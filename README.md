@@ -16,18 +16,18 @@ Date has been a long time pain point in ECMAScript. This proposes `temporal`, a 
 that brings a DateTime API similar to Java 8's to the ECMAScript language.
 
 Because of the size of the problem domain, this proposal brings only two standard objects.
-The remaining object will be left for later proposals.  See below for details. 
+The remaining objects will be left for later proposals.  See below for details. 
 
 ## Standard objects defined in this proposal
 
-Class name      | Description                                                         | Example
+Object name     | Description                                                         | Example
 ----------------|---------------------------------------------------------------------|-------------
 `LocalDateTime` | A date and a time without any time zone reference.                  | `2017-12-31T12:00:00`
 `ZonedDateTime` | A date and a time, at a specific instant in time, with a time zone. | `2017-12-31T12:00:00-08:00 America/New_York`
 
 ### Other standard objects in this module (TBD)
 
-Class name      | Description                                                         | Example
+Object name     | Description                                                         | Example
 ----------------|---------------------------------------------------------------------|-------------
 `Instant`       | A point on the universal timeline, typically represented in UTC.    | `2017-12-31T20:00:00Z` 
 `OffsetDateTime`| A date, time, and fixed offset from UTC.                            | `2017-21-31T08:00:00-08:00`
@@ -54,7 +54,7 @@ Class name      | Description                                                   
 
 ---------------------------------------------------------------------------------------------------
 
-## Class: `LocalDateTime`
+## Standard Object: `LocalDateTime`
 
 A date and a time without any time zone reference.
 
@@ -91,13 +91,20 @@ var options = {
 ### Usage Examples
 
 ```js
-// add and subtract
+// add/subtract time  (Dec 31 2017 23:00 + 2h = Jan 1 2018 01:00)
+// TBD
+
+// add/subtract months  (Mar 31 + 1M = Apr 30)
+// TBD
+
+// add/subtract years  (Feb 29 2020 - 1Y = Feb 28 2019)
+// TBD
 
 ```
 
 ---------------------------------------------------------------------------------------------------
 
-## Class: `ZonedDateTime`
+## Standard Object: `ZonedDateTime`
 
 A date and a time with a time zone, at a specific instant in time.
 
