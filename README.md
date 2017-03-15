@@ -128,9 +128,6 @@ The first parameter is the time zone or time zone offset.  It can be any of:
 - An indicator that denotes the local time zone of the computer where the code is executing.
   - This can be either `undefined`, or the string `'SYSTEM'`.
 
-Note that `Instant` and `OffsetDateTime` from Noda Time and Java 8 can be represented in this scheme
-without explicitly defining them as seperate types.
-
 ### Possible Input Parameters
 
 ```js
