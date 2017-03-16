@@ -59,7 +59,7 @@ Object name     | Description                                                   
 A date and a time without any time zone reference.
 
 *The term "local" here derives from ISO-8601 §2.1.16, and means "locally applicable".
-In other words, local to somebody, somewhere.  Does not mean local to the user or computer.*
+In other words, local to somebody, somewhere.  Does not mean local to the user or computer. A local date time cannot be related to a point on the global timeline (UTC).*
 
 ### Constructor Syntax
 
