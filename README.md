@@ -92,13 +92,13 @@ var options = {
 
 ```js
 // add/subtract time  (Dec 31 2017 23:00 + 2h = Jan 1 2018 01:00)
-// TBD
+var addHours = new temporal.LocalDateTime(2017, 12, 31, 23, 00).add(2, 'hours');
 
-// add/subtract months  (Mar 31 + 1M = Apr 30)
-// TBD
+// add/subtract months  (Mar 31 - 1M = Feb 28)
+var addMonths = new temporal.LocalDateTime(2017,03,31).subtract(1, 'months'); 
 
 // add/subtract years  (Feb 29 2020 - 1Y = Feb 28 2019)
-// TBD
+var subtractYears = new temporal.LocalDateTime(2020, 02, 29).subtract(1, 'years');
 
 ```
 
