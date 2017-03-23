@@ -196,3 +196,9 @@ for (var i = 0; i < 4; i++) {
 ["2017-03-12T08:00:00.000000000-07:00", "2017-03-12T15:00:00.000000000Z"]
 ["2017-03-13T08:00:00.000000000-07:00", "2017-03-13T15:00:00.000000000Z"]
 ```
+## Questions
++ Should a duration proposal precede this?
++ Do we want to restrict operations on the `ZonedDateTime` type to global computations?
++ Should we pursue LocalDate and LocalTime before LocalDateTime?
++ Should parsing and formatting outside of ISO8601 be deferred to the ECMA402 specification?
++ Should we remove pluggable calendars and defer those to ECMA402?
