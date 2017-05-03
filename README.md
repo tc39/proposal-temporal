@@ -8,7 +8,7 @@ Brian Terlson
 
 ## Status
 
-This proposal is currently stage 0
+This proposal is currently stage 1
 
 ## Overview / Motivation
 
