@@ -24,12 +24,12 @@ This proposes `temporal`, a built in module that brings a modern date time API t
 - All time-of-day values are based on a standard 24-hour clock.
 - [Leap seconds](https://en.wikipedia.org/wiki/Leap_second) are not represented.
 
-===================================================================================================
+---------------------------------------------------------------------------------------------------
 
 # Scenario-Based Examples
 TBD
 
-===================================================================================================
+---------------------------------------------------------------------------------------------------
 
 # Top-Level Functions
 
@@ -125,7 +125,7 @@ An `Instant` object, representing the absolute point in time specified.
 #### Examples
 TBD
 
-===================================================================================================
+---------------------------------------------------------------------------------------------------
 
 # Object: `PlainDate`
 Represents a whole day, as a date on the proleptic Gregorian calendar.
@@ -147,7 +147,7 @@ let date = date.add(number, unit);
 let dateTime = date.withTime(time);
 ```
 
-===================================================================================================
+---------------------------------------------------------------------------------------------------
 
 # Object: `PlainTime`
 Represents a position on a 24-hour clock.
@@ -171,7 +171,7 @@ let time = time.add(number, unit);
 let dateTime = time.withDate(date);
 ```
 
-===================================================================================================
+---------------------------------------------------------------------------------------------------
 
 # Object: `PlainDateTime`
 Represents a whole day, and the position within that day.
@@ -200,7 +200,7 @@ let time = dateTime.toPlainTime();
 let zonedInstant = dateTime.withZone(timeZone[, options]);
 ```
 
-===================================================================================================
+---------------------------------------------------------------------------------------------------
 
 # Object: `Instant`
 Represents an absolute point in time.
@@ -219,7 +219,7 @@ TBD
 let zonedInstant = instant.withZone(timeZone);
 ```
 
-===================================================================================================
+---------------------------------------------------------------------------------------------------
 
 ## `ZonedInstant`
 Represents an absoute point in time, with an associated time zone.
