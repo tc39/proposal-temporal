@@ -1,10 +1,12 @@
-### Temporal Proposal
+# Temporal Proposal
+
+Provides standard objects and functions for working with dates and times.
 
 ## Champions
 
-Maggie Pint
-
-Brian Terlson
+- Maggie Pint
+- Matt Johnson
+- Brian Terlson
 
 ## Status
 
@@ -12,193 +14,229 @@ This proposal is currently stage 1
 
 ## Overview / Motivation
 
-Date has been a long time pain point in ECMAScript. This proposes `temporal`, a built in module
-that brings a DateTime API similar to Java 8's to the ECMAScript language.
-
-Because of the size of the problem domain, this proposal brings only two standard objects.
-The remaining objects will be left for later proposals.  See below for details. 
-
-## Standard objects defined in this proposal
-
-Object name     | Description                                                         | Example
-----------------|---------------------------------------------------------------------|-------------
-`LocalDateTime` | A date and a time without any time zone reference.                  | `2017-12-31T12:00:00`
-`ZonedDateTime` | A date and a time, at a specific instant in time, with a time zone. | `2017-12-31T12:00:00-08:00 America/New_York`
-
-### Other standard objects in this module (TBD)
-
-Object name     | Description                                                         | Example
-----------------|---------------------------------------------------------------------|-------------
-`Instant`       | A point on the universal timeline, typically represented in UTC.    | `2017-12-31T20:00:00Z` 
-`OffsetDateTime`| A date, time, and fixed offset from UTC.                            | `2017-21-31T08:00:00-08:00`
-`LocalDate`     | A date without any time or time zone reference.                     | `2017-12-31`
-`LocalTime`     | A time-of-day without any date or time zone reference.              | `17:00`
-`Duration`      | A time-based amount of time, as if measured by a stopwatch.         | 5 minutes
-`Period`        | A date-based amount of time in the ISO8601 calendar system.         | 3 months
-
-### Other Similar APIs:
-
-- [`java.time` native package (Java 8)](https://docs.oracle.com/javase/8/docs/api/java/time/package-summary.html)
-- [ThreeTen Backport (Java)](http://www.threeten.org/threetenbp/)
-- [Joda-Time library (Java)](http://www.joda.org/joda-time/)
-- [Noda Time library (.NET)](http://nodatime.org/)
-- [JS-Joda library (JavaScript)](https://github.com/js-joda/js-joda)
+Date has been a long time pain point in ECMAScript.
+This proposes `temporal`, a built in module that brings a modern date time API to the ECMAScript language.
 
 ### Principles:
 
-- Immutable API design
-- Nanosecond precision
-- ISO-8601 compliance
+- All temporal APIs are non-mutating.  All temporal objects are effectively immutable.
+- All date values are based on the [Proleptic Gregorian Calendar](https://en.wikipedia.org/wiki/Proleptic_Gregorian_calendar).  Other calendar systems are out-of-scope for this proposal.
+- All time-of-day values are based on a standard 24-hour clock.
+- [Leap seconds](https://en.wikipedia.org/wiki/Leap_second) are not represented.
 
-## Examples
+===================================================================================================
+
+# Scenario-Based Examples
+TBD
+
+===================================================================================================
+
+# Top-Level Functions
+
+## Function: `createDate`
+Creates a `PlainDate` object, representing a whole date.
+The combined values must be representable within the range of `PlainDate.MIN_VALUE` through `PlainDate.MAX_VALUE`.
+
+#### Syntax
+```js
+let date = temporal.createDate(year, month, day);
+```
+
+#### Parameters
+ - `year` : Integer value representing the year.
+ - `month` : Integer value representing the month, from `1` through `12`.
+ - `day` : Integer value representing the day, from `1` through the number of days for the given `month` and `year`, which may be `28`, `29`, `30`, or `31`.
+
+#### Return Value
+A `PlainDate` object, representing the date specified.
+
+#### Examples
+TBD
 
 ---------------------------------------------------------------------------------------------------
 
-## Standard Object: `LocalDateTime`
+## Function: `createTime`
+Creates a `PlainTime` object, representing a time-of-day.
+The combined values must be representable within the range of `PlainTime.MIN_VALUE` through `PlainTime.MAX_VALUE`.
 
-A date and a time without any time zone reference.
-
-*The term "local" here derives from ISO-8601 §2.1.16, and means "locally applicable".
-In other words, local to somebody, somewhere.  Does not mean local to the user or computer. A local date time cannot be related to a point on the global timeline (UTC).*
-
-### Constructor Syntax
-
+#### Syntax
 ```js
-var ldt = new temporal.LocalDateTime(year, month, day, hours, minutes[, seconds[, millis[, nanosOfMillis]]][, options]);
+let time = temporal.createTime(hour, minute[, second[, millisecond[, nanosecond]]]);
 ```
 
-### Possible Input Parameters
+#### Parameters
+ - `hour` : Integer value representing the hour of the day, from `0` through `24`.
+ - `minute` : Integer value representing the minute within the hour, from `0` through `59`.
+ - `second` : Optional. Integer value representing the second within the minute, from `0` through `59`.
+ - `millisecond` : Optional. Integer value representing the millisecond within the second, from `0` through `999`.
+ - `nanosecond` : Optional. Integer value representing the nanosecond within the millisecond, from `0` through `999999`.
 
-```js
-var ldt = new temporal.LocalDateTime(2017, 12, 31, 23, 59);
-var ldt = new temporal.LocalDateTime(2017, 12, 31, 23, 59, options);
-var ldt = new temporal.LocalDateTime(2017, 12, 31, 23, 59, 59);
-var ldt = new temporal.LocalDateTime(2017, 12, 31, 23, 59, 59, options);
-var ldt = new temporal.LocalDateTime(2017, 12, 31, 23, 59, 59, 123);
-var ldt = new temporal.LocalDateTime(2017, 12, 31, 23, 59, 59, 123, options);
-var ldt = new temporal.LocalDateTime(2017, 12, 31, 23, 59, 59, 123, 456789);
-var ldt = new temporal.LocalDateTime(2017, 12, 31, 23, 59, 59, 123, 456789, options);
-```
+#### Return Value
+A `PlainTime` object, representing the time-of-day specified.
 
-### Default Options
-
-```js
-var options = {
-    calendar: 'gregory'  // uses ECMA-402 calendar names
-};
-```
-
-### Usage Examples
-
-```js
-// add/subtract time  (Dec 31 2017 23:00 + 2h = Jan 1 2018 01:00)
-var addHours = new temporal.LocalDateTime(2017, 12, 31, 23, 00).add(2, 'hours');
-
-// add/subtract months  (Mar 31 - 1M = Feb 28)
-var addMonths = new temporal.LocalDateTime(2017,03,31).subtract(1, 'months'); 
-
-// add/subtract years  (Feb 29 2020 - 1Y = Feb 28 2019)
-var subtractYears = new temporal.LocalDateTime(2020, 02, 29).subtract(1, 'years');
-
-```
+#### Examples
+TBD
 
 ---------------------------------------------------------------------------------------------------
 
-## Standard Object: `ZonedDateTime`
+## Function: `createDateTime`
+Creates a `PlainDateTime` object, representing a date and a time on that date.
+The combined values must be representable within the range of `PlainDateTime.MIN_VALUE` through `PlainDateTime.MAX_VALUE`.
 
-A date and a time with a time zone, at a specific instant in time.
-
-### Constructor Syntax
-
+#### Syntax
 ```js
-var ldt = new temporal.ZonedDateTime(timeZone, year, month, day, hours, minutes[, seconds[, millis[, nanosOfMillis]]][, options]);
+let dateTime = temporal.createDateTime(year, month, day, hour, minute[, second[, millisecond[, nanosecond]]]);
 ```
 
-The first parameter is the time zone or time zone offset.  It can be any of:
+#### Parameters
+ - `year` : Integer value representing the year.
+ - `month` : Integer value representing the month, from `1` through `12`.
+ - `day` : Integer value representing the day, from `1` through the number of days for the given `month` and `year`, which may be `28`, `29`, `30`, or `31`.
+ - `hour` : Integer value representing the hour of the day, from `0` through `24`.
+ - `minute` : Integer value representing the minute within the hour, from `0` through `59`.
+ - `second` : Optional. Integer value representing the second within the minute, from `0` through `59`.
+ - `millisecond` : Optional. Integer value representing the millisecond within the second, from `0` through `999`.
+ - `nanosecond` : Optional. Integer value representing the nanosecond within the millisecond, from `0` through `999999`.
 
-- A zone or link name from the IANA/Olson time zone database. (BCP175/RFC6557)
-  - Ex:  `'America/New_York'`, `'Europe/London'`, `'Asia/Shanghai'`, `'UTC'`
+#### Return Value
+A `PlainDateTime` object, representing the date and time-of-day specified.
 
-- A fixed offset from UTC in ±HH:MM or ±HHMM format, with positive values East of *GMT*. (ISO8601)
-  - Ex:  `'-08:00'`, `'-05:00'`, `'+05:30'`, `'+12:45'`
+#### Examples
+TBD
 
-- A fixed offset from UTC in minutes, with positive values *West* of GMT (for compatibility with `Date.getTimezoneOffset`).
-  - Ex:  `480`, `300`, `-330`, `-765`
+---------------------------------------------------------------------------------------------------
 
-- An indicator that denotes the local time zone of the computer where the code is executing.
-  - This can be either `undefined`, or the string `'SYSTEM'`.
+## Function: `createInstant`
+Creates an `Instant` object, representing an absolute point in time.
+The combined values must be representable within the range of `Instant.MIN_VALUE` through `Instant.MAX_VALUE`.
 
-### Possible Input Parameters
-
+#### Syntax
 ```js
-var zdt = new temporal.ZonedDateTime('America/New_York', 2017, 12, 31, 23, 59);
-var zdt = new temporal.ZonedDateTime('America/New_York', 2017, 12, 31, 23, 59, options);
-var zdt = new temporal.ZonedDateTime('America/New_York', 2017, 12, 31, 23, 59, 59);
-var zdt = new temporal.ZonedDateTime('America/New_York', 2017, 12, 31, 23, 59, 59, options);
-var zdt = new temporal.ZonedDateTime('America/New_York', 2017, 12, 31, 23, 59, 59, 123);
-var zdt = new temporal.ZonedDateTime('America/New_York', 2017, 12, 31, 23, 59, 59, 123, options);
-var zdt = new temporal.ZonedDateTime('America/New_York', 2017, 12, 31, 23, 59, 59, 123, 456789);
-var zdt = new temporal.ZonedDateTime('America/New_York', 2017, 12, 31, 23, 59, 59, 123, 456789, options);
+let instant = temporal.createInstant(milliseconds[, nanoseconds]);
 ```
 
-### Default Options
+#### Parameters
+ - `milliseconds` : Integer value representing the number of milliseconds elapsed from 1970-01-01 00:00:00.000 UTC, without regarding leap seconds.
+ - `nanoseconds` : Optional. Integer value representing the nanosecond within the millisecond.
 
+#### Return Value
+An `Instant` object, representing the absolute point in time specified.
+
+#### Examples
+TBD
+
+===================================================================================================
+
+# Object: `PlainDate`
+Represents a whole day, as a date on the proleptic Gregorian calendar.
+
+## Constructor
 ```js
-var options = {
-    calendar: 'gregory' // uses ECMA-402 calendar names
-    resolver: (mapping) => ({
-        skipped: mapping.forwardShifted(),
-        ambiguous: mapping.firstOccurrence()
-    })
-};
+new PlainDate(year, month, day)
 ```
 
-### Resolver Functions
+### Properties
+TBD
 
-Any resolver function that returns a ZonedDateTime is allowed.
-Properties on mapping are TBD
-
-Built-in skipped local time resolver functions are:
-
-- `forwardShifted()`   Shifts forward by the duration of the gap. (ex: 02:30 => 03:30)
-- `nextValid()`        Uses the next valid local time. (ex: 02:30 => 03:00)
-- `lastValid()`        Uses the last valid local time. (ex: 02:30 => 01:59:59.999999999)
-- `throws()`           Skipped local time causes an error to be thrown.
-
-Built-in ambiguous local time resolver functions are:
-
-- `firstOccurrence()`  Chooses the first occurance of an ambiguous value. (ex: 01:30 EDT)
-- `lastOccurrence()`   Chooses the last occurance of an ambiguous value.  (ex: 01:30 EST)
-- `throws()`           Ambiguous local time causes an error to be thrown.
-
-### Usage Examples
-
+### Functions
 ```js
-// Convert between various time zones
-var eastUS = new ZonedDateTime('America/New_York', 2017, 1, 1, 0, 0);
-var france = eastUS.withZone('Europe/Paris');
-var utc = eastUS.withZone('UTC');
-var localSystem = eastUS.withZone('SYSTEM');
+let year = date.getYear();
+let month = date.getYear();
+let day = date.getDay();
+let date = date.add(number, unit);
+let dateTime = date.withTime(time);
 ```
 
-```js
-// Calculate the daily occurrence for 8AM Pacific that respects DST
-var zdt = new ZonedDateTime('America/Los_Angeles', 2017, 3, 10, 8, 0);
-for (var i = 0; i < 4; i++) {
-    var occurrenceTimeUTC = zdt.withZone('UTC');
-    console.log([zdt, occurrenceTimeUTC]);
-    zdt = zdt.addDays(1);
-}
+===================================================================================================
 
-// Output:
-["2017-03-10T08:00:00.000000000-08:00", "2017-03-10T16:00:00.000000000Z"]
-["2017-03-11T08:00:00.000000000-08:00", "2017-03-11T16:00:00.000000000Z"]
-["2017-03-12T08:00:00.000000000-07:00", "2017-03-12T15:00:00.000000000Z"]
-["2017-03-13T08:00:00.000000000-07:00", "2017-03-13T15:00:00.000000000Z"]
+# Object: `PlainTime`
+Represents a position on a 24-hour clock.
+
+### Constructor
+```js
+new PlainTime(hour, minute[[[, second], millisecond], nanosecond])
 ```
-## Questions
-+ Should a duration proposal precede this?
-+ Do we want to restrict operations on the `ZonedDateTime` type to global computations?
-+ Should we pursue LocalDate and LocalTime before LocalDateTime?
-+ Should parsing and formatting outside of ISO8601 be deferred to the ECMA402 specification?
-+ Should we remove pluggable calendars and defer those to ECMA402?
+
+### Properties
+TBD
+
+### Functions
+```js
+let hour = time.getHour();
+let minute = time.getMinute();
+let second = time.getSecond();
+let millisecond = time.getMillisecond();
+let nanosecond = time.getNanosecond();
+let time = time.add(number, unit);
+let dateTime = time.withDate(date);
+```
+
+===================================================================================================
+
+# Object: `PlainDateTime`
+Represents a whole day, and the position within that day.
+
+### Constructor
+```js
+new PlainDateTime(plainDate, plainTime)
+```
+
+### Properties
+TBD
+
+### Functions
+```js
+let year = dateTime.getYear();
+let month = dateTime.getYear();
+let day = dateTime.getDay();
+let hour = dateTime.getHour();
+let minute = dateTime.getMinute();
+let second = dateTime.getSecond();
+let millisecond = dateTime.getMillisecond();
+let nanosecond = dateTime.getNanosecond();
+let dateTime = dateTime.add(number, unit);
+let date = dateTime.toPlainDate();
+let time = dateTime.toPlainTime();
+let zonedInstant = dateTime.withZone(timeZone[, options]);
+```
+
+===================================================================================================
+
+# Object: `Instant`
+Represents an absolute point in time.
+Counted as number of nanoseconds from `1970-01-01T00:00:00.000000000Z`.
+
+### Constructor
+```js
+new Instant(milliseconds[, nanoseconds])
+```
+
+### Properties
+TBD
+
+### Functions
+```js
+let zonedInstant = instant.withZone(timeZone);
+```
+
+===================================================================================================
+
+## `ZonedInstant`
+Represents an absoute point in time, with an associated time zone.
+
+### Constructor
+```js
+new ZonedInstant(instant, timeZone)
+```
+
+### Properties
+TBD
+
+### Functions
+```js
+let dateTime = zonedInstant.toPlainDateTime();
+let date = zonedInstant.toPlainDate();
+let time = zonedInstant.toPlainTime();
+let instant = zonedInstant.toInstant();
+```
+
