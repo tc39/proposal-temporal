@@ -33,15 +33,15 @@ This proposes `temporal`, a built in module that brings a modern date time API t
 Object name     | Description                                                         | Example
 ----------------|---------------------------------------------------------------------|-------------
 `PlainDate`     | A date without any time or time zone reference.                     | `2017-12-31`
-`PlainTime`     | A time-of-day without any date or time zone reference.              | `17:00`
-`PlainDateTime` | A date and a time without any time zone reference.                  | `2017-12-31T12:00`
+`PlainTime`     | A time-of-day without any date or time zone reference.              | `17:00:00`
+`PlainDateTime` | A date and a time without any time zone reference.                  | `2017-12-31T12:00:00`
 
 ### Objects representing Absolute Time
 
 Object name     | Description                                                         | Example
 ----------------|---------------------------------------------------------------------|-------------
-`Instant`       | A point on the universal timeline, typically represented in UTC.    | `2017-12-31T00:00Z` 
-`ZonedInstant`  | A point on the universal timeline, with an associated time zone.    | `2017-12-31T09:00+09:00[Asia/Tokyo]`
+`Instant`       | A point on the universal timeline, typically represented in UTC.    | `2017-12-31T00:00:00Z` 
+`ZonedInstant`  | A point on the universal timeline, with an associated time zone.    | <span style="white-space:nowrap">`2017-12-31T09:00:00+09:00[Asia/Tokyo]`</span>
 
 Note that the time zone of a `ZonedInstant` can be any of:
 
