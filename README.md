@@ -136,13 +136,14 @@ new PlainDate(year, month, day)
 ```
 
 ### Properties
-TBD
+```js
+let year = dateTime.year;
+let month = dateTime.month;
+let day = dateTime.day;
+```
 
 ### Functions
 ```js
-let year = date.getYear();
-let month = date.getYear();
-let day = date.getDay();
 let date = date.add(number, unit);
 let dateTime = date.withTime(time);
 ```
@@ -158,15 +159,16 @@ new PlainTime(hour, minute[[[, second], millisecond], nanosecond])
 ```
 
 ### Properties
-TBD
+```js
+let hour = dateTime.hour;
+let minute = dateTime.minute;
+let second = dateTime.second;
+let millisecond = dateTime.millisecond;
+let nanosecond = dateTime.nanosecond;
+```
 
 ### Functions
 ```js
-let hour = time.getHour();
-let minute = time.getMinute();
-let second = time.getSecond();
-let millisecond = time.getMillisecond();
-let nanosecond = time.getNanosecond();
 let time = time.add(number, unit);
 let dateTime = time.withDate(date);
 ```
@@ -182,18 +184,19 @@ new PlainDateTime(plainDate, plainTime)
 ```
 
 ### Properties
-TBD
+```js
+let year = dateTime.year;
+let month = dateTime.month;
+let day = dateTime.day;
+let hour = dateTime.hour;
+let minute = dateTime.minute;
+let second = dateTime.second;
+let millisecond = dateTime.millisecond;
+let nanosecond = dateTime.nanosecond;
+```
 
 ### Functions
 ```js
-let year = dateTime.getYear();
-let month = dateTime.getYear();
-let day = dateTime.getDay();
-let hour = dateTime.getHour();
-let minute = dateTime.getMinute();
-let second = dateTime.getSecond();
-let millisecond = dateTime.getMillisecond();
-let nanosecond = dateTime.getNanosecond();
 let dateTime = dateTime.add(number, unit);
 let date = dateTime.toPlainDate();
 let time = dateTime.toPlainTime();
@@ -212,7 +215,10 @@ new Instant(milliseconds[, nanoseconds])
 ```
 
 ### Properties
-TBD
+```js
+let milliseconds = instant.milliseconds;
+let nanoseconds = instant.nanoseconds;
+```
 
 ### Functions
 ```js
@@ -230,7 +236,11 @@ new ZonedInstant(instant, timeZone)
 ```
 
 ### Properties
-TBD
+```js
+let milliseconds = zonedInstant.milliseconds;
+let nanoseconds = zonedInstant.nanoseconds;
+let timeZone = zonedInstant.timeZone;
+```
 
 ### Functions
 ```js
