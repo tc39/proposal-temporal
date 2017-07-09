@@ -26,6 +26,35 @@ This proposes `temporal`, a built in module that brings a modern date time API t
 
 ---------------------------------------------------------------------------------------------------
 
+# Overview of Standard Objects in the `temporal` module
+
+### Objects representing Civil Time
+
+Object name     | Description                                                         | Example
+----------------|---------------------------------------------------------------------|-------------
+`PlainDate`     | A date without any time or time zone reference.                     | `2017-12-31`
+`PlainTime`     | A time-of-day without any date or time zone reference.              | `17:00`
+`PlainDateTime` | A date and a time without any time zone reference.                  | `2017-12-31T12:00:00`
+
+### Objects representing Absolute Time
+
+Object name     | Description                                                         | Example
+----------------|---------------------------------------------------------------------|-------------
+`Instant`       | A point on the universal timeline, typically represented in UTC.    | `2017-12-31T20:00:00Z` 
+`ZonedInstant`  | A point on the universal timeline, with an associated time zone.    | `2017-12-31T12:00:00-08:00 America/New_York`
+
+Note that the time zone of a `ZonedInstant` can be any of:
+
+- Coordinated Universal Time, indicated by the string `'UTC'`
+- The system local time zone, indicated by the string `'SYSTEM'`
+- A fixed offset from UTC, indicated by a string in `'±HH:MM'` or `'±HHMM'` format
+- A `Zone` or `Link` name from the [IANA time zone database](https://www.iana.org/time-zones),
+  as also listed [here](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones).
+
+Because a fixed offset is supported, there is no need for a separate `OffsetDateTime` type.
+
+---------------------------------------------------------------------------------------------------
+
 # Scenario-Based Examples
 TBD
 
