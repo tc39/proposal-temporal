@@ -41,7 +41,7 @@ Object name     | Description                                                   
 Object name     | Description                                                         | Example
 ----------------|---------------------------------------------------------------------|-------------
 `Instant`       | A point on the universal timeline, typically represented in UTC.    | `2017-12-31T20:00:00Z` 
-`ZonedInstant`  | A point on the universal timeline, with an associated time zone.    | `2017-12-31T12:00:00-08:00 America/New_York`
+`ZonedInstant`  | A point on the universal timeline, with an associated time zone.    | `2017-12-31T12:00:00-08:00[America/New_York]`
 
 Note that the time zone of a `ZonedInstant` can be any of:
 
