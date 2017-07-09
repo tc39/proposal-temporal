@@ -137,15 +137,15 @@ new PlainDate(year, month, day)
 
 ### Properties
 ```js
-let year = dateTime.year;
-let month = dateTime.month;
-let day = dateTime.day;
+let year = plainDate.year;
+let month = plainDate.month;
+let day = plainDate.day;
 ```
 
 ### Functions
 ```js
-let date = date.add(number, unit);
-let dateTime = date.withTime(time);
+let plainDate2 = plainDate1.add(number, unit);
+let plainDateTime = plainDate.withTime(time);
 ```
 
 ---------------------------------------------------------------------------------------------------
@@ -160,17 +160,17 @@ new PlainTime(hour, minute[[[, second], millisecond], nanosecond])
 
 ### Properties
 ```js
-let hour = dateTime.hour;
-let minute = dateTime.minute;
-let second = dateTime.second;
-let millisecond = dateTime.millisecond;
-let nanosecond = dateTime.nanosecond;
+let hour = plainTime.hour;
+let minute = plainTime.minute;
+let second = plainTime.second;
+let millisecond = plainTime.millisecond;
+let nanosecond = plainTime.nanosecond;
 ```
 
 ### Functions
 ```js
-let time = time.add(number, unit);
-let dateTime = time.withDate(date);
+let plainTime2 = plainTime1.add(number, unit);
+let plainDateTime = plainTime.withDate(date);
 ```
 
 ---------------------------------------------------------------------------------------------------
@@ -185,22 +185,22 @@ new PlainDateTime(plainDate, plainTime)
 
 ### Properties
 ```js
-let year = dateTime.year;
-let month = dateTime.month;
-let day = dateTime.day;
-let hour = dateTime.hour;
-let minute = dateTime.minute;
-let second = dateTime.second;
-let millisecond = dateTime.millisecond;
-let nanosecond = dateTime.nanosecond;
+let year = plainDateTime.year;
+let month = plainDateTime.month;
+let day = plainDateTime.day;
+let hour = plainDateTime.hour;
+let minute = plainDateTime.minute;
+let second = plainDateTime.second;
+let millisecond = plainDateTime.millisecond;
+let nanosecond = plainDateTime.nanosecond;
 ```
 
 ### Functions
 ```js
-let dateTime = dateTime.add(number, unit);
-let date = dateTime.toPlainDate();
-let time = dateTime.toPlainTime();
-let zonedInstant = dateTime.withZone(timeZone[, options]);
+let plainDateTime2 = plainDateTime1.add(number, unit);
+let plainDate = plainDateTime.toPlainDate();
+let plainTime = plainDateTime.toPlainTime();
+let zonedInstant = plainDateTime.withZone(timeZone[, options]);
 ```
 
 ---------------------------------------------------------------------------------------------------
@@ -244,9 +244,9 @@ let timeZone = zonedInstant.timeZone;
 
 ### Functions
 ```js
-let dateTime = zonedInstant.toPlainDateTime();
-let date = zonedInstant.toPlainDate();
-let time = zonedInstant.toPlainTime();
+let plainDateTime = zonedInstant.toPlainDateTime();
+let plainDate = zonedInstant.toPlainDate();
+let plainTime = zonedInstant.toPlainTime();
 let instant = zonedInstant.toInstant();
 ```
 
