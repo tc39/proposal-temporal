@@ -257,7 +257,7 @@ let zonedInstant = instant.withZone(timeZone);
 ---------------------------------------------------------------------------------------------------
 
 ## Object: `ZonedInstant`
-Represents an absoute point in time, with an associated time zone.
+Represents an absolute point in time, with an associated time zone.
 
 ### Constructor
 ```js
