@@ -82,7 +82,7 @@ let day = civilDate.day;
 
 ### Functions
 ```js
-let civilDate2 = civilDate1.add({months: 1});
+let civilDate2 = civilDate1.plus({months: 1});
 let civilDateTime = civilDate.withTime(time);
 ```
 
@@ -115,7 +115,7 @@ let nanosecond = civilTime.nanosecond;
 
 ### Functions
 ```js
-let civilTime2 = civilTime1.add({hours: 2, minutes: 4}});
+let civilTime2 = civilTime1.plus({hours: 2, minutes: 4}});
 let civilDateTime = civilTime.withDate(date);
 ```
 
@@ -147,7 +147,7 @@ let nanosecond = civilDateTime.nanosecond;
 
 ### Functions
 ```js
-let civilDateTime2 = civilDateTime1.add({days: 3, hours: 4, minutes: 2, seconds: 12});
+let civilDateTime2 = civilDateTime1.plus({days: 3, hours: 4, minutes: 2, seconds: 12});
 let civilDate = civilDateTime.toCivilDate();
 let civilTime = civilDateTime.toCivilTime();
 let zonedInstant = civilDateTime.withZone(timeZone[, options]);
@@ -202,4 +202,23 @@ let civilDateTime = zonedInstant.toCivilDateTime();
 let civilDate = zonedInstant.toCivilDate();
 let civilTime = zonedInstant.toCivilTime();
 let instant = zonedInstant.toInstant();
+```
+---------------------------------------------------------------------------------------------
+## With Function
+Allows the user to create a new instance of any temporal object with new date-part values.
+
+```js
+let myCivilDate = new CivilDate(2016, 2, 29);
+let newCivilDate = myDate.with({year: 2017, month: 3});
+//results in civil date with value 2017-03-29
+```
+
+----------------------------------------------------------------------------------------------
+## Plus function
+Returns a new temporal object with the specified date parts added. Units will be added in order of size, descending.
+
+```js
+let myCivilDate = new CivilDate(2016, 2, 29);
+let newCivilDate = myCivilDate.plus({years: 1, months: 2});
+//results in civil date with value 2017-4-28
 ```
