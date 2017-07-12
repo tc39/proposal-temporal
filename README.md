@@ -126,12 +126,18 @@ Represents a whole day, and the position within that day.
 
 ### Constructor
 ```js
-new CivilDateTime(civilDate, civilTime)
+new CivilDateTime(year, month, day, hour, minute[, second[, millisecond[, nanosecond]]])
 ```
 
 #### Parameters
- - `civilDate` - Required. A civil date object representing the desired date
- - `civilTime` - Required. A civil time object representing the desired time
+ - `year` : Integer value representing the year.
+ - `month` : Integer value representing the month, from `1` through `12`.
+ - `day` : Integer value representing the day, from `1` through the number of days for the given `month` and `year`, which may be `28`, `29`, `30`, or `31`.
+ - `hour` : Integer value representing the hour of the day, from `0` through `24`.
+ - `minute` : Integer value representing the minute within the hour, from `0` through `59`.
+ - `second` : Optional. Integer value representing the second within the minute, from `0` through `59`.
+ - `millisecond` : Optional. Integer value representing the millisecond within the second, from `0` through `999`.
+ - `nanosecond` : Optional. Integer value representing the nanosecond within the millisecond, from `0` through `999999`.
 
 ### Properties
 ```js
@@ -147,6 +153,7 @@ let nanosecond = civilDateTime.nanosecond;
 
 ### Functions
 ```js
+let civilDateTime = CivilDateTime.from(date, time);
 let civilDateTime2 = civilDateTime1.plus({days: 3, hours: 4, minutes: 2, seconds: 12});
 let civilDate = civilDateTime.toCivilDate();
 let civilTime = civilDateTime.toCivilTime();
