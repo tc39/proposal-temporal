@@ -32,9 +32,9 @@ This proposes `temporal`, a built in module that brings a modern date time API t
 
 Object name     | Description                                                         | Example
 ----------------|---------------------------------------------------------------------|-------------
-`PlainDate`     | A date without any time or time zone reference.                     | `2017-12-31`
-`PlainTime`     | A time-of-day without any date or time zone reference.              | `17:00:00`
-`PlainDateTime` | A date and a time without any time zone reference.                  | `2017-12-31T12:00:00`
+`CivilDate`     | A date without any time or time zone reference.                     | `2017-12-31`
+`CivilTime`     | A time-of-day without any date or time zone reference.              | `17:00:00`
+`CivilDateTime` | A date and a time without any time zone reference.                  | `2017-12-31T12:00:00`
 
 ### Objects representing Absolute Time
 
@@ -60,176 +60,97 @@ TBD
 
 ---------------------------------------------------------------------------------------------------
 
-# Top-Level Functions
-
-## Function: `createDate`
-Creates a `PlainDate` object, representing a whole date.
-The combined values must be representable within the range of `PlainDate.MIN_VALUE` through `PlainDate.MAX_VALUE`.
-
-#### Syntax
-```js
-let date = temporal.createDate(year, month, day);
-```
-
-#### Parameters
- - `year` : Integer value representing the year.
- - `month` : Integer value representing the month, from `1` through `12`.
- - `day` : Integer value representing the day, from `1` through the number of days for the given `month` and `year`, which may be `28`, `29`, `30`, or `31`.
-
-#### Return Value
-A `PlainDate` object, representing the date specified.
-
-#### Examples
-TBD
-
----------------------------------------------------------------------------------------------------
-
-## Function: `createTime`
-Creates a `PlainTime` object, representing a time-of-day.
-The combined values must be representable within the range of `PlainTime.MIN_VALUE` through `PlainTime.MAX_VALUE`.
-
-#### Syntax
-```js
-let time = temporal.createTime(hour, minute[, second[, millisecond[, nanosecond]]]);
-```
-
-#### Parameters
- - `hour` : Integer value representing the hour of the day, from `0` through `24`.
- - `minute` : Integer value representing the minute within the hour, from `0` through `59`.
- - `second` : Optional. Integer value representing the second within the minute, from `0` through `59`.
- - `millisecond` : Optional. Integer value representing the millisecond within the second, from `0` through `999`.
- - `nanosecond` : Optional. Integer value representing the nanosecond within the millisecond, from `0` through `999999`.
-
-#### Return Value
-A `PlainTime` object, representing the time-of-day specified.
-
-#### Examples
-TBD
-
----------------------------------------------------------------------------------------------------
-
-## Function: `createDateTime`
-Creates a `PlainDateTime` object, representing a date and a time on that date.
-The combined values must be representable within the range of `PlainDateTime.MIN_VALUE` through `PlainDateTime.MAX_VALUE`.
-
-#### Syntax
-```js
-let dateTime = temporal.createDateTime(year, month, day, hour, minute[, second[, millisecond[, nanosecond]]]);
-```
-
-#### Parameters
- - `year` : Integer value representing the year.
- - `month` : Integer value representing the month, from `1` through `12`.
- - `day` : Integer value representing the day, from `1` through the number of days for the given `month` and `year`, which may be `28`, `29`, `30`, or `31`.
- - `hour` : Integer value representing the hour of the day, from `0` through `24`.
- - `minute` : Integer value representing the minute within the hour, from `0` through `59`.
- - `second` : Optional. Integer value representing the second within the minute, from `0` through `59`.
- - `millisecond` : Optional. Integer value representing the millisecond within the second, from `0` through `999`.
- - `nanosecond` : Optional. Integer value representing the nanosecond within the millisecond, from `0` through `999999`.
-
-#### Return Value
-A `PlainDateTime` object, representing the date and time-of-day specified.
-
-#### Examples
-TBD
-
----------------------------------------------------------------------------------------------------
-
-## Function: `createInstant`
-Creates an `Instant` object, representing an absolute point in time.
-The combined values must be representable within the range of `Instant.MIN_VALUE` through `Instant.MAX_VALUE`.
-
-#### Syntax
-```js
-let instant = temporal.createInstant(milliseconds[, nanoseconds]);
-```
-
-#### Parameters
- - `milliseconds` : Integer value representing the number of milliseconds elapsed from 1970-01-01 00:00:00.000 UTC, without regarding leap seconds.
- - `nanoseconds` : Optional. Integer value representing the nanosecond within the millisecond.
-
-#### Return Value
-An `Instant` object, representing the absolute point in time specified.
-
-#### Examples
-TBD
-
----------------------------------------------------------------------------------------------------
-
-# Object: `PlainDate`
+# Object: `CivilDate`
 Represents a whole day, as a date on the proleptic Gregorian calendar.
 
 ## Constructor
 ```js
-new PlainDate(year, month, day)
+new CivilDate(year, month, day)
 ```
+
+#### Parameters
+ - `year` : Integer value representing the year.
+ - `month` : Integer value representing the month, from `1` through `12`.
+ - `day` : Integer value representing the day, from `1` through the number of days for the given `month` and `year`, which may be `28`, `29`, `30`, or `31`.
 
 ### Properties
 ```js
-let year = plainDate.year;
-let month = plainDate.month;
-let day = plainDate.day;
+let year = civilDate.year;
+let month = civilDate.month;
+let day = civilDate.day;
 ```
 
 ### Functions
 ```js
-let plainDate2 = plainDate1.add(number, unit);
-let plainDateTime = plainDate.withTime(time);
+let civilDate2 = civilDate1.add({months: 1});
+let civilDateTime = civilDate.withTime(time);
 ```
 
 ---------------------------------------------------------------------------------------------------
 
-# Object: `PlainTime`
+# Object: `CivilTime`
 Represents a position on a 24-hour clock.
 
 ### Constructor
 ```js
-new PlainTime(hour, minute[[[, second], millisecond], nanosecond])
+new CivilTime(hour, minute[[[, second], millisecond], nanosecond])
 ```
+
+
+#### Parameters
+ - `hour` : Integer value representing the hour of the day, from `0` through `24`.
+ - `minute` : Integer value representing the minute within the hour, from `0` through `59`.
+ - `second` : Optional. Integer value representing the second within the minute, from `0` through `59`.
+ - `millisecond` : Optional. Integer value representing the millisecond within the second, from `0` through `999`.
+ - `nanosecond` : Optional. Integer value representing the nanosecond within the millisecond, from `0` through `999999`.
 
 ### Properties
 ```js
-let hour = plainTime.hour;
-let minute = plainTime.minute;
-let second = plainTime.second;
-let millisecond = plainTime.millisecond;
-let nanosecond = plainTime.nanosecond;
+let hour = civilTime.hour;
+let minute = civilTime.minute;
+let second = civilTime.second;
+let millisecond = civilTime.millisecond;
+let nanosecond = civilTime.nanosecond;
 ```
 
 ### Functions
 ```js
-let plainTime2 = plainTime1.add(number, unit);
-let plainDateTime = plainTime.withDate(date);
+let civilTime2 = civilTime1.add({hours: 2, minutes: 4}});
+let civilDateTime = civilTime.withDate(date);
 ```
 
 ---------------------------------------------------------------------------------------------------
 
-# Object: `PlainDateTime`
+# Object: `CivilDateTime`
 Represents a whole day, and the position within that day.
 
 ### Constructor
 ```js
-new PlainDateTime(plainDate, plainTime)
+new CivilDateTime(civilDate, civilTime)
 ```
+
+#### Parameters
+ - `civilDate` - Required. A civil date object representing the desired date
+ - `civilTime` - Required. A civil time object representing the desired time
 
 ### Properties
 ```js
-let year = plainDateTime.year;
-let month = plainDateTime.month;
-let day = plainDateTime.day;
-let hour = plainDateTime.hour;
-let minute = plainDateTime.minute;
-let second = plainDateTime.second;
-let millisecond = plainDateTime.millisecond;
-let nanosecond = plainDateTime.nanosecond;
+let year = civilDateTime.year;
+let month = civilDateTime.month;
+let day = civilDateTime.day;
+let hour = civilDateTime.hour;
+let minute = civilDateTime.minute;
+let second = civilDateTime.second;
+let millisecond = civilDateTime.millisecond;
+let nanosecond = civilDateTime.nanosecond;
 ```
 
 ### Functions
 ```js
-let plainDateTime2 = plainDateTime1.add(number, unit);
-let plainDate = plainDateTime.toPlainDate();
-let plainTime = plainDateTime.toPlainTime();
-let zonedInstant = plainDateTime.withZone(timeZone[, options]);
+let civilDateTime2 = civilDateTime1.add({days: 3, hours: 4, minutes: 2, seconds: 12});
+let civilDate = civilDateTime.toCivilDate();
+let civilTime = civilDateTime.toCivilTime();
+let zonedInstant = civilDateTime.withZone(timeZone[, options]);
 ```
 
 ---------------------------------------------------------------------------------------------------
@@ -242,6 +163,10 @@ Counted as number of nanoseconds from `1970-01-01T00:00:00.000000000Z`.
 ```js
 new Instant(milliseconds[, nanoseconds])
 ```
+
+#### Parameters
+ - `milliseconds` : Integer value representing the number of milliseconds elapsed from 1970-01-01 00:00:00.000 UTC, without regarding leap seconds.
+ - `nanoseconds` : Optional. Integer value representing the nanosecond within the millisecond.
 
 ### Properties
 ```js
@@ -273,9 +198,8 @@ let timeZone = zonedInstant.timeZone;
 
 ### Functions
 ```js
-let plainDateTime = zonedInstant.toPlainDateTime();
-let plainDate = zonedInstant.toPlainDate();
-let plainTime = zonedInstant.toPlainTime();
+let civilDateTime = zonedInstant.toCivilDateTime();
+let civilDate = zonedInstant.toCivilDate();
+let civilTime = zonedInstant.toCivilTime();
 let instant = zonedInstant.toInstant();
 ```
-
