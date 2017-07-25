@@ -115,7 +115,7 @@ let nanosecond = civilTime.nanosecond;
 
 ### Functions
 ```js
-let civilTime2 = civilTime1.plus({hours: 2, minutes: 4}});
+let civilTime2 = civilTime1.plus({hours: 2, minutes: 4});
 let civilDateTime = civilTime.withDate(date);
 ```
 
