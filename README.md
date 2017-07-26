@@ -188,7 +188,7 @@ let zonedInstant = instant.withZone(timeZone);
 
 ---------------------------------------------------------------------------------------------------
 
-## Object: `ZonedInstant`
+# Object: `ZonedInstant`
 Represents an absolute point in time, with an associated time zone.
 
 ### Constructor
@@ -211,7 +211,7 @@ let civilTime = zonedInstant.toCivilTime();
 let instant = zonedInstant.toInstant();
 ```
 ---------------------------------------------------------------------------------------------
-## With Function
+# `with` function  (all civil objects)
 Allows the user to create a new instance of any temporal object with new date-part values.
 
 ```js
@@ -221,7 +221,7 @@ let newCivilDate = myDate.with({year: 2017, month: 3});
 ```
 
 ----------------------------------------------------------------------------------------------
-## Plus function
+# `plus` function  (all objects)
 Returns a new temporal object with the specified date parts added. Units will be added in order of size, descending.
 
 ```js
