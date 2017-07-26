@@ -20,7 +20,7 @@ This proposes `temporal`, a built in module that brings a modern date time API t
 ### Principles:
 
 - All temporal APIs are non-mutating.  All temporal objects are effectively immutable.
-- All date values are based on the [Proleptic Gregorian Calendar](https://en.wikipedia.org/wiki/Proleptic_Gregorian_calendar).  Other calendar systems are out-of-scope for this proposal.
+- All date values are based on the [Proleptic Gregorian Calendar](https://en.wikipedia.org/wiki/Proleptic_Gregorian_calendar).  Other calendar systems are out-of-scope for this proposal.  However, we will consider how future APIs may interact with this one such that extending it to support other calendars may be possible in a future proposal.
 - All time-of-day values are based on a standard 24-hour clock.
 - [Leap seconds](https://en.wikipedia.org/wiki/Leap_second) are not represented.
 
