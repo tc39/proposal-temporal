@@ -98,7 +98,7 @@ new CivilTime(hour, minute[[[, second], millisecond], nanosecond])
 
 
 #### Parameters
- - `hour` : Integer value representing the hour of the day, from `0` through `24`.
+ - `hour` : Integer value representing the hour of the day, from `0` through `23`.
  - `minute` : Integer value representing the minute within the hour, from `0` through `59`.
  - `second` : Optional. Integer value representing the second within the minute, from `0` through `59`.
  - `millisecond` : Optional. Integer value representing the millisecond within the second, from `0` through `999`.
@@ -133,7 +133,7 @@ new CivilDateTime(year, month, day, hour, minute[, second[, millisecond[, nanose
  - `year` : Integer value representing the year.
  - `month` : Integer value representing the month, from `1` through `12`.
  - `day` : Integer value representing the day, from `1` through the number of days for the given `month` and `year`, which may be `28`, `29`, `30`, or `31`.
- - `hour` : Integer value representing the hour of the day, from `0` through `24`.
+ - `hour` : Integer value representing the hour of the day, from `0` through `23`.
  - `minute` : Integer value representing the minute within the hour, from `0` through `59`.
  - `second` : Optional. Integer value representing the second within the minute, from `0` through `59`.
  - `millisecond` : Optional. Integer value representing the millisecond within the second, from `0` through `999`.
