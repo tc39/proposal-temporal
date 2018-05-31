@@ -1,0 +1,33 @@
+{
+  "name": "temporal",
+  "version": "1.0.0",
+  "description": "TC39 Temporal Proposal Polyfill",
+  "main": "index.js",
+  "module": "lib/index.mjs",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "for FILE in $(find test -type f -name '*.js' | grep -v 'test/node.js'); do node --harmony-bigint -r ./test/node.js $FILE; done",
+    "prepare": "npm run build",
+    "build": "rollup -c rollup.config.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://bbgithub.dev.bloomberg.com/javascript-guild/temporal-polyfill.git"
+  },
+  "keywords": [
+    "TC39",
+    "Polyfill",
+    "Temporal"
+  ],
+  "author": "Philipp Dunkel <pdunkel1@bloomberg.net>",
+  "license": "UNLICENSED",
+  "dependencies": {},
+  "devDependencies": {
+    "rollup": "^0.59.1",
+    "rollup-plugin-license": "^0.6.0",
+    "rollup-plugin-node-resolve": "^3.3.0"
+  }
+}
