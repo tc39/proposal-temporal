@@ -8,7 +8,7 @@ author: Philipp Dunkel
 esid: pending
 ---*/
 
-const instant = new temporal.Instant(0, 0);
+const instant = new temporal.Instant(0n);
 
 assert.sameValue('1970-01-01T00:00:00.000000000+00:00[UTC]', instant.toString());
 

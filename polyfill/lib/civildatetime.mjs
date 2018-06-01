@@ -7,7 +7,7 @@ import { plus, pad, parse  } from './util.mjs';
 import { toEpoch } from './epoch.mjs';
 import { CivilDate } from './civildate.mjs';
 import { CivilTime } from './civiltime.mjs';
-import { Instant } from './instant.mjs';
+import { VALUE, Instant } from './instant.mjs';
 import { ZonedInstant } from './zonedinstant.mjs';
 
 const DATA = Symbol('data');
@@ -42,9 +42,10 @@ export class CivilDateTime {
     return new CivilTime(hour, minute, second, millisecond, nanosecond);
   }
   withZone(zone) {
-    const millis = toEpoch(this, zone);
-    const nanoseconds = (BigInt(millis) * BigInt(1e6)) + BigInt(this.nanosecond)
-    const instant = new Instant(nanoseconds);
+    const milliseconds = toEpoch(this, zone);
+    const nanoseconds = this.nanosecond;
+    const instant = Object.create(Instant.prototype);
+    instant[VALUE] = { milliseconds, nanoseconds };
     return new ZonedInstant(instant, zone);
   }
   toString() {
