@@ -3,8 +3,8 @@
 ** This code is governed by the license found in the LICENSE file.
 */
 
-import { plus, pad } from './util';
-import { ZonedInstant } from './zonedinstant';
+import { plus, pad } from './util.mjs';
+import { ZonedInstant } from './zonedinstant.mjs';
 
 const VALUE = Symbol('value');
 

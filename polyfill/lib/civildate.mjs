@@ -3,8 +3,8 @@
 ** This code is governed by the license found in the LICENSE file.
 */
 
-import { plus, pad  } from './util';
-import { CivilDateTime } from './civildatetime';
+import { plus, pad  } from './util.mjs';
+import { CivilDateTime } from './civildatetime.mjs';
 
 const DATA = Symbol('data');
 

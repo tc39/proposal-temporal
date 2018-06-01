@@ -3,11 +3,11 @@
 ** This code is governed by the license found in the LICENSE file.
 */
 
-import { plus, pad, validZone, parse  } from './util';
-import { fromEpoch, zoneOffset } from './epoch';
-import { CivilDate } from './civildate';
-import { CivilTime } from './civiltime';
-import { CivilDateTime } from './civildatetime';
+import { plus, pad, validZone, parse  } from './util.mjs';
+import { fromEpoch, zoneOffset } from './epoch.mjs';
+import { CivilDate } from './civildate.mjs';
+import { CivilTime } from './civiltime.mjs';
+import { CivilDateTime } from './civildatetime.mjs';
 
 const INSTANT = Symbol('instant');
 const ZONE = Symbol('zone');

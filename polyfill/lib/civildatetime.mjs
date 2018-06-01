@@ -3,12 +3,12 @@
 ** This code is governed by the license found in the LICENSE file.
 */
 
-import { plus, pad, parse  } from './util';
-import { toEpoch } from './epoch';
-import { CivilDate } from './civildate';
-import { CivilTime } from './civiltime';
-import { Instant } from './instant';
-import { ZonedInstant } from './zonedinstant';
+import { plus, pad, parse  } from './util.mjs';
+import { toEpoch } from './epoch.mjs';
+import { CivilDate } from './civildate.mjs';
+import { CivilTime } from './civiltime.mjs';
+import { Instant } from './instant.mjs';
+import { ZonedInstant } from './zonedinstant.mjs';
 
 const DATA = Symbol('data');
 

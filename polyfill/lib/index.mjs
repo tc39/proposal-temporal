@@ -3,8 +3,8 @@
 ** This code is governed by the license found in the LICENSE file.
 */
 
-export { CivilDate } from './civildate';
-export { CivilTime } from './civiltime';
-export { CivilDateTime } from './civildatetime';
-export { Instant } from './instant';
-export { ZonedInstant } from './zonedinstant';
+export { CivilDate } from './civildate.mjs';
+export { CivilTime } from './civiltime.mjs';
+export { CivilDateTime } from './civildatetime.mjs';
+export { Instant } from './instant.mjs';
+export { ZonedInstant } from './zonedinstant.mjs';

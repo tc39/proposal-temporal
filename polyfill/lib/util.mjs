@@ -3,7 +3,7 @@
 ** This code is governed by the license found in the LICENSE file.
 */
 
-import { zones } from './zones';
+import { zones } from './zones.mjs';
 
 export function plus(
   { year: ly = 0, month: lm = 0, day: ld = 0, hour: lhr = 0, minute: lmn = 0, second: lsd = 0, millisecond: lms = 0, nanosecond: lns = 0 } = {},
@@ -86,6 +86,7 @@ function findTimeZone(offset) {
 }
 
 export function validZone(zone) {
+  zone = zone === 'SYSTEM' ? systemTimeZone() : zone;
   if (!!zones[zone]) { return zone; }
   const match = /([+-])?(\d{1,2})(:?(\d{1,2}))?/.exec(zone);
   if (!match) throw new TypeError(`Invalid Time-Zone: ${zone}`);
@@ -97,9 +98,9 @@ export function validZone(zone) {
 
 const parseExpression = (()=>{
   const date = '(\\d{4})-(\\d{2})-(\\d{2})';
-  const time = '(\\d{2}):(\\d{2}):(\\d{2})(?:\\.(\\d{3,9}))';
+  const time = '(\\d{2}):(\\d{2}):(\\d{2})(?:\\.(\\d{3,9}))?';
   const offs = '([+-]?\\d{1,2}(?::?\\d{2})?)';
-  const zone = '(?:\\[(\\w+\/\\w+)\\])';
+  const zone = '(?:\\[(\\w+\/\\w+|UTC)\\])';
   return new RegExp(`^${date}T${time}${offs}?${zone}?$`);
 })();
 const parseOffset = (str)=>{
@@ -118,7 +119,7 @@ export function parse(str) {
   const hour = +match[4];
   const minute = +match[5];
   const second = +match[6];
-  const subsec = +(match[7] + '000000000').slice(0, 9).replace(/^0+/,'');
+  const subsec = +((isNaN(+match[7])?0:+match[7]) + '000000000').slice(0, 9).replace(/^0+/,'');
 
   const millisecond = Math.floor(subsec / 1e6);
   const nanosecond = (subsec % 1e6);
