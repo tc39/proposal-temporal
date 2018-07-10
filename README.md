@@ -42,7 +42,7 @@ Object name     | Description                                                   
 
 Object name     | Description                                                         | Example
 ----------------|---------------------------------------------------------------------|-------------
-`Instant`       | A point on the universal timeline, typically represented in UTC.    | `2017-12-31T00:00:00Z` 
+`Instant`       | A point on the universal timeline, typically represented in UTC.    | `2017-12-31T00:00:00Z`
 `ZonedInstant`  | A point on the universal timeline, with an associated time zone.    | `2017‑12‑31T09:00:00+09:00[Asia/Tokyo]`
 
 Note that the time zone of a `ZonedInstant` can be any of:
@@ -218,7 +218,7 @@ Allows the user to create a new instance of any temporal object with new date-pa
 
 ```js
 let myCivilDate = new CivilDate(2016, 2, 29);
-let newCivilDate = myDate.with({year: 2017, month: 3});
+let newCivilDate = myCivilDate.with({year: 2017, month: 3});
 //results in civil date with value 2017-03-29
 ```
 
