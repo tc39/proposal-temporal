@@ -1,0 +1,86 @@
+<html>
+  <head>
+    <title>World Clock</title>
+    <script type="module">
+      import { Instant } from '../lib/index.mjs';
+
+      function updateAll(instant) {
+        const elems = document.getElementsByClassName('display');
+        for (let el of elems) {
+          try {
+            const zone = el.getAttribute('timeZone');
+            const zoned = instant.withZone(zone);
+            const date = zoned.toCivilDate();
+            const time = zoned.toCivilTime();
+            const bg = (time.hour < 20) && (time.hour >= 8) ? 'white' : 'black';
+            const fg = bg === 'black' ? 'white' : 'black';
+            el.style.color = fg;
+            el.style.backgroundColor = bg;
+            el.innerHTML = `<td>${zone}</td><td style="text-align: right;">${time.toString().split('.').shift()} (${date})</td>`;
+          } catch(err) {
+            console.error(err);
+          }
+        }
+      }
+
+      let interval;
+      window.update = (string) => {
+        updateAll(Instant.parse(string))
+      };
+      window.checkInterval = (on) => {
+        try {
+          interval = clearInterval(interval);
+        } catch(err) {
+          console.error(err);
+        }
+
+        if (!on) return;
+        const input = document.getElementById('input');
+        interval = setInterval(()=>{
+          const now = Instant.now();
+          input.value = now.withZone('SYSTEM').toString();
+          updateAll(now);
+        }, 1000);
+      }
+    </script>
+  </head>
+  <body>
+    <table width="100%" border="1" style="border-collapse: collapse;">
+      <thead>
+        <th colspan="2">Time</th>
+      </thead>
+      <tbody>
+
+        <tr class="display" timeZone="SYSTEM"></tr>
+        <tr>
+          <td><input id="input" onchange="update(this.value);" style="width: 100%"/></td>
+          <td><input type="checkbox" onchange="checkInterval(this.checked);"/>Automatic Update to Current Time</td>
+        </tr>
+        <tr class="display" timeZone="Pacific/Apia"></tr>
+        <tr class="display" timeZone="Pacific/Wallis"></tr>
+        <tr class="display" timeZone="Pacific/Efate"></tr>
+        <tr class="display" timeZone="Australia/Sydney"></tr>
+        <tr class="display" timeZone="Asia/Jayapura"></tr>
+        <tr class="display" timeZone="Asia/Shanghai"></tr>
+        <tr class="display" timeZone="Asia/Phnom_Penh"></tr>
+        <tr class="display" timeZone="Asia/Almaty"></tr>
+        <tr class="display" timeZone="Asia/Aqtobe"></tr>
+        <tr class="display" timeZone="Asia/Tehran"></tr>
+        <tr class="display" timeZone="Europe/Samara"></tr>
+        <tr class="display" timeZone="Europe/Moscow"></tr>
+        <tr class="display" timeZone="Europe/Vienna"></tr>
+        <tr class="display" timeZone="Europe/London"></tr>
+        <tr class="display" timeZone="UTC"></tr>
+        <tr class="display" timeZone="Atlantic/Reykjavik"></tr>
+        <tr class="display" timeZone="America/Montevideo"></tr>
+        <tr class="display" timeZone="America/New_York"></tr>
+        <tr class="display" timeZone="America/Chicago"></tr>
+        <tr class="display" timeZone="America/Denver"></tr>
+        <tr class="display" timeZone="America/Los_Angeles"></tr>
+        <tr class="display" timeZone="America/Anchorage"></tr>
+        <tr class="display" timeZone="America/Adak"></tr>
+        <tr class="display" timeZone="Pacific/Honolulu"></tr>
+      </tbody>
+    </table>
+  </body>
+</html>
