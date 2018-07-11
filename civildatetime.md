@@ -1,7 +1,7 @@
 # CivilDateTime
 ## CivilDateTime Objects
 ### Overview of CivilDateTime Objects and Definitions of Abstract Operations
-A CivilDateTime object is an immutable Map Object that contains Number values corresponding to a particular year, month, day, hour, minute, second, millisecond, and nanosecond.
+A CivilDateTime object is an immutable Object that contains Number values corresponding to a particular year, month, day, hour, minute, second, millisecond, and nanosecond.
 The following functions are abstract operations that operate on time values (defined SOMEWHERE).  Note that, in every case, if any argument to one of these functions is NaN, the result will be NaN.
 
 #### Year Number
@@ -99,7 +99,7 @@ The CivilDateTime constructor has the following properties:
 The initial value of CivilDateTime.prototype is the intrinsic object %CivilDateTimePrototype%.  This property has the attributes {[[Writable]]: false, [[Enumerable]]: false, [[Configurable]]: false}.
 
 #### CivilDateTime.plus (data)
-The abstract operation plus takes as an argument a Map Object with a range of 1 to 8 key/value pairs, inclusive.  The keys may not be duplicated and may be any combination of "year", "month", "day", "hour", "minute", "second", "millisecond", and "nanosecond".  The values must be of the Number type and may be positive or negative integers. The CivilDateTime operation uses Gregorian pro-leptic calendar computation.
+The abstract operation plus takes as an argument a Map Object with a range of 1 to 8 key/value pairs, inclusive.  The keys may not be duplicated and may be any combination of "year", "month", "day", "hour", "minute", "second", "millisecond", and "nanosecond".  The values must be of the Number type and may be positive or negative integers. If the sum of the current value and the argument value exceeds the range of allowable values for the given unit, increment the next unit. CivilDateTime calculations uses Gregorian pro-leptic calendar computation.
 
 When the plus function is called, the following steps are taken:
 
@@ -109,19 +109,19 @@ When the plus function is called, the following steps are taken:
 
 3.  Assert: Type(data) is Object.
 
-4.  Assert: data has at least one of the following keys: "hour", "minute", "second", "millisecond", and/or "nanosecond".
+4.  Assert: data has at least one of the following keys: "year", "month", "day", "hour", "minute", "second", "millisecond", and/or "nanosecond".
 
 5.  If the data associated with any of the provided keys is not finite, return NaN.
 
 6.	If NewTarget is not undefined, then
-  a.	If "year" is one of the keys supplied, let y be ? ToNumber(year) + thisYearValue; else let y be thisYearValue.
-  b.	If "month" is one of the keys supplied, let m be ? ToNumber(month) + thisMonthValue; else let m be thisMonthValue.
-  c.	If "day" is one of the keys supplied, let d be ? ToNumber(day) + thisDayValue; else let d be thisDayValue.
-  d.	If "hour" is one of the keys supplied, let h be ? ToNumber(hour) + thisHourValue; else let h be thisHourValue.
-  e.	If "minute" is one of the keys supplied, let min be ? ToNumber(minute) + thisMinuteValue; else let min be thisMinuteValue.
-  f.	If "second" is one of the keys supplied, let s be ? ToNumber(second) + thisSecondValue; else let s be thisSecondValue.
-  g.	If "millisecond" is one of the keys supplied, let ms be ? ToNumber(millisecond) + thisMillisecondValue; else let ms be thisMillisecondValue.
-  h.	If "nanosecond" is one of the keys supplied, let ns be ? ToNumber(nanosecond) + thisNanosecondValue; else let ns be thisNanosecondValue.
+  a.	If "year" is supplied, let y be ? ToNumber(year) + thisYearValue. If y is NaN, throw a TypeError exception; else if "year" is not supplied, let y be thisYearValue.
+  b.	If "month" is supplied, let m be ? ToNumber(month) + thisMonthValue. If m is NaN, throw a TypeError exception; else if "month" is not supplied, let m be thisMonthValue.
+  c.	If "day" is supplied, let d be ? ToNumber(day) + thisDayValue. If d is NaN, throw a TypeError exception; else if "day" is not supplied, let d be thisDayValue.
+  d.	If "hour" is supplied, let h be ? ToNumber(hour) + thisHourValue. If h is NaN, throw a TypeError exception; else if "hour" is not supplied, let h be thisHourValue.
+  e.	If "minute" is supplied, let min be ? ToNumber(minute) + thisMinuteValue. If min is NaN, throw a TypeError exception; else if "minute" is not supplied, let min be thisMinuteValue.
+  f.	If "second" is supplied, let s be ? ToNumber(second) + thisSecondValue. If s is NaN, throw a TypeError exception; else if "second" is not supplied, let s be thisSecondValue.
+  g.	If "millisecond" is supplied, let ms be ? ToNumber(millisecond) + thisMillisecondValue. If ms is NaN, throw a TypeError exception; else if "millisecond" is not supplied, let ms be thisMillisecondValue.
+  h.	If "nanosecond" is supplied, let ns be ? ToNumber(nanosecond) + thisNanosecondValue. If ns is NaN, throw a TypeError exception; else if "nanosecond" is not supplied, let ns be thisNanosecondValue.
   i.  Let O be ? OrdinaryCreateFromConstructor(NewTarget, "%CivilDateTimePrototype%", <<[[YearValue, MonthValue, DayValue, HourValue, MinuteValue, SecondValue, MillisecondValue, NanosecondValue]]>>).
   j.  Set O.[[YearValue]] to y.
   k.  Set O.[[MonthValue]] to m.
@@ -137,7 +137,7 @@ When the plus function is called, the following steps are taken:
 
 
 #### CivilDateTime.from (date, time)
-The abstract operation plus takes as an argument a CivilDate Object and a CivilTime Object. It creates a new CivilDateTime object 
+The abstract operation from takes as arguments a CivilDate Object and a CivilTime Object. It creates a new CivilDateTime object. 
 
 When the from function is called, the following steps are taken:
 
@@ -171,17 +171,6 @@ When the from function is called, the following steps are taken:
   
 6. Else, do something else?
 
-#### CivilDateTime.fromDate (date, zone)
-The abstract operation plus takes as an argument a CivilDate Object and a ZonedInstant Object. It creates a new CivilDateTime Object.
-
-When the fromDate function is called, the following steps are taken:
-
-1.	Let numberOfArgs be the number of arguments passed to this function call.
-
-2.	Assert: numberOfArgs == 2.
-
-3.  Something?
-
 #### CivilDateTime.toCivilDate
 It creates a new CivilDate Object populated with the relevant values of the CivilDateTime Object on which the operation is performed.
 
@@ -189,7 +178,7 @@ When the toCivilDate function is called, the following steps are taken:
 
 1.  If NewTarget is not undefined, then
   a. Let y be thisYearValue.
-  b. Let min be thisMonthValue.
+  b. Let m be thisMonthValue.
   c. Let d be thisDayValue.
   i. Let O be ? OrdinaryCreateFromConstructor(NewTarget, "%CivilDatePrototype%", <<[[YearValue, MonthValue, DayValue]]>>).
   j. Set O.[[YearValue]] to y.
@@ -221,7 +210,7 @@ When the toCivilTime function is called, the following steps are taken:
 2. Else, do something else?
 
 #### CivilDateTime.withZone (timeZone[, options])
-The abstract operation plus takes as an argument a String and an optional Object. It creates a new ZonedInstant object.
+The abstract operation plus takes as an argument a Time Zone String and an optional Object. It takes the current CivilDateTime object, converts its values to Unix epoch time. It creates a new ZonedInstant object.
 
 When the withZone function is called, the following steps are taken:
 
@@ -233,24 +222,4 @@ When the withZone function is called, the following steps are taken:
 
 4.  If options is supplied, assert: Type(options) Object.
 
-5.  If NewTarget is not undefined, then
-  a. Let y be date.YearValue.
-  b. Let min be date.MonthValue.
-  c. Let d be date.DayValue.
-  d. Let h be time.HourValue.
-  e. Let min be time.MinuteValue.
-  f. Let s be time.SecondValue.
-  g. Let ms be time.MillisecondValue.
-  h. Let ns be time.NanosecondValue.
-  i. Let O be ? OrdinaryCreateFromConstructor(NewTarget, "%CivilDateTimePrototype%", <<[[YearValue, MonthValue, DayValue, HourValue, MinuteValue, SecondValue, MillisecondValue, NanosecondValue]]>>).
-  j. Set O.[[YearValue]] to y.
-  k. Set O.[[MonthValue]] to m.
-  l. Set O.[[DayValue]] to d.
-  j. Set O.[[HourValue]] to h.
-  k. Set O.[[MinuteValue]] to min.
-  l. Set O.[[SecondValue]] to s.
-  m. Set O.[[MillisecondValue]] to ms.
-  n. Set O.[[NanosecondValue]] to ns.
-  o. Return O.
-  
-6. Else, do something else?
+5.  If NewTarget is not undefined, then -- do something to convert.  Get more input.
