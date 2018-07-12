@@ -42,19 +42,38 @@ export function plus(
 };
 
 export function pad(num, cnt) {
-  return `0000000000${`${num}`.trim()}`.slice(-1 * cnt);
+  const str = `${num}`;
+  const prefix = (new Array(cnt)).fill('0').join('');
+  return `${prefix}${`${str}`.trim()}`.slice(-1 * Math.max(cnt, str.length));
 };
 
-let systemZone;
-export function systemTimeZone() {
-  if (systemZone) { return systemZone; }
+export function validZone(zone) {
+  if (zone === 'UTC') { return 'UTC'; }
+  zone = (zone === 'SYSTEM') ? systemTimeZone() : zone;
+  const match = /([+-])?(\d{1,2})(:?(\d{1,2}))?/.exec(zone);
+  if (!match) {
+    const found = new Intl.DateTimeFormat('en-us', { timeZone: zone, timeZoneName: 'short' }).formatToParts().find((i)=>(i.type==='timeZoneName'));
+    if (!found || !found.value) {
+      throw new Error(`invalid timezone: ${zone}`);
+    }
+    return zone;
+  }
+  const sign = match[1] || '+';
+  const offset = (+match[2] * 60) + (+match[3] || 0);
+  const hours = Math.floor(offset / 60);
+  const minutes = Math.floor(offset % 60);
+  return `${sign}${pad(hours, 2)}:${pad(minutes,2)}`;
+}
+
+function systemTimeZone() {
   const zone = new Intl.DateTimeFormat('en-us', { timeZoneName: 'long' }).formatToParts().find((i)=>(i.type==='timeZoneName'));
   if (zones[zone.value]) { return zone.value; }
+
   const iana = Object.keys(zones);
   for (let iananame of iana) {
     const data = zones[iananame];
     if (Object.keys(data).find((off)=>(data[off] === zone.value))) {
-      return (systemZone = iananame);
+      return iananame;
     };
   }
 
@@ -69,68 +88,4 @@ export function systemTimeZone() {
     if (data[short]) { return iananame; }
   }
   return short;
-};
-
-function findTimeZone(offset) {
-  const base = Math.abs(Math.floor(offset / 60000))
-  const hours = ('00' + Math.floor(base / 60)).slice(-2);
-  const minutes = ('00' + (base % 60)).slice(-2);
-  const string = `${offset < 0 ? '-' : '+'}${hours}:${minutes}`;
-
-  const iana = Object.keys(zones);
-  for (let iananame of iana) {
-    const data = zones[iananame];
-    if (data[string]) return iananame;
-  }
-  return undefined;
 }
-
-export function validZone(zone) {
-  zone = zone === 'SYSTEM' ? systemTimeZone() : zone;
-  if (!!zones[zone]) { return zone; }
-  const match = /([+-])?(\d{1,2})(:?(\d{1,2}))?/.exec(zone);
-  if (!match) throw new TypeError(`Invalid Time-Zone: ${zone}`);
-  const sign = match[1] || '+';
-  const hours = ('00' + match[2]).slice(-2);
-  const minutes = ('00' + (mathc[3] || '')).slice(-2);
-  return `${sign}${hours}:{$minutes}`;
-}
-
-const parseExpression = (()=>{
-  const date = '(\\d{4})-(\\d{2})-(\\d{2})';
-  const time = '(\\d{2}):(\\d{2}):(\\d{2})(?:\\.(\\d{3,9}))?';
-  const offs = '([+-]?\\d{1,2}(?::?\\d{2})?)';
-  const zone = '(?:\\[(\\w+\/\\w+|UTC)\\])';
-  return new RegExp(`^${date}T${time}${offs}?${zone}?$`);
-})();
-const parseOffset = (str)=>{
-  if (!str) return undefined;
-  const match = /([+-]?\d{1,2}):?(\d{2})?/.exec(str) || [ null, '0', '0' ];
-  const hour = match[1] || '0';
-  const mins = match[2] || '0';
-  return ((+hour * 60) + (+mins)) * 60000;
-};
-
-export function parse(str) {
-  const match = parseExpression.exec(str) || [];
-  const year = +match[1];
-  const month = +match[2];
-  const day = +match[3];
-  const hour = +match[4];
-  const minute = +match[5];
-  const second = +match[6];
-  const subsec = +((isNaN(+match[7])?0:+match[7]) + '000000000').slice(0, 9).replace(/^0+/,'');
-
-  const millisecond = Math.floor(subsec / 1e6);
-  const nanosecond = (subsec % 1e6);
-
-  const offset = parseOffset(match[8]);
-  const zone = match[9] || findTimeZone(offset) || systemTimeZone();
-
-  return {
-    year, month, day,
-    hour, minute, second,
-    millisecond, nanosecond,
-    offset, zone
-  };
-};

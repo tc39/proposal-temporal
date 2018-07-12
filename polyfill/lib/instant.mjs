@@ -5,6 +5,7 @@
 
 import { plus, pad } from './util.mjs';
 import { ZonedInstant } from './zonedinstant.mjs';
+import { fromEpoch } from './epoch.mjs';
 
 export const VALUE = Symbol('value');
 
@@ -32,15 +33,30 @@ export class Instant {
   withZone(zone) {
     return new ZonedInstant(this, zone);
   }
-  toString() {
-    return this.withZone('UTC').toString();
-  }
-
   valueOf() {
     return BigInt(this[VALUE].milliseconds) * BigInt(1e6) + BigInt(this[VALUE].nanoseconds);
   }
   format(locale, options) {
     return this.withZone().format(locale, options);
+  }
+  toString() {
+    const { year, month, day, hour, minute, second, millisecond } = fromEpoch(this.milliseconds, 'UTC');
+    const nanosecond = this.nanoseconds;
+    return `${pad(year,4)}-${pad(month,2)}-${pad(day,2)}T${pad(hour,2)}:${pad(minute,2)}:${pad(second,2)}.${pad(millisecond,3)}${pad(nanosecond,6)}Z`;
+  }
+
+  static fromString(string) {
+    const match = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})\.(\d{3})(\d{6})Z$/.exec(string);
+    if (!match) {
+      throw new Error(`invalid date-time-string ${string}`);
+    }
+    const milliseconds = Date.UTC(+match[1], +match[2] - 1, +match[3], +match[4], +match[5], +match[6], +match[7]);
+    const nanoseconds = +match[8];
+
+    const instant = Object.create(Instant.prototype);
+    instant[VALUE] = { milliseconds, nanoseconds };
+
+    return instant;
   }
 
   static now() {
@@ -58,10 +74,6 @@ export class Instant {
       nanoseconds: 0
     };
     return object;
-  }
-
-  static parse(string) {
-    return ZonedInstant.parse(string).toInstant();
   }
 }
 

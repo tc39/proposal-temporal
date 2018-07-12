@@ -7,13 +7,16 @@ export function toEpoch({ year = 1970, month = 1, day = 1, hour = 0, minute = 0,
   const ts = Date.UTC(year, month - 1, day, hour, minute, second, millisecond);
 
   const offsetI = guessOffset(ts, zone);
+  if (checkOffset(ts - offsetI, zone, { year, month, day, hour, minute, second, millisecond })) {
+    return ts + offsetI;
+  }
 
-  const offsetA = guessOffset(ts + offsetI, zone);
+  const offsetA = guessOffset(ts - offsetI, zone);
   if (checkOffset(ts + offsetA, zone, { year, month, day, hour, minute, second, millisecond })) {
     return ts + offsetA;
   }
 
-  const offsetB = guessOffset(ts - offsetI, zone);
+  const offsetB = guessOffset(ts + offsetI, zone);
   if (checkOffset(ts + offsetB, zone, { year, month, day, hour, minute, second, millisecond })) {
     return ts + offsetB;
   }
@@ -82,11 +85,11 @@ function formatter(zone) {
   }
   const parts = /([+-])(\d{1,2})(?::?(\d{2}))?/.exec(zone);
   if (parts) {
-    const minutes = (+parts[2] * 60) + (parts[3] || 0);
-    const offset = (parts[1] === '-') ? -minutes : +minutes;
+    const minutes = (+parts[2] * 60) + (+parts[3] || 0);
+    const offset = (parts[1] === '-') ? +minutes : -minutes;
     return {
       formatToParts: (date)=>{
-        const ts = date.valueOf() - offset;
+        const ts = date.valueOf() - (offset * 60000);
         const r = new Date(ts);
         return [
           { type: 'year', value: '' + r.getUTCFullYear() },

@@ -9,9 +9,12 @@
     "test": "test"
   },
   "scripts": {
-    "test:bigint": "for FILE in $(find test/temporal -type f -name '*.js' | grep -v 'test/node.js'); do node -r ./test/node.js $FILE; if [ $? = 0 ]; then echo 'OK ' $FILE; else echo 'FAIL ' $FILE; fi; done",
+    "test:parts:epoch": "rollup --format=cjs --file=test/parts/epoch/epoch.js -- lib/epoch.mjs && tape test/parts/epoch/**/*.t.js",
+    "test:parts:util": "rollup --format=cjs --file=test/parts/utils/util.js -- lib/util.mjs && tape test/parts/utils/**/*.t.js",
+    "test:parts": "npm run test:parts:epoch && npm run test:parts:util",
     "test:compat": "tape test/compat/**/*.js",
-    "test": "npm run test:compat && npm run test:bigint",
+    "test:bigint": "for FILE in $(find test/temporal -type f -name '*.js' | grep -v 'test/node.js'); do node -r ./test/node.js $FILE; if [ $? = 0 ]; then echo 'OK ' $FILE; else echo 'FAIL ' $FILE; fi; done",
+    "test": "npm run build && npm run test:parts && npm run test:compat && npm run test:bigint",
     "prepare": "npm run build",
     "build": "rollup -c rollup.config.js"
   },

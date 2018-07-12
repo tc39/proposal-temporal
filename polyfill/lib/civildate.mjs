@@ -33,14 +33,18 @@ export class CivilDate {
     return `${pad(year, 4)}-${pad(month, 2)}-${pad(day, 2)}`;
   }
 
+  static fromString(string) {
+    const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(string);
+    if (!match) {
+      throw new Error(`invalid date-string: ${string}`);
+    }
+    return new CivilDate(+match[1], +match[2], +match[3]);
+  }
+
   static now(zone) {
     return CivilDateTime.now(zone).toCivilDate();
   }
   static fromMilliseconds(millis, zone) {
     return CivilDateTime.fromMilliseconds(millis, zone).toCivilDate();
-  }
-
-  static parse(string) {
-    return CivilDateTime.parse(string).toCivilDate();
   }
 };

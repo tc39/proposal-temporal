@@ -20,8 +20,8 @@ test('CivilTime', ({ test, end })=>{
     end();
   });
 
-  test('parse', ({ equal, end })=>{
-    const one = CivilTime.parse('1976-11-18T15:23:30.450000100+01:00[Europe/Vienna]');
+  test('fromString', ({ equal, throws, end })=>{
+    const one = CivilTime.fromString('15:23:30.450000100');
     equal(one instanceof CivilTime, true);
     equal(one.hour, 15);
     equal(one.minute, 23);
@@ -29,29 +29,27 @@ test('CivilTime', ({ test, end })=>{
     equal(one.millisecond, 450);
     equal(one.nanosecond, 100);
 
-    const two = CivilTime.parse('1976-11-18T15:23:30.450000100[Europe/Vienna]');
-    equal(two instanceof CivilTime, true);
-    equal(two.hour, 15);
-    equal(two.minute, 23);
-    equal(two.second, 30);
-    equal(two.millisecond, 450);
-    equal(two.nanosecond, 100);
-
-    const three = CivilTime.parse('1976-11-18T15:23:30.450000100+01:00');
-    equal(three instanceof CivilTime, true);
-    equal(three.hour, 15);
-    equal(three.minute, 23);
-    equal(three.second, 30);
-    equal(three.millisecond, 450);
-    equal(three.nanosecond, 100);
-
-    const four = CivilTime.parse('1976-11-18T15:23:30.450000100');
-    equal(four instanceof CivilTime, true);
-    equal(four.hour, 15);
-    equal(four.minute, 23);
-    equal(four.second, 30);
-    equal(four.millisecond, 450);
-    equal(four.nanosecond, 100);
+    throws(()=>{
+      CivilTime.fromString('1976-11-18T15:23:30.450000100+01:00[Europe/Vienna]');
+    });
+    throws(()=>{
+      CivilTime.fromString('1976-11-18T15:23:30.450000100[Europe/Vienna]');
+    });
+    throws(()=>{
+      CivilTime.fromString('1976-11-18T15:23:30.450000100+01:00');
+    });
+    throws(()=>{
+      CivilTime.fromString('1976-11-18T15:23:30.450000100');
+    });
+    throws(()=>{
+      CivilTime.fromString('15:23:30.123');
+    });
+    throws(()=>{
+      CivilTime.fromString('15:23:30');
+    });
+    throws(()=>{
+      CivilTime.fromString('15:23');
+    });
 
     end();
   });
