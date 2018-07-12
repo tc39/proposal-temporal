@@ -33,15 +33,11 @@ export class CivilDate {
     return `${pad(year, 4)}-${pad(month, 2)}-${pad(day, 2)}`;
   }
 
-  toDate(zone, time) {
-    return this.withTime(date).withZone(zone).toDate();
-  }
-
   static now(zone) {
     return CivilDateTime.now(zone).toCivilDate();
   }
-  static fromDate(date, zone) {
-    return CivilDateTime.fromDate(date, zone).toCivilDate();
+  static fromMilliseconds(millis, zone) {
+    return CivilDateTime.fromMilliseconds(millis, zone).toCivilDate();
   }
 
   static parse(string) {

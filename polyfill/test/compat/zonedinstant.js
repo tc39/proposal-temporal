@@ -8,7 +8,7 @@ test('ZonedInstant', ({ test, end})=>{
   });
 
   test('construct', ({ equal, end })=>{
-    const instant = Instant.fromDate(217175010450);
+    const instant = Instant.fromMilliseconds(217175010450);
     const instance = new ZonedInstant(instant, 'Europe/Vienna');
 
     equal(typeof instance, 'object');

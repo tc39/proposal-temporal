@@ -3,18 +3,18 @@ const { Instant } = require('../../');
 
 test('Instant', ({ test, end})=>{
   test('simple', ({ equal, end })=>{
-    const instant = Instant.fromDate(0);
+    const instant = Instant.fromMilliseconds(0);
 
     equal('1970-01-01T00:00:00.000000000+00:00[UTC]', instant.toString());
 
     const now = new Date();
-    const nowi = Instant.fromDate(now);
+    const nowi = Instant.fromMilliseconds(now);
     equal(now.toISOString().replace('Z','000000+00:00[UTC]'), nowi.toString());
     end();
   });
 
   test('construct', ({ equal, end })=>{
-    const instance = Instant.fromDate(217178610450);
+    const instance = Instant.fromMilliseconds(217178610450);
 
     equal(typeof instance, 'object');
     equal(instance instanceof Instant, true);

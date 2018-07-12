@@ -36,9 +36,6 @@ export class Instant {
     return this.withZone('UTC').toString();
   }
 
-  toDate() {
-    return new Date(this.milliseconds);
-  }
   valueOf() {
     return BigInt(this[VALUE].milliseconds) * BigInt(1e6) + BigInt(this[VALUE].nanoseconds);
   }
@@ -54,10 +51,10 @@ export class Instant {
     };
     return object;
   }
-  static fromDate(date) {
+  static fromMilliseconds(milliseconds) {
     const object = Object.create(Instant.prototype);
     object[VALUE] = {
-      milliseconds: (date || 0).valueOf(),
+      milliseconds: (milliseconds || 0).valueOf(),
       nanoseconds: 0
     };
     return object;

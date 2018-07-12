@@ -43,15 +43,11 @@ export class CivilTime {
     return `${pad(hour, 2)}:${pad(minute, 2)}:${pad(second, 2)}.${pad(nanos, 9)}`;
   }
 
-  toDate(zone, date) {
-    return this.withDate(date).withZone(zone).toDate();
-  }
-
   static now(zone) {
     return CivilDateTime.now(zone).toCivilTime();
   }
-  static fromDate(date, zone) {
-    return CivilDateTime.fromDate(date, zone).toCivilTime();
+  static fromMilliseconds(milliseconds, zone) {
+    return CivilDateTime.fromMilliseconds(milliseconds, zone).toCivilTime();
   }
 
   static parse(string) {

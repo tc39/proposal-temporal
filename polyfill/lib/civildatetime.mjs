@@ -54,10 +54,6 @@ export class CivilDateTime {
     return `${pad(year, 4)}-${pad(month, 2)}-${pad(day, 2)}T${pad(hour, 2)}:${pad(minute, 2)}:${pad(second, 2)}.${pad(nanos, 9)}`;
   }
 
-  toDate(zone) {
-    return this.withZone(zone).toDate();
-  }
-
   static from(date = {}, time = {}) {
     const { year, month, day } = date;
     const { hour, minute, second, millisecond, nanosecond } = time;
@@ -66,8 +62,8 @@ export class CivilDateTime {
   static now(zone) {
     return ZonedInstant.now(zone).toCivilDateTime();
   }
-  static fromDate(date, zone) {
-    return ZonedInstant.fromDate(date, zone).toCivilDateTime();
+  static fromMilliseconds(date, zone) {
+    return ZonedInstant.fromMilliseconds(date, zone).toCivilDateTime();
   }
 
   static parse(string) {

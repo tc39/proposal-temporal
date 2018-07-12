@@ -47,9 +47,6 @@ export class ZonedInstant{
     return `${pad(year,4)}-${pad(month,2)}-${pad(day,2)}T${pad(hour,2)}:${pad(minute,2)}:${pad(second,2)}.${pad(nanosecond,9)}${offset}${zone}`;
   }
 
-  toDate() {
-    return this.toInstant().toDate();
-  }
   valueOf() {
     return this.toInstant().valueOf();
   }
@@ -58,14 +55,14 @@ export class ZonedInstant{
       locale,
       Object.assign({}, options, { timeZone: this.timeZone })
     );
-    return fmt.format(this.toDate());
+    return fmt.format(new Date(this.toInstant().milliseconds));
   }
 
   static now(zone) {
     return Instant.now().withZone(zone);
   }
-  static fromDate(date, zone) {
-    return Instant.fromDate(date).withZone(zone);
+  static fromMilliseconds(milliseconds, zone) {
+    return Instant.fromMilliseconds(milliseconds).withZone(zone);
   }
 
   static parse(string) {
