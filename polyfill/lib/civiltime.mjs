@@ -49,10 +49,6 @@ export class CivilTime {
     }
     return new CivilTime(+match[1], +match[2], +match[3], +match[4], +match[5]);
   }
-
-  static now(zone) {
-    return CivilDateTime.now(zone).toCivilTime();
-  }
   static fromMilliseconds(milliseconds, zone) {
     return CivilDateTime.fromMilliseconds(milliseconds, zone).toCivilTime();
   }

@@ -9,14 +9,14 @@ export function plus(
   { year: ly = 0, month: lm = 0, day: ld = 0, hour: lhr = 0, minute: lmn = 0, second: lsd = 0, millisecond: lms = 0, nanosecond: lns = 0 } = {},
   { years: ry = 0, months: rm = 0, days: rd = 0, hours: rhr = 0, minutes: rmn = 0, seconds: rsd = 0, milliseconds: rms = 0, nanoseconds: rns = 0 } = {}
 ) {
-  let year = ly + ry;
-  let month = lm + rm;
-  let day = ld + rd;
-  let hour = lhr + rhr;
-  let minute = lmn + rmn;
-  let second = lsd + rsd;
-  let millisecond = lms + rms;
-  let nanosecond = lns + rns;
+  let year = num(ly) + num(ry);
+  let month = num(lm) + num(rm);
+  let day = num(ld) + num(rd);
+  let hour = num(lhr) + num(rhr);
+  let minute = num(lmn) + num(rmn);
+  let second = num(lsd) + num(rsd);
+  let millisecond = num(lms) + num(rms);
+  let nanosecond = num(lns) + num(rns);
 
   while (nanosecond < 0) {
     nanosecond += 1E6;
@@ -42,9 +42,17 @@ export function plus(
 };
 
 export function pad(num, cnt) {
-  const str = `${num}`;
+  const str = `${Math.abs(+num)}`;
   const prefix = (new Array(cnt)).fill('0').join('');
   return `${prefix}${`${str}`.trim()}`.slice(-1 * Math.max(cnt, str.length));
+};
+export function spad(num, cnt) {
+  return `${+num < 0 ? '-' : ''}${pad(num, cnt)}`;
+};
+
+export function num(number = 0) {
+  if (isNaN(+number)) throw new Error(`invalid number ${number}`);
+  return +number;
 };
 
 export function validZone(zone) {

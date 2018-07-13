@@ -3,7 +3,7 @@
 ** This code is governed by the license found in the LICENSE file.
 */
 
-import { pad, validZone  } from './util.mjs';
+import { pad, validZone, spad  } from './util.mjs';
 import { fromEpoch, zoneOffset } from './epoch.mjs';
 import { CivilDate } from './civildate.mjs';
 import { CivilTime } from './civiltime.mjs';
@@ -54,7 +54,7 @@ export class ZonedInstant{
     const { year, month, day, hour, minute, second, millisecond } = fromEpoch(ts, this[ZONE]);
     const nanosecond = this[INSTANT].nanoseconds;
     const offset = ([ 'UTC', '+00:00', '-00:00' ].indexOf(this[ZONE]) > -1) ? 'Z' : zoneOffset(ts, this[ZONE]);
-    return `${pad(year,4)}-${pad(month,2)}-${pad(day,2)}T${pad(hour,2)}:${pad(minute,2)}:${pad(second,2)}.${pad(millisecond,3)}${pad(nanosecond,6)}${offset}`;
+    return `${spad(year,4)}-${pad(month,2)}-${pad(day,2)}T${pad(hour,2)}:${pad(minute,2)}:${pad(second,2)}.${pad(millisecond,3)}${pad(nanosecond,6)}${offset}`;
   }
 
   static fromString(string) {
@@ -62,7 +62,7 @@ export class ZonedInstant{
     if (!match) {
       throw new Error(`invalid date-time-string ${string}`);
     }
-    const civil = new CivilDateTime(+match[1], +match[2], +match[3], +match[4], +match[5], +match[6], +match[7], +match[8]);
+    const civil = new CivilDateTime(match[1], match[2], match[3], match[4], match[5], match[6], match[7], match[8]);
     return civil.withZone(match[9] === 'Z' ? 'UTC' : match[9]);
   }
 

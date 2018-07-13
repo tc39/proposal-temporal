@@ -3,7 +3,7 @@
 ** This code is governed by the license found in the LICENSE file.
 */
 
-import { plus, pad  } from './util.mjs';
+import { plus, pad, spad  } from './util.mjs';
 import { toEpoch } from './epoch.mjs';
 import { CivilDate } from './civildate.mjs';
 import { CivilTime } from './civiltime.mjs';
@@ -50,7 +50,7 @@ export class CivilDateTime {
   }
   toString() {
     const { year, month, day, hour, minute, second, millisecond, nanosecond } = this;
-    return `${pad(year, 4)}-${pad(month, 2)}-${pad(day, 2)}T${pad(hour, 2)}:${pad(minute, 2)}:${pad(second, 2)}.${pad(millisecond,3)}${pad(nanosecond, 6)}`;
+    return `${spad(year, 4)}-${pad(month, 2)}-${pad(day, 2)}T${pad(hour, 2)}:${pad(minute, 2)}:${pad(second, 2)}.${pad(millisecond,3)}${pad(nanosecond, 6)}`;
   }
 
   static fromString(string) {
@@ -65,9 +65,6 @@ export class CivilDateTime {
     const { year, month, day } = date;
     const { hour, minute, second, millisecond, nanosecond } = time;
     return new CivilDateTime(year, month, day, hour, minute, second, millisecond, nanosecond);
-  }
-  static now(zone) {
-    return ZonedInstant.now(zone).toCivilDateTime();
   }
   static fromMilliseconds(date, zone) {
     return ZonedInstant.fromMilliseconds(date, zone).toCivilDateTime();

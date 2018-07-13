@@ -3,7 +3,7 @@
 ** This code is governed by the license found in the LICENSE file.
 */
 
-import { plus, pad  } from './util.mjs';
+import { plus, pad, spad  } from './util.mjs';
 import { CivilDateTime } from './civildatetime.mjs';
 
 const DATA = Symbol('data');
@@ -30,7 +30,7 @@ export class CivilDate {
   }
   toString() {
     const { year, month, day } = this;
-    return `${pad(year, 4)}-${pad(month, 2)}-${pad(day, 2)}`;
+    return `${spad(year, 4)}-${pad(month, 2)}-${pad(day, 2)}`;
   }
 
   static fromString(string) {
@@ -39,10 +39,6 @@ export class CivilDate {
       throw new Error(`invalid date-string: ${string}`);
     }
     return new CivilDate(+match[1], +match[2], +match[3]);
-  }
-
-  static now(zone) {
-    return CivilDateTime.now(zone).toCivilDate();
   }
   static fromMilliseconds(millis, zone) {
     return CivilDateTime.fromMilliseconds(millis, zone).toCivilDate();
