@@ -5,7 +5,7 @@ A CivilDateTime object is an immutable Object that contains Number values corres
 The following functions are abstract operations that operate on time values (defined SOMEWHERE).  Note that, in every case, if any argument to one of these functions is NaN, the result will be NaN.
 
 #### Year Number
-The Year Number is a positive integer corresponding to a particular year.  It is called the year value.  It must have a Number value and may not be NaN.
+The Year Number is a integer Number corresponding to a particular year.  It is called the year value.  It must have a Number value and may not be NaN.
 
 #### Month Number
 The Month Number is a positive integer corresponding to a particular month.  It is called the month value and is identified by an integer in the range of 1 to 12, inclusive.  It must have a Number value and may not be NaN.
@@ -55,7 +55,7 @@ Something?
 The CivilDateTime constructor is the %CivilDateTime% intrinsic object.  When called as a constructor, it creates and initializes a new CivilDateTime object.
 The CivilDateTime constructor is a single function.
 The CivilDateTime constructor is subclassable.
-The length property of the CivilDateTime constructor function is a range of 2 to 5, inclusive.
+The length property of the CivilDateTime constructor function is a range of 5 to 8, inclusive.
 
 #### CivilDateTime (year, month, day, hour, minute[[[, second], millisecond], nanosecond])
 This description only applies if the CivilDateTime constructor is called with at least five arguments.
