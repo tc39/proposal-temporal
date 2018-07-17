@@ -42,7 +42,7 @@ Object name     | Description                                                   
 
 Object name     | Description                                                         | Example
 ----------------|---------------------------------------------------------------------|-------------
-`Instant`       | A point on the universal timeline, typically represented in UTC.    | `2017-12-31T00:00:00Z` 
+`Instant`       | A point on the universal timeline, typically represented in UTC.    | `2017-12-31T00:00:00Z`
 `ZonedInstant`  | A point on the universal timeline, with an associated time zone.    | `2017‑12‑31T09:00:00+09:00[Asia/Tokyo]`
 
 Note that the time zone of a `ZonedInstant` can be any of:
@@ -231,3 +231,51 @@ let myCivilDate = new CivilDate(2016, 2, 29);
 let newCivilDate = myCivilDate.plus({years: 1, months: 2});
 //results in civil date with value 2017-4-28
 ```
+
+Quick question to @littledan & @rxaviers : Where do you want me to put this sensibly? I'm not sure a file in the repo is the right place, though I'm willing to be told otherwise.
+
+# Technical Design Decision Record
+
+As part of creating/improving the *temporal* proposal, a discussions took place involving [@maggiepint](https://twitter.com/maggiepint), [@RedSquirrelious](https://twitter.com/RedSquirrelious), [@bterlson](https://twitter.com/bterlson) and  [@pipobscure](https://twitter.com/pipobscure) as well as at times [@littledan](https://twitter.com/littledan) and others. These are the conclusions we arrived at. This is the summary of my recollections of the reasoning behind these decisions.
+
+## Remove `toDate()` methods
+
+We did not want to tie the *temporal* proposals to the existing `Date` built-in objects. The creating an explicit dependency makes future evolution of the standards harder.
+
+For that reason we removed the `toDate()` methods from the proposal. This is simply a shortcut for `new Date(instant.milliseconds)` to begin with, so there is very little benefit to that tie.
+
+## Rename `fromDate()` methods to `fromMilliseconds()`
+
+In the same vein as removing `toDate()` we also decided to rename `fromDate()` to `fromMilliseconds()`. For one thing, the name `fromMilliseconds()` is actually more reflective of what the method is supposed to do as it is supposed to accept a numeric argument representing the *milliseconds since epoch* as well.
+
+The semantics of the method will be:
+
+1. _ms_ is the value of `ToNumber(argument)`
+1. _ns_ is set to `0`
+1. a new instant is created with the *value of* `(ms * 1e6) + ns`
+
+In this logic, the first step would convert a `Date` object to its numeric value via `Date.prototype.valueOf()` which is the *milliseconds since epoch*. As such even though the methods was renamed it can still function as `fromDate()` without making an explicit tie to the build-in `Date` object.
+
+## Rename `parse()` methods to `fromString()`
+
+There has been long lived discussions on the inconsistencies in the implementations of `Date.parse()`. The aim of renaming `parse()` to `fromString()` was to avoid these. `fromString()` should mirror the behaviour of `toString()` rather than implementing an actual parse. The only functionality `fromString()` should support is parsing the *strings* produced by `toString()` and nothing more.
+
+This is narrowed down to an exceedingly narrow set of formats by explicitly and tightly specifying the relevant `toString()` operations.
+
+The purpose of `fromString()` and the reason we felt we still wanted it as part of the api is that we wanted to allow round-tripping like `Instant.fromString(instant.toString())` which allows for easier serialisation.
+
+**Examples**
+
+`Instant.prototype.toString()` always outputs **&lt;year>-&lt;month>-&lt;day>T&lt;hours>:&lt;minutes>:&lt;seconds>.&lt;nanoseconds>Z**
+
+`ZonedInstant.prototype.toString` always outputs **&lt;year>-&lt;month>-&lt;day>T&lt;hours>:&lt;minutes>:&lt;seconds>.&lt;nanoseconds>[Z|&lt;offset>]**
+
+Other formats of parts will not be output, so the `fromString()` methods can be extremely restrictive.
+
+### ZonedInstant.prototype.timezone will be the offset rather than the IANA name
+
+The offset at a point in time is unique an clear. It can also be parsed back allowing for serialisation as described above.
+
+In contrast the *IANA Zones* are unclear and are hard to parse back requiring a full timezone database. In order to keep the proposal interoperable with IoT and other low-spec scenarios, requiring full *IANA* support seemed contraindicated.
+
+At the same time we felt it's critical to allow for fully supporting *IANA Zones* in the `ZonedInstant` constructor as well as the `withZone()` methods.
