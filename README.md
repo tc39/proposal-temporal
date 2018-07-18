@@ -232,21 +232,19 @@ let newCivilDate = myCivilDate.plus({years: 1, months: 2});
 //results in civil date with value 2017-4-28
 ```
 
-Quick question to @littledan & @rxaviers : Where do you want me to put this sensibly? I'm not sure a file in the repo is the right place, though I'm willing to be told otherwise.
-
 # Technical Design Decision Record
 
 As part of creating/improving the *temporal* proposal, a discussions took place involving [@maggiepint](https://twitter.com/maggiepint), [@RedSquirrelious](https://twitter.com/RedSquirrelious), [@bterlson](https://twitter.com/bterlson) and  [@pipobscure](https://twitter.com/pipobscure) as well as at times [@littledan](https://twitter.com/littledan) and others. These are the conclusions we arrived at. This is the summary of my recollections of the reasoning behind these decisions.
 
-## Remove `toDate()` methods
+## Omit `toDate()` methods
 
 We did not want to tie the *temporal* proposals to the existing `Date` built-in objects. The creating an explicit dependency makes future evolution of the standards harder.
 
-For that reason we removed the `toDate()` methods from the proposal. This is simply a shortcut for `new Date(instant.milliseconds)` to begin with, so there is very little benefit to that tie.
+For that reason we omitted the `toDate()` methods from the proposal. This is simply a shortcut for `new Date(instant.milliseconds)` to begin with, so there is very little benefit to that tie.
 
-## Rename `fromDate()` methods to `fromMilliseconds()`
+## Naming `fromMilliseconds()` rather than `fromDate()` method
 
-In the same vein as removing `toDate()` we also decided to rename `fromDate()` to `fromMilliseconds()`. For one thing, the name `fromMilliseconds()` is actually more reflective of what the method is supposed to do as it is supposed to accept a numeric argument representing the *milliseconds since epoch* as well.
+In the same vein as omitting `toDate()` we also decided to name the method to create an Instant from a `Date` as `fromMilliseconds()` rather than `fromDate()`. For one thing, the name `fromMilliseconds()` is actually more reflective of what the method is supposed to do as it is supposed to accept a numeric argument representing the *milliseconds since epoch* as well.
 
 The semantics of the method will be:
 
@@ -256,9 +254,9 @@ The semantics of the method will be:
 
 In this logic, the first step would convert a `Date` object to its numeric value via `Date.prototype.valueOf()` which is the *milliseconds since epoch*. As such even though the methods was renamed it can still function as `fromDate()` without making an explicit tie to the build-in `Date` object.
 
-## Rename `parse()` methods to `fromString()`
+## Naming method `fromString()` rather than `parse()`
 
-There has been long lived discussions on the inconsistencies in the implementations of `Date.parse()`. The aim of renaming `parse()` to `fromString()` was to avoid these. `fromString()` should mirror the behaviour of `toString()` rather than implementing an actual parse. The only functionality `fromString()` should support is parsing the *strings* produced by `toString()` and nothing more.
+There has been long lived discussions on the inconsistencies in the implementations of `Date.parse()`. The aim of naming `fromString()` as that rather than `parse()` was to avoid these. `fromString()` should mirror the behaviour of `toString()` rather than implementing an actual parse. The only functionality `fromString()` should support is parsing the *strings* produced by `toString()` and nothing more.
 
 This is narrowed down to an exceedingly narrow set of formats by explicitly and tightly specifying the relevant `toString()` operations.
 
