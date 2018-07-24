@@ -20,30 +20,28 @@ test('CivilDate', ({ test, end })=>{
     end();
   });
 
-  test('parse', ({ equal, end })=>{
-    const one = CivilDate.parse('1976-11-18T15:23:30.450000100+01:00[Europe/Vienna]');
+  test('fromString', ({ equal, throws, end })=>{
+    const one = CivilDate.fromString('1976-11-18');
     equal(one instanceof CivilDate, true);
     equal(one.year, 1976);
     equal(one.month, 11);
     equal(one.day, 18);
 
-    const two = CivilDate.parse('1976-11-18T15:23:30.450000100[Europe/Vienna]');
-    equal(two instanceof CivilDate, true);
-    equal(two.year, 1976);
-    equal(two.month, 11);
-    equal(two.day, 18);
-
-    const three = CivilDate.parse('1976-11-18T15:23:30.450000100+01:00');
-    equal(three instanceof CivilDate, true);
-    equal(three.year, 1976);
-    equal(three.month, 11);
-    equal(three.day, 18);
-
-    const four = CivilDate.parse('1976-11-18T15:23:30.450000100');
-    equal(four instanceof CivilDate, true);
-    equal(four.year, 1976);
-    equal(four.month, 11);
-    equal(four.day, 18);
+    throws(()=>{
+      CivilDate.fromString('1976-11-18T15:23:30.450000100');
+    });
+    throws(()=>{
+      CivilDate.fromString('1976-11-18T15:23:30');
+    });
+    throws(()=>{
+      CivilDate.fromString('1976-11-18 15:23:30');
+    });
+    throws(()=>{
+      CivilDate.fromString('1976-11-18T15:23:30.450000100[Europe/Vienna]');
+    });
+    throws(()=>{
+      CivilDate.fromString('1976-11-18T15:23:30.450000100+01:00');
+    });
 
     end();
   });

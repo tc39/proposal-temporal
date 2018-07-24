@@ -39,22 +39,17 @@ export class CivilTime {
   }
   toString() {
     const { hour, minute, second, millisecond, nanosecond } = this;
-    const nanos = (millisecond * 1E6) + nanosecond;
-    return `${pad(hour, 2)}:${pad(minute, 2)}:${pad(second, 2)}.${pad(nanos, 9)}`;
+    return `${pad(hour, 2)}:${pad(minute, 2)}:${pad(second, 2)}.${pad(millisecond, 3)}${pad(nanosecond, 6)}`;
   }
 
-  toDate(zone, date) {
-    return this.withDate(date).withZone(zone).toDate();
+  static fromString(string) {
+    const match = /^(\d{2}):(\d{2}):(\d{2})\.(\d{3})(\d{6})$/.exec(string);
+    if (!match) {
+      throw new Error(`invalid time-string ${string}`);
+    }
+    return new CivilTime(+match[1], +match[2], +match[3], +match[4], +match[5]);
   }
-
-  static now(zone) {
-    return CivilDateTime.now(zone).toCivilTime();
-  }
-  static fromDate(date, zone) {
-    return CivilDateTime.fromDate(date, zone).toCivilTime();
-  }
-
-  static parse(string) {
-    return CivilDateTime.parse(string).toCivilTime();
+  static fromMilliseconds(milliseconds, zone) {
+    return CivilDateTime.fromMilliseconds(milliseconds, zone).toCivilTime();
   }
 }

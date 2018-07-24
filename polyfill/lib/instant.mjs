@@ -3,8 +3,9 @@
 ** This code is governed by the license found in the LICENSE file.
 */
 
-import { plus, pad } from './util.mjs';
+import { plus, pad, spad, num } from './util.mjs';
 import { ZonedInstant } from './zonedinstant.mjs';
+import { fromEpoch } from './epoch.mjs';
 
 export const VALUE = Symbol('value');
 
@@ -32,39 +33,40 @@ export class Instant {
   withZone(zone) {
     return new ZonedInstant(this, zone);
   }
-  toString() {
-    return this.withZone('UTC').toString();
-  }
-
-  toDate() {
-    return new Date(this.milliseconds);
-  }
   valueOf() {
     return BigInt(this[VALUE].milliseconds) * BigInt(1e6) + BigInt(this[VALUE].nanoseconds);
   }
   format(locale, options) {
     return this.withZone().format(locale, options);
   }
+  toString() {
+    const { year, month, day, hour, minute, second, millisecond } = fromEpoch(this.milliseconds, 'UTC');
+    const nanosecond = this.nanoseconds;
+    return `${spad(year,4)}-${pad(month,2)}-${pad(day,2)}T${pad(hour,2)}:${pad(minute,2)}:${pad(second,2)}.${pad(millisecond,3)}${pad(nanosecond,6)}Z`;
+  }
 
-  static now() {
+  static fromString(string) {
+    const match = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})\.(\d{3})(\d{6})Z$/.exec(string);
+    if (!match) {
+      throw new Error(`invalid date-time-string ${string}`);
+    }
+    const milliseconds = Date.UTC(num(match[1]), num(match[2]) - 1, num(match[3]), num(match[4]), num(match[5]), num(match[6]), num(match[7]));
+    const nanoseconds = num(match[8]);
+
+    const instant = Object.create(Instant.prototype);
+    instant[VALUE] = { milliseconds, nanoseconds };
+
+    return instant;
+  }
+
+  static fromMilliseconds(milliseconds) {
+    milliseconds = num(milliseconds);
     const object = Object.create(Instant.prototype);
     object[VALUE] = {
-      milliseconds: Date.now(),
+      milliseconds,
       nanoseconds: 0
     };
     return object;
-  }
-  static fromDate(date) {
-    const object = Object.create(Instant.prototype);
-    object[VALUE] = {
-      milliseconds: (date || 0).valueOf(),
-      nanoseconds: 0
-    };
-    return object;
-  }
-
-  static parse(string) {
-    return ZonedInstant.parse(string).toInstant();
   }
 }
 
