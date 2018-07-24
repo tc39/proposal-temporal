@@ -218,7 +218,7 @@ Allows the user to create a new instance of any temporal object with new date-pa
 
 ```js
 let myCivilDate = new CivilDate(2016, 2, 29);
-let newCivilDate = myDate.with({year: 2017, month: 3});
+let newCivilDate = myCivilDate.with({year: 2017, month: 3});
 //results in civil date with value 2017-03-29
 ```
 
