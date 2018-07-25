@@ -13,31 +13,31 @@ contributors: Maggie Pint, Matt Johnson, Brian Terlson, Daniel Ehrenberg, Philip
 <emu-clause id=sec-hour-number>
     <h1>Hour Number</h1>
     <p>
-        The Hour Number is a positive integer Number corresponding to a particular hour.  It is called the hour value and is identified by an integer in the range of 0 to 23, inclusive.  It must have a Number value and may not be NaN.
+        The Hour Number is a positive integer Number corresponding to a particular hour.  It is called the HourValue and is identified by an integer in the range of 0 to 23, inclusive.  It must have a Number value and may not be NaN.
     </p>
 </emu-clause>
 <emu-clause id=sec-minute-number>
         <h1>Minute Number</h1>
         <p>
-            The Minute Number is a positive integer Number corresponding to a particular minute.  It is called the minute value and is identified by an integer in the range of 0 to 59, inclusive.  It must have a Number value and may not be NaN.
+            The Minute Number is a positive integer Number corresponding to a particular minute.  It is called the MinuteValue and is identified by an integer in the range of 0 to 59, inclusive.  It must have a Number value and may not be NaN.
         </p>
 </emu-clause>
 <emu-clause id=sec-second-number>
     <h1>Second Number</h1>
     <p>
-        The Second Number is a positive integer Number corresponding to a particular second.  It is called the second value and is identified by an integer in the range of 0 to 59, inclusive.  It must have a Number value and may not be NaN.
+        The Second Number is a positive integer Number corresponding to a particular second.  It is called the SecondValue and is identified by an integer in the range of 0 to 59, inclusive.  It must have a Number value and may not be NaN.
     </p>
 </emu-clause>
 <emu-clause id=sec-millisecond-number>
     <h1>Millisecond Number</h1>
     <p>
-        The Millisecond Number is a positive integer Number corresponding to a particular millisecond.  It is called the millisecond value and is identified by an integer in the range of 0 to 999, inclusive.  It must have a Number value and may not be NaN.
+        The Millisecond Number is a positive integer Number corresponding to a particular millisecond.  It is called the MillisecondValue and is identified by an integer in the range of 0 to 999, inclusive.  It must have a Number value and may not be NaN.
     </p>
 </emu-clause>
 <emu-clause id=sec-nanosecond-number>
     <h1>Nanosecond Number</h1>
     <p>
-        The Nanosecond Number is a positive integer Number corresponding to a particular nanosecond.  It is called the nanosecond value and is identified by an integer in the range of 0 to 999999, inclusive.  It must have a Number value and may not be NaN.
+        The Nanosecond Number is a positive integer Number corresponding to a particular nanosecond.  It is called the NanosecondValue value and is identified by an integer in the range of 0 to 999999, inclusive.  It must have a Number value and may not be NaN.
     </p>
 </emu-clause>
 <emu-clause id=sec-plus-operation>
@@ -45,6 +45,13 @@ contributors: Maggie Pint, Matt Johnson, Brian Terlson, Daniel Ehrenberg, Philip
     <p>
         The abstract operation Plus returns a new CivilTime object that may have 0 to 4 values copied from the CivilTime object on which the operation was performed.  The new CivilTime object will have one or more updated values that depend on terminal values of an Object passed in as the argument.  The argument Object consists of a range of 1 to 5 (inclusive) key/value pairs.  Each pair consists of a nonterminal symbol and a corresponding terminal Number.  An argument Object may have one and only one of each of the nonterminal symbols "Hour", "Minute", "Second", "Millisecond", and "Nanosecond".
     </p>
+</emu-clause>
+<emu-clause id=sec-with-operation>
+  <h1>With(?_hour, ?_minute, ?_second, ?_millisecond, ?_nanosecond)</h1>
+  <p>The abstract operation With takes one Object argument and returns a new CivilTime object.</p>
+  <p>The Object argument must have a range of 1 to 5 inclusive key/value pairs with the keys "hour", "minute", "second", "millisecond", and/or "nanosecond".</p>
+  <p>The corresponding value for each key must be a Number.</p>
+  <p>The new CivilTime object copies the HourValue, MinuteValue, SecondValue, MillisecondValue, and/or NanosecondValue properties from the original CivilTime object and replaces the property value(s) with the corresponding argument value.</p>
 </emu-clause>
 <emu-clause id=sec-withdate-operation>
     <h1>WithDate(date)</h1>
@@ -81,7 +88,7 @@ contributors: Maggie Pint, Matt Johnson, Brian Terlson, Daniel Ehrenberg, Philip
             j. Set O.[[MillisecondValue]] to ms.
             k. Set O.[[NanosecondValue]] to ns.
             h. Return O
-        5. Else, do something else?
+        5. Else, TBD?
     </emu-alg>
 </emu-clause>
 <emu-clause id=sec-constructor-prop>
@@ -109,11 +116,11 @@ contributors: Maggie Pint, Matt Johnson, Brian Terlson, Daniel Ehrenberg, Philip
         5.  If the value associated with any of the provided keys is not finite, return NaN.
 
         6.	If NewTarget is not undefined, then
-            a.	If "hour" is one of the keys supplied, let h be ? ToNumber(hour) + thisHourValue; else let h be thisHourValue.
-            b.	If "minute" is one of the keys supplied, let min be ? ToNumber(minute) + thisMinuteValue; else let min be thisMinuteValue.
-            c.	If "second" is one of the keys supplied, let s be ? ToNumber(second) + thisSecondValue; else let s be thisSecondValue.
-            d.	If "millisecond" is one of the keys supplied, let ms be ? ToNumber(millisecond) + thisMillisecondValue; else let ms be thisMillisecondValue.
-            e.	If "nanosecond" is one of the keys supplied, let ns be ? ToNumber(nanosecond) + thisNanosecondValue; else let ns be thisNanosecondValue.
+            a.	If data.hour is supplied, let h be ? ToNumber(hour) + thisHourValue; else let h be thisHourValue.
+            b.	If data.minute is supplied, let min be ? ToNumber(minute) + thisMinuteValue; else let min be thisMinuteValue.
+            c.	If data.second is supplied, let s be ? ToNumber(second) + thisSecondValue; else let s be thisSecondValue.
+            d.	If data.millisecond is supplied, let ms be ? ToNumber(millisecond) + thisMillisecondValue; else let ms be thisMillisecondValue.
+            e.	If data.nanosecond is supplied, let ns be ? ToNumber(nanosecond) + thisNanosecondValue; else let ns be thisNanosecondValue.
             f.  Let O be ? OrdinaryCreateFromConstructor(NewTarget, "%CivilTimePrototype%", <<[[HourValue, MinuteValue, SecondValue, MillisecondValue, NanosecondValue]]>>).
             g. Set O.[[HourValue]] to h.
             h. Set O.[[MinuteValue]] to min.
@@ -122,11 +129,40 @@ contributors: Maggie Pint, Matt Johnson, Brian Terlson, Daniel Ehrenberg, Philip
             k. Set O.[[NanosecondValue]] to ns.
             h. Return O
 
-        7. Else, do something else?
+        7. Else, TBD
     </emu-alg>
 </emu-clause>
+<emu-clause id=sec-with-alg>
+  <h1>CivilTime.with(data)</h1>
+  <p>The abstract operation with takes as an argument an Object with a range of 1 to 5 key/value pairs, inclusive.</p>
+  <p>The keys may not be duplicated and may be any combination of "hour", "minute", "second", "millisecond", and "nanosecond".</p> 
+  <p>The values must be of the Number type and may be either positive or negative integers. The CivilTime operation uses Gregorian pro-leptic calendar computation.</p>
+  <p>When the with function is called, the following steps are taken:</p>
+  <emu-alg>
+    1. Let numberOfArgs be the number of arguments passed to this function call. 
+    2. Assert: numberOfArgs == 1. 
+    3. Assert: Type(value) is Object. 
+    4. Assert: value has at least one of the following keys: "hour", "minute", "second", "millisecond", and/or "nanosecond". 
+    5. If the value associated with any of the provided keys is not finite, return NaN. 
+    6. If NewTarget is not undefined, then 
+      a. If data.hour is supplied, let h be ? ToNumber(hour); else let h be thisHourValue. 
+      b. If data.minute is supplied, let min be ? ToNumber(minute); else let min be thisMinuteValue. 
+      c. If data.second is supplied, let s be ? ToNumber(second); else let s be thisSecondValue. 
+      d. If data.millisecond is supplied, let ms be ? ToNumber(millisecond); else let ms be thisMillisecondValue. 
+      e. If data.nanosecond is supplied, let ns be ? ToNumber(nanosecond); else let ns be thisNanosecondValue. 
+      f. Adjust h, min, s, ms, and ns values according to Gregorian pro-leptic calendar computation.
+      f. Let O be ? OrdinaryCreateFromConstructor(NewTarget, "%CivilTimePrototype%", <<[[HourValue, MinuteValue, SecondValue, MillisecondValue, NanosecondValue]]>>). 
+      g. Set O.[[HourValue]] to h. 
+      h. Set O.[[MinuteValue]] to min. 
+      i. Set O.[[SecondValue]] to s. 
+      j. Set O.[[MillisecondValue]] to ms. 
+      k. Set O.[[NanosecondValue]] to ns. 
+      h. Return O 
+    7. Else, TBD
+  </emu-alg>
+</emu-clause>
 <emu-clause id=sec-withdate-alg>
-    <h1>CivilTime.withDate (value)</h1>
+    <h1>CivilTime.withDate (data)</h1>
     <p>The abstract operation plus takes as an argument a CivilDate Object. It creates a new CivilDateTime object.</p>
     <p>When the withDate function is called, the following steps are taken:</p>
     <emu-alg>
@@ -134,17 +170,18 @@ contributors: Maggie Pint, Matt Johnson, Brian Terlson, Daniel Ehrenberg, Philip
 
         2.	Assert: numberOfArgs == 1.
 
-        3.  Assert: Type(value) is CivilDate Object.
+        3.  Assert: Type(data) is CivilDate Object.
 
         4.  If NewTarget is not undefined, then
-            a. Let y be ? value.YearValue.
-            b. Let min be ? value.MonthValue.
-            c. Let d be ? value.DayValue.
+            a. Let y be ? data.YearValue.
+            b. Let min be ? data.MonthValue.
+            c. Let d be ? data.DayValue.
             d. Let h be ? thisHourValue.
             e. Let min be ? thisMinuteValue.
             f. Let s be ? thisSecondValue.
             g. Let ms be ? thisMillisecondValue.
             h. Let ns be ? thisNanosecondValue.
+            f. Adjust h, min, s, ms, and ns values according to Gregorian pro-leptic calendar computation.
             i. Let O be ? OrdinaryCreateFromConstructor(NewTarget, "%CivilDateTimePrototype%", <<[[YearValue, MonthValue, DayValue, HourValue, MinuteValue, SecondValue, MillisecondValue, NanosecondValue]]>>).
             j. Set O.[[YearValue]] to y.
             k. Set O.[[MonthValue]] to m.
@@ -156,6 +193,6 @@ contributors: Maggie Pint, Matt Johnson, Brian Terlson, Daniel Ehrenberg, Philip
             n. Set O.[[NanosecondValue]] to ns.
             o. Return O
 
-        5. Else, do something else?
+        5. Else, TBD?
     </emu-alg>
 </emu-clause>
