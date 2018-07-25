@@ -48,6 +48,11 @@ contributors: Maggie Pint, Matt Johnson, Brian Terlson, Daniel Ehrenberg, Philip
         The abstract operation Plus returns a new CivilDate object that may have 0 to 2 values copied from the CivilDate object on which the operation was performed.  The new CivilDate object will have one or more updated values that depend on terminal values of an Object passed in as the argument.  The argument Object consists of a range of 1 to 3 (inclusive) key-value pairs.  Each pair consists of a nonterminal symbol and a corresponding terminal Number.  An argument Object may have one and only one of each of the nonterminal symbols “Year”, “Month”, and “Day”.
     </p>
 </emu-clause>
+<emu-clause id=sec-with-operation>
+  <h1>With(?_year, ?_month, ?_day)</h1>
+  <p>The abstract operation With takes one Object argument and returns a new CivilDate object.  The Object argument must have a range of 1 to 3 inclusive key/value pairs with the keys "year", "month", and/or "day".  The corresponding value for each key must be a Number.</p>
+  <p>The new CivilDate object copies the YearValue, MonthValue, and/or DayValue properties from the original CivilDate object and replaces the property value(s) with the corresponding argument value.</p>
+</emu-clause>
 <emu-clause id=sec-withtime-operation>
     <h1>WithTime(time)</h1>
     <p>The abstract operation WithTime returns a CivilDateTime object that copies and may update the year, month, and day values of the CivilDate object on which the operation was performed.</p>
@@ -94,20 +99,38 @@ contributors: Maggie Pint, Matt Johnson, Brian Terlson, Daniel Ehrenberg, Philip
     <p>When the plus function is called, the following steps are taken:</p>
     <emu-alg>
         1.	Let numberOfArgs be the number of arguments passed to this function call.
-
+        2. Assert: Type(data) is Object.
         2.	Assert: numberOfArgs == 1.
-
         3.	If NewTarget is not undefined, then
-            a. Let y be thisYearValue
-            b. Let m be thisMonthValue
-            c. Let d be thisDayValue
-            d. If arguments to this function call include the key "year", then
-            i. Let y += ToNumber(yearValue)
-            e. If arguments to this function call include the key "month", then
-            i. Let m += ToNumber(monthValue)
-            f. If arguments to this function call include the key "day", then
-            i. Let d += ToNumber(dayValue)
-            ii. Regulate the final y, m, and d values using Gregorian calendar calculations.
-            d.  Let O be ? OrdinaryCreateFromConstructor(New Target, "%CivilDatePrototype%", y, m, d)
+          a. If data.year is supplied, let y be ? ToNumber(year) + thisYearValue. If y is NaN, throw a TypeError exception; else if "year" is not supplied, let y be thisYearValue. 
+          b. If data.month is supplied, let m be ? ToNumber(month) + thisMonthValue. If m is NaN, throw a TypeError exception; else if "month" is not supplied, let m be thisMonthValue. 
+          c. If data.day is supplied, let d be ? ToNumber(day) + thisDayValue. If d is NaN, throw a TypeError exception; else if "day" is not supplied, let d be thisDayValue.
+          d. Regulate the final y, m, and d values using Gregorian calendar calculations.
+          e.  Let O be ? OrdinaryCreateFromConstructor(New Target, "%CivilDatePrototype%", y, m, d)
+          f. Set O.[[YearValue]] to y. 
+          g. Set O.[[MonthValue]] to m. 
+          h. Set O.[[DayValue]] to d.
+          i. Return O.
     </emu-alg>
+</emu-clause>
+<emu-clause id=sec-with-alg>
+  <h1>CivilDate.with (data)</h1>
+  <p>The abstract operation with takes as an argument an Object with a range of 1 to 3 key/value pairs, inclusive. The keys may not be duplicated and may be any combination of “year”, “month”, “day”. The values must be of the Number type and
+    may be positive or negative integers. The CivilDate operation uses Gregorian pro-leptic calendar computation.</p>
+  <p>When the with function is called, the following steps are taken:</p>
+  <emu-alg>
+    1. Let numberOfArgs be the number of arguments passed to this function call. 
+    2. Assert: numberOfArgs == 1.
+    3. Assert: Type(data) is Object.
+    3. If NewTarget is not undefined, then 
+      a. If data.year is supplied, let y be ? ToNumber(year). If y is NaN, throw a TypeError exception; else if "year" is not supplied, let y be thisYearValue. 
+      b. If data.month is supplied, let m be ? ToNumber(month). If m is NaN, throw a TypeError exception; else if "month" is not supplied, let m be thisMonthValue.
+    c. If data.day is supplied, let d be ? ToNumber(day). If d is NaN, throw a TypeError exception; else if "day" is not supplied, let d be thisDayValue. 
+    d. Regulate the final y, m, and d values using Gregorian calendar calculations.
+    e. Let O be ? OrdinaryCreateFromConstructor(New Target, "%CivilDatePrototype%", y, m, d) 
+    f. Set O.[[YearValue]] to y.
+    g. Set O.[[MonthValue]] to m. 
+    h. Set O.[[DayValue]] to d. 
+    i. Return O.
+  </emu-alg>
 </emu-clause>
