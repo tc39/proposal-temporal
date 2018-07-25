@@ -95,42 +95,50 @@ contributors: Maggie Pint, Matt Johnson, Brian Terlson, Daniel Ehrenberg, Philip
 </emu-clause>
 <emu-clause id=sec-plus-alg>
     <h1>CivilDate.plus (data)</h1>
-    <p>The abstract operation plus takes as an argument an Object with a range of 1 to 3 key/value pairs, inclusive.  The keys may not be duplicated and may be any combination of “year”, “month”, “day”.  The values must be of the Number type and may be positive or negative integers. The CivilDate operation uses Gregorian pro-leptic calendar computation.</p>
+    <p>The abstract operation plus takes as an argument an Object with a range of 1 to 3 key/value pairs, inclusive.</p>
+    <p>The keys may not be duplicated and may be any combination of “year”, “month”, “day”.</p>
+    <p>The values must be of the Number type and may be positive or negative integers.</p>
+    <p>If the sum of the current value and the argument value exceeds the range of allowable values for the given unit, increment the next unit.</p>
+    <p>The CivilDate operation uses Gregorian pro-leptic calendar computation.</p>
     <p>When the plus function is called, the following steps are taken:</p>
     <emu-alg>
         1.	Let numberOfArgs be the number of arguments passed to this function call.
         2. Assert: Type(data) is Object.
         2.	Assert: numberOfArgs == 1.
         3.	If NewTarget is not undefined, then
-          a. If data.year is supplied, let y be ? ToNumber(year) + thisYearValue. If y is NaN, throw a TypeError exception; else if "year" is not supplied, let y be thisYearValue. 
-          b. If data.month is supplied, let m be ? ToNumber(month) + thisMonthValue. If m is NaN, throw a TypeError exception; else if "month" is not supplied, let m be thisMonthValue. 
-          c. If data.day is supplied, let d be ? ToNumber(day) + thisDayValue. If d is NaN, throw a TypeError exception; else if "day" is not supplied, let d be thisDayValue.
-          d. Regulate the final y, m, and d values using Gregorian calendar calculations.
+          a. If data.year is supplied, let y be ? ToNumber(year) + thisYearValue. If y is NaN, throw a TypeError exception; else if data.year is not supplied, let y be thisYearValue. 
+          b. If data.month is supplied, let m be ? ToNumber(month) + thisMonthValue. If m is NaN, throw a TypeError exception; else if data.month is not supplied, let m be thisMonthValue. 
+          c. If data.day is supplied, let d be ? ToNumber(day) + thisDayValue. If d is NaN, throw a TypeError exception; else if data.day is not supplied, let d be thisDayValue.
+          d. Regulate the final y, m, and d values using Gregorian pro-leptic calendar calculations.
           e.  Let O be ? OrdinaryCreateFromConstructor(New Target, "%CivilDatePrototype%", y, m, d)
           f. Set O.[[YearValue]] to y. 
           g. Set O.[[MonthValue]] to m. 
           h. Set O.[[DayValue]] to d.
           i. Return O.
+        4. Else, TBD
     </emu-alg>
 </emu-clause>
 <emu-clause id=sec-with-alg>
   <h1>CivilDate.with (data)</h1>
-  <p>The abstract operation with takes as an argument an Object with a range of 1 to 3 key/value pairs, inclusive. The keys may not be duplicated and may be any combination of “year”, “month”, “day”. The values must be of the Number type and
-    may be positive or negative integers. The CivilDate operation uses Gregorian pro-leptic calendar computation.</p>
-  <p>When the with function is called, the following steps are taken:</p>
+    <p>The abstract operation plus takes as an argument an Object with a range of 1 to 3 key/value pairs, inclusive.</p>
+    <p>The keys may not be duplicated and may be any combination of “year”, “month”, “day”.</p>
+    <p>The values must be of the Number type and may be positive or negative integers.</p>
+    <p>The CivilDate operation uses Gregorian pro-leptic calendar computation.</p>
+    <p>When the with function is called, the following steps are taken:</p>
   <emu-alg>
     1. Let numberOfArgs be the number of arguments passed to this function call. 
     2. Assert: numberOfArgs == 1.
     3. Assert: Type(data) is Object.
     3. If NewTarget is not undefined, then 
-      a. If data.year is supplied, let y be ? ToNumber(year). If y is NaN, throw a TypeError exception; else if "year" is not supplied, let y be thisYearValue. 
-      b. If data.month is supplied, let m be ? ToNumber(month). If m is NaN, throw a TypeError exception; else if "month" is not supplied, let m be thisMonthValue.
-    c. If data.day is supplied, let d be ? ToNumber(day). If d is NaN, throw a TypeError exception; else if "day" is not supplied, let d be thisDayValue. 
-    d. Regulate the final y, m, and d values using Gregorian calendar calculations.
-    e. Let O be ? OrdinaryCreateFromConstructor(New Target, "%CivilDatePrototype%", y, m, d) 
-    f. Set O.[[YearValue]] to y.
-    g. Set O.[[MonthValue]] to m. 
-    h. Set O.[[DayValue]] to d. 
-    i. Return O.
+      a. If data.year is supplied, let y be ? ToNumber(year). If y is NaN, throw a TypeError exception; else if data.year is not supplied, let y be thisYearValue. 
+      b. If data.month is supplied, let m be ? ToNumber(month). If m is NaN, throw a TypeError exception; else if data.month is not supplied, let m be thisMonthValue.
+      c. If data.day is supplied, let d be ? ToNumber(day). If d is NaN, throw a TypeError exception; else if data.day is not supplied, let d be thisDayValue. 
+      d. Regulate the final y, m, and d values using Gregorian pro-leptic calendar calculations.
+      e. Let O be ? OrdinaryCreateFromConstructor(New Target, "%CivilDatePrototype%", y, m, d) 
+      f. Set O.[[YearValue]] to y.
+      g. Set O.[[MonthValue]] to m. 
+      h. Set O.[[DayValue]] to d. 
+      i. Return O.
+    4. Else, TBD
   </emu-alg>
 </emu-clause>
