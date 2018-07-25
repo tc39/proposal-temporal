@@ -116,18 +116,19 @@ contributors: Maggie Pint, Matt Johnson, Brian Terlson, Daniel Ehrenberg, Philip
         5.  If the value associated with any of the provided keys is not finite, return NaN.
 
         6.	If NewTarget is not undefined, then
-            a.	If data.hour is supplied, let h be ? ToNumber(hour) + thisHourValue; else let h be thisHourValue.
-            b.	If data.minute is supplied, let min be ? ToNumber(minute) + thisMinuteValue; else let min be thisMinuteValue.
-            c.	If data.second is supplied, let s be ? ToNumber(second) + thisSecondValue; else let s be thisSecondValue.
-            d.	If data.millisecond is supplied, let ms be ? ToNumber(millisecond) + thisMillisecondValue; else let ms be thisMillisecondValue.
-            e.	If data.nanosecond is supplied, let ns be ? ToNumber(nanosecond) + thisNanosecondValue; else let ns be thisNanosecondValue.
-            f.  Let O be ? OrdinaryCreateFromConstructor(NewTarget, "%CivilTimePrototype%", <<[[HourValue, MinuteValue, SecondValue, MillisecondValue, NanosecondValue]]>>).
-            g. Set O.[[HourValue]] to h.
-            h. Set O.[[MinuteValue]] to min.
-            i. Set O.[[SecondValue]] to s.
-            j. Set O.[[MillisecondValue]] to ms.
-            k. Set O.[[NanosecondValue]] to ns.
-            h. Return O
+          d. If data.hour is supplied, let h be ? ToNumber(hour) + thisHourValue. If h is NaN, throw a TypeError exception; else if data.hour is not supplied, let h be thisHourValue.
+          e. If data.minute is supplied, let min be ? ToNumber(minute) + thisMinuteValue. If min is NaN, throw a TypeError exception; else if data.minute is not supplied, let min be thisMinuteValue. 
+          f. If data.second is supplied, let s be ? ToNumber(second) + thisSecondValue. If s is NaN, throw a TypeError exception; else if data.second is not supplied, let s be thisSecondValue. 
+          g. If data.millisecond is supplied, let ms be ? ToNumber(millisecond) + thisMillisecondValue. If ms is NaN, throw a TypeError exception; else if data.millisecond is not supplied, let ms be thisMillisecondValue.
+          h. If data.nanosecond is supplied, let ns be ? ToNumber(nanosecond) + thisNanosecondValue. If ns is NaN, throw a TypeError exception; else if data.nanosecond is not supplied, let ns be thisNanosecondValue. 
+          i. Regulate h, min, s, ms, and ns values according to Gregorian pro-leptic calendar calculations.
+          f.  Let O be ? OrdinaryCreateFromConstructor(NewTarget, "%CivilTimePrototype%", <<[[HourValue, MinuteValue, SecondValue, MillisecondValue, NanosecondValue]]>>).
+          g. Set O.[[HourValue]] to h.
+          h. Set O.[[MinuteValue]] to min.
+          i. Set O.[[SecondValue]] to s.
+          j. Set O.[[MillisecondValue]] to ms.
+          k. Set O.[[NanosecondValue]] to ns.
+          h. Return O
 
         7. Else, TBD
     </emu-alg>
@@ -145,12 +146,12 @@ contributors: Maggie Pint, Matt Johnson, Brian Terlson, Daniel Ehrenberg, Philip
     4. Assert: value has at least one of the following keys: "hour", "minute", "second", "millisecond", and/or "nanosecond". 
     5. If the value associated with any of the provided keys is not finite, return NaN. 
     6. If NewTarget is not undefined, then 
-      a. If data.hour is supplied, let h be ? ToNumber(hour); else let h be thisHourValue. 
-      b. If data.minute is supplied, let min be ? ToNumber(minute); else let min be thisMinuteValue. 
-      c. If data.second is supplied, let s be ? ToNumber(second); else let s be thisSecondValue. 
-      d. If data.millisecond is supplied, let ms be ? ToNumber(millisecond); else let ms be thisMillisecondValue. 
-      e. If data.nanosecond is supplied, let ns be ? ToNumber(nanosecond); else let ns be thisNanosecondValue. 
-      f. Adjust h, min, s, ms, and ns values according to Gregorian pro-leptic calendar computation.
+      a. If data.hour is supplied, let h be ? ToNumber(hour); If h is NaN, throw a TypeError exception; else if data.hour is not supplied, let h be thisHourValue. 
+      b. If data.minute is supplied, let min be ? ToNumber(minute); If min is NaN, throw a TypeError exception; else if data.minute is not supplied, let min be thisMinuteValue. 
+      c. If data.second is supplied, let s be ? ToNumber(second); If s is NaN, throw a TypeError exception; else if data.second is not supplied, let s be thisSecondValue. 
+      d. If data.millisecond is supplied, let ms be ? ToNumber(millisecond); If ms is NaN, throw a TypeError exception; else if data.millisecond is not supplied, let ms be thisMillisecondValue. 
+      e. If data.nanosecond is supplied, let ns be ? ToNumber(nanosecond); If ns is NaN, throw a TypeError exception; else if data.nanosecond is not supplied, let ns be thisNanosecondValue. 
+      f. Regulate h, min, s, ms, and ns values according to Gregorian pro-leptic calendar calculations.
       f. Let O be ? OrdinaryCreateFromConstructor(NewTarget, "%CivilTimePrototype%", <<[[HourValue, MinuteValue, SecondValue, MillisecondValue, NanosecondValue]]>>). 
       g. Set O.[[HourValue]] to h. 
       h. Set O.[[MinuteValue]] to min. 
@@ -174,14 +175,14 @@ contributors: Maggie Pint, Matt Johnson, Brian Terlson, Daniel Ehrenberg, Philip
 
         4.  If NewTarget is not undefined, then
             a. Let y be ? data.YearValue.
-            b. Let min be ? data.MonthValue.
+            b. Let m be ? data.MonthValue.
             c. Let d be ? data.DayValue.
             d. Let h be ? thisHourValue.
             e. Let min be ? thisMinuteValue.
             f. Let s be ? thisSecondValue.
             g. Let ms be ? thisMillisecondValue.
             h. Let ns be ? thisNanosecondValue.
-            f. Adjust h, min, s, ms, and ns values according to Gregorian pro-leptic calendar computation.
+            f. Regulate y, m, d, h, min, s, ms, and ns values according to Gregorian pro-leptic calendar calculations.
             i. Let O be ? OrdinaryCreateFromConstructor(NewTarget, "%CivilDateTimePrototype%", <<[[YearValue, MonthValue, DayValue, HourValue, MinuteValue, SecondValue, MillisecondValue, NanosecondValue]]>>).
             j. Set O.[[YearValue]] to y.
             k. Set O.[[MonthValue]] to m.
