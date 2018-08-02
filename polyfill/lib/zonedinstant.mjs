@@ -65,10 +65,6 @@ export class ZonedInstant{
     const civil = new CivilDateTime(match[1], match[2], match[3], match[4], match[5], match[6], match[7], match[8]);
     return civil.withZone(match[9] === 'Z' ? 'UTC' : match[9]);
   }
-
-  static now(zone) {
-    return Instant.now().withZone(zone);
-  }
   static fromMilliseconds(milliseconds, zone) {
     return Instant.fromMilliseconds(milliseconds).withZone(zone);
   }

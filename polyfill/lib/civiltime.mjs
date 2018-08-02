@@ -34,7 +34,7 @@ export class CivilTime {
   with({ hour = this.hour, minute = this.minute, second = this.second, millisecond = this.millisecond, nanosecond = this.nanosecond } = {}) {
     return new CivilTime(hour, minute, second, millisecond, nanosecond);
   }
-  withDate(date = CivilDateTime.now().toCivilDate()) {
+  withDate(date) {
     return new CivilDateTime.from(date, this);
   }
   toString() {

@@ -25,7 +25,7 @@ export class CivilDate {
   with({ year = this.year, month = this.month , day = this.day } = {}) {
     return new CivilDate(year, month, day);
   }
-  withTime(time = CivilDateTime.now().toCivilTime()) {
+  withTime(time) {
     return new CivilDateTime.from(this, time);
   }
   toString() {
