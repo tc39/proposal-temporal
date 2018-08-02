@@ -12,6 +12,7 @@ const one = temporal.Instant.fromString('1976-11-18T14:23:30.450000100Z');
 assert.sameValue(one instanceof temporal.Instant, true);
 assert.sameValue(one.milliseconds, 217175010450);
 assert.sameValue(one.nanoseconds, 100);
+assert.sameValue(one.value, 217175010450000100n);
 
 
 assert.throws(Error, ()=>{

@@ -14,4 +14,5 @@ assert.sameValue(typeof instance, 'object');
 assert.sameValue(instance instanceof temporal.Instant, true);
 assert.sameValue(instance.milliseconds, 217178610450);
 assert.sameValue(instance.nanoseconds, 100);
+assert.sameValue(instance.value, 217178610450000100n);
 assert.sameValue(instance.toString(), '1976-11-18T15:23:30.450000100Z');

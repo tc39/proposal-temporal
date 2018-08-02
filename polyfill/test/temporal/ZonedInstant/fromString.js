@@ -12,6 +12,7 @@ const one = temporal.ZonedInstant.fromString('1976-11-18T15:23:30.450000100+01:0
 assert.sameValue(one instanceof temporal.ZonedInstant, true);
 assert.sameValue(one.milliseconds, 217175010450);
 assert.sameValue(one.nanoseconds, 100);
+assert.sameValue(one.value, 217175010450000100n);
 assert.sameValue(one.timeZone, '+01:00');
 
 assert.throws(Error, ()=>{

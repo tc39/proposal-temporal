@@ -21,6 +21,7 @@ export class ZonedInstant{
 
   get milliseconds() { return this[INSTANT].milliseconds; }
   get nanoseconds() { return this[INSTANT].nanoseconds; }
+  get value() { return BigInt(this.milliseconds) * BigInt(1e6) + BigInt(this.nanoseconds); }
   get timeZone() { return this[ZONE]; }
 
   toCivilDateTime() {
@@ -39,9 +40,6 @@ export class ZonedInstant{
   }
   toInstant() { return this[INSTANT]; }
 
-  valueOf() {
-    return this.toInstant().valueOf();
-  }
   format(locale = navigator.language, options = {}) {
     const fmt = new Intl.DateTimeFormat(
       locale,

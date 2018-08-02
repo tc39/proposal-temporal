@@ -19,6 +19,7 @@ export class Instant {
 
   get milliseconds() { return this[VALUE].milliseconds; }
   get nanoseconds() { return this[VALUE].nanoseconds; }
+  get value() { return BigInt(this.milliseconds) * BigInt(1e6) + BigInt(this.nanoseconds); }
 
   plus(data) {
     const object = Object.create(Instant.prototype);
@@ -32,9 +33,6 @@ export class Instant {
   }
   withZone(zone) {
     return new ZonedInstant(this, zone);
-  }
-  valueOf() {
-    return BigInt(this[VALUE].milliseconds) * BigInt(1e6) + BigInt(this[VALUE].nanoseconds);
   }
   format(locale, options) {
     return this.withZone().format(locale, options);
