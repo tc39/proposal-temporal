@@ -16,7 +16,6 @@ export class Instant {
     const nanoseconds = Number(nanos % BigInt(1e6));
     this[VALUE] = { milliseconds, nanoseconds };
   }
-  get [Symbol.toStringTag] () { return 'Instant'; }
 
   get milliseconds() { return this[VALUE].milliseconds; }
   get nanoseconds() { return this[VALUE].nanoseconds; }
@@ -69,6 +68,7 @@ export class Instant {
     return object;
   }
 }
+Instant.prototype[Symbol.toStringTag] = 'Instant';
 
 function toParts(value) {
   const millis = value.milliseconds;

@@ -18,7 +18,6 @@ export class ZonedInstant{
     this[INSTANT] = instant;
     this[ZONE] = zone;
   }
-  get [Symbol.toStringTag] () { return 'ZonedInstant'; }
 
   get milliseconds() { return this[INSTANT].milliseconds; }
   get nanoseconds() { return this[INSTANT].nanoseconds; }
@@ -69,4 +68,4 @@ export class ZonedInstant{
     return Instant.fromMilliseconds(milliseconds).withZone(zone);
   }
 };
-
+ZonedInstant.prototype[Symbol.toStringTag] = 'ZonedInstant';
