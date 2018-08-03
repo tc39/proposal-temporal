@@ -13,6 +13,7 @@ export class CivilDate {
     const { year, month, day } = plus({}, { years, months, days });
     this[DATA] = { year, month, day };
   }
+  get [Symbol.toStringTag] () { return 'CivilDate'; }
 
   get year() { return this[DATA].year; }
   get month() { return this[DATA].month; }

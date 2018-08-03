@@ -16,6 +16,7 @@ export class CivilDateTime {
   constructor(years, months, days, hours, minutes, seconds = 0, milliseconds = 0, nanoseconds = 0) {
     this[DATA] = plus({}, { years, months, days, hours, minutes, seconds, milliseconds, nanoseconds });
   }
+  get [Symbol.toStringTag] () { return 'CivilDateTime'; }
 
   get year() { return this[DATA].year; }
   get month() { return this[DATA].month; }

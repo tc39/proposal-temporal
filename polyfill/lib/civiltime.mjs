@@ -14,6 +14,7 @@ export class CivilTime {
     const { hour, minute, second, millisecond, nanosecond } = plus({}, { hours, minutes, seconds, milliseconds, nanoseconds });
     this[DATA] = { hour, minute, second, millisecond, nanosecond };
   }
+  get [Symbol.toStringTag] () { return 'CivilTime'; }
 
   get hour() { return this[DATA].hour; }
   get minute() { return this[DATA].minute; }
