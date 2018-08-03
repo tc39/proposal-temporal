@@ -3,7 +3,7 @@
 ** This code is governed by the license found in the LICENSE file.
 */
 
-import { plus, pad, spad  } from './util.mjs';
+import { plus, pad, spad, dayOfWeek, dayOfYear, weekOfYear  } from './util.mjs';
 import { toEpoch } from './epoch.mjs';
 import { CivilDate } from './civildate.mjs';
 import { CivilTime } from './civiltime.mjs';
@@ -27,6 +27,10 @@ export class CivilDateTime {
   get millisecond() { return this[DATA].millisecond; }
   get nanosecond() { return this[DATA].nanosecond; }
 
+  get dayOfWeek() { return dayOfWeek(this.year, this.month, this.day); }
+  get dayOfYear() { return dayOfYear(this.year, this.month, this.day); }
+  get weekOfYear() { return weekOfYear(this.year, this.month, this.day); }
+
   plus(data) {
     const { year, month, day, hour, minute, second, millisecond, nanosecond } = plus(this, data);
     return new CivilDateTime(year, month, day, hour, minute, second, millisecond, nanosecond);
@@ -49,11 +53,20 @@ export class CivilDateTime {
     instant[VALUE] = { milliseconds, nanoseconds };
     return new ZonedInstant(instant, zone);
   }
-  toString() {
+  toString() { return this.toDateTimeString(); }
+  toJSON() { return this.toString(); }
+  toDateTimeString() {
     const { year, month, day, hour, minute, second, millisecond, nanosecond } = this;
     return `${spad(year, 4)}-${pad(month, 2)}-${pad(day, 2)}T${pad(hour, 2)}:${pad(minute, 2)}:${pad(second, 2)}.${pad(millisecond,3)}${pad(nanosecond, 6)}`;
   }
-  toJSON() { return this.toString(); }
+  toWeekDateTimeString() {
+    const { year, weekOfYear, dayOfWeek, hour, minute, second, millisecond, nanosecond } = this;
+    return `${spad(year, 4)}-W${pad(weekOfYear, 2)}-${pad(dayOfWeek, 2)}T${pad(hour, 2)}:${pad(minute, 2)}:${pad(second, 2)}.${pad(millisecond,3)}${pad(nanosecond, 6)}`;
+  }
+  toOrdinalDateTimeString() {
+    const { year, dayOfYear, hour, minute, second, millisecond, nanosecond } = this;
+    return `${spad(year, 4)}-${pad(dayOfYear, 3)}T${pad(hour, 2)}:${pad(minute, 2)}:${pad(second, 2)}.${pad(millisecond,3)}${pad(nanosecond, 6)}`;
+  }
 
   static fromString(string) {
     const match = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})\.(\d{3})(\d{6})$/.exec(string);
