@@ -277,3 +277,67 @@ The offset at a point in time is unique an clear. It can also be parsed back all
 In contrast the *IANA Zones* are unclear and are hard to parse back requiring a full timezone database. In order to keep the proposal interoperable with IoT and other low-spec scenarios, requiring full *IANA* support seemed contraindicated.
 
 At the same time we felt it's critical to allow for fully supporting *IANA Zones* in the `ZonedInstant` constructor as well as the `withZone()` methods.
+
+## Omit `.valueOf()` and have `.value` on `Instant` and `ZonedInstant`
+
+`.valueOf()` is a special kind of method and has a lot of implications in terms of casting. See [Issue #74](https://github.com/tc39/proposal-temporal/issues/74) for the full discussion. Due to all of that returning a `BigInt` from that is counter productive and there be dragons if we go there. Also there is little value in having `.valueOf()`.
+
+However we doo need a way to get the nanoseconds that have elapsed since the epoch rather than just the constituent parts. For that reason we suggest having the `.value` property that returns a `BigInt` representing the nanoseconds since the epoch.
+
+## `toString()` should in fact return the ISO-String
+
+Again [Issue #74](https://github.com/tc39/proposal-temporal/issues/74) has the full discussion. The agreement was that the ISO-String seems to be the right thig to return. Something of the shape *[object Type]* is insufficient since it gives no insight into the value. Something like *[object Type ISO-String]* is unprecendented and to be avoided since it would be unlikely to ever get consensus. Most other things in JS return a string-version of the value, so the ISO-String seems to be the right thing.
+
+## `.toJSON()` should return the ISO representation (similar to `Date`)
+
+`JSON.stringify()` is a very common need. The standard way to deal with this is to do what `Date` does and stringify to some standardized string-representation. Parsing can be done by implementing a reviver passed to `JSON.parse()`.
+
+**Example 1:**
+
+```
+const json = '{"d":"2018-08-03T05:18:47.635000000-07:00"}';
+const parsed = JSON.parse(json, (key, value)=>{
+  try {
+    return ZonedInstant.fromString(value);
+  } catch(e) {
+    console.error(e);
+    return value;
+  }
+});
+```
+
+**Example 2:**
+
+```
+const json = '{"d":"2018-08-03T05:18:47.635000000Z"}';
+const parsed = JSON.parse(json, (key, value)=>{
+  try {
+    return Instant.fromString(value);
+  } catch(e) {
+    console.error(e);
+    return value;
+  }
+});
+```
+
+## Omit `.now()` and similar access to the current moment
+
+See [Issue #73](https://github.com/tc39/proposal-temporal/issues/73) for the full discussion.
+
+There are two main issues with this. For one, it makes getting higher resolution things harder in future, and it also creates security problems since it makes the outside environment available in the VM.
+
+Since there is an easy way to get the current date/time already (`Instant.fromMilliseconds(Date.now())`) this convenience seemed ill-advised given the issues it would raise.
+
+## Omit `.plus()` from `Instant` (and potentially from `ZonedInstant`)
+
+See [Issue #68](https://github.com/tc39/proposal-temporal/issues/68) for the full discussion.
+
+It turns out that adding to an `Instant` without a clear timezone is ambiguous.
+
+> Assume the instant 2020-02-29T16:00:00.000000000Z
+>
+> In Britain the calculation instant.plus({ month: 1 }) would result in 2020-03-29T16:00:00.000000000Z
+>
+> In Sydney that is already 2020-03-01T02:00:00.000000000 so the calculation there would have to yield 2020-04-01T02:00:00.000000000 which in turn is actually several days ahead if expressed as an Instant. So it's ambiguous.
+
+While this would be OK for `ZonedInstant` the question now is whether to restrict it to things that innately have a concept of distinct units to add and subtract. This is under discussion especially in the context of supporting different calendars and renaming `CivilXXX` objects as raised in [Issue #79](https://github.com/tc39/proposal-temporal/issues/79).
