@@ -33,6 +33,7 @@ export class CivilDate {
     const { year, month, day } = this;
     return `${spad(year, 4)}-${pad(month, 2)}-${pad(day, 2)}`;
   }
+  toJSON() { return this.toString(); }
 
   static fromString(string) {
     const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(string);

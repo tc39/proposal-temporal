@@ -42,6 +42,7 @@ export class CivilTime {
     const { hour, minute, second, millisecond, nanosecond } = this;
     return `${pad(hour, 2)}:${pad(minute, 2)}:${pad(second, 2)}.${pad(millisecond, 3)}${pad(nanosecond, 6)}`;
   }
+  toJSON() { return this.toString(); }
 
   static fromString(string) {
     const match = /^(\d{2}):(\d{2}):(\d{2})\.(\d{3})(\d{6})$/.exec(string);
