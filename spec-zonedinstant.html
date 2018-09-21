@@ -1,13 +1,13 @@
-+<pre class=metadata> 
++<pre class=metadata>
   title: Temporal proposal: ZonedInstant
-  toc: false 
-  stage: 1 
+  toc: false
+  stage: 1
   contributors: Maggie Pint, Brian Terlson, Matt Johnson, Sasha Pierson, Philipp Dunkel
-</pre> 
-<emu-intro id="intro"> 
+</pre>
+<emu-intro id="intro">
   <h1>ZonedInstant Objects</h1>
   <p>A `ZonedInstant` object is an immutable object referencing a point in time. The referenced point in time is specific to a given time zone and is measured with nanoseconds precision.</p>
-</emu-intro> 
+</emu-intro>
 <emu-clause id="sec-temporal-zonedinstant-millisecond-number">
   <h1>Millisecond Number</h1>
   <p>The Millisecond Number is an integer corresponding to a particular millisecond. It is called the millisecond value. It must have a Number value and may not be NaN.</p>
@@ -47,42 +47,32 @@
   <p>The value of the new ZonedInstant object is the value of the original ZonedInstant's milliseconds with the specified date parts, excepting any nanoseconds argument, converted to milliseconds and added to the original MillisecondValue.</p>
   <p>Units will be added in order of size, descending. Calling this function with a _this_ context that is not an instance of ZonedInstant is illegal.</p>
 </emu-clause>
-<emu-clause id="sec-temporal-zonedinstant.prototype.plus"> 
+<emu-clause id="sec-temporal-zonedinstant.prototype.plus">
   <h1>ZonedInstant.prototype.plus({ ? _years_, ? _months_, ? _days_, ? _hours_, ? _minutes_, ? _seconds_, ? _milliseconds_, ? _nanoseconds_ })</h1>
   <p>When called with a ZonedInstant object as the _this_ context, the result will be a new ZonedInstant object.</p>
   <p>The value of the new ZonedInstant object is the value of the original ZonedInstant with the specified date parts added. Units will be added in order of size, descending. </p>
   <p>Calling this function with a _this_ context that is not an instance of ZonedInstant is illegal. </p>
-</emu-clause> 
+</emu-clause>
 <emu-clause id="sec-temporal-zonedinstant.prototype.toinstant">
     <h1>ZonedInstant.prototype.toInstant()</h1>
     <p>The abstract operation toInstant returns a new Instant Object with the milliseond and nanosecond values of the ZonedInstant object on which it is called.</p>
 </emu-clause>
-<emu-clause id="sec-temporal-zonedinstant.prototype.tocivildate">
-  <h1>ZonedInstant.prototype.toCivilDate()</h1>
-  <p>The abstract operation toCivilDate returns a new CivilDate Object with the year, month, and day values calculated from the milliseconds and nanoseconds since Epoch</p>
-</emu-clause>
-<emu-clause id="sec-temporal-zonedinstant.prototype.tociviltime">
-  <h1>ZonedInstant.prototype.toCivilTime()</h1>
-</emu-clause>
-<emu-clause id="sec-temporal-zonedinstant.prototype.tocivildatetime">
-  <h1>ZonedInstant.prototype.toCivilDateTime()</h1>
-</emu-clause>
-<emu-clause id="sec-temporal-zonedinstant.prototype.tostring"> 
+<emu-clause id="sec-temporal-zonedinstant.prototype.tostring">
   <h1>ZonedInstant.prototype.toString()</h1>
   <p>When called with a ZonedInstant object as a _this_ context it will return an ISO 8601 String value representing the value of the ZonedInstant object.</p>
   <p>The format of the String will always be an IsoDateTime of the following form: </p>
-  <emu-grammar> 
-    Sign: `-` 
-    Year: Sign? Digit Digit Digit Digit 
-    Month: `01` through `12` 
-    Day: `01` through `31` 
-    Hour: `00` through `24` 
-    Minute: `00` through `59` 
-    Second: `00` through `59` 
-    Nanoseconds: `000000000` through `999999999` 
-    IsoDateTime: Year Month Day `T` Hour Minute Second `.` Nanoseconds `Z` 
-  </emu-grammar> 
-  Calling this function with a _this_ context that is not an instance of ZonedInstant is illegal. 
+  <emu-grammar>
+    Sign: `-`
+    Year: Sign? Digit Digit Digit Digit
+    Month: `01` through `12`
+    Day: `01` through `31`
+    Hour: `00` through `24`
+    Minute: `00` through `59`
+    Second: `00` through `59`
+    Nanoseconds: `000000000` through `999999999`
+    IsoDateTime: Year Month Day `T` Hour Minute Second `.` Nanoseconds `Z`
+  </emu-grammar>
+  Calling this function with a _this_ context that is not an instance of ZonedInstant is illegal.
 </emu-clause>
 <emu-clause id=sec-temporal-zonedinstant-constructor-prop>
   <h1>Properties of the ZonedInstant Constructor</h1>
@@ -102,16 +92,16 @@
   <p>This description only applies if the ZonedInstant constructor is called with at least 2 arguments.</p>
   <p>When the ZonedInstant constructor function is called, the following steps are taken:</p>
   <emu-alg>
-    1. Let numberOfArgs be the number of arguments passed to this function call. 
-    1. Assert: numberOfArgs == 2. 
-    1. If NewTarget is not undefined, then 
-      a. Let ms be instant.milliseconds. 
-      a. Let ns be instant.nanoseconds. 
-      a. Let tz be timeZone. 
-      a. Let O be ? OrdinaryCreateFromConstructor(NewTarget, "%ZonedInstantPrototype%", <<[[MillisecondValue, NanosecondValue,TimeZoneValue]]>>). 
-      a. Set O.[[MillisecondValue]] to ms. 
-      a. Set O.[[NanosecondValue]] to ns. 
-      a. Set O.[[TimeZoneValue]] to tz. 
+    1. Let numberOfArgs be the number of arguments passed to this function call.
+    1. Assert: numberOfArgs == 2.
+    1. If NewTarget is not undefined, then
+      a. Let ms be instant.milliseconds.
+      a. Let ns be instant.nanoseconds.
+      a. Let tz be timeZone.
+      a. Let O be ? OrdinaryCreateFromConstructor(NewTarget, "%ZonedInstantPrototype%", <<[[MillisecondValue, NanosecondValue,TimeZoneValue]]>>).
+      a. Set O.[[MillisecondValue]] to ms.
+      a. Set O.[[NanosecondValue]] to ns.
+      a. Set O.[[TimeZoneValue]] to tz.
       a. Return O.
   </emu-alg>
 </emu-clause>
@@ -140,26 +130,5 @@
         a. Set O.[[MillisecondValue]] to ms.
         a. Set O.[[NanosecondValue]] to ns.
         a. Return O.
-    </emu-alg>
-</emu-clause>
-<emu-clauseid="sec-temporal-zonedinstant-tocivildate">
-  <h1>toCivilDate()</h1>
-  <p>When the ZonedInstant toCivilDate function is called, the following steps are taken:</p>
-  <emu-alg>
-    TBD
-  </emu-alg>
-</emu-clause>
-<emu-clauseid="sec-temporal-zonedinstant-tociviltime">
-  <h1>toCivilTime()</h1>
-  <p>When the ZonedInstant toCivilDate function is called, the following steps are taken:</p>
-  <emu-alg>
-    TBD
-  </emu-alg>
-</emu-clause>
-<emu-clauseid="sec-temporal-zonedinstant-tocivildatetime">
-    <h1>toCivilDateTime()</h1>
-    <p>When the ZonedInstant toCivilDateTime function is called, the following steps are taken:</p>
-    <emu-alg>
-      TBD
     </emu-alg>
 </emu-clause>
