@@ -55,6 +55,46 @@ export function num(number = 0) {
   return +number;
 };
 
+export function dayOfWeek(year, month, day) {
+    const m = month + ((month < 3) ? 10 : -2);
+    const Y = year - ((month < 3) ? 1 : 0);
+
+    const c = Math.floor(Y / 100);
+    const y = Y - (c * 100);
+    const d = day;
+
+    const pD = d;
+    const pM = Math.floor((2.6 * m) - 0.2);
+    const pY = y + Math.floor(y / 4);
+    const pC = Math.floor(c / 4) - (2 * c);
+
+    const dow = (pD + pM + pY + pC) % 7;
+
+    return dow + ((dow < 0) ? 7 : 0);
+};
+
+export function isLeapYear(year) {
+    return (((year % 4) === 0) && !((year % 100) === 0)) || ((year % 400) === 0);
+};
+
+export function dayOfYear(year, month, day) {
+    const dm = [ 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 ];
+    let days = day;
+    for(let m = 0; m < (month - 1); m++) {
+        days += dm[m];
+    }
+    days += (isLeapYear(year) && (month > 2)) ? 1 : 0;
+    return days;
+};
+
+export function weekOfYear(year, month, day) {
+    const doy = dayOfYear(year, month, day);
+    const dow = dayOfWeek(year, month, day);
+    const doj = dayOfWeek(year, 1, 1);
+
+    return ((doy + 6) / 7) + ((dow < doj) ? 1 : 0);
+};
+
 export function validZone(zone) {
   if (zone === 'UTC') { return 'UTC'; }
   zone = (zone === 'SYSTEM') ? systemTimeZone() : zone;

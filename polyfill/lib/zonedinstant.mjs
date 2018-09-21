@@ -21,6 +21,7 @@ export class ZonedInstant{
 
   get milliseconds() { return this[INSTANT].milliseconds; }
   get nanoseconds() { return this[INSTANT].nanoseconds; }
+  get value() { return BigInt(this.milliseconds) * BigInt(1e6) + BigInt(this.nanoseconds); }
   get timeZone() { return this[ZONE]; }
 
   toCivilDateTime() {
@@ -39,9 +40,6 @@ export class ZonedInstant{
   }
   toInstant() { return this[INSTANT]; }
 
-  valueOf() {
-    return this.toInstant().valueOf();
-  }
   format(locale = navigator.language, options = {}) {
     const fmt = new Intl.DateTimeFormat(
       locale,
@@ -56,6 +54,7 @@ export class ZonedInstant{
     const offset = ([ 'UTC', '+00:00', '-00:00' ].indexOf(this[ZONE]) > -1) ? 'Z' : zoneOffset(ts, this[ZONE]);
     return `${spad(year,4)}-${pad(month,2)}-${pad(day,2)}T${pad(hour,2)}:${pad(minute,2)}:${pad(second,2)}.${pad(millisecond,3)}${pad(nanosecond,6)}${offset}`;
   }
+  toJSON() { return this.toString(); }
 
   static fromString(string) {
     const match = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})\.(\d{3})(\d{6})(Z|[+-]\d{2}:\d{2})$/.exec(string);
@@ -65,12 +64,8 @@ export class ZonedInstant{
     const civil = new CivilDateTime(match[1], match[2], match[3], match[4], match[5], match[6], match[7], match[8]);
     return civil.withZone(match[9] === 'Z' ? 'UTC' : match[9]);
   }
-
-  static now(zone) {
-    return Instant.now().withZone(zone);
-  }
   static fromMilliseconds(milliseconds, zone) {
     return Instant.fromMilliseconds(milliseconds).withZone(zone);
   }
 };
-
+ZonedInstant.prototype[Symbol.toStringTag] = 'ZonedInstant';

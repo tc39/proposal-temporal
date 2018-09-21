@@ -34,13 +34,14 @@ export class CivilTime {
   with({ hour = this.hour, minute = this.minute, second = this.second, millisecond = this.millisecond, nanosecond = this.nanosecond } = {}) {
     return new CivilTime(hour, minute, second, millisecond, nanosecond);
   }
-  withDate(date = CivilDateTime.now().toCivilDate()) {
+  withDate(date) {
     return new CivilDateTime.from(date, this);
   }
   toString() {
     const { hour, minute, second, millisecond, nanosecond } = this;
     return `${pad(hour, 2)}:${pad(minute, 2)}:${pad(second, 2)}.${pad(millisecond, 3)}${pad(nanosecond, 6)}`;
   }
+  toJSON() { return this.toString(); }
 
   static fromString(string) {
     const match = /^(\d{2}):(\d{2}):(\d{2})\.(\d{3})(\d{6})$/.exec(string);
@@ -52,4 +53,5 @@ export class CivilTime {
   static fromMilliseconds(milliseconds, zone) {
     return CivilDateTime.fromMilliseconds(milliseconds, zone).toCivilTime();
   }
-}
+};
+CivilTime.prototype[Symbol.toStringTag] = 'CivilTime';

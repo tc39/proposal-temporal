@@ -19,6 +19,7 @@ export class Instant {
 
   get milliseconds() { return this[VALUE].milliseconds; }
   get nanoseconds() { return this[VALUE].nanoseconds; }
+  get value() { return BigInt(this.milliseconds) * BigInt(1e6) + BigInt(this.nanoseconds); }
 
   plus(data) {
     const object = Object.create(Instant.prototype);
@@ -33,9 +34,6 @@ export class Instant {
   withZone(zone) {
     return new ZonedInstant(this, zone);
   }
-  valueOf() {
-    return BigInt(this[VALUE].milliseconds) * BigInt(1e6) + BigInt(this[VALUE].nanoseconds);
-  }
   format(locale, options) {
     return this.withZone().format(locale, options);
   }
@@ -44,6 +42,7 @@ export class Instant {
     const nanosecond = this.nanoseconds;
     return `${spad(year,4)}-${pad(month,2)}-${pad(day,2)}T${pad(hour,2)}:${pad(minute,2)}:${pad(second,2)}.${pad(millisecond,3)}${pad(nanosecond,6)}Z`;
   }
+  toJSON() { return this.toString(); }
 
   static fromString(string) {
     const match = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})\.(\d{3})(\d{6})Z$/.exec(string);
@@ -69,6 +68,7 @@ export class Instant {
     return object;
   }
 }
+Instant.prototype[Symbol.toStringTag] = 'Instant';
 
 function toParts(value) {
   const millis = value.milliseconds;

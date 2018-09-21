@@ -3,7 +3,7 @@
 ** This code is governed by the license found in the LICENSE file.
 */
 
-import { plus, pad, spad  } from './util.mjs';
+import { plus, pad, spad, dayOfWeek, dayOfYear, weekOfYear  } from './util.mjs';
 import { CivilDateTime } from './civildatetime.mjs';
 
 const DATA = Symbol('data');
@@ -18,6 +18,10 @@ export class CivilDate {
   get month() { return this[DATA].month; }
   get day() { return this[DATA].day; }
 
+  get dayOfWeek() { return dayOfWeek(this.year, this.month, this.day); }
+  get dayOfYear() { return dayOfYear(this.year, this.month, this.day); }
+  get weekOfYear() { return weekOfYear(this.year, this.month, this.day); }
+
   plus(data) {
     const { year, month, day } = plus(this, data);
     return new CivilDate(year, month, day);
@@ -25,12 +29,22 @@ export class CivilDate {
   with({ year = this.year, month = this.month , day = this.day } = {}) {
     return new CivilDate(year, month, day);
   }
-  withTime(time = CivilDateTime.now().toCivilTime()) {
+  withTime(time) {
     return new CivilDateTime.from(this, time);
   }
-  toString() {
+  toString() { return this.toDateString(); }
+  toJSON() { return this.toString(); }
+  toDateString() {
     const { year, month, day } = this;
     return `${spad(year, 4)}-${pad(month, 2)}-${pad(day, 2)}`;
+  }
+  toWeekDateString() {
+    const { year, weekOfYear, dayOfWeek } = this;
+    return `${spad(year, 4)}-W${pad(weekOfYear, 2)}-${pad(dayOfWeek, 2)}`;
+  }
+  toOrdinalDateString() {
+    const { year, dayOfYear } = this;
+    return `${spad(year, 4)}-${pad(dayOfYear, 3)}`;
   }
 
   static fromString(string) {
@@ -44,3 +58,4 @@ export class CivilDate {
     return CivilDateTime.fromMilliseconds(millis, zone).toCivilDate();
   }
 };
+CivilDate.prototype[Symbol.toStringTag] = 'CivilDate';
