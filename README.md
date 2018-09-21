@@ -30,13 +30,13 @@ For a detailed breakdown of motivations see:
 
 # Overview of Standard Objects in the `temporal` module
 
-### Objects representing Civil Time
+### Objects representing Gregorian Time
 
 Object name     | Description                                                         | Example
 ----------------|---------------------------------------------------------------------|-------------
-`CivilDate`     | A date without any time or time zone reference.                     | `2017-12-31`
-`CivilTime`     | A time-of-day without any date or time zone reference.              | `17:00:00`
-`CivilDateTime` | A date and a time without any time zone reference.                  | `2017-12-31T12:00:00`
+`GregorianDate`     | A date without any time or time zone reference.                     | `2017-12-31`
+`GregorianTime`     | A time-of-day without any date or time zone reference.              | `17:00:00`
+`GregorianDateTime` | A date and a time without any time zone reference.                  | `2017-12-31T12:00:00`
 
 ### Objects representing Absolute Time
 
@@ -63,10 +63,10 @@ Because a fixed offset is supported, there is no need for a separate `OffsetDate
 
 ```js
 // Temporal
-let dateTimeInChicago = new CivilDateTime(2000, 12, 31, 23, 59)
+let dateTimeInChicago = new GregorianDateTime(2000, 12, 31, 23, 59)
 let instantInChicago = dateTimeInChicago.withZone('America/Chicago');
 let instantInSydney = new ZonedInstant(instantInChicago.instant, 'Australia/Sydney')
-let dateTimeInSydney = instantInSydney.toCivilDateTime()
+let dateTimeInSydney = GregorianDateTime.fromZonedInstant(instantInSydney)
 dateTimeInChicago.toString() // 2000-12-31T23:59:00.000000000
 dateTimeInSydney.toString()  // 2001-01-01T16:59:00.000000000
 
@@ -91,12 +91,12 @@ dateInLocalTimeZone.toISOString()             // dependent on local time zone
 
 ---------------------------------------------------------------------------------------------------
 
-# Object: `CivilDate`
+# Object: `GregorianDate`
 Represents a whole day, as a date on the proleptic Gregorian calendar.
 
 ## Constructor
 ```js
-new CivilDate(year, month, day)
+new GregorianDate(year, month, day)
 ```
 
 #### Parameters
@@ -106,25 +106,25 @@ new CivilDate(year, month, day)
 
 ### Properties
 ```js
-let year = civilDate.year;
-let month = civilDate.month;
-let day = civilDate.day;
+let year = gregorianDate.year;
+let month = gregorianDate.month;
+let day = gregorianDate.day;
 ```
 
 ### Functions
 ```js
-let civilDate2 = civilDate1.plus({months: 1});
-let civilDateTime = civilDate.withTime(time);
+let gregorianDate2 = gregorianDate1.plus({months: 1});
+let gregorianDateTime = gregorianDate.withTime(time);
 ```
 
 ---------------------------------------------------------------------------------------------------
 
-# Object: `CivilTime`
+# Object: `GregorianTime`
 Represents a position on a 24-hour clock.
 
 ### Constructor
 ```js
-new CivilTime(hour, minute[[[, second], millisecond], nanosecond])
+new GregorianTime(hour, minute[[, second], nanosecond])
 ```
 
 
@@ -132,32 +132,32 @@ new CivilTime(hour, minute[[[, second], millisecond], nanosecond])
  - `hour` : Integer value representing the hour of the day, from `0` through `23`.
  - `minute` : Integer value representing the minute within the hour, from `0` through `59`.
  - `second` : Optional. Integer value representing the second within the minute, from `0` through `59`.
- - `millisecond` : Optional. Integer value representing the millisecond within the second, from `0` through `999`.
- - `nanosecond` : Optional. Integer value representing the nanosecond within the millisecond, from `0` through `999999`.
+ - `nanosecond` : Optional. Integer value representing the sub-second data with nanosecond accuracy, from `0` through `999999999`.
 
 ### Properties
 ```js
-let hour = civilTime.hour;
-let minute = civilTime.minute;
-let second = civilTime.second;
-let millisecond = civilTime.millisecond;
-let nanosecond = civilTime.nanosecond;
+let hour = gregorianTime.hour;
+let minute = gregorianTime.minute;
+let second = gregorianTime.second;
+let millisecond = gregorianTime.millisecond;
+let microsecond = gregorianTime.microsecond;
+let nanosecond = gregorianTime.nanosecond;
 ```
 
 ### Functions
 ```js
-let civilTime2 = civilTime1.plus({hours: 2, minutes: 4});
-let civilDateTime = civilTime.withDate(date);
+let gregorianTime2 = gregorianTime1.plus({hours: 2, minutes: 4});
+let gregorianDateTime = gregorianTime.withDate(date);
 ```
 
 ---------------------------------------------------------------------------------------------------
 
-# Object: `CivilDateTime`
+# Object: `GregorianDateTime`
 Represents a whole day, and the position within that day.
 
 ### Constructor
 ```js
-new CivilDateTime(year, month, day, hour, minute[, second[, millisecond[, nanosecond]]])
+new GregorianDateTime(year, month, day, hour, minute[, second[, nanosecond]])
 ```
 
 #### Parameters
@@ -167,28 +167,28 @@ new CivilDateTime(year, month, day, hour, minute[, second[, millisecond[, nanose
  - `hour` : Integer value representing the hour of the day, from `0` through `23`.
  - `minute` : Integer value representing the minute within the hour, from `0` through `59`.
  - `second` : Optional. Integer value representing the second within the minute, from `0` through `59`.
- - `millisecond` : Optional. Integer value representing the millisecond within the second, from `0` through `999`.
- - `nanosecond` : Optional. Integer value representing the nanosecond within the millisecond, from `0` through `999999`.
+ - `nanosecond` : Optional. Integer value representing the sub-second data with nanosecond accuracy, from `0` through `999999999`.
 
 ### Properties
 ```js
-let year = civilDateTime.year;
-let month = civilDateTime.month;
-let day = civilDateTime.day;
-let hour = civilDateTime.hour;
-let minute = civilDateTime.minute;
-let second = civilDateTime.second;
-let millisecond = civilDateTime.millisecond;
-let nanosecond = civilDateTime.nanosecond;
+let year = gregorianDateTime.year;
+let month = gregorianDateTime.month;
+let day = gregorianDateTime.day;
+let hour = gregorianDateTime.hour;
+let minute = gregorianDateTime.minute;
+let second = gregorianDateTime.second;
+let millisecond = gregorianDateTime.millisecond;
+let microsecond = gregorianDateTime.microsecond;
+let nanosecond = gregorianDateTime.nanosecond;
 ```
 
 ### Functions
 ```js
-let civilDateTime = CivilDateTime.from(date, time);
-let civilDateTime2 = civilDateTime1.plus({days: 3, hours: 4, minutes: 2, seconds: 12});
-let civilDate = civilDateTime.toCivilDate();
-let civilTime = civilDateTime.toCivilTime();
-let zonedInstant = civilDateTime.withZone(timeZone[, options]);
+let gregorianDateTime = GregorianDateTime.from(date, time);
+let gregorianDateTime2 = gregorianDateTime1.plus({days: 3, hours: 4, minutes: 2, seconds: 12});
+let gregorianDate = gregorianDateTime.toGregorianDate();
+let gregorianTime = gregorianDateTime.toGregorianTime();
+let zonedInstant = gregorianDateTime.withZone(timeZone[, options]);
 ```
 
 ---------------------------------------------------------------------------------------------------
@@ -199,16 +199,17 @@ Counted as number of nanoseconds from `1970-01-01T00:00:00.000000000Z`.
 
 ### Constructor
 ```js
-new Instant(milliseconds[, nanoseconds])
+new Instant(nanoseconds)
 ```
 
 #### Parameters
- - `milliseconds` : Integer value representing the number of milliseconds elapsed from 1970-01-01 00:00:00.000 UTC, without regarding leap seconds.
- - `nanoseconds` : Optional. Integer value representing the nanosecond within the millisecond.
+ - `nanoseconds` : BigInt value representing the number of nanoseconds elapsed from 1970-01-01 00:00:00.000000000 UTC, without regarding leap seconds.
 
 ### Properties
 ```js
+let seconds = instant.seconds;
 let milliseconds = instant.milliseconds;
+let microseconds = instant.microseconds;
 let nanoseconds = instant.nanoseconds;
 ```
 
@@ -229,16 +230,18 @@ new ZonedInstant(instant, timeZone)
 
 ### Properties
 ```js
-let milliseconds = zonedInstant.milliseconds;
-let nanoseconds = zonedInstant.nanoseconds;
+let seconds = instant.seconds;
+let milliseconds = instant.milliseconds;
+let microseconds = instant.microseconds;
+let nanoseconds = instant.nanoseconds;
 let timeZone = zonedInstant.timeZone;
 ```
 
 ### Functions
 ```js
-let civilDateTime = zonedInstant.toCivilDateTime();
-let civilDate = zonedInstant.toCivilDate();
-let civilTime = zonedInstant.toCivilTime();
+let gregorianDateTime = GregorianDateTime.fromZonedInstant(zonedInstant);
+let gregorianDate = GregorianDate.fromZonedInstant(zonedInstant);
+let gregorianTime = GregorianTime.fromZonedInstant(zonedInstant);
 let instant = zonedInstant.toInstant();
 ```
 ---------------------------------------------------------------------------------------------
@@ -246,8 +249,8 @@ let instant = zonedInstant.toInstant();
 Allows the user to create a new instance of any temporal object with new date-part values.
 
 ```js
-let myCivilDate = new CivilDate(2016, 2, 29);
-let newCivilDate = myCivilDate.with({year: 2017, month: 3});
+let myGregorianDate = new GregorianDate(2016, 2, 29);
+let newGregorianDate = myGregorianDate.with({year: 2017, month: 3});
 //results in civil date with value 2017-03-29
 ```
 
@@ -256,8 +259,8 @@ let newCivilDate = myCivilDate.with({year: 2017, month: 3});
 Returns a new temporal object with the specified date parts added. Units will be added in order of size, descending.
 
 ```js
-let myCivilDate = new CivilDate(2016, 2, 29);
-let newCivilDate = myCivilDate.plus({years: 1, months: 2});
+let myGregorianDate = new GregorianDate(2016, 2, 29);
+let newGregorianDate = myGregorianDate.plus({years: 1, months: 2});
 //results in civil date with value 2017-4-28
 ```
 
