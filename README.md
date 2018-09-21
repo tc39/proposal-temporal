@@ -58,7 +58,36 @@ Because a fixed offset is supported, there is no need for a separate `OffsetDate
 ---------------------------------------------------------------------------------------------------
 
 # Scenario-Based Examples
-TBD
+
+### Convert a time in one time zone to a time at the same instant in another time zone.
+
+```js
+// Temporal
+let dateTimeInChicago = new CivilDateTime(2000, 12, 31, 23, 59)
+let instantInChicago = dateTimeInChicago.withZone('America/Chicago');
+let instantInSydney = new ZonedInstant(instantInChicago.instant, 'Australia/Sydney')
+let dateTimeInSydney = instantInSydney.toCivilDateTime()
+dateTimeInChicago.toString() // 2000-12-31T23:59:00.000000000
+dateTimeInSydney.toString()  // 2001-01-01T16:59:00.000000000
+
+// Date
+// A time zone is not supported, so an offset must be used instead.
+// Whatever provides the offset needs to know when to provide -05:00 vs -06:00 for Chicago.
+let timestampInChicago = Date.parse("2000-12-31T23:59:00-06:00")
+let dateInLocalTimeZone = new Date(timestampInChicago)
+let formatterInSydney = new Intl.DateTimeFormat('en-US', { timeZone: 'Australia/Sydney', year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' }
+let formatterInChicago = new Intl.DateTimeFormat('en-US', { timeZone: 'America/Chicago', year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' }))
+dateInLocalTimeZone.toISOString()              // 2001-01-01T05:59:00.000Z
+formatterInSydney.format(dateInLocalTimeZone)  // 1/1/2001, 4:59:00 PM
+formatterInChicago.format(dateInLocalTimeZone) // 12/31/2000, 11:59:00 PM
+
+// Performing calendar operations such as finding the start of month
+dateTimeInChicago.with({ day: 1 }).toString() // 2000-12-01T23:59:00.000000000
+dateTimeInSydney.with({ day: 1 }).toString()  // 2001-01-01T16:59:00.000000000
+dateInLocalTimeZone.setDate(1)
+dateInLocalTimeZone.toISOString()             // dependent on local time zone
+// A Date object is unable to perform calendar operations in time zones other than local time or UTC.
+```
 
 ---------------------------------------------------------------------------------------------------
 
