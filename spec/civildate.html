@@ -1,7 +1,7 @@
 <!doctype html>
 <meta charset="utf8">
 
-<emu-intro id=sec-intro>
+<emu-intro id=sec-temporal-civildate>
   <h1>CivilDate Objects</h1>
   <p>A CivilDate object is an immutable Object that contains Number values corresponding to a particular year, month,
     and day.</p>
@@ -9,20 +9,20 @@
     every case, if any argument to one of these functions is NaN, the result will be NaN.</p>
 </emu-intro>
 
-<emu-clause id=sec-year-number>
+<emu-clause id=sec-temporal-civildate-year-number>
   <h1>Year Number</h1>
   <p>The Year Number is an integer Number corresponding to a particular year. It is called the year value. It must
     have a Number value and may not be NaN.</p>
 </emu-clause>
 
-<emu-clause id=sec-month-number>
+<emu-clause id=sec-temporal-civildate-month-number>
   <h1>Month Number</h1>
   <p>The Month Number is a positive integer Number corresponding to a particular month. It is called the month value
     and is identified by an integer in the range of 1 to 12, inclusive. It must have a Number value and may not be
     NaN.</p>
 </emu-clause>
 
-<emu-clause id=sec-day-number>
+<emu-clause id=sec-temporal-civildate-day-number>
   <h1>Day Number</h1>
   <p>The Day Number is a positive integer Number corresponding to a particular day of the month. It is called the
     day value and is identified by an integer the value of which is dependent on the month and year values. It must
@@ -41,7 +41,7 @@
   </emu-alg>
 </emu-clause>
 
-<emu-clause id=sec-plus-operation>
+<emu-clause id=sec-temporal-civildate-plus-operation>
   <h1>Plus(Object)</h1>
   <p>The abstract operation Plus returns a new CivilDate object that may have 0 to 2 values copied from the
     CivilDate object on which the operation was performed. The new CivilDate object will have one or more updated
@@ -51,7 +51,7 @@
     "Month", and "Day".</p>
 </emu-clause>
 
-<emu-clause id=sec-with-operation>
+<emu-clause id=sec-temporal-civildate-with-operation>
   <h1>With(?_year, ?_month, ?_day)</h1>
   <p>The abstract operation With takes one Object argument and returns a new CivilDate object. The Object argument
     must have a range of 1 to 3 inclusive key/value pairs with the keys "year", "month", and/or "day". The
@@ -60,13 +60,13 @@
     CivilDate object and replaces the property value(s) with the corresponding argument value.</p>
 </emu-clause>
 
-<emu-clause id=sec-withtime-operation>
+<emu-clause id=sec-temporal-civildate-withtime-operation>
   <h1>WithTime(time)</h1>
   <p>The abstract operation WithTime returns a CivilDateTime object that copies and may update the year, month, and
     day values of the CivilDate object on which the operation was performed.</p>
 </emu-clause>
 
-<emu-clause id=sec-constructor>
+<emu-clause id=sec-temporal-civildate-constructor>
   <h1>CivilDate Constructor</h1>
   <p>The CivilDate constructor is the %CivilDate% intrinsic object. When called as a constructor, it creates and
     initializes a new CivilDate object.</p>
@@ -77,7 +77,7 @@
   </emu-grammar>
 </emu-clause>
 
-<emu-clause id=sec-constructor-alg>
+<emu-clause id=sec-temporal-civildate-constructor-alg>
   <h1>CivilDate (year, month, day)</h1>
   <p>This description only applies if the CivilDate constructor is called with at least 3 arguments.</p>
   <p>When the CivilDate function is called, the following steps are taken:</p>
@@ -91,20 +91,20 @@
   </emu-alg>
 </emu-clause>
 
-<emu-clause id=sec-constructor-prop>
+<emu-clause id=sec-temporal-civildate-constructor-prop>
   <h1>Properties of the CivilDate Constructor</h1>
   <p>The value of the [[Prototype]] internal slot of the CivilDate constructor is the intrinsic object
     %FunctionPrototype%.</p>
   <p>The CivilDate constructor has the following properties:</p>
 </emu-clause>
 
-<emu-clause id=sec-prototype>
+<emu-clause id=sec-temporal-civildate-prototype>
   <h1>CivilDate Prototype</h1>
   <p>The initial value of CivilDate.prototype is the intrinsic object %CivilDatePrototype%. This property has the
     attributes {[[Writable]]: false, [[Enumerable]]: false, [[Configurable]]: false}.</p>
 </emu-clause>
 
-<emu-clause id=sec-plus-alg>
+<emu-clause id=sec-temporal-civildate-plus-alg>
   <h1>CivilDate.plus (data)</h1>
   <p>The abstract operation plus takes as an argument an Object with a range of 1 to 3 key/value pairs, inclusive.</p>
   <p>The keys may not be duplicated and may be any combination of "year", "month", "day".</p>
@@ -134,7 +134,7 @@
   </emu-alg>
 </emu-clause>
 
-<emu-clause id=sec-with-alg>
+<emu-clause id=sec-temporal-civildate-with-alg>
   <h1>CivilDate.with (data)</h1>
   <p>The abstract operation plus takes as an argument an Object with a range of 1 to 3 key/value pairs, inclusive.</p>
   <p>The keys may not be duplicated and may be any combination of "year", "month", "day".</p>

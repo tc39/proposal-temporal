@@ -1,39 +1,39 @@
 <!doctype html>
 <meta charset="utf8">
 
-<emu-intro id=sec-intro>
+<emu-intro id=sec-temporal-instant>
   <h1>Introduction</h1>
   <p>An `Instant` is an immutable object referencing a point in time with nanoseconds precision.</p>
 </emu-intro>
 
-<emu-clause id=sec-temporal-Instant>
+<emu-clause id=sec-temporal-instant-constructor>
   <h1>new Instant(*nanoseconds*)</h1>
   <p>When called as a constructor creates a new Instant object. *nanoseconds* is a BigInt of the nanoseconds since
     epoch.</p>
 </emu-clause>
 
-<emu-clause id=sec-temporal-Instant.prototype.valueOf>
+<emu-clause id=sec-temporal-instant.prototype.valueOf>
   <h1>Instant.prototype.valueOf()</h1>
   <p>When called with an Instant object as the _this_ context the result will be a BigInt value with the nanoseconds
     since epoch the instant represents.</p>
   <p>Calling this function with anything other than an Instant object as the _this_ context is illegal.</p>
 </emu-clause>
 
-<emu-clause id=sec-temporal-Instant.prototype.milliseconds>
+<emu-clause id=sec-temporal-instant.prototype.milliseconds>
   <h1>Instant.prototype.milliseconds</h1>
   <p>`instant.milliseconds` is a getter that returns the milliseconds Number integer since epoch of the point in time
     represented by the instant object such that `instant.milliseconds === Math.floor(instant.valueOf() / 1e6)` is
     *true*.</p>
 </emu-clause>
 
-<emu-clause id=sec-temporal-Instant.prototype.nanoseconds>
+<emu-clause id=sec-temporal-instant.prototype.nanoseconds>
   <h1>Instant.prototype.nanoseconds</h1>
   <p>`instant.nanoseconds` is a getter that returns the nanoseconds Number such that it represents only the nanoseconds
     that are not represented in `Instant.prototype.milliseconds` such that `instant.nanoseconds === instant.valueOf() %
     1e6` is *true*.</p>
 </emu-clause>
 
-<emu-clause id=sec-temporal-Instant.prototype.plus>
+<emu-clause id=sec-temporal-instant.prototype.plus>
   <h1>Instant.prototype.plus({ ? _years_, ? _months_, ? _days_, ? _hours_, ? _minutes_, ? _seconds_, ?
     _milliseconds_, ? _nanoseconds_ })</h1>
   <p>When called with an Instant object as the _this_ context the result will be a new Instant object. The value of the
@@ -42,9 +42,9 @@
   <p>Calling this function with a _this_ context that is not an instance of Instant is illegal.</p>
 </emu-clause>
 
-<emu-clause id=sec-temporal-Instant.prototype.withZone>
+<emu-clause id=sec-temporal-instant.prototype.withZone>
   <h1>Instant.prototype.withZone(_timezone_)</h1>
-  <p>When called with an Instant object as a _this_ context it will return a <emu-xref href="#sec-temporal-ZonedInstant">ZonedInstant</emu-xref>
+  <p>When called with an Instant object as a _this_ context it will return a <emu-xref href="#sec-temporal-zonedinstant">ZonedInstant</emu-xref>
     object that specifies an instant in time in the given time zone.</p>
   <p>_timezone_ is a string specifying a time zone. Legal values are IANA geographic time zone names as well as the
     special values *"SYSTEM"* and *"UTC"*.</p>
@@ -55,7 +55,7 @@
   <p>Calling this function with a _this_ context that is not an instance of Instant is illegal.</p>
 </emu-clause>
 
-<emu-clause id=sec-temporal-Instant.prototype.toString>
+<emu-clause id=sec-temporal-instant.prototype.toString>
   <h1>Instant.prototype.toString()</h1>
   <p>When called with an Instant object as a _this_ context it will return an ISO 8601 String value representing the
     value of the Instant object.</p>
@@ -74,7 +74,7 @@
   <p>Calling this function with a _this_ context that is not an instance of Instant is illegal.</p>
 </emu-clause>
 
-<emu-clause id=sec-temporal-Instant.prototype.format>
+<emu-clause id=sec-temporal-instant.prototype.format>
   <h1>Instant.prototype.format([_locale_], [_options_])</h1>
   <p>When called with an Instant object as a _this_ context it will return an String value representing the value of
     the Instant object as formated by an `Intl.DateFormatter` objects `format` method when invoked with the _locale_
@@ -83,17 +83,17 @@
   <p>Calling this function with a _this_ context that is not an instance of Instant is illegal.</p>
 </emu-clause>
 
-<emu-clause id=sec-temporal-Instant.fromMilliseconds>
+<emu-clause id=sec-temporal-instant.fromMilliseconds>
   <h1>Instant.fromMilliseconds(_miliseconds_)</h1>
   <p>This function will create an Instant object that represents the instant in time _milliseconds_ since epoch.
     Nanoseconds will be *0*.</p>
   <p>_milliseconds_ is the Number of milliseconds since epoch.</p>
 </emu-clause>
 
-<emu-clause id=sec-temporal-Instant.fromString>
+<emu-clause id=sec-temporal-instant.fromString>
   <h1>Instant.fromString(_string_)</h1>
   <p>This function will create an Instant object from a String. The _string_ has to strictly conform to the format
     produced by
-    <emu-xref href="#sec-temporal-Instant.prototype.toString" title />. Any _string_ not strictly conforming to that
+    <emu-xref href="#sec-temporal-instant.prototype.toString" title />. Any _string_ not strictly conforming to that
     format will throw an Error.</p>
 </emu-clause>
