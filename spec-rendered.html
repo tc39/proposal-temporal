@@ -1,0 +1,2591 @@
+<!doctype html>
+<head><meta charset="utf-8">
+
+<title>Temporal proposal</title><script type="application/json" id="menu-search-biblio">[{"type":"clause","id":"sec-temporal-civildate","aoid":null,"title":"CivilDate Objects","titleHTML":"CivilDate Objects","number":"","namespace":"<no location>","location":"","referencingIds":[],"key":"CivilDate Objects"},{"type":"clause","id":"sec-temporal-civildate-year-number","aoid":null,"title":"Year Number","titleHTML":"Year Number","number":"1","namespace":"<no location>","location":"","referencingIds":[],"key":"Year Number"},{"type":"clause","id":"sec-temporal-civildate-month-number","aoid":null,"title":"Month Number","titleHTML":"Month Number","number":"2","namespace":"<no location>","location":"","referencingIds":[],"key":"Month Number"},{"type":"clause","id":"sec-temporal-civildate-day-number","aoid":null,"title":"Day Number","titleHTML":"Day Number","number":"3","namespace":"<no location>","location":"","referencingIds":[],"key":"Day Number"},{"type":"clause","id":"sec-temporal-civildate-plus-operation","aoid":null,"title":"Plus(Object)","titleHTML":"Plus(Object)","number":"4","namespace":"<no location>","location":"","referencingIds":[],"key":"Plus(Object)"},{"type":"clause","id":"sec-temporal-civildate-with-operation","aoid":null,"title":"With(?_year, ?_month, ?_day)","titleHTML":"With(?_year, ?_month, ?_day)","number":"5","namespace":"<no location>","location":"","referencingIds":[],"key":"With(?_year, ?_month, ?_day)"},{"type":"clause","id":"sec-temporal-civildate-withtime-operation","aoid":null,"title":"WithTime(time)","titleHTML":"WithTime(time)","number":"6","namespace":"<no location>","location":"","referencingIds":[],"key":"WithTime(time)"},{"type":"clause","id":"sec-temporal-civildate-constructor","aoid":null,"title":"CivilDate Constructor","titleHTML":"CivilDate Constructor","number":"7","namespace":"<no location>","location":"","referencingIds":[],"key":"CivilDate Constructor"},{"type":"clause","id":"sec-temporal-civildate-constructor-alg","aoid":null,"title":"CivilDate (year, month, day)","titleHTML":"CivilDate (year, month, day)","number":"8","namespace":"<no location>","location":"","referencingIds":[],"key":"CivilDate (year, month, day)"},{"type":"clause","id":"sec-temporal-civildate-constructor-prop","aoid":null,"title":"Properties of the CivilDate Constructor","titleHTML":"Properties of the CivilDate Constructor","number":"9","namespace":"<no location>","location":"","referencingIds":[],"key":"Properties of the CivilDate Constructor"},{"type":"clause","id":"sec-temporal-civildate-prototype","aoid":null,"title":"CivilDate Prototype","titleHTML":"CivilDate Prototype","number":"10","namespace":"<no location>","location":"","referencingIds":[],"key":"CivilDate Prototype"},{"type":"clause","id":"sec-temporal-civildate-plus-alg","aoid":null,"title":"CivilDate.plus (data)","titleHTML":"CivilDate.plus (data)","number":"11","namespace":"<no location>","location":"","referencingIds":[],"key":"CivilDate.plus (data)"},{"type":"clause","id":"sec-temporal-civildate-with-alg","aoid":null,"title":"CivilDate.with (data)","titleHTML":"CivilDate.with (data)","number":"12","namespace":"<no location>","location":"","referencingIds":[],"key":"CivilDate.with (data)"},{"type":"clause","id":"sec-temporal-civiltime","aoid":null,"title":"CivilTime Objects","titleHTML":"CivilTime Objects","number":"","namespace":"<no location>","location":"","referencingIds":[],"key":"CivilTime Objects"},{"type":"clause","id":"sec-temporal-civiltime-hour-number","aoid":null,"title":"Hour Number","titleHTML":"Hour Number","number":"13","namespace":"<no location>","location":"","referencingIds":[],"key":"Hour Number"},{"type":"clause","id":"sec-temporal-civiltime-minute-number","aoid":null,"title":"Minute Number","titleHTML":"Minute Number","number":"14","namespace":"<no location>","location":"","referencingIds":[],"key":"Minute Number"},{"type":"clause","id":"sec-temporal-civiltime-second-number","aoid":null,"title":"Second Number","titleHTML":"Second Number","number":"15","namespace":"<no location>","location":"","referencingIds":[],"key":"Second Number"},{"type":"clause","id":"sec-temporal-civiltime-millisecond-number","aoid":null,"title":"Millisecond Number","titleHTML":"Millisecond Number","number":"16","namespace":"<no location>","location":"","referencingIds":[],"key":"Millisecond Number"},{"type":"clause","id":"sec-temporal-civiltime-nanosecond-number","aoid":null,"title":"Nanosecond Number","titleHTML":"Nanosecond Number","number":"17","namespace":"<no location>","location":"","referencingIds":[],"key":"Nanosecond Number"},{"type":"clause","id":"sec-temporal-civiltime-plus-operation","aoid":null,"title":"Plus(Object)","titleHTML":"Plus(Object)","number":"18","namespace":"<no location>","location":"","referencingIds":[],"key":"Plus(Object)"},{"type":"clause","id":"sec-temporal-civiltime-with-operation","aoid":null,"title":"With(?_hour, ?_minute, ?_second, ?_millisecond, ?_nanosecond)","titleHTML":"With(?_hour, ?_minute, ?_second, ?_millisecond, ?_nanosecond)","number":"19","namespace":"<no location>","location":"","referencingIds":[],"key":"With(?_hour, ?_minute, ?_second, ?_millisecond, ?_nanosecond)"},{"type":"clause","id":"sec-temporal-civiltime-withdate-operation","aoid":null,"title":"WithDate(date)","titleHTML":"WithDate(date)","number":"20","namespace":"<no location>","location":"","referencingIds":[],"key":"WithDate(date)"},{"type":"clause","id":"sec-temporal-civiltime-constructor","aoid":null,"title":"CivilTime Constructor","titleHTML":"CivilTime Constructor","number":"21","namespace":"<no location>","location":"","referencingIds":[],"key":"CivilTime Constructor"},{"type":"clause","id":"sec-temporal-civiltime-constructor-alg","aoid":null,"title":"CivilTime (hour, minute[[[, second], millisecond], nanosecond])","titleHTML":"CivilTime (hour, minute[[[, second], millisecond], nanosecond])","number":"22","namespace":"<no location>","location":"","referencingIds":[],"key":"CivilTime (hour, minute[[[, second], millisecond], nanosecond])"},{"type":"clause","id":"sec-temporal-civiltime-constructor-prop","aoid":null,"title":"Properties of the CivilTime Constructor","titleHTML":"Properties of the CivilTime Constructor","number":"23","namespace":"<no location>","location":"","referencingIds":[],"key":"Properties of the CivilTime Constructor"},{"type":"clause","id":"sec-temporal-civiltime-prototype","aoid":null,"title":"CivilTime Prototype","titleHTML":"CivilTime Prototype","number":"24","namespace":"<no location>","location":"","referencingIds":[],"key":"CivilTime Prototype"},{"type":"clause","id":"sec-temporal-civiltime-plus-alg","aoid":null,"title":"CivilTime.plus (data)","titleHTML":"CivilTime.plus (data)","number":"25","namespace":"<no location>","location":"","referencingIds":[],"key":"CivilTime.plus (data)"},{"type":"clause","id":"sec-temporal-civiltime-with-alg","aoid":null,"title":"CivilTime.with(data)","titleHTML":"CivilTime.with(data)","number":"26","namespace":"<no location>","location":"","referencingIds":[],"key":"CivilTime.with(data)"},{"type":"clause","id":"sec-temporal-civiltime-withdate-alg","aoid":null,"title":"CivilTime.withDate (data)","titleHTML":"CivilTime.withDate (data)","number":"27","namespace":"<no location>","location":"","referencingIds":[],"key":"CivilTime.withDate (data)"},{"type":"clause","id":"sec-temporal-civildatetime","aoid":null,"title":"CivilDateTime Objects","titleHTML":"CivilDateTime Objects","number":"","namespace":"<no location>","location":"","referencingIds":[],"key":"CivilDateTime Objects"},{"type":"clause","id":"sec-temporal-civildatetime-year-number","aoid":null,"title":"Year Number","titleHTML":"Year Number","number":"28","namespace":"<no location>","location":"","referencingIds":[],"key":"Year Number"},{"type":"clause","id":"sec-temporal-civildatetime-month-number","aoid":null,"title":"Month Number","titleHTML":"Month Number","number":"29","namespace":"<no location>","location":"","referencingIds":[],"key":"Month Number"},{"type":"clause","id":"sec-temporal-civildatetime-day-number","aoid":null,"title":"Day Number","titleHTML":"Day Number","number":"30","namespace":"<no location>","location":"","referencingIds":[],"key":"Day Number"},{"type":"clause","id":"sec-temporal-civildatetime-hour-number","aoid":null,"title":"Hour Number","titleHTML":"Hour Number","number":"31","namespace":"<no location>","location":"","referencingIds":[],"key":"Hour Number"},{"type":"clause","id":"sec-temporal-civildatetime-minute-number","aoid":null,"title":"Minute Number","titleHTML":"Minute Number","number":"32","namespace":"<no location>","location":"","referencingIds":[],"key":"Minute Number"},{"type":"clause","id":"sec-temporal-civildatetime-second-number","aoid":null,"title":"Second Number","titleHTML":"Second Number","number":"33","namespace":"<no location>","location":"","referencingIds":[],"key":"Second Number"},{"type":"clause","id":"sec-temporal-civildatetime-millisecond-number","aoid":null,"title":"Millisecond Number","titleHTML":"Millisecond Number","number":"34","namespace":"<no location>","location":"","referencingIds":[],"key":"Millisecond Number"},{"type":"clause","id":"sec-temporal-civildatetime-nanosecond-number","aoid":null,"title":"Nanosecond Number","titleHTML":"Nanosecond Number","number":"35","namespace":"<no location>","location":"","referencingIds":[],"key":"Nanosecond Number"},{"type":"clause","id":"sec-temporal-civildatetime-from-operation","aoid":null,"title":"From(date, time)","titleHTML":"From(date, time)","number":"36","namespace":"<no location>","location":"","referencingIds":[],"key":"From(date, time)"},{"type":"clause","id":"sec-temporal-civildatetime-plus-operation","aoid":null,"title":"Plus(Object)","titleHTML":"Plus(Object)","number":"37","namespace":"<no location>","location":"","referencingIds":[],"key":"Plus(Object)"},{"type":"clause","id":"sec-temporal-civildatetime-with-operation","aoid":null,"title":"With(Object)","titleHTML":"With(Object)","number":"38","namespace":"<no location>","location":"","referencingIds":[],"key":"With(Object)"},{"type":"clause","id":"sec-temporal-civildatetime-constructor","aoid":null,"title":"CivilDateTime Constructor","titleHTML":"CivilDateTime Constructor","number":"39","namespace":"<no location>","location":"","referencingIds":[],"key":"CivilDateTime Constructor"},{"type":"clause","id":"sec-temporal-civildatetime-constructor-alg","aoid":null,"title":"CivilDateTime (year, month, day, hour, minute[[[, second], millisecond], nanosecond])","titleHTML":"CivilDateTime (year, month, day, hour, minute[[[, second], millisecond], nanosecond])","number":"40","namespace":"<no location>","location":"","referencingIds":[],"key":"CivilDateTime (year, month, day, hour, minute[[[, second], millisecond], nanosecond])"},{"type":"clause","id":"sec-temporal-civildatetime-constructor-prop","aoid":null,"title":"Properties of the CivilDateTime Constructor","titleHTML":"Properties of the CivilDateTime Constructor","number":"41","namespace":"<no location>","location":"","referencingIds":[],"key":"Properties of the CivilDateTime Constructor"},{"type":"clause","id":"sec-temporal-civildatetime-prototype","aoid":null,"title":"CivilDateTime Prototype","titleHTML":"CivilDateTime Prototype","number":"42","namespace":"<no location>","location":"","referencingIds":[],"key":"CivilDateTime Prototype"},{"type":"clause","id":"sec-temporal-civildatetime-plus-alg","aoid":null,"title":"CivilDateTime.plus (data)","titleHTML":"CivilDateTime.plus (data)","number":"43","namespace":"<no location>","location":"","referencingIds":[],"key":"CivilDateTime.plus (data)"},{"type":"clause","id":"sec-temporal-civildatetime-with-alg","aoid":null,"title":"CivilDateTime.with (data)","titleHTML":"CivilDateTime.with (data)","number":"44","namespace":"<no location>","location":"","referencingIds":[],"key":"CivilDateTime.with (data)"},{"type":"clause","id":"sec-temporal-civildatetime-from-alg","aoid":null,"title":"CivilDateTime.from (date, time)","titleHTML":"CivilDateTime.from (date, time)","number":"45","namespace":"<no location>","location":"","referencingIds":[],"key":"CivilDateTime.from (date, time)"},{"type":"clause","id":"sec-temporal-civildatetime-tocivildate-alg","aoid":null,"title":"CivilDateTime.toCivilDate","titleHTML":"CivilDateTime.toCivilDate","number":"46","namespace":"<no location>","location":"","referencingIds":[],"key":"CivilDateTime.toCivilDate"},{"type":"clause","id":"sec-temporal-civildatetime-tociviltime-alg","aoid":null,"title":"CivilDateTime.toCivilTime","titleHTML":"CivilDateTime.toCivilTime","number":"47","namespace":"<no location>","location":"","referencingIds":[],"key":"CivilDateTime.toCivilTime"},{"type":"clause","id":"sec-temporal-civildatetime-withzone-alg","aoid":null,"title":"CivilDateTime.withZone (timeZone[, options])","titleHTML":"CivilDateTime.withZone (timeZone[, options])","number":"48","namespace":"<no location>","location":"","referencingIds":[],"key":"CivilDateTime.withZone (timeZone[, options])"},{"type":"clause","id":"sec-temporal-instant","aoid":null,"title":"Introduction","titleHTML":"Introduction","number":"","namespace":"<no location>","location":"","referencingIds":[],"key":"Introduction"},{"type":"clause","id":"sec-temporal-instant-constructor","aoid":null,"title":"new Instant(nanoseconds)","titleHTML":"new Instant(<emu-val>nanoseconds</emu-val>)","number":"49","namespace":"<no location>","location":"","referencingIds":[],"key":"new Instant(nanoseconds)"},{"type":"clause","id":"sec-temporal-instant.prototype.valueOf","aoid":null,"title":"Instant.prototype.valueOf()","titleHTML":"Instant.prototype.valueOf()","number":"50","namespace":"<no location>","location":"","referencingIds":[],"key":"Instant.prototype.valueOf()"},{"type":"clause","id":"sec-temporal-instant.prototype.milliseconds","aoid":null,"title":"Instant.prototype.milliseconds","titleHTML":"Instant.prototype.milliseconds","number":"51","namespace":"<no location>","location":"","referencingIds":[],"key":"Instant.prototype.milliseconds"},{"type":"clause","id":"sec-temporal-instant.prototype.nanoseconds","aoid":null,"title":"Instant.prototype.nanoseconds","titleHTML":"Instant.prototype.nanoseconds","number":"52","namespace":"<no location>","location":"","referencingIds":[],"key":"Instant.prototype.nanoseconds"},{"type":"clause","id":"sec-temporal-instant.prototype.plus","aoid":null,"title":"Instant.prototype.plus({ ? years, ? months, ? days, ? hours, ? minutes, ? seconds, ?\n    milliseconds, ? nanoseconds })","titleHTML":"Instant.prototype.plus({ ? <var>years</var>, ? <var>months</var>, ? <var>days</var>, ? <var>hours</var>, ? <var>minutes</var>, ? <var>seconds</var>, ?\n    <var>milliseconds</var>, ? <var>nanoseconds</var> })","number":"53","namespace":"<no location>","location":"","referencingIds":[],"key":"Instant.prototype.plus({ ? years, ? months, ? days, ? hours, ? minutes, ? seconds, ?\n    milliseconds, ? nanoseconds })"},{"type":"clause","id":"sec-temporal-instant.prototype.withZone","aoid":null,"title":"Instant.prototype.withZone(timezone)","titleHTML":"Instant.prototype.withZone(<var>timezone</var>)","number":"54","namespace":"<no location>","location":"","referencingIds":[],"key":"Instant.prototype.withZone(timezone)"},{"type":"production","id":"prod-Sign","name":"Sign","referencingIds":["_ref_76","_ref_77"],"namespace":"<no location>","location":"","key":"Sign"},{"type":"production","id":"prod-Year","name":"Year","referencingIds":[],"namespace":"<no location>","location":"","key":"Year"},{"type":"production","id":"prod-Month","name":"Month","referencingIds":[],"namespace":"<no location>","location":"","key":"Month"},{"type":"clause","id":"sec-temporal-instant.prototype.toString","aoid":null,"title":"Instant.prototype.toString()","titleHTML":"Instant.prototype.toString()","number":"55","namespace":"<no location>","location":"","referencingIds":["_ref_1"],"key":"Instant.prototype.toString()"},{"type":"clause","id":"sec-temporal-instant.prototype.format","aoid":null,"title":"Instant.prototype.format([locale], [options])","titleHTML":"Instant.prototype.format([<var>locale</var>], [<var>options</var>])","number":"56","namespace":"<no location>","location":"","referencingIds":[],"key":"Instant.prototype.format([locale], [options])"},{"type":"clause","id":"sec-temporal-instant.fromMilliseconds","aoid":null,"title":"Instant.fromMilliseconds(miliseconds)","titleHTML":"Instant.fromMilliseconds(<var>miliseconds</var>)","number":"57","namespace":"<no location>","location":"","referencingIds":[],"key":"Instant.fromMilliseconds(miliseconds)"},{"type":"clause","id":"sec-temporal-instant.fromString","aoid":null,"title":"Instant.fromString(string)","titleHTML":"Instant.fromString(<var>string</var>)","number":"58","namespace":"<no location>","location":"","referencingIds":[],"key":"Instant.fromString(string)"},{"type":"clause","id":"sec-temporal-zonedinstant","aoid":null,"title":"ZonedInstant Objects","titleHTML":"ZonedInstant Objects","number":"","namespace":"<no location>","location":"","referencingIds":["_ref_0"],"key":"ZonedInstant Objects"},{"type":"clause","id":"sec-temporal-zonedinstant-millisecond-number","aoid":null,"title":"Millisecond Number","titleHTML":"Millisecond Number","number":"59","namespace":"<no location>","location":"","referencingIds":[],"key":"Millisecond Number"},{"type":"clause","id":"sec-temporal-zonedinstant-nanosecond-number","aoid":null,"title":"Nanosecond Number","titleHTML":"Nanosecond Number","number":"60","namespace":"<no location>","location":"","referencingIds":[],"key":"Nanosecond Number"},{"type":"clause","id":"sec-temporal-zonedinstant-timezone","aoid":null,"title":"TimeZone String","titleHTML":"TimeZone String","number":"61","namespace":"<no location>","location":"","referencingIds":[],"key":"TimeZone String"},{"type":"clause","id":"sec-temporal-zonedinstant-prototype","aoid":null,"title":"ZonedInstant Prototype","titleHTML":"ZonedInstant Prototype","number":"62","namespace":"<no location>","location":"","referencingIds":[],"key":"ZonedInstant Prototype"},{"type":"clause","id":"sec-temporal-zonedinstant.prototype.valueof","aoid":null,"title":"ZonedInstant.prototype.valueOf()  ","titleHTML":"ZonedInstant.prototype.valueOf()  ","number":"63","namespace":"<no location>","location":"","referencingIds":[],"key":"ZonedInstant.prototype.valueOf()  "},{"type":"clause","id":"sec-temporal-zonedinstant.prototype.milliseconds","aoid":null,"title":"ZonedInstant.prototype.milliseconds","titleHTML":"ZonedInstant.prototype.milliseconds","number":"64","namespace":"<no location>","location":"","referencingIds":[],"key":"ZonedInstant.prototype.milliseconds"},{"type":"clause","id":"sec-temporal-zonedinstant.prototype.nanoseconds","aoid":null,"title":"ZonedInstant.prototype.nanoseconds","titleHTML":"ZonedInstant.prototype.nanoseconds","number":"65","namespace":"<no location>","location":"","referencingIds":[],"key":"ZonedInstant.prototype.nanoseconds"},{"type":"clause","id":"sec-temporal-zonedinstant.prototype.timezone","aoid":null,"title":"ZonedInstant.prototype.timeZone","titleHTML":"ZonedInstant.prototype.timeZone","number":"66","namespace":"<no location>","location":"","referencingIds":[],"key":"ZonedInstant.prototype.timeZone"},{"type":"clause","id":"sec-temporal-zonedinstant.prototype.with","aoid":null,"title":"ZonedInstant.prototype.with({ ? years, ? months, ? days, ? hours, ? minutes, ? seconds, ?\n    milliseconds, ? nanoseconds })","titleHTML":"ZonedInstant.prototype.with({ ? <var>years</var>, ? <var>months</var>, ? <var>days</var>, ? <var>hours</var>, ? <var>minutes</var>, ? <var>seconds</var>, ?\n    <var>milliseconds</var>, ? <var>nanoseconds</var> })","number":"67","namespace":"<no location>","location":"","referencingIds":[],"key":"ZonedInstant.prototype.with({ ? years, ? months, ? days, ? hours, ? minutes, ? seconds, ?\n    milliseconds, ? nanoseconds })"},{"type":"clause","id":"sec-temporal-zonedinstant.prototype.plus","aoid":null,"title":"ZonedInstant.prototype.plus({ ? years, ? months, ? days, ? hours, ? minutes, ? seconds, ?\n    milliseconds, ? nanoseconds })","titleHTML":"ZonedInstant.prototype.plus({ ? <var>years</var>, ? <var>months</var>, ? <var>days</var>, ? <var>hours</var>, ? <var>minutes</var>, ? <var>seconds</var>, ?\n    <var>milliseconds</var>, ? <var>nanoseconds</var> })","number":"68","namespace":"<no location>","location":"","referencingIds":[],"key":"ZonedInstant.prototype.plus({ ? years, ? months, ? days, ? hours, ? minutes, ? seconds, ?\n    milliseconds, ? nanoseconds })"},{"type":"clause","id":"sec-temporal-zonedinstant.prototype.toinstant","aoid":null,"title":"ZonedInstant.prototype.toInstant()","titleHTML":"ZonedInstant.prototype.toInstant()","number":"69","namespace":"<no location>","location":"","referencingIds":[],"key":"ZonedInstant.prototype.toInstant()"},{"type":"clause","id":"sec-temporal-zonedinstant.prototype.tocivildate","aoid":null,"title":"ZonedInstant.prototype.toCivilDate()","titleHTML":"ZonedInstant.prototype.toCivilDate()","number":"70","namespace":"<no location>","location":"","referencingIds":[],"key":"ZonedInstant.prototype.toCivilDate()"},{"type":"clause","id":"sec-temporal-zonedinstant.prototype.tociviltime","aoid":null,"title":"ZonedInstant.prototype.toCivilTime()","titleHTML":"ZonedInstant.prototype.toCivilTime()","number":"71","namespace":"<no location>","location":"","referencingIds":[],"key":"ZonedInstant.prototype.toCivilTime()"},{"type":"clause","id":"sec-temporal-zonedinstant.prototype.tocivildatetime","aoid":null,"title":"ZonedInstant.prototype.toCivilDateTime()","titleHTML":"ZonedInstant.prototype.toCivilDateTime()","number":"72","namespace":"<no location>","location":"","referencingIds":[],"key":"ZonedInstant.prototype.toCivilDateTime()"},{"type":"clause","id":"sec-temporal-zonedinstant.prototype.tostring","aoid":null,"title":"ZonedInstant.prototype.toString()","titleHTML":"ZonedInstant.prototype.toString()","number":"73","namespace":"<no location>","location":"","referencingIds":[],"key":"ZonedInstant.prototype.toString()"},{"type":"clause","id":"sec-temporal-zonedinstant-constructor-prop","aoid":null,"title":"Properties of the ZonedInstant Constructor","titleHTML":"Properties of the ZonedInstant Constructor","number":"74","namespace":"<no location>","location":"","referencingIds":[],"key":"Properties of the ZonedInstant Constructor"},{"type":"clause","id":"sec-temporal-zonedinstant-constructor","aoid":null,"title":"ZonedInstant Constructor","titleHTML":"ZonedInstant Constructor","number":"75","namespace":"<no location>","location":"","referencingIds":[],"key":"ZonedInstant Constructor"},{"type":"clause","id":"sec-temporal-zonedinstant-alg","aoid":null,"title":"ZonedInstant(instant, timeZone)","titleHTML":"ZonedInstant(<emu-val>instant</emu-val>, <emu-val>timeZone</emu-val>)","number":"76","namespace":"<no location>","location":"","referencingIds":[],"key":"ZonedInstant(instant, timeZone)"},{"type":"clause","id":"sec-temporal-zonedinstant-plus","aoid":null,"title":"plus()","titleHTML":"plus()","number":"77","namespace":"<no location>","location":"","referencingIds":[],"key":"plus()"},{"type":"clause","id":"sec-temporal-zonedinstant-with","aoid":null,"title":"with()","titleHTML":"with()","number":"78","namespace":"<no location>","location":"","referencingIds":[],"key":"with()"},{"type":"clause","id":"sec-temporal-zonedinstant-toinstant","aoid":null,"title":"toInstant()","titleHTML":"toInstant()","number":"79","namespace":"<no location>","location":"","referencingIds":[],"key":"toInstant()"},{"type":"clause","id":"sec-temporal-zonedinstant-tocivildate","aoid":null,"title":"toCivilDate()","titleHTML":"toCivilDate()","number":"80","namespace":"<no location>","location":"","referencingIds":[],"key":"toCivilDate()"},{"type":"clause","id":"sec-temporal-zonedinstant-tociviltime","aoid":null,"title":"toCivilTime()","titleHTML":"toCivilTime()","number":"81","namespace":"<no location>","location":"","referencingIds":[],"key":"toCivilTime()"},{"type":"clause","id":"sec-temporal-zonedinstant-tocivildatetime","aoid":null,"title":"toCivilDateTime()","titleHTML":"toCivilDateTime()","number":"82","namespace":"<no location>","location":"","referencingIds":[],"key":"toCivilDateTime()"},{"type":"clause","id":"sec-copyright-and-software-license","aoid":null,"title":"Copyright & Software License","titleHTML":"Copyright &amp; Software License","number":"A","namespace":"<no location>","location":"","referencingIds":[],"key":"Copyright & Software License"}]</script><script>"use strict";
+
+function Search(menu) {
+  this.menu = menu;
+  this.$search = document.getElementById('menu-search');
+  this.$searchBox = document.getElementById('menu-search-box');
+  this.$searchResults = document.getElementById('menu-search-results');
+  
+  this.loadBiblio();
+  
+  document.addEventListener('keydown', this.documentKeydown.bind(this));
+  
+  this.$searchBox.addEventListener('keydown', debounce(this.searchBoxKeydown.bind(this), { stopPropagation: true }));
+  this.$searchBox.addEventListener('keyup', debounce(this.searchBoxKeyup.bind(this), { stopPropagation: true }));
+}
+
+Search.prototype.loadBiblio = function () {
+  var $biblio = document.getElementById('menu-search-biblio');
+  if (!$biblio) {
+    this.biblio = [];
+  } else {
+    this.biblio = JSON.parse($biblio.textContent);
+    this.biblio.clauses = this.biblio.filter(function (e) { return e.type === 'clause' });
+    this.biblio.byId = this.biblio.reduce(function (map, entry) {
+      map[entry.id] = entry;
+      return map;
+    }, {});
+  }
+}
+
+Search.prototype.documentKeydown = function (e) {
+  if (e.keyCode === 191) {
+    e.preventDefault();
+    e.stopPropagation();
+    this.triggerSearch();
+  }
+}
+
+Search.prototype.searchBoxKeydown = function (e) {
+  e.stopPropagation();
+  e.preventDefault();
+  if (e.keyCode === 191 && e.target.value.length === 0) {
+    e.preventDefault();
+  } else if (e.keyCode === 13) {
+    e.preventDefault();
+    this.selectResult();
+  }
+}
+
+Search.prototype.searchBoxKeyup = function (e) {
+  if (e.keyCode === 13 || e.keyCode === 9) {
+    return;
+  }
+  
+  this.search(e.target.value);
+}
+
+
+Search.prototype.triggerSearch = function (e) {
+  if (this.menu.isVisible()) {
+    this._closeAfterSearch = false;
+  } else {
+    this._closeAfterSearch = true;
+    this.menu.show();
+  }
+
+  this.$searchBox.focus();
+  this.$searchBox.select();
+}
+// bit 12 - Set if the result starts with searchString
+// bits 8-11: 8 - number of chunks multiplied by 2 if cases match, otherwise 1.
+// bits 1-7: 127 - length of the entry
+// General scheme: prefer case sensitive matches with fewer chunks, and otherwise
+// prefer shorter matches.
+function relevance(result, searchString) {
+  var relevance = 0;
+  
+  relevance = Math.max(0, 8 - result.match.chunks) << 7;
+  
+  if (result.match.caseMatch) {
+    relevance *= 2;
+  }
+  
+  if (result.match.prefix) {
+    relevance += 2048
+  }
+  
+  relevance += Math.max(0, 255 - result.entry.key.length);
+  
+  return relevance;
+}
+
+Search.prototype.search = function (searchString) {
+  var s = Date.now();
+
+  if (searchString === '') {
+    this.displayResults([]);
+    this.hideSearch();
+    return;
+  } else {
+    this.showSearch();
+  }
+  
+  if (searchString.length === 1) {
+    this.displayResults([]);
+    return;
+  }
+    
+  var results;
+
+  if (/^[\d\.]*$/.test(searchString)) {
+    results = this.biblio.clauses.filter(function (clause) {
+      return clause.number.substring(0, searchString.length) === searchString;
+    }).map(function (clause) {
+      return { entry: clause };
+    });
+  } else {
+    results = [];
+    
+    for (var i = 0; i < this.biblio.length; i++) {
+      var entry = this.biblio[i];
+      if (!entry.key) {
+        // biblio entries without a key aren't searchable
+        continue;
+      }
+
+      var match = fuzzysearch(searchString, entry.key);
+      if (match) {
+        results.push({ entry: entry, match: match });
+      }
+    }
+  
+    results.forEach(function (result) {
+      result.relevance = relevance(result, searchString);
+    });
+    
+    results = results.sort(function (a, b) { return b.relevance - a.relevance });
+
+  }
+
+  if (results.length > 50) {
+    results = results.slice(0, 50);
+  }
+  
+  this.displayResults(results);
+}
+Search.prototype.hideSearch = function () {
+  this.$search.classList.remove('active');
+}
+
+Search.prototype.showSearch = function () {
+  this.$search.classList.add('active');
+}
+
+Search.prototype.selectResult = function () {
+  var $first = this.$searchResults.querySelector('li:first-child a');
+
+  if ($first) {
+    document.location = $first.getAttribute('href');
+  }
+  
+  this.$searchBox.value = '';
+  this.$searchBox.blur();
+  this.displayResults([]);
+  this.hideSearch();
+
+  if (this._closeAfterSearch) {
+    this.menu.hide();
+  }
+}
+
+Search.prototype.displayResults = function (results) {
+  if (results.length > 0) {
+    this.$searchResults.classList.remove('no-results');
+    
+    var html = '<ul>';
+
+    results.forEach(function (result) {
+      var entry = result.entry;
+      var id = entry.id;
+      var cssClass = '';
+      var text = '';
+
+      if (entry.type === 'clause') {
+        var number = entry.number ? entry.number + ' ' : '';
+        text = number + entry.key;
+        cssClass = 'clause';
+        id = entry.id;
+      } else if (entry.type === 'production') {
+        text = entry.key;
+        cssClass = 'prod';
+        id = entry.id;  
+      } else if (entry.type === 'op') {
+        text = entry.key;
+        cssClass = 'op';
+        id = entry.id || entry.refId;
+      } else if (entry.type === 'term') {
+        text = entry.key;
+        cssClass = 'term';
+        id = entry.id || entry.refId;
+      }
+
+      if (text) {
+        html += '<li class=menu-search-result-' + cssClass + '><a href="#' + id + '">' + text + '</a></li>'
+      }
+    });
+
+    html += '</ul>'
+
+    this.$searchResults.innerHTML = html;
+  } else {
+    this.$searchResults.innerHTML = '';
+    this.$searchResults.classList.add('no-results');
+  }
+}
+
+
+function Menu() {
+  this.$toggle = document.getElementById('menu-toggle');
+  this.$menu = document.getElementById('menu');
+  this.$toc = document.querySelector('menu-toc > ol');
+  this.$pins = document.querySelector('#menu-pins');
+  this.$pinList = document.getElementById('menu-pins-list');
+  this.$toc = document.querySelector('#menu-toc > ol');
+  this.$specContainer = document.getElementById('spec-container');
+  this.search = new Search(this);
+  
+  this._pinnedIds = {}; 
+  this.loadPinEntries();
+
+  // toggle menu
+  this.$toggle.addEventListener('click', this.toggle.bind(this));
+
+  // keydown events for pinned clauses
+  document.addEventListener('keydown', this.documentKeydown.bind(this));
+
+  // toc expansion
+  var tocItems = this.$menu.querySelectorAll('#menu-toc li');
+  for (var i = 0; i < tocItems.length; i++) {
+    var $item = tocItems[i];
+    $item.addEventListener('click', function($item, event) {
+      $item.classList.toggle('active');
+      event.stopPropagation();
+    }.bind(null, $item));
+  }
+
+  // close toc on toc item selection
+  var tocLinks = this.$menu.querySelectorAll('#menu-toc li > a');
+  for (var i = 0; i < tocLinks.length; i++) {
+    var $link = tocLinks[i];
+    $link.addEventListener('click', function(event) {
+      this.toggle();
+      event.stopPropagation();
+    }.bind(this));
+  }
+
+  // update active clause on scroll
+  window.addEventListener('scroll', debounce(this.updateActiveClause.bind(this)));
+  this.updateActiveClause();
+
+  // prevent menu scrolling from scrolling the body
+  this.$toc.addEventListener('wheel', function (e) {
+    var target = e.currentTarget;
+    var offTop = e.deltaY < 0 && target.scrollTop === 0;
+    if (offTop) {
+      e.preventDefault();
+    }
+    var offBottom = e.deltaY > 0
+                    && target.offsetHeight + target.scrollTop >= target.scrollHeight;
+
+    if (offBottom) {
+		  e.preventDefault();
+	  }
+  })
+}
+
+Menu.prototype.documentKeydown = function (e) {
+  e.stopPropagation();
+  if (e.keyCode === 80) {
+    this.togglePinEntry();
+  } else if (e.keyCode > 48 && e.keyCode < 58) {
+    this.selectPin(e.keyCode - 49);
+  }
+}
+
+Menu.prototype.updateActiveClause = function () {
+  this.setActiveClause(findActiveClause(this.$specContainer))
+}
+
+Menu.prototype.setActiveClause = function (clause) {
+  this.$activeClause = clause;
+  this.revealInToc(this.$activeClause);
+}
+
+Menu.prototype.revealInToc = function (path) {
+  var current = this.$toc.querySelectorAll('li.revealed');
+  for (var i = 0; i < current.length; i++) {
+    current[i].classList.remove('revealed');
+    current[i].classList.remove('revealed-leaf');
+  }
+  
+  var current = this.$toc;
+  var index = 0;
+  while (index < path.length) {
+    var children = current.children;
+    for (var i = 0; i < children.length; i++) {
+      if ('#' + path[index].id === children[i].children[1].getAttribute('href') ) {
+        children[i].classList.add('revealed');
+        if (index === path.length - 1) {
+          children[i].classList.add('revealed-leaf');
+          var rect = children[i].getBoundingClientRect();
+          this.$toc.getBoundingClientRect().top
+          var tocRect = this.$toc.getBoundingClientRect();
+          if (rect.top + 10 > tocRect.bottom) {
+            this.$toc.scrollTop = this.$toc.scrollTop + (rect.top - tocRect.bottom) + (rect.bottom - rect.top);
+          } else if (rect.top < tocRect.top) {
+            this.$toc.scrollTop = this.$toc.scrollTop - (tocRect.top - rect.top);
+          }
+        }
+        current = children[i].querySelector('ol');
+        index++;
+        break;
+      }      
+    }
+    
+  }
+}
+
+function findActiveClause(root, path) {
+  var clauses = new ClauseWalker(root);
+  var $clause;
+  var found = false;
+  var path = path || [];
+  
+  while ($clause = clauses.nextNode()) {
+    var rect = $clause.getBoundingClientRect();
+    var $header = $clause.children[0];
+    var marginTop = parseInt(getComputedStyle($header)["margin-top"]);
+    
+    if ((rect.top - marginTop) <= 0 && rect.bottom > 0) {
+      found = true;
+      return findActiveClause($clause, path.concat($clause)) || path;
+    }
+  }
+  
+  return path;
+}
+
+function ClauseWalker(root) {
+  var previous;
+  var treeWalker = document.createTreeWalker(
+    root,
+    NodeFilter.SHOW_ELEMENT,
+    {
+      acceptNode: function (node) {
+        if (previous === node.parentNode) {
+          return NodeFilter.FILTER_REJECT;
+        } else {
+          previous = node;
+        }
+        if (node.nodeName === 'EMU-CLAUSE' || node.nodeName === 'EMU-INTRO' || node.nodeName === 'EMU-ANNEX') {
+          return NodeFilter.FILTER_ACCEPT;
+        } else {
+          return NodeFilter.FILTER_SKIP;
+        }
+      }
+    },
+    false
+    );
+  
+  return treeWalker;
+}
+
+Menu.prototype.toggle = function () {
+  this.$menu.classList.toggle('active');
+}
+
+Menu.prototype.show = function () {
+  this.$menu.classList.add('active');
+}
+
+Menu.prototype.hide = function () {
+  this.$menu.classList.remove('active');
+}
+
+Menu.prototype.isVisible = function() {
+  return this.$menu.classList.contains('active');
+}
+
+Menu.prototype.showPins = function () {
+  this.$pins.classList.add('active');
+}
+
+Menu.prototype.hidePins = function () {
+  this.$pins.classList.remove('active');
+}
+
+Menu.prototype.addPinEntry = function (id) {
+  var entry = this.search.biblio.byId[id];
+  if (!entry) {
+    // id was deleted after pin (or something) so remove it
+    delete this._pinnedIds[id];
+    this.persistPinEntries();
+    return;
+  }
+
+  if (entry.type === 'clause') {
+    var prefix;
+    if (entry.number) {
+      prefix = entry.number + ' ';
+    } else {
+      prefix = '';
+    }
+    this.$pinList.innerHTML += '<li><a href="#' + entry.id + '">' + prefix + entry.titleHTML + '</a></li>';
+  } else {
+    this.$pinList.innerHTML += '<li><a href="#' + entry.id + '">' + entry.key + '</a></li>';
+  }
+
+  if (Object.keys(this._pinnedIds).length === 0) {
+    this.showPins();
+  }
+  this._pinnedIds[id] = true;
+  this.persistPinEntries();
+}
+
+Menu.prototype.removePinEntry = function (id) {
+  var item = this.$pinList.querySelector('a[href="#' + id + '"]').parentNode;
+  this.$pinList.removeChild(item);
+  delete this._pinnedIds[id];
+  if (Object.keys(this._pinnedIds).length === 0) {
+    this.hidePins();
+  }
+
+  this.persistPinEntries();
+}
+
+Menu.prototype.persistPinEntries = function () {
+  try {
+    if (!window.localStorage) return;
+  } catch (e) {
+    return;
+  }
+
+  localStorage.pinEntries = JSON.stringify(Object.keys(this._pinnedIds));
+}
+
+Menu.prototype.loadPinEntries = function () {
+  try {
+    if (!window.localStorage) return;
+  } catch (e) {
+    return;
+  }
+  
+  var pinsString = window.localStorage.pinEntries;
+  if (!pinsString) return;
+  var pins = JSON.parse(pinsString);
+  for(var i = 0; i < pins.length; i++) {
+    this.addPinEntry(pins[i]);
+  }
+}
+
+Menu.prototype.togglePinEntry = function (id) {
+  if (!id) {
+    id = this.$activeClause[this.$activeClause.length - 1].id;
+  }
+
+  if (this._pinnedIds[id]) {
+    this.removePinEntry(id);
+  } else {
+    this.addPinEntry(id);
+  }
+}
+
+Menu.prototype.selectPin = function (num) {
+  document.location = this.$pinList.children[num].children[0].href;
+}
+
+var menu;
+function init() {
+  menu = new Menu();
+  var $container = document.getElementById('spec-container');
+  $container.addEventListener('mouseover', debounce(function (e) {
+    Toolbox.activateIfMouseOver(e);
+  }));
+}
+
+document.addEventListener('DOMContentLoaded', init);
+
+function debounce(fn, opts) {
+  opts = opts || {};
+  var timeout;
+  return function(e) {
+    if (opts.stopPropagation) {
+      e.stopPropagation();
+    }
+    var args = arguments;
+    if (timeout) {
+      clearTimeout(timeout);
+    }
+    timeout = setTimeout(function() {
+      timeout = null;
+      fn.apply(this, args);
+    }.bind(this), 150);
+  }
+}
+
+var CLAUSE_NODES = ['EMU-CLAUSE', 'EMU-INTRO', 'EMU-ANNEX'];
+function findLocalReferences ($elem) {
+  var name = $elem.innerHTML;
+  var references = [];
+
+  var parentClause = $elem.parentNode;
+  while (parentClause && CLAUSE_NODES.indexOf(parentClause.nodeName) === -1) {
+    parentClause = parentClause.parentNode;
+  }
+
+  if(!parentClause) return;
+
+  var vars = parentClause.querySelectorAll('var');
+
+  for (var i = 0; i < vars.length; i++) {
+    var $var = vars[i];
+
+    if ($var.innerHTML === name) {
+      references.push($var);
+    }
+  }
+
+  return references;
+}
+
+function toggleFindLocalReferences($elem) {
+  var references = findLocalReferences($elem);
+  if ($elem.classList.contains('referenced')) {
+    references.forEach(function ($reference) {
+      $reference.classList.remove('referenced');
+    });
+  } else {
+    references.forEach(function ($reference) {
+      $reference.classList.add('referenced');
+    });
+  }
+}
+
+function installFindLocalReferences () {
+  document.addEventListener('click', function (e) {
+    if (e.target.nodeName === 'VAR') {
+      toggleFindLocalReferences(e.target);
+    }
+  });
+}
+
+document.addEventListener('DOMContentLoaded', installFindLocalReferences);
+
+
+
+
+// The following license applies to the fuzzysearch function
+// The MIT License (MIT)
+// Copyright © 2015 Nicolas Bevacqua
+// Copyright © 2016 Brian Terlson
+// Permission is hereby granted, free of charge, to any person obtaining a copy of
+// this software and associated documentation files (the "Software"), to deal in
+// the Software without restriction, including without limitation the rights to
+// use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+// the Software, and to permit persons to whom the Software is furnished to do so,
+// subject to the following conditions:
+
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+function fuzzysearch (searchString, haystack, caseInsensitive) {
+  var tlen = haystack.length;
+  var qlen = searchString.length;
+  var chunks = 1;
+  var finding = false;
+  var prefix = true;
+  
+  if (qlen > tlen) {
+    return false;
+  }
+  
+  if (qlen === tlen) {
+    if (searchString === haystack) {
+      return { caseMatch: true, chunks: 1, prefix: true };
+    } else if (searchString.toLowerCase() === haystack.toLowerCase()) {
+      return { caseMatch: false, chunks: 1, prefix: true };
+    } else {
+      return false;
+    }
+  }
+  
+  outer: for (var i = 0, j = 0; i < qlen; i++) {
+    var nch = searchString[i];
+    while (j < tlen) {
+      var targetChar = haystack[j++];
+      if (targetChar === nch) {
+        finding = true;
+        continue outer;
+      }
+      if (finding) {
+        chunks++;
+        finding = false;
+      }
+    }
+    
+    if (caseInsensitive) { return false }
+    
+    return fuzzysearch(searchString.toLowerCase(), haystack.toLowerCase(), true);
+  }
+  
+  return { caseMatch: !caseInsensitive, chunks: chunks, prefix: j <= qlen };
+}
+
+var Toolbox = {
+  init: function () {
+    this.$container = document.createElement('div');
+    this.$container.classList.add('toolbox');
+    this.$permalink = document.createElement('a');
+    this.$permalink.textContent = 'Permalink';
+    this.$pinLink = document.createElement('a');
+    this.$pinLink.textContent = 'Pin';
+    this.$pinLink.setAttribute('href', '#');
+    this.$pinLink.addEventListener('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      menu.togglePinEntry(this.entry.id);
+    }.bind(this));
+
+    this.$refsLink = document.createElement('a');
+    this.$refsLink.setAttribute('href', '#');
+    this.$refsLink.addEventListener('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      referencePane.showReferencesFor(this.entry);
+    }.bind(this));
+    this.$container.appendChild(this.$permalink);
+    this.$container.appendChild(this.$pinLink);
+    this.$container.appendChild(this.$refsLink);
+    document.body.appendChild(this.$container);
+  },
+
+  activate: function (el, entry, target) {
+    if (el === this._activeEl) return;
+    this.active = true;
+    this.entry = entry;
+    this.$container.classList.add('active');
+    this.top = el.offsetTop - this.$container.offsetHeight - 10;
+    this.left = el.offsetLeft;
+    this.$container.setAttribute('style', 'left: ' + this.left + 'px; top: ' + this.top + 'px');
+    this.updatePermalink();
+    this.updateReferences();
+    this._activeEl = el;
+    if (this.top < document.body.scrollTop && el === target) {
+      // don't scroll unless it's a small thing (< 200px)
+      this.$container.scrollIntoView();
+    }
+  },
+
+  updatePermalink: function () {
+    this.$permalink.setAttribute('href', '#' + this.entry.id);
+  },
+
+  updateReferences: function () {
+    this.$refsLink.textContent = 'References (' + this.entry.referencingIds.length + ')';
+  },
+
+  activateIfMouseOver: function (e) {
+    var ref = this.findReferenceUnder(e.target);
+    if (ref && (!this.active || e.pageY > this._activeEl.offsetTop)) {
+      var entry = menu.search.biblio.byId[ref.id];
+      this.activate(ref.element, entry, e.target);
+    } else if (this.active && ((e.pageY < this.top) || e.pageY > (this._activeEl.offsetTop + this._activeEl.offsetHeight))) {
+      this.deactivate();
+    }
+  },
+
+  findReferenceUnder: function (el) {
+    while (el) {
+      var parent = el.parentNode;
+      if (el.nodeName === 'H1' && parent.nodeName.match(/EMU-CLAUSE|EMU-ANNEX|EMU-INTRO/) && parent.id) {
+        return { element: el, id: parent.id };
+      } else if (el.nodeName.match(/EMU-(?!CLAUSE|XREF|ANNEX|INTRO)|DFN/) &&
+                el.id && el.id[0] !== '_') {
+        if (el.nodeName === 'EMU-FIGURE' || el.nodeName === 'EMU-TABLE' || el.nodeName === 'EMU-EXAMPLE') {
+          // return the figcaption element
+          return { element: el.children[0].children[0], id: el.id };
+        } else if (el.nodeName === 'EMU-PRODUCTION') {
+          // return the LHS non-terminal element
+          return { element: el.children[0], id: el.id };
+        } else {
+          return { element: el, id: el.id };
+        }
+      }
+      el = parent;
+    }
+  },
+
+  deactivate: function () {
+    this.$container.classList.remove('active');
+    this._activeEl = null;
+    this.activeElBounds = null;
+    this.active = false;
+  }
+}
+
+var referencePane = {
+  init: function() {
+    this.$container = document.createElement('div');
+    this.$container.setAttribute('id', 'references-pane-container');
+
+    var $spacer = document.createElement('div');
+    $spacer.setAttribute('id', 'references-pane-spacer');
+
+    this.$pane = document.createElement('div');
+    this.$pane.setAttribute('id', 'references-pane');
+
+    this.$container.appendChild($spacer);
+    this.$container.appendChild(this.$pane);
+
+    this.$header = document.createElement('div');
+    this.$header.classList.add('menu-pane-header');
+    this.$header.textContent = 'References to ';
+    this.$headerRefId = document.createElement('a');
+    this.$header.appendChild(this.$headerRefId);
+    this.$closeButton = document.createElement('span');
+    this.$closeButton.setAttribute('id', 'references-pane-close');
+    this.$closeButton.addEventListener('click', function (e) {
+      this.deactivate();
+    }.bind(this));
+    this.$header.appendChild(this.$closeButton);
+
+    this.$pane.appendChild(this.$header);
+    var tableContainer = document.createElement('div');
+    tableContainer.setAttribute('id', 'references-pane-table-container');
+
+    this.$table = document.createElement('table');
+    this.$table.setAttribute('id', 'references-pane-table');
+
+    this.$tableBody = this.$table.createTBody();
+
+    tableContainer.appendChild(this.$table);
+    this.$pane.appendChild(tableContainer);
+
+    menu.$specContainer.appendChild(this.$container);
+  },
+
+  activate: function () {
+    this.$container.classList.add('active');
+  },
+
+  deactivate: function () {
+    this.$container.classList.remove('active');
+  },
+
+  showReferencesFor(entry) {
+    this.activate();
+    var newBody = document.createElement('tbody');
+    var previousId;
+    var previousCell;
+    var dupCount = 0;
+    this.$headerRefId.textContent = '#' + entry.id;
+    this.$headerRefId.setAttribute('href', '#' + entry.id);
+    entry.referencingIds.map(function (id) {
+      var target = document.getElementById(id);
+      var cid = findParentClauseId(target);
+      var clause = menu.search.biblio.byId[cid];
+      var dupCount = 0;
+      return { id: id, clause: clause }
+    }).sort(function (a, b) {
+      return sortByClauseNumber(a.clause, b.clause);
+    }).forEach(function (record, i) {
+      if (previousId === record.clause.id) {
+        previousCell.innerHTML += ' (<a href="#' + record.id + '">' + (dupCount + 2) + '</a>)';
+        dupCount++;
+      } else {
+        var row = newBody.insertRow();
+        var cell = row.insertCell();
+        cell.innerHTML = record.clause.number;
+        cell = row.insertCell();
+        cell.innerHTML = '<a href="#' + record.id + '">' + record.clause.titleHTML + '</a>';
+        previousCell = cell;
+        previousId = record.clause.id;
+        dupCount = 0;
+      }
+    }, this);
+    this.$table.removeChild(this.$tableBody);
+    this.$tableBody = newBody;
+    this.$table.appendChild(this.$tableBody);
+  }
+}
+function findParentClauseId(node) {
+  while (node && node.nodeName !== 'EMU-CLAUSE' && node.nodeName !== 'EMU-INTRO' && node.nodeName !== 'EMU-ANNEX') {
+    node = node.parentNode;
+  }
+  if (!node) return null;
+  return node.getAttribute('id');
+}
+
+function sortByClauseNumber(c1, c2) {
+  var c1c = c1.number.split('.');
+  var c2c = c2.number.split('.');
+
+  for (var i = 0; i < c1c.length; i++) {
+    if (i >= c2c.length) {
+      return 1;
+    }
+    
+    var c1 = c1c[i];
+    var c2 = c2c[i];
+    var c1cn = Number(c1);
+    var c2cn = Number(c2);
+
+    if (Number.isNaN(c1cn) && Number.isNaN(c2cn)) {
+      if (c1 > c2) {
+        return 1;
+      } else if (c1 < c2) {
+        return -1;
+      }
+    } else if (!Number.isNaN(c1cn) && Number.isNaN(c2cn)) {
+      return -1;
+    } else if (Number.isNaN(c1cn) && !Number.isNaN(c2cn)) {
+      return 1;
+    } else if(c1cn > c2cn) {
+      return 1;
+    } else if (c1cn < c2cn) {
+      return -1;
+    }
+  }
+
+  if (c1c.length === c2c.length) {
+    return 0;
+  }
+  return -1;
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+  Toolbox.init();
+  referencePane.init();
+})
+var CLAUSE_NODES = ['EMU-CLAUSE', 'EMU-INTRO', 'EMU-ANNEX'];
+function findLocalReferences ($elem) {
+  var name = $elem.innerHTML;
+  var references = [];
+
+  var parentClause = $elem.parentNode;
+  while (parentClause && CLAUSE_NODES.indexOf(parentClause.nodeName) === -1) {
+    parentClause = parentClause.parentNode;
+  }
+
+  if(!parentClause) return;
+
+  var vars = parentClause.querySelectorAll('var');
+
+  for (var i = 0; i < vars.length; i++) {
+    var $var = vars[i];
+
+    if ($var.innerHTML === name) {
+      references.push($var);
+    }
+  }
+
+  return references;
+}
+
+function toggleFindLocalReferences($elem) {
+  var references = findLocalReferences($elem);
+  if ($elem.classList.contains('referenced')) {
+    references.forEach(function ($reference) {
+      $reference.classList.remove('referenced');
+    });
+  } else {
+    references.forEach(function ($reference) {
+      $reference.classList.add('referenced');
+    });
+  }
+}
+
+function installFindLocalReferences () {
+  document.addEventListener('click', function (e) {
+    if (e.target.nodeName === 'VAR') {
+      toggleFindLocalReferences(e.target);
+    }
+  });
+}
+
+document.addEventListener('DOMContentLoaded', installFindLocalReferences);
+</script><style>body {
+  display: flex;
+  font-size: 18px;
+  line-height: 1.5;
+  font-family: Cambria, Palatino Linotype, Palatino, Liberation Serif, serif;
+  padding: 0;
+  margin: 0;
+  color: #111;
+}
+
+#spec-container {
+  padding: 0 20px;
+  flex-grow: 1;
+  flex-basis: 66%;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+body.oldtoc {
+  margin: 0 auto;
+}
+
+a {
+    text-decoration: none;
+    color: #206ca7;
+}
+
+a:visited {
+  color: #206ca7;
+}
+
+a:hover {
+    text-decoration: underline;
+    color: #239dee;
+}
+
+
+code {
+    font-weight: bold;
+    font-family: Consolas, Monaco, monospace;
+    white-space: pre;
+}
+
+pre code {
+  font-weight: inherit;
+}
+
+pre code.hljs {
+  background-color: #fff;
+  margin: 0;
+  padding: 0;
+}
+
+ol.toc {
+    list-style: none;
+    padding-left: 0;
+}
+
+ol.toc ol.toc {
+    padding-left: 2ex;
+    list-style: none;
+}
+
+var {
+  color: #2aa198;
+  transition: background-color 0.25s ease;
+  cursor: pointer;
+}
+
+var.referenced {
+  background-color: #ffff33;
+}
+
+emu-const {
+  font-family: sans-serif;
+}
+
+emu-val {
+  font-weight: bold;
+}
+emu-alg ol, emu-alg ol ol ol ol {
+    list-style-type: decimal;
+}
+
+emu-alg ol ol, emu-alg ol ol ol ol ol {
+    list-style-type: lower-alpha;
+}
+
+emu-alg ol ol ol, ol ol ol ol ol ol {
+    list-style-type: lower-roman;
+}
+
+emu-eqn {
+  display: block;
+  margin-left: 4em;
+}
+
+emu-eqn.inline {
+  display: inline;
+  margin: 0;
+}
+
+emu-eqn div:first-child {
+  margin-left: -2em;
+}
+
+emu-note {
+    margin: 1em 0;
+    color: #666;
+    border-left: 5px solid #ccc;
+    display: flex;
+    flex-direction: row;
+}
+
+emu-note > span.note {
+    flex-basis: 100px;
+    min-width: 100px;
+    flex-grow: 0;
+    flex-shrink: 1;
+    text-transform: uppercase;
+    padding-left: 5px;
+}
+
+emu-note[type=editor] {
+  border-left-color: #faa;
+}
+
+emu-note > div.note-contents {
+  flex-grow: 1;
+  flex-shrink: 1;
+}
+
+emu-note > div.note-contents > p:first-of-type {
+  margin-top: 0;
+}
+
+emu-note > div.note-contents > p:last-of-type {
+  margin-bottom: 0;
+}
+
+emu-figure {
+  display: block;
+}
+
+emu-example {
+  display: block;
+  margin: 1em 3em;
+}
+
+emu-example figure figcaption {
+  margin-top: 0.5em;
+  text-align: left;
+}
+
+emu-figure figure,
+emu-example figure,
+emu-table figure {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+emu-production {
+    display: block;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    margin-left: 5ex;
+}
+
+emu-grammar.inline, emu-production.inline,
+emu-grammar.inline emu-production emu-rhs, emu-production.inline emu-rhs,
+emu-grammar[collapsed] emu-production emu-rhs, emu-production[collapsed] emu-rhs {
+    display: inline;
+    padding-left: 1ex;
+    margin-left: 0;
+}
+
+emu-grammar[collapsed] emu-production, emu-production[collapsed] {
+    margin: 0;
+}
+
+emu-constraints {
+    font-size: .75em;
+    margin-right: 1ex;
+}
+
+emu-gann {
+    margin-right: 1ex;
+}
+
+emu-gann emu-t:last-child,
+emu-gann emu-nt:last-child {
+    margin-right: 0;
+}
+
+emu-geq {
+    margin-left: 1ex;
+    font-weight: bold;
+}
+
+emu-oneof {
+    font-weight: bold;
+    margin-left: 1ex;
+}
+
+emu-nt {
+    display: inline-block;
+    font-style: italic;
+    white-space: nowrap;
+    text-indent: 0;
+}
+
+emu-nt a, emu-nt a:visited {
+  color: #333;
+}
+
+emu-rhs emu-nt {
+    margin-right: 1ex;
+}
+
+emu-t {
+    display: inline-block;
+    font-family: monospace;
+    font-weight: bold;
+    white-space: nowrap;
+    text-indent: 0;
+}
+
+emu-production emu-t {
+    margin-right: 1ex;
+}
+
+emu-rhs {
+    display: block;
+    padding-left: 75px;
+    text-indent: -25px;
+}
+
+emu-mods {
+    font-size: .85em;
+    vertical-align: sub;
+    font-style: normal;
+    font-weight: normal;
+}
+
+emu-production[collapsed] emu-mods {
+  display: none;
+}
+
+emu-params, emu-opt {
+  margin-right: 1ex;
+  font-family: monospace;
+}
+
+emu-params, emu-constraints {
+  color: #2aa198;
+}
+
+emu-opt {
+  color: #b58900;
+}
+
+emu-gprose {
+    font-size: 0.9em;
+    font-family: Helvetica, Arial, sans-serif;
+}
+
+h1.shortname {
+  color: #f60;
+  font-size: 1.5em;
+  margin: 0;
+}
+
+h1.version {
+  color: #f60;
+  font-size: 1.5em;
+  margin: 0;
+}
+
+h1.title {
+  margin-top: 0;
+  color: #f60;
+}
+
+h1.first {
+  margin-top: 0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    position: relative;
+}
+
+h1 .secnum {
+  text-decoration: none;
+  margin-right: 10px;
+}
+
+h1 span.title {
+  order: 2;
+}
+
+
+h1 { font-size: 2.67em; margin-top: 2em; margin-bottom: 0; line-height: 1em;}
+h2 { font-size: 2em; }
+h3 { font-size: 1.56em; }
+h4 { font-size: 1.25em; }
+h5 { font-size: 1.11em; }
+h6 { font-size: 1em; }
+
+h1:hover span.utils {
+  display: block;
+}
+
+span.utils {
+  font-size: 18px;
+  line-height: 18px;
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  font-weight: normal;
+}
+
+span.utils:before {
+    content: "⤷";
+    display: inline-block;
+    padding: 0 5px;
+}
+
+span.utils > * {
+  display: inline-block;
+  margin-right: 20px;
+}
+
+h1 span.utils span.anchor a,
+h2 span.utils span.anchor a,
+h3 span.utils span.anchor a,
+h4 span.utils span.anchor a,
+h5 span.utils span.anchor a,
+h6 span.utils span.anchor a {
+  text-decoration: none;
+  font-variant: small-caps;
+}
+
+h1 span.utils span.anchor a:hover,
+h2 span.utils span.anchor a:hover,
+h3 span.utils span.anchor a:hover,
+h4 span.utils span.anchor a:hover,
+h5 span.utils span.anchor a:hover,
+h6 span.utils span.anchor a:hover {
+  color: #333;
+}
+
+emu-intro h1, emu-clause h1, emu-annex h1 { font-size: 2em; }
+emu-intro h2, emu-clause h2, emu-annex h2 { font-size: 1.56em; }
+emu-intro h3, emu-clause h3, emu-annex h3 { font-size: 1.25em; }
+emu-intro h4, emu-clause h4, emu-annex h4 { font-size: 1.11em; }
+emu-intro h5, emu-clause h5, emu-annex h5 { font-size: 1em; }
+emu-intro h6, emu-clause h6, emu-annex h6 { font-size: 0.9em; }
+emu-intro emu-intro h1, emu-clause emu-clause h1, emu-annex emu-annex h1 { font-size: 1.56em; }
+emu-intro emu-intro h2, emu-clause emu-clause h2, emu-annex emu-annex h2 { font-size: 1.25em; }
+emu-intro emu-intro h3, emu-clause emu-clause h3, emu-annex emu-annex h3 { font-size: 1.11em; }
+emu-intro emu-intro h4, emu-clause emu-clause h4, emu-annex emu-annex h4 { font-size: 1em; }
+emu-intro emu-intro h5, emu-clause emu-clause h5, emu-annex emu-annex h5 { font-size: 0.9em; }
+emu-intro emu-intro emu-intro h1, emu-clause emu-clause emu-clause h1, emu-annex emu-annex emu-annex h1 { font-size: 1.25em; }
+emu-intro emu-intro emu-intro h2, emu-clause emu-clause emu-clause h2, emu-annex emu-annex emu-annex h2 { font-size: 1.11em; }
+emu-intro emu-intro emu-intro h3, emu-clause emu-clause emu-clause h3, emu-annex emu-annex emu-annex h3 { font-size: 1em; }
+emu-intro emu-intro emu-intro h4, emu-clause emu-clause emu-clause h4, emu-annex emu-annex emu-annex h4 { font-size: 0.9em; }
+emu-intro emu-intro emu-intro emu-intro h1, emu-clause emu-clause emu-clause emu-clause h1, emu-annex emu-annex emu-annex emu-annex h1 { font-size: 1.11em; }
+emu-intro emu-intro emu-intro emu-intro h2, emu-clause emu-clause emu-clause emu-clause h2, emu-annex emu-annex emu-annex emu-annex h2 { font-size: 1em; }
+emu-intro emu-intro emu-intro emu-intro h3, emu-clause emu-clause emu-clause emu-clause h3, emu-annex emu-annex emu-annex emu-annex h3 { font-size: 0.9em; }
+emu-intro emu-intro emu-intro emu-intro emu-intro h1, emu-clause emu-clause emu-clause emu-clause emu-clause h1, emu-annex emu-annex emu-annex emu-annex emu-annex h1 { font-size: 1em; }
+emu-intro emu-intro emu-intro emu-intro emu-intro h2, emu-clause emu-clause emu-clause emu-clause emu-clause h2, emu-annex emu-annex emu-annex emu-annex emu-annex h2 { font-size: 0.9em; }
+emu-intro emu-intro emu-intro emu-intro emu-intro emu-intro h1, emu-clause emu-clause emu-clause emu-clause emu-clause emu-clause h1, emu-annex emu-annex emu-annex emu-annex emu-annex emu-annex h1 { font-size: 0.9em }
+
+emu-clause, emu-intro, emu-annex {
+    display: block;
+}
+
+/* Figures and tables */
+figure { display: block; margin: 1em 0 3em 0; }
+figure object { display: block; margin: 0 auto; }
+figure table.real-table { margin: 0 auto; }
+figure figcaption {
+    display: block;
+    color: #555555;
+    font-weight: bold;
+    text-align: center;
+}
+
+emu-table table {
+  margin: 0 auto;
+}
+
+emu-table table, table.real-table {
+    border-collapse: collapse;
+}
+
+emu-table td, emu-table th, table.real-table td, table.real-table th {
+    border: 1px solid black;
+    padding: 0.4em;
+    vertical-align: baseline;
+}
+emu-table th, emu-table thead td, table.real-table th {
+    background-color: #eeeeee;
+}
+
+/* Note: the left content edges of table.lightweight-table >tbody >tr >td
+   and div.display line up. */
+table.lightweight-table {
+    border-collapse: collapse;
+    margin: 0 0 0 1.5em;
+}
+table.lightweight-table td, table.lightweight-table th {
+    border: none;
+    padding: 0 0.5em;
+    vertical-align: baseline;
+}
+
+/* diff styles */
+ins {
+    background-color: #e0f8e0;
+    text-decoration: none;
+    border-bottom: 1px solid #396;
+}
+
+del {
+    background-color: #fee;
+}
+
+ins.block, del.block,
+emu-production > ins, emu-production > del,
+emu-grammar > ins, emu-grammar > del {
+  display: block;
+}
+emu-rhs > ins, emu-rhs > del { 
+  display: inline;
+}
+
+tr.ins > td > ins {
+  border-bottom: none;
+}
+
+tr.ins > td {
+  background-color: #e0f8e0;
+}
+
+tr.del > td {
+  background-color: #fee;
+}
+
+/* Menu Styles */
+#menu-toggle {
+  font-size: 2em;
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 1.5em;
+  height: 1.5em;
+  z-index: 3;
+  visibility: hidden;
+  color: #1567a2;
+  background-color: #fff;
+
+  line-height: 1.5em;
+  text-align: center;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;;
+
+  cursor: pointer;
+}
+
+#menu {
+  display: flex;
+  flex-direction: column;
+  width: 33%; height: 100vh;
+  max-width: 500px;
+  box-sizing: border-box;
+  background-color: #ddd;
+  overflow: hidden;
+  transition: opacity 0.1s linear;
+  padding: 0 5px;
+  position: fixed;
+  left: 0; top: 0;
+  border-right: 2px solid #bbb;
+
+  z-index: 2;
+}
+
+#menu-spacer {
+  flex-basis: 33%;
+  max-width: 500px;
+  flex-grow: 0;
+  flex-shrink: 0;
+}
+
+#menu a {
+  color: #1567a2;
+}
+
+#menu.active {
+  display: flex;
+  opacity: 1;
+  z-index: 2;
+}
+
+#menu-pins {
+  flex-grow: 1;
+  display: none;
+}
+
+#menu-pins.active {
+  display: block;
+}
+
+#menu-pins-list {
+  margin: 0;
+  padding: 0;
+  counter-reset: pins-counter;
+}
+
+#menu-pins-list > li:before {
+  content: counter(pins-counter);
+  counter-increment: pins-counter;
+  display: inline-block;
+  width: 25px;
+  text-align: center;
+  border: 1px solid #bbb;
+  padding: 2px;
+  margin: 4px;
+  box-sizing: border-box;
+  line-height: 1em;
+  background-color: #ccc;
+  border-radius: 4px;
+}
+#menu-toc > ol {
+  padding: 0;
+  flex-grow: 1;
+}
+
+#menu-toc > ol li {
+  padding: 0;
+}
+
+#menu-toc > ol , #menu-toc > ol ol {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+#menu-toc > ol ol {
+  padding-left: 0.75em;
+}
+
+#menu-toc li {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+#menu-toc .item-toggle {
+  display: inline-block;
+  transform: rotate(-45deg) translate(-5px, -5px);
+  transition: transform 0.1s ease;
+  text-align: center;
+  width: 20px;
+
+  color: #aab;
+
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;;
+
+  cursor: pointer;
+}
+
+#menu-toc .item-toggle-none {
+  display: inline-block;
+  width: 20px;
+}
+
+#menu-toc li.active > .item-toggle {
+  transform: rotate(45deg) translate(-5px, -5px);
+}
+
+#menu-toc li > ol {
+  display: none;
+}
+
+#menu-toc li.active > ol {
+  display: block;
+}
+
+#menu-toc li.revealed > a {
+  background-color: #bbb;
+  font-weight: bold;
+  /*
+  background-color: #222;
+  color: #c6d8e4;
+  */
+}
+
+#menu-toc li.revealed-leaf> a {
+  color: #206ca7;
+  /*
+  background-color: #222;
+  color: #c6d8e4;
+  */
+}
+
+#menu-toc li.revealed > .item-toggle {
+  transform: rotate(45deg) translate(-5px, -5px);
+}
+
+#menu-toc li.revealed > ol {
+  display: block;
+}
+
+#menu-toc li > a {
+  padding: 2px 5px;
+}
+
+#menu > * {
+  margin-bottom: 5px;
+}
+
+.menu-pane-header {
+  padding: 0 5px;
+  text-transform: uppercase;
+  background-color: #aaa;
+  color: #335;
+  font-weight: bold;
+  letter-spacing: 2px;
+  flex-grow: 0;
+  flex-shrink: 0;
+  font-size: 0.8em;
+}
+
+#menu-toc {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  overflow: hidden;
+  flex-grow: 1;
+}
+
+#menu-toc ol.toc {
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+#menu-search {
+  position: relative;
+  flex-grow: 0;
+  flex-shrink: 0;
+  width: 100%;
+  
+  display: flex;
+  flex-direction: column;
+  
+  max-height: 300px;
+}
+
+#menu-trace-list {
+  display: none;
+}
+
+#menu-search-box {
+  box-sizing: border-box;
+  display: block;
+  width: 100%;
+  margin: 5px 0 0 0;
+  font-size: 1em;
+  padding: 2px;
+  background-color: #bbb;
+  border: 1px solid #999;
+}
+
+#menu-search-results {
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+li.menu-search-result-clause:before {
+    content: 'clause';
+    width: 40px;
+    display: inline-block;
+    text-align: right;
+    padding-right: 1ex;
+    color: #666;
+    font-size: 75%;
+}
+li.menu-search-result-op:before {
+    content: 'op';
+    width: 40px;
+    display: inline-block;
+    text-align: right;
+    padding-right: 1ex;
+    color: #666;
+    font-size: 75%;
+}
+
+li.menu-search-result-prod:before {
+    content: 'prod';
+    width: 40px;
+    display: inline-block;
+    text-align: right;
+    padding-right: 1ex;
+    color: #666;
+    font-size: 75%
+}
+
+
+li.menu-search-result-term:before {
+    content: 'term';
+    width: 40px;
+    display: inline-block;
+    text-align: right;
+    padding-right: 1ex;
+    color: #666;
+    font-size: 75%
+}
+
+#menu-search-results ul {
+  padding: 0 5px;
+  margin: 0;
+}
+
+#menu-search-results li {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+
+#menu-trace-list {
+  counter-reset: item;
+  margin: 0 0 0 20px;
+  padding: 0;
+}
+#menu-trace-list li {
+  display: block;
+  white-space: nowrap;
+}
+
+#menu-trace-list li .secnum:after {
+  content: " ";
+}
+#menu-trace-list li:before {
+    content: counter(item) " ";
+    background-color: #222;
+    counter-increment: item;
+    color: #999;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    display: inline-block;
+    text-align: center;
+    margin: 2px 4px 2px 0;
+}
+
+@media (max-width: 1000px) {
+  body {
+    margin: 0;
+    display: block;
+  }
+
+  #menu {
+    display: none;
+    padding-top: 3em;
+    width: 450px;
+  }
+
+  #menu.active {
+    position: fixed;
+    height: 100%;
+    left: 0;
+    top: 0;
+    right: 300px;
+  }
+
+  #menu-toggle {
+    visibility: visible;
+  }
+
+  #spec-container {
+    padding: 0 5px;
+  }
+
+  #references-pane-spacer {
+    display: none;
+  }
+}
+
+@media only screen and (max-width: 800px) {
+  #menu {
+    width: 100%;
+  }
+
+  h1 .secnum:empty {
+    margin: 0; padding: 0;
+  }
+}
+
+
+/* Toolbox */
+.toolbox {
+	position: absolute;
+	background: #ddd;
+	border: 1px solid #aaa;
+  display: none;
+  color: #eee;
+  padding: 5px;
+  border-radius: 3px;
+}
+
+.toolbox.active {
+  display: inline-block;
+}
+
+.toolbox a {
+  text-decoration: none;
+  padding: 0 5px;
+}
+
+.toolbox a:hover {
+  text-decoration: underline;
+}
+
+.toolbox:after, .toolbox:before {
+	top: 100%;
+	left: 15px;
+	border: solid transparent;
+	content: " ";
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+}
+
+.toolbox:after {
+	border-color: rgba(0, 0, 0, 0);
+	border-top-color: #ddd;
+	border-width: 10px;
+	margin-left: -10px;
+}
+.toolbox:before {
+	border-color: rgba(204, 204, 204, 0);
+	border-top-color: #aaa;
+	border-width: 12px;
+	margin-left: -12px;
+}
+
+#references-pane-container {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 250px;
+  display: none;
+  background-color: #ddd;
+  z-index: 1;
+}
+
+#references-pane-table-container {
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+#references-pane-spacer {
+  flex-basis: 33%;
+  max-width: 500px;
+}
+
+#references-pane {
+  flex-grow: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+#references-pane-container.active {
+  display: flex;
+}
+
+#references-pane-close:after {
+  content: '✖';
+  float: right;
+  cursor: pointer;
+}
+
+#references-pane table tr td:first-child {
+  text-align: right;
+  padding-right: 5px;
+}
+
+@media print {
+  #menu-toggle {
+    display: none; 
+  }
+}
+</style></head><body><div id="menu-toggle">☰</div><div id="menu-spacer"></div><div id="menu"><div id="menu-search"><input type="text" id="menu-search-box" placeholder="Search..."><div id="menu-search-results" class="inactive"></div></div><div id="menu-pins"><div class="menu-pane-header">Pins</div><ul id="menu-pins-list"></ul></div><div class="menu-pane-header">Table of Contents</div><div id="menu-toc"><ol class="toc"><li><span class="item-toggle-none"></span><a href="#sec-temporal-civildate" title="CivilDate Objects">CivilDate Objects</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civildate-year-number" title="Year Number"><span class="secnum">1</span> Year Number</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civildate-month-number" title="Month Number"><span class="secnum">2</span> Month Number</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civildate-day-number" title="Day Number"><span class="secnum">3</span> Day Number</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civildate-plus-operation" title="Plus(Object)"><span class="secnum">4</span> Plus(Object)</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civildate-with-operation" title="With(?_year, ?_month, ?_day)"><span class="secnum">5</span> With(?_year, ?_month, ?_day)</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civildate-withtime-operation" title="WithTime(time)"><span class="secnum">6</span> WithTime(time)</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civildate-constructor" title="CivilDate Constructor"><span class="secnum">7</span> CivilDate Constructor</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civildate-constructor-alg" title="CivilDate (year, month, day)"><span class="secnum">8</span> CivilDate (year, month, day)</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civildate-constructor-prop" title="Properties of the CivilDate Constructor"><span class="secnum">9</span> Properties of the CivilDate Constructor</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civildate-prototype" title="CivilDate Prototype"><span class="secnum">10</span> CivilDate Prototype</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civildate-plus-alg" title="CivilDate.plus (data)"><span class="secnum">11</span> CivilDate.plus (data)</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civildate-with-alg" title="CivilDate.with (data)"><span class="secnum">12</span> CivilDate.with (data)</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civiltime" title="CivilTime Objects">CivilTime Objects</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civiltime-hour-number" title="Hour Number"><span class="secnum">13</span> Hour Number</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civiltime-minute-number" title="Minute Number"><span class="secnum">14</span> Minute Number</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civiltime-second-number" title="Second Number"><span class="secnum">15</span> Second Number</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civiltime-millisecond-number" title="Millisecond Number"><span class="secnum">16</span> Millisecond Number</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civiltime-nanosecond-number" title="Nanosecond Number"><span class="secnum">17</span> Nanosecond Number</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civiltime-plus-operation" title="Plus(Object)"><span class="secnum">18</span> Plus(Object)</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civiltime-with-operation" title="With(?_hour, ?_minute, ?_second, ?_millisecond, ?_nanosecond)"><span class="secnum">19</span> With(?_hour, ?_minute, ?_second, ?_millisecond, ?_nanosecond)</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civiltime-withdate-operation" title="WithDate(date)"><span class="secnum">20</span> WithDate(date)</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civiltime-constructor" title="CivilTime Constructor"><span class="secnum">21</span> CivilTime Constructor</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civiltime-constructor-alg" title="CivilTime (hour, minute[[[, second], millisecond], nanosecond])"><span class="secnum">22</span> CivilTime (hour, minute[[[, second], millisecond], nanosecond])</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civiltime-constructor-prop" title="Properties of the CivilTime Constructor"><span class="secnum">23</span> Properties of the CivilTime Constructor</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civiltime-prototype" title="CivilTime Prototype"><span class="secnum">24</span> CivilTime Prototype</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civiltime-plus-alg" title="CivilTime.plus (data)"><span class="secnum">25</span> CivilTime.plus (data)</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civiltime-with-alg" title="CivilTime.with(data)"><span class="secnum">26</span> CivilTime.with(data)</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civiltime-withdate-alg" title="CivilTime.withDate (data)"><span class="secnum">27</span> CivilTime.withDate (data)</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civildatetime" title="CivilDateTime Objects">CivilDateTime Objects</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civildatetime-year-number" title="Year Number"><span class="secnum">28</span> Year Number</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civildatetime-month-number" title="Month Number"><span class="secnum">29</span> Month Number</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civildatetime-day-number" title="Day Number"><span class="secnum">30</span> Day Number</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civildatetime-hour-number" title="Hour Number"><span class="secnum">31</span> Hour Number</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civildatetime-minute-number" title="Minute Number"><span class="secnum">32</span> Minute Number</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civildatetime-second-number" title="Second Number"><span class="secnum">33</span> Second Number</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civildatetime-millisecond-number" title="Millisecond Number"><span class="secnum">34</span> Millisecond Number</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civildatetime-nanosecond-number" title="Nanosecond Number"><span class="secnum">35</span> Nanosecond Number</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civildatetime-from-operation" title="From(date, time)"><span class="secnum">36</span> From(date, time)</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civildatetime-plus-operation" title="Plus(Object)"><span class="secnum">37</span> Plus(Object)</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civildatetime-with-operation" title="With(Object)"><span class="secnum">38</span> With(Object)</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civildatetime-constructor" title="CivilDateTime Constructor"><span class="secnum">39</span> CivilDateTime Constructor</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civildatetime-constructor-alg" title="CivilDateTime (year, month, day, hour, minute[[[, second], millisecond], nanosecond])"><span class="secnum">40</span> CivilDateTime (year, month, day, hour, minute[[[, second], millisecond], nanosecond])</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civildatetime-constructor-prop" title="Properties of the CivilDateTime Constructor"><span class="secnum">41</span> Properties of the CivilDateTime Constructor</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civildatetime-prototype" title="CivilDateTime Prototype"><span class="secnum">42</span> CivilDateTime Prototype</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civildatetime-plus-alg" title="CivilDateTime.plus (data)"><span class="secnum">43</span> CivilDateTime.plus (data)</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civildatetime-with-alg" title="CivilDateTime.with (data)"><span class="secnum">44</span> CivilDateTime.with (data)</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civildatetime-from-alg" title="CivilDateTime.from (date, time)"><span class="secnum">45</span> CivilDateTime.from (date, time)</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civildatetime-tocivildate-alg" title="CivilDateTime.toCivilDate"><span class="secnum">46</span> CivilDateTime.toCivilDate</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civildatetime-tociviltime-alg" title="CivilDateTime.toCivilTime"><span class="secnum">47</span> CivilDateTime.toCivilTime</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civildatetime-withzone-alg" title="CivilDateTime.withZone (timeZone[, options])"><span class="secnum">48</span> CivilDateTime.withZone (timeZone[, options])</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-instant" title="Introduction">Introduction</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-instant-constructor" title="new Instant(nanoseconds)"><span class="secnum">49</span> new Instant(<emu-val>nanoseconds</emu-val>)</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-instant.prototype.valueOf" title="Instant.prototype.valueOf()"><span class="secnum">50</span> Instant.prototype.valueOf()</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-instant.prototype.milliseconds" title="Instant.prototype.milliseconds"><span class="secnum">51</span> Instant.prototype.milliseconds</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-instant.prototype.nanoseconds" title="Instant.prototype.nanoseconds"><span class="secnum">52</span> Instant.prototype.nanoseconds</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-instant.prototype.plus" title="Instant.prototype.plus({ ? years, ? months, ? days, ? hours, ? minutes, ? seconds, ?
+    milliseconds, ? nanoseconds })"><span class="secnum">53</span> Instant.prototype.plus({ ? <var>years</var>, ? <var>months</var>, ? <var>days</var>, ? <var>hours</var>, ? <var>minutes</var>, ? <var>seconds</var>, ?
+    <var>milliseconds</var>, ? <var>nanoseconds</var> })</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-instant.prototype.withZone" title="Instant.prototype.withZone(timezone)"><span class="secnum">54</span> Instant.prototype.withZone(<var>timezone</var>)</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-instant.prototype.toString" title="Instant.prototype.toString()"><span class="secnum">55</span> Instant.prototype.toString()</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-instant.prototype.format" title="Instant.prototype.format([locale], [options])"><span class="secnum">56</span> Instant.prototype.format([<var>locale</var>], [<var>options</var>])</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-instant.fromMilliseconds" title="Instant.fromMilliseconds(miliseconds)"><span class="secnum">57</span> Instant.fromMilliseconds(<var>miliseconds</var>)</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-instant.fromString" title="Instant.fromString(string)"><span class="secnum">58</span> Instant.fromString(<var>string</var>)</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-zonedinstant" title="ZonedInstant Objects">ZonedInstant Objects</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-zonedinstant-millisecond-number" title="Millisecond Number"><span class="secnum">59</span> Millisecond Number</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-zonedinstant-nanosecond-number" title="Nanosecond Number"><span class="secnum">60</span> Nanosecond Number</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-zonedinstant-timezone" title="TimeZone String"><span class="secnum">61</span> TimeZone String</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-zonedinstant-prototype" title="ZonedInstant Prototype"><span class="secnum">62</span> ZonedInstant Prototype</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-zonedinstant.prototype.valueof" title="ZonedInstant.prototype.valueOf()  "><span class="secnum">63</span> ZonedInstant.prototype.valueOf()  </a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-zonedinstant.prototype.milliseconds" title="ZonedInstant.prototype.milliseconds"><span class="secnum">64</span> ZonedInstant.prototype.milliseconds</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-zonedinstant.prototype.nanoseconds" title="ZonedInstant.prototype.nanoseconds"><span class="secnum">65</span> ZonedInstant.prototype.nanoseconds</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-zonedinstant.prototype.timezone" title="ZonedInstant.prototype.timeZone"><span class="secnum">66</span> ZonedInstant.prototype.timeZone</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-zonedinstant.prototype.with" title="ZonedInstant.prototype.with({ ? years, ? months, ? days, ? hours, ? minutes, ? seconds, ?
+    milliseconds, ? nanoseconds })"><span class="secnum">67</span> ZonedInstant.prototype.with({ ? <var>years</var>, ? <var>months</var>, ? <var>days</var>, ? <var>hours</var>, ? <var>minutes</var>, ? <var>seconds</var>, ?
+    <var>milliseconds</var>, ? <var>nanoseconds</var> })</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-zonedinstant.prototype.plus" title="ZonedInstant.prototype.plus({ ? years, ? months, ? days, ? hours, ? minutes, ? seconds, ?
+    milliseconds, ? nanoseconds })"><span class="secnum">68</span> ZonedInstant.prototype.plus({ ? <var>years</var>, ? <var>months</var>, ? <var>days</var>, ? <var>hours</var>, ? <var>minutes</var>, ? <var>seconds</var>, ?
+    <var>milliseconds</var>, ? <var>nanoseconds</var> })</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-zonedinstant.prototype.toinstant" title="ZonedInstant.prototype.toInstant()"><span class="secnum">69</span> ZonedInstant.prototype.toInstant()</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-zonedinstant.prototype.tocivildate" title="ZonedInstant.prototype.toCivilDate()"><span class="secnum">70</span> ZonedInstant.prototype.toCivilDate()</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-zonedinstant.prototype.tociviltime" title="ZonedInstant.prototype.toCivilTime()"><span class="secnum">71</span> ZonedInstant.prototype.toCivilTime()</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-zonedinstant.prototype.tocivildatetime" title="ZonedInstant.prototype.toCivilDateTime()"><span class="secnum">72</span> ZonedInstant.prototype.toCivilDateTime()</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-zonedinstant.prototype.tostring" title="ZonedInstant.prototype.toString()"><span class="secnum">73</span> ZonedInstant.prototype.toString()</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-zonedinstant-constructor-prop" title="Properties of the ZonedInstant Constructor"><span class="secnum">74</span> Properties of the ZonedInstant Constructor</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-zonedinstant-constructor" title="ZonedInstant Constructor"><span class="secnum">75</span> ZonedInstant Constructor</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-zonedinstant-alg" title="ZonedInstant(instant, timeZone)"><span class="secnum">76</span> ZonedInstant(<emu-val>instant</emu-val>, <emu-val>timeZone</emu-val>)</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-zonedinstant-plus" title="plus()"><span class="secnum">77</span> plus()</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-zonedinstant-with" title="with()"><span class="secnum">78</span> with()</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-zonedinstant-toinstant" title="toInstant()"><span class="secnum">79</span> toInstant()</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-zonedinstant-tocivildate" title="toCivilDate()"><span class="secnum">80</span> toCivilDate()</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-zonedinstant-tociviltime" title="toCivilTime()"><span class="secnum">81</span> toCivilTime()</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-zonedinstant-tocivildatetime" title="toCivilDateTime()"><span class="secnum">82</span> toCivilDateTime()</a></li><li><span class="item-toggle-none"></span><a href="#sec-copyright-and-software-license" title="Copyright &amp; Software License"><span class="secnum">A</span> Copyright &amp; Software License</a></li></ol></div></div><div id="spec-container"><h1 class="version first">Stage 1 Draft / September 23, 2018</h1><h1 class="title">Temporal proposal</h1>
+
+<emu-import href="spec/civildate.html"><emu-intro id="sec-temporal-civildate">
+  <h1>CivilDate Objects</h1>
+  <p>A CivilDate object is an immutable Object that contains Number values corresponding to a particular year, month,
+    and day.</p>
+  <p>The following functions are abstract operations that operate on time values (defined SOMEWHERE). Note that, in
+    every case, if any argument to one of these functions is NaN, the result will be NaN.</p>
+</emu-intro>
+
+<emu-clause id="sec-temporal-civildate-year-number">
+  <h1><span class="secnum">1</span>Year Number</h1>
+  <p>The Year Number is an integer Number corresponding to a particular year. It is called the year value. It must
+    have a Number value and may not be NaN.</p>
+</emu-clause>
+
+<emu-clause id="sec-temporal-civildate-month-number">
+  <h1><span class="secnum">2</span>Month Number</h1>
+  <p>The Month Number is a positive integer Number corresponding to a particular month. It is called the month value
+    and is identified by an integer in the range of 1 to 12, inclusive. It must have a Number value and may not be
+    NaN.</p>
+</emu-clause>
+
+<emu-clause id="sec-temporal-civildate-day-number">
+  <h1><span class="secnum">3</span>Day Number</h1>
+  <p>The <emu-xref aoid="Day"><a href="https://tc39.github.io/ecma262/#sec-day-number-and-time-within-day">Day</a></emu-xref> Number is a positive integer Number corresponding to a particular day of the month. It is called the
+    day value and is identified by an integer the value of which is dependent on the month and year values. It must
+    have a Number value and may not be NaN. The range of possible day values can be calculated as follows:</p>
+  <emu-alg><ol><li>For any year value with a month values of 1, 3, 5, 7, 8, 10, or 12, the day value is in the range of 1 to
+        31, inclusive.</li><li>For any year value with a month value of 4, 6, 9, or 11, the day value is in the range of 1 to 30,
+        inclusive.</li><li>For the month value 2, the range of possible values for the day value depends on whether the year value
+        corresponds to a leap year.<ol><li>If the year value <emu-xref aoid="modulo"><a href="https://tc39.github.io/ecma262/#sec-algorithm-conventions">modulo</a></emu-xref> 4 != 0, the range is 1 to 28, inclusive.</li><li>If the year value <emu-xref aoid="modulo"><a href="https://tc39.github.io/ecma262/#sec-algorithm-conventions">modulo</a></emu-xref> 400 == 0, the range is 1 to 29, inclusive.</li><li>If the year value <emu-xref aoid="modulo"><a href="https://tc39.github.io/ecma262/#sec-algorithm-conventions">modulo</a></emu-xref> 100 == and year value % 400 != 0, the range is 1 to 28, inclusive.</li><li>If the year value <emu-xref aoid="modulo"><a href="https://tc39.github.io/ecma262/#sec-algorithm-conventions">modulo</a></emu-xref> 4 == 0 and year value % 100 != 0, the range is 1 to 29, inclusive.
+  </li></ol></li></ol></emu-alg>
+</emu-clause>
+
+<emu-clause id="sec-temporal-civildate-plus-operation">
+  <h1><span class="secnum">4</span>Plus(Object)</h1>
+  <p>The abstract operation Plus returns a new CivilDate object that may have 0 to 2 values copied from the
+    CivilDate object on which the operation was performed. The new CivilDate object will have one or more updated
+    values that depend on terminal values of an Object passed in as the argument. The argument Object consists of a
+    range of 1 to 3 (inclusive) key-value pairs. Each pair consists of a nonterminal symbol and a corresponding
+    terminal Number. An argument Object may have one and only one of each of the nonterminal symbols "Year",
+    "Month", and "<emu-xref aoid="Day"><a href="https://tc39.github.io/ecma262/#sec-day-number-and-time-within-day">Day</a></emu-xref>".</p>
+</emu-clause>
+
+<emu-clause id="sec-temporal-civildate-with-operation">
+  <h1><span class="secnum">5</span>With(?_year, ?_month, ?_day)</h1>
+  <p>The abstract operation With takes one Object argument and returns a new CivilDate object. The Object argument
+    must have a range of 1 to 3 inclusive key/value pairs with the keys "year", "month", and/or "day". The
+    corresponding value for each key must be a Number.</p>
+  <p>The new CivilDate object copies the YearValue, MonthValue, and/or DayValue properties from the original
+    CivilDate object and replaces the property value(s) with the corresponding argument value.</p>
+</emu-clause>
+
+<emu-clause id="sec-temporal-civildate-withtime-operation">
+  <h1><span class="secnum">6</span>WithTime(time)</h1>
+  <p>The abstract operation WithTime returns a CivilDateTime object that copies and may update the year, month, and
+    day values of the CivilDate object on which the operation was performed.</p>
+</emu-clause>
+
+<emu-clause id="sec-temporal-civildate-constructor">
+  <h1><span class="secnum">7</span>CivilDate Constructor</h1>
+  <p>The CivilDate constructor is the %CivilDate% intrinsic object. When called as a constructor, it creates and
+    initializes a new CivilDate object.</p>
+  <p>The CivilDate constructor is a single function.</p>
+  <p>The CivilDate constructor is subclassable</p>
+  <p>The length property of the CivilDate constructor function is 3.</p>
+  <emu-grammar></emu-grammar>
+</emu-clause>
+
+<emu-clause id="sec-temporal-civildate-constructor-alg">
+  <h1><span class="secnum">8</span>CivilDate (year, month, day)</h1>
+  <p>This description only applies if the CivilDate constructor is called with at least 3 arguments.</p>
+  <p>When the CivilDate function is called, the following steps are taken:</p>
+  <emu-alg><ol><li>Let numberOfArgs be the number of arguments passed to this function call.</li><li>Assert: numberOfArgs == 3.</li><li>If NewTarget is not undefined, then<ol><li>Let y be ?&nbsp;<emu-xref aoid="ToNumber" id="_ref_2"><a href="https://tc39.github.io/ecma262/#sec-tonumber">ToNumber</a></emu-xref>(year)</li><li>Let m be ?&nbsp;<emu-xref aoid="ToNumber" id="_ref_3"><a href="https://tc39.github.io/ecma262/#sec-tonumber">ToNumber</a></emu-xref>(month)</li><li>Let d be ?&nbsp;<emu-xref aoid="ToNumber" id="_ref_4"><a href="https://tc39.github.io/ecma262/#sec-tonumber">ToNumber</a></emu-xref>(<emu-xref aoid="Day"><a href="https://tc39.github.io/ecma262/#sec-day-number-and-time-within-day">Day</a></emu-xref>)
+  </li></ol></li></ol></emu-alg>
+</emu-clause>
+
+<emu-clause id="sec-temporal-civildate-constructor-prop">
+  <h1><span class="secnum">9</span>Properties of the CivilDate Constructor</h1>
+  <p>The value of the [[Prototype]] internal slot of the CivilDate constructor is the intrinsic object
+    <emu-xref href="#sec-properties-of-the-function-prototype-object"><a href="https://tc39.github.io/ecma262/#sec-properties-of-the-function-prototype-object">%FunctionPrototype%</a></emu-xref>.</p>
+  <p>The CivilDate constructor has the following properties:</p>
+</emu-clause>
+
+<emu-clause id="sec-temporal-civildate-prototype">
+  <h1><span class="secnum">10</span>CivilDate Prototype</h1>
+  <p>The initial value of CivilDate.prototype is the intrinsic object %CivilDatePrototype%. This property has the
+    attributes {[[Writable]]: false, [[Enumerable]]: false, [[Configurable]]: false}.</p>
+</emu-clause>
+
+<emu-clause id="sec-temporal-civildate-plus-alg">
+  <h1><span class="secnum">11</span>CivilDate.plus (data)</h1>
+  <p>The abstract operation plus takes as an argument an Object with a range of 1 to 3 key/value pairs, inclusive.</p>
+  <p>The keys may not be duplicated and may be any combination of "year", "month", "day".</p>
+  <p>The values must be of the Number type and may be positive or negative integers.</p>
+  <p>If the sum of the current value and the argument value exceeds the range of allowable values for the given unit,
+    increment the next unit.</p>
+  <p>The CivilDate operation uses Gregorian pro-leptic calendar computation.</p>
+  <p>When the plus function is called, the following steps are taken:</p>
+  <emu-alg><ol><li>Let numberOfArgs be the number of arguments passed to this function call.</li><li>Assert: <emu-xref aoid="Type" id="_ref_5"><a href="https://tc39.github.io/ecma262/#sec-ecmascript-data-types-and-values">Type</a></emu-xref>(data) is Object.</li><li>Assert: numberOfArgs == 1.</li><li>If NewTarget is not undefined, then<ol><li>If data.year is supplied, let y be ?&nbsp;<emu-xref aoid="ToNumber" id="_ref_6"><a href="https://tc39.github.io/ecma262/#sec-tonumber">ToNumber</a></emu-xref>(year) + thisYearValue. If y is NaN, throw a TypeError
+          exception; else if data.year is not supplied, let y be thisYearValue.</li><li>If data.month is supplied, let m be ?&nbsp;<emu-xref aoid="ToNumber" id="_ref_7"><a href="https://tc39.github.io/ecma262/#sec-tonumber">ToNumber</a></emu-xref>(month) + thisMonthValue. If m is NaN, throw a TypeError
+          exception; else if data.month is not supplied, let m be thisMonthValue.</li><li>If data.day is supplied, let d be ?&nbsp;<emu-xref aoid="ToNumber" id="_ref_8"><a href="https://tc39.github.io/ecma262/#sec-tonumber">ToNumber</a></emu-xref>(day) + thisDayValue. If d is NaN, throw a TypeError exception;
+          else if data.day is not supplied, let d be thisDayValue.</li><li>Regulate the final y, m, and d values using Gregorian pro-leptic calendar calculations.</li><li>Let O be ?&nbsp;<emu-xref aoid="OrdinaryCreateFromConstructor" id="_ref_9"><a href="https://tc39.github.io/ecma262/#sec-ordinarycreatefromconstructor">OrdinaryCreateFromConstructor</a></emu-xref>(New Target, "%CivilDatePrototype%", y, m, d)</li><li>Set O.[[YearValue]] to y.</li><li>Set O.[[MonthValue]] to m.</li><li>Set O.[[DayValue]] to d.</li><li>Return O.</li></ol></li><li>Else, TBD
+  </li></ol></emu-alg>
+</emu-clause>
+
+<emu-clause id="sec-temporal-civildate-with-alg">
+  <h1><span class="secnum">12</span>CivilDate.with (data)</h1>
+  <p>The abstract operation plus takes as an argument an Object with a range of 1 to 3 key/value pairs, inclusive.</p>
+  <p>The keys may not be duplicated and may be any combination of "year", "month", "day".</p>
+  <p>The values must be of the Number type and may be positive or negative integers.</p>
+  <p>The CivilDate operation uses Gregorian pro-leptic calendar computation.</p>
+  <p>When the with function is called, the following steps are taken:</p>
+  <emu-alg><ol><li>Let numberOfArgs be the number of arguments passed to this function call.</li><li>Assert: numberOfArgs == 1.</li><li>Assert: <emu-xref aoid="Type" id="_ref_10"><a href="https://tc39.github.io/ecma262/#sec-ecmascript-data-types-and-values">Type</a></emu-xref>(data) is Object.</li><li>If NewTarget is not undefined, then<ol><li>If data.year is supplied, let y be ?&nbsp;<emu-xref aoid="ToNumber" id="_ref_11"><a href="https://tc39.github.io/ecma262/#sec-tonumber">ToNumber</a></emu-xref>(year). If y is NaN, throw a TypeError exception; else if
+          data.year is not supplied, let y be thisYearValue.</li><li>If data.month is supplied, let m be ?&nbsp;<emu-xref aoid="ToNumber" id="_ref_12"><a href="https://tc39.github.io/ecma262/#sec-tonumber">ToNumber</a></emu-xref>(month). If m is NaN, throw a TypeError exception; else if
+          data.month is not supplied, let m be thisMonthValue.</li><li>If data.day is supplied, let d be ?&nbsp;<emu-xref aoid="ToNumber" id="_ref_13"><a href="https://tc39.github.io/ecma262/#sec-tonumber">ToNumber</a></emu-xref>(day). If d is NaN, throw a TypeError exception; else if
+          data.day is not supplied, let d be thisDayValue.</li><li>Regulate the final y, m, and d values using Gregorian pro-leptic calendar calculations.</li><li>Let O be ?&nbsp;<emu-xref aoid="OrdinaryCreateFromConstructor" id="_ref_14"><a href="https://tc39.github.io/ecma262/#sec-ordinarycreatefromconstructor">OrdinaryCreateFromConstructor</a></emu-xref>(New Target, "%CivilDatePrototype%", y, m, d)</li><li>Set O.[[YearValue]] to y.</li><li>Set O.[[MonthValue]] to m.</li><li>Set O.[[DayValue]] to d.</li><li>Return O.</li></ol></li><li>Else, TBD
+  </li></ol></emu-alg>
+</emu-clause>
+</emu-import>
+<emu-import href="spec/civiltime.html"><emu-intro id="sec-temporal-civiltime">
+  <h1>CivilTime Objects</h1>
+  <p>A CivilTime object is an immutable Object that contains Number values corresponding to a particular hour, minute,
+    second, millisecond, and nanosecond.</p>
+  <p>The following functions are abstract operations that operate on time values (defined SOMEWHERE). Note that, in
+    every case, if any argument to one of these functions is NaN, the result will be NaN.</p>
+</emu-intro>
+
+<emu-clause id="sec-temporal-civiltime-hour-number">
+  <h1><span class="secnum">13</span>Hour Number</h1>
+  <p>The Hour Number is a positive integer Number corresponding to a particular hour. It is called the HourValue and is
+    identified by an integer in the range of 0 to 23, inclusive. It must have a Number value and may not be NaN.</p>
+</emu-clause>
+
+<emu-clause id="sec-temporal-civiltime-minute-number">
+  <h1><span class="secnum">14</span>Minute Number</h1>
+  <p>The Minute Number is a positive integer Number corresponding to a particular minute. It is called the MinuteValue
+    and is identified by an integer in the range of 0 to 59, inclusive. It must have a Number value and may not be NaN.</p>
+</emu-clause>
+
+<emu-clause id="sec-temporal-civiltime-second-number">
+  <h1><span class="secnum">15</span>Second Number</h1>
+  <p>The Second Number is a positive integer Number corresponding to a particular second. It is called the SecondValue
+    and is identified by an integer in the range of 0 to 59, inclusive. It must have a Number value and may not be NaN.</p>
+</emu-clause>
+
+<emu-clause id="sec-temporal-civiltime-millisecond-number">
+  <h1><span class="secnum">16</span>Millisecond Number</h1>
+  <p>The Millisecond Number is a positive integer Number corresponding to a particular millisecond. It is called the
+    MillisecondValue and is identified by an integer in the range of 0 to 999, inclusive. It must have a Number value
+    and may not be NaN.</p>
+</emu-clause>
+
+<emu-clause id="sec-temporal-civiltime-nanosecond-number">
+  <h1><span class="secnum">17</span>Nanosecond Number</h1>
+  <p>The Nanosecond Number is a positive integer Number corresponding to a particular nanosecond. It is called the
+    NanosecondValue value and is identified by an integer in the range of 0 to 999999, inclusive. It must have a Number
+    value and may not be NaN.</p>
+</emu-clause>
+
+<emu-clause id="sec-temporal-civiltime-plus-operation">
+  <h1><span class="secnum">18</span>Plus(Object)</h1>
+  <p>The abstract operation Plus returns a new CivilTime object that may have 0 to 4 values copied from the CivilTime
+    object on which the operation was performed. The new CivilTime object will have one or more updated values that
+    depend on terminal values of an Object passed in as the argument. The argument Object consists of a range of 1 to 5
+    (inclusive) key/value pairs. Each pair consists of a nonterminal symbol and a corresponding terminal Number. An
+    argument Object may have one and only one of each of the nonterminal symbols "Hour", "Minute", "Second",
+    "Millisecond", and "Nanosecond".</p>
+</emu-clause>
+
+<emu-clause id="sec-temporal-civiltime-with-operation">
+  <h1><span class="secnum">19</span>With(?_hour, ?_minute, ?_second, ?_millisecond, ?_nanosecond)</h1>
+  <p>The abstract operation With takes one Object argument and returns a new CivilTime object.</p>
+  <p>The Object argument must have a range of 1 to 5 inclusive key/value pairs with the keys "hour", "minute",
+    "second", "millisecond", and/or "nanosecond".</p>
+  <p>The corresponding value for each key must be a Number.</p>
+  <p>The new CivilTime object copies the HourValue, MinuteValue, SecondValue, MillisecondValue, and/or NanosecondValue
+    properties from the original CivilTime object and replaces the property value(s) with the corresponding argument
+    value.</p>
+</emu-clause>
+
+<emu-clause id="sec-temporal-civiltime-withdate-operation">
+  <h1><span class="secnum">20</span>WithDate(date)</h1>
+  <p>The abstract operation WithTime returns a CivilDateTime object with the date values passed as the argument and the
+    hour, minute, second, millisecond, and nanosecond values of the CivilTime object on which the operation was
+    performed.</p>
+</emu-clause>
+
+<emu-clause id="sec-temporal-civiltime-constructor">
+  <h1><span class="secnum">21</span>CivilTime Constructor</h1>
+  <p>The CivilTime constructor is the %CivilTime% intrinsic object. When called as a constructor, it creates and
+    initializes a new CivilTime object.</p>
+  <p>The CivilTime constructor is a single function.</p>
+  <p>The CivilTime constructor is subclassable.</p>
+  <p>The length property of the CivilTime constructor function is a range of 2 to 5, inclusive.</p>
+</emu-clause>
+
+<emu-clause id="sec-temporal-civiltime-constructor-alg">
+  <h1><span class="secnum">22</span>CivilTime (hour, minute[[[, second], millisecond], nanosecond])</h1>
+  <p>This description only applies if the CivilTime constructor is called with at least two arguments.</p>
+  <p>When the CivilTime function is called, the following steps are taken:</p>
+  <emu-alg><ol><li>Let numberOfArgs be the number of arguments passed to this function call.</li><li>Assert: numberOfArgs &gt;= 2.</li><li>If hour is not finite or minute is not finite or second is not finite or millisecond is not finite or nanosecond
+        is not finite, return NaN.</li><li>If NewTarget is not undefined, then<ol><li>Let h be ?&nbsp;<emu-xref aoid="ToNumber" id="_ref_15"><a href="https://tc39.github.io/ecma262/#sec-tonumber">ToNumber</a></emu-xref>(hour).</li><li>Let min be ?&nbsp;<emu-xref aoid="ToNumber" id="_ref_16"><a href="https://tc39.github.io/ecma262/#sec-tonumber">ToNumber</a></emu-xref>(minute).</li><li>If "second" is supplied, let s be ?&nbsp;<emu-xref aoid="ToNumber" id="_ref_17"><a href="https://tc39.github.io/ecma262/#sec-tonumber">ToNumber</a></emu-xref>(second); else let s be 0.</li><li>If "millisecond" is supplied, let ms be ?&nbsp;<emu-xref aoid="ToNumber" id="_ref_18"><a href="https://tc39.github.io/ecma262/#sec-tonumber">ToNumber</a></emu-xref>(millisecond); else let ms be 0.</li><li>If "nanosecond" is supplied, let ns be ?&nbsp;<emu-xref aoid="ToNumber" id="_ref_19"><a href="https://tc39.github.io/ecma262/#sec-tonumber">ToNumber</a></emu-xref>(nanosecond); else let ns be 0.</li><li>Let O be ?&nbsp;<emu-xref aoid="OrdinaryCreateFromConstructor" id="_ref_20"><a href="https://tc39.github.io/ecma262/#sec-ordinarycreatefromconstructor">OrdinaryCreateFromConstructor</a></emu-xref>(NewTarget, "%CivilTimePrototype%", &lt;&lt;[[HourValue, MinuteValue,
+          SecondValue, MillisecondValue, NanosecondValue]]&gt;&gt;).</li><li>Set O.[[HourValue]] to h.</li><li>Set O.[[MinuteValue]] to min.</li><li>Set O.[[SecondValue]] to s.</li><li>Set O.[[MillisecondValue]] to ms.</li><li>Set O.[[NanosecondValue]] to ns.</li><li>Return O</li></ol></li><li>Else, TBD?
+  </li></ol></emu-alg>
+</emu-clause>
+
+<emu-clause id="sec-temporal-civiltime-constructor-prop">
+  <h1><span class="secnum">23</span>Properties of the CivilTime Constructor</h1>
+  <p>The value of the [[Prototype]] internal slot of the CivilTime constructor is the intrinsic object
+    <emu-xref href="#sec-properties-of-the-function-prototype-object"><a href="https://tc39.github.io/ecma262/#sec-properties-of-the-function-prototype-object">%FunctionPrototype%</a></emu-xref>.</p>
+  <p>The CivilTime constructor has the following properties:</p>
+</emu-clause>
+
+<emu-clause id="sec-temporal-civiltime-prototype">
+  <h1><span class="secnum">24</span>CivilTime Prototype</h1>
+  <p>The initial value of CivilTime.prototype is the intrinsic object %CivilTimePrototype%. This property has the
+    attributes {[[Writable]]: false, [[Enumerable]]: false, [[Configurable]]: false}.</p>
+</emu-clause>
+
+<emu-clause id="sec-temporal-civiltime-plus-alg">
+  <h1><span class="secnum">25</span>CivilTime.plus (data)</h1>
+  <p>The abstract operation plus takes as an argument a Map Object with a range of 1 to 5 key/value pairs, inclusive.
+    The keys may not be duplicated and may be any combination of "hour", "minute", "second", "millisecond", and
+    "nanosecond". The values must be of the Number type and may be positive or negative integers. The CivilTime
+    operation uses Gregorian pro-leptic calendar computation.</p>
+  <p>When the plus function is called, the following steps are taken:</p>
+  <emu-alg><ol><li>Let numberOfArgs be the number of arguments passed to this function call.</li><li>Assert: numberOfArgs == 1.</li><li>Assert: <emu-xref aoid="Type" id="_ref_21"><a href="https://tc39.github.io/ecma262/#sec-ecmascript-data-types-and-values">Type</a></emu-xref>(value) is Object.</li><li>Assert: value has at least one of the following keys: "hour", "minute", "second", "millisecond", and/or
+        "nanosecond".</li><li>If the value associated with any of the provided keys is not finite, return NaN.</li><li>If NewTarget is not undefined, then<ol><li>If data.hour is supplied, let h be ?&nbsp;<emu-xref aoid="ToNumber" id="_ref_22"><a href="https://tc39.github.io/ecma262/#sec-tonumber">ToNumber</a></emu-xref>(hour) + thisHourValue. If h is NaN, throw a TypeError exception;
+          else if data.hour is not supplied, let h be thisHourValue.</li><li>If data.minute is supplied, let min be ?&nbsp;<emu-xref aoid="ToNumber" id="_ref_23"><a href="https://tc39.github.io/ecma262/#sec-tonumber">ToNumber</a></emu-xref>(minute) + thisMinuteValue. If min is NaN, throw a TypeError
+          exception; else if data.minute is not supplied, let min be thisMinuteValue.</li><li>If data.second is supplied, let s be ?&nbsp;<emu-xref aoid="ToNumber" id="_ref_24"><a href="https://tc39.github.io/ecma262/#sec-tonumber">ToNumber</a></emu-xref>(second) + thisSecondValue. If s is NaN, throw a TypeError
+          exception; else if data.second is not supplied, let s be thisSecondValue.</li><li>If data.millisecond is supplied, let ms be ?&nbsp;<emu-xref aoid="ToNumber" id="_ref_25"><a href="https://tc39.github.io/ecma262/#sec-tonumber">ToNumber</a></emu-xref>(millisecond) + thisMillisecondValue. If ms is NaN, throw a
+          TypeError exception; else if data.millisecond is not supplied, let ms be thisMillisecondValue.</li><li>If data.nanosecond is supplied, let ns be ?&nbsp;<emu-xref aoid="ToNumber" id="_ref_26"><a href="https://tc39.github.io/ecma262/#sec-tonumber">ToNumber</a></emu-xref>(nanosecond) + thisNanosecondValue. If ns is NaN, throw a
+          TypeError exception; else if data.nanosecond is not supplied, let ns be thisNanosecondValue.</li><li>Regulate h, min, s, ms, and ns values according to Gregorian pro-leptic calendar calculations.</li><li>Let O be ?&nbsp;<emu-xref aoid="OrdinaryCreateFromConstructor" id="_ref_27"><a href="https://tc39.github.io/ecma262/#sec-ordinarycreatefromconstructor">OrdinaryCreateFromConstructor</a></emu-xref>(NewTarget, "%CivilTimePrototype%", &lt;&lt;[[HourValue, MinuteValue,
+          SecondValue, MillisecondValue, NanosecondValue]]&gt;&gt;).</li><li>Set O.[[HourValue]] to h.</li><li>Set O.[[MinuteValue]] to min.</li><li>Set O.[[SecondValue]] to s.</li><li>Set O.[[MillisecondValue]] to ms.</li><li>Set O.[[NanosecondValue]] to ns.</li><li>Return O</li></ol></li><li>Else, TBD
+  </li></ol></emu-alg>
+</emu-clause>
+
+<emu-clause id="sec-temporal-civiltime-with-alg">
+  <h1><span class="secnum">26</span>CivilTime.with(data)</h1>
+  <p>The abstract operation with takes as an argument an Object with a range of 1 to 5 key/value pairs, inclusive.</p>
+  <p>The keys may not be duplicated and may be any combination of "hour", "minute", "second", "millisecond", and
+    "nanosecond".</p>
+  <p>The values must be of the Number type and may be either positive or negative integers. The CivilTime operation
+    uses Gregorian pro-leptic calendar computation.</p>
+  <p>When the with function is called, the following steps are taken:</p>
+  <emu-alg><ol><li>Let numberOfArgs be the number of arguments passed to this function call.</li><li>Assert: numberOfArgs == 1.</li><li>Assert: <emu-xref aoid="Type" id="_ref_28"><a href="https://tc39.github.io/ecma262/#sec-ecmascript-data-types-and-values">Type</a></emu-xref>(value) is Object.</li><li>Assert: value has at least one of the following keys: "hour", "minute", "second", "millisecond", and/or
+        "nanosecond".</li><li>If the value associated with any of the provided keys is not finite, return NaN.</li><li>If NewTarget is not undefined, then<ol><li>If data.hour is supplied, let h be ?&nbsp;<emu-xref aoid="ToNumber" id="_ref_29"><a href="https://tc39.github.io/ecma262/#sec-tonumber">ToNumber</a></emu-xref>(hour); If h is NaN, throw a TypeError exception; else if data.hour
+          is not supplied, let h be thisHourValue.</li><li>If data.minute is supplied, let min be ?&nbsp;<emu-xref aoid="ToNumber" id="_ref_30"><a href="https://tc39.github.io/ecma262/#sec-tonumber">ToNumber</a></emu-xref>(minute); If min is NaN, throw a TypeError exception; else if
+          data.minute is not supplied, let min be thisMinuteValue.</li><li>If data.second is supplied, let s be ?&nbsp;<emu-xref aoid="ToNumber" id="_ref_31"><a href="https://tc39.github.io/ecma262/#sec-tonumber">ToNumber</a></emu-xref>(second); If s is NaN, throw a TypeError exception; else if
+          data.second is not supplied, let s be thisSecondValue.</li><li>If data.millisecond is supplied, let ms be ?&nbsp;<emu-xref aoid="ToNumber" id="_ref_32"><a href="https://tc39.github.io/ecma262/#sec-tonumber">ToNumber</a></emu-xref>(millisecond); If ms is NaN, throw a TypeError exception;
+          else if data.millisecond is not supplied, let ms be thisMillisecondValue.</li><li>If data.nanosecond is supplied, let ns be ?&nbsp;<emu-xref aoid="ToNumber" id="_ref_33"><a href="https://tc39.github.io/ecma262/#sec-tonumber">ToNumber</a></emu-xref>(nanosecond); If ns is NaN, throw a TypeError exception;
+          else if data.nanosecond is not supplied, let ns be thisNanosecondValue.</li><li>Regulate h, min, s, ms, and ns values according to Gregorian pro-leptic calendar calculations.</li><li>Let O be ?&nbsp;<emu-xref aoid="OrdinaryCreateFromConstructor" id="_ref_34"><a href="https://tc39.github.io/ecma262/#sec-ordinarycreatefromconstructor">OrdinaryCreateFromConstructor</a></emu-xref>(NewTarget, "%CivilTimePrototype%", &lt;&lt;[[HourValue, MinuteValue,
+           SecondValue, MillisecondValue, NanosecondValue]]&gt;&gt;).</li><li>Set O.[[HourValue]] to h.</li><li>Set O.[[MinuteValue]] to min.</li><li>Set O.[[SecondValue]] to s.</li><li>Set O.[[MillisecondValue]] to ms.</li><li>Set O.[[NanosecondValue]] to ns.</li><li>Return O</li></ol></li><li>Else, TBD
+  </li></ol></emu-alg>
+</emu-clause>
+
+<emu-clause id="sec-temporal-civiltime-withdate-alg">
+  <h1><span class="secnum">27</span>CivilTime.withDate (data)</h1>
+  <p>The abstract operation plus takes as an argument a CivilDate Object. It creates a new CivilDateTime object.</p>
+  <p>When the withDate function is called, the following steps are taken:</p>
+  <emu-alg><ol><li>Let numberOfArgs be the number of arguments passed to this function call.</li><li>Assert: numberOfArgs == 1.</li><li>Assert: <emu-xref aoid="Type" id="_ref_35"><a href="https://tc39.github.io/ecma262/#sec-ecmascript-data-types-and-values">Type</a></emu-xref>(data) is CivilDate Object.</li><li>If NewTarget is not undefined, then<ol><li>Let y be ? data.YearValue.</li><li>Let m be ? data.MonthValue.</li><li>Let d be ? data.DayValue.</li><li>Let h be ? thisHourValue.</li><li>Let min be ? thisMinuteValue.</li><li>Let s be ? thisSecondValue.</li><li>Let ms be ? thisMillisecondValue.</li><li>Let ns be ? thisNanosecondValue.</li><li>Regulate y, m, d, h, min, s, ms, and ns values according to Gregorian pro-leptic calendar calculations.</li><li>Let O be ?&nbsp;<emu-xref aoid="OrdinaryCreateFromConstructor" id="_ref_36"><a href="https://tc39.github.io/ecma262/#sec-ordinarycreatefromconstructor">OrdinaryCreateFromConstructor</a></emu-xref>(NewTarget, "%CivilDateTimePrototype%", &lt;&lt;[[YearValue, MonthValue,
+          DayValue, HourValue, MinuteValue, SecondValue, MillisecondValue, NanosecondValue]]&gt;&gt;).</li><li>Set O.[[YearValue]] to y.</li><li>Set O.[[MonthValue]] to m.</li><li>Set O.[[DayValue]] to d.</li><li>Set O.[[HourValue]] to h.</li><li>Set O.[[MinuteValue]] to min.</li><li>Set O.[[SecondValue]] to s.</li><li>Set O.[[MillisecondValue]] to ms.</li><li>Set O.[[NanosecondValue]] to ns.</li><li>Return O</li></ol></li><li>Else, TBD?
+  </li></ol></emu-alg>
+</emu-clause>
+</emu-import>
+<emu-import href="spec/civildatetime.html"><emu-intro id="sec-temporal-civildatetime">
+  <h1>CivilDateTime Objects</h1>
+  <p>A CivilDateTime object is an immutable Object that contains Number values corresponding to a particular year,
+    month, day, hour, minute, second, millisecond, and nanosecond.</p>
+  <p>The following functions are abstract operations that operate on time values (defined SOMEWHERE). Note that, in
+    every case, if any argument to one of these functions is NaN, the result will be NaN.</p>
+</emu-intro>
+
+<emu-clause id="sec-temporal-civildatetime-year-number">
+  <h1><span class="secnum">28</span>Year Number</h1>
+  <p>The Year Number is a integer Number corresponding to a particular year. It is called the year value. It must have
+    a Number value and may not be NaN.</p>
+</emu-clause>
+
+<emu-clause id="sec-temporal-civildatetime-month-number">
+  <h1><span class="secnum">29</span>Month Number</h1>
+  <p>The Month Number is a positive integer corresponding to a particular month. It is called the month value and is
+    identified by an integer in the range of 1 to 12, inclusive. It must have a Number value and may not be NaN.</p>
+</emu-clause>
+
+<emu-clause id="sec-temporal-civildatetime-day-number">
+  <h1><span class="secnum">30</span>Day Number</h1>
+  <p>The <emu-xref aoid="Day"><a href="https://tc39.github.io/ecma262/#sec-day-number-and-time-within-day">Day</a></emu-xref> Number is a positive integer corresponding to a particular day of the month. It is called the day value
+    and is identified by an integer the value of which is dependent on the month and year values. It must have a Number
+    value and may not be NaN. The range of possible day values can be calculated as follows:</p>
+  <emu-alg><ol><li>For any year value with a month values of 1, 3, 5, 7, 8, 10, or 12, the day value is in the range of 1 to 31,
+        inclusive.</li><li>For any year value with a month value of 4, 6, 9, or 11, the day value is in the range of 1 to 30, inclusive.</li><li>For the month value 2, the range of possible values for the day value depends on whether the year value
+        corresponds to a leap year.<ol><li>If the year value <emu-xref aoid="modulo"><a href="https://tc39.github.io/ecma262/#sec-algorithm-conventions">modulo</a></emu-xref> 4 != 0, the range is 1 to 28, inclusive.</li><li>If the year value <emu-xref aoid="modulo"><a href="https://tc39.github.io/ecma262/#sec-algorithm-conventions">modulo</a></emu-xref> 400 == 0, the range is 1 to 29, inclusive.</li><li>If the year value <emu-xref aoid="modulo"><a href="https://tc39.github.io/ecma262/#sec-algorithm-conventions">modulo</a></emu-xref> 100 == and year value % 400 != 0, the range is 1 to 28, inclusive.</li><li>If the year value <emu-xref aoid="modulo"><a href="https://tc39.github.io/ecma262/#sec-algorithm-conventions">modulo</a></emu-xref> 4 == 0 and year value % 100 != 0, the range is 1 to 29, inclusive.
+  </li></ol></li></ol></emu-alg>
+</emu-clause>
+
+<emu-clause id="sec-temporal-civildatetime-hour-number">
+  <h1><span class="secnum">31</span>Hour Number</h1>
+  <p>The Hour Number is a positive integer corresponding to a particular hour. It is called the hour value and is
+    identified by an integer in the range of 0 to 23, inclusive. It must have a Number value and may not be NaN.</p>
+</emu-clause>
+
+<emu-clause id="sec-temporal-civildatetime-minute-number">
+  <h1><span class="secnum">32</span>Minute Number</h1>
+  <p>The Minute Number is a positive integer corresponding to a particular minute. It is called the minute value and is
+    identified by an integer in the range of 0 to 59, inclusive. It must have a Number value and may not be NaN.</p>
+</emu-clause>
+
+<emu-clause id="sec-temporal-civildatetime-second-number">
+  <h1><span class="secnum">33</span>Second Number</h1>
+  <p>The Second Number is a positive integer corresponding to a particular second. It is called the second value and is
+    identified by an integer in the range of 0 to 59, inclusive. It must have a Number value and may not be NaN.</p>
+</emu-clause>
+
+<emu-clause id="sec-temporal-civildatetime-millisecond-number">
+  <h1><span class="secnum">34</span>Millisecond Number</h1>
+  <p>The Millisecond Number is a positive integer corresponding to a particular millisecond. It is called the
+    millisecond value and is identified by an integer in the range of 0 to 999, inclusive. It must have a Number value
+    and may not be NaN.</p>
+</emu-clause>
+
+<emu-clause id="sec-temporal-civildatetime-nanosecond-number">
+  <h1><span class="secnum">35</span>Nanosecond Number</h1>
+  <p>The Nanosecond Number is a positive integer corresponding to a particular nanosecond. It is called the nanosecond
+    value and is identified by an integer in the range of 0 to 999999, inclusive. It must have a Number value and may
+    not be NaN.</p>
+</emu-clause>
+
+<emu-clause id="sec-temporal-civildatetime-from-operation">
+  <h1><span class="secnum">36</span>From(date, time)</h1>
+  <p>The abstract operation From takes a CivilDate Object and a CivilTime Object returns a new CivilDateTime object
+    with the corresponding argument values for year, month, day, hour, minute, second, millisecond, and nanosecond.</p>
+</emu-clause>
+
+<emu-clause id="sec-temporal-civildatetime-plus-operation">
+  <h1><span class="secnum">37</span>Plus(Object)</h1>
+  <p>The abstract operation Plus returns a new CivilDateTime object that may have 0 to 8 values (inclusive) copied from
+    the CivilDateTime object on which the operation was performed.</p>
+  <p>The new CivilDateTime object will have one or more updated values that depend on terminal values of an Object
+    passed in as the argument.</p>
+  <p>The argument Object consists of a range of 1 to 8 (inclusive) key/value pairs. Each pair consists of a nonterminal
+    symbol and a corresponding terminal Number.</p>
+  <p>An argument Object may have one and only one of each of the nonterminal symbols "Year", "Month", "<emu-xref aoid="Day"><a href="https://tc39.github.io/ecma262/#sec-day-number-and-time-within-day">Day</a></emu-xref>", "Hour",
+    "Minute", "Second", "Millisecond", and "Nanosecond".</p>
+</emu-clause>
+
+<emu-clause id="sec-temporal-civildatetime-with-operation">
+  <h1><span class="secnum">38</span>With(Object)</h1>
+  <p>The abstract operation With returns a new CivilDateTime object that may have 1 to 8 values (inclusive) copied from
+    the CivilDateTime object on which the operation was performed.</p>
+  <p>The new CivilDateTime object will have one or more updated values that depend on terminal values of an Object
+    passed in as the argument.</p>
+  <p>The argument Object consists of a range of 1 to 8 (inclusive) key/value pairs. Each pair consists of a nonterminal
+    symbol and a corresponding terminal Number.</p>
+  <p>An argument Object may have one or zero of each of the nonterminal symbols "Year", "Month", "<emu-xref aoid="Day"><a href="https://tc39.github.io/ecma262/#sec-day-number-and-time-within-day">Day</a></emu-xref>", "Hour",
+    "Minute", "Second", "Millisecond", and "Nanosecond".</p>
+</emu-clause>
+
+<emu-clause id="sec-temporal-civildatetime-constructor">
+  <h1><span class="secnum">39</span>CivilDateTime Constructor</h1>
+  <p>The CivilDateTime constructor is the %CivilDateTime% intrinsic object. When called as a constructor, it creates
+    and initializes a new CivilDateTime object.</p>
+  <p>The CivilDateTime constructor is a single function.</p>
+  <p>The CivilDateTime constructor is subclassable.</p>
+  <p>The length property of the CivilDateTime constructor function is a range of 5 to 8, inclusive.</p>
+  <emu-grammar></emu-grammar>
+</emu-clause>
+
+<emu-clause id="sec-temporal-civildatetime-constructor-alg">
+  <h1><span class="secnum">40</span>CivilDateTime (year, month, day, hour, minute[[[, second], millisecond], nanosecond])</h1>
+  <p>This description only applies if the CivilDateTime constructor is called with at least five arguments.</p>
+  <p>When the CivilDateTime function is called, the following steps are taken:</p>
+  <emu-alg><ol><li>Let numberOfArgs be the number of arguments passed to this function call.</li><li>Assert: numberOfArgs &gt;= 5.</li><li>If year is not finite or month is not finite or day is not finite or hour is not finite or minute is not finite
+        or second is not finite or millisecond is not finite or nanosecond is not finite, return NaN.</li><li>If NewTarget is not undefined, then<ol><li>Let y be ?&nbsp;<emu-xref aoid="ToNumber" id="_ref_37"><a href="https://tc39.github.io/ecma262/#sec-tonumber">ToNumber</a></emu-xref>(year).</li><li>Let m be ?&nbsp;<emu-xref aoid="ToNumber" id="_ref_38"><a href="https://tc39.github.io/ecma262/#sec-tonumber">ToNumber</a></emu-xref>(month).</li><li>Let d be ?&nbsp;<emu-xref aoid="ToNumber" id="_ref_39"><a href="https://tc39.github.io/ecma262/#sec-tonumber">ToNumber</a></emu-xref>(day).</li><li>Let h be ?&nbsp;<emu-xref aoid="ToNumber" id="_ref_40"><a href="https://tc39.github.io/ecma262/#sec-tonumber">ToNumber</a></emu-xref>(hour).</li><li>Let min be ?&nbsp;<emu-xref aoid="ToNumber" id="_ref_41"><a href="https://tc39.github.io/ecma262/#sec-tonumber">ToNumber</a></emu-xref>(minute).</li><li>If second is supplied, let s be ?&nbsp;<emu-xref aoid="ToNumber" id="_ref_42"><a href="https://tc39.github.io/ecma262/#sec-tonumber">ToNumber</a></emu-xref>(second); else let s be 0.</li><li>If millisecond is supplied, let ms be ?&nbsp;<emu-xref aoid="ToNumber" id="_ref_43"><a href="https://tc39.github.io/ecma262/#sec-tonumber">ToNumber</a></emu-xref>(millisecond); else let ms be 0.</li><li>If nanosecond is supplied, let ns be ?&nbsp;<emu-xref aoid="ToNumber" id="_ref_44"><a href="https://tc39.github.io/ecma262/#sec-tonumber">ToNumber</a></emu-xref>(nanosecond); else let ns be 0.</li><li>Adjust y, m, d, h, min, s, ms, and ns values according to pro-leptic Gregorian calendar computation.</li><li>Let O be ?&nbsp;<emu-xref aoid="OrdinaryCreateFromConstructor" id="_ref_45"><a href="https://tc39.github.io/ecma262/#sec-ordinarycreatefromconstructor">OrdinaryCreateFromConstructor</a></emu-xref>(NewTarget, "%CivilDateTimePrototype%", &lt;&lt;[[YearValue, MonthValue,
+          DayValue, HourValue, MinuteValue, SecondValue, MillisecondValue, NanosecondValue]]&gt;&gt;).</li><li>Set O.[[YearValue]] to y.</li><li>Set O.[[MonthValue]] to m.</li><li>Set O.[[DayValue]] to d .</li><li>Set O.[[HourValue]] to h.</li><li>Set O.[[MinuteValue]] to min.</li><li>Set O.[[SecondValue]] to s.</li><li>Set O.[[MillisecondValue]] to ms.</li><li>Set O.[[NanosecondValue]] to ns.</li><li>Return O</li></ol></li><li>Else, TBD
+  </li></ol></emu-alg>
+</emu-clause>
+
+<emu-clause id="sec-temporal-civildatetime-constructor-prop">
+  <h1><span class="secnum">41</span>Properties of the CivilDateTime Constructor</h1>
+  <p>The value of the [[Prototype]] internal slot of the CivilDateTime constructor is the intrinsic object
+    <emu-xref href="#sec-properties-of-the-function-prototype-object"><a href="https://tc39.github.io/ecma262/#sec-properties-of-the-function-prototype-object">%FunctionPrototype%</a></emu-xref>.</p>
+  <p>The CivilDateTime constructor has the following properties:</p>
+</emu-clause>
+
+<emu-clause id="sec-temporal-civildatetime-prototype">
+  <h1><span class="secnum">42</span>CivilDateTime Prototype</h1>
+  <p>The initial value of CivilDateTime.prototype is the intrinsic object %CivilDateTimePrototype%. This property has
+    the attributes {[[Writable]]: false, [[Enumerable]]: false, [[Configurable]]: false}.</p>
+</emu-clause>
+
+<emu-clause id="sec-temporal-civildatetime-plus-alg">
+  <h1><span class="secnum">43</span>CivilDateTime.plus (data)</h1>
+  <p>The abstract operation plus takes as an argument an Object with a range of 1 to 8 key/value pairs, inclusive.</p>
+  <p>The keys may not be duplicated and may be any combination of "year", "month", "day", "hour", "minute", "second",
+    "millisecond", and "nanosecond".</p>
+  <p>The values must be of the Number type and may be positive or negative integers.</p>
+  <p>If the sum of the current value and the argument value exceeds the range of allowable values for the given unit,
+    increment the next unit.</p>
+  <p>CivilDateTime calculations uses Gregorian pro-leptic calendar computation.</p>
+  <p>When the with function is called, the following steps are taken:</p>
+  <p>When the plus function is called, the following steps are taken:</p>
+  <emu-alg><ol><li>Let numberOfArgs be the number of arguments passed to this function call.</li><li>Assert: numberOfArgs == 1.</li><li>Assert: <emu-xref aoid="Type" id="_ref_46"><a href="https://tc39.github.io/ecma262/#sec-ecmascript-data-types-and-values">Type</a></emu-xref>(data) is Object.</li><li>Assert: data has at least one of the following keys: "year", "month", "day", "hour", "minute", "second",
+        "millisecond", and/or "nanosecond".</li><li>If the data associated with any of the provided keys is not finite, return NaN.</li><li>If NewTarget is not undefined, then<ol><li>If data.year is supplied, let y be ?&nbsp;<emu-xref aoid="ToNumber" id="_ref_47"><a href="https://tc39.github.io/ecma262/#sec-tonumber">ToNumber</a></emu-xref>(year) + thisYearValue. If y is NaN, throw a TypeError exception;
+          else if data.year is not supplied, let y be thisYearValue.</li><li>If data.month is supplied, let m be ?&nbsp;<emu-xref aoid="ToNumber" id="_ref_48"><a href="https://tc39.github.io/ecma262/#sec-tonumber">ToNumber</a></emu-xref>(month) + thisMonthValue. If m is NaN, throw a TypeError
+          exception; else if data.month is not supplied, let m be thisMonthValue.</li><li>If data.day is supplied, let d be ?&nbsp;<emu-xref aoid="ToNumber" id="_ref_49"><a href="https://tc39.github.io/ecma262/#sec-tonumber">ToNumber</a></emu-xref>(day) + thisDayValue. If d is NaN, throw a TypeError exception; else
+          if data.day is not supplied, let d be thisDayValue.</li><li>If data.hour is supplied, let h be ?&nbsp;<emu-xref aoid="ToNumber" id="_ref_50"><a href="https://tc39.github.io/ecma262/#sec-tonumber">ToNumber</a></emu-xref>(hour) + thisHourValue. If h is NaN, throw a TypeError exception;
+          else if data.hour is not supplied, let h be thisHourValue.</li><li>If data.minute is supplied, let min be ?&nbsp;<emu-xref aoid="ToNumber" id="_ref_51"><a href="https://tc39.github.io/ecma262/#sec-tonumber">ToNumber</a></emu-xref>(minute) + thisMinuteValue. If min is NaN, throw a TypeError
+          exception; else if data.minute is not supplied, let min be thisMinuteValue.</li><li>If data.second is supplied, let s be ?&nbsp;<emu-xref aoid="ToNumber" id="_ref_52"><a href="https://tc39.github.io/ecma262/#sec-tonumber">ToNumber</a></emu-xref>(second) + thisSecondValue. If s is NaN, throw a TypeError
+          exception; else if data.second is not supplied, let s be thisSecondValue.</li><li>If data.millisecond is supplied, let ms be ?&nbsp;<emu-xref aoid="ToNumber" id="_ref_53"><a href="https://tc39.github.io/ecma262/#sec-tonumber">ToNumber</a></emu-xref>(millisecond) + thisMillisecondValue. If ms is NaN, throw a
+          TypeError exception; else if data.millisecond is not supplied, let ms be thisMillisecondValue.</li><li>If data.nanosecond is supplied, let ns be ?&nbsp;<emu-xref aoid="ToNumber" id="_ref_54"><a href="https://tc39.github.io/ecma262/#sec-tonumber">ToNumber</a></emu-xref>(nanosecond) + thisNanosecondValue. If ns is NaN, throw a
+          TypeError exception; else if data.nanosecond is not supplied, let ns be thisNanosecondValue.</li><li>Adjust y, m, d, h, min, s, ms, and ns values according to pro-leptic Gregorian calendar computation.</li><li>Let O be ?&nbsp;<emu-xref aoid="OrdinaryCreateFromConstructor" id="_ref_55"><a href="https://tc39.github.io/ecma262/#sec-ordinarycreatefromconstructor">OrdinaryCreateFromConstructor</a></emu-xref>(NewTarget, "%CivilDateTimePrototype%", &lt;&lt;[[YearValue, MonthValue,
+          DayValue, HourValue, MinuteValue, SecondValue, MillisecondValue, NanosecondValue]]&gt;&gt;).</li><li>Set O.[[YearValue]] to y.</li><li>Set O.[[MonthValue]] to m.</li><li>Set O.[[DayValue]] to d.</li><li>Set O.[[HourValue]] to h.</li><li>Set O.[[MinuteValue]] to min.</li><li>Set O.[[SecondValue]] to s.</li><li>Set O.[[MillisecondValue]] to ms.</li><li>Set O.[[NanosecondValue]] to ns.</li><li>Return O.</li></ol></li><li>Else, TBD
+  </li></ol></emu-alg>
+</emu-clause>
+
+<emu-clause id="sec-temporal-civildatetime-with-alg">
+  <h1><span class="secnum">44</span>CivilDateTime.with (data)</h1>
+  <p>The abstract operation with takes as an argument an Object with a range of 1 to 8 key/value pairs, inclusive.</p>
+  <p>The keys may not be duplicated and may be any combination of "year", "month", "day", "hour", "minute", "second",
+    "millisecond", and "nanosecond".</p>
+  <p>The values must be of the Number type and may be positive or negative integers.</p>
+  <p>CivilDateTime calculations uses Gregorian pro-leptic calendar computation.</p>
+  <p>When the with function is called, the following steps are taken:</p>
+  <emu-alg><ol><li>Let numberOfArgs be the number of arguments passed to this function call.</li><li>Assert: numberOfArgs == 1.</li><li>Assert: <emu-xref aoid="Type" id="_ref_56"><a href="https://tc39.github.io/ecma262/#sec-ecmascript-data-types-and-values">Type</a></emu-xref>(data) is Object.</li><li>Assert: data has at least one of the following keys: "year", "month", "day", "hour", "minute", "second",
+        "millisecond", and/or "nanosecond".</li><li>If the data associated with any of the provided keys is not finite, return NaN.</li><li>If NewTarget is not undefined, then<ol><li>If data.year is supplied, let y be ?&nbsp;<emu-xref aoid="ToNumber" id="_ref_57"><a href="https://tc39.github.io/ecma262/#sec-tonumber">ToNumber</a></emu-xref>(year). If y is NaN, throw a TypeError exception; else if data.year
+          is not supplied, let y be thisYearValue.</li><li>If data.month is supplied, let m be ?&nbsp;<emu-xref aoid="ToNumber" id="_ref_58"><a href="https://tc39.github.io/ecma262/#sec-tonumber">ToNumber</a></emu-xref>(month). If m is NaN, throw a TypeError exception; else if
+          data.month is not supplied, let m be thisMonthValue.</li><li>If data.day is supplied, let d be ?&nbsp;<emu-xref aoid="ToNumber" id="_ref_59"><a href="https://tc39.github.io/ecma262/#sec-tonumber">ToNumber</a></emu-xref>(day). If d is NaN, throw a TypeError exception; else if data.day is
+          not supplied, let d be thisDayValue.</li><li>If data.hour is supplied, let h be ?&nbsp;<emu-xref aoid="ToNumber" id="_ref_60"><a href="https://tc39.github.io/ecma262/#sec-tonumber">ToNumber</a></emu-xref>(hour). If h is NaN, throw a TypeError exception; else if data.hour
+          is not supplied, let h be thisHourValue.</li><li>If data.minute is supplied, let min be ?&nbsp;<emu-xref aoid="ToNumber" id="_ref_61"><a href="https://tc39.github.io/ecma262/#sec-tonumber">ToNumber</a></emu-xref>(minute). If min is NaN, throw a TypeError exception; else if
+          data.minute is not supplied, let min be thisMinuteValue.</li><li>If data.second is supplied, let s be ?&nbsp;<emu-xref aoid="ToNumber" id="_ref_62"><a href="https://tc39.github.io/ecma262/#sec-tonumber">ToNumber</a></emu-xref>(second). If s is NaN, throw a TypeError exception; else if
+          data.second is not supplied, let s be thisSecondValue.</li><li>If data.millisecond is supplied, let ms be ?&nbsp;<emu-xref aoid="ToNumber" id="_ref_63"><a href="https://tc39.github.io/ecma262/#sec-tonumber">ToNumber</a></emu-xref>(millisecond). If ms is NaN, throw a TypeError exception;
+          else if data.millisecond is not supplied, let ms be thisMillisecondValue.</li><li>If data.nanosecond is supplied, let ns be ?&nbsp;<emu-xref aoid="ToNumber" id="_ref_64"><a href="https://tc39.github.io/ecma262/#sec-tonumber">ToNumber</a></emu-xref>(nanosecond). If ns is NaN, throw a TypeError exception;
+          else if data.nanosecond is not supplied, let ns be thisNanosecondValue.</li><li>Adjust y, m, d, h, min, s, ms, and ns values according to pro-leptic Gregorian calendar computation.</li><li>Let O be ?&nbsp;<emu-xref aoid="OrdinaryCreateFromConstructor" id="_ref_65"><a href="https://tc39.github.io/ecma262/#sec-ordinarycreatefromconstructor">OrdinaryCreateFromConstructor</a></emu-xref>(NewTarget, "%CivilDateTimePrototype%", &lt;&lt;[[YearValue, MonthValue,
+          DayValue, HourValue, MinuteValue, SecondValue, MillisecondValue, NanosecondValue]]&gt;&gt;).</li><li>Set O.[[YearValue]] to y.</li><li>Set O.[[MonthValue]] to m.</li><li>Set O.[[DayValue]] to d.</li><li>Set O.[[HourValue]] to h.</li><li>Set O.[[MinuteValue]] to min.</li><li>Set O.[[SecondValue]] to s.</li><li>Set O.[[MillisecondValue]] to ms.</li><li>Set O.[[NanosecondValue]] to ns.</li><li>Return O.</li></ol></li><li>Else, TBD
+  </li></ol></emu-alg>
+</emu-clause>
+
+<emu-clause id="sec-temporal-civildatetime-from-alg">
+  <h1><span class="secnum">45</span>CivilDateTime.from (date, time)</h1>
+  <p>The abstract operation from takes as arguments a CivilDate Object and a CivilTime Object. It creates a new
+    CivilDateTime object.  </p>
+  <p>When the from function is called, the following steps are taken:</p>
+  <emu-alg><ol><li>Let numberOfArgs be the number of arguments passed to this function call.</li><li>Assert: numberOfArgs == 2.</li><li>Assert: <emu-xref aoid="Type" id="_ref_66"><a href="https://tc39.github.io/ecma262/#sec-ecmascript-data-types-and-values">Type</a></emu-xref>(date) is CivilDate Object.</li><li>Assert: <emu-xref aoid="Type" id="_ref_67"><a href="https://tc39.github.io/ecma262/#sec-ecmascript-data-types-and-values">Type</a></emu-xref>(time) is CivilTime Object.</li><li>If NewTarget is not undefined, then<ol><li>Let y be date.YearValue.</li><li>Let min be date.MonthValue.</li><li>Let d be date.DayValue.</li><li>Let h be time.HourValue.</li><li>Let min be time.MinuteValue.</li><li>Let s be time.SecondValue.</li><li>Let ms be time.MillisecondValue.</li><li>Let ns be time.NanosecondValue.</li><li>Let O be ?&nbsp;<emu-xref aoid="OrdinaryCreateFromConstructor" id="_ref_68"><a href="https://tc39.github.io/ecma262/#sec-ordinarycreatefromconstructor">OrdinaryCreateFromConstructor</a></emu-xref>(NewTarget, "%CivilDateTimePrototype%", &lt;&lt;[[YearValue, MonthValue,
+          DayValue, HourValue, MinuteValue, SecondValue, MillisecondValue, NanosecondValue]]&gt;&gt;).</li><li>Set O.[[YearValue]] to y.</li><li>Set O.[[MonthValue]] to m.</li><li>Set O.[[DayValue]] to d.</li><li>Set O.[[HourValue]] to h.</li><li>Set O.[[MinuteValue]] to min.</li><li>Set O.[[SecondValue]] to s.</li><li>Set O.[[MillisecondValue]] to ms.</li><li>Set O.[[NanosecondValue]] to ns.</li><li>Return O.</li></ol></li><li>Else, TBD
+  </li></ol></emu-alg>
+</emu-clause>
+
+<emu-clause id="sec-temporal-civildatetime-tocivildate-alg">
+  <h1><span class="secnum">46</span>CivilDateTime.toCivilDate</h1>
+  <p>It creates a new CivilDate Object populated with the relevant values of the CivilDateTime Object on which the
+    operation is performed.</p>
+  <p>When the toCivilDate function is called, the following steps are taken:</p>
+  <emu-alg><ol><li>If NewTarget is not undefined, then<ol><li>Let y be thisYearValue.</li><li>Let m be thisMonthValue.</li><li>Let d be thisDayValue.</li><li>Let O be ?&nbsp;<emu-xref aoid="OrdinaryCreateFromConstructor" id="_ref_69"><a href="https://tc39.github.io/ecma262/#sec-ordinarycreatefromconstructor">OrdinaryCreateFromConstructor</a></emu-xref>(NewTarget, "%CivilDatePrototype%", &lt;&lt;[[YearValue, MonthValue,
+          DayValue]]&gt;&gt;).</li><li>Set O.[[YearValue]] to y.</li><li>Set O.[[MonthValue]] to m.</li><li>Set O.[[DayValue]] to d.</li><li>Return O.</li></ol></li><li>Else, TBD
+  </li></ol></emu-alg>
+</emu-clause>
+
+<emu-clause id="sec-temporal-civildatetime-tociviltime-alg">
+  <h1><span class="secnum">47</span>CivilDateTime.toCivilTime</h1>
+  <p>It creates a new CivilTime Object populated with the relevant values of the CivilDateTime Object on which the
+    operation is performed.</p>
+  <p>When the toCivilTime function is called, the following steps are taken:</p>
+  <emu-alg><ol><li>If NewTarget is not undefined, then<ol><li>Let h be time.HourValue.</li><li>Let min be time.MinuteValue.</li><li>Let s be time.SecondValue.</li><li>Let ms be time.MillisecondValue.</li><li>Let ns be time.NanosecondValue.</li><li>Let O be ?&nbsp;<emu-xref aoid="OrdinaryCreateFromConstructor" id="_ref_70"><a href="https://tc39.github.io/ecma262/#sec-ordinarycreatefromconstructor">OrdinaryCreateFromConstructor</a></emu-xref>(NewTarget, "%CivilTimePrototype%", &lt;&lt;[[HourValue, MinuteValue,
+          SecondValue, MillisecondValue, NanosecondValue]]&gt;&gt;).</li><li>Set O.[[HourValue]] to h.</li><li>Set O.[[MinuteValue]] to min.</li><li>Set O.[[SecondValue]] to s.</li><li>Set O.[[MillisecondValue]] to ms.</li><li>Set O.[[NanosecondValue]] to ns.</li><li>Return O.</li></ol></li><li>Else, TBD
+  </li></ol></emu-alg>
+</emu-clause>
+
+<emu-clause id="sec-temporal-civildatetime-withzone-alg">
+  <h1><span class="secnum">48</span>CivilDateTime.withZone (timeZone[, options])</h1>
+  <p>The abstract operation plus takes as an argument a Time Zone String and an optional Object. It takes the current
+    CivilDateTime object, converts its values to Unix epoch time. It creates a new ZonedInstant object.</p>
+  <p>When the withZone function is called, the following steps are taken:</p>
+  <emu-alg><ol><li>Let numberOfArgs be the number of arguments passed to this function call.</li><li>Assert: numberOfArgs &gt; 1.</li><li>Assert: <emu-xref aoid="Type" id="_ref_71"><a href="https://tc39.github.io/ecma262/#sec-ecmascript-data-types-and-values">Type</a></emu-xref>(timeZone) is String.</li><li>If options is supplied, assert: <emu-xref aoid="Type" id="_ref_72"><a href="https://tc39.github.io/ecma262/#sec-ecmascript-data-types-and-values">Type</a></emu-xref>(options) Object.</li><li>If NewTarget is not undefined, then -- do something to convert. <emu-xref aoid="Get" id="_ref_73"><a href="https://tc39.github.io/ecma262/#sec-get-o-p">Get</a></emu-xref> more input.
+  </li></ol></emu-alg>
+</emu-clause>
+</emu-import>
+<emu-import href="spec/instant.html"><emu-intro id="sec-temporal-instant">
+  <h1>Introduction</h1>
+  <p>An <code>Instant</code> is an immutable object referencing a point in time with nanoseconds precision.</p>
+</emu-intro>
+
+<emu-clause id="sec-temporal-instant-constructor">
+  <h1><span class="secnum">49</span>new Instant(<emu-val>nanoseconds</emu-val>)</h1>
+  <p>When called as a constructor creates a new Instant object. <emu-val>nanoseconds</emu-val> is a BigInt of the nanoseconds since
+    epoch.</p>
+</emu-clause>
+
+<emu-clause id="sec-temporal-instant.prototype.valueOf">
+  <h1><span class="secnum">50</span>Instant.prototype.valueOf()</h1>
+  <p>When called with an Instant object as the <var>this</var> context the result will be a BigInt value with the nanoseconds
+    since epoch the instant represents.</p>
+  <p>Calling this function with anything other than an Instant object as the <var>this</var> context is illegal.</p>
+</emu-clause>
+
+<emu-clause id="sec-temporal-instant.prototype.milliseconds">
+  <h1><span class="secnum">51</span>Instant.prototype.milliseconds</h1>
+  <p><code>instant.milliseconds</code> is a getter that returns the milliseconds Number integer since epoch of the point in time
+    represented by the instant object such that <code>instant.milliseconds === Math.floor(instant.valueOf() / 1e6)</code> is
+    <emu-val>true</emu-val>.</p>
+</emu-clause>
+
+<emu-clause id="sec-temporal-instant.prototype.nanoseconds">
+  <h1><span class="secnum">52</span>Instant.prototype.nanoseconds</h1>
+  <p><code>instant.nanoseconds</code> is a getter that returns the nanoseconds Number such that it represents only the nanoseconds
+    that are not represented in <code>Instant.prototype.milliseconds</code> such that <code>instant.nanoseconds === instant.valueOf() %
+    1e6</code> is <emu-val>true</emu-val>.</p>
+</emu-clause>
+
+<emu-clause id="sec-temporal-instant.prototype.plus">
+  <h1><span class="secnum">53</span>Instant.prototype.plus({ ? <var>years</var>, ? <var>months</var>, ? <var>days</var>, ? <var>hours</var>, ? <var>minutes</var>, ? <var>seconds</var>, ?
+    <var>milliseconds</var>, ? <var>nanoseconds</var> })</h1>
+  <p>When called with an Instant object as the <var>this</var> context the result will be a new Instant object. The value of the
+    new Instant object is the value of the original instant with the specified date parts added. Units will be added in
+    order of size, descending.</p>
+  <p>Calling this function with a <var>this</var> context that is not an instance of Instant is illegal.</p>
+</emu-clause>
+
+<emu-clause id="sec-temporal-instant.prototype.withZone">
+  <h1><span class="secnum">54</span>Instant.prototype.withZone(<var>timezone</var>)</h1>
+  <p>When called with an Instant object as a <var>this</var> context it will return a  <emu-xref href="#sec-temporal-zonedinstant" id="_ref_0"><a href="#sec-temporal-zonedinstant">ZonedInstant</a></emu-xref>
+    object that specifies an instant in time in the given time zone.</p>
+  <p><var>timezone</var> is a string specifying a time zone. Legal values are IANA geographic time zone names as well as the
+    special values <emu-val>"SYSTEM"</emu-val> and <emu-val>"UTC"</emu-val>.</p>
+  <ul>
+    <li><emu-val>"UTC"</emu-val> indicates that the time zone should be Coordinated Universal Time.</li>
+    <li><emu-val>"SYSTEM"</emu-val> indicates that the time zone should be local time as provided by the system.</li>
+  </ul>
+  <p>Calling this function with a <var>this</var> context that is not an instance of Instant is illegal.</p>
+</emu-clause>
+
+<emu-clause id="sec-temporal-instant.prototype.toString">
+  <h1><span class="secnum">55</span>Instant.prototype.toString()</h1>
+  <p>When called with an Instant object as a <var>this</var> context it will return an ISO 8601 String value representing the
+    value of the Instant object.</p>
+  <p>The format of the String will always be an IsoDateTime of the following form:</p>
+  <emu-grammar><emu-production name="Sign" collapsed="" id="prod-Sign">
+    <emu-nt><a href="#prod-Sign">Sign</a></emu-nt><emu-geq>:</emu-geq><emu-rhs a="6f24a587"><emu-t>-</emu-t></emu-rhs>
+</emu-production>
+<emu-production name="Year" collapsed="" id="prod-Year">
+    <emu-nt><a href="#prod-Year">Year</a></emu-nt><emu-geq>:</emu-geq><emu-rhs a="c38bd622"><emu-nt optional="" id="_ref_76"><a href="#prod-Sign">Sign</a><emu-mods><emu-opt>opt</emu-opt></emu-mods></emu-nt><emu-nt>Digit</emu-nt><emu-nt>Digit</emu-nt><emu-nt>Digit</emu-nt><emu-nt>Digit</emu-nt></emu-rhs>
+</emu-production>
+<emu-production name="Month" collapsed="" id="prod-Month">
+    <emu-nt><a href="#prod-Month">Month</a></emu-nt><emu-geq>:</emu-geq><emu-rhs a="14df541f"><emu-t>01</emu-t></emu-rhs>
+</emu-production></emu-grammar>
+  <p>Calling this function with a <var>this</var> context that is not an instance of Instant is illegal.</p>
+</emu-clause>
+
+<emu-clause id="sec-temporal-instant.prototype.format">
+  <h1><span class="secnum">56</span>Instant.prototype.format([<var>locale</var>], [<var>options</var>])</h1>
+  <p>When called with an Instant object as a <var>this</var> context it will return an String value representing the value of
+    the Instant object as formated by an <code>Intl.DateFormatter</code> objects <code>format</code> method when invoked with the <var>locale</var>
+    and <var>options</var> arguments passed through.</p>
+  <p>The <var>date</var> argument to the <code>Intl.DateDormatter</code> is equivalent to <code>new Date(instant.milliseconds)</code>.</p>
+  <p>Calling this function with a <var>this</var> context that is not an instance of Instant is illegal.</p>
+</emu-clause>
+
+<emu-clause id="sec-temporal-instant.fromMilliseconds">
+  <h1><span class="secnum">57</span>Instant.fromMilliseconds(<var>miliseconds</var>)</h1>
+  <p>This function will create an Instant object that represents the instant in time <var>milliseconds</var> since epoch.
+    Nanoseconds will be <emu-val>0</emu-val>.</p>
+  <p><var>milliseconds</var> is the Number of milliseconds since epoch.</p>
+</emu-clause>
+
+<emu-clause id="sec-temporal-instant.fromString">
+  <h1><span class="secnum">58</span>Instant.fromString(<var>string</var>)</h1>
+  <p>This function will create an Instant object from a String. The <var>string</var> has to strictly conform to the format
+    produced by
+    
+    <emu-xref href="#sec-temporal-instant.prototype.toString" title="" id="_ref_1"><a href="#sec-temporal-instant.prototype.toString">. Any <var>string</var> not strictly conforming to that
+    format will throw an Error.</a></emu-xref></p>
+</emu-clause>
+</emu-import>
+<emu-import href="spec/zonedinstant.html"><emu-intro id="sec-temporal-zonedinstant">
+  <h1>ZonedInstant Objects</h1>
+  <p>A <code>ZonedInstant</code> object is an immutable object referencing a point in time. The referenced point in time is
+    specific to a given time zone and is measured with nanoseconds precision.</p>
+</emu-intro>
+
+<emu-clause id="sec-temporal-zonedinstant-millisecond-number">
+  <h1><span class="secnum">59</span>Millisecond Number</h1>
+  <p>The Millisecond Number is an integer corresponding to a particular millisecond. It is called the millisecond
+    value. It must have a Number value and may not be NaN.</p>
+</emu-clause>
+
+<emu-clause id="sec-temporal-zonedinstant-nanosecond-number">
+  <h1><span class="secnum">60</span>Nanosecond Number</h1>
+  <p>The Nanosecond Number is an integer corresponding to a particular nanosecond. It is called the nanosecond value
+    and is identified by an integer in the range of 0 to 999999, inclusive. It must have a Number value and may not
+    be NaN.</p>
+</emu-clause>
+
+<emu-clause id="sec-temporal-zonedinstant-timezone">
+  <h1><span class="secnum">61</span>TimeZone String</h1>
+  <p>The TimeZone String is an string corresponding to a particular IANA time zone. It is called the timeZone value.
+    It must have a String value and may not be null.</p>
+</emu-clause>
+
+<emu-clause id="sec-temporal-zonedinstant-prototype">
+  <h1><span class="secnum">62</span>ZonedInstant Prototype</h1>
+  <p>The initial value of ZonedInstant.prototype is the intrinsic object %ZonedInstantPrototype%. This property has
+    the attributes {[[Writable]]: false, [[Enumerable]]: false, [[Configurable]]: false}.</p>
+</emu-clause>
+
+<emu-clause id="sec-temporal-zonedinstant.prototype.valueof">
+  <h1><span class="secnum">63</span>ZonedInstant.prototype.valueOf()  </h1>
+  <p>When called with a ZonedInstant object as the <var>this</var> context the result will be a BigInt value with the
+    nanoseconds since epoch the ZonedInstant represents.</p>
+  <p>Calling this function with anything other than a ZonedInstant object as the <var>this</var> context is illegal.</p>
+</emu-clause>
+
+<emu-clause id="sec-temporal-zonedinstant.prototype.milliseconds">
+  <h1><span class="secnum">64</span>ZonedInstant.prototype.milliseconds</h1>
+  <p><code>ZonedInstant.milliseconds</code> is a getter that returns the milliseconds Number integer since epoch of the point in
+    time represented by the ZonedInstant object such that <code>ZonedInstant.milliseconds ===
+    Math.floor(ZonedInstant.valueOf() / 1e6)</code> is <emu-val>true</emu-val>.</p>
+</emu-clause>
+
+<emu-clause id="sec-temporal-zonedinstant.prototype.nanoseconds">
+  <h1><span class="secnum">65</span>ZonedInstant.prototype.nanoseconds</h1>
+  <p><code>ZonedInstant.nanoseconds</code> is a getter that returns the nanoseconds Number such that it represents only the
+    nanoseconds that are not represented in <code>ZonedInstant.prototype.milliseconds</code> such that
+    <code>ZonedInstant.nanoseconds === ZonedInstant.valueOf() % 1e6</code> is <emu-val>true</emu-val>.</p>
+</emu-clause>
+
+<emu-clause id="sec-temporal-zonedinstant.prototype.timezone">
+  <h1><span class="secnum">66</span>ZonedInstant.prototype.timeZone</h1>
+  <p><code>ZonedInstant.timeZone</code> is a getter that returns the object's associated IANA time zone value as a String.</p>
+</emu-clause>
+
+<emu-clause id="sec-temporal-zonedinstant.prototype.with">
+  <h1><span class="secnum">67</span>ZonedInstant.prototype.with({ ? <var>years</var>, ? <var>months</var>, ? <var>days</var>, ? <var>hours</var>, ? <var>minutes</var>, ? <var>seconds</var>, ?
+    <var>milliseconds</var>, ? <var>nanoseconds</var> })</h1>
+  <p>&gt;When called with a ZonedInstant object as the <var>this</var> context, the result will be a new ZonedInstant object.</p>
+  <p>The value of the new ZonedInstant object is the value of the original ZonedInstant's milliseconds with the
+    specified date parts, excepting any nanoseconds argument, converted to milliseconds and added to the original
+    MillisecondValue.</p>
+  <p>Units will be added in order of size, descending. Calling this function with a <var>this</var> context that is not an
+    instance of ZonedInstant is illegal.</p>
+</emu-clause>
+
+<emu-clause id="sec-temporal-zonedinstant.prototype.plus">
+  <h1><span class="secnum">68</span>ZonedInstant.prototype.plus({ ? <var>years</var>, ? <var>months</var>, ? <var>days</var>, ? <var>hours</var>, ? <var>minutes</var>, ? <var>seconds</var>, ?
+    <var>milliseconds</var>, ? <var>nanoseconds</var> })</h1>
+  <p>When called with a ZonedInstant object as the <var>this</var> context, the result will be a new ZonedInstant object.</p>
+  <p>The value of the new ZonedInstant object is the value of the original ZonedInstant with the specified date parts
+    added. Units will be added in order of size, descending.  </p>
+  <p>Calling this function with a <var>this</var> context that is not an instance of ZonedInstant is illegal.  </p>
+</emu-clause>
+
+<emu-clause id="sec-temporal-zonedinstant.prototype.toinstant">
+  <h1><span class="secnum">69</span>ZonedInstant.prototype.toInstant()</h1>
+  <p>The abstract operation toInstant returns a new Instant Object with the milliseond and nanosecond values of the
+    ZonedInstant object on which it is called.</p>
+</emu-clause>
+
+<emu-clause id="sec-temporal-zonedinstant.prototype.tocivildate">
+  <h1><span class="secnum">70</span>ZonedInstant.prototype.toCivilDate()</h1>
+  <p>The abstract operation toCivilDate returns a new CivilDate Object with the year, month, and day values
+    calculated from the milliseconds and nanoseconds since Epoch</p>
+</emu-clause>
+
+<emu-clause id="sec-temporal-zonedinstant.prototype.tociviltime">
+  <h1><span class="secnum">71</span>ZonedInstant.prototype.toCivilTime()</h1>
+</emu-clause>
+
+<emu-clause id="sec-temporal-zonedinstant.prototype.tocivildatetime">
+  <h1><span class="secnum">72</span>ZonedInstant.prototype.toCivilDateTime()</h1>
+</emu-clause>
+
+<emu-clause id="sec-temporal-zonedinstant.prototype.tostring">
+  <h1><span class="secnum">73</span>ZonedInstant.prototype.toString()</h1>
+  <p>When called with a ZonedInstant object as a <var>this</var> context it will return an ISO 8601 String value representing
+    the value of the ZonedInstant object.</p>
+  <p>The format of the String will always be an IsoDateTime of the following form:  </p>
+  <emu-grammar><emu-production name="Sign" collapsed="">
+    <emu-nt><a href="#prod-Sign">Sign</a></emu-nt><emu-geq>:</emu-geq><emu-rhs a="6f24a587"><emu-t>-</emu-t></emu-rhs>
+</emu-production>
+<emu-production name="Year" collapsed="">
+    <emu-nt><a href="#prod-Year">Year</a></emu-nt><emu-geq>:</emu-geq><emu-rhs a="c38bd622"><emu-nt optional="" id="_ref_77"><a href="#prod-Sign">Sign</a><emu-mods><emu-opt>opt</emu-opt></emu-mods></emu-nt><emu-nt>Digit</emu-nt><emu-nt>Digit</emu-nt><emu-nt>Digit</emu-nt><emu-nt>Digit</emu-nt></emu-rhs>
+</emu-production>
+<emu-production name="Month" collapsed="">
+    <emu-nt><a href="#prod-Month">Month</a></emu-nt><emu-geq>:</emu-geq><emu-rhs a="14df541f"><emu-t>01</emu-t></emu-rhs>
+</emu-production></emu-grammar>
+  Calling this function with a <var>this</var> context that is not an instance of ZonedInstant is illegal.
+
+</emu-clause>
+
+<emu-clause id="sec-temporal-zonedinstant-constructor-prop">
+  <h1><span class="secnum">74</span>Properties of the ZonedInstant Constructor</h1>
+  <p>The value of the [[Prototype]] internal slot of the ZonedInstant constructor is the intrinsic object
+    <emu-xref href="#sec-properties-of-the-function-prototype-object"><a href="https://tc39.github.io/ecma262/#sec-properties-of-the-function-prototype-object">%FunctionPrototype%</a></emu-xref>.</p>
+  <p>The ZonedInstant constructor has the following properties:</p>
+</emu-clause>
+
+<emu-clause id="sec-temporal-zonedinstant-constructor">
+  <h1><span class="secnum">75</span>ZonedInstant Constructor</h1>
+  <p>The ZonedInstant constructor is the %ZonedInstant% intrinsic object. When called as a constructor, it creates a
+    new ZonedInstant object. <emu-val>instant</emu-val> is an Instant object and <emu-val>timeZone</emu-val> is a String corresponding to an IANA time
+    zone.
+    
+    </p><p>The ZonedInstant constructor is a single function.</p>
+    <p>The ZonedInstant constructor is subclassable.</p>
+    <p>The length property of the ZonedInstant construtor function is 2.</p>
+</emu-clause>
+
+<emu-clause id="sec-temporal-zonedinstant-alg">
+  <h1><span class="secnum">76</span>ZonedInstant(<emu-val>instant</emu-val>, <emu-val>timeZone</emu-val>)</h1>
+  <p>This description only applies if the ZonedInstant constructor is called with at least 2 arguments.</p>
+  <p>When the ZonedInstant constructor function is called, the following steps are taken:</p>
+  <emu-alg><ol><li>Let numberOfArgs be the number of arguments passed to this function call.</li><li>Assert: numberOfArgs == 2.</li><li>If NewTarget is not undefined, then<ol><li>Let ms be instant.milliseconds.</li><li>Let ns be instant.nanoseconds.</li><li>Let tz be timeZone.</li><li>Let O be ?&nbsp;<emu-xref aoid="OrdinaryCreateFromConstructor" id="_ref_74"><a href="https://tc39.github.io/ecma262/#sec-ordinarycreatefromconstructor">OrdinaryCreateFromConstructor</a></emu-xref>(NewTarget, "%ZonedInstantPrototype%", &lt;&lt;[[MillisecondValue,
+          NanosecondValue,TimeZoneValue]]&gt;&gt;).</li><li>Set O.[[MillisecondValue]] to ms.</li><li>Set O.[[NanosecondValue]] to ns.</li><li>Set O.[[TimeZoneValue]] to tz.</li><li>Return O.
+  </li></ol></li></ol></emu-alg>
+</emu-clause>
+
+<emu-clause id="sec-temporal-zonedinstant-plus">
+  <h1><span class="secnum">77</span>plus()</h1>
+  <p>When the ZonedInstant plus function is called, the following steps are taken:</p>
+  <emu-alg><p>TBD
+  </p></emu-alg>
+</emu-clause>
+
+<emu-clause id="sec-temporal-zonedinstant-with">
+  <h1><span class="secnum">78</span>with()</h1>
+  <p>When the ZonedInstant with function is called, the following steps are taken:</p>
+  <emu-alg><p>TBD
+  </p></emu-alg>
+</emu-clause>
+
+<emu-clause id="sec-temporal-zonedinstant-toinstant">
+  <h1><span class="secnum">79</span>toInstant()</h1>
+  <p>When the ZonedInstant toInstant function is called, the following steps are taken:</p>
+  <emu-alg><ol><li>If NewTarget is not undefined, then<ol><li>Let ms be thisMillisecondValue.</li><li>Let ns be thisNanosecondValue.</li><li>Let O be ?&nbsp;<emu-xref aoid="OrdinaryCreateFromConstructor" id="_ref_75"><a href="https://tc39.github.io/ecma262/#sec-ordinarycreatefromconstructor">OrdinaryCreateFromConstructor</a></emu-xref>(NewTarget, "%InstantPrototype%", &lt;&lt;[[MillisecondValue,
+          NanosecondValue]]&gt;&gt;).</li><li>Set O.[[MillisecondValue]] to ms.</li><li>Set O.[[NanosecondValue]] to ns.</li><li>Return O.
+  </li></ol></li></ol></emu-alg>
+</emu-clause>
+
+<emu-clause id="sec-temporal-zonedinstant-tocivildate">
+  <h1><span class="secnum">80</span>toCivilDate()</h1>
+  <p>When the ZonedInstant toCivilDate function is called, the following steps are taken:</p>
+  <emu-alg><p>TBD
+  </p></emu-alg>
+</emu-clause>
+
+<emu-clause id="sec-temporal-zonedinstant-tociviltime">
+  <h1><span class="secnum">81</span>toCivilTime()</h1>
+  <p>When the ZonedInstant toCivilDate function is called, the following steps are taken:</p>
+  <emu-alg><p>TBD
+  </p></emu-alg>
+</emu-clause>
+
+<emu-clause id="sec-temporal-zonedinstant-tocivildatetime">
+  <h1><span class="secnum">82</span>toCivilDateTime()</h1>
+  <p>When the ZonedInstant toCivilDateTime function is called, the following steps are taken:</p>
+  <emu-alg><p>TBD
+  </p></emu-alg>
+</emu-clause><emu-annex id="sec-copyright-and-software-license">
+      <h1><span class="secnum">A</span>Copyright &amp; Software License</h1>
+      
+      <h2>Copyright Notice</h2>
+      <p>© 2018 Maggie Pint, Matt Johnson, Brian Terlson, Daniel Ehrenberg, Philipp Dunkel, Sasha Pierson</p>
+
+      <h2>Software License</h2>
+      <p>All Software contained in this document ("Software") is protected by copyright and is being made available under the "BSD License", included below. This Software may be subject to third party rights (rights from parties other than Ecma International), including patent rights, and no licenses under such third party rights are granted under this license even if the third party concerned is a member of Ecma International. SEE THE ECMA CODE OF CONDUCT IN PATENT MATTERS AVAILABLE AT https://ecma-international.org/memento/codeofconduct.htm FOR INFORMATION REGARDING THE LICENSING OF PATENT CLAIMS THAT ARE REQUIRED TO IMPLEMENT ECMA INTERNATIONAL STANDARDS.</p>
+
+<p>Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:</p>
+
+<ol>
+  <li>Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.</li>
+  <li>Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.</li>
+  <li>Neither the name of the authors nor Ecma International may be used to endorse or promote products derived from this software without specific prior written permission.</li>
+</ol>
+
+<p>THIS SOFTWARE IS PROVIDED BY THE ECMA INTERNATIONAL "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL ECMA INTERNATIONAL BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</p>
+
+    </emu-annex>
+</emu-import>
+</div></body>
