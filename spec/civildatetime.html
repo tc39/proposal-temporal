@@ -1,0 +1,352 @@
+<!doctype html>
+<meta charset="utf8">
+
+<emu-clause id=sec-temporal-civildatetime>
+  <h1>CivilDateTime Objects</h1>
+  <p>A CivilDateTime object is an immutable Object that contains Number values corresponding to a particular year,
+    month, day, hour, minute, second, millisecond, and nanosecond.</p>
+  <p>The following functions are abstract operations that operate on time values (defined SOMEWHERE). Note that, in
+    every case, if any argument to one of these functions is NaN, the result will be NaN.</p>
+
+  <emu-clause id=sec-temporal-civildatetime-year-number>
+    <h1>Year Number</h1>
+    <p>The Year Number is a integer Number corresponding to a particular year. It is called the year value. It must have
+      a Number value and may not be NaN.</p>
+  </emu-clause>
+
+  <emu-clause id=sec-temporal-civildatetime-month-number>
+    <h1>Month Number</h1>
+    <p>The Month Number is a positive integer corresponding to a particular month. It is called the month value and is
+      identified by an integer in the range of 1 to 12, inclusive. It must have a Number value and may not be NaN.</p>
+  </emu-clause>
+
+  <emu-clause id=sec-temporal-civildatetime-day-number>
+    <h1>Day Number</h1>
+    <p>The Day Number is a positive integer corresponding to a particular day of the month. It is called the day value
+      and is identified by an integer the value of which is dependent on the month and year values. It must have a Number
+      value and may not be NaN. The range of possible day values can be calculated as follows:</p>
+    <emu-alg>
+      1. For any year value with a month values of 1, 3, 5, 7, 8, 10, or 12, the day value is in the range of 1 to 31,
+          inclusive.
+      1. For any year value with a month value of 4, 6, 9, or 11, the day value is in the range of 1 to 30, inclusive.
+      1. For the month value 2, the range of possible values for the day value depends on whether the year value
+          corresponds to a leap year.
+        1. If the year value modulo 4 != 0, the range is 1 to 28, inclusive.
+        1. If the year value modulo 400 == 0, the range is 1 to 29, inclusive.
+        1. If the year value modulo 100 == and year value % 400 != 0, the range is 1 to 28, inclusive.
+        1. If the year value modulo 4 == 0 and year value % 100 != 0, the range is 1 to 29, inclusive.
+    </emu-alg>
+  </emu-clause>
+
+  <emu-clause id=sec-temporal-civildatetime-hour-number>
+    <h1>Hour Number</h1>
+    <p>The Hour Number is a positive integer corresponding to a particular hour. It is called the hour value and is
+      identified by an integer in the range of 0 to 23, inclusive. It must have a Number value and may not be NaN.</p>
+  </emu-clause>
+
+  <emu-clause id=sec-temporal-civildatetime-minute-number>
+    <h1>Minute Number</h1>
+    <p>The Minute Number is a positive integer corresponding to a particular minute. It is called the minute value and is
+      identified by an integer in the range of 0 to 59, inclusive. It must have a Number value and may not be NaN.</p>
+  </emu-clause>
+
+  <emu-clause id=sec-temporal-civildatetime-second-number>
+    <h1>Second Number</h1>
+    <p>The Second Number is a positive integer corresponding to a particular second. It is called the second value and is
+      identified by an integer in the range of 0 to 59, inclusive. It must have a Number value and may not be NaN.</p>
+  </emu-clause>
+
+  <emu-clause id=sec-temporal-civildatetime-millisecond-number>
+    <h1>Millisecond Number</h1>
+    <p>The Millisecond Number is a positive integer corresponding to a particular millisecond. It is called the
+      millisecond value and is identified by an integer in the range of 0 to 999, inclusive. It must have a Number value
+      and may not be NaN.</p>
+  </emu-clause>
+
+  <emu-clause id=sec-temporal-civildatetime-nanosecond-number>
+    <h1>Nanosecond Number</h1>
+    <p>The Nanosecond Number is a positive integer corresponding to a particular nanosecond. It is called the nanosecond
+      value and is identified by an integer in the range of 0 to 999999, inclusive. It must have a Number value and may
+      not be NaN.</p>
+  </emu-clause>
+
+  <emu-clause id=sec-temporal-civildatetime-from-operation>
+    <h1>From(date, time)</h1>
+    <p>The abstract operation From takes a CivilDate Object and a CivilTime Object returns a new CivilDateTime object
+      with the corresponding argument values for year, month, day, hour, minute, second, millisecond, and nanosecond.</p>
+  </emu-clause>
+
+  <emu-clause id=sec-temporal-civildatetime-plus-operation>
+    <h1>Plus(Object)</h1>
+    <p>The abstract operation Plus returns a new CivilDateTime object that may have 0 to 8 values (inclusive) copied from
+      the CivilDateTime object on which the operation was performed.</p>
+    <p>The new CivilDateTime object will have one or more updated values that depend on terminal values of an Object
+      passed in as the argument.</p>
+    <p>The argument Object consists of a range of 1 to 8 (inclusive) key/value pairs. Each pair consists of a nonterminal
+      symbol and a corresponding terminal Number.</p>
+    <p>An argument Object may have one and only one of each of the nonterminal symbols "Year", "Month", "Day", "Hour",
+      "Minute", "Second", "Millisecond", and "Nanosecond".</p>
+  </emu-clause>
+
+  <emu-clause id=sec-temporal-civildatetime-with-operation>
+    <h1>With(Object)</h1>
+    <p>The abstract operation With returns a new CivilDateTime object that may have 1 to 8 values (inclusive) copied from
+      the CivilDateTime object on which the operation was performed.</p>
+    <p>The new CivilDateTime object will have one or more updated values that depend on terminal values of an Object
+      passed in as the argument.</p>
+    <p>The argument Object consists of a range of 1 to 8 (inclusive) key/value pairs. Each pair consists of a nonterminal
+      symbol and a corresponding terminal Number.</p>
+    <p>An argument Object may have one or zero of each of the nonterminal symbols "Year", "Month", "Day", "Hour",
+      "Minute", "Second", "Millisecond", and "Nanosecond".</p>
+  </emu-clause>
+
+  <emu-clause id=sec-temporal-civildatetime-constructor>
+    <h1>CivilDateTime Constructor</h1>
+    <p>The CivilDateTime constructor is the %CivilDateTime% intrinsic object. When called as a constructor, it creates
+      and initializes a new CivilDateTime object.</p>
+    <p>The CivilDateTime constructor is a single function.</p>
+    <p>The CivilDateTime constructor is subclassable.</p>
+    <p>The length property of the CivilDateTime constructor function is a range of 5 to 8, inclusive.</p>
+    <emu-grammar>
+    </emu-grammar>
+  </emu-clause>
+
+  <emu-clause id=sec-temporal-civildatetime-constructor-alg>
+    <h1>CivilDateTime (year, month, day, hour, minute[[[, second], millisecond], nanosecond])</h1>
+    <p>This description only applies if the CivilDateTime constructor is called with at least five arguments.</p>
+    <p>When the CivilDateTime function is called, the following steps are taken:</p>
+    <emu-alg>
+      1. Let numberOfArgs be the number of arguments passed to this function call.
+      1. Assert: numberOfArgs >= 5.
+      1. If year is not finite or month is not finite or day is not finite or hour is not finite or minute is not finite
+          or second is not finite or millisecond is not finite or nanosecond is not finite, return NaN.
+      1. If NewTarget is not undefined, then
+        1. Let y be ? ToNumber(year).
+        1. Let m be ? ToNumber(month).
+        1. Let d be ? ToNumber(day).
+        1. Let h be ? ToNumber(hour).
+        1. Let min be ? ToNumber(minute).
+        1. If second is supplied, let s be ? ToNumber(second); else let s be 0.
+        1. If millisecond is supplied, let ms be ? ToNumber(millisecond); else let ms be 0.
+        1. If nanosecond is supplied, let ns be ? ToNumber(nanosecond); else let ns be 0.
+        1. Adjust y, m, d, h, min, s, ms, and ns values according to pro-leptic Gregorian calendar computation.
+        1. Let O be ? OrdinaryCreateFromConstructor(NewTarget, "%CivilDateTimePrototype%", <<[[YearValue, MonthValue,
+            DayValue, HourValue, MinuteValue, SecondValue, MillisecondValue, NanosecondValue]]>>).
+        1. Set O.[[YearValue]] to y.
+        1. Set O.[[MonthValue]] to m.
+        1. Set O.[[DayValue]] to d .
+        1. Set O.[[HourValue]] to h.
+        1. Set O.[[MinuteValue]] to min.
+        1. Set O.[[SecondValue]] to s.
+        1. Set O.[[MillisecondValue]] to ms.
+        1. Set O.[[NanosecondValue]] to ns.
+        1. Return O
+      1. Else, TBD
+    </emu-alg>
+  </emu-clause>
+
+  <emu-clause id=sec-temporal-civildatetime-constructor-prop>
+    <h1>Properties of the CivilDateTime Constructor</h1>
+    <p>The value of the [[Prototype]] internal slot of the CivilDateTime constructor is the intrinsic object
+      %FunctionPrototype%.</p>
+    <p>The CivilDateTime constructor has the following properties:</p>
+  </emu-clause>
+
+  <emu-clause id=sec-temporal-civildatetime-prototype>
+    <h1>CivilDateTime Prototype</h1>
+    <p>The initial value of CivilDateTime.prototype is the intrinsic object %CivilDateTimePrototype%. This property has
+      the attributes {[[Writable]]: false, [[Enumerable]]: false, [[Configurable]]: false}.</p>
+  </emu-clause>
+
+  <emu-clause id=sec-temporal-civildatetime-plus-alg>
+    <h1>CivilDateTime.plus (data)</h1>
+    <p>The abstract operation plus takes as an argument an Object with a range of 1 to 8 key/value pairs, inclusive.</p>
+    <p>The keys may not be duplicated and may be any combination of "year", "month", "day", "hour", "minute", "second",
+      "millisecond", and "nanosecond".</p>
+    <p>The values must be of the Number type and may be positive or negative integers.</p>
+    <p>If the sum of the current value and the argument value exceeds the range of allowable values for the given unit,
+      increment the next unit.</p>
+    <p>CivilDateTime calculations uses Gregorian pro-leptic calendar computation.</p>
+    <p>When the with function is called, the following steps are taken:</p>
+    <p>When the plus function is called, the following steps are taken:</p>
+    <emu-alg>
+      1. Let numberOfArgs be the number of arguments passed to this function call.
+      1. Assert: numberOfArgs == 1.
+      1. Assert: Type(data) is Object.
+      1. Assert: data has at least one of the following keys: "year", "month", "day", "hour", "minute", "second",
+          "millisecond", and/or "nanosecond".
+      1. If the data associated with any of the provided keys is not finite, return NaN.
+      1. If NewTarget is not undefined, then
+        1. If data.year is supplied, let y be ? ToNumber(year) + thisYearValue. If y is NaN, throw a TypeError exception;
+            else if data.year is not supplied, let y be thisYearValue.
+        1. If data.month is supplied, let m be ? ToNumber(month) + thisMonthValue. If m is NaN, throw a TypeError
+            exception; else if data.month is not supplied, let m be thisMonthValue.
+        1. If data.day is supplied, let d be ? ToNumber(day) + thisDayValue. If d is NaN, throw a TypeError exception; else
+            if data.day is not supplied, let d be thisDayValue.
+        1. If data.hour is supplied, let h be ? ToNumber(hour) + thisHourValue. If h is NaN, throw a TypeError exception;
+            else if data.hour is not supplied, let h be thisHourValue.
+        1. If data.minute is supplied, let min be ? ToNumber(minute) + thisMinuteValue. If min is NaN, throw a TypeError
+            exception; else if data.minute is not supplied, let min be thisMinuteValue.
+        1. If data.second is supplied, let s be ? ToNumber(second) + thisSecondValue. If s is NaN, throw a TypeError
+            exception; else if data.second is not supplied, let s be thisSecondValue.
+        1. If data.millisecond is supplied, let ms be ? ToNumber(millisecond) + thisMillisecondValue. If ms is NaN, throw a
+            TypeError exception; else if data.millisecond is not supplied, let ms be thisMillisecondValue.
+        1. If data.nanosecond is supplied, let ns be ? ToNumber(nanosecond) + thisNanosecondValue. If ns is NaN, throw a
+            TypeError exception; else if data.nanosecond is not supplied, let ns be thisNanosecondValue.
+        1. Adjust y, m, d, h, min, s, ms, and ns values according to pro-leptic Gregorian calendar computation.
+        1. Let O be ? OrdinaryCreateFromConstructor(NewTarget, "%CivilDateTimePrototype%", <<[[YearValue, MonthValue,
+            DayValue, HourValue, MinuteValue, SecondValue, MillisecondValue, NanosecondValue]]>>).
+        1. Set O.[[YearValue]] to y.
+        1. Set O.[[MonthValue]] to m.
+        1. Set O.[[DayValue]] to d.
+        1. Set O.[[HourValue]] to h.
+        1. Set O.[[MinuteValue]] to min.
+        1. Set O.[[SecondValue]] to s.
+        1. Set O.[[MillisecondValue]] to ms.
+        1. Set O.[[NanosecondValue]] to ns.
+        1. Return O.
+      1. Else, TBD
+    </emu-alg>
+  </emu-clause>
+
+  <emu-clause id=sec-temporal-civildatetime-with-alg>
+    <h1>CivilDateTime.with (data)</h1>
+    <p>The abstract operation with takes as an argument an Object with a range of 1 to 8 key/value pairs, inclusive.</p>
+    <p>The keys may not be duplicated and may be any combination of "year", "month", "day", "hour", "minute", "second",
+      "millisecond", and "nanosecond".</p>
+    <p>The values must be of the Number type and may be positive or negative integers.</p>
+    <p>CivilDateTime calculations uses Gregorian pro-leptic calendar computation.</p>
+    <p>When the with function is called, the following steps are taken:</p>
+    <emu-alg>
+      1. Let numberOfArgs be the number of arguments passed to this function call.
+      1. Assert: numberOfArgs == 1.
+      1. Assert: Type(data) is Object.
+      1. Assert: data has at least one of the following keys: "year", "month", "day", "hour", "minute", "second",
+          "millisecond", and/or "nanosecond".
+      1. If the data associated with any of the provided keys is not finite, return NaN.
+      1. If NewTarget is not undefined, then
+        1. If data.year is supplied, let y be ? ToNumber(year). If y is NaN, throw a TypeError exception; else if data.year
+            is not supplied, let y be thisYearValue.
+        1. If data.month is supplied, let m be ? ToNumber(month). If m is NaN, throw a TypeError exception; else if
+            data.month is not supplied, let m be thisMonthValue.
+        1. If data.day is supplied, let d be ? ToNumber(day). If d is NaN, throw a TypeError exception; else if data.day is
+            not supplied, let d be thisDayValue.
+        1. If data.hour is supplied, let h be ? ToNumber(hour). If h is NaN, throw a TypeError exception; else if data.hour
+            is not supplied, let h be thisHourValue.
+        1. If data.minute is supplied, let min be ? ToNumber(minute). If min is NaN, throw a TypeError exception; else if
+            data.minute is not supplied, let min be thisMinuteValue.
+        1. If data.second is supplied, let s be ? ToNumber(second). If s is NaN, throw a TypeError exception; else if
+            data.second is not supplied, let s be thisSecondValue.
+        1. If data.millisecond is supplied, let ms be ? ToNumber(millisecond). If ms is NaN, throw a TypeError exception;
+            else if data.millisecond is not supplied, let ms be thisMillisecondValue.
+        1. If data.nanosecond is supplied, let ns be ? ToNumber(nanosecond). If ns is NaN, throw a TypeError exception;
+            else if data.nanosecond is not supplied, let ns be thisNanosecondValue.
+        1. Adjust y, m, d, h, min, s, ms, and ns values according to pro-leptic Gregorian calendar computation.
+        1. Let O be ? OrdinaryCreateFromConstructor(NewTarget, "%CivilDateTimePrototype%", <<[[YearValue, MonthValue,
+            DayValue, HourValue, MinuteValue, SecondValue, MillisecondValue, NanosecondValue]]>>).
+        1. Set O.[[YearValue]] to y.
+        1. Set O.[[MonthValue]] to m.
+        1. Set O.[[DayValue]] to d.
+        1. Set O.[[HourValue]] to h.
+        1. Set O.[[MinuteValue]] to min.
+        1. Set O.[[SecondValue]] to s.
+        1. Set O.[[MillisecondValue]] to ms.
+        1. Set O.[[NanosecondValue]] to ns.
+        1. Return O.
+      1. Else, TBD
+    </emu-alg>
+  </emu-clause>
+
+  <emu-clause id=sec-temporal-civildatetime-from-alg>
+    <h1>CivilDateTime.from (date, time)</h1>
+    <p>The abstract operation from takes as arguments a CivilDate Object and a CivilTime Object. It creates a new
+      CivilDateTime object. </p>
+    <p>When the from function is called, the following steps are taken:</p>
+    <emu-alg>
+      1. Let numberOfArgs be the number of arguments passed to this function call.
+      1. Assert: numberOfArgs == 2.
+      1. Assert: Type(date) is CivilDate Object.
+      1. Assert: Type(time) is CivilTime Object.
+      1. If NewTarget is not undefined, then
+        1. Let y be date.YearValue.
+        1. Let min be date.MonthValue.
+        1. Let d be date.DayValue.
+        1. Let h be time.HourValue.
+        1. Let min be time.MinuteValue.
+        1. Let s be time.SecondValue.
+        1. Let ms be time.MillisecondValue.
+        1. Let ns be time.NanosecondValue.
+        1. Let O be ? OrdinaryCreateFromConstructor(NewTarget, "%CivilDateTimePrototype%", <<[[YearValue, MonthValue,
+            DayValue, HourValue, MinuteValue, SecondValue, MillisecondValue, NanosecondValue]]>>).
+        1. Set O.[[YearValue]] to y.
+        1. Set O.[[MonthValue]] to m.
+        1. Set O.[[DayValue]] to d.
+        1. Set O.[[HourValue]] to h.
+        1. Set O.[[MinuteValue]] to min.
+        1. Set O.[[SecondValue]] to s.
+        1. Set O.[[MillisecondValue]] to ms.
+        1. Set O.[[NanosecondValue]] to ns.
+        1. Return O.
+      1. Else, TBD
+    </emu-alg>
+  </emu-clause>
+
+  <emu-clause id=sec-temporal-civildatetime-tocivildate-alg>
+    <h1>CivilDateTime.toCivilDate</h1>
+    <p>It creates a new CivilDate Object populated with the relevant values of the CivilDateTime Object on which the
+      operation is performed.</p>
+    <p>When the toCivilDate function is called, the following steps are taken:</p>
+    <emu-alg>
+      1. If NewTarget is not undefined, then
+        1. Let y be thisYearValue.
+        1. Let m be thisMonthValue.
+        1. Let d be thisDayValue.
+        1. Let O be ? OrdinaryCreateFromConstructor(NewTarget, "%CivilDatePrototype%", <<[[YearValue, MonthValue,
+            DayValue]]>>).
+        1. Set O.[[YearValue]] to y.
+        1. Set O.[[MonthValue]] to m.
+        1. Set O.[[DayValue]] to d.
+        1. Return O.
+      1. Else, TBD
+    </emu-alg>
+  </emu-clause>
+
+  <emu-clause id=sec-temporal-civildatetime-tociviltime-alg>
+    <h1>CivilDateTime.toCivilTime</h1>
+    <p>It creates a new CivilTime Object populated with the relevant values of the CivilDateTime Object on which the
+      operation is performed.</p>
+    <p>When the toCivilTime function is called, the following steps are taken:</p>
+    <emu-alg>
+      1. If NewTarget is not undefined, then
+        1. Let h be time.HourValue.
+        1. Let min be time.MinuteValue.
+        1. Let s be time.SecondValue.
+        1. Let ms be time.MillisecondValue.
+        1. Let ns be time.NanosecondValue.
+        1. Let O be ? OrdinaryCreateFromConstructor(NewTarget, "%CivilTimePrototype%", <<[[HourValue, MinuteValue,
+            SecondValue, MillisecondValue, NanosecondValue]]>>).
+        1. Set O.[[HourValue]] to h.
+        1. Set O.[[MinuteValue]] to min.
+        1. Set O.[[SecondValue]] to s.
+        1. Set O.[[MillisecondValue]] to ms.
+        1. Set O.[[NanosecondValue]] to ns.
+        1. Return O.
+      1. Else, TBD
+    </emu-alg>
+  </emu-clause>
+
+  <emu-clause id=sec-temporal-civildatetime-withzone-alg>
+    <h1>CivilDateTime.withZone (timeZone[, options])</h1>
+    <p>The abstract operation plus takes as an argument a Time Zone String and an optional Object. It takes the current
+      CivilDateTime object, converts its values to Unix epoch time. It creates a new ZonedInstant object.</p>
+    <p>When the withZone function is called, the following steps are taken:</p>
+    <emu-alg>
+      1. Let numberOfArgs be the number of arguments passed to this function call.
+      1. Assert: numberOfArgs > 1.
+      1. Assert: Type(timeZone) is String.
+      1. If options is supplied, assert: Type(options) Object.
+      1. If NewTarget is not undefined, then -- do something to convert. Get more input.
+    </emu-alg>
+  </emu-clause>
+
+</emu-clause>
