@@ -12,7 +12,7 @@ Provides standard objects and functions for working with dates and times.
 
 This proposal is currently stage 1
 
-[Proposed Spec Text is viewable here.](http://htmlpreview.github.io/?https://github.com/tc39/proposal-temporal/blob/master/spec-rendered.html)  
+[Proposed Spec Text is viewable here.](https://tc39.github.io/proposal-temporal/spec-rendered)  
 (Note, this is a work in progress.)
 
 ## Overview / Motivation
