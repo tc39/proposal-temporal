@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Title</title>
+    <meta charset="utf-8">
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'Droid Serif'; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# Temporal For Stage 2
+## September 2018
+
+---
+### Five Objects
+- Objects representing dates and times unrelated to UTC
+- Objects representing dates and times related to UTC
+- Civil naming is up in the air, but is not a stage 2 concern
+- Initial spec text is [here](https://tc39.github.io/proposal-temporal/spec-rendered)
+---
+
+### Objects representing Civil Time
+
+Object name     | Description                                                         | Example
+----------------|---------------------------------------------------------------------|-------------
+`CivilDate`     | A date without any time or time zone reference.                     | `2017-12-31`
+`CivilTime`     | A time-of-day without any date or time zone reference.              | `17:00:00`
+`CivilDateTime` | A date and a time without any time zone reference.                  | `2017-12-31T12:00:00`
+
+---
+
+### Objects representing Absolute Time
+
+Object name     | Description                                                         | Example
+----------------|---------------------------------------------------------------------|-------------
+`Instant`       | A point on the universal timeline, typically represented in UTC.    | `2017-12-31T00:00:00Z`
+`ZonedInstant`  | A point on the universal timeline, with an associated time zone.    | `2017‑12‑31T09:00:00+09:00[Asia/Tokyo]`
+
+
+---
+# .valueOf()
+
+- Cut `.valueOf()`
+- Override `.toPrimitive()` on the prototypes
+
+---
+# Now
+
+- Calls to now were cut from this proposal
+
+
+`new Instant(Date.now())`
+
+---
+# Leap Seconds
+
+- Discussed at July 2018 Meeting
+- Follow-on investigations reveal that data may not be available at OS level
+- Intend to allow for parsing strings with leap seconds
+- Do we want to allow round-tripping with leap second flag?
+
+---
+# Non-Stage 2 Topics
+
+- Standard library
+- Civil/Local/Simple/Plain/None naming prefix
+- ZonedInstant vs ZonedDateTime naming
+- ZonedInstant constructor
+
+
+    </textarea>
+    <script src="https://remarkjs.com/downloads/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>
