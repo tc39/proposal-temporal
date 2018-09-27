@@ -10,10 +10,15 @@ Provides standard objects and functions for working with dates and times.
 
 ## Status
 
-This proposal is currently stage 1
+This proposal is currently stage 2
 
 [Proposed Spec Text is viewable here.](https://tc39.github.io/proposal-temporal/spec-rendered)  
 (Note, this is a work in progress.)
+
+Stage 3 Reviewers:
+- Richard Gibson
+- Bradley Farias
+- Daniel Ehrenberg
 
 ## Overview / Motivation
 
