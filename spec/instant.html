@@ -8,48 +8,47 @@
   <emu-clause id=sec-temporal-instant-constructor>
     <h1>new Instant(*nanoseconds*)</h1>
     <p>When called as a constructor creates a new Instant object. *nanoseconds* is a BigInt of the nanoseconds since
-      epoch.</p>
+      epoch. This value is stored in the [[value]] slot.</p>
   </emu-clause>
 
-  <emu-clause id=sec-temporal-instant.prototype.valueOf>
-    <h1>Instant.prototype.valueOf()</h1>
-    <p>When called with an Instant object as the _this_ context the result will be a BigInt value with the nanoseconds
-      since epoch the instant represents.</p>
-    <p>Calling this function with anything other than an Instant object as the _this_ context is illegal.</p>
+  <emu-clause id=sec-temporal-instant.prototype.seconds>
+    <h1>Instant.prototype.seconds</h1>
+    <p>`instant.seconds` is a getter that returns the seconds Number integer since epoch of the point in time
+      represented by the instant object such that `instant.seconds === Math.floor([[value]] / 1e9)` is
+      *true*.</p>
   </emu-clause>
 
   <emu-clause id=sec-temporal-instant.prototype.milliseconds>
     <h1>Instant.prototype.milliseconds</h1>
     <p>`instant.milliseconds` is a getter that returns the milliseconds Number integer since epoch of the point in time
-      represented by the instant object such that `instant.milliseconds === Math.floor(instant.valueOf() / 1e6)` is
+      represented by the instant object such that `instant.milliseconds === Math.floor([[value]] / 1e6)` is
+      *true*.</p>
+  </emu-clause>
+
+  <emu-clause id=sec-temporal-instant.prototype.microseconds>
+    <h1>Instant.prototype.microseconds</h1>
+    <p>`instant.mircoseconds` is a getter that returns the microseconds BigInt since epoch of the point in time
+      represented by the instant object such that `instant.microseconds === Math.floor([[value]] / 1e3)` is
       *true*.</p>
   </emu-clause>
 
   <emu-clause id=sec-temporal-instant.prototype.nanoseconds>
-    <h1>Instant.prototype.nanoseconds</h1>
-    <p>`instant.nanoseconds` is a getter that returns the nanoseconds Number such that it represents only the nanoseconds
-      that are not represented in `Instant.prototype.milliseconds` such that `instant.nanoseconds === instant.valueOf() %
-      1e6` is *true*.</p>
-  </emu-clause>
-
-  <emu-clause id=sec-temporal-instant.prototype.plus>
-    <h1>Instant.prototype.plus({ ? _years_, ? _months_, ? _days_, ? _hours_, ? _minutes_, ? _seconds_, ?
-      _milliseconds_, ? _nanoseconds_ })</h1>
-    <p>When called with an Instant object as the _this_ context the result will be a new Instant object. The value of the
-      new Instant object is the value of the original instant with the specified date parts added. Units will be added in
-      order of size, descending.</p>
-    <p>Calling this function with a _this_ context that is not an instance of Instant is illegal.</p>
+    <h1>Instant.prototype.milliseconds</h1>
+    <p>`instant.mircoseconds` is a getter that returns the nanoseconds BigInt since epoch of the point in time
+      represented by the instant object such that `instant.nanoseconds === [[value]]` is
+      *true*.</p>
   </emu-clause>
 
   <emu-clause id=sec-temporal-instant.prototype.withZone>
     <h1>Instant.prototype.withZone(_timezone_)</h1>
-    <p>When called with an Instant object as a _this_ context it will return a <emu-xref href="#sec-temporal-zonedinstant">ZonedInstant</emu-xref>
+    <p>When called with an Instant object as a _this_ context it will return a <emu-xref href="#sec-temporal-zoneddatetime">ZonedDateTime</emu-xref>
       object that specifies an instant in time in the given time zone.</p>
-    <p>_timezone_ is a string specifying a time zone. Legal values are IANA geographic time zone names as well as the
-      special values *"SYSTEM"* and *"UTC"*.</p>
+    <p>_timezone_ is a string specifying a time zone. Legal values are:</p>
     <ul>
-      <li>*"UTC"* indicates that the time zone should be Coordinated Universal Time.</li>
-      <li>*"SYSTEM"* indicates that the time zone should be local time as provided by the system.</li>
+      <li>a IANA geographic time zone</li>
+      <li>an offset string in the format `[+-]hh:mm`</li>
+      <li>the string *"UTC"* indicates that the time zone should be Coordinated Universal Time.</li>
+      <li>the string *"SYSTEM"* indicates that the time zone should be local time as provided by the system.</li>
     </ul>
     <p>Calling this function with a _this_ context that is not an instance of Instant is illegal.</p>
   </emu-clause>
@@ -72,21 +71,48 @@
     </emu-grammar>
     <p>Calling this function with a _this_ context that is not an instance of Instant is illegal.</p>
   </emu-clause>
-
-  <emu-clause id=sec-temporal-instant.prototype.format>
-    <h1>Instant.prototype.format([_locale_], [_options_])</h1>
-    <p>When called with an Instant object as a _this_ context it will return an String value representing the value of
-      the Instant object as formated by an `Intl.DateFormatter` objects `format` method when invoked with the _locale_
-      and _options_ arguments passed through.</p>
-    <p>The _date_ argument to the `Intl.DateDormatter` is equivalent to `new Date(instant.milliseconds)`.</p>
-    <p>Calling this function with a _this_ context that is not an instance of Instant is illegal.</p>
+  <emu-clause id=sec-temporal-instant.prototype.toJSON>
+    <h1>Instant.prototype.toJSON()</h1>
+    <p>When called with an Instant object as a _this_ context it will return an ISO 8601 String value representing the
+      value of the Instant object equivalent to `this.toString()`.</p>
   </emu-clause>
 
+  <emu-clause id=sec-temporal-instant.fromSeconds>
+    <h1>Instant.fromSeconds(_seconds_)</h1>
+    <p>This function will create an Instant object that represents the instant in time _seconds_ since epoch.
+      Lower precision will be zeroed.</p>
+    <p>_seconds_ is the Number of seconds since epoch.</p>
+  </emu-clause>
   <emu-clause id=sec-temporal-instant.fromMilliseconds>
-    <h1>Instant.fromMilliseconds(_miliseconds_)</h1>
+    <h1>Instant.fromMilliseconds(_milliseconds_)</h1>
     <p>This function will create an Instant object that represents the instant in time _milliseconds_ since epoch.
-      Nanoseconds will be *0*.</p>
+      Lower precision will be zeroed.</p>
     <p>_milliseconds_ is the Number of milliseconds since epoch.</p>
+  </emu-clause>
+  <emu-clause id=sec-temporal-instant.fromMicroseconds>
+    <h1>Instant.fromMicroseconds(_microseconds_)</h1>
+    <p>This function will create an Instant object that represents the instant in time _microseconds_ since epoch.
+      Lower precision will be zeroed.</p>
+    <p>_microseconds_ is the BigInt of microseconds since epoch.</p>
+  </emu-clause>
+  <emu-clause id=sec-temporal-instant.fromNanoseconds>
+    <h1>Instant.fromNanoseconds(_nanoseconds_)</h1>
+    <p>This function will create an Instant object that represents the instant in time _nanoseconds_ since epoch.</p>
+    <p>_nanoeconds_ is the BigInt of nanoeconds since epoch.</p>
+  </emu-clause>
+
+  <emu-clause id=sec-temporal-instant.fromUTC>
+    <h1>Instant.fromUTC(_year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_)</h1>
+    <p>This function will create an Instant object that represents the instant in time specified as a *UTC* date since epoch.</p>
+    <p>_year_ is the year as a Number according to the proleptic gregorian calendar.</p>
+    <p>_month_ is the month as a Number according to the proleptic gregorian calendar. The value is between `1..12`.</p>
+    <p>_day_ is the day of the month as a Number according to the proleptic gregorian calendar. The value is between `1..31` depending on the month.</p>
+    <p>_hour_ is the hour of the day as a Number based on a 24h midnight based day. The value is between `0..23`.</p>
+    <p>_minute_ is the minute of the hour as a Number with a value between `0..59`.</p>
+    <p>_second_ is the second of the minute as a Number with a value between `0..60`. The value `60` is used for leap-seconds.</p>
+    <p>_millisecond_ is the millisecond part as a Number with a value between `0..999`.</p>
+    <p>_microsecond_ is the microsecond part as a Number with a value between `0..999`.</p>
+    <p>_nanosecond_ is the nanosecond part as a Number with a value between `0..999`.</p>
   </emu-clause>
 
   <emu-clause id=sec-temporal-instant.fromString>
