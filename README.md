@@ -137,7 +137,7 @@ Represents a position on a 24-hour clock.
 
 ### Constructor
 ```js
-new CivilTime(hour, minute[[[, second], millisecond], nanosecond])
+new CivilTime(hour, minute[, second[, millisecond[, nanosecond]]])
 ```
 
 
