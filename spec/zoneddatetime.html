@@ -141,7 +141,7 @@
     <h1>ZonedDateTime.prototype.toString()</h1>
     <p>When called with a ZonedDateTime object as a _this_ context it will return an ISO 8601 String value representing
       the value of the ZonedInstant object.</p>
-    <p>The format of the String will always be an IsoDateTime of the following form: </p>
+    <p>The format of the String will always be an ISODateTime of the following form: </p>
     <emu-grammar>
       Sign: `-`
       Year: Sign? Digit Digit Digit Digit
@@ -156,7 +156,7 @@
       IANAZoneName: a geographic IANA timezone name
       IANAZone: `[` IANAZoneName `]`
       TimeZone: OffsetSign [ IANAZone ] (IANAZone is only included if a geographic IANA timezone was specified)
-      IsoDateTime: Year Month Day `T` Hour Minute Second `.` Nanoseconds `Z`
+      ISODateTime: Year Month Day `T` Hour Minute Second `.` Nanoseconds `Z`
     </emu-grammar>
     Calling this function with a _this_ context that is not an instance of ZonedDateTime is illegal.
   </emu-clause>

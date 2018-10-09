@@ -57,7 +57,7 @@
     <h1>Instant.prototype.toString()</h1>
     <p>When called with an Instant object as a _this_ context it will return an ISO 8601 String value representing the
       value of the Instant object.</p>
-    <p>The format of the String will always be an IsoDateTime of the following form:</p>
+    <p>The format of the String will always be an ISODateTime of the following form:</p>
     <emu-grammar>
       Sign: `-`
       Year: Sign? Digit Digit Digit Digit
@@ -67,7 +67,7 @@
       Minute: `00` through `59`
       Second: `00` through `59`
       Nanoseconds: `000000000` through `999999999`
-      IsoDateTime: Year Month Day `T` Hour Minute Second `.` Nanoseconds `Z`
+      ISODateTime: Year Month Day `T` Hour Minute Second `.` Nanoseconds `Z`
     </emu-grammar>
     <p>Calling this function with a _this_ context that is not an instance of Instant is illegal.</p>
   </emu-clause>

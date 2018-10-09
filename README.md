@@ -201,7 +201,7 @@ let civilDateTime = CivilDateTime.from(date, time);
 let civilDateTime2 = civilDateTime1.plus({days: 3, hours: 4, minutes: 2, seconds: 12});
 let civilDate = civilDateTime.toCivilDate();
 let civilTime = civilDateTime.toCivilTime();
-let zonedInstant = civilDateTime.withZone(timeZone[, options]);
+let zonedDateTime = civilDateTime.withZone(timeZone[, options]);
 ```
 
 ---------------------------------------------------------------------------------------------------
@@ -212,22 +212,23 @@ Counted as number of nanoseconds from `1970-01-01T00:00:00.000000000Z`.
 
 ### Constructor
 ```js
-new Instant(milliseconds[, nanoseconds])
+new Instant(nanoseconds)
 ```
 
 #### Parameters
- - `milliseconds` : Integer value representing the number of milliseconds elapsed from 1970-01-01 00:00:00.000 UTC, without regarding leap seconds.
- - `nanoseconds` : Optional. Integer value representing the nanosecond within the millisecond.
+ - `nanoseconds` : BigInt value representing the number of nanoseconds elapsed from 1970-01-01 00:00:00.000 UTC, without regarding leap seconds.
 
 ### Properties
 ```js
-let milliseconds = instant.milliseconds;
-let nanoseconds = instant.nanoseconds;
+let seconds = instant.seconds; // seconds since POSIX-Epoch (Number)
+let milliseconds = instant.milliseconds; // milliseconds since POSIX-Epoch (Number)
+let microseconds = instant.microseconds; // microseconds since POSIX-Epoch (BigInt)
+let nanoseconds = instant.nanoseconds; // nanoseconds since POSIX-Epoch (BigInt)
 ```
 
 ### Functions
 ```js
-let zonedInstant = instant.withZone(timeZone);
+let zonedDateTime = instant.withZone(timeZone);
 ```
 
 ---------------------------------------------------------------------------------------------------
@@ -237,14 +238,24 @@ Represents an absolute point in time, with an associated time zone.
 
 ### Constructor
 ```js
-new ZonedInstant(instant, timeZone)
+new ZonedDateTime(instant, timeZone)
 ```
 
 ### Properties
 ```js
-let milliseconds = zonedInstant.milliseconds;
-let nanoseconds = zonedInstant.nanoseconds;
-let timeZone = zonedInstant.timeZone;
+let year = zonedInstant.year;
+let month = zonedInstant.month;
+let day = zonedInstant.day;
+let hour = zonedInstant.hour;
+let minute = zonedInstant.minute;
+let second = zonedInstant.second;
+let millisecond = zonedInstant.millisecond; // 0-999
+let microsecond = zonedInstant.microsecond; // 0-999
+let nanosecond = zonedInstant.nanosecond; // 0-999
+let timeZone = zonedInstant.timeZone; // ianaZone || offsetString
+let ianaZone = zonedInstant.ianaZone; // if specified the geographic zone name
+let offsetString = zonedInstant.offsetString; // +00:00 formatted time offset
+let offsetSeconds = zonedInstant.offsetSeconds; // integer seconds offset from UTC
 ```
 
 ### Functions
