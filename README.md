@@ -34,6 +34,9 @@ For a detailed breakdown of motivations see:
 - All time-of-day values are based on a standard 24-hour clock.
 - [Leap seconds](https://en.wikipedia.org/wiki/Leap_second) are not represented.
 
+## Polyfill
+
+A complete polyfill can be found [here](https://github.com/pipobscure/tc39-proposal-temporal). It will be developed to remain in sync with this proposal.
 ---------------------------------------------------------------------------------------------------
 
 # Overview of Standard Objects in the `temporal` module
