@@ -5,6 +5,7 @@ Provides standard objects and functions for working with dates and times.
 ## Champions
 
 - Maggie Pint  ([@maggiepint](https://github.com/maggiepint))
+- Philipp Dunkel ([@pipobscure](https://github.com/pipobscure))
 - Matt Johnson ([@mj1856](https://github.com/mj1856))
 - Brian Terlson ([@bterlson](https://github.com/bterlson))
 
