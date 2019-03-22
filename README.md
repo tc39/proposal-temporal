@@ -37,7 +37,8 @@ For a detailed breakdown of motivations see:
 
 ## Polyfill
 
-A complete polyfill can be found [here](https://github.com/pipobscure/tc39-proposal-temporal). It will be developed to remain in sync with this proposal.
+A complete polyfill can be found [here](https://github.com/std-proposal/temporal). It will be developed to remain in sync with this proposal.
+
 ---------------------------------------------------------------------------------------------------
 
 # Overview of Standard Objects in the `temporal` module
@@ -60,9 +61,9 @@ Object name     | Description                                                   
 Object name     | Description                                                         | Example
 ----------------|---------------------------------------------------------------------|-------------
 `Instant`       | A point on the universal timeline, typically represented in UTC.    | `2017-12-31T00:00:00Z`
-`ZonedInstant`  | A point on the universal timeline, with an associated time zone.    | `2017‑12‑31T09:00:00+09:00[Asia/Tokyo]`
+`ZonedDateTime`  | A point on the universal timeline, with an associated time zone.    | `2017‑12‑31T09:00:00+09:00[Asia/Tokyo]`
 
-Note that the time zone of a `ZonedInstant` can be any of:
+Note that the time zone of a `ZonedDateTime` can be any of:
 
 - Coordinated Universal Time, indicated by the string `'UTC'`
 - The system local time zone, indicated by the string `'SYSTEM'`
@@ -80,12 +81,12 @@ Because a fixed offset is supported, there is no need for a separate `OffsetDate
 
 ```js
 // Temporal
-let dateTimeInChicago = new CivilDateTime(2000, 12, 31, 23, 59)
-let instantInChicago = dateTimeInChicago.withZone('America/Chicago');
-let instantInSydney = new ZonedInstant(instantInChicago.instant, 'Australia/Sydney')
-let dateTimeInSydney = instantInSydney.toCivilDateTime()
-dateTimeInChicago.toString() // 2000-12-31T23:59:00.000000000
-dateTimeInSydney.toString()  // 2001-01-01T16:59:00.000000000
+let dateTimeAnywhere = new CivilDateTime(2000, 12, 31, 23, 59)
+let instantInChicago = dateTimeAnywhere.withZone('America/Chicago');
+let instantInSydney = new ZonedDateTime(instantInChicago.instant, 'Australia/Sydney')
+let calendarClockDateTimeFromSydney = instantInSydney.toCivilDateTime()
+dateTimeAnywhere.toString() // 2000-12-31T23:59:00.000000000
+calendarClockDateTimeFromSydney.toString()  // 2001-01-01T16:59:00.000000000
 
 // Date
 // A time zone is not supported, so an offset must be used instead.
@@ -99,8 +100,8 @@ formatterInSydney.format(dateInLocalTimeZone)  // 1/1/2001, 4:59:00 PM
 formatterInChicago.format(dateInLocalTimeZone) // 12/31/2000, 11:59:00 PM
 
 // Performing calendar operations such as finding the start of month
-dateTimeInChicago.with({ day: 1 }).toString() // 2000-12-01T23:59:00.000000000
-dateTimeInSydney.with({ day: 1 }).toString()  // 2001-01-01T16:59:00.000000000
+dateTimeAnywhere.with({ day: 1 }).toString() // 2000-12-01T23:59:00.000000000
+calendarClockDateTimeFromSydney.with({ day: 1 }).toString()  // 2001-01-01T16:59:00.000000000
 dateInLocalTimeZone.setDate(1)
 dateInLocalTimeZone.toISOString()             // dependent on local time zone
 // A Date object is unable to perform calendar operations in time zones other than local time or UTC.
@@ -126,12 +127,21 @@ new CivilDate(year, month, day)
 let year = civilDate.year;
 let month = civilDate.month;
 let day = civilDate.day;
+let dayOfWeek = civilDate.dayOfWeek;
+let dayOfYear = civilDate.dayOfYear;
+let weekOfYear = civilDate.weekOfYear;
 ```
 
-### Functions
+### Methods
 ```js
 let civilDate2 = civilDate1.plus({months: 1});
 let civilDateTime = civilDate.withTime(time);
+let civilDate2.with({ day: 1 });
+let iso8601 = civilDate1.toString(); // 2000-12-31
+let json_rep = civilDate1.toJSON(); // "2000-12-31"
+let iso8601_1 = civilDate1.toDateString(); // 2000-12-31
+let iso8601_2 = civilDate1.toWeekDateString(); // 2000-W52-7
+let iso8601_3 = civilDate1.toOrdinalDateString(); // 2000-366
 ```
 
 ---------------------------------------------------------------------------------------------------
@@ -141,16 +151,16 @@ Represents a position on a 24-hour clock.
 
 ### Constructor
 ```js
-new CivilTime(hour, minute[, second[, millisecond[, nanosecond]]])
+new CivilTime(hour, minute[, second[, millisecond[, microsecond, [, nanosecond]]]])
 ```
-
 
 #### Parameters
  - `hour` : Integer value representing the hour of the day, from `0` through `23`.
  - `minute` : Integer value representing the minute within the hour, from `0` through `59`.
  - `second` : Optional. Integer value representing the second within the minute, from `0` through `59`.
  - `millisecond` : Optional. Integer value representing the millisecond within the second, from `0` through `999`.
- - `nanosecond` : Optional. Integer value representing the nanosecond within the millisecond, from `0` through `999999`.
+ - `microsecond` : Optional. Integer value representing the microsecond within the millisecond, from `0` through `999`.
+ - `nanosecond` : Optional. Integer value representing the nanosecond within the microsecond, from `0` through `999`.
 
 ### Properties
 ```js
@@ -158,10 +168,11 @@ let hour = civilTime.hour;
 let minute = civilTime.minute;
 let second = civilTime.second;
 let millisecond = civilTime.millisecond;
+let microsecond = civilTime.microsecond;
 let nanosecond = civilTime.nanosecond;
 ```
 
-### Functions
+### Methods
 ```js
 let civilTime2 = civilTime1.plus({hours: 2, minutes: 4});
 let civilDateTime = civilTime.withDate(date);
@@ -174,7 +185,7 @@ Represents a whole day, and the position within that day.
 
 ### Constructor
 ```js
-new CivilDateTime(year, month, day, hour, minute[, second[, millisecond[, nanosecond]]])
+new CivilDateTime(year, month, day, hour, minute[, second[, millisecond[, microsecond, [, nanosecond]]]])
 ```
 
 #### Parameters
@@ -185,7 +196,8 @@ new CivilDateTime(year, month, day, hour, minute[, second[, millisecond[, nanose
  - `minute` : Integer value representing the minute within the hour, from `0` through `59`.
  - `second` : Optional. Integer value representing the second within the minute, from `0` through `59`.
  - `millisecond` : Optional. Integer value representing the millisecond within the second, from `0` through `999`.
- - `nanosecond` : Optional. Integer value representing the nanosecond within the millisecond, from `0` through `999999`.
+ - `microsecond` : Optional. Integer value representing the microsecond within the millisecond, from `0` through `999`.
+ - `nanosecond` : Optional. Integer value representing the nanosecond within the microsecond, from `0` through `999`.
 
 ### Properties
 ```js
@@ -196,17 +208,35 @@ let hour = civilDateTime.hour;
 let minute = civilDateTime.minute;
 let second = civilDateTime.second;
 let millisecond = civilDateTime.millisecond;
+let microsecond = civilDateTime.microsecond;
 let nanosecond = civilDateTime.nanosecond;
+let dayOfWeek = civilDateTime.dayOfWeek;
+let dayOfYear = civilDateTime.dayOfYear;
+let weekOfYear = civilDateTime.weekOfYear;
 ```
 
-### Functions
+### Methods
 ```js
-let civilDateTime = CivilDateTime.from(date, time);
 let civilDateTime2 = civilDateTime1.plus({days: 3, hours: 4, minutes: 2, seconds: 12});
 let civilDate = civilDateTime.toCivilDate();
 let civilTime = civilDateTime.toCivilTime();
-let zonedInstant = civilDateTime.withZone(timeZone[, options]);
+
+let zonedDateTime = civilDateTime.withZone(timeZone[, options]);
+let civilDateTime = CivilDateTime.fromZonedDateTime(zonedDateTime);
+
+let dateTimeString = civilDateTime.toString(); // 1976-11-18T15:23:30.000000000
+let dateTimeString = civilDateTime.toDateTimeString(); // 1976-11-18T15:23:30.000000000
+let civilDateTime = CivilDateTime.fromDateTimeString(dateTimeString); // only accepts the format produced by .toDateTimeString()
+
+let weekDateString = civilDateTime.toWeekDateTimeString(); // 1976-W47-4T15:23:30.000000000
+let civilDateTime = CivilDateTime.fromWeekDateTimeString(weekDateString); // only accepts the format produced by .toWeekDateTimeString()
+
+let ordinalDateString = civilDateTime.toOrdinalDateTimeString(); // 1976-323T15:23:30.000000000
+let civilDateTime = CivilDateTime.fromWeekDateTimeString(ordinalDateString); // only accepts the format produced by .toOrdinalDateTimeString()
+
+let civilDateTime = CivilDateTime.fromString(isoDateTimeString); // accepts only the formats from .toDateTimeString() .toWeekDateTimeString() and .toOrdinalDateTimeString()
 ```
+
 
 ---------------------------------------------------------------------------------------------------
 
@@ -216,50 +246,79 @@ Counted as number of nanoseconds from `1970-01-01T00:00:00.000000000Z`.
 
 ### Constructor
 ```js
-new Instant(milliseconds[, nanoseconds])
+new Instant(nanoseconds)
 ```
 
 #### Parameters
- - `milliseconds` : Integer value representing the number of milliseconds elapsed from 1970-01-01 00:00:00.000 UTC, without regarding leap seconds.
- - `nanoseconds` : Optional. Integer value representing the nanosecond within the millisecond.
+ - `nanoseconds` : BigInt value representing the number of nanoseconds elapsed from 1970-01-01 00:00:00.000 UTC, without regarding leap seconds. The constructor throws unless the parameter is a valid BigInt.
+
+The constructor is very strict and can only be called with a `BigInt`. To construct `Instant` objects one would generically use one of the `from` methods which allow for clear and explicit construction.
 
 ### Properties
 ```js
-let milliseconds = instant.milliseconds;
-let nanoseconds = instant.nanoseconds;
+let seconds = instant.epochSeconds; // number of seconds since 1970-01-01 00:00:00.000Z
+let milliseconds = instant.epochMilliseconds; // number of milliseconds since 1970-01-01 00:00:00.000Z
+let microseconds = instant.epochMicroseconds; // bigint of microseocnds since 1970-01-01 00:00:00.000Z
+let nanoseconds = instant.epochNanoseconds; // bigint of nanoseconds since 1970-01-01 00:00:00.000Z
 ```
 
-### Functions
+### Methods
 ```js
-let zonedInstant = instant.withZone(timeZone);
+let zonedDateTime = instant.withZone(timeZone);
+
+let instant_1 = Instant.fromString("1976-11-18T15:23:30.123456789Z"); // 1976-11-18T15:23:30.123456789Z
+let instant_2 = Instant.fromSeconds(217178610000); // 1976-11-18T15:23:30.000000000Z - the argument is cast to a Number
+let instant_3 = Instant.fromMilliseconds(217178610000123); // 1976-11-18T15:23:30.123000000Z - the argument is cast to a Number
+let instant_4 = Instant.fromMicroseconds(217178610000123456n); // 1976-11-18T15:23:30.123456000Z - the argument is NOT cast and has to be BigInt
+let instant_5 = Instant.fromNanoseconds(217178610000123456789n); // 1976-11-18T15:23:30.123456789Z - the argument is NOT cast and has to be BigInt
+let instant_6 = Instant.fromUTC(1976, 11, 18, 15, 23, 30, 123, 456, 789);
 ```
 
 ---------------------------------------------------------------------------------------------------
 
-# Object: `ZonedInstant`
+# Object: `ZonedDateTime`
 Represents an absolute point in time, with an associated time zone.
 
 ### Constructor
 ```js
-new ZonedInstant(instant, timeZone)
+new ZonedDateTime(instant, timeZone)
 ```
+
+#### Parameters
+ - `instant` : an `Instant` object tying the instance to a specific point in time
+ - `timeZone`: a string that is either a valid IANA Name/Link, a valid offset in +-HH:MM format, 'SYSTEM' or 'UTC'
 
 ### Properties
 ```js
-let milliseconds = zonedInstant.milliseconds;
-let nanoseconds = zonedInstant.nanoseconds;
-let timeZone = zonedInstant.timeZone;
+let instant = zonedDateTime.instant;
+let offset = zonedDateTime.offsetSeconds; // seconds offset from UTC
+let ianaZone = zonedDateTime.ianaZone; // only present if created with a Zone-Name/Link
+let offsetString = zoneDateTime.offsetString; // the hour:minute offset from UTF
+let timeZone = zonedDateTime.timeZone; // the ianaZone if present the offset-steing otherwise
+let year = zonedDateTime.year;
+let month = zonedDateTime.month;
+let day = zonedDateTime.day;
+let hours = zonedDateTime.hours;
+let minutes = zonedDateTime.minutes;
+let seconds = zonedDateTime.seconds;
+let millisecond = zonedDateTime.milliseconds;
+let microsecond = zonedDateTime.microseconds;
+let nanosecond = zonedDateTime.nanoseconds;
+let dayOfWeek = zonedDateTime.dayOfWeek;
+let dayOfYear = zonedDateTime.dayOfYear;
+let weekOfYear = zonedDateTime.weekOfYear;
 ```
 
-### Functions
+### Methods
 ```js
-let civilDateTime = zonedInstant.toCivilDateTime();
-let civilDate = zonedInstant.toCivilDate();
-let civilTime = zonedInstant.toCivilTime();
-let instant = zonedInstant.toInstant();
+let civilDateTime = zonedDateTime.toCivilDateTime();
+let civilDate = zonedDateTime.toCivilDate();
+let civilTime = zonedDateTime.toCivilTime();
+let iso8601 = zonedDateTime.toString(); // 2000-12-31T23:59:00.000000000-06:00[America/Chicago]
+let json = zonedDateTime.toJSON(); // "2000-12-31T23:59:00.000000000-06:00[America/Chicago]"
 ```
 ---------------------------------------------------------------------------------------------
-# `with` function  (all civil objects)
+# `with` method  (all civil objects)
 Allows the user to create a new instance of any temporal object with new date-part values.
 
 ```js
@@ -269,13 +328,13 @@ let newCivilDate = myCivilDate.with({year: 2017, month: 3});
 ```
 
 ----------------------------------------------------------------------------------------------
-# `plus` function  (all objects)
+# `plus` method  (all objects)
 Returns a new temporal object with the specified date parts added. Units will be added in order of size, descending.
 
 ```js
 let myCivilDate = new CivilDate(2016, 2, 29);
 let newCivilDate = myCivilDate.plus({years: 1, months: 2});
-//results in civil date with value 2017-4-28
+//results in civil date with value 2017-04-28
 ```
 
 # Technical Design Decision Record
@@ -312,14 +371,14 @@ The purpose of `fromString()` and the reason we felt we still wanted it as part 
 
 `Instant.prototype.toString()` always outputs **&lt;year>-&lt;month>-&lt;day>T&lt;hours>:&lt;minutes>:&lt;seconds>.&lt;nanoseconds>Z**
 
-`ZonedInstant.prototype.toString` always outputs **&lt;year>-&lt;month>-&lt;day>T&lt;hours>:&lt;minutes>:&lt;seconds>.&lt;nanoseconds>[Z|&lt;offset>]**
+`ZonedDateTime.prototype.toString` always outputs **&lt;year>-&lt;month>-&lt;day>T&lt;hours>:&lt;minutes>:&lt;seconds>.&lt;nanoseconds>[Z|&lt;offset>]**
 
 Other formats of parts will not be output, so the `fromString()` methods can be extremely restrictive.
 
-### ZonedInstant.prototype.timezone will be the offset rather than the IANA name
+### ZonedDateTime.prototype.timeZone will be the offset rather than the IANA name
 
 The offset at a point in time is unique an clear. It can also be parsed back allowing for serialisation as described above.
 
 In contrast the *IANA Zones* are unclear and are hard to parse back requiring a full timezone database. In order to keep the proposal interoperable with IoT and other low-spec scenarios, requiring full *IANA* support seemed contraindicated.
 
-At the same time we felt it's critical to allow for fully supporting *IANA Zones* in the `ZonedInstant` constructor as well as the `withZone()` methods.
+At the same time we felt it's critical to allow for fully supporting *IANA Zones* in the `ZonedDateTime` constructor as well as the `withZone()` methods.
