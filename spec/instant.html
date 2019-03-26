@@ -83,32 +83,32 @@
       format will throw an Error.</p>
   </emu-clause>
   
-  <emu-clause id=sec-temporal-instant.fromSeconds>
-    <h1>Instant.fromSeconds(_seconds_)</h1>
+  <emu-clause id=sec-temporal-instant.fromEpochSeconds>
+    <h1>Instant.fromEpochSeconds(_seconds_)</h1>
     <p>
       This function will create an Instant object that represents the instant in time _seconds_ since epoch such that
       `BigInt(instant.epochSeconds) * BigInt(1e9) === instant.epochNanoseconds` and `instant.epochSeconds === _seconds_`
       are both `true`.
     </p>
   </emu-clause>
-  <emu-clause id=sec-temporal-instant.fromMilliseconds>
-    <h1>Instant.fromMilliseconds(_miliseconds_)</h1>
+  <emu-clause id=sec-temporal-instant.fromEpochMilliseconds>
+    <h1>Instant.fromEpochMilliseconds(_miliseconds_)</h1>
     <p>
       This function will create an Instant object that represents the instant in time _milliseconds_ since epoch such that
       `BigInt(instant.epochMilliseconds) * BigInt(1e6) === instant.epochNanoseconds` and `instant.epochMilliseconds === _milliseconds_`
       are both `true`.
     </p>
   </emu-clause>
-  <emu-clause id=sec-temporal-instant.fromMicroseconds>
-    <h1>Instant.fromMicroseconds(_microseconds_)</h1>
+  <emu-clause id=sec-temporal-instant.fromEpochMicroseconds>
+    <h1>Instant.fromEpochMicroseconds(_microseconds_)</h1>
     <p>
       This function will create an Instant object that represents the instant in time _milliseconds_ since epoch such that
       `instant.epochMicroseconds * BigInt(1e3) === instant.epochNanoseconds` and `instant.epochMicroseconds === _microseconds_`
       are both `true`.
     </p>
   </emu-clause>
-  <emu-clause id=sec-temporal-instant.fromNanoSeconds>
-    <h1>Instant.fromNanoSeconds(_nanoseconds_)</h1>
+  <emu-clause id=sec-temporal-instant.fromEpochNanoseconds>
+    <h1>Instant.fromEpochNanoseconds(_nanoseconds_)</h1>
     <p>
       This function will create an Instant object that represents the instant in time _nanoseconds_ since epoch such that
       `instant.epochNanoseconds === instant.epochNanoseconds` and `instant.epochMicroseconds === _microseconds_`

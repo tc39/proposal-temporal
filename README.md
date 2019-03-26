@@ -347,9 +347,9 @@ We did not want to tie the *temporal* proposals to the existing `Date` built-in 
 
 For that reason we omitted the `toDate()` methods from the proposal. This is simply a shortcut for `new Date(instant.milliseconds)` to begin with, so there is very little benefit to that tie.
 
-## Naming `fromMilliseconds()` rather than `fromDate()` method
+## Naming `fromEpochMilliseconds()` rather than `fromDate()` method
 
-In the same vein as omitting `toDate()` we also decided to name the method to create an Instant from a `Date` as `fromMilliseconds()` rather than `fromDate()`. For one thing, the name `fromMilliseconds()` is actually more reflective of what the method is supposed to do as it is supposed to accept a numeric argument representing the *milliseconds since epoch* as well.
+In the same vein as omitting `toDate()` we also decided to name the method to create an Instant from a `Date` as `fromEpochMilliseconds()` rather than `fromDate()`. For one thing, the name `fromEpochMilliseconds()` is actually more reflective of what the method is supposed to do as it is supposed to accept a numeric argument representing the *milliseconds since epoch* as well.
 
 The semantics of the method will be:
 
