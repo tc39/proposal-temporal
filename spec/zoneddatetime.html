@@ -22,7 +22,7 @@
     <p>The ZonedDateTime constructor is subclassable.</p>
     <p>The length property of the ZonedDateTime construtor function is 2.</p>
   </emu-clause>
-  <emu-clause id="sec-temporal-instant-constructor">
+  <emu-clause id="sec-temporal-zoneddatetime-constructor">
     <h1>new ZonedDateTime(_instant_, _timezone_)</h1>
     <p>
       When called as a constructor creates a new `ZonedDateTime` object.
@@ -282,5 +282,32 @@
     Calling this function with a _this_ context that is not an instance of
     ZonedDateTime is illegal.
   </emu-clause>
-
+  <emu-clause id=sec-temporal-zoneddatetime.fromEpochSeconds>
+    <h1>ZonedDateTime.fromEpochSeconds(_seconds_, _timezone_)</h1>
+    <p>
+      This function will create a ZonedDateTime object that is equivalent to:
+      `new ZonedDateTime(Instant.fromEpochSeconds(_seconds), _timezone)`.
+    </p>
+  </emu-clause>
+  <emu-clause id=sec-temporal-zoneddatetime.fromEpochMilliseconds>
+    <h1>ZonedDateTime.fromEpochMilliseconds(_miliseconds_, _timezone_)</h1>
+    <p>
+      This function will create a ZonedDateTime object that is equivalent to:
+      `new ZonedDateTime(Instant.fromEpochMilliseconds(_milliseconds), _timezone)`.
+    </p>
+  </emu-clause>
+  <emu-clause id=sec-temporal-zoneddatetime.fromEpochMicroseconds>
+    <h1>ZonedDateTime.fromEpochMicroseconds(_microseconds_, _timezone_)</h1>
+    <p>
+      This function will create a ZonedDateTime object that is equivalent to:
+      `new ZonedDateTime(Instant.fromEpochMicroseconds(_microseconds), _timezone)`.
+    </p>
+  </emu-clause>
+  <emu-clause id=sec-temporal-zoneddatetime.fromEpochNanoseconds>
+    <h1>ZonedDateTime.fromEpochNanoseconds(_nanoseconds_, _timezone_)</h1>
+    <p>
+      This function will create a ZonedDateTime object that is equivalent to:
+      `new ZonedDateTime(Instant.fromEpochNanoseconds(_nanoseconds), _timezone)`.
+    </p>
+  </emu-clause>
 </emu-clause>
