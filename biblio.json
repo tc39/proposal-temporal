@@ -1,0 +1,14 @@
+{
+  "https://proposal-javascript-standard-library-domenic.now.sh/": [
+    {
+      "type": "op",
+      "aoid": "CreateSyntheticModule",
+      "id": "sec-createsyntheticmodule"
+    },
+    {
+      "type": "op",
+      "aoid": "SetSyntheticModuleExport",
+      "id": "sec-setsyntheticmoduleexport"
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+<!doctype html>
+<meta charset="utf8">
+
+<emu-clause id=sec-temporal-module>
+  <h1>The Temporal module</h1>
+
+  <p>The API defined in this specification is exposed as a synthetic module with the specifier
+  `"std:temporal"`. This is achieved through the modification to HostResolveImportedModule
+  abstract operation in this section.</p>
+
+  <emu-clause id=sec-temporal-module-HostResolveImportedModule>
+    <h1>HostResolveImportedModule ( _referencingModule_, _specifier_ )</h1>
+
+    <p>The implementation-defined HostResolveImportedModule abstract operation must additionally
+    conform to the following requirement:</p>
+
+    <p>If _specifier_ is `"std:temporal"`, the operation must return the Module Record created
+    by the following steps.</p>
+
+    <emu-alg>
+      1.  Let _objects_ be « %CivilDate%, %CivilTime%, %CivilDateTime%, %Instant%, %ZonedInstant% ».
+      1.  Let _exports_ be « "CivilDate", "CivilTime", "CivilDateTime", "Instant", "ZonedInstant" ».
+      1.  Let _realm_ be the current Realm Record.
+      1.  Let _moduleRecord_ be ! CreateSyntheticModule(_exports_, the following steps, _realm_,
+          *undefined*), with the following steps:
+          1.  For each _object_ in _objects_, do
+              1.  Let _id_ be ! Get(_object_, `"name"`).
+              1.  Perform ! SetSyntheticModuleExport(_moduleRecord_, _id_, _object_).
+      1.  Return _moduleRecord_.
+    </emu-alg>
+  </emu-clause>
+</emu-clause>
