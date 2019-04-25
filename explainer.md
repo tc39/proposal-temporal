@@ -166,7 +166,7 @@ This creates an ISO-8601 string in the following format:
 ```js
 ${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${nanoseconds}${offset}
 
-The `year` is 0-padded to a minimum of 4 digits. `month`, `day`, `hours`, `minutes`, `seconds` are 0-padded to a minimum of 2 digits. `nanoseconds` is 0-padded to a minimum of 9 digits. The `offset` is the timezone offset as created by `zoned.offset.
+The `year` is 0-padded to a minimum of 4 digits. `month`, `day`, `hours`, `minutes`, `seconds` are 0-padded to a minimum of 2 digits. `nanoseconds` is 0-padded to a minimum of 9 digits. The `offset` is the timezone offset as created by `zoned.offset`.
 
 Examples:
 
