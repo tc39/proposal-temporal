@@ -1,5 +1,12 @@
 # Temporal
 
+Temporal is the proposal of a new date & time handling API for ECMA-Script. The design principles are:
+
+- All temporal APIs are non-mutating.  All temporal objects are effectively immutable.
+- All date values are based on the [Proleptic Gregorian Calendar](https://en.wikipedia.org/wiki/Proleptic_Gregorian_calendar).  Other calendar systems are out-of-scope for this proposal.  However, we will consider how future APIs may interact with this one such that extending it to support other calendars may be possible in a future proposal.
+- All time-of-day values are based on a standard 24-hour clock.
+- [Leap seconds](https://en.wikipedia.org/wiki/Leap_second) are not represented.
+
 ## Timeline Objects
 
 There is a subset of temporal objects that are tied to the absolute timeline. They represent a specific point in time.
