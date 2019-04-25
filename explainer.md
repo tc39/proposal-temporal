@@ -436,7 +436,7 @@ The constructor may only be called as such. It takes between 2 and 4 numeric arg
 - `seconds` seconds of the minutes *(default: 0)*
 - `milliseconds` milliseconds of the second *(default: 0)*
 - `microseconds` microseconds of the millisecond *(default: 0)*
-- `nanoseconds` nanoseconds of the microseconds *(default: 0)
+- `nanoseconds` nanoseconds of the microseconds *(default: 0)*
 
 #### CivilTime.prototype.hour : number
 
