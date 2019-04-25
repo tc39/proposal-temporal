@@ -4,7 +4,7 @@
 
 There is a subset of temporal objects that are tied to the absolute timeline. They represent a specific point in time.
 
-These are `Instant`, `OffsetDateTime` and `ZonedDateTime` in order of amount of detail information available in them.
+These are `Instant`, `OffsetDateTime`, and `ZonedDateTime` in order of amount of detail information available in them.
 
 Instant just represents an absolute point in time. No timezone or offset information is present. As such Intants have no concept of days or months or even hours.
 
