@@ -13,7 +13,7 @@ OffsetDateTime is the combination of an Instant with an offset from UTC. As such
 ZonedDateTime represents an OffsetDateTime combined with an *IANA Timezone*. With that added information ZonedDateTime is able to observe daylight savings rules.
 
 ### Instant
-An `Instant` is an object that specifies a specific point in time. For convenience of interoperatbility it uses *nanoseconds since the unix-epoch* to do so.
+An `Instant` is an object that specifies a specific point in time. For convenience of interoperability it uses *nanoseconds since the unix-epoch* to do so.
 #### Instant() - constuctor
 
 #### Instant.prototype.epochSeconds : number
