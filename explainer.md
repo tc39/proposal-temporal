@@ -36,7 +36,7 @@ since unix-epoch*.
 The `epochNanoseconds` property of an `Instant` object is readonly and represents the *nanoseconds
 since unix-epoch*.
 
-#### Instant.prototype.witZone(zone: string) : ZonedDateTime
+#### Instant.prototype.withZone(zone: string) : ZonedDateTime
 
 This creates a `ZonedDateTime` by applying a *iana timezone* to the instant.
 
