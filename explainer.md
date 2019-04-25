@@ -520,7 +520,7 @@ The constructor may only be called as such. It takes between 5 and 7 numeric arg
 - `seconds` seconds of the minutes *(default: 0)*
 - `milliseconds` milliseconds of the seconds *(default: 0)*
 - `microseconds` microseconds of the milliseconds *(default: 0)*
-- `nanoseconds` nanoseconds of the microseconds *(default: 0)
+- `nanoseconds` nanoseconds of the microseconds *(default: 0)*
 
 #### CivilDateTime.prototype.year : number
 
