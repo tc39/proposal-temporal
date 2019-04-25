@@ -490,7 +490,7 @@ Combines this `CivilTime` with the passed `CivilDate` to create a new `CivilDate
 `.toString()` creates an ISO-8601 compliant string in the format:
 **`hour`:`minute`:`second`.`nanosecond`**.
 
-The `hours`, `minutes` and `seconds` are 0-padded to a minimum of 2 digits.
+The `hours`, `minutes`, and `seconds` are 0-padded to a minimum of 2 digits.
 `nanoseconds` is 0-padded to a minimum of 9 digits.
 
 #### CivilTime.prototype.toJSON() : string
