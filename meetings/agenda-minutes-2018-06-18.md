@@ -29,9 +29,9 @@ Agenda and notes:
     * MPT: Any scenarios where we don’t have 64 bits of storage?
     * AP: BigInt is arbitrary, so if BigInt lands in the spec, we can store whatever.
     * MPT: Now, we can have the BigInt constructor.
-    * PD: That’s why I added the toDate/fromDate functions, where you can also pass the Number miliseconds-since-epoch.
+    * PD: That’s why I added the toDate/fromDate functions, where you can also pass the Number milliseconds-since-epoch.
     * MPT: Do we also need a nanosecond constructor?
-    * PD: We only have a nanosecond constructor, and toDate/fromDate is your milisecond constructor.
+    * PD: We only have a nanosecond constructor, and toDate/fromDate is your millisecond constructor.
     * AP: Even 32-bit systems need to support BigInt
     * MPT: For next steps, I’m happy with the APIs. Phillip, I’ll have to look closer at your choices, but they seem pretty good. Let’s try to get this used and get realistic feedback, and get initial feedback on spec text to push this towards Stage 2. Maybe someone from my staff will write the spec text. How do we want to get the polyfill driven out for people to try?
     * PD: Maybe we can hold back the polyfill until we have spec text--the worst thing we can do is get adoption and change fundamentals. In terms of actually putting it out, publishing as a node module should do it. The web can use it, so no problem.
