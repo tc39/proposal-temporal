@@ -9,76 +9,74 @@ Temporal is the proposal of a new date & time handling API for ECMA-Script. The 
 
 ## Timeline Objects
 
-There is a subset of temporal objects that are tied to the absolute timeline. They represent a specific point in time.
+There is a subset of temporal objects that are tied to the absolute timeline meaning they are relative to a specific and specified point in time. In this case that time is the [POSIX-epoch](http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap03.html#tag_03_150) and follows the rules established in [ECMA-262](https://tc39.github.io/ecma262/#sec-time-values-and-time-range). They represent a specific point in time.
 
 These are `Instant`, `OffsetDateTime`, and `ZonedDateTime` in order of amount of detail information available in them.
 
 `Instant` just represents an absolute point in time. No timezone or offset information is present. As such Instants have no concept of days or months or even hours.
 
-OffsetDateTime is the combination of an Instant with an offset from UTC. As such it has the ability to know about days, months, etc. However it does not know what timezone or locality it is in. As such it cannot know which daylight saving rules apply.
+`OffsetDateTime` is the combination of an Instant with an offset from UTC. As such it has the ability to know about days, months, etc. However it does not know what timezone or locality it is in. As such it cannot know which daylight saving rules apply.
 
-ZonedDateTime represents an OffsetDateTime combined with an *IANA Timezone*. With that added information ZonedDateTime is able to observe daylight saving rules.
+`ZonedDateTime` represents an `OffsetDateTime` combined with an *IANA Timezone*. With that added information ZonedDateTime is able to observe daylight saving rules.
 
-### Instant
+**All temporal object are immutable in that their properties are getters only.**
+
+### Instant <a name="Instant" />
 An `Instant` is an object that specifies a specific point in time. For convenience of interoperability it uses *nanoseconds since the unix-epoch* to do so.
 #### Instant() - constuctor
 
 #### Instant.prototype.epochSeconds : number
 
-The `epochSeconds` property of an `Instant` object is readonly and represents the *seconds
-since unix-epoch*.
+The `epochSeconds` property of an `Instant` object represents the *seconds since POSIX-epoch*.
 
 #### Instant.prototype.epochMilliseconds: number
 
-The `epochMilliseconds` property of an `Instant` object is readonly and represents the *milliseconds
-since unix-epoch*.
+The `epochMilliseconds` property of an `Instant` object represents the *whole milliseconds since POSIX-epoch*.
 
 #### Instant.prototype.epochMicroseconds: BigInt
 
-The `epochMicroseconds` property of an `Instant` object is readonly and represents the *microseconds
-since unix-epoch*.
+The `epochMicroseconds` property of an `Instant` object represents the *whole microseconds since POSIX-epoch*.
 
 #### Instant.prototype.epochNanoseconds: BigInt
 
-The `epochNanoseconds` property of an `Instant` object is readonly and represents the *nanoseconds
-since unix-epoch*.
+The `epochNanoseconds` property of an `Instant` object represents the *nanoseconds since POSIX-epoch*.
 
-#### Instant.prototype.withZone(zone: string) : ZonedDateTime
+#### Instant.prototype.withZone(zone: string) : [ZonedDateTime](#ZoneDateTime)
 
-This creates a `ZonedDateTime` by applying a *iana timezone* to the instant.
+This creates a `ZonedDateTime` by applying a *IANA timezone* to the instant.
 
 This is equivalent to `new ZonedDateTime(instant, zone)`
 
-#### Instant.prototype.withOffset(offset: string) : OffsetDateTime
+#### Instant.prototype.withOffset(offset: string) : [OffsetDateTime](#OffsetDateTime)
 
 This creates a `OffsetDateTime` by applying an *offset-string* to the instant.
 
 This is equivalent to `new OffsetDateTime(instant, offset)`
 
-#### Instant.fromString(iso: string) : Instant
+#### Instant.fromString(iso: string) : [Instant](#Instant)
 
 Parses a `string` that must be in the same ISO-8601 format as produced by `Instant.prototype.toString()` and creates a new `Instant` object from it.
 
-#### Instant.fromEpochSeconds(epochseconds: number) : Instant
-
-Equivalent to `Instant.fromMilliseconds(seconds * 1000)`.
-
-#### Instant.fromEpochMilliseconds(epochmillis: number) : Instant
-
-Equivalent to `Instant.fromEpochMicroseconds(BigInt(epochmillis) * 1000n)`.
-
-#### Instant.fromEpochMicroseconds(epochmicros: BigInt) : Instant
-
-Equivalent to `Instant.fromEpochNanoseconds(epochmicros * 1000n)`.
-
-#### Instant.fromEpochNanoseconds(epochnanos: BigInt) : Instant
+#### Instant.fromEpochNanoseconds(epochnanos: BigInt) : [Instant](#Instant)
 
 Equivalent to `new Instant(epochnanos)`.
 
-### OffsetDateTime
+#### Instant.fromEpochMicroseconds(epochmicros: BigInt) : [Instant](#Instant)
+
+Equivalent to `Instant.fromEpochNanoseconds(epochmicros * 1000n)`.
+
+#### Instant.fromEpochMilliseconds(epochmillis: number) : [Instant](#Instant)
+
+Equivalent to `Instant.fromEpochMicroseconds(BigInt(epochmillis) * 1000n)`.
+
+#### Instant.fromEpochSeconds(epochseconds: number) : [Instant](#Instant)
+
+Equivalent to `Instant.fromEpochMilliseconds(seconds * 1000)`.
+
+### OffsetDateTime <a name="OffsetDateTime" />
 
 An `OffsetDateTime` is an object that specifies a specific point in time with a specific offset from *UTC*.
-It bases this on an `Instant` and an offsett `string`.
+It bases this on an `Instant` and an offset `string`.
 
 #### OffsetDateTime(instant: Instant, offset: string) - constructor
 
@@ -87,7 +85,7 @@ of `Instant` and the second is a `string` representing a valid time offset.
 
 #### OffsetDateTime.prototype.instant : BigInt
 
-The instance of `Instant` that was used to create this `OffsetDateTime`.
+The instance of `Instant` that is being referenced by this `OffsetDateTime`.
 
 #### OffsetDateTime.prototype.offset : string
 
@@ -95,7 +93,7 @@ The time-zone offset represented as a `string`.
 
 This must always have the format: `sign``hours`:`minutes` where
 
-- `sign` is eitner `+` or `-`
+- `sign` is either `+` or `-`
 - `hours` is the hours offset 0-padded to 2 digits.
 - `minutes` is the minutes offset 0-padded to 2 digits.
 
@@ -107,35 +105,35 @@ The `.year` property represents the year of the `OffsetDateTime` according to th
 
 #### OffsetDateTime.prototype.month: number
 
-The `.month` property represents the month of the `OffsetDateTime `  according to the proleptic Gregorian calendar with a midnight to midnight 24 hour day.
+The `.month` property represents the month of the `OffsetDateTime`  according to the proleptic Gregorian calendar with a midnight to midnight 24 hour day. This value is guaranteed to be between `1` and `12` inclusive.
 
 #### OffsetDateTime.prototype.day: number
 
-The `.day` property represents the day of the `OffsetDateTime `  according to the proleptic Gregorian calendar with a midnight to midnight 24 hour day.
+The `.day` property represents the day of the `OffsetDateTime`  according to the proleptic Gregorian calendar with a midnight to midnight 24 hour day.
 
 #### OffsetDateTime.prototype.hour: number
 
-The `.hour` property represents the hour of the `OffsetDateTime `  according to the proleptic Gregorian calendar with a midnight to midnight 24 hour day.
+The `.hour` property represents the hour of the `OffsetDateTime` from `0` to `23` inclusive according to the proleptic Gregorian calendar with a midnight to midnight 24 hour day.
 
 #### OffsetDateTime.prototype.minute: number
 
-The `.minute` property represents the minute of the hour of the `OffsetDateTime `  according to the proleptic Gregorian calendar with a midnight to midnight 24 hour day.
+The `.minute` property represents the minute of the hour of the `OffsetDateTime` from `0` to `59` inclusive according to the proleptic Gregorian calendar with a midnight to midnight 24 hour day.
 
 #### OffsetDateTime.prototype.second: number
 
-The `.second` property represents the seconds of the minute of the `OffsetDateTime `  according to the proleptic Gregorian calendar with a midnight to midnight 24 hour day.
+The `.second` property represents the whole seconds of the minute of the `OffsetDateTime` from `0` to `59` inclusive according to the proleptic Gregorian calendar with a midnight to midnight 24 hour day.
 
 #### OffsetDateTime.prototype.millisecond: number
 
-The `.millisecond` property represents the milliseconds of the seconds of the `OffsetDateTime `  according to the proleptic Gregorian calendar with a midnight to midnight 24 hour day.
+The `.millisecond` property represents the whole milliseconds of the seconds of the `OffsetDateTime` from `0` to `999` inclusive  according to the proleptic Gregorian calendar with a midnight to midnight 24 hour day.
 
 #### OffsetDateTime.prototype.microsecond: number
 
-The `.microsecond` property represents the microseconds of the milliseconds of the `OffsetDateTime `  according to the proleptic Gregorian calendar with a midnight to midnight 24 hour day.
+The `.microsecond` property represents the whole microseconds of the milliseconds of the `OffsetDateTime` from `0` to `999` inclusive  according to the proleptic Gregorian calendar with a midnight to midnight 24 hour day.
 
 #### OffsetDateTime.prototype.nanosecond: number
 
-The `.nanosecond` property represents the nanoseconds of the microseconds of the `OffsetDateTime `  according to the proleptic Gregorian calendar with a midnight to midnight 24 hour day.
+The `.nanosecond` property represents the nanoseconds of the microseconds of the `OffsetDateTime` from `0` to `999` inclusive  according to the proleptic Gregorian calendar with a midnight to midnight 24 hour day.
 
 #### OffsetDateTime.prototype.dayOfWeek: number
 
@@ -143,35 +141,41 @@ The `.dayOfWeek` property represents the day of the week according to the prolep
 
 #### OffsetDateTime.prototype.dayOfYear: number
 
-The `.dayOfYear` property represents the ordinal day of the Gregorian year according to ISO-8601.
+The `.dayOfYear` property represents the ordinal day of the Gregorian year from `1` to `366` inclusive according to ISO-8601.
 
 #### OffsetDateTime.prototype.weekOfYear: number
 
-The `.weekOfYear` property represents the ISO week-number. Beware that dates at the begining of a year may be part of a week from the preceding year, and dates at the end of a year may be part of a week at the beginning of the next year, as the first week of any year is defined as the week that contains the first Thursday of the week.
+The `.weekOfYear` property represents the ISO week-number from `1` to `53` inclusive. Beware that dates at the begining of a year may be part of a week from the preceding year, and dates at the end of a year may be part of a week at the beginning of the next year, as the first week of any year is defined as the week that contains the first Thursday of the week.
 
-#### OffsetDateTime.prototype.plus(data: IntervalLike): ZonedDateTime
+#### OffsetDateTime.prototype.with(data: DateTimeLike): [OffsetDateTime](#OffsetDateTime)
+#### OffsetDateTime.prototype.plus(data: DurationLike): [OffsetDateTime](#OffsetDateTime)
 
 Creates a new `ZonedDateTime` object by adding (subtracting for negative values) values to its members. The specified values must be numeric if specified.
 
 The algorithm is such that:
 
 1. the individual values are added to the existing values.
-2. the range of `nanoseconds` is ensured to be between 0 and 999 by adjusting the `microseconds`
-3. the range of `microseconds` is ensured to be between 0 and 999 by adjusting the `milliseconds`
-4. the range of `milliseconds` is ensured to be between 0 and 999 by adjusting the `seconds`
-5. the range of `seconds` is ensured to be between 0 and 59 by adjusting the `minutes`
-6. the range of `minutes` is ensured to be between 0 and 59 by adjusting the `hours`
-7. the range of `hours` is ensured to be between 0 and 23 by adjusting `days`
+2. the range of `nanoseconds` is ensured to be between 0 and 999 by adjusting the `microsecond`
+3. the range of `microseconds` is ensured to be between 0 and 999 by adjusting the `millisecond`
+4. the range of `milliseconds` is ensured to be between 0 and 999 by adjusting the `second`
+5. the range of `seconds` is ensured to be between 0 and 59 by adjusting the `minute`
+6. the range of `minutes` is ensured to be between 0 and 59 by adjusting the `hour`
+7. the range of `hours` is ensured to be between 0 and 23 by adjusting `day`
 8. the range of `days` is ensured to be between 1 and 29-31 depending on the month by adjusting `month`
-9. the range of `months` is ensured to be between 1 and 12 by adjusting the `years`.
+9. the range of `months` is ensured to be between 1 and 12 by adjusting the `year`.
 
-#### OffsetDateTime.prototype.minus(other: ZonedDateTime): Interval
-#### OffsetDateTime.prototype.withZone(iana: string) : ZonedDateTime
+#### OffsetDateTime.prototype.minus(other: [ZonedDateTime](#ZonedDateTime)): [Duration](#Duration)
+
+#### OffsetDateTime.prototype.withZone(iana: string) : [ZonedDateTime](#ZonedDateTime)
+
+Creates a new `ZonedDateTime` object representing the same point in time with the passed IANA-Timezone. If the IANA-Timezone is invalid this method throws.
+
 #### OffsetDateTime.prototype.toString() : string
 
 This creates an ISO-8601 string in the following format:
 ```js
 ${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${nanoseconds}${offset}
+```
 
 The `year` is 0-padded to a minimum of 4 digits. `month`, `day`, `hours`, `minutes`, `seconds` are 0-padded to a minimum of 2 digits. `nanoseconds` is 0-padded to a minimum of 9 digits. The `offset` is the timezone offset as created by `zoned.offset`.
 
@@ -183,116 +187,37 @@ Examples:
 
 Equivalent to `OffsetDateTime.prototype.toString() : string`
 
-#### OffsetDateTime.fromString(iso: string) : ZonedDateTime
+#### OffsetDateTime.fromString(iso: string) : [ZonedDateTime](#ZonedDateTime)
 
-Parses a `string` in the specific ISO-8601 format emitted by `OffsetDateTime.prototype.toString()`.
+Creates a new `OffsetDateTime` object from parsing a string that must be in the same ISO 8601 format used for `OffsetDateTime.prototype.toString()`, with precision at or exceeding the minute level and non-empty non-"Z" UTC offset representation.
 
-#### OffsetDateTime.fromZonedDateTime(zoned : ZonedDateTime) : OffsetDateTime
+#### OffsetDateTime.fromZonedDateTime(zoned : [ZonedDateTime](#ZonedDateTime)) : [OffsetDateTime](#OffsetDateTime)
 
+### ZonedDateTime <a name="ZonedDateTime" />
 
+A `ZonedDateTime` is an object that specifies a specific point in time with an *IANA timezone*.
+It bases this on an `Instant` and an IANA `string`.
 
-
-
-### ZonedDateTime
-
-An `ZonedDateTime` is an object that specifies a specific point in time with an *IANA timezone*.
-It bases this on an `Instant` and an iana `string`.
-
-#### ZonedDateTime(instant: Instant, zone: string) - constructor
+#### ZonedDateTime(instant: [Instant](#Instant), zone: string) - constructor
 
 The constructor may only be called as such. It takes two arguments. The first is an instance
 of `Instant` and the second is a `string` representing a valid IANA timezone.
 
-#### ZonedDateTime.prototype.instant : BigInt
+#### ZonedDateTime.prototype
 
-The instance of `Instant` that was used to create this `ZonedDateTime`.
+`ZonedDateTime.prototype` includes all properties and methods of `OffsetDateTime.prototype`, plus the following additions and replacements.
 
 #### ZonedDateTime.prototype.timeZone : string
-#### ZonedDateTime.prototype.offset : string
 
-The time-zone offset represented as a `string`.
+The IANA-Timezone used by this `ZonedDateTime`.
 
-This must always have the format: `sign``hours`:`minutes` where
-
-- `sign` is eitner `+` or `-`
-- `hours` is the hours offset 0-padded to 2 digits.
-- `minutes` is the minutes offset 0-padded to 2 digits.
-
-Examples: `+00:00`, `-04:00`, `+03:00`, ...
-
-#### ZonedDateTime.prototype.year: number
-
-The `.year` property represents the year of the `ZonedDateTime` according to the proleptic Gregorian calendar with a midnight to midnight 24 hour day.
-
-#### ZonedDateTime.prototype.month: number
-
-The `.month` property represents the month of the `ZonedDateTime `  according to the proleptic Gregorian calendar with a midnight to midnight 24 hour day.
-
-#### ZonedDateTime.prototype.day: number
-
-The `.day` property represents the day of the `ZonedDateTime `  according to the proleptic Gregorian calendar with a midnight to midnight 24 hour day.
-
-#### ZonedDateTime.prototype.hour: number
-
-The `.hour` property represents the hour of the `ZonedDateTime `  according to the proleptic Gregorian calendar with a midnight to midnight 24 hour day.
-
-#### ZonedDateTime.prototype.minute: number
-
-The `.minute` property represents the minute of the hour of the `ZonedDateTime `  according to the proleptic Gregorian calendar with a midnight to midnight 24 hour day.
-
-#### ZonedDateTime.prototype.second: number
-
-The `.second` property represents the seconds of the minute of the `ZonedDateTime `  according to the proleptic Gregorian calendar with a midnight to midnight 24 hour day.
-
-#### ZonedDateTime.prototype.millisecond: number
-
-The `.millisecond` property represents the milliseconds of the seconds of the `ZonedDateTime `  according to the proleptic Gregorian calendar with a midnight to midnight 24 hour day.
-
-#### ZonedDateTime.prototype.microsecond: number
-
-The `.microsecond` property represents the microseconds of the milliseconds of the `ZonedDateTime `  according to the proleptic Gregorian calendar with a midnight to midnight 24 hour day.
-
-#### ZonedDateTime.prototype.nanosecond: number
-
-The `.nanosecond` property represents the nanoseconds of the microseconds of the `ZonedDateTime `  according to the proleptic Gregorian calendar with a midnight to midnight 24 hour day.
-
-#### ZonedDateTime.prototype.dayOfWeek: number
-
-The `.dayOfWeek` property represents the day of the week according to the proleptic Gregorian calendar with a midnight to midnight 24 hour day where Monday is `1` and `Sunday` is `7` in accordance with ISO-8601. 
-
-#### ZonedDateTime.prototype.dayOfYear: number
-
-The `.dayOfYear` property represents the ordinal day of the Gregorian year according to ISO-8601.
-
-#### ZonedDateTime.prototype.weekOfYear: number
-
-The `.weekOfYear` property represents the ISO week-number. Beware that dates at the begining of a
-year may be part of a week from the preceding year, and dates at the end of a year may be part of
-a week at the beginning of the next year, as the first week of any year is defined as the week that
-contains the first Thursday of the week.
-
-#### ZonedDateTime.prototype.plus(data: IntervalLike): ZonedDateTime
-
-Creates a new `ZonedDateTime` object by adding (subtracting for negative values) values to its members.
-The specified values must be numeric if specified.
-
-The algorithm is such that:
-
-1. the individual values are added to the existing values.
-2. the range of `nanoseconds` is ensured to be between 0 and 999 by adjusting the `microseconds`
-3. the range of `microseconds` is ensured to be between 0 and 999 by adjusting the `milliseconds`
-4. the range of `milliseconds` is ensured to be between 0 and 999 by adjusting the `seconds`
-5. the range of `seconds` is ensured to be between 0 and 59 by adjusting the `minutes`
-6. the range of `minutes` is ensured to be between 0 and 59 by adjusting the `hours`
-7. the range of `hours` is ensured to be between 0 and 23 by adjusting `days`
-8. the range of `days` is ensured to be between 1 and 29-31 depending on the month by adjusting `month`
-9. the range of `months` is ensured to be between 1 and 12 by adjusting the `years`.
-
-#### ZonedDateTime.prototype.minus(other: ZonedDateTime): Interval
 #### ZonedDateTime.prototype.toString() : string
 
-This creates an ISO-8601 string in the following format **`year`-`month`-`day`T`hours`:`minutes`:`seconds`.`nanoseconds``offset`[`iana`]**
-if an *IANA-Timezone* is available.
+This creates an ISO-8601 string in the following format 
+
+```js
+${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${nanoseconds}${offset}[${iana}]
+```
 
 The `year` is 0-padded to a minimum of 4 digits. `month`, `day`, `hours`, `minutes`, `seconds`
 are 0-padded to a minimum of 2 digits. `nanoseconds` is 0-padded to a minimum of 9 digits. The
@@ -304,13 +229,13 @@ Examples:
 - `1976-11-18T15:23:30.123456789+01:00[Europe/Vienna]` - created with `Europe/Vienna` timezone
 - `1976-11-18T15:23:30.123456789+01:00[Europe/Berlin]` - created with `Europe/Berlin` timezone
 
-#### ZonedDateTime.prototype.toJSON() : string
-
-Equivalent to `ZonedDateTime.prototype.toString() : string`
-
-#### ZonedDateTime.fromString(iso: string) : ZonedDateTime
+#### ZonedDateTime.fromString(iso: string) : [ZonedDateTime](#ZonedDateTime)
 
 Creates a new `ZonedDateTime` object from parsing a string that must be in the same ISO 8601 format used for `ZonedDateTime.prototype.toString()`, with precision at or exceeding the minute level, non-empty non-"Z" UTC offset representation, and a bracketed IANA time zone name in which the offset is correct for the represented date and time.
+
+#### ZonedDateTime.isValidTimezone(iana: string) : boolean
+
+A method that can be used to check if a give string is a valid IANA-Timezone representation.
 
 ## Unbound Objects
 
@@ -322,7 +247,9 @@ In addition there are more abstract dates that are used frequently in civil disc
 
 These objects all have in common is that they are not tied to a specific point on the timeline.
 
-### CivilDate
+**Again all temporal object are immutable in that their properties are getters only.**
+
+### CivilDate <a name="CivilDate" />
 
 `CivilDate` (and its siblings) represents a date and time corresponding to the requirements of ISO-8601.
 
@@ -361,7 +288,7 @@ The `.dayOfYear` property represents the ordinal day of the Gregorian year accor
 
 The `.weekOfYear` property represents the ISO week-number. Beware that dates at the begining of a year may be part of a week from the preceding year, and dates at the end of a year may be part of a week at the beginning of the next year, as the first week of any year is defined as the week that contains the first Thursday of the week.
 
-#### CivilDate.prototype.plus(value: IntervalLike) : CivilDate
+#### CivilDate.prototype.plus(value: [DurationLike](#DurationLike)) : [CivilDate](#CivilDate)
 
 Creates a new `CivilDate` object by adding (subtracting for negative values) values to its members.
 The specified values must be numeric if specified.
@@ -371,12 +298,12 @@ The algorithm is such that:
   2. the range of `days` is ensured to be between 1 and 29-31 depending on the month by adjusting `month`
   3. the range of `months` is ensured to be between 1 and 12 by adjusting the `years`.
 
-#### CivilDate.prototype.with(values: DateLike) : CivilDate
+#### CivilDate.prototype.with(values: [DateLike](#DateLike)) : [CivilDate](#CivilDate)
 
 Creates a new `CivilDate` object by overriding specified values to its members.
 The specified values must be numeric if specified.
 
-#### CivilDate.prototype.withTime(time : CivilTime) : CivilDateTime
+#### CivilDate.prototype.withTime(time : [CivilTime](#CivilTime)) : [CivilDateTime](#CivilDateTime)
 
 Combines this `CivilDate` with the passed `CivilTime` to create a new `CivilDateTime` object.
 
@@ -388,7 +315,7 @@ Equivalent to `date.toDateString()`
 
 Equivalent to `date.toString()`
 
-#### CivilDate.prototype.toDateTimeString() : string
+#### CivilDate.prototype.toDateString() : string
 
 `.toDateString()` creates an ISO-8601 compliant string in the format:
 **`year`-`month`-`day`**. The `year` is 0-padded to a minimum of 4 digits. `month` and `day`.
@@ -426,11 +353,11 @@ Creates a new `CivilDate` by parsing an ISO-8601 string in the format created by
 
 Creates a new `CivilDate` by parsing an ISO-8601 string in the format created by `.toOrdinalDateString()`.
 
-#### CivilDate.fromString(isostring: string): CivilDate
+#### CivilDate.fromString(isostring: string): [CivilDate](#CivilDate)
 
-Creates a new `CivilDate` by parsing an ISO-8601 string in the one of the formats created `.toDateString()`, `.toWeekDateString()` or `.toOrdinalDateString()`.
+Creates a new `CivilDate` by parsing an ISO-8601 string in the one of the formats created `.toDateString()`, `.toWeekDateString()`, or `.toOrdinalDateString()`.
 
-### CivilTime
+### CivilTime <a name="CivilTime" />
 
 `CivilTime` (and its siblings) represents a time corresponding to the requirements of ISO-8601.
 
@@ -471,7 +398,7 @@ The `.microsecond` property represents the sub-millisecond component of the mill
 
 The `.nanosecond` property represents the sub-microsecond component of the microsecond of the `CivilTime` with nanosecond precision. It will have a value between 0 and 999.
 
-#### CivilTime.prototype.plus(values: IntervalLike) : CivilTime
+#### CivilTime.prototype.plus(values: [DurationLike](#DurationLike)) : [CivilTime](#CivilTime)
 
 Creates a new `CivilTime` object by adding (subtracting for negative values) values to its members.
 The specified values must be numeric if specified.
@@ -485,12 +412,12 @@ The algorithm is such that:
  6. the range of `minutes` is ensured to be between 0 and 59 by adjusting the `hours`
  7. the range of `hours` is ensured to be between 0 and 23
 
-#### CivilTime.prototype.with(values: TimeLike) : CivilTime
+#### CivilTime.prototype.with(values: [TimeLike](#TimeLike)) : [CivilTime](#CivilTime)
 
 Creates a new `CivilTime` object by overriding specified values to its members.
 The specified values must be numeric if specified.
 
-#### CivilTime.prototype.withDate(date : CivilDate) : CivilDateTime
+#### CivilTime.prototype.withDate(date : [CivilDate](#CivilDate)) : [CivilDateTime](#CivilDateTime)
 
 Combines this `CivilTime` with the passed `CivilDate` to create a new `CivilDateTime` object.
 
@@ -510,7 +437,7 @@ Equivalent to `datetime.toString()`
 
 Creates a new `CivilTime` by parsing an ISO-8601 string in the format created by `.toString()`.
 
-### CivilDateTime
+### CivilDateTime <a name="CivilDateTime" />
 
 `CivilDateTime` (and its siblings) represents a date and time corresponding to the requirements of ISO-8601.
 
@@ -579,7 +506,7 @@ The `.microsecond` property represents the sub-millisecond component of the mill
 
 The `.nanosecond` property represents the sub-microsecond component of the microsecond of the `CivilDateTime` with nanosecond precision. It will have a value between 0 and 999.
 
-#### CivilDateTime.prototype.plus(inteval: IntervalLike) : CivilTime
+#### CivilDateTime.prototype.plus(inteval: [DurationLike](#DurationLike)) : [CivilTime](#CivilTime)
 
 Creates a new `CivilDateTime` object by adding (subtracting for negative values) values to its members.
 The specified values must be numeric if specified.
@@ -593,7 +520,7 @@ The algorithm is such that:
  6. the range of `minutes` is ensured to be between 0 and 59 by adjusting the `hours`
  7. the range of `hours` is ensured to be between 0 and 23
 
-#### CivilDateTime.prototype.with(values: DateTimeLike) : CivilTime
+#### CivilDateTime.prototype.with(values: [DateTimeLike](#DateTimeLike)) : [CivilTime](#CivilTime)
 
 Creates a new `CivilTime` object by overriding specified values to its members.
 The specified values must be numeric if specified.
@@ -614,7 +541,7 @@ Equivalent to `datetime.toString()`
 
 Creates a new `CivilTime` by parsing an ISO-8601 string in the format created by `.toString()`.
 
-### CivilYearMonth
+### CivilYearMonth <a name="CivilYearMonth" />
 
 A `CivilYearMonth` is used to represent dates that have an unkown day component.
 
@@ -625,19 +552,19 @@ The constructor may only be called as such. It takes 2 numeric arguments.
 - `year` the Gregorian year
 - `month` the Gregorian month
 
-#### CivilYearMonth.prototype.withDay(day: number) : CivilDate
-#### CivilYearMonth.prototype.with(values: DateLike) : CivilYearMonth
-#### CivilYearMonth.prototype.plus(value: IntervalLike) : CivilYearMonth
-#### CivilYearMonth.prototype.minus(other: CivilYearMonth) : Interval
+#### CivilYearMonth.prototype.withDay(day: number) : [CivilDate](#CivilDate)
+#### CivilYearMonth.prototype.with(values: [DateLike](#DateLike)) : [CivilYearMonth](#CivilYearMonth)
+#### CivilYearMonth.prototype.plus(value: [DurationLike](#DurationLike)) : [CivilYearMonth](#CivilYearMonth)
+#### CivilYearMonth.prototype.minus(other: [CivilYearMonth](#CivilYearMonth)) : [Duration](#Duration)
 #### CivilYearMonth.prototype.toString() : string
 
 Produces a string representation of the value in the format `yyyy/mm` where `yyyy` is the year with a minimum of 4 digits and a optional sign. and `mm` is the months with a minimum of 2 digits.
 
-#### CivilYearMonth.fromString(str: string) : CivilYearMonth
+#### CivilYearMonth.fromString(str: string) : [CivilYearMonth](#CivilYearMonth)
 
 Parses a string in the exact format produced by `CivilYearMonth.prototype.toString()`.
 
-### CivilMonthDay
+### CivilMonthDay <a name="CivilMonthDay" />
 
 The `CivilMonthDay` is used to represent dates that have an unknown year component. 
 
@@ -654,76 +581,76 @@ The constructor may only be called as such. It takes 2 numeric arguments.
 - `month` the Gregorian month
 - `day` the Gregorian day of month
 
-#### CivilMonthDay.prototype.withYear(year: number) : CivilDate
-#### CivilMonthDay.prototype.with(values: DateLike) : CivilMonthDay
-#### CivilMonthDay.prototype.plus(value: IntervalLike) : CivilMonthDay
-#### CivilMonthDay.prototype.minus(other: CivilMonthDay) : Interval
+#### CivilMonthDay.prototype.withYear(year: number) : [CivilDate](#CivilDate)
+#### CivilMonthDay.prototype.with(values: [DateLike](#DateLike)) : [CivilMonthDay](#CivilMonthDay)
+#### CivilMonthDay.prototype.plus(value: [DurationLike](#DurationLike)) : [CivilMonthDay](#CivilMonthDay)
+#### CivilMonthDay.prototype.minus(other: [CivilMonthDay](#CivilMonthDay)) : [Duration](#Duration)
 
-## Intervals & Operations
+## Durations & Operations
 
-### Interval
+### Duration <a name="Duration" />
 
-Interval objects are produced by subtracting two temporal object from each other using the `minus()` method. Subtraction is limited to operations between objects of the same type.
+Duration objects are produced by subtracting two temporal object from each other using the `minus()` method. Subtraction is limited to operations between objects of the same type.
 
-All `Interval` fields are integer values. Intervals are immutable like all temporal objects.
+All `Duration` fields are integer values. Durations are immutable like all temporal objects.
 
-Intervals can only be created through the `minus` method on temporal objects.
+Durations can only be created through the `minus` method on temporal objects.
 
-#### Interval.prototype.years: number
+#### Duration.prototype.years: number
 
 Is the **integer** number of years difference this interval represents.
 
-#### Interval.prototype.months: number
+#### Duration.prototype.months: number
 
 Is the **integer** number of months difference this interval represents.
 
-#### Interval.prototype.days: number
+#### Duration.prototype.days: number
 
 Is the **integer** number of day difference this interval represents.
 
-#### Interval.prototype.hours: number
+#### Duration.prototype.hours: number
 
 Is the **integer** number of hours difference this interval represents.
 
-#### Interval.prototype.minutes: number
+#### Duration.prototype.minutes: number
 
 Is the **integer** number of minutes difference this interval represents.
 
-#### Interval.prototype.seconds: number
+#### Duration.prototype.seconds: number
 
 Is the **integer** number of seconds difference this interval represents.
 
-#### Interval.prototype.milliseconds: number
+#### Duration.prototype.milliseconds: number
 
 Is the **integer** number of milliseconds difference this interval represents.
 
-#### Interval.prototype.microseconds: number
+#### Duration.prototype.microseconds: number
 
 Is the **integer** number of microseconds difference this interval represents.
 
-#### Interval.prototype.nanoseconds: number
+#### Duration.prototype.nanoseconds: number
 
 Is the **integer** number of nanoseconds difference this interval represents.
 
-#### Interval.prototype.minus(other: Interval) : Interval
+#### Duration.prototype.minus(other: Duration) : Duration
 
-Creates a new `Interval` where each of the fields is defined as:
+Creates a new `Duration` where each of the fields is defined as:
 
  `field = mine.field - other.field`
 
 This can result in mixed intervals where some fields are positive and some negative. Such intervals are fully valid.
 
-#### Interval.prototype.plus(values: IntervalLike) : Interval
+#### Duration.prototype.plus(values: [DurationLike](#DurationLike)) : [Duration](#Duration)
 
-Creates a new `Interval` where each of the fields is defined as:
+Creates a new `Duration` where each of the fields is defined as:
 
  `field = mine.field + other.field`
 
 This can result in mixed intervals where some fields are positive and some negative. Such intervals are fully valid.
 
-#### Interval.prototype.with(values: IntervalLike) : Interval
+#### Duration.prototype.with(values: [DurationLike](#DurationLike)) : [Duration](#Duration)
 
-Creates a new `Interval` where each of the fields is defined as:
+Creates a new `Duration` where each of the fields is defined as:
 
  `field = other.field !== undefined ? other.field : mine.field`
 
@@ -733,16 +660,16 @@ This can result in mixed intervals where some fields are positive and some negat
 
 #### Difference
 
-The difference operation implimented via the `minus` method on temporal objects allow taking the difference between like objects, resulting in an `Interval`. The specificity of the interval will depend on the objects involved.
+The difference operation implimented via the `minus` method on temporal objects allow taking the difference between like objects, resulting in an `Duration`. The specificity of the interval will depend on the objects involved.
 
 Example:
- * CivilDate - will produce an Interval with potential *non-zero* values in `years`, `months` and `days` with all other fields nulled out.
- * CivilTime - will prodce an Interval with potential *non-zero* values in `hours`, `minutes`,  `seconds`, `milliseconds`, `microseconds` and `nanoeconds` with all other fields nulled out.
- * `CivilDateTime` - will produce an Interval where all fields are potentially *non-zero*
+ * CivilDate - will produce an Duration with potential *non-zero* values in `years`, `months` and `days` with all other fields nulled out.
+ * CivilTime - will prodce an Duration with potential *non-zero* values in `hours`, `minutes`,  `seconds`, `milliseconds`, `microseconds` and `nanoeconds` with all other fields nulled out.
+ * `CivilDateTime` - will produce an Duration where all fields are potentially *non-zero*
 
 #### Addition
 
-The addition operation is implemented via the `plus` method on temporal objects. These methods take an IntervalLike as an argument that is first converted to an actual Interval. That means that *non-integer* value in interval fields will be floored.
+The addition operation is implemented via the `plus` method on temporal objects. These methods take an DurationLike as an argument that is first converted to an actual Duration. That means that *non-integer* value in interval fields will be floored.
 
 Adding an interval to a type means taking only the corresponding interval values and ignoring all others.
 
@@ -752,7 +679,7 @@ Example: CivilDate plus { hours: 48 } is a no-op since hours does not have a cor
 
 Interfaces are not actually defined, they are simply conveniences to make conversing about temporal objects, methods and their arguments easier.
 
-### DateLike
+### DateLike <a name="DateLike" />
 
 Any JS object that has date like properties. These are:
 
@@ -762,7 +689,7 @@ Any JS object that has date like properties. These are:
 
 These properties are all optional, but if they are on a DateLike object they have to be numeric.
 
-### TimeLike
+### TimeLike <a name="TimeLike" />
 
 Any JS object that has time like properties. These are:
 
@@ -775,11 +702,11 @@ Any JS object that has time like properties. These are:
 
 These properties are all optional, but if they are on a TimeLike object they have to be numeric.
 
-### DateTimeLike
+### DateTimeLike <a name="DateTimeLike" />
 
 Any JS object that is both a DateLike and a TimeLike.
 
-### IntervalLike
+### DurationLike <a name="DurationLike" />
 
 Any JS object that has interval properties. These are:
 
@@ -793,7 +720,7 @@ Any JS object that has interval properties. These are:
 * microseconds - number of microseconds difference
 * nanoseconds - number of nanoseconds difference
 
-These properties are all optional, but if they are on an IntervalLike object they have to be numeric.
+These properties are all optional, but if they are on an DurationLike object they have to be numeric.
 
 ---
 
