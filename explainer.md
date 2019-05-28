@@ -17,7 +17,7 @@ Instant just represents an absolute point in time. No timezone or offset informa
 
 OffsetDateTime is the combination of an Instant with an offset from UTC. As such it has the ability to know about days, months, etc. However it does not know what timezone or locality it is in. As such it cannot know which daylight saving rules apply.
 
-ZonedDateTime represents an OffsetDateTime combined with an *IANA Timezone*. With that added information ZonedDateTime is able to observe daylight savings rules.
+ZonedDateTime represents an OffsetDateTime combined with an *IANA Timezone*. With that added information ZonedDateTime is able to observe daylight saving rules.
 
 ### Instant
 An `Instant` is an object that specifies a specific point in time. For convenience of interoperability it uses *nanoseconds since the unix-epoch* to do so.
