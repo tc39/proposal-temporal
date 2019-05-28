@@ -41,7 +41,7 @@ The `epochMicroseconds` property of an `Instant` object represents the *whole mi
 
 The `epochNanoseconds` property of an `Instant` object represents the *nanoseconds since POSIX-epoch*.
 
-#### Instant.prototype.withZone(zone: string) : [ZonedDateTime](#ZoneDateTime)
+#### Instant.prototype.withZone(zone: string) : [ZonedDateTime](#ZonedDateTime)
 
 This creates a `ZonedDateTime` by applying a *IANA timezone* to the instant.
 
