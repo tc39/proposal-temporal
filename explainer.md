@@ -13,7 +13,7 @@ There is a subset of temporal objects that are tied to the absolute timeline. Th
 
 These are `Instant`, `OffsetDateTime`, and `ZonedDateTime` in order of amount of detail information available in them.
 
-Instant just represents an absolute point in time. No timezone or offset information is present. As such Instants have no concept of days or months or even hours.
+`Instant` just represents an absolute point in time. No timezone or offset information is present. As such Instants have no concept of days or months or even hours.
 
 OffsetDateTime is the combination of an Instant with an offset from UTC. As such it has the ability to know about days, months, etc. However it does not know what timezone or locality it is in. As such it cannot know which daylight saving rules apply.
 
