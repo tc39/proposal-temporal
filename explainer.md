@@ -310,7 +310,7 @@ Equivalent to `ZonedDateTime.prototype.toString() : string`
 
 #### ZonedDateTime.fromString(iso: string) : ZonedDateTime
 
-Parses a `string` in the specific ISO-8601 format emitted by `ZonedDateTime.prototype.toString()`.
+Creates a new `ZonedDateTime` object from parsing a string that must be in the same ISO 8601 format used for `ZonedDateTime.prototype.toString()`, with precision at or exceeding the minute level, non-empty non-"Z" UTC offset representation, and a bracketed IANA time zone name in which the offset is correct for the represented date and time.
 
 ## Unbound Objects
 
