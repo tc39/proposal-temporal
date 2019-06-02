@@ -44,10 +44,12 @@ A complete polyfill can be found [here](https://github.com/std-proposal/temporal
 # Overview of Standard Objects in the `temporal` module
 
 Please see the [Object Description](./objects.md) for details on the shape and functionality of
-temporal objects.
+temporal objects as well as the [Mental Model](./mentalmodel.md) which underlies that API and explain the relationship between these objects.
 
 There are also some [Example Use-Cases](./examples.md) to describe how these objects can be used
 in practice.
+
+Also there were many long discussions on the naming of the `Civil*` objects. There is a short piece describing the pros and cons and arguments on [how we reached the decision to name them `Civil`](./civil.md).
 
 ### Civil Vs Instant Objects
 
