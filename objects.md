@@ -150,7 +150,9 @@ The `.weekOfYear` property represents the ISO week-number from `1` to `53` inclu
 #### OffsetDateTime.prototype.with(data: DateTimeLike): [OffsetDateTime](#OffsetDateTime)
 #### OffsetDateTime.prototype.plus(data: DurationLike): [OffsetDateTime](#OffsetDateTime)
 
-Creates a new `ZonedDateTime` object by adding (subtracting for negative values) values to its members. The specified values must be numeric if specified.
+Creates a new `OffsetDateTime` object by adding values to its members. The specified values
+must be numeric if specified and will be cast to a scaled integer (by calulating the absolute
+value and flooring it).
 
 The algorithm is such that:
 
@@ -166,9 +168,20 @@ The algorithm is such that:
 
 #### OffsetDateTime.prototype.minus(other: [ZonedDateTime](#ZonedDateTime)): [Duration](#Duration)
 
+Creates a new `OffsetDateTime` object by subtracting values to its members. The specified values
+must be numeric if specified and will be cast to a scaled integer (by calulating the absolute
+value and flooring it).
+
+
 #### OffsetDateTime.prototype.withZone(iana: string) : [ZonedDateTime](#ZonedDateTime)
 
 Creates a new `ZonedDateTime` object representing the same point in time with the passed IANA-Timezone. If the IANA-Timezone is invalid this method throws.
+
+#### OffsetDateTime.prototype.getCivilDateTime() : [CivilDateTime](#CivilDateTime)
+#### OffsetDateTime.prototype.getCivilDate() : [CivilDate](#CivilDate)
+#### OffsetDateTime.prototype.getCivilTime() : [CivilTime](#CivilTime)
+#### OffsetDateTime.prototype.getCivilYearMonth() : [CivilYearMonth](#CivilYearMonth)
+#### OffsetDateTime.prototype.getCivilMonthDay() : [CivilMonthDay](#CivilMonthDay)
 
 #### OffsetDateTime.prototype.toString() : string
 
@@ -191,8 +204,6 @@ Equivalent to `OffsetDateTime.prototype.toString() : string`
 
 Creates a new `OffsetDateTime` object from parsing a string that must be in the same ISO 8601 format used for `OffsetDateTime.prototype.toString()`, with precision at or exceeding the minute level and non-empty non-"Z" UTC offset representation.
 
-#### OffsetDateTime.fromZonedDateTime(zoned : [ZonedDateTime](#ZonedDateTime)) : [OffsetDateTime](#OffsetDateTime)
-
 ### ZonedDateTime <a name="ZonedDateTime" />
 
 A `ZonedDateTime` is an object that specifies a specific point in time with an *IANA timezone*.
@@ -205,11 +216,14 @@ of `Instant` and the second is a `string` representing a valid IANA timezone.
 
 #### ZonedDateTime.prototype
 
-`ZonedDateTime.prototype` includes all properties and methods of `OffsetDateTime.prototype`, plus the following additions and replacements.
+`ZonedDateTime.prototype` includes all properties and methods of `OffsetDateTime.prototype` except `plus` & `minus`.
+In addition the following properties & methods are defined:
 
 #### ZonedDateTime.prototype.timeZone : string
 
 The IANA-Timezone used by this `ZonedDateTime`.
+
+#### ZonedDateTime.prototype.getOffsetDateTime() : [OffsetDateTime](#OffsetDateTime)
 
 #### ZonedDateTime.prototype.toString() : string
 
@@ -290,18 +304,31 @@ The `.weekOfYear` property represents the ISO week-number. Beware that dates at 
 
 #### CivilDate.prototype.plus(value: [DurationLike](#DurationLike)) : [CivilDate](#CivilDate)
 
-Creates a new `CivilDate` object by adding (subtracting for negative values) values to its members.
-The specified values must be numeric if specified.
+Creates a new `CivilDate` object by adding values to its members.
+The specified values must be numeric if specified. The specified values
+must be numeric if specified and will be cast to a scaled integer (by calulating the absolute
+value and flooring it).
 
 The algorithm is such that:
   1. the individual values are added to the existing values.
   2. the range of `days` is ensured to be between 1 and 29-31 depending on the month by adjusting `month`
   3. the range of `months` is ensured to be between 1 and 12 by adjusting the `years`.
 
+#### CivilDate.prototype.plus(value: [DurationLike](#DurationLike)) : [CivilDate](#CivilDate)
+
+Creates a new `CivilDate` object by subtracting values to its members.
+The specified values must be numeric if specified. The specified values
+must be numeric if specified and will be cast to a scaled integer (by calulating the absolute
+value and flooring it).
+
 #### CivilDate.prototype.with(values: [DateLike](#DateLike)) : [CivilDate](#CivilDate)
 
 Creates a new `CivilDate` object by overriding specified values to its members.
 The specified values must be numeric if specified.
+
+#### CivilDate.prototype.plus(values: [DurationLike](#DurationLike)) : [CivilDate](#CivilDate)
+#### CivilDate.prototype.minus(values: [DurationLike](#DurationLike)) : [CivilDate](#CivilDate)
+#### CivilDate.prototype.difference(other: [DateLike](#DateLike)) : [Duration](#Duration)
 
 #### CivilDate.prototype.withTime(time : [CivilTime](#CivilTime)) : [CivilDateTime](#CivilDateTime)
 
@@ -315,47 +342,9 @@ Equivalent to `date.toDateString()`
 
 Equivalent to `date.toString()`
 
-#### CivilDate.prototype.toDateString() : string
-
-`.toDateString()` creates an ISO-8601 compliant string in the format:
-**`year`-`month`-`day`**. The `year` is 0-padded to a minimum of 4 digits. `month` and `day`.
-
-#### CivilDate.prototype.toWeekDateString() : string
-
-`.toWeekDateString()` creates an ISO-8601 compliant string in the format:
-**`year`-W`week`-`weekday`**.
-
-The `year` is 0-padded to a minimum of 4 digits. `week`is 0-padded to a minimum of 2 digits.
-
-The `week` is the ISO week as calculated by `.weekOfYear` and the `weekday` is the ISO week-day as
-calculated by `.dayOfWeek`. The `year` may be one year before/after the `.year` property of the
-`CivilDate` if the specified date is part of the last week of the previous year or the first
-week of the following year.
-
-#### CivilDate.prototype.toOrdinalDateString() : string
-
-`.toOrdinalDateString()` creates an ISO-8601 compliant strung in the format:
-**`year`-`day-of-year`**.
-
-The `year` is 0-padded to a minimum of 4 digits. `dof-of-year` is 0-padded to a minimum of 3 digits.
-
-The `day-of-year` is the ordinal day as calculated by `.dayOfYear`.
-
-#### CivilDate.fromDateString(isostring : string): string
-
-Creates a new `CivilDate` by parsing an ISO-8601 string in the format created by `.toDateString()`.
-
-#### CivilDate.fromWeekDateString(isostring : string): string
-
-Creates a new `CivilDate` by parsing an ISO-8601 string in the format created by `.toWeekDateString()`.
-
-#### CivilDate.fromOrdinalDateString(isostring : string): string
-
-Creates a new `CivilDate` by parsing an ISO-8601 string in the format created by `.toOrdinalDateString()`.
-
 #### CivilDate.fromString(isostring: string): [CivilDate](#CivilDate)
 
-Creates a new `CivilDate` by parsing an ISO-8601 string in the one of the formats created `.toDateString()`, `.toWeekDateString()`, or `.toOrdinalDateString()`.
+Creates a new `CivilDate` by parsing an ISO-8601 string in the format created by `.toString()`.
 
 ### CivilTime <a name="CivilTime" />
 
@@ -398,10 +387,17 @@ The `.microsecond` property represents the sub-millisecond component of the mill
 
 The `.nanosecond` property represents the sub-microsecond component of the microsecond of the `CivilTime` with nanosecond precision. It will have a value between 0 and 999.
 
+#### CivilTime.prototype.with(values: [TimeLike](#TimeLike)) : [CivilTime](#CivilTime)
+
+Creates a new `CivilTime` object by overriding specified values to its members.
+The specified values must be numeric if specified.
+
 #### CivilTime.prototype.plus(values: [DurationLike](#DurationLike)) : [CivilTime](#CivilTime)
 
-Creates a new `CivilTime` object by adding (subtracting for negative values) values to its members.
-The specified values must be numeric if specified.
+Creates a new `CivilTime` object by subtracting values to its members.
+The specified values must be numeric if specified. The specified values
+must be numeric if specified and will be cast to a scaled integer (by calulating the absolute
+value and flooring it).
 
 The algorithm is such that:
  1. the individual values are added to the existing values.
@@ -412,10 +408,8 @@ The algorithm is such that:
  6. the range of `minutes` is ensured to be between 0 and 59 by adjusting the `hours`
  7. the range of `hours` is ensured to be between 0 and 23
 
-#### CivilTime.prototype.with(values: [TimeLike](#TimeLike)) : [CivilTime](#CivilTime)
-
-Creates a new `CivilTime` object by overriding specified values to its members.
-The specified values must be numeric if specified.
+#### CivilTime.prototype.minus(values: [DurationLike](#DurationLike)) : [CivilTime](#CivilTime)
+#### CivilTime.prototype.difference(other: [DateLike](#DateLike)) : [Duration](#Duration)
 
 #### CivilTime.prototype.withDate(date : [CivilDate](#CivilDate)) : [CivilDateTime](#CivilDateTime)
 
@@ -506,10 +500,12 @@ The `.microsecond` property represents the sub-millisecond component of the mill
 
 The `.nanosecond` property represents the sub-microsecond component of the microsecond of the `CivilDateTime` with nanosecond precision. It will have a value between 0 and 999.
 
-#### CivilDateTime.prototype.plus(inteval: [DurationLike](#DurationLike)) : [CivilTime](#CivilTime)
+#### CivilDateTime.prototype.plus(duration: [DurationLike](#DurationLike)) : [CivilDateTime](#CivilDateTime)
 
-Creates a new `CivilDateTime` object by adding (subtracting for negative values) values to its members.
-The specified values must be numeric if specified.
+Creates a new `CivilDateTime` object by subtracting values to its members.
+The specified values must be numeric if specified. The specified values
+must be numeric if specified and will be cast to a scaled integer (by calulating the absolute
+value and flooring it).
 
 The algorithm is such that:
  1. the individual values are added to the existing values.
@@ -519,11 +515,23 @@ The algorithm is such that:
  5. the range of `seconds` is ensured to be between 0 and 59 by adjusting the `minutes`
  6. the range of `minutes` is ensured to be between 0 and 59 by adjusting the `hours`
  7. the range of `hours` is ensured to be between 0 and 23
+ 8. the range of `days` is ensured to be between 1 and 29-31 depending on the month by adjusting `month`
+ 9. the range of `months` is ensured to be between 1 and 12 by adjusting the `years`.
 
+#### CivilDateTime.prototype.minus(duration: [DurationLike](#DurationLike)) : [CivilDateTime](#CivilDateTime)
+#### CivilDateTime.prototype.difference(other: TimeLike) : [Duration](#Duration)
 #### CivilDateTime.prototype.with(values: [DateTimeLike](#DateTimeLike)) : [CivilTime](#CivilTime)
 
 Creates a new `CivilTime` object by overriding specified values to its members.
 The specified values must be numeric if specified.
+
+#### CivilDateTime.prototype.withZone(ianaZone : string, filter?: string | symbol) : [ZonedDateTime](#ZonedDateTime)
+#### CivilDateTime.prototype.withOffset(offset : string) : [OffsetDateTime](#OffsetDateTime) 
+
+#### CivilDateTime.prototype.getCivilDate() : [CivilDate](#CivilDate)
+#### CivilDateTime.prototype.getCivilTime() : [CivilTime](#CivilTime)
+#### CivilDateTime.prototype.getCivilYearMonth() : [CivilYearMonth](#CivilYearMonth)
+#### CivilDateTime.prototype.getCivilMonthDay() : [CivilMonthDay](#CivilMonthDay)
 
 #### CivilDateTime.prototype.toString() : string
 
@@ -555,7 +563,8 @@ The constructor may only be called as such. It takes 2 numeric arguments.
 #### CivilYearMonth.prototype.withDay(day: number) : [CivilDate](#CivilDate)
 #### CivilYearMonth.prototype.with(values: [DateLike](#DateLike)) : [CivilYearMonth](#CivilYearMonth)
 #### CivilYearMonth.prototype.plus(value: [DurationLike](#DurationLike)) : [CivilYearMonth](#CivilYearMonth)
-#### CivilYearMonth.prototype.minus(other: [CivilYearMonth](#CivilYearMonth)) : [Duration](#Duration)
+#### CivilYearMonth.prototype.minus(value: [DurationLike](#DurationLike)) : [CivilYearMonth](#CivilYearMonth)
+#### CivilYearMonth.prototype.difference(other: [CivilYearMonth](#CivilYearMonth)) : [Duration](#Duration)
 #### CivilYearMonth.prototype.toString() : string
 
 Produces a string representation of the value in the format `yyyy/mm` where `yyyy` is the year with a minimum of 4 digits and a optional sign. and `mm` is the months with a minimum of 2 digits.
@@ -584,7 +593,8 @@ The constructor may only be called as such. It takes 2 numeric arguments.
 #### CivilMonthDay.prototype.withYear(year: number) : [CivilDate](#CivilDate)
 #### CivilMonthDay.prototype.with(values: [DateLike](#DateLike)) : [CivilMonthDay](#CivilMonthDay)
 #### CivilMonthDay.prototype.plus(value: [DurationLike](#DurationLike)) : [CivilMonthDay](#CivilMonthDay)
-#### CivilMonthDay.prototype.minus(other: [CivilMonthDay](#CivilMonthDay)) : [Duration](#Duration)
+#### CivilMonthDay.prototype.minus(value: [DurationLike](#DurationLike)) : [CivilMonthDay](#CivilMonthDay)
+#### CivilMonthDay.prototype.difference(other: [CivilMonthDay](#CivilMonthDay)) : [Duration](#Duration)
 
 ## Durations & Operations
 
@@ -631,30 +641,6 @@ Is the **integer** number of microseconds difference this interval represents.
 #### Duration.prototype.nanoseconds: number
 
 Is the **integer** number of nanoseconds difference this interval represents.
-
-#### Duration.prototype.minus(other: Duration) : Duration
-
-Creates a new `Duration` where each of the fields is defined as:
-
- `field = mine.field - other.field`
-
-This can result in mixed intervals where some fields are positive and some negative. Such intervals are fully valid.
-
-#### Duration.prototype.plus(values: [DurationLike](#DurationLike)) : [Duration](#Duration)
-
-Creates a new `Duration` where each of the fields is defined as:
-
- `field = mine.field + other.field`
-
-This can result in mixed intervals where some fields are positive and some negative. Such intervals are fully valid.
-
-#### Duration.prototype.with(values: [DurationLike](#DurationLike)) : [Duration](#Duration)
-
-Creates a new `Duration` where each of the fields is defined as:
-
- `field = other.field !== undefined ? other.field : mine.field`
-
-This can result in mixed intervals where some fields are positive and some negative. Such intervals are fully valid.
 
 ### Operations
 
