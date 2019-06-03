@@ -87,7 +87,7 @@ In terms of interoperability, the TAG review yielded the information that HTML f
 
 ## Durations
 
-`Duration` objects are only yielded by taking the difference between two like temporal objects. Durations are always absolute values and can be used for date/time maths using the `plus` and `minus` operation on temporal objects.
+`Duration` objects are yielded by taking the difference between two like temporal objects, and can be used for date/time maths using the `plus` and `minus` operations on temporal objects.
 
 The danger with these objects is that they can incorreclty be applied to unlike objects. Consider applying the difference between `2019-01-02T12:00:00.000000000` and `2019-02-02T13:00:00.000000000` which is `1month 1hour` to a date of `2019-05-01` which drops the hours entirely or a time of `15:00:00.000000000` which ignores the month.
 
