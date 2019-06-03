@@ -40,7 +40,7 @@ Before we talk about how to name them, we should be clear on what things we are 
 
 ## Local
 
-**Pro:** Local is the prefix that many languages use for this type of object. It is therefore very intuitive to many users.
+**Pro:** Local is the prefix that many programming languages use for this type of object. It is therefore very intuitive to many users.
 
 **Con:** Local is actually wrong in that it names the one characteristic that these objects do **not** possess: locality.
 
