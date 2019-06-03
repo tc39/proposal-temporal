@@ -81,7 +81,7 @@ In terms of interoperability, the TAG review yielded the information that HTML f
 
 ## CivilMonthDay
 
-Similarly this is a day and month without a year. An example would be *new years day* / *the 1st of January* where the year is considered irelevant as it is a valid statement for any year.
+Similarly this is a day and month without a year. An example would be *new years day* / *the 1st of January* where the year is considered irrelevant as it is a valid statement for any year.
 
 In terms of interoperability, the TAG review yielded the information that HTML form elements can yield dates like this. And this concept is included in other specifications. To provide a full and compatible set of objects we determined that it was within scope of this proposal to include this type.
 
