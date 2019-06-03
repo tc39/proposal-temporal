@@ -45,7 +45,7 @@ Conceptually `Instant`s are not geopgraphically tied to any place. They are equa
 
 ## OffsetDateTime
 
-`OffsetDateTime` objects represent a point in time together with a specific offset from UTC. Given that these offets are only valid on Earth, they are tied to a place. However they do not have a timezone or dayligh-davings adjustments or anything of that nature.
+`OffsetDateTime` objects represent a point in time together with a specific offset from UTC. Given that these offets are only valid on Earth, they are tied to a place. However they do not have a time zone or daylight saving adjustments.
 
 As such they can be considered at best to be tied to the planet Earth rather than a specific locality. However because they are tied to the planet, they do have a concept of time units uch as hours and days. And because we restrict ourselves to the proleptic gregorian calendar, they do have months and years that correspond with our western understanding of these ideas.
 
