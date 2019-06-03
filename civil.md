@@ -44,7 +44,7 @@ Before we talk about how to name them, we should be clear on what things we are 
 
 **Con:** Local is actually wrong in that it names the one characteristic that these objects do **not** possess: locality.
 
-**Con:** Local is the prefix that many languages use. However the `Civil` objects are part of a larger whole with a very specific mental model. Local violates that mental model and by suggesting analogies to other languages it exascerbates that misunderstanding of the meaning and value of these types.
+**Con:** Local is the prefix that many languages use. However the `Civil` objects are part of a larger whole with a very specific mental model. Local violates that mental model and by suggesting analogies to other languages it exacerbates that misunderstanding of the meaning and value of these types.
 
 ## Civil
 
