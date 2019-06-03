@@ -32,7 +32,7 @@ Before we talk about how to name them, we should be clear on what things we are 
 
 ## Gregorian
 
-**Pro:** The reason `Gregorian` was suggested was in view of the fact that we are limiting ourselves to the gregorian calendar. Future implementations of these object could them be named appropriately according to the calendar they implement and be on equal footing to the current set of objects that we intend to support.
+**Pro:** The reason `Gregorian` was suggested was in view of the fact that we are limiting ourselves to the gregorian calendar. Future implementations of these objects could then be named appropriately according to the calendar they implement and be on equal footing to the current set of objects that we intend to support.
 
 **Con:** Gregorian requires knowledge of the fact that the *proleptic gregorian calendar* is what most of the western world uses. This is not knowledge we can assume.
 
