@@ -29,7 +29,7 @@ Before continuing I'd also like to call out the following API principles to keep
 1. All objects are immutable
 2. Methods beginning with `with` will result in objects that contain equal or more data and are therefore safe in terms of losing information.
 3. Methods beginning with `get` will result in retrieving an aspect of the object. Thus the value retrieved will have less information that the original object.
-4. The calculation methods `plus`, `minus` and `difference` act with or result in objects of the same type. `difference` is only permissible with objects of the same information content, while `plus` and `minus` are permissible only with `Durations` (or objects containing the same level of information) generated using the `difference` method.
+4. The calculation methods `plus`, `minus`, and `difference` act with or result in objects of the same type. `difference` is only permissible with objects of the same information content, while `plus` and `minus` are permissible only with `Durations` (or objects containing the same level of information) generated using the `difference` method.
 
 **Please also see the detailed [API description of these temporal objects](objects.md)!!!**
 
