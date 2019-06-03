@@ -67,7 +67,7 @@ Contrary to `ZonedDateTime` and `OffsetDateTime` the `CivilDateTime` objects are
 
 This contain just the date part. It can be mentally considered the *leaf of a desk-calendar*. It can be placed anywhere on the planet, can mean any time within the 24-hour day, but the extent of the time period cannot be acurately specified as it has a different meaning in Australia and Europe for example.
 
-This has usually been represented by absuing a datetime object of some sort. However this leads to all kinds of problems when doing date/time maths. This is a more accurate and specific representation of the concept.
+This has usually been represented by abusing a datetime object of some sort. However this leads to all kinds of problems when doing date/time maths. This is a more accurate and specific representation of the concept.
 
 ## CivilTime
 
