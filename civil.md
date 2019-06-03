@@ -8,7 +8,7 @@ Famous quote:
 
 Infamous quote:
 
-    Cache invalidation is easy if you don't use a caches.
+    Cache invalidation is easy if you don't use a cache.
 
     -- Phil Dunkel
 
