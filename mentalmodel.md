@@ -35,7 +35,7 @@ Before continuing I'd also like to call out the following API principles to keep
 
 ## Instant
 
-`Instant` objects are meant to represent a specific point in absolute time. For convenience we have chosen that point to be *midnight of January the 1st 1970 UTC* as our *epoch*. The choice fell upon that specific date and time due to the precendent of the [POSIX Epoch](http://pubs.opengroup.org/onlinepubs/9699919799/mindex.html) and Unix Epoch based on it.
+`Instant` objects are meant to represent a specific point in absolute time. For convenience we have chosen that point to be *midnight of January the 1st 1970 UTC* as our *epoch*. The choice fell upon that specific date and time due to the precendent of the [POSIX Epoch](http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap03.html#tag_03_150) and Unix Epoch based on it.
 
 We decided to ignore  leap seconds since they are arbitrarily decided upon and unpredictable. An `Instant` can therefore not be said to be on the TAE timeline, but rather on the UTC timeline. In terms of leap-seconds we accept them a input (`fromString`) but immediately convert them to the relevant numeric representation and therefore ignoring the fact that this came from a leap-second.
 
