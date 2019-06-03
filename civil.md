@@ -14,7 +14,7 @@ Infamous quote:
 
 Which leaves us with a *hard problem in computer science*: the naming of the `Civil` family of objects.
 
-**There are a set of objects that represents dates, times as well as aggregations and parts thereof which do not contain enough data to tie them to a sepcific timezone or locality: what do we call them?**
+**There are a set of objects that represents dates, times, as well as aggregations and parts thereof which do not contain enough data to tie them to a sepcific timezone or locality: what do we call them?**
 
 Before we talk about how to name them, we should be clear on what things we are naming and the [mental model](./mentalmodel.md) they represent:
 
