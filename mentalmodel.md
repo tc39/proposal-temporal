@@ -75,7 +75,7 @@ This represents a time without a date or relation to a specific location. 12:00:
 
 ## CivilYearMonth
 
-This represents an entire month of a year. It's an incompete date, but nevertheless useful in many contexts. An example use would be the statement: *By January 2020 we want to have completed the temporal specification*
+This represents an entire month of a year. It's an incomplete date, but is nevertheless useful in many contexts. An example use would be the statement: *By January 2020 we want to have completed the temporal specification*
 
 In terms of interoperability, the TAG review yielded the information that HTML form elements can yield dates like this. And this concept is included in other specifications. To provide a full and compatible set of objects we determined that it was within scope of this proposal to include this type.
 
