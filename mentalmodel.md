@@ -51,7 +51,7 @@ As such they can be considered at best to be tied to the planet Earth rather tha
 
 ## ZonedDateTime
 
-`ZonedDateTime` objects represent a point in time in a specific IANA timezone. Since these timezones are tied to a specific locality (city/country), these are more precise and observe daylight savings changes.
+`ZonedDateTime` objects represent a point in time in a specific IANA timezone. Since these timezones are tied to a specific locality (city/state/country), these are more precise and observe daylight savings changes.
 
 They also have a concept of time units and are most like what the current `Date` object provides, with the exception of the timezone being a specified value rather that magically intuited from system information.
 
