@@ -75,7 +75,7 @@ Object name     | Description                                                   
 
 Object name     | Description                                                         | Example
 ----------------|---------------------------------------------------------------------|-------------
-`Instant`       | A point on the universal timeline, typically represented in UTC.    | `2017-12-31T00:00:00Z`
+`Instant`       | A point on the universal timeline.                                  | `2017-12-31T00:00:00Z`
 `OffsetDateTime`| A point on the universal timeline, with an associated offset.       | `2017‑12‑31T09:00:00+09:00`
 `ZonedDateTime` | A point on the universal timeline, with an associated time zone.    | `2017‑12‑31T09:00:00+09:00[Asia/Tokyo]`
 
