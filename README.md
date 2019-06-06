@@ -57,9 +57,9 @@ Also there were many long discussions on the naming of the `Civil*` objects. The
 
 ### Civil Vs Instant Objects
 
-The word Civil indicates an object that does not have a relationship to the global timeline (UTC). The object could be anywhere/in any place.
+The word 'Civil' indicates an object that does not have a relationship to the global timeline (UTC). The object could be anywhere/in any place.
 
-The word Instant indicates an object that has a relationship to the global timeline (UTC), and can assertively be mapped to a UTC date.
+The word 'Instant' indicates an object that has a relationship to the global timeline (UTC), and can assertively be mapped to a UTC date.
 
 ### Objects representing Civil Time
 
