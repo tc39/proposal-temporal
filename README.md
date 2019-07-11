@@ -57,9 +57,9 @@ Also there were many long discussions on the naming of the `Civil*` objects. The
 
 ### Civil Vs Instant Objects
 
-The word Civil indicates an object that does not have a relationship to the global timeline (UTC). The object could be anywhere/in any place.
+The word 'Civil' indicates an object that does not have a relationship to the global timeline (UTC). The object could be anywhere/in any place.
 
-The word Instant indicates an object that has a relationship to the global timeline (UTC), and can assertively be mapped to a UTC date.
+The word 'Instant' indicates an object that has a relationship to the global timeline (UTC), and can assertively be mapped to a UTC date.
 
 ### Objects representing Civil Time
 
@@ -75,7 +75,7 @@ Object name     | Description                                                   
 
 Object name     | Description                                                         | Example
 ----------------|---------------------------------------------------------------------|-------------
-`Instant`       | A point on the universal timeline, typically represented in UTC.    | `2017-12-31T00:00:00Z`
+`Instant`       | A point on the universal timeline.                                  | `2017-12-31T00:00:00Z`
 `OffsetDateTime`| A point on the universal timeline, with an associated offset.       | `2017‑12‑31T09:00:00+09:00`
 `ZonedDateTime` | A point on the universal timeline, with an associated time zone.    | `2017‑12‑31T09:00:00+09:00[Asia/Tokyo]`
 
