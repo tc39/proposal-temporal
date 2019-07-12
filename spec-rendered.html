@@ -8,11 +8,11 @@ function Search(menu) {
   this.$search = document.getElementById('menu-search');
   this.$searchBox = document.getElementById('menu-search-box');
   this.$searchResults = document.getElementById('menu-search-results');
-  
+
   this.loadBiblio();
-  
+
   document.addEventListener('keydown', this.documentKeydown.bind(this));
-  
+
   this.$searchBox.addEventListener('keydown', debounce(this.searchBoxKeydown.bind(this), { stopPropagation: true }));
   this.$searchBox.addEventListener('keyup', debounce(this.searchBoxKeyup.bind(this), { stopPropagation: true }));
 }
@@ -54,7 +54,7 @@ Search.prototype.searchBoxKeyup = function (e) {
   if (e.keyCode === 13 || e.keyCode === 9) {
     return;
   }
-  
+
   this.search(e.target.value);
 }
 
@@ -77,19 +77,19 @@ Search.prototype.triggerSearch = function (e) {
 // prefer shorter matches.
 function relevance(result, searchString) {
   var relevance = 0;
-  
+
   relevance = Math.max(0, 8 - result.match.chunks) << 7;
-  
+
   if (result.match.caseMatch) {
     relevance *= 2;
   }
-  
+
   if (result.match.prefix) {
     relevance += 2048
   }
-  
+
   relevance += Math.max(0, 255 - result.entry.key.length);
-  
+
   return relevance;
 }
 
@@ -103,12 +103,12 @@ Search.prototype.search = function (searchString) {
   } else {
     this.showSearch();
   }
-  
+
   if (searchString.length === 1) {
     this.displayResults([]);
     return;
   }
-    
+
   var results;
 
   if (/^[\d\.]*$/.test(searchString)) {
@@ -119,7 +119,7 @@ Search.prototype.search = function (searchString) {
     });
   } else {
     results = [];
-    
+
     for (var i = 0; i < this.biblio.length; i++) {
       var entry = this.biblio[i];
       if (!entry.key) {
@@ -132,11 +132,11 @@ Search.prototype.search = function (searchString) {
         results.push({ entry: entry, match: match });
       }
     }
-  
+
     results.forEach(function (result) {
       result.relevance = relevance(result, searchString);
     });
-    
+
     results = results.sort(function (a, b) { return b.relevance - a.relevance });
 
   }
@@ -144,7 +144,7 @@ Search.prototype.search = function (searchString) {
   if (results.length > 50) {
     results = results.slice(0, 50);
   }
-  
+
   this.displayResults(results);
 }
 Search.prototype.hideSearch = function () {
@@ -161,7 +161,7 @@ Search.prototype.selectResult = function () {
   if ($first) {
     document.location = $first.getAttribute('href');
   }
-  
+
   this.$searchBox.value = '';
   this.$searchBox.blur();
   this.displayResults([]);
@@ -175,7 +175,7 @@ Search.prototype.selectResult = function () {
 Search.prototype.displayResults = function (results) {
   if (results.length > 0) {
     this.$searchResults.classList.remove('no-results');
-    
+
     var html = '<ul>';
 
     results.forEach(function (result) {
@@ -192,7 +192,7 @@ Search.prototype.displayResults = function (results) {
       } else if (entry.type === 'production') {
         text = entry.key;
         cssClass = 'prod';
-        id = entry.id;  
+        id = entry.id;
       } else if (entry.type === 'op') {
         text = entry.key;
         cssClass = 'op';
@@ -227,8 +227,8 @@ function Menu() {
   this.$toc = document.querySelector('#menu-toc > ol');
   this.$specContainer = document.getElementById('spec-container');
   this.search = new Search(this);
-  
-  this._pinnedIds = {}; 
+
+  this._pinnedIds = {};
   this.loadPinEntries();
 
   // toggle menu
@@ -301,7 +301,7 @@ Menu.prototype.revealInToc = function (path) {
     current[i].classList.remove('revealed');
     current[i].classList.remove('revealed-leaf');
   }
-  
+
   var current = this.$toc;
   var index = 0;
   while (index < path.length) {
@@ -323,9 +323,9 @@ Menu.prototype.revealInToc = function (path) {
         current = children[i].querySelector('ol');
         index++;
         break;
-      }      
+      }
     }
-    
+
   }
 }
 
@@ -334,18 +334,18 @@ function findActiveClause(root, path) {
   var $clause;
   var found = false;
   var path = path || [];
-  
+
   while ($clause = clauses.nextNode()) {
     var rect = $clause.getBoundingClientRect();
     var $header = $clause.children[0];
     var marginTop = parseInt(getComputedStyle($header)["margin-top"]);
-    
+
     if ((rect.top - marginTop) <= 0 && rect.bottom > 0) {
       found = true;
       return findActiveClause($clause, path.concat($clause)) || path;
     }
   }
-  
+
   return path;
 }
 
@@ -370,7 +370,7 @@ function ClauseWalker(root) {
     },
     false
     );
-  
+
   return treeWalker;
 }
 
@@ -453,7 +453,7 @@ Menu.prototype.loadPinEntries = function () {
   } catch (e) {
     return;
   }
-  
+
   var pinsString = window.localStorage.pinEntries;
   if (!pinsString) return;
   var pins = JSON.parse(pinsString);
@@ -584,11 +584,11 @@ function fuzzysearch (searchString, haystack, caseInsensitive) {
   var chunks = 1;
   var finding = false;
   var prefix = true;
-  
+
   if (qlen > tlen) {
     return false;
   }
-  
+
   if (qlen === tlen) {
     if (searchString === haystack) {
       return { caseMatch: true, chunks: 1, prefix: true };
@@ -598,7 +598,7 @@ function fuzzysearch (searchString, haystack, caseInsensitive) {
       return false;
     }
   }
-  
+
   outer: for (var i = 0, j = 0; i < qlen; i++) {
     var nch = searchString[i];
     while (j < tlen) {
@@ -612,12 +612,12 @@ function fuzzysearch (searchString, haystack, caseInsensitive) {
         finding = false;
       }
     }
-    
+
     if (caseInsensitive) { return false }
-    
+
     return fuzzysearch(searchString.toLowerCase(), haystack.toLowerCase(), true);
   }
-  
+
   return { caseMatch: !caseInsensitive, chunks: chunks, prefix: j <= qlen };
 }
 
@@ -814,7 +814,7 @@ function sortByClauseNumber(c1, c2) {
     if (i >= c2c.length) {
       return 1;
     }
-    
+
     var c1 = c1c[i];
     var c2 = c2c[i];
     var c1cn = Number(c1);
@@ -1330,7 +1330,7 @@ emu-production > ins, emu-production > del,
 emu-grammar > ins, emu-grammar > del {
   display: block;
 }
-emu-rhs > ins, emu-rhs > del { 
+emu-rhs > ins, emu-rhs > del {
   display: inline;
 }
 
@@ -1559,10 +1559,10 @@ tr.del > td {
   flex-grow: 0;
   flex-shrink: 0;
   width: 100%;
-  
+
   display: flex;
   flex-direction: column;
-  
+
   max-height: 300px;
 }
 
@@ -1800,7 +1800,7 @@ li.menu-search-result-term:before {
 
 @media print {
   #menu-toggle {
-    display: none; 
+    display: none;
   }
 }
 </style></head><body><div id="menu-toggle">☰</div><div id="menu-spacer"></div><div id="menu"><div id="menu-search"><input type="text" id="menu-search-box" placeholder="Search..."><div id="menu-search-results" class="inactive"></div></div><div id="menu-pins"><div class="menu-pane-header">Pins</div><ul id="menu-pins-list"></ul></div><div class="menu-pane-header">Table of Contents</div><div id="menu-toc"><ol class="toc"><li><span class="item-toggle-none"></span><a href="#sec-temporal-intro" title="Introduction">Introduction</a></li><li><span class="item-toggle">◢</span><a href="#sec-temporal-civildate" title="CivilDate Objects"><span class="secnum">1</span> CivilDate Objects</a><ol class="toc"><li><span class="item-toggle-none"></span><a href="#sec-temporal-civildate-year-number" title="Year Number"><span class="secnum">1.1</span> Year Number</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civildate-month-number" title="Month Number"><span class="secnum">1.2</span> Month Number</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civildate-day-number" title="Day Number"><span class="secnum">1.3</span> Day Number</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civildate-plus-operation" title="Plus(Object)"><span class="secnum">1.4</span> Plus(Object)</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civildate-with-operation" title="With(?_year, ?_month, ?_day)"><span class="secnum">1.5</span> With(?_year, ?_month, ?_day)</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civildate-withtime-operation" title="WithTime(time)"><span class="secnum">1.6</span> WithTime(time)</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civildate-constructor" title="CivilDate Constructor"><span class="secnum">1.7</span> CivilDate Constructor</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civildate-constructor-alg" title="CivilDate (year, month, day)"><span class="secnum">1.8</span> CivilDate (year, month, day)</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civildate-constructor-prop" title="Properties of the CivilDate Constructor"><span class="secnum">1.9</span> Properties of the CivilDate Constructor</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civildate-prototype" title="CivilDate Prototype"><span class="secnum">1.10</span> CivilDate Prototype</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civildate-plus-alg" title="CivilDate.plus (data)"><span class="secnum">1.11</span> CivilDate.plus (data)</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civildate-with-alg" title="CivilDate.with (data)"><span class="secnum">1.12</span> CivilDate.with (data)</a></li></ol></li><li><span class="item-toggle">◢</span><a href="#sec-temporal-civiltime" title="CivilTime Objects"><span class="secnum">2</span> CivilTime Objects</a><ol class="toc"><li><span class="item-toggle-none"></span><a href="#sec-temporal-civiltime-hour-number" title="Hour Number"><span class="secnum">2.1</span> Hour Number</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civiltime-minute-number" title="Minute Number"><span class="secnum">2.2</span> Minute Number</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civiltime-second-number" title="Second Number"><span class="secnum">2.3</span> Second Number</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civiltime-millisecond-number" title="Millisecond Number"><span class="secnum">2.4</span> Millisecond Number</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civiltime-nanosecond-number" title="Nanosecond Number"><span class="secnum">2.5</span> Nanosecond Number</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civiltime-plus-operation" title="Plus(Object)"><span class="secnum">2.6</span> Plus(Object)</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civiltime-with-operation" title="With(?_hour, ?_minute, ?_second, ?_millisecond, ?_nanosecond)"><span class="secnum">2.7</span> With(?_hour, ?_minute, ?_second, ?_millisecond, ?_nanosecond)</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civiltime-withdate-operation" title="WithDate(date)"><span class="secnum">2.8</span> WithDate(date)</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civiltime-constructor" title="CivilTime Constructor"><span class="secnum">2.9</span> CivilTime Constructor</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civiltime-constructor-alg" title="CivilTime (hour, minute[[[, second], millisecond], nanosecond])"><span class="secnum">2.10</span> CivilTime (hour, minute[[[, second], millisecond], nanosecond])</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civiltime-constructor-prop" title="Properties of the CivilTime Constructor"><span class="secnum">2.11</span> Properties of the CivilTime Constructor</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civiltime-prototype" title="CivilTime Prototype"><span class="secnum">2.12</span> CivilTime Prototype</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civiltime-plus-alg" title="CivilTime.plus (data)"><span class="secnum">2.13</span> CivilTime.plus (data)</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civiltime-with-alg" title="CivilTime.with(data)"><span class="secnum">2.14</span> CivilTime.with(data)</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civiltime-withdate-alg" title="CivilTime.withDate (data)"><span class="secnum">2.15</span> CivilTime.withDate (data)</a></li></ol></li><li><span class="item-toggle">◢</span><a href="#sec-temporal-civildatetime" title="CivilDateTime Objects"><span class="secnum">3</span> CivilDateTime Objects</a><ol class="toc"><li><span class="item-toggle-none"></span><a href="#sec-temporal-civildatetime-year-number" title="Year Number"><span class="secnum">3.1</span> Year Number</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civildatetime-month-number" title="Month Number"><span class="secnum">3.2</span> Month Number</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civildatetime-day-number" title="Day Number"><span class="secnum">3.3</span> Day Number</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civildatetime-hour-number" title="Hour Number"><span class="secnum">3.4</span> Hour Number</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civildatetime-minute-number" title="Minute Number"><span class="secnum">3.5</span> Minute Number</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civildatetime-second-number" title="Second Number"><span class="secnum">3.6</span> Second Number</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civildatetime-millisecond-number" title="Millisecond Number"><span class="secnum">3.7</span> Millisecond Number</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civildatetime-nanosecond-number" title="Nanosecond Number"><span class="secnum">3.8</span> Nanosecond Number</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civildatetime-from-operation" title="From(date, time)"><span class="secnum">3.9</span> From(date, time)</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civildatetime-plus-operation" title="Plus(Object)"><span class="secnum">3.10</span> Plus(Object)</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civildatetime-with-operation" title="With(Object)"><span class="secnum">3.11</span> With(Object)</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civildatetime-constructor" title="CivilDateTime Constructor"><span class="secnum">3.12</span> CivilDateTime Constructor</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civildatetime-constructor-alg" title="CivilDateTime (year, month, day, hour, minute[[[, second], millisecond], nanosecond])"><span class="secnum">3.13</span> CivilDateTime (year, month, day, hour, minute[[[, second], millisecond], nanosecond])</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civildatetime-constructor-prop" title="Properties of the CivilDateTime Constructor"><span class="secnum">3.14</span> Properties of the CivilDateTime Constructor</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civildatetime-prototype" title="CivilDateTime Prototype"><span class="secnum">3.15</span> CivilDateTime Prototype</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civildatetime-plus-alg" title="CivilDateTime.plus (data)"><span class="secnum">3.16</span> CivilDateTime.plus (data)</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civildatetime-with-alg" title="CivilDateTime.with (data)"><span class="secnum">3.17</span> CivilDateTime.with (data)</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civildatetime-from-alg" title="CivilDateTime.from (date, time)"><span class="secnum">3.18</span> CivilDateTime.from (date, time)</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civildatetime-tocivildate-alg" title="CivilDateTime.toCivilDate"><span class="secnum">3.19</span> CivilDateTime.toCivilDate</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civildatetime-tociviltime-alg" title="CivilDateTime.toCivilTime"><span class="secnum">3.20</span> CivilDateTime.toCivilTime</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-civildatetime-withzone-alg" title="CivilDateTime.withZone (timeZone[, options])"><span class="secnum">3.21</span> CivilDateTime.withZone (timeZone[, options])</a></li></ol></li><li><span class="item-toggle">◢</span><a href="#sec-temporal-instant" title="Instant Objects"><span class="secnum">4</span> Instant Objects</a><ol class="toc"><li><span class="item-toggle-none"></span><a href="#sec-temporal-instant-constructor" title="new Instant(nanoseconds)"><span class="secnum">4.1</span> new Instant(<emu-val>nanoseconds</emu-val>)</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-instant.prototype.valueOf" title="Instant.prototype.valueOf()"><span class="secnum">4.2</span> Instant.prototype.valueOf()</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-instant.prototype.milliseconds" title="Instant.prototype.milliseconds"><span class="secnum">4.3</span> Instant.prototype.milliseconds</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-instant.prototype.nanoseconds" title="Instant.prototype.nanoseconds"><span class="secnum">4.4</span> Instant.prototype.nanoseconds</a></li><li><span class="item-toggle-none"></span><a href="#sec-temporal-instant.prototype.plus" title="Instant.prototype.plus({ ? years, ? months, ? days, ? hours, ? minutes, ? seconds, ?
@@ -2369,9 +2369,9 @@ li.menu-search-result-term:before {
   <emu-clause id="sec-temporal-instant.prototype.format">
     <h1><span class="secnum">4.8</span>Instant.prototype.format([<var>locale</var>], [<var>options</var>])</h1>
     <p>When called with an Instant object as a <var>this</var> context it will return an String value representing the value of
-      the Instant object as formated by an <code>Intl.DateFormatter</code> objects <code>format</code> method when invoked with the <var>locale</var>
+      the Instant object as formated by an <code>Intl.DateTimeFormat</code> objects <code>format</code> method when invoked with the <var>locale</var>
       and <var>options</var> arguments passed through.</p>
-    <p>The <var>date</var> argument to the <code>Intl.DateDormatter</code> is equivalent to <code>new Date(instant.milliseconds)</code>.</p>
+    <p>The <var>date</var> argument to the <code>Intl.DateTimeFormat</code> is equivalent to <code>new Date(instant.milliseconds)</code>.</p>
     <p>Calling this function with a <var>this</var> context that is not an instance of Instant is illegal.</p>
   </emu-clause>
 
@@ -2386,7 +2386,7 @@ li.menu-search-result-term:before {
     <h1><span class="secnum">4.10</span>Instant.fromString(<var>string</var>)</h1>
     <p>This function will create an Instant object from a String. The <var>string</var> has to strictly conform to the format
       produced by
-      
+
       <emu-xref href="#sec-temporal-instant.prototype.toString" title="" id="_ref_1"><a href="#sec-temporal-instant.prototype.toString">. Any <var>string</var> not strictly conforming to that
       format will throw an Error.</a></emu-xref></p>
   </emu-clause>
@@ -2504,7 +2504,7 @@ li.menu-search-result-term:before {
     <emu-nt><a href="#prod-Month">Month</a></emu-nt><emu-geq>:</emu-geq><emu-rhs a="14df541f"><emu-t>01</emu-t></emu-rhs>
 </emu-production></emu-grammar>
     Calling this function with a <var>this</var> context that is not an instance of ZonedInstant is illegal.
-  
+
   </emu-clause>
 
   <emu-clause id="sec-temporal-zonedinstant-constructor-prop">
@@ -2519,7 +2519,7 @@ li.menu-search-result-term:before {
     <p>The ZonedInstant constructor is the %ZonedInstant% intrinsic object. When called as a constructor, it creates a
       new ZonedInstant object. <emu-val>instant</emu-val> is an Instant object and <emu-val>timeZone</emu-val> is a String corresponding to an IANA time
       zone.
-      
+
       </p><p>The ZonedInstant constructor is a single function.</p>
       <p>The ZonedInstant constructor is subclassable.</p>
       <p>The length property of the ZonedInstant construtor function is 2.</p>
@@ -2579,7 +2579,7 @@ li.menu-search-result-term:before {
 
 </emu-clause><emu-annex id="sec-copyright-and-software-license">
       <h1><span class="secnum">A</span>Copyright &amp; Software License</h1>
-      
+
       <h2>Copyright Notice</h2>
       <p>© 2018 Maggie Pint, Matt Johnson, Brian Terlson, Daniel Ehrenberg, Philipp Dunkel, Sasha Pierson</p>
 
