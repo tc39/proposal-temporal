@@ -54,7 +54,7 @@ The key is that it is "locally applicable", not that it implies a location.
 
 **Pro:** The term "local time" is in widespread use, both in scholarly articles and common parlance. For example, airline pilots will typically say "when we land the local time will be 7pm".
 
-**Con:** Local names a characteristic that these objects do not possess: locality. But suely this misunderstands how "local" is used in English - as with the airline case, the phrase "local time" doesn't refer to knowledge of the locality, but the absence of needing to worry about it on your watch/phone once it is set correctly. As a related example, talking about your "local shop" doesn't require identifying a specific shop in a specific locality. Instead it is a phrase used to discuss whatever the shop nearest to you is, something that varies depending on where you are.
+**Con:** Local names a characteristic that these objects do not possess: locality. But surely this misunderstands how "local" is used in English - as with the airline case, the phrase "local time" doesn't refer to knowledge of the locality, but the absence of needing to worry about it on your watch/phone once it is set correctly. As a related example, talking about your "local shop" doesn't require identifying a specific shop in a specific locality. Instead it is a phrase used to discuss whatever the shop nearest to you is, something that varies depending on where you are.
 
 ## Civil
 
