@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<meta charset="utf8" />
+
+<emu-clause id="sec-temporal-offsetdatetime">
+    <h1>OffsetDateTime Objects</h1>
+    <p>
+    A `OffsetDateTime` object is an immutable object referencing a point in time
+    where the referenced point in time is specific to a given time zone and is
+    measured with nanoseconds precision.
+    </p>
+
+    <emu-clause id="sec-temporal-offsetdatetime-constructor">
+        <h1>OffsetDateTime Constructor</h1>
+        <h1>new OffsetDateTime(_instant_, _timezone_)</h1>
+        <p>
+        The OffsetDateTime constructor is the %OffsetDateTime% intrinsic object.
+        When called as a constructor, it creates a new OffsetDateTime object.
+        </p>
+        <p>The OffsetDateTime constructor is a single function.</p>
+        <p>The OffsetDateTime constructor is subclassable.</p>
+        <p>The length property of the OffsetDateTime construtor function is 2.</p>
+        <p>
+        When called as a constructor creates a new `OffsetDateTime` object.
+        _instant_ is an instance of `Instant`; _offset_ is a string of:
+        </p>
+        <emu-grammar>
+        Sign: `-` or `+`
+        Hours: `00` through `24`
+        Minutes: `00` through `59`
+        Offset: Sign Hours `:`? Minutes 
+        </emu-grammar>
+    </emu-clause>
+    <emu-clause id="sec-temporal-offsetdatetime-alg">
+        <h1>OffsetDateTime(_instant_, _offset_)</h1>
+        <p>This description only applies if the OffsetDateTime constructor is called with at least 2 arguments.</p>
+        <p>When the OffsetDateTime constructor function is called, the following steps are taken:</p>
+        <emu-alg>
+        1. Let numberOfArgs be the number of arguments passed to this function call.
+        1. Assert: numberOfArgs == 2.
+        1. Assert: offset is valid String
+        1. If NewTarget is not undefined, then
+            1. Let inst be instant.milliseconds.
+            1. Let off be offset.
+            1. Let O be
+            ? OrdinaryCreateFromConstructor(
+                NewTarget,
+                "%OffsetDateTimePrototype%", <<[[InstantValue,TimeZoneValue]]>>).
+            1. Set O.[[InstantValue]] to instant.
+            1. Set O.[[OffsetValue]] to off.
+        Return O.
+        </emu-alg>
+    </emu-clause>
+    <emu-clause id="sec-temporal-offsetdatetime-constructor-prop">
+        <h1>Properties of the OffsetDateTime Constructor</h1>
+        <p>The value of the [[Prototype]] internal slot of the OffsetDateTime constructor is the intrinsic object %FunctionPrototype%.</p>
+        <p>The OffsetDateTime constructor has the following properties:</p>
+    </emu-clause>
+    <emu-clause id="sec-temporal-offsetdatetime-prototype">
+        <h1>OffsetDateTime Prototype</h1>
+        <p>
+        The initial value of OffsetDateTime.prototype is the intrinsic object
+        %OffsetDateTimePrototype%. This property has the attributes {[[Writable]]:
+        false, [[Enumerable]]: false, [[Configurable]]: false}.
+        </p>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-offsetdatetime.prototype.instant">
+        <h1>OffsetDateTime.prototype.instant</h1>
+        <p>`OffsetDateTime.instant` is a getter that returns the underlying instant represented by this `OffsetDateTime`.</p>
+    </emu-clause>
+    <emu-clause id="sec-temporal-offsetdatetime.prototype.offset">
+        <h1>OffsetDateTime.prototype.offset</h1>
+        <p>`OffsetDateTime.offset` is a getter that returns the String offset of the timezone represented by this `OffsetDateTime` in the format `[+-]HH:MM`.</p>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-offsetdatetime.prototype.year">
+        <h1>OffsetDateTime.prototype.year</h1>
+        <p>`OffsetDateTime.year` is a getter that returns the year represented by this `OffsetDateTime` according to the proleptic gregorian calendar.</p>
+    </emu-clause>
+    <emu-clause id="sec-temporal-offsetdatetime.prototype.month">
+        <h1>OffsetDateTime.prototype.month</h1>
+        <p>`OffsetDateTime.month` is a getter that returns the month represented by this `OffsetDateTime` according to the proleptic gregorian calendar.</p>
+    </emu-clause>
+    <emu-clause id="sec-temporal-offsetdatetime.prototype.day">
+        <h1>OffsetDateTime.prototype.day</h1>
+        <p>`OffsetDateTime.day` is a getter that returns the day of the month represented by this `OffsetDateTime` according to the proleptic gregorian calendar.</p>
+    </emu-clause>
+    <emu-clause id="sec-temporal-offsetdatetime.prototype.hours">
+        <h1>OffsetDateTime.prototype.hours</h1>
+        <p>`OffsetDateTime.hours` is a getter that returns the hours of the day represented by this `OffsetDateTime`.</p>
+    </emu-clause>
+    <emu-clause id="sec-temporal-offsetdatetime.prototype.minutes">
+        <h1>OffsetDateTime.prototype.minutes</h1>
+        <p>`OffsetDateTime.minutes` is a getter that returns the minutes of the hour represented by this `OffsetDateTime`.</p>
+    </emu-clause>
+    <emu-clause id="sec-temporal-offsetdatetime.prototype.seconds">
+        <h1>OffsetDateTime.prototype.seconds</h1>
+        <p>`OffsetDateTime.seconds` is a getter that returns the seconds of the minute represented by this `OffsetDateTime`.</p>
+    </emu-clause>
+    <emu-clause id="sec-temporal-offsetdatetime.prototype.milliseconds">
+        <h1>OffsetDateTime.prototype.milliseconds</h1>
+        <p>`OffsetDateTime.milliseconds` is a getter that returns the milliseconds of the second represented by this `OffsetDateTime`. This value is restricted to the range of `0` to `999` inclusive.</p>
+    </emu-clause>
+    <emu-clause id="sec-temporal-offsetdatetime.prototype.microseconds">
+        <h1>OffsetDateTime.prototype.microseconds</h1>
+        <p>
+        `OffsetDateTime.microseconds` is a getter that returns the microseconds of the dat represented by this `OffsetDateTime`.
+        This value is restricted to the range of `0` to `999` inclusive.
+        </p>
+    </emu-clause>
+    <emu-clause id="sec-temporal-offsetdatetime.prototype.nanoseconds">
+        <h1>OffsetDateTime.prototype.nanoseconds</h1>
+        <p>
+        `OffsetDateTime.nanoseconds` is a getter that returns the nanoseconds of the dat represented by this `OffsetDateTime`.
+        This value is restricted to the range of `0` to `999` inclusive.
+        </p>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-offsetdatetime.prototype.dayOfWeek">
+        <h1>OffsetDateTime.prototype.dayOfWeek</h1>
+        <p>
+        `OffsetDateTime.dayOfWeek` is a getter that returns the day of the week represented by this `OffsetDateTime` according to the proleptic gregorian calendar.
+        The values are `1` through `7` corresponding to the ISO weekday numbers.
+        </p>
+    </emu-clause>
+    <emu-clause id="sec-temporal-offsetdatetime.prototype.dayOfYear">
+        <h1>OffsetDateTime.prototype.dayOfYear</h1>
+        <p>
+        `OffsetDateTime.dayOfYear` is a getter that returns the day of the year represented by this `OffsetDateTime` according to the proleptic gregorian calendar.
+        The values are `1` through `365` in a normal year and `1` through `366` in a leapyear.
+        </p>
+    </emu-clause>
+    <emu-clause id="sec-temporal-offsetdatetime.prototype.weekOfYear">
+        <h1>OffsetDateTime.prototype.weekOfYear</h1>
+        <p>
+        `OffsetDateTime.weekOfYear` is a getter that returns the week of the year represented by this `OffsetDateTime` according to the proleptic gregorian calendar.
+        The values are `1` through `53` and correspond to the ISO week numbers.
+        </p>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-offsetdatetime.prototype.with">
+        <h1>
+        OffsetDateTime.prototype.with({ ? _years_, ? _months_, ? _days_, ? _hours_,
+        ? _minutes_, ? _seconds_, ? _milliseconds_, ? _microseconds_, ? _nanoseconds_ })
+        </h1>
+        <p>When called with a OffsetDateTime object as the _this_ context, the result will be a new OffsetDateTime object.</p>
+        <p>
+        The value of the new OffsetDateTime object is the value of the original
+        OffsetDateTime's milliseconds with the specified date parts, excepting any
+        nanoseconds argument, converted to milliseconds and added to the original
+        MillisecondValue.
+        </p>
+        <p>
+        Units will be added in order of size, descending. Calling this function
+        with a _this_ context that is not an instance of OffsetDateTime is illegal.
+        </p>
+    </emu-clause>
+    <emu-clause id="sec-temporal-offsetdatetime.prototype.plus">
+        <h1>
+        OffsetDateTime.prototype.plus({ ? _years_, ? _months_, ? _days_, ? _hours_,
+        ? _minutes_, ? _seconds_, ? _milliseconds_, ? _microseconds_, ? _nanoseconds_ })
+        </h1>
+        <p>
+        When called with a OffsetDateTime object as the _this_ context, the result
+        will be a new OffsetDateTime object.
+        </p>
+        <p>
+        The value of the new OffsetDateTime object is the value of the original
+        OffsetDateTime with the specified date parts added. Units will be added in
+        order of size, descending.
+        </p>
+        <p>Calling this function with a _this_ context that is not an instance of OffsetDateTime is illegal.</p>
+    </emu-clause>
+    <emu-clause id="sec-temporal-offsetdatetime.prototype.minus">
+        <h1>OffsetDateTime.prototype.minus(_otherOffsetDateTime_)</h1>
+        <p>
+        When called with a OffsetDateTime object as the _this_ context, the result
+        will be a new <emu-xref href="#sec-temporal-duration" title /> object.
+        </p>
+        <p>The value of the new Duration object is difference between _this_ and the supplied OffsetDateTime.</p>
+        <p>Calling this function with a _this_ context that is not an instance of OffsetDateTime is illegal.</p>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-offsetdatetime.prototype.getcivildate">
+        <h1>OffsetDateTime.prototype.getCivilDate()</h1>
+        <p>
+        The abstract operation getCivilDate returns a new CivilDate Object with the
+        year, month, and day values calculated from the milliseconds and
+        nanoseconds since Epoch
+        </p>
+    </emu-clause>
+    <emu-clause id="sec-temporal-offsetdatetime.prototype.getciviltime">
+        <h1>OffsetDateTime.prototype.getCivilTime()</h1>
+    </emu-clause>
+    <emu-clause id="sec-temporal-offsetdatetime.prototype.getcivildatetime">
+        <h1>OffsetDateTime.prototype.getCivilDateTime()</h1>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-offsetdatetime.prototype.tostring">
+        <h1>OffsetDateTime.prototype.toString()</h1>
+        <p>
+        When called with a OffsetDateTime object as a _this_ context it will return
+        an ISO 8601 String value representing the value of the OffsetDateTime
+        object.
+        </p>
+        <p>The format of the String will always be an IsoDateTime of the following form:</p>
+        <emu-grammar>
+        Sign: `-`
+        Year: Sign? Digit Digit Digit Digit
+        Month: `01` through `12`
+        Day: `01` through `31`
+        Hour: `00` through `24`
+        Minute: `00` through `59`
+        Second: `00` through `59`
+        Milliseconds: `000` through `999`
+        Microseconds: `000` through `999`
+        Nanoseconds: `000` through `999`
+        DatePart: Year `-` Month `-` Day
+        SubSeconds: `.` Milliseconds Microseconds Nanoseconds
+        TimePart: Hour `:` Minute `:` Second SubSeconds
+        OffsetDirection: `+` or `-`
+        OffsetHours: `00` to `24`
+        OffsetMinutes: `00` to `59`
+        Offset: OffsetDirection OffsetHours `:` OffsetMinutes
+        IsoDateTime: DatePart `T` TimePart Offset
+        </emu-grammar>
+        <p>Calling this function with a _this_ context that is not an instance of OffsetDateTime is illegal.</p>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-offsetdatetime.fromstring">
+        <h1>OffsetDateTime.fromString(_isostring_)</h1>
+        <p>
+        _isostring_ has to be in the precise format produced by <emu-xref href="#sec-temporal-offsetdatetime.prototype.tostring" title />.
+        However the `SubSeconds` are optional from right to left (when there isn't a `Milliseconds` part the `.` is disallowed).
+        </p>
+        <p>Calling this function with a _this_ context that is not an instance of OffsetDateTime is illegal.</p>
+    </emu-clause>
+</emu-clause>

@@ -172,11 +172,6 @@ Creates a new `OffsetDateTime` object by subtracting values to its members. The 
 must be numeric if specified and will be cast to a scaled integer (by calulating the absolute
 value and flooring it).
 
-
-#### OffsetDateTime.prototype.withZone(iana: string) : [ZonedDateTime](#ZonedDateTime)
-
-Creates a new `ZonedDateTime` object representing the same point in time with the passed IANA-Timezone. If the IANA-Timezone is invalid this method throws.
-
 #### OffsetDateTime.prototype.getCivilDateTime() : [CivilDateTime](#CivilDateTime)
 #### OffsetDateTime.prototype.getCivilDate() : [CivilDate](#CivilDate)
 #### OffsetDateTime.prototype.getCivilTime() : [CivilTime](#CivilTime)
