@@ -147,7 +147,7 @@
           1. <ins>Let _fields_ be the list of fields in the Fields column of the row.</ins>
           1. <ins>For each field _field_ of _opts_, do</ins>
             1. <ins>If _field_ is in _fields_, then</ins>
-              1. <ins>Set _limitedOptions_.[[&lt;field>]] to _opts_.[[&lt;field>]].</ins>
+              1. <ins>Set _limitedOptions_.[[&lt;_field_>]] to _opts_.[[&lt;_field_>]].</ins>
           1. <ins>If _matcher_ is `"basic"`, then</ins>
             1. <ins>Let _bestFormat_ be BasicFormatMatcher(_limitedOptions_, _formats_).</ins>
           1. <ins>Else,</ins>
@@ -229,21 +229,21 @@
         1. <ins>If IsTemporalObject(_date_) is *true*,</ins>
           1. <ins>Let _x_ be _date_.</ins>
           1. <ins>If _date_ is a CivilDate object, then</ins>
-            1. <ins>Let _pattern_ be _dtf_.[[CivilDatePattern]].</ins>
+            1. <ins>Let _pattern_ be _dateTimeFormat_.[[CivilDatePattern]].</ins>
             1. <ins>Let _tm_ be { [[weekday]]: _date_.dayOfWeek, [[year]]: _date_.year, [[month]]: _date_.month, [[day]]: _date_.day }.</ins>
           1. <ins>Else if _date_ is a CivilTime object, then</ins>
-            1. <ins>Let _pattern_ be _dtf_.[[CivilTimePattern]].</ins>
+            1. <ins>Let _pattern_ be _dateTimeFormat_.[[CivilTimePattern]].</ins>
             1. <ins>Let _tm_ be { [[hour]]: _date_.hour, [[minute]]: _date_.minute, [[second]]: _date_.second }.</ins>
           1. <ins>Else if _date_ is a CivilDateTime object, then</ins>
-            1. <ins>Let _pattern_ be _dtf_.[[CivilDateTimePattern]].</ins>
+            1. <ins>Let _pattern_ be _dateTimeFormat_.[[CivilDateTimePattern]].</ins>
             1. <ins>Let _tm_ be { [[weekday]]: _date_.dayOfWeek, [[year]]: _date_.year, [[month]]: _date_.month, [[day]]: _date_.day, [[hour]]: _date_.hour, [[minute]]: _date_.minute, [[second]]: _date_.second }.</ins>
           1. <ins>Else if _date_ is a ZonedDateTime object, then</ins>
-            1. <ins>Let _pattern_ be _dtf_.[[ZonedDateTimePattern]].</ins>
+            1. <ins>Let _pattern_ be _dateTimeFormat_.[[ZonedDateTimePattern]].</ins>
             1. Let _offsetDateTime_ be _date_.getOffsetDateTime().
             1. <ins>Let _tm_ be { [[weekday]]: _offsetDateTime_.dayOfWeek, [[year]]: _offsetDateTime_.year, [[month]]: _offsetDateTime_.month, [[day]]: _offsetDateTime_.day, [[hour]]: _offsetDateTime_.hour, [[minute]]: _offsetDateTime_.minute, [[second]]: _offsetDateTime_.second }.</ins>
           1. <ins>If _pattern_ is *null*, throw a *TypeError* exception.</ins>
         1. <ins>Else,</ins>
-          1. <ins>Let _pattern_ be _dtf_.[[Pattern]].</ins>
+          1. <ins>Let _pattern_ be _dateTimeFormat_.[[Pattern]].</ins>
           1. If _date_ is *undefined*, then
             1. Let _x_ be Call(%Date_now%, *undefined*).
           1. Else,
@@ -263,7 +263,7 @@
         1. Let _result_ be a new empty List.
         1. Let _patternParts_ be PartitionPattern(<del>_dateTimeFormat_.[[Pattern]]</del><ins>_pattern_</ins>).
         1. For each element _patternPart_ of _patternParts_, in List order, do
-          1. Let _p_ be If _patternPart_.[[Type]].
+          1. Let _p_ be _patternPart_.[[Type]].
           1. If _p_ is `"literal"`, then
             1. Add new part record { [[Type]]: `"literal"`, [[Value]]: _patternPart_.[[Value]] } as a new element of the list _result_.
           1. If _p_ matches a Property column of the row in <emu-xref href="#table-datetimeformat-components"></emu-xref>, then
