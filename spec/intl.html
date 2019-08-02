@@ -87,9 +87,27 @@
         1. Let _r_ be ResolveLocale( %DateTimeFormat%.[[AvailableLocales]], _requestedLocales_, _opt_, %DateTimeFormat%.[[RelevantExtensionKeys]], _localeData_).
         1. Set _dateTimeFormat_.[[Locale]] to _r_.[[locale]].
         1. Set _dateTimeFormat_.[[Calendar]] to _r_.[[ca]].
-        1. Set _dateTimeFormat_.[[HourCycle]] to _r_.[[hc]].
+        1. <del>Set _dateTimeFormat_.[[HourCycle]] to _r_.[[hc]].</del>
+        1. <ins>Let _dataLocale_ be _r_.[[dataLocale]].</ins>
+        1. <ins>Let _dataLocaleData_ be _localeData_.[[&lt;_dataLocale_&gt;]].</ins>
+        1. <ins>Let _hcDefault_ be _dataLocaleData_.[[hourCycle]].</ins>
+        1. <ins>Let _hc_ be _r_.[[hc]].</ins>
+        1. <ins>If _hc_ is *null*, then</ins>
+          1. <ins>Set _hc_ to _hcDefault_.</ins>
+        1. <ins>If _hour12_ is not *undefined*, then</ins>
+          1. <ins>If _hour12_ is *true*, then</ins>
+            1. <ins>If _hcDefault_ is `"h11"` or `"h23"`, then</ins>
+              1. <ins>Set _hc_ to `"h11"`.</ins>
+            1. <ins>Else,</ins>
+              1. <ins>Set _hc_ to `"h12"`.</ins>
+          1. <ins>Else,</ins>
+            1. <ins>Assert: _hour12_ is *false*.</ins>
+            1. <ins>If _hcDefault_ is `"h11"` or `"h23"`, then</ins>
+              1. <ins>Set _hc_ to `"h23"`.</ins>
+            1. <ins>Else,</ins>
+              1. <ins>Set _hc_ to `"h24"`.</ins>
         1. Set _dateTimeFormat_.[[NumberingSystem]] to _r_.[[nu]].
-        1. Let _dataLocale_ be _r_.[[dataLocale]].
+        1. <del>Let _dataLocale_ be _r_.[[dataLocale]].</del>
         1. Let _timeZone_ be ? Get(_options_, `"timeZone"`).
         1. If _timeZone_ is not *undefined*, then
           1. Let _timeZone_ be ? ToString(_timeZone_).
@@ -104,67 +122,60 @@
           1. Let _prop_ be the name given in the Property column of the row.
           1. Let _value_ be ? GetOption(_options_, _prop_, `"string"`, &laquo; the strings given in the Values column of the row &raquo;, *undefined*).
           1. Set _opt_.[[&lt;_prop_&gt;]] to _value_.
-        1. Let _dataLocaleData_ be _localeData_.[[&lt;_dataLocale_&gt;]].
+        1. <del>Let _dataLocaleData_ be _localeData_.[[&lt;_dataLocale_&gt;]].</del>
         1. Let _formats_ be _dataLocaleData_.[[formats]].
         1. Let _matcher_ be ? GetOption(_options_, `"formatMatcher"`, `"string"`, &laquo; `"basic"`, `"best fit"` &raquo;, `"best fit"`).
-        1. If _matcher_ is `"basic"`, then
-          1. Let _bestFormat_ be BasicFormatMatcher(_opt_, _formats_).
-        1. Else,
-          1. Let _bestFormat_ be BestFitFormatMatcher(_opt_, _formats_).
-        1. For each row in <emu-xref href="#table-datetimeformat-components"></emu-xref>, except the header row, in table order, do
-          1. Let _prop_ be the name given in the Property column of the row.
-          1. Let _p_ be _bestFormat_.[[&lt;_prop_&gt;]].
-          1. If _p_ not *undefined*, then
-            1. Set _dateTimeFormat_'s internal slot whose name is the Internal Slot column of the row to _p_.
-        1. If _dateTimeFormat_.[[Hour]] is not *undefined*, then
-          1. Let _hcDefault_ be _dataLocaleData_.[[hourCycle]].
-          1. Let _hc_ be _dateTimeFormat_.[[HourCycle]].
-          1. If _hc_ is *null*, then
-            1. Set _hc_ to _hcDefault_.
-          1. If _hour12_ is not *undefined*, then
-            1. If _hour12_ is *true*, then
-              1. If _hcDefault_ is `"h11"` or `"h23"`, then
-                1. Set _hc_ to `"h11"`.
-              1. Else,
-                1. Set _hc_ to `"h12"`.
-            1. Else,
-              1. Assert: _hour12_ is *false*.
-              1. If _hcDefault_ is `"h11"` or `"h23"`, then
-                1. Set _hc_ to `"h23"`.
-              1. Else,
-                1. Set _hc_ to `"h24"`.
-          1. Set _dateTimeFormat_.[[HourCycle]] to _hc_.
-          1. If _dateTimeformat_.[[HourCycle]] is `"h11"` or `"h12"`, then
-            1. Let _pattern_ be _bestFormat_.[[pattern12]].
-          1. Else,
-            1. Let _pattern_ be _bestFormat_.[[pattern]].
-        1. Else,
-          1. Set _dateTimeFormat_.[[HourCycle]] to *undefined*.
-          1. Let _pattern_ be _bestFormat_.[[pattern]].
-        1. Set _dateTimeFormat_.[[Pattern]] to _pattern_.
+        1. <del>If _matcher_ is `"basic"`, then</del>
+          1. <del>Let _bestFormat_ be BasicFormatMatcher(_opt_, _formats_).</del>
+        1. <del>Else,</del>
+          1. <del>Let _bestFormat_ be BestFitFormatMatcher(_opt_, _formats_).</del>
+        1. <del>For each row in <emu-xref href="#table-datetimeformat-components"></emu-xref>, except the header row, in table order, do</del>
+          1. <del>Let _prop_ be the name given in the Property column of the row.</del>
+          1. <del>Let _p_ be _bestFormat_.[[&lt;_prop_&gt;]].</del>
+          1. <del>If _p_ not *undefined*, then</del>
+            1. <del>Set _dateTimeFormat_'s internal slot whose name is the Internal Slot column of the row to _p_.</del>
+        1. <del>If _dateTimeFormat_.[[Hour]] is not *undefined*, then</del>
+          1. <del>Let _hcDefault_ be _dataLocaleData_.[[hourCycle]].</del>
+          1. <del>Let _hc_ be _dateTimeFormat_.[[HourCycle]].</del>
+          1. <del>If _hc_ is *null*, then</del>
+            1. <del>Set _hc_ to _hcDefault_.</del>
+          1. <del>If _hour12_ is not *undefined*, then</del>
+            1. <del>If _hour12_ is *true*, then</del>
+              1. <del>If _hcDefault_ is `"h11"` or `"h23"`, then</del>
+                1. <del>Set _hc_ to `"h11"`.</del>
+              1. <del>Else,</del>
+                1. <del>Set _hc_ to `"h12"`.</del>
+            1. <del>Else,</del>
+              1. <del>Assert: _hour12_ is *false*.</del>
+              1. <del>If _hcDefault_ is `"h11"` or `"h23"`, then</del>
+                1. <del>Set _hc_ to `"h23"`.</del>
+              1. <del>Else,</del>
+                1. <del>Set _hc_ to `"h24"`.</del>
+          1. <del>Set _dateTimeFormat_.[[HourCycle]] to _hc_.</del>
+          1. <del>If _dateTimeformat_.[[HourCycle]] is `"h11"` or `"h12"`, then</del>
+            1. <del>Let _pattern_ be _bestFormat_.[[pattern12]].</del>
+          1. <del>Else,</del>
+            1. <del>Let _pattern_ be _bestFormat_.[[pattern]].</del>
+        1. <del>Else,</del>
+          1. <del>Set _dateTimeFormat_.[[HourCycle]] to *undefined*.</del>
+          1. <del>Let _pattern_ be _bestFormat_.[[pattern]].</del>
+        1. Set _dateTimeFormat_.[[Pattern]] to <del>_pattern_</del><ins>GetDateTimeFormatPattern(_opt_, _formats_, _hc_)</ins>.
         1. <ins>For each row in <emu-xref href="#table-temporal-patterns"></emu-xref>, except the header row, in table order, do</ins>
           1. <ins>Let _limitedOptions_ be a new Record.</ins>
           1. <ins>Let _fields_ be the list of fields in the Fields column of the row.</ins>
           1. <ins>For each field _field_ of _opts_, do</ins>
             1. <ins>If _field_ is in _fields_, then</ins>
               1. <ins>Set _limitedOptions_.[[&lt;_field_>]] to _opts_.[[&lt;_field_>]].</ins>
-          1. <ins>If _matcher_ is `"basic"`, then</ins>
-            1. <ins>Let _bestFormat_ be BasicFormatMatcher(_limitedOptions_, _formats_).</ins>
-          1. <ins>Else,</ins>
-            1. <ins>Let _bestFormat_ be BestFitFormatMatcher(_limitedOptions_, _formats_).</ins>
-          1. <ins>If _bestFormat_ has any fields that are in _fields_, then</ins>
-            1. <ins>If _bestFormat_ has an [[hour]] field, then</ins>
-              1. <ins>Do the hourCycle dance.</ins>
-            1. <ins>Else,</ins>
-              1. <ins>Let _pattern_ be _bestFormat_.[[pattern]].</ins>
-          1. <ins>Else,</ins>
-            1. <ins>Let _pattern_ be *null*.</ins>
-          1. <ins>Set _dateTimeFormat_'s internal slot whose name is the Pattern column of the row to _pattern_.</ins>
+          1. <ins>Let _bestFormat_ be GetDateTimeFormatPattern(_limitedOptions_, _formats_, _hc_).</ins>
+          1. <ins>If _bestFormat_ does not have any fields that are in _fields_, then</ins>
+            1. <ins>Set _bestFormat_ to *null*.</ins>
+          1. <ins>Set _dateTimeFormat_'s internal slot whose name is the Pattern column of the row to _bestFormat_.</ins>
         1. Return _dateTimeFormat_.
       </emu-alg>
 
+      <ins class="block">
       <emu-table id="table-temporal-patterns">
-        <emu-caption><ins>Supported fields for temporal patterns</ins></emu-caption>
+        <emu-caption>Supported fields for temporal patterns</emu-caption>
         <table class="real-table">
           <thead>
             <tr>
@@ -178,23 +189,8 @@
           </tr>
         </table>
       </emu-table>
+      </ins>
 
-    </emu-clause>
-
-    <emu-clause id="sec-formatnumberstring" aoid="IsTemporalObject">
-      <h1><ins>IsTemporalObject ( _value_ )</ins></h1>
-
-      <p>
-        The IsTemporalObject abstract operation is called with argument _value_, and performs the following steps:
-      </p>
-
-      <emu-alg>
-        1. If Type(_value_) is not Object, then
-          1. Return *false*.
-        1. If _value_ is not a CivilDate, CivilTime, CivilDateTime or ZonedDateTime object:
-          1. Return *false*.
-        1. Return *true*.
-      </emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-datetime-format-functions">
@@ -267,21 +263,21 @@
           1. If _p_ is `"literal"`, then
             1. Add new part record { [[Type]]: `"literal"`, [[Value]]: _patternPart_.[[Value]] } as a new element of the list _result_.
           1. If _p_ matches a Property column of the row in <emu-xref href="#table-datetimeformat-components"></emu-xref>, then
-            1. Let _f_ be the value of _dateTimeFormat_'s internal slot whose name is the Internal Slot column of the matching row.
+            1. Let _f_ be <del>the value of _dateTimeFormat_'s internal slot whose name is the Internal Slot column of the matching row</del><ins>_pattern_.[[&lt;_p_>]]</ins>.
             1. Let _v_ be the value of _tm_'s field whose name is the Internal Slot column of the matching row.
             1. If _p_ is `"year"` and _v_ ≤ 0, let _v_ be 1 - _v_.
             1. If _p_ is `"month"`, increase _v_ by 1.
-            1. If _p_ is `"hour"` and _dateTimeFormat_.[[HourCycle]] is `"h11"` or `"h12"`, then
+            1. If _p_ is `"hour"` and <del>_dateTimeFormat_.[[HourCycle]]</del><ins>_pattern_.[[hourCycle]]</ins> is `"h11"` or `"h12"`, then
               1. Let _v_ be _v_ modulo 12.
-              1. If _v_ is 0 and _dateTimeFormat_.[[HourCycle]] is `"h12"`, let _v_ be 12.
-            1. If _p_ is `"hour"` and _dateTimeFormat_.[[HourCycle]] is `"h24"`, then
+              1. If _v_ is 0 and <del>_dateTimeFormat_.[[HourCycle]]</del><ins>_pattern_.[[hourCycle]]</ins> is `"h12"`, let _v_ be 12.
+            1. If _p_ is `"hour"` and <del>_dateTimeFormat_.[[HourCycle]]</del><ins>_pattern_.[[hourCycle]]</ins> is `"h24"`, then
               1. If _v_ is 0, let _v_ be 24.
             1. If _f_ is `"numeric"`, then
               1. Let _fv_ be FormatNumber(_nf_, _v_).
             1. Else if _f_ is `"2-digit"`, then
               1. Let _fv_ be FormatNumber(_nf2_, _v_).
               1. If the `length` property of _fv_ is greater than 2, let _fv_ be the substring of _fv_ containing the last two characters.
-            1. Else if _f_ is `"narrow"`, `"short"`, or `"long"`, then let _fv_ be a String value representing _f_ in the desired form; the String value depends upon the implementation and the effective locale and calendar of _dateTimeFormat_. If _p_ is `"month"`, then the String value may also depend on whether _dateTimeFormat_ has a [[Day]] internal slot. If _p_ is `"timeZoneName"`, then the String value may also depend on the value of the [[inDST]] field of _tm_. If _p_ is `"era"`, then the String value may also depend on whether _dateTimeFormat_ has a [[Era]] internal slot and if the implementation does not have a localized representation of _f_, then use _f_ itself.
+            1. Else if _f_ is `"narrow"`, `"short"`, or `"long"`, then let _fv_ be a String value representing _f_ in the desired form; the String value depends upon the implementation and the effective locale and calendar of _dateTimeFormat_. If _p_ is `"month"`, then the String value may also depend on whether _dateTimeFormat_ has a [[Day]] internal slot.<!--XXX--> If _p_ is `"timeZoneName"`, then the String value may also depend on the value of the [[inDST]] field of _tm_. If _p_ is `"era"`, then the String value may also depend on whether _dateTimeFormat_ has a [[Era]] internal slot and if the implementation does not have a localized representation of _f_, then use _f_ itself.
             1. Add new part record { [[Type]]: _p_, [[Value]]: _fv_ } as a new element of the list _result_.
           1. Else if _p_ is equal to `"ampm"`, then
             1. Let _v_ be _tm_.[[hour]].
@@ -291,7 +287,7 @@
               1. Let _fv_ be an implementation and locale dependent String value representing `"ante meridiem"`.
             1. Add new part record { [[Type]]: `"dayPeriod"`, [[Value]]: _fv_ } as a new element of the list _result_.
           1. Else,
-            1. Let _unknown_ be an implementation-, locale-, and numbering system-dependent String based on _x_ and _p_.
+            1. Let _unknown_ be an implementation-, locale-, and numbering system-dependent String based on <del>_x_</del><ins>_tm_</ins> and _p_.
             1. Append a new Record { [[Type]]: `"unknown"`, [[Value]]: _unknown_ } as the last element of _result_.
         1. Return _result_.
       </emu-alg>
@@ -342,8 +338,51 @@
           1. Increment _n_ by 1.
         1. Return _result_.
       </emu-alg>
-
     </emu-clause>
+
+    <ins class="block">
+    <emu-clause id="sec-formatnumberstring" aoid="IsTemporalObject">
+      <h1>IsTemporalObject ( _value_ )</h1>
+
+      <p>
+        The IsTemporalObject abstract operation is called with argument _value_, and performs the following steps:
+      </p>
+
+      <emu-alg>
+        1. If Type(_value_) is not Object, then
+          1. Return *false*.
+        1. If _value_ is not a CivilDate, CivilTime, CivilDateTime or ZonedDateTime object:
+          1. Return *false*.
+        1. Return *true*.
+      </emu-alg>
+    </emu-clause>
+    </ins>
+
+    <ins class="block">
+    <emu-clause id="sec-getdatetimeformatpattern" aoid="GetDateTimeFormatPattern">
+      <h1>GetDateTimeFormatPattern ( _opt_, _formats_, _hc_ )</h1>
+
+      <p>
+        The abstract operation GetDateTimeFormatPattern accepts the arguments _opt_ (which must be a record), _formats_ (a List of records), and _hc_ (one of `"h11"`, `"h12"`, `"h23"`, and `"h24"`). It returns one of the records from _formats_. This abstract operation functions as follows:
+      </p>
+
+      <emu-alg>
+        1. If _matcher_ is `"basic"`, then
+          1. Let _bestFormat_ be BasicFormatMatcher(_opt_, _formats_).
+        1. Else,
+          1. Let _bestFormat_ be BestFitFormatMatcher(_opt_, _formats_).
+        1. If _bestFormat_.[[hour]] is not *undefined*, then
+          1. If _hc_ is `"h11"` or `"h12"`, then
+            1. Set _bestFormat_.[[pattern]] to _bestFormat_.[[pattern12]].
+          1. Remove the [[pattern12]] field from _bestFormat_.
+          1. Set _bestFormat_.[[hourCycle]] to _hc_.
+        1. Else,
+          1. Set _bestFormat_.[[hourCycle]] to *undefined*.
+        1. Return _bestFormat_.
+      </emu-alg>
+    </emu-clause>
+    </ins>
+  </emu-clause>
 
   <emu-clause id="sec-properties-of-intl-datetimeformat-prototype-object">
     <h1>Properties of the Intl.DateTimeFormat Prototype Object</h1>
@@ -369,4 +408,33 @@
 
   </emu-clause>
 
+  <emu-clause id="sec-properties-of-intl-datetimeformat-instances">
+    <h1>Properties of Intl.DateTimeFormat Instances</h1>
+
+    <p>
+      Intl.DateTimeFormat instances inherit properties from %DateTimeFormatPrototype%.
+    </p>
+
+    <p>
+      Intl.DateTimeFormat instances have an [[InitializedDateTimeFormat]] internal slot.
+    </p>
+
+    <p>
+      Intl.DateTimeFormat instances also have several internal slots that are computed by the constructor:
+    </p>
+
+    <ul>
+      <li>[[Locale]] is a String value with the language tag of the locale whose localization is used for formatting.</li>
+      <li>[[Calendar]] is a String value with the `"type"` given in Unicode Technical Standard 35 for the calendar used for formatting.</li>
+      <li>[[NumberingSystem]] is a String value with the `"type"` given in Unicode Technical Standard 35 for the numbering system used for formatting.</li>
+      <li>[[TimeZone]] is a String value with the IANA time zone name of the time zone used for formatting.</li>
+      <li><del>[[Weekday]], [[Era]], [[Year]], [[Month]], [[Day]], [[Hour]], [[Minute]], [[Second]], [[TimeZoneName]] are each either *undefined*, indicating that the component is not used for formatting, or one of the String values given in <emu-xref href="#table-datetimeformat-components"></emu-xref>, indicating how the component should be presented in the formatted output.</del></li>
+      <li><del>[[HourCycle]] is a String value indicating whether the 12-hour format (`"h11"`, `"h12"`) or the 24-hour format (`"h23"`, `"h24"`) should be used. `"h11"` and `"h23"` start with hour 0 and go up to 11 and 23 respectively. `"h12"` and `"h24"` start with hour 1 and go up to 12 and 24. [[HourCycle]] is only used when [[Hour]] is not *undefined*.</del></li>
+      <li>[[Pattern]]<ins>, [[CivilDatePattern]], … are</ins> <del>is a String value</del><ins>records containing at least a [[pattern]] field</ins> as described in <emu-xref href="#sec-intl.datetimeformat-internal-slots"></emu-xref>.</li>
+    </ul>
+
+    <p>
+      Finally, Intl.DateTimeFormat instances have a [[BoundFormat]] internal slot that caches the function returned by the format accessor (<emu-xref href="#sec-intl.datetimeformat.prototype.format"></emu-xref>).
+    </p>
+  </emu-clause>
 </emu-clause>
