@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<meta charset="utf8" />
+
+<emu-clause id="sec-temporal-duration">
+    <h1>Duration Objects</h1>
+    <p>
+    Duration objects describe the difference between two like Date, Time or DateTime objects.
+    They are only created via the <i>.minus()</i> methods of these objects.
+    </p>
+    <ul>
+        <li>The <i>.minus()</i> operation on Date objects, creates a Duration that only has years, months and days properties.</li>
+        <li>The <i>.minus()</i> operation on Time objects, creates a Duration that only has hours, minutes, seconds, milliseconds, microseconds and nanoseconds properties.</li>
+        <li>The <i>.minus()</i> operation on Instant objects, creates a Duration like that of Time objects.</li>
+        <li>The <i>.minus()</i> operation on DateTime objects , creates a Duration that has all member properties, except if passed an option indicating it should be created as a Time object or Date object.</li>
+    </ul>
+    <p>
+    When created, the smaller units are combined into full larger units (i.e. 1000 milliseconds are recorded as 1 seconds) up to the largest available unit.
+    The result of this is that the largest available unit may have a larger value in some circumstances. Durations created from Time objects may have an hours property larger than 24, which would be invalid for a Duration created from a DateTime object.
+    </p>
+    <p>
+    When a Duration is applied to an object via the <i>.plus()</i> method, only the relevant fields are taken into consideration.
+    Such that a Date objects receiving a DateTime duration will entirely ignore the values of the hours and below fields. As a consequence
+    A Date object receiving a Duration from the <i>.minus()</i> of Time objects, will be a no-op, since it will not have any relevant fields even in the case where the hours are larger than 24 which would equate
+    </p>
+    <p>
+    All properties of Durations are positive integers.
+    When coerced from a plain object that looks like a Duration the following rules are applied:
+    <ol>
+        <li>All fields whose names match those of a Duration are extracted.</li>
+        <li>Each value is coerced:</li>
+        <ul>
+            <li>If the field is numeric it is rounded to the nearest integer.</li>
+            <li>If the field is non-numeric it is set to undefined.</li>
+        </ul>
+        <li>A Duration is created with the available values.</li>
+        <li>If one of years, months or days is numeric, the others are set to 0.</li>
+        <li>If one of hours, minutes, seconds, milliseconds, microseconds or nanoseconds is numeric, the others are set to 0.</li>
+        <li>The Duration is normalized through adding/subtracting values of adjacent units.</li>
+        <li>If the resulting Duration has a negative value that value is converted to its absolute value.</li>
+    </ol>
+    </p>
+    <p>
+    Duration objects have the following (optional) properties:
+    </p>
+    <ul>
+        <li>years</li>
+        <li>months</li>
+        <li>days</li>
+        <li>hours</li>
+        <li>minutes</li>
+        <li>seconds</li>
+        <li>milliseconds</li>
+        <li>microseconds</li>
+        <li>nanoseconds</li>
+    </ul>
+</emu-clause>
