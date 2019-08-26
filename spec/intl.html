@@ -183,10 +183,24 @@
               <th>Fields</th>
             </tr>
           </thead>
-          <tr>
-            <th>[[CivilDatePattern]]</td>
-            <td>[[weekday]], [[era]], [[year]], [[month]], [[day]]</td>
-          </tr>
+          <tbody>
+            <tr>
+              <th>[[CivilDatePattern]]</td>
+              <td>[[weekday]], [[era]], [[year]], [[month]], [[day]]</td>
+            </tr>
+            <tr>
+              <th>[[CivilTimePattern]]</td>
+              <td>[[hour]], [[minute]], [[second]]</td>
+            </tr>
+            <tr>
+              <th>[[CivilDateTimePattern]]</td>
+              <td>[[weekday]], [[era]], [[year]], [[month]], [[day]], [[hour]], [[minute]], [[second]]</td>
+            </tr>
+            <tr>
+              <th>[[ZonedDateTime]]</td>
+              <td>[[weekday]], [[era]], [[year]], [[month]], [[day]], [[hour]], [[minute]], [[second]]</td>
+            </tr>
+          </tbody>
         </table>
       </emu-table>
       </ins>
@@ -235,7 +249,7 @@
             1. <ins>Let _tm_ be { [[weekday]]: _date_.dayOfWeek, [[year]]: _date_.year, [[month]]: _date_.month, [[day]]: _date_.day, [[hour]]: _date_.hour, [[minute]]: _date_.minute, [[second]]: _date_.second }.</ins>
           1. <ins>Else if _date_ is a ZonedDateTime object, then</ins>
             1. <ins>Let _pattern_ be _dateTimeFormat_.[[ZonedDateTimePattern]].</ins>
-            1. Let _offsetDateTime_ be _date_.getOffsetDateTime().
+            1. <ins>Let _offsetDateTime_ be _date_.getOffsetDateTime().</ins>
             1. <ins>Let _tm_ be { [[weekday]]: _offsetDateTime_.dayOfWeek, [[year]]: _offsetDateTime_.year, [[month]]: _offsetDateTime_.month, [[day]]: _offsetDateTime_.day, [[hour]]: _offsetDateTime_.hour, [[minute]]: _offsetDateTime_.minute, [[second]]: _offsetDateTime_.second }.</ins>
           1. <ins>If _pattern_ is *null*, throw a *TypeError* exception.</ins>
         1. <ins>Else,</ins>
@@ -277,7 +291,7 @@
             1. Else if _f_ is `"2-digit"`, then
               1. Let _fv_ be FormatNumber(_nf2_, _v_).
               1. If the `length` property of _fv_ is greater than 2, let _fv_ be the substring of _fv_ containing the last two characters.
-            1. Else if _f_ is `"narrow"`, `"short"`, or `"long"`, then let _fv_ be a String value representing _f_ in the desired form; the String value depends upon the implementation and the effective locale and calendar of _dateTimeFormat_. If _p_ is `"month"`, then the String value may also depend on whether _dateTimeFormat_ has a [[Day]] internal slot.<!--XXX--> If _p_ is `"timeZoneName"`, then the String value may also depend on the value of the [[inDST]] field of _tm_. If _p_ is `"era"`, then the String value may also depend on whether _dateTimeFormat_ has a [[Era]] internal slot and if the implementation does not have a localized representation of _f_, then use _f_ itself.
+            1. Else if _f_ is `"narrow"`, `"short"`, or `"long"`, then let _fv_ be a String value representing _f_ in the desired form; the String value depends upon the implementation and the effective locale and calendar of _dateTimeFormat_. If _p_ is `"month"`, then the String value may also depend on whether <del>_dateTimeFormat_ has a [[Day]]</del><ins>_pattern_ has a [[day]]</ins> internal slot. If _p_ is `"timeZoneName"`, then the String value may also depend on the value of the [[inDST]] field of _tm_. If _p_ is `"era"`, then the String value may also depend on whether <del>_dateTimeFormat_ has a [[Era]]</del><ins>_pattern_ has a [[era]]</ins> internal slot and if the implementation does not have a localized representation of _f_, then use _f_ itself.
             1. Add new part record { [[Type]]: _p_, [[Value]]: _fv_ } as a new element of the list _result_.
           1. Else if _p_ is equal to `"ampm"`, then
             1. Let _v_ be _tm_.[[hour]].
@@ -406,6 +420,136 @@
       </emu-alg>
     </emu-clause>
 
+    <emu-clause id="sec-intl.datetimeformat.prototype.resolvedoptions">
+      <h1>Intl.DateTimeFormat.prototype.resolvedOptions ()</h1>
+
+      <p>
+        This function provides access to the locale and formatting options computed during initialization of the object.
+      </p>
+
+      <emu-alg>
+        1. Let _dtf_ be *this* value.
+        1. If Type(_dtf_) is not Object, throw a *TypeError* exception.
+        1. Let _dtf_ be ? UnwrapDateTimeFormat(_dtf_).
+        1. Let _options_ be ! ObjectCreate(%ObjectPrototype%).
+        1. For each row of <emu-xref href="#table-datetimeformat-resolvedoptions-properties"></emu-xref>, except the header row, in table order, do
+          1. Let _p_ be the Property value of the current row.
+          1. If _p_ is `"hour12"`, then
+            1. Let _hc_ be _dtf_.<del>[[HourCycle]]</del><ins>[[Pattern]].[[hourCycle]]</ins>.
+            1. If _hc_ is `"h11"` or `"h12"`, let _v_ be *true*.
+            1. Else if, _hc_ is `"h23"` or `"h24"`, let _v_ be *false*.
+            1. Else, let _v_ be *undefined*.
+          1. Else,
+            1. <ins>If the Location value of the current row is ~object~, then</ins>
+              1. Let _v_ be the value of _dtf_'s internal slot whose name is the Internal Slot value of the current row.
+            1. <ins>Else,</ins>
+              1. <ins>Assert: the Location value of the current row is ~pattern~.</ins>
+              1. <ins>Let _v_ be the value of _dtf_.[[Pattern]]'s internal slot whose name is the Internal Slot value of the current row.</ins>
+          1. If _v_ is not *undefined*, then
+            1. Perform ! CreateDataPropertyOrThrow(_options_, _p_, _v_).
+        1. Return _options_.
+      </emu-alg>
+
+      <emu-table id="table-datetimeformat-resolvedoptions-properties">
+        <emu-caption>Resolved Options of DateTimeFormat Instances</emu-caption>
+        <table class="real-table">
+          <thead>
+            <tr>
+              <th>Property</th>
+              <th><ins>Location</ins></th>
+              <th>Internal Slot</th>
+            </tr>
+          </thead>
+          <tr>
+            <td>`"locale"`</td>
+            <td><ins>~object~</ins></td>
+            <td>[[Locale]]</td>
+          </tr>
+          <tr>
+            <td>`"calendar"`</td>
+            <td><ins>~object~</ins></td>
+            <td>[[Calendar]]</td>
+          </tr>
+          <tr>
+            <td>`"numberingSystem"`</td>
+            <td><ins>~object~</ins></td>
+            <td>[[NumberingSystem]]</td>
+          </tr>
+          <tr>
+            <td>`"timeZone"`</td>
+            <td><ins>~object~</ins></td>
+            <td>[[TimeZone]]</td>
+          </tr>
+          <tr>
+            <td>`"hourCycle"`</td>
+            <td><ins>~pattern~</ins></td>
+            <td><del>[[HourCycle]]</del><ins>[[hourCycle]]</ins></td>
+          </tr>
+          <tr>
+            <td>`"hour12"`</td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>`"weekday"`</td>
+            <td><ins>~pattern~</ins></td>
+            <td><del>[[Weekday]]</del><ins>[[weekday]]</ins></td>
+          </tr>
+          <tr>
+            <td>`"era"`</td>
+            <td><ins>~pattern~</ins></td>
+            <td><del>[[Era]]</del><ins>[[era]]</ins></td>
+          </tr>
+          <tr>
+            <td>`"year"`</td>
+            <td><ins>~pattern~</ins></td>
+            <td><del>[[Year]]</del><ins>[[year]]</ins></td>
+          </tr>
+          <tr>
+            <td>`"month"`</td>
+            <td><ins>~pattern~</ins></td>
+            <td><del>[[Month]]</del><ins>[[month]]</ins></td>
+          </tr>
+          <tr>
+            <td>`"day"`</td>
+            <td><ins>~pattern~</ins></td>
+            <td><del>[[Day]]</del><ins>[[day]]</ins></td>
+          </tr>
+          <tr>
+            <td>`"hour"`</td>
+            <td><ins>~pattern~</ins></td>
+            <td><del>[[Hour]]</del><ins>[[hour]]</ins></td>
+          </tr>
+          <tr>
+            <td>`"minute"`</td>
+            <td><ins>~pattern~</ins></td>
+            <td><del>[[Minute]]</del><ins>[[minute]]</ins></td>
+          </tr>
+          <tr>
+            <td>`"second"`</td>
+            <td><ins>~pattern~</ins></td>
+            <td><del>[[Second]]</del><ins>[[second]]</ins></td>
+          </tr>
+          <tr>
+            <td>`"timeZoneName"`</td>
+            <td><ins>~pattern~</ins></td>
+            <td><del>[[TimeZoneName]]</del><ins>[[timeZoneName]]</ins></td>
+          </tr>
+        </table>
+      </emu-table>
+
+      <p>
+        For web compatibility reasons, if the property hourCycle is set, the hour12 property should be set to *true* when hourCycle is `"h11"` or `"h12"`, or to *false* when hourCycle is `"h23"` or `"h24"`.
+      </p>
+
+      <emu-note>
+        In this version of the ECMAScript 2020 Internationalization API, the timeZone property will be the name of the default time zone if no timeZone property was provided in the options object provided to the Intl.DateTimeFormat constructor. The first edition left the timeZone property *undefined* in this case.
+      </emu-note>
+
+      <emu-note>
+        For compatibility with versions prior to the fifth edition, the `"hour12"` property is set in addition to the `"hourCycle"` property.
+      </emu-note>
+    </emu-clause>
   </emu-clause>
 
   <emu-clause id="sec-properties-of-intl-datetimeformat-instances">
