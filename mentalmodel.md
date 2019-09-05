@@ -4,23 +4,23 @@ The temporal proposal works within a specific mental model of objects. These rep
 
 ```mermaid
 graph TB
+  timezone((TimeZone))
   instant((Instant))
-    offset((OffsetDateTime))
     zoned((ZonedDateTime))
-      datetime((CivilDateTime))
-      time((CivilTime))
-      date((CivilDate))
-      yearmonth((CivilYearMonth))
-      monthday((CivilMonthDay))
-      
-  instant --- offset
-  instant --- zoned
-  offset --- datetime
-  zoned --- datetime
-  datetime --- date
-  datetime --- time
-  date --- yearmonth
-  date --- monthday
+      datetime((DateTime))
+      time((Time))
+      date((Date))
+      yearmonth((YearMonth))
+      monthday((MonthDay))
+  duration((Duration))
+
+  zoned --> instant
+  zoned --> timezone
+  zoned --> datetime
+  datetime --> date
+  datetime --> time
+  date --> yearmonth
+  date --> monthday
 ```
 ![Mental Model Diagram](./objectrelation.png)
 
