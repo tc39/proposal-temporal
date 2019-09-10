@@ -77,3 +77,55 @@ All temporal objects should be information stable. All methods that increase or 
 
 Negative durations make no sense. Therefore there is a need to have both a `plus` and a `minus` method for date/time arithmetics.
 Only integer units are supported in durations and arithmetic. Expressing fractions requires the use of smaller units.
+
+### The properties on Instant should be getXXX() methods
+
+This comes out of [#139](https://github.com/tc39/proposal-temporal/issues/139). It's actually true that the epochNanoseconds and their ilk aren't really the value of the Instant and that the value of the Instant shouldn't be exposed. There is however a clear relation between an Instant and the epoch, so that `fromEpochNanoseconds()` and `getEpochNanoseconds()` should be the way forward.
+
+### TimeZone objects should be a thing
+
+There have been multiple requests that there is an interface to the time-zone data directly. For that reason we have introduced TimeZone objects. They stringify to the IANA-name of the timezone or the Offset-String in case of a pure offset.
+
+### OffsetDateTime
+
+Since `TimeZone` objects are now a thing and have all the information necessary to distinguish between pure offsets and actual IANA time-zones the distinction between `OffsetDateTime` and `ZonedDateTime` has become meaningless. Therefore we are dropping `OffsetDateTime`.
+
+### Duration strings
+
+`Duration` objects stringify to ISO8601 duration strings and can also be created from such strings. Which makes it easier to work with durations. Any place a duration can be passed into an API either an actual `Duration` object, or a POJO with the same fields, or an ISO8601 duration string can be passed.
+
+### Add `Local` namespace object
+
+Issue [#148](https://github.com/tc39/proposal-temporal/issues/148) gave some valuable feedback. A big part of that was that for most cases one would start off the current date and time.
+
+At the same time, we acknowledge the need for security and the need to eliminate leaking methods such as getting the current date/time.
+
+For that reason we have the `Local` namespace to encapsulate all of these.
+
+```javascript
+Local.instant = ()=>Instant.fromEpochNanoseconds(<lt;epoch nanos from system&gt;);
+Local.timeZone = ()=>TimeZone.for(&lt;current-timezone&gt;);
+Local.zoneDateTime = ()=>Local.Instant.withZone(Local.timeZone());
+Local.dateTime = ()=>Local.zonedDateTime().getDateTime();
+Local.date = ()=>Local.dateTime().getDate();
+Local.time = ()=>Local.dateTime().getTime();
+Local.yearMonth = ()=>Local.date().getYearMonth();
+Local.monthDay = ()=>Local.date().getMonthDay();
+```
+
+Which means the only actually relevant exposing methods are `Local.instant()` and `Local.timeZone()`. Which are well defined places that can be replaced for secure environments.
+
+What isn't exposed is any exfiltration of system data via constructors or via things on the individual Temporal classes. We believe this to be a sensible compromise between usability needs and security concerns.
+
+### Object comparisons
+
+We have added:
+
+ * `Instant.compare(left, right)` - compares IntantLike objects (Instant & ZonedDateTime) by their Intant-Value
+ * `DateTime.compare(left, right)` - compare DateTimeLike objects by year, month, day, hour, minute, second, ...
+ * `Date.compare(left, right)` - compare DateLike objects by year, month, day
+ * `Time.compare(left, right)` - compare TimeLike objects by hour, minute, second, ...
+
+These functions are able to be plugged into `Array.prototype.sort()` permitting to sort lists.
+
+For `ZonedDateTime` object both `Instant.compare(left, right)` & `DateTime.compare(left, right)` can be used, allowing for sorting either in terms of the absolute point in time or the date/time fields (ignoring the timezone).
