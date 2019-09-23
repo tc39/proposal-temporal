@@ -13,6 +13,8 @@ Provides standard objects and functions for working with dates and times.
 
 This proposal is currently stage 2
 
+***NOTE (2019-0923): The most accurate up-to-date state of the discussion is currently the code of the [PolyFill](https://github.com/std-proposal/temporal/). The next week will be spent updating documentation and spec-text to match that!***
+
 [Proposed Spec Text is viewable here.](https://tc39.github.io/proposal-temporal/spec-rendered)  
 (Note, this is a work in progress.)
 
