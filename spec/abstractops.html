@@ -1,0 +1,201 @@
+<!doctype html>
+<meta charset="utf8">
+
+<emu-clause id=sec-temporal-abstract-ops>
+  <h1>Abstract operations</h1>
+
+  <emu-clause id=sec-temporal-TemporalToInteger aoid=TemporalToInteger>
+    <h1>TemporalToInteger ( _value_ )</h1>
+    <p>Take _value_ and turn it into an integer. <mark>TODO: how.</mark></p>
+  </emu-clause>
+
+  <emu-clause id=sec-temporal-daysinmonth aoid=DaysInMonth>
+    <h1>DaysInMonth ( _year_, _month_ )</h1>
+    <emu-alg>
+      1. Assert: _month_ is an integer, _month_ &geq; 1, and _month_ &leq; 12.
+      1. If _month_ is 1, 3, 5, 7, 8, 10, or 12, return 31.
+      1. If _month_ is 4, 6, 9, or 11, return 30.
+      1. If _year_ modulo 4 &ne; 0, return 28.
+      1. If _year_ modulo 400 = 0, return 29.
+      1. If _year_ modulo 100 = 0, return 28.
+      1. Return 29.
+    </emu-alg>
+  </emu-clause>
+
+  <emu-clause id=sec-temporal-ToDayOfWeek aoid=ToDayOfWeek>
+    <h1>ToDayOfWeek ( _year_, _month_, _day_ )</h1>
+    <emu-alg>
+      1. Let _date_ be the date given by _year_, _month_, and _day_.
+      1. Return _date_'s day of the week according to ISO-8601.
+    </emu-alg>
+    <emu-note>Monday is 1 and Sunday is 7.</emu-note>
+  </emu-clause>
+
+  <emu-clause id=sec-temporal-ToDayOfYear aoid=ToDayOfYear>
+    <h1>ToDayOfYear ( _year_, _month_, _day_ )</h1>
+    <emu-alg>
+      1. Let _date_ be the date given by _year_, _month_, and _day_.
+      1. Return _date_'s ordinal date in the year according to ISO-8601.
+    </emu-alg>
+  </emu-clause>
+
+  <emu-clause id=sec-temporal-ToWeekOfYear aoid=ToWeekOfYear>
+    <h1>ToWeekOfYear ( _year_, _month_, _day_ )</h1>
+    <emu-alg>
+      1. Let _date_ be the date given by _year_, _month_, and _day_.
+      1. Return _date_'s week number according to ISO-8601.
+    </emu-alg>
+    <emu-note>Beware that dates at the begining of a year may be part of a week from the preceding year, and dates at the end of a year may be part of a week at the beginning of the next year, as the first week of any year is defined as the week that contains the first Thursday of the year.</emu-note>
+  </emu-clause>
+
+  <emu-clause id=sec-temporal-ToDurationLike aoid=ToDurationLike>
+    <h1>ToDurationLike ( _duration_ )</h1>
+    <emu-alg>
+      1. Let _result_ be {
+        [[Years]]: *undefined*,
+        [[Months]]: *undefined*,
+        [[Days]]: *undefined*,
+        [[Hours]]: *undefined*,
+        [[Minutes]]: *undefined*,
+        [[Seconds]]: *undefined*,
+        [[Milliseconds]]: *undefined*,
+        [[Microseconds]]: *undefined*,
+        [[Nanoseconds]]: *undefined*
+        }.
+      1. If Type(_duration_) is Undefined or Null, then
+        1. Return _result_.
+      1. <mark>TODO: Handle strings?</mark>
+      1. If Type(_duration_) is not Object, then
+        1. Throw a *TypeError* exception.
+      1. For each row of <emu-xref href="#table-temporal-durationlike-properties"></emu-xref>, except the header row, in table order, do
+        1. Let _property_ be the Property value of the current row.
+        1. Let _value_ be ? TemporalToInteger(? Get(_duration_, _property_)).
+        1. Set _result_'s internal slot whose name is the Internal Slot value of the current row to _value_.
+      1. Return _result_.
+    </emu-alg>
+
+    <emu-table id="table-temporal-durationlike-properties">
+      <emu-caption>Properties of a DurationLike</emu-caption>
+      <table class="real-table">
+        <thead>
+          <tr>
+            <th>Internal Slot</th>
+            <th>Property</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>[[Days]]</td>
+            <td>`"days"`</td>
+          </tr>
+          <tr>
+            <td>[[Hours]]</td>
+            <td>`"hours"`</td>
+          </tr>
+          <tr>
+            <td>[[Microseconds]]</td>
+            <td>`"microseconds"`</td>
+          </tr>
+          <tr>
+            <td>[[Milliseconds]]</td>
+            <td>`"milliseconds"`</td>
+          </tr>
+          <tr>
+            <td>[[Minutes]]</td>
+            <td>`"minutes"`</td>
+          </tr>
+          <tr>
+            <td>[[Months]]</td>
+            <td>`"months"`</td>
+          </tr>
+          <tr>
+            <td>[[Nanoseconds]]</td>
+            <td>`"nanoseconds"`</td>
+          </tr>
+          <tr>
+            <td>[[Seconds]]</td>
+            <td>`"seconds"`</td>
+          </tr>
+          <tr>
+            <td>[[Years]]</td>
+            <td>`"years"`</td>
+          </tr>
+        </tbody>
+      </table>
+    </emu-table>
+  </emu-clause>
+
+  <emu-clause id=sec-temporal-ToDateLike aoid=ToDateLike>
+    <h1>ToDateLike ( _date_ )</h1>
+    <emu-alg>
+      1. Let _result_ be {
+        [[Year]]: *undefined*,
+        [[Month]]: *undefined*,
+        [[Day]]: *undefined*,
+        }.
+      1. If Type(_date_) is Undefined or Null, then
+        1. Return _result_.
+      1. <mark>TODO: Handle strings?</mark>
+      1. If Type(_date_) is not Object, then
+        1. Throw a *TypeError* exception.
+      1. For each row of <emu-xref href="#table-temporal-datelike-properties"></emu-xref>, except the header row, in table order, do
+        1. Let _property_ be the Property value of the current row.
+        1. Let _value_ be ? TemporalToInteger(? Get(_date_, _property_)).
+        1. Set _result_'s internal slot whose name is the Internal Slot value of the current row to _value_.
+      1. Return _result_.
+    </emu-alg>
+
+    <emu-table id="table-temporal-datelike-properties">
+      <emu-caption>Properties of a DateLike</emu-caption>
+      <table class="real-table">
+        <thead>
+          <tr>
+            <th>Internal Slot</th>
+            <th>Property</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>[[Day]]</td>
+            <td>`"day"`</td>
+          </tr>
+          <tr>
+            <td>[[Month]]</td>
+            <td>`"month"`</td>
+          </tr>
+          <tr>
+            <td>[[Year]]</td>
+            <td>`"year"`</td>
+          </tr>
+        </tbody>
+      </table>
+    </emu-table>
+  </emu-clause>
+
+  <emu-clause id=sec-temporal-ValidateDate aoid=ValidateDate>
+    <h1>ValidateDate ( _y_, _m_, _d_ )</h1>
+    <emu-alg>
+      1. Assert: _y_, _m_, and _d_ are integer Number values.
+      1. If _m_ &lt; 1 or _m_ &gt; 12, then
+        1. Return *false*.
+      1. Let _maxDay_ be DaysInMonth(_y_, _m_).
+      1. If _d_ &lt; 1 or _d_ &gt; _maxDay_, then
+        1. Return *false*.
+      1. Return *true*.
+    </emu-alg>
+  </emu-clause>
+
+  <emu-clause id=sec-temporal-PadYear aoid=PadYear>
+    <h1>PadYear ( _y_ )</h1>
+    <emu-alg>
+      1. Assert: _y_ is an integer Number value.
+      1. If _y_ &gt; 999 and _y_ &lt; 9999, then
+        1. <mark>TODO: Why is this different?</mark>
+        1. <mark>TODO: Should be &le; 9999?</mark>
+        1. Return _y_ formatted as a four-digit decimal number, padded to the left with a zero if necessary.
+      1. If _y_ &ge; 0, let _yearSign_ be `"+"`; otherwise, let _yearSign_ be `"-"`.
+      1. Let _year_ be abs(_y_), formatted as a decimal number.
+      1. Return the string-concatenation of _yearSign_ and _year_.
+    </emu-alg>
+  </emu-clause>
+</emu-clause>

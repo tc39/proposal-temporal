@@ -297,6 +297,10 @@ The `.dayOfYear` property represents the ordinal day of the Gregorian year accor
 
 The `.weekOfYear` property represents the ISO week-number. Beware that dates at the begining of a year may be part of a week from the preceding year, and dates at the end of a year may be part of a week at the beginning of the next year, as the first week of any year is defined as the week that contains the first Thursday of the week.
 
+#### CivilDate.prototype.getYearMonth() : YearMonth
+
+#### CivilDate.prototype.getMonthDay() : MonthDay
+
 #### CivilDate.prototype.plus(value: [DurationLike](#DurationLike)) : [CivilDate](#CivilDate)
 
 Creates a new `CivilDate` object by adding values to its members.
@@ -309,7 +313,7 @@ The algorithm is such that:
   2. the range of `days` is ensured to be between 1 and 29-31 depending on the month by adjusting `month`
   3. the range of `months` is ensured to be between 1 and 12 by adjusting the `years`.
 
-#### CivilDate.prototype.plus(value: [DurationLike](#DurationLike)) : [CivilDate](#CivilDate)
+#### CivilDate.prototype.minus(value: [DurationLike](#DurationLike)) : [CivilDate](#CivilDate)
 
 Creates a new `CivilDate` object by subtracting values to its members.
 The specified values must be numeric if specified. The specified values
@@ -321,17 +325,13 @@ value and flooring it).
 Creates a new `CivilDate` object by overriding specified values to its members.
 The specified values must be numeric if specified.
 
-#### CivilDate.prototype.plus(values: [DurationLike](#DurationLike)) : [CivilDate](#CivilDate)
-#### CivilDate.prototype.minus(values: [DurationLike](#DurationLike)) : [CivilDate](#CivilDate)
-#### CivilDate.prototype.difference(other: [DateLike](#DateLike)) : [Duration](#Duration)
+#### CivilDate.prototype.withTime(time : [TimeLike](#TimeLike)) : [CivilDateTime](#CivilDateTime)
 
-#### CivilDate.prototype.withTime(time : [CivilTime](#CivilTime)) : [CivilDateTime](#CivilDateTime)
-
-Combines this `CivilDate` with the passed `CivilTime` to create a new `CivilDateTime` object.
+Combines this `CivilDate` with the passed `TimeLike` to create a new `CivilDateTime` object.
 
 #### CivilDate.prototype.toString() : string
 
-Equivalent to `date.toDateString()`
+Returns the date in ISO-8601 format.
 
 #### CivilDate.prototype.toJSON() : string
 
@@ -340,6 +340,8 @@ Equivalent to `date.toString()`
 #### CivilDate.fromString(isostring: string): [CivilDate](#CivilDate)
 
 Creates a new `CivilDate` by parsing an ISO-8601 string in the format created by `.toString()`.
+
+#### CivilDate.compare(one: [DateLike](#DateLike), two: [DateLike](#DateLike)) : number
 
 ### CivilTime <a name="CivilTime" />
 
@@ -595,11 +597,11 @@ The constructor may only be called as such. It takes 2 numeric arguments.
 
 ### Duration <a name="Duration" />
 
-Duration objects are produced by subtracting two temporal object from each other using the `minus()` method. Subtraction is limited to operations between objects of the same type.
+Duration objects are produced by subtracting two temporal object from each other using the `difference()` method. Subtraction is limited to operations between objects of the same type.
 
 All `Duration` fields are integer values. Durations are immutable like all temporal objects.
 
-Durations can only be created through the `minus` method on temporal objects.
+Durations can only be created through the `difference` method on temporal objects.
 
 #### Duration.prototype.years: number
 
