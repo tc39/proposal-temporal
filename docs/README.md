@@ -1,8 +1,10 @@
+<!-- headingDivider: 4 -->
+
 # Temporal
 
 ## Object Relationship
 
-```mermaid
+<div class="mermaid">
 graph LR;
   timezone(Time-Zone);
   subgraph " ";
@@ -21,7 +23,7 @@ graph LR;
   end;
   absolute === timezone;
   timezone === datetime;
-```
+</div>
 
 ## API
 
@@ -341,3 +343,10 @@ A representatio nof a calendar date.
 #### Temporal.getTime(timeZone: Temporal.TimeZone | string) : Temporal.Time
 
 ## Examples
+
+**Now open your developer tools, and try it out!**
+
+<script type="application/javascript" src="./playground.js"></script>
+<script type="application/javascript" src="./mermaid.js"></script>
+<script>mermaid.initialize({startOnLoad:true, flowchart:{ useMaxWidth:false } });</script>
+<style>.mermaid svg { height: 13em; }</style>
