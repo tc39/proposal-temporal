@@ -1,18 +1,8 @@
-import { ES } from "./ecmascript.mjs";
+import { ES } from './ecmascript.mjs';
 
-import {
-  HOUR,
-  MINUTE,
-  SECOND,
-  MILLISECOND,
-  MICROSECOND,
-  NANOSECOND,
-  CreateSlots,
-  GetSlot,
-  SetSlot
-} from "./slots.mjs";
+import { HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND, CreateSlots, GetSlot, SetSlot } from './slots.mjs';
 
-import { time as RAW } from "./regex.mjs";
+import { time as RAW } from './regex.mjs';
 const TIME = new RegExp(`^${RAW.source}$`);
 
 export function Time(
@@ -22,18 +12,13 @@ export function Time(
   millisecond = 0,
   microsecond = 0,
   nanosecond = 0,
-  disambiguation = "constrain"
+  disambiguation = 'constrain'
 ) {
   if (!(this instanceof Time))
-    return new Time(
-      hour,
-      minute,
-      second,
-      millisecond,
-      microsecond,
-      nanosecond,
-      disambiguation
-    );
+    return new Time(hour, minute, second, millisecond, microsecond, nanosecond, disambiguation);
+  if ('object' === typeof hour && !minute && !second && !millisecond && !microsecond && !nanosecond) {
+    ({ hour, minute, second = 0, millisecond = 0, microsecond = 0, nanosecond = 0 } = hour);
+  }
   hour = ES.ToInteger(hour);
   minute = ES.ToInteger(minute);
   second = ES.ToInteger(second);
@@ -41,15 +26,8 @@ export function Time(
   microsecond = ES.ToInteger(microsecond);
   nanosecond = ES.ToInteger(nanosecond);
   switch (disambiguation) {
-    case "constrain":
-      ({
-        hour,
-        minute,
-        second,
-        millisecond,
-        microsecond,
-        nanosecond
-      } = ES.ConstrainTime(
+    case 'constrain':
+      ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.ConstrainTime(
         hour,
         minute,
         second,
@@ -58,15 +36,8 @@ export function Time(
         nanosecond
       ));
       break;
-    case "balance":
-      ({
-        hour,
-        minute,
-        second,
-        millisecond,
-        microsecond,
-        nanosecond
-      } = ES.BalanceTime(
+    case 'balance':
+      ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.BalanceTime(
         hour,
         minute,
         second,
@@ -131,7 +102,7 @@ Object.defineProperties(Time.prototype, {
     configurable: true
   }
 });
-Time.prototype.with = function(timeLike = {}, disambiguation = "constrain") {
+Time.prototype.with = function(timeLike = {}, disambiguation = 'constrain') {
   const {
     hour = GetSlot(this, HOUR),
     minute = GetSlot(this, MINUTE),
@@ -140,31 +111,13 @@ Time.prototype.with = function(timeLike = {}, disambiguation = "constrain") {
     microsecond = GetSlot(this, MICROSECOND),
     nanosecond = GetSlot(this, NANOSECOND)
   } = timeLike;
-  return new Time(
-    hour,
-    minute,
-    second,
-    millisecond,
-    microsecond,
-    nanosecond,
-    disambiguation
-  );
+  return new Time(hour, minute, second, millisecond, microsecond, nanosecond, disambiguation);
 };
 Time.prototype.plus = function plus(durationLike) {
   const duration = ES.CastToDuration(durationLike);
   let { hour, minute, second, millisecond, microsecond, nanosecond } = this;
-  let {
-    years,
-    months,
-    days,
-    hours,
-    minutes,
-    seconds,
-    milliseconds,
-    microseconds,
-    nanoseconds
-  } = duration;
-  if (years || months || days) throw new RangeError("invalid duration");
+  let { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
+  if (years || months || days) throw new RangeError('invalid duration');
   ({ hour, minute, second, minute, microsecond, nanosecond } = ES.AddTime(
     hour,
     minute,
@@ -193,30 +146,13 @@ Time.prototype.plus = function plus(durationLike) {
     microseconds,
     nanoseconds
   ));
-  return new Time(
-    hour,
-    minute,
-    second,
-    millisecond,
-    microsecond,
-    nanosecond
-  );
+  return new Time(hour, minute, second, millisecond, microsecond, nanosecond);
 };
 Time.prototype.minus = function minus(durationLike) {
   const duration = ES.CastToDuration(durationLike);
   let { hour, minute, second, millisecond, microsecond, nanosecond } = this;
-  let {
-    years,
-    months,
-    days,
-    hours,
-    minutes,
-    seconds,
-    milliseconds,
-    microseconds,
-    nanoseconds
-  } = duration;
-  if (years || months || days) throw new RangeError("invalid duration");
+  let { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
+  if (years || months || days) throw new RangeError('invalid duration');
   ({ hour, minute, second, minute, microsecond, nanosecond } = ES.SubtractTime(
     hour,
     minute,
@@ -245,14 +181,7 @@ Time.prototype.minus = function minus(durationLike) {
     microseconds,
     nanoseconds
   ));
-  return new Time(
-    hour,
-    minute,
-    second,
-    millisecond,
-    microsecond,
-    nanosecond
-  );
+  return new Time(hour, minute, second, millisecond, microsecond, nanosecond);
 };
 Time.prototype.difference = function difference(other = {}) {
   const [one, two] = [
@@ -275,17 +204,7 @@ Time.prototype.difference = function difference(other = {}) {
   const milliseconds = two.millisecond - one.millisecond;
   const microseconds = two.microsecond - one.microsecond;
   const nanoseconds = two.nanosecond - one.nanosecond;
-  return new Duration(
-    0,
-    0,
-    0,
-    hours,
-    minutes,
-    seconds,
-    milliseconds,
-    microseconds,
-    nanoseconds
-  );
+  return new Duration(0, 0, 0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
 };
 
 Time.prototype.toString = Time.prototype.toJSON = function toString() {
@@ -297,65 +216,41 @@ Time.prototype.toString = Time.prototype.toJSON = function toString() {
     GetSlot(this, MICROSECOND),
     GetSlot(this, NANOSECOND)
   );
-  let resultString = `${hour}:${minute}${seconds ? `:${seconds}` : ""}`;
+  let resultString = `${hour}:${minute}${seconds ? `:${seconds}` : ''}`;
   return resultString;
 };
 Time.prototype.toLocaleString = function toLocaleString(...args) {
   return new Intl.DateTimeFormat(...args).format(this);
 };
 
-Time.prototype.withDate = function withDate(
-  dateLike = {},
-  disambiguation = "constrain"
-) {
+Time.prototype.withDate = function withDate(dateLike = {}, disambiguation = 'constrain') {
   let { year, month, day } = dateLike;
   let { hour, minute, second, millisecond, microsecond, nanosecond } = this;
-  const DateTime = ES.GetIntrinsic("%Temporal.DateTime%");
-  return new DateTime(
-    year,
-    month,
-    day,
-    hour,
-    minute,
-    second,
-    millisecond,
-    microsecond,
-    nanosecond,
-    disambiguation
-  );
+  const DateTime = ES.GetIntrinsic('%Temporal.DateTime%');
+  return new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, disambiguation);
 };
 
 Time.fromString = function fromString(isoStringParam) {
   const isoString = ES.ToString(isoStringParam);
   const match = TIME.exec(isoString);
-  if (!match) throw new RangeError("invalid datetime string");
+  if (!match) throw new RangeError('invalid datetime string');
   const hour = ES.ToInteger(match[1]);
   const minute = ES.ToInteger(match[2]);
   const second = match[3] ? ES.ToInteger(match[3]) : 0;
   const millisecond = match[4] ? ES.ToInteger(match[4]) : 0;
   const microsecond = match[5] ? ES.ToInteger(match[5]) : 0;
   const nanosecond = match[6] ? ES.ToInteger(match[6]) : 0;
-  return new Time(
-    hour,
-    minute,
-    second,
-    millisecond,
-    microsecond,
-    nanosecond,
-    "reject"
-  );
+  return new Time(hour, minute, second, millisecond, microsecond, nanosecond, 'reject');
 };
 Time.compare = function compare(one, two) {
   if (one.hour !== two.hour) return one.hour - two.hour;
   if (one.minute !== two.minute) return one.minute - two.minute;
   if (one.second !== two.second) return one.second - two.second;
-  if (one.millisecond !== two.millisecond)
-    return one.millisecond - two.millisecond;
-  if (one.microsecond !== two.microsecond)
-    return one.microsecond - two.microsecond;
+  if (one.millisecond !== two.millisecond) return one.millisecond - two.millisecond;
+  if (one.microsecond !== two.microsecond) return one.microsecond - two.microsecond;
   if (one.nanosecond !== two.nanosecond) return one.nanosecond - two.nanosecond;
   return 0;
 };
 Object.defineProperty(Time.prototype, Symbol.toStringTag, {
-  value: "Temporal.Time"
+  value: 'Temporal.Time'
 });

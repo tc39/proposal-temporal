@@ -1,18 +1,14 @@
-import { ES } from "./ecmascript.mjs";
-import { IDENTIFIER, CreateSlots, GetSlot, SetSlot } from "./slots.mjs";
-import { ZONES } from "./zones.mjs";
-import { timezone as TZRE } from "./regex.mjs";
+import { ES } from './ecmascript.mjs';
+import { IDENTIFIER, CreateSlots, GetSlot, SetSlot } from './slots.mjs';
+import { ZONES } from './zones.mjs';
+import { timezone as TZRE } from './regex.mjs';
 
 export function TimeZone(timeZoneIndentifier) {
   if (!(this instanceof TimeZone)) return new TimeZone(timeZoneIndentifier);
   CreateSlots(this);
-  SetSlot(
-    this,
-    IDENTIFIER,
-    ES.GetCanonicalTimeZoneIdentifier(timeZoneIndentifier)
-  );
+  SetSlot(this, IDENTIFIER, ES.GetCanonicalTimeZoneIdentifier(timeZoneIndentifier));
 }
-Object.defineProperty(TimeZone.prototype, "name", {
+Object.defineProperty(TimeZone.prototype, 'name', {
   get: function() {
     return GetSlot(this, IDENTIFIER);
   },
@@ -24,46 +20,16 @@ TimeZone.prototype.getOffsetFor = function getOffsetFor(absolute) {
 };
 TimeZone.prototype.getDateTimeFor = function getDateTimeFor(absolute) {
   const epochNanoseconds = absolute.getEpochNanoseconds();
-  const {
-    year,
-    month,
-    day,
-    hour,
-    minute,
-    second,
-    millisecond,
-    microsecond,
-    nanosecond
-  } = ES.GetTimeZoneDateTimeParts(epochNanoseconds, GetSlot(this, IDENTIFIER));
-  const DateTime = ES.GetIntrinsic("%Temporal.DateTime%");
-  return new DateTime(
-    year,
-    month,
-    day,
-    hour,
-    minute,
-    second,
-    millisecond,
-    microsecond,
-    nanosecond
+  const { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.GetTimeZoneDateTimeParts(
+    epochNanoseconds,
+    GetSlot(this, IDENTIFIER)
   );
+  const DateTime = ES.GetIntrinsic('%Temporal.DateTime%');
+  return new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
 };
-TimeZone.prototype.getAbsoluteFor = function getAbsoluteFor(
-  dateTime,
-  disambiguation = "earlier"
-) {
-  const Absolute = ES.GetIntrinsic("%Temporal.Absolute%");
-  const {
-    year,
-    month,
-    day,
-    hour,
-    minute,
-    second,
-    millisecond,
-    microsecond,
-    nanosecond
-  } = dateTime;
+TimeZone.prototype.getAbsoluteFor = function getAbsoluteFor(dateTime, disambiguation = 'earlier') {
+  const Absolute = ES.GetIntrinsic('%Temporal.Absolute%');
+  const { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = dateTime;
   const options = ES.GetTimeZoneEpochNanoseconds(
     GetSlot(this, IDENTIFIER),
     year,
@@ -79,45 +45,28 @@ TimeZone.prototype.getAbsoluteFor = function getAbsoluteFor(
   if (options.length === 1) return new Absolute(options[0]);
   if (options.length) {
     switch (disambiguation) {
-      case "earlier":
+      case 'earlier':
         return new Ansolute(options[0]);
-      case "later":
+      case 'later':
         return new Absolute(options[1]);
       default:
         throw new RangeError(`multiple absolute found`);
     }
   }
 
-  if (!["earlier", "later"].includes(disambiguation))
-    throw new RangeError(`no such absolute found`);
+  if (!['earlier', 'later'].includes(disambiguation)) throw new RangeError(`no such absolute found`);
 
-  const utcns = ES.GetEpochFromParts(
-    year,
-    month,
-    day,
-    hour,
-    minute,
-    second,
-    millisecond,
-    microsecond,
-    nanosecond
-  );
-  const before = ES.GetTimeZoneOffsetNanoSeconds(
-    utcns - 86400000000000n,
-    GetSlot(this, IDENTIFIER)
-  );
-  const after = ES.GetTimeZoneOffsetNanoSeconds(
-    utcns + 86400000000000n,
-    GetSlot(this, IDENTIFIER)
-  );
-  const diff = new (ES.GetIntrinsic("%Temporal.Duration%"))({
+  const utcns = ES.GetEpochFromParts(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
+  const before = ES.GetTimeZoneOffsetNanoSeconds(utcns - 86400000000000n, GetSlot(this, IDENTIFIER));
+  const after = ES.GetTimeZoneOffsetNanoSeconds(utcns + 86400000000000n, GetSlot(this, IDENTIFIER));
+  const diff = new (ES.GetIntrinsic('%Temporal.Duration%'))({
     nanoseconds: Number(after - before)
   });
   switch (disambiguation) {
-    case "earlier":
+    case 'earlier':
       const earlier = dateTime.minus(diff);
       return this.getAbsoluteFor(earlier, disambiguation);
-    case "later":
+    case 'later':
       const later = dateTime.plus(diff);
       return this.getAbsoluteFor(later, disambiguation);
     default:
@@ -126,16 +75,12 @@ TimeZone.prototype.getAbsoluteFor = function getAbsoluteFor(
 };
 TimeZone.prototype.getTransitions = function getTransitions(startingPoint) {
   let epochNanoseconds = startingPoint.getEpochNanoseconds();
-  const Absolute = ES.GetIntrinsic("%Temporal.Absolute%");
+  const Absolute = ES.GetIntrinsic('%Temporal.Absolute%');
   return {
     next: () => {
-      epochNanoseconds = ES.GetTimeZoneNextTransition(
-        epochNanoseconds,
-        GetSlot(this, IDENTIFIER)
-      );
+      epochNanoseconds = ES.GetTimeZoneNextTransition(epochNanoseconds, GetSlot(this, IDENTIFIER));
       const done = epochNanoseconds !== null;
-      const value =
-        epochNanoseconds !== null ? null : new Absolute(epochNanoseconds);
+      const value = epochNanoseconds !== null ? null : new Absolute(epochNanoseconds);
       return { done, value };
     }
   };
@@ -166,5 +111,5 @@ TimeZone[Symbol.iterator] = function() {
   };
 };
 Object.defineProperty(TimeZone.prototype, Symbol.toStringTag, {
-  value: "Temporal.TimeZone"
+  value: 'Temporal.TimeZone'
 });

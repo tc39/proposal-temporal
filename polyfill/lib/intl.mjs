@@ -1,36 +1,26 @@
-import { ES } from "./ecmascript.mjs";
+import { ES } from './ecmascript.mjs';
 
-const Absolute = ES.GetIntrinsic("%Temporal.Absolute%");
-const DateTime = ES.GetIntrinsic("%Temporal.DateTime%");
-const Date = ES.GetIntrinsic("%Temporal.Date%");
-const Time = ES.GetIntrinsic("%Temporal.Time%");
-const YearMonth = ES.GetIntrinsic("%Temporal.YearMonth%");
-const MonthDay = ES.GetIntrinsic("%Temporal.MonthDay%");
+const Absolute = ES.GetIntrinsic('%Temporal.Absolute%');
+const DateTime = ES.GetIntrinsic('%Temporal.DateTime%');
+const Date = ES.GetIntrinsic('%Temporal.Date%');
+const Time = ES.GetIntrinsic('%Temporal.Time%');
+const YearMonth = ES.GetIntrinsic('%Temporal.YearMonth%');
+const MonthDay = ES.GetIntrinsic('%Temporal.MonthDay%');
 
-const DATE = Symbol("date");
-const YM = Symbol("ym");
-const MD = Symbol("md");
-const TIME = Symbol("time");
-const DATETIME = Symbol("datetime");
-const ORIGINAL = Symbol("original");
+const DATE = Symbol('date');
+const YM = Symbol('ym');
+const MD = Symbol('md');
+const TIME = Symbol('time');
+const DATETIME = Symbol('datetime');
+const ORIGINAL = Symbol('original');
 
 const IntlDateTimeFormat = Intl.DateTimeFormat;
-export function DateTimeFormat(
-  locale = IntlDateTimeFormat().resolvedOptions().locale,
-  options = {}
-) {
-  if (!(this instanceof DateTimeFormat))
-    return new DateTimeFormat(locale, options);
+export function DateTimeFormat(locale = IntlDateTimeFormat().resolvedOptions().locale, options = {}) {
+  if (!(this instanceof DateTimeFormat)) return new DateTimeFormat(locale, options);
   this[ORIGINAL] = new IntlDateTimeFormat(locale, options);
   this[DATE] = new IntlDateTimeFormat(locale, dateAmmend(options, {}));
-  this[YM] = new IntlDateTimeFormat(
-    locale,
-    dateAmmend(options, { day: false })
-  );
-  this[MD] = new IntlDateTimeFormat(
-    locale,
-    dateAmmend(options, { year: false })
-  );
+  this[YM] = new IntlDateTimeFormat(locale, dateAmmend(options, { day: false }));
+  this[MD] = new IntlDateTimeFormat(locale, dateAmmend(options, { year: false }));
   this[TIME] = new IntlDateTimeFormat(locale, timeAmmend(options));
   this[DATETIME] = new IntlDateTimeFormat(locale, datetimeAmmend(options));
 }
@@ -82,16 +72,11 @@ function format(datetime, ...rest) {
 }
 function formatToParts(datetime, ...rest) {
   const { absolute, formatter } = extractOverrides(datetime, this);
-  if (absolute && formatter)
-    return formatter.formatToParts(absolute.getEpochMilliseconds());
+  if (absolute && formatter) return formatter.formatToParts(absolute.getEpochMilliseconds());
   return this[ORIGINAL].formatToParts(datetime, ...rest);
 }
 function formatRange(a, b) {
-  if (
-    "object" === typeof a &&
-    "object" === typeof b &&
-    Object.getPrototypeOf(a) === Object.getPrototypeOf(b)
-  ) {
+  if ('object' === typeof a && 'object' === typeof b && Object.getPrototypeOf(a) === Object.getPrototypeOf(b)) {
     const { absolute: aa, formatter } = extractOverrides(a, this);
     if (aa && formatter) {
       const { absolute: ba } = extractOverrides(b, this);
@@ -101,11 +86,7 @@ function formatRange(a, b) {
   return this[ORIGINAL].formatRange(a, b);
 }
 function formatRangeToParts(a, b) {
-  if (
-    "object" === typeof a &&
-    "object" === typeof b &&
-    Object.getPrototypeOf(a) === Object.getPrototypeOf(b)
-  ) {
+  if ('object' === typeof a && 'object' === typeof b && Object.getPrototypeOf(a) === Object.getPrototypeOf(b)) {
     const { absolute: aa, formatter } = extractOverrides(a, this);
     if (aa && formatter) {
       const { absolute: ba } = extractOverrides(b, this);
@@ -117,10 +98,9 @@ function formatRangeToParts(a, b) {
 
 function ammend(options = {}, ammended = {}) {
   options = Object.assign({}, options);
-  for (let opt of ["year", "month", "day", "hour", "minute", "second"]) {
+  for (let opt of ['year', 'month', 'day', 'hour', 'minute', 'second']) {
     options[opt] = opt in ammended ? ammended[opt] : options[opt];
-    if (options[opt] === false || options[opt] === undefined)
-      delete options[opt];
+    if (options[opt] === false || options[opt] === undefined) delete options[opt];
   }
   return options;
 }
@@ -128,9 +108,9 @@ function timeAmmend(options) {
   options = ammend(options, { year: false, month: false, day: false });
   if (!hasTimeOptions(options)) {
     options = Object.assign(options, {
-      hour: "numeric",
-      minute: "numeric",
-      second: "numeric"
+      hour: 'numeric',
+      minute: 'numeric',
+      second: 'numeric'
     });
   }
   return options;
@@ -139,9 +119,9 @@ function dateAmmend(options, ammendments) {
   options = ammend(options, { hour: false, minute: false, second: false });
   if (!hasDateOptions(options)) {
     options = Object.assign(options, {
-      year: "numeric",
-      month: "numeric",
-      day: "numeric"
+      year: 'numeric',
+      month: 'numeric',
+      day: 'numeric'
     });
   }
   options = ammend(options, ammendments);
@@ -151,22 +131,22 @@ function datetimeAmmend(options) {
   options = Object.assign({}, options);
   if (!hasTimeOptions(options) && !hasDateOptions(options)) {
     Object.assign(options, {
-      year: "numeric",
-      month: "numeric",
-      day: "numeric",
-      hour: "numeric",
-      minute: "numeric",
-      second: "numeric"
+      year: 'numeric',
+      month: 'numeric',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      second: 'numeric'
     });
   }
   return options;
 }
 
 function hasDateOptions(options) {
-  return "year" in options || "month" in options || "day" in options;
+  return 'year' in options || 'month' in options || 'day' in options;
 }
 function hasTimeOptions(options) {
-  return "hour" in options || "minute" in options || "second" in options;
+  return 'hour' in options || 'minute' in options || 'second' in options;
 }
 function extractOverrides(datetime, main) {
   let formatter;
@@ -187,17 +167,7 @@ function extractOverrides(datetime, main) {
     formatter = formatter || main[DATE];
   }
   if (datetime instanceof DateTime) {
-    const {
-      year,
-      month,
-      day,
-      hour,
-      minute,
-      second,
-      millisecond,
-      microsecond,
-      nanosecond
-    } = datetime;
+    const { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = datetime;
     const found = ES.GetTimeZoneEpochNanoseconds(
       main.resolvedOptions().timeZone,
       year,

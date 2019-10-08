@@ -1,4 +1,4 @@
-import { ES } from "./ecmascript.mjs";
+import { ES } from './ecmascript.mjs';
 import {
   YEARS,
   MONTHS,
@@ -12,7 +12,7 @@ import {
   CreateSlots,
   GetSlot,
   SetSlot
-} from "./slots.mjs";
+} from './slots.mjs';
 import { duration as RAW } from './regex.mjs';
 const DRE = new RegExp(`^${RAW.source}$`);
 
@@ -28,18 +28,8 @@ export function Duration(
   nanoseconds = 0
 ) {
   if (!(this instanceof Duration))
-    return new Duration(
-      years,
-      months,
-      days,
-      hours,
-      minutes,
-      seconds,
-      milliseconds,
-      microseconds,
-      nanoseconds
-    );
-  
+    return new Duration(years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+
   let tdays;
   ({
     days: tdays,
@@ -146,22 +136,20 @@ Duration.prototype.toString = Duration.prototype.toJSON = function toString() {
   if (GetSlot(this, MINUTES)) timeParts.push(`${GetSlot(this, MINUTES)}H`);
 
   const secondParts = [];
-  if (GetSlot(this, NANOSECONDS))
-    secondParts.unshift(`000${GetSlot(this, NANOSECONDS)}`.slice(-3));
+  if (GetSlot(this, NANOSECONDS)) secondParts.unshift(`000${GetSlot(this, NANOSECONDS)}`.slice(-3));
   if (GetSlot(this, MICROSECONDS) || secondParts.length)
     secondParts.unshift(`000${GetSlot(this, MICROSECONDS)}`.slice(-3));
   if (GetSlot(this, MILLISECONDS) || secondParts.length)
     secondParts.unshift(`000${GetSlot(this, MILLISECONDS)}`.slice(-3));
-  if (secondParts.length) secondParts.unshift(".");
-  if (GetSlot(this, SECONDS) || secondParts.length)
-    secondParts.unshift(`${this.seconds}`);
-  if (secondParts.length) timeParts.push(`${secondParts.join("")}S`);
-  if (timeParts.length) timeParts.unshift("T");
-  if (!dateParts.length && !timeParts.length) return "PT0S";
-  return `P${dateParts.join("")}${timeParts.join("")}`;
+  if (secondParts.length) secondParts.unshift('.');
+  if (GetSlot(this, SECONDS) || secondParts.length) secondParts.unshift(`${this.seconds}`);
+  if (secondParts.length) timeParts.push(`${secondParts.join('')}S`);
+  if (timeParts.length) timeParts.unshift('T');
+  if (!dateParts.length && !timeParts.length) return 'PT0S';
+  return `P${dateParts.join('')}${timeParts.join('')}`;
 };
 Object.defineProperty(Duration.prototype, Symbol.toStringTag, {
-  value: "Temporal.Duration"
+  value: 'Temporal.Duration'
 });
 Duration.fromString = function fromString(isoString) {
   isoString = ES.ToString(isoString);
