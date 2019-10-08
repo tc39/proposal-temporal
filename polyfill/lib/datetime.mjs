@@ -13,7 +13,9 @@ import {
   MILLISECOND,
   MICROSECOND,
   NANOSECOND,
-  CreateSlots, GetSlot, SetSlot
+  CreateSlots,
+  GetSlot,
+  SetSlot
 } from "./slots.mjs";
 
 export function DateTime(
@@ -488,7 +490,11 @@ DateTime.prototype.inZone = function inZone(
 };
 DateTime.prototype.getDate = function getDate() {
   const Date = ES.GetIntrinsic("%Temporal.Date%");
-  return new Date(GetSlot(this, YEAR), GetSlot(this, MONTH), GetSlot(this, DAY));
+  return new Date(
+    GetSlot(this, YEAR),
+    GetSlot(this, MONTH),
+    GetSlot(this, DAY)
+  );
 };
 DateTime.prototype.getYearMonth = function getYearMonth() {
   const YearMonth = ES.GetIntrinsic("%Temporal.YearMonth%");
@@ -551,5 +557,5 @@ DateTime.compare = function compare(one, two) {
   return 0;
 };
 Object.defineProperty(DateTime.prototype, Symbol.toStringTag, {
-  get: () => "Temporal.DateTime"
+  value: "Temporal.DateTime"
 });

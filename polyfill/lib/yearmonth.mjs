@@ -58,7 +58,10 @@ YearMonth.prototype.with = function(
   dateLike = {},
   disambiguation = "constrain"
 ) {
-  const { year = GetSlot(this, YEAR), month = GetSlot(this, MONTH) } = dateTimeLike;
+  const {
+    year = GetSlot(this, YEAR),
+    month = GetSlot(this, MONTH)
+  } = dateTimeLike;
   return new YearMonth(year, month, disambiguation);
 };
 YearMonth.prototype.plus = function plus(
@@ -182,5 +185,5 @@ YearMonth.compare = function compare(one, two) {
 };
 
 Object.defineProperty(YearMonth.prototype, Symbol.toStringTag, {
-  get: () => "Temporal.YearMonth"
+  value: "Temporal.YearMonth"
 });

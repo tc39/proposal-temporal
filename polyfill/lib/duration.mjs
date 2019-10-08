@@ -9,7 +9,9 @@ import {
   MILLISECONDS,
   MICROSECONDS,
   NANOSECONDS,
-  CreateSlots, GetSlot, SetSlot
+  CreateSlots,
+  GetSlot,
+  SetSlot
 } from "./slots.mjs";
 
 export function Duration(
@@ -184,5 +186,5 @@ Duration.prototype.toString = Duration.prototype.toJSON = function toString() {
   return `P${dateParts.join("")}${timeParts.join("")}`;
 };
 Object.defineProperty(Duration.prototype, Symbol.toStringTag, {
-  get: () => "Temporal.Duration"
+  value: "Temporal.Duration"
 });

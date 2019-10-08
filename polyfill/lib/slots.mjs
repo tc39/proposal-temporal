@@ -28,11 +28,11 @@ export const NANOSECONDS = Symbol("slot-nanoseconds");
 
 const slots = new WeakMap();
 export function CreateSlots(container) {
-    slots.set(container, {});
+  slots.set(container, {});
 }
 export function GetSlot(container, id) {
-    return slots.get(container)[id];
+  return slots.get(container)[id];
 }
 export function SetSlot(container, id, value) {
-    slots.get(container)[id] = value;
+  slots.get(container)[id] = value;
 }

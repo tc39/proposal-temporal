@@ -7,7 +7,9 @@ import {
   MILLISECOND,
   MICROSECOND,
   NANOSECOND,
-  CreateSlots, GetSlot, SetSlot
+  CreateSlots,
+  GetSlot,
+  SetSlot
 } from "./slots.mjs";
 
 import { time as RAW } from "./regex.mjs";
@@ -335,5 +337,5 @@ Time.compare = function compare(one, two) {
   return 0;
 };
 Object.defineProperty(Time.prototype, Symbol.toStringTag, {
-  get: () => "Temporal.Time"
+  value: "Temporal.Time"
 });

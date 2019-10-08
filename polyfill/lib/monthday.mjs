@@ -44,7 +44,10 @@ MonthDay.prototype.with = function(
   dateLike = {},
   disambiguation = "constrain"
 ) {
-  const { month = GetSlot(this, MONTH), day = GetSlot(this, DAY) } = dateTimeLike;
+  const {
+    month = GetSlot(this, MONTH),
+    day = GetSlot(this, DAY)
+  } = dateTimeLike;
   return new MonthDay(month, day, disambiguation);
 };
 MonthDay.prototype.plus = function plus(
@@ -169,5 +172,5 @@ MonthDay.compare = function compare(one, two) {
   return 0;
 };
 Object.defineProperty(MonthDay.prototype, Symbol.toStringTag, {
-  get: () => "Temporal.MonthDay"
+  value: "Temporal.MonthDay"
 });
