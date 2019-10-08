@@ -53,7 +53,7 @@ export function Duration(
   SetSlot(this, YEARS, ES.AssertPositiveInteger(ES.ToInteger(years)));
   SetSlot(this, MONTHS, ES.AssertPositiveInteger(ES.ToInteger(months)));
   SetSlot(this, DAYS, ES.AssertPositiveInteger(ES.ToInteger(days)));
-  SetSlot(this, HOURS, hours + days * 24);
+  SetSlot(this, HOURS, hours);
   SetSlot(this, MINUTES, minutes);
   SetSlot(this, SECONDS, seconds);
   SetSlot(this, MILLISECONDS, milliseconds);

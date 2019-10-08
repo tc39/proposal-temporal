@@ -316,13 +316,13 @@ DateTime.prototype.toString = DateTime.prototype.toJSON = function toString() {
   let day = ES.ISODateTimePartString(GetSlot(this, DAY));
   let hour = ES.ISODateTimePartString(GetSlot(this, HOUR));
   let minute = ES.ISODateTimePartString(GetSlot(this, MINUTE));
-  let seconds = ES.ISOSecondsString(
+  let second = ES.ISOSecondsString(
     GetSlot(this, SECOND),
     GetSlot(this, MILLISECOND),
     GetSlot(this, MICROSECOND),
     GetSlot(this, NANOSECOND)
   );
-  let resultString = `${year}-${month}-${day}T${hour}:${minute}${seconds ? `:${seconds}` : ''}`;
+  let resultString = `${year}-${month}-${day}T${hour}:${minute}${second ? `:${second}` : ''}`;
   return resultString;
 };
 DateTime.prototype.toLocaleString = function toLocaleString(...args) {

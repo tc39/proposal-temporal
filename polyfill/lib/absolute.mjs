@@ -78,7 +78,7 @@ Absolute.prototype.toString = Absolute.prototype.toJSON = function toString(time
   let dateTime = timeZone.getDateTimeFor(this);
   let year = ES.ISOYearString(dateTime.year);
   let month = ES.ISODateTimePartString(dateTime.month);
-  let day = ES.ISODateTimePartString(dateTime.month);
+  let day = ES.ISODateTimePartString(dateTime.day);
   let hour = ES.ISODateTimePartString(dateTime.hour);
   let minute = ES.ISODateTimePartString(dateTime.minute);
   let seconds = ES.ISOSecondsString(dateTime.second, dateTime.millisecond, dateTime.microsecond, dateTime.nanosecond);

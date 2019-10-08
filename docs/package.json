@@ -1,0 +1,35 @@
+{
+  "name": "tc39-temporal-playground",
+  "version": "1.0.0",
+  "description": "Temporal Proposal Playground",
+  "main": "index.js",
+  "private": true,
+  "scripts": {
+    "build": "rollup -c rollup.config.js && marp README.md -o index.html",
+    "watch": "marp -p README.md -o index.html"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tc39/proposal-temporal.git"
+  },
+  "keywords": [
+    "Temporal",
+    "TC39",
+    "Playground"
+  ],
+  "author": "Philipp Dunkel <pip@pipobscure.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tc39/proposal-temporal/issues"
+  },
+  "homepage": "https://github.com/tc39/proposal-temporal#readme",
+  "devDependencies": {
+    "@marp-team/marp-cli": "^0.14.1",
+    "rollup": "^1.23.1",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-node-resolve": "^5.2.0"
+  },
+  "marp": {
+    "html": true
+  }
+}

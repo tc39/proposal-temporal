@@ -99,7 +99,6 @@ Date.prototype.with = function(dateLike = {}, disambiguation = 'constrain') {
 };
 Date.prototype.plus = function plus(durationLike = {}, disambiguation = 'constrain') {
   const duration = ES.CastToDuration(durationLike);
-  console.error(`Duration: ${duration}`);
   let { year, month, day } = this;
   let { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
   if (hours || minutes || seconds || milliseconds || microseconds || nanoseconds)

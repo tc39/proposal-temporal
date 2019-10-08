@@ -16,7 +16,7 @@ Object.defineProperty(TimeZone.prototype, 'name', {
   enumerable: true
 });
 TimeZone.prototype.getOffsetFor = function getOffsetFor(absolute) {
-  return ES.GetTimeZoneOffsetString(absolute.getEpochNanoseconds());
+  return ES.GetTimeZoneOffsetString(absolute.getEpochNanoseconds(), GetSlot(this, IDENTIFIER));
 };
 TimeZone.prototype.getDateTimeFor = function getDateTimeFor(absolute) {
   const epochNanoseconds = absolute.getEpochNanoseconds();
@@ -59,7 +59,7 @@ TimeZone.prototype.getAbsoluteFor = function getAbsoluteFor(dateTime, disambigua
   const utcns = ES.GetEpochFromParts(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
   const before = ES.GetTimeZoneOffsetNanoSeconds(utcns - 86400000000000n, GetSlot(this, IDENTIFIER));
   const after = ES.GetTimeZoneOffsetNanoSeconds(utcns + 86400000000000n, GetSlot(this, IDENTIFIER));
-  const diff = new (ES.GetIntrinsic('%Temporal.Duration%'))({
+  const diff = ES.CastToDuration({
     nanoseconds: Number(after - before)
   });
   switch (disambiguation) {
