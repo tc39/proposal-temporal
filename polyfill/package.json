@@ -1,0 +1,49 @@
+{
+  "name": "tc39-temporal",
+  "version": "1.0.0",
+  "description": "TC39 Proposal: Temporal",
+  "main": "index.js",
+  "scripts": {
+    "pretty": "prettier --write lib/*.*(m)js ",
+    "build": "rollup -c rollup.config.js",
+    "prepublishOnly": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tc39/proposal-temporal.git"
+  },
+  "keywords": [
+    "TC39",
+    "Polyfill",
+    "Date",
+    "Time",
+    "DateTime",
+    "TimeZone",
+    "Duration"
+  ],
+  "author": "Philipp Dunkel <pip@pipobscure.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tc39/proposal-temporal/issues"
+  },
+  "homepage": "https://github.com/tc39/proposal-temporal#readme",
+  "dependencies": {
+    "es-abstract": "^1.14.2",
+    "full-icu": "^1.3.0"
+  },
+  "devDependencies": {
+    "prettier": "^1.18.2",
+    "rollup": "^1.23.1",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-node-resolve": "^5.2.0"
+  },
+  "prettier": {
+    "printWidth": 120,
+    "trailingComma": "none",
+    "tabWidth": 2,
+    "semi": true,
+    "singleQuote": true,
+    "bracketSpacing": true,
+    "arrowParens": "always"
+  }
+}

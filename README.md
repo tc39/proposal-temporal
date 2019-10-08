@@ -2,6 +2,9 @@
 
 Provides standard objects and functions for working with dates and times.
 
+**NOTE: The current working version is the [Polyfill](./polyfill). Specification text is being written based on that!**
+***This is NOT suitable for production use as it has several performance issues that are in place for the sake of clarity!!!***
+
 ## Champions
 
 - Maggie Pint  ([@maggiepint](https://github.com/maggiepint))
@@ -12,11 +15,6 @@ Provides standard objects and functions for working with dates and times.
 ## Status
 
 This proposal is currently stage 2
-
-***NOTE (2019-0923): The most accurate up-to-date state of the discussion is currently the code of the [PolyFill](https://github.com/std-proposal/temporal/). The next week will be spent updating documentation and spec-text to match that!***
-
-[Proposed Spec Text is viewable here.](https://tc39.github.io/proposal-temporal/spec-rendered)  
-(Note, this is a work in progress.)
 
 Stage 3 Reviewers:
 - Richard Gibson
@@ -43,7 +41,7 @@ For a detailed breakdown of motivations see:
 
 ## Polyfill
 
-A complete polyfill can be found [here](https://github.com/std-proposal/temporal). It will be developed to remain in sync with this proposal.
+A complete polyfill can be found [here](./polyfill). It will be developed to remain in sync with this proposal.
 
 ---------------------------------------------------------------------------------------------------
 
