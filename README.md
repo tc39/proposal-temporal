@@ -3,6 +3,7 @@
 Provides standard objects and functions for working with dates and times.
 
 **NOTE: The current working version is the [Polyfill](./polyfill). Specification text is being written based on that!**
+***This is NOT suitable for production use as it has several performance issues that are in place for the sake of clarity!!!***
 
 ## Champions
 
