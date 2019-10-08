@@ -138,7 +138,7 @@ MonthDay.prototype.difference = function difference(
   const Duration = ES.GetIntrinsic("%Temporal.Duration%");
   return new Duration(0, months, days, 0, 0, 0, 0, 0, 0);
 };
-MonthDay.prototype.toString = function toString() {
+MonthDay.prototype.toString = MonthDay.prototype.toJSON = function toString() {
   let year = ES.ISOYearString(GetSlot(this, YEAR));
   let month = ES.ISODateTimePartString(GetSlot(this, MONTH));
   let day = ES.ISODateTimePartString(GetSlot(this, DAY));
@@ -147,9 +147,6 @@ MonthDay.prototype.toString = function toString() {
 };
 MonthDay.prototype.toLocaleString = function toLocaleString(...args) {
   return new Intl.DateTimeFormat(...args).format(this);
-};
-MonthDay.prototype.toJSON = function toJSON() {
-  return this.toString();
 };
 MonthDay.prototype.withYear = function withYear(year) {
   const month = GetSlot(this, MONTH);

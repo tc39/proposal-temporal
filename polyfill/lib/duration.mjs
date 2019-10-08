@@ -158,7 +158,7 @@ Object.defineProperties(Duration.prototype, {
     configurable: true
   }
 });
-Duration.prototype.toString = function toString() {
+Duration.prototype.toString = Duration.prototype.toJSON = function toString() {
   const dateParts = [];
   if (GetSlot(this, YEARS)) dateParts.push(`${GetSlot(this, YEARS)}Y`);
   if (GetSlot(this, MONTHS)) dateParts.push(`${GetSlot(this, MONTHS)}M`);

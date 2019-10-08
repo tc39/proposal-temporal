@@ -266,7 +266,7 @@ Time.prototype.difference = function difference(other = {}) {
   );
 };
 
-Time.prototype.toString = function toString() {
+Time.prototype.toString = Time.prototype.toJSON = function toString() {
   let hour = ES.ISODateTimePartString(GetSlot(this, HOUR));
   let minute = ES.ISODateTimePartString(GetSlot(this, MINUTE));
   let seconds = ES.ISOSecondsString(
@@ -280,9 +280,6 @@ Time.prototype.toString = function toString() {
 };
 Time.prototype.toLocaleString = function toLocaleString(...args) {
   return new Intl.DateTimeFormat(...args).format(this);
-};
-Time.prototype.toJSON = function toJSON() {
-  return this.toString();
 };
 
 Time.prototype.withDate = function withDate(

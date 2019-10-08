@@ -73,7 +73,7 @@ Absolute.prototype.difference = function difference(other) {
   const Duration = ES.GetIntrinsic("%Temporal.Duration%");
   return new Duration(0, 0, 0, 0, 0, secds, milli, micro, nanos);
 };
-Absolute.prototype.toString = function toString(timeZoneParam = "UTC") {
+Absolute.prototype.toString = Absolute.prototype.toJSON = function toString(timeZoneParam = "UTC") {
   let timeZone = ES.ToTimeZone(timeZoneParam);
   let dateTime = timeZone.getDateTimeFor(this);
   let year = ES.ISOYearString(dateTime.year);

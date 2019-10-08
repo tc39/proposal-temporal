@@ -458,7 +458,7 @@ DateTime.prototype.difference = function difference(
     nanoseconds
   );
 };
-DateTime.prototype.toString = function toString() {
+DateTime.prototype.toString = DateTime.prototype.toJSON = function toString() {
   let year = ES.ISOYearString(GetSlot(this, YEAR));
   let month = ES.ISODateTimePartString(GetSlot(this, MONTH));
   let day = ES.ISODateTimePartString(GetSlot(this, DAY));
@@ -477,9 +477,6 @@ DateTime.prototype.toString = function toString() {
 };
 DateTime.prototype.toLocaleString = function toLocaleString(...args) {
   return new Intl.DateTimeFormat(...args).format(this);
-};
-DateTime.prototype.toJSON = function toJSON() {
-  return this.toString();
 };
 
 DateTime.prototype.inZone = function inZone(

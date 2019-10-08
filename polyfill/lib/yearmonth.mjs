@@ -148,7 +148,7 @@ YearMonth.prototype.difference = function difference(
   const Duration = ES.GetIntrinsic("%Temporal.Duration%");
   return new Duration(years, months);
 };
-YearMonth.prototype.toString = function toString() {
+YearMonth.prototype.toString = YearMonth.prototype.toJSON = function toString() {
   let year = ES.ISOYearString(GetSlot(this, YEAR));
   let month = ES.ISODateTimePartString(GetSlot(this, MONTH));
   let resultString = `${year}-${month}`;
@@ -156,9 +156,6 @@ YearMonth.prototype.toString = function toString() {
 };
 YearMonth.prototype.toLocaleString = function toLocaleString(...args) {
   return new Intl.DateTimeFormat(...args).format(this);
-};
-YearMonth.prototype.toJSON = function toJSON() {
-  return this.toString();
 };
 YearMonth.prototype.withDay = function withDay(
   day,

@@ -1,6 +1,7 @@
 import { ES } from "./ecmascript.mjs";
 import { IDENTIFIER, CreateSlots, GetSlot, SetSlot } from "./slots.mjs";
 import { ZONES } from "./zones.mjs";
+import { timezone as TZRE } from './regex.mjs';
 
 export function TimeZone(timeZoneIndentifier) {
   if (!(this instanceof TimeZone)) return new TimeZone(timeZoneIndentifier);
@@ -137,8 +138,14 @@ TimeZone.prototype.getTransitions = function getTransitions(startingPoint) {
     }
   };
 };
-TimeZone.prototype.toString = function toString() {
+TimeZone.prototype.toString = TimeZone.prototype.toJSON = function toString() {
   return this.name;
+};
+TimeZome.fromString = function fromString(isoString) {
+  isoString = ES.ToString(isoString);
+  const match = TZRE.exec(isoString);
+  if (!match) throw new RangeError(`invalid timezone string: ${isoString}`);
+  return new TimeZone(match[1]);
 };
 TimeZone[Symbol.iterator] = function() {
   const iter = ZONES[Symbol.iterator]();

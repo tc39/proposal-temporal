@@ -9,3 +9,5 @@ export const time = new RegExp(`${basetim}${seconds}`);
 export const datetime = new RegExp(`${date.source}T${time.source}`);
 
 export const offset = /([+-][01]?[0-9]):?([0-5][0-9])/;
+
+export const timezone = /([+-][0-1]?[0-9]:?[0-5][0-9]|\[[^]+\])/;

@@ -216,7 +216,7 @@ Date.prototype.difference = function difference(
   const Duration = ES.GetIntrinsic("%Temporal.Duration%");
   return new Duration(years, 0, days, 0, 0, 0, 0, 0, 0);
 };
-Date.prototype.toString = function toString() {
+Date.prototype.toString = Date.prototype.toJSON = function toString() {
   let year = ES.ISOYearString(GetSlot(this, YEAR));
   let month = ES.ISODateTimePartString(GetSlot(this, MONTH));
   let day = ES.ISODateTimePartString(GetSlot(this, DAY));
@@ -225,9 +225,6 @@ Date.prototype.toString = function toString() {
 };
 Date.prototype.toLocaleString = function toLocaleString(...args) {
   return new Intl.DateTimeFormat(...args).format(this);
-};
-Date.prototype.toJSON = function toJSON() {
-  return this.toString();
 };
 Date.prototype.withTime = function withTime(
   timeLike,
