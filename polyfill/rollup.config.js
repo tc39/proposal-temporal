@@ -1,20 +1,16 @@
-import babel from "rollup-plugin-babel";
+import commonjs from "rollup-plugin-commonjs";
+import resolve from "rollup-plugin-node-resolve";
+
 export default {
-  input: "lib/temporal.mjs",
+  input: "lib/index.mjs",
   output: {
     name: "temporal",
     file: "index.js",
     format: "commonjs",
     lib: ["es6"]
   },
-  external: ["es-abstract"],
   plugins: [
-    babel({
-      exclude: "node_modules/**",
-      plugins: [
-        "@babel/plugin-proposal-numeric-separator",
-        "@babel/plugin-syntax-bigint"
-      ]
-    })
+    commonjs(),
+    resolve({ preferBuiltins: false })
   ]
 };

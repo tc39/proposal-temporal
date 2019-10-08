@@ -103,11 +103,11 @@ TimeZone.prototype.getAbsoluteFor = function getAbsoluteFor(
     nanosecond
   );
   const before = ES.GetTimeZoneOffsetNanoSeconds(
-    utcns - BigInt(24 * 3600_000_000_000),
+    utcns - 86400000000000n,
     GetSlot(this, IDENTIFIER)
   );
   const after = ES.GetTimeZoneOffsetNanoSeconds(
-    utcns + BigInt(24 * 3600_000_000_000),
+    utcns + 86400000000000n,
     GetSlot(this, IDENTIFIER)
   );
   const diff = new (ES.GetIntrinsic("%Temporal.Duration%"))({

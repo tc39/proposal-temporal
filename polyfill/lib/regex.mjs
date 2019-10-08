@@ -11,3 +11,5 @@ export const datetime = new RegExp(`${date.source}T${time.source}`);
 export const offset = /([+-][01]?[0-9]):?([0-5][0-9])/;
 
 export const timezone = /([+-][0-1]?[0-9]:?[0-5][0-9]|\[[^]+\])/;
+
+export const duration = /P(?:(\d+)Y)?(?:(\d+)M)?(?:(\d+)D)?(?:T(?:(\d+)H)?(?:(\d+)M)?(?:(\d+(?:\.\d+)?)S)?)?/;

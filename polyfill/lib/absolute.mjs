@@ -9,19 +9,19 @@ export function Absolute(epochNanoSeconds) {
 
 Absolute.prototype.getEpochSeconds = function getEpochSeconds() {
   let epochNanoSeconds = GetSlot(this, EPOCHNANOSECONDS);
-  let epochSecondsBigInt = epochNanoSeconds / BigInt(1_000_000_000);
+  let epochSecondsBigInt = epochNanoSeconds / 1000000000n;
   let epochSeconds = ES.ToNumber(epochSecondsBigInt);
   return epochSeconds;
 };
 Absolute.prototype.getEpochMilliseconds = function getEpochMilliseconds() {
   let epochNanoSeconds = GetSlot(this, EPOCHNANOSECONDS);
-  let epochMillisecondsBigInt = epochNanoSeconds / BigInt(1_000_000);
+  let epochMillisecondsBigInt = epochNanoSeconds / 1000000n;
   let epochMilliseconds = ES.ToNumber(epochMillisecondsBigInt);
   return epochMilliseconds;
 };
 Absolute.prototype.getEpochMicroseconds = function getEpochMicroseconds() {
   let epochNanoSeconds = GetSlot(this, EPOCHNANOSECONDS);
-  let epochMicroseconds = epochNanoSeconds / BigInt(1_000);
+  let epochMicroseconds = epochNanoSeconds / 1000n;
   return epochMicroseconds;
 };
 Absolute.prototype.getEpochNanoseconds = function getEpochNanoseconds() {
@@ -35,12 +35,12 @@ Absolute.prototype.plus = function plus(durationLike = {}) {
   if (duration.years) throw new RangeError(`invalid duration field years`);
   if (duration.months) throw new RangeError(`invalid duration field months`);
 
-  let delta = BigInt(duration.days) * BigInt(86_400_000_000_000);
-  delta += BigInt(duration.hours) * BigInt(3_600_000_000_000);
-  delta += BigInt(duration.minutes) * BigInt(60_000_000_000);
-  delta += BigInt(duration.seconds) * BigInt(1_000_000_000);
-  delta += BigInt(duration.milliseconds) * BigInt(1_000_000);
-  delta += BigInt(duration.microseconds) * BigInt(1_000);
+  let delta = BigInt(duration.days) * 86400000000000n;
+  delta += BigInt(duration.hours) * 3600000000000n;
+  delta += BigInt(duration.minutes) * 60000000000n;
+  delta += BigInt(duration.seconds) * 1000000000n;
+  delta += BigInt(duration.milliseconds) * 1000000n;
+  delta += BigInt(duration.microseconds) * 1000n;
   delta += BigInt(duration.nanosecond);
 
   const result = GetSlot(this, EPOCHNANOSECONDS) + delta;
@@ -52,12 +52,12 @@ Absolute.prototype.minus = function minus(durationLike = {}) {
   if (duration.years) throw new RangeError(`invalid duration field years`);
   if (duration.months) throw new RangeError(`invalid duration field months`);
 
-  let delta = BigInt(duration.days) * BigInt(86_400_000_000_000);
-  delta += BigInt(duration.hours) * BigInt(3_600_000_000_000);
-  delta += BigInt(duration.minutes) * BigInt(60_000_000_000);
-  delta += BigInt(duration.seconds) * BigInt(1_000_000_000);
-  delta += BigInt(duration.milliseconds) * BigInt(1_000_000);
-  delta += BigInt(duration.microseconds) * BigInt(1_000);
+  let delta = BigInt(duration.days) * 86400000000000n;
+  delta += BigInt(duration.hours) * 3600000000000n;
+  delta += BigInt(duration.minutes) * 60000000000n;
+  delta += BigInt(duration.seconds) * 1000000000n;
+  delta += BigInt(duration.milliseconds) * 1000000n;
+  delta += BigInt(duration.microseconds) * 1000n;
   delta += BigInt(duration.nanosecond);
 
   const result = GetSlot(this, EPOCHNANOSECONDS) - delta;
@@ -67,9 +67,9 @@ Absolute.prototype.difference = function difference(other) {
   const [one, two] = [this, other].sort(Absoulte.compare);
   const delta = two.getEpochNanoseconds() - one.getEpochNanoseconds();
   const nanos = Number(delta % 1000);
-  const micro = Number((delta / BigInt(1_000)) % 1000);
-  const milli = Number((delta / BigInt(1_000_000)) % 1000);
-  const secds = Number(delta / BigInt(1_000_000_000));
+  const micro = Number((delta / 1000n) % 1000);
+  const milli = Number((delta / 1000000n) % 1000);
+  const secds = Number(delta / 1000000000n);
   const Duration = ES.GetIntrinsic("%Temporal.Duration%");
   return new Duration(0, 0, 0, 0, 0, secds, milli, micro, nanos);
 };
@@ -106,7 +106,7 @@ Absolute.prototype.inZone = function inZone(timeZoneParam = "UTC") {
 Absolute.fromEpochSeconds = function fromEpochSeconds(epochSecondsParam) {
   let epochSeconds = ES.ToNumber(epochSecondsParam);
   let epochSecondsBigInt = BigInt(epochSeconds);
-  let epochNanoSeconds = epochSecondsBigInt * BigInt(1_000_000_000);
+  let epochNanoSeconds = epochSecondsBigInt * 1000000000n;
   let resultObject = new Absolute(epochNanoSeconds);
   return resultObject;
 };
@@ -115,7 +115,7 @@ Absolute.fromEpochMilliseconds = function fromEpochMilliseconds(
 ) {
   let epochMilliseconds = ES.ToNumber(epochMillisecondsParam);
   let epochMillisecondsBigInt = BigInt(epochMilliseconds);
-  let epochNanoSeconds = epochMillisecondsBigInt * BigInt(1_000_000);
+  let epochNanoSeconds = epochMillisecondsBigInt * 1000000n;
   let resultObject = new Absolute(epochNanoSeconds);
   return resultObject;
 };
@@ -123,7 +123,7 @@ Absolute.fromEpochMicroseconds = function fromEpochMicroseconds(
   epochMicrosecondsParam
 ) {
   let epochMicroseconds = BigInt(epochMicrosecondsParam);
-  let epochNanoSeconds = epochMicroseconds * BigInt(1_000);
+  let epochNanoSeconds = epochMicroseconds * 1000n;
   let resultObject = new Absolute(epochNanoSeconds);
   return resultObject;
 };

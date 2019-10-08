@@ -116,6 +116,7 @@ Date.prototype.plus = function plus(
   disambiguation = "constrain"
 ) {
   const duration = ES.CastToDuration(durationLike);
+  console.error(`Duration: ${duration}`);
   let { year, month, day } = this;
   let {
     years,

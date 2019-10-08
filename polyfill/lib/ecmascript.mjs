@@ -1,5 +1,5 @@
-import ESAbstract from "es-abstract";
-const ES2019 = ESAbstract.ES2019;
+import ES2019 from "es-abstract/es2019.js";
+
 const IntlDateTimeFormat = Intl.DateTimeFormat;
 
 import { DateTime as TemporalDateTime } from "./datetime.mjs";
@@ -11,7 +11,7 @@ import { Absolute as Temporalabsolute } from "./absolute.mjs";
 import { TimeZone as TemporalTimeZone } from "./timezone.mjs";
 import { Duration as TemporalDuration } from "./duration.mjs";
 
-const DAYNANOS = BigInt(3600_000_000_000);
+const DAYNANOS = 3600000000000n;
 
 const INTRINSICS = {
   "%Temporal.DateTime%": TemporalDateTime,
@@ -120,12 +120,12 @@ export const ES = Object.assign(Object.assign({}, ES2019), {
     return offsetString;
   },
   GetNSParts: epochNanoseconds => {
-    let subseconds = epochNanoseconds % BigInt(1_000_000_000);
-    let seconds = (epochNanoseconds - subseconds) / BigInt(1_000_000_000);
+    let subseconds = epochNanoseconds % 1000000000n;
+    let seconds = (epochNanoseconds - subseconds) / 1000000000n;
     return { seconds, subseconds };
   },
   GetPartsNanoseconds: (seconds, subseconds) => {
-    seconds *= BigInt(1_000_000_000);
+    seconds *= 1000000000n;
     return seconds + subseconds;
   },
   GetEpochFromParts: (
@@ -143,15 +143,15 @@ export const ES = Object.assign(Object.assign({}, ES2019), {
       Date.UTC(year, month - 1, day, hour, minute, second, 0) / 1000
     );
     let subseconds =
-      BigInt(millisecond * 1_000_000) +
-      BigInt(microsecond * 1_000) +
+      BigInt(millisecond * 1000000) +
+      BigInt(microsecond * 1000) +
       BigInt(nanosecond);
-    subseconds -= seconds < 0n ? BigInt(1_000_000_000) : 0n;
+    subseconds -= seconds < 0n ? 1000000000n : 0n;
     return ES.GetPartsNanoseconds(seconds, subseconds);
   },
   GetTimeZoneDateTimeParts: (epochNanoseconds, timeZoneIdentifier) => {
     let { seconds, subseconds } = ES.GetNSParts(epochNanoseconds);
-    subseconds += subseconds < 0 ? BigInt(1_000_000_000) : 0n;
+    subseconds += subseconds < 0 ? 1000000000n : 0n;
     let nanosecond = Number(subseconds % 1000n);
     let microsecond = Number((subseconds / 1000n) % 1000n);
     let millisecond = Number((subseconds / 1000000n) % 1000n);
@@ -484,28 +484,9 @@ export const ES = Object.assign(Object.assign({}, ES2019), {
   CastToDuration: durationLike => {
     const Duration = ES.GetIntrinsic("%Temporal.Duration%");
     if (durationLike instanceof Duration) return durationLike;
-    let {
-      years,
-      months,
-      days,
-      hours,
-      minutes,
-      seconds,
-      milliseconds,
-      microseconds,
-      nanoseconds
-    } = durationLike;
-    return new Duration(
-      years,
-      months,
-      days,
-      hours,
-      minutes,
-      seconds,
-      milliseconds,
-      microseconds,
-      nanoseconds
-    );
+    if ('string' === typeof durationLike) return Duration.fromString(durationLike);
+    const { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = durationLike;
+    return new Duration(years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 'reject');
   },
   AddDate: (year, month, day, years, months, days, disambiguation) => {
     year += years;
@@ -632,15 +613,17 @@ export const ES = Object.assign(Object.assign({}, ES2019), {
     return { days, hour, minute, second, millisecond, microsecond, nanosecond };
   },
 
-  ToPositiveInteger: num =>
-    Math.floor(Math.abs(Number.isFinite(num) ? num : 0)),
+  AssertPositiveInteger: num =>{
+    if (!Number.isFinite(num) || Math.abs(num)!==num) throw new RangeError(`invalid positive integer: ${num}`);
+    return num;
+  },
 
   SystemUTCEpochNanoSeconds: (() => {
-    let nanos = BigInt(Date.now() % 1_000_000);
+    let nanos = BigInt(Date.now() % 1000000);
     return () => {
       const millis = Date.now();
-      const result = BigInt(millis) * BigInt(1_000_000) + nanos;
-      nanos = BigInt(millis % 1_000_000);
+      const result = BigInt(millis) * 1000000n + nanos;
+      nanos = BigInt(millis % 1000000);
       return result;
     };
   })(),
@@ -658,14 +641,14 @@ function parseOffsetString(string) {
   if (!match) return null;
   const hours = +match[1];
   const minutes = +match[2];
-  return BigInt((hours * 60 + minutes) * 60) * BigInt(1_000_000_000);
+  return BigInt((hours * 60 + minutes) * 60) * 1000000000n;
 }
 function makeOffsetString(offsetNanoSeconds) {
-  let offsetSeconds = Number(offsetNanoSeconds / BigInt(1_000_000_000));
+  let offsetSeconds = Number(offsetNanoSeconds / 1000000000n);
   const sign = offsetSeconds < 0 ? "-" : "+";
   offsetSeconds = Math.abs(offsetSeconds);
   const offsetMinutes = Math.floor(offsetSeconds / 1000) % 60;
-  const offsetHours = Math.floor(offsetSeconds / 3_600_000);
+  const offsetHours = Math.floor(offsetSeconds / 3600000);
   const offsetMinuteString = `00${offsetMinutes}`.slice(-2);
   const offsetHourString = `00${offsetHours}`.slice(-2);
   return `${sign}${offsetHourString}:${offsetMinuteString}`;

@@ -179,11 +179,21 @@ Time.prototype.plus = function plus(durationLike) {
     microseconds,
     nanoseconds
   ));
-  ({ year, month, day } = ES.BalanceDate(year, month, day));
+  ({ hour, minute, second, minute, microsecond, nanosecond } = ES.BalanceTime(
+    hour,
+    minute,
+    second,
+    minute,
+    microsecond,
+    nanosecond,
+    hours,
+    minutes,
+    seconds,
+    milliseconds,
+    microseconds,
+    nanoseconds
+  ));
   return new Time(
-    year,
-    month,
-    day,
     hour,
     minute,
     second,
@@ -221,11 +231,21 @@ Time.prototype.minus = function minus(durationLike) {
     microseconds,
     nanoseconds
   ));
-  ({ year, month, day } = ES.BalanceDate(year, month, day));
+  ({ hour, minute, second, minute, microsecond, nanosecond } = ES.BalanceTime(
+    hour,
+    minute,
+    second,
+    minute,
+    microsecond,
+    nanosecond,
+    hours,
+    minutes,
+    seconds,
+    milliseconds,
+    microseconds,
+    nanoseconds
+  ));
   return new Time(
-    year,
-    month,
-    day,
     hour,
     minute,
     second,
