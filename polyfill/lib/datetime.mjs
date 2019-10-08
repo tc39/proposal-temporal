@@ -4,15 +4,16 @@ import { datetime as RAW } from "./regex.mjs";
 const DATETIME = new RegExp(`^${RAW.source}$`);
 
 import {
-  SLOT_YEAR,
-  SLOT_MONTH,
-  SLOT_DAY,
-  SLOT_HOUR,
-  SLOT_MINUTE,
-  SLOT_SECOND,
-  SLOT_MILLISECOND,
-  SLOT_MICROSECOND,
-  SLOT_NANOSECOND
+  YEAR,
+  MONTH,
+  DAY,
+  HOUR,
+  MINUTE,
+  SECOND,
+  MILLISECOND,
+  MICROSECOND,
+  NANOSECOND,
+  CreateSlots, GetSlot, SetSlot
 } from "./slots.mjs";
 
 export function DateTime(
@@ -92,76 +93,77 @@ export function DateTime(
       ES.RejectTime(hour, minute, second, millisecond, microsecond, nanosecond);
   }
 
-  this[SLOT_YEAR] = year;
-  this[SLOT_MONTH] = month;
-  this[SLOT_DAY] = day;
-  this[SLOT_HOUR] = hour;
-  this[SLOT_MINUTE] = minute;
-  this[SLOT_SECOND] = second;
-  this[SLOT_MILLISECOND] = millisecond;
-  this[SLOT_MICROSECOND] = microsecond;
-  this[SLOT_NANOSECOND] = nanosecond;
+  CreateSlots(this);
+  SetSlot(this, YEAR, year);
+  SetSlot(this, MONTH, month);
+  SetSlot(this, DAY, day);
+  SetSlot(this, HOUR, hour);
+  SetSlot(this, MINUTE, minute);
+  SetSlot(this, SECOND, second);
+  SetSlot(this, MILLISECOND, millisecond);
+  SetSlot(this, MICROSECOND, microsecond);
+  SetSlot(this, NANOSECOND, nanosecond);
 }
 Object.defineProperties(DateTime.prototype, {
   year: {
     get: function() {
-      return this[SLOT_YEAR];
+      return GetSlot(this, YEAR);
     },
     enumerable: true,
     configurable: true
   },
   month: {
     get: function() {
-      return this[SLOT_MONTH];
+      return GetSlot(this, MONTH);
     },
     enumerable: true,
     configurable: true
   },
   day: {
     get: function() {
-      return this[SLOT_DAY];
+      return GetSlot(this, DAY);
     },
     enumerable: true,
     configurable: true
   },
   hour: {
     get: function() {
-      return this[SLOT_HOUR];
+      return GetSlot(this, HOUR);
     },
     enumerable: true,
     configurable: true
   },
   minute: {
     get: function() {
-      return this[SLOT_MINUTE];
+      return GetSlot(this, MINUTE);
     },
     enumerable: true,
     configurable: true
   },
   second: {
     get: function() {
-      return this[SLOT_SECOND];
+      return GetSlot(this, SECOND);
     },
     enumerable: true,
     configurable: true
   },
   millisecond: {
     get: function() {
-      return this[SLOT_MILLISECOND];
+      return GetSlot(this, MILLISECOND);
     },
     enumerable: true,
     configurable: true
   },
   microsecond: {
     get: function() {
-      return this[SLOT_MICROSECOND];
+      return GetSlot(this, MICROSECOND);
     },
     enumerable: true,
     configurable: true
   },
   nanosecond: {
     get: function() {
-      return this[SLOT_NANOSECOND];
+      return GetSlot(this, NANOSECOND);
     },
     enumerable: true,
     configurable: true
@@ -169,9 +171,9 @@ Object.defineProperties(DateTime.prototype, {
   dayOfWeek: {
     get: function() {
       return ES.DayOfWeek(
-        this[SLOT_THIS].year,
-        this[SLOT_THIS].month,
-        this[SLOT_DAY]
+        GetSlot(this, YEAR),
+        GetSlot(this, MONTH),
+        GetSlot(this, DAY)
       );
     },
     enumerable: true,
@@ -180,9 +182,9 @@ Object.defineProperties(DateTime.prototype, {
   dayOfYear: {
     get: function() {
       return ES.DayOfYear(
-        this[SLOT_THIS].year,
-        this[SLOT_THIS].month,
-        this[SLOT_DAY]
+        GetSlot(this, YEAR),
+        GetSlot(this, MONTH),
+        GetSlot(this, DAY)
       );
     },
     enumerable: true,
@@ -191,9 +193,9 @@ Object.defineProperties(DateTime.prototype, {
   weekOfYear: {
     get: function() {
       return ES.WeekOfYear(
-        this[SLOT_THIS].year,
-        this[SLOT_THIS].month,
-        this[SLOT_DAY]
+        GetSlot(this, YEAR),
+        GetSlot(this, MONTH),
+        GetSlot(this, DAY)
       );
     },
     enumerable: true,
@@ -201,21 +203,21 @@ Object.defineProperties(DateTime.prototype, {
   },
   daysInYear: {
     get: function() {
-      return ES.LeapYear(this[SLOT_YEAR]) ? 366 : 365;
+      return ES.LeapYear(GetSlot(this, YEAR)) ? 366 : 365;
     },
     enumerable: true,
     configurable: true
   },
   daysInMonth: {
     get: function() {
-      return ES.DaysInMonth(this[SLOT_THIS].year, this[SLOT_MONTH]);
+      return ES.DaysInMonth(GetSlot(this, YEAR), GetSlot(this, MONTH));
     },
     enumerable: true,
     configurable: true
   },
   leapYear: {
     get: function() {
-      return ES.LeapYear(this[SLOT_YEAR]);
+      return ES.LeapYear(GetSlot(this, YEAR));
     },
     enumerable: true,
     configurable: true
@@ -226,15 +228,15 @@ DateTime.prototype.with = function(
   disambiguation = "constrain"
 ) {
   const {
-    year = this[SLOT_YEAR],
-    month = this[SLOT_MONTH],
-    day = this[SLOT_DAY],
-    hour = this[SLOT_HOUR],
-    minute = this[SLOT_MINUTE],
-    second = this[SLOT_SECOND],
-    millisecond = this[SLOT_MILLISECOND],
-    microsecond = this[SLOT_MICROSECOND],
-    nanosecond = this[SLOT_NANOSECOND]
+    year = GetSlot(this, YEAR),
+    month = GetSlot(this, MONTH),
+    day = GetSlot(this, DAY),
+    hour = GetSlot(this, HOUR),
+    minute = GetSlot(this, MINUTE),
+    second = GetSlot(this, SECOND),
+    millisecond = GetSlot(this, MILLISECOND),
+    microsecond = GetSlot(this, MICROSECOND),
+    nanosecond = GetSlot(this, NANOSECOND)
   } = dateTimeLike;
   return new DateTime(
     year,
@@ -457,16 +459,16 @@ DateTime.prototype.difference = function difference(
   );
 };
 DateTime.prototype.toString = function toString() {
-  let year = ES.ISOYearString(this[SLOT_YEAR]);
-  let month = ES.ISODateTimePartString(this[SLOT_MONTH]);
-  let day = ES.ISODateTimePartString(this[SLOT_DAY]);
-  let hour = ES.ISODateTimePartString(this[SLOT_HOUR]);
-  let minute = ES.ISODateTimePartString(this[SLOT_MINUTE]);
+  let year = ES.ISOYearString(GetSlot(this, YEAR));
+  let month = ES.ISODateTimePartString(GetSlot(this, MONTH));
+  let day = ES.ISODateTimePartString(GetSlot(this, DAY));
+  let hour = ES.ISODateTimePartString(GetSlot(this, HOUR));
+  let minute = ES.ISODateTimePartString(GetSlot(this, MINUTE));
   let seconds = ES.ISOSecondsString(
-    this[SLOT_SECOND],
-    this[SLOT_MILLISECOND],
-    this[SLOT_MICROSECOND],
-    this[SLOT_NANOSECOND]
+    GetSlot(this, SECOND),
+    GetSlot(this, MILLISECOND),
+    GetSlot(this, MICROSECOND),
+    GetSlot(this, NANOSECOND)
   );
   let resultString = `${year}-${month}-${day}T${hour}:${minute}${
     seconds ? `:${seconds}` : ""
@@ -489,25 +491,25 @@ DateTime.prototype.inZone = function inZone(
 };
 DateTime.prototype.getDate = function getDate() {
   const Date = ES.GetIntrinsic("%Temporal.Date%");
-  return new Date(this[SLOT_YEAR], this[SLOT_MONTH], this[SLOT_DAY]);
+  return new Date(GetSlot(this, YEAR), GetSlot(this, MONTH), GetSlot(this, DAY));
 };
 DateTime.prototype.getYearMonth = function getYearMonth() {
   const YearMonth = ES.GetIntrinsic("%Temporal.YearMonth%");
-  return new YearMonth(this[SLOT_YEAR], this[SLOT_MONTH]);
+  return new YearMonth(GetSlot(this, YEAR), GetSlot(this, MONTH));
 };
 DateTime.prototype.getMonthDay = function getMonthDay() {
   const MonthDay = ES.GetIntrinsic("%Temporal.MonthDay%");
-  return new MonthDay(this[SLOT_MONTH], this[SLOT_DAY]);
+  return new MonthDay(GetSlot(this, MONTH), GetSlot(this, DAY));
 };
 DateTime.prototype.getTime = function getTime() {
   const Time = ES.GetIntrinsic("%Temporal.Time%");
   return new Time(
-    this[SLOT_HOUR],
-    this[SLOT_MINUTE],
-    this[SLOT_SECOND],
-    this[SLOT_MILLISECOND],
-    this[SLOT_MICROSECOND],
-    this[SLOT_NANOSECOND]
+    GetSlot(this, HOUR),
+    GetSlot(this, MINUTE),
+    GetSlot(this, SECOND),
+    GetSlot(this, MILLISECOND),
+    GetSlot(this, MICROSECOND),
+    GetSlot(this, NANOSECOND)
   );
 };
 

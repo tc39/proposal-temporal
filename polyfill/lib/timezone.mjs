@@ -1,16 +1,17 @@
 import { ES } from "./ecmascript.mjs";
-import { SLOT_IDENTIFIER } from "./slots.mjs";
+import { IDENTIFIER, CreateSlots, GetSlot, SetSlot } from "./slots.mjs";
 import { ZONES } from "./zones.mjs";
 
 export function TimeZone(timeZoneIndentifier) {
   if (!(this instanceof TimeZone)) return new TimeZone(timeZoneIndentifier);
-  this[SLOT_IDENTIFIER] = ES.GetCanonicalTimeZoneIdentifier(
+  CreateSlots(this);
+  SetSlot(this, IDENTIFIER, ES.GetCanonicalTimeZoneIdentifier(
     timeZoneIndentifier
-  );
+  ));
 }
 Object.defineProperty(TimeZone.prototype, "name", {
   get: function() {
-    return this[SLOT_IDENTIFIER];
+    return GetSlot(this, IDENTIFIER);
   },
   configurable: true,
   enumerable: true
@@ -30,7 +31,7 @@ TimeZone.prototype.getDateTimeFor = function getDateTimeFor(absolute) {
     millisecond,
     microsecond,
     nanosecond
-  } = ES.GetTimeZoneDateTimeParts(epochNanoseconds, this[SLOT_IDENTIFIER]);
+  } = ES.GetTimeZoneDateTimeParts(epochNanoseconds, GetSlot(this, IDENTIFIER));
   const DateTime = ES.GetIntrinsic("%Temporal.DateTime%");
   return new DateTime(
     year,
@@ -61,7 +62,7 @@ TimeZone.prototype.getAbsoluteFor = function getAbsoluteFor(
     nanosecond
   } = dateTime;
   const options = ES.GetTimeZoneEpochNanoseconds(
-    this[SLOT_IDENTIFIER],
+    GetSlot(this, IDENTIFIER),
     year,
     month,
     day,
@@ -100,11 +101,11 @@ TimeZone.prototype.getAbsoluteFor = function getAbsoluteFor(
   );
   const before = ES.GetTimeZoneOffsetNanoSeconds(
     utcns - BigInt(24 * 3600_000_000_000),
-    this[SLOT_IDENTIFIER]
+    GetSlot(this, IDENTIFIER)
   );
   const after = ES.GetTimeZoneOffsetNanoSeconds(
     utcns + BigInt(24 * 3600_000_000_000),
-    this[SLOT_IDENTIFIER]
+    GetSlot(this, IDENTIFIER)
   );
   const diff = new (ES.GetIntrinsic("%Temporal.Duration%"))({
     nanoseconds: Number(after - before)
@@ -127,7 +128,7 @@ TimeZone.prototype.getTransitions = function getTransitions(startingPoint) {
     next: () => {
       epochNanoseconds = ES.GetTimeZoneNextTransition(
         epochNanoseconds,
-        this[SLOT_IDENTIFIER]
+        GetSlot(this, IDENTIFIER)
       );
       const done = epochNanoseconds !== null;
       const value =

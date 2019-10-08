@@ -1,12 +1,13 @@
 import { ES } from "./ecmascript.mjs";
 
 import {
-  SLOT_HOUR,
-  SLOT_MINUTE,
-  SLOT_SECOND,
-  SLOT_MILLISECOND,
-  SLOT_MICROSECOND,
-  SLOT_NANOSECOND
+  HOUR,
+  MINUTE,
+  SECOND,
+  MILLISECOND,
+  MICROSECOND,
+  NANOSECOND,
+  CreateSlots, GetSlot, SetSlot
 } from "./slots.mjs";
 
 import { time as RAW } from "./regex.mjs";
@@ -75,52 +76,54 @@ export function Time(
     default:
       ES.RejectTime(hour, minute, second, millisecond, microsecond, nanosecond);
   }
-  this[SLOT_HOUR] = hour;
-  this[SLOT_MINUTE] = minute;
-  this[SLOT_SECOND] = second;
-  this[SLOT_MILLISECOND] = millisecond;
-  this[SLOT_MICROSECOND] = microsecond;
-  this[SLOT_NANOSECOND] = nanosecond;
+
+  CreateSlots(this);
+  SetSlot(this, HOUR, hour);
+  SetSlot(this, MINUTE, minute);
+  SetSlot(this, SECOND, second);
+  SetSlot(this, MILLISECOND, millisecond);
+  SetSlot(this, MICROSECOND, microsecond);
+  SetSlot(this, NANOSECOND, nanosecond);
 }
 Object.defineProperties(Time.prototype, {
   hour: {
     get: function() {
-      return this[SLOT_HOUR];
+      return GetSlot(this, HOUR);
     },
     enumerable: true,
     configurable: true
   },
   minute: {
     get: function() {
-      return this[SLOT_MINUTE];
+      return GetSlot(this, MINUTE);
     },
     enumerable: true,
     configurable: true
   },
   second: {
     get: function() {
-      return this[SLOT_SECOND];
+      return GetSlot(this, SECOND);
     },
     enumerable: true,
     configurable: true
   },
   millisecond: {
     get: function() {
-      return this[SLOT_MILLISECOND];
+      return GetSlot(this, MILLISECOND);
     },
     enumerable: true,
     configurable: true
   },
   microsecond: {
     get: function() {
-      return this[SLOT_MICROSECOND];
+      return GetSlot(this, MICROSECOND);
     },
     enumerable: true,
     configurable: true
   },
   nanosecond: {
     get: function() {
-      return this[SLOT_NANOSECOND];
+      return GetSlot(this, NANOSECOND);
     },
     enumerable: true,
     configurable: true
@@ -128,12 +131,12 @@ Object.defineProperties(Time.prototype, {
 });
 Time.prototype.with = function(timeLike = {}, disambiguation = "constrain") {
   const {
-    hour = this[SLOT_HOUR],
-    minute = this[SLOT_MINUTE],
-    second = this[SLOT_SECOND],
-    millisecond = this[SLOT_MILLISECOND],
-    microsecond = this[SLOT_MICROSECOND],
-    nanosecond = this[SLOT_NANOSECOND]
+    hour = GetSlot(this, HOUR),
+    minute = GetSlot(this, MINUTE),
+    second = GetSlot(this, SECOND),
+    millisecond = GetSlot(this, MILLISECOND),
+    microsecond = GetSlot(this, MICROSECOND),
+    nanosecond = GetSlot(this, NANOSECOND)
   } = timeLike;
   return new Time(
     hour,
@@ -264,13 +267,13 @@ Time.prototype.difference = function difference(other = {}) {
 };
 
 Time.prototype.toString = function toString() {
-  let hour = ES.ISODateTimePartString(this[SLOT_HOUR]);
-  let minute = ES.ISODateTimePartString(this[SLOT_MINUTE]);
+  let hour = ES.ISODateTimePartString(GetSlot(this, HOUR));
+  let minute = ES.ISODateTimePartString(GetSlot(this, MINUTE));
   let seconds = ES.ISOSecondsString(
-    this[SLOT_SECOND],
-    this[SLOT_MILLISECOND],
-    this[SLOT_MICROSECOND],
-    this[SLOT_NANOSECOND]
+    GetSlot(this, SECOND),
+    GetSlot(this, MILLISECOND),
+    GetSlot(this, MICROSECOND),
+    GetSlot(this, NANOSECOND)
   );
   let resultString = `${hour}:${minute}${seconds ? `:${seconds}` : ""}`;
   return resultString;

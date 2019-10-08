@@ -1,14 +1,15 @@
 import { ES } from "./ecmascript.mjs";
 import {
-  SLOT_YEARS,
-  SLOT_MONTHS,
-  SLOT_DAYS,
-  SLOT_HOURS,
-  SLOT_MINUTES,
-  SLOT_SECONDS,
-  SLOT_MILLISECONDS,
-  SLOT_MICROSECONDS,
-  SLOT_NANOSECONDS
+  YEARS,
+  MONTHS,
+  DAYS,
+  HOURS,
+  MINUTES,
+  SECONDS,
+  MILLISECONDS,
+  MICROSECONDS,
+  NANOSECONDS,
+  CreateSlots, GetSlot, SetSlot
 } from "./slots.mjs";
 
 export function Duration(
@@ -81,76 +82,77 @@ export function Duration(
   ));
   days += tdays;
 
-  this[SLOT_YEARS] = ES.ToPositiveInteger(years);
-  this[SLOT_MONTHS] = ES.ToPositiveInteger(months);
-  this[SLOT_DAYS] = ES.ToPositiveInteger(days);
-  this[SLOT_HOURS] = hours + days * 24;
-  this[SLOT_MINUTES] = minutes;
-  this[SLOT_SECONDS] = seconds;
-  this[SLOT_MILLISECONDS] = milliseconds;
-  this[SLOT_MICROSECONDS] = microseconds;
-  this[SLOT_NANOSECONDS] = nanoseconds;
+  CreateSlots(this);
+  SetSlot(this, YEARS, ES.ToPositiveInteger(years));
+  SetSlot(this, MONTHS, ES.ToPositiveInteger(months));
+  SetSlot(this, DAYS, ES.ToPositiveInteger(days));
+  SetSlot(this, HOURS, hours + days * 24);
+  SetSlot(this, MINUTES, minutes);
+  SetSlot(this, SECONDS, seconds);
+  SetSlot(this, MILLISECONDS, milliseconds);
+  SetSlot(this, MICROSECONDS, microseconds);
+  SetSlot(this, NANOSECONDS, nanoseconds);
 }
 Object.defineProperties(Duration.prototype, {
   years: {
     get: function() {
-      return this[SLOT_YEARS];
+      return GetSlot(this, YEARS);
     },
     enumerable: true,
     configurable: true
   },
   months: {
     get: function() {
-      return this[SLOT_MONTHS];
+      return GetSlot(this, MONTHS);
     },
     enumerable: true,
     configurable: true
   },
   days: {
     get: function() {
-      return this[SLOT_DAYS];
+      return GetSlot(this, DAYS);
     },
     enumerable: true,
     configurable: true
   },
   hours: {
     get: function() {
-      return this[SLOT_HOURS];
+      return GetSlot(this, HOURS);
     },
     enumerable: true,
     configurable: true
   },
   minutes: {
     get: function() {
-      return this[SLOT_MINUTES];
+      return GetSlot(this, MINUTES);
     },
     enumerable: true,
     configurable: true
   },
   seconds: {
     get: function() {
-      return this[SLOT_SECONDS];
+      return GetSlot(this, SECONDS);
     },
     enumerable: true,
     configurable: true
   },
   milliseconds: {
     get: function() {
-      return this[SLOT_MILLISECONDS];
+      return GetSlot(this, MILLISECONDS);
     },
     enumerable: true,
     configurable: true
   },
   microseconds: {
     get: function() {
-      return this[SLOT_MICROSECONDS];
+      return GetSlot(this, MICROSECONDS);
     },
     enumerable: true,
     configurable: true
   },
   nanoseconds: {
     get: function() {
-      return this[SLOT_NANOSECONDS];
+      return GetSlot(this, NANOSECONDS);
     },
     enumerable: true,
     configurable: true
@@ -158,23 +160,23 @@ Object.defineProperties(Duration.prototype, {
 });
 Duration.prototype.toString = function toString() {
   const dateParts = [];
-  if (this[SLOT_YEARS]) dateParts.push(`${this[SLOT_YEARS]}Y`);
-  if (this[SLOT_MONTHS]) dateParts.push(`${this[SLOT_MONTHS]}M`);
-  if (this[SLOT_DAYS]) dateParts.push(`${this[SLOT_DAYS]}D`);
+  if (GetSlot(this, YEARS)) dateParts.push(`${GetSlot(this, YEARS)}Y`);
+  if (GetSlot(this, MONTHS)) dateParts.push(`${GetSlot(this, MONTHS)}M`);
+  if (GetSlot(this, DAYS)) dateParts.push(`${GetSlot(this, DAYS)}D`);
 
   const timeParts = [];
-  if (this[SLOT_HOURS]) timeParts.push(`${this[SLOT_HOURS]}H`);
-  if (this[SLOT_MINUTES]) timeParts.push(`${this[SLOT_MINUTES]}H`);
+  if (GetSlot(this, HOURS)) timeParts.push(`${GetSlot(this, HOURS)}H`);
+  if (GetSlot(this, MINUTES)) timeParts.push(`${GetSlot(this, MINUTES)}H`);
 
   const secondParts = [];
-  if (this[SLOT_NANOSECONDS])
-    secondParts.unshift(`000${this[SLOT_NANOSECONDS]}`.slice(-3));
-  if (this[SLOT_MICROSECONDS] || secondParts.length)
-    secondParts.unshift(`000${this[SLOT_MICROSECONDS]}`.slice(-3));
-  if (this[SLOT_MILLISECONDS] || secondParts.length)
-    secondParts.unshift(`000${this[SLOT_MILLISECONDS]}`.slice(-3));
+  if (GetSlot(this, NANOSECONDS))
+    secondParts.unshift(`000${GetSlot(this, NANOSECONDS)}`.slice(-3));
+  if (GetSlot(this, MICROSECONDS) || secondParts.length)
+    secondParts.unshift(`000${GetSlot(this, MICROSECONDS)}`.slice(-3));
+  if (GetSlot(this, MILLISECONDS) || secondParts.length)
+    secondParts.unshift(`000${GetSlot(this, MILLISECONDS)}`.slice(-3));
   if (secondParts.length) secondParts.unshift(".");
-  if (this[SLOT_SECONDS] || secondParts.length)
+  if (GetSlot(this, SECONDS) || secondParts.length)
     secondParts.unshift(`${this.seconds}`);
   if (secondParts.length) timeParts.push(`${secondParts.join("")}S`);
   if (timeParts.length) timeParts.unshift("T");

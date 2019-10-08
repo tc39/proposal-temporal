@@ -1,30 +1,31 @@
 import { ES } from "./ecmascript.mjs";
-import { SLOT_EPOCHNANOSECONDS } from "./slots.mjs";
+import { EPOCHNANOSECONDS, CreateSlots, GetSlot, SetSlot } from "./slots.mjs";
 
 export function Absolute(epochNanoSeconds) {
   if (!(this instanceof Absolute)) return new Absolute(epochNanoseconds);
-  this[SLOT_EPOCHNANOSECONDS] = epochNanoSeconds;
+  CreateSlots(this);
+  SetSlot(this, EPOCHNANOSECONDS, epochNanoSeconds);
 }
 
 Absolute.prototype.getEpochSeconds = function getEpochSeconds() {
-  let epochNanoSeconds = this[SLOT_EPOCHNANOSECONDS];
+  let epochNanoSeconds = GetSlot(this, EPOCHNANOSECONDS);
   let epochSecondsBigInt = epochNanoSeconds / BigInt(1_000_000_000);
   let epochSeconds = ES.ToNumber(epochSecondsBigInt);
   return epochSeconds;
 };
 Absolute.prototype.getEpochMilliseconds = function getEpochMilliseconds() {
-  let epochNanoSeconds = this[SLOT_EPOCHNANOSECONDS];
+  let epochNanoSeconds = GetSlot(this, EPOCHNANOSECONDS);
   let epochMillisecondsBigInt = epochNanoSeconds / BigInt(1_000_000);
   let epochMilliseconds = ES.ToNumber(epochMillisecondsBigInt);
   return epochMilliseconds;
 };
 Absolute.prototype.getEpochMicroseconds = function getEpochMicroseconds() {
-  let epochNanoSeconds = this[SLOT_EPOCHNANOSECONDS];
+  let epochNanoSeconds = GetSlot(this, EPOCHNANOSECONDS);
   let epochMicroseconds = epochNanoSeconds / BigInt(1_000);
   return epochMicroseconds;
 };
 Absolute.prototype.getEpochNanoseconds = function getEpochNanoseconds() {
-  let epochNanoSeconds = this[SLOT_EPOCHNANOSECONDS];
+  let epochNanoSeconds = GetSlot(this, EPOCHNANOSECONDS);
   return epochNanoSeconds;
 };
 
@@ -42,7 +43,7 @@ Absolute.prototype.plus = function plus(durationLike = {}) {
   delta += BigInt(duration.microseconds) * BigInt(1_000);
   delta += BigInt(duration.nanosecond);
 
-  const result = this[SLOT_EPOCHNANOSECONDS] + delta;
+  const result = GetSlot(this, EPOCHNANOSECONDS) + delta;
   return new Absolute(result);
 };
 Absolute.prototype.minus = function minus(durationLike = {}) {
@@ -59,7 +60,7 @@ Absolute.prototype.minus = function minus(durationLike = {}) {
   delta += BigInt(duration.microseconds) * BigInt(1_000);
   delta += BigInt(duration.nanosecond);
 
-  const result = this[SLOT_EPOCHNANOSECONDS] - delta;
+  const result = GetSlot(this, EPOCHNANOSECONDS) - delta;
   return new Absolute(result);
 };
 Absolute.prototype.difference = function difference(other) {

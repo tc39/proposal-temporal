@@ -1,5 +1,5 @@
 import { ES } from "./ecmascript.mjs";
-import { SLOT_MONTH, SLOT_DAY } from "./slots.mjs";
+import { MONTH, DAY, CreateSlots, GetSlot, SetSlot } from "./slots.mjs";
 
 import { monthday as RAW } from "./regex.mjs";
 const DATE = new RegExp(`^${RAW.source}$`);
@@ -20,20 +20,21 @@ export function MonthDay(month, day, disambiguation) {
       ES.RejectDate(1970, month, day);
   }
 
-  this[SLOT_MONTH] = month;
-  this[SLOT_DAY] = day;
+  CreateSlots(this);
+  SetSlot(this, MONTH, month);
+  SetSlot(this, DAY, day);
 }
 Object.defineProperties(MonthDay.prototype, {
   month: {
     get: function() {
-      return this[SLOT_MONTH];
+      return GetSlot(this, MONTH);
     },
     enumerable: true,
     configurable: true
   },
   day: {
     get: function() {
-      return this[SLOT_DAY];
+      return GetSlot(this, DAY);
     },
     enumerable: true,
     configurable: true
@@ -43,7 +44,7 @@ MonthDay.prototype.with = function(
   dateLike = {},
   disambiguation = "constrain"
 ) {
-  const { month = this[SLOT_MONTH], day = this[SLOT_DAY] } = dateTimeLike;
+  const { month = GetSlot(this, MONTH), day = GetSlot(this, DAY) } = dateTimeLike;
   return new MonthDay(month, day, disambiguation);
 };
 MonthDay.prototype.plus = function plus(
@@ -138,9 +139,9 @@ MonthDay.prototype.difference = function difference(
   return new Duration(0, months, days, 0, 0, 0, 0, 0, 0);
 };
 MonthDay.prototype.toString = function toString() {
-  let year = ES.ISOYearString(this[SLOT_YEAR]);
-  let month = ES.ISODateTimePartString(this[SLOT_MONTH]);
-  let day = ES.ISODateTimePartString(this[SLOT_DAY]);
+  let year = ES.ISOYearString(GetSlot(this, YEAR));
+  let month = ES.ISODateTimePartString(GetSlot(this, MONTH));
+  let day = ES.ISODateTimePartString(GetSlot(this, DAY));
   let resultString = `${year}-${month}-${day}`;
   return resultString;
 };
@@ -151,8 +152,8 @@ MonthDay.prototype.toJSON = function toJSON() {
   return this.toString();
 };
 MonthDay.prototype.withYear = function withYear(year) {
-  const month = this[SLOT_MONTH];
-  const day = this[SLOT_DAY];
+  const month = GetSlot(this, MONTH);
+  const day = GetSlot(this, DAY);
   const Date = ES.GetIntrinsic("%Temporal.Date%");
   return new Date(year, month, day);
 };
