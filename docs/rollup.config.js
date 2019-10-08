@@ -5,7 +5,7 @@ export default {
   input: "setup.js",
   output: {
     name: "temporal",
-    file: "index.js",
+    file: "playground.js",
     format: "umd",
     lib: ["es6"]
   },

@@ -376,7 +376,7 @@
 
 	var string_prototype_trimright = bound$1;
 
-	const inspect = (obj)=>`${obj}`;
+	const inspect = (obj)=>(obj && 'object' === typeof obj)?`{ ${Object.entries(obj).map(([k,v])=>`${k}:${v}`).join(', ') } }`:`${obj}`;
 
 	var util = /*#__PURE__*/Object.freeze({
 	    __proto__: null,
@@ -3456,33 +3456,35 @@
 
 	const timezone$1 = /([+-][0-1]?[0-9]:?[0-5][0-9]|\[[^]+\])/;
 
+	const duration = /P(?:(\d+)Y)?(?:(\d+)M)?(?:(\d+)D)?(?:T(?:(\d+)H)?(?:(\d+)M)?(?:(\d+(?:\.\d+)?)S)?)?/;
+
 	// Absolute
-	const EPOCHNANOSECONDS = Symbol("slot-epochNanoSeconds");
+	const EPOCHNANOSECONDS = Symbol('slot-epochNanoSeconds');
 
 	// TimeZone
-	const IDENTIFIER = Symbol("slot-identifier");
+	const IDENTIFIER = Symbol('slot-identifier');
 
 	// DateTime, Date, Time, YearMonth, MonthDay
-	const YEAR$1 = Symbol("slot-year");
-	const MONTH = Symbol("slot-month");
-	const DAY = Symbol("slot-day");
-	const HOUR = Symbol("slot-hour");
-	const MINUTE = Symbol("slot-minute");
-	const SECOND = Symbol("slot-second");
-	const MILLISECOND = Symbol("slot-millisecond");
-	const MICROSECOND = Symbol("slot-microsecond");
-	const NANOSECOND = Symbol("slot-nanosecond");
+	const YEAR$1 = Symbol('slot-year');
+	const MONTH = Symbol('slot-month');
+	const DAY = Symbol('slot-day');
+	const HOUR = Symbol('slot-hour');
+	const MINUTE = Symbol('slot-minute');
+	const SECOND = Symbol('slot-second');
+	const MILLISECOND = Symbol('slot-millisecond');
+	const MICROSECOND = Symbol('slot-microsecond');
+	const NANOSECOND = Symbol('slot-nanosecond');
 
 	// Duration
-	const YEARS = Symbol("slot-years");
-	const MONTHS = Symbol("slot-months");
-	const DAYS = Symbol("slot-days");
-	const HOURS = Symbol("slot-hours");
-	const MINUTES = Symbol("slot-minutes");
-	const SECONDS = Symbol("slot-seconds");
-	const MILLISECONDS = Symbol("slot-milliseconds");
-	const MICROSECONDS = Symbol("slot-microseconds");
-	const NANOSECONDS = Symbol("slot-nanoseconds");
+	const YEARS = Symbol('slot-years');
+	const MONTHS = Symbol('slot-months');
+	const DAYS = Symbol('slot-days');
+	const HOURS = Symbol('slot-hours');
+	const MINUTES = Symbol('slot-minutes');
+	const SECONDS = Symbol('slot-seconds');
+	const MILLISECONDS = Symbol('slot-milliseconds');
+	const MICROSECONDS = Symbol('slot-microseconds');
+	const NANOSECONDS = Symbol('slot-nanoseconds');
 
 	const slots = new WeakMap();
 	function CreateSlots(container) {
@@ -3507,21 +3509,37 @@
 	  millisecond = 0,
 	  microsecond = 0,
 	  nanosecond = 0,
-	  disambiguation = "constrain"
+	  disambiguation = 'constrain'
 	) {
 	  if (!(this instanceof DateTime$1))
-	    return new DateTime$1(
-	      year,
-	      month,
-	      day,
-	      hour,
-	      minute,
-	      second,
-	      millisecond,
-	      microsecond,
-	      nanosecond,
-	      disambiguation
-	    );
+	    return new DateTime$1(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, disambiguation);
+	  if (
+	    'object' === typeof year &&
+	    'object' === typeof month &&
+	    !day &&
+	    !hour &&
+	    !minute &&
+	    !second &&
+	    !millisecond &&
+	    !microsecond &&
+	    !nanosecond
+	  ) {
+	    ({ hour, minute, second = 0, millisecond = 0, microsecond = 0, nanosecond = 0 } = month);
+	    ({ year, month, day } = year);
+	  }
+	  if (
+	    'object' === typeof year &&
+	    !month &&
+	    !day &&
+	    !hour &&
+	    !minute &&
+	    !second &&
+	    !millisecond &&
+	    !microsecond &&
+	    !nanosecond
+	  ) {
+	    ({ year, month, day, hour, minute, second = 0, millisecond = 0, microsecond = 0, nanosecond = 0 } = year);
+	  }
 	  year = ES.ToInteger(year);
 	  month = ES.ToInteger(month);
 	  day = ES.ToInteger(day);
@@ -3532,16 +3550,9 @@
 	  microsecond = ES.ToInteger(microsecond);
 	  nanosecond = ES.ToInteger(nanosecond);
 	  switch (disambiguation) {
-	    case "constrain":
+	    case 'constrain':
 	      ({ year, month, day } = ES.ConstrainDate(year, month, day));
-	      ({
-	        hour,
-	        minute,
-	        second,
-	        millisecond,
-	        microsecond,
-	        nanosecond
-	      } = ES.ConstrainTime(
+	      ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.ConstrainTime(
 	        hour,
 	        minute,
 	        second,
@@ -3550,16 +3561,8 @@
 	        nanosecond
 	      ));
 	      break;
-	    case "balance":
-	      ({
-	        days,
-	        hour,
-	        minute,
-	        second,
-	        millisecond,
-	        microsecond,
-	        nanosecond
-	      } = ES.BalanceTime(
+	    case 'balance':
+	      ({ days, hour, minute, second, millisecond, microsecond, nanosecond } = ES.BalanceTime(
 	        hour,
 	        minute,
 	        second,
@@ -3651,33 +3654,21 @@
 	  },
 	  dayOfWeek: {
 	    get: function() {
-	      return ES.DayOfWeek(
-	        GetSlot(this, YEAR$1),
-	        GetSlot(this, MONTH),
-	        GetSlot(this, DAY)
-	      );
+	      return ES.DayOfWeek(GetSlot(this, YEAR$1), GetSlot(this, MONTH), GetSlot(this, DAY));
 	    },
 	    enumerable: true,
 	    configurable: true
 	  },
 	  dayOfYear: {
 	    get: function() {
-	      return ES.DayOfYear(
-	        GetSlot(this, YEAR$1),
-	        GetSlot(this, MONTH),
-	        GetSlot(this, DAY)
-	      );
+	      return ES.DayOfYear(GetSlot(this, YEAR$1), GetSlot(this, MONTH), GetSlot(this, DAY));
 	    },
 	    enumerable: true,
 	    configurable: true
 	  },
 	  weekOfYear: {
 	    get: function() {
-	      return ES.WeekOfYear(
-	        GetSlot(this, YEAR$1),
-	        GetSlot(this, MONTH),
-	        GetSlot(this, DAY)
-	      );
+	      return ES.WeekOfYear(GetSlot(this, YEAR$1), GetSlot(this, MONTH), GetSlot(this, DAY));
 	    },
 	    enumerable: true,
 	    configurable: true
@@ -3704,10 +3695,7 @@
 	    configurable: true
 	  }
 	});
-	DateTime$1.prototype.with = function(
-	  dateTimeLike = {},
-	  disambiguation = "constrain"
-	) {
+	DateTime$1.prototype.with = function(dateTimeLike = {}, disambiguation = 'constrain') {
 	  const {
 	    year = GetSlot(this, YEAR$1),
 	    month = GetSlot(this, MONTH),
@@ -3719,64 +3707,14 @@
 	    microsecond = GetSlot(this, MICROSECOND),
 	    nanosecond = GetSlot(this, NANOSECOND)
 	  } = dateTimeLike;
-	  return new DateTime$1(
-	    year,
-	    month,
-	    day,
-	    hour,
-	    minute,
-	    second,
-	    millisecond,
-	    microsecond,
-	    nanosecond,
-	    disambiguation
-	  );
+	  return new DateTime$1(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, disambiguation);
 	};
-	DateTime$1.prototype.plus = function plus(
-	  durationLike = {},
-	  disambiguation = "constrain"
-	) {
+	DateTime$1.prototype.plus = function plus(durationLike = {}, disambiguation = 'constrain') {
 	  const duration = ES.CastToDuration(durationLike);
-	  let {
-	    year,
-	    month,
-	    day,
-	    hour,
-	    minute,
-	    second,
-	    millisecond,
-	    microsecond,
-	    nanosecond
-	  } = this;
-	  let {
-	    years,
-	    months,
-	    days,
-	    hours,
-	    minutes,
-	    seconds,
-	    milliseconds,
-	    microseconds,
-	    nanoseconds
-	  } = duration;
-	  ({ year, month, day } = ES.AddDate(
-	    year,
-	    month,
-	    day,
-	    years,
-	    months,
-	    days,
-	    disambiguation
-	  ));
-	  ({
-	    days,
-	    hour,
-	    minute,
-	    second,
-	    millisecond,
-	    microsecond,
-	    nanosecond
-	  } = ES.AddTime(
+	  let { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = this;
+	  let { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
+	  ({ year, month, day } = ES.AddDate(year, month, day, years, months, days, disambiguation));
+	  ({ days, hour, minute, second, millisecond, microsecond, nanosecond } = ES.AddTime(
 	    hour,
 	    minute,
 	    second,
@@ -3792,63 +3730,14 @@
 	  ));
 	  day += days;
 	  ({ year, month, day } = ES.BalanceDate(year, month, day));
-	  return new DateTime$1(
-	    year,
-	    month,
-	    day,
-	    hour,
-	    minute,
-	    second,
-	    millisecond,
-	    microsecond,
-	    nanosecond
-	  );
+	  return new DateTime$1(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
 	};
-	DateTime$1.prototype.minus = function minus(
-	  durationLike = {},
-	  disambiguation = "constrain"
-	) {
+	DateTime$1.prototype.minus = function minus(durationLike = {}, disambiguation = 'constrain') {
 	  const duration = ES.CastToDuration(durationLike);
-	  let {
-	    year,
-	    month,
-	    day,
-	    hour,
-	    minute,
-	    second,
-	    millisecond,
-	    microsecond,
-	    nanosecond
-	  } = this;
-	  let {
-	    years,
-	    months,
-	    days,
-	    hours,
-	    minutes,
-	    seconds,
-	    milliseconds,
-	    microseconds,
-	    nanoseconds
-	  } = duration;
-	  ({ year, month, day } = ES.SubtractDate(
-	    year,
-	    month,
-	    day,
-	    years,
-	    months,
-	    days,
-	    disambiguation
-	  ));
-	  ({
-	    days,
-	    hour,
-	    minute,
-	    second,
-	    millisecond,
-	    microsecond,
-	    nanosecond
-	  } = ES.SubtractTime(
+	  let { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = this;
+	  let { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
+	  ({ year, month, day } = ES.SubtractDate(year, month, day, years, months, days, disambiguation));
+	  ({ days, hour, minute, second, millisecond, microsecond, nanosecond } = ES.SubtractTime(
 	    hour,
 	    minute,
 	    second,
@@ -3864,38 +3753,18 @@
 	  ));
 	  day += days;
 	  ({ year, month, day } = ES.BalanceDate(year, month, day));
-	  return new DateTime$1(
-	    year,
-	    month,
-	    day,
-	    hour,
-	    minute,
-	    second,
-	    millisecond,
-	    microsecond,
-	    nanosecond
-	  );
+	  return new DateTime$1(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
 	};
-	DateTime$1.prototype.difference = function difference(
-	  other,
-	  disambiguation = "constrain"
-	) {
+	DateTime$1.prototype.difference = function difference(other, disambiguation = 'constrain') {
 	  const [one, two] = [this, other].sort(DateTime$1.compare);
 	  let years = two.year - one.year;
 
-	  let days =
-	    ES.DayOfYear(two.year, two.month, two.day) -
-	    ES.DayOfYear(one.year, one.month, one.day);
+	  let days = ES.DayOfYear(two.year, two.month, two.day) - ES.DayOfYear(one.year, one.month, one.day);
 	  if (days < 0) {
 	    years -= 1;
 	    days = (ES.LeapYear(two.year) ? 366 : 365) + days;
 	  }
-	  if (
-	    disambiguation === "constrain" &&
-	    month === 2 &&
-	    ES.LeapYear(one.year) &&
-	    !ES.LeapYear(one.year + years)
-	  )
+	  if (disambiguation === 'constrain' && month === 2 && ES.LeapYear(one.year) && !ES.LeapYear(one.year + years))
 	    ;
 
 	  let hours = two.hour - one.hour;
@@ -3913,31 +3782,14 @@
 	    millisecond: milliseconds,
 	    microsecond: microseconds,
 	    nanosecond: nanoseconds
-	  } = ES.BalanceTime(
-	    hours,
-	    minutes,
-	    seconds,
-	    milliseconds,
-	    microseconds,
-	    nanoseconds
-	  ));
+	  } = ES.BalanceTime(hours, minutes, seconds, milliseconds, microseconds, nanoseconds));
 	  days += deltaDays;
 	  if (days < 0) {
 	    years -= 1;
 	    days += ES.DaysInMonth(two.year, two.month);
 	  }
-	  const Duration = ES.GetIntrinsic("%Temporal.Duration%");
-	  return new Duration(
-	    years,
-	    0,
-	    days,
-	    hours,
-	    minutes,
-	    seconds,
-	    milliseconds,
-	    microseconds,
-	    nanoseconds
-	  );
+	  const Duration = ES.GetIntrinsic('%Temporal.Duration%');
+	  return new Duration(years, 0, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
 	};
 	DateTime$1.prototype.toString = DateTime$1.prototype.toJSON = function toString() {
 	  let year = ES.ISOYearString(GetSlot(this, YEAR$1));
@@ -3945,46 +3797,37 @@
 	  let day = ES.ISODateTimePartString(GetSlot(this, DAY));
 	  let hour = ES.ISODateTimePartString(GetSlot(this, HOUR));
 	  let minute = ES.ISODateTimePartString(GetSlot(this, MINUTE));
-	  let seconds = ES.ISOSecondsString(
+	  let second = ES.ISOSecondsString(
 	    GetSlot(this, SECOND),
 	    GetSlot(this, MILLISECOND),
 	    GetSlot(this, MICROSECOND),
 	    GetSlot(this, NANOSECOND)
 	  );
-	  let resultString = `${year}-${month}-${day}T${hour}:${minute}${
-    seconds ? `:${seconds}` : ""
-  }`;
+	  let resultString = `${year}-${month}-${day}T${hour}:${minute}${second ? `:${second}` : ''}`;
 	  return resultString;
 	};
 	DateTime$1.prototype.toLocaleString = function toLocaleString(...args) {
 	  return new Intl.DateTimeFormat(...args).format(this);
 	};
 
-	DateTime$1.prototype.inZone = function inZone(
-	  timeZoneParam = "UTC",
-	  disambiguation = "earlier"
-	) {
+	DateTime$1.prototype.inZone = function inZone(timeZoneParam = 'UTC', disambiguation = 'earlier') {
 	  let timeZone = ES.ToTimeZone(timeZoneParam);
 	  return timeZone.getAbsoluteFor(this, disambiguation);
 	};
 	DateTime$1.prototype.getDate = function getDate() {
-	  const Date = ES.GetIntrinsic("%Temporal.Date%");
-	  return new Date(
-	    GetSlot(this, YEAR$1),
-	    GetSlot(this, MONTH),
-	    GetSlot(this, DAY)
-	  );
+	  const Date = ES.GetIntrinsic('%Temporal.Date%');
+	  return new Date(GetSlot(this, YEAR$1), GetSlot(this, MONTH), GetSlot(this, DAY));
 	};
 	DateTime$1.prototype.getYearMonth = function getYearMonth() {
-	  const YearMonth = ES.GetIntrinsic("%Temporal.YearMonth%");
+	  const YearMonth = ES.GetIntrinsic('%Temporal.YearMonth%');
 	  return new YearMonth(GetSlot(this, YEAR$1), GetSlot(this, MONTH));
 	};
 	DateTime$1.prototype.getMonthDay = function getMonthDay() {
-	  const MonthDay = ES.GetIntrinsic("%Temporal.MonthDay%");
+	  const MonthDay = ES.GetIntrinsic('%Temporal.MonthDay%');
 	  return new MonthDay(GetSlot(this, MONTH), GetSlot(this, DAY));
 	};
 	DateTime$1.prototype.getTime = function getTime() {
-	  const Time = ES.GetIntrinsic("%Temporal.Time%");
+	  const Time = ES.GetIntrinsic('%Temporal.Time%');
 	  return new Time(
 	    GetSlot(this, HOUR),
 	    GetSlot(this, MINUTE),
@@ -3998,7 +3841,7 @@
 	DateTime$1.fromString = function fromString(isoStringParam) {
 	  const isoString = ES.ToString(isoStringParam);
 	  const match = DATETIME.exec(isoString);
-	  if (!match) throw new RangeError("invalid datetime string");
+	  if (!match) throw new RangeError('invalid datetime string');
 	  const year = ES.ToInteger(match[1]);
 	  const month = ES.ToInteger(match[2]);
 	  const day = ES.ToInteger(match[3]);
@@ -4008,18 +3851,7 @@
 	  const millisecond = match[7] ? ES.ToInteger(match[7]) : 0;
 	  const microsecond = match[8] ? ES.ToInteger(match[8]) : 0;
 	  const nanosecond = match[9] ? ES.ToInteger(match[9]) : 0;
-	  return new DateTime$1(
-	    year,
-	    month,
-	    day,
-	    hour,
-	    minute,
-	    second,
-	    millisecond,
-	    microsecond,
-	    nanosecond,
-	    "reject"
-	  );
+	  return new DateTime$1(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, 'reject');
 	};
 	DateTime$1.compare = function compare(one, two) {
 	  if (one.year !== two.year) return one.year - two.year;
@@ -4028,30 +3860,30 @@
 	  if (one.hour !== two.hour) return one.hour - two.hour;
 	  if (one.minute !== two.minute) return one.minute - two.minute;
 	  if (one.second !== two.second) return one.second - two.second;
-	  if (one.millisecond !== two.millisecond)
-	    return one.millisecond - two.millisecond;
-	  if (one.microsecond !== two.microsecond)
-	    return one.microsecond - two.microsecond;
+	  if (one.millisecond !== two.millisecond) return one.millisecond - two.millisecond;
+	  if (one.microsecond !== two.microsecond) return one.microsecond - two.microsecond;
 	  if (one.nanosecond !== two.nanosecond) return one.nanosecond - two.nanosecond;
 	  return 0;
 	};
 	Object.defineProperty(DateTime$1.prototype, Symbol.toStringTag, {
-	  value: "Temporal.DateTime"
+	  value: 'Temporal.DateTime'
 	});
 
 	const DATE = new RegExp(`^${date.source}$`);
 
 	function Date$1(year, month, day, disambiguation) {
-	  if (!(this instanceof Date$1))
-	    return new Date$1(year, month, day, disambiguation);
+	  if (!(this instanceof Date$1)) return new Date$1(year, month, day, disambiguation);
+	  if ('object' === typeof year && !month && !day) {
+	    ({ year, month, day } = year);
+	  }
 	  year = ES.ToInteger(year);
 	  month = ES.ToInteger(month);
 	  day = ES.ToInteger(day);
 	  switch (disambiguation) {
-	    case "constrain":
+	    case 'constrain':
 	      ({ year, month, day } = ES.ConstrainDate(year, month, day));
 	      break;
-	    case "balance":
+	    case 'balance':
 	      ({ year, month, day } = ES.BalanceDate(year, month, day));
 	      break;
 	    default:
@@ -4087,33 +3919,21 @@
 	  },
 	  dayOfWeek: {
 	    get: function() {
-	      return ES.DayOfWeek(
-	        GetSlot(this, THIS).year,
-	        GetSlot(this, THIS).month,
-	        GetSlot(this, DAY)
-	      );
+	      return ES.DayOfWeek(GetSlot(this, THIS).year, GetSlot(this, THIS).month, GetSlot(this, DAY));
 	    },
 	    enumerable: true,
 	    configurable: true
 	  },
 	  dayOfYear: {
 	    get: function() {
-	      return ES.DayOfYear(
-	        GetSlot(this, THIS).year,
-	        GetSlot(this, THIS).month,
-	        GetSlot(this, DAY)
-	      );
+	      return ES.DayOfYear(GetSlot(this, THIS).year, GetSlot(this, THIS).month, GetSlot(this, DAY));
 	    },
 	    enumerable: true,
 	    configurable: true
 	  },
 	  weekOfYear: {
 	    get: function() {
-	      return ES.WeekOfYear(
-	        GetSlot(this, THIS).year,
-	        GetSlot(this, THIS).month,
-	        GetSlot(this, DAY)
-	      );
+	      return ES.WeekOfYear(GetSlot(this, THIS).year, GetSlot(this, THIS).month, GetSlot(this, DAY));
 	    },
 	    enumerable: true,
 	    configurable: true
@@ -4140,117 +3960,47 @@
 	    configurable: true
 	  }
 	});
-	Date$1.prototype.with = function(dateLike = {}, disambiguation = "constrain") {
-	  const {
-	    year = GetSlot(this, YEAR$1),
-	    month = GetSlot(this, MONTH),
-	    day = GetSlot(this, DAY)
-	  } = dateTimeLike;
+	Date$1.prototype.with = function(dateLike = {}, disambiguation = 'constrain') {
+	  const { year = GetSlot(this, YEAR$1), month = GetSlot(this, MONTH), day = GetSlot(this, DAY) } = dateTimeLike;
 	  return new Date$1(year, month, day, disambiguation);
 	};
-	Date$1.prototype.plus = function plus(
-	  durationLike = {},
-	  disambiguation = "constrain"
-	) {
+	Date$1.prototype.plus = function plus(durationLike = {}, disambiguation = 'constrain') {
 	  const duration = ES.CastToDuration(durationLike);
 	  let { year, month, day } = this;
-	  let {
-	    years,
-	    months,
-	    days,
-	    hours,
-	    minutes,
-	    seconds,
-	    milliseconds,
-	    microseconds,
-	    nanoseconds
-	  } = duration;
-	  if (
-	    hours ||
-	    minutes ||
-	    seconds ||
-	    milliseconds ||
-	    microseconds ||
-	    nanoseconds
-	  )
-	    throw new RangeError("invalid duration");
-	  ({ year, month, day } = ES.AddDate(
-	    year,
-	    month,
-	    day,
-	    years,
-	    months,
-	    days,
-	    disambiguation
-	  ));
+	  let { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
+	  if (hours || minutes || seconds || milliseconds || microseconds || nanoseconds)
+	    throw new RangeError('invalid duration');
+	  ({ year, month, day } = ES.AddDate(year, month, day, years, months, days, disambiguation));
 	  ({ year, month, day } = ES.BalanceDate(year, month, day));
 	  return new Date$1(year, month, day);
 	};
-	Date$1.prototype.minus = function minus(
-	  durationLike = {},
-	  disambiguation = "constrain"
-	) {
+	Date$1.prototype.minus = function minus(durationLike = {}, disambiguation = 'constrain') {
 	  const duration = ES.CastToDuration(durationLike);
 	  let { year, month, day } = this;
-	  let {
-	    years,
-	    months,
-	    days,
-	    hours,
-	    minutes,
-	    seconds,
-	    milliseconds,
-	    microseconds,
-	    nanoseconds
-	  } = duration;
-	  if (
-	    hours ||
-	    minutes ||
-	    seconds ||
-	    milliseconds ||
-	    microseconds ||
-	    nanoseconds
-	  )
-	    throw new RangeError("invalid duration");
-	  ({ year, month, day } = ES.SubtractDate(
-	    year,
-	    month,
-	    day,
-	    years,
-	    months,
-	    days,
-	    disambiguation
-	  ));
+	  let { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
+	  if (hours || minutes || seconds || milliseconds || microseconds || nanoseconds)
+	    throw new RangeError('invalid duration');
+	  ({ year, month, day } = ES.SubtractDate(year, month, day, years, months, days, disambiguation));
 	  ({ year, month, day } = ES.BalanceDate(year, month, day));
 	  return new Date$1(year, month, day);
 	};
-	Date$1.prototype.difference = function difference(
-	  other,
-	  disambiguation = "constrain"
-	) {
+	Date$1.prototype.difference = function difference(other, disambiguation = 'constrain') {
 	  const [one, two] = [this, other].sort(DateTime.compare);
 	  let years = two.year - one.year;
 
-	  let days =
-	    ES.DayOfYear(two.year, two.month, two.day) -
-	    ES.DayOfYear(one.year, one.month, one.day);
+	  let days = ES.DayOfYear(two.year, two.month, two.day) - ES.DayOfYear(one.year, one.month, one.day);
 	  if (days < 0) {
 	    years -= 1;
 	    days = (ES.LeapYear(two.year) ? 366 : 365) + days;
 	  }
-	  if (
-	    disambiguation === "constrain" &&
-	    month === 2 &&
-	    ES.LeapYear(one.year) &&
-	    !ES.LeapYear(one.year + years)
-	  )
+	  if (disambiguation === 'constrain' && month === 2 && ES.LeapYear(one.year) && !ES.LeapYear(one.year + years))
 	    ;
 
 	  if (days < 0) {
 	    years -= 1;
 	    days += ES.DaysInMonth(two.year, two.month);
 	  }
-	  const Duration = ES.GetIntrinsic("%Temporal.Duration%");
+	  const Duration = ES.GetIntrinsic('%Temporal.Duration%');
 	  return new Duration(years, 0, days, 0, 0, 0, 0, 0, 0);
 	};
 	Date$1.prototype.toString = Date$1.prototype.toJSON = function toString() {
@@ -4263,52 +4013,31 @@
 	Date$1.prototype.toLocaleString = function toLocaleString(...args) {
 	  return new Intl.DateTimeFormat(...args).format(this);
 	};
-	Date$1.prototype.withTime = function withTime(
-	  timeLike,
-	  disambiguation = "constrain"
-	) {
+	Date$1.prototype.withTime = function withTime(timeLike, disambiguation = 'constrain') {
 	  const year = GetSlot(this, YEAR$1);
 	  const month = GetSlot(this, MONTH);
 	  const day = GetSlot(this, DAY);
-	  const {
-	    hour,
-	    minute,
-	    second,
-	    millisecond,
-	    microsecond,
-	    nanosecond
-	  } = timeLike;
-	  const DateTime = ES.GetIntrinsic("%Temporal.DateTime%");
-	  return new DateTime(
-	    year,
-	    month,
-	    day,
-	    hour,
-	    minute,
-	    second,
-	    millisecond,
-	    microsecond,
-	    nanosecond,
-	    disambiguation
-	  );
+	  const { hour, minute, second, millisecond, microsecond, nanosecond } = timeLike;
+	  const DateTime = ES.GetIntrinsic('%Temporal.DateTime%');
+	  return new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, disambiguation);
 	};
 	Date$1.prototype.getYearMonth = function getYearMonth() {
-	  const YearMonth = ES.GetIntrinsic("%Temporal.YearMonth%");
+	  const YearMonth = ES.GetIntrinsic('%Temporal.YearMonth%');
 	  return new YearMonth(GetSlot(this, YEAR$1), GetSlot(this, MONTH));
 	};
 	Date$1.prototype.getMonthDay = function getMonthDay() {
-	  const MonthDay = ES.GetIntrinsic("%Temporal.MonthDay%");
+	  const MonthDay = ES.GetIntrinsic('%Temporal.MonthDay%');
 	  return new MonthDay(GetSlot(this, MONTH), GetSlot(this, DAY));
 	};
 
 	Date$1.fromString = function fromString(isoStringParam) {
 	  const isoString = ES.ToString(isoStringParam);
 	  const match = DATE.exec(isoString);
-	  if (!match) throw new RangeError("invalid date string");
+	  if (!match) throw new RangeError('invalid date string');
 	  const year = ES.ToInteger(match[1]);
 	  const month = ES.ToInteger(match[2]);
 	  const day = ES.ToInteger(match[3]);
-	  return new Date$1(year, month, day, "reject");
+	  return new Date$1(year, month, day, 'reject');
 	};
 	Date$1.compare = function compare(one, two) {
 	  if (one.year !== two.year) return one.year - two.year;
@@ -4317,22 +4046,24 @@
 	  return 0;
 	};
 	Object.defineProperty(Date$1.prototype, Symbol.toStringTag, {
-	  get: () => "Temporal.Date"
+	  get: () => 'Temporal.Date'
 	});
 
 	const DATE$1 = new RegExp(`^${yearmonth.source}$`);
 
 	function YearMonth(year, month, disambiguation) {
-	  if (!(this instanceof YearMonth))
-	    return new YearMonth(year, month, disambiguation);
+	  if (!(this instanceof YearMonth)) return new YearMonth(year, month, disambiguation);
+	  if ('object' === typeof year && !month) {
+	    ({ year, month } = year);
+	  }
 	  year = ES.ToInteger(year);
 	  month = ES.ToInteger(month);
 	  ({ year, month } = ES.ConstrainDate(year, month, 1));
 	  switch (disambiguation) {
-	    case "constrain":
+	    case 'constrain':
 	      ({ year, month } = ES.ConstrainDate(year, month, 1));
 	      break;
-	    case "balance":
+	    case 'balance':
 	      ({ year, month } = ES.BalanceYearMonth(year, month));
 	      break;
 	    default:
@@ -4372,92 +4103,31 @@
 	    configurable: true
 	  }
 	});
-	YearMonth.prototype.with = function(
-	  dateLike = {},
-	  disambiguation = "constrain"
-	) {
-	  const {
-	    year = GetSlot(this, YEAR$1),
-	    month = GetSlot(this, MONTH)
-	  } = dateTimeLike;
+	YearMonth.prototype.with = function(dateLike = {}, disambiguation = 'constrain') {
+	  const { year = GetSlot(this, YEAR$1), month = GetSlot(this, MONTH) } = dateTimeLike;
 	  return new YearMonth(year, month, disambiguation);
 	};
-	YearMonth.prototype.plus = function plus(
-	  durationLike = {},
-	  disambiguation = "constrain"
-	) {
+	YearMonth.prototype.plus = function plus(durationLike = {}, disambiguation = 'constrain') {
 	  const duration = ES.CastToDuration(durationLike);
 	  let { year, month } = this;
-	  let {
-	    years,
-	    months,
-	    days,
-	    hours,
-	    minutes,
-	    seconds,
-	    milliseconds,
-	    microseconds,
-	    nanoseconds
-	  } = duration;
-	  if (
-	    (hours || minutes || seconds || milliseconds || microseconds || nanoseconds)
-	  )
-	    throw new RangeError("invalid duration");
-	  ({ year, month } = ES.AddDate(
-	    year,
-	    month,
-	    1,
-	    years,
-	    months,
-	    0,
-	    disambiguation
-	  ));
+	  let { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
+	  if ((hours || minutes || seconds || milliseconds || microseconds || nanoseconds))
+	    throw new RangeError('invalid duration');
+	  ({ year, month } = ES.AddDate(year, month, 1, years, months, 0, disambiguation));
 	  ({ year, month } = ES.BalanceYearMonth(year, month));
 	  return new YearMonth(year, month);
 	};
-	YearMonth.prototype.minus = function minus(
-	  durationLike = {},
-	  disambiguation = "constrain"
-	) {
+	YearMonth.prototype.minus = function minus(durationLike = {}, disambiguation = 'constrain') {
 	  const duration = ES.CastToDuration(durationLike);
 	  let { year, month } = this;
-	  let {
-	    years,
-	    months,
-	    days,
-	    hours,
-	    minutes,
-	    seconds,
-	    milliseconds,
-	    microseconds,
-	    nanoseconds
-	  } = duration;
-	  if (
-	    days ||
-	    hours ||
-	    minutes ||
-	    seconds ||
-	    milliseconds ||
-	    microseconds ||
-	    nanoseconds
-	  )
-	    throw new RangeError("invalid duration");
-	  ({ year, month } = ES.SubtractDate(
-	    year,
-	    month,
-	    1,
-	    years,
-	    months,
-	    0,
-	    disambiguation
-	  ));
+	  let { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
+	  if (days || hours || minutes || seconds || milliseconds || microseconds || nanoseconds)
+	    throw new RangeError('invalid duration');
+	  ({ year, month } = ES.SubtractDate(year, month, 1, years, months, 0, disambiguation));
 	  ({ year, month } = ES.BalanceYearMonth(year, month));
 	  return new YearMonth(year, month);
 	};
-	YearMonth.prototype.difference = function difference(
-	  other,
-	  disambiguation = "constrain"
-	) {
+	YearMonth.prototype.difference = function difference(other, disambiguation = 'constrain') {
 	  const [one, two] = [this, other].sort(DateTime.compare);
 	  let years = two.year - one.year;
 	  let months = two.month - one.month;
@@ -4465,7 +4135,7 @@
 	    years -= 1;
 	    months += 12;
 	  }
-	  const Duration = ES.GetIntrinsic("%Temporal.Duration%");
+	  const Duration = ES.GetIntrinsic('%Temporal.Duration%');
 	  return new Duration(years, months);
 	};
 	YearMonth.prototype.toString = YearMonth.prototype.toJSON = function toString() {
@@ -4477,23 +4147,20 @@
 	YearMonth.prototype.toLocaleString = function toLocaleString(...args) {
 	  return new Intl.DateTimeFormat(...args).format(this);
 	};
-	YearMonth.prototype.withDay = function withDay(
-	  day,
-	  disambiguation = "constrain"
-	) {
+	YearMonth.prototype.withDay = function withDay(day, disambiguation = 'constrain') {
 	  const year = GetSlot(this, YEAR$1);
 	  const month = GetSlot(this, MONTH);
-	  const Date = ES.GetIntrinsic("%Temporal.Date%");
+	  const Date = ES.GetIntrinsic('%Temporal.Date%');
 	  return new Date(year, month, day, disambiguation);
 	};
 
 	YearMonth.fromString = function fromString(isoStringParam) {
 	  const isoString = ES.ToString(isoStringParam);
 	  const match = DATE$1.exec(isoString);
-	  if (!match) throw new RangeError("invalid date string");
+	  if (!match) throw new RangeError('invalid date string');
 	  const year = ES.ToInteger(match[1]);
 	  const month = ES.ToInteger(match[2]);
-	  return new YearMonth(year, month, "reject");
+	  return new YearMonth(year, month, 'reject');
 	};
 	YearMonth.compare = function compare(one, two) {
 	  if (one.year !== two.year) return one.year - two.year;
@@ -4502,21 +4169,23 @@
 	};
 
 	Object.defineProperty(YearMonth.prototype, Symbol.toStringTag, {
-	  value: "Temporal.YearMonth"
+	  value: 'Temporal.YearMonth'
 	});
 
 	const DATE$2 = new RegExp(`^${monthday.source}$`);
 
 	function MonthDay(month, day, disambiguation) {
-	  if (!(this instanceof MonthDay))
-	    return new MonthDay(month, day, disambiguation);
+	  if (!(this instanceof MonthDay)) return new MonthDay(month, day, disambiguation);
+	  if ('object' === typeof month) {
+	    ({ month, day } = month);
+	  }
 	  month = ES.ToInteger(month);
 	  day = ES.ToInteger(day);
 	  switch (disambiguation) {
-	    case "constrain":
+	    case 'constrain':
 	      ({ month, day } = ES.ConstrainDate(1970, month, day));
 	      break;
-	    case "balance":
+	    case 'balance':
 	      ({ month, day } = ES.BalanceDate(1970, month, day));
 	      break;
 	    default:
@@ -4543,97 +4212,31 @@
 	    configurable: true
 	  }
 	});
-	MonthDay.prototype.with = function(
-	  dateLike = {},
-	  disambiguation = "constrain"
-	) {
-	  const {
-	    month = GetSlot(this, MONTH),
-	    day = GetSlot(this, DAY)
-	  } = dateTimeLike;
+	MonthDay.prototype.with = function(dateLike = {}, disambiguation = 'constrain') {
+	  const { month = GetSlot(this, MONTH), day = GetSlot(this, DAY) } = dateTimeLike;
 	  return new MonthDay(month, day, disambiguation);
 	};
-	MonthDay.prototype.plus = function plus(
-	  durationLike = {},
-	  disambiguation = "constrain"
-	) {
+	MonthDay.prototype.plus = function plus(durationLike = {}, disambiguation = 'constrain') {
 	  const duration = ES.CastToDuration(durationLike);
 	  let { month, day } = this;
-	  let {
-	    years,
-	    months,
-	    days,
-	    hours,
-	    minutes,
-	    seconds,
-	    milliseconds,
-	    microseconds,
-	    nanoseconds
-	  } = duration;
-	  if (
-	    years ||
-	    hours ||
-	    minutes ||
-	    seconds ||
-	    milliseconds ||
-	    microseconds ||
-	    nanoseconds
-	  )
-	    throw new RangeError("invalid duration");
-	  ({ year, month, day } = ES.AddDate(
-	    year,
-	    month,
-	    day,
-	    years,
-	    months,
-	    days,
-	    disambiguation
-	  ));
+	  let { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
+	  if (years || hours || minutes || seconds || milliseconds || microseconds || nanoseconds)
+	    throw new RangeError('invalid duration');
+	  ({ year, month, day } = ES.AddDate(year, month, day, years, months, days, disambiguation));
 	  ({ month, day } = ES.BalanceDate(1970, month, day));
 	  return new MonthDay(month, day);
 	};
-	MonthDay.prototype.minus = function minus(
-	  durationLike = {},
-	  disambiguation = "constrain"
-	) {
+	MonthDay.prototype.minus = function minus(durationLike = {}, disambiguation = 'constrain') {
 	  const duration = ES.CastToDuration(durationLike);
 	  let { year, month, day } = this;
-	  let {
-	    years,
-	    months,
-	    days,
-	    hours,
-	    minutes,
-	    seconds,
-	    milliseconds,
-	    microseconds,
-	    nanoseconds
-	  } = duration;
-	  if (
-	    hours ||
-	    minutes ||
-	    seconds ||
-	    milliseconds ||
-	    microseconds ||
-	    nanoseconds
-	  )
-	    throw new RangeError("invalid duration");
-	  ({ year, month, day } = ES.SubtractDate(
-	    year,
-	    month,
-	    day,
-	    years,
-	    months,
-	    days,
-	    disambiguation
-	  ));
+	  let { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
+	  if (hours || minutes || seconds || milliseconds || microseconds || nanoseconds)
+	    throw new RangeError('invalid duration');
+	  ({ year, month, day } = ES.SubtractDate(year, month, day, years, months, days, disambiguation));
 	  ({ year, month, day } = ES.BalanceDate(year, month, day));
 	  return new MonthDay(month, day);
 	};
-	MonthDay.prototype.difference = function difference(
-	  other,
-	  disambiguation = "constrain"
-	) {
+	MonthDay.prototype.difference = function difference(other, disambiguation = 'constrain') {
 	  const [one, two] = [this, other].sort(MonthDay.compare);
 	  let months = two.month - one.month;
 	  let days = (two.days = one.days);
@@ -4641,7 +4244,7 @@
 	    days = ES.DaysInMonth(1970, two.month) + days;
 	    months -= 1;
 	  }
-	  const Duration = ES.GetIntrinsic("%Temporal.Duration%");
+	  const Duration = ES.GetIntrinsic('%Temporal.Duration%');
 	  return new Duration(0, months, days, 0, 0, 0, 0, 0, 0);
 	};
 	MonthDay.prototype.toString = MonthDay.prototype.toJSON = function toString() {
@@ -4657,17 +4260,17 @@
 	MonthDay.prototype.withYear = function withYear(year) {
 	  const month = GetSlot(this, MONTH);
 	  const day = GetSlot(this, DAY);
-	  const Date = ES.GetIntrinsic("%Temporal.Date%");
+	  const Date = ES.GetIntrinsic('%Temporal.Date%');
 	  return new Date(year, month, day);
 	};
 
 	MonthDay.fromString = function fromString(isoStringParam) {
 	  const isoString = ES.ToString(isoStringParam);
 	  const match = DATE$2.exec(isoString);
-	  if (!match) throw new RangeError("invalid yearmonth string");
+	  if (!match) throw new RangeError('invalid yearmonth string');
 	  const month = ES.ToInteger(match[1]);
 	  const day = ES.ToInteger(match[2]);
-	  return new MonthDay(month, day, "reject");
+	  return new MonthDay(month, day, 'reject');
 	};
 	MonthDay.compare = function compare(one, two) {
 	  if (one.month !== two.month) return one.month - two.month;
@@ -4675,7 +4278,7 @@
 	  return 0;
 	};
 	Object.defineProperty(MonthDay.prototype, Symbol.toStringTag, {
-	  value: "Temporal.MonthDay"
+	  value: 'Temporal.MonthDay'
 	});
 
 	const TIME = new RegExp(`^${time.source}$`);
@@ -4687,18 +4290,13 @@
 	  millisecond = 0,
 	  microsecond = 0,
 	  nanosecond = 0,
-	  disambiguation = "constrain"
+	  disambiguation = 'constrain'
 	) {
 	  if (!(this instanceof Time))
-	    return new Time(
-	      hour,
-	      minute,
-	      second,
-	      millisecond,
-	      microsecond,
-	      nanosecond,
-	      disambiguation
-	    );
+	    return new Time(hour, minute, second, millisecond, microsecond, nanosecond, disambiguation);
+	  if ('object' === typeof hour && !minute && !second && !millisecond && !microsecond && !nanosecond) {
+	    ({ hour, minute, second = 0, millisecond = 0, microsecond = 0, nanosecond = 0 } = hour);
+	  }
 	  hour = ES.ToInteger(hour);
 	  minute = ES.ToInteger(minute);
 	  second = ES.ToInteger(second);
@@ -4706,15 +4304,8 @@
 	  microsecond = ES.ToInteger(microsecond);
 	  nanosecond = ES.ToInteger(nanosecond);
 	  switch (disambiguation) {
-	    case "constrain":
-	      ({
-	        hour,
-	        minute,
-	        second,
-	        millisecond,
-	        microsecond,
-	        nanosecond
-	      } = ES.ConstrainTime(
+	    case 'constrain':
+	      ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.ConstrainTime(
 	        hour,
 	        minute,
 	        second,
@@ -4723,15 +4314,8 @@
 	        nanosecond
 	      ));
 	      break;
-	    case "balance":
-	      ({
-	        hour,
-	        minute,
-	        second,
-	        millisecond,
-	        microsecond,
-	        nanosecond
-	      } = ES.BalanceTime(
+	    case 'balance':
+	      ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.BalanceTime(
 	        hour,
 	        minute,
 	        second,
@@ -4796,7 +4380,7 @@
 	    configurable: true
 	  }
 	});
-	Time.prototype.with = function(timeLike = {}, disambiguation = "constrain") {
+	Time.prototype.with = function(timeLike = {}, disambiguation = 'constrain') {
 	  const {
 	    hour = GetSlot(this, HOUR),
 	    minute = GetSlot(this, MINUTE),
@@ -4805,31 +4389,13 @@
 	    microsecond = GetSlot(this, MICROSECOND),
 	    nanosecond = GetSlot(this, NANOSECOND)
 	  } = timeLike;
-	  return new Time(
-	    hour,
-	    minute,
-	    second,
-	    millisecond,
-	    microsecond,
-	    nanosecond,
-	    disambiguation
-	  );
+	  return new Time(hour, minute, second, millisecond, microsecond, nanosecond, disambiguation);
 	};
 	Time.prototype.plus = function plus(durationLike) {
 	  const duration = ES.CastToDuration(durationLike);
 	  let { hour, minute, second, millisecond, microsecond, nanosecond } = this;
-	  let {
-	    years,
-	    months,
-	    days,
-	    hours,
-	    minutes,
-	    seconds,
-	    milliseconds,
-	    microseconds,
-	    nanoseconds
-	  } = duration;
-	  if (years || months || days) throw new RangeError("invalid duration");
+	  let { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
+	  if (years || months || days) throw new RangeError('invalid duration');
 	  ({ hour, minute, second, minute, microsecond, nanosecond } = ES.AddTime(
 	    hour,
 	    minute,
@@ -4844,34 +4410,27 @@
 	    microseconds,
 	    nanoseconds
 	  ));
-	  ({ year, month, day } = ES.BalanceDate(year, month, day));
-	  return new Time(
-	    year,
-	    month,
-	    day,
+	  ({ hour, minute, second, minute, microsecond, nanosecond } = ES.BalanceTime(
 	    hour,
 	    minute,
 	    second,
-	    millisecond,
+	    minute,
 	    microsecond,
-	    nanosecond
-	  );
-	};
-	Time.prototype.minus = function minus(durationLike) {
-	  const duration = ES.CastToDuration(durationLike);
-	  let { hour, minute, second, millisecond, microsecond, nanosecond } = this;
-	  let {
-	    years,
-	    months,
-	    days,
+	    nanosecond,
 	    hours,
 	    minutes,
 	    seconds,
 	    milliseconds,
 	    microseconds,
 	    nanoseconds
-	  } = duration;
-	  if (years || months || days) throw new RangeError("invalid duration");
+	  ));
+	  return new Time(hour, minute, second, millisecond, microsecond, nanosecond);
+	};
+	Time.prototype.minus = function minus(durationLike) {
+	  const duration = ES.CastToDuration(durationLike);
+	  let { hour, minute, second, millisecond, microsecond, nanosecond } = this;
+	  let { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
+	  if (years || months || days) throw new RangeError('invalid duration');
 	  ({ hour, minute, second, minute, microsecond, nanosecond } = ES.SubtractTime(
 	    hour,
 	    minute,
@@ -4886,18 +4445,21 @@
 	    microseconds,
 	    nanoseconds
 	  ));
-	  ({ year, month, day } = ES.BalanceDate(year, month, day));
-	  return new Time(
-	    year,
-	    month,
-	    day,
+	  ({ hour, minute, second, minute, microsecond, nanosecond } = ES.BalanceTime(
 	    hour,
 	    minute,
 	    second,
-	    millisecond,
+	    minute,
 	    microsecond,
-	    nanosecond
-	  );
+	    nanosecond,
+	    hours,
+	    minutes,
+	    seconds,
+	    milliseconds,
+	    microseconds,
+	    nanoseconds
+	  ));
+	  return new Time(hour, minute, second, millisecond, microsecond, nanosecond);
 	};
 	Time.prototype.difference = function difference(other = {}) {
 	  const [one, two] = [
@@ -4920,17 +4482,7 @@
 	  const milliseconds = two.millisecond - one.millisecond;
 	  const microseconds = two.microsecond - one.microsecond;
 	  const nanoseconds = two.nanosecond - one.nanosecond;
-	  return new Duration(
-	    0,
-	    0,
-	    0,
-	    hours,
-	    minutes,
-	    seconds,
-	    milliseconds,
-	    microseconds,
-	    nanoseconds
-	  );
+	  return new Duration(0, 0, 0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
 	};
 
 	Time.prototype.toString = Time.prototype.toJSON = function toString() {
@@ -4942,73 +4494,49 @@
 	    GetSlot(this, MICROSECOND),
 	    GetSlot(this, NANOSECOND)
 	  );
-	  let resultString = `${hour}:${minute}${seconds ? `:${seconds}` : ""}`;
+	  let resultString = `${hour}:${minute}${seconds ? `:${seconds}` : ''}`;
 	  return resultString;
 	};
 	Time.prototype.toLocaleString = function toLocaleString(...args) {
 	  return new Intl.DateTimeFormat(...args).format(this);
 	};
 
-	Time.prototype.withDate = function withDate(
-	  dateLike = {},
-	  disambiguation = "constrain"
-	) {
+	Time.prototype.withDate = function withDate(dateLike = {}, disambiguation = 'constrain') {
 	  let { year, month, day } = dateLike;
 	  let { hour, minute, second, millisecond, microsecond, nanosecond } = this;
-	  const DateTime = ES.GetIntrinsic("%Temporal.DateTime%");
-	  return new DateTime(
-	    year,
-	    month,
-	    day,
-	    hour,
-	    minute,
-	    second,
-	    millisecond,
-	    microsecond,
-	    nanosecond,
-	    disambiguation
-	  );
+	  const DateTime = ES.GetIntrinsic('%Temporal.DateTime%');
+	  return new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, disambiguation);
 	};
 
 	Time.fromString = function fromString(isoStringParam) {
 	  const isoString = ES.ToString(isoStringParam);
 	  const match = TIME.exec(isoString);
-	  if (!match) throw new RangeError("invalid datetime string");
+	  if (!match) throw new RangeError('invalid datetime string');
 	  const hour = ES.ToInteger(match[1]);
 	  const minute = ES.ToInteger(match[2]);
 	  const second = match[3] ? ES.ToInteger(match[3]) : 0;
 	  const millisecond = match[4] ? ES.ToInteger(match[4]) : 0;
 	  const microsecond = match[5] ? ES.ToInteger(match[5]) : 0;
 	  const nanosecond = match[6] ? ES.ToInteger(match[6]) : 0;
-	  return new Time(
-	    hour,
-	    minute,
-	    second,
-	    millisecond,
-	    microsecond,
-	    nanosecond,
-	    "reject"
-	  );
+	  return new Time(hour, minute, second, millisecond, microsecond, nanosecond, 'reject');
 	};
 	Time.compare = function compare(one, two) {
 	  if (one.hour !== two.hour) return one.hour - two.hour;
 	  if (one.minute !== two.minute) return one.minute - two.minute;
 	  if (one.second !== two.second) return one.second - two.second;
-	  if (one.millisecond !== two.millisecond)
-	    return one.millisecond - two.millisecond;
-	  if (one.microsecond !== two.microsecond)
-	    return one.microsecond - two.microsecond;
+	  if (one.millisecond !== two.millisecond) return one.millisecond - two.millisecond;
+	  if (one.microsecond !== two.microsecond) return one.microsecond - two.microsecond;
 	  if (one.nanosecond !== two.nanosecond) return one.nanosecond - two.nanosecond;
 	  return 0;
 	};
 	Object.defineProperty(Time.prototype, Symbol.toStringTag, {
-	  value: "Temporal.Time"
+	  value: 'Temporal.Time'
 	});
 
-	function Absolute(epochNanoSeconds) {
+	function Absolute(epochNanoseconds) {
 	  if (!(this instanceof Absolute)) return new Absolute(epochNanoseconds);
 	  CreateSlots(this);
-	  SetSlot(this, EPOCHNANOSECONDS, epochNanoSeconds);
+	  SetSlot(this, EPOCHNANOSECONDS, epochNanoseconds);
 	}
 
 	Absolute.prototype.getEpochSeconds = function getEpochSeconds() {
@@ -5034,7 +4562,7 @@
 	};
 
 	Absolute.prototype.plus = function plus(durationLike = {}) {
-	  const Duration = ES.GetIntrinsic("%Temporal.Duration%");
+	  const Duration = ES.GetIntrinsic('%Temporal.Duration%');
 	  const duration = new Duration(durationLike);
 	  if (duration.years) throw new RangeError(`invalid duration field years`);
 	  if (duration.months) throw new RangeError(`invalid duration field months`);
@@ -5051,7 +4579,7 @@
 	  return new Absolute(result);
 	};
 	Absolute.prototype.minus = function minus(durationLike = {}) {
-	  const Duration = ES.GetIntrinsic("%Temporal.Duration%");
+	  const Duration = ES.GetIntrinsic('%Temporal.Duration%');
 	  const duration = new Duration(durationLike);
 	  if (duration.years) throw new RangeError(`invalid duration field years`);
 	  if (duration.months) throw new RangeError(`invalid duration field months`);
@@ -5074,35 +4602,26 @@
 	  const micro = Number((delta / 1000n) % 1000);
 	  const milli = Number((delta / 1000000n) % 1000);
 	  const secds = Number(delta / 1000000000n);
-	  const Duration = ES.GetIntrinsic("%Temporal.Duration%");
+	  const Duration = ES.GetIntrinsic('%Temporal.Duration%');
 	  return new Duration(0, 0, 0, 0, 0, secds, milli, micro, nanos);
 	};
-	Absolute.prototype.toString = Absolute.prototype.toJSON = function toString(
-	  timeZoneParam = "UTC"
-	) {
+	Absolute.prototype.toString = Absolute.prototype.toJSON = function toString(timeZoneParam = 'UTC') {
 	  let timeZone = ES.ToTimeZone(timeZoneParam);
 	  let dateTime = timeZone.getDateTimeFor(this);
 	  let year = ES.ISOYearString(dateTime.year);
 	  let month = ES.ISODateTimePartString(dateTime.month);
-	  let day = ES.ISODateTimePartString(dateTime.month);
+	  let day = ES.ISODateTimePartString(dateTime.day);
 	  let hour = ES.ISODateTimePartString(dateTime.hour);
 	  let minute = ES.ISODateTimePartString(dateTime.minute);
-	  let seconds = ES.ISOSecondsString(
-	    dateTime.second,
-	    dateTime.millisecond,
-	    dateTime.microsecond,
-	    dateTime.nanosecond
-	  );
+	  let seconds = ES.ISOSecondsString(dateTime.second, dateTime.millisecond, dateTime.microsecond, dateTime.nanosecond);
 	  let timeZoneString = ES.ISOTimeZoneString(timeZone, this);
-	  let resultString = `${year}-${month}-${day}T${hour}:${minute}${
-    seconds ? `:${seconds}` : ""
-  }${timeZoneString}`;
+	  let resultString = `${year}-${month}-${day}T${hour}:${minute}${seconds ? `:${seconds}` : ''}${timeZoneString}`;
 	  return resultString;
 	};
 	Absolute.prototype.toLocaleString = function toLocaleString(...args) {
 	  return new Intl.DateTimeFormat(...args).format(this);
 	};
-	Absolute.prototype.inZone = function inZone(timeZoneParam = "UTC") {
+	Absolute.prototype.inZone = function inZone(timeZoneParam = 'UTC') {
 	  const timeZone = ES.ToTimeZone(timeZoneParam);
 	  return timeZone.getDateTimeFor(this);
 	};
@@ -5114,26 +4633,20 @@
 	  let resultObject = new Absolute(epochNanoSeconds);
 	  return resultObject;
 	};
-	Absolute.fromEpochMilliseconds = function fromEpochMilliseconds(
-	  epochMillisecondsParam
-	) {
+	Absolute.fromEpochMilliseconds = function fromEpochMilliseconds(epochMillisecondsParam) {
 	  let epochMilliseconds = ES.ToNumber(epochMillisecondsParam);
 	  let epochMillisecondsBigInt = BigInt(epochMilliseconds);
 	  let epochNanoSeconds = epochMillisecondsBigInt * 1000000n;
 	  let resultObject = new Absolute(epochNanoSeconds);
 	  return resultObject;
 	};
-	Absolute.fromEpochMicroseconds = function fromEpochMicroseconds(
-	  epochMicrosecondsParam
-	) {
+	Absolute.fromEpochMicroseconds = function fromEpochMicroseconds(epochMicrosecondsParam) {
 	  let epochMicroseconds = BigInt(epochMicrosecondsParam);
 	  let epochNanoSeconds = epochMicroseconds * 1000n;
 	  let resultObject = new Absolute(epochNanoSeconds);
 	  return resultObject;
 	};
-	Absolute.fromEpochNanoseconds = function fromEpochNanoseconds(
-	  epochNanosecondsParam
-	) {
+	Absolute.fromEpochNanoseconds = function fromEpochNanoseconds(epochNanosecondsParam) {
 	  let epochNanoseconds = BigInt(epochNanosecondsParam);
 	  let resultObject = new Absolute(epochNanoseconds);
 	  return resultObject;
@@ -5141,492 +4654,488 @@
 	Absolute.fromString = function fromString(isoString) {};
 
 	Object.defineProperty(Absolute.prototype, Symbol.toStringTag, {
-	  get: () => "Temporal.Absolute"
+	  get: () => 'Temporal.Absolute'
 	});
 
 	const ZONES = [
-	  "Africa/Abidjan",
-	  "Africa/Accra",
-	  "Africa/Addis_Ababa",
-	  "Africa/Algiers",
-	  "Africa/Asmara",
-	  "Africa/Bamako",
-	  "Africa/Bangui",
-	  "Africa/Banjul",
-	  "Africa/Bissau",
-	  "Africa/Blantyre",
-	  "Africa/Brazzaville",
-	  "Africa/Bujumbura",
-	  "Africa/Cairo",
-	  "Africa/Casablanca",
-	  "Africa/Ceuta",
-	  "Africa/Conakry",
-	  "Africa/Dakar",
-	  "Africa/Dar_es_Salaam",
-	  "Africa/Djibouti",
-	  "Africa/Douala",
-	  "Africa/El_Aaiun",
-	  "Africa/Freetown",
-	  "Africa/Gaborone",
-	  "Africa/Harare",
-	  "Africa/Johannesburg",
-	  "Africa/Juba",
-	  "Africa/Kampala",
-	  "Africa/Khartoum",
-	  "Africa/Kigali",
-	  "Africa/Kinshasa",
-	  "Africa/Lagos",
-	  "Africa/Libreville",
-	  "Africa/Lome",
-	  "Africa/Luanda",
-	  "Africa/Lubumbashi",
-	  "Africa/Lusaka",
-	  "Africa/Malabo",
-	  "Africa/Maputo",
-	  "Africa/Maseru",
-	  "Africa/Mbabane",
-	  "Africa/Mogadishu",
-	  "Africa/Monrovia",
-	  "Africa/Nairobi",
-	  "Africa/Ndjamena",
-	  "Africa/Niamey",
-	  "Africa/Nouakchott",
-	  "Africa/Ouagadougou",
-	  "Africa/Porto-Novo",
-	  "Africa/Sao_Tome",
-	  "Africa/Timbuktu",
-	  "Africa/Tripoli",
-	  "Africa/Tunis",
-	  "Africa/Windhoek",
-	  "America/Adak",
-	  "America/Anchorage",
-	  "America/Anguilla",
-	  "America/Antigua",
-	  "America/Araguaina",
-	  "America/Argentina/Buenos_Aires",
-	  "America/Argentina/Catamarca",
-	  "America/Argentina/ComodRivadavia",
-	  "America/Argentina/Cordoba",
-	  "America/Argentina/Jujuy",
-	  "America/Argentina/La_Rioja",
-	  "America/Argentina/Mendoza",
-	  "America/Argentina/Rio_Gallegos",
-	  "America/Argentina/Salta",
-	  "America/Argentina/San_Juan",
-	  "America/Argentina/San_Luis",
-	  "America/Argentina/Tucuman",
-	  "America/Argentina/Ushuaia",
-	  "America/Aruba",
-	  "America/Asuncion",
-	  "America/Atikokan",
-	  "America/Atka",
-	  "America/Bahia",
-	  "America/Bahia_Banderas",
-	  "America/Barbados",
-	  "America/Belem",
-	  "America/Belize",
-	  "America/Blanc-Sablon",
-	  "America/Boa_Vista",
-	  "America/Bogota",
-	  "America/Boise",
-	  "America/Buenos_Aires",
-	  "America/Cambridge_Bay",
-	  "America/Campo_Grande",
-	  "America/Cancun",
-	  "America/Caracas",
-	  "America/Catamarca",
-	  "America/Cayenne",
-	  "America/Cayman",
-	  "America/Chicago",
-	  "America/Chihuahua",
-	  "America/Coral_Harbour",
-	  "America/Cordoba",
-	  "America/Costa_Rica",
-	  "America/Creston",
-	  "America/Cuiaba",
-	  "America/Curacao",
-	  "America/Danmarkshavn",
-	  "America/Dawson",
-	  "America/Dawson_Creek",
-	  "America/Denver",
-	  "America/Detroit",
-	  "America/Dominica",
-	  "America/Edmonton",
-	  "America/Eirunepe",
-	  "America/El_Salvador",
-	  "America/Ensenada",
-	  "America/Fort_Nelson",
-	  "America/Fort_Wayne",
-	  "America/Fortaleza",
-	  "America/Glace_Bay",
-	  "America/Godthab",
-	  "America/Goose_Bay",
-	  "America/Grand_Turk",
-	  "America/Grenada",
-	  "America/Guadeloupe",
-	  "America/Guatemala",
-	  "America/Guayaquil",
-	  "America/Guyana",
-	  "America/Halifax",
-	  "America/Havana",
-	  "America/Hermosillo",
-	  "America/Indiana/Indianapolis",
-	  "America/Indiana/Knox",
-	  "America/Indiana/Marengo",
-	  "America/Indiana/Petersburg",
-	  "America/Indiana/Tell_City",
-	  "America/Indiana/Vevay",
-	  "America/Indiana/Vincennes",
-	  "America/Indiana/Winamac",
-	  "America/Indianapolis",
-	  "America/Inuvik",
-	  "America/Iqaluit",
-	  "America/Jamaica",
-	  "America/Jujuy",
-	  "America/Juneau",
-	  "America/Kentucky/Louisville",
-	  "America/Kentucky/Monticello",
-	  "America/Knox_IN",
-	  "America/Kralendijk",
-	  "America/La_Paz",
-	  "America/Lima",
-	  "America/Los_Angeles",
-	  "America/Louisville",
-	  "America/Lower_Princes",
-	  "America/Maceio",
-	  "America/Managua",
-	  "America/Manaus",
-	  "America/Marigot",
-	  "America/Martinique",
-	  "America/Matamoros",
-	  "America/Mazatlan",
-	  "America/Mendoza",
-	  "America/Menominee",
-	  "America/Merida",
-	  "America/Metlakatla",
-	  "America/Mexico_City",
-	  "America/Miquelon",
-	  "America/Moncton",
-	  "America/Monterrey",
-	  "America/Montevideo",
-	  "America/Montreal",
-	  "America/Montserrat",
-	  "America/Nassau",
-	  "America/New_York",
-	  "America/Nipigon",
-	  "America/Nome",
-	  "America/Noronha",
-	  "America/North_Dakota/Beulah",
-	  "America/North_Dakota/Center",
-	  "America/North_Dakota/New_Salem",
-	  "America/Ojinaga",
-	  "America/Panama",
-	  "America/Pangnirtung",
-	  "America/Paramaribo",
-	  "America/Phoenix",
-	  "America/Port_of_Spain",
-	  "America/Port-au-Prince",
-	  "America/Porto_Acre",
-	  "America/Porto_Velho",
-	  "America/Puerto_Rico",
-	  "America/Punta_Arenas",
-	  "America/Rainy_River",
-	  "America/Rankin_Inlet",
-	  "America/Recife",
-	  "America/Regina",
-	  "America/Resolute",
-	  "America/Rio_Branco",
-	  "America/Rosario",
-	  "America/Santa_Isabel",
-	  "America/Santarem",
-	  "America/Santiago",
-	  "America/Santo_Domingo",
-	  "America/Sao_Paulo",
-	  "America/Scoresbysund",
-	  "America/Shiprock",
-	  "America/Sitka",
-	  "America/St_Barthelemy",
-	  "America/St_Johns",
-	  "America/St_Kitts",
-	  "America/St_Lucia",
-	  "America/St_Thomas",
-	  "America/St_Vincent",
-	  "America/Swift_Current",
-	  "America/Tegucigalpa",
-	  "America/Thule",
-	  "America/Thunder_Bay",
-	  "America/Tijuana",
-	  "America/Toronto",
-	  "America/Tortola",
-	  "America/Vancouver",
-	  "America/Virgin",
-	  "America/Whitehorse",
-	  "America/Winnipeg",
-	  "America/Yakutat",
-	  "America/Yellowknife",
-	  "Antarctica/Casey",
-	  "Antarctica/Davis",
-	  "Antarctica/DumontDUrville",
-	  "Antarctica/Macquarie",
-	  "Antarctica/Mawson",
-	  "Antarctica/McMurdo",
-	  "Antarctica/Palmer",
-	  "Antarctica/Rothera",
-	  "Antarctica/South_Pole",
-	  "Antarctica/Syowa",
-	  "Antarctica/Troll",
-	  "Antarctica/Vostok",
-	  "Arctic/Longyearbyen",
-	  "Asia/Aden",
-	  "Asia/Almaty",
-	  "Asia/Amman",
-	  "Asia/Anadyr",
-	  "Asia/Aqtau",
-	  "Asia/Aqtobe",
-	  "Asia/Ashgabat",
-	  "Asia/Ashkhabad",
-	  "Asia/Atyrau",
-	  "Asia/Baghdad",
-	  "Asia/Bahrain",
-	  "Asia/Baku",
-	  "Asia/Bangkok",
-	  "Asia/Barnaul",
-	  "Asia/Beirut",
-	  "Asia/Bishkek",
-	  "Asia/Brunei",
-	  "Asia/Calcutta",
-	  "Asia/Chita",
-	  "Asia/Choibalsan",
-	  "Asia/Chongqing",
-	  "Asia/Chungking",
-	  "Asia/Colombo",
-	  "Asia/Dacca",
-	  "Asia/Damascus",
-	  "Asia/Dhaka",
-	  "Asia/Dili",
-	  "Asia/Dubai",
-	  "Asia/Dushanbe",
-	  "Asia/Famagusta",
-	  "Asia/Gaza",
-	  "Asia/Harbin",
-	  "Asia/Hebron",
-	  "Asia/Ho_Chi_Minh",
-	  "Asia/Hong_Kong",
-	  "Asia/Hovd",
-	  "Asia/Irkutsk",
-	  "Asia/Istanbul",
-	  "Asia/Jakarta",
-	  "Asia/Jayapura",
-	  "Asia/Jerusalem",
-	  "Asia/Kabul",
-	  "Asia/Kamchatka",
-	  "Asia/Karachi",
-	  "Asia/Kashgar",
-	  "Asia/Kathmandu",
-	  "Asia/Katmandu",
-	  "Asia/Kuala_Lumpur",
-	  "Asia/Kuching",
-	  "Asia/Kuwait",
-	  "Asia/Macao",
-	  "Asia/Macau",
-	  "Asia/Magadan",
-	  "Asia/Makassar",
-	  "Asia/Manila",
-	  "Asia/Muscat",
-	  "Asia/Novokuznetsk",
-	  "Asia/Novosibirsk",
-	  "Asia/Omsk",
-	  "Asia/Oral",
-	  "Asia/Phnom_Penh",
-	  "Asia/Pontianak",
-	  "Asia/Pyongyang",
-	  "Asia/Qatar",
-	  "Asia/Qyzylorda",
-	  "Asia/Rangoon",
-	  "Asia/Riyadh",
-	  "Asia/Saigon",
-	  "Asia/Sakhalin",
-	  "Asia/Samarkand",
-	  "Asia/Seoul",
-	  "Asia/Shanghai",
-	  "Asia/Singapore",
-	  "Asia/Srednekolymsk",
-	  "Asia/Taipei",
-	  "Asia/Tashkent",
-	  "Asia/Tbilisi",
-	  "Asia/Tehran",
-	  "Asia/Tel_Aviv",
-	  "Asia/Thimbu",
-	  "Asia/Thimphu",
-	  "Asia/Tokyo",
-	  "Asia/Tomsk",
-	  "Asia/Ujung_Pandang",
-	  "Asia/Ulaanbaatar",
-	  "Asia/Ulan_Bator",
-	  "Asia/Urumqi",
-	  "Asia/Ust-Nera",
-	  "Asia/Vientiane",
-	  "Asia/Vladivostok",
-	  "Asia/Yakutsk",
-	  "Asia/Yangon",
-	  "Asia/Yekaterinburg",
-	  "Asia/Yerevan",
-	  "Atlantic/Azores",
-	  "Atlantic/Bermuda",
-	  "Atlantic/Canary",
-	  "Atlantic/Cape_Verde",
-	  "Atlantic/Faeroe",
-	  "Atlantic/Faroe",
-	  "Atlantic/Jan_Mayen",
-	  "Atlantic/Madeira",
-	  "Atlantic/Reykjavik",
-	  "Atlantic/South_Georgia",
-	  "Atlantic/St_Helena",
-	  "Atlantic/Stanley",
-	  "Australia/Adelaide",
-	  "Australia/Brisbane",
-	  "Australia/Broken_Hill",
-	  "Australia/Canberra",
-	  "Australia/Currie",
-	  "Australia/Darwin",
-	  "Australia/Eucla",
-	  "Australia/Hobart",
-	  "Australia/Lindeman",
-	  "Australia/Lord_Howe",
-	  "Australia/Melbourne",
-	  "Australia/Perth",
-	  "Australia/Sydney",
-	  "Australia/Yancowinna",
-	  "Europe/Amsterdam",
-	  "Europe/Andorra",
-	  "Europe/Astrakhan",
-	  "Europe/Athens",
-	  "Europe/Belfast",
-	  "Europe/Belgrade",
-	  "Europe/Berlin",
-	  "Europe/Bratislava",
-	  "Europe/Brussels",
-	  "Europe/Bucharest",
-	  "Europe/Budapest",
-	  "Europe/Busingen",
-	  "Europe/Chisinau",
-	  "Europe/Copenhagen",
-	  "Europe/Dublin",
-	  "Europe/Gibraltar",
-	  "Europe/Guernsey",
-	  "Europe/Helsinki",
-	  "Europe/Isle_of_Man",
-	  "Europe/Istanbul",
-	  "Europe/Jersey",
-	  "Europe/Kaliningrad",
-	  "Europe/Kiev",
-	  "Europe/Kirov",
-	  "Europe/Lisbon",
-	  "Europe/Ljubljana",
-	  "Europe/London",
-	  "Europe/Luxembourg",
-	  "Europe/Madrid",
-	  "Europe/Malta",
-	  "Europe/Mariehamn",
-	  "Europe/Minsk",
-	  "Europe/Monaco",
-	  "Europe/Moscow",
-	  "Asia/Nicosia",
-	  "Europe/Oslo",
-	  "Europe/Paris",
-	  "Europe/Podgorica",
-	  "Europe/Prague",
-	  "Europe/Riga",
-	  "Europe/Rome",
-	  "Europe/Samara",
-	  "Europe/San_Marino",
-	  "Europe/Sarajevo",
-	  "Europe/Saratov",
-	  "Europe/Simferopol",
-	  "Europe/Skopje",
-	  "Europe/Sofia",
-	  "Europe/Stockholm",
-	  "Europe/Tallinn",
-	  "Europe/Tirane",
-	  "Europe/Tiraspol",
-	  "Europe/Ulyanovsk",
-	  "Europe/Uzhgorod",
-	  "Europe/Vaduz",
-	  "Europe/Vatican",
-	  "Europe/Vienna",
-	  "Europe/Vilnius",
-	  "Europe/Volgograd",
-	  "Europe/Warsaw",
-	  "Europe/Zagreb",
-	  "Europe/Zaporozhye",
-	  "Europe/Zurich",
-	  "Indian/Antananarivo",
-	  "Indian/Chagos",
-	  "Indian/Christmas",
-	  "Indian/Cocos",
-	  "Indian/Comoro",
-	  "Indian/Kerguelen",
-	  "Indian/Mahe",
-	  "Indian/Maldives",
-	  "Indian/Mauritius",
-	  "Indian/Mayotte",
-	  "Indian/Reunion",
-	  "Pacific/Apia",
-	  "Pacific/Auckland",
-	  "Pacific/Bougainville",
-	  "Pacific/Chatham",
-	  "Pacific/Chuuk",
-	  "Pacific/Easter",
-	  "Pacific/Efate",
-	  "Pacific/Enderbury",
-	  "Pacific/Fakaofo",
-	  "Pacific/Fiji",
-	  "Pacific/Funafuti",
-	  "Pacific/Galapagos",
-	  "Pacific/Gambier",
-	  "Pacific/Guadalcanal",
-	  "Pacific/Guam",
-	  "Pacific/Honolulu",
-	  "Pacific/Johnston",
-	  "Pacific/Kiritimati",
-	  "Pacific/Kosrae",
-	  "Pacific/Kwajalein",
-	  "Pacific/Majuro",
-	  "Pacific/Marquesas",
-	  "Pacific/Midway",
-	  "Pacific/Nauru",
-	  "Pacific/Niue",
-	  "Pacific/Norfolk",
-	  "Pacific/Noumea",
-	  "Pacific/Pago_Pago",
-	  "Pacific/Palau",
-	  "Pacific/Pitcairn",
-	  "Pacific/Pohnpei",
-	  "Pacific/Ponape",
-	  "Pacific/Port_Moresby",
-	  "Pacific/Rarotonga",
-	  "Pacific/Saipan",
-	  "Pacific/Samoa",
-	  "Pacific/Tahiti",
-	  "Pacific/Tarawa",
-	  "Pacific/Tongatapu",
-	  "Pacific/Truk",
-	  "Pacific/Wake",
-	  "Pacific/Wallis",
-	  "Pacific/Yap",
-	  "UTC"
+	  'Africa/Abidjan',
+	  'Africa/Accra',
+	  'Africa/Addis_Ababa',
+	  'Africa/Algiers',
+	  'Africa/Asmara',
+	  'Africa/Bamako',
+	  'Africa/Bangui',
+	  'Africa/Banjul',
+	  'Africa/Bissau',
+	  'Africa/Blantyre',
+	  'Africa/Brazzaville',
+	  'Africa/Bujumbura',
+	  'Africa/Cairo',
+	  'Africa/Casablanca',
+	  'Africa/Ceuta',
+	  'Africa/Conakry',
+	  'Africa/Dakar',
+	  'Africa/Dar_es_Salaam',
+	  'Africa/Djibouti',
+	  'Africa/Douala',
+	  'Africa/El_Aaiun',
+	  'Africa/Freetown',
+	  'Africa/Gaborone',
+	  'Africa/Harare',
+	  'Africa/Johannesburg',
+	  'Africa/Juba',
+	  'Africa/Kampala',
+	  'Africa/Khartoum',
+	  'Africa/Kigali',
+	  'Africa/Kinshasa',
+	  'Africa/Lagos',
+	  'Africa/Libreville',
+	  'Africa/Lome',
+	  'Africa/Luanda',
+	  'Africa/Lubumbashi',
+	  'Africa/Lusaka',
+	  'Africa/Malabo',
+	  'Africa/Maputo',
+	  'Africa/Maseru',
+	  'Africa/Mbabane',
+	  'Africa/Mogadishu',
+	  'Africa/Monrovia',
+	  'Africa/Nairobi',
+	  'Africa/Ndjamena',
+	  'Africa/Niamey',
+	  'Africa/Nouakchott',
+	  'Africa/Ouagadougou',
+	  'Africa/Porto-Novo',
+	  'Africa/Sao_Tome',
+	  'Africa/Timbuktu',
+	  'Africa/Tripoli',
+	  'Africa/Tunis',
+	  'Africa/Windhoek',
+	  'America/Adak',
+	  'America/Anchorage',
+	  'America/Anguilla',
+	  'America/Antigua',
+	  'America/Araguaina',
+	  'America/Argentina/Buenos_Aires',
+	  'America/Argentina/Catamarca',
+	  'America/Argentina/ComodRivadavia',
+	  'America/Argentina/Cordoba',
+	  'America/Argentina/Jujuy',
+	  'America/Argentina/La_Rioja',
+	  'America/Argentina/Mendoza',
+	  'America/Argentina/Rio_Gallegos',
+	  'America/Argentina/Salta',
+	  'America/Argentina/San_Juan',
+	  'America/Argentina/San_Luis',
+	  'America/Argentina/Tucuman',
+	  'America/Argentina/Ushuaia',
+	  'America/Aruba',
+	  'America/Asuncion',
+	  'America/Atikokan',
+	  'America/Atka',
+	  'America/Bahia',
+	  'America/Bahia_Banderas',
+	  'America/Barbados',
+	  'America/Belem',
+	  'America/Belize',
+	  'America/Blanc-Sablon',
+	  'America/Boa_Vista',
+	  'America/Bogota',
+	  'America/Boise',
+	  'America/Buenos_Aires',
+	  'America/Cambridge_Bay',
+	  'America/Campo_Grande',
+	  'America/Cancun',
+	  'America/Caracas',
+	  'America/Catamarca',
+	  'America/Cayenne',
+	  'America/Cayman',
+	  'America/Chicago',
+	  'America/Chihuahua',
+	  'America/Coral_Harbour',
+	  'America/Cordoba',
+	  'America/Costa_Rica',
+	  'America/Creston',
+	  'America/Cuiaba',
+	  'America/Curacao',
+	  'America/Danmarkshavn',
+	  'America/Dawson',
+	  'America/Dawson_Creek',
+	  'America/Denver',
+	  'America/Detroit',
+	  'America/Dominica',
+	  'America/Edmonton',
+	  'America/Eirunepe',
+	  'America/El_Salvador',
+	  'America/Ensenada',
+	  'America/Fort_Nelson',
+	  'America/Fort_Wayne',
+	  'America/Fortaleza',
+	  'America/Glace_Bay',
+	  'America/Godthab',
+	  'America/Goose_Bay',
+	  'America/Grand_Turk',
+	  'America/Grenada',
+	  'America/Guadeloupe',
+	  'America/Guatemala',
+	  'America/Guayaquil',
+	  'America/Guyana',
+	  'America/Halifax',
+	  'America/Havana',
+	  'America/Hermosillo',
+	  'America/Indiana/Indianapolis',
+	  'America/Indiana/Knox',
+	  'America/Indiana/Marengo',
+	  'America/Indiana/Petersburg',
+	  'America/Indiana/Tell_City',
+	  'America/Indiana/Vevay',
+	  'America/Indiana/Vincennes',
+	  'America/Indiana/Winamac',
+	  'America/Indianapolis',
+	  'America/Inuvik',
+	  'America/Iqaluit',
+	  'America/Jamaica',
+	  'America/Jujuy',
+	  'America/Juneau',
+	  'America/Kentucky/Louisville',
+	  'America/Kentucky/Monticello',
+	  'America/Knox_IN',
+	  'America/Kralendijk',
+	  'America/La_Paz',
+	  'America/Lima',
+	  'America/Los_Angeles',
+	  'America/Louisville',
+	  'America/Lower_Princes',
+	  'America/Maceio',
+	  'America/Managua',
+	  'America/Manaus',
+	  'America/Marigot',
+	  'America/Martinique',
+	  'America/Matamoros',
+	  'America/Mazatlan',
+	  'America/Mendoza',
+	  'America/Menominee',
+	  'America/Merida',
+	  'America/Metlakatla',
+	  'America/Mexico_City',
+	  'America/Miquelon',
+	  'America/Moncton',
+	  'America/Monterrey',
+	  'America/Montevideo',
+	  'America/Montreal',
+	  'America/Montserrat',
+	  'America/Nassau',
+	  'America/New_York',
+	  'America/Nipigon',
+	  'America/Nome',
+	  'America/Noronha',
+	  'America/North_Dakota/Beulah',
+	  'America/North_Dakota/Center',
+	  'America/North_Dakota/New_Salem',
+	  'America/Ojinaga',
+	  'America/Panama',
+	  'America/Pangnirtung',
+	  'America/Paramaribo',
+	  'America/Phoenix',
+	  'America/Port_of_Spain',
+	  'America/Port-au-Prince',
+	  'America/Porto_Acre',
+	  'America/Porto_Velho',
+	  'America/Puerto_Rico',
+	  'America/Punta_Arenas',
+	  'America/Rainy_River',
+	  'America/Rankin_Inlet',
+	  'America/Recife',
+	  'America/Regina',
+	  'America/Resolute',
+	  'America/Rio_Branco',
+	  'America/Rosario',
+	  'America/Santa_Isabel',
+	  'America/Santarem',
+	  'America/Santiago',
+	  'America/Santo_Domingo',
+	  'America/Sao_Paulo',
+	  'America/Scoresbysund',
+	  'America/Shiprock',
+	  'America/Sitka',
+	  'America/St_Barthelemy',
+	  'America/St_Johns',
+	  'America/St_Kitts',
+	  'America/St_Lucia',
+	  'America/St_Thomas',
+	  'America/St_Vincent',
+	  'America/Swift_Current',
+	  'America/Tegucigalpa',
+	  'America/Thule',
+	  'America/Thunder_Bay',
+	  'America/Tijuana',
+	  'America/Toronto',
+	  'America/Tortola',
+	  'America/Vancouver',
+	  'America/Virgin',
+	  'America/Whitehorse',
+	  'America/Winnipeg',
+	  'America/Yakutat',
+	  'America/Yellowknife',
+	  'Antarctica/Casey',
+	  'Antarctica/Davis',
+	  'Antarctica/DumontDUrville',
+	  'Antarctica/Macquarie',
+	  'Antarctica/Mawson',
+	  'Antarctica/McMurdo',
+	  'Antarctica/Palmer',
+	  'Antarctica/Rothera',
+	  'Antarctica/South_Pole',
+	  'Antarctica/Syowa',
+	  'Antarctica/Troll',
+	  'Antarctica/Vostok',
+	  'Arctic/Longyearbyen',
+	  'Asia/Aden',
+	  'Asia/Almaty',
+	  'Asia/Amman',
+	  'Asia/Anadyr',
+	  'Asia/Aqtau',
+	  'Asia/Aqtobe',
+	  'Asia/Ashgabat',
+	  'Asia/Ashkhabad',
+	  'Asia/Atyrau',
+	  'Asia/Baghdad',
+	  'Asia/Bahrain',
+	  'Asia/Baku',
+	  'Asia/Bangkok',
+	  'Asia/Barnaul',
+	  'Asia/Beirut',
+	  'Asia/Bishkek',
+	  'Asia/Brunei',
+	  'Asia/Calcutta',
+	  'Asia/Chita',
+	  'Asia/Choibalsan',
+	  'Asia/Chongqing',
+	  'Asia/Chungking',
+	  'Asia/Colombo',
+	  'Asia/Dacca',
+	  'Asia/Damascus',
+	  'Asia/Dhaka',
+	  'Asia/Dili',
+	  'Asia/Dubai',
+	  'Asia/Dushanbe',
+	  'Asia/Famagusta',
+	  'Asia/Gaza',
+	  'Asia/Harbin',
+	  'Asia/Hebron',
+	  'Asia/Ho_Chi_Minh',
+	  'Asia/Hong_Kong',
+	  'Asia/Hovd',
+	  'Asia/Irkutsk',
+	  'Asia/Istanbul',
+	  'Asia/Jakarta',
+	  'Asia/Jayapura',
+	  'Asia/Jerusalem',
+	  'Asia/Kabul',
+	  'Asia/Kamchatka',
+	  'Asia/Karachi',
+	  'Asia/Kashgar',
+	  'Asia/Kathmandu',
+	  'Asia/Katmandu',
+	  'Asia/Kuala_Lumpur',
+	  'Asia/Kuching',
+	  'Asia/Kuwait',
+	  'Asia/Macao',
+	  'Asia/Macau',
+	  'Asia/Magadan',
+	  'Asia/Makassar',
+	  'Asia/Manila',
+	  'Asia/Muscat',
+	  'Asia/Novokuznetsk',
+	  'Asia/Novosibirsk',
+	  'Asia/Omsk',
+	  'Asia/Oral',
+	  'Asia/Phnom_Penh',
+	  'Asia/Pontianak',
+	  'Asia/Pyongyang',
+	  'Asia/Qatar',
+	  'Asia/Qyzylorda',
+	  'Asia/Rangoon',
+	  'Asia/Riyadh',
+	  'Asia/Saigon',
+	  'Asia/Sakhalin',
+	  'Asia/Samarkand',
+	  'Asia/Seoul',
+	  'Asia/Shanghai',
+	  'Asia/Singapore',
+	  'Asia/Srednekolymsk',
+	  'Asia/Taipei',
+	  'Asia/Tashkent',
+	  'Asia/Tbilisi',
+	  'Asia/Tehran',
+	  'Asia/Tel_Aviv',
+	  'Asia/Thimbu',
+	  'Asia/Thimphu',
+	  'Asia/Tokyo',
+	  'Asia/Tomsk',
+	  'Asia/Ujung_Pandang',
+	  'Asia/Ulaanbaatar',
+	  'Asia/Ulan_Bator',
+	  'Asia/Urumqi',
+	  'Asia/Ust-Nera',
+	  'Asia/Vientiane',
+	  'Asia/Vladivostok',
+	  'Asia/Yakutsk',
+	  'Asia/Yangon',
+	  'Asia/Yekaterinburg',
+	  'Asia/Yerevan',
+	  'Atlantic/Azores',
+	  'Atlantic/Bermuda',
+	  'Atlantic/Canary',
+	  'Atlantic/Cape_Verde',
+	  'Atlantic/Faeroe',
+	  'Atlantic/Faroe',
+	  'Atlantic/Jan_Mayen',
+	  'Atlantic/Madeira',
+	  'Atlantic/Reykjavik',
+	  'Atlantic/South_Georgia',
+	  'Atlantic/St_Helena',
+	  'Atlantic/Stanley',
+	  'Australia/Adelaide',
+	  'Australia/Brisbane',
+	  'Australia/Broken_Hill',
+	  'Australia/Canberra',
+	  'Australia/Currie',
+	  'Australia/Darwin',
+	  'Australia/Eucla',
+	  'Australia/Hobart',
+	  'Australia/Lindeman',
+	  'Australia/Lord_Howe',
+	  'Australia/Melbourne',
+	  'Australia/Perth',
+	  'Australia/Sydney',
+	  'Australia/Yancowinna',
+	  'Europe/Amsterdam',
+	  'Europe/Andorra',
+	  'Europe/Astrakhan',
+	  'Europe/Athens',
+	  'Europe/Belfast',
+	  'Europe/Belgrade',
+	  'Europe/Berlin',
+	  'Europe/Bratislava',
+	  'Europe/Brussels',
+	  'Europe/Bucharest',
+	  'Europe/Budapest',
+	  'Europe/Busingen',
+	  'Europe/Chisinau',
+	  'Europe/Copenhagen',
+	  'Europe/Dublin',
+	  'Europe/Gibraltar',
+	  'Europe/Guernsey',
+	  'Europe/Helsinki',
+	  'Europe/Isle_of_Man',
+	  'Europe/Istanbul',
+	  'Europe/Jersey',
+	  'Europe/Kaliningrad',
+	  'Europe/Kiev',
+	  'Europe/Kirov',
+	  'Europe/Lisbon',
+	  'Europe/Ljubljana',
+	  'Europe/London',
+	  'Europe/Luxembourg',
+	  'Europe/Madrid',
+	  'Europe/Malta',
+	  'Europe/Mariehamn',
+	  'Europe/Minsk',
+	  'Europe/Monaco',
+	  'Europe/Moscow',
+	  'Asia/Nicosia',
+	  'Europe/Oslo',
+	  'Europe/Paris',
+	  'Europe/Podgorica',
+	  'Europe/Prague',
+	  'Europe/Riga',
+	  'Europe/Rome',
+	  'Europe/Samara',
+	  'Europe/San_Marino',
+	  'Europe/Sarajevo',
+	  'Europe/Saratov',
+	  'Europe/Simferopol',
+	  'Europe/Skopje',
+	  'Europe/Sofia',
+	  'Europe/Stockholm',
+	  'Europe/Tallinn',
+	  'Europe/Tirane',
+	  'Europe/Tiraspol',
+	  'Europe/Ulyanovsk',
+	  'Europe/Uzhgorod',
+	  'Europe/Vaduz',
+	  'Europe/Vatican',
+	  'Europe/Vienna',
+	  'Europe/Vilnius',
+	  'Europe/Volgograd',
+	  'Europe/Warsaw',
+	  'Europe/Zagreb',
+	  'Europe/Zaporozhye',
+	  'Europe/Zurich',
+	  'Indian/Antananarivo',
+	  'Indian/Chagos',
+	  'Indian/Christmas',
+	  'Indian/Cocos',
+	  'Indian/Comoro',
+	  'Indian/Kerguelen',
+	  'Indian/Mahe',
+	  'Indian/Maldives',
+	  'Indian/Mauritius',
+	  'Indian/Mayotte',
+	  'Indian/Reunion',
+	  'Pacific/Apia',
+	  'Pacific/Auckland',
+	  'Pacific/Bougainville',
+	  'Pacific/Chatham',
+	  'Pacific/Chuuk',
+	  'Pacific/Easter',
+	  'Pacific/Efate',
+	  'Pacific/Enderbury',
+	  'Pacific/Fakaofo',
+	  'Pacific/Fiji',
+	  'Pacific/Funafuti',
+	  'Pacific/Galapagos',
+	  'Pacific/Gambier',
+	  'Pacific/Guadalcanal',
+	  'Pacific/Guam',
+	  'Pacific/Honolulu',
+	  'Pacific/Johnston',
+	  'Pacific/Kiritimati',
+	  'Pacific/Kosrae',
+	  'Pacific/Kwajalein',
+	  'Pacific/Majuro',
+	  'Pacific/Marquesas',
+	  'Pacific/Midway',
+	  'Pacific/Nauru',
+	  'Pacific/Niue',
+	  'Pacific/Norfolk',
+	  'Pacific/Noumea',
+	  'Pacific/Pago_Pago',
+	  'Pacific/Palau',
+	  'Pacific/Pitcairn',
+	  'Pacific/Pohnpei',
+	  'Pacific/Ponape',
+	  'Pacific/Port_Moresby',
+	  'Pacific/Rarotonga',
+	  'Pacific/Saipan',
+	  'Pacific/Samoa',
+	  'Pacific/Tahiti',
+	  'Pacific/Tarawa',
+	  'Pacific/Tongatapu',
+	  'Pacific/Truk',
+	  'Pacific/Wake',
+	  'Pacific/Wallis',
+	  'Pacific/Yap',
+	  'UTC'
 	];
 
 	function TimeZone(timeZoneIndentifier) {
 	  if (!(this instanceof TimeZone)) return new TimeZone(timeZoneIndentifier);
 	  CreateSlots(this);
-	  SetSlot(
-	    this,
-	    IDENTIFIER,
-	    ES.GetCanonicalTimeZoneIdentifier(timeZoneIndentifier)
-	  );
+	  SetSlot(this, IDENTIFIER, ES.GetCanonicalTimeZoneIdentifier(timeZoneIndentifier));
 	}
-	Object.defineProperty(TimeZone.prototype, "name", {
+	Object.defineProperty(TimeZone.prototype, 'name', {
 	  get: function() {
 	    return GetSlot(this, IDENTIFIER);
 	  },
@@ -5634,50 +5143,20 @@
 	  enumerable: true
 	});
 	TimeZone.prototype.getOffsetFor = function getOffsetFor(absolute) {
-	  return ES.GetTimeZoneOffsetString(absolute.getEpochNanoseconds());
+	  return ES.GetTimeZoneOffsetString(absolute.getEpochNanoseconds(), GetSlot(this, IDENTIFIER));
 	};
 	TimeZone.prototype.getDateTimeFor = function getDateTimeFor(absolute) {
 	  const epochNanoseconds = absolute.getEpochNanoseconds();
-	  const {
-	    year,
-	    month,
-	    day,
-	    hour,
-	    minute,
-	    second,
-	    millisecond,
-	    microsecond,
-	    nanosecond
-	  } = ES.GetTimeZoneDateTimeParts(epochNanoseconds, GetSlot(this, IDENTIFIER));
-	  const DateTime = ES.GetIntrinsic("%Temporal.DateTime%");
-	  return new DateTime(
-	    year,
-	    month,
-	    day,
-	    hour,
-	    minute,
-	    second,
-	    millisecond,
-	    microsecond,
-	    nanosecond
+	  const { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.GetTimeZoneDateTimeParts(
+	    epochNanoseconds,
+	    GetSlot(this, IDENTIFIER)
 	  );
+	  const DateTime = ES.GetIntrinsic('%Temporal.DateTime%');
+	  return new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
 	};
-	TimeZone.prototype.getAbsoluteFor = function getAbsoluteFor(
-	  dateTime,
-	  disambiguation = "earlier"
-	) {
-	  const Absolute = ES.GetIntrinsic("%Temporal.Absolute%");
-	  const {
-	    year,
-	    month,
-	    day,
-	    hour,
-	    minute,
-	    second,
-	    millisecond,
-	    microsecond,
-	    nanosecond
-	  } = dateTime;
+	TimeZone.prototype.getAbsoluteFor = function getAbsoluteFor(dateTime, disambiguation = 'earlier') {
+	  const Absolute = ES.GetIntrinsic('%Temporal.Absolute%');
+	  const { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = dateTime;
 	  const options = ES.GetTimeZoneEpochNanoseconds(
 	    GetSlot(this, IDENTIFIER),
 	    year,
@@ -5693,45 +5172,28 @@
 	  if (options.length === 1) return new Absolute(options[0]);
 	  if (options.length) {
 	    switch (disambiguation) {
-	      case "earlier":
+	      case 'earlier':
 	        return new Ansolute(options[0]);
-	      case "later":
+	      case 'later':
 	        return new Absolute(options[1]);
 	      default:
 	        throw new RangeError(`multiple absolute found`);
 	    }
 	  }
 
-	  if (!["earlier", "later"].includes(disambiguation))
-	    throw new RangeError(`no such absolute found`);
+	  if (!['earlier', 'later'].includes(disambiguation)) throw new RangeError(`no such absolute found`);
 
-	  const utcns = ES.GetEpochFromParts(
-	    year,
-	    month,
-	    day,
-	    hour,
-	    minute,
-	    second,
-	    millisecond,
-	    microsecond,
-	    nanosecond
-	  );
-	  const before = ES.GetTimeZoneOffsetNanoSeconds(
-	    utcns - 86400000000000n,
-	    GetSlot(this, IDENTIFIER)
-	  );
-	  const after = ES.GetTimeZoneOffsetNanoSeconds(
-	    utcns + 86400000000000n,
-	    GetSlot(this, IDENTIFIER)
-	  );
-	  const diff = new (ES.GetIntrinsic("%Temporal.Duration%"))({
+	  const utcns = ES.GetEpochFromParts(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
+	  const before = ES.GetTimeZoneOffsetNanoSeconds(utcns - 86400000000000n, GetSlot(this, IDENTIFIER));
+	  const after = ES.GetTimeZoneOffsetNanoSeconds(utcns + 86400000000000n, GetSlot(this, IDENTIFIER));
+	  const diff = ES.CastToDuration({
 	    nanoseconds: Number(after - before)
 	  });
 	  switch (disambiguation) {
-	    case "earlier":
+	    case 'earlier':
 	      const earlier = dateTime.minus(diff);
 	      return this.getAbsoluteFor(earlier, disambiguation);
-	    case "later":
+	    case 'later':
 	      const later = dateTime.plus(diff);
 	      return this.getAbsoluteFor(later, disambiguation);
 	    default:
@@ -5740,16 +5202,12 @@
 	};
 	TimeZone.prototype.getTransitions = function getTransitions(startingPoint) {
 	  let epochNanoseconds = startingPoint.getEpochNanoseconds();
-	  const Absolute = ES.GetIntrinsic("%Temporal.Absolute%");
+	  const Absolute = ES.GetIntrinsic('%Temporal.Absolute%');
 	  return {
 	    next: () => {
-	      epochNanoseconds = ES.GetTimeZoneNextTransition(
-	        epochNanoseconds,
-	        GetSlot(this, IDENTIFIER)
-	      );
+	      epochNanoseconds = ES.GetTimeZoneNextTransition(epochNanoseconds, GetSlot(this, IDENTIFIER));
 	      const done = epochNanoseconds !== null;
-	      const value =
-	        epochNanoseconds !== null ? null : new Absolute(epochNanoseconds);
+	      const value = epochNanoseconds !== null ? null : new Absolute(epochNanoseconds);
 	      return { done, value };
 	    }
 	  };
@@ -5780,8 +5238,10 @@
 	  };
 	};
 	Object.defineProperty(TimeZone.prototype, Symbol.toStringTag, {
-	  value: "Temporal.TimeZone"
+	  value: 'Temporal.TimeZone'
 	});
+
+	const DRE = new RegExp(`^${duration.source}$`);
 
 	function Duration$1(
 	  years = 0,
@@ -5794,46 +5254,9 @@
 	  microseconds = 0,
 	  nanoseconds = 0
 	) {
-	  if (
-	    years &&
-	    !months &&
-	    !days &&
-	    !hours &&
-	    !minutes &&
-	    !seconds &&
-	    !milliseconds &&
-	    !microseconds &&
-	    !nanoseconds
-	  ) {
-	    if ("string" === typeof years) {
-	      return Duration$1.fromString(years);
-	    }
-	    if ("object" === typeof years) {
-	      ({
-	        years = 0,
-	        months = 0,
-	        days = 0,
-	        hours = 0,
-	        minutes = 0,
-	        seconds = 0,
-	        milliseconds = 0,
-	        microseconds = 0,
-	        nanoseconds = 0
-	      } = years);
-	    }
-	  }
 	  if (!(this instanceof Duration$1))
-	    return new Duration$1(
-	      years,
-	      months,
-	      days,
-	      hours,
-	      minutes,
-	      seconds,
-	      milliseconds,
-	      microseconds,
-	      nanoseconds
-	    );
+	    return new Duration$1(years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+
 	  let tdays;
 	  ({
 	    days: tdays,
@@ -5844,20 +5267,20 @@
 	    microsecond: microseconds,
 	    nanosecond: nanoseconds
 	  } = ES.BalanceTime(
-	    ES.ToPositiveInteger(hours),
-	    ES.ToPositiveInteger(minutes),
-	    ES.ToPositiveInteger(seconds),
-	    ES.ToPositiveInteger(milliseconds),
-	    ES.ToPositiveInteger(microseconds),
-	    ES.ToPositiveInteger(nanoseconds)
+	    ES.AssertPositiveInteger(ES.ToInteger(hours)),
+	    ES.AssertPositiveInteger(ES.ToInteger(minutes)),
+	    ES.AssertPositiveInteger(ES.ToInteger(seconds)),
+	    ES.AssertPositiveInteger(ES.ToInteger(milliseconds)),
+	    ES.AssertPositiveInteger(ES.ToInteger(microseconds)),
+	    ES.AssertPositiveInteger(ES.ToInteger(nanoseconds))
 	  ));
 	  days += tdays;
 
 	  CreateSlots(this);
-	  SetSlot(this, YEARS, ES.ToPositiveInteger(years));
-	  SetSlot(this, MONTHS, ES.ToPositiveInteger(months));
-	  SetSlot(this, DAYS, ES.ToPositiveInteger(days));
-	  SetSlot(this, HOURS, hours + days * 24);
+	  SetSlot(this, YEARS, ES.AssertPositiveInteger(ES.ToInteger(years)));
+	  SetSlot(this, MONTHS, ES.AssertPositiveInteger(ES.ToInteger(months)));
+	  SetSlot(this, DAYS, ES.AssertPositiveInteger(ES.ToInteger(days)));
+	  SetSlot(this, HOURS, hours);
 	  SetSlot(this, MINUTES, minutes);
 	  SetSlot(this, SECONDS, seconds);
 	  SetSlot(this, MILLISECONDS, milliseconds);
@@ -5940,56 +5363,69 @@
 	  if (GetSlot(this, MINUTES)) timeParts.push(`${GetSlot(this, MINUTES)}H`);
 
 	  const secondParts = [];
-	  if (GetSlot(this, NANOSECONDS))
-	    secondParts.unshift(`000${GetSlot(this, NANOSECONDS)}`.slice(-3));
+	  if (GetSlot(this, NANOSECONDS)) secondParts.unshift(`000${GetSlot(this, NANOSECONDS)}`.slice(-3));
 	  if (GetSlot(this, MICROSECONDS) || secondParts.length)
 	    secondParts.unshift(`000${GetSlot(this, MICROSECONDS)}`.slice(-3));
 	  if (GetSlot(this, MILLISECONDS) || secondParts.length)
 	    secondParts.unshift(`000${GetSlot(this, MILLISECONDS)}`.slice(-3));
-	  if (secondParts.length) secondParts.unshift(".");
-	  if (GetSlot(this, SECONDS) || secondParts.length)
-	    secondParts.unshift(`${this.seconds}`);
-	  if (secondParts.length) timeParts.push(`${secondParts.join("")}S`);
-	  if (timeParts.length) timeParts.unshift("T");
-	  if (!dateParts.length && !timeParts.length) return "PT0S";
-	  return `P${dateParts.join("")}${timeParts.join("")}`;
+	  if (secondParts.length) secondParts.unshift('.');
+	  if (GetSlot(this, SECONDS) || secondParts.length) secondParts.unshift(`${this.seconds}`);
+	  if (secondParts.length) timeParts.push(`${secondParts.join('')}S`);
+	  if (timeParts.length) timeParts.unshift('T');
+	  if (!dateParts.length && !timeParts.length) return 'PT0S';
+	  return `P${dateParts.join('')}${timeParts.join('')}`;
 	};
 	Object.defineProperty(Duration$1.prototype, Symbol.toStringTag, {
-	  value: "Temporal.Duration"
+	  value: 'Temporal.Duration'
 	});
+	Duration$1.fromString = function fromString(isoString) {
+	  isoString = ES.ToString(isoString);
+	  const match = DRE.exec(isoString);
+	  if (!match) throw new RangeError(`invalid duration ${isoString}`);
+	  const years = +(match[1] || 0);
+	  const months = +(match[2] || 0);
+	  const days = +(match[3] || 0);
+	  const hours = +(match[4] || 0);
+	  const minutes = +(match[5] || 0);
+	  let seconds = +(match[6] || 0);
+	  let nanoseconds = Math.floor(seconds * 1000000000);
+	  const microseconds = Math.floor(nanoseconds / 1000) % 1000;
+	  const milliseconds = Math.floor(nanoseconds / 1000000) % 1000;
+	  seconds = Math.floor(nanoseconds / 1000000000);
+	  nanoseconds = nanoseconds % 1000;
+	  return new Duration$1(years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+	};
 
 	const IntlDateTimeFormat = Intl.DateTimeFormat;
 
 	const DAYNANOS = 3600000000000n;
 
 	const INTRINSICS$1 = {
-	  "%Temporal.DateTime%": DateTime$1,
-	  "%Temporal.Date%": Date$1,
-	  "%Temporal.YearMonth%": YearMonth,
-	  "%Temporal.MonthDay%": MonthDay,
-	  "%Temporal.Time%": Time,
-	  "%Temporal.TimeZone%": TimeZone,
-	  "%Temporal.Absolute%": Absolute,
-	  "%Temporal.Duration%": Duration$1
+	  '%Temporal.DateTime%': DateTime$1,
+	  '%Temporal.Date%': Date$1,
+	  '%Temporal.YearMonth%': YearMonth,
+	  '%Temporal.MonthDay%': MonthDay,
+	  '%Temporal.Time%': Time,
+	  '%Temporal.TimeZone%': TimeZone,
+	  '%Temporal.Absolute%': Absolute,
+	  '%Temporal.Duration%': Duration$1
 	};
 
 	const ES = Object.assign(Object.assign({}, es2019), {
-	  GetIntrinsic: intrinsic => {
-	    return intrinsic in INTRINSICS$1
-	      ? INTRINSICS$1[intrinsic]
-	      : es2019.GetIntrinsic(intrinsic);
+	  GetIntrinsic: (intrinsic) => {
+	    return intrinsic in INTRINSICS$1 ? INTRINSICS$1[intrinsic] : es2019.GetIntrinsic(intrinsic);
 	  },
 
-	  ToTimeZone: tz => {
-	    const TimeZone = ES.GetIntrinsic("%Temporal.TimeZone%");
+	  ToTimeZone: (tz) => {
+	    const TimeZone = ES.GetIntrinsic('%Temporal.TimeZone%');
 	    return tz instanceof TimeZone ? tz : new TimeZone(`${tz}`);
 	  },
 	  ISOTimeZoneString: (timeZone, absolute) => {
 	    let offset = timeZone.getOffsetFor(absolute);
 	    let timeZoneString;
 	    switch (true) {
-	      case "UTC" === timeZone.name:
-	        timeZoneString = "Z";
+	      case 'UTC' === timeZone.name:
+	        timeZoneString = 'Z';
 	        break;
 	      case timeZone.name === offset:
 	        timeZoneString = offset;
@@ -6000,10 +5436,10 @@
 	    }
 	    return timeZoneString;
 	  },
-	  ISOYearString: year => {
+	  ISOYearString: (year) => {
 	    let yearString;
 	    if (year < 1000 || year > 9999) {
-	      let sign = year < 0 ? "-" : "+";
+	      let sign = year < 0 ? '-' : '+';
 	      let yearNumber = Math.abs(year);
 	      yearString = sign + `000000${yearNumber}`.slice(-6);
 	    } else {
@@ -6011,22 +5447,22 @@
 	    }
 	    return yearString;
 	  },
-	  ISODateTimePartString: part => `00${part}`.slice(-2),
+	  ISODateTimePartString: (part) => `00${part}`.slice(-2),
 	  ISOSecondsString: (seconds, millis, micros, nanos) => {
-	    if (!seconds && !millis && !micros && !nanos) return "";
+	    if (!seconds && !millis && !micros && !nanos) return '';
 
 	    let parts = [];
 	    if (nanos) parts.unshift(`000${nanos || 0}`.slice(-3));
 	    if (micros || parts.length) parts.unshift(`000${micros || 0}`.slice(-3));
 	    if (millis || parts.length) parts.unshift(`000${millis || 0}`.slice(-3));
 	    let secs = `00${seconds}`.slice(-2);
-	    let post = parts.length ? `.${parts.join("")}` : "";
+	    let post = parts.length ? `.${parts.join('')}` : '';
 	    return `${secs}${post}`;
 	  },
-	  GetCanonicalTimeZoneIdentifier: timeZoneIdentifier => {
+	  GetCanonicalTimeZoneIdentifier: (timeZoneIdentifier) => {
 	    const offset = parseOffsetString(timeZoneIdentifier);
 	    if (offset !== null) return makeOffsetString(offset);
-	    const formatter = new IntlDateTimeFormat("en-iso", {
+	    const formatter = new IntlDateTimeFormat('en-iso', {
 	      timeZone: timeZoneIdentifier
 	    });
 	    return formatter.resolvedOptions().timeZone;
@@ -6046,29 +5482,16 @@
 	      nanosecond
 	    } = ES.GetTimeZoneDateTimeParts(epochNanoseconds, timeZoneIdentifier);
 
-	    const utc = ES.GetEpochFromParts(
-	      year,
-	      month,
-	      day,
-	      hour,
-	      minute,
-	      second,
-	      millisecond,
-	      microsecond,
-	      nanosecond
-	    );
+	    const utc = ES.GetEpochFromParts(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
 	    const offsetNanos = utc - epochNanoseconds;
 	    return offsetNanos;
 	  },
 	  GetTimeZoneOffsetString: (epochNanoseconds, timeZoneIdentifier) => {
-	    const offsetNanos = ES.GetTimeZoneOffsetNanoSeconds(
-	      epochNanoseconds,
-	      timeZoneIdentifier
-	    );
+	    const offsetNanos = ES.GetTimeZoneOffsetNanoSeconds(epochNanoseconds, timeZoneIdentifier);
 	    const offsetString = makeOffsetString(offsetNanos);
 	    return offsetString;
 	  },
-	  GetNSParts: epochNanoseconds => {
+	  GetNSParts: (epochNanoseconds) => {
 	    let subseconds = epochNanoseconds % 1000000000n;
 	    let seconds = (epochNanoseconds - subseconds) / 1000000000n;
 	    return { seconds, subseconds };
@@ -6077,24 +5500,9 @@
 	    seconds *= 1000000000n;
 	    return seconds + subseconds;
 	  },
-	  GetEpochFromParts: (
-	    year,
-	    month,
-	    day,
-	    hour,
-	    minute,
-	    second,
-	    millisecond,
-	    microsecond,
-	    nanosecond
-	  ) => {
-	    const seconds = BigInt(
-	      Date.UTC(year, month - 1, day, hour, minute, second, 0) / 1000
-	    );
-	    let subseconds =
-	      BigInt(millisecond * 1000000) +
-	      BigInt(microsecond * 1000) +
-	      BigInt(nanosecond);
+	  GetEpochFromParts: (year, month, day, hour, minute, second, millisecond, microsecond, nanosecond) => {
+	    const seconds = BigInt(Date.UTC(year, month - 1, day, hour, minute, second, 0) / 1000);
+	    let subseconds = BigInt(millisecond * 1000000) + BigInt(microsecond * 1000) + BigInt(nanosecond);
 	    subseconds -= seconds < 0n ? 1000000000n : 0n;
 	    return ES.GetPartsNanoseconds(seconds, subseconds);
 	  },
@@ -6128,14 +5536,14 @@
 	        nanosecond
 	      };
 	    }
-	    const fmt = new IntlDateTimeFormat("en-iso", {
+	    const fmt = new IntlDateTimeFormat('en-iso', {
 	      hour12: false,
-	      year: "numeric",
-	      month: "numeric",
-	      day: "numeric",
-	      hour: "numeric",
-	      minute: "numeric",
-	      second: "numeric",
+	      year: 'numeric',
+	      month: 'numeric',
+	      day: 'numeric',
+	      hour: 'numeric',
+	      minute: 'numeric',
+	      second: 'numeric',
 	      timeZone: timeZoneIdentifier
 	    });
 	    const parts = fmt.formatToParts(epochMilliseconds).reduce(reduceParts, {});
@@ -6154,7 +5562,7 @@
 	      rightNanos = leftNanos + 7n * 24n * DAYNANOS;
 	    }
 	    return bisect(
-	      epochNs => ES.GetTimeZoneOffsetString(epochNs, timeZoneIdentifier),
+	      (epochNs) => ES.GetTimeZoneOffsetString(epochNs, timeZoneIdentifier),
 	      leftNanos,
 	      rightNanos,
 	      leftOffset,
@@ -6189,21 +5597,12 @@
 	      const epochNanoseconds = utcEpochNanoseconds + offset;
 	      return [epochNanoseconds];
 	    }
-	    const earliest = ES.GetTimeZoneOffsetNanoSeconds(
-	      utcEpochNanoseconds - DAYNANOS,
-	      timeZoneIdentifier
-	    );
-	    const latest = ES.GetTimeZoneOffsetNanoSeconds(
-	      utcEpochNanoseconds + DAYNANOS,
-	      timeZoneIdentifier
-	    );
+	    const earliest = ES.GetTimeZoneOffsetNanoSeconds(utcEpochNanoseconds - DAYNANOS, timeZoneIdentifier);
+	    const latest = ES.GetTimeZoneOffsetNanoSeconds(utcEpochNanoseconds + DAYNANOS, timeZoneIdentifier);
 	    const found = Array.from(new Set([earliest, latest]))
-	      .map(offsetNanoseconds => {
+	      .map((offsetNanoseconds) => {
 	        const epochNanoseconds = utcEpochNanoseconds - offsetNanoseconds;
-	        const parts = ES.GetTimeZoneDateTimeParts(
-	          epochNanoseconds,
-	          timeZoneIdentifier
-	        );
+	        const parts = ES.GetTimeZoneDateTimeParts(epochNanoseconds, timeZoneIdentifier);
 	        if (
 	          year !== parts.year ||
 	          month !== parts.month ||
@@ -6217,10 +5616,10 @@
 	        }
 	        return epochNanoseconds;
 	      })
-	      .filter(x => x !== undefined);
+	      .filter((x) => x !== undefined);
 	    return found;
 	  },
-	  LeapYear: year => {
+	  LeapYear: (year) => {
 	    if (undefined === year) return false;
 	    const isDiv4 = year % 4 === 0;
 	    const isDiv100 = year % 100 === 0;
@@ -6232,7 +5631,7 @@
 	      standard: [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31],
 	      leapyear: [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 	    };
-	    return DoM[ES.LeapYear(year) ? "leapyear" : "standard"][month - 1];
+	    return DoM[ES.LeapYear(year) ? 'leapyear' : 'standard'][month - 1];
 	  },
 	  DayOfWeek: (year, month, day) => {
 	    const m = month + (month < 3 ? 10 : -2);
@@ -6297,17 +5696,11 @@
 	  BalanceDate: (year, month, day) => {
 	    ({ year, month } = ES.BalanceYearMonth(year, month));
 	    let daysInYear = 0;
-	    while (
-	      ((daysInYear = ES.LeapYear(month > 2 ? year : year - 1) ? -366 : -365),
-	      day < daysInYear)
-	    ) {
+	    while (((daysInYear = ES.LeapYear(month > 2 ? year : year - 1) ? -366 : -365), day < daysInYear)) {
 	      year -= 1;
 	      day -= daysInYear;
 	    }
-	    while (
-	      ((daysInYear = ES.LeapYear(month > 2 ? year : year + 1) ? 366 : 365),
-	      day > daysInYear)
-	    ) {
+	    while (((daysInYear = ES.LeapYear(month > 2 ? year : year + 1) ? 366 : 365), day > daysInYear)) {
 	      year += 1;
 	      day -= daysInYear;
 	    }
@@ -6392,14 +5785,7 @@
 	    day = ES.ConstrainToRange(day, 1, ES.DaysInMonth(year, month));
 	    return { year, month, day };
 	  },
-	  ConstrainTime: (
-	    hour,
-	    minute,
-	    second,
-	    millisecond,
-	    microsecond,
-	    nanosecond
-	  ) => {
+	  ConstrainTime: (hour, minute, second, millisecond, microsecond, nanosecond) => {
 	    hour = ES.ConstrainToRange(hour, 0, 23);
 	    minute = ES.ConstrainToRange(minute, 0, 59);
 	    second = ES.ConstrainToRange(second, 0, 59);
@@ -6410,8 +5796,7 @@
 	  },
 
 	  RejectToRange: (value, min, max) => {
-	    if (value < min || value > max)
-	      throw new RangeError(`value out of range: ${min} <= ${value} <= ${max}`);
+	    if (value < min || value > max) throw new RangeError(`value out of range: ${min} <= ${value} <= ${max}`);
 	    return value;
 	  },
 	  RejectDate: (year, month, day) => {
@@ -6430,20 +5815,11 @@
 	    return { hour, minute, second, millisecond, microsecond, nanosecond };
 	  },
 
-	  CastToDuration: durationLike => {
-	    const Duration = ES.GetIntrinsic("%Temporal.Duration%");
+	  CastToDuration: (durationLike) => {
+	    const Duration = ES.GetIntrinsic('%Temporal.Duration%');
 	    if (durationLike instanceof Duration) return durationLike;
-	    let {
-	      years,
-	      months,
-	      days,
-	      hours,
-	      minutes,
-	      seconds,
-	      milliseconds,
-	      microseconds,
-	      nanoseconds
-	    } = durationLike;
+	    if ('string' === typeof durationLike) return Duration.fromString(durationLike);
+	    const { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = durationLike;
 	    return new Duration(
 	      years,
 	      months,
@@ -6453,7 +5829,8 @@
 	      seconds,
 	      milliseconds,
 	      microseconds,
-	      nanoseconds
+	      nanoseconds,
+	      'reject'
 	    );
 	  },
 	  AddDate: (year, month, day, years, months, days, disambiguation) => {
@@ -6465,10 +5842,10 @@
 	    month = 1 + (month % 12);
 
 	    switch (disambiguation) {
-	      case "constrain":
+	      case 'constrain':
 	        ({ year, month, day } = ES.ConstrainDate(year, month, day));
 	        break;
-	      case "balance":
+	      case 'balance':
 	        ({ year, month, day } = ES.BalanceDate(year, month, day));
 	        break;
 	      default:
@@ -6499,15 +5876,7 @@
 	    microsecond += microseconds;
 	    nanosecond += nanoseconds;
 	    let days = 0;
-	    ({
-	      days,
-	      hour,
-	      minute,
-	      second,
-	      millisecond,
-	      microsecond,
-	      nanosecond
-	    } = ES.BalanceTime(
+	    ({ days, hour, minute, second, millisecond, microsecond, nanosecond } = ES.BalanceTime(
 	      hour,
 	      minute,
 	      second,
@@ -6528,10 +5897,10 @@
 	    }
 
 	    switch (disambiguation) {
-	      case "constrain":
+	      case 'constrain':
 	        ({ year, month, day } = ES.ConstrainDate(year, month, day));
 	        break;
-	      case "balance":
+	      case 'balance':
 	        ({ year, month, day } = ES.BalanceDate(year, month, day));
 	        break;
 	      default:
@@ -6562,15 +5931,7 @@
 	    microsecond -= microseconds;
 	    nanosecond -= nanoseconds;
 	    let days = 0;
-	    ({
-	      days,
-	      hour,
-	      minute,
-	      second,
-	      millisecond,
-	      microsecond,
-	      nanosecond
-	    } = ES.BalanceTime(
+	    ({ days, hour, minute, second, millisecond, microsecond, nanosecond } = ES.BalanceTime(
 	      hour,
 	      minute,
 	      second,
@@ -6581,8 +5942,10 @@
 	    return { days, hour, minute, second, millisecond, microsecond, nanosecond };
 	  },
 
-	  ToPositiveInteger: num =>
-	    Math.floor(Math.abs(Number.isFinite(num) ? num : 0)),
+	  AssertPositiveInteger: (num) => {
+	    if (!Number.isFinite(num) || Math.abs(num) !== num) throw new RangeError(`invalid positive integer: ${num}`);
+	    return num;
+	  },
 
 	  SystemUTCEpochNanoSeconds: (() => {
 	    let nanos = BigInt(Date.now() % 1000000);
@@ -6594,7 +5957,7 @@
 	    };
 	  })(),
 	  SystemTimeZone: () => {
-	    const fmt = new IntlDateTimeFormat("en-iso");
+	    const fmt = new IntlDateTimeFormat('en-iso');
 	    return ES.ToTimeZone(fmt.resolvedOptions().timeZone);
 	  }
 	});
@@ -6609,44 +5972,38 @@
 	}
 	function makeOffsetString(offsetNanoSeconds) {
 	  let offsetSeconds = Number(offsetNanoSeconds / 1000000000n);
-	  const sign = offsetSeconds < 0 ? "-" : "+";
+	  const sign = offsetSeconds < 0 ? '-' : '+';
 	  offsetSeconds = Math.abs(offsetSeconds);
-	  const offsetMinutes = Math.floor(offsetSeconds / 1000) % 60;
-	  const offsetHours = Math.floor(offsetSeconds / 3600000);
+	  const offsetMinutes = Math.floor(offsetSeconds / 60) % 60;
+	  const offsetHours = Math.floor(offsetSeconds / 3600);
 	  const offsetMinuteString = `00${offsetMinutes}`.slice(-2);
 	  const offsetHourString = `00${offsetHours}`.slice(-2);
 	  return `${sign}${offsetHourString}:${offsetMinuteString}`;
 	}
 	function reduceParts(res, item) {
-	  if (item.type === "literal") return res;
-	  if (item.type === "timeZoneName") return res;
+	  if (item.type === 'literal') return res;
+	  if (item.type === 'timeZoneName') return res;
 	  res[item.type] = parseInt(item.value, 10);
 	  return res;
 	}
-	function bisect(
-	  getState,
-	  left,
-	  right,
-	  lstate = getState(left),
-	  rstate = getState(right)
-	) {
+	function bisect(getState, left, right, lstate = getState(left), rstate = getState(right)) {
 	  if (right - left < 2n) return right;
 	  let middle = Math.ceil((left + right) / 2n);
 	  if (middle === right) middle -= 1n;
 	  const mstate = getState(middle);
 	  if (mstate === lstate) return bisect(getState, middle, right, mstate, rstate);
 	  if (mstate === rstate) return bisect(getState, left, middle, lstate, mstate);
-	  throw new Error("invalid state in bisection");
+	  throw new Error('invalid state in bisection');
 	}
 
-	const Absolute$1 = ES.GetIntrinsic("%Temporal.Absolute%");
-	const TimeZone$1 = ES.GetIntrinsic("%Temporal.TimeZone%");
-	const DateTime$2 = ES.GetIntrinsic("%Temporal.DateTime%");
-	const Date$2 = ES.GetIntrinsic("%Temporal.Date%");
-	const YearMonth$1 = ES.GetIntrinsic("%Temporal.YearMonth%");
-	const MonthDay$1 = ES.GetIntrinsic("%Temporal.MonthDay%");
-	const Time$1 = ES.GetIntrinsic("%Temporal.Time%");
-	const Duration$2 = ES.GetIntrinsic("%Temporal.Duration%");
+	const Absolute$1 = ES.GetIntrinsic('%Temporal.Absolute%');
+	const TimeZone$1 = ES.GetIntrinsic('%Temporal.TimeZone%');
+	const DateTime$2 = ES.GetIntrinsic('%Temporal.DateTime%');
+	const Date$2 = ES.GetIntrinsic('%Temporal.Date%');
+	const YearMonth$1 = ES.GetIntrinsic('%Temporal.YearMonth%');
+	const MonthDay$1 = ES.GetIntrinsic('%Temporal.MonthDay%');
+	const Time$1 = ES.GetIntrinsic('%Temporal.Time%');
+	const Duration$2 = ES.GetIntrinsic('%Temporal.Duration%');
 
 	function getAbsolute() {
 	  let epochNanoSeconds = ES.SystemUTCEpochNanoSeconds();
@@ -6698,37 +6055,27 @@
 	    getTimeZone: getTimeZone
 	});
 
-	const Absolute$2 = ES.GetIntrinsic("%Temporal.Absolute%");
-	const DateTime$3 = ES.GetIntrinsic("%Temporal.DateTime%");
-	const Date$3 = ES.GetIntrinsic("%Temporal.Date%");
-	const Time$2 = ES.GetIntrinsic("%Temporal.Time%");
-	const YearMonth$2 = ES.GetIntrinsic("%Temporal.YearMonth%");
-	const MonthDay$2 = ES.GetIntrinsic("%Temporal.MonthDay%");
+	const Absolute$2 = ES.GetIntrinsic('%Temporal.Absolute%');
+	const DateTime$3 = ES.GetIntrinsic('%Temporal.DateTime%');
+	const Date$3 = ES.GetIntrinsic('%Temporal.Date%');
+	const Time$2 = ES.GetIntrinsic('%Temporal.Time%');
+	const YearMonth$2 = ES.GetIntrinsic('%Temporal.YearMonth%');
+	const MonthDay$2 = ES.GetIntrinsic('%Temporal.MonthDay%');
 
-	const DATE$3 = Symbol("date");
-	const YM = Symbol("ym");
-	const MD = Symbol("md");
-	const TIME$1 = Symbol("time");
-	const DATETIME$1 = Symbol("datetime");
-	const ORIGINAL = Symbol("original");
+	const DATE$3 = Symbol('date');
+	const YM = Symbol('ym');
+	const MD = Symbol('md');
+	const TIME$1 = Symbol('time');
+	const DATETIME$1 = Symbol('datetime');
+	const ORIGINAL = Symbol('original');
 
 	const IntlDateTimeFormat$1 = Intl.DateTimeFormat;
-	function DateTimeFormat(
-	  locale = IntlDateTimeFormat$1().resolvedOptions().locale,
-	  options = {}
-	) {
-	  if (!(this instanceof DateTimeFormat))
-	    return new DateTimeFormat(locale, options);
+	function DateTimeFormat(locale = IntlDateTimeFormat$1().resolvedOptions().locale, options = {}) {
+	  if (!(this instanceof DateTimeFormat)) return new DateTimeFormat(locale, options);
 	  this[ORIGINAL] = new IntlDateTimeFormat$1(locale, options);
 	  this[DATE$3] = new IntlDateTimeFormat$1(locale, dateAmmend(options, {}));
-	  this[YM] = new IntlDateTimeFormat$1(
-	    locale,
-	    dateAmmend(options, { day: false })
-	  );
-	  this[MD] = new IntlDateTimeFormat$1(
-	    locale,
-	    dateAmmend(options, { year: false })
-	  );
+	  this[YM] = new IntlDateTimeFormat$1(locale, dateAmmend(options, { day: false }));
+	  this[MD] = new IntlDateTimeFormat$1(locale, dateAmmend(options, { year: false }));
 	  this[TIME$1] = new IntlDateTimeFormat$1(locale, timeAmmend(options));
 	  this[DATETIME$1] = new IntlDateTimeFormat$1(locale, datetimeAmmend(options));
 	}
@@ -6780,16 +6127,11 @@
 	}
 	function formatToParts(datetime, ...rest) {
 	  const { absolute, formatter } = extractOverrides(datetime, this);
-	  if (absolute && formatter)
-	    return formatter.formatToParts(absolute.getEpochMilliseconds());
+	  if (absolute && formatter) return formatter.formatToParts(absolute.getEpochMilliseconds());
 	  return this[ORIGINAL].formatToParts(datetime, ...rest);
 	}
 	function formatRange(a, b) {
-	  if (
-	    "object" === typeof a &&
-	    "object" === typeof b &&
-	    Object.getPrototypeOf(a) === Object.getPrototypeOf(b)
-	  ) {
+	  if ('object' === typeof a && 'object' === typeof b && Object.getPrototypeOf(a) === Object.getPrototypeOf(b)) {
 	    const { absolute: aa, formatter } = extractOverrides(a, this);
 	    if (aa && formatter) {
 	      const { absolute: ba } = extractOverrides(b, this);
@@ -6799,11 +6141,7 @@
 	  return this[ORIGINAL].formatRange(a, b);
 	}
 	function formatRangeToParts(a, b) {
-	  if (
-	    "object" === typeof a &&
-	    "object" === typeof b &&
-	    Object.getPrototypeOf(a) === Object.getPrototypeOf(b)
-	  ) {
+	  if ('object' === typeof a && 'object' === typeof b && Object.getPrototypeOf(a) === Object.getPrototypeOf(b)) {
 	    const { absolute: aa, formatter } = extractOverrides(a, this);
 	    if (aa && formatter) {
 	      const { absolute: ba } = extractOverrides(b, this);
@@ -6815,10 +6153,9 @@
 
 	function ammend(options = {}, ammended = {}) {
 	  options = Object.assign({}, options);
-	  for (let opt of ["year", "month", "day", "hour", "minute", "second"]) {
+	  for (let opt of ['year', 'month', 'day', 'hour', 'minute', 'second']) {
 	    options[opt] = opt in ammended ? ammended[opt] : options[opt];
-	    if (options[opt] === false || options[opt] === undefined)
-	      delete options[opt];
+	    if (options[opt] === false || options[opt] === undefined) delete options[opt];
 	  }
 	  return options;
 	}
@@ -6826,9 +6163,9 @@
 	  options = ammend(options, { year: false, month: false, day: false });
 	  if (!hasTimeOptions(options)) {
 	    options = Object.assign(options, {
-	      hour: "numeric",
-	      minute: "numeric",
-	      second: "numeric"
+	      hour: 'numeric',
+	      minute: 'numeric',
+	      second: 'numeric'
 	    });
 	  }
 	  return options;
@@ -6837,9 +6174,9 @@
 	  options = ammend(options, { hour: false, minute: false, second: false });
 	  if (!hasDateOptions(options)) {
 	    options = Object.assign(options, {
-	      year: "numeric",
-	      month: "numeric",
-	      day: "numeric"
+	      year: 'numeric',
+	      month: 'numeric',
+	      day: 'numeric'
 	    });
 	  }
 	  options = ammend(options, ammendments);
@@ -6849,22 +6186,22 @@
 	  options = Object.assign({}, options);
 	  if (!hasTimeOptions(options) && !hasDateOptions(options)) {
 	    Object.assign(options, {
-	      year: "numeric",
-	      month: "numeric",
-	      day: "numeric",
-	      hour: "numeric",
-	      minute: "numeric",
-	      second: "numeric"
+	      year: 'numeric',
+	      month: 'numeric',
+	      day: 'numeric',
+	      hour: 'numeric',
+	      minute: 'numeric',
+	      second: 'numeric'
 	    });
 	  }
 	  return options;
 	}
 
 	function hasDateOptions(options) {
-	  return "year" in options || "month" in options || "day" in options;
+	  return 'year' in options || 'month' in options || 'day' in options;
 	}
 	function hasTimeOptions(options) {
-	  return "hour" in options || "minute" in options || "second" in options;
+	  return 'hour' in options || 'minute' in options || 'second' in options;
 	}
 	function extractOverrides(datetime, main) {
 	  let formatter;
@@ -6885,17 +6222,7 @@
 	    formatter = formatter || main[DATE$3];
 	  }
 	  if (datetime instanceof DateTime$3) {
-	    const {
-	      year,
-	      month,
-	      day,
-	      hour,
-	      minute,
-	      second,
-	      millisecond,
-	      microsecond,
-	      nanosecond
-	    } = datetime;
+	    const { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = datetime;
 	    const found = ES.GetTimeZoneEpochNanoseconds(
 	      main.resolvedOptions().timeZone,
 	      year,
@@ -6926,15 +6253,15 @@
 	});
 
 	function setup(global = globalThis) {
-	    global.Temporal = {};
-	    copy(global.Temporal, Temporal);
-	    copy(global.Intl, Intl$1);
+	  global.Temporal = {};
+	  copy(global.Temporal, Temporal);
+	  copy(global.Intl, Intl$1);
 
-	    function copy(target, source) {
-	        for (const prop of Object.getOwnPropertyNames(source)) {
-	            target[prop] = source[prop];
-	        }
+	  function copy(target, source) {
+	    for (const prop of Object.getOwnPropertyNames(source)) {
+	      target[prop] = source[prop];
 	    }
+	  }
 	}
 
 	exports.Intl = Intl$1;

@@ -5,8 +5,8 @@
   "main": "index.js",
   "private": true,
   "scripts": {
-    "build": "rollup -c rollup.config.js && marp README.md -o index.html",
-    "watch": "marp -p README.md -o index.html"
+    "build": "rollup -c rollup.config.js && marp playground.md -o playground.html",
+    "watch": "marp -p playground.md -o playground.html"
   },
   "repository": {
     "type": "git",

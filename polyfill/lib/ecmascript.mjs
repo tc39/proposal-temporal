@@ -102,7 +102,6 @@ export const ES = Object.assign(Object.assign({}, ES2019), {
   GetTimeZoneOffsetString: (epochNanoseconds, timeZoneIdentifier) => {
     const offsetNanos = ES.GetTimeZoneOffsetNanoSeconds(epochNanoseconds, timeZoneIdentifier);
     const offsetString = makeOffsetString(offsetNanos);
-    console.error('GetTimeZoneOffsetString', offsetNanos, offsetString);
     return offsetString;
   },
   GetNSParts: (epochNanoseconds) => {
