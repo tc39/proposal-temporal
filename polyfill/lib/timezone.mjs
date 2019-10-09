@@ -9,7 +9,7 @@ export class TimeZone {
     SetSlot(this, IDENTIFIER, ES.GetCanonicalTimeZoneIdentifier(timeZoneIndentifier));
   }
   get name() {
-    return GetSlot(this, IDENTIFIER);
+    return String(GetSlot(this, IDENTIFIER));
   }
   getOffsetFor(absolute) {
     absolute = ES.GetIntrinsic('%Temporal.absolute%')(absolute);

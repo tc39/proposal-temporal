@@ -28,7 +28,7 @@ export function DateTimeFormat(locale = IntlDateTimeFormat().resolvedOptions().l
 DateTimeFormat.supportedLocalesOf = function(...args) {
   return IntlDateTimeFormat.supportedLocalesOf(...args);
 };
-DateTimeFormat.prototype = Object.create(IntlDateTimeFormat.prototype, {
+const properties = {
   resolvedOptions: {
     value: resolvedOptions,
     enumerable: true,
@@ -41,25 +41,30 @@ DateTimeFormat.prototype = Object.create(IntlDateTimeFormat.prototype, {
     writable: false,
     configurable: true
   },
-  formatToParts: {
-    value: formatToParts,
-    enumerable: true,
-    writable: false,
-    configurable: true
-  },
   formatRange: {
     value: formatRange,
     enumerable: true,
     writable: false,
     configurable: true
-  },
-  formatRangeToParts: {
-    value: formatRangeToParts,
+  }
+};
+if (formatToParts in IntlDateTimeFormat.prototype) {
+  properties.formatToParts = {
+    value: formatToParts,
     enumerable: true,
     writable: false,
     configurable: true
-  }
-});
+  };
+}
+if (formatRangeToParts in IntlDateTimeFormat.prototype) {
+  properties.formatRangeToParts = {
+    value: formatToParts,
+    enumerable: true,
+    writable: false,
+    configurable: true
+  };
+}
+DateTimeFormat.prototype = Object.create(IntlDateTimeFormat.prototype, properties);
 
 function resolvedOptions() {
   return this[ORIGINAL].resolvedOptions();
