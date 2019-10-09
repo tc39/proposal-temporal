@@ -1,0 +1,14 @@
+{
+  "https://tc39.es/ecma402/": [
+    {
+      "type": "clause",
+      "number": "Internal slots",
+      "id": "sec-intl.datetimeformat-internal-slots"
+    },
+    {
+      "type": "clause",
+      "number": "get Intl.DateTimeFormat.prototype.format",
+      "id": "sec-intl.datetimeformat.prototype.format"
+    }
+  ]
+}
