@@ -10,6 +10,7 @@ import { Time as TemporalTime } from './time.mjs';
 import { Absolute as Temporalabsolute } from './absolute.mjs';
 import { TimeZone as TemporalTimeZone } from './timezone.mjs';
 import { Duration as TemporalDuration } from './duration.mjs';
+import * as Cast from './casts.mjs';
 
 const DAYNANOS = 3600000000000n;
 
@@ -23,6 +24,9 @@ const INTRINSICS = {
   '%Temporal.Absolute%': Temporalabsolute,
   '%Temporal.Duration%': TemporalDuration
 };
+for (let [name, value] of Object.entries(Cast)) {
+  INTRINSICS[`%Temporal.${name}%`] = value;
+}
 
 export const ES = Object.assign(Object.assign({}, ES2019), {
   GetIntrinsic: (intrinsic) => {
