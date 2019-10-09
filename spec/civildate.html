@@ -27,7 +27,7 @@
         1. Let _y_ be ? TemporalToInteger(_year_).
         1. Let _m_ be ? TemporalToInteger(_month_).
         1. Let _d_ be ? TemporalToInteger(_day_).
-        1. If ! ValidateDate ( _y_, _m_, _d_ ) is *false*, then
+        1. If ! ValidateDate(_y_, _m_, _d_) is *false*, then
           1. Throw a *TypeError* exception.
         1. Return CreateDate(_y_, _m_, _d_, NewTarget).
       </emu-alg>
@@ -46,11 +46,32 @@
       <p>This property has the attributes { [[Writable]]: false, [[Enumerable]]: false, [[Configurable]]: false }.</p>
     </emu-clause>
 
+    <emu-clause>
+      <h1>Temporal.Date.fromString( _isostring_ )</h1>
+      <p>
+        The `fromString` method takes one argument _isostring_.
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _date_ be the *this* value.
+        1. If Type(_date_) is not Object or _date_ does not have an [[InitializedTemporalDate]] internal slot, then
+          1. Throw a *TypeError* exception.
+        1. Let _validSyntax_ be *true* if _isostring_ conforms to the format `YYYY-MM-DD`, and *false* otherwise, where:
+          * `YYYY` is either four decimal digits or an expanded year of `"+"` or `"-"` followed by six decimal digits;
+          * `-` is the code unit 0x002D (HYPHEN-MINUS);
+          * `MM` is two decimal digits;
+          * `-` is the code unit 0x002D (HYPHEN-MINUS);
+          * `DD` is two decimal digits.
+        1. If _validSyntax_ is *false*, then
+          1. Throw a *TypeError* exception.
+        1. Let _year_, _month_, and _day_ be the respective parts of _isostring_, interpreted as decimal numbers.
+        1. If ! ValidateDate(_year_, _month_, _day_) is *false*, then
+          1. Throw a *TypeError* exception.
+        1. Return CreateDate(_year_, _month_, _day_).
+      </emu-alg>
+    </emu-clause>
+
 <!-- TODO
-#### CivilDate.fromString(isostring: string): [CivilDate](#CivilDate)
-
-Creates a new `CivilDate` by parsing an ISO-8601 string in the format created by `.toString()`.
-
 CivilDate.compare()?
 -->
   </emu-clause>
@@ -373,6 +394,7 @@ CivilDate.compare()?
     <emu-clause id=sec-temporal-date-create aoid=CreateDate>
       <h1>CreateDate ( _y_, _m_, _d_ [, _newTarget_] )</h1>
       <emu-alg>
+        1. Assert: ! ValidateDate(_y_, _m_, _d_) is *true*.
         1. If _newTarget_ is not given, set it to %Temporal.Date%
         1. Let _object_ be ? OrdinaryCreateFromConstructor(_newTarget_, `"%Temporal.Date.prototype%"`, « [[InitializedTemporalDate]], [[Year]], [[Month]], [[Day]] »).
         1. Set _object_.[[Year]] to _y_.
