@@ -1,3 +1,4 @@
+
 import('./index.mjs')
   .then(({ setup }) => setup(globalThis))
   .catch((err) => {

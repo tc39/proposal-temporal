@@ -24,31 +24,31 @@ export class Date {
     SetSlot(this, MONTH, month);
     SetSlot(this, DAY, day);
   }
-  year() {
+  get year() {
     return GetSlot(this, YEAR);
   }
-  month() {
+  get month() {
     return GetSlot(this, MONTH);
   }
-  day() {
+  get day() {
     return GetSlot(this, DAY);
   }
-  dayOfWeek() {
+  get dayOfWeek() {
     return ES.DayOfWeek(GetSlot(this, THIS).year, GetSlot(this, THIS).month, GetSlot(this, DAY));
   }
-  dayOfYear() {
+  get dayOfYear() {
     return ES.DayOfYear(GetSlot(this, THIS).year, GetSlot(this, THIS).month, GetSlot(this, DAY));
   }
-  weekOfYear() {
+  get weekOfYear() {
     return ES.WeekOfYear(GetSlot(this, THIS).year, GetSlot(this, THIS).month, GetSlot(this, DAY));
   }
-  daysInYear() {
+  get daysInYear() {
     return ES.LeapYear(GetSlot(this, YEAR)) ? 366 : 365;
   }
-  daysInMonth() {
+  get daysInMonth() {
     return ES.DaysInMonth(GetSlot(this, THIS).year, GetSlot(this, MONTH));
   }
-  leapYear() {
+  get leapYear() {
     return ES.LeapYear(GetSlot(this, YEAR));
   }
   with(dateLike = {}, disambiguation = 'constrain') {
@@ -142,6 +142,9 @@ export class Date {
   }
 }
 Date.prototype.toJSON = Date.prototype.toString;
-Object.defineProperty(Date.prototype, Symbol.toStringTag, {
-  value: 'Temporal.Date'
-});
+
+if ('undefined' !== typeof Symbol) {
+  Object.defineProperty(Date.prototype, Symbol.toStringTag, {
+    value: 'Temporal.Date'
+  });
+}

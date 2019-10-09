@@ -158,17 +158,7 @@ export class Time {
     other = ES.GetIntrinsic('%Temporal.time%')(other);
     const [one, two] = [
       this,
-      Object.assign(
-        {
-          hours: 0,
-          minute: 0,
-          second: 0,
-          millisecond: 0,
-          microsecond: 0,
-          nanosecond: 0
-        },
-        other
-      )
+      other
     ].sort(Time.compare);
     const hours = two.hour - one.hour;
     const minutes = two.minute - one.minute;
@@ -227,6 +217,8 @@ export class Time {
   }
 }
 Time.prototype.toJSON = Time.prototype.toString;
-Object.defineProperty(Time.prototype, Symbol.toStringTag, {
-  value: 'Temporal.Time'
-});
+if ('undefined' !== typeof Symbol) {
+  Object.defineProperty(Time.prototype, Symbol.toStringTag, {
+    value: 'Temporal.Time'
+  });
+}

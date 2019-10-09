@@ -78,49 +78,49 @@ export class DateTime {
     SetSlot(this, MICROSECOND, microsecond);
     SetSlot(this, NANOSECOND, nanosecond);
   }
-  year() {
+  get year() {
     return GetSlot(this, YEAR);
   }
-  month() {
+  get month() {
     return GetSlot(this, MONTH);
   }
-  day() {
+  get day() {
     return GetSlot(this, DAY);
   }
-  hour() {
+  get hour() {
     return GetSlot(this, HOUR);
   }
-  minute() {
+  get minute() {
     return GetSlot(this, MINUTE);
   }
-  second() {
+  get second() {
     return GetSlot(this, SECOND);
   }
-  millisecond() {
+  get millisecond() {
     return GetSlot(this, MILLISECOND);
   }
-  microsecond() {
+  get microsecond() {
     return GetSlot(this, MICROSECOND);
   }
-  nanosecond() {
+  get nanosecond() {
     return GetSlot(this, NANOSECOND);
   }
-  dayOfWeek() {
+  get dayOfWeek() {
     return ES.DayOfWeek(GetSlot(this, YEAR), GetSlot(this, MONTH), GetSlot(this, DAY));
   }
-  dayOfYear() {
+  get dayOfYear() {
     return ES.DayOfYear(GetSlot(this, YEAR), GetSlot(this, MONTH), GetSlot(this, DAY));
   }
-  weekOfYear() {
+  get weekOfYear() {
     return ES.WeekOfYear(GetSlot(this, YEAR), GetSlot(this, MONTH), GetSlot(this, DAY));
   }
-  daysInYear() {
+  get daysInYear() {
     return ES.LeapYear(GetSlot(this, YEAR)) ? 366 : 365;
   }
-  daysInMonth() {
+  get daysInMonth() {
     return ES.DaysInMonth(GetSlot(this, YEAR), GetSlot(this, MONTH));
   }
-  leapYear() {
+  get leapYear() {
     return ES.LeapYear(GetSlot(this, YEAR));
   }
   with(dateTimeLike = {}, disambiguation = 'constrain') {
@@ -309,6 +309,8 @@ export class DateTime {
   }
 }
 DateTime.prototype.toJSON = DateTime.prototype.toString;
-Object.defineProperty(DateTime.prototype, Symbol.toStringTag, {
-  value: 'Temporal.DateTime'
-});
+if ('undefined' !== typeof Symbol) {
+  Object.defineProperty(DateTime.prototype, Symbol.toStringTag, {
+    value: 'Temporal.DateTime'
+  });
+}

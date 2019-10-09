@@ -135,6 +135,8 @@ export class Duration {
   }
 }
 Duration.prototype.toJSON = Duration.prototype.toString;
-Object.defineProperty(Duration.prototype, Symbol.toStringTag, {
-  value: 'Temporal.Duration'
-});
+if ('undefined' !== typeof Symbol) {
+  Object.defineProperty(Duration.prototype, Symbol.toStringTag, {
+    value: 'Temporal.Duration'
+  });
+}

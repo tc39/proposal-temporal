@@ -9,25 +9,24 @@ export class Absolute {
   }
 
   getEpochSeconds() {
-    let epochNanoSeconds = GetSlot(this, EPOCHNANOSECONDS);
-    let epochSecondsBigInt = epochNanoSeconds / 1000000000n;
-    let epochSeconds = ES.ToNumber(epochSecondsBigInt);
+    const value = GetSlot(this, EPOCHNANOSECONDS);
+    const epochSeconds = Math[value.ms < 0 ? 'ceil' : 'floor'](value.ms / 1000);
     return epochSeconds;
   }
   getEpochMilliseconds() {
-    let epochNanoSeconds = GetSlot(this, EPOCHNANOSECONDS);
-    let epochMillisecondsBigInt = epochNanoSeconds / 1000000n;
-    let epochMilliseconds = ES.ToNumber(epochMillisecondsBigInt);
-    return epochMilliseconds;
+    const value = GetSlot(this, EPOCHNANOSECONDS);
+    const epochMilliSeconds = value.ms;
+    return epochMilliSeconds;
   }
   getEpochMicroseconds() {
-    let epochNanoSeconds = GetSlot(this, EPOCHNANOSECONDS);
-    let epochMicroseconds = epochNanoSeconds / 1000n;
-    return epochMicroseconds;
+    const value = GetSlot(this, EPOCHNANOSECONDS);
+    const epochNanoseconds = BigInt(value.ms) * BigInt(1e6) + (BigInt(value.ns) % BigInt(1e6));
+    return epochNanoseconds / BigInt(1e3);
   }
   getEpochNanoseconds() {
-    let epochNanoSeconds = GetSlot(this, EPOCHNANOSECONDS);
-    return epochNanoSeconds;
+    const value = GetSlot(this, EPOCHNANOSECONDS);
+    const epochMicroseconds = BigInt(value.ms) * BigInt(1e6) + (BigInt(value.ns) % BigInt(1e6));
+    return epochMicroseconds;
   }
 
   plus(durationLike = {}) {
@@ -35,39 +34,65 @@ export class Absolute {
     if (duration.years) throw new RangeError(`invalid duration field years`);
     if (duration.months) throw new RangeError(`invalid duration field months`);
 
-    let delta = BigInt(duration.days) * 86400000000000n;
-    delta += BigInt(duration.hours) * 3600000000000n;
-    delta += BigInt(duration.minutes) * 60000000000n;
-    delta += BigInt(duration.seconds) * 1000000000n;
-    delta += BigInt(duration.milliseconds) * 1000000n;
-    delta += BigInt(duration.microseconds) * 1000n;
-    delta += BigInt(duration.nanosecond);
+    let { ms, ns } = GetSlot(this, EPOCHNANOSECONDS);
+    let negative = ms < 0 || ns < 0;
+    ns += duration.microseconds * 1000;
+    ns += duration.nanoseconds;
+    if (negative && ns > 0) {
+      ms += Math.floor(ns / 1e6);
+      ns = 1e6 - (ns % 1e6);
+    }
+    ms += duration.days * 86400000;
+    ms += duration.hours * 3600000;
+    ms += duration.minutes * 60000;
+    ms += duration.seconds * 1000;
+    ms += duration.milliseconds;
 
-    const result = GetSlot(this, EPOCHNANOSECONDS) + delta;
-    return new Absolute(result);
+    if (negative && ms > 0) {
+      ms -= 1;
+      ns += 1e6;
+    }
+
+    const result = Object.create(Absolute.prototype);
+    CreateSlots(result);
+    SetSlot(result, EPOCHNANOSECONDS, { ms, ns });
+    return result;
   }
   minus(durationLike = {}) {
     const duration = ES.GetIntrinsic('%Temporal.duration%')(durationLike);
     if (duration.years) throw new RangeError(`invalid duration field years`);
     if (duration.months) throw new RangeError(`invalid duration field months`);
 
-    let delta = BigInt(duration.days) * 86400000000000n;
-    delta += BigInt(duration.hours) * 3600000000000n;
-    delta += BigInt(duration.minutes) * 60000000000n;
-    delta += BigInt(duration.seconds) * 1000000000n;
-    delta += BigInt(duration.milliseconds) * 1000000n;
-    delta += BigInt(duration.microseconds) * 1000n;
-    delta += BigInt(duration.nanosecond);
+    let { ms, ns } = GetSlot(this, EPOCHNANOSECONDS);
+    let negative = ms < 0 || ns < 0;
+    ns -= duration.nanoseconds;
+    ns -= duration.microseconds;
+    if (!negative && ns < 0) {
+      ms += Math.ceil(ns / 1e6);
+      ns = 1e6 + (ns % 1e6);
+    }
+    ms -= duration.days * 86400000;
+    ms -= duration.hours * 3600000;
+    ms -= duration.minutes * 60000;
+    ms -= duration.seconds * 1000;
+    ms -= duration.milliseconds;
 
-    const result = GetSlot(this, EPOCHNANOSECONDS) - delta;
-    return new Absolute(result);
+    const result = Object.create(Absolute.prototype);
+    CreateSlots(result);
+    SetSlot(result, EPOCHNANOSECONDS, { ms, ns });
+    return result;
   }
   difference(other) {
     other = ES.GetIntrinsic('%Temporal.absolute%')(other);
 
     const [one, two] = [this, other].sort(Absoulte.compare);
-    const delta = two.getEpochNanoseconds() - one.getEpochNanoseconds();
-    const duration = ES.GetIntrinsic('%Temporal.duration%')(delta);
+    const { ms: onems, ns: onens } = GetSlot(one, EPOCHNANOSECONDS);
+    const { ms: twoms, ns: twons } = GetSlot(two, EPOCHNANOSECONDS);
+
+    ns = twons - onens;
+    ms = twoms - onems;
+
+    const duration = new ES.GetIntrinsic('%Temporal.Duration%')(delta);
     return duration;
   }
   toString(timeZoneParam = 'UTC') {
@@ -92,28 +117,35 @@ export class Absolute {
   }
 
   static fromEpochSeconds(epochSecondsParam) {
-    let epochSeconds = ES.ToNumber(epochSecondsParam);
-    let epochSecondsBigInt = BigInt(epochSeconds);
-    let epochNanoSeconds = epochSecondsBigInt * 1000000000n;
-    let resultObject = new Absolute(epochNanoSeconds);
+    const epochMilliseconds = ES.ToNumber(epochSecondsParam) * 1000;
+    const resultObject = Object.create(Absolute.prototype);
+    CreateSlots(resultObject);
+    SetSlot(resultObject, EPOCHNANOSECONDS, { ms: epochMilliseconds, ns: 0 });
     return resultObject;
   }
   static fromEpochMilliseconds(epochMillisecondsParam) {
-    let epochMilliseconds = ES.ToNumber(epochMillisecondsParam);
-    let epochMillisecondsBigInt = BigInt(epochMilliseconds);
-    let epochNanoSeconds = epochMillisecondsBigInt * 1000000n;
-    let resultObject = new Absolute(epochNanoSeconds);
+    const epochMilliseconds = ES.ToNumber(epochMillisecondsParam);
+    const resultObject = Object.create(Absolute.prototype);
+    CreateSlots(resultObject);
+    SetSlot(resultObject, EPOCHNANOSECONDS, { ms: epochMilliseconds, ns: 0 });
     return resultObject;
   }
-  static fromEpochMicroseconds(epochMicrosecondsParam) {
-    let epochMicroseconds = BigInt(epochMicrosecondsParam);
-    let epochNanoSeconds = epochMicroseconds * 1000n;
-    let resultObject = new Absolute(epochNanoSeconds);
+  static fromEpochMicroseconds(epochMicroseconds) {
+    if ('bigint' !== typeof epochNanoseconds) throw RangeError('bigint required');
+    const epochMilliseconds = epochMicroseconds / BigInt(1e3);
+    const restNanoseconds = epochMicroseconds % BigInt(1e3);
+    const resultObject = Object.create(Absolute.prototype);
+    CreateSlots(resultObject);
+    SetSlot(resultObject, EPOCHNANOSECONDS, { ms: epochMilliseconds, ns: restNanoseconds });
     return resultObject;
   }
-  static fromEpochNanoseconds(epochNanosecondsParam) {
-    let epochNanoseconds = BigInt(epochNanosecondsParam);
-    let resultObject = new Absolute(epochNanoseconds);
+  static fromEpochNanoseconds(epochNanoseconds) {
+    if ('bigint' !== typeof epochNanoseconds) throw RangeError('bigint required');
+    const epochMilliseconds = epochNanoseconds / BigInt(1e6);
+    const restNanoseconds = epochNanoseconds % BigInt(1e6);
+    const resultObject = Object.create(Absolute.prototype);
+    CreateSlots(resultObject);
+    SetSlot(resultObject, EPOCHNANOSECONDS, { ms: epochMilliseconds, ns: restNanoseconds });
     return resultObject;
   }
   static fromString(isoString) {
@@ -143,8 +175,20 @@ export class Absolute {
     });
     return datetime.inZone(zone || 'UTC', match[11] ? match[10] : 'earlier');
   }
+  static compare(one, two) {
+    one = ES.GetIntrinsic('%Temporal.absolute%')(one);
+    two = ES.GetIntrinsic('%Temporal.absolute%')(two);
+    one = GetSlot(one, EPOCHNANOSECONDS);
+    two = GetSlot(two, EPOCHNANOSECONDS);
+    if (one.ms !== two.ms) return two.ms - one.ms;
+    if (one.ns !== two.ns) return two.ns - one.ns;
+    return 0;
+  }
 }
 Absolute.prototype.toJSON = Absolute.prototype.toString;
-Object.defineProperty(Absolute.prototype, Symbol.toStringTag, {
-  value: 'Temporal.Absolute'
-});
+
+if ('undefined' !== typeof Symbol) {
+  Object.defineProperty(Absolute.prototype, Symbol.toStringTag, {
+    value: 'Temporal.Absolute'
+  });
+}

@@ -12,12 +12,18 @@ export const datetime = new RegExp(`^${datesplit.source}T${timesplit.source}(?:$
 export const date = new RegExp(`^${datesplit.source}(?:T${timepart.source}${zonepart.source}?)?$`);
 export const time = new RegExp(`^(?:${datepart.source}T)?${timesplit.source}(?:${zonepart.source})?$`);
 export const timezone = new RegExp(`^(?:${datepart.source}T${timepart.source})?${zonesplit.source}$`);
-export const yearmonth = new RegExp(`^(${yearpart.source})-(\\d{2})(?:-\\d{2}(?:T${timepart.source}${zonepart.source}?)?)?$`);
+export const yearmonth = new RegExp(
+  `^(${yearpart.source})-(\\d{2})(?:-\\d{2}(?:T${timepart.source}${zonepart.source}?)?)?$`
+);
 
-export const monthday = new RegExp('^' + [
-  new RegExp(`(?:${yearpart.source}-(\\d{2})-(\\d{2})(?:T${timepart.source}${zonepart.source}?)?)`).source,
-  new RegExp(`(?:(\\d{2})-(\\d{2}))`).source
-].join('|') + '$');
+export const monthday = new RegExp(
+  '^' +
+    [
+      new RegExp(`(?:${yearpart.source}-(\\d{2})-(\\d{2})(?:T${timepart.source}${zonepart.source}?)?)`).source,
+      new RegExp(`(?:(\\d{2})-(\\d{2}))`).source
+    ].join('|') +
+    '$'
+);
 
 export const offset = /([+-][01]?[0-9]):?([0-5][0-9])/;
 export const duration = /P(?:(\d+)Y)?(?:(\d+)M)?(?:(\d+)D)?(?:T(?:(\d+)H)?(?:(\d+)M)?(?:(\d+(?:\.\d+)?)S)?)?/;

@@ -103,6 +103,8 @@ export class YearMonth {
   }
 }
 YearMonth.prototype.toJSON = YearMonth.prototype.toString;
-Object.defineProperty(YearMonth.prototype, Symbol.toStringTag, {
-  value: 'Temporal.YearMonth'
-});
+if ('undefined' !== typeof Symbol) {
+  Object.defineProperty(YearMonth.prototype, Symbol.toStringTag, {
+    value: 'Temporal.YearMonth'
+  });
+}

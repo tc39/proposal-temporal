@@ -101,6 +101,8 @@ export class MonthDay {
   }
 }
 MonthDay.prototype.toJSON = MonthDay.prototype.toString;
-Object.defineProperty(MonthDay.prototype, Symbol.toStringTag, {
-  value: 'Temporal.MonthDay'
-});
+if ('undefined' !== typeof Symbol) {
+  Object.defineProperty(MonthDay.prototype, Symbol.toStringTag, {
+    value: 'Temporal.MonthDay'
+  });
+}
