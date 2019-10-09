@@ -41,9 +41,9 @@
             1. Let inst be instant.milliseconds.
             1. Let tz be timeZone.
             1. Let O be ? OrdinaryCreateFromConstructor(NewTarget, "%ZonedDateTimePrototype%", <<[[InstantValue,TimeZoneValue]]>>).
-          1. Set O.[[InstantValue]] to instant.
-          1. Set O.[[TimeZoneValue]] to tz.
-        Return O.
+        1. Set O.[[InstantValue]] to instant.
+        1. Set O.[[TimeZoneValue]] to tz.
+        1. Return O.
         </emu-alg>
     </emu-clause>
     <emu-clause id="sec-temporal-zoneddatetime-constructor-prop">
