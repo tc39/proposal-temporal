@@ -1,230 +1,558 @@
 <!doctype html>
 <meta charset="utf8">
 
-<emu-clause id=sec-temporal-civiltime>
-  <h1>CivilTime Objects</h1>
-  <p>A CivilTime object is an immutable Object that contains Number values corresponding to a particular hour, minute,
-    second, millisecond, and nanosecond.</p>
-  <p>The following functions are abstract operations that operate on time values (defined SOMEWHERE). Note that, in
-    every case, if any argument to one of these functions is NaN, the result will be NaN.</p>
+<emu-clause id=sec-temporal-time>
+  <h1>Temporal.Time Objects</h1>
+  <p>A Temporal.Time object is an immutable Object that contains Number values corresponding to a particular hour, minute,
+    second, millisecond, microsecond, and nanosecond.</p>
 
-  <emu-clause id=sec-temporal-civiltime-hour-number>
-    <h1>Hour Number</h1>
-    <p>The Hour Number is a positive integer Number corresponding to a particular hour. It is called the HourValue and is
-      identified by an integer in the range of 0 to 23, inclusive. It must have a Number value and may not be NaN.</p>
+  <emu-clause id=sec-temporal-time-constructor>
+    <h1>The Temporal.Time Constructor</h1>
+    <p>
+      The Temporal.Time constructor is the %Temporal.Time% intrinsic object.
+      When called as a constructor, it creates and initializes a new Temporal.Time object.
+    </p>
+    <p>
+      The Temporal.Time constructor is designed to be subclassable.
+      It may be used as the value of an extends clause of a class definition.
+      Subclass constructors that intend to inherit the specified Time behaviour must include a super call to the %Temporal.Time% constructor to create and initialize subclass instances with the necessary internal slots.
+    </p>
+
+    <emu-clause id=sec-temporal-time-constructor-alg>
+      <h1>Temporal.Time ( _hour_, _minute_ [ , _second_ [ , _millisecond_ [ , _microsecond_ [ , _nanosecond_ [ , _disambiguation_ ] ] ] ] ] )</h1>
+      <p>When the Temporal.Time function is called, the following steps are taken:</p>
+      <emu-alg>
+        1. If NewTarget is *undefined*, then
+          1. Throw a *TypeError* exception.
+        1. Let _hour_ be ? ToInteger(_hour_).
+        1. Let _minute_ be ? ToInteger(_minute_).
+        1. If _second_ is not *undefined*, then
+          1. Let _second_ be ? ToInteger(_second_).
+        1. Else
+          1. Let _second_ be 0.
+        1. If _millisecond_ is not *undefined*, then
+          1. Let _millisecond_ be ? ToInteger(_millisecond_).
+        1. Else
+          1. Let _millisecond_ be 0.
+        1. If _microsecond_ is not *undefined*, then
+          1. Let _microsecond_ be ? ToInteger(_microsecond_).
+        1. Else
+          1. Let _microsecond_ be 0.
+        1. If _nanosecond_ is not *undefined*, then
+          1. Let _nanosecond_ be ? ToInteger(_nanosecond_).
+        1. Else
+          1. Let _nanosecond_ be 0.
+        1. If _disambiguation_ is not *undefined*, then
+          1. Set _disambiguation_ to ? ToString(_disambiguation_).
+        1. Else
+          1. Set _disambiguation_ to `"constrain"`.
+        1. Let _result_ be ? RegulateTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _disambiguation_).
+        1. Return ? CreateTime(_result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]], NewTarget).
+      </emu-alg>
+    </emu-clause>
   </emu-clause>
 
-  <emu-clause id=sec-temporal-civiltime-minute-number>
-    <h1>Minute Number</h1>
-    <p>The Minute Number is a positive integer Number corresponding to a particular minute. It is called the MinuteValue
-      and is identified by an integer in the range of 0 to 59, inclusive. It must have a Number value and may not be NaN.</p>
-  </emu-clause>
-
-  <emu-clause id=sec-temporal-civiltime-second-number>
-    <h1>Second Number</h1>
-    <p>The Second Number is a positive integer Number corresponding to a particular second. It is called the SecondValue
-      and is identified by an integer in the range of 0 to 59, inclusive. It must have a Number value and may not be NaN.</p>
-  </emu-clause>
-
-  <emu-clause id=sec-temporal-civiltime-millisecond-number>
-    <h1>Millisecond Number</h1>
-    <p>The Millisecond Number is a positive integer Number corresponding to a particular millisecond. It is called the
-      MillisecondValue and is identified by an integer in the range of 0 to 999, inclusive. It must have a Number value
-      and may not be NaN.</p>
-  </emu-clause>
-
-  <emu-clause id=sec-temporal-civiltime-nanosecond-number>
-    <h1>Nanosecond Number</h1>
-    <p>The Nanosecond Number is a positive integer Number corresponding to a particular nanosecond. It is called the
-      NanosecondValue value and is identified by an integer in the range of 0 to 999999, inclusive. It must have a Number
-      value and may not be NaN.</p>
-  </emu-clause>
-
-  <emu-clause id=sec-temporal-civiltime-plus-operation>
-    <h1>Plus(Object)</h1>
-    <p>The abstract operation Plus returns a new CivilTime object that may have 0 to 4 values copied from the CivilTime
-      object on which the operation was performed. The new CivilTime object will have one or more updated values that
-      depend on terminal values of an Object passed in as the argument. The argument Object consists of a range of 1 to 5
-      (inclusive) key/value pairs. Each pair consists of a nonterminal symbol and a corresponding terminal Number. An
-      argument Object may have one and only one of each of the nonterminal symbols "Hour", "Minute", "Second",
-      "Millisecond", and "Nanosecond".</p>
-  </emu-clause>
-
-  <emu-clause id=sec-temporal-civiltime-with-operation>
-    <h1>With(?_hour, ?_minute, ?_second, ?_millisecond, ?_nanosecond)</h1>
-    <p>The abstract operation With takes one Object argument and returns a new CivilTime object.</p>
-    <p>The Object argument must have a range of 1 to 5 inclusive key/value pairs with the keys "hour", "minute",
-      "second", "millisecond", and/or "nanosecond".</p>
-    <p>The corresponding value for each key must be a Number.</p>
-    <p>The new CivilTime object copies the HourValue, MinuteValue, SecondValue, MillisecondValue, and/or NanosecondValue
-      properties from the original CivilTime object and replaces the property value(s) with the corresponding argument
-      value.</p>
-  </emu-clause>
-
-  <emu-clause id=sec-temporal-civiltime-withdate-operation>
-    <h1>WithDate(date)</h1>
-    <p>The abstract operation WithTime returns a CivilDateTime object with the date values passed as the argument and the
-      hour, minute, second, millisecond, and nanosecond values of the CivilTime object on which the operation was
-      performed.</p>
-  </emu-clause>
-
-  <emu-clause id=sec-temporal-civiltime-constructor>
-    <h1>CivilTime Constructor</h1>
-    <p>The CivilTime constructor is the %CivilTime% intrinsic object. When called as a constructor, it creates and
-      initializes a new CivilTime object.</p>
-    <p>The CivilTime constructor is a single function.</p>
-    <p>The CivilTime constructor is subclassable.</p>
-    <p>The length property of the CivilTime constructor function is a range of 2 to 5, inclusive.</p>
-  </emu-clause>
-
-  <emu-clause id=sec-temporal-civiltime-constructor-alg>
-    <h1>CivilTime (hour, minute[, second[, millisecond[, nanosecond]]])</h1>
-    <p>This description only applies if the CivilTime constructor is called with at least two arguments.</p>
-    <p>When the CivilTime function is called, the following steps are taken:</p>
-    <emu-alg>
-      1. Let numberOfArgs be the number of arguments passed to this function call.
-      1. Assert: numberOfArgs >= 2.
-      1. If hour is not finite or minute is not finite or second is not finite or millisecond is not finite or nanosecond
-          is not finite, return NaN.
-      1. If NewTarget is not undefined, then
-        1. Let h be ? ToNumber(hour).
-        1. Let min be ? ToNumber(minute).
-        1. If "second" is supplied, let s be ? ToNumber(second); else let s be 0.
-        1. If "millisecond" is supplied, let ms be ? ToNumber(millisecond); else let ms be 0.
-        1. If "nanosecond" is supplied, let ns be ? ToNumber(nanosecond); else let ns be 0.
-        1. Let O be ? OrdinaryCreateFromConstructor(NewTarget, "%CivilTimePrototype%", <<[[HourValue, MinuteValue,
-            SecondValue, MillisecondValue, NanosecondValue]]>>).
-        1. Set O.[[HourValue]] to h.
-        1. Set O.[[MinuteValue]] to min.
-        1. Set O.[[SecondValue]] to s.
-        1. Set O.[[MillisecondValue]] to ms.
-        1. Set O.[[NanosecondValue]] to ns.
-        1. Return O
-      1. Else, TBD?
-    </emu-alg>
-  </emu-clause>
-
-  <emu-clause id=sec-temporal-civiltime-constructor-prop>
-    <h1>Properties of the CivilTime Constructor</h1>
-    <p>The value of the [[Prototype]] internal slot of the CivilTime constructor is the intrinsic object
+  <emu-clause id=sec-properties-of-the-temporal-time-constructor>
+    <h1>Properties of the Temporal.Time Constructor</h1>
+    <p>The value of the [[Prototype]] internal slot of the Temporal.Time constructor is the intrinsic object
       %FunctionPrototype%.</p>
-    <p>The CivilTime constructor has the following properties:</p>
+    <p>The Temporal.Time constructor has the following properties:</p>
+
+    <emu-clause id=sec-temporal-time-prototype>
+      <h1>Temporal.Time.prototype</h1>
+      <p>The initial value of Temporal.Time.prototype is %Temporal.Time.prototype%.</p>
+      <p>This property has the attributes { [[Writable]]: *false*, [[Enumerable]]: *false*, [[Configurable]]: *false* }.</p>
+    </emu-clause>
+
+    <emu-clause>
+      <h1>Temporal.Time.fromString ( _isostring_ )</h1>
+      <p>
+        The `fromString` method takes one argument _isostring_.
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _isostring_ be ? ToString(_isostring_).
+        1. <mark>TODO.</mark>
+<!--
+https://github.com/tc39/proposal-temporal/issues/184
+const yearpart = /(?:[+-]\d{6}|\d{4})/;
+const datepart = new RegExp(`(?:${yearpart.source}-\\d{2}-\\d{2})`);
+const timepart = /(?:\d{2}\:\d{2}(?:\:\d{2}(?:\.\d{3}(?:\d{3}(?:\d{3})?)?)?)?)/;
+const zonepart = /(?:Z|(?:[+-]\d{1,2}\:?\d{2}(?:\[[^\]\s]+\])?))/;
+export const time = new RegExp(`^(?:${datepart.source}T)?${timesplit.source}(?:${zonepart.source})?$`);
+-->
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause>
+      <h1>Temporal.Time.from ( …_args_ )</h1>
+      <p>
+        <mark>TODO: Define.</mark>
+      </p>
+    </emu-clause>
+
+    <emu-clause>
+      <h1>Temporal.Time.compare ( _one_, _two_ )</h1>
+      <p>
+        The `compare` method takes two arguments, _one_ and _two_.
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _one_ be ? ToTime(_one_).
+        1. Let _two_ be ? ToTime(_two_).
+        1. If _one_.[[Hour]] &gt; _two_.[[Hour]], return 1.
+        1. If _one_.[[Hour]] &lt; _two_.[[Hour]], return -1.
+        1. If _one_.[[Minute]] &gt; _two_.[[Minute]], return 1.
+        1. If _one_.[[Minute]] &lt; _two_.[[Minute]], return -1.
+        1. If _one_.[[Second]] &gt; _two_.[[Second]], return 1.
+        1. If _one_.[[Second]] &lt; _two_.[[Second]], return -1.
+        1. If _one_.[[Millisecond]] &gt; _two_.[[Millisecond]], return 1.
+        1. If _one_.[[Millisecond]] &lt; _two_.[[Millisecond]], return -1.
+        1. If _one_.[[Microsecond]] &gt; _two_.[[Microsecond]], return 1.
+        1. If _one_.[[Microsecond]] &lt; _two_.[[Microsecond]], return -1.
+        1. If _one_.[[Nanosecond]] &gt; _two_.[[Nanosecond]], return 1.
+        1. If _one_.[[Nanosecond]] &lt; _two_.[[Nanosecond]], return -1.
+        1. Return +0.
+      </emu-alg>
+    </emu-clause>
   </emu-clause>
 
-  <emu-clause id=sec-temporal-civiltime-prototype>
-    <h1>CivilTime Prototype</h1>
-    <p>The initial value of CivilTime.prototype is the intrinsic object %CivilTimePrototype%. This property has the
-      attributes {[[Writable]]: false, [[Enumerable]]: false, [[Configurable]]: false}.</p>
+  <emu-clause id=sec-properties-of-the-temporal-time-prototype-object>
+    <h1>Properties of the Temporal.Time Prototype Object</h1>
+
+    <p>The Temporal.Time prototype object</p>
+    <ul>
+      <li>is the intrinsic object %Temporal.Time.prototype%.
+      <li>is itself an ordinary object.
+      <li>is not a Temporal.Time instance and does not have a [[InitializedTemporalTime]] internal slot.
+      <li>has a [[Prototype]] internal slot whose value is %Object.prototype%.
+    </ul>
+
+    <emu-clause id=sec-temporal.time.prototype.constructor>
+      <h1>Temporal.Time.prototype.constructor</h1>
+      <p>The initial value of Temporal.Time.prototype.constructor is %Temporal.Time%.</p>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal.time.prototype-@@tostringtag">
+      <h1>Temporal.Date.prototype[ @@toStringTag ]</h1>
+      <p>
+        The initial value of the @@toStringTag property is the string value `"Temporal.Time"`.
+      </p>
+      <p>
+        This property has the attributes { [[Writable]]: *false*, [[Enumerable]]: *false*, [[Configurable]]: *true* }.
+      </p>
+    </emu-clause>
+
+    <emu-clause>
+      <h1>get Temporal.Time.prototype.hour</h1>
+      <p>
+        Temporal.Time.prototype.hour is an accessor property whose set accessor function is undefined.
+        Its get accessor function performs the following steps:
+      </p>
+      <emu-alg>
+        1. Let _time_ be the *this* value.
+        1. If Type(_time_) is not Object or _time_ does not have an [[InitializedTemporalTime]] internal slot, then
+          1. Throw a *TypeError* exception.
+        1. Return _time_.[[Hour]].
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause>
+      <h1>get Temporal.Time.prototype.minute</h1>
+      <p>
+        Temporal.Time.prototype.minute is an accessor property whose set accessor function is undefined.
+        Its get accessor function performs the following steps:
+      </p>
+      <emu-alg>
+        1. Let _time_ be the *this* value.
+        1. If Type(_time_) is not Object or _time_ does not have an [[InitializedTemporalTime]] internal slot, then
+          1. Throw a *TypeError* exception.
+        1. Return _time_.[[Minute]].
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause>
+      <h1>get Temporal.Time.prototype.second</h1>
+      <p>
+        Temporal.Time.prototype.second is an accessor property whose set accessor function is undefined.
+        Its get accessor function performs the following steps:
+      </p>
+      <emu-alg>
+        1. Let _time_ be the *this* value.
+        1. If Type(_time_) is not Object or _time_ does not have an [[InitializedTemporalTime]] internal slot, then
+          1. Throw a *TypeError* exception.
+        1. Return _time_.[[Second]].
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause>
+      <h1>get Temporal.Time.prototype.millisecond</h1>
+      <p>
+        Temporal.Time.prototype.millisecond is an accessor property whose set accessor function is undefined.
+        Its get accessor function performs the following steps:
+      </p>
+      <emu-alg>
+        1. Let _time_ be the *this* value.
+        1. If Type(_time_) is not Object or _time_ does not have an [[InitializedTemporalTime]] internal slot, then
+          1. Throw a *TypeError* exception.
+        1. Return _time_.[[Millisecond]].
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause>
+      <h1>get Temporal.Time.prototype.microsecond</h1>
+      <p>
+        Temporal.Time.prototype.microsecond is an accessor property whose set accessor function is undefined.
+        Its get accessor function performs the following steps:
+      </p>
+      <emu-alg>
+        1. Let _time_ be the *this* value.
+        1. If Type(_time_) is not Object or _time_ does not have an [[InitializedTemporalTime]] internal slot, then
+          1. Throw a *TypeError* exception.
+        1. Return _time_.[[Microsecond]].
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause>
+      <h1>get Temporal.Time.prototype.nanosecond</h1>
+      <p>
+        Temporal.Time.prototype.nanosecond is an accessor property whose set accessor function is undefined.
+        Its get accessor function performs the following steps:
+      </p>
+      <emu-alg>
+        1. Let _time_ be the *this* value.
+        1. If Type(_time_) is not Object or _time_ does not have an [[InitializedTemporalTime]] internal slot, then
+          1. Throw a *TypeError* exception.
+        1. Return _time_.[[Nanosecond]].
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause>
+      <h1>Temporal.Time.prototype.plus ( _duration_ )</h1>
+      <p>
+        The `plus` method takes one argument _duration_.
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _time_ be the *this* value.
+        1. If Type(_time_) is not Object or _time_ does not have an [[InitializedTemporalTime]] internal slot, then
+          1. Throw a *TypeError* exception.
+        1. Let _duration_ be ? ToTimeDurationLike(_duration_).
+        1. Let _hour_ be _time_.[[Hour]] + _duration_.[[Hours]].
+        1. Let _minute_ be _time_.[[Minute]] + _duration_.[[Minutes]].
+        1. Let _second_ be _time_.[[Second]] + _duration_.[[Seconds]].
+        1. Let _millisecond_ be _time_.[[Millisecond]] + _duration_.[[Milliseconds]].
+        1. Let _microsecond_ be _time_.[[Microsecond]] + _duration_.[[Microseconds]].
+        1. Let _nanosecond_ be _time_.[[Nanosecond]] + _duration_.[[Nanoseconds]].
+        1. <mark>TODO: overflow</mark>
+        1. Return ? CreateTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause>
+      <h1>Temporal.Time.prototype.minus ( _duration_ )</h1>
+      <p>
+        The `minus` method takes one argument _duration_.
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _time_ be the *this* value.
+        1. If Type(_time_) is not Object or _time_ does not have an [[InitializedTemporalTime]] internal slot, then
+          1. Throw a *TypeError* exception.
+        1. Let _duration_ be ? ToTimeDurationLike(_duration_).
+        1. Let _hour_ be _time_.[[Hour]] - _duration_.[[Hour]].
+        1. Let _minute_ be _time_.[[Minute]] - _duration_.[[Minute]].
+        1. Let _second_ be _time_.[[Second]] - _duration_.[[Second]].
+        1. Let _millisecond_ be _time_.[[Millisecond]] - _duration_.[[Millisecond]].
+        1. Let _microsecond_ be _time_.[[Microsecond]] - _duration_.[[Microsecond]].
+        1. Let _nanosecond_ be _time_.[[Nanosecond]] - _duration_.[[Nanosecond]].
+        1. <mark>TODO: overflow</mark>
+        1. Return ? CreateTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause>
+      <h1>Temporal.Time.prototype.with ( _timelike_ [ , _disambiguation_ ] )</h1>
+      <p>
+        The `with` method takes two arguments, _timelike_ and _disambiguation_.
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _time_ be the *this* value.
+        1. If Type(_time_) is not Object or _time_ does not have an [[InitializedTemporalTime]] internal slot, then
+          1. Throw a *TypeError* exception.
+        1. Let _timelike_ be ? ToPartialTime(_timelike_).
+        1. Let _disambiguation_ be ? ToString(_disambiguation_).
+        1. If _timelike_.[[Hour]] is not *undefined*, then
+          1. Let _hour_ be _timelike_.[[Hour]].
+        1. Else
+          1. Let _hour_ be _time_.[[Hour]].
+        1. If _timelike_.[[Minute]] is not *undefined*, then
+          1. Let _minute_ be _timelike_.[[Minute]].
+        1. Else
+          1. Let _minute_ be _time_.[[Minute]].
+        1. If _timelike_.[[Second]] is not *undefined*, then
+          1. Let _second_ be _timelike_.[[Second]].
+        1. Else
+          1. Let _second_ be _time_.[[Second]].
+        1. If _timelike_.[[Millisecond]] is not *undefined*, then
+          1. Let _millisecond_ be _timelike_.[[Millisecond]].
+        1. Else
+          1. Let _millisecond_ be _time_.[[Millisecond]].
+        1. If _timelike_.[[Microsecond]] is not *undefined*, then
+          1. Let _microsecond_ be _timelike_.[[Microsecond]].
+        1. Else
+          1. Let _microsecond_ be _time_.[[Microsecond]].
+        1. If _timelike_.[[Nanosecond]] is not *undefined*, then
+          1. Let _nanosecond_ be _timelike_.[[Nanosecond]].
+        1. Else
+          1. Let _nanosecond_ be _time_.[[Nanosecond]].
+        1. If ! ValidateTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_) is *false*, then
+          1. Throw a *TypeError* exception.
+        1. If _disambiguation_ is not *undefined*, then
+          1. Set _disambiguation_ to ? ToString(_disambiguation_).
+        1. Else
+          1. Set _disambiguation_ to `"constrain"`.
+        1. Let _result_ be ? RegulateTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _disambiguation_).
+        1. Return ? CreateTime(_result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause>
+      <h1>Temporal.Time.prototype.difference ( _otherTime_ )</h1>
+      <p>
+        The `difference` method takes one argument _otherTime_.
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _time_ be the *this* value.
+        1. If Type(_time_) is not Object or _time_ does not have an [[InitializedTemporalTime]] internal slot, then
+          1. Throw a *TypeError* exception.
+        1. Let _otherTime_ be ? ToTime(_otherTime_).
+        1. Let _greater_ be _time_.
+        1. Let _smaller_ be _otherTime_.
+        1. <mark>TODO: Swap order if needed.</mark>
+        1. Let _hour_ be _greater_.[[Hour]] - _smaller_.[[Hour]].
+        1. Let _minute_ be _greater_.[[Minute]] - _smaller_.[[Minute]].
+        1. Let _second_ be _greater_.[[Second]] - _smaller_.[[Second]].
+        1. Let _millisecond_ be _greater_.[[Millisecond]] - _smaller_.[[Millisecond]].
+        1. Let _microsecond_ be _greater_.[[Microsecond]] - _smaller_.[[Microsecond]].
+        1. Let _nanosecond_ be _greater_.[[Nanosecond]] - _smaller_.[[Nanosecond]].
+        1. <mark>TODO: Balance.</mark>
+        1. Return CreateDuration(0, 0, 0, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause>
+      <h1>Temporal.Time.prototype.withDate ( _date_ [ , _disambiguation_ ] )</h1>
+      <p>
+        The `withDate` method takes two arguments, _date_ and _disambiguation_.
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _time_ be the *this* value.
+        1. If Type(_time_) is not Object or _time_ does not have an [[InitializedTemporalTime]] internal slot, then
+          1. Throw a *TypeError* exception.
+        1. Let _date_ be ? ToDate(_date_).
+        1. If _disambiguation_ is not *undefined*, then
+          1. Set _disambiguation_ to ? ToString(_disambiguation_).
+        1. Else
+          1. Set _disambiguation_ to `"constrain"`.
+        1. Return CreateDateTime(_date_.[[Year]], _date_.[[Month]], _date_.[[Day]],
+          _time_.[[Hour]], _time_.[[Minute]], _time_.[[Second]],
+          _time_.[[Millisecond]], _time_.[[Microsecond]], _time_.[[Nanosecond]]).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause>
+      <h1>Temporal.Time.prototype.toString ( )</h1>
+      <p>
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _time_ be the *this* value.
+        1. If Type(_time_) is not Object or _time_ does not have an [[InitializedTemporalTime]] internal slot, then
+          1. Throw a *TypeError* exception.
+        1. Let _hour_ be _time_.[[Hour]] formatted as a two-digit decimal number, padded to the left with a zero if necessary.
+        1. Let _minute_ be _time_.[[Minute]] formatted as a two-digit decimal number, padded to the left with a zero if necessary.
+        1. Let _seconds_ be ! FormatSecondsStringPart(_time_.[[Second]], _time_.[[Millisecond]], _time_.[[Microsecond]], _time_.[[Nanosecond]]).
+        1. Return the string-concatenation of _hour_, the code unit 0x003A (COLON), _minute_, and _seconds_.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause>
+      <h1>Temporal.Time.prototype.toLocaleString ( …_args_ )</h1>
+      <p>
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _time_ be the *this* value.
+        1. If Type(_time_) is not Object or _time_ does not have an [[InitializedTemporalTime]] internal slot, then
+          1. Throw a *TypeError* exception.
+        1. Let _dateFormat_ be ? Construct(%DateTimeFormat%, _args_).
+        1. Return ? FormatDateTime(_dateFormat_, _time_).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause>
+      <h1>Temporal.Time.prototype.toJSON ( )</h1>
+      <p><mark>TODO: Share with toString().</mark></p>
+      <p>
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _time_ be the *this* value.
+        1. If Type(_time_) is not Object or _time_ does not have an [[InitializedTemporalTime]] internal slot, then
+          1. Throw a *TypeError* exception.
+        1. Let _hour_ be _time_.[[Hour]] formatted as a two-digit decimal number, padded to the left with a zero if necessary.
+        1. Let _minute_ be _time_.[[Minute]] formatted as a two-digit decimal number, padded to the left with a zero if necessary.
+        1. Let _seconds_ be ! FormatSecondsStringPart(_time_.[[Second]], _time_.[[Millisecond]], _time_.[[Microsecond]], _time_.[[Nanosecond]]).
+        1. Return the string-concatenation of _hour_, the code unit 0x003A (COLON), _minute_, and _seconds_.
+      </emu-alg>
+    </emu-clause>
   </emu-clause>
 
-  <emu-clause id=sec-temporal-civiltime-plus-alg>
-    <h1>CivilTime.plus (data)</h1>
-    <p>The abstract operation plus takes as an argument a Map Object with a range of 1 to 5 key/value pairs, inclusive.
-      The keys may not be duplicated and may be any combination of "hour", "minute", "second", "millisecond", and
-      "nanosecond". The values must be of the Number type and may be positive or negative integers. The CivilTime
-      operation uses Gregorian pro-leptic calendar computation.</p>
-    <p>When the plus function is called, the following steps are taken:</p>
-    <emu-alg>
-      1. Let numberOfArgs be the number of arguments passed to this function call.
-      1. Assert: numberOfArgs == 1.
-      1. Assert: Type(value) is Object.
-      1. Assert: value has at least one of the following keys: "hour", "minute", "second", "millisecond", and/or
-          "nanosecond".
-      1. If the value associated with any of the provided keys is not finite, return NaN.
-      1. If NewTarget is not undefined, then
-        1. If data.hour is supplied, let h be ? ToNumber(hour) + thisHourValue. If h is NaN, throw a TypeError exception;
-            else if data.hour is not supplied, let h be thisHourValue.
-        1. If data.minute is supplied, let min be ? ToNumber(minute) + thisMinuteValue. If min is NaN, throw a TypeError
-            exception; else if data.minute is not supplied, let min be thisMinuteValue.
-        1. If data.second is supplied, let s be ? ToNumber(second) + thisSecondValue. If s is NaN, throw a TypeError
-            exception; else if data.second is not supplied, let s be thisSecondValue.
-        1. If data.millisecond is supplied, let ms be ? ToNumber(millisecond) + thisMillisecondValue. If ms is NaN, throw a
-            TypeError exception; else if data.millisecond is not supplied, let ms be thisMillisecondValue.
-        1. If data.nanosecond is supplied, let ns be ? ToNumber(nanosecond) + thisNanosecondValue. If ns is NaN, throw a
-            TypeError exception; else if data.nanosecond is not supplied, let ns be thisNanosecondValue.
-        1. Regulate h, min, s, ms, and ns values according to Gregorian pro-leptic calendar calculations.
-        1. Let O be ? OrdinaryCreateFromConstructor(NewTarget, "%CivilTimePrototype%", <<[[HourValue, MinuteValue,
-            SecondValue, MillisecondValue, NanosecondValue]]>>).
-        1. Set O.[[HourValue]] to h.
-        1. Set O.[[MinuteValue]] to min.
-        1. Set O.[[SecondValue]] to s.
-        1. Set O.[[MillisecondValue]] to ms.
-        1. Set O.[[NanosecondValue]] to ns.
-        1. Return O
-      1. Else, TBD
-    </emu-alg>
-  </emu-clause>
+  <emu-clause id=sec-temporal-date-abstract-ops>
+    <h1>Abstract operations</h1>
 
-  <emu-clause id=sec-temporal-civiltime-with-alg>
-    <h1>CivilTime.with(data)</h1>
-    <p>The abstract operation with takes as an argument an Object with a range of 1 to 5 key/value pairs, inclusive.</p>
-    <p>The keys may not be duplicated and may be any combination of "hour", "minute", "second", "millisecond", and
-      "nanosecond".</p>
-    <p>The values must be of the Number type and may be either positive or negative integers. The CivilTime operation
-      uses Gregorian pro-leptic calendar computation.</p>
-    <p>When the with function is called, the following steps are taken:</p>
-    <emu-alg>
-      1. Let numberOfArgs be the number of arguments passed to this function call.
-      1. Assert: numberOfArgs == 1.
-      1. Assert: Type(value) is Object.
-      1. Assert: value has at least one of the following keys: "hour", "minute", "second", "millisecond", and/or
-          "nanosecond".
-      1. If the value associated with any of the provided keys is not finite, return NaN.
-      1. If NewTarget is not undefined, then
-        1. If data.hour is supplied, let h be ? ToNumber(hour); If h is NaN, throw a TypeError exception; else if data.hour
-            is not supplied, let h be thisHourValue.
-        1. If data.minute is supplied, let min be ? ToNumber(minute); If min is NaN, throw a TypeError exception; else if
-            data.minute is not supplied, let min be thisMinuteValue.
-        1. If data.second is supplied, let s be ? ToNumber(second); If s is NaN, throw a TypeError exception; else if
-            data.second is not supplied, let s be thisSecondValue.
-        1. If data.millisecond is supplied, let ms be ? ToNumber(millisecond); If ms is NaN, throw a TypeError exception;
-            else if data.millisecond is not supplied, let ms be thisMillisecondValue.
-        1. If data.nanosecond is supplied, let ns be ? ToNumber(nanosecond); If ns is NaN, throw a TypeError exception;
-            else if data.nanosecond is not supplied, let ns be thisNanosecondValue.
-        1. Regulate h, min, s, ms, and ns values according to Gregorian pro-leptic calendar calculations.
-        1. Let O be ? OrdinaryCreateFromConstructor(NewTarget, "%CivilTimePrototype%", <<[[HourValue, MinuteValue,
-            SecondValue, MillisecondValue, NanosecondValue]]>>).
-        1. Set O.[[HourValue]] to h.
-        1. Set O.[[MinuteValue]] to min.
-        1. Set O.[[SecondValue]] to s.
-        1. Set O.[[MillisecondValue]] to ms.
-        1. Set O.[[NanosecondValue]] to ns.
-        1. Return O
-      1. Else, TBD
-    </emu-alg>
-  </emu-clause>
+    <emu-clause id=sec-temporal-ToPartialTime aoid=ToPartialTime>
+      <h1>ToPartialTime ( _time_ )</h1>
+      <emu-alg>
+        1. Let _result_ be {
+          [[Hour]]: *undefined*,
+          [[Minute]]: *undefined*,
+          [[Second]]: *undefined*,
+          [[Millisecond]]: *undefined*,
+          [[Microsecond]]: *undefined*,
+          [[Nanosecond]]: *undefined*,
+          }.
+        1. If Type(_time_) is Undefined or Null, then
+          1. Return _result_.
+        1. <mark>TODO: Handle strings?</mark>
+        1. If Type(_time_) is not Object, then
+          1. Throw a *TypeError* exception.
+        1. For each row of <emu-xref href="#table-temporal-datelike-properties"></emu-xref>, except the header row, in table order, do
+          1. Let _property_ be the Property value of the current row.
+          1. Let _value_ be ? ToInteger(? Get(_time_, _property_)).
+          1. Set _result_'s internal slot whose name is the Internal Slot value of the current row to _value_.
+        1. Return _result_.
+      </emu-alg>
 
-  <emu-clause id=sec-temporal-civiltime-withdate-alg>
-    <h1>CivilTime.withDate (data)</h1>
-    <p>The abstract operation plus takes as an argument a CivilDate Object. It creates a new CivilDateTime object.</p>
-    <p>When the withDate function is called, the following steps are taken:</p>
-    <emu-alg>
-      1. Let numberOfArgs be the number of arguments passed to this function call.
-      1. Assert: numberOfArgs == 1.
-      1. Assert: Type(data) is CivilDate Object.
-      1. If NewTarget is not undefined, then
-        1. Let y be ? data.YearValue.
-        1. Let m be ? data.MonthValue.
-        1. Let d be ? data.DayValue.
-        1. Let h be ? thisHourValue.
-        1. Let min be ? thisMinuteValue.
-        1. Let s be ? thisSecondValue.
-        1. Let ms be ? thisMillisecondValue.
-        1. Let ns be ? thisNanosecondValue.
-        1. Regulate y, m, d, h, min, s, ms, and ns values according to Gregorian pro-leptic calendar calculations.
-        1. Let O be ? OrdinaryCreateFromConstructor(NewTarget, "%CivilDateTimePrototype%", <<[[YearValue, MonthValue,
-            DayValue, HourValue, MinuteValue, SecondValue, MillisecondValue, NanosecondValue]]>>).
-        1. Set O.[[YearValue]] to y.
-        1. Set O.[[MonthValue]] to m.
-        1. Set O.[[DayValue]] to d.
-        1. Set O.[[HourValue]] to h.
-        1. Set O.[[MinuteValue]] to min.
-        1. Set O.[[SecondValue]] to s.
-        1. Set O.[[MillisecondValue]] to ms.
-        1. Set O.[[NanosecondValue]] to ns.
-        1. Return O
-      1. Else, TBD?
-    </emu-alg>
-  </emu-clause>
+      <emu-table id="table-temporal-timelike-properties">
+        <emu-caption>Properties of a TimeLike</emu-caption>
+        <table class="real-table">
+          <thead>
+            <tr>
+              <th>Internal Slot</th>
+              <th>Property</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>[[Hour]]</td>
+              <td>`"hour"`</td>
+            </tr>
 
+            <tr>
+              <td>[[Minute]]</td>
+              <td>`"minute"`</td>
+            </tr>
+
+            <tr>
+              <td>[[Second]]</td>
+              <td>`"second"`</td>
+            </tr>
+
+            <tr>
+              <td>[[Millisecond]]</td>
+              <td>`"millisecond"`</td>
+            </tr>
+
+            <tr>
+              <td>[[Microsecond]]</td>
+              <td>`"microsecond"`</td>
+            </tr>
+
+            <tr>
+              <td>[[Nanosecond]]</td>
+              <td>`"nanosecond"`</td>
+            </tr>
+          </tbody>
+        </table>
+      </emu-table>
+    </emu-clause>
+
+    <emu-clause id=sec-temporal-RegulateTime aoid=RegulateTime>
+      <h1>RegulateTime ( _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _disambiguation_ )</h1>
+      <emu-alg>
+        1. <mark>TODO: consult _disambiguation_.</mark>
+        1. If ! ValidateTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_) is *false*, then
+          1. Throw a *RangeError* exception.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id=sec-temporal-ValidateTime aoid=ValidateTime>
+      <h1>ValidateTime ( _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_ )</h1>
+      <emu-alg>
+        1. Assert: _hour_, _minute_, _second_, _millisecond_, _microsecond_, and _nanosecond_ are integer Number values.
+        1. If _hour_ &lt; 0 or _hour_ &gt; 23, then
+          1. Return *false*.
+        1. If _minute_ &lt; 0 or _minute_ &gt; 59, then
+          1. Return *false*.
+        1. If _second_ &lt; 0 or _second_ &gt; 59, then
+          1. Return *false*.
+        1. If _millisecond_ &lt; 0 or _millisecond_ &gt; 999, then
+          1. Return *false*.
+        1. If _microsecond_ &lt; 0 or _microsecond_ &gt; 999, then
+          1. Return *false*.
+        1. If _nanosecond_ &lt; 0 or _nanosecond_ &gt; 999, then
+          1. Return *false*.
+        1. Return *true*.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id=sec-temporal-createtime aoid=CreateTime>
+      <h1>CreateTime ( _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_ [, _newTarget_] )</h1>
+      <emu-alg>
+        1. Assert: ! ValidateTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_) is *true*.
+        1. If _newTarget_ is not given, set it to %Temporal.Time%
+        1. Let _object_ be ? OrdinaryCreateFromConstructor(_newTarget_, `"%Temporal.Time.prototype%"`, « [[InitializedTemporalTime]], [[Hour]], [[Minute]], [[Second]], [[Millisecond]], [[Microsecond]], [[Nanosecond]] »).
+        1. Set _object_.[[Hour]] to _hour_.
+        1. Set _object_.[[Minute]] to _minute_.
+        1. Set _object_.[[Second]] to _second_.
+        1. Set _object_.[[Millisecond]] to _millisecond_.
+        1. Set _object_.[[Microsecond]] to _microsecond_.
+        1. Set _object_.[[Nanosecond]] to _nanosecond_.
+        1. Return _object_.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id=sec-temporal-ToTime aoid=ToTime>
+      <h1>ToTime ( _time_ )</h1>
+      <emu-alg>
+        1. Let _result_ be {
+          [[Hour]]: *undefined*,
+          [[Minute]]: *undefined*,
+          [[Second]]: *undefined*,
+          [[Millisecond]]: *undefined*,
+          [[Microsecond]]: *undefined*,
+          [[Nanosecond]]: *undefined*,
+          }.
+        1. <mark>TODO: Handle strings?</mark>
+        1. If Type(_time_) is not Object, then
+          1. Throw a *TypeError* exception.
+        1. For each row of <emu-xref href="#table-temporal-timelike-properties"></emu-xref>, except the header row, in table order, do
+          1. Let _property_ be the Property value of the current row.
+          1. Let _value_ be ? Get(_time_, _property_).
+          1. If _value_ is *undefined*, then
+            1. Throw a *TypeError* exception.
+          1. Let _value_ be ? ToInteger(_value_).
+          1. Set _result_'s internal slot whose name is the Internal Slot value of the current row to _value_.
+        1. If ! ValidateTime(_result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]) is *false*, then
+          1. Throw a *TypeError* exception.
+        1. <mark>TODO: Throw if any date properties are present?</mark>
+        1. Return _result_.
+      </emu-alg>
+    </emu-clause>
+  </emu-clause>
 </emu-clause>

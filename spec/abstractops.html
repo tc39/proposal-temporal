@@ -129,6 +129,68 @@
     </emu-table>
   </emu-clause>
 
+  <emu-clause id=sec-temporal-ToTimeDurationLike aoid=ToTimeDurationLike>
+    <h1>ToTimeDurationLike ( _duration_ )</h1>
+    <emu-alg>
+      1. Let _result_ be {
+        [[Hours]]: 0,
+        [[Minutes]]: 0,
+        [[Seconds]]: 0,
+        [[Milliseconds]]: 0,
+        [[Microseconds]]: 0,
+        [[Nanoseconds]]: 0
+        }.
+      1. If Type(_duration_) is Undefined or Null, then
+        1. Return _result_.
+      1. <mark>TODO: Handle strings?</mark>
+      1. If Type(_duration_) is not Object, then
+        1. Throw a *TypeError* exception.
+      1. For each row of <emu-xref href="#table-temporal-durationlike-properties"></emu-xref>, except the header row, in table order, do
+        1. Let _property_ be the Property value of the current row.
+        1. Let _value_ be ? ToInteger(? Get(_duration_, _property_)).
+        1. Set _result_'s internal slot whose name is the Internal Slot value of the current row to _value_.
+      1. Return _result_.
+    </emu-alg>
+
+    <emu-table id="table-temporal-timedurationlike-properties">
+      <emu-caption>Properties of a TimeDurationLike</emu-caption>
+      <table class="real-table">
+        <thead>
+          <tr>
+            <th>Internal Slot</th>
+            <th>Property</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>[[Hours]]</td>
+            <td>`"hours"`</td>
+          </tr>
+          <tr>
+            <td>[[Microseconds]]</td>
+            <td>`"microseconds"`</td>
+          </tr>
+          <tr>
+            <td>[[Milliseconds]]</td>
+            <td>`"milliseconds"`</td>
+          </tr>
+          <tr>
+            <td>[[Minutes]]</td>
+            <td>`"minutes"`</td>
+          </tr>
+          <tr>
+            <td>[[Nanoseconds]]</td>
+            <td>`"nanoseconds"`</td>
+          </tr>
+          <tr>
+            <td>[[Seconds]]</td>
+            <td>`"seconds"`</td>
+          </tr>
+        </tbody>
+      </table>
+    </emu-table>
+  </emu-clause>
+
   <emu-clause id=sec-temporal-CreateDuration aoid=CreateDuration>
     <h1>CreateDuration ( _years_, _months_, _days_ )</h1>
     <p>
@@ -157,10 +219,25 @@
     </p>
   </emu-clause>
 
-  <emu-clause id=sec-temporal-ToTimeLike aoid=ToTimeLike>
-    <h1>ToTimeLike ( _time_ )</h1>
-    <p>
-      <mark>TODO: Define.</mark>
-    </p>
+  <emu-clause id=sec-temporal-FormatSecondsStringPart aoid=FormatSecondsStringPart>
+    <h1>FormatSecondsStringPart ( _second_, _millisecond_, _microsecond_, _nanosecond_ )</h1>
+    <emu-alg>
+      1. If _second_, _millisecond_, _microsecond_, and _nanosecond_ are all 0, then
+        1. Return `""`.
+      1. Let _nanos_, _micros_, and _millis_ be `""`.
+      1. If _nanosecond_ is not 0, then
+        1. Set _nanos_ to _nanosecond_ formatted as a three-digit decimal number, padded to the left with zeroes if necessary.
+        1. Set _micros_ and _millis_ to `"000"`.
+      1. If _microsecond_ is not 0, then
+        1. Set _micros_ be _microsecond_ formatted as a three-digit decimal number, padded to the left with zeroes if necessary.
+        1. Set _millis_ to `"000"`.
+      1. If _millisecond_ is not 0, then
+        1. Set _millis_ to _millisecond_ formatted as a three-digit decimal number, padded to the left with zeroes if necessary.
+      1. Let _decimal_ be the string-concatenation of _nanos_, _micros_, and _millis_.
+      1. Let _result_ be _second_ formatted as a two-digit decimal number, padded to the left with a zero if necessary.
+      1. If _decimal_ is not empty, then
+        1. Set _result_ to the string-concatenation of _result_, the code unit 0x002E (FULL STOP), and _decimal_.
+      1. Return the string-concatenation of the code unit 0x003A (COLON) and _result_.
+    </emu-alg>
   </emu-clause>
 </emu-clause>
