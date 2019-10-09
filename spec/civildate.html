@@ -270,20 +270,19 @@ CivilDate.compare()?
         1. Let _date_ be the *this* value.
         1. If Type(_date_) is not Object or _date_ does not have an [[InitializedTemporalDate]] internal slot, then
           1. Throw a *TypeError* exception.
-        1. Let _duration_ be ? ToDurationLike(_duration_).
-        1. <mark>TODO: Throw if any time properties are present?</mark>
+        1. Let _duration_ be ? ToDateDurationLike(_duration_).
         1. If _duration_.[[Year]] is not *undefined*, then
           1. Let _y_ be _duration_.[[Year]].
         1. Else
           1. Let _y_ be _date_.[[Year]].
         1. If _duration_.[[Month]] is not *undefined*, then
-          1. Let _y_ be _duration_.[[Month]].
+          1. Let _m_ be _duration_.[[Month]].
         1. Else
-          1. Let _y_ be _date_.[[Month]].
+          1. Let _m_ be _date_.[[Month]].
         1. If _duration_.[[Day]] is not *undefined*, then
-          1. Let _y_ be _duration_.[[Day]].
+          1. Let _d_ be _duration_.[[Day]].
         1. Else
-          1. Let _y_ be _date_.[[Day]].
+          1. Let _d_ be _date_.[[Day]].
         1. Regulate the _y_, _m_, and _d_ values using Gregorian pro-leptic calendar calculations.
         1. Return CreateDate(_y_, _m_, _d_).
       </emu-alg>
@@ -326,7 +325,7 @@ CivilDate.compare()?
     <emu-clause>
       <h1>Temporal.Date.prototype.withTime( _time_ )</h1>
       <p>
-        The `with` method takes one argument _time_.
+        The `withTime` method takes one argument _time_.
         The following steps are taken:
       </p>
       <emu-alg>
@@ -334,7 +333,9 @@ CivilDate.compare()?
         1. If Type(_date_) is not Object or _date_ does not have an [[InitializedTemporalDate]] internal slot, then
           1. Throw a *TypeError* exception.
         1. Let _time_ be ? ToTimeLike(_time_).
+        1. <mark>TODO: Should this take a Temporal.Time instead?</mark>
         1. If any of _time_.[[Hour]], _time_.[[Minute]], _time_.[[Second]], _time_.[[Millisecond]], _time_.[[Microsecond]], or _time_.[[Nanosecond]] is *undefined*, then
+          1. <mark>TODO: Merge into ToTimeLike?</mark>
           1. Throw a *TypeError* exception.
         1. Return CreateDateTime(_date_.[[Year]], _date_.[[Month]], _date_.[[Day]],
           _time_.[[Hour]], _time_.[[Minute]], _time_.[[Second]],
