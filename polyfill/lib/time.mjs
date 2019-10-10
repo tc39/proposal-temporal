@@ -156,10 +156,7 @@ export class Time {
   }
   difference(other = {}) {
     other = ES.GetIntrinsic('%Temporal.time%')(other);
-    const [one, two] = [
-      this,
-      other
-    ].sort(Time.compare);
+    const [one, two] = [this, other].sort(Time.compare);
     const hours = two.hour - one.hour;
     const minutes = two.minute - one.minute;
     const seconds = two.second - one.seconds;
@@ -203,6 +200,9 @@ export class Time {
     const microsecond = ES.ToInteger(match[5]);
     const nanosecond = ES.ToInteger(match[6]);
     return new ES.GetIntrinsic('%Temporal.Time%')(hour, minute, second, millisecond, microsecond, nanosecond, 'reject');
+  }
+  static from(...args) {
+    return ES.GetIntrinsic('%Temporal.time%')(...args);
   }
   static compare(one, two) {
     one = ES.GetIntrinsic('%Temporal.time%')(one);

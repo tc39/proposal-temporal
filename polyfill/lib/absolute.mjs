@@ -175,6 +175,9 @@ export class Absolute {
     });
     return datetime.inZone(zone || 'UTC', match[11] ? match[10] : 'earlier');
   }
+  static from(...args) {
+    return ES.GetIntrinsic('%Temporal.absolute%')(...args);
+  }
   static compare(one, two) {
     one = ES.GetIntrinsic('%Temporal.absolute%')(one);
     two = ES.GetIntrinsic('%Temporal.absolute%')(two);

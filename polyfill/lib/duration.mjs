@@ -133,6 +133,9 @@ export class Duration {
       'reject'
     );
   }
+  static from(...args) {
+    return ES.GetIntrinsic('%Temporal.duration%')(...args);
+  }
 }
 Duration.prototype.toJSON = Duration.prototype.toString;
 if ('undefined' !== typeof Symbol) {

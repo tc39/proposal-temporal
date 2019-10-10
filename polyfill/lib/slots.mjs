@@ -26,8 +26,8 @@ export const MILLISECONDS = 'slot-milliseconds';
 export const MICROSECONDS = 'slot-microseconds';
 export const NANOSECONDS = 'slot-nanoseconds';
 
-const SLOTS = ('undefined' === typeof Symbol) ? '_SLOTS' : Symbol('SLOTS');
-const slots = ('function' === typeof WeakMap) ? new WeakMap() : null;
+const SLOTS = 'undefined' === typeof Symbol ? '_SLOTS' : Symbol('SLOTS');
+const slots = 'function' === typeof WeakMap ? new WeakMap() : null;
 export function CreateSlots(container) {
   if (!slots) {
     container[SLOTS] = {};

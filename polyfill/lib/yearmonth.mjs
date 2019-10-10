@@ -94,6 +94,9 @@ export class YearMonth {
     const month = ES.ToInteger(match[2]);
     return new ES.GetIntrinsic('%Temporal.YearMonth%')(year, month, 'reject');
   }
+  static from(...args) {
+    return ES.GetIntrinsic('%Temporal.yearmonth%')(...args);
+  }
   static compare(one, two) {
     one = ES.GetIntrinsic('%Temporal.yearmonth%')(one);
     two = ES.GetIntrinsic('%Temporal.yearmonth%')(two);

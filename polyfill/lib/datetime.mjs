@@ -293,6 +293,9 @@ export class DateTime {
       'reject'
     );
   }
+  static from(...args) {
+    return ES.GetIntrinsic('%Temporal.datetime%')(...args);
+  }
   static compare(one, two) {
     one = ES.GetIntrinsic('%Temporal.datetime%')(one);
     two = ES.GetIntrinsic('%Temporal.datetime%')(two);

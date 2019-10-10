@@ -92,6 +92,9 @@ export class MonthDay {
     const day = ES.ToInteger(match[2]);
     return new ES.GetIntrinsic('%Temporal.MonthDay%')(month, day, 'reject');
   }
+  static from(...args) {
+    return ES.GetIntrinsic('%Temporal.monthday%')(...args);
+  }
   static compare(one, two) {
     one = ES.GetIntrinsic('%Temporal.monthday')(one);
     two = ES.GetIntrinsic('%Temporal.monthday')(two);

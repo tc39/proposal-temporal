@@ -120,6 +120,9 @@ export class TimeZone {
     const zone = match[1] ? 'UTC' : match[3] || match[2];
     return new TimeZone(zone);
   }
+  static from(...args) {
+    return ES.GetIntrinsic('%Temporal.timezone%')(...args);
+  }
 }
 if ('undefined' !== typeof Symbol) {
   TimeZone[Symbol.iterator] = function() {
@@ -143,4 +146,3 @@ if ('undefined' !== typeof Symbol) {
   });
 }
 TimeZone.prototype.toJSON = TimeZone.prototype.toString;
-

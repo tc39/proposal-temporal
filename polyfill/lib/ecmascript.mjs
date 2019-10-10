@@ -84,11 +84,11 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
       timeZone: timeZoneIdentifier,
       hour12: false,
       year: 'numeric',
-      month:'numeric',
-      day:'numeric',
-      hour:'numeric',
-      minute:'numeric',
-      second:'numeric'
+      month: 'numeric',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      second: 'numeric'
     });
     formatter.toString = tzIdent;
     return formatter;
@@ -113,13 +113,13 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
   },
   GetEpochFromParts: (year, month, day, hour, minute, second, millisecond, microsecond, nanosecond) => {
     const ms = Date.UTC(year, month - 1, day, hour, minute, second, millisecond);
-    const nsbase = (microsecond * 1000 + nanosecond);
-    const ns = (ms < 0) ? (1e6 - nsbase) : nsbase;
+    const nsbase = microsecond * 1000 + nanosecond;
+    const ns = ms < 0 ? 1e6 - nsbase : nsbase;
     return { ms, ns };
   },
   GetTimeZoneDateTimeParts: (epochMilliseconds, restNanoseconds, timeZone) => {
     const offset = parseOffsetString(timeZone);
-    const negative = (epochMilliseconds < 0) || (restNanoseconds < 0);
+    const negative = epochMilliseconds < 0 || restNanoseconds < 0;
     let millisecond = (negative ? 1e3 : 0) + (epochMilliseconds % 1e3);
     let microsecond = (negative ? 1e3 : 0) + Math[negative ? 'ceil' : 'floor'](restNanoseconds / 1e3);
     let nanosecond = (negative ? 1e3 : 0) + (restNanoseconds % 1e3);
@@ -134,9 +134,16 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
       let minute = item.getUTCMinutes();
       let second = item.getUTCSeconds();
       let days = 0;
-      ({ days, hour, minute, second, millisecond, microsecond, nanosecond } = ES.BalanceTime(hour, minute, second, millisecond, microsecond, nanosecond));
+      ({ days, hour, minute, second, millisecond, microsecond, nanosecond } = ES.BalanceTime(
+        hour,
+        minute,
+        second,
+        millisecond,
+        microsecond,
+        nanosecond
+      ));
       day += days;
-      ({ year, month, day} = ES.BalanceDate(year, month, day));
+      ({ year, month, day } = ES.BalanceDate(year, month, day));
       return {
         year,
         month,
@@ -150,11 +157,21 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
       };
     }
     let year, month, day, hour, minute, second;
-    ({year, month, day, hour, minute, second } = ES.GetFormatterParts(timeZone, epochMilliseconds).reduce(reduceParts, {}));
+    ({ year, month, day, hour, minute, second } = ES.GetFormatterParts(timeZone, epochMilliseconds).reduce(
+      reduceParts,
+      {}
+    ));
     let days = 0;
-    ({ days, hour, minute, second, millisecond, microsecond, nanosecond } = ES.BalanceTime(hour, minute, second, millisecond, microsecond, nanosecond));
+    ({ days, hour, minute, second, millisecond, microsecond, nanosecond } = ES.BalanceTime(
+      hour,
+      minute,
+      second,
+      millisecond,
+      microsecond,
+      nanosecond
+    ));
     day += days;
-    ({ year, month, day} = ES.BalanceDate(year, month, day));
+    ({ year, month, day } = ES.BalanceDate(year, month, day));
     return { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond };
   },
   GetTimeZoneNextTransition: (epochMilliseconds, timeZone) => {
@@ -179,30 +196,19 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
   },
   GetFormatterParts: (fmt, v) => {
     const datetime = fmt.format(v);
-    const [ date, time ] = datetime.split(/,\s+/);
-    const [ month, day, year ] = date.split('/');
-    const [ hour, minute, second ] = time.split(':');
+    const [date, time] = datetime.split(/,\s+/);
+    const [month, day, year] = date.split('/');
+    const [hour, minute, second] = time.split(':');
     return [
       { type: 'year', value: +year },
       { type: 'month', value: +month },
       { type: 'day', value: +day },
       { type: 'hour', value: +hour },
       { type: 'minute', value: +minute },
-      { type: 'second', value: +second },
+      { type: 'second', value: +second }
     ];
   },
-  GetTimeZoneEpochValue: (
-    timeZone,
-    year,
-    month,
-    day,
-    hour,
-    minute,
-    second,
-    millisecond,
-    microsecond,
-    nanosecond
-  ) => {
+  GetTimeZoneEpochValue: (timeZone, year, month, day, hour, minute, second, millisecond, microsecond, nanosecond) => {
     const offset = parseOffsetString(timeZone);
     let { ms, ns } = ES.GetEpochFromParts(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
     if (offset !== null) {
@@ -226,7 +232,7 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
         ) {
           return undefined;
         }
-        return { ms:epochMilliseconds, ns };
+        return { ms: epochMilliseconds, ns };
       })
       .filter((x) => x !== undefined);
     return found;
@@ -609,4 +615,6 @@ function bisect(getState, left, right, lstate = getState(left), rstate = getStat
   throw new Error('invalid state in bisection');
 }
 
-function tzIdent() { return this.resolvedOptions().timeZone; };
+function tzIdent() {
+  return this.resolvedOptions().timeZone;
+}
