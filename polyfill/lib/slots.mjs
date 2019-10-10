@@ -30,22 +30,26 @@ const SLOTS = 'undefined' === typeof Symbol ? '_SLOTS' : Symbol('SLOTS');
 const slots = 'function' === typeof WeakMap ? new WeakMap() : null;
 export function CreateSlots(container) {
   if (!slots) {
-    container[SLOTS] = {};
+    container[SLOTS] = Object.create(null);
   } else {
-    slots.set(container, {});
+    slots.set(container, Object.create(null));
   }
+}
+function GetSlots(container) {
+  if (!slots) {
+    return container[SLOTS];
+  } else {
+    return slots.get(container);
+  }
+}
+export function HasSlot(container, ...ids) {
+  if (!container || 'object' === typeof container) return false;
+  const slots = GetSlots(container);
+  return !!slots && ids.reduce((all, id) => all && id in slots, true);
 }
 export function GetSlot(container, id) {
-  if (!slots) {
-    return container[SLOTS][id];
-  } else {
-    return slots.get(container)[id];
-  }
+  return GetSlots(container)[id];
 }
 export function SetSlot(container, id, value) {
-  if (!slots) {
-    container[SLOTS][id] = value;
-  } else {
-    slots.get(container)[id] = value;
-  }
+  GetSlots(container)[id] = value;
 }

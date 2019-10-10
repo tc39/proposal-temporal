@@ -60,8 +60,8 @@ export class Absolute {
   }
   minus(durationLike = {}) {
     const duration = ES.GetIntrinsic('%Temporal.duration%')(durationLike);
-    if (duration.years) throw new RangeError(`invalid duration field years`);
-    if (duration.months) throw new RangeError(`invalid duration field months`);
+    if (duration.years !== 0) throw new RangeError(`invalid duration field years`);
+    if (duration.months !== 0) throw new RangeError(`invalid duration field months`);
 
     let { ms, ns } = GetSlot(this, EPOCHNANOSECONDS);
     let negative = ms < 0 || ns < 0;

@@ -1,8 +1,35 @@
 import { ES } from './ecmascript.mjs';
+import {
+  HasSlot,
+  IDENTIFIER,
+  EPOCHNANOSECONDS,
+  YEAR,
+  MONTH,
+  DAY,
+  HOUR,
+  MINUTE,
+  SECOND,
+  MILLISECOND,
+  MICROSECOND,
+  NANOSECOND,
+  YEARS,
+  MONTHS,
+  DAYS,
+  HOURS,
+  MINUTES,
+  SECONDS,
+  MILLISECONDS,
+  MICROSECONDS,
+  NANOSECONDS
+} from './slots.mjs';
 
-export function absolute(arg) {
+export function absolute(arg, aux) {
   const Absolute = ES.GetIntrinsic('%Temporal.Absolute%');
-  if (arg instanceof Absolute) return arg;
+  if (HasSlot(arg, EPOCHNANOSECONDS)) return arg;
+  if (HasSlot(arg, YEAR, MONTH, DAY, HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND)) {
+    const tz = timezone(aux);
+    return tz.getAbsoluteFor(arg);
+  }
   if ('bigint' === typeof arg) return new Absolute(arg);
   if ('string' === typeof arg) {
     try {
@@ -13,26 +40,62 @@ export function absolute(arg) {
   throw RangeError(`invalid absolute value: ${arg}`);
 }
 
-export function datetime(arg, add) {
+export function datetime(arg, aux) {
   const DateTime = ES.GetIntrinsic('%Temporal.DateTime%');
-  if (arg instanceof DateTime) return arg;
+  if (HasSlot(arg, YEAR, MONTH, DAY, HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND)) {
+    return new DateTime(
+      GetSlot(arg, YEAR),
+      GetSlot(arg, MONTH),
+      GetSlot(arg, DAY),
+      GetSlot(arg, HOUR),
+      GetSlot(arg, MINUTE),
+      GetSlot(arg, SECOND),
+      GetSlot(arg, MILLISECOND),
+      GetSlot(arg, MICROSECOND),
+      GetSlot(arg, NANOSECOND)
+    );
+  }
+  if (HasSlot(arg, EPOCHNANOSECONDS)) return arg.inZone(aux);
+  if (HasSlot(arg, YEAR, MONTH, DAY) && HasSlot(aux, HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND)) {
+    return new DateTime(
+      GetSlot(arg, YEAR),
+      GetSlot(arg, MONTH),
+      GetSlot(arg, DAY),
+      GetSlot(aux, HOUR),
+      GetSlot(aux, MINUTE),
+      GetSlot(aux, SECOND),
+      GetSlot(aux, MILLISECOND),
+      GetSlot(aux, MICROSECOND),
+      GetSlot(aux, NANOSECOND)
+    );
+  }
+  if (HasSlot(aux, YEAR, MONTH, DAY) && HasSlot(arg, HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND)) {
+    return new DateTime(
+      GetSlot(aux, YEAR),
+      GetSlot(aux, MONTH),
+      GetSlot(aux, DAY),
+      GetSlot(arg, HOUR),
+      GetSlot(arg, MINUTE),
+      GetSlot(arg, SECOND),
+      GetSlot(arg, MILLISECOND),
+      GetSlot(arg, MICROSECOND),
+      GetSlot(arg, NANOSECOND)
+    );
+  }
   if ('string' === typeof arg) {
     try {
       return DateTime.fromString(arg);
     } catch (ex) {}
   }
-  if ('bigint' === typeof arg || 'number' === typeof arg || Number.isFinite(+arg)) return absolute(arg).inZone('UTC');
-  if ('object' === typeof arg) {
-    const { year, month, day } = time('object' === typeof add ? add : arg);
-    const { hour, minute, second, millisecond, microsecond, nanosecond } = date(arg);
-    return new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
-  }
+  if ('bigint' === typeof arg || 'number' === typeof arg || Number.isFinite(+arg)) return absolute(arg).inZone(aux);
   throw new RangeError(`invalid datetime ${arg}`);
 }
 
-export function date(arg) {
+export function date(arg, aux) {
   const Date = ES.GetIntrinsic('%Temporal.Date%');
-  if (arg instanceof Date) return arg;
+  if (HasSlot(arg, YEAR, MONTH, DAY)) {
+    return new Date(GetSlot(arg, YEAR), GetSlot(arg, MONTH), GetSlot(arg, DAY));
+  }
   if ('string' === typeof arg) {
     try {
       return Date.fromString(arg);
@@ -41,7 +104,7 @@ export function date(arg) {
   if ('bigint' === typeof arg || 'number' === typeof arg || Number.isFinite(+arg))
     return absolute(arg)
       .getDate()
-      .inZone('UTC')
+      .inZone(aux)
       .getDate();
   if ('object' === typeof arg) {
     const { year, month, day } = arg;
@@ -50,9 +113,18 @@ export function date(arg) {
   throw new RangeError(`invalid date ${arg}`);
 }
 
-export function time(arg) {
+export function time(arg, aux) {
   const Time = ES.GetIntrinsic('%Temporal.Time%');
-  if (arg instanceof Time) return arg;
+  if (HasSlot(arg, HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND)) {
+    return new Time(
+      GetSlot(arg, HOUR),
+      GetSlot(arg, MINUTE),
+      GetSlot(arg, SECOND),
+      GetSlot(arg, MILLISECOND),
+      GetSlot(arg, MICROSECOND),
+      GetSlot(arg, NANOSECOND)
+    );
+  }
   if ('string' === typeof arg) {
     try {
       return Time.fromString(arg);
@@ -61,17 +133,20 @@ export function time(arg) {
   if ('bigint' === typeof arg || 'number' === typeof arg || Number.isFinite(+arg))
     return absolute(arg)
       .getDate()
-      .inZone('UTC')
+      .inZone(aux)
       .getTime();
   if ('object' === typeof arg) {
     const { hour, minute, second, millisecond, microsecond, nanosecond } = time(arg);
     return new Time(hour, minute, second, millisecond, microsecond, nanosecond);
   }
+  throw RangeError(`invalid time value: ${arg}`);
 }
 
-export function yearmonth(arg) {
+export function yearmonth(arg, aux) {
   const YearMonth = ES.GetIntrinsic('%Temporal.YearMonth%');
-  if (arg instanceof YearMonth) return arg;
+  if (HasSlot(arg, YEAR, MONTH)) {
+    return new YearMonth(GetSlot(arg, year), GetSlot(arg, MONTH));
+  }
   if ('string' === typeof arg) {
     try {
       return YearMonth.fromString(arg);
@@ -86,11 +161,14 @@ export function yearmonth(arg) {
     const { year, month } = arg;
     return new YearMonth(year, month);
   }
+  throw RangeError(`invalid yearmonth value: ${arg}`);
 }
 
 export function monthday(arg) {
   const MonthDay = ES.GetIntrinsic('%Temporal.MonthDay%');
-  if (arg instanceof MonthDay) return arg;
+  if (HasSlot(arg, MONTH, DAY)) {
+    return new MonthDay(GetSlot(arg, MONTH), GetSlot(arg, DAY));
+  }
   if ('string' === typeof arg) {
     try {
       return MonthDay.fromString(arg);
@@ -105,11 +183,24 @@ export function monthday(arg) {
     const { month, day } = arg;
     return new MonthDay(month, day);
   }
+  throw RangeError(`invalid monthday value: ${arg}`);
 }
 
 export function duration(arg) {
   const Duration = ES.GetIntrinsic('%Temporal.Duration%');
-  if (arg instanceof Duration) return arg;
+  if (HasSlot(arg, YEARS, MONTHS, DAYS, HOURS, MINUTES, SECONDS, MILLISECONDS, MICROSECONDS, NANOSECONDS)) {
+    return new Duration(
+      GetSlot(arg, YEARS),
+      GetSlot(arg, MONTHS),
+      GetSlot(arg, DAYS),
+      GetSlot(arg, HOURS),
+      GetSlot(arg, MINUTES),
+      GetSlot(arg, SECONDS),
+      GetSlot(arg, MILLISECONDS),
+      GetSlot(arg, MICROSECONDS),
+      GetSlot(arg, NANOSECONDS)
+    );
+  }
   if ('string' === typeof arg) {
     try {
       return Duration.fromString(arg);
@@ -131,6 +222,7 @@ export function duration(arg) {
     } = arg;
     return new Duration(years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
   }
+  throw new RangeError(`invalid duration value ${arg}`);
 }
 
 export function timezone(arg) {
