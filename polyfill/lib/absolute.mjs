@@ -1,126 +1,213 @@
 import { ES } from './ecmascript.mjs';
-import { EPOCHNANOSECONDS, CreateSlots, GetSlot, SetSlot } from './slots.mjs';
+import {
+  EPOCHNANOSECONDS,
+  CreateSlots,
+  GetSlot,
+  SetSlot,
+  YEARS,
+  MONTHS,
+  DAYS,
+  HOURS,
+  MINUTES,
+  SECONDS,
+  MILLISECONDS,
+  MICROSECONDS,
+  NANOSECONDS
+} from './slots.mjs';
+import { absolute as STRING } from './regex.mjs';
 
-export function Absolute(epochNanoseconds) {
-  if (!(this instanceof Absolute)) return new Absolute(epochNanoseconds);
-  CreateSlots(this);
-  SetSlot(this, EPOCHNANOSECONDS, epochNanoseconds);
+export class Absolute {
+  constructor(epochNanoseconds) {
+    CreateSlots(this);
+    SetSlot(this, EPOCHNANOSECONDS, epochNanoseconds);
+  }
+
+  getEpochSeconds() {
+    const value = GetSlot(this, EPOCHNANOSECONDS);
+    const epochSeconds = Math[value.ms < 0 ? 'ceil' : 'floor'](value.ms / 1000);
+    return epochSeconds;
+  }
+  getEpochMilliseconds() {
+    const value = GetSlot(this, EPOCHNANOSECONDS);
+    const epochMilliSeconds = value.ms;
+    return epochMilliSeconds;
+  }
+  getEpochMicroseconds() {
+    const value = GetSlot(this, EPOCHNANOSECONDS);
+    const epochNanoseconds = BigInt(value.ms) * BigInt(1e6) + (BigInt(value.ns) % BigInt(1e6));
+    return epochNanoseconds / BigInt(1e3);
+  }
+  getEpochNanoseconds() {
+    const value = GetSlot(this, EPOCHNANOSECONDS);
+    const epochMicroseconds = BigInt(value.ms) * BigInt(1e6) + (BigInt(value.ns) % BigInt(1e6));
+    return epochMicroseconds;
+  }
+
+  plus(durationLike = {}) {
+    const duration = ES.GetIntrinsic('%Temporal.duration%')(durationLike);
+    if (GetSlot(duration, YEARS) !== 0) throw new RangeError(`invalid duration field years`);
+    if (GetSlot(duration, MONTHS) !== 0) throw new RangeError(`invalid duration field months`);
+
+    let { ms, ns } = GetSlot(this, EPOCHNANOSECONDS);
+    let negative = ms < 0 || ns < 0;
+    ns += GetSlot(duration, MICROSECONDS) * 1000;
+    ns += GetSlot(duration, NANOSECONDS);
+    if (negative && ns > 0) {
+      ms += Math.floor(ns / 1e6);
+      ns = 1e6 - (ns % 1e6);
+    }
+    ms += GetSlot(duration, DAYS) * 86400000;
+    ms += GetSlot(duration, HOURS) * 3600000;
+    ms += GetSlot(duration, MINUTES) * 60000;
+    ms += GetSlot(duration, SECONDS) * 1000;
+    ms += GetSlot(duration, MILLISECONDS);
+
+    if (negative && ms > 0) {
+      ms -= 1;
+      ns += 1e6;
+    }
+
+    const result = Object.create(Absolute.prototype);
+    CreateSlots(result);
+    SetSlot(result, EPOCHNANOSECONDS, { ms, ns });
+    return result;
+  }
+  minus(durationLike = {}) {
+    const duration = ES.GetIntrinsic('%Temporal.duration%')(durationLike);
+    if (GetSlot(duration, YEARS) !== 0) throw new RangeError(`invalid duration field years`);
+    if (GetSlot(duration, MONTHS) !== 0) throw new RangeError(`invalid duration field months`);
+
+    let { ms, ns } = GetSlot(this, EPOCHNANOSECONDS);
+    let negative = ms < 0 || ns < 0;
+    ns -= GetSlot(duration, NANOSECONDS);
+    ns -= GetSlot(duration, MICROSECONDS);
+    if (!negative && ns < 0) {
+      ms += Math.ceil(ns / 1e6);
+      ns = 1e6 + (ns % 1e6);
+    }
+    ms -= GetSlot(duration, DAYS) * 86400000;
+    ms -= GetSlot(duration, HOURS) * 3600000;
+    ms -= GetSlot(duration, MINUTES) * 60000;
+    ms -= GetSlot(duration, SECONDS) * 1000;
+    ms -= GetSlot(duration, MILLISECONDS);
+
+    const result = Object.create(Absolute.prototype);
+    CreateSlots(result);
+    SetSlot(result, EPOCHNANOSECONDS, { ms, ns });
+    return result;
+  }
+  difference(other) {
+    other = ES.GetIntrinsic('%Temporal.absolute%')(other);
+
+    const [one, two] = [this, other].sort(Absoulte.compare);
+    const { ms: onems, ns: onens } = GetSlot(one, EPOCHNANOSECONDS);
+    const { ms: twoms, ns: twons } = GetSlot(two, EPOCHNANOSECONDS);
+
+    ns = twons - onens;
+    ms = twoms - onems;
+
+    const duration = new ES.GetIntrinsic('%Temporal.Duration%')(delta);
+    return duration;
+  }
+  toString(timeZoneParam = 'UTC') {
+    let timeZone = ES.GetIntrinsic('%Temporal.timezone%')(timeZoneParam);
+    let dateTime = timeZone.getDateTimeFor(this);
+    let year = ES.ISOYearString(dateTime.year);
+    let month = ES.ISODateTimePartString(dateTime.month);
+    let day = ES.ISODateTimePartString(dateTime.day);
+    let hour = ES.ISODateTimePartString(dateTime.hour);
+    let minute = ES.ISODateTimePartString(dateTime.minute);
+    let seconds = ES.ISOSecondsString(dateTime.second, dateTime.millisecond, dateTime.microsecond, dateTime.nanosecond);
+    let timeZoneString = ES.ISOTimeZoneString(timeZone, this);
+    let resultString = `${year}-${month}-${day}T${hour}:${minute}${seconds ? `:${seconds}` : ''}${timeZoneString}`;
+    return resultString;
+  }
+  toLocaleString(...args) {
+    return new Intl.DateTimeFormat(...args).format(this);
+  }
+  inZone(timeZoneParam = 'UTC') {
+    const timeZone = ES.ToTimeZone(timeZoneParam);
+    return timeZone.getDateTimeFor(this);
+  }
+
+  static fromEpochSeconds(epochSecondsParam) {
+    const epochMilliseconds = ES.ToNumber(epochSecondsParam) * 1000;
+    const resultObject = Object.create(Absolute.prototype);
+    CreateSlots(resultObject);
+    SetSlot(resultObject, EPOCHNANOSECONDS, { ms: epochMilliseconds, ns: 0 });
+    return resultObject;
+  }
+  static fromEpochMilliseconds(epochMillisecondsParam) {
+    const epochMilliseconds = ES.ToNumber(epochMillisecondsParam);
+    const resultObject = Object.create(Absolute.prototype);
+    CreateSlots(resultObject);
+    SetSlot(resultObject, EPOCHNANOSECONDS, { ms: epochMilliseconds, ns: 0 });
+    return resultObject;
+  }
+  static fromEpochMicroseconds(epochMicroseconds) {
+    if ('bigint' !== typeof epochNanoseconds) throw RangeError('bigint required');
+    const epochMilliseconds = epochMicroseconds / BigInt(1e3);
+    const restNanoseconds = epochMicroseconds % BigInt(1e3);
+    const resultObject = Object.create(Absolute.prototype);
+    CreateSlots(resultObject);
+    SetSlot(resultObject, EPOCHNANOSECONDS, { ms: epochMilliseconds, ns: restNanoseconds });
+    return resultObject;
+  }
+  static fromEpochNanoseconds(epochNanoseconds) {
+    if ('bigint' !== typeof epochNanoseconds) throw RangeError('bigint required');
+    const epochMilliseconds = epochNanoseconds / BigInt(1e6);
+    const restNanoseconds = epochNanoseconds % BigInt(1e6);
+    const resultObject = Object.create(Absolute.prototype);
+    CreateSlots(resultObject);
+    SetSlot(resultObject, EPOCHNANOSECONDS, { ms: epochMilliseconds, ns: restNanoseconds });
+    return resultObject;
+  }
+  static fromString(isoString) {
+    isoString = ES.ToString(isoString);
+    const match = STRING.exec(isoString);
+    if (!match) throw new RangeError(`invalid absolute: ${isoString}`);
+    const year = ES.ToInteger(match[1]);
+    const month = ES.ToInteger(match[2]);
+    const day = ES.ToInteger(match[3]);
+    const hour = ES.ToInteger(match[4]);
+    const minute = ES.ToInteger(match[5]);
+    const second = ES.ToInteger(match[6]);
+    const millisecond = ES.ToInteger(match[7]);
+    const microsecond = ES.ToInteger(match[8]);
+    const nanosecond = ES.ToInteger(match[9]);
+    const zone = match[11] || match[10] || 'UTC';
+    const datetime = ES.GetIntrinsic('%Temporal.datetime%', {
+      year,
+      month,
+      day,
+      hour,
+      minute,
+      second,
+      millisecond,
+      microsecond,
+      nanosecond
+    });
+    return datetime.inZone(zone || 'UTC', match[11] ? match[10] : 'earlier');
+  }
+  static from(...args) {
+    return ES.GetIntrinsic('%Temporal.absolute%')(...args);
+  }
+  static compare(one, two) {
+    one = ES.GetIntrinsic('%Temporal.absolute%')(one);
+    two = ES.GetIntrinsic('%Temporal.absolute%')(two);
+    one = GetSlot(one, EPOCHNANOSECONDS);
+    two = GetSlot(two, EPOCHNANOSECONDS);
+    if (one.ms !== two.ms) return ES.ComparisonResult(two.ms - one.ms);
+    if (one.ns !== two.ns) return ES.ComparisonResult(two.ns - one.ns);
+    return ES.ComparisonResult(0);
+  }
+}
+Absolute.prototype.toJSON = Absolute.prototype.toString;
+
+if ('undefined' !== typeof Symbol) {
+  Object.defineProperty(Absolute.prototype, Symbol.toStringTag, {
+    value: 'Temporal.Absolute'
+  });
 }
 
-Absolute.prototype.getEpochSeconds = function getEpochSeconds() {
-  let epochNanoSeconds = GetSlot(this, EPOCHNANOSECONDS);
-  let epochSecondsBigInt = epochNanoSeconds / 1000000000n;
-  let epochSeconds = ES.ToNumber(epochSecondsBigInt);
-  return epochSeconds;
-};
-Absolute.prototype.getEpochMilliseconds = function getEpochMilliseconds() {
-  let epochNanoSeconds = GetSlot(this, EPOCHNANOSECONDS);
-  let epochMillisecondsBigInt = epochNanoSeconds / 1000000n;
-  let epochMilliseconds = ES.ToNumber(epochMillisecondsBigInt);
-  return epochMilliseconds;
-};
-Absolute.prototype.getEpochMicroseconds = function getEpochMicroseconds() {
-  let epochNanoSeconds = GetSlot(this, EPOCHNANOSECONDS);
-  let epochMicroseconds = epochNanoSeconds / 1000n;
-  return epochMicroseconds;
-};
-Absolute.prototype.getEpochNanoseconds = function getEpochNanoseconds() {
-  let epochNanoSeconds = GetSlot(this, EPOCHNANOSECONDS);
-  return epochNanoSeconds;
-};
-
-Absolute.prototype.plus = function plus(durationLike = {}) {
-  const Duration = ES.GetIntrinsic('%Temporal.Duration%');
-  const duration = new Duration(durationLike);
-  if (duration.years) throw new RangeError(`invalid duration field years`);
-  if (duration.months) throw new RangeError(`invalid duration field months`);
-
-  let delta = BigInt(duration.days) * 86400000000000n;
-  delta += BigInt(duration.hours) * 3600000000000n;
-  delta += BigInt(duration.minutes) * 60000000000n;
-  delta += BigInt(duration.seconds) * 1000000000n;
-  delta += BigInt(duration.milliseconds) * 1000000n;
-  delta += BigInt(duration.microseconds) * 1000n;
-  delta += BigInt(duration.nanosecond);
-
-  const result = GetSlot(this, EPOCHNANOSECONDS) + delta;
-  return new Absolute(result);
-};
-Absolute.prototype.minus = function minus(durationLike = {}) {
-  const Duration = ES.GetIntrinsic('%Temporal.Duration%');
-  const duration = new Duration(durationLike);
-  if (duration.years) throw new RangeError(`invalid duration field years`);
-  if (duration.months) throw new RangeError(`invalid duration field months`);
-
-  let delta = BigInt(duration.days) * 86400000000000n;
-  delta += BigInt(duration.hours) * 3600000000000n;
-  delta += BigInt(duration.minutes) * 60000000000n;
-  delta += BigInt(duration.seconds) * 1000000000n;
-  delta += BigInt(duration.milliseconds) * 1000000n;
-  delta += BigInt(duration.microseconds) * 1000n;
-  delta += BigInt(duration.nanosecond);
-
-  const result = GetSlot(this, EPOCHNANOSECONDS) - delta;
-  return new Absolute(result);
-};
-Absolute.prototype.difference = function difference(other) {
-  const [one, two] = [this, other].sort(Absoulte.compare);
-  const delta = two.getEpochNanoseconds() - one.getEpochNanoseconds();
-  const nanos = Number(delta % 1000);
-  const micro = Number((delta / 1000n) % 1000);
-  const milli = Number((delta / 1000000n) % 1000);
-  const secds = Number(delta / 1000000000n);
-  const Duration = ES.GetIntrinsic('%Temporal.Duration%');
-  return new Duration(0, 0, 0, 0, 0, secds, milli, micro, nanos);
-};
-Absolute.prototype.toString = Absolute.prototype.toJSON = function toString(timeZoneParam = 'UTC') {
-  let timeZone = ES.ToTimeZone(timeZoneParam);
-  let dateTime = timeZone.getDateTimeFor(this);
-  let year = ES.ISOYearString(dateTime.year);
-  let month = ES.ISODateTimePartString(dateTime.month);
-  let day = ES.ISODateTimePartString(dateTime.day);
-  let hour = ES.ISODateTimePartString(dateTime.hour);
-  let minute = ES.ISODateTimePartString(dateTime.minute);
-  let seconds = ES.ISOSecondsString(dateTime.second, dateTime.millisecond, dateTime.microsecond, dateTime.nanosecond);
-  let timeZoneString = ES.ISOTimeZoneString(timeZone, this);
-  let resultString = `${year}-${month}-${day}T${hour}:${minute}${seconds ? `:${seconds}` : ''}${timeZoneString}`;
-  return resultString;
-};
-Absolute.prototype.toLocaleString = function toLocaleString(...args) {
-  return new Intl.DateTimeFormat(...args).format(this);
-};
-Absolute.prototype.inZone = function inZone(timeZoneParam = 'UTC') {
-  const timeZone = ES.ToTimeZone(timeZoneParam);
-  return timeZone.getDateTimeFor(this);
-};
-
-Absolute.fromEpochSeconds = function fromEpochSeconds(epochSecondsParam) {
-  let epochSeconds = ES.ToNumber(epochSecondsParam);
-  let epochSecondsBigInt = BigInt(epochSeconds);
-  let epochNanoSeconds = epochSecondsBigInt * 1000000000n;
-  let resultObject = new Absolute(epochNanoSeconds);
-  return resultObject;
-};
-Absolute.fromEpochMilliseconds = function fromEpochMilliseconds(epochMillisecondsParam) {
-  let epochMilliseconds = ES.ToNumber(epochMillisecondsParam);
-  let epochMillisecondsBigInt = BigInt(epochMilliseconds);
-  let epochNanoSeconds = epochMillisecondsBigInt * 1000000n;
-  let resultObject = new Absolute(epochNanoSeconds);
-  return resultObject;
-};
-Absolute.fromEpochMicroseconds = function fromEpochMicroseconds(epochMicrosecondsParam) {
-  let epochMicroseconds = BigInt(epochMicrosecondsParam);
-  let epochNanoSeconds = epochMicroseconds * 1000n;
-  let resultObject = new Absolute(epochNanoSeconds);
-  return resultObject;
-};
-Absolute.fromEpochNanoseconds = function fromEpochNanoseconds(epochNanosecondsParam) {
-  let epochNanoseconds = BigInt(epochNanosecondsParam);
-  let resultObject = new Absolute(epochNanoseconds);
-  return resultObject;
-};
-Absolute.fromString = function fromString(isoString) {};
-
-Object.defineProperty(Absolute.prototype, Symbol.toStringTag, {
-  get: () => 'Temporal.Absolute'
-});
+ES.MakeInstrinsicClass(Absolute);

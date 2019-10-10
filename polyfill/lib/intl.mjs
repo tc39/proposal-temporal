@@ -1,4 +1,5 @@
 import { ES } from './ecmascript.mjs';
+import { assign as ObjectAssign } from './compat.mjs';
 
 const Absolute = ES.GetIntrinsic('%Temporal.Absolute%');
 const DateTime = ES.GetIntrinsic('%Temporal.DateTime%');
@@ -27,7 +28,7 @@ export function DateTimeFormat(locale = IntlDateTimeFormat().resolvedOptions().l
 DateTimeFormat.supportedLocalesOf = function(...args) {
   return IntlDateTimeFormat.supportedLocalesOf(...args);
 };
-DateTimeFormat.prototype = Object.create(IntlDateTimeFormat.prototype, {
+const properties = {
   resolvedOptions: {
     value: resolvedOptions,
     enumerable: true,
@@ -40,25 +41,30 @@ DateTimeFormat.prototype = Object.create(IntlDateTimeFormat.prototype, {
     writable: false,
     configurable: true
   },
-  formatToParts: {
-    value: formatToParts,
-    enumerable: true,
-    writable: false,
-    configurable: true
-  },
   formatRange: {
     value: formatRange,
     enumerable: true,
     writable: false,
     configurable: true
-  },
-  formatRangeToParts: {
-    value: formatRangeToParts,
+  }
+};
+if (formatToParts in IntlDateTimeFormat.prototype) {
+  properties.formatToParts = {
+    value: formatToParts,
     enumerable: true,
     writable: false,
     configurable: true
-  }
-});
+  };
+}
+if (formatRangeToParts in IntlDateTimeFormat.prototype) {
+  properties.formatRangeToParts = {
+    value: formatToParts,
+    enumerable: true,
+    writable: false,
+    configurable: true
+  };
+}
+DateTimeFormat.prototype = Object.create(IntlDateTimeFormat.prototype, properties);
 
 function resolvedOptions() {
   return this[ORIGINAL].resolvedOptions();
@@ -97,7 +103,7 @@ function formatRangeToParts(a, b) {
 }
 
 function ammend(options = {}, ammended = {}) {
-  options = Object.assign({}, options);
+  options = ObjectAssign({}, options);
   for (let opt of ['year', 'month', 'day', 'hour', 'minute', 'second']) {
     options[opt] = opt in ammended ? ammended[opt] : options[opt];
     if (options[opt] === false || options[opt] === undefined) delete options[opt];
@@ -107,7 +113,7 @@ function ammend(options = {}, ammended = {}) {
 function timeAmmend(options) {
   options = ammend(options, { year: false, month: false, day: false });
   if (!hasTimeOptions(options)) {
-    options = Object.assign(options, {
+    options = ObjectAssign(options, {
       hour: 'numeric',
       minute: 'numeric',
       second: 'numeric'
@@ -118,7 +124,7 @@ function timeAmmend(options) {
 function dateAmmend(options, ammendments) {
   options = ammend(options, { hour: false, minute: false, second: false });
   if (!hasDateOptions(options)) {
-    options = Object.assign(options, {
+    options = ObjectAssign(options, {
       year: 'numeric',
       month: 'numeric',
       day: 'numeric'
@@ -128,9 +134,9 @@ function dateAmmend(options, ammendments) {
   return options;
 }
 function datetimeAmmend(options) {
-  options = Object.assign({}, options);
+  options = ObjectAssign({}, options);
   if (!hasTimeOptions(options) && !hasDateOptions(options)) {
-    Object.assign(options, {
+    ObjectAssign(options, {
       year: 'numeric',
       month: 'numeric',
       day: 'numeric',

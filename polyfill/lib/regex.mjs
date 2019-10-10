@@ -1,15 +1,29 @@
-export const yearmonth = /(\d{4}|[+-]\d{6})-(\d{2})/;
-export const monthday = /(\d{2})-(\d{2})/;
-export const date = new RegExp(`${yearmonth.source}${/-(\d{2})/.source}`);
+const yearpart = /(?:[+-]\d{6}|\d{4})/;
+const datepart = new RegExp(`(?:${yearpart.source}-\\d{2}-\\d{2})`);
+const timepart = /(?:\d{2}\:\d{2}(?:\:\d{2}(?:\.\d{3}(?:\d{3}(?:\d{3})?)?)?)?)/;
+const zonepart = /(?:Z|(?:[+-]\d{1,2}\:?\d{2}(?:\[[^\]\s]+\])?))/;
 
-const basetim = /(\d{2}):(\d{2})/;
-const seconds = /(?:(\d{2})(?:\.(\d{3})(?: (\d{3})(?:(\d{3}))?)?)?)?/;
-export const time = new RegExp(`${basetim}${seconds}`);
+const datesplit = new RegExp(`(${yearpart.source})-(\\d{2})-(\\d{2})`);
+const timesplit = /(\d{2})\:(\d{2})(?:\:(\d{2})(?:\.(\d{3})(\d{3})?(\d{3})?)?)?/;
+const zonesplit = /(?:Z|(?:([+-]\d{1,2}\:?\d{2})(?:\[([^\]\s]+)\])?))/;
 
-export const datetime = new RegExp(`${date.source}T${time.source}`);
+export const absolute = new RegExp(`^${datesplit.source}T${timesplit.source}${zonesplit.source}$`);
+export const datetime = new RegExp(`^${datesplit.source}T${timesplit.source}(?:${zonepart.source})?$`);
+export const date = new RegExp(`^${datesplit.source}(?:T${timepart.source}${zonepart.source}?)?$`);
+export const time = new RegExp(`^(?:${datepart.source}T)?${timesplit.source}(?:${zonepart.source})?$`);
+export const timezone = new RegExp(`^(?:${datepart.source}T${timepart.source})?${zonesplit.source}$`);
+export const yearmonth = new RegExp(
+  `^(${yearpart.source})-(\\d{2})(?:-\\d{2}(?:T${timepart.source}${zonepart.source}?)?)?$`
+);
+
+export const monthday = new RegExp(
+  '^' +
+    [
+      new RegExp(`(?:${yearpart.source}-(\\d{2})-(\\d{2})(?:T${timepart.source}${zonepart.source}?)?)`).source,
+      new RegExp(`(?:(\\d{2})-(\\d{2}))`).source
+    ].join('|') +
+    '$'
+);
 
 export const offset = /([+-][01]?[0-9]):?([0-5][0-9])/;
-
-export const timezone = /([+-][0-1]?[0-9]:?[0-5][0-9]|\[[^]+\])/;
-
 export const duration = /P(?:(\d+)Y)?(?:(\d+)M)?(?:(\d+)D)?(?:T(?:(\d+)H)?(?:(\d+)M)?(?:(\d+(?:\.\d+)?)S)?)?/;
