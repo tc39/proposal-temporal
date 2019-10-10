@@ -1,5 +1,19 @@
 import { ES } from './ecmascript.mjs';
-import { EPOCHNANOSECONDS, CreateSlots, GetSlot, SetSlot } from './slots.mjs';
+import {
+  EPOCHNANOSECONDS,
+  CreateSlots,
+  GetSlot,
+  SetSlot,
+  YEARS,
+  MONTHS,
+  DAYS,
+  HOURS,
+  MINUTES,
+  SECONDS,
+  MILLISECONDS,
+  MICROSECONDS,
+  NANOSECONDS
+} from './slots.mjs';
 import { absolute as STRING } from './regex.mjs';
 
 export class Absolute {
@@ -31,22 +45,22 @@ export class Absolute {
 
   plus(durationLike = {}) {
     const duration = ES.GetIntrinsic('%Temporal.duration%')(durationLike);
-    if (duration.years) throw new RangeError(`invalid duration field years`);
-    if (duration.months) throw new RangeError(`invalid duration field months`);
+    if (GetSlot(duration, YEARS) !== 0) throw new RangeError(`invalid duration field years`);
+    if (GetSlot(duration, MONTHS) !== 0) throw new RangeError(`invalid duration field months`);
 
     let { ms, ns } = GetSlot(this, EPOCHNANOSECONDS);
     let negative = ms < 0 || ns < 0;
-    ns += duration.microseconds * 1000;
-    ns += duration.nanoseconds;
+    ns += GetSlot(duration, MICROSECONDS) * 1000;
+    ns += GetSlot(duration, NANOSECONDS);
     if (negative && ns > 0) {
       ms += Math.floor(ns / 1e6);
       ns = 1e6 - (ns % 1e6);
     }
-    ms += duration.days * 86400000;
-    ms += duration.hours * 3600000;
-    ms += duration.minutes * 60000;
-    ms += duration.seconds * 1000;
-    ms += duration.milliseconds;
+    ms += GetSlot(duration, DAYS) * 86400000;
+    ms += GetSlot(duration, HOURS) * 3600000;
+    ms += GetSlot(duration, MINUTES) * 60000;
+    ms += GetSlot(duration, SECONDS) * 1000;
+    ms += GetSlot(duration, MILLISECONDS);
 
     if (negative && ms > 0) {
       ms -= 1;
@@ -60,22 +74,22 @@ export class Absolute {
   }
   minus(durationLike = {}) {
     const duration = ES.GetIntrinsic('%Temporal.duration%')(durationLike);
-    if (duration.years !== 0) throw new RangeError(`invalid duration field years`);
-    if (duration.months !== 0) throw new RangeError(`invalid duration field months`);
+    if (GetSlot(duration, YEARS) !== 0) throw new RangeError(`invalid duration field years`);
+    if (GetSlot(duration, MONTHS) !== 0) throw new RangeError(`invalid duration field months`);
 
     let { ms, ns } = GetSlot(this, EPOCHNANOSECONDS);
     let negative = ms < 0 || ns < 0;
-    ns -= duration.nanoseconds;
-    ns -= duration.microseconds;
+    ns -= GetSlot(duration, NANOSECONDS);
+    ns -= GetSlot(duration, MICROSECONDS);
     if (!negative && ns < 0) {
       ms += Math.ceil(ns / 1e6);
       ns = 1e6 + (ns % 1e6);
     }
-    ms -= duration.days * 86400000;
-    ms -= duration.hours * 3600000;
-    ms -= duration.minutes * 60000;
-    ms -= duration.seconds * 1000;
-    ms -= duration.milliseconds;
+    ms -= GetSlot(duration, DAYS) * 86400000;
+    ms -= GetSlot(duration, HOURS) * 3600000;
+    ms -= GetSlot(duration, MINUTES) * 60000;
+    ms -= GetSlot(duration, SECONDS) * 1000;
+    ms -= GetSlot(duration, MILLISECONDS);
 
     const result = Object.create(Absolute.prototype);
     CreateSlots(result);
@@ -183,9 +197,9 @@ export class Absolute {
     two = ES.GetIntrinsic('%Temporal.absolute%')(two);
     one = GetSlot(one, EPOCHNANOSECONDS);
     two = GetSlot(two, EPOCHNANOSECONDS);
-    if (one.ms !== two.ms) return two.ms - one.ms;
-    if (one.ns !== two.ns) return two.ns - one.ns;
-    return 0;
+    if (one.ms !== two.ms) return ES.ComparisonResult(two.ms - one.ms);
+    if (one.ns !== two.ns) return ES.ComparisonResult(two.ns - one.ns);
+    return ES.ComparisonResult(0);
   }
 }
 Absolute.prototype.toJSON = Absolute.prototype.toString;
@@ -195,3 +209,5 @@ if ('undefined' !== typeof Symbol) {
     value: 'Temporal.Absolute'
   });
 }
+
+ES.MakeInstrinsicClass(Absolute);

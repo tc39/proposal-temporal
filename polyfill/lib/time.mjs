@@ -88,7 +88,7 @@ export class Time {
     const duration = ES.GetIntrinsic('%Temporal.duration%')(durationLike);
     let { hour, minute, second, millisecond, microsecond, nanosecond } = this;
     let { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
-    if (years || months || days) throw new RangeError('invalid duration');
+    if (years !== 0 || months !== 0 || days !== 0) throw new RangeError('invalid duration');
     ({ hour, minute, second, minute, microsecond, nanosecond } = ES.AddTime(
       hour,
       minute,
@@ -123,7 +123,7 @@ export class Time {
     const duration = ES.GetIntrinsic('%Temporal.duration%')(durationLike);
     let { hour, minute, second, millisecond, microsecond, nanosecond } = this;
     let { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
-    if (years || months || days) throw new RangeError('invalid duration');
+    if (years !== 0 || months !== 0 || days !== 0) throw new RangeError('invalid duration');
     ({ hour, minute, second, minute, microsecond, nanosecond } = ES.SubtractTime(
       hour,
       minute,
@@ -207,13 +207,13 @@ export class Time {
   static compare(one, two) {
     one = ES.GetIntrinsic('%Temporal.time%')(one);
     two = ES.GetIntrinsic('%Temporal.time%')(two);
-    if (one.hour !== two.hour) return one.hour - two.hour;
-    if (one.minute !== two.minute) return one.minute - two.minute;
-    if (one.second !== two.second) return one.second - two.second;
-    if (one.millisecond !== two.millisecond) return one.millisecond - two.millisecond;
-    if (one.microsecond !== two.microsecond) return one.microsecond - two.microsecond;
-    if (one.nanosecond !== two.nanosecond) return one.nanosecond - two.nanosecond;
-    return 0;
+    if (one.hour !== two.hour) return ES.ComparisonResult(one.hour - two.hour);
+    if (one.minute !== two.minute) return ES.ComparisonResult(one.minute - two.minute);
+    if (one.second !== two.second) return ES.ComparisonResult(one.second - two.second);
+    if (one.millisecond !== two.millisecond) return ES.ComparisonResult(one.millisecond - two.millisecond);
+    if (one.microsecond !== two.microsecond) return ES.ComparisonResult(one.microsecond - two.microsecond);
+    if (one.nanosecond !== two.nanosecond) return ES.ComparisonResult(one.nanosecond - two.nanosecond);
+    return ES.ComparisonResult(0);
   }
 }
 Time.prototype.toJSON = Time.prototype.toString;
@@ -222,3 +222,4 @@ if ('undefined' !== typeof Symbol) {
     value: 'Temporal.Time'
   });
 }
+ES.MakeInstrinsicClass(Time);

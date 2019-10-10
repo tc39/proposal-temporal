@@ -39,7 +39,15 @@ export class MonthDay {
     const duration = ES.GetIntrinsic('%Temporal.duration')(durationLike);
     let { month, day } = this;
     let { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
-    if (years || hours || minutes || seconds || milliseconds || microseconds || nanoseconds)
+    if (
+      years !== 0 ||
+      hours !== 0 ||
+      minutes !== 0 ||
+      seconds !== 0 ||
+      milliseconds !== 0 ||
+      microseconds !== 0 ||
+      nanoseconds !== 0
+    )
       throw new RangeError('invalid duration');
     ({ year, month, day } = ES.AddDate(year, month, day, years, months, days, disambiguation));
     ({ month, day } = ES.BalanceDate(1970, month, day));
@@ -49,7 +57,7 @@ export class MonthDay {
     const duration = ES.GetIntrinsic('%Temporal.duration')(durationLike);
     let { year, month, day } = this;
     let { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
-    if (hours || minutes || seconds || milliseconds || microseconds || nanoseconds)
+    if (hours !== 0 || minutes !== 0 || seconds !== 0 || milliseconds !== 0 || microseconds !== 0 || nanoseconds !== 0)
       throw new RangeError('invalid duration');
     ({ year, month, day } = ES.SubtractDate(year, month, day, years, months, days, disambiguation));
     ({ year, month, day } = ES.BalanceDate(year, month, day));
@@ -98,9 +106,9 @@ export class MonthDay {
   static compare(one, two) {
     one = ES.GetIntrinsic('%Temporal.monthday')(one);
     two = ES.GetIntrinsic('%Temporal.monthday')(two);
-    if (one.month !== two.month) return one.month - two.month;
-    if (one.day !== two.day) return one.day - two.day;
-    return 0;
+    if (one.month !== two.month) return ES.ComparisonResult(one.month - two.month);
+    if (one.day !== two.day) return ES.ComparisonResult(one.day - two.day);
+    return ES.ComparisonResult(0);
   }
 }
 MonthDay.prototype.toJSON = MonthDay.prototype.toString;
@@ -109,3 +117,4 @@ if ('undefined' !== typeof Symbol) {
     value: 'Temporal.MonthDay'
   });
 }
+ES.MakeInstrinsicClass(MonthDay);

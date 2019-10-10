@@ -69,7 +69,7 @@ export class Date {
     const duration = ES.GetIntrinsic('%Temporal.duration%')(durationLike);
     let { year, month, day } = this;
     let { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
-    if (hours || minutes || seconds || milliseconds || microseconds || nanoseconds)
+    if (hours !== 0 || minutes !== 0 || seconds !== 0 || milliseconds !== 0 || microseconds !== 0 || nanoseconds !== 0)
       throw new RangeError('invalid duration');
     ({ year, month, day } = ES.SubtractDate(year, month, day, years, months, days, disambiguation));
     ({ year, month, day } = ES.BalanceDate(year, month, day));
@@ -138,10 +138,10 @@ export class Date {
   static compare(one, two) {
     one = ES.GetIntrinsic('%Temporal.date%')(one);
     two = ES.GetIntrinsic('%Temporal.date%')(two);
-    if (one.year !== two.year) return one.year - two.year;
-    if (one.month !== two.month) return one.month - two.month;
-    if (one.day !== two.day) return one.day - two.day;
-    return 0;
+    if (one.year !== two.year) return ES.ComparisonResult(one.year - two.year);
+    if (one.month !== two.month) return ES.ComparisonResult(one.month - two.month);
+    if (one.day !== two.day) return ES.ComparisonResult(one.day - two.day);
+    return ES.ComparisonResult(0);
   }
 }
 Date.prototype.toJSON = Date.prototype.toString;
@@ -151,3 +151,5 @@ if ('undefined' !== typeof Symbol) {
     value: 'Temporal.Date'
   });
 }
+
+ES.MakeInstrinsicClass(Date);

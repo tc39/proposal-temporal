@@ -39,7 +39,7 @@ export class YearMonth {
     return new YearMonth(year, month, disambiguation);
   }
   plus(durationLike = {}, disambiguation = 'constrain') {
-    const duration = ES.GetIntrinsic('%Temporal.duration%')(duration);
+    const duration = ES.GetIntrinsic('%Temporal.duration%')(durationLike);
     let { year, month } = this;
     let { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
     if ((days, hours || minutes || seconds || milliseconds || microseconds || nanoseconds))
@@ -49,10 +49,18 @@ export class YearMonth {
     return new YearMonth(year, month);
   }
   minus(durationLike = {}, disambiguation = 'constrain') {
-    const duration = ES.GetIntrinsic('%Temporal.duration%')(duration);
+    const duration = ES.GetIntrinsic('%Temporal.duration%')(durationLike);
     let { year, month } = this;
     let { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
-    if (days || hours || minutes || seconds || milliseconds || microseconds || nanoseconds)
+    if (
+      days !== 0 ||
+      hours !== 0 ||
+      minutes !== 0 ||
+      seconds !== 0 ||
+      milliseconds !== 0 ||
+      microseconds !== 0 ||
+      nanoseconds !== 0
+    )
       throw new RangeError('invalid duration');
     ({ year, month } = ES.SubtractDate(year, month, 1, years, months, 0, disambiguation));
     ({ year, month } = ES.BalanceYearMonth(year, month));
@@ -100,9 +108,9 @@ export class YearMonth {
   static compare(one, two) {
     one = ES.GetIntrinsic('%Temporal.yearmonth%')(one);
     two = ES.GetIntrinsic('%Temporal.yearmonth%')(two);
-    if (one.year !== two.year) return one.year - two.year;
-    if (one.month !== two.month) return one.month - two.month;
-    return 0;
+    if (one.year !== two.year) return ES.ComparisonResult(one.year - two.year);
+    if (one.month !== two.month) return ES.ComparisonResult(one.month - two.month);
+    return ES.ComparisonResult(0);
   }
 }
 YearMonth.prototype.toJSON = YearMonth.prototype.toString;
@@ -111,3 +119,4 @@ if ('undefined' !== typeof Symbol) {
     value: 'Temporal.YearMonth'
   });
 }
+ES.MakeInstrinsicClass(YearMonth);
