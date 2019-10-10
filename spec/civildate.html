@@ -16,20 +16,17 @@
       Subclass constructors that intend to inherit the specified Date behaviour must include a super call to the %Temporal.Date% constructor to create and initialize subclass instances with the necessary internal slots.</p>
 
     <emu-clause id=sec-temporal-date-constructor-alg>
-      <h1>Temporal.Date ( _year_, _month_, _day_ )</h1>
+      <h1>Temporal.Date ( _year_, _month_, _day_, _disambiguation_ )</h1>
       <p>When the Temporal.Date function is called, the following steps are taken:</p>
       <emu-alg>
         1. If NewTarget is *undefined*, then
           1. Throw a *TypeError* exception.
-        1. Let _numberOfArgs_ be the number of arguments passed to this function call.
-        1. If _numberOfArgs_ &lt; 3, then:
-          1. Throw a *TypeError* exception.
         1. Let _y_ be ? TemporalToInteger(_year_).
         1. Let _m_ be ? TemporalToInteger(_month_).
         1. Let _d_ be ? TemporalToInteger(_day_).
-        1. If ! ValidateDate(_y_, _m_, _d_) is *false*, then
-          1. Throw a *TypeError* exception.
-        1. Return CreateDate(_y_, _m_, _d_, NewTarget).
+        1. Let _disambiguation_ be ? ToString(_disambiguation_).
+        1. Let _result_ be ? RegulateDate(_y_, _m_, _d_, _disambiguation_).
+        1. Return ? CreateDate(result.[[Year]], result.[[Month]], result.[[Day]], NewTarget).
       </emu-alg>
     </emu-clause>
   </emu-clause>
@@ -47,15 +44,12 @@
     </emu-clause>
 
     <emu-clause>
-      <h1>Temporal.Date.fromString( _isostring_ )</h1>
+      <h1>Temporal.Date.fromString ( _isostring_ )</h1>
       <p>
         The `fromString` method takes one argument _isostring_.
         The following steps are taken:
       </p>
       <emu-alg>
-        1. Let _date_ be the *this* value.
-        1. If Type(_date_) is not Object or _date_ does not have an [[InitializedTemporalDate]] internal slot, then
-          1. Throw a *TypeError* exception.
         1. Let _validSyntax_ be *true* if _isostring_ conforms to the format `YYYY-MM-DD`, and *false* otherwise, where:
           * `YYYY` is either four decimal digits or an expanded year of `"+"` or `"-"` followed by six decimal digits;
           * `-` is the code unit 0x002D (HYPHEN-MINUS);
@@ -65,15 +59,29 @@
         1. If _validSyntax_ is *false*, then
           1. Throw a *TypeError* exception.
         1. Let _year_, _month_, and _day_ be the respective parts of _isostring_, interpreted as decimal numbers.
-        1. If ! ValidateDate(_year_, _month_, _day_) is *false*, then
-          1. Throw a *TypeError* exception.
-        1. Return CreateDate(_year_, _month_, _day_).
+        1. Let _result_ be ? RegulateDate(_year_, _month_, _day_, `"reject"`).
+        1. Return ? CreateDate(result.[[Year]], result.[[Month]], result.[[Day]]).
       </emu-alg>
     </emu-clause>
 
-<!-- TODO
-CivilDate.compare()?
--->
+    <emu-clause>
+      <h1>Temporal.Date.compare ( _one_, _two_ )</h1>
+      <p>
+        The `compare` method takes two arguments, _one_ and _two_.
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _one_ be ? ToDate(_one_).
+        1. Let _two_ be ? ToDate(_two_).
+        1. If _one_.[[Year]] &gt; _two_.[[Year]], return 1.
+        1. If _one_.[[Year]] &lt; _two_.[[Year]], return -1.
+        1. If _one_.[[Month]] &gt; _two_.[[Month]], return 1.
+        1. If _one_.[[Month]] &lt; _two_.[[Month]], return -1.
+        1. If _one_.[[Day]] &gt; _two_.[[Day]], return 1.
+        1. If _one_.[[Day]] &lt; _two_.[[Day]], return -1.
+        1. Return +0.
+      </emu-alg>
+    </emu-clause>
   </emu-clause>
 
   <emu-clause id=sec-properties-of-the-temporal-date-prototype-object>
@@ -177,7 +185,51 @@ CivilDate.compare()?
     </emu-clause>
 
     <emu-clause>
-      <h1>Temporal.Date.prototype.getYearMonth()</h1>
+      <h1>get Temporal.Date.prototype.daysInYear</h1>
+      <p>
+        Temporal.Date.prototype.daysInYear is an accessor property whose set accessor function is undefined.
+        Its get accessor function performs the following steps:
+      </p>
+      <emu-alg>
+        1. Let _date_ be the *this* value.
+        1. If Type(_date_) is not Object or _date_ does not have an [[InitializedTemporalDate]] internal slot, then
+          1. Throw a *TypeError* exception.
+        1. If ! IsLeapYear(_date_.[[Year]]) is *true*, then
+          1. Return 366.
+        1. Return 365.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause>
+      <h1>get Temporal.Date.prototype.daysInMonth</h1>
+      <p>
+        Temporal.Date.prototype.daysInMonth is an accessor property whose set accessor function is undefined.
+        Its get accessor function performs the following steps:
+      </p>
+      <emu-alg>
+        1. Let _date_ be the *this* value.
+        1. If Type(_date_) is not Object or _date_ does not have an [[InitializedTemporalDate]] internal slot, then
+          1. Throw a *TypeError* exception.
+        1. Return DaysInMonth(_date_.[[Year]], _date_.[[Month]]).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause>
+      <h1>get Temporal.Date.prototype.leapYear</h1>
+      <p>
+        Temporal.Date.prototype.leapYear is an accessor property whose set accessor function is undefined.
+        Its get accessor function performs the following steps:
+      </p>
+      <emu-alg>
+        1. Let _date_ be the *this* value.
+        1. If Type(_date_) is not Object or _date_ does not have an [[InitializedTemporalDate]] internal slot, then
+          1. Throw a *TypeError* exception.
+        1. Return ! IsLeapYear(_date_.[[Year]]) is *true*.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause>
+      <h1>Temporal.Date.prototype.getYearMonth ( )</h1>
       <p>
         The following steps are taken:
       </p>
@@ -190,7 +242,7 @@ CivilDate.compare()?
     </emu-clause>
 
     <emu-clause>
-      <h1>Temporal.Date.prototype.getMonthDay()</h1>
+      <h1>Temporal.Date.prototype.getMonthDay ( )</h1>
       <p>
         The following steps are taken:
       </p>
@@ -203,7 +255,7 @@ CivilDate.compare()?
     </emu-clause>
 
     <emu-clause>
-      <h1>Temporal.Date.prototype.plus( _duration_ )</h1>
+      <h1>Temporal.Date.prototype.plus ( _duration_, _disambiguation_ )</h1>
       <p>
         The `plus` method takes one argument _duration_.
         The following steps are taken:
@@ -214,6 +266,7 @@ CivilDate.compare()?
           1. Throw a *TypeError* exception.
         1. Let _duration_ be ? ToDurationLike(_duration_).
         1. <mark>TODO: Throw if any time properties are present?</mark>
+        1. Let _disambiguation_ be ? ToString(_disambiguation_).
         1. If _duration_.[[Year]] is not *undefined*, then
           1. Let _y_ be _date_.[[Year]] + _duration_.[[Year]].
         1. Else
@@ -226,13 +279,13 @@ CivilDate.compare()?
           1. Let _y_ be _date_.[[Day]] + _duration_.[[Day]].
         1. Else
           1. Let _y_ be _date_.[[Day]].
-        1. Regulate the _y_, _m_, and _d_ values using Gregorian pro-leptic calendar calculations.
-        1. Return CreateDate(_y_, _m_, _d_).
+        1. Let _result_ be ? RegulateDate(_y_, _m_, _d_, _disambiguation_).
+        1. Return ? CreateDate(result.[[Year]], result.[[Month]], result.[[Day]]).
       </emu-alg>
     </emu-clause>
 
     <emu-clause>
-      <h1>Temporal.Date.prototype.minus( _duration_ )</h1>
+      <h1>Temporal.Date.prototype.minus ( _duration_ )</h1>
       <p>
         The `plus` method takes one argument _duration_.
         The following steps are taken:
@@ -243,6 +296,7 @@ CivilDate.compare()?
           1. Throw a *TypeError* exception.
         1. Let _duration_ be ? ToDurationLike(_duration_).
         1. <mark>TODO: Throw if any time properties are present?</mark>
+        1. Let _disambiguation_ be ? ToString(_disambiguation_).
         1. If _duration_.[[Year]] is not *undefined*, then
           1. Let _y_ be _date_.[[Year]] - _duration_.[[Year]].
         1. Else
@@ -255,41 +309,42 @@ CivilDate.compare()?
           1. Let _y_ be _date_.[[Day]] - _duration_.[[Day]].
         1. Else
           1. Let _y_ be _date_.[[Day]].
-        1. Regulate the _y_, _m_, and _d_ values using Gregorian pro-leptic calendar calculations.
-        1. Return CreateDate(_y_, _m_, _d_).
+        1. Let _result_ be ? RegulateDate(_y_, _m_, _d_, _disambiguation_).
+        1. Return ? CreateDate(result.[[Year]], result.[[Month]], result.[[Day]]).
       </emu-alg>
     </emu-clause>
 
     <emu-clause>
-      <h1>Temporal.Date.prototype.with( _duration_ )</h1>
+      <h1>Temporal.Date.prototype.with ( _otherDate_, _disambiguation_ )</h1>
       <p>
-        The `with` method takes one argument _duration_.
+        The `with` method takes one argument _otherDate_.
         The following steps are taken:
       </p>
       <emu-alg>
         1. Let _date_ be the *this* value.
         1. If Type(_date_) is not Object or _date_ does not have an [[InitializedTemporalDate]] internal slot, then
           1. Throw a *TypeError* exception.
-        1. Let _duration_ be ? ToDateDurationLike(_duration_).
-        1. If _duration_.[[Year]] is not *undefined*, then
-          1. Let _y_ be _duration_.[[Year]].
+        1. Let _otherDate_ be ? ToPartialDate(_otherDate_).
+        1. Let _disambiguation_ be ? ToString(_disambiguation_).
+        1. If _otherDate_.[[Year]] is not *undefined*, then
+          1. Let _y_ be _otherDate_.[[Year]].
         1. Else
           1. Let _y_ be _date_.[[Year]].
-        1. If _duration_.[[Month]] is not *undefined*, then
-          1. Let _m_ be _duration_.[[Month]].
+        1. If _otherDate_.[[Month]] is not *undefined*, then
+          1. Let _m_ be _otherDate_.[[Month]].
         1. Else
           1. Let _m_ be _date_.[[Month]].
-        1. If _duration_.[[Day]] is not *undefined*, then
-          1. Let _d_ be _duration_.[[Day]].
+        1. If _otherDate_.[[Day]] is not *undefined*, then
+          1. Let _d_ be _otherDate_.[[Day]].
         1. Else
           1. Let _d_ be _date_.[[Day]].
-        1. Regulate the _y_, _m_, and _d_ values using Gregorian pro-leptic calendar calculations.
-        1. Return CreateDate(_y_, _m_, _d_).
+        1. Let _result_ be ? RegulateDate(_y_, _m_, _d_, _disambiguation_).
+        1. Return ? CreateDate(result.[[Year]], result.[[Month]], result.[[Day]]).
       </emu-alg>
     </emu-clause>
 
     <emu-clause>
-      <h1>Temporal.Date.prototype.difference( _otherDate_ )</h1>
+      <h1>Temporal.Date.prototype.difference ( _otherDate_ )</h1>
       <p>
         The `difference` method takes one argument _otherDate_.
         The following steps are taken:
@@ -298,10 +353,8 @@ CivilDate.compare()?
         1. Let _date_ be the *this* value.
         1. If Type(_date_) is not Object or _date_ does not have an [[InitializedTemporalDate]] internal slot, then
           1. Throw a *TypeError* exception.
-        1. Let _otherDate_ be ? ToDateLike(_otherDate_).
-        1. If one of _otherDate_.[[Year]], _otherDate_.[[Month]], and _otherDate_.[[Day]] is *undefined*, then
-          1. Throw a *TypeError* exception.
-        1. <mark>TODO: Should this just take an actual Temporal.Date?</mark>
+        1. Let _otherDate_ be ? ToDate(_otherDate_).
+        1. Let _disambiguation_ be ? ToString(_disambiguation_).
         1. If ! ValidateDate(_otherDate_.[[Year]], _otherDate_.[[Month]], _otherDate_.[[Day]]) is *false*, then
           1. Throw a *TypeError* exception.
         1. <mark>TODO: Throw if any time properties are present?</mark>
@@ -323,7 +376,7 @@ CivilDate.compare()?
     </emu-clause>
 
     <emu-clause>
-      <h1>Temporal.Date.prototype.withTime( _time_ )</h1>
+      <h1>Temporal.Date.prototype.withTime ( _time_ )</h1>
       <p>
         The `withTime` method takes one argument _time_.
         The following steps are taken:
@@ -334,6 +387,7 @@ CivilDate.compare()?
           1. Throw a *TypeError* exception.
         1. Let _time_ be ? ToTimeLike(_time_).
         1. <mark>TODO: Should this take a Temporal.Time instead?</mark>
+        1. Let _disambiguation_ be ? ToString(_disambiguation_).
         1. If any of _time_.[[Hour]], _time_.[[Minute]], _time_.[[Second]], _time_.[[Millisecond]], _time_.[[Microsecond]], or _time_.[[Nanosecond]] is *undefined*, then
           1. <mark>TODO: Merge into ToTimeLike?</mark>
           1. Throw a *TypeError* exception.
@@ -344,7 +398,7 @@ CivilDate.compare()?
     </emu-clause>
 
     <emu-clause>
-      <h1>Temporal.Date.prototype.toString()</h1>
+      <h1>Temporal.Date.prototype.toString ( )</h1>
       <p>
         The following steps are taken:
       </p>
@@ -360,7 +414,7 @@ CivilDate.compare()?
     </emu-clause>
 
     <emu-clause>
-      <h1>Temporal.Date.prototype.toJSON()</h1>
+      <h1>Temporal.Date.prototype.toJSON ( )</h1>
       <p><mark>TODO: Share with toString().</mark></p>
       <p>
         The following steps are taken:
@@ -393,7 +447,7 @@ CivilDate.compare()?
     <h1>Abstract operations</h1>
 
     <emu-clause id=sec-temporal-date-create aoid=CreateDate>
-      <h1>CreateDate ( _y_, _m_, _d_ [, _newTarget_] )</h1>
+      <h1>CreateDate ( _y_, _m_, _d_ [ , _newTarget_ ] )</h1>
       <emu-alg>
         1. Assert: ! ValidateDate(_y_, _m_, _d_) is *true*.
         1. If _newTarget_ is not given, set it to %Temporal.Date%
@@ -402,6 +456,110 @@ CivilDate.compare()?
         1. Set _object_.[[Month]] to _m_.
         1. Set _object_.[[Day]] to _d_.
         1. Return _object_.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id=sec-temporal-ToDate aoid=ToDate>
+      <h1>ToDate ( _date_ )</h1>
+      <emu-alg>
+        1. Let _result_ be {
+          [[Year]]: *undefined*,
+          [[Month]]: *undefined*,
+          [[Day]]: *undefined*,
+          }.
+        1. <mark>TODO: Handle strings?</mark>
+        1. If Type(_date_) is not Object, then
+          1. Throw a *TypeError* exception.
+        1. For each row of <emu-xref href="#table-temporal-datelike-properties"></emu-xref>, except the header row, in table order, do
+          1. Let _property_ be the Property value of the current row.
+          1. Let _value_ be ? Get(_date_, _property_).
+          1. If _value_ is *undefined*, then
+            1. Throw a *TypeError* exception.
+          1. Let _value_ be ? TemporalToInteger().
+          1. Set _result_'s internal slot whose name is the Internal Slot value of the current row to _value_.
+        1. Return _result_.
+      </emu-alg>
+
+    <emu-clause id=sec-temporal-ToPartialDate aoid=ToPartialDate>
+      <h1>ToPartialDate ( _date_ )</h1>
+      <emu-alg>
+        1. Let _result_ be {
+          [[Year]]: *undefined*,
+          [[Month]]: *undefined*,
+          [[Day]]: *undefined*,
+          }.
+        1. If Type(_date_) is Undefined or Null, then
+          1. Return _result_.
+        1. <mark>TODO: Handle strings?</mark>
+        1. If Type(_date_) is not Object, then
+          1. Throw a *TypeError* exception.
+        1. For each row of <emu-xref href="#table-temporal-datelike-properties"></emu-xref>, except the header row, in table order, do
+          1. Let _property_ be the Property value of the current row.
+          1. Let _value_ be ? TemporalToInteger(? Get(_date_, _property_)).
+          1. Set _result_'s internal slot whose name is the Internal Slot value of the current row to _value_.
+        1. Return _result_.
+      </emu-alg>
+
+      <emu-table id="table-temporal-datelike-properties">
+        <emu-caption>Properties of a DateLike</emu-caption>
+        <table class="real-table">
+          <thead>
+            <tr>
+              <th>Internal Slot</th>
+              <th>Property</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>[[Day]]</td>
+              <td>`"day"`</td>
+            </tr>
+            <tr>
+              <td>[[Month]]</td>
+              <td>`"month"`</td>
+            </tr>
+            <tr>
+              <td>[[Year]]</td>
+              <td>`"year"`</td>
+            </tr>
+          </tbody>
+        </table>
+      </emu-table>
+    </emu-clause>
+
+    <emu-clause id=sec-temporal-RegulateDate aoid=RegulateDate>
+      <h1>RegulateDate ( _y_, _m_, _d_, _disambiguation_ )</h1>
+      <emu-alg>
+        1. <mark>TODO: consult _disambiguation_.</mark>
+        1. If ! ValidateDate(_y_, _m_, _d_) is *false*, then
+          1. Throw a *RangeError* exception.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id=sec-temporal-ValidateDate aoid=ValidateDate>
+      <h1>ValidateDate ( _y_, _m_, _d_ )</h1>
+      <emu-alg>
+        1. Assert: _y_, _m_, and _d_ are integer Number values.
+        1. If _m_ &lt; 1 or _m_ &gt; 12, then
+          1. Return *false*.
+        1. Let _maxDay_ be DaysInMonth(_y_, _m_).
+        1. If _d_ &lt; 1 or _d_ &gt; _maxDay_, then
+          1. Return *false*.
+        1. Return *true*.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id=sec-temporal-PadYear aoid=PadYear>
+      <h1>PadYear ( _y_ )</h1>
+      <emu-alg>
+        1. Assert: _y_ is an integer Number value.
+        1. If _y_ &gt; 999 and _y_ &lt; 9999, then
+          1. <mark>TODO: Why is this different?</mark>
+          1. <mark>TODO: Should be &le; 9999?</mark>
+          1. Return _y_ formatted as a four-digit decimal number, padded to the left with a zero if necessary.
+        1. If _y_ &ge; 0, let _yearSign_ be `"+"`; otherwise, let _yearSign_ be `"-"`.
+        1. Let _year_ be abs(_y_), formatted as a decimal number.
+        1. Return the string-concatenation of _yearSign_ and _year_.
       </emu-alg>
     </emu-clause>
   </emu-clause>
