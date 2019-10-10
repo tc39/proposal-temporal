@@ -26,8 +26,7 @@ import {
 export function absolute(arg, aux) {
   const Absolute = ES.GetIntrinsic('%Temporal.Absolute%');
   if (HasSlot(arg, EPOCHNANOSECONDS)) {
-    if (arg instanceof Absolute) return arg;
-    return new Absolute(GetSlot(arg, EPOCHNANOSECONDS));
+    return arg;
   }
   if (HasSlot(arg, YEAR, MONTH, DAY, HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND)) {
     const tz = timezone(aux);
@@ -46,18 +45,7 @@ export function absolute(arg, aux) {
 export function datetime(arg, aux) {
   const DateTime = ES.GetIntrinsic('%Temporal.DateTime%');
   if (HasSlot(arg, YEAR, MONTH, DAY, HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND)) {
-    if (arg instanceof DateTime) return arg;
-    return new DateTime(
-      GetSlot(arg, YEAR),
-      GetSlot(arg, MONTH),
-      GetSlot(arg, DAY),
-      GetSlot(arg, HOUR),
-      GetSlot(arg, MINUTE),
-      GetSlot(arg, SECOND),
-      GetSlot(arg, MILLISECOND),
-      GetSlot(arg, MICROSECOND),
-      GetSlot(arg, NANOSECOND)
-    );
+    return arg;
   }
   if (HasSlot(arg, EPOCHNANOSECONDS)) return arg.inZone(aux);
   if (HasSlot(arg, YEAR, MONTH, DAY) && HasSlot(aux, HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND)) {
@@ -98,7 +86,7 @@ export function datetime(arg, aux) {
 export function date(arg, aux) {
   const Date = ES.GetIntrinsic('%Temporal.Date%');
   if (HasSlot(arg, YEAR, MONTH, DAY)) {
-    if (arg instanceof Date) return Date;
+    if (!HasSlot(arg, HOUR)) return Date;
     return new Date(GetSlot(arg, YEAR), GetSlot(arg, MONTH), GetSlot(arg, DAY));
   }
   if ('string' === typeof arg) {
@@ -121,7 +109,7 @@ export function date(arg, aux) {
 export function time(arg, aux) {
   const Time = ES.GetIntrinsic('%Temporal.Time%');
   if (HasSlot(arg, HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND)) {
-    if (arg instanceof Time) return arg;
+    if (HasSlot(arg, MONTH)) return arg;
     return new Time(
       GetSlot(arg, HOUR),
       GetSlot(arg, MINUTE),
@@ -151,7 +139,7 @@ export function time(arg, aux) {
 export function yearmonth(arg, aux) {
   const YearMonth = ES.GetIntrinsic('%Temporal.YearMonth%');
   if (HasSlot(arg, YEAR, MONTH)) {
-    if (arg instanceof YearMonth) return arg;
+    if (!HasSlot(arg, DAY)) return arg;
     return new YearMonth(GetSlot(arg, year), GetSlot(arg, MONTH));
   }
   if ('string' === typeof arg) {
@@ -174,7 +162,7 @@ export function yearmonth(arg, aux) {
 export function monthday(arg) {
   const MonthDay = ES.GetIntrinsic('%Temporal.MonthDay%');
   if (HasSlot(arg, MONTH, DAY)) {
-    if (arg instanceof MonthDay) return arg;
+    if (!HasSlot(arg, YEAR)) return arg;
     return new MonthDay(GetSlot(arg, MONTH), GetSlot(arg, DAY));
   }
   if ('string' === typeof arg) {
@@ -198,17 +186,6 @@ export function duration(arg) {
   const Duration = ES.GetIntrinsic('%Temporal.Duration%');
   if (HasSlot(arg, YEARS, MONTHS, DAYS, HOURS, MINUTES, SECONDS, MILLISECONDS, MICROSECONDS, NANOSECONDS)) {
     if (arg instanceof Duration) return arg;
-    return new Duration(
-      GetSlot(arg, YEARS),
-      GetSlot(arg, MONTHS),
-      GetSlot(arg, DAYS),
-      GetSlot(arg, HOURS),
-      GetSlot(arg, MINUTES),
-      GetSlot(arg, SECONDS),
-      GetSlot(arg, MILLISECONDS),
-      GetSlot(arg, MICROSECONDS),
-      GetSlot(arg, NANOSECONDS)
-    );
   }
   if ('string' === typeof arg) {
     try {
@@ -237,8 +214,7 @@ export function duration(arg) {
 export function timezone(arg) {
   const TimeZone = ES.GetIntrinsic('%Temporal.TimeZone%');
   if (HasSlot(arg, IDENTIFIER)) {
-    if (arg instanceof TimeZone) return arg;
-    return new TimeZone(String(arg));
+    return arg;
   }
   return new TimeZone(`${arg}`);
 }
