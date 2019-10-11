@@ -130,7 +130,6 @@ export class Duration {
       milliseconds,
       microseconds,
       nanoseconds,
-      'reject'
     );
   }
   static from(...args) {
