@@ -121,7 +121,8 @@ export class Duration {
     const milliseconds = ES.ToInteger(match[7]);
     const microseconds = ES.ToInteger(match[8]);
     const nanoseconds = ES.ToInteger(match[9]);
-    return new ES.GetIntrinsic('%Temporal.Duration%')(
+    const Duration = ES.GetIntrinsic('%Temporal.Duration%');
+    return new Duration(
       years,
       months,
       days,

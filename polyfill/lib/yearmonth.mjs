@@ -101,7 +101,8 @@ export class YearMonth {
     if (!match) throw new RangeError(`invalid yearmonth: ${isoString}`);
     const year = ES.ToInteger(match[1]);
     const month = ES.ToInteger(match[2]);
-    return new ES.GetIntrinsic('%Temporal.YearMonth%')(year, month, 'reject');
+    const YearMonth = ES.GetIntrinsic('%Temporal.YearMonth%');
+    return new YearMonth(year, month, 'reject');
   }
   static from(...args) {
     return ES.GetIntrinsic('%Temporal.yearmonth%')(...args);

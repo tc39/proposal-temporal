@@ -131,7 +131,8 @@ export class Date {
     const year = ES.ToInteger(match[1]);
     const month = ES.ToInteger(match[2]);
     const day = ES.ToInteger(match[3]);
-    return new ES.GetIntrinsic('%Temporal.Date%')(year, month, day, 'reject');
+    const Date = ES.GetIntrinsic('%Temporal.Date%');
+    return new Date(year, month, day, 'reject');
   }
   static from(...args) {
     return ES.GetIntrinsic('%Temporal.date%')(...args);

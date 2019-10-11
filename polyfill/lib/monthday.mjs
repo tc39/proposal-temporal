@@ -99,7 +99,8 @@ export class MonthDay {
     if (!match) throw new RangeError(`invalid monthday: ${isoString}`);
     const month = ES.ToInteger(match[1]);
     const day = ES.ToInteger(match[2]);
-    return new ES.GetIntrinsic('%Temporal.MonthDay%')(month, day, 'reject');
+    const MonthDay = ES.GetIntrinsic('%Temporal.MonthDay%');
+    return new MonthDay(month, day, 'reject');
   }
   static from(...args) {
     return ES.GetIntrinsic('%Temporal.monthday%')(...args);

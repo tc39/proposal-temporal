@@ -107,7 +107,8 @@ export class Absolute {
     ns = twons - onens;
     ms = twoms - onems;
 
-    const duration = new ES.GetIntrinsic('%Temporal.Duration%')(delta);
+    const Duration = ES.GetIntrinsic('%Temporal.Duration%');
+    const duration = new Duration(delta);
     return duration;
   }
   toString(timeZoneParam = 'UTC') {

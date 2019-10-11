@@ -200,7 +200,8 @@ export class Time {
     const millisecond = ES.ToInteger(match[4]);
     const microsecond = ES.ToInteger(match[5]);
     const nanosecond = ES.ToInteger(match[6]);
-    return new ES.GetIntrinsic('%Temporal.Time%')(hour, minute, second, millisecond, microsecond, nanosecond, 'reject');
+    const Timer = ES.GetIntrinsic('%Temporal.Time%');
+    return new Time(hour, minute, second, millisecond, microsecond, nanosecond, 'reject');
   }
   static from(...args) {
     return ES.GetIntrinsic('%Temporal.time%')(...args);
