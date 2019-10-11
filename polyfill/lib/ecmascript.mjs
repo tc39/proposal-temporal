@@ -266,7 +266,7 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
 
     const dow = (pD + pM + pY + pC) % 7;
 
-    return dow + (dow < 0 ? 7 : 0);
+    return dow + (dow <= 0 ? 7 : 0);
   },
   DayOfYear: (year, month, day) => {
     let days = day;
