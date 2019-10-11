@@ -30,7 +30,7 @@ export class YearMonth {
     return GetSlot(this, MONTH);
   }
   get daysInMonth() {
-    return ES.DaysInMonth(GetSlot(this, THIS).year, GetSlot(this, MONTH));
+    return ES.DaysInMonth(GetSlot(this, YEAR), GetSlot(this, MONTH));
   }
   get leapYear() {
     return ES.LeapYear(GetSlot(this, YEAR));
