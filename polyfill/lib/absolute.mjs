@@ -1,4 +1,5 @@
 import { ES } from './ecmascript.mjs';
+import { MakeIntrinsicClass } from './intrinsicclass.mjs';
 import {
   EPOCHNANOSECONDS,
   CreateSlots,
@@ -210,4 +211,4 @@ if ('undefined' !== typeof Symbol) {
   });
 }
 
-ES.MakeIntrinsicClass(Absolute);
+MakeIntrinsicClass(Absolute);

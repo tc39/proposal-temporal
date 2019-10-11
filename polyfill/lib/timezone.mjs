@@ -1,4 +1,5 @@
 import { ES } from './ecmascript.mjs';
+import { MakeIntrinsicClass } from './intrinsicclass.mjs';
 import { IDENTIFIER, EPOCHNANOSECONDS, CreateSlots, GetSlot, SetSlot } from './slots.mjs';
 import { ZONES } from './zones.mjs';
 import { timezone as STRING } from './regex.mjs';
@@ -146,4 +147,4 @@ if ('undefined' !== typeof Symbol) {
   });
 }
 TimeZone.prototype.toJSON = TimeZone.prototype.toString;
-ES.MakeIntrinsicClass(TimeZone);
+MakeIntrinsicClass(TimeZone);

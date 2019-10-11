@@ -1,5 +1,5 @@
 import { ES } from './ecmascript.mjs';
-
+import { MakeIntrinsicClass } from './intrinsicclass.mjs';
 import { datetime as STRING } from './regex.mjs';
 
 import {
@@ -317,4 +317,4 @@ if ('undefined' !== typeof Symbol) {
     value: 'Temporal.DateTime'
   });
 }
-ES.MakeIntrinsicClass(DateTime);
+MakeIntrinsicClass(DateTime);

@@ -1,4 +1,5 @@
 import { ES } from './ecmascript.mjs';
+import { MakeIntrinsicClass } from './intrinsicclass.mjs';
 import { MONTH, DAY, CreateSlots, GetSlot, SetSlot } from './slots.mjs';
 
 import { monthday as RAW } from './regex.mjs';
@@ -117,4 +118,4 @@ if ('undefined' !== typeof Symbol) {
     value: 'Temporal.MonthDay'
   });
 }
-ES.MakeIntrinsicClass(MonthDay);
+MakeIntrinsicClass(MonthDay);
