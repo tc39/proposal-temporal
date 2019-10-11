@@ -1,4 +1,7 @@
 language: node_js
 node_js: 12
+before_install:
+  - cd polyfill/
 script:
-  - node --experimental-modules ./polyfill/test/regex.mjs
+  - node --experimental-modules ./test/regex.mjs
+  - node --experimental-modules ./test/date.mjs
