@@ -143,4 +143,4 @@ if ('undefined' !== typeof Symbol) {
     value: 'Temporal.Duration'
   });
 }
-ES.MakeInstrinsicClass(Duration);
+ES.MakeIntrinsicClass(Duration);

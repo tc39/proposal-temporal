@@ -119,4 +119,4 @@ if ('undefined' !== typeof Symbol) {
     value: 'Temporal.YearMonth'
   });
 }
-ES.MakeInstrinsicClass(YearMonth);
+ES.MakeIntrinsicClass(YearMonth);

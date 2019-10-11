@@ -37,10 +37,10 @@ export class Date {
     return ES.DayOfWeek(GetSlot(this, THIS).year, GetSlot(this, THIS).month, GetSlot(this, DAY));
   }
   get dayOfYear() {
-    return ES.DayOfYear(GetSlot(this, THIS).year, GetSlot(this, THIS).month, GetSlot(this, DAY));
+    return ES.DayOfYear(GetSlot(this, YEAR), GetSlot(this, MONTH), GetSlot(this, DAY));
   }
   get weekOfYear() {
-    return ES.WeekOfYear(GetSlot(this, THIS).year, GetSlot(this, THIS).month, GetSlot(this, DAY));
+    return ES.WeekOfYear(GetSlot(this, YEAR), GetSlot(this, MONTH), GetSlot(this, DAY));
   }
   get daysInYear() {
     return ES.LeapYear(GetSlot(this, YEAR)) ? 366 : 365;
@@ -152,4 +152,4 @@ if ('undefined' !== typeof Symbol) {
   });
 }
 
-ES.MakeInstrinsicClass(Date);
+ES.MakeIntrinsicClass(Date);

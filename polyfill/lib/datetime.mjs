@@ -317,4 +317,4 @@ if ('undefined' !== typeof Symbol) {
     value: 'Temporal.DateTime'
   });
 }
-ES.MakeInstrinsicClass(DateTime);
+ES.MakeIntrinsicClass(DateTime);
