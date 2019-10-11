@@ -280,7 +280,7 @@ export class DateTime {
     const millisecond = ES.ToInteger(match[7]);
     const microsecond = ES.ToInteger(match[8]);
     const nanosecond = ES.ToInteger(match[9]);
-    return new ES.GetIntrinsic('%Temporal.DateTime%')(
+    return ES.GetIntrinsic('%Temporal.DateTime%')(
       year,
       month,
       day,
