@@ -266,7 +266,7 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
 
     const dow = (pD + pM + pY + pC) % 7;
 
-    return dow + (dow < 0 ? 7 : 0);
+    return dow + (dow <= 0 ? 7 : 0);
   },
   DayOfYear: (year, month, day) => {
     let days = day;
@@ -578,20 +578,6 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
     return ES.ToTimeZone(fmt.resolvedOptions().timeZone);
   },
   ComparisonResult: (value) => (value < 0 ? -1 : value > 0 ? 1 : value),
-  MakeIntrinsicClass: (cls) => {
-    for (let prop of Object.getOwnPropertyNames(cls)) {
-      const desc = Object.getOwnPropertyDescriptor(cls[prop]);
-      if (!desc.configurable || !desc.enumerable) continue;
-      desc.enumerable = false;
-      Object.defineProperty(cls, prop, desc);
-    }
-    for (let prop of Object.getOwnPropertyNames(cls.prototype)) {
-      const desc = Object.getOwnPropertyDescriptor(cls.prototype[prop]);
-      if (!desc.configurable || !desc.enumerable) continue;
-      desc.enumerable = false;
-      Object.defineProperty(cls.prototype, prop, desc);
-    }
-  }
 });
 
 import * as REGEX from './regex.mjs';

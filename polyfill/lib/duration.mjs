@@ -1,4 +1,5 @@
 import { ES } from './ecmascript.mjs';
+import { MakeIntrinsicClass } from './intrinsicclass.mjs';
 import {
   YEARS,
   MONTHS,
@@ -143,4 +144,4 @@ if ('undefined' !== typeof Symbol) {
     value: 'Temporal.Duration'
   });
 }
-ES.MakeIntrinsicClass(Duration);
+MakeIntrinsicClass(Duration);

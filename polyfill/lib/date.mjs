@@ -1,4 +1,5 @@
 import { ES } from './ecmascript.mjs';
+import { MakeIntrinsicClass } from './intrinsicclass.mjs';
 import { YEAR, MONTH, DAY, CreateSlots, GetSlot, SetSlot } from './slots.mjs';
 
 import { date as STRING } from './regex.mjs';
@@ -34,7 +35,7 @@ export class Date {
     return GetSlot(this, DAY);
   }
   get dayOfWeek() {
-    return ES.DayOfWeek(GetSlot(this, THIS).year, GetSlot(this, THIS).month, GetSlot(this, DAY));
+    return ES.DayOfWeek(GetSlot(this, YEAR), GetSlot(this, MONTH), GetSlot(this, DAY));
   }
   get dayOfYear() {
     return ES.DayOfYear(GetSlot(this, YEAR), GetSlot(this, MONTH), GetSlot(this, DAY));
@@ -152,4 +153,4 @@ if ('undefined' !== typeof Symbol) {
   });
 }
 
-ES.MakeIntrinsicClass(Date);
+MakeIntrinsicClass(Date);

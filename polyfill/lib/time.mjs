@@ -1,4 +1,5 @@
 import { ES } from './ecmascript.mjs';
+import { MakeIntrinsicClass } from './intrinsicclass.mjs';
 
 import { HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND, CreateSlots, GetSlot, SetSlot } from './slots.mjs';
 
@@ -222,4 +223,4 @@ if ('undefined' !== typeof Symbol) {
     value: 'Temporal.Time'
   });
 }
-ES.MakeIntrinsicClass(Time);
+MakeIntrinsicClass(Time);
