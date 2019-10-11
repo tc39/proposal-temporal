@@ -86,7 +86,7 @@ export class Time {
     return new Time(hour, minute, second, millisecond, microsecond, nanosecond, disambiguation);
   }
   plus(durationLike) {
-    const duration = ES.GetIntrinsic('%Temporal.duration%')(durationLike);
+    const duration = ES.GetIntrinsic('%Temporal.Duration%')(durationLike);
     let { hour, minute, second, millisecond, microsecond, nanosecond } = this;
     let { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
     if (years !== 0 || months !== 0 || days !== 0) throw new RangeError('invalid duration');
@@ -121,7 +121,7 @@ export class Time {
     return new Time(hour, minute, second, millisecond, microsecond, nanosecond);
   }
   minus(durationLike) {
-    const duration = ES.GetIntrinsic('%Temporal.duration%')(durationLike);
+    const duration = ES.GetIntrinsic('%Temporal.Duration%')(durationLike);
     let { hour, minute, second, millisecond, microsecond, nanosecond } = this;
     let { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
     if (years !== 0 || months !== 0 || days !== 0) throw new RangeError('invalid duration');
@@ -156,7 +156,7 @@ export class Time {
     return new Time(hour, minute, second, millisecond, microsecond, nanosecond);
   }
   difference(other = {}) {
-    other = ES.GetIntrinsic('%Temporal.time%')(other);
+    other = ES.GetIntrinsic('%Temporal.Time%')(other);
     const [one, two] = [this, other].sort(Time.compare);
     const hours = two.hour - one.hour;
     const minutes = two.minute - one.minute;
@@ -184,7 +184,7 @@ export class Time {
   }
 
   withDate(dateLike = {}, disambiguation = 'constrain') {
-    let { year, month, day } = ES.GetIntrinsic('%Temporal.date%')(dateLike);
+    let { year, month, day } = ES.GetIntrinsic('%Temporal.Date%')(dateLike);
     let { hour, minute, second, millisecond, microsecond, nanosecond } = this;
     const DateTime = ES.GetIntrinsic('%Temporal.DateTime%');
     return new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, disambiguation);
@@ -203,11 +203,11 @@ export class Time {
     return ES.GetIntrinsic('%Temporal.Time%')(hour, minute, second, millisecond, microsecond, nanosecond, 'reject');
   }
   static from(...args) {
-    return ES.GetIntrinsic('%Temporal.time%')(...args);
+    return ES.GetIntrinsic('%Temporal.Time%')(...args);
   }
   static compare(one, two) {
-    one = ES.GetIntrinsic('%Temporal.time%')(one);
-    two = ES.GetIntrinsic('%Temporal.time%')(two);
+    one = ES.GetIntrinsic('%Temporal.Time%')(one);
+    two = ES.GetIntrinsic('%Temporal.Time%')(two);
     if (one.hour !== two.hour) return ES.ComparisonResult(one.hour - two.hour);
     if (one.minute !== two.minute) return ES.ComparisonResult(one.minute - two.minute);
     if (one.second !== two.second) return ES.ComparisonResult(one.second - two.second);

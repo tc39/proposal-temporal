@@ -37,7 +37,7 @@ export class MonthDay {
     return new MonthDay(month, day, disambiguation);
   }
   plus(durationLike = {}, disambiguation = 'constrain') {
-    const duration = ES.GetIntrinsic('%Temporal.duration')(durationLike);
+    const duration = ES.GetIntrinsic('%Temporal.Duration')(durationLike);
     let { month, day } = this;
     let { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
     if (
@@ -55,7 +55,7 @@ export class MonthDay {
     return new MonthDay(month, day);
   }
   minus(durationLike = {}, disambiguation = 'constrain') {
-    const duration = ES.GetIntrinsic('%Temporal.duration')(durationLike);
+    const duration = ES.GetIntrinsic('%Temporal.Duration')(durationLike);
     let { year, month, day } = this;
     let { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
     if (hours !== 0 || minutes !== 0 || seconds !== 0 || milliseconds !== 0 || microseconds !== 0 || nanoseconds !== 0)
@@ -65,7 +65,7 @@ export class MonthDay {
     return new MonthDay(month, day);
   }
   difference(other, disambiguation = 'constrain') {
-    other = ES.GetIntrinsic('%Temporal.monthday')(other);
+    other = ES.GetIntrinsic('%Temporal.MonthDay')(other);
     const [one, two] = [this, other].sort(MonthDay.compare);
     let months = two.month - one.month;
     let days = (two.days = one.days);
@@ -102,11 +102,11 @@ export class MonthDay {
     return ES.GetIntrinsic('%Temporal.MonthDay%')(month, day, 'reject');
   }
   static from(...args) {
-    return ES.GetIntrinsic('%Temporal.monthday%')(...args);
+    return ES.GetIntrinsic('%Temporal.MonthDay%')(...args);
   }
   static compare(one, two) {
-    one = ES.GetIntrinsic('%Temporal.monthday')(one);
-    two = ES.GetIntrinsic('%Temporal.monthday')(two);
+    one = ES.GetIntrinsic('%Temporal.MonthDay')(one);
+    two = ES.GetIntrinsic('%Temporal.MonthDay')(two);
     if (one.month !== two.month) return ES.ComparisonResult(one.month - two.month);
     if (one.day !== two.day) return ES.ComparisonResult(one.day - two.day);
     return ES.ComparisonResult(0);
