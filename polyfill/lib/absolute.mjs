@@ -210,4 +210,4 @@ if ('undefined' !== typeof Symbol) {
   });
 }
 
-ES.MakeInstrinsicClass(Absolute);
+ES.MakeIntrinsicClass(Absolute);

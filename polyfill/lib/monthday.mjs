@@ -117,4 +117,4 @@ if ('undefined' !== typeof Symbol) {
     value: 'Temporal.MonthDay'
   });
 }
-ES.MakeInstrinsicClass(MonthDay);
+ES.MakeIntrinsicClass(MonthDay);

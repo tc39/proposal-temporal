@@ -146,4 +146,4 @@ if ('undefined' !== typeof Symbol) {
   });
 }
 TimeZone.prototype.toJSON = TimeZone.prototype.toString;
-ES.MakeInstrinsicClass(TimeZone);
+ES.MakeIntrinsicClass(TimeZone);

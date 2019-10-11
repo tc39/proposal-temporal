@@ -222,4 +222,4 @@ if ('undefined' !== typeof Symbol) {
     value: 'Temporal.Time'
   });
 }
-ES.MakeInstrinsicClass(Time);
+ES.MakeIntrinsicClass(Time);
