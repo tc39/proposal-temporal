@@ -19,7 +19,7 @@ if ('undefined' === typeof Symbol) {
 }
 
 import { ES } from './ecmascript.mjs';
-import { EPOCHNANOSECONDS, CreateSlots, SetSlot } from './slots.mjs';
+import { EPOCHNANOSECONDS, CreateSlots, SetSlot, HasSlot } from './slots.mjs';
 
 export const Absolute = ES.GetIntrinsic('%Temporal.Absolute%');
 export const TimeZone = ES.GetIntrinsic('%Temporal.TimeZone%');

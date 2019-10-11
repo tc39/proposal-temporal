@@ -81,7 +81,7 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
     const offset = parseOffsetString(timeZoneIdentifier);
     if (offset !== null) return makeOffsetString(offset);
     const formatter = new IntlDateTimeFormat('en-us', {
-      timeZone: timeZoneIdentifier,
+      timeZone: String(timeZoneIdentifier),
       hour12: false,
       year: 'numeric',
       month: 'numeric',
@@ -577,7 +577,7 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
     const fmt = new IntlDateTimeFormat('en-us');
     return ES.ToTimeZone(fmt.resolvedOptions().timeZone);
   },
-  ComparisonResult: (value) => (value < 0 ? -1 : value > 0 ? 1 : value),
+  ComparisonResult: (value) => (value < 0 ? -1 : value > 0 ? 1 : value)
 });
 
 import * as REGEX from './regex.mjs';

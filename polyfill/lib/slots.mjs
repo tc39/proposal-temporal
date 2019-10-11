@@ -43,9 +43,9 @@ function GetSlots(container) {
   }
 }
 export function HasSlot(container, ...ids) {
-  if (!container || 'object' === typeof container) return false;
-  const slots = GetSlots(container);
-  return !!slots && ids.reduce((all, id) => all && id in slots, true);
+  if (!container || 'object' !== typeof container) return false;
+  const myslots = GetSlots(container);
+  return !!myslots && ids.reduce((all, id) => all && id in myslots, true);
 }
 export function GetSlot(container, id) {
   return GetSlots(container)[id];

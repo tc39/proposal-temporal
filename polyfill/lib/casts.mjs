@@ -38,7 +38,7 @@ export function absolute(arg, aux) {
       return Absolute.fromString(arg);
     } catch (ex) {}
   }
-  if (Number.isFinite(+arg)) return Absolute.fromEpochMilliseconds(+arg);
+  if (Number.isFinite(arg)) return Absolute.fromEpochMilliseconds(+arg);
   throw RangeError(`invalid absolute value: ${arg}`);
 }
 
