@@ -13,11 +13,11 @@ export class TimeZone {
     return String(GetSlot(this, IDENTIFIER));
   }
   getOffsetFor(absolute) {
-    absolute = ES.GetIntrinsic('%Temporal.absolute%')(absolute);
+    absolute = ES.CastAbsolute(absolute);
     return ES.GetTimeZoneOffsetString(absolute.getEpochMilliseconds(), GetSlot(this, IDENTIFIER));
   }
   getDateTimeFor(absolute) {
-    absolute = ES.GetIntrinsic('%Temporal.absolute%')(absolute);
+    absolute = ES.CastAbsolute(absolute);
     const { ms, ns } = GetSlot(absolute, EPOCHNANOSECONDS);
     const {
       year,
@@ -34,7 +34,7 @@ export class TimeZone {
     return new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
   }
   getAbsoluteFor(dateTime, disambiguation = 'earlier') {
-    dateTime = ES.GetIntrinsic('%Temporal.datetime%')(dateTime);
+    dateTime = ES.CastDateTime(dateTime);
     const Absolute = ES.GetIntrinsic('%Temporal.Absolute%');
     const { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = dateTime;
     const options = ES.GetTimeZoneEpochValue(
@@ -99,7 +99,7 @@ export class TimeZone {
     }
   }
   getTransitions(startingPoint) {
-    startingPoint = ES.GetIntrinsic('%Temporal.absolute%')(startingPoint);
+    startingPoint = ES.CastAbsolute(startingPoint);
     let { ms } = GetSlot(startingPoint, EPOCHNANOSECONDS);
     const Absolute = ES.GetIntrinsic('%Temporal.Absolute%');
     return {
@@ -122,7 +122,7 @@ export class TimeZone {
     return new TimeZone(zone);
   }
   static from(...args) {
-    return ES.GetIntrinsic('%Temporal.timezone%')(...args);
+    return ES.CastTimeZone(...args);
   }
 }
 if ('undefined' !== typeof Symbol) {

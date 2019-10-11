@@ -40,7 +40,7 @@ export class YearMonth {
     return new YearMonth(year, month, disambiguation);
   }
   plus(durationLike = {}, disambiguation = 'constrain') {
-    const duration = ES.GetIntrinsic('%Temporal.duration%')(durationLike);
+    const duration = ES.CastDuration(durationLike);
     let { year, month } = this;
     let { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
     if ((days, hours || minutes || seconds || milliseconds || microseconds || nanoseconds))
@@ -50,7 +50,7 @@ export class YearMonth {
     return new YearMonth(year, month);
   }
   minus(durationLike = {}, disambiguation = 'constrain') {
-    const duration = ES.GetIntrinsic('%Temporal.duration%')(durationLike);
+    const duration = ES.CastDuration(durationLike);
     let { year, month } = this;
     let { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
     if (
@@ -68,7 +68,7 @@ export class YearMonth {
     return new YearMonth(year, month);
   }
   difference(other) {
-    other = ES.GetIntrinsic('%Temporal.yearmonth%')(other);
+    other = ES.CastYearMonth(other);
     const [one, two] = [this, other].sort(DateTime.compare);
     let years = two.year - one.year;
     let months = two.month - one.month;
@@ -105,11 +105,11 @@ export class YearMonth {
     return new YearMonth(year, month, 'reject');
   }
   static from(...args) {
-    return ES.GetIntrinsic('%Temporal.yearmonth%')(...args);
+    return ES.CastYearMonth(...args);
   }
   static compare(one, two) {
-    one = ES.GetIntrinsic('%Temporal.yearmonth%')(one);
-    two = ES.GetIntrinsic('%Temporal.yearmonth%')(two);
+    one = ES.CastYearMonth(one);
+    two = ES.CastYearMonth(two);
     if (one.year !== two.year) return ES.ComparisonResult(one.year - two.year);
     if (one.month !== two.month) return ES.ComparisonResult(one.month - two.month);
     return ES.ComparisonResult(0);

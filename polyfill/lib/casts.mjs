@@ -23,13 +23,13 @@ import {
   NANOSECONDS
 } from './slots.mjs';
 
-export function absolute(arg, aux) {
+export function CastAbsolute(arg, aux) {
   const Absolute = ES.GetIntrinsic('%Temporal.Absolute%');
   if (HasSlot(arg, EPOCHNANOSECONDS)) {
     return arg;
   }
   if (HasSlot(arg, YEAR, MONTH, DAY, HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND)) {
-    const tz = timezone(aux);
+    const tz = CastTimeZone(aux);
     return tz.getAbsoluteFor(arg);
   }
   if ('bigint' === typeof arg) return new Absolute(arg);
@@ -42,7 +42,7 @@ export function absolute(arg, aux) {
   throw RangeError(`invalid absolute value: ${arg}`);
 }
 
-export function datetime(arg, aux) {
+export function CastDateTime(arg, aux) {
   const DateTime = ES.GetIntrinsic('%Temporal.DateTime%');
   if (HasSlot(arg, YEAR, MONTH, DAY, HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND)) {
     return arg;
@@ -79,11 +79,11 @@ export function datetime(arg, aux) {
       return DateTime.fromString(arg);
     } catch (ex) {}
   }
-  if ('bigint' === typeof arg || 'number' === typeof arg || Number.isFinite(+arg)) return absolute(arg).inZone(aux);
+  if ('bigint' === typeof arg || 'number' === typeof arg || Number.isFinite(+arg)) return CastAbsolute(arg).inZone(aux);
   throw new RangeError(`invalid datetime ${arg}`);
 }
 
-export function date(arg, aux) {
+export function CastDate(arg, aux) {
   const Date = ES.GetIntrinsic('%Temporal.Date%');
   if (HasSlot(arg, YEAR, MONTH, DAY)) {
     if (!HasSlot(arg, HOUR)) return Date;
@@ -95,8 +95,7 @@ export function date(arg, aux) {
     } catch (ex) {}
   }
   if ('bigint' === typeof arg || 'number' === typeof arg || Number.isFinite(+arg))
-    return absolute(arg)
-      .getDate()
+    return CastAbsolute(arg)
       .inZone(aux)
       .getDate();
   if ('object' === typeof arg) {
@@ -106,7 +105,7 @@ export function date(arg, aux) {
   throw new RangeError(`invalid date ${arg}`);
 }
 
-export function time(arg, aux) {
+export function CastTime(arg, aux) {
   const Time = ES.GetIntrinsic('%Temporal.Time%');
   if (HasSlot(arg, HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND)) {
     if (HasSlot(arg, MONTH)) return arg;
@@ -125,18 +124,17 @@ export function time(arg, aux) {
     } catch (ex) {}
   }
   if ('bigint' === typeof arg || 'number' === typeof arg || Number.isFinite(+arg))
-    return absolute(arg)
-      .getDate()
+    return CastAbsolute(arg)
       .inZone(aux)
       .getTime();
   if ('object' === typeof arg) {
-    const { hour, minute, second, millisecond, microsecond, nanosecond } = time(arg);
+    const { hour, minute, second, millisecond, microsecond, nanosecond } = arg;
     return new Time(hour, minute, second, millisecond, microsecond, nanosecond);
   }
   throw RangeError(`invalid time value: ${arg}`);
 }
 
-export function yearmonth(arg, aux) {
+export function CastYearMonth(arg, aux) {
   const YearMonth = ES.GetIntrinsic('%Temporal.YearMonth%');
   if (HasSlot(arg, YEAR, MONTH)) {
     if (!HasSlot(arg, DAY)) return arg;
@@ -148,8 +146,7 @@ export function yearmonth(arg, aux) {
     } catch (ex) {}
   }
   if ('bigint' === typeof arg || 'number' === typeof arg || Number.isFinite(+arg))
-    return absolute(arg)
-      .getDate()
+    return CastAbsolute(arg)
       .inZone('UTC')
       .getYearMonth();
   if ('object' === typeof arg) {
@@ -159,7 +156,7 @@ export function yearmonth(arg, aux) {
   throw RangeError(`invalid yearmonth value: ${arg}`);
 }
 
-export function monthday(arg) {
+export function CastMonthDay(arg) {
   const MonthDay = ES.GetIntrinsic('%Temporal.MonthDay%');
   if (HasSlot(arg, MONTH, DAY)) {
     if (!HasSlot(arg, YEAR)) return arg;
@@ -171,8 +168,7 @@ export function monthday(arg) {
     } catch (ex) {}
   }
   if ('bigint' === typeof arg || 'number' === typeof arg || Number.isFinite(+arg))
-    return absolute(arg)
-      .getDate()
+    return CastAbsolute(arg)
       .inZone('UTC')
       .getMonthDay();
   if ('object' === typeof arg) {
@@ -182,7 +178,7 @@ export function monthday(arg) {
   throw RangeError(`invalid monthday value: ${arg}`);
 }
 
-export function duration(arg) {
+export function CastDuration(arg) {
   const Duration = ES.GetIntrinsic('%Temporal.Duration%');
   if (HasSlot(arg, YEARS, MONTHS, DAYS, HOURS, MINUTES, SECONDS, MILLISECONDS, MICROSECONDS, NANOSECONDS)) {
     if (arg instanceof Duration) return arg;
@@ -211,7 +207,7 @@ export function duration(arg) {
   throw new RangeError(`invalid duration value ${arg}`);
 }
 
-export function timezone(arg) {
+export function CastTimeZone(arg) {
   const TimeZone = ES.GetIntrinsic('%Temporal.TimeZone%');
   if (HasSlot(arg, IDENTIFIER)) {
     return arg;

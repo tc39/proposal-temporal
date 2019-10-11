@@ -136,7 +136,7 @@ export class Duration {
     );
   }
   static from(...args) {
-    return ES.GetIntrinsic('%Temporal.duration%')(...args);
+    return ES.CastDuration(...args);
   }
 }
 Duration.prototype.toJSON = Duration.prototype.toString;

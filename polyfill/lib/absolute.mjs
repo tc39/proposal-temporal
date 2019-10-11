@@ -45,7 +45,7 @@ export class Absolute {
   }
 
   plus(durationLike = {}) {
-    const duration = ES.GetIntrinsic('%Temporal.duration%')(durationLike);
+    const duration = ES.CastDuration(durationLike);
     if (GetSlot(duration, YEARS) !== 0) throw new RangeError(`invalid duration field years`);
     if (GetSlot(duration, MONTHS) !== 0) throw new RangeError(`invalid duration field months`);
 
@@ -74,7 +74,7 @@ export class Absolute {
     return result;
   }
   minus(durationLike = {}) {
-    const duration = ES.GetIntrinsic('%Temporal.duration%')(durationLike);
+    const duration = ES.CastDuration(durationLike);
     if (GetSlot(duration, YEARS) !== 0) throw new RangeError(`invalid duration field years`);
     if (GetSlot(duration, MONTHS) !== 0) throw new RangeError(`invalid duration field months`);
 
@@ -98,7 +98,7 @@ export class Absolute {
     return result;
   }
   difference(other) {
-    other = ES.GetIntrinsic('%Temporal.absolute%')(other);
+    other = ES.CastAbsolute(other);
 
     const [one, two] = [this, other].sort(Absoulte.compare);
     const { ms: onems, ns: onens } = GetSlot(one, EPOCHNANOSECONDS);
@@ -112,7 +112,7 @@ export class Absolute {
     return duration;
   }
   toString(timeZoneParam = 'UTC') {
-    let timeZone = ES.GetIntrinsic('%Temporal.timezone%')(timeZoneParam);
+    let timeZone = ES.CastTimeZone(timeZoneParam);
     let dateTime = timeZone.getDateTimeFor(this);
     let year = ES.ISOYearString(dateTime.year);
     let month = ES.ISODateTimePartString(dateTime.month);
@@ -178,7 +178,7 @@ export class Absolute {
     const microsecond = ES.ToInteger(match[8]);
     const nanosecond = ES.ToInteger(match[9]);
     const zone = match[11] || match[10] || 'UTC';
-    const datetime = ES.GetIntrinsic('%Temporal.datetime%', {
+    const datetime = ES.GetIntrinsic('CastDateTime', {
       year,
       month,
       day,
@@ -192,11 +192,11 @@ export class Absolute {
     return datetime.inZone(zone || 'UTC', match[11] ? match[10] : 'earlier');
   }
   static from(...args) {
-    return ES.GetIntrinsic('%Temporal.absolute%')(...args);
+    return ES.CastAbsolute(...args);
   }
   static compare(one, two) {
-    one = ES.GetIntrinsic('%Temporal.absolute%')(one);
-    two = ES.GetIntrinsic('%Temporal.absolute%')(two);
+    one = ES.CastAbsolute(one);
+    two = ES.CastAbsolute(two);
     one = GetSlot(one, EPOCHNANOSECONDS);
     two = GetSlot(two, EPOCHNANOSECONDS);
     if (one.ms !== two.ms) return ES.ComparisonResult(two.ms - one.ms);

@@ -138,7 +138,7 @@ export class DateTime {
     return new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, disambiguation);
   }
   plus(durationLike = {}, disambiguation = 'constrain') {
-    const duration = ES.GetIntrinsic('%Temporal.duration%')(durationLike);
+    const duration = ES.CastDuration(durationLike);
     let { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = this;
     let { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
     ({ year, month, day } = ES.AddDate(year, month, day, years, months, days, disambiguation));
@@ -161,7 +161,7 @@ export class DateTime {
     return new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
   }
   minus(durationLike = {}, disambiguation = 'constrain') {
-    const duration = ES.GetIntrinsic('%Temporal.duration%')(durationLike);
+    const duration = ES.CastDuration(durationLike);
     let { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = this;
     let { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
     ({ year, month, day } = ES.SubtractDate(year, month, day, years, months, days, disambiguation));
@@ -184,7 +184,7 @@ export class DateTime {
     return new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
   }
   difference(other, disambiguation = 'constrain') {
-    other = ES.GetIntrinsic('%Temporal.datetime%')(other);
+    other = ES.CastDateTime(other);
     const [one, two] = [this, other].sort(DateTime.compare);
     let years = two.year - one.year;
 
@@ -240,7 +240,7 @@ export class DateTime {
   }
 
   inZone(timeZoneParam = 'UTC', disambiguation = 'earlier') {
-    const timeZone = ES.GetIntrinsic('%Temporal.timezone%')(timeZoneParam);
+    const timeZone = ES.CastTimeZone(timeZoneParam);
     return timeZone.getAbsoluteFor(this, disambiguation);
   }
   getDate() {
@@ -267,7 +267,7 @@ export class DateTime {
     );
   }
 
-  static fromString(isoStringParam) {
+  static fromString(isoString) {
     isoString = ES.ToString(isoString);
     const match = STRING.exec(isoString);
     if (!match) throw new RangeError(`invalid datetime: ${isoString}`);
@@ -284,11 +284,11 @@ export class DateTime {
     return new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, 'reject');
   }
   static from(...args) {
-    return ES.GetIntrinsic('%Temporal.datetime%')(...args);
+    return ES.CastDateTime(...args);
   }
   static compare(one, two) {
-    one = ES.GetIntrinsic('%Temporal.datetime%')(one);
-    two = ES.GetIntrinsic('%Temporal.datetime%')(two);
+    one = ES.CastDateTime(one);
+    two = ES.CastDateTime(two);
     if (one.year !== two.year) return ES.ComparisonResult(one.year - two.year);
     if (one.month !== two.month) return ES.ComparisonResult(one.month - two.month);
     if (one.day !== two.day) return ES.ComparisonResult(one.day - two.day);

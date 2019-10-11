@@ -25,11 +25,8 @@ const INTRINSICS = {
   '%Temporal.Absolute%': Temporalabsolute,
   '%Temporal.Duration%': TemporalDuration
 };
-for (let name in Cast) {
-  if (Object.prototype.hasOwnProperty.call(Cast, name)) INTRINSICS[`%Temporal.${name}%`] = Cast[name];
-}
 
-export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
+export const ES = ObjectAssign(ObjectAssign(ObjectAssign({}, Cast), ES2019), {
   GetIntrinsic: (intrinsic) => {
     return intrinsic in INTRINSICS ? INTRINSICS[intrinsic] : ES2019.GetIntrinsic(intrinsic);
   },

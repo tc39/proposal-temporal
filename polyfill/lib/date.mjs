@@ -57,7 +57,7 @@ export class Date {
     return new Date(year, month, day, disambiguation);
   }
   plus(durationLike = {}, disambiguation = 'constrain') {
-    const duration = ES.GetIntrinsic('%Temporal.duration%')(durationLike);
+    const duration = ES.CastDuration(durationLike);
     let { year, month, day } = this;
     let { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
     if (hours || minutes || seconds || milliseconds || microseconds || nanoseconds)
@@ -67,7 +67,7 @@ export class Date {
     return new Date(year, month, day);
   }
   minus(durationLike = {}, disambiguation = 'constrain') {
-    const duration = ES.GetIntrinsic('%Temporal.duration%')(durationLike);
+    const duration = ES.CastDuration(durationLike);
     let { year, month, day } = this;
     let { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
     if (hours !== 0 || minutes !== 0 || seconds !== 0 || milliseconds !== 0 || microseconds !== 0 || nanoseconds !== 0)
@@ -77,7 +77,7 @@ export class Date {
     return new Date(year, month, day);
   }
   difference(other, disambiguation = 'constrain') {
-    other = ES.GetIntrinsic('%Temporal.date%')(other);
+    other = ES.CastDate(other);
     const [one, two] = [this, other].sort(DateTime.compare);
     let years = two.year - one.year;
 
@@ -110,7 +110,7 @@ export class Date {
     const year = GetSlot(this, YEAR);
     const month = GetSlot(this, MONTH);
     const day = GetSlot(this, DAY);
-    timeLike = ES.GetIntrinsic('%Temporal.time%')(timeLike);
+    timeLike = ES.CastTime(timeLike);
     const { hour, minute, second, millisecond, microsecond, nanosecond } = timeLike;
     const DateTime = ES.GetIntrinsic('%Temporal.DateTime%');
     return new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, disambiguation);
@@ -135,11 +135,11 @@ export class Date {
     return new Date(year, month, day, 'reject');
   }
   static from(...args) {
-    return ES.GetIntrinsic('%Temporal.date%')(...args);
+    return ES.CastDate(...args);
   }
   static compare(one, two) {
-    one = ES.GetIntrinsic('%Temporal.date%')(one);
-    two = ES.GetIntrinsic('%Temporal.date%')(two);
+    one = ES.CastDate(one);
+    two = ES.CastDate(two);
     if (one.year !== two.year) return ES.ComparisonResult(one.year - two.year);
     if (one.month !== two.month) return ES.ComparisonResult(one.month - two.month);
     if (one.day !== two.day) return ES.ComparisonResult(one.day - two.day);
