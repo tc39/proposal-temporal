@@ -1,3 +1,5 @@
 import { Temporal } from '../lib/index.mjs';
+import { strict as assert } from 'assert';
 
 let date = new Temporal.Date(2019, 10, 1);
+assert.equal(date.dayOfWeek, 2);

@@ -35,7 +35,7 @@ export class Date {
     return GetSlot(this, DAY);
   }
   get dayOfWeek() {
-    return ES.DayOfWeek(GetSlot(this, THIS).year, GetSlot(this, THIS).month, GetSlot(this, DAY));
+    return ES.DayOfWeek(GetSlot(this, YEAR), GetSlot(this, MONTH), GetSlot(this, DAY));
   }
   get dayOfYear() {
     return ES.DayOfYear(GetSlot(this, YEAR), GetSlot(this, MONTH), GetSlot(this, DAY));
