@@ -5,6 +5,7 @@ before_install:
 script:
 - node --experimental-modules ./test/regex.mjs
 - node --experimental-modules ./test/date.mjs
+- node --experimental-modules ./test/time.mjs
 - npm run build
 env:
   global:
