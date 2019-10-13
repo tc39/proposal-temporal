@@ -190,7 +190,7 @@ export class Time {
     return new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, disambiguation);
   }
 
-  static fromString(isoStringParam) {
+  static fromString(isoString) {
     isoString = ES.ToString(isoString);
     const match = STRING.exec(isoString);
     if (!match) throw new RangeError(`invalid time: ${isoString}`);
