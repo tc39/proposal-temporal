@@ -109,7 +109,7 @@ export function CastDate(arg, aux) {
 export function CastTime(arg, aux) {
   const Time = ES.GetIntrinsic('%Temporal.Time%');
   if (HasSlot(arg, HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND)) {
-    if (HasSlot(arg, MONTH)) return arg;
+    if (!HasSlot(arg, MONTH)) return arg;
     return new Time(
       GetSlot(arg, HOUR),
       GetSlot(arg, MINUTE),
