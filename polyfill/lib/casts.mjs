@@ -1,5 +1,6 @@
 import { ES } from './ecmascript.mjs';
 import {
+  GetSlot,
   HasSlot,
   IDENTIFIER,
   EPOCHNANOSECONDS,
