@@ -86,7 +86,7 @@ export function CastDateTime(arg, aux) {
 export function CastDate(arg, aux) {
   const Date = ES.GetIntrinsic('%Temporal.Date%');
   if (HasSlot(arg, YEAR, MONTH, DAY)) {
-    if (!HasSlot(arg, HOUR)) return Date;
+    if (!HasSlot(arg, HOUR)) return arg;
     return new Date(GetSlot(arg, YEAR), GetSlot(arg, MONTH), GetSlot(arg, DAY));
   }
   if ('string' === typeof arg) {
