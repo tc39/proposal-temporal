@@ -50,6 +50,7 @@
         The following steps are taken:
       </p>
       <emu-alg>
+        1. Let _isostring_ be ? ToString(_isostring_).
         1. Let _validSyntax_ be *true* if _isostring_ conforms to the format `YYYY-MM-DD`, and *false* otherwise, where:
           * `YYYY` is either four decimal digits or an expanded year of `"+"` or `"-"` followed by six decimal digits;
           * `-` is the code unit 0x002D (HYPHEN-MINUS);
@@ -107,7 +108,7 @@
       <p>The initial value of Temporal.Date.prototype.constructor is %Temporal.Date%.</p>
     </emu-clause>
 
-    <emu-clause id="sec-Intl.Segmenter.prototype-@@tostringtag">
+    <emu-clause id="sec-temporal.date.prototype-@@tostringtag">
       <h1>Temporal.Date.prototype[ @@toStringTag ]</h1>
       <p>
         The initial value of the @@toStringTag property is the string value `"Temporal.Date"`.
@@ -489,6 +490,7 @@
         1. <mark>TODO: Throw if any time properties are present?</mark>
         1. Return _result_.
       </emu-alg>
+    </emu-clause>
 
     <emu-clause id=sec-temporal-ToPartialDate aoid=ToPartialDate>
       <h1>ToPartialDate ( _date_ )</h1>
