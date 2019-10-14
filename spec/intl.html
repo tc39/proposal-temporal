@@ -74,7 +74,7 @@
 
       <emu-alg>
         1. Let _requestedLocales_ be ? CanonicalizeLocaleList(_locales_).
-        1. Let _options_ be ? ToDateTimeOptions(_options_, `"any"`, `"date"`).
+        1. <del>Let _options_ be ? ToDateTimeOptions(_options_, `"any"`, `"date"`).</del>
         1. Let _opt_ be a new Record.
         1. Let _matcher_ be ? GetOption(_options_, `"localeMatcher"`, `"string"`, &laquo; `"lookup"`, `"best fit"` &raquo;, `"best fit"`).
         1. Set _opt_.[[localeMatcher]] to _matcher_.
@@ -159,13 +159,27 @@
         1. <del>Else,</del>
           1. <del>Set _dateTimeFormat_.[[HourCycle]] to *undefined*.</del>
           1. <del>Let _pattern_ be _bestFormat_.[[pattern]].</del>
-        1. Set _dateTimeFormat_.[[Pattern]] to <del>_pattern_</del><ins>GetDateTimeFormatPattern(_opt_, _formats_, _hc_)</ins>.
+        1. <ins>Let _expandedOptions_ be a copy of _opt_.</ins>
+        1. <ins>Let _needDefaults_ be *true*.</ins>
+        1. <ins>For each _field_ of « `"weekday"`, `"year"`, `"month"`, `"day"`, `"hour"`, `"minute"`, `"second"` », do</ins>
+          1. <ins>If _expandedOptions_.[[&lt;_field_>]] is not *undefined*, then</ins>
+            1. <ins>Set _needDefaults_ to *false*.</ins>
+        1. <ins>If _needDefaults_ is *true*, then</ins>
+          1. <ins>For each _field_ of « `"year"`, `"month"`, `"day"` », do</ins>
+            1. <ins>Set _expandedOptions_.[[&lt;_field_>]] to `"numeric"`.</ins>
+        1. Set _dateTimeFormat_.[[Pattern]] to <del>_pattern_</del><ins>GetDateTimeFormatPattern(_expandedOptions_, _formats_, _hc_)</ins>.
         1. <ins>For each row in <emu-xref href="#table-temporal-patterns"></emu-xref>, except the header row, in table order, do</ins>
           1. <ins>Let _limitedOptions_ be a new Record.</ins>
-          1. <ins>Let _fields_ be the list of fields in the Fields column of the row.</ins>
-          1. <ins>For each field _field_ of _opts_, do</ins>
+          1. <ins>Let _needDefaults_ be *true*.</ins>
+          1. <ins>Let _fields_ be the list of fields in the Supported fields column of the row.</ins>
+          1. <ins>For each field _field_ of _opt_, do</ins>
             1. <ins>If _field_ is in _fields_, then</ins>
-              1. <ins>Set _limitedOptions_.[[&lt;_field_>]] to _opts_.[[&lt;_field_>]].</ins>
+              1. <ins>Set _needDefaults_ to *false*.</ins>
+              1. <ins>Set _limitedOptions_.[[&lt;_field_>]] to _opt_.[[&lt;_field_>]].</ins>
+          1. <ins>If _needDefaults_ is *true*, then</ins>
+          1. <ins>Let _defaultFields_ be the list of fields in the Supported fields column of the row.</ins>
+            1. <ins>For each _field_ of _defaultFields_, do</ins>
+              1. <ins>Set _limitedOptions_.[[&lt;_field_>]] to <mark>something</mark>.</ins>
           1. <ins>Let _bestFormat_ be GetDateTimeFormatPattern(_limitedOptions_, _formats_, _hc_).</ins>
           1. <ins>If _bestFormat_ does not have any fields that are in _fields_, then</ins>
             1. <ins>Set _bestFormat_ to *null*.</ins>
@@ -180,25 +194,40 @@
           <thead>
             <tr>
               <th>Pattern</th>
-              <th>Fields</th>
+              <th>Supported fields</th>
+              <th>Default fields</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <th>[[CivilDatePattern]]</td>
+              <th>[[TemporalDatePattern]]</td>
               <td>[[weekday]], [[era]], [[year]], [[month]], [[day]]</td>
+              <td>[[year]], [[month]], [[day]]</td>
             </tr>
             <tr>
-              <th>[[CivilTimePattern]]</td>
+              <th>[[TemporalYearMonthPattern]]</td>
+              <td>[[era]], [[year]], [[month]]</td>
+              <td>[[year]], [[month]]</td>
+            </tr>
+            <tr>
+              <th>[[TemporalMonthDayPattern]]</td>
+              <td>[[month]], [[day]]</td>
+              <td>[[month]], [[day]]</td>
+            </tr>
+            <tr>
+              <th>[[TemporalTimePattern]]</td>
+              <td>[[hour]], [[minute]], [[second]], [[dayPeriod]], [[fractionalSecondDigits]]</td>
               <td>[[hour]], [[minute]], [[second]]</td>
             </tr>
             <tr>
-              <th>[[CivilDateTimePattern]]</td>
-              <td>[[weekday]], [[era]], [[year]], [[month]], [[day]], [[hour]], [[minute]], [[second]]</td>
+              <th>[[TemporalDateTimePattern]]</td>
+              <td>[[weekday]], [[era]], [[year]], [[month]], [[day]], [[hour]], [[minute]], [[second]], [[dayPeriod]], [[fractionalSecondDigits]]</td>
+              <td>[[year]], [[month]], [[day]], [[hour]], [[minute]], [[second]]</td>
             </tr>
             <tr>
-              <th>[[ZonedDateTime]]</td>
-              <td>[[weekday]], [[era]], [[year]], [[month]], [[day]], [[hour]], [[minute]], [[second]]</td>
+              <th>[[TemporalAbsolutePattern]]</td>
+              <td>[[weekday]], [[era]], [[year]], [[month]], [[day]], [[hour]], [[minute]], [[second]], [[dayPeriod]], [[fractionalSecondDigits]]</td>
+              <td>[[year]], [[month]], [[day]], [[hour]], [[minute]], [[second]]</td>
             </tr>
           </tbody>
         </table>
@@ -238,19 +267,22 @@
       <emu-alg>
         1. <ins>If IsTemporalObject(_date_) is *true*,</ins>
           1. <ins>Let _x_ be _date_.</ins>
-          1. <ins>If _date_ is a CivilDate object, then</ins>
-            1. <ins>Let _pattern_ be _dateTimeFormat_.[[CivilDatePattern]].</ins>
-            1. <ins>Let _tm_ be { [[weekday]]: _date_.dayOfWeek, [[year]]: _date_.year, [[month]]: _date_.month, [[day]]: _date_.day }.</ins>
-          1. <ins>Else if _date_ is a CivilTime object, then</ins>
-            1. <ins>Let _pattern_ be _dateTimeFormat_.[[CivilTimePattern]].</ins>
-            1. <ins>Let _tm_ be { [[hour]]: _date_.hour, [[minute]]: _date_.minute, [[second]]: _date_.second }.</ins>
-          1. <ins>Else if _date_ is a CivilDateTime object, then</ins>
-            1. <ins>Let _pattern_ be _dateTimeFormat_.[[CivilDateTimePattern]].</ins>
-            1. <ins>Let _tm_ be { [[weekday]]: _date_.dayOfWeek, [[year]]: _date_.year, [[month]]: _date_.month, [[day]]: _date_.day, [[hour]]: _date_.hour, [[minute]]: _date_.minute, [[second]]: _date_.second }.</ins>
-          1. <ins>Else if _date_ is a ZonedDateTime object, then</ins>
-            1. <ins>Let _pattern_ be _dateTimeFormat_.[[ZonedDateTimePattern]].</ins>
-            1. <ins>Let _offsetDateTime_ be _date_.getOffsetDateTime().</ins>
-            1. <ins>Let _tm_ be { [[weekday]]: _offsetDateTime_.dayOfWeek, [[year]]: _offsetDateTime_.year, [[month]]: _offsetDateTime_.month, [[day]]: _offsetDateTime_.day, [[hour]]: _offsetDateTime_.hour, [[minute]]: _offsetDateTime_.minute, [[second]]: _offsetDateTime_.second }.</ins>
+          1. <mark>TODO: era, dayPeriod, fractionalSecondDigits</mark>
+          1. <ins>If _date_ has an [[InitializedTemporalDate]] internal slot, then</ins>
+            1. <ins>Let _pattern_ be _dateTimeFormat_.[[TemporalDatePattern]].</ins>
+            1. <ins>Let _tm_ be { [[weekday]]: ToDayOfWeek(_date_.[[Year]], _date_.[[Month]], _date_.[[Day]]), [[year]]: _date_.[[Year]], [[month]]: _date_.[[Month]], [[day]]: _date_.[[Day]] }.</ins>
+          1. <ins>If _date_ has an [[InitializedTemporalYearMonth]] internal slot, then</ins>
+            1. <ins>Let _pattern_ be _dateTimeFormat_.[[TemporalYearMonthPattern]].</ins>
+            1. <ins>Let _tm_ be { [[year]]: _date_.[[Year]], [[month]]: _date_.[[Month]] }.</ins>
+          1. <ins>If _date_ has an [[InitializedTemporalMonthDay]] internal slot, then</ins>
+            1. <ins>Let _pattern_ be _dateTimeFormat_.[[TemporalMonthDayPattern]].</ins>
+            1. <ins>Let _tm_ be { [[month]]: _date_.[[Month]], [[day]]: _date_.[[Day]] }.</ins>
+          1. <ins>If _date_ has an [[InitializedTemporalTime]] internal slot, then</ins>
+            1. <ins>Let _pattern_ be _dateTimeFormat_.[[TemporalTimePattern]].</ins>
+            1. <ins>Let _tm_ be { [[hour]]: _date_.[[Hour]], [[minute]]: _date_.[[Minute]], [[second]]: _date_.[[Second]] }.</ins>
+          1. <ins>If _date_ has an [[InitializedTemporalDateTime]] or an [[InitializedTemporalAbsolute]] internal slot, then</ins>
+            1. <ins>Let _pattern_ be _dateTimeFormat_.[[TemporalDateTimePattern]].</ins>
+            1. <ins>Let _tm_ be { [[weekday]]: ToDayOfWeek(_date_.[[Year]], _date_.[[Month]], _date_.[[Day]]), [[year]]: _date_.[[Year]], [[month]]: _date_.[[Month]], [[day]]: _date_.[[Day]], [[hour]]: _date_.[[Hour]], [[minute]]: _date_.[[Minute]], [[second]]: _date_.[[Second]] }.</ins>
           1. <ins>If _pattern_ is *null*, throw a *TypeError* exception.</ins>
         1. <ins>Else,</ins>
           1. <ins>Let _pattern_ be _dateTimeFormat_.[[Pattern]].</ins>
@@ -365,7 +397,7 @@
       <emu-alg>
         1. If Type(_value_) is not Object, then
           1. Return *false*.
-        1. If _value_ is not a CivilDate, CivilTime, CivilDateTime or ZonedDateTime object:
+        1. If _value_ does not have an [[InitializedTemporalDate]], [[InitializedTemporalTime]], [[InitializedTemporalDateTime]], [[InitializedTemporalYearMonth]], [[InitializedTemporalMonthDay]], or [[InitializedTemporalAbsolute]] internal slot, then
           1. Return *false*.
         1. Return *true*.
       </emu-alg>
