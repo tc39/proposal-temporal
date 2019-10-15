@@ -1,7 +1,21 @@
 language: node_js
 node_js: 12
 before_install:
-  - cd polyfill/
+- cd polyfill/
 script:
-  - node --experimental-modules ./test/regex.mjs
-  - node --experimental-modules ./test/date.mjs
+- node --experimental-modules ./test/regex.mjs
+- node --experimental-modules ./test/date.mjs
+- npm run build
+env:
+  global:
+    secure: lDm/QoxFYu+if2tEmCRBJ+QzeOeWOuyFpvkHsVPJebDEn2ZKQo5lAXdMgqO+MeeMC14h9nkRC0Mg9mi+cOOLdHQ/PbKWXRljI9IRyeeKzjD24v+HHIB3NylBWVaJczClizKiF2rIQkF8xufAP1g6bRTIHFzU63QiVssts1ASuvVxnx/8kJgo53N5MqTifE3aJPv3tmL6NnOBKY3vd1uATfdhY9hD4GxvROWhr05uw83EbU46mvZeCgPm79FxXuWMIt0o0XP02nU750yNQUB+wNJ5ZLbL295E6iG0au/TU74KKuEmO37dpfT5Y7hD1nHSNoRwWAMBihN4yEUd94wxwewIHYTfAVViAC3G+86VuaD9gFDgRtM9Qp0ddlMOf8Ws4ISR5x+iXS+tbFkFFcLfX7ZazC83Ivf5X+LN51w0Yt7nLSu/GvJX/SDEf3BXSr6P77KU1XkQrsBPOjU7zHToO3ZSBN0e5qYOim3L4I8gcsji2OuGp9/6hsN6mQwceCsjHB+FzL9pzAfy8PY7t0PH8MgmUC1pu6MblMt8BrpOFUimyeD+pGUPxF08+3rtYVXx7Fa5+6vU71ze4y9XcYC92AeR4nZoKNFu5sQugybDJpcjKX2+iiwVmjqgcT5mN9EVRa9RYJkf3/qSrqFwPaK9+I48Ehmug/gOBKdA9unYbB4=
+deploy:
+  local_dir: out/
+  target_branch: gh-pages
+  keep_history: true
+  provider: pages
+  skip_cleanup: true
+  github_token: $GH_ACCESS_TOKEN
+  committer_from_gh: true
+  on:
+    branch: master

@@ -1,3 +1,5 @@
 node_modules/
 polyfill/index.js
 polyfill/index.js.map
+out/
+.vscode/
