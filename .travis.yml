@@ -19,4 +19,4 @@ deploy:
   github_token: $GH_ACCESS_TOKEN
   committer_from_gh: true
   on:
-    branch: master
+    branch: main
