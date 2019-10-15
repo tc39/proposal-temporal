@@ -1,22 +1,24 @@
 language: node_js
 node_js: 12
-before_install:
-- cd polyfill/
-script:
-- node --experimental-modules ./test/regex.mjs
-- node --experimental-modules ./test/date.mjs
-- node --experimental-modules ./test/time.mjs
-- npm run build
-deploy:
-  local_dir: out/
-  target_branch: gh-pages
-  keep_history: true
-  provider: pages
-  skip_cleanup: true
-  github_token: "$GH_ACCESS_TOKEN"
-  committer_from_gh: true
-  on:
-    branch: main
-env:
-  global:
-  - secure: PFNewaGFSCksqqOmy5ffZnV8ZyqfH+o3ctf01uXYHPRmMvQdDhyqWv8wT002mQncpQVUhb8sFc8EQQQppFmhp6Z+7TpKeoUdsVE5luXKiI11UeEbYr+Yfwb9CS6g7bGQv26OOUJT+3S2gmeb/g9gRGJrOufzeZWsTD7LU9wIZOVPvyh4P/jlcEb15E/EdLqpQGzYP6suHvQj2+RFS2lZZy6+QZu5MD5Jw88fY4x7sXlb5erfz4Pcun5PSdHB9ONE2z2Q/q18tkFdi4diaTmh8h+xU2ZqzsikAXFknWrwq2PJh8hOthrNinoDI9GLQW5oxiZ3AwTSfAGMH9xdxFOOyL3NrH1z88WW5E+Qs95JAyS58LhwZCkKYznalotyjh83RzXdOKS+Qa2g8l29LImlhp79+P4QGT7ltFxtuvTiausObOqLkBk8/FcOmxJZ/b/1pea6xrZnHCC5pVFt1LEI1g4fv66tRiNkv4ZP9Ap84qPbb8LsQyLDOiSt2oq4BWH4BGOyt9/wuE24Cx5UlsCXgBYtsJcCAPEFuJ9yLLtbuwOZq7b9QClVC6Ahr4L+mxEKKMatKt4Y8rBqz34hgCvwSIcz4gF6Cugk1h8vuc1nR/ffZgp4Z6eJkGGdY7jA6c8X2J3Tcts2ZQ1Y96Vw8kPKcUJNdN4fONtlOA1KHmr0tR8=
+matrix:
+  include:
+  - name: "Polyfill tests"
+    before_install:
+    - cd polyfill/
+    script:
+    - node --experimental-modules ./test/regex.mjs
+    - node --experimental-modules ./test/date.mjs
+    - node --experimental-modules ./test/time.mjs
+  - name: "Specification compilation"
+    script:
+    - npm run build
+    deploy:
+      local_dir: out/
+      target_branch: gh-pages
+      keep_history: true
+      provider: pages
+      skip_cleanup: true
+      github_token: $GH_ACCESS_TOKEN
+      committer_from_gh: true
+      on:
+        branch: main
