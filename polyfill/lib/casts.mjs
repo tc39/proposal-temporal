@@ -189,8 +189,6 @@ export function CastDuration(arg) {
       return Duration.fromString(arg);
     } catch (ex) {}
   }
-  if ('bigint' === typeof arg) return new Duration(0, 0, 0, 0, 0, 0, 0, 0, arg);
-  if (Number.isFinite(+arg)) return new Duration(0, 0, 0, 0, 0, 0, +arg, 0, 0);
   if ('object' === typeof arg) {
     const {
       years = 0,
