@@ -26,31 +26,53 @@ export class Duration {
     seconds = 0,
     milliseconds = 0,
     microseconds = 0,
-    nanoseconds = 0
+    nanoseconds = 0,
+    disambiguation = 'constrain'
   ) {
-    let tdays;
-    ({
-      days: tdays,
-      hour: hours,
-      minute: minutes,
-      second: seconds,
-      millisecond: milliseconds,
-      microsecond: microseconds,
-      nanosecond: nanoseconds
-    } = ES.BalanceTime(
-      ES.AssertPositiveInteger(ES.ToInteger(hours)),
-      ES.AssertPositiveInteger(ES.ToInteger(minutes)),
-      ES.AssertPositiveInteger(ES.ToInteger(seconds)),
-      ES.AssertPositiveInteger(ES.ToInteger(milliseconds)),
-      ES.AssertPositiveInteger(ES.ToInteger(microseconds)),
-      ES.AssertPositiveInteger(ES.ToInteger(nanoseconds))
-    ));
-    days += tdays;
+    years = ES.ToInteger(years);
+    months = ES.ToInteger(months);
+    days = ES.ToInteger(days);
+    hours = ES.ToInteger(hours);
+    minutes = ES.ToInteger(minutes);
+    seconds = ES.ToInteger(seconds);
+    milliseconds = ES.ToInteger(milliseconds);
+    microseconds = ES.ToInteger(microseconds);
+    nanoseconds = ES.ToInteger(nanoseconds);
+
+    switch (ES.ToString(disambiguation)) {
+      case 'reject':
+        for (const prop of [years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds]) {
+          if (prop < 0) throw new RangeError('negative values not allowed as duration fields');
+        }
+        break;
+      case 'constrain':
+        const arr = [years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds];
+        for (const idx in arr) {
+          if (arr[idx] < 0) arr[idx] = -arr[idx];
+        }
+        [years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds] = arr;
+        break;
+      case 'balance':
+        let tdays;
+        ({
+          days: tdays,
+          hour: hours,
+          minute: minutes,
+          second: seconds,
+          millisecond: milliseconds,
+          microsecond: microseconds,
+          nanosecond: nanoseconds
+        } = ES.BalanceTime(hours, minutes, seconds, milliseconds, microseconds, nanoseconds));
+        days += tdays;
+        break;
+      default:
+        throw new TypeError('disambiguation should be either reject, constrain or balance');
+    }
 
     CreateSlots(this);
-    SetSlot(this, YEARS, ES.AssertPositiveInteger(ES.ToInteger(years)));
-    SetSlot(this, MONTHS, ES.AssertPositiveInteger(ES.ToInteger(months)));
-    SetSlot(this, DAYS, ES.AssertPositiveInteger(ES.ToInteger(days)));
+    SetSlot(this, YEARS, years);
+    SetSlot(this, MONTHS, months);
+    SetSlot(this, DAYS, days);
     SetSlot(this, HOURS, hours);
     SetSlot(this, MINUTES, minutes);
     SetSlot(this, SECONDS, seconds);
