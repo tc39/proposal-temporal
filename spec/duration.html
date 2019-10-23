@@ -92,13 +92,9 @@
       initialize subclass instances with the necessary internal slots.
     </p>
     <emu-clause id="sec-temporal-duration-constructor-alg">
-      <h1>
-        Temporal.Duration (_years_, _months_, _days_, _hours_, _minutes_,
-        _seconds_, _milliseconds_, _microseconds_, _nanoseconds_)
-      </h1>
+      <h1>Temporal.Duration (_years_, _months_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_, _disambiguation_)</h1>
       <p>
-        When the Temporal.Duration function is called, the following steps are
-        taken:
+        When the Temporal.Duration function is called, the following steps are taken:
       </p>
       <emu-alg>
         1. If NewTarget is *undefined*, then
@@ -112,8 +108,16 @@
         1. Let _ms_ be ? ToInteger(_milliseconds_).
         1. Let _mis_ be ? ToInteger(_microseconds_).
         1. Let _ns_ be ? ToInteger(_nanoseconds_).
-        1. Let _bt_ be ? BalanceTime(_h_, _m_, _s_, _ms_, _mis_, _ns_).
-        1. Increment _d_ by bt.[[Days]].
+        1. Let _disambiguation_ be ? ToString(_disambiguation_).
+        1. If _disambiguation_ is *'reject'*, then
+          1. For each of _y_, _mo_, _d_, _h_, _m_, _s_, _ms_, _mis_, _ns_, if any of the values is negative, throw a *RangeError* exception.
+        1. If _disambiguation_ is *'constrain'*, then
+          1. For each of _y_, _mo_, _d_, _h_, _m_, _s_, _ms_, _mis_, _ns_, if any of the values is negative, let it be its own absolute value.
+        1. If _disambiguation_ is *'balance'*, then
+          1. Let _bt_ be ? BalanceTime(_h_, _m_, _s_, _ms_, _mis_, _ns_).
+          1. Increment _d_ by bt.[[Days]].
+        1. Else
+          1. Throw a *TypeError* exception.
         1. Return ? CreateDuration(_y_, _mo_, _d_, _h_, _m_, _s_, _ms_, _mis_, _ns_).
       </emu-alg>
     </emu-clause>
