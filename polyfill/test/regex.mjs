@@ -1,252 +1,248 @@
 import { absolute, datetime, date, time, timezone, yearmonth, monthday, offset, duration } from '../lib/regex.mjs';
 
-import { inspect } from 'util';
-const failOnly = true;
-let failures = 0;
+import Demitasse from '@pipobscure/demitasse';
+const { describe, it, report } = Demitasse;
 
-test('absolute', absolute, '1976-11-18T15:23+01:00[Europe/Vienna]');
-test('absolute', absolute, '1976-11-18T15:23:30+01:00[Europe/Vienna]');
-test('absolute', absolute, '1976-11-18T15:23:30.123+01:00[Europe/Vienna]');
-test('absolute', absolute, '1976-11-18T15:23:30.123456+01:00[Europe/Vienna]');
-test('absolute', absolute, '1976-11-18T15:23:30.123456789+01:00[Europe/Vienna]');
-test('absolute', absolute, '1976-11-18T15:23+1:00[Europe/Vienna]');
-test('absolute', absolute, '1976-11-18T15:23:30+1:00[Europe/Vienna]');
-test('absolute', absolute, '1976-11-18T15:23:30.123+1:00[Europe/Vienna]');
-test('absolute', absolute, '1976-11-18T15:23:30.123456+1:00[Europe/Vienna]');
-test('absolute', absolute, '1976-11-18T15:23:30.123456789+1:00[Europe/Vienna]');
+import Pretty from '@pipobscure/demitasse-pretty';
+const { reporter } = Pretty;
 
-test('absolute', absolute, '1976-11-18T15:23+0100[Europe/Vienna]');
-test('absolute', absolute, '1976-11-18T15:23:30+0100[Europe/Vienna]');
-test('absolute', absolute, '1976-11-18T15:23:30.123+0100[Europe/Vienna]');
-test('absolute', absolute, '1976-11-18T15:23:30.123456+0100[Europe/Vienna]');
-test('absolute', absolute, '1976-11-18T15:23:30.123456789+0100[Europe/Vienna]');
-test('absolute', absolute, '1976-11-18T15:23+100[Europe/Vienna]');
-test('absolute', absolute, '1976-11-18T15:23:30+100[Europe/Vienna]');
-test('absolute', absolute, '1976-11-18T15:23:30.123+100[Europe/Vienna]');
-test('absolute', absolute, '1976-11-18T15:23:30.123456+100[Europe/Vienna]');
-test('absolute', absolute, '1976-11-18T15:23:30.123456789+100[Europe/Vienna]');
+import assert from 'assert';
 
-test('absolute', absolute, '1976-11-18T15:23-04:00');
-test('absolute', absolute, '1976-11-18T15:23:30-04:00');
-test('absolute', absolute, '1976-11-18T15:23:30.123-04:00');
-test('absolute', absolute, '1976-11-18T15:23:30.123456-04:00');
-test('absolute', absolute, '1976-11-18T15:23:30.123456789-04:00');
-test('absolute', absolute, '1976-11-18T15:23-4:00');
-test('absolute', absolute, '1976-11-18T15:23:30-4:00');
-test('absolute', absolute, '1976-11-18T15:23:30.123-4:00');
-test('absolute', absolute, '1976-11-18T15:23:30.123456-4:00');
-test('absolute', absolute, '1976-11-18T15:23:30.123456789-4:00');
-test('absolute', absolute, '1976-11-18T15:23-0400');
-test('absolute', absolute, '1976-11-18T15:23:30-0400');
-test('absolute', absolute, '1976-11-18T15:23:30.123-0400');
-test('absolute', absolute, '1976-11-18T15:23:30.123456-0400');
-test('absolute', absolute, '1976-11-18T15:23:30.123456789-0400');
-test('absolute', absolute, '1976-11-18T15:23-400');
-test('absolute', absolute, '1976-11-18T15:23:30-400');
-test('absolute', absolute, '1976-11-18T15:23:30.123-400');
-test('absolute', absolute, '1976-11-18T15:23:30.123456-400');
-test('absolute', absolute, '1976-11-18T15:23:30.123456789-400');
+describe('absolute', () => {
+  test(absolute, '1976-11-18T15:23+01:00[Europe/Vienna]');
+  test(absolute, '1976-11-18T15:23:30+01:00[Europe/Vienna]');
+  test(absolute, '1976-11-18T15:23:30.123+01:00[Europe/Vienna]');
+  test(absolute, '1976-11-18T15:23:30.123456+01:00[Europe/Vienna]');
+  test(absolute, '1976-11-18T15:23:30.123456789+01:00[Europe/Vienna]');
+  test(absolute, '1976-11-18T15:23+1:00[Europe/Vienna]');
+  test(absolute, '1976-11-18T15:23:30+1:00[Europe/Vienna]');
+  test(absolute, '1976-11-18T15:23:30.123+1:00[Europe/Vienna]');
+  test(absolute, '1976-11-18T15:23:30.123456+1:00[Europe/Vienna]');
+  test(absolute, '1976-11-18T15:23:30.123456789+1:00[Europe/Vienna]');
 
-line();
+  test(absolute, '1976-11-18T15:23+0100[Europe/Vienna]');
+  test(absolute, '1976-11-18T15:23:30+0100[Europe/Vienna]');
+  test(absolute, '1976-11-18T15:23:30.123+0100[Europe/Vienna]');
+  test(absolute, '1976-11-18T15:23:30.123456+0100[Europe/Vienna]');
+  test(absolute, '1976-11-18T15:23:30.123456789+0100[Europe/Vienna]');
+  test(absolute, '1976-11-18T15:23+100[Europe/Vienna]');
+  test(absolute, '1976-11-18T15:23:30+100[Europe/Vienna]');
+  test(absolute, '1976-11-18T15:23:30.123+100[Europe/Vienna]');
+  test(absolute, '1976-11-18T15:23:30.123456+100[Europe/Vienna]');
+  test(absolute, '1976-11-18T15:23:30.123456789+100[Europe/Vienna]');
 
-test('datetime', datetime, '1976-11-18T15:23+100[Europe/Vienna]');
-test('datetime', datetime, '1976-11-18T15:23:30+100[Europe/Vienna]');
-test('datetime', datetime, '1976-11-18T15:23:30.123+100[Europe/Vienna]');
-test('datetime', datetime, '1976-11-18T15:23:30.123456+100[Europe/Vienna]');
-test('datetime', datetime, '1976-11-18T15:23:30.123456789+100[Europe/Vienna]');
-test('datetime', datetime, '1976-11-18T15:23-400');
-test('datetime', datetime, '1976-11-18T15:23:30-400');
-test('datetime', datetime, '1976-11-18T15:23:30.123-400');
-test('datetime', datetime, '1976-11-18T15:23:30.123456-400');
-test('datetime', datetime, '1976-11-18T15:23:30.123456789-400');
-test('datetime', datetime, '1976-11-18T15:23');
-test('datetime', datetime, '1976-11-18T15:23:30');
-test('datetime', datetime, '1976-11-18T15:23:30.123');
-test('datetime', datetime, '1976-11-18T15:23:30.123456');
-test('datetime', datetime, '1976-11-18T15:23:30.123456789');
+  test(absolute, '1976-11-18T15:23-04:00');
+  test(absolute, '1976-11-18T15:23:30-04:00');
+  test(absolute, '1976-11-18T15:23:30.123-04:00');
+  test(absolute, '1976-11-18T15:23:30.123456-04:00');
+  test(absolute, '1976-11-18T15:23:30.123456789-04:00');
+  test(absolute, '1976-11-18T15:23-4:00');
+  test(absolute, '1976-11-18T15:23:30-4:00');
+  test(absolute, '1976-11-18T15:23:30.123-4:00');
+  test(absolute, '1976-11-18T15:23:30.123456-4:00');
+  test(absolute, '1976-11-18T15:23:30.123456789-4:00');
+  test(absolute, '1976-11-18T15:23-0400');
+  test(absolute, '1976-11-18T15:23:30-0400');
+  test(absolute, '1976-11-18T15:23:30.123-0400');
+  test(absolute, '1976-11-18T15:23:30.123456-0400');
+  test(absolute, '1976-11-18T15:23:30.123456789-0400');
+  test(absolute, '1976-11-18T15:23-400');
+  test(absolute, '1976-11-18T15:23:30-400');
+  test(absolute, '1976-11-18T15:23:30.123-400');
+  test(absolute, '1976-11-18T15:23:30.123456-400');
+  test(absolute, '1976-11-18T15:23:30.123456789-400');
+});
 
-line();
+describe('datetime', () => {
+  test(datetime, '1976-11-18T15:23+100[Europe/Vienna]');
+  test(datetime, '1976-11-18T15:23:30+100[Europe/Vienna]');
+  test(datetime, '1976-11-18T15:23:30.123+100[Europe/Vienna]');
+  test(datetime, '1976-11-18T15:23:30.123456+100[Europe/Vienna]');
+  test(datetime, '1976-11-18T15:23:30.123456789+100[Europe/Vienna]');
+  test(datetime, '1976-11-18T15:23-400');
+  test(datetime, '1976-11-18T15:23:30-400');
+  test(datetime, '1976-11-18T15:23:30.123-400');
+  test(datetime, '1976-11-18T15:23:30.123456-400');
+  test(datetime, '1976-11-18T15:23:30.123456789-400');
+  test(datetime, '1976-11-18T15:23');
+  test(datetime, '1976-11-18T15:23:30');
+  test(datetime, '1976-11-18T15:23:30.123');
+  test(datetime, '1976-11-18T15:23:30.123456');
+  test(datetime, '1976-11-18T15:23:30.123456789');
+});
 
-test('date', date, '1976-11-18T15:23+100[Europe/Vienna]');
-test('date', date, '1976-11-18T15:23:30+100[Europe/Vienna]');
-test('date', date, '1976-11-18T15:23:30.123+100[Europe/Vienna]');
-test('date', date, '1976-11-18T15:23:30.123456+100[Europe/Vienna]');
-test('date', date, '1976-11-18T15:23:30.123456789+100[Europe/Vienna]');
-test('date', date, '1976-11-18T15:23-400');
-test('date', date, '1976-11-18T15:23:30-400');
-test('date', date, '1976-11-18T15:23:30.123-400');
-test('date', date, '1976-11-18T15:23:30.123456-400');
-test('date', date, '1976-11-18T15:23:30.123456789-400');
-test('date', date, '1976-11-18T15:23');
-test('date', date, '1976-11-18T15:23:30');
-test('date', date, '1976-11-18T15:23:30.123');
-test('date', date, '1976-11-18T15:23:30.123456');
-test('date', date, '1976-11-18T15:23:30.123456789');
-test('date', date, '1976-11-18');
-test('date', date, '+999999-11-18');
-test('date', date, '-000300-11-18');
-test('date', date, '1976-11-18');
-test('date', date, '1512-11-18');
+describe('date', () => {
+  test(date, '1976-11-18T15:23+100[Europe/Vienna]');
+  test(date, '1976-11-18T15:23:30+100[Europe/Vienna]');
+  test(date, '1976-11-18T15:23:30.123+100[Europe/Vienna]');
+  test(date, '1976-11-18T15:23:30.123456+100[Europe/Vienna]');
+  test(date, '1976-11-18T15:23:30.123456789+100[Europe/Vienna]');
+  test(date, '1976-11-18T15:23-400');
+  test(date, '1976-11-18T15:23:30-400');
+  test(date, '1976-11-18T15:23:30.123-400');
+  test(date, '1976-11-18T15:23:30.123456-400');
+  test(date, '1976-11-18T15:23:30.123456789-400');
+  test(date, '1976-11-18T15:23');
+  test(date, '1976-11-18T15:23:30');
+  test(date, '1976-11-18T15:23:30.123');
+  test(date, '1976-11-18T15:23:30.123456');
+  test(date, '1976-11-18T15:23:30.123456789');
+  test(date, '1976-11-18');
+  test(date, '+999999-11-18');
+  test(date, '-000300-11-18');
+  test(date, '1976-11-18');
+  test(date, '1512-11-18');
+});
 
-line();
+describe('time', () => {
+  test(time, '1976-11-18T15:23+100[Europe/Vienna]');
+  test(time, '1976-11-18T15:23:30+100[Europe/Vienna]');
+  test(time, '1976-11-18T15:23:30.123+100[Europe/Vienna]');
+  test(time, '1976-11-18T15:23:30.123456+100[Europe/Vienna]');
+  test(time, '1976-11-18T15:23:30.123456789+100[Europe/Vienna]');
+  test(time, '1976-11-18T15:23-400');
+  test(time, '1976-11-18T15:23:30-400');
+  test(time, '1976-11-18T15:23:30.123-400');
+  test(time, '1976-11-18T15:23:30.123456-400');
+  test(time, '1976-11-18T15:23:30.123456789-400');
+  test(time, '1976-11-18T15:23');
+  test(time, '1976-11-18T15:23:30');
+  test(time, '1976-11-18T15:23:30.123');
+  test(time, '1976-11-18T15:23:30.123456');
+  test(time, '1976-11-18T15:23:30.123456789');
+  test(time, '15:23');
+  test(time, '15:23:30');
+  test(time, '15:23:30.123');
+  test(time, '15:23:30.123456');
+  test(time, '15:23:30.123456789');
+});
 
-test('time', time, '1976-11-18T15:23+100[Europe/Vienna]');
-test('time', time, '1976-11-18T15:23:30+100[Europe/Vienna]');
-test('time', time, '1976-11-18T15:23:30.123+100[Europe/Vienna]');
-test('time', time, '1976-11-18T15:23:30.123456+100[Europe/Vienna]');
-test('time', time, '1976-11-18T15:23:30.123456789+100[Europe/Vienna]');
-test('time', time, '1976-11-18T15:23-400');
-test('time', time, '1976-11-18T15:23:30-400');
-test('time', time, '1976-11-18T15:23:30.123-400');
-test('time', time, '1976-11-18T15:23:30.123456-400');
-test('time', time, '1976-11-18T15:23:30.123456789-400');
-test('time', time, '1976-11-18T15:23');
-test('time', time, '1976-11-18T15:23:30');
-test('time', time, '1976-11-18T15:23:30.123');
-test('time', time, '1976-11-18T15:23:30.123456');
-test('time', time, '1976-11-18T15:23:30.123456789');
-test('time', time, '15:23');
-test('time', time, '15:23:30');
-test('time', time, '15:23:30.123');
-test('time', time, '15:23:30.123456');
-test('time', time, '15:23:30.123456789');
+describe('yearmonth', () => {
+  test(yearmonth, '1976-11-18T15:23+100[Europe/Vienna]');
+  test(yearmonth, '1976-11-18T15:23:30+100[Europe/Vienna]');
+  test(yearmonth, '1976-11-18T15:23:30.123+100[Europe/Vienna]');
+  test(yearmonth, '1976-11-18T15:23:30.123456+100[Europe/Vienna]');
+  test(yearmonth, '1976-11-18T15:23:30.123456789+100[Europe/Vienna]');
+  test(yearmonth, '1976-11-18T15:23-400');
+  test(yearmonth, '1976-11-18T15:23:30-400');
+  test(yearmonth, '1976-11-18T15:23:30.123-400');
+  test(yearmonth, '1976-11-18T15:23:30.123456-400');
+  test(yearmonth, '1976-11-18T15:23:30.123456789-400');
+  test(yearmonth, '1976-11-18T15:23');
+  test(yearmonth, '1976-11-18T15:23:30');
+  test(yearmonth, '1976-11-18T15:23:30.123');
+  test(yearmonth, '1976-11-18T15:23:30.123456');
+  test(yearmonth, '1976-11-18T15:23:30.123456789');
+  test(yearmonth, '1976-11-18');
+  test(yearmonth, '+999999-11-18');
+  test(yearmonth, '-000300-11-18');
+  test(yearmonth, '1976-11-18');
+  test(yearmonth, '1512-11-18');
+  test(yearmonth, '1976-11');
+  test(yearmonth, '+999999-11');
+  test(yearmonth, '-000300-11');
+  test(yearmonth, '1976-11');
+  test(yearmonth, '1512-11');
+});
 
-line();
+describe('monthday', () => {
+  test(monthday, '1976-11-18T15:23+100[Europe/Vienna]');
+  test(monthday, '1976-11-18T15:23:30+100[Europe/Vienna]');
+  test(monthday, '1976-11-18T15:23:30.123+100[Europe/Vienna]');
+  test(monthday, '1976-11-18T15:23:30.123456+100[Europe/Vienna]');
+  test(monthday, '1976-11-18T15:23:30.123456789+100[Europe/Vienna]');
+  test(monthday, '1976-11-18T15:23-400');
+  test(monthday, '1976-11-18T15:23:30-400');
+  test(monthday, '1976-11-18T15:23:30.123-400');
+  test(monthday, '1976-11-18T15:23:30.123456-400');
+  test(monthday, '1976-11-18T15:23:30.123456789-400');
+  test(monthday, '1976-11-18T15:23');
+  test(monthday, '1976-11-18T15:23:30');
+  test(monthday, '1976-11-18T15:23:30.123');
+  test(monthday, '1976-11-18T15:23:30.123456');
+  test(monthday, '1976-11-18T15:23:30.123456789');
+  test(monthday, '1976-11-18');
+  test(monthday, '+999999-11-18');
+  test(monthday, '-000300-11-18');
+  test(monthday, '1976-11-18');
+  test(monthday, '1512-11-18');
+  test(monthday, '1976-11-18');
+  test(monthday, '11-18');
+  test(monthday, '12-13');
+  test(monthday, '02-02');
+  test(monthday, '01-31');
+});
 
-test('yearmonth', yearmonth, '1976-11-18T15:23+100[Europe/Vienna]');
-test('yearmonth', yearmonth, '1976-11-18T15:23:30+100[Europe/Vienna]');
-test('yearmonth', yearmonth, '1976-11-18T15:23:30.123+100[Europe/Vienna]');
-test('yearmonth', yearmonth, '1976-11-18T15:23:30.123456+100[Europe/Vienna]');
-test('yearmonth', yearmonth, '1976-11-18T15:23:30.123456789+100[Europe/Vienna]');
-test('yearmonth', yearmonth, '1976-11-18T15:23-400');
-test('yearmonth', yearmonth, '1976-11-18T15:23:30-400');
-test('yearmonth', yearmonth, '1976-11-18T15:23:30.123-400');
-test('yearmonth', yearmonth, '1976-11-18T15:23:30.123456-400');
-test('yearmonth', yearmonth, '1976-11-18T15:23:30.123456789-400');
-test('yearmonth', yearmonth, '1976-11-18T15:23');
-test('yearmonth', yearmonth, '1976-11-18T15:23:30');
-test('yearmonth', yearmonth, '1976-11-18T15:23:30.123');
-test('yearmonth', yearmonth, '1976-11-18T15:23:30.123456');
-test('yearmonth', yearmonth, '1976-11-18T15:23:30.123456789');
-test('yearmonth', yearmonth, '1976-11-18');
-test('yearmonth', yearmonth, '+999999-11-18');
-test('yearmonth', yearmonth, '-000300-11-18');
-test('yearmonth', yearmonth, '1976-11-18');
-test('yearmonth', yearmonth, '1512-11-18');
-test('yearmonth', yearmonth, '1976-11');
-test('yearmonth', yearmonth, '+999999-11');
-test('yearmonth', yearmonth, '-000300-11');
-test('yearmonth', yearmonth, '1976-11');
-test('yearmonth', yearmonth, '1512-11');
+describe('offset', () => {
+  test(offset, '+000');
+  test(offset, '-000');
+  test(offset, '+0000');
+  test(offset, '-0000');
+  test(offset, '+0:00');
+  test(offset, '-0:00');
+  test(offset, '+00:00');
+  test(offset, '-00:00');
+  test(offset, '+300');
+  test(offset, '-300');
+  test(offset, '+0300');
+  test(offset, '-0300');
+  test(offset, '+3:00');
+  test(offset, '-3:00');
+  test(offset, '+03:00');
+  test(offset, '-03:00');
+});
 
-line();
+describe('timezone', () => {
+  test(timezone, '1976-11-18T15:23+100[Europe/Vienna]');
+  test(timezone, '1976-11-18T15:23:30+100[Europe/Vienna]');
+  test(timezone, '1976-11-18T15:23:30.123+100[Europe/Vienna]');
+  test(timezone, '1976-11-18T15:23:30.123456+100[Europe/Vienna]');
+  test(timezone, '1976-11-18T15:23:30.123456789+100[Europe/Vienna]');
 
-test('monthday', monthday, '1976-11-18T15:23+100[Europe/Vienna]');
-test('monthday', monthday, '1976-11-18T15:23:30+100[Europe/Vienna]');
-test('monthday', monthday, '1976-11-18T15:23:30.123+100[Europe/Vienna]');
-test('monthday', monthday, '1976-11-18T15:23:30.123456+100[Europe/Vienna]');
-test('monthday', monthday, '1976-11-18T15:23:30.123456789+100[Europe/Vienna]');
-test('monthday', monthday, '1976-11-18T15:23-400');
-test('monthday', monthday, '1976-11-18T15:23:30-400');
-test('monthday', monthday, '1976-11-18T15:23:30.123-400');
-test('monthday', monthday, '1976-11-18T15:23:30.123456-400');
-test('monthday', monthday, '1976-11-18T15:23:30.123456789-400');
-test('monthday', monthday, '1976-11-18T15:23');
-test('monthday', monthday, '1976-11-18T15:23:30');
-test('monthday', monthday, '1976-11-18T15:23:30.123');
-test('monthday', monthday, '1976-11-18T15:23:30.123456');
-test('monthday', monthday, '1976-11-18T15:23:30.123456789');
-test('monthday', monthday, '1976-11-18');
-test('monthday', monthday, '+999999-11-18');
-test('monthday', monthday, '-000300-11-18');
-test('monthday', monthday, '1976-11-18');
-test('monthday', monthday, '1512-11-18');
-test('monthday', monthday, '1976-11-18');
-test('monthday', monthday, '11-18');
-test('monthday', monthday, '12-13');
-test('monthday', monthday, '02-02');
-test('monthday', monthday, '01-31');
+  test(timezone, '1976-11-18T15:23-04:00');
+  test(timezone, '1976-11-18T15:23:30-04:00');
+  test(timezone, '1976-11-18T15:23:30.123-04:00');
+  test(timezone, '1976-11-18T15:23:30.123456-04:00');
+  test(timezone, '1976-11-18T15:23:30.123456789-04:00');
+  test(timezone, '+100[Europe/Vienna]');
+  test(timezone, '+100[Europe/Vienna]');
+  test(timezone, '+100[Europe/Vienna]');
+  test(timezone, '+100[Europe/Vienna]');
+  test(timezone, '+100[Europe/Vienna]');
+  test(timezone, '-04:00');
+  test(timezone, '-04:00');
+  test(timezone, '-04:00');
+  test(timezone, '-04:00');
+  test(timezone, '-04:00');
+});
 
-line();
-
-test('offset', offset, '+000');
-test('offset', offset, '-000');
-test('offset', offset, '+0000');
-test('offset', offset, '-0000');
-test('offset', offset, '+0:00');
-test('offset', offset, '-0:00');
-test('offset', offset, '+00:00');
-test('offset', offset, '-00:00');
-test('offset', offset, '+300');
-test('offset', offset, '-300');
-test('offset', offset, '+0300');
-test('offset', offset, '-0300');
-test('offset', offset, '+3:00');
-test('offset', offset, '-3:00');
-test('offset', offset, '+03:00');
-test('offset', offset, '-03:00');
-
-line();
-
-test('timezone', timezone, '1976-11-18T15:23+100[Europe/Vienna]');
-test('timezone', timezone, '1976-11-18T15:23:30+100[Europe/Vienna]');
-test('timezone', timezone, '1976-11-18T15:23:30.123+100[Europe/Vienna]');
-test('timezone', timezone, '1976-11-18T15:23:30.123456+100[Europe/Vienna]');
-test('timezone', timezone, '1976-11-18T15:23:30.123456789+100[Europe/Vienna]');
-
-test('timezone', timezone, '1976-11-18T15:23-04:00');
-test('timezone', timezone, '1976-11-18T15:23:30-04:00');
-test('timezone', timezone, '1976-11-18T15:23:30.123-04:00');
-test('timezone', timezone, '1976-11-18T15:23:30.123456-04:00');
-test('timezone', timezone, '1976-11-18T15:23:30.123456789-04:00');
-test('timezone', timezone, '+100[Europe/Vienna]');
-test('timezone', timezone, '+100[Europe/Vienna]');
-test('timezone', timezone, '+100[Europe/Vienna]');
-test('timezone', timezone, '+100[Europe/Vienna]');
-test('timezone', timezone, '+100[Europe/Vienna]');
-test('timezone', timezone, '-04:00');
-test('timezone', timezone, '-04:00');
-test('timezone', timezone, '-04:00');
-test('timezone', timezone, '-04:00');
-test('timezone', timezone, '-04:00');
-
-line();
-
-const dp = ['1Y', '2M', '3D'];
-let day = [''];
-while (dp.length) {
-  const n = dp.shift();
-  day = day.concat(day.map((p) => `${p}${n}`));
-}
-
-const tp = ['4H', '5M', '6S', '7.123S', '8.123456S', '9.123456789S', '0.123S', '0.123456S', '0.123456789S'];
-let tim = [''];
-while (tp.length) {
-  const n = tp.shift();
-  tim = tim.concat(tim.map((p) => `${p}${n}`));
-}
-
-day.forEach((p) => test(p, duration, `P${p}`));
-tim.forEach((p) => test(p, duration, `PT${p}`));
-for (let d of day) {
-  for (let t of tim) {
-    test(`${d}T${t}`, duration, `P${d}T${t}`);
+describe('duration', () => {
+  const dp = ['1Y', '2M', '3D'];
+  let day = [''];
+  while (dp.length) {
+    const n = dp.shift();
+    day = day.concat(day.map((p) => `${p}${n}`));
   }
+
+  const tp = ['4H', '5M', '6S', '7.123S', '8.123456S', '9.123456789S', '0.123S', '0.123456S', '0.123456789S'];
+  let tim = [''];
+  while (tp.length) {
+    const n = tp.shift();
+    tim = tim.concat(tim.map((p) => `${p}${n}`));
+  }
+
+  day.forEach((p) => test(duration, `P${p}`));
+  tim.forEach((p) => test(duration, `PT${p}`));
+  for (let d of day) {
+    for (let t of tim) {
+      test(duration, `P${d}T${t}`);
+    }
+  }
+});
+
+function test(reg, str) {
+  it(`${str}`, () => assert(!!reg.exec(str)));
 }
 
-function test(name, reg, str) {
-  const match = reg.exec(str);
-  failures += match ? 0 : 1;
-  let line = `${name}.exec(${JSON.stringify(str)}) => ${!match ? 'failed' : inspect(match, false, 1, false)}`;
-  if (!failOnly || !match) console.log(line.split(/\r?\n/).join(' '));
-}
-function line() {
-  if (!failOnly)
-    console.log(
-      Array(100)
-        .fill('=')
-        .join('=')
-    );
-}
-
-process.exit(failures);
+import { normalize } from 'path';
+if (normalize(import.meta.url.slice(8)) === normalize(process.argv[1])) report(reporter);

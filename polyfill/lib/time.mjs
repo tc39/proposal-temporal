@@ -90,25 +90,11 @@ export class Time {
     let { hour, minute, second, millisecond, microsecond, nanosecond } = this;
     let { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
     if (years !== 0 || months !== 0 || days !== 0) throw new RangeError('invalid duration');
-    ({ hour, minute, second, minute, microsecond, nanosecond } = ES.AddTime(
+    ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.AddTime(
       hour,
       minute,
       second,
-      minute,
-      microsecond,
-      nanosecond,
-      hours,
-      minutes,
-      seconds,
-      milliseconds,
-      microseconds,
-      nanoseconds
-    ));
-    ({ hour, minute, second, minute, microsecond, nanosecond } = ES.BalanceTime(
-      hour,
-      minute,
-      second,
-      minute,
+      millisecond,
       microsecond,
       nanosecond,
       hours,
@@ -139,32 +125,14 @@ export class Time {
       microseconds,
       nanoseconds
     ));
-    ({ hour, minute, second, minute, microsecond, nanosecond } = ES.BalanceTime(
-      hour,
-      minute,
-      second,
-      minute,
-      microsecond,
-      nanosecond,
-      hours,
-      minutes,
-      seconds,
-      milliseconds,
-      microseconds,
-      nanoseconds
-    ));
     return new Time(hour, minute, second, millisecond, microsecond, nanosecond);
   }
   difference(other = {}) {
     other = ES.CastTime(other);
-    const [one, two] = [this, other].sort(Time.compare);
-    const hours = two.hour - one.hour;
-    const minutes = two.minute - one.minute;
-    const seconds = two.second - one.seconds;
-    const milliseconds = two.millisecond - one.millisecond;
-    const microseconds = two.microsecond - one.microsecond;
-    const nanoseconds = two.nanosecond - one.nanosecond;
-    return new Duration(0, 0, 0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+    const [earlier, later] = [this, other].sort(Time.compare);
+    const { hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.DifferenceTime(earlier, later);
+    const Duration = ES.GetIntrinsic('%Temporal.Duration%');
+    return new Duration(0, 0, 0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 'balance');
   }
 
   toString() {
@@ -200,7 +168,7 @@ export class Time {
     const millisecond = ES.ToInteger(match[4]);
     const microsecond = ES.ToInteger(match[5]);
     const nanosecond = ES.ToInteger(match[6]);
-    const Timer = ES.GetIntrinsic('%Temporal.Time%');
+    const Time = ES.GetIntrinsic('%Temporal.Time%');
     return new Time(hour, minute, second, millisecond, microsecond, nanosecond, 'reject');
   }
   static from(...args) {

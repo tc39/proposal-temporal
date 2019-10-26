@@ -26,31 +26,59 @@ export class Duration {
     seconds = 0,
     milliseconds = 0,
     microseconds = 0,
-    nanoseconds = 0
+    nanoseconds = 0,
+    disambiguation = 'balance'
   ) {
-    let tdays;
-    ({
-      days: tdays,
-      hour: hours,
-      minute: minutes,
-      second: seconds,
-      millisecond: milliseconds,
-      microsecond: microseconds,
-      nanosecond: nanoseconds
-    } = ES.BalanceTime(
-      ES.AssertPositiveInteger(ES.ToInteger(hours)),
-      ES.AssertPositiveInteger(ES.ToInteger(minutes)),
-      ES.AssertPositiveInteger(ES.ToInteger(seconds)),
-      ES.AssertPositiveInteger(ES.ToInteger(milliseconds)),
-      ES.AssertPositiveInteger(ES.ToInteger(microseconds)),
-      ES.AssertPositiveInteger(ES.ToInteger(nanoseconds))
-    ));
-    days += tdays;
+    switch (disambiguation) {
+      case 'constrain':
+        years = ES.ConstrainToRange(years, 0, Number.MAX_SAFE_INTEGER);
+        months = ES.ConstrainToRange(months, 0, Number.MAX_SAFE_INTEGER);
+        days = ES.ConstrainToRange(days, 0, Number.MAX_SAFE_INTEGER);
+        hours = ES.ConstrainToRange(hours, 0, Number.MAX_SAFE_INTEGER);
+        minutes = ES.ConstrainToRange(minutes, 0, Number.MAX_SAFE_INTEGER);
+        seconds = ES.ConstrainToRange(seconds, 0, Number.MAX_SAFE_INTEGER);
+        milliseconds = ES.ConstrainToRange(milliseconds, 0, Number.MAX_SAFE_INTEGER);
+        microseconds = ES.ConstrainToRange(microseconds, 0, Number.MAX_SAFE_INTEGER);
+        nanoseconds = ES.ConstrainToRange(nanoseconds, 0, Number.MAX_SAFE_INTEGER);
+        break;
+      case 'balance':
+        let tdays;
+        ({
+          days: tdays,
+          hour: hours,
+          minute: minutes,
+          second: seconds,
+          millisecond: milliseconds,
+          microsecond: microseconds,
+          nanosecond: nanoseconds
+        } = ES.BalanceTime(
+          ES.ConstrainToRange(ES.ToInteger(hours), 0, Number.MAX_SAFE_INTEGER),
+          ES.ConstrainToRange(ES.ToInteger(minutes), 0, Number.MAX_SAFE_INTEGER),
+          ES.ConstrainToRange(ES.ToInteger(seconds), 0, Number.MAX_SAFE_INTEGER),
+          ES.ConstrainToRange(ES.ToInteger(milliseconds), 0, Number.MAX_SAFE_INTEGER),
+          ES.ConstrainToRange(ES.ToInteger(microseconds), 0, Number.MAX_SAFE_INTEGER),
+          ES.ConstrainToRange(ES.ToInteger(nanoseconds), 0, Number.MAX_SAFE_INTEGER)
+        ));
+        days += tdays;
+        days = ES.ConstrainToRange(ES.ToInteger(days), 0, Number.MAX_SAFE_INTEGER);
+        years = ES.ConstrainToRange(ES.ToInteger(years), 0, Number.MAX_SAFE_INTEGER);
+        break;
+    }
+
+    years = ES.AssertPositiveInteger(years);
+    months = ES.AssertPositiveInteger(months);
+    days = ES.AssertPositiveInteger(days);
+    hours = ES.AssertPositiveInteger(hours);
+    minutes = ES.AssertPositiveInteger(minutes);
+    seconds = ES.AssertPositiveInteger(seconds);
+    milliseconds = ES.AssertPositiveInteger(milliseconds);
+    microseconds = ES.AssertPositiveInteger(microseconds);
+    nanoseconds = ES.AssertPositiveInteger(nanoseconds);
 
     CreateSlots(this);
-    SetSlot(this, YEARS, ES.AssertPositiveInteger(ES.ToInteger(years)));
-    SetSlot(this, MONTHS, ES.AssertPositiveInteger(ES.ToInteger(months)));
-    SetSlot(this, DAYS, ES.AssertPositiveInteger(ES.ToInteger(days)));
+    SetSlot(this, YEARS, years);
+    SetSlot(this, MONTHS, months);
+    SetSlot(this, DAYS, days);
     SetSlot(this, HOURS, hours);
     SetSlot(this, MINUTES, minutes);
     SetSlot(this, SECONDS, seconds);
@@ -93,7 +121,7 @@ export class Duration {
 
     const timeParts = [];
     if (GetSlot(this, HOURS)) timeParts.push(`${GetSlot(this, HOURS)}H`);
-    if (GetSlot(this, MINUTES)) timeParts.push(`${GetSlot(this, MINUTES)}H`);
+    if (GetSlot(this, MINUTES)) timeParts.push(`${GetSlot(this, MINUTES)}M`);
 
     const secondParts = [];
     if (GetSlot(this, NANOSECONDS)) secondParts.unshift(`000${GetSlot(this, NANOSECONDS)}`.slice(-3));

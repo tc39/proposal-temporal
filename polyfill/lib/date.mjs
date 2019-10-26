@@ -53,7 +53,7 @@ export class Date {
     return ES.LeapYear(GetSlot(this, YEAR));
   }
   with(dateLike = {}, disambiguation = 'constrain') {
-    const { year = GetSlot(this, YEAR), month = GetSlot(this, MONTH), day = GetSlot(this, DAY) } = dateTimeLike;
+    const { year = GetSlot(this, YEAR), month = GetSlot(this, MONTH), day = GetSlot(this, DAY) } = dateLike;
     return new Date(year, month, day, disambiguation);
   }
   plus(durationLike = {}, disambiguation = 'constrain') {
@@ -63,7 +63,6 @@ export class Date {
     if (hours || minutes || seconds || milliseconds || microseconds || nanoseconds)
       throw new RangeError('invalid duration');
     ({ year, month, day } = ES.AddDate(year, month, day, years, months, days, disambiguation));
-    ({ year, month, day } = ES.BalanceDate(year, month, day));
     return new Date(year, month, day);
   }
   minus(durationLike = {}, disambiguation = 'constrain') {
@@ -73,28 +72,14 @@ export class Date {
     if (hours !== 0 || minutes !== 0 || seconds !== 0 || milliseconds !== 0 || microseconds !== 0 || nanoseconds !== 0)
       throw new RangeError('invalid duration');
     ({ year, month, day } = ES.SubtractDate(year, month, day, years, months, days, disambiguation));
-    ({ year, month, day } = ES.BalanceDate(year, month, day));
     return new Date(year, month, day);
   }
   difference(other, disambiguation = 'constrain') {
     other = ES.CastDate(other);
-    const [one, two] = [this, other].sort(DateTime.compare);
-    let years = two.year - one.year;
-
-    let days = ES.DayOfYear(two.year, two.month, two.day) - ES.DayOfYear(one.year, one.month, one.day);
-    if (days < 0) {
-      years -= 1;
-      days = (ES.LeapYear(two.year) ? 366 : 365) + days;
-    }
-    if (disambiguation === 'constrain' && month === 2 && ES.LeapYear(one.year) && !ES.LeapYear(one.year + years))
-      days + 1;
-
-    if (days < 0) {
-      years -= 1;
-      days += ES.DaysInMonth(two.year, two.month);
-    }
+    const [smaller, larger] = [this, other].sort(Date.compare);
+    const { years, months, days } = ES.DifferenceDate(smaller, larger);
     const Duration = ES.GetIntrinsic('%Temporal.Duration%');
-    return new Duration(years, 0, days, 0, 0, 0, 0, 0, 0);
+    return new Duration(years, months, days, 0, 0, 0, 0, 0, 0);
   }
   toString() {
     let year = ES.ISOYearString(GetSlot(this, YEAR));
@@ -124,7 +109,7 @@ export class Date {
     return new MonthDay(GetSlot(this, MONTH), GetSlot(this, DAY));
   }
 
-  static fromString(isoStringParam) {
+  static fromString(isoString) {
     isoString = ES.ToString(isoString);
     const match = STRING.exec(isoString);
     if (!match) throw new RangeError(`invalid date: ${isoString}`);

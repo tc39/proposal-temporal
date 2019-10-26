@@ -19,8 +19,11 @@ import { absolute as STRING } from './regex.mjs';
 
 export class Absolute {
   constructor(epochNanoseconds) {
+    if ('bigint' !== typeof epochNanoseconds) throw RangeError('bigint required');
+    const epochMilliseconds = Number(epochNanoseconds / BigInt(1e6));
+    const restNanoseconds = Number(epochNanoseconds % BigInt(1e6));
     CreateSlots(this);
-    SetSlot(this, EPOCHNANOSECONDS, epochNanoseconds);
+    SetSlot(this, EPOCHNANOSECONDS, { ms: epochMilliseconds, ns: restNanoseconds });
   }
 
   getEpochSeconds() {
@@ -100,15 +103,15 @@ export class Absolute {
   difference(other) {
     other = ES.CastAbsolute(other);
 
-    const [one, two] = [this, other].sort(Absoulte.compare);
+    const [one, two] = [this, other].sort(Absolute.compare);
     const { ms: onems, ns: onens } = GetSlot(one, EPOCHNANOSECONDS);
     const { ms: twoms, ns: twons } = GetSlot(two, EPOCHNANOSECONDS);
 
-    ns = twons - onens;
-    ms = twoms - onems;
+    const ns = twons - onens;
+    const ms = twoms - onems;
 
     const Duration = ES.GetIntrinsic('%Temporal.Duration%');
-    const duration = new Duration(delta);
+    const duration = new Duration(0, 0, 0, 0, 0, 0, ms, 0, ns, 'balance');
     return duration;
   }
   toString(timeZoneParam = 'UTC') {
@@ -147,9 +150,9 @@ export class Absolute {
     return resultObject;
   }
   static fromEpochMicroseconds(epochMicroseconds) {
-    if ('bigint' !== typeof epochNanoseconds) throw RangeError('bigint required');
+    if ('bigint' !== typeof epochMicroseconds) throw RangeError('bigint required');
     const epochMilliseconds = epochMicroseconds / BigInt(1e3);
-    const restNanoseconds = epochMicroseconds % BigInt(1e3);
+    const restNanoseconds = (epochMicroseconds % BigInt(1e3)) * BigInt(1e3);
     const resultObject = Object.create(Absolute.prototype);
     CreateSlots(resultObject);
     SetSlot(resultObject, EPOCHNANOSECONDS, { ms: epochMilliseconds, ns: restNanoseconds });
@@ -178,7 +181,7 @@ export class Absolute {
     const microsecond = ES.ToInteger(match[8]);
     const nanosecond = ES.ToInteger(match[9]);
     const zone = match[11] || match[10] || 'UTC';
-    const datetime = ES.GetIntrinsic('CastDateTime', {
+    const datetime = ES.CastDateTime({
       year,
       month,
       day,
@@ -199,8 +202,8 @@ export class Absolute {
     two = ES.CastAbsolute(two);
     one = GetSlot(one, EPOCHNANOSECONDS);
     two = GetSlot(two, EPOCHNANOSECONDS);
-    if (one.ms !== two.ms) return ES.ComparisonResult(two.ms - one.ms);
-    if (one.ns !== two.ns) return ES.ComparisonResult(two.ns - one.ns);
+    if (one.ms !== two.ms) return ES.ComparisonResult(one.ms - two.ms);
+    if (one.ns !== two.ns) return ES.ComparisonResult(one.ns - two.ns);
     return ES.ComparisonResult(0);
   }
 }
