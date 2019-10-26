@@ -8,7 +8,7 @@
     "mkdirp": "^0.5.1"
   },
   "scripts": {
-    "prebuild": "mkdirp out && pushd polyfill && npm run install && npm run build && popd && push docs && npm install && npm run build && popd && cp docs/playground.* out/",
+    "prebuild": "mkdirp out && cd polyfill && npm run install && npm run build && cd ../docs && npm install && npm run build && cd .. && cp docs/playground.* out/",
     "build": "ecmarkup spec.html out/index.html"
   },
   "repository": {
