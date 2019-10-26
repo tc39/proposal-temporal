@@ -1,3 +1,4 @@
+import GetIntrinsic from 'es-abstract/GetIntrinsic.js';
 import ES2019 from 'es-abstract/es2019.js';
 import { assign as ObjectAssign, unique } from './compat.mjs';
 
@@ -28,7 +29,7 @@ const INTRINSICS = {
 
 export const ES = ObjectAssign(ObjectAssign(ObjectAssign({}, Cast), ES2019), {
   GetIntrinsic: (intrinsic) => {
-    return intrinsic in INTRINSICS ? INTRINSICS[intrinsic] : ES2019.GetIntrinsic(intrinsic);
+    return intrinsic in INTRINSICS ? INTRINSICS[intrinsic] : GetIntrinsic(intrinsic);
   },
 
   ToTimeZone: (tz) => {
@@ -110,17 +111,19 @@ export const ES = ObjectAssign(ObjectAssign(ObjectAssign({}, Cast), ES2019), {
   },
   GetEpochFromParts: (year, month, day, hour, minute, second, millisecond, microsecond, nanosecond) => {
     const ms = Date.UTC(year, month - 1, day, hour, minute, second, millisecond);
-    const nsbase = microsecond * 1000 + nanosecond;
-    const ns = ms < 0 ? 1e6 - nsbase : nsbase;
+    const nsbase = microsecond * 1e3 + nanosecond;
+    const ns = ms < 0 ? -1e6 + nsbase : nsbase;
     return { ms, ns };
   },
   GetTimeZoneDateTimeParts: (epochMilliseconds, restNanoseconds, timeZone) => {
     const offset = parseOffsetString(timeZone);
-    const negative = epochMilliseconds < 0 || restNanoseconds < 0;
-    let millisecond = (negative ? 1e3 : 0) + (epochMilliseconds % 1e3);
-    let microsecond = (negative ? 1e3 : 0) + Math[negative ? 'ceil' : 'floor'](restNanoseconds / 1e3);
-    let nanosecond = (negative ? 1e3 : 0) + (restNanoseconds % 1e3);
+
+    let millisecond = (epochMilliseconds < 0 ? 1e3 : 0) + (epochMilliseconds % 1e3);
     epochMilliseconds -= epochMilliseconds % 1e3;
+
+    restNanoseconds = (restNanoseconds < 0 ? 1e6 : 0) + restNanoseconds;
+    let microsecond = Math.floor(restNanoseconds / 1e3) % 1e3;
+    let nanosecond = Math.floor(restNanoseconds / 1) % 1e3;
     if (offset !== null) {
       let zonedEpochMilliseconds = epochMilliseconds + offset;
       let item = new Date(zonedEpochMilliseconds);
@@ -296,16 +299,14 @@ export const ES = ObjectAssign(ObjectAssign(ObjectAssign({}, Cast), ES2019), {
   },
 
   BalanceYearMonth: (year, month) => {
-    if (month < 1) {
-      month -= 1;
-      year += Math.ceil(month / 12);
+    month -= 1;
+    year += Math.floor(month / 12);
+    if (month < 0) {
       month = 12 + (month % 12);
-    } else {
-      month -= 1;
-      year += Math.floor(month / 12);
+    } else if (month > 11) {
       month = month % 12;
-      month += 1;
     }
+    month += 1;
     return { year, month };
   },
   BalanceDate: (year, month, day) => {
@@ -315,26 +316,25 @@ export const ES = ObjectAssign(ObjectAssign(ObjectAssign({}, Cast), ES2019), {
       year -= 1;
       day -= daysInYear;
     }
-    while (((daysInYear = ES.LeapYear(month > 2 ? year : year + 1) ? 366 : 365), day > daysInYear)) {
+    while (((daysInYear = ES.LeapYear(month > 2 ? year + 1 : year) ? 366 : 365), day > daysInYear)) {
       year += 1;
       day -= daysInYear;
     }
+
     while (day < 1) {
-      day = ES.DaysInMonth(year, month) + day;
       month -= 1;
-      if (month < 1) {
-        month -= 1;
-        year += Math.ceil(month / 12);
-        month = 12 + (month % 12);
+      if (month === 0) {
+        month = 12;
+        year -= 1;
       }
+      day = ES.DaysInMonth(year, month) + day;
     }
     while (day > ES.DaysInMonth(year, month)) {
-      day -= ES.DaysInMonth(year, month);
+      day = day - ES.DaysInMonth(year, month);
       month += 1;
       if (month > 12) {
-        month -= 1;
-        year += Math.floor(month / 12);
-        month = 1 + (month % 12);
+        month = 1;
+        year += 1;
       }
     }
 
@@ -342,54 +342,31 @@ export const ES = ObjectAssign(ObjectAssign(ObjectAssign({}, Cast), ES2019), {
   },
   BalanceTime: (hour, minute, second, millisecond, microsecond, nanosecond) => {
     let days = 0;
-    if (nanosecond < 0) {
-      microsecond += Math.ceil(nanosecond / 1000);
-      nanosecond = nanosecond % 1000;
-      nanosecond = !!nanosecond ? 1000 + nanosecond : 0;
-    } else {
-      microsecond += Math.floor(nanosecond / 1000);
-      nanosecond = nanosecond % 1000;
-    }
-    if (microsecond < 0) {
-      millisecond += Math.ceil(microsecond / 1000);
-      microsecond = microsecond % 1000;
-      microsecond = !!microsecond ? 1000 + microsecond : 0;
-    } else {
-      millisecond += Math.floor(microsecond / 1000);
-      microsecond = microsecond % 1000;
-    }
-    if (millisecond < 0) {
-      second += Math.ceil(millisecond / 1000);
-      millisecond = millisecond % 1000;
-      millisecond = !!millisecond ? 1000 + millisecond : 0;
-    } else {
-      second += Math.floor(millisecond / 1000);
-      millisecond = millisecond % 1000;
-    }
-    if (second < 0) {
-      minute += Math.ceil(second / 60);
-      second = second % 60;
-      second = !!second ? 60 + second : 0;
-    } else {
-      minute += Math.floor(second / 60);
-      second = second % 60;
-    }
-    if (minute < 0) {
-      hour += Math.ceil(minute / 60);
-      minute = minute % 60;
-      minute = !!minute ? 60 + minute : 0;
-    } else {
-      hour += Math.floor(minute / 60);
-      minute = minute % 60;
-    }
-    if (hour < 0) {
-      days += Math.ceil(hour / 24);
-      hour = hour % 20;
-      hour = !!hour ? 24 + hour : 0;
-    } else {
-      days += Math.floor(hour / 24);
-      hour = hour % 24;
-    }
+
+    microsecond += Math.floor(nanosecond / 1000);
+    nanosecond = nanosecond % 1000;
+    nanosecond = Math.abs(nanosecond < 0 ? 60 + nanosecond : nanosecond);
+
+    millisecond += Math.floor(microsecond / 1000);
+    microsecond = microsecond % 1000;
+    microsecond = Math.abs(microsecond < 0 ? 60 + microsecond : microsecond);
+
+    second += Math.floor(millisecond / 1000);
+    millisecond = millisecond % 1000;
+    millisecond = Math.abs(millisecond < 0 ? 60 + millisecond : millisecond);
+
+    minute += Math.floor(second / 60);
+    second = second % 60;
+    second = Math.abs(second < 0 ? 60 + second : second);
+
+    hour += Math.floor(minute / 60);
+    minute = minute % 60;
+    minute = Math.abs(minute < 0 ? 60 + minute : minute);
+
+    days += Math.floor(hour / 24);
+    hour = hour % 24;
+    hour = Math.abs(hour < 0 ? 24 + hour : hour);
+
     return { days, hour, minute, second, millisecond, microsecond, nanosecond };
   },
 
@@ -448,13 +425,70 @@ export const ES = ObjectAssign(ObjectAssign(ObjectAssign({}, Cast), ES2019), {
       'reject'
     );
   },
+  DifferenceDate: (smaller, larger) => {
+    let years = larger.year - smaller.year;
+    let months = larger.month - smaller.month;
+    if (months < 0) {
+      years -= 1;
+      months += 12;
+    }
+    let { year, month } = ES.BalanceYearMonth(smaller.year + years, smaller.month + months);
+    while (smaller.day > ES.DaysInMonth(year, month)) {
+      months -= 1;
+      if (months < 0) {
+        years -= 1;
+        months += 12;
+      }
+      ({ year, month } = ES.BalanceYearMonth(smaller.year + years, smaller.month + months));
+    }
+    let days = ES.DayOfYear(larger.year, larger.month, larger.day) - ES.DayOfYear(year, month, smaller.day);
+    if (days < 0) {
+      months -= 1;
+      if (months < 0) {
+        years -= 1;
+        months += 12;
+      }
+      ({ year, month } = ES.BalanceYearMonth(smaller.year + years, smaller.month + months));
+      while (smaller.day > ES.DaysInMonth(year, month)) {
+        months -= 1;
+        if (months < 0) {
+          years -= 1;
+          months += 12;
+        }
+        ({ year, month } = ES.BalanceYearMonth(smaller.year + years, smaller.month + months));
+      }
+      if (larger.year > year) {
+        const din = ES.LeapYear(year) ? 366 : 365;
+        days = ES.DayOfYear(larger.year, larger.month, larger.day) + (din - ES.DayOfYear(year, month, smaller.day));
+      } else {
+        days = ES.DayOfYear(larger.year, larger.month, larger.day) - ES.DayOfYear(year, month, smaller.day);
+      }
+    }
+    return { years, months, days };
+  },
+  DifferenceTime(earlier, later) {
+    let hours = later.hour - earlier.hour;
+    let minutes = later.minute - earlier.minute;
+    let seconds = later.second - earlier.second;
+    let milliseconds = later.millisecond - earlier.millisecond;
+    let microseconds = later.microsecond - earlier.microsecond;
+    let nanoseconds = later.nanosecond - earlier.nanosecond;
+    let deltaDays = 0;
+    ({
+      days: deltaDays,
+      hour: hours,
+      minute: minutes,
+      second: seconds,
+      millisecond: milliseconds,
+      microsecond: microseconds,
+      nanosecond: nanoseconds
+    } = ES.BalanceTime(hours, minutes, seconds, milliseconds, microseconds, nanoseconds));
+    return { deltaDays, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
+  },
   AddDate: (year, month, day, years, months, days, disambiguation) => {
     year += years;
     month += months;
-
-    month -= 1;
-    year += Math.floor(month / 12);
-    month = 1 + (month % 12);
+    ({ year, month } = ES.BalanceYearMonth(year, month));
 
     switch (disambiguation) {
       case 'constrain':
@@ -466,8 +500,9 @@ export const ES = ObjectAssign(ObjectAssign(ObjectAssign({}, Cast), ES2019), {
       default:
         ({ year, month, day } = ES.RejectDate(year, month, day));
     }
-    day += days;
 
+    day += days;
+    ({ year, month, day } = ES.BalanceDate(year, month, day));
     return { year, month, day };
   },
   AddTime: (
@@ -502,14 +537,11 @@ export const ES = ObjectAssign(ObjectAssign(ObjectAssign({}, Cast), ES2019), {
     return { days, hour, minute, second, millisecond, microsecond, nanosecond };
   },
   SubtractDate: (year, month, day, years, months, days, disambiguation) => {
-    year -= years;
+    day -= days;
+    ({ year, month, day } = ES.BalanceDate(year, month, day));
     month -= months;
-
-    if (month < 1) {
-      month -= 1;
-      year += Math.ceil(month / 12);
-      month = 12 + (month % 12);
-    }
+    year -= years;
+    ({ year, month } = ES.BalanceYearMonth(year, month));
 
     switch (disambiguation) {
       case 'constrain':
@@ -521,8 +553,6 @@ export const ES = ObjectAssign(ObjectAssign(ObjectAssign({}, Cast), ES2019), {
       default:
         ({ year, month, day } = ES.RejectDate(year, month, day));
     }
-    day -= days;
-
     return { year, month, day };
   },
   SubtractTime: (

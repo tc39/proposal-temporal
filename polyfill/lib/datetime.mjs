@@ -142,7 +142,8 @@ export class DateTime {
     let { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = this;
     let { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
     ({ year, month, day } = ES.AddDate(year, month, day, years, months, days, disambiguation));
-    ({ days, hour, minute, second, millisecond, microsecond, nanosecond } = ES.AddTime(
+    let deltaDays = 0;
+    ({ deltaDays, hour, minute, second, millisecond, microsecond, nanosecond } = ES.AddTime(
       hour,
       minute,
       second,
@@ -156,7 +157,7 @@ export class DateTime {
       microseconds,
       nanoseconds
     ));
-    day += days;
+    day += deltaDays;
     ({ year, month, day } = ES.BalanceDate(year, month, day));
     return new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
   }
@@ -164,8 +165,8 @@ export class DateTime {
     const duration = ES.CastDuration(durationLike);
     let { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = this;
     let { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
-    ({ year, month, day } = ES.SubtractDate(year, month, day, years, months, days, disambiguation));
-    ({ days, hour, minute, second, millisecond, microsecond, nanosecond } = ES.SubtractTime(
+    let deltaDays = 0;
+    ({ deltaDays, hour, minute, second, millisecond, microsecond, nanosecond } = ES.SubtractTime(
       hour,
       minute,
       second,
@@ -179,46 +180,24 @@ export class DateTime {
       microseconds,
       nanoseconds
     ));
-    day += days;
-    ({ year, month, day } = ES.BalanceDate(year, month, day));
+    days += deltaDays;
+    ({ year, month, day } = ES.SubtractDate(year, month, day, years, months, days, disambiguation));
     return new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
   }
   difference(other, disambiguation = 'constrain') {
     other = ES.CastDateTime(other);
-    const [one, two] = [this, other].sort(DateTime.compare);
-    let years = two.year - one.year;
+    const [smaller, larger] = [this, other].sort(DateTime.compare);
+    const { deltaDays, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.DifferenceTime(
+      smaller,
+      larger
+    );
+    let { year, month, day } = larger;
+    day += deltaDays;
+    ({ year, month, day } = ES.BalanceDate(year, month, day));
+    let { years, months, days } = ES.DifferenceDate(smaller, { year, month, day });
 
-    let days = ES.DayOfYear(two.year, two.month, two.day) - ES.DayOfYear(one.year, one.month, one.day);
-    if (days < 0) {
-      years -= 1;
-      days = (ES.LeapYear(two.year) ? 366 : 365) + days;
-    }
-    if (disambiguation === 'constrain' && month === 2 && ES.LeapYear(one.year) && !ES.LeapYear(one.year + years))
-      days + 1;
-
-    let hours = two.hour - one.hour;
-    let minutes = two.minute - one.minute;
-    let seconds = two.second - one.second;
-    let milliseconds = two.millisecond - one.millisecond;
-    let microseconds = two.microsecond - one.microsecond;
-    let nanoseconds = two.nanosecond - one.nanosecond;
-    let deltaDays = 0;
-    ({
-      days: deltaDays,
-      hour: hours,
-      minute: minutes,
-      second: seconds,
-      millisecond: milliseconds,
-      microsecond: microseconds,
-      nanosecond: nanoseconds
-    } = ES.BalanceTime(hours, minutes, seconds, milliseconds, microseconds, nanoseconds));
-    days += deltaDays;
-    if (days < 0) {
-      years -= 1;
-      days += ES.DaysInMonth(two.year, two.month);
-    }
     const Duration = ES.GetIntrinsic('%Temporal.Duration%');
-    return new Duration(years, 0, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+    return new Duration(years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
   }
   toString() {
     let year = ES.ISOYearString(GetSlot(this, YEAR));

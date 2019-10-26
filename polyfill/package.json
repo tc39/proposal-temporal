@@ -4,7 +4,8 @@
   "description": "TC39 Proposal: Temporal",
   "main": "index.js",
   "scripts": {
-    "pretty": "prettier --write lib/*.*(m)js ",
+    "test": "node --no-warnings --experimental-modules --loader ./test/resolve.source.mjs ./test/all.mjs",
+    "pretty": "prettier --write lib/*.*(m)js test/*.*(m)js",
     "build": "rollup -c rollup.config.js",
     "prepublishOnly": "npm run build"
   },
@@ -34,6 +35,8 @@
   "devDependencies": {
     "@babel/core": "^7.6.2",
     "@babel/preset-env": "^7.6.2",
+    "@pipobscure/demitasse": "^1.0.10",
+    "@pipobscure/demitasse-pretty": "^1.0.10",
     "core-js": "^3.2.1",
     "prettier": "^1.18.2",
     "rollup": "^1.23.1",

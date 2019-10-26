@@ -115,7 +115,7 @@ export class Duration {
 
     const timeParts = [];
     if (GetSlot(this, HOURS)) timeParts.push(`${GetSlot(this, HOURS)}H`);
-    if (GetSlot(this, MINUTES)) timeParts.push(`${GetSlot(this, MINUTES)}H`);
+    if (GetSlot(this, MINUTES)) timeParts.push(`${GetSlot(this, MINUTES)}M`);
 
     const secondParts = [];
     if (GetSlot(this, NANOSECONDS)) secondParts.unshift(`000${GetSlot(this, NANOSECONDS)}`.slice(-3));

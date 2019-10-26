@@ -51,25 +51,19 @@
       </p>
       <emu-alg>
         1. Let _isostring_ be ? ToString(_isostring_).
-        1. Let _validSyntax_ be *true* if _isostring_ conforms to the format `YYYY-MM-DD`, and *false* otherwise, where:
-          * `YYYY` is either four decimal digits or an expanded year of `"+"` or `"-"` followed by six decimal digits;
-          * `-` is the code unit 0x002D (HYPHEN-MINUS);
-          * `MM` is two decimal digits;
-          * `-` is the code unit 0x002D (HYPHEN-MINUS);
-          * `DD` is two decimal digits.
-        1. If _validSyntax_ is *false*, then
-          1. Throw a *RangeError* exception.
-        1. Let _year_, _month_, and _day_ be the respective parts of _isostring_, interpreted as decimal numbers.
-        1. Let _result_ be ? RegulateDate(_year_, _month_, _day_, `"reject"`).
-        1. Return ? CreateDate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]]).
+        1. Return ? DateFromString(_isostring_).
       </emu-alg>
     </emu-clause>
 
     <emu-clause>
-      <h1>Temporal.Date.from ( …_args_ )</h1>
+      <h1>Temporal.Date.from ( _arg_ )</h1>
       <p>
-        <mark>TODO: Define.</mark>
+        The `fromString` method takes one argument _arg_.
+        The following steps are taken:
       </p>
+      <emu-alg>
+        1. Return ? ToDate(_arg_).
+      </emu-alg>
     </emu-clause>
 
     <emu-clause>
@@ -467,28 +461,48 @@
       </emu-alg>
     </emu-clause>
 
+    <emu-clause id=sec-temporal-DateFromString aoid=DateFromString>
+      <h1>DateFromString ( _date_ )</h1>
+      <emu-alg>
+        1. Assert: Type(_date_) is String.
+        1. Let _validSyntax_ be *true* if _isostring_ conforms to the format `YYYY-MM-DD`, and *false* otherwise, where:
+          * `YYYY` is either four decimal digits or an expanded year of `"+"` or `"-"` followed by six decimal digits;
+          * `-` is the code unit 0x002D (HYPHEN-MINUS);
+          * `MM` is two decimal digits;
+          * `-` is the code unit 0x002D (HYPHEN-MINUS);
+          * `DD` is two decimal digits.
+        1. If _validSyntax_ is *false*, then
+          1. Throw a *RangeError* exception.
+        1. Let _year_, _month_, and _day_ be the respective parts of _isostring_, interpreted as decimal numbers.
+        1. Let _result_ be ? RegulateDate(_year_, _month_, _day_, `"reject"`).
+        1. Return ? CreateDate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]]).
+      </emu-alg>
+    </emu-clause>
+
     <emu-clause id=sec-temporal-ToDate aoid=ToDate>
       <h1>ToDate ( _date_ )</h1>
       <emu-alg>
-        1. Let _result_ be {
-          [[Year]]: *undefined*,
-          [[Month]]: *undefined*,
-          [[Day]]: *undefined*,
-          }.
-        1. <mark>TODO: Handle strings?</mark>
-        1. If Type(_date_) is not Object, then
-          1. Throw a *TypeError* exception.
-        1. For each row of <emu-xref href="#table-temporal-datelike-properties"></emu-xref>, except the header row, in table order, do
-          1. Let _property_ be the Property value of the current row.
-          1. Let _value_ be ? Get(_date_, _property_).
-          1. If _value_ is *undefined*, then
+        1. If Type(_date_) is String, then
+          1. Return ? DateFromString(_date_).
+        1. If Type(_date_) is Object, then
+          1. Let _result_ be the Record {
+            [[Year]]: *undefined*,
+            [[Month]]: *undefined*,
+            [[Day]]: *undefined*,
+            }.
+          1. If _date_ has an [[InitializedTemporalDate]] internal slot, then
+            1. Return _date_.
+          1. For each row of <emu-xref href="#table-temporal-datelike-properties"></emu-xref>, except the header row, in table order, do
+            1. Let _property_ be the Property value of the current row.
+            1. Let _value_ be ? Get(_date_, _property_).
+            1. If _value_ is *undefined*, then
+              1. Throw a *TypeError* exception.
+            1. Let _value_ be ? ToInteger(_value_).
+            1. Set _result_'s internal slot whose name is the Internal Slot value of the current row to _value_.
+          1. If ! ValidateDate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]]) is *false*, then
             1. Throw a *TypeError* exception.
-          1. Let _value_ be ? ToInteger(_value_).
-          1. Set _result_'s internal slot whose name is the Internal Slot value of the current row to _value_.
-        1. If ! ValidateDate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]]) is *false*, then
-          1. Throw a *TypeError* exception.
-        1. <mark>TODO: Throw if any time properties are present?</mark>
-        1. Return _result_.
+          1. Return ? CreateDate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]).
+        1. Throw a *TypeError* exception.
       </emu-alg>
     </emu-clause>
 

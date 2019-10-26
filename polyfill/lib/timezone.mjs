@@ -49,7 +49,12 @@ export class TimeZone {
       microsecond,
       nanosecond
     );
-    if (options.length === 1) return new Absolute(options[0]);
+    if (options.length === 1) {
+      const absolute = Object.create(Absolute.prototype);
+      CreateSlots(absolute);
+      SetSlot(absolute, EPOCHNANOSECONDS, options[0]);
+      return absolute;
+    }
     if (options.length) {
       switch (disambiguation) {
         case 'earlier': {

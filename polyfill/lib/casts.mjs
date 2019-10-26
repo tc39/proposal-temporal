@@ -75,6 +75,10 @@ export function CastDateTime(arg, aux) {
       GetSlot(arg, NANOSECOND)
     );
   }
+  if ('object' === typeof arg) {
+    const { year, month, day, hour, minute, second = 0, millisecond = 0, microsecond = 0, nanosecond = 0 } = arg;
+    return new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, 'constrain');
+  }
   if ('string' === typeof arg) {
     try {
       return DateTime.fromString(arg);
