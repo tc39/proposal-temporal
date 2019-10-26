@@ -74,7 +74,7 @@ export class Date {
     ({ year, month, day } = ES.SubtractDate(year, month, day, years, months, days, disambiguation));
     return new Date(year, month, day);
   }
-  difference(other, disambiguation = 'constrain') {
+  difference(other) {
     other = ES.CastDate(other);
     const [smaller, larger] = [this, other].sort(Date.compare);
     const { years, months, days } = ES.DifferenceDate(smaller, larger);

@@ -60,10 +60,10 @@ describe('Date.difference(normal, leap)', () => {
 function build(name, sone, stwo) {
   const [one, two] = [Temporal.Date.from(sone), Temporal.Date.from(stwo)].sort(Temporal.Date.compare);
   describe(name, () => {
-    // buildSub(one, two);
-    // buildSub(one.with({ day: 25 }), two.with({ day: 5 }));
+    buildSub(one, two);
+    buildSub(one.with({ day: 25 }), two.with({ day: 5 }));
     buildSub(one.with({ day: 30 }), two.with({ day: 29 }));
-    // buildSub(one.with({ day: 30 }), two.with({ day: 5 }));
+    buildSub(one.with({ day: 30 }), two.with({ day: 5 }));
   });
 }
 function buildSub(one, two) {
@@ -71,11 +71,9 @@ function buildSub(one, two) {
     const dif = two.difference(one);
     const difm = new Temporal.Duration(dif.years, dif.months);
     const difd = new Temporal.Duration(0, 0, dif.days);
-    it(`(${one}).plus(${dif}) => ${two}`, () => equal(`${one.plus(dif)}`, `${two}`, `(${one}).plus(${dif}) => ${two}`));
+    it(`(${one}).plus(${dif}) => ${two}`, () => equal(`${one.plus(dif, 'reject')}`, `${two}`, `(${one}).plus(${dif}) => ${two}`));
     it(`(${two}).minus(${dif}) => ${one}`, () =>
-      equal(`${two.minus(dif)}`, `${one}`, `(${two}).minus(${dif}) => ${one}`));
-    it(`(${one}) plus(${difm}) = ${one.plus(difm)} plus(${difd}) = ${one.plus(difm).plus(difd)}`, () => {});
-    it(`(${two}) minus(${difd}) = ${two.minus(difd)} minus(${difm}) = ${two.minus(difd).minus(difm)}`, () => {});
+      equal(`${two.minus(dif, 'reject')}`, `${one}`, `(${two}).minus(${dif}) => ${one}`));
   });
 }
 

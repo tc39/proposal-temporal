@@ -184,7 +184,7 @@ export class DateTime {
     ({ year, month, day } = ES.SubtractDate(year, month, day, years, months, days, disambiguation));
     return new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
   }
-  difference(other, disambiguation = 'constrain') {
+  difference(other) {
     other = ES.CastDateTime(other);
     const [smaller, larger] = [this, other].sort(DateTime.compare);
     const { deltaDays, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.DifferenceTime(
