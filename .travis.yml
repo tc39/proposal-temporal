@@ -6,9 +6,7 @@ matrix:
     before_install:
     - cd polyfill/
     script:
-    - node --experimental-modules ./test/regex.mjs
-    - node --experimental-modules ./test/date.mjs
-    - node --experimental-modules ./test/time.mjs
+    - npm run test
   - name: "Specification compilation"
     script:
     - npm run build
