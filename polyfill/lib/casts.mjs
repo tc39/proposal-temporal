@@ -99,7 +99,7 @@ export function CastDate(arg, aux) {
       return Date.fromString(arg);
     } catch (ex) {}
   }
-  if (ES.ValidPropertyBag(arg, [ 'year', 'month', 'day' ])) {
+  if (ES.ValidPropertyBag(arg, ['year', 'month', 'day'])) {
     const { year, month, day } = arg;
     return new Date(year, month, day);
   }
@@ -124,7 +124,7 @@ export function CastTime(arg, aux) {
       return Time.fromString(arg);
     } catch (ex) {}
   }
-  if (ES.ValidPropertyBag(arg, [ 'hour', 'minute', 'second', 'millisecond', 'microsecond', 'nanosecond' ])) {
+  if (ES.ValidPropertyBag(arg, ['hour', 'minute', 'second', 'millisecond', 'microsecond', 'nanosecond'])) {
     const { hour, minute, second, millisecond, microsecond, nanosecond } = arg;
     return new Time(hour, minute, second, millisecond, microsecond, nanosecond);
   }
@@ -142,8 +142,8 @@ export function CastYearMonth(arg, aux) {
       return YearMonth.fromString(arg);
     } catch (ex) {}
   }
-  if (ES.ValidPropertyBag(arg, [ 'year', 'month' ])) {
-    const { year = 0, month= 1 } = arg;
+  if (ES.ValidPropertyBag(arg, ['year', 'month'])) {
+    const { year = 0, month = 1 } = arg;
     return new YearMonth(year, month);
   }
   throw RangeError(`invalid yearmonth value: ${arg}`);
@@ -160,7 +160,7 @@ export function CastMonthDay(arg) {
       return MonthDay.fromString(arg);
     } catch (ex) {}
   }
-  if (ES.ValidPropertyBag(arg, [ 'month', 'day' ])) {
+  if (ES.ValidPropertyBag(arg, ['month', 'day'])) {
     const { month = 1, day = 1 } = arg;
     return new MonthDay(month, day);
   }
@@ -177,7 +177,19 @@ export function CastDuration(arg) {
       return Duration.fromString(arg);
     } catch (ex) {}
   }
-  if (ES.ValidPropertyBag(arg, [ 'years', 'months', 'days', 'hours', 'minutes', 'seconds', 'milliseconds', 'microseconds', 'nanoseconds' ])) {
+  if (
+    ES.ValidPropertyBag(arg, [
+      'years',
+      'months',
+      'days',
+      'hours',
+      'minutes',
+      'seconds',
+      'milliseconds',
+      'microseconds',
+      'nanoseconds'
+    ])
+  ) {
     const {
       years = 0,
       months = 0,

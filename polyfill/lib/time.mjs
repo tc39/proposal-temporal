@@ -78,7 +78,7 @@ export class Time {
   }
 
   with(timeLike = {}, disambiguation = 'constrain') {
-    if (!ES.ValidPropertyBag(timeLike, [ 'hour', 'minute', 'second', 'millisecond', 'microsecond', 'nanosecond' ])) {
+    if (!ES.ValidPropertyBag(timeLike, ['hour', 'minute', 'second', 'millisecond', 'microsecond', 'nanosecond'])) {
       throw new RangeError('invalid time-like');
     }
     const {
@@ -94,11 +94,11 @@ export class Time {
   }
   plus(durationLike) {
     const duration = ES.CastDuration(durationLike);
-    if (!ES.ValidPropertyBag(duration, [], [ 'years', 'months', 'days' ])) {
+    if (!ES.ValidPropertyBag(duration, [], ['years', 'months', 'days'])) {
       throw new RangeError('invalid duration');
     }
     let { hour, minute, second, millisecond, microsecond, nanosecond } = this;
-    const {hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
+    const { hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
     ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.AddTime(
       hour,
       minute,
@@ -118,7 +118,7 @@ export class Time {
   }
   minus(durationLike) {
     const duration = ES.CastDuration(durationLike);
-    if (!ES.ValidPropertyBag(duration, [], [ 'years', 'months', 'days' ])) {
+    if (!ES.ValidPropertyBag(duration, [], ['years', 'months', 'days'])) {
       throw new RangeError('invalid duration');
     }
     let { hour, minute, second, millisecond, microsecond, nanosecond } = this;
@@ -181,11 +181,14 @@ export class Time {
     const millisecond = ES.ToInteger(match[4]);
     const microsecond = ES.ToInteger(match[5]);
     const nanosecond = ES.ToInteger(match[6]);
-    const Time = ES.GetIntrinsic('%Temporal.Time%');
-    return new Time(hour, minute, second, millisecond, microsecond, nanosecond, 'reject');
+    const Construct = this;
+    return new Construct(hour, minute, second, millisecond, microsecond, nanosecond, 'reject');
   }
   static from(...args) {
-    return ES.CastTime(...args);
+    const result = ES.CastTime(...args);
+    return this === Time
+      ? result
+      : new this(result.hour, result.minute, result.second, result.millisecond, result.microsecond, result.nanosecond);
   }
   static compare(one, two) {
     one = ES.CastTime(one);

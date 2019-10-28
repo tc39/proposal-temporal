@@ -36,7 +36,7 @@ export class MonthDay {
   }
 
   with(dateLike = {}, disambiguation = 'constrain') {
-    if (!ES.ValidPropertyBag(dateLike, [ 'month', 'day' ])) {
+    if (!ES.ValidPropertyBag(dateLike, ['month', 'day'])) {
       throw new RangeError('invalid month-day-like');
     }
     const { month = GetSlot(this, MONTH), day = GetSlot(this, DAY) } = dateLike;
@@ -45,7 +45,13 @@ export class MonthDay {
   }
   plus(durationLike = {}, disambiguation = 'constrain') {
     const duration = ES.CastDuration(durationLike);
-    if (!ES.ValidPropertyBag(duration, [], [ 'years', 'hours', 'minutes', 'seconds', 'milliseconds', 'microseconds', 'nanoseconds' ])) {
+    if (
+      !ES.ValidPropertyBag(
+        duration,
+        [],
+        ['years', 'hours', 'minutes', 'seconds', 'milliseconds', 'microseconds', 'nanoseconds']
+      )
+    ) {
       throw new RangeError('invalid duration');
     }
     let { month, day } = this;
@@ -58,7 +64,13 @@ export class MonthDay {
   }
   minus(durationLike = {}, disambiguation = 'constrain') {
     const duration = ES.CastDuration(durationLike);
-    if (!ES.ValidPropertyBag(duration, [], [ 'years', 'hours', 'minutes', 'seconds', 'milliseconds', 'microseconds', 'nanoseconds' ])) {
+    if (
+      !ES.ValidPropertyBag(
+        duration,
+        [],
+        ['years', 'hours', 'minutes', 'seconds', 'milliseconds', 'microseconds', 'nanoseconds']
+      )
+    ) {
       throw new RangeError('invalid duration');
     }
     let { month, day } = this;
@@ -105,11 +117,12 @@ export class MonthDay {
     if (!match) throw new RangeError(`invalid monthday: ${isoString}`);
     const month = ES.ToInteger(match[1]);
     const day = ES.ToInteger(match[2]);
-    const MonthDay = ES.GetIntrinsic('%Temporal.MonthDay%');
-    return new MonthDay(month, day, 'reject');
+    const Construct = this;
+    return new Construct(month, day, 'reject');
   }
   static from(...args) {
-    return ES.CastYearMonth(...args);
+    const result = ES.CastYearMonth(...args);
+    return this === MonthDay ? result : new this(result.month, result.day);
   }
   static compare(one, two) {
     one = ES.CastMonthDay(one);
