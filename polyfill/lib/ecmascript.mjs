@@ -31,7 +31,20 @@ export const ES = ObjectAssign(ObjectAssign(ObjectAssign({}, Cast), ES2019), {
   GetIntrinsic: (intrinsic) => {
     return intrinsic in INTRINSICS ? INTRINSICS[intrinsic] : GetIntrinsic(intrinsic);
   },
-
+  ValidPropertyBag: (bag, anyof = [], noneof = []) => {
+    if (!bag || 'object' !== typeof bag) return false;
+    let any = !anyof.length;
+    for (let prop of anyof) {
+      const value = ES.ToNumber(bag[prop]);
+      any = any || Number.isFinite(value);
+    }
+    let none = false;
+    for (let prop of noneof) {
+      const value = ES.ToNumber(bag[prop]);
+      none = none || (Number.isFinite(value) && !!value);
+    }
+    return any && !none;
+  },
   ToTimeZone: (tz) => {
     const TimeZone = ES.GetIntrinsic('%Temporal.TimeZone%');
     return tz instanceof TimeZone ? tz : new TimeZone(`${tz}`);

@@ -78,6 +78,9 @@ export class Time {
   }
 
   with(timeLike = {}, disambiguation = 'constrain') {
+    if (!ES.ValidPropertyBag(timeLike, [ 'hour', 'minute', 'second', 'millisecond', 'microsecond', 'nanosecond' ])) {
+      throw new RangeError('invalid time-like');
+    }
     const {
       hour = GetSlot(this, HOUR),
       minute = GetSlot(this, MINUTE),
@@ -90,9 +93,11 @@ export class Time {
   }
   plus(durationLike) {
     const duration = ES.CastDuration(durationLike);
+    if (!ES.ValidPropertyBag(duration, [], [ 'years', 'months', 'days' ])) {
+      throw new RangeError('invalid duration');
+    }
     let { hour, minute, second, millisecond, microsecond, nanosecond } = this;
-    let { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
-    if (years !== 0 || months !== 0 || days !== 0) throw new RangeError('invalid duration');
+    const {hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
     ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.AddTime(
       hour,
       minute,
@@ -111,9 +116,11 @@ export class Time {
   }
   minus(durationLike) {
     const duration = ES.CastDuration(durationLike);
+    if (!ES.ValidPropertyBag(duration, [], [ 'years', 'months', 'days' ])) {
+      throw new RangeError('invalid duration');
+    }
     let { hour, minute, second, millisecond, microsecond, nanosecond } = this;
-    let { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
-    if (years !== 0 || months !== 0 || days !== 0) throw new RangeError('invalid duration');
+    const { hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
     ({ hour, minute, second, minute, microsecond, nanosecond } = ES.SubtractTime(
       hour,
       minute,

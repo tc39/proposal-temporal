@@ -128,6 +128,9 @@ export class DateTime {
     return ES.LeapYear(GetSlot(this, YEAR));
   }
   with(dateTimeLike = {}, disambiguation = 'constrain') {
+    if (!ES.ValidPropertyBag(dateTimeLike, [ 'year', 'month', 'day', 'hour', 'minute', 'second', 'millisecond', 'microsecond', 'nanosecond' ])) {
+      throw new RangeError('invalid date-time-like');
+    }
     const {
       year = GetSlot(this, YEAR),
       month = GetSlot(this, MONTH),
@@ -143,8 +146,11 @@ export class DateTime {
   }
   plus(durationLike = {}, disambiguation = 'constrain') {
     const duration = ES.CastDuration(durationLike);
+    if (!ES.ValidPropertyBag(duration, [ 'years', 'months', 'days', 'hours', 'minutes', 'seconds', 'milliseconds', 'microseconds', 'nanoseconds' ])) {
+      throw new RangeError('invalid duration');
+    }
     let { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = this;
-    let { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
+    const { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
     ({ year, month, day } = ES.AddDate(year, month, day, years, months, days, disambiguation));
     let deltaDays = 0;
     ({ deltaDays, hour, minute, second, millisecond, microsecond, nanosecond } = ES.AddTime(
@@ -167,8 +173,11 @@ export class DateTime {
   }
   minus(durationLike = {}, disambiguation = 'constrain') {
     const duration = ES.CastDuration(durationLike);
+    if (!ES.ValidPropertyBag(duration, [ 'years', 'months', 'days', 'hours', 'minutes', 'seconds', 'milliseconds', 'microseconds', 'nanoseconds' ])) {
+      throw new RangeError('invalid duration');
+    }
     let { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = this;
-    let { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
+    const { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
     let deltaDays = 0;
     ({ deltaDays, hour, minute, second, millisecond, microsecond, nanosecond } = ES.SubtractTime(
       hour,

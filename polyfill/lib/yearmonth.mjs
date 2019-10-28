@@ -38,33 +38,30 @@ export class YearMonth {
     return ES.LeapYear(GetSlot(this, YEAR));
   }
   with(dateLike = {}, disambiguation = 'constrain') {
-    const { year = GetSlot(this, YEAR), month = GetSlot(this, MONTH) } = dateTimeLike;
+    if (!ES.ValidPropertyBag(dateLike, [ 'year', 'month' ])) {
+      throw new RangeError('invalid year-month-like');
+    }
+    const { year = GetSlot(this, YEAR), month = GetSlot(this, MONTH) } = dateLike;
     return new YearMonth(year, month, disambiguation);
   }
   plus(durationLike = {}, disambiguation = 'constrain') {
     const duration = ES.CastDuration(durationLike);
-    let { year, month } = this;
-    let { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
-    if ((days, hours || minutes || seconds || milliseconds || microseconds || nanoseconds))
+    if (!ES.ValidPropertyBag(duration, [], [ 'days', 'hours', 'minutes', 'seconds', 'milliseconds', 'microseconds', 'nanoseconds' ])) {
       throw new RangeError('invalid duration');
+    }
+    let { year, month } = this;
+    const { years, months } = duration;
     ({ year, month } = ES.AddDate(year, month, 1, years, months, 0, disambiguation));
     ({ year, month } = ES.BalanceYearMonth(year, month));
     return new YearMonth(year, month);
   }
   minus(durationLike = {}, disambiguation = 'constrain') {
     const duration = ES.CastDuration(durationLike);
-    let { year, month } = this;
-    let { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
-    if (
-      days !== 0 ||
-      hours !== 0 ||
-      minutes !== 0 ||
-      seconds !== 0 ||
-      milliseconds !== 0 ||
-      microseconds !== 0 ||
-      nanoseconds !== 0
-    )
+    if (!ES.ValidPropertyBag(duration, [], [ 'days', 'hours', 'minutes', 'seconds', 'milliseconds', 'microseconds', 'nanoseconds' ])) {
       throw new RangeError('invalid duration');
+    }
+    let { year, month } = this;
+    const { years, months } = duration;
     ({ year, month } = ES.SubtractDate(year, month, 1, years, months, 0, disambiguation));
     ({ year, month } = ES.BalanceYearMonth(year, month));
     return new YearMonth(year, month);

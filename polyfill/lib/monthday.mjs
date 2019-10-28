@@ -36,45 +36,46 @@ export class MonthDay {
   }
 
   with(dateLike = {}, disambiguation = 'constrain') {
-    const { month = GetSlot(this, MONTH), day = GetSlot(this, DAY) } = dateTimeLike;
+    if (!ES.ValidPropertyBag(dateLike, [ 'month', 'day' ])) {
+      throw new RangeError('invalid month-day-like');
+    }
+    const { month = GetSlot(this, MONTH), day = GetSlot(this, DAY) } = dateLike;
     return new MonthDay(month, day, disambiguation);
   }
   plus(durationLike = {}, disambiguation = 'constrain') {
     const duration = ES.CastDuration(durationLike);
-    let { month, day } = this;
-    let { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
-    if (
-      years !== 0 ||
-      hours !== 0 ||
-      minutes !== 0 ||
-      seconds !== 0 ||
-      milliseconds !== 0 ||
-      microseconds !== 0 ||
-      nanoseconds !== 0
-    )
+    if (!ES.ValidPropertyBag(duration, [], [ 'years', 'hours', 'minutes', 'seconds', 'milliseconds', 'microseconds', 'nanoseconds' ])) {
       throw new RangeError('invalid duration');
-    ({ year, month, day } = ES.AddDate(year, month, day, years, months, days, disambiguation));
-    ({ month, day } = ES.BalanceDate(1970, month, day));
+    }
+    let { month, day } = this;
+    const { months, days } = duration;
+    const year = 1970; // non-leap year
+    ({ month, day } = ES.AddDate(year, month, day, years, months, days, disambiguation));
+    ({ month, day } = ES.BalanceDate(year, month, day));
     return new MonthDay(month, day);
   }
   minus(durationLike = {}, disambiguation = 'constrain') {
     const duration = ES.CastDuration(durationLike);
-    let { year, month, day } = this;
-    let { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
-    if (hours !== 0 || minutes !== 0 || seconds !== 0 || milliseconds !== 0 || microseconds !== 0 || nanoseconds !== 0)
+    if (!ES.ValidPropertyBag(duration, [], [ 'years', 'hours', 'minutes', 'seconds', 'milliseconds', 'microseconds', 'nanoseconds' ])) {
       throw new RangeError('invalid duration');
-    ({ year, month, day } = ES.SubtractDate(year, month, day, years, months, days, disambiguation));
-    ({ year, month, day } = ES.BalanceDate(year, month, day));
+    }
+    let { month, day } = this;
+    const year = 1970; // non-leap year (any will do)
+    const { months, days } = duration;
+    ({ month, day } = ES.SubtractDate(year, month, day, years, months, days, disambiguation));
+    ({ month, day } = ES.BalanceDate(year, month, day));
     return new MonthDay(month, day);
   }
-  difference(other, disambiguation = 'constrain') {
+  difference(other) {
     other = ES.CastMonthDay(other);
     const [one, two] = [this, other].sort(MonthDay.compare);
     let months = two.month - one.month;
     let days = (two.days = one.days);
+    let month = two.month;
     if (days < 0) {
-      days = ES.DaysInMonth(1970, two.month) + days;
       months -= 1;
+      month = one.month + months;
+      days = ES.DaysInMonth(1970, month) + days;
     }
     const Duration = ES.GetIntrinsic('%Temporal.Duration%');
     return new Duration(0, months, days, 0, 0, 0, 0, 0, 0);
