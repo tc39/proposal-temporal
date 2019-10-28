@@ -25,322 +25,73 @@ graph LR;
   timezone === datetime;
 </div>
 
-## API
+## API Overview
 
-### Temporal.Absolute
+### `Temporal.Absolute`
 
-An absolute point in time.
+An `Temporal.Absolute` represents a fixed point in time along the POSIX timeline. It does this by internally maintaining a slot for "Nanoseconds since the POSIX-Epoch".
 
+See [Temporal.Absolute Documentation](./docs/absolute.md) for more detailed documentation.
 
-#### new Temporal.Absolute(epochNanoSeconds : bigint) : Temporal.Absolute
+### `Temporal.TimeZone`
 
-#### absolute.getEpochSeconds() : number
+A `Temporal.TimeZone` represents an IANA Timezone, a specific UTF-Offset or UTC itself. Because of this `Temporal.TimeZone` can be used to convert between `Temporal.Absolute` and `Temporal.DateTime` as well as finding out the offset at a specific `Temporal.Absolute`.
 
-#### absolute.getEpochMilliseconds() : number
+`Temporal.TimeZone` is also an iterable that give access to the IANA-Timezones supported by the system from the [IANA time zone database](https://www.iana.org/time-zones) (also listed [here](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)).
 
-#### absolute.getEpochMicroseconds() : bigint
+See [Temporal.TimeZone Documentation](./docs/timezone.md) for more detailed documentation.
 
-#### absolute.getEpochNanoseconds() : bigint
+### `Temporal.DateTime`
 
-#### absolute.inZone(timeZone: Temporal.TimeZone | string) : Temporal.DateTime
+A `Temporal.DateTime` represents a caldendar date and wall-clock time. That means it does not carry timezone information. However it can be converted to a `Temporal.Absolute` using a `Temporal.TimeZone`.
 
-#### absolute.plus(duration: Temporal.Duration | string | object) : Temporal.Absolute
+This can also be converted to object containing only partial information such as `Temporal.Date` and `Temporal.Time`.
 
-#### absolute.minus(duration: Temporal.Duration | string | object) : Temporal.Absolute
+See [Temporal.DateTime Documentation](./docs/datetime.md) for more detailed documentation.
 
-#### absolute.difference(other: Temporal.Absolute) : Temporal.Duration
+### `Temporal.Time`
 
-#### absolute.toString(timeZone?: Temporal.TimeZone | string) : string
+A `Temporal.Time` object represents a wall-clock time. Since there is no date component this can not be directly translated to an absolute point in time. However it can be converted to a `Temporal.Absolute` by combining with a `Temporal.Date` using a `Temporal.TimeZone`.
 
-#### absolute.toLocaleString(locale?: string, options: object) : string
+See [Temporal.Time Documentation](./docs/time.md) for more detailed documentation.
 
-#### Temporal.Absolute.fromString(spec: string) : Temporal.Absolute
+### `Temporal.Date`
 
-#### Temporal.Absolute.compare(one: Temporal.Absolute, two: Temporal.Absolute) : number
+A `Temporal.Date` object represents a calendar date. This means there is no way to convert this to an absolute point in time, however combining with a `Temporal.Time` a `Temporal.DateTime` can be obtained which in turn can be pinned to the absolute timeline.
 
+This can also be converted to partial dates such as `Temporal.YearMonth` and `Temporal.MonthDay`.
 
-### Temporal.TimeZone
+See [Temporal.Date Documentation](./docs/date.md) for more detailed documentation.
 
-A representation of a time-zone giving access to information about offsets & dst-changes as well as allowing for conversions.
+### `Temporal.YearMonth`
 
+A date without a day component. This is useful to express things like "the November 2010 meeting".
 
-#### new Temporal.TimeZone(timeZone: string) : Temporal.TimeZone
+See [Temporal.YearMonth Documentation](./docs/yearmonth.md) for more detailed documentation.
 
-#### timeZone.name : string
+### `Temporal.MonthDay`
 
-#### timeZone.getOffsetFor(absolute: Temporal.Absolute) : string
+A date without a year component. This is useful to express things like "Bastille-Day is on the 14th of July".
 
-#### timeZone.getDateTimeFor(absolute: Temporal.Absolute) : Temporal.DateTime
+See [Temporal.MonthDay Documentation](./docs/monthay.md) for more detailed documentation.
 
-#### timeZone.getAbsoluteFor(dateTime: Temporal.DateTime, disambiguation: 'earlier' | 'later' | 'reject' = 'earlier') : Temporal.Absolute
+### `Temporal.Duration`
 
-#### timeZone.getTransitions(starPoint: Temporal.Absolute) : iterator<Temporal.Absolute>
+A `Temporal.Duration` expresses a length of time. This is used fo date/time maths.
 
-#### timeZone.toString() : string
+See [Temporal.Duration Documentation](./docs/duration.md) for more detailed documentation.
 
-#### Temporal.TimeZone.fromString(spec: string) : Temporal.TimeZone
+### `Temporal` functions
 
-#### Temporal.TimeZone: iterator<Temporal.TimeZone>
+ * `Temporal.getAbsolute()` - get the current system absolute time
+ * `Temporal.getTimeZone()` - get the current system timezone
+ * `Temporal.getDateTime()` - get the current system date/time
+ * `Temporal.getTime()` - get the current system time
+ * `Temporal.getDate()` - get the current system date
+ * `Temporal.getYearMonth()` - get the current system year/month
+ * `Temporal.getMonthDay()` - get the current system month/day
 
-
-### Temporal.Duration
-
-A representations of a duration of time whcih can be used in date/time arithmetic.
-
-
-#### new Temporal.Duration(durationLike: object) : Temporal.Duration
-
-#### new Temporal.Duration(iso: string) : Temporal.Duration
-
-#### new Temporal.Duration(years?: number, months?: number, days?: number, hours?: number, minutes?: number, seconds?: number, milliseconds?: number, microseconds?: number, nanoseconds?: number) : Temporal.Duration
-
-#### duration.years : number
-
-#### duration.months : number
-
-#### duration.days : number
-
-#### duration.hours : number
-
-#### duration.minutes : number
-
-#### duration.seconds : number
-
-#### duration.milliseconds : number
-
-#### duration.microseconds : number
-
-#### duration.nanoseconds : number
-
-#### duration.years : number
-
-#### duration.toString() : string
-
-#### Temporal.Duration.fromString(iso: string) : Temporal.Duration
-
-
-### Temporal.Date
-
-A representatio nof a calendar date.
-
-
-#### new Temporal.Date({ year: number, month: number, day: number }, disambiguation: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.Date
-
-#### new Temporal.Date(year: number, month: number, day: number, disambiguation: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.Date
-
-#### date.year : number
-
-#### date.month : number
-
-#### date.day : number
-
-#### date.dayOfWeek : number
-
-#### date.weekOfYear : number
-
-#### date.daysInMonth : number
-
-#### date.daysInYear : number
-
-#### date.leapYear : boolean
-
-#### date.with(dateLike: object) : Temporal.Date
-
-#### date.plus(duration: Temporal.Duration | object | string) : Temporal.Date
-
-#### date.minus(duration: Temporal.Duration | object | string) : Temporal.Date
-
-#### date.difference(other: Temporal.Date | object) : Temporal.Duration
-
-#### date.toString() : string
-
-#### date.toLocaleString(locale?: string, options?: object) : string
-
-#### date.withTime(time: Temporal.Time | object) : Temporal.DateTime
-
-#### date.getYearMonth() : Temporal.YearMonth
-
-#### date.getMonthDay() : Temporal.MonthDay
-
-#### Temporal.Date.fromString(iso: string) : Temporal.Date
-
-#### Temporal.Date.compare(one: Temporal.Date | object, two: Temporal.Date | object) : number
-
-
-### Temporal.Time
-
-A representation of wall-clock time.
-
-
-#### new Temporal.Time(hour: number, minute: number, second: number = 0, milliseconds: number =0, microsecond: number = 0, nanosecond: nunber = 0) : Temporal.Time
-
-#### new Temporal.Time({ hour: number, minute: number, second: number = 0, milliseconds: number =0, microsecond: number = 0, nanosecond: nunber = 0 }, disambiguation: 'constrain' | 'balance' | 'reject' = 'constrain')
-
-#### time.hour: number
-
-#### time.minute: number
-
-#### time.second: number
-
-#### time.millisecond: number
-
-#### time.microsecond: number
-
-#### time.nanosecond: number
-
-#### time.with({ hour: number = this.hour, minute: number = this.minute, second: numer = this.second ...}) : Temporal.Time
-
-#### time.plus(duration: string | object) : Temporal.Time
-
-#### time.minus(duration: string | object) : Temporal.Time
-
-#### time.difference(other: Temporal.Time | object) : Temporal.Duration
-
-#### time.toString() : string
-
-#### time.toLocaleString(locale?:string, options?: object) : string
-
-#### time.withDate(date: Temporal.Date | object) : Temporal.DateTime
-
-#### Temporal.Time.fromString(iso: string) : Temporal.Time
-
-#### Temporal.Time.compare(one: Temporal.Time | object, two: Temporal.Time | object) : number;
-
-### Temporal.DateTime
-
-
-#### new Temporal.DateTime(year: number, month: number, day: number, hour: number, minute: number, second: number = 0, milliseconds: number =0, microsecond: number = 0, nanosecond: nunber = 0) : Temporal.Time
-
-#### new Temporal.DateTime({ year: number, month: number, day: number, hour: number, minute: number, second: number = 0, milliseconds: number =0, microsecond: number = 0, nanosecond: nunber = 0 }, disambiguation: 'constrain' | 'balance' | 'reject' = 'constrain')
-
-#### new Temporal.DateTime({ year: number, month: number, day: number }, { hour: number, minute: number, second: number = 0, milliseconds: number =0, microsecond: number = 0, nanosecond: nunber = 0 }, disambiguation: 'constrain' | 'balance' | 'reject' = 'constrain')
-
-#### datetime.year : number
-
-#### datetime.month : number
-
-#### datetime.day : number
-
-#### datetime.hour: number
-
-#### datetime.minute: number
-
-#### datetime.second: number
-
-#### datetime.millisecond: number
-
-#### datetime.microsecond: number
-
-#### datetime.nanosecond: number
-
-#### datetime.dayOfWeek : number
-
-#### datetime.weekOfYear : number
-
-#### datetime.daysInMonth : number
-
-#### datetime.daysInYear : number
-
-#### datetime.leapYear : boolean
-
-#### datetime.with({ year: number, month: number, hour: number, hour: number = this.hour, minute: number = this.minute, ...}) : Temporal.DateTime
-
-#### datetime.plus(duration: string | object) : Temporal.DateTime
-
-#### datetime.minus(duration: string | object) : Temporal.DateTime
-
-#### datetime.difference(other: Temporal.DateTime | object) : Temporal.Duration
-
-#### datetime.toString() : string
-
-#### datetime.toLocaleString(locale?:string, options?: object) : string
-
-#### datetime.getYearMonth() : Temporal.YearMonth
-
-#### datetime.getMonthDay() : Temporal.MonthDay
-
-#### Temporal.DateTime.fromString(iso: string) : Temporal.DateTime
-
-#### Temporal.DateTime.compare(one: Temporal.DateTime | object, two: Temporal.DateTime | object) : number;
-
-### Temporal.YearMonth
-
-A representatio nof a calendar date.
-
-
-#### new Temporal.YearMonth({ year: number, month: number }, disambiguation: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.YearMonth
-
-#### new Temporal.YearMonth(year: number, month: number, disambiguation: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.YearMonth
-
-#### yearMonth.year : number
-
-#### yearMonth.month : number
-
-#### yearMonth.daysInMonth : number
-
-#### yearMonth.daysInYear : number
-
-#### yearMonth.leapYear : boolean
-
-#### yearMonth.with(yearMonthLike: object) : Temporal.YearMonth
-
-#### yearMonth.plus(duration: Temporal.Duration | object | string) : Temporal.YearMonth
-
-#### yearMonth.minus(duration: Temporal.Duration | object | string) : Temporal.YearMonth
-
-#### yearMonth.difference(other: Temporal.YearMonth | object) : Temporal.Duration
-
-#### yearMonth.toString() : string
-
-#### yearMonth.toLocaleString(locale?: string, options?: object) : string
-
-#### yearMonth.withDay(day: number) : Temporal.Date
-
-#### Temporal.YearMonth.fromString(iso: string) : Temporal.YearMonth
-
-#### Temporal.YearMonth.compare(one: Temporal.YearMonth | object, two: Temporal.YearMonth | object) : number
-
-### Temporal.MonthDay
-
-#### new Temporal.MonthDay({ month: number, day: number }, disambiguation: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.MonthDay
-
-#### new Temporal.MonthDay(month: number, day: number, disambiguation: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.MonthDay
-
-#### monthDay.month : number
-
-#### monthDay.day : number
-
-#### monthDay.daysInMonth : number
-
-#### monthDay.with(monthDayLike: object) : Temporal.MonthDay
-
-#### monthDay.plus(duration: Temporal.Duration | object | string) : Temporal.MonthDay
-
-#### monthDay.minus(duration: Temporal.Duration | object | string) : Temporal.MonthDay
-
-#### monthDay.difference(other: Temporal.MonthDay | object) : Temporal.Duration
-
-#### monthDay.toString() : string
-
-#### monthDay.toLocaleString(locale?: string, options?: object) : string
-
-#### monthDay.withYear(year: number) : Temporal.Date
-
-#### Temporal.MonthDay.fromString(iso: string) : Temporal.MonthDay
-
-#### Temporal.MonthDay.compare(one: Temporal.MonthDay | object, two: Temporal.MonthDay | object) : number
-
-### Temporal System Information
-
-#### Temporal.getAbsolute() : Temporal.Absolute
-
-#### Temporal.getTimeZone() : Temporal.TimeZone
-
-#### Temporal.getDateTime(timeZone: Temporal.TimeZone | string) : Temporal.DateTime
-
-#### Temporal.getDate(timeZone: Temporal.TimeZone | string) : Temporal.Date
-
-#### Temporal.getTime(timeZone: Temporal.TimeZone | string) : Temporal.Time
+See [Temporal Functions Documentation](./docs/functions.md) for more detailed documentation.
 
 ## Examples
 
