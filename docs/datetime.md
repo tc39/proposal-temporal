@@ -42,9 +42,13 @@
 
 ## datetime.toLocaleString(locale?:string, options?: object) : string
 
+## datetime.getDate() : Temporal.Date
+
 ## datetime.getYearMonth() : Temporal.YearMonth
 
 ## datetime.getMonthDay() : Temporal.MonthDay
+
+## datetime.getTime() : Temporal.Time
 
 ## Temporal.DateTime.fromString(iso: string) : Temporal.DateTime
 
