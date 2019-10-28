@@ -42,7 +42,8 @@ export class YearMonth {
       throw new RangeError('invalid year-month-like');
     }
     const { year = GetSlot(this, YEAR), month = GetSlot(this, MONTH) } = dateLike;
-    return new YearMonth(year, month, disambiguation);
+    const Construct = ES.SpeciesConstructor(this, YearMonth);
+    return new Construct(year, month, disambiguation);
   }
   plus(durationLike = {}, disambiguation = 'constrain') {
     const duration = ES.CastDuration(durationLike);
@@ -53,7 +54,8 @@ export class YearMonth {
     const { years, months } = duration;
     ({ year, month } = ES.AddDate(year, month, 1, years, months, 0, disambiguation));
     ({ year, month } = ES.BalanceYearMonth(year, month));
-    return new YearMonth(year, month);
+    const Construct = ES.SpeciesConstructor(this, YearMonth);
+    return new Construct(year, month);
   }
   minus(durationLike = {}, disambiguation = 'constrain') {
     const duration = ES.CastDuration(durationLike);
@@ -64,7 +66,8 @@ export class YearMonth {
     const { years, months } = duration;
     ({ year, month } = ES.SubtractDate(year, month, 1, years, months, 0, disambiguation));
     ({ year, month } = ES.BalanceYearMonth(year, month));
-    return new YearMonth(year, month);
+    const Construct = ES.SpeciesConstructor(this, YearMonth);
+    return new Construct(year, month);
   }
   difference(other) {
     other = ES.CastYearMonth(other);
@@ -115,9 +118,5 @@ export class YearMonth {
   }
 }
 YearMonth.prototype.toJSON = YearMonth.prototype.toString;
-if ('undefined' !== typeof Symbol) {
-  Object.defineProperty(YearMonth.prototype, Symbol.toStringTag, {
-    value: 'Temporal.YearMonth'
-  });
-}
-MakeIntrinsicClass(YearMonth);
+
+MakeIntrinsicClass(YearMonth, 'Temporal.YearMonth');

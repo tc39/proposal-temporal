@@ -165,9 +165,5 @@ export class Duration {
   }
 }
 Duration.prototype.toJSON = Duration.prototype.toString;
-if ('undefined' !== typeof Symbol) {
-  Object.defineProperty(Duration.prototype, Symbol.toStringTag, {
-    value: 'Temporal.Duration'
-  });
-}
-MakeIntrinsicClass(Duration);
+
+MakeIntrinsicClass(Duration, 'Temporal.Duration');

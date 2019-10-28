@@ -1,14 +1,18 @@
-export function MakeIntrinsicClass(cls) {
-  for (let prop of Object.getOwnPropertyNames(cls)) {
-    const desc = Object.getOwnPropertyDescriptor(cls, prop);
-    if (!desc.configurable || !desc.enumerable) continue;
-    desc.enumerable = false;
-    Object.defineProperty(cls, prop, desc);
+export function MakeIntrinsicClass(Class, name) {
+  if ('undefined' !== typeof Symbol) {
+    Class.prototype[Symbol.toStringTag] = name;
+    Class.prototype[Symbol.species] = Class;
   }
-  for (let prop of Object.getOwnPropertyNames(cls.prototype)) {
-    const desc = Object.getOwnPropertyDescriptor(cls.prototype, prop);
+  for (let prop of Object.getOwnPropertyNames(Class)) {
+    const desc = Object.getOwnPropertyDescriptor(Class, prop);
     if (!desc.configurable || !desc.enumerable) continue;
     desc.enumerable = false;
-    Object.defineProperty(cls.prototype, prop, desc);
+    Object.defineProperty(Class, prop, desc);
+  }
+  for (let prop of Object.getOwnPropertyNames(Class.prototype)) {
+    const desc = Object.getOwnPropertyDescriptor(Class.prototype, prop);
+    if (!desc.configurable || !desc.enumerable) continue;
+    desc.enumerable = false;
+    Object.defineProperty(Class.prototype, prop, desc);
   }
 }

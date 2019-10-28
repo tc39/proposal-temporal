@@ -142,7 +142,8 @@ export class DateTime {
       microsecond = GetSlot(this, MICROSECOND),
       nanosecond = GetSlot(this, NANOSECOND)
     } = dateTimeLike;
-    return new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, disambiguation);
+    const Construct = ES.SpeciesConstructor(this, DateTime);
+    return new Construct(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, disambiguation);
   }
   plus(durationLike = {}, disambiguation = 'constrain') {
     const duration = ES.CastDuration(durationLike);
@@ -169,7 +170,8 @@ export class DateTime {
     ));
     day += deltaDays;
     ({ year, month, day } = ES.BalanceDate(year, month, day));
-    return new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
+    const Construct = ES.SpeciesConstructor(this, DateTime);
+    return new Construct(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
   }
   minus(durationLike = {}, disambiguation = 'constrain') {
     const duration = ES.CastDuration(durationLike);
@@ -195,7 +197,8 @@ export class DateTime {
     ));
     days += deltaDays;
     ({ year, month, day } = ES.SubtractDate(year, month, day, years, months, days, disambiguation));
-    return new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
+    const Construct = ES.SpeciesConstructor(this, DateTime);
+    return new Construct(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
   }
   difference(other) {
     other = ES.CastDateTime(other);
@@ -294,9 +297,5 @@ export class DateTime {
   }
 }
 DateTime.prototype.toJSON = DateTime.prototype.toString;
-if ('undefined' !== typeof Symbol) {
-  Object.defineProperty(DateTime.prototype, Symbol.toStringTag, {
-    value: 'Temporal.DateTime'
-  });
-}
-MakeIntrinsicClass(DateTime);
+
+MakeIntrinsicClass(DateTime, 'Temporal.DateTime');

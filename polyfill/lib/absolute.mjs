@@ -209,10 +209,4 @@ export class Absolute {
 }
 Absolute.prototype.toJSON = Absolute.prototype.toString;
 
-if ('undefined' !== typeof Symbol) {
-  Object.defineProperty(Absolute.prototype, Symbol.toStringTag, {
-    value: 'Temporal.Absolute'
-  });
-}
-
-MakeIntrinsicClass(Absolute);
+MakeIntrinsicClass(Absolute, 'Temporal.Absolute');
