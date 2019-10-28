@@ -62,7 +62,7 @@ export class MonthDay {
     let { month, day } = this;
     const { months, days } = duration;
     const year = 1970; // non-leap year
-    ({ month, day } = ES.AddDate(year, month, day, years, months, days, disambiguation));
+    ({ month, day } = ES.AddDate(year, month, day, 0, months, days, disambiguation));
     ({ month, day } = ES.BalanceDate(year, month, day));
     const Construct = ES.SpeciesConstructor(this, MonthDay);
     return new Construct(month, day);
@@ -85,7 +85,7 @@ export class MonthDay {
     let { month, day } = this;
     const year = 1970; // non-leap year (any will do)
     const { months, days } = duration;
-    ({ month, day } = ES.SubtractDate(year, month, day, years, months, days, disambiguation));
+    ({ month, day } = ES.SubtractDate(year, month, day, 0, months, days, disambiguation));
     ({ month, day } = ES.BalanceDate(year, month, day));
     const Construct = ES.SpeciesConstructor(this, MonthDay);
     return new Construct(month, day);
