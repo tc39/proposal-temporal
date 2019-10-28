@@ -36,21 +36,26 @@ export class MonthDay {
   }
 
   with(dateLike = {}, disambiguation = 'constrain') {
-    if (!ES.ValidPropertyBag(dateLike, ['month', 'day'])) {
+    const props = ES.ValidPropertyBag(dateLike, ['month', 'day']);
+    if (!props) {
       throw new RangeError('invalid month-day-like');
     }
-    const { month = GetSlot(this, MONTH), day = GetSlot(this, DAY) } = dateLike;
+    const { month = GetSlot(this, MONTH), day = GetSlot(this, DAY) } = props;
     const Construct = ES.SpeciesConstructor(this, MonthDay);
     return new Construct(month, day, disambiguation);
   }
   plus(durationLike = {}, disambiguation = 'constrain') {
     const duration = ES.CastDuration(durationLike);
     if (
-      !ES.ValidPropertyBag(
-        duration,
-        [],
-        ['years', 'hours', 'minutes', 'seconds', 'milliseconds', 'microseconds', 'nanoseconds']
-      )
+      !ES.ValidDuration(duration, [
+        'years',
+        'hours',
+        'minutes',
+        'seconds',
+        'milliseconds',
+        'microseconds',
+        'nanoseconds'
+      ])
     ) {
       throw new RangeError('invalid duration');
     }
@@ -65,11 +70,15 @@ export class MonthDay {
   minus(durationLike = {}, disambiguation = 'constrain') {
     const duration = ES.CastDuration(durationLike);
     if (
-      !ES.ValidPropertyBag(
-        duration,
-        [],
-        ['years', 'hours', 'minutes', 'seconds', 'milliseconds', 'microseconds', 'nanoseconds']
-      )
+      !ES.ValidDuration(duration, [
+        'years',
+        'hours',
+        'minutes',
+        'seconds',
+        'milliseconds',
+        'microseconds',
+        'nanoseconds'
+      ])
     ) {
       throw new RangeError('invalid duration');
     }

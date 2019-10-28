@@ -78,7 +78,15 @@ export class Time {
   }
 
   with(timeLike = {}, disambiguation = 'constrain') {
-    if (!ES.ValidPropertyBag(timeLike, ['hour', 'minute', 'second', 'millisecond', 'microsecond', 'nanosecond'])) {
+    const props = ES.ValidPropertyBag(timeLike, [
+      'hour',
+      'minute',
+      'second',
+      'millisecond',
+      'microsecond',
+      'nanosecond'
+    ]);
+    if (!props) {
       throw new RangeError('invalid time-like');
     }
     const {
@@ -88,13 +96,13 @@ export class Time {
       millisecond = GetSlot(this, MILLISECOND),
       microsecond = GetSlot(this, MICROSECOND),
       nanosecond = GetSlot(this, NANOSECOND)
-    } = timeLike;
+    } = props;
     const Construct = ES.SpeciesConstructor(this, Time);
     return new Construct(hour, minute, second, millisecond, microsecond, nanosecond, disambiguation);
   }
   plus(durationLike) {
     const duration = ES.CastDuration(durationLike);
-    if (!ES.ValidPropertyBag(duration, [], ['years', 'months', 'days'])) {
+    if (!ES.ValidDuration(duration, ['years', 'months', 'days'])) {
       throw new RangeError('invalid duration');
     }
     let { hour, minute, second, millisecond, microsecond, nanosecond } = this;
@@ -118,7 +126,7 @@ export class Time {
   }
   minus(durationLike) {
     const duration = ES.CastDuration(durationLike);
-    if (!ES.ValidPropertyBag(duration, [], ['years', 'months', 'days'])) {
+    if (!ES.ValidDuration(duration, ['years', 'months', 'days'])) {
       throw new RangeError('invalid duration');
     }
     let { hour, minute, second, millisecond, microsecond, nanosecond } = this;

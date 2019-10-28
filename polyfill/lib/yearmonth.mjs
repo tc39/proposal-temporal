@@ -38,21 +38,26 @@ export class YearMonth {
     return ES.LeapYear(GetSlot(this, YEAR));
   }
   with(dateLike = {}, disambiguation = 'constrain') {
-    if (!ES.ValidPropertyBag(dateLike, ['year', 'month'])) {
+    const props = ES.ValidPropertyBag(dateLike, ['year', 'month']);
+    if (!props) {
       throw new RangeError('invalid year-month-like');
     }
-    const { year = GetSlot(this, YEAR), month = GetSlot(this, MONTH) } = dateLike;
+    const { year = GetSlot(this, YEAR), month = GetSlot(this, MONTH) } = props;
     const Construct = ES.SpeciesConstructor(this, YearMonth);
     return new Construct(year, month, disambiguation);
   }
   plus(durationLike = {}, disambiguation = 'constrain') {
     const duration = ES.CastDuration(durationLike);
     if (
-      !ES.ValidPropertyBag(
-        duration,
-        [],
-        ['days', 'hours', 'minutes', 'seconds', 'milliseconds', 'microseconds', 'nanoseconds']
-      )
+      !ES.ValidDuration(duration, [
+        'days',
+        'hours',
+        'minutes',
+        'seconds',
+        'milliseconds',
+        'microseconds',
+        'nanoseconds'
+      ])
     ) {
       throw new RangeError('invalid duration');
     }
@@ -66,11 +71,15 @@ export class YearMonth {
   minus(durationLike = {}, disambiguation = 'constrain') {
     const duration = ES.CastDuration(durationLike);
     if (
-      !ES.ValidPropertyBag(
-        duration,
-        [],
-        ['days', 'hours', 'minutes', 'seconds', 'milliseconds', 'microseconds', 'nanoseconds']
-      )
+      !ES.ValidDuration(duration, [
+        'days',
+        'hours',
+        'minutes',
+        'seconds',
+        'milliseconds',
+        'microseconds',
+        'nanoseconds'
+      ])
     ) {
       throw new RangeError('invalid duration');
     }
