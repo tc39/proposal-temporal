@@ -23,7 +23,7 @@ Stage 3 Reviewers:
 ## Overview / Motivation
 
 Date has been a long time pain point in ECMAScript.
-This proposes `temporal`, a built in module that brings a modern date time API to the ECMAScript language.
+This proposes `Temporal`, a global object that acts as a top-level namespace (like `Math`) that brings a modern date time API to the ECMAScript language.
 For a detailed breakdown of motivations see:
 [Fixing JavaScript Date](https://maggiepint.com/2017/04/09/fixing-javascript-date-getting-started/)
 
