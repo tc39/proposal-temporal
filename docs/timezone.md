@@ -13,7 +13,7 @@ A representation of a time-zone giving access to information about offsets & dst
 
 ## timeZone.getAbsoluteFor(dateTime: Temporal.DateTime, disambiguation: 'earlier' | 'later' | 'reject' = 'earlier') : Temporal.Absolute
 
-## timeZone.getTransitions(starPoint: Temporal.Absolute) : iterator<Temporal.Absolute>
+## timeZone.getTransitions(startingPoint: Temporal.Absolute) : iterator<Temporal.Absolute>
 
 ## timeZone.toString() : string
 
