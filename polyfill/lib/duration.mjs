@@ -12,8 +12,7 @@ import {
   NANOSECONDS,
   CreateSlots,
   GetSlot,
-  SetSlot,
-  HasSlot
+  SetSlot
 } from './slots.mjs';
 import { duration as STRING } from './regex.mjs';
 
@@ -82,43 +81,43 @@ export class Duration {
     SetSlot(this, NANOSECONDS, nanoseconds);
   }
   get years() {
-    if (!HasSlot(this, YEARS, MONTHS, DAYS, HOURS, MINUTES,SECONDS, MILLISECONDS, MICROSECONDS, NANOSECONDS)) throw new TypeError('invalid receiver');
+    if (!ES.IsDuration(this)) throw new TypeError('invalid receiver');
     return GetSlot(this, YEARS);
   }
   get months() {
-    if (!HasSlot(this, YEARS, MONTHS, DAYS, HOURS, MINUTES,SECONDS, MILLISECONDS, MICROSECONDS, NANOSECONDS)) throw new TypeError('invalid receiver');
+    if (!ES.IsDuration(this)) throw new TypeError('invalid receiver');
     return GetSlot(this, MONTHS);
   }
   get days() {
-    if (!HasSlot(this, YEARS, MONTHS, DAYS, HOURS, MINUTES,SECONDS, MILLISECONDS, MICROSECONDS, NANOSECONDS)) throw new TypeError('invalid receiver');
+    if (!ES.IsDuration(this)) throw new TypeError('invalid receiver');
     return GetSlot(this, DAYS);
   }
   get hours() {
-    if (!HasSlot(this, YEARS, MONTHS, DAYS, HOURS, MINUTES,SECONDS, MILLISECONDS, MICROSECONDS, NANOSECONDS)) throw new TypeError('invalid receiver');
+    if (!ES.IsDuration(this)) throw new TypeError('invalid receiver');
     return GetSlot(this, HOURS);
   }
   get minutes() {
-    if (!HasSlot(this, YEARS, MONTHS, DAYS, HOURS, MINUTES,SECONDS, MILLISECONDS, MICROSECONDS, NANOSECONDS)) throw new TypeError('invalid receiver');
+    if (!ES.IsDuration(this)) throw new TypeError('invalid receiver');
     return GetSlot(this, MINUTES);
   }
   get seconds() {
-    if (!HasSlot(this, YEARS, MONTHS, DAYS, HOURS, MINUTES,SECONDS, MILLISECONDS, MICROSECONDS, NANOSECONDS)) throw new TypeError('invalid receiver');
+    if (!ES.IsDuration(this)) throw new TypeError('invalid receiver');
     return GetSlot(this, SECONDS);
   }
   get milliseconds() {
-    if (!HasSlot(this, YEARS, MONTHS, DAYS, HOURS, MINUTES,SECONDS, MILLISECONDS, MICROSECONDS, NANOSECONDS)) throw new TypeError('invalid receiver');
+    if (!ES.IsDuration(this)) throw new TypeError('invalid receiver');
     return GetSlot(this, MILLISECONDS);
   }
   get microseconds() {
-    if (!HasSlot(this, YEARS, MONTHS, DAYS, HOURS, MINUTES,SECONDS, MILLISECONDS, MICROSECONDS, NANOSECONDS)) throw new TypeError('invalid receiver');
+    if (!ES.IsDuration(this)) throw new TypeError('invalid receiver');
     return GetSlot(this, MICROSECONDS);
   }
   get nanoseconds() {
-    if (!HasSlot(this, YEARS, MONTHS, DAYS, HOURS, MINUTES,SECONDS, MILLISECONDS, MICROSECONDS, NANOSECONDS)) throw new TypeError('invalid receiver');
+    if (!ES.IsDuration(this)) throw new TypeError('invalid receiver');
     return GetSlot(this, NANOSECONDS);
   }
   toString() {
-    if (!HasSlot(this, YEARS, MONTHS, DAYS, HOURS, MINUTES,SECONDS, MILLISECONDS, MICROSECONDS, NANOSECONDS)) throw new TypeError('invalid receiver');
+    if (!ES.IsDuration(this)) throw new TypeError('invalid receiver');
     const dateParts = [];
     if (GetSlot(this, YEARS)) dateParts.push(`${GetSlot(this, YEARS)}Y`);
     if (GetSlot(this, MONTHS)) dateParts.push(`${GetSlot(this, MONTHS)}M`);
@@ -142,7 +141,7 @@ export class Duration {
     return `P${dateParts.join('')}${timeParts.join('')}`;
   }
   toLocaleString(...args) {
-    if (!HasSlot(this, YEARS, MONTHS, DAYS, HOURS, MINUTES,SECONDS, MILLISECONDS, MICROSECONDS, NANOSECONDS)) throw new TypeError('invalid receiver');
+    if (!ES.IsDuration(this)) throw new TypeError('invalid receiver');
     return new Intl.DateTimeFormat(...args).format(this);
   }
   static fromString(isoString) {

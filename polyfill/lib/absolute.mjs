@@ -4,7 +4,6 @@ import {
   EPOCHNANOSECONDS,
   CreateSlots,
   GetSlot,
-  HasSlot,
   SetSlot,
   YEARS,
   MONTHS,
@@ -17,7 +16,6 @@ import {
   NANOSECONDS
 } from './slots.mjs';
 import { absolute as STRING } from './regex.mjs';
-import { TimeZone } from './timezone.mjs';
 
 export class Absolute {
   constructor(epochNanoseconds) {
@@ -29,32 +27,32 @@ export class Absolute {
   }
 
   getEpochSeconds() {
-    if (!HasSlot(this, EPOCHNANOSECONDS)) throw new TypeError('invalid receiver');
+    if (!ES.IsAbsolute(this)) throw new TypeError('invalid receiver');
     const value = GetSlot(this, EPOCHNANOSECONDS);
     const epochSeconds = Math[value.ms < 0 ? 'ceil' : 'floor'](value.ms / 1000);
     return epochSeconds;
   }
   getEpochMilliseconds() {
-    if (!HasSlot(this, EPOCHNANOSECONDS)) throw new TypeError('invalid receiver');
+    if (!ES.IsAbsolute(this)) throw new TypeError('invalid receiver');
     const value = GetSlot(this, EPOCHNANOSECONDS);
     const epochMilliSeconds = value.ms;
     return epochMilliSeconds;
   }
   getEpochMicroseconds() {
-    if (!HasSlot(this, EPOCHNANOSECONDS)) throw new TypeError('invalid receiver');
+    if (!ES.IsAbsolute(this)) throw new TypeError('invalid receiver');
     const value = GetSlot(this, EPOCHNANOSECONDS);
     const epochNanoseconds = BigInt(value.ms) * BigInt(1e6) + (BigInt(value.ns) % BigInt(1e6));
     return epochNanoseconds / BigInt(1e3);
   }
   getEpochNanoseconds() {
-    if (!HasSlot(this, EPOCHNANOSECONDS)) throw new TypeError('invalid receiver');
+    if (!ES.IsAbsolute(this)) throw new TypeError('invalid receiver');
     const value = GetSlot(this, EPOCHNANOSECONDS);
     const epochMicroseconds = BigInt(value.ms) * BigInt(1e6) + (BigInt(value.ns) % BigInt(1e6));
     return epochMicroseconds;
   }
 
   plus(durationLike = {}) {
-    if (!HasSlot(this, EPOCHNANOSECONDS)) throw new TypeError('invalid receiver');
+    if (!ES.IsAbsolute(this)) throw new TypeError('invalid receiver');
     const duration = ES.CastDuration(durationLike);
     if (GetSlot(duration, YEARS) !== 0) throw new RangeError(`invalid duration field years`);
     if (GetSlot(duration, MONTHS) !== 0) throw new RangeError(`invalid duration field months`);
@@ -88,7 +86,7 @@ export class Absolute {
     return result;
   }
   minus(durationLike = {}) {
-    if (!HasSlot(this, EPOCHNANOSECONDS)) throw new TypeError('invalid receiver');
+    if (!ES.IsAbsolute(this)) throw new TypeError('invalid receiver');
     const duration = ES.CastDuration(durationLike);
     if (GetSlot(duration, YEARS) !== 0) throw new RangeError(`invalid duration field years`);
     if (GetSlot(duration, MONTHS) !== 0) throw new RangeError(`invalid duration field months`);
@@ -117,7 +115,7 @@ export class Absolute {
     return result;
   }
   difference(other) {
-    if (!HasSlot(this, EPOCHNANOSECONDS)) throw new TypeError('invalid receiver');
+    if (!ES.IsAbsolute(this)) throw new TypeError('invalid receiver');
     other = ES.CastAbsolute(other);
 
     const [one, two] = [this, other].sort(Absolute.compare);
@@ -132,7 +130,7 @@ export class Absolute {
     return duration;
   }
   toString(timeZoneParam = 'UTC') {
-    if (!HasSlot(this, EPOCHNANOSECONDS)) throw new TypeError('invalid receiver');
+    if (!ES.IsAbsolute(this)) throw new TypeError('invalid receiver');
     let timeZone = ES.CastTimeZone(timeZoneParam);
     let dateTime = timeZone.getDateTimeFor(this);
     let year = ES.ISOYearString(dateTime.year);
@@ -146,12 +144,11 @@ export class Absolute {
     return resultString;
   }
   toLocaleString(...args) {
-    if (!HasSlot)
-    if (!HasSlot(this, EPOCHNANOSECONDS)) throw new TypeError('invalid receiver');
+    if (!ES.IsAbsolute(this)) throw new TypeError('invalid receiver');
     return new Intl.DateTimeFormat(...args).format(this);
   }
   inZone(timeZoneParam = 'UTC') {
-    if (!HasSlot(this, EPOCHNANOSECONDS)) throw new TypeError('invalid receiver');
+    if (!ES.IsAbsolute(this)) throw new TypeError('invalid receiver');
     const timeZone = ES.ToTimeZone(timeZoneParam);
     return timeZone.getDateTimeFor(this);
   }

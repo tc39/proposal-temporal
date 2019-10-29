@@ -13,6 +13,29 @@ import { Absolute as Temporalabsolute } from './absolute.mjs';
 import { TimeZone as TemporalTimeZone } from './timezone.mjs';
 import { Duration as TemporalDuration } from './duration.mjs';
 import * as Cast from './casts.mjs';
+import {
+  HasSlot,
+  EPOCHNANOSECONDS,
+  IDENTIFIER,
+  YEAR,
+  MONTH,
+  DAY,
+  HOUR,
+  MINUTE,
+  SECOND,
+  MILLISECOND,
+  MICROSECOND,
+  NANOSECOND,
+  YEARS,
+  MONTHS,
+  DAYS,
+  HOURS,
+  MINUTES,
+  SECONDS,
+  MILLISECONDS,
+  MICROSECONDS,
+  NANOSECONDS
+} from './slots.mjs';
 
 const DAYMILLIS = 3600000;
 
@@ -28,6 +51,17 @@ const INTRINSICS = {
 };
 
 export const ES = ObjectAssign(ObjectAssign(ObjectAssign({}, Cast), ES2019), {
+  IsAbsolute: (item) => HasSlot(item, EPOCHNANOSECONDS),
+  IsTimeZone: (item) => HasSlot(item, IDENTIFIER),
+  IsDuration: (item) =>
+    HasSlot(item, YEARS, MONTHS, DAYS, HOURS, MINUTES, SECONDS, MILLISECONDS, MICROSECONDS, NANOSECONDS),
+  IsDate: (item) =>
+    HasSlot(item, YEAR, MONTH, DAY) && !HasSlot(item, HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND),
+  IsTime: (item) =>
+    HasSlot(item, HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND) && !HasSlot(item, YEAR, MONTH, DAY),
+  IsDateTime: (item) => HasSlot(item, YEAR, MONTH, DAY, HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND),
+  IsYearMonth: (item) => HasSlot(item, YEAR, MONTH) && !HasSlot(item, DAY),
+  IsMonthDay: (item) => HasSlot(item, MONTH, DAY) && !HasSlot(item, YEAR),
   GetIntrinsic: (intrinsic) => {
     return intrinsic in INTRINSICS ? INTRINSICS[intrinsic] : GetIntrinsic(intrinsic);
   },

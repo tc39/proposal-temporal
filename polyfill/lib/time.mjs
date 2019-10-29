@@ -1,7 +1,7 @@
 import { ES } from './ecmascript.mjs';
 import { MakeIntrinsicClass } from './intrinsicclass.mjs';
 
-import { YEAR, MONTH, DAY, HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND, CreateSlots, GetSlot, SetSlot, HasSlot } from './slots.mjs';
+import { HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND, CreateSlots, GetSlot, SetSlot } from './slots.mjs';
 
 import { time as STRING } from './regex.mjs';
 
@@ -59,32 +59,32 @@ export class Time {
   }
 
   get hour() {
-    if (!HasSlot(this, HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND) || HasSlot(YEAR, MONTH, DAY)) throw new TypeError('invalid receiver');
+    if (!ES.IsTime(this)) throw new TypeError('invalid receiver');
     return GetSlot(this, HOUR);
   }
   get minute() {
-    if (!HasSlot(this, HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND) || HasSlot(YEAR, MONTH, DAY)) throw new TypeError('invalid receiver');
+    if (!ES.IsTime(this)) throw new TypeError('invalid receiver');
     return GetSlot(this, MINUTE);
   }
   get second() {
-    if (!HasSlot(this, HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND) || HasSlot(YEAR, MONTH, DAY)) throw new TypeError('invalid receiver');
+    if (!ES.IsTime(this)) throw new TypeError('invalid receiver');
     return GetSlot(this, SECOND);
   }
   get millisecond() {
-    if (!HasSlot(this, HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND) || HasSlot(YEAR, MONTH, DAY)) throw new TypeError('invalid receiver');
+    if (!ES.IsTime(this)) throw new TypeError('invalid receiver');
     return GetSlot(this, MILLISECOND);
   }
   get microsecond() {
-    if (!HasSlot(this, HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND) || HasSlot(YEAR, MONTH, DAY)) throw new TypeError('invalid receiver');
+    if (!ES.IsTime(this)) throw new TypeError('invalid receiver');
     return GetSlot(this, MICROSECOND);
   }
   get nanosecond() {
-    if (!HasSlot(this, HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND) || HasSlot(YEAR, MONTH, DAY)) throw new TypeError('invalid receiver');
+    if (!ES.IsTime(this)) throw new TypeError('invalid receiver');
     return GetSlot(this, NANOSECOND);
   }
 
   with(timeLike = {}, disambiguation = 'constrain') {
-    if (!HasSlot(this, HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND) || HasSlot(YEAR, MONTH, DAY)) throw new TypeError('invalid receiver');
+    if (!ES.IsTime(this)) throw new TypeError('invalid receiver');
     const props = ES.ValidPropertyBag(timeLike, [
       'hour',
       'minute',
@@ -108,7 +108,7 @@ export class Time {
     return new Construct(hour, minute, second, millisecond, microsecond, nanosecond, disambiguation);
   }
   plus(durationLike) {
-    if (!HasSlot(this, HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND) || HasSlot(YEAR, MONTH, DAY)) throw new TypeError('invalid receiver');
+    if (!ES.IsTime(this)) throw new TypeError('invalid receiver');
     const duration = ES.CastDuration(durationLike);
     if (!ES.ValidDuration(duration, ['years', 'months', 'days'])) {
       throw new RangeError('invalid duration');
@@ -133,7 +133,7 @@ export class Time {
     return new Construct(hour, minute, second, millisecond, microsecond, nanosecond);
   }
   minus(durationLike) {
-    if (!HasSlot(this, HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND) || HasSlot(YEAR, MONTH, DAY)) throw new TypeError('invalid receiver');
+    if (!ES.IsTime(this)) throw new TypeError('invalid receiver');
     const duration = ES.CastDuration(durationLike);
     if (!ES.ValidDuration(duration, ['years', 'months', 'days'])) {
       throw new RangeError('invalid duration');
@@ -158,7 +158,7 @@ export class Time {
     return new Construct(hour, minute, second, millisecond, microsecond, nanosecond);
   }
   difference(other) {
-    if (!HasSlot(this, HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND) || HasSlot(YEAR, MONTH, DAY)) throw new TypeError('invalid receiver');
+    if (!ES.IsTime(this)) throw new TypeError('invalid receiver');
     other = ES.CastTime(other);
     const [earlier, later] = [this, other].sort(Time.compare);
     const { hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.DifferenceTime(earlier, later);
@@ -167,7 +167,7 @@ export class Time {
   }
 
   toString() {
-    if (!HasSlot(this, HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND) || HasSlot(YEAR, MONTH, DAY)) throw new TypeError('invalid receiver');
+    if (!ES.IsTime(this)) throw new TypeError('invalid receiver');
     let hour = ES.ISODateTimePartString(GetSlot(this, HOUR));
     let minute = ES.ISODateTimePartString(GetSlot(this, MINUTE));
     let seconds = ES.ISOSecondsString(
@@ -180,12 +180,12 @@ export class Time {
     return resultString;
   }
   toLocaleString(...args) {
-    if (!HasSlot(this, HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND) || HasSlot(YEAR, MONTH, DAY)) throw new TypeError('invalid receiver');
+    if (!ES.IsTime(this)) throw new TypeError('invalid receiver');
     return new Intl.DateTimeFormat(...args).format(this);
   }
 
   withDate(dateLike = {}, disambiguation = 'constrain') {
-    if (!HasSlot(this, HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND) || HasSlot(YEAR, MONTH, DAY)) throw new TypeError('invalid receiver');
+    if (!ES.IsTime(this)) throw new TypeError('invalid receiver');
     let { year, month, day } = ES.CastDate(dateLike);
     let { hour, minute, second, millisecond, microsecond, nanosecond } = this;
     const DateTime = ES.GetIntrinsic('%Temporal.DateTime%');
