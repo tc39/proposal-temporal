@@ -1,0 +1,68 @@
+<h1 id="temporal">Temporal</h1>
+<h2 id="object-relationship">Object Relationship</h2>
+<div class="mermaid">
+graph LR;
+  timezone(Time-Zone);
+  subgraph " ";
+    absolute(Absolute);
+  end;
+  subgraph " ";
+    datetime(DateTime);
+      date(Date);
+        yearmonth(YearMonth);
+        monthday(MonthDay);
+      time(Time);
+    datetime --- date;
+    datetime --- time;
+    date --- yearmonth;
+    date --- monthday;
+  end;
+  absolute === timezone;
+  timezone === datetime;
+</div>
+
+<h2 id="api-overview">API Overview</h2>
+<h3 id="temporalabsolute"><code>Temporal.Absolute</code></h3>
+<p>An <code>Temporal.Absolute</code> represents a fixed point in time along the POSIX timeline. It does this by internally maintaining a slot for &quot;Nanoseconds since the POSIX-Epoch&quot;.</p>
+<p>See <a href="./docs/absolute.md">Temporal.Absolute Documentation</a> for more detailed documentation.</p>
+<h3 id="temporaltimezone"><code>Temporal.TimeZone</code></h3>
+<p>A <code>Temporal.TimeZone</code> represents an IANA Timezone, a specific UTF-Offset or UTC itself. Because of this <code>Temporal.TimeZone</code> can be used to convert between <code>Temporal.Absolute</code> and <code>Temporal.DateTime</code> as well as finding out the offset at a specific <code>Temporal.Absolute</code>.</p>
+<p><code>Temporal.TimeZone</code> is also an iterable that give access to the IANA-Timezones supported by the system from the <a href="https://www.iana.org/time-zones">IANA time zone database</a> (also listed <a href="https://en.wikipedia.org/wiki/List_of_tz_database_time_zones">here</a>).</p>
+<p>See <a href="./docs/timezone.md">Temporal.TimeZone Documentation</a> for more detailed documentation.</p>
+<h3 id="temporaldatetime"><code>Temporal.DateTime</code></h3>
+<p>A <code>Temporal.DateTime</code> represents a caldendar date and wall-clock time. That means it does not carry timezone information. However it can be converted to a <code>Temporal.Absolute</code> using a <code>Temporal.TimeZone</code>.</p>
+<p>This can also be converted to object containing only partial information such as <code>Temporal.Date</code> and <code>Temporal.Time</code>.</p>
+<p>See <a href="./docs/datetime.md">Temporal.DateTime Documentation</a> for more detailed documentation.</p>
+<h3 id="temporaltime"><code>Temporal.Time</code></h3>
+<p>A <code>Temporal.Time</code> object represents a wall-clock time. Since there is no date component this can not be directly translated to an absolute point in time. However it can be converted to a <code>Temporal.Absolute</code> by combining with a <code>Temporal.Date</code> using a <code>Temporal.TimeZone</code>.</p>
+<p>See <a href="./docs/time.md">Temporal.Time Documentation</a> for more detailed documentation.</p>
+<h3 id="temporaldate"><code>Temporal.Date</code></h3>
+<p>A <code>Temporal.Date</code> object represents a calendar date. This means there is no way to convert this to an absolute point in time, however combining with a <code>Temporal.Time</code> a <code>Temporal.DateTime</code> can be obtained which in turn can be pinned to the absolute timeline.</p>
+<p>This can also be converted to partial dates such as <code>Temporal.YearMonth</code> and <code>Temporal.MonthDay</code>.</p>
+<p>See <a href="./docs/date.md">Temporal.Date Documentation</a> for more detailed documentation.</p>
+<h3 id="temporalyearmonth"><code>Temporal.YearMonth</code></h3>
+<p>A date without a day component. This is useful to express things like &quot;the November 2010 meeting&quot;.</p>
+<p>See <a href="./docs/yearmonth.md">Temporal.YearMonth Documentation</a> for more detailed documentation.</p>
+<h3 id="temporalmonthday"><code>Temporal.MonthDay</code></h3>
+<p>A date without a year component. This is useful to express things like &quot;Bastille-Day is on the 14th of July&quot;.</p>
+<p>See <a href="./docs/monthay.md">Temporal.MonthDay Documentation</a> for more detailed documentation.</p>
+<h3 id="temporalduration"><code>Temporal.Duration</code></h3>
+<p>A <code>Temporal.Duration</code> expresses a length of time. This is used fo date/time maths.</p>
+<p>See <a href="./docs/duration.md">Temporal.Duration Documentation</a> for more detailed documentation.</p>
+<h3 id="temporal-functions"><code>Temporal</code> functions</h3>
+<ul>
+<li><code>Temporal.getAbsolute()</code> - get the current system absolute time</li>
+<li><code>Temporal.getTimeZone()</code> - get the current system timezone</li>
+<li><code>Temporal.getDateTime()</code> - get the current system date/time</li>
+<li><code>Temporal.getTime()</code> - get the current system time</li>
+<li><code>Temporal.getDate()</code> - get the current system date</li>
+<li><code>Temporal.getYearMonth()</code> - get the current system year/month</li>
+<li><code>Temporal.getMonthDay()</code> - get the current system month/day</li>
+</ul>
+<p>See <a href="./docs/functions.md">Temporal Functions Documentation</a> for more detailed documentation.</p>
+<h2 id="examples">Examples</h2>
+<p><strong>Now open your developer tools, and try it out!</strong></p>
+<script type="application/javascript" src="./playground.js"></script>
+<script type="application/javascript" src="./mermaid.js"></script>
+<script>mermaid.initialize({startOnLoad:true, flowchart:{ useMaxWidth:false } });</script>
+<style>.mermaid svg { height: 13em; }</style>
