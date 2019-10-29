@@ -27,10 +27,10 @@ describe('Duration', () => {
       equal(`${new Duration(-1, -1, -1, -1, -1, -1, -1, -1, -1, 'constrain')}`, 'P1Y1M1DT1H1M1.001001001S'));
     it('excessive values balance when "balance"', () =>
       equal(`${new Duration(0, 0, 0, 0, 0, 0, 0, 0, 1000, 'balance')}`, 'PT0.000001S'));
-    it('throw when bad disambiguation', () =>
-      throws(() => new Duration(0, 0, 0, 0, 0, 0, 0, 0, 0, 'xyz'), TypeError));
+    it('throw when bad disambiguation', () => throws(() => new Duration(0, 0, 0, 0, 0, 0, 0, 0, 0, 'xyz'), TypeError));
   });
 });
 
 import { normalize } from 'path';
-if (normalize(import.meta.url.slice(8)) === normalize(process.argv[1])) report(reporter);
+if (normalize(import.meta.url.slice(8)) === normalize(process.argv[1]))
+  report(reporter).then((failed) => process.exit(failed ? 1 : 0));

@@ -23,4 +23,8 @@ Promise.resolve()
   .then(() => {
     return Demitasse.report(Pretty.reporter);
   })
-  .catch((e) => console.error(e));
+  .then((failed) => process.exit(failed ? 1 : 0))
+  .catch((e) => {
+    console.error(e);
+    process.exit(-1);
+  });
