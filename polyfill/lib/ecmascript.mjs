@@ -45,10 +45,10 @@ export const ES = ObjectAssign(ObjectAssign(ObjectAssign({}, Cast), ES2019), {
     }
     return any ? any : false;
   },
-  ValidDuration: (duration, invalid = []) => {
+  ValidDuration: (durationbag, invalid = []) => {
     for (let prop of invalid) {
-      if (prop in bag) {
-        const value = ES.ToNumber(bag[prop]);
+      if (prop in durationbag) {
+        const value = ES.ToNumber(durationbag[prop]);
         if (Number.isFinite(value) && !!value) {
           return false;
         }

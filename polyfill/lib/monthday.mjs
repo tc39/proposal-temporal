@@ -94,7 +94,7 @@ export class MonthDay {
     other = ES.CastMonthDay(other);
     const [one, two] = [this, other].sort(MonthDay.compare);
     let months = two.month - one.month;
-    let days = (two.days - one.days);
+    let days = two.days - one.days;
     let month = two.month;
     if (days < 0) {
       months -= 1;
