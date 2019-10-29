@@ -165,7 +165,7 @@
           1. <ins>If _expandedOptions_.[[&lt;_field_>]] is not *undefined*, then</ins>
             1. <ins>Set _needDefaults_ to *false*.</ins>
         1. <ins>If _needDefaults_ is *true*, then</ins>
-          1. <ins>For each _field_ of « `"year"`, `"month"`, `"day"` », do</ins>
+          1. <ins>For each _field_ of « `"year"`, `"month"`, `"day"`, `"hour"`, `"minute"`, `"second"` », do</ins>
             1. <ins>Set _expandedOptions_.[[&lt;_field_>]] to `"numeric"`.</ins>
         1. Set _dateTimeFormat_.[[Pattern]] to <del>_pattern_</del><ins>GetDateTimeFormatPattern(_expandedOptions_, _formats_, _hc_)</ins>.
         1. <ins>For each row in <emu-xref href="#table-temporal-patterns"></emu-xref>, except the header row, in table order, do</ins>
