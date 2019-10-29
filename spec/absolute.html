@@ -1,0 +1,111 @@
+<!doctype html>
+<meta charset="utf8">
+
+<emu-clause id=sec-temporal-absolute>
+  <h1>Absolute Objects</h1>
+  <p>An `Absolute` is an immutable object referencing a point in time with nanoseconds precision.</p>
+
+  <emu-clause id=sec-temporal-absolute-constructor>
+    <h1>new Absolute(*nanoseconds*)</h1>
+    <p>When called as a constructor creates a new Absolute object. *nanoseconds* is a BigInt of the nanoseconds since
+      epoch.</p>
+  </emu-clause>
+
+  <emu-clause id=sec-temporal-absolute.prototype.epochseconds>
+    <h1>Absolute.prototype.epochSeconds</h1>
+    <p>`absolute.epochSeconds` is a getter that returns the seconds Number integer since epoch of the point in time
+      represented by the absolute object such that `absolute.epochSeconds === Number(absolute.valueOf() / BigInt(1e9)` is
+      *true*.</p>
+  </emu-clause>
+  <emu-clause id=sec-temporal-absolute.prototype.epochmilliseconds>
+    <h1>Absolute.prototype.epochMilliseconds</h1>
+    <p>`absolute.epochMilliseconds` is a getter that returns the milliseconds Number integer since epoch of the point in time
+      represented by the absolute object such that `absolute.epochMilliseconds === Number(absolute.valueOf() / BigInt(1e6))` is
+      *true*.</p>
+  </emu-clause>
+  <emu-clause id=sec-temporal-absolute.prototype.epochmicroseconds>
+    <h1>Absolute.prototype.epochMicroseconds</h1>
+    <p>`absolute.epochMicroseconds` is a getter that returns the microseconds BigInt since epoch of the point in time
+      represented by the absolute object such that `absolute.epochMicroseconds === Number(absolute.valueOf() / BigInt(1e3))` is
+      *true*.</p>
+  </emu-clause>
+  <emu-clause id=sec-temporal-absolute.prototype.epochnanoseconds>
+    <h1>Absolute.prototype.epochNanoseconds</h1>
+    <p>`absolute.epochNanoseconds` is a getter that returns the nanoseconds BigInt since epoch of the point in time
+      represented by the absolute object such that `absolute.epochNanoseconds === absolute.valueOf()` is *true*.</p>
+  </emu-clause>
+  <emu-clause id=sec-temporal-absolute.prototype.withZone>
+    <h1>Absolute.prototype.withZone(_timezone_)</h1>
+    <p>When called with an Absolute object as a _this_ context it will return a <emu-xref href="#sec-temporal-zoneddatetime">ZonedDateTime</emu-xref>
+      object that specifies an absolute in time in the given time zone.</p>
+    <p>_timezone_ is a string specifying a time zone. Legal values are IANA time zone names.</p>
+    <p>Calling this function with a _this_ context that is not an instance of Absolute is illegal.</p>
+  </emu-clause>
+  <emu-clause id=sec-temporal-absolute.prototype.withOffset>
+    <h1>Absolute.prototype.withOffset(_offset_)</h1>
+    <p>When called with an Absolute object as a _this_ context it will return a <emu-xref href="#sec-temporal-offsetdatetime">OffsetDateTime</emu-xref>
+      object that specifies an absolute in time in the given time zone.</p>
+    <p>_offset_ is a string specifying an offset as specified in <emu-xref href="#sec-temporal-offsetdatetime-constructor">OffsetDateTime</emu-xref></p>
+    <p>Calling this function with a _this_ context that is not an instance of Absolute is illegal.</p>
+  </emu-clause>
+  <emu-clause id=sec-temporal-absolute.prototype.toString>
+    <h1>Absolute.prototype.toString()</h1>
+    <p>When called with an Absolute object as a _this_ context it will return an ISO 8601 String value representing the
+      value of the Absolute object.</p>
+    <p>The format of the String will always be an IsoDateTime of the following form:</p>
+    <emu-grammar>
+      Sign: `-`
+      Year: Sign? Digit Digit Digit Digit
+      Month: `01` through `12`
+      Day: `01` through `31`
+      Hour: `00` through `24`
+      Minute: `00` through `59`
+      Second: `00` through `59`
+      Milliseconds: `000` through `999`
+      Microseconds: `000` through `999`
+      Nanoseconds: `000` through `999`
+      IsoDateTime: Year `-` Month `-` Day `T` Hour `:` Minute `:` Second `.` Milliseconds Microseconds Nanoseconds `Z`
+    </emu-grammar>
+    <p>Calling this function with a _this_ context that is not an instance of Absolute is illegal.</p>
+  </emu-clause>
+
+  <emu-clause id=sec-temporal-absolute.fromString>
+    <h1>Absolute.fromString(_string_)</h1>
+    <p>This function will create an Absolute object from a String. The _string_ has to strictly conform to the format
+      produced by <emu-xref href="#sec-temporal-absolute.prototype.toString" title />. Any _string_ not strictly conforming to that
+      format will throw an Error.</p>
+  </emu-clause>
+  <emu-clause id=sec-temporal-absolute.fromEpochSeconds>
+    <h1>Absolute.fromEpochSeconds(_seconds_)</h1>
+    <p>
+      This function will create an Absolute object that represents the absolute in time _seconds_ since epoch such that
+      `BigInt(absolute.epochSeconds) * BigInt(1e9) === absolute.epochNanoseconds` and `absolute.epochSeconds === _seconds_`
+      are both `true`.
+    </p>
+  </emu-clause>
+  <emu-clause id=sec-temporal-absolute.fromEpochMilliseconds>
+    <h1>Absolute.fromEpochMilliseconds(_milliseconds_)</h1>
+    <p>
+      This function will create an Absolute object that represents the absolute in time _milliseconds_ since epoch such that
+      `BigInt(absolute.epochMilliseconds) * BigInt(1e6) === absolute.epochNanoseconds` and `absolute.epochMilliseconds === _milliseconds_`
+      are both `true`.
+    </p>
+  </emu-clause>
+  <emu-clause id=sec-temporal-absolute.fromEpochMicroseconds>
+    <h1>Absolute.fromEpochMicroseconds(_microseconds_)</h1>
+    <p>
+      This function will create an Absolute object that represents the absolute in time _milliseconds_ since epoch such that
+      `absolute.epochMicroseconds * BigInt(1e3) === absolute.epochNanoseconds` and `absolute.epochMicroseconds === _microseconds_`
+      are both `true`.
+    </p>
+  </emu-clause>
+  <emu-clause id=sec-temporal-absolute.fromEpochNanoseconds>
+    <h1>Absolute.fromEpochNanoseconds(_nanoseconds_)</h1>
+    <p>
+      This function will create an Absolute object that represents the absolute in time _nanoseconds_ since epoch such that
+      `absolute.epochNanoseconds === absolute.epochNanoseconds` and `absolute.epochMicroseconds === _microseconds_`
+      are both `true`.
+    </p>
+  </emu-clause>
+
+</emu-clause>
