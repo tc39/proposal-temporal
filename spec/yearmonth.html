@@ -3,5 +3,512 @@
 
 <emu-clause id=sec-temporal-yearmonth>
   <h1>Temporal.YearMonth Objects</h1>
-  <p><mark>TODO: Specify.</mark></p>
+  <p>A Temporal.YearMonth object is an immutable Object that contains Number values corresponding to a particular year and month.</p>
+
+  <emu-clause id=sec-temporal-yearmonth-constructor>
+    <h1>The Temporal.YearMonth Constructor</h1>
+    <p>
+      The Temporal.YearMonth constructor is the %Temporal.YearMonth% intrinsic object.
+      When called as a constructor, it creates and initializes a new Temporal.YearMonth object.
+    </p>
+    <p>
+      The Temporal.YearMonth constructor is designed to be subclassable.
+      It may be used as the value of an extends clause of a class definition.
+      Subclass constructors that intend to inherit the specified YearMonth behaviour must include a super call to the %Temporal.YearMonth% constructor to create and initialize subclass instances with the necessary internal slots.
+    </p>
+
+    <emu-clause id=sec-temporal-yearmonth-constructor-alg>
+      <h1>Temporal.YearMonth ( _year_, _month_ [ , _disambiguation_ ] )</h1>
+      <p>When the Temporal.YearMonth function is called, the following steps are taken:</p>
+      <emu-alg>
+        1. If NewTarget is *undefined*, then
+          1. Throw a *TypeError* exception.
+        1. Let _y_ be ? ToInteger(_year_).
+        1. Let _m_ be ? ToInteger(_month_).
+        1. If _disambiguation_ is not *undefined*, then
+          1. Set _disambiguation_ to ? ToString(_disambiguation_).
+        1. Else
+          1. Set _disambiguation_ to `"constrain"`.
+        1. Let _result_ be ? RegulateYearMonth(_y_, _m_, _disambiguation_).
+        1. Return ? CreateYearMonth(_result_.[[Year]], _result_.[[Month]], NewTarget).
+      </emu-alg>
+    </emu-clause>
+  </emu-clause>
+
+  <emu-clause id=sec-properties-of-the-temporal-YearMonth-constructor>
+    <h1>Properties of the Temporal.YearMonth Constructor</h1>
+    <p>The value of the [[Prototype]] internal slot of the Temporal.YearMonth constructor is the intrinsic object %FunctionPrototype%.</p>
+    <p>The Temporal.YearMonth constructor has the following properties:</p>
+
+    <emu-clause id=sec-temporal-YearMonth-prototype>
+      <h1>Temporal.YearMonth.prototype</h1>
+      <p>The initial value of Temporal.YearMonth.prototype is %Temporal.YearMonth.prototype%.</p>
+      <p>This property has the attributes { [[Writable]]: *false*, [[Enumerable]]: *false*, [[Configurable]]: *false* }.</p>
+    </emu-clause>
+
+    <emu-clause>
+      <h1>Temporal.YearMonth.fromString ( _isostring_ )</h1>
+      <p>
+        The `fromString` method takes one argument _isostring_.
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _isostring_ be ? ToString(_isostring_).
+        1. Return ? YearMonthFromString(_isostring_).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause>
+      <h1>Temporal.YearMonth.from ( _arg_ )</h1>
+      <p>
+        The `from` method takes one argument _arg_.
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Return ? ToYearMonth(_arg_).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause>
+      <h1>Temporal.YearMonth.compare ( _one_, _two_ )</h1>
+      <p>
+        The `compare` method takes two arguments, _one_ and _two_.
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _one_ be ? ToYearMonth(_one_).
+        1. Let _two_ be ? ToYearMonth(_two_).
+        1. Return ! YearMonthCompare(_one_, _two_).
+      </emu-alg>
+    </emu-clause>
+  </emu-clause>
+
+  <emu-clause id=sec-properties-of-the-temporal-YearMonth-prototype-object>
+    <h1>Properties of the Temporal.YearMonth Prototype Object</h1>
+
+    <p>The Temporal.YearMonth prototype object</p>
+    <ul>
+      <li>is the intrinsic object %Temporal.YearMonth.prototype%.
+      <li>is itself an ordinary object.
+      <li>is not a Temporal.YearMonth instance and does not have a [[InitializedTemporalYearMonth]] internal slot.
+      <li>has a [[Prototype]] internal slot whose value is %Object.prototype%.
+    </ul>
+
+    <emu-clause id=sec-temporal.YearMonth.prototype.constructor>
+      <h1>Temporal.YearMonth.prototype.constructor</h1>
+      <p>The initial value of Temporal.YearMonth.prototype.constructor is %Temporal.YearMonth%.</p>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal.YearMonth.prototype-@@tostringtag">
+      <h1>Temporal.YearMonth.prototype[ @@toStringTag ]</h1>
+      <p>
+        The initial value of the @@toStringTag property is the string value `"Temporal.YearMonth"`.
+      </p>
+      <p>
+        This property has the attributes { [[Writable]]: *false*, [[Enumerable]]: *false*, [[Configurable]]: *true* }.
+      </p>
+    </emu-clause>
+
+    <emu-clause>
+      <h1>get Temporal.YearMonth.prototype.year</h1>
+      <p>
+        Temporal.YearMonth.prototype.year is an accessor property whose set accessor function is undefined.
+        Its get accessor function performs the following steps:
+      </p>
+      <emu-alg>
+        1. Let _yearMonth_ be the *this* value.
+        1. If Type(_yearMonth_) is not Object or _yearMonth_ does not have an [[InitializedTemporalYearMonth]] internal slot, then
+          1. Throw a *TypeError* exception.
+        1. Return _yearMonth_.[[Year]].
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause>
+      <h1>get Temporal.YearMonth.prototype.month</h1>
+      <p>
+        Temporal.YearMonth.prototype.month is an accessor property whose set accessor function is undefined.
+        Its get accessor function performs the following steps:
+      </p>
+      <emu-alg>
+        1. Let _yearMonth_ be the *this* value.
+        1. If Type(_yearMonth_) is not Object or _yearMonth_ does not have an [[InitializedTemporalYearMonth]] internal slot, then
+          1. Throw a *TypeError* exception.
+        1. Return _yearMonth_.[[Month]].
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause>
+      <h1>get Temporal.YearMonth.prototype.daysInMonth</h1>
+      <p>
+        Temporal.YearMonth.prototype.daysInMonth is an accessor property whose set accessor function is undefined.
+        Its get accessor function performs the following steps:
+      </p>
+      <emu-alg>
+        1. Let _yearMonth_ be the *this* value.
+        1. If Type(_yearMonth_) is not Object or _yearMonth_ does not have an [[InitializedTemporalYearMonth]] internal slot, then
+          1. Throw a *TypeError* exception.
+        1. Return ! DaysInMonth(_yearMonth_.[[Year]], _yearMonth_.[[Month]]).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause>
+      <h1>get Temporal.YearMonth.prototype.leapYear</h1>
+      <p>
+        Temporal.YearMonth.prototype.leapYear is an accessor property whose set accessor function is undefined.
+        Its get accessor function performs the following steps:
+      </p>
+      <emu-alg>
+        1. Let _yearMonth_ be the *this* value.
+        1. If Type(_yearMonth_) is not Object or _yearMonth_ does not have an [[InitializedTemporalYearMonth]] internal slot, then
+          1. Throw a *TypeError* exception.
+        1. Return ! IsLeapYear(_yearMonth_.[[Year]]).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause>
+      <h1>Temporal.YearMonth.prototype.with ( _otherYearMonth_ [ , _disambiguation_ ] )</h1>
+      <p>
+        The `with` method takes two arguments, _otherYearMonth_ and _disambiguation_.
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _yearMonth_ be the *this* value.
+        1. If Type(_yearMonth_) is not Object or _yearMonth_ does not have an [[InitializedTemporalYearMonth]] internal slot, then
+          1. Throw a *TypeError* exception.
+        1. Let _otherYearMonth_ be ? ToPartialYearMonth(_otherYearMonth_).
+        1. If _disambiguation_ is not *undefined*, then
+          1. Set _disambiguation_ to ? ToString(_disambiguation_).
+        1. Else
+          1. Set _disambiguation_ to `"constrain"`.
+        1. If _otherYearMonth_.[[Year]] is not *undefined*, then
+          1. Let _y_ be _otherYearMonth_.[[Year]].
+        1. Else
+          1. Let _y_ be _yearMonth_.[[Year]].
+        1. If _otherYearMonth_.[[Month]] is not *undefined*, then
+          1. Let _m_ be _otherYearMonth_.[[Month]].
+        1. Else
+          1. Let _m_ be _yearMonth_.[[Month]].
+        1. Let _result_ be ? RegulateYearMonth(_y_, _m_, _disambiguation_).
+        1. Return ? CreateYearMonth(_result_.[[Year]], _result_.[[Month]]).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause>
+      <h1>Temporal.YearMonth.prototype.plus ( _duration_ [ , _disambiguation_ ] )</h1>
+      <p>
+        The `plus` method takes two arguments, _duration_ and _disambiguation_.
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _yearMonth_ be the *this* value.
+        1. If Type(_yearMonth_) is not Object or _yearMonth_ does not have an [[InitializedTemporalYearMonth]] internal slot, then
+          1. Throw a *TypeError* exception.
+        1. Let _duration_ be ? ToDurationLike(_duration_).
+        1. <mark>TODO: Throw if any day/time properties are present?</mark>
+        1. If _disambiguation_ is not *undefined*, then
+          1. Set _disambiguation_ to ? ToString(_disambiguation_).
+        1. Else
+          1. Set _disambiguation_ to `"constrain"`.
+        1. Let _y_ be _yearMonth_.[[Year]] + _duration_.[[Years]].
+        1. Let _m_ be _yearMonth_.[[Month]] + _duration_.[[Months]].
+        1. Let _result_ be ? RegulateYearMonth(_y_, _m_, _disambiguation_).
+        1. Return ? CreateYearMonth(_result_.[[Year]], _result_.[[Month]]).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause>
+      <h1>Temporal.YearMonth.prototype.minus ( _duration_ [ , _disambiguation_ ] )</h1>
+      <p>
+        The `minus` method takes two arguments, _duration_ and _disambiguation_.
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _yearMonth_ be the *this* value.
+        1. If Type(_yearMonth_) is not Object or _yearMonth_ does not have an [[InitializedTemporalYearMonth]] internal slot, then
+          1. Throw a *TypeError* exception.
+        1. Let _duration_ be ? ToDurationLike(_duration_).
+        1. <mark>TODO: Throw if any day/time properties are present?</mark>
+        1. If _disambiguation_ is not *undefined*, then
+          1. Set _disambiguation_ to ? ToString(_disambiguation_).
+        1. Else
+          1. Set _disambiguation_ to `"constrain"`.
+        1. Let _y_ be _yearMonth_.[[Year]] - _duration_.[[Years]].
+        1. Let _m_ be _yearMonth_.[[Month]] - _duration_.[[Months]].
+        1. Let _result_ be ? RegulateYearMonth(_y_, _m_, _disambiguation_).
+        1. Return ? CreateYearMonth(_result_.[[Year]], _result_.[[Month]]).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause>
+      <h1>Temporal.YearMonth.prototype.difference ( _otherYearMonth_ )</h1>
+      <p>
+        The `difference` method takes one argument, _otherYearMonth_.
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _yearMonth_ be the *this* value.
+        1. If Type(_yearMonth_) is not Object or _yearMonth_ does not have an [[InitializedTemporalYearMonth]] internal slot, then
+          1. Throw a *TypeError* exception.
+        1. Let _otherYearMonth_ be ? ToYearMonth(_otherYearMonth_).
+        1. If ! YearMonthCompare(_yearMonth_, _otherYearMonth_) &lt; 0, then
+          1. Let _greater_ be _otherYearMonth_.
+          1. Let _smaller_ be _yearMonth_.
+        1. Else,
+          1. Let _greater_ be _yearMonth_.
+          1. Let _smaller_ be _otherYearMonth_.
+        1. Let _years_ be _greater_.[[Year]] - _smaller_.[[Year]].
+        1. Let _months_ be _greater_.[[Month]] - _smaller_.[[Month]].
+        1. If _months_ &lt; 0, then
+          1. Set _years_ to _years_ - 1.
+          1. Set _months_ to _months_ + 12.
+        1. <mark>Assert: _months_ &ge; 0.</mark>
+        1. Return ? CreateDuration(_years_, _months_).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause>
+      <h1>Temporal.YearMonth.prototype.toString ( )</h1>
+      <p>
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _yearMonth_ be the *this* value.
+        1. If Type(_yearMonth_) is not Object or _yearMonth_ does not have an [[InitializedTemporalYearMonth]] internal slot, then
+          1. Throw a *TypeError* exception.
+        1. Return ! YearMonthToString(_yearMonth_).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause>
+      <h1>Temporal.YearMonth.prototype.toLocaleString ( [ _locales_ [ , _options_ ] ] )</h1>
+      <p>
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _yearMonth_ be the *this* value.
+        1. If Type(_yearMonth_) is not Object or _yearMonth_ does not have an [[InitializedTemporalYearMonth]] internal slot, then
+          1. Throw a *TypeError* exception.
+        1. If the implementation does not include the ECMA-402 Internationalization API, then
+          1. Return ! YearMonthToString(_yearMonth_).
+        1. Let _dateFormat_ be ? Construct(%DateTimeFormat%, « _locales_, _options_ »).
+        1. Return ? FormatDateTime(_dateFormat_, _yearMonth_).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause>
+      <h1>Temporal.YearMonth.prototype.toJSON ( )</h1>
+      <p>
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _yearMonth_ be the *this* value.
+        1. If Type(_yearMonth_) is not Object or _yearMonth_ does not have an [[InitializedTemporalYearMonth]] internal slot, then
+          1. Throw a *TypeError* exception.
+        1. Return ! YearMonthToString(_yearMonth_).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause>
+      <h1>Temporal.YearMonth.prototype.withDay ( _day_ [ , _disambiguation_ ] )</h1>
+      <p>
+        The `withDay` method takes two arguments, _day_ and _disambiguation_.
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _yearMonth_ be the *this* value.
+        1. If Type(_yearMonth_) is not Object or _yearMonth_ does not have an [[InitializedTemporalYearMonth]] internal slot, then
+          1. Throw a *TypeError* exception.
+        1. Let _d_ be ? ToInteger(_day_).
+        1. If _disambiguation_ is not *undefined*, then
+          1. Set _disambiguation_ to ? ToString(_disambiguation_).
+        1. Else
+          1. Set _disambiguation_ to `"constrain"`.
+        1. Let _result_ be ? RegulateDate(_yearMonth_.[[Year]], _yearMonth_.[[Month]], _d_, _disambiguation_).
+        1. Return ? CreateDate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]]).
+      </emu-alg>
+    </emu-clause>
+  </emu-clause>
+
+  <emu-clause id=sec-temporal-yearmonth-abstract-ops>
+    <h1>Abstract operations</h1>
+
+    <emu-clause id=sec-temporal-ToPartialYearMonth aoid=ToPartialYearMonth>
+      <h1>ToPartialYearMonth ( _yearMonth_ )</h1>
+      <emu-alg>
+        1. If Type(_yearMonth_) is String, then
+          1. Return ? ParseYearMonthString(_yearMonth_).
+        1. If Type(_yearMonth_) is Object, then
+          1. Let _result_ be the new Record {
+              [[Year]]: *undefined*,
+              [[Month]]: *undefined*
+            }.
+          1. Let _any_ be *false*.
+          1. For each row of <emu-xref href="#table-temporal-yearmonthlike-properties"></emu-xref>, except the header row, in table order, do
+            1. Let _property_ be the Property value of the current row.
+            1. Let _value_ be ? Get(_yearMonth_, _property_).
+            1. If _value_ is not *undefined*, then
+              1. Set _any_ to *true*.
+              1. Set _value_ to ? ToInteger(_value_).
+              1. Set _result_'s internal slot whose name is the Internal Slot value of the current row to _value_.
+          1. If _any_ is *false*, then
+            1. Throw a *TypeError* exception.
+          1. Return _result_.
+        1. Throw a *TypeError* exception.
+      </emu-alg>
+
+      <emu-table id="table-temporal-yearmonthlike-properties">
+        <emu-caption>Properties of a YearMonthLike</emu-caption>
+        <table class="real-table">
+          <thead>
+            <tr>
+              <th>Internal Slot</th>
+              <th>Property</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>[[Month]]</td>
+              <td>`"month"`</td>
+            </tr>
+            <tr>
+              <td>[[Year]]</td>
+              <td>`"year"`</td>
+            </tr>
+          </tbody>
+        </table>
+      </emu-table>
+    </emu-clause>
+    <emu-clause id=sec-temporal-RegulateYearMonth aoid=RegulateYearMonth>
+      <h1>RegulateYearMonth ( _year_, _month_, _disambiguation_ )</h1>
+      <emu-alg>
+        1. Assert: _year_ and _month_ are integer Number values.
+        1. Assert: _disambiguation_ is one of `"constrain"`, `"balance"`, or `"reject"`.
+        1. If _disambiguation_ is `"constrain"`, then
+          1. <mark>TODO: define.</mark>
+        1. If _disambiguation_ is `"balance"`, then
+          1. Return BalanceYearMonth(_year_, _month_).
+        1. If _disambiguation_ is `"reject"`, then
+          1. If ! ValidateYearMonth(_year_, _month_) is *false*, then
+            1. Throw a *RangeError* exception.
+          1. Return the new Record {
+              [[Year]]: _year_,
+              [[Month]]: _month_
+            }.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id=sec-temporal-ValidateYearMonth aoid=ValidateYearMonth>
+      <h1>ValidateYearMonth ( _year_, _month_ )</h1>
+      <emu-alg>
+        1. Assert: _year_ and _month_ are integer Number values.
+        1. If _month_ &lt; 1 or _month_ &gt; 12, then
+          1. Return *false*.
+        1. Return *true*.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id=sec-temporal-BalanceYearMonth aoid=BalanceYearMonth>
+      <h1>BalanceYearMonth ( _year_, _month_ )</h1>
+      <emu-alg>
+        1. Assert: _year_ and _month_ are integer Number values.
+        1. Set _year_ to _year_ + floor((_month_ - 1) / 12).
+        1. Set _month_ to NonNegativeModulo(_month_ - 1, 12) + 1.
+        1. Return the new Record {
+            [[Year]]: _year_,
+            [[Month]]: _month_
+          }.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id=sec-temporal-createyearmonth aoid=CreateYearMonth>
+      <h1>CreateYearMonth ( _year_, _month_ [ , _newTarget_ ] )</h1>
+      <emu-alg>
+        1. Assert: ! ValidateYearMonth(_year_, _month_) is *true*.
+        1. If _newTarget_ is not given, set it to %Temporal.YearMonth%
+        1. Let _object_ be ? OrdinaryCreateFromConstructor(_newTarget_, `"%Temporal.YearMonth.prototype%"`, « [[InitializedTemporalYearMonth]], [[Year]], [[Month]] »).
+        1. Set _object_.[[Year]] to _year_.
+        1. Set _object_.[[Month]] to _month_.
+        1. Return _object_.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-ParseYearMonthString" aoid="ParseYearMonthString">
+      <h1>ParseYearMonthString ( _yearMonth_ )</h1>
+      <emu-alg>
+        1. Assert: Type(_yearMonth_) is String.
+        1. Let _valid_ be *true* if _yearMonth_ matches <a href="https://github.com/tc39/proposal-temporal/blob/main/polyfill/lib/regex.mjs">the "yearmonth" regular expression in the polyfill</a> and *false* otherwise.
+        1. <mark>TODO: Actually specify this somehow.</mark>
+        1. If _valid_ is *false*, then
+          1. Throw a *RangeError* exception.
+        1. Let _year_ and _month_ be the respective parts of _yearMonth_ interpreted as decimal numbers.
+        1. Return the new Record {
+            [[Year]]: _year_,
+            [[Month]]: _month_
+          }.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-YearMonthFromString" aoid="YearMonthFromString">
+      <h1>YearMonthFromString ( _yearMonth_ )</h1>
+      <emu-alg>
+        1. Assert: Type(_yearMonth_) is String.
+        1. Let _result_ be ? ParseYearMonthString(_yearMonth_).
+        1. If ! ValidateYearMonth(_result_.[[Year]], _result_.[[Month]]) is *false*, then
+          1. Throw a *TypeError* exception.
+        1. Return ? CreateYearMonth(_result_.[[Year]], _result_.[[Month]]).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id=sec-temporal-ToYearMonth aoid=ToYearMonth>
+      <h1>ToYearMonth ( _yearMonth_ )</h1>
+      <emu-alg>
+        1. If Type(_yearMonth_) is String, then
+          1. Return ? YearMonthFromString(_yearMonth_).
+        1. If Type(_yearMonth_) is Object, then
+          1. If _yearMonth_ has an [[InitializedTemporalYearMonth]] internal slot, then
+            1. Return _yearMonth_.
+          1. Let _result_ be the new Record {
+              [[Year]]: *undefined*,
+              [[Month]]: *undefined*
+            }.
+          1. For each row of <emu-xref href="#table-temporal-yearmonthlike-properties"></emu-xref>, except the header row, in table order, do
+            1. Let _property_ be the Property value of the current row.
+            1. Let _value_ be ? Get(_yearMonth_, _property_).
+            1. If _value_ is *undefined*, then
+              1. Throw a *TypeError* exception.
+            1. Let _value_ be ? ToInteger(_value_).
+            1. Set _result_'s internal slot whose name is the Internal Slot value of the current row to _value_.
+          1. If ! ValidateYearMonth(_result_.[[Year]], _result_.[[Month]]) is *false*, then
+            1. Throw a *TypeError* exception.
+          1. Return ? CreateYearMonth(_result_.[[Year]], _result_.[[Month]]).
+        1. Throw a *TypeError* exception.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id=sec-temporal-YearMonthToString aoid=YearMonthToString>
+      <h1>YearMonthToString ( _yearMonth_ )</h1>
+      <emu-alg>
+        1. Assert: Type(_yearMonth_) is Object.
+        1. Assert: _yearMonth_ has an [[InitializedTemporalYearMonth]] internal slot.
+        1. Let _year_ be PadYear(_yearMonth_.[[Year]]).
+        1. Let _month_ be _yearMonth_.[[Month]] formatted as a two-digit decimal number, padded to the left with a zero if necessary.
+        1. Return the string-concatenation of _year_, the code unit 0x002D (HYPHEN-MINUS), and _month_.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id=sec-temporal-YearMonthCompare aoid=YearMonthCompare>
+      <h1>YearMonthCompare ( _one_, _two_ )</h1>
+      <emu-alg>
+        1. Assert: Type(_one_) is Object.
+        1. Assert: _one_ has an [[InitializedTemporalYearMonth]] internal slot.
+        1. Assert: Type(_two_) is Object.
+        1. Assert: _two_ has an [[InitializedTemporalYearMonth]] internal slot.
+        1. If _one_.[[Year]] &gt; _two_.[[Year]], return 1.
+        1. If _one_.[[Year]] &lt; _two_.[[Year]], return -1.
+        1. If _one_.[[Month]] &gt; _two_.[[Month]], return 1.
+        1. If _one_.[[Month]] &lt; _two_.[[Month]], return -1.
+        1. Return +0.
+      </emu-alg>
+    </emu-clause>
+  </emu-clause>
 </emu-clause>

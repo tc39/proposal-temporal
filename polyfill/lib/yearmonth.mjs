@@ -8,6 +8,7 @@ export class YearMonth {
   constructor(year, month, disambiguation = 'constrain') {
     year = ES.ToInteger(year);
     month = ES.ToInteger(month);
+    disambiguation = ES.ToString(disambiguation);
     switch (disambiguation) {
       case 'reject':
         ES.RejectDate(year, month, 1);
@@ -51,7 +52,7 @@ export class YearMonth {
     const Construct = ES.SpeciesConstructor(this, YearMonth);
     return new Construct(year, month, disambiguation);
   }
-  plus(durationLike = {}, disambiguation = 'constrain') {
+  plus(durationLike, disambiguation = 'constrain') {
     if (!ES.IsYearMonth(this)) throw new TypeError('invalid receiver');
     const duration = ES.CastDuration(durationLike);
     if (
@@ -74,7 +75,7 @@ export class YearMonth {
     const Construct = ES.SpeciesConstructor(this, YearMonth);
     return new Construct(year, month);
   }
-  minus(durationLike = {}, disambiguation = 'constrain') {
+  minus(durationLike, disambiguation = 'constrain') {
     if (!ES.IsYearMonth(this)) throw new TypeError('invalid receiver');
     const duration = ES.CastDuration(durationLike);
     if (
