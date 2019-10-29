@@ -20,6 +20,8 @@ describe('YearMonth', () => {
     describe('.fromString()', ()=>{
       it('YearMonth.fromString(2019-10) == 2019-10', ()=>equal(`${YearMonth.fromString('2019-10')}`, '2019-10'));
       it('YearMonth.fromString(2019-10-01T09:00:00Z) == 2019-10', ()=>equal(`${YearMonth.fromString('2019-10-01T09:00:00Z')}`, '2019-10'));
+      it(`YearMonth.fromString('1976-11') == (1976-11)`, ()=>equal(`${YearMonth.fromString('1976-11')}`, '1976-11'));
+      it(`YearMonth.fromString('1976-11-18') == (1976-11)`, ()=>equal(`${YearMonth.fromString('1976-11-18')}`, '1976-11'));
     });
   });
 });
