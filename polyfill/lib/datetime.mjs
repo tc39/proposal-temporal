@@ -83,51 +83,67 @@ export class DateTime {
     SetSlot(this, NANOSECOND, nanosecond);
   }
   get year() {
+    if (!(this instanceof DateTime)) throw new TypeError('invalid receiver');
     return GetSlot(this, YEAR);
   }
   get month() {
+    if (!(this instanceof DateTime)) throw new TypeError('invalid receiver');
     return GetSlot(this, MONTH);
   }
   get day() {
+    if (!(this instanceof DateTime)) throw new TypeError('invalid receiver');
     return GetSlot(this, DAY);
   }
   get hour() {
+    if (!(this instanceof DateTime)) throw new TypeError('invalid receiver');
     return GetSlot(this, HOUR);
   }
   get minute() {
+    if (!(this instanceof DateTime)) throw new TypeError('invalid receiver');
     return GetSlot(this, MINUTE);
   }
   get second() {
+    if (!(this instanceof DateTime)) throw new TypeError('invalid receiver');
     return GetSlot(this, SECOND);
   }
   get millisecond() {
+    if (!(this instanceof DateTime)) throw new TypeError('invalid receiver');
     return GetSlot(this, MILLISECOND);
   }
   get microsecond() {
+    if (!(this instanceof DateTime)) throw new TypeError('invalid receiver');
     return GetSlot(this, MICROSECOND);
   }
   get nanosecond() {
+    if (!(this instanceof DateTime)) throw new TypeError('invalid receiver');
     return GetSlot(this, NANOSECOND);
   }
   get dayOfWeek() {
+    if (!(this instanceof DateTime)) throw new TypeError('invalid receiver');
     return ES.DayOfWeek(GetSlot(this, YEAR), GetSlot(this, MONTH), GetSlot(this, DAY));
   }
   get dayOfYear() {
+    if (!(this instanceof DateTime)) throw new TypeError('invalid receiver');
     return ES.DayOfYear(GetSlot(this, YEAR), GetSlot(this, MONTH), GetSlot(this, DAY));
   }
   get weekOfYear() {
+    if (!(this instanceof DateTime)) throw new TypeError('invalid receiver');
     return ES.WeekOfYear(GetSlot(this, YEAR), GetSlot(this, MONTH), GetSlot(this, DAY));
   }
   get daysInYear() {
+    if (!(this instanceof DateTime)) throw new TypeError('invalid receiver');
     return ES.LeapYear(GetSlot(this, YEAR)) ? 366 : 365;
   }
   get daysInMonth() {
+    if (!(this instanceof DateTime)) throw new TypeError('invalid receiver');
     return ES.DaysInMonth(GetSlot(this, YEAR), GetSlot(this, MONTH));
   }
   get leapYear() {
+    if (!(this instanceof DateTime)) throw new TypeError('invalid receiver');
     return ES.LeapYear(GetSlot(this, YEAR));
   }
   with(dateTimeLike = {}, disambiguation = 'constrain') {
+    if (!(this instanceof DateTime)) throw new TypeError('invalid receiver');
     const props = ES.ValidPropertyBag(dateTimeLike, [
       'year',
       'month',
@@ -157,6 +173,7 @@ export class DateTime {
     return new Construct(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, disambiguation);
   }
   plus(durationLike = {}, disambiguation = 'constrain') {
+    if (!(this instanceof DateTime)) throw new TypeError('invalid receiver');
     const duration = ES.CastDuration(durationLike);
     if (
       !ES.ValidDuration(duration, [
@@ -197,6 +214,7 @@ export class DateTime {
     return new Construct(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
   }
   minus(durationLike = {}, disambiguation = 'constrain') {
+    if (!(this instanceof DateTime)) throw new TypeError('invalid receiver');
     const duration = ES.CastDuration(durationLike);
     if (
       !ES.ValidDuration(duration, [
@@ -236,6 +254,7 @@ export class DateTime {
     return new Construct(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
   }
   difference(other) {
+    if (!(this instanceof DateTime)) throw new TypeError('invalid receiver');
     other = ES.CastDateTime(other);
     const [smaller, larger] = [this, other].sort(DateTime.compare);
     const { deltaDays, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.DifferenceTime(
@@ -251,6 +270,7 @@ export class DateTime {
     return new Duration(years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
   }
   toString() {
+    if (!(this instanceof DateTime)) throw new TypeError('invalid receiver');
     let year = ES.ISOYearString(GetSlot(this, YEAR));
     let month = ES.ISODateTimePartString(GetSlot(this, MONTH));
     let day = ES.ISODateTimePartString(GetSlot(this, DAY));
@@ -266,26 +286,32 @@ export class DateTime {
     return resultString;
   }
   toLocaleString(...args) {
+    if (!(this instanceof DateTime)) throw new TypeError('invalid receiver');
     return new Intl.DateTimeFormat(...args).format(this);
   }
 
   inZone(timeZoneParam = 'UTC', disambiguation = 'earlier') {
+    if (!(this instanceof DateTime)) throw new TypeError('invalid receiver');
     const timeZone = ES.CastTimeZone(timeZoneParam);
     return timeZone.getAbsoluteFor(this, disambiguation);
   }
   getDate() {
+    if (!(this instanceof DateTime)) throw new TypeError('invalid receiver');
     const Date = ES.GetIntrinsic('%Temporal.Date%');
     return new Date(GetSlot(this, YEAR), GetSlot(this, MONTH), GetSlot(this, DAY));
   }
   getYearMonth() {
+    if (!(this instanceof DateTime)) throw new TypeError('invalid receiver');
     const YearMonth = ES.GetIntrinsic('%Temporal.YearMonth%');
     return new YearMonth(GetSlot(this, YEAR), GetSlot(this, MONTH));
   }
   getMonthDay() {
+    if (!(this instanceof DateTime)) throw new TypeError('invalid receiver');
     const MonthDay = ES.GetIntrinsic('%Temporal.MonthDay%');
     return new MonthDay(GetSlot(this, MONTH), GetSlot(this, DAY));
   }
   getTime() {
+    if (!(this instanceof DateTime)) throw new TypeError('invalid receiver');
     const Time = ES.GetIntrinsic('%Temporal.Time%');
     return new Time(
       GetSlot(this, HOUR),
