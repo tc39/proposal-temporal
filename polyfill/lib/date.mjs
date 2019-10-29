@@ -5,11 +5,14 @@ import { YEAR, MONTH, DAY, CreateSlots, GetSlot, SetSlot } from './slots.mjs';
 import { date as STRING } from './regex.mjs';
 
 export class Date {
-  constructor(year, month, day, disambiguation) {
+  constructor(year, month, day, disambiguation = 'constrain') {
     year = ES.ToInteger(year);
     month = ES.ToInteger(month);
     day = ES.ToInteger(day);
     switch (disambiguation) {
+      case 'reject':
+        ES.RejectDate(year, month, day);
+        break;
       case 'constrain':
         ({ year, month, day } = ES.ConstrainDate(year, month, day));
         break;
@@ -17,7 +20,7 @@ export class Date {
         ({ year, month, day } = ES.BalanceDate(year, month, day));
         break;
       default:
-        ES.RejectDate(year, month, day);
+        throw new TypeError('disambiguation should be either reject, constrain or balance');
     }
 
     CreateSlots(this);
