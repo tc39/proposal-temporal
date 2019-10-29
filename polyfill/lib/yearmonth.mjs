@@ -118,7 +118,7 @@ export class YearMonth {
     return new Date(year, month, day, disambiguation);
   }
 
-  static fromString(isoStringParam) {
+  static fromString(isoString) {
     isoString = ES.ToString(isoString);
     const match = STRING.exec(isoString);
     if (!match) throw new RangeError(`invalid yearmonth: ${isoString}`);

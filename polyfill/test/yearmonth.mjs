@@ -17,6 +17,10 @@ describe('YearMonth', () => {
       it('balance', () => equal(`${new YearMonth(2019, 13, 'balance')}`, '2020-01'));
       it('throw when bad disambiguation', () => throws(() => new YearMonth(2019, 1, 'xyz'), TypeError));
     });
+    describe('.fromString()', ()=>{
+      it('YearMonth.fromString(2019-10) == 2019-10', ()=>equal(`${YearMonth.fromString('2019-10')}`, '2019-10'));
+      it('YearMonth.fromString(2019-10-01T09:00:00Z) == 2019-10', ()=>equal(`${YearMonth.fromString('2019-10-01T09:00:00Z')}`, '2019-10'));
+    });
   });
 });
 
