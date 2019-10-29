@@ -5,8 +5,8 @@
   "main": "index.js",
   "private": true,
   "scripts": {
-    "build": "rollup -c rollup.config.js && marp playground.md -o playground.html",
-    "watch": "marp -p playground.md -o playground.html"
+    "build:javascript": "rollup -c rollup.config.ejs",
+    "build:html": "for FILE in `ls *.md`; do marked -o `echo $FILE | sed -e 's/.md/.html/'` $FILE; done && cp README.html index.html"
   },
   "repository": {
     "type": "git",
@@ -24,12 +24,9 @@
   },
   "homepage": "https://github.com/tc39/proposal-temporal#readme",
   "devDependencies": {
-    "@marp-team/marp-cli": "^0.14.1",
+    "marked": "^0.7.0",
     "rollup": "^1.23.1",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-node-resolve": "^5.2.0"
-  },
-  "marp": {
-    "html": true
   }
 }

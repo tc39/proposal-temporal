@@ -1,5 +1,3 @@
-<!-- headingDivider: 4 -->
-
 # Temporal
 
 ## Object Relationship
