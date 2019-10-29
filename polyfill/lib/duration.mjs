@@ -130,6 +130,9 @@ export class Duration {
     if (!dateParts.length && !timeParts.length) return 'PT0S';
     return `P${dateParts.join('')}${timeParts.join('')}`;
   }
+  toLocaleString(...args) {
+    return new Intl.DateTimeFormat(...args).format(this);
+  }
   static fromString(isoString) {
     isoString = ES.ToString(isoString);
     const match = STRING.exec(isoString);
