@@ -16,9 +16,15 @@ import * as time from './time.mjs';
 import * as datetime from './datetime.mjs';
 import * as duration from './duration.mjs';
 import * as datemath from './datemath.mjs';
+import * as yearmonth from './yearmonth.mjs';
+import * as monthday from './monthday.mjs';
 
 Promise.resolve()
   .then(() => {
     return Demitasse.report(Pretty.reporter);
   })
-  .catch((e) => console.error(e));
+  .then((failed) => process.exit(failed ? 1 : 0))
+  .catch((e) => {
+    console.error(e);
+    process.exit(-1);
+  });

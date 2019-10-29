@@ -130,6 +130,9 @@ export class TimeZone {
     return ES.CastTimeZone(...args);
   }
 }
+
+TimeZone.prototype.toJSON = TimeZone.prototype.toString;
+
 if ('undefined' !== typeof Symbol) {
   TimeZone[Symbol.iterator] = function() {
     const iter = ZONES[Symbol.iterator]();
@@ -139,7 +142,7 @@ if ('undefined' !== typeof Symbol) {
           let { value, done } = iter.next();
           if (done) return { done };
           try {
-            value = TimeZone(value);
+            value = new TimeZone(value);
             done = false;
             return { done, value };
           } catch (ex) {}
@@ -147,9 +150,6 @@ if ('undefined' !== typeof Symbol) {
       }
     };
   };
-  Object.defineProperty(TimeZone.prototype, Symbol.toStringTag, {
-    value: 'Temporal.TimeZone'
-  });
 }
-TimeZone.prototype.toJSON = TimeZone.prototype.toString;
-MakeIntrinsicClass(TimeZone);
+
+MakeIntrinsicClass(TimeZone, 'Temporal.TimeZone');

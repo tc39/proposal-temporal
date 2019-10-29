@@ -16,6 +16,7 @@ import {
   NANOSECONDS
 } from './slots.mjs';
 import { absolute as STRING } from './regex.mjs';
+import { TimeZone } from './timezone.mjs';
 
 export class Absolute {
   constructor(epochNanoseconds) {
@@ -71,6 +72,10 @@ export class Absolute {
       ns += 1e6;
     }
 
+    const Construct = ES.SpeciesConstructor(this, Absolute);
+    if (Construct !== Absolute) {
+      return new Construct(BigInt(ms) * BigInt(1e6) + BigInt(ns));
+    }
     const result = Object.create(Absolute.prototype);
     CreateSlots(result);
     SetSlot(result, EPOCHNANOSECONDS, { ms, ns });
@@ -95,6 +100,10 @@ export class Absolute {
     ms -= GetSlot(duration, SECONDS) * 1000;
     ms -= GetSlot(duration, MILLISECONDS);
 
+    const Construct = ES.SpeciesConstructor(this, Absolute);
+    if (Construct !== Absolute) {
+      return new Construct(BigInt(ms) * BigInt(1e6) + BigInt(ns));
+    }
     const result = Object.create(Absolute.prototype);
     CreateSlots(result);
     SetSlot(result, EPOCHNANOSECONDS, { ms, ns });
@@ -140,14 +149,14 @@ export class Absolute {
     const resultObject = Object.create(Absolute.prototype);
     CreateSlots(resultObject);
     SetSlot(resultObject, EPOCHNANOSECONDS, { ms: epochMilliseconds, ns: 0 });
-    return resultObject;
+    return this === Absolute ? resultObject : new this(resultObject.getEpochNanoseconds());
   }
   static fromEpochMilliseconds(epochMillisecondsParam) {
     const epochMilliseconds = ES.ToNumber(epochMillisecondsParam);
     const resultObject = Object.create(Absolute.prototype);
     CreateSlots(resultObject);
     SetSlot(resultObject, EPOCHNANOSECONDS, { ms: epochMilliseconds, ns: 0 });
-    return resultObject;
+    return this === Absolute ? resultObject : new this(resultObject.getEpochNanoseconds());
   }
   static fromEpochMicroseconds(epochMicroseconds) {
     if ('bigint' !== typeof epochMicroseconds) throw RangeError('bigint required');
@@ -156,7 +165,7 @@ export class Absolute {
     const resultObject = Object.create(Absolute.prototype);
     CreateSlots(resultObject);
     SetSlot(resultObject, EPOCHNANOSECONDS, { ms: epochMilliseconds, ns: restNanoseconds });
-    return resultObject;
+    return this === Absolute ? resultObject : new this(resultObject.getEpochNanoseconds());
   }
   static fromEpochNanoseconds(epochNanoseconds) {
     if ('bigint' !== typeof epochNanoseconds) throw RangeError('bigint required');
@@ -165,7 +174,7 @@ export class Absolute {
     const resultObject = Object.create(Absolute.prototype);
     CreateSlots(resultObject);
     SetSlot(resultObject, EPOCHNANOSECONDS, { ms: epochMilliseconds, ns: restNanoseconds });
-    return resultObject;
+    return this === Absolute ? resultObject : new this(resultObject.getEpochNanoseconds());
   }
   static fromString(isoString) {
     isoString = ES.ToString(isoString);
@@ -192,10 +201,12 @@ export class Absolute {
       microsecond,
       nanosecond
     });
-    return datetime.inZone(zone || 'UTC', match[11] ? match[10] : 'earlier');
+    const result = datetime.inZone(zone || 'UTC', match[11] ? match[10] : 'earlier');
+    return this === Absolute ? result : new this(result.getEpochNanoseconds());
   }
   static from(...args) {
-    return ES.CastAbsolute(...args);
+    const result = ES.CastAbsolute(...args);
+    return this === Absolute ? result : new this(result.getEpochNanoseconds());
   }
   static compare(one, two) {
     one = ES.CastAbsolute(one);
@@ -209,10 +220,4 @@ export class Absolute {
 }
 Absolute.prototype.toJSON = Absolute.prototype.toString;
 
-if ('undefined' !== typeof Symbol) {
-  Object.defineProperty(Absolute.prototype, Symbol.toStringTag, {
-    value: 'Temporal.Absolute'
-  });
-}
-
-MakeIntrinsicClass(Absolute);
+MakeIntrinsicClass(Absolute, 'Temporal.Absolute');

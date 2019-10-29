@@ -12,7 +12,7 @@ import Pretty from '@pipobscure/demitasse-pretty';
 const { reporter } = Pretty;
 
 import Assert from 'assert';
-const { ok: assert, equal } = Assert;
+const { ok: assert, equal, throws } = Assert;
 
 import { DateTime } from 'tc39-temporal';
 
@@ -200,6 +200,13 @@ describe('DateTime', () => {
       it('datetime.weekOfYear is 47', () => equal(datetime.weekOfYear, 47));
       it('`${datetime}` is 1976-11-18T15:23', () => equal(`${datetime}`, '1976-11-18T15:23'));
     });
+    describe('Disambiguation', () => {
+      it('reject', () => throws(() => new DateTime(2019, 1, 32, 0, 0, 0, 0, 0, 0, 'reject'), RangeError));
+      it('constrain', () => equal(`${new DateTime(2019, 1, 32, 0, 0, 0, 0, 0, 0, 'constrain')}`, '2019-01-31T00:00'));
+      it('balance', () => equal(`${new DateTime(2019, 1, 32, 0, 0, 0, 0, 0, 0, 'balance')}`, '2019-02-01T00:00'));
+      it('throw when bad disambiguation', () =>
+        throws(() => new DateTime(2019, 1, 1, 0, 0, 0, 0, 0, 0, 'xyz'), TypeError));
+    });
   });
   describe('.with manipulation', () => {
     const datetime = new DateTime(1976, 11, 18, 15, 23, 30, 123, 456, 789);
@@ -237,4 +244,5 @@ describe('DateTime', () => {
 });
 
 import { normalize } from 'path';
-if (normalize(import.meta.url.slice(8)) === normalize(process.argv[1])) report(reporter);
+if (normalize(import.meta.url.slice(8)) === normalize(process.argv[1]))
+  report(reporter).then((failed) => process.exit(failed ? 1 : 0));

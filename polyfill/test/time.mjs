@@ -12,7 +12,7 @@ import Pretty from '@pipobscure/demitasse-pretty';
 const { reporter } = Pretty;
 
 import Assert from 'assert';
-const { ok: assert, equal } = Assert;
+const { ok: assert, equal, throws } = Assert;
 
 import * as Temporal from 'tc39-temporal';
 const { Time } = Temporal;
@@ -268,6 +268,12 @@ describe('Time', () => {
         equal(`${Time.fromString('15:23:30.123456789')}`, '15:23:30.123456789');
       });
     });
+    describe('Disambiguation', () => {
+      it('reject', () => throws(() => new Time(0, 0, 0, 0, 0, 1000, 'reject'), RangeError));
+      it('constrain', () => equal(`${new Time(0, 0, 0, 0, 0, 1000, 'constrain')}`, '00:00:00.000000999'));
+      it('balance', () => equal(`${new Time(0, 0, 0, 0, 0, 1000, 'balance')}`, '00:00:00.000001'));
+      it('throw when bad disambiguation', () => throws(() => new Time(0, 0, 0, 0, 0, 1, 'xyz'), TypeError));
+    });
   });
   describe('time operations', () => {
     const datetime = { year: 2019, month: 10, day: 1, hour: 14, minute: 20, second: 36 };
@@ -283,4 +289,5 @@ describe('Time', () => {
 });
 
 import { normalize } from 'path';
-if (normalize(import.meta.url.slice(8)) === normalize(process.argv[1])) report(reporter);
+if (normalize(import.meta.url.slice(8)) === normalize(process.argv[1]))
+  report(reporter).then((failed) => process.exit(failed ? 1 : 0));
