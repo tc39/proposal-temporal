@@ -56,8 +56,8 @@ export class DateTime {
         ));
         break;
       case 'balance':
-        let days;
-        ({ days, hour, minute, second, millisecond, microsecond, nanosecond } = ES.BalanceTime(
+        let deltaDays;
+        ({ deltaDays, hour, minute, second, millisecond, microsecond, nanosecond } = ES.BalanceTime(
           hour,
           minute,
           second,
@@ -65,7 +65,7 @@ export class DateTime {
           microsecond,
           nanosecond
         ));
-        ({ year, month, day } = ES.BalanceDate(year, month, day + days));
+        ({ year, month, day } = ES.BalanceDate(year, month, day + deltaDays));
         break;
       default:
         throw new TypeError('disambiguation should be either reject, constrain or balance');
@@ -158,23 +158,8 @@ export class DateTime {
   }
   plus(durationLike = {}, disambiguation = 'constrain') {
     const duration = ES.CastDuration(durationLike);
-    if (
-      !ES.ValidDuration(duration, [
-        'years',
-        'months',
-        'days',
-        'hours',
-        'minutes',
-        'seconds',
-        'milliseconds',
-        'microseconds',
-        'nanoseconds'
-      ])
-    ) {
-      throw new RangeError('invalid duration');
-    }
     let { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = this;
-    const { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
+    let { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
     ({ year, month, day } = ES.AddDate(year, month, day, years, months, days, disambiguation));
     let deltaDays = 0;
     ({ deltaDays, hour, minute, second, millisecond, microsecond, nanosecond } = ES.AddTime(
@@ -198,23 +183,8 @@ export class DateTime {
   }
   minus(durationLike = {}, disambiguation = 'constrain') {
     const duration = ES.CastDuration(durationLike);
-    if (
-      !ES.ValidDuration(duration, [
-        'years',
-        'months',
-        'days',
-        'hours',
-        'minutes',
-        'seconds',
-        'milliseconds',
-        'microseconds',
-        'nanoseconds'
-      ])
-    ) {
-      throw new RangeError('invalid duration');
-    }
     let { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = this;
-    const { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
+    let { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
     let deltaDays = 0;
     ({ deltaDays, hour, minute, second, millisecond, microsecond, nanosecond } = ES.SubtractTime(
       hour,
@@ -230,7 +200,7 @@ export class DateTime {
       microseconds,
       nanoseconds
     ));
-    days += deltaDays;
+    days -= deltaDays;
     ({ year, month, day } = ES.SubtractDate(year, month, day, years, months, days, disambiguation));
     const Construct = ES.SpeciesConstructor(this, DateTime);
     return new Construct(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
