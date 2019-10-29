@@ -56,26 +56,35 @@ export class Date {
     return ES.LeapYear(GetSlot(this, YEAR));
   }
   with(dateLike = {}, disambiguation = 'constrain') {
-    const { year = GetSlot(this, YEAR), month = GetSlot(this, MONTH), day = GetSlot(this, DAY) } = dateLike;
-    return new Date(year, month, day, disambiguation);
+    const props = ES.ValidPropertyBag(dateLike, ['year', 'month', 'day']);
+    if (!props) {
+      throw new RangeError('invalid date-like');
+    }
+    const { year = GetSlot(this, YEAR), month = GetSlot(this, MONTH), day = GetSlot(this, DAY) } = props;
+    const Construct = ES.SpeciesConstructor(this, Date);
+    return new Construct(year, month, day, disambiguation);
   }
   plus(durationLike = {}, disambiguation = 'constrain') {
     const duration = ES.CastDuration(durationLike);
-    let { year, month, day } = this;
-    let { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
-    if (hours || minutes || seconds || milliseconds || microseconds || nanoseconds)
+    if (!ES.ValidDuration(duration, ['hours', 'minutes', 'seconds', 'milliseconds', 'microseconds', 'nanoseconds'])) {
       throw new RangeError('invalid duration');
+    }
+    let { year, month, day } = this;
+    const { years, months, days } = duration;
     ({ year, month, day } = ES.AddDate(year, month, day, years, months, days, disambiguation));
-    return new Date(year, month, day);
+    const Construct = ES.SpeciesConstructor(this, Date);
+    return new Construct(year, month, day);
   }
   minus(durationLike = {}, disambiguation = 'constrain') {
     const duration = ES.CastDuration(durationLike);
-    let { year, month, day } = this;
-    let { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
-    if (hours !== 0 || minutes !== 0 || seconds !== 0 || milliseconds !== 0 || microseconds !== 0 || nanoseconds !== 0)
+    if (!ES.ValidDuration(duration, ['hours', 'minutes', 'seconds', 'milliseconds', 'microseconds', 'nanoseconds'])) {
       throw new RangeError('invalid duration');
+    }
+    let { year, month, day } = this;
+    const { years, months, days } = duration;
     ({ year, month, day } = ES.SubtractDate(year, month, day, years, months, days, disambiguation));
-    return new Date(year, month, day);
+    const Construct = ES.SpeciesConstructor(this, Date);
+    return new Construct(year, month, day);
   }
   difference(other) {
     other = ES.CastDate(other);
@@ -119,11 +128,12 @@ export class Date {
     const year = ES.ToInteger(match[1]);
     const month = ES.ToInteger(match[2]);
     const day = ES.ToInteger(match[3]);
-    const Date = ES.GetIntrinsic('%Temporal.Date%');
-    return new Date(year, month, day, 'reject');
+    const Construct = this;
+    return new Construct(year, month, day, 'reject');
   }
   static from(...args) {
-    return ES.CastDate(...args);
+    const result = ES.CastDate(...args);
+    return this === Date ? result : new this(result.year, result.month, result.day);
   }
   static compare(one, two) {
     one = ES.CastDate(one);
@@ -136,10 +146,4 @@ export class Date {
 }
 Date.prototype.toJSON = Date.prototype.toString;
 
-if ('undefined' !== typeof Symbol) {
-  Object.defineProperty(Date.prototype, Symbol.toStringTag, {
-    value: 'Temporal.Date'
-  });
-}
-
-MakeIntrinsicClass(Date);
+MakeIntrinsicClass(Date, 'Temporal.Date');

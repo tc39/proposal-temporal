@@ -38,36 +38,57 @@ export class YearMonth {
     return ES.LeapYear(GetSlot(this, YEAR));
   }
   with(dateLike = {}, disambiguation = 'constrain') {
-    const { year = GetSlot(this, YEAR), month = GetSlot(this, MONTH) } = dateTimeLike;
-    return new YearMonth(year, month, disambiguation);
+    const props = ES.ValidPropertyBag(dateLike, ['year', 'month']);
+    if (!props) {
+      throw new RangeError('invalid year-month-like');
+    }
+    const { year = GetSlot(this, YEAR), month = GetSlot(this, MONTH) } = props;
+    const Construct = ES.SpeciesConstructor(this, YearMonth);
+    return new Construct(year, month, disambiguation);
   }
   plus(durationLike = {}, disambiguation = 'constrain') {
     const duration = ES.CastDuration(durationLike);
-    let { year, month } = this;
-    let { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
-    if ((days, hours || minutes || seconds || milliseconds || microseconds || nanoseconds))
+    if (
+      !ES.ValidDuration(duration, [
+        'days',
+        'hours',
+        'minutes',
+        'seconds',
+        'milliseconds',
+        'microseconds',
+        'nanoseconds'
+      ])
+    ) {
       throw new RangeError('invalid duration');
+    }
+    let { year, month } = this;
+    const { years, months } = duration;
     ({ year, month } = ES.AddDate(year, month, 1, years, months, 0, disambiguation));
     ({ year, month } = ES.BalanceYearMonth(year, month));
-    return new YearMonth(year, month);
+    const Construct = ES.SpeciesConstructor(this, YearMonth);
+    return new Construct(year, month);
   }
   minus(durationLike = {}, disambiguation = 'constrain') {
     const duration = ES.CastDuration(durationLike);
-    let { year, month } = this;
-    let { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
     if (
-      days !== 0 ||
-      hours !== 0 ||
-      minutes !== 0 ||
-      seconds !== 0 ||
-      milliseconds !== 0 ||
-      microseconds !== 0 ||
-      nanoseconds !== 0
-    )
+      !ES.ValidDuration(duration, [
+        'days',
+        'hours',
+        'minutes',
+        'seconds',
+        'milliseconds',
+        'microseconds',
+        'nanoseconds'
+      ])
+    ) {
       throw new RangeError('invalid duration');
+    }
+    let { year, month } = this;
+    const { years, months } = duration;
     ({ year, month } = ES.SubtractDate(year, month, 1, years, months, 0, disambiguation));
     ({ year, month } = ES.BalanceYearMonth(year, month));
-    return new YearMonth(year, month);
+    const Construct = ES.SpeciesConstructor(this, YearMonth);
+    return new Construct(year, month);
   }
   difference(other) {
     other = ES.CastYearMonth(other);
@@ -103,11 +124,12 @@ export class YearMonth {
     if (!match) throw new RangeError(`invalid yearmonth: ${isoString}`);
     const year = ES.ToInteger(match[1]);
     const month = ES.ToInteger(match[2]);
-    const YearMonth = ES.GetIntrinsic('%Temporal.YearMonth%');
-    return new YearMonth(year, month, 'reject');
+    const Construct = this;
+    return new Construct(year, month, 'reject');
   }
   static from(...args) {
-    return ES.CastYearMonth(...args);
+    const result = ES.CastYearMonth(...args);
+    return this === YearMonth ? result : new this(result.year, result.month);
   }
   static compare(one, two) {
     one = ES.CastYearMonth(one);
@@ -118,9 +140,5 @@ export class YearMonth {
   }
 }
 YearMonth.prototype.toJSON = YearMonth.prototype.toString;
-if ('undefined' !== typeof Symbol) {
-  Object.defineProperty(YearMonth.prototype, Symbol.toStringTag, {
-    value: 'Temporal.YearMonth'
-  });
-}
-MakeIntrinsicClass(YearMonth);
+
+MakeIntrinsicClass(YearMonth, 'Temporal.YearMonth');

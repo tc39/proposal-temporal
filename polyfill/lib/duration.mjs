@@ -146,8 +146,8 @@ export class Duration {
     const milliseconds = ES.ToInteger(match[7]);
     const microseconds = ES.ToInteger(match[8]);
     const nanoseconds = ES.ToInteger(match[9]);
-    const Duration = ES.GetIntrinsic('%Temporal.Duration%');
-    return new Duration(
+    const Construct = this;
+    return new Construct(
       years,
       months,
       days,
@@ -161,13 +161,22 @@ export class Duration {
     );
   }
   static from(...args) {
-    return ES.CastDuration(...args);
+    const result = ES.CastDuration(...args);
+    return this === Duration
+      ? result
+      : new this(
+          result.years,
+          result.months,
+          result.days,
+          result.hours,
+          result.minutes,
+          result.seconds,
+          result.milliseconds,
+          result.microseconds,
+          result.nanoseconds
+        );
   }
 }
 Duration.prototype.toJSON = Duration.prototype.toString;
-if ('undefined' !== typeof Symbol) {
-  Object.defineProperty(Duration.prototype, Symbol.toStringTag, {
-    value: 'Temporal.Duration'
-  });
-}
-MakeIntrinsicClass(Duration);
+
+MakeIntrinsicClass(Duration, 'Temporal.Duration');

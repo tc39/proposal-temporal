@@ -128,6 +128,20 @@ export class DateTime {
     return ES.LeapYear(GetSlot(this, YEAR));
   }
   with(dateTimeLike = {}, disambiguation = 'constrain') {
+    const props = ES.ValidPropertyBag(dateTimeLike, [
+      'year',
+      'month',
+      'day',
+      'hour',
+      'minute',
+      'second',
+      'millisecond',
+      'microsecond',
+      'nanosecond'
+    ]);
+    if (!props) {
+      throw new RangeError('invalid date-time-like');
+    }
     const {
       year = GetSlot(this, YEAR),
       month = GetSlot(this, MONTH),
@@ -138,13 +152,29 @@ export class DateTime {
       millisecond = GetSlot(this, MILLISECOND),
       microsecond = GetSlot(this, MICROSECOND),
       nanosecond = GetSlot(this, NANOSECOND)
-    } = dateTimeLike;
-    return new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, disambiguation);
+    } = props;
+    const Construct = ES.SpeciesConstructor(this, DateTime);
+    return new Construct(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, disambiguation);
   }
   plus(durationLike = {}, disambiguation = 'constrain') {
     const duration = ES.CastDuration(durationLike);
+    if (
+      !ES.ValidDuration(duration, [
+        'years',
+        'months',
+        'days',
+        'hours',
+        'minutes',
+        'seconds',
+        'milliseconds',
+        'microseconds',
+        'nanoseconds'
+      ])
+    ) {
+      throw new RangeError('invalid duration');
+    }
     let { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = this;
-    let { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
+    const { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
     ({ year, month, day } = ES.AddDate(year, month, day, years, months, days, disambiguation));
     let deltaDays = 0;
     ({ deltaDays, hour, minute, second, millisecond, microsecond, nanosecond } = ES.AddTime(
@@ -163,12 +193,28 @@ export class DateTime {
     ));
     day += deltaDays;
     ({ year, month, day } = ES.BalanceDate(year, month, day));
-    return new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
+    const Construct = ES.SpeciesConstructor(this, DateTime);
+    return new Construct(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
   }
   minus(durationLike = {}, disambiguation = 'constrain') {
     const duration = ES.CastDuration(durationLike);
+    if (
+      !ES.ValidDuration(duration, [
+        'years',
+        'months',
+        'days',
+        'hours',
+        'minutes',
+        'seconds',
+        'milliseconds',
+        'microseconds',
+        'nanoseconds'
+      ])
+    ) {
+      throw new RangeError('invalid duration');
+    }
     let { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = this;
-    let { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
+    const { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
     let deltaDays = 0;
     ({ deltaDays, hour, minute, second, millisecond, microsecond, nanosecond } = ES.SubtractTime(
       hour,
@@ -186,7 +232,8 @@ export class DateTime {
     ));
     days += deltaDays;
     ({ year, month, day } = ES.SubtractDate(year, month, day, years, months, days, disambiguation));
-    return new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
+    const Construct = ES.SpeciesConstructor(this, DateTime);
+    return new Construct(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
   }
   difference(other) {
     other = ES.CastDateTime(other);
@@ -264,10 +311,12 @@ export class DateTime {
     const microsecond = ES.ToInteger(match[8]);
     const nanosecond = ES.ToInteger(match[9]);
     const DateTime = ES.GetIntrinsic('%Temporal.DateTime%');
-    return new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, 'reject');
+    const Construct = this;
+    return new Construct(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, 'reject');
   }
   static from(...args) {
-    return ES.CastDateTime(...args);
+    const result = ES.CastDateTime(...args);
+    return this === DateTime ? result : new this(result.year, result.month, result.day);
   }
   static compare(one, two) {
     one = ES.CastDateTime(one);
@@ -285,9 +334,5 @@ export class DateTime {
   }
 }
 DateTime.prototype.toJSON = DateTime.prototype.toString;
-if ('undefined' !== typeof Symbol) {
-  Object.defineProperty(DateTime.prototype, Symbol.toStringTag, {
-    value: 'Temporal.DateTime'
-  });
-}
-MakeIntrinsicClass(DateTime);
+
+MakeIntrinsicClass(DateTime, 'Temporal.DateTime');

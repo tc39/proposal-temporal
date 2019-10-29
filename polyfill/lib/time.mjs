@@ -78,6 +78,17 @@ export class Time {
   }
 
   with(timeLike = {}, disambiguation = 'constrain') {
+    const props = ES.ValidPropertyBag(timeLike, [
+      'hour',
+      'minute',
+      'second',
+      'millisecond',
+      'microsecond',
+      'nanosecond'
+    ]);
+    if (!props) {
+      throw new RangeError('invalid time-like');
+    }
     const {
       hour = GetSlot(this, HOUR),
       minute = GetSlot(this, MINUTE),
@@ -85,14 +96,17 @@ export class Time {
       millisecond = GetSlot(this, MILLISECOND),
       microsecond = GetSlot(this, MICROSECOND),
       nanosecond = GetSlot(this, NANOSECOND)
-    } = timeLike;
-    return new Time(hour, minute, second, millisecond, microsecond, nanosecond, disambiguation);
+    } = props;
+    const Construct = ES.SpeciesConstructor(this, Time);
+    return new Construct(hour, minute, second, millisecond, microsecond, nanosecond, disambiguation);
   }
   plus(durationLike) {
     const duration = ES.CastDuration(durationLike);
+    if (!ES.ValidDuration(duration, ['years', 'months', 'days'])) {
+      throw new RangeError('invalid duration');
+    }
     let { hour, minute, second, millisecond, microsecond, nanosecond } = this;
-    let { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
-    if (years !== 0 || months !== 0 || days !== 0) throw new RangeError('invalid duration');
+    const { hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
     ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.AddTime(
       hour,
       minute,
@@ -107,13 +121,16 @@ export class Time {
       microseconds,
       nanoseconds
     ));
-    return new Time(hour, minute, second, millisecond, microsecond, nanosecond);
+    const Construct = ES.SpeciesConstructor(this, Time);
+    return new Construct(hour, minute, second, millisecond, microsecond, nanosecond);
   }
   minus(durationLike) {
     const duration = ES.CastDuration(durationLike);
+    if (!ES.ValidDuration(duration, ['years', 'months', 'days'])) {
+      throw new RangeError('invalid duration');
+    }
     let { hour, minute, second, millisecond, microsecond, nanosecond } = this;
-    let { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
-    if (years !== 0 || months !== 0 || days !== 0) throw new RangeError('invalid duration');
+    const { hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
     ({ hour, minute, second, minute, microsecond, nanosecond } = ES.SubtractTime(
       hour,
       minute,
@@ -128,7 +145,8 @@ export class Time {
       microseconds,
       nanoseconds
     ));
-    return new Time(hour, minute, second, millisecond, microsecond, nanosecond);
+    const Construct = ES.SpeciesConstructor(this, Time);
+    return new Construct(hour, minute, second, millisecond, microsecond, nanosecond);
   }
   difference(other = {}) {
     other = ES.CastTime(other);
@@ -171,11 +189,14 @@ export class Time {
     const millisecond = ES.ToInteger(match[4]);
     const microsecond = ES.ToInteger(match[5]);
     const nanosecond = ES.ToInteger(match[6]);
-    const Time = ES.GetIntrinsic('%Temporal.Time%');
-    return new Time(hour, minute, second, millisecond, microsecond, nanosecond, 'reject');
+    const Construct = this;
+    return new Construct(hour, minute, second, millisecond, microsecond, nanosecond, 'reject');
   }
   static from(...args) {
-    return ES.CastTime(...args);
+    const result = ES.CastTime(...args);
+    return this === Time
+      ? result
+      : new this(result.hour, result.minute, result.second, result.millisecond, result.microsecond, result.nanosecond);
   }
   static compare(one, two) {
     one = ES.CastTime(one);
@@ -190,9 +211,5 @@ export class Time {
   }
 }
 Time.prototype.toJSON = Time.prototype.toString;
-if ('undefined' !== typeof Symbol) {
-  Object.defineProperty(Time.prototype, Symbol.toStringTag, {
-    value: 'Temporal.Time'
-  });
-}
-MakeIntrinsicClass(Time);
+
+MakeIntrinsicClass(Time, 'Temporal.Time');

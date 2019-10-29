@@ -36,45 +36,70 @@ export class MonthDay {
   }
 
   with(dateLike = {}, disambiguation = 'constrain') {
-    const { month = GetSlot(this, MONTH), day = GetSlot(this, DAY) } = dateTimeLike;
-    return new MonthDay(month, day, disambiguation);
+    const props = ES.ValidPropertyBag(dateLike, ['month', 'day']);
+    if (!props) {
+      throw new RangeError('invalid month-day-like');
+    }
+    const { month = GetSlot(this, MONTH), day = GetSlot(this, DAY) } = props;
+    const Construct = ES.SpeciesConstructor(this, MonthDay);
+    return new Construct(month, day, disambiguation);
   }
   plus(durationLike = {}, disambiguation = 'constrain') {
     const duration = ES.CastDuration(durationLike);
-    let { month, day } = this;
-    let { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
     if (
-      years !== 0 ||
-      hours !== 0 ||
-      minutes !== 0 ||
-      seconds !== 0 ||
-      milliseconds !== 0 ||
-      microseconds !== 0 ||
-      nanoseconds !== 0
-    )
+      !ES.ValidDuration(duration, [
+        'years',
+        'hours',
+        'minutes',
+        'seconds',
+        'milliseconds',
+        'microseconds',
+        'nanoseconds'
+      ])
+    ) {
       throw new RangeError('invalid duration');
-    ({ year, month, day } = ES.AddDate(year, month, day, years, months, days, disambiguation));
-    ({ month, day } = ES.BalanceDate(1970, month, day));
-    return new MonthDay(month, day);
+    }
+    let { month, day } = this;
+    const { months, days } = duration;
+    const year = 1970; // non-leap year
+    ({ month, day } = ES.AddDate(year, month, day, 0, months, days, disambiguation));
+    ({ month, day } = ES.BalanceDate(year, month, day));
+    const Construct = ES.SpeciesConstructor(this, MonthDay);
+    return new Construct(month, day);
   }
   minus(durationLike = {}, disambiguation = 'constrain') {
     const duration = ES.CastDuration(durationLike);
-    let { year, month, day } = this;
-    let { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
-    if (hours !== 0 || minutes !== 0 || seconds !== 0 || milliseconds !== 0 || microseconds !== 0 || nanoseconds !== 0)
+    if (
+      !ES.ValidDuration(duration, [
+        'years',
+        'hours',
+        'minutes',
+        'seconds',
+        'milliseconds',
+        'microseconds',
+        'nanoseconds'
+      ])
+    ) {
       throw new RangeError('invalid duration');
-    ({ year, month, day } = ES.SubtractDate(year, month, day, years, months, days, disambiguation));
-    ({ year, month, day } = ES.BalanceDate(year, month, day));
-    return new MonthDay(month, day);
+    }
+    let { month, day } = this;
+    const year = 1970; // non-leap year (any will do)
+    const { months, days } = duration;
+    ({ month, day } = ES.SubtractDate(year, month, day, 0, months, days, disambiguation));
+    ({ month, day } = ES.BalanceDate(year, month, day));
+    const Construct = ES.SpeciesConstructor(this, MonthDay);
+    return new Construct(month, day);
   }
-  difference(other, disambiguation = 'constrain') {
+  difference(other) {
     other = ES.CastMonthDay(other);
     const [one, two] = [this, other].sort(MonthDay.compare);
     let months = two.month - one.month;
-    let days = (two.days = one.days);
+    let days = two.days - one.days;
+    let month = two.month;
     if (days < 0) {
-      days = ES.DaysInMonth(1970, two.month) + days;
       months -= 1;
+      month = one.month + months;
+      days = ES.DaysInMonth(1970, month) + days;
     }
     const Duration = ES.GetIntrinsic('%Temporal.Duration%');
     return new Duration(0, months, days, 0, 0, 0, 0, 0, 0);
@@ -101,11 +126,12 @@ export class MonthDay {
     if (!match) throw new RangeError(`invalid monthday: ${isoString}`);
     const month = ES.ToInteger(match[1]);
     const day = ES.ToInteger(match[2]);
-    const MonthDay = ES.GetIntrinsic('%Temporal.MonthDay%');
-    return new MonthDay(month, day, 'reject');
+    const Construct = this;
+    return new Construct(month, day, 'reject');
   }
   static from(...args) {
-    return ES.CastYearMonth(...args);
+    const result = ES.CastYearMonth(...args);
+    return this === MonthDay ? result : new this(result.month, result.day);
   }
   static compare(one, two) {
     one = ES.CastMonthDay(one);
@@ -116,9 +142,5 @@ export class MonthDay {
   }
 }
 MonthDay.prototype.toJSON = MonthDay.prototype.toString;
-if ('undefined' !== typeof Symbol) {
-  Object.defineProperty(MonthDay.prototype, Symbol.toStringTag, {
-    value: 'Temporal.MonthDay'
-  });
-}
-MakeIntrinsicClass(MonthDay);
+
+MakeIntrinsicClass(MonthDay, 'Temporal.MonthDay');

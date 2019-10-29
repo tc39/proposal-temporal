@@ -99,12 +99,9 @@ export function CastDate(arg, aux) {
       return Date.fromString(arg);
     } catch (ex) {}
   }
-  if ('bigint' === typeof arg || 'number' === typeof arg || Number.isFinite(+arg))
-    return CastAbsolute(arg)
-      .inZone(aux)
-      .getDate();
-  if ('object' === typeof arg) {
-    const { year, month, day } = arg;
+  const props = ES.ValidPropertyBag(arg, ['year', 'month', 'day']);
+  if (props) {
+    const { year, month, day } = props;
     return new Date(year, month, day);
   }
   throw new RangeError(`invalid date ${arg}`);
@@ -128,12 +125,9 @@ export function CastTime(arg, aux) {
       return Time.fromString(arg);
     } catch (ex) {}
   }
-  if ('bigint' === typeof arg || 'number' === typeof arg || Number.isFinite(+arg))
-    return CastAbsolute(arg)
-      .inZone(aux)
-      .getTime();
-  if ('object' === typeof arg) {
-    const { hour, minute, second, millisecond, microsecond, nanosecond } = arg;
+  const props = ES.ValidPropertyBag(arg, ['hour', 'minute', 'second', 'millisecond', 'microsecond', 'nanosecond']);
+  if (props) {
+    const { hour, minute, second, millisecond, microsecond, nanosecond } = props;
     return new Time(hour, minute, second, millisecond, microsecond, nanosecond);
   }
   throw RangeError(`invalid time value: ${arg}`);
@@ -150,12 +144,9 @@ export function CastYearMonth(arg, aux) {
       return YearMonth.fromString(arg);
     } catch (ex) {}
   }
-  if ('bigint' === typeof arg || 'number' === typeof arg || Number.isFinite(+arg))
-    return CastAbsolute(arg)
-      .inZone('UTC')
-      .getYearMonth();
-  if ('object' === typeof arg) {
-    const { year, month } = arg;
+  const props = ES.ValidPropertyBag(arg, ['year', 'month']);
+  if (props) {
+    const { year = 0, month = 1 } = props;
     return new YearMonth(year, month);
   }
   throw RangeError(`invalid yearmonth value: ${arg}`);
@@ -172,12 +163,9 @@ export function CastMonthDay(arg) {
       return MonthDay.fromString(arg);
     } catch (ex) {}
   }
-  if ('bigint' === typeof arg || 'number' === typeof arg || Number.isFinite(+arg))
-    return CastAbsolute(arg)
-      .inZone('UTC')
-      .getMonthDay();
-  if ('object' === typeof arg) {
-    const { month, day } = arg;
+  const props = ES.ValidPropertyBag(arg, ['month', 'day']);
+  if (props) {
+    const { month = 1, day = 1 } = arg;
     return new MonthDay(month, day);
   }
   throw RangeError(`invalid monthday value: ${arg}`);
@@ -193,7 +181,18 @@ export function CastDuration(arg) {
       return Duration.fromString(arg);
     } catch (ex) {}
   }
-  if ('object' === typeof arg) {
+  const props = ES.ValidPropertyBag(arg, [
+    'years',
+    'months',
+    'days',
+    'hours',
+    'minutes',
+    'seconds',
+    'milliseconds',
+    'microseconds',
+    'nanoseconds'
+  ]);
+  if (props) {
     const {
       years = 0,
       months = 0,
@@ -204,7 +203,7 @@ export function CastDuration(arg) {
       milliseconds = 0,
       microseconds = 0,
       nanoseconds = 0
-    } = arg;
+    } = props;
     return new Duration(years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
   }
   throw new RangeError(`invalid duration value ${arg}`);
