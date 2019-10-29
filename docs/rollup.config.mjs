@@ -2,7 +2,7 @@ import commonjs from "rollup-plugin-commonjs";
 import resolve from "rollup-plugin-node-resolve";
 
 export default {
-  input: "setup.js",
+  input: "setup.mjs",
   output: {
     name: "temporal",
     file: "playground.js",
