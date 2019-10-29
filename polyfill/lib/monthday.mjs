@@ -80,10 +80,9 @@ export class MonthDay {
     return new Duration(0, months, days, 0, 0, 0, 0, 0, 0);
   }
   toString() {
-    let year = ES.ISOYearString(GetSlot(this, YEAR));
     let month = ES.ISODateTimePartString(GetSlot(this, MONTH));
     let day = ES.ISODateTimePartString(GetSlot(this, DAY));
-    let resultString = `${year}-${month}-${day}`;
+    let resultString = `${month}-${day}`;
     return resultString;
   }
   toLocaleString(...args) {

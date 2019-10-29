@@ -8,7 +8,6 @@ export class YearMonth {
   constructor(year, month, disambiguation = 'constrain') {
     year = ES.ToInteger(year);
     month = ES.ToInteger(month);
-    ({ year, month } = ES.ConstrainDate(year, month, 1));
     switch (disambiguation) {
       case 'reject':
         ES.RejectDate(year, month, 1);
