@@ -12,7 +12,7 @@ import Pretty from '@pipobscure/demitasse-pretty';
 const { reporter } = Pretty;
 
 import Assert from 'assert';
-const { ok: assert, equal } = Assert;
+const { ok: assert, equal, throws } = Assert;
 
 import { Date } from 'tc39-temporal';
 
@@ -90,6 +90,13 @@ describe('Date', () => {
     it('date.dayOfYear is 323', () => equal(date.dayOfYear, 323));
     it('date.weekOfYear is 47', () => equal(date.weekOfYear, 47));
     it('`${date}` is 1976-11-18', () => equal(`${date}`, '1976-11-18'));
+
+    describe('Disambiguation', () => {
+      it('reject', () => throws(() => new Date(2019, 1, 32, 'reject'), RangeError));
+      it('constrain', () => equal(`${new Date(2019, 1, 32, 'constrain')}`, '2019-01-31'));
+      it('balance', () => equal(`${new Date(2019, 1, 32, 'balance')}`, '2019-02-01'));
+      it('throw when bad disambiguation', () => throws(() => new Date(2019, 1, 1, 'xyz'), TypeError));
+    });
   });
   describe('date fields', () => {
     const date = new Date(2019, 10, 6);

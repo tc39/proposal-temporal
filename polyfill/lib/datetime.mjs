@@ -56,6 +56,7 @@ export class DateTime {
         ));
         break;
       case 'balance':
+        let days;
         ({ days, hour, minute, second, millisecond, microsecond, nanosecond } = ES.BalanceTime(
           hour,
           minute,
