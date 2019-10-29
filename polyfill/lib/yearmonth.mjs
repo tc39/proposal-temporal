@@ -1,6 +1,6 @@
 import { ES } from './ecmascript.mjs';
 import { MakeIntrinsicClass } from './intrinsicclass.mjs';
-import { YEAR, MONTH, CreateSlots, GetSlot, SetSlot } from './slots.mjs';
+import { YEAR, MONTH, CreateSlots, GetSlot, SetSlot, HasSlot } from './slots.mjs';
 
 import { yearmonth as STRING } from './regex.mjs';
 
@@ -26,23 +26,23 @@ export class YearMonth {
     SetSlot(this, MONTH, month);
   }
   get year() {
-    if (!(this instanceof YearMonth)) throw new TypeError('invalid receiver');
+    if (!HasSlot(this, YEAR, MONTH)) throw new TypeError('invalid receiver');
     return GetSlot(this, YEAR);
   }
   get month() {
-    if (!(this instanceof YearMonth)) throw new TypeError('invalid receiver');
+    if (!HasSlot(this, YEAR, MONTH)) throw new TypeError('invalid receiver');
     return GetSlot(this, MONTH);
   }
   get daysInMonth() {
-    if (!(this instanceof YearMonth)) throw new TypeError('invalid receiver');
+    if (!HasSlot(this, YEAR, MONTH)) throw new TypeError('invalid receiver');
     return ES.DaysInMonth(GetSlot(this, YEAR), GetSlot(this, MONTH));
   }
   get leapYear() {
-    if (!(this instanceof YearMonth)) throw new TypeError('invalid receiver');
+    if (!HasSlot(this, YEAR, MONTH)) throw new TypeError('invalid receiver');
     return ES.LeapYear(GetSlot(this, YEAR));
   }
   with(dateLike = {}, disambiguation = 'constrain') {
-    if (!(this instanceof YearMonth)) throw new TypeError('invalid receiver');
+    if (!HasSlot(this, YEAR, MONTH)) throw new TypeError('invalid receiver');
     const props = ES.ValidPropertyBag(dateLike, ['year', 'month']);
     if (!props) {
       throw new RangeError('invalid year-month-like');
@@ -52,7 +52,7 @@ export class YearMonth {
     return new Construct(year, month, disambiguation);
   }
   plus(durationLike = {}, disambiguation = 'constrain') {
-    if (!(this instanceof YearMonth)) throw new TypeError('invalid receiver');
+    if (!HasSlot(this, YEAR, MONTH)) throw new TypeError('invalid receiver');
     const duration = ES.CastDuration(durationLike);
     if (
       !ES.ValidDuration(duration, [
@@ -75,7 +75,7 @@ export class YearMonth {
     return new Construct(year, month);
   }
   minus(durationLike = {}, disambiguation = 'constrain') {
-    if (!(this instanceof YearMonth)) throw new TypeError('invalid receiver');
+    if (!HasSlot(this, YEAR, MONTH)) throw new TypeError('invalid receiver');
     const duration = ES.CastDuration(durationLike);
     if (
       !ES.ValidDuration(duration, [
@@ -98,7 +98,7 @@ export class YearMonth {
     return new Construct(year, month);
   }
   difference(other) {
-    if (!(this instanceof YearMonth)) throw new TypeError('invalid receiver');
+    if (!HasSlot(this, YEAR, MONTH)) throw new TypeError('invalid receiver');
     other = ES.CastYearMonth(other);
     const [one, two] = [this, other].sort(DateTime.compare);
     let years = two.year - one.year;
@@ -111,18 +111,18 @@ export class YearMonth {
     return new Duration(years, months);
   }
   toString() {
-    if (!(this instanceof YearMonth)) throw new TypeError('invalid receiver');
+    if (!HasSlot(this, YEAR, MONTH)) throw new TypeError('invalid receiver');
     let year = ES.ISOYearString(GetSlot(this, YEAR));
     let month = ES.ISODateTimePartString(GetSlot(this, MONTH));
     let resultString = `${year}-${month}`;
     return resultString;
   }
   toLocaleString(...args) {
-    if (!(this instanceof YearMonth)) throw new TypeError('invalid receiver');
+    if (!HasSlot(this, YEAR, MONTH)) throw new TypeError('invalid receiver');
     return new Intl.DateTimeFormat(...args).format(this);
   }
   withDay(day, disambiguation = 'constrain') {
-    if (!(this instanceof YearMonth)) throw new TypeError('invalid receiver');
+    if (!HasSlot(this, YEAR, MONTH)) throw new TypeError('invalid receiver');
     const year = GetSlot(this, YEAR);
     const month = GetSlot(this, MONTH);
     const Date = ES.GetIntrinsic('%Temporal.Date%');
