@@ -365,31 +365,29 @@ export const ES = ObjectAssign(ObjectAssign(ObjectAssign({}, Cast), ES2019), {
     return { year, month, day };
   },
   BalanceTime: (hour, minute, second, millisecond, microsecond, nanosecond) => {
-    let days = 0;
-
     microsecond += Math.floor(nanosecond / 1000);
     nanosecond = nanosecond % 1000;
-    nanosecond = Math.abs(nanosecond < 0 ? 60 + nanosecond : nanosecond);
+    nanosecond = nanosecond < 0 ? 1000 + nanosecond : nanosecond;
 
     millisecond += Math.floor(microsecond / 1000);
     microsecond = microsecond % 1000;
-    microsecond = Math.abs(microsecond < 0 ? 60 + microsecond : microsecond);
+    microsecond = microsecond < 0 ? 1000 + microsecond : microsecond;
 
     second += Math.floor(millisecond / 1000);
     millisecond = millisecond % 1000;
-    millisecond = Math.abs(millisecond < 0 ? 60 + millisecond : millisecond);
+    millisecond = millisecond < 0 ? 1000 + millisecond : millisecond;
 
     minute += Math.floor(second / 60);
     second = second % 60;
-    second = Math.abs(second < 0 ? 60 + second : second);
+    second = second < 0 ? 60 + second : second;
 
     hour += Math.floor(minute / 60);
     minute = minute % 60;
-    minute = Math.abs(minute < 0 ? 60 + minute : minute);
+    minute = minute < 0 ? 60 + minute : minute;
 
-    days += Math.floor(hour / 24);
+    let days = Math.floor(hour / 24);
     hour = hour % 24;
-    hour = Math.abs(hour < 0 ? 24 + hour : hour);
+    hour = hour < 0 ? 24 + hour : hour;
 
     return { days, hour, minute, second, millisecond, microsecond, nanosecond };
   },

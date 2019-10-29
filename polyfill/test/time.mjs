@@ -147,6 +147,44 @@ describe('Time', () => {
       it('time.nanosecond is 0', () => equal(time.nanosecond, 0));
       it('`${time}` is 15:23', () => equal(`${time}`, '15:23'));
     });
+    describe('balance tests', () => {
+      let balanceTests = [
+        [[15, 23, 30, 123, 456, -1000], [15, 23, 30, 123, 455, 0], 'nanosecond = -1000'],
+        [[15, 23, 30, 123, 456, -789], [15, 23, 30, 123, 455, 211], 'nanosecond = -789'],
+        [[15, 23, 30, 123, 456, 1000], [15, 23, 30, 123, 457, 0], 'nanosecond = 1000'],
+        [[15, 23, 30, 123, -1000, 456], [15, 23, 30, 122, 0, 456], 'microsecond = -1000'],
+        [[15, 23, 30, 123, -789, 456], [15, 23, 30, 122, 211, 456], 'microsecond = -789'],
+        [[15, 23, 30, 123, 1000, 456], [15, 23, 30, 124, 0, 456], 'microsecond = 1000'],
+        [[15, 23, 30, -1000, 123, 456], [15, 23, 29, 0, 123, 456], 'millisecond = -1000'],
+        [[15, 23, 30, -789, 123, 456], [15, 23, 29, 211, 123, 456], 'millisecond = -789'],
+        [[15, 23, 30, 1000, 123, 456], [15, 23, 31, 0, 123, 456], 'millisecond = 1000'],
+        [[15, 23, -60, 123, 456, 789], [15, 22, 0, 123, 456, 789], 'second = -60'],
+        [[15, 23, -34, 123, 456, 789], [15, 22, 26, 123, 456, 789], 'second = -34'],
+        [[15, 23, 60, 123, 456, 789], [15, 24, 0, 123, 456, 789], 'second = 60'],
+        [[15, -60, 23, 123, 456, 789], [14, 0, 23, 123, 456, 789], 'minute = -60'],
+        [[15, -34, 23, 123, 456, 789], [14, 26, 23, 123, 456, 789], 'minute = -34'],
+        [[15, 60, 23, 123, 456, 789], [16, 0, 23, 123, 456, 789], 'minute = 60'],
+        [[-24, 23, 30, 123, 456, 789], [0, 23, 30, 123, 456, 789], 'hour = -24'],
+        [[-3, 23, 30, 123, 456, 789], [21, 23, 30, 123, 456, 789], 'hour = -3'],
+        [[24, 23, 30, 123, 456, 789], [0, 23, 30, 123, 456, 789], 'hour = 24'],
+      ];
+      for (const [args, expected, description] of balanceTests) {
+        describe(description, () => {
+          let time;
+          it('time can be constructed', () => {
+            time = new Time(...args, 'balance');
+            assert(time);
+            equal(typeof time, 'object');
+          });
+          it(`time.hour is ${expected[0]}`, () => equal(time.hour, expected[0]));
+          it(`time.minute is ${expected[1]}`, () => equal(time.minute, expected[1]));
+          it(`time.second is ${expected[2]}`, () => equal(time.second, expected[2]));
+          it(`time.millisecond is ${expected[3]}`, () => equal(time.millisecond, expected[3]));
+          it(`time.microsecond is ${expected[4]}`, () => equal(time.microsecond, expected[4]));
+          it(`time.nanosecond is ${expected[5]}`, () => equal(time.nanosecond, expected[5]));
+        });
+      }
+    });
     describe('.with manipulation', () => {
       const time = new Time(15, 23, 30, 123, 456, 789);
       it('time.with({ hour: 3 } works', () => {

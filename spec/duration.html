@@ -115,7 +115,13 @@
           1. For each of _y_, _mo_, _d_, _h_, _m_, _s_, _ms_, _mis_, _ns_, if any of the values is negative, let it be its own absolute value.
         1. Else if _disambiguation_ is *"balance"*, then
           1. Let _bt_ be ? BalanceTime(_h_, _m_, _s_, _ms_, _mis_, _ns_).
-          1. Increment _d_ by bt.[[Days]].
+          1. Increment _d_ by _bt_.[[Day]].
+          1. Set _h_ to _bt_.[[Hour]].
+          1. Set _m_ to _bt_.[[Minute]].
+          1. Set _s_ to _bt_.[[Second]].
+          1. Set _ms_ to _bt_.[[Millisecond]].
+          1. Set _mis_ to _bt_.[[Microsecond]].
+          1. Set _ns_ to _bt_.[[Nanosecond]].
         1. Else,
           1. Throw a *TypeError* exception.
         1. Return ? CreateDuration(_y_, _mo_, _d_, _h_, _m_, _s_, _ms_, _mis_, _ns_).

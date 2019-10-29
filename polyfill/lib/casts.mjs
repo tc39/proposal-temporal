@@ -109,21 +109,8 @@ export function CastDate(arg, aux) {
 
 export function CastTime(arg, aux) {
   const Time = ES.GetIntrinsic('%Temporal.Time%');
-  if (HasSlot(arg, HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND)) {
-    if (!HasSlot(arg, MONTH)) return arg;
-    return new Time(
-      GetSlot(arg, HOUR),
-      GetSlot(arg, MINUTE),
-      GetSlot(arg, SECOND),
-      GetSlot(arg, MILLISECOND),
-      GetSlot(arg, MICROSECOND),
-      GetSlot(arg, NANOSECOND)
-    );
-  }
   if ('string' === typeof arg) {
-    try {
-      return Time.fromString(arg);
-    } catch (ex) {}
+    return Time.fromString(arg);
   }
   const props = ES.ValidPropertyBag(arg, ['hour', 'minute', 'second', 'millisecond', 'microsecond', 'nanosecond']);
   if (props) {
