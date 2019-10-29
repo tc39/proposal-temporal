@@ -180,13 +180,14 @@ export const ES = ObjectAssign(ObjectAssign(ObjectAssign({}, Cast), ES2019), {
         nanosecond
       };
     }
+
     let year, month, day, hour, minute, second;
     ({ year, month, day, hour, minute, second } = ES.GetFormatterParts(timeZone, epochMilliseconds).reduce(
       reduceParts,
       {}
     ));
-    let days = 0;
-    ({ days, hour, minute, second, millisecond, microsecond, nanosecond } = ES.BalanceTime(
+    let deltaDays = 0;
+    ({ deltaDays, hour, minute, second, millisecond, microsecond, nanosecond } = ES.BalanceTime(
       hour,
       minute,
       second,
@@ -194,7 +195,7 @@ export const ES = ObjectAssign(ObjectAssign(ObjectAssign({}, Cast), ES2019), {
       microsecond,
       nanosecond
     ));
-    day += days;
+    day += deltaDays;
     ({ year, month, day } = ES.BalanceDate(year, month, day));
     return { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond };
   },

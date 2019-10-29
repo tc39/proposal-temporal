@@ -75,8 +75,29 @@ export function CastDateTime(arg, aux) {
       GetSlot(arg, NANOSECOND)
     );
   }
-  if ('object' === typeof arg) {
-    const { year, month, day, hour, minute, second = 0, millisecond = 0, microsecond = 0, nanosecond = 0 } = arg;
+  const props = ES.ValidPropertyBag(arg, [
+    'year',
+    'month',
+    'day',
+    'hour',
+    'minute',
+    'second',
+    'millisecond',
+    'microsecond',
+    'nanosecond'
+  ]);
+  if (props) {
+    const {
+      year = 0,
+      month = 1,
+      day = 1,
+      hour = 0,
+      minute = 0,
+      second = 0,
+      millisecond = 0,
+      microsecond = 0,
+      nanosecond = 0
+    } = props;
     return new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, 'constrain');
   }
   if ('string' === typeof arg) {
