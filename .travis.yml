@@ -3,9 +3,6 @@ node_js: 12
 matrix:
   include:
   - name: "Polyfill tests"
-    before_install:
-    - cd polyfill/
-    - npm install
     script:
     - npm run test
   - name: "Specification compilation"

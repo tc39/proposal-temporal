@@ -5,7 +5,7 @@
   "main": "index.js",
   "private": true,
   "scripts": {
-    "build:javascript": "rollup -c rollup.config.mjs",
+    "build:javascript": "rollup -c rollup.config.ejs",
     "build:html": "for FILE in `ls *.md`; do marked -o `echo $FILE | sed -e 's/.md/.html'` $FILE; done &&  && cp README.html index.html"
   },
   "repository": {
