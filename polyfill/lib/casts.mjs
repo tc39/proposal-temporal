@@ -112,29 +112,15 @@ export function CastDate(arg, aux) {
 
 export function CastTime(arg, aux) {
   const Time = ES.GetIntrinsic('%Temporal.Time%');
-  if (HasSlot(arg, HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND)) {
-    if (!HasSlot(arg, MONTH)) return arg;
-    return new Time(
-      GetSlot(arg, HOUR),
-      GetSlot(arg, MINUTE),
-      GetSlot(arg, SECOND),
-      GetSlot(arg, MILLISECOND),
-      GetSlot(arg, MICROSECOND),
-      GetSlot(arg, NANOSECOND)
-    );
-  }
   if ('string' === typeof arg) {
-    try {
-      return Time.fromString(arg);
-    } catch (ex) {}
+    return Time.fromString(arg);
   }
-  if ('bigint' === typeof arg || 'number' === typeof arg || Number.isFinite(+arg))
-    return CastAbsolute(arg)
-      .inZone(aux)
-      .getTime();
   if ('object' === typeof arg) {
-    const { hour, minute, second, millisecond, microsecond, nanosecond } = arg;
-    return new Time(hour, minute, second, millisecond, microsecond, nanosecond);
+    if (HasSlot(arg, HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND) && !HasSlot(arg, MONTH)) {
+      return arg;
+    }
+    const { hour, microsecond, millisecond, minute, nanosecond, second } = arg;
+    return new Time(hour, minute, second, millisecond, microsecond, nanosecond, 'reject');
   }
   throw RangeError(`invalid time value: ${arg}`);
 }

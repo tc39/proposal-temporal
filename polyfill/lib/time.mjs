@@ -127,7 +127,7 @@ export class Time {
     ));
     return new Time(hour, minute, second, millisecond, microsecond, nanosecond);
   }
-  difference(other = {}) {
+  difference(other) {
     other = ES.CastTime(other);
     const [earlier, later] = [this, other].sort(Time.compare);
     const { hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.DifferenceTime(earlier, later);
