@@ -22,6 +22,9 @@ export class Time {
     microsecond = ES.ToInteger(microsecond);
     nanosecond = ES.ToInteger(nanosecond);
     switch (disambiguation) {
+      case 'reject':
+        ES.RejectTime(hour, minute, second, millisecond, microsecond, nanosecond);
+        break;
       case 'constrain':
         ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.ConstrainTime(
           hour,
@@ -43,7 +46,7 @@ export class Time {
         ));
         break;
       default:
-        ES.RejectTime(hour, minute, second, millisecond, microsecond, nanosecond);
+        throw new TypeError('disambiguation should be either reject, constrain or balance');
     }
 
     CreateSlots(this);

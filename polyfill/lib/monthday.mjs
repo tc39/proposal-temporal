@@ -6,10 +6,13 @@ import { monthday as RAW } from './regex.mjs';
 const DATE = new RegExp(`^${RAW.source}$`);
 
 export class MonthDay {
-  constructor(month, day, disambiguation) {
+  constructor(month, day, disambiguation = 'constrain') {
     month = ES.ToInteger(month);
     day = ES.ToInteger(day);
     switch (disambiguation) {
+      case 'reject':
+        ES.RejectDate(1970, month, day);
+        break;
       case 'constrain':
         ({ month, day } = ES.ConstrainDate(1970, month, day));
         break;
@@ -17,7 +20,7 @@ export class MonthDay {
         ({ month, day } = ES.BalanceDate(1970, month, day));
         break;
       default:
-        ES.RejectDate(1970, month, day);
+        throw new TypeError('disambiguation should be either reject, constrain or balance');
     }
 
     CreateSlots(this);
@@ -77,10 +80,9 @@ export class MonthDay {
     return new Duration(0, months, days, 0, 0, 0, 0, 0, 0);
   }
   toString() {
-    let year = ES.ISOYearString(GetSlot(this, YEAR));
     let month = ES.ISODateTimePartString(GetSlot(this, MONTH));
     let day = ES.ISODateTimePartString(GetSlot(this, DAY));
-    let resultString = `${year}-${month}-${day}`;
+    let resultString = `${month}-${day}`;
     return resultString;
   }
   toLocaleString(...args) {

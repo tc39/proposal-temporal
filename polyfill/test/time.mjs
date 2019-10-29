@@ -12,7 +12,7 @@ import Pretty from '@pipobscure/demitasse-pretty';
 const { reporter } = Pretty;
 
 import Assert from 'assert';
-const { ok: assert, equal } = Assert;
+const { ok: assert, equal, throws } = Assert;
 
 import * as Temporal from 'tc39-temporal';
 const { Time } = Temporal;
@@ -229,6 +229,12 @@ describe('Time', () => {
       it('Time.fromString("15:23:30.123456789")', () => {
         equal(`${Time.fromString('15:23:30.123456789')}`, '15:23:30.123456789');
       });
+    });
+    describe('Disambiguation', () => {
+      it('reject', () => throws(() => new Time(0, 0, 0, 0, 0, 1000, 'reject'), RangeError));
+      it('constrain', () => equal(`${new Time(0, 0, 0, 0, 0, 1000, 'constrain')}`, '00:00:00.000000999'));
+      it('balance', () => equal(`${new Time(0, 0, 0, 0, 0, 1000, 'balance')}`, '00:00:00.000001'));
+      it('throw when bad disambiguation', () => throws(() => new Time(0, 0, 0, 0, 0, 1, 'xyz'), TypeError));
     });
   });
   describe('time operations', () => {

@@ -556,9 +556,20 @@
     <emu-clause id=sec-temporal-RegulateDate aoid=RegulateDate>
       <h1>RegulateDate ( _y_, _m_, _d_, _disambiguation_ )</h1>
       <emu-alg>
-        1. <mark>TODO: consult _disambiguation_.</mark>
-        1. If ! ValidateDate(_y_, _m_, _d_) is *false*, then
-          1. Throw a *RangeError* exception.
+        1. If _disambiguation_ is *"reject"*, then
+          1. Perform ? RejectDate(_year_, _month_, _day_).
+        1. Else if _disambiguation_ is *"constrain"*, then
+          1. Let _result_ be ? ConstrainDate(_year_, _month_, _day_).
+          1. Set _y_ to _result_.year.
+          1. Set _m_ to _result_.month.
+          1. Set _d_ to _result_.day.
+        1. Else if _disambiguation_ is *"balance"*, then
+          1. Let _result_ be ? BalanceDate(_year_, _month_, _day_).
+          1. Set _y_ to _result_.year.
+          1. Set _m_ to _result_.month.
+          1. Set _d_ to _result_.day.
+        1. Else,
+          1. Throw a *TypeError* exception.
       </emu-alg>
     </emu-clause>
 

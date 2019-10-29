@@ -40,6 +40,10 @@ export class DateTime {
     microsecond = ES.ToInteger(microsecond);
     nanosecond = ES.ToInteger(nanosecond);
     switch (disambiguation) {
+      case 'reject':
+        ES.RejectDate(year, month, day);
+        ES.RejectTime(hour, minute, second, millisecond, microsecond, nanosecond);
+        break;
       case 'constrain':
         ({ year, month, day } = ES.ConstrainDate(year, month, day));
         ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.ConstrainTime(
@@ -52,6 +56,7 @@ export class DateTime {
         ));
         break;
       case 'balance':
+        let days;
         ({ days, hour, minute, second, millisecond, microsecond, nanosecond } = ES.BalanceTime(
           hour,
           minute,
@@ -63,8 +68,7 @@ export class DateTime {
         ({ year, month, day } = ES.BalanceDate(year, month, day + days));
         break;
       default:
-        ES.RejectDate(year, month, day);
-        ES.RejectTime(hour, minute, second, millisecond, microsecond, nanosecond);
+        throw new TypeError('disambiguation should be either reject, constrain or balance');
     }
 
     CreateSlots(this);
