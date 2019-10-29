@@ -69,8 +69,6 @@ function build(name, sone, stwo) {
 function buildSub(one, two) {
   describe(`< ${one} : ${two} >`, () => {
     const dif = two.difference(one);
-    const difm = new Temporal.Duration(dif.years, dif.months);
-    const difd = new Temporal.Duration(0, 0, dif.days);
     it(`(${one}).plus(${dif}) => ${two}`, () =>
       equal(`${one.plus(dif, 'reject')}`, `${two}`, `(${one}).plus(${dif}) => ${two}`));
     it(`(${two}).minus(${dif}) => ${one}`, () =>

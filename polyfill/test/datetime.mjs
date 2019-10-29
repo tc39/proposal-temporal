@@ -241,6 +241,15 @@ describe('DateTime', () => {
       equal(`${datetime.with({ month: 5, second: 15 })}`, '1976-05-18T15:23:15.123456789');
     });
   });
+  describe('date/time maths', () => {
+    const earlier = DateTime.fromString('1976-11-18T15:23:30.123456789');
+    const later = DateTime.fromString('2019-10-29T10:46:38.271986102');
+    const diff = earlier.difference(later);
+    it(`(${earlier}).difference(${later}) == (${later}).difference(${earlier})`, () =>
+      equal(`${later.difference(earlier)}`, `${diff}`));
+    it(`(${earlier}).plus(${diff}) == (${later})`, () => equal(`${earlier.plus(diff)}`, `${later}`));
+    it(`(${later}).minus(${diff}) == (${earlier})`, () => equal(`${later.minus(diff)}`, `${earlier}`));
+  });
 });
 
 import { normalize } from 'path';

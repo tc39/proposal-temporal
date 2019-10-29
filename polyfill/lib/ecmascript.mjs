@@ -385,11 +385,11 @@ export const ES = ObjectAssign(ObjectAssign(ObjectAssign({}, Cast), ES2019), {
     minute = minute % 60;
     minute = minute < 0 ? 60 + minute : minute;
 
-    let days = Math.floor(hour / 24);
+    let deltaDays = Math.floor(hour / 24);
     hour = hour % 24;
     hour = hour < 0 ? 24 + hour : hour;
 
-    return { days, hour, minute, second, millisecond, microsecond, nanosecond };
+    return { deltaDays, hour, minute, second, millisecond, microsecond, nanosecond };
   },
 
   ConstrainToRange: (value, min, max) => Math.min(max, Math.max(min, value)),
@@ -497,7 +497,7 @@ export const ES = ObjectAssign(ObjectAssign(ObjectAssign({}, Cast), ES2019), {
     let nanoseconds = later.nanosecond - earlier.nanosecond;
     let deltaDays = 0;
     ({
-      days: deltaDays,
+      deltaDays,
       hour: hours,
       minute: minutes,
       second: seconds,
@@ -550,8 +550,8 @@ export const ES = ObjectAssign(ObjectAssign(ObjectAssign({}, Cast), ES2019), {
     millisecond += milliseconds;
     microsecond += microseconds;
     nanosecond += nanoseconds;
-    let days = 0;
-    ({ days, hour, minute, second, millisecond, microsecond, nanosecond } = ES.BalanceTime(
+    let deltaDays = 0;
+    ({ deltaDays, hour, minute, second, millisecond, microsecond, nanosecond } = ES.BalanceTime(
       hour,
       minute,
       second,
@@ -559,7 +559,7 @@ export const ES = ObjectAssign(ObjectAssign(ObjectAssign({}, Cast), ES2019), {
       microsecond,
       nanosecond
     ));
-    return { days, hour, minute, second, millisecond, microsecond, nanosecond };
+    return { deltaDays, hour, minute, second, millisecond, microsecond, nanosecond };
   },
   SubtractDate: (year, month, day, years, months, days, disambiguation = 'constrain') => {
     day -= days;
@@ -603,8 +603,8 @@ export const ES = ObjectAssign(ObjectAssign(ObjectAssign({}, Cast), ES2019), {
     millisecond -= milliseconds;
     microsecond -= microseconds;
     nanosecond -= nanoseconds;
-    let days = 0;
-    ({ days, hour, minute, second, millisecond, microsecond, nanosecond } = ES.BalanceTime(
+    let deltaDays = 0;
+    ({ deltaDays, hour, minute, second, millisecond, microsecond, nanosecond } = ES.BalanceTime(
       hour,
       minute,
       second,
@@ -612,7 +612,7 @@ export const ES = ObjectAssign(ObjectAssign(ObjectAssign({}, Cast), ES2019), {
       microsecond,
       nanosecond
     ));
-    return { days, hour, minute, second, millisecond, microsecond, nanosecond };
+    return { deltaDays, hour, minute, second, millisecond, microsecond, nanosecond };
   },
 
   AssertPositiveInteger: (num) => {
