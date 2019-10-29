@@ -18,7 +18,7 @@ const TIME = Symbol('time');
 const DATETIME = Symbol('datetime');
 const DURATION = Symbol('duration');
 const ORIGINAL = Symbol('original');
-const TIMEZONE = Symbol('timzone');
+const TIMEZONE = Symbol('timezone');
 
 const IntlDateTimeFormat = Intl.DateTimeFormat;
 
