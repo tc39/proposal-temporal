@@ -160,14 +160,12 @@ export function CastYearMonth(arg, aux) {
 
 export function CastMonthDay(arg) {
   const MonthDay = ES.GetIntrinsic('%Temporal.MonthDay%');
-  if (HasSlot(arg, MONTH, DAY)) {
-    if (!HasSlot(arg, YEAR)) return arg;
-    return new MonthDay(GetSlot(arg, MONTH), GetSlot(arg, DAY));
+  if (ES.IsYearMonth(arg)) {
+    return arg;
   }
   if ('string' === typeof arg) {
-    try {
-      return MonthDay.fromString(arg);
-    } catch (ex) {}
+    // XXX #252 - Remove fromString
+    return MonthDay.fromString(arg);
   }
   const props = ES.ValidPropertyBag(arg, ['month', 'day']);
   if (props) {

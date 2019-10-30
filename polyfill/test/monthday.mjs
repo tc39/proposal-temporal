@@ -17,6 +17,11 @@ describe('MonthDay', () => {
       it('balance', () => equal(`${new MonthDay(1, 32, 'balance')}`, '02-01'));
       it('throw when bad disambiguation', () => throws(() => new MonthDay(1, 1, 'xyz'), TypeError));
     });
+    describe('Leap day', () => {
+      it('reject', () => equal(`${new MonthDay(2, 29, 'reject')}`, '02-29'));
+      it('constrain', () => equal(`${new MonthDay(2, 29, 'constrain')}`, '02-29'));
+      it('balance', () => equal(`${new MonthDay(2, 29, 'balance')}`, '02-29'));
+    });
     describe('.fromString()', ()=>{
       it('MonthDay.fromString(10-01) == 10-01', ()=>equal(`${MonthDay.fromString('10-01')}`, '10-01'));
       it('MonthDay.fromString(2019-10-01T09:00:00Z) == 10-01', ()=>equal(`${MonthDay.fromString('2019-10-01T09:00:00Z')}`, '10-01'));
