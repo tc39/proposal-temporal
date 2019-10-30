@@ -20,6 +20,8 @@ describe('MonthDay', () => {
     describe('.fromString()', ()=>{
       it('MonthDay.fromString(10-01) == 10-01', ()=>equal(`${MonthDay.fromString('10-01')}`, '10-01'));
       it('MonthDay.fromString(2019-10-01T09:00:00Z) == 10-01', ()=>equal(`${MonthDay.fromString('2019-10-01T09:00:00Z')}`, '10-01'));
+      it(`MonthDay.fromString('11-18') == (11-18)`, ()=>equal(`${MonthDay.fromString('11-18')}`, '11-18'));
+      it(`MonthDay.fromString('1976-11-18') == (11-18)`, ()=>equal(`${MonthDay.fromString('1976-11-18')}`, '11-18'));
     });
   });
 });

@@ -4,7 +4,8 @@
   "description": "TC39 Proposal: Temporal",
   "main": "index.js",
   "scripts": {
-    "test": "node --no-warnings --experimental-modules --loader ./test/resolve.source.mjs ./test/all.mjs",
+    "coverage": "c8 report --reporter html",
+    "test": "node --no-warnings --experimental-modules --icu-data-dir node_modules/full-icu/icudt64l.dat --loader ./test/resolve.source.mjs ./test/all.mjs",
     "pretty": "prettier --write lib/*.*(m)js test/*.*(m)js",
     "build": "rollup -c rollup.config.js",
     "prepublishOnly": "npm run build"
@@ -29,14 +30,15 @@
   },
   "homepage": "https://github.com/tc39/proposal-temporal#readme",
   "dependencies": {
-    "es-abstract": "^1.14.2",
-    "full-icu": "^1.3.0"
+    "es-abstract": "^1.14.2"
   },
   "devDependencies": {
+    "full-icu": "^1.3.0",
     "@babel/core": "^7.6.2",
     "@babel/preset-env": "^7.6.2",
     "@pipobscure/demitasse": "^1.0.10",
     "@pipobscure/demitasse-pretty": "^1.0.10",
+    "c8": "^6.0.1",
     "core-js": "^3.2.1",
     "prettier": "^1.18.2",
     "rollup": "^1.23.1",

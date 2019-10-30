@@ -1,5 +1,7 @@
 import { ES } from './ecmascript.mjs';
 import { assign as ObjectAssign } from './compat.mjs';
+import { IDENTIFIER, GetSlot } from './slots.mjs';
+import { TimeZone } from './timezone.mjs';
 
 const Absolute = ES.GetIntrinsic('%Temporal.Absolute%');
 const DateTime = ES.GetIntrinsic('%Temporal.DateTime%');
@@ -16,6 +18,7 @@ const TIME = Symbol('time');
 const DATETIME = Symbol('datetime');
 const DURATION = Symbol('duration');
 const ORIGINAL = Symbol('original');
+const TIMEZONE = Symbol('timezone');
 
 const IntlDateTimeFormat = Intl.DateTimeFormat;
 
@@ -143,6 +146,7 @@ export function DateTimeFormat(locale = IntlDateTimeFormat().resolvedOptions().l
   if (!(this instanceof DateTimeFormat)) return new DateTimeFormat(locale, options);
 
   this[ORIGINAL] = new IntlDateTimeFormat(locale, datetimeAmend(options));
+  this[TIMEZONE] = new TimeZone(this.resolvedOptions().timeZone);
   this[DATE] = new IntlDateTimeFormat(locale, dateAmend(options, {}));
   this[YM] = new IntlDateTimeFormat(locale, dateAmend(options, { day: false }));
   this[MD] = new IntlDateTimeFormat(locale, dateAmend(options, { year: false }));
@@ -304,22 +308,8 @@ function extractOverrides(datetime, main) {
     formatter = formatter || main[DATE];
   }
   if (datetime instanceof DateTime) {
-    const { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = datetime;
-    const found = ES.GetTimeZoneEpochNanoseconds(
-      main.resolvedOptions().timeZone,
-      year,
-      month,
-      day,
-      hour,
-      minute,
-      second,
-      millisecond,
-      microsecond,
-      nanosecond
-    );
     formatter = formatter || main[DATETIME];
-    if (!found.length) throw new RangeError(`invalid datetime in ${timezone}`);
-    datetime = new Absolute(found[0]);
+    datetime = main[TIMEZONE].getAbsoluteFor(datetime, 'earlier');
   }
   if (datetime instanceof Absolute) {
     formatter = formatter || main[DATETIME];

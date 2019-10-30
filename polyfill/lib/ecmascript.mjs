@@ -274,6 +274,7 @@ export const ES = ObjectAssign(ObjectAssign(ObjectAssign({}, Cast), ES2019), {
       ms += offset;
       return [{ ms, ns }];
     }
+    
     const earliest = ES.GetTimeZoneOffsetMilliseconds(ms - DAYMILLIS, timeZone);
     const latest = ES.GetTimeZoneOffsetMilliseconds(ms + DAYMILLIS, timeZone);
     const found = unique([earliest, latest])

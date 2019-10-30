@@ -18,6 +18,7 @@ import * as duration from './duration.mjs';
 import * as datemath from './datemath.mjs';
 import * as yearmonth from './yearmonth.mjs';
 import * as monthday from './monthday.mjs';
+import * as intl from './intl.mjs';
 
 Promise.resolve()
   .then(() => {
