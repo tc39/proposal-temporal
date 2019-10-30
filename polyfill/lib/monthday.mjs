@@ -28,13 +28,16 @@ export class MonthDay {
   }
 
   get month() {
+    if (!ES.IsMonthDay(this)) throw new TypeError('invalid receiver');
     return GetSlot(this, MONTH);
   }
   get day() {
+    if (!ES.IsMonthDay(this)) throw new TypeError('invalid receiver');
     return GetSlot(this, DAY);
   }
 
   with(dateLike = {}, disambiguation = 'constrain') {
+    if (!ES.IsMonthDay(this)) throw new TypeError('invalid receiver');
     const props = ES.ValidPropertyBag(dateLike, ['month', 'day']);
     if (!props) {
       throw new RangeError('invalid month-day-like');
@@ -44,6 +47,7 @@ export class MonthDay {
     return new Construct(month, day, disambiguation);
   }
   plus(durationLike = {}, disambiguation = 'constrain') {
+    if (!ES.IsMonthDay(this)) throw new TypeError('invalid receiver');
     const duration = ES.CastDuration(durationLike);
     if (
       !ES.ValidDuration(duration, [
@@ -67,6 +71,7 @@ export class MonthDay {
     return new Construct(month, day);
   }
   minus(durationLike = {}, disambiguation = 'constrain') {
+    if (!ES.IsMonthDay(this)) throw new TypeError('invalid receiver');
     const duration = ES.CastDuration(durationLike);
     if (
       !ES.ValidDuration(duration, [
@@ -90,6 +95,7 @@ export class MonthDay {
     return new Construct(month, day);
   }
   difference(other) {
+    if (!ES.IsMonthDay(this)) throw new TypeError('invalid receiver');
     other = ES.CastMonthDay(other);
     const [one, two] = [this, other].sort(MonthDay.compare);
     let months = two.month - one.month;
@@ -104,15 +110,18 @@ export class MonthDay {
     return new Duration(0, months, days, 0, 0, 0, 0, 0, 0);
   }
   toString() {
+    if (!ES.IsMonthDay(this)) throw new TypeError('invalid receiver');
     let month = ES.ISODateTimePartString(GetSlot(this, MONTH));
     let day = ES.ISODateTimePartString(GetSlot(this, DAY));
     let resultString = `${month}-${day}`;
     return resultString;
   }
   toLocaleString(...args) {
+    if (!ES.IsMonthDay(this)) throw new TypeError('invalid receiver');
     return new Intl.DateTimeFormat(...args).format(this);
   }
   withYear(year) {
+    if (!ES.IsMonthDay(this)) throw new TypeError('invalid receiver');
     const month = GetSlot(this, MONTH);
     const day = GetSlot(this, DAY);
     const Date = ES.GetIntrinsic('%Temporal.Date%');

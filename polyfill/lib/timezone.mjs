@@ -10,13 +10,16 @@ export class TimeZone {
     SetSlot(this, IDENTIFIER, ES.GetCanonicalTimeZoneIdentifier(timeZoneIndentifier));
   }
   get name() {
+    if (!ES.IsTimeZone(this)) throw new TypeError('invalid receiver');
     return String(GetSlot(this, IDENTIFIER));
   }
   getOffsetFor(absolute) {
+    if (!ES.IsTimeZone(this)) throw new TypeError('invalid receiver');
     absolute = ES.CastAbsolute(absolute);
     return ES.GetTimeZoneOffsetString(absolute.getEpochMilliseconds(), GetSlot(this, IDENTIFIER));
   }
   getDateTimeFor(absolute) {
+    if (!ES.IsTimeZone(this)) throw new TypeError('invalid receiver');
     absolute = ES.CastAbsolute(absolute);
     const { ms, ns } = GetSlot(absolute, EPOCHNANOSECONDS);
     const {
@@ -34,6 +37,7 @@ export class TimeZone {
     return new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
   }
   getAbsoluteFor(dateTime, disambiguation = 'earlier') {
+    if (!ES.IsTimeZone(this)) throw new TypeError('invalid receiver');
     dateTime = ES.CastDateTime(dateTime);
     const Absolute = ES.GetIntrinsic('%Temporal.Absolute%');
     const { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = dateTime;
@@ -104,6 +108,7 @@ export class TimeZone {
     }
   }
   getTransitions(startingPoint) {
+    if (!ES.IsTimeZone(this)) throw new TypeError('invalid receiver');
     startingPoint = ES.CastAbsolute(startingPoint);
     let { ms } = GetSlot(startingPoint, EPOCHNANOSECONDS);
     const Absolute = ES.GetIntrinsic('%Temporal.Absolute%');
@@ -117,6 +122,7 @@ export class TimeZone {
     };
   }
   toString() {
+    if (!ES.IsTimeZone(this)) throw new TypeError('invalid receiver');
     return this.name;
   }
   static fromString(isoString) {
