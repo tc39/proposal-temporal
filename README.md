@@ -52,7 +52,7 @@ See [Temporal.Absolute Documentation](./docs/absolute.md) for more detailed docu
 
 ### `Temporal.TimeZone`
 
-A `Temporal.TimeZone` represents an IANA Timezone, a specific UTF-Offset or UTC itself. Because of this `Temporal.TimeZone` can be used to convert between `Temporal.Absolute` and `Temporal.DateTime` as well as finding out the offset at a specific `Temporal.Absolute`.
+A `Temporal.TimeZone` represents an IANA Timezone, a specific UTC-Offset or UTC itself. Because of this `Temporal.TimeZone` can be used to convert between `Temporal.Absolute` and `Temporal.DateTime` as well as finding out the offset at a specific `Temporal.Absolute`.
 
 `Temporal.TimeZone` is also an iterable that give access to the IANA-Timezones supported by the system from the [IANA time zone database](https://www.iana.org/time-zones) (also listed [here](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)).
 
