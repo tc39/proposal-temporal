@@ -1,352 +1,824 @@
 <!doctype html>
 <meta charset="utf8">
 
-<emu-clause id=sec-temporal-civildatetime>
-  <h1>CivilDateTime Objects</h1>
-  <p>A CivilDateTime object is an immutable Object that contains Number values corresponding to a particular year,
-    month, day, hour, minute, second, millisecond, and nanosecond.</p>
-  <p>The following functions are abstract operations that operate on time values (defined SOMEWHERE). Note that, in
-    every case, if any argument to one of these functions is NaN, the result will be NaN.</p>
+<emu-clause id=sec-temporal-datetime>
+  <h1>Temporal.DateTime Objects</h1>
+  <p>A Temporal.DateTime object is an immutable Object that contains Number values corresponding to a particular year, month, day, hour, minute, second, millisecond, microsecond, and nanosecond.</p>
 
-  <emu-clause id=sec-temporal-civildatetime-year-number>
-    <h1>Year Number</h1>
-    <p>The Year Number is a integer Number corresponding to a particular year. It is called the year value. It must have
-      a Number value and may not be NaN.</p>
+  <emu-clause id=sec-temporal-datetime-constructor>
+    <h1>The Temporal.DateTime Constructor</h1>
+    <p>
+      The Temporal.DateTime constructor is the %Temporal.DateTime% intrinsic object.
+      When called as a constructor, it creates and initializes a new Temporal.DateTime object.
+    </p>
+    <p>
+      The Temporal.DateTime constructor is designed to be subclassable.
+      It may be used as the value of an extends clause of a class definition.
+      Subclass constructors that intend to inherit the specified DateTime behaviour must include a super call to the %Temporal.DateTime% constructor to create and initialize subclass instances with the necessary internal slots.
+    </p>
+
+    <emu-clause id=sec-temporal-datetime-constructor-alg>
+      <h1>Temporal.DateTime ( _year_, _month_, _day_, _hour_, _minute_ [ , _second_ [ , _millisecond_ [ , _microsecond_ [ , _nanosecond_ [ , _disambiguation_ ] ] ] ] ] )</h1>
+      <p>When the Temporal.DateTime function is called, the following steps are taken:</p>
+      <emu-alg>
+        1. If NewTarget is *undefined*, then
+          1. Throw a *TypeError* exception.
+        1. Let _year_ be ? ToInteger(_year_).
+        1. Let _month_ be ? ToInteger(_month_).
+        1. Let _day_ be ? ToInteger(_day_).
+        1. Let _hour_ be ? ToInteger(_hour_).
+        1. Let _minute_ be ? ToInteger(_minute_).
+        1. If _second_ is not *undefined*, then
+          1. Let _second_ be ? ToInteger(_second_).
+        1. Else
+          1. Let _second_ be 0.
+        1. If _millisecond_ is not *undefined*, then
+          1. Let _millisecond_ be ? ToInteger(_millisecond_).
+        1. Else
+          1. Let _millisecond_ be 0.
+        1. If _microsecond_ is not *undefined*, then
+          1. Let _microsecond_ be ? ToInteger(_microsecond_).
+        1. Else
+          1. Let _microsecond_ be 0.
+        1. If _nanosecond_ is not *undefined*, then
+          1. Let _nanosecond_ be ? ToInteger(_nanosecond_).
+        1. Else
+          1. Let _nanosecond_ be 0.
+        1. If _disambiguation_ is not *undefined*, then
+          1. Set _disambiguation_ to ? ToString(_disambiguation_).
+        1. Else
+          1. Set _disambiguation_ to `"constrain"`.
+        1. Let _result_ be ? RegulateDateTime(_year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _disambiguation_).
+        1. Return ? CreateDateTime(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]], NewTarget).
+      </emu-alg>
+    </emu-clause>
   </emu-clause>
 
-  <emu-clause id=sec-temporal-civildatetime-month-number>
-    <h1>Month Number</h1>
-    <p>The Month Number is a positive integer corresponding to a particular month. It is called the month value and is
-      identified by an integer in the range of 1 to 12, inclusive. It must have a Number value and may not be NaN.</p>
+  <emu-clause id=sec-properties-of-the-temporal-datetime-constructor>
+    <h1>Properties of the Temporal.DateTime Constructor</h1>
+    <p>The value of the [[Prototype]] internal slot of the Temporal.DateTime constructor is the intrinsic object %FunctionPrototype%.</p>
+    <p>The Temporal.DateTime constructor has the following properties:</p>
+
+    <emu-clause id=sec-temporal-datetime-prototype>
+      <h1>Temporal.DateTime.prototype</h1>
+      <p>The initial value of Temporal.DateTime.prototype is %Temporal.DateTime.prototype%.</p>
+      <p>This property has the attributes { [[Writable]]: *false*, [[Enumerable]]: *false*, [[Configurable]]: *false* }.</p>
+    </emu-clause>
+
+    <emu-clause>
+      <h1>Temporal.DateTime.fromString ( _isostring_ )</h1>
+      <p>
+        The `fromString` method takes one argument _isostring_.
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _isostring_ be ? ToString(_isostring_).
+        1. Return ? DateTimeFromString(_isostring_).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause>
+      <h1>Temporal.DateTime.from ( _arg_ )</h1>
+      <p>
+        The `from` method takes one argument _arg_.
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Return ? ToDateTime(_arg_).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause>
+      <h1>Temporal.DateTime.compare ( _one_, _two_ )</h1>
+      <p>
+        The `compare` method takes two arguments, _one_ and _two_.
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _one_ be ? ToDateTime(_one_).
+        1. Let _two_ be ? ToDateTime(_two_).
+        1. Return ! DateTimeCompare(_one_, _two_).
+      </emu-alg>
+    </emu-clause>
   </emu-clause>
 
-  <emu-clause id=sec-temporal-civildatetime-day-number>
-    <h1>Day Number</h1>
-    <p>The Day Number is a positive integer corresponding to a particular day of the month. It is called the day value
-      and is identified by an integer the value of which is dependent on the month and year values. It must have a Number
-      value and may not be NaN. The range of possible day values can be calculated as follows:</p>
-    <emu-alg>
-      1. For any year value with a month values of 1, 3, 5, 7, 8, 10, or 12, the day value is in the range of 1 to 31,
-          inclusive.
-      1. For any year value with a month value of 4, 6, 9, or 11, the day value is in the range of 1 to 30, inclusive.
-      1. For the month value 2, the range of possible values for the day value depends on whether the year value
-          corresponds to a leap year.
-        1. If the year value modulo 4 != 0, the range is 1 to 28, inclusive.
-        1. If the year value modulo 400 == 0, the range is 1 to 29, inclusive.
-        1. If the year value modulo 100 == and year value % 400 != 0, the range is 1 to 28, inclusive.
-        1. If the year value modulo 4 == 0 and year value % 100 != 0, the range is 1 to 29, inclusive.
-    </emu-alg>
+  <emu-clause id=sec-properties-of-the-temporal-datetime-prototype-object>
+    <h1>Properties of the Temporal.DateTime Prototype Object</h1>
+
+    <p>The Temporal.DateTime prototype object</p>
+    <ul>
+      <li>is the intrinsic object %Temporal.DateTime.prototype%.
+      <li>is itself an ordinary object.
+      <li>is not a Temporal.DateTime instance and does not have a [[InitializedTemporalDateTime]] internal slot.
+      <li>has a [[Prototype]] internal slot whose value is %Object.prototype%.
+    </ul>
+
+    <emu-clause id=sec-temporal.datetime.prototype.constructor>
+      <h1>Temporal.DateTime.prototype.constructor</h1>
+      <p>The initial value of Temporal.DateTime.prototype.constructor is %Temporal.DateTime%.</p>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal.datetime.prototype-@@tostringtag">
+      <h1>Temporal.DateTime.prototype[ @@toStringTag ]</h1>
+      <p>
+        The initial value of the @@toStringTag property is the string value `"Temporal.DateTime"`.
+      </p>
+      <p>
+        This property has the attributes { [[Writable]]: *false*, [[Enumerable]]: *false*, [[Configurable]]: *true* }.
+      </p>
+    </emu-clause>
+
+    <emu-clause>
+      <h1>get Temporal.DateTime.prototype.year</h1>
+      <p>
+        Temporal.DateTime.prototype.year is an accessor property whose set accessor function is undefined.
+        Its get accessor function performs the following steps:
+      </p>
+      <emu-alg>
+        1. Let _dateTime_ be the *this* value.
+        1. If Type(_dateTime_) is not Object or _dateTime_ does not have an [[InitializedTemporalDateTime]] internal slot, then
+          1. Throw a *TypeError* exception.
+        1. Return _dateTime_.[[Year]].
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause>
+      <h1>get Temporal.DateTime.prototype.month</h1>
+      <p>
+        Temporal.DateTime.prototype.month is an accessor property whose set accessor function is undefined.
+        Its get accessor function performs the following steps:
+      </p>
+      <emu-alg>
+        1. Let _dateTime_ be the *this* value.
+        1. If Type(_dateTime_) is not Object or _dateTime_ does not have an [[InitializedTemporalDateTime]] internal slot, then
+          1. Throw a *TypeError* exception.
+        1. Return _dateTime_.[[Month]].
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause>
+      <h1>get Temporal.DateTime.prototype.day</h1>
+      <p>
+        Temporal.DateTime.prototype.day is an accessor property whose set accessor function is undefined.
+        Its get accessor function performs the following steps:
+      </p>
+      <emu-alg>
+        1. Let _dateTime_ be the *this* value.
+        1. If Type(_dateTime_) is not Object or _dateTime_ does not have an [[InitializedTemporalDateTime]] internal slot, then
+          1. Throw a *TypeError* exception.
+        1. Return _dateTime_.[[Day]].
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause>
+      <h1>get Temporal.DateTime.prototype.hour</h1>
+      <p>
+        Temporal.DateTime.prototype.hour is an accessor property whose set accessor function is undefined.
+        Its get accessor function performs the following steps:
+      </p>
+      <emu-alg>
+        1. Let _dateTime_ be the *this* value.
+        1. If Type(_dateTime_) is not Object or _dateTime_ does not have an [[InitializedTemporalDateTime]] internal slot, then
+          1. Throw a *TypeError* exception.
+        1. Return _dateTime_.[[Hour]].
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause>
+      <h1>get Temporal.DateTime.prototype.minute</h1>
+      <p>
+        Temporal.DateTime.prototype.minute is an accessor property whose set accessor function is undefined.
+        Its get accessor function performs the following steps:
+      </p>
+      <emu-alg>
+        1. Let _dateTime_ be the *this* value.
+        1. If Type(_dateTime_) is not Object or _dateTime_ does not have an [[InitializedTemporalDateTime]] internal slot, then
+          1. Throw a *TypeError* exception.
+        1. Return _dateTime_.[[Minute]].
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause>
+      <h1>get Temporal.DateTime.prototype.second</h1>
+      <p>
+        Temporal.DateTime.prototype.second is an accessor property whose set accessor function is undefined.
+        Its get accessor function performs the following steps:
+      </p>
+      <emu-alg>
+        1. Let _dateTime_ be the *this* value.
+        1. If Type(_dateTime_) is not Object or _dateTime_ does not have an [[InitializedTemporalDateTime]] internal slot, then
+          1. Throw a *TypeError* exception.
+        1. Return _dateTime_.[[Second]].
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause>
+      <h1>get Temporal.DateTime.prototype.millisecond</h1>
+      <p>
+        Temporal.DateTime.prototype.millisecond is an accessor property whose set accessor function is undefined.
+        Its get accessor function performs the following steps:
+      </p>
+      <emu-alg>
+        1. Let _dateTime_ be the *this* value.
+        1. If Type(_dateTime_) is not Object or _dateTime_ does not have an [[InitializedTemporalDateTime]] internal slot, then
+          1. Throw a *TypeError* exception.
+        1. Return _dateTime_.[[Millisecond]].
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause>
+      <h1>get Temporal.DateTime.prototype.microsecond</h1>
+      <p>
+        Temporal.DateTime.prototype.microsecond is an accessor property whose set accessor function is undefined.
+        Its get accessor function performs the following steps:
+      </p>
+      <emu-alg>
+        1. Let _dateTime_ be the *this* value.
+        1. If Type(_dateTime_) is not Object or _dateTime_ does not have an [[InitializedTemporalDateTime]] internal slot, then
+          1. Throw a *TypeError* exception.
+        1. Return _dateTime_.[[Microsecond]].
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause>
+      <h1>get Temporal.DateTime.prototype.nanosecond</h1>
+      <p>
+        Temporal.DateTime.prototype.nanosecond is an accessor property whose set accessor function is undefined.
+        Its get accessor function performs the following steps:
+      </p>
+      <emu-alg>
+        1. Let _dateTime_ be the *this* value.
+        1. If Type(_dateTime_) is not Object or _dateTime_ does not have an [[InitializedTemporalDateTime]] internal slot, then
+          1. Throw a *TypeError* exception.
+        1. Return _dateTime_.[[Nanosecond]].
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause>
+      <h1>get Temporal.DateTime.prototype.dayOfWeek</h1>
+      <p>
+        Temporal.DateTime.prototype.dayOfWeek is an accessor property whose set accessor function is undefined.
+        Its get accessor function performs the following steps:
+      </p>
+      <emu-alg>
+        1. Let _dateTime_ be the *this* value.
+        1. If Type(_dateTime_) is not Object or _dateTime_ does not have an [[InitializedTemporalDateTime]] internal slot, then
+          1. Throw a *TypeError* exception.
+        1. Return ! ToDayOfWeek(_dateTime_.[[Year]], _dateTime_.[[Month]], _dateTime_.[[Day]]).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause>
+      <h1>get Temporal.DateTime.prototype.dayOfYear</h1>
+      <p>
+        Temporal.DateTime.prototype.dayOfYear is an accessor property whose set accessor function is undefined.
+        Its get accessor function performs the following steps:
+      </p>
+      <emu-alg>
+        1. Let _dateTime_ be the *this* value.
+        1. If Type(_dateTime_) is not Object or _dateTime_ does not have an [[InitializedTemporalDateTime]] internal slot, then
+          1. Throw a *TypeError* exception.
+        1. Return ! ToDayOfYear(_dateTime_.[[Year]], _dateTime_.[[Month]], _dateTime_.[[Day]]).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause>
+      <h1>get Temporal.DateTime.prototype.weekOfYear</h1>
+      <p>
+        Temporal.DateTime.prototype.weekOfYear is an accessor property whose set accessor function is undefined.
+        Its get accessor function performs the following steps:
+      </p>
+      <emu-alg>
+        1. Let _dateTime_ be the *this* value.
+        1. If Type(_dateTime_) is not Object or _dateTime_ does not have an [[InitializedTemporalDateTime]] internal slot, then
+          1. Throw a *TypeError* exception.
+        1. Return ! ToWeekOfYear(_dateTime_.[[Year]], _dateTime_.[[Month]], _dateTime_.[[Day]]).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause>
+      <h1>get Temporal.DateTime.prototype.daysInYear</h1>
+      <p>
+        Temporal.DateTime.prototype.daysInYear is an accessor property whose set accessor function is undefined.
+        Its get accessor function performs the following steps:
+      </p>
+      <emu-alg>
+        1. Let _dateTime_ be the *this* value.
+        1. If Type(_dateTime_) is not Object or _dateTime_ does not have an [[InitializedTemporalDateTime]] internal slot, then
+          1. Throw a *TypeError* exception.
+        1. If ! IsLeapYear(_dateTime_.[[Year]]) is *true*, then
+          1. Return 366.
+        1. Return 365.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause>
+      <h1>get Temporal.DateTime.prototype.daysInMonth</h1>
+      <p>
+        Temporal.DateTime.prototype.daysInMonth is an accessor property whose set accessor function is undefined.
+        Its get accessor function performs the following steps:
+      </p>
+      <emu-alg>
+        1. Let _dateTime_ be the *this* value.
+        1. If Type(_dateTime_) is not Object or _dateTime_ does not have an [[InitializedTemporalDateTime]] internal slot, then
+          1. Throw a *TypeError* exception.
+        1. Return ! DaysInMonth(_dateTime_.[[Year]], _dateTime_.[[Month]]).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause>
+      <h1>get Temporal.DateTime.prototype.leapYear</h1>
+      <p>
+        Temporal.DateTime.prototype.leapYear is an accessor property whose set accessor function is undefined.
+        Its get accessor function performs the following steps:
+      </p>
+      <emu-alg>
+        1. Let _dateTime_ be the *this* value.
+        1. If Type(_dateTime_) is not Object or _dateTime_ does not have an [[InitializedTemporalDateTime]] internal slot, then
+          1. Throw a *TypeError* exception.
+        1. Return ! IsLeapYear(_dateTime_.[[Year]]).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause>
+      <h1>Temporal.DateTime.prototype.with ( _dateTimeLike_ [ , _disambiguation_ ] )</h1>
+      <p>
+        The `with` method takes two arguments, _dateTimeLike_ and _disambiguation_.
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _dateTime_ be the *this* value.
+        1. If Type(_dateTime_) is not Object or _dateTime_ does not have an [[InitializedTemporalDateTime]] internal slot, then
+          1. Throw a *TypeError* exception.
+        1. Let _dateTimeLike_ be ? ToPartialDateTime(_dateTimeLike_).
+        1. If _disambiguation_ is not *undefined*, then
+          1. Set _disambiguation_ to ? ToString(_disambiguation_).
+        1. Else
+          1. Set _disambiguation_ to `"constrain"`.
+        1. If _dateTimeLike_.[[Year]] is not *undefined*, then
+          1. Let _year_ be _dateTimeLike_.[[Year]].
+        1. Else
+          1. Let _year_ be _dateTime_.[[Year]].
+        1. If _dateTimeLike_.[[Month]] is not *undefined*, then
+          1. Let _month_ be _dateTimeLike_.[[Month]].
+        1. Else
+          1. Let _month_ be _dateTime_.[[Month]].
+        1. If _dateTimeLike_.[[Day]] is not *undefined*, then
+          1. Let _day_ be _dateTimeLike_.[[Day]].
+        1. Else
+          1. Let _day_ be _dateTime_.[[Day]].
+        1. If _dateTimeLike_.[[Hour]] is not *undefined*, then
+          1. Let _hour_ be _dateTimeLike_.[[Hour]].
+        1. Else
+          1. Let _hour_ be _dateTime_.[[Hour]].
+        1. If _dateTimeLike_.[[Minute]] is not *undefined*, then
+          1. Let _minute_ be _dateTimeLike_.[[Minute]].
+        1. Else
+          1. Let _minute_ be _dateTime_.[[Minute]].
+        1. If _dateTimeLike_.[[Second]] is not *undefined*, then
+          1. Let _second_ be _dateTimeLike_.[[Second]].
+        1. Else
+          1. Let _second_ be _dateTime_.[[Second]].
+        1. If _dateTimeLike_.[[Millisecond]] is not *undefined*, then
+          1. Let _millisecond_ be _dateTimeLike_.[[Millisecond]].
+        1. Else
+          1. Let _millisecond_ be _dateTime_.[[Millisecond]].
+        1. If _dateTimeLike_.[[Microsecond]] is not *undefined*, then
+          1. Let _microsecond_ be _dateTimeLike_.[[Microsecond]].
+        1. Else
+          1. Let _microsecond_ be _dateTime_.[[Microsecond]].
+        1. If _dateTimeLike_.[[Nanosecond]] is not *undefined*, then
+          1. Let _nanosecond_ be _dateTimeLike_.[[Nanosecond]].
+        1. Else
+          1. Let _nanosecond_ be _dateTime_.[[Nanosecond]].
+        1. Let _result_ be ? RegulateDateTime(_year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _disambiguation_).
+        1. Return ? CreateDateTime(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause>
+      <h1>Temporal.DateTime.prototype.plus ( _duration_ [ , _disambiguation_ ] )</h1>
+      <p>
+        The `plus` method takes one argument _duration_.
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _dateTime_ be the *this* value.
+        1. If Type(_dateTime_) is not Object or _dateTime_ does not have an [[InitializedTemporalDateTime]] internal slot, then
+          1. Throw a *TypeError* exception.
+        1. Let _duration_ be ? ToTimeDurationLike(_duration_).
+        1. If _disambiguation_ is not *undefined*, then
+          1. Set _disambiguation_ to ? ToString(_disambiguation_).
+        1. Else
+          1. Set _disambiguation_ to `"constrain"`.
+        1. Let _timePart_ be ? AddTime(_dateTime_.[[Hour]], _dateTime_.[[Minute]], _dateTime_.[[Second]], _dateTime_.[[Millisecond]], _dateTime_.[[Microsecond]], _dateTime_.[[Nanosecond]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
+        1. Let _datePart_ be ? AddDate(_dateTime_.[[Year]], _dateTime_.[[Month]], _dateTime_.[[Day]], _duration_.[[Years]], _duration_.[[Months]], _duration_.[[Days]], _disambiguation_).
+        1. Let _datePart_ be ! BalanceDate(_datePart_.[[Year]], _datePart_.[[Month]], _datePart_.[[Day]] + _timePart_.[[Day]]).
+        1. Return ? CreateDateTime(_datePart_.[[Year]], _datePart_.[[Month]], _datePart_.[[Day]], _timePart_.[[Hour]], _timePart_.[[Minute]], _timePart_.[[Second]], _timePart_.[[Millisecond]], _timePart_.[[Microsecond]], _timePart_.[[Nanosecond]]).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause>
+      <h1>Temporal.DateTime.prototype.minus ( _duration_ [ , _disambiguation_ ] )</h1>
+      <p>
+        The `minus` method takes one argument _duration_.
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _dateTime_ be the *this* value.
+        1. If Type(_dateTime_) is not Object or _dateTime_ does not have an [[InitializedTemporalDateTime]] internal slot, then
+          1. Throw a *TypeError* exception.
+        1. Let _duration_ be ? ToTimeDurationLike(_duration_).
+        1. If _disambiguation_ is not *undefined*, then
+          1. Set _disambiguation_ to ? ToString(_disambiguation_).
+        1. Else
+          1. Set _disambiguation_ to `"constrain"`.
+        1. <mark>TODO</mark>
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause>
+      <h1>Temporal.DateTime.prototype.difference ( _otherDateTime_ )</h1>
+      <p>
+        The `difference` method takes one argument _otherDateTime_.
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _dateTime_ be the *this* value.
+        1. If Type(_dateTime_) is not Object or _dateTime_ does not have an [[InitializedTemporalDateTime]] internal slot, then
+          1. Throw a *TypeError* exception.
+        1. Let _otherDateTime_ be ? ToDateTime(_otherDateTime_).
+        1. If ! DateTimeCompare(_dateTime_, _otherDateTime_) &lt; 0, then
+          1. Let _greater_ be _otherDateTime_.
+          1. Let _smaller_ be _dateTime_.
+        1. Else,
+          1. Let _greater_ be _dateTime_.
+          1. Let _smaller_ be _otherDateTime_.
+        1. <mark>TODO</mark>
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause>
+      <h1>Temporal.DateTime.prototype.toString ( )</h1>
+      <p>
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _dateTime_ be the *this* value.
+        1. If Type(_dateTime_) is not Object or _dateTime_ does not have an [[InitializedTemporalDateTime]] internal slot, then
+          1. Throw a *TypeError* exception.
+        1. Return ! DateTimeToString(_dateTime_).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause>
+      <h1>Temporal.DateTime.prototype.toLocaleString ( [ _locales_ [ , _options_ ] ] )</h1>
+      <p>
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _dateTime_ be the *this* value.
+        1. If Type(_dateTime_) is not Object or _dateTime_ does not have an [[InitializedTemporalDateTime]] internal slot, then
+          1. Throw a *TypeError* exception.
+        1. If the implementation does not include the ECMA-402 Internationalization API, then
+          1. Return ! DateTimeToString(_dateTime_).
+        1. Let _dateFormat_ be ? Construct(%DateTimeFormat%, « _locales_, _options_ »).
+        1. Return ? FormatDateTime(_dateFormat_, _dateTime_).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause>
+      <h1>Temporal.DateTime.prototype.toJSON ( )</h1>
+      <p>
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _dateTime_ be the *this* value.
+        1. If Type(_dateTime_) is not Object or _dateTime_ does not have an [[InitializedTemporalDateTime]] internal slot, then
+          1. Throw a *TypeError* exception.
+        1. Return ! DateTimeToString(_dateTime_).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause>
+      <h1>Temporal.DateTime.prototype.inTimeZone ( [ _timeZoneParam_ [ , _disambiguation_ ] ] )</h1>
+      <p>
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _dateTime_ be the *this* value.
+        1. If Type(_dateTime_) is not Object or _dateTime_ does not have an [[InitializedTemporalDateTime]] internal slot, then
+          1. Throw a *TypeError* exception.
+        1. If _timeZoneParam_ is *undefined*, then
+          1. Set _timeZoneParam_ to `"UTC"`.
+        1. Let _timeZone_ be ? ToTimeZone(_timeZoneParam_).
+        1. If _disambiguation_ is not *undefined*, then
+          1. Set _disambiguation_ to ? ToString(_disambiguation_).
+        1. Else
+          1. Set _disambiguation_ to `"earlier"`.
+        1. Return ? GetAbsoluteFor(_timeZone_, _dateTime_, _disambiguation_).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause>
+      <h1>Temporal.DateTime.prototype.getDate ( )</h1>
+      <p>
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _dateTime_ be the *this* value.
+        1. If Type(_dateTime_) is not Object or _dateTime_ does not have an [[InitializedTemporalDateTime]] internal slot, then
+          1. Throw a *TypeError* exception.
+        1. Return ? CreateDate(_dateTime_.[[Year]], _dateTime_.[[Month]], _dateTime_.[[Day]]).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause>
+      <h1>Temporal.DateTime.prototype.getYearMonth ( )</h1>
+      <p>
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _dateTime_ be the *this* value.
+        1. If Type(_dateTime_) is not Object or _dateTime_ does not have an [[InitializedTemporalDateTime]] internal slot, then
+          1. Throw a *TypeError* exception.
+        1. Return ? CreateYearMonth(_dateTime_.[[Year]], _dateTime_.[[Month]]).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause>
+      <h1>Temporal.DateTime.prototype.getMonthDay ( )</h1>
+      <p>
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _dateTime_ be the *this* value.
+        1. If Type(_dateTime_) is not Object or _dateTime_ does not have an [[InitializedTemporalDateTime]] internal slot, then
+          1. Throw a *TypeError* exception.
+        1. Return ? CreateMonthDay(_dateTime_.[[Month]], _dateTime_.[[Day]]).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause>
+      <h1>Temporal.DateTime.prototype.getTime ( )</h1>
+      <p>
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _dateTime_ be the *this* value.
+        1. If Type(_dateTime_) is not Object or _dateTime_ does not have an [[InitializedTemporalDateTime]] internal slot, then
+          1. Throw a *TypeError* exception.
+        1. Return ? CreateTime(_dateTime_.[[Hour]], _dateTime_.[[Minute]], _dateTime_.[[Second]], _dateTime_.[[Millisecond]], _dateTime_.[[Microsecond]], _dateTime_.[[Nanosecond]]).
+      </emu-alg>
+    </emu-clause>
   </emu-clause>
 
-  <emu-clause id=sec-temporal-civildatetime-hour-number>
-    <h1>Hour Number</h1>
-    <p>The Hour Number is a positive integer corresponding to a particular hour. It is called the hour value and is
-      identified by an integer in the range of 0 to 23, inclusive. It must have a Number value and may not be NaN.</p>
-  </emu-clause>
+  <emu-clause id=sec-temporal-datetime-abstract-ops>
+    <h1>Abstract operations</h1>
 
-  <emu-clause id=sec-temporal-civildatetime-minute-number>
-    <h1>Minute Number</h1>
-    <p>The Minute Number is a positive integer corresponding to a particular minute. It is called the minute value and is
-      identified by an integer in the range of 0 to 59, inclusive. It must have a Number value and may not be NaN.</p>
-  </emu-clause>
+    <emu-clause id=sec-temporal-ToPartialDateTime aoid=ToPartialDateTime>
+      <h1>ToPartialDateTime ( _dateTime_ )</h1>
+      <emu-alg>
+        1. If Type(_dateTime_) is String, then
+          1. Return ? ParseDateTimeString(_dateTime_).
+        1. If Type(_dateTime_) is Object, then
+          1. Let _result_ be the new Record {
+              [[Year]]: *undefined*,
+              [[Month]]: *undefined*,
+              [[Day]]: *undefined*,
+              [[Hour]]: *undefined*,
+              [[Minute]]: *undefined*,
+              [[Second]]: *undefined*,
+              [[Millisecond]]: *undefined*,
+              [[Microsecond]]: *undefined*,
+              [[Nanosecond]]: *undefined*
+            }.
+          1. Let _any_ be *false*.
+          1. For each row of <emu-xref href="#table-temporal-datetimelike-properties"></emu-xref>, except the header row, in table order, do
+            1. Let _property_ be the Property value of the current row.
+            1. Let _value_ be ? Get(_dateTime_, _property_).
+            1. If _value_ is not *undefined*, then
+              1. Set _any_ to *true*.
+              1. Set _value_ to ? ToInteger(_value_).
+              1. Set _result_'s internal slot whose name is the Internal Slot value of the current row to _value_.
+          1. If _any_ is *false*, then
+            1. Throw a *TypeError* exception.
+          1. Return _result_.
+        1. Throw a *TypeError* exception.
+      </emu-alg>
 
-  <emu-clause id=sec-temporal-civildatetime-second-number>
-    <h1>Second Number</h1>
-    <p>The Second Number is a positive integer corresponding to a particular second. It is called the second value and is
-      identified by an integer in the range of 0 to 59, inclusive. It must have a Number value and may not be NaN.</p>
-  </emu-clause>
+      <emu-table id="table-temporal-datetimelike-properties">
+        <emu-caption>Internal slots and properties for DateTime argument objects</emu-caption>
+        <table class="real-table">
+          <thead>
+            <tr>
+              <th>Internal Slot</th>
+              <th>Property</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>[[Day]]</td>
+              <td>`"day"`</td>
+            </tr>
 
-  <emu-clause id=sec-temporal-civildatetime-millisecond-number>
-    <h1>Millisecond Number</h1>
-    <p>The Millisecond Number is a positive integer corresponding to a particular millisecond. It is called the
-      millisecond value and is identified by an integer in the range of 0 to 999, inclusive. It must have a Number value
-      and may not be NaN.</p>
-  </emu-clause>
+            <tr>
+              <td>[[Hour]]</td>
+              <td>`"hour"`</td>
+            </tr>
 
-  <emu-clause id=sec-temporal-civildatetime-nanosecond-number>
-    <h1>Nanosecond Number</h1>
-    <p>The Nanosecond Number is a positive integer corresponding to a particular nanosecond. It is called the nanosecond
-      value and is identified by an integer in the range of 0 to 999999, inclusive. It must have a Number value and may
-      not be NaN.</p>
-  </emu-clause>
+            <tr>
+              <td>[[Minute]]</td>
+              <td>`"minute"`</td>
+            </tr>
 
-  <emu-clause id=sec-temporal-civildatetime-from-operation>
-    <h1>From(date, time)</h1>
-    <p>The abstract operation From takes a CivilDate Object and a CivilTime Object returns a new CivilDateTime object
-      with the corresponding argument values for year, month, day, hour, minute, second, millisecond, and nanosecond.</p>
-  </emu-clause>
+            <tr>
+              <td>[[Second]]</td>
+              <td>`"second"`</td>
+            </tr>
 
-  <emu-clause id=sec-temporal-civildatetime-plus-operation>
-    <h1>Plus(Object)</h1>
-    <p>The abstract operation Plus returns a new CivilDateTime object that may have 0 to 8 values (inclusive) copied from
-      the CivilDateTime object on which the operation was performed.</p>
-    <p>The new CivilDateTime object will have one or more updated values that depend on terminal values of an Object
-      passed in as the argument.</p>
-    <p>The argument Object consists of a range of 1 to 8 (inclusive) key/value pairs. Each pair consists of a nonterminal
-      symbol and a corresponding terminal Number.</p>
-    <p>An argument Object may have one and only one of each of the nonterminal symbols "Year", "Month", "Day", "Hour",
-      "Minute", "Second", "Millisecond", and "Nanosecond".</p>
-  </emu-clause>
+            <tr>
+              <td>[[Millisecond]]</td>
+              <td>`"millisecond"`</td>
+            </tr>
 
-  <emu-clause id=sec-temporal-civildatetime-with-operation>
-    <h1>With(Object)</h1>
-    <p>The abstract operation With returns a new CivilDateTime object that may have 1 to 8 values (inclusive) copied from
-      the CivilDateTime object on which the operation was performed.</p>
-    <p>The new CivilDateTime object will have one or more updated values that depend on terminal values of an Object
-      passed in as the argument.</p>
-    <p>The argument Object consists of a range of 1 to 8 (inclusive) key/value pairs. Each pair consists of a nonterminal
-      symbol and a corresponding terminal Number.</p>
-    <p>An argument Object may have one or zero of each of the nonterminal symbols "Year", "Month", "Day", "Hour",
-      "Minute", "Second", "Millisecond", and "Nanosecond".</p>
-  </emu-clause>
+            <tr>
+              <td>[[Microsecond]]</td>
+              <td>`"microsecond"`</td>
+            </tr>
 
-  <emu-clause id=sec-temporal-civildatetime-constructor>
-    <h1>CivilDateTime Constructor</h1>
-    <p>The CivilDateTime constructor is the %CivilDateTime% intrinsic object. When called as a constructor, it creates
-      and initializes a new CivilDateTime object.</p>
-    <p>The CivilDateTime constructor is a single function.</p>
-    <p>The CivilDateTime constructor is subclassable.</p>
-    <p>The length property of the CivilDateTime constructor function is a range of 5 to 8, inclusive.</p>
-    <emu-grammar>
-    </emu-grammar>
-  </emu-clause>
+            <tr>
+              <td>[[Month]]</td>
+              <td>`"month"`</td>
+            </tr>
 
-  <emu-clause id=sec-temporal-civildatetime-constructor-alg>
-    <h1>CivilDateTime (year, month, day, hour, minute[, second[, millisecond[, nanosecond]]])</h1>
-    <p>This description only applies if the CivilDateTime constructor is called with at least five arguments.</p>
-    <p>When the CivilDateTime function is called, the following steps are taken:</p>
-    <emu-alg>
-      1. Let numberOfArgs be the number of arguments passed to this function call.
-      1. Assert: numberOfArgs >= 5.
-      1. If year is not finite or month is not finite or day is not finite or hour is not finite or minute is not finite
-          or second is not finite or millisecond is not finite or nanosecond is not finite, return NaN.
-      1. If NewTarget is not undefined, then
-        1. Let y be ? ToNumber(year).
-        1. Let m be ? ToNumber(month).
-        1. Let d be ? ToNumber(day).
-        1. Let h be ? ToNumber(hour).
-        1. Let min be ? ToNumber(minute).
-        1. If second is supplied, let s be ? ToNumber(second); else let s be 0.
-        1. If millisecond is supplied, let ms be ? ToNumber(millisecond); else let ms be 0.
-        1. If nanosecond is supplied, let ns be ? ToNumber(nanosecond); else let ns be 0.
-        1. Adjust y, m, d, h, min, s, ms, and ns values according to pro-leptic Gregorian calendar computation.
-        1. Let O be ? OrdinaryCreateFromConstructor(NewTarget, "%CivilDateTimePrototype%", <<[[YearValue, MonthValue,
-            DayValue, HourValue, MinuteValue, SecondValue, MillisecondValue, NanosecondValue]]>>).
-        1. Set O.[[YearValue]] to y.
-        1. Set O.[[MonthValue]] to m.
-        1. Set O.[[DayValue]] to d .
-        1. Set O.[[HourValue]] to h.
-        1. Set O.[[MinuteValue]] to min.
-        1. Set O.[[SecondValue]] to s.
-        1. Set O.[[MillisecondValue]] to ms.
-        1. Set O.[[NanosecondValue]] to ns.
-        1. Return O
-      1. Else, TBD
-    </emu-alg>
-  </emu-clause>
+            <tr>
+              <td>[[Nanosecond]]</td>
+              <td>`"nanosecond"`</td>
+            </tr>
 
-  <emu-clause id=sec-temporal-civildatetime-constructor-prop>
-    <h1>Properties of the CivilDateTime Constructor</h1>
-    <p>The value of the [[Prototype]] internal slot of the CivilDateTime constructor is the intrinsic object
-      %FunctionPrototype%.</p>
-    <p>The CivilDateTime constructor has the following properties:</p>
-  </emu-clause>
+            <tr>
+              <td>[[Year]]</td>
+              <td>`"year"`</td>
+            </tr>
+          </tbody>
+        </table>
+      </emu-table>
+    </emu-clause>
 
-  <emu-clause id=sec-temporal-civildatetime-prototype>
-    <h1>CivilDateTime Prototype</h1>
-    <p>The initial value of CivilDateTime.prototype is the intrinsic object %CivilDateTimePrototype%. This property has
-      the attributes {[[Writable]]: false, [[Enumerable]]: false, [[Configurable]]: false}.</p>
-  </emu-clause>
+    <emu-clause id=sec-temporal-RegulateDateTime aoid=RegulateDateTime>
+      <h1>RegulateDateTime ( _year_, _month_, _date_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _disambiguation_ )</h1>
+      <emu-alg>
+        1. Assert: _disambiguation_ is one of `"constrain"`, `"balance"`, or `"reject"`.
+        1. If _disambiguation_ is `"constrain"`, then
+          1. <mark>TODO: define.</mark>
+        1. If _disambiguation_ is `"balance"`, then
+          1. <mark>TODO: define.</mark>
+        1. If _disambiguation_ is `"reject"`, then
+          1. <mark>TODO: define.</mark>
+      </emu-alg>
+    </emu-clause>
 
-  <emu-clause id=sec-temporal-civildatetime-plus-alg>
-    <h1>CivilDateTime.plus (data)</h1>
-    <p>The abstract operation plus takes as an argument an Object with a range of 1 to 8 key/value pairs, inclusive.</p>
-    <p>The keys may not be duplicated and may be any combination of "year", "month", "day", "hour", "minute", "second",
-      "millisecond", and "nanosecond".</p>
-    <p>The values must be of the Number type and may be positive or negative integers.</p>
-    <p>If the sum of the current value and the argument value exceeds the range of allowable values for the given unit,
-      increment the next unit.</p>
-    <p>CivilDateTime calculations uses Gregorian pro-leptic calendar computation.</p>
-    <p>When the with function is called, the following steps are taken:</p>
-    <p>When the plus function is called, the following steps are taken:</p>
-    <emu-alg>
-      1. Let numberOfArgs be the number of arguments passed to this function call.
-      1. Assert: numberOfArgs == 1.
-      1. Assert: Type(data) is Object.
-      1. Assert: data has at least one of the following keys: "year", "month", "day", "hour", "minute", "second",
-          "millisecond", and/or "nanosecond".
-      1. If the data associated with any of the provided keys is not finite, return NaN.
-      1. If NewTarget is not undefined, then
-        1. If data.year is supplied, let y be ? ToNumber(year) + thisYearValue. If y is NaN, throw a TypeError exception;
-            else if data.year is not supplied, let y be thisYearValue.
-        1. If data.month is supplied, let m be ? ToNumber(month) + thisMonthValue. If m is NaN, throw a TypeError
-            exception; else if data.month is not supplied, let m be thisMonthValue.
-        1. If data.day is supplied, let d be ? ToNumber(day) + thisDayValue. If d is NaN, throw a TypeError exception; else
-            if data.day is not supplied, let d be thisDayValue.
-        1. If data.hour is supplied, let h be ? ToNumber(hour) + thisHourValue. If h is NaN, throw a TypeError exception;
-            else if data.hour is not supplied, let h be thisHourValue.
-        1. If data.minute is supplied, let min be ? ToNumber(minute) + thisMinuteValue. If min is NaN, throw a TypeError
-            exception; else if data.minute is not supplied, let min be thisMinuteValue.
-        1. If data.second is supplied, let s be ? ToNumber(second) + thisSecondValue. If s is NaN, throw a TypeError
-            exception; else if data.second is not supplied, let s be thisSecondValue.
-        1. If data.millisecond is supplied, let ms be ? ToNumber(millisecond) + thisMillisecondValue. If ms is NaN, throw a
-            TypeError exception; else if data.millisecond is not supplied, let ms be thisMillisecondValue.
-        1. If data.nanosecond is supplied, let ns be ? ToNumber(nanosecond) + thisNanosecondValue. If ns is NaN, throw a
-            TypeError exception; else if data.nanosecond is not supplied, let ns be thisNanosecondValue.
-        1. Adjust y, m, d, h, min, s, ms, and ns values according to pro-leptic Gregorian calendar computation.
-        1. Let O be ? OrdinaryCreateFromConstructor(NewTarget, "%CivilDateTimePrototype%", <<[[YearValue, MonthValue,
-            DayValue, HourValue, MinuteValue, SecondValue, MillisecondValue, NanosecondValue]]>>).
-        1. Set O.[[YearValue]] to y.
-        1. Set O.[[MonthValue]] to m.
-        1. Set O.[[DayValue]] to d.
-        1. Set O.[[HourValue]] to h.
-        1. Set O.[[MinuteValue]] to min.
-        1. Set O.[[SecondValue]] to s.
-        1. Set O.[[MillisecondValue]] to ms.
-        1. Set O.[[NanosecondValue]] to ns.
-        1. Return O.
-      1. Else, TBD
-    </emu-alg>
-  </emu-clause>
+    <emu-clause id=sec-temporal-ValidateDateTime aoid=ValidateDateTime>
+      <h1>ValidateDateTime ( _year_, _month_, _date_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_ )</h1>
+      <emu-alg>
+        1. Assert: _year_, _month_, _date_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, and _nanosecond_ are integer Number values.
+        1. If ! ValidateDate(_year_, _month_, _date_) is *false*, then
+          1. Return *false*.
+        1. If ! ValidateTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_) is *false*, then
+          1. Return *false*.
+        1. Return *true*.
+      </emu-alg>
+    </emu-clause>
 
-  <emu-clause id=sec-temporal-civildatetime-with-alg>
-    <h1>CivilDateTime.with (data)</h1>
-    <p>The abstract operation with takes as an argument an Object with a range of 1 to 8 key/value pairs, inclusive.</p>
-    <p>The keys may not be duplicated and may be any combination of "year", "month", "day", "hour", "minute", "second",
-      "millisecond", and "nanosecond".</p>
-    <p>The values must be of the Number type and may be positive or negative integers.</p>
-    <p>CivilDateTime calculations uses Gregorian pro-leptic calendar computation.</p>
-    <p>When the with function is called, the following steps are taken:</p>
-    <emu-alg>
-      1. Let numberOfArgs be the number of arguments passed to this function call.
-      1. Assert: numberOfArgs == 1.
-      1. Assert: Type(data) is Object.
-      1. Assert: data has at least one of the following keys: "year", "month", "day", "hour", "minute", "second",
-          "millisecond", and/or "nanosecond".
-      1. If the data associated with any of the provided keys is not finite, return NaN.
-      1. If NewTarget is not undefined, then
-        1. If data.year is supplied, let y be ? ToNumber(year). If y is NaN, throw a TypeError exception; else if data.year
-            is not supplied, let y be thisYearValue.
-        1. If data.month is supplied, let m be ? ToNumber(month). If m is NaN, throw a TypeError exception; else if
-            data.month is not supplied, let m be thisMonthValue.
-        1. If data.day is supplied, let d be ? ToNumber(day). If d is NaN, throw a TypeError exception; else if data.day is
-            not supplied, let d be thisDayValue.
-        1. If data.hour is supplied, let h be ? ToNumber(hour). If h is NaN, throw a TypeError exception; else if data.hour
-            is not supplied, let h be thisHourValue.
-        1. If data.minute is supplied, let min be ? ToNumber(minute). If min is NaN, throw a TypeError exception; else if
-            data.minute is not supplied, let min be thisMinuteValue.
-        1. If data.second is supplied, let s be ? ToNumber(second). If s is NaN, throw a TypeError exception; else if
-            data.second is not supplied, let s be thisSecondValue.
-        1. If data.millisecond is supplied, let ms be ? ToNumber(millisecond). If ms is NaN, throw a TypeError exception;
-            else if data.millisecond is not supplied, let ms be thisMillisecondValue.
-        1. If data.nanosecond is supplied, let ns be ? ToNumber(nanosecond). If ns is NaN, throw a TypeError exception;
-            else if data.nanosecond is not supplied, let ns be thisNanosecondValue.
-        1. Adjust y, m, d, h, min, s, ms, and ns values according to pro-leptic Gregorian calendar computation.
-        1. Let O be ? OrdinaryCreateFromConstructor(NewTarget, "%CivilDateTimePrototype%", <<[[YearValue, MonthValue,
-            DayValue, HourValue, MinuteValue, SecondValue, MillisecondValue, NanosecondValue]]>>).
-        1. Set O.[[YearValue]] to y.
-        1. Set O.[[MonthValue]] to m.
-        1. Set O.[[DayValue]] to d.
-        1. Set O.[[HourValue]] to h.
-        1. Set O.[[MinuteValue]] to min.
-        1. Set O.[[SecondValue]] to s.
-        1. Set O.[[MillisecondValue]] to ms.
-        1. Set O.[[NanosecondValue]] to ns.
-        1. Return O.
-      1. Else, TBD
-    </emu-alg>
-  </emu-clause>
+    <emu-clause id=sec-temporal-createdatetime aoid=CreateDateTime>
+      <h1>CreateDateTime ( _year_, _month_, _date_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_ [, _newTarget_] )</h1>
+      <emu-alg>
+        1. Assert: ! ValidateDateTime(_year_, _month_, _date_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_) is *true*.
+        1. If _newTarget_ is not given, set it to %Temporal.DateTime%
+        1. Let _object_ be ? OrdinaryCreateFromConstructor(_newTarget_, `"%Temporal.DateTime.prototype%"`, « [[InitializedTemporalDateTime]], [[Year]], [[Month]], [[Day]], [[Hour]], [[Minute]], [[Second]], [[Millisecond]], [[Microsecond]], [[Nanosecond]] »).
+        1. Set _object_.[[Year]] to _year_.
+        1. Set _object_.[[Month]] to _month_.
+        1. Set _object_.[[Day]] to _day_.
+        1. Set _object_.[[Hour]] to _hour_.
+        1. Set _object_.[[Minute]] to _minute_.
+        1. Set _object_.[[Second]] to _second_.
+        1. Set _object_.[[Millisecond]] to _millisecond_.
+        1. Set _object_.[[Microsecond]] to _microsecond_.
+        1. Set _object_.[[Nanosecond]] to _nanosecond_.
+        1. Return _object_.
+      </emu-alg>
+    </emu-clause>
 
-  <emu-clause id=sec-temporal-civildatetime-from-alg>
-    <h1>CivilDateTime.from (date, time)</h1>
-    <p>The abstract operation from takes as arguments a CivilDate Object and a CivilTime Object. It creates a new
-      CivilDateTime object. </p>
-    <p>When the from function is called, the following steps are taken:</p>
-    <emu-alg>
-      1. Let numberOfArgs be the number of arguments passed to this function call.
-      1. Assert: numberOfArgs == 2.
-      1. Assert: Type(date) is CivilDate Object.
-      1. Assert: Type(time) is CivilTime Object.
-      1. If NewTarget is not undefined, then
-        1. Let y be date.YearValue.
-        1. Let min be date.MonthValue.
-        1. Let d be date.DayValue.
-        1. Let h be time.HourValue.
-        1. Let min be time.MinuteValue.
-        1. Let s be time.SecondValue.
-        1. Let ms be time.MillisecondValue.
-        1. Let ns be time.NanosecondValue.
-        1. Let O be ? OrdinaryCreateFromConstructor(NewTarget, "%CivilDateTimePrototype%", <<[[YearValue, MonthValue,
-            DayValue, HourValue, MinuteValue, SecondValue, MillisecondValue, NanosecondValue]]>>).
-        1. Set O.[[YearValue]] to y.
-        1. Set O.[[MonthValue]] to m.
-        1. Set O.[[DayValue]] to d.
-        1. Set O.[[HourValue]] to h.
-        1. Set O.[[MinuteValue]] to min.
-        1. Set O.[[SecondValue]] to s.
-        1. Set O.[[MillisecondValue]] to ms.
-        1. Set O.[[NanosecondValue]] to ns.
-        1. Return O.
-      1. Else, TBD
-    </emu-alg>
-  </emu-clause>
+    <emu-clause id="sec-temporal-ParseDateTimeString" aoid="ParseDateTimeString">
+      <h1>ParseDateTimeString ( _dateTime_ )</h1>
+      <emu-alg>
+        1. Assert: Type(_dateTime_) is String.
+        1. Let _valid_ be *true* if _dateTime_ matches <a href="https://github.com/tc39/proposal-temporal/blob/main/polyfill/lib/regex.mjs">the "datetime" regular expression in the polyfill</a> and *false* otherwise.
+        1. <mark>TODO: Actually specify this somehow.</mark>
+        1. If _valid_ is *false*, then
+          1. Throw a *RangeError* exception.
+        1. Let _year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_ be the respective parts of _dateTime_ interpreted as decimal numbers.
+        1. Return the new Record {
+            [[Year]]: _year_,
+            [[Month]]: _month_,
+            [[Day]]: _day_,
+            [[Hour]]: _hour_,
+            [[Minute]]: _minute_,
+            [[Second]]: _second_,
+            [[Millisecond]]: _millisecond_,
+            [[Microsecond]]: _microsecond_,
+            [[Nanosecond]]: _nanosecond_
+          }.
+      </emu-alg>
+    </emu-clause>
 
-  <emu-clause id=sec-temporal-civildatetime-tocivildate-alg>
-    <h1>CivilDateTime.toCivilDate</h1>
-    <p>It creates a new CivilDate Object populated with the relevant values of the CivilDateTime Object on which the
-      operation is performed.</p>
-    <p>When the toCivilDate function is called, the following steps are taken:</p>
-    <emu-alg>
-      1. If NewTarget is not undefined, then
-        1. Let y be thisYearValue.
-        1. Let m be thisMonthValue.
-        1. Let d be thisDayValue.
-        1. Let O be ? OrdinaryCreateFromConstructor(NewTarget, "%CivilDatePrototype%", <<[[YearValue, MonthValue,
-            DayValue]]>>).
-        1. Set O.[[YearValue]] to y.
-        1. Set O.[[MonthValue]] to m.
-        1. Set O.[[DayValue]] to d.
-        1. Return O.
-      1. Else, TBD
-    </emu-alg>
-  </emu-clause>
+    <emu-clause id="sec-temporal-DateTimeFromString" aoid="DateTimeFromString">
+      <h1>DateTimeFromString ( _dateTime_ )</h1>
+      <emu-alg>
+        1. Assert: Type(_dateTime_) is String.
+        1. Let _result_ be ParseDateTimeString(_dateTime_).
+        1. If ! ValidateDateTime(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]) is *false*, then
+          1. Throw a *TypeError* exception.
+        1. Return ? CreateDateTime(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]).
+      </emu-alg>
+    </emu-clause>
 
-  <emu-clause id=sec-temporal-civildatetime-tociviltime-alg>
-    <h1>CivilDateTime.toCivilTime</h1>
-    <p>It creates a new CivilTime Object populated with the relevant values of the CivilDateTime Object on which the
-      operation is performed.</p>
-    <p>When the toCivilTime function is called, the following steps are taken:</p>
-    <emu-alg>
-      1. If NewTarget is not undefined, then
-        1. Let h be time.HourValue.
-        1. Let min be time.MinuteValue.
-        1. Let s be time.SecondValue.
-        1. Let ms be time.MillisecondValue.
-        1. Let ns be time.NanosecondValue.
-        1. Let O be ? OrdinaryCreateFromConstructor(NewTarget, "%CivilTimePrototype%", <<[[HourValue, MinuteValue,
-            SecondValue, MillisecondValue, NanosecondValue]]>>).
-        1. Set O.[[HourValue]] to h.
-        1. Set O.[[MinuteValue]] to min.
-        1. Set O.[[SecondValue]] to s.
-        1. Set O.[[MillisecondValue]] to ms.
-        1. Set O.[[NanosecondValue]] to ns.
-        1. Return O.
-      1. Else, TBD
-    </emu-alg>
-  </emu-clause>
+    <emu-clause id=sec-temporal-ToDateTime aoid=ToDateTime>
+      <h1>ToDateTime ( _dateTime_ )</h1>
+      <emu-alg>
+        1. If Type(_dateTime_) is String, then
+          1. Return ? DateTimeFromString(_dateTime_).
+        1. If Type(_dateTime_) is Object, then
+          1. If _dateTime_ has an [[InitializedTemporalDateTime]] internal slot, then
+            1. Return _dateTime_.
+          1. Let _result_ be the new Record {
+              [[Year]]: *undefined*,
+              [[Month]]: *undefined*,
+              [[Day]]: *undefined*,
+              [[Hour]]: *undefined*,
+              [[Minute]]: *undefined*,
+              [[Second]]: *undefined*,
+              [[Millisecond]]: *undefined*,
+              [[Microsecond]]: *undefined*,
+              [[Nanosecond]]: *undefined*
+            }.
+          1. For each row of <emu-xref href="#table-temporal-datetimelike-properties"></emu-xref>, except the header row, in table order, do
+            1. Let _property_ be the Property value of the current row.
+            1. Let _value_ be ? Get(_dateTime_, _property_).
+            1. If _value_ is *undefined*, then
+              1. Throw a *TypeError* exception.
+            1. Let _value_ be ? ToInteger(_value_).
+            1. Set _result_'s internal slot whose name is the Internal Slot value of the current row to _value_.
+          1. If ! ValidateDateTime(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]) is *false*, then
+            1. Throw a *TypeError* exception.
+          1. Return ? CreateDateTime(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]).
+        1. Throw a *TypeError* exception.
+      </emu-alg>
+    </emu-clause>
 
-  <emu-clause id=sec-temporal-civildatetime-withzone-alg>
-    <h1>CivilDateTime.withZone (timeZone[, options])</h1>
-    <p>The abstract operation plus takes as an argument a Time Zone String and an optional Object. It takes the current
-      CivilDateTime object, converts its values to Unix epoch time. It creates a new ZonedDateTime object.</p>
-    <p>When the withZone function is called, the following steps are taken:</p>
-    <emu-alg>
-      1. Let numberOfArgs be the number of arguments passed to this function call.
-      1. Assert: numberOfArgs > 1.
-      1. Assert: Type(timeZone) is String.
-      1. If options is supplied, assert: Type(options) Object.
-      1. If NewTarget is not undefined, then -- do something to convert. Get more input.
-    </emu-alg>
-  </emu-clause>
+    <emu-clause id=sec-temporal-DateTimeToString aoid=DateTimeToString>
+      <h1>DateTimeToString ( _dateTime_ )</h1>
+      <emu-alg>
+        1. Assert: Type(_dateTime_) is Object.
+        1. Assert: _dateTime_ has an [[InitializedTemporalDateTime]] internal slot.
+        1. Let _year_ be ! PadYear(_date_.[[Year]]).
+        1. Let _month_ be _date_.[[Month]] formatted as a two-digit decimal number, padded to the left with a zero if necessary.
+        1. Let _day_ be _date_.[[Day]] formatted as a two-digit decimal number, padded to the left with a zero if necessary.
+        1. Let _hour_ be _dateTime_.[[Hour]] formatted as a two-digit decimal number, padded to the left with a zero if necessary.
+        1. Let _minute_ be _dateTime_.[[Minute]] formatted as a two-digit decimal number, padded to the left with a zero if necessary.
+        1. Let _seconds_ be ! FormatSecondsStringPart(_dateTime_.[[Second]], _dateTime_.[[Millisecond]], _dateTime_.[[Microsecond]], _dateTime_.[[Nanosecond]]).
+        1. Return the string-concatenation of _year_, the code unit 0x002D (HYPHEN-MINUS), _month_, the code unit 0x002D (HYPHEN-MINUS), _day_, 0x0054 (LATIN CAPITAL LETTER T), _hour_, the code unit 0x003A (COLON), _minute_, and _seconds_.
+      </emu-alg>
+    </emu-clause>
 
+    <emu-clause id=sec-temporal-DateTimeCompare aoid=DateTimeCompare>
+      <h1>DateTimeCompare ( _one_, _two_ )</h1>
+      <emu-alg>
+        1. Assert: Type(_one_) is Object.
+        1. Assert: _one_ has an [[InitializedTemporalDateTime]] internal slot.
+        1. Assert: Type(_two_) is Object.
+        1. Assert: _two_ has an [[InitializedTemporalDateTime]] internal slot.
+        1. If _one_.[[Year]] &gt; _two_.[[Year]], return 1.
+        1. If _one_.[[Year]] &lt; _two_.[[Year]], return -1.
+        1. If _one_.[[Month]] &gt; _two_.[[Month]], return 1.
+        1. If _one_.[[Month]] &lt; _two_.[[Month]], return -1.
+        1. If _one_.[[Day]] &gt; _two_.[[Day]], return 1.
+        1. If _one_.[[Day]] &lt; _two_.[[Day]], return -1.
+        1. If _one_.[[Hour]] &gt; _two_.[[Hour]], return 1.
+        1. If _one_.[[Hour]] &lt; _two_.[[Hour]], return -1.
+        1. If _one_.[[Minute]] &gt; _two_.[[Minute]], return 1.
+        1. If _one_.[[Minute]] &lt; _two_.[[Minute]], return -1.
+        1. If _one_.[[Second]] &gt; _two_.[[Second]], return 1.
+        1. If _one_.[[Second]] &lt; _two_.[[Second]], return -1.
+        1. If _one_.[[Millisecond]] &gt; _two_.[[Millisecond]], return 1.
+        1. If _one_.[[Millisecond]] &lt; _two_.[[Millisecond]], return -1.
+        1. If _one_.[[Microsecond]] &gt; _two_.[[Microsecond]], return 1.
+        1. If _one_.[[Microsecond]] &lt; _two_.[[Microsecond]], return -1.
+        1. If _one_.[[Nanosecond]] &gt; _two_.[[Nanosecond]], return 1.
+        1. If _one_.[[Nanosecond]] &lt; _two_.[[Nanosecond]], return -1.
+        1. Return +0.
+      </emu-alg>
+    </emu-clause>
+  </emu-clause>
 </emu-clause>

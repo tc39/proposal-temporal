@@ -23,6 +23,7 @@ import {
   MICROSECONDS,
   NANOSECONDS
 } from './slots.mjs';
+import { time as TIMESTRING } from './regex.mjs';
 
 export function CastAbsolute(arg, aux) {
   const Absolute = ES.GetIntrinsic('%Temporal.Absolute%');
@@ -44,36 +45,13 @@ export function CastAbsolute(arg, aux) {
 }
 
 export function CastDateTime(arg, aux) {
+  if ('string' === typeof arg) {
+    // XXX #252 - Remove fromString
+    return DateTime.fromString(arg);
+  }
   const DateTime = ES.GetIntrinsic('%Temporal.DateTime%');
-  if (HasSlot(arg, YEAR, MONTH, DAY, HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND)) {
+  if (ES.IsDateTime(arg)) {
     return arg;
-  }
-  if (HasSlot(arg, EPOCHNANOSECONDS)) return arg.inTimeZone(aux);
-  if (HasSlot(arg, YEAR, MONTH, DAY) && HasSlot(aux, HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND)) {
-    return new DateTime(
-      GetSlot(arg, YEAR),
-      GetSlot(arg, MONTH),
-      GetSlot(arg, DAY),
-      GetSlot(aux, HOUR),
-      GetSlot(aux, MINUTE),
-      GetSlot(aux, SECOND),
-      GetSlot(aux, MILLISECOND),
-      GetSlot(aux, MICROSECOND),
-      GetSlot(aux, NANOSECOND)
-    );
-  }
-  if (HasSlot(aux, YEAR, MONTH, DAY) && HasSlot(arg, HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND)) {
-    return new DateTime(
-      GetSlot(aux, YEAR),
-      GetSlot(aux, MONTH),
-      GetSlot(aux, DAY),
-      GetSlot(arg, HOUR),
-      GetSlot(arg, MINUTE),
-      GetSlot(arg, SECOND),
-      GetSlot(arg, MILLISECOND),
-      GetSlot(arg, MICROSECOND),
-      GetSlot(arg, NANOSECOND)
-    );
   }
   const props = ES.ValidPropertyBag(arg, [
     'year',
@@ -100,13 +78,6 @@ export function CastDateTime(arg, aux) {
     } = props;
     return new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, 'constrain');
   }
-  if ('string' === typeof arg) {
-    try {
-      return DateTime.fromString(arg);
-    } catch (ex) {}
-  }
-  if ('bigint' === typeof arg || 'number' === typeof arg || Number.isFinite(+arg))
-    return CastAbsolute(arg).inTimeZone(aux);
   throw new RangeError(`invalid datetime ${arg}`);
 }
 
@@ -129,10 +100,28 @@ export function CastDate(arg, aux) {
   throw new RangeError(`invalid date ${arg}`);
 }
 
+export function TimeFromString(arg, Construct) {
+  if (typeof arg !== 'string') {
+    throw new TypeError("Internal error: wrong argument type for TimeFromString");
+  }
+
+  const match = TIMESTRING.exec(arg);
+  if (!match) {
+    throw new RangeError(`invalid time: ${isoString}`);
+  }
+  const hour = ES.ToInteger(match[1]);
+  const minute = ES.ToInteger(match[2]);
+  const second = ES.ToInteger(match[3]);
+  const millisecond = ES.ToInteger(match[4]);
+  const microsecond = ES.ToInteger(match[5]);
+  const nanosecond = ES.ToInteger(match[6]);
+  return new Construct(hour, minute, second, millisecond, microsecond, nanosecond, 'reject');
+}
+
 export function CastTime(arg, aux) {
   const Time = ES.GetIntrinsic('%Temporal.Time%');
   if ('string' === typeof arg) {
-    return Time.fromString(arg);
+    return TimeFromString(arg, Time);
   }
   const props = ES.ValidPropertyBag(arg, ['hour', 'minute', 'second', 'millisecond', 'microsecond', 'nanosecond']);
   if (props) {

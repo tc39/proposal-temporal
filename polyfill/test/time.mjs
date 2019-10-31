@@ -268,6 +268,18 @@ describe('Time', () => {
         equal(`${Time.fromString('15:23:30.123456789')}`, '15:23:30.123456789');
       });
     });
+    describe('Time.from() doesn\'t call fromString', () => {
+      // XXX #252 - Remove fromString
+      it('Time.from("15:23")', () => {
+        const original = Time.fromString;
+        Time.fromString = () => { throw TypeError("Should not call fromString") };
+        try {
+          equal(`${Time.from('15:23')}`, '15:23');
+        } finally {
+          Time.fromString = original;
+        }
+      });
+    });
     describe('Disambiguation', () => {
       it('reject', () => throws(() => new Time(0, 0, 0, 0, 0, 1000, 'reject'), RangeError));
       it('constrain', () => equal(`${new Time(0, 0, 0, 0, 0, 1000, 'constrain')}`, '00:00:00.000000999'));

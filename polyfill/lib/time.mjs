@@ -3,8 +3,6 @@ import { MakeIntrinsicClass } from './intrinsicclass.mjs';
 
 import { HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND, CreateSlots, GetSlot, SetSlot } from './slots.mjs';
 
-import { time as STRING } from './regex.mjs';
-
 export class Time {
   constructor(
     hour,
@@ -193,17 +191,7 @@ export class Time {
   }
 
   static fromString(isoString) {
-    isoString = ES.ToString(isoString);
-    const match = STRING.exec(isoString);
-    if (!match) throw new RangeError(`invalid time: ${isoString}`);
-    const hour = ES.ToInteger(match[1]);
-    const minute = ES.ToInteger(match[2]);
-    const second = ES.ToInteger(match[3]);
-    const millisecond = ES.ToInteger(match[4]);
-    const microsecond = ES.ToInteger(match[5]);
-    const nanosecond = ES.ToInteger(match[6]);
-    const Construct = this;
-    return new Construct(hour, minute, second, millisecond, microsecond, nanosecond, 'reject');
+    return ES.TimeFromString(ES.ToString(isoString), this);
   }
   static from(...args) {
     const result = ES.CastTime(...args);

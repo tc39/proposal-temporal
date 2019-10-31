@@ -39,6 +39,7 @@ export class DateTime {
     millisecond = ES.ToInteger(millisecond);
     microsecond = ES.ToInteger(microsecond);
     nanosecond = ES.ToInteger(nanosecond);
+    disambiguation = ES.ToString(disambiguation);
     switch (disambiguation) {
       case 'reject':
         ES.RejectDate(year, month, day);
@@ -142,7 +143,7 @@ export class DateTime {
     if (!ES.IsDateTime(this)) throw new TypeError('invalid receiver');
     return ES.LeapYear(GetSlot(this, YEAR));
   }
-  with(dateTimeLike = {}, disambiguation = 'constrain') {
+  with(dateTimeLike, disambiguation = 'constrain') {
     if (!ES.IsDateTime(this)) throw new TypeError('invalid receiver');
     const props = ES.ValidPropertyBag(dateTimeLike, [
       'year',
@@ -172,7 +173,7 @@ export class DateTime {
     const Construct = ES.SpeciesConstructor(this, DateTime);
     return new Construct(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, disambiguation);
   }
-  plus(durationLike = {}, disambiguation = 'constrain') {
+  plus(durationLike, disambiguation = 'constrain') {
     if (!ES.IsDateTime(this)) throw new TypeError('invalid receiver');
     const duration = ES.CastDuration(durationLike);
     let { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = this;
@@ -198,7 +199,7 @@ export class DateTime {
     const Construct = ES.SpeciesConstructor(this, DateTime);
     return new Construct(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
   }
-  minus(durationLike = {}, disambiguation = 'constrain') {
+  minus(durationLike, disambiguation = 'constrain') {
     if (!ES.IsDateTime(this)) throw new TypeError('invalid receiver');
     const duration = ES.CastDuration(durationLike);
     let { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = this;
