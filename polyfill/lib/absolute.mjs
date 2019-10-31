@@ -63,7 +63,7 @@ export class Absolute {
     ns += GetSlot(duration, NANOSECONDS);
     if (negative && ns > 0) {
       ms += Math.floor(ns / 1e6);
-      ns = 1e6 - (ns % 1e6);
+      ns = ns % 1e6;
     }
     ms += GetSlot(duration, DAYS) * 86400000;
     ms += GetSlot(duration, HOURS) * 3600000;
@@ -97,7 +97,7 @@ export class Absolute {
     ns -= GetSlot(duration, MICROSECONDS) * 1000;
     if (!negative && ns < 0) {
       ms += Math.floor(ns / 1e6);
-      ns = 1e6 + (ns % 1e6);
+      ns = ns % 1e6 + 1e6;
     }
     ms -= GetSlot(duration, DAYS) * 86400000;
     ms -= GetSlot(duration, HOURS) * 3600000;
