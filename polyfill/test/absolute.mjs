@@ -162,6 +162,30 @@ describe('Absolute', () => {
       );
     });
   });
+  describe('Absolute.plus() works', () => {
+    const absolute = new Absolute(0n);
+    it('absolute.plus({nanoseconds: 100n})', () => {
+      equal(absolute.plus({ nanoseconds: 100n }).getEpochNanoseconds(), 100);
+    });
+    it('absolute.plus({microseconds: 100n})', () => {
+      equal(absolute.plus({ microseconds: 100n }).getEpochNanoseconds(), 1e5);
+    });
+    it('absolute.plus({milliseconds: 100n})', () => {
+      equal(absolute.plus({ milliseconds: 100n }).getEpochNanoseconds(), 1e8);
+    });
+  });
+  describe('Absolute.minus() works', () => {
+    const absolute = new Absolute(BigInt(1e8));
+    it('absolute.minus({nanoseconds: 100n})', () => {
+      equal(absolute.minus({ nanoseconds: 100n }).getEpochNanoseconds(), 1e8 - 100);
+    });
+    it('absolute.minus({microseconds: 100n})', () => {
+      equal(absolute.minus({ microseconds: 100n }).getEpochNanoseconds(), 1e8 - 1e5);
+    });
+    it('absolute.minus({milliseconds: 100n})', () => {
+      equal(absolute.minus({ milliseconds: 100n }).getEpochNanoseconds(), 0);
+    });
+  });
 });
 
 import { normalize } from 'path';

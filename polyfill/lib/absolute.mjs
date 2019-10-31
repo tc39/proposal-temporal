@@ -94,9 +94,9 @@ export class Absolute {
     let { ms, ns } = GetSlot(this, EPOCHNANOSECONDS);
     let negative = ms < 0 || ns < 0;
     ns -= GetSlot(duration, NANOSECONDS);
-    ns -= GetSlot(duration, MICROSECONDS);
+    ns -= GetSlot(duration, MICROSECONDS) * 1000;
     if (!negative && ns < 0) {
-      ms += Math.ceil(ns / 1e6);
+      ms += Math.floor(ns / 1e6);
       ns = 1e6 + (ns % 1e6);
     }
     ms -= GetSlot(duration, DAYS) * 86400000;
