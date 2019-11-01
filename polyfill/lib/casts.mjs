@@ -48,7 +48,7 @@ export function CastDateTime(arg, aux) {
   if (HasSlot(arg, YEAR, MONTH, DAY, HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND)) {
     return arg;
   }
-  if (HasSlot(arg, EPOCHNANOSECONDS)) return arg.inZone(aux);
+  if (HasSlot(arg, EPOCHNANOSECONDS)) return arg.inTimeZone(aux);
   if (HasSlot(arg, YEAR, MONTH, DAY) && HasSlot(aux, HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND)) {
     return new DateTime(
       GetSlot(arg, YEAR),
@@ -105,7 +105,8 @@ export function CastDateTime(arg, aux) {
       return DateTime.fromString(arg);
     } catch (ex) {}
   }
-  if ('bigint' === typeof arg || 'number' === typeof arg || Number.isFinite(+arg)) return CastAbsolute(arg).inZone(aux);
+  if ('bigint' === typeof arg || 'number' === typeof arg || Number.isFinite(+arg))
+    return CastAbsolute(arg).inTimeZone(aux);
   throw new RangeError(`invalid datetime ${arg}`);
 }
 

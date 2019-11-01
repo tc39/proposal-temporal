@@ -38,6 +38,9 @@ describe('Absolute', () => {
       it('Absolute.prototype has getEpochNanoseconds', () => {
         assert('getEpochNanoseconds' in Absolute.prototype);
       });
+      it('Absolute.prototype.inTimeZone is a Function', () => {
+        equal(typeof Absolute.prototype.inTimeZone, 'function');
+      });
       it('Absolute.prototype.toString is a Function', () => {
         equal(typeof Absolute.prototype.toString, 'function');
       });

@@ -260,7 +260,7 @@ export class DateTime {
     return new Intl.DateTimeFormat(...args).format(this);
   }
 
-  inZone(timeZoneParam = 'UTC', disambiguation = 'earlier') {
+  inTimeZone(timeZoneParam = 'UTC', disambiguation = 'earlier') {
     if (!ES.IsDateTime(this)) throw new TypeError('invalid receiver');
     const timeZone = ES.CastTimeZone(timeZoneParam);
     return timeZone.getAbsoluteFor(this, disambiguation);

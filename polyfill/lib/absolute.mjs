@@ -147,7 +147,7 @@ export class Absolute {
     if (!ES.IsAbsolute(this)) throw new TypeError('invalid receiver');
     return new Intl.DateTimeFormat(...args).format(this);
   }
-  inZone(timeZoneParam = 'UTC') {
+  inTimeZone(timeZoneParam = 'UTC') {
     if (!ES.IsAbsolute(this)) throw new TypeError('invalid receiver');
     const timeZone = ES.ToTimeZone(timeZoneParam);
     return timeZone.getDateTimeFor(this);
@@ -210,7 +210,7 @@ export class Absolute {
       microsecond,
       nanosecond
     });
-    const result = datetime.inZone(zone || 'UTC', match[11] ? match[10] : 'earlier');
+    const result = datetime.inTimeZone(zone || 'UTC', match[11] ? match[10] : 'earlier');
     return this === Absolute ? result : new this(result.getEpochNanoseconds());
   }
   static from(...args) {

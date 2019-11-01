@@ -74,8 +74,8 @@ describe('DateTime', () => {
       it('DateTime.prototype.difference is a Function', () => {
         equal(typeof DateTime.prototype.difference, 'function');
       });
-      it('DateTime.prototype.inZone is a Function', () => {
-        equal(typeof DateTime.prototype.inZone, 'function');
+      it('DateTime.prototype.inTimeZone is a Function', () => {
+        equal(typeof DateTime.prototype.inTimeZone, 'function');
       });
       it('DateTime.prototype.getDate is a Function', () => {
         equal(typeof DateTime.prototype.getDate, 'function');
