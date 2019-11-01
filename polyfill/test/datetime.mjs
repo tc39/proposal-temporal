@@ -90,8 +90,8 @@ describe('DateTime', () => {
         equal(typeof DateTime.prototype.toJSON, 'function');
       });
     });
-    it('DateTime.fromString is a Function', () => {
-      equal(typeof DateTime.fromString, 'function');
+    it('DateTime.from is a Function', () => {
+      equal(typeof DateTime.from, 'function');
     });
   });
   describe('Construction', () => {
@@ -242,8 +242,8 @@ describe('DateTime', () => {
     });
   });
   describe('date/time maths', () => {
-    const earlier = DateTime.fromString('1976-11-18T15:23:30.123456789');
-    const later = DateTime.fromString('2019-10-29T10:46:38.271986102');
+    const earlier = DateTime.from('1976-11-18T15:23:30.123456789');
+    const later = DateTime.from('2019-10-29T10:46:38.271986102');
     const diff = earlier.difference(later);
     it(`(${earlier}).difference(${later}) == (${later}).difference(${earlier})`, () =>
       equal(`${later.difference(earlier)}`, `${diff}`));

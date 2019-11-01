@@ -294,26 +294,30 @@ export class DateTime {
     );
   }
 
-  static fromString(isoString) {
-    isoString = ES.ToString(isoString);
-    const match = STRING.exec(isoString);
-    if (!match) throw new RangeError(`invalid datetime: ${isoString}`);
-    const year = ES.ToInteger(match[1]);
-    const month = ES.ToInteger(match[2]);
-    const day = ES.ToInteger(match[3]);
-    const hour = ES.ToInteger(match[4]);
-    const minute = ES.ToInteger(match[5]);
-    const second = ES.ToInteger(match[6]);
-    const millisecond = ES.ToInteger(match[7]);
-    const microsecond = ES.ToInteger(match[8]);
-    const nanosecond = ES.ToInteger(match[9]);
-    const DateTime = ES.GetIntrinsic('%Temporal.DateTime%');
-    const Construct = this;
-    return new Construct(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, 'reject');
-  }
-  static from(...args) {
-    const result = ES.CastDateTime(...args);
-    return this === DateTime ? result : new this(result.year, result.month, result.day);
+  static from(arg) {
+    if (typeof arg === 'object') {
+      const result = ES.CastDateTime(arg);
+      // BUG: did we just throw the time component away?
+      return this === DateTime ? result : new this(result.year, result.month, result.day);
+    } else if (typeof arg === 'string') {
+      const match = STRING.exec(arg);
+      if (!match) throw new RangeError(`invalid datetime: ${arg}`);
+      const year = ES.ToInteger(match[1]);
+      const month = ES.ToInteger(match[2]);
+      const day = ES.ToInteger(match[3]);
+      const hour = ES.ToInteger(match[4]);
+      const minute = ES.ToInteger(match[5]);
+      const second = ES.ToInteger(match[6]);
+      const millisecond = ES.ToInteger(match[7]);
+      const microsecond = ES.ToInteger(match[8]);
+      const nanosecond = ES.ToInteger(match[9]);
+      // ???: why does this exist?
+      const DateTime = ES.GetIntrinsic('%Temporal.DateTime%');
+      const Construct = this;
+      return new Construct(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, 'reject');
+    } else {
+      throw new TypeError(`invalid datetime: ${arg}`);
+    }
   }
   static compare(one, two) {
     one = ES.CastDateTime(one);
