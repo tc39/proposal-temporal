@@ -120,12 +120,12 @@ export class MonthDay {
     if (!ES.IsMonthDay(this)) throw new TypeError('invalid receiver');
     return new Intl.DateTimeFormat(...args).format(this);
   }
-  withYear(year) {
+  withYear(year, disambiguation = 'constrain') {
     if (!ES.IsMonthDay(this)) throw new TypeError('invalid receiver');
     const month = GetSlot(this, MONTH);
     const day = GetSlot(this, DAY);
     const Date = ES.GetIntrinsic('%Temporal.Date%');
-    return new Date(year, month, day);
+    return new Date(year, month, day, disambiguation);
   }
 
   static fromString(isoString) {
