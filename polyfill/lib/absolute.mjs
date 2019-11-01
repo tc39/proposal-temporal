@@ -185,36 +185,39 @@ export class Absolute {
     SetSlot(resultObject, EPOCHNANOSECONDS, { ms: epochMilliseconds, ns: restNanoseconds });
     return this === Absolute ? resultObject : new this(resultObject.getEpochNanoseconds());
   }
-  static fromString(isoString) {
-    isoString = ES.ToString(isoString);
-    const match = STRING.exec(isoString);
-    if (!match) throw new RangeError(`invalid absolute: ${isoString}`);
-    const year = ES.ToInteger(match[1]);
-    const month = ES.ToInteger(match[2]);
-    const day = ES.ToInteger(match[3]);
-    const hour = ES.ToInteger(match[4]);
-    const minute = ES.ToInteger(match[5]);
-    const second = ES.ToInteger(match[6]);
-    const millisecond = ES.ToInteger(match[7]);
-    const microsecond = ES.ToInteger(match[8]);
-    const nanosecond = ES.ToInteger(match[9]);
-    const zone = match[11] || match[10] || 'UTC';
-    const datetime = ES.CastDateTime({
-      year,
-      month,
-      day,
-      hour,
-      minute,
-      second,
-      millisecond,
-      microsecond,
-      nanosecond
-    });
-    const result = datetime.inTimeZone(zone || 'UTC', match[11] ? match[10] : 'earlier');
-    return this === Absolute ? result : new this(result.getEpochNanoseconds());
-  }
-  static from(...args) {
-    const result = ES.CastAbsolute(...args);
+  static from(arg) {
+    let result;
+    if (typeof arg === 'object') {
+      result = ES.CastAbsolute(arg);
+    } else if (typeof arg === 'string') {
+      const isoString = ES.ToString(arg);
+      const match = STRING.exec(isoString);
+      if (!match) throw new RangeError(`invalid absolute: ${isoString}`);
+      const year = ES.ToInteger(match[1]);
+      const month = ES.ToInteger(match[2]);
+      const day = ES.ToInteger(match[3]);
+      const hour = ES.ToInteger(match[4]);
+      const minute = ES.ToInteger(match[5]);
+      const second = ES.ToInteger(match[6]);
+      const millisecond = ES.ToInteger(match[7]);
+      const microsecond = ES.ToInteger(match[8]);
+      const nanosecond = ES.ToInteger(match[9]);
+      const zone = match[11] || match[10] || 'UTC';
+      const datetime = ES.CastDateTime({
+        year,
+        month,
+        day,
+        hour,
+        minute,
+        second,
+        millisecond,
+        microsecond,
+        nanosecond
+      });
+      result = datetime.inTimeZone(zone || 'UTC', match[11] ? match[10] : 'earlier');
+    } else {
+      throw new TypeError(`invalid absolute: ${arg}`);
+    }
     return this === Absolute ? result : new this(result.getEpochNanoseconds());
   }
   static compare(one, two) {

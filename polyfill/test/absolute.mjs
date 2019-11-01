@@ -60,8 +60,8 @@ describe('Absolute', () => {
     it('Absolute.fromEpochNanoseconds is a Function', () => {
       equal(typeof Absolute.fromEpochNanoseconds, 'function');
     });
-    it('Absolute.fromString is a Function', () => {
-      equal(typeof Absolute.fromString, 'function');
+    it('Absolute.from is a Function', () => {
+      equal(typeof Absolute.from, 'function');
     });
   });
   describe('Construction', () => {
@@ -80,13 +80,13 @@ describe('Absolute', () => {
   describe('absolute.toString() works', () => {
     it('`1976-11-18T14:23:30.123456789Z`.toString()', () => {
       const iso = '1976-11-18T14:23:30.123456789Z';
-      const instant = Absolute.fromString(iso);
+      const instant = Absolute.from(iso);
       assert(instant);
       equal(`${instant}`, iso);
     });
     it('`1963-02-13T09:36:29.123456789Z`.toString()', () => {
       const iso = '1963-02-13T09:36:29.123456789Z';
-      const instant = Absolute.fromString(iso);
+      const instant = Absolute.from(iso);
       assert(instant);
       equal(`${instant}`, iso);
     });
@@ -139,28 +139,28 @@ describe('Absolute', () => {
       equal(instant.getEpochNanoseconds(), epochNanoseconds);
     });
   });
-  describe('Absolute.fromString() works', () => {
+  describe('Absolute.from() works', () => {
     it('1976-11-18T15:23Z', () => {
-      equal(Absolute.fromString('1976-11-18T15:23Z').getEpochMilliseconds(), Date.UTC(1976, 10, 18, 15, 23));
+      equal(Absolute.from('1976-11-18T15:23Z').getEpochMilliseconds(), Date.UTC(1976, 10, 18, 15, 23));
     });
     it('1976-11-18T15:23:30Z', () => {
-      equal(Absolute.fromString('1976-11-18T15:23:30Z').getEpochMilliseconds(), Date.UTC(1976, 10, 18, 15, 23, 30));
+      equal(Absolute.from('1976-11-18T15:23:30Z').getEpochMilliseconds(), Date.UTC(1976, 10, 18, 15, 23, 30));
     });
     it('1976-11-18T15:23:30.123Z', () => {
       equal(
-        Absolute.fromString('1976-11-18T15:23:30.123Z').getEpochMilliseconds(),
+        Absolute.from('1976-11-18T15:23:30.123Z').getEpochMilliseconds(),
         Date.UTC(1976, 10, 18, 15, 23, 30, 123)
       );
     });
     it('1976-11-18T15:23:30.123456Z', () => {
       equal(
-        Absolute.fromString('1976-11-18T15:23:30.123456Z').getEpochMicroseconds(),
+        Absolute.from('1976-11-18T15:23:30.123456Z').getEpochMicroseconds(),
         BigInt(Date.UTC(1976, 10, 18, 15, 23, 30, 123)) * BigInt(1e3) + BigInt(456)
       );
     });
     it('1976-11-18T15:23:30.123456789Z', () => {
       equal(
-        Absolute.fromString('1976-11-18T15:23:30.123456789Z').getEpochNanoseconds(),
+        Absolute.from('1976-11-18T15:23:30.123456789Z').getEpochNanoseconds(),
         BigInt(Date.UTC(1976, 10, 18, 15, 23, 30, 123)) * BigInt(1e6) + BigInt(456789)
       );
     });

@@ -13,7 +13,7 @@ import * as Temporal from 'tc39-temporal';
 
 describe('Intl', ()=>{
     describe('absolute.toLocaleString()', ()=>{
-        const absolute = Temporal.Absolute.fromString('1976-11-18T14:23:30Z');
+        const absolute = Temporal.Absolute.from('1976-11-18T14:23:30Z');
         it(`(${absolute.toString()}).toLocaleString('en-US', { timeZone: 'Europe/Vienna' })`, ()=>equal(`${absolute.toLocaleString('en', { timeZone: 'America/New_York' })}`, '11/18/1976, 9:23:30 AM'));
         it(`(${absolute.toString()}).toLocaleString('de-AT', { timeZone: 'Europe/Vienna' })`, ()=>equal(`${absolute.toLocaleString('de', { timeZone: 'Europe/Vienna' })}`, '18.11.1976, 15:23:30'));
     });
