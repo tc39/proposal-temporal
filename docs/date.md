@@ -1,6 +1,6 @@
 # `Temporal.Date`
 
-A representatio nof a calendar date.
+A representation of a calendar date.
 
 ## new Temporal.Date(year: number, month: number, day: number, disambiguation: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.Date
 
