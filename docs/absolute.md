@@ -12,7 +12,7 @@ An absolute point in time.
 
 ## absolute.getEpochNanoseconds() : bigint
 
-## absolute.inZone(timeZone: Temporal.TimeZone | string) : Temporal.DateTime
+## absolute.inTimeZone(timeZone: Temporal.TimeZone | string) : Temporal.DateTime
 
 ## absolute.plus(duration: Temporal.Duration | string | object) : Temporal.Absolute
 

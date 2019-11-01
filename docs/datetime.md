@@ -42,7 +42,7 @@
 
 ## datetime.toLocaleString(locale?:string, options?: object) : string
 
-## datetime.inZone(timeZoneParam = 'UTC', disambiguation = 'earlier') : Temporal.Absolute
+## datetime.inTimeZone(timeZoneParam = 'UTC', disambiguation = 'earlier') : Temporal.Absolute
 
 ## datetime.getDate() : Temporal.Date
 

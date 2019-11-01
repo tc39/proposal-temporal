@@ -34,7 +34,7 @@ dt.millisecond/* 0 */; dt.microsecond/* 0 */; dt.nanosecond/* 0 */;
 dt.with({ month: 11 }); // 2019-11-07T13:03:30
 dt.plus('P1D'); // 2019-10-08T13:03:30
 dt.minus('P1M'); // 2019-09-07T13:03:30
-dt.inZone('Europe/Vienna'); // 2019-10-07T11:03:30Z
+dt.inTimeZone('Europe/Vienna'); // 2019-10-07T11:03:30Z
 dt.getDate()/* 2019-10-07 */; dt.getTime()/* 13:03:30 */;
 ```
 
@@ -79,8 +79,8 @@ dt.getEpochNanoseconds(); // 1570537307821560338n
 dt.getEpochMicroseconds(); // 1570537307821560n
 dt.getEpochMilliseconds(); // 1570537307821
 dt.getEpochSeconds(); // 1570537307
-dt.inZone('America/New_York'); // 2019-10-08T08:21:47.821560338
-dt.inZone('Europe/Berlin'); // 2019-10-08T14:21:47.821560338
+dt.inTimeZone('America/New_York'); // 2019-10-08T08:21:47.821560338
+dt.inTimeZone('Europe/Berlin'); // 2019-10-08T14:21:47.821560338
 dt.toString('America/New_York'); // 2019-10-08T08:21:47.821560338-04:00[America/New_York]
 ```
 
