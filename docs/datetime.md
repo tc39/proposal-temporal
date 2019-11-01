@@ -52,8 +52,6 @@
 
 ## datetime.getTime() : Temporal.Time
 
-## Temporal.DateTime.fromString(iso: string) : Temporal.DateTime
-
 ## Temporal.DateTime.from(thing: string | object) : Temporal.DateTime
 
 ## Temporal.DateTime.compare(one: Temporal.DateTime | object, two: Temporal.DateTime | object) : number;

@@ -46,8 +46,7 @@ export function CastAbsolute(arg, aux) {
 
 export function CastDateTime(arg, aux) {
   if ('string' === typeof arg) {
-    // XXX #252 - Remove fromString
-    return DateTime.fromString(arg);
+    return DateTime.from(arg);
   }
   const DateTime = ES.GetIntrinsic('%Temporal.DateTime%');
   if (ES.IsDateTime(arg)) {
@@ -78,6 +77,11 @@ export function CastDateTime(arg, aux) {
     } = props;
     return new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, 'constrain');
   }
+  if ('string' === typeof arg) {
+    try {
+      return DateTime.from(arg);
+    } catch (ex) {}
+  }
   throw new RangeError(`invalid datetime ${arg}`);
 }
 
@@ -102,7 +106,7 @@ export function CastDate(arg, aux) {
 
 export function TimeFromString(arg, Construct) {
   if (typeof arg !== 'string') {
-    throw new TypeError("Internal error: wrong argument type for TimeFromString");
+    throw new TypeError('Internal error: wrong argument type for TimeFromString');
   }
 
   const match = TIMESTRING.exec(arg);
