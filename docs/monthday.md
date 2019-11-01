@@ -20,7 +20,7 @@
 
 ## monthDay.toLocaleString(locale?: string, options?: object) : string
 
-## monthDay.withYear(year: number) : Temporal.Date
+## monthDay.withYear(year: number, disambiguation: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.Date
 
 ## Temporal.MonthDay.fromString(iso: string) : Temporal.MonthDay
 
