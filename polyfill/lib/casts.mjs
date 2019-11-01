@@ -37,7 +37,7 @@ export function CastAbsolute(arg, aux) {
   if ('bigint' === typeof arg) return new Absolute(arg);
   if ('string' === typeof arg) {
     try {
-      return Absolute.fromString(arg);
+      return Absolute.from(arg);
     } catch (ex) {}
   }
   if (Number.isFinite(arg)) return Absolute.fromEpochMilliseconds(+arg);
