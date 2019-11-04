@@ -9,6 +9,7 @@ export class Date {
     year = ES.ToInteger(year);
     month = ES.ToInteger(month);
     day = ES.ToInteger(day);
+    disambiguation = ES.ToString(disambiguation);
     switch (disambiguation) {
       case 'reject':
         ES.RejectDate(year, month, day);
