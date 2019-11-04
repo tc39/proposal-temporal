@@ -15,6 +15,16 @@
     </emu-alg>
   </emu-clause>
 
+  <emu-clause id="sec-temporal-daysinyear" aoid="DaysInYear">
+    <h1>DaysInYear ( _year_ )</h1>
+    <emu-alg>
+      1. Assert: _year_ is an integer.
+      1. If ! IsLeapYear(_year_) is *true*, then
+        1. Return 366.
+      1. Return 365.
+    </emu-alg>
+  </emu-clause>
+
   <emu-clause id="sec-temporal-daysinmonth" aoid="DaysInMonth">
     <h1>DaysInMonth ( _year_, _month_ )</h1>
     <emu-alg>
