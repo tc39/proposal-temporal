@@ -295,9 +295,7 @@
       <emu-alg>
         1. Let _dateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
-        1. If ! IsLeapYear(_dateTime_.[[Year]]) is *true*, then
-          1. Return 366.
-        1. Return 365.
+        1. Return ! DaysInYear(_dateTime_.[[Year]]).
       </emu-alg>
     </emu-clause>
 
