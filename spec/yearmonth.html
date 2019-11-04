@@ -481,7 +481,7 @@
       <emu-alg>
         1. Assert: Type(_yearMonth_) is Object.
         1. Assert: _yearMonth_ has an [[InitializedTemporalYearMonth]] internal slot.
-        1. Let _year_ be PadYear(_yearMonth_.[[Year]]).
+        1. Let _year_ be ! PadYear(_yearMonth_.[[Year]]).
         1. Let _month_ be _yearMonth_.[[Month]] formatted as a two-digit decimal number, padded to the left with a zero if necessary.
         1. Return the string-concatenation of _year_, the code unit 0x002D (HYPHEN-MINUS), and _month_.
       </emu-alg>
