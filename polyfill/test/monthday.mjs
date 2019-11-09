@@ -23,9 +23,49 @@ describe('MonthDay', () => {
       it(`MonthDay.fromString('11-18') == (11-18)`, ()=>equal(`${MonthDay.fromString('11-18')}`, '11-18'));
       it(`MonthDay.fromString('1976-11-18') == (11-18)`, ()=>equal(`${MonthDay.fromString('1976-11-18')}`, '11-18'));
     });
+    describe('getters', ()=>{
+      let md = new MonthDay(1, 15);
+      it(`(1-15).month === '1'`, ()=>{
+        equal(`${md.month}`, '1');
+      });
+      it(`(1-15).day === '15'`, ()=>{
+        equal(`${md.day}`, '15');
+      });
+    });
+    describe('plus()', ()=>{
+      let jan15 = new MonthDay(1,15);
+      let feb1 = new MonthDay(2, 1);
+      let april15 = new MonthDay(4, 15);
+      it(`(1-15) plus 1 day === '01-16'`, ()=>{
+        let duration = new Duration(0,0,1);
+        equal(`${jan15.plus(duration)}`, '01-16');
+
+      });
+      it(`(1-15) plus 16 days === '01-31'`, ()=>{
+        let duration = new Duration(0,0,16);
+        equal(`${jan15.plus(duration)}`, '01-31');
+      });
+      it(`(1-15) plus 17 days === '02-01'`, ()=>{
+        let duration = new Duration(0,0,17);
+        equal(`${jan15.plus(duration)}`, '02-01');
+      });
+      it(`(2-1) plus 28 days === '03-01'`, ()=>{
+        let duration = new Duration(0,0,28);
+        equal(`${feb1.plus(duration)}`, '03-01');
+      });
+      it(`(4-15) plus 16 days === '05-01'`, ()=>{
+        let duration = new Duration(0,0,16);
+        equal(`${april15.plus(duration)}`, '05-01');
+      });
+      it(`(4-15) plus 365 days === '04-15'`, ()=>{
+        let duration = new Duration(0,0,365);
+        equal(`${april15.plus(duration)}`, '04-15');
+      });
+    });
   });
 });
 
 import { normalize } from 'path';
+import { Duration } from '../lib/duration.mjs';
 if (normalize(import.meta.url.slice(8)) === normalize(process.argv[1]))
   report(reporter).then((failed) => process.exit(failed ? 1 : 0));
