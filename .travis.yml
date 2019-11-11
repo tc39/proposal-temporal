@@ -4,7 +4,7 @@ matrix:
   include:
   - name: "Polyfill tests"
     script:
-    - npm run test
+    - npm run codecov
   - name: "Specification compilation"
     script:
     - npm run build
