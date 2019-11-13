@@ -129,19 +129,21 @@ export class YearMonth {
     const Date = ES.GetIntrinsic('%Temporal.Date%');
     return new Date(year, month, day, disambiguation);
   }
-
-  static fromString(isoString) {
-    isoString = ES.ToString(isoString);
-    const match = STRING.exec(isoString);
-    if (!match) throw new RangeError(`invalid yearmonth: ${isoString}`);
-    const year = ES.ToInteger(match[1]);
-    const month = ES.ToInteger(match[2]);
-    const Construct = this;
-    return new Construct(year, month, 'reject');
-  }
-  static from(...args) {
-    const result = ES.CastYearMonth(...args);
-    return this === YearMonth ? result : new this(result.year, result.month);
+  static from(arg) {
+    if (typeof arg === 'object') {
+      const result = ES.CastYearMonth(arg);
+      return this === YearMonth ? result : new this(result.year, result.month);
+    } else if (typeof arg === 'string') {
+      const isoString = ES.ToString(arg);
+      const match = STRING.exec(isoString);
+      if (!match) throw new RangeError(`invalid yearmonth: ${isoString}`);
+      const year = ES.ToInteger(match[1]);
+      const month = ES.ToInteger(match[2]);
+      const Construct = this;
+      return new Construct(year, month, 'reject');
+    } else {
+      throw new TypeError(`invalid yearmonth: ${arg}`);
+    }
   }
   static compare(one, two) {
     one = ES.CastYearMonth(one);

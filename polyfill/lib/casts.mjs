@@ -141,7 +141,9 @@ export function CastYearMonth(arg, aux) {
     return arg;
   }
   if ('string' === typeof arg) {
-    return YearMonth.fromString(arg);
+    try {
+      return YearMonth.from(arg);
+    } catch (ex) {}
   }
   const props = ES.ValidPropertyBag(arg, ['year', 'month']);
   if (props) {
