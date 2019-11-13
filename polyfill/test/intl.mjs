@@ -28,7 +28,7 @@ describe('Intl', ()=>{
         it(`(${time.toString()}).toLocaleString('de-AT', { timeZone: 'Europe/Vienna' })`, ()=>equal(`${time.toLocaleString('de', { timeZone: 'Europe/Vienna' })}`, '15:23:30'));
     });
     describe('date.toLocaleString()', ()=>{
-        const date = Temporal.Date.fromString('1976-11-18T15:23:30');
+        const date = Temporal.Date.from('1976-11-18T15:23:30');
         it(`(${date.toString()}).toLocaleString('en-US', { timeZone: 'Europe/Vienna' })`, ()=>equal(`${date.toLocaleString('en', { timeZone: 'America/New_York' })}`, '11/18/1976'));
         it(`(${date.toString()}).toLocaleString('de-AT', { timeZone: 'Europe/Vienna' })`, ()=>equal(`${date.toLocaleString('de', { timeZone: 'Europe/Vienna' })}`, '18.11.1976'));
     });

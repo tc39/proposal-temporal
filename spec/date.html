@@ -45,18 +45,6 @@
       <p>This property has the attributes { [[Writable]]: *false*, [[Enumerable]]: *false*, [[Configurable]]: *false* }.</p>
     </emu-clause>
 
-    <emu-clause id="sec-temporal.date.fromstring">
-      <h1>Temporal.Date.fromString ( _isostring_ )</h1>
-      <p>
-        The `fromString` method takes one argument _isostring_.
-        The following steps are taken:
-      </p>
-      <emu-alg>
-        1. Let _isostring_ be ? ToString(_isostring_).
-        1. Return ? DateFromString(_isostring_).
-      </emu-alg>
-    </emu-clause>
-
     <emu-clause id="sec-temporal.date.from">
       <h1>Temporal.Date.from ( _arg_ )</h1>
       <p>
@@ -64,7 +52,11 @@
         The following steps are taken:
       </p>
       <emu-alg>
-        1. Return ? ToDate(_arg_).
+        1. If Type(_arg_) is Object, then
+          1. Return ? ToDate(_arg_).
+        1. If Type(_arg_) is String, then
+          1. Return ? DateFromString(_arg_).
+        1. Throw a *TypeError* exception.
       </emu-alg>
     </emu-clause>
 

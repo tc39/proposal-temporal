@@ -139,20 +139,21 @@ export class Date {
     const MonthDay = ES.GetIntrinsic('%Temporal.MonthDay%');
     return new MonthDay(GetSlot(this, MONTH), GetSlot(this, DAY));
   }
-
-  static fromString(isoString) {
-    isoString = ES.ToString(isoString);
-    const match = STRING.exec(isoString);
-    if (!match) throw new RangeError(`invalid date: ${isoString}`);
-    const year = ES.ToInteger(match[1]);
-    const month = ES.ToInteger(match[2]);
-    const day = ES.ToInteger(match[3]);
-    const Construct = this;
-    return new Construct(year, month, day, 'reject');
-  }
-  static from(...args) {
-    const result = ES.CastDate(...args);
-    return this === Date ? result : new this(result.year, result.month, result.day);
+  static from(arg) {
+    if (typeof arg === 'object') {
+      const result = ES.CastDate(arg);
+      return this === Date ? result : new this(result.year, result.month, result.day);
+    } else if (typeof arg === 'string') {
+      const match = STRING.exec(arg);
+      if (!match) throw new RangeError(`invalid date: ${arg}`);
+      const year = ES.ToInteger(match[1]);
+      const month = ES.ToInteger(match[2]);
+      const day = ES.ToInteger(match[3]);
+      const Construct = this;
+      return new Construct(year, month, day, 'reject');
+    } else {
+      throw new TypeError(`invalid date: ${arg}`);
+    }
   }
   static compare(one, two) {
     one = ES.CastDate(one);
