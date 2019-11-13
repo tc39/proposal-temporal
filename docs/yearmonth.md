@@ -28,8 +28,6 @@ A representatio nof a calendar date.
 
 ## yearMonth.withDay(day: number) : Temporal.Date
 
-## Temporal.YearMonth.fromString(iso: string) : Temporal.YearMonth
-
 ## Temporal.YearMonth.from(thing: string | object) : Temporal.YearMonth
 
 ## Temporal.YearMonth.compare(one: Temporal.YearMonth | object, two: Temporal.YearMonth | object) : number
