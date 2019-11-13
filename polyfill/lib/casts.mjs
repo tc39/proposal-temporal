@@ -159,8 +159,9 @@ export function CastMonthDay(arg) {
     return arg;
   }
   if ('string' === typeof arg) {
-    // XXX #252 - Remove fromString
-    return MonthDay.fromString(arg);
+    try {
+      return MonthDay.from(arg);
+    } catch (ex) {}
   }
   const props = ES.ValidPropertyBag(arg, ['month', 'day']);
   if (props) {

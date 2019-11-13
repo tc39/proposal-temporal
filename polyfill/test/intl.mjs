@@ -38,7 +38,7 @@ describe('Intl', ()=>{
         it(`(${yearmonth.toString()}).toLocaleString('de-AT', { timeZone: 'Europe/Vienna' })`, ()=>equal(`${yearmonth.toLocaleString('de', { timeZone: 'Europe/Vienna' })}`, '11.1976'));
     });
     describe('monthday.toLocaleString()', ()=>{
-        const monthday = Temporal.MonthDay.fromString('1976-11-18T15:23:30');
+        const monthday = Temporal.MonthDay.from('1976-11-18T15:23:30');
         it(`(${monthday.toString()}).toLocaleString('en-US', { timeZone: 'Europe/Vienna' })`, ()=>equal(`${monthday.toLocaleString('en', { timeZone: 'America/New_York' })}`, '11/18'));
         it(`(${monthday.toString()}).toLocaleString('de-AT', { timeZone: 'Europe/Vienna' })`, ()=>equal(`${monthday.toLocaleString('de', { timeZone: 'Europe/Vienna' })}`, '18.11.'));
     });
