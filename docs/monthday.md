@@ -22,8 +22,6 @@
 
 ## monthDay.withYear(year: number, disambiguation: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.Date
 
-## Temporal.MonthDay.fromString(iso: string) : Temporal.MonthDay
-
 ## Temporal.MonthDay.from(thing: string | object) : Temporal.MonthDay
 
 ## Temporal.MonthDay.compare(one: Temporal.MonthDay | object, two: Temporal.MonthDay | object) : number
