@@ -72,8 +72,8 @@ describe('Date', () => {
         equal(typeof Date.prototype.toJSON, 'function');
       });
     });
-    it('Date.fromString is a Function', () => {
-      equal(typeof Date.fromString, 'function');
+    it('Date.from is a Function', () => {
+      equal(typeof Date.from, 'function');
     });
   });
   describe('Construction', () => {
@@ -175,39 +175,39 @@ describe('Date', () => {
       equal(new Date(1914, 2, 23).toString(), '1914-02-23');
     });
   });
-  describe('Date.fromString() works', () => {
-    it('Date.fromString("1976-11-18")', () => {
-      const date = Date.fromString('1976-11-18');
+  describe('Date.from() works', () => {
+    it('Date.from("1976-11-18")', () => {
+      const date = Date.from('1976-11-18');
       equal(date.year, 1976);
       equal(date.month, 11);
       equal(date.day, 18);
     });
-    it('Date.fromString("2019-06-30")', () => {
-      const date = Date.fromString('2019-06-30');
+    it('Date.from("2019-06-30")', () => {
+      const date = Date.from('2019-06-30');
       equal(date.year, 2019);
       equal(date.month, 6);
       equal(date.day, 30);
     });
-    it('Date.fromString("+000050-06-30")', () => {
-      const date = Date.fromString('+000050-06-30');
+    it('Date.from("+000050-06-30")', () => {
+      const date = Date.from('+000050-06-30');
       equal(date.year, 50);
       equal(date.month, 6);
       equal(date.day, 30);
     });
-    it('Date.fromString("+010583-06-30")', () => {
-      const date = Date.fromString('+010583-06-30');
+    it('Date.from("+010583-06-30")', () => {
+      const date = Date.from('+010583-06-30');
       equal(date.year, 10583);
       equal(date.month, 6);
       equal(date.day, 30);
     });
-    it('Date.fromString("-010583-06-30")', () => {
-      const date = Date.fromString('-010583-06-30');
+    it('Date.from("-010583-06-30")', () => {
+      const date = Date.from('-010583-06-30');
       equal(date.year, -10583);
       equal(date.month, 6);
       equal(date.day, 30);
     });
-    it('Date.fromString("-000333-06-30")', () => {
-      const date = Date.fromString('-000333-06-30');
+    it('Date.from("-000333-06-30")', () => {
+      const date = Date.from('-000333-06-30');
       equal(date.year, -333);
       equal(date.month, 6);
       equal(date.day, 30);

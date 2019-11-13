@@ -93,7 +93,7 @@ export function CastDate(arg, aux) {
   }
   if ('string' === typeof arg) {
     try {
-      return Date.fromString(arg);
+      return Date.from(arg);
     } catch (ex) {}
   }
   const props = ES.ValidPropertyBag(arg, ['year', 'month', 'day']);
