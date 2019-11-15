@@ -90,7 +90,7 @@ See [Temporal.YearMonth Documentation](./docs/yearmonth.md) for more detailed do
 
 A date without a year component. This is useful to express things like "Bastille-Day is on the 14th of July".
 
-See [Temporal.MonthDay Documentation](./docs/monthay.md) for more detailed documentation.
+See [Temporal.MonthDay Documentation](./docs/monthday.md) for more detailed documentation.
 
 ### `Temporal.Duration`
 
