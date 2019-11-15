@@ -1,2 +1,1 @@
-# Bad property descriptor.
-Temporal/prop-desc.js
+# Empty.
