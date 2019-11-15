@@ -5,6 +5,9 @@ matrix:
   - name: "Polyfill tests"
     script:
     - npm run codecov
+  - name: "test262 tests"
+    script:
+    - npm run test262
   - name: "Specification compilation"
     script:
     - npm run build

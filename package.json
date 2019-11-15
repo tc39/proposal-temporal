@@ -10,6 +10,7 @@
   "scripts": {
     "test": "cd polyfill && npm install && npm test && cd ..",
     "codecov": "cd polyfill && npm install && npm run codecov && cd ..",
+    "test262": "cd polyfill && npm run test262",
     "build:prepare": "mkdirp out && mkdirp out/docs",
     "build:polyfill": "cd polyfill && npm install && npm run build && cd ..",
     "build:javascript": "npm run build:polyfill && cd docs && npm install && npm run build:javascript && cd .. && cp docs/*.js out/docs/",

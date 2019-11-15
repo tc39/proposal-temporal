@@ -6,9 +6,11 @@
   "scripts": {
     "coverage": "c8 report --reporter html",
     "test": "node --no-warnings --experimental-modules --icu-data-dir node_modules/full-icu/icudt64l.dat --loader ./test/resolve.source.mjs ./test/all.mjs",
+    "test262": "./ci_test.sh",
     "codecov": "npm install codecov && NODE_V8_COVERAGE=coverage/tmp npm run test && c8 report --reporter=text-lcov > coverage/tests.lcov && codecov",
     "pretty": "prettier --write lib/*.*(m)js test/*.*(m)js",
     "build": "rollup -c rollup.config.js",
+    "build-script": "rollup -c rollup-script.config.js",
     "prepublishOnly": "npm run build"
   },
   "repository": {
@@ -33,7 +35,8 @@
   "dependencies": {
     "big-integer": "^1.6.48",
     "codecov": "^3.6.1",
-    "es-abstract": "^1.14.2"
+    "es-abstract": "^1.14.2",
+    "test262-harness": "^6.5.0"
   },
   "devDependencies": {
     "@babel/core": "^7.6.2",
