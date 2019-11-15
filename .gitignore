@@ -1,5 +1,7 @@
 node_modules/
 polyfill/index.js
 polyfill/index.js.map
+polyfill/script.js
+polyfill/test262/
 out/
 .vscode/
