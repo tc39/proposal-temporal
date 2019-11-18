@@ -2,7 +2,6 @@
 
 A representation of a time-zone giving access to information about offsets & dst-changes as well as allowing for conversions.
 
-
 ## new Temporal.TimeZone(timeZone: string) : Temporal.TimeZone
 
 ## timeZone.name : string
@@ -16,7 +15,5 @@ A representation of a time-zone giving access to information about offsets & dst
 ## timeZone.getTransitions(startingPoint: Temporal.Absolute) : iterator<Temporal.Absolute>
 
 ## timeZone.toString() : string
-
-## Temporal.TimeZone.fromString(spec: string) : Temporal.TimeZone
 
 ## Temporal.TimeZone: iterator<Temporal.TimeZone>
