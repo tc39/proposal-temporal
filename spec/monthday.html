@@ -17,7 +17,7 @@
       Subclass constructors that intend to inherit the specified MonthDay behaviour must include a super call to the %Temporal.MonthDay% constructor to create and initialize subclass instances with the necessary internal slots.
     </p>
 
-    <emu-clause id="sec-temporal-MonthDay-constructor-alg">
+    <emu-clause id="sec-temporal.monthday">
       <h1>Temporal.MonthDay ( _month_, _day_ [ , _disambiguation_ ] )</h1>
       <p>When the Temporal.MonthDay function is called, the following steps are taken:</p>
       <emu-alg>
@@ -46,7 +46,7 @@
       <p>This property has the attributes { [[Writable]]: *false*, [[Enumerable]]: *false*, [[Configurable]]: *false* }.</p>
     </emu-clause>
 
-    <emu-clause>
+    <emu-clause id="sec-temporal.monthday.fromstring">
       <h1>Temporal.MonthDay.fromString ( _isostring_ )</h1>
       <p>
         The `fromString` method takes one argument _isostring_.
@@ -59,7 +59,7 @@
       <!-- XXX #252 - Remove fromString -->
     </emu-clause>
 
-    <emu-clause>
+    <emu-clause id="sec-temporal.monthday.from">
       <h1>Temporal.MonthDay.from ( _arg_ )</h1>
       <p>
         The `from` method takes one argument _arg_.
@@ -70,7 +70,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause>
+    <emu-clause id="sec-temporal.monthday.compare">
       <h1>Temporal.MonthDay.compare ( _one_, _two_ )</h1>
       <p>
         The `compare` method takes two arguments, _one_ and _two_.
@@ -110,7 +110,7 @@
       </p>
     </emu-clause>
 
-    <emu-clause>
+    <emu-clause id="sec-get-temporal.monthday.prototype.month">
       <h1>get Temporal.MonthDay.prototype.month</h1>
       <p>
         Temporal.MonthDay.prototype.month is an accessor property whose set accessor function is undefined.
@@ -123,7 +123,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause>
+    <emu-clause id="sec-get-temporal.monthday.prototype.day">
       <h1>get Temporal.MonthDay.prototype.day</h1>
       <p>
         Temporal.MonthDay.prototype.day is an accessor property whose set accessor function is undefined.
@@ -136,7 +136,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause>
+    <emu-clause id="sec-temporal.monthday.prototype.with">
       <h1>Temporal.MonthDay.prototype.with ( _otherMonthDay_ [ , _disambiguation_ ] )</h1>
       <p>
         The `with` method takes two arguments, _otherMonthDay_ and _disambiguation_.
@@ -163,7 +163,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause>
+    <emu-clause id="sec-temporal.monthday.prototype.plus">
       <h1>Temporal.MonthDay.prototype.plus ( _duration_ [ , _disambiguation_ ] )</h1>
       <p>
         The `plus` method takes two arguments, _duration_ and _disambiguation_.
@@ -185,7 +185,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause>
+    <emu-clause id="sec-temporal.monthday.prototype.minus">
       <h1>Temporal.MonthDay.prototype.minus ( _duration_ [ , _disambiguation_ ] )</h1>
       <p>
         The `minus` method takes two arguments, _duration_ and _disambiguation_.
@@ -207,7 +207,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause>
+    <emu-clause id="sec-temporal.monthday.prototype.difference">
       <h1>Temporal.MonthDay.prototype.difference ( _otherMonthDay_ )</h1>
       <p>
         The `difference` method takes two arguments, _otherMonthDay_ and _disambiguation_.
@@ -233,7 +233,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause>
+    <emu-clause id="sec-temporal.monthday.prototype.tostring">
       <h1>Temporal.MonthDay.prototype.toString ( )</h1>
       <p>
         The following steps are taken:
@@ -245,7 +245,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause>
+    <emu-clause id="sec-temporal.monthday.prototype.tolocalestring">
       <h1>Temporal.MonthDay.prototype.toLocaleString ( [ _locales_ [ , _options_ ] ] )</h1>
       <p>
         The following steps are taken:
@@ -260,7 +260,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause>
+    <emu-clause id="sec-temporal.monthday.prototype.tojson">
       <h1>Temporal.MonthDay.prototype.toJSON ( )</h1>
       <p>
         The following steps are taken:
@@ -272,7 +272,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause>
+    <emu-clause id="sec-temporal.monthday.prototype.withyear">
       <h1>Temporal.MonthDay.prototype.withYear ( _year_ [ , _disambiguation_ ] )</h1>
       <p>
         The `withYear` method takes two arguments, _year_ and _disambiguation_.
