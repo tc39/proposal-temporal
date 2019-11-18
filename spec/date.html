@@ -340,7 +340,7 @@
           1. Set _years_ to _years_ - 1.
           1. Let _daysInYear_ be 366 if LeapYear(_greater_.[[Year]]) is *true* and 365 otherwise.
           1. Set _days_ to _days_ + _daysInYear_.
-        1. <mark>Assert: _days_ &ge; 0.</mark>
+        1. <mark>Assert: _days_ ≥ 0.</mark>
         1. Return ? CreateDuration(_years_, 0, _days_).
       </emu-alg>
     </emu-clause>
@@ -566,9 +566,9 @@
       <h1>PadYear ( _y_ )</h1>
       <emu-alg>
         1. Assert: _y_ is an integer Number value.
-        1. If _y_ &gt; 999 and _y_ &le; 9999, then
+        1. If _y_ &gt; 999 and _y_ ≤ 9999, then
           1. Return _y_ formatted as a four-digit decimal number, padded to the left with a zero if necessary.
-        1. If _y_ &ge; 0, let _yearSign_ be `"+"`; otherwise, let _yearSign_ be `"-"`.
+        1. If _y_ ≥ 0, let _yearSign_ be `"+"`; otherwise, let _yearSign_ be `"-"`.
         1. Let _year_ be abs(_y_), formatted as a decimal number.
         1. Return the string-concatenation of _yearSign_ and _year_.
       </emu-alg>
