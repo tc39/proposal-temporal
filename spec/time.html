@@ -18,7 +18,7 @@
       Subclass constructors that intend to inherit the specified Time behaviour must include a super call to the %Temporal.Time% constructor to create and initialize subclass instances with the necessary internal slots.
     </p>
 
-    <emu-clause id="sec-temporal-time-constructor-alg">
+    <emu-clause id="sec-temporal.time">
       <h1>Temporal.Time ( _hour_, _minute_ [ , _second_ [ , _millisecond_ [ , _microsecond_ [ , _nanosecond_ [ , _disambiguation_ ] ] ] ] ] )</h1>
       <p>When the Temporal.Time function is called, the following steps are taken:</p>
       <emu-alg>
@@ -64,7 +64,7 @@
       <p>This property has the attributes { [[Writable]]: *false*, [[Enumerable]]: *false*, [[Configurable]]: *false* }.</p>
     </emu-clause>
 
-    <emu-clause>
+    <emu-clause id="sec-temporal.time.fromstring">
       <h1>Temporal.Time.fromString ( _isostring_ )</h1>
       <p>
         The `fromString` method takes one argument _isostring_.
@@ -76,7 +76,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause>
+    <emu-clause id="sec-temporal.time.from">
       <h1>Temporal.Time.from ( _arg_ )</h1>
       <p>
         The `from` method takes one argument _arg_.
@@ -87,7 +87,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause>
+    <emu-clause id="sec-temporal.time.compare">
       <h1>Temporal.Time.compare ( _one_, _two_ )</h1>
       <p>
         The `compare` method takes two arguments, _one_ and _two_.
@@ -127,7 +127,7 @@
       </p>
     </emu-clause>
 
-    <emu-clause>
+    <emu-clause id="sec-get-temporal.time.prototype.hour">
       <h1>get Temporal.Time.prototype.hour</h1>
       <p>
         Temporal.Time.prototype.hour is an accessor property whose set accessor function is undefined.
@@ -140,7 +140,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause>
+    <emu-clause id="sec-get-temporal.time.prototype.minute">
       <h1>get Temporal.Time.prototype.minute</h1>
       <p>
         Temporal.Time.prototype.minute is an accessor property whose set accessor function is undefined.
@@ -153,7 +153,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause>
+    <emu-clause id="sec-get-temporal.time.prototype.second">
       <h1>get Temporal.Time.prototype.second</h1>
       <p>
         Temporal.Time.prototype.second is an accessor property whose set accessor function is undefined.
@@ -166,7 +166,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause>
+    <emu-clause id="sec-get-temporal.time.prototype.millisecond">
       <h1>get Temporal.Time.prototype.millisecond</h1>
       <p>
         Temporal.Time.prototype.millisecond is an accessor property whose set accessor function is undefined.
@@ -179,7 +179,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause>
+    <emu-clause id="sec-get-temporal.time.prototype.microsecond">
       <h1>get Temporal.Time.prototype.microsecond</h1>
       <p>
         Temporal.Time.prototype.microsecond is an accessor property whose set accessor function is undefined.
@@ -192,7 +192,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause>
+    <emu-clause id="sec-get-temporal.time.prototype.nanosecond">
       <h1>get Temporal.Time.prototype.nanosecond</h1>
       <p>
         Temporal.Time.prototype.nanosecond is an accessor property whose set accessor function is undefined.
@@ -205,7 +205,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause>
+    <emu-clause id="sec-temporal.time.prototype.plus">
       <h1>Temporal.Time.prototype.plus ( _duration_ )</h1>
       <p>
         The `plus` method takes one argument _duration_.
@@ -221,7 +221,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause>
+    <emu-clause id="sec-temporal.time.prototype.minus">
       <h1>Temporal.Time.prototype.minus ( _duration_ )</h1>
       <p>
         The `minus` method takes one argument _duration_.
@@ -242,7 +242,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause>
+    <emu-clause id="sec-temporal.time.prototype.with">
       <h1>Temporal.Time.prototype.with ( _timelike_ [ , _disambiguation_ ] )</h1>
       <p>
         The `with` method takes two arguments, _timelike_ and _disambiguation_.
@@ -285,7 +285,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause>
+    <emu-clause id="sec-temporal.time.prototype.difference">
       <h1>Temporal.Time.prototype.difference ( _otherTime_ )</h1>
       <p>
         The `difference` method takes one argument _otherTime_.
@@ -312,7 +312,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause>
+    <emu-clause id="sec-temporal.time.prototype.withdate">
       <h1>Temporal.Time.prototype.withDate ( _date_ [ , _disambiguation_ ] )</h1>
       <p>
         The `withDate` method takes two arguments, _date_ and _disambiguation_.
@@ -333,7 +333,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause>
+    <emu-clause id="sec-temporal.time.prototype.tostring">
       <h1>Temporal.Time.prototype.toString ( )</h1>
       <p>
         The following steps are taken:
@@ -345,7 +345,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause>
+    <emu-clause id="sec-temporal.time.prototype.tolocalestring">
       <h1>Temporal.Time.prototype.toLocaleString ( [ _locales_ [ , _options_ ] ] )</h1>
       <p>
         The following steps are taken:
@@ -360,7 +360,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause>
+    <emu-clause id="sec-temporal.time.prototype.tojson">
       <h1>Temporal.Time.prototype.toJSON ( )</h1>
       <p>
         The following steps are taken:
