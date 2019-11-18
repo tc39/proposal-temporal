@@ -125,15 +125,18 @@ export class TimeZone {
     if (!ES.IsTimeZone(this)) throw new TypeError('invalid receiver');
     return this.name;
   }
-  static fromString(isoString) {
-    isoString = ES.ToString(isoString);
-    const match = STRING.exec(isoString);
-    if (!match) throw new RangeError(`invalid timezone: ${isoString}`);
-    const zone = match[1] ? 'UTC' : match[3] || match[2];
-    return new TimeZone(zone);
-  }
-  static from(...args) {
-    return ES.CastTimeZone(...args);
+  static from(arg) {
+    if (typeof arg === 'object') {
+      return ES.CastTimeZone(arg);
+    } else if (typeof arg === 'string') {
+      const isoString = ES.ToString(arg);
+      const match = STRING.exec(isoString);
+      if (!match) throw new RangeError(`invalid timezone: ${isoString}`);
+      const zone = match[1] ? 'UTC' : match[3] || match[2];
+      return new TimeZone(zone);
+    } else {
+      throw new TypeError(`invalid timezone: ${arg}`);
+    }
   }
 }
 
