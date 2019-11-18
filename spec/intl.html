@@ -76,10 +76,10 @@
         1. Let _requestedLocales_ be ? CanonicalizeLocaleList(_locales_).
         1. <del>Let _options_ be ? ToDateTimeOptions(_options_, `"any"`, `"date"`).</del>
         1. Let _opt_ be a new Record.
-        1. Let _matcher_ be ? GetOption(_options_, `"localeMatcher"`, `"string"`, &laquo; `"lookup"`, `"best fit"` &raquo;, `"best fit"`).
+        1. Let _matcher_ be ? GetOption(_options_, `"localeMatcher"`, `"string"`, « `"lookup"`, `"best fit"` », `"best fit"`).
         1. Set _opt_.[[localeMatcher]] to _matcher_.
         1. Let _hour12_ be ? GetOption(_options_, `"hour12"`, `"boolean"`, *undefined*, *undefined*).
-        1. Let _hourCycle_ be ? GetOption(_options_, `"hourCycle"`, `"string"`, &laquo; `"h11"`, `"h12"`, `"h23"`, `"h24"` &raquo;, *undefined*).
+        1. Let _hourCycle_ be ? GetOption(_options_, `"hourCycle"`, `"string"`, « `"h11"`, `"h12"`, `"h23"`, `"h24"` », *undefined*).
         1. If _hour12_ is not *undefined*, then
           1. Let _hourCycle_ be *null*.
         1. Set _opt_.[[hc]] to _hourCycle_.
@@ -120,11 +120,11 @@
         1. Let _opt_ be a new Record.
         1. For each row of <emu-xref href="#table-datetimeformat-components"></emu-xref>, except the header row, in table order, do
           1. Let _prop_ be the name given in the Property column of the row.
-          1. Let _value_ be ? GetOption(_options_, _prop_, `"string"`, &laquo; the strings given in the Values column of the row &raquo;, *undefined*).
+          1. Let _value_ be ? GetOption(_options_, _prop_, `"string"`, « the strings given in the Values column of the row », *undefined*).
           1. Set _opt_.[[&lt;_prop_&gt;]] to _value_.
         1. <del>Let _dataLocaleData_ be _localeData_.[[&lt;_dataLocale_&gt;]].</del>
         1. Let _formats_ be _dataLocaleData_.[[formats]].
-        1. Let _matcher_ be ? GetOption(_options_, `"formatMatcher"`, `"string"`, &laquo; `"basic"`, `"best fit"` &raquo;, `"best fit"`).
+        1. Let _matcher_ be ? GetOption(_options_, `"formatMatcher"`, `"string"`, « `"basic"`, `"best fit"` », `"best fit"`).
         1. <del>If _matcher_ is `"basic"`, then</del>
           1. <del>Let _bestFormat_ be BasicFormatMatcher(_opt_, _formats_).</del>
         1. <del>Else,</del>
@@ -162,11 +162,11 @@
         1. <ins>Let _expandedOptions_ be a copy of _opt_.</ins>
         1. <ins>Let _needDefaults_ be *true*.</ins>
         1. <ins>For each _field_ of « `"weekday"`, `"year"`, `"month"`, `"day"`, `"hour"`, `"minute"`, `"second"` », do</ins>
-          1. <ins>If _expandedOptions_.[[&lt;_field_>]] is not *undefined*, then</ins>
+          1. <ins>If _expandedOptions_.[[&lt;_field_&gt;]] is not *undefined*, then</ins>
             1. <ins>Set _needDefaults_ to *false*.</ins>
         1. <ins>If _needDefaults_ is *true*, then</ins>
           1. <ins>For each _field_ of « `"year"`, `"month"`, `"day"`, `"hour"`, `"minute"`, `"second"` », do</ins>
-            1. <ins>Set _expandedOptions_.[[&lt;_field_>]] to `"numeric"`.</ins>
+            1. <ins>Set _expandedOptions_.[[&lt;_field_&gt;]] to `"numeric"`.</ins>
         1. Set _dateTimeFormat_.[[Pattern]] to <del>_pattern_</del><ins>GetDateTimeFormatPattern(_expandedOptions_, _formats_, _hc_)</ins>.
         1. <ins>For each row in <emu-xref href="#table-temporal-patterns"></emu-xref>, except the header row, in table order, do</ins>
           1. <ins>Let _limitedOptions_ be a new Record.</ins>
@@ -175,11 +175,11 @@
           1. <ins>For each field _field_ of _opt_, do</ins>
             1. <ins>If _field_ is in _fields_, then</ins>
               1. <ins>Set _needDefaults_ to *false*.</ins>
-              1. <ins>Set _limitedOptions_.[[&lt;_field_>]] to _opt_.[[&lt;_field_>]].</ins>
+              1. <ins>Set _limitedOptions_.[[&lt;_field_&gt;]] to _opt_.[[&lt;_field_&gt;]].</ins>
           1. <ins>If _needDefaults_ is *true*, then</ins>
           1. <ins>Let _defaultFields_ be the list of fields in the Supported fields column of the row.</ins>
             1. <ins>For each _field_ of _defaultFields_, do</ins>
-              1. <ins>Set _limitedOptions_.[[&lt;_field_>]] to <mark>something</mark>.</ins>
+              1. <ins>Set _limitedOptions_.[[&lt;_field_&gt;]] to <mark>something</mark>.</ins>
           1. <ins>Let _bestFormat_ be GetDateTimeFormatPattern(_limitedOptions_, _formats_, _hc_).</ins>
           1. <ins>If _bestFormat_ does not have any fields that are in _fields_, then</ins>
             1. <ins>Set _bestFormat_ to *null*.</ins>
@@ -296,11 +296,11 @@
         1. Let _locale_ be _dateTimeFormat_.[[Locale]].
         1. Let _nfOptions_ be ObjectCreate(*null*).
         1. Perform ! CreateDataPropertyOrThrow(_nfOptions_, `"useGrouping"`, *false*).
-        1. Let _nf_ be ? Construct(%NumberFormat%, &laquo; _locale_, _nfOptions_ &raquo;).
+        1. Let _nf_ be ? Construct(%NumberFormat%, « _locale_, _nfOptions_ »).
         1. Let _nf2Options_ be ObjectCreate(*null*).
         1. Perform ! CreateDataPropertyOrThrow(_nf2Options_, `"minimumIntegerDigits"`, 2).
         1. Perform ! CreateDataPropertyOrThrow(_nf2Options_, `"useGrouping"`, *false*).
-        1. Let _nf2_ be ? Construct(%NumberFormat%, &laquo; _locale_, _nf2Options_ &raquo;).
+        1. Let _nf2_ be ? Construct(%NumberFormat%, « _locale_, _nf2Options_ »).
         1. <del>Let _tm_ be ToLocalTime(_x_, _dateTimeFormat_.[[Calendar]], _dateTimeFormat_.[[TimeZone]]).</del>
         1. Let _result_ be a new empty List.
         1. Let _patternParts_ be PartitionPattern(<del>_dateTimeFormat_.[[Pattern]]</del><ins>_pattern_</ins>).
@@ -309,7 +309,7 @@
           1. If _p_ is `"literal"`, then
             1. Add new part record { [[Type]]: `"literal"`, [[Value]]: _patternPart_.[[Value]] } as a new element of the list _result_.
           1. If _p_ matches a Property column of the row in <emu-xref href="#table-datetimeformat-components"></emu-xref>, then
-            1. Let _f_ be <del>the value of _dateTimeFormat_'s internal slot whose name is the Internal Slot column of the matching row</del><ins>_pattern_.[[&lt;_p_>]]</ins>.
+            1. Let _f_ be <del>the value of _dateTimeFormat_'s internal slot whose name is the Internal Slot column of the matching row</del><ins>_pattern_.[[&lt;_p_&gt;]]</ins>.
             1. Let _v_ be the value of _tm_'s field whose name is the Internal Slot column of the matching row.
             1. If _p_ is `"year"` and _v_ ≤ 0, let _v_ be 1 - _v_.
             1. If _p_ is `"month"`, increase _v_ by 1.
