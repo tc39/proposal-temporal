@@ -117,8 +117,7 @@
       </p>
       <emu-alg>
         1. Let _yearMonth_ be the *this* value.
-        1. If Type(_yearMonth_) is not Object or _yearMonth_ does not have an [[InitializedTemporalYearMonth]] internal slot, then
-          1. Throw a *TypeError* exception.
+        1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
         1. Return _yearMonth_.[[Year]].
       </emu-alg>
     </emu-clause>
@@ -131,8 +130,7 @@
       </p>
       <emu-alg>
         1. Let _yearMonth_ be the *this* value.
-        1. If Type(_yearMonth_) is not Object or _yearMonth_ does not have an [[InitializedTemporalYearMonth]] internal slot, then
-          1. Throw a *TypeError* exception.
+        1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
         1. Return _yearMonth_.[[Month]].
       </emu-alg>
     </emu-clause>
@@ -145,8 +143,7 @@
       </p>
       <emu-alg>
         1. Let _yearMonth_ be the *this* value.
-        1. If Type(_yearMonth_) is not Object or _yearMonth_ does not have an [[InitializedTemporalYearMonth]] internal slot, then
-          1. Throw a *TypeError* exception.
+        1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
         1. Return ! DaysInMonth(_yearMonth_.[[Year]], _yearMonth_.[[Month]]).
       </emu-alg>
     </emu-clause>
@@ -159,8 +156,7 @@
       </p>
       <emu-alg>
         1. Let _yearMonth_ be the *this* value.
-        1. If Type(_yearMonth_) is not Object or _yearMonth_ does not have an [[InitializedTemporalYearMonth]] internal slot, then
-          1. Throw a *TypeError* exception.
+        1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
         1. Return ! IsLeapYear(_yearMonth_.[[Year]]).
       </emu-alg>
     </emu-clause>
@@ -173,8 +169,7 @@
       </p>
       <emu-alg>
         1. Let _yearMonth_ be the *this* value.
-        1. If Type(_yearMonth_) is not Object or _yearMonth_ does not have an [[InitializedTemporalYearMonth]] internal slot, then
-          1. Throw a *TypeError* exception.
+        1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
         1. Let _otherYearMonth_ be ? ToPartialYearMonth(_otherYearMonth_).
         1. If _disambiguation_ is not *undefined*, then
           1. Set _disambiguation_ to ? ToString(_disambiguation_).
@@ -201,8 +196,7 @@
       </p>
       <emu-alg>
         1. Let _yearMonth_ be the *this* value.
-        1. If Type(_yearMonth_) is not Object or _yearMonth_ does not have an [[InitializedTemporalYearMonth]] internal slot, then
-          1. Throw a *TypeError* exception.
+        1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
         1. Let _duration_ be ? ToDurationLike(_duration_).
         1. <mark>TODO: Throw if any day/time properties are present?</mark>
         1. If _disambiguation_ is not *undefined*, then
@@ -224,8 +218,7 @@
       </p>
       <emu-alg>
         1. Let _yearMonth_ be the *this* value.
-        1. If Type(_yearMonth_) is not Object or _yearMonth_ does not have an [[InitializedTemporalYearMonth]] internal slot, then
-          1. Throw a *TypeError* exception.
+        1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
         1. Let _duration_ be ? ToDurationLike(_duration_).
         1. <mark>TODO: Throw if any day/time properties are present?</mark>
         1. If _disambiguation_ is not *undefined*, then
@@ -247,8 +240,7 @@
       </p>
       <emu-alg>
         1. Let _yearMonth_ be the *this* value.
-        1. If Type(_yearMonth_) is not Object or _yearMonth_ does not have an [[InitializedTemporalYearMonth]] internal slot, then
-          1. Throw a *TypeError* exception.
+        1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
         1. Let _otherYearMonth_ be ? ToYearMonth(_otherYearMonth_).
         1. If ! YearMonthCompare(_yearMonth_, _otherYearMonth_) &lt; 0, then
           1. Let _greater_ be _otherYearMonth_.
@@ -273,8 +265,7 @@
       </p>
       <emu-alg>
         1. Let _yearMonth_ be the *this* value.
-        1. If Type(_yearMonth_) is not Object or _yearMonth_ does not have an [[InitializedTemporalYearMonth]] internal slot, then
-          1. Throw a *TypeError* exception.
+        1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
         1. Return ! YearMonthToString(_yearMonth_).
       </emu-alg>
     </emu-clause>
@@ -286,8 +277,7 @@
       </p>
       <emu-alg>
         1. Let _yearMonth_ be the *this* value.
-        1. If Type(_yearMonth_) is not Object or _yearMonth_ does not have an [[InitializedTemporalYearMonth]] internal slot, then
-          1. Throw a *TypeError* exception.
+        1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
         1. If the implementation does not include the ECMA-402 Internationalization API, then
           1. Return ! YearMonthToString(_yearMonth_).
         1. Let _dateFormat_ be ? Construct(%DateTimeFormat%, « _locales_, _options_ »).
@@ -302,8 +292,7 @@
       </p>
       <emu-alg>
         1. Let _yearMonth_ be the *this* value.
-        1. If Type(_yearMonth_) is not Object or _yearMonth_ does not have an [[InitializedTemporalYearMonth]] internal slot, then
-          1. Throw a *TypeError* exception.
+        1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
         1. Return ! YearMonthToString(_yearMonth_).
       </emu-alg>
     </emu-clause>
@@ -316,8 +305,7 @@
       </p>
       <emu-alg>
         1. Let _yearMonth_ be the *this* value.
-        1. If Type(_yearMonth_) is not Object or _yearMonth_ does not have an [[InitializedTemporalYearMonth]] internal slot, then
-          1. Throw a *TypeError* exception.
+        1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
         1. Let _d_ be ? ToInteger(_day_).
         1. If _disambiguation_ is not *undefined*, then
           1. Set _disambiguation_ to ? ToString(_disambiguation_).

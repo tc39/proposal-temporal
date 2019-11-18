@@ -118,8 +118,7 @@
       </p>
       <emu-alg>
         1. Let _monthDay_ be the *this* value.
-        1. If Type(_monthDay_) is not Object or _monthDay_ does not have an [[InitializedTemporalMonthDay]] internal slot, then
-          1. Throw a *TypeError* exception.
+        1. Perform ? RequireInternalSlot(_monthDay_, [[InitializedTemporalMonthDay]]).
         1. Return _monthDay_.[[Month]].
       </emu-alg>
     </emu-clause>
@@ -132,8 +131,7 @@
       </p>
       <emu-alg>
         1. Let _monthDay_ be the *this* value.
-        1. If Type(_monthDay_) is not Object or _monthDay_ does not have an [[InitializedTemporalMonthDay]] internal slot, then
-          1. Throw a *TypeError* exception.
+        1. Perform ? RequireInternalSlot(_monthDay_, [[InitializedTemporalMonthDay]]).
         1. Return _monthDay_.[[Day]].
       </emu-alg>
     </emu-clause>
@@ -146,8 +144,7 @@
       </p>
       <emu-alg>
         1. Let _monthDay_ be the *this* value.
-        1. If Type(_monthDay_) is not Object or _monthDay_ does not have an [[InitializedTemporalMonthDay]] internal slot, then
-          1. Throw a *TypeError* exception.
+        1. Perform ? RequireInternalSlot(_monthDay_, [[InitializedTemporalMonthDay]]).
         1. Let _otherMonthDay_ be ? ToPartialMonthDay(_otherMonthDay_).
         1. If _disambiguation_ is not *undefined*, then
           1. Set _disambiguation_ to ? ToString(_disambiguation_).
@@ -174,8 +171,7 @@
       </p>
       <emu-alg>
         1. Let _monthDay_ be the *this* value.
-        1. If Type(_monthDay_) is not Object or _monthDay_ does not have an [[InitializedTemporalMonthDay]] internal slot, then
-          1. Throw a *TypeError* exception.
+        1. Perform ? RequireInternalSlot(_monthDay_, [[InitializedTemporalMonthDay]]).
         1. Let _duration_ be ? ToDurationLike(_duration_).
         1. <mark>TODO: Throw if any year/time properties are present?</mark>
         1. If _disambiguation_ is not *undefined*, then
@@ -197,8 +193,7 @@
       </p>
       <emu-alg>
         1. Let _monthDay_ be the *this* value.
-        1. If Type(_monthDay_) is not Object or _monthDay_ does not have an [[InitializedTemporalMonthDay]] internal slot, then
-          1. Throw a *TypeError* exception.
+        1. Perform ? RequireInternalSlot(_monthDay_, [[InitializedTemporalMonthDay]]).
         1. Let _duration_ be ? ToDurationLike(_duration_).
         1. <mark>TODO: Throw if any year/time properties are present?</mark>
         1. If _disambiguation_ is not *undefined*, then
@@ -220,8 +215,7 @@
       </p>
       <emu-alg>
         1. Let _monthDay_ be the *this* value.
-        1. If Type(_monthDay_) is not Object or _monthDay_ does not have an [[InitializedTemporalMonthDay]] internal slot, then
-          1. Throw a *TypeError* exception.
+        1. Perform ? RequireInternalSlot(_monthDay_, [[InitializedTemporalMonthDay]]).
         1. Let _otherMonthDay_ be ? ToMonthDay(_otherMonthDay_).
         1. If ! MonthDayCompare(_monthDay_, _otherMonthDay_) &lt; 0, then
           1. Let _greater_ be _otherMonthDay_.
@@ -246,8 +240,7 @@
       </p>
       <emu-alg>
         1. Let _monthDay_ be the *this* value.
-        1. If Type(_monthDay_) is not Object or _monthDay_ does not have an [[InitializedTemporalMonthDay]] internal slot, then
-          1. Throw a *TypeError* exception.
+        1. Perform ? RequireInternalSlot(_monthDay_, [[InitializedTemporalMonthDay]]).
         1. Return ! MonthDayToString(_monthDay_).
       </emu-alg>
     </emu-clause>
@@ -259,8 +252,7 @@
       </p>
       <emu-alg>
         1. Let _monthDay_ be the *this* value.
-        1. If Type(_monthDay_) is not Object or _monthDay_ does not have an [[InitializedTemporalMonthDay]] internal slot, then
-          1. Throw a *TypeError* exception.
+        1. Perform ? RequireInternalSlot(_monthDay_, [[InitializedTemporalMonthDay]]).
         1. If the implementation does not include the ECMA-402 Internationalization API, then
           1. Return ! MonthDayToString(_monthDay_).
         1. Let _dateFormat_ be ? Construct(%DateTimeFormat%, « _locales_, _options_ »).
@@ -275,8 +267,7 @@
       </p>
       <emu-alg>
         1. Let _monthDay_ be the *this* value.
-        1. If Type(_monthDay_) is not Object or _monthDay_ does not have an [[InitializedTemporalMonthDay]] internal slot, then
-          1. Throw a *TypeError* exception.
+        1. Perform ? RequireInternalSlot(_monthDay_, [[InitializedTemporalMonthDay]]).
         1. Return ! MonthDayToString(_monthDay_).
       </emu-alg>
     </emu-clause>
@@ -289,8 +280,7 @@
       </p>
       <emu-alg>
         1. Let _monthDay_ be the *this* value.
-        1. If Type(_monthDay_) is not Object or _monthDay_ does not have an [[InitializedTemporalMonthDay]] internal slot, then
-          1. Throw a *TypeError* exception.
+        1. Perform ? RequireInternalSlot(_monthDay_, [[InitializedTemporalMonthDay]]).
         1. Let _y_ be ? ToInteger(_year_).
         1. If _disambiguation_ is not *undefined*, then
           1. Set _disambiguation_ to ? ToString(_disambiguation_).
