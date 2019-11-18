@@ -376,7 +376,7 @@
   <emu-clause id="sec-temporal-date-abstract-ops">
     <h1>Abstract operations</h1>
 
-    <emu-clause id="sec-temporal-ToPartialTime" aoid="ToPartialTime">
+    <emu-clause id="sec-temporal-topartialtime" aoid="ToPartialTime">
       <h1>ToPartialTime ( _time_ )</h1>
       <emu-alg>
         1. If Type(_time_) is String, then
@@ -448,7 +448,7 @@
       </emu-table>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-RegulateTime" aoid="RegulateTime">
+    <emu-clause id="sec-temporal-regulatetime" aoid="RegulateTime">
       <h1>RegulateTime ( _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _disambiguation_ )</h1>
       <emu-alg>
         1. Assert: _disambiguation_ is one of `"constrain"`, `"balance"`, or `"reject"`.
@@ -471,7 +471,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-ValidateTime" aoid="ValidateTime">
+    <emu-clause id="sec-temporal-validatetime" aoid="ValidateTime">
       <h1>ValidateTime ( _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_ )</h1>
       <emu-alg>
         1. Assert: _hour_, _minute_, _second_, _millisecond_, _microsecond_, and _nanosecond_ are integer Number values.
@@ -491,7 +491,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-BalanceTime" aoid="BalanceTime">
+    <emu-clause id="sec-temporal-balancetime" aoid="BalanceTime">
       <h1>BalanceTime ( _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_ )</h1>
       <emu-alg>
         1. Assert: _hour_, _minute_, _second_, _millisecond_, _microsecond_, and _nanosecond_ are integer Number values.
@@ -535,7 +535,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-ParseTimeString" aoid="ParseTimeString">
+    <emu-clause id="sec-temporal-parsetimestring" aoid="ParseTimeString">
       <h1>ParseTimeString ( _time_ )</h1>
       <emu-alg>
         1. Assert: Type(_time_) is String.
@@ -555,7 +555,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-TimeFromString" aoid="TimeFromString">
+    <emu-clause id="sec-temporal-timefromstring" aoid="TimeFromString">
       <h1>TimeFromString ( _time_ )</h1>
       <emu-alg>
         1. Assert: Type(_time_) is String.
@@ -566,7 +566,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-ToTime" aoid="ToTime">
+    <emu-clause id="sec-temporal-totime" aoid="ToTime">
       <h1>ToTime ( _time_ )</h1>
       <emu-alg>
         1. If Type(_time_) is String, then
@@ -596,7 +596,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-TimeToString" aoid="TimeToString">
+    <emu-clause id="sec-temporal-timetostring" aoid="TimeToString">
       <h1>TimeToString ( _time_ )</h1>
       <emu-alg>
         1. Assert: Type(_time_) is Object.
@@ -608,7 +608,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-TimeCompare" aoid="TimeCompare">
+    <emu-clause id="sec-temporal-timecompare" aoid="TimeCompare">
       <h1>TimeCompare ( _one_, _two_ )</h1>
       <emu-alg>
         1. Assert: Type(_one_) is Object.
@@ -631,7 +631,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-AddTime" aoid="AddTime">
+    <emu-clause id="sec-temporal-addtime" aoid="AddTime">
       <h1>AddTime ( _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_ )</h1>
       <emu-alg>
         1. Assert: _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, and _nanoseconds_ are integer Number values.

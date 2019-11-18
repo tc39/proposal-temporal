@@ -549,7 +549,7 @@
   <emu-clause id="sec-temporal-datetime-abstract-ops">
     <h1>Abstract operations</h1>
 
-    <emu-clause id="sec-temporal-ToPartialDateTime" aoid="ToPartialDateTime">
+    <emu-clause id="sec-temporal-topartialdatetime" aoid="ToPartialDateTime">
       <h1>ToPartialDateTime ( _dateTime_ )</h1>
       <emu-alg>
         1. If Type(_dateTime_) is String, then
@@ -639,7 +639,7 @@
       </emu-table>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-RegulateDateTime" aoid="RegulateDateTime">
+    <emu-clause id="sec-temporal-regulatedatetime" aoid="RegulateDateTime">
       <h1>RegulateDateTime ( _year_, _month_, _date_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _disambiguation_ )</h1>
       <emu-alg>
         1. Assert: _disambiguation_ is one of `"constrain"`, `"balance"`, or `"reject"`.
@@ -652,7 +652,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-ValidateDateTime" aoid="ValidateDateTime">
+    <emu-clause id="sec-temporal-validatedatetime" aoid="ValidateDateTime">
       <h1>ValidateDateTime ( _year_, _month_, _date_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_ )</h1>
       <emu-alg>
         1. Assert: _year_, _month_, _date_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, and _nanosecond_ are integer Number values.
@@ -683,7 +683,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-ParseDateTimeString" aoid="ParseDateTimeString">
+    <emu-clause id="sec-temporal-parsedatetimestring" aoid="ParseDateTimeString">
       <h1>ParseDateTimeString ( _dateTime_ )</h1>
       <emu-alg>
         1. Assert: Type(_dateTime_) is String.
@@ -706,7 +706,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-DateTimeFromString" aoid="DateTimeFromString">
+    <emu-clause id="sec-temporal-datetimefromstring" aoid="DateTimeFromString">
       <h1>DateTimeFromString ( _dateTime_ )</h1>
       <emu-alg>
         1. Assert: Type(_dateTime_) is String.
@@ -717,7 +717,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-ToDateTime" aoid="ToDateTime">
+    <emu-clause id="sec-temporal-todatetime" aoid="ToDateTime">
       <h1>ToDateTime ( _dateTime_ )</h1>
       <emu-alg>
         1. If Type(_dateTime_) is String, then
@@ -750,7 +750,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-DateTimeToString" aoid="DateTimeToString">
+    <emu-clause id="sec-temporal-datetimetostring" aoid="DateTimeToString">
       <h1>DateTimeToString ( _dateTime_ )</h1>
       <emu-alg>
         1. Assert: Type(_dateTime_) is Object.
@@ -765,7 +765,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-DateTimeCompare" aoid="DateTimeCompare">
+    <emu-clause id="sec-temporal-datetimecompare" aoid="DateTimeCompare">
       <h1>DateTimeCompare ( _one_, _two_ )</h1>
       <emu-alg>
         1. Assert: Type(_one_) is Object.
