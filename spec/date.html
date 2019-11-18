@@ -1,12 +1,12 @@
 <!doctype html>
 <meta charset="utf8">
 
-<emu-clause id=sec-temporal-date>
+<emu-clause id="sec-temporal-date">
   <h1>Temporal.Date Objects</h1>
   <p>A Temporal.Date object is an immutable Object that contains Number values corresponding to a particular year, month,
     and day.</p>
 
-  <emu-clause id=sec-temporal-date-constructor>
+  <emu-clause id="sec-temporal-date-constructor">
     <h1>The Temporal.Date Constructor</h1>
     <p>The Temporal.Date constructor is the %Temporal.Date% intrinsic object. When called as a constructor, it creates and
       initializes a new Temporal.Date object.</p>
@@ -15,7 +15,7 @@
       It may be used as the value of an extends clause of a class definition.
       Subclass constructors that intend to inherit the specified Date behaviour must include a super call to the %Temporal.Date% constructor to create and initialize subclass instances with the necessary internal slots.</p>
 
-    <emu-clause id=sec-temporal-date-constructor-alg>
+    <emu-clause id="sec-temporal-date-constructor-alg">
       <h1>Temporal.Date ( _year_, _month_, _day_, _disambiguation_ )</h1>
       <p>When the Temporal.Date function is called, the following steps are taken:</p>
       <emu-alg>
@@ -31,13 +31,13 @@
     </emu-clause>
   </emu-clause>
 
-  <emu-clause id=sec-properties-of-the-temporal-date-constructor>
+  <emu-clause id="sec-properties-of-the-temporal-date-constructor">
     <h1>Properties of the Temporal.Date Constructor</h1>
     <p>The value of the [[Prototype]] internal slot of the Temporal.Date constructor is the intrinsic object
       %FunctionPrototype%.</p>
     <p>The Temporal.Date constructor has the following properties:</p>
 
-    <emu-clause id=sec-temporal-date-prototype>
+    <emu-clause id="sec-temporal-date-prototype">
       <h1>Temporal.Date.prototype</h1>
       <p>The initial value of Temporal.Date.prototype is %Temporal.Date.prototype%.</p>
       <p>This property has the attributes { [[Writable]]: *false*, [[Enumerable]]: *false*, [[Configurable]]: *false* }.</p>
@@ -86,7 +86,7 @@
     </emu-clause>
   </emu-clause>
 
-  <emu-clause id=sec-properties-of-the-temporal-date-prototype-object>
+  <emu-clause id="sec-properties-of-the-temporal-date-prototype-object">
     <h1>Properties of the Temporal.Date Prototype Object</h1>
 
     <p>The Temporal.Date prototype object</p>
@@ -97,7 +97,7 @@
       <li>has a [[Prototype]] internal slot whose value is %Object.prototype%.
     </ul>
 
-    <emu-clause id=sec-temporal.date.prototype.constructor>
+    <emu-clause id="sec-temporal.date.prototype.constructor">
       <h1>Temporal.Date.prototype.constructor</h1>
       <p>The initial value of Temporal.Date.prototype.constructor is %Temporal.Date%.</p>
     </emu-clause>
@@ -409,7 +409,7 @@
     </emu-clause>
   </emu-clause>
 
-  <emu-clause id=sec-properties-of-temporal-date-instances>
+  <emu-clause id="sec-properties-of-temporal-date-instances">
     <h1>Properties of Temporal.Date Instances</h1>
     <p>Temporal.Date instances are ordinary objects that inherit properties from the %Temporal.Date.prototype%.</p>
     <p>Temporal.Date instances have the following internal slots:
@@ -421,10 +421,10 @@
     <p>The value of each of these internal slots is a Number which is an integer.</p>
   </emu-clause>
 
-  <emu-clause id=sec-temporal-date-abstract-ops>
+  <emu-clause id="sec-temporal-date-abstract-ops">
     <h1>Abstract operations</h1>
 
-    <emu-clause id=sec-temporal-date-create aoid=CreateDate>
+    <emu-clause id="sec-temporal-date-create" aoid="CreateDate">
       <h1>CreateDate ( _y_, _m_, _d_ [ , _newTarget_ ] )</h1>
       <emu-alg>
         1. Assert: ! ValidateDate(_y_, _m_, _d_) is *true*.
@@ -437,7 +437,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id=sec-temporal-DateFromString aoid=DateFromString>
+    <emu-clause id="sec-temporal-DateFromString" aoid="DateFromString">
       <h1>DateFromString ( _date_ )</h1>
       <emu-alg>
         1. Assert: Type(_date_) is String.
@@ -455,7 +455,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id=sec-temporal-ToDate aoid=ToDate>
+    <emu-clause id="sec-temporal-ToDate" aoid="ToDate">
       <h1>ToDate ( _date_ )</h1>
       <emu-alg>
         1. If Type(_date_) is String, then
@@ -482,7 +482,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id=sec-temporal-ToPartialDate aoid=ToPartialDate>
+    <emu-clause id="sec-temporal-ToPartialDate" aoid="ToPartialDate">
       <h1>ToPartialDate ( _date_ )</h1>
       <emu-alg>
         1. Let _result_ be {
@@ -529,7 +529,7 @@
       </emu-table>
     </emu-clause>
 
-    <emu-clause id=sec-temporal-RegulateDate aoid=RegulateDate>
+    <emu-clause id="sec-temporal-RegulateDate" aoid="RegulateDate">
       <h1>RegulateDate ( _y_, _m_, _d_, _disambiguation_ )</h1>
       <emu-alg>
         1. If _disambiguation_ is *"reject"*, then
@@ -549,7 +549,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id=sec-temporal-ValidateDate aoid=ValidateDate>
+    <emu-clause id="sec-temporal-ValidateDate" aoid="ValidateDate">
       <h1>ValidateDate ( _y_, _m_, _d_ )</h1>
       <emu-alg>
         1. Assert: _y_, _m_, and _d_ are integer Number values.
@@ -562,7 +562,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id=sec-temporal-PadYear aoid=PadYear>
+    <emu-clause id="sec-temporal-PadYear" aoid="PadYear">
       <h1>PadYear ( _y_ )</h1>
       <emu-alg>
         1. Assert: _y_ is an integer Number value.
@@ -574,7 +574,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id=sec-temporal-AddDate aoid=AddDate>
+    <emu-clause id="sec-temporal-AddDate" aoid="AddDate">
       <h1>AddDate ( _year_, _month_, _day_, _years_, _months_, _days_, _disambiguation_ )</h1>
       <emu-alg>
         1. Assert: _year_, _month_, _day_, _years_, _months_, and _days_ are integer Number values.

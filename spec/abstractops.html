@@ -1,10 +1,10 @@
 <!doctype html>
 <meta charset="utf8">
 
-<emu-clause id=sec-temporal-abstract-ops>
+<emu-clause id="sec-temporal-abstract-ops">
   <h1>Abstract operations</h1>
 
-  <emu-clause id=sec-temporal-IsLeapYear aoid=IsLeapYear>
+  <emu-clause id="sec-temporal-IsLeapYear" aoid="IsLeapYear">
     <h1>IsLeapYear ( _year_ )</h1>
     <emu-alg>
       1. Assert: _year_ is an integer.
@@ -15,7 +15,7 @@
     </emu-alg>
   </emu-clause>
 
-  <emu-clause id=sec-temporal-daysinmonth aoid=DaysInMonth>
+  <emu-clause id="sec-temporal-daysinmonth" aoid="DaysInMonth">
     <h1>DaysInMonth ( _year_, _month_ )</h1>
     <emu-alg>
       1. Assert: _month_ is an integer, _month_ &geq; 1, and _month_ &leq; 12.
@@ -26,7 +26,7 @@
     </emu-alg>
   </emu-clause>
 
-  <emu-clause id=sec-temporal-ToDayOfWeek aoid=ToDayOfWeek>
+  <emu-clause id="sec-temporal-ToDayOfWeek" aoid="ToDayOfWeek">
     <h1>ToDayOfWeek ( _year_, _month_, _day_ )</h1>
     <emu-alg>
       1. Let _date_ be the date given by _year_, _month_, and _day_.
@@ -35,7 +35,7 @@
     <emu-note>Monday is 1 and Sunday is 7.</emu-note>
   </emu-clause>
 
-  <emu-clause id=sec-temporal-ToDayOfYear aoid=ToDayOfYear>
+  <emu-clause id="sec-temporal-ToDayOfYear" aoid="ToDayOfYear">
     <h1>ToDayOfYear ( _year_, _month_, _day_ )</h1>
     <emu-alg>
       1. Let _date_ be the date given by _year_, _month_, and _day_.
@@ -43,7 +43,7 @@
     </emu-alg>
   </emu-clause>
 
-  <emu-clause id=sec-temporal-ToWeekOfYear aoid=ToWeekOfYear>
+  <emu-clause id="sec-temporal-ToWeekOfYear" aoid="ToWeekOfYear">
     <h1>ToWeekOfYear ( _year_, _month_, _day_ )</h1>
     <emu-alg>
       1. Let _date_ be the date given by _year_, _month_, and _day_.
@@ -52,7 +52,7 @@
     <emu-note>Beware that dates at the begining of a year may be part of a week from the preceding year, and dates at the end of a year may be part of a week at the beginning of the next year, as the first week of any year is defined as the week that contains the first Thursday of the year.</emu-note>
   </emu-clause>
 
-  <emu-clause id=sec-temporal-ToDurationLike aoid=ToDurationLike>
+  <emu-clause id="sec-temporal-ToDurationLike" aoid="ToDurationLike">
     <h1>ToDurationLike ( _duration_ )</h1>
     <emu-alg>
       1. Let _result_ be the Record {
@@ -129,7 +129,7 @@
     </emu-table>
   </emu-clause>
 
-  <emu-clause id=sec-temporal-ToTimeDurationLike aoid=ToTimeDurationLike>
+  <emu-clause id="sec-temporal-ToTimeDurationLike" aoid="ToTimeDurationLike">
     <h1>ToTimeDurationLike ( _duration_ )</h1>
     <emu-alg>
       1. Let _result_ be {
@@ -191,14 +191,14 @@
     </emu-table>
   </emu-clause>
 
-  <emu-clause id=sec-temporal-CreateDuration aoid=CreateDuration>
+  <emu-clause id="sec-temporal-CreateDuration" aoid="CreateDuration">
     <h1>CreateDuration ( _years_, _months_, _days_ )</h1>
     <p>
       <mark>TODO: Define.</mark>
     </p>
   </emu-clause>
 
-  <emu-clause id=sec-temporal-FormatSecondsStringPart aoid=FormatSecondsStringPart>
+  <emu-clause id="sec-temporal-FormatSecondsStringPart" aoid="FormatSecondsStringPart">
     <h1>FormatSecondsStringPart ( _second_, _millisecond_, _microsecond_, _nanosecond_ )</h1>
     <emu-alg>
       1. If _second_, _millisecond_, _microsecond_, and _nanosecond_ are all 0, then
@@ -220,7 +220,7 @@
     </emu-alg>
   </emu-clause>
 
-  <emu-clause id=sec-temporal-NonNegativeModulo aoid=NonNegativeModulo>
+  <emu-clause id="sec-temporal-NonNegativeModulo" aoid="NonNegativeModulo">
     <h1>NonNegativeModulo ( _x_, _y_ )</h1>
     <emu-alg>
       1. Let _result_ be _x_ modulo _y_.

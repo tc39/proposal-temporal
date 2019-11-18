@@ -1,11 +1,11 @@
 <!doctype html>
 <meta charset="utf8">
 
-<emu-clause id=sec-temporal-datetime>
+<emu-clause id="sec-temporal-datetime">
   <h1>Temporal.DateTime Objects</h1>
   <p>A Temporal.DateTime object is an immutable Object that contains Number values corresponding to a particular year, month, day, hour, minute, second, millisecond, microsecond, and nanosecond.</p>
 
-  <emu-clause id=sec-temporal-datetime-constructor>
+  <emu-clause id="sec-temporal-datetime-constructor">
     <h1>The Temporal.DateTime Constructor</h1>
     <p>
       The Temporal.DateTime constructor is the %Temporal.DateTime% intrinsic object.
@@ -17,7 +17,7 @@
       Subclass constructors that intend to inherit the specified DateTime behaviour must include a super call to the %Temporal.DateTime% constructor to create and initialize subclass instances with the necessary internal slots.
     </p>
 
-    <emu-clause id=sec-temporal-datetime-constructor-alg>
+    <emu-clause id="sec-temporal-datetime-constructor-alg">
       <h1>Temporal.DateTime ( _year_, _month_, _day_, _hour_, _minute_ [ , _second_ [ , _millisecond_ [ , _microsecond_ [ , _nanosecond_ [ , _disambiguation_ ] ] ] ] ] )</h1>
       <p>When the Temporal.DateTime function is called, the following steps are taken:</p>
       <emu-alg>
@@ -54,12 +54,12 @@
     </emu-clause>
   </emu-clause>
 
-  <emu-clause id=sec-properties-of-the-temporal-datetime-constructor>
+  <emu-clause id="sec-properties-of-the-temporal-datetime-constructor">
     <h1>Properties of the Temporal.DateTime Constructor</h1>
     <p>The value of the [[Prototype]] internal slot of the Temporal.DateTime constructor is the intrinsic object %FunctionPrototype%.</p>
     <p>The Temporal.DateTime constructor has the following properties:</p>
 
-    <emu-clause id=sec-temporal-datetime-prototype>
+    <emu-clause id="sec-temporal-datetime-prototype">
       <h1>Temporal.DateTime.prototype</h1>
       <p>The initial value of Temporal.DateTime.prototype is %Temporal.DateTime.prototype%.</p>
       <p>This property has the attributes { [[Writable]]: *false*, [[Enumerable]]: *false*, [[Configurable]]: *false* }.</p>
@@ -102,7 +102,7 @@
     </emu-clause>
   </emu-clause>
 
-  <emu-clause id=sec-properties-of-the-temporal-datetime-prototype-object>
+  <emu-clause id="sec-properties-of-the-temporal-datetime-prototype-object">
     <h1>Properties of the Temporal.DateTime Prototype Object</h1>
 
     <p>The Temporal.DateTime prototype object</p>
@@ -113,7 +113,7 @@
       <li>has a [[Prototype]] internal slot whose value is %Object.prototype%.
     </ul>
 
-    <emu-clause id=sec-temporal.datetime.prototype.constructor>
+    <emu-clause id="sec-temporal.datetime.prototype.constructor">
       <h1>Temporal.DateTime.prototype.constructor</h1>
       <p>The initial value of Temporal.DateTime.prototype.constructor is %Temporal.DateTime%.</p>
     </emu-clause>
@@ -546,10 +546,10 @@
     </emu-clause>
   </emu-clause>
 
-  <emu-clause id=sec-temporal-datetime-abstract-ops>
+  <emu-clause id="sec-temporal-datetime-abstract-ops">
     <h1>Abstract operations</h1>
 
-    <emu-clause id=sec-temporal-ToPartialDateTime aoid=ToPartialDateTime>
+    <emu-clause id="sec-temporal-ToPartialDateTime" aoid="ToPartialDateTime">
       <h1>ToPartialDateTime ( _dateTime_ )</h1>
       <emu-alg>
         1. If Type(_dateTime_) is String, then
@@ -639,7 +639,7 @@
       </emu-table>
     </emu-clause>
 
-    <emu-clause id=sec-temporal-RegulateDateTime aoid=RegulateDateTime>
+    <emu-clause id="sec-temporal-RegulateDateTime" aoid="RegulateDateTime">
       <h1>RegulateDateTime ( _year_, _month_, _date_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _disambiguation_ )</h1>
       <emu-alg>
         1. Assert: _disambiguation_ is one of `"constrain"`, `"balance"`, or `"reject"`.
@@ -652,7 +652,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id=sec-temporal-ValidateDateTime aoid=ValidateDateTime>
+    <emu-clause id="sec-temporal-ValidateDateTime" aoid="ValidateDateTime">
       <h1>ValidateDateTime ( _year_, _month_, _date_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_ )</h1>
       <emu-alg>
         1. Assert: _year_, _month_, _date_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, and _nanosecond_ are integer Number values.
@@ -664,7 +664,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id=sec-temporal-createdatetime aoid=CreateDateTime>
+    <emu-clause id="sec-temporal-createdatetime" aoid="CreateDateTime">
       <h1>CreateDateTime ( _year_, _month_, _date_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_ [, _newTarget_] )</h1>
       <emu-alg>
         1. Assert: ! ValidateDateTime(_year_, _month_, _date_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_) is *true*.
@@ -717,7 +717,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id=sec-temporal-ToDateTime aoid=ToDateTime>
+    <emu-clause id="sec-temporal-ToDateTime" aoid="ToDateTime">
       <h1>ToDateTime ( _dateTime_ )</h1>
       <emu-alg>
         1. If Type(_dateTime_) is String, then
@@ -750,7 +750,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id=sec-temporal-DateTimeToString aoid=DateTimeToString>
+    <emu-clause id="sec-temporal-DateTimeToString" aoid="DateTimeToString">
       <h1>DateTimeToString ( _dateTime_ )</h1>
       <emu-alg>
         1. Assert: Type(_dateTime_) is Object.
@@ -765,7 +765,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id=sec-temporal-DateTimeCompare aoid=DateTimeCompare>
+    <emu-clause id="sec-temporal-DateTimeCompare" aoid="DateTimeCompare">
       <h1>DateTimeCompare ( _one_, _two_ )</h1>
       <emu-alg>
         1. Assert: Type(_one_) is Object.

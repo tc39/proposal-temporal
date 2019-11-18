@@ -1,12 +1,12 @@
 <!doctype html>
 <meta charset="utf8">
 
-<emu-clause id=sec-temporal-time>
+<emu-clause id="sec-temporal-time">
   <h1>Temporal.Time Objects</h1>
   <p>A Temporal.Time object is an immutable Object that contains Number values corresponding to a particular hour, minute,
     second, millisecond, microsecond, and nanosecond.</p>
 
-  <emu-clause id=sec-temporal-time-constructor>
+  <emu-clause id="sec-temporal-time-constructor">
     <h1>The Temporal.Time Constructor</h1>
     <p>
       The Temporal.Time constructor is the %Temporal.Time% intrinsic object.
@@ -18,7 +18,7 @@
       Subclass constructors that intend to inherit the specified Time behaviour must include a super call to the %Temporal.Time% constructor to create and initialize subclass instances with the necessary internal slots.
     </p>
 
-    <emu-clause id=sec-temporal-time-constructor-alg>
+    <emu-clause id="sec-temporal-time-constructor-alg">
       <h1>Temporal.Time ( _hour_, _minute_ [ , _second_ [ , _millisecond_ [ , _microsecond_ [ , _nanosecond_ [ , _disambiguation_ ] ] ] ] ] )</h1>
       <p>When the Temporal.Time function is called, the following steps are taken:</p>
       <emu-alg>
@@ -52,13 +52,13 @@
     </emu-clause>
   </emu-clause>
 
-  <emu-clause id=sec-properties-of-the-temporal-time-constructor>
+  <emu-clause id="sec-properties-of-the-temporal-time-constructor">
     <h1>Properties of the Temporal.Time Constructor</h1>
     <p>The value of the [[Prototype]] internal slot of the Temporal.Time constructor is the intrinsic object
       %FunctionPrototype%.</p>
     <p>The Temporal.Time constructor has the following properties:</p>
 
-    <emu-clause id=sec-temporal-time-prototype>
+    <emu-clause id="sec-temporal-time-prototype">
       <h1>Temporal.Time.prototype</h1>
       <p>The initial value of Temporal.Time.prototype is %Temporal.Time.prototype%.</p>
       <p>This property has the attributes { [[Writable]]: *false*, [[Enumerable]]: *false*, [[Configurable]]: *false* }.</p>
@@ -101,7 +101,7 @@
     </emu-clause>
   </emu-clause>
 
-  <emu-clause id=sec-properties-of-the-temporal-time-prototype-object>
+  <emu-clause id="sec-properties-of-the-temporal-time-prototype-object">
     <h1>Properties of the Temporal.Time Prototype Object</h1>
 
     <p>The Temporal.Time prototype object</p>
@@ -112,7 +112,7 @@
       <li>has a [[Prototype]] internal slot whose value is %Object.prototype%.
     </ul>
 
-    <emu-clause id=sec-temporal.time.prototype.constructor>
+    <emu-clause id="sec-temporal.time.prototype.constructor">
       <h1>Temporal.Time.prototype.constructor</h1>
       <p>The initial value of Temporal.Time.prototype.constructor is %Temporal.Time%.</p>
     </emu-clause>
@@ -373,10 +373,10 @@
     </emu-clause>
   </emu-clause>
 
-  <emu-clause id=sec-temporal-date-abstract-ops>
+  <emu-clause id="sec-temporal-date-abstract-ops">
     <h1>Abstract operations</h1>
 
-    <emu-clause id=sec-temporal-ToPartialTime aoid=ToPartialTime>
+    <emu-clause id="sec-temporal-ToPartialTime" aoid="ToPartialTime">
       <h1>ToPartialTime ( _time_ )</h1>
       <emu-alg>
         1. If Type(_time_) is String, then
@@ -448,7 +448,7 @@
       </emu-table>
     </emu-clause>
 
-    <emu-clause id=sec-temporal-RegulateTime aoid=RegulateTime>
+    <emu-clause id="sec-temporal-RegulateTime" aoid="RegulateTime">
       <h1>RegulateTime ( _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _disambiguation_ )</h1>
       <emu-alg>
         1. Assert: _disambiguation_ is one of `"constrain"`, `"balance"`, or `"reject"`.
@@ -471,7 +471,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id=sec-temporal-ValidateTime aoid=ValidateTime>
+    <emu-clause id="sec-temporal-ValidateTime" aoid="ValidateTime">
       <h1>ValidateTime ( _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_ )</h1>
       <emu-alg>
         1. Assert: _hour_, _minute_, _second_, _millisecond_, _microsecond_, and _nanosecond_ are integer Number values.
@@ -491,7 +491,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id=sec-temporal-BalanceTime aoid=BalanceTime>
+    <emu-clause id="sec-temporal-BalanceTime" aoid="BalanceTime">
       <h1>BalanceTime ( _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_ )</h1>
       <emu-alg>
         1. Assert: _hour_, _minute_, _second_, _millisecond_, _microsecond_, and _nanosecond_ are integer Number values.
@@ -519,7 +519,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id=sec-temporal-createtime aoid=CreateTime>
+    <emu-clause id="sec-temporal-createtime" aoid="CreateTime">
       <h1>CreateTime ( _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_ [, _newTarget_] )</h1>
       <emu-alg>
         1. Assert: ! ValidateTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_) is *true*.
@@ -566,7 +566,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id=sec-temporal-ToTime aoid=ToTime>
+    <emu-clause id="sec-temporal-ToTime" aoid="ToTime">
       <h1>ToTime ( _time_ )</h1>
       <emu-alg>
         1. If Type(_time_) is String, then
@@ -596,7 +596,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id=sec-temporal-TimeToString aoid=TimeToString>
+    <emu-clause id="sec-temporal-TimeToString" aoid="TimeToString">
       <h1>TimeToString ( _time_ )</h1>
       <emu-alg>
         1. Assert: Type(_time_) is Object.
@@ -608,7 +608,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id=sec-temporal-TimeCompare aoid=TimeCompare>
+    <emu-clause id="sec-temporal-TimeCompare" aoid="TimeCompare">
       <h1>TimeCompare ( _one_, _two_ )</h1>
       <emu-alg>
         1. Assert: Type(_one_) is Object.
@@ -631,7 +631,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id=sec-temporal-AddTime aoid=AddTime>
+    <emu-clause id="sec-temporal-AddTime" aoid="AddTime">
       <h1>AddTime ( _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_ )</h1>
       <emu-alg>
         1. Assert: _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, and _nanoseconds_ are integer Number values.
