@@ -120,8 +120,7 @@
       </p>
       <emu-alg>
         1. Let _date_ be the *this* value.
-        1. If Type(_date_) is not Object or _date_ does not have an [[InitializedTemporalDate]] internal slot, then
-          1. Throw a *TypeError* exception.
+        1. Perform ? RequireInternalSlot(_date_, [[InitializedTemporalDate]]).
         1. Return _date_.[[Year]].
       </emu-alg>
     </emu-clause>
@@ -134,8 +133,7 @@
       </p>
       <emu-alg>
         1. Let _date_ be the *this* value.
-        1. If Type(_date_) is not Object or _date_ does not have an [[InitializedTemporalDate]] internal slot, then
-          1. Throw a *TypeError* exception.
+        1. Perform ? RequireInternalSlot(_date_, [[InitializedTemporalDate]]).
         1. Return _date_.[[Month]].
       </emu-alg>
     </emu-clause>
@@ -148,8 +146,7 @@
       </p>
       <emu-alg>
         1. Let _date_ be the *this* value.
-        1. If Type(_date_) is not Object or _date_ does not have an [[InitializedTemporalDate]] internal slot, then
-          1. Throw a *TypeError* exception.
+        1. Perform ? RequireInternalSlot(_date_, [[InitializedTemporalDate]]).
         1. Return _date_.[[Day]].
       </emu-alg>
     </emu-clause>
@@ -162,8 +159,7 @@
       </p>
       <emu-alg>
         1. Let _date_ be the *this* value.
-        1. If Type(_date_) is not Object or _date_ does not have an [[InitializedTemporalDate]] internal slot, then
-          1. Throw a *TypeError* exception.
+        1. Perform ? RequireInternalSlot(_date_, [[InitializedTemporalDate]]).
         1. Return ToDayOfWeek(_date_.[[Year]], _date_.[[Month]], _date_.[[Day]]).
       </emu-alg>
     </emu-clause>
@@ -176,8 +172,7 @@
       </p>
       <emu-alg>
         1. Let _date_ be the *this* value.
-        1. If Type(_date_) is not Object or _date_ does not have an [[InitializedTemporalDate]] internal slot, then
-          1. Throw a *TypeError* exception.
+        1. Perform ? RequireInternalSlot(_date_, [[InitializedTemporalDate]]).
         1. Return ToDayOfYear(_date_.[[Year]], _date_.[[Month]], _date_.[[Day]]).
       </emu-alg>
     </emu-clause>
@@ -190,8 +185,7 @@
       </p>
       <emu-alg>
         1. Let _date_ be the *this* value.
-        1. If Type(_date_) is not Object or _date_ does not have an [[InitializedTemporalDate]] internal slot, then
-          1. Throw a *TypeError* exception.
+        1. Perform ? RequireInternalSlot(_date_, [[InitializedTemporalDate]]).
         1. Return ToWeekOfYear(_date_.[[Year]], _date_.[[Month]], _date_.[[Day]]).
       </emu-alg>
     </emu-clause>
@@ -204,8 +198,7 @@
       </p>
       <emu-alg>
         1. Let _date_ be the *this* value.
-        1. If Type(_date_) is not Object or _date_ does not have an [[InitializedTemporalDate]] internal slot, then
-          1. Throw a *TypeError* exception.
+        1. Perform ? RequireInternalSlot(_date_, [[InitializedTemporalDate]]).
         1. If ! IsLeapYear(_date_.[[Year]]) is *true*, then
           1. Return 366.
         1. Return 365.
@@ -220,8 +213,7 @@
       </p>
       <emu-alg>
         1. Let _date_ be the *this* value.
-        1. If Type(_date_) is not Object or _date_ does not have an [[InitializedTemporalDate]] internal slot, then
-          1. Throw a *TypeError* exception.
+        1. Perform ? RequireInternalSlot(_date_, [[InitializedTemporalDate]]).
         1. Return DaysInMonth(_date_.[[Year]], _date_.[[Month]]).
       </emu-alg>
     </emu-clause>
@@ -234,8 +226,7 @@
       </p>
       <emu-alg>
         1. Let _date_ be the *this* value.
-        1. If Type(_date_) is not Object or _date_ does not have an [[InitializedTemporalDate]] internal slot, then
-          1. Throw a *TypeError* exception.
+        1. Perform ? RequireInternalSlot(_date_, [[InitializedTemporalDate]]).
         1. Return ! IsLeapYear(_date_.[[Year]]).
       </emu-alg>
     </emu-clause>
@@ -247,8 +238,7 @@
       </p>
       <emu-alg>
         1. Let _date_ be the *this* value.
-        1. If Type(_date_) is not Object or _date_ does not have an [[InitializedTemporalDate]] internal slot, then
-          1. Throw a *TypeError* exception.
+        1. Perform ? RequireInternalSlot(_date_, [[InitializedTemporalDate]]).
         1. Return ? CreateYearMonth(_date_.[[Year]], _date_.[[Month]]).
       </emu-alg>
     </emu-clause>
@@ -260,8 +250,7 @@
       </p>
       <emu-alg>
         1. Let _date_ be the *this* value.
-        1. If Type(_date_) is not Object or _date_ does not have an [[InitializedTemporalDate]] internal slot, then
-          1. Throw a *TypeError* exception.
+        1. Perform ? RequireInternalSlot(_date_, [[InitializedTemporalDate]]).
         1. Return ? CreateMonthDay(_date_.[[Month]], _date_.[[Day]]).
       </emu-alg>
     </emu-clause>
@@ -274,8 +263,7 @@
       </p>
       <emu-alg>
         1. Let _date_ be the *this* value.
-        1. If Type(_date_) is not Object or _date_ does not have an [[InitializedTemporalDate]] internal slot, then
-          1. Throw a *TypeError* exception.
+        1. Perform ? RequireInternalSlot(_date_, [[InitializedTemporalDate]]).
         1. Let _duration_ be ? ToDurationLike(_duration_).
         1. <mark>TODO: Throw if any time properties are present?</mark>
         1. Let _disambiguation_ be ? ToString(_disambiguation_).
@@ -291,8 +279,7 @@
       </p>
       <emu-alg>
         1. Let _date_ be the *this* value.
-        1. If Type(_date_) is not Object or _date_ does not have an [[InitializedTemporalDate]] internal slot, then
-          1. Throw a *TypeError* exception.
+        1. Perform ? RequireInternalSlot(_date_, [[InitializedTemporalDate]]).
         1. Let _duration_ be ? ToDurationLike(_duration_).
         1. <mark>TODO: Throw if any time properties are present?</mark>
         1. Let _disambiguation_ be ? ToString(_disambiguation_).
@@ -313,8 +300,7 @@
       </p>
       <emu-alg>
         1. Let _date_ be the *this* value.
-        1. If Type(_date_) is not Object or _date_ does not have an [[InitializedTemporalDate]] internal slot, then
-          1. Throw a *TypeError* exception.
+        1. Perform ? RequireInternalSlot(_date_, [[InitializedTemporalDate]]).
         1. Let _otherDate_ be ? ToPartialDate(_otherDate_).
         1. Let _disambiguation_ be ? ToString(_disambiguation_).
         1. If _otherDate_.[[Year]] is not *undefined*, then
@@ -342,8 +328,7 @@
       </p>
       <emu-alg>
         1. Let _date_ be the *this* value.
-        1. If Type(_date_) is not Object or _date_ does not have an [[InitializedTemporalDate]] internal slot, then
-          1. Throw a *TypeError* exception.
+        1. Perform ? RequireInternalSlot(_date_, [[InitializedTemporalDate]]).
         1. Let _otherDate_ be ? ToDate(_otherDate_).
         1. Let _disambiguation_ be ? ToString(_disambiguation_).
         1. Let _greater_ be _date_.
@@ -368,8 +353,7 @@
       </p>
       <emu-alg>
         1. Let _date_ be the *this* value.
-        1. If Type(_date_) is not Object or _date_ does not have an [[InitializedTemporalDate]] internal slot, then
-          1. Throw a *TypeError* exception.
+        1. Perform ? RequireInternalSlot(_date_, [[InitializedTemporalDate]]).
         1. Let _time_ be ? ToTimeLike(_time_).
         1. If any of _time_.[[Hour]], _time_.[[Minute]], _time_.[[Second]], _time_.[[Millisecond]], _time_.[[Microsecond]], or _time_.[[Nanosecond]] is *undefined*, then
           1. <mark>TODO: Merge into ToTimeLike?</mark>
@@ -387,8 +371,7 @@
       </p>
       <emu-alg>
         1. Let _date_ be the *this* value.
-        1. If Type(_date_) is not Object or _date_ does not have an [[InitializedTemporalDate]] internal slot, then
-          1. Throw a *TypeError* exception.
+        1. Perform ? RequireInternalSlot(_date_, [[InitializedTemporalDate]]).
         1. Let _year_ be PadYear(_date_.[[Year]]).
         1. Let _month_ be _date_.[[Month]] formatted as a two-digit decimal number, padded to the left with a zero if necessary.
         1. Let _day_ be _date_.[[Day]] formatted as a two-digit decimal number, padded to the left with a zero if necessary.
@@ -403,8 +386,7 @@
       </p>
       <emu-alg>
         1. Let _date_ be the *this* value.
-        1. If Type(_date_) is not Object or _date_ does not have an [[InitializedTemporalDate]] internal slot, then
-          1. Throw a *TypeError* exception.
+        1. Perform ? RequireInternalSlot(_date_, [[InitializedTemporalDate]]).
         1. Let _dateFormat_ be ? Construct(%DateTimeFormat%, _args_).
         1. Return ? FormatDateTime(_dateFormat_, _date_).
       </emu-alg>
@@ -418,8 +400,7 @@
       </p>
       <emu-alg>
         1. Let _date_ be the *this* value.
-        1. If Type(_date_) is not Object or _date_ does not have an [[InitializedTemporalDate]] internal slot, then
-          1. Throw a *TypeError* exception.
+        1. Perform ? RequireInternalSlot(_date_, [[InitializedTemporalDate]]).
         1. Let _year_ be PadYear(_date_.[[Year]]).
         1. Let _month_ be _date_.[[Month]] formatted as a two-digit decimal number, padded to the left with a zero if necessary.
         1. Let _day_ be _date_.[[Day]] formatted as a two-digit decimal number, padded to the left with a zero if necessary.
