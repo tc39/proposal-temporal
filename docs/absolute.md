@@ -1,6 +1,7 @@
 # `Temporal.Absolute`
 
-An absolute point in time.
+An absolute point in time.  
+No timezone or offset information is present. As such `Absolute`s have no concept of days, months or even hours. For convenience of interoperability it uses _nanoseconds since the unix-epoch_
 
 ## new Temporal.Absolute(epochNanoSeconds : bigint) : Temporal.Absolute
 
