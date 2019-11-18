@@ -295,7 +295,7 @@
   <emu-clause id="sec-temporal-monthday-abstract-ops">
     <h1>Abstract operations</h1>
 
-    <emu-clause id="sec-temporal-ToPartialMonthDay" aoid="ToPartialMonthDay">
+    <emu-clause id="sec-temporal-topartialmonthday" aoid="ToPartialMonthDay">
       <h1>ToPartialMonthDay ( _monthDay_ )</h1>
       <emu-alg>
         1. If Type(_monthDay_) is String, then
@@ -342,7 +342,7 @@
       </emu-table>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-RegulateMonthDay" aoid="RegulateMonthDay">
+    <emu-clause id="sec-temporal-regulatemonthday" aoid="RegulateMonthDay">
       <h1>RegulateMonthDay ( _month_, _day_, _disambiguation_ )</h1>
       <emu-alg>
         1. Assert: _disambiguation_ is one of `"constrain"`, `"balance"`, or `"reject"`.
@@ -360,7 +360,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-ValidateMonthDay" aoid="ValidateMonthDay">
+    <emu-clause id="sec-temporal-validatemonthday" aoid="ValidateMonthDay">
       <h1>ValidateMonthDay ( _month_, _day_ )</h1>
       <emu-alg>
         1. Assert: _month_ and _day_ are integer Number values.
@@ -373,7 +373,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-BalanceMonthDay" aoid="BalanceMonthDay">
+    <emu-clause id="sec-temporal-balancemonthday" aoid="BalanceMonthDay">
       <h1>BalanceMonthDay ( _month_, _day_ )</h1>
       <emu-alg>
         1. Assert: _month_ and _day_ are integer Number values.
@@ -385,7 +385,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-createyearmonth" aoid="CreateMonthDay">
+    <emu-clause id="sec-temporal-createmonthday" aoid="CreateMonthDay">
       <h1>CreateMonthDay ( _month_, _day_ [ , _newTarget_ ] )</h1>
       <emu-alg>
         1. Assert: ! ValidateMonthDay(_month_, _day_) is *true*.
@@ -397,7 +397,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-ParseMonthDayString" aoid="ParseMonthDayString">
+    <emu-clause id="sec-temporal-parsemonthdaystring" aoid="ParseMonthDayString">
       <h1>ParseMonthDayString ( _monthDay_ )</h1>
       <emu-alg>
         1. Assert: Type(_monthDay_) is String.
@@ -413,7 +413,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-MonthDayFromString" aoid="MonthDayFromString">
+    <emu-clause id="sec-temporal-monthdayfromstring" aoid="MonthDayFromString">
       <h1>MonthDayFromString ( _monthDay_ )</h1>
       <emu-alg>
         1. Assert: Type(_monthDay_) is String.
@@ -424,7 +424,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-ToMonthDay" aoid="ToMonthDay">
+    <emu-clause id="sec-temporal-tomonthday" aoid="ToMonthDay">
       <h1>ToMonthDay ( _monthDay_ )</h1>
       <emu-alg>
         1. If Type(_monthDay_) is String, then
@@ -450,7 +450,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-MonthDayToString" aoid="MonthDayToString">
+    <emu-clause id="sec-temporal-monthdaytostring" aoid="MonthDayToString">
       <h1>MonthDayToString ( _monthDay_ )</h1>
       <emu-alg>
         1. Assert: Type(_monthDay_) is Object.
@@ -461,7 +461,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-MonthDayCompare" aoid="MonthDayCompare">
+    <emu-clause id="sec-temporal-monthdaycompare" aoid="MonthDayCompare">
       <h1>MonthDayCompare ( _one_, _two_ )</h1>
       <emu-alg>
         1. Assert: Type(_one_) is Object.

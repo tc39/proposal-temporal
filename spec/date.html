@@ -424,7 +424,7 @@
   <emu-clause id="sec-temporal-date-abstract-ops">
     <h1>Abstract operations</h1>
 
-    <emu-clause id="sec-temporal-date-create" aoid="CreateDate">
+    <emu-clause id="sec-temporal-createdate" aoid="CreateDate">
       <h1>CreateDate ( _y_, _m_, _d_ [ , _newTarget_ ] )</h1>
       <emu-alg>
         1. Assert: ! ValidateDate(_y_, _m_, _d_) is *true*.
@@ -437,7 +437,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-DateFromString" aoid="DateFromString">
+    <emu-clause id="sec-temporal-datefromstring" aoid="DateFromString">
       <h1>DateFromString ( _date_ )</h1>
       <emu-alg>
         1. Assert: Type(_date_) is String.
@@ -455,7 +455,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-ToDate" aoid="ToDate">
+    <emu-clause id="sec-temporal-todate" aoid="ToDate">
       <h1>ToDate ( _date_ )</h1>
       <emu-alg>
         1. If Type(_date_) is String, then
@@ -482,7 +482,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-ToPartialDate" aoid="ToPartialDate">
+    <emu-clause id="sec-temporal-topartialdate" aoid="ToPartialDate">
       <h1>ToPartialDate ( _date_ )</h1>
       <emu-alg>
         1. Let _result_ be {
@@ -529,7 +529,7 @@
       </emu-table>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-RegulateDate" aoid="RegulateDate">
+    <emu-clause id="sec-temporal-regulatedate" aoid="RegulateDate">
       <h1>RegulateDate ( _y_, _m_, _d_, _disambiguation_ )</h1>
       <emu-alg>
         1. If _disambiguation_ is *"reject"*, then
@@ -549,7 +549,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-ValidateDate" aoid="ValidateDate">
+    <emu-clause id="sec-temporal-validatedate" aoid="ValidateDate">
       <h1>ValidateDate ( _y_, _m_, _d_ )</h1>
       <emu-alg>
         1. Assert: _y_, _m_, and _d_ are integer Number values.
@@ -562,7 +562,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-PadYear" aoid="PadYear">
+    <emu-clause id="sec-temporal-padyear" aoid="PadYear">
       <h1>PadYear ( _y_ )</h1>
       <emu-alg>
         1. Assert: _y_ is an integer Number value.
@@ -574,7 +574,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-AddDate" aoid="AddDate">
+    <emu-clause id="sec-temporal-adddate" aoid="AddDate">
       <h1>AddDate ( _year_, _month_, _day_, _years_, _months_, _days_, _disambiguation_ )</h1>
       <emu-alg>
         1. Assert: _year_, _month_, _day_, _years_, _months_, and _days_ are integer Number values.
