@@ -1,11 +1,11 @@
 <!doctype html>
 <meta charset="utf8">
 
-<emu-clause id=sec-temporal-monthday>
+<emu-clause id="sec-temporal-monthday">
   <h1>Temporal.MonthDay Objects</h1>
   <p>A Temporal.MonthDay object is an immutable Object that contains Number values corresponding to a particular year and month.</p>
 
-  <emu-clause id=sec-temporal-monthday-constructor>
+  <emu-clause id="sec-temporal-monthday-constructor">
     <h1>The Temporal.MonthDay Constructor</h1>
     <p>
       The Temporal.MonthDay constructor is the %Temporal.MonthDay% intrinsic object.
@@ -17,7 +17,7 @@
       Subclass constructors that intend to inherit the specified MonthDay behaviour must include a super call to the %Temporal.MonthDay% constructor to create and initialize subclass instances with the necessary internal slots.
     </p>
 
-    <emu-clause id=sec-temporal-MonthDay-constructor-alg>
+    <emu-clause id="sec-temporal-MonthDay-constructor-alg">
       <h1>Temporal.MonthDay ( _month_, _day_ [ , _disambiguation_ ] )</h1>
       <p>When the Temporal.MonthDay function is called, the following steps are taken:</p>
       <emu-alg>
@@ -35,12 +35,12 @@
     </emu-clause>
   </emu-clause>
 
-  <emu-clause id=sec-properties-of-the-temporal-MonthDay-constructor>
+  <emu-clause id="sec-properties-of-the-temporal-MonthDay-constructor">
     <h1>Properties of the Temporal.MonthDay Constructor</h1>
     <p>The value of the [[Prototype]] internal slot of the Temporal.MonthDay constructor is the intrinsic object %FunctionPrototype%.</p>
     <p>The Temporal.MonthDay constructor has the following properties:</p>
 
-    <emu-clause id=sec-temporal-MonthDay-prototype>
+    <emu-clause id="sec-temporal-MonthDay-prototype">
       <h1>Temporal.MonthDay.prototype</h1>
       <p>The initial value of Temporal.MonthDay.prototype is %Temporal.MonthDay.prototype%.</p>
       <p>This property has the attributes { [[Writable]]: *false*, [[Enumerable]]: *false*, [[Configurable]]: *false* }.</p>
@@ -84,7 +84,7 @@
     </emu-clause>
   </emu-clause>
 
-  <emu-clause id=sec-properties-of-the-temporal-MonthDay-prototype-object>
+  <emu-clause id="sec-properties-of-the-temporal-MonthDay-prototype-object">
     <h1>Properties of the Temporal.MonthDay Prototype Object</h1>
 
     <p>The Temporal.MonthDay prototype object</p>
@@ -95,7 +95,7 @@
       <li>has a [[Prototype]] internal slot whose value is %Object.prototype%.
     </ul>
 
-    <emu-clause id=sec-temporal.MonthDay.prototype.constructor>
+    <emu-clause id="sec-temporal.MonthDay.prototype.constructor">
       <h1>Temporal.MonthDay.prototype.constructor</h1>
       <p>The initial value of Temporal.MonthDay.prototype.constructor is %Temporal.MonthDay%.</p>
     </emu-clause>
@@ -292,10 +292,10 @@
     </emu-clause>
   </emu-clause>
 
-  <emu-clause id=sec-temporal-monthday-abstract-ops>
+  <emu-clause id="sec-temporal-monthday-abstract-ops">
     <h1>Abstract operations</h1>
 
-    <emu-clause id=sec-temporal-ToPartialMonthDay aoid=ToPartialMonthDay>
+    <emu-clause id="sec-temporal-ToPartialMonthDay" aoid="ToPartialMonthDay">
       <h1>ToPartialMonthDay ( _monthDay_ )</h1>
       <emu-alg>
         1. If Type(_monthDay_) is String, then
@@ -342,7 +342,7 @@
       </emu-table>
     </emu-clause>
 
-    <emu-clause id=sec-temporal-RegulateMonthDay aoid=RegulateMonthDay>
+    <emu-clause id="sec-temporal-RegulateMonthDay" aoid="RegulateMonthDay">
       <h1>RegulateMonthDay ( _month_, _day_, _disambiguation_ )</h1>
       <emu-alg>
         1. Assert: _disambiguation_ is one of `"constrain"`, `"balance"`, or `"reject"`.
@@ -360,7 +360,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id=sec-temporal-ValidateMonthDay aoid=ValidateMonthDay>
+    <emu-clause id="sec-temporal-ValidateMonthDay" aoid="ValidateMonthDay">
       <h1>ValidateMonthDay ( _month_, _day_ )</h1>
       <emu-alg>
         1. Assert: _month_ and _day_ are integer Number values.
@@ -373,7 +373,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id=sec-temporal-BalanceMonthDay aoid=BalanceMonthDay>
+    <emu-clause id="sec-temporal-BalanceMonthDay" aoid="BalanceMonthDay">
       <h1>BalanceMonthDay ( _month_, _day_ )</h1>
       <emu-alg>
         1. Assert: _month_ and _day_ are integer Number values.
@@ -385,7 +385,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id=sec-temporal-createyearmonth aoid=CreateMonthDay>
+    <emu-clause id="sec-temporal-createyearmonth" aoid="CreateMonthDay">
       <h1>CreateMonthDay ( _month_, _day_ [ , _newTarget_ ] )</h1>
       <emu-alg>
         1. Assert: ! ValidateMonthDay(_month_, _day_) is *true*.
@@ -424,7 +424,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id=sec-temporal-ToMonthDay aoid=ToMonthDay>
+    <emu-clause id="sec-temporal-ToMonthDay" aoid="ToMonthDay">
       <h1>ToMonthDay ( _monthDay_ )</h1>
       <emu-alg>
         1. If Type(_monthDay_) is String, then
@@ -450,7 +450,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id=sec-temporal-MonthDayToString aoid=MonthDayToString>
+    <emu-clause id="sec-temporal-MonthDayToString" aoid="MonthDayToString">
       <h1>MonthDayToString ( _monthDay_ )</h1>
       <emu-alg>
         1. Assert: Type(_monthDay_) is Object.
@@ -461,7 +461,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id=sec-temporal-MonthDayCompare aoid=MonthDayCompare>
+    <emu-clause id="sec-temporal-MonthDayCompare" aoid="MonthDayCompare">
       <h1>MonthDayCompare ( _one_, _two_ )</h1>
       <emu-alg>
         1. Assert: Type(_one_) is Object.
