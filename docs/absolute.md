@@ -44,8 +44,7 @@ Returns a string in the ISO 8601 date format representing the specified `Absolut
 
 ```js
 const date = new Temporal.Absolute(1574074321816000000n);
-date.toString();
-// 2019-11-18T10:52:01.816Z
+date.toString(); // 2019-11-18T10:52:01.816Z
 ```
 
 ## absolute.toLocaleString(locale?: string, options: object) : string
@@ -57,6 +56,17 @@ Returns a string with a locally sensitive representation of the specified `Absol
 Creates a new `Absolute` object from the string argument passed in.
 
 ## Temporal.Absolute.from(thing: string | object) : Temporal.Absolute
+
+Creates a new `Absolute` object from either an object or IEO-8601 string.
+
+### String Example
+
+```js
+const date = Temporal.Absolute.from("2019-11-18T11:00:00.000Z");
+date.toString(); // 2019-11-18T11:00Z
+```
+
+### Object Example
 
 ## Temporal.Absolute.compare(one: Temporal.Absolute, two: Temporal.Absolute) : number
 
