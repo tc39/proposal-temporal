@@ -67,8 +67,8 @@ describe('Time', () => {
         equal(typeof Time.prototype.toJSON, 'function');
       });
     });
-    it('Time.fromString is a Function', () => {
-      equal(typeof Time.fromString, 'function');
+    it('Time.from is a Function', () => {
+      equal(typeof Time.from, 'function');
     });
   });
   describe('Construction', () => {
@@ -251,33 +251,21 @@ describe('Time', () => {
         equal(new Time(15, 23, 30, 123, 456, 789).toString(), '15:23:30.123456789');
       });
     });
-    describe('Time.fromString() works', () => {
-      it('Time.fromString("15:23")', () => {
-        equal(`${Time.fromString('15:23')}`, '15:23');
-      });
-      it('Time.fromString("15:23:30")', () => {
-        equal(`${Time.fromString('15:23:30')}`, '15:23:30');
-      });
-      it('Time.fromString("15:23:30.123")', () => {
-        equal(`${Time.fromString('15:23:30.123')}`, '15:23:30.123');
-      });
-      it('Time.fromString("15:23:30.123456")', () => {
-        equal(`${Time.fromString('15:23:30.123456')}`, '15:23:30.123456');
-      });
-      it('Time.fromString("15:23:30.123456789")', () => {
-        equal(`${Time.fromString('15:23:30.123456789')}`, '15:23:30.123456789');
-      });
-    });
-    describe('Time.from() doesn\'t call fromString', () => {
-      // XXX #252 - Remove fromString
+    describe('Time.from() works', () => {
       it('Time.from("15:23")', () => {
-        const original = Time.fromString;
-        Time.fromString = () => { throw TypeError("Should not call fromString") };
-        try {
-          equal(`${Time.from('15:23')}`, '15:23');
-        } finally {
-          Time.fromString = original;
-        }
+        equal(`${Time.from('15:23')}`, '15:23');
+      });
+      it('Time.from("15:23:30")', () => {
+        equal(`${Time.from('15:23:30')}`, '15:23:30');
+      });
+      it('Time.from("15:23:30.123")', () => {
+        equal(`${Time.from('15:23:30.123')}`, '15:23:30.123');
+      });
+      it('Time.from("15:23:30.123456")', () => {
+        equal(`${Time.from('15:23:30.123456')}`, '15:23:30.123456');
+      });
+      it('Time.from("15:23:30.123456789")', () => {
+        equal(`${Time.from('15:23:30.123456789')}`, '15:23:30.123456789');
       });
     });
     describe('Disambiguation', () => {
@@ -296,7 +284,7 @@ describe('Time', () => {
       equal(`${Time.from(datetime)}`, `${fromed}`));
 
     const iso = '20:18:32';
-    it(`Temporal.Time.fromString("${iso}") === (${iso})`, () => equal(`${Time.fromString(iso)}`, iso));
+    it(`Temporal.Time.from("${iso}") === (${iso})`, () => equal(`${Time.from(iso)}`, iso));
   });
 });
 

@@ -190,14 +190,24 @@ export class Time {
     return new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, disambiguation);
   }
 
-  static fromString(isoString) {
-    return ES.TimeFromString(ES.ToString(isoString), this);
-  }
-  static from(...args) {
-    const result = ES.CastTime(...args);
-    return this === Time
-      ? result
-      : new this(result.hour, result.minute, result.second, result.millisecond, result.microsecond, result.nanosecond);
+  static from(arg) {
+    if (typeof arg === 'object') {
+      const result = ES.CastTime(arg);
+      return this === Time
+        ? result
+        : new this(
+            result.hour,
+            result.minute,
+            result.second,
+            result.millisecond,
+            result.microsecond,
+            result.nanosecond
+          );
+    } else if (typeof arg === 'string') {
+      return ES.TimeFromString(ES.ToString(arg), this);
+    } else {
+      throw new TypeError(`invalid time: ${arg}`);
+    }
   }
   static compare(one, two) {
     one = ES.CastTime(one);
