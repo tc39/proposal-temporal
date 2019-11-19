@@ -178,7 +178,7 @@ export function CastDuration(arg) {
   }
   if ('string' === typeof arg) {
     try {
-      return Duration.fromString(arg);
+      return Duration.from(arg);
     } catch (ex) {}
   }
   const props = ES.ValidPropertyBag(arg, [

@@ -108,7 +108,7 @@ for (let zone of Temporal.TimeZone) console.log(zone.name); // lists all TimeZon
 
 ```javascript
 dt = Temporal.Duration(0, 0, 1); // 1 Day
-dt = Temporal.Duration.fromString('PT2H'); // 2 Hours
+dt = Temporal.Duration.from('PT2H'); // 2 Hours
 dt = Temporal.Duration(1, 2, 3, 5, 6, 7, 8, 9); // P1Y2M3DT4H5M6.007008009S
 
 dt.years/* 1 */; dt.months/* 2 */; dt.days/* 3 */;

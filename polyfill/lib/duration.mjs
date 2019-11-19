@@ -144,48 +144,51 @@ export class Duration {
     if (!ES.IsDuration(this)) throw new TypeError('invalid receiver');
     return new Intl.DateTimeFormat(...args).format(this);
   }
-  static fromString(isoString) {
-    isoString = ES.ToString(isoString);
-    const match = STRING.exec(isoString);
-    if (!match) throw new RangeError(`invalid duration: ${isoString}`);
-    const years = ES.ToInteger(match[1]);
-    const months = ES.ToInteger(match[2]);
-    const days = ES.ToInteger(match[3]);
-    const hours = ES.ToInteger(match[4]);
-    const minutes = ES.ToInteger(match[5]);
-    const seconds = ES.ToInteger(match[6]);
-    const milliseconds = ES.ToInteger(match[7]);
-    const microseconds = ES.ToInteger(match[8]);
-    const nanoseconds = ES.ToInteger(match[9]);
-    const Construct = this;
-    return new Construct(
-      years,
-      months,
-      days,
-      hours,
-      minutes,
-      seconds,
-      milliseconds,
-      microseconds,
-      nanoseconds,
-      'reject'
-    );
-  }
-  static from(...args) {
-    const result = ES.CastDuration(...args);
-    return this === Duration
-      ? result
-      : new this(
-          result.years,
-          result.months,
-          result.days,
-          result.hours,
-          result.minutes,
-          result.seconds,
-          result.milliseconds,
-          result.microseconds,
-          result.nanoseconds
-        );
+  static from(arg) {
+    if (typeof arg === 'object') {
+      const result = ES.CastDuration(arg);
+      return this === Duration
+        ? result
+        : new this(
+            result.years,
+            result.months,
+            result.days,
+            result.hours,
+            result.minutes,
+            result.seconds,
+            result.milliseconds,
+            result.microseconds,
+            result.nanoseconds
+          );
+    } else if (typeof arg === 'string') {
+      const isoString = ES.ToString(arg);
+      const match = STRING.exec(isoString);
+      if (!match) throw new RangeError(`invalid duration: ${isoString}`);
+      const years = ES.ToInteger(match[1]);
+      const months = ES.ToInteger(match[2]);
+      const days = ES.ToInteger(match[3]);
+      const hours = ES.ToInteger(match[4]);
+      const minutes = ES.ToInteger(match[5]);
+      const seconds = ES.ToInteger(match[6]);
+      const milliseconds = ES.ToInteger(match[7]);
+      const microseconds = ES.ToInteger(match[8]);
+      const nanoseconds = ES.ToInteger(match[9]);
+      const Construct = this;
+      return new Construct(
+        years,
+        months,
+        days,
+        hours,
+        minutes,
+        seconds,
+        milliseconds,
+        microseconds,
+        nanoseconds,
+        'reject'
+      );
+    } else {
+      return new TypeError(`invalid duration: ${duration}`);
+    }
   }
 }
 Duration.prototype.toJSON = Duration.prototype.toString;
