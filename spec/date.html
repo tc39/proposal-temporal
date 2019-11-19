@@ -381,15 +381,18 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause>
-      <h1>Temporal.Date.prototype.toLocaleString ( …_args_ )</h1>
+    <emu-clause id="sec-temporal.date.prototype.tolocalestring">
+      <h1>Temporal.Date.prototype.toLocaleString ( [ _locales_ [ , _options_ ] ] )</h1>
       <p>
+        The `toLocaleString` method takes two arguments, _locales_ and _options_.
         The following steps are taken:
       </p>
       <emu-alg>
         1. Let _date_ be the *this* value.
         1. Perform ? RequireInternalSlot(_date_, [[InitializedTemporalDate]]).
-        1. Let _dateFormat_ be ? Construct(%DateTimeFormat%, _args_).
+        1. If the implementation does not include the ECMA-402 Internationalization API, then
+          1. Return ! DateToString(_date_).
+        1. Let _dateFormat_ be ? Construct(%DateTimeFormat%, « _locales_, _options_ »).
         1. Return ? FormatDateTime(_dateFormat_, _date_).
       </emu-alg>
     </emu-clause>
