@@ -52,10 +52,6 @@ date.toString(); // 2019-11-18T10:52:01.816Z
 
 Returns a string with a locally sensitive representation of the specified `Absolute` object. Overrides the `Object.prototype.toLocaleString()` method.
 
-## Temporal.Absolute.fromString(spec: string) : Temporal.Absolute
-
-Creates a new `Absolute` object from the string argument passed in.
-
 ## Temporal.Absolute.from(thing: string | object) : Temporal.Absolute
 
 Creates a new `Absolute` object from either an object or IEO-8601 string.

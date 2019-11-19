@@ -77,10 +77,6 @@ Returns a new [`YearMonth`](./YearMonth) object.
 
 Returns a new [`YearMonth`](./MonthDay) object.
 
-## Temporal.Date.fromString(iso: string) : Temporal.Date
-
-Returns a new `Date` object from an ISO 8601 string
-
 ## Temporal.Date.from(thing: string | object) : Temporal.Date
 
 ## Temporal.Date.compare(one: Temporal.Date | object, two: Temporal.Date | object) : number
