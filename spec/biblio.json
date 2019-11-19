@@ -4,6 +4,11 @@
       "type": "op",
       "aoid": "RequireInternalSlot",
       "id": "sec-requireinternalslot"
+    },
+    {
+      "type": "op",
+      "aoid": "ToBigInt",
+      "id": "sec-tobigint"
     }
   ],
   "https://tc39.es/ecma402/": [

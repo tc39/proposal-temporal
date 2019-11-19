@@ -41,17 +41,17 @@ export class Absolute {
   getEpochMicroseconds() {
     if (!ES.IsAbsolute(this)) throw new TypeError('invalid receiver');
     const value = GetSlot(this, EPOCHNANOSECONDS);
-    const epochNanoseconds = BigInt(value.ms) * BigInt(1e6) + (BigInt(value.ns) % BigInt(1e6));
+    const epochNanoseconds = BigInt(value.ms) * BigInt(1e6) + BigInt(value.ns);
     return epochNanoseconds / BigInt(1e3);
   }
   getEpochNanoseconds() {
     if (!ES.IsAbsolute(this)) throw new TypeError('invalid receiver');
     const value = GetSlot(this, EPOCHNANOSECONDS);
-    const epochMicroseconds = BigInt(value.ms) * BigInt(1e6) + (BigInt(value.ns) % BigInt(1e6));
+    const epochMicroseconds = BigInt(value.ms) * BigInt(1e6) + BigInt(value.ns);
     return epochMicroseconds;
   }
 
-  plus(durationLike = {}) {
+  plus(durationLike) {
     if (!ES.IsAbsolute(this)) throw new TypeError('invalid receiver');
     const duration = ES.CastDuration(durationLike);
     if (GetSlot(duration, YEARS) !== 0) throw new RangeError(`invalid duration field years`);
@@ -85,7 +85,7 @@ export class Absolute {
     SetSlot(result, EPOCHNANOSECONDS, { ms, ns });
     return result;
   }
-  minus(durationLike = {}) {
+  minus(durationLike) {
     if (!ES.IsAbsolute(this)) throw new TypeError('invalid receiver');
     const duration = ES.CastDuration(durationLike);
     if (GetSlot(duration, YEARS) !== 0) throw new RangeError(`invalid duration field years`);
