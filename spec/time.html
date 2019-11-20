@@ -98,7 +98,7 @@
       <emu-alg>
         1. Let _one_ be ? ToTime(_one_).
         1. Let _two_ be ? ToTime(_two_).
-        1. Return TimeCompare(_one_, _two_).
+        1. Return ! TimeCompare(_one_, _two_).
       </emu-alg>
     </emu-clause>
   </emu-clause>
@@ -297,7 +297,7 @@
         1. Let _time_ be the *this* value.
         1. Perform ? RequireInternalSlot(_time_, [[InitializedTemporalTime]]).
         1. Let _otherTime_ be ? ToTime(_otherTime_).
-        1. If TimeCompare(_time_, _otherTime_) &lt; 0, then
+        1. If ! TimeCompare(_time_, _otherTime_) &lt; 0, then
           1. Let _greater_ be _otherTime_.
           1. Let _smaller_ be _time_.
         1. Else,
