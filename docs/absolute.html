@@ -1,16 +1,39 @@
 <h1 id="temporalabsolute"><code>Temporal.Absolute</code></h1>
-<p>An absolute point in time.</p>
+<p>An absolute point in time.<br>No timezone or offset information is present. As such <code>Absolute</code>s have no concept of days, months or even hours. For convenience of interoperability it uses <em>nanoseconds since the unix-epoch</em></p>
 <h2 id="new-temporalabsoluteepochnanoseconds--bigint--temporalabsolute">new Temporal.Absolute(epochNanoSeconds : bigint) : Temporal.Absolute</h2>
+<p>Creates a new <code>Absolute</code> object that represents an absolute point on the timeline.</p>
 <h2 id="absolutegetepochseconds--number">absolute.getEpochSeconds() : number</h2>
+<p>Returns the numeric value of the specified date as the number of seconds since January 1, 1970, 00:00:00 UTC (negative for prior times).</p>
 <h2 id="absolutegetepochmilliseconds--number">absolute.getEpochMilliseconds() : number</h2>
+<p>Returns the numeric value of the specified date as the number of milliseconds since January 1, 1970, 00:00:00 UTC (negative for prior times).</p>
 <h2 id="absolutegetepochmicroseconds--bigint">absolute.getEpochMicroseconds() : bigint</h2>
+<p>Returns the numeric value of the specified date as the number of microseconds since January 1, 1970, 00:00:00 UTC (negative for prior times).</p>
 <h2 id="absolutegetepochnanoseconds--bigint">absolute.getEpochNanoseconds() : bigint</h2>
+<p>Returns the numeric value of the specified date as the number of nanoseconds since January 1, 1970, 00:00:00 UTC (negative for prior times).</p>
 <h2 id="absoluteintimezonetimezone-temporaltimezone--string--temporaldatetime">absolute.inTimeZone(timeZone: Temporal.TimeZone | string) : Temporal.DateTime</h2>
+<p>Returns the time-zone offset as a <code>DateTime</code> object for the current timezone.</p>
 <h2 id="absoluteplusduration-temporalduration--string--object--temporalabsolute">absolute.plus(duration: Temporal.Duration | string | object) : Temporal.Absolute</h2>
+<p>Returns a new <code>Absolute</code> object which is the sum of the current object plus the additional argument.</p>
 <h2 id="absoluteminusduration-temporalduration--string--object--temporalabsolute">absolute.minus(duration: Temporal.Duration | string | object) : Temporal.Absolute</h2>
+<p>Returns a new <code>Absolute</code> object which is the sum of the current object minus the additional argument.</p>
 <h2 id="absolutedifferenceother-temporalabsolute--temporalduration">absolute.difference(other: Temporal.Absolute) : Temporal.Duration</h2>
+<p>Returns a new <code>Duration</code> object which is the difference between the current <code>Absolute</code> object and the argument <code>Absolute</code> value.</p>
 <h2 id="absolutetostringtimezone-temporaltimezone--string--string">absolute.toString(timeZone?: Temporal.TimeZone | string) : string</h2>
+<p>Returns a string in the ISO 8601 date format representing the specified <code>Absolute</code> object. Overrides the <code>Object.prototype.toString()</code> method.</p>
+<pre><code class="language-js">const date = new Temporal.Absolute(1574074321816000000n);
+date.toString(); // 2019-11-18T10:52:01.816Z</code></pre>
 <h2 id="absolutetolocalestringlocale-string-options-object--string">absolute.toLocaleString(locale?: string, options: object) : string</h2>
-<h2 id="temporalabsolutefromstringspec-string--temporalabsolute">Temporal.Absolute.fromString(spec: string) : Temporal.Absolute</h2>
+<p>Returns a string with a locally sensitive representation of the specified <code>Absolute</code> object. Overrides the <code>Object.prototype.toLocaleString()</code> method.</p>
 <h2 id="temporalabsolutefromthing-string--object--temporalabsolute">Temporal.Absolute.from(thing: string | object) : Temporal.Absolute</h2>
+<p>Creates a new <code>Absolute</code> object from either an object or IEO-8601 string.</p>
+<h3 id="string-example">String Example</h3>
+<pre><code class="language-js">const date = Temporal.Absolute.from(&quot;2019-11-18T11:00:00.000Z&quot;);
+date.toString(); // 2019-11-18T11:00Z</code></pre>
+<h3 id="object-example">Object Example</h3>
 <h2 id="temporalabsolutecompareone-temporalabsolute-two-temporalabsolute--number">Temporal.Absolute.compare(one: Temporal.Absolute, two: Temporal.Absolute) : number</h2>
+<p>Allows for easier comparison of Absolute objects, returns:</p>
+<ul>
+<li><code>-1</code> if the first object represents a lower value than the second</li>
+<li><code>0</code> if the 2 objects represent the same value</li>
+<li><code>1</code> if the first object represents a higher value than the second</li>
+</ul>
