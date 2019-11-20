@@ -1,8 +1,10 @@
 # `Temporal.Duration`
 
-A representations of a duration of time whcih can be used in date/time arithmetic.
+A representations of a duration of time which can be used in date/time arithmetic.
 
 ## new Temporal.Duration(durationLike: object) : Temporal.Duration
+
+Creates a new `Duration` object that represents a duration of time.
 
 ## new Temporal.Duration(iso: string) : Temporal.Duration
 
@@ -31,7 +33,5 @@ A representations of a duration of time whcih can be used in date/time arithmeti
 ## duration.toString() : string
 
 ## duration.toLocaleString(locale?: string, options?: object) : string
-
-## Temporal.Duration.fromString(iso: string) : Temporal.Duration
 
 ## Temporal.Duration.from(thing: string | object) : Temporal.Duration
