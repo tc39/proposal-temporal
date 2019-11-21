@@ -21,7 +21,7 @@ export class TimeZone {
   getDateTimeFor(absolute) {
     if (!ES.IsTimeZone(this)) throw new TypeError('invalid receiver');
     absolute = ES.CastAbsolute(absolute);
-    const { ms, ns } = GetSlot(absolute, EPOCHNANOSECONDS);
+    const ns = GetSlot(absolute, EPOCHNANOSECONDS);
     const {
       year,
       month,
@@ -32,7 +32,7 @@ export class TimeZone {
       millisecond,
       microsecond,
       nanosecond
-    } = ES.GetTimeZoneDateTimeParts(ms, ns, GetSlot(this, IDENTIFIER));
+    } = ES.GetTimeZoneDateTimeParts(ns, GetSlot(this, IDENTIFIER));
     const DateTime = ES.GetIntrinsic('%Temporal.DateTime%');
     return new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
   }
