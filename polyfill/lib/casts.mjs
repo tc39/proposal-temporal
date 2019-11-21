@@ -44,11 +44,11 @@ export function CastAbsolute(arg, aux) {
   throw RangeError(`invalid absolute value: ${arg}`);
 }
 
-export function CastDateTime(arg, aux) {
+export function CastDateTime(arg) {
+  const DateTime = ES.GetIntrinsic('%Temporal.DateTime%');
   if ('string' === typeof arg) {
     return DateTime.from(arg);
   }
-  const DateTime = ES.GetIntrinsic('%Temporal.DateTime%');
   if (ES.IsDateTime(arg)) {
     return arg;
   }

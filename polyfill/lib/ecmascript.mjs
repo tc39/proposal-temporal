@@ -152,8 +152,8 @@ export const ES = ObjectAssign(ObjectAssign(ObjectAssign({}, Cast), ES2019), {
     return formatter;
   },
   GetTimeZoneOffsetNanoseconds: (epochNanoseconds, timeZone) => {
-    const offset = parseOffsetString(timeZone);
-    if (offset !== null) return offset;
+    const offset = parseOffsetString(`${timeZone}`);
+    if (offset !== null) return bigInt(offset).multiply(1e6);
     const { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.GetTimeZoneDateTimeParts(
       epochNanoseconds,
       timeZone
@@ -162,7 +162,7 @@ export const ES = ObjectAssign(ObjectAssign(ObjectAssign({}, Cast), ES2019), {
     return utc.minus(epochNanoseconds);
   },
   GetTimeZoneOffsetString: (epochNanoseconds, timeZone) => {
-    const offsetNanos = ES.GetTimeZoneOffsetNanoseconds(epochNanoseconds, timeZone);
+    const offsetNanos = bigInt(ES.GetTimeZoneOffsetNanoseconds(epochNanoseconds, timeZone));
     const offsetString = makeOffsetString(offsetNanos.divide(1e6));
     return offsetString;
   },
@@ -234,25 +234,34 @@ export const ES = ObjectAssign(ObjectAssign(ObjectAssign({}, Cast), ES2019), {
     ({ year, month, day } = ES.BalanceDate(year, month, day));
     return { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond };
   },
-  GetTimeZoneNextTransition: (epochMilliseconds, timeZone) => {
+  GetTimeZoneNextTransition: (epochNanoseconds, timeZone) => {
     const offset = parseOffsetString(timeZone);
-    if (offset !== null) return null;
-
-    let leftMillis = epochMilliseconds;
-    let leftOffset = ES.GetTimeZoneOffsetString(leftMillis, timeZone);
-    let rightMillis = leftMillis;
-    let rightOffset = leftOffset;
-    while (leftOffset === rightOffset) {
-      leftMillis = rightMillis;
-      rightMillis = leftMillis + 7 * 24 * DAYMILLIS;
+    if (offset !== null) {
+      return null;
     }
-    return bisect(
-      (epochMS) => ES.GetTimeZoneOffsetString(epochMS, timeZone),
-      leftMillis,
-      rightMillis,
+
+    let leftNanos = epochNanoseconds;
+    let leftOffset = ES.GetTimeZoneOffsetString(leftNanos, timeZone);
+    let rightNanos = leftNanos;
+    let rightOffset = leftOffset;
+    let weeks = 0;
+    while ((leftOffset === rightOffset) && (weeks < 104)) {
+      rightNanos = bigInt(leftNanos).plus(7 * 24 * DAYMILLIS * 1e6);
+      rightOffset = ES.GetTimeZoneOffsetString(rightNanos, timeZone);
+      if (leftOffset === rightOffset) {
+        leftNanos = rightNanos;
+      }
+      weeks++;
+    }
+    if (leftOffset === rightOffset) return null;
+    const result = bisect(
+      (epochNS) => ES.GetTimeZoneOffsetString(epochNS, timeZone),
+      leftNanos,
+      rightNanos,
       leftOffset,
       rightOffset
     );
+    return result;
   },
   GetFormatterParts: (fmt, v) => {
     const datetime = fmt.format(v);
@@ -686,8 +695,8 @@ function parseOffsetString(string) {
   return (hours * 60 + minutes) * 60 * 1000;
 }
 function makeOffsetString(offsetMilliSeconds) {
-  let offsetSeconds = Number(offsetMilliSeconds / 1000);
-  const sign = offsetSeconds < 0 ? '-' : '+';
+  let offsetSeconds = Math.round(offsetMilliSeconds / 1000);
+  const sign = (offsetSeconds < 0) ? '-' : '+';
   offsetSeconds = Math.abs(offsetSeconds);
   const offsetMinutes = Math.floor(offsetSeconds / 60) % 60;
   const offsetHours = Math.floor(offsetSeconds / 3600);
@@ -702,13 +711,22 @@ function reduceParts(res, item) {
   return res;
 }
 function bisect(getState, left, right, lstate = getState(left), rstate = getState(right)) {
-  if (right - left < 2) return right;
-  let middle = Math.ceil((left + right) / 2);
-  if (middle === right) middle -= 1;
-  const mstate = getState(middle);
-  if (mstate === lstate) return bisect(getState, middle, right, mstate, rstate);
-  if (mstate === rstate) return bisect(getState, left, middle, lstate, mstate);
-  throw new Error('invalid state in bisection');
+  left = bigInt(left);
+  right = bigInt(right);
+  while (right.minus(left).greater(1)) {
+    let middle = left.plus(right).divide(2);
+    const mstate = getState(middle);
+    if (mstate === lstate) {
+      left = middle;
+      lstate = mstate;
+    } else if(mstate === rstate) {
+      right = middle;
+      rstate = mstate;
+    } else {
+      throw new Error('invalid state in bisection');
+    }
+  }
+  return right;
 }
 
 function tzIdent() {

@@ -10,6 +10,7 @@ import Pretty from '@pipobscure/demitasse-pretty';
 
 import * as exports from './exports.mjs';
 
+import * as timezone from './timezone.mjs';
 import * as absolute from './absolute.mjs';
 import * as date from './date.mjs';
 import * as time from './time.mjs';
