@@ -155,7 +155,7 @@
         1. Let _absolute_ be the *this* value.
         1. Perform ? RequireInternalSlot(_absolute_, [[InitializedTemporalAbsolute]]).
         1. Let _ns_ be _absolute_.[[Nanoseconds]].
-        1. Let _s_ be floor(_ns_ / 1,000,000,000).
+        1. Let _s_ be RoundTowardsZero(_ns_ / 1,000,000,000<sub>ℝ</sub>).
         1. Return _s_.
       </emu-alg>
     </emu-clause>
@@ -169,7 +169,7 @@
         1. Let _absolute_ be the *this* value.
         1. Perform ? RequireInternalSlot(_absolute_, [[InitializedTemporalAbsolute]]).
         1. Let _ns_ be _absolute_.[[Nanoseconds]].
-        1. Let _ms_ be floor(_ns_ / 1,000,000).
+        1. Let _ms_ be RoundTowardsZero(_ns_ / 1,000,000<sub>ℝ</sub>).
         1. Return _ms_.
       </emu-alg>
     </emu-clause>
@@ -183,7 +183,7 @@
         1. Let _absolute_ be the *this* value.
         1. Perform ? RequireInternalSlot(_absolute_, [[InitializedTemporalAbsolute]]).
         1. Let _ns_ be _absolute_.[[Nanoseconds]].
-        1. Let _mcs_ be floor(_ns_ / 1,000).
+        1. Let _mcs_ be RoundTowardsZero(_ns_ / 1,000<sub>ℝ</sub>).
         1. Return _mcs_.
       </emu-alg>
     </emu-clause>
@@ -338,7 +338,7 @@
       <h1>CreateAbsolute ( _ns_ [ , _newTarget_] )</h1>
       <emu-alg>
         1. Assert: Type(_ns_) is BigInt.
-        1. If _newTarget_ is not given, set it to %Temporal.Absolute%
+        1. If _newTarget_ is not given, set it to %Temporal.Absolute%.
         1. Let _object_ be ? OrdinaryCreateFromConstructor(_newTarget_, `"%Temporal.Absolute.prototype%"`, « [[InitializedTemporalAbsolute]], [[Nanoseconds]] »).
         1. Set _object_.[[Nanoseconds]] to _ns_.
         1. Return _object_.
