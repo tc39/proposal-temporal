@@ -2,30 +2,30 @@ import { ES } from './ecmascript.mjs';
 const Absolute = ES.GetIntrinsic('%Temporal.Absolute%');
 
 export const now = {
-    absolute: getAbsolute,
-    dateTime: getDateTime,
-    date: getDate,
-    time: getTime,
-    timeZone: getTimeZone
+    absolute,
+    dateTime,
+    date,
+    time,
+    timeZone
 };
 
-function getAbsolute() {
+function absolute() {
     const ns = ES.SystemUTCEpochNanoSeconds();
     return new Absolute(ns);
 }
-function getDateTime(timeZone = getTimeZone()) {
-    timeZone = ES.ToTimeZone(timeZone);
-    const absolute = getAbsolute();
-    let dateTime = timeZone.getDateTimeFor(absolute);
+function dateTime(zone = timeZone()) {
+    zone = ES.ToTimeZone(zone);
+    const abs = absolute();
+    let dateTime = zone.getDateTimeFor(abs);
     return dateTime;
 }
-function getDate(timeZone) {
-    return getDateTime(timeZone).getDate();
+function date(zone) {
+    return dateTime(zone).getDate();
 }
-function getTime(timeZone) {
-    return getDateTime(timeZone).getTime();
+function time(zone) {
+    return dateTime(zone).getTime();
 }
-function getTimeZone() {
-    let timeZone = ES.SystemTimeZone();
-    return timeZone;
+function timeZone() {
+    let zone = ES.SystemTimeZone();
+    return zone;
 }
