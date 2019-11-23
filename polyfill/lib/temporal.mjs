@@ -19,7 +19,6 @@ if ('undefined' === typeof Symbol) {
 }
 
 import { ES } from './ecmascript.mjs';
-import { EPOCHNANOSECONDS, CreateSlots, SetSlot, HasSlot } from './slots.mjs';
 
 export const Absolute = ES.GetIntrinsic('%Temporal.Absolute%');
 export const TimeZone = ES.GetIntrinsic('%Temporal.TimeZone%');
@@ -30,26 +29,4 @@ export const MonthDay = ES.GetIntrinsic('%Temporal.MonthDay%');
 export const Time = ES.GetIntrinsic('%Temporal.Time%');
 export const Duration = ES.GetIntrinsic('%Temporal.Duration%');
 
-export function getAbsolute() {
-  const { ms, ns } = ES.SystemUTCEpochNanoSeconds();
-  const result = Object.create(Absolute.prototype);
-  CreateSlots(result);
-  SetSlot(result, EPOCHNANOSECONDS, { ms, ns });
-  return result;
-}
-export function getDateTime(timeZone = getTimeZone()) {
-  timeZone = ES.ToTimeZone(timeZone);
-  const absolute = getAbsolute();
-  let dateTime = timeZone.getDateTimeFor(absolute);
-  return dateTime;
-}
-export function getDate(timeZone) {
-  return getDateTime(timeZone).getDate();
-}
-export function getTime(timeZone) {
-  return getDateTime(timeZone).getTime();
-}
-export function getTimeZone() {
-  let timeZone = ES.SystemTimeZone();
-  return timeZone;
-}
+export { now } from './now.mjs';

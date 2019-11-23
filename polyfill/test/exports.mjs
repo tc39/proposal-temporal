@@ -18,8 +18,9 @@ import * as Temporal from 'tc39-temporal';
 
 describe('Exports', () => {
   const named = Object.keys(Temporal);
-  it(`should be 13 things`, () => {
-    equal(named.length, 13);
+  console.error(named);
+  it(`should be 9 things`, () => {
+    equal(named.length, 9);
   });
   it('should contain `Absolute`', () => {
     assert(named.includes('Absolute'));
@@ -44,21 +45,6 @@ describe('Exports', () => {
   });
   it('should contain `Duration`', () => {
     assert(named.includes('Duration'));
-  });
-  it('should contain `getAbsolute`', () => {
-    assert(named.includes('getAbsolute'));
-  });
-  it('should contain `getDateTime`', () => {
-    assert(named.includes('getDateTime'));
-  });
-  it('should contain `getTimeZone`', () => {
-    assert(named.includes('getTimeZone'));
-  });
-  it('should contain `getTime`', () => {
-    assert(named.includes('getTime'));
-  });
-  it('should contain `getDate`', () => {
-    assert(named.includes('getDate'));
   });
 });
 
