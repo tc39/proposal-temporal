@@ -16,39 +16,33 @@ import {
   NANOSECONDS
 } from './slots.mjs';
 import { absolute as STRING } from './regex.mjs';
+import bigInt from 'big-integer';
 
 export class Absolute {
   constructor(epochNanoseconds) {
-    if ('bigint' !== typeof epochNanoseconds) throw RangeError('bigint required');
-    const epochMilliseconds = Number(epochNanoseconds / BigInt(1e6));
-    const restNanoseconds = Number(epochNanoseconds % BigInt(1e6));
+    if (('bigint' !== typeof epochNanoseconds) && !bigInt.isInstance(epochNanoseconds)) throw RangeError('bigint required');
     CreateSlots(this);
-    SetSlot(this, EPOCHNANOSECONDS, { ms: epochMilliseconds, ns: restNanoseconds });
+    SetSlot(this, EPOCHNANOSECONDS, bigInt(epochNanoseconds));
   }
 
   getEpochSeconds() {
     if (!ES.IsAbsolute(this)) throw new TypeError('invalid receiver');
     const value = GetSlot(this, EPOCHNANOSECONDS);
-    const epochSeconds = Math[value.ms < 0 ? 'ceil' : 'floor'](value.ms / 1000);
-    return epochSeconds;
+    return value.divide(1e9);
   }
   getEpochMilliseconds() {
     if (!ES.IsAbsolute(this)) throw new TypeError('invalid receiver');
-    const value = GetSlot(this, EPOCHNANOSECONDS);
-    const epochMilliSeconds = value.ms;
-    return epochMilliSeconds;
+    const value = bigInt(GetSlot(this, EPOCHNANOSECONDS));
+    return value.divide(1e6);
   }
   getEpochMicroseconds() {
     if (!ES.IsAbsolute(this)) throw new TypeError('invalid receiver');
-    const value = GetSlot(this, EPOCHNANOSECONDS);
-    const epochNanoseconds = BigInt(value.ms) * BigInt(1e6) + (BigInt(value.ns) % BigInt(1e6));
-    return epochNanoseconds / BigInt(1e3);
+    const value = bigInt(GetSlot(this, EPOCHNANOSECONDS));
+    return value.divide(1e3).value;
   }
   getEpochNanoseconds() {
     if (!ES.IsAbsolute(this)) throw new TypeError('invalid receiver');
-    const value = GetSlot(this, EPOCHNANOSECONDS);
-    const epochMicroseconds = BigInt(value.ms) * BigInt(1e6) + (BigInt(value.ns) % BigInt(1e6));
-    return epochMicroseconds;
+    return bigInt(GetSlot(this, EPOCHNANOSECONDS)).value;
   }
 
   plus(durationLike = {}) {
@@ -57,33 +51,18 @@ export class Absolute {
     if (GetSlot(duration, YEARS) !== 0) throw new RangeError(`invalid duration field years`);
     if (GetSlot(duration, MONTHS) !== 0) throw new RangeError(`invalid duration field months`);
 
-    let { ms, ns } = GetSlot(this, EPOCHNANOSECONDS);
-    let negative = ms < 0 || ns < 0;
-    ns += GetSlot(duration, MICROSECONDS) * 1000;
-    ns += GetSlot(duration, NANOSECONDS);
-    if (negative && ns > 0) {
-      ms += Math.floor(ns / 1e6);
-      ns = 1e6 - (ns % 1e6);
-    }
-    ms += GetSlot(duration, DAYS) * 86400000;
-    ms += GetSlot(duration, HOURS) * 3600000;
-    ms += GetSlot(duration, MINUTES) * 60000;
-    ms += GetSlot(duration, SECONDS) * 1000;
-    ms += GetSlot(duration, MILLISECONDS);
+    let add = bigInt(0);
+    add = add.plus(bigInt(GetSlot(duration, NANOSECONDS)).multiply(1e0));
+    add = add.plus(bigInt(GetSlot(duration, MICROSECONDS)).multiply(1e3));
+    add = add.plus(bigInt(GetSlot(duration, MILLISECONDS)).multiply(1e6));
+    add = add.plus(bigInt(GetSlot(duration, SECONDS)).multiply(1e9));
+    add = add.plus(bigInt(GetSlot(duration, MINUTES)).multiply(60).multiply(1e9));
+    add = add.plus(bigInt(GetSlot(duration, HOURS)).multiply(60 * 60).multiply(1e9));
+    add = add.plus(bigInt(GetSlot(duration, DAYS)).multiply(24 * 60 * 60).multiply(1e9));
 
-    if (negative && ms > 0) {
-      ms -= 1;
-      ns += 1e6;
-    }
-
+    const ns = bigInt(GetSlot(this, EPOCHNANOSECONDS)).plus(add);
     const Construct = ES.SpeciesConstructor(this, Absolute);
-    if (Construct !== Absolute) {
-      return new Construct(BigInt(ms) * BigInt(1e6) + BigInt(ns));
-    }
-    const result = Object.create(Absolute.prototype);
-    CreateSlots(result);
-    SetSlot(result, EPOCHNANOSECONDS, { ms, ns });
-    return result;
+    return new Construct(ns);
   }
   minus(durationLike = {}) {
     if (!ES.IsAbsolute(this)) throw new TypeError('invalid receiver');
@@ -91,42 +70,35 @@ export class Absolute {
     if (GetSlot(duration, YEARS) !== 0) throw new RangeError(`invalid duration field years`);
     if (GetSlot(duration, MONTHS) !== 0) throw new RangeError(`invalid duration field months`);
 
-    let { ms, ns } = GetSlot(this, EPOCHNANOSECONDS);
-    let negative = ms < 0 || ns < 0;
-    ns -= GetSlot(duration, NANOSECONDS);
-    ns -= GetSlot(duration, MICROSECONDS);
-    if (!negative && ns < 0) {
-      ms += Math.ceil(ns / 1e6);
-      ns = 1e6 + (ns % 1e6);
-    }
-    ms -= GetSlot(duration, DAYS) * 86400000;
-    ms -= GetSlot(duration, HOURS) * 3600000;
-    ms -= GetSlot(duration, MINUTES) * 60000;
-    ms -= GetSlot(duration, SECONDS) * 1000;
-    ms -= GetSlot(duration, MILLISECONDS);
+    let add = bigInt(0);
+    add = add.plus(bigInt(GetSlot(duration, NANOSECONDS)).multiply(1e0));
+    add = add.plus(bigInt(GetSlot(duration, MICROSECONDS)).multiply(1e3));
+    add = add.plus(bigInt(GetSlot(duration, MILLISECONDS)).multiply(1e6));
+    add = add.plus(bigInt(GetSlot(duration, SECONDS)).multiply(1e9));
+    add = add.plus(bigInt(GetSlot(duration, MINUTES)).multiply(60).multiply(1e9));
+    add = add.plus(bigInt(GetSlot(duration, HOURS)).multiply(60 * 60).multiply(1e9));
+    add = add.plus(bigInt(GetSlot(duration, DAYS)).multiply(24 * 60 * 60).multiply(1e9));
 
+    const ns = bigInt(GetSlot(this, EPOCHNANOSECONDS)).minus(add);
     const Construct = ES.SpeciesConstructor(this, Absolute);
-    if (Construct !== Absolute) {
-      return new Construct(BigInt(ms) * BigInt(1e6) + BigInt(ns));
-    }
-    const result = Object.create(Absolute.prototype);
-    CreateSlots(result);
-    SetSlot(result, EPOCHNANOSECONDS, { ms, ns });
-    return result;
+    return new Construct(bigInt(ns));
   }
   difference(other) {
     if (!ES.IsAbsolute(this)) throw new TypeError('invalid receiver');
     other = ES.CastAbsolute(other);
 
     const [one, two] = [this, other].sort(Absolute.compare);
-    const { ms: onems, ns: onens } = GetSlot(one, EPOCHNANOSECONDS);
-    const { ms: twoms, ns: twons } = GetSlot(two, EPOCHNANOSECONDS);
+    const onens = GetSlot(one, EPOCHNANOSECONDS);
+    const twons = GetSlot(two, EPOCHNANOSECONDS);
+    const diff = twons.minus(onens);
 
-    const ns = twons - onens;
-    const ms = twoms - onems;
+    const ns = diff.mod(1e3);
+    const us = diff.divide(1e3).mod(1e3);
+    const ms = diff.divide(1e6).mod(1e3);
+    const ss = diff.divide(1e9);
 
     const Duration = ES.GetIntrinsic('%Temporal.Duration%');
-    const duration = new Duration(0, 0, 0, 0, 0, 0, ms, 0, ns, 'balance');
+    const duration = new Duration(0, 0, 0, 0, 0, ss, ms, us, ns, 'balance');
     return duration;
   }
   toString(timeZoneParam = 'UTC') {
@@ -154,36 +126,16 @@ export class Absolute {
   }
 
   static fromEpochSeconds(epochSecondsParam) {
-    const epochMilliseconds = ES.ToNumber(epochSecondsParam) * 1000;
-    const resultObject = Object.create(Absolute.prototype);
-    CreateSlots(resultObject);
-    SetSlot(resultObject, EPOCHNANOSECONDS, { ms: epochMilliseconds, ns: 0 });
-    return this === Absolute ? resultObject : new this(resultObject.getEpochNanoseconds());
+    return new Absolute(bigInt(epochSecondsParam).multiply(1e9));
   }
   static fromEpochMilliseconds(epochMillisecondsParam) {
-    const epochMilliseconds = ES.ToNumber(epochMillisecondsParam);
-    const resultObject = Object.create(Absolute.prototype);
-    CreateSlots(resultObject);
-    SetSlot(resultObject, EPOCHNANOSECONDS, { ms: epochMilliseconds, ns: 0 });
-    return this === Absolute ? resultObject : new this(resultObject.getEpochNanoseconds());
+    return new Absolute(bigInt(epochMillisecondsParam).multiply(1e6));
   }
   static fromEpochMicroseconds(epochMicroseconds) {
-    if ('bigint' !== typeof epochMicroseconds) throw RangeError('bigint required');
-    const epochMilliseconds = epochMicroseconds / BigInt(1e3);
-    const restNanoseconds = (epochMicroseconds % BigInt(1e3)) * BigInt(1e3);
-    const resultObject = Object.create(Absolute.prototype);
-    CreateSlots(resultObject);
-    SetSlot(resultObject, EPOCHNANOSECONDS, { ms: epochMilliseconds, ns: restNanoseconds });
-    return this === Absolute ? resultObject : new this(resultObject.getEpochNanoseconds());
+    return new Absolute(bigInt(epochMicroseconds).multiply(1e3));
   }
   static fromEpochNanoseconds(epochNanoseconds) {
-    if ('bigint' !== typeof epochNanoseconds) throw RangeError('bigint required');
-    const epochMilliseconds = epochNanoseconds / BigInt(1e6);
-    const restNanoseconds = epochNanoseconds % BigInt(1e6);
-    const resultObject = Object.create(Absolute.prototype);
-    CreateSlots(resultObject);
-    SetSlot(resultObject, EPOCHNANOSECONDS, { ms: epochMilliseconds, ns: restNanoseconds });
-    return this === Absolute ? resultObject : new this(resultObject.getEpochNanoseconds());
+    return new Absolute(bigInt(epochNanoseconds));
   }
   static from(arg) {
     let result;
@@ -225,9 +177,9 @@ export class Absolute {
     two = ES.CastAbsolute(two);
     one = GetSlot(one, EPOCHNANOSECONDS);
     two = GetSlot(two, EPOCHNANOSECONDS);
-    if (one.ms !== two.ms) return ES.ComparisonResult(one.ms - two.ms);
-    if (one.ns !== two.ns) return ES.ComparisonResult(one.ns - two.ns);
-    return ES.ComparisonResult(0);
+    if (bigInt(one).lesser(two)) return -1;
+    if (bigInt(one).greater(two)) return 1;
+    return 0;
   }
 }
 Absolute.prototype.toJSON = Absolute.prototype.toString;
