@@ -50,7 +50,7 @@ export class MonthDay {
   }
   plus(durationLike, disambiguation = 'constrain') {
     if (!ES.IsMonthDay(this)) throw new TypeError('invalid receiver');
-    const duration = ES.CastDuration(durationLike);
+    const duration = ES.ToDuration(durationLike);
     if (
       !ES.ValidDuration(duration, [
         'years',
@@ -74,7 +74,7 @@ export class MonthDay {
   }
   minus(durationLike, disambiguation = 'constrain') {
     if (!ES.IsMonthDay(this)) throw new TypeError('invalid receiver');
-    const duration = ES.CastDuration(durationLike);
+    const duration = ES.ToDuration(durationLike);
     if (
       !ES.ValidDuration(duration, [
         'years',
@@ -98,7 +98,7 @@ export class MonthDay {
   }
   difference(other) {
     if (!ES.IsMonthDay(this)) throw new TypeError('invalid receiver');
-    other = ES.CastMonthDay(other);
+    other = ES.ToMonthDay(other);
     const [one, two] = [this, other].sort(MonthDay.compare);
     let months = two.month - one.month;
     let days = two.days - one.days;
@@ -131,7 +131,7 @@ export class MonthDay {
   }
   static from(arg) {
     if (typeof arg === 'object') {
-      const result = ES.CastYearMonth(arg);
+      const result = ES.ToYearMonth(arg);
       return this === MonthDay ? result : new this(result.month, result.day);
     } else if (typeof arg === 'string') {
       const isoString = ES.ToString(arg);
@@ -146,8 +146,8 @@ export class MonthDay {
     }
   }
   static compare(one, two) {
-    one = ES.CastMonthDay(one);
-    two = ES.CastMonthDay(two);
+    one = ES.ToMonthDay(one);
+    two = ES.ToMonthDay(two);
     if (one.month !== two.month) return ES.ComparisonResult(one.month - two.month);
     if (one.day !== two.day) return ES.ComparisonResult(one.day - two.day);
     return ES.ComparisonResult(0);

@@ -15,7 +15,7 @@ import {
   MICROSECONDS,
   NANOSECONDS
 } from './slots.mjs';
-import { absolute as STRING } from './regex.mjs';
+
 import bigInt from 'big-integer';
 
 export class Absolute {
@@ -47,7 +47,7 @@ export class Absolute {
 
   plus(durationLike) {
     if (!ES.IsAbsolute(this)) throw new TypeError('invalid receiver');
-    const duration = ES.CastDuration(durationLike);
+    const duration = ES.ToDuration(durationLike);
     if (GetSlot(duration, YEARS) !== 0) throw new RangeError(`invalid duration field years`);
     if (GetSlot(duration, MONTHS) !== 0) throw new RangeError(`invalid duration field months`);
 
@@ -66,7 +66,7 @@ export class Absolute {
   }
   minus(durationLike) {
     if (!ES.IsAbsolute(this)) throw new TypeError('invalid receiver');
-    const duration = ES.CastDuration(durationLike);
+    const duration = ES.ToDuration(durationLike);
     if (GetSlot(duration, YEARS) !== 0) throw new RangeError(`invalid duration field years`);
     if (GetSlot(duration, MONTHS) !== 0) throw new RangeError(`invalid duration field months`);
 
@@ -85,7 +85,7 @@ export class Absolute {
   }
   difference(other) {
     if (!ES.IsAbsolute(this)) throw new TypeError('invalid receiver');
-    other = ES.CastAbsolute(other);
+    other = ES.ToAbsolute(other);
 
     const [one, two] = [this, other].sort(Absolute.compare);
     const onens = GetSlot(one, EPOCHNANOSECONDS);
@@ -103,7 +103,7 @@ export class Absolute {
   }
   toString(timeZoneParam = 'UTC') {
     if (!ES.IsAbsolute(this)) throw new TypeError('invalid receiver');
-    let timeZone = ES.CastTimeZone(timeZoneParam);
+    let timeZone = ES.ToTimeZone(timeZoneParam);
     let dateTime = timeZone.getDateTimeFor(this);
     let year = ES.ISOYearString(dateTime.year);
     let month = ES.ISODateTimePartString(dateTime.month);
@@ -137,44 +137,13 @@ export class Absolute {
   static fromEpochNanoseconds(epochNanoseconds) {
     return new Absolute(bigInt(epochNanoseconds));
   }
-  static from(arg) {
-    let result;
-    if (typeof arg === 'object') {
-      result = ES.CastAbsolute(arg);
-    } else if (typeof arg === 'string') {
-      const isoString = ES.ToString(arg);
-      const match = STRING.exec(isoString);
-      if (!match) throw new RangeError(`invalid absolute: ${isoString}`);
-      const year = ES.ToInteger(match[1]);
-      const month = ES.ToInteger(match[2]);
-      const day = ES.ToInteger(match[3]);
-      const hour = ES.ToInteger(match[4]);
-      const minute = ES.ToInteger(match[5]);
-      const second = ES.ToInteger(match[6]);
-      const millisecond = ES.ToInteger(match[7]);
-      const microsecond = ES.ToInteger(match[8]);
-      const nanosecond = ES.ToInteger(match[9]);
-      const zone = match[11] || match[10] || 'UTC';
-      const datetime = ES.CastDateTime({
-        year,
-        month,
-        day,
-        hour,
-        minute,
-        second,
-        millisecond,
-        microsecond,
-        nanosecond
-      });
-      result = datetime.inTimeZone(zone || 'UTC', match[11] ? match[10] : 'earlier');
-    } else {
-      throw new TypeError(`invalid absolute: ${arg}`);
-    }
-    return this === Absolute ? result : new this(result.getEpochNanoseconds());
+  static from(arg, zone) {
+    let result = ES.ToAbsolute(arg, zone);
+    return this === Absolute ? result : new this(GetSlot(result, EPOCHNANOSECONDS));
   }
   static compare(one, two) {
-    one = ES.CastAbsolute(one);
-    two = ES.CastAbsolute(two);
+    one = ES.ToAbsolute(one);
+    two = ES.ToAbsolute(two);
     one = GetSlot(one, EPOCHNANOSECONDS);
     two = GetSlot(two, EPOCHNANOSECONDS);
     if (bigInt(one).lesser(two)) return -1;

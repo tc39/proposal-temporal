@@ -175,7 +175,7 @@ export class DateTime {
   }
   plus(durationLike, disambiguation = 'constrain') {
     if (!ES.IsDateTime(this)) throw new TypeError('invalid receiver');
-    const duration = ES.CastDuration(durationLike);
+    const duration = ES.ToDuration(durationLike);
     let { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = this;
     let { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
     ({ year, month, day } = ES.AddDate(year, month, day, years, months, days, disambiguation));
@@ -201,7 +201,7 @@ export class DateTime {
   }
   minus(durationLike, disambiguation = 'constrain') {
     if (!ES.IsDateTime(this)) throw new TypeError('invalid receiver');
-    const duration = ES.CastDuration(durationLike);
+    const duration = ES.ToDuration(durationLike);
     let { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = this;
     let { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
     let deltaDays = 0;
@@ -226,7 +226,7 @@ export class DateTime {
   }
   difference(other) {
     if (!ES.IsDateTime(this)) throw new TypeError('invalid receiver');
-    other = ES.CastDateTime(other);
+    other = ES.ToDateTime(other);
     const [smaller, larger] = [this, other].sort(DateTime.compare);
     const { deltaDays, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.DifferenceTime(
       smaller,
@@ -263,7 +263,7 @@ export class DateTime {
 
   inTimeZone(timeZoneParam = 'UTC', disambiguation = 'earlier') {
     if (!ES.IsDateTime(this)) throw new TypeError('invalid receiver');
-    const timeZone = ES.CastTimeZone(timeZoneParam);
+    const timeZone = ES.ToTimeZone(timeZoneParam);
     return timeZone.getAbsoluteFor(this, disambiguation);
   }
   getDate() {
@@ -295,33 +295,23 @@ export class DateTime {
   }
 
   static from(arg) {
-    if (typeof arg === 'object') {
-      const result = ES.CastDateTime(arg);
-      // BUG: did we just throw the time component away?
-      return this === DateTime ? result : new this(result.year, result.month, result.day);
-    } else if (typeof arg === 'string') {
-      const match = STRING.exec(arg);
-      if (!match) throw new RangeError(`invalid datetime: ${arg}`);
-      const year = ES.ToInteger(match[1]);
-      const month = ES.ToInteger(match[2]);
-      const day = ES.ToInteger(match[3]);
-      const hour = ES.ToInteger(match[4]);
-      const minute = ES.ToInteger(match[5]);
-      const second = ES.ToInteger(match[6]);
-      const millisecond = ES.ToInteger(match[7]);
-      const microsecond = ES.ToInteger(match[8]);
-      const nanosecond = ES.ToInteger(match[9]);
-      // ???: why does this exist?
-      const DateTime = ES.GetIntrinsic('%Temporal.DateTime%');
-      const Construct = this;
-      return new Construct(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, 'reject');
-    } else {
-      throw new TypeError(`invalid datetime: ${arg}`);
-    }
+    let result = ES.ToDateTime(arg);
+    return this === DateTime ? result : new this(
+      GetSlot(result, YEAR),
+      GetSlot(result, MONTH),
+      GetSlot(result, DAY),
+      GetSlot(result, HOUR),
+      GetSlot(result, MINUTE),
+      GetSlot(result, SECOND),
+      GetSlot(result, MILLISECOND),
+      GetSlot(result, MICROSECOND),
+      GetSlot(result, NANOSECOND),
+      'reject'
+    );
   }
   static compare(one, two) {
-    one = ES.CastDateTime(one);
-    two = ES.CastDateTime(two);
+    one = ES.ToDateTime(one);
+    two = ES.ToDateTime(two);
     if (one.year !== two.year) return ES.ComparisonResult(one.year - two.year);
     if (one.month !== two.month) return ES.ComparisonResult(one.month - two.month);
     if (one.day !== two.day) return ES.ComparisonResult(one.day - two.day);
