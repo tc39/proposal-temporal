@@ -223,6 +223,10 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
   },
   ToMonthDay: (item) => {
     if (ES.IsMonthDay(item)) return item;
+    const props = ES.ValidPropertyBag(item, [
+      'month',
+      'day'
+    ]);
     if (props) {
       const {
         month = 1,
@@ -233,8 +237,8 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
     const isoString = ES.ToString(item);
     const match = PARSE.monthday.exec(isoString);
     if (!match) throw new RangeError(`invalid yearmonth: ${iso}`);
-    const month = ES.ToInteger(match[1]);
-    const day = ES.ToInteger(match[2]);
+    const month = ES.ToInteger(match[1] || match[3]);
+    const day = ES.ToInteger(match[2] || match[4]);
     return new TemporalMonthDay(month, day, 'reject');
   },
   ToDuration: (item) => {

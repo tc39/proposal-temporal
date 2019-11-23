@@ -130,20 +130,12 @@ export class MonthDay {
     return new Date(year, month, day, disambiguation);
   }
   static from(arg) {
-    if (typeof arg === 'object') {
-      const result = ES.ToYearMonth(arg);
-      return this === MonthDay ? result : new this(result.month, result.day);
-    } else if (typeof arg === 'string') {
-      const isoString = ES.ToString(arg);
-      const match = STRING.exec(isoString);
-      if (!match) throw new RangeError(`invalid monthday: ${isoString}`);
-      const month = ES.ToInteger(match[1] || match[3]);
-      const day = ES.ToInteger(match[2] || match[4]);
-      const Construct = this;
-      return new Construct(month, day, 'reject');
-    } else {
-      throw new TypeError(`invalid date: ${arg}`);
-    }
+    let result = ES.ToMonthDay(arg);
+    return this === MonthDay ? result : new this(
+      GetSlot(result, MONTH),
+      GetSlot(result, DAY),
+      'reject'
+    );
   }
   static compare(one, two) {
     one = ES.ToMonthDay(one);

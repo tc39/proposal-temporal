@@ -130,20 +130,12 @@ export class YearMonth {
     return new Date(year, month, day, disambiguation);
   }
   static from(arg) {
-    if (typeof arg === 'object') {
-      const result = ES.ToYearMonth(arg);
-      return this === YearMonth ? result : new this(result.year, result.month);
-    } else if (typeof arg === 'string') {
-      const isoString = ES.ToString(arg);
-      const match = STRING.exec(isoString);
-      if (!match) throw new RangeError(`invalid yearmonth: ${isoString}`);
-      const year = ES.ToInteger(match[1]);
-      const month = ES.ToInteger(match[2]);
-      const Construct = this;
-      return new Construct(year, month, 'reject');
-    } else {
-      throw new TypeError(`invalid yearmonth: ${arg}`);
-    }
+    let result = ES.ToYearMonth(arg);
+    return this === YearMonth ? result : new this(
+      GetSlot(result, YEAR),
+      GetSlot(result, MONTH),
+      'reject'
+    );
   }
   static compare(one, two) {
     one = ES.ToYearMonth(one);
