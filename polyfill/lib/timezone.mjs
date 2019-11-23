@@ -16,12 +16,12 @@ export class TimeZone {
   getOffsetFor(absolute) {
     if (!ES.IsTimeZone(this)) throw new TypeError('invalid receiver');
     absolute = ES.CastAbsolute(absolute);
-    return ES.GetTimeZoneOffsetString(absolute.getEpochMilliseconds(), GetSlot(this, IDENTIFIER));
+    return ES.GetTimeZoneOffsetString(GetSlot(absolute, EPOCHNANOSECONDS), GetSlot(this, IDENTIFIER));
   }
   getDateTimeFor(absolute) {
     if (!ES.IsTimeZone(this)) throw new TypeError('invalid receiver');
     absolute = ES.CastAbsolute(absolute);
-    const { ms, ns } = GetSlot(absolute, EPOCHNANOSECONDS);
+    const ns = GetSlot(absolute, EPOCHNANOSECONDS);
     const {
       year,
       month,
@@ -32,7 +32,7 @@ export class TimeZone {
       millisecond,
       microsecond,
       nanosecond
-    } = ES.GetTimeZoneDateTimeParts(ms, ns, GetSlot(this, IDENTIFIER));
+    } = ES.GetTimeZoneDateTimeParts(ns, GetSlot(this, IDENTIFIER));
     const DateTime = ES.GetIntrinsic('%Temporal.DateTime%');
     return new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
   }
@@ -110,16 +110,21 @@ export class TimeZone {
   getTransitions(startingPoint) {
     if (!ES.IsTimeZone(this)) throw new TypeError('invalid receiver');
     startingPoint = ES.CastAbsolute(startingPoint);
-    let { ms } = GetSlot(startingPoint, EPOCHNANOSECONDS);
+    let epochNanoseconds = GetSlot(startingPoint, EPOCHNANOSECONDS);
     const Absolute = ES.GetIntrinsic('%Temporal.Absolute%');
-    return {
+    const timeZone = GetSlot(this, IDENTIFIER);
+    const result = {
       next: () => {
-        ms = ES.GetTimeZoneNextTransition(ms, GetSlot(this, IDENTIFIER));
-        const done = epochNanoseconds !== null;
-        const value = epochNanoseconds !== null ? null : new Absolute(epochNanoseconds);
+        epochNanoseconds = ES.GetTimeZoneNextTransition(epochNanoseconds, timeZone);
+        const done = epochNanoseconds === null;
+        const value = epochNanoseconds === null ? null : new Absolute(epochNanoseconds);
         return { done, value };
       }
     };
+    if (typeof Symbol === 'function') {
+      result[Symbol.iterator] = ()=>result;
+    }
+    return result;
   }
   toString() {
     if (!ES.IsTimeZone(this)) throw new TypeError('invalid receiver');
