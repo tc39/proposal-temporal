@@ -145,26 +145,19 @@ export class Duration {
     return new Intl.DateTimeFormat(...args).format(this);
   }
   static from(arg) {
-    if (typeof arg === 'object') {
-      const result = ES.ToDuration(arg);
-      return this === Duration
-        ? result
-        : new this(
-            result.years,
-            result.months,
-            result.days,
-            result.hours,
-            result.minutes,
-            result.seconds,
-            result.milliseconds,
-            result.microseconds,
-            result.nanoseconds
-          );
-    } else if (typeof arg === 'string') {
-
-    } else {
-      return new TypeError(`invalid duration: ${duration}`);
-    }
+    let result = ES.ToDuration(arg);
+    return this === Duration ? result : new this(
+      GetSlot(result, YEARS),
+      GetSlot(result, MONTHS),
+      GetSlot(result, DAYS),
+      GetSlot(result, HOURS),
+      GetSlot(result, MINUTES),
+      GetSlot(result, SECONDS),
+      GetSlot(result, MILLISECONDS),
+      GetSlot(result, MICROSECONDS),
+      GetSlot(result, NANOSECONDS),
+      'reject'
+    );
   }
 }
 Duration.prototype.toJSON = Duration.prototype.toString;

@@ -400,9 +400,9 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
   },
   GetTimeZoneDateTimeParts: (epochNanoseconds, timeZone) => {
     const offset = parseOffsetString(timeZone);
-
-    let epochMilliseconds = bigInt(epochNanoseconds).divide(1e6);
-    let nanos = +((epochNanoseconds < 0 ? 1e9 : 0) + bigInt(epochNanoseconds).mod(1e9));
+    let nanos = bigInt(epochNanoseconds).mod(1e9);
+    let epochMilliseconds = bigInt(epochNanoseconds).divide(1e9).multiply(1e3).plus(Math.floor(nanos / 1e6));
+    nanos = +((epochNanoseconds < 0 ? 1e9 : 0) + nanos);
     let millisecond = Math.floor(nanos / 1e6) % 1e3;
     let microsecond = Math.floor(nanos / 1e3) % 1e3;
     let nanosecond = Math.floor(nanos / 1e0) % 1e3;
@@ -440,7 +440,6 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
         nanosecond
       };
     }
-
     let year, month, day, hour, minute, second;
     ({ year, month, day, hour, minute, second } = ES.GetFormatterParts(timeZone, epochMilliseconds).reduce(
       reduceParts,
@@ -929,7 +928,7 @@ function bisect(getState, left, right, lstate = getState(left), rstate = getStat
       right = middle;
       rstate = mstate;
     } else {
-      throw new Error('invalid state in bisection');
+      throw new Error(`invalid state in bisection ${lstate} - ${mstate} - ${rstate}`);
     }
   }
   return right;

@@ -164,6 +164,9 @@ describe('Absolute', () => {
         BigInt(Date.UTC(1976, 10, 18, 15, 23, 30, 123)) * BigInt(1e6) + BigInt(456789)
       );
     });
+    it('Absolute.from(-1n)', () => {
+      equal(`${ Absolute.from(-1n) }`, '1969-12-31T23:59:59.999999999Z');
+    });
   });
   describe('Absolute.plus works', ()=>{
     describe('cross epoch in ms', ()=>{
