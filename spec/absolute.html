@@ -2,97 +2,374 @@
 <meta charset="utf8">
 
 <emu-clause id="sec-temporal-absolute">
-  <h1>Absolute Objects</h1>
-  <p>An `Absolute` is an immutable object referencing a point in time with nanoseconds precision.</p>
+  <h1>Temporal.Absolute Objects</h1>
+  <p>A Temporal.Absolute object is an immutable Object referencing a point in time with nanoseconds precision.</p>
 
   <emu-clause id="sec-temporal-absolute-constructor">
-    <h1>new Absolute(*nanoseconds*)</h1>
-    <p>When called as a constructor creates a new Absolute object. *nanoseconds* is a BigInt of the nanoseconds since
-      epoch.</p>
+    <h1>The Temporal.Absolute Constructor</h1>
+    <p>
+      The Temporal.Absolute constructor is the %Temporal.Absolute% intrinsic object.
+      When called as a constructor, it creates and initializes a new Temporal.Absolute object.
+    </p>
+    <p>
+      The Temporal.Absolute constructor is designed to be subclassable.
+      It may be used as the value of an extends clause of a class definition.
+      Subclass constructors that intend to inherit the specified Absolute behaviour must include a super call to the %Temporal.Absolute% constructor to create and initialize subclass instances with the necessary internal slots.
+    </p>
+
+    <emu-clause id="sec-temporal.absolute">
+      <h1>Temporal.Absolute ( _epochNanoseconds_ )</h1>
+      <p>
+        When the `Temporal.Absolute` function is called, the following steps are taken:
+      </p>
+      <emu-alg>
+        1. If NewTarget is *undefined*, then
+          1. Throw a *TypeError* exception.
+        1. Let _epochNanoseconds_ be ? ToBigInt(_epochNanoseconds_).
+        1. Return ? CreateAbsolute(_epochNanoseconds_, NewTarget).
+      </emu-alg>
+    </emu-clause>
   </emu-clause>
 
-  <emu-clause id="sec-temporal-absolute.prototype.epochseconds">
-    <h1>Absolute.prototype.epochSeconds</h1>
-    <p>`absolute.epochSeconds` is a getter that returns the seconds Number integer since epoch of the point in time
-      represented by the absolute object such that `absolute.epochSeconds === Number(absolute.valueOf() / BigInt(1e9)` is
-      *true*.</p>
-  </emu-clause>
-  <emu-clause id="sec-temporal-absolute.prototype.epochmilliseconds">
-    <h1>Absolute.prototype.epochMilliseconds</h1>
-    <p>`absolute.epochMilliseconds` is a getter that returns the milliseconds Number integer since epoch of the point in time
-      represented by the absolute object such that `absolute.epochMilliseconds === Number(absolute.valueOf() / BigInt(1e6))` is
-      *true*.</p>
-  </emu-clause>
-  <emu-clause id="sec-temporal-absolute.prototype.epochmicroseconds">
-    <h1>Absolute.prototype.epochMicroseconds</h1>
-    <p>`absolute.epochMicroseconds` is a getter that returns the microseconds BigInt since epoch of the point in time
-      represented by the absolute object such that `absolute.epochMicroseconds === Number(absolute.valueOf() / BigInt(1e3))` is
-      *true*.</p>
-  </emu-clause>
-  <emu-clause id="sec-temporal-absolute.prototype.epochnanoseconds">
-    <h1>Absolute.prototype.epochNanoseconds</h1>
-    <p>`absolute.epochNanoseconds` is a getter that returns the nanoseconds BigInt since epoch of the point in time
-      represented by the absolute object such that `absolute.epochNanoseconds === absolute.valueOf()` is *true*.</p>
-  </emu-clause>
-  <emu-clause id="sec-temporal-absolute.prototype.withZone">
-    <h1>Absolute.prototype.withZone(_timezone_)</h1>
-    <p>When called with an Absolute object as a _this_ context it will return a <emu-xref href="#sec-temporal-zoneddatetime">ZonedDateTime</emu-xref>
-      object that specifies an absolute in time in the given time zone.</p>
-    <p>_timezone_ is a string specifying a time zone. Legal values are IANA time zone names.</p>
-    <p>Calling this function with a _this_ context that is not an instance of Absolute is illegal.</p>
-  </emu-clause>
-  <emu-clause id="sec-temporal-absolute.prototype.toString">
-    <h1>Absolute.prototype.toString()</h1>
-    <p>When called with an Absolute object as a _this_ context it will return an ISO 8601 String value representing the
-      value of the Absolute object.</p>
-    <p>The format of the String will always be an IsoDateTime of the following form:</p>
-    <emu-grammar>
-      Sign: `-`
-      Year: Sign? Digit Digit Digit Digit
-      Month: `01` through `12`
-      Day: `01` through `31`
-      Hour: `00` through `24`
-      Minute: `00` through `59`
-      Second: `00` through `59`
-      Milliseconds: `000` through `999`
-      Microseconds: `000` through `999`
-      Nanoseconds: `000` through `999`
-      IsoDateTime: Year `-` Month `-` Day `T` Hour `:` Minute `:` Second `.` Milliseconds Microseconds Nanoseconds `Z`
-    </emu-grammar>
-    <p>Calling this function with a _this_ context that is not an instance of Absolute is illegal.</p>
+  <emu-clause id="sec-properties-of-the-temporal-absolute-constructor">
+    <h1>Properties of the Temporal.Absolute Constructor</h1>
+    <p>The value of the [[Prototype]] internal slot of the Temporal.Absolute constructor is the intrinsic object %FunctionPrototype%.</p>
+    <p>The Temporal.Absolute constructor has the following properties:</p>
+
+    <emu-clause id="sec-temporal-absolute-prototype">
+      <h1>Temporal.Absolute.prototype</h1>
+      <p>The initial value of Temporal.Absolute.prototype is %Temporal.Absolute.prototype%.</p>
+      <p>This property has the attributes { [[Writable]]: *false*, [[Enumerable]]: *false*, [[Configurable]]: *false* }.</p>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal.absolute.from">
+      <h1>Temporal.Absolute.from ( _arg_ )</h1>
+      <p>
+        The `from` method takes one argument _arg_.
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Return ? ToAbsolute(_arg_).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal.absolute.fromepochseconds">
+      <h1>Temporal.Absolute.fromEpochSeconds ( _arg_ )</h1>
+      <p>
+        The `fromEpochSeconds` method takes one argument _arg_.
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _arg_ be ? ToNumber(_arg_).
+        1. Let _arg_ be ? NumberToBigInt(_arg_).
+        1. Let _epochNanoseconds_ be _arg_ × 1,000,000,000.
+        1. Return ? CreateAbsolute(_epochNanoseconds_).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal.absolute.fromepochmilliseconds">
+      <h1>Temporal.Absolute.fromEpochMilliseconds ( _arg_ )</h1>
+      <p>
+        The `fromEpochMilliseconds` method takes one argument _arg_.
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _arg_ be ? ToNumber(_arg_).
+        1. Let _arg_ be ? NumberToBigInt(_arg_).
+        1. Let _epochNanoseconds_ be _arg_ × 1,000,000.
+        1. Return ? CreateAbsolute(_epochNanoseconds_).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal.absolute.fromepochmicroseconds">
+      <h1>Temporal.Absolute.fromEpochMicroseconds ( _arg_ )</h1>
+      <p>
+        The `fromEpochMicroseconds` method takes one argument _arg_.
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _arg_ be ? ToBigInt(_arg_).
+        1. Let _epochNanoseconds_ be _arg_ × 1,000.
+        1. Return ? CreateAbsolute(_epochNanoseconds_).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal.absolute.fromepochnanoseconds">
+      <h1>Temporal.Absolute.fromEpochNanoseconds ( _arg_ )</h1>
+      <p>
+        The `fromEpochNanoseconds` method takes one argument _arg_.
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _epochNanoseconds_ be ? ToBigInt(_arg_).
+        1. Return ? CreateAbsolute(_epochNanoseconds_).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal.absolute.compare">
+      <h1>Temporal.Absolute.compare ( _one_, _two_ )</h1>
+      <p>
+        The `compare` method takes two arguments, _one_ and _two_.
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _one_ be ? ToAbsolute(_one_).
+        1. Let _two_ be ? ToAbsolute(_two_).
+        1. Return ! AbsoluteCompare(_one_, _two_).
+      </emu-alg>
+    </emu-clause>
   </emu-clause>
 
-  <emu-clause id="sec-temporal-absolute.fromEpochSeconds">
-    <h1>Absolute.fromEpochSeconds(_seconds_)</h1>
-    <p>
-      This function will create an Absolute object that represents the absolute in time _seconds_ since epoch such that
-      `BigInt(absolute.epochSeconds) * BigInt(1e9) === absolute.epochNanoseconds` and `absolute.epochSeconds === _seconds_`
-      are both `true`.
-    </p>
-  </emu-clause>
-  <emu-clause id="sec-temporal-absolute.fromEpochMilliseconds">
-    <h1>Absolute.fromEpochMilliseconds(_milliseconds_)</h1>
-    <p>
-      This function will create an Absolute object that represents the absolute in time _milliseconds_ since epoch such that
-      `BigInt(absolute.epochMilliseconds) * BigInt(1e6) === absolute.epochNanoseconds` and `absolute.epochMilliseconds === _milliseconds_`
-      are both `true`.
-    </p>
-  </emu-clause>
-  <emu-clause id="sec-temporal-absolute.fromEpochMicroseconds">
-    <h1>Absolute.fromEpochMicroseconds(_microseconds_)</h1>
-    <p>
-      This function will create an Absolute object that represents the absolute in time _milliseconds_ since epoch such that
-      `absolute.epochMicroseconds * BigInt(1e3) === absolute.epochNanoseconds` and `absolute.epochMicroseconds === _microseconds_`
-      are both `true`.
-    </p>
-  </emu-clause>
-  <emu-clause id="sec-temporal-absolute.fromEpochNanoseconds">
-    <h1>Absolute.fromEpochNanoseconds(_nanoseconds_)</h1>
-    <p>
-      This function will create an Absolute object that represents the absolute in time _nanoseconds_ since epoch such that
-      `absolute.epochNanoseconds === absolute.epochNanoseconds` and `absolute.epochMicroseconds === _microseconds_`
-      are both `true`.
-    </p>
+  <emu-clause id="sec-properties-of-the-temporal-absolute-prototype-object">
+    <h1>Properties of the Temporal.Absolute Prototype Object</h1>
+
+    <p>The Temporal.Absolute prototype object</p>
+    <ul>
+      <li>is the intrinsic object %Temporal.Absolute.prototype%.
+      <li>is itself an ordinary object.
+      <li>is not a Temporal.Absolute instance and does not have a [[InitializedTemporalAbsolute]] internal slot.
+      <li>has a [[Prototype]] internal slot whose value is %Object.prototype%.
+    </ul>
+
+    <emu-clause id="sec-temporal.Absolute.prototype.constructor">
+      <h1>Temporal.Absolute.prototype.constructor</h1>
+      <p>The initial value of Temporal.Absolute.prototype.constructor is %Temporal.Absolute%.</p>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal.Absolute.prototype-@@tostringtag">
+      <h1>Temporal.Absolute.prototype[ @@toStringTag ]</h1>
+      <p>
+        The initial value of the @@toStringTag property is the string value `"Temporal.Absolute"`.
+      </p>
+      <p>
+        This property has the attributes { [[Writable]]: *false*, [[Enumerable]]: *false*, [[Configurable]]: *true* }.
+      </p>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal.absolute.prototype.getepochseconds">
+      <h1>Temporal.Absolute.prototype.getEpochSeconds ( )</h1>
+      <p>
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _absolute_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_absolute_, [[InitializedTemporalAbsolute]]).
+        1. Let _ns_ be _absolute_.[[Nanoseconds]].
+        1. Let _s_ be RoundTowardsZero(_ns_ / 1,000,000,000<sub>ℝ</sub>).
+        1. Return _s_.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal.absolute.prototype.getepochmilliseconds">
+      <h1>Temporal.Absolute.prototype.getEpochMilliseconds ( )</h1>
+      <p>
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _absolute_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_absolute_, [[InitializedTemporalAbsolute]]).
+        1. Let _ns_ be _absolute_.[[Nanoseconds]].
+        1. Let _ms_ be RoundTowardsZero(_ns_ / 1,000,000<sub>ℝ</sub>).
+        1. Return _ms_.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal.absolute.prototype.getepochmicroseconds">
+      <h1>Temporal.Absolute.prototype.getEpochMicroseconds ( )</h1>
+      <p>
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _absolute_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_absolute_, [[InitializedTemporalAbsolute]]).
+        1. Let _ns_ be _absolute_.[[Nanoseconds]].
+        1. Let _mcs_ be RoundTowardsZero(_ns_ / 1,000<sub>ℝ</sub>).
+        1. Return _mcs_.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal.absolute.prototype.getepochnanoseconds">
+      <h1>Temporal.Absolute.prototype.getEpochNanoseconds ( )</h1>
+      <p>
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _absolute_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_absolute_, [[InitializedTemporalAbsolute]]).
+        1. Let _ns_ be _absolute_.[[Nanoseconds]].
+        1. Return _ns_.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal.absolute.prototype.plus">
+      <h1>Temporal.Absolute.prototype.plus ( _duration_ )</h1>
+      <p>
+        The `plus` method takes one argument _duration_.
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _absolute_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_absolute_, [[InitializedTemporalAbsolute]]).
+        1. Let _duration_ be ? ToTimeDurationLike(_duration_).
+        1. <mark>TODO: Handling year, month, day?</mark>
+        1. Let _ns_ be _absolute_.[[Nanoseconds]] +
+            _duration_.[[Nanoseconds]] +
+            _duration_.[[Microseconds]] × 1000 +
+            _duration_.[[Milliseconds]] × 1,000,000 +
+            _duration_.[[Seconds]] × 1,000,000,000 +
+            _duration_.[[Minutes]] × 60,000,000,000 +
+            _duration_.[[Hours]] × 3,600,000,000,000 +
+            _duration_.[[Days]] × 86,400,000,000,000.
+        1. Return ? CreateAbsolute(_ns_).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal.absolute.prototype.minus">
+      <h1>Temporal.Absolute.prototype.minus ( _duration_ )</h1>
+      <p>
+        The `minus` method takes one argument _duration_.
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _absolute_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_absolute_, [[InitializedTemporalAbsolute]]).
+        1. Let _duration_ be ? ToTimeDurationLike(_duration_).
+        1. <mark>TODO: Handling year, month, day?</mark>
+        1. Let _ns_ be _absolute_.[[Nanoseconds]] -
+            _duration_.[[Nanoseconds]] -
+            _duration_.[[Microseconds]] × 1000 -
+            _duration_.[[Milliseconds]] × 1,000,000 -
+            _duration_.[[Seconds]] × 1,000,000,000 -
+            _duration_.[[Minutes]] × 60,000,000,000 -
+            _duration_.[[Hours]] × 3,600,000,000,000 -
+            _duration_.[[Days]] × 86,400,000,000,000.
+        1. Return ? CreateAbsolute(_ns_).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal.absolute.prototype.difference">
+      <h1>Temporal.Absolute.prototype.difference ( _otherAbsolute_ )</h1>
+      <p>
+        The `difference` method takes one argument _otherAbsolute_.
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _absolute_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_absolute_, [[InitializedTemporalAbsolute]]).
+        1. Let _otherAbsolute_ be ? ToAbsolute(_otherAbsolute_).
+        1. If ! AbsoluteCompare(_absolute_, _otherAbsolute_) &lt; 0, then
+          1. Let _greater_ be _otherAbsolute_.
+          1. Let _smaller_ be _absolute_.
+        1. Else,
+          1. Let _greater_ be _absolute_.
+          1. Let _smaller_ be _otherAbsolute_.
+        1. Let _ns_ be _greater_.[[Nanoseconds]] - _smaller_.[[Nanoseconds]].
+        1. Let _result_ be ! BalanceTime(0, 0, 0, 0, 0, _ns_).
+        1. Return ? CreateDuration(0, 0, _result_.[[Days]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal.absolute.prototype.tostring">
+      <h1>Temporal.Absolute.prototype.toString ( [ _timeZone_ ] )</h1>
+      <p>
+        The `toString` method takes one argument _timeZone_.
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _absolute_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_absolute_, [[InitializedTemporalAbsolute]]).
+        1. If _timeZone_ is *undefined*, then
+          1. Set _timeZone_ to *"UTC"*.
+        1. Let _timeZone_ be ? ToTimeZone(_timeZone_).
+        1. Return ! AbsoluteToString(_absolute_, _timeZone_).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal.absolute.prototype.tolocalestring">
+      <h1>Temporal.Absolute.prototype.toLocaleString ( [ _locales_ [ , _options_ ] ] )</h1>
+      <p>
+        The `toLocaleString` method takes two arguments, _locales_ and _options_.
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _absolute_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_absolute_, [[InitializedTemporalAbsolute]]).
+        1. If the implementation does not include the ECMA-402 Internationalization API, then
+          1. Return ! AbsoluteToString(_absolute_).
+        1. Let _dateFormat_ be ? Construct(%DateTimeFormat%, « _locales_, _options_ »).
+        1. Return ? FormatDateTime(_dateFormat_, _absolute_).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal.absolute.prototype.tojson">
+      <h1>Temporal.Absolute.prototype.toJSON ( [ _timeZone_ ] )</h1>
+      <p>
+        The `toJSON` method takes one argument _timeZone_.
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _absolute_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_absolute_, [[InitializedTemporalAbsolute]]).
+        1. Return ! AbsoluteToString(_absolute_).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal.absolute.prototype.intimezone">
+      <h1>Temporal.Absolute.prototype.inTimeZone ( [ _timeZone_ ] )</h1>
+      <p>
+        The `inTimeZone` method takes one argument _timeZone_.
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _absolute_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_absolute_, [[InitializedTemporalAbsolute]]).
+        1. If _timeZone_ is *undefined*, then
+          1. Set _timeZone_ to *"UTC"*.
+        1. Let _timeZone_ be ? ToTimeZone(_timeZone_).
+        1. Return ? GetDateTimeFor(_timeZone_, _absolute_);
+      </emu-alg>
+    </emu-clause>
   </emu-clause>
 
+  <emu-clause id="sec-temporal-datetime-abstract-ops">
+    <h1>Abstract operations</h1>
+
+    <emu-clause id="sec-temporal-createabsolute" aoid="CreateAbsolute">
+      <h1>CreateAbsolute ( _ns_ [ , _newTarget_] )</h1>
+      <emu-alg>
+        1. Assert: Type(_ns_) is BigInt.
+        1. If _newTarget_ is not given, set it to %Temporal.Absolute%.
+        1. Let _object_ be ? OrdinaryCreateFromConstructor(_newTarget_, `"%Temporal.Absolute.prototype%"`, « [[InitializedTemporalAbsolute]], [[Nanoseconds]] »).
+        1. Set _object_.[[Nanoseconds]] to _ns_.
+        1. Return _object_.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-absolutecompare" aoid="AbsoluteCompare">
+      <h1>AbsoluteCompare ( _one_, _two_ )</h1>
+      <emu-alg>
+        1. Assert: Type(_one_) is Object.
+        1. Assert: _one_ has an [[InitializedTemporalAbsolute]] internal slot.
+        1. Assert: Type(_two_) is Object.
+        1. Assert: _two_ has an [[InitializedTemporalAbsolute]] internal slot.
+        1. If _one_.[[Nanoseconds]] &gt; _two_.[[Nanoseconds]], return 1.
+        1. If _one_.[[Nanoseconds]] &lt; _two_.[[Nanoseconds]], return -1.
+        1. Return +0.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-absolutetostring" aoid="AbsoluteToString">
+      <h1>AbsoluteToString ( _absolute_, _timeZone_ )</h1>
+      <emu-alg>
+        1. Assert: Type(_absolute_) is Object.
+        1. Assert: _absolute_ has an [[InitializedTemporalAbsolute]] internal slot.
+        1. Assert: Type(_timeZone_) is Object.
+        1. Assert: _timeZone_ has an [[InitializedTemporalTimeZone]] internal slot.
+        1. Let _dateTime_ be ? GetDateTimeFor(_timeZone_, _absolute_);
+        1. Let _dateTimeString_ be ! DateTimeToString(_dateTime_).
+        1. Let _timeZoneString_ be ? ISOTimeZoneString(_timeZone_, _absolute_).
+        1. Return the string-concatenation of _dateTimeString_ and _timeZoneString_.
+      </emu-alg>
+    </emu-clause>
+  </emu-clause>
 </emu-clause>

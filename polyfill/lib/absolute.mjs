@@ -45,7 +45,7 @@ export class Absolute {
     return bigInt(GetSlot(this, EPOCHNANOSECONDS)).value;
   }
 
-  plus(durationLike = {}) {
+  plus(durationLike) {
     if (!ES.IsAbsolute(this)) throw new TypeError('invalid receiver');
     const duration = ES.CastDuration(durationLike);
     if (GetSlot(duration, YEARS) !== 0) throw new RangeError(`invalid duration field years`);
@@ -64,7 +64,7 @@ export class Absolute {
     const Construct = ES.SpeciesConstructor(this, Absolute);
     return new Construct(ns);
   }
-  minus(durationLike = {}) {
+  minus(durationLike) {
     if (!ES.IsAbsolute(this)) throw new TypeError('invalid receiver');
     const duration = ES.CastDuration(durationLike);
     if (GetSlot(duration, YEARS) !== 0) throw new RangeError(`invalid duration field years`);
