@@ -167,7 +167,7 @@ describe('Absolute', () => {
   });
   describe('Absolute.plus works', ()=>{
     describe('cross epoch in ms', ()=>{
-      const abs = Absolute.fromString('1969-12-25T12:23:45.678901234Z');
+      const abs = Absolute.from('1969-12-25T12:23:45.678901234Z');
       const one = abs.minus({ days: 10, nanoseconds: 800 });
       const two = abs.plus({ days: 10, nanoseconds: 800 });
       const three = two.minus({ days: 20, nanoseconds: 1600 });
