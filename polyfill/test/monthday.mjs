@@ -28,6 +28,12 @@ describe('MonthDay', () => {
         equal(`${MonthDay.from('2019-10-01T09:00:00Z')}`, '10-01'));
       it(`MonthDay.from('11-18') == (11-18)`, () => equal(`${MonthDay.from('11-18')}`, '11-18'));
       it(`MonthDay.from('1976-11-18') == (11-18)`, () => equal(`${MonthDay.from('1976-11-18')}`, '11-18'));
+      it('MonthDay.from({ month: 11, day: 18 }) == 11-18', () => equal(`${MonthDay.from({ month: 11, day: 18 }) }`, '11-18'));
+      it('MonthDay.from(11-18) == 11-18', () => {
+        const orig = new MonthDay(11, 18);
+        const actu = MonthDay.from(orig);
+        equal(actu, orig);
+      });
     });
     describe('getters', () => {
       let md = new MonthDay(1, 15);
