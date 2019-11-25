@@ -6,6 +6,8 @@ A representation of a calendar date.
 
 Creates a new `Date` object that represents a calendar date
 
+## Temporal.Date.from(thing: string | object) : Temporal.Date
+
 ## date.year : number
 
 Returns the year this `Date` represents
@@ -76,8 +78,6 @@ Returns a new [`YearMonth`](./YearMonth) object.
 ## date.getMonthDay() : Temporal.MonthDay
 
 Returns a new [`YearMonth`](./MonthDay) object.
-
-## Temporal.Date.from(thing: string | object) : Temporal.Date
 
 ## Temporal.Date.compare(one: Temporal.Date | object, two: Temporal.Date | object) : number
 

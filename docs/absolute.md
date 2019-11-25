@@ -7,6 +7,10 @@ No timezone or offset information is present. As such `Absolute`s have no concep
 
 Creates a new `Absolute` object that represents an absolute point on the timeline.
 
+## Temporal.Absolute.from(thing: string | object) : Temporal.Absolute
+
+Creates a new `Absolute` object from either an object or IEO-8601 string.
+
 ## absolute.getEpochSeconds() : number
 
 Returns the numeric value of the specified date as the number of seconds since January 1, 1970, 00:00:00 UTC (negative for prior times).
@@ -51,10 +55,6 @@ date.toString(); // 2019-11-18T10:52:01.816Z
 ## absolute.toLocaleString(locale?: string, options: object) : string
 
 Returns a string with a locally sensitive representation of the specified `Absolute` object. Overrides the `Object.prototype.toLocaleString()` method.
-
-## Temporal.Absolute.from(thing: string | object) : Temporal.Absolute
-
-Creates a new `Absolute` object from either an object or IEO-8601 string.
 
 ### String Example
 
