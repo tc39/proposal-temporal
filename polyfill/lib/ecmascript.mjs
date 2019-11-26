@@ -74,7 +74,7 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
     if (!match) return new TemporalTimeZone(isoString);
     if (!match) throw new RangeError(`invalid absolute: ${isoString}`);
     const zone = match[1] ? 'UTC' : match[3] || match[2];
-    return new TimeZone(zone);
+    return new TemporalTimeZone(zone);
   },
   ToAbsolute: (item) => {
     if (ES.IsAbsolute(item)) return item;
