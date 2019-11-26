@@ -10,6 +10,8 @@ Creates a new `Duration` object that represents a duration of time.
 
 ## new Temporal.Duration(years?: number, months?: number, days?: number, hours?: number, minutes?: number, seconds?: number, milliseconds?: number, microseconds?: number, nanoseconds?: number, disambiguation: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.Duration
 
+## Temporal.Duration.from(thing: string | object) : Temporal.Duration
+
 ## duration.years : number
 
 ## duration.months : number
@@ -33,5 +35,3 @@ Creates a new `Duration` object that represents a duration of time.
 ## duration.toString() : string
 
 ## duration.toLocaleString(locale?: string, options?: object) : string
-
-## Temporal.Duration.from(thing: string | object) : Temporal.Duration

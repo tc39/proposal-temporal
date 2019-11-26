@@ -2,6 +2,8 @@
 
 ## new Temporal.MonthDay(month: number, day: number, disambiguation: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.MonthDay
 
+## Temporal.MonthDay.from(thing: string | object) : Temporal.MonthDay
+
 ## monthDay.month : number
 
 ## monthDay.day : number
@@ -21,7 +23,5 @@
 ## monthDay.toLocaleString(locale?: string, options?: object) : string
 
 ## monthDay.withYear(year: number, disambiguation: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.Date
-
-## Temporal.MonthDay.from(thing: string | object) : Temporal.MonthDay
 
 ## Temporal.MonthDay.compare(one: Temporal.MonthDay | object, two: Temporal.MonthDay | object) : number
