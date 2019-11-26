@@ -131,17 +131,10 @@ export class TimeZone {
     return this.name;
   }
   static from(arg) {
-    if (typeof arg === 'object') {
-      return ES.ToTimeZone(arg);
-    } else if (typeof arg === 'string') {
-      const isoString = ES.ToString(arg);
-      const match = STRING.exec(isoString);
-      if (!match) throw new RangeError(`invalid timezone: ${isoString}`);
-      const zone = match[1] ? 'UTC' : match[3] || match[2];
-      return new TimeZone(zone);
-    } else {
-      throw new TypeError(`invalid timezone: ${arg}`);
-    }
+    let result = ES.ToTimeZone(arg);
+    return this === TimeZone ? result : new this(
+      GetSlot(result, IDENTIFIER)
+    );
   }
 }
 
