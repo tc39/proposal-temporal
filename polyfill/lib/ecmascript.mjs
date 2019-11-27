@@ -1094,6 +1094,9 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
     if (!Number.isFinite(num) || Math.abs(num) !== num) throw new RangeError(`invalid positive integer: ${num}`);
     return num;
   },
+  // Note: This method returns values with bogus nanoseconds based on the previous iteration's
+  // milliseconds. That way there is a guarantee that the full nanoseconds are always going to be
+  // increasing at least and that the microsecond and nanosecond fields are likely to be non-zero.
   SystemUTCEpochNanoSeconds: (() => {
     let ns = Date.now() % 1e6;
     return () => {
