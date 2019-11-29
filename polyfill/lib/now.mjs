@@ -16,7 +16,7 @@ function absolute() {
 function dateTime(zone = timeZone()) {
     zone = ES.ToTimeZone(zone);
     const abs = absolute();
-    let dateTime = zone.getDateTimeFor(abs);
+    const dateTime = zone.getDateTimeFor(abs);
     return dateTime;
 }
 function date(zone) {
@@ -26,6 +26,5 @@ function time(zone) {
     return dateTime(zone).getTime();
 }
 function timeZone() {
-    let zone = ES.SystemTimeZone();
-    return zone;
+    return ES.SystemTimeZone();
 }
