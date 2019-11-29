@@ -18,8 +18,8 @@ import * as Temporal from 'tc39-temporal';
 
 describe('Exports', () => {
   const named = Object.keys(Temporal);
-  it(`should be 13 things`, () => {
-    equal(named.length, 13);
+  it(`should be 9 things`, () => {
+    equal(named.length, 9);
   });
   it('should contain `Absolute`', () => {
     assert(named.includes('Absolute'));
@@ -45,20 +45,44 @@ describe('Exports', () => {
   it('should contain `Duration`', () => {
     assert(named.includes('Duration'));
   });
-  it('should contain `getAbsolute`', () => {
-    assert(named.includes('getAbsolute'));
+  it('should contain `now`', () => {
+    assert(named.includes('now'));
   });
-  it('should contain `getDateTime`', () => {
-    assert(named.includes('getDateTime'));
-  });
-  it('should contain `getTimeZone`', () => {
-    assert(named.includes('getTimeZone'));
-  });
-  it('should contain `getTime`', () => {
-    assert(named.includes('getTime'));
-  });
-  it('should contain `getDate`', () => {
-    assert(named.includes('getDate'));
+  describe('Temporal.now', () => {
+    const names = Object.keys(Temporal.now);
+    it('should have 5 things', () => {
+      equal(names.length, 5);
+    });
+    it('should contain absolute', () => {
+      assert(names.includes('absolute'));
+    });
+    it('should contain dateTime', () => {
+      assert(names.includes('dateTime'));
+    });
+    it('should contain date', () => {
+      assert(names.includes('date'));
+    });
+    it('should contain time', () => {
+      assert(names.includes('time'));
+    });
+    it('should contain timeZone', () => {
+      assert(names.includes('timeZone'));
+    });
+    it('should contain absolute', () => {
+      equal(typeof Temporal.now.absolute, 'function');
+    });
+    it('should contain dateTime', () => {
+      equal(typeof Temporal.now.dateTime, 'function');
+    });
+    it('should contain date', () => {
+      equal(typeof Temporal.now.date, 'function');
+    });
+    it('should contain time', () => {
+      equal(typeof Temporal.now.time, 'function');
+    });
+    it('should contain timeZone', () => {
+      equal(typeof Temporal.now.timeZone, 'function');
+    });
   });
 });
 
