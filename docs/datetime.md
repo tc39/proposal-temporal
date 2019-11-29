@@ -2,6 +2,8 @@
 
 ## new Temporal.DateTime(year: number, month: number, day: number, hour: number, minute: number, second: number = 0, milliseconds: number =0, microsecond: number = 0, nanosecond: nunber = 0, disambiguation: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.Time
 
+## Temporal.DateTime.from(thing: string | object) : Temporal.DateTime
+
 ## datetime.year : number
 
 ## datetime.month : number
@@ -51,7 +53,5 @@
 ## datetime.getMonthDay() : Temporal.MonthDay
 
 ## datetime.getTime() : Temporal.Time
-
-## Temporal.DateTime.from(thing: string | object) : Temporal.DateTime
 
 ## Temporal.DateTime.compare(one: Temporal.DateTime | object, two: Temporal.DateTime | object) : number;
