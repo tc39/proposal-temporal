@@ -11,6 +11,7 @@ import Pretty from '@pipobscure/demitasse-pretty';
 import * as exports from './exports.mjs';
 // import * as regex from './regex.mjs';
 import * as now from './now.mjs';
+import * as ecmascript from './ecmascript.mjs';
 
 import * as timezone from './timezone.mjs';
 import * as absolute from './absolute.mjs';

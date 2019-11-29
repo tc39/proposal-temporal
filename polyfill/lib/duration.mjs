@@ -145,50 +145,19 @@ export class Duration {
     return new Intl.DateTimeFormat(...args).format(this);
   }
   static from(arg) {
-    if (typeof arg === 'object') {
-      const result = ES.CastDuration(arg);
-      return this === Duration
-        ? result
-        : new this(
-            result.years,
-            result.months,
-            result.days,
-            result.hours,
-            result.minutes,
-            result.seconds,
-            result.milliseconds,
-            result.microseconds,
-            result.nanoseconds
-          );
-    } else if (typeof arg === 'string') {
-      const isoString = ES.ToString(arg);
-      const match = STRING.exec(isoString);
-      if (!match) throw new RangeError(`invalid duration: ${isoString}`);
-      const years = ES.ToInteger(match[1]);
-      const months = ES.ToInteger(match[2]);
-      const days = ES.ToInteger(match[3]);
-      const hours = ES.ToInteger(match[4]);
-      const minutes = ES.ToInteger(match[5]);
-      const seconds = ES.ToInteger(match[6]);
-      const milliseconds = ES.ToInteger(match[7]);
-      const microseconds = ES.ToInteger(match[8]);
-      const nanoseconds = ES.ToInteger(match[9]);
-      const Construct = this;
-      return new Construct(
-        years,
-        months,
-        days,
-        hours,
-        minutes,
-        seconds,
-        milliseconds,
-        microseconds,
-        nanoseconds,
-        'reject'
-      );
-    } else {
-      return new TypeError(`invalid duration: ${duration}`);
-    }
+    let result = ES.ToDuration(arg);
+    return this === Duration ? result : new this(
+      GetSlot(result, YEARS),
+      GetSlot(result, MONTHS),
+      GetSlot(result, DAYS),
+      GetSlot(result, HOURS),
+      GetSlot(result, MINUTES),
+      GetSlot(result, SECONDS),
+      GetSlot(result, MILLISECONDS),
+      GetSlot(result, MICROSECONDS),
+      GetSlot(result, NANOSECONDS),
+      'reject'
+    );
   }
 }
 Duration.prototype.toJSON = Duration.prototype.toString;

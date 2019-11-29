@@ -29,6 +29,15 @@ describe('Duration', () => {
       equal(`${new Duration(0, 0, 0, 0, 0, 0, 0, 0, 1000, 'balance')}`, 'PT0.000001S'));
     it('throw when bad disambiguation', () => throws(() => new Duration(0, 0, 0, 0, 0, 0, 0, 0, 0, 'xyz'), TypeError));
   });
+  describe('from()', () => {
+    it(`Duration.from(P5Y) == P5Y`, () => {
+      const orig = new Duration(5);
+      const from = Duration.from(orig);
+      equal(from, orig);
+    });
+    it(`Duration.from({ milliseconds: 5 }) == PT0.005S`, () => equal(`${ Duration.from({ milliseconds: 5 }) }`, 'PT0.005S'));
+    it(`Duration.from("P1D") == P1D`, () => equal(`${ Duration.from("P1D") }`, 'P1D'));
+  });
 });
 
 import { normalize } from 'path';

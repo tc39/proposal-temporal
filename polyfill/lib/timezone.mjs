@@ -15,12 +15,12 @@ export class TimeZone {
   }
   getOffsetFor(absolute) {
     if (!ES.IsTimeZone(this)) throw new TypeError('invalid receiver');
-    absolute = ES.CastAbsolute(absolute);
+    absolute = ES.ToAbsolute(absolute);
     return ES.GetTimeZoneOffsetString(GetSlot(absolute, EPOCHNANOSECONDS), GetSlot(this, IDENTIFIER));
   }
   getDateTimeFor(absolute) {
     if (!ES.IsTimeZone(this)) throw new TypeError('invalid receiver');
-    absolute = ES.CastAbsolute(absolute);
+    absolute = ES.ToAbsolute(absolute);
     const ns = GetSlot(absolute, EPOCHNANOSECONDS);
     const {
       year,
@@ -38,7 +38,7 @@ export class TimeZone {
   }
   getAbsoluteFor(dateTime, disambiguation = 'earlier') {
     if (!ES.IsTimeZone(this)) throw new TypeError('invalid receiver');
-    dateTime = ES.CastDateTime(dateTime);
+    dateTime = ES.ToDateTime(dateTime);
     const Absolute = ES.GetIntrinsic('%Temporal.Absolute%');
     const { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = dateTime;
     const options = ES.GetTimeZoneEpochValue(
@@ -93,7 +93,7 @@ export class TimeZone {
     );
     const before = ES.GetTimeZoneOffsetMilliseconds(utcms - 86400000, GetSlot(this, IDENTIFIER));
     const after = ES.GetTimeZoneOffsetMilliseconds(utcms + 86400000, GetSlot(this, IDENTIFIER));
-    const diff = ES.CastToDuration({
+    const diff = ES.ToToDuration({
       milliseconds: after - before
     });
     switch (disambiguation) {
@@ -109,7 +109,7 @@ export class TimeZone {
   }
   getTransitions(startingPoint) {
     if (!ES.IsTimeZone(this)) throw new TypeError('invalid receiver');
-    startingPoint = ES.CastAbsolute(startingPoint);
+    startingPoint = ES.ToAbsolute(startingPoint);
     let epochNanoseconds = GetSlot(startingPoint, EPOCHNANOSECONDS);
     const Absolute = ES.GetIntrinsic('%Temporal.Absolute%');
     const timeZone = GetSlot(this, IDENTIFIER);
@@ -131,17 +131,10 @@ export class TimeZone {
     return this.name;
   }
   static from(arg) {
-    if (typeof arg === 'object') {
-      return ES.CastTimeZone(arg);
-    } else if (typeof arg === 'string') {
-      const isoString = ES.ToString(arg);
-      const match = STRING.exec(isoString);
-      if (!match) throw new RangeError(`invalid timezone: ${isoString}`);
-      const zone = match[1] ? 'UTC' : match[3] || match[2];
-      return new TimeZone(zone);
-    } else {
-      throw new TypeError(`invalid timezone: ${arg}`);
-    }
+    let result = ES.ToTimeZone(arg);
+    return this === TimeZone ? result : new this(
+      GetSlot(result, IDENTIFIER)
+    );
   }
 }
 

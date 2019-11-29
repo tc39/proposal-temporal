@@ -212,6 +212,12 @@ describe('Date', () => {
       equal(date.month, 6);
       equal(date.day, 30);
     });
+    it ('Date.from(1976-11-18) == 1976-11-18', () => {
+      const orig = new Date(1976, 11, 18);
+      const actual = Date.from(orig);
+      equal(actual, orig);
+    });
+    it('Date.from({ year: 1976, month: 11, day: 18 }) == 1976-11-18', () => equal(`${Date.from({ year: 1976, month: 11, day: 18 })}`, '1976-11-18'));
   });
 });
 

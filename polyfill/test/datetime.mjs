@@ -250,6 +250,19 @@ describe('DateTime', () => {
     it(`(${earlier}).plus(${diff}) == (${later})`, () => equal(`${earlier.plus(diff)}`, `${later}`));
     it(`(${later}).minus(${diff}) == (${earlier})`, () => equal(`${later.minus(diff)}`, `${earlier}`));
   });
+  describe('DateTime.from() works', () => {
+    it('DateTime.from("1976-11-18 15:23:30")', () => equal(`${DateTime.from('1976-11-18 15:23:30')}`, "1976-11-18T15:23:30"));
+    it('DateTime.from("1976-11-18 15:23:30.001")', () => equal(`${DateTime.from('1976-11-18 15:23:30.001')}`, "1976-11-18T15:23:30.001"));
+    it('DateTime.from("1976-11-18 15:23:30.001123")', () => equal(`${DateTime.from('1976-11-18 15:23:30.001123')}`, "1976-11-18T15:23:30.001123"));
+    it('DateTime.from("1976-11-18 15:23:30.001123456")', () => equal(`${DateTime.from('1976-11-18 15:23:30.001123456')}`, "1976-11-18T15:23:30.001123456"));
+    it('DateTime.from(1976-11-18) == 1976-11-18', () => {
+      const orig = new DateTime(1976, 11, 18, 15, 23, 20, 123, 456, 789);
+      const actual = DateTime.from(orig);
+      equal(actual, orig);
+    });
+    it('DateTime.from({ year: 1976, month: 11, day: 18 }) == 1976-11-18T00:00', () => equal(`${DateTime.from({ year: 1976, month: 11, day: 18 })}`, '1976-11-18T00:00'));
+    it('DateTime.from({ year: 1976, month: 11, day: 18, millisecond: 123 }) == 1976-11-18T00:00:00.123', () => equal(`${DateTime.from({ year: 1976, month: 11, day: 18, millisecond: 123 })}`, '1976-11-18T00:00:00.123'));
+  });
 });
 
 import { normalize } from 'path';

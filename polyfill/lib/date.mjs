@@ -77,7 +77,7 @@ export class Date {
   }
   plus(durationLike = {}, disambiguation = 'constrain') {
     if (!ES.IsDate(this)) throw new TypeError('invalid receiver');
-    const duration = ES.CastDuration(durationLike);
+    const duration = ES.ToDuration(durationLike);
     if (!ES.ValidDuration(duration, ['hours', 'minutes', 'seconds', 'milliseconds', 'microseconds', 'nanoseconds'])) {
       throw new RangeError('invalid duration');
     }
@@ -89,7 +89,7 @@ export class Date {
   }
   minus(durationLike = {}, disambiguation = 'constrain') {
     if (!ES.IsDate(this)) throw new TypeError('invalid receiver');
-    const duration = ES.CastDuration(durationLike);
+    const duration = ES.ToDuration(durationLike);
     if (!ES.ValidDuration(duration, ['hours', 'minutes', 'seconds', 'milliseconds', 'microseconds', 'nanoseconds'])) {
       throw new RangeError('invalid duration');
     }
@@ -101,7 +101,7 @@ export class Date {
   }
   difference(other) {
     if (!ES.IsDate(this)) throw new TypeError('invalid receiver');
-    other = ES.CastDate(other);
+    other = ES.ToDate(other);
     const [smaller, larger] = [this, other].sort(Date.compare);
     const { years, months, days } = ES.DifferenceDate(smaller, larger);
     const Duration = ES.GetIntrinsic('%Temporal.Duration%');
@@ -124,7 +124,7 @@ export class Date {
     const year = GetSlot(this, YEAR);
     const month = GetSlot(this, MONTH);
     const day = GetSlot(this, DAY);
-    timeLike = ES.CastTime(timeLike);
+    timeLike = ES.ToTime(timeLike);
     const { hour, minute, second, millisecond, microsecond, nanosecond } = timeLike;
     const DateTime = ES.GetIntrinsic('%Temporal.DateTime%');
     return new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, disambiguation);
@@ -140,24 +140,17 @@ export class Date {
     return new MonthDay(GetSlot(this, MONTH), GetSlot(this, DAY));
   }
   static from(arg) {
-    if (typeof arg === 'object') {
-      const result = ES.CastDate(arg);
-      return this === Date ? result : new this(result.year, result.month, result.day);
-    } else if (typeof arg === 'string') {
-      const match = STRING.exec(arg);
-      if (!match) throw new RangeError(`invalid date: ${arg}`);
-      const year = ES.ToInteger(match[1]);
-      const month = ES.ToInteger(match[2]);
-      const day = ES.ToInteger(match[3]);
-      const Construct = this;
-      return new Construct(year, month, day, 'reject');
-    } else {
-      throw new TypeError(`invalid date: ${arg}`);
-    }
+    let result = ES.ToDate(arg);
+    return this === Date ? result : new this(
+      GetSlot(result, YEAR),
+      GetSlot(result, MONTH),
+      GetSlot(result, DAY),
+      'reject'
+    );
   }
   static compare(one, two) {
-    one = ES.CastDate(one);
-    two = ES.CastDate(two);
+    one = ES.ToDate(one);
+    two = ES.ToDate(two);
     if (one.year !== two.year) return ES.ComparisonResult(one.year - two.year);
     if (one.month !== two.month) return ES.ComparisonResult(one.month - two.month);
     if (one.day !== two.day) return ES.ComparisonResult(one.day - two.day);

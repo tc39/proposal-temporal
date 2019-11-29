@@ -54,7 +54,7 @@ export class YearMonth {
   }
   plus(durationLike, disambiguation = 'constrain') {
     if (!ES.IsYearMonth(this)) throw new TypeError('invalid receiver');
-    const duration = ES.CastDuration(durationLike);
+    const duration = ES.ToDuration(durationLike);
     if (
       !ES.ValidDuration(duration, [
         'days',
@@ -77,7 +77,7 @@ export class YearMonth {
   }
   minus(durationLike, disambiguation = 'constrain') {
     if (!ES.IsYearMonth(this)) throw new TypeError('invalid receiver');
-    const duration = ES.CastDuration(durationLike);
+    const duration = ES.ToDuration(durationLike);
     if (
       !ES.ValidDuration(duration, [
         'days',
@@ -100,7 +100,7 @@ export class YearMonth {
   }
   difference(other) {
     if (!ES.IsYearMonth(this)) throw new TypeError('invalid receiver');
-    other = ES.CastYearMonth(other);
+    other = ES.ToYearMonth(other);
     const [one, two] = [this, other].sort(DateTime.compare);
     let years = two.year - one.year;
     let months = two.month - one.month;
@@ -130,24 +130,16 @@ export class YearMonth {
     return new Date(year, month, day, disambiguation);
   }
   static from(arg) {
-    if (typeof arg === 'object') {
-      const result = ES.CastYearMonth(arg);
-      return this === YearMonth ? result : new this(result.year, result.month);
-    } else if (typeof arg === 'string') {
-      const isoString = ES.ToString(arg);
-      const match = STRING.exec(isoString);
-      if (!match) throw new RangeError(`invalid yearmonth: ${isoString}`);
-      const year = ES.ToInteger(match[1]);
-      const month = ES.ToInteger(match[2]);
-      const Construct = this;
-      return new Construct(year, month, 'reject');
-    } else {
-      throw new TypeError(`invalid yearmonth: ${arg}`);
-    }
+    let result = ES.ToYearMonth(arg);
+    return this === YearMonth ? result : new this(
+      GetSlot(result, YEAR),
+      GetSlot(result, MONTH),
+      'reject'
+    );
   }
   static compare(one, two) {
-    one = ES.CastYearMonth(one);
-    two = ES.CastYearMonth(two);
+    one = ES.ToYearMonth(one);
+    two = ES.ToYearMonth(two);
     if (one.year !== two.year) return ES.ComparisonResult(one.year - two.year);
     if (one.month !== two.month) return ES.ComparisonResult(one.month - two.month);
     return ES.ComparisonResult(0);

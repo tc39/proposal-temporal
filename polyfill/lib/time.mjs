@@ -107,7 +107,7 @@ export class Time {
   }
   plus(durationLike) {
     if (!ES.IsTime(this)) throw new TypeError('invalid receiver');
-    const duration = ES.CastDuration(durationLike);
+    const duration = ES.ToDuration(durationLike);
     if (!ES.ValidDuration(duration, ['years', 'months', 'days'])) {
       throw new RangeError('invalid duration');
     }
@@ -132,7 +132,7 @@ export class Time {
   }
   minus(durationLike) {
     if (!ES.IsTime(this)) throw new TypeError('invalid receiver');
-    const duration = ES.CastDuration(durationLike);
+    const duration = ES.ToDuration(durationLike);
     if (!ES.ValidDuration(duration, ['years', 'months', 'days'])) {
       throw new RangeError('invalid duration');
     }
@@ -157,7 +157,7 @@ export class Time {
   }
   difference(other) {
     if (!ES.IsTime(this)) throw new TypeError('invalid receiver');
-    other = ES.CastTime(other);
+    other = ES.ToTime(other);
     const [earlier, later] = [this, other].sort(Time.compare);
     const { hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.DifferenceTime(earlier, later);
     const Duration = ES.GetIntrinsic('%Temporal.Duration%');
@@ -184,34 +184,27 @@ export class Time {
 
   withDate(dateLike = {}, disambiguation = 'constrain') {
     if (!ES.IsTime(this)) throw new TypeError('invalid receiver');
-    let { year, month, day } = ES.CastDate(dateLike);
+    let { year, month, day } = ES.ToDate(dateLike);
     let { hour, minute, second, millisecond, microsecond, nanosecond } = this;
     const DateTime = ES.GetIntrinsic('%Temporal.DateTime%');
     return new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, disambiguation);
   }
 
   static from(arg) {
-    if (typeof arg === 'object') {
-      const result = ES.CastTime(arg);
-      return this === Time
-        ? result
-        : new this(
-            result.hour,
-            result.minute,
-            result.second,
-            result.millisecond,
-            result.microsecond,
-            result.nanosecond
-          );
-    } else if (typeof arg === 'string') {
-      return ES.TimeFromString(ES.ToString(arg), this);
-    } else {
-      throw new TypeError(`invalid time: ${arg}`);
-    }
+    let result = ES.ToTime(arg);
+    return this === Time ? result : new this(
+      GetSlot(result, HOUR),
+      GetSlot(result, MINUTE),
+      GetSlot(result, SECOND),
+      GetSlot(result, MILLISECOND),
+      GetSlot(result, MICROSECOND),
+      GetSlot(result, NANOSECOND),
+      'reject'
+    );
   }
   static compare(one, two) {
-    one = ES.CastTime(one);
-    two = ES.CastTime(two);
+    one = ES.ToTime(one);
+    two = ES.ToTime(two);
     if (one.hour !== two.hour) return ES.ComparisonResult(one.hour - two.hour);
     if (one.minute !== two.minute) return ES.ComparisonResult(one.minute - two.minute);
     if (one.second !== two.second) return ES.ComparisonResult(one.second - two.second);
