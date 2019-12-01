@@ -60,7 +60,7 @@ See [Temporal.TimeZone Documentation](./docs/timezone.md) for more detailed docu
 
 ### `Temporal.DateTime`
 
-A `Temporal.DateTime` represents a caldendar date and wall-clock time. That means it does not carry timezone information. However it can be converted to a `Temporal.Absolute` using a `Temporal.TimeZone`.
+A `Temporal.DateTime` represents a calendar date and wall-clock time. That means it does not carry timezone information. However it can be converted to a `Temporal.Absolute` using a `Temporal.TimeZone`.
 
 This can also be converted to object containing only partial information such as `Temporal.Date` and `Temporal.Time`.
 
@@ -94,7 +94,7 @@ See [Temporal.MonthDay Documentation](./docs/monthday.md) for more detailed docu
 
 ### `Temporal.Duration`
 
-A `Temporal.Duration` expresses a length of time. This is used fo date/time maths.
+A `Temporal.Duration` expresses a length of time. This is used for date/time maths.
 
 See [Temporal.Duration Documentation](./docs/duration.md) for more detailed documentation.
 
