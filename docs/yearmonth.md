@@ -1,6 +1,6 @@
 # `Temporal.YearMonth`
 
-A representatio nof a calendar date.
+A representation of a calendar date.
 
 ## new Temporal.YearMonth(year: number, month: number, disambiguation: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.YearMonth
 
