@@ -46,7 +46,7 @@ A complete polyfill can be found [here](./polyfill). It is being developed as sp
 
 ### `Temporal.Absolute`
 
-An `Temporal.Absolute` represents a fixed point in time along the POSIX timeline. It does this by internally maintaining a slot for "Nanoseconds since the POSIX-Epoch".
+A `Temporal.Absolute` represents a fixed point in time along the POSIX timeline. It does this by internally maintaining a slot for "Nanoseconds since the POSIX-Epoch".
 
 See [Temporal.Absolute Documentation](./docs/absolute.md) for more detailed documentation.
 
