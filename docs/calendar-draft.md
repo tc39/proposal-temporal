@@ -223,7 +223,7 @@ Temporal.Date.from = function(thing: string | object, options: object) {
 	const isoDate = // a date in the ISO calendar with fields from object
 
 	if (object.calendar instanceof string) {
-		const calendar = options.?idToCalendar.?(object.calendar)
+		const calendar = options?.idToCalendar?.(object.calendar)
 			?? Temporal.Calendar.idToCalendar(id);  // call intrinsic
 		if (!calendar) {
 			throw new RangeError("Unknown calendar");
