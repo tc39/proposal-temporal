@@ -1,6 +1,6 @@
 # Draft Design of Temporal Calendar API
 
-This doc describes a design for first-class support for non-Gregorian [calendars](https://en.wikipedia.org/wiki/Calendar) in Temporal.
+This doc describes a design for first-class support for non-Gregorian [calendars](https://en.wikipedia.org/wiki/Calendar) in Temporal.  Although most of this document is based on Temporal.Date, most of this applies to Temporal.DateTime and Temporal.Time as well.
 
 ## Temporal.Date internal slots
 
@@ -20,7 +20,7 @@ The new Temporal.Calendar interface is a mechanism to allow arbitrary calendar s
 
 ### Methods on the Temporal.Calendar interface
 
-All of the following methods return new Temporal.Date objects.  All properties of `Temporal.Calendar` are Symbols.
+All of the following methods return new Temporal objects.  All properties of `Temporal.Calendar` are Symbols.
 
 ```javascript
 class MyCalendar {
@@ -150,7 +150,7 @@ The following methods/getters would still work:
 - .toLocaleString()
 - .compare()
 
-Although small, this set of operations still covers many of the recipes in the Temporal Cookbook.
+Although small, this set of operations still covers many of the recipes in the proposed Temporal Cookbook.
 
 To enable the extended set of operations, the user would just use `.withCalendar()`:
 
@@ -196,7 +196,8 @@ Serialization to/from strings will still be supported.  To convert to a string, 
 ```javascript
 Temporal.Date.prototype.toString = function() {
 	let calendarKeyword, isoDate;
-	if (this.calendar === Temporal.Calendar.iso) {
+	// For Default Calendar Option 3, check for the partial ISO calendar here
+	if (/* this.calendar is the ISO calendar */) {
 		calendarKeyword = null;
 		isoDate = this;
 	} else {
@@ -207,6 +208,8 @@ Temporal.Date.prototype.toString = function() {
 	// "2019-12-06[hebrew]"
 }
 ```
+
+For objects with time components (such as Temporal.DateTime), the calendar would be appended to the end of the string.  It would be distinguisable from the timezone because it does not contain a slash.  This requirement might be changed later.  For example: `2019-12-06T16:23+00:50[America/NewYork][hebrew]`
 
 ### New behavior of Temporal.Date.from
 
@@ -223,6 +226,8 @@ Temporal.Date.from = function(thing: string | object, options: object) {
 	const isoDate = // a date in the ISO calendar with fields from object
 
 	if (typeof object.calendar === "string") {
+		// Note: Do we want this implicit escape hatch? If a lookup function is provided,
+		// maybe it should be treated as 100% authoritative.
 		const calendar = options?.idToCalendar?.(object.calendar)
 			?? Temporal.Calendar.idToCalendar(id);  // call intrinsic
 		if (!calendar) {
@@ -309,6 +314,7 @@ Temporal.now.date = function(calendar) {
 All of the following APIs would gain an internal slot for the calendar.
 
 - Temporal.DateTime
+- Temporal.Time
 - Temporal.YearMonth
 - Temporal.MonthDay
 
