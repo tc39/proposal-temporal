@@ -94,7 +94,7 @@ class MyCalendar {
 }
 ```
 
-An instance of `MyCalendar` is expected to have stateless behavior; i.e., calling a method with the same arguments should return the same result each time.
+An instance of `MyCalendar` is *expected* to have stateless behavior; i.e., calling a method with the same arguments should return the same result each time.  There would be no mechanism for enforcing that user-land calendars are stateless; the calendar author should test this expectation on their own in order to prevent unexpected behavior such as the lack of round-tripping.
 
 ## Default Calendar
 
