@@ -18,6 +18,8 @@ The *calendar* slot contains an object implementing the Temporal.Calendar interf
 
 The new Temporal.Calendar interface is a mechanism to allow arbitrary calendar systems to be implemented on top of Temporal.  ***Most users will not encounter the Temporal.Calendar interface directly***, unless they are building or using a non-built-in calendar system.
 
+An open question is whether this "interface" should be a protocol or an identity.  See issue #289.  The following section assumes it is a protocol.
+
 ### Methods on the Temporal.Calendar interface
 
 All of the following methods return new Temporal objects.  All properties of `Temporal.Calendar` are Symbols.
