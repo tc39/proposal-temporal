@@ -94,7 +94,7 @@ class MyCalendar {
 }
 ```
 
-An instance of `MyCalendar` would be immutable.
+An instance of `MyCalendar` is expected to have stateless behavior; i.e., calling a method with the same arguments should return the same result each time.
 
 ## Default Calendar
 
