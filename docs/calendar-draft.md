@@ -10,7 +10,7 @@ Temporal.Date currently has three internal slots: year, month, and day. (An "int
 2. isLeapMonth
 3. era
 
-It is believed that a date in any known calendar can be described using the five-tuple (*year*, *month*, *day*, *isLeapMonth*, *era*).  It is possible that *isLeapMonth* can be merged into *month* by expanding the set of numbers that *month* can represent.
+It is believed that a date in any known calendar can be described using the five-tuple (*year*, *month*, *day*, *isLeapMonth*, *era*).  Since all operations involving the slots of Temporal.Date will go through the calendar first, calendars that need more data can assign complex types to these slots.  It is possible that *isLeapMonth* can be merged into *month* by expanding the set of numbers that *month* can represent.
 
 The *calendar* slot contains an object implementing the Temporal.Calendar interface, described below.
 
@@ -116,7 +116,7 @@ const PartialIsoCalendar = {
 	},
 
 	[Temporal.Calendar.fromISO] = (isoDate) => {
-		return self;
+		return isoDate;
 	},
 
 	[Temporal.Calendar.id] = "iso",
@@ -222,7 +222,7 @@ Temporal.Date.from = function(thing: string | object, options: object) {
 
 	const isoDate = // a date in the ISO calendar with fields from object
 
-	if (object.calendar instanceof string) {
+	if (typeof object.calendar === "string") {
 		const calendar = options?.idToCalendar?.(object.calendar)
 			?? Temporal.Calendar.idToCalendar(id);  // call intrinsic
 		if (!calendar) {
@@ -261,7 +261,7 @@ Temporal.Date will defer to Temporal.Calendar methods wherever necessary.  Examp
 
 ```javascript
 Temporal.Date.prototype.plus = function(duration) {
-	return this.calendar.plus(this, duration);
+	return this.calendar[Temporal.Calendar.plus](this, duration);
 }
 
 Temporal.Date.prototype.difference = function(other) {
