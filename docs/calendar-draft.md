@@ -165,7 +165,7 @@ Temporal.Date.from("2019-12-06").withCalendar(Intl.defaultCalendar).weekOfYear;
 Temporal.Date.from("2019-12-06").withCalendar(request.calendar).weekOfYear;
 ```
 
-The Gregorian calendar, ID "gregory" ([why not "gregorian"?](https://github.com/tc39/ecma402/issues/212)), could be used to indicate the full ISO calendar.  So, "iso" would mean the partial version, and "gregory" would mean the full version.  Alternatively, "iso8601", the identifier defined by CLDR as "Gregorian calendar using the ISO 8601 calendar week rules", could be the identifier for the full ISO calendar.
+The calendar IDs are less clear.  If the partial ISO calendar used ID `"iso"`, then what would the full ISO calendar use?  ID "gregory" ([why not "gregorian"?](https://github.com/tc39/ecma402/issues/212)) is misleading because there are Gregorian calendars that do not all agree on the same rules for things like weeks of the year.  One solution could be to use a nullish ID like `null` or `""` for the partial ISO calendar and `"iso"` for the full ISO calendar.  Alternatively, "iso8601", the identifier defined by CLDR as "Gregorian calendar using the ISO 8601 calendar week rules", could be the identifier for the full ISO calendar.
 
 ## Temporal.Date API changes
 
