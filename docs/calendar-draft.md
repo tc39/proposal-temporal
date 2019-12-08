@@ -211,7 +211,9 @@ Temporal.Date.prototype.toString = function() {
 }
 ```
 
-For objects with time components (such as Temporal.DateTime), the calendar would be appended to the end of the string.  It would be distinguisable from the timezone because it does not contain a slash.  This requirement might be changed later.  For example: `2019-12-06T16:23+00:50[America/NewYork][hebrew]`
+For objects with time components (such as Temporal.DateTime), the calendar would be appended to the end of the string.  It would be distinguisable from the timezone because it does not contain a slash.  For example: `2019-12-06T16:23+00:50[America/NewYork][hebrew]`
+
+Alternatively, we may consider changing the syntax to add `c=` for calendars and `z=` for zones.  `2019-12-06T16:23+00:50[z=America/NewYork][c=hebrew]`
 
 ### New behavior of Temporal.Date.from
 
