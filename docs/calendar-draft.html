@@ -1,0 +1,258 @@
+<h1 id="draft-design-of-temporal-calendar-api">Draft Design of Temporal Calendar API</h1>
+<p>This doc describes a design for first-class support for non-Gregorian <a href="https://en.wikipedia.org/wiki/Calendar">calendars</a> in Temporal.  Although most of this document is based on Temporal.Date, most of this applies to Temporal.DateTime and Temporal.Time as well.</p>
+<h2 id="temporaldate-internal-slots">Temporal.Date internal slots</h2>
+<p>Temporal.Date currently has three internal slots: year, month, and day. (An &quot;internal slot&quot; refers to actual data, as opposed to &quot;properties&quot;, which could be computed.)  In this proposal, three more internal slots would be added:</p>
+<ol>
+<li>calendar</li>
+<li>isLeapMonth</li>
+<li>era</li>
+</ol>
+<p>It is believed that a date in any known calendar can be described using the five-tuple (<em>year</em>, <em>month</em>, <em>day</em>, <em>isLeapMonth</em>, <em>era</em>).  Since all operations involving the slots of Temporal.Date will go through the calendar first, calendars that need more data can assign complex types to these slots.  It is possible that <em>isLeapMonth</em> can be merged into <em>month</em> by expanding the set of numbers that <em>month</em> can represent.</p>
+<p>The <em>calendar</em> slot contains an object implementing the Temporal.Calendar interface, described below.</p>
+<h2 id="temporalcalendar-interface">Temporal.Calendar interface</h2>
+<p>The new Temporal.Calendar interface is a mechanism to allow arbitrary calendar systems to be implemented on top of Temporal.  <strong><em>Most users will not encounter the Temporal.Calendar interface directly</em></strong>, unless they are building or using a non-built-in calendar system.</p>
+<p>An open question is whether this &quot;interface&quot; should be a protocol or an identity.  See issue #289.  The following section assumes it is a protocol.</p>
+<h3 id="methods-on-the-temporalcalendar-interface">Methods on the Temporal.Calendar interface</h3>
+<p>All of the following methods return new Temporal objects.  All properties of <code>Temporal.Calendar</code> are Symbols.</p>
+<pre><code class="language-javascript">class MyCalendar {
+
+    ///////////////////
+    //  To/From ISO  //
+    ///////////////////
+
+    /** Returns the projection of self in the ISO calendar */
+    [Temporal.Calendar.toISO](
+        self: Temporal.Date
+    ) : Temporal.Date;
+
+    /** Returns the projection of isoDate in the custom calendar */
+    [Temporal.Calendar.fromISO](
+        isoDate: Temporal.Date
+    ) : Temporal.Date;
+
+    /** A string identifier for this calendar */
+    [Temporal.Calendar.id] : string;
+
+    //////////////////
+    //  Arithmetic  //
+    //////////////////
+
+    /** Returns self plus duration according to the calendar rules. */
+    [Temporal.Calendar.plus](
+        self: Temporal.Date,
+        duration: Temporal.Duration,
+        options: /* options bag */
+    ) : Temporal.Date;
+
+    /** Returns self minus duration according to the calendar rules. */
+    [Temporal.Calendar.minus](
+        self: Temporal.Date,
+        duration: Temporal.Duration,
+        options: /* options bag */
+    ) : Temporal.Date;
+
+    /** Returns self minus other, which are dates in the same calendar. */
+    [Temporal.Calendar.difference](
+        self: Temporal.Date,
+        other: Temporal.Date,
+        options: /* options bag */
+    ) : Temporal.Duration;
+
+    ////////////////////////////////////
+    //  Accessors:                    //
+    //  Semantics defined in date.md  //
+    ////////////////////////////////////
+
+    [Temporal.Calendar.dayOfWeek](
+        self: Temporal.Date
+    ) : number;
+
+    [Temporal.Calendar.weekOfYear](
+        self: Temporal.Date
+    ) : number;
+
+    [Temporal.Calendar.daysInMonth](
+        self: Temporal.Date
+    ) : number;
+
+    [Temporal.Calendar.daysInYear](
+        self: Temporal.Date
+    ) : number;
+
+    [Temporal.Calendar.leapYear](
+        self: Temporal.Date
+    ) : boolean;
+}</code></pre>
+<p>It&#39;s not immediately clear how to make <em>calendar-specific accessors</em> available, such as the year type (&quot;kesidran&quot;, &quot;chaser&quot;, &quot;maleh&quot;) in the Hebrew calendar.  See #291.</p>
+<p>An instance of <code>MyCalendar</code> is <em>expected</em> to have stateless behavior; i.e., calling a method with the same arguments should return the same result each time.  There would be no mechanism for enforcing that user-land calendars are stateless; the calendar author should test this expectation on their own in order to prevent unexpected behavior such as the lack of round-tripping.</p>
+<h2 id="default-calendar">Default Calendar</h2>
+<p>An open question is what the behavior should be if the programmer does not specify a calendar, or if we should require the programmer to always specify a calendar.  Four choices are on the table:</p>
+<ol>
+<li>Default to full ISO (Gregorian) calendar.</li>
+<li>Require the user to explicitly specify the calendar.</li>
+<li>Default to a partial ISO calendar (explained below).</li>
+<li>Default to <code>Intl.defaultCalendar</code> (a new symbol), or ISO if that field doesn&#39;t exist.</li>
+</ol>
+<h3 id="partial-iso-calendar-option-3">Partial ISO Calendar (Option 3)</h3>
+<p>A partial ISO calendar would be one implemented as follows:</p>
+<pre><code class="language-javascript">const PartialIsoCalendar = {
+    [Temporal.Calendar.toISO] = (self) =&gt; {
+        return self;
+    },
+
+    [Temporal.Calendar.fromISO] = (isoDate) =&gt; {
+        return isoDate;
+    },
+
+    [Temporal.Calendar.id] = &quot;iso&quot;,
+
+    // ALL OTHER METHODS:
+    [Temporal.Calendar.plus] = () =&gt; {
+        throw new TypeError(&quot;Unsupported operation: full calendar required&quot;);
+    }
+    // Same for [Temporal.Calendar.minus], etc.
+}</code></pre>
+<p>It would in effect render default Temporal.Date (and Temporal.DateTime) with fewer operations until you specify a calendar.  The following methods/getters would throw:</p>
+<ul>
+<li>.dayOfWeek</li>
+<li>.weekOfYear</li>
+<li>.daysInMonth</li>
+<li>.daysInYear</li>
+<li>.leapYear</li>
+<li>.plus() -- <em>might</em> be OK if the programmer requests only time units</li>
+<li>.minus() -- <em>might</em> be OK if the programmer requests only time units</li>
+<li>.difference() -- <em>might</em> be OK if the programmer requests only time units</li>
+<li>.getYearMonth()</li>
+<li>.getMonthDay()</li>
+</ul>
+<p>The following methods/getters would still work:</p>
+<ul>
+<li>.with()</li>
+<li>.withTime()</li>
+<li>.toString()</li>
+<li>.toLocaleString()</li>
+<li>.compare()</li>
+</ul>
+<p>Although small, this set of operations still covers many of the recipes in the proposed Temporal Cookbook.</p>
+<p>To enable the extended set of operations, the user would just use <code>.withCalendar()</code>:</p>
+<pre><code class="language-javascript">// Force the Gregorian calendar:
+Temporal.Date.from(&quot;2019-12-06&quot;).withCalendar(&quot;gregory&quot;).weekOfYear;
+
+// Use a calendar from another source:
+Temporal.Date.from(&quot;2019-12-06&quot;).withCalendar(Intl.defaultCalendar).weekOfYear;
+Temporal.Date.from(&quot;2019-12-06&quot;).withCalendar(request.calendar).weekOfYear;</code></pre>
+<p>The calendar IDs are less clear.  If the partial ISO calendar used ID <code>&quot;iso&quot;</code>, then what would the full ISO calendar use?  ID &quot;gregory&quot; (<a href="https://github.com/tc39/ecma402/issues/212">why not &quot;gregorian&quot;?</a>) is misleading because there are Gregorian calendars that do not all agree on the same rules for things like weeks of the year.  One solution could be to use a nullish ID like <code>null</code> or <code>&quot;&quot;</code> for the partial ISO calendar and <code>&quot;iso&quot;</code> for the full ISO calendar.  Alternatively, &quot;iso8601&quot;, the identifier defined by CLDR as &quot;Gregorian calendar using the ISO 8601 calendar week rules&quot;, could be the identifier for the full ISO calendar.</p>
+<h2 id="temporaldate-api-changes">Temporal.Date API changes</h2>
+<h3 id="new-temporaldate-instance-methods">New Temporal.Date instance methods</h3>
+<p>The following methods involving ISO conversion would be added:</p>
+<pre><code class="language-javascript">Temporal.Date.prototype.toISO = function(): Temporal.Date {
+    const isoDate = this.calendar[Temporal.Calendar.toISO](this);
+    // assert: isoDate.calendar === Temporal.Calendar.iso
+    return isoDate;
+}
+
+// Temporal.Date.prototype.with does *not* modify the calendar. A new method
+// is added for that:
+
+Temporal.Date.prototype.withCalendar = function(newCalendar: Calendar) {
+    const isoDate = this.toISO();  // note: call intrinsic version
+    const otherDate = newCalendar[Temporal.Calendar.fromISO](isoDate);
+    // assert: otherDate.calendar === newCalendar
+    return otherDate;
+}</code></pre>
+<h3 id="iso-strings-with-calendar-hint">ISO strings with calendar hint</h3>
+<p>Serialization to/from strings will still be supported.  To convert to a string, the <code>Temporal.Calendar.id</code> field of the calendar will be appended in <code>[]</code> following the date.  For example, <code>2019-12-06[hebrew]</code> refers to 2019-12-06 projected into the Hebrew calendar.</p>
+<pre><code class="language-javascript">Temporal.Date.prototype.toString = function() {
+    let calendarKeyword, isoDate;
+    // For Default Calendar Option 3, check for the partial ISO calendar here
+    if (/* this.calendar is the ISO calendar */) {
+        calendarKeyword = null;
+        isoDate = this;
+    } else {
+        calendarKeyword = this.calendar[Temporal.Calendar.identifier];
+        isoDate = this.toISO();  // call intrinsic
+    }
+    // return an ISO string for isoDate with calendar in brackets:
+    // &quot;2019-12-06[hebrew]&quot;
+}</code></pre>
+<p>For objects with time components (such as Temporal.DateTime), the calendar would be appended to the end of the string.  It would be distinguisable from the timezone because it does not contain a slash.  For example: <code>2019-12-06T16:23+00:50[America/NewYork][hebrew]</code>.  @gibson042 points out that this could be probematic: &quot;There are many aliases without / ... [including] #156. And it gets worse with author-defined time zone and calendar names.&quot;</p>
+<p>Alternatively, we may consider changing the syntax to add <code>c=</code> for calendars and <code>z=</code> for zones.  <code>2019-12-06T16:23+00:50[z=America/NewYork][c=hebrew]</code></p>
+<h3 id="new-behavior-of-temporaldatefrom">New behavior of Temporal.Date.from</h3>
+<p><code>Temporal.Date.from</code> would take a new optional <code>options</code> argument, with a single field <code>idToCalendar</code> specifying a function to map from identifiers to Calendar objects.  If not present, the <code>Intl.Calendar</code> namespace will be searched.</p>
+<p>Example implementation:</p>
+<pre><code class="language-javascript">Temporal.Date.from = function(thing: string | object, options: object) {
+    if (typeof thing === &quot;string&quot;) {
+        object = // components of string
+    }
+
+    const isoDate = // a date in the ISO calendar with fields from object
+
+    if (typeof object.calendar === &quot;string&quot;) {
+        // Note: Do we want this implicit escape hatch? If a lookup function is provided,
+        // maybe it should be treated as 100% authoritative.
+        const calendar = options?.idToCalendar?.(object.calendar)
+            ?? Temporal.Calendar.idToCalendar(id);  // call intrinsic
+        if (!calendar) {
+            throw new RangeError(&quot;Unknown calendar&quot;);
+        }
+        if (calendar[Temporal.Calendar.id] !== object.calendar) {
+            throw new RangeError(&quot;Calendar IDs do not match&quot;)
+        }
+        return isoDate.withCalendar(calendar);  // call intrinsic
+    } else if (object.calendar) {
+        return isoDate.withCalendar(object.calendar);  // call intrinsic
+    } else {
+        return isoDate;
+    }
+}</code></pre>
+<p>Example call site with custom calendars:</p>
+<pre><code class="language-javascript">const fooCalendar = new FooCalendar();
+
+Temporal.Date.from(&quot;2019-12-03[foo]&quot;, {
+    idToCalendar: function(id) {
+        if (id === &quot;foo&quot;) {
+            return fooCalendar;
+        }
+        return null;
+    }
+});</code></pre>
+<h3 id="semantics-of-existing-temporaldate-instance-methods">Semantics of existing Temporal.Date instance methods</h3>
+<p>Temporal.Date will defer to Temporal.Calendar methods wherever necessary.  Example implementation of selected Temporal.Date methods:</p>
+<pre><code class="language-javascript">Temporal.Date.prototype.plus = function(duration) {
+    return this.calendar[Temporal.Calendar.plus](this, duration);
+}
+
+Temporal.Date.prototype.difference = function(other) {
+    if (other.calendar !== this.calendar) {
+        // Note: call intrinsic versions of these methods
+        other = other.toISO().withCalendar(this.calendar);
+    }
+    return this.calendar[Temporal.Calendar.difference](this, other);
+}
+</code></pre>
+<h2 id="other-temporaldate-constructors">Other Temporal.Date constructors</h2>
+<h3 id="temporalabsoluteprototypeintimezone">Temporal.Absolute.prototype.inTimeZone</h3>
+<p>The third way to get a Temporal.Date (besides from a string and an object) is to convert it from a Temporal.Absolute.</p>
+<p>The API here would depend on the decision for whether to require an explicit default calendar.  If we decide to use a default calendar (options 1, 3, and 4), no API change would be required for this method.  If we decide to require an explicit calendar, then the API would likely be changed as follows:</p>
+<pre><code class="language-javascript">// Default calendar option 2 only
+Temporal.Absolute.prototype.inTimeZone = function(timeZone, calendar) {
+    const isoDate = // compute the ISO date from the time zone
+    return calendar[Temporal.Calendar.fromISO](isoDate);
+}</code></pre>
+<h3 id="temporalnow">Temporal.now</h3>
+<p>The fourth way to get a Temporal.Date is to get the current time according to the environment (or mocked for SES).</p>
+<p>As above, this API depends on whether we decide to use a default calendar.  If we require an explicit calendar, it would be similar to above:</p>
+<pre><code class="language-javascript">Temporal.now.date = function(calendar) {
+    const absolute = Temporal.now.absolute();  // use intrinsic
+    const timeZone = Temporal.now.timeZone();  // use intrinsic
+    return absolute.inTimeZone(timeZone, calendar);  // use intrinsic
+}</code></pre>
+<h2 id="changes-to-other-temporal-apis">Changes to other Temporal APIs</h2>
+<p>All of the following APIs would gain an internal slot for the calendar.</p>
+<ul>
+<li>Temporal.DateTime</li>
+<li>Temporal.Time</li>
+<li>Temporal.YearMonth</li>
+<li>Temporal.MonthDay</li>
+</ul>
+<p>In addition, Temporal.DateTime would gain the two other slots from Temporal.Date (<em>era</em> and <em>isLeapMonth</em>).</p>
