@@ -218,6 +218,7 @@ describe('Date', () => {
       equal(actual, orig);
     });
     it('Date.from({ year: 1976, month: 11, day: 18 }) == 1976-11-18', () => equal(`${Date.from({ year: 1976, month: 11, day: 18 })}`, '1976-11-18'));
+    it('DateTime.from({}) throws', () => throws(() => Date.from({}), RangeError));
   });
 });
 

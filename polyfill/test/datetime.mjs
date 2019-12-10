@@ -262,6 +262,7 @@ describe('DateTime', () => {
     });
     it('DateTime.from({ year: 1976, month: 11, day: 18 }) == 1976-11-18T00:00', () => equal(`${DateTime.from({ year: 1976, month: 11, day: 18 })}`, '1976-11-18T00:00'));
     it('DateTime.from({ year: 1976, month: 11, day: 18, millisecond: 123 }) == 1976-11-18T00:00:00.123', () => equal(`${DateTime.from({ year: 1976, month: 11, day: 18, millisecond: 123 })}`, '1976-11-18T00:00:00.123'));
+    it('DateTime.from({}) throws', () => throws(() => DateTime.from({}), RangeError));
   });
 });
 

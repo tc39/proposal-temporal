@@ -37,6 +37,7 @@ describe('Duration', () => {
     });
     it(`Duration.from({ milliseconds: 5 }) == PT0.005S`, () => equal(`${ Duration.from({ milliseconds: 5 }) }`, 'PT0.005S'));
     it(`Duration.from("P1D") == P1D`, () => equal(`${ Duration.from("P1D") }`, 'P1D'));
+    it('Duration.from({}) throws', () => throws(() => Duration.from({}), RangeError));
   });
 });
 
