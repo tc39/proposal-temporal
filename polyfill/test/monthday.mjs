@@ -34,6 +34,7 @@ describe('MonthDay', () => {
         const actu = MonthDay.from(orig);
         equal(actu, orig);
       });
+      it('MonthDay.from({}) throws', () => throws(() => MonthDay.from({}), RangeError));
     });
     describe('getters', () => {
       let md = new MonthDay(1, 15);

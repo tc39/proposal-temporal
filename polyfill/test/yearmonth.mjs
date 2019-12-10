@@ -29,6 +29,7 @@ describe('YearMonth', () => {
         const actu = YearMonth.from(orig);
         equal(actu, orig);
       });
+      it('YearMonth.from({}) throws', () => throws(() => YearMonth.from({}), RangeError));
     });
   });
 });

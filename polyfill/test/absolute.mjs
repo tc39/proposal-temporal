@@ -167,6 +167,7 @@ describe('Absolute', () => {
     it('Absolute.from(-1n)', () => {
       equal(`${ Absolute.from(-1n) }`, '1969-12-31T23:59:59.999999999Z');
     });
+    it('Absolute.from({}) throws', () => throws(() => Absolute.from({}), RangeError));
   });
   describe('Absolute.plus works', ()=>{
     describe('cross epoch in ms', ()=>{

@@ -267,6 +267,7 @@ describe('Time', () => {
       it('Time.from("15:23:30.123456789")', () => {
         equal(`${Time.from('15:23:30.123456789')}`, '15:23:30.123456789');
       });
+      it('Time.from({}) throws', () => throws(() => Time.from({}), RangeError));
     });
     describe('Disambiguation', () => {
       it('reject', () => throws(() => new Time(0, 0, 0, 0, 0, 1000, 'reject'), RangeError));
