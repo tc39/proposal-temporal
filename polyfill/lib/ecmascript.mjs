@@ -134,7 +134,7 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
     }
     const isoString = ES.ToString(item);
     const match = PARSE.datetime.exec(isoString);
-    if (!match) throw new RangeError(`invalid datetime: ${iso}`);
+    if (!match) throw new RangeError(`invalid datetime: ${isoString}`);
     const year = ES.ToInteger(match[1]);
     const month = ES.ToInteger(match[2]);
     const day = ES.ToInteger(match[3]);
@@ -163,7 +163,7 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
     }
     const isoString = ES.ToString(item);
     const match = PARSE.date.exec(isoString);
-    if (!match) throw new RangeError(`invalid date: ${iso}`);
+    if (!match) throw new RangeError(`invalid date: ${isoString}`);
     const year = ES.ToInteger(match[1]);
     const month = ES.ToInteger(match[2]);
     const day = ES.ToInteger(match[3]);
@@ -192,7 +192,7 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
     }
     const isoString = ES.ToString(item);
     const match = PARSE.time.exec(isoString);
-    if (!match) throw new RangeError(`invalid date: ${iso}`);
+    if (!match) throw new RangeError(`invalid date: ${isoString}`);
     const hour = ES.ToInteger(match[1]);
     const minute = ES.ToInteger(match[2]);
     const second = ES.ToInteger(match[3]);
@@ -216,7 +216,7 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
     }
     const isoString = ES.ToString(item);
     const match = PARSE.yearmonth.exec(isoString);
-    if (!match) throw new RangeError(`invalid yearmonth: ${iso}`);
+    if (!match) throw new RangeError(`invalid yearmonth: ${isoString}`);
     const year = ES.ToInteger(match[1]);
     const month = ES.ToInteger(match[2]);
     return new TemporalYearMonth(year, month, 'reject');
@@ -236,7 +236,7 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
     }
     const isoString = ES.ToString(item);
     const match = PARSE.monthday.exec(isoString);
-    if (!match) throw new RangeError(`invalid yearmonth: ${iso}`);
+    if (!match) throw new RangeError(`invalid yearmonth: ${isoString}`);
     const month = ES.ToInteger(match[1] || match[3]);
     const day = ES.ToInteger(match[2] || match[4]);
     return new TemporalMonthDay(month, day, 'reject');
@@ -270,7 +270,7 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
     }
     const isoString = ES.ToString(item);
     const match = PARSE.duration.exec(isoString);
-    if (!match) throw new RangeError(`invalid duration: ${iso}`);
+    if (!match) throw new RangeError(`invalid duration: ${isoString}`);
     const years = ES.ToInteger(match[1]);
     const months = ES.ToInteger(match[2]);
     const days = ES.ToInteger(match[3]);
