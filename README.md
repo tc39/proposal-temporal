@@ -6,19 +6,20 @@ Provides standard objects and functions for working with dates and times.
 
 ## Champions
 
-- Maggie Pint  ([@maggiepint](https://github.com/maggiepint))
-- Philipp Dunkel ([@pipobscure](https://github.com/pipobscure))
-- Matt Johnson ([@mj1856](https://github.com/mj1856))
-- Brian Terlson ([@bterlson](https://github.com/bterlson))
+-   Maggie Pint ([@maggiepint](https://github.com/maggiepint))
+-   Philipp Dunkel ([@pipobscure](https://github.com/pipobscure))
+-   Matt Johnson ([@mj1856](https://github.com/mj1856))
+-   Brian Terlson ([@bterlson](https://github.com/bterlson))
 
 ## Status
 
 This proposal is currently stage 2
 
 Stage 3 Reviewers:
-- Richard Gibson
-- Bradley Farias
-- Daniel Ehrenberg
+
+-   Richard Gibson
+-   Bradley Farias
+-   Daniel Ehrenberg
 
 ## Overview / Motivation
 
@@ -29,10 +30,10 @@ For a detailed breakdown of motivations see:
 
 ### Principles:
 
-- All temporal APIs are non-mutating.  All temporal objects are effectively immutable.
-- All date values are based on the [Proleptic Gregorian Calendar](https://en.wikipedia.org/wiki/Proleptic_Gregorian_calendar).  Other calendar systems are out-of-scope for this proposal.  However, we will consider how future APIs may interact with this one such that extending it to support other calendars may be possible in a future proposal.
-- All time-of-day values are based on a standard 24-hour clock.
-- [Leap seconds](https://en.wikipedia.org/wiki/Leap_second) are not represented.
+-   All temporal APIs are non-mutating. All temporal objects are effectively immutable.
+-   All date values are based on the [Proleptic Gregorian Calendar](https://en.wikipedia.org/wiki/Proleptic_Gregorian_calendar). Other calendar systems are out-of-scope for this proposal. However, we will consider how future APIs may interact with this one such that extending it to support other calendars may be possible in a future proposal.
+-   All time-of-day values are based on a standard 24-hour clock.
+-   [Leap seconds](https://en.wikipedia.org/wiki/Leap_second) are not represented.
 
 ## Specification Text
 
@@ -41,6 +42,10 @@ For a detailed breakdown of motivations see:
 ## Polyfill
 
 A complete polyfill can be found [here](./polyfill). It is being developed as specification in code.
+
+## Cookbook
+
+A cookbook to help you get started and learn the ins and outs of Temporal is available [here](./cookbook/README.md)
 
 ## Overview of Classes in the `Temporal` global
 
@@ -100,12 +105,12 @@ See [Temporal.Duration Documentation](./docs/duration.md) for more detailed docu
 
 ### `Temporal` functions
 
- * `Temporal.getAbsolute()` - get the current system absolute time
- * `Temporal.getTimeZone()` - get the current system timezone
- * `Temporal.getDateTime()` - get the current system date/time
- * `Temporal.getTime()` - get the current system time
- * `Temporal.getDate()` - get the current system date
- * `Temporal.getYearMonth()` - get the current system year/month
- * `Temporal.getMonthDay()` - get the current system month/day
+-   `Temporal.getAbsolute()` - get the current system absolute time
+-   `Temporal.getTimeZone()` - get the current system timezone
+-   `Temporal.getDateTime()` - get the current system date/time
+-   `Temporal.getTime()` - get the current system time
+-   `Temporal.getDate()` - get the current system date
+-   `Temporal.getYearMonth()` - get the current system year/month
+-   `Temporal.getMonthDay()` - get the current system month/day
 
 See [Temporal Functions Documentation](./docs/functions.md) for more detailed documentation.
