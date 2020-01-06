@@ -1,1 +1,2 @@
-# Empty.
+# Bad property descriptor
+Absolute/prototype/toStringTag/prop-desc.js

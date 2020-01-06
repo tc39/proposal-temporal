@@ -21,33 +21,6 @@ describe('Absolute', () => {
     it('Absolute is a Function', () => {
       equal(typeof Absolute, 'function');
     });
-    it('Absolute has a prototype', () => {
-      assert(Absolute.prototype);
-      equal(typeof Absolute.prototype, 'object');
-    });
-    describe('Absolute.prototype', () => {
-      it('Absolute.prototype has getEpochSeconds', () => {
-        assert('getEpochSeconds' in Absolute.prototype);
-      });
-      it('Absolute.prototype has getEpochMilliseconds', () => {
-        assert('getEpochMilliseconds' in Absolute.prototype);
-      });
-      it('Absolute.prototype has getEpochMicroseconds', () => {
-        assert('getEpochMicroseconds' in Absolute.prototype);
-      });
-      it('Absolute.prototype has getEpochNanoseconds', () => {
-        assert('getEpochNanoseconds' in Absolute.prototype);
-      });
-      it('Absolute.prototype.inTimeZone is a Function', () => {
-        equal(typeof Absolute.prototype.inTimeZone, 'function');
-      });
-      it('Absolute.prototype.toString is a Function', () => {
-        equal(typeof Absolute.prototype.toString, 'function');
-      });
-      it('Absolute.prototype.toJSON is a Function', () => {
-        equal(typeof Absolute.prototype.toJSON, 'function');
-      });
-    });
     it('Absolute.fromEpochSeconds is a Function', () => {
       equal(typeof Absolute.fromEpochSeconds, 'function');
     });
