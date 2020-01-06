@@ -1,7 +1,23 @@
 export function MakeIntrinsicClass(Class, name) {
   if ('undefined' !== typeof Symbol) {
-    Class.prototype[Symbol.toStringTag] = name;
-    Class.prototype[Symbol.species] = Class;
+    Object.defineProperty(Class.prototype, Symbol.toStringTag, {
+      value: name,
+      writable: false,
+      enumerable: false,
+      configurable: true,
+    });
+    const species = function() { return this };
+    Object.defineProperty(species, "name", {
+      value: "get [Symbol.species]",
+      writable: false,
+      enumerable: false,
+      configurable: true,
+    });
+    Object.defineProperty(Class.prototype, Symbol.class, {
+      get: species,
+      enumerable: false,
+      configurable: true,
+    });
   }
   for (let prop of Object.getOwnPropertyNames(Class)) {
     const desc = Object.getOwnPropertyDescriptor(Class, prop);
