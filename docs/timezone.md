@@ -1,6 +1,6 @@
 # `Temporal.TimeZone`
 
-A representation of a time-zone giving access to information about offsets & dst-changes as well as allowing for conversions.
+A representation of a time zone giving access to information about offsets & dst-changes as well as allowing for conversions.
 
 ## new Temporal.TimeZone(timeZone: string) : Temporal.TimeZone
 

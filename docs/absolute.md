@@ -1,7 +1,7 @@
 # `Temporal.Absolute`
 
 An absolute point in time.  
-No timezone or offset information is present. As such `Absolute`s have no concept of days, months or even hours. For convenience of interoperability it uses _nanoseconds since the unix-epoch_
+No time zone or offset information is present. As such `Absolute`s have no concept of days, months or even hours. For convenience of interoperability it uses _nanoseconds since the unix-epoch_
 
 ## new Temporal.Absolute(epochNanoSeconds : bigint) : Temporal.Absolute
 
@@ -29,7 +29,7 @@ Returns the numeric value of the specified date as the number of nanoseconds sin
 
 ## absolute.inTimeZone(timeZone: Temporal.TimeZone | string) : Temporal.DateTime
 
-Returns the time-zone offset as a `DateTime` object for the current timezone.
+Returns the time zone offset as a `DateTime` object for the current time zone.
 
 ## absolute.plus(duration: Temporal.Duration | string | object) : Temporal.Absolute
 
