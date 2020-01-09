@@ -33,15 +33,15 @@ See [Temporal.Absolute Documentation](./absolute.md) for more detailed documenta
 
 ### `Temporal.TimeZone`
 
-A `Temporal.TimeZone` represents an IANA Timezone, a specific UTF-Offset or UTC itself. Because of this `Temporal.TimeZone` can be used to convert between `Temporal.Absolute` and `Temporal.DateTime` as well as finding out the offset at a specific `Temporal.Absolute`.
+A `Temporal.TimeZone` represents an IANA time zone, a specific UTF-Offset or UTC itself. Because of this `Temporal.TimeZone` can be used to convert between `Temporal.Absolute` and `Temporal.DateTime` as well as finding out the offset at a specific `Temporal.Absolute`.
 
-`Temporal.TimeZone` is also an iterable that give access to the IANA-Timezones supported by the system from the [IANA time zone database](https://www.iana.org/time-zones) (also listed [here](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)).
+`Temporal.TimeZone` is also an iterable that give access to the IANA time zones supported by the system from the [IANA time zone database](https://www.iana.org/time-zones) (also listed [here](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)).
 
 See [Temporal.TimeZone Documentation](./timezone.md) for more detailed documentation.
 
 ### `Temporal.DateTime`
 
-A `Temporal.DateTime` represents a calendar date and wall-clock time. That means it does not carry timezone information. However it can be converted to a `Temporal.Absolute` using a `Temporal.TimeZone`.
+A `Temporal.DateTime` represents a calendar date and wall-clock time. That means it does not carry time zone information. However it can be converted to a `Temporal.Absolute` using a `Temporal.TimeZone`.
 
 This can also be converted to object containing only partial information such as `Temporal.Date` and `Temporal.Time`.
 
@@ -82,7 +82,7 @@ See [Temporal.Duration Documentation](./duration.md) for more detailed documenta
 ### `Temporal` functions
 
  * `Temporal.getAbsolute()` - get the current system absolute time
- * `Temporal.getTimeZone()` - get the current system timezone
+ * `Temporal.getTimeZone()` - get the current system time zone
  * `Temporal.getDateTime()` - get the current system date/time
  * `Temporal.getTime()` - get the current system time
  * `Temporal.getDate()` - get the current system date
