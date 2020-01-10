@@ -169,6 +169,16 @@ Temporal.Date.from("2019-12-06").withCalendar(request.calendar).weekOfYear;
 
 The calendar IDs are less clear.  If the partial ISO calendar used ID `"iso"`, then what would the full ISO calendar use?  ID "gregory" ([why not "gregorian"?](https://github.com/tc39/ecma402/issues/212)) is misleading because there are Gregorian calendars that do not all agree on the same rules for things like weeks of the year.  One solution could be to use a nullish ID like `null` or `""` for the partial ISO calendar and `"iso"` for the full ISO calendar.  Alternatively, "iso8601", the identifier defined by CLDR as "Gregorian calendar using the ISO 8601 calendar week rules", could be the identifier for the full ISO calendar.
 
+### Default Calendar Options: Pros and Cons
+
+| Description | Full ISO (option 1) | No Default (option 2) | Partial ISO (option 3) | User Preference (option 4) |
+|-------------|---------------------|-----------------------|------------------------|----------------------------|
+| API consistency & predictability | 😃 Consistent and predictable | 😃 Consistent and predictable | 😐 Predictable behavior, but call sites may or may not require an explicit calendar | ☹️ Consistent API, but unpredictable behavior based on user's or server's location |
+| Impact on Temporal call sites | 😃 No changes | ☹️ All call sites require extra boilerplate | 🙂 Most* operations work; some require extra boilerplate | 😃 No changes |
+| Impact on i18n correctness | ☹️ Programmer needs to know to "opt in" to use the user's calendar preference | 😃 All operations require an explicit choice | 😃 Calendar-sensitive operations require an explicit choice | 🙂 Correct on front end, but programmer needs to know to "opt in" on back end |
+
+*\* See https://github.com/tc39/proposal-temporal/issues/240#issuecomment-557726669*
+
 ## Temporal.Date API changes
 
 ### New Temporal.Date instance methods
