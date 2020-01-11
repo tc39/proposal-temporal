@@ -333,6 +333,16 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
     }
     return disambiguation;
   },
+  ToLargestTemporalUnit: (largestUnit, disallowedStrings = []) => {
+    largestUnit = ES.ToString(largestUnit);
+    if (disallowedStrings.includes(largestUnit)) {
+      throw new RangeError(`${largestUnit} not allowed as the largest unit here`);
+    }
+    if (!['years', 'months', 'days', 'hours', 'minutes', 'seconds'].includes(largestUnit)) {
+      throw new RangeError(`invalid largest unit ${largestUnit}`);
+    }
+    return largestUnit;
+  },
   GetIntrinsic: (intrinsic) => {
     return intrinsic in INTRINSICS ? INTRINSICS[intrinsic] : GetIntrinsic(intrinsic);
   },
@@ -735,6 +745,58 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
 
     return { deltaDays, hour, minute, second, millisecond, microsecond, nanosecond };
   },
+  BalanceDurationDate: (years, months, startYear, startMonth, startDay) => {
+    if (months < 0) {
+      years -= 1;
+      months += 12;
+    }
+    let { year, month } = ES.BalanceYearMonth(startYear + years, startMonth + months);
+    while (startDay > ES.DaysInMonth(year, month)) {
+      months -= 1;
+      if (months < 0) {
+        years -= 1;
+        months += 12;
+      }
+      ({ year, month } = ES.BalanceYearMonth(startYear + years, startMonth + months));
+    }
+    return { year, month, years, months };
+  },
+  BalanceDuration: (days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, largestUnit) => {
+    let deltaDays;
+    ({
+      deltaDays,
+      hour: hours,
+      minute: minutes,
+      second: seconds,
+      millisecond: milliseconds,
+      microsecond: microseconds,
+      nanosecond: nanoseconds,
+    } = ES.BalanceTime(hours, minutes, seconds, milliseconds, microseconds, nanoseconds));
+    days += deltaDays;
+
+    switch (largestUnit) {
+      case 'hours':
+        hours += 24 * days;
+        days = 0;
+        break;
+      case 'minutes':
+        minutes += 60 * (hours + 24 * days);
+        hours = days = 0;
+        break;
+      case 'seconds':
+        seconds += 60 * (minutes + 60 * (hours + 24 * days));
+        minutes = hours = days = 0;
+        break;
+      case 'years':
+      case 'months':
+      case 'days':
+        break;
+      default:
+        throw new Error('assert not reached');
+    }
+
+    return { days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
+  },
 
   ConstrainToRange: (value, min, max) => Math.min(max, Math.max(min, value)),
   ConstrainDate: (year, month, day) => {
@@ -836,44 +898,39 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
     }
   },
 
-  DifferenceDate: (smaller, larger) => {
+  DifferenceDate: (smaller, larger, largestUnit = 'days') => {
     let years = larger.year - smaller.year;
-    let months = larger.month - smaller.month;
-    if (months < 0) {
-      years -= 1;
-      months += 12;
-    }
-    let { year, month } = ES.BalanceYearMonth(smaller.year + years, smaller.month + months);
-    while (smaller.day > ES.DaysInMonth(year, month)) {
-      months -= 1;
-      if (months < 0) {
-        years -= 1;
-        months += 12;
-      }
-      ({ year, month } = ES.BalanceYearMonth(smaller.year + years, smaller.month + months));
-    }
-    let days = ES.DayOfYear(larger.year, larger.month, larger.day) - ES.DayOfYear(year, month, smaller.day);
-    if (days < 0) {
-      months -= 1;
-      if (months < 0) {
-        years -= 1;
-        months += 12;
-      }
-      ({ year, month } = ES.BalanceYearMonth(smaller.year + years, smaller.month + months));
-      while (smaller.day > ES.DaysInMonth(year, month)) {
-        months -= 1;
-        if (months < 0) {
-          years -= 1;
-          months += 12;
-        }
-        ({ year, month } = ES.BalanceYearMonth(smaller.year + years, smaller.month + months));
-      }
-      if (larger.year > year) {
-        const din = ES.LeapYear(year) ? 366 : 365;
-        days = ES.DayOfYear(larger.year, larger.month, larger.day) + (din - ES.DayOfYear(year, month, smaller.day));
-      } else {
+    let months, days;
+
+    switch (largestUnit) {
+      case 'years':
+      case 'months': {
+        months = larger.month - smaller.month;
+        let year, month;
+        ({ year, month, years, months } = ES.BalanceDurationDate(years, months, smaller.year, smaller.month, smaller.day));
         days = ES.DayOfYear(larger.year, larger.month, larger.day) - ES.DayOfYear(year, month, smaller.day);
+        if (days < 0) {
+          months -= 1;
+          ({ year, month, years, months } = ES.BalanceDurationDate(years, months, smaller.year, smaller.month, smaller.day));
+          days = ES.DayOfYear(larger.year, larger.month, larger.day) - ES.DayOfYear(year, month, smaller.day);
+          if (larger.year > year) days += ES.LeapYear(year) ? 366 : 365;
+        }
+        if (largestUnit === 'months') {
+          months += years * 12;
+          years = 0;
+        }
+        break;
       }
+      case 'days':
+        months = 0;
+        days = ES.DayOfYear(larger.year, larger.month, larger.day) - ES.DayOfYear(smaller.year, smaller.month, smaller.day);
+        while (years > 0) {
+          days += ES.LeapYear(smaller.year + years - 1) ? 366 : 365;
+          years -= 1;
+        }
+        break;
+      default:
+        throw new Error('assert not reached');
     }
     return { years, months, days };
   },

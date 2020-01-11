@@ -392,22 +392,39 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal.datetime.prototype.difference">
-      <h1>Temporal.DateTime.prototype.difference ( _otherDateTime_ )</h1>
+      <h1>Temporal.DateTime.prototype.difference ( _otherDateTime_, [ _largestUnit_ ] )</h1>
       <p>
-        The `difference` method takes one argument _otherDateTime_.
+        The `difference` method takes two arguments, _otherDateTime_ and _largestUnit_.
         The following steps are taken:
       </p>
       <emu-alg>
         1. Let _dateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
         1. Perform ? RequireInternalSlot(_otherDateTime_, [[InitializedTemporalDateTime]]).
+        1. Set _largestUnit_ to ? ToLargestTemporalUnit(_largestUnit_, « », `"days"`).
         1. If ! DateTimeCompare(_dateTime_, _otherDateTime_) &lt; 0, then
           1. Let _greater_ be _otherDateTime_.
           1. Let _smaller_ be _dateTime_.
         1. Else,
           1. Let _greater_ be _dateTime_.
           1. Let _smaller_ be _otherDateTime_.
-        1. <mark>TODO</mark>
+        1. Let _timeDifference_ be ! DifferenceTime(_smaller_, _greater_).
+        1. Let _balanceResult_ be ! BalanceDate(_greater_.[[Year]], _greater_.[[Month]], _greater_.[[Day]] + _timeDifference_.[[Days]]).
+        1. Let _dateDifference_ be ! DifferenceDate(_smaller_, _balanceResult_, _largestUnit_).
+        1. Let _days_ be _dateDifference_.[[Days]].
+        1. Let _hours_ be _timeDifference_.[[Hour]].
+        1. Let _minutes_ be _timeDifference_.[[Minute]].
+        1. Let _seconds_ be _timeDifference_.[[Second]].
+        1. If _largestUnit_ is `"hours"`, `"minutes"`, or `"seconds"`, then
+          1. Set _hours_ to _hours_ + 24 &times; _days_.
+          1. Set _days_ to 0.
+        1. If _largestUnit_ is `"minutes"` or `"seconds"`, then
+          1. Set _minutes_ to _minutes_ + 60 &times; _hours_.
+          1. Set _hours_ to 0.
+        1. If _largestUnit_ is `"seconds"`, then
+          1. Set _seconds_ to _seconds_ + 60 &times; _minutes_.
+          1. Set _minutes_ to 0.
+        1. Return ? CreateDuration(_dateDifference_.[[Years]], _dateDifference_.[[Months]], _days_, _hours_, _minutes_, _seconds_, _timeDifference_.[[Millisecond]], _timeDifference_.[[Microsecond]], _timeDifference_.[[Nanosecond]]).
       </emu-alg>
     </emu-clause>
 

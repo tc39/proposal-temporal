@@ -278,23 +278,49 @@ oneDay = new Temporal.Duration(0, 0, 1);
 Temporal.now.absolute().minus(oneDay);
 ```
 
-### absolute.**difference**(_other_: Temporal.Absolute) : Temporal.Duration
+### absolute.**difference**(_other_: Temporal.Absolute, _largestUnit_: string = 'seconds') : Temporal.Duration
 
 **Parameters:**
 - `other` (`Temporal.Absolute`): Another time with which to compute the difference.
+- `largestUnit` (optional string): The largest unit of time to allow in the resulting `Temporal.Duration` object.
+  Valid values are `'days'`, `'hours'`, `'minutes'`, and `'seconds'`.
+  The default is `"seconds"`.
 
 **Returns:** a `Temporal.Duration` representing the difference between `absolute` and `other`.
 
 This method computes the difference between the two times represented by `absolute` and `other`, and returns it as a `Temporal.Duration` object.
 The difference is always positive, no matter the order of `absolute` and `other`, because `Temporal.Duration` objects cannot represent negative durations.
 
+The `largestUnit` parameter controls how the resulting duration is expressed.
+The returned `Temporal.Duration` object will not have any nonzero fields that are larger than the unit in `largestUnit`.
+A difference of two hours will become 7200 seconds when `largestUnit` is `"seconds"`, for example.
+However, a difference of 30 seconds will still be 30 seconds even if `largestUnit` is `"hours"`.
+
+By default, the largest unit in the result is seconds.
+Unlike other Temporal types, months and years are not allowed.
+This is because in the ISO calendar, months and years can be different lengths depending on which month is meant and whether the year is a leap year.
+`Temporal.Absolute` is intended to be calendar-independent and therefore free of these ambiguities.
+
 Example usage:
 ```js
 startOfMoonMission = Temporal.Absolute.from('1969-07-16T13:32:00Z');
 endOfMoonMission = Temporal.Absolute.from('1969-07-24T16:50:35Z');
-missionLength = startOfMoonMission.difference(endOfMoonMission);  // => P8DT3H18M35S
-endOfMoonMission.difference(startOfMoonMission);  // => P8DT3H18M35S
+missionLength = startOfMoonMission.difference(endOfMoonMission, 'days');  // => P8DT3H18M35S
+endOfMoonMission.difference(startOfMoonMission, 'days');  // => P8DT3H18M35S
 missionLength.toLocaleString();  // example output: '8 days 3 hours 18 minutes 35 seconds'
+
+// A billion (10^9) seconds since the epoch in different units
+epoch = new Temporal.Absolute(0n);
+billion = Temporal.Absolute.fromEpochSeconds(1e9);
+epoch.difference(billion);  // => PT1000000000S
+epoch.difference(billion, 'hours')  // => PT277777H46M40S
+epoch.difference(billion, 'days')  // => P11574DT1H46M40S
+
+// If you really need to calculate the difference between two Absolutes
+// in years, you can eliminate the ambiguity by choosing your starting
+// point explicitly. For example, using the corresponding UTC date:
+utc = Temporal.TimeZone.from('UTC');
+epoch.inTimeZone(utc).difference(billion.inTimeZone(utc), 'years');  // => P31Y8M8DT1H46M40S
 ```
 
 ### absolute.**toString**(_timeZone_?: Temporal.TimeZone | string) : string

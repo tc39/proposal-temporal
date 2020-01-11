@@ -225,15 +225,16 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal.yearmonth.prototype.difference">
-      <h1>Temporal.YearMonth.prototype.difference ( _otherYearMonth_ )</h1>
+      <h1>Temporal.YearMonth.prototype.difference ( _otherYearMonth_ [, _largestUnit_ ]. )</h1>
       <p>
-        The `difference` method takes one argument _otherYearMonth_.
+        The `difference` method takes two arguments, _otherYearMonth_ and _largestUnit_.
         The following steps are taken:
       </p>
       <emu-alg>
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
         1. Perform ? RequireInternalSlot(_otherYearMonth_, [[InitializedTemporalYearMonth]]).
+        1. Set _largestUnit_ to ? ToLargestTemporalUnit(_largestUnit_, « `"days"`, `"hours"`, `"minutes"`, `"seconds"` », `"years"`).
         1. If ! YearMonthCompare(_yearMonth_, _otherYearMonth_) &lt; 0, then
           1. Let _greater_ be _otherYearMonth_.
           1. Let _smaller_ be _yearMonth_.
@@ -245,6 +246,9 @@
         1. If _months_ &lt; 0, then
           1. Set _years_ to _years_ - 1.
           1. Set _months_ to _months_ + 12.
+        1. If _largestUnit_ is `"months"`, then
+          1. Set _months_ to _months_ + _years_ &times; 12.
+          1. Set _years_ to 0.
         1. <mark>Assert: _months_ ≥ 0.</mark>
         1. Return ? CreateDuration(_years_, _months_, 0, 0, 0, 0, 0, 0, 0).
       </emu-alg>

@@ -310,6 +310,21 @@ describe('Time', () => {
         throws(() => time.difference({ hour: 16, minute: 34 }), TypeError);
         throws(() => time.difference('16:34'), TypeError);
       });
+      const time1 = Time.from('10:23:15');
+      const time2 = Time.from('17:15:57');
+      it('the default largest unit is at least hours', () => {
+        equal(`${time1.difference(time2)}`, 'PT6H52M42S');
+        equal(`${time1.difference(time2, 'hours')}`, 'PT6H52M42S');
+      });
+      it('higher units have no effect', () => {
+        equal(`${time1.difference(time2, 'days')}`, 'PT6H52M42S');
+        equal(`${time1.difference(time2, 'months')}`, 'PT6H52M42S');
+        equal(`${time1.difference(time2, 'years')}`, 'PT6H52M42S');
+      });
+      it('can return lower units', () => {
+        equal(`${time1.difference(time2, 'minutes')}`, 'PT412M42S');
+        equal(`${time1.difference(time2, 'seconds')}`, 'PT24762S');
+      });
     });
     describe('Time.compare() works', () => {
       const t1 = Time.from('08:44:15.321');

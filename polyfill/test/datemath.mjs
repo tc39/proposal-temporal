@@ -60,19 +60,22 @@ describe('Date.difference(normal, leap)', () => {
 function build(name, sone, stwo) {
   const [one, two] = [Temporal.Date.from(sone), Temporal.Date.from(stwo)].sort(Temporal.Date.compare);
   describe(name, () => {
-    buildSub(one, two);
-    buildSub(one.with({ day: 25 }), two.with({ day: 5 }));
-    buildSub(one.with({ day: 30 }), two.with({ day: 29 }));
-    buildSub(one.with({ day: 30 }), two.with({ day: 5 }));
+    const largestUnits = ['years', 'months', 'days'];
+    buildSub(one, two, largestUnits);
+    buildSub(one.with({ day: 25 }), two.with({ day: 5 }), largestUnits);
+    buildSub(one.with({ day: 30 }), two.with({ day: 29 }), largestUnits);
+    buildSub(one.with({ day: 30 }), two.with({ day: 5 }), largestUnits);
   });
 }
-function buildSub(one, two) {
-  describe(`< ${one} : ${two} >`, () => {
-    const dif = two.difference(one);
-    it(`(${one}).plus(${dif}) => ${two}`, () =>
-      equal(`${one.plus(dif, 'reject')}`, `${two}`, `(${one}).plus(${dif}) => ${two}`));
-    it(`(${two}).minus(${dif}) => ${one}`, () =>
-      equal(`${two.minus(dif, 'reject')}`, `${one}`, `(${two}).minus(${dif}) => ${one}`));
+function buildSub(one, two, largestUnits) {
+  largestUnits.forEach(largestUnit => {
+    describe(`< ${one} : ${two} (${largestUnit})>`, () => {
+      const dif = two.difference(one, largestUnit);
+      it(`(${one}).plus(${dif}) => ${two}`, () =>
+        equal(`${one.plus(dif, 'reject')}`, `${two}`, `(${one}).plus(${dif}) => ${two}`));
+      it(`(${two}).minus(${dif}) => ${one}`, () =>
+        equal(`${two.minus(dif, 'reject')}`, `${one}`, `(${two}).minus(${dif}) => ${one}`));
+    });
   });
 }
 

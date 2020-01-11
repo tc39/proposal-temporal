@@ -246,15 +246,16 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal.absolute.prototype.difference">
-      <h1>Temporal.Absolute.prototype.difference ( _otherAbsolute_ )</h1>
+      <h1>Temporal.Absolute.prototype.difference ( _otherAbsolute_ [, _largestUnit_ ] )</h1>
       <p>
-        The `difference` method takes one argument _otherAbsolute_.
+        The `difference` method takes two arguments, _otherAbsolute_ and _largestUnit_.
         The following steps are taken:
       </p>
       <emu-alg>
         1. Let _absolute_ be the *this* value.
         1. Perform ? RequireInternalSlot(_absolute_, [[InitializedTemporalAbsolute]]).
         1. Perform ? RequireInternalSlot(_otherAbsolute_, [[InitializedTemporalAbsolute]]).
+        1. Set _largestUnit_ to ? ToLargestTemporalUnit(_largestUnit_, « `"years"`, `"months"` », `"seconds"`).
         1. If ! AbsoluteCompare(_absolute_, _otherAbsolute_) &lt; 0, then
           1. Let _greater_ be _otherAbsolute_.
           1. Let _smaller_ be _absolute_.
@@ -262,7 +263,7 @@
           1. Let _greater_ be _absolute_.
           1. Let _smaller_ be _otherAbsolute_.
         1. Let _ns_ be _greater_.[[Nanoseconds]] - _smaller_.[[Nanoseconds]].
-        1. Let _result_ be ! BalanceTime(0, 0, 0, 0, 0, _ns_).
+        1. Let _result_ be ! BalanceDuration(0, 0, 0, 0, 0, 0, _ns_, _largestUnit_).
         1. Return ? CreateDuration(0, 0, _result_.[[Days]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]).
       </emu-alg>
     </emu-clause>

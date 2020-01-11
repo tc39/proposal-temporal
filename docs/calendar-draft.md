@@ -316,12 +316,12 @@ Temporal.Date.prototype.plus = function(duration) {
 	return this.calendar.plus(this, duration);
 }
 
-Temporal.Date.prototype.difference = function(other) {
+Temporal.Date.prototype.difference = function(other, options) {
 	if (other.calendar !== this.calendar) {
 		// Note: call intrinsic versions of these methods
 		other = other.toISO().withCalendar(this.calendar);
 	}
-	return this.calendar.difference(this, other);
+	return this.calendar.difference(this, other, options);
 }
 
 ```
