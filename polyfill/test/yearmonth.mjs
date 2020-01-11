@@ -97,6 +97,21 @@ describe('YearMonth', () => {
       throws(() => nov94.difference({ year: 2013, month: 6 }), TypeError);
       throws(() => nov94.difference('2013-06'), TypeError);
     });
+    const feb20 = YearMonth.from('2020-02');
+    const feb21 = YearMonth.from('2021-02');
+    it('defaults to returning years', () => {
+      equal(`${feb21.difference(feb20)}`, 'P1Y');
+      equal(`${feb21.difference(feb20, 'years')}`, 'P1Y');
+    });
+    it('can return months', () => {
+      equal(`${feb21.difference(feb20, 'months')}`, 'P12M');
+    });
+    it('cannot return lower units', () => {
+      throws(() => feb21.difference(feb20, 'days'), RangeError);
+      throws(() => feb21.difference(feb20, 'hours'), RangeError);
+      throws(() => feb21.difference(feb20, 'minutes'), RangeError);
+      throws(() => feb21.difference(feb20, 'seconds'), RangeError);
+    });
   });
   describe('YearMonth.plus() works', () => {
     const ym = YearMonth.from('2019-11');

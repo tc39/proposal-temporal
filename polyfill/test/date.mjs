@@ -144,8 +144,8 @@ describe('Date', () => {
       const duration = date.difference(Date.from({ year: 1976, month: 10, day: 5 }));
 
       equal(duration.years, 0);
-      equal(duration.months, 1);
-      equal(duration.days, 13);
+      equal(duration.months, 0);
+      equal(duration.days, 44);
       equal(duration.hours, 0);
       equal(duration.minutes, 0);
       equal(duration.seconds, 0);
@@ -153,8 +153,8 @@ describe('Date', () => {
       equal(duration.microseconds, 0);
       equal(duration.nanoseconds, 0);
     });
-    it('date.difference({ year: 2019, month: 11, day: 18 })', () => {
-      const duration = date.difference(Date.from({ year: 2019, month: 11, day: 18 }));
+    it('date.difference({ year: 2019, month: 11, day: 18 }, "years")', () => {
+      const duration = date.difference(Date.from({ year: 2019, month: 11, day: 18 }), 'years');
       equal(duration.years, 43);
       equal(duration.months, 0);
       equal(duration.days, 0);
@@ -169,6 +169,51 @@ describe('Date', () => {
       throws(() => date.difference({ year: 2019, month: 11, day: 5 }), TypeError);
       throws(() => date.difference('2019-11-05'), TypeError);
     })
+    it('takes days per month into account', () => {
+      const date1 = Date.from('2019-01-01');
+      const date2 = Date.from('2019-02-01');
+      const date3 = Date.from('2019-03-01');
+      equal(`${date1.difference(date2)}`, 'P31D');
+      equal(`${date2.difference(date3)}`, 'P28D');
+
+      const date4 = Date.from('2020-02-01');
+      const date5 = Date.from('2020-03-01');
+      equal(`${date4.difference(date5)}`, 'P29D');
+    });
+    it('takes days per year into account', () => {
+      const date1 = Date.from('2019-01-01');
+      const date2 = Date.from('2019-06-01');
+      const date3 = Date.from('2020-01-01');
+      const date4 = Date.from('2020-06-01');
+      const date5 = Date.from('2021-01-01');
+      const date6 = Date.from('2021-06-01');
+      equal(`${date1.difference(date3)}`, 'P365D');
+      equal(`${date3.difference(date5)}`, 'P366D');
+      equal(`${date2.difference(date4)}`, 'P366D');
+      equal(`${date4.difference(date6)}`, 'P365D');
+    });
+    const feb20 = Date.from('2020-02-01');
+    const feb21 = Date.from('2021-02-01');
+    it('defaults to returning days', () => {
+      equal(`${feb21.difference(feb20)}`, 'P366D');
+      equal(`${feb21.difference(feb20, 'days')}`, 'P366D');
+    });
+    it('can return higher units', () => {
+      equal(`${feb21.difference(feb20, 'years')}`, 'P1Y');
+      equal(`${feb21.difference(feb20, 'months')}`, 'P12M');
+    });
+    it('cannot return lower units', () => {
+      throws(() => feb21.difference(feb20, 'hours'), RangeError);
+      throws(() => feb21.difference(feb20, 'minutes'), RangeError);
+      throws(() => feb21.difference(feb20, 'seconds'), RangeError);
+    });
+    it('does not include higher units than necessary', () => {
+      const lastFeb20 = Date.from('2020-02-29');
+      const lastFeb21 = Date.from('2021-02-28');
+      equal(`${lastFeb21.difference(lastFeb20)}`, 'P365D');
+      equal(`${lastFeb21.difference(lastFeb20, 'months')}`, 'P11M30D');
+      equal(`${lastFeb21.difference(lastFeb20, 'years')}`, 'P11M30D');
+    });
   });
   describe('date.plus() works', () => {
     let date = new Date(1976, 11, 18);

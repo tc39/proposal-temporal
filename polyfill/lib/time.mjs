@@ -164,9 +164,10 @@ export class Time {
     const Construct = ES.SpeciesConstructor(this, Time);
     return new Construct(hour, minute, second, millisecond, microsecond, nanosecond);
   }
-  difference(other) {
+  difference(other, largestUnit = 'hours') {
     if (!ES.IsTime(this)) throw new TypeError('invalid receiver');
     if (!ES.IsTime(other)) throw new TypeError('invalid Time object');
+    largestUnit = ES.ToLargestTemporalUnit(largestUnit);
     const [earlier, later] = [this, other].sort(Time.compare);
     let { hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.DifferenceTime(earlier, later);
     if (hours >= 12) {
@@ -177,8 +178,16 @@ export class Time {
       microseconds *= -1;
       nanoseconds *= -1;
     }
+    ({
+      hours,
+      minutes,
+      seconds,
+      milliseconds,
+      microseconds,
+      nanoseconds,
+    } = ES.BalanceDuration(0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, largestUnit));
     const Duration = ES.GetIntrinsic('%Temporal.Duration%');
-    return new Duration(0, 0, 0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 'balance');
+    return new Duration(0, 0, 0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 'reject');
   }
 
   toString() {

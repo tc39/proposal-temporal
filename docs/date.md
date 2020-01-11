@@ -309,20 +309,41 @@ date.minus({months: 1}, 'constrain')  // => 2019-02-28
 date.minus({months: 1}, 'reject')  // => throws
 ```
 
-### date.**difference**(_other_: Temporal.Date) : Temporal.Duration
+### date.**difference**(_other_: Temporal.Date, _largestUnit_: string = 'days') : Temporal.Duration
 
 **Parameters:**
 - `other` (`Temporal.Date`): Another date with which to compute the difference.
+- `largestUnit` (optional string): The largest unit of time to allow in the resulting `Temporal.Duration` object.
+  Valid values are `'years'`, `'months'`, and `'days'`.
+  The default is `days`.
 
 **Returns:** a `Temporal.Duration` representing the difference between `date` and `other`.
 
 This method computes the difference between the two dates represented by `date` and `other`, and returns it as a `Temporal.Duration` object.
 The difference is always positive, no matter the order of `date` and `other`, because `Temporal.Duration` objects cannot represent negative durations.
 
+The `largestUnit` parameter controls how the resulting duration is expressed.
+The returned `Temporal.Duration` object will not have any nonzero fields that are larger than the unit in `largestUnit`.
+A difference of two years will become 24 months when `largestUnit` is `"months"`, for example.
+However, a difference of two months will still be two months even if `largestUnit` is `"years"`.
+
+By default, the largest unit in the result is days.
+This is because months and years can be different lengths depending on which month is meant and whether the year is a leap year.
+Unlike other Temporal types, hours and lower are not allowed, because the data model of `Temporal.Date` doesn't have that accuracy.
+
 Usage example:
 ```javascript
 date = Temporal.Date.from('2006-08-24');
-date.difference(Temporal.Date.from('2019-01-31'))  // => P12Y5M7D
+other = Temporal.Date.from('2019-01-31');
+date.difference(other)           // => P4543D
+date.difference(other, 'years')  // => P12Y5M7D
+
+// If you really need to calculate the difference between two Dates in
+// hours, you can eliminate the ambiguity by explicitly choosing the
+// point in time from which you want to reckon the difference. For
+// example, using midnight:
+midnight = Temporal.Time.from('00:00');
+date.withTime(midnight).difference(other.withTime(midnight), 'hours')  // => PT109032H
 ```
 
 ### date.**toString**() : string

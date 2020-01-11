@@ -274,11 +274,13 @@ describe('DateTime', () => {
   describe('date/time maths', () => {
     const earlier = DateTime.from('1976-11-18T15:23:30.123456789');
     const later = DateTime.from('2019-10-29T10:46:38.271986102');
-    const diff = earlier.difference(later);
-    it(`(${earlier}).difference(${later}) == (${later}).difference(${earlier})`, () =>
-      equal(`${later.difference(earlier)}`, `${diff}`));
-    it(`(${earlier}).plus(${diff}) == (${later})`, () => equal(`${earlier.plus(diff)}`, `${later}`));
-    it(`(${later}).minus(${diff}) == (${earlier})`, () => equal(`${later.minus(diff)}`, `${earlier}`));
+    ['years', 'months', 'days', 'hours', 'minutes', 'seconds'].forEach(largest => {
+      const diff = earlier.difference(later, largest);
+      it(`(${earlier}).difference(${later}, ${largest}) == (${later}).difference(${earlier}, ${largest})`, () =>
+        equal(`${later.difference(earlier, largest)}`, `${diff}`));
+      it(`(${earlier}).plus(${diff}) == (${later})`, () => equal(`${earlier.plus(diff)}`, `${later}`));
+      it(`(${later}).minus(${diff}) == (${earlier})`, () => equal(`${later.minus(diff)}`, `${earlier}`));
+    })
   });
   describe('date/time maths: hours overflow', () => {
     const later = DateTime.from('2019-10-29T10:46:38.271986102');
@@ -316,6 +318,28 @@ describe('DateTime', () => {
     it("doesn't cast argument", () => {
       throws(() => dt.difference({ year: 2019, month: 10, day: 29, hour: 10}), TypeError);
       throws(() => dt.difference('2019-10-29T10:46:38.271986102'), TypeError);
+    });
+    const feb20 = DateTime.from('2020-02-01T00:00');
+    const feb21 = DateTime.from('2021-02-01T00:00');
+    it('defaults to returning days', () => {
+      equal(`${feb21.difference(feb20)}`, 'P366D');
+      equal(`${feb21.difference(feb20, 'days')}`, 'P366D');
+      equal(`${DateTime.from('2021-02-01T00:00:00.000000001').difference(feb20)}`, 'P366DT0.000000001S');
+      equal(`${feb21.difference(DateTime.from('2020-02-01T00:00:00.000000001'))}`, 'P365DT23H59M59.999999999S');
+    });
+    it('can return lower or higher units', () => {
+      equal(`${feb21.difference(feb20, 'years')}`, 'P1Y');
+      equal(`${feb21.difference(feb20, 'months')}`, 'P12M');
+      equal(`${feb21.difference(feb20, 'hours')}`, 'PT8784H');
+      equal(`${feb21.difference(feb20, 'minutes')}`, 'PT527040M');
+      equal(`${feb21.difference(feb20, 'seconds')}`, 'PT31622400S');
+    });
+    it('does not include higher units than necessary', () => {
+      const lastFeb20 = DateTime.from('2020-02-29T00:00');
+      const lastFeb21 = DateTime.from('2021-02-28T00:00');
+      equal(`${lastFeb21.difference(lastFeb20)}`, 'P365D');
+      equal(`${lastFeb21.difference(lastFeb20, 'months')}`, 'P11M30D');
+      equal(`${lastFeb21.difference(lastFeb20, 'years')}`, 'P11M30D');
     });
   });
   describe('DateTime.from() works', () => {

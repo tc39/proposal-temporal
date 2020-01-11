@@ -348,20 +348,40 @@ dt.minus({months: 1}, 'constrain')  // => 2019-02-28T15:30
 dt.minus({months: 1}, 'reject')  // => throws
 ```
 
-### datetime.**difference**(_other_: Temporal.DateTime) : Temporal.Duration
+### datetime.**difference**(_other_: Temporal.DateTime, _largestUnit_: string = 'days') : Temporal.Duration
 
 **Parameters:**
 - `other` (`Temporal.DateTime`): Another date/time with which to compute the difference.
+- `largestUnit` (optional string): The largest unit of time to allow in the resulting `Temporal.Duration` object.
+  Valid values are `'years'`, `'months'`, `'days'`, `'hours'`, `'minutes'`, and `'seconds'`.
+  The default is `days`.
 
 **Returns:** a `Temporal.Duration` representing the difference between `datetime` and `other`.
 
 This method computes the difference between the two times represented by `datetime` and `other`, and returns it as a `Temporal.Duration` object.
 The difference is always positive, no matter the order of `datetime` and `other`, because `Temporal.Duration` objects cannot represent negative durations.
 
+The `largestUnit` parameter controls how the resulting duration is expressed.
+The returned `Temporal.Duration` object will not have any nonzero fields that are larger than the unit in `largestUnit`.
+A difference of two hours will become 7200 seconds when `largestUnit` is `"seconds"`, for example.
+However, a difference of 30 seconds will still be 30 seconds even if `largestUnit` is `"hours"`.
+
+By default, the largest unit in the result is days.
+This is because months and years can be different lengths depending on which month is meant and whether the year is a leap year.
+
 Usage example:
 ```javascript
-dt = new Temporal.DateTime(1995, 12, 7, 3, 24, 30, 0, 3, 500);
-dt.difference(Temporal.DateTime.from('2019-01-31T15:30'))  // => P23Y1M24DT12H5M29.999996500S
+dt1 = Temporal.DateTime.from('1995-12-07T03:24:30.000003500');
+dt2 = Temporal.DateTime.from('2019-01-31T15:30');
+dt1.difference(dt2);           // =>    P8456DT12H5M29.999996500S
+dt1.difference(dt2), 'years')  // => P23Y1M24DT12H5M29.999996500S
+
+// Months and years can be different lengths
+[jan1, feb1, mar1] = [1, 2, 3].map(month => Temporal.DateTime.from({year: 2020, month, day: 1}));
+jan1.difference(feb1);            // => P31D
+jan1.difference(feb1, 'months');  // => P1M
+feb1.difference(mar1);            // => P29D
+feb1.difference(mar1, 'months');  // => P1M
 ```
 
 ### datetime.**toString**() : string

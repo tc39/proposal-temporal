@@ -293,6 +293,23 @@ describe('Absolute', () => {
       throws(() => earlier.difference(later.toString()), TypeError);
       throws(() => earlier.difference({}), TypeError);
     });
+    const feb20 = Absolute.from('2020-02-01T00:00Z');
+    const feb21 = Absolute.from('2021-02-01T00:00Z');
+    it('defaults to returning seconds', () => {
+      equal(`${feb21.difference(feb20)}`, 'PT31622400S');
+      equal(`${feb21.difference(feb20, 'seconds')}`, 'PT31622400S');
+      equal(`${Absolute.from('2021-02-01T00:00:00.000000001Z').difference(feb20)}`, 'PT31622400.000000001S');
+      equal(`${feb21.difference(Absolute.from('2020-02-01T00:00:00.000000001Z'))}`, 'PT31622399.999999999S');
+    });
+    it('can return minutes, hours, and days', () => {
+      equal(`${feb21.difference(feb20, 'hours')}`, 'PT8784H');
+      equal(`${feb21.difference(feb20, 'minutes')}`, 'PT527040M');
+      equal(`${feb21.difference(feb20, 'days')}`, 'P366D');
+    });
+    it('cannot return months and years', () => {
+      throws(() => feb21.difference(feb20, 'months'), RangeError);
+      throws(() => feb21.difference(feb20, 'years'), RangeError);
+    });
   });
   describe('Min/max range', () => {
     it('constructing from ns', () => {

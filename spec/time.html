@@ -264,15 +264,16 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal.time.prototype.difference">
-      <h1>Temporal.Time.prototype.difference ( _otherTime_ )</h1>
+      <h1>Temporal.Time.prototype.difference ( _otherTime_ [, _largestUnit_ ] )</h1>
       <p>
-        The `difference` method takes one argument _otherTime_.
+        The `difference` method takes two arguments, _otherTime_ and _largestUnit_.
         The following steps are taken:
       </p>
       <emu-alg>
         1. Let _time_ be the *this* value.
         1. Perform ? RequireInternalSlot(_time_, [[InitializedTemporalTime]]).
         1. Perform ? RequireInternalSlot(_otherTime_, [[InitializedTemporalTime]]).
+        1. Set _largestUnit_ to ? ToLargestTemporalUnit(_largestUnit_, « », `"hours"`).
         1. If ! TimeCompare(_time_, _otherTime_) &lt; 0, then
           1. Let _greater_ be _otherTime_.
           1. Let _smaller_ be _time_.
@@ -281,9 +282,10 @@
           1. Let _smaller_ be _otherTime_.
         1. Let _result_ be ! DifferenceTime(_smaller_, _greater_).
         1. If _result_.[[Hour]] &geq; 12, then
-          1. Set _result_ to ! BalanceDuration(0, 24 &minus; _result_.[[Hour]], &minus;_result_.[[Minute]], &minus;_result_.[[Second]], &minus;_result_.[[Millisecond]], &minus;_result_.[[Microsecond]], &minus;_result_.[[Nanosecond]]).
-          1. Return ? CreateDuration(0, 0, 0, _result_.[[Hours]], _result_.[[Minutes]], _result_.[[Seconds]], _result_.[[Milliseconds]], _result_.[[Microseconds]], _result_.[[Nanoseconds]]).
-        1. Return ? CreateDuration(0, 0, 0, _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]).
+          1. Set _result_ to ! BalanceDuration(0, 24 &minus; _result_.[[Hour]], &minus;_result_.[[Minute]], &minus;_result_.[[Second]], &minus;_result_.[[Millisecond]], &minus;_result_.[[Microsecond]], &minus;_result_.[[Nanosecond]], _largestUnit_).
+        1. Else,
+          1. Set _result_ to ! BalanceDuration(0, _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]], _largestUnit_).
+        1. Return ? CreateDuration(0, 0, 0, _result_.[[Hours]], _result_.[[Minutes]], _result_.[[Seconds]], _result_.[[Milliseconds]], _result_.[[Microseconds]], _result_.[[Nanoseconds]]).
       </emu-alg>
     </emu-clause>
 

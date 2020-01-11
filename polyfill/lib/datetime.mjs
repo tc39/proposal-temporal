@@ -239,18 +239,35 @@ export class DateTime {
     const Construct = ES.SpeciesConstructor(this, DateTime);
     return new Construct(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, disambiguation);
   }
-  difference(other) {
+  difference(other, largestUnit = 'days') {
     if (!ES.IsDateTime(this)) throw new TypeError('invalid receiver');
     if (!ES.IsDateTime(other)) throw new TypeError('invalid DateTime object');
+    largestUnit = ES.ToLargestTemporalUnit(largestUnit);
     const [smaller, larger] = [this, other].sort(DateTime.compare);
-    const { deltaDays, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.DifferenceTime(
+    let { deltaDays, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.DifferenceTime(
       smaller,
       larger
     );
     let { year, month, day } = larger;
     day += deltaDays;
     ({ year, month, day } = ES.BalanceDate(year, month, day));
-    let { years, months, days } = ES.DifferenceDate(smaller, { year, month, day });
+
+    let dateLargestUnit = 'days';
+    if (largestUnit === 'years' || largestUnit === 'months') {
+      dateLargestUnit = largestUnit;
+    }
+
+    let { years, months, days } = ES.DifferenceDate(smaller, { year, month, day }, dateLargestUnit);
+
+    ({
+      days,
+      hours,
+      minutes,
+      seconds,
+      milliseconds,
+      microseconds,
+      nanoseconds,
+    } = ES.BalanceDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, largestUnit));
 
     const Duration = ES.GetIntrinsic('%Temporal.Duration%');
     return new Duration(years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);

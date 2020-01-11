@@ -108,11 +108,12 @@ export class Date {
     const Construct = ES.SpeciesConstructor(this, Date);
     return new Construct(year, month, day, disambiguation);
   }
-  difference(other) {
+  difference(other, largestUnit = 'days') {
     if (!ES.IsDate(this)) throw new TypeError('invalid receiver');
     if (!ES.IsDate(other)) throw new TypeError('invalid Date object');
+    largestUnit = ES.ToLargestTemporalUnit(largestUnit, ['hours', 'minutes', 'seconds']);
     const [smaller, larger] = [this, other].sort(Date.compare);
-    const { years, months, days } = ES.DifferenceDate(smaller, larger);
+    const { years, months, days } = ES.DifferenceDate(smaller, larger, largestUnit);
     const Duration = ES.GetIntrinsic('%Temporal.Duration%');
     return new Duration(years, months, days, 0, 0, 0, 0, 0, 0);
   }

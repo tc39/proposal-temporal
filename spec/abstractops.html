@@ -40,6 +40,21 @@
     </emu-alg>
   </emu-clause>
 
+  <emu-clause id="sec-temporal-tolargesttemporalunit" aoid="ToLargestTemporalUnit">
+    <h1>ToLargestTemporalUnit ( _largestUnit_, _disallowedUnits_, _defaultUnit_ )</h1>
+    <emu-alg>
+      1. Assert: _disallowedUnits_ does not contain _defaultUnit_.
+      1. If _largestUnit_ is *undefined*, then
+        1. Return _defaultUnit_.
+      1. Set _largestUnit_ to ? ToString(_largestUnit_).
+      1. If _disallowedUnits_ contains _largestUnit_, then
+        1. Throw a *RangeError* exception.
+      1. If _largestUnit_ is not one of `"years"`, `"months"`, `"days"`, `"hours"`, `"minutes"`, or `"seconds"`, then
+        1. Throw a *RangeError* exception.
+      1. Return _largestUnit_.
+    </emu-alg>
+  </emu-clause>
+
   <emu-clause id="sec-temporal-isleapyear" aoid="IsLeapYear">
     <h1>IsLeapYear ( _year_ )</h1>
     <emu-alg>

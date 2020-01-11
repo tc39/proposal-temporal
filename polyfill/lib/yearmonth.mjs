@@ -91,15 +91,20 @@ export class YearMonth {
     const Construct = ES.SpeciesConstructor(this, YearMonth);
     return new Construct(year, month);
   }
-  difference(other) {
+  difference(other, largestUnit = 'years') {
     if (!ES.IsYearMonth(this)) throw new TypeError('invalid receiver');
     if (!ES.IsYearMonth(other)) throw new TypeError('invalid YearMonth object');
+    largestUnit = ES.ToLargestTemporalUnit(largestUnit, ['days', 'hours', 'minutes', 'seconds']);
     const [one, two] = [this, other].sort(YearMonth.compare);
     let years = two.year - one.year;
     let months = two.month - one.month;
     if (months < 0) {
       years -= 1;
       months += 12;
+    }
+    if (largestUnit === 'months') {
+      months += 12 * years;
+      years = 0;
     }
     const Duration = ES.GetIntrinsic('%Temporal.Duration%');
     return new Duration(years, months);

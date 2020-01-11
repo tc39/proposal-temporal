@@ -90,9 +90,10 @@ export class Absolute {
     const Construct = ES.SpeciesConstructor(this, Absolute);
     return new Construct(bigInt(ns));
   }
-  difference(other) {
+  difference(other, largestUnit = 'seconds') {
     if (!ES.IsAbsolute(this)) throw new TypeError('invalid receiver');
     if (!ES.IsAbsolute(other)) throw new TypeError('invalid Absolute object');
+    largestUnit = ES.ToLargestTemporalUnit(largestUnit, ['years', 'months']);
 
     const [one, two] = [this, other].sort(Absolute.compare);
     const onens = GetSlot(one, EPOCHNANOSECONDS);
@@ -105,8 +106,16 @@ export class Absolute {
     const ss = diff.divide(1e9);
 
     const Duration = ES.GetIntrinsic('%Temporal.Duration%');
-    const duration = new Duration(0, 0, 0, 0, 0, ss, ms, us, ns, 'balance');
-    return duration;
+    const {
+      days,
+      hours,
+      minutes,
+      seconds,
+      milliseconds,
+      microseconds,
+      nanoseconds,
+    } = ES.BalanceDuration(0, 0, 0, ss, ms, us, ns, largestUnit);
+    return new Duration(0, 0, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 'reject');
   }
   toString(timeZoneParam = 'UTC') {
     if (!ES.IsAbsolute(this)) throw new TypeError('invalid receiver');

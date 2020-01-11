@@ -251,20 +251,40 @@ ym.minus({years: 20, months: 4})  // => 1999-02
 ym.minus('P14Y')  // => 2005-06
 ```
 
-### yearMonth.**difference**(_other_: Temporal.YearMonth) : Temporal.Duration
+### yearMonth.**difference**(_other_: Temporal.YearMonth, _largestUnit_: string = 'years') : Temporal.Duration
 
 **Parameters:**
 - `other` (`Temporal.YearMonth`): Another month with which to compute the difference.
+- `largestUnit` (optional string): The largest unit of time to allow in the resulting `Temporal.Duration` object.
+  Valid values are `'years'` and `'months'`.
+  The default is `years`.
+
 
 **Returns:** a `Temporal.Duration` representing the difference between `yearMonth` and `other`.
 
 This method computes the difference between the two months represented by `yearMonth` and `other`, and returns it as a `Temporal.Duration` object.
 The difference is always positive, no matter the order of `yearMonth` and `other`, because `Temporal.Duration` objects cannot represent negative durations.
 
+The `largestUnit` parameter controls how the resulting duration is expressed.
+The returned `Temporal.Duration` object will not have any nonzero fields that are larger than the unit in `largestUnit`.
+A difference of one year and two months will become 14 months when `largestUnit` is `"months"`, for example.
+However, a difference of one month will still be one month even if `largestUnit` is `"years"`.
+
+Unlike other Temporal types, days and lower units are not allowed, because the data model of `Temporal.YearMonth` doesn't have that accuracy.
+
 Usage example:
 ```javascript
 ym = Temporal.YearMonth.from('2019-06');
-ym.difference(Temporal.YearMonth.from('2006-08'))  // => P12Y10M
+other = Temporal.YearMonth.from('2006-08');
+ym.difference(other)            // => P12Y10M
+ym.difference(other, 'months')  // => P154M
+
+// If you really need to calculate the difference between two YearMonths
+// in days, you can eliminate the ambiguity by explicitly choosing the
+// day of the month (and if applicable, the time of that day) from which
+// you want to reckon the difference. For example, using the first of
+// the month to calculate a number of days:
+ym.withDay(1).difference(other.withDay(1), 'days');  // => P4687D
 ```
 
 ### yearMonth.**toString**() : string
