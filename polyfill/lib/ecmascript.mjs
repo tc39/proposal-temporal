@@ -899,9 +899,10 @@ const OFFSET = new RegExp(`^${REGEX.offset.source}$`);
 function parseOffsetString(string) {
   const match = OFFSET.exec(String(string));
   if (!match) return null;
-  const hours = +match[1];
-  const minutes = +match[2];
-  return (hours * 60 + minutes) * 60 * 1000;
+  const sign = match[1] === '-' ? -1 : +1;
+  const hours = +match[2];
+  const minutes = +match[3];
+  return sign * (hours * 60 + minutes) * 60 * 1000;
 }
 function makeOffsetString(offsetMilliSeconds) {
   let offsetSeconds = Math.round(offsetMilliSeconds / 1000);

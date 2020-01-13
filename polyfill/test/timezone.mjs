@@ -49,6 +49,7 @@ describe('TimeZone', ()=>{
         test('+01:00');
         test('-01:00');
         test('+0330', '+03:30');
+        test('-0650', '-06:50');
         test('Europe/Vienna');
         test('America/New_York');
         test('Africa/CAIRO', 'Africa/Cairo');
