@@ -39,7 +39,7 @@ import {
   NANOSECONDS
 } from './slots.mjs';
 
-const DAYMILLIS = 3600000;
+const DAYMILLIS = 86400000;
 
 const INTRINSICS = {
   '%Temporal.DateTime%': TemporalDateTime,

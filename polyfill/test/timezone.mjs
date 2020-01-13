@@ -81,6 +81,13 @@ describe('TimeZone', ()=>{
             equal(`${zone.getAbsoluteFor(dtm, 'later')}`, '2019-03-31T01:45Z');
             throws(() => zone.getAbsoluteFor(dtm, 'reject'), RangeError);
         });
+        it('clock moving backward', () => {
+            const zone = new Temporal.TimeZone('America/Sao_Paulo');
+            const dtm = new Temporal.DateTime(2019, 2, 16, 23, 45);
+            equal(`${zone.getAbsoluteFor(dtm, 'earlier')}`, '2019-02-17T01:45Z');
+            equal(`${zone.getAbsoluteFor(dtm, 'later')}`, '2019-02-17T02:45Z');
+            throws(() => zone.getAbsoluteFor(dtm, 'reject'), RangeError);
+        });
     });
 });
 
