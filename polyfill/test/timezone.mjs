@@ -37,10 +37,26 @@ describe('TimeZone', ()=>{
         test('-0650');
         test('Europe/Vienna');
         test('America/New_York');
+        test('Africa/CAIRO');  // capitalization
+        test('Asia/Ulan_Bator');  // IANA Link Name
         test('UTC');
         test('GMT');
         function test(zone) {
             it(`${zone} is a zone`, () => equal(typeof new Temporal.TimeZone(zone), 'object'));
+        }
+    });
+    describe('.name property', () => {
+        test('+01:00');
+        test('-01:00');
+        test('+0330', '+03:30');
+        test('Europe/Vienna');
+        test('America/New_York');
+        test('Africa/CAIRO', 'Africa/Cairo');
+        test('Asia/Ulan_Bator', 'Asia/Ulaanbaatar');
+        test('UTC');
+        test('GMT', 'UTC');
+        function test(zone, name = zone) {
+            it(`${zone} has name ${name}`, () => equal(new Temporal.TimeZone(zone).name, name));
         }
     });
     describe('+01:00', ()=>{
