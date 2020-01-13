@@ -324,10 +324,6 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
     }
     return true;
   },
-  ToTimeZone: (tz) => {
-    const TimeZone = ES.GetIntrinsic('%Temporal.TimeZone%');
-    return tz instanceof TimeZone ? tz : new TimeZone(`${tz}`);
-  },
   ISOTimeZoneString: (timeZone, absolute) => {
     let offset = timeZone.getOffsetFor(absolute);
     let timeZoneString;
