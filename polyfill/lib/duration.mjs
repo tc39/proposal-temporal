@@ -53,9 +53,9 @@ export class Duration {
         [years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds] = arr;
         break;
       case 'balance':
-        let tdays;
+        let deltaDays;
         ({
-          days: tdays,
+          deltaDays,
           hour: hours,
           minute: minutes,
           second: seconds,
@@ -63,7 +63,7 @@ export class Duration {
           microsecond: microseconds,
           nanosecond: nanoseconds
         } = ES.BalanceTime(hours, minutes, seconds, milliseconds, microseconds, nanoseconds));
-        days += tdays;
+        days += deltaDays;
         break;
       default:
         throw new TypeError('disambiguation should be either reject, constrain or balance');
