@@ -31,7 +31,7 @@ if [ $RESULT -eq 0 ]; then
   rm ../exec.out
   c8 report --reporter=text-lcov > ../coverage/tests.lcov
   cd ..
-  codecov --disable=gcov
+  codecov
 else
   rm ../exec.out
 fi
