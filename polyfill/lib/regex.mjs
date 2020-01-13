@@ -25,5 +25,5 @@ export const monthday = new RegExp(
     '$'
 );
 
-export const offset = /([+-][01]?[0-9]):?([0-5][0-9])/;
+export const offset = /([+-])([01]?[0-9]):?([0-5][0-9])/;
 export const duration = /P(?:(\d+)Y)?(?:(\d+)M)?(?:(\d+)D)?(?:T(?:(\d+)H)?(?:(\d+)M)?(?:(\d+(?:\.\d+)?)S)?)?/;
