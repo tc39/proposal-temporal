@@ -4,6 +4,8 @@ import { IDENTIFIER, EPOCHNANOSECONDS, CreateSlots, GetSlot, SetSlot } from './s
 import { ZONES } from './zones.mjs';
 import { timezone as STRING } from './regex.mjs';
 
+import bigInt from 'big-integer';
+
 export class TimeZone {
   constructor(timeZoneIndentifier) {
     CreateSlots(this);
@@ -80,7 +82,7 @@ export class TimeZone {
 
     if (!~['earlier', 'later'].indexOf(disambiguation)) throw new RangeError(`no such absolute found`);
 
-    const { ms: utcms } = ES.GetEpochFromParts(
+    const utcns = ES.GetEpochFromParts(
       year,
       month,
       day,
@@ -91,10 +93,10 @@ export class TimeZone {
       microsecond,
       nanosecond
     );
-    const before = ES.GetTimeZoneOffsetMilliseconds(utcms - 86400000, GetSlot(this, IDENTIFIER));
-    const after = ES.GetTimeZoneOffsetMilliseconds(utcms + 86400000, GetSlot(this, IDENTIFIER));
-    const diff = ES.ToToDuration({
-      milliseconds: after - before
+    const before = ES.GetTimeZoneOffsetNanoseconds(utcns.minus(bigInt(86400 * 1e9)), GetSlot(this, IDENTIFIER));
+    const after = ES.GetTimeZoneOffsetNanoseconds(utcns.plus(bigInt(86400 * 1e9)), GetSlot(this, IDENTIFIER));
+    const diff = ES.ToDuration({
+      nanoseconds: after.minus(before)
     });
     switch (disambiguation) {
       case 'earlier':
