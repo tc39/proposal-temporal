@@ -73,6 +73,15 @@ describe('TimeZone', ()=>{
         it(`(${zone}).getAbsoluteFor(${dtm})`, () => assert(zone.getAbsoluteFor(dtm) instanceof Temporal.Absolute));
         it(`(${zone}).getTransitions() => [4-transitions]`, () => equal(ArrayFrom(zone.getTransitions(abs), 4).length, 4));
     });
+    describe('with DST change', () => {
+        it('clock moving forward', () => {
+            const zone = new Temporal.TimeZone('Europe/Berlin');
+            const dtm = new Temporal.DateTime(2019, 3, 31, 2, 45);
+            equal(`${zone.getAbsoluteFor(dtm, 'earlier')}`, '2019-03-31T00:45Z');
+            equal(`${zone.getAbsoluteFor(dtm, 'later')}`, '2019-03-31T01:45Z');
+            throws(() => zone.getAbsoluteFor(dtm, 'reject'), RangeError);
+        });
+    });
 });
 
 function ArrayFrom(iter, limit = Number.POSITIVE_INFINITY) {
