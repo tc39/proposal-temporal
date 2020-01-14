@@ -1,2 +1,4 @@
-import { setup } from '../polyfill';
-setup();
+import { Temporal, Intl } from '../polyfill';
+globalThis.Temporal = {};
+Object.assign(globalThis.Temporal, Temporal);
+Object.assign(globalThis.Intl, Intl);
