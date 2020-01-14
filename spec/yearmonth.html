@@ -27,10 +27,7 @@
           1. Throw a *TypeError* exception.
         1. Let _y_ be ? ToInteger(_year_).
         1. Let _m_ be ? ToInteger(_month_).
-        1. If _disambiguation_ is not *undefined*, then
-          1. Set _disambiguation_ to ? ToString(_disambiguation_).
-        1. Else
-          1. Set _disambiguation_ to `"constrain"`.
+        1. Set _disambiguation_ to ? ToDisambiguation(_disambiguation_).
         1. Let _result_ be ? RegulateYearMonth(_y_, _m_, _disambiguation_).
         1. Return ? CreateYearMonth(_result_.[[Year]], _result_.[[Month]], NewTarget).
       </emu-alg>
@@ -165,10 +162,7 @@
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
         1. Let _otherYearMonth_ be ? ToPartialYearMonth(_otherYearMonth_).
-        1. If _disambiguation_ is not *undefined*, then
-          1. Set _disambiguation_ to ? ToString(_disambiguation_).
-        1. Else
-          1. Set _disambiguation_ to `"constrain"`.
+        1. Set _disambiguation_ to ? ToDisambiguation(_disambiguation_).
         1. If _otherYearMonth_.[[Year]] is not *undefined*, then
           1. Let _y_ be _otherYearMonth_.[[Year]].
         1. Else
@@ -193,10 +187,7 @@
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
         1. Let _duration_ be ? ToDurationLike(_duration_).
         1. <mark>TODO: Throw if any day/time properties are present?</mark>
-        1. If _disambiguation_ is not *undefined*, then
-          1. Set _disambiguation_ to ? ToString(_disambiguation_).
-        1. Else
-          1. Set _disambiguation_ to `"constrain"`.
+        1. Set _disambiguation_ to ? ToDisambiguation(_disambiguation_).
         1. Let _y_ be _yearMonth_.[[Year]] + _duration_.[[Years]].
         1. Let _m_ be _yearMonth_.[[Month]] + _duration_.[[Months]].
         1. Let _result_ be ? RegulateYearMonth(_y_, _m_, _disambiguation_).
@@ -215,10 +206,7 @@
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
         1. Let _duration_ be ? ToDurationLike(_duration_).
         1. <mark>TODO: Throw if any day/time properties are present?</mark>
-        1. If _disambiguation_ is not *undefined*, then
-          1. Set _disambiguation_ to ? ToString(_disambiguation_).
-        1. Else
-          1. Set _disambiguation_ to `"constrain"`.
+        1. Set _disambiguation_ to ? ToDisambiguation(_disambiguation_).
         1. Let _y_ be _yearMonth_.[[Year]] - _duration_.[[Years]].
         1. Let _m_ be _yearMonth_.[[Month]] - _duration_.[[Months]].
         1. Let _result_ be ? RegulateYearMonth(_y_, _m_, _disambiguation_).
@@ -302,10 +290,7 @@
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
         1. Let _d_ be ? ToInteger(_day_).
-        1. If _disambiguation_ is not *undefined*, then
-          1. Set _disambiguation_ to ? ToString(_disambiguation_).
-        1. Else
-          1. Set _disambiguation_ to `"constrain"`.
+        1. Set _disambiguation_ to ? ToDisambiguation(_disambiguation_).
         1. Let _result_ be ? RegulateDate(_yearMonth_.[[Year]], _yearMonth_.[[Month]], _d_, _disambiguation_).
         1. Return ? CreateDate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]]).
       </emu-alg>
