@@ -7,9 +7,9 @@ import { timezone as STRING } from './regex.mjs';
 import bigInt from 'big-integer';
 
 export class TimeZone {
-  constructor(timeZoneIndentifier) {
+  constructor(timeZoneIdentifier) {
     CreateSlots(this);
-    SetSlot(this, IDENTIFIER, ES.GetCanonicalTimeZoneIdentifier(timeZoneIndentifier));
+    SetSlot(this, IDENTIFIER, ES.GetCanonicalTimeZoneIdentifier(timeZoneIdentifier));
   }
   get name() {
     if (!ES.IsTimeZone(this)) throw new TypeError('invalid receiver');
