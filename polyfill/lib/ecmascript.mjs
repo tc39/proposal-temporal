@@ -69,12 +69,25 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
   IsMonthDay: (item) => HasSlot(item, MONTH, DAY) && !HasSlot(item, YEAR),
   ToTimeZone: (item) => {
     if (ES.IsTimeZone(item)) return item;
-    const isoString = ES.ToString(item);
-    const match = PARSE.timezone.exec(isoString);
-    if (!match) return new TemporalTimeZone(isoString);
-    if (!match) throw new RangeError(`invalid absolute: ${isoString}`);
-    const zone = match[1] ? 'UTC' : match[3] || match[2];
-    return new TemporalTimeZone(zone);
+    const stringIdent = ES.ToString(item);
+    try {
+      const canonicalIdent = ES.GetCanonicalTimeZoneIdentifier(stringIdent);
+      if (canonicalIdent) return new TemporalTimeZone(canonicalIdent);
+    } catch {
+      // fall through
+    }
+    // Try parsing ISO string instead
+    const match = PARSE.timezone.exec(stringIdent);
+    if (!match) throw new RangeError(`invalid time zone identifier: ${stringIdent}`);
+    const [, z, offset, ianaName] = match;
+    const zone = z ? 'UTC' : ianaName || offset;
+    const result = new TemporalTimeZone(zone);
+    if (offset && ianaName) {
+      const absolute = TemporalAbsolute.from(stringIdent);
+      if (result.getOffsetFor(absolute) !== offset)
+        throw new RangeError(`invalid offset ${offset}[${ianaName}]`);
+    }
+    return result;
   },
   ToAbsolute: (item) => {
     if (ES.IsAbsolute(item)) return item;
@@ -92,7 +105,7 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
     const millisecond = ES.ToInteger(match[7]);
     const microsecond = ES.ToInteger(match[8]);
     const nanosecond = ES.ToInteger(match[9]);
-    const zone = match[11] || match[10] || 'UTC';
+    const zone = match[10] ? 'UTC' : match[12] || match[11];
     const datetime = ES.ToDateTime({
       year,
       month,

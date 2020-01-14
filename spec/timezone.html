@@ -192,6 +192,11 @@
       <h1>TimeZoneFromString ( _timeZone_ )</h1>
       <emu-alg>
         1. Assert: Type(_timeZone_) is String.
+        1. If _timeZone_ matches `/([+-][01]?[0-9]):?([0-5][0-9])/`, then
+          1. <mark>TODO: Construct the time zone with the offset</mark>
+        1. If ! IsValidTimeZoneName(_timeZone_) is *true*, then
+          1. Let _canonical_ be ! CanonicalizeTimeZoneName(_timeZone_).
+          1. Return ? CreateTimeZone(_canonical_).
         1. Let _valid_ be *true* if _timeZone_ matches <a href="https://github.com/tc39/proposal-temporal/blob/main/polyfill/lib/regex.mjs">the "timezone" regular expression in the polyfill</a> and *false* otherwise.
         1. <mark>TODO: Actually specify this somehow.</mark>
         1. If _valid_ is *false*, then

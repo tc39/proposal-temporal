@@ -22,6 +22,9 @@ The string `timeZoneIdentifier` is canonicalized before being used to determine 
 For example, values like `+100` will be understood to mean `+01:00`, and capitalization will be corrected.
 If no time zone can be determined from `timeZoneIdentifier`, then a `RangeError` is thrown.
 
+Use this constructor directly if you have a string that is known to be a correct time zone identifier.
+If you have an ISO 8601 date-time string, `Temporal.TimeZone.from()` is probably more convenient.
+
 Example usage:
 ```javascript
 tz = new Temporal.TimeZone('UTC');
@@ -48,6 +51,47 @@ tz2.getTransitions(now).next().done;  // => false
 ```
 
 ## Static methods
+
+### Temporal.TimeZone.**from**(_thing_: string | object) : Temporal.TimeZone
+
+**Parameters:**
+- `thing` (string or object): A `Temporal.TimeZone` object or a string from which to create a `Temporal.TimeZone`.
+
+**Returns:** a new `Temporal.TimeZone` object.
+
+This static method creates a new time zone from another value.
+If the value is a string, it can be:
+- a string that is accepted by `new Temporal.TimeZone()`;
+- a string in the ISO 8601 format including a time zone offset part.
+Or, if the value is an object, it can be another `Temporal.TimeZone` object, which is returned directly.
+
+Note that the ISO 8601 string can optionally be extended with an IANA time zone name in square brackets appended to it.
+
+This function is often more convenient to use than `new Temporal.TimeZone()` because it handles a wider range of input.
+
+Usage examples:
+```javascript
+// IANA time zone names and UTC offsets
+tz = Temporal.TimeZone.from('UTC');
+tz = Temporal.TimeZone.from('Africa/Cairo');
+tz = Temporal.TimeZone.from('america/VANCOUVER');
+tz = Temporal.TimeZone.from('Asia/Katmandu');  // alias of Asia/Kathmandu
+tz = Temporal.TimeZone.from('-04:00');
+tz = Temporal.TimeZone.from('+645');
+
+// ISO 8601 string with time zone offset part
+tz = Temporal.TimeZone.from('2020-01-14T00:31:00.065858086Z');
+tz = Temporal.TimeZone.from('2020-01-13T16:31:00.065858086-08:00');
+tz = Temporal.TimeZone.from('2020-01-13T16:31:00.065858086-08:00[America/Vancouver]');
+
+// Existing TimeZone object
+tz2 = Temporal.TimeZone.from(tz);
+
+/* WRONG */ tz = Temporal.TimeZone.from('local');  // not a time zone, throws
+/* WRONG */ tz = Temporal.TimeZone.from({name: 'UTC'});  // not a TimeZone object, throws
+/* WRONG */ tz = Temporal.TimeZone.from('2020-01-14T00:31:00');  // ISO 8601 string without time zone offset part, throws
+/* WRONG */ tz = Temporal.TimeZone.from('-08:00[America/Vancouver]')  // ISO 8601 string without date-time part, throws
+```
 
 ### **Temporal.TimeZone**: iterator<Temporal.TimeZone>
 
