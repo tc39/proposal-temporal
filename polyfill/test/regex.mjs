@@ -53,6 +53,12 @@ describe('fromString regex', ()=>{
     test(absolute, '1976-11-18T15:23:30.123456-400');
     test(absolute, '1976-11-18T15:23:30.123456789-400');
 
+    test(absolute, '1976-11-18T15:23Z');
+    test(absolute, '1976-11-18T15:23:30Z');
+    test(absolute, '1976-11-18T15:23:30.123Z');
+    test(absolute, '1976-11-18T15:23:30.123456Z');
+    test(absolute, '1976-11-18T15:23:30.123456789Z');
+
     test(absolute, '1976-11-18 15:23+01:00[Europe/Vienna]');
     test(absolute, '1976-11-18 15:23:30+01:00[Europe/Vienna]');
     test(absolute, '1976-11-18 15:23:30.123+01:00[Europe/Vienna]');
@@ -95,6 +101,12 @@ describe('fromString regex', ()=>{
     test(absolute, '1976-11-18 15:23:30.123-400');
     test(absolute, '1976-11-18 15:23:30.123456-400');
     test(absolute, '1976-11-18 15:23:30.123456789-400');
+
+    test(absolute, '1976-11-18 15:23Z');
+    test(absolute, '1976-11-18 15:23:30Z');
+    test(absolute, '1976-11-18 15:23:30.123Z');
+    test(absolute, '1976-11-18 15:23:30.123456Z');
+    test(absolute, '1976-11-18 15:23:30.123456789Z');
   });
 
   describe('datetime', () => {
@@ -324,16 +336,12 @@ describe('fromString regex', ()=>{
     test(timezone, '1976-11-18T15:23:30.123-04:00');
     test(timezone, '1976-11-18T15:23:30.123456-04:00');
     test(timezone, '1976-11-18T15:23:30.123456789-04:00');
-    test(timezone, '+100[Europe/Vienna]');
-    test(timezone, '+100[Europe/Vienna]');
-    test(timezone, '+100[Europe/Vienna]');
-    test(timezone, '+100[Europe/Vienna]');
-    test(timezone, '+100[Europe/Vienna]');
-    test(timezone, '-04:00');
-    test(timezone, '-04:00');
-    test(timezone, '-04:00');
-    test(timezone, '-04:00');
-    test(timezone, '-04:00');
+
+    test(timezone, '1976-11-18T15:23Z');
+    test(timezone, '1976-11-18T15:23:30Z');
+    test(timezone, '1976-11-18T15:23:30.123Z');
+    test(timezone, '1976-11-18T15:23:30.123456Z');
+    test(timezone, '1976-11-18T15:23:30.123456789Z');
 
     test(timezone, '1976-11-18 15:23+100[Europe/Vienna]');
     test(timezone, '1976-11-18 15:23:30+100[Europe/Vienna]');
@@ -346,6 +354,12 @@ describe('fromString regex', ()=>{
     test(timezone, '1976-11-18 15:23:30.123-04:00');
     test(timezone, '1976-11-18 15:23:30.123456-04:00');
     test(timezone, '1976-11-18 15:23:30.123456789-04:00');
+
+    test(timezone, '1976-11-18 15:23Z');
+    test(timezone, '1976-11-18 15:23:30Z');
+    test(timezone, '1976-11-18 15:23:30.123Z');
+    test(timezone, '1976-11-18 15:23:30.123456Z');
+    test(timezone, '1976-11-18 15:23:30.123456789Z');
   });
 
   describe('duration', () => {

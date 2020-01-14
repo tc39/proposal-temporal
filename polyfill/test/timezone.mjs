@@ -60,6 +60,45 @@ describe('TimeZone', ()=>{
             it(`${zone} has name ${name}`, () => equal(new Temporal.TimeZone(zone).name, name));
         }
     });
+    describe('TimeZone.from(identifier)', () => {
+        test('+01:00');
+        test('-01:00');
+        test('+0330');
+        test('-0650');
+        test('Europe/Vienna');
+        test('America/New_York');
+        test('Africa/CAIRO');
+        test('Asia/Ulan_Bator');
+        test('UTC');
+        test('GMT');
+        function test(zone) {
+            const timezoneFrom = Temporal.TimeZone.from(zone);
+            const timezoneObj = new Temporal.TimeZone(zone);
+            it(`TimeZone.from(${zone}) is a time zone`, () => equal(typeof timezoneFrom, 'object'));
+            it(`TimeZone.from(${zone}) does the same thing as new TimeZone(${zone})`, () =>
+                equal(timezoneFrom.name, timezoneObj.name));
+            it(`TimeZone.from(new TimeZone(${zone})) is the same object`, () => equal(Temporal.TimeZone.from(timezoneObj), timezoneObj));
+        }
+        it('TimeZone.from throws with bad identifier', () => {
+            throws(() => Temporal.TimeZone.from('local'));
+            throws(() => Temporal.TimeZone.from('Z'));
+            throws(() => Temporal.TimeZone.from('-08:00[America/Vancouver]'));
+        });
+    });
+    describe('TimeZone.from(ISO string)', () => {
+        test('1994-11-05T08:15:30-05:00', '-05:00');
+        test('1994-11-05T08:15:30-05:00[America/New_York]', 'America/New_York');
+        test('1994-11-05T13:15:30Z', 'UTC');
+        function test(isoString, name) {
+            const tz = Temporal.TimeZone.from(isoString);
+            it(`TimeZone.from(${isoString}) is a time zone`, () => equal(typeof tz, 'object'));
+            it(`TimeZone.from(${isoString}) has name ${name}`, () => equal(tz.name, name));
+        }
+        it('offset disagreeing with IANA name throws', () => {
+            throws(() => Temporal.TimeZone.from('1994-11-05T08:15:30-05:00[UTC]'), RangeError);
+            throws(() => Temporal.TimeZone.from('1994-11-05T13:15:30+00:00[America/New_York]'), RangeError);
+        });
+    });
     describe('+01:00', ()=>{
         const zone = new Temporal.TimeZone('+01:00');
         const abs = Temporal.Absolute.fromEpochSeconds(Math.floor(Math.random() * 1e9));
