@@ -4,6 +4,30 @@
 <emu-clause id="sec-temporal-abstract-ops">
   <h1>Abstract operations</h1>
 
+  <emu-clause id="sec-temporal-todisambiguation" aoid="ToDisambiguation">
+    <h1>ToDisambiguation ( _disambiguation_ )</h1>
+    <emu-alg>
+      1. If _disambiguation_ is *undefined*, then
+        1. Return `"constrain"`.
+      1. Set _disambiguation_ to ? ToString(_disambiguation_).
+      1. If _disambiguation_ is not one of `"constrain"`, `"balance"`, or `"reject"`, then
+        1. Throw a *RangeError* exception.
+      1. Return _disambiguation_.
+    </emu-alg>
+  </emu-clause>
+
+  <emu-clause id="sec-temporal-totimezonedisambiguation" aoid="ToTimeZoneDisambiguation">
+    <h1>ToTimeZoneDisambiguation ( _disambiguation_ )</h1>
+    <emu-alg>
+      1. If _disambiguation_ is *undefined*, then
+        1. Return `"earlier"`.
+      1. Set _disambiguation_ to ? ToString(_disambiguation_).
+      1. If _disambiguation_ is not one of `"earlier"` or `"later"`, then
+        1. Throw a *RangeError* exception.
+      1. Return _disambiguation_.
+    </emu-alg>
+  </emu-clause>
+
   <emu-clause id="sec-temporal-isleapyear" aoid="IsLeapYear">
     <h1>IsLeapYear ( _year_ )</h1>
     <emu-alg>

@@ -108,10 +108,7 @@
         1. Let _ms_ be ? ToInteger(_milliseconds_).
         1. Let _mis_ be ? ToInteger(_microseconds_).
         1. Let _ns_ be ? ToInteger(_nanoseconds_).
-        1. If _disambiguation_ is not *undefined*, then
-          1. Set _disambiguation_ to ? ToString(_disambiguation_).
-        1. Else
-          1. Set _disambiguation_ to `"constrain"`.
+        1. Set _disambiguation_ to ? ToDisambiguation(_disambiguation_).
         1. If _disambiguation_ is *"reject"*, then
           1. For each of _y_, _mo_, _d_, _h_, _m_, _s_, _ms_, _mis_, _ns_, if any of the values is negative, throw a *RangeError* exception.
         1. Else if _disambiguation_ is *"constrain"*, then
@@ -125,8 +122,6 @@
           1. Set _ms_ to _bt_.[[Millisecond]].
           1. Set _mis_ to _bt_.[[Microsecond]].
           1. Set _ns_ to _bt_.[[Nanosecond]].
-        1. Else,
-          1. Throw a *TypeError* exception.
         1. Return ? CreateDuration(_y_, _mo_, _d_, _h_, _m_, _s_, _ms_, _mis_, _ns_).
       </emu-alg>
     </emu-clause>

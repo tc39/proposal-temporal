@@ -26,7 +26,7 @@
         1. Let _y_ be ? ToInteger(_year_).
         1. Let _m_ be ? ToInteger(_month_).
         1. Let _d_ be ? ToInteger(_day_).
-        1. Let _disambiguation_ be ? ToString(_disambiguation_).
+        1. Set _disambiguation_ to ? ToDisambiguation(_disambiguation_).
         1. Let _result_ be ? RegulateDate(_y_, _m_, _d_, _disambiguation_).
         1. Return ? CreateDate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], NewTarget).
       </emu-alg>
@@ -258,7 +258,7 @@
         1. Perform ? RequireInternalSlot(_date_, [[InitializedTemporalDate]]).
         1. Let _duration_ be ? ToDurationLike(_duration_).
         1. <mark>TODO: Throw if any time properties are present?</mark>
-        1. Let _disambiguation_ be ? ToString(_disambiguation_).
+        1. Set _disambiguation_ to ? ToDisambiguation(_disambiguation_).
         1. Return ? AddDate(_date_.[[Year]], _date_.[[Month]], _date_.[[Day]], _duration_.[[Years]], _duration_.[[Months]], _duration_.[[Days]], _disambiguation_).
       </emu-alg>
     </emu-clause>
@@ -274,7 +274,7 @@
         1. Perform ? RequireInternalSlot(_date_, [[InitializedTemporalDate]]).
         1. Let _duration_ be ? ToDurationLike(_duration_).
         1. <mark>TODO: Throw if any time properties are present?</mark>
-        1. Let _disambiguation_ be ? ToString(_disambiguation_).
+        1. Set _disambiguation_ to ? ToDisambiguation(_disambiguation_).
         1. Let _y_ be _date_.[[Year]] - _duration_.[[Years]].
         1. Let _m_ be _date_.[[Month]] - _duration_.[[Months]].
         1. Let _intermediate_ be ? RegulateDate(_y_, _m_, _date_.[[Day]], _disambiguation_).
@@ -294,7 +294,7 @@
         1. Let _date_ be the *this* value.
         1. Perform ? RequireInternalSlot(_date_, [[InitializedTemporalDate]]).
         1. Let _otherDate_ be ? ToPartialDate(_otherDate_).
-        1. Let _disambiguation_ be ? ToString(_disambiguation_).
+        1. Set _disambiguation_ to ? ToDisambiguation(_disambiguation_).
         1. If _otherDate_.[[Year]] is not *undefined*, then
           1. Let _y_ be _otherDate_.[[Year]].
         1. Else
@@ -313,9 +313,9 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal.date.prototype.difference">
-      <h1>Temporal.Date.prototype.difference ( _otherDate_, _disambiguation_ )</h1>
+      <h1>Temporal.Date.prototype.difference ( _otherDate_ )</h1>
       <p>
-        The `difference` method takes two arguments, _otherDate_ and _disambiguation_.
+        The `difference` method takes one argument _otherDate_.
         The following steps are taken:
       </p>
       <emu-alg>

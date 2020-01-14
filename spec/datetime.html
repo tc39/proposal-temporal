@@ -46,10 +46,7 @@
           1. Let _nanosecond_ be ? ToInteger(_nanosecond_).
         1. Else
           1. Let _nanosecond_ be 0.
-        1. If _disambiguation_ is not *undefined*, then
-          1. Set _disambiguation_ to ? ToString(_disambiguation_).
-        1. Else
-          1. Set _disambiguation_ to `"constrain"`.
+        1. Set _disambiguation_ to ? ToDisambiguation(_disambiguation_).
         1. Let _result_ be ? RegulateDateTime(_year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _disambiguation_).
         1. Return ? CreateDateTime(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]], NewTarget).
       </emu-alg>
@@ -327,10 +324,7 @@
         1. Let _dateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
         1. Let _dateTimeLike_ be ? ToPartialDateTime(_dateTimeLike_).
-        1. If _disambiguation_ is not *undefined*, then
-          1. Set _disambiguation_ to ? ToString(_disambiguation_).
-        1. Else
-          1. Set _disambiguation_ to `"constrain"`.
+        1. Set _disambiguation_ to ? ToDisambiguation(_disambiguation_).
         1. If _dateTimeLike_.[[Year]] is not *undefined*, then
           1. Let _year_ be _dateTimeLike_.[[Year]].
         1. Else
@@ -382,10 +376,7 @@
         1. Let _dateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
         1. Let _duration_ be ? ToTimeDurationLike(_duration_).
-        1. If _disambiguation_ is not *undefined*, then
-          1. Set _disambiguation_ to ? ToString(_disambiguation_).
-        1. Else
-          1. Set _disambiguation_ to `"constrain"`.
+        1. Set _disambiguation_ to ? ToDisambiguation(_disambiguation_).
         1. Let _timePart_ be ? AddTime(_dateTime_.[[Hour]], _dateTime_.[[Minute]], _dateTime_.[[Second]], _dateTime_.[[Millisecond]], _dateTime_.[[Microsecond]], _dateTime_.[[Nanosecond]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
         1. Let _datePart_ be ? AddDate(_dateTime_.[[Year]], _dateTime_.[[Month]], _dateTime_.[[Day]], _duration_.[[Years]], _duration_.[[Months]], _duration_.[[Days]], _disambiguation_).
         1. Let _datePart_ be ! BalanceDate(_datePart_.[[Year]], _datePart_.[[Month]], _datePart_.[[Day]] + _timePart_.[[Day]]).
@@ -403,10 +394,7 @@
         1. Let _dateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
         1. Let _duration_ be ? ToTimeDurationLike(_duration_).
-        1. If _disambiguation_ is not *undefined*, then
-          1. Set _disambiguation_ to ? ToString(_disambiguation_).
-        1. Else
-          1. Set _disambiguation_ to `"constrain"`.
+        1. Set _disambiguation_ to ? ToDisambiguation(_disambiguation_).
         1. <mark>TODO</mark>
       </emu-alg>
     </emu-clause>
@@ -483,10 +471,7 @@
         1. If _timeZoneParam_ is *undefined*, then
           1. Set _timeZoneParam_ to `"UTC"`.
         1. Let _timeZone_ be ? ToTimeZone(_timeZoneParam_).
-        1. If _disambiguation_ is not *undefined*, then
-          1. Set _disambiguation_ to ? ToString(_disambiguation_).
-        1. Else
-          1. Set _disambiguation_ to `"earlier"`.
+        1. Set _disambiguation_ to ? ToTimeZoneDisambiguation(_disambiguation_).
         1. Return ? GetAbsoluteFor(_timeZone_, _dateTime_, _disambiguation_).
       </emu-alg>
     </emu-clause>
