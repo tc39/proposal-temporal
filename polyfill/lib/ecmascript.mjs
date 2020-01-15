@@ -668,11 +668,8 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
   BalanceYearMonth: (year, month) => {
     month -= 1;
     year += Math.floor(month / 12);
-    if (month < 0) {
-      month = 12 + (month % 12);
-    } else if (month > 11) {
-      month = month % 12;
-    }
+    month %= 12;
+    if (month < 0) month += 12;
     month += 1;
     return { year, month };
   },
