@@ -408,9 +408,9 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal-datefromstring" aoid="DateFromString">
-      <h1>DateFromString ( _date_ )</h1>
+      <h1>DateFromString ( _isostring_ )</h1>
       <emu-alg>
-        1. Assert: Type(_date_) is String.
+        1. Assert: Type(_isostring_) is String.
         1. Let _validSyntax_ be *true* if _isostring_ conforms to the format `YYYY-MM-DD`, and *false* otherwise, where:
           * `YYYY` is either four decimal digits or an expanded year of `"+"` or `"-"` followed by six decimal digits;
           * `-` is the code unit 0x002D (HYPHEN-MINUS);
