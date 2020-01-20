@@ -1,7 +1,7 @@
 import { Temporal } from "../polyfill/lib/index.mjs";
 
 /**
- * Converts a Global Date object into an Absolute Object
+ * Converts a Date instance into a Temporal.Absolute instance
  *
  * @param {Date} esDate This is a Date object
  * @returns {Temporal.Absolute} Absolute Object
