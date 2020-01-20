@@ -1,7 +1,7 @@
 import { Temporal } from "../polyfill/lib/index.mjs";
 
 /**
- * Converts an absolute point in time to a readable string of a different time zone
+ * Converts an absolute point in time to a readable string of a specified time zone
  *
  * @param {Temporal.Absolute} absolute An absolute point in time
  * @returns {string} IANA Timezone
