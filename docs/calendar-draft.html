@@ -142,6 +142,47 @@ Temporal.Date.from(&quot;2019-12-06&quot;).withCalendar(&quot;gregory&quot;).wee
 Temporal.Date.from(&quot;2019-12-06&quot;).withCalendar(Intl.defaultCalendar).weekOfYear;
 Temporal.Date.from(&quot;2019-12-06&quot;).withCalendar(request.calendar).weekOfYear;</code></pre>
 <p>The calendar IDs are less clear.  If the partial ISO calendar used ID <code>&quot;iso&quot;</code>, then what would the full ISO calendar use?  ID &quot;gregory&quot; (<a href="https://github.com/tc39/ecma402/issues/212">why not &quot;gregorian&quot;?</a>) is misleading because there are Gregorian calendars that do not all agree on the same rules for things like weeks of the year.  One solution could be to use a nullish ID like <code>null</code> or <code>&quot;&quot;</code> for the partial ISO calendar and <code>&quot;iso&quot;</code> for the full ISO calendar.  Alternatively, &quot;iso8601&quot;, the identifier defined by CLDR as &quot;Gregorian calendar using the ISO 8601 calendar week rules&quot;, could be the identifier for the full ISO calendar.</p>
+<h3 id="default-calendar-options-pros-and-cons">Default Calendar Options: Pros and Cons</h3>
+<table>
+<thead>
+<tr>
+<th>Description</th>
+<th>Full ISO (option 1)</th>
+<th>No Default (option 2)</th>
+<th>Partial ISO (option 3)</th>
+<th>User Preference (option 4)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>API consistency &amp; predictability</td>
+<td>😃 Consistent and predictable</td>
+<td>😃 Consistent and predictable</td>
+<td>😐 Predictable behavior, but call sites may or may not require an explicit calendar</td>
+<td>☹️ Consistent API, but unpredictable behavior based on user&#39;s or server&#39;s location</td>
+</tr>
+<tr>
+<td>Impact on Temporal call sites</td>
+<td>😃 No changes</td>
+<td>☹️ All call sites require extra boilerplate</td>
+<td>🙂 Most* operations work; some require extra boilerplate</td>
+<td>😃 No changes</td>
+</tr>
+<tr>
+<td>Impact on i18n correctness</td>
+<td>☹️ Programmer needs to know to &quot;opt in&quot; to use the user&#39;s calendar preference</td>
+<td>😃 All operations require an explicit choice</td>
+<td>😃 Calendar-sensitive operations require an explicit choice</td>
+<td>🙂 Correct on front end, but programmer needs to know to &quot;opt in&quot; on back end</td>
+</tr>
+<tr>
+<td>Impact on interoperability</td>
+<td>😃 ISO is the industry standard format</td>
+<td>😃 Explicit choice</td>
+<td>😃 I/O operations operate in the ISO calendar space</td>
+<td>☹️ Temporal objects may not interop with the ISO calendar</td>
+</tr>
+</tbody></table>
+<p><em>\</em> See <a href="https://github.com/tc39/proposal-temporal/issues/240#issuecomment-557726669">https://github.com/tc39/proposal-temporal/issues/240#issuecomment-557726669</a>*</p>
 <h2 id="temporaldate-api-changes">Temporal.Date API changes</h2>
 <h3 id="new-temporaldate-instance-methods">New Temporal.Date instance methods</h3>
 <p>The following methods involving ISO conversion would be added:</p>
