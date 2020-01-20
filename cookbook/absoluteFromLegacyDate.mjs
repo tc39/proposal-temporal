@@ -7,7 +7,7 @@ import { Temporal } from "../polyfill/lib/index.mjs";
  * @returns {Temporal.Absolute} Temporal.Absolute instance
  */
 function getAbsoluteFromDate(esDate) {
-    const date = Temporal.Absolute.fromEpochSeconds(esDate.getTime());
+    const date = Temporal.Absolute.fromEpochMilliseconds(esDate.getTime());
     return date;
 }
 
