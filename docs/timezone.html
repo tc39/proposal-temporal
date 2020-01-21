@@ -1,10 +1,154 @@
 <h1 id="temporaltimezone"><code>Temporal.TimeZone</code></h1>
-<p>A representation of a time-zone giving access to information about offsets &amp; dst-changes as well as allowing for conversions.</p>
-<h2 id="new-temporaltimezonetimezone-string--temporaltimezone">new Temporal.TimeZone(timeZone: string) : Temporal.TimeZone</h2>
+<p>A <code>Temporal.TimeZone</code> is a representation of a time zone: either an <a href="https://www.iana.org/time-zones">IANA time zone</a>, including information about the time zone such as the offset between the local time and UTC at a particular time, and daylight saving time (DST) changes; or simply a particular UTC offset with no DST.</p>
+<p>Since <code>Temporal.Absolute</code> and <code>Temporal.DateTime</code> do not contain any time zone information, a <code>Temporal.TimeZone</code> object is required to convert between the two.</p>
+<p>Finally, the <code>Temporal.TimeZone</code> object itself provides access to a list of the time zones in the IANA time zone database.</p>
+<h2 id="new-temporaltimezonetimezoneidentifier-string--temporaltimezone">new Temporal.TimeZone(timeZoneIdentifier: string) : Temporal.TimeZone</h2>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>timeZoneIdentifier</code> (string): A description of the time zone; either its IANA name, or a UTC offset.</li>
+</ul>
+<p><strong>Returns:</strong> a new <code>Temporal.TimeZone</code> object.</p>
+<p>For a list of IANA time zone names, see the current version of the <a href="https://www.iana.org/time-zones">IANA time zone database</a>.
+A convenient list is also available <a href="https://en.wikipedia.org/wiki/List_of_tz_database_time_zones">on Wikipedia</a>, although it might not reflect the latest official status.</p>
+<p>The string <code>timeZoneIdentifier</code> is canonicalized before being used to determine the time zone.
+For example, values like <code>+100</code> will be understood to mean <code>+01:00</code>, and capitalization will be corrected.
+If no time zone can be determined from <code>timeZoneIdentifier</code>, then a <code>RangeError</code> is thrown.</p>
+<p>Usage examples:</p>
+<pre><code class="language-javascript">tz = new Temporal.TimeZone(&#39;UTC&#39;);
+tz = new Temporal.TimeZone(&#39;Africa/Cairo&#39;);
+tz = new Temporal.TimeZone(&#39;america/VANCOUVER&#39;);
+tz = new Temporal.TimeZone(&#39;Asia/Katmandu&#39;);  // alias of Asia/Kathmandu
+tz = new Temporal.TimeZone(&#39;-04:00&#39;);
+tz = new Temporal.TimeZone(&#39;+645&#39;);
+/* WRONG */ tz = new Temporal.TimeZone(&#39;local&#39;);  // not a time zone, throws</code></pre>
+<h3 id="difference-between-iana-time-zones-and-utc-offsets">Difference between IANA time zones and UTC offsets</h3>
+<p>The returned time zone object behaves slightly differently depending on whether an IANA time zone name (e.g. <code>Europe/Berlin</code>) is given, or a UTC offset (e.g. <code>+01:00</code>).
+IANA time zones may have DST transitions, and UTC offsets do not.
+For example:</p>
+<pre><code class="language-javascript">tz1 = new Temporal.TimeZone(&#39;-08:00&#39;);
+tz2 = new Temporal.TimeZone(&#39;America/Vancouver&#39;);
+now = Temporal.now.absolute();
+tz1.getTransitions(now).next().done;  // =&gt; true
+tz2.getTransitions(now).next().done;  // =&gt; false</code></pre>
 <h2 id="timezonename--string">timeZone.name : string</h2>
+<p>The <code>name</code> property gives an unambiguous identifier for the time zone.
+Effectively, this is the canonicalized version of whatever <code>timeZoneIdentifier</code> was passed as a parameter to the constructor.</p>
 <h2 id="timezonegetoffsetforabsolute-temporalabsolute--string">timeZone.getOffsetFor(absolute: Temporal.Absolute) : string</h2>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>absolute</code> (<code>Temporal.Absolute</code>): The time for which to compute the time zone&#39;s UTC offset.</li>
+</ul>
+<p><strong>Returns</strong>: a string indicating the UTC offset at the given time.</p>
+<p>Since the UTC offset can change throughout the year in time zones that employ DST, this method queries the UTC offset at a particular time.</p>
+<p>Note that only <code>Temporal.TimeZone</code> objects constructed from an IANA time zone name may have DST transitions; those constructed from a UTC offset do not.
+If <code>timeZone</code> is a UTC offset time zone, the return value of this method is effectively the same as <code>timeZone.name</code>.</p>
+<p>Example usage:</p>
+<pre><code class="language-javascript">// Getting the UTC offset for a time zone at a particular time
+timestamp = new Temporal.Absolute(1553993100000000000n);
+tz = new Temporal.TimeZone(&#39;Europe/Berlin&#39;);
+tz.getOffsetFor(timestamp);  // =&gt; +01:00
+
+// TimeZone with a fixed UTC offset
+tz = new Temporal.TimeZone(&#39;-08:00&#39;);
+tz.getOffsetFor(timestamp);  // =&gt; -08:00
+// UTC is always 0 offset
+tz = new Temporal.TimeZone(&#39;UTC&#39;);
+tz.getOffsetFor(timestamp);  // =&gt; +00:00</code></pre>
 <h2 id="timezonegetdatetimeforabsolute-temporalabsolute--temporaldatetime">timeZone.getDateTimeFor(absolute: Temporal.Absolute) : Temporal.DateTime</h2>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>absolute</code> (<code>Temporal.Absolute</code>): An absolute time to convert.</li>
+</ul>
+<p><strong>Returns:</strong> A <code>Temporal.DateTime</code> object indicating the calendar date and wall-clock time in <code>timeZone</code> at the absolute time indicated by <code>absolute</code>.</p>
+<p>This method is one way to convert a <code>Temporal.Absolute</code> to a <code>Temporal.DateTime</code>.</p>
+<p>Example usage:</p>
+<pre><code class="language-javascript">// Converting a specific absolute time to a calendar date / wall-clock time
+timestamp = new Temporal.Absolute(1553993100000000000n);
+tz = new Temporal.TimeZone(&#39;Europe/Berlin&#39;);
+tz.getDateTimeFor(timestamp);  // =&gt; 2019-03-31T01:45
+
+// What time was the Unix Epoch (timestamp 0) in Bell Labs (Murray Hill, New Jersey, USA)?
+epoch = new Temporal.Absolute(0n);
+tz = new Temporal.TimeZone(&#39;America/New_York&#39;);
+tz.getDateTimeFor(epoch);  // =&gt; 1969-12-31T19:00</code></pre>
 <h2 id="timezonegetabsolutefordatetime-temporaldatetime-disambiguation-earlier--later--reject--earlier--temporalabsolute">timeZone.getAbsoluteFor(dateTime: Temporal.DateTime, disambiguation: &#39;earlier&#39; | &#39;later&#39; | &#39;reject&#39; = &#39;earlier&#39;) : Temporal.Absolute</h2>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>dateTime</code> (<code>Temporal.DateTime</code>): A calendar date and wall-clock time to convert.</li>
+<li><code>disambiguation</code> (optional <code>string</code>): How to disambiguate if the date and time given by <code>dateTime</code> does not exist in the time zone, or exists more than once.
+Allowed values are <code>earlier</code>, <code>later</code>, and <code>reject</code>.
+The default is <code>earlier</code>.</li>
+</ul>
+<p><strong>Returns:</strong> A <code>Temporal.Absolute</code> object indicating the absolute time in <code>timeZone</code> at the time of the calendar date and wall-clock time from <code>dateTime</code>.</p>
+<p>This method is one way to convert a <code>Temporal.DateTime</code> to a <code>Temporal.Absolute</code>.</p>
+<h3 id="resolving-ambiguity">Resolving ambiguity</h3>
+<blockquote>
+<p>This explanation was adapted from the <a href="https://github.com/moment/momentjs.com/blob/master/docs/moment-timezone/01-using-timezones/02-parsing-ambiguous-inputs.html">moment-timezone documentation</a>.</p>
+</blockquote>
+<p>This conversion is not necessarily one-to-one.
+Due to DST time changes, there is a possibility that a wall-clock time either does not exist, or has existed twice.
+The <code>disambiguation</code> argument controls what absolute time to return in the case of ambiguity:</p>
+<ul>
+<li><code>earlier</code> (the default): The earlier of the two possible absolute times will be returned.</li>
+<li><code>later</code>: The later of the two possible absolute times will be returned.</li>
+<li><code>reject</code>: A <code>RangeError</code> will be thrown.</li>
+</ul>
+<p>When entering DST, clocks move forward an hour.
+In reality, it is not time that is moving, it is the offset moving.
+Moving the offset forward gives the illusion that an hour has disappeared.
+As the clock ticks, you can see it move from 1:58 to 1:59 to 3:00.
+It is easier to see what is actually happening when you include the offset.</p>
+<pre><code>1:58 +1
+1:59 +1
+3:00 +2
+3:01 +2</code></pre><p>The result is that any time between 1:59:59 and 3:00:00 never actually happened.
+In <code>earlier</code> mode, the absolute time will skip backwards by the amount of the DST gap (usually 1 hour).
+In <code>later</code> mode, the absolute time will skip forwards by the amount of the DST gap.</p>
+<pre><code class="language-javascript">tz = new Temporal.TimeZone(&#39;Europe/Berlin&#39;);
+dt = new Temporal.DateTime(2019, 3, 31, 2, 45);
+tz.getAbsoluteFor(dt, &#39;earlier&#39;);  // =&gt; 2019-03-31T00:45Z
+tz.getAbsoluteFor(dt, &#39;later&#39;);    // =&gt; 2019-03-31T01:45Z
+tz.getAbsoluteFor(dt, &#39;reject&#39;);   // throws</code></pre>
+<p>In this example, the wall-clock time 2:45 doesn&#39;t exist, so it is treated as either 1:45 +01:00 or 3:45 +02:00.</p>
+<p>Likewise, at the end of DST, clocks move backward an hour.
+In this case, the illusion is that an hour repeats itself.
+In <code>earlier</code> mode, the absolute time will be the earlier instance of the duplicated wall-clock time.
+In <code>later</code> mode, the absolute time will be the later instance of the duplicated time.</p>
+<pre><code class="language-javascript">tz = new Temporal.TimeZone(&#39;America/Sao_Paulo&#39;);
+dt = new Temporal.DateTime(2019, 2, 16, 23, 45);
+tz.getAbsoluteFor(dt, &#39;earlier&#39;);  // =&gt; 2019-02-17T01:45Z
+tz.getAbsoluteFor(dt, &#39;later&#39;);    // =&gt; 2019-02-17T02:45Z
+tz.getAbsoluteFor(dt, &#39;reject&#39;);   // throws</code></pre>
+<p>In this example, the wall-clock time 23:45 exists twice.</p>
+<blockquote>
+<p><em>Compatibility Note</em>: The built-in behaviour of the Moment Timezone and Luxon libraries is to give the same result as <code>earlier</code> when turning the clock back, and <code>later</code> when setting the clock forward.</p>
+</blockquote>
 <h2 id="timezonegettransitionsstartingpoint-temporalabsolute--iteratortemporalabsolute">timeZone.getTransitions(startingPoint: Temporal.Absolute) : iterator&lt;Temporal.Absolute&gt;</h2>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>startingPoint</code> (<code>Temporal.Absolute</code>): Time after which to start calculating DST transitions.</li>
+</ul>
+<p><strong>Returns:</strong> An iterable yielding <code>Temporal.Absolute</code> objects indicating subsequent DST transitions in the given time zone.</p>
+<p>This method is used to calculate future DST transitions for the time zone, starting at <code>startingPoint</code>.</p>
+<p>Note that if the time zone was constructed from a UTC offset, there will be no DST transitions.
+In that case, the iterable will be empty.</p>
+<p>Example usage:</p>
+<pre><code class="language-javascript">// How long until the next DST change from now, in the current location?
+tz = Temporal.now.timeZone();
+now = Temporal.now.absolute();
+[nextTransition] = tz.getTransitions(now);
+duration = nextTransition.difference(now);
+duration.toLocaleString();  // output will vary</code></pre>
 <h2 id="timezonetostring--string">timeZone.toString() : string</h2>
+<p><strong>Returns:</strong> The string given by <code>timeZone.name</code>.</p>
+<p>This method overrides <code>Object.prototype.toString()</code> and provides the time zone&#39;s <code>name</code> property as a human-readable description.</p>
 <h2 id="temporaltimezone-iteratortemporaltimezone">Temporal.TimeZone: iterator&lt;Temporal.TimeZone&gt;</h2>
+<p>The <code>Temporal.TimeZone</code> object is itself iterable, and can be used to iterate through all of the IANA time zones supported by the implementation.</p>
+<p>Example usage:</p>
+<pre><code class="language-javascript">// List all supported IANA time zones
+for (let zone of Temporal.TimeZone) console.log(zone.name);
+// example output:
+// Africa/Abidjan
+// Africa/Accra
+// Africa/Addis_Ababa
+// ...and many more</code></pre>

@@ -216,7 +216,7 @@ Temporal.Date.prototype.withCalendar = function(newCalendar: Calendar) {
     // return an ISO string for isoDate with calendar in brackets:
     // &quot;2019-12-06[hebrew]&quot;
 }</code></pre>
-<p>For objects with time components (such as Temporal.DateTime), the calendar would be appended to the end of the string.  It would be distinguisable from the timezone because it does not contain a slash.  For example: <code>2019-12-06T16:23+00:50[America/NewYork][hebrew]</code>.  @gibson042 points out that this could be probematic: &quot;There are many aliases without / ... [including] #156. And it gets worse with author-defined time zone and calendar names.&quot;</p>
+<p>For objects with time components (such as Temporal.DateTime), the calendar would be appended to the end of the string.  It would be distinguisable from the time zone because it does not contain a slash.  For example: <code>2019-12-06T16:23+00:50[America/NewYork][hebrew]</code>.  @gibson042 points out that this could be probematic: &quot;There are many aliases without / ... [including] #156. And it gets worse with author-defined time zone and calendar names.&quot;</p>
 <p>Alternatively, we may consider changing the syntax to add <code>c=</code> for calendars and <code>z=</code> for zones.  <code>2019-12-06T16:23+00:50[z=America/NewYork][c=hebrew]</code></p>
 <h3 id="new-behavior-of-temporaldatefrom">New behavior of Temporal.Date.from</h3>
 <p><code>Temporal.Date.from</code> would take a new optional <code>options</code> argument, with a single field <code>idToCalendar</code> specifying a function to map from identifiers to Calendar objects.  If not present, the <code>Intl.Calendar</code> namespace will be searched.</p>

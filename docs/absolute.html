@@ -1,5 +1,5 @@
 <h1 id="temporalabsolute"><code>Temporal.Absolute</code></h1>
-<p>An absolute point in time.<br>No timezone or offset information is present. As such <code>Absolute</code>s have no concept of days, months or even hours. For convenience of interoperability it uses <em>nanoseconds since the unix-epoch</em></p>
+<p>An absolute point in time.<br>No time zone or offset information is present. As such <code>Absolute</code>s have no concept of days, months or even hours. For convenience of interoperability it uses <em>nanoseconds since the unix-epoch</em></p>
 <h2 id="new-temporalabsoluteepochnanoseconds--bigint--temporalabsolute">new Temporal.Absolute(epochNanoSeconds : bigint) : Temporal.Absolute</h2>
 <p>Creates a new <code>Absolute</code> object that represents an absolute point on the timeline.</p>
 <h2 id="temporalabsolutefromthing-string--object--temporalabsolute">Temporal.Absolute.from(thing: string | object) : Temporal.Absolute</h2>
@@ -13,7 +13,7 @@
 <h2 id="absolutegetepochnanoseconds--bigint">absolute.getEpochNanoseconds() : bigint</h2>
 <p>Returns the numeric value of the specified date as the number of nanoseconds since January 1, 1970, 00:00:00 UTC (negative for prior times).</p>
 <h2 id="absoluteintimezonetimezone-temporaltimezone--string--temporaldatetime">absolute.inTimeZone(timeZone: Temporal.TimeZone | string) : Temporal.DateTime</h2>
-<p>Returns the time-zone offset as a <code>DateTime</code> object for the current timezone.</p>
+<p>Returns the time zone offset as a <code>DateTime</code> object for the current time zone.</p>
 <h2 id="absoluteplusduration-temporalduration--string--object--temporalabsolute">absolute.plus(duration: Temporal.Duration | string | object) : Temporal.Absolute</h2>
 <p>Returns a new <code>Absolute</code> object which is the sum of the current object plus the additional argument.</p>
 <h2 id="absoluteminusduration-temporalduration--string--object--temporalabsolute">absolute.minus(duration: Temporal.Duration | string | object) : Temporal.Absolute</h2>

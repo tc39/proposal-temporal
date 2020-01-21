@@ -26,11 +26,11 @@ graph LR;
 <p>An <code>Temporal.Absolute</code> represents a fixed point in time along the POSIX timeline. It does this by internally maintaining a slot for &quot;Nanoseconds since the POSIX-Epoch&quot;.</p>
 <p>See <a href="./absolute.html">Temporal.Absolute Documentation</a> for more detailed documentation.</p>
 <h3 id="temporaltimezone"><code>Temporal.TimeZone</code></h3>
-<p>A <code>Temporal.TimeZone</code> represents an IANA Timezone, a specific UTF-Offset or UTC itself. Because of this <code>Temporal.TimeZone</code> can be used to convert between <code>Temporal.Absolute</code> and <code>Temporal.DateTime</code> as well as finding out the offset at a specific <code>Temporal.Absolute</code>.</p>
-<p><code>Temporal.TimeZone</code> is also an iterable that give access to the IANA-Timezones supported by the system from the <a href="https://www.iana.org/time-zones">IANA time zone database</a> (also listed <a href="https://en.wikipedia.org/wiki/List_of_tz_database_time_zones">here</a>).</p>
+<p>A <code>Temporal.TimeZone</code> represents an IANA time zone, a specific UTC offset or UTC itself. Because of this <code>Temporal.TimeZone</code> can be used to convert between <code>Temporal.Absolute</code> and <code>Temporal.DateTime</code> as well as finding out the offset at a specific <code>Temporal.Absolute</code>.</p>
+<p><code>Temporal.TimeZone</code> is also an iterable that gives access to the IANA time zones supported by the system from the <a href="https://www.iana.org/time-zones">IANA time zone database</a> (also listed <a href="https://en.wikipedia.org/wiki/List_of_tz_database_time_zones">here</a>).</p>
 <p>See <a href="./timezone.html">Temporal.TimeZone Documentation</a> for more detailed documentation.</p>
 <h3 id="temporaldatetime"><code>Temporal.DateTime</code></h3>
-<p>A <code>Temporal.DateTime</code> represents a calendar date and wall-clock time. That means it does not carry timezone information. However it can be converted to a <code>Temporal.Absolute</code> using a <code>Temporal.TimeZone</code>.</p>
+<p>A <code>Temporal.DateTime</code> represents a calendar date and wall-clock time. That means it does not carry time zone information. However it can be converted to a <code>Temporal.Absolute</code> using a <code>Temporal.TimeZone</code>.</p>
 <p>This can also be converted to object containing only partial information such as <code>Temporal.Date</code> and <code>Temporal.Time</code>.</p>
 <p>See <a href="./datetime.html">Temporal.DateTime Documentation</a> for more detailed documentation.</p>
 <h3 id="temporaltime"><code>Temporal.Time</code></h3>
@@ -52,7 +52,7 @@ graph LR;
 <h3 id="temporal-functions"><code>Temporal</code> functions</h3>
 <ul>
 <li><code>Temporal.getAbsolute()</code> - get the current system absolute time</li>
-<li><code>Temporal.getTimeZone()</code> - get the current system timezone</li>
+<li><code>Temporal.getTimeZone()</code> - get the current system time zone</li>
 <li><code>Temporal.getDateTime()</code> - get the current system date/time</li>
 <li><code>Temporal.getTime()</code> - get the current system time</li>
 <li><code>Temporal.getDate()</code> - get the current system date</li>
