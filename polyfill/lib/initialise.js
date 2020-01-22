@@ -1,7 +1,6 @@
 import('./index.mjs')
   .then(({ Temporal, Intl }) => {
-    globalThis.Temporal = {};
-    Object.assign(globalThis.Temporal, Temporal);
+    globalThis.Temporal = { ...Temporal };
     Object.assign(globalThis.Intl, Intl);
   })
   .catch((err) => {
