@@ -14,7 +14,8 @@ const { reporter } = Pretty;
 import Assert from 'assert';
 const { ok: assert, equal, throws } = Assert;
 
-import { Date } from 'tc39-temporal';
+import * as Temporal from 'tc39-temporal';
+const { Date } = Temporal;
 
 describe('Date', () => {
   describe('Structure', () => {
@@ -75,6 +76,9 @@ describe('Date', () => {
     it('Date.from is a Function', () => {
       equal(typeof Date.from, 'function');
     });
+    it('Date.compare is a Function', () => {
+      equal(typeof Date.compare, 'function');
+    });
   });
   describe('Construction', () => {
     let date;
@@ -123,6 +127,12 @@ describe('Date', () => {
       const date = original.with({ day: 17 });
       equal(`${date}`, '1976-11-17');
     });
+  });
+  describe('Date.withTime() works', () => {
+    const date = Date.from('1976-11-18');
+    const dt = date.withTime(Temporal.Time.from('11:30:23'));
+    it('returns a Temporal.DateTime', () => assert(dt instanceof Temporal.DateTime));
+    it('combines the date and time', () => equal(`${dt}`, '1976-11-18T11:30:23'));
   });
   describe('date.difference() works', () => {
     const date = new Date(1976, 11, 18);
@@ -219,6 +229,13 @@ describe('Date', () => {
     });
     it('Date.from({ year: 1976, month: 11, day: 18 }) == 1976-11-18', () => equal(`${Date.from({ year: 1976, month: 11, day: 18 })}`, '1976-11-18'));
     it('DateTime.from({}) throws', () => throws(() => Date.from({}), RangeError));
+  });
+  describe('Date.compare works', () => {
+    const d1 = Date.from('1976-11-18');
+    const d2 = Date.from('2019-06-30');
+    it('equal', () => equal(Date.compare(d1, d1), 0));
+    it('smaller/larger', () => equal(Date.compare(d1, d2), -1));
+    it('larger/smaller', () => equal(Date.compare(d2, d1), 1));
   });
 });
 

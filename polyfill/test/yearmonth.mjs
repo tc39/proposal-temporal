@@ -10,6 +10,23 @@ const { throws, equal } = assert;
 import { YearMonth } from 'tc39-temporal';
 
 describe('YearMonth', () => {
+  describe('Structure', () => {
+    it('YearMonth is a Function', () => {
+      equal(typeof YearMonth, 'function');
+    });
+    it('YearMonth has a prototype', () => {
+      assert(YearMonth.prototype);
+      equal(typeof YearMonth.prototype, 'object');
+    });
+    describe('YearMonth.prototype', () => {
+      it('YearMonth.prototype.difference is a Function', () => {
+        equal(typeof YearMonth.prototype.difference, 'function');
+      });
+    });
+    it('YearMonth.compare is a Function', () => {
+      equal(typeof YearMonth.compare, 'function');
+    });
+  });
   describe('Construction', () => {
     describe('Disambiguation', () => {
       it('reject', () => throws(() => new YearMonth(2019, 13, 'reject'), RangeError));
@@ -31,6 +48,13 @@ describe('YearMonth', () => {
       });
       it('YearMonth.from({}) throws', () => throws(() => YearMonth.from({}), RangeError));
     });
+  });
+  describe('YearMonth.compare() works', () => {
+    const nov94 = YearMonth.from('1994-11');
+    const jun13 = YearMonth.from('2013-06');
+    it('equal', () => equal(YearMonth.compare(nov94, nov94), 0));
+    it('smaller/larger', () => equal(YearMonth.compare(nov94, jun13), -1));
+    it('larger/smaller', () => equal(YearMonth.compare(jun13, nov94), 1));
   });
   describe('YearMonth.difference() works', () => {
     const nov94 = YearMonth.from('1994-11');

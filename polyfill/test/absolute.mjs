@@ -47,6 +47,9 @@ describe('Absolute', () => {
       it('Absolute.prototype.toJSON is a Function', () => {
         equal(typeof Absolute.prototype.toJSON, 'function');
       });
+      it('Absolute.prototype.difference is a Function', () => {
+        equal(typeof Absolute.prototype.difference, 'function');
+      });
     });
     it('Absolute.fromEpochSeconds is a Function', () => {
       equal(typeof Absolute.fromEpochSeconds, 'function');
@@ -62,6 +65,9 @@ describe('Absolute', () => {
     });
     it('Absolute.from is a Function', () => {
       equal(typeof Absolute.from, 'function');
+    });
+    it('Absolute.compare is a Function', () => {
+      equal(typeof Absolute.compare, 'function');
     });
   });
   describe('Construction', () => {
@@ -181,6 +187,26 @@ describe('Absolute', () => {
       it(`(${two}).minus({ days: 20, nanoseconds: 1600 }) = ${one}`, () => equal(`${three}`, `${one}`));
       it(`(${one}).plus( days: 20, nanoseconds: 1600 }) = ${two}`, () => equal(`${four}`, `${two}`));
     });
+  });
+  describe('Absolute.compare works', () => {
+    const abs1 = Absolute.from('1963-02-13T09:36:29.123456789Z');
+    const abs2 = Absolute.from('1976-11-18T15:23:30.123456789Z');
+    const abs3 = Absolute.from('1981-12-15T14:34:31.987654321Z');
+    it('pre epoch equal', () => equal(Absolute.compare(abs1, Absolute.from(abs1)), 0));
+    it('epoch equal', () => equal(Absolute.compare(abs2, Absolute.from(abs2)), 0));
+    it('cross epoch smaller/larger', () => equal(Absolute.compare(abs1, abs2), -1));
+    it('cross epoch larger/smaller', () => equal(Absolute.compare(abs2, abs1), 1));
+    it('epoch smaller/larger', () => equal(Absolute.compare(abs2, abs3), -1));
+    it('epoch larger/smaller', () => equal(Absolute.compare(abs3, abs2), 1));
+  });
+  describe('Absolute.difference works', () => {
+    const earlier = Absolute.from('1976-11-18T15:23:30.123456789Z');
+    const later = Absolute.from('2019-10-29T10:46:38.271986102Z');
+    const diff = earlier.difference(later);
+    it(`(${earlier}).difference(${later}) == (${later}).difference(${earlier})`, () =>
+      equal(`${later.difference(earlier)}`, `${diff}`));
+    it(`(${earlier}).plus(${diff}) == (${later})`, () => equal(`${earlier.plus(diff)}`, `${later}`));
+    it(`(${later}).minus(${diff}) == (${earlier})`, () => equal(`${later.minus(diff)}`, `${earlier}`));
   });
 });
 

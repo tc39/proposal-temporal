@@ -93,6 +93,9 @@ describe('DateTime', () => {
     it('DateTime.from is a Function', () => {
       equal(typeof DateTime.from, 'function');
     });
+    it('DateTime.compare is a Function', () => {
+      equal(typeof DateTime.compare, 'function');
+    });
   });
   describe('Construction', () => {
     describe('new DateTime(1976, 11, 18, 15, 23, 30, 123, 456, 789)', () => {
@@ -240,6 +243,13 @@ describe('DateTime', () => {
     it('datetime.with({ month: 5, second: 15 } works', () => {
       equal(`${datetime.with({ month: 5, second: 15 })}`, '1976-05-18T15:23:15.123456789');
     });
+  });
+  describe('DateTime.compare() works', () => {
+    const dt1 = DateTime.from('1976-11-18T15:23:30.123456789');
+    const dt2 = DateTime.from('2019-10-29T10:46:38.271986102');
+    it('equal', () => equal(DateTime.compare(dt1, dt1), 0));
+    it('smaller/larger', () => equal(DateTime.compare(dt1, dt2), -1));
+    it('larger/smaller', () => equal(DateTime.compare(dt2, dt1), 1));
   });
   describe('date/time maths', () => {
     const earlier = DateTime.from('1976-11-18T15:23:30.123456789');
