@@ -75,6 +75,15 @@ describe('MonthDay', () => {
       });
     });
   });
+  describe('MonthDay.difference() works', () => {
+    const jan15 = MonthDay.from('01-15');
+    const feb1 = MonthDay.from('02-01');
+    const diff = jan15.difference(feb1);
+    it(`${jan15}.difference(${feb1}) == ${feb1}.difference(${jan15})`, () =>
+      equal(`${diff}`, `${feb1.difference(jan15)}`));
+    it(`${jan15}.plus(${diff}) == ${feb1}`, () => equal(`${jan15.plus(diff)}`, `${feb1}`));
+    it(`${feb1}.minus(${diff}) == ${jan15}`, () => equal(`${feb1.minus(diff)}`, `${jan15}`));
+  });
 });
 
 import { normalize } from 'path';

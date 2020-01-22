@@ -101,7 +101,7 @@ export class MonthDay {
     other = ES.ToMonthDay(other);
     const [one, two] = [this, other].sort(MonthDay.compare);
     let months = two.month - one.month;
-    let days = two.days - one.days;
+    let days = two.day - one.day;
     if (days < 0) {
       months -= 1;
       let month = one.month + months;
