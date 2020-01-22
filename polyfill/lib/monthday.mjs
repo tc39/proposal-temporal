@@ -98,7 +98,6 @@ export class MonthDay {
   }
   difference(other) {
     if (!ES.IsMonthDay(this)) throw new TypeError('invalid receiver');
-    other = ES.ToMonthDay(other);
     const [one, two] = [this, other].sort(MonthDay.compare);
     let months = two.month - one.month;
     let days = two.day - one.day;
@@ -138,8 +137,7 @@ export class MonthDay {
     );
   }
   static compare(one, two) {
-    one = ES.ToMonthDay(one);
-    two = ES.ToMonthDay(two);
+    if (!ES.IsMonthDay(one) || !ES.IsMonthDay(two)) throw new TypeError('invalid MonthDay object');
     if (one.month !== two.month) return ES.ComparisonResult(one.month - two.month);
     if (one.day !== two.day) return ES.ComparisonResult(one.day - two.day);
     return ES.ComparisonResult(0);

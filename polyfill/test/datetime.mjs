@@ -250,6 +250,14 @@ describe('DateTime', () => {
     it('equal', () => equal(DateTime.compare(dt1, dt1), 0));
     it('smaller/larger', () => equal(DateTime.compare(dt1, dt2), -1));
     it('larger/smaller', () => equal(DateTime.compare(dt2, dt1), 1));
+    it("doesn't cast first argument", () => {
+      throws(() => DateTime.compare({ year: 1976, month: 11, day: 18, hour: 15 }, dt2), TypeError);
+      throws(() => DateTime.compare('1976-11-18T15:23:30.123456789', dt2), TypeError);
+    });
+    it("doesn't cast second argument", () => {
+      throws(() => DateTime.compare(dt1, { year: 2019, month: 10, day: 29, hour: 10 }), TypeError);
+      throws(() => DateTime.compare('2019-10-29T10:46:38.271986102', dt2), TypeError);
+    });
   });
   describe('date/time maths', () => {
     const earlier = DateTime.from('1976-11-18T15:23:30.123456789');
@@ -259,6 +267,13 @@ describe('DateTime', () => {
       equal(`${later.difference(earlier)}`, `${diff}`));
     it(`(${earlier}).plus(${diff}) == (${later})`, () => equal(`${earlier.plus(diff)}`, `${later}`));
     it(`(${later}).minus(${diff}) == (${earlier})`, () => equal(`${later.minus(diff)}`, `${earlier}`));
+  });
+  describe('DateTime.difference()', () => {
+    const dt = DateTime.from('1976-11-18T15:23:30.123456789');
+    it("doesn't cast argument", () => {
+      throws(() => dt.difference({ year: 2019, month: 10, day: 29, hour: 10}), TypeError);
+      throws(() => dt.difference('2019-10-29T10:46:38.271986102'), TypeError);
+    });
   });
   describe('DateTime.from() works', () => {
     it('DateTime.from("1976-11-18 15:23:30")', () => equal(`${DateTime.from('1976-11-18 15:23:30')}`, "1976-11-18T15:23:30"));

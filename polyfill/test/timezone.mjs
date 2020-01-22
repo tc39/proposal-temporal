@@ -106,6 +106,19 @@ describe('TimeZone', ()=>{
             throws(() => zone.getAbsoluteFor(dtm, 'reject'), RangeError);
         });
     });
+    describe('Casting', () => {
+        const zone = Temporal.TimeZone.from('+03:30');
+        it("getOffsetFor() doesn't cast its argument", () => {
+            throws(() => zone.getOffsetFor(0n), TypeError);
+            throws(() => zone.getOffsetFor('2019-02-17T01:45Z'), TypeError);
+            throws(() => zone.getOffsetFor({}), TypeError);
+        });
+        it("getDateTimeFor() doesn't cast its argument", () => {
+            throws(() => zone.getDateTimeFor(0n), TypeError);
+            throws(() => zone.getDateTimeFor('2019-02-17T01:45Z'), TypeError);
+            throws(() => zone.getDateTimeFor({}), TypeError);
+        });
+    });
 });
 
 function ArrayFrom(iter, limit = Number.POSITIVE_INFINITY) {

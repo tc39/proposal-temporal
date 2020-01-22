@@ -98,6 +98,14 @@ describe('MonthDay', () => {
     it('equal', () => equal(MonthDay.compare(jan15, jan15), 0));
     it('smaller/larger', () => equal(MonthDay.compare(jan15, feb1), -1));
     it('larger/smaller', () => equal(MonthDay.compare(feb1, jan15), 1));
+    it("doesn't cast first argument", () => {
+      throws(() => MonthDay.compare({ month: 1, day: 15 }, feb1), TypeError);
+      throws(() => MonthDay.compare('01-15', feb1), TypeError);
+    });
+    it("doesn't cast second argument", () => {
+      throws(() => MonthDay.compare(jan15, { month: 2, day: 1 }), TypeError);
+      throws(() => MonthDay.compare(jan15, '02-01'), TypeError);
+    });
   });
   describe('MonthDay.difference() works', () => {
     const jan15 = MonthDay.from('01-15');
@@ -107,6 +115,10 @@ describe('MonthDay', () => {
       equal(`${diff}`, `${feb1.difference(jan15)}`));
     it(`${jan15}.plus(${diff}) == ${feb1}`, () => equal(`${jan15.plus(diff)}`, `${feb1}`));
     it(`${feb1}.minus(${diff}) == ${jan15}`, () => equal(`${feb1.minus(diff)}`, `${jan15}`));
+    it("doesn't cast argument", () => {
+      throws(() => jan15.difference({ month: 2, day: 1 }), TypeError);
+      throws(() => jan15.difference('02-01'), TypeError);
+    });
   });
 });
 

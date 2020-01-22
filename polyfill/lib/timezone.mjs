@@ -17,12 +17,10 @@ export class TimeZone {
   }
   getOffsetFor(absolute) {
     if (!ES.IsTimeZone(this)) throw new TypeError('invalid receiver');
-    absolute = ES.ToAbsolute(absolute);
     return ES.GetTimeZoneOffsetString(GetSlot(absolute, EPOCHNANOSECONDS), GetSlot(this, IDENTIFIER));
   }
   getDateTimeFor(absolute) {
     if (!ES.IsTimeZone(this)) throw new TypeError('invalid receiver');
-    absolute = ES.ToAbsolute(absolute);
     const ns = GetSlot(absolute, EPOCHNANOSECONDS);
     const {
       year,

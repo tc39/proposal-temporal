@@ -70,8 +70,8 @@
         The following steps are taken:
       </p>
       <emu-alg>
-        1. Let _one_ be ? ToMonthDay(_one_).
-        1. Let _two_ be ? ToMonthDay(_two_).
+        1. Perform ? RequireInternalSlot(_one_, [[InitializedTemporalMonthDay]]).
+        1. Perform ? RequireInternalSlot(_two_, [[InitializedTemporalMonthDay]]).
         1. Return ! MonthDayCompare(_one_, _two_).
       </emu-alg>
     </emu-clause>
@@ -209,7 +209,7 @@
       <emu-alg>
         1. Let _monthDay_ be the *this* value.
         1. Perform ? RequireInternalSlot(_monthDay_, [[InitializedTemporalMonthDay]]).
-        1. Let _otherMonthDay_ be ? ToMonthDay(_otherMonthDay_).
+        1. Perform ? RequireInternalSlot(_otherMonthDay_, [[InitializedTemporalMonthDay]]).
         1. If ! MonthDayCompare(_monthDay_, _otherMonthDay_) &lt; 0, then
           1. Let _greater_ be _otherMonthDay_.
           1. Let _smaller_ be _monthDay_.

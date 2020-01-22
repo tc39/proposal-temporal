@@ -114,7 +114,7 @@
       <emu-alg>
         1. Let _timeZone_ be the *this* value.
         1. Perform ? RequireInternalSlot(_timeZone_, [[InitializedTemporalTimeZone]]).
-        1. Let _absolute_ be ? ToAbsolute(_absolute_).
+        1. Perform ? RequireInternalSlot(_absolute_, [[InitializedTemporalAbsolute]]).
         1. Return ? GetTimeZoneOffsetString(_absolute_.[[Nanoseconds]], _timeZone_.[[Identifier]]).
       </emu-alg>
     </emu-clause>
@@ -128,7 +128,7 @@
       <emu-alg>
         1. Let _timeZone_ be the *this* value.
         1. Perform ? RequireInternalSlot(_timeZone_, [[InitializedTemporalTimeZone]]).
-        1. Let _absolute_ be ? ToAbsolute(_absolute_).
+        1. Perform ? RequireInternalSlot(_absolute_, [[InitializedTemporalAbsolute]]).
         1. Return ? GetDateTimeFor(_timeZone_, _absolute_);
       </emu-alg>
     </emu-clause>

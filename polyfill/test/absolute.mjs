@@ -198,6 +198,14 @@ describe('Absolute', () => {
     it('cross epoch larger/smaller', () => equal(Absolute.compare(abs2, abs1), 1));
     it('epoch smaller/larger', () => equal(Absolute.compare(abs2, abs3), -1));
     it('epoch larger/smaller', () => equal(Absolute.compare(abs3, abs2), 1));
+    it("doesn't cast first argument", () => {
+      throws(() => Absolute.compare(abs1, abs1.toString()), TypeError);
+      throws(() => Absolute.compare(abs1, {}), TypeError);
+    });
+    it("doesn't cast second argument", () => {
+      throws(() => Absolute.compare(abs2.getEpochNanoseconds(), abs2), TypeError);
+      throws(() => Absolute.compare({}, abs2), TypeError);
+    });
   });
   describe('Absolute.difference works', () => {
     const earlier = Absolute.from('1976-11-18T15:23:30.123456789Z');
@@ -207,6 +215,10 @@ describe('Absolute', () => {
       equal(`${later.difference(earlier)}`, `${diff}`));
     it(`(${earlier}).plus(${diff}) == (${later})`, () => equal(`${earlier.plus(diff)}`, `${later}`));
     it(`(${later}).minus(${diff}) == (${earlier})`, () => equal(`${later.minus(diff)}`, `${earlier}`));
+    it("doesn't cast argument", () => {
+      throws(() => earlier.difference(later.toString()), TypeError);
+      throws(() => earlier.difference({}), TypeError);
+    });
   });
 });
 

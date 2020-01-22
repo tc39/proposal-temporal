@@ -226,7 +226,6 @@ export class DateTime {
   }
   difference(other) {
     if (!ES.IsDateTime(this)) throw new TypeError('invalid receiver');
-    other = ES.ToDateTime(other);
     const [smaller, larger] = [this, other].sort(DateTime.compare);
     const { deltaDays, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.DifferenceTime(
       smaller,
@@ -310,8 +309,7 @@ export class DateTime {
     );
   }
   static compare(one, two) {
-    one = ES.ToDateTime(one);
-    two = ES.ToDateTime(two);
+    if (!ES.IsDateTime(one) || !ES.IsDateTime(two)) throw new TypeError('invalid DateTime object');
     if (one.year !== two.year) return ES.ComparisonResult(one.year - two.year);
     if (one.month !== two.month) return ES.ComparisonResult(one.month - two.month);
     if (one.day !== two.day) return ES.ComparisonResult(one.day - two.day);

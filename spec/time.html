@@ -88,8 +88,8 @@
         The following steps are taken:
       </p>
       <emu-alg>
-        1. Let _one_ be ? ToTime(_one_).
-        1. Let _two_ be ? ToTime(_two_).
+        1. Perform ? RequireInternalSlot(_one_, [[InitializedTemporalTime]]).
+        1. Perform ? RequireInternalSlot(_two_, [[InitializedTemporalTime]]).
         1. Return ! TimeCompare(_one_, _two_).
       </emu-alg>
     </emu-clause>
@@ -288,7 +288,7 @@
       <emu-alg>
         1. Let _time_ be the *this* value.
         1. Perform ? RequireInternalSlot(_time_, [[InitializedTemporalTime]]).
-        1. Let _otherTime_ be ? ToTime(_otherTime_).
+        1. Perform ? RequireInternalSlot(_otherTime_, [[InitializedTemporalTime]]).
         1. If ! TimeCompare(_time_, _otherTime_) &lt; 0, then
           1. Let _greater_ be _otherTime_.
           1. Let _smaller_ be _time_.
@@ -315,7 +315,7 @@
       <emu-alg>
         1. Let _time_ be the *this* value.
         1. Perform ? RequireInternalSlot(_time_, [[InitializedTemporalTime]]).
-        1. Let _date_ be ? ToDate(_date_).
+        1. Perform ? RequireInternalSlot(_date_, [[InitializedTemporalDate]]).
         1. If _disambiguation_ is not *undefined*, then
           1. Set _disambiguation_ to ? ToString(_disambiguation_).
         1. Else

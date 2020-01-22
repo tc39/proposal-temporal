@@ -113,8 +113,8 @@
         The following steps are taken:
       </p>
       <emu-alg>
-        1. Let _one_ be ? ToAbsolute(_one_).
-        1. Let _two_ be ? ToAbsolute(_two_).
+        1. Perform ? RequireInternalSlot(_one_, [[InitializedTemporalAbsolute]]).
+        1. Perform ? RequireInternalSlot(_two_, [[InitializedTemporalAbsolute]]).
         1. Return ! AbsoluteCompare(_one_, _two_).
       </emu-alg>
     </emu-clause>
@@ -256,7 +256,7 @@
       <emu-alg>
         1. Let _absolute_ be the *this* value.
         1. Perform ? RequireInternalSlot(_absolute_, [[InitializedTemporalAbsolute]]).
-        1. Let _otherAbsolute_ be ? ToAbsolute(_otherAbsolute_).
+        1. Perform ? RequireInternalSlot(_otherAbsolute_, [[InitializedTemporalAbsolute]]).
         1. If ! AbsoluteCompare(_absolute_, _otherAbsolute_) &lt; 0, then
           1. Let _greater_ be _otherAbsolute_.
           1. Let _smaller_ be _absolute_.

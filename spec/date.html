@@ -67,8 +67,8 @@
         The following steps are taken:
       </p>
       <emu-alg>
-        1. Let _one_ be ? ToDate(_one_).
-        1. Let _two_ be ? ToDate(_two_).
+        1. Perform ? RequireInternalSlot(_one_, [[InitializedTemporalDate]]).
+        1. Perform ? RequireInternalSlot(_two_, [[InitializedTemporalDate]]).
         1. If _one_.[[Year]] &gt; _two_.[[Year]], return 1.
         1. If _one_.[[Year]] &lt; _two_.[[Year]], return -1.
         1. If _one_.[[Month]] &gt; _two_.[[Month]], return 1.
@@ -321,7 +321,7 @@
       <emu-alg>
         1. Let _date_ be the *this* value.
         1. Perform ? RequireInternalSlot(_date_, [[InitializedTemporalDate]]).
-        1. Let _otherDate_ be ? ToDate(_otherDate_).
+        1. Perform ? RequireInternalSlot(_otherDate_, [[InitializedTemporalDate]]).
         1. Let _disambiguation_ be ? ToString(_disambiguation_).
         1. Let _greater_ be _date_.
         1. Let _smaller_ be _otherDate_.
@@ -345,7 +345,7 @@
       <emu-alg>
         1. Let _date_ be the *this* value.
         1. Perform ? RequireInternalSlot(_date_, [[InitializedTemporalDate]]).
-        1. Let _time_ be ? ToTime(_time_).
+        1. Perform ? RequireInternalSlot(_time_, [[InitializedTemporalTime]]).
         1. Return ? CreateDateTime(_date_.[[Year]], _date_.[[Month]], _date_.[[Day]],
           _time_.[[Hour]], _time_.[[Minute]], _time_.[[Second]],
           _time_.[[Millisecond]], _time_.[[Microsecond]], _time_.[[Nanosecond]]).

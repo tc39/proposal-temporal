@@ -24,12 +24,12 @@ A representation of wall-clock time.
 
 ## time.minus(duration: string | object, disambiguation: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.Time
 
-## time.difference(other: Temporal.Time | object) : Temporal.Duration
+## time.difference(other: Temporal.Time) : Temporal.Duration
 
 ## time.toString() : string
 
 ## time.toLocaleString(locale?:string, options?: object) : string
 
-## time.withDate(date: Temporal.Date | object) : Temporal.DateTime
+## time.withDate(date: Temporal.Date) : Temporal.DateTime
 
-## Temporal.Time.compare(one: Temporal.Time | object, two: Temporal.Time | object) : number;
+## Temporal.Time.compare(one: Temporal.Time, two: Temporal.Time) : number;
