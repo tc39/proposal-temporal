@@ -15,6 +15,11 @@ function Search(menu) {
   
   this.$searchBox.addEventListener('keydown', debounce(this.searchBoxKeydown.bind(this), { stopPropagation: true }));
   this.$searchBox.addEventListener('keyup', debounce(this.searchBoxKeyup.bind(this), { stopPropagation: true }));
+  
+  // Perform an initial search if the box is not empty.
+  if (this.$searchBox.value) {
+    this.search(this.$searchBox.value);
+  }
 }
 
 Search.prototype.loadBiblio = function () {
@@ -484,6 +489,11 @@ function init() {
   var $container = document.getElementById('spec-container');
   $container.addEventListener('mouseover', debounce(function (e) {
     Toolbox.activateIfMouseOver(e);
+  }));
+  document.addEventListener('keydown', debounce(function (e) {
+    if (e.code === "Escape" && Toolbox.active) {
+      Toolbox.deactivate();
+    }
   }));
 }
 
@@ -1058,6 +1068,10 @@ emu-table figure {
 
 emu-production {
     display: block;
+}
+
+emu-grammar[type="example"] emu-production,
+emu-grammar[type="definition"] emu-production {
     margin-top: 1em;
     margin-bottom: 1em;
     margin-left: 5ex;
@@ -1085,6 +1099,7 @@ emu-gann {
 }
 
 emu-gann emu-t:last-child,
+emu-gann emu-gprose:last-child,
 emu-gann emu-nt:last-child {
     margin-right: 0;
 }
@@ -1139,10 +1154,6 @@ emu-mods {
     font-weight: normal;
 }
 
-emu-production[collapsed] emu-mods {
-  display: none;
-}
-
 emu-params, emu-opt {
   margin-right: 1ex;
   font-family: monospace;
@@ -1159,6 +1170,10 @@ emu-opt {
 emu-gprose {
     font-size: 0.9em;
     font-family: Helvetica, Arial, sans-serif;
+}
+
+emu-production emu-gprose {
+    margin-right: 1ex;
 }
 
 h1.shortname {
@@ -1188,7 +1203,7 @@ h1, h2, h3, h4, h5, h6 {
 
 h1 .secnum {
   text-decoration: none;
-  margin-right: 10px;
+  margin-right: 5px;
 }
 
 h1 span.title {
@@ -1812,17 +1827,17 @@ li.menu-search-result-term:before {
 </emu-intro>
 
 <emu-import href="spec/temporal.html"><emu-clause id="sec-temporal-object">
-  <h1><span class="secnum">1</span>The Temporal Object</h1>
+  <h1><span class="secnum">1</span> The Temporal Object</h1>
   <p><mark>TODO: Specify.</mark></p>
 </emu-clause>
 </emu-import>
 <emu-import href="spec/date.html"><emu-clause id="sec-temporal-date">
-  <h1><span class="secnum">2</span>Temporal.Date Objects</h1>
+  <h1><span class="secnum">2</span> Temporal.Date Objects</h1>
   <p>A Temporal.Date object is an immutable Object that contains Number values corresponding to a particular year, month,
     and day.</p>
 
   <emu-clause id="sec-temporal-date-constructor">
-    <h1><span class="secnum">2.1</span>The Temporal.Date Constructor</h1>
+    <h1><span class="secnum">2.1</span> The Temporal.Date Constructor</h1>
     <p>The Temporal.Date constructor is the %Temporal.Date% intrinsic object. When called as a constructor, it creates and
       initializes a new Temporal.Date object.</p>
     <p>
@@ -1831,7 +1846,7 @@ li.menu-search-result-term:before {
       Subclass constructors that intend to inherit the specified Date behaviour must include a super call to the %Temporal.Date% constructor to create and initialize subclass instances with the necessary internal slots.</p>
 
     <emu-clause id="sec-temporal.date">
-      <h1><span class="secnum">2.1.1</span>Temporal.Date ( <var>year</var>, <var>month</var>, <var>day</var>, <var>disambiguation</var> )</h1>
+      <h1><span class="secnum">2.1.1</span> Temporal.Date ( <var>year</var>, <var>month</var>, <var>day</var>, <var>disambiguation</var> )</h1>
       <p>
         When the <code>Temporal.Date</code> function is called, the following steps are taken:
       
@@ -1842,19 +1857,19 @@ li.menu-search-result-term:before {
   </emu-clause>
 
   <emu-clause id="sec-properties-of-the-temporal-date-constructor">
-    <h1><span class="secnum">2.2</span>Properties of the Temporal.Date Constructor</h1>
+    <h1><span class="secnum">2.2</span> Properties of the Temporal.Date Constructor</h1>
     <p>The value of the [[Prototype]] internal slot of the Temporal.Date constructor is the intrinsic object
       <emu-xref href="#sec-properties-of-the-function-prototype-object"><a href="https://tc39.github.io/ecma262/#sec-properties-of-the-function-prototype-object">%FunctionPrototype%</a></emu-xref>.</p>
     <p>The Temporal.Date constructor has the following properties:</p>
 
     <emu-clause id="sec-temporal-date-prototype">
-      <h1><span class="secnum">2.2.1</span>Temporal.Date.prototype</h1>
+      <h1><span class="secnum">2.2.1</span> Temporal.Date.prototype</h1>
       <p>The initial value of Temporal.Date.prototype is %Temporal.Date.prototype%.</p>
       <p>This property has the attributes { [[Writable]]: <emu-val>false</emu-val>, [[Enumerable]]: <emu-val>false</emu-val>, [[Configurable]]: <emu-val>false</emu-val> }.</p>
     </emu-clause>
 
     <emu-clause id="sec-temporal.date.from">
-      <h1><span class="secnum">2.2.2</span>Temporal.Date.from ( <var>arg</var> )</h1>
+      <h1><span class="secnum">2.2.2</span> Temporal.Date.from ( <var>arg</var> )</h1>
       <p>
         The <code>from</code> method takes one argument <var>arg</var>.
         The following steps are taken:
@@ -1865,7 +1880,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal.date.compare">
-      <h1><span class="secnum">2.2.3</span>Temporal.Date.compare ( <var>one</var>, <var>two</var> )</h1>
+      <h1><span class="secnum">2.2.3</span> Temporal.Date.compare ( <var>one</var>, <var>two</var> )</h1>
       <p>
         The <code>compare</code> method takes two arguments, <var>one</var> and <var>two</var>.
         The following steps are taken:
@@ -1877,7 +1892,7 @@ li.menu-search-result-term:before {
   </emu-clause>
 
   <emu-clause id="sec-properties-of-the-temporal-date-prototype-object">
-    <h1><span class="secnum">2.3</span>Properties of the Temporal.Date Prototype Object</h1>
+    <h1><span class="secnum">2.3</span> Properties of the Temporal.Date Prototype Object</h1>
 
     <p>The Temporal.Date prototype object</p>
     <ul>
@@ -1892,12 +1907,12 @@ li.menu-search-result-term:before {
     </li></ul>
 
     <emu-clause id="sec-temporal.date.prototype.constructor">
-      <h1><span class="secnum">2.3.1</span>Temporal.Date.prototype.constructor</h1>
+      <h1><span class="secnum">2.3.1</span> Temporal.Date.prototype.constructor</h1>
       <p>The initial value of Temporal.Date.prototype.constructor is %Temporal.Date%.</p>
     </emu-clause>
 
     <emu-clause id="sec-temporal.date.prototype-@@tostringtag">
-      <h1><span class="secnum">2.3.2</span>Temporal.Date.prototype[ @@toStringTag ]</h1>
+      <h1><span class="secnum">2.3.2</span> Temporal.Date.prototype[ @@toStringTag ]</h1>
       <p>
         The initial value of the @@toStringTag property is the string value <code>"Temporal.Date"</code>.
       
@@ -1909,7 +1924,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-get-temporal.date.prototype.year">
-      <h1><span class="secnum">2.3.3</span>get Temporal.Date.prototype.year</h1>
+      <h1><span class="secnum">2.3.3</span> get Temporal.Date.prototype.year</h1>
       <p>
         <code>Temporal.Date.prototype.year</code> is an accessor property whose set accessor function is undefined.
         Its get accessor function performs the following steps:
@@ -1920,7 +1935,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-get-temporal.date.prototype.month">
-      <h1><span class="secnum">2.3.4</span>get Temporal.Date.prototype.month</h1>
+      <h1><span class="secnum">2.3.4</span> get Temporal.Date.prototype.month</h1>
       <p>
         <code>Temporal.Date.prototype.month</code> is an accessor property whose set accessor function is undefined.
         Its get accessor function performs the following steps:
@@ -1931,7 +1946,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-get-temporal.date.prototype.day">
-      <h1><span class="secnum">2.3.5</span>get Temporal.Date.prototype.day</h1>
+      <h1><span class="secnum">2.3.5</span> get Temporal.Date.prototype.day</h1>
       <p>
         <code>Temporal.Date.prototype.day</code> is an accessor property whose set accessor function is undefined.
         Its get accessor function performs the following steps:
@@ -1942,7 +1957,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-get-temporal.date.prototype.dayofweek">
-      <h1><span class="secnum">2.3.6</span>get Temporal.Date.prototype.dayOfWeek</h1>
+      <h1><span class="secnum">2.3.6</span> get Temporal.Date.prototype.dayOfWeek</h1>
       <p>
         <code>Temporal.Date.prototype.dayOfWeek</code> is an accessor property whose set accessor function is undefined.
         Its get accessor function performs the following steps:
@@ -1953,7 +1968,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-get-temporal.date.prototype.dayofyear">
-      <h1><span class="secnum">2.3.7</span>get Temporal.Date.prototype.dayOfYear</h1>
+      <h1><span class="secnum">2.3.7</span> get Temporal.Date.prototype.dayOfYear</h1>
       <p>
         <code>Temporal.Date.prototype.dayOfYear</code> is an accessor property whose set accessor function is undefined.
         Its get accessor function performs the following steps:
@@ -1964,7 +1979,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-get-temporal.date.prototype.weekofyear">
-      <h1><span class="secnum">2.3.8</span>get Temporal.Date.prototype.weekOfYear</h1>
+      <h1><span class="secnum">2.3.8</span> get Temporal.Date.prototype.weekOfYear</h1>
       <p>
         <code>Temporal.Date.prototype.weekOfYear</code> is an accessor property whose set accessor function is undefined.
         Its get accessor function performs the following steps:
@@ -1975,7 +1990,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-get-temporal.date.prototype.daysinyear">
-      <h1><span class="secnum">2.3.9</span>get Temporal.Date.prototype.daysInYear</h1>
+      <h1><span class="secnum">2.3.9</span> get Temporal.Date.prototype.daysInYear</h1>
       <p>
         <code>Temporal.Date.prototype.daysInYear</code> is an accessor property whose set accessor function is undefined.
         Its get accessor function performs the following steps:
@@ -1986,7 +2001,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-get-temporal.date.prototype.daysinmonth">
-      <h1><span class="secnum">2.3.10</span>get Temporal.Date.prototype.daysInMonth</h1>
+      <h1><span class="secnum">2.3.10</span> get Temporal.Date.prototype.daysInMonth</h1>
       <p>
         <code>Temporal.Date.prototype.daysInMonth</code> is an accessor property whose set accessor function is undefined.
         Its get accessor function performs the following steps:
@@ -1997,7 +2012,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-get-temporal.date.prototype.leapyear">
-      <h1><span class="secnum">2.3.11</span>get Temporal.Date.prototype.leapYear</h1>
+      <h1><span class="secnum">2.3.11</span> get Temporal.Date.prototype.leapYear</h1>
       <p>
         <code>Temporal.Date.prototype.leapYear</code> is an accessor property whose set accessor function is undefined.
         Its get accessor function performs the following steps:
@@ -2008,7 +2023,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal.date.prototype.getyearmonth">
-      <h1><span class="secnum">2.3.12</span>Temporal.Date.prototype.getYearMonth ( )</h1>
+      <h1><span class="secnum">2.3.12</span> Temporal.Date.prototype.getYearMonth ( )</h1>
       <p>
         The following steps are taken:
       
@@ -2018,7 +2033,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal.date.prototype.getmonthday">
-      <h1><span class="secnum">2.3.13</span>Temporal.Date.prototype.getMonthDay ( )</h1>
+      <h1><span class="secnum">2.3.13</span> Temporal.Date.prototype.getMonthDay ( )</h1>
       <p>
         The following steps are taken:
       
@@ -2028,7 +2043,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal.date.prototype.plus">
-      <h1><span class="secnum">2.3.14</span>Temporal.Date.prototype.plus ( <var>duration</var>, <var>disambiguation</var> )</h1>
+      <h1><span class="secnum">2.3.14</span> Temporal.Date.prototype.plus ( <var>duration</var>, <var>disambiguation</var> )</h1>
       <p>
         The <code>plus</code> method takes two arguments, <var>duration</var> and <var>disambiguation</var>.
         The following steps are taken:
@@ -2039,7 +2054,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal.date.prototype.minus">
-      <h1><span class="secnum">2.3.15</span>Temporal.Date.prototype.minus ( <var>duration</var>, <var>disambiguation</var> )</h1>
+      <h1><span class="secnum">2.3.15</span> Temporal.Date.prototype.minus ( <var>duration</var>, <var>disambiguation</var> )</h1>
       <p>
         The <code>minus</code> method takes two arguments, <var>duration</var> and <var>disambiguation</var>.
         The following steps are taken:
@@ -2050,7 +2065,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal.date.prototype.with">
-      <h1><span class="secnum">2.3.16</span>Temporal.Date.prototype.with ( <var>otherDate</var>, <var>disambiguation</var> )</h1>
+      <h1><span class="secnum">2.3.16</span> Temporal.Date.prototype.with ( <var>otherDate</var>, <var>disambiguation</var> )</h1>
       <p>
         The <code>with</code> method takes two arguments, <var>otherDate</var> and <var>disambiguation</var>.
         The following steps are taken:
@@ -2061,7 +2076,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal.date.prototype.difference">
-      <h1><span class="secnum">2.3.17</span>Temporal.Date.prototype.difference ( <var>otherDate</var>, <var>disambiguation</var> )</h1>
+      <h1><span class="secnum">2.3.17</span> Temporal.Date.prototype.difference ( <var>otherDate</var>, <var>disambiguation</var> )</h1>
       <p>
         The <code>difference</code> method takes two arguments, <var>otherDate</var> and <var>disambiguation</var>.
         The following steps are taken:
@@ -2072,7 +2087,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal.date.prototype.withtime">
-      <h1><span class="secnum">2.3.18</span>Temporal.Date.prototype.withTime ( <var>time</var> )</h1>
+      <h1><span class="secnum">2.3.18</span> Temporal.Date.prototype.withTime ( <var>time</var> )</h1>
       <p>
         The <code>withTime</code> method takes one argument <var>time</var>.
         The following steps are taken:
@@ -2085,7 +2100,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal.date.prototype.tostring">
-      <h1><span class="secnum">2.3.19</span>Temporal.Date.prototype.toString ( )</h1>
+      <h1><span class="secnum">2.3.19</span> Temporal.Date.prototype.toString ( )</h1>
       <p>
         The following steps are taken:
       
@@ -2095,7 +2110,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal.date.prototype.tolocalestring">
-      <h1><span class="secnum">2.3.20</span>Temporal.Date.prototype.toLocaleString ( [ <var>locales</var> [ , <var>options</var> ] ] )</h1>
+      <h1><span class="secnum">2.3.20</span> Temporal.Date.prototype.toLocaleString ( [ <var>locales</var> [ , <var>options</var> ] ] )</h1>
       <p>
         The <code>toLocaleString</code> method takes two arguments, <var>locales</var> and <var>options</var>.
         The following steps are taken:
@@ -2106,7 +2121,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal.date.prototype.tojson">
-      <h1><span class="secnum">2.3.21</span>Temporal.Date.prototype.toJSON ( )</h1>
+      <h1><span class="secnum">2.3.21</span> Temporal.Date.prototype.toJSON ( )</h1>
       <p><mark>TODO: Share with toString().</mark></p>
       <p>
         The following steps are taken:
@@ -2118,7 +2133,7 @@ li.menu-search-result-term:before {
   </emu-clause>
 
   <emu-clause id="sec-properties-of-temporal-date-instances">
-    <h1><span class="secnum">2.4</span>Properties of Temporal.Date Instances</h1>
+    <h1><span class="secnum">2.4</span> Properties of Temporal.Date Instances</h1>
     <p>Temporal.Date instances are ordinary objects that inherit properties from the %Temporal.Date.prototype%.</p>
     <p>Temporal.Date instances have the following internal slots:
     
@@ -2131,22 +2146,22 @@ li.menu-search-result-term:before {
   </emu-clause>
 
   <emu-clause id="sec-temporal-date-abstract-ops">
-    <h1><span class="secnum">2.5</span>Abstract operations</h1>
+    <h1><span class="secnum">2.5</span> Abstract operations</h1>
 
     <emu-clause id="sec-temporal-createdate" aoid="CreateDate">
-      <h1><span class="secnum">2.5.1</span>CreateDate ( <var>y</var>, <var>m</var>, <var>d</var> [ , <var>newTarget</var> ] )</h1>
+      <h1><span class="secnum">2.5.1</span> CreateDate ( <var>y</var>, <var>m</var>, <var>d</var> [ , <var>newTarget</var> ] )</h1>
       <emu-alg><ol><li>Assert: !&nbsp;<emu-xref aoid="ValidateDate" id="_ref_64"><a href="#sec-temporal-validatedate">ValidateDate</a></emu-xref>(<var>y</var>, <var>m</var>, <var>d</var>) is <emu-val>true</emu-val>.</li><li>If <var>newTarget</var> is not given, set it to %Temporal.Date%</li><li>Let <var>object</var> be ?&nbsp;<emu-xref aoid="OrdinaryCreateFromConstructor" id="_ref_65"><a href="https://tc39.github.io/ecma262/#sec-ordinarycreatefromconstructor">OrdinaryCreateFromConstructor</a></emu-xref>(<var>newTarget</var>, <code>"%Temporal.Date.prototype%"</code>, « [[InitializedTemporalDate]], [[Year]], [[Month]], [[Day]] »).</li><li>Set <var>object</var>.[[Year]] to <var>y</var>.</li><li>Set <var>object</var>.[[Month]] to <var>m</var>.</li><li>Set <var>object</var>.[[Day]] to <var>d</var>.</li><li>Return <var>object</var>.
       </li></ol></emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal-datefromstring" aoid="DateFromString">
-      <h1><span class="secnum">2.5.2</span>DateFromString ( <var>date</var> )</h1>
+      <h1><span class="secnum">2.5.2</span> DateFromString ( <var>date</var> )</h1>
       <emu-alg><ol><li>Assert: <emu-xref aoid="Type" id="_ref_66"><a href="https://tc39.github.io/ecma262/#sec-ecmascript-data-types-and-values">Type</a></emu-xref>(<var>date</var>) is String.</li><li>Let <var>validSyntax</var> be <emu-val>true</emu-val> if <var>isostring</var> conforms to the format <code>YYYY-MM-DD</code>, and <emu-val>false</emu-val> otherwise, where:<ul><li><code>YYYY</code> is either four decimal digits or an expanded year of <code>"+"</code> or <code>"-"</code> followed by six decimal digits;</li><li><code>-</code> is the code unit 0x002D (HYPHEN-MINUS);</li><li><code>MM</code> is two decimal digits;</li><li><code>-</code> is the code unit 0x002D (HYPHEN-MINUS);</li><li><code>DD</code> is two decimal digits.</li></ul></li><li>If <var>validSyntax</var> is <emu-val>false</emu-val>, then<ol><li>Throw a <emu-val>RangeError</emu-val> exception.</li></ol></li><li>Let <var>year</var>, <var>month</var>, and <var>day</var> be the respective parts of <var>isostring</var>, interpreted as decimal numbers.</li><li>Let <var>result</var> be ?&nbsp;<emu-xref aoid="RegulateDate" id="_ref_67"><a href="#sec-temporal-regulatedate">RegulateDate</a></emu-xref>(<var>year</var>, <var>month</var>, <var>day</var>, <code>"reject"</code>).</li><li>Return ?&nbsp;<emu-xref aoid="CreateDate" id="_ref_68"><a href="#sec-temporal-createdate">CreateDate</a></emu-xref>(<var>result</var>.[[Year]], <var>result</var>.[[Month]], <var>result</var>.[[Day]]).
       </li></ol></emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal-todate" aoid="ToDate">
-      <h1><span class="secnum">2.5.3</span>ToDate ( <var>date</var> )</h1>
+      <h1><span class="secnum">2.5.3</span> ToDate ( <var>date</var> )</h1>
       <emu-alg><ol><li>If <emu-xref aoid="Type" id="_ref_69"><a href="https://tc39.github.io/ecma262/#sec-ecmascript-data-types-and-values">Type</a></emu-xref>(<var>date</var>) is String, then<ol><li>Return ?&nbsp;<emu-xref aoid="DateFromString" id="_ref_70"><a href="#sec-temporal-datefromstring">DateFromString</a></emu-xref>(<var>date</var>).</li></ol></li><li>If <emu-xref aoid="Type" id="_ref_71"><a href="https://tc39.github.io/ecma262/#sec-ecmascript-data-types-and-values">Type</a></emu-xref>(<var>date</var>) is Object, then<ol><li>Let <var>result</var> be the <emu-xref href="#sec-list-and-record-specification-type"><a href="https://tc39.github.io/ecma262/#sec-list-and-record-specification-type">Record</a></emu-xref> {
             [[Year]]: <emu-val>undefined</emu-val>,
             [[Month]]: <emu-val>undefined</emu-val>,
@@ -2156,7 +2171,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal-topartialdate" aoid="ToPartialDate">
-      <h1><span class="secnum">2.5.4</span>ToPartialDate ( <var>date</var> )</h1>
+      <h1><span class="secnum">2.5.4</span> ToPartialDate ( <var>date</var> )</h1>
       <emu-alg><ol><li>Let <var>result</var> be {
           [[Year]]: <emu-val>undefined</emu-val>,
           [[Month]]: <emu-val>undefined</emu-val>,
@@ -2192,25 +2207,25 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal-regulatedate" aoid="RegulateDate">
-      <h1><span class="secnum">2.5.5</span>RegulateDate ( <var>y</var>, <var>m</var>, <var>d</var>, <var>disambiguation</var> )</h1>
+      <h1><span class="secnum">2.5.5</span> RegulateDate ( <var>y</var>, <var>m</var>, <var>d</var>, <var>disambiguation</var> )</h1>
       <emu-alg><ol><li>Assert: <var>disambiguation</var> is one of <code>"constrain"</code>, <code>"balance"</code>, or <code>"reject"</code>.</li><li>If <var>disambiguation</var> is <emu-val>"reject"</emu-val>, then<ol><li>Return ?&nbsp;RejectDate(<var>year</var>, <var>month</var>, <var>day</var>).</li></ol></li><li>If <var>disambiguation</var> is <emu-val>"constrain"</emu-val>, then<ol><li>Return !&nbsp;ConstrainDate(<var>year</var>, <var>month</var>, <var>day</var>).</li></ol></li><li>If <var>disambiguation</var> is <emu-val>"balance"</emu-val>, then<ol><li>Return !&nbsp;BalanceDate(<var>year</var>, <var>month</var>, <var>day</var>).
       </li></ol></li></ol></emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal-validatedate" aoid="ValidateDate">
-      <h1><span class="secnum">2.5.6</span>ValidateDate ( <var>y</var>, <var>m</var>, <var>d</var> )</h1>
+      <h1><span class="secnum">2.5.6</span> ValidateDate ( <var>y</var>, <var>m</var>, <var>d</var> )</h1>
       <emu-alg><ol><li>Assert: <var>y</var>, <var>m</var>, and <var>d</var> are integer Number values.</li><li>If <var>m</var> &lt; 1 or <var>m</var> &gt; 12, then<ol><li>Return <emu-val>false</emu-val>.</li></ol></li><li>Let <var>maxDay</var> be !&nbsp;<emu-xref aoid="DaysInMonth" id="_ref_80"><a href="#sec-temporal-daysinmonth">DaysInMonth</a></emu-xref>(<var>y</var>, <var>m</var>).</li><li>If <var>d</var> &lt; 1 or <var>d</var> &gt; <var>maxDay</var>, then<ol><li>Return <emu-val>false</emu-val>.</li></ol></li><li>Return <emu-val>true</emu-val>.
       </li></ol></emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal-padyear" aoid="PadYear">
-      <h1><span class="secnum">2.5.7</span>PadYear ( <var>y</var> )</h1>
+      <h1><span class="secnum">2.5.7</span> PadYear ( <var>y</var> )</h1>
       <emu-alg><ol><li>Assert: <var>y</var> is an integer Number value.</li><li>If <var>y</var> &gt; 999 and <var>y</var> ≤ 9999, then<ol><li>Return <var>y</var> formatted as a four-digit decimal number, padded to the left with a zero if necessary.</li></ol></li><li>If <var>y</var> ≥ 0, let <var>yearSign</var> be <code>"+"</code>; otherwise, let <var>yearSign</var> be <code>"-"</code>.</li><li>Let <var>year</var> be <emu-xref aoid="abs"><a href="https://tc39.github.io/ecma262/#sec-algorithm-conventions">abs</a></emu-xref>(<var>y</var>), formatted as a decimal number.</li><li>Return the string-concatenation of <var>yearSign</var> and <var>year</var>.
       </li></ol></emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal-adddate" aoid="AddDate">
-      <h1><span class="secnum">2.5.8</span>AddDate ( <var>year</var>, <var>month</var>, <var>day</var>, <var>years</var>, <var>months</var>, <var>days</var>, <var>disambiguation</var> )</h1>
+      <h1><span class="secnum">2.5.8</span> AddDate ( <var>year</var>, <var>month</var>, <var>day</var>, <var>years</var>, <var>months</var>, <var>days</var>, <var>disambiguation</var> )</h1>
       <emu-alg><ol><li>Assert: <var>year</var>, <var>month</var>, <var>day</var>, <var>years</var>, <var>months</var>, and <var>days</var> are integer Number values.</li><li>Assert: <var>disambiguation</var> is one of <code>"constrain"</code>, <code>"balance"</code>, or <code>"reject"</code>.</li><li>Let <var>y</var> be <var>year</var> + <var>years</var>.</li><li>Let <var>m</var> be <var>month</var> + <var>months</var>.</li><li>Let <var>intermediate</var> be !&nbsp;<emu-xref aoid="BalanceYearMonth" id="_ref_81"><a href="#sec-temporal-balanceyearmonth">BalanceYearMonth</a></emu-xref>(<var>y</var>, <var>m</var>).</li><li>Let <var>intermediate</var> be ?&nbsp;<emu-xref aoid="RegulateDate" id="_ref_82"><a href="#sec-temporal-regulatedate">RegulateDate</a></emu-xref>(<var>intermediate</var>.[[Year]], <var>intermediate</var>.[[Month]], <var>day</var>, <var>disambiguation</var>).</li><li>Let <var>d</var> be <var>intermediate</var>.[[Day]] + <var>days</var>.</li><li>Return !&nbsp;BalanceDate(<var>intermediate</var>.[[Year]], <var>intermediate</var>.[[Month]], <var>d</var>).
       </li></ol></emu-alg>
     </emu-clause>
@@ -2218,12 +2233,12 @@ li.menu-search-result-term:before {
 </emu-clause>
 </emu-import>
 <emu-import href="spec/time.html"><emu-clause id="sec-temporal-time">
-  <h1><span class="secnum">3</span>Temporal.Time Objects</h1>
+  <h1><span class="secnum">3</span> Temporal.Time Objects</h1>
   <p>A Temporal.Time object is an immutable Object that contains Number values corresponding to a particular hour, minute,
     second, millisecond, microsecond, and nanosecond.</p>
 
   <emu-clause id="sec-temporal-time-constructor">
-    <h1><span class="secnum">3.1</span>The Temporal.Time Constructor</h1>
+    <h1><span class="secnum">3.1</span> The Temporal.Time Constructor</h1>
     <p>
       The Temporal.Time constructor is the %Temporal.Time% intrinsic object.
       When called as a constructor, it creates and initializes a new Temporal.Time object.
@@ -2237,7 +2252,7 @@ li.menu-search-result-term:before {
     </p>
 
     <emu-clause id="sec-temporal.time">
-      <h1><span class="secnum">3.1.1</span>Temporal.Time ( <var>hour</var>, <var>minute</var> [ , <var>second</var> [ , <var>millisecond</var> [ , <var>microsecond</var> [ , <var>nanosecond</var> [ , <var>disambiguation</var> ] ] ] ] ] )</h1>
+      <h1><span class="secnum">3.1.1</span> Temporal.Time ( <var>hour</var>, <var>minute</var> [ , <var>second</var> [ , <var>millisecond</var> [ , <var>microsecond</var> [ , <var>nanosecond</var> [ , <var>disambiguation</var> ] ] ] ] ] )</h1>
       <p>
         When the <code>Temporal.Time</code> function is called, the following steps are taken:
       
@@ -2248,19 +2263,19 @@ li.menu-search-result-term:before {
   </emu-clause>
 
   <emu-clause id="sec-properties-of-the-temporal-time-constructor">
-    <h1><span class="secnum">3.2</span>Properties of the Temporal.Time Constructor</h1>
+    <h1><span class="secnum">3.2</span> Properties of the Temporal.Time Constructor</h1>
     <p>The value of the [[Prototype]] internal slot of the Temporal.Time constructor is the intrinsic object
       <emu-xref href="#sec-properties-of-the-function-prototype-object"><a href="https://tc39.github.io/ecma262/#sec-properties-of-the-function-prototype-object">%FunctionPrototype%</a></emu-xref>.</p>
     <p>The Temporal.Time constructor has the following properties:</p>
 
     <emu-clause id="sec-temporal-time-prototype">
-      <h1><span class="secnum">3.2.1</span>Temporal.Time.prototype</h1>
+      <h1><span class="secnum">3.2.1</span> Temporal.Time.prototype</h1>
       <p>The initial value of Temporal.Time.prototype is %Temporal.Time.prototype%.</p>
       <p>This property has the attributes { [[Writable]]: <emu-val>false</emu-val>, [[Enumerable]]: <emu-val>false</emu-val>, [[Configurable]]: <emu-val>false</emu-val> }.</p>
     </emu-clause>
 
     <emu-clause id="sec-temporal.time.from">
-      <h1><span class="secnum">3.2.2</span>Temporal.Time.from ( <var>arg</var> )</h1>
+      <h1><span class="secnum">3.2.2</span> Temporal.Time.from ( <var>arg</var> )</h1>
       <p>
         The <code>from</code> method takes one argument <var>arg</var>.
         The following steps are taken:
@@ -2271,7 +2286,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal.time.compare">
-      <h1><span class="secnum">3.2.3</span>Temporal.Time.compare ( <var>one</var>, <var>two</var> )</h1>
+      <h1><span class="secnum">3.2.3</span> Temporal.Time.compare ( <var>one</var>, <var>two</var> )</h1>
       <p>
         The <code>compare</code> method takes two arguments, <var>one</var> and <var>two</var>.
         The following steps are taken:
@@ -2283,7 +2298,7 @@ li.menu-search-result-term:before {
   </emu-clause>
 
   <emu-clause id="sec-properties-of-the-temporal-time-prototype-object">
-    <h1><span class="secnum">3.3</span>Properties of the Temporal.Time Prototype Object</h1>
+    <h1><span class="secnum">3.3</span> Properties of the Temporal.Time Prototype Object</h1>
 
     <p>The Temporal.Time prototype object</p>
     <ul>
@@ -2298,12 +2313,12 @@ li.menu-search-result-term:before {
     </li></ul>
 
     <emu-clause id="sec-temporal.time.prototype.constructor">
-      <h1><span class="secnum">3.3.1</span>Temporal.Time.prototype.constructor</h1>
+      <h1><span class="secnum">3.3.1</span> Temporal.Time.prototype.constructor</h1>
       <p>The initial value of Temporal.Time.prototype.constructor is %Temporal.Time%.</p>
     </emu-clause>
 
     <emu-clause id="sec-temporal.time.prototype-@@tostringtag">
-      <h1><span class="secnum">3.3.2</span>Temporal.Date.prototype[ @@toStringTag ]</h1>
+      <h1><span class="secnum">3.3.2</span> Temporal.Date.prototype[ @@toStringTag ]</h1>
       <p>
         The initial value of the @@toStringTag property is the string value <code>"Temporal.Time"</code>.
       
@@ -2315,7 +2330,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-get-temporal.time.prototype.hour">
-      <h1><span class="secnum">3.3.3</span>get Temporal.Time.prototype.hour</h1>
+      <h1><span class="secnum">3.3.3</span> get Temporal.Time.prototype.hour</h1>
       <p>
         <code>Temporal.Time.prototype.hour</code> is an accessor property whose set accessor function is undefined.
         Its get accessor function performs the following steps:
@@ -2326,7 +2341,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-get-temporal.time.prototype.minute">
-      <h1><span class="secnum">3.3.4</span>get Temporal.Time.prototype.minute</h1>
+      <h1><span class="secnum">3.3.4</span> get Temporal.Time.prototype.minute</h1>
       <p>
         <code>Temporal.Time.prototype.minute</code> is an accessor property whose set accessor function is undefined.
         Its get accessor function performs the following steps:
@@ -2337,7 +2352,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-get-temporal.time.prototype.second">
-      <h1><span class="secnum">3.3.5</span>get Temporal.Time.prototype.second</h1>
+      <h1><span class="secnum">3.3.5</span> get Temporal.Time.prototype.second</h1>
       <p>
         <code>Temporal.Time.prototype.second</code> is an accessor property whose set accessor function is undefined.
         Its get accessor function performs the following steps:
@@ -2348,7 +2363,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-get-temporal.time.prototype.millisecond">
-      <h1><span class="secnum">3.3.6</span>get Temporal.Time.prototype.millisecond</h1>
+      <h1><span class="secnum">3.3.6</span> get Temporal.Time.prototype.millisecond</h1>
       <p>
         <code>Temporal.Time.prototype.millisecond</code> is an accessor property whose set accessor function is undefined.
         Its get accessor function performs the following steps:
@@ -2359,7 +2374,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-get-temporal.time.prototype.microsecond">
-      <h1><span class="secnum">3.3.7</span>get Temporal.Time.prototype.microsecond</h1>
+      <h1><span class="secnum">3.3.7</span> get Temporal.Time.prototype.microsecond</h1>
       <p>
         <code>Temporal.Time.prototype.microsecond</code> is an accessor property whose set accessor function is undefined.
         Its get accessor function performs the following steps:
@@ -2370,7 +2385,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-get-temporal.time.prototype.nanosecond">
-      <h1><span class="secnum">3.3.8</span>get Temporal.Time.prototype.nanosecond</h1>
+      <h1><span class="secnum">3.3.8</span> get Temporal.Time.prototype.nanosecond</h1>
       <p>
         <code>Temporal.Time.prototype.nanosecond</code> is an accessor property whose set accessor function is undefined.
         Its get accessor function performs the following steps:
@@ -2381,7 +2396,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal.time.prototype.plus">
-      <h1><span class="secnum">3.3.9</span>Temporal.Time.prototype.plus ( <var>duration</var> )</h1>
+      <h1><span class="secnum">3.3.9</span> Temporal.Time.prototype.plus ( <var>duration</var> )</h1>
       <p>
         The <code>plus</code> method takes one argument <var>duration</var>.
         The following steps are taken:
@@ -2392,7 +2407,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal.time.prototype.minus">
-      <h1><span class="secnum">3.3.10</span>Temporal.Time.prototype.minus ( <var>duration</var> )</h1>
+      <h1><span class="secnum">3.3.10</span> Temporal.Time.prototype.minus ( <var>duration</var> )</h1>
       <p>
         The <code>minus</code> method takes one argument <var>duration</var>.
         The following steps are taken:
@@ -2403,7 +2418,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal.time.prototype.with">
-      <h1><span class="secnum">3.3.11</span>Temporal.Time.prototype.with ( <var>timelike</var> [ , <var>disambiguation</var> ] )</h1>
+      <h1><span class="secnum">3.3.11</span> Temporal.Time.prototype.with ( <var>timelike</var> [ , <var>disambiguation</var> ] )</h1>
       <p>
         The <code>with</code> method takes two arguments, <var>timelike</var> and <var>disambiguation</var>.
         The following steps are taken:
@@ -2414,7 +2429,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal.time.prototype.difference">
-      <h1><span class="secnum">3.3.12</span>Temporal.Time.prototype.difference ( <var>otherTime</var> )</h1>
+      <h1><span class="secnum">3.3.12</span> Temporal.Time.prototype.difference ( <var>otherTime</var> )</h1>
       <p>
         The <code>difference</code> method takes one argument <var>otherTime</var>.
         The following steps are taken:
@@ -2425,7 +2440,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal.time.prototype.withdate">
-      <h1><span class="secnum">3.3.13</span>Temporal.Time.prototype.withDate ( <var>date</var> [ , <var>disambiguation</var> ] )</h1>
+      <h1><span class="secnum">3.3.13</span> Temporal.Time.prototype.withDate ( <var>date</var> [ , <var>disambiguation</var> ] )</h1>
       <p>
         The <code>withDate</code> method takes two arguments, <var>date</var> and <var>disambiguation</var>.
         The following steps are taken:
@@ -2438,7 +2453,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal.time.prototype.tostring">
-      <h1><span class="secnum">3.3.14</span>Temporal.Time.prototype.toString ( )</h1>
+      <h1><span class="secnum">3.3.14</span> Temporal.Time.prototype.toString ( )</h1>
       <p>
         The following steps are taken:
       
@@ -2448,7 +2463,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal.time.prototype.tolocalestring">
-      <h1><span class="secnum">3.3.15</span>Temporal.Time.prototype.toLocaleString ( [ <var>locales</var> [ , <var>options</var> ] ] )</h1>
+      <h1><span class="secnum">3.3.15</span> Temporal.Time.prototype.toLocaleString ( [ <var>locales</var> [ , <var>options</var> ] ] )</h1>
       <p>
         The <code>toLocaleString</code> method takes two arguments, <var>locales</var> and <var>options</var>.
         The following steps are taken:
@@ -2459,7 +2474,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal.time.prototype.tojson">
-      <h1><span class="secnum">3.3.16</span>Temporal.Time.prototype.toJSON ( )</h1>
+      <h1><span class="secnum">3.3.16</span> Temporal.Time.prototype.toJSON ( )</h1>
       <p>
         The following steps are taken:
       
@@ -2470,10 +2485,10 @@ li.menu-search-result-term:before {
   </emu-clause>
 
   <emu-clause id="sec-temporal-date-abstract-ops">
-    <h1><span class="secnum">3.4</span>Abstract operations</h1>
+    <h1><span class="secnum">3.4</span> Abstract operations</h1>
 
     <emu-clause id="sec-temporal-topartialtime" aoid="ToPartialTime">
-      <h1><span class="secnum">3.4.1</span>ToPartialTime ( <var>time</var> )</h1>
+      <h1><span class="secnum">3.4.1</span> ToPartialTime ( <var>time</var> )</h1>
       <emu-alg><ol><li>If <emu-xref aoid="Type" id="_ref_122"><a href="https://tc39.github.io/ecma262/#sec-ecmascript-data-types-and-values">Type</a></emu-xref>(<var>time</var>) is String, then<ol><li>Return ?&nbsp;<emu-xref aoid="ParseTimeString" id="_ref_123"><a href="#sec-temporal-parsetimestring">ParseTimeString</a></emu-xref>(<var>time</var>).</li></ol></li><li>If <emu-xref aoid="Type" id="_ref_124"><a href="https://tc39.github.io/ecma262/#sec-ecmascript-data-types-and-values">Type</a></emu-xref>(<var>time</var>) is Object, then<ol><li>Let <var>result</var> be the new <emu-xref href="#sec-list-and-record-specification-type"><a href="https://tc39.github.io/ecma262/#sec-list-and-record-specification-type">Record</a></emu-xref> {
             [[Hour]]: <emu-val>undefined</emu-val>,
             [[Minute]]: <emu-val>undefined</emu-val>,
@@ -2529,7 +2544,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal-regulatetime" aoid="RegulateTime">
-      <h1><span class="secnum">3.4.2</span>RegulateTime ( <var>hour</var>, <var>minute</var>, <var>second</var>, <var>millisecond</var>, <var>microsecond</var>, <var>nanosecond</var>, <var>disambiguation</var> )</h1>
+      <h1><span class="secnum">3.4.2</span> RegulateTime ( <var>hour</var>, <var>minute</var>, <var>second</var>, <var>millisecond</var>, <var>microsecond</var>, <var>nanosecond</var>, <var>disambiguation</var> )</h1>
       <emu-alg><ol><li>Assert: <var>disambiguation</var> is one of <code>"constrain"</code>, <code>"balance"</code>, or <code>"reject"</code>.</li><li>If <var>disambiguation</var> is <code>"constrain"</code>, then<ol><li><mark>TODO: define.</mark></li></ol></li><li>If <var>disambiguation</var> is <code>"balance"</code>, then<ol><li>Return !&nbsp;<emu-xref aoid="BalanceTime" id="_ref_127"><a href="#sec-temporal-balancetime">BalanceTime</a></emu-xref>(<var>hour</var>, <var>minute</var>, <var>second</var>, <var>millisecond</var>, <var>microsecond</var>, <var>nanosecond</var>).</li></ol></li><li>If <var>disambiguation</var> is <code>"reject"</code>, then<ol><li>If !&nbsp;<emu-xref aoid="ValidateTime" id="_ref_128"><a href="#sec-temporal-validatetime">ValidateTime</a></emu-xref>(<var>hour</var>, <var>minute</var>, <var>second</var>, <var>millisecond</var>, <var>microsecond</var>, <var>nanosecond</var>) is <emu-val>false</emu-val>, then<ol><li>Throw a <emu-val>RangeError</emu-val> exception.</li></ol></li><li>Return the new <emu-xref href="#sec-list-and-record-specification-type"><a href="https://tc39.github.io/ecma262/#sec-list-and-record-specification-type">Record</a></emu-xref> {
             [[Days]]: 0,
             [[Hour]]: <var>hour</var>,
@@ -2543,13 +2558,13 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal-validatetime" aoid="ValidateTime">
-      <h1><span class="secnum">3.4.3</span>ValidateTime ( <var>hour</var>, <var>minute</var>, <var>second</var>, <var>millisecond</var>, <var>microsecond</var>, <var>nanosecond</var> )</h1>
+      <h1><span class="secnum">3.4.3</span> ValidateTime ( <var>hour</var>, <var>minute</var>, <var>second</var>, <var>millisecond</var>, <var>microsecond</var>, <var>nanosecond</var> )</h1>
       <emu-alg><ol><li>Assert: <var>hour</var>, <var>minute</var>, <var>second</var>, <var>millisecond</var>, <var>microsecond</var>, and <var>nanosecond</var> are integer Number values.</li><li>If <var>hour</var> &lt; 0 or <var>hour</var> &gt; 23, then<ol><li>Return <emu-val>false</emu-val>.</li></ol></li><li>If <var>minute</var> &lt; 0 or <var>minute</var> &gt; 59, then<ol><li>Return <emu-val>false</emu-val>.</li></ol></li><li>If <var>second</var> &lt; 0 or <var>second</var> &gt; 59, then<ol><li>Return <emu-val>false</emu-val>.</li></ol></li><li>If <var>millisecond</var> &lt; 0 or <var>millisecond</var> &gt; 999, then<ol><li>Return <emu-val>false</emu-val>.</li></ol></li><li>If <var>microsecond</var> &lt; 0 or <var>microsecond</var> &gt; 999, then<ol><li>Return <emu-val>false</emu-val>.</li></ol></li><li>If <var>nanosecond</var> &lt; 0 or <var>nanosecond</var> &gt; 999, then<ol><li>Return <emu-val>false</emu-val>.</li></ol></li><li>Return <emu-val>true</emu-val>.
       </li></ol></emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal-balancetime" aoid="BalanceTime">
-      <h1><span class="secnum">3.4.4</span>BalanceTime ( <var>hour</var>, <var>minute</var>, <var>second</var>, <var>millisecond</var>, <var>microsecond</var>, <var>nanosecond</var> )</h1>
+      <h1><span class="secnum">3.4.4</span> BalanceTime ( <var>hour</var>, <var>minute</var>, <var>second</var>, <var>millisecond</var>, <var>microsecond</var>, <var>nanosecond</var> )</h1>
       <emu-alg><ol><li>Assert: <var>hour</var>, <var>minute</var>, <var>second</var>, <var>millisecond</var>, <var>microsecond</var>, and <var>nanosecond</var> are integer Number values.</li><li>Set <var>microsecond</var> to <var>microsecond</var> + <emu-xref aoid="floor"><a href="https://tc39.github.io/ecma262/#sec-algorithm-conventions">floor</a></emu-xref>(<var>nanosecond</var> / 1000).</li><li>Set <var>nanosecond</var> to <emu-xref aoid="NonNegativeModulo" id="_ref_129"><a href="#sec-temporal-nonnegativemodulo">NonNegativeModulo</a></emu-xref>(<var>nanosecond</var>, 1000).</li><li>Set <var>millisecond</var> to <var>millisecond</var> + <emu-xref aoid="floor"><a href="https://tc39.github.io/ecma262/#sec-algorithm-conventions">floor</a></emu-xref>(<var>microsecond</var> / 1000).</li><li>Set <var>microsecond</var> to <emu-xref aoid="NonNegativeModulo" id="_ref_130"><a href="#sec-temporal-nonnegativemodulo">NonNegativeModulo</a></emu-xref>(<var>microsecond</var>, 1000).</li><li>Set <var>second</var> to <var>second</var> + <emu-xref aoid="floor"><a href="https://tc39.github.io/ecma262/#sec-algorithm-conventions">floor</a></emu-xref>(<var>microsecond</var> / 1000).</li><li>Set <var>microsecond</var> to <emu-xref aoid="NonNegativeModulo" id="_ref_131"><a href="#sec-temporal-nonnegativemodulo">NonNegativeModulo</a></emu-xref>(<var>microsecond</var>, 1000).</li><li>Set <var>minute</var> to <var>minute</var> + <emu-xref aoid="floor"><a href="https://tc39.github.io/ecma262/#sec-algorithm-conventions">floor</a></emu-xref>(<var>second</var> / 60).</li><li>Set <var>second</var> to <emu-xref aoid="NonNegativeModulo" id="_ref_132"><a href="#sec-temporal-nonnegativemodulo">NonNegativeModulo</a></emu-xref>(<var>second</var>, 60).</li><li>Set <var>hour</var> to <var>hour</var> + <emu-xref aoid="floor"><a href="https://tc39.github.io/ecma262/#sec-algorithm-conventions">floor</a></emu-xref>(<var>minute</var> / 60).</li><li>Set <var>minute</var> to <emu-xref aoid="NonNegativeModulo" id="_ref_133"><a href="#sec-temporal-nonnegativemodulo">NonNegativeModulo</a></emu-xref>(<var>minute</var>, 60).</li><li>Let <var>days</var> be <emu-xref aoid="floor"><a href="https://tc39.github.io/ecma262/#sec-algorithm-conventions">floor</a></emu-xref>(<var>hour</var> / 24).</li><li>Set <var>hour</var> to <emu-xref aoid="NonNegativeModulo" id="_ref_134"><a href="#sec-temporal-nonnegativemodulo">NonNegativeModulo</a></emu-xref>(<var>hour</var>, 24).</li><li>Return the new <emu-xref href="#sec-list-and-record-specification-type"><a href="https://tc39.github.io/ecma262/#sec-list-and-record-specification-type">Record</a></emu-xref> {
           [[Days]]: <var>days</var>,
           [[Hour]]: <var>hour</var>,
@@ -2563,13 +2578,13 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal-createtime" aoid="CreateTime">
-      <h1><span class="secnum">3.4.5</span>CreateTime ( <var>hour</var>, <var>minute</var>, <var>second</var>, <var>millisecond</var>, <var>microsecond</var>, <var>nanosecond</var> [, <var>newTarget</var>] )</h1>
+      <h1><span class="secnum">3.4.5</span> CreateTime ( <var>hour</var>, <var>minute</var>, <var>second</var>, <var>millisecond</var>, <var>microsecond</var>, <var>nanosecond</var> [, <var>newTarget</var>] )</h1>
       <emu-alg><ol><li>Assert: !&nbsp;<emu-xref aoid="ValidateTime" id="_ref_135"><a href="#sec-temporal-validatetime">ValidateTime</a></emu-xref>(<var>hour</var>, <var>minute</var>, <var>second</var>, <var>millisecond</var>, <var>microsecond</var>, <var>nanosecond</var>) is <emu-val>true</emu-val>.</li><li>If <var>newTarget</var> is not given, set it to %Temporal.Time%</li><li>Let <var>object</var> be ?&nbsp;<emu-xref aoid="OrdinaryCreateFromConstructor" id="_ref_136"><a href="https://tc39.github.io/ecma262/#sec-ordinarycreatefromconstructor">OrdinaryCreateFromConstructor</a></emu-xref>(<var>newTarget</var>, <code>"%Temporal.Time.prototype%"</code>, « [[InitializedTemporalTime]], [[Hour]], [[Minute]], [[Second]], [[Millisecond]], [[Microsecond]], [[Nanosecond]] »).</li><li>Set <var>object</var>.[[Hour]] to <var>hour</var>.</li><li>Set <var>object</var>.[[Minute]] to <var>minute</var>.</li><li>Set <var>object</var>.[[Second]] to <var>second</var>.</li><li>Set <var>object</var>.[[Millisecond]] to <var>millisecond</var>.</li><li>Set <var>object</var>.[[Microsecond]] to <var>microsecond</var>.</li><li>Set <var>object</var>.[[Nanosecond]] to <var>nanosecond</var>.</li><li>Return <var>object</var>.
       </li></ol></emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal-parsetimestring" aoid="ParseTimeString">
-      <h1><span class="secnum">3.4.6</span>ParseTimeString ( <var>time</var> )</h1>
+      <h1><span class="secnum">3.4.6</span> ParseTimeString ( <var>time</var> )</h1>
       <emu-alg><ol><li>Assert: <emu-xref aoid="Type" id="_ref_137"><a href="https://tc39.github.io/ecma262/#sec-ecmascript-data-types-and-values">Type</a></emu-xref>(<var>time</var>) is String.</li><li>Let <var>valid</var> be <emu-val>true</emu-val> if <var>time</var> matches <a href="https://github.com/tc39/proposal-temporal/blob/main/polyfill/lib/regex.mjs">the "time" regular expression in the polyfill</a> and <emu-val>false</emu-val> otherwise.</li><li><mark>TODO: Actually specify this somehow.</mark></li><li>If <var>valid</var> is <emu-val>false</emu-val>, then<ol><li>Throw a <emu-val>RangeError</emu-val> exception.</li></ol></li><li>Let <var>hour</var>, <var>minute</var>, <var>second</var>, <var>millisecond</var>, <var>microsecond</var>, <var>nanosecond</var> be the respective parts of <var>time</var> interpreted as decimal numbers.</li><li>Return the new <emu-xref href="#sec-list-and-record-specification-type"><a href="https://tc39.github.io/ecma262/#sec-list-and-record-specification-type">Record</a></emu-xref> {
           [[Hour]]: <var>hour</var>,
           [[Minute]]: <var>minute</var>,
@@ -2582,13 +2597,13 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal-timefromstring" aoid="TimeFromString">
-      <h1><span class="secnum">3.4.7</span>TimeFromString ( <var>time</var> )</h1>
+      <h1><span class="secnum">3.4.7</span> TimeFromString ( <var>time</var> )</h1>
       <emu-alg><ol><li>Assert: <emu-xref aoid="Type" id="_ref_138"><a href="https://tc39.github.io/ecma262/#sec-ecmascript-data-types-and-values">Type</a></emu-xref>(<var>time</var>) is String.</li><li>Let <var>result</var> be <emu-xref aoid="ParseTimeString" id="_ref_139"><a href="#sec-temporal-parsetimestring">ParseTimeString</a></emu-xref>(<var>time</var>).</li><li>If !&nbsp;<emu-xref aoid="ValidateTime" id="_ref_140"><a href="#sec-temporal-validatetime">ValidateTime</a></emu-xref>(<var>result</var>.[[Hour]], <var>result</var>.[[Minute]], <var>result</var>.[[Second]], <var>result</var>.[[Millisecond]], <var>result</var>.[[Microsecond]], <var>result</var>.[[Nanosecond]]) is <emu-val>false</emu-val>, then<ol><li>Throw a <emu-val>TypeError</emu-val> exception.</li></ol></li><li>Return ?&nbsp;<emu-xref aoid="CreateTime" id="_ref_141"><a href="#sec-temporal-createtime">CreateTime</a></emu-xref>(<var>result</var>.[[Hour]], <var>result</var>.[[Minute]], <var>result</var>.[[Second]], <var>result</var>.[[Millisecond]], <var>result</var>.[[Microsecond]], <var>result</var>.[[Nanosecond]]).
       </li></ol></emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal-totime" aoid="ToTime">
-      <h1><span class="secnum">3.4.8</span>ToTime ( <var>time</var> )</h1>
+      <h1><span class="secnum">3.4.8</span> ToTime ( <var>time</var> )</h1>
       <emu-alg><ol><li>If <emu-xref aoid="Type" id="_ref_142"><a href="https://tc39.github.io/ecma262/#sec-ecmascript-data-types-and-values">Type</a></emu-xref>(<var>time</var>) is String, then<ol><li>Return ?&nbsp;<emu-xref aoid="TimeFromString" id="_ref_143"><a href="#sec-temporal-timefromstring">TimeFromString</a></emu-xref>(<var>time</var>).</li></ol></li><li>If <emu-xref aoid="Type" id="_ref_144"><a href="https://tc39.github.io/ecma262/#sec-ecmascript-data-types-and-values">Type</a></emu-xref>(<var>time</var>) is Object, then<ol><li>If <var>time</var> has an [[InitializedTemporalTime]] internal slot, then<ol><li>Return <var>time</var>.</li></ol></li><li>Let <var>result</var> be the new <emu-xref href="#sec-list-and-record-specification-type"><a href="https://tc39.github.io/ecma262/#sec-list-and-record-specification-type">Record</a></emu-xref> {
             [[Hour]]: <emu-val>undefined</emu-val>,
             [[Minute]]: <emu-val>undefined</emu-val>,
@@ -2601,19 +2616,19 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal-timetostring" aoid="TimeToString">
-      <h1><span class="secnum">3.4.9</span>TimeToString ( <var>time</var> )</h1>
+      <h1><span class="secnum">3.4.9</span> TimeToString ( <var>time</var> )</h1>
       <emu-alg><ol><li>Assert: <emu-xref aoid="Type" id="_ref_149"><a href="https://tc39.github.io/ecma262/#sec-ecmascript-data-types-and-values">Type</a></emu-xref>(<var>time</var>) is Object.</li><li>Assert: <var>time</var> has an [[InitializedTemporalTime]] internal slot.</li><li>Let <var>hour</var> be <var>time</var>.[[Hour]] formatted as a two-digit decimal number, padded to the left with a zero if necessary.</li><li>Let <var>minute</var> be <var>time</var>.[[Minute]] formatted as a two-digit decimal number, padded to the left with a zero if necessary.</li><li>Let <var>seconds</var> be !&nbsp;<emu-xref aoid="FormatSecondsStringPart" id="_ref_150"><a href="#sec-temporal-formatsecondsstringpart">FormatSecondsStringPart</a></emu-xref>(<var>time</var>.[[Second]], <var>time</var>.[[Millisecond]], <var>time</var>.[[Microsecond]], <var>time</var>.[[Nanosecond]]).</li><li>Return the string-concatenation of <var>hour</var>, the code unit 0x003A (COLON), <var>minute</var>, and <var>seconds</var>.
       </li></ol></emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal-timecompare" aoid="TimeCompare">
-      <h1><span class="secnum">3.4.10</span>TimeCompare ( <var>one</var>, <var>two</var> )</h1>
+      <h1><span class="secnum">3.4.10</span> TimeCompare ( <var>one</var>, <var>two</var> )</h1>
       <emu-alg><ol><li>Assert: <emu-xref aoid="Type" id="_ref_151"><a href="https://tc39.github.io/ecma262/#sec-ecmascript-data-types-and-values">Type</a></emu-xref>(<var>one</var>) is Object.</li><li>Assert: <var>one</var> has an [[InitializedTemporalTime]] internal slot.</li><li>Assert: <emu-xref aoid="Type" id="_ref_152"><a href="https://tc39.github.io/ecma262/#sec-ecmascript-data-types-and-values">Type</a></emu-xref>(<var>two</var>) is Object.</li><li>Assert: <var>two</var> has an [[InitializedTemporalTime]] internal slot.</li><li>If <var>one</var>.[[Hour]] &gt; <var>two</var>.[[Hour]], return 1.</li><li>If <var>one</var>.[[Hour]] &lt; <var>two</var>.[[Hour]], return -1.</li><li>If <var>one</var>.[[Minute]] &gt; <var>two</var>.[[Minute]], return 1.</li><li>If <var>one</var>.[[Minute]] &lt; <var>two</var>.[[Minute]], return -1.</li><li>If <var>one</var>.[[Second]] &gt; <var>two</var>.[[Second]], return 1.</li><li>If <var>one</var>.[[Second]] &lt; <var>two</var>.[[Second]], return -1.</li><li>If <var>one</var>.[[Millisecond]] &gt; <var>two</var>.[[Millisecond]], return 1.</li><li>If <var>one</var>.[[Millisecond]] &lt; <var>two</var>.[[Millisecond]], return -1.</li><li>If <var>one</var>.[[Microsecond]] &gt; <var>two</var>.[[Microsecond]], return 1.</li><li>If <var>one</var>.[[Microsecond]] &lt; <var>two</var>.[[Microsecond]], return -1.</li><li>If <var>one</var>.[[Nanosecond]] &gt; <var>two</var>.[[Nanosecond]], return 1.</li><li>If <var>one</var>.[[Nanosecond]] &lt; <var>two</var>.[[Nanosecond]], return -1.</li><li>Return +0.
       </li></ol></emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal-addtime" aoid="AddTime">
-      <h1><span class="secnum">3.4.11</span>AddTime ( <var>hour</var>, <var>minute</var>, <var>second</var>, <var>millisecond</var>, <var>microsecond</var>, <var>nanosecond</var>, <var>hours</var>, <var>minutes</var>, <var>seconds</var>, <var>milliseconds</var>, <var>microseconds</var>, <var>nanoseconds</var> )</h1>
+      <h1><span class="secnum">3.4.11</span> AddTime ( <var>hour</var>, <var>minute</var>, <var>second</var>, <var>millisecond</var>, <var>microsecond</var>, <var>nanosecond</var>, <var>hours</var>, <var>minutes</var>, <var>seconds</var>, <var>milliseconds</var>, <var>microseconds</var>, <var>nanoseconds</var> )</h1>
       <emu-alg><ol><li>Assert: <var>hour</var>, <var>minute</var>, <var>second</var>, <var>millisecond</var>, <var>microsecond</var>, <var>nanosecond</var>, <var>hours</var>, <var>minutes</var>, <var>seconds</var>, <var>milliseconds</var>, <var>microseconds</var>, and <var>nanoseconds</var> are integer Number values.</li><li>Let <var>hour</var> be <var>hour</var> + <var>hours</var>.</li><li>Let <var>minute</var> be <var>minute</var> + <var>minutes</var>.</li><li>Let <var>second</var> be <var>second</var> + <var>seconds</var>.</li><li>Let <var>millisecond</var> be <var>millisecond</var> + <var>milliseconds</var>.</li><li>Let <var>microsecond</var> be <var>microsecond</var> + <var>microseconds</var>.</li><li>Let <var>nanosecond</var> be <var>nanosecond</var> + <var>nanoseconds</var>.</li><li>Return !&nbsp;<emu-xref aoid="BalanceTime" id="_ref_153"><a href="#sec-temporal-balancetime">BalanceTime</a></emu-xref>(<var>hour</var>, <var>minute</var>, <var>second</var>, <var>millisecond</var>, <var>microsecond</var>, <var>nanosecond</var>).
       </li></ol></emu-alg>
     </emu-clause>
@@ -2621,11 +2636,11 @@ li.menu-search-result-term:before {
 </emu-clause>
 </emu-import>
 <emu-import href="spec/datetime.html"><emu-clause id="sec-temporal-datetime">
-  <h1><span class="secnum">4</span>Temporal.DateTime Objects</h1>
+  <h1><span class="secnum">4</span> Temporal.DateTime Objects</h1>
   <p>A Temporal.DateTime object is an immutable Object that contains Number values corresponding to a particular year, month, day, hour, minute, second, millisecond, microsecond, and nanosecond.</p>
 
   <emu-clause id="sec-temporal-datetime-constructor">
-    <h1><span class="secnum">4.1</span>The Temporal.DateTime Constructor</h1>
+    <h1><span class="secnum">4.1</span> The Temporal.DateTime Constructor</h1>
     <p>
       The Temporal.DateTime constructor is the %Temporal.DateTime% intrinsic object.
       When called as a constructor, it creates and initializes a new Temporal.DateTime object.
@@ -2639,7 +2654,7 @@ li.menu-search-result-term:before {
     </p>
 
     <emu-clause id="sec-temporal.datetime">
-      <h1><span class="secnum">4.1.1</span>Temporal.DateTime ( <var>year</var>, <var>month</var>, <var>day</var>, <var>hour</var>, <var>minute</var> [ , <var>second</var> [ , <var>millisecond</var> [ , <var>microsecond</var> [ , <var>nanosecond</var> [ , <var>disambiguation</var> ] ] ] ] ] )</h1>
+      <h1><span class="secnum">4.1.1</span> Temporal.DateTime ( <var>year</var>, <var>month</var>, <var>day</var>, <var>hour</var>, <var>minute</var> [ , <var>second</var> [ , <var>millisecond</var> [ , <var>microsecond</var> [ , <var>nanosecond</var> [ , <var>disambiguation</var> ] ] ] ] ] )</h1>
       <p>
         When the <code>Temporal.DateTime</code> function is called, the following steps are taken:
       
@@ -2650,18 +2665,18 @@ li.menu-search-result-term:before {
   </emu-clause>
 
   <emu-clause id="sec-properties-of-the-temporal-datetime-constructor">
-    <h1><span class="secnum">4.2</span>Properties of the Temporal.DateTime Constructor</h1>
+    <h1><span class="secnum">4.2</span> Properties of the Temporal.DateTime Constructor</h1>
     <p>The value of the [[Prototype]] internal slot of the Temporal.DateTime constructor is the intrinsic object <emu-xref href="#sec-properties-of-the-function-prototype-object"><a href="https://tc39.github.io/ecma262/#sec-properties-of-the-function-prototype-object">%FunctionPrototype%</a></emu-xref>.</p>
     <p>The Temporal.DateTime constructor has the following properties:</p>
 
     <emu-clause id="sec-temporal-datetime-prototype">
-      <h1><span class="secnum">4.2.1</span>Temporal.DateTime.prototype</h1>
+      <h1><span class="secnum">4.2.1</span> Temporal.DateTime.prototype</h1>
       <p>The initial value of Temporal.DateTime.prototype is %Temporal.DateTime.prototype%.</p>
       <p>This property has the attributes { [[Writable]]: <emu-val>false</emu-val>, [[Enumerable]]: <emu-val>false</emu-val>, [[Configurable]]: <emu-val>false</emu-val> }.</p>
     </emu-clause>
 
     <emu-clause id="sec-temporal.datetime.from">
-      <h1><span class="secnum">4.2.2</span>Temporal.DateTime.from ( <var>arg</var> )</h1>
+      <h1><span class="secnum">4.2.2</span> Temporal.DateTime.from ( <var>arg</var> )</h1>
       <p>
         The <code>from</code> method takes one argument <var>arg</var>.
         The following steps are taken:
@@ -2672,7 +2687,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal.datetime.compare">
-      <h1><span class="secnum">4.2.3</span>Temporal.DateTime.compare ( <var>one</var>, <var>two</var> )</h1>
+      <h1><span class="secnum">4.2.3</span> Temporal.DateTime.compare ( <var>one</var>, <var>two</var> )</h1>
       <p>
         The <code>compare</code> method takes two arguments, <var>one</var> and <var>two</var>.
         The following steps are taken:
@@ -2684,7 +2699,7 @@ li.menu-search-result-term:before {
   </emu-clause>
 
   <emu-clause id="sec-properties-of-the-temporal-datetime-prototype-object">
-    <h1><span class="secnum">4.3</span>Properties of the Temporal.DateTime Prototype Object</h1>
+    <h1><span class="secnum">4.3</span> Properties of the Temporal.DateTime Prototype Object</h1>
 
     <p>The Temporal.DateTime prototype object</p>
     <ul>
@@ -2699,12 +2714,12 @@ li.menu-search-result-term:before {
     </li></ul>
 
     <emu-clause id="sec-temporal.datetime.prototype.constructor">
-      <h1><span class="secnum">4.3.1</span>Temporal.DateTime.prototype.constructor</h1>
+      <h1><span class="secnum">4.3.1</span> Temporal.DateTime.prototype.constructor</h1>
       <p>The initial value of Temporal.DateTime.prototype.constructor is %Temporal.DateTime%.</p>
     </emu-clause>
 
     <emu-clause id="sec-temporal.datetime.prototype-@@tostringtag">
-      <h1><span class="secnum">4.3.2</span>Temporal.DateTime.prototype[ @@toStringTag ]</h1>
+      <h1><span class="secnum">4.3.2</span> Temporal.DateTime.prototype[ @@toStringTag ]</h1>
       <p>
         The initial value of the @@toStringTag property is the string value <code>"Temporal.DateTime"</code>.
       
@@ -2716,7 +2731,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-get-temporal.datetime.prototype.year">
-      <h1><span class="secnum">4.3.3</span>get Temporal.DateTime.prototype.year</h1>
+      <h1><span class="secnum">4.3.3</span> get Temporal.DateTime.prototype.year</h1>
       <p>
         <code>Temporal.DateTime.prototype.year</code> is an accessor property whose set accessor function is undefined.
         Its get accessor function performs the following steps:
@@ -2727,7 +2742,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-get-temporal.datetime.prototype.month">
-      <h1><span class="secnum">4.3.4</span>get Temporal.DateTime.prototype.month</h1>
+      <h1><span class="secnum">4.3.4</span> get Temporal.DateTime.prototype.month</h1>
       <p>
         <code>Temporal.DateTime.prototype.month</code> is an accessor property whose set accessor function is undefined.
         Its get accessor function performs the following steps:
@@ -2738,7 +2753,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-get-temporal.datetime.prototype.day">
-      <h1><span class="secnum">4.3.5</span>get Temporal.DateTime.prototype.day</h1>
+      <h1><span class="secnum">4.3.5</span> get Temporal.DateTime.prototype.day</h1>
       <p>
         <code>Temporal.DateTime.prototype.day</code> is an accessor property whose set accessor function is undefined.
         Its get accessor function performs the following steps:
@@ -2749,7 +2764,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-get-temporal.datetime.prototype.hour">
-      <h1><span class="secnum">4.3.6</span>get Temporal.DateTime.prototype.hour</h1>
+      <h1><span class="secnum">4.3.6</span> get Temporal.DateTime.prototype.hour</h1>
       <p>
         <code>Temporal.DateTime.prototype.hour</code> is an accessor property whose set accessor function is undefined.
         Its get accessor function performs the following steps:
@@ -2760,7 +2775,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-get-temporal.datetime.prototype.minute">
-      <h1><span class="secnum">4.3.7</span>get Temporal.DateTime.prototype.minute</h1>
+      <h1><span class="secnum">4.3.7</span> get Temporal.DateTime.prototype.minute</h1>
       <p>
         <code>Temporal.DateTime.prototype.minute</code> is an accessor property whose set accessor function is undefined.
         Its get accessor function performs the following steps:
@@ -2771,7 +2786,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-get-temporal.datetime.prototype.second">
-      <h1><span class="secnum">4.3.8</span>get Temporal.DateTime.prototype.second</h1>
+      <h1><span class="secnum">4.3.8</span> get Temporal.DateTime.prototype.second</h1>
       <p>
         <code>Temporal.DateTime.prototype.second</code> is an accessor property whose set accessor function is undefined.
         Its get accessor function performs the following steps:
@@ -2782,7 +2797,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-get-temporal.datetime.prototype.millisecond">
-      <h1><span class="secnum">4.3.9</span>get Temporal.DateTime.prototype.millisecond</h1>
+      <h1><span class="secnum">4.3.9</span> get Temporal.DateTime.prototype.millisecond</h1>
       <p>
         <code>Temporal.DateTime.prototype.millisecond</code> is an accessor property whose set accessor function is undefined.
         Its get accessor function performs the following steps:
@@ -2793,7 +2808,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-get-temporal.datetime.prototype.microsecond">
-      <h1><span class="secnum">4.3.10</span>get Temporal.DateTime.prototype.microsecond</h1>
+      <h1><span class="secnum">4.3.10</span> get Temporal.DateTime.prototype.microsecond</h1>
       <p>
         <code>Temporal.DateTime.prototype.microsecond</code> is an accessor property whose set accessor function is undefined.
         Its get accessor function performs the following steps:
@@ -2804,7 +2819,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-get-temporal.datetime.prototype.nanosecond">
-      <h1><span class="secnum">4.3.11</span>get Temporal.DateTime.prototype.nanosecond</h1>
+      <h1><span class="secnum">4.3.11</span> get Temporal.DateTime.prototype.nanosecond</h1>
       <p>
         <code>Temporal.DateTime.prototype.nanosecond</code> is an accessor property whose set accessor function is undefined.
         Its get accessor function performs the following steps:
@@ -2815,7 +2830,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-get-temporal.datetime.prototype.dayofweek">
-      <h1><span class="secnum">4.3.12</span>get Temporal.DateTime.prototype.dayOfWeek</h1>
+      <h1><span class="secnum">4.3.12</span> get Temporal.DateTime.prototype.dayOfWeek</h1>
       <p>
         <code>Temporal.DateTime.prototype.dayOfWeek</code> is an accessor property whose set accessor function is undefined.
         Its get accessor function performs the following steps:
@@ -2826,7 +2841,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-get-temporal.datetime.prototype.dayofyear">
-      <h1><span class="secnum">4.3.13</span>get Temporal.DateTime.prototype.dayOfYear</h1>
+      <h1><span class="secnum">4.3.13</span> get Temporal.DateTime.prototype.dayOfYear</h1>
       <p>
         <code>Temporal.DateTime.prototype.dayOfYear</code> is an accessor property whose set accessor function is undefined.
         Its get accessor function performs the following steps:
@@ -2837,7 +2852,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-get-temporal.datetime.prototype.weekofyear">
-      <h1><span class="secnum">4.3.14</span>get Temporal.DateTime.prototype.weekOfYear</h1>
+      <h1><span class="secnum">4.3.14</span> get Temporal.DateTime.prototype.weekOfYear</h1>
       <p>
         <code>Temporal.DateTime.prototype.weekOfYear</code> is an accessor property whose set accessor function is undefined.
         Its get accessor function performs the following steps:
@@ -2848,7 +2863,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-get-temporal.datetime.prototype.daysinyear">
-      <h1><span class="secnum">4.3.15</span>get Temporal.DateTime.prototype.daysInYear</h1>
+      <h1><span class="secnum">4.3.15</span> get Temporal.DateTime.prototype.daysInYear</h1>
       <p>
         <code>Temporal.DateTime.prototype.daysInYear</code> is an accessor property whose set accessor function is undefined.
         Its get accessor function performs the following steps:
@@ -2859,7 +2874,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-get-temporal.datetime.prototype.daysinmonth">
-      <h1><span class="secnum">4.3.16</span>get Temporal.DateTime.prototype.daysInMonth</h1>
+      <h1><span class="secnum">4.3.16</span> get Temporal.DateTime.prototype.daysInMonth</h1>
       <p>
         <code>Temporal.DateTime.prototype.daysInMonth</code> is an accessor property whose set accessor function is undefined.
         Its get accessor function performs the following steps:
@@ -2870,7 +2885,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-get-temporal.datetime.prototype.leapyear">
-      <h1><span class="secnum">4.3.17</span>get Temporal.DateTime.prototype.leapYear</h1>
+      <h1><span class="secnum">4.3.17</span> get Temporal.DateTime.prototype.leapYear</h1>
       <p>
         <code>Temporal.DateTime.prototype.leapYear</code> is an accessor property whose set accessor function is undefined.
         Its get accessor function performs the following steps:
@@ -2881,7 +2896,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal.datetime.prototype.with">
-      <h1><span class="secnum">4.3.18</span>Temporal.DateTime.prototype.with ( <var>dateTimeLike</var> [ , <var>disambiguation</var> ] )</h1>
+      <h1><span class="secnum">4.3.18</span> Temporal.DateTime.prototype.with ( <var>dateTimeLike</var> [ , <var>disambiguation</var> ] )</h1>
       <p>
         The <code>with</code> method takes two arguments, <var>dateTimeLike</var> and <var>disambiguation</var>.
         The following steps are taken:
@@ -2892,7 +2907,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal.datetime.prototype.plus">
-      <h1><span class="secnum">4.3.19</span>Temporal.DateTime.prototype.plus ( <var>duration</var> [ , <var>disambiguation</var> ] )</h1>
+      <h1><span class="secnum">4.3.19</span> Temporal.DateTime.prototype.plus ( <var>duration</var> [ , <var>disambiguation</var> ] )</h1>
       <p>
         The <code>plus</code> method takes two arguments, <var>duration</var> and <var>disambiguation</var>.
         The following steps are taken:
@@ -2903,7 +2918,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal.datetime.prototype.minus">
-      <h1><span class="secnum">4.3.20</span>Temporal.DateTime.prototype.minus ( <var>duration</var> [ , <var>disambiguation</var> ] )</h1>
+      <h1><span class="secnum">4.3.20</span> Temporal.DateTime.prototype.minus ( <var>duration</var> [ , <var>disambiguation</var> ] )</h1>
       <p>
         The <code>minus</code> method takes two arguments, <var>duration</var> and <var>disambiguation</var>.
         The following steps are taken:
@@ -2914,7 +2929,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal.datetime.prototype.difference">
-      <h1><span class="secnum">4.3.21</span>Temporal.DateTime.prototype.difference ( <var>otherDateTime</var> )</h1>
+      <h1><span class="secnum">4.3.21</span> Temporal.DateTime.prototype.difference ( <var>otherDateTime</var> )</h1>
       <p>
         The <code>difference</code> method takes one argument <var>otherDateTime</var>.
         The following steps are taken:
@@ -2925,7 +2940,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal.datetime.prototype.tostring">
-      <h1><span class="secnum">4.3.22</span>Temporal.DateTime.prototype.toString ( )</h1>
+      <h1><span class="secnum">4.3.22</span> Temporal.DateTime.prototype.toString ( )</h1>
       <p>
         The following steps are taken:
       
@@ -2935,7 +2950,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal.datetime.prototype.tolocalestring">
-      <h1><span class="secnum">4.3.23</span>Temporal.DateTime.prototype.toLocaleString ( [ <var>locales</var> [ , <var>options</var> ] ] )</h1>
+      <h1><span class="secnum">4.3.23</span> Temporal.DateTime.prototype.toLocaleString ( [ <var>locales</var> [ , <var>options</var> ] ] )</h1>
       <p>
         The <code>toLocaleString</code> method takes two arguments, <var>locales</var> and <var>options</var>.
         The following steps are taken:
@@ -2946,7 +2961,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal.datetime.prototype.tojson">
-      <h1><span class="secnum">4.3.24</span>Temporal.DateTime.prototype.toJSON ( )</h1>
+      <h1><span class="secnum">4.3.24</span> Temporal.DateTime.prototype.toJSON ( )</h1>
       <p>
         The following steps are taken:
       
@@ -2956,7 +2971,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal.datetime.prototype.intimezone">
-      <h1><span class="secnum">4.3.25</span>Temporal.DateTime.prototype.inTimeZone ( [ <var>timeZoneParam</var> [ , <var>disambiguation</var> ] ] )</h1>
+      <h1><span class="secnum">4.3.25</span> Temporal.DateTime.prototype.inTimeZone ( [ <var>timeZoneParam</var> [ , <var>disambiguation</var> ] ] )</h1>
       <p>
         The <code>inTimeZone</code> method takes two arguments, <var>timeZoneParam</var> and <var>disambiguation</var>.
         The following steps are taken:
@@ -2967,7 +2982,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal.datetime.prototype.getdate">
-      <h1><span class="secnum">4.3.26</span>Temporal.DateTime.prototype.getDate ( )</h1>
+      <h1><span class="secnum">4.3.26</span> Temporal.DateTime.prototype.getDate ( )</h1>
       <p>
         The following steps are taken:
       
@@ -2977,7 +2992,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal.datetime.prototype.getyearmonth">
-      <h1><span class="secnum">4.3.27</span>Temporal.DateTime.prototype.getYearMonth ( )</h1>
+      <h1><span class="secnum">4.3.27</span> Temporal.DateTime.prototype.getYearMonth ( )</h1>
       <p>
         The following steps are taken:
       
@@ -2987,7 +3002,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal.datetime.prototype.getmonthday">
-      <h1><span class="secnum">4.3.28</span>Temporal.DateTime.prototype.getMonthDay ( )</h1>
+      <h1><span class="secnum">4.3.28</span> Temporal.DateTime.prototype.getMonthDay ( )</h1>
       <p>
         The following steps are taken:
       
@@ -2997,7 +3012,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal.datetime.prototype.gettime">
-      <h1><span class="secnum">4.3.29</span>Temporal.DateTime.prototype.getTime ( )</h1>
+      <h1><span class="secnum">4.3.29</span> Temporal.DateTime.prototype.getTime ( )</h1>
       <p>
         The following steps are taken:
       
@@ -3008,10 +3023,10 @@ li.menu-search-result-term:before {
   </emu-clause>
 
   <emu-clause id="sec-temporal-datetime-abstract-ops">
-    <h1><span class="secnum">4.4</span>Abstract operations</h1>
+    <h1><span class="secnum">4.4</span> Abstract operations</h1>
 
     <emu-clause id="sec-temporal-topartialdatetime" aoid="ToPartialDateTime">
-      <h1><span class="secnum">4.4.1</span>ToPartialDateTime ( <var>dateTime</var> )</h1>
+      <h1><span class="secnum">4.4.1</span> ToPartialDateTime ( <var>dateTime</var> )</h1>
       <emu-alg><ol><li>If <emu-xref aoid="Type" id="_ref_203"><a href="https://tc39.github.io/ecma262/#sec-ecmascript-data-types-and-values">Type</a></emu-xref>(<var>dateTime</var>) is String, then<ol><li>Return ?&nbsp;<emu-xref aoid="ParseDateTimeString" id="_ref_204"><a href="#sec-temporal-parsedatetimestring">ParseDateTimeString</a></emu-xref>(<var>dateTime</var>).</li></ol></li><li>If <emu-xref aoid="Type" id="_ref_205"><a href="https://tc39.github.io/ecma262/#sec-ecmascript-data-types-and-values">Type</a></emu-xref>(<var>dateTime</var>) is Object, then<ol><li>Let <var>result</var> be the new <emu-xref href="#sec-list-and-record-specification-type"><a href="https://tc39.github.io/ecma262/#sec-list-and-record-specification-type">Record</a></emu-xref> {
               [[Year]]: <emu-val>undefined</emu-val>,
               [[Month]]: <emu-val>undefined</emu-val>,
@@ -3085,25 +3100,25 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal-regulatedatetime" aoid="RegulateDateTime">
-      <h1><span class="secnum">4.4.2</span>RegulateDateTime ( <var>year</var>, <var>month</var>, <var>date</var>, <var>hour</var>, <var>minute</var>, <var>second</var>, <var>millisecond</var>, <var>microsecond</var>, <var>nanosecond</var>, <var>disambiguation</var> )</h1>
+      <h1><span class="secnum">4.4.2</span> RegulateDateTime ( <var>year</var>, <var>month</var>, <var>date</var>, <var>hour</var>, <var>minute</var>, <var>second</var>, <var>millisecond</var>, <var>microsecond</var>, <var>nanosecond</var>, <var>disambiguation</var> )</h1>
       <emu-alg><ol><li>Assert: <var>disambiguation</var> is one of <code>"constrain"</code>, <code>"balance"</code>, or <code>"reject"</code>.</li><li>If <var>disambiguation</var> is <code>"constrain"</code>, then<ol><li><mark>TODO: define.</mark></li></ol></li><li>If <var>disambiguation</var> is <code>"balance"</code>, then<ol><li><mark>TODO: define.</mark></li></ol></li><li>If <var>disambiguation</var> is <code>"reject"</code>, then<ol><li><mark>TODO: define.</mark>
       </li></ol></li></ol></emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal-validatedatetime" aoid="ValidateDateTime">
-      <h1><span class="secnum">4.4.3</span>ValidateDateTime ( <var>year</var>, <var>month</var>, <var>date</var>, <var>hour</var>, <var>minute</var>, <var>second</var>, <var>millisecond</var>, <var>microsecond</var>, <var>nanosecond</var> )</h1>
+      <h1><span class="secnum">4.4.3</span> ValidateDateTime ( <var>year</var>, <var>month</var>, <var>date</var>, <var>hour</var>, <var>minute</var>, <var>second</var>, <var>millisecond</var>, <var>microsecond</var>, <var>nanosecond</var> )</h1>
       <emu-alg><ol><li>Assert: <var>year</var>, <var>month</var>, <var>date</var>, <var>hour</var>, <var>minute</var>, <var>second</var>, <var>millisecond</var>, <var>microsecond</var>, and <var>nanosecond</var> are integer Number values.</li><li>If !&nbsp;<emu-xref aoid="ValidateDate" id="_ref_208"><a href="#sec-temporal-validatedate">ValidateDate</a></emu-xref>(<var>year</var>, <var>month</var>, <var>date</var>) is <emu-val>false</emu-val>, then<ol><li>Return <emu-val>false</emu-val>.</li></ol></li><li>If !&nbsp;<emu-xref aoid="ValidateTime" id="_ref_209"><a href="#sec-temporal-validatetime">ValidateTime</a></emu-xref>(<var>hour</var>, <var>minute</var>, <var>second</var>, <var>millisecond</var>, <var>microsecond</var>, <var>nanosecond</var>) is <emu-val>false</emu-val>, then<ol><li>Return <emu-val>false</emu-val>.</li></ol></li><li>Return <emu-val>true</emu-val>.
       </li></ol></emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal-createdatetime" aoid="CreateDateTime">
-      <h1><span class="secnum">4.4.4</span>CreateDateTime ( <var>year</var>, <var>month</var>, <var>date</var>, <var>hour</var>, <var>minute</var>, <var>second</var>, <var>millisecond</var>, <var>microsecond</var>, <var>nanosecond</var> [, <var>newTarget</var>] )</h1>
+      <h1><span class="secnum">4.4.4</span> CreateDateTime ( <var>year</var>, <var>month</var>, <var>date</var>, <var>hour</var>, <var>minute</var>, <var>second</var>, <var>millisecond</var>, <var>microsecond</var>, <var>nanosecond</var> [, <var>newTarget</var>] )</h1>
       <emu-alg><ol><li>Assert: !&nbsp;<emu-xref aoid="ValidateDateTime" id="_ref_210"><a href="#sec-temporal-validatedatetime">ValidateDateTime</a></emu-xref>(<var>year</var>, <var>month</var>, <var>date</var>, <var>hour</var>, <var>minute</var>, <var>second</var>, <var>millisecond</var>, <var>microsecond</var>, <var>nanosecond</var>) is <emu-val>true</emu-val>.</li><li>If <var>newTarget</var> is not given, set it to %Temporal.DateTime%</li><li>Let <var>object</var> be ?&nbsp;<emu-xref aoid="OrdinaryCreateFromConstructor" id="_ref_211"><a href="https://tc39.github.io/ecma262/#sec-ordinarycreatefromconstructor">OrdinaryCreateFromConstructor</a></emu-xref>(<var>newTarget</var>, <code>"%Temporal.DateTime.prototype%"</code>, « [[InitializedTemporalDateTime]], [[Year]], [[Month]], [[Day]], [[Hour]], [[Minute]], [[Second]], [[Millisecond]], [[Microsecond]], [[Nanosecond]] »).</li><li>Set <var>object</var>.[[Year]] to <var>year</var>.</li><li>Set <var>object</var>.[[Month]] to <var>month</var>.</li><li>Set <var>object</var>.[[Day]] to <var>day</var>.</li><li>Set <var>object</var>.[[Hour]] to <var>hour</var>.</li><li>Set <var>object</var>.[[Minute]] to <var>minute</var>.</li><li>Set <var>object</var>.[[Second]] to <var>second</var>.</li><li>Set <var>object</var>.[[Millisecond]] to <var>millisecond</var>.</li><li>Set <var>object</var>.[[Microsecond]] to <var>microsecond</var>.</li><li>Set <var>object</var>.[[Nanosecond]] to <var>nanosecond</var>.</li><li>Return <var>object</var>.
       </li></ol></emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal-parsedatetimestring" aoid="ParseDateTimeString">
-      <h1><span class="secnum">4.4.5</span>ParseDateTimeString ( <var>dateTime</var> )</h1>
+      <h1><span class="secnum">4.4.5</span> ParseDateTimeString ( <var>dateTime</var> )</h1>
       <emu-alg><ol><li>Assert: <emu-xref aoid="Type" id="_ref_212"><a href="https://tc39.github.io/ecma262/#sec-ecmascript-data-types-and-values">Type</a></emu-xref>(<var>dateTime</var>) is String.</li><li>Let <var>valid</var> be <emu-val>true</emu-val> if <var>dateTime</var> matches <a href="https://github.com/tc39/proposal-temporal/blob/main/polyfill/lib/regex.mjs">the "datetime" regular expression in the polyfill</a> and <emu-val>false</emu-val> otherwise.</li><li><mark>TODO: Actually specify this somehow.</mark></li><li>If <var>valid</var> is <emu-val>false</emu-val>, then<ol><li>Throw a <emu-val>RangeError</emu-val> exception.</li></ol></li><li>Let <var>year</var>, <var>month</var>, <var>day</var>, <var>hour</var>, <var>minute</var>, <var>second</var>, <var>millisecond</var>, <var>microsecond</var>, <var>nanosecond</var> be the respective parts of <var>dateTime</var> interpreted as decimal numbers.</li><li>Return the new <emu-xref href="#sec-list-and-record-specification-type"><a href="https://tc39.github.io/ecma262/#sec-list-and-record-specification-type">Record</a></emu-xref> {
             [[Year]]: <var>year</var>,
             [[Month]]: <var>month</var>,
@@ -3119,13 +3134,13 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal-datetimefromstring" aoid="DateTimeFromString">
-      <h1><span class="secnum">4.4.6</span>DateTimeFromString ( <var>dateTime</var> )</h1>
+      <h1><span class="secnum">4.4.6</span> DateTimeFromString ( <var>dateTime</var> )</h1>
       <emu-alg><ol><li>Assert: <emu-xref aoid="Type" id="_ref_213"><a href="https://tc39.github.io/ecma262/#sec-ecmascript-data-types-and-values">Type</a></emu-xref>(<var>dateTime</var>) is String.</li><li>Let <var>result</var> be <emu-xref aoid="ParseDateTimeString" id="_ref_214"><a href="#sec-temporal-parsedatetimestring">ParseDateTimeString</a></emu-xref>(<var>dateTime</var>).</li><li>If !&nbsp;<emu-xref aoid="ValidateDateTime" id="_ref_215"><a href="#sec-temporal-validatedatetime">ValidateDateTime</a></emu-xref>(<var>result</var>.[[Year]], <var>result</var>.[[Month]], <var>result</var>.[[Day]], <var>result</var>.[[Hour]], <var>result</var>.[[Minute]], <var>result</var>.[[Second]], <var>result</var>.[[Millisecond]], <var>result</var>.[[Microsecond]], <var>result</var>.[[Nanosecond]]) is <emu-val>false</emu-val>, then<ol><li>Throw a <emu-val>TypeError</emu-val> exception.</li></ol></li><li>Return ?&nbsp;<emu-xref aoid="CreateDateTime" id="_ref_216"><a href="#sec-temporal-createdatetime">CreateDateTime</a></emu-xref>(<var>result</var>.[[Year]], <var>result</var>.[[Month]], <var>result</var>.[[Day]], <var>result</var>.[[Hour]], <var>result</var>.[[Minute]], <var>result</var>.[[Second]], <var>result</var>.[[Millisecond]], <var>result</var>.[[Microsecond]], <var>result</var>.[[Nanosecond]]).
       </li></ol></emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal-todatetime" aoid="ToDateTime">
-      <h1><span class="secnum">4.4.7</span>ToDateTime ( <var>dateTime</var> )</h1>
+      <h1><span class="secnum">4.4.7</span> ToDateTime ( <var>dateTime</var> )</h1>
       <emu-alg><ol><li>If <emu-xref aoid="Type" id="_ref_217"><a href="https://tc39.github.io/ecma262/#sec-ecmascript-data-types-and-values">Type</a></emu-xref>(<var>dateTime</var>) is String, then<ol><li>Return ?&nbsp;<emu-xref aoid="DateTimeFromString" id="_ref_218"><a href="#sec-temporal-datetimefromstring">DateTimeFromString</a></emu-xref>(<var>dateTime</var>).</li></ol></li><li>If <emu-xref aoid="Type" id="_ref_219"><a href="https://tc39.github.io/ecma262/#sec-ecmascript-data-types-and-values">Type</a></emu-xref>(<var>dateTime</var>) is Object, then<ol><li>If <var>dateTime</var> has an [[InitializedTemporalDateTime]] internal slot, then<ol><li>Return <var>dateTime</var>.</li></ol></li><li>Let <var>result</var> be the new <emu-xref href="#sec-list-and-record-specification-type"><a href="https://tc39.github.io/ecma262/#sec-list-and-record-specification-type">Record</a></emu-xref> {
               [[Year]]: <emu-val>undefined</emu-val>,
               [[Month]]: <emu-val>undefined</emu-val>,
@@ -3141,13 +3156,13 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal-datetimetostring" aoid="DateTimeToString">
-      <h1><span class="secnum">4.4.8</span>DateTimeToString ( <var>dateTime</var> )</h1>
+      <h1><span class="secnum">4.4.8</span> DateTimeToString ( <var>dateTime</var> )</h1>
       <emu-alg><ol><li>Assert: <emu-xref aoid="Type" id="_ref_224"><a href="https://tc39.github.io/ecma262/#sec-ecmascript-data-types-and-values">Type</a></emu-xref>(<var>dateTime</var>) is Object.</li><li>Assert: <var>dateTime</var> has an [[InitializedTemporalDateTime]] internal slot.</li><li>Let <var>year</var> be !&nbsp;<emu-xref aoid="PadYear" id="_ref_225"><a href="#sec-temporal-padyear">PadYear</a></emu-xref>(<var>date</var>.[[Year]]).</li><li>Let <var>month</var> be <var>date</var>.[[Month]] formatted as a two-digit decimal number, padded to the left with a zero if necessary.</li><li>Let <var>day</var> be <var>date</var>.[[Day]] formatted as a two-digit decimal number, padded to the left with a zero if necessary.</li><li>Let <var>hour</var> be <var>dateTime</var>.[[Hour]] formatted as a two-digit decimal number, padded to the left with a zero if necessary.</li><li>Let <var>minute</var> be <var>dateTime</var>.[[Minute]] formatted as a two-digit decimal number, padded to the left with a zero if necessary.</li><li>Let <var>seconds</var> be !&nbsp;<emu-xref aoid="FormatSecondsStringPart" id="_ref_226"><a href="#sec-temporal-formatsecondsstringpart">FormatSecondsStringPart</a></emu-xref>(<var>dateTime</var>.[[Second]], <var>dateTime</var>.[[Millisecond]], <var>dateTime</var>.[[Microsecond]], <var>dateTime</var>.[[Nanosecond]]).</li><li>Return the string-concatenation of <var>year</var>, the code unit 0x002D (HYPHEN-MINUS), <var>month</var>, the code unit 0x002D (HYPHEN-MINUS), <var>day</var>, 0x0054 (LATIN CAPITAL LETTER T), <var>hour</var>, the code unit 0x003A (COLON), <var>minute</var>, and <var>seconds</var>.
       </li></ol></emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal-datetimecompare" aoid="DateTimeCompare">
-      <h1><span class="secnum">4.4.9</span>DateTimeCompare ( <var>one</var>, <var>two</var> )</h1>
+      <h1><span class="secnum">4.4.9</span> DateTimeCompare ( <var>one</var>, <var>two</var> )</h1>
       <emu-alg><ol><li>Assert: <emu-xref aoid="Type" id="_ref_227"><a href="https://tc39.github.io/ecma262/#sec-ecmascript-data-types-and-values">Type</a></emu-xref>(<var>one</var>) is Object.</li><li>Assert: <var>one</var> has an [[InitializedTemporalDateTime]] internal slot.</li><li>Assert: <emu-xref aoid="Type" id="_ref_228"><a href="https://tc39.github.io/ecma262/#sec-ecmascript-data-types-and-values">Type</a></emu-xref>(<var>two</var>) is Object.</li><li>Assert: <var>two</var> has an [[InitializedTemporalDateTime]] internal slot.</li><li>If <var>one</var>.[[Year]] &gt; <var>two</var>.[[Year]], return 1.</li><li>If <var>one</var>.[[Year]] &lt; <var>two</var>.[[Year]], return -1.</li><li>If <var>one</var>.[[Month]] &gt; <var>two</var>.[[Month]], return 1.</li><li>If <var>one</var>.[[Month]] &lt; <var>two</var>.[[Month]], return -1.</li><li>If <var>one</var>.[[Day]] &gt; <var>two</var>.[[Day]], return 1.</li><li>If <var>one</var>.[[Day]] &lt; <var>two</var>.[[Day]], return -1.</li><li>If <var>one</var>.[[Hour]] &gt; <var>two</var>.[[Hour]], return 1.</li><li>If <var>one</var>.[[Hour]] &lt; <var>two</var>.[[Hour]], return -1.</li><li>If <var>one</var>.[[Minute]] &gt; <var>two</var>.[[Minute]], return 1.</li><li>If <var>one</var>.[[Minute]] &lt; <var>two</var>.[[Minute]], return -1.</li><li>If <var>one</var>.[[Second]] &gt; <var>two</var>.[[Second]], return 1.</li><li>If <var>one</var>.[[Second]] &lt; <var>two</var>.[[Second]], return -1.</li><li>If <var>one</var>.[[Millisecond]] &gt; <var>two</var>.[[Millisecond]], return 1.</li><li>If <var>one</var>.[[Millisecond]] &lt; <var>two</var>.[[Millisecond]], return -1.</li><li>If <var>one</var>.[[Microsecond]] &gt; <var>two</var>.[[Microsecond]], return 1.</li><li>If <var>one</var>.[[Microsecond]] &lt; <var>two</var>.[[Microsecond]], return -1.</li><li>If <var>one</var>.[[Nanosecond]] &gt; <var>two</var>.[[Nanosecond]], return 1.</li><li>If <var>one</var>.[[Nanosecond]] &lt; <var>two</var>.[[Nanosecond]], return -1.</li><li>Return +0.
       </li></ol></emu-alg>
     </emu-clause>
@@ -3155,7 +3170,7 @@ li.menu-search-result-term:before {
 </emu-clause>
 </emu-import>
 <emu-import href="spec/duration.html"><emu-clause id="sec-temporal-duration">
-  <h1><span class="secnum">5</span>Temporal.Duration Objects</h1>
+  <h1><span class="secnum">5</span> Temporal.Duration Objects</h1>
 
   <p>
     A Temporal.Duration object describes the difference between two like Date,
@@ -3233,7 +3248,7 @@ li.menu-search-result-term:before {
   </ol> -->
 
   <emu-clause id="sec-temporal-duration-constructor">
-    <h1><span class="secnum">5.1</span>The Temporal.Duration Constructor</h1>
+    <h1><span class="secnum">5.1</span> The Temporal.Duration Constructor</h1>
     <p>
       The Temporal.Duration constructor is the %Temporal.Duration% intrinsic
       object. When called as a constructor, it creates and initializes a new
@@ -3249,7 +3264,7 @@ li.menu-search-result-term:before {
     
     </p>
     <emu-clause id="sec-temporal.duration">
-      <h1><span class="secnum">5.1.1</span>Temporal.Duration ( <var>years</var>, <var>months</var>, <var>days</var>, <var>hours</var>, <var>minutes</var>, <var>seconds</var>, <var>milliseconds</var>, <var>microseconds</var>, <var>nanoseconds</var>, <var>disambiguation</var> )</h1>
+      <h1><span class="secnum">5.1.1</span> Temporal.Duration ( <var>years</var>, <var>months</var>, <var>days</var>, <var>hours</var>, <var>minutes</var>, <var>seconds</var>, <var>milliseconds</var>, <var>microseconds</var>, <var>nanoseconds</var>, <var>disambiguation</var> )</h1>
       <p>
         When the <code>Temporal.Duration</code> function is called, the following steps are taken:
       
@@ -3260,7 +3275,7 @@ li.menu-search-result-term:before {
   </emu-clause>
 
   <emu-clause id="sec-properties-of-the-temporal-duration-constructor">
-    <h1><span class="secnum">5.2</span>Properties of the Temporal.Duration Constructor</h1>
+    <h1><span class="secnum">5.2</span> Properties of the Temporal.Duration Constructor</h1>
     <p>
       The value of the [[Prototype]] internal slot of the Temporal.Duration
       constructor is the intrinsic object <emu-xref href="#sec-properties-of-the-function-prototype-object"><a href="https://tc39.github.io/ecma262/#sec-properties-of-the-function-prototype-object">%FunctionPrototype%</a></emu-xref>.
@@ -3269,7 +3284,7 @@ li.menu-search-result-term:before {
     <p>The Temporal.Duration constructor has the following properties:</p>
 
     <emu-clause id="sec-temporal-duration-prototype">
-      <h1><span class="secnum">5.2.1</span>Temporal.Duration.prototype</h1>
+      <h1><span class="secnum">5.2.1</span> Temporal.Duration.prototype</h1>
       <p>
         The initial value of Temporal.Duration.prototype is
         %Temporal.Duration.prototype%.
@@ -3283,7 +3298,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal.duration.from">
-      <h1><span class="secnum">5.2.2</span>Temporal.Duration.from ( <var>arg</var> )</h1>
+      <h1><span class="secnum">5.2.2</span> Temporal.Duration.from ( <var>arg</var> )</h1>
       <p>
         The <code>from</code> method takes one argument <var>arg</var>.
         The following steps are taken:
@@ -3295,7 +3310,7 @@ li.menu-search-result-term:before {
   </emu-clause>
 
   <emu-clause id="sec-properties-of-the-temporal-duration-prototype-object">
-    <h1><span class="secnum">5.3</span>Properties of the Temporal.Duration Prototype Object</h1>
+    <h1><span class="secnum">5.3</span> Properties of the Temporal.Duration Prototype Object</h1>
 
     <p>The Temporal.Duration prototype object</p>
     <ul>
@@ -3306,18 +3321,18 @@ li.menu-search-result-term:before {
     </ul>
 
     <emu-clause id="sec-temporal-duration-prototype-constructor">
-      <h1><span class="secnum">5.3.1</span>Temporal.Duration.prototype.constructor</h1>
+      <h1><span class="secnum">5.3.1</span> Temporal.Duration.prototype.constructor</h1>
       <p>The initial value of Temporal.Duration.prototype.constructor is %Temporal.Duration%.</p>
     </emu-clause>
 
     <emu-clause id="sec-intl-segmenter-prototype-@@tostringtag">
-      <h1><span class="secnum">5.3.2</span>Temporal.Date.prototype[ @@toStringTag ]</h1>
+      <h1><span class="secnum">5.3.2</span> Temporal.Date.prototype[ @@toStringTag ]</h1>
       <p>The initial value of the @@toStringTag property is the string value <code>"Temporal.Duration"</code>.</p>
       <p>This property has the attributes { [[Writable]]: <emu-val>false</emu-val>, [[Enumerable]]: <emu-val>false</emu-val>, [[Configurable]]: <emu-val>true</emu-val> }.</p>
     </emu-clause>
 
     <emu-clause id="sec-get-temporal.duration.prototype.years">
-      <h1><span class="secnum">5.3.3</span>get Temporal.Duration.prototype.years</h1>
+      <h1><span class="secnum">5.3.3</span> get Temporal.Duration.prototype.years</h1>
       <p>
         <code>Temporal.Duration.prototype.years</code> is an accessor property whose set accessor function is undefined.
         Its get accessor function performs the following steps:
@@ -3328,7 +3343,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-get-temporal.duration.prototype.months">
-      <h1><span class="secnum">5.3.4</span>get Temporal.Duration.prototype.months</h1>
+      <h1><span class="secnum">5.3.4</span> get Temporal.Duration.prototype.months</h1>
       <p>
         <code>Temporal.Duration.prototype.months</code> is an accessor property whose set accessor function is undefined.
         Its get accessor function performs the following steps:
@@ -3339,7 +3354,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-get-temporal.duration.prototype.days">
-      <h1><span class="secnum">5.3.5</span>get Temporal.Duration.prototype.days</h1>
+      <h1><span class="secnum">5.3.5</span> get Temporal.Duration.prototype.days</h1>
       <p>
         <code>Temporal.Duration.prototype.days</code> is an accessor property whose set accessor function is undefined.
         Its get accessor function performs the following steps:
@@ -3350,7 +3365,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-get-temporal.duration.prototype.hours">
-      <h1><span class="secnum">5.3.6</span>get Temporal.Duration.prototype.hours</h1>
+      <h1><span class="secnum">5.3.6</span> get Temporal.Duration.prototype.hours</h1>
       <p>
         <code>Temporal.Duration.prototype.hours</code> is an accessor property whose set accessor function is undefined.
         Its get accessor function performs the following steps:
@@ -3361,7 +3376,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-get-temporal.duration.prototype.minutes">
-      <h1><span class="secnum">5.3.7</span>get Temporal.Duration.prototype.minutes</h1>
+      <h1><span class="secnum">5.3.7</span> get Temporal.Duration.prototype.minutes</h1>
       <p>
         <code>Temporal.Duration.prototype.minutes</code> is an accessor property whose set accessor function is undefined.
         Its get accessor function performs the following steps:
@@ -3372,7 +3387,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-get-temporal.duration.prototype.seconds">
-      <h1><span class="secnum">5.3.8</span>get Temporal.Duration.prototype.seconds</h1>
+      <h1><span class="secnum">5.3.8</span> get Temporal.Duration.prototype.seconds</h1>
       <p>
         <code>Temporal.Duration.prototype.seconds</code> is an accessor property whose set accessor function is undefined.
         Its get accessor function performs the following steps:
@@ -3383,7 +3398,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-get-temporal.duration.prototype.milliseconds">
-      <h1><span class="secnum">5.3.9</span>get Temporal.Duration.prototype.milliseconds</h1>
+      <h1><span class="secnum">5.3.9</span> get Temporal.Duration.prototype.milliseconds</h1>
       <p>
         <code>Temporal.Duration.prototype.milliseconds</code> is an accessor property whose set accessor function is undefined.
         Its get accessor function performs the following steps:
@@ -3394,7 +3409,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-get-temporal.duration.prototype.microseconds">
-      <h1><span class="secnum">5.3.10</span>get Temporal.Duration.prototype.microseconds</h1>
+      <h1><span class="secnum">5.3.10</span> get Temporal.Duration.prototype.microseconds</h1>
       <p>
         <code>Temporal.Duration.prototype.microseconds</code> is an accessor property whose set accessor function is undefined.
         Its get accessor function performs the following steps:
@@ -3405,7 +3420,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-get-temporal.duration.prototype.nanoseconds">
-      <h1><span class="secnum">5.3.11</span>get Temporal.Duration.prototype.nanoseconds</h1>
+      <h1><span class="secnum">5.3.11</span> get Temporal.Duration.prototype.nanoseconds</h1>
       <p>
         <code>Temporal.Duration.prototype.nanoseconds</code> is an accessor property whose set accessor function is undefined.
         Its get accessor function performs the following steps:
@@ -3416,7 +3431,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal.duration.prototype.tostring">
-      <h1><span class="secnum">5.3.12</span>Temporal.Duration.prototype.toString ( )</h1>
+      <h1><span class="secnum">5.3.12</span> Temporal.Duration.prototype.toString ( )</h1>
       <p>
         The following steps are taken:
       
@@ -3426,7 +3441,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal.duration.prototype.tojson">
-      <h1><span class="secnum">5.3.13</span>Temporal.Duration.prototype.toJSON ( )</h1>
+      <h1><span class="secnum">5.3.13</span> Temporal.Duration.prototype.toJSON ( )</h1>
       <p>
         The following steps are taken:
       
@@ -3437,10 +3452,10 @@ li.menu-search-result-term:before {
   </emu-clause>
 
   <emu-clause id="sec-temporal-duration-abstract-ops">
-    <h1><span class="secnum">5.4</span>Abstract Operations</h1>
+    <h1><span class="secnum">5.4</span> Abstract Operations</h1>
 
     <emu-clause id="sec-temporal-toduration" aoid="ToDuration">
-      <h1><span class="secnum">5.4.1</span>ToDuration ( <var>arg</var> )</h1>
+      <h1><span class="secnum">5.4.1</span> ToDuration ( <var>arg</var> )</h1>
       <emu-alg><ol><li>If <emu-xref aoid="Type" id="_ref_247"><a href="https://tc39.github.io/ecma262/#sec-ecmascript-data-types-and-values">Type</a></emu-xref>(<var>arg</var>) is String, then<ol><li>Return ?&nbsp;<emu-xref aoid="DurationFromString" id="_ref_248"><a href="#sec-temporal-durationfromstring">DurationFromString</a></emu-xref>(<var>arg</var>).</li></ol></li><li>If <emu-xref aoid="Type" id="_ref_249"><a href="https://tc39.github.io/ecma262/#sec-ecmascript-data-types-and-values">Type</a></emu-xref>(<var>arg</var>) is Object, then<ol><li>If <var>arg</var> has an [[InitializedTemporalDuration]] internal slot, then<ol><li>Return <var>arg</var>.</li></ol></li><li>Let <var>result</var> be the <emu-xref href="#sec-list-and-record-specification-type"><a href="https://tc39.github.io/ecma262/#sec-list-and-record-specification-type">Record</a></emu-xref> {
             [[Years]]: <emu-val>undefined</emu-val>,
             [[Months]]: <emu-val>undefined</emu-val>,
@@ -3456,13 +3471,13 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal-durationfromstring" aoid="DurationFromString">
-      <h1><span class="secnum">5.4.2</span>DurationFromString ( <var>duration</var> )</h1>
+      <h1><span class="secnum">5.4.2</span> DurationFromString ( <var>duration</var> )</h1>
       <emu-alg><ol><li>Assert: <emu-xref aoid="Type" id="_ref_253"><a href="https://tc39.github.io/ecma262/#sec-ecmascript-data-types-and-values">Type</a></emu-xref>(<var>duration</var>) is String.</li><li>Let <var>valid</var> be <emu-val>true</emu-val> if <var>duration</var> conforms to the "duration" format specified in RFC 3339 (https://www.ietf.org/rfc/rfc3339.txt) Appendix A and false otherwise.</li><li>If <var>valid</var> is <emu-val>false</emu-val>, then<ol><li>Throw a <emu-val>RangeError</emu-val> exception.</li></ol></li><li>Let <var>years</var>, <var>months</var>, <var>days</var>, <var>hours</var>, <var>minutes</var>, <var>seconds</var>, <var>milliseconds</var>, <var>microseconds</var> and <var>nanoseconds</var> be the respective parts of <var>duration</var> interpreted as decimal numbers.</li><li>Return ?&nbsp;<emu-xref aoid="CreateDuration" id="_ref_254"><a href="#sec-temporal-CreateDuration">CreateDuration</a></emu-xref>(<var>years</var>, <var>months</var>, <var>days</var>, <var>hours</var>, <var>minutes</var>, <var>seconds</var>, <var>milliseconds</var>, <var>microseconds</var>, <var>nanoseconds</var>).
       </li></ol></emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal-durationtostring" aoid="DurationToString">
-      <h1><span class="secnum">5.4.3</span>DurationToString ( <var>duration</var> )</h1>
+      <h1><span class="secnum">5.4.3</span> DurationToString ( <var>duration</var> )</h1>
       <emu-alg><ol><li>Let <var>years</var> be <var>duration</var>.[[Years]].</li><li>Let <var>months</var> be <var>duration</var>.[[Months]].</li><li>Let <var>days</var> be <var>duration</var>.[[Days]].</li><li>Let <var>hours</var> be <var>duration</var>.[[Hours]].</li><li>Let <var>minutes</var> be <var>duration</var>.[[Minutes]].</li><li>Let <var>seconds</var> be <var>duration</var>.[[Seconds]].</li><li>Let <var>milliseconds</var> be <var>duration</var>.[[Milliseconds]].</li><li>Let <var>microseconds</var> be <var>duration</var>.[[Microseconds]].</li><li>Let <var>nanoseconds</var> be <var>duration</var>.[[Nanoseconds]].</li><li>Return the concatenation of <var>years</var>, <var>months</var>, <var>days</var>, <var>hours</var>, <var>minutes</var>, <var>seconds</var>, <var>milliseconds</var>, <var>microseconds</var>, <var>nanoseconds</var> in the format specified in RFC 3339 (https://www.ietf.org/rfc/rfc3339.txt) Appendix A.
       </li></ol></emu-alg>
     </emu-clause>
@@ -3520,11 +3535,11 @@ li.menu-search-result-term:before {
 </emu-clause>
 </emu-import>
 <emu-import href="spec/absolute.html"><emu-clause id="sec-temporal-absolute">
-  <h1><span class="secnum">6</span>Temporal.Absolute Objects</h1>
+  <h1><span class="secnum">6</span> Temporal.Absolute Objects</h1>
   <p>A Temporal.Absolute object is an immutable Object referencing a point in time with nanoseconds precision.</p>
 
   <emu-clause id="sec-temporal-absolute-constructor">
-    <h1><span class="secnum">6.1</span>The Temporal.Absolute Constructor</h1>
+    <h1><span class="secnum">6.1</span> The Temporal.Absolute Constructor</h1>
     <p>
       The Temporal.Absolute constructor is the %Temporal.Absolute% intrinsic object.
       When called as a constructor, it creates and initializes a new Temporal.Absolute object.
@@ -3538,7 +3553,7 @@ li.menu-search-result-term:before {
     </p>
 
     <emu-clause id="sec-temporal.absolute">
-      <h1><span class="secnum">6.1.1</span>Temporal.Absolute ( <var>epochNanoseconds</var> )</h1>
+      <h1><span class="secnum">6.1.1</span> Temporal.Absolute ( <var>epochNanoseconds</var> )</h1>
       <p>
         When the <code>Temporal.Absolute</code> function is called, the following steps are taken:
       
@@ -3549,18 +3564,18 @@ li.menu-search-result-term:before {
   </emu-clause>
 
   <emu-clause id="sec-properties-of-the-temporal-absolute-constructor">
-    <h1><span class="secnum">6.2</span>Properties of the Temporal.Absolute Constructor</h1>
+    <h1><span class="secnum">6.2</span> Properties of the Temporal.Absolute Constructor</h1>
     <p>The value of the [[Prototype]] internal slot of the Temporal.Absolute constructor is the intrinsic object <emu-xref href="#sec-properties-of-the-function-prototype-object"><a href="https://tc39.github.io/ecma262/#sec-properties-of-the-function-prototype-object">%FunctionPrototype%</a></emu-xref>.</p>
     <p>The Temporal.Absolute constructor has the following properties:</p>
 
     <emu-clause id="sec-temporal-absolute-prototype">
-      <h1><span class="secnum">6.2.1</span>Temporal.Absolute.prototype</h1>
+      <h1><span class="secnum">6.2.1</span> Temporal.Absolute.prototype</h1>
       <p>The initial value of Temporal.Absolute.prototype is %Temporal.Absolute.prototype%.</p>
       <p>This property has the attributes { [[Writable]]: <emu-val>false</emu-val>, [[Enumerable]]: <emu-val>false</emu-val>, [[Configurable]]: <emu-val>false</emu-val> }.</p>
     </emu-clause>
 
     <emu-clause id="sec-temporal.absolute.from">
-      <h1><span class="secnum">6.2.2</span>Temporal.Absolute.from ( <var>arg</var> )</h1>
+      <h1><span class="secnum">6.2.2</span> Temporal.Absolute.from ( <var>arg</var> )</h1>
       <p>
         The <code>from</code> method takes one argument <var>arg</var>.
         The following steps are taken:
@@ -3571,7 +3586,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal.absolute.fromepochseconds">
-      <h1><span class="secnum">6.2.3</span>Temporal.Absolute.fromEpochSeconds ( <var>arg</var> )</h1>
+      <h1><span class="secnum">6.2.3</span> Temporal.Absolute.fromEpochSeconds ( <var>arg</var> )</h1>
       <p>
         The <code>fromEpochSeconds</code> method takes one argument <var>arg</var>.
         The following steps are taken:
@@ -3582,7 +3597,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal.absolute.fromepochmilliseconds">
-      <h1><span class="secnum">6.2.4</span>Temporal.Absolute.fromEpochMilliseconds ( <var>arg</var> )</h1>
+      <h1><span class="secnum">6.2.4</span> Temporal.Absolute.fromEpochMilliseconds ( <var>arg</var> )</h1>
       <p>
         The <code>fromEpochMilliseconds</code> method takes one argument <var>arg</var>.
         The following steps are taken:
@@ -3593,7 +3608,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal.absolute.fromepochmicroseconds">
-      <h1><span class="secnum">6.2.5</span>Temporal.Absolute.fromEpochMicroseconds ( <var>arg</var> )</h1>
+      <h1><span class="secnum">6.2.5</span> Temporal.Absolute.fromEpochMicroseconds ( <var>arg</var> )</h1>
       <p>
         The <code>fromEpochMicroseconds</code> method takes one argument <var>arg</var>.
         The following steps are taken:
@@ -3604,7 +3619,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal.absolute.fromepochnanoseconds">
-      <h1><span class="secnum">6.2.6</span>Temporal.Absolute.fromEpochNanoseconds ( <var>arg</var> )</h1>
+      <h1><span class="secnum">6.2.6</span> Temporal.Absolute.fromEpochNanoseconds ( <var>arg</var> )</h1>
       <p>
         The <code>fromEpochNanoseconds</code> method takes one argument <var>arg</var>.
         The following steps are taken:
@@ -3615,7 +3630,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal.absolute.compare">
-      <h1><span class="secnum">6.2.7</span>Temporal.Absolute.compare ( <var>one</var>, <var>two</var> )</h1>
+      <h1><span class="secnum">6.2.7</span> Temporal.Absolute.compare ( <var>one</var>, <var>two</var> )</h1>
       <p>
         The <code>compare</code> method takes two arguments, <var>one</var> and <var>two</var>.
         The following steps are taken:
@@ -3627,7 +3642,7 @@ li.menu-search-result-term:before {
   </emu-clause>
 
   <emu-clause id="sec-properties-of-the-temporal-absolute-prototype-object">
-    <h1><span class="secnum">6.3</span>Properties of the Temporal.Absolute Prototype Object</h1>
+    <h1><span class="secnum">6.3</span> Properties of the Temporal.Absolute Prototype Object</h1>
 
     <p>The Temporal.Absolute prototype object</p>
     <ul>
@@ -3642,12 +3657,12 @@ li.menu-search-result-term:before {
     </li></ul>
 
     <emu-clause id="sec-temporal.Absolute.prototype.constructor">
-      <h1><span class="secnum">6.3.1</span>Temporal.Absolute.prototype.constructor</h1>
+      <h1><span class="secnum">6.3.1</span> Temporal.Absolute.prototype.constructor</h1>
       <p>The initial value of Temporal.Absolute.prototype.constructor is %Temporal.Absolute%.</p>
     </emu-clause>
 
     <emu-clause id="sec-temporal.Absolute.prototype-@@tostringtag">
-      <h1><span class="secnum">6.3.2</span>Temporal.Absolute.prototype[ @@toStringTag ]</h1>
+      <h1><span class="secnum">6.3.2</span> Temporal.Absolute.prototype[ @@toStringTag ]</h1>
       <p>
         The initial value of the @@toStringTag property is the string value <code>"Temporal.Absolute"</code>.
       
@@ -3659,7 +3674,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal.absolute.prototype.getepochseconds">
-      <h1><span class="secnum">6.3.3</span>Temporal.Absolute.prototype.getEpochSeconds ( )</h1>
+      <h1><span class="secnum">6.3.3</span> Temporal.Absolute.prototype.getEpochSeconds ( )</h1>
       <p>
         The following steps are taken:
       
@@ -3669,7 +3684,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal.absolute.prototype.getepochmilliseconds">
-      <h1><span class="secnum">6.3.4</span>Temporal.Absolute.prototype.getEpochMilliseconds ( )</h1>
+      <h1><span class="secnum">6.3.4</span> Temporal.Absolute.prototype.getEpochMilliseconds ( )</h1>
       <p>
         The following steps are taken:
       
@@ -3679,7 +3694,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal.absolute.prototype.getepochmicroseconds">
-      <h1><span class="secnum">6.3.5</span>Temporal.Absolute.prototype.getEpochMicroseconds ( )</h1>
+      <h1><span class="secnum">6.3.5</span> Temporal.Absolute.prototype.getEpochMicroseconds ( )</h1>
       <p>
         The following steps are taken:
       
@@ -3689,7 +3704,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal.absolute.prototype.getepochnanoseconds">
-      <h1><span class="secnum">6.3.6</span>Temporal.Absolute.prototype.getEpochNanoseconds ( )</h1>
+      <h1><span class="secnum">6.3.6</span> Temporal.Absolute.prototype.getEpochNanoseconds ( )</h1>
       <p>
         The following steps are taken:
       
@@ -3699,7 +3714,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal.absolute.prototype.plus">
-      <h1><span class="secnum">6.3.7</span>Temporal.Absolute.prototype.plus ( <var>duration</var> )</h1>
+      <h1><span class="secnum">6.3.7</span> Temporal.Absolute.prototype.plus ( <var>duration</var> )</h1>
       <p>
         The <code>plus</code> method takes one argument <var>duration</var>.
         The following steps are taken:
@@ -3717,7 +3732,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal.absolute.prototype.minus">
-      <h1><span class="secnum">6.3.8</span>Temporal.Absolute.prototype.minus ( <var>duration</var> )</h1>
+      <h1><span class="secnum">6.3.8</span> Temporal.Absolute.prototype.minus ( <var>duration</var> )</h1>
       <p>
         The <code>minus</code> method takes one argument <var>duration</var>.
         The following steps are taken:
@@ -3735,7 +3750,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal.absolute.prototype.difference">
-      <h1><span class="secnum">6.3.9</span>Temporal.Absolute.prototype.difference ( <var>otherAbsolute</var> )</h1>
+      <h1><span class="secnum">6.3.9</span> Temporal.Absolute.prototype.difference ( <var>otherAbsolute</var> )</h1>
       <p>
         The <code>difference</code> method takes one argument <var>otherAbsolute</var>.
         The following steps are taken:
@@ -3746,7 +3761,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal.absolute.prototype.tostring">
-      <h1><span class="secnum">6.3.10</span>Temporal.Absolute.prototype.toString ( [ <var>timeZone</var> ] )</h1>
+      <h1><span class="secnum">6.3.10</span> Temporal.Absolute.prototype.toString ( [ <var>timeZone</var> ] )</h1>
       <p>
         The <code>toString</code> method takes one argument <var>timeZone</var>.
         The following steps are taken:
@@ -3757,7 +3772,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal.absolute.prototype.tolocalestring">
-      <h1><span class="secnum">6.3.11</span>Temporal.Absolute.prototype.toLocaleString ( [ <var>locales</var> [ , <var>options</var> ] ] )</h1>
+      <h1><span class="secnum">6.3.11</span> Temporal.Absolute.prototype.toLocaleString ( [ <var>locales</var> [ , <var>options</var> ] ] )</h1>
       <p>
         The <code>toLocaleString</code> method takes two arguments, <var>locales</var> and <var>options</var>.
         The following steps are taken:
@@ -3768,7 +3783,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal.absolute.prototype.tojson">
-      <h1><span class="secnum">6.3.12</span>Temporal.Absolute.prototype.toJSON ( [ <var>timeZone</var> ] )</h1>
+      <h1><span class="secnum">6.3.12</span> Temporal.Absolute.prototype.toJSON ( [ <var>timeZone</var> ] )</h1>
       <p>
         The <code>toJSON</code> method takes one argument <var>timeZone</var>.
         The following steps are taken:
@@ -3779,7 +3794,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal.absolute.prototype.intimezone">
-      <h1><span class="secnum">6.3.13</span>Temporal.Absolute.prototype.inTimeZone ( [ <var>timeZone</var> ] )</h1>
+      <h1><span class="secnum">6.3.13</span> Temporal.Absolute.prototype.inTimeZone ( [ <var>timeZone</var> ] )</h1>
       <p>
         The <code>inTimeZone</code> method takes one argument <var>timeZone</var>.
         The following steps are taken:
@@ -3791,22 +3806,22 @@ li.menu-search-result-term:before {
   </emu-clause>
 
   <emu-clause id="sec-temporal-datetime-abstract-ops">
-    <h1><span class="secnum">6.4</span>Abstract operations</h1>
+    <h1><span class="secnum">6.4</span> Abstract operations</h1>
 
     <emu-clause id="sec-temporal-createabsolute" aoid="CreateAbsolute">
-      <h1><span class="secnum">6.4.1</span>CreateAbsolute ( <var>ns</var> [ , <var>newTarget</var>] )</h1>
+      <h1><span class="secnum">6.4.1</span> CreateAbsolute ( <var>ns</var> [ , <var>newTarget</var>] )</h1>
       <emu-alg><ol><li>Assert: <emu-xref aoid="Type" id="_ref_281"><a href="https://tc39.github.io/ecma262/#sec-ecmascript-data-types-and-values">Type</a></emu-xref>(<var>ns</var>) is BigInt.</li><li>If <var>newTarget</var> is not given, set it to %Temporal.Absolute%.</li><li>Let <var>object</var> be ?&nbsp;<emu-xref aoid="OrdinaryCreateFromConstructor" id="_ref_282"><a href="https://tc39.github.io/ecma262/#sec-ordinarycreatefromconstructor">OrdinaryCreateFromConstructor</a></emu-xref>(<var>newTarget</var>, <code>"%Temporal.Absolute.prototype%"</code>, « [[InitializedTemporalAbsolute]], [[Nanoseconds]] »).</li><li>Set <var>object</var>.[[Nanoseconds]] to <var>ns</var>.</li><li>Return <var>object</var>.
       </li></ol></emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal-absolutecompare" aoid="AbsoluteCompare">
-      <h1><span class="secnum">6.4.2</span>AbsoluteCompare ( <var>one</var>, <var>two</var> )</h1>
+      <h1><span class="secnum">6.4.2</span> AbsoluteCompare ( <var>one</var>, <var>two</var> )</h1>
       <emu-alg><ol><li>Assert: <emu-xref aoid="Type" id="_ref_283"><a href="https://tc39.github.io/ecma262/#sec-ecmascript-data-types-and-values">Type</a></emu-xref>(<var>one</var>) is Object.</li><li>Assert: <var>one</var> has an [[InitializedTemporalAbsolute]] internal slot.</li><li>Assert: <emu-xref aoid="Type" id="_ref_284"><a href="https://tc39.github.io/ecma262/#sec-ecmascript-data-types-and-values">Type</a></emu-xref>(<var>two</var>) is Object.</li><li>Assert: <var>two</var> has an [[InitializedTemporalAbsolute]] internal slot.</li><li>If <var>one</var>.[[Nanoseconds]] &gt; <var>two</var>.[[Nanoseconds]], return 1.</li><li>If <var>one</var>.[[Nanoseconds]] &lt; <var>two</var>.[[Nanoseconds]], return -1.</li><li>Return +0.
       </li></ol></emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal-absolutetostring" aoid="AbsoluteToString">
-      <h1><span class="secnum">6.4.3</span>AbsoluteToString ( <var>absolute</var>, <var>timeZone</var> )</h1>
+      <h1><span class="secnum">6.4.3</span> AbsoluteToString ( <var>absolute</var>, <var>timeZone</var> )</h1>
       <emu-alg><ol><li>Assert: <emu-xref aoid="Type" id="_ref_285"><a href="https://tc39.github.io/ecma262/#sec-ecmascript-data-types-and-values">Type</a></emu-xref>(<var>absolute</var>) is Object.</li><li>Assert: <var>absolute</var> has an [[InitializedTemporalAbsolute]] internal slot.</li><li>Assert: <emu-xref aoid="Type" id="_ref_286"><a href="https://tc39.github.io/ecma262/#sec-ecmascript-data-types-and-values">Type</a></emu-xref>(<var>timeZone</var>) is Object.</li><li>Assert: <var>timeZone</var> has an [[InitializedTemporalTimeZone]] internal slot.</li><li>Let <var>dateTime</var> be ?&nbsp;<emu-xref aoid="GetDateTimeFor" id="_ref_287"><a href="#sec-temporal-getdatetimefor">GetDateTimeFor</a></emu-xref>(<var>timeZone</var>, <var>absolute</var>);</li><li>Let <var>dateTimeString</var> be !&nbsp;<emu-xref aoid="DateTimeToString" id="_ref_288"><a href="#sec-temporal-datetimetostring">DateTimeToString</a></emu-xref>(<var>dateTime</var>).</li><li>Let <var>timeZoneString</var> be ?&nbsp;ISOTimeZoneString(<var>timeZone</var>, <var>absolute</var>).</li><li>Return the string-concatenation of <var>dateTimeString</var> and <var>timeZoneString</var>.
       </li></ol></emu-alg>
     </emu-clause>
@@ -3814,11 +3829,11 @@ li.menu-search-result-term:before {
 </emu-clause>
 </emu-import>
 <emu-import href="spec/yearmonth.html"><emu-clause id="sec-temporal-yearmonth">
-  <h1><span class="secnum">7</span>Temporal.YearMonth Objects</h1>
+  <h1><span class="secnum">7</span> Temporal.YearMonth Objects</h1>
   <p>A Temporal.YearMonth object is an immutable Object that contains Number values corresponding to a particular year and month.</p>
 
   <emu-clause id="sec-temporal-yearmonth-constructor">
-    <h1><span class="secnum">7.1</span>The Temporal.YearMonth Constructor</h1>
+    <h1><span class="secnum">7.1</span> The Temporal.YearMonth Constructor</h1>
     <p>
       The Temporal.YearMonth constructor is the %Temporal.YearMonth% intrinsic object.
       When called as a constructor, it creates and initializes a new Temporal.YearMonth object.
@@ -3832,7 +3847,7 @@ li.menu-search-result-term:before {
     </p>
 
     <emu-clause id="sec-temporal.yearmonth">
-      <h1><span class="secnum">7.1.1</span>Temporal.YearMonth ( <var>year</var>, <var>month</var> [ , <var>disambiguation</var> ] )</h1>
+      <h1><span class="secnum">7.1.1</span> Temporal.YearMonth ( <var>year</var>, <var>month</var> [ , <var>disambiguation</var> ] )</h1>
       <p>
         When the <code>Temporal.YearMonth</code> function is called, the following steps are taken:
       
@@ -3843,18 +3858,18 @@ li.menu-search-result-term:before {
   </emu-clause>
 
   <emu-clause id="sec-properties-of-the-temporal-YearMonth-constructor">
-    <h1><span class="secnum">7.2</span>Properties of the Temporal.YearMonth Constructor</h1>
+    <h1><span class="secnum">7.2</span> Properties of the Temporal.YearMonth Constructor</h1>
     <p>The value of the [[Prototype]] internal slot of the Temporal.YearMonth constructor is the intrinsic object <emu-xref href="#sec-properties-of-the-function-prototype-object"><a href="https://tc39.github.io/ecma262/#sec-properties-of-the-function-prototype-object">%FunctionPrototype%</a></emu-xref>.</p>
     <p>The Temporal.YearMonth constructor has the following properties:</p>
 
     <emu-clause id="sec-temporal-YearMonth-prototype">
-      <h1><span class="secnum">7.2.1</span>Temporal.YearMonth.prototype</h1>
+      <h1><span class="secnum">7.2.1</span> Temporal.YearMonth.prototype</h1>
       <p>The initial value of Temporal.YearMonth.prototype is %Temporal.YearMonth.prototype%.</p>
       <p>This property has the attributes { [[Writable]]: <emu-val>false</emu-val>, [[Enumerable]]: <emu-val>false</emu-val>, [[Configurable]]: <emu-val>false</emu-val> }.</p>
     </emu-clause>
 
     <emu-clause id="sec-temporal.yearmonth.from">
-      <h1><span class="secnum">7.2.2</span>Temporal.YearMonth.from ( <var>arg</var> )</h1>
+      <h1><span class="secnum">7.2.2</span> Temporal.YearMonth.from ( <var>arg</var> )</h1>
       <p>
         The <code>from</code> method takes one argument <var>arg</var>.
         The following steps are taken:
@@ -3865,7 +3880,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal.yearmonth.compare">
-      <h1><span class="secnum">7.2.3</span>Temporal.YearMonth.compare ( <var>one</var>, <var>two</var> )</h1>
+      <h1><span class="secnum">7.2.3</span> Temporal.YearMonth.compare ( <var>one</var>, <var>two</var> )</h1>
       <p>
         The <code>compare</code> method takes two arguments, <var>one</var> and <var>two</var>.
         The following steps are taken:
@@ -3877,7 +3892,7 @@ li.menu-search-result-term:before {
   </emu-clause>
 
   <emu-clause id="sec-properties-of-the-temporal-YearMonth-prototype-object">
-    <h1><span class="secnum">7.3</span>Properties of the Temporal.YearMonth Prototype Object</h1>
+    <h1><span class="secnum">7.3</span> Properties of the Temporal.YearMonth Prototype Object</h1>
 
     <p>The Temporal.YearMonth prototype object</p>
     <ul>
@@ -3892,12 +3907,12 @@ li.menu-search-result-term:before {
     </li></ul>
 
     <emu-clause id="sec-temporal.YearMonth.prototype.constructor">
-      <h1><span class="secnum">7.3.1</span>Temporal.YearMonth.prototype.constructor</h1>
+      <h1><span class="secnum">7.3.1</span> Temporal.YearMonth.prototype.constructor</h1>
       <p>The initial value of Temporal.YearMonth.prototype.constructor is %Temporal.YearMonth%.</p>
     </emu-clause>
 
     <emu-clause id="sec-temporal.YearMonth.prototype-@@tostringtag">
-      <h1><span class="secnum">7.3.2</span>Temporal.YearMonth.prototype[ @@toStringTag ]</h1>
+      <h1><span class="secnum">7.3.2</span> Temporal.YearMonth.prototype[ @@toStringTag ]</h1>
       <p>
         The initial value of the @@toStringTag property is the string value <code>"Temporal.YearMonth"</code>.
       
@@ -3909,7 +3924,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-get-temporal.yearmonth.prototype.year">
-      <h1><span class="secnum">7.3.3</span>get Temporal.YearMonth.prototype.year</h1>
+      <h1><span class="secnum">7.3.3</span> get Temporal.YearMonth.prototype.year</h1>
       <p>
         <code>Temporal.YearMonth.prototype.year</code> is an accessor property whose set accessor function is undefined.
         Its get accessor function performs the following steps:
@@ -3920,7 +3935,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-get-temporal.yearmonth.prototype.month">
-      <h1><span class="secnum">7.3.4</span>get Temporal.YearMonth.prototype.month</h1>
+      <h1><span class="secnum">7.3.4</span> get Temporal.YearMonth.prototype.month</h1>
       <p>
         <code>Temporal.YearMonth.prototype.month</code> is an accessor property whose set accessor function is undefined.
         Its get accessor function performs the following steps:
@@ -3931,7 +3946,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-get-temporal.yearmonth.prototype.daysinmonth">
-      <h1><span class="secnum">7.3.5</span>get Temporal.YearMonth.prototype.daysInMonth</h1>
+      <h1><span class="secnum">7.3.5</span> get Temporal.YearMonth.prototype.daysInMonth</h1>
       <p>
         <code>Temporal.YearMonth.prototype.daysInMonth</code> is an accessor property whose set accessor function is undefined.
         Its get accessor function performs the following steps:
@@ -3942,7 +3957,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-get-temporal.yearmonth.prototype.leapyear">
-      <h1><span class="secnum">7.3.6</span>get Temporal.YearMonth.prototype.leapYear</h1>
+      <h1><span class="secnum">7.3.6</span> get Temporal.YearMonth.prototype.leapYear</h1>
       <p>
         <code>Temporal.YearMonth.prototype.leapYear</code> is an accessor property whose set accessor function is undefined.
         Its get accessor function performs the following steps:
@@ -3953,7 +3968,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal.yearmonth.prototype.with">
-      <h1><span class="secnum">7.3.7</span>Temporal.YearMonth.prototype.with ( <var>otherYearMonth</var> [ , <var>disambiguation</var> ] )</h1>
+      <h1><span class="secnum">7.3.7</span> Temporal.YearMonth.prototype.with ( <var>otherYearMonth</var> [ , <var>disambiguation</var> ] )</h1>
       <p>
         The <code>with</code> method takes two arguments, <var>otherYearMonth</var> and <var>disambiguation</var>.
         The following steps are taken:
@@ -3964,7 +3979,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal.yearmonth.prototype.plus">
-      <h1><span class="secnum">7.3.8</span>Temporal.YearMonth.prototype.plus ( <var>duration</var> [ , <var>disambiguation</var> ] )</h1>
+      <h1><span class="secnum">7.3.8</span> Temporal.YearMonth.prototype.plus ( <var>duration</var> [ , <var>disambiguation</var> ] )</h1>
       <p>
         The <code>plus</code> method takes two arguments, <var>duration</var> and <var>disambiguation</var>.
         The following steps are taken:
@@ -3975,7 +3990,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal.yearmonth.prototype.minus">
-      <h1><span class="secnum">7.3.9</span>Temporal.YearMonth.prototype.minus ( <var>duration</var> [ , <var>disambiguation</var> ] )</h1>
+      <h1><span class="secnum">7.3.9</span> Temporal.YearMonth.prototype.minus ( <var>duration</var> [ , <var>disambiguation</var> ] )</h1>
       <p>
         The <code>minus</code> method takes two arguments, <var>duration</var> and <var>disambiguation</var>.
         The following steps are taken:
@@ -3986,7 +4001,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal.yearmonth.prototype.difference">
-      <h1><span class="secnum">7.3.10</span>Temporal.YearMonth.prototype.difference ( <var>otherYearMonth</var> )</h1>
+      <h1><span class="secnum">7.3.10</span> Temporal.YearMonth.prototype.difference ( <var>otherYearMonth</var> )</h1>
       <p>
         The <code>difference</code> method takes one argument <var>otherYearMonth</var>.
         The following steps are taken:
@@ -3997,7 +4012,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal.yearmonth.prototype.tostring">
-      <h1><span class="secnum">7.3.11</span>Temporal.YearMonth.prototype.toString ( )</h1>
+      <h1><span class="secnum">7.3.11</span> Temporal.YearMonth.prototype.toString ( )</h1>
       <p>
         The following steps are taken:
       
@@ -4007,7 +4022,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal.yearmonth.prototype.tolocalestring">
-      <h1><span class="secnum">7.3.12</span>Temporal.YearMonth.prototype.toLocaleString ( [ <var>locales</var> [ , <var>options</var> ] ] )</h1>
+      <h1><span class="secnum">7.3.12</span> Temporal.YearMonth.prototype.toLocaleString ( [ <var>locales</var> [ , <var>options</var> ] ] )</h1>
       <p>
         The <code>toLocaleString</code> method takes two arguments, <var>locales</var> and <var>options</var>.
         The following steps are taken:
@@ -4018,7 +4033,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal.yearmonth.prototype.tojson">
-      <h1><span class="secnum">7.3.13</span>Temporal.YearMonth.prototype.toJSON ( )</h1>
+      <h1><span class="secnum">7.3.13</span> Temporal.YearMonth.prototype.toJSON ( )</h1>
       <p>
         The following steps are taken:
       
@@ -4028,7 +4043,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal.yearmonth.prototype.withday">
-      <h1><span class="secnum">7.3.14</span>Temporal.YearMonth.prototype.withDay ( <var>day</var> [ , <var>disambiguation</var> ] )</h1>
+      <h1><span class="secnum">7.3.14</span> Temporal.YearMonth.prototype.withDay ( <var>day</var> [ , <var>disambiguation</var> ] )</h1>
       <p>
         The <code>withDay</code> method takes two arguments, <var>day</var> and <var>disambiguation</var>.
         The following steps are taken:
@@ -4040,10 +4055,10 @@ li.menu-search-result-term:before {
   </emu-clause>
 
   <emu-clause id="sec-temporal-yearmonth-abstract-ops">
-    <h1><span class="secnum">7.4</span>Abstract operations</h1>
+    <h1><span class="secnum">7.4</span> Abstract operations</h1>
 
     <emu-clause id="sec-temporal-topartialyearmonth" aoid="ToPartialYearMonth">
-      <h1><span class="secnum">7.4.1</span>ToPartialYearMonth ( <var>yearMonth</var> )</h1>
+      <h1><span class="secnum">7.4.1</span> ToPartialYearMonth ( <var>yearMonth</var> )</h1>
       <emu-alg><ol><li>If <emu-xref aoid="Type" id="_ref_327"><a href="https://tc39.github.io/ecma262/#sec-ecmascript-data-types-and-values">Type</a></emu-xref>(<var>yearMonth</var>) is String, then<ol><li>Return ?&nbsp;<emu-xref aoid="ParseYearMonthString" id="_ref_328"><a href="#sec-temporal-parseyearmonthstring">ParseYearMonthString</a></emu-xref>(<var>yearMonth</var>).</li></ol></li><li>If <emu-xref aoid="Type" id="_ref_329"><a href="https://tc39.github.io/ecma262/#sec-ecmascript-data-types-and-values">Type</a></emu-xref>(<var>yearMonth</var>) is Object, then<ol><li>Let <var>result</var> be the new <emu-xref href="#sec-list-and-record-specification-type"><a href="https://tc39.github.io/ecma262/#sec-list-and-record-specification-type">Record</a></emu-xref> {
               [[Year]]: <emu-val>undefined</emu-val>,
               [[Month]]: <emu-val>undefined</emu-val>
@@ -4073,7 +4088,7 @@ li.menu-search-result-term:before {
       </figure></emu-table>
     </emu-clause>
     <emu-clause id="sec-temporal-regulateyearmonth" aoid="RegulateYearMonth">
-      <h1><span class="secnum">7.4.2</span>RegulateYearMonth ( <var>year</var>, <var>month</var>, <var>disambiguation</var> )</h1>
+      <h1><span class="secnum">7.4.2</span> RegulateYearMonth ( <var>year</var>, <var>month</var>, <var>disambiguation</var> )</h1>
       <emu-alg><ol><li>Assert: <var>year</var> and <var>month</var> are integer Number values.</li><li>Assert: <var>disambiguation</var> is one of <code>"constrain"</code>, <code>"balance"</code>, or <code>"reject"</code>.</li><li>If <var>disambiguation</var> is <code>"constrain"</code>, then<ol><li><mark>TODO: define.</mark></li></ol></li><li>If <var>disambiguation</var> is <code>"balance"</code>, then<ol><li>Return <emu-xref aoid="BalanceYearMonth" id="_ref_332"><a href="#sec-temporal-balanceyearmonth">BalanceYearMonth</a></emu-xref>(<var>year</var>, <var>month</var>).</li></ol></li><li>If <var>disambiguation</var> is <code>"reject"</code>, then<ol><li>If !&nbsp;<emu-xref aoid="ValidateYearMonth" id="_ref_333"><a href="#sec-temporal-validateyearmonth">ValidateYearMonth</a></emu-xref>(<var>year</var>, <var>month</var>) is <emu-val>false</emu-val>, then<ol><li>Throw a <emu-val>RangeError</emu-val> exception.</li></ol></li><li>Return the new <emu-xref href="#sec-list-and-record-specification-type"><a href="https://tc39.github.io/ecma262/#sec-list-and-record-specification-type">Record</a></emu-xref> {
               [[Year]]: <var>year</var>,
               [[Month]]: <var>month</var>
@@ -4082,13 +4097,13 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal-validateyearmonth" aoid="ValidateYearMonth">
-      <h1><span class="secnum">7.4.3</span>ValidateYearMonth ( <var>year</var>, <var>month</var> )</h1>
+      <h1><span class="secnum">7.4.3</span> ValidateYearMonth ( <var>year</var>, <var>month</var> )</h1>
       <emu-alg><ol><li>Assert: <var>year</var> and <var>month</var> are integer Number values.</li><li>If <var>month</var> &lt; 1 or <var>month</var> &gt; 12, then<ol><li>Return <emu-val>false</emu-val>.</li></ol></li><li>Return <emu-val>true</emu-val>.
       </li></ol></emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal-balanceyearmonth" aoid="BalanceYearMonth">
-      <h1><span class="secnum">7.4.4</span>BalanceYearMonth ( <var>year</var>, <var>month</var> )</h1>
+      <h1><span class="secnum">7.4.4</span> BalanceYearMonth ( <var>year</var>, <var>month</var> )</h1>
       <emu-alg><ol><li>Assert: <var>year</var> and <var>month</var> are integer Number values.</li><li>Set <var>year</var> to <var>year</var> + <emu-xref aoid="floor"><a href="https://tc39.github.io/ecma262/#sec-algorithm-conventions">floor</a></emu-xref>((<var>month</var> - 1) / 12).</li><li>Set <var>month</var> to <emu-xref aoid="NonNegativeModulo" id="_ref_334"><a href="#sec-temporal-nonnegativemodulo">NonNegativeModulo</a></emu-xref>(<var>month</var> - 1, 12) + 1.</li><li>Return the new <emu-xref href="#sec-list-and-record-specification-type"><a href="https://tc39.github.io/ecma262/#sec-list-and-record-specification-type">Record</a></emu-xref> {
             [[Year]]: <var>year</var>,
             [[Month]]: <var>month</var>
@@ -4097,13 +4112,13 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal-createyearmonth" aoid="CreateYearMonth">
-      <h1><span class="secnum">7.4.5</span>CreateYearMonth ( <var>year</var>, <var>month</var> [ , <var>newTarget</var> ] )</h1>
+      <h1><span class="secnum">7.4.5</span> CreateYearMonth ( <var>year</var>, <var>month</var> [ , <var>newTarget</var> ] )</h1>
       <emu-alg><ol><li>Assert: !&nbsp;<emu-xref aoid="ValidateYearMonth" id="_ref_335"><a href="#sec-temporal-validateyearmonth">ValidateYearMonth</a></emu-xref>(<var>year</var>, <var>month</var>) is <emu-val>true</emu-val>.</li><li>If <var>newTarget</var> is not given, set it to %Temporal.YearMonth%</li><li>Let <var>object</var> be ?&nbsp;<emu-xref aoid="OrdinaryCreateFromConstructor" id="_ref_336"><a href="https://tc39.github.io/ecma262/#sec-ordinarycreatefromconstructor">OrdinaryCreateFromConstructor</a></emu-xref>(<var>newTarget</var>, <code>"%Temporal.YearMonth.prototype%"</code>, « [[InitializedTemporalYearMonth]], [[Year]], [[Month]] »).</li><li>Set <var>object</var>.[[Year]] to <var>year</var>.</li><li>Set <var>object</var>.[[Month]] to <var>month</var>.</li><li>Return <var>object</var>.
       </li></ol></emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal-parseyearmonthstring" aoid="ParseYearMonthString">
-      <h1><span class="secnum">7.4.6</span>ParseYearMonthString ( <var>yearMonth</var> )</h1>
+      <h1><span class="secnum">7.4.6</span> ParseYearMonthString ( <var>yearMonth</var> )</h1>
       <emu-alg><ol><li>Assert: <emu-xref aoid="Type" id="_ref_337"><a href="https://tc39.github.io/ecma262/#sec-ecmascript-data-types-and-values">Type</a></emu-xref>(<var>yearMonth</var>) is String.</li><li>Let <var>valid</var> be <emu-val>true</emu-val> if <var>yearMonth</var> matches <a href="https://github.com/tc39/proposal-temporal/blob/main/polyfill/lib/regex.mjs">the "yearmonth" regular expression in the polyfill</a> and <emu-val>false</emu-val> otherwise.</li><li><mark>TODO: Actually specify this somehow.</mark></li><li>If <var>valid</var> is <emu-val>false</emu-val>, then<ol><li>Throw a <emu-val>RangeError</emu-val> exception.</li></ol></li><li>Let <var>year</var> and <var>month</var> be the respective parts of <var>yearMonth</var> interpreted as decimal numbers.</li><li>Return the new <emu-xref href="#sec-list-and-record-specification-type"><a href="https://tc39.github.io/ecma262/#sec-list-and-record-specification-type">Record</a></emu-xref> {
             [[Year]]: <var>year</var>,
             [[Month]]: <var>month</var>
@@ -4112,13 +4127,13 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal-yearmonthfromstring" aoid="YearMonthFromString">
-      <h1><span class="secnum">7.4.7</span>YearMonthFromString ( <var>yearMonth</var> )</h1>
+      <h1><span class="secnum">7.4.7</span> YearMonthFromString ( <var>yearMonth</var> )</h1>
       <emu-alg><ol><li>Assert: <emu-xref aoid="Type" id="_ref_338"><a href="https://tc39.github.io/ecma262/#sec-ecmascript-data-types-and-values">Type</a></emu-xref>(<var>yearMonth</var>) is String.</li><li>Let <var>result</var> be ?&nbsp;<emu-xref aoid="ParseYearMonthString" id="_ref_339"><a href="#sec-temporal-parseyearmonthstring">ParseYearMonthString</a></emu-xref>(<var>yearMonth</var>).</li><li>If !&nbsp;<emu-xref aoid="ValidateYearMonth" id="_ref_340"><a href="#sec-temporal-validateyearmonth">ValidateYearMonth</a></emu-xref>(<var>result</var>.[[Year]], <var>result</var>.[[Month]]) is <emu-val>false</emu-val>, then<ol><li>Throw a <emu-val>TypeError</emu-val> exception.</li></ol></li><li>Return ?&nbsp;<emu-xref aoid="CreateYearMonth" id="_ref_341"><a href="#sec-temporal-createyearmonth">CreateYearMonth</a></emu-xref>(<var>result</var>.[[Year]], <var>result</var>.[[Month]]).
       </li></ol></emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal-toyearmonth" aoid="ToYearMonth">
-      <h1><span class="secnum">7.4.8</span>ToYearMonth ( <var>yearMonth</var> )</h1>
+      <h1><span class="secnum">7.4.8</span> ToYearMonth ( <var>yearMonth</var> )</h1>
       <emu-alg><ol><li>If <emu-xref aoid="Type" id="_ref_342"><a href="https://tc39.github.io/ecma262/#sec-ecmascript-data-types-and-values">Type</a></emu-xref>(<var>yearMonth</var>) is String, then<ol><li>Return ?&nbsp;<emu-xref aoid="YearMonthFromString" id="_ref_343"><a href="#sec-temporal-yearmonthfromstring">YearMonthFromString</a></emu-xref>(<var>yearMonth</var>).</li></ol></li><li>If <emu-xref aoid="Type" id="_ref_344"><a href="https://tc39.github.io/ecma262/#sec-ecmascript-data-types-and-values">Type</a></emu-xref>(<var>yearMonth</var>) is Object, then<ol><li>If <var>yearMonth</var> has an [[InitializedTemporalYearMonth]] internal slot, then<ol><li>Return <var>yearMonth</var>.</li></ol></li><li>Let <var>result</var> be the new <emu-xref href="#sec-list-and-record-specification-type"><a href="https://tc39.github.io/ecma262/#sec-list-and-record-specification-type">Record</a></emu-xref> {
               [[Year]]: <emu-val>undefined</emu-val>,
               [[Month]]: <emu-val>undefined</emu-val>
@@ -4127,13 +4142,13 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal-yearmonthtostring" aoid="YearMonthToString">
-      <h1><span class="secnum">7.4.9</span>YearMonthToString ( <var>yearMonth</var> )</h1>
+      <h1><span class="secnum">7.4.9</span> YearMonthToString ( <var>yearMonth</var> )</h1>
       <emu-alg><ol><li>Assert: <emu-xref aoid="Type" id="_ref_349"><a href="https://tc39.github.io/ecma262/#sec-ecmascript-data-types-and-values">Type</a></emu-xref>(<var>yearMonth</var>) is Object.</li><li>Assert: <var>yearMonth</var> has an [[InitializedTemporalYearMonth]] internal slot.</li><li>Let <var>year</var> be !&nbsp;<emu-xref aoid="PadYear" id="_ref_350"><a href="#sec-temporal-padyear">PadYear</a></emu-xref>(<var>yearMonth</var>.[[Year]]).</li><li>Let <var>month</var> be <var>yearMonth</var>.[[Month]] formatted as a two-digit decimal number, padded to the left with a zero if necessary.</li><li>Return the string-concatenation of <var>year</var>, the code unit 0x002D (HYPHEN-MINUS), and <var>month</var>.
       </li></ol></emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal-yearmonthcompare" aoid="YearMonthCompare">
-      <h1><span class="secnum">7.4.10</span>YearMonthCompare ( <var>one</var>, <var>two</var> )</h1>
+      <h1><span class="secnum">7.4.10</span> YearMonthCompare ( <var>one</var>, <var>two</var> )</h1>
       <emu-alg><ol><li>Assert: <emu-xref aoid="Type" id="_ref_351"><a href="https://tc39.github.io/ecma262/#sec-ecmascript-data-types-and-values">Type</a></emu-xref>(<var>one</var>) is Object.</li><li>Assert: <var>one</var> has an [[InitializedTemporalYearMonth]] internal slot.</li><li>Assert: <emu-xref aoid="Type" id="_ref_352"><a href="https://tc39.github.io/ecma262/#sec-ecmascript-data-types-and-values">Type</a></emu-xref>(<var>two</var>) is Object.</li><li>Assert: <var>two</var> has an [[InitializedTemporalYearMonth]] internal slot.</li><li>If <var>one</var>.[[Year]] &gt; <var>two</var>.[[Year]], return 1.</li><li>If <var>one</var>.[[Year]] &lt; <var>two</var>.[[Year]], return -1.</li><li>If <var>one</var>.[[Month]] &gt; <var>two</var>.[[Month]], return 1.</li><li>If <var>one</var>.[[Month]] &lt; <var>two</var>.[[Month]], return -1.</li><li>Return +0.
       </li></ol></emu-alg>
     </emu-clause>
@@ -4141,11 +4156,11 @@ li.menu-search-result-term:before {
 </emu-clause>
 </emu-import>
 <emu-import href="spec/monthday.html"><emu-clause id="sec-temporal-monthday">
-  <h1><span class="secnum">8</span>Temporal.MonthDay Objects</h1>
+  <h1><span class="secnum">8</span> Temporal.MonthDay Objects</h1>
   <p>A Temporal.MonthDay object is an immutable Object that contains Number values corresponding to a particular year and month.</p>
 
   <emu-clause id="sec-temporal-monthday-constructor">
-    <h1><span class="secnum">8.1</span>The Temporal.MonthDay Constructor</h1>
+    <h1><span class="secnum">8.1</span> The Temporal.MonthDay Constructor</h1>
     <p>
       The Temporal.MonthDay constructor is the %Temporal.MonthDay% intrinsic object.
       When called as a constructor, it creates and initializes a new Temporal.MonthDay object.
@@ -4159,7 +4174,7 @@ li.menu-search-result-term:before {
     </p>
 
     <emu-clause id="sec-temporal.monthday">
-      <h1><span class="secnum">8.1.1</span>Temporal.MonthDay ( <var>month</var>, <var>day</var> [ , <var>disambiguation</var> ] )</h1>
+      <h1><span class="secnum">8.1.1</span> Temporal.MonthDay ( <var>month</var>, <var>day</var> [ , <var>disambiguation</var> ] )</h1>
       <p>
         When the <code>Temporal.MonthDay</code> function is called, the following steps are taken:
       
@@ -4170,18 +4185,18 @@ li.menu-search-result-term:before {
   </emu-clause>
 
   <emu-clause id="sec-properties-of-the-temporal-MonthDay-constructor">
-    <h1><span class="secnum">8.2</span>Properties of the Temporal.MonthDay Constructor</h1>
+    <h1><span class="secnum">8.2</span> Properties of the Temporal.MonthDay Constructor</h1>
     <p>The value of the [[Prototype]] internal slot of the Temporal.MonthDay constructor is the intrinsic object <emu-xref href="#sec-properties-of-the-function-prototype-object"><a href="https://tc39.github.io/ecma262/#sec-properties-of-the-function-prototype-object">%FunctionPrototype%</a></emu-xref>.</p>
     <p>The Temporal.MonthDay constructor has the following properties:</p>
 
     <emu-clause id="sec-temporal-MonthDay-prototype">
-      <h1><span class="secnum">8.2.1</span>Temporal.MonthDay.prototype</h1>
+      <h1><span class="secnum">8.2.1</span> Temporal.MonthDay.prototype</h1>
       <p>The initial value of Temporal.MonthDay.prototype is %Temporal.MonthDay.prototype%.</p>
       <p>This property has the attributes { [[Writable]]: <emu-val>false</emu-val>, [[Enumerable]]: <emu-val>false</emu-val>, [[Configurable]]: <emu-val>false</emu-val> }.</p>
     </emu-clause>
 
     <emu-clause id="sec-temporal.monthday.from">
-      <h1><span class="secnum">8.2.2</span>Temporal.MonthDay.from ( <var>arg</var> )</h1>
+      <h1><span class="secnum">8.2.2</span> Temporal.MonthDay.from ( <var>arg</var> )</h1>
       <p>
         The <code>from</code> method takes one argument <var>arg</var>.
         The following steps are taken:
@@ -4192,7 +4207,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal.monthday.compare">
-      <h1><span class="secnum">8.2.3</span>Temporal.MonthDay.compare ( <var>one</var>, <var>two</var> )</h1>
+      <h1><span class="secnum">8.2.3</span> Temporal.MonthDay.compare ( <var>one</var>, <var>two</var> )</h1>
       <p>
         The <code>compare</code> method takes two arguments, <var>one</var> and <var>two</var>.
         The following steps are taken:
@@ -4204,7 +4219,7 @@ li.menu-search-result-term:before {
   </emu-clause>
 
   <emu-clause id="sec-properties-of-the-temporal-MonthDay-prototype-object">
-    <h1><span class="secnum">8.3</span>Properties of the Temporal.MonthDay Prototype Object</h1>
+    <h1><span class="secnum">8.3</span> Properties of the Temporal.MonthDay Prototype Object</h1>
 
     <p>The Temporal.MonthDay prototype object</p>
     <ul>
@@ -4219,12 +4234,12 @@ li.menu-search-result-term:before {
     </li></ul>
 
     <emu-clause id="sec-temporal.MonthDay.prototype.constructor">
-      <h1><span class="secnum">8.3.1</span>Temporal.MonthDay.prototype.constructor</h1>
+      <h1><span class="secnum">8.3.1</span> Temporal.MonthDay.prototype.constructor</h1>
       <p>The initial value of Temporal.MonthDay.prototype.constructor is %Temporal.MonthDay%.</p>
     </emu-clause>
 
     <emu-clause id="sec-temporal.MonthDay.prototype-@@tostringtag">
-      <h1><span class="secnum">8.3.2</span>Temporal.MonthDay.prototype[ @@toStringTag ]</h1>
+      <h1><span class="secnum">8.3.2</span> Temporal.MonthDay.prototype[ @@toStringTag ]</h1>
       <p>
         The initial value of the @@toStringTag property is the string value <code>"Temporal.MonthDay"</code>.
       
@@ -4236,7 +4251,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-get-temporal.monthday.prototype.month">
-      <h1><span class="secnum">8.3.3</span>get Temporal.MonthDay.prototype.month</h1>
+      <h1><span class="secnum">8.3.3</span> get Temporal.MonthDay.prototype.month</h1>
       <p>
         <code>Temporal.MonthDay.prototype.month</code> is an accessor property whose set accessor function is undefined.
         Its get accessor function performs the following steps:
@@ -4247,7 +4262,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-get-temporal.monthday.prototype.day">
-      <h1><span class="secnum">8.3.4</span>get Temporal.MonthDay.prototype.day</h1>
+      <h1><span class="secnum">8.3.4</span> get Temporal.MonthDay.prototype.day</h1>
       <p>
         <code>Temporal.MonthDay.prototype.day</code> is an accessor property whose set accessor function is undefined.
         Its get accessor function performs the following steps:
@@ -4258,7 +4273,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal.monthday.prototype.with">
-      <h1><span class="secnum">8.3.5</span>Temporal.MonthDay.prototype.with ( <var>otherMonthDay</var> [ , <var>disambiguation</var> ] )</h1>
+      <h1><span class="secnum">8.3.5</span> Temporal.MonthDay.prototype.with ( <var>otherMonthDay</var> [ , <var>disambiguation</var> ] )</h1>
       <p>
         The <code>with</code> method takes two arguments, <var>otherMonthDay</var> and <var>disambiguation</var>.
         The following steps are taken:
@@ -4269,7 +4284,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal.monthday.prototype.plus">
-      <h1><span class="secnum">8.3.6</span>Temporal.MonthDay.prototype.plus ( <var>duration</var> [ , <var>disambiguation</var> ] )</h1>
+      <h1><span class="secnum">8.3.6</span> Temporal.MonthDay.prototype.plus ( <var>duration</var> [ , <var>disambiguation</var> ] )</h1>
       <p>
         The <code>plus</code> method takes two arguments, <var>duration</var> and <var>disambiguation</var>.
         The following steps are taken:
@@ -4280,7 +4295,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal.monthday.prototype.minus">
-      <h1><span class="secnum">8.3.7</span>Temporal.MonthDay.prototype.minus ( <var>duration</var> [ , <var>disambiguation</var> ] )</h1>
+      <h1><span class="secnum">8.3.7</span> Temporal.MonthDay.prototype.minus ( <var>duration</var> [ , <var>disambiguation</var> ] )</h1>
       <p>
         The <code>minus</code> method takes two arguments, <var>duration</var> and <var>disambiguation</var>.
         The following steps are taken:
@@ -4291,7 +4306,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal.monthday.prototype.difference">
-      <h1><span class="secnum">8.3.8</span>Temporal.MonthDay.prototype.difference ( <var>otherMonthDay</var> )</h1>
+      <h1><span class="secnum">8.3.8</span> Temporal.MonthDay.prototype.difference ( <var>otherMonthDay</var> )</h1>
       <p>
         The <code>difference</code> method takes one argument <var>otherMonthDay</var>.
         The following steps are taken:
@@ -4302,7 +4317,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal.monthday.prototype.tostring">
-      <h1><span class="secnum">8.3.9</span>Temporal.MonthDay.prototype.toString ( )</h1>
+      <h1><span class="secnum">8.3.9</span> Temporal.MonthDay.prototype.toString ( )</h1>
       <p>
         The following steps are taken:
       
@@ -4312,7 +4327,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal.monthday.prototype.tolocalestring">
-      <h1><span class="secnum">8.3.10</span>Temporal.MonthDay.prototype.toLocaleString ( [ <var>locales</var> [ , <var>options</var> ] ] )</h1>
+      <h1><span class="secnum">8.3.10</span> Temporal.MonthDay.prototype.toLocaleString ( [ <var>locales</var> [ , <var>options</var> ] ] )</h1>
       <p>
         The <code>toLocaleString</code> method takes two arguments, <var>locales</var> and <var>options</var>.
         The following steps are taken:
@@ -4323,7 +4338,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal.monthday.prototype.tojson">
-      <h1><span class="secnum">8.3.11</span>Temporal.MonthDay.prototype.toJSON ( )</h1>
+      <h1><span class="secnum">8.3.11</span> Temporal.MonthDay.prototype.toJSON ( )</h1>
       <p>
         The following steps are taken:
       
@@ -4333,7 +4348,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal.monthday.prototype.withyear">
-      <h1><span class="secnum">8.3.12</span>Temporal.MonthDay.prototype.withYear ( <var>year</var> [ , <var>disambiguation</var> ] )</h1>
+      <h1><span class="secnum">8.3.12</span> Temporal.MonthDay.prototype.withYear ( <var>year</var> [ , <var>disambiguation</var> ] )</h1>
       <p>
         The <code>withYear</code> method takes two arguments, <var>year</var> and <var>disambiguation</var>.
         The following steps are taken:
@@ -4345,10 +4360,10 @@ li.menu-search-result-term:before {
   </emu-clause>
 
   <emu-clause id="sec-temporal-monthday-abstract-ops">
-    <h1><span class="secnum">8.4</span>Abstract operations</h1>
+    <h1><span class="secnum">8.4</span> Abstract operations</h1>
 
     <emu-clause id="sec-temporal-topartialmonthday" aoid="ToPartialMonthDay">
-      <h1><span class="secnum">8.4.1</span>ToPartialMonthDay ( <var>monthDay</var> )</h1>
+      <h1><span class="secnum">8.4.1</span> ToPartialMonthDay ( <var>monthDay</var> )</h1>
       <emu-alg><ol><li>If <emu-xref aoid="Type" id="_ref_390"><a href="https://tc39.github.io/ecma262/#sec-ecmascript-data-types-and-values">Type</a></emu-xref>(<var>monthDay</var>) is String, then<ol><li>Return ?&nbsp;<emu-xref aoid="ParseMonthDayString" id="_ref_391"><a href="#sec-temporal-parsemonthdaystring">ParseMonthDayString</a></emu-xref>(<var>monthDay</var>).</li></ol></li><li>If <emu-xref aoid="Type" id="_ref_392"><a href="https://tc39.github.io/ecma262/#sec-ecmascript-data-types-and-values">Type</a></emu-xref>(<var>monthDay</var>) is Object, then<ol><li>Let <var>result</var> be the new <emu-xref href="#sec-list-and-record-specification-type"><a href="https://tc39.github.io/ecma262/#sec-list-and-record-specification-type">Record</a></emu-xref> {
               [[Month]]: <emu-val>undefined</emu-val>,
               [[Day]]: <emu-val>undefined</emu-val>
@@ -4379,7 +4394,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal-regulatemonthday" aoid="RegulateMonthDay">
-      <h1><span class="secnum">8.4.2</span>RegulateMonthDay ( <var>month</var>, <var>day</var>, <var>disambiguation</var> )</h1>
+      <h1><span class="secnum">8.4.2</span> RegulateMonthDay ( <var>month</var>, <var>day</var>, <var>disambiguation</var> )</h1>
       <emu-alg><ol><li>Assert: <var>disambiguation</var> is one of <code>"constrain"</code>, <code>"balance"</code>, or <code>"reject"</code>.</li><li>If <var>disambiguation</var> is <code>"constrain"</code>, then<ol><li><mark>TODO: define.</mark></li></ol></li><li>If <var>disambiguation</var> is <code>"balance"</code>, then<ol><li>Return !&nbsp;<emu-xref aoid="BalanceMonthDay" id="_ref_395"><a href="#sec-temporal-balancemonthday">BalanceMonthDay</a></emu-xref>(<var>month</var>, <var>day</var>).</li></ol></li><li>If <var>disambiguation</var> is <code>"reject"</code>, then<ol><li>If !&nbsp;<emu-xref aoid="ValidateMonthDay" id="_ref_396"><a href="#sec-temporal-validatemonthday">ValidateMonthDay</a></emu-xref>(<var>month</var>, <var>day</var>) is <emu-val>false</emu-val>, then<ol><li>Throw a <emu-val>RangeError</emu-val> exception.</li></ol></li><li>Return the new <emu-xref href="#sec-list-and-record-specification-type"><a href="https://tc39.github.io/ecma262/#sec-list-and-record-specification-type">Record</a></emu-xref> {
               [[Month]]: <var>month</var>,
               [[Day]]: <var>day</var>
@@ -4388,13 +4403,13 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal-validatemonthday" aoid="ValidateMonthDay">
-      <h1><span class="secnum">8.4.3</span>ValidateMonthDay ( <var>month</var>, <var>day</var> )</h1>
+      <h1><span class="secnum">8.4.3</span> ValidateMonthDay ( <var>month</var>, <var>day</var> )</h1>
       <emu-alg><ol><li>Assert: <var>month</var> and <var>day</var> are integer Number values.</li><li>If <var>month</var> &lt; 1 or <var>month</var> &gt; 12, then<ol><li>Return <emu-val>false</emu-val>.</li></ol></li><li>Let <var>maxDay</var> be !&nbsp;<emu-xref aoid="DaysInMonth" id="_ref_397"><a href="#sec-temporal-daysinmonth">DaysInMonth</a></emu-xref>(1972, <var>m</var>).</li><li>If <var>d</var> &lt; 1 or <var>d</var> &gt; <var>maxDay</var>, then<ol><li>Return <emu-val>false</emu-val>.</li></ol></li><li>Return <emu-val>true</emu-val>.
       </li></ol></emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal-balancemonthday" aoid="BalanceMonthDay">
-      <h1><span class="secnum">8.4.4</span>BalanceMonthDay ( <var>month</var>, <var>day</var> )</h1>
+      <h1><span class="secnum">8.4.4</span> BalanceMonthDay ( <var>month</var>, <var>day</var> )</h1>
       <emu-alg><ol><li>Assert: <var>month</var> and <var>day</var> are integer Number values.</li><li>Let <var>result</var> be !&nbsp;BalanceDate(1972, <var>month</var>, <var>day</var>).</li><li>Return the new <emu-xref href="#sec-list-and-record-specification-type"><a href="https://tc39.github.io/ecma262/#sec-list-and-record-specification-type">Record</a></emu-xref> {
             [[Month]]: <var>result</var>.[[Month]],
             [[Day]]: <var>result</var>.[[Day]]
@@ -4403,13 +4418,13 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal-createmonthday" aoid="CreateMonthDay">
-      <h1><span class="secnum">8.4.5</span>CreateMonthDay ( <var>month</var>, <var>day</var> [ , <var>newTarget</var> ] )</h1>
+      <h1><span class="secnum">8.4.5</span> CreateMonthDay ( <var>month</var>, <var>day</var> [ , <var>newTarget</var> ] )</h1>
       <emu-alg><ol><li>Assert: !&nbsp;<emu-xref aoid="ValidateMonthDay" id="_ref_398"><a href="#sec-temporal-validatemonthday">ValidateMonthDay</a></emu-xref>(<var>month</var>, <var>day</var>) is <emu-val>true</emu-val>.</li><li>If <var>newTarget</var> is not given, set it to %Temporal.MonthDay%</li><li>Let <var>object</var> be ?&nbsp;<emu-xref aoid="OrdinaryCreateFromConstructor" id="_ref_399"><a href="https://tc39.github.io/ecma262/#sec-ordinarycreatefromconstructor">OrdinaryCreateFromConstructor</a></emu-xref>(<var>newTarget</var>, <code>"%Temporal.MonthDay.prototype%"</code>, « [[InitializedTemporalMonthDay]], [[Month]], [[Day]] »).</li><li>Set <var>object</var>.[[Month]] to <var>month</var>.</li><li>Set <var>object</var>.[[Day]] to <var>day</var>.</li><li>Return <var>object</var>.
       </li></ol></emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal-parsemonthdaystring" aoid="ParseMonthDayString">
-      <h1><span class="secnum">8.4.6</span>ParseMonthDayString ( <var>monthDay</var> )</h1>
+      <h1><span class="secnum">8.4.6</span> ParseMonthDayString ( <var>monthDay</var> )</h1>
       <emu-alg><ol><li>Assert: <emu-xref aoid="Type" id="_ref_400"><a href="https://tc39.github.io/ecma262/#sec-ecmascript-data-types-and-values">Type</a></emu-xref>(<var>monthDay</var>) is String.</li><li>Let <var>valid</var> be <emu-val>true</emu-val> if <var>monthDay</var> matches <a href="https://github.com/tc39/proposal-temporal/blob/main/polyfill/lib/regex.mjs">the "monthday" regular expression in the polyfill</a> and <emu-val>false</emu-val> otherwise.</li><li><mark>TODO: Actually specify this somehow.</mark></li><li>If <var>valid</var> is <emu-val>false</emu-val>, then<ol><li>Throw a <emu-val>RangeError</emu-val> exception.</li></ol></li><li>Let <var>month</var> and <var>day</var> be the respective parts of <var>monthDay</var> interpreted as decimal numbers.</li><li>Return the new <emu-xref href="#sec-list-and-record-specification-type"><a href="https://tc39.github.io/ecma262/#sec-list-and-record-specification-type">Record</a></emu-xref> {
             [[Month]]: <var>month</var>,
             [[Day]]: <var>day</var>
@@ -4418,13 +4433,13 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal-monthdayfromstring" aoid="MonthDayFromString">
-      <h1><span class="secnum">8.4.7</span>MonthDayFromString ( <var>monthDay</var> )</h1>
+      <h1><span class="secnum">8.4.7</span> MonthDayFromString ( <var>monthDay</var> )</h1>
       <emu-alg><ol><li>Assert: <emu-xref aoid="Type" id="_ref_401"><a href="https://tc39.github.io/ecma262/#sec-ecmascript-data-types-and-values">Type</a></emu-xref>(<var>monthDay</var>) is String.</li><li>Let <var>result</var> be ?&nbsp;<emu-xref aoid="ParseMonthDayString" id="_ref_402"><a href="#sec-temporal-parsemonthdaystring">ParseMonthDayString</a></emu-xref>(<var>monthDay</var>).</li><li>If !&nbsp;<emu-xref aoid="ValidateMonthDay" id="_ref_403"><a href="#sec-temporal-validatemonthday">ValidateMonthDay</a></emu-xref>(<var>result</var>.[[Month]], <var>result</var>.[[Day]]) is <emu-val>false</emu-val>, then<ol><li>Throw a <emu-val>TypeError</emu-val> exception.</li></ol></li><li>Return ?&nbsp;<emu-xref aoid="CreateMonthDay" id="_ref_404"><a href="#sec-temporal-createmonthday">CreateMonthDay</a></emu-xref>(<var>result</var>.[[Month]], <var>result</var>.[[Day]]).
       </li></ol></emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal-tomonthday" aoid="ToMonthDay">
-      <h1><span class="secnum">8.4.8</span>ToMonthDay ( <var>monthDay</var> )</h1>
+      <h1><span class="secnum">8.4.8</span> ToMonthDay ( <var>monthDay</var> )</h1>
       <emu-alg><ol><li>If <emu-xref aoid="Type" id="_ref_405"><a href="https://tc39.github.io/ecma262/#sec-ecmascript-data-types-and-values">Type</a></emu-xref>(<var>monthDay</var>) is String, then<ol><li>Return ?&nbsp;<emu-xref aoid="MonthDayFromString" id="_ref_406"><a href="#sec-temporal-monthdayfromstring">MonthDayFromString</a></emu-xref>(<var>monthDay</var>).</li></ol></li><li>If <emu-xref aoid="Type" id="_ref_407"><a href="https://tc39.github.io/ecma262/#sec-ecmascript-data-types-and-values">Type</a></emu-xref>(<var>monthDay</var>) is Object, then<ol><li>If <var>monthDay</var> has an [[InitializedTemporalMonthDay]] internal slot, then<ol><li>Return <var>monthDay</var>.</li></ol></li><li>Let <var>result</var> be the new <emu-xref href="#sec-list-and-record-specification-type"><a href="https://tc39.github.io/ecma262/#sec-list-and-record-specification-type">Record</a></emu-xref> {
               [[Month]]: <emu-val>undefined</emu-val>,
               [[Day]]: <emu-val>undefined</emu-val>
@@ -4433,13 +4448,13 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal-monthdaytostring" aoid="MonthDayToString">
-      <h1><span class="secnum">8.4.9</span>MonthDayToString ( <var>monthDay</var> )</h1>
+      <h1><span class="secnum">8.4.9</span> MonthDayToString ( <var>monthDay</var> )</h1>
       <emu-alg><ol><li>Assert: <emu-xref aoid="Type" id="_ref_412"><a href="https://tc39.github.io/ecma262/#sec-ecmascript-data-types-and-values">Type</a></emu-xref>(<var>monthDay</var>) is Object.</li><li>Assert: <var>monthDay</var> has an [[InitializedTemporalMonthDay]] internal slot.</li><li>Let <var>month</var> be <var>date</var>.[[Month]] formatted as a two-digit decimal number, padded to the left with a zero if necessary.</li><li>Let <var>day</var> be <var>date</var>.[[Day]] formatted as a two-digit decimal number, padded to the left with a zero if necessary.</li><li>Return the string-concatenation of <var>month</var>, the code unit 0x002D (HYPHEN-MINUS), and <var>day</var>.
       </li></ol></emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal-monthdaycompare" aoid="MonthDayCompare">
-      <h1><span class="secnum">8.4.10</span>MonthDayCompare ( <var>one</var>, <var>two</var> )</h1>
+      <h1><span class="secnum">8.4.10</span> MonthDayCompare ( <var>one</var>, <var>two</var> )</h1>
       <emu-alg><ol><li>Assert: <emu-xref aoid="Type" id="_ref_413"><a href="https://tc39.github.io/ecma262/#sec-ecmascript-data-types-and-values">Type</a></emu-xref>(<var>one</var>) is Object.</li><li>Assert: <var>one</var> has an [[InitializedTemporalMonthDay]] internal slot.</li><li>Assert: <emu-xref aoid="Type" id="_ref_414"><a href="https://tc39.github.io/ecma262/#sec-ecmascript-data-types-and-values">Type</a></emu-xref>(<var>two</var>) is Object.</li><li>Assert: <var>two</var> has an [[InitializedTemporalMonthDay]] internal slot.</li><li>If <var>one</var>.[[Month]] &gt; <var>two</var>.[[Month]], return 1.</li><li>If <var>one</var>.[[Month]] &lt; <var>two</var>.[[Month]], return -1.</li><li>If <var>one</var>.[[Day]] &gt; <var>two</var>.[[Day]], return 1.</li><li>If <var>one</var>.[[Day]] &lt; <var>two</var>.[[Day]], return -1.</li><li>Return +0.
       </li></ol></emu-alg>
     </emu-clause>
@@ -4447,11 +4462,11 @@ li.menu-search-result-term:before {
 </emu-clause>
 </emu-import>
 <emu-import href="spec/timezone.html"><emu-clause id="sec-temporal-timezone">
-  <h1><span class="secnum">9</span>Temporal.TimeZone Objects</h1>
+  <h1><span class="secnum">9</span> Temporal.TimeZone Objects</h1>
   <p>A Temporal.TimeZone object is an immutable Object referencing a time zone.</p>
 
   <emu-clause id="sec-temporal-timezone-constructor">
-    <h1><span class="secnum">9.1</span>The Temporal.TimeZone Constructor</h1>
+    <h1><span class="secnum">9.1</span> The Temporal.TimeZone Constructor</h1>
     <p>
       The Temporal.TimeZone constructor is the %Temporal.TimeZone% intrinsic object.
       When called as a constructor, it creates and initializes a new Temporal.TimeZone object.
@@ -4465,7 +4480,7 @@ li.menu-search-result-term:before {
     </p>
 
     <emu-clause id="sec-temporal.timezone">
-      <h1><span class="secnum">9.1.1</span>Temporal.TimeZone ( <var>identifier</var> )</h1>
+      <h1><span class="secnum">9.1.1</span> Temporal.TimeZone ( <var>identifier</var> )</h1>
       <p>
         When the <code>Temporal.TimeZone</code> function is called, the following steps are taken:
       
@@ -4476,25 +4491,25 @@ li.menu-search-result-term:before {
   </emu-clause>
 
   <emu-clause id="sec-properties-of-the-temporal-timezone-constructor">
-    <h1><span class="secnum">9.2</span>Properties of the Temporal.TimeZone Constructor</h1>
+    <h1><span class="secnum">9.2</span> Properties of the Temporal.TimeZone Constructor</h1>
     <p>The value of the [[Prototype]] internal slot of the Temporal.TimeZone constructor is the intrinsic object <emu-xref href="#sec-properties-of-the-function-prototype-object"><a href="https://tc39.github.io/ecma262/#sec-properties-of-the-function-prototype-object">%FunctionPrototype%</a></emu-xref>.</p>
     <p>The Temporal.TimeZone constructor has the following properties:</p>
 
     <emu-clause id="sec-temporal-timezone-prototype">
-      <h1><span class="secnum">9.2.1</span>Temporal.TimeZone.prototype</h1>
+      <h1><span class="secnum">9.2.1</span> Temporal.TimeZone.prototype</h1>
       <p>The initial value of Temporal.TimeZone.prototype is %Temporal.TimeZone.prototype%.</p>
       <p>This property has the attributes { [[Writable]]: <emu-val>false</emu-val>, [[Enumerable]]: <emu-val>false</emu-val>, [[Configurable]]: <emu-val>false</emu-val> }.</p>
     </emu-clause>
 
     <emu-clause id="sec-temporal.timezone.prototype-@@iterator">
-      <h1><span class="secnum">9.2.2</span>Temporal.TimeZone[ @@iterator ]</h1>
+      <h1><span class="secnum">9.2.2</span> Temporal.TimeZone[ @@iterator ]</h1>
       <p>
         <mark>TODO</mark>
       </p>
     </emu-clause>
 
     <emu-clause id="sec-temporal.timezone.from">
-      <h1><span class="secnum">9.2.3</span>Temporal.TimeZone.from ( <var>arg</var> )</h1>
+      <h1><span class="secnum">9.2.3</span> Temporal.TimeZone.from ( <var>arg</var> )</h1>
       <p>
         The <code>from</code> method takes one argument <var>arg</var>.
         The following steps are taken:
@@ -4506,7 +4521,7 @@ li.menu-search-result-term:before {
   </emu-clause>
 
   <emu-clause id="sec-properties-of-the-temporal-timezone-prototype-object">
-    <h1><span class="secnum">9.3</span>Properties of the Temporal.TimeZone Prototype Object</h1>
+    <h1><span class="secnum">9.3</span> Properties of the Temporal.TimeZone Prototype Object</h1>
 
     <p>The Temporal.TimeZone prototype object</p>
     <ul>
@@ -4521,12 +4536,12 @@ li.menu-search-result-term:before {
     </li></ul>
 
     <emu-clause id="sec-temporal.timezone.prototype.constructor">
-      <h1><span class="secnum">9.3.1</span>Temporal.TimeZone.prototype.constructor</h1>
+      <h1><span class="secnum">9.3.1</span> Temporal.TimeZone.prototype.constructor</h1>
       <p>The initial value of Temporal.TimeZone.prototype.constructor is %Temporal.TimeZone%.</p>
     </emu-clause>
 
     <emu-clause id="sec-temporal.timezone.prototype-@@tostringtag">
-      <h1><span class="secnum">9.3.2</span>Temporal.TimeZone.prototype[ @@toStringTag ]</h1>
+      <h1><span class="secnum">9.3.2</span> Temporal.TimeZone.prototype[ @@toStringTag ]</h1>
       <p>
         The initial value of the @@toStringTag property is the string value <code>"Temporal.TimeZone"</code>.
       
@@ -4538,7 +4553,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-get-temporal.timezone.prototype.name">
-      <h1><span class="secnum">9.3.3</span>get Temporal.TimeZone.prototype.name</h1>
+      <h1><span class="secnum">9.3.3</span> get Temporal.TimeZone.prototype.name</h1>
       <p>
         <code>Temporal.TimeZone.prototype.name</code> is an accessor property whose set accessor function is undefined.
         Its get accessor function performs the following steps:
@@ -4549,7 +4564,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal.timezone.prototype.getoffsetfor">
-      <h1><span class="secnum">9.3.4</span>Temporal.TimeZone.prototype.getOffsetFor ( <var>absolute</var> )</h1>
+      <h1><span class="secnum">9.3.4</span> Temporal.TimeZone.prototype.getOffsetFor ( <var>absolute</var> )</h1>
       <p>
         The <code>getOffsetFor</code> method takes one argument <var>absolute</var>.
         The following steps are taken:
@@ -4560,7 +4575,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal.timezone.prototype.getdatetimefor">
-      <h1><span class="secnum">9.3.5</span>Temporal.TimeZone.prototype.getDateTimeFor ( <var>absolute</var> )</h1>
+      <h1><span class="secnum">9.3.5</span> Temporal.TimeZone.prototype.getDateTimeFor ( <var>absolute</var> )</h1>
       <p>
         The <code>getDateTimeFor</code> method takes one argument <var>absolute</var>.
         The following steps are taken:
@@ -4571,7 +4586,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal.timezone.prototype.getabsolutefor">
-      <h1><span class="secnum">9.3.6</span>Temporal.TimeZone.prototype.getAbsoluteFor ( <var>dateTime</var> [ , <var>disambiguation</var> ] )</h1>
+      <h1><span class="secnum">9.3.6</span> Temporal.TimeZone.prototype.getAbsoluteFor ( <var>dateTime</var> [ , <var>disambiguation</var> ] )</h1>
       <p>
         The <code>getAbsoluteFor</code> method takes two arguments, <var>dateTime</var> and <var>disambiguation</var>.
         The following steps are taken:
@@ -4582,7 +4597,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal.timezone.prototype.gettransitions">
-      <h1><span class="secnum">9.3.7</span>Temporal.TimeZone.prototype.getTransitions ( <var>startingPoint</var> )</h1>
+      <h1><span class="secnum">9.3.7</span> Temporal.TimeZone.prototype.getTransitions ( <var>startingPoint</var> )</h1>
       <p>
         The <code>getTransitions</code> method takes one argument <var>startingPoint</var>.
         The following steps are taken:
@@ -4593,7 +4608,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal.timezone.prototype.tostring">
-      <h1><span class="secnum">9.3.8</span>Temporal.TimeZone.prototype.toString ( )</h1>
+      <h1><span class="secnum">9.3.8</span> Temporal.TimeZone.prototype.toString ( )</h1>
       <p>
         The following steps are taken:
       
@@ -4603,7 +4618,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal.timezone.prototype.tojson">
-      <h1><span class="secnum">9.3.9</span>Temporal.TimeZone.prototype.toJSON ( )</h1>
+      <h1><span class="secnum">9.3.9</span> Temporal.TimeZone.prototype.toJSON ( )</h1>
       <p>
         The following steps are taken:
       
@@ -4614,28 +4629,28 @@ li.menu-search-result-term:before {
   </emu-clause>
 
   <emu-clause id="sec-temporal-timezone-abstract-ops">
-    <h1><span class="secnum">9.4</span>Abstract operations</h1>
+    <h1><span class="secnum">9.4</span> Abstract operations</h1>
 
     <emu-clause id="sec-temporal-timezonefromstring" aoid="TimeZoneFromString">
-      <h1><span class="secnum">9.4.1</span>TimeZoneFromString ( <var>timeZone</var> )</h1>
+      <h1><span class="secnum">9.4.1</span> TimeZoneFromString ( <var>timeZone</var> )</h1>
       <emu-alg><ol><li>Assert: <emu-xref aoid="Type" id="_ref_419"><a href="https://tc39.github.io/ecma262/#sec-ecmascript-data-types-and-values">Type</a></emu-xref>(<var>timeZone</var>) is String.</li><li>Let <var>valid</var> be <emu-val>true</emu-val> if <var>timeZone</var> matches <a href="https://github.com/tc39/proposal-temporal/blob/main/polyfill/lib/regex.mjs">the "timezone" regular expression in the polyfill</a> and <emu-val>false</emu-val> otherwise.</li><li><mark>TODO: Actually specify this somehow.</mark></li><li>If <var>valid</var> is <emu-val>false</emu-val>, then<ol><li>Throw a <emu-val>RangeError</emu-val> exception.</li></ol></li><li>Let <var>identifier</var> be the relevant part of <var>timeZone</var>.</li><li><mark>TODO: Use time zone name when present; offset otherwise.</mark></li><li>If <var>identifier</var> is <emu-val>"Z"</emu-val>, then set <var>identifier</var> to <emu-val>"UTC"</emu-val>.</li><li>If !&nbsp;<emu-xref aoid="IsValidTimeZoneName"><a href="https://tc39.es/ecma402/#sec-isvalidtimezonename">IsValidTimeZoneName</a></emu-xref>(<var>identifier</var>) is <emu-val>false</emu-val>, then<ol><li>Throw a <emu-val>TypeError</emu-val> exception.</li></ol></li><li>Let <var>canonical</var> be !&nbsp;<emu-xref aoid="CanonicalizeTimeZoneName"><a href="https://tc39.es/ecma402/#sec-canonicalizetimezonename">CanonicalizeTimeZoneName</a></emu-xref>(<var>identifier</var>).</li><li>Return ?&nbsp;<emu-xref aoid="CreateTimeZone" id="_ref_420"><a href="#sec-temporal-createtimezone">CreateTimeZone</a></emu-xref>(<var>canonical</var>).
       </li></ol></emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal-totimezone" aoid="ToTimeZone">
-      <h1><span class="secnum">9.4.2</span>ToTimeZone ( <var>timeZone</var> )</h1>
+      <h1><span class="secnum">9.4.2</span> ToTimeZone ( <var>timeZone</var> )</h1>
       <emu-alg><ol><li>If <emu-xref aoid="Type" id="_ref_421"><a href="https://tc39.github.io/ecma262/#sec-ecmascript-data-types-and-values">Type</a></emu-xref>(<var>timeZone</var>) is Object, then<ol><li>If <var>timeZone</var> has an [[InitializedTemporalTimeZone]] internal slot, then<ol><li>Return <var>timeZone</var>.</li></ol></li></ol></li><li>Let <var>timeZone</var> be ?&nbsp;<emu-xref aoid="ToString" id="_ref_422"><a href="https://tc39.github.io/ecma262/#sec-tostring">ToString</a></emu-xref>(<var>timeZone</var>).</li><li>Return ?&nbsp;<emu-xref aoid="TimeZoneFromString" id="_ref_423"><a href="#sec-temporal-timezonefromstring">TimeZoneFromString</a></emu-xref>(<var>timeZone</var>).
       </li></ol></emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal-createtimezone" aoid="CreateTimeZone">
-      <h1><span class="secnum">9.4.3</span>CreateTimeZone ( <var>identifier</var> )</h1>
+      <h1><span class="secnum">9.4.3</span> CreateTimeZone ( <var>identifier</var> )</h1>
       <emu-alg><ol><li>Assert: !&nbsp;<emu-xref aoid="CanonicalizeTimeZoneName"><a href="https://tc39.es/ecma402/#sec-canonicalizetimezonename">CanonicalizeTimeZoneName</a></emu-xref>(<var>identifier</var>) is <var>identifier</var>.</li><li>If <var>newTarget</var> is not given, set it to %Temporal.TimeZone%.</li><li>Let <var>object</var> be ?&nbsp;<emu-xref aoid="OrdinaryCreateFromConstructor" id="_ref_424"><a href="https://tc39.github.io/ecma262/#sec-ordinarycreatefromconstructor">OrdinaryCreateFromConstructor</a></emu-xref>(<var>newTarget</var>, <code>"%Temporal.TimeZone.prototype%"</code>, « [[InitializedTemporalTimeZone]], [[Identifier]] »).</li><li>Set <var>object</var>.[[Identifier]] to <var>identifier</var>.</li><li>Return <var>object</var>.
       </li></ol></emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal-getdatetimefor" aoid="GetDateTimeFor">
-      <h1><span class="secnum">9.4.4</span>GetDateTimeFor ( <var>timeZone</var>, <var>absolute</var> )</h1>
+      <h1><span class="secnum">9.4.4</span> GetDateTimeFor ( <var>timeZone</var>, <var>absolute</var> )</h1>
       <emu-alg><ol><li>Assert: <emu-xref aoid="Type" id="_ref_425"><a href="https://tc39.github.io/ecma262/#sec-ecmascript-data-types-and-values">Type</a></emu-xref>(<var>timeZone</var>) is Object.</li><li>Assert: <var>timeZone</var> has an [[InitializedTemporalTimeZone]] internal slot.</li><li>Assert: <emu-xref aoid="Type" id="_ref_426"><a href="https://tc39.github.io/ecma262/#sec-ecmascript-data-types-and-values">Type</a></emu-xref>(<var>absolute</var>) is Object.</li><li>Assert: <var>absolute</var> has an [[InitializedTemporalAbsolute]] internal slot.</li><li>Let <var>result</var> be the moment <var>absolute</var>.[[Nanosecond]] nanoseconds from the epoch, in the time zone <var>timeZone</var>.[[Identifier]].</li><li>Return ?&nbsp;<emu-xref aoid="CreateDateTime" id="_ref_427"><a href="#sec-temporal-createdatetime">CreateDateTime</a></emu-xref>(<var>result</var>.[[Year]], <var>result</var>.[[Month]], <var>result</var>.[[Day]], <var>result</var>.[[Hour]], <var>result</var>.[[Minute]], <var>result</var>.[[Second]], <var>result</var>.[[Millisecond]], <var>result</var>.[[Microsecond]], <var>result</var>.[[Nanosecond]]).
       </li></ol></emu-alg>
     </emu-clause>
@@ -4643,10 +4658,10 @@ li.menu-search-result-term:before {
 </emu-clause>
 </emu-import>
 <emu-import href="spec/intl.html"><emu-clause id="sec-temporal-intl">
-  <h1><span class="secnum">10</span>Integration with the Intl.DateTimeFormat interface</h1>
+  <h1><span class="secnum">10</span> Integration with the Intl.DateTimeFormat interface</h1>
 
   <emu-clause id="sec-datetimeformat-abstracts">
-    <h1><span class="secnum">10.1</span>Abstract Operations For DateTimeFormat Objects</h1>
+    <h1><span class="secnum">10.1</span> Abstract Operations For DateTimeFormat Objects</h1>
 
     <emu-table id="table-datetimeformat-components"><figure><figcaption>Table 7: Components of date and time formats</figcaption>
       
@@ -4707,7 +4722,7 @@ li.menu-search-result-term:before {
     </figure></emu-table>
 
     <emu-clause id="sec-temporal-initializedatetimeformat" aoid="InitializeDateTimeFormat">
-      <h1><span class="secnum">10.1.1</span>InitializeDateTimeFormat ( <var>dateTimeFormat</var>, <var>locales</var>, <var>options</var> )</h1>
+      <h1><span class="secnum">10.1.1</span> InitializeDateTimeFormat ( <var>dateTimeFormat</var>, <var>locales</var>, <var>options</var> )</h1>
 
       <p>
         The abstract operation InitializeDateTimeFormat accepts the arguments <var>dateTimeFormat</var> (which must be an object), <var>locales</var>, and <var>options</var>. It initializes <var>dateTimeFormat</var> as a DateTimeFormat object. This abstract operation functions as follows:
@@ -4767,7 +4782,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-datetime-format-functions">
-      <h1><span class="secnum">10.1.2</span>DateTime Format Functions</h1>
+      <h1><span class="secnum">10.1.2</span> DateTime Format Functions</h1>
 
       <p>A DateTime format function is an anonymous built-in function that has a [[DateTimeFormat]] internal slot.</p>
       <p>When a DateTime format function <var>F</var> is called with optional argument <var>date</var>, the following steps are taken:</p>
@@ -4782,7 +4797,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-partitiondatetimepattern" aoid="PartitionDateTimePattern">
-      <h1><span class="secnum">10.1.3</span>PartitionDateTimePattern ( <var>dateTimeFormat</var>,  <del><var>x</var></del><ins><var>date</var></ins> )</h1>
+      <h1><span class="secnum">10.1.3</span> PartitionDateTimePattern ( <var>dateTimeFormat</var>,  <del><var>x</var></del><ins><var>date</var></ins> )</h1>
 
       <p>
         The PartitionDateTimePattern abstract operation is called with arguments <var>dateTimeFormat</var> (which must be an object initialized as a DateTimeFormat) and  <del><var>x</var></del><ins><var>date</var></ins> (which must be  <del>a Number</del><ins>an ECMAScript</ins> value),  <del>interprets <var>x</var> as a <emu-xref href="#sec-time-values-and-time-range"><a href="https://tc39.github.io/ecma262/#sec-time-values-and-time-range">time value</a></emu-xref> as specified in ES2015,  <emu-xref href="#sec-time-values-and-time-range"><a href="https://tc39.github.io/ecma262/#sec-time-values-and-time-range">20.3.1.1</a></emu-xref>,</del> and creates the corresponding parts according to the effective locale and the formatting options of <var>dateTimeFormat</var>. The following steps are taken:
@@ -4805,7 +4820,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-formatdatetime" aoid="FormatDateTime">
-      <h1><span class="secnum">10.1.4</span>FormatDateTime( <var>dateTimeFormat</var>, <var>x</var> )</h1>
+      <h1><span class="secnum">10.1.4</span> FormatDateTime( <var>dateTimeFormat</var>, <var>x</var> )</h1>
 
       <p>
         The FormatDateTime abstract operation is called with arguments <var>dateTimeFormat</var> (which must be an object initialized as a DateTimeFormat) and <var>x</var> (which must be  <del>a Number</del><ins>an ECMAScript</ins> value), and performs the following steps:
@@ -4818,7 +4833,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-temporal-formatdatetimetoparts" aoid="FormatDateTimeToParts">
-      <h1><span class="secnum">10.1.5</span>FormatDateTimeToParts ( <var>dateTimeFormat</var>, <var>x</var> )</h1>
+      <h1><span class="secnum">10.1.5</span> FormatDateTimeToParts ( <var>dateTimeFormat</var>, <var>x</var> )</h1>
 
       <p>
         The FormatDateTimeToParts abstract operation is called with arguments <var>dateTimeFormat</var> (which must be an object initialized as a DateTimeFormat) and <var>x</var> (which must be  <del>a Number</del><ins>an ECMAScript</ins> value), and performs the following steps:
@@ -4831,7 +4846,7 @@ li.menu-search-result-term:before {
 
     <ins class="block">
     <emu-clause id="sec-temporal-istemporalobject" aoid="IsTemporalObject">
-      <h1><span class="secnum">10.1.6</span>IsTemporalObject ( <var>value</var> )</h1>
+      <h1><span class="secnum">10.1.6</span> IsTemporalObject ( <var>value</var> )</h1>
 
       <p>
         The IsTemporalObject abstract operation is called with argument <var>value</var>, and performs the following steps:
@@ -4845,7 +4860,7 @@ li.menu-search-result-term:before {
 
     <ins class="block">
     <emu-clause id="sec-temporal-getdatetimeformatpattern" aoid="GetDateTimeFormatPattern">
-      <h1><span class="secnum">10.1.7</span>GetDateTimeFormatPattern ( <var>opt</var>, <var>formats</var>, <var>hc</var> )</h1>
+      <h1><span class="secnum">10.1.7</span> GetDateTimeFormatPattern ( <var>opt</var>, <var>formats</var>, <var>hc</var> )</h1>
 
       <p>
         The abstract operation GetDateTimeFormatPattern accepts the arguments <var>opt</var> (which must be a record), <var>formats</var> (a <emu-xref href="#sec-list-and-record-specification-type"><a href="https://tc39.github.io/ecma262/#sec-list-and-record-specification-type">List</a></emu-xref> of records), and <var>hc</var> (one of <code>"h11"</code>, <code>"h12"</code>, <code>"h23"</code>, and <code>"h24"</code>). It returns one of the records from <var>formats</var>. This abstract operation functions as follows:
@@ -4859,10 +4874,10 @@ li.menu-search-result-term:before {
   </emu-clause>
 
   <emu-clause id="sec-properties-of-intl-datetimeformat-prototype-object">
-    <h1><span class="secnum">10.2</span>Properties of the Intl.DateTimeFormat Prototype Object</h1>
+    <h1><span class="secnum">10.2</span> Properties of the Intl.DateTimeFormat Prototype Object</h1>
 
     <emu-clause id="sec-intl.datetimeformat.prototype.formattoparts">
-      <h1><span class="secnum">10.2.1</span>Intl.DateTimeFormat.prototype.formatToParts ( <var>date</var> )</h1>
+      <h1><span class="secnum">10.2.1</span> Intl.DateTimeFormat.prototype.formatToParts ( <var>date</var> )</h1>
 
       <p>
         The <code>formatToParts</code> method takes one argument <var>date</var>.
@@ -4875,7 +4890,7 @@ li.menu-search-result-term:before {
     </emu-clause>
 
     <emu-clause id="sec-intl.datetimeformat.prototype.resolvedoptions">
-      <h1><span class="secnum">10.2.2</span>Intl.DateTimeFormat.prototype.resolvedOptions ()</h1>
+      <h1><span class="secnum">10.2.2</span> Intl.DateTimeFormat.prototype.resolvedOptions ()</h1>
 
       <p>
         This function provides access to the locale and formatting options computed during initialization of the object.
@@ -4991,7 +5006,7 @@ li.menu-search-result-term:before {
   </emu-clause>
 
   <emu-clause id="sec-properties-of-intl-datetimeformat-instances">
-    <h1><span class="secnum">10.3</span>Properties of Intl.DateTimeFormat Instances</h1>
+    <h1><span class="secnum">10.3</span> Properties of Intl.DateTimeFormat Instances</h1>
 
     <p>
       Intl.DateTimeFormat instances inherit properties from %DateTimeFormatPrototype%.
@@ -5026,48 +5041,48 @@ li.menu-search-result-term:before {
 </emu-clause>
 </emu-import>
 <emu-import href="spec/abstractops.html"><emu-clause id="sec-temporal-abstract-ops">
-  <h1><span class="secnum">11</span>Abstract operations</h1>
+  <h1><span class="secnum">11</span> Abstract operations</h1>
 
   <emu-clause id="sec-temporal-isleapyear" aoid="IsLeapYear">
-    <h1><span class="secnum">11.1</span>IsLeapYear ( <var>year</var> )</h1>
+    <h1><span class="secnum">11.1</span> IsLeapYear ( <var>year</var> )</h1>
     <emu-alg><ol><li>Assert: <var>year</var> is an integer.</li><li>If <var>year</var> <emu-xref aoid="modulo"><a href="https://tc39.github.io/ecma262/#sec-algorithm-conventions">modulo</a></emu-xref> 4 ≠ 0, return <emu-val>false</emu-val>.</li><li>If <var>year</var> <emu-xref aoid="modulo"><a href="https://tc39.github.io/ecma262/#sec-algorithm-conventions">modulo</a></emu-xref> 400 = 0, return <emu-val>true</emu-val>.</li><li>If <var>year</var> <emu-xref aoid="modulo"><a href="https://tc39.github.io/ecma262/#sec-algorithm-conventions">modulo</a></emu-xref> 100 = 0, return <emu-val>false</emu-val>.</li><li>Return <emu-val>true</emu-val>.
     </li></ol></emu-alg>
   </emu-clause>
 
   <emu-clause id="sec-temporal-daysinyear" aoid="DaysInYear">
-    <h1><span class="secnum">11.2</span>DaysInYear ( <var>year</var> )</h1>
+    <h1><span class="secnum">11.2</span> DaysInYear ( <var>year</var> )</h1>
     <emu-alg><ol><li>Assert: <var>year</var> is an integer.</li><li>If !&nbsp;<emu-xref aoid="IsLeapYear" id="_ref_465"><a href="#sec-temporal-isleapyear">IsLeapYear</a></emu-xref>(<var>year</var>) is <emu-val>true</emu-val>, then<ol><li>Return 366.</li></ol></li><li>Return 365.
     </li></ol></emu-alg>
   </emu-clause>
 
   <emu-clause id="sec-temporal-daysinmonth" aoid="DaysInMonth">
-    <h1><span class="secnum">11.3</span>DaysInMonth ( <var>year</var>, <var>month</var> )</h1>
+    <h1><span class="secnum">11.3</span> DaysInMonth ( <var>year</var>, <var>month</var> )</h1>
     <emu-alg><ol><li>Assert: <var>month</var> is an integer, <var>month</var> ≥ 1, and <var>month</var> ≤ 12.</li><li>If <var>month</var> is 1, 3, 5, 7, 8, 10, or 12, return 31.</li><li>If <var>month</var> is 4, 6, 9, or 11, return 30.</li><li>If !&nbsp;<emu-xref aoid="IsLeapYear" id="_ref_466"><a href="#sec-temporal-isleapyear">IsLeapYear</a></emu-xref>(<var>year</var>) is <emu-val>true</emu-val>, return 29.</li><li>Return 28.
     </li></ol></emu-alg>
   </emu-clause>
 
   <emu-clause id="sec-temporal-todayofweek" aoid="ToDayOfWeek">
-    <h1><span class="secnum">11.4</span>ToDayOfWeek ( <var>year</var>, <var>month</var>, <var>day</var> )</h1>
+    <h1><span class="secnum">11.4</span> ToDayOfWeek ( <var>year</var>, <var>month</var>, <var>day</var> )</h1>
     <emu-alg><ol><li>Let <var>date</var> be the date given by <var>year</var>, <var>month</var>, and <var>day</var>.</li><li>Return <var>date</var>'s day of the week according to ISO-8601.
     </li></ol></emu-alg>
     <emu-note><span class="note">Note</span><div class="note-contents">Monday is 1 and Sunday is 7.</div></emu-note>
   </emu-clause>
 
   <emu-clause id="sec-temporal-todayofyear" aoid="ToDayOfYear">
-    <h1><span class="secnum">11.5</span>ToDayOfYear ( <var>year</var>, <var>month</var>, <var>day</var> )</h1>
+    <h1><span class="secnum">11.5</span> ToDayOfYear ( <var>year</var>, <var>month</var>, <var>day</var> )</h1>
     <emu-alg><ol><li>Let <var>date</var> be the date given by <var>year</var>, <var>month</var>, and <var>day</var>.</li><li>Return <var>date</var>'s ordinal date in the year according to ISO-8601.
     </li></ol></emu-alg>
   </emu-clause>
 
   <emu-clause id="sec-temporal-toweekofyear" aoid="ToWeekOfYear">
-    <h1><span class="secnum">11.6</span>ToWeekOfYear ( <var>year</var>, <var>month</var>, <var>day</var> )</h1>
+    <h1><span class="secnum">11.6</span> ToWeekOfYear ( <var>year</var>, <var>month</var>, <var>day</var> )</h1>
     <emu-alg><ol><li>Let <var>date</var> be the date given by <var>year</var>, <var>month</var>, and <var>day</var>.</li><li>Return <var>date</var>'s week number according to ISO-8601.
     </li></ol></emu-alg>
     <emu-note><span class="note">Note</span><div class="note-contents">Beware that dates at the begining of a year may be part of a week from the preceding year, and dates at the end of a year may be part of a week at the beginning of the next year, as the first week of any year is defined as the week that contains the first Thursday of the year.</div></emu-note>
   </emu-clause>
 
   <emu-clause id="sec-temporal-todurationlike" aoid="ToDurationLike">
-    <h1><span class="secnum">11.7</span>ToDurationLike ( <var>duration</var> )</h1>
+    <h1><span class="secnum">11.7</span> ToDurationLike ( <var>duration</var> )</h1>
     <emu-alg><ol><li>Let <var>result</var> be the <emu-xref href="#sec-list-and-record-specification-type"><a href="https://tc39.github.io/ecma262/#sec-list-and-record-specification-type">Record</a></emu-xref> {
         [[Years]]: 0,
         [[Months]]: 0,
@@ -5133,7 +5148,7 @@ li.menu-search-result-term:before {
   </emu-clause>
 
   <emu-clause id="sec-temporal-totimedurationlike" aoid="ToTimeDurationLike">
-    <h1><span class="secnum">11.8</span>ToTimeDurationLike ( <var>duration</var> )</h1>
+    <h1><span class="secnum">11.8</span> ToTimeDurationLike ( <var>duration</var> )</h1>
     <emu-alg><ol><li>Let <var>result</var> be {
         [[Hours]]: 0,
         [[Minutes]]: 0,
@@ -5184,31 +5199,31 @@ li.menu-search-result-term:before {
   </emu-clause>
 
   <emu-clause id="sec-temporal-CreateDuration" aoid="CreateDuration">
-    <h1><span class="secnum">11.9</span>CreateDuration ( <var>years</var>, <var>months</var>, <var>days</var> )</h1>
+    <h1><span class="secnum">11.9</span> CreateDuration ( <var>years</var>, <var>months</var>, <var>days</var> )</h1>
     <p>
       <mark>TODO: Define.</mark>
     </p>
   </emu-clause>
 
   <emu-clause id="sec-temporal-formatsecondsstringpart" aoid="FormatSecondsStringPart">
-    <h1><span class="secnum">11.10</span>FormatSecondsStringPart ( <var>second</var>, <var>millisecond</var>, <var>microsecond</var>, <var>nanosecond</var> )</h1>
+    <h1><span class="secnum">11.10</span> FormatSecondsStringPart ( <var>second</var>, <var>millisecond</var>, <var>microsecond</var>, <var>nanosecond</var> )</h1>
     <emu-alg><ol><li>If <var>second</var>, <var>millisecond</var>, <var>microsecond</var>, and <var>nanosecond</var> are all 0, then<ol><li>Return <code>""</code>.</li></ol></li><li>Let <var>nanos</var>, <var>micros</var>, and <var>millis</var> be <code>""</code>.</li><li>If <var>nanosecond</var> is not 0, then<ol><li>Set <var>nanos</var> to <var>nanosecond</var> formatted as a three-digit decimal number, padded to the left with zeroes if necessary.</li><li>Set <var>micros</var> and <var>millis</var> to <code>"000"</code>.</li></ol></li><li>If <var>microsecond</var> is not 0, then<ol><li>Set <var>micros</var> be <var>microsecond</var> formatted as a three-digit decimal number, padded to the left with zeroes if necessary.</li><li>Set <var>millis</var> to <code>"000"</code>.</li></ol></li><li>If <var>millisecond</var> is not 0, then<ol><li>Set <var>millis</var> to <var>millisecond</var> formatted as a three-digit decimal number, padded to the left with zeroes if necessary.</li></ol></li><li>Let <var>decimal</var> be the string-concatenation of <var>nanos</var>, <var>micros</var>, and <var>millis</var>.</li><li>Let <var>result</var> be <var>second</var> formatted as a two-digit decimal number, padded to the left with a zero if necessary.</li><li>If <var>decimal</var> is not empty, then<ol><li>Set <var>result</var> to the string-concatenation of <var>result</var>, the code unit 0x002E (FULL STOP), and <var>decimal</var>.</li></ol></li><li>Return the string-concatenation of the code unit 0x003A (COLON) and <var>result</var>.
     </li></ol></emu-alg>
   </emu-clause>
 
   <emu-clause id="sec-temporal-nonnegativemodulo" aoid="NonNegativeModulo">
-    <h1><span class="secnum">11.11</span>NonNegativeModulo ( <var>x</var>, <var>y</var> )</h1>
+    <h1><span class="secnum">11.11</span> NonNegativeModulo ( <var>x</var>, <var>y</var> )</h1>
     <emu-alg><ol><li>Let <var>result</var> be <var>x</var> <emu-xref aoid="modulo"><a href="https://tc39.github.io/ecma262/#sec-algorithm-conventions">modulo</a></emu-xref> <var>y</var>.</li><li>If <var>result</var> &lt; 0, then<ol><li>Set <var>result</var> to <var>result</var> + <var>y</var>.</li></ol></li><li>Return <var>result</var>.
     </li></ol></emu-alg>
   </emu-clause>
 
   <emu-clause id="sec-temporal-roundtowardszero" aoid="RoundTowardsZero">
-    <h1><span class="secnum">11.12</span>RoundTowardsZero ( <var>x</var> )</h1>
+    <h1><span class="secnum">11.12</span> RoundTowardsZero ( <var>x</var> )</h1>
     <emu-alg><ol><li>Return the mathematical value that is the same sign as <var>x</var> and whose magnitude is <emu-xref aoid="floor"><a href="https://tc39.github.io/ecma262/#sec-algorithm-conventions">floor</a></emu-xref>(<emu-xref aoid="abs"><a href="https://tc39.github.io/ecma262/#sec-algorithm-conventions">abs</a></emu-xref>(<var>x</var>)).
     </li></ol></emu-alg>
   </emu-clause>
 </emu-clause><emu-annex id="sec-copyright-and-software-license">
-      <h1><span class="secnum">A</span>Copyright &amp; Software License</h1>
+      <h1><span class="secnum">A</span> Copyright &amp; Software License</h1>
       
       <h2>Copyright Notice</h2>
       <p>© 2020 Maggie Pint, Matt Johnson, Brian Terlson, Daniel Ehrenberg, Philipp Dunkel, Sasha Pierson</p>
