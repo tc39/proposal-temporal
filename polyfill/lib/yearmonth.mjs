@@ -101,7 +101,7 @@ export class YearMonth {
   difference(other) {
     if (!ES.IsYearMonth(this)) throw new TypeError('invalid receiver');
     other = ES.ToYearMonth(other);
-    const [one, two] = [this, other].sort(DateTime.compare);
+    const [one, two] = [this, other].sort(YearMonth.compare);
     let years = two.year - one.year;
     let months = two.month - one.month;
     if (months < 0) {
