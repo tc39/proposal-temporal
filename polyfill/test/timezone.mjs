@@ -35,6 +35,7 @@ describe('TimeZone', ()=>{
         test('-01:00');
         test('+0330');
         test('-0650');
+        test('-08');
         test('Europe/Vienna');
         test('America/New_York');
         test('Africa/CAIRO');  // capitalization
@@ -50,6 +51,7 @@ describe('TimeZone', ()=>{
         test('-01:00');
         test('+0330', '+03:30');
         test('-0650', '-06:50');
+        test('-08', '-08:00');
         test('Europe/Vienna');
         test('America/New_York');
         test('Africa/CAIRO', 'Africa/Cairo');
@@ -65,6 +67,7 @@ describe('TimeZone', ()=>{
         test('-01:00');
         test('+0330');
         test('-0650');
+        test('-08');
         test('Europe/Vienna');
         test('America/New_York');
         test('Africa/CAIRO');
@@ -88,6 +91,7 @@ describe('TimeZone', ()=>{
     describe('TimeZone.from(ISO string)', () => {
         test('1994-11-05T08:15:30-05:00', '-05:00');
         test('1994-11-05T08:15:30-05:00[America/New_York]', 'America/New_York');
+        test('1994-11-05T08:15:30-05[America/New_York]', 'America/New_York');
         test('1994-11-05T13:15:30Z', 'UTC');
         function test(isoString, name) {
             const tz = Temporal.TimeZone.from(isoString);
@@ -97,6 +101,7 @@ describe('TimeZone', ()=>{
         it('offset disagreeing with IANA name throws', () => {
             throws(() => Temporal.TimeZone.from('1994-11-05T08:15:30-05:00[UTC]'), RangeError);
             throws(() => Temporal.TimeZone.from('1994-11-05T13:15:30+00:00[America/New_York]'), RangeError);
+            throws(() => Temporal.TimeZone.from('1994-11-05T13:15:30-03[Europe/Brussels]'), RangeError);
         });
     });
     describe('+01:00', ()=>{

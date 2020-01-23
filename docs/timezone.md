@@ -19,7 +19,7 @@ For a list of IANA time zone names, see the current version of the [IANA time zo
 A convenient list is also available [on Wikipedia](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones), although it might not reflect the latest official status.
 
 The string `timeZoneIdentifier` is canonicalized before being used to determine the time zone.
-For example, values like `+100` will be understood to mean `+01:00`, and capitalization will be corrected.
+For example, values like `+01` will be understood to mean `+01:00`, and capitalization will be corrected.
 If no time zone can be determined from `timeZoneIdentifier`, then a `RangeError` is thrown.
 
 Use this constructor directly if you have a string that is known to be a correct time zone identifier.
@@ -32,7 +32,7 @@ tz = new Temporal.TimeZone('Africa/Cairo');
 tz = new Temporal.TimeZone('america/VANCOUVER');
 tz = new Temporal.TimeZone('Asia/Katmandu');  // alias of Asia/Kathmandu
 tz = new Temporal.TimeZone('-04:00');
-tz = new Temporal.TimeZone('+645');
+tz = new Temporal.TimeZone('+0645');
 /* WRONG */ tz = new Temporal.TimeZone('local');  // not a time zone, throws
 ```
 
@@ -77,7 +77,7 @@ tz = Temporal.TimeZone.from('Africa/Cairo');
 tz = Temporal.TimeZone.from('america/VANCOUVER');
 tz = Temporal.TimeZone.from('Asia/Katmandu');  // alias of Asia/Kathmandu
 tz = Temporal.TimeZone.from('-04:00');
-tz = Temporal.TimeZone.from('+645');
+tz = Temporal.TimeZone.from('+0645');
 
 // ISO 8601 string with time zone offset part
 tz = Temporal.TimeZone.from('2020-01-14T00:31:00.065858086Z');

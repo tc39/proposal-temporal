@@ -79,7 +79,9 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
     // Try parsing ISO string instead
     const match = PARSE.timezone.exec(stringIdent);
     if (!match) throw new RangeError(`invalid time zone identifier: ${stringIdent}`);
-    const [, z, offset, ianaName] = match;
+    const [, z, hour, minute = '00', ianaName] = match;
+    let offset;
+    if (typeof hour !== 'undefined') offset = `${hour}:${minute}`;
     const zone = z ? 'UTC' : ianaName || offset;
     const result = new TemporalTimeZone(zone);
     if (offset && ianaName) {
@@ -105,7 +107,7 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
     const millisecond = ES.ToInteger(match[7]);
     const microsecond = ES.ToInteger(match[8]);
     const nanosecond = ES.ToInteger(match[9]);
-    const zone = match[10] ? 'UTC' : match[12] || match[11];
+    const zone = match[10] ? 'UTC' : match[13] || `${match[11]}:${match[12] || '00'}`;
     const datetime = ES.ToDateTime({
       year,
       month,
@@ -913,7 +915,7 @@ function parseOffsetString(string) {
   if (!match) return null;
   const sign = match[1] === '-' ? -1 : +1;
   const hours = +match[2];
-  const minutes = +match[3];
+  const minutes = +(match[3] || 0);
   return sign * (hours * 60 + minutes) * 60 * 1000;
 }
 function makeOffsetString(offsetMilliSeconds) {
