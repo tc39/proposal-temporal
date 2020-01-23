@@ -210,7 +210,7 @@
       <emu-alg>
         1. Let _absolute_ be the *this* value.
         1. Perform ? RequireInternalSlot(_absolute_, [[InitializedTemporalAbsolute]]).
-        1. Let _duration_ be ? ToTimeDurationLike(_duration_).
+        1. Let _duration_ be ? ToLimitedDuration(_duration_, « *"years"*, *"months"* »).
         1. <mark>TODO: Handling year, month, day?</mark>
         1. Let _ns_ be _absolute_.[[Nanoseconds]] +
             _duration_.[[Nanoseconds]] +
@@ -233,7 +233,7 @@
       <emu-alg>
         1. Let _absolute_ be the *this* value.
         1. Perform ? RequireInternalSlot(_absolute_, [[InitializedTemporalAbsolute]]).
-        1. Let _duration_ be ? ToTimeDurationLike(_duration_).
+        1. Let _duration_ be ? ToLimitedDuration(_duration_, « *"years"*, *"months"* »).
         1. <mark>TODO: Handling year, month, day?</mark>
         1. Let _ns_ be _absolute_.[[Nanoseconds]] -
             _duration_.[[Nanoseconds]] -
