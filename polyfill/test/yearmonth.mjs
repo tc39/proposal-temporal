@@ -83,6 +83,20 @@ describe('YearMonth', () => {
       throws(() => nov94.difference('2013-06'), TypeError);
     });
   });
+  describe('YearMonth.plus() works', () => {
+    const ym = YearMonth.from('2019-11');
+    it('(2019-11) plus 2 months === 2020-01', () =>
+      equal(`${ym.plus({ months: 2 })}`, '2020-01'));
+    it('(2019-11) plus 1 year === 2020-11', () =>
+      equal(`${ym.plus({ years: 1 })}`, '2020-11'));
+  });
+  describe('YearMonth.minus() works', () => {
+    const ym = YearMonth.from('2019-11');
+    it('(2019-11) minus 11 months === 2018-12', () =>
+      equal(`${ym.minus({ months: 11 })}`, '2018-12'));
+    it('(2019-11) minus 12 years === 2007-11', () =>
+      equal(`${ym.minus({ years: 12 })}`, '2007-11'));
+  });
 });
 
 import { normalize } from 'path';
