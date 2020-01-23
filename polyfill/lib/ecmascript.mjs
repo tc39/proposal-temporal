@@ -17,6 +17,7 @@ import bigInt from 'big-integer';
 
 import {
   HasSlot,
+  GetSlot,
   EPOCHNANOSECONDS,
   IDENTIFIER,
   YEAR,
@@ -164,6 +165,36 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
     const nanosecond = ES.ToInteger(match[9]);
     return new TemporalDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, 'reject');
   },
+  ToPartialDateTime: (item) => {
+    if (ES.IsDateTime(item)) {
+      return {
+        year: GetSlot(item, YEAR),
+        month: GetSlot(item, MONTH),
+        day: GetSlot(item, DAY),
+        hour: GetSlot(item, HOUR),
+        minute: GetSlot(item, MINUTE),
+        second: GetSlot(item, SECOND),
+        millisecond: GetSlot(item, MILLISECOND),
+        microsecond: GetSlot(item, MICROSECOND),
+        nanosecond: GetSlot(item, NANOSECOND),
+      };
+    }
+    const props = ES.ValidPropertyBag(item, [
+      'year',
+      'month',
+      'day',
+      'hour',
+      'minute',
+      'second',
+      'millisecond',
+      'microsecond',
+      'nanosecond'
+    ]);
+    if (!props) {
+      throw new RangeError('invalid date-time-like');
+    }
+    return props;
+  },
   ToDate: (item) => {
     if (ES.IsDate(item)) return item;
     const props = ES.ValidDateTimeFrom(item, [
@@ -186,6 +217,20 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
     const month = ES.ToInteger(match[2]);
     const day = ES.ToInteger(match[3]);
     return new TemporalDate(year, month, day, 'reject');
+  },
+  ToPartialDate: (item) => {
+    if (ES.IsDate(item)) {
+      return {
+        year: GetSlot(item, YEAR),
+        month: GetSlot(item, MONTH),
+        day: GetSlot(item, DAY),
+      };
+    }
+    const props = ES.ValidPropertyBag(item, ['year', 'month', 'day']);
+    if (!props) {
+      throw new RangeError('invalid date-like');
+    }
+    return props;
   },
   ToTime: (item) => {
     if (ES.IsTime(item)) return item;
@@ -220,6 +265,30 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
     const nanosecond = ES.ToInteger(match[6]);
     return new TemporalTime(hour, minute, second, millisecond, microsecond, nanosecond, 'reject');
   },
+  ToPartialTime: (item) => {
+    if (ES.IsTime(item)) {
+      return {
+        hour: GetSlot(item, HOUR),
+        minute: GetSlot(item, MINUTE),
+        second: GetSlot(item, SECOND),
+        millisecond: GetSlot(item, MILLISECOND),
+        microsecond: GetSlot(item, MICROSECOND),
+        nanosecond: GetSlot(item, NANOSECOND),
+      };
+    }
+    const props = ES.ValidPropertyBag(item, [
+      'hour',
+      'minute',
+      'second',
+      'millisecond',
+      'microsecond',
+      'nanosecond'
+    ]);
+    if (!props) {
+      throw new RangeError('invalid time-like');
+    }
+    return props;
+  },
   ToYearMonth: (item) => {
     if (ES.IsYearMonth(item)) return item;
     const props = ES.ValidDateTimeFrom(item, [
@@ -240,6 +309,19 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
     const month = ES.ToInteger(match[2]);
     return new TemporalYearMonth(year, month, 'reject');
   },
+  ToPartialYearMonth: (item) => {
+    if (ES.IsYearMonth(item)) {
+      return {
+        year: GetSlot(item, YEAR),
+        month: GetSlot(item, MONTH),
+      };
+    }
+    const props = ES.ValidPropertyBag(item, ['year', 'month']);
+    if (!props) {
+      throw new RangeError('invalid year-month-like');
+    }
+    return props;
+  },
   ToMonthDay: (item) => {
     if (ES.IsMonthDay(item)) return item;
     const props = ES.ValidDateTimeFrom(item, [
@@ -259,6 +341,19 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
     const month = ES.ToInteger(match[1] || match[3]);
     const day = ES.ToInteger(match[2] || match[4]);
     return new TemporalMonthDay(month, day, 'reject');
+  },
+  ToPartialMonthDay: (item) => {
+    if (ES.IsDate(item)) {
+      return {
+        month: GetSlot(item, MONTH),
+        day: GetSlot(item, DAY),
+      };
+    }
+    const props = ES.ValidPropertyBag(item, ['month', 'day']);
+    if (!props) {
+      throw new RangeError('invalid month-day-like');
+    }
+    return props;
   },
   ToDuration: (item) => {
     if (ES.IsDuration(item)) return item;

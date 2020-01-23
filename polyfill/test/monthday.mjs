@@ -67,6 +67,10 @@ describe('MonthDay', () => {
       const md = MonthDay.from('01-22');
       it('with(12-)', () => equal(`${md.with({ month: 12 })}`, '12-22'));
       it('with(-15)', () => equal(`${md.with({ day: 15 })}`, '01-15'));
+      it('with(otherMonthDay)', () => {
+        const otherMonthDay = MonthDay.from('12-15');
+        equal(`${md.with(otherMonthDay)}`, '12-15');
+      });
     });
   });
   describe('MonthDay.compare() works', () => {

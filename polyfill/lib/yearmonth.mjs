@@ -42,12 +42,9 @@ export class YearMonth {
     if (!ES.IsYearMonth(this)) throw new TypeError('invalid receiver');
     return ES.LeapYear(GetSlot(this, YEAR));
   }
-  with(dateLike = {}, disambiguation = 'constrain') {
+  with(yearMonthLike = {}, disambiguation = 'constrain') {
     if (!ES.IsYearMonth(this)) throw new TypeError('invalid receiver');
-    const props = ES.ValidPropertyBag(dateLike, ['year', 'month']);
-    if (!props) {
-      throw new RangeError('invalid year-month-like');
-    }
+    const props = ES.ToPartialYearMonth(yearMonthLike);
     const { year = GetSlot(this, YEAR), month = GetSlot(this, MONTH) } = props;
     const Construct = ES.SpeciesConstructor(this, YearMonth);
     return new Construct(year, month, disambiguation);

@@ -127,6 +127,11 @@ describe('Date', () => {
       const date = original.with({ day: 17 });
       equal(`${date}`, '1976-11-17');
     });
+    it('date.with(otherDate) works', () => {
+      const otherDate = Date.from('1981-12-15');
+      const date = original.with(otherDate);
+      equal(`${date}`, `${otherDate}`);
+    });
   });
   describe('Date.withTime() works', () => {
     const date = Date.from('1976-11-18');

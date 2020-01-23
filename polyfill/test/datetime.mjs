@@ -255,6 +255,10 @@ describe('DateTime', () => {
     it('datetime.with({ month: 5, second: 15 } works', () => {
       equal(`${datetime.with({ month: 5, second: 15 })}`, '1976-05-18T15:23:15.123456789');
     });
+    it('datetime.with(otherDateTime) works', () => {
+      const otherDateTime = DateTime.from('2019-10-29T10:46:38.271986102');
+      equal(`${datetime.with(otherDateTime)}`, '2019-10-29T10:46:38.271986102');
+    });
   });
   describe('DateTime.compare() works', () => {
     const dt1 = DateTime.from('1976-11-18T15:23:30.123456789');

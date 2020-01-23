@@ -145,20 +145,7 @@ export class DateTime {
   }
   with(dateTimeLike, disambiguation = 'constrain') {
     if (!ES.IsDateTime(this)) throw new TypeError('invalid receiver');
-    const props = ES.ValidPropertyBag(dateTimeLike, [
-      'year',
-      'month',
-      'day',
-      'hour',
-      'minute',
-      'second',
-      'millisecond',
-      'microsecond',
-      'nanosecond'
-    ]);
-    if (!props) {
-      throw new RangeError('invalid date-time-like');
-    }
+    const props = ES.ToPartialDateTime(dateTimeLike);
     const {
       year = GetSlot(this, YEAR),
       month = GetSlot(this, MONTH),

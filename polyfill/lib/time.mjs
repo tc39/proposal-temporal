@@ -83,17 +83,7 @@ export class Time {
 
   with(timeLike = {}, disambiguation = 'constrain') {
     if (!ES.IsTime(this)) throw new TypeError('invalid receiver');
-    const props = ES.ValidPropertyBag(timeLike, [
-      'hour',
-      'minute',
-      'second',
-      'millisecond',
-      'microsecond',
-      'nanosecond'
-    ]);
-    if (!props) {
-      throw new RangeError('invalid time-like');
-    }
+    const props = ES.ToPartialTime(timeLike);
     const {
       hour = GetSlot(this, HOUR),
       minute = GetSlot(this, MINUTE),

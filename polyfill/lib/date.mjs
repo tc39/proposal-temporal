@@ -67,10 +67,7 @@ export class Date {
   }
   with(dateLike = {}, disambiguation = 'constrain') {
     if (!ES.IsDate(this)) throw new TypeError('invalid receiver');
-    const props = ES.ValidPropertyBag(dateLike, ['year', 'month', 'day']);
-    if (!props) {
-      throw new RangeError('invalid date-like');
-    }
+    const props = ES.ToPartialDate(dateLike);
     const { year = GetSlot(this, YEAR), month = GetSlot(this, MONTH), day = GetSlot(this, DAY) } = props;
     const Construct = ES.SpeciesConstructor(this, Date);
     return new Construct(year, month, day, disambiguation);

@@ -38,12 +38,9 @@ export class MonthDay {
     return GetSlot(this, DAY);
   }
 
-  with(dateLike, disambiguation = 'constrain') {
+  with(monthDayLike, disambiguation = 'constrain') {
     if (!ES.IsMonthDay(this)) throw new TypeError('invalid receiver');
-    const props = ES.ValidPropertyBag(dateLike, ['month', 'day']);
-    if (!props) {
-      throw new RangeError('invalid month-day-like');
-    }
+    const props = ES.ToPartialMonthDay(monthDayLike);
     const { month = GetSlot(this, MONTH), day = GetSlot(this, DAY) } = props;
     const Construct = ES.SpeciesConstructor(this, MonthDay);
     return new Construct(month, day, disambiguation);

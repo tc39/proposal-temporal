@@ -535,8 +535,11 @@
             }.
           1. Let _any_ be *false*.
           1. For each row of <emu-xref href="#table-temporal-datetimelike-properties"></emu-xref>, except the header row, in table order, do
-            1. Let _property_ be the Property value of the current row.
-            1. Let _value_ be ? Get(_dateTime_, _property_).
+            1. If _dateTime_ has an [[InitializedTemporalDateTime]] internal slot, then
+              1. Let _value_ be the value of _dateTime_'s internal slot whose name is the Internal Slot value of the current row.
+            1. Else
+              1. Let _property_ be the Property value of the current row.
+              1. Let _value_ be ? Get(_dateTime_, _property_).
             1. If _value_ is not *undefined*, then
               1. Set _any_ to *true*.
               1. Set _value_ to ? ToInteger(_value_).

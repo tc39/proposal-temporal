@@ -219,6 +219,10 @@ describe('Time', () => {
       it('time.with({ minute: 8, nanosecond: 3 } works', () => {
         equal(`${time.with({ minute: 8, nanosecond: 3 })}`, '15:08:30.123456003');
       });
+      it('time.with(otherTime) works', () => {
+        const otherTime = Time.from('20:12:15.987654321');
+        equal(`${time.with(otherTime)}`, '20:12:15.987654321');
+      });
     });
   describe('time.withDate() works', () => {
     const time = Time.from('11:30:23.123456789');
