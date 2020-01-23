@@ -67,6 +67,17 @@ describe('Absolute', () => {
       assert(instant);
       equal(`${instant}`, iso);
     });
+    it('optional time zone parameter UTC', () => {
+      const iso = '1976-11-18T14:23:30.123456789Z';
+      const abs = Absolute.from(iso);
+      const tz = Temporal.TimeZone.from('UTC');
+      equal(abs.toString(tz), iso);
+    });
+    it('optional time zone parameter non-UTC', () => {
+      const abs = Absolute.from('1976-11-18T14:23:30.123456789Z');
+      const tz = Temporal.TimeZone.from('America/New_York');
+      equal(abs.toString(tz), '1976-11-18T09:23:30.123456789-05:00[America/New_York]');
+    });
   });
   describe('Absolute.getEpochSeconds() works', () => {
     it('post-epoch', () => {
@@ -346,6 +357,27 @@ describe('Absolute', () => {
       const max = Absolute.from('+275760-09-13T00:00Z');
       throws(() => min.minus({nanoseconds: 1}), RangeError);
       throws(() => max.plus({nanoseconds: 1}), RangeError);
+    });
+  });
+  describe('Absolute.inTimeZone works', () => {
+    const iso = '1976-11-18T14:23:30.123456789Z';
+    const abs = Absolute.from(iso);
+    it('without optional parameter', () => {
+      const dt = abs.inTimeZone();
+      equal(abs.getEpochNanoseconds(), dt.inTimeZone().getEpochNanoseconds());
+      equal(`${dt}`, '1976-11-18T14:23:30.123456789');
+    });
+    it('optional time zone parameter UTC', () => {
+      const tz = Temporal.TimeZone.from('UTC');
+      const dt = abs.inTimeZone(tz);
+      equal(abs.getEpochNanoseconds(), dt.inTimeZone(tz).getEpochNanoseconds());
+      equal(`${dt}`, '1976-11-18T14:23:30.123456789');
+    });
+    it('optional time zone parameter non-UTC', () => {
+      const tz = Temporal.TimeZone.from('America/New_York');
+      const dt = abs.inTimeZone(tz);
+      equal(abs.getEpochNanoseconds(), dt.inTimeZone(tz).getEpochNanoseconds());
+      equal(`${dt}`, '1976-11-18T09:23:30.123456789');
     });
   });
 });
