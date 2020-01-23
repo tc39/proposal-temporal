@@ -77,6 +77,11 @@ describe('YearMonth', () => {
         });
       });
     });
+    describe('.with()', () => {
+      const ym = YearMonth.from('2019-10');
+      it('with(2020)', () => equal(`${ym.with({ year: 2020 })}`, '2020-10'));
+      it('with(09)', () => equal(`${ym.with({ month: 9 })}`, '2019-09'));
+    });
   });
   describe('YearMonth.compare() works', () => {
     const nov94 = YearMonth.from('1994-11');
