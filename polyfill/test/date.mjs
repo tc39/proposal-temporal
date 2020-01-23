@@ -185,6 +185,21 @@ describe('Date', () => {
       equal(`${new Date(2019, 1, 31).plus({ months: 1 })}`, '2019-02-28');
     });
   });
+  describe('date.minus() works', () => {
+    const date = Date.from('2019-11-18');
+    it('date.minus({ years: 43 })', () => {
+      equal(`${date.minus({ years: 43 })}`, '1976-11-18');
+    });
+    it('date.minus({ months: 11 })', () => {
+      equal(`${date.minus({ months: 11 })}`, '2018-12-18');
+    });
+    it('date.minus({ days: 20 })', () => {
+      equal(`${date.minus({ days: 20 })}`, '2019-10-29');
+    });
+    it('Date.from("2019-02-28").minus({ months: 1 })', () => {
+      equal(`${Date.from('2019-02-28').minus({ months: 1 })}`, '2019-01-28');
+    });
+  });
   describe('date.toString() works', () => {
     it('new Date(1976, 11, 18).toString()', () => {
       equal(new Date(1976, 11, 18).toString(), '1976-11-18');

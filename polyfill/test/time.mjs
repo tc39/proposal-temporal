@@ -270,6 +270,15 @@ describe('Time', () => {
         equal(`${time.plus({ nanoseconds: 300 })}`, '15:23:30.123457089');
       });
     });
+    describe('time.minus() works', () => {
+      const time = Time.from('15:23:30.123456789');
+      it(`(${time}).minus({ hours: 16 })`, () =>
+        equal(`${time.minus({ hours: 16 })}`, '23:23:30.123456789'));
+      it(`(${time}).minus({ minutes: 45 })`, () =>
+        equal(`${time.minus({ minutes: 45 })}`, '14:38:30.123456789'));
+      it(`(${time}).minus({ nanoseconds: 800 })`, () =>
+        equal(`${time.minus({ nanoseconds: 800 })}`, '15:23:30.123455989'));
+    });
     describe('time.toString() works', () => {
       it('new Time(15, 23).toString()', () => {
         equal(new Time(15, 23).toString(), '15:23');
