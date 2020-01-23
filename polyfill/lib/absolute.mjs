@@ -7,13 +7,6 @@ import {
   SetSlot,
   YEARS,
   MONTHS,
-  DAYS,
-  HOURS,
-  MINUTES,
-  SECONDS,
-  MILLISECONDS,
-  MICROSECONDS,
-  NANOSECONDS
 } from './slots.mjs';
 
 import bigInt from 'big-integer';
@@ -47,18 +40,24 @@ export class Absolute {
 
   plus(durationLike) {
     if (!ES.IsAbsolute(this)) throw new TypeError('invalid receiver');
-    const duration = ES.ToDuration(durationLike);
-    if (GetSlot(duration, YEARS) !== 0) throw new RangeError(`invalid duration field years`);
-    if (GetSlot(duration, MONTHS) !== 0) throw new RangeError(`invalid duration field months`);
+    const {
+      days,
+      hours,
+      minutes,
+      seconds,
+      milliseconds,
+      microseconds,
+      nanoseconds
+    } = ES.ToLimitedDuration(durationLike, [YEARS, MONTHS]);
 
     let add = bigInt(0);
-    add = add.plus(bigInt(GetSlot(duration, NANOSECONDS)).multiply(1e0));
-    add = add.plus(bigInt(GetSlot(duration, MICROSECONDS)).multiply(1e3));
-    add = add.plus(bigInt(GetSlot(duration, MILLISECONDS)).multiply(1e6));
-    add = add.plus(bigInt(GetSlot(duration, SECONDS)).multiply(1e9));
-    add = add.plus(bigInt(GetSlot(duration, MINUTES)).multiply(60).multiply(1e9));
-    add = add.plus(bigInt(GetSlot(duration, HOURS)).multiply(60 * 60).multiply(1e9));
-    add = add.plus(bigInt(GetSlot(duration, DAYS)).multiply(24 * 60 * 60).multiply(1e9));
+    add = add.plus(bigInt(nanoseconds));
+    add = add.plus(bigInt(microseconds).multiply(1e3));
+    add = add.plus(bigInt(milliseconds).multiply(1e6));
+    add = add.plus(bigInt(seconds).multiply(1e9));
+    add = add.plus(bigInt(minutes).multiply(60 * 1e9));
+    add = add.plus(bigInt(hours).multiply(60 * 60 * 1e9));
+    add = add.plus(bigInt(days).multiply(24 * 60 * 60 * 1e9));
 
     const ns = bigInt(GetSlot(this, EPOCHNANOSECONDS)).plus(add);
     const Construct = ES.SpeciesConstructor(this, Absolute);
@@ -66,18 +65,24 @@ export class Absolute {
   }
   minus(durationLike) {
     if (!ES.IsAbsolute(this)) throw new TypeError('invalid receiver');
-    const duration = ES.ToDuration(durationLike);
-    if (GetSlot(duration, YEARS) !== 0) throw new RangeError(`invalid duration field years`);
-    if (GetSlot(duration, MONTHS) !== 0) throw new RangeError(`invalid duration field months`);
+    const {
+      days,
+      hours,
+      minutes,
+      seconds,
+      milliseconds,
+      microseconds,
+      nanoseconds
+    } = ES.ToLimitedDuration(durationLike, [YEARS, MONTHS]);
 
     let add = bigInt(0);
-    add = add.plus(bigInt(GetSlot(duration, NANOSECONDS)).multiply(1e0));
-    add = add.plus(bigInt(GetSlot(duration, MICROSECONDS)).multiply(1e3));
-    add = add.plus(bigInt(GetSlot(duration, MILLISECONDS)).multiply(1e6));
-    add = add.plus(bigInt(GetSlot(duration, SECONDS)).multiply(1e9));
-    add = add.plus(bigInt(GetSlot(duration, MINUTES)).multiply(60).multiply(1e9));
-    add = add.plus(bigInt(GetSlot(duration, HOURS)).multiply(60 * 60).multiply(1e9));
-    add = add.plus(bigInt(GetSlot(duration, DAYS)).multiply(24 * 60 * 60).multiply(1e9));
+    add = add.plus(bigInt(nanoseconds));
+    add = add.plus(bigInt(microseconds).multiply(1e3));
+    add = add.plus(bigInt(milliseconds).multiply(1e6));
+    add = add.plus(bigInt(seconds).multiply(1e9));
+    add = add.plus(bigInt(minutes).multiply(60 * 1e9));
+    add = add.plus(bigInt(hours).multiply(60 * 60 * 1e9));
+    add = add.plus(bigInt(days).multiply(24 * 60 * 60 * 1e9));
 
     const ns = bigInt(GetSlot(this, EPOCHNANOSECONDS)).minus(add);
     const Construct = ES.SpeciesConstructor(this, Absolute);

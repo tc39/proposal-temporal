@@ -14,7 +14,8 @@ const { reporter } = Pretty;
 import Assert from 'assert';
 const { ok: assert, equal, throws } = Assert;
 
-import { Absolute } from 'tc39-temporal';
+import * as Temporal from 'tc39-temporal';
+const { Absolute } = Temporal;
 
 describe('Absolute', () => {
   describe('Structure', () => {
@@ -238,8 +239,8 @@ describe('Absolute', () => {
     });
   });
   describe('Absolute.plus works', ()=>{
+    const abs = Absolute.from('1969-12-25T12:23:45.678901234Z');
     describe('cross epoch in ms', ()=>{
-      const abs = Absolute.from('1969-12-25T12:23:45.678901234Z');
       const one = abs.minus({ days: 10, nanoseconds: 800 });
       const two = abs.plus({ days: 10, nanoseconds: 800 });
       const three = two.minus({ days: 20, nanoseconds: 1600 });
@@ -248,6 +249,17 @@ describe('Absolute', () => {
       it(`(${abs}).plus({ days: 10, nanoseconds: 800 }) = ${two}`, () => equal(`${two}`, '1970-01-04T12:23:45.678902034Z'));
       it(`(${two}).minus({ days: 20, nanoseconds: 1600 }) = ${one}`, () => equal(`${three}`, `${one}`));
       it(`(${one}).plus( days: 20, nanoseconds: 1600 }) = ${two}`, () => equal(`${four}`, `${two}`));
+    });
+    it('abs.plus(durationObj)', () => {
+      const later = abs.plus(Temporal.Duration.from('P10DT0.000000800S'));
+      equal(`${later}`, '1970-01-04T12:23:45.678902034Z');
+    });
+  });
+  describe('Absolute.minus works', () => {
+    const abs = Absolute.from('1969-12-25T12:23:45.678901234Z');
+    it('abs.minus(durationObj)', () => {
+      const earlier = abs.minus(Temporal.Duration.from('P10DT0.000000800S'));
+      equal(`${earlier}`, '1969-12-15T12:23:45.678900434Z');
     });
   });
   describe('Absolute.compare works', () => {

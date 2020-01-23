@@ -269,6 +269,9 @@ describe('Time', () => {
       it(`(${time}).plus({ nanoseconds: 300 })`, () => {
         equal(`${time.plus({ nanoseconds: 300 })}`, '15:23:30.123457089');
       });
+      it('time.plus(durationObj)', () => {
+        equal(`${time.plus(Temporal.Duration.from('PT16H'))}`, '07:23:30.123456789');
+      });
     });
     describe('time.minus() works', () => {
       const time = Time.from('15:23:30.123456789');
@@ -278,6 +281,9 @@ describe('Time', () => {
         equal(`${time.minus({ minutes: 45 })}`, '14:38:30.123456789'));
       it(`(${time}).minus({ nanoseconds: 800 })`, () =>
         equal(`${time.minus({ nanoseconds: 800 })}`, '15:23:30.123455989'));
+      it('time.minus(durationObj)', () => {
+        equal(`${time.minus(Temporal.Duration.from('PT16H'))}`, '23:23:30.123456789');
+      });
     });
     describe('time.toString() works', () => {
       it('new Time(15, 23).toString()', () => {
