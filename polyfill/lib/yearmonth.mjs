@@ -1,6 +1,19 @@
 import { ES } from './ecmascript.mjs';
 import { MakeIntrinsicClass } from './intrinsicclass.mjs';
-import { YEAR, MONTH, CreateSlots, GetSlot, SetSlot } from './slots.mjs';
+import {
+  YEAR,
+  MONTH,
+  CreateSlots,
+  GetSlot,
+  SetSlot,
+  DAYS,
+  HOURS,
+  MINUTES,
+  SECONDS,
+  MILLISECONDS,
+  MICROSECONDS,
+  NANOSECONDS,
+} from './slots.mjs';
 
 import { yearmonth as STRING } from './regex.mjs';
 
@@ -54,20 +67,7 @@ export class YearMonth {
   }
   plus(durationLike, disambiguation = 'constrain') {
     if (!ES.IsYearMonth(this)) throw new TypeError('invalid receiver');
-    const duration = ES.ToDuration(durationLike);
-    if (
-      !ES.ValidDuration(duration, [
-        'days',
-        'hours',
-        'minutes',
-        'seconds',
-        'milliseconds',
-        'microseconds',
-        'nanoseconds'
-      ])
-    ) {
-      throw new RangeError('invalid duration');
-    }
+    const duration = ES.ToLimitedDuration(durationLike, [DAYS, HOURS, MINUTES, SECONDS, MILLISECONDS, MICROSECONDS, NANOSECONDS]);
     let { year, month } = this;
     const { years, months } = duration;
     ({ year, month } = ES.AddDate(year, month, 1, years, months, 0, disambiguation));
@@ -77,20 +77,7 @@ export class YearMonth {
   }
   minus(durationLike, disambiguation = 'constrain') {
     if (!ES.IsYearMonth(this)) throw new TypeError('invalid receiver');
-    const duration = ES.ToDuration(durationLike);
-    if (
-      !ES.ValidDuration(duration, [
-        'days',
-        'hours',
-        'minutes',
-        'seconds',
-        'milliseconds',
-        'microseconds',
-        'nanoseconds'
-      ])
-    ) {
-      throw new RangeError('invalid duration');
-    }
+    const duration = ES.ToLimitedDuration(durationLike, [DAYS, HOURS, MINUTES, SECONDS, MILLISECONDS, MICROSECONDS, NANOSECONDS]);
     let { year, month } = this;
     const { years, months } = duration;
     ({ year, month } = ES.SubtractDate(year, month, 1, years, months, 0, disambiguation));

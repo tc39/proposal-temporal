@@ -7,7 +7,8 @@ const { reporter } = Pretty;
 import { strict as assert } from 'assert';
 const { throws, equal } = assert;
 
-import { YearMonth } from 'tc39-temporal';
+import * as Temporal from 'tc39-temporal';
+const { YearMonth } = Temporal;
 
 describe('YearMonth', () => {
   describe('Structure', () => {
@@ -89,6 +90,9 @@ describe('YearMonth', () => {
       equal(`${ym.plus({ months: 2 })}`, '2020-01'));
     it('(2019-11) plus 1 year === 2020-11', () =>
       equal(`${ym.plus({ years: 1 })}`, '2020-11'));
+    it('yearMonth.plus(durationObj)', () => {
+      equal(`${ym.plus(Temporal.Duration.from('P2M'))}`, '2020-01');
+    });
   });
   describe('YearMonth.minus() works', () => {
     const ym = YearMonth.from('2019-11');
@@ -96,6 +100,9 @@ describe('YearMonth', () => {
       equal(`${ym.minus({ months: 11 })}`, '2018-12'));
     it('(2019-11) minus 12 years === 2007-11', () =>
       equal(`${ym.minus({ years: 12 })}`, '2007-11'));
+    it('yearMonth.minus(durationObj)', () => {
+      equal(`${ym.minus(Temporal.Duration.from('P11M'))}`, '2018-12');
+    });
   });
 });
 

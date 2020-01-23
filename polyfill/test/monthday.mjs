@@ -7,7 +7,8 @@ const { reporter } = Pretty;
 import { strict as assert } from 'assert';
 const { throws, equal } = assert;
 
-import { MonthDay } from 'tc39-temporal';
+import * as Temporal from 'tc39-temporal';
+const { MonthDay } = Temporal;
 
 describe('MonthDay', () => {
   describe('Structure', () => {

@@ -16,6 +16,7 @@ import { Duration as TemporalDuration } from './duration.mjs';
 import bigInt from 'big-integer';
 
 import {
+  GetSlot,
   HasSlot,
   EPOCHNANOSECONDS,
   IDENTIFIER,
@@ -311,6 +312,15 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
       'reject'
     );
   },
+  ToLimitedDuration: (item, disallowedSlots = []) => {
+    const duration = ES.ToDuration(item);
+    for (let slot of disallowedSlots) {
+      if (GetSlot(duration, slot) !== 0) {
+        throw new RangeError(`invalid duration field ${slot}`);
+      }
+    }
+    return duration;
+  },
   GetIntrinsic: (intrinsic) => {
     return intrinsic in INTRINSICS ? INTRINSICS[intrinsic] : GetIntrinsic(intrinsic);
   },
@@ -343,17 +353,6 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
       }
     }
     return result;
-  },
-  ValidDuration: (durationbag, invalid = []) => {
-    for (let prop of invalid) {
-      if (prop in durationbag) {
-        const value = ES.ToNumber(durationbag[prop]);
-        if (Number.isFinite(value) && !!value) {
-          return false;
-        }
-      }
-    }
-    return true;
   },
   ISOTimeZoneString: (timeZone, absolute) => {
     let offset = timeZone.getOffsetFor(absolute);

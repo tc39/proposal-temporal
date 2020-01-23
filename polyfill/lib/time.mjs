@@ -1,7 +1,20 @@
 import { ES } from './ecmascript.mjs';
 import { MakeIntrinsicClass } from './intrinsicclass.mjs';
 
-import { HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND, CreateSlots, GetSlot, SetSlot } from './slots.mjs';
+import {
+  HOUR,
+  MINUTE,
+  SECOND,
+  MILLISECOND,
+  MICROSECOND,
+  NANOSECOND,
+  CreateSlots,
+  GetSlot,
+  SetSlot,
+  YEARS,
+  MONTHS,
+  DAYS,
+} from './slots.mjs';
 
 export class Time {
   constructor(
@@ -107,11 +120,8 @@ export class Time {
   }
   plus(durationLike) {
     if (!ES.IsTime(this)) throw new TypeError('invalid receiver');
-    const duration = ES.ToDuration(durationLike);
-    if (!ES.ValidDuration(duration, ['years', 'months', 'days'])) {
-      throw new RangeError('invalid duration');
-    }
     let { hour, minute, second, millisecond, microsecond, nanosecond } = this;
+    const duration = ES.ToLimitedDuration(durationLike, [YEARS, MONTHS, DAYS]);
     const { hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
     ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.AddTime(
       hour,
@@ -132,11 +142,8 @@ export class Time {
   }
   minus(durationLike) {
     if (!ES.IsTime(this)) throw new TypeError('invalid receiver');
-    const duration = ES.ToDuration(durationLike);
-    if (!ES.ValidDuration(duration, ['years', 'months', 'days'])) {
-      throw new RangeError('invalid duration');
-    }
     let { hour, minute, second, millisecond, microsecond, nanosecond } = this;
+    const duration = ES.ToLimitedDuration(durationLike, [YEARS, MONTHS, DAYS]);
     const { hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
     ({ hour, minute, second, minute, microsecond, nanosecond } = ES.SubtractTime(
       hour,

@@ -184,6 +184,9 @@ describe('Date', () => {
     it('new Date(2019, 1, 31).plus({ months: 1 })', () => {
       equal(`${new Date(2019, 1, 31).plus({ months: 1 })}`, '2019-02-28');
     });
+    it('date.plus(durationObj)', () => {
+      equal(`${date.plus(Temporal.Duration.from('P43Y'))}`, '2019-11-18');
+    });
   });
   describe('date.minus() works', () => {
     const date = Date.from('2019-11-18');
@@ -198,6 +201,9 @@ describe('Date', () => {
     });
     it('Date.from("2019-02-28").minus({ months: 1 })', () => {
       equal(`${Date.from('2019-02-28').minus({ months: 1 })}`, '2019-01-28');
+    });
+    it('Date.minus(durationObj)', () => {
+      equal(`${date.minus(Temporal.Duration.from('P43Y'))}`, '1976-11-18');
     });
   });
   describe('date.toString() works', () => {
