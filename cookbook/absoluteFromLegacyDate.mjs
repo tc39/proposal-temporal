@@ -1,5 +1,3 @@
-import { Temporal } from "../polyfill/lib/index.mjs";
-
 /**
  * Converts a Date instance into a Temporal.Absolute instance
  *
@@ -11,5 +9,5 @@ function getAbsoluteFromDate(esDate) {
     return date;
 }
 
-const date = new Date();
-getAbsoluteFromDate(date); // Absolute [Temporal.Absolute] {}
+const date = new Date("1970-01-01T00:00:01Z");
+const absolute = getAbsoluteFromDate(date); // Absolute [Temporal.Absolute] {}
