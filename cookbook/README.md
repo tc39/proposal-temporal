@@ -1,5 +1,11 @@
 # Temporal Cookbook
 
+## Running the cookbook files
+
+Running cookbook files: `node --experimental-modules --no-warnings --icu-data-dir ./polyfill/node_modules/full-icu/ -r ./polyfill/index.js ${cookbookFile}`
+
+_The above code allows `Temporal` to exist as a global object before the cookbook file runs._
+
 ## Construction
 
 ### [Absolute from legacy Date](./absoluteFromLegacyDate.mjs)
