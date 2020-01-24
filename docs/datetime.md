@@ -55,3 +55,6 @@
 ## datetime.getTime() : Temporal.Time
 
 ## Temporal.DateTime.compare(one: Temporal.DateTime, two: Temporal.DateTime) : number;
+
+<script type="application/javascript" src="./prism.js"></script>
+<link rel="stylesheet" type="text/css" href="./prism.css">

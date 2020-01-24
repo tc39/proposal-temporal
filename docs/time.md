@@ -33,3 +33,6 @@ A representation of wall-clock time.
 ## time.withDate(date: Temporal.Date) : Temporal.DateTime
 
 ## Temporal.Time.compare(one: Temporal.Time, two: Temporal.Time) : number;
+
+<script type="application/javascript" src="./prism.js"></script>
+<link rel="stylesheet" type="text/css" href="./prism.css">

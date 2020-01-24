@@ -31,3 +31,6 @@ A representation of a calendar date.
 ## yearMonth.withDay(day: number) : Temporal.Date
 
 ## Temporal.YearMonth.compare(one: Temporal.YearMonth, two: Temporal.YearMonth) : number
+
+<script type="application/javascript" src="./prism.js"></script>
+<link rel="stylesheet" type="text/css" href="./prism.css">

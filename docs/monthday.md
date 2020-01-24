@@ -25,3 +25,6 @@
 ## monthDay.withYear(year: number, disambiguation: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.Date
 
 ## Temporal.MonthDay.compare(one: Temporal.MonthDay, two: Temporal.MonthDay) : number
+
+<script type="application/javascript" src="./prism.js"></script>
+<link rel="stylesheet" type="text/css" href="./prism.css">
