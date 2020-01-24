@@ -31,3 +31,6 @@ Creates a new `Duration` object that represents a duration of time.
 ## duration.toString() : string
 
 ## duration.toLocaleString(locale?: string, options?: object) : string
+
+<script type="application/javascript" src="./prism.js"></script>
+<link rel="stylesheet" type="text/css" href="./prism.css">

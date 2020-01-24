@@ -124,5 +124,7 @@ dt.milliseconds/* 7 */; dt.microseconds/* 8 */; dt.nanoseconds/* 9 */
 
 <script type="application/javascript" src="./playground.js"></script>
 <script type="application/javascript" src="./mermaid.js"></script>
+<script type="application/javascript" src="./prism.js"></script>
+<link rel="stylesheet" type="text/css" href="./prism.css">
 <script>mermaid.initialize({startOnLoad:true, flowchart:{ useMaxWidth:false } });</script>
 <style>.mermaid svg { height: 13em; }</style>

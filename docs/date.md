@@ -86,3 +86,6 @@ Allows for easier comparison of `Date` objects, returns:
 - `-1` if the first object represents a lower value than the second
 - `0` if the 2 objects represent the same value
 - `1` if the first object represents a higher value than the second
+
+<script type="application/javascript" src="./prism.js"></script>
+<link rel="stylesheet" type="text/css" href="./prism.css">

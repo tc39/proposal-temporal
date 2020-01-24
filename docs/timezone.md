@@ -211,3 +211,6 @@ for (let zone of Temporal.TimeZone) console.log(zone.name);
 // Africa/Addis_Ababa
 // ...and many more
 ```
+
+<script type="application/javascript" src="./prism.js"></script>
+<link rel="stylesheet" type="text/css" href="./prism.css">
