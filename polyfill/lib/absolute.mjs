@@ -28,12 +28,12 @@ export class Absolute {
   getEpochSeconds() {
     if (!ES.IsAbsolute(this)) throw new TypeError('invalid receiver');
     const value = GetSlot(this, EPOCHNANOSECONDS);
-    return value.divide(1e9);
+    return +value.divide(1e9);
   }
   getEpochMilliseconds() {
     if (!ES.IsAbsolute(this)) throw new TypeError('invalid receiver');
     const value = bigInt(GetSlot(this, EPOCHNANOSECONDS));
-    return value.divide(1e6);
+    return +value.divide(1e6);
   }
   getEpochMicroseconds() {
     if (!ES.IsAbsolute(this)) throw new TypeError('invalid receiver');

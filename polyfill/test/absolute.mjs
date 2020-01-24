@@ -97,6 +97,22 @@ describe('Absolute', () => {
       equal(`${instant}`, iso);
     });
   });
+  describe('Absolute.getEpochSeconds() works', () => {
+    it('post-epoch', () => {
+      const epochMs = Date.UTC(1976, 10, 18, 15, 23, 30, 123);
+      const epochNs = BigInt(epochMs) * BigInt(1e6);
+      const abs = new Absolute(epochNs);
+      equal(abs.getEpochSeconds(), Math.trunc(epochMs / 1e3));
+      equal(typeof abs.getEpochSeconds(), 'number');
+    });
+    it('pre-epoch', () => {
+      const epochMs = Date.UTC(1963, 1, 13, 9, 36, 29, 123);
+      const epochNs = BigInt(epochMs) * BigInt(1e6);
+      const abs = new Absolute(epochNs);
+      equal(abs.getEpochSeconds(), Math.trunc(epochMs / 1e3));
+      equal(typeof abs.getEpochSeconds(), 'number');
+    });
+  });
   describe('Absolute.fromEpochSeconds() works', () => {
     it('1976-11-18T15:23:30', () => {
       const epochSeconds = Math.floor(Date.UTC(1976, 10, 18, 15, 23, 30, 123) / 1e3);
@@ -107,6 +123,22 @@ describe('Absolute', () => {
       const epochSeconds = Math.floor(Date.UTC(1963, 1, 13, 9, 36, 29, 123) / 1e3);
       const instant = Absolute.fromEpochSeconds(epochSeconds);
       equal(instant.getEpochSeconds(), epochSeconds);
+    });
+  });
+  describe('Absolute.getEpochMilliseconds() works', () => {
+    it('post-epoch', () => {
+      const epochMs = Date.UTC(1976, 10, 18, 15, 23, 30, 123);
+      const epochNs = BigInt(epochMs) * BigInt(1e6);
+      const abs = new Absolute(epochNs);
+      equal(abs.getEpochMilliseconds(), epochMs);
+      equal(typeof abs.getEpochMilliseconds(), 'number');
+    });
+    it('pre-epoch', () => {
+      const epochMs = Date.UTC(1963, 1, 13, 9, 36, 29, 123);
+      const epochNs = BigInt(epochMs) * BigInt(1e6);
+      const abs = new Absolute(epochNs);
+      equal(abs.getEpochMilliseconds(), epochMs);
+      equal(typeof abs.getEpochMilliseconds(), 'number');
     });
   });
   describe('Absolute.fromEpochMilliseconds() works', () => {
@@ -121,6 +153,22 @@ describe('Absolute', () => {
       equal(instant.getEpochMilliseconds(), epochMilliseconds);
     });
   });
+  describe('Absolute.getEpochMicroseconds() works', () => {
+    it('post-epoch', () => {
+      const epochMs = Date.UTC(1976, 10, 18, 15, 23, 30, 123);
+      const epochNs = BigInt(epochMs) * BigInt(1e6);
+      const abs = new Absolute(epochNs);
+      equal(abs.getEpochMicroseconds(), BigInt(epochMs) * BigInt(1e3));
+      equal(typeof abs.getEpochMicroseconds(), 'bigint');
+    });
+    it('pre-epoch', () => {
+      const epochMs = Date.UTC(1963, 1, 13, 9, 36, 29, 123);
+      const epochNs = BigInt(epochMs) * BigInt(1e6);
+      const abs = new Absolute(epochNs);
+      equal(abs.getEpochMicroseconds(), BigInt(epochMs) * BigInt(1e3));
+      equal(typeof abs.getEpochMicroseconds(), 'bigint');
+    });
+  });
   describe('Absolute.fromEpochMicroseconds() works', () => {
     it('1976-11-18T15:23:30.123456', () => {
       const epochMicroseconds = BigInt(Date.UTC(1976, 10, 18, 15, 23, 30, 123)) * BigInt(1e3) + BigInt(456);
@@ -131,6 +179,22 @@ describe('Absolute', () => {
       const epochMicroseconds = BigInt(Date.UTC(1963, 1, 13, 9, 36, 29, 123)) * BigInt(1e3) + BigInt(456);
       const instant = Absolute.fromEpochMicroseconds(epochMicroseconds);
       equal(instant.getEpochMicroseconds(), epochMicroseconds);
+    });
+  });
+  describe('Absolute.getEpochNanoseconds() works', () => {
+    it('post-epoch', () => {
+      const epochMs = Date.UTC(1976, 10, 18, 15, 23, 30, 123);
+      const epochNs = BigInt(epochMs) * BigInt(1e6);
+      const abs = new Absolute(epochNs);
+      equal(abs.getEpochNanoseconds(), epochNs);
+      equal(typeof abs.getEpochNanoseconds(), 'bigint');
+    });
+    it('pre-epoch', () => {
+      const epochMs = Date.UTC(1963, 1, 13, 9, 36, 29, 123);
+      const epochNs = BigInt(epochMs) * BigInt(1e6);
+      const abs = new Absolute(epochNs);
+      equal(abs.getEpochNanoseconds(), epochNs);
+      equal(typeof abs.getEpochNanoseconds(), 'bigint');
     });
   });
   describe('Absolute.fromEpochNanoseconds() works', () => {
