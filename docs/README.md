@@ -79,17 +79,15 @@ A `Temporal.Duration` expresses a length of time. This is used for date/time mat
 
 See [Temporal.Duration Documentation](./duration.md) for more detailed documentation.
 
-### Temporal functions
+### **Temporal.now**
 
- * `Temporal.getAbsolute()` - get the current system absolute time
- * `Temporal.getTimeZone()` - get the current system time zone
- * `Temporal.getDateTime()` - get the current system date/time
- * `Temporal.getTime()` - get the current system time
- * `Temporal.getDate()` - get the current system date
- * `Temporal.getYearMonth()` - get the current system year/month
- * `Temporal.getMonthDay()` - get the current system month/day
+ * `Temporal.now.absolute()` - get the current system absolute time
+ * `Temporal.now.timeZone()` - get the current system time zone
+ * `Temporal.now.dateTime()` - get the current system date/time
+ * `Temporal.now.time()` - get the current system time
+ * `Temporal.now.date()` - get the current system date
 
-See [Temporal Functions Documentation](./functions.md) for more detailed documentation.
+See [Temporal.now Documentation](./now.md) for more detailed documentation.
 
 ### **Temporal.Calendar**
 
