@@ -27,7 +27,7 @@ graph LR;
 
 ### `Temporal.Absolute`
 
-An `Temporal.Absolute` represents a fixed point in time along the POSIX timeline. It does this by internally maintaining a slot for "Nanoseconds since the POSIX-Epoch".
+An `Temporal.Absolute` represents a fixed point in time, without regard to calendar or location.
 
 See [Temporal.Absolute Documentation](./absolute.md) for more detailed documentation.
 
