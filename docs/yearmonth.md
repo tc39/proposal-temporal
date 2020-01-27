@@ -22,7 +22,7 @@ A representation of a calendar date.
 
 ## yearMonth.minus(duration: Temporal.Duration | object | string, disambiguation: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.YearMonth
 
-## yearMonth.difference(other: Temporal.YearMonth | object) : Temporal.Duration
+## yearMonth.difference(other: Temporal.YearMonth) : Temporal.Duration
 
 ## yearMonth.toString() : string
 
@@ -30,4 +30,4 @@ A representation of a calendar date.
 
 ## yearMonth.withDay(day: number) : Temporal.Date
 
-## Temporal.YearMonth.compare(one: Temporal.YearMonth | object, two: Temporal.YearMonth | object) : number
+## Temporal.YearMonth.compare(one: Temporal.YearMonth, two: Temporal.YearMonth) : number

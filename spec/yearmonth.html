@@ -70,8 +70,8 @@
         The following steps are taken:
       </p>
       <emu-alg>
-        1. Let _one_ be ? ToYearMonth(_one_).
-        1. Let _two_ be ? ToYearMonth(_two_).
+        1. Perform ? RequireInternalSlot(_one_, [[InitializedTemporalYearMonth]]).
+        1. Perform ? RequireInternalSlot(_two_, [[InitializedTemporalYearMonth]]).
         1. Return ! YearMonthCompare(_one_, _two_).
       </emu-alg>
     </emu-clause>
@@ -235,7 +235,7 @@
       <emu-alg>
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
-        1. Let _otherYearMonth_ be ? ToYearMonth(_otherYearMonth_).
+        1. Perform ? RequireInternalSlot(_otherYearMonth_, [[InitializedTemporalYearMonth]]).
         1. If ! YearMonthCompare(_yearMonth_, _otherYearMonth_) &lt; 0, then
           1. Let _greater_ be _otherYearMonth_.
           1. Let _smaller_ be _yearMonth_.

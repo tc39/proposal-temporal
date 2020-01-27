@@ -16,7 +16,7 @@
 
 ## monthDay.minus(duration: Temporal.Duration | object | string, disambiguation: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.MonthDay
 
-## monthDay.difference(other: Temporal.MonthDay | object) : Temporal.Duration
+## monthDay.difference(other: Temporal.MonthDay) : Temporal.Duration
 
 ## monthDay.toString() : string
 
@@ -24,4 +24,4 @@
 
 ## monthDay.withYear(year: number, disambiguation: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.Date
 
-## Temporal.MonthDay.compare(one: Temporal.MonthDay | object, two: Temporal.MonthDay | object) : number
+## Temporal.MonthDay.compare(one: Temporal.MonthDay, two: Temporal.MonthDay) : number

@@ -55,7 +55,7 @@ Returns a new `Date` object which is the sum of the current object plus the addi
 
 Returns a new `Date` object which is the sum of the current object minus the additional argument.
 
-## date.difference(other: Temporal.Date | object) : Temporal.Duration
+## date.difference(other: Temporal.Date) : Temporal.Duration
 
 Returns a new `Duration` object which is the difference between the current `Date` object and the argument `Date` value.
 
@@ -67,7 +67,7 @@ Returns an ISO 8601 string representing the current `Date` object
 
 Returns a string with a locally sensitive representation of the specified `Date` object. Overrides the `Object.prototype.toLocaleString()` method.
 
-## date.withTime(time: Temporal.Time | object) : Temporal.DateTime
+## date.withTime(time: Temporal.Time) : Temporal.DateTime
 
 Returns a new [`DateTime`](./DateTime) object using the combination of this `Date` and the `Time` object passed in.
 
@@ -79,7 +79,7 @@ Returns a new [`YearMonth`](./YearMonth) object.
 
 Returns a new [`YearMonth`](./MonthDay) object.
 
-## Temporal.Date.compare(one: Temporal.Date | object, two: Temporal.Date | object) : number
+## Temporal.Date.compare(one: Temporal.Date, two: Temporal.Date) : number
 
 Allows for easier comparison of `Date` objects, returns:
 

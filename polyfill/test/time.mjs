@@ -70,6 +70,9 @@ describe('Time', () => {
     it('Time.from is a Function', () => {
       equal(typeof Time.from, 'function');
     });
+    it('Time.compare is a Function', () => {
+      equal(typeof Time.compare, 'function');
+    });
   });
   describe('Construction', () => {
     describe('complete', () => {
@@ -209,6 +212,12 @@ describe('Time', () => {
         equal(`${time.with({ minute: 8, nanosecond: 3 })}`, '15:08:30.123456003');
       });
     });
+  describe('time.withDate() works', () => {
+    const time = Time.from('11:30:23.123456789');
+    const dt = time.withDate(Temporal.Date.from('1976-11-18'));
+    it('returns a Temporal.DateTime', () => assert(dt instanceof Temporal.DateTime));
+    it('combines the date and time', () => equal(`${dt}`, '1976-11-18T11:30:23.123456789'));
+  });
     describe('time.difference() works', () => {
       const time = new Time(15, 23, 30, 123, 456, 789);
       const one = new Time(14, 23, 30, 123, 456, 789);
@@ -221,6 +230,13 @@ describe('Time', () => {
         const duration = time.difference(two);
         equal(`${duration}`, 'PT1H53M');
       });
+    });
+    describe('Time.compare() works', () => {
+      const t1 = Time.from('08:44:15.321');
+      const t2 = Time.from('14:23:30.123');
+      it('equal', () => equal(Time.compare(t1, t1), 0));
+      it('smaller/larger', () => equal(Time.compare(t1, t2), -1));
+      it('larger/smaller', () => equal(Time.compare(t2, t1), 1));
     });
     describe('time.plus() works', () => {
       const time = new Time(15, 23, 30, 123, 456, 789);

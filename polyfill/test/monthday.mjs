@@ -10,6 +10,23 @@ const { throws, equal } = assert;
 import { MonthDay } from 'tc39-temporal';
 
 describe('MonthDay', () => {
+  describe('Structure', () => {
+    it('MonthDay is a Function', () => {
+      equal(typeof MonthDay, 'function');
+    });
+    it('MonthDay has a prototype', () => {
+      assert(MonthDay.prototype);
+      equal(typeof MonthDay.prototype, 'object');
+    });
+    describe('MonthDay.prototype', () => {
+      it('MonthDay.prototype.difference is a Function', () => {
+        equal(typeof MonthDay.prototype.difference, 'function');
+      });
+    });
+    it('MonthDay.compare is a Function', () => {
+      equal(typeof MonthDay.compare, 'function');
+    });
+  });
   describe('Construction', () => {
     describe('Disambiguation', () => {
       it('reject', () => throws(() => new MonthDay(1, 32, 'reject'), RangeError));
@@ -73,6 +90,34 @@ describe('MonthDay', () => {
         let duration = new Duration(0, 0, 365);
         equal(`${april15.plus(duration)}`, '04-15');
       });
+    });
+  });
+  describe('MonthDay.compare() works', () => {
+    const jan15 = MonthDay.from('01-15');
+    const feb1 = MonthDay.from('02-01');
+    it('equal', () => equal(MonthDay.compare(jan15, jan15), 0));
+    it('smaller/larger', () => equal(MonthDay.compare(jan15, feb1), -1));
+    it('larger/smaller', () => equal(MonthDay.compare(feb1, jan15), 1));
+    it("doesn't cast first argument", () => {
+      throws(() => MonthDay.compare({ month: 1, day: 15 }, feb1), TypeError);
+      throws(() => MonthDay.compare('01-15', feb1), TypeError);
+    });
+    it("doesn't cast second argument", () => {
+      throws(() => MonthDay.compare(jan15, { month: 2, day: 1 }), TypeError);
+      throws(() => MonthDay.compare(jan15, '02-01'), TypeError);
+    });
+  });
+  describe('MonthDay.difference() works', () => {
+    const jan15 = MonthDay.from('01-15');
+    const feb1 = MonthDay.from('02-01');
+    const diff = jan15.difference(feb1);
+    it(`${jan15}.difference(${feb1}) == ${feb1}.difference(${jan15})`, () =>
+      equal(`${diff}`, `${feb1.difference(jan15)}`));
+    it(`${jan15}.plus(${diff}) == ${feb1}`, () => equal(`${jan15.plus(diff)}`, `${feb1}`));
+    it(`${feb1}.minus(${diff}) == ${jan15}`, () => equal(`${feb1.minus(diff)}`, `${jan15}`));
+    it("doesn't cast argument", () => {
+      throws(() => jan15.difference({ month: 2, day: 1 }), TypeError);
+      throws(() => jan15.difference('02-01'), TypeError);
     });
   });
 });

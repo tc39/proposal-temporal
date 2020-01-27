@@ -14,7 +14,8 @@ const { reporter } = Pretty;
 import Assert from 'assert';
 const { ok: assert, equal, throws } = Assert;
 
-import { Date } from 'tc39-temporal';
+import * as Temporal from 'tc39-temporal';
+const { Date } = Temporal;
 
 describe('Date', () => {
   describe('Structure', () => {
@@ -75,6 +76,9 @@ describe('Date', () => {
     it('Date.from is a Function', () => {
       equal(typeof Date.from, 'function');
     });
+    it('Date.compare is a Function', () => {
+      equal(typeof Date.compare, 'function');
+    });
   });
   describe('Construction', () => {
     let date;
@@ -124,10 +128,20 @@ describe('Date', () => {
       equal(`${date}`, '1976-11-17');
     });
   });
+  describe('Date.withTime() works', () => {
+    const date = Date.from('1976-11-18');
+    const dt = date.withTime(Temporal.Time.from('11:30:23'));
+    it('returns a Temporal.DateTime', () => assert(dt instanceof Temporal.DateTime));
+    it('combines the date and time', () => equal(`${dt}`, '1976-11-18T11:30:23'));
+    it("doesn't cast argument", () => {
+      throws(() => dt.withTime({ hours: 11, minutes: 30, seconds: 23 }), TypeError);
+      throws(() => dt.withTime('11:30:23'), TypeError);
+    });
+  });
   describe('date.difference() works', () => {
     const date = new Date(1976, 11, 18);
     it('date.difference({ year: 1976, month: 10, day: 5 })', () => {
-      const duration = date.difference({ year: 1976, month: 10, day: 5 });
+      const duration = date.difference(Date.from({ year: 1976, month: 10, day: 5 }));
 
       equal(duration.years, 0);
       equal(duration.months, 1);
@@ -140,7 +154,7 @@ describe('Date', () => {
       equal(duration.nanoseconds, 0);
     });
     it('date.difference({ year: 2019, month: 11, day: 18 })', () => {
-      const duration = date.difference({ year: 2019, month: 11, day: 18 });
+      const duration = date.difference(Date.from({ year: 2019, month: 11, day: 18 }));
       equal(duration.years, 43);
       equal(duration.months, 0);
       equal(duration.days, 0);
@@ -151,6 +165,10 @@ describe('Date', () => {
       equal(duration.microseconds, 0);
       equal(duration.nanoseconds, 0);
     });
+    it("doesn't cast argument", () => {
+      throws(() => date.difference({ year: 2019, month: 11, day: 5 }), TypeError);
+      throws(() => date.difference('2019-11-05'), TypeError);
+    })
   });
   describe('date.plus() works', () => {
     let date = new Date(1976, 11, 18);
@@ -219,6 +237,21 @@ describe('Date', () => {
     });
     it('Date.from({ year: 1976, month: 11, day: 18 }) == 1976-11-18', () => equal(`${Date.from({ year: 1976, month: 11, day: 18 })}`, '1976-11-18'));
     it('DateTime.from({}) throws', () => throws(() => Date.from({}), RangeError));
+  });
+  describe('Date.compare works', () => {
+    const d1 = Date.from('1976-11-18');
+    const d2 = Date.from('2019-06-30');
+    it('equal', () => equal(Date.compare(d1, d1), 0));
+    it('smaller/larger', () => equal(Date.compare(d1, d2), -1));
+    it('larger/smaller', () => equal(Date.compare(d2, d1), 1));
+    it("doesn't cast first argument", () => {
+      throws(() => Date.compare({ year: 1976, month: 11, day: 18 }, d2), TypeError);
+      throws(() => Date.compare('1976-11-18', d2), TypeError);
+    });
+    it("doesn't cast second argument", () => {
+      throws(() => Date.compare(d1, { year: 2019, month: 6, day: 30 }), TypeError);
+      throws(() => Date.compare(d1, '2019-06-30'), TypeError);
+    });
   });
 });
 

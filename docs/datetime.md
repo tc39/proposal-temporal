@@ -38,7 +38,7 @@
 
 ## datetime.minus(duration: string | object, disambiguation: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.DateTime
 
-## datetime.difference(other: Temporal.DateTime | object) : Temporal.Duration
+## datetime.difference(other: Temporal.DateTime) : Temporal.Duration
 
 ## datetime.toString() : string
 
@@ -54,4 +54,4 @@
 
 ## datetime.getTime() : Temporal.Time
 
-## Temporal.DateTime.compare(one: Temporal.DateTime | object, two: Temporal.DateTime | object) : number;
+## Temporal.DateTime.compare(one: Temporal.DateTime, two: Temporal.DateTime) : number;
