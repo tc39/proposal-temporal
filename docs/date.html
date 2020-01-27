@@ -26,19 +26,19 @@ date.dayOfWeek; // 1</code></pre>
 <p>Returns a new <code>Date</code> object which is the sum of the current object plus the additional argument.</p>
 <h2 id="dateminusduration-temporalduration--object--string-disambiguation-constrain--balance--reject--constrain--temporaldate">date.minus(duration: Temporal.Duration | object | string, disambiguation: &#39;constrain&#39; | &#39;balance&#39; | &#39;reject&#39; = &#39;constrain&#39;) : Temporal.Date</h2>
 <p>Returns a new <code>Date</code> object which is the sum of the current object minus the additional argument.</p>
-<h2 id="datedifferenceother-temporaldate--object--temporalduration">date.difference(other: Temporal.Date | object) : Temporal.Duration</h2>
+<h2 id="datedifferenceother-temporaldate--temporalduration">date.difference(other: Temporal.Date) : Temporal.Duration</h2>
 <p>Returns a new <code>Duration</code> object which is the difference between the current <code>Date</code> object and the argument <code>Date</code> value.</p>
 <h2 id="datetostring--string">date.toString() : string</h2>
 <p>Returns an ISO 8601 string representing the current <code>Date</code> object</p>
 <h2 id="datetolocalestringlocale-string-options-object--string">date.toLocaleString(locale?: string, options?: object) : string</h2>
 <p>Returns a string with a locally sensitive representation of the specified <code>Date</code> object. Overrides the <code>Object.prototype.toLocaleString()</code> method.</p>
-<h2 id="datewithtimetime-temporaltime--object--temporaldatetime">date.withTime(time: Temporal.Time | object) : Temporal.DateTime</h2>
+<h2 id="datewithtimetime-temporaltime--temporaldatetime">date.withTime(time: Temporal.Time) : Temporal.DateTime</h2>
 <p>Returns a new <a href="./DateTime"><code>DateTime</code></a> object using the combination of this <code>Date</code> and the <code>Time</code> object passed in.</p>
 <h2 id="dategetyearmonth--temporalyearmonth">date.getYearMonth() : Temporal.YearMonth</h2>
 <p>Returns a new <a href="./YearMonth"><code>YearMonth</code></a> object.</p>
 <h2 id="dategetmonthday--temporalmonthday">date.getMonthDay() : Temporal.MonthDay</h2>
 <p>Returns a new <a href="./MonthDay"><code>YearMonth</code></a> object.</p>
-<h2 id="temporaldatecompareone-temporaldate--object-two-temporaldate--object--number">Temporal.Date.compare(one: Temporal.Date | object, two: Temporal.Date | object) : number</h2>
+<h2 id="temporaldatecompareone-temporaldate-two-temporaldate--number">Temporal.Date.compare(one: Temporal.Date, two: Temporal.Date) : number</h2>
 <p>Allows for easier comparison of <code>Date</code> objects, returns:</p>
 <ul>
 <li><code>-1</code> if the first object represents a lower value than the second</li>
