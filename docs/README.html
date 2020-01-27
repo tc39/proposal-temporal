@@ -23,7 +23,7 @@ graph LR;
 
 <h2 id="api-overview">API Overview</h2>
 <h3 id="temporalabsolute"><code>Temporal.Absolute</code></h3>
-<p>An <code>Temporal.Absolute</code> represents a fixed point in time along the POSIX timeline. It does this by internally maintaining a slot for &quot;Nanoseconds since the POSIX-Epoch&quot;.</p>
+<p>An <code>Temporal.Absolute</code> represents a fixed point in time, without regard to calendar or location.</p>
 <p>See <a href="./absolute.html">Temporal.Absolute Documentation</a> for more detailed documentation.</p>
 <h3 id="temporaltimezone"><code>Temporal.TimeZone</code></h3>
 <p>A <code>Temporal.TimeZone</code> represents an IANA time zone, a specific UTC offset or UTC itself. Because of this <code>Temporal.TimeZone</code> can be used to convert between <code>Temporal.Absolute</code> and <code>Temporal.DateTime</code> as well as finding out the offset at a specific <code>Temporal.Absolute</code>.</p>
