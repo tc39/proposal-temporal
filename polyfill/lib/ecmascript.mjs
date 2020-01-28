@@ -660,30 +660,26 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
   BalanceDate: (year, month, day) => {
     ({ year, month } = ES.BalanceYearMonth(year, month));
     let daysInYear = 0;
-    while (((daysInYear = ES.LeapYear(month > 2 ? year : year - 1) ? -366 : -365), day < daysInYear)) {
+    let testYear = month > 2 ? year : year - 1;
+    while (((daysInYear = ES.LeapYear(testYear) ? 366 : 365), day < -daysInYear)) {
       year -= 1;
-      day -= daysInYear;
+      testYear -= 1;
+      day += daysInYear;
     }
-    while (((daysInYear = ES.LeapYear(month > 2 ? year + 1 : year) ? 366 : 365), day > daysInYear)) {
+    testYear += 1;
+    while (((daysInYear = ES.LeapYear(testYear) ? 366 : 365), day > daysInYear)) {
       year += 1;
+      testYear += 1;
       day -= daysInYear;
     }
 
     while (day < 1) {
-      month -= 1;
-      if (month === 0) {
-        month = 12;
-        year -= 1;
-      }
-      day = ES.DaysInMonth(year, month) + day;
+      ({ year, month } = ES.BalanceYearMonth(year, month - 1));
+      day += ES.DaysInMonth(year, month);
     }
     while (day > ES.DaysInMonth(year, month)) {
-      day = day - ES.DaysInMonth(year, month);
-      month += 1;
-      if (month > 12) {
-        month = 1;
-        year += 1;
-      }
+      day -= ES.DaysInMonth(year, month);
+      ({ year, month } = ES.BalanceYearMonth(year, month + 1));
     }
 
     return { year, month, day };
