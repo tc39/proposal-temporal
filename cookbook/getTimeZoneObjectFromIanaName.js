@@ -7,3 +7,5 @@
 function getTimeZoneObjectFromIanaName(ianaTimeZoneName) {
     return new Temporal.TimeZone(ianaTimeZoneName);
 }
+
+getTimeZoneObjectFromIanaName("Europe/London").toString(); // Europe/London
