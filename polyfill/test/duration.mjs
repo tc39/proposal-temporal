@@ -23,9 +23,15 @@ describe('Duration', () => {
       const negative = { years: -1, months: -1, days: -1, hours: -1, minutes: -1, seconds: -1, milliseconds: -1, microseconds: -1, nanoseconds: -1 };
       it('negative values throw when "reject"', () =>
         throws(() => Duration.from(negative, { disambiguation: 'reject' }), RangeError));
+      it('excessive values unchanged when "reject"', () => {
+        equal(`${Duration.from({ minutes: 100 }, { disambiguation: 'reject' })}`, 'PT100M');
+      });
       it('negative values invert when "constrain"', () => {
         equal(`${Duration.from(negative)}`, 'P1Y1M1DT1H1M1.001001001S');
         equal(`${Duration.from(negative, { disambiguation: 'constrain' })}`, 'P1Y1M1DT1H1M1.001001001S');
+      });
+      it('excessive values unchanged when "constrain"', () => {
+        equal(`${Duration.from({ minutes: 100 }, { disambiguation: 'constrain' })}`, 'PT100M');
       });
       it('excessive time units balance when "balance"', () => {
         equal(`${Duration.from({ nanoseconds: 1000 }, { disambiguation: 'balance' })}`, 'PT0.000001S');
