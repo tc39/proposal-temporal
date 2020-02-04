@@ -9,7 +9,8 @@
     "codecov": "npm install codecov && NODE_V8_COVERAGE=coverage/tmp npm run test && c8 report --reporter=text-lcov > coverage/tests.lcov && codecov",
     "pretty": "prettier --write lib/*.*(m)js test/*.*(m)js",
     "build": "rollup -c rollup.config.js",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "playground": "npm run build && node --experimental-modules --no-warnings --icu-data-dir ./node_modules/full-icu/ -r ./lib/initialise.js"
   },
   "repository": {
     "type": "git",
