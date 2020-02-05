@@ -11,7 +11,9 @@ Since `Temporal.Absolute` doesn't contain any information about time zones, a `T
 
 Like Unix time, `Temporal.Absolute` ignores leap seconds.
 
-## new Temporal.Absolute(epochNanoseconds : bigint) : Temporal.Absolute
+## Constructor
+
+### new Temporal.Absolute(epochNanoseconds : bigint) : Temporal.Absolute
 
 **Parameters:**
 - `epochNanoSeconds` (bigint): A number of nanoseconds.
@@ -34,7 +36,9 @@ epoch = new Temporal.Absolute(0n);  // => 1970-01-01T00:00Z
 turnOfTheCentury = new Temporal.Absolute(-2208988800000000000n);  // => 1900-01-01T00:00Z
 ```
 
-## Temporal.Absolute.from(thing: string | Temporal.Absolute) : Temporal.Absolute
+## Static methods
+
+### Temporal.Absolute.from(thing: string | Temporal.Absolute) : Temporal.Absolute
 
 **Parameters:**
 - `thing` (string or `Temporal.Absolute`): The value representing the desired point in time.
@@ -61,7 +65,7 @@ abs === Temporal.Absolute.from(abs);  // => true
 /* WRONG */ abs = Temporal.Absolute.from('2019-03031T02:45+01:00[Europe/Berlin]');  // time skipped in DST transition; throws
 ```
 
-## Temporal.Absolute.fromEpochSeconds(epochSeconds: number) : Temporal.Absolute
+### Temporal.Absolute.fromEpochSeconds(epochSeconds: number) : Temporal.Absolute
 
 **Parameters:**
 - `epochSeconds` (number): A number of seconds.
@@ -82,7 +86,7 @@ epoch = Temporal.Absolute.fromEpochSeconds(0);  // => 1970-01-01T00:00Z
 turnOfTheCentury = Temporal.Absolute.fromEpochSeconds(-2208988800);  // => 1900-01-01T00:00Z
 ```
 
-## Temporal.Absolute.fromEpochMilliseconds(epochMilliseconds: number) : Temporal.Absolute
+### Temporal.Absolute.fromEpochMilliseconds(epochMilliseconds: number) : Temporal.Absolute
 
 **Parameters:**
 - `epochMilliseconds` (number): A number of milliseconds.
@@ -103,7 +107,7 @@ todayMs = Temporal.Absolute.fromEpochMilliseconds(Date.now());
 todayNs = Temporal.now.absolute();
 ```
 
-## Temporal.Absolute.fromEpochMicroseconds(epochMilliseconds : bigint) : Temporal.Absolute
+### Temporal.Absolute.fromEpochMicroseconds(epochMilliseconds : bigint) : Temporal.Absolute
 
 **Parameters:**
 - `epochMicroseconds` (bigint): A number of microseconds.
@@ -112,7 +116,7 @@ todayNs = Temporal.now.absolute();
 
 Same as `Temporal.Absolute.fromEpochSeconds()`, but with microsecond (10<sup>&minus;6</sup> second) precision.
 
-## Temporal.Absolute.fromEpochNanoseconds(epochNanoseconds : bigint) : Temporal.Absolute
+### Temporal.Absolute.fromEpochNanoseconds(epochNanoseconds : bigint) : Temporal.Absolute
 
 **Parameters:**
 - `epochNanoseconds` (bigint): A number of nanoseconds.
@@ -122,7 +126,34 @@ Same as `Temporal.Absolute.fromEpochSeconds()`, but with microsecond (10<sup>&mi
 Same as `Temporal.Absolute.fromEpochSeconds()`, but with nanosecond (10<sup>&minus;9</sup> second) precision.
 Also the same as `new Temporal.Absolute(epochNanoseconds)`.
 
-## absolute.getEpochSeconds() : number
+### Temporal.Absolute.compare(one: Temporal.Absolute, two: Temporal.Absolute) : number
+
+**Parameters:**
+- `one` (`Temporal.Absolute`): First time to compare.
+- `two` (`Temporal.Absolute`): Second time to compare.
+
+**Returns:** &minus;1, 0, or 1.
+
+Compares two `Temporal.Absolute` objects.
+Returns an integer indicating whether `one` comes before or after or is equal to `two`.
+- &minus;1 if `one` comes before `two`;
+- 0 if `one` and `two` represent the same time;
+- 1 if `one` comes after `two`.
+
+This function can be used to sort arrays of `Temporal.Absolute` objects.
+For example:
+```javascript
+one = Temporal.Absolute.fromEpochSeconds(1.0e9);
+two = Temporal.Absolute.fromEpochSeconds(1.1e9);
+three = Temporal.Absolute.fromEpochSeconds(1.2e9);
+sorted = [three, one, two].sort(Temporal.Absolute.compare);
+sorted.join(' ');
+// => 2001-09-09T01:46:40Z 2004-11-09T11:33:20Z 2008-01-10T21:20Z
+```
+
+## Methods
+
+### absolute.getEpochSeconds() : number
 
 **Returns:** an integer number of seconds.
 
@@ -138,7 +169,7 @@ abs = Temporal.Absolute.from('2019-03-30T01:45+01:00');
 abs.getEpochSeconds();  // => 1554000300
 ```
 
-## absolute.getEpochMilliseconds() : number
+### absolute.getEpochMilliseconds() : number
 
 **Returns:** an integer number of milliseconds.
 
@@ -151,13 +182,13 @@ abs = Temporal.Absolute.from('2019-03-30T00:45Z');
 new Date(abs.getEpochMilliseconds());  // => 2019-03-30T00:45:00.000Z
 ```
 
-## absolute.getEpochMicroseconds() : bigint
+### absolute.getEpochMicroseconds() : bigint
 
 **Returns:** a number of microseconds, as a bigint.
 
 Same as `getEpochSeconds()`, but with microsecond (10<sup>&minus;6</sup> second) precision.
 
-## absolute.getEpochNanoseconds() : bigint
+### absolute.getEpochNanoseconds() : bigint
 
 **Returns:** a number of nanoseconds, as a bigint.
 
@@ -165,7 +196,7 @@ Same as `getEpochSeconds()`, but with nanosecond (10<sup>&minus;9</sup> second) 
 
 The value returned from this method is suitable to be passed to `new Temporal.Absolute()`.
 
-## absolute.inTimeZone(timeZone: Temporal.TimeZone | string) : Temporal.DateTime
+### absolute.inTimeZone(timeZone: Temporal.TimeZone | string) : Temporal.DateTime
 
 **Parameters:**
 - `timeZone` (object or string): A `Temporal.TimeZone` object, or a string description of the time zone; either its IANA name or UTC offset.
@@ -192,7 +223,7 @@ tz = new Temporal.TimeZone('America/New_York');
 epoch.inTimeZone(tz);  // => 1969-12-31T19:00
 ```
 
-## absolute.plus(duration: string | object) : Temporal.Absolute
+### absolute.plus(duration: string | object) : Temporal.Absolute
 
 **Parameters:**
 - `duration` (string or object): A `Temporal.Duration` object, a duration-like object, or a string from which to create a `Temporal.Duration`.
@@ -215,7 +246,7 @@ fiveHours = new Temporal.Duration(0, 0, 0, 5);
 Temporal.now.absolute().plus(fiveHours);
 ```
 
-## absolute.minus(duration: string | object) : Temporal.Absolute
+### absolute.minus(duration: string | object) : Temporal.Absolute
 
 **Parameters:**
 - `duration` (string or object): A `Temporal.Duration` object, a duration-like object, or a string from which to create a `Temporal.Duration`.
@@ -238,7 +269,7 @@ oneDay = new Temporal.Duration(0, 0, 1);
 Temporal.now.absolute().minus(oneDay);
 ```
 
-## absolute.difference(other: Temporal.Absolute) : Temporal.Duration
+### absolute.difference(other: Temporal.Absolute) : Temporal.Duration
 
 **Parameters:**
 - `other` (`Temporal.Absolute`): Another time with which to compute the difference.
@@ -257,7 +288,7 @@ endOfMoonMission.difference(startOfMoonMission);  // => P8DT3H18M35S
 missionLength.toLocaleString();  // example output: '8 days 3 hours 18 minutes 35 seconds'
 ```
 
-## absolute.toString(timeZone?: Temporal.TimeZone | string) : string
+### absolute.toString(timeZone?: Temporal.TimeZone | string) : string
 
 **Parameters:**
 - `timeZone` (optional string or `Temporal.TimeZone`): the time zone to express `absolute` in.
@@ -276,7 +307,7 @@ abs.toString(Temporal.TimeZone.from('UTC'));  // => 2019-11-18T10:52:01.816Z
 abs.toString('Asia/Seoul');  // => 2019-11-18T19:52:01.816+09:00[Asia/Seoul]
 ```
 
-## absolute.toLocaleString(locales?: string | array&lt;string&gt;, options?: object) : string
+### absolute.toLocaleString(locales?: string | array&lt;string&gt;, options?: object) : string
 
 **Parameters:**
 - `locales` (optional string or array of strings): A string with a BCP 47 language tag with an optional Unicode extension key, or an array of such strings.
@@ -295,31 +326,6 @@ abs.toLocaleString();  // => example output: 2019-11-18, 3:00:00 a.m.
 abs.toLocaleString('de-DE');  // => example output: 18.11.2019, 03:00:00
 abs.toLocaleString('de-DE', { timeZone: 'Europe/Berlin', weekday: 'long' });  // => Montag, 18.11.2019, 12:00:00
 abs.toLocaleString('en-US-u-nu-fullwide-hc-h12', { timeZone: 'Asia/Kolkata' });  // => １１/１８/２０１９, ４:３０:００ PM
-```
-
-## Temporal.Absolute.compare(one: Temporal.Absolute, two: Temporal.Absolute) : number
-
-**Parameters:**
-- `one` (`Temporal.Absolute`): First time to compare.
-- `two` (`Temporal.Absolute`): Second time to compare.
-
-**Returns:** &minus;1, 0, or 1.
-
-Compares two `Temporal.Absolute` objects.
-Returns an integer indicating whether `one` comes before or after or is equal to `two`.
-- &minus;1 if `one` comes before `two`;
-- 0 if `one` and `two` represent the same time;
-- 1 if `one` comes after `two`.
-
-This function can be used to sort arrays of `Temporal.Absolute` objects.
-For example:
-```javascript
-one = Temporal.Absolute.fromEpochSeconds(1.0e9);
-two = Temporal.Absolute.fromEpochSeconds(1.1e9);
-three = Temporal.Absolute.fromEpochSeconds(1.2e9);
-sorted = [three, one, two].sort(Temporal.Absolute.compare);
-sorted.join(' ');
-// => 2001-09-09T01:46:40Z 2004-11-09T11:33:20Z 2008-01-10T21:20Z
 ```
 
 <script type="application/javascript" src="./prism.js"></script>

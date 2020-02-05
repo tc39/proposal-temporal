@@ -1,60 +1,68 @@
 # `Temporal.DateTime`
 
-## new Temporal.DateTime(year: number, month: number, day: number, hour: number, minute: number, second: number = 0, milliseconds: number =0, microsecond: number = 0, nanosecond: nunber = 0, disambiguation: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.Time
+## Constructor
 
-## Temporal.DateTime.from(thing: string | object) : Temporal.DateTime
+### new Temporal.DateTime(year: number, month: number, day: number, hour: number, minute: number, second: number = 0, milliseconds: number =0, microsecond: number = 0, nanosecond: nunber = 0, disambiguation: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.Time
 
-## datetime.year : number
+## Static methods
 
-## datetime.month : number
+### Temporal.DateTime.from(thing: string | object) : Temporal.DateTime
 
-## datetime.day : number
+### Temporal.DateTime.compare(one: Temporal.DateTime, two: Temporal.DateTime) : number;
 
-## datetime.hour: number
+## Properties
 
-## datetime.minute: number
+### datetime.year : number
 
-## datetime.second: number
+### datetime.month : number
 
-## datetime.millisecond: number
+### datetime.day : number
 
-## datetime.microsecond: number
+### datetime.hour: number
 
-## datetime.nanosecond: number
+### datetime.minute: number
 
-## datetime.dayOfWeek : number
+### datetime.second: number
 
-## datetime.weekOfYear : number
+### datetime.millisecond: number
 
-## datetime.daysInMonth : number
+### datetime.microsecond: number
 
-## datetime.daysInYear : number
+### datetime.nanosecond: number
 
-## datetime.leapYear : boolean
+### datetime.dayOfWeek : number
 
-## datetime.with({ year: number, month: number, hour: number, hour: number = this.hour, minute: number = this.minute, ...}, disambiguation: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.DateTime
+### datetime.weekOfYear : number
 
-## datetime.plus(duration: string | object, disambiguation: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.DateTime
+### datetime.daysInMonth : number
 
-## datetime.minus(duration: string | object, disambiguation: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.DateTime
+### datetime.daysInYear : number
 
-## datetime.difference(other: Temporal.DateTime) : Temporal.Duration
+### datetime.leapYear : boolean
 
-## datetime.toString() : string
+## Methods
 
-## datetime.toLocaleString(locale?:string, options?: object) : string
+### datetime.with({ year: number, month: number, hour: number, hour: number = this.hour, minute: number = this.minute, ...}, disambiguation: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.DateTime
 
-## datetime.inTimeZone(timeZoneParam = 'UTC', disambiguation = 'earlier') : Temporal.Absolute
+### datetime.plus(duration: string | object, disambiguation: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.DateTime
 
-## datetime.getDate() : Temporal.Date
+### datetime.minus(duration: string | object, disambiguation: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.DateTime
 
-## datetime.getYearMonth() : Temporal.YearMonth
+### datetime.difference(other: Temporal.DateTime) : Temporal.Duration
 
-## datetime.getMonthDay() : Temporal.MonthDay
+### datetime.toString() : string
 
-## datetime.getTime() : Temporal.Time
+### datetime.toLocaleString(locale?:string, options?: object) : string
 
-## Temporal.DateTime.compare(one: Temporal.DateTime, two: Temporal.DateTime) : number;
+### datetime.inTimeZone(timeZoneParam = 'UTC', disambiguation = 'earlier') : Temporal.Absolute
+
+### datetime.getDate() : Temporal.Date
+
+### datetime.getYearMonth() : Temporal.YearMonth
+
+### datetime.getMonthDay() : Temporal.MonthDay
+
+### datetime.getTime() : Temporal.Time
 
 <script type="application/javascript" src="./prism.js"></script>
 <link rel="stylesheet" type="text/css" href="./prism.css">

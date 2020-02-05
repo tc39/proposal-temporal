@@ -2,35 +2,43 @@
 
 A representation of a calendar date.
 
-## new Temporal.YearMonth(year: number, month: number, disambiguation: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.YearMonth
+## Constructor
 
-## Temporal.YearMonth.from(thing: string | object) : Temporal.YearMonth
+### new Temporal.YearMonth(year: number, month: number, disambiguation: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.YearMonth
 
-## yearMonth.year : number
+## Static methods
 
-## yearMonth.month : number
+### Temporal.YearMonth.from(thing: string | object) : Temporal.YearMonth
 
-## yearMonth.daysInMonth : number
+### Temporal.YearMonth.compare(one: Temporal.YearMonth, two: Temporal.YearMonth) : number
 
-## yearMonth.daysInYear : number
+## Properties
 
-## yearMonth.leapYear : boolean
+### yearMonth.year : number
 
-## yearMonth.with(yearMonthLike: object, disambiguation: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.YearMonth
+### yearMonth.month : number
 
-## yearMonth.plus(duration: Temporal.Duration | object | string, disambiguation: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.YearMonth
+### yearMonth.daysInMonth : number
 
-## yearMonth.minus(duration: Temporal.Duration | object | string, disambiguation: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.YearMonth
+### yearMonth.daysInYear : number
 
-## yearMonth.difference(other: Temporal.YearMonth) : Temporal.Duration
+### yearMonth.leapYear : boolean
 
-## yearMonth.toString() : string
+## Methods
 
-## yearMonth.toLocaleString(locale?: string, options?: object) : string
+### yearMonth.with(yearMonthLike: object, disambiguation: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.YearMonth
 
-## yearMonth.withDay(day: number) : Temporal.Date
+### yearMonth.plus(duration: Temporal.Duration | object | string, disambiguation: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.YearMonth
 
-## Temporal.YearMonth.compare(one: Temporal.YearMonth, two: Temporal.YearMonth) : number
+### yearMonth.minus(duration: Temporal.Duration | object | string, disambiguation: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.YearMonth
+
+### yearMonth.difference(other: Temporal.YearMonth) : Temporal.Duration
+
+### yearMonth.toString() : string
+
+### yearMonth.toLocaleString(locale?: string, options?: object) : string
+
+### yearMonth.withDay(day: number) : Temporal.Date
 
 <script type="application/javascript" src="./prism.js"></script>
 <link rel="stylesheet" type="text/css" href="./prism.css">

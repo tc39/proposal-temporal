@@ -2,35 +2,43 @@
 
 A representations of a duration of time which can be used in date/time arithmetic.
 
-## new Temporal.Duration(years?: number, months?: number, days?: number, hours?: number, minutes?: number, seconds?: number, milliseconds?: number, microseconds?: number, nanoseconds?: number, disambiguation: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.Duration
+## Constructor
+
+### new Temporal.Duration(years?: number, months?: number, days?: number, hours?: number, minutes?: number, seconds?: number, milliseconds?: number, microseconds?: number, nanoseconds?: number, disambiguation: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.Duration
 
 Creates a new `Duration` object that represents a duration of time.
 
-## Temporal.Duration.from(thing: string | object) : Temporal.Duration
+## Static methods
 
-## duration.years : number
+### Temporal.Duration.from(thing: string | object) : Temporal.Duration
 
-## duration.months : number
+## Properties
 
-## duration.days : number
+### duration.years : number
 
-## duration.hours : number
+### duration.months : number
 
-## duration.minutes : number
+### duration.days : number
 
-## duration.seconds : number
+### duration.hours : number
 
-## duration.milliseconds : number
+### duration.minutes : number
 
-## duration.microseconds : number
+### duration.seconds : number
 
-## duration.nanoseconds : number
+### duration.milliseconds : number
 
-## duration.years : number
+### duration.microseconds : number
 
-## duration.toString() : string
+### duration.nanoseconds : number
 
-## duration.toLocaleString(locale?: string, options?: object) : string
+### duration.years : number
+
+## Methods
+
+### duration.toString() : string
+
+### duration.toLocaleString(locale?: string, options?: object) : string
 
 <script type="application/javascript" src="./prism.js"></script>
 <link rel="stylesheet" type="text/css" href="./prism.css">
