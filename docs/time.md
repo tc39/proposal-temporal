@@ -2,37 +2,45 @@
 
 A representation of wall-clock time.
 
-## new Temporal.Time(hour: number, minute: number, second: number = 0, milliseconds: number =0, microsecond: number = 0, nanosecond: number = 0, disambiguation: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.Time
+## Constructor
 
-## Temporal.Time.from(thing: string | object) : Temporal.Time
+### new Temporal.Time(hour: number, minute: number, second: number = 0, milliseconds: number =0, microsecond: number = 0, nanosecond: number = 0, disambiguation: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.Time
 
-## time.hour: number
+## Static methods
 
-## time.minute: number
+### Temporal.Time.from(thing: string | object) : Temporal.Time
 
-## time.second: number
+### Temporal.Time.compare(one: Temporal.Time, two: Temporal.Time) : number;
 
-## time.millisecond: number
+## Properties
 
-## time.microsecond: number
+### time.hour: number
 
-## time.nanosecond: number
+### time.minute: number
 
-## time.with({ hour: number = this.hour, minute: number = this.minute, second: numer = this.second ...}, disambiguation: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.Time
+### time.second: number
 
-## time.plus(duration: string | object, disambiguation: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.Time
+### time.millisecond: number
 
-## time.minus(duration: string | object, disambiguation: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.Time
+### time.microsecond: number
 
-## time.difference(other: Temporal.Time) : Temporal.Duration
+### time.nanosecond: number
 
-## time.toString() : string
+## Methods
 
-## time.toLocaleString(locale?:string, options?: object) : string
+### time.with({ hour: number = this.hour, minute: number = this.minute, second: numer = this.second ...}, disambiguation: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.Time
 
-## time.withDate(date: Temporal.Date) : Temporal.DateTime
+### time.plus(duration: string | object, disambiguation: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.Time
 
-## Temporal.Time.compare(one: Temporal.Time, two: Temporal.Time) : number;
+### time.minus(duration: string | object, disambiguation: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.Time
+
+### time.difference(other: Temporal.Time) : Temporal.Duration
+
+### time.toString() : string
+
+### time.toLocaleString(locale?:string, options?: object) : string
+
+### time.withDate(date: Temporal.Date) : Temporal.DateTime
 
 <script type="application/javascript" src="./prism.js"></script>
 <link rel="stylesheet" type="text/css" href="./prism.css">

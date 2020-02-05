@@ -6,7 +6,9 @@ Since `Temporal.Absolute` and `Temporal.DateTime` do not contain any time zone i
 
 Finally, the `Temporal.TimeZone` object itself provides access to a list of the time zones in the IANA time zone database.
 
-## new Temporal.TimeZone(timeZoneIdentifier: string) : Temporal.TimeZone
+## Constructor
+
+### new Temporal.TimeZone(timeZoneIdentifier: string) : Temporal.TimeZone
 
 **Parameters:**
 - `timeZoneIdentifier` (string): A description of the time zone; either its IANA name, or a UTC offset.
@@ -31,7 +33,7 @@ tz = new Temporal.TimeZone('+645');
 /* WRONG */ tz = new Temporal.TimeZone('local');  // not a time zone, throws
 ```
 
-### Difference between IANA time zones and UTC offsets
+#### Difference between IANA time zones and UTC offsets
 
 The returned time zone object behaves slightly differently depending on whether an IANA time zone name (e.g. `Europe/Berlin`) is given, or a UTC offset (e.g. `+01:00`).
 IANA time zones may have DST transitions, and UTC offsets do not.
@@ -45,12 +47,34 @@ tz1.getTransitions(now).next().done;  // => true
 tz2.getTransitions(now).next().done;  // => false
 ```
 
-## timeZone.name : string
+## Static methods
+
+### Temporal.TimeZone: iterator<Temporal.TimeZone>
+
+The `Temporal.TimeZone` object is itself iterable, and can be used to iterate through all of the IANA time zones supported by the implementation.
+
+Example usage:
+
+```javascript
+// List all supported IANA time zones
+for (let zone of Temporal.TimeZone) console.log(zone.name);
+// example output:
+// Africa/Abidjan
+// Africa/Accra
+// Africa/Addis_Ababa
+// ...and many more
+```
+
+## Properties
+
+### timeZone.name : string
 
 The `name` property gives an unambiguous identifier for the time zone.
 Effectively, this is the canonicalized version of whatever `timeZoneIdentifier` was passed as a parameter to the constructor.
 
-## timeZone.getOffsetFor(absolute: Temporal.Absolute) : string
+## Methods
+
+### timeZone.getOffsetFor(absolute: Temporal.Absolute) : string
 
 **Parameters:**
 - `absolute` (`Temporal.Absolute`): The time for which to compute the time zone's UTC offset.
@@ -77,7 +101,7 @@ tz = new Temporal.TimeZone('UTC');
 tz.getOffsetFor(timestamp);  // => +00:00
 ```
 
-## timeZone.getDateTimeFor(absolute: Temporal.Absolute) : Temporal.DateTime
+### timeZone.getDateTimeFor(absolute: Temporal.Absolute) : Temporal.DateTime
 
 **Parameters:**
 - `absolute` (`Temporal.Absolute`): An absolute time to convert.
@@ -100,7 +124,7 @@ tz = new Temporal.TimeZone('America/New_York');
 tz.getDateTimeFor(epoch);  // => 1969-12-31T19:00
 ```
 
-## timeZone.getAbsoluteFor(dateTime: Temporal.DateTime, disambiguation: 'earlier' | 'later' | 'reject' = 'earlier') : Temporal.Absolute
+### timeZone.getAbsoluteFor(dateTime: Temporal.DateTime, disambiguation: 'earlier' | 'later' | 'reject' = 'earlier') : Temporal.Absolute
 
 **Parameters:**
 - `dateTime` (`Temporal.DateTime`): A calendar date and wall-clock time to convert.
@@ -112,7 +136,7 @@ tz.getDateTimeFor(epoch);  // => 1969-12-31T19:00
 
 This method is one way to convert a `Temporal.DateTime` to a `Temporal.Absolute`.
 
-### Resolving ambiguity
+#### Resolving ambiguity
 
 > This explanation was adapted from the [moment-timezone documentation](https://github.com/moment/momentjs.com/blob/master/docs/moment-timezone/01-using-timezones/02-parsing-ambiguous-inputs.md).
 
@@ -167,7 +191,7 @@ In this example, the wall-clock time 23:45 exists twice.
 
 > *Compatibility Note*: The built-in behaviour of the Moment Timezone and Luxon libraries is to give the same result as `earlier` when turning the clock back, and `later` when setting the clock forward.
 
-## timeZone.getTransitions(startingPoint: Temporal.Absolute) : iterator<Temporal.Absolute>
+### timeZone.getTransitions(startingPoint: Temporal.Absolute) : iterator<Temporal.Absolute>
 
 **Parameters:**
 - `startingPoint` (`Temporal.Absolute`): Time after which to start calculating DST transitions.
@@ -190,27 +214,11 @@ duration = nextTransition.difference(now);
 duration.toLocaleString();  // output will vary
 ```
 
-## timeZone.toString() : string
+### timeZone.toString() : string
 
 **Returns:** The string given by `timeZone.name`.
 
 This method overrides `Object.prototype.toString()` and provides the time zone's `name` property as a human-readable description.
-
-## Temporal.TimeZone: iterator<Temporal.TimeZone>
-
-The `Temporal.TimeZone` object is itself iterable, and can be used to iterate through all of the IANA time zones supported by the implementation.
-
-Example usage:
-
-```javascript
-// List all supported IANA time zones
-for (let zone of Temporal.TimeZone) console.log(zone.name);
-// example output:
-// Africa/Abidjan
-// Africa/Accra
-// Africa/Addis_Ababa
-// ...and many more
-```
 
 <script type="application/javascript" src="./prism.js"></script>
 <link rel="stylesheet" type="text/css" href="./prism.css">
