@@ -98,6 +98,7 @@ export class MonthDay {
   }
   difference(other) {
     if (!ES.IsMonthDay(this)) throw new TypeError('invalid receiver');
+    if (!ES.IsMonthDay(other)) throw new TypeError('invalid MonthDay object');
     const [one, two] = [this, other].sort(MonthDay.compare);
     let months = two.month - one.month;
     let days = two.day - one.day;
