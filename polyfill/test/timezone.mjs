@@ -165,6 +165,18 @@ describe('TimeZone', ()=>{
             throws(() => zone.getDateTimeFor({}), TypeError);
         });
     });
+    describe('TimeZone.getAbsoluteFor() works', () => {
+        it('recent date', () => {
+            const dt = Temporal.DateTime.from('2019-10-29T10:46:38.271986102');
+            const tz = Temporal.TimeZone.from('Europe/Amsterdam');
+            equal(`${tz.getAbsoluteFor(dt)}`, '2019-10-29T09:46:38.271986102Z');
+        });
+        it('year ≤ 99', () => {
+            const dt = Temporal.DateTime.from('+000098-10-29T10:46:38.271986102');
+            const tz = Temporal.TimeZone.from('+06:00')
+            equal(`${tz.getAbsoluteFor(dt)}`, '+000098-10-29T04:46:38.271986102Z');
+        });
+    });
     describe('getAbsoluteFor disambiguation', () => {
         const zone = Temporal.TimeZone.from('+03:30');
         const dtm = new Temporal.DateTime(2019, 2, 16, 23, 45);

@@ -14,7 +14,8 @@ const { reporter } = Pretty;
 import Assert from 'assert';
 const { ok: assert, equal, throws } = Assert;
 
-import { DateTime } from 'tc39-temporal';
+import * as Temporal from 'tc39-temporal';
+const { DateTime } = Temporal;
 
 describe('DateTime', () => {
   describe('Structure', () => {
@@ -311,6 +312,18 @@ describe('DateTime', () => {
     });
     it.skip('DateTime.from(number) is converted to string', () =>
       equal(`${DateTime.from(19761118)}`, `${DateTime.from('19761118')}`));
+  });
+  describe('DateTime.inTimeZone() works', () => {
+    it('recent date', () => {
+      const dt = DateTime.from('2019-10-29T10:46:38.271986102');
+      const tz = Temporal.TimeZone.from('Europe/Amsterdam');
+      equal(`${dt.inTimeZone(tz)}`, '2019-10-29T09:46:38.271986102Z');
+      equal(`${dt.inTimeZone('Europe/Amsterdam')}`, '2019-10-29T09:46:38.271986102Z');
+    });
+    it('year ≤ 99', () => {
+      const dt = DateTime.from('+000098-10-29T10:46:38.271986102');
+      equal(`${dt.inTimeZone('+06:00')}`, '+000098-10-29T04:46:38.271986102Z');
+    });
   });
 });
 
