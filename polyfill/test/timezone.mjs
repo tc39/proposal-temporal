@@ -113,6 +113,8 @@ describe('TimeZone', ()=>{
         it(`(${zone}).getDateTimeFor(${abs})`, () => assert(zone.getDateTimeFor(abs) instanceof Temporal.DateTime));
         it(`(${zone}).getAbsoluteFor(${dtm})`, () => assert(zone.getAbsoluteFor(dtm) instanceof Temporal.Absolute));
         it(`(${zone}).getTransitions() => []`, () => equal(ArrayFrom(zone.getTransitions(abs), 4).length, 0));
+        it('wraps around to the next day', () =>
+            equal(`${zone.getDateTimeFor(Temporal.Absolute.from('2020-02-06T23:59Z'))}`, '2020-02-07T00:59'));
     });
     describe('UTC', () => {
         const zone = new Temporal.TimeZone('UTC');

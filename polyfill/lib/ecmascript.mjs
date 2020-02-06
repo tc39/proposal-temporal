@@ -446,14 +446,14 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
       let zonedEpochMilliseconds = epochMilliseconds + offset;
       let item = new Date(zonedEpochMilliseconds);
       let year = item.getUTCFullYear();
-      let month = item.getUTCMonth();
+      let month = item.getUTCMonth() + 1;
       let day = item.getUTCDate();
       let hour = item.getUTCHours();
       let minute = item.getUTCMinutes();
       let second = item.getUTCSeconds();
 
-      let days = 0;
-      ({ days, hour, minute, second, millisecond, microsecond, nanosecond } = ES.BalanceTime(
+      let deltaDays = 0;
+      ({ deltaDays, hour, minute, second, millisecond, microsecond, nanosecond } = ES.BalanceTime(
         hour,
         minute,
         second,
@@ -461,7 +461,7 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
         microsecond,
         nanosecond
       ));
-      day += days;
+      day += deltaDays;
       ({ year, month, day } = ES.BalanceDate(year, month, day));
       return {
         year,
