@@ -226,6 +226,7 @@ export class DateTime {
   }
   difference(other) {
     if (!ES.IsDateTime(this)) throw new TypeError('invalid receiver');
+    if (!ES.IsDateTime(other)) throw new TypeError('invalid DateTime object');
     const [smaller, larger] = [this, other].sort(DateTime.compare);
     const { deltaDays, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.DifferenceTime(
       smaller,

@@ -85,6 +85,7 @@ export class Absolute {
   }
   difference(other) {
     if (!ES.IsAbsolute(this)) throw new TypeError('invalid receiver');
+    if (!ES.IsAbsolute(other)) throw new TypeError('invalid Absolute object');
 
     const [one, two] = [this, other].sort(Absolute.compare);
     const onens = GetSlot(one, EPOCHNANOSECONDS);
@@ -141,6 +142,7 @@ export class Absolute {
     return this === Absolute ? result : new this(GetSlot(result, EPOCHNANOSECONDS));
   }
   static compare(one, two) {
+    if (!ES.IsAbsolute(one) || !ES.IsAbsolute(two)) throw new TypeError('invalid Absolute object');
     one = GetSlot(one, EPOCHNANOSECONDS);
     two = GetSlot(two, EPOCHNANOSECONDS);
     if (bigInt(one).lesser(two)) return -1;

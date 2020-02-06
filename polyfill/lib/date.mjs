@@ -101,6 +101,7 @@ export class Date {
   }
   difference(other) {
     if (!ES.IsDate(this)) throw new TypeError('invalid receiver');
+    if (!ES.IsDate(other)) throw new TypeError('invalid Date object');
     const [smaller, larger] = [this, other].sort(Date.compare);
     const { years, months, days } = ES.DifferenceDate(smaller, larger);
     const Duration = ES.GetIntrinsic('%Temporal.Duration%');
