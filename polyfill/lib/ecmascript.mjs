@@ -525,13 +525,26 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
     );
     return result;
   },
-  GetFormatterParts: (fmt, v) => {
-    const datetime = fmt.format(v);
-    const [date, time] = datetime.split(/,\s+/);
-    const [month, day, year] = date.split('/');
+  GetFormatterParts: (timeZone, epochMilliseconds) => {
+    const formatter = new IntlDateTimeFormat('en-us', {
+      timeZone,
+      hour12: false,
+      era: 'short',
+      year: 'numeric',
+      month: 'numeric',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      second: 'numeric'
+    });
+    // FIXME: can this use formatToParts instead?
+    const datetime = formatter.format(new Date(epochMilliseconds));
+    const [date, fullYear, time] = datetime.split(/,\s+/);
+    const [month, day] = date.split(' ');
+    const [year, era] = fullYear.split(' ');
     const [hour, minute, second] = time.split(':');
     return [
-      { type: 'year', value: +year },
+      { type: 'year', value: era === 'BC' ? -year + 1 : +year },
       { type: 'month', value: +month },
       { type: 'day', value: +day },
       { type: 'hour', value: +hour },

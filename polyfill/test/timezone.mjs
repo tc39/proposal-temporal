@@ -176,6 +176,13 @@ describe('TimeZone', ()=>{
             const tz = Temporal.TimeZone.from('+06:00')
             equal(`${tz.getAbsoluteFor(dt)}`, '+000098-10-29T04:46:38.271986102Z');
         });
+        it('year < 1', () => {
+            let dt = Temporal.DateTime.from('+000000-10-29T10:46:38.271986102');
+            const tz = Temporal.TimeZone.from('+06:00')
+            equal(`${tz.getAbsoluteFor(dt)}`, '+000000-10-29T04:46:38.271986102Z');
+            dt = Temporal.DateTime.from('-001000-10-29T10:46:38.271986102');
+            equal(`${tz.getAbsoluteFor(dt)}`, '-001000-10-29T04:46:38.271986102Z');
+        });
     });
     describe('getAbsoluteFor disambiguation', () => {
         const zone = Temporal.TimeZone.from('+03:30');
