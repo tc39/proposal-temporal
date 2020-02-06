@@ -230,6 +230,10 @@ describe('Time', () => {
         const duration = time.difference(two);
         equal(`${duration}`, 'PT1H53M');
       });
+      it("doesn't cast argument", () => {
+        throws(() => time.difference({ hour: 16, minute: 34 }), TypeError);
+        throws(() => time.difference('16:34'), TypeError);
+      });
     });
     describe('Time.compare() works', () => {
       const t1 = Time.from('08:44:15.321');
@@ -237,6 +241,14 @@ describe('Time', () => {
       it('equal', () => equal(Time.compare(t1, t1), 0));
       it('smaller/larger', () => equal(Time.compare(t1, t2), -1));
       it('larger/smaller', () => equal(Time.compare(t2, t1), 1));
+      it("doesn't cast first argument", () => {
+        throws(() => Time.compare({ hour: 16, minute: 34 }, t2), TypeError);
+        throws(() => Time.compare('16:34', t2), TypeError);
+      });
+      it("doesn't cast second argument", () => {
+        throws(() => Time.compare(t1, { hour: 16, minute: 34 }), TypeError);
+        throws(() => Time.compare(t1, '16:34'), TypeError);
+      });
     });
     describe('time.plus() works', () => {
       const time = new Time(15, 23, 30, 123, 456, 789);
