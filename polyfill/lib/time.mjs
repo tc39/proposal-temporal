@@ -157,7 +157,7 @@ export class Time {
   }
   difference(other) {
     if (!ES.IsTime(this)) throw new TypeError('invalid receiver');
-    other = ES.ToTime(other);
+    if (!ES.IsTime(other)) throw new TypeError('invalid Time object');
     const [earlier, later] = [this, other].sort(Time.compare);
     const { hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.DifferenceTime(earlier, later);
     const Duration = ES.GetIntrinsic('%Temporal.Duration%');
@@ -203,8 +203,7 @@ export class Time {
     );
   }
   static compare(one, two) {
-    one = ES.ToTime(one);
-    two = ES.ToTime(two);
+    if (!ES.IsTime(one) || !ES.IsTime(two)) throw new TypeError('invalid Time object');
     if (one.hour !== two.hour) return ES.ComparisonResult(one.hour - two.hour);
     if (one.minute !== two.minute) return ES.ComparisonResult(one.minute - two.minute);
     if (one.second !== two.second) return ES.ComparisonResult(one.second - two.second);
