@@ -10,6 +10,7 @@ Provides standard objects and functions for working with dates and times.
 -   Philipp Dunkel ([@pipobscure](https://github.com/pipobscure))
 -   Matt Johnson ([@mj1856](https://github.com/mj1856))
 -   Brian Terlson ([@bterlson](https://github.com/bterlson))
+-   Shane Carr ([@sffc](https://github.com/sffc))
 
 ## Status
 
