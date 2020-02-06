@@ -1,31 +1,35 @@
 <h1 id="temporaldatetime"><code>Temporal.DateTime</code></h1>
-<h2 id="new-temporaldatetimeyear-number-month-number-day-number-hour-number-minute-number-second-number--0-milliseconds-number-0-microsecond-number--0-nanosecond-nunber--0-disambiguation-constrain--balance--reject--constrain--temporaltime">new Temporal.DateTime(year: number, month: number, day: number, hour: number, minute: number, second: number = 0, milliseconds: number =0, microsecond: number = 0, nanosecond: nunber = 0, disambiguation: &#39;constrain&#39; | &#39;balance&#39; | &#39;reject&#39; = &#39;constrain&#39;) : Temporal.Time</h2>
-<h2 id="temporaldatetimefromthing-string--object--temporaldatetime">Temporal.DateTime.from(thing: string | object) : Temporal.DateTime</h2>
-<h2 id="datetimeyear--number">datetime.year : number</h2>
-<h2 id="datetimemonth--number">datetime.month : number</h2>
-<h2 id="datetimeday--number">datetime.day : number</h2>
-<h2 id="datetimehour-number">datetime.hour: number</h2>
-<h2 id="datetimeminute-number">datetime.minute: number</h2>
-<h2 id="datetimesecond-number">datetime.second: number</h2>
-<h2 id="datetimemillisecond-number">datetime.millisecond: number</h2>
-<h2 id="datetimemicrosecond-number">datetime.microsecond: number</h2>
-<h2 id="datetimenanosecond-number">datetime.nanosecond: number</h2>
-<h2 id="datetimedayofweek--number">datetime.dayOfWeek : number</h2>
-<h2 id="datetimeweekofyear--number">datetime.weekOfYear : number</h2>
-<h2 id="datetimedaysinmonth--number">datetime.daysInMonth : number</h2>
-<h2 id="datetimedaysinyear--number">datetime.daysInYear : number</h2>
-<h2 id="datetimeleapyear--boolean">datetime.leapYear : boolean</h2>
-<h2 id="datetimewith-year-number-month-number-hour-number-hour-number--thishour-minute-number--thisminute--disambiguation-constrain--balance--reject--constrain--temporaldatetime">datetime.with({ year: number, month: number, hour: number, hour: number = this.hour, minute: number = this.minute, ...}, disambiguation: &#39;constrain&#39; | &#39;balance&#39; | &#39;reject&#39; = &#39;constrain&#39;) : Temporal.DateTime</h2>
-<h2 id="datetimeplusduration-string--object-disambiguation-constrain--balance--reject--constrain--temporaldatetime">datetime.plus(duration: string | object, disambiguation: &#39;constrain&#39; | &#39;balance&#39; | &#39;reject&#39; = &#39;constrain&#39;) : Temporal.DateTime</h2>
-<h2 id="datetimeminusduration-string--object-disambiguation-constrain--balance--reject--constrain--temporaldatetime">datetime.minus(duration: string | object, disambiguation: &#39;constrain&#39; | &#39;balance&#39; | &#39;reject&#39; = &#39;constrain&#39;) : Temporal.DateTime</h2>
-<h2 id="datetimedifferenceother-temporaldatetime--temporalduration">datetime.difference(other: Temporal.DateTime) : Temporal.Duration</h2>
-<h2 id="datetimetostring--string">datetime.toString() : string</h2>
-<h2 id="datetimetolocalestringlocalestring-options-object--string">datetime.toLocaleString(locale?:string, options?: object) : string</h2>
-<h2 id="datetimeintimezonetimezoneparam--utc-disambiguation--earlier--temporalabsolute">datetime.inTimeZone(timeZoneParam = &#39;UTC&#39;, disambiguation = &#39;earlier&#39;) : Temporal.Absolute</h2>
-<h2 id="datetimegetdate--temporaldate">datetime.getDate() : Temporal.Date</h2>
-<h2 id="datetimegetyearmonth--temporalyearmonth">datetime.getYearMonth() : Temporal.YearMonth</h2>
-<h2 id="datetimegetmonthday--temporalmonthday">datetime.getMonthDay() : Temporal.MonthDay</h2>
-<h2 id="datetimegettime--temporaltime">datetime.getTime() : Temporal.Time</h2>
-<h2 id="temporaldatetimecompareone-temporaldatetime-two-temporaldatetime--number">Temporal.DateTime.compare(one: Temporal.DateTime, two: Temporal.DateTime) : number;</h2>
+<h2 id="constructor">Constructor</h2>
+<h3 id="new-temporaldatetimeyear-number-month-number-day-number-hour-number-minute-number-second-number--0-milliseconds-number-0-microsecond-number--0-nanosecond-nunber--0-disambiguation-constrain--balance--reject--constrain--temporaltime">new Temporal.DateTime(year: number, month: number, day: number, hour: number, minute: number, second: number = 0, milliseconds: number =0, microsecond: number = 0, nanosecond: nunber = 0, disambiguation: &#39;constrain&#39; | &#39;balance&#39; | &#39;reject&#39; = &#39;constrain&#39;) : Temporal.Time</h3>
+<h2 id="static-methods">Static methods</h2>
+<h3 id="temporaldatetimefromthing-string--object--temporaldatetime">Temporal.DateTime.from(thing: string | object) : Temporal.DateTime</h3>
+<h3 id="temporaldatetimecompareone-temporaldatetime-two-temporaldatetime--number">Temporal.DateTime.compare(one: Temporal.DateTime, two: Temporal.DateTime) : number;</h3>
+<h2 id="properties">Properties</h2>
+<h3 id="datetimeyear--number">datetime.year : number</h3>
+<h3 id="datetimemonth--number">datetime.month : number</h3>
+<h3 id="datetimeday--number">datetime.day : number</h3>
+<h3 id="datetimehour-number">datetime.hour: number</h3>
+<h3 id="datetimeminute-number">datetime.minute: number</h3>
+<h3 id="datetimesecond-number">datetime.second: number</h3>
+<h3 id="datetimemillisecond-number">datetime.millisecond: number</h3>
+<h3 id="datetimemicrosecond-number">datetime.microsecond: number</h3>
+<h3 id="datetimenanosecond-number">datetime.nanosecond: number</h3>
+<h3 id="datetimedayofweek--number">datetime.dayOfWeek : number</h3>
+<h3 id="datetimeweekofyear--number">datetime.weekOfYear : number</h3>
+<h3 id="datetimedaysinmonth--number">datetime.daysInMonth : number</h3>
+<h3 id="datetimedaysinyear--number">datetime.daysInYear : number</h3>
+<h3 id="datetimeleapyear--boolean">datetime.leapYear : boolean</h3>
+<h2 id="methods">Methods</h2>
+<h3 id="datetimewith-year-number-month-number-hour-number-hour-number--thishour-minute-number--thisminute--disambiguation-constrain--balance--reject--constrain--temporaldatetime">datetime.with({ year: number, month: number, hour: number, hour: number = this.hour, minute: number = this.minute, ...}, disambiguation: &#39;constrain&#39; | &#39;balance&#39; | &#39;reject&#39; = &#39;constrain&#39;) : Temporal.DateTime</h3>
+<h3 id="datetimeplusduration-string--object-disambiguation-constrain--balance--reject--constrain--temporaldatetime">datetime.plus(duration: string | object, disambiguation: &#39;constrain&#39; | &#39;balance&#39; | &#39;reject&#39; = &#39;constrain&#39;) : Temporal.DateTime</h3>
+<h3 id="datetimeminusduration-string--object-disambiguation-constrain--balance--reject--constrain--temporaldatetime">datetime.minus(duration: string | object, disambiguation: &#39;constrain&#39; | &#39;balance&#39; | &#39;reject&#39; = &#39;constrain&#39;) : Temporal.DateTime</h3>
+<h3 id="datetimedifferenceother-temporaldatetime--temporalduration">datetime.difference(other: Temporal.DateTime) : Temporal.Duration</h3>
+<h3 id="datetimetostring--string">datetime.toString() : string</h3>
+<h3 id="datetimetolocalestringlocalestring-options-object--string">datetime.toLocaleString(locale?:string, options?: object) : string</h3>
+<h3 id="datetimeintimezonetimezoneparam--utc-disambiguation--earlier--temporalabsolute">datetime.inTimeZone(timeZoneParam = &#39;UTC&#39;, disambiguation = &#39;earlier&#39;) : Temporal.Absolute</h3>
+<h3 id="datetimegetdate--temporaldate">datetime.getDate() : Temporal.Date</h3>
+<h3 id="datetimegetyearmonth--temporalyearmonth">datetime.getYearMonth() : Temporal.YearMonth</h3>
+<h3 id="datetimegetmonthday--temporalmonthday">datetime.getMonthDay() : Temporal.MonthDay</h3>
+<h3 id="datetimegettime--temporaltime">datetime.getTime() : Temporal.Time</h3>
 <script type="application/javascript" src="./prism.js"></script>
 <link rel="stylesheet" type="text/css" href="./prism.css">

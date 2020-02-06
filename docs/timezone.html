@@ -2,7 +2,8 @@
 <p>A <code>Temporal.TimeZone</code> is a representation of a time zone: either an <a href="https://www.iana.org/time-zones">IANA time zone</a>, including information about the time zone such as the offset between the local time and UTC at a particular time, and daylight saving time (DST) changes; or simply a particular UTC offset with no DST.</p>
 <p>Since <code>Temporal.Absolute</code> and <code>Temporal.DateTime</code> do not contain any time zone information, a <code>Temporal.TimeZone</code> object is required to convert between the two.</p>
 <p>Finally, the <code>Temporal.TimeZone</code> object itself provides access to a list of the time zones in the IANA time zone database.</p>
-<h2 id="new-temporaltimezonetimezoneidentifier-string--temporaltimezone">new Temporal.TimeZone(timeZoneIdentifier: string) : Temporal.TimeZone</h2>
+<h2 id="constructor">Constructor</h2>
+<h3 id="new-temporaltimezonetimezoneidentifier-string--temporaltimezone">new Temporal.TimeZone(timeZoneIdentifier: string) : Temporal.TimeZone</h3>
 <p><strong>Parameters:</strong></p>
 <ul>
 <li><code>timeZoneIdentifier</code> (string): A description of the time zone; either its IANA name, or a UTC offset.</li>
@@ -21,7 +22,7 @@ tz = new Temporal.TimeZone(&#39;Asia/Katmandu&#39;);  // alias of Asia/Kathmandu
 tz = new Temporal.TimeZone(&#39;-04:00&#39;);
 tz = new Temporal.TimeZone(&#39;+645&#39;);
 /* WRONG */ tz = new Temporal.TimeZone(&#39;local&#39;);  // not a time zone, throws</code></pre>
-<h3 id="difference-between-iana-time-zones-and-utc-offsets">Difference between IANA time zones and UTC offsets</h3>
+<h4 id="difference-between-iana-time-zones-and-utc-offsets">Difference between IANA time zones and UTC offsets</h4>
 <p>The returned time zone object behaves slightly differently depending on whether an IANA time zone name (e.g. <code>Europe/Berlin</code>) is given, or a UTC offset (e.g. <code>+01:00</code>).
 IANA time zones may have DST transitions, and UTC offsets do not.
 For example:</p>
@@ -30,10 +31,23 @@ tz2 = new Temporal.TimeZone(&#39;America/Vancouver&#39;);
 now = Temporal.now.absolute();
 tz1.getTransitions(now).next().done;  // =&gt; true
 tz2.getTransitions(now).next().done;  // =&gt; false</code></pre>
-<h2 id="timezonename--string">timeZone.name : string</h2>
+<h2 id="static-methods">Static methods</h2>
+<h3 id="temporaltimezone-iteratortemporaltimezone">Temporal.TimeZone: iterator&lt;Temporal.TimeZone&gt;</h3>
+<p>The <code>Temporal.TimeZone</code> object is itself iterable, and can be used to iterate through all of the IANA time zones supported by the implementation.</p>
+<p>Example usage:</p>
+<pre><code class="language-javascript">// List all supported IANA time zones
+for (let zone of Temporal.TimeZone) console.log(zone.name);
+// example output:
+// Africa/Abidjan
+// Africa/Accra
+// Africa/Addis_Ababa
+// ...and many more</code></pre>
+<h2 id="properties">Properties</h2>
+<h3 id="timezonename--string">timeZone.name : string</h3>
 <p>The <code>name</code> property gives an unambiguous identifier for the time zone.
 Effectively, this is the canonicalized version of whatever <code>timeZoneIdentifier</code> was passed as a parameter to the constructor.</p>
-<h2 id="timezonegetoffsetforabsolute-temporalabsolute--string">timeZone.getOffsetFor(absolute: Temporal.Absolute) : string</h2>
+<h2 id="methods">Methods</h2>
+<h3 id="timezonegetoffsetforabsolute-temporalabsolute--string">timeZone.getOffsetFor(absolute: Temporal.Absolute) : string</h3>
 <p><strong>Parameters:</strong></p>
 <ul>
 <li><code>absolute</code> (<code>Temporal.Absolute</code>): The time for which to compute the time zone&#39;s UTC offset.</li>
@@ -54,7 +68,7 @@ tz.getOffsetFor(timestamp);  // =&gt; -08:00
 // UTC is always 0 offset
 tz = new Temporal.TimeZone(&#39;UTC&#39;);
 tz.getOffsetFor(timestamp);  // =&gt; +00:00</code></pre>
-<h2 id="timezonegetdatetimeforabsolute-temporalabsolute--temporaldatetime">timeZone.getDateTimeFor(absolute: Temporal.Absolute) : Temporal.DateTime</h2>
+<h3 id="timezonegetdatetimeforabsolute-temporalabsolute--temporaldatetime">timeZone.getDateTimeFor(absolute: Temporal.Absolute) : Temporal.DateTime</h3>
 <p><strong>Parameters:</strong></p>
 <ul>
 <li><code>absolute</code> (<code>Temporal.Absolute</code>): An absolute time to convert.</li>
@@ -71,7 +85,7 @@ tz.getDateTimeFor(timestamp);  // =&gt; 2019-03-31T01:45
 epoch = new Temporal.Absolute(0n);
 tz = new Temporal.TimeZone(&#39;America/New_York&#39;);
 tz.getDateTimeFor(epoch);  // =&gt; 1969-12-31T19:00</code></pre>
-<h2 id="timezonegetabsolutefordatetime-temporaldatetime-disambiguation-earlier--later--reject--earlier--temporalabsolute">timeZone.getAbsoluteFor(dateTime: Temporal.DateTime, disambiguation: &#39;earlier&#39; | &#39;later&#39; | &#39;reject&#39; = &#39;earlier&#39;) : Temporal.Absolute</h2>
+<h3 id="timezonegetabsolutefordatetime-temporaldatetime-disambiguation-earlier--later--reject--earlier--temporalabsolute">timeZone.getAbsoluteFor(dateTime: Temporal.DateTime, disambiguation: &#39;earlier&#39; | &#39;later&#39; | &#39;reject&#39; = &#39;earlier&#39;) : Temporal.Absolute</h3>
 <p><strong>Parameters:</strong></p>
 <ul>
 <li><code>dateTime</code> (<code>Temporal.DateTime</code>): A calendar date and wall-clock time to convert.</li>
@@ -81,7 +95,7 @@ The default is <code>earlier</code>.</li>
 </ul>
 <p><strong>Returns:</strong> A <code>Temporal.Absolute</code> object indicating the absolute time in <code>timeZone</code> at the time of the calendar date and wall-clock time from <code>dateTime</code>.</p>
 <p>This method is one way to convert a <code>Temporal.DateTime</code> to a <code>Temporal.Absolute</code>.</p>
-<h3 id="resolving-ambiguity">Resolving ambiguity</h3>
+<h4 id="resolving-ambiguity">Resolving ambiguity</h4>
 <blockquote>
 <p>This explanation was adapted from the <a href="https://github.com/moment/momentjs.com/blob/master/docs/moment-timezone/01-using-timezones/02-parsing-ambiguous-inputs.html">moment-timezone documentation</a>.</p>
 </blockquote>
@@ -123,7 +137,7 @@ tz.getAbsoluteFor(dt, &#39;reject&#39;);   // throws</code></pre>
 <blockquote>
 <p><em>Compatibility Note</em>: The built-in behaviour of the Moment Timezone and Luxon libraries is to give the same result as <code>earlier</code> when turning the clock back, and <code>later</code> when setting the clock forward.</p>
 </blockquote>
-<h2 id="timezonegettransitionsstartingpoint-temporalabsolute--iteratortemporalabsolute">timeZone.getTransitions(startingPoint: Temporal.Absolute) : iterator&lt;Temporal.Absolute&gt;</h2>
+<h3 id="timezonegettransitionsstartingpoint-temporalabsolute--iteratortemporalabsolute">timeZone.getTransitions(startingPoint: Temporal.Absolute) : iterator&lt;Temporal.Absolute&gt;</h3>
 <p><strong>Parameters:</strong></p>
 <ul>
 <li><code>startingPoint</code> (<code>Temporal.Absolute</code>): Time after which to start calculating DST transitions.</li>
@@ -139,18 +153,8 @@ now = Temporal.now.absolute();
 [nextTransition] = tz.getTransitions(now);
 duration = nextTransition.difference(now);
 duration.toLocaleString();  // output will vary</code></pre>
-<h2 id="timezonetostring--string">timeZone.toString() : string</h2>
+<h3 id="timezonetostring--string">timeZone.toString() : string</h3>
 <p><strong>Returns:</strong> The string given by <code>timeZone.name</code>.</p>
 <p>This method overrides <code>Object.prototype.toString()</code> and provides the time zone&#39;s <code>name</code> property as a human-readable description.</p>
-<h2 id="temporaltimezone-iteratortemporaltimezone">Temporal.TimeZone: iterator&lt;Temporal.TimeZone&gt;</h2>
-<p>The <code>Temporal.TimeZone</code> object is itself iterable, and can be used to iterate through all of the IANA time zones supported by the implementation.</p>
-<p>Example usage:</p>
-<pre><code class="language-javascript">// List all supported IANA time zones
-for (let zone of Temporal.TimeZone) console.log(zone.name);
-// example output:
-// Africa/Abidjan
-// Africa/Accra
-// Africa/Addis_Ababa
-// ...and many more</code></pre>
 <script type="application/javascript" src="./prism.js"></script>
 <link rel="stylesheet" type="text/css" href="./prism.css">
