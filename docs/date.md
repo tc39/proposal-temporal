@@ -1,4 +1,4 @@
-# `Temporal.Date`
+# Temporal.Date
 
 A representation of a calendar date.
 

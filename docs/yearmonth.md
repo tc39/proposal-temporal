@@ -1,4 +1,4 @@
-# `Temporal.YearMonth`
+# Temporal.YearMonth
 
 A representation of a calendar date.
 

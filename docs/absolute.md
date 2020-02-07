@@ -1,4 +1,4 @@
-# `Temporal.Absolute`
+# Temporal.Absolute
 
 A `Temporal.Absolute` is an absolute point in time, with a precision in nanoseconds.
 No time zone or calendar information is present.
@@ -16,7 +16,7 @@ Like Unix time, `Temporal.Absolute` ignores leap seconds.
 ### **new Temporal.Absolute**(_epochNanoseconds_ : bigint) : Temporal.Absolute
 
 **Parameters:**
-- `epochNanoSeconds` (bigint): A number of nanoseconds.
+- `epochNanoseconds` (bigint): A number of nanoseconds.
 
 **Returns:** a new `Temporal.Absolute` object.
 
@@ -62,7 +62,8 @@ abs === Temporal.Absolute.from(abs);  // => true
 // Not enough information to denote a single point in time:
 /* WRONG */ abs = Temporal.Absolute.from('2019-03-30');  // no time; throws
 /* WRONG */ abs = Temporal.Absolute.from('2019-03-30T01:45');  // no time zone; throws
-/* WRONG */ abs = Temporal.Absolute.from('2019-03031T02:45+01:00[Europe/Berlin]');  // time skipped in DST transition; throws
+/* WRONG */ abs = Temporal.Absolute.from('2019-03031T02:45+01:00[Europe/Berlin]');
+    // time skipped in DST transition; throws
 ```
 
 ### Temporal.Absolute.**fromEpochSeconds**(_epochSeconds_: number) : Temporal.Absolute
@@ -78,7 +79,7 @@ This static method creates a new `Temporal.Absolute` object with seconds precisi
 The number of seconds since the Unix epoch is a common measure of time in many computer systems.
 Use this method if you need to interface with such a system.
 
-Usage example:
+Example usage:
 ```js
 // Same examples as in new Temporal.Absolute(), but with seconds precision
 abs = Temporal.Absolute.fromEpochSeconds(1553906700);
@@ -102,7 +103,8 @@ jsdate = new Date('December 17, 1995 03:24:00 GMT')
 abs = Temporal.Absolute.fromEpochMilliseconds(jsdate.getTime());  // => 1995-12-17T03:24Z
 abs = Temporal.Absolute.fromEpochMilliseconds(+jsdate);  // valueOf() called implicitly
 
-// This is a way to get the current time, but Temporal.now.absolute() would give the same with higher accuracy
+// This is a way to get the current time, but Temporal.now.absolute()
+// would give the same with higher accuracy
 todayMs = Temporal.Absolute.fromEpochMilliseconds(Date.now());
 todayNs = Temporal.now.absolute();
 ```
@@ -324,6 +326,11 @@ Example usage:
 abs = Temporal.Absolute.from("2019-11-18T11:00:00.000Z");
 abs.toLocaleString();  // => example output: 2019-11-18, 3:00:00 a.m.
 abs.toLocaleString('de-DE');  // => example output: 18.11.2019, 03:00:00
-abs.toLocaleString('de-DE', { timeZone: 'Europe/Berlin', weekday: 'long' });  // => Montag, 18.11.2019, 12:00:00
-abs.toLocaleString('en-US-u-nu-fullwide-hc-h12', { timeZone: 'Asia/Kolkata' });  // => １１/１８/２０１９, ４:３０:００ PM
+abs.toLocaleString('de-DE', {
+    timeZone: 'Europe/Berlin',
+    weekday: 'long',
+});  // => Montag, 18.11.2019, 12:00:00
+abs.toLocaleString('en-US-u-nu-fullwide-hc-h12', {
+    timeZone: 'Asia/Kolkata',
+});  // => １１/１８/２０１９, ４:３０:００ PM
 ```
