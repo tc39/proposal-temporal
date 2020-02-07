@@ -24,7 +24,13 @@
       pre code[class*="language-"] { font-size: 0.85em; }
       pre[class*="language-"] { padding: 0.5em; }
       h2 { border-bottom: 2px solid var(--text-muted); margin-top: 2em; }
-      h3 { border-bottom: 1px solid var(--text-muted); }
+      h3 {
+        border-bottom: 1px solid var(--text-muted);
+        color: var(--text-muted);
+        font-weight: normal;
+      }
+      h3 em { font-weight: bold; }
+      h3 strong { color: var(--text-bright); }
       :not(h2) + h3 { margin-top: 2em; }
       footer {
         border-top: 1px solid var(--background);
