@@ -13,7 +13,7 @@ Like Unix time, `Temporal.Absolute` ignores leap seconds.
 
 ## Constructor
 
-### new Temporal.Absolute(epochNanoseconds : bigint) : Temporal.Absolute
+### **new Temporal.Absolute**(_epochNanoseconds_ : bigint) : Temporal.Absolute
 
 **Parameters:**
 - `epochNanoSeconds` (bigint): A number of nanoseconds.
@@ -38,7 +38,7 @@ turnOfTheCentury = new Temporal.Absolute(-2208988800000000000n);  // => 1900-01-
 
 ## Static methods
 
-### Temporal.Absolute.from(thing: string | Temporal.Absolute) : Temporal.Absolute
+### Temporal.Absolute.**from**(_thing_: string | Temporal.Absolute) : Temporal.Absolute
 
 **Parameters:**
 - `thing` (string or `Temporal.Absolute`): The value representing the desired point in time.
@@ -65,7 +65,7 @@ abs === Temporal.Absolute.from(abs);  // => true
 /* WRONG */ abs = Temporal.Absolute.from('2019-03031T02:45+01:00[Europe/Berlin]');  // time skipped in DST transition; throws
 ```
 
-### Temporal.Absolute.fromEpochSeconds(epochSeconds: number) : Temporal.Absolute
+### Temporal.Absolute.**fromEpochSeconds**(_epochSeconds_: number) : Temporal.Absolute
 
 **Parameters:**
 - `epochSeconds` (number): A number of seconds.
@@ -86,7 +86,7 @@ epoch = Temporal.Absolute.fromEpochSeconds(0);  // => 1970-01-01T00:00Z
 turnOfTheCentury = Temporal.Absolute.fromEpochSeconds(-2208988800);  // => 1900-01-01T00:00Z
 ```
 
-### Temporal.Absolute.fromEpochMilliseconds(epochMilliseconds: number) : Temporal.Absolute
+### Temporal.Absolute.**fromEpochMilliseconds**(_epochMilliseconds_: number) : Temporal.Absolute
 
 **Parameters:**
 - `epochMilliseconds` (number): A number of milliseconds.
@@ -107,7 +107,7 @@ todayMs = Temporal.Absolute.fromEpochMilliseconds(Date.now());
 todayNs = Temporal.now.absolute();
 ```
 
-### Temporal.Absolute.fromEpochMicroseconds(epochMilliseconds : bigint) : Temporal.Absolute
+### Temporal.Absolute.**fromEpochMicroseconds**(_epochMilliseconds_ : bigint) : Temporal.Absolute
 
 **Parameters:**
 - `epochMicroseconds` (bigint): A number of microseconds.
@@ -116,7 +116,7 @@ todayNs = Temporal.now.absolute();
 
 Same as `Temporal.Absolute.fromEpochSeconds()`, but with microsecond (10<sup>&minus;6</sup> second) precision.
 
-### Temporal.Absolute.fromEpochNanoseconds(epochNanoseconds : bigint) : Temporal.Absolute
+### Temporal.Absolute.**fromEpochNanoseconds**(_epochNanoseconds_ : bigint) : Temporal.Absolute
 
 **Parameters:**
 - `epochNanoseconds` (bigint): A number of nanoseconds.
@@ -126,7 +126,7 @@ Same as `Temporal.Absolute.fromEpochSeconds()`, but with microsecond (10<sup>&mi
 Same as `Temporal.Absolute.fromEpochSeconds()`, but with nanosecond (10<sup>&minus;9</sup> second) precision.
 Also the same as `new Temporal.Absolute(epochNanoseconds)`.
 
-### Temporal.Absolute.compare(one: Temporal.Absolute, two: Temporal.Absolute) : number
+### Temporal.Absolute.**compare**(_one_: Temporal.Absolute, _two_: Temporal.Absolute) : number
 
 **Parameters:**
 - `one` (`Temporal.Absolute`): First time to compare.
@@ -153,7 +153,7 @@ sorted.join(' ');
 
 ## Methods
 
-### absolute.getEpochSeconds() : number
+### absolute.**getEpochSeconds**() : number
 
 **Returns:** an integer number of seconds.
 
@@ -169,7 +169,7 @@ abs = Temporal.Absolute.from('2019-03-30T01:45+01:00');
 abs.getEpochSeconds();  // => 1554000300
 ```
 
-### absolute.getEpochMilliseconds() : number
+### absolute.**getEpochMilliseconds**() : number
 
 **Returns:** an integer number of milliseconds.
 
@@ -182,13 +182,13 @@ abs = Temporal.Absolute.from('2019-03-30T00:45Z');
 new Date(abs.getEpochMilliseconds());  // => 2019-03-30T00:45:00.000Z
 ```
 
-### absolute.getEpochMicroseconds() : bigint
+### absolute.**getEpochMicroseconds**() : bigint
 
 **Returns:** a number of microseconds, as a bigint.
 
 Same as `getEpochSeconds()`, but with microsecond (10<sup>&minus;6</sup> second) precision.
 
-### absolute.getEpochNanoseconds() : bigint
+### absolute.**getEpochNanoseconds**() : bigint
 
 **Returns:** a number of nanoseconds, as a bigint.
 
@@ -196,7 +196,7 @@ Same as `getEpochSeconds()`, but with nanosecond (10<sup>&minus;9</sup> second) 
 
 The value returned from this method is suitable to be passed to `new Temporal.Absolute()`.
 
-### absolute.inTimeZone(timeZone: Temporal.TimeZone | string) : Temporal.DateTime
+### absolute.**inTimeZone**(_timeZone_: Temporal.TimeZone | string) : Temporal.DateTime
 
 **Parameters:**
 - `timeZone` (object or string): A `Temporal.TimeZone` object, or a string description of the time zone; either its IANA name or UTC offset.
@@ -223,7 +223,7 @@ tz = new Temporal.TimeZone('America/New_York');
 epoch.inTimeZone(tz);  // => 1969-12-31T19:00
 ```
 
-### absolute.plus(duration: string | object) : Temporal.Absolute
+### absolute.**plus**(_duration_: string | object) : Temporal.Absolute
 
 **Parameters:**
 - `duration` (string or object): A `Temporal.Duration` object, a duration-like object, or a string from which to create a `Temporal.Duration`.
@@ -246,7 +246,7 @@ fiveHours = new Temporal.Duration(0, 0, 0, 5);
 Temporal.now.absolute().plus(fiveHours);
 ```
 
-### absolute.minus(duration: string | object) : Temporal.Absolute
+### absolute.**minus**(_duration_: string | object) : Temporal.Absolute
 
 **Parameters:**
 - `duration` (string or object): A `Temporal.Duration` object, a duration-like object, or a string from which to create a `Temporal.Duration`.
@@ -269,7 +269,7 @@ oneDay = new Temporal.Duration(0, 0, 1);
 Temporal.now.absolute().minus(oneDay);
 ```
 
-### absolute.difference(other: Temporal.Absolute) : Temporal.Duration
+### absolute.**difference**(_other_: Temporal.Absolute) : Temporal.Duration
 
 **Parameters:**
 - `other` (`Temporal.Absolute`): Another time with which to compute the difference.
@@ -288,7 +288,7 @@ endOfMoonMission.difference(startOfMoonMission);  // => P8DT3H18M35S
 missionLength.toLocaleString();  // example output: '8 days 3 hours 18 minutes 35 seconds'
 ```
 
-### absolute.toString(timeZone?: Temporal.TimeZone | string) : string
+### absolute.**toString**(_timeZone_?: Temporal.TimeZone | string) : string
 
 **Parameters:**
 - `timeZone` (optional string or `Temporal.TimeZone`): the time zone to express `absolute` in.
@@ -307,7 +307,7 @@ abs.toString(Temporal.TimeZone.from('UTC'));  // => 2019-11-18T10:52:01.816Z
 abs.toString('Asia/Seoul');  // => 2019-11-18T19:52:01.816+09:00[Asia/Seoul]
 ```
 
-### absolute.toLocaleString(locales?: string | array&lt;string&gt;, options?: object) : string
+### absolute.**toLocaleString**(_locales_?: string | array&lt;string&gt;, options?: object) : string
 
 **Parameters:**
 - `locales` (optional string or array of strings): A string with a BCP 47 language tag with an optional Unicode extension key, or an array of such strings.

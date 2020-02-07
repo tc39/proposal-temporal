@@ -8,7 +8,7 @@ Finally, the `Temporal.TimeZone` object itself provides access to a list of the 
 
 ## Constructor
 
-### new Temporal.TimeZone(timeZoneIdentifier: string) : Temporal.TimeZone
+### **new Temporal.TimeZone**(_timeZoneIdentifier_: string) : Temporal.TimeZone
 
 **Parameters:**
 - `timeZoneIdentifier` (string): A description of the time zone; either its IANA name, or a UTC offset.
@@ -49,7 +49,7 @@ tz2.getTransitions(now).next().done;  // => false
 
 ## Static methods
 
-### Temporal.TimeZone: iterator<Temporal.TimeZone>
+### **Temporal.TimeZone**: iterator<Temporal.TimeZone>
 
 The `Temporal.TimeZone` object is itself iterable, and can be used to iterate through all of the IANA time zones supported by the implementation.
 
@@ -67,14 +67,14 @@ for (let zone of Temporal.TimeZone) console.log(zone.name);
 
 ## Properties
 
-### timeZone.name : string
+### timeZone.**name** : string
 
 The `name` property gives an unambiguous identifier for the time zone.
 Effectively, this is the canonicalized version of whatever `timeZoneIdentifier` was passed as a parameter to the constructor.
 
 ## Methods
 
-### timeZone.getOffsetFor(absolute: Temporal.Absolute) : string
+### timeZone.**getOffsetFor**(_absolute_: Temporal.Absolute) : string
 
 **Parameters:**
 - `absolute` (`Temporal.Absolute`): The time for which to compute the time zone's UTC offset.
@@ -101,7 +101,7 @@ tz = new Temporal.TimeZone('UTC');
 tz.getOffsetFor(timestamp);  // => +00:00
 ```
 
-### timeZone.getDateTimeFor(absolute: Temporal.Absolute) : Temporal.DateTime
+### timeZone.**getDateTimeFor**(_absolute_: Temporal.Absolute) : Temporal.DateTime
 
 **Parameters:**
 - `absolute` (`Temporal.Absolute`): An absolute time to convert.
@@ -124,7 +124,7 @@ tz = new Temporal.TimeZone('America/New_York');
 tz.getDateTimeFor(epoch);  // => 1969-12-31T19:00
 ```
 
-### timeZone.getAbsoluteFor(dateTime: Temporal.DateTime, disambiguation: 'earlier' | 'later' | 'reject' = 'earlier') : Temporal.Absolute
+### timeZone.**getAbsoluteFor**(_dateTime_: Temporal.DateTime, _disambiguation_: 'earlier' | 'later' | 'reject' = 'earlier') : Temporal.Absolute
 
 **Parameters:**
 - `dateTime` (`Temporal.DateTime`): A calendar date and wall-clock time to convert.
@@ -191,7 +191,7 @@ In this example, the wall-clock time 23:45 exists twice.
 
 > *Compatibility Note*: The built-in behaviour of the Moment Timezone and Luxon libraries is to give the same result as `earlier` when turning the clock back, and `later` when setting the clock forward.
 
-### timeZone.getTransitions(startingPoint: Temporal.Absolute) : iterator<Temporal.Absolute>
+### timeZone.**getTransitions**(_startingPoint_: Temporal.Absolute) : iterator<Temporal.Absolute>
 
 **Parameters:**
 - `startingPoint` (`Temporal.Absolute`): Time after which to start calculating DST transitions.
@@ -214,7 +214,7 @@ duration = nextTransition.difference(now);
 duration.toLocaleString();  // output will vary
 ```
 
-### timeZone.toString() : string
+### timeZone.**toString**() : string
 
 **Returns:** The string given by `timeZone.name`.
 

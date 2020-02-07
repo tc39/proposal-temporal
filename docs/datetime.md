@@ -2,64 +2,64 @@
 
 ## Constructor
 
-### new Temporal.DateTime(year: number, month: number, day: number, hour: number, minute: number, second: number = 0, milliseconds: number =0, microsecond: number = 0, nanosecond: nunber = 0, disambiguation: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.Time
+### **new Temporal.DateTime**(_year_: number, _month_: number, _day_: number, _hour_: number, _minute_: number, _second_: number = 0, _millisecond_: number = 0, _microsecond_: number = 0, _nanosecond_: number = 0, _disambiguation_: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.Time
 
 ## Static methods
 
-### Temporal.DateTime.from(thing: string | object) : Temporal.DateTime
+### Temporal.DateTime.**from**(_thing_: string | object) : Temporal.DateTime
 
-### Temporal.DateTime.compare(one: Temporal.DateTime, two: Temporal.DateTime) : number;
+### Temporal.DateTime.**compare**(_one_: Temporal.DateTime, _two_: Temporal.DateTime) : number;
 
 ## Properties
 
-### datetime.year : number
+### datetime.**year** : number
 
-### datetime.month : number
+### datetime.**month** : number
 
-### datetime.day : number
+### datetime.**day** : number
 
-### datetime.hour: number
+### datetime.**hour**: number
 
-### datetime.minute: number
+### datetime.**minute**: number
 
-### datetime.second: number
+### datetime.**second**: number
 
-### datetime.millisecond: number
+### datetime.**millisecond**: number
 
-### datetime.microsecond: number
+### datetime.**microsecond**: number
 
-### datetime.nanosecond: number
+### datetime.**nanosecond**: number
 
-### datetime.dayOfWeek : number
+### datetime.**dayOfWeek** : number
 
-### datetime.weekOfYear : number
+### datetime.**weekOfYear** : number
 
-### datetime.daysInMonth : number
+### datetime.**daysInMonth** : number
 
-### datetime.daysInYear : number
+### datetime.**daysInYear** : number
 
-### datetime.leapYear : boolean
+### datetime.**leapYear** : boolean
 
 ## Methods
 
-### datetime.with({ year: number, month: number, hour: number, hour: number = this.hour, minute: number = this.minute, ...}, disambiguation: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.DateTime
+### datetime.**with**({ year: number, month: number, hour: number, hour: number = this.hour, minute: number = this.minute, ...}, _disambiguation_: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.DateTime
 
-### datetime.plus(duration: string | object, disambiguation: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.DateTime
+### datetime.**plus**(_duration_: string | object, _disambiguation_: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.DateTime
 
-### datetime.minus(duration: string | object, disambiguation: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.DateTime
+### datetime.**minus**(_duration_: string | object, _disambiguation_: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.DateTime
 
-### datetime.difference(other: Temporal.DateTime) : Temporal.Duration
+### datetime.**difference**(_other_: Temporal.DateTime) : Temporal.Duration
 
-### datetime.toString() : string
+### datetime.**toString**() : string
 
-### datetime.toLocaleString(locale?:string, options?: object) : string
+### datetime.**toLocaleString**(_locale_?:string, _options_?: object) : string
 
-### datetime.inTimeZone(timeZoneParam = 'UTC', disambiguation = 'earlier') : Temporal.Absolute
+### datetime.**inTimeZone**(_timeZoneParam_ = 'UTC', _disambiguation_ = 'earlier') : Temporal.Absolute
 
-### datetime.getDate() : Temporal.Date
+### datetime.**getDate**() : Temporal.Date
 
-### datetime.getYearMonth() : Temporal.YearMonth
+### datetime.**getYearMonth**() : Temporal.YearMonth
 
-### datetime.getMonthDay() : Temporal.MonthDay
+### datetime.**getMonthDay**() : Temporal.MonthDay
 
-### datetime.getTime() : Temporal.Time
+### datetime.**getTime**() : Temporal.Time

@@ -4,38 +4,38 @@ A representation of a calendar date.
 
 ## Constructor
 
-### new Temporal.YearMonth(year: number, month: number, disambiguation: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.YearMonth
+### **new Temporal.YearMonth**(_year_: number, _month_: number, _disambiguation_: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.YearMonth
 
 ## Static methods
 
-### Temporal.YearMonth.from(thing: string | object) : Temporal.YearMonth
+### Temporal.YearMonth.**from**(_thing_: string | object) : Temporal.YearMonth
 
-### Temporal.YearMonth.compare(one: Temporal.YearMonth, two: Temporal.YearMonth) : number
+### Temporal.YearMonth.**compare**(_one_: Temporal.YearMonth, _two_: Temporal.YearMonth) : number
 
 ## Properties
 
-### yearMonth.year : number
+### yearMonth.**year** : number
 
-### yearMonth.month : number
+### yearMonth.**month** : number
 
-### yearMonth.daysInMonth : number
+### yearMonth.**daysInMonth** : number
 
-### yearMonth.daysInYear : number
+### yearMonth.**daysInYear** : number
 
-### yearMonth.leapYear : boolean
+### yearMonth.**leapYear** : boolean
 
 ## Methods
 
-### yearMonth.with(yearMonthLike: object, disambiguation: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.YearMonth
+### yearMonth.**with**(_yearMonthLike_: object, _disambiguation_: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.YearMonth
 
-### yearMonth.plus(duration: Temporal.Duration | object | string, disambiguation: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.YearMonth
+### yearMonth.**plus**(_duration_: Temporal.Duration | object | string, _disambiguation_: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.YearMonth
 
-### yearMonth.minus(duration: Temporal.Duration | object | string, disambiguation: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.YearMonth
+### yearMonth.**minus**(_duration_: Temporal.Duration | object | string, _disambiguation_: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.YearMonth
 
-### yearMonth.difference(other: Temporal.YearMonth) : Temporal.Duration
+### yearMonth.**difference**(_other_: Temporal.YearMonth) : Temporal.Duration
 
-### yearMonth.toString() : string
+### yearMonth.**toString**() : string
 
-### yearMonth.toLocaleString(locale?: string, options?: object) : string
+### yearMonth.**toLocaleString**(_locale_?: string, _options_?: object) : string
 
-### yearMonth.withDay(day: number) : Temporal.Date
+### yearMonth.**withDay**(_day_: number) : Temporal.Date

@@ -4,38 +4,38 @@ A representations of a duration of time which can be used in date/time arithmeti
 
 ## Constructor
 
-### new Temporal.Duration(years?: number, months?: number, days?: number, hours?: number, minutes?: number, seconds?: number, milliseconds?: number, microseconds?: number, nanoseconds?: number, disambiguation: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.Duration
+### **new Temporal.Duration**(_years_?: number, _months_?: number, _days_?: number, _hours_?: number, _minutes_?: number, _seconds_?: number, _milliseconds_?: number, _microseconds_?: number, _nanoseconds_?: number, _disambiguation_: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.Duration
 
 Creates a new `Duration` object that represents a duration of time.
 
 ## Static methods
 
-### Temporal.Duration.from(thing: string | object) : Temporal.Duration
+### Temporal.Duration.**from**(_thing_: string | object) : Temporal.Duration
 
 ## Properties
 
-### duration.years : number
+### duration.**years** : number
 
-### duration.months : number
+### duration.**months** : number
 
-### duration.days : number
+### duration.**days** : number
 
-### duration.hours : number
+### duration.**hours** : number
 
-### duration.minutes : number
+### duration.**minutes** : number
 
-### duration.seconds : number
+### duration.**seconds** : number
 
-### duration.milliseconds : number
+### duration.**milliseconds** : number
 
-### duration.microseconds : number
+### duration.**microseconds** : number
 
-### duration.nanoseconds : number
+### duration.**nanoseconds** : number
 
-### duration.years : number
+### duration.**years** : number
 
 ## Methods
 
-### duration.toString() : string
+### duration.**toString**() : string
 
-### duration.toLocaleString(locale?: string, options?: object) : string
+### duration.**toLocaleString**(_locale_?: string, _options_?: object) : string
