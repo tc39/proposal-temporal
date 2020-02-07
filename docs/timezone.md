@@ -1,4 +1,4 @@
-# `Temporal.TimeZone`
+# Temporal.TimeZone
 
 A `Temporal.TimeZone` is a representation of a time zone: either an [IANA time zone](https://www.iana.org/time-zones), including information about the time zone such as the offset between the local time and UTC at a particular time, and daylight saving time (DST) changes; or simply a particular UTC offset with no DST.
 
@@ -22,7 +22,7 @@ The string `timeZoneIdentifier` is canonicalized before being used to determine 
 For example, values like `+100` will be understood to mean `+01:00`, and capitalization will be corrected.
 If no time zone can be determined from `timeZoneIdentifier`, then a `RangeError` is thrown.
 
-Usage examples:
+Example usage:
 ```javascript
 tz = new Temporal.TimeZone('UTC');
 tz = new Temporal.TimeZone('Africa/Cairo');

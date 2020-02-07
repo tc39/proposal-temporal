@@ -1,4 +1,4 @@
-# `Temporal.DateTime`
+# Temporal.DateTime
 
 ## Constructor
 

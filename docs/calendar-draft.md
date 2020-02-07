@@ -18,7 +18,9 @@ The *calendar* slot contains an object implementing the Temporal.Calendar interf
 
 The new Temporal.Calendar interface is a mechanism to allow arbitrary calendar systems to be implemented on top of Temporal.  ***Most users will not encounter the Temporal.Calendar interface directly***, unless they are building or using a non-built-in calendar system.
 
-An open question is whether this "interface" should be a protocol or an identity.  See issue #289.  The following section assumes it is a protocol.
+An open question is whether this "interface" should be a protocol or an identity.
+See [issue #289](https://github.com/tc39/proposal-temporal/issues/289).
+The following section assumes it is a protocol.
 
 ### Methods on the Temporal.Calendar interface
 
@@ -96,7 +98,8 @@ class MyCalendar {
 }
 ```
 
-It's not immediately clear how to make *calendar-specific accessors* available, such as the year type ("kesidran", "chaser", "maleh") in the Hebrew calendar.  See #291.
+It's not immediately clear how to make *calendar-specific accessors* available, such as the year type ("kesidran", "chaser", "maleh") in the Hebrew calendar.
+See [#291](https://github.com/tc39/proposal-temporal/issues/291).
 
 An instance of `MyCalendar` is *expected* to have stateless behavior; i.e., calling a method with the same arguments should return the same result each time.  There would be no mechanism for enforcing that user-land calendars are stateless; the calendar author should test this expectation on their own in order to prevent unexpected behavior such as the lack of round-tripping.
 
@@ -178,7 +181,7 @@ The calendar IDs are less clear.  If the partial ISO calendar used ID `"iso"`, t
 | Impact on i18n correctness | ☹️ Programmer needs to know to "opt in" to use the user's calendar preference | 😃 All operations require an explicit choice | 😃 Calendar-sensitive operations require an explicit choice | 🙂 Correct on front end, but programmer needs to know to "opt in" on back end |
 | Impact on interoperability | 😃 ISO is the industry standard format | 😃 Explicit choice | 😃 I/O operations operate in the ISO calendar space | ☹️ Temporal objects may not interop with the ISO calendar |
 
-*\* See https://github.com/tc39/proposal-temporal/issues/240#issuecomment-557726669*
+\**See https://github.com/tc39/proposal-temporal/issues/240#issuecomment-557726669*
 
 ## Temporal.Date API changes
 
@@ -224,7 +227,7 @@ Temporal.Date.prototype.toString = function() {
 }
 ```
 
-For objects with time components (such as Temporal.DateTime), the calendar would be appended to the end of the string.  It would be distinguisable from the time zone because it does not contain a slash.  For example: `2019-12-06T16:23+00:50[America/NewYork][hebrew]`.  @gibson042 points out that this could be probematic: "There are many aliases without / ... [including] #156. And it gets worse with author-defined time zone and calendar names."
+For objects with time components (such as Temporal.DateTime), the calendar would be appended to the end of the string.  It would be distinguishable from the time zone because it does not contain a slash.  For example: `2019-12-06T16:23+00:50[America/NewYork][hebrew]`.  @gibson042 points out that this could be probematic: "There are many aliases without / ... [including] [#156](https://github.com/tc39/proposal-temporal/issues/156). And it gets worse with author-defined time zone and calendar names."
 
 Alternatively, we may consider changing the syntax to add `c=` for calendars and `z=` for zones.  `2019-12-06T16:23+00:50[z=America/NewYork][c=hebrew]`
 

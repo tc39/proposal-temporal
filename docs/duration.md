@@ -1,4 +1,4 @@
-# `Temporal.Duration`
+# Temporal.Duration
 
 A representations of a duration of time which can be used in date/time arithmetic.
 

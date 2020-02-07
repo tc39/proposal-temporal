@@ -1,4 +1,4 @@
-# `Temporal.MonthDay`
+# Temporal.MonthDay
 
 ## Constructor
 

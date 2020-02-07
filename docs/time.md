@@ -1,4 +1,4 @@
-# `Temporal.Time`
+# Temporal.Time
 
 A representation of wall-clock time.
 

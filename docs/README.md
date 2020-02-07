@@ -4,7 +4,7 @@
 
 <div class="mermaid">
 graph LR;
-  timezone(Time-Zone);
+  timezone(TimeZone);
   subgraph " ";
     absolute(Absolute);
   end;
@@ -27,7 +27,7 @@ graph LR;
 
 ### **Temporal.Absolute**
 
-An `Temporal.Absolute` represents a fixed point in time, without regard to calendar or location.
+A `Temporal.Absolute` represents a fixed point in time, without regard to calendar or location.
 
 See [Temporal.Absolute Documentation](./absolute.md) for more detailed documentation.
 
@@ -91,3 +91,7 @@ See [Temporal.Duration Documentation](./duration.md) for more detailed documenta
 
 See [Temporal Functions Documentation](./functions.md) for more detailed documentation.
 
+### **Temporal.Calendar**
+
+A Calendar API is under discussion.
+See [Calendar Draft](./calendar-draft.md) for more information.

@@ -43,75 +43,12 @@ For a detailed breakdown of motivations see:
 ## Polyfill
 
 A complete polyfill can be found [here](./polyfill). It is being developed as specification in code.
+When viewing the [reference documentation](https://tc39.es/proposal-temporal/docs/index.html), the polyfill is automatically loaded in your browser, so you can try it out by opening your browser's developer tools.
 
 ## Cookbook
 
 A cookbook to help you get started and learn the ins and outs of Temporal is available [here](./cookbook/README.md)
 
-## Overview of Classes in the `Temporal` global
+## API Documentation
 
-### `Temporal.Absolute`
-
-An `Temporal.Absolute` represents a fixed point in time, without regard to calendar or location.
-
-See [Temporal.Absolute Documentation](./docs/absolute.md) for more detailed documentation.
-
-### `Temporal.TimeZone`
-
-A `Temporal.TimeZone` represents an IANA Timezone, a specific UTC-Offset or UTC itself. Because of this `Temporal.TimeZone` can be used to convert between `Temporal.Absolute` and `Temporal.DateTime` as well as finding out the offset at a specific `Temporal.Absolute`.
-
-`Temporal.TimeZone` is also an iterable that give access to the IANA-Timezones supported by the system from the [IANA time zone database](https://www.iana.org/time-zones) (also listed [here](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)).
-
-See [Temporal.TimeZone Documentation](./docs/timezone.md) for more detailed documentation.
-
-### `Temporal.DateTime`
-
-A `Temporal.DateTime` represents a calendar date and wall-clock time. That means it does not carry timezone information. However it can be converted to a `Temporal.Absolute` using a `Temporal.TimeZone`.
-
-This can also be converted to object containing only partial information such as `Temporal.Date` and `Temporal.Time`.
-
-See [Temporal.DateTime Documentation](./docs/datetime.md) for more detailed documentation.
-
-### `Temporal.Time`
-
-A `Temporal.Time` object represents a wall-clock time. Since there is no date component this can not be directly translated to an absolute point in time. However it can be converted to a `Temporal.Absolute` by combining with a `Temporal.Date` using a `Temporal.TimeZone`.
-
-See [Temporal.Time Documentation](./docs/time.md) for more detailed documentation.
-
-### `Temporal.Date`
-
-A `Temporal.Date` object represents a calendar date. This means there is no way to convert this to an absolute point in time, however combining with a `Temporal.Time` a `Temporal.DateTime` can be obtained which in turn can be pinned to the absolute timeline.
-
-This can also be converted to partial dates such as `Temporal.YearMonth` and `Temporal.MonthDay`.
-
-See [Temporal.Date Documentation](./docs/date.md) for more detailed documentation.
-
-### `Temporal.YearMonth`
-
-A date without a day component. This is useful to express things like "the November 2010 meeting".
-
-See [Temporal.YearMonth Documentation](./docs/yearmonth.md) for more detailed documentation.
-
-### `Temporal.MonthDay`
-
-A date without a year component. This is useful to express things like "Bastille-Day is on the 14th of July".
-
-See [Temporal.MonthDay Documentation](./docs/monthday.md) for more detailed documentation.
-
-### `Temporal.Duration`
-
-A `Temporal.Duration` expresses a length of time. This is used for date/time maths.
-
-See [Temporal.Duration Documentation](./docs/duration.md) for more detailed documentation.
-
-### `Temporal` functions
-
--   `Temporal.getAbsolute()` - get the current system absolute time
--   `Temporal.getTimeZone()` - get the current system timezone
--   `Temporal.getDateTime()` - get the current system date/time
--   `Temporal.getTime()` - get the current system time
--   `Temporal.getDate()` - get the current system date
--   `Temporal.getYearMonth()` - get the current system year/month
--   `Temporal.getMonthDay()` - get the current system month/day
-
-See [Temporal Functions Documentation](./docs/functions.md) for more detailed documentation.
+Reference documentation and examples are in progress and can be found [here](https://tc39.es/proposal-temporal/docs/index.html).
