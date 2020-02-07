@@ -3,11 +3,27 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/kognise/water.css@latest/dist/light.min.css">
     <script type="application/javascript" src="./playground.js"></script>
     <script type="application/javascript" src="./mermaid.js"></script>
     <script type="application/javascript" src="./prism.js"></script>
     <link rel="stylesheet" type="text/css" href="./prism.css">
     <script>mermaid.initialize({startOnLoad:true,flowchart:{useMaxWidth:false}});</script>
-    <style>.mermaid svg { height: 13em; }</style>
+    <style>
+      /* https://github.com/kognise/water.css/blob/master/src/variables-light.css */
+      :root {
+        --text-muted: #999999;
+        --text-bright: #000000;
+        --variable: #39a33c;
+      }
+      .mermaid svg { height: 13em; }
+      body { font-size: 18px; max-width: 900px;}
+      pre { border-left: 4px solid var(--variable); }
+      pre code[class*="language-"] { font-size: 0.85em; }
+      pre[class*="language-"] { padding: 0.5em; }
+      h2 { border-bottom: 2px solid var(--text-muted); margin-top: 2em; }
+      h3 { border-bottom: 1px solid var(--text-muted); }
+      :not(h2) + h3 { margin-top: 2em; }
+    </style>
   </head>
   <body>
