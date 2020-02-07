@@ -254,7 +254,7 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
     }
     const isoString = ES.ToString(item);
     const match = PARSE.monthday.exec(isoString);
-    if (!match) throw new RangeError(`invalid yearmonth: ${isoString}`);
+    if (!match) throw new RangeError(`invalid MonthDay: ${isoString}`);
     const month = ES.ToInteger(match[1] || match[3]);
     const day = ES.ToInteger(match[2] || match[4]);
     return new TemporalMonthDay(month, day, 'reject');
