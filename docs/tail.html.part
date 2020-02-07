@@ -5,5 +5,15 @@
       </p>
       <p>View this or help contribute on <a href="https://github.com/tc39/proposal-temporal">GitHub</a>.</p>
     </footer>
+    <script>
+      // Add permalinks to all <h3> elements (function documentation headings)
+      const h3s = document.getElementsByTagName('h3');
+      for (let h3 of h3s) {
+        const anchor = document.createElement('a');
+        anchor.className = 'heading-link';
+        anchor.setAttribute('href', `#${h3.getAttribute('id')}`);
+        h3.prepend(anchor);
+      };
+    </script>
   </body>
 </html>
