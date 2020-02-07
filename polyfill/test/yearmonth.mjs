@@ -46,7 +46,11 @@ describe('YearMonth', () => {
         const actu = YearMonth.from(orig);
         equal(actu, orig);
       });
-      it('YearMonth.from({}) throws', () => throws(() => YearMonth.from({}), RangeError));
+      it('YearMonth.from({ year: 2019 }) throws', () => throws(() => YearMonth.from({ year: 2019 }), TypeError));
+      it('YearMonth.from({ month: 6 }) throws', () => throws(() => YearMonth.from({ month: 6 }), TypeError));
+      it('YearMonth.from({}) throws', () => throws(() => YearMonth.from({}), TypeError));
+      it('YearMonth.from(required prop undefined) throws', () =>
+        throws(() => YearMonth.from({ year: undefined, month: 6 }), TypeError));
     });
   });
   describe('YearMonth.compare() works', () => {

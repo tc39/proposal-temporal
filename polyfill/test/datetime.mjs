@@ -203,6 +203,14 @@ describe('DateTime', () => {
       it('datetime.weekOfYear is 47', () => equal(datetime.weekOfYear, 47));
       it('`${datetime}` is 1976-11-18T15:23', () => equal(`${datetime}`, '1976-11-18T15:23'));
     });
+    describe('new DateTime(1976, 11, 18, 15)', () => {
+      const datetime = new DateTime(1976, 11, 18, 15);
+      it('`${datetime}` is 1976-11-18T15:00', () => equal(`${datetime}`, '1976-11-18T15:00'));
+    });
+    describe('new DateTime(1976, 11, 18)', () => {
+      const datetime = new DateTime(1976, 11, 18);
+      it('`${datetime}` is 1976-11-18T00:00', () => equal(`${datetime}`, '1976-11-18T00:00'));
+    });
     describe('Disambiguation', () => {
       it('reject', () => throws(() => new DateTime(2019, 1, 32, 0, 0, 0, 0, 0, 0, 'reject'), RangeError));
       it('constrain', () => equal(`${new DateTime(2019, 1, 32, 0, 0, 0, 0, 0, 0, 'constrain')}`, '2019-01-31T00:00'));
@@ -290,7 +298,11 @@ describe('DateTime', () => {
     });
     it('DateTime.from({ year: 1976, month: 11, day: 18 }) == 1976-11-18T00:00', () => equal(`${DateTime.from({ year: 1976, month: 11, day: 18 })}`, '1976-11-18T00:00'));
     it('DateTime.from({ year: 1976, month: 11, day: 18, millisecond: 123 }) == 1976-11-18T00:00:00.123', () => equal(`${DateTime.from({ year: 1976, month: 11, day: 18, millisecond: 123 })}`, '1976-11-18T00:00:00.123'));
-    it('DateTime.from({}) throws', () => throws(() => DateTime.from({}), RangeError));
+    it('DateTime.from({ month: 11, day: 18, hour: 15, minute: 23, second: 30, millisecond: 123 }) throws', () =>
+      throws(() => DateTime.from({ month: 11, day: 18, hour: 15, minute: 23, second: 30, millisecond: 123 }), TypeError));
+    it('DateTime.from({}) throws', () => throws(() => DateTime.from({}), TypeError));
+    it('DateTime.from(required prop undefined) throws', () =>
+      throws(() => DateTime.from({ year: undefined, month: 11, day: 18 }), TypeError));
     it('DateTime.from(ISO string leap second) is constrained', () => {
       equal(`${DateTime.from('2016-12-31T23:59:60')}`, '2016-12-31T23:59:59');
     });

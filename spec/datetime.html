@@ -18,7 +18,7 @@
     </p>
 
     <emu-clause id="sec-temporal.datetime">
-      <h1>Temporal.DateTime ( _year_, _month_, _day_, _hour_, _minute_ [ , _second_ [ , _millisecond_ [ , _microsecond_ [ , _nanosecond_ [ , _disambiguation_ ] ] ] ] ] )</h1>
+      <h1>Temporal.DateTime ( _year_, _month_, _day_ [ , _hour_ [ , _minute_ [ , _second_ [ , _millisecond_ [ , _microsecond_ [ , _nanosecond_ [ , _disambiguation_ ] ] ] ] ] ] ] )</h1>
       <p>
         When the `Temporal.DateTime` function is called, the following steps are taken:
       </p>
@@ -566,52 +566,62 @@
             <tr>
               <th>Internal Slot</th>
               <th>Property</th>
+              <th>Optional</th>
             </tr>
           </thead>
           <tbody>
             <tr>
               <td>[[Day]]</td>
               <td>`"day"`</td>
+              <td>*false*</td>
             </tr>
 
             <tr>
               <td>[[Hour]]</td>
               <td>`"hour"`</td>
+              <td>*true*</td>
             </tr>
 
             <tr>
               <td>[[Microsecond]]</td>
               <td>`"microsecond"`</td>
+              <td>*true*</td>
             </tr>
 
             <tr>
               <td>[[Millisecond]]</td>
               <td>`"millisecond"`</td>
+              <td>*true*</td>
             </tr>
 
             <tr>
               <td>[[Minute]]</td>
               <td>`"minute"`</td>
+              <td>*true*</td>
             </tr>
 
             <tr>
               <td>[[Month]]</td>
               <td>`"month"`</td>
+              <td>*false*</td>
             </tr>
 
             <tr>
               <td>[[Nanosecond]]</td>
               <td>`"nanosecond"`</td>
+              <td>*true*</td>
             </tr>
 
             <tr>
               <td>[[Second]]</td>
               <td>`"second"`</td>
+              <td>*true*</td>
             </tr>
 
             <tr>
               <td>[[Year]]</td>
               <td>`"year"`</td>
+              <td>*false*</td>
             </tr>
           </tbody>
         </table>
@@ -718,7 +728,7 @@
           1. For each row of <emu-xref href="#table-temporal-datetimelike-properties"></emu-xref>, except the header row, in table order, do
             1. Let _property_ be the Property value of the current row.
             1. Let _value_ be ? Get(_dateTime_, _property_).
-            1. If _value_ is *undefined*, then
+            1. If _value_ is *undefined* and the Optional value of the current row is *false*, then
               1. Throw a *TypeError* exception.
             1. Let _value_ be ? ToInteger(_value_).
             1. Set _result_'s internal slot whose name is the Internal Slot value of the current row to _value_.

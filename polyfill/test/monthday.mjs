@@ -51,7 +51,11 @@ describe('MonthDay', () => {
         const actu = MonthDay.from(orig);
         equal(actu, orig);
       });
-      it('MonthDay.from({}) throws', () => throws(() => MonthDay.from({}), RangeError));
+      it('MonthDay.from({ day: 15 }) throws', () => throws(() => MonthDay.from({ day: 15 }), TypeError));
+      it('MonthDay.from({ month: 12 }) throws', () => throws(() => MonthDay.from({ month: 12 }), TypeError));
+      it('MonthDay.from({}) throws', () => throws(() => MonthDay.from({}), TypeError));
+      it('MonthDay.from(required prop undefined) throws', () =>
+        throws(() => MonthDay.from({ month: undefined, day: 15 }), TypeError));
     });
     describe('getters', () => {
       let md = new MonthDay(1, 15);
