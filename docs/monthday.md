@@ -33,6 +33,3 @@
 ### monthDay.toLocaleString(locale?: string, options?: object) : string
 
 ### monthDay.withYear(year: number, disambiguation: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.Date
-
-<script type="application/javascript" src="./prism.js"></script>
-<link rel="stylesheet" type="text/css" href="./prism.css">

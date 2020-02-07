@@ -327,6 +327,3 @@ abs.toLocaleString('de-DE');  // => example output: 18.11.2019, 03:00:00
 abs.toLocaleString('de-DE', { timeZone: 'Europe/Berlin', weekday: 'long' });  // => Montag, 18.11.2019, 12:00:00
 abs.toLocaleString('en-US-u-nu-fullwide-hc-h12', { timeZone: 'Asia/Kolkata' });  // => １１/１８/２０１９, ４:３０:００ PM
 ```
-
-<script type="application/javascript" src="./prism.js"></script>
-<link rel="stylesheet" type="text/css" href="./prism.css">

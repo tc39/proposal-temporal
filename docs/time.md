@@ -41,6 +41,3 @@ A representation of wall-clock time.
 ### time.toLocaleString(locale?:string, options?: object) : string
 
 ### time.withDate(date: Temporal.Date) : Temporal.DateTime
-
-<script type="application/javascript" src="./prism.js"></script>
-<link rel="stylesheet" type="text/css" href="./prism.css">
