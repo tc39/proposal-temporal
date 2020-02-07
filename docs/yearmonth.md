@@ -39,6 +39,3 @@ A representation of a calendar date.
 ### yearMonth.toLocaleString(locale?: string, options?: object) : string
 
 ### yearMonth.withDay(day: number) : Temporal.Date
-
-<script type="application/javascript" src="./prism.js"></script>
-<link rel="stylesheet" type="text/css" href="./prism.css">

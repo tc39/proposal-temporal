@@ -336,6 +336,3 @@ All of the following APIs would gain an internal slot for the calendar.
 - Temporal.MonthDay
 
 In addition, Temporal.DateTime would gain the two other slots from Temporal.Date (*era* and *isLeapMonth*).
-
-<script type="application/javascript" src="./prism.js"></script>
-<link rel="stylesheet" type="text/css" href="./prism.css">

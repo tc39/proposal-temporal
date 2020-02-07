@@ -219,6 +219,3 @@ duration.toLocaleString();  // output will vary
 **Returns:** The string given by `timeZone.name`.
 
 This method overrides `Object.prototype.toString()` and provides the time zone's `name` property as a human-readable description.
-
-<script type="application/javascript" src="./prism.js"></script>
-<link rel="stylesheet" type="text/css" href="./prism.css">

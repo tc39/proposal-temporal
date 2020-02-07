@@ -6,7 +6,7 @@
   "private": true,
   "scripts": {
     "build:javascript": "rollup -c rollup.config.ejs",
-    "build:html": "for FILE in `ls *.md`; do cat $FILE | sed 's/.md)/.html)/' | marked -o `echo $FILE | sed -e 's/.md/.html/'`; done && cp README.html index.html"
+    "build:html": "for FILE in *.md; do cat $FILE | sed 's/.md\\([)#]\\)/.html\\1/' | marked -o ${FILE%.md}.html.part; cat head.html.part ${FILE%.md}.html.part tail.html.part > ${FILE%.md}.html; rm -f ${FILE%.md}.html.part; done && cp README.html index.html"
   },
   "repository": {
     "type": "git",

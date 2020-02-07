@@ -94,6 +94,3 @@ Returns a new [`YearMonth`](./YearMonth) object.
 ### date.getMonthDay() : Temporal.MonthDay
 
 Returns a new [`YearMonth`](./MonthDay) object.
-
-<script type="application/javascript" src="./prism.js"></script>
-<link rel="stylesheet" type="text/css" href="./prism.css">
