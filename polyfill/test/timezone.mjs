@@ -119,6 +119,19 @@ describe('TimeZone', ()=>{
             throws(() => zone.getDateTimeFor({}), TypeError);
         });
     });
+    describe('getAbsoluteFor disambiguation', () => {
+        const zone = Temporal.TimeZone.from('+03:30');
+        const dtm = new Temporal.DateTime(2019, 2, 16, 23, 45);
+        it("getAbsoluteFor() disambiguation", () => {
+            for (const disambiguation of [undefined, 'earlier', 'later', 'reject']) {
+                assert(zone.getAbsoluteFor(dtm, disambiguation) instanceof Temporal.Absolute);
+            }
+            throws(() => zone.getAbsoluteFor(dtm, null), RangeError);
+            throws(() => zone.getAbsoluteFor(dtm, ''), RangeError);
+            throws(() => zone.getAbsoluteFor(dtm, 'EARLIER'), RangeError);
+            throws(() => zone.getAbsoluteFor(dtm, 'test'), RangeError);
+        });
+    });
 });
 
 function ArrayFrom(iter, limit = Number.POSITIVE_INFINITY) {

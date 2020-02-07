@@ -41,6 +41,11 @@ export class TimeZone {
   getAbsoluteFor(dateTime, disambiguation = 'earlier') {
     if (!ES.IsTimeZone(this)) throw new TypeError('invalid receiver');
     dateTime = ES.ToDateTime(dateTime);
+    disambiguation = ES.ToString(disambiguation);
+    if (!~['earlier', 'later', 'reject'].indexOf(disambiguation)) {
+      throw new RangeError(`"${disambiguation}" is not a valid value for the disambiguation argument`);
+    }
+
     const Absolute = ES.GetIntrinsic('%Temporal.Absolute%');
     const { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = dateTime;
     const options = ES.GetTimeZoneEpochValue(
@@ -75,12 +80,12 @@ export class TimeZone {
           SetSlot(result, EPOCHNANOSECONDS, options[1]);
           return result;
         }
-        default:
+        case 'reject': {
           throw new RangeError(`multiple absolute found`);
+        }
       }
     }
 
-    if (!~['earlier', 'later'].indexOf(disambiguation)) throw new RangeError(`no such absolute found`);
 
     const utcns = ES.GetEpochFromParts(
       year,
@@ -99,14 +104,17 @@ export class TimeZone {
       nanoseconds: after.minus(before)
     });
     switch (disambiguation) {
-      case 'earlier':
+      case 'earlier': {
         const earlier = dateTime.minus(diff);
         return this.getAbsoluteFor(earlier, disambiguation);
-      case 'later':
+      }
+      case 'later': {
         const later = dateTime.plus(diff);
         return this.getAbsoluteFor(later, disambiguation);
-      default:
+      }
+      case 'reject': {
         throw new RangeError(`no such absolute found`);
+      }
     }
   }
   getTransitions(startingPoint) {
