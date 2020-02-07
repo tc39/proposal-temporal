@@ -150,6 +150,14 @@ describe('Time', () => {
       it('time.nanosecond is 0', () => equal(time.nanosecond, 0));
       it('`${time}` is 15:23', () => equal(`${time}`, '15:23'));
     });
+    describe('missing minute', () => {
+      const time = new Time(15);
+      it('`${time}` is 15:00', () => equal(`${time}`, '15:00'));
+    });
+    describe('missing all parameters', () => {
+      const time = new Time();
+      it('`${time}` is 00:00', () => equal(`${time}`, '00:00'));
+    });
     describe('balance tests', () => {
       let balanceTests = [
         [[15, 23, 30, 123, 456, -1000], [15, 23, 30, 123, 455, 0], 'nanosecond = -1000'],
@@ -295,7 +303,9 @@ describe('Time', () => {
       it('Time.from("15:23:30.123456789")', () => {
         equal(`${Time.from('15:23:30.123456789')}`, '15:23:30.123456789');
       });
-      it('Time.from({}) throws', () => throws(() => Time.from({}), RangeError));
+      it('Time.from({ hour: 15, minute: 23 })', () => equal(`${Time.from({ hour: 15, minute: 23 })}`, '15:23'));
+      it('Time.from({ minute: 30, microsecond: 555 })', () => equal(`${Time.from({ minute: 30, microsecond: 555 })}`, '00:30:00.000555'));
+      it('Time.from({})', () => equal(`${Time.from({})}`, `${new Time()}`));
       it('Time.from(ISO string leap second) is constrained', () => {
         equal(`${Time.from('23:59:60')}`, '23:59:59');
       });

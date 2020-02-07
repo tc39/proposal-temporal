@@ -236,7 +236,11 @@ describe('Date', () => {
       equal(actual, orig);
     });
     it('Date.from({ year: 1976, month: 11, day: 18 }) == 1976-11-18', () => equal(`${Date.from({ year: 1976, month: 11, day: 18 })}`, '1976-11-18'));
-    it('DateTime.from({}) throws', () => throws(() => Date.from({}), RangeError));
+    it('Date.from({ year: 2019, day: 15 }) throws', () => throws(() => Date.from({ year: 2019, day: 15 }), TypeError));
+    it('Date.from({ month: 12 }) throws', () => throws(() => Date.from({ month: 12 }), TypeError));
+    it('Date.from({}) throws', () => throws(() => Date.from({}), TypeError));
+    it('Date.from(required prop undefined) throws', () =>
+      throws(() => Date.from({ year: undefined, month: 11, day: 18 }), TypeError));
   });
   describe('Date.compare works', () => {
     const d1 = Date.from('1976-11-18');

@@ -5,8 +5,8 @@ import { HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND, CreateSlots
 
 export class Time {
   constructor(
-    hour,
-    minute,
+    hour = 0,
+    minute = 0,
     second = 0,
     millisecond = 0,
     microsecond = 0,

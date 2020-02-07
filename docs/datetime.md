@@ -2,7 +2,7 @@
 
 ## Constructor
 
-### **new Temporal.DateTime**(_year_: number, _month_: number, _day_: number, _hour_: number, _minute_: number, _second_: number = 0, _millisecond_: number = 0, _microsecond_: number = 0, _nanosecond_: number = 0, _disambiguation_: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.Time
+### **new Temporal.DateTime**(_year_: number, _month_: number, _day_: number, _hour_: number = 0, _minute_: number = 0, _second_: number = 0, _millisecond_: number = 0, _microsecond_: number = 0, _nanosecond_: number = 0, _disambiguation_: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.DateTime
 
 ## Static methods
 

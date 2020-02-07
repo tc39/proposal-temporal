@@ -123,10 +123,11 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
   },
   ToDateTime: (item) => {
     if (ES.IsDateTime(item)) return item;
-    const props = ES.ValidPropertyBag(item, [
+    const props = ES.ValidDateTimeFrom(item, [
       'year',
       'month',
       'day',
+    ], [
       'hour',
       'minute',
       'second',
@@ -137,14 +138,14 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
     if (props) {
       const {
         hour = 0,
-        day = 1,
+        day,
         microsecond = 0,
         millisecond = 0,
         minute = 0,
-        month = 1,
+        month,
         nanosecond = 0,
         second = 0,
-        year = 0,
+        year,
       } = props;
       return new TemporalDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, 'reject');
     }
@@ -165,16 +166,16 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
   },
   ToDate: (item) => {
     if (ES.IsDate(item)) return item;
-    const props = ES.ValidPropertyBag(item, [
+    const props = ES.ValidDateTimeFrom(item, [
       'year',
       'month',
       'day'
     ]);
     if (props) {
       const {
-        day = 1,
-        month = 1,
-        year = 0,
+        day,
+        month,
+        year,
       } = props;
       return new TemporalDate(year, month, day, 'reject');
     }
@@ -188,7 +189,7 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
   },
   ToTime: (item) => {
     if (ES.IsTime(item)) return item;
-    const props = ES.ValidPropertyBag(item, [
+    const props = ES.ValidDateTimeFrom(item, [], [
       'hour',
       'minute',
       'second',
@@ -221,14 +222,14 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
   },
   ToYearMonth: (item) => {
     if (ES.IsYearMonth(item)) return item;
-    const props = ES.ValidPropertyBag(item, [
+    const props = ES.ValidDateTimeFrom(item, [
       'year',
       'month'
     ]);
     if (props) {
       const {
-        month = 1,
-        year = 0,
+        month,
+        year,
       } = props;
       return new TemporalYearMonth(year, month, 'reject');
     }
@@ -241,14 +242,14 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
   },
   ToMonthDay: (item) => {
     if (ES.IsMonthDay(item)) return item;
-    const props = ES.ValidPropertyBag(item, [
+    const props = ES.ValidDateTimeFrom(item, [
       'month',
       'day'
     ]);
     if (props) {
       const {
-        day = 1,
-        month = 1,
+        day,
+        month,
       } = props;
       return new TemporalMonthDay(month, day, 'reject');
     }
@@ -327,6 +328,22 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
       }
     }
     return any ? any : false;
+  },
+  ValidDateTimeFrom: (bag, required, optional = []) => {
+    if (!bag || 'object' !== typeof bag) return false;
+    let result = {};
+    for (let prop of required) {
+      if (!(prop in bag) || typeof bag[prop] === 'undefined')
+        throw new TypeError(`required property '${prop}' missing or undefined`);
+      result[prop] = ES.ToNumber(bag[prop]);
+    }
+    for (let prop of optional) {
+      if (prop in bag) {
+        const value = ES.ToNumber(bag[prop]);
+        if (Number.isFinite(value)) result[prop] = value;
+      }
+    }
+    return result;
   },
   ValidDuration: (durationbag, invalid = []) => {
     for (let prop of invalid) {
