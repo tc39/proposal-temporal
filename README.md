@@ -47,7 +47,7 @@ When viewing the [reference documentation](https://tc39.es/proposal-temporal/doc
 
 ## Cookbook
 
-A cookbook to help you get started and learn the ins and outs of Temporal is available [here](./cookbook/README.md)
+A cookbook to help you get started and learn the ins and outs of Temporal is available [here](./docs/cookbook.md)
 
 ## API Documentation
 
