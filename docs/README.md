@@ -95,3 +95,7 @@ See [Temporal Functions Documentation](./functions.md) for more detailed documen
 
 A Calendar API is under discussion.
 See [Calendar Draft](./calendar-draft.md) for more information.
+
+## Cookbook
+
+A cookbook to help you get started and learn the ins and outs of Temporal is available [here](./cookbook.md).
