@@ -12,6 +12,7 @@
     <style>
       /* https://github.com/kognise/water.css/blob/master/src/variables-light.css */
       :root {
+        --background: #efefef;
         --text-muted: #999999;
         --text-bright: #000000;
         --variable: #39a33c;
@@ -24,6 +25,13 @@
       h2 { border-bottom: 2px solid var(--text-muted); margin-top: 2em; }
       h3 { border-bottom: 1px solid var(--text-muted); }
       :not(h2) + h3 { margin-top: 2em; }
+      footer {
+        border-top: 1px solid var(--background);
+        color: var(--text-muted);
+        font-size: 0.8em;
+        margin-top: 2em;
+        padding-top: 10px;
+      }
     </style>
   </head>
   <body>

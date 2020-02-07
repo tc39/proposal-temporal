@@ -91,6 +91,3 @@ See [Temporal.Duration Documentation](./duration.md) for more detailed documenta
 
 See [Temporal Functions Documentation](./functions.md) for more detailed documentation.
 
-## Examples
-
-**Now open your developer tools, and try it out!**
