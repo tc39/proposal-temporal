@@ -241,6 +241,8 @@ describe('Date', () => {
     it('Date.from({}) throws', () => throws(() => Date.from({}), TypeError));
     it('Date.from(required prop undefined) throws', () =>
       throws(() => Date.from({ year: undefined, month: 11, day: 18 }), TypeError));
+    it.skip('Date.from(number) is converted to string', () =>
+      equal(`${Date.from(19761118)}`, `${Date.from('19761118')}`))
   });
   describe('Date.compare works', () => {
     const d1 = Date.from('1976-11-18');

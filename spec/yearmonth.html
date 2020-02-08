@@ -54,9 +54,8 @@
       <emu-alg>
         1. If Type(_arg_) is Object, then
           1. Return ? ToYearMonth(_arg_).
-        1. If Type(_arg_) is String, then
-          1. Return ? YearMonthFromString(_arg_).
-        1. Throw new *TypeError* exception.
+        1. Let _string_ be ? ToString(_arg_).
+        1. Return ? YearMonthFromString(_string_).
       </emu-alg>
     </emu-clause>
 
@@ -428,8 +427,6 @@
     <emu-clause id="sec-temporal-toyearmonth" aoid="ToYearMonth">
       <h1>ToYearMonth ( _yearMonth_ )</h1>
       <emu-alg>
-        1. If Type(_yearMonth_) is String, then
-          1. Return ? YearMonthFromString(_yearMonth_).
         1. If Type(_yearMonth_) is Object, then
           1. If _yearMonth_ has an [[InitializedTemporalYearMonth]] internal slot, then
             1. Return _yearMonth_.

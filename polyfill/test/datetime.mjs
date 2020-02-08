@@ -309,6 +309,8 @@ describe('DateTime', () => {
     it('DateTime.from(property bag leap second) throws', () => {
       throws(() => DateTime.from({ year: 2016, month: 12, day: 31, hour: 23, minute: 59, second: 60 }), RangeError);
     });
+    it.skip('DateTime.from(number) is converted to string', () =>
+      equal(`${DateTime.from(19761118)}`, `${DateTime.from('19761118')}`));
   });
 });
 

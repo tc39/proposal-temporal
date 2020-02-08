@@ -312,6 +312,8 @@ describe('Time', () => {
       it('Time.from(property bag leap second) throws', () => {
         throws(() => Time.from({ hour: 23, minute: 59, second: 60 }), RangeError);
       });
+      it.skip('Time.from(number) is converted to string', () =>
+        equal(`${Time.from(1523)}`, `${Time.from('1523')}`));
     });
     describe('Disambiguation', () => {
       it('reject', () => throws(() => new Time(0, 0, 0, 0, 0, 1000, 'reject'), RangeError));

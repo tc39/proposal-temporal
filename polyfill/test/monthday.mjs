@@ -56,6 +56,8 @@ describe('MonthDay', () => {
       it('MonthDay.from({}) throws', () => throws(() => MonthDay.from({}), TypeError));
       it('MonthDay.from(required prop undefined) throws', () =>
         throws(() => MonthDay.from({ month: undefined, day: 15 }), TypeError));
+      it.skip('MonthDay.from(number) is converted to string', () =>
+        equal(`${MonthDay.from(1201)}`, `${MonthDay.from('12-01')}`));
     });
     describe('getters', () => {
       let md = new MonthDay(1, 15);

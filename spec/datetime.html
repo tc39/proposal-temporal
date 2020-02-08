@@ -62,9 +62,8 @@
       <emu-alg>
         1. If Type(_arg_) is Object, then
           1. Return ? ToDateTime(_arg_).
-        1. If Type(_arg_) is String, then
-          1. Return ? DateTimeFromString(_arg_).
-        1. Throw a new *TypeError* exception.
+        1. Let _string_ be ? ToString(_arg_).
+        1. Return ? DateTimeFromString(_string_).
       </emu-alg>
     </emu-clause>
 
@@ -699,8 +698,6 @@
       <h1>ToDateTime ( _dateTime_ )</h1>
       <emu-note>The value of ? ToInteger(*undefined*) is 0.</emu-note>
       <emu-alg>
-        1. If Type(_dateTime_) is String, then
-          1. Return ? DateTimeFromString(_dateTime_).
         1. If Type(_dateTime_) is Object, then
           1. If _dateTime_ has an [[InitializedTemporalDateTime]] internal slot, then
             1. Return _dateTime_.

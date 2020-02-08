@@ -54,9 +54,8 @@
       <emu-alg>
         1. If Type(_arg_) is Object, then
           1. Return ? ToMonthDay(_arg_).
-        1. If Type(_arg_) is String, then
-          1. Return ? MonthDayFromString(_arg_).
-        1. Throw a *TypeError* exception.
+        1. Let _string_ be ? ToString(_arg_).
+        1. Return ? MonthDayFromString(_string_).
       </emu-alg>
     </emu-clause>
 
@@ -404,8 +403,6 @@
     <emu-clause id="sec-temporal-tomonthday" aoid="ToMonthDay">
       <h1>ToMonthDay ( _monthDay_ )</h1>
       <emu-alg>
-        1. If Type(_monthDay_) is String, then
-          1. Return ? MonthDayFromString(_monthDay_).
         1. If Type(_monthDay_) is Object, then
           1. If _monthDay_ has an [[InitializedTemporalMonthDay]] internal slot, then
             1. Return _monthDay_.
