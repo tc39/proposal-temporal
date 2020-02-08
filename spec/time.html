@@ -61,9 +61,8 @@
       <emu-alg>
         1. If Type(_arg_) is Object, then
           1. Return ? ToTime(_arg_).
-        1. If Type(_arg_) is String, then
-          1. Return ? TimeFromString(_arg_).
-        1. Throw a *TypeError* exception.
+        1. Let _string_ be ? ToString(_arg_).
+        1. Return ? TimeFromString(_string_).
       </emu-alg>
     </emu-clause>
 
@@ -545,8 +544,6 @@
       <h1>ToTime ( _time_ )</h1>
       <emu-note>The value of ? ToInteger(*undefined*) is 0.</emu-note>
       <emu-alg>
-        1. If Type(_time_) is String, then
-          1. Return ? TimeFromString(_time_).
         1. If Type(_time_) is Object, then
           1. If _time_ has an [[InitializedTemporalTime]] internal slot, then
             1. Return _time_.

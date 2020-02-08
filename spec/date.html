@@ -54,9 +54,8 @@
       <emu-alg>
         1. If Type(_arg_) is Object, then
           1. Return ? ToDate(_arg_).
-        1. If Type(_arg_) is String, then
-          1. Return ? DateFromString(_arg_).
-        1. Throw a *TypeError* exception.
+        1. Let _string_ be ? ToString(_arg_).
+        1. Return ? DateFromString(_string_).
       </emu-alg>
     </emu-clause>
 
@@ -440,8 +439,6 @@
     <emu-clause id="sec-temporal-todate" aoid="ToDate">
       <h1>ToDate ( _date_ )</h1>
       <emu-alg>
-        1. If Type(_date_) is String, then
-          1. Return ? DateFromString(_date_).
         1. If Type(_date_) is Object, then
           1. If _date_ has an [[InitializedTemporalDate]] internal slot, then
             1. Return _date_.

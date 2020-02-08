@@ -51,6 +51,8 @@ describe('YearMonth', () => {
       it('YearMonth.from({}) throws', () => throws(() => YearMonth.from({}), TypeError));
       it('YearMonth.from(required prop undefined) throws', () =>
         throws(() => YearMonth.from({ year: undefined, month: 6 }), TypeError));
+      it.skip('YearMonth.from(number) is converted to string', () =>
+        equal(`${YearMonth.from(201906)}`, `${YearMonth.from('201906')}`))
     });
   });
   describe('YearMonth.compare() works', () => {
