@@ -1,8 +1,11 @@
 import commonjs from "rollup-plugin-commonjs";
+import babel from "rollup-plugin-babel";
+import builtins from "rollup-plugin-node-builtins";
 import resolve from "rollup-plugin-node-resolve";
+import {uglify} from 'rollup-plugin-uglify';
 
 export default {
-  input: "setup.ejs",
+  input: "../polyfill/lib/index.mjs",
   output: {
     name: "temporal",
     file: "playground.js",
@@ -11,6 +14,21 @@ export default {
   },
   plugins: [
     commonjs(),
-    resolve({ preferBuiltins: false })
+    builtins(),
+    resolve({ preferBuiltins: false }),
+    babel({
+      exclude: '../polyfill/lib/node_modules/**',
+      presets: [
+        [
+          "@babel/preset-env",
+          {
+            corejs: 3,
+            useBuiltIns: "entry",
+            targets: "> 0.25%, not dead"
+          }
+        ]
+      ]
+    }),
+    uglify()
   ]
 };

@@ -5,7 +5,7 @@
   "main": "index.js",
   "private": true,
   "scripts": {
-    "build:javascript": "rollup -c rollup.config.ejs",
+    "build:javascript": "rollup -m -c rollup.config.ejs",
     "build:html": "for FILE in *.md; do cat $FILE | sed 's/.md\\([)#]\\)/.html\\1/' | marked -o ${FILE%.md}.html.part; cat head.html.part ${FILE%.md}.html.part tail.html.part > ${FILE%.md}.html; rm -f ${FILE%.md}.html.part; done && cp README.html index.html"
   },
   "repository": {
@@ -24,9 +24,14 @@
   },
   "homepage": "https://github.com/tc39/proposal-temporal#readme",
   "devDependencies": {
+    "@babel/core": "^7.8.4",
+    "@babel/preset-env": "^7.8.4",
     "marked": "^0.7.0",
     "rollup": "^1.23.1",
+    "rollup-plugin-babel": "^4.3.3",
     "rollup-plugin-commonjs": "^10.1.0",
-    "rollup-plugin-node-resolve": "^5.2.0"
+    "rollup-plugin-node-builtins": "^2.1.2",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-uglify": "^6.0.4"
   }
 }

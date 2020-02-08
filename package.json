@@ -12,7 +12,7 @@
     "codecov": "cd polyfill && npm install && npm run codecov && cd ..",
     "build:prepare": "mkdirp out && mkdirp out/docs",
     "build:polyfill": "cd polyfill && npm install && npm run build && cd ..",
-    "build:javascript": "npm run build:polyfill && cd docs && npm install && npm run build:javascript && cd .. && cp docs/*.js out/docs/",
+    "build:javascript": "npm run build:polyfill && cd docs && npm install && npm run build:javascript && cd .. && cp docs/*.js docs/*.js.map out/docs/",
     "build:docs": "cd docs && npm install && npm run build:html && cd .. && cp docs/*.html docs/*.css out/docs/",
     "build:spec": "ecmarkup spec.html out/index.html",
     "prebuild": "mkdirp out && mkdirp out/docs",
