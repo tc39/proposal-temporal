@@ -33,7 +33,7 @@ describe('fromString regex', () => {
       test(`${dateTimeString}:30.123456789${zoneString}`, components);
     }
     // Time separators
-    ['T', ' '].forEach((timeSep) =>
+    ['T', 't', ' '].forEach((timeSep) =>
       generateTest(`1976-11-18${timeSep}15:23`, 'Z', [1976, 11, 18, 15, 23, 30, 123, 456, 789])
     );
     // Time zone with bracketed name
@@ -47,6 +47,8 @@ describe('fromString regex', () => {
     // Various numbers of decimal places
     test('1976-11-18T15:23:30.123Z', [1976, 11, 18, 15, 23, 30, 123]);
     test('1976-11-18T15:23:30.123456Z', [1976, 11, 18, 15, 23, 30, 123, 456]);
+    // Lowercase UTC designator
+    generateTest('1976-11-18T15:23', 'z', [1976, 11, 18, 15, 23, 30, 123, 456, 789]);
   });
 
   describe('datetime', () => {
@@ -72,7 +74,7 @@ describe('fromString regex', () => {
       test(`${dateTimeString}:30.123456789${zoneString}`, components);
     }
     // Time separators
-    ['T', ' '].forEach((timeSep) => generateTest(`1976-11-18${timeSep}15:23`, ''));
+    ['T', 't', ' '].forEach((timeSep) => generateTest(`1976-11-18${timeSep}15:23`, ''));
     // Various forms of time zone
     ['+0100[Europe/Vienna]', '-0400', ''].forEach((zoneString) => generateTest('1976-11-18T15:23', zoneString));
     // Various numbers of decimal places
@@ -97,7 +99,7 @@ describe('fromString regex', () => {
       test(`${dateTimeString}:30.123456789${zoneString}`, components);
     }
     // Time separators
-    ['T', ' '].forEach((timeSep) => generateTest(`1976-11-18${timeSep}15:23`, ''));
+    ['T', 't', ' '].forEach((timeSep) => generateTest(`1976-11-18${timeSep}15:23`, ''));
     // Various forms of time zone
     ['+0100[Europe/Vienna]', '-0400', ''].forEach((zoneString) => generateTest('1976-11-18T15:23', zoneString));
     // Various numbers of decimal places
@@ -129,7 +131,7 @@ describe('fromString regex', () => {
       test(`${dateTimeString}:30.123456789${zoneString}`, components);
     }
     // Time separators
-    ['T', ' '].forEach((timeSep) => generateTest(`1976-11-18${timeSep}15:23`, ''));
+    ['T', 't', ' '].forEach((timeSep) => generateTest(`1976-11-18${timeSep}15:23`, ''));
     // Various forms of time zone
     ['+0100[Europe/Vienna]', '-0400', ''].forEach((zoneString) => generateTest('1976-11-18T15:23', zoneString));
     // Various numbers of decimal places
@@ -155,7 +157,7 @@ describe('fromString regex', () => {
       test(`${dateTimeString}:30.123456789${zoneString}`, components);
     }
     // Time separators
-    ['T', ' '].forEach((timeSep) => generateTest(`1976-11-18${timeSep}15:23`, ''));
+    ['T', 't', ' '].forEach((timeSep) => generateTest(`1976-11-18${timeSep}15:23`, ''));
     // Various forms of time zone
     ['+0100[Europe/Vienna]', '-0400', ''].forEach((zoneString) => generateTest('1976-11-18T15:23', zoneString));
     // Various numbers of decimal places
@@ -188,7 +190,7 @@ describe('fromString regex', () => {
       test(`${dateTimeString}:30.123456789${zoneString}`, components);
     }
     // Time separators
-    ['T', ' '].forEach((timeSep) => generateTest(`1976-11-18${timeSep}15:23`, ''));
+    ['T', 't', ' '].forEach((timeSep) => generateTest(`1976-11-18${timeSep}15:23`, ''));
     // Various forms of time zone
     ['+0100[Europe/Vienna]', '-0400', ''].forEach((zoneString) => generateTest('1976-11-18T15:23', zoneString));
     // Various numbers of decimal places
@@ -218,7 +220,7 @@ describe('fromString regex', () => {
       test(`${dateTimeString}:30.123456789${zoneString}`, expectedName);
     }
     // Time separators
-    ['T', ' '].forEach((timeSep) => generateTest(`1976-11-18${timeSep}15:23`, 'Z', 'UTC'));
+    ['T', 't', ' '].forEach((timeSep) => generateTest(`1976-11-18${timeSep}15:23`, 'Z', 'UTC'));
     // Time zone with bracketed name
     ['+01:00', '+01', '+0100'].forEach((zoneString) =>
       generateTest('1976-11-18T15:23', `${zoneString}[Europe/Vienna]`, 'Europe/Vienna')
@@ -227,6 +229,8 @@ describe('fromString regex', () => {
     ['-04:00', '-04', '-0400'].forEach((zoneString) => generateTest('1976-11-18T15:23', zoneString, '-04:00'));
     // Various numbers of decimal places
     ['123', '123456'].forEach((decimals) => test(`1976-11-18T15:23:30.${decimals}Z`, 'UTC'));
+    // Lowercase UTC designator
+    generateTest('1976-11-18T15:23', 'z', 'UTC');
     // Offset-only forms
     test('+0000', '+00:00');
     test('-0000', '+00:00');
@@ -290,11 +294,22 @@ describe('fromString regex', () => {
       []
     );
 
-    day.forEach(([p, expect]) => test(`P${p}`, expect));
-    tim.forEach(([p, expect]) => test(`PT${p}`, expect));
+    day.forEach(([p, expect]) => {
+      test(`P${p}`, expect);
+      test(`p${p}`, expect);
+      test(`p${p.toLowerCase()}`, expect);
+    });
+    tim.forEach(([p, expect]) => {
+      test(`PT${p}`, expect);
+      test(`Pt${p}`, expect);
+      test(`pt${p.toLowerCase()}`, expect);
+    });
     for (let [d, dexpect] of day) {
       for (let [t, texpect] of tim) {
         test(`P${d}T${t}`, { ...dexpect, ...texpect });
+        test(`p${d}T${t.toLowerCase()}`, { ...dexpect, ...texpect });
+        test(`P${d.toLowerCase()}t${t}`, { ...dexpect, ...texpect });
+        test(`p${d.toLowerCase()}t${t.toLowerCase()}`, { ...dexpect, ...texpect });
       }
     }
   });

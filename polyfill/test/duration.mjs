@@ -43,6 +43,7 @@ describe('Duration', () => {
       equal(`${Duration.from({ milliseconds: 5 })}`, 'PT0.005S'));
     it('Duration.from("P1D") == P1D', () => equal(`${Duration.from('P1D')}`, 'P1D'));
     it('Duration.from({})', () => equal(`${Duration.from({})}`, `${new Duration()}`));
+    it('lowercase variant', () => equal(`${Duration.from('p1y1m1dt1h1m1s')}`, 'P1Y1M1DT1H1M1S'));
     describe('Disambiguation', () => {
       it('negative values always throw', () => {
         const negative = {

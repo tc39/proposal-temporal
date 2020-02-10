@@ -395,6 +395,10 @@ describe('DateTime', () => {
       it('balance leap second', () =>
         equal(`${DateTime.from(leap, { disambiguation: 'balance' })}`, '2017-01-01T00:00'));
     });
+    it('variant time separators', () => {
+      equal(`${DateTime.from('1976-11-18t15:23Z')}`, '1976-11-18T15:23');
+      equal(`${DateTime.from('1976-11-18 15:23Z')}`, '1976-11-18T15:23');
+    });
   });
   describe('DateTime.inTimeZone() works', () => {
     it('recent date', () => {
