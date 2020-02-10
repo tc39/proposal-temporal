@@ -1,15 +1,17 @@
-import commonjs from "rollup-plugin-commonjs";
-import resolve from "rollup-plugin-node-resolve";
-import babel from "rollup-plugin-babel";
-import {uglify} from 'rollup-plugin-uglify';
+import commonjs from 'rollup-plugin-commonjs';
+import resolve from 'rollup-plugin-node-resolve';
+import babel from 'rollup-plugin-babel';
+import { uglify } from 'rollup-plugin-uglify';
+import { env } from 'process';
 
-export default {
-  input: "lib/index.mjs",
+const config = {
+  input: 'lib/index.mjs',
   output: {
-    name: "temporal",
-    file: "index.js",
-    format: "commonjs",
-    lib: ["es6"]
+    name: 'temporal',
+    file: 'index.js',
+    format: 'commonjs',
+    lib: ['es6'],
+    sourcemap: true
   },
   plugins: [
     commonjs(),
@@ -18,15 +20,20 @@ export default {
       exclude: 'node_modules/**',
       presets: [
         [
-          "@babel/preset-env",
+          '@babel/preset-env',
           {
             corejs: 3,
-            useBuiltIns: "entry",
-            targets: "> 0.25%, not dead"
+            useBuiltIns: 'entry',
+            targets: '> 0.25%, not dead'
           }
         ]
       ]
-    }),
-    uglify()
+    })
   ]
 };
+
+if (env.NODE_ENV === 'production') {
+  config.plugins.push(uglify());
+}
+
+export default config;
