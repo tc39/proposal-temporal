@@ -10,9 +10,10 @@ import assert from "assert";
  * @returns {Temporal.Absolute[]} Temporal.Absolute instance
  */
 function getSortedInstants(parseableAbsoluteStrings, reverse = false) {
-    const sortedAbsoluteTimes = parseableAbsoluteStrings.sort(
-        Temporal.Absolute.compare
-    );
+    const absoluteObjects = parseableAbsoluteStrings.map(v => {
+        return Temporal.Absolute.from(v);
+    });
+    const sortedAbsoluteTimes = absoluteObjects.sort(Temporal.Absolute.compare);
 
     return reverse ? sortedAbsoluteTimes.reverse() : sortedAbsoluteTimes;
 }
