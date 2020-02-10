@@ -293,6 +293,13 @@ describe('Absolute', () => {
     it('Absolute.from(ISO string leap second) is constrained', () => {
       equal(`${Absolute.from('2016-12-31T23:59:60Z')}`, '2016-12-31T23:59:59Z');
     });
+    it('variant time separators', () => {
+      equal(`${Absolute.from('1976-11-18t15:23Z')}`, '1976-11-18T15:23Z');
+      equal(`${Absolute.from('1976-11-18 15:23Z')}`, '1976-11-18T15:23Z');
+    });
+    it('variant UTC designator', () => {
+      equal(`${Absolute.from('1976-11-18T15:23z')}`, '1976-11-18T15:23Z');
+    });
   });
   describe('Absolute.plus works', () => {
     const abs = Absolute.from('1969-12-25T12:23:45.678901234Z');
