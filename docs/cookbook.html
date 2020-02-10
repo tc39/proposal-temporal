@@ -55,12 +55,48 @@
     </style>
   </head>
   <body>
-<h1 id="temporal-functions"><code>Temporal</code> Functions</h1>
-<h2 id="temporalgetabsolute--temporalabsolute">Temporal.getAbsolute() : Temporal.Absolute</h2>
-<h2 id="temporalgettimezone--temporaltimezone">Temporal.getTimeZone() : Temporal.TimeZone</h2>
-<h2 id="temporalgetdatetimetimezone-temporaltimezone--string--temporalgettimezone--temporaldatetime">Temporal.getDateTime(timeZone: Temporal.TimeZone | string = Temporal.getTimeZone()) : Temporal.DateTime</h2>
-<h2 id="temporalgetdatetimezone-temporaltimezone--string--temporalgettimezone--temporaldate">Temporal.getDate(timeZone: Temporal.TimeZone | string = Temporal.getTimeZone()) : Temporal.Date</h2>
-<h2 id="temporalgettimetimezone-temporaltimezone--string--temporalgettimezone--temporaltime">Temporal.getTime(timeZone: Temporal.TimeZone | string = Temporal.getTimeZone()) : Temporal.Time</h2>
+<h1 id="temporal-cookbook">Temporal Cookbook</h1>
+<h2 id="running-the-cookbook-files">Running the cookbook files</h2>
+<p>Running cookbook files:</p>
+<pre><code class="language-sh">node --experimental-modules --no-warnings \
+    --icu-data-dir ./polyfill/node_modules/full-icu/ \
+    -r ./polyfill/index.js ./docs/cookbook/${cookbookFile}</code></pre>
+<p><em>The above code allows <code>Temporal</code> to exist as a global object before the cookbook file runs.</em></p>
+<h2 id="construction">Construction</h2>
+<h3 id="absolute-from-legacy-date"><a href="./cookbook/absoluteFromLegacyDate.mjs">Absolute from legacy Date</a></h3>
+<p>Map a legacy ECMAScript Date instance into a Temporal.Absolute instance corresponding to the same instant in absolute time.</p>
+<pre><code class="language-javascript">/**
+ * Converts a Date instance into a Temporal.Absolute instance
+ *
+ * @param {Date} esDate This is a Date instance
+ * @returns {Temporal.Absolute} Temporal.Absolute instance
+ */
+function getAbsoluteFromDate(esDate) {
+    const date = Temporal.Absolute.fromEpochMilliseconds(esDate.getTime());
+    return date;
+}
+
+const date = new Date(&quot;1970-01-01T00:00:01Z&quot;);
+const absolute = getAbsoluteFromDate(date); // Absolute [Temporal.Absolute] {}</code></pre>
+<h3 id="zoned-instant-from-instant-and-time-zone"><a href="./cookbook/getParseableZonedStringAtInstant.mjs">Zoned instant from instant and time zone</a></h3>
+<p>Map a Temporal.Absolute instance and a time zone name into a string serialization of the local time in that zone corresponding to the instant in absolute time.</p>
+<pre><code class="language-javascript">/**
+ * Converts an absolute point in time to a readable string of a specified time zone
+ *
+ * @param {Temporal.Absolute} absolute An absolute point in time
+ * @param {Temporal.TimeZone|string} absolute An absolute point in time
+ * @returns {string} IANA Timezone
+ */
+function getParseableZonedStringAtInstant(absolute, ianaTimeZoneName) {
+    // inTimeZone accepts either a timezone string or a Temporal.TimeZone object
+    // It returns a DateTime object
+    const localDateTime = absolute.inTimeZone(ianaTimeZoneName);
+    return localDateTime.toString();
+}
+
+const absoluteTime = Temporal.Absolute.from(&quot;2020-01-03T10:41:51Z&quot;);
+const timeZone = &quot;Europe/Paris&quot;;
+getParseableZonedStringAtInstant(absoluteTime, timeZone); // &#39;2020-01-03T11:41:51&#39;</code></pre>
     <footer>
       <p>
         This page includes a script which loads an implementation of Temporal in your browser.

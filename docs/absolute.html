@@ -1,4 +1,61 @@
-<h1 id="temporalabsolute"><code>Temporal.Absolute</code></h1>
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/kognise/water.css@latest/dist/light.min.css">
+    <script type="application/javascript" src="./playground.js"></script>
+    <script type="application/javascript" src="./mermaid.js"></script>
+    <script type="application/javascript" src="./prism.js"></script>
+    <link rel="stylesheet" type="text/css" href="./prism.css">
+    <script>mermaid.initialize({startOnLoad:true,flowchart:{useMaxWidth:false}});</script>
+    <script>
+      Temporal = { ...temporal.Temporal };
+      Object.assign(Intl, temporal.Intl);
+    </script>
+    <style>
+      /* https://github.com/kognise/water.css/blob/master/src/variables-light.css */
+      :root {
+        --background: #efefef;
+        --text-muted: #999999;
+        --text-bright: #000000;
+        --text-width: 900px;
+        --variable: #39a33c;
+      }
+      .mermaid svg { height: 13em; }
+      body { font-size: 18px; max-width: var(--text-width);}
+      pre { border-left: 4px solid var(--variable); }
+      pre code[class*="language-"] { font-size: 0.85em; }
+      pre[class*="language-"] { padding: 0.5em; }
+      h2 { border-bottom: 2px solid var(--text-muted); margin-top: 2em; }
+      h3 {
+        border-bottom: 1px solid var(--text-muted);
+        color: var(--text-muted);
+        font-weight: normal;
+      }
+      h3 em { font-weight: bold; }
+      h3 strong { color: var(--text-bright); }
+      :not(h2) + h3 { margin-top: 2em; }
+      footer {
+        border-top: 1px solid var(--background);
+        color: var(--text-muted);
+        font-size: 0.8em;
+        margin-top: 2em;
+        padding-top: 10px;
+      }
+      .heading-link {
+        left: calc((100vw - var(--text-width)) / 2 - 1.5em);
+        opacity: 0;
+        position: absolute;
+        transition: opacity 150ms;
+      }
+      .heading-link:hover { text-decoration: none; }
+      .heading-link::before { content: '¶'; }
+      h3:hover .heading-link { opacity: 1; }
+    </style>
+  </head>
+  <body>
+<h1 id="temporalabsolute">Temporal.Absolute</h1>
 <p>A <code>Temporal.Absolute</code> is an absolute point in time, with a precision in nanoseconds.
 No time zone or calendar information is present.
 As such <code>Temporal.Absolute</code> has no concept of days, months or even hours.</p>
@@ -7,10 +64,10 @@ However, a <code>Temporal.Absolute</code> can be created from any of several exp
 <p>Since <code>Temporal.Absolute</code> doesn&#39;t contain any information about time zones, a <code>Temporal.TimeZone</code> is needed in order to convert it into a <code>Temporal.DateTime</code> (and from there into any of the other <code>Temporal</code> objects.)</p>
 <p>Like Unix time, <code>Temporal.Absolute</code> ignores leap seconds.</p>
 <h2 id="constructor">Constructor</h2>
-<h3 id="new-temporalabsoluteepochnanoseconds--bigint--temporalabsolute">new Temporal.Absolute(epochNanoseconds : bigint) : Temporal.Absolute</h3>
+<h3 id="new-temporalabsoluteepochnanoseconds--bigint--temporalabsolute"><strong>new Temporal.Absolute</strong>(<em>epochNanoseconds</em> : bigint) : Temporal.Absolute</h3>
 <p><strong>Parameters:</strong></p>
 <ul>
-<li><code>epochNanoSeconds</code> (bigint): A number of nanoseconds.</li>
+<li><code>epochNanoseconds</code> (bigint): A number of nanoseconds.</li>
 </ul>
 <p><strong>Returns:</strong> a new <code>Temporal.Absolute</code> object.</p>
 <p>Creates a new <code>Temporal.Absolute</code> object that represents a single point in time.</p>
@@ -24,7 +81,7 @@ epoch = new Temporal.Absolute(0n);  // =&gt; 1970-01-01T00:00Z
 // Dates before the Unix epoch are negative
 turnOfTheCentury = new Temporal.Absolute(-2208988800000000000n);  // =&gt; 1900-01-01T00:00Z</code></pre>
 <h2 id="static-methods">Static methods</h2>
-<h3 id="temporalabsolutefromthing-string--temporalabsolute--temporalabsolute">Temporal.Absolute.from(thing: string | Temporal.Absolute) : Temporal.Absolute</h3>
+<h3 id="temporalabsolutefromthing-string--temporalabsolute--temporalabsolute">Temporal.Absolute.<strong>from</strong>(<em>thing</em>: string | Temporal.Absolute) : Temporal.Absolute</h3>
 <p><strong>Parameters:</strong></p>
 <ul>
 <li><code>thing</code> (string or <code>Temporal.Absolute</code>): The value representing the desired point in time.</li>
@@ -44,8 +101,9 @@ abs === Temporal.Absolute.from(abs);  // =&gt; true
 // Not enough information to denote a single point in time:
 /* WRONG */ abs = Temporal.Absolute.from(&#39;2019-03-30&#39;);  // no time; throws
 /* WRONG */ abs = Temporal.Absolute.from(&#39;2019-03-30T01:45&#39;);  // no time zone; throws
-/* WRONG */ abs = Temporal.Absolute.from(&#39;2019-03031T02:45+01:00[Europe/Berlin]&#39;);  // time skipped in DST transition; throws</code></pre>
-<h3 id="temporalabsolutefromepochsecondsepochseconds-number--temporalabsolute">Temporal.Absolute.fromEpochSeconds(epochSeconds: number) : Temporal.Absolute</h3>
+/* WRONG */ abs = Temporal.Absolute.from(&#39;2019-03031T02:45+01:00[Europe/Berlin]&#39;);
+    // time skipped in DST transition; throws</code></pre>
+<h3 id="temporalabsolutefromepochsecondsepochseconds-number--temporalabsolute">Temporal.Absolute.<strong>fromEpochSeconds</strong>(<em>epochSeconds</em>: number) : Temporal.Absolute</h3>
 <p><strong>Parameters:</strong></p>
 <ul>
 <li><code>epochSeconds</code> (number): A number of seconds.</li>
@@ -55,12 +113,12 @@ abs === Temporal.Absolute.from(abs);  // =&gt; true
 <code>epochSeconds</code> is the number of seconds between the Unix epoch (midnight UTC on January 1, 1970) and the desired point in time.</p>
 <p>The number of seconds since the Unix epoch is a common measure of time in many computer systems.
 Use this method if you need to interface with such a system.</p>
-<p>Usage example:</p>
+<p>Example usage:</p>
 <pre><code class="language-js">// Same examples as in new Temporal.Absolute(), but with seconds precision
 abs = Temporal.Absolute.fromEpochSeconds(1553906700);
 epoch = Temporal.Absolute.fromEpochSeconds(0);  // =&gt; 1970-01-01T00:00Z
 turnOfTheCentury = Temporal.Absolute.fromEpochSeconds(-2208988800);  // =&gt; 1900-01-01T00:00Z</code></pre>
-<h3 id="temporalabsolutefromepochmillisecondsepochmilliseconds-number--temporalabsolute">Temporal.Absolute.fromEpochMilliseconds(epochMilliseconds: number) : Temporal.Absolute</h3>
+<h3 id="temporalabsolutefromepochmillisecondsepochmilliseconds-number--temporalabsolute">Temporal.Absolute.<strong>fromEpochMilliseconds</strong>(<em>epochMilliseconds</em>: number) : Temporal.Absolute</h3>
 <p><strong>Parameters:</strong></p>
 <ul>
 <li><code>epochMilliseconds</code> (number): A number of milliseconds.</li>
@@ -73,17 +131,18 @@ Use this method to create a <code>Temporal.Absolute</code> object from a <code>D
 abs = Temporal.Absolute.fromEpochMilliseconds(jsdate.getTime());  // =&gt; 1995-12-17T03:24Z
 abs = Temporal.Absolute.fromEpochMilliseconds(+jsdate);  // valueOf() called implicitly
 
-// This is a way to get the current time, but Temporal.now.absolute() would give the same with higher accuracy
+// This is a way to get the current time, but Temporal.now.absolute()
+// would give the same with higher accuracy
 todayMs = Temporal.Absolute.fromEpochMilliseconds(Date.now());
 todayNs = Temporal.now.absolute();</code></pre>
-<h3 id="temporalabsolutefromepochmicrosecondsepochmilliseconds--bigint--temporalabsolute">Temporal.Absolute.fromEpochMicroseconds(epochMilliseconds : bigint) : Temporal.Absolute</h3>
+<h3 id="temporalabsolutefromepochmicrosecondsepochmilliseconds--bigint--temporalabsolute">Temporal.Absolute.<strong>fromEpochMicroseconds</strong>(<em>epochMilliseconds</em> : bigint) : Temporal.Absolute</h3>
 <p><strong>Parameters:</strong></p>
 <ul>
 <li><code>epochMicroseconds</code> (bigint): A number of microseconds.</li>
 </ul>
 <p><strong>Returns:</strong> a new <code>Temporal.Absolute</code> object.</p>
 <p>Same as <code>Temporal.Absolute.fromEpochSeconds()</code>, but with microsecond (10<sup>&minus;6</sup> second) precision.</p>
-<h3 id="temporalabsolutefromepochnanosecondsepochnanoseconds--bigint--temporalabsolute">Temporal.Absolute.fromEpochNanoseconds(epochNanoseconds : bigint) : Temporal.Absolute</h3>
+<h3 id="temporalabsolutefromepochnanosecondsepochnanoseconds--bigint--temporalabsolute">Temporal.Absolute.<strong>fromEpochNanoseconds</strong>(<em>epochNanoseconds</em> : bigint) : Temporal.Absolute</h3>
 <p><strong>Parameters:</strong></p>
 <ul>
 <li><code>epochNanoseconds</code> (bigint): A number of nanoseconds.</li>
@@ -91,7 +150,7 @@ todayNs = Temporal.now.absolute();</code></pre>
 <p><strong>Returns:</strong> a new <code>Temporal.Absolute</code> object.</p>
 <p>Same as <code>Temporal.Absolute.fromEpochSeconds()</code>, but with nanosecond (10<sup>&minus;9</sup> second) precision.
 Also the same as <code>new Temporal.Absolute(epochNanoseconds)</code>.</p>
-<h3 id="temporalabsolutecompareone-temporalabsolute-two-temporalabsolute--number">Temporal.Absolute.compare(one: Temporal.Absolute, two: Temporal.Absolute) : number</h3>
+<h3 id="temporalabsolutecompareone-temporalabsolute-two-temporalabsolute--number">Temporal.Absolute.<strong>compare</strong>(<em>one</em>: Temporal.Absolute, <em>two</em>: Temporal.Absolute) : number</h3>
 <p><strong>Parameters:</strong></p>
 <ul>
 <li><code>one</code> (<code>Temporal.Absolute</code>): First time to compare.</li>
@@ -114,7 +173,7 @@ sorted = [three, one, two].sort(Temporal.Absolute.compare);
 sorted.join(&#39; &#39;);
 // =&gt; 2001-09-09T01:46:40Z 2004-11-09T11:33:20Z 2008-01-10T21:20Z</code></pre>
 <h2 id="methods">Methods</h2>
-<h3 id="absolutegetepochseconds--number">absolute.getEpochSeconds() : number</h3>
+<h3 id="absolutegetepochseconds--number">absolute.<strong>getEpochSeconds</strong>() : number</h3>
 <p><strong>Returns:</strong> an integer number of seconds.</p>
 <p>Returns the number of seconds between the Unix epoch (midnight UTC on January 1, 1970) and <code>absolute</code>.
 This number will be negative if <code>absolute</code> is before 1970.
@@ -123,21 +182,21 @@ The number of seconds is rounded towards zero.</p>
 <p>Example usage:</p>
 <pre><code class="language-js">abs = Temporal.Absolute.from(&#39;2019-03-30T01:45+01:00&#39;);
 abs.getEpochSeconds();  // =&gt; 1554000300</code></pre>
-<h3 id="absolutegetepochmilliseconds--number">absolute.getEpochMilliseconds() : number</h3>
+<h3 id="absolutegetepochmilliseconds--number">absolute.<strong>getEpochMilliseconds</strong>() : number</h3>
 <p><strong>Returns:</strong> an integer number of milliseconds.</p>
 <p>Same as <code>getEpochSeconds()</code>, but with millisecond (10<sup>&minus;3</sup> second) precision.</p>
 <p>This method can be useful in particular to create an old-style JavaScript <code>Date</code> object, if one is needed.
 An example:</p>
 <pre><code class="language-js">abs = Temporal.Absolute.from(&#39;2019-03-30T00:45Z&#39;);
 new Date(abs.getEpochMilliseconds());  // =&gt; 2019-03-30T00:45:00.000Z</code></pre>
-<h3 id="absolutegetepochmicroseconds--bigint">absolute.getEpochMicroseconds() : bigint</h3>
+<h3 id="absolutegetepochmicroseconds--bigint">absolute.<strong>getEpochMicroseconds</strong>() : bigint</h3>
 <p><strong>Returns:</strong> a number of microseconds, as a bigint.</p>
 <p>Same as <code>getEpochSeconds()</code>, but with microsecond (10<sup>&minus;6</sup> second) precision.</p>
-<h3 id="absolutegetepochnanoseconds--bigint">absolute.getEpochNanoseconds() : bigint</h3>
+<h3 id="absolutegetepochnanoseconds--bigint">absolute.<strong>getEpochNanoseconds</strong>() : bigint</h3>
 <p><strong>Returns:</strong> a number of nanoseconds, as a bigint.</p>
 <p>Same as <code>getEpochSeconds()</code>, but with nanosecond (10<sup>&minus;9</sup> second) precision.</p>
 <p>The value returned from this method is suitable to be passed to <code>new Temporal.Absolute()</code>.</p>
-<h3 id="absoluteintimezonetimezone-temporaltimezone--string--temporaldatetime">absolute.inTimeZone(timeZone: Temporal.TimeZone | string) : Temporal.DateTime</h3>
+<h3 id="absoluteintimezonetimezone-temporaltimezone--string--temporaldatetime">absolute.<strong>inTimeZone</strong>(<em>timeZone</em>: Temporal.TimeZone | string) : Temporal.DateTime</h3>
 <p><strong>Parameters:</strong></p>
 <ul>
 <li><code>timeZone</code> (object or string): A <code>Temporal.TimeZone</code> object, or a string description of the time zone; either its IANA name or UTC offset.</li>
@@ -157,7 +216,7 @@ timestamp.inTimeZone(&#39;-08:00&#39;);  // =&gt; 2019-02-01T16:45
 epoch = new Temporal.Absolute(0n);
 tz = new Temporal.TimeZone(&#39;America/New_York&#39;);
 epoch.inTimeZone(tz);  // =&gt; 1969-12-31T19:00</code></pre>
-<h3 id="absoluteplusduration-string--object--temporalabsolute">absolute.plus(duration: string | object) : Temporal.Absolute</h3>
+<h3 id="absoluteplusduration-string--object--temporalabsolute">absolute.<strong>plus</strong>(<em>duration</em>: string | object) : Temporal.Absolute</h3>
 <p><strong>Parameters:</strong></p>
 <ul>
 <li><code>duration</code> (string or object): A <code>Temporal.Duration</code> object, a duration-like object, or a string from which to create a <code>Temporal.Duration</code>.</li>
@@ -176,7 +235,7 @@ Temporal.now.absolute().plus({ hours: 5 });
 Temporal.now.absolute().plus(&#39;PT5H&#39;);
 fiveHours = new Temporal.Duration(0, 0, 0, 5);
 Temporal.now.absolute().plus(fiveHours);</code></pre>
-<h3 id="absoluteminusduration-string--object--temporalabsolute">absolute.minus(duration: string | object) : Temporal.Absolute</h3>
+<h3 id="absoluteminusduration-string--object--temporalabsolute">absolute.<strong>minus</strong>(<em>duration</em>: string | object) : Temporal.Absolute</h3>
 <p><strong>Parameters:</strong></p>
 <ul>
 <li><code>duration</code> (string or object): A <code>Temporal.Duration</code> object, a duration-like object, or a string from which to create a <code>Temporal.Duration</code>.</li>
@@ -195,7 +254,7 @@ Temporal.now.absolute().minus({ days: 1 });
 Temporal.now.absolute().minus(&#39;P1D&#39;);
 oneDay = new Temporal.Duration(0, 0, 1);
 Temporal.now.absolute().minus(oneDay);</code></pre>
-<h3 id="absolutedifferenceother-temporalabsolute--temporalduration">absolute.difference(other: Temporal.Absolute) : Temporal.Duration</h3>
+<h3 id="absolutedifferenceother-temporalabsolute--temporalduration">absolute.<strong>difference</strong>(<em>other</em>: Temporal.Absolute) : Temporal.Duration</h3>
 <p><strong>Parameters:</strong></p>
 <ul>
 <li><code>other</code> (<code>Temporal.Absolute</code>): Another time with which to compute the difference.</li>
@@ -209,7 +268,7 @@ endOfMoonMission = Temporal.Absolute.from(&#39;1969-07-24T16:50:35Z&#39;);
 missionLength = startOfMoonMission.difference(endOfMoonMission);  // =&gt; P8DT3H18M35S
 endOfMoonMission.difference(startOfMoonMission);  // =&gt; P8DT3H18M35S
 missionLength.toLocaleString();  // example output: &#39;8 days 3 hours 18 minutes 35 seconds&#39;</code></pre>
-<h3 id="absolutetostringtimezone-temporaltimezone--string--string">absolute.toString(timeZone?: Temporal.TimeZone | string) : string</h3>
+<h3 id="absolutetostringtimezone-temporaltimezone--string--string">absolute.<strong>toString</strong>(<em>timeZone</em>?: Temporal.TimeZone | string) : string</h3>
 <p><strong>Parameters:</strong></p>
 <ul>
 <li><code>timeZone</code> (optional string or <code>Temporal.TimeZone</code>): the time zone to express <code>absolute</code> in.
@@ -223,7 +282,7 @@ The string can be passed to <code>Temporal.Absolute.from()</code> to create a ne
 abs.toString();  // =&gt; 2019-11-18T10:52:01.816Z
 abs.toString(Temporal.TimeZone.from(&#39;UTC&#39;));  // =&gt; 2019-11-18T10:52:01.816Z
 abs.toString(&#39;Asia/Seoul&#39;);  // =&gt; 2019-11-18T19:52:01.816+09:00[Asia/Seoul]</code></pre>
-<h3 id="absolutetolocalestringlocales-string--arraystring-options-object--string">absolute.toLocaleString(locales?: string | array&lt;string&gt;, options?: object) : string</h3>
+<h3 id="absolutetolocalestringlocales-string--arraystring-options-object--string">absolute.<strong>toLocaleString</strong>(<em>locales</em>?: string | array&lt;string&gt;, options?: object) : string</h3>
 <p><strong>Parameters:</strong></p>
 <ul>
 <li><code>locales</code> (optional string or array of strings): A string with a BCP 47 language tag with an optional Unicode extension key, or an array of such strings.</li>
@@ -236,7 +295,39 @@ abs.toString(&#39;Asia/Seoul&#39;);  // =&gt; 2019-11-18T19:52:01.816+09:00[Asia
 <pre><code class="language-js">abs = Temporal.Absolute.from(&quot;2019-11-18T11:00:00.000Z&quot;);
 abs.toLocaleString();  // =&gt; example output: 2019-11-18, 3:00:00 a.m.
 abs.toLocaleString(&#39;de-DE&#39;);  // =&gt; example output: 18.11.2019, 03:00:00
-abs.toLocaleString(&#39;de-DE&#39;, { timeZone: &#39;Europe/Berlin&#39;, weekday: &#39;long&#39; });  // =&gt; Montag, 18.11.2019, 12:00:00
-abs.toLocaleString(&#39;en-US-u-nu-fullwide-hc-h12&#39;, { timeZone: &#39;Asia/Kolkata&#39; });  // =&gt; １１/１８/２０１９, ４:３０:００ PM</code></pre>
-<script type="application/javascript" src="./prism.js"></script>
-<link rel="stylesheet" type="text/css" href="./prism.css">
+abs.toLocaleString(&#39;de-DE&#39;, {
+    timeZone: &#39;Europe/Berlin&#39;,
+    weekday: &#39;long&#39;,
+});  // =&gt; Montag, 18.11.2019, 12:00:00
+abs.toLocaleString(&#39;en-US-u-nu-fullwide-hc-h12&#39;, {
+    timeZone: &#39;Asia/Kolkata&#39;,
+});  // =&gt; １１/１８/２０１９, ４:３０:００ PM</code></pre>
+    <footer>
+      <p>
+        This page includes a script which loads an implementation of Temporal in your browser.
+        You can open a console in your browser's developer tools and try it out directly!
+      </p>
+      <p>View this or help contribute on <a href="https://github.com/tc39/proposal-temporal">GitHub</a>.</p>
+    </footer>
+    <script>
+      // Add permalinks to all <h3> elements (function documentation headings)
+      const h3s = document.getElementsByTagName('h3');
+      for (let h3 of h3s) {
+        const anchor = document.createElement('a');
+        anchor.className = 'heading-link';
+
+        // Use the **function name** as the link ID, otherwise fall back to the
+        // ID generated by markdown
+        let id = h3.getAttribute('id');
+        const bold = h3.getElementsByTagName('strong');
+        if (bold[0]) {
+          id = bold[0].textContent.replace(/[^a-zA-Z]/g, '-');
+          h3.setAttribute('id', id);
+        }
+
+        anchor.setAttribute('href', `#${id}`);
+        h3.prepend(anchor);
+      };
+    </script>
+  </body>
+</html>

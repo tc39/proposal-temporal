@@ -1,23 +1,107 @@
-<h1 id="temporalduration"><code>Temporal.Duration</code></h1>
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/kognise/water.css@latest/dist/light.min.css">
+    <script type="application/javascript" src="./playground.js"></script>
+    <script type="application/javascript" src="./mermaid.js"></script>
+    <script type="application/javascript" src="./prism.js"></script>
+    <link rel="stylesheet" type="text/css" href="./prism.css">
+    <script>mermaid.initialize({startOnLoad:true,flowchart:{useMaxWidth:false}});</script>
+    <script>
+      Temporal = { ...temporal.Temporal };
+      Object.assign(Intl, temporal.Intl);
+    </script>
+    <style>
+      /* https://github.com/kognise/water.css/blob/master/src/variables-light.css */
+      :root {
+        --background: #efefef;
+        --text-muted: #999999;
+        --text-bright: #000000;
+        --text-width: 900px;
+        --variable: #39a33c;
+      }
+      .mermaid svg { height: 13em; }
+      body { font-size: 18px; max-width: var(--text-width);}
+      pre { border-left: 4px solid var(--variable); }
+      pre code[class*="language-"] { font-size: 0.85em; }
+      pre[class*="language-"] { padding: 0.5em; }
+      h2 { border-bottom: 2px solid var(--text-muted); margin-top: 2em; }
+      h3 {
+        border-bottom: 1px solid var(--text-muted);
+        color: var(--text-muted);
+        font-weight: normal;
+      }
+      h3 em { font-weight: bold; }
+      h3 strong { color: var(--text-bright); }
+      :not(h2) + h3 { margin-top: 2em; }
+      footer {
+        border-top: 1px solid var(--background);
+        color: var(--text-muted);
+        font-size: 0.8em;
+        margin-top: 2em;
+        padding-top: 10px;
+      }
+      .heading-link {
+        left: calc((100vw - var(--text-width)) / 2 - 1.5em);
+        opacity: 0;
+        position: absolute;
+        transition: opacity 150ms;
+      }
+      .heading-link:hover { text-decoration: none; }
+      .heading-link::before { content: '¶'; }
+      h3:hover .heading-link { opacity: 1; }
+    </style>
+  </head>
+  <body>
+<h1 id="temporalduration">Temporal.Duration</h1>
 <p>A representations of a duration of time which can be used in date/time arithmetic.</p>
 <h2 id="constructor">Constructor</h2>
-<h3 id="new-temporaldurationyears-number-months-number-days-number-hours-number-minutes-number-seconds-number-milliseconds-number-microseconds-number-nanoseconds-number-disambiguation-constrain--balance--reject--constrain--temporalduration">new Temporal.Duration(years?: number, months?: number, days?: number, hours?: number, minutes?: number, seconds?: number, milliseconds?: number, microseconds?: number, nanoseconds?: number, disambiguation: &#39;constrain&#39; | &#39;balance&#39; | &#39;reject&#39; = &#39;constrain&#39;) : Temporal.Duration</h3>
+<h3 id="new-temporaldurationyears-number-months-number-days-number-hours-number-minutes-number-seconds-number-milliseconds-number-microseconds-number-nanoseconds-number-disambiguation-constrain--balance--reject--constrain--temporalduration"><strong>new Temporal.Duration</strong>(<em>years</em>?: number, <em>months</em>?: number, <em>days</em>?: number, <em>hours</em>?: number, <em>minutes</em>?: number, <em>seconds</em>?: number, <em>milliseconds</em>?: number, <em>microseconds</em>?: number, <em>nanoseconds</em>?: number, <em>disambiguation</em>: &#39;constrain&#39; | &#39;balance&#39; | &#39;reject&#39; = &#39;constrain&#39;) : Temporal.Duration</h3>
 <p>Creates a new <code>Duration</code> object that represents a duration of time.</p>
 <h2 id="static-methods">Static methods</h2>
-<h3 id="temporaldurationfromthing-string--object--temporalduration">Temporal.Duration.from(thing: string | object) : Temporal.Duration</h3>
+<h3 id="temporaldurationfromthing-string--object--temporalduration">Temporal.Duration.<strong>from</strong>(<em>thing</em>: string | object) : Temporal.Duration</h3>
 <h2 id="properties">Properties</h2>
-<h3 id="durationyears--number">duration.years : number</h3>
-<h3 id="durationmonths--number">duration.months : number</h3>
-<h3 id="durationdays--number">duration.days : number</h3>
-<h3 id="durationhours--number">duration.hours : number</h3>
-<h3 id="durationminutes--number">duration.minutes : number</h3>
-<h3 id="durationseconds--number">duration.seconds : number</h3>
-<h3 id="durationmilliseconds--number">duration.milliseconds : number</h3>
-<h3 id="durationmicroseconds--number">duration.microseconds : number</h3>
-<h3 id="durationnanoseconds--number">duration.nanoseconds : number</h3>
-<h3 id="durationyears--number-1">duration.years : number</h3>
+<h3 id="durationyears--number">duration.<strong>years</strong> : number</h3>
+<h3 id="durationmonths--number">duration.<strong>months</strong> : number</h3>
+<h3 id="durationdays--number">duration.<strong>days</strong> : number</h3>
+<h3 id="durationhours--number">duration.<strong>hours</strong> : number</h3>
+<h3 id="durationminutes--number">duration.<strong>minutes</strong> : number</h3>
+<h3 id="durationseconds--number">duration.<strong>seconds</strong> : number</h3>
+<h3 id="durationmilliseconds--number">duration.<strong>milliseconds</strong> : number</h3>
+<h3 id="durationmicroseconds--number">duration.<strong>microseconds</strong> : number</h3>
+<h3 id="durationnanoseconds--number">duration.<strong>nanoseconds</strong> : number</h3>
+<h3 id="durationyears--number-1">duration.<strong>years</strong> : number</h3>
 <h2 id="methods">Methods</h2>
-<h3 id="durationtostring--string">duration.toString() : string</h3>
-<h3 id="durationtolocalestringlocale-string-options-object--string">duration.toLocaleString(locale?: string, options?: object) : string</h3>
-<script type="application/javascript" src="./prism.js"></script>
-<link rel="stylesheet" type="text/css" href="./prism.css">
+<h3 id="durationtostring--string">duration.<strong>toString</strong>() : string</h3>
+<h3 id="durationtolocalestringlocale-string-options-object--string">duration.<strong>toLocaleString</strong>(<em>locale</em>?: string, <em>options</em>?: object) : string</h3>
+    <footer>
+      <p>
+        This page includes a script which loads an implementation of Temporal in your browser.
+        You can open a console in your browser's developer tools and try it out directly!
+      </p>
+      <p>View this or help contribute on <a href="https://github.com/tc39/proposal-temporal">GitHub</a>.</p>
+    </footer>
+    <script>
+      // Add permalinks to all <h3> elements (function documentation headings)
+      const h3s = document.getElementsByTagName('h3');
+      for (let h3 of h3s) {
+        const anchor = document.createElement('a');
+        anchor.className = 'heading-link';
+
+        // Use the **function name** as the link ID, otherwise fall back to the
+        // ID generated by markdown
+        let id = h3.getAttribute('id');
+        const bold = h3.getElementsByTagName('strong');
+        if (bold[0]) {
+          id = bold[0].textContent.replace(/[^a-zA-Z]/g, '-');
+          h3.setAttribute('id', id);
+        }
+
+        anchor.setAttribute('href', `#${id}`);
+        h3.prepend(anchor);
+      };
+    </script>
+  </body>
+</html>

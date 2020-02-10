@@ -1,11 +1,68 @@
-<h1 id="temporaldate"><code>Temporal.Date</code></h1>
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/kognise/water.css@latest/dist/light.min.css">
+    <script type="application/javascript" src="./playground.js"></script>
+    <script type="application/javascript" src="./mermaid.js"></script>
+    <script type="application/javascript" src="./prism.js"></script>
+    <link rel="stylesheet" type="text/css" href="./prism.css">
+    <script>mermaid.initialize({startOnLoad:true,flowchart:{useMaxWidth:false}});</script>
+    <script>
+      Temporal = { ...temporal.Temporal };
+      Object.assign(Intl, temporal.Intl);
+    </script>
+    <style>
+      /* https://github.com/kognise/water.css/blob/master/src/variables-light.css */
+      :root {
+        --background: #efefef;
+        --text-muted: #999999;
+        --text-bright: #000000;
+        --text-width: 900px;
+        --variable: #39a33c;
+      }
+      .mermaid svg { height: 13em; }
+      body { font-size: 18px; max-width: var(--text-width);}
+      pre { border-left: 4px solid var(--variable); }
+      pre code[class*="language-"] { font-size: 0.85em; }
+      pre[class*="language-"] { padding: 0.5em; }
+      h2 { border-bottom: 2px solid var(--text-muted); margin-top: 2em; }
+      h3 {
+        border-bottom: 1px solid var(--text-muted);
+        color: var(--text-muted);
+        font-weight: normal;
+      }
+      h3 em { font-weight: bold; }
+      h3 strong { color: var(--text-bright); }
+      :not(h2) + h3 { margin-top: 2em; }
+      footer {
+        border-top: 1px solid var(--background);
+        color: var(--text-muted);
+        font-size: 0.8em;
+        margin-top: 2em;
+        padding-top: 10px;
+      }
+      .heading-link {
+        left: calc((100vw - var(--text-width)) / 2 - 1.5em);
+        opacity: 0;
+        position: absolute;
+        transition: opacity 150ms;
+      }
+      .heading-link:hover { text-decoration: none; }
+      .heading-link::before { content: '¶'; }
+      h3:hover .heading-link { opacity: 1; }
+    </style>
+  </head>
+  <body>
+<h1 id="temporaldate">Temporal.Date</h1>
 <p>A representation of a calendar date.</p>
 <h2 id="constructor">Constructor</h2>
-<h3 id="new-temporaldateyear-number-month-number-day-number-disambiguation-constrain--balance--reject--constrain--temporaldate">new Temporal.Date(year: number, month: number, day: number, disambiguation: &#39;constrain&#39; | &#39;balance&#39; | &#39;reject&#39; = &#39;constrain&#39;) : Temporal.Date</h3>
+<h3 id="new-temporaldateyear-number-month-number-day-number-disambiguation-constrain--balance--reject--constrain--temporaldate"><strong>new Temporal.Date</strong>(<em>year</em>: number, <em>month</em>: number, <em>day</em>: number, <em>disambiguation</em>: &#39;constrain&#39; | &#39;balance&#39; | &#39;reject&#39; = &#39;constrain&#39;) : Temporal.Date</h3>
 <p>Creates a new <code>Date</code> object that represents a calendar date</p>
 <h2 id="static-methods">Static methods</h2>
-<h3 id="temporaldatefromthing-string--object--temporaldate">Temporal.Date.from(thing: string | object) : Temporal.Date</h3>
-<h2 id="temporaldatecompareone-temporaldate-two-temporaldate--number">Temporal.Date.compare(one: Temporal.Date, two: Temporal.Date) : number</h2>
+<h3 id="temporaldatefromthing-string--object--temporaldate">Temporal.Date.<strong>from</strong>(<em>thing</em>: string | object) : Temporal.Date</h3>
+<h3 id="temporaldatecompareone-temporaldate-two-temporaldate--number">Temporal.Date.<strong>compare</strong>(<em>one</em>: Temporal.Date, <em>two</em>: Temporal.Date) : number</h3>
 <p>Allows for easier comparison of <code>Date</code> objects, returns:</p>
 <ul>
 <li><code>-1</code> if the first object represents a lower value than the second</li>
@@ -13,41 +70,68 @@
 <li><code>1</code> if the first object represents a higher value than the second</li>
 </ul>
 <h2 id="properties">Properties</h2>
-<h3 id="dateyear--number">date.year : number</h3>
+<h3 id="dateyear--number">date.<strong>year</strong> : number</h3>
 <p>Returns the year this <code>Date</code> represents</p>
-<h3 id="datemonth--number">date.month : number</h3>
+<h3 id="datemonth--number">date.<strong>month</strong> : number</h3>
 <p>Returns the month this <code>Date</code> represents</p>
-<h3 id="dateday--number">date.day : number</h3>
+<h3 id="dateday--number">date.<strong>day</strong> : number</h3>
 <p>Returns the day this <code>Date</code> represents</p>
-<h3 id="datedayofweek--number">date.dayOfWeek : number</h3>
+<h3 id="datedayofweek--number">date.<strong>dayOfWeek</strong> : number</h3>
 <p>Returns the day of the week this <code>Date</code> represents</p>
 <pre><code class="language-js">const date = new Temporal.Date(2019, 11, 18); // Monday
 date.dayOfWeek; // 1</code></pre>
-<h3 id="dateweekofyear--number">date.weekOfYear : number</h3>
+<h3 id="dateweekofyear--number">date.<strong>weekOfYear</strong> : number</h3>
 <p>Returns the week in a calendar year</p>
-<h3 id="datedaysinmonth--number">date.daysInMonth : number</h3>
+<h3 id="datedaysinmonth--number">date.<strong>daysInMonth</strong> : number</h3>
 <p>Returns the number of days in the month the <code>Date</code> Object represents</p>
-<h3 id="datedaysinyear--number">date.daysInYear : number</h3>
+<h3 id="datedaysinyear--number">date.<strong>daysInYear</strong> : number</h3>
 <p>Returns the number of days in the year the <code>Date</code> Object represents</p>
-<h3 id="dateleapyear--boolean">date.leapYear : boolean</h3>
+<h3 id="dateleapyear--boolean">date.<strong>leapYear</strong> : boolean</h3>
 <p>Returns a boolean indicating whether the <code>Date</code> is in a leap year or not</p>
 <h2 id="methods">Methods</h2>
-<h3 id="datewithdatelike-object-disambiguation-constrain--balance--reject--constrain--temporaldate">date.with(dateLike: object, disambiguation: &#39;constrain&#39; | &#39;balance&#39; | &#39;reject&#39; = &#39;constrain&#39;) : Temporal.Date</h3>
-<h2 id="dateplusduration-temporalduration--object--string-disambiguation-constrain--balance--reject--constrain--temporaldate">date.plus(duration: Temporal.Duration | object | string, disambiguation: &#39;constrain&#39; | &#39;balance&#39; | &#39;reject&#39; = &#39;constrain&#39;) : Temporal.Date</h2>
+<h3 id="datewithdatelike-object-disambiguation-constrain--balance--reject--constrain--temporaldate">date.<strong>with</strong>(<em>dateLike</em>: object, <em>disambiguation</em>: &#39;constrain&#39; | &#39;balance&#39; | &#39;reject&#39; = &#39;constrain&#39;) : Temporal.Date</h3>
+<h3 id="dateplusduration-temporalduration--object--string-disambiguation-constrain--balance--reject--constrain--temporaldate">date.<strong>plus</strong>(<em>duration</em>: Temporal.Duration | object | string, <em>disambiguation</em>: &#39;constrain&#39; | &#39;balance&#39; | &#39;reject&#39; = &#39;constrain&#39;) : Temporal.Date</h3>
 <p>Returns a new <code>Date</code> object which is the sum of the current object plus the additional argument.</p>
-<h3 id="dateminusduration-temporalduration--object--string-disambiguation-constrain--balance--reject--constrain--temporaldate">date.minus(duration: Temporal.Duration | object | string, disambiguation: &#39;constrain&#39; | &#39;balance&#39; | &#39;reject&#39; = &#39;constrain&#39;) : Temporal.Date</h3>
+<h3 id="dateminusduration-temporalduration--object--string-disambiguation-constrain--balance--reject--constrain--temporaldate">date.<strong>minus</strong>(<em>duration</em>: Temporal.Duration | object | string, <em>disambiguation</em>: &#39;constrain&#39; | &#39;balance&#39; | &#39;reject&#39; = &#39;constrain&#39;) : Temporal.Date</h3>
 <p>Returns a new <code>Date</code> object which is the sum of the current object minus the additional argument.</p>
-<h3 id="datedifferenceother-temporaldate--temporalduration">date.difference(other: Temporal.Date) : Temporal.Duration</h3>
+<h3 id="datedifferenceother-temporaldate--temporalduration">date.<strong>difference</strong>(<em>other</em>: Temporal.Date) : Temporal.Duration</h3>
 <p>Returns a new <code>Duration</code> object which is the difference between the current <code>Date</code> object and the argument <code>Date</code> value.</p>
-<h3 id="datetostring--string">date.toString() : string</h3>
+<h3 id="datetostring--string">date.<strong>toString</strong>() : string</h3>
 <p>Returns an ISO 8601 string representing the current <code>Date</code> object</p>
-<h3 id="datetolocalestringlocale-string-options-object--string">date.toLocaleString(locale?: string, options?: object) : string</h3>
+<h3 id="datetolocalestringlocale-string-options-object--string">date.<strong>toLocaleString</strong>(<em>locale</em>?: string, <em>options</em>?: object) : string</h3>
 <p>Returns a string with a locally sensitive representation of the specified <code>Date</code> object. Overrides the <code>Object.prototype.toLocaleString()</code> method.</p>
-<h3 id="datewithtimetime-temporaltime--temporaldatetime">date.withTime(time: Temporal.Time) : Temporal.DateTime</h3>
+<h3 id="datewithtimetime-temporaltime--temporaldatetime">date.<strong>withTime</strong>(<em>time</em>: Temporal.Time) : Temporal.DateTime</h3>
 <p>Returns a new <a href="./DateTime"><code>DateTime</code></a> object using the combination of this <code>Date</code> and the <code>Time</code> object passed in.</p>
-<h3 id="dategetyearmonth--temporalyearmonth">date.getYearMonth() : Temporal.YearMonth</h3>
+<h3 id="dategetyearmonth--temporalyearmonth">date.<strong>getYearMonth</strong>() : Temporal.YearMonth</h3>
 <p>Returns a new <a href="./YearMonth"><code>YearMonth</code></a> object.</p>
-<h3 id="dategetmonthday--temporalmonthday">date.getMonthDay() : Temporal.MonthDay</h3>
+<h3 id="dategetmonthday--temporalmonthday">date.<strong>getMonthDay</strong>() : Temporal.MonthDay</h3>
 <p>Returns a new <a href="./MonthDay"><code>YearMonth</code></a> object.</p>
-<script type="application/javascript" src="./prism.js"></script>
-<link rel="stylesheet" type="text/css" href="./prism.css">
+    <footer>
+      <p>
+        This page includes a script which loads an implementation of Temporal in your browser.
+        You can open a console in your browser's developer tools and try it out directly!
+      </p>
+      <p>View this or help contribute on <a href="https://github.com/tc39/proposal-temporal">GitHub</a>.</p>
+    </footer>
+    <script>
+      // Add permalinks to all <h3> elements (function documentation headings)
+      const h3s = document.getElementsByTagName('h3');
+      for (let h3 of h3s) {
+        const anchor = document.createElement('a');
+        anchor.className = 'heading-link';
+
+        // Use the **function name** as the link ID, otherwise fall back to the
+        // ID generated by markdown
+        let id = h3.getAttribute('id');
+        const bold = h3.getElementsByTagName('strong');
+        if (bold[0]) {
+          id = bold[0].textContent.replace(/[^a-zA-Z]/g, '-');
+          h3.setAttribute('id', id);
+        }
+
+        anchor.setAttribute('href', `#${id}`);
+        h3.prepend(anchor);
+      };
+    </script>
+  </body>
+</html>

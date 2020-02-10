@@ -1,9 +1,66 @@
-<h1 id="temporaltimezone"><code>Temporal.TimeZone</code></h1>
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/kognise/water.css@latest/dist/light.min.css">
+    <script type="application/javascript" src="./playground.js"></script>
+    <script type="application/javascript" src="./mermaid.js"></script>
+    <script type="application/javascript" src="./prism.js"></script>
+    <link rel="stylesheet" type="text/css" href="./prism.css">
+    <script>mermaid.initialize({startOnLoad:true,flowchart:{useMaxWidth:false}});</script>
+    <script>
+      Temporal = { ...temporal.Temporal };
+      Object.assign(Intl, temporal.Intl);
+    </script>
+    <style>
+      /* https://github.com/kognise/water.css/blob/master/src/variables-light.css */
+      :root {
+        --background: #efefef;
+        --text-muted: #999999;
+        --text-bright: #000000;
+        --text-width: 900px;
+        --variable: #39a33c;
+      }
+      .mermaid svg { height: 13em; }
+      body { font-size: 18px; max-width: var(--text-width);}
+      pre { border-left: 4px solid var(--variable); }
+      pre code[class*="language-"] { font-size: 0.85em; }
+      pre[class*="language-"] { padding: 0.5em; }
+      h2 { border-bottom: 2px solid var(--text-muted); margin-top: 2em; }
+      h3 {
+        border-bottom: 1px solid var(--text-muted);
+        color: var(--text-muted);
+        font-weight: normal;
+      }
+      h3 em { font-weight: bold; }
+      h3 strong { color: var(--text-bright); }
+      :not(h2) + h3 { margin-top: 2em; }
+      footer {
+        border-top: 1px solid var(--background);
+        color: var(--text-muted);
+        font-size: 0.8em;
+        margin-top: 2em;
+        padding-top: 10px;
+      }
+      .heading-link {
+        left: calc((100vw - var(--text-width)) / 2 - 1.5em);
+        opacity: 0;
+        position: absolute;
+        transition: opacity 150ms;
+      }
+      .heading-link:hover { text-decoration: none; }
+      .heading-link::before { content: '¶'; }
+      h3:hover .heading-link { opacity: 1; }
+    </style>
+  </head>
+  <body>
+<h1 id="temporaltimezone">Temporal.TimeZone</h1>
 <p>A <code>Temporal.TimeZone</code> is a representation of a time zone: either an <a href="https://www.iana.org/time-zones">IANA time zone</a>, including information about the time zone such as the offset between the local time and UTC at a particular time, and daylight saving time (DST) changes; or simply a particular UTC offset with no DST.</p>
 <p>Since <code>Temporal.Absolute</code> and <code>Temporal.DateTime</code> do not contain any time zone information, a <code>Temporal.TimeZone</code> object is required to convert between the two.</p>
 <p>Finally, the <code>Temporal.TimeZone</code> object itself provides access to a list of the time zones in the IANA time zone database.</p>
 <h2 id="constructor">Constructor</h2>
-<h3 id="new-temporaltimezonetimezoneidentifier-string--temporaltimezone">new Temporal.TimeZone(timeZoneIdentifier: string) : Temporal.TimeZone</h3>
+<h3 id="new-temporaltimezonetimezoneidentifier-string--temporaltimezone"><strong>new Temporal.TimeZone</strong>(<em>timeZoneIdentifier</em>: string) : Temporal.TimeZone</h3>
 <p><strong>Parameters:</strong></p>
 <ul>
 <li><code>timeZoneIdentifier</code> (string): A description of the time zone; either its IANA name, or a UTC offset.</li>
@@ -14,7 +71,7 @@ A convenient list is also available <a href="https://en.wikipedia.org/wiki/List_
 <p>The string <code>timeZoneIdentifier</code> is canonicalized before being used to determine the time zone.
 For example, values like <code>+100</code> will be understood to mean <code>+01:00</code>, and capitalization will be corrected.
 If no time zone can be determined from <code>timeZoneIdentifier</code>, then a <code>RangeError</code> is thrown.</p>
-<p>Usage examples:</p>
+<p>Example usage:</p>
 <pre><code class="language-javascript">tz = new Temporal.TimeZone(&#39;UTC&#39;);
 tz = new Temporal.TimeZone(&#39;Africa/Cairo&#39;);
 tz = new Temporal.TimeZone(&#39;america/VANCOUVER&#39;);
@@ -32,7 +89,7 @@ now = Temporal.now.absolute();
 tz1.getTransitions(now).next().done;  // =&gt; true
 tz2.getTransitions(now).next().done;  // =&gt; false</code></pre>
 <h2 id="static-methods">Static methods</h2>
-<h3 id="temporaltimezone-iteratortemporaltimezone">Temporal.TimeZone: iterator&lt;Temporal.TimeZone&gt;</h3>
+<h3 id="temporaltimezone-iteratortemporaltimezone"><strong>Temporal.TimeZone</strong>: iterator&lt;Temporal.TimeZone&gt;</h3>
 <p>The <code>Temporal.TimeZone</code> object is itself iterable, and can be used to iterate through all of the IANA time zones supported by the implementation.</p>
 <p>Example usage:</p>
 <pre><code class="language-javascript">// List all supported IANA time zones
@@ -43,11 +100,11 @@ for (let zone of Temporal.TimeZone) console.log(zone.name);
 // Africa/Addis_Ababa
 // ...and many more</code></pre>
 <h2 id="properties">Properties</h2>
-<h3 id="timezonename--string">timeZone.name : string</h3>
+<h3 id="timezonename--string">timeZone.<strong>name</strong> : string</h3>
 <p>The <code>name</code> property gives an unambiguous identifier for the time zone.
 Effectively, this is the canonicalized version of whatever <code>timeZoneIdentifier</code> was passed as a parameter to the constructor.</p>
 <h2 id="methods">Methods</h2>
-<h3 id="timezonegetoffsetforabsolute-temporalabsolute--string">timeZone.getOffsetFor(absolute: Temporal.Absolute) : string</h3>
+<h3 id="timezonegetoffsetforabsolute-temporalabsolute--string">timeZone.<strong>getOffsetFor</strong>(<em>absolute</em>: Temporal.Absolute) : string</h3>
 <p><strong>Parameters:</strong></p>
 <ul>
 <li><code>absolute</code> (<code>Temporal.Absolute</code>): The time for which to compute the time zone&#39;s UTC offset.</li>
@@ -68,7 +125,7 @@ tz.getOffsetFor(timestamp);  // =&gt; -08:00
 // UTC is always 0 offset
 tz = new Temporal.TimeZone(&#39;UTC&#39;);
 tz.getOffsetFor(timestamp);  // =&gt; +00:00</code></pre>
-<h3 id="timezonegetdatetimeforabsolute-temporalabsolute--temporaldatetime">timeZone.getDateTimeFor(absolute: Temporal.Absolute) : Temporal.DateTime</h3>
+<h3 id="timezonegetdatetimeforabsolute-temporalabsolute--temporaldatetime">timeZone.<strong>getDateTimeFor</strong>(<em>absolute</em>: Temporal.Absolute) : Temporal.DateTime</h3>
 <p><strong>Parameters:</strong></p>
 <ul>
 <li><code>absolute</code> (<code>Temporal.Absolute</code>): An absolute time to convert.</li>
@@ -85,7 +142,7 @@ tz.getDateTimeFor(timestamp);  // =&gt; 2019-03-31T01:45
 epoch = new Temporal.Absolute(0n);
 tz = new Temporal.TimeZone(&#39;America/New_York&#39;);
 tz.getDateTimeFor(epoch);  // =&gt; 1969-12-31T19:00</code></pre>
-<h3 id="timezonegetabsolutefordatetime-temporaldatetime-disambiguation-earlier--later--reject--earlier--temporalabsolute">timeZone.getAbsoluteFor(dateTime: Temporal.DateTime, disambiguation: &#39;earlier&#39; | &#39;later&#39; | &#39;reject&#39; = &#39;earlier&#39;) : Temporal.Absolute</h3>
+<h3 id="timezonegetabsolutefordatetime-temporaldatetime-disambiguation-earlier--later--reject--earlier--temporalabsolute">timeZone.<strong>getAbsoluteFor</strong>(<em>dateTime</em>: Temporal.DateTime, <em>disambiguation</em>: &#39;earlier&#39; | &#39;later&#39; | &#39;reject&#39; = &#39;earlier&#39;) : Temporal.Absolute</h3>
 <p><strong>Parameters:</strong></p>
 <ul>
 <li><code>dateTime</code> (<code>Temporal.DateTime</code>): A calendar date and wall-clock time to convert.</li>
@@ -137,7 +194,7 @@ tz.getAbsoluteFor(dt, &#39;reject&#39;);   // throws</code></pre>
 <blockquote>
 <p><em>Compatibility Note</em>: The built-in behaviour of the Moment Timezone and Luxon libraries is to give the same result as <code>earlier</code> when turning the clock back, and <code>later</code> when setting the clock forward.</p>
 </blockquote>
-<h3 id="timezonegettransitionsstartingpoint-temporalabsolute--iteratortemporalabsolute">timeZone.getTransitions(startingPoint: Temporal.Absolute) : iterator&lt;Temporal.Absolute&gt;</h3>
+<h3 id="timezonegettransitionsstartingpoint-temporalabsolute--iteratortemporalabsolute">timeZone.<strong>getTransitions</strong>(<em>startingPoint</em>: Temporal.Absolute) : iterator&lt;Temporal.Absolute&gt;</h3>
 <p><strong>Parameters:</strong></p>
 <ul>
 <li><code>startingPoint</code> (<code>Temporal.Absolute</code>): Time after which to start calculating DST transitions.</li>
@@ -153,8 +210,35 @@ now = Temporal.now.absolute();
 [nextTransition] = tz.getTransitions(now);
 duration = nextTransition.difference(now);
 duration.toLocaleString();  // output will vary</code></pre>
-<h3 id="timezonetostring--string">timeZone.toString() : string</h3>
+<h3 id="timezonetostring--string">timeZone.<strong>toString</strong>() : string</h3>
 <p><strong>Returns:</strong> The string given by <code>timeZone.name</code>.</p>
 <p>This method overrides <code>Object.prototype.toString()</code> and provides the time zone&#39;s <code>name</code> property as a human-readable description.</p>
-<script type="application/javascript" src="./prism.js"></script>
-<link rel="stylesheet" type="text/css" href="./prism.css">
+    <footer>
+      <p>
+        This page includes a script which loads an implementation of Temporal in your browser.
+        You can open a console in your browser's developer tools and try it out directly!
+      </p>
+      <p>View this or help contribute on <a href="https://github.com/tc39/proposal-temporal">GitHub</a>.</p>
+    </footer>
+    <script>
+      // Add permalinks to all <h3> elements (function documentation headings)
+      const h3s = document.getElementsByTagName('h3');
+      for (let h3 of h3s) {
+        const anchor = document.createElement('a');
+        anchor.className = 'heading-link';
+
+        // Use the **function name** as the link ID, otherwise fall back to the
+        // ID generated by markdown
+        let id = h3.getAttribute('id');
+        const bold = h3.getElementsByTagName('strong');
+        if (bold[0]) {
+          id = bold[0].textContent.replace(/[^a-zA-Z]/g, '-');
+          h3.setAttribute('id', id);
+        }
+
+        anchor.setAttribute('href', `#${id}`);
+        h3.prepend(anchor);
+      };
+    </script>
+  </body>
+</html>

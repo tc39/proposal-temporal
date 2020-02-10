@@ -1,8 +1,65 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/kognise/water.css@latest/dist/light.min.css">
+    <script type="application/javascript" src="./playground.js"></script>
+    <script type="application/javascript" src="./mermaid.js"></script>
+    <script type="application/javascript" src="./prism.js"></script>
+    <link rel="stylesheet" type="text/css" href="./prism.css">
+    <script>mermaid.initialize({startOnLoad:true,flowchart:{useMaxWidth:false}});</script>
+    <script>
+      Temporal = { ...temporal.Temporal };
+      Object.assign(Intl, temporal.Intl);
+    </script>
+    <style>
+      /* https://github.com/kognise/water.css/blob/master/src/variables-light.css */
+      :root {
+        --background: #efefef;
+        --text-muted: #999999;
+        --text-bright: #000000;
+        --text-width: 900px;
+        --variable: #39a33c;
+      }
+      .mermaid svg { height: 13em; }
+      body { font-size: 18px; max-width: var(--text-width);}
+      pre { border-left: 4px solid var(--variable); }
+      pre code[class*="language-"] { font-size: 0.85em; }
+      pre[class*="language-"] { padding: 0.5em; }
+      h2 { border-bottom: 2px solid var(--text-muted); margin-top: 2em; }
+      h3 {
+        border-bottom: 1px solid var(--text-muted);
+        color: var(--text-muted);
+        font-weight: normal;
+      }
+      h3 em { font-weight: bold; }
+      h3 strong { color: var(--text-bright); }
+      :not(h2) + h3 { margin-top: 2em; }
+      footer {
+        border-top: 1px solid var(--background);
+        color: var(--text-muted);
+        font-size: 0.8em;
+        margin-top: 2em;
+        padding-top: 10px;
+      }
+      .heading-link {
+        left: calc((100vw - var(--text-width)) / 2 - 1.5em);
+        opacity: 0;
+        position: absolute;
+        transition: opacity 150ms;
+      }
+      .heading-link:hover { text-decoration: none; }
+      .heading-link::before { content: '¶'; }
+      h3:hover .heading-link { opacity: 1; }
+    </style>
+  </head>
+  <body>
 <h1 id="temporal">Temporal</h1>
 <h2 id="object-relationship">Object Relationship</h2>
 <div class="mermaid">
 graph LR;
-  timezone(Time-Zone);
+  timezone(TimeZone);
   subgraph " ";
     absolute(Absolute);
   end;
@@ -22,34 +79,34 @@ graph LR;
 </div>
 
 <h2 id="api-overview">API Overview</h2>
-<h3 id="temporalabsolute"><code>Temporal.Absolute</code></h3>
-<p>An <code>Temporal.Absolute</code> represents a fixed point in time, without regard to calendar or location.</p>
+<h3 id="temporalabsolute"><strong>Temporal.Absolute</strong></h3>
+<p>A <code>Temporal.Absolute</code> represents a fixed point in time, without regard to calendar or location.</p>
 <p>See <a href="./absolute.html">Temporal.Absolute Documentation</a> for more detailed documentation.</p>
-<h3 id="temporaltimezone"><code>Temporal.TimeZone</code></h3>
+<h3 id="temporaltimezone"><strong>Temporal.TimeZone</strong></h3>
 <p>A <code>Temporal.TimeZone</code> represents an IANA time zone, a specific UTC offset or UTC itself. Because of this <code>Temporal.TimeZone</code> can be used to convert between <code>Temporal.Absolute</code> and <code>Temporal.DateTime</code> as well as finding out the offset at a specific <code>Temporal.Absolute</code>.</p>
 <p><code>Temporal.TimeZone</code> is also an iterable that gives access to the IANA time zones supported by the system from the <a href="https://www.iana.org/time-zones">IANA time zone database</a> (also listed <a href="https://en.wikipedia.org/wiki/List_of_tz_database_time_zones">here</a>).</p>
 <p>See <a href="./timezone.html">Temporal.TimeZone Documentation</a> for more detailed documentation.</p>
-<h3 id="temporaldatetime"><code>Temporal.DateTime</code></h3>
+<h3 id="temporaldatetime"><strong>Temporal.DateTime</strong></h3>
 <p>A <code>Temporal.DateTime</code> represents a calendar date and wall-clock time. That means it does not carry time zone information. However it can be converted to a <code>Temporal.Absolute</code> using a <code>Temporal.TimeZone</code>.</p>
 <p>This can also be converted to object containing only partial information such as <code>Temporal.Date</code> and <code>Temporal.Time</code>.</p>
 <p>See <a href="./datetime.html">Temporal.DateTime Documentation</a> for more detailed documentation.</p>
-<h3 id="temporaltime"><code>Temporal.Time</code></h3>
+<h3 id="temporaltime"><strong>Temporal.Time</strong></h3>
 <p>A <code>Temporal.Time</code> object represents a wall-clock time. Since there is no date component this can not be directly translated to an absolute point in time. However it can be converted to a <code>Temporal.Absolute</code> by combining with a <code>Temporal.Date</code> using a <code>Temporal.TimeZone</code>.</p>
 <p>See <a href="./time.html">Temporal.Time Documentation</a> for more detailed documentation.</p>
-<h3 id="temporaldate"><code>Temporal.Date</code></h3>
+<h3 id="temporaldate"><strong>Temporal.Date</strong></h3>
 <p>A <code>Temporal.Date</code> object represents a calendar date. This means there is no way to convert this to an absolute point in time, however combining with a <code>Temporal.Time</code> a <code>Temporal.DateTime</code> can be obtained which in turn can be pinned to the absolute timeline.</p>
 <p>This can also be converted to partial dates such as <code>Temporal.YearMonth</code> and <code>Temporal.MonthDay</code>.</p>
 <p>See <a href="./date.html">Temporal.Date Documentation</a> for more detailed documentation.</p>
-<h3 id="temporalyearmonth"><code>Temporal.YearMonth</code></h3>
+<h3 id="temporalyearmonth"><strong>Temporal.YearMonth</strong></h3>
 <p>A date without a day component. This is useful to express things like &quot;the November 2010 meeting&quot;.</p>
 <p>See <a href="./yearmonth.html">Temporal.YearMonth Documentation</a> for more detailed documentation.</p>
-<h3 id="temporalmonthday"><code>Temporal.MonthDay</code></h3>
+<h3 id="temporalmonthday"><strong>Temporal.MonthDay</strong></h3>
 <p>A date without a year component. This is useful to express things like &quot;Bastille-Day is on the 14th of July&quot;.</p>
 <p>See <a href="./monthday.html">Temporal.MonthDay Documentation</a> for more detailed documentation.</p>
-<h3 id="temporalduration"><code>Temporal.Duration</code></h3>
+<h3 id="temporalduration"><strong>Temporal.Duration</strong></h3>
 <p>A <code>Temporal.Duration</code> expresses a length of time. This is used for date/time maths.</p>
 <p>See <a href="./duration.html">Temporal.Duration Documentation</a> for more detailed documentation.</p>
-<h3 id="temporal-functions"><code>Temporal</code> functions</h3>
+<h3 id="temporal-functions">Temporal functions</h3>
 <ul>
 <li><code>Temporal.getAbsolute()</code> - get the current system absolute time</li>
 <li><code>Temporal.getTimeZone()</code> - get the current system time zone</li>
@@ -60,9 +117,37 @@ graph LR;
 <li><code>Temporal.getMonthDay()</code> - get the current system month/day</li>
 </ul>
 <p>See <a href="./functions.html">Temporal Functions Documentation</a> for more detailed documentation.</p>
-<h2 id="examples">Examples</h2>
-<p><strong>Now open your developer tools, and try it out!</strong></p>
-<script type="application/javascript" src="./playground.js"></script>
-<script type="application/javascript" src="./mermaid.js"></script>
-<script>mermaid.initialize({startOnLoad:true, flowchart:{ useMaxWidth:false } });</script>
-<style>.mermaid svg { height: 13em; }</style>
+<h3 id="temporalcalendar"><strong>Temporal.Calendar</strong></h3>
+<p>A Calendar API is under discussion.
+See <a href="./calendar-draft.html">Calendar Draft</a> for more information.</p>
+<h2 id="cookbook">Cookbook</h2>
+<p>A cookbook to help you get started and learn the ins and outs of Temporal is available <a href="./cookbook.html">here</a>.</p>
+    <footer>
+      <p>
+        This page includes a script which loads an implementation of Temporal in your browser.
+        You can open a console in your browser's developer tools and try it out directly!
+      </p>
+      <p>View this or help contribute on <a href="https://github.com/tc39/proposal-temporal">GitHub</a>.</p>
+    </footer>
+    <script>
+      // Add permalinks to all <h3> elements (function documentation headings)
+      const h3s = document.getElementsByTagName('h3');
+      for (let h3 of h3s) {
+        const anchor = document.createElement('a');
+        anchor.className = 'heading-link';
+
+        // Use the **function name** as the link ID, otherwise fall back to the
+        // ID generated by markdown
+        let id = h3.getAttribute('id');
+        const bold = h3.getElementsByTagName('strong');
+        if (bold[0]) {
+          id = bold[0].textContent.replace(/[^a-zA-Z]/g, '-');
+          h3.setAttribute('id', id);
+        }
+
+        anchor.setAttribute('href', `#${id}`);
+        h3.prepend(anchor);
+      };
+    </script>
+  </body>
+</html>
