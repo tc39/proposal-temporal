@@ -82,6 +82,11 @@ describe('YearMonth', () => {
         equal(`${YearMonth.from('+0019761118T152330.1+00:00')}`, '1976-11');
         equal(`${YearMonth.from('+0019761118T152330.1+0000')}`, '1976-11');
       });
+      it('optional components', () => {
+        equal(`${YearMonth.from('1976-11-18T15:23')}`, '1976-11');
+        equal(`${YearMonth.from('1976-11-18T15')}`, '1976-11');
+        equal(`${YearMonth.from('1976-11-18')}`, '1976-11');
+      });
       describe('Disambiguation', () => {
         const bad = { year: 2019, month: 13 };
         it('reject', () => throws(() => YearMonth.from(bad, { disambiguation: 'reject' }), RangeError));

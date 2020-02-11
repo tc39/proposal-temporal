@@ -329,6 +329,10 @@ describe('Absolute', () => {
       equal(`${Absolute.from('+0019761118T152330.1+00:00')}`, '1976-11-18T15:23:30.100Z');
       equal(`${Absolute.from('+0019761118T152330.1+0000')}`, '1976-11-18T15:23:30.100Z');
     });
+    it('optional parts', () => {
+      equal(`${Absolute.from('1976-11-18T15:23:30+00')}`, '1976-11-18T15:23:30Z');
+      equal(`${Absolute.from('1976-11-18T15Z')}`, '1976-11-18T15:00Z');
+    });
   });
   describe('Absolute.plus works', () => {
     const abs = Absolute.from('1969-12-25T12:23:45.678901234Z');

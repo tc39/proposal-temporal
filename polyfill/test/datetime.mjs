@@ -429,6 +429,11 @@ describe('DateTime', () => {
       equal(`${DateTime.from('+0019761118T152330.1+00:00')}`, '1976-11-18T15:23:30.100');
       equal(`${DateTime.from('+0019761118T152330.1+0000')}`, '1976-11-18T15:23:30.100');
     });
+    it('optional parts', () => {
+      equal(`${DateTime.from('1976-11-18T15:23:30+00')}`, '1976-11-18T15:23:30');
+      equal(`${DateTime.from('1976-11-18T15')}`, '1976-11-18T15:00');
+      equal(`${DateTime.from('1976-11-18')}`, '1976-11-18T00:00');
+    });
   });
   describe('DateTime.inTimeZone() works', () => {
     it('recent date', () => {

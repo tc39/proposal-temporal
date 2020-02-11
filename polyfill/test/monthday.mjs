@@ -64,6 +64,11 @@ describe('MonthDay', () => {
         equal(`${MonthDay.from('+0019761118T152330.1+00:00')}`, '11-18');
         equal(`${MonthDay.from('+0019761118T152330.1+0000')}`, '11-18');
       });
+      it('optional parts', () => {
+        equal(`${MonthDay.from('1976-11-18T15:23')}`, '11-18');
+        equal(`${MonthDay.from('1976-11-18T15')}`, '11-18');
+        equal(`${MonthDay.from('1976-11-18')}`, '11-18');
+      });
       describe('Disambiguation', () => {
         const bad = { month: 1, day: 32 };
         it('reject', () => throws(() => MonthDay.from(bad, { disambiguation: 'reject' }), RangeError));
