@@ -415,6 +415,17 @@ describe('Time', () => {
         const t = Time.from('2020-02-12T11:42+01:00[Europe/Amsterdam]');
         notEqual(Time.from(t), t);
       });
+      it('any number of decimal places', () => {
+        equal(`${Time.from('1976-11-18T15:23:30.1Z')}`, '15:23:30.100');
+        equal(`${Time.from('1976-11-18T15:23:30.12Z')}`, '15:23:30.120');
+        equal(`${Time.from('1976-11-18T15:23:30.123Z')}`, '15:23:30.123');
+        equal(`${Time.from('1976-11-18T15:23:30.1234Z')}`, '15:23:30.123400');
+        equal(`${Time.from('1976-11-18T15:23:30.12345Z')}`, '15:23:30.123450');
+        equal(`${Time.from('1976-11-18T15:23:30.123456Z')}`, '15:23:30.123456');
+        equal(`${Time.from('1976-11-18T15:23:30.1234567Z')}`, '15:23:30.123456700');
+        equal(`${Time.from('1976-11-18T15:23:30.12345678Z')}`, '15:23:30.123456780');
+        equal(`${Time.from('1976-11-18T15:23:30.123456789Z')}`, '15:23:30.123456789');
+      });
       describe('Disambiguation', () => {
         const bad = { nanosecond: 1000 };
         it('reject', () => throws(() => Time.from(bad, { disambiguation: 'reject' }), RangeError));
