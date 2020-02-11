@@ -370,8 +370,27 @@ describe('Date', () => {
     it('Date.from({}) throws', () => throws(() => Date.from({}), TypeError));
     it('Date.from(required prop undefined) throws', () =>
       throws(() => Date.from({ year: undefined, month: 11, day: 18 }), TypeError));
-    it.skip('Date.from(number) is converted to string', () =>
-      equal(`${Date.from(19761118)}`, `${Date.from('19761118')}`));
+    it('Date.from(number) is converted to string', () => equal(`${Date.from(19761118)}`, `${Date.from('19761118')}`));
+    it('basic format', () => {
+      equal(`${Date.from('19761118')}`, '1976-11-18');
+      equal(`${Date.from('+0019761118')}`, '1976-11-18');
+    });
+    it('mixture of basic and extended format', () => {
+      equal(`${Date.from('1976-11-18T152330.1+00:00')}`, '1976-11-18');
+      equal(`${Date.from('19761118T15:23:30.1+00:00')}`, '1976-11-18');
+      equal(`${Date.from('1976-11-18T15:23:30.1+0000')}`, '1976-11-18');
+      equal(`${Date.from('1976-11-18T152330.1+0000')}`, '1976-11-18');
+      equal(`${Date.from('19761118T15:23:30.1+0000')}`, '1976-11-18');
+      equal(`${Date.from('19761118T152330.1+00:00')}`, '1976-11-18');
+      equal(`${Date.from('19761118T152330.1+0000')}`, '1976-11-18');
+      equal(`${Date.from('+001976-11-18T152330.1+00:00')}`, '1976-11-18');
+      equal(`${Date.from('+0019761118T15:23:30.1+00:00')}`, '1976-11-18');
+      equal(`${Date.from('+001976-11-18T15:23:30.1+0000')}`, '1976-11-18');
+      equal(`${Date.from('+001976-11-18T152330.1+0000')}`, '1976-11-18');
+      equal(`${Date.from('+0019761118T15:23:30.1+0000')}`, '1976-11-18');
+      equal(`${Date.from('+0019761118T152330.1+00:00')}`, '1976-11-18');
+      equal(`${Date.from('+0019761118T152330.1+0000')}`, '1976-11-18');
+    });
     describe('Disambiguation', () => {
       const bad = { year: 2019, month: 1, day: 32 };
       it('reject', () => throws(() => Date.from(bad, { disambiguation: 'reject' }), RangeError));

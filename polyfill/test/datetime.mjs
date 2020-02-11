@@ -372,7 +372,7 @@ describe('DateTime', () => {
     it('DateTime.from(ISO string leap second) is constrained', () => {
       equal(`${DateTime.from('2016-12-31T23:59:60')}`, '2016-12-31T23:59:59');
     });
-    it.skip('DateTime.from(number) is converted to string', () =>
+    it('DateTime.from(number) is converted to string', () =>
       equal(`${DateTime.from(19761118)}`, `${DateTime.from('19761118')}`));
     describe('Disambiguation', () => {
       const bad = { year: 2019, month: 1, day: 32 };
@@ -412,6 +412,22 @@ describe('DateTime', () => {
     });
     it('variant decimal separator', () => {
       equal(`${DateTime.from('1976-11-18T15:23:30,12Z')}`, '1976-11-18T15:23:30.120');
+    });
+    it('mixture of basic and extended format', () => {
+      equal(`${DateTime.from('1976-11-18T152330.1+00:00')}`, '1976-11-18T15:23:30.100');
+      equal(`${DateTime.from('19761118T15:23:30.1+00:00')}`, '1976-11-18T15:23:30.100');
+      equal(`${DateTime.from('1976-11-18T15:23:30.1+0000')}`, '1976-11-18T15:23:30.100');
+      equal(`${DateTime.from('1976-11-18T152330.1+0000')}`, '1976-11-18T15:23:30.100');
+      equal(`${DateTime.from('19761118T15:23:30.1+0000')}`, '1976-11-18T15:23:30.100');
+      equal(`${DateTime.from('19761118T152330.1+00:00')}`, '1976-11-18T15:23:30.100');
+      equal(`${DateTime.from('19761118T152330.1+0000')}`, '1976-11-18T15:23:30.100');
+      equal(`${DateTime.from('+001976-11-18T152330.1+00:00')}`, '1976-11-18T15:23:30.100');
+      equal(`${DateTime.from('+0019761118T15:23:30.1+00:00')}`, '1976-11-18T15:23:30.100');
+      equal(`${DateTime.from('+001976-11-18T15:23:30.1+0000')}`, '1976-11-18T15:23:30.100');
+      equal(`${DateTime.from('+001976-11-18T152330.1+0000')}`, '1976-11-18T15:23:30.100');
+      equal(`${DateTime.from('+0019761118T15:23:30.1+0000')}`, '1976-11-18T15:23:30.100');
+      equal(`${DateTime.from('+0019761118T152330.1+00:00')}`, '1976-11-18T15:23:30.100');
+      equal(`${DateTime.from('+0019761118T152330.1+0000')}`, '1976-11-18T15:23:30.100');
     });
   });
   describe('DateTime.inTimeZone() works', () => {
