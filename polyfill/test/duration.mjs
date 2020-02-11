@@ -55,6 +55,9 @@ describe('Duration', () => {
       equal(`${Duration.from('P1Y1M1DT1H1M1.12345678S')}`, 'P1Y1M1DT1H1M1.123456780S');
       equal(`${Duration.from('P1Y1M1DT1H1M1.123456789S')}`, 'P1Y1M1DT1H1M1.123456789S');
     });
+    it('variant decimal separator', () => {
+      equal(`${Duration.from('P1Y1M1DT1H1M1,12S')}`, 'P1Y1M1DT1H1M1.120S');
+    });
     describe('Disambiguation', () => {
       it('negative values always throw', () => {
         const negative = {
