@@ -60,8 +60,28 @@ describe('YearMonth', () => {
       it('YearMonth.from({}) throws', () => throws(() => YearMonth.from({}), TypeError));
       it('YearMonth.from(required prop undefined) throws', () =>
         throws(() => YearMonth.from({ year: undefined, month: 6 }), TypeError));
-      it.skip('YearMonth.from(number) is converted to string', () =>
+      it('YearMonth.from(number) is converted to string', () =>
         equal(`${YearMonth.from(201906)}`, `${YearMonth.from('201906')}`));
+      it('basic format', () => {
+        equal(`${YearMonth.from('197611')}`, '1976-11');
+        equal(`${YearMonth.from('+00197611')}`, '1976-11');
+      });
+      it('mixture of basic and extended format', () => {
+        equal(`${YearMonth.from('1976-11-18T152330.1+00:00')}`, '1976-11');
+        equal(`${YearMonth.from('19761118T15:23:30.1+00:00')}`, '1976-11');
+        equal(`${YearMonth.from('1976-11-18T15:23:30.1+0000')}`, '1976-11');
+        equal(`${YearMonth.from('1976-11-18T152330.1+0000')}`, '1976-11');
+        equal(`${YearMonth.from('19761118T15:23:30.1+0000')}`, '1976-11');
+        equal(`${YearMonth.from('19761118T152330.1+00:00')}`, '1976-11');
+        equal(`${YearMonth.from('19761118T152330.1+0000')}`, '1976-11');
+        equal(`${YearMonth.from('+001976-11-18T152330.1+00:00')}`, '1976-11');
+        equal(`${YearMonth.from('+0019761118T15:23:30.1+00:00')}`, '1976-11');
+        equal(`${YearMonth.from('+001976-11-18T15:23:30.1+0000')}`, '1976-11');
+        equal(`${YearMonth.from('+001976-11-18T152330.1+0000')}`, '1976-11');
+        equal(`${YearMonth.from('+0019761118T15:23:30.1+0000')}`, '1976-11');
+        equal(`${YearMonth.from('+0019761118T152330.1+00:00')}`, '1976-11');
+        equal(`${YearMonth.from('+0019761118T152330.1+0000')}`, '1976-11');
+      });
       describe('Disambiguation', () => {
         const bad = { year: 2019, month: 13 };
         it('reject', () => throws(() => YearMonth.from(bad, { disambiguation: 'reject' }), RangeError));

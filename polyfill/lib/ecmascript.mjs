@@ -92,20 +92,20 @@ export const ES = ObjectAssign({}, ES2019, {
     const match = regex.exec(isoString);
     if (!match) throw new RangeError(`invalid ISO 8601 string: ${isoString}`);
     const year = ES.ToInteger(match[1]);
-    const month = ES.ToInteger(match[2]);
-    const day = ES.ToInteger(match[3]);
-    const hour = ES.ToInteger(match[4]);
-    const minute = ES.ToInteger(match[5]);
-    let second = ES.ToInteger(match[6]);
+    const month = ES.ToInteger(match[2] || match[4]);
+    const day = ES.ToInteger(match[3] || match[5]);
+    const hour = ES.ToInteger(match[6]);
+    const minute = ES.ToInteger(match[7] || match[10]);
+    let second = ES.ToInteger(match[8] || match[11]);
     if (second === 60) second = 59;
-    const fraction = match[7] + '000000000';
+    const fraction = (match[9] || match[12]) + '000000000';
     const millisecond = ES.ToInteger(fraction.slice(0, 3));
     const microsecond = ES.ToInteger(fraction.slice(3, 6));
     const nanosecond = ES.ToInteger(fraction.slice(6, 9));
-    const offset = `${match[9]}:${match[10] || '00'}`;
-    let ianaName = match[11];
+    const offset = `${match[14]}:${match[15] || '00'}`;
+    let ianaName = match[16];
     if (ianaName) ianaName = ES.GetCanonicalTimeZoneIdentifier(ianaName).toString();
-    const zone = match[8] ? 'UTC' : ianaName || offset;
+    const zone = match[13] ? 'UTC' : ianaName || offset;
     return { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, zone, ianaName, offset };
   },
   ParseTemporalAbsoluteString: (isoString) => {
@@ -122,10 +122,10 @@ export const ES = ObjectAssign({}, ES2019, {
     let hour, minute, second, millisecond, microsecond, nanosecond;
     if (match) {
       hour = ES.ToInteger(match[1]);
-      minute = ES.ToInteger(match[2]);
-      second = ES.ToInteger(match[3]);
+      minute = ES.ToInteger(match[2] || match[5]);
+      second = ES.ToInteger(match[3] || match[6]);
       if (second === 60) second = 59;
-      const fraction = match[4] + '000000000';
+      const fraction = (match[4] || match[7]) + '000000000';
       millisecond = ES.ToInteger(fraction.slice(0, 3));
       microsecond = ES.ToInteger(fraction.slice(3, 6));
       nanosecond = ES.ToInteger(fraction.slice(6, 9));

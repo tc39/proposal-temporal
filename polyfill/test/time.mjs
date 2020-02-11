@@ -410,7 +410,7 @@ describe('Time', () => {
         equal(`${Time.from('23:59:60', { disambiguation: 'balance' })}`, '23:59:59');
         equal(`${Time.from('23:59:60', { disambiguation: 'reject' })}`, '23:59:59');
       });
-      it.skip('Time.from(number) is converted to string', () => equal(`${Time.from(1523)}`, `${Time.from('1523')}`));
+      it('Time.from(number) is converted to string', () => equal(`${Time.from(1523)}`, `${Time.from('1523')}`));
       it('Time.from(time) is not the same object', () => {
         const t = Time.from('2020-02-12T11:42+01:00[Europe/Amsterdam]');
         notEqual(Time.from(t), t);
@@ -428,6 +428,30 @@ describe('Time', () => {
       });
       it('variant decimal separator', () => {
         equal(`${Time.from('1976-11-18T15:23:30,12Z')}`, '15:23:30.120');
+      });
+      it('basic format', () => {
+        equal(`${Time.from('152330')}`, '15:23:30');
+        equal(`${Time.from('152330.1')}`, '15:23:30.100');
+        equal(`${Time.from('152330-08')}`, '15:23:30');
+        equal(`${Time.from('152330.1-08')}`, '15:23:30.100');
+        equal(`${Time.from('152330-0800')}`, '15:23:30');
+        equal(`${Time.from('152330.1-0800')}`, '15:23:30.100');
+      });
+      it('mixture of basic and extended format', () => {
+        equal(`${Time.from('1976-11-18T152330.1+00:00')}`, '15:23:30.100');
+        equal(`${Time.from('19761118T15:23:30.1+00:00')}`, '15:23:30.100');
+        equal(`${Time.from('1976-11-18T15:23:30.1+0000')}`, '15:23:30.100');
+        equal(`${Time.from('1976-11-18T152330.1+0000')}`, '15:23:30.100');
+        equal(`${Time.from('19761118T15:23:30.1+0000')}`, '15:23:30.100');
+        equal(`${Time.from('19761118T152330.1+00:00')}`, '15:23:30.100');
+        equal(`${Time.from('19761118T152330.1+0000')}`, '15:23:30.100');
+        equal(`${Time.from('+001976-11-18T152330.1+00:00')}`, '15:23:30.100');
+        equal(`${Time.from('+0019761118T15:23:30.1+00:00')}`, '15:23:30.100');
+        equal(`${Time.from('+001976-11-18T15:23:30.1+0000')}`, '15:23:30.100');
+        equal(`${Time.from('+001976-11-18T152330.1+0000')}`, '15:23:30.100');
+        equal(`${Time.from('+0019761118T15:23:30.1+0000')}`, '15:23:30.100');
+        equal(`${Time.from('+0019761118T152330.1+00:00')}`, '15:23:30.100');
+        equal(`${Time.from('+0019761118T152330.1+0000')}`, '15:23:30.100');
       });
       describe('Disambiguation', () => {
         const bad = { nanosecond: 1000 };

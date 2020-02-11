@@ -43,8 +43,27 @@ describe('MonthDay', () => {
       it('MonthDay.from({}) throws', () => throws(() => MonthDay.from({}), TypeError));
       it('MonthDay.from(required prop undefined) throws', () =>
         throws(() => MonthDay.from({ month: undefined, day: 15 }), TypeError));
-      it.skip('MonthDay.from(number) is converted to string', () =>
+      it('MonthDay.from(number) is converted to string', () =>
         equal(`${MonthDay.from(1201)}`, `${MonthDay.from('12-01')}`));
+      it('basic format', () => {
+        equal(`${MonthDay.from('1118')}`, '11-18');
+      });
+      it('mixture of basic and extended format', () => {
+        equal(`${MonthDay.from('1976-11-18T152330.1+00:00')}`, '11-18');
+        equal(`${MonthDay.from('19761118T15:23:30.1+00:00')}`, '11-18');
+        equal(`${MonthDay.from('1976-11-18T15:23:30.1+0000')}`, '11-18');
+        equal(`${MonthDay.from('1976-11-18T152330.1+0000')}`, '11-18');
+        equal(`${MonthDay.from('19761118T15:23:30.1+0000')}`, '11-18');
+        equal(`${MonthDay.from('19761118T152330.1+00:00')}`, '11-18');
+        equal(`${MonthDay.from('19761118T152330.1+0000')}`, '11-18');
+        equal(`${MonthDay.from('+001976-11-18T152330.1+00:00')}`, '11-18');
+        equal(`${MonthDay.from('+0019761118T15:23:30.1+00:00')}`, '11-18');
+        equal(`${MonthDay.from('+001976-11-18T15:23:30.1+0000')}`, '11-18');
+        equal(`${MonthDay.from('+001976-11-18T152330.1+0000')}`, '11-18');
+        equal(`${MonthDay.from('+0019761118T15:23:30.1+0000')}`, '11-18');
+        equal(`${MonthDay.from('+0019761118T152330.1+00:00')}`, '11-18');
+        equal(`${MonthDay.from('+0019761118T152330.1+0000')}`, '11-18');
+      });
       describe('Disambiguation', () => {
         const bad = { month: 1, day: 32 };
         it('reject', () => throws(() => MonthDay.from(bad, { disambiguation: 'reject' }), RangeError));
