@@ -75,19 +75,7 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
   ToTimeZone: (item) => {
     if (ES.IsTimeZone(item)) return item;
     const stringIdent = ES.ToString(item);
-    try {
-      const canonicalIdent = ES.GetCanonicalTimeZoneIdentifier(stringIdent);
-      if (canonicalIdent) return new TemporalTimeZone(canonicalIdent);
-    } catch {
-      // fall through
-    }
-    // Try parsing ISO string instead
-    const match = PARSE.timezone.exec(stringIdent);
-    if (!match) throw new RangeError(`invalid time zone identifier: ${stringIdent}`);
-    const [, z, hour, minute = '00', ianaName] = match;
-    let offset;
-    if (typeof hour !== 'undefined') offset = `${hour}:${minute}`;
-    const zone = z ? 'UTC' : ianaName || offset;
+    const {zone, ianaName, offset} = ES.ParseTimeZoneString(stringIdent);
     const result = new TemporalTimeZone(zone);
     if (offset && ianaName) {
       const absolute = TemporalAbsolute.from(stringIdent);
@@ -97,11 +85,10 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
     }
     return result;
   },
-  ToAbsolute: (item) => {
-    if (ES.IsAbsolute(item)) return item;
-    const isoString = ES.ToString(item);
-    const match = PARSE.absolute.exec(isoString);
-    if (!match) throw new RangeError(`invalid absolute: ${isoString}`);
+  ParseISODateTime: (isoString, { zoneRequired }) => {
+    const regex = zoneRequired ? PARSE.absolute : PARSE.datetime;
+    const match = regex.exec(isoString);
+    if (!match) throw new RangeError(`invalid ISO 8601 string: ${isoString}`);
     const year = ES.ToInteger(match[1]);
     const month = ES.ToInteger(match[2]);
     const day = ES.ToInteger(match[3]);
@@ -112,18 +99,95 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
     const millisecond = ES.ToInteger(match[7]);
     const microsecond = ES.ToInteger(match[8]);
     const nanosecond = ES.ToInteger(match[9]);
-    const zone = match[10] ? 'UTC' : match[13] || `${match[11]}:${match[12] || '00'}`;
-    const datetime = ES.ToDateTime({
-      year,
-      month,
-      day,
-      hour,
-      minute,
-      second,
-      millisecond,
-      microsecond,
-      nanosecond
-    });
+    const offset = `${match[11]}:${match[12] || '00'}`;
+    let ianaName = match[13];
+    if (ianaName) ianaName = ES.GetCanonicalTimeZoneIdentifier(ianaName).toString();
+    const zone = match[10] ? 'UTC' : ianaName || offset;
+    return {year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, zone, ianaName, offset};
+  },
+  ParseAbsoluteString: (isoString) => {
+    return ES.ParseISODateTime(isoString, { zoneRequired: true });
+  },
+  ParseDateTimeString: (isoString) => {
+    return ES.ParseISODateTime(isoString, { zoneRequired: false });
+  },
+  ParseDateString: (isoString) => {
+    return ES.ParseISODateTime(isoString, { zoneRequired: false });
+  },
+  ParseTimeString: (isoString) => {
+    const match = PARSE.time.exec(isoString);
+    let hour, minute, second, millisecond, microsecond, nanosecond;
+    if (match) {
+      hour = ES.ToInteger(match[1]);
+      minute = ES.ToInteger(match[2]);
+      second = ES.ToInteger(match[3]);
+      if (second === 60) second = 59;
+      millisecond = ES.ToInteger(match[4]);
+      microsecond = ES.ToInteger(match[5]);
+      nanosecond = ES.ToInteger(match[6]);
+    } else {
+      ({
+        hour,
+        minute,
+        second,
+        millisecond,
+        microsecond,
+        nanosecond,
+      } = ES.ParseISODateTime(isoString, { zoneRequired: false }));
+    }
+    return {hour, minute, second, millisecond, microsecond, nanosecond};
+  },
+  ParseYearMonthString: (isoString) => {
+    const match = PARSE.yearmonth.exec(isoString);
+    let year, month;
+    if (match) {
+      year = ES.ToInteger(match[1]);
+      month = ES.ToInteger(match[2]);
+    } else {
+      ({year, month} = ES.ParseISODateTime(isoString, { zoneRequired: false }));
+    }
+    return {year, month};
+  },
+  ParseMonthDayString: (isoString) => {
+    const match = PARSE.monthday.exec(isoString);
+    let month, day;
+    if (match) {
+      month = ES.ToInteger(match[1]);
+      day = ES.ToInteger(match[2]);
+    } else {
+      ({month, day} = ES.ParseISODateTime(isoString, { zoneRequired: false }));
+    }
+    return {month, day};
+  },
+  ParseTimeZoneString: (stringIdent) => {
+    try {
+      const canonicalIdent = ES.GetCanonicalTimeZoneIdentifier(stringIdent);
+      if (canonicalIdent) return {zone: canonicalIdent.toString()};
+    } catch {
+      // fall through
+    }
+    // Try parsing ISO string instead
+    return ES.ParseISODateTime(stringIdent, { zoneRequired: true });
+  },
+  ParseDurationString: (isoString) => {
+    const match = PARSE.duration.exec(isoString);
+    if (!match) throw new RangeError(`invalid duration: ${isoString}`);
+    const years = ES.ToInteger(match[1]);
+    const months = ES.ToInteger(match[2]);
+    const days = ES.ToInteger(match[3]);
+    const hours = ES.ToInteger(match[4]);
+    const minutes = ES.ToInteger(match[5]);
+    const seconds = ES.ToInteger(match[6]);
+    const milliseconds = ES.ToInteger(match[7]);
+    const microseconds = ES.ToInteger(match[8]);
+    const nanoseconds = ES.ToInteger(match[9]);
+    return {years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds};
+  },
+  ToAbsolute: (item) => {
+    if (ES.IsAbsolute(item)) return item;
+    const isoString = ES.ToString(item);
+    const { zone, ...props } = ES.ParseAbsoluteString(isoString);
+    const datetime = ES.ToDateTime(props);
     return datetime.inTimeZone(zone, 'reject');
   },
   ToDateTime: (item) => {
@@ -155,18 +219,7 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
       return new TemporalDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, 'reject');
     }
     const isoString = ES.ToString(item);
-    const match = PARSE.datetime.exec(isoString);
-    if (!match) throw new RangeError(`invalid datetime: ${isoString}`);
-    const year = ES.ToInteger(match[1]);
-    const month = ES.ToInteger(match[2]);
-    const day = ES.ToInteger(match[3]);
-    const hour = ES.ToInteger(match[4]);
-    const minute = ES.ToInteger(match[5]);
-    let second = ES.ToInteger(match[6]);
-    if (second === 60) second = 59;
-    const millisecond = ES.ToInteger(match[7]);
-    const microsecond = ES.ToInteger(match[8]);
-    const nanosecond = ES.ToInteger(match[9]);
+    const {year, month, day, hour, minute, second, millisecond, microsecond, nanosecond} = ES.ParseDateTimeString(isoString);
     return new TemporalDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, 'reject');
   },
   ToDate: (item) => {
@@ -185,11 +238,7 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
       return new TemporalDate(year, month, day, 'reject');
     }
     const isoString = ES.ToString(item);
-    const match = PARSE.date.exec(isoString);
-    if (!match) throw new RangeError(`invalid date: ${isoString}`);
-    const year = ES.ToInteger(match[1]);
-    const month = ES.ToInteger(match[2]);
-    const day = ES.ToInteger(match[3]);
+    const {year, month, day} = ES.ParseDateString(isoString);
     return new TemporalDate(year, month, day, 'reject');
   },
   ToTime: (item) => {
@@ -214,15 +263,7 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
       return new TemporalTime(hour, minute, second, millisecond, microsecond, nanosecond, 'reject');
     }
     const isoString = ES.ToString(item);
-    const match = PARSE.time.exec(isoString);
-    if (!match) throw new RangeError(`invalid date: ${isoString}`);
-    const hour = ES.ToInteger(match[1]);
-    const minute = ES.ToInteger(match[2]);
-    let second = ES.ToInteger(match[3]);
-    if (second === 60) second = 59;
-    const millisecond = ES.ToInteger(match[4]);
-    const microsecond = ES.ToInteger(match[5]);
-    const nanosecond = ES.ToInteger(match[6]);
+    const {hour, minute, second, millisecond, microsecond, nanosecond} = ES.ParseTimeString(isoString);
     return new TemporalTime(hour, minute, second, millisecond, microsecond, nanosecond, 'reject');
   },
   ToYearMonth: (item) => {
@@ -239,10 +280,7 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
       return new TemporalYearMonth(year, month, 'reject');
     }
     const isoString = ES.ToString(item);
-    const match = PARSE.yearmonth.exec(isoString);
-    if (!match) throw new RangeError(`invalid yearmonth: ${isoString}`);
-    const year = ES.ToInteger(match[1]);
-    const month = ES.ToInteger(match[2]);
+    const {year, month} = ES.ParseYearMonthString(isoString);
     return new TemporalYearMonth(year, month, 'reject');
   },
   ToMonthDay: (item) => {
@@ -259,10 +297,7 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
       return new TemporalMonthDay(month, day, 'reject');
     }
     const isoString = ES.ToString(item);
-    const match = PARSE.monthday.exec(isoString);
-    if (!match) throw new RangeError(`invalid MonthDay: ${isoString}`);
-    const month = ES.ToInteger(match[1] || match[3]);
-    const day = ES.ToInteger(match[2] || match[4]);
+    const {month, day} = ES.ParseMonthDayString(isoString);
     return new TemporalMonthDay(month, day, 'reject');
   },
   ToDuration: (item) => {
@@ -293,17 +328,17 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
       return new TemporalDuration(years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 'reject');
     }
     const isoString = ES.ToString(item);
-    const match = PARSE.duration.exec(isoString);
-    if (!match) throw new RangeError(`invalid duration: ${isoString}`);
-    const years = ES.ToInteger(match[1]);
-    const months = ES.ToInteger(match[2]);
-    const days = ES.ToInteger(match[3]);
-    const hours = ES.ToInteger(match[4]);
-    const minutes = ES.ToInteger(match[5]);
-    const seconds = ES.ToInteger(match[6]);
-    const milliseconds = ES.ToInteger(match[7]);
-    const microseconds = ES.ToInteger(match[8]);
-    const nanoseconds = ES.ToInteger(match[9]);
+    const {
+      years,
+      months,
+      days,
+      hours,
+      minutes,
+      seconds,
+      milliseconds,
+      microseconds,
+      nanoseconds,
+    } = ES.ParseDurationString(isoString);
     return new TemporalDuration(
       years,
       months,
