@@ -1,6 +1,6 @@
 const yearpart = /(?:[+-]\d{6}|\d{4})/;
 const datesplit = new RegExp(`(${yearpart.source})(?:-(\\d{2})-(\\d{2})|(\\d{2})(\\d{2}))`);
-const timesplit = /(\d{2})(?::(\d{2})(?::(\d{2})(?:[.,](\d{1,9}))?)?|(\d{2})(?:(\d{2})(?:[.,](\d{1,9}))?)?)/;
+const timesplit = /(\d{2})(?::(\d{2})(?::(\d{2})(?:[.,](\d{1,9}))?)?|(\d{2})(?:(\d{2})(?:[.,](\d{1,9}))?)?)?/;
 const zonesplit = /(?:(Z)|(?:([+-]\d{2})(?::?(\d{2}))?(?:\[([^\]\s]+)\])?))/i;
 
 export const absolute = new RegExp(`^${datesplit.source}(?:T|\\s+)${timesplit.source}${zonesplit.source}$`, 'i');

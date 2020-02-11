@@ -453,6 +453,9 @@ describe('Time', () => {
         equal(`${Time.from('+0019761118T152330.1+00:00')}`, '15:23:30.100');
         equal(`${Time.from('+0019761118T152330.1+0000')}`, '15:23:30.100');
       });
+      it('optional parts', () => {
+        equal(`${Time.from('15')}`, '15:00');
+      });
       describe('Disambiguation', () => {
         const bad = { nanosecond: 1000 };
         it('reject', () => throws(() => Time.from(bad, { disambiguation: 'reject' }), RangeError));

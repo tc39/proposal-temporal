@@ -63,6 +63,8 @@ describe('fromString regex', () => {
     test('19761118T15:23:30Z', [1976, 11, 18, 15, 23, 30]);
     test('19761118T152330Z', [1976, 11, 18, 15, 23, 30]);
     test('19761118T152330.1234Z', [1976, 11, 18, 15, 23, 30, 123, 400]);
+    // Representations with reduced precision
+    test('1976-11-18T15Z', [1976, 11, 18, 15]);
   });
 
   describe('datetime', () => {
@@ -110,6 +112,9 @@ describe('fromString regex', () => {
     test('19761118T15:23:30', [1976, 11, 18, 15, 23, 30]);
     test('19761118T152330', [1976, 11, 18, 15, 23, 30]);
     test('19761118T152330.1234', [1976, 11, 18, 15, 23, 30, 123, 400]);
+    // Representations with reduced precision
+    test('1976-11-18T15', [1976, 11, 18, 15]);
+    test('1976-11-18', [1976, 11, 18]);
   });
 
   describe('date', () => {
@@ -146,6 +151,8 @@ describe('fromString regex', () => {
       '19761118T152330',
       '19761118T152330.1234'
     ].forEach((str) => test(str, [1976, 11, 18]));
+    // Representations with reduced precision
+    test('1976-11-18T15', [1976, 11, 18, 15]);
     // Date-only forms
     test('1976-11-18', [1976, 11, 18]);
     test('19761118', [1976, 11, 18]);
@@ -197,8 +204,12 @@ describe('fromString regex', () => {
     test('19761118T15:23:30', [15, 23, 30]);
     test('19761118T152330', [15, 23, 30]);
     test('19761118T152330.1234', [15, 23, 30, 123, 400]);
+    // Representations with reduced precision
+    test('1976-11-18T15', [15]);
+    test('1976-11-18', []);
     // Time-only forms
     generateTest('15:23', '');
+    ['+01:00[Europe/Vienna]', '-04:00', 'Z', ''].forEach((zoneStr) => test(`15${zoneStr}`, [15]));
   });
 
   describe('yearmonth', () => {
@@ -232,7 +243,9 @@ describe('fromString regex', () => {
       '1976-11-18T152330.1234',
       '19761118T15:23:30',
       '19761118T152330',
-      '19761118T152330.1234'
+      '19761118T152330.1234',
+      // Representations with reduced precision
+      '1976-11-18T15'
     ].forEach((str) => test(str, [1976, 11]));
     // Date-only forms
     test('1976-11-18', [1976, 11]);
@@ -286,6 +299,8 @@ describe('fromString regex', () => {
       '19761118T15:23:30',
       '19761118T152330',
       '19761118T152330.1234',
+      // Representations with reduced precision
+      '1976-11-18T15',
       // Date-only forms
       '1976-11-18',
       '19761118',
@@ -335,13 +350,15 @@ describe('fromString regex', () => {
     generateTest('1976-11-18T15:23', 'z', 'UTC');
     // Comma decimal separator
     test('1976-11-18T15:23:30,1234Z', 'UTC');
-    // Mixture of basic and extended format
     [
+      // Mixture of basic and extended format
       '1976-11-18T152330',
       '1976-11-18T152330.1234',
       '19761118T15:23:30',
       '19761118T152330',
-      '19761118T152330.1234'
+      '19761118T152330.1234',
+      // Representations with reduced precision
+      '1976-11-18T15'
     ].forEach((dateTimeString) => {
       ['+01:00', '+01', '+0100'].forEach((zoneString) =>
         test(`${dateTimeString}${zoneString}[Europe/Vienna]`, 'Europe/Vienna')
