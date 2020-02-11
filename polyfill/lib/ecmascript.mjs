@@ -98,13 +98,14 @@ export const ES = ObjectAssign({}, ES2019, {
     const minute = ES.ToInteger(match[5]);
     let second = ES.ToInteger(match[6]);
     if (second === 60) second = 59;
-    const millisecond = ES.ToInteger(match[7]);
-    const microsecond = ES.ToInteger(match[8]);
-    const nanosecond = ES.ToInteger(match[9]);
-    const offset = `${match[11]}:${match[12] || '00'}`;
-    let ianaName = match[13];
+    const fraction = match[7] + '000000000';
+    const millisecond = ES.ToInteger(fraction.slice(0, 3));
+    const microsecond = ES.ToInteger(fraction.slice(3, 6));
+    const nanosecond = ES.ToInteger(fraction.slice(6, 9));
+    const offset = `${match[9]}:${match[10] || '00'}`;
+    let ianaName = match[11];
     if (ianaName) ianaName = ES.GetCanonicalTimeZoneIdentifier(ianaName).toString();
-    const zone = match[10] ? 'UTC' : ianaName || offset;
+    const zone = match[8] ? 'UTC' : ianaName || offset;
     return { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, zone, ianaName, offset };
   },
   ParseTemporalAbsoluteString: (isoString) => {
@@ -124,9 +125,10 @@ export const ES = ObjectAssign({}, ES2019, {
       minute = ES.ToInteger(match[2]);
       second = ES.ToInteger(match[3]);
       if (second === 60) second = 59;
-      millisecond = ES.ToInteger(match[4]);
-      microsecond = ES.ToInteger(match[5]);
-      nanosecond = ES.ToInteger(match[6]);
+      const fraction = match[4] + '000000000';
+      millisecond = ES.ToInteger(fraction.slice(0, 3));
+      microsecond = ES.ToInteger(fraction.slice(3, 6));
+      nanosecond = ES.ToInteger(fraction.slice(6, 9));
     } else {
       ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.ParseISODateTime(isoString, {
         zoneRequired: false
@@ -175,9 +177,10 @@ export const ES = ObjectAssign({}, ES2019, {
     const hours = ES.ToInteger(match[4]);
     const minutes = ES.ToInteger(match[5]);
     const seconds = ES.ToInteger(match[6]);
-    const milliseconds = ES.ToInteger(match[7]);
-    const microseconds = ES.ToInteger(match[8]);
-    const nanoseconds = ES.ToInteger(match[9]);
+    const fraction = match[7] + '000000000';
+    const milliseconds = ES.ToInteger(fraction.slice(0, 3));
+    const microseconds = ES.ToInteger(fraction.slice(3, 6));
+    const nanoseconds = ES.ToInteger(fraction.slice(6, 9));
     return { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
   },
   ParseTemporalAbsolute: (isoString) => {

@@ -44,6 +44,17 @@ describe('Duration', () => {
     it('Duration.from("P1D") == P1D', () => equal(`${Duration.from('P1D')}`, 'P1D'));
     it('Duration.from({})', () => equal(`${Duration.from({})}`, `${new Duration()}`));
     it('lowercase variant', () => equal(`${Duration.from('p1y1m1dt1h1m1s')}`, 'P1Y1M1DT1H1M1S'));
+    it('any number of decimal places works', () => {
+      equal(`${Duration.from('P1Y1M1DT1H1M1.1S')}`, 'P1Y1M1DT1H1M1.100S');
+      equal(`${Duration.from('P1Y1M1DT1H1M1.12S')}`, 'P1Y1M1DT1H1M1.120S');
+      equal(`${Duration.from('P1Y1M1DT1H1M1.123S')}`, 'P1Y1M1DT1H1M1.123S');
+      equal(`${Duration.from('P1Y1M1DT1H1M1.1234S')}`, 'P1Y1M1DT1H1M1.123400S');
+      equal(`${Duration.from('P1Y1M1DT1H1M1.12345S')}`, 'P1Y1M1DT1H1M1.123450S');
+      equal(`${Duration.from('P1Y1M1DT1H1M1.123456S')}`, 'P1Y1M1DT1H1M1.123456S');
+      equal(`${Duration.from('P1Y1M1DT1H1M1.1234567S')}`, 'P1Y1M1DT1H1M1.123456700S');
+      equal(`${Duration.from('P1Y1M1DT1H1M1.12345678S')}`, 'P1Y1M1DT1H1M1.123456780S');
+      equal(`${Duration.from('P1Y1M1DT1H1M1.123456789S')}`, 'P1Y1M1DT1H1M1.123456789S');
+    });
     describe('Disambiguation', () => {
       it('negative values always throw', () => {
         const negative = {
