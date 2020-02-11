@@ -426,6 +426,9 @@ describe('Time', () => {
         equal(`${Time.from('1976-11-18T15:23:30.12345678Z')}`, '15:23:30.123456780');
         equal(`${Time.from('1976-11-18T15:23:30.123456789Z')}`, '15:23:30.123456789');
       });
+      it('variant decimal separator', () => {
+        equal(`${Time.from('1976-11-18T15:23:30,12Z')}`, '15:23:30.120');
+      });
       describe('Disambiguation', () => {
         const bad = { nanosecond: 1000 };
         it('reject', () => throws(() => Time.from(bad, { disambiguation: 'reject' }), RangeError));

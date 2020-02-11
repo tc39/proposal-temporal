@@ -410,6 +410,9 @@ describe('DateTime', () => {
       equal(`${DateTime.from('1976-11-18T15:23:30.12345678Z')}`, '1976-11-18T15:23:30.123456780');
       equal(`${DateTime.from('1976-11-18T15:23:30.123456789Z')}`, '1976-11-18T15:23:30.123456789');
     });
+    it('variant decimal separator', () => {
+      equal(`${DateTime.from('1976-11-18T15:23:30,12Z')}`, '1976-11-18T15:23:30.120');
+    });
   });
   describe('DateTime.inTimeZone() works', () => {
     it('recent date', () => {

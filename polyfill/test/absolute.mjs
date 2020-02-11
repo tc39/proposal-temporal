@@ -311,6 +311,9 @@ describe('Absolute', () => {
       equal(`${Absolute.from('1976-11-18T15:23:30.12345678Z')}`, '1976-11-18T15:23:30.123456780Z');
       equal(`${Absolute.from('1976-11-18T15:23:30.123456789Z')}`, '1976-11-18T15:23:30.123456789Z');
     });
+    it('variant decimal separator', () => {
+      equal(`${Absolute.from('1976-11-18T15:23:30,12Z')}`, '1976-11-18T15:23:30.120Z');
+    });
   });
   describe('Absolute.plus works', () => {
     const abs = Absolute.from('1969-12-25T12:23:45.678901234Z');
