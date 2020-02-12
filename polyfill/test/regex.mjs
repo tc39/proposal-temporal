@@ -356,12 +356,14 @@ describe('fromString regex', ()=>{
       day = day.concat(day.map((p) => `${p}${n}`));
     }
 
-    const tp = ['4H', '5M', '6S', '7.123S', '8.123456S', '9.123456789S', '0.123S', '0.123456S', '0.123456789S'];
+    const tp = ['4H', '5M'];
+    const sec = ['', '6S', '7.123S', '8.123456S', '9.123456789S', '0.123S', '0.123456S', '0.123456789S'];
     let tim = [''];
     while (tp.length) {
       const n = tp.shift();
       tim = tim.concat(tim.map((p) => `${p}${n}`));
     }
+    tim = tim.concat(...sec.map((s) => tim.map((p) => `${p}${s}`)));
 
     day.forEach((p) => test(duration, `P${p}`));
     tim.forEach((p) => test(duration, `PT${p}`));
