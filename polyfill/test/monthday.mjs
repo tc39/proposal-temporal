@@ -69,6 +69,10 @@ describe('MonthDay', () => {
         equal(`${MonthDay.from('1976-11-18T15')}`, '11-18');
         equal(`${MonthDay.from('1976-11-18')}`, '11-18');
       });
+      it('RFC 3339 month-day syntax', () => {
+        equal(`${MonthDay.from('--11-18')}`, '11-18');
+        equal(`${MonthDay.from('--1118')}`, '11-18');
+      });
       describe('Disambiguation', () => {
         const bad = { month: 1, day: 32 };
         it('reject', () => throws(() => MonthDay.from(bad, { disambiguation: 'reject' }), RangeError));

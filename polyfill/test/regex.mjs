@@ -320,6 +320,9 @@ describe('fromString regex', () => {
     test('0202', [2, 2]);
     test('01-31', [1, 31]);
     test('0131', [1, 31]);
+    // RFC 3339 month-day form
+    test('--11-18', [11, 18]);
+    test('--1118', [11, 18]);
   });
 
   describe('timezone', () => {
