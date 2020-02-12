@@ -8,11 +8,16 @@
 import Demitasse from '@pipobscure/demitasse';
 import Pretty from '@pipobscure/demitasse-pretty';
 
-import * as exports from './exports.mjs';
-// import * as regex from './regex.mjs';
-import * as now from './now.mjs';
+// tests with long tedious output
+import * as datemath from './datemath.mjs';
+import * as regex from './regex.mjs';
+
+// tests of internals
 import * as ecmascript from './ecmascript.mjs';
 
+// tests of public API
+import * as exports from './exports.mjs';
+import * as now from './now.mjs';
 import * as timezone from './timezone.mjs';
 import * as absolute from './absolute.mjs';
 import * as date from './date.mjs';
@@ -23,7 +28,6 @@ import * as yearmonth from './yearmonth.mjs';
 import * as monthday from './monthday.mjs';
 import * as intl from './intl.mjs';
 
-import * as datemath from './datemath.mjs';
 
 Promise.resolve()
   .then(() => {
