@@ -510,7 +510,7 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
     let ns = ES.GetEpochFromParts(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
 
     if (offset !== null) {
-      ns = ns.plus(bigInt(offset).multiply(1e6));
+      ns = ns.minus(bigInt(offset).multiply(1e6));
       return [ns];
     }
 

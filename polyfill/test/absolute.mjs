@@ -234,10 +234,20 @@ describe('Absolute', () => {
         BigInt(Date.UTC(1976, 10, 18, 15, 23, 30, 123)) * BigInt(1e6) + BigInt(456789)
       );
     });
+    it('2020-02-12T11:42-08:00', () => {
+      equal(
+        Absolute.from('2020-02-12T11:42-08:00').getEpochNanoseconds(),
+        BigInt(Date.UTC(2020, 1, 12, 19, 42)) * BigInt(1e6));
+    });
     it('2020-02-12T11:42-08:00[America/Vancouver]', () => {
       equal(
         Absolute.from('2020-02-12T11:42-08:00[America/Vancouver]').getEpochNanoseconds(),
         BigInt(Date.UTC(2020, 1, 12, 19, 42)) * BigInt(1e6));
+    });
+    it('2020-02-12T11:42+01:00', () => {
+      equal(
+        Absolute.from('2020-02-12T11:42+01:00').getEpochNanoseconds(),
+        BigInt(Date.UTC(2020, 1, 12, 10, 42)) * BigInt(1e6));
     });
     it('2020-02-12T11:42+01:00[Europe/Amsterdam]', () => {
       equal(
