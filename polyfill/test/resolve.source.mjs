@@ -3,7 +3,8 @@
  ** This code is governed by the license found in the LICENSE file.
  */
 
-import PKG from '../package.json';
+import fs from 'fs';
+const PKG = JSON.parse(fs.readFileSync('package.json', { encoding: 'utf-8' }));
 export function resolve(specifier, parent, defaultResolve) {
   if (specifier === PKG.name) {
     specifier = new URL('../lib/temporal.mjs', import.meta.url).toString();
