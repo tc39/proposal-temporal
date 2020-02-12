@@ -103,7 +103,7 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
       microsecond,
       nanosecond
     });
-    return datetime.inTimeZone(zone, match[11] ? match[10] : 'earlier');
+    return datetime.inTimeZone(zone, 'reject');
   },
   ToDateTime: (item) => {
     if (ES.IsDateTime(item)) return item;
