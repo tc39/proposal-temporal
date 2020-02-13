@@ -258,6 +258,9 @@ describe('Absolute', () => {
       equal(`${ Absolute.from(-1n) }`, '1969-12-31T23:59:59.999999999Z');
     });
     it('Absolute.from({}) throws', () => throws(() => Absolute.from({}), RangeError));
+    it('Absolute.from(ISO string leap second) is constrained', () => {
+      equal(`${Absolute.from('2016-12-31T23:59:60Z')}`, '2016-12-31T23:59:59Z');
+    });
   });
   describe('Absolute.plus works', ()=>{
     describe('cross epoch in ms', ()=>{

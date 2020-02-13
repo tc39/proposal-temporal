@@ -296,12 +296,21 @@ describe('Time', () => {
         equal(`${Time.from('15:23:30.123456789')}`, '15:23:30.123456789');
       });
       it('Time.from({}) throws', () => throws(() => Time.from({}), RangeError));
+      it('Time.from(ISO string leap second) is constrained', () => {
+        equal(`${Time.from('23:59:60')}`, '23:59:59');
+      });
+      it('Time.from(property bag leap second) throws', () => {
+        throws(() => Time.from({ hour: 23, minute: 59, second: 60 }), RangeError);
+      });
     });
     describe('Disambiguation', () => {
       it('reject', () => throws(() => new Time(0, 0, 0, 0, 0, 1000, 'reject'), RangeError));
       it('constrain', () => equal(`${new Time(0, 0, 0, 0, 0, 1000, 'constrain')}`, '00:00:00.000000999'));
       it('balance', () => equal(`${new Time(0, 0, 0, 0, 0, 1000, 'balance')}`, '00:00:00.000001'));
       it('throw when bad disambiguation', () => throws(() => new Time(0, 0, 0, 0, 0, 1, 'xyz'), TypeError));
+      it('reject leap second', () => throws(() => new Time(23, 59, 60, 0, 0, 0, 'reject'), RangeError));
+      it('constrain leap second', () => equal(`${new Time(23, 59, 60, 0, 0, 0, 'constrain')}`, '23:59:59'));
+      it('balance leap second', () => equal(`${new Time(23, 59, 60, 0, 0, 0, 'balance')}`, '00:00'));
     });
   });
   describe('time operations', () => {

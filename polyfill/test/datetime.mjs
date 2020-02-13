@@ -209,6 +209,9 @@ describe('DateTime', () => {
       it('balance', () => equal(`${new DateTime(2019, 1, 32, 0, 0, 0, 0, 0, 0, 'balance')}`, '2019-02-01T00:00'));
       it('throw when bad disambiguation', () =>
         throws(() => new DateTime(2019, 1, 1, 0, 0, 0, 0, 0, 0, 'xyz'), TypeError));
+      it('reject leap second', () => throws(() => new DateTime(2016, 12, 31, 23, 59, 60, 0, 0, 0, 'reject'), RangeError));
+      it('constrain leap second', () => equal(`${new DateTime(2016, 12, 31, 23, 59, 60, 0, 0, 0, 'constrain')}`, '2016-12-31T23:59:59'));
+      it('balance leap second', () => equal(`${new DateTime(2016, 12, 31, 23, 59, 60, 0, 0, 0, 'balance')}`, '2017-01-01T00:00'));
     });
   });
   describe('.with manipulation', () => {
@@ -288,6 +291,12 @@ describe('DateTime', () => {
     it('DateTime.from({ year: 1976, month: 11, day: 18 }) == 1976-11-18T00:00', () => equal(`${DateTime.from({ year: 1976, month: 11, day: 18 })}`, '1976-11-18T00:00'));
     it('DateTime.from({ year: 1976, month: 11, day: 18, millisecond: 123 }) == 1976-11-18T00:00:00.123', () => equal(`${DateTime.from({ year: 1976, month: 11, day: 18, millisecond: 123 })}`, '1976-11-18T00:00:00.123'));
     it('DateTime.from({}) throws', () => throws(() => DateTime.from({}), RangeError));
+    it('DateTime.from(ISO string leap second) is constrained', () => {
+      equal(`${DateTime.from('2016-12-31T23:59:60')}`, '2016-12-31T23:59:59');
+    });
+    it('DateTime.from(property bag leap second) throws', () => {
+      throws(() => DateTime.from({ year: 2016, month: 12, day: 31, hour: 23, minute: 59, second: 60 }), RangeError);
+    });
   });
 });
 
