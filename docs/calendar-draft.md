@@ -42,7 +42,7 @@ class MyCalendar {
 	) : Temporal.Date;
 
 	/** A string identifier for this calendar */
-	id] : string;
+	id : string;
 
 	//////////////////
 	//  Arithmetic  //
