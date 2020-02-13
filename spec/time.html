@@ -23,27 +23,16 @@
       <p>
         When the `Temporal.Time` function is called, the following steps are taken:
       </p>
+      <emu-note>The value of ? ToInteger(*undefined*) is 0.</emu-note>
       <emu-alg>
         1. If NewTarget is *undefined*, then
           1. Throw a *TypeError* exception.
         1. Let _hour_ be ? ToInteger(_hour_).
         1. Let _minute_ be ? ToInteger(_minute_).
-        1. If _second_ is not *undefined*, then
-          1. Let _second_ be ? ToInteger(_second_).
-        1. Else
-          1. Let _second_ be 0.
-        1. If _millisecond_ is not *undefined*, then
-          1. Let _millisecond_ be ? ToInteger(_millisecond_).
-        1. Else
-          1. Let _millisecond_ be 0.
-        1. If _microsecond_ is not *undefined*, then
-          1. Let _microsecond_ be ? ToInteger(_microsecond_).
-        1. Else
-          1. Let _microsecond_ be 0.
-        1. If _nanosecond_ is not *undefined*, then
-          1. Let _nanosecond_ be ? ToInteger(_nanosecond_).
-        1. Else
-          1. Let _nanosecond_ be 0.
+        1. Let _second_ be ? ToInteger(_second_).
+        1. Let _millisecond_ be ? ToInteger(_millisecond_).
+        1. Let _microsecond_ be ? ToInteger(_microsecond_).
+        1. Let _nanosecond_ be ? ToInteger(_nanosecond_).
         1. Set _disambiguation_ to ? ToDisambiguation(_disambiguation_).
         1. Let _result_ be ? RegulateTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _disambiguation_).
         1. Return ? CreateTime(_result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]], NewTarget).
@@ -554,6 +543,7 @@
 
     <emu-clause id="sec-temporal-totime" aoid="ToTime">
       <h1>ToTime ( _time_ )</h1>
+      <emu-note>The value of ? ToInteger(*undefined*) is 0.</emu-note>
       <emu-alg>
         1. If Type(_time_) is String, then
           1. Return ? TimeFromString(_time_).
@@ -564,8 +554,6 @@
           1. For each row of <emu-xref href="#table-temporal-timelike-properties"></emu-xref>, except the header row, in table order, do
             1. Let _property_ be the Property value of the current row.
             1. Let _value_ be ? Get(_time_, _property_).
-            1. If _value_ is *undefined*, then
-              1. Throw a *TypeError* exception.
             1. Let _value_ be ? ToInteger(_value_).
             1. Set _result_'s internal slot whose name is the Internal Slot value of the current row to _value_.
           1. If ! ValidateTime(_result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]) is *false*, then

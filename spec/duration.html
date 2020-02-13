@@ -96,6 +96,7 @@
       <p>
         When the `Temporal.Duration` function is called, the following steps are taken:
       </p>
+      <emu-note>The value of ? ToInteger(*undefined*) is 0.</emu-note>
       <emu-alg>
         1. If NewTarget is *undefined*, then
           1. Throw a *TypeError* exception.
@@ -332,6 +333,7 @@
 
     <emu-clause id="sec-temporal-toduration" aoid="ToDuration">
       <h1>ToDuration ( _arg_ )</h1>
+      <emu-note>The value of ? ToInteger(*undefined*) is 0.</emu-note>
       <emu-alg>
         1. If Type(_arg_) is String, then
           1. Return ? DurationFromString(_arg_).
@@ -342,10 +344,7 @@
           1. For each row of <emu-xref href="#table-temporal-durationlike-properties"></emu-xref>, except the header row, in table order, do
             1. Let _prop_ be the Property value of the current row.
             1. Let _val_ be ? Get(_arg_, _prop_).
-            1. If _val_ is *undefined*, then
-              1. Let _val_ be *0*.
-            1. Else
-              1. Let _val_ be ? ToInteger(_val_).
+            1. Let _val_ be ? ToInteger(_val_).
             1. Set _result_'s internal slot whose name is the Internal Slot value of the current row to _val_.
           1. Return ? CreateDuration(_result_.[[Years]], _result_.[[Months]], _result_.[[Days]], _result_.[[Hours]], _result_.[[Minutes]], _result_.[[Seconds]], _result_.[[Milliseconds]], _result_.[[Microseconds]], _result_.[[Nanoseconds]]).
         1. Throw a *RangeError* exception.
