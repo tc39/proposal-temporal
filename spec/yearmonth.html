@@ -433,10 +433,7 @@
         1. If Type(_yearMonth_) is Object, then
           1. If _yearMonth_ has an [[InitializedTemporalYearMonth]] internal slot, then
             1. Return _yearMonth_.
-          1. Let _result_ be the new Record {
-              [[Year]]: *undefined*,
-              [[Month]]: *undefined*
-            }.
+          1. Let _result_ be a new Record with all the internal slots given in the Internal Slot column in <emu-xref href="#table-temporal-yearmonthlike-properties"></emu-xref>.
           1. For each row of <emu-xref href="#table-temporal-yearmonthlike-properties"></emu-xref>, except the header row, in table order, do
             1. Let _property_ be the Property value of the current row.
             1. Let _value_ be ? Get(_yearMonth_, _property_).
