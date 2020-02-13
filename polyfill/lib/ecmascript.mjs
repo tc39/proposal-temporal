@@ -87,7 +87,8 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
     const day = ES.ToInteger(match[3]);
     const hour = ES.ToInteger(match[4]);
     const minute = ES.ToInteger(match[5]);
-    const second = ES.ToInteger(match[6]);
+    let second = ES.ToInteger(match[6]);
+    if (second === 60) second = 59;
     const millisecond = ES.ToInteger(match[7]);
     const microsecond = ES.ToInteger(match[8]);
     const nanosecond = ES.ToInteger(match[9]);
@@ -140,7 +141,8 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
     const day = ES.ToInteger(match[3]);
     const hour = ES.ToInteger(match[4]);
     const minute = ES.ToInteger(match[5]);
-    const second = ES.ToInteger(match[6]);
+    let second = ES.ToInteger(match[6]);
+    if (second === 60) second = 59;
     const millisecond = ES.ToInteger(match[7]);
     const microsecond = ES.ToInteger(match[8]);
     const nanosecond = ES.ToInteger(match[9]);
@@ -195,7 +197,8 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
     if (!match) throw new RangeError(`invalid date: ${isoString}`);
     const hour = ES.ToInteger(match[1]);
     const minute = ES.ToInteger(match[2]);
-    const second = ES.ToInteger(match[3]);
+    let second = ES.ToInteger(match[3]);
+    if (second === 60) second = 59;
     const millisecond = ES.ToInteger(match[4]);
     const microsecond = ES.ToInteger(match[5]);
     const nanosecond = ES.ToInteger(match[6]);
@@ -699,7 +702,7 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
   RejectTime: (hour, minute, second, millisecond, microsecond, nanosecond) => {
     hour = ES.RejectToRange(hour, 0, 23);
     minute = ES.RejectToRange(minute, 0, 59);
-    second = ES.RejectToRange(second, 0, 60);
+    second = ES.RejectToRange(second, 0, 59);
     millisecond = ES.RejectToRange(millisecond, 0, 999);
     microsecond = ES.RejectToRange(microsecond, 0, 999);
     nanosecond = ES.RejectToRange(nanosecond, 0, 999);
