@@ -349,21 +349,10 @@ describe('fromString regex', ()=>{
   });
 
   describe('duration', () => {
-    const dp = ['1Y', '2M', '3D'];
-    let day = [''];
-    while (dp.length) {
-      const n = dp.shift();
-      day = day.concat(day.map((p) => `${p}${n}`));
-    }
-
-    const tp = ['4H', '5M'];
+    const day = ['', '1Y', '2M', '3D', '1Y2M', '1Y3D', '2M3D', '1Y2M3D'];
+    const times = ['', '4H', '5M', '4H5M'];
     const sec = ['', '6S', '7.123S', '8.123456S', '9.123456789S', '0.123S', '0.123456S', '0.123456789S'];
-    let tim = [''];
-    while (tp.length) {
-      const n = tp.shift();
-      tim = tim.concat(tim.map((p) => `${p}${n}`));
-    }
-    tim = tim.concat(...sec.map((s) => tim.map((p) => `${p}${s}`)));
+    const tim = sec.reduce((arr, s) => arr.concat(times.map((p) => `${p}${s}`)), []);
 
     day.forEach((p) => test(duration, `P${p}`));
     tim.forEach((p) => test(duration, `PT${p}`));
