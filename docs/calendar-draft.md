@@ -24,7 +24,7 @@ The following section assumes it is a protocol.
 
 ### Methods on the Temporal.Calendar interface
 
-All of the following methods return new Temporal objects.  All properties of `Temporal.Calendar` are Symbols.
+All of the following methods return new Temporal objects.
 
 ```javascript
 class MyCalendar {
@@ -34,38 +34,38 @@ class MyCalendar {
 	///////////////////
 
 	/** Returns the projection of self in the ISO calendar */
-	[Temporal.Calendar.toISO](
+	toISO(
 		self: Temporal.Date
 	) : Temporal.Date;
 
 	/** Returns the projection of isoDate in the custom calendar */
-	[Temporal.Calendar.fromISO](
+	fromISO(
 		isoDate: Temporal.Date
 	) : Temporal.Date;
 
 	/** A string identifier for this calendar */
-	[Temporal.Calendar.id] : string;
+	id : string;
 
 	//////////////////
 	//  Arithmetic  //
 	//////////////////
 
 	/** Returns self plus duration according to the calendar rules. */
-	[Temporal.Calendar.plus](
+	plus(
 		self: Temporal.Date,
 		duration: Temporal.Duration,
 		options: /* options bag */
 	) : Temporal.Date;
 
 	/** Returns self minus duration according to the calendar rules. */
-	[Temporal.Calendar.minus](
+	minus(
 		self: Temporal.Date,
 		duration: Temporal.Duration,
 		options: /* options bag */
 	) : Temporal.Date;
 
 	/** Returns self minus other, which are dates in the same calendar. */
-	[Temporal.Calendar.difference](
+	difference(
 		self: Temporal.Date,
 		other: Temporal.Date,
 		options: /* options bag */
@@ -76,23 +76,23 @@ class MyCalendar {
 	//  Semantics defined in date.md  //
 	////////////////////////////////////
 
-	[Temporal.Calendar.dayOfWeek](
+	dayOfWeek(
 		self: Temporal.Date
 	) : number;
 
-	[Temporal.Calendar.weekOfYear](
+	weekOfYear(
 		self: Temporal.Date
 	) : number;
 
-	[Temporal.Calendar.daysInMonth](
+	daysInMonth(
 		self: Temporal.Date
 	) : number;
 
-	[Temporal.Calendar.daysInYear](
+	daysInYear(
 		self: Temporal.Date
 	) : number;
 
-	[Temporal.Calendar.leapYear](
+	leapYear(
 		self: Temporal.Date
 	) : boolean;
 }
