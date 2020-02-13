@@ -338,17 +338,7 @@
         1. If Type(_arg_) is Object, then
           1. If _arg_ has an [[InitializedTemporalDuration]] internal slot, then
             1. Return _arg_.
-          1. Let _result_ be the Record {
-            [[Years]]: *undefined*,
-            [[Months]]: *undefined*,
-            [[Days]]: *undefined*,
-            [[Hours]]: *undefined*,
-            [[Minutes]]: *undefined*,
-            [[Seconds]]: *undefined*,
-            [[Milliseconds]]: *undefined*,
-            [[Microseconds]]: *undefined*,
-            [[Nanoseconds]]: *undefined*,
-          }.
+          1. Let _result_ be a new Record with all the internal slots given in the Internal Slot column in <emu-xref href="#table-temporal-durationlike-properties"></emu-xref>.
           1. For each row of <emu-xref href="#table-temporal-durationlike-properties"></emu-xref>, except the header row, in table order, do
             1. Let _prop_ be the Property value of the current row.
             1. Let _val_ be ? Get(_arg_, _prop_).
