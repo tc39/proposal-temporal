@@ -505,11 +505,17 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal-regulatedate" aoid="RegulateDate">
-      <h1>RegulateDate ( _y_, _m_, _d_, _disambiguation_ )</h1>
+      <h1>RegulateDate ( _year_, _month_, _day_, _disambiguation_ )</h1>
       <emu-alg>
         1. Assert: _disambiguation_ is one of `"constrain"`, `"balance"`, or `"reject"`.
         1. If _disambiguation_ is *"reject"*, then
-          1. Return ? RejectDate(_year_, _month_, _day_).
+          1. If ! ValidateDate(_year_, _month_, _day_) is *false*, then
+            1. Throw a *RangeError* exception.
+          1. Return the Record {
+            [[Year]]: _year_,
+            [[Month]]: _month_,
+            [[Day]]: _day_,
+            }.
         1. If _disambiguation_ is *"constrain"*, then
           1. Return ! ConstrainDate(_year_, _month_, _day_).
         1. If _disambiguation_ is *"balance"*, then
@@ -527,6 +533,29 @@
         1. If _d_ &lt; 1 or _d_ &gt; _maxDay_, then
           1. Return *false*.
         1. Return *true*.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-constraindate" aoid="ConstrainDate">
+      <h1>ConstrainDate ( _year_, _month_, _day_ )</h1>
+      <emu-alg>
+        1. Assert: _year_, _month_, and _day_ are integer Number values.
+        1. Set _year_ to ConstrainToRange(_year_, -999999, 999999).
+        1. Set _month_ to ConstrainToRange(_month_, 1, 12).
+        1. Set _day_ to ConstrainToRange(_day_, 1, DaysInMonth(_year_, _month_));
+        1. Return the Record {
+          [[Year]]: _year_,
+          [[Month]]: _month_,
+          [[Day]]: _day_,
+          }.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-balancedate" aoid="BalanceDate">
+      <h1>BalanceDate ( _year_, _month_, _day_ )</h1>
+      <emu-alg>
+        1. Assert: _year_, _month_, and _day_ are integer Number values.
+        1. <mark>TODO</mark>
       </emu-alg>
     </emu-clause>
 
