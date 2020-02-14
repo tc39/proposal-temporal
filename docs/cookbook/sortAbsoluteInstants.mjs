@@ -27,8 +27,8 @@ const e = "2019-03-25T01:45:00-06:00[America/New_York]";
 const results = getSortedInstants([a, b, c, d, e]);
 
 // results will have correct order
-assert.equal(results[0], d);
-assert.equal(results[1], e);
-assert.equal(results[2], c);
-assert.equal(results[3], a);
-assert.equal(results[4], b);
+assert.equal(results[0].toString(), "2019-03-16T01:45Z");
+assert.equal(results[1].toString(), "2019-03-25T05:45Z");
+assert.equal(results[2].toString(), "2019-03-30T00:45Z");
+assert.equal(results[3].toString(), "2020-01-24T01:04:36.491865121Z");
+assert.equal(results[4].toString(), "2020-02-11T01:04:36.491865121Z");
