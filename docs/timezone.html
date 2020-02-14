@@ -69,15 +69,17 @@
 <p>For a list of IANA time zone names, see the current version of the <a href="https://www.iana.org/time-zones">IANA time zone database</a>.
 A convenient list is also available <a href="https://en.wikipedia.org/wiki/List_of_tz_database_time_zones">on Wikipedia</a>, although it might not reflect the latest official status.</p>
 <p>The string <code>timeZoneIdentifier</code> is canonicalized before being used to determine the time zone.
-For example, values like <code>+100</code> will be understood to mean <code>+01:00</code>, and capitalization will be corrected.
+For example, values like <code>+01</code> will be understood to mean <code>+01:00</code>, and capitalization will be corrected.
 If no time zone can be determined from <code>timeZoneIdentifier</code>, then a <code>RangeError</code> is thrown.</p>
+<p>Use this constructor directly if you have a string that is known to be a correct time zone identifier.
+If you have an ISO 8601 date-time string, <code>Temporal.TimeZone.from()</code> is probably more convenient.</p>
 <p>Example usage:</p>
 <pre><code class="language-javascript">tz = new Temporal.TimeZone(&#39;UTC&#39;);
 tz = new Temporal.TimeZone(&#39;Africa/Cairo&#39;);
 tz = new Temporal.TimeZone(&#39;america/VANCOUVER&#39;);
 tz = new Temporal.TimeZone(&#39;Asia/Katmandu&#39;);  // alias of Asia/Kathmandu
 tz = new Temporal.TimeZone(&#39;-04:00&#39;);
-tz = new Temporal.TimeZone(&#39;+645&#39;);
+tz = new Temporal.TimeZone(&#39;+0645&#39;);
 /* WRONG */ tz = new Temporal.TimeZone(&#39;local&#39;);  // not a time zone, throws</code></pre>
 <h4 id="difference-between-iana-time-zones-and-utc-offsets">Difference between IANA time zones and UTC offsets</h4>
 <p>The returned time zone object behaves slightly differently depending on whether an IANA time zone name (e.g. <code>Europe/Berlin</code>) is given, or a UTC offset (e.g. <code>+01:00</code>).
@@ -89,6 +91,42 @@ now = Temporal.now.absolute();
 tz1.getTransitions(now).next().done;  // =&gt; true
 tz2.getTransitions(now).next().done;  // =&gt; false</code></pre>
 <h2 id="static-methods">Static methods</h2>
+<h3 id="temporaltimezonefromthing-string--object--temporaltimezone">Temporal.TimeZone.<strong>from</strong>(<em>thing</em>: string | object) : Temporal.TimeZone</h3>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>thing</code> (string or object): A <code>Temporal.TimeZone</code> object or a string from which to create a <code>Temporal.TimeZone</code>.</li>
+</ul>
+<p><strong>Returns:</strong> a new <code>Temporal.TimeZone</code> object.</p>
+<p>This static method creates a new time zone from another value.
+If the value is a string, it can be:</p>
+<ul>
+<li>a string that is accepted by <code>new Temporal.TimeZone()</code>;</li>
+<li>a string in the ISO 8601 format including a time zone offset part.
+Or, if the value is an object, it can be another <code>Temporal.TimeZone</code> object, which is returned directly.</li>
+</ul>
+<p>Note that the ISO 8601 string can optionally be extended with an IANA time zone name in square brackets appended to it.</p>
+<p>This function is often more convenient to use than <code>new Temporal.TimeZone()</code> because it handles a wider range of input.</p>
+<p>Usage examples:</p>
+<pre><code class="language-javascript">// IANA time zone names and UTC offsets
+tz = Temporal.TimeZone.from(&#39;UTC&#39;);
+tz = Temporal.TimeZone.from(&#39;Africa/Cairo&#39;);
+tz = Temporal.TimeZone.from(&#39;america/VANCOUVER&#39;);
+tz = Temporal.TimeZone.from(&#39;Asia/Katmandu&#39;);  // alias of Asia/Kathmandu
+tz = Temporal.TimeZone.from(&#39;-04:00&#39;);
+tz = Temporal.TimeZone.from(&#39;+0645&#39;);
+
+// ISO 8601 string with time zone offset part
+tz = Temporal.TimeZone.from(&#39;2020-01-14T00:31:00.065858086Z&#39;);
+tz = Temporal.TimeZone.from(&#39;2020-01-13T16:31:00.065858086-08:00&#39;);
+tz = Temporal.TimeZone.from(&#39;2020-01-13T16:31:00.065858086-08:00[America/Vancouver]&#39;);
+
+// Existing TimeZone object
+tz2 = Temporal.TimeZone.from(tz);
+
+/* WRONG */ tz = Temporal.TimeZone.from(&#39;local&#39;);  // not a time zone, throws
+/* WRONG */ tz = Temporal.TimeZone.from({name: &#39;UTC&#39;});  // not a TimeZone object, throws
+/* WRONG */ tz = Temporal.TimeZone.from(&#39;2020-01-14T00:31:00&#39;);  // ISO 8601 string without time zone offset part, throws
+/* WRONG */ tz = Temporal.TimeZone.from(&#39;-08:00[America/Vancouver]&#39;)  // ISO 8601 string without date-time part, throws</code></pre>
 <h3 id="temporaltimezone-iteratortemporaltimezone"><strong>Temporal.TimeZone</strong>: iterator&lt;Temporal.TimeZone&gt;</h3>
 <p>The <code>Temporal.TimeZone</code> object is itself iterable, and can be used to iterate through all of the IANA time zones supported by the implementation.</p>
 <p>Example usage:</p>
