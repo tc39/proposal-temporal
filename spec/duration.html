@@ -362,6 +362,19 @@
       </emu-alg>
     </emu-clause>
 
+    <emu-clause id="sec-temporal-tolimitedduration" aoid="ToLimitedDuration">
+      <h1>ToLimitedDuration ( _arg_ , _disallowedFields_ )</h1>
+      <emu-alg>
+        1. Let _duration_ be ? ToDuration(_arg_).
+        1. For each row of <emu-xref href="#table-temporal-durationlike-properties"></emu-xref>, except the header row, in table order, do
+          1. Let _prop_ be the Property value of the current row.
+          1. Let _value_ be _result_'s internal slot whose name is the Internal Slot value of the current row.
+          1. If _value_ is not 0 and _disallowedFields_ contains _prop_, then
+            1. Throw a *RangeError* exception.
+        1. Return _duration_.
+      </emu-alg>
+    </emu-clause>
+
     <emu-clause id="sec-temporal-durationfromstring" aoid="DurationFromString">
       <h1>DurationFromString ( _duration_ )</h1>
       <emu-alg>
@@ -402,39 +415,39 @@
         <tbody>
           <tr>
             <td>[[Days]]</td>
-            <td>"days"</td>
+            <td>*"days"*</td>
           </tr>
           <tr>
             <td>[[Hours]]</td>
-            <td>"hours"</td>
+            <td>*"hours"*</td>
           </tr>
           <tr>
             <td>[[Microseconds]]</td>
-            <td>"microseconds"</td>
+            <td>*"microseconds"*</td>
           </tr>
           <tr>
             <td>[[Milliseconds]]</td>
-            <td>"milliseconds"</td>
+            <td>*"milliseconds"*</td>
           </tr>
           <tr>
             <td>[[Minutes]]</td>
-            <td>"minutes"</td>
+            <td>*"minutes"*</td>
           </tr>
           <tr>
             <td>[[Months]]</td>
-            <td>"months"</td>
+            <td>*"months"*</td>
           </tr>
           <tr>
             <td>[[Nanoseconds]]</td>
-            <td>"nanoseconds"</td>
+            <td>*"nanoseconds"*</td>
           </tr>
           <tr>
             <td>[[Seconds]]</td>
-            <td>"seconds"</td>
+            <td>*"seconds"*</td>
           </tr>
           <tr>
             <td>[[Years]]</td>
-            <td>"years"</td>
+            <td>*"years"*</td>
           </tr>
         </tbody>
       </table>
