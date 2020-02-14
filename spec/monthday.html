@@ -159,8 +159,7 @@
       <emu-alg>
         1. Let _monthDay_ be the *this* value.
         1. Perform ? RequireInternalSlot(_monthDay_, [[InitializedTemporalMonthDay]]).
-        1. Let _duration_ be ? ToDurationLike(_duration_).
-        1. <mark>TODO: Throw if any year/time properties are present?</mark>
+        1. Let _duration_ be ? ToLimitedDuration(_duration_, « *"years"*, *"hours"*, *"minutes"*, *"seconds"*, *"milliseconds"*, *"microseconds"*, *"nanoseconds"* »).
         1. Set _disambiguation_ to ? ToDisambiguation(_disambiguation_).
         1. Let _m_ be _monthDay_.[[Month]] + _duration_.[[Months]].
         1. Let _d_ be _monthDay_.[[Day]] + _duration_.[[Days]].
@@ -178,8 +177,7 @@
       <emu-alg>
         1. Let _monthDay_ be the *this* value.
         1. Perform ? RequireInternalSlot(_monthDay_, [[InitializedTemporalMonthDay]]).
-        1. Let _duration_ be ? ToDurationLike(_duration_).
-        1. <mark>TODO: Throw if any year/time properties are present?</mark>
+        1. Let _duration_ be ? ToLimitedDuration(_duration_, « *"years"*, *"hours"*, *"minutes"*, *"seconds"*, *"milliseconds"*, *"microseconds"*, *"nanoseconds"* »).
         1. Set _disambiguation_ to ? ToDisambiguation(_disambiguation_).
         1. Let _m_ be _monthDay_.[[Month]] - _duration_.[[Months]].
         1. Let _d_ be _monthDay_.[[Day]] - _duration_.[[Days]].
