@@ -7,7 +7,7 @@ import assert from "assert";
  *
  * @param {string[]} parseableAbsoluteStrings - a group of ISO Strings
  * @param {boolean} reverse ascending or descending order
- * @returns {string[]} Temporal.Absolute instance
+ * @returns {string[]} the array from parseableAbsoluteStrings, sorted
  */
 function getSortedInstants(parseableAbsoluteStrings, reverse = false) {
     const sortedAbsoluteTimes = parseableAbsoluteStrings
