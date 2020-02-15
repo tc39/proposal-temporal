@@ -36,7 +36,12 @@ tz.getAbsoluteFor(dt, 'later');    // => 2019-03-31T01:45Z
 tz.getAbsoluteFor(dt, 'reject');   // throws
 ```
 
-In this example, the wall-clock time 2:45 doesn't exist, so it is treated as either 1:45 +01:00 or 3:45 +02:00.
+In this example, the wall-clock time 2:45 doesn't exist, so it is treated as either 1:45 +01:00 or 3:45 +02:00, which can be seen by converting the absolute back to a wall-clock time in the time zone:
+
+```javascript
+tz.getAbsoluteFor(dt, 'earlier').inTimeZone(tz);  // => 2019-03-31T01:45
+tz.getAbsoluteFor(dt, 'later').inTimeZone(tz);  // => 2019-03-31T03:45
+```
 
 Likewise, at the end of DST, clocks move backward an hour.
 In this case, the illusion is that an hour repeats itself.
