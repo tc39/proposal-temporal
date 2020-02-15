@@ -189,49 +189,15 @@ Allowed values are <code>earlier</code>, <code>later</code>, and <code>reject</c
 The default is <code>earlier</code>.</li>
 </ul>
 <p><strong>Returns:</strong> A <code>Temporal.Absolute</code> object indicating the absolute time in <code>timeZone</code> at the time of the calendar date and wall-clock time from <code>dateTime</code>.</p>
-<p>This method is one way to convert a <code>Temporal.DateTime</code> to a <code>Temporal.Absolute</code>.</p>
-<h4 id="resolving-ambiguity">Resolving ambiguity</h4>
-<blockquote>
-<p>This explanation was adapted from the <a href="https://github.com/moment/momentjs.com/blob/master/docs/moment-timezone/01-using-timezones/02-parsing-ambiguous-inputs.html">moment-timezone documentation</a>.</p>
-</blockquote>
-<p>This conversion is not necessarily one-to-one.
-Due to DST time changes, there is a possibility that a wall-clock time either does not exist, or has existed twice.
-The <code>disambiguation</code> argument controls what absolute time to return in the case of ambiguity:</p>
+<p>This method is one way to convert a <code>Temporal.DateTime</code> to a <code>Temporal.Absolute</code>.
+It is identical to <a href="./datetime.html#inTimeZone"><code>dateTime.inTimeZone(timeZone, disambiguation)</code></a>.</p>
+<p>In the case of ambiguity, the <code>disambiguation</code> parameter controls what absolute time to return:</p>
 <ul>
-<li><code>earlier</code> (the default): The earlier of the two possible absolute times will be returned.</li>
-<li><code>later</code>: The later of the two possible absolute times will be returned.</li>
-<li><code>reject</code>: A <code>RangeError</code> will be thrown.</li>
+<li><code>earlier</code>: The earlier of two possible times.</li>
+<li><code>later</code>: The later of two possible times.</li>
+<li><code>reject</code>: Throw a <code>RangeError</code> instead.</li>
 </ul>
-<p>When entering DST, clocks move forward an hour.
-In reality, it is not time that is moving, it is the offset moving.
-Moving the offset forward gives the illusion that an hour has disappeared.
-As the clock ticks, you can see it move from 1:58 to 1:59 to 3:00.
-It is easier to see what is actually happening when you include the offset.</p>
-<pre><code>1:58 +1
-1:59 +1
-3:00 +2
-3:01 +2</code></pre><p>The result is that any time between 1:59:59 and 3:00:00 never actually happened.
-In <code>earlier</code> mode, the absolute time will skip backwards by the amount of the DST gap (usually 1 hour).
-In <code>later</code> mode, the absolute time will skip forwards by the amount of the DST gap.</p>
-<pre><code class="language-javascript">tz = new Temporal.TimeZone(&#39;Europe/Berlin&#39;);
-dt = new Temporal.DateTime(2019, 3, 31, 2, 45);
-tz.getAbsoluteFor(dt, &#39;earlier&#39;);  // =&gt; 2019-03-31T00:45Z
-tz.getAbsoluteFor(dt, &#39;later&#39;);    // =&gt; 2019-03-31T01:45Z
-tz.getAbsoluteFor(dt, &#39;reject&#39;);   // throws</code></pre>
-<p>In this example, the wall-clock time 2:45 doesn&#39;t exist, so it is treated as either 1:45 +01:00 or 3:45 +02:00.</p>
-<p>Likewise, at the end of DST, clocks move backward an hour.
-In this case, the illusion is that an hour repeats itself.
-In <code>earlier</code> mode, the absolute time will be the earlier instance of the duplicated wall-clock time.
-In <code>later</code> mode, the absolute time will be the later instance of the duplicated time.</p>
-<pre><code class="language-javascript">tz = new Temporal.TimeZone(&#39;America/Sao_Paulo&#39;);
-dt = new Temporal.DateTime(2019, 2, 16, 23, 45);
-tz.getAbsoluteFor(dt, &#39;earlier&#39;);  // =&gt; 2019-02-17T01:45Z
-tz.getAbsoluteFor(dt, &#39;later&#39;);    // =&gt; 2019-02-17T02:45Z
-tz.getAbsoluteFor(dt, &#39;reject&#39;);   // throws</code></pre>
-<p>In this example, the wall-clock time 23:45 exists twice.</p>
-<blockquote>
-<p><em>Compatibility Note</em>: The built-in behaviour of the Moment Timezone and Luxon libraries is to give the same result as <code>earlier</code> when turning the clock back, and <code>later</code> when setting the clock forward.</p>
-</blockquote>
+<p>For usage examples and a more complete explanation of how this disambiguation works and why it is necessary, see <a href="./ambiguity.html">Resolving ambiguity</a>.</p>
 <h3 id="timezonegettransitionsstartingpoint-temporalabsolute--iteratortemporalabsolute">timeZone.<strong>getTransitions</strong>(<em>startingPoint</em>: Temporal.Absolute) : iterator&lt;Temporal.Absolute&gt;</h3>
 <p><strong>Parameters:</strong></p>
 <ul>

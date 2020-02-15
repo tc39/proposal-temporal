@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/kognise/water.css@latest/dist/light.min.css">
+    <script type="application/javascript" src="./playground.js"></script>
+    <script type="application/javascript" src="./mermaid.js"></script>
+    <script type="application/javascript" src="./prism.js"></script>
+    <link rel="stylesheet" type="text/css" href="./prism.css">
+    <script>mermaid.initialize({startOnLoad:true,flowchart:{useMaxWidth:false}});</script>
+    <script>
+      Temporal = { ...temporal.Temporal };
+      Object.assign(Intl, temporal.Intl);
+    </script>
+    <style>
+      /* https://github.com/kognise/water.css/blob/master/src/variables-light.css */
+      :root {
+        --background: #efefef;
+        --text-muted: #999999;
+        --text-bright: #000000;
+        --text-width: 900px;
+        --variable: #39a33c;
+      }
+      .mermaid svg { height: 13em; }
+      body { font-size: 18px; max-width: var(--text-width);}
+      pre { border-left: 4px solid var(--variable); }
+      pre code[class*="language-"] { font-size: 0.85em; }
+      pre[class*="language-"] { padding: 0.5em; }
+      h2 { border-bottom: 2px solid var(--text-muted); margin-top: 2em; }
+      h3 {
+        border-bottom: 1px solid var(--text-muted);
+        color: var(--text-muted);
+        font-weight: normal;
+      }
+      h3 em { font-weight: bold; }
+      h3 strong { color: var(--text-bright); }
+      :not(h2) + h3 { margin-top: 2em; }
+      footer {
+        border-top: 1px solid var(--background);
+        color: var(--text-muted);
+        font-size: 0.8em;
+        margin-top: 2em;
+        padding-top: 10px;
+      }
+      .heading-link {
+        left: calc((100vw - var(--text-width)) / 2 - 1.5em);
+        opacity: 0;
+        position: absolute;
+        transition: opacity 150ms;
+      }
+      .heading-link:hover { text-decoration: none; }
+      .heading-link::before { content: '¶'; }
+      h3:hover .heading-link { opacity: 1; }
+    </style>
+  </head>
+  <body>
+<h1 id="resolving-ambiguity">Resolving ambiguity</h1>
+<blockquote>
+<p>This explanation was adapted from the <a href="https://github.com/moment/momentjs.com/blob/master/docs/moment-timezone/01-using-timezones/02-parsing-ambiguous-inputs.html">moment-timezone documentation</a>.</p>
+</blockquote>
+<p>Converting a <a href="./datetime.html"><code>Temporal.DateTime</code></a> wall-clock time to a <a href="./absolute.md"><code>Temporal.Absolute</code></a> is not necessarily a one-to-one conversion.
+Due to DST time changes, there is a possibility that a wall-clock time either does not exist, or has existed twice.</p>
+<p>There are two mostly equivalent methods that accomplish this conversion: <a href="./datetime.html#inTimeZone"><code>Temporal.DateTime.prototype.inTimeZone</code></a> and <a href="./timezone.html#getAbsoluteFor"><code>Temporal.TimeZone.prototype.getAbsoluteFor</code></a>.
+The <code>disambiguation</code> argument to these methods controls what absolute time to return in the case of ambiguity:</p>
+<ul>
+<li><code>earlier</code> (the default): The earlier of two possible absolute times will be returned.</li>
+<li><code>later</code>: The later of two possible absolute times will be returned.</li>
+<li><code>reject</code>: A <code>RangeError</code> will be thrown.</li>
+</ul>
+<p>When entering DST, clocks move forward an hour.
+In reality, it is not time that is moving, it is the offset moving.
+Moving the offset forward gives the illusion that an hour has disappeared.
+As the clock ticks, you can see it move from 1:58 to 1:59 to 3:00.
+It is easier to see what is actually happening when you include the offset.</p>
+<pre><code>1:58 +1
+1:59 +1
+3:00 +2
+3:01 +2</code></pre><p>The result is that any time between 1:59:59 and 3:00:00 never actually happened.
+In <code>earlier</code> mode, the absolute time that is returned will be as if the post-change UTC offset had continued before the change, effectively skipping backwards by the amount of the DST gap (usually 1 hour).
+In <code>later</code> mode, the absolute time that is returned will be as if the pre-change UTC offset had continued after the change, effectively skipping forwards by the amount of the DST gap.</p>
+<pre><code class="language-javascript">tz = new Temporal.TimeZone(&#39;Europe/Berlin&#39;);
+dt = new Temporal.DateTime(2019, 3, 31, 2, 45);
+tz.getAbsoluteFor(dt, &#39;earlier&#39;);  // =&gt; 2019-03-31T00:45Z
+tz.getAbsoluteFor(dt, &#39;later&#39;);    // =&gt; 2019-03-31T01:45Z
+tz.getAbsoluteFor(dt, &#39;reject&#39;);   // throws</code></pre>
+<p>In this example, the wall-clock time 2:45 doesn&#39;t exist, so it is treated as either 1:45 +01:00 or 3:45 +02:00, which can be seen by converting the absolute back to a wall-clock time in the time zone:</p>
+<pre><code class="language-javascript">tz.getAbsoluteFor(dt, &#39;earlier&#39;).inTimeZone(tz);  // =&gt; 2019-03-31T01:45
+tz.getAbsoluteFor(dt, &#39;later&#39;).inTimeZone(tz);  // =&gt; 2019-03-31T03:45</code></pre>
+<p>Likewise, at the end of DST, clocks move backward an hour.
+In this case, the illusion is that an hour repeats itself.
+In <code>earlier</code> mode, the absolute time will be the earlier instance of the duplicated wall-clock time.
+In <code>later</code> mode, the absolute time will be the later instance of the duplicated time.</p>
+<pre><code class="language-javascript">tz = new Temporal.TimeZone(&#39;America/Sao_Paulo&#39;);
+dt = new Temporal.DateTime(2019, 2, 16, 23, 45);
+dt.inTimeZone(tz, &#39;earlier&#39;);  // =&gt; 2019-02-17T01:45Z
+dt.inTimeZone(tz, &#39;later&#39;);    // =&gt; 2019-02-17T02:45Z
+dt.inTimeZone(tz, &#39;reject&#39;);   // throws</code></pre>
+<p>In this example, the wall-clock time 23:45 exists twice.</p>
+<blockquote>
+<p><em>Compatibility Note</em>: The built-in behaviour of the Moment Timezone and Luxon libraries is to give the same result as <code>earlier</code> when turning the clock back, and <code>later</code> when setting the clock forward.</p>
+</blockquote>
+    <footer>
+      <p>
+        This page includes a script which loads an implementation of Temporal in your browser.
+        You can open a console in your browser's developer tools and try it out directly!
+      </p>
+      <p>View this or help contribute on <a href="https://github.com/tc39/proposal-temporal">GitHub</a>.</p>
+    </footer>
+    <script>
+      // Add permalinks to all <h3> elements (function documentation headings)
+      const h3s = document.getElementsByTagName('h3');
+      for (let h3 of h3s) {
+        const anchor = document.createElement('a');
+        anchor.className = 'heading-link';
+
+        // Use the **function name** as the link ID, otherwise fall back to the
+        // ID generated by markdown
+        let id = h3.getAttribute('id');
+        const bold = h3.getElementsByTagName('strong');
+        if (bold[0]) {
+          id = bold[0].textContent.replace(/[^a-zA-Z]/g, '-');
+          h3.setAttribute('id', id);
+        }
+
+        anchor.setAttribute('href', `#${id}`);
+        h3.prepend(anchor);
+      };
+    </script>
+  </body>
+</html>
