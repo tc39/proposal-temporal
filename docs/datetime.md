@@ -21,9 +21,9 @@ A `Temporal.DateTime` can also be converted into any of the other `Temporal` obj
 - `hour` (optional number): An hour of the day, ranging between 0 and 23 inclusive.
 - `minute` (optional number): A minute, ranging between 0 and 59 inclusive.
 - `second` (optional number): A second, ranging between 0 and 59 inclusive.
-- `milliseconds` (optional number): A number of milliseconds, ranging between 0 and 999 inclusive.
-- `microseconds` (optional number): A number of microseconds, ranging between 0 and 999 inclusive.
-- `nanoseconds` (optional number): A number of nanoseconds, ranging between 0 and 999 inclusive.
+- `millisecond` (optional number): A number of milliseconds, ranging between 0 and 999 inclusive.
+- `microsecond` (optional number): A number of microseconds, ranging between 0 and 999 inclusive.
+- `nanosecond` (optional number): A number of nanoseconds, ranging between 0 and 999 inclusive.
 
 **Returns:** a new `Temporal.DateTime` object.
 
