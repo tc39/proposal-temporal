@@ -349,7 +349,7 @@
         1. Assert: _year_ and _month_ are integer Number values.
         1. Assert: _disambiguation_ is one of `"constrain"`, `"balance"`, or `"reject"`.
         1. If _disambiguation_ is `"constrain"`, then
-          1. <mark>TODO: define.</mark>
+          1. Return ! ConstrainYearMonth(_year_, _month_).
         1. If _disambiguation_ is `"balance"`, then
           1. Return BalanceYearMonth(_year_, _month_).
         1. If _disambiguation_ is `"reject"`, then
@@ -381,6 +381,19 @@
         1. Return the new Record {
             [[Year]]: _year_,
             [[Month]]: _month_
+          }.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-constraindate" aoid="ConstrainDate">
+      <h1>ConstrainYearMonth ( _year_, _month_ )</h1>
+      <emu-alg>
+        1. Assert: _year_ and _month_ are integer Number values.
+        1. Set _year_ to ConstrainToRange(_year_, -999999, 999999).
+        1. Set _month_ to ConstrainToRange(_month_, 1, 12).
+        1. Return the Record {
+          [[Year]]: _year_,
+          [[Month]]: _month_,
           }.
       </emu-alg>
     </emu-clause>
