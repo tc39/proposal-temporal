@@ -93,7 +93,6 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
   },
   ToAbsolute: (item) => {
     if (ES.IsAbsolute(item)) return item;
-    if ('bigint' === typeof item || bigInt.isInstance(item)) return new TemporalAbsolute(item);
     const isoString = ES.ToString(item);
     const match = PARSE.absolute.exec(isoString);
     if (!match) throw new RangeError(`invalid absolute: ${isoString}`);

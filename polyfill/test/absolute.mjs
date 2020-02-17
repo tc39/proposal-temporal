@@ -178,6 +178,10 @@ describe('Absolute', () => {
       const instant = Absolute.fromEpochNanoseconds(epochNanoseconds);
       equal(instant.getEpochNanoseconds(), epochNanoseconds);
     });
+    it('-1n', () => {
+      const instant = Absolute.fromEpochNanoseconds(-1n);
+      equal(`${instant}`, '1969-12-31T23:59:59.999999999Z');
+    });
   });
   describe('Absolute.from() works', () => {
     it('1976-11-18T15:23Z', () => {
@@ -224,9 +228,10 @@ describe('Absolute', () => {
         Absolute.from('2020-02-12T11:42+01:00[Europe/Amsterdam]').getEpochNanoseconds(),
         BigInt(Date.UTC(2020, 1, 12, 10, 42)) * BigInt(1e6));
     });
-    it('Absolute.from(-1n)', () => {
-      equal(`${ Absolute.from(-1n) }`, '1969-12-31T23:59:59.999999999Z');
-    });
+    it('Absolute.from(1) throws', () => throws(() => Absolute.from(1), RangeError));
+    it('Absolute.from(-1) throws', () => throws(() => Absolute.from(-1), RangeError));
+    it('Absolute.from(1n) throws', () => throws(() => Absolute.from(1n), RangeError));
+    it('Absolute.from(-1n) throws', () => throws(() => Absolute.from(-1n), RangeError));
     it('Absolute.from({}) throws', () => throws(() => Absolute.from({}), RangeError));
     it('Absolute.from(ISO string leap second) is constrained', () => {
       equal(`${Absolute.from('2016-12-31T23:59:60Z')}`, '2016-12-31T23:59:59Z');
