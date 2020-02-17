@@ -123,7 +123,7 @@
           1. Set _ms_ to _bt_.[[Millisecond]].
           1. Set _mis_ to _bt_.[[Microsecond]].
           1. Set _ns_ to _bt_.[[Nanosecond]].
-        1. Return ? CreateDuration(_y_, _mo_, _d_, _h_, _m_, _s_, _ms_, _mis_, _ns_).
+        1. Return ? CreateDuration(_y_, _mo_, _d_, _h_, _m_, _s_, _ms_, _mis_, _ns_, NewTarget).
       </emu-alg>
     </emu-clause>
   </emu-clause>
@@ -348,6 +348,24 @@
             1. Set _result_'s internal slot whose name is the Internal Slot value of the current row to _val_.
           1. Return ? CreateDuration(_result_.[[Years]], _result_.[[Months]], _result_.[[Days]], _result_.[[Hours]], _result_.[[Minutes]], _result_.[[Seconds]], _result_.[[Milliseconds]], _result_.[[Microseconds]], _result_.[[Nanoseconds]]).
         1. Throw a *RangeError* exception.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-createtime" aoid="CreateTime">
+      <h1>CreateDuration ( _years_, _months_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_ [, _newTarget_] )</h1>
+      <emu-alg>
+        1. If _newTarget_ is not given, set it to %Temporal.Duration%.
+        1. Let _object_ be ? OrdinaryCreateFromConstructor(_newTarget_, `"%Temporal.Duration.prototype%"`, « [[InitializedTemporalDuration]], [[Years]], [[Months]], [[Days]], [[Hours]], [[Minutes]], [[Seconds]], [[Milliseconds]], [[Microseconds]], [[Nanoseconds]] »).
+        1. Set _object_.[[Years]] to _years_.
+        1. Set _object_.[[Months]] to _months_.
+        1. Set _object_.[[Days]] to _days_.
+        1. Set _object_.[[Hours]] to _hours_.
+        1. Set _object_.[[Minutes]] to _minutes_.
+        1. Set _object_.[[Seconds]] to _seconds_.
+        1. Set _object_.[[Milliseconds]] to _milliseconds_.
+        1. Set _object_.[[Microseconds]] to _microseconds_.
+        1. Set _object_.[[Nanoseconds]] to _nanoseconds_.
+        1. Return _object_.
       </emu-alg>
     </emu-clause>
 
