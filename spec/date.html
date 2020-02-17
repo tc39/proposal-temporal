@@ -540,12 +540,11 @@
       <h1>ConstrainDate ( _year_, _month_, _day_ )</h1>
       <emu-alg>
         1. Assert: _year_, _month_, and _day_ are integer Number values.
-        1. Set _year_ to ConstrainToRange(_year_, -999999, 999999).
-        1. Set _month_ to ConstrainToRange(_month_, 1, 12).
-        1. Set _day_ to ConstrainToRange(_day_, 1, DaysInMonth(_year_, _month_));
+        1. Let _yearMonth_ be ! ConstrainYearMonth(_year_, _month_).
+        1. Set _day_ to ConstrainToRange(_day_, 1, DaysInMonth(_yearMonth_.[[Year]], _yearMonth_.[[Month]]));
         1. Return the Record {
-          [[Year]]: _year_,
-          [[Month]]: _month_,
+          [[Year]]: _yearMonth_.[[Year]],
+          [[Month]]: _yearMonth_.[[Month]],
           [[Day]]: _day_,
           }.
       </emu-alg>
