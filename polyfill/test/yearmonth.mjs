@@ -23,12 +23,26 @@ describe('YearMonth', () => {
       it('YearMonth.prototype.difference is a Function', () => {
         equal(typeof YearMonth.prototype.difference, 'function');
       });
+      it('YearMonth.prototype has daysInYear', () => {
+        assert('daysInYear' in YearMonth.prototype);
+      });
     });
     it('YearMonth.compare is a Function', () => {
       equal(typeof YearMonth.compare, 'function');
     });
   });
   describe('Construction', () => {
+    let ym;
+    it('YearMonth can be constructed', () => {
+      ym = new YearMonth(1976, 11);
+      assert(ym);
+      equal(typeof ym, 'object');
+    });
+    it('ym.year is 1976', () => equal(ym.year, 1976));
+    it('ym.month is 11', () => equal(ym.month, 11));
+    it('ym.daysInMonth is 30', () => equal(ym.daysInMonth, 30));
+    it('ym.daysInYear is 366', () => equal(ym.daysInYear, 366));
+
     describe('Disambiguation', () => {
       it('reject', () => throws(() => new YearMonth(2019, 13, 'reject'), RangeError));
       it('constrain', () => equal(`${new YearMonth(2019, 13, 'constrain')}`, '2019-12'));
