@@ -125,6 +125,19 @@
       </emu-alg>
     </emu-clause>
 
+    <emu-clause id="sec-get-temporal.yearmonth.prototype.daysinyear">
+      <h1>get Temporal.YearMonth.prototype.daysInYear</h1>
+      <p>
+        `Temporal.YearMonth.prototype.daysInYear` is an accessor property whose set accessor is undefined.
+        Its get accessor function performs the following steps:
+      </p>
+      <emu-alg>
+        1. Let _yearMonth_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
+        1. Return ! DaysInYear(_yearMonth_.[[Year]]).
+      </emu-alg>
+    </emu-clause>
+
     <emu-clause id="sec-get-temporal.yearmonth.prototype.daysinmonth">
       <h1>get Temporal.YearMonth.prototype.daysInMonth</h1>
       <p>
