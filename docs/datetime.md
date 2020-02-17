@@ -12,12 +12,12 @@ A `Temporal.DateTime` can also be converted into any of the other `Temporal` obj
 
 ## Constructor
 
-### **new Temporal.DateTime**(_year_: number, _month_: number, _day_: number, _hour_: number = 0, _minute_: number = 0, _second_: number = 0, _millisecond_: number = 0, _microsecond_: number = 0, _nanosecond_: number = 0, _disambiguation_: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.DateTime
+### **new Temporal.DateTime**(_isoYear_: number, _isoMonth_: number, _isoDay_: number, _hour_: number = 0, _minute_: number = 0, _second_: number = 0, _millisecond_: number = 0, _microsecond_: number = 0, _nanosecond_: number = 0, _disambiguation_: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.DateTime
 
 **Parameters:**
-- `year` (number): A year, ranging between &minus;271821 and 275760 inclusive.
-- `month` (number): A month, ranging between 1 and 12 inclusive.
-- `day` (number): A day of the month, ranging between 1 and 31 inclusive.
+- `isoYear` (number): A year.
+- `isoMonth` (number): A month, ranging between 1 and 12 inclusive.
+- `isoDay` (number): A day of the month, ranging between 1 and 31 inclusive.
 - `hour` (optional number): An hour of the day, ranging between 0 and 23 inclusive.
 - `minute` (optional number): A minute, ranging between 0 and 59 inclusive.
 - `second` (optional number): A second, ranging between 0 and 59 inclusive.
@@ -32,6 +32,8 @@ A `Temporal.DateTime` can also be converted into any of the other `Temporal` obj
 
 Use this constructor if you have the correct parameters for the date already as individual number values, or you need the disambiguation behaviour.
 Otherwise, `Temporal.DateTime.from()`, which accepts more kinds of input, is probably more convenient.
+
+All values are given as reckoned in the [ISO 8601 calendar](https://en.wikipedia.org/wiki/ISO_8601#Dates).
 
 The `disambiguation` parameter works as follows:
 - In `constrain` mode (the default), any out-of-range values are clamped to the nearest in-range value.
@@ -161,7 +163,8 @@ dt.nanosecond   // => 500
 ### datetime.**dayOfWeek** : number
 
 The `dayOfWeek` read-only property gives the weekday number that the date falls on.
-The weekday number is a value between 1 and 7, inclusive: Monday is 1, and Sunday is 7.
+The weekday number is defined as in the ISO 8601 standard: a value between 1 and 7, inclusive, with Monday being 1, and Sunday 7.
+For an overview, see [ISO 8601 on Wikipedia](https://en.wikipedia.org/wiki/ISO_8601#Week_dates).
 
 Usage example:
 ```javascript
@@ -177,13 +180,8 @@ This is a value between 1 and 365, or 366 in a leap year.
 Usage example:
 ```javascript
 dt = new Temporal.DateTime(1995, 12, 7, 3, 24, 30, 0, 3, 500);
-// Print dt in ISO ordinal date format
-year = `${dt.year}`.padStart(4, '0');
-day = `${dt.dayOfYear}`.padStart(3, '0');
-hour = `${dt.hour}`.padStart(2, '0');
-minute = `${dt.minute}`.padStart(2, '0');
-second = `${dt.second}`.padStart(2, '0');
-`${year}-${day}T${hour}:${minute}:${second}`  // => 1995-341T03:24:30
+// ISO ordinal date
+console.log(dt.year, dt.dayOfYear);  // => 1995 341
 ```
 
 ### datetime.**weekOfYear** : number
@@ -196,13 +194,8 @@ For more information on ISO week numbers, see for example the Wikipedia article 
 Usage example:
 ```javascript
 dt = new Temporal.DateTime(1995, 12, 7, 3, 24, 30, 0, 3, 500);
-// Print dt in ISO week number / week day format
-year = `${dt.year}`.padStart(4, '0');
-week = `${dt.weekOfYear}`.padStart(2, '0');
-hour = `${dt.hour}`.padStart(2, '0');
-minute = `${dt.minute}`.padStart(2, '0');
-second = `${dt.second}`.padStart(2, '0');
-`${year}-W${week}-${dt.dayOfWeek}T${hour}:${minute}:${second}`  // => 1995-W49-4T03:24:30
+// ISO week date
+console.log(dt.year, dt.weekOfYear, dt.dayOfWeek);  // => 1995 49 4
 ```
 
 ### datetime.**daysInMonth** : number
@@ -222,8 +215,8 @@ for (let month = 1; month <= 12; month++) {
 const strings = monthsByDays[30].map(dt => dt.toLocaleString('en', {month: 'long'}));
 // Shuffle to improve poem as determined empirically
 strings.unshift(strings.pop());
-const last = strings.pop();
-const poem = `Thirty days hath ${strings.join(', ')}, and ${last}`;
+const format = new Intl.ListFormat('en');
+const poem = `Thirty days hath ${format.format(strings)}`;
 
 console.log(poem);
 ```
@@ -236,7 +229,8 @@ This is 365 or 366, depending on whether the year is a leap year.
 Usage example:
 ```javascript
 dt = Temporal.now.dateTime();
-`The year is ${Math.round(dt.dayOfYear / dt.daysInYear * 100)}% over!`
+percent = dt.dayOfYear / dt.daysInYear;
+`The year is ${percent.toLocaleString('en', {style: 'percent'})} over!`
 // example output: "The year is 10% over!"
 ```
 
