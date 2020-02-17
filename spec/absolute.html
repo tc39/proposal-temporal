@@ -346,9 +346,23 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal-toabsolute" aoid="ToAbsolute">
-      <h1>ToAbsolute ( _arg_ )</h1>
+      <h1>ToAbsolute ( _absolute_ )</h1>
       <emu-alg>
-        1. <mark>TODO</mark>
+        1. If Type(_absolute_) is Object and _absolute_ has an [[InitializedTemporalAbsolute]] internal slot, then
+          1. Return _absolute_.
+        1. Let _absolute_ be ? ToString(_absolute_).
+        1. Let _valid_ be *true* if _absolute_ matches <a href="https://github.com/tc39/proposal-temporal/blob/main/polyfill/lib/regex.mjs">the "absolute" regular expression in the polyfill</a> and *false* otherwise.
+        1. <mark>TODO: Actually specify this somehow.</mark>
+        1. If _valid_ is *false*, then
+          1. Throw a *RangeError* exception.
+        1. Let _year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_ be the respective parts of _absolute_ interpreted as decimal numbers.
+        1. If _second_ is 60, then
+          1. Set _second_ to 59.
+        1. <mark>Let _timeZone_ be some appropriate TimeZone object based on _abolute_.</mark>
+        1. If ! ValidateDateTime(_year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_) is *false*, then
+          1. Throw a *TypeError* exception.
+        1. Let _dateTime_ be ? CreateDateTime(_year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_).
+        1. Return ? GetAbsoluteFor(_timeZone_, _dateTime_, *"reject"*).
       </emu-alg>
     </emu-clause>
 
