@@ -280,6 +280,11 @@ describe('DateTime', () => {
     it(`(${earlier}).plus(${diff}) == (${later})`, () => equal(`${earlier.plus(diff)}`, `${later}`));
     it(`(${later}).minus(${diff}) == (${earlier})`, () => equal(`${later.minus(diff)}`, `${earlier}`));
   });
+  describe('date/time maths: hours overflow', () => {
+    const later = DateTime.from('2019-10-29T10:46:38.271986102');
+    const earlier = later.minus({ hours: 12 });
+    it("result", () => equal(`${earlier}`, '2019-10-28T22:46:38.271986102'));
+  });
   describe('DateTime.difference()', () => {
     const dt = DateTime.from('1976-11-18T15:23:30.123456789');
     it("doesn't cast argument", () => {
