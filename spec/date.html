@@ -68,13 +68,7 @@
       <emu-alg>
         1. Perform ? RequireInternalSlot(_one_, [[InitializedTemporalDate]]).
         1. Perform ? RequireInternalSlot(_two_, [[InitializedTemporalDate]]).
-        1. If _one_.[[Year]] &gt; _two_.[[Year]], return 1.
-        1. If _one_.[[Year]] &lt; _two_.[[Year]], return -1.
-        1. If _one_.[[Month]] &gt; _two_.[[Month]], return 1.
-        1. If _one_.[[Month]] &lt; _two_.[[Month]], return -1.
-        1. If _one_.[[Day]] &gt; _two_.[[Day]], return 1.
-        1. If _one_.[[Day]] &lt; _two_.[[Day]], return -1.
-        1. Return +0.
+        1. Return ! DateCompare(_one_, _two_).
       </emu-alg>
     </emu-clause>
   </emu-clause>
@@ -319,10 +313,12 @@
         1. Let _date_ be the *this* value.
         1. Perform ? RequireInternalSlot(_date_, [[InitializedTemporalDate]]).
         1. Perform ? RequireInternalSlot(_otherDate_, [[InitializedTemporalDate]]).
-        1. Let _disambiguation_ be ? ToString(_disambiguation_).
-        1. Let _greater_ be _date_.
-        1. Let _smaller_ be _otherDate_.
-        1. <mark>TODO: Swap order if needed.</mark>
+        1. If ! DateCompare(_date_, _otherDate_) &lt; 0, then
+          1. Let _greater_ be _otherDate_.
+          1. Let _smaller_ be _date_.
+        1. Else,
+          1. Let _greater_ be _date_.
+          1. Let _smaller_ be _otherDate_.
         1. Let _years_ be _greater_.[[Year]] - _smaller_.[[Year]].
         1. Let _days_ be ToDayOfYear(_greater_.[[Year]], _greater_.[[Month]], _greater_.[[Day]]) - ToDayOfYear(_smaller_.[[Year]], _smaller_.[[Month]], _smaller_.[[Day]]).
         1. If _days_ &lt; 0, then
@@ -628,6 +624,23 @@
         1. Let _intermediate_ be ? RegulateDate(_intermediate_.[[Year]], _intermediate_.[[Month]], _day_, _disambiguation_).
         1. Let _d_ be _intermediate_.[[Day]] + _days_.
         1. Return ! BalanceDate(_intermediate_.[[Year]], _intermediate_.[[Month]], _d_).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-datecompare" aoid="DateCompare">
+      <h1>DateCompare ( _one_, _two_ )</h1>
+      <emu-alg>
+        1. Assert: Type(_one_) is Object.
+        1. Assert: _one_ has an [[InitializedTemporalDate]] internal slot.
+        1. Assert: Type(_two_) is Object.
+        1. Assert: _two_ has an [[InitializedTemporalDate]] internal slot.
+        1. If _one_.[[Year]] &gt; _two_.[[Year]], return 1.
+        1. If _one_.[[Year]] &lt; _two_.[[Year]], return -1.
+        1. If _one_.[[Month]] &gt; _two_.[[Month]], return 1.
+        1. If _one_.[[Month]] &lt; _two_.[[Month]], return -1.
+        1. If _one_.[[Day]] &gt; _two_.[[Day]], return 1.
+        1. If _one_.[[Day]] &lt; _two_.[[Day]], return -1.
+        1. Return +0.
       </emu-alg>
     </emu-clause>
   </emu-clause>
