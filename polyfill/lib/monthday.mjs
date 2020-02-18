@@ -48,69 +48,6 @@ export class MonthDay {
     const Construct = ES.SpeciesConstructor(this, MonthDay);
     return new Construct(month, day, disambiguation);
   }
-  plus(durationLike, disambiguation = 'constrain') {
-    if (!ES.IsMonthDay(this)) throw new TypeError('invalid receiver');
-    const duration = ES.ToDuration(durationLike);
-    if (
-      !ES.ValidDuration(duration, [
-        'years',
-        'hours',
-        'minutes',
-        'seconds',
-        'milliseconds',
-        'microseconds',
-        'nanoseconds'
-      ])
-    ) {
-      throw new RangeError('invalid duration');
-    }
-    let { month, day } = this;
-    const { months, days } = duration;
-    const year = 1970; // XXX #261 non-leap year
-    ({ month, day } = ES.AddDate(year, month, day, 0, months, days, disambiguation));
-    ({ month, day } = ES.BalanceDate(year, month, day));
-    const Construct = ES.SpeciesConstructor(this, MonthDay);
-    return new Construct(month, day);
-  }
-  minus(durationLike, disambiguation = 'constrain') {
-    if (!ES.IsMonthDay(this)) throw new TypeError('invalid receiver');
-    const duration = ES.ToDuration(durationLike);
-    if (
-      !ES.ValidDuration(duration, [
-        'years',
-        'hours',
-        'minutes',
-        'seconds',
-        'milliseconds',
-        'microseconds',
-        'nanoseconds'
-      ])
-    ) {
-      throw new RangeError('invalid duration');
-    }
-    let { month, day } = this;
-    const year = 1970; // XXX #261 non-leap year
-    const { months, days } = duration;
-    ({ month, day } = ES.SubtractDate(year, month, day, 0, months, days, disambiguation));
-    ({ month, day } = ES.BalanceDate(year, month, day));
-    const Construct = ES.SpeciesConstructor(this, MonthDay);
-    return new Construct(month, day);
-  }
-  difference(other) {
-    if (!ES.IsMonthDay(this)) throw new TypeError('invalid receiver');
-    if (!ES.IsMonthDay(other)) throw new TypeError('invalid MonthDay object');
-    const [one, two] = [this, other].sort(MonthDay.compare);
-    let months = two.month - one.month;
-    let days = two.day - one.day;
-    if (days < 0) {
-      months -= 1;
-      let month = one.month + months;
-      // XXX #261 leap days?
-      days = ES.DaysInMonth(1970, month) + days;
-    }
-    const Duration = ES.GetIntrinsic('%Temporal.Duration%');
-    return new Duration(0, months, days, 0, 0, 0, 0, 0, 0);
-  }
   toString() {
     if (!ES.IsMonthDay(this)) throw new TypeError('invalid receiver');
     let month = ES.ISODateTimePartString(GetSlot(this, MONTH));
