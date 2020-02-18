@@ -299,7 +299,7 @@ As discussed earlier, Temporal.Date will defer to Temporal.Calendar methods wher
 
 ```javascript
 Temporal.Date.prototype.plus = function(duration) {
-	return this.calendar.plus?.(this, duration);
+	return this.calendar.plus(this, duration);
 }
 
 Temporal.Date.prototype.difference = function(other) {
