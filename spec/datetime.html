@@ -617,7 +617,7 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal-regulatedatetime" aoid="RegulateDateTime">
-      <h1>RegulateDateTime ( _year_, _month_, _date_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _disambiguation_ )</h1>
+      <h1>RegulateDateTime ( _year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _disambiguation_ )</h1>
       <emu-alg>
         1. Assert: _disambiguation_ is one of `"constrain"`, `"balance"`, or `"reject"`.
         1. If _disambiguation_ is `"constrain"`, then
@@ -630,10 +630,10 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal-validatedatetime" aoid="ValidateDateTime">
-      <h1>ValidateDateTime ( _year_, _month_, _date_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_ )</h1>
+      <h1>ValidateDateTime ( _year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_ )</h1>
       <emu-alg>
-        1. Assert: _year_, _month_, _date_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, and _nanosecond_ are integer Number values.
-        1. If ! ValidateDate(_year_, _month_, _date_) is *false*, then
+        1. Assert: _year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, and _nanosecond_ are integer Number values.
+        1. If ! ValidateDate(_year_, _month_, _day_) is *false*, then
           1. Return *false*.
         1. If ! ValidateTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_) is *false*, then
           1. Return *false*.
@@ -642,9 +642,9 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal-createdatetime" aoid="CreateDateTime">
-      <h1>CreateDateTime ( _year_, _month_, _date_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_ [, _newTarget_] )</h1>
+      <h1>CreateDateTime ( _year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_ [, _newTarget_] )</h1>
       <emu-alg>
-        1. Assert: ! ValidateDateTime(_year_, _month_, _date_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_) is *true*.
+        1. Assert: ! ValidateDateTime(_year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_) is *true*.
         1. If _newTarget_ is not given, set it to %Temporal.DateTime%.
         1. Let _object_ be ? OrdinaryCreateFromConstructor(_newTarget_, `"%Temporal.DateTime.prototype%"`, « [[InitializedTemporalDateTime]], [[Year]], [[Month]], [[Day]], [[Hour]], [[Minute]], [[Second]], [[Millisecond]], [[Microsecond]], [[Nanosecond]] »).
         1. Set _object_.[[Year]] to _year_.
@@ -721,9 +721,9 @@
       <emu-alg>
         1. Assert: Type(_dateTime_) is Object.
         1. Assert: _dateTime_ has an [[InitializedTemporalDateTime]] internal slot.
-        1. Let _year_ be ! PadYear(_date_.[[Year]]).
-        1. Let _month_ be _date_.[[Month]] formatted as a two-digit decimal number, padded to the left with a zero if necessary.
-        1. Let _day_ be _date_.[[Day]] formatted as a two-digit decimal number, padded to the left with a zero if necessary.
+        1. Let _year_ be ! PadYear(_dateTime_.[[Year]]).
+        1. Let _month_ be _dateTime_.[[Month]] formatted as a two-digit decimal number, padded to the left with a zero if necessary.
+        1. Let _day_ be _dateTime_.[[Day]] formatted as a two-digit decimal number, padded to the left with a zero if necessary.
         1. Let _hour_ be _dateTime_.[[Hour]] formatted as a two-digit decimal number, padded to the left with a zero if necessary.
         1. Let _minute_ be _dateTime_.[[Minute]] formatted as a two-digit decimal number, padded to the left with a zero if necessary.
         1. Let _seconds_ be ! FormatSecondsStringPart(_dateTime_.[[Second]], _dateTime_.[[Millisecond]], _dateTime_.[[Microsecond]], _dateTime_.[[Nanosecond]]).
