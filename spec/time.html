@@ -353,8 +353,6 @@
     <emu-clause id="sec-temporal-topartialtime" aoid="ToPartialTime">
       <h1>ToPartialTime ( _time_ )</h1>
       <emu-alg>
-        1. If Type(_time_) is String, then
-          1. Return ? ParseTimeString(_time_).
         1. If Type(_time_) is Object, then
           1. Let _result_ be the new Record {
             [[Hour]]: *undefined*,
