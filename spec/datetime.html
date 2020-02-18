@@ -645,7 +645,7 @@
       <h1>CreateDateTime ( _year_, _month_, _date_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_ [, _newTarget_] )</h1>
       <emu-alg>
         1. Assert: ! ValidateDateTime(_year_, _month_, _date_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_) is *true*.
-        1. If _newTarget_ is not given, set it to %Temporal.DateTime%
+        1. If _newTarget_ is not given, set it to %Temporal.DateTime%.
         1. Let _object_ be ? OrdinaryCreateFromConstructor(_newTarget_, `"%Temporal.DateTime.prototype%"`, « [[InitializedTemporalDateTime]], [[Year]], [[Month]], [[Day]], [[Hour]], [[Minute]], [[Second]], [[Millisecond]], [[Microsecond]], [[Nanosecond]] »).
         1. Set _object_.[[Year]] to _year_.
         1. Set _object_.[[Month]] to _month_.

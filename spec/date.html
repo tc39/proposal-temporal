@@ -409,7 +409,7 @@
       <h1>CreateDate ( _y_, _m_, _d_ [ , _newTarget_ ] )</h1>
       <emu-alg>
         1. Assert: ! ValidateDate(_y_, _m_, _d_) is *true*.
-        1. If _newTarget_ is not given, set it to %Temporal.Date%
+        1. If _newTarget_ is not given, set it to %Temporal.Date%.
         1. Let _object_ be ? OrdinaryCreateFromConstructor(_newTarget_, `"%Temporal.Date.prototype%"`, « [[InitializedTemporalDate]], [[Year]], [[Month]], [[Day]] »).
         1. Set _object_.[[Year]] to _y_.
         1. Set _object_.[[Month]] to _m_.

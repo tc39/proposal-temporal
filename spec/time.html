@@ -497,7 +497,7 @@
       <h1>CreateTime ( _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_ [, _newTarget_] )</h1>
       <emu-alg>
         1. Assert: ! ValidateTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_) is *true*.
-        1. If _newTarget_ is not given, set it to %Temporal.Time%
+        1. If _newTarget_ is not given, set it to %Temporal.Time%.
         1. Let _object_ be ? OrdinaryCreateFromConstructor(_newTarget_, `"%Temporal.Time.prototype%"`, « [[InitializedTemporalTime]], [[Hour]], [[Minute]], [[Second]], [[Millisecond]], [[Microsecond]], [[Nanosecond]] »).
         1. Set _object_.[[Hour]] to _hour_.
         1. Set _object_.[[Minute]] to _minute_.

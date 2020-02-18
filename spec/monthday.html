@@ -298,7 +298,7 @@
       <h1>CreateMonthDay ( _month_, _day_ [ , _newTarget_ ] )</h1>
       <emu-alg>
         1. Assert: ! ValidateMonthDay(_month_, _day_) is *true*.
-        1. If _newTarget_ is not given, set it to %Temporal.MonthDay%
+        1. If _newTarget_ is not given, set it to %Temporal.MonthDay%.
         1. Let _object_ be ? OrdinaryCreateFromConstructor(_newTarget_, `"%Temporal.MonthDay.prototype%"`, « [[InitializedTemporalMonthDay]], [[Month]], [[Day]] »).
         1. Set _object_.[[Month]] to _month_.
         1. Set _object_.[[Day]] to _day_.
