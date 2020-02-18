@@ -36,7 +36,7 @@ class MyCalendar {
 	) : Temporal.Date;
 
 	/** Constructs a Temporal.Date from a free-form option bag */
-	fromFields(
+	dateFromFields(
 		fields: object
 	) : Temporal.Date;
 
@@ -249,7 +249,7 @@ In this scenario, `Temporal.Date.from` would take a new optional `options` argum
 ```javascript
 const fooCalendar = new FooCalendar();
 
-Temporal.Date.from("2019-12-03[foo]", {
+Temporal.Date.from("2019-12-03[c=foo]", {
 	idToCalendar: function(id) {
 		if (id === "foo") {
 			return fooCalendar;
@@ -263,7 +263,21 @@ Temporal.Date.from("2019-12-03[foo]", {
 
 The exact behavior of this method depends on a few open discussions, but some logic will be passed to the Calendar object in order to project the date into the correct calendar system.
 
-Potential example implementation:
+```javascript
+Temporal.Date.from = function(thing: string | object, options: object) {
+	if (typeof thing === "string") {
+		let object = // components of string
+		return Temporal.Calendar.iso.dateFromFields(object);
+	} else {
+		// Get the calendar object, either the default calendar or something based
+		// on thing.calendar (string lookup or object)
+		let calendar = // ...
+		return calendar.dateFromFields(thing);
+	}
+}
+```
+
+Anoter example based on the toISO/fromISO methods (different semantics):
 
 ```javascript
 Temporal.Date.from = function(thing: string | object, options: object) {
