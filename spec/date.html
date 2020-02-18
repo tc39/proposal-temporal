@@ -251,7 +251,8 @@
         1. Perform ? RequireInternalSlot(_date_, [[InitializedTemporalDate]]).
         1. Let _duration_ be ? ToLimitedDuration(_duration_, « *"hours"*, *"minutes"*, *"seconds"*, *"milliseconds"*, *"microseconds"*, *"nanoseconds"* »).
         1. Set _disambiguation_ to ? ToDisambiguation(_disambiguation_).
-        1. Return ? AddDate(_date_.[[Year]], _date_.[[Month]], _date_.[[Day]], _duration_.[[Years]], _duration_.[[Months]], _duration_.[[Days]], _disambiguation_).
+        1. Let _result_ be ? AddDate(_date_.[[Year]], _date_.[[Month]], _date_.[[Day]], _duration_.[[Years]], _duration_.[[Months]], _duration_.[[Days]], _disambiguation_).
+        1. Return ? CreateDate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]]).
       </emu-alg>
     </emu-clause>
 
