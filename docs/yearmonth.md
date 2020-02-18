@@ -22,7 +22,7 @@ A representation of a calendar date.
 
 ### yearMonth.**daysInYear** : number
 
-### yearMonth.**leapYear** : boolean
+### yearMonth.**isLeapYear** : boolean
 
 ## Methods
 

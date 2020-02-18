@@ -55,7 +55,7 @@ Returns the number of days in the month the `Date` Object represents
 
 Returns the number of days in the year the `Date` Object represents
 
-### date.**leapYear** : boolean
+### date.**isLeapYear** : boolean
 
 Returns a boolean indicating whether the `Date` is in a leap year or not
 

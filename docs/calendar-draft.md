@@ -92,7 +92,7 @@ class MyCalendar {
 		self: Temporal.Date
 	) : number;
 
-	leapYear(
+	isLeapYear(
 		self: Temporal.Date
 	) : boolean;
 }
@@ -142,7 +142,7 @@ It would in effect render default Temporal.Date (and Temporal.DateTime) with few
 - .weekOfYear
 - .daysInMonth
 - .daysInYear
-- .leapYear
+- .isLeapYear
 - .plus() -- *might* be OK if the programmer requests only time units
 - .minus() -- *might* be OK if the programmer requests only time units
 - .difference() -- *might* be OK if the programmer requests only time units
