@@ -16,17 +16,9 @@
 
 ### monthDay.**day** : number
 
-### monthDay.**daysInMonth** : number
-
 ## Methods
 
 ### monthDay.**with**(_monthDayLike_: object, _disambiguation_: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.MonthDay
-
-### monthDay.**plus**(_duration_: Temporal.Duration | object | string, _disambiguation_: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.MonthDay
-
-### monthDay.**minus**(_duration_: Temporal.Duration | object | string, _disambiguation_: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.MonthDay
-
-### monthDay.**difference**(_other_: Temporal.MonthDay) : Temporal.Duration
 
 ### monthDay.**toString**() : string
 
