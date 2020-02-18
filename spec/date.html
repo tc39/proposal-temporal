@@ -267,11 +267,7 @@
         1. Perform ? RequireInternalSlot(_date_, [[InitializedTemporalDate]]).
         1. Let _duration_ be ? ToLimitedDuration(_duration_, « *"hours"*, *"minutes"*, *"seconds"*, *"milliseconds"*, *"microseconds"*, *"nanoseconds"* »).
         1. Set _disambiguation_ to ? ToDisambiguation(_disambiguation_).
-        1. Let _y_ be _date_.[[Year]] - _duration_.[[Years]].
-        1. Let _m_ be _date_.[[Month]] - _duration_.[[Months]].
-        1. Let _intermediate_ be ? RegulateDate(_y_, _m_, _date_.[[Day]], _disambiguation_).
-        1. Let _d_ be _intermediate_.[[Day]] - _duration_.[[Days]].
-        1. Let _result_ be ? RegulateDate(_intermediate_.[[Year]], _intermediate_.[[Month]], _d_, `"balance"`).
+        1. Let _result_ be ? SubtractDate(_date_.[[Year]], _date_.[[Month]], _date_.[[Day]], _duration_.[[Years]], _duration_.[[Months]], _duration_.[[Days]], _disambiguation_).
         1. Return ? CreateDate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]]).
       </emu-alg>
     </emu-clause>
@@ -624,6 +620,18 @@
         1. Let _intermediate_ be ? RegulateDate(_intermediate_.[[Year]], _intermediate_.[[Month]], _day_, _disambiguation_).
         1. Let _d_ be _intermediate_.[[Day]] + _days_.
         1. Return ! BalanceDate(_intermediate_.[[Year]], _intermediate_.[[Month]], _d_).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-subtractdate" aoid="SubtractDate">
+      <h1>SubtractDate ( _year_, _month_, _day_, _years_, _months_, _days_, _disambiguation_ )</h1>
+      <emu-alg>
+        1. Assert: _year_, _month_, _day_, _years_, _months_, and _days_ are integer Number values.
+        1. Assert: _disambiguation_ is one of `"constrain"`, `"balance"`, or `"reject"`.
+        1. Let _intermediate_ be ! BalanceDate(_year_, _month_, _day_ - _days_).
+        1. Let _d_ be _intermediate_.[[Day]].
+        1. Let _intermediate_ be ! BalanceYearMonth(_intermediate_.[[Year]] - _years_, _intermediate_.[[Month]] - _months_).
+        1. Return ? RegulateDate(_intermediate_.[[Year]], _intermediate_.[[Month]], _d_).
       </emu-alg>
     </emu-clause>
 
