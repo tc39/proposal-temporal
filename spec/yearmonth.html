@@ -389,7 +389,7 @@
       <h1>CreateYearMonth ( _year_, _month_ [ , _newTarget_ ] )</h1>
       <emu-alg>
         1. Assert: ! ValidateYearMonth(_year_, _month_) is *true*.
-        1. If _newTarget_ is not given, set it to %Temporal.YearMonth%
+        1. If _newTarget_ is not given, set it to %Temporal.YearMonth%.
         1. Let _object_ be ? OrdinaryCreateFromConstructor(_newTarget_, `"%Temporal.YearMonth.prototype%"`, « [[InitializedTemporalYearMonth]], [[Year]], [[Month]] »).
         1. Set _object_.[[Year]] to _year_.
         1. Set _object_.[[Month]] to _month_.
