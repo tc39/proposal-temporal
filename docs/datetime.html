@@ -241,15 +241,15 @@ This is 365 or 366, depending on whether the year is a leap year.</p>
 <pre><code class="language-javascript">dt = Temporal.now.dateTime();
 `The year is ${Math.round(dt.dayOfYear / dt.daysInYear * 100)}% over!`
 // example output: &quot;The year is 10% over!&quot;</code></pre>
-<h3 id="datetimeleapyear--boolean">datetime.<strong>leapYear</strong> : boolean</h3>
-<p>The <code>leapYear</code> read-only property tells whether the year that the date falls in is a leap year or not.
+<h3 id="datetimeisleapyear--boolean">datetime.<strong>isLeapYear</strong> : boolean</h3>
+<p>The <code>isLeapYear</code> read-only property tells whether the year that the date falls in is a leap year or not.
 Its value is <code>true</code> if the year is a leap year, and <code>false</code> if not.</p>
 <p>Usage example:</p>
 <pre><code class="language-javascript">// Is this year a leap year?
 dt = Temporal.now.dateTime();
-dt.leapYear  // example output: true
+dt.isLeapYear  // example output: true
 // Is 2100 a leap year? (no, because it&#39;s divisible by 100 and not 400)
-dt.with({year: 2100}).leapYear  // =&gt; false</code></pre>
+dt.with({year: 2100}).isLeapYear  // =&gt; false</code></pre>
 <h2 id="methods">Methods</h2>
 <h3 id="datetimewithdatetimelike-object-disambiguation-constrain--balance--reject--constrain--temporaldatetime">datetime.<strong>with</strong>(<em>dateTimeLike</em>: object, <em>disambiguation</em>: &#39;constrain&#39; | &#39;balance&#39; | &#39;reject&#39; = &#39;constrain&#39;) : Temporal.DateTime</h3>
 <p><strong>Parameters:</strong></p>
