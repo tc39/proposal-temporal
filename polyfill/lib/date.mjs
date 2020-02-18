@@ -61,7 +61,7 @@ export class Date {
     if (!ES.IsDate(this)) throw new TypeError('invalid receiver');
     return ES.DaysInMonth(GetSlot(this, YEAR), GetSlot(this, MONTH));
   }
-  get leapYear() {
+  get isLeapYear() {
     if (!ES.IsDate(this)) throw new TypeError('invalid receiver');
     return ES.LeapYear(GetSlot(this, YEAR));
   }

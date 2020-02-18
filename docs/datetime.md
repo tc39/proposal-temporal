@@ -240,18 +240,18 @@ dt = Temporal.now.dateTime();
 // example output: "The year is 10% over!"
 ```
 
-### datetime.**leapYear** : boolean
+### datetime.**isLeapYear** : boolean
 
-The `leapYear` read-only property tells whether the year that the date falls in is a leap year or not.
+The `isLeapYear` read-only property tells whether the year that the date falls in is a leap year or not.
 Its value is `true` if the year is a leap year, and `false` if not.
 
 Usage example:
 ```javascript
 // Is this year a leap year?
 dt = Temporal.now.dateTime();
-dt.leapYear  // example output: true
+dt.isLeapYear  // example output: true
 // Is 2100 a leap year? (no, because it's divisible by 100 and not 400)
-dt.with({year: 2100}).leapYear  // => false
+dt.with({year: 2100}).isLeapYear  // => false
 ```
 
 ## Methods
