@@ -389,8 +389,8 @@
       <h1>ConstrainYearMonth ( _year_, _month_ )</h1>
       <emu-alg>
         1. Assert: _year_ and _month_ are integer Number values.
-        1. Set _year_ to ConstrainToRange(_year_, -999999, 999999).
-        1. Set _month_ to ConstrainToRange(_month_, 1, 12).
+        1. Set _year_ to ! ConstrainToRange(_year_, -999999, 999999).
+        1. Set _month_ to ! ConstrainToRange(_month_, 1, 12).
         1. Return the Record {
           [[Year]]: _year_,
           [[Month]]: _month_,
