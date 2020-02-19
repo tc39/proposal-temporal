@@ -537,7 +537,7 @@
       <emu-alg>
         1. Assert: _year_, _month_, and _day_ are integer Number values.
         1. Let _yearMonth_ be ! ConstrainYearMonth(_year_, _month_).
-        1. Set _day_ to ConstrainToRange(_day_, 1, DaysInMonth(_yearMonth_.[[Year]], _yearMonth_.[[Month]]));
+        1. Set _day_ to ! ConstrainToRange(_day_, 1, DaysInMonth(_yearMonth_.[[Year]], _yearMonth_.[[Month]]));
         1. Return the Record {
           [[Year]]: _yearMonth_.[[Year]],
           [[Month]]: _yearMonth_.[[Month]],
