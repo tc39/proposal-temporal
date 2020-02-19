@@ -87,7 +87,7 @@ md = Temporal.MonthDay.from(Temporal.Date.from('2006-08-24'));
 **Returns:** &minus;1, 0, or 1.
 
 Compares two `Temporal.MonthDay` objects.
-Returns an integer indicating whether `one` comes before or after or is equal to `two`.
+Returns an integer indicating whether `one` comes before or after or is equal to `two`, assuming they occur in the same year..
 - &minus;1 if `one` comes before `two`;
 - 0 if `one` and `two` are the same;
 - 1 if `one` comes after `two`.
