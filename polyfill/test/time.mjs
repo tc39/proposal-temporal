@@ -238,6 +238,74 @@ describe('Time', () => {
         const duration = time.difference(two);
         equal(`${duration}`, 'PT1H53M');
       });
+      it('always returns a duration of 12 hours or less', () => {
+        const start1 = new Temporal.Time(11);
+        const start2 = new Temporal.Time(23);
+
+        let duration = Temporal.Duration.from('PT11H');
+        let end = start1.plus(duration);
+        equal(`${start1.difference(end)}`, 'PT11H');
+        end = start2.plus(duration);
+        equal(`${start2.difference(end)}`, 'PT11H');
+
+        duration = Temporal.Duration.from('PT11H45M');
+        end = start1.plus(duration);
+        equal(`${start1.difference(end)}`, 'PT11H45M');
+        end = start2.plus(duration);
+        equal(`${start2.difference(end)}`, 'PT11H45M');
+
+        duration = Temporal.Duration.from('PT12H');
+        end = start1.plus(duration);
+        equal(`${start1.difference(end)}`, 'PT12H');
+        end = start2.plus(duration);
+        equal(`${start2.difference(end)}`, 'PT12H');
+
+        duration = Temporal.Duration.from('PT12H15M');
+        end = start1.plus(duration);
+        equal(`${start1.difference(end)}`, 'PT11H45M');
+        end = start2.plus(duration);
+        equal(`${start2.difference(end)}`, 'PT11H45M');
+
+        duration = Temporal.Duration.from('PT13H');
+        end = start1.plus(duration);
+        equal(`${start1.difference(end)}`, 'PT11H');
+        end = start2.plus(duration);
+        equal(`${start2.difference(end)}`, 'PT11H');
+      });
+      it('returns the same duration no matter when the start time is', () => {
+        const hours = Array(24).fill().map((_, ix) => ix);
+        hours.forEach((hour) => {
+          const time1 = new Temporal.Time(hour);
+          const time2 = time1.plus(Temporal.Duration.from('PT9H'));
+          equal(`${time1.difference(time2)}`, 'PT9H');
+        });
+
+        const zeroTo59 = Array(60).fill().map((_, ix) => ix);
+        zeroTo59.forEach((num) => {
+          const minute1 = new Temporal.Time(23, num);
+          const minute2 = minute1.plus(Temporal.Duration.from('PT45M'));
+          equal(`${minute1.difference(minute2)}`, 'PT45M');
+
+          const second1 = new Temporal.Time(23, 59, num);
+          const second2 = second1.plus(Temporal.Duration.from('PT45S'));
+          equal(`${second1.difference(second2)}`, 'PT45S');
+        });
+
+        const last10 = Array(10).fill().map((_, ix) => ix + 990);
+        last10.forEach((num) => {
+          const ms1 = new Temporal.Time(23, 59, 59, num);
+          const ms2 = ms1.plus(Temporal.Duration.from('PT0.008S'));
+          equal(`${ms1.difference(ms2)}`, 'PT0.008S');
+
+          const µs1 = new Temporal.Time(23, 59, 59, 999, num);
+          const µs2 = µs1.plus(Temporal.Duration.from('PT0.000008S'));
+          equal(`${µs1.difference(µs2)}`, 'PT0.000008S');
+
+          const ns1 = new Temporal.Time(23, 59, 59, 999, 999, num);
+          const ns2 = ns1.plus(Temporal.Duration.from('PT0.000000008S'));
+          equal(`${ns1.difference(ns2)}`, 'PT0.000000008S');
+        });
+      });
       it("doesn't cast argument", () => {
         throws(() => time.difference({ hour: 16, minute: 34 }), TypeError);
         throws(() => time.difference('16:34'), TypeError);

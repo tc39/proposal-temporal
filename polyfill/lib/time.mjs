@@ -166,7 +166,15 @@ export class Time {
     if (!ES.IsTime(this)) throw new TypeError('invalid receiver');
     if (!ES.IsTime(other)) throw new TypeError('invalid Time object');
     const [earlier, later] = [this, other].sort(Time.compare);
-    const { hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.DifferenceTime(earlier, later);
+    let { hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.DifferenceTime(earlier, later);
+    if (hours >= 12) {
+      hours = 24 - hours;
+      minutes *= -1;
+      seconds *= -1;
+      milliseconds *= -1;
+      microseconds *= -1;
+      nanoseconds *= -1;
+    }
     const Duration = ES.GetIntrinsic('%Temporal.Duration%');
     return new Duration(0, 0, 0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 'balance');
   }
