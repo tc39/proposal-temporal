@@ -85,19 +85,172 @@
       It does not represent the final API of this proposal, nor even the current consensus.
     </div>
 <h1 id="temporalmonthday">Temporal.MonthDay</h1>
+<p>A <code>Temporal.MonthDay</code> represents a particular day on the calendar, but without a year.
+For example, it could be used to represent a yearly recurring event, like &quot;Bastille Day is on the 14th of July.&quot;</p>
+<p>If you need to refer to a certain instance of a calendar event, in a particular year, use <code>Temporal.Date</code> or even <code>Temporal.DateTime</code>.
+A <code>Temporal.MonthDay</code> can be converted into a <code>Temporal.Date</code> by combining it with a year, using the <code>withYear()</code> method.</p>
 <h2 id="constructor">Constructor</h2>
-<h3 id="new-temporalmonthdaymonth-number-day-number-disambiguation-constrain--balance--reject--constrain--temporalmonthday"><strong>new Temporal.MonthDay</strong>(<em>month</em>: number, <em>day</em>: number, <em>disambiguation</em>: &#39;constrain&#39; | &#39;balance&#39; | &#39;reject&#39; = &#39;constrain&#39;) : Temporal.MonthDay</h3>
+<h3 id="new-temporalmonthdayisomonth-number-isoday-number-disambiguation-constrain--balance--reject--constrain--temporalmonthday"><strong>new Temporal.MonthDay</strong>(<em>isoMonth</em>: number, <em>isoDay</em>: number, <em>disambiguation</em>: &#39;constrain&#39; | &#39;balance&#39; | &#39;reject&#39; = &#39;constrain&#39;) : Temporal.MonthDay</h3>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>isoMonth</code> (number): A month, ranging between 1 and 12 inclusive.</li>
+<li><code>isoDay</code> (number): A day of the month, ranging between 1 and 31 inclusive.</li>
+<li><code>disambiguation</code> (optional string): How to deal with out-of-range values of the other parameters.
+Allowed values are <code>constrain</code>, <code>balance</code>, and <code>reject</code>.
+The default is <code>constrain</code>.</li>
+</ul>
+<p><strong>Returns:</strong> a new <code>Temporal.MonthDay</code> object.</p>
+<p>Use this constructor if you have the correct parameters for the date already as individual number values, or you need the disambiguation behaviour.
+Otherwise, <code>Temporal.MonthDay.from()</code>, which accepts more kinds of input, is probably more convenient.</p>
+<p>All values are given as reckoned in the <a href="https://en.wikipedia.org/wiki/ISO_8601#Dates">ISO 8601 calendar</a>.</p>
+<p>The <code>disambiguation</code> parameter works as follows:</p>
+<ul>
+<li>In <code>constrain</code> mode (the default), any out-of-range values are clamped to the nearest in-range value.</li>
+<li>In <code>balance</code> mode, any out-of-range values are resolved by balancing them with the next highest unit.</li>
+<li>In <code>reject</code> mode, the presence of out-of-range values will cause the constructor to throw a <code>RangeError</code>.</li>
+</ul>
+<blockquote>
+<p><strong>NOTE</strong>: February 29 (Leap day in the ISO 8601 calendar) is a valid value for <code>Temporal.MonthDay</code>, even though that date does not occur every year.</p>
+</blockquote>
+<p>Usage examples:</p>
+<pre><code class="language-javascript">// Pi day
+md = new Temporal.MonthDay(3, 14)  // =&gt; 03-14
+// Leap day
+md = new Temporal.MonthDay(2, 29)  // =&gt; 02-29
+
+// Different disambiguation modes
+md = new Temporal.MonthDay(13, 1, &#39;constrain&#39;)  // =&gt; 12-01
+md = new Temporal.MonthDay(-1, 1, &#39;constrain&#39;)  // =&gt; 01-01
+md = new Temporal.MonthDay(13, 1, &#39;balance&#39;)  // =&gt; 01-01
+md = new Temporal.MonthDay(-1, 1, &#39;balance&#39;)  // =&gt; 11-01
+md = new Temporal.MonthDay(13, 1, &#39;reject&#39;)  // throws
+md = new Temporal.MonthDay(-1, 1, &#39;reject&#39;)  // throws</code></pre>
 <h2 id="static-methods">Static methods</h2>
 <h3 id="temporalmonthdayfromthing-string--object--temporalmonthday">Temporal.MonthDay.<strong>from</strong>(<em>thing</em>: string | object) : Temporal.MonthDay</h3>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>thing</code> (string or object): The value representing the desired date.</li>
+</ul>
+<p><strong>Returns:</strong> a new <code>Temporal.MonthDay</code> object (or the same object if <code>thing</code> was a <code>Temporal.MonthDay</code> object.)</p>
+<p>This static method creates a new <code>Temporal.MonthDay</code> object from another value.
+If the value is a string, it must be in ISO 8601 format.
+If the value is another <code>Temporal.MonthDay</code> object, the same object is returned.
+If the value is any other object, it must have <code>month</code> and <code>day</code> properties, and a <code>Temporal.MonthDay</code> will be constructed from them.</p>
+<p>Note that any year, time, or time zone part of an ISO 8601 string passed to this function is optional, and will be ignored.</p>
+<p>Example usage:</p>
+<pre><code class="language-javascript">md = Temporal.MonthDay.from(&#39;08-24&#39;);  // =&gt; 08-24
+md = Temporal.MonthDay.from(&#39;2006-08-24&#39;);  // =&gt; 08-24
+md = Temporal.MonthDay.from(&#39;2006-08-24T15:43:27&#39;);  // =&gt; 08-24
+md = Temporal.MonthDay.from(&#39;2006-08-24T15:43:27Z&#39;);  // =&gt; 08-24
+md = Temporal.MonthDay.from(&#39;2006-08-24T15:43:27+01:00[Europe/Brussels]&#39;);
+  // =&gt; 08-24
+md === Temporal.MonthDay.from.html)  // =&gt; true
+
+md = Temporal.MonthDay.from({month: 8, day: 24});  // =&gt; 08-24
+md = Temporal.MonthDay.from(Temporal.Date.from(&#39;2006-08-24&#39;));
+  // =&gt; same as above; Temporal.Date has month and day properties</code></pre>
 <h3 id="temporalmonthdaycompareone-temporalmonthday-two-temporalmonthday--number">Temporal.MonthDay.<strong>compare</strong>(<em>one</em>: Temporal.MonthDay, <em>two</em>: Temporal.MonthDay) : number</h3>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>one</code> (<code>Temporal.MonthDay</code>): First date to compare.</li>
+<li><code>two</code> (<code>Temporal.MonthDay</code>): Second date to compare.</li>
+</ul>
+<p><strong>Returns:</strong> &minus;1, 0, or 1.</p>
+<p>Compares two <code>Temporal.MonthDay</code> objects.
+Returns an integer indicating whether <code>one</code> comes before or after or is equal to <code>two</code>, assuming they occur in the same year..</p>
+<ul>
+<li>&minus;1 if <code>one</code> comes before <code>two</code>;</li>
+<li>0 if <code>one</code> and <code>two</code> are the same;</li>
+<li>1 if <code>one</code> comes after <code>two</code>.</li>
+</ul>
+<p>This function can be used to sort arrays of <code>Temporal.MonthDay</code> objects.
+For example:</p>
+<pre><code class="language-javascript">one = Temporal.MonthDay.from(&#39;08-24&#39;);
+two = Temporal.MonthDay.from(&#39;07-14&#39;);
+three = Temporal.MonthDay.from(&#39;02-18&#39;);
+sorted = [one, two, three].sort(Temporal.MonthDay.compare);
+sorted.join(&#39; &#39;);  // =&gt; 02-18 07-14 08-24</code></pre>
 <h2 id="properties">Properties</h2>
 <h3 id="monthdaymonth--number">monthDay.<strong>month</strong> : number</h3>
 <h3 id="monthdayday--number">monthDay.<strong>day</strong> : number</h3>
+<p>The above read-only properties allow accessing each component of the date individually.</p>
+<p>Usage examples:</p>
+<pre><code class="language-javascript">md = Temporal.MonthDay.from(&#39;08-24&#39;);
+md.month  // =&gt; 8
+md.day    // =&gt; 24</code></pre>
 <h2 id="methods">Methods</h2>
 <h3 id="monthdaywithmonthdaylike-object-disambiguation-constrain--balance--reject--constrain--temporalmonthday">monthDay.<strong>with</strong>(<em>monthDayLike</em>: object, <em>disambiguation</em>: &#39;constrain&#39; | &#39;balance&#39; | &#39;reject&#39; = &#39;constrain&#39;) : Temporal.MonthDay</h3>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>monthDayLike</code> (object): an object with some or all of the properties of a <code>Temporal.MonthDay</code>.</li>
+<li><code>disambiguation</code> (optional string): How to deal with out-of-range values.
+Allowed values are <code>constrain</code>, <code>balance</code>, and <code>reject</code>.
+The default is <code>constrain</code>.</li>
+</ul>
+<p><strong>Returns:</strong> a new <code>Temporal.MonthDay</code> object.</p>
+<p>This method creates a new <code>Temporal.MonthDay</code> which is a copy of <code>monthDay</code>, but any properties present on <code>monthDayLike</code> override the ones already present on <code>monthDay</code>.</p>
+<p>The disambiguation parameter tells what should happen when out-of-range values are given or when the result would be an invalid month-day combination, such as &quot;June 31&quot;:</p>
+<ul>
+<li>In <code>constrain</code> mode (the default), any out-of-range values are clamped to the nearest in-range value, so June 31 would become June 30.</li>
+<li>In <code>balance</code> mode, an out-of-range value for the day is resolved by balancing them with the next highest unit, so June 31 would become July 1; and an out-of-range value for the month wraps around, so <code>{month: 13}</code> would end up as January.</li>
+<li>In <code>reject</code> mode, the presence of out-of-range values will cause the constructor to throw a <code>RangeError</code>.</li>
+</ul>
+<blockquote>
+<p><strong>NOTE:</strong> For the purpose of this method, February is treated as having 29 days, so that it remains possible to construct a <code>Temporal.MonthDay</code> for February 29.</p>
+</blockquote>
+<p>Since <code>Temporal.MonthDay</code> objects are immutable, use this method instead of modifying one.</p>
+<p>Usage example:</p>
+<pre><code class="language-javascript">md = Temporal.MonthDay.from(&#39;11-15&#39;);
+// What&#39;s the last day of that month?
+md.with({day: 31}, &#39;constrain&#39;)  // =&gt; 11-30
+Temporal.MonthDay.from(&#39;02-01&#39;).with({day: 31}, &#39;constrain&#39;);  // =&gt; 02-29</code></pre>
 <h3 id="monthdaytostring--string">monthDay.<strong>toString</strong>() : string</h3>
+<p><strong>Returns:</strong> a string in the ISO 8601 date format representing <code>monthDay</code>.</p>
+<p>This method overrides the <code>Object.prototype.toString()</code> method and provides a convenient, unambiguous string representation of <code>monthDay</code>.
+The string can be passed to <code>Temporal.MonthDay.from()</code> to create a new <code>Temporal.MonthDay</code> object.</p>
+<p>Example usage:</p>
+<pre><code class="language-js">md = Temporal.MonthDay.from(&#39;08-24&#39;);
+md.toString();  // =&gt; 08-24</code></pre>
 <h3 id="monthdaytolocalestringlocale-string-options-object--string">monthDay.<strong>toLocaleString</strong>(<em>locale</em>?: string, <em>options</em>?: object) : string</h3>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>locales</code> (optional string or array of strings): A string with a BCP 47 language tag with an optional Unicode extension key, or an array of such strings.</li>
+<li><code>options</code> (optional object): An object with properties influencing the formatting.</li>
+</ul>
+<p><strong>Returns:</strong> a language-sensitive representation of <code>monthDay</code>.</p>
+<p>This method overrides <code>Object.prototype.toLocaleString()</code> to provide a human-readable, language-sensitive representation of <code>monthDay</code>.</p>
+<p>The <code>locales</code> and <code>options</code> arguments are the same as in the constructor to <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DateTimeFormat"><code>Intl.DateTimeFormat</code></a>.</p>
+<p>Example usage:</p>
+<pre><code class="language-js">md = Temporal.MonthDay.from(&#39;08-24&#39;);
+md.toLocaleString();  // =&gt; example output: 08-24
+md.toLocaleString(&#39;de-DE&#39;);  // =&gt; example output: 24.8.
+md.toLocaleString(&#39;de-DE&#39;, {month: &#39;long&#39;, day: &#39;numeric&#39;});  // =&gt; 24. August
+md.toLocaleString(&#39;en-US-u-nu-fullwide&#39;);  // =&gt; ８/２４</code></pre>
 <h3 id="monthdaywithyearyear-number-disambiguation-constrain--balance--reject--constrain--temporaldate">monthDay.<strong>withYear</strong>(<em>year</em>: number, <em>disambiguation</em>: &#39;constrain&#39; | &#39;balance&#39; | &#39;reject&#39; = &#39;constrain&#39;) : Temporal.Date</h3>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>year</code> (number): A year.</li>
+<li><code>disambiguation</code> (optional string): How to deal with out-of-range values.
+Allowed values are <code>constrain</code>, <code>balance</code>, and <code>reject</code>.
+The default is <code>constrain</code>.</li>
+</ul>
+<p><strong>Returns:</strong> a <code>Temporal.Date</code> object that represents the calendar date of <code>monthDay</code> in <code>year</code>.</p>
+<p>This method can be used to convert <code>Temporal.MonthDay</code> into a <code>Temporal.Date</code>, by supplying a year to use.
+The converted object carries a copy of all the relevant fields of <code>monthDay</code>.</p>
+<p>The disambiguation parameter tells what should happen when translating a <code>Temporal.MonthDay</code> representing February 29 into a non-leap year:</p>
+<ul>
+<li>In <code>constrain</code> mode (the default), the result will be February 28 of that year.</li>
+<li>In <code>balance</code> mode, the result will be March 1.</li>
+<li>In <code>reject</code> mode, the method will throw a <code>RangeError</code>.</li>
+</ul>
+<p>Usage example:</p>
+<pre><code class="language-javascript">md = Temporal.MonthDay.from(&#39;08-24&#39;);
+md.withYear(2017)  // =&gt; 2017-08-24
+
+md = Temporal.MonthDay.from(&#39;02-29&#39;);
+md.withYear(2017, &#39;constrain&#39;)  // =&gt; 2017-02-28
+md.withYear(2017, &#39;balance&#39;)    // =&gt; 2017-03-01
+md.withYear(2017, &#39;reject&#39;)     // throws</code></pre>
     <footer>
       <p>
         This page includes a script which loads an implementation of Temporal in your browser.
