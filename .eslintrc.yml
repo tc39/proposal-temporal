@@ -22,4 +22,7 @@ ignorePatterns:
   - /docs/prism.js
   - /polyfill/index.js
   - /polyfill/script.js
-rules: {}
+rules:
+  curly:
+    - error
+    - multi-line

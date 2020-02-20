@@ -87,8 +87,9 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
     const result = new TemporalTimeZone(zone);
     if (offset && ianaName) {
       const absolute = TemporalAbsolute.from(stringIdent);
-      if (result.getOffsetFor(absolute) !== offset)
+      if (result.getOffsetFor(absolute) !== offset) {
         throw new RangeError(`invalid offset ${offset}[${ianaName}]`);
+      }
     }
     return result;
   },
@@ -342,8 +343,9 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
     if (!bag || 'object' !== typeof bag) return false;
     let result = {};
     for (let prop of required) {
-      if (!(prop in bag) || typeof bag[prop] === 'undefined')
+      if (!(prop in bag) || typeof bag[prop] === 'undefined') {
         throw new TypeError(`required property '${prop}' missing or undefined`);
+      }
       result[prop] = ES.ToNumber(bag[prop]);
     }
     for (let prop of optional) {
@@ -427,8 +429,7 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
   GetEpochFromParts: (year, month, day, hour, minute, second, millisecond, microsecond, nanosecond) => {
     let ms = Date.UTC(year, month - 1, day, hour, minute, second, millisecond);
     // Date.UTC interprets one and two-digit years as being in the 20th century
-    if (year >= 0 && year < 100)
-      ms = new Date(ms).setUTCFullYear(year);
+    if (year >= 0 && year < 100) ms = new Date(ms).setUTCFullYear(year);
     let ns = bigInt(ms).multiply(1e6);
     ns = ns.plus(bigInt(microsecond).multiply(1e3));
     ns = ns.plus(bigInt(nanosecond));

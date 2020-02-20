@@ -130,10 +130,12 @@ export class Duration {
 
     const secondParts = [];
     if (GetSlot(this, NANOSECONDS)) secondParts.unshift(`000${GetSlot(this, NANOSECONDS)}`.slice(-3));
-    if (GetSlot(this, MICROSECONDS) || secondParts.length)
+    if (GetSlot(this, MICROSECONDS) || secondParts.length) {
       secondParts.unshift(`000${GetSlot(this, MICROSECONDS)}`.slice(-3));
-    if (GetSlot(this, MILLISECONDS) || secondParts.length)
+    }
+    if (GetSlot(this, MILLISECONDS) || secondParts.length) {
       secondParts.unshift(`000${GetSlot(this, MILLISECONDS)}`.slice(-3));
+    }
     if (secondParts.length) secondParts.unshift('.');
     if (GetSlot(this, SECONDS) || secondParts.length) secondParts.unshift(`${this.seconds}`);
     if (secondParts.length) timeParts.push(`${secondParts.join('')}S`);
