@@ -185,7 +185,7 @@ ym = Temporal.YearMonth.from('2019-06');
 ym.with({month: 12})  // => 2019-12
 ```
 
-### yearMonth.**plus**(_duration_: string | object, _disambiguation_: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.YearMonth
+### yearMonth.**plus**(_duration_: string | object, _disambiguation_: 'constrain' | 'reject' = 'constrain') : Temporal.YearMonth
 
 **Parameters:**
 - `duration` (string or object): A `Temporal.Duration` object, a duration-like object, or a string from which to create a `Temporal.Duration`.
@@ -213,7 +213,7 @@ ym.plus({years: 20, months: 4})  // => 2039-10
 ym.plus('P14Y')  // => 2033-06
 ```
 
-### yearMonth.**minus**(_duration_: string | object, _disambiguation_: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.YearMonth
+### yearMonth.**minus**(_duration_: string | object, _disambiguation_: 'constrain' | 'reject' = 'constrain') : Temporal.YearMonth
 
 **Parameters:**
 - `duration` (string or object): A `Temporal.Duration` object, a duration-like object, or a string from which to create a `Temporal.Duration`.

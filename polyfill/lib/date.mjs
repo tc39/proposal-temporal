@@ -88,6 +88,7 @@ export class Date {
   }
   plus(durationLike = {}, disambiguation = 'constrain') {
     if (!ES.IsDate(this)) throw new TypeError('invalid receiver');
+    disambiguation = ES.ToArithmeticDisambiguation(disambiguation);
     const duration = ES.ToLimitedDuration(durationLike, [HOURS, MINUTES, SECONDS, MILLISECONDS, MICROSECONDS, NANOSECONDS]);
     let { year, month, day } = this;
     const { years, months, days } = duration;
@@ -97,6 +98,7 @@ export class Date {
   }
   minus(durationLike = {}, disambiguation = 'constrain') {
     if (!ES.IsDate(this)) throw new TypeError('invalid receiver');
+    disambiguation = ES.ToArithmeticDisambiguation(disambiguation);
     const duration = ES.ToLimitedDuration(durationLike, [HOURS, MINUTES, SECONDS, MILLISECONDS, MICROSECONDS, NANOSECONDS]);
     let { year, month, day } = this;
     const { years, months, days } = duration;

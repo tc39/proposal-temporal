@@ -340,6 +340,8 @@ describe('Time', () => {
       it('time.plus(durationObj)', () => {
         equal(`${time.plus(Temporal.Duration.from('PT16H'))}`, '07:23:30.123456789');
       });
+      it('invalid disambiguation', () =>
+        throws(() => time.plus({ hours: 1 }, 'balance'), RangeError));
     });
     describe('time.minus() works', () => {
       const time = Time.from('15:23:30.123456789');
@@ -352,6 +354,8 @@ describe('Time', () => {
       it('time.minus(durationObj)', () => {
         equal(`${time.minus(Temporal.Duration.from('PT16H'))}`, '23:23:30.123456789');
       });
+      it('invalid disambiguation', () =>
+        throws(() => time.minus({ hours: 1 }, 'balance'), RangeError));
     });
     describe('time.toString() works', () => {
       it('new Time(15, 23).toString()', () => {

@@ -107,6 +107,8 @@ describe('YearMonth', () => {
     it('yearMonth.plus(durationObj)', () => {
       equal(`${ym.plus(Temporal.Duration.from('P2M'))}`, '2020-01');
     });
+    it('invalid disambiguation', () =>
+      throws(() => ym.plus({ months: 1 }, 'balance'), RangeError));
   });
   describe('YearMonth.minus() works', () => {
     const ym = YearMonth.from('2019-11');
@@ -117,6 +119,8 @@ describe('YearMonth', () => {
     it('yearMonth.minus(durationObj)', () => {
       equal(`${ym.minus(Temporal.Duration.from('P11M'))}`, '2018-12');
     });
+    it('invalid disambiguation', () =>
+      throws(() => ym.minus({ months: 1 }, 'balance'), RangeError));
   });
 });
 
