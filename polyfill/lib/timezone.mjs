@@ -2,7 +2,6 @@ import { ES } from './ecmascript.mjs';
 import { MakeIntrinsicClass } from './intrinsicclass.mjs';
 import { IDENTIFIER, EPOCHNANOSECONDS, CreateSlots, GetSlot, SetSlot } from './slots.mjs';
 import { ZONES } from './zones.mjs';
-import { timezone as STRING } from './regex.mjs';
 
 import bigInt from 'big-integer';
 
@@ -155,14 +154,16 @@ if ('undefined' !== typeof Symbol) {
     const iter = ZONES[Symbol.iterator]();
     return {
       next: () => {
-        while (true) {
+        while (true) {  // eslint-disable-line no-constant-condition
           let { value, done } = iter.next();
           if (done) return { done };
           try {
             value = new TimeZone(value);
             done = false;
             return { done, value };
-          } catch (ex) {}
+          } catch (ex) {
+            continue;
+          }
         }
       }
     };

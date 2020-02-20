@@ -5,7 +5,7 @@ import Pretty from '@pipobscure/demitasse-pretty';
 const { reporter } = Pretty;
 
 import Assert from 'assert';
-const { ok: assert, deepEqual, throws } = Assert;
+const { deepEqual } = Assert;
 
 import { ES } from '../lib/ecmascript.mjs';
 import { GetSlot, IDENTIFIER } from '../lib/slots.mjs';

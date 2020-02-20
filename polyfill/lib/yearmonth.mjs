@@ -15,8 +15,6 @@ import {
   NANOSECONDS,
 } from './slots.mjs';
 
-import { yearmonth as STRING } from './regex.mjs';
-
 export class YearMonth {
   constructor(year, month, disambiguation = 'constrain') {
     year = ES.ToInteger(year);

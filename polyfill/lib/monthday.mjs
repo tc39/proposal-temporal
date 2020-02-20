@@ -2,8 +2,6 @@ import { ES } from './ecmascript.mjs';
 import { MakeIntrinsicClass } from './intrinsicclass.mjs';
 import { MONTH, DAY, CreateSlots, GetSlot, SetSlot } from './slots.mjs';
 
-import { monthday as STRING } from './regex.mjs';
-
 export class MonthDay {
   constructor(month, day, disambiguation = 'constrain') {
     month = ES.ToInteger(month);
