@@ -208,5 +208,6 @@ function ArrayFrom(iter, limit = Number.POSITIVE_INFINITY) {
     return result;
 }
 import { normalize } from 'path';
-if (normalize(import.meta.url.slice(8)) === normalize(process.argv[1]))
+if (normalize(import.meta.url.slice(8)) === normalize(process.argv[1])) {
     report(reporter).then((failed) => process.exit(failed ? 1 : 0));
+}
