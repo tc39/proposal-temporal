@@ -93,12 +93,12 @@ Of the <code>Temporal</code> classes carrying human-readable time information, i
 <p>A <code>Temporal.DateTime</code> can be converted to a <code>Temporal.Absolute</code> using a <code>Temporal.TimeZone</code>.
 A <code>Temporal.DateTime</code> can also be converted into any of the other <code>Temporal</code> objects that carry less information, such as <code>Temporal.Date</code> for the date or <code>Temporal.Time</code> for the time.</p>
 <h2 id="constructor">Constructor</h2>
-<h3 id="new-temporaldatetimeyear-number-month-number-day-number-hour-number--0-minute-number--0-second-number--0-millisecond-number--0-microsecond-number--0-nanosecond-number--0-disambiguation-constrain--balance--reject--constrain--temporaldatetime"><strong>new Temporal.DateTime</strong>(<em>year</em>: number, <em>month</em>: number, <em>day</em>: number, <em>hour</em>: number = 0, <em>minute</em>: number = 0, <em>second</em>: number = 0, <em>millisecond</em>: number = 0, <em>microsecond</em>: number = 0, <em>nanosecond</em>: number = 0, <em>disambiguation</em>: &#39;constrain&#39; | &#39;balance&#39; | &#39;reject&#39; = &#39;constrain&#39;) : Temporal.DateTime</h3>
+<h3 id="new-temporaldatetimeisoyear-number-isomonth-number-isoday-number-hour-number--0-minute-number--0-second-number--0-millisecond-number--0-microsecond-number--0-nanosecond-number--0-disambiguation-constrain--balance--reject--constrain--temporaldatetime"><strong>new Temporal.DateTime</strong>(<em>isoYear</em>: number, <em>isoMonth</em>: number, <em>isoDay</em>: number, <em>hour</em>: number = 0, <em>minute</em>: number = 0, <em>second</em>: number = 0, <em>millisecond</em>: number = 0, <em>microsecond</em>: number = 0, <em>nanosecond</em>: number = 0, <em>disambiguation</em>: &#39;constrain&#39; | &#39;balance&#39; | &#39;reject&#39; = &#39;constrain&#39;) : Temporal.DateTime</h3>
 <p><strong>Parameters:</strong></p>
 <ul>
-<li><code>year</code> (number): A year, ranging between &minus;271821 and 275760 inclusive.</li>
-<li><code>month</code> (number): A month, ranging between 1 and 12 inclusive.</li>
-<li><code>day</code> (number): A day of the month, ranging between 1 and 31 inclusive.</li>
+<li><code>isoYear</code> (number): A year.</li>
+<li><code>isoMonth</code> (number): A month, ranging between 1 and 12 inclusive.</li>
+<li><code>isoDay</code> (number): A day of the month, ranging between 1 and 31 inclusive.</li>
 <li><code>hour</code> (optional number): An hour of the day, ranging between 0 and 23 inclusive.</li>
 <li><code>minute</code> (optional number): A minute, ranging between 0 and 59 inclusive.</li>
 <li><code>second</code> (optional number): A second, ranging between 0 and 59 inclusive.</li>
@@ -112,6 +112,7 @@ The default is <code>constrain</code>.</li>
 <p><strong>Returns:</strong> a new <code>Temporal.DateTime</code> object.</p>
 <p>Use this constructor if you have the correct parameters for the date already as individual number values, or you need the disambiguation behaviour.
 Otherwise, <code>Temporal.DateTime.from()</code>, which accepts more kinds of input, is probably more convenient.</p>
+<p>All values are given as reckoned in the <a href="https://en.wikipedia.org/wiki/ISO_8601#Dates">ISO 8601 calendar</a>.</p>
 <p>The <code>disambiguation</code> parameter works as follows:</p>
 <ul>
 <li>In <code>constrain</code> mode (the default), any out-of-range values are clamped to the nearest in-range value.</li>
@@ -215,7 +216,8 @@ dt.microsecond  // =&gt; 3
 dt.nanosecond   // =&gt; 500</code></pre>
 <h3 id="datetimedayofweek--number">datetime.<strong>dayOfWeek</strong> : number</h3>
 <p>The <code>dayOfWeek</code> read-only property gives the weekday number that the date falls on.
-The weekday number is a value between 1 and 7, inclusive: Monday is 1, and Sunday is 7.</p>
+The weekday number is defined as in the ISO 8601 standard: a value between 1 and 7, inclusive, with Monday being 1, and Sunday 7.
+For an overview, see <a href="https://en.wikipedia.org/wiki/ISO_8601#Week_dates">ISO 8601 on Wikipedia</a>.</p>
 <p>Usage example:</p>
 <pre><code class="language-javascript">dt = new Temporal.DateTime(1995, 12, 7, 3, 24, 30, 0, 3, 500);
 [&#39;MON&#39;, &#39;TUE&#39;, &#39;WED&#39;, &#39;THU&#39;, &#39;FRI&#39;, &#39;SAT&#39;, &#39;SUN&#39;][dt.dayOfWeek - 1]  // =&gt; THU</code></pre>
@@ -224,13 +226,8 @@ The weekday number is a value between 1 and 7, inclusive: Monday is 1, and Sunda
 This is a value between 1 and 365, or 366 in a leap year.</p>
 <p>Usage example:</p>
 <pre><code class="language-javascript">dt = new Temporal.DateTime(1995, 12, 7, 3, 24, 30, 0, 3, 500);
-// Print dt in ISO ordinal date format
-year = `${dt.year}`.padStart(4, &#39;0&#39;);
-day = `${dt.dayOfYear}`.padStart(3, &#39;0&#39;);
-hour = `${dt.hour}`.padStart(2, &#39;0&#39;);
-minute = `${dt.minute}`.padStart(2, &#39;0&#39;);
-second = `${dt.second}`.padStart(2, &#39;0&#39;);
-`${year}-${day}T${hour}:${minute}:${second}`  // =&gt; 1995-341T03:24:30</code></pre>
+// ISO ordinal date
+console.log(dt.year, dt.dayOfYear);  // =&gt; 1995 341</code></pre>
 <h3 id="datetimeweekofyear--number">datetime.<strong>weekOfYear</strong> : number</h3>
 <p>The <code>weekOfYear</code> read-only property gives the ISO week number of the date.
 This is normally a value between 1 and 52, but in a few cases it can be 53 as well.
@@ -238,13 +235,8 @@ ISO week 1 is the week containing the first Thursday of the year.
 For more information on ISO week numbers, see for example the Wikipedia article on <a href="https://en.wikipedia.org/wiki/ISO_week_date">ISO week date</a>.</p>
 <p>Usage example:</p>
 <pre><code class="language-javascript">dt = new Temporal.DateTime(1995, 12, 7, 3, 24, 30, 0, 3, 500);
-// Print dt in ISO week number / week day format
-year = `${dt.year}`.padStart(4, &#39;0&#39;);
-week = `${dt.weekOfYear}`.padStart(2, &#39;0&#39;);
-hour = `${dt.hour}`.padStart(2, &#39;0&#39;);
-minute = `${dt.minute}`.padStart(2, &#39;0&#39;);
-second = `${dt.second}`.padStart(2, &#39;0&#39;);
-`${year}-W${week}-${dt.dayOfWeek}T${hour}:${minute}:${second}`  // =&gt; 1995-W49-4T03:24:30</code></pre>
+// ISO week date
+console.log(dt.year, dt.weekOfYear, dt.dayOfWeek);  // =&gt; 1995 49 4</code></pre>
 <h3 id="datetimedaysinmonth--number">datetime.<strong>daysInMonth</strong> : number</h3>
 <p>The <code>daysInMonth</code> read-only property gives the number of days in the month that the date falls in.
 This is 28, 29, 30, or 31, depending on the month and whether the year is a leap year.</p>
@@ -259,8 +251,8 @@ for (let month = 1; month &lt;= 12; month++) {
 const strings = monthsByDays[30].map(dt =&gt; dt.toLocaleString(&#39;en&#39;, {month: &#39;long&#39;}));
 // Shuffle to improve poem as determined empirically
 strings.unshift(strings.pop());
-const last = strings.pop();
-const poem = `Thirty days hath ${strings.join(&#39;, &#39;)}, and ${last}`;
+const format = new Intl.ListFormat(&#39;en&#39;);
+const poem = `Thirty days hath ${format.format(strings)}`;
 
 console.log(poem);</code></pre>
 <h3 id="datetimedaysinyear--number">datetime.<strong>daysInYear</strong> : number</h3>
@@ -268,7 +260,8 @@ console.log(poem);</code></pre>
 This is 365 or 366, depending on whether the year is a leap year.</p>
 <p>Usage example:</p>
 <pre><code class="language-javascript">dt = Temporal.now.dateTime();
-`The year is ${Math.round(dt.dayOfYear / dt.daysInYear * 100)}% over!`
+percent = dt.dayOfYear / dt.daysInYear;
+`The year is ${percent.toLocaleString(&#39;en&#39;, {style: &#39;percent&#39;})} over!`
 // example output: &quot;The year is 10% over!&quot;</code></pre>
 <h3 id="datetimeisleapyear--boolean">datetime.<strong>isLeapYear</strong> : boolean</h3>
 <p>The <code>isLeapYear</code> read-only property tells whether the year that the date falls in is a leap year or not.
