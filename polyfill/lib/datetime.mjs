@@ -1,6 +1,5 @@
 import { ES } from './ecmascript.mjs';
 import { MakeIntrinsicClass } from './intrinsicclass.mjs';
-import { datetime as STRING } from './regex.mjs';
 
 import {
   YEAR,
@@ -56,7 +55,7 @@ export class DateTime {
           nanosecond
         ));
         break;
-      case 'balance':
+      case 'balance': {
         let deltaDays;
         ({ deltaDays, hour, minute, second, millisecond, microsecond, nanosecond } = ES.BalanceTime(
           hour,
@@ -68,6 +67,7 @@ export class DateTime {
         ));
         ({ year, month, day } = ES.BalanceDate(year, month, day + deltaDays));
         break;
+      }
       default:
         throw new TypeError('disambiguation should be either reject, constrain or balance');
     }

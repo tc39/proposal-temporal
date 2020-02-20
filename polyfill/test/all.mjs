@@ -28,6 +28,8 @@ import * as yearmonth from './yearmonth.mjs';
 import * as monthday from './monthday.mjs';
 import * as intl from './intl.mjs';
 
+void datemath, regex, ecmascript, exports, now, timezone, absolute, date, time,
+  datetime, duration, yearmonth, monthday, intl;
 
 Promise.resolve()
   .then(() => {

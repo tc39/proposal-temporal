@@ -14,7 +14,6 @@ import {
   GetSlot,
   SetSlot
 } from './slots.mjs';
-import { duration as STRING } from './regex.mjs';
 
 export class Duration {
   constructor(
@@ -45,14 +44,15 @@ export class Duration {
           if (prop < 0) throw new RangeError('negative values not allowed as duration fields');
         }
         break;
-      case 'constrain':
+      case 'constrain': {
         const arr = [years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds];
         for (const idx in arr) {
           if (arr[idx] < 0) arr[idx] = -arr[idx];
         }
         [years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds] = arr;
         break;
-      case 'balance':
+      }
+      case 'balance': {
         let deltaDays;
         ({
           deltaDays,
@@ -65,6 +65,7 @@ export class Duration {
         } = ES.BalanceTime(hours, minutes, seconds, milliseconds, microseconds, nanoseconds));
         days += deltaDays;
         break;
+      }
       default:
         throw new TypeError('disambiguation should be either reject, constrain or balance');
     }

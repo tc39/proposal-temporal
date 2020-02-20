@@ -1,6 +1,5 @@
 import { ES } from './ecmascript.mjs';
 import { assign as ObjectAssign } from './compat.mjs';
-import { IDENTIFIER, GetSlot } from './slots.mjs';
 import { TimeZone } from './timezone.mjs';
 
 const Absolute = ES.GetIntrinsic('%Temporal.Absolute%');

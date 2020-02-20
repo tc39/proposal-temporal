@@ -1,11 +1,11 @@
 const yearpart = /(?:[+-]\d{6}|\d{4})/;
 const datepart = new RegExp(`(?:${yearpart.source}-\\d{2}-\\d{2})`);
-const timepart = /(?:\d{2}\:\d{2}(?:\:\d{2}(?:\.\d{3}(?:\d{3}(?:\d{3})?)?)?)?)/;
-const zonepart = /(?:Z|(?:[+-]\d{2}(?:\:?\d{2})?(?:\[[^\]\s]+\])?))/;
+const timepart = /(?:\d{2}:\d{2}(?::\d{2}(?:\.\d{3}(?:\d{3}(?:\d{3})?)?)?)?)/;
+const zonepart = /(?:Z|(?:[+-]\d{2}(?::?\d{2})?(?:\[[^\]\s]+\])?))/;
 
 const datesplit = new RegExp(`(${yearpart.source})-(\\d{2})-(\\d{2})`);
-const timesplit = /(\d{2})\:(\d{2})(?:\:(\d{2})(?:\.(\d{3})(\d{3})?(\d{3})?)?)?/;
-const zonesplit = /(?:(Z)|(?:([+-]\d{2})(?:\:?(\d{2}))?(?:\[([^\]\s]+)\])?))/;
+const timesplit = /(\d{2}):(\d{2})(?::(\d{2})(?:\.(\d{3})(\d{3})?(\d{3})?)?)?/;
+const zonesplit = /(?:(Z)|(?:([+-]\d{2})(?::?(\d{2}))?(?:\[([^\]\s]+)\])?))/;
 
 export const absolute = new RegExp(`^${datesplit.source}(?:T|\\s+)${timesplit.source}${zonesplit.source}$`);
 export const datetime = new RegExp(`^${datesplit.source}(?:T|\\s+)${timesplit.source}(?:${zonepart.source})?$`);

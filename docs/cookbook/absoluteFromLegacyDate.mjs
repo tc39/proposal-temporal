@@ -10,4 +10,4 @@ function getAbsoluteFromDate(esDate) {
 }
 
 const date = new Date("1970-01-01T00:00:01Z");
-const absolute = getAbsoluteFromDate(date); // Absolute [Temporal.Absolute] {}
+getAbsoluteFromDate(date); // Absolute [Temporal.Absolute] {}

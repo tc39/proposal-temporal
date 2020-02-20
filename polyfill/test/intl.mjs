@@ -5,7 +5,7 @@ import Pretty from '@pipobscure/demitasse-pretty';
 const { reporter } = Pretty;
 
 import Assert from 'assert';
-const { ok: assert, equal } = Assert;
+const { equal } = Assert;
 
 import { DateTimeFormat } from '../lib/intl.mjs';
 Intl.DateTimeFormat = DateTimeFormat;

@@ -10,8 +10,8 @@ let idx = 0;
 let cnt = 0;
 let fail = 0;
 const sts = Temporal.now.absolute();
-for (let one = start; !!Temporal.Date.compare(one, end); one = one.plus('P1D')) {
-  for (let two = one; !!Temporal.Date.compare(two, end); two = two.plus('P1D')) {
+for (let one = start; Temporal.Date.compare(one, end); one = one.plus('P1D')) {
+  for (let two = one; Temporal.Date.compare(two, end); two = two.plus('P1D')) {
     const ok = test(one, two);
     cnt++;
     if (!(cnt % 100_000)) process.stderr.write('*');
