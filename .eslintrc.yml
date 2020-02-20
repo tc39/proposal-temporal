@@ -1,0 +1,25 @@
+env:
+  browser: true
+  es6: true
+  node: true
+extends: 'eslint:recommended'
+parser: babel-eslint  # for supporting dynamic import()
+globals:
+  Atomics: readonly
+  BigInt: readonly
+  SharedArrayBuffer: readonly
+  globalThis: readonly
+parserOptions:
+  ecmaVersion: 2020
+  sourceType: module
+ignorePatterns:
+  - node_modules/
+  - /out/
+  - /polyfill/test262/
+  # Specific vendored or generated files
+  - /docs/mermaid.js
+  - /docs/playground.js
+  - /docs/prism.js
+  - /polyfill/index.js
+  - /polyfill/script.js
+rules: {}
