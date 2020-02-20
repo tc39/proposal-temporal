@@ -285,6 +285,32 @@ describe('DateTime', () => {
     const earlier = later.minus({ hours: 12 });
     it("result", () => equal(`${earlier}`, '2019-10-28T22:46:38.271986102'));
   });
+  describe('DateTime.plus() works', () => {
+    it('constrain when ambiguous result', () => {
+      const jan31 = DateTime.from('2020-01-31T15:00');
+      equal(`${jan31.plus({ months: 1 })}`, '2020-02-29T15:00');
+      equal(`${jan31.plus({ months: 1 }, 'constrain')}`, '2020-02-29T15:00');
+    });
+    it('throw when ambiguous result with reject', () => {
+      const jan31 = DateTime.from('2020-01-31T15:00:00');
+      throws(() => jan31.plus({ months: 1 }, 'reject'), RangeError);
+    });
+    it('invalid disambiguation', () =>
+      throws(() => DateTime.from('2019-11-18T15:00').plus({ months: 1 }, 'balance'), RangeError));
+  });
+  describe('date.minus() works', () => {
+    it('constrain when ambiguous result', () => {
+      const mar31 = DateTime.from('2020-03-31T15:00');
+      equal(`${mar31.minus({ months: 1 })}`, '2020-02-29T15:00');
+      equal(`${mar31.minus({ months: 1 }, 'constrain')}`, '2020-02-29T15:00');
+    });
+    it('throw when ambiguous result with reject', () => {
+      const mar31 = DateTime.from('2020-03-31T15:00');
+      throws(() => mar31.minus({ months: 1 }, 'reject'), RangeError);
+    });
+    it('invalid disambiguation', () =>
+      throws(() => DateTime.from('2019-11-18T15:00').minus({ months: 1 }, 'balance'), RangeError));
+  });
   describe('DateTime.difference()', () => {
     const dt = DateTime.from('1976-11-18T15:23:30.123456789');
     it("doesn't cast argument", () => {

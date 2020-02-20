@@ -322,6 +322,13 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
     }
     return duration;
   },
+  ToArithmeticDisambiguation: (disambiguation) => {
+    disambiguation = ES.ToString(disambiguation);
+    if (disambiguation !== 'constrain' && disambiguation !== 'reject') {
+      throw new RangeError(`disambiguation should be constrain or reject, not ${disambiguation}`)
+    }
+    return disambiguation;
+  },
   GetIntrinsic: (intrinsic) => {
     return intrinsic in INTRINSICS ? INTRINSICS[intrinsic] : GetIntrinsic(intrinsic);
   },
@@ -807,7 +814,7 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
     } = ES.BalanceTime(hours, minutes, seconds, milliseconds, microseconds, nanoseconds));
     return { deltaDays, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
   },
-  AddDate: (year, month, day, years, months, days, disambiguation = 'constrain') => {
+  AddDate: (year, month, day, years, months, days, disambiguation) => {
     year += years;
     month += months;
     ({ year, month } = ES.BalanceYearMonth(year, month));
@@ -819,11 +826,8 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
       case 'constrain':
         ({ year, month, day } = ES.ConstrainDate(year, month, day));
         break;
-      case 'balance':
-        ({ year, month, day } = ES.BalanceDate(year, month, day));
-        break;
       default:
-        throw new TypeError('disambiguation should be either reject, constrain or balance');
+        throw new Error('assert not reached');
     }
 
     day += days;
@@ -861,7 +865,7 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
     ));
     return { deltaDays, hour, minute, second, millisecond, microsecond, nanosecond };
   },
-  SubtractDate: (year, month, day, years, months, days, disambiguation = 'constrain') => {
+  SubtractDate: (year, month, day, years, months, days, disambiguation) => {
     day -= days;
     ({ year, month, day } = ES.BalanceDate(year, month, day));
     month -= months;
@@ -875,11 +879,8 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
       case 'constrain':
         ({ year, month, day } = ES.ConstrainDate(year, month, day));
         break;
-      case 'balance':
-        ({ year, month, day } = ES.BalanceDate(year, month, day));
-        break;
       default:
-        throw new TypeError('disambiguation should be either reject, constrain or balance');
+        throw new Error('assert not reached');
     }
     return { year, month, day };
   },

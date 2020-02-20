@@ -270,12 +270,12 @@ dt = new Temporal.DateTime(1995, 12, 7, 3, 24, 30, 0, 3, 500);
 dt.with({year: 2015, second: 31})  // => 2015-12-07T03:24:31.000003500
 ```
 
-### datetime.**plus**(_duration_: string | object, _disambiguation_: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.DateTime
+### datetime.**plus**(_duration_: string | object, _disambiguation_: 'constrain' | 'reject' = 'constrain') : Temporal.DateTime
 
 **Parameters:**
 - `duration` (string or object): A `Temporal.Duration` object, a duration-like object, or a string from which to create a `Temporal.Duration`.
 - `disambiguation` (optional string): How to deal with additions that result in out-of-range values.
-  Allowed values are `constrain`, `balance`, and `reject`.
+  Allowed values are `constrain` and `reject`.
   The default is `constrain`.
 
 **Returns:** a new `Temporal.DateTime` object which is the date and time indicated by `datetime` plus `duration`.
@@ -291,7 +291,6 @@ Some additions may be ambiguous, because months have different lengths.
 For example, adding one month to August 31 would result in September 31, which doesn't exist.
 For these cases, the `disambiguation` argument tells what to do:
 - In `constrain` mode (the default), out-of-range values are clamped to the nearest in-range value.
-- In `balance` mode, out-of-range values are resolved by balancing them with the next highest unit.
 - In `reject` mode, an addition that would result in an out-of-range value fails, and a `RangeError` is thrown.
 
 Usage example:
@@ -302,16 +301,15 @@ dt.plus('P14Y7MT7H14M21S')  // => 2010-07-07T10:38:51.000003500
 
 dt = Temporal.DateTime.from('2019-01-31T15:30')
 dt.plus({months: 1}, 'constrain')  // => 2019-02-28T15:30
-dt.plus({months: 1}, 'balance')  // => 2019-03-03T15:30
 dt.plus({months: 1}, 'reject')  // => throws
 ```
 
-### datetime.**minus**(_duration_: string | object, _disambiguation_: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.DateTime
+### datetime.**minus**(_duration_: string | object, _disambiguation_: 'constrain' | 'reject' = 'constrain') : Temporal.DateTime
 
 **Parameters:**
 - `duration` (string or object): A `Temporal.Duration` object, a duration-like object, or a string from which to create a `Temporal.Duration`.
 - `disambiguation` (optional string): How to deal with subtractions that result in out-of-range values.
-  Allowed values are `constrain`, `balance`, and `reject`.
+  Allowed values are `constrain` and `reject`.
   The default is `constrain`.
 
 **Returns:** a new `Temporal.DateTime` object which is the time indicated by `datetime` minus `duration`.
@@ -327,7 +325,6 @@ Some subtractions may be ambiguous, because months have different lengths.
 For example, subtracting one month from July 31 would result in June 31, which doesn't exist.
 For these cases, the `disambiguation` argument tells what to do:
 - In `constrain` mode (the default), out-of-range values are clamped to the nearest in-range value.
-- In `balance` mode, out-of-range values are resolved by balancing them with the next highest unit.
 - In `reject` mode, an addition that would result in an out-of-range value fails, and a `RangeError` is thrown.
 
 Usage example:
@@ -338,7 +335,6 @@ dt.minus('P14Y7MT7H14M21S')  // => 1981-05-06T20:10:09.000003500
 
 dt = Temporal.DateTime.from('2019-03-31T15:30')
 dt.minus({months: 1}, 'constrain')  // => 2019-02-28T15:30
-dt.minus({months: 1}, 'balance')  // => 2019-03-03T15:30
 dt.minus({months: 1}, 'reject')  // => throws
 ```
 

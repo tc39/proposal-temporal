@@ -30,9 +30,9 @@ A representation of wall-clock time.
 
 ### time.**with**({ hour: number = this.hour, minute: number = this.minute, second: numer = this.second ...}, _disambiguation_: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.Time
 
-### time.**plus**(_duration_: string | object, _disambiguation_: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.Time
+### time.**plus**(_duration_: string | object, _disambiguation_: 'constrain' | 'reject' = 'constrain') : Temporal.Time
 
-### time.**minus**(_duration_: string | object, _disambiguation_: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.Time
+### time.**minus**(_duration_: string | object, _disambiguation_: 'constrain' | 'reject' = 'constrain') : Temporal.Time
 
 ### time.**difference**(_other_: Temporal.Time) : Temporal.Duration
 

@@ -187,6 +187,17 @@ describe('Date', () => {
     it('date.plus(durationObj)', () => {
       equal(`${date.plus(Temporal.Duration.from('P43Y'))}`, '2019-11-18');
     });
+    it('constrain when ambiguous result', () => {
+      const jan31 = Date.from('2020-01-31');
+      equal(`${jan31.plus({ months: 1 })}`, '2020-02-29');
+      equal(`${jan31.plus({ months: 1 }, 'constrain')}`, '2020-02-29');
+    });
+    it('throw when ambiguous result with reject', () => {
+      const jan31 = Date.from('2020-01-31');
+      throws(() => jan31.plus({ months: 1 }, 'reject'), RangeError);
+    });
+    it('invalid disambiguation', () =>
+      throws(() => date.plus({ months: 1 }, 'balance'), RangeError));
   });
   describe('date.minus() works', () => {
     const date = Date.from('2019-11-18');
@@ -205,6 +216,17 @@ describe('Date', () => {
     it('Date.minus(durationObj)', () => {
       equal(`${date.minus(Temporal.Duration.from('P43Y'))}`, '1976-11-18');
     });
+    it('constrain when ambiguous result', () => {
+      const mar31 = Date.from('2020-03-31');
+      equal(`${mar31.minus({ months: 1 })}`, '2020-02-29');
+      equal(`${mar31.minus({ months: 1 }, 'constrain')}`, '2020-02-29');
+    });
+    it('throw when ambiguous result with reject', () => {
+      const mar31 = Date.from('2020-03-31');
+      throws(() => mar31.minus({ months: 1 }, 'reject'), RangeError);
+    });
+    it('invalid disambiguation', () =>
+      throws(() => date.minus({ months: 1 }, 'balance'), RangeError));
   });
   describe('date.toString() works', () => {
     it('new Date(1976, 11, 18).toString()', () => {

@@ -175,6 +175,7 @@ export class DateTime {
   }
   plus(durationLike, disambiguation = 'constrain') {
     if (!ES.IsDateTime(this)) throw new TypeError('invalid receiver');
+    disambiguation = ES.ToArithmeticDisambiguation(disambiguation);
     const duration = ES.ToLimitedDuration(durationLike);
     let { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = this;
     let { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
@@ -201,6 +202,7 @@ export class DateTime {
   }
   minus(durationLike, disambiguation = 'constrain') {
     if (!ES.IsDateTime(this)) throw new TypeError('invalid receiver');
+    disambiguation = ES.ToArithmeticDisambiguation(disambiguation);
     const duration = ES.ToLimitedDuration(durationLike);
     let { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = this;
     let { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
