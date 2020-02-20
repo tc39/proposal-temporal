@@ -174,7 +174,13 @@ const properties = {
     enumerable: true,
     writable: false,
     configurable: true
-  }
+  },
+  formatRangeToParts: {
+    value: formatRangeToParts,
+    enumerable: true,
+    writable: false,
+    configurable: true
+  },
 };
 if (formatToParts in IntlDateTimeFormat.prototype) {
   properties.formatToParts = {
@@ -186,7 +192,7 @@ if (formatToParts in IntlDateTimeFormat.prototype) {
 }
 if (formatRangeToParts in IntlDateTimeFormat.prototype) {
   properties.formatRangeToParts = {
-    value: formatToParts,
+    value: formatRangeToParts,
     enumerable: true,
     writable: false,
     configurable: true
@@ -220,7 +226,7 @@ function formatRange(a, b) {
     const { absolute: aa, formatter: aformatter } = extractOverrides(a, this);
     const { absolute: bb, formatter: bformatter } = extractOverrides(b, this);
     if (aa && bb && aformatter && bformatter && aformatter === bformatter) {
-      return formatter.formatRange(aa, ba);
+      return aformatter.formatRange(aa.getEpochMilliseconds(), bb.getEpochMilliseconds());
     }
   }
   return this[ORIGINAL].formatRange(a, b);
@@ -228,9 +234,9 @@ function formatRange(a, b) {
 function formatRangeToParts(a, b) {
   if ('object' === typeof a && 'object' === typeof b && Object.getPrototypeOf(a) === Object.getPrototypeOf(b)) {
     const { absolute: aa, formatter: aformatter } = extractOverrides(a, this);
-    const { absolute: bb, formatter: bformatter } = extractOverrides(a, this);
+    const { absolute: bb, formatter: bformatter } = extractOverrides(b, this);
     if (aa && bb && aformatter && bformatter && aformatter === bformatter) {
-      return formatter.formatRangeToParts(aa, ba);
+      return aformatter.formatRangeToParts(aa.getEpochMilliseconds(), bb.getEpochMilliseconds());
     }
   }
   return this[ORIGINAL].formatRangeToParts(a, b);
