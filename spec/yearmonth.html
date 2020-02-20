@@ -349,7 +349,7 @@
         1. If _disambiguation_ is `"constrain"`, then
           1. Return ! ConstrainYearMonth(_year_, _month_).
         1. If _disambiguation_ is `"balance"`, then
-          1. Return BalanceYearMonth(_year_, _month_).
+          1. Return ! BalanceYearMonth(_year_, _month_).
         1. If _disambiguation_ is `"reject"`, then
           1. If ! ValidateYearMonth(_year_, _month_) is *false*, then
             1. Throw a *RangeError* exception.

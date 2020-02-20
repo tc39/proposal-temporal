@@ -300,7 +300,7 @@
         1. Perform ? RequireInternalSlot(_date_, [[InitializedTemporalDate]]).
         1. Set _disambiguation_ to ? ToDisambiguation(_disambiguation_).
         1. <mark>TODO: Consider _disambiguation_.</mark>
-        1. Return CreateDateTime(_date_.[[Year]], _date_.[[Month]], _date_.[[Day]],
+        1. Return ? CreateDateTime(_date_.[[Year]], _date_.[[Month]], _date_.[[Day]],
           _time_.[[Hour]], _time_.[[Minute]], _time_.[[Second]],
           _time_.[[Millisecond]], _time_.[[Microsecond]], _time_.[[Nanosecond]]).
       </emu-alg>
@@ -531,7 +531,7 @@
       <h1>TimeFromString ( _time_ )</h1>
       <emu-alg>
         1. Assert: Type(_time_) is String.
-        1. Let _result_ be ParseTimeString(_time_).
+        1. Let _result_ be ? ParseTimeString(_time_).
         1. If ! ValidateTime(_result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]) is *false*, then
           1. Throw a *TypeError* exception.
         1. Return ? CreateTime(_result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]).
