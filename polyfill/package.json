@@ -56,6 +56,7 @@
     "rollup-plugin-babel": "^4.3.3",
     "rollup-plugin-uglify": "^6.0.4",
     "test262-harness": "^6.7.0",
+    "timezones.json": "^1.5.2",
     "uuid": "^7.0.2"
   },
   "engines": {
