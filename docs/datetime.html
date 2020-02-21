@@ -287,12 +287,12 @@ The default is <code>constrain</code>.</li>
 <p>Usage example:</p>
 <pre><code class="language-javascript">dt = new Temporal.DateTime(1995, 12, 7, 3, 24, 30, 0, 3, 500);
 dt.with({year: 2015, second: 31})  // =&gt; 2015-12-07T03:24:31.000003500</code></pre>
-<h3 id="datetimeplusduration-string--object-disambiguation-constrain--balance--reject--constrain--temporaldatetime">datetime.<strong>plus</strong>(<em>duration</em>: string | object, <em>disambiguation</em>: &#39;constrain&#39; | &#39;balance&#39; | &#39;reject&#39; = &#39;constrain&#39;) : Temporal.DateTime</h3>
+<h3 id="datetimeplusduration-string--object-disambiguation-constrain--reject--constrain--temporaldatetime">datetime.<strong>plus</strong>(<em>duration</em>: string | object, <em>disambiguation</em>: &#39;constrain&#39; | &#39;reject&#39; = &#39;constrain&#39;) : Temporal.DateTime</h3>
 <p><strong>Parameters:</strong></p>
 <ul>
 <li><code>duration</code> (string or object): A <code>Temporal.Duration</code> object, a duration-like object, or a string from which to create a <code>Temporal.Duration</code>.</li>
 <li><code>disambiguation</code> (optional string): How to deal with additions that result in out-of-range values.
-Allowed values are <code>constrain</code>, <code>balance</code>, and <code>reject</code>.
+Allowed values are <code>constrain</code> and <code>reject</code>.
 The default is <code>constrain</code>.</li>
 </ul>
 <p><strong>Returns:</strong> a new <code>Temporal.DateTime</code> object which is the date and time indicated by <code>datetime</code> plus <code>duration</code>.</p>
@@ -308,7 +308,6 @@ For example, adding one month to August 31 would result in September 31, which d
 For these cases, the <code>disambiguation</code> argument tells what to do:</p>
 <ul>
 <li>In <code>constrain</code> mode (the default), out-of-range values are clamped to the nearest in-range value.</li>
-<li>In <code>balance</code> mode, out-of-range values are resolved by balancing them with the next highest unit.</li>
 <li>In <code>reject</code> mode, an addition that would result in an out-of-range value fails, and a <code>RangeError</code> is thrown.</li>
 </ul>
 <p>Usage example:</p>
@@ -318,14 +317,13 @@ dt.plus(&#39;P14Y7MT7H14M21S&#39;)  // =&gt; 2010-07-07T10:38:51.000003500
 
 dt = Temporal.DateTime.from(&#39;2019-01-31T15:30&#39;)
 dt.plus({months: 1}, &#39;constrain&#39;)  // =&gt; 2019-02-28T15:30
-dt.plus({months: 1}, &#39;balance&#39;)  // =&gt; 2019-03-03T15:30
 dt.plus({months: 1}, &#39;reject&#39;)  // =&gt; throws</code></pre>
-<h3 id="datetimeminusduration-string--object-disambiguation-constrain--balance--reject--constrain--temporaldatetime">datetime.<strong>minus</strong>(<em>duration</em>: string | object, <em>disambiguation</em>: &#39;constrain&#39; | &#39;balance&#39; | &#39;reject&#39; = &#39;constrain&#39;) : Temporal.DateTime</h3>
+<h3 id="datetimeminusduration-string--object-disambiguation-constrain--reject--constrain--temporaldatetime">datetime.<strong>minus</strong>(<em>duration</em>: string | object, <em>disambiguation</em>: &#39;constrain&#39; | &#39;reject&#39; = &#39;constrain&#39;) : Temporal.DateTime</h3>
 <p><strong>Parameters:</strong></p>
 <ul>
 <li><code>duration</code> (string or object): A <code>Temporal.Duration</code> object, a duration-like object, or a string from which to create a <code>Temporal.Duration</code>.</li>
 <li><code>disambiguation</code> (optional string): How to deal with subtractions that result in out-of-range values.
-Allowed values are <code>constrain</code>, <code>balance</code>, and <code>reject</code>.
+Allowed values are <code>constrain</code> and <code>reject</code>.
 The default is <code>constrain</code>.</li>
 </ul>
 <p><strong>Returns:</strong> a new <code>Temporal.DateTime</code> object which is the time indicated by <code>datetime</code> minus <code>duration</code>.</p>
@@ -341,7 +339,6 @@ For example, subtracting one month from July 31 would result in June 31, which d
 For these cases, the <code>disambiguation</code> argument tells what to do:</p>
 <ul>
 <li>In <code>constrain</code> mode (the default), out-of-range values are clamped to the nearest in-range value.</li>
-<li>In <code>balance</code> mode, out-of-range values are resolved by balancing them with the next highest unit.</li>
 <li>In <code>reject</code> mode, an addition that would result in an out-of-range value fails, and a <code>RangeError</code> is thrown.</li>
 </ul>
 <p>Usage example:</p>
@@ -351,7 +348,6 @@ dt.minus(&#39;P14Y7MT7H14M21S&#39;)  // =&gt; 1981-05-06T20:10:09.000003500
 
 dt = Temporal.DateTime.from(&#39;2019-03-31T15:30&#39;)
 dt.minus({months: 1}, &#39;constrain&#39;)  // =&gt; 2019-02-28T15:30
-dt.minus({months: 1}, &#39;balance&#39;)  // =&gt; 2019-03-03T15:30
 dt.minus({months: 1}, &#39;reject&#39;)  // =&gt; throws</code></pre>
 <h3 id="datetimedifferenceother-temporaldatetime--temporalduration">datetime.<strong>difference</strong>(<em>other</em>: Temporal.DateTime) : Temporal.Duration</h3>
 <p><strong>Parameters:</strong></p>

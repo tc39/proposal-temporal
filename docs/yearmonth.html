@@ -224,7 +224,7 @@ The default is <code>constrain</code>.</li>
 <pre><code class="language-javascript">ym = Temporal.YearMonth.from(&#39;2019-06&#39;);
 // Get December of that year
 ym.with({month: 12})  // =&gt; 2019-12</code></pre>
-<h3 id="yearmonthplusduration-string--object-disambiguation-constrain--balance--reject--constrain--temporalyearmonth">yearMonth.<strong>plus</strong>(<em>duration</em>: string | object, <em>disambiguation</em>: &#39;constrain&#39; | &#39;balance&#39; | &#39;reject&#39; = &#39;constrain&#39;) : Temporal.YearMonth</h3>
+<h3 id="yearmonthplusduration-string--object-disambiguation-constrain--reject--constrain--temporalyearmonth">yearMonth.<strong>plus</strong>(<em>duration</em>: string | object, <em>disambiguation</em>: &#39;constrain&#39; | &#39;reject&#39; = &#39;constrain&#39;) : Temporal.YearMonth</h3>
 <p><strong>Parameters:</strong></p>
 <ul>
 <li><code>duration</code> (string or object): A <code>Temporal.Duration</code> object, a duration-like object, or a string from which to create a <code>Temporal.Duration</code>.</li>
@@ -247,7 +247,7 @@ However, disambiguation may have an effect in other calendars where years can be
 <pre><code class="language-javascript">ym = Temporal.YearMonth.from(&#39;2019-06&#39;);
 ym.plus({years: 20, months: 4})  // =&gt; 2039-10
 ym.plus(&#39;P14Y&#39;)  // =&gt; 2033-06</code></pre>
-<h3 id="yearmonthminusduration-string--object-disambiguation-constrain--balance--reject--constrain--temporalyearmonth">yearMonth.<strong>minus</strong>(<em>duration</em>: string | object, <em>disambiguation</em>: &#39;constrain&#39; | &#39;balance&#39; | &#39;reject&#39; = &#39;constrain&#39;) : Temporal.YearMonth</h3>
+<h3 id="yearmonthminusduration-string--object-disambiguation-constrain--reject--constrain--temporalyearmonth">yearMonth.<strong>minus</strong>(<em>duration</em>: string | object, <em>disambiguation</em>: &#39;constrain&#39; | &#39;reject&#39; = &#39;constrain&#39;) : Temporal.YearMonth</h3>
 <p><strong>Parameters:</strong></p>
 <ul>
 <li><code>duration</code> (string or object): A <code>Temporal.Duration</code> object, a duration-like object, or a string from which to create a <code>Temporal.Duration</code>.</li>
