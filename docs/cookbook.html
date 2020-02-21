@@ -106,7 +106,7 @@ function getAbsoluteFromDate(esDate) {
 }
 
 const date = new Date(&quot;1970-01-01T00:00:01Z&quot;);
-const absolute = getAbsoluteFromDate(date); // Absolute [Temporal.Absolute] {}</code></pre>
+getAbsoluteFromDate(date); // Absolute [Temporal.Absolute] {}</code></pre>
 <h3 id="zoned-instant-from-instant-and-time-zone"><a href="./cookbook/getParseableZonedStringAtInstant.mjs">Zoned instant from instant and time zone</a></h3>
 <p>Map a Temporal.Absolute instance and a time zone name into a string serialization of the local time in that zone corresponding to the instant in absolute time.</p>
 <pre><code class="language-javascript">/**
