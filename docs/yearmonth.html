@@ -85,26 +85,235 @@
       It does not represent the final API of this proposal, nor even the current consensus.
     </div>
 <h1 id="temporalyearmonth">Temporal.YearMonth</h1>
-<p>A representation of a calendar date.</p>
+<p>A <code>Temporal.YearMonth</code> represents a particular month on the calendar.
+For example, it could be used to represent a particular instance of a monthly recurring event, like &quot;the June 2019 meeting&quot;.</p>
+<p><code>Temporal.YearMonth</code> refers to the whole of a specific month; if you need to refer to a calendar event on a certain day, use <code>Temporal.Date</code> or even <code>Temporal.DateTime</code>.
+A <code>Temporal.YearMonth</code> can be converted into a <code>Temporal.Date</code> by combining it with a day of the month, using the <code>withDay()</code> method.</p>
 <h2 id="constructor">Constructor</h2>
-<h3 id="new-temporalyearmonthyear-number-month-number-disambiguation-constrain--balance--reject--constrain--temporalyearmonth"><strong>new Temporal.YearMonth</strong>(<em>year</em>: number, <em>month</em>: number, <em>disambiguation</em>: &#39;constrain&#39; | &#39;balance&#39; | &#39;reject&#39; = &#39;constrain&#39;) : Temporal.YearMonth</h3>
+<h3 id="new-temporalyearmonthisoyear-number-isomonth-number-disambiguation-constrain--balance--reject--constrain--temporalyearmonth"><strong>new Temporal.YearMonth</strong>(<em>isoYear</em>: number, <em>isoMonth</em>: number, <em>disambiguation</em>: &#39;constrain&#39; | &#39;balance&#39; | &#39;reject&#39; = &#39;constrain&#39;) : Temporal.YearMonth</h3>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>isoYear</code> (number): A year.</li>
+<li><code>isoMonth</code> (number): A month, ranging between 1 and 12 inclusive.</li>
+<li><code>disambiguation</code> (optional string): How to deal with out-of-range values of the other parameters.
+Allowed values are <code>constrain</code>, <code>balance</code>, and <code>reject</code>.
+The default is <code>constrain</code>.</li>
+</ul>
+<p><strong>Returns:</strong> a new <code>Temporal.YearMonth</code> object.</p>
+<p>Use this constructor if you have the correct parameters already as individual number values, or you need the disambiguation behaviour.
+Otherwise, <code>Temporal.YearMonth.from()</code>, which accepts more kinds of input, is probably more convenient.</p>
+<p>All values are given as reckoned in the <a href="https://en.wikipedia.org/wiki/ISO_8601#Dates">ISO 8601 calendar</a>.</p>
+<p>The <code>disambiguation</code> parameter works as follows:</p>
+<ul>
+<li>In <code>constrain</code> mode (the default), any out-of-range values are clamped to the nearest in-range value.</li>
+<li>In <code>balance</code> mode, any out-of-range values are resolved by balancing them with the next highest unit.</li>
+<li>In <code>reject</code> mode, the presence of out-of-range values will cause the constructor to throw a <code>RangeError</code>.</li>
+</ul>
+<p>Usage examples:</p>
+<pre><code class="language-javascript">// The June 2019 meeting
+ym = new Temporal.YearMonth(2019, 6)  // =&gt; 2019-06
+
+// Different disambiguation modes
+ym = new Temporal.YearMonth(2001, 13, &#39;constrain&#39;)  // =&gt; 2001-12
+ym = new Temporal.YearMonth(2001, -1, &#39;constrain&#39;)  // =&gt; 2001-01
+ym = new Temporal.YearMonth(2001, 13, &#39;balance&#39;)  // =&gt; 2002-01
+ym = new Temporal.YearMonth(2001, -1, &#39;balance&#39;)  // =&gt; 2000-11
+ym = new Temporal.YearMonth(2001, 13, &#39;reject&#39;)  // throws
+ym = new Temporal.YearMonth(2001, -1, &#39;reject&#39;)  // throws</code></pre>
 <h2 id="static-methods">Static methods</h2>
 <h3 id="temporalyearmonthfromthing-string--object--temporalyearmonth">Temporal.YearMonth.<strong>from</strong>(<em>thing</em>: string | object) : Temporal.YearMonth</h3>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>thing</code> (string or object): The value representing the desired month.</li>
+</ul>
+<p><strong>Returns:</strong> a new <code>Temporal.YearMonth</code> object (or the same object if <code>thing</code> was a <code>Temporal.YearMonth</code> object.)</p>
+<p>This static method creates a new <code>Temporal.YearMonth</code> object from another value.
+If the value is a string, it must be in ISO 8601 format.
+Any parts of the string other than the year and the month will be ignored.
+If the value is another <code>Temporal.YearMonth</code> object, the same object is returned.
+If the value is any other object, it must have <code>year</code> and <code>month</code> properties, and a <code>Temporal.YearMonth</code> will be constructed from them.</p>
+<p>Example usage:</p>
+<pre><code class="language-javascript">ym = Temporal.YearMonth.from(&#39;2019-06&#39;);  // =&gt; 2019-06
+ym = Temporal.YearMonth.from(&#39;2019-06-24&#39;);  // =&gt; 2019-06
+ym = Temporal.YearMonth.from(&#39;2019-06-24T15:43:27&#39;);  // =&gt; 2019-06
+ym = Temporal.YearMonth.from(&#39;2019-06-24T15:43:27Z&#39;);  // =&gt; 2019-06
+ym = Temporal.YearMonth.from(&#39;2019-06-24T15:43:27+01:00[Europe/Brussels]&#39;);
+  // =&gt; 2019-06
+ym === Temporal.YearMonth.from(ym)  // =&gt; true
+
+ym = Temporal.YearMonth.from({year: 2019, month: 6});  // =&gt; 2019-06
+ym = Temporal.YearMonth.from(Temporal.Date.from(&#39;2019-06-24&#39;));
+  // =&gt; same as above; Temporal.Date has year and month properties</code></pre>
 <h3 id="temporalyearmonthcompareone-temporalyearmonth-two-temporalyearmonth--number">Temporal.YearMonth.<strong>compare</strong>(<em>one</em>: Temporal.YearMonth, <em>two</em>: Temporal.YearMonth) : number</h3>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>one</code> (<code>Temporal.YearMonth</code>): First month to compare.</li>
+<li><code>two</code> (<code>Temporal.YearMonth</code>): Second month to compare.</li>
+</ul>
+<p><strong>Returns:</strong> &minus;1, 0, or 1.</p>
+<p>Compares two <code>Temporal.YearMonth</code> objects.
+Returns an integer indicating whether <code>one</code> comes before or after or is equal to <code>two</code>.</p>
+<ul>
+<li>&minus;1 if <code>one</code> comes before <code>two</code>;</li>
+<li>0 if <code>one</code> and <code>two</code> are the same;</li>
+<li>1 if <code>one</code> comes after <code>two</code>.</li>
+</ul>
+<p>This function can be used to sort arrays of <code>Temporal.YearMonth</code> objects.
+For example:</p>
+<pre><code class="language-javascript">one = Temporal.YearMonth.from(&#39;2006-08&#39;);
+two = Temporal.YearMonth.from(&#39;2015-07&#39;);
+three = Temporal.YearMonth.from(&#39;1930-02&#39;);
+sorted = [one, two, three].sort(Temporal.YearMonth.compare);
+sorted.join(&#39; &#39;);  // =&gt; 1930-02 2006-08 2015-07</code></pre>
 <h2 id="properties">Properties</h2>
 <h3 id="yearmonthyear--number">yearMonth.<strong>year</strong> : number</h3>
 <h3 id="yearmonthmonth--number">yearMonth.<strong>month</strong> : number</h3>
+<p>The above read-only properties allow accessing the year and month individually.</p>
+<p>Usage examples:</p>
+<pre><code class="language-javascript">ym = Temporal.YearMonth.from(&#39;2019-06&#39;);
+ym.year   // =&gt; 2019
+ym.month  // =&gt; 6</code></pre>
 <h3 id="yearmonthdaysinmonth--number">yearMonth.<strong>daysInMonth</strong> : number</h3>
+<p>The <code>daysInMonth</code> read-only property gives the number of days in the month.
+This is 28, 29, 30, or 31, depending on the month and whether the year is a leap year.</p>
+<p>Usage example:</p>
+<pre><code class="language-javascript">// Attempt to write some mnemonic poetry
+const monthsByDays = {};
+for (let month = 1; month &lt;= 12; month++) {
+    const ym = Temporal.YearMonth.from({year: 2020, month});
+    monthsByDays[ym.daysInMonth] = (monthsByDays[ym.daysInMonth] || []).concat(ym);
+}
+
+const strings = monthsByDays[30].map(ym =&gt; ym.toLocaleString(&#39;en&#39;, {month: &#39;long&#39;}));
+// Shuffle to improve poem as determined empirically
+strings.unshift(strings.pop());
+const format = new Intl.ListFormat(&#39;en&#39;);
+const poem = `Thirty days hath ${format.format(strings)}`;
+
+console.log(poem);</code></pre>
 <h3 id="yearmonthdaysinyear--number">yearMonth.<strong>daysInYear</strong> : number</h3>
+<p>The <code>daysInYear</code> read-only property gives the number of days in the year that the month falls in.
+This is 365 or 366, depending on whether the year is a leap year.</p>
+<p>Usage example:</p>
+<pre><code class="language-javascript">ym = Temporal.YearMonth.from(&#39;2019-06&#39;);
+percent = ym.daysInMonth / ym.daysInYear;
+`${ym.toLocaleString(&#39;en&#39;, {month: &#39;long&#39;, year: &#39;numeric&#39;})} was ${percent.toLocaleString(&#39;en&#39;, {style: &#39;percent&#39;})} of the year!`
+  // =&gt; example output: &quot;June 2019 was 8% of the year!&quot;</code></pre>
 <h3 id="yearmonthisleapyear--boolean">yearMonth.<strong>isLeapYear</strong> : boolean</h3>
+<p>The <code>isLeapYear</code> read-only property tells whether the year that the date falls in is a leap year or not.
+Its value is <code>true</code> if the year is a leap year, and <code>false</code> if not.</p>
+<p>Usage example:</p>
+<pre><code class="language-javascript">// Was June 2019 in a leap year?
+ym = Temporal.YearMonth.from(&#39;2019-06&#39;);
+ym.isLeapYear  // =&gt; false
+// Is 2100 a leap year? (no, because it&#39;s divisible by 100 and not 400)
+ym.with({year: 2100}).isLeapYear  // =&gt; false</code></pre>
 <h2 id="methods">Methods</h2>
 <h3 id="yearmonthwithyearmonthlike-object-disambiguation-constrain--balance--reject--constrain--temporalyearmonth">yearMonth.<strong>with</strong>(<em>yearMonthLike</em>: object, <em>disambiguation</em>: &#39;constrain&#39; | &#39;balance&#39; | &#39;reject&#39; = &#39;constrain&#39;) : Temporal.YearMonth</h3>
-<h3 id="yearmonthplusduration-temporalduration--object--string-disambiguation-constrain--balance--reject--constrain--temporalyearmonth">yearMonth.<strong>plus</strong>(<em>duration</em>: Temporal.Duration | object | string, <em>disambiguation</em>: &#39;constrain&#39; | &#39;balance&#39; | &#39;reject&#39; = &#39;constrain&#39;) : Temporal.YearMonth</h3>
-<h3 id="yearmonthminusduration-temporalduration--object--string-disambiguation-constrain--balance--reject--constrain--temporalyearmonth">yearMonth.<strong>minus</strong>(<em>duration</em>: Temporal.Duration | object | string, <em>disambiguation</em>: &#39;constrain&#39; | &#39;balance&#39; | &#39;reject&#39; = &#39;constrain&#39;) : Temporal.YearMonth</h3>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>yearMonthLike</code> (object): an object with some or all of the properties of a <code>Temporal.YearMonth</code>.</li>
+<li><code>disambiguation</code> (optional string): How to deal with out-of-range values.
+Allowed values are <code>constrain</code>, <code>balance</code>, and <code>reject</code>.
+The default is <code>constrain</code>.</li>
+</ul>
+<p><strong>Returns:</strong> a new <code>Temporal.YearMonth</code> object.</p>
+<p>This method creates a new <code>Temporal.YearMonth</code> which is a copy of <code>yearMonth</code>, but any properties present on <code>yearMonthLike</code> override the ones already present on <code>yearMonth</code>.</p>
+<p>Since <code>Temporal.YearMonth</code> objects are immutable, use this method instead of modifying one.</p>
+<p>Usage example:</p>
+<pre><code class="language-javascript">ym = Temporal.YearMonth.from(&#39;2019-06&#39;);
+// Get December of that year
+ym.with({month: 12})  // =&gt; 2019-12</code></pre>
+<h3 id="yearmonthplusduration-string--object-disambiguation-constrain--balance--reject--constrain--temporalyearmonth">yearMonth.<strong>plus</strong>(<em>duration</em>: string | object, <em>disambiguation</em>: &#39;constrain&#39; | &#39;balance&#39; | &#39;reject&#39; = &#39;constrain&#39;) : Temporal.YearMonth</h3>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>duration</code> (string or object): A <code>Temporal.Duration</code> object, a duration-like object, or a string from which to create a <code>Temporal.Duration</code>.</li>
+<li><code>disambiguation</code> (optional string): How to deal with additions that result in out-of-range values.
+Allowed values are <code>constrain</code>, <code>balance</code>, and <code>reject</code>.
+The default is <code>constrain</code>.</li>
+</ul>
+<p><strong>Returns:</strong> a new <code>Temporal.YearMonth</code> object which is the month indicated by <code>yearMonth</code> plus <code>duration</code>.</p>
+<p>This method adds <code>duration</code> to <code>yearMonth</code>, returning a month that is in the future relative to <code>yearMonth</code>.</p>
+<p>The <code>duration</code> argument can be any value that could be passed to <code>Temporal.Duration.from()</code>:</p>
+<ul>
+<li>a <code>Temporal.Duration</code> object;</li>
+<li>any object with properties denoting a duration, such as <code>{ months: 5 }</code>;</li>
+<li>a string in ISO 8601 duration format, such as <code>P5M</code>.</li>
+</ul>
+<p>The <code>disambiguation</code> parameter has no effect in the default ISO calendar, because a year is always 12 months and therefore not ambiguous.
+It doesn&#39;t matter in this case that years and months can be different numbers of days, as the resolution of <code>Temporal.YearMonth</code> does not distinguish days.
+However, disambiguation may have an effect in other calendars where years can be different numbers of months.</p>
+<p>Usage example:</p>
+<pre><code class="language-javascript">ym = Temporal.YearMonth.from(&#39;2019-06&#39;);
+ym.plus({years: 20, months: 4})  // =&gt; 2039-10
+ym.plus(&#39;P14Y&#39;)  // =&gt; 2033-06</code></pre>
+<h3 id="yearmonthminusduration-string--object-disambiguation-constrain--balance--reject--constrain--temporalyearmonth">yearMonth.<strong>minus</strong>(<em>duration</em>: string | object, <em>disambiguation</em>: &#39;constrain&#39; | &#39;balance&#39; | &#39;reject&#39; = &#39;constrain&#39;) : Temporal.YearMonth</h3>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>duration</code> (string or object): A <code>Temporal.Duration</code> object, a duration-like object, or a string from which to create a <code>Temporal.Duration</code>.</li>
+<li><code>disambiguation</code> (optional string): How to deal with additions that result in out-of-range values.
+Allowed values are <code>constrain</code>, <code>balance</code>, and <code>reject</code>.
+The default is <code>constrain</code>.</li>
+</ul>
+<p><strong>Returns:</strong> a new <code>Temporal.YearMonth</code> object which is the month indicated by <code>yearMonth</code> minus <code>duration</code>.</p>
+<p>This method subtracts <code>duration</code> from <code>yearMonth</code>, returning a month that is in the future relative to <code>yearMonth</code>.</p>
+<p>The <code>duration</code> argument can be any value that could be passed to <code>Temporal.Duration.from()</code>:</p>
+<ul>
+<li>a <code>Temporal.Duration</code> object;</li>
+<li>any object with properties denoting a duration, such as <code>{ months: 5 }</code>;</li>
+<li>a string in ISO 8601 duration format, such as <code>P5M</code>.</li>
+</ul>
+<p>The <code>disambiguation</code> parameter has no effect in the default ISO calendar, because a year is always 12 months and therefore not ambiguous.
+It doesn&#39;t matter in this case that years and months can be different numbers of days, as the resolution of <code>Temporal.YearMonth</code> does not distinguish days.
+However, disambiguation may have an effect in other calendars where years can be different numbers of months.</p>
+<p>Usage example:</p>
+<pre><code class="language-javascript">ym = Temporal.YearMonth.from(&#39;2019-06&#39;);
+ym.minus({years: 20, months: 4})  // =&gt; 1999-02
+ym.minus(&#39;P14Y&#39;)  // =&gt; 2005-06</code></pre>
 <h3 id="yearmonthdifferenceother-temporalyearmonth--temporalduration">yearMonth.<strong>difference</strong>(<em>other</em>: Temporal.YearMonth) : Temporal.Duration</h3>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>other</code> (<code>Temporal.YearMonth</code>): Another month with which to compute the difference.</li>
+</ul>
+<p><strong>Returns:</strong> a <code>Temporal.Duration</code> representing the difference between <code>yearMonth</code> and <code>other</code>.</p>
+<p>This method computes the difference between the two months represented by <code>yearMonth</code> and <code>other</code>, and returns it as a <code>Temporal.Duration</code> object.
+The difference is always positive, no matter the order of <code>yearMonth</code> and <code>other</code>, because <code>Temporal.Duration</code> objects cannot represent negative durations.</p>
+<p>Usage example:</p>
+<pre><code class="language-javascript">ym = Temporal.YearMonth.from(&#39;2019-06&#39;);
+ym.difference(Temporal.YearMonth.from(&#39;2006-08&#39;))  // =&gt; P12Y10M</code></pre>
 <h3 id="yearmonthtostring--string">yearMonth.<strong>toString</strong>() : string</h3>
+<p><strong>Returns:</strong> a string in the ISO 8601 date format representing <code>yearMonth</code>.</p>
+<p>This method overrides the <code>Object.prototype.toString()</code> method and provides a convenient, unambiguous string representation of <code>yearMonth</code>.
+The string can be passed to <code>Temporal.YearMonth.from()</code> to create a new <code>Temporal.YearMonth</code> object.</p>
+<p>Example usage:</p>
+<pre><code class="language-js">ym = Temporal.YearMonth.from(&#39;2019-06&#39;);
+ym.toString();  // =&gt; 2019-06</code></pre>
 <h3 id="yearmonthtolocalestringlocale-string-options-object--string">yearMonth.<strong>toLocaleString</strong>(<em>locale</em>?: string, <em>options</em>?: object) : string</h3>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>locales</code> (optional string or array of strings): A string with a BCP 47 language tag with an optional Unicode extension key, or an array of such strings.</li>
+<li><code>options</code> (optional object): An object with properties influencing the formatting.</li>
+</ul>
+<p><strong>Returns:</strong> a language-sensitive representation of <code>yearMonth</code>.</p>
+<p>This method overrides <code>Object.prototype.toLocaleString()</code> to provide a human-readable, language-sensitive representation of <code>yearMonth</code>.</p>
+<p>The <code>locales</code> and <code>options</code> arguments are the same as in the constructor to <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DateTimeFormat"><code>Intl.DateTimeFormat</code></a>.</p>
+<p>Example usage:</p>
+<pre><code class="language-js">ym = Temporal.YearMonth.from(&#39;2019-06&#39;);
+ym.toLocaleString();  // =&gt; example output: 2019-06
+ym.toLocaleString(&#39;de-DE&#39;);  // =&gt; example output: 6.2019
+ym.toLocaleString(&#39;de-DE&#39;, {month: &#39;long&#39;, year: &#39;numeric&#39;});  // =&gt; Juni 2019
+ym.toLocaleString(&#39;en-US-u-nu-fullwide&#39;);  // =&gt; ６/２０１９</code></pre>
 <h3 id="yearmonthwithdayday-number--temporaldate">yearMonth.<strong>withDay</strong>(<em>day</em>: number) : Temporal.Date</h3>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>day</code> (number): A day of the month, which must be a valid day of <code>yearMonth</code>.</li>
+</ul>
+<p><strong>Returns:</strong> a <code>Temporal.Date</code> object that represents the calendar date of <code>day</code> in <code>yearMonth</code>.</p>
+<p>This method can be used to convert <code>Temporal.YearMonth</code> into a <code>Temporal.Date</code>, by supplying a calendar day to use.
+The converted object carries a copy of all the relevant fields of <code>yearMonth</code>.</p>
+<p>Usage example:</p>
+<pre><code class="language-javascript">ym = Temporal.YearMonth.from(&#39;2019-06&#39;);
+ym.withDay(24)  // =&gt; 2019-06-24</code></pre>
     <footer>
       <p>
         This page includes a script which loads an implementation of Temporal in your browser.
