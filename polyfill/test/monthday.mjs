@@ -64,6 +64,23 @@ describe('MonthDay', () => {
         equal(`${MonthDay.from('+0019761118T152330.1+00:00')}`, '11-18');
         equal(`${MonthDay.from('+0019761118T152330.1+0000')}`, '11-18');
       });
+      it('24:00 to mean next day midnight', () => {
+        equal(`${MonthDay.from('1976-11-18T24:00:00Z')}`, '11-19');
+        equal(`${MonthDay.from('1976-11-30T24:00:00Z')}`, '12-01');
+        equal(`${MonthDay.from('1976-12-31T24:00:00Z')}`, '01-01');
+        equal(`${MonthDay.from('1976-02-28T24:00:00Z')}`, '02-29');
+        equal(`${MonthDay.from('1976-02-29T24:00:00Z')}`, '03-01');
+        equal(`${MonthDay.from('1977-02-28T24:00:00Z')}`, '03-01');
+      });
+      it('0 is the only number valid with 24 hours', () => {
+        [
+          '1976-11-18T24:01Z',
+          '1976-11-18T24:00:01Z',
+          '1976-11-18T24:00:00.001Z',
+          '1976-11-18T24:00:00.000001Z',
+          '1976-11-18T24:00:00.000000001Z'
+        ].forEach((str) => throws(() => MonthDay.from(str), RangeError));
+      });
       it('optional parts', () => {
         equal(`${MonthDay.from('1976-11-18T15:23')}`, '11-18');
         equal(`${MonthDay.from('1976-11-18T15')}`, '11-18');

@@ -217,11 +217,23 @@ const timeSpec = seq(
   timeHour,
   choice([':', timeMinute, [':', timeSecond, [timeFraction]]], seq(timeMinute, [timeSecond, [timeFraction]]))
 );
+const midnightFraction = seq(decimalSeparator, between(1, 9, '0'));
+const timeSpecMidnight = withCode(
+  choice(seq('24', [':00', [':00', [midnightFraction]]]), seq('2400', ['00', [midnightFraction]])),
+  (data) => {
+    data.hour = 0;
+    const { year, month, day } = ES.BalanceDate(data.year, data.month, data.day + 1);
+    data.year = year;
+    data.month = month;
+    data.day = day;
+  }
+);
+const timeSpecBase = choice(timeSpec, timeSpecMidnight);
 
 const dateSpecMonthDay = seq(['--'], dateMonth, ['-'], dateDay);
 const dateSpecYearMonth = seq(dateYear, ['-'], dateMonth);
 const date = choice(seq(dateYear, '-', dateMonth, '-', dateDay), seq(dateYear, dateMonth, dateDay));
-const time = seq(timeSpec, [timeZone]);
+const time = seq(timeSpecBase, [timeZone]);
 const dateTime = choice(date, seq(date, dateTimeSeparator, time));
 
 // A repeat of timeFractionalPart and timeFraction because of the different
@@ -266,7 +278,7 @@ const durationYears = seq(
 const durationDate = seq(choice(durationYears, durationMonths, durationDays), [durationTime]);
 const duration = seq(durationDesignator, choice(durationDate, durationTime));
 
-const absolute = seq(date, dateTimeSeparator, timeSpec, timeZone);
+const absolute = seq(date, dateTimeSeparator, timeSpecBase, timeZone);
 
 // goal elements
 const goals = {

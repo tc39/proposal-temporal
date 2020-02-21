@@ -356,8 +356,22 @@
           TimeHour `:` TimeMinute `:` TimeSecond TimeFraction?
           TimeHour TimeMinute TimeSecond TimeFraction?
 
+      MidnightFraction :
+          DecimalSeparator `0` `0`? `0`? `0`? `0`? `0`? `0`? `0`? `0`?
+
+      TimeSpecMidnight :
+          `24`
+          `24:00`
+          `2400`
+          `24:00:00` MidnightFraction?
+          `240000` MidnightFraction?
+
+      TimeSpecBase :
+          TimeSpec
+          TimeSpecMidnight
+
       Time :
-          TimeSpec TimeZone?
+          TimeSpecBase TimeZone?
 
       DateTime :
           Date
@@ -448,6 +462,20 @@
         1. Set _day_ to 1.
       1. Else
         1. Set _day_ to ! ToInteger(_day_).
+      1. If _isoString_ contains a |TimeSpecMidnight| production, then
+        1. Perform ? RejectDate(_year_, _month_, _day_).
+        1. Let _nextDay_ be ! BalanceDate(_year_, _month_, _day_ + 1).
+        1. Return the new Record {
+          [[Year]]: _nextDay_.[[Year]],
+          [[Month]]: _nextDay_.[[Month]],
+          [[Day]]: _nextDay_.[[Day]],
+          [[Hour]]: 0,
+          [[Minute]]: 0,
+          [[Second]]: 0,
+          [[Millisecond]]: 0,
+          [[Microsecond]]: 0,
+          [[Nanosecond]]: 0
+          }.
       1. Set _hour_ to ! ToInteger(_hour_).
       1. Set _minute_ to ! ToInteger(_minute_).
       1. Set _second_ to ! ToInteger(_second_).
@@ -609,6 +637,15 @@
         1. Set _day_ to 1.
       1. Else
         1. Set _day_ to ! ToInteger(_day_).
+      1. If _isoString_ contains a |TimeSpecMidnight| production, then
+        1. Assert: _isoString_ contains a |DateYear| production.
+        1. Let _year_ be the part of _isoString_ produced by the |DateYear| production.
+        1. Set _year_ to ! ToInteger(_year_).
+        1. Let _nextDay_ be ! BalanceDate(_year_, _month_, _day_ + 1).
+        1. Return the new Record {
+          [[Month]]: _nextDay_.[[Month]],
+          [[Day]]: _nextDay_.[[Day]]
+          }.
       1. Return the new Record {
         [[Month]]: _month_,
         [[Day]]: _day_

@@ -91,10 +91,10 @@ export const ES = ObjectAssign({}, ES2019, {
     const regex = zoneRequired ? PARSE.absolute : PARSE.datetime;
     const match = regex.exec(isoString);
     if (!match) throw new RangeError(`invalid ISO 8601 string: ${isoString}`);
-    const year = ES.ToInteger(match[1]);
-    const month = ES.ToInteger(match[2] || match[4]);
-    const day = ES.ToInteger(match[3] || match[5]);
-    const hour = ES.ToInteger(match[6]);
+    let year = ES.ToInteger(match[1]);
+    let month = ES.ToInteger(match[2] || match[4]);
+    let day = ES.ToInteger(match[3] || match[5]);
+    let hour = ES.ToInteger(match[6]);
     const minute = ES.ToInteger(match[7] || match[10]);
     let second = ES.ToInteger(match[8] || match[11]);
     if (second === 60) second = 59;
@@ -106,6 +106,15 @@ export const ES = ObjectAssign({}, ES2019, {
     let ianaName = match[16];
     if (ianaName) ianaName = ES.GetCanonicalTimeZoneIdentifier(ianaName).toString();
     const zone = match[13] ? 'UTC' : ianaName || offset;
+    if (hour === 24 && minute === 0 && second === 0 && millisecond === 0 && microsecond === 0 && nanosecond === 0) {
+      hour = 0;
+      ({ year, month, day } = ES.BalanceDate(year, month, day + 1));
+    }
+    // Out of range values are invalid ISO strings (except that we check for a
+    // valid year later, -999999 is not necessarily an ill-formed ISO string)
+    ES.RejectToRange(month, 1, 12);
+    ES.RejectToRange(day, 1, ES.DaysInMonth(year, month));
+    ES.RejectTime(hour, minute, second, millisecond, microsecond, nanosecond);
     return { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, zone, ianaName, offset };
   },
   ParseTemporalAbsoluteString: (isoString) => {
@@ -129,11 +138,15 @@ export const ES = ObjectAssign({}, ES2019, {
       millisecond = ES.ToInteger(fraction.slice(0, 3));
       microsecond = ES.ToInteger(fraction.slice(3, 6));
       nanosecond = ES.ToInteger(fraction.slice(6, 9));
+      if (hour === 24 && minute === 0 && second === 0 && millisecond === 0 && microsecond === 0 && nanosecond === 0) {
+        hour = 0;
+      }
     } else {
       ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.ParseISODateTime(isoString, {
         zoneRequired: false
       }));
     }
+    ES.RejectTime(hour, minute, second, millisecond, microsecond, nanosecond);
     return { hour, minute, second, millisecond, microsecond, nanosecond };
   },
   ParseTemporalYearMonthString: (isoString) => {

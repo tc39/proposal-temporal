@@ -391,6 +391,20 @@ describe('Date', () => {
       equal(`${Date.from('+0019761118T152330.1+00:00')}`, '1976-11-18');
       equal(`${Date.from('+0019761118T152330.1+0000')}`, '1976-11-18');
     });
+    it('24:00 to mean next day midnight', () => {
+      equal(`${Date.from('1976-11-18T24:00:00Z')}`, '1976-11-19');
+      equal(`${Date.from('1976-11-30T24:00:00Z')}`, '1976-12-01');
+      equal(`${Date.from('1976-12-31T24:00:00Z')}`, '1977-01-01');
+    });
+    it('0 is the only number valid with 24 hours', () => {
+      [
+        '1976-11-18T24:01Z',
+        '1976-11-18T24:00:01Z',
+        '1976-11-18T24:00:00.001Z',
+        '1976-11-18T24:00:00.000001Z',
+        '1976-11-18T24:00:00.000000001Z'
+      ].forEach((str) => throws(() => Date.from(str), RangeError));
+    });
     describe('Disambiguation', () => {
       const bad = { year: 2019, month: 1, day: 32 };
       it('reject', () => throws(() => Date.from(bad, { disambiguation: 'reject' }), RangeError));
