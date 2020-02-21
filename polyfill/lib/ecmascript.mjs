@@ -745,22 +745,19 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
 
   RejectToRange: (value, min, max) => {
     if (value < min || value > max) throw new RangeError(`value out of range: ${min} <= ${value} <= ${max}`);
-    return value;
   },
   RejectDate: (year, month, day) => {
-    year = ES.RejectToRange(year, -999999, 999999);
-    month = ES.RejectToRange(month, 1, 12);
-    day = ES.RejectToRange(day, 1, ES.DaysInMonth(year, month));
-    return { year, month, day };
+    ES.RejectToRange(year, -999999, 999999);
+    ES.RejectToRange(month, 1, 12);
+    ES.RejectToRange(day, 1, ES.DaysInMonth(year, month));
   },
   RejectTime: (hour, minute, second, millisecond, microsecond, nanosecond) => {
-    hour = ES.RejectToRange(hour, 0, 23);
-    minute = ES.RejectToRange(minute, 0, 59);
-    second = ES.RejectToRange(second, 0, 59);
-    millisecond = ES.RejectToRange(millisecond, 0, 999);
-    microsecond = ES.RejectToRange(microsecond, 0, 999);
-    nanosecond = ES.RejectToRange(nanosecond, 0, 999);
-    return { hour, minute, second, millisecond, microsecond, nanosecond };
+    ES.RejectToRange(hour, 0, 23);
+    ES.RejectToRange(minute, 0, 59);
+    ES.RejectToRange(second, 0, 59);
+    ES.RejectToRange(millisecond, 0, 999);
+    ES.RejectToRange(microsecond, 0, 999);
+    ES.RejectToRange(nanosecond, 0, 999);
   },
   DifferenceDate: (smaller, larger) => {
     let years = larger.year - smaller.year;
@@ -829,7 +826,7 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
 
     switch (disambiguation) {
       case 'reject':
-        ({ year, month, day } = ES.RejectDate(year, month, day));
+        ES.RejectDate(year, month, day);
         break;
       case 'constrain':
         ({ year, month, day } = ES.ConstrainDate(year, month, day));
@@ -882,7 +879,7 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
 
     switch (disambiguation) {
       case 'reject':
-        ({ year, month, day } = ES.RejectDate(year, month, day));
+        ES.RejectDate(year, month, day);
         break;
       case 'constrain':
         ({ year, month, day } = ES.ConstrainDate(year, month, day));
