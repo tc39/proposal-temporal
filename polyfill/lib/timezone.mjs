@@ -59,26 +59,13 @@ export class TimeZone {
       microsecond,
       nanosecond
     );
-    if (options.length === 1) {
-      const absolute = Object.create(Absolute.prototype);
-      CreateSlots(absolute);
-      SetSlot(absolute, EPOCHNANOSECONDS, options[0]);
-      return absolute;
-    }
+    if (options.length === 1) return new Absolute(options[0]);
     if (options.length) {
       switch (disambiguation) {
-        case 'earlier': {
-          const result = Object.create(Absolute.prototype);
-          CreateSlots(result);
-          SetSlot(result, EPOCHNANOSECONDS, options[0]);
-          return result;
-        }
-        case 'later': {
-          const result = Object.create(Absolute.prototype);
-          CreateSlots(result);
-          SetSlot(result, EPOCHNANOSECONDS, options[1]);
-          return result;
-        }
+        case 'earlier':
+          return new Absolute(options[0]);
+        case 'later':
+          return new Absolute(options[1]);
         case 'reject': {
           throw new RangeError(`multiple absolute found`);
         }
@@ -97,6 +84,7 @@ export class TimeZone {
       microsecond,
       nanosecond
     );
+    if (utcns === null) throw new RangeError('DateTime outside of supported range');
     const before = ES.GetTimeZoneOffsetNanoseconds(utcns.minus(bigInt(86400 * 1e9)), GetSlot(this, IDENTIFIER));
     const after = ES.GetTimeZoneOffsetNanoseconds(utcns.plus(bigInt(86400 * 1e9)), GetSlot(this, IDENTIFIER));
     const diff = ES.ToDuration({

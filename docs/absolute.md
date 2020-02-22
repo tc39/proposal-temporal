@@ -27,6 +27,9 @@ Creates a new `Temporal.Absolute` object that represents a single point in time.
 Use this constructor directly if you know the precise number of nanoseconds already and have it in bigint form, for example from a database.
 Otherwise, `Temporal.Absolute.from()`, which accepts more kinds of input, is probably more convenient.
 
+The range of allowed values for this type is the same as the old-style JavaScript `Date`, 100 million (10<sup>8</sup>) days before or after the Unix epoch.
+This range covers approximately half a million years. If `epochNanoseconds` is outside of this range, a `RangeError` will be thrown.
+
 Example usage:
 ```js
 abs = new Temporal.Absolute(1553906700000000000n);
@@ -239,6 +242,8 @@ The `duration` argument can be any value that could be passed to `Temporal.Durat
 - any object with properties denoting a duration, such as `{ hours: 5, minutes: 30 }`;
 - a string in ISO 8601 duration format, such as `PT5H30M`.
 
+If the result is outside the allowed range for `Temporal.Absolute`, a `RangeError` will be thrown.
+
 Example usage:
 ```js
 // Temporal.Absolute representing five hours from now
@@ -261,6 +266,8 @@ The `duration` argument can be any value that could be passed to `Temporal.Durat
 - a `Temporal.Duration` object;
 - any object with properties denoting a duration, such as `{ hours: 5, minutes: 30 }`;
 - a string in ISO 8601 duration format, such as `PT5H30M`.
+
+If the result is outside the allowed range for `Temporal.Absolute`, a `RangeError` will be thrown.
 
 Example usage:
 ```js
