@@ -190,7 +190,7 @@ ym.with({month: 12})  // => 2019-12
 **Parameters:**
 - `duration` (string or object): A `Temporal.Duration` object, a duration-like object, or a string from which to create a `Temporal.Duration`.
 - `disambiguation` (optional string): How to deal with additions that result in out-of-range values.
-  Allowed values are `constrain`, `balance`, and `reject`.
+  Allowed values are `constrain` and `reject`.
   The default is `constrain`.
 
 **Returns:** a new `Temporal.YearMonth` object which is the month indicated by `yearMonth` plus `duration`.
@@ -218,7 +218,7 @@ ym.plus('P14Y')  // => 2033-06
 **Parameters:**
 - `duration` (string or object): A `Temporal.Duration` object, a duration-like object, or a string from which to create a `Temporal.Duration`.
 - `disambiguation` (optional string): How to deal with additions that result in out-of-range values.
-  Allowed values are `constrain`, `balance`, and `reject`.
+  Allowed values are `constrain` and `reject`.
   The default is `constrain`.
 
 **Returns:** a new `Temporal.YearMonth` object which is the month indicated by `yearMonth` minus `duration`.
