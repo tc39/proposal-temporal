@@ -294,6 +294,43 @@ describe('Absolute', () => {
       throws(() => earlier.difference({}), TypeError);
     });
   });
+  describe('Min/max range', () => {
+    it('constructing from ns', () => {
+      const limit = 8_640_000_000_000_000_000_000n;
+      throws(() => new Absolute(-limit - 1n), RangeError);
+      throws(() => new Absolute(limit + 1n), RangeError);
+      equal(`${new Absolute(-limit)}`, '-271821-04-20T00:00Z');
+      equal(`${new Absolute(limit)}`, '+275760-09-13T00:00Z');
+    });
+    it('constructing from ms', () => {
+      const limit = 86400e11;
+      throws(() => Absolute.fromEpochMilliseconds(-limit - 1), RangeError);
+      throws(() => Absolute.fromEpochMilliseconds(limit + 1), RangeError);
+      equal(`${Absolute.fromEpochMilliseconds(-limit)}`, '-271821-04-20T00:00Z');
+      equal(`${Absolute.fromEpochMilliseconds(limit)}`, '+275760-09-13T00:00Z');
+    });
+    it('constructing from ISO string', () => {
+      throws(() => Absolute.from('-271821-04-19T23:59:59.999999999Z'), RangeError);
+      throws(() => Absolute.from('+275760-09-13T00:00:00.000000001Z'), RangeError);
+      equal(`${Absolute.from('-271821-04-20T00:00Z')}`, '-271821-04-20T00:00Z');
+      equal(`${Absolute.from('+275760-09-13T00:00Z')}`, '+275760-09-13T00:00Z');
+    });
+    it('converting from DateTime', () => {
+      const min = Temporal.DateTime.from('-271821-04-19T00:00:00.000000001');
+      const max = Temporal.DateTime.from('+275760-09-13T23:59:59.999999999');
+      throws(() => min.inTimeZone('UTC'), RangeError);
+      throws(() => max.inTimeZone('UTC'), RangeError);
+      const utc = Temporal.TimeZone.from('UTC');
+      throws(() => utc.getAbsoluteFor(min), RangeError);
+      throws(() => utc.getAbsoluteFor(max), RangeError);
+    });
+    it('adding and subtracting beyond limit', () => {
+      const min = Absolute.from('-271821-04-20T00:00Z');
+      const max = Absolute.from('+275760-09-13T00:00Z');
+      throws(() => min.minus({nanoseconds: 1}), RangeError);
+      throws(() => max.plus({nanoseconds: 1}), RangeError);
+    });
+  });
 });
 
 import { normalize } from 'path';

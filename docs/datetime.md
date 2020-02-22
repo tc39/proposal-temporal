@@ -410,6 +410,8 @@ In the case of ambiguity, the `disambiguation` parameter controls what absolute 
 
 For usage examples and a more complete explanation of how this disambiguation works and why it is necessary, see [Resolving ambiguity](./ambiguity.md).
 
+If the result is outside the range that `Temporal.Absolute` can represent, then a `RangeError` will be thrown, no matter the value of `disambiguation`.
+
 ### datetime.**getDate**() : Temporal.Date
 
 **Returns:** a `Temporal.Date` object that is the same as the date portion of `datetime`.

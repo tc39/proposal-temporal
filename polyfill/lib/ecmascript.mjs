@@ -41,6 +41,8 @@ import {
 } from './slots.mjs';
 
 const DAYMILLIS = 86400000;
+const NS_MIN = bigInt(-86400).multiply(1e17);
+const NS_MAX = bigInt(86400).multiply(1e17);
 
 const INTRINSICS = {
   '%Temporal.DateTime%': TemporalDateTime,
@@ -426,6 +428,7 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
       timeZone
     );
     const utc = ES.GetEpochFromParts(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
+    if (utc === null) throw new RangeError('Date outside of supported range');
     return utc.minus(epochNanoseconds);
   },
   GetTimeZoneOffsetString: (epochNanoseconds, timeZone) => {
@@ -435,11 +438,13 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
   },
   GetEpochFromParts: (year, month, day, hour, minute, second, millisecond, microsecond, nanosecond) => {
     let ms = Date.UTC(year, month - 1, day, hour, minute, second, millisecond);
+    if (Number.isNaN(ms)) return null;
     // Date.UTC interprets one and two-digit years as being in the 20th century
     if (year >= 0 && year < 100) ms = new Date(ms).setUTCFullYear(year);
     let ns = bigInt(ms).multiply(1e6);
     ns = ns.plus(bigInt(microsecond).multiply(1e3));
     ns = ns.plus(bigInt(nanosecond));
+    if (ns.lesser(NS_MIN) || ns.greater(NS_MAX)) return null;
     return ns;
   },
   GetTimeZoneDateTimeParts: (epochNanoseconds, timeZone) => {
@@ -452,8 +457,8 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
     let nanosecond = Math.floor(nanos / 1e0) % 1e3;
 
     if (offset !== null) {
-      let zonedEpochMilliseconds = epochMilliseconds + offset;
-      let item = new Date(zonedEpochMilliseconds);
+      millisecond += offset;
+      let item = new Date(+epochMilliseconds);
       let year = item.getUTCFullYear();
       let month = item.getUTCMonth() + 1;
       let day = item.getUTCDate();
@@ -561,14 +566,20 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
   GetTimeZoneEpochValue: (timeZone, year, month, day, hour, minute, second, millisecond, microsecond, nanosecond) => {
     const offset = parseOffsetString(timeZone);
     let ns = ES.GetEpochFromParts(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
+    if (ns === null) throw new RangeError('DateTime outside of supported range');
 
     if (offset !== null) {
       ns = ns.minus(bigInt(offset).multiply(1e6));
       return [ns];
     }
 
-    const earliest = ES.GetTimeZoneOffsetNanoseconds(bigInt(ns).minus(bigInt(DAYMILLIS).multiply(1e6)), timeZone);
-    const latest = ES.GetTimeZoneOffsetNanoseconds(bigInt(ns).plus(bigInt(DAYMILLIS).multiply(1e6)), timeZone);
+    const dayNanos = bigInt(DAYMILLIS).multiply(1e6);
+    let nsEarlier = ns.minus(dayNanos);
+    if (nsEarlier.lesser(NS_MIN)) nsEarlier = ns;
+    let nsLater = ns.plus(dayNanos);
+    if (nsLater.greater(NS_MAX)) nsLater = ns;
+    const earliest = ES.GetTimeZoneOffsetNanoseconds(nsEarlier, timeZone);
+    const latest = ES.GetTimeZoneOffsetNanoseconds(nsLater, timeZone);
     const found = unique([earliest, latest])
       .map((offsetNanoseconds) => {
         const epochNanoseconds = bigInt(ns).minus(offsetNanoseconds);
@@ -758,6 +769,11 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
     ES.RejectToRange(millisecond, 0, 999);
     ES.RejectToRange(microsecond, 0, 999);
     ES.RejectToRange(nanosecond, 0, 999);
+  },
+  RejectAbsolute: (epochNanoseconds) => {
+    if (epochNanoseconds.lesser(NS_MIN) || epochNanoseconds.greater(NS_MAX)) {
+      throw new RangeError('Absolute outside of supported range');
+    }
   },
   DifferenceDate: (smaller, larger) => {
     let years = larger.year - smaller.year;
