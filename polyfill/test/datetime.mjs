@@ -362,6 +362,53 @@ describe('DateTime', () => {
       equal(`${dt.inTimeZone('+06:00')}`, '-001000-10-29T04:46:38.271986102Z');
     });
   });
+  describe('Min/max range', () => {
+    it('constructing from numbers', () => {
+      throws(() => new DateTime(-271821, 4, 19, 0, 0, 0, 0, 0, 0, 'reject'), RangeError);
+      throws(() => new DateTime(275760, 9, 14, 0, 0, 0, 0, 0, 0, 'reject'), RangeError);
+      throws(() => new DateTime(-271821, 4, 19, 0, 0, 0, 0, 0, 0, 'balance'), RangeError);
+      throws(() => new DateTime(275760, 9, 14, 0, 0, 0, 0, 0, 0, 'balance'), RangeError);
+      equal(`${new DateTime(-271821, 4, 19, 0, 0, 0, 0, 0, 0, 'constrain')}`, '-271821-04-19T00:00:00.000000001');
+      equal(`${new DateTime(275760, 9, 14, 0, 0, 0, 0, 0, 0, 'constrain')}`, '+275760-09-13T23:59:59.999999999');
+      equal(`${new DateTime(-271821, 4, 19, 0, 0, 0, 0, 0, 1, 'reject')}`, '-271821-04-19T00:00:00.000000001');
+      equal(`${new DateTime(275760, 9, 13, 23, 59, 59, 999, 999, 999, 'reject')}`, '+275760-09-13T23:59:59.999999999');
+    });
+    it('constructing from ISO string', () => {
+      throws(() => DateTime.from('-271821-04-19T00:00'), RangeError);
+      throws(() => DateTime.from('+275760-09-14T00:00'), RangeError);
+      equal(`${DateTime.from('-271821-04-19T00:00:00.000000001')}`, '-271821-04-19T00:00:00.000000001');
+      equal(`${DateTime.from('+275760-09-13T23:59:59.999999999')}`, '+275760-09-13T23:59:59.999999999');
+    });
+    it('converting from Absolute', () => {
+      const min = Temporal.Absolute.from('-271821-04-20T00:00Z');
+      const max = Temporal.Absolute.from('+275760-09-13T00:00Z');
+      equal(`${min.inTimeZone('-23:59')}`, '-271821-04-19T00:01');
+      equal(`${max.inTimeZone('+23:59')}`, '+275760-09-13T23:59');
+    });
+    it('converting from Date and Time', () => {
+      const midnight = Temporal.Time.from('00:00');
+      const firstNs = Temporal.Time.from('00:00:00.000000001');
+      const lastNs = Temporal.Time.from('23:59:59.999999999');
+      const min = Temporal.Date.from('-271821-04-19');
+      const max = Temporal.Date.from('+275760-09-13');
+      throws(() => min.withTime(midnight, 'reject'), RangeError);
+      throws(() => midnight.withDate(min, 'reject'), RangeError);
+      equal(`${min.withTime(midnight)}`, '-271821-04-19T00:00:00.000000001');
+      equal(`${midnight.withDate(min)}`, '-271821-04-19T00:00:00.000000001');
+      equal(`${min.withTime(firstNs)}`, '-271821-04-19T00:00:00.000000001');
+      equal(`${firstNs.withDate(min)}`, '-271821-04-19T00:00:00.000000001');
+      equal(`${max.withTime(lastNs)}`, '+275760-09-13T23:59:59.999999999');
+      equal(`${lastNs.withDate(max)}`, '+275760-09-13T23:59:59.999999999');
+    });
+    it('adding and subtracting beyond limit', () => {
+      const min = DateTime.from('-271821-04-19T00:00:00.000000001');
+      const max = DateTime.from('+275760-09-13T23:59:59.999999999');
+      equal(`${min.minus({nanoseconds: 1})}`, '-271821-04-19T00:00:00.000000001');
+      equal(`${max.plus({nanoseconds: 1})}`, '+275760-09-13T23:59:59.999999999');
+      throws(() => min.minus({nanoseconds: 1}, 'reject'), RangeError);
+      throws(() => max.plus({nanoseconds: 1}, 'reject'), RangeError);
+    });
+  });
 });
 
 import { normalize } from 'path';

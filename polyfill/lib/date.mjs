@@ -30,6 +30,8 @@ export class Date {
         break;
       case 'balance':
         ({ year, month, day } = ES.BalanceDate(year, month, day));
+        // Still rejected if balanced Date is outside valid range
+        ES.RejectDate(year, month, day);
         break;
       default:
         throw new TypeError('disambiguation should be either reject, constrain or balance');
@@ -94,7 +96,7 @@ export class Date {
     const { years, months, days } = duration;
     ({ year, month, day } = ES.AddDate(year, month, day, years, months, days, disambiguation));
     const Construct = ES.SpeciesConstructor(this, Date);
-    return new Construct(year, month, day);
+    return new Construct(year, month, day, disambiguation);
   }
   minus(durationLike = {}, disambiguation = 'constrain') {
     if (!ES.IsDate(this)) throw new TypeError('invalid receiver');
@@ -104,7 +106,7 @@ export class Date {
     const { years, months, days } = duration;
     ({ year, month, day } = ES.SubtractDate(year, month, day, years, months, days, disambiguation));
     const Construct = ES.SpeciesConstructor(this, Date);
-    return new Construct(year, month, day);
+    return new Construct(year, month, day, disambiguation);
   }
   difference(other) {
     if (!ES.IsDate(this)) throw new TypeError('invalid receiver');

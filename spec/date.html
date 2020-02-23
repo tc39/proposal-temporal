@@ -517,7 +517,10 @@
         1. If _disambiguation_ is *"constrain"*, then
           1. Return ! ConstrainDate(_year_, _month_, _day_).
         1. If _disambiguation_ is *"balance"*, then
-          1. Return ! BalanceDate(_year_, _month_, _day_).
+          1. Let _result be ! BalanceDate(_year_, _month_, _day_).
+          1. If ! ValidateDate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]]) is *false*, then
+            1. Throw a *RangeError* exception.
+          1. Return _result_.
       </emu-alg>
     </emu-clause>
 
@@ -525,12 +528,8 @@
       <h1>ValidateDate ( _y_, _m_, _d_ )</h1>
       <emu-alg>
         1. Assert: _y_, _m_, and _d_ are integer Number values.
-        1. If _m_ &lt; 1 or _m_ &gt; 12, then
-          1. Return *false*.
-        1. Let _maxDay_ be ! DaysInMonth(_y_, _m_).
-        1. If _d_ &lt; 1 or _d_ &gt; _maxDay_, then
-          1. Return *false*.
-        1. Return *true*.
+        1. NOTE: Deferring to ValidateDateTime with an hour of 12 avoids trouble at the extremes of the representable range of dates, which stop just before midnight on each end.
+        1. Return ! ValidateDateTime(_y_, _m_, _d_, 12, 0, 0, 0, 0, 0).
       </emu-alg>
     </emu-clause>
 
@@ -624,7 +623,8 @@
         1. Let _intermediate_ be ! BalanceYearMonth(_y_, _m_).
         1. Let _intermediate_ be ? RegulateDate(_intermediate_.[[Year]], _intermediate_.[[Month]], _day_, _disambiguation_).
         1. Let _d_ be _intermediate_.[[Day]] + _days_.
-        1. Return ! BalanceDate(_intermediate_.[[Year]], _intermediate_.[[Month]], _d_).
+        1. Let _intermediate_ be ! BalanceDate(_intermediate_.[[Year]], _intermediate_.[[Month]], _d_).
+        1. Return ? RegulateDate(_intermediate_.[[Year]], _intermediate_.[[Month]], _intermediate_.[[Day]], _disambiguation_).
       </emu-alg>
     </emu-clause>
 

@@ -33,6 +33,10 @@ The `disambiguation` parameter works as follows:
 - In `balance` mode, any out-of-range values are resolved by balancing them with the next highest unit.
 - In `reject` mode, the presence of out-of-range values will cause the constructor to throw a `RangeError`.
 
+The range of allowed values for this type is exactly enough that calling [`getDate()`](./datetime.html#getDate) on any valid `Temporal.DateTime` will succeed.
+If `isoYear`, `isoMonth`, and `isoDay` form a date outside of this range, then `constrain` mode will clamp the date to the limit of the allowed range.
+Both `balance` and `reject` mode will throw a `RangeError` in this case.
+
 Usage examples:
 ```javascript
 // Pi day in 2020
@@ -254,6 +258,9 @@ For these cases, the `disambiguation` argument tells what to do:
 - In `constrain` mode (the default), out-of-range values are clamped to the nearest in-range value.
 - In `reject` mode, an addition that would result in an out-of-range value fails, and a `RangeError` is thrown.
 
+Additionally, if the result is outside the range of dates that `Temporal.Date` can represent, then `constrain` mode will clamp the result to the allowed range.
+The `reject` mode will throw a `RangeError` in this case.
+
 Usage example:
 ```javascript
 date = Temporal.Date.from('2006-08-24');
@@ -287,6 +294,9 @@ For example, subtracting one month from July 31 would result in June 31, which d
 For these cases, the `disambiguation` argument tells what to do:
 - In `constrain` mode (the default), out-of-range values are clamped to the nearest in-range value.
 - In `reject` mode, an addition that would result in an out-of-range value fails, and a `RangeError` is thrown.
+
+Additionally, if the result is outside the range of dates that `Temporal.Date` can represent, then `constrain` mode will clamp the result to the allowed range.
+The `reject` mode will throw a `RangeError` in this case.
 
 Usage example:
 ```javascript

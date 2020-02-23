@@ -22,13 +22,15 @@ export class YearMonth {
     disambiguation = ES.ToString(disambiguation);
     switch (disambiguation) {
       case 'reject':
-        ES.RejectDate(year, month, 1);
+        ES.RejectYearMonth(year, month);
         break;
       case 'constrain':
-        ({ year, month } = ES.ConstrainDate(year, month, 1));
+        ({ year, month } = ES.ConstrainYearMonth(year, month));
         break;
       case 'balance':
         ({ year, month } = ES.BalanceYearMonth(year, month));
+        // Still rejected if balanced YearMonth is outside valid range
+        ES.RejectYearMonth(year, month);
         break;
       default:
         throw new TypeError('disambiguation should be either reject, constrain or balance');
