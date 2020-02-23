@@ -690,7 +690,7 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
 
     return { year, month, day };
   },
-  BalanceTime: (hour, minute, second, millisecond, microsecond, nanosecond) => {
+  BalanceSubSecond: (millisecond, microsecond, nanosecond) => {
     microsecond += Math.floor(nanosecond / 1000);
     nanosecond = nanosecond % 1000;
     nanosecond = nanosecond < 0 ? 1000 + nanosecond : nanosecond;
@@ -699,9 +699,17 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
     microsecond = microsecond % 1000;
     microsecond = microsecond < 0 ? 1000 + microsecond : microsecond;
 
-    second += Math.floor(millisecond / 1000);
+    const seconds = Math.floor(millisecond / 1000);
     millisecond = millisecond % 1000;
     millisecond = millisecond < 0 ? 1000 + millisecond : millisecond;
+
+    return { seconds, millisecond, microsecond, nanosecond };
+  },
+  BalanceTime: (hour, minute, second, millisecond, microsecond, nanosecond) => {
+    let seconds;
+    ({ seconds, millisecond, microsecond, nanosecond } = ES.BalanceSubSecond(millisecond, microsecond, nanosecond));
+
+    second += seconds;
 
     minute += Math.floor(second / 60);
     second = second % 60;

@@ -413,10 +413,9 @@
         1. Let _hours_ be _duration_.[[Hours]].
         1. Let _minutes_ be _duration_.[[Minutes]].
         1. Let _seconds_ be _duration_.[[Seconds]].
-        1. Let _milliseconds_ be _duration_.[[Milliseconds]].
-        1. Let _microseconds_ be _duration_.[[Microseconds]].
-        1. Let _nanoseconds_ be _duration_.[[Nanoseconds]].
-        1. Return the concatenation of _years_, _months_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_ in the format specified in RFC 3339 (https://www.ietf.org/rfc/rfc3339.txt) Appendix A.
+        1. Let _balanceResult_ be ! BalanceSubSecond(_duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
+        1. Set _seconds_ to _seconds_ + _balanceResult_.[[Seconds]].
+        1. Return the concatenation of _years_, _months_, _days_, _hours_, _minutes_, _seconds_, _balanceResult_.[[Millisecond]], _balanceResult_.[[Microsecond]], _balanceResult_.[[Nanosecond]] in the format specified in RFC 3339 (https://www.ietf.org/rfc/rfc3339.txt) Appendix A.
       </emu-alg>
     </emu-clause>
 
