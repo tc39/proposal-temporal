@@ -15,6 +15,8 @@ import {
   SetSlot
 } from './slots.mjs';
 
+import bigInt from 'big-integer';
+
 export class Duration {
   constructor(
     years = 0,
@@ -42,12 +44,14 @@ export class Duration {
       case 'reject':
         for (const prop of [years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds]) {
           if (prop < 0) throw new RangeError('negative values not allowed as duration fields');
+          if (!Number.isFinite(prop)) throw new RangeError('infinite values not allowed as duration fields');
         }
         break;
       case 'constrain': {
         const arr = [years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds];
         for (const idx in arr) {
           if (arr[idx] < 0) arr[idx] = -arr[idx];
+          if (!Number.isFinite(arr[idx])) arr[idx] = Number.MAX_VALUE;
         }
         [years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds] = arr;
         break;
@@ -64,6 +68,9 @@ export class Duration {
           nanosecond: nanoseconds
         } = ES.BalanceTime(hours, minutes, seconds, milliseconds, microseconds, nanoseconds));
         days += deltaDays;
+        for (const prop of [years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds]) {
+          if (!Number.isFinite(prop)) throw new RangeError('infinite values not allowed as duration fields');
+        }
         break;
       }
       default:
@@ -118,15 +125,19 @@ export class Duration {
     return GetSlot(this, NANOSECONDS);
   }
   toString() {
+    function formatNumber(num) {
+      if (num <= Number.MAX_SAFE_INTEGER) return num.toString(10);
+      return bigInt(num).toString();
+    }
     if (!ES.IsDuration(this)) throw new TypeError('invalid receiver');
     const dateParts = [];
-    if (GetSlot(this, YEARS)) dateParts.push(`${GetSlot(this, YEARS)}Y`);
-    if (GetSlot(this, MONTHS)) dateParts.push(`${GetSlot(this, MONTHS)}M`);
-    if (GetSlot(this, DAYS)) dateParts.push(`${GetSlot(this, DAYS)}D`);
+    if (GetSlot(this, YEARS)) dateParts.push(`${formatNumber(GetSlot(this, YEARS))}Y`);
+    if (GetSlot(this, MONTHS)) dateParts.push(`${formatNumber(GetSlot(this, MONTHS))}M`);
+    if (GetSlot(this, DAYS)) dateParts.push(`${formatNumber(GetSlot(this, DAYS))}D`);
 
     const timeParts = [];
-    if (GetSlot(this, HOURS)) timeParts.push(`${GetSlot(this, HOURS)}H`);
-    if (GetSlot(this, MINUTES)) timeParts.push(`${GetSlot(this, MINUTES)}M`);
+    if (GetSlot(this, HOURS)) timeParts.push(`${formatNumber(GetSlot(this, HOURS))}H`);
+    if (GetSlot(this, MINUTES)) timeParts.push(`${formatNumber(GetSlot(this, MINUTES))}M`);
 
     const secondParts = [];
     let ms = GetSlot(this, MILLISECONDS);
@@ -139,7 +150,7 @@ export class Duration {
     if (µs || secondParts.length) secondParts.unshift(`${µs}`.padStart(3, '0'));
     if (ms || secondParts.length) secondParts.unshift(`${ms}`.padStart(3, '0'));
     if (secondParts.length) secondParts.unshift('.');
-    if (s || secondParts.length) secondParts.unshift(`${s}`);
+    if (s || secondParts.length) secondParts.unshift(formatNumber(s));
     if (secondParts.length) timeParts.push(`${secondParts.join('')}S`);
     if (timeParts.length) timeParts.unshift('T');
     if (!dateParts.length && !timeParts.length) return 'PT0S';
