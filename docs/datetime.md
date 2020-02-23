@@ -44,6 +44,10 @@ The `disambiguation` parameter works as follows:
 > In the default `constrain` disambiguation mode, this will be converted to 59, and in `balance` mode, to 00 of the next minute.
 > In `reject` mode, the constructor will throw, so if you have to interoperate with times that may contain leap seconds, don't use `reject`.
 
+The range of allowed values for this type is exactly enough that calling [`inTimeZone()`](./absolute.html#inTimeZone) on any valid `Temporal.Absolute` with any valid `Temporal.TimeZone` will succeed.
+If the parameters passed in to this constructor form a date outside of this range, then `constrain` mode will clamp the values to the limit of the allowed range.
+Both `balance` and `reject` mode will throw a `RangeError` in this case.
+
 Usage examples:
 ```javascript
 // Leet hour on pi day in 2020
@@ -293,6 +297,9 @@ For these cases, the `disambiguation` argument tells what to do:
 - In `constrain` mode (the default), out-of-range values are clamped to the nearest in-range value.
 - In `reject` mode, an addition that would result in an out-of-range value fails, and a `RangeError` is thrown.
 
+Additionally, if the result is outside the range that `Temporal.DateTime` can represent, then `constrain` mode will clamp the result to the allowed range.
+The `reject` mode will throw a `RangeError` in this case.
+
 Usage example:
 ```javascript
 dt = new Temporal.DateTime(1995, 12, 7, 3, 24, 30, 0, 3, 500);
@@ -326,6 +333,9 @@ For example, subtracting one month from July 31 would result in June 31, which d
 For these cases, the `disambiguation` argument tells what to do:
 - In `constrain` mode (the default), out-of-range values are clamped to the nearest in-range value.
 - In `reject` mode, an addition that would result in an out-of-range value fails, and a `RangeError` is thrown.
+
+Additionally, if the result is outside the range that `Temporal.DateTime` can represent, then `constrain` mode will clamp the result to the allowed range.
+The `reject` mode will throw a `RangeError` in this case.
 
 Usage example:
 ```javascript

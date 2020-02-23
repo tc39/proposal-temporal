@@ -43,6 +43,8 @@ import {
 const DAYMILLIS = 86400000;
 const NS_MIN = bigInt(-86400).multiply(1e17);
 const NS_MAX = bigInt(86400).multiply(1e17);
+const YEAR_MIN = -271821;
+const YEAR_MAX = 275760;
 
 const INTRINSICS = {
   '%Temporal.DateTime%': TemporalDateTime,
@@ -739,9 +741,8 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
 
   ConstrainToRange: (value, min, max) => Math.min(max, Math.max(min, value)),
   ConstrainDate: (year, month, day) => {
-    year = ES.ConstrainToRange(year, -999999, 999999);
-    month = ES.ConstrainToRange(month, 1, 12);
-    day = ES.ConstrainToRange(day, 1, ES.DaysInMonth(year, month));
+    // Noon avoids trouble at edges of DateTime range (excludes midnight)
+    ({ year, month, day } = ES.ConstrainDateTime(year, month, day, 12, 0, 0, 0, 0, 0));
     return { year, month, day };
   },
   ConstrainTime: (hour, minute, second, millisecond, microsecond, nanosecond) => {
@@ -753,14 +754,53 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
     nanosecond = ES.ConstrainToRange(nanosecond, 0, 999);
     return { hour, minute, second, millisecond, microsecond, nanosecond };
   },
+  ConstrainDateTime: (year, month, day, hour, minute, second, millisecond, microsecond, nanosecond) => {
+    year = ES.ConstrainToRange(year, YEAR_MIN, YEAR_MAX);
+    month = ES.ConstrainToRange(month, 1, 12);
+    day = ES.ConstrainToRange(day, 1, ES.DaysInMonth(year, month));
+    ({
+      hour,
+      minute,
+      second,
+      millisecond,
+      microsecond,
+      nanosecond,
+    } = ES.ConstrainTime(hour, minute, second, millisecond, microsecond, nanosecond));
+    // Constrain to within 24 hours outside the Absolute range
+    if (year === YEAR_MIN &&
+      null === ES.GetEpochFromParts(year, month, day + 1, hour, minute, second, millisecond, microsecond, nanosecond - 1)) {
+      month = 4;
+      day = 19;
+      hour = minute = second = millisecond = microsecond = 0;
+      nanosecond = 1;
+    } else if (year === YEAR_MAX &&
+      null === ES.GetEpochFromParts(year, month, day - 1, hour, minute, second, millisecond, microsecond, nanosecond + 1)) {
+      month = 9;
+      day = 13;
+      hour = 23;
+      minute = second = 59;
+      millisecond = microsecond = nanosecond = 999;
+    }
+    return ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond });
+  },
+  ConstrainYearMonth: (year, month) => {
+    year = ES.ConstrainToRange(year, YEAR_MIN, YEAR_MAX);
+    if (year === YEAR_MIN) {
+      month = ES.ConstrainToRange(month, 4, 12);
+    } else if (year === YEAR_MAX) {
+      month = ES.ConstrainToRange(month, 1, 9);
+    } else {
+      month = ES.ConstrainToRange(month, 1, 12);
+    }
+    return ({ year, month });
+  },
 
   RejectToRange: (value, min, max) => {
     if (value < min || value > max) throw new RangeError(`value out of range: ${min} <= ${value} <= ${max}`);
   },
   RejectDate: (year, month, day) => {
-    ES.RejectToRange(year, -999999, 999999);
-    ES.RejectToRange(month, 1, 12);
-    ES.RejectToRange(day, 1, ES.DaysInMonth(year, month));
+    // Noon avoids trouble at edges of DateTime range (excludes midnight)
+    ES.RejectDateTime(year, month, day, 12, 0, 0, 0, 0, 0);
   },
   RejectTime: (hour, minute, second, millisecond, microsecond, nanosecond) => {
     ES.RejectToRange(hour, 0, 23);
@@ -770,11 +810,35 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
     ES.RejectToRange(microsecond, 0, 999);
     ES.RejectToRange(nanosecond, 0, 999);
   },
+  RejectDateTime: (year, month, day, hour, minute, second, millisecond, microsecond, nanosecond) => {
+    ES.RejectToRange(year, YEAR_MIN, YEAR_MAX);
+    ES.RejectToRange(month, 1, 12);
+    ES.RejectToRange(day, 1, ES.DaysInMonth(year, month));
+    ES.RejectTime(hour, minute, second, millisecond, microsecond, nanosecond);
+    // Reject any DateTime 24 hours or more outside the Absolute range
+    if ((year === YEAR_MIN &&
+      null == ES.GetEpochFromParts(year, month, day + 1, hour, minute, second, millisecond, microsecond, nanosecond - 1)) ||
+      (year === YEAR_MAX &&
+      null == ES.GetEpochFromParts(year, month, day - 1, hour, minute, second, millisecond, microsecond, nanosecond + 1))) {
+      throw new RangeError('DateTime outside of supported range');
+    }
+  },
   RejectAbsolute: (epochNanoseconds) => {
     if (epochNanoseconds.lesser(NS_MIN) || epochNanoseconds.greater(NS_MAX)) {
       throw new RangeError('Absolute outside of supported range');
     }
   },
+  RejectYearMonth: (year, month) => {
+    ES.RejectToRange(year, YEAR_MIN, YEAR_MAX);
+    if (year === YEAR_MIN) {
+      ES.RejectToRange(month, 4, 12);
+    } else if (year === YEAR_MAX) {
+      ES.RejectToRange(month, 1, 9);
+    } else {
+      ES.RejectToRange(month, 1, 12);
+    }
+  },
+
   DifferenceDate: (smaller, larger) => {
     let years = larger.year - smaller.year;
     let months = larger.month - smaller.month;

@@ -41,12 +41,23 @@ export class DateTime {
     disambiguation = ES.ToString(disambiguation);
     switch (disambiguation) {
       case 'reject':
-        ES.RejectDate(year, month, day);
-        ES.RejectTime(hour, minute, second, millisecond, microsecond, nanosecond);
+        ES.RejectDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
         break;
       case 'constrain':
-        ({ year, month, day } = ES.ConstrainDate(year, month, day));
-        ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.ConstrainTime(
+        ({
+          year,
+          month,
+          day,
+          hour,
+          minute,
+          second,
+          millisecond,
+          microsecond,
+          nanosecond,
+        } = ES.ConstrainDateTime(
+          year,
+          month,
+          day,
           hour,
           minute,
           second,
@@ -66,6 +77,8 @@ export class DateTime {
           nanosecond
         ));
         ({ year, month, day } = ES.BalanceDate(year, month, day + deltaDays));
+        // Still rejected if balanced DateTime is outside valid range
+        ES.RejectDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
         break;
       }
       default:
@@ -198,7 +211,7 @@ export class DateTime {
     day += deltaDays;
     ({ year, month, day } = ES.BalanceDate(year, month, day));
     const Construct = ES.SpeciesConstructor(this, DateTime);
-    return new Construct(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
+    return new Construct(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, disambiguation);
   }
   minus(durationLike, disambiguation = 'constrain') {
     if (!ES.IsDateTime(this)) throw new TypeError('invalid receiver');
@@ -224,7 +237,7 @@ export class DateTime {
     days -= deltaDays;
     ({ year, month, day } = ES.SubtractDate(year, month, day, years, months, days, disambiguation));
     const Construct = ES.SpeciesConstructor(this, DateTime);
-    return new Construct(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
+    return new Construct(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, disambiguation);
   }
   difference(other) {
     if (!ES.IsDateTime(this)) throw new TypeError('invalid receiver');

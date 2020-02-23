@@ -29,6 +29,10 @@ The `disambiguation` parameter works as follows:
 - In `balance` mode, any out-of-range values are resolved by balancing them with the next highest unit.
 - In `reject` mode, the presence of out-of-range values will cause the constructor to throw a `RangeError`.
 
+The range of allowed values for this type is exactly enough that calling [`getYearMonth()`](./date.html#getYearMonth) on any valid `Temporal.Date` will succeed.
+If `isoYear` and `isoMonth` are outside of this range, then `constrain` mode will clamp the date to the limit of the allowed range.
+Both `balance` and `reject` mode will throw a `RangeError` in this case.
+
 Usage examples:
 ```javascript
 // The June 2019 meeting
@@ -202,7 +206,10 @@ The `duration` argument can be any value that could be passed to `Temporal.Durat
 - any object with properties denoting a duration, such as `{ months: 5 }`;
 - a string in ISO 8601 duration format, such as `P5M`.
 
-The `disambiguation` parameter has no effect in the default ISO calendar, because a year is always 12 months and therefore not ambiguous.
+If the result is outside the range of dates that `Temporal.YearMonth` can represent, then `constrain` mode will clamp the result to the allowed range.
+The `reject` mode will throw a `RangeError` in this case.
+
+Other than for out-of-range values, the `disambiguation` parameter has no effect in the default ISO calendar, because a year is always 12 months and therefore not ambiguous.
 It doesn't matter in this case that years and months can be different numbers of days, as the resolution of `Temporal.YearMonth` does not distinguish days.
 However, disambiguation may have an effect in other calendars where years can be different numbers of months.
 
@@ -230,7 +237,10 @@ The `duration` argument can be any value that could be passed to `Temporal.Durat
 - any object with properties denoting a duration, such as `{ months: 5 }`;
 - a string in ISO 8601 duration format, such as `P5M`.
 
-The `disambiguation` parameter has no effect in the default ISO calendar, because a year is always 12 months and therefore not ambiguous.
+If the result is outside the range of dates that `Temporal.YearMonth` can represent, then `constrain` mode will clamp the result to the allowed range.
+The `reject` mode will throw a `RangeError` in this case.
+
+Other than for out-of-range values, the `disambiguation` parameter has no effect in the default ISO calendar, because a year is always 12 months and therefore not ambiguous.
 It doesn't matter in this case that years and months can be different numbers of days, as the resolution of `Temporal.YearMonth` does not distinguish days.
 However, disambiguation may have an effect in other calendars where years can be different numbers of months.
 

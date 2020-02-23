@@ -302,6 +302,60 @@ describe('Date', () => {
       throws(() => Date.compare(d1, '2019-06-30'), TypeError);
     });
   });
+  describe('Min/max range', () => {
+    it('constructing from numbers', () => {
+      throws(() => new Date(-271821, 4, 18, 'reject'), RangeError);
+      throws(() => new Date(275760, 9, 14, 'reject'), RangeError);
+      throws(() => new Date(-271821, 4, 18, 'balance'), RangeError);
+      throws(() => new Date(275760, 9, 14, 'balance'), RangeError);
+      equal(`${new Date(-271821, 4, 18, 'constrain')}`, '-271821-04-19');
+      equal(`${new Date(275760, 9, 14, 'constrain')}`, '+275760-09-13');
+      equal(`${new Date(-271821, 4, 19, 'reject')}`, '-271821-04-19');
+      equal(`${new Date(275760, 9, 13, 'reject')}`, '+275760-09-13');
+    });
+    it('constructing from ISO string', () => {
+      throws(() => Date.from('-271821-04-18'), RangeError);
+      throws(() => Date.from('+275760-09-14'), RangeError);
+      equal(`${Date.from('-271821-04-19')}`, '-271821-04-19');
+      equal(`${Date.from('+275760-09-13')}`, '+275760-09-13');
+    });
+    it('converting from DateTime', () => {
+      const min = Temporal.DateTime.from('-271821-04-19T00:00:00.000000001');
+      const max = Temporal.DateTime.from('+275760-09-13T23:59:59.999999999');
+      equal(`${min.getDate()}`, '-271821-04-19');
+      equal(`${max.getDate()}`, '+275760-09-13');
+    });
+    it('converting from YearMonth', () => {
+      const min = Temporal.YearMonth.from('-271821-04');
+      const max = Temporal.YearMonth.from('+275760-09');
+      throws(() => min.withDay(1, 'reject'), RangeError);
+      throws(() => max.withDay(30, 'reject'), RangeError);
+      throws(() => min.withDay(1, 'balance'), RangeError);
+      throws(() => max.withDay(30, 'balance'), RangeError);
+      equal(`${min.withDay(1)}`, '-271821-04-19');
+      equal(`${max.withDay(30)}`, '+275760-09-13');
+    });
+    it('converting from MonthDay', () => {
+      const jan1 = Temporal.MonthDay.from('01-01');
+      const dec31 = Temporal.MonthDay.from('12-31');
+      const minYear = -271821;
+      const maxYear = 275760;
+      throws(() => jan1.withYear(minYear, 'reject'), RangeError);
+      throws(() => dec31.withYear(maxYear, 'reject'), RangeError);
+      throws(() => jan1.withYear(minYear, 'balance'), RangeError);
+      throws(() => dec31.withYear(maxYear, 'balance'), RangeError);
+      equal(`${jan1.withYear(minYear)}`, '-271821-04-19');
+      equal(`${dec31.withYear(maxYear)}`, '+275760-09-13');
+    });
+    it('adding and subtracting beyond limit', () => {
+      const min = Date.from('-271821-04-19');
+      const max = Date.from('+275760-09-13');
+      equal(`${min.minus({days: 1})}`, '-271821-04-19');
+      equal(`${max.plus({days: 1})}`, '+275760-09-13');
+      throws(() => min.minus({days: 1}, 'reject'), RangeError);
+      throws(() => max.plus({days: 1}, 'reject'), RangeError);
+    });
+  });
 });
 
 import { normalize } from 'path';

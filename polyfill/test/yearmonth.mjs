@@ -122,6 +122,39 @@ describe('YearMonth', () => {
     it('invalid disambiguation', () =>
       throws(() => ym.minus({ months: 1 }, 'balance'), RangeError));
   });
+  describe('Min/max range', () => {
+    it('constructing from numbers', () => {
+      throws(() => new YearMonth(-271821, 3, 'reject'), RangeError);
+      throws(() => new YearMonth(275760, 10, 'reject'), RangeError);
+      throws(() => new YearMonth(-271821, 3, 'balance'), RangeError);
+      throws(() => new YearMonth(275760, 10, 'balance'), RangeError);
+      equal(`${new YearMonth(-271821, 4, 'constrain')}`, '-271821-04');
+      equal(`${new YearMonth(275760, 9, 'constrain')}`, '+275760-09');
+      equal(`${new YearMonth(-271821, 4, 'reject')}`, '-271821-04');
+      equal(`${new YearMonth(275760, 9, 'reject')}`, '+275760-09');
+    });
+    it('constructing from ISO string', () => {
+      throws(() => YearMonth.from('-271821-03'), RangeError);
+      throws(() => YearMonth.from('+275760-10'), RangeError);
+      equal(`${YearMonth.from('-271821-04')}`, '-271821-04');
+      equal(`${YearMonth.from('+275760-09')}`, '+275760-09');
+    });
+    it('converting from Date', () => {
+      const min = Temporal.Date.from('-271821-04-19');
+      const max = Temporal.Date.from('+275760-09-13');
+      equal(`${min.getYearMonth()}`, '-271821-04');
+      equal(`${max.getYearMonth()}`, '+275760-09');
+    });
+    it('adding and subtracting beyond limit', () => {
+      const min = YearMonth.from('-271821-04');
+      const max = YearMonth.from('+275760-09');
+      equal(`${min.minus({months: 1})}`, '-271821-04');
+      equal(`${max.plus({months: 1})}`, '+275760-09');
+      throws(() => min.minus({months: 1}, 'reject'), RangeError);
+      throws(() => max.plus({months: 1}, 'reject'), RangeError);
+    });
+
+  });
 });
 
 import { normalize } from 'path';

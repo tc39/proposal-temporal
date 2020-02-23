@@ -200,6 +200,9 @@ The disambiguation parameter tells what should happen when translating a `Tempor
 - In `balance` mode, the result will be March 1.
 - In `reject` mode, the method will throw a `RangeError`.
 
+Additionally, if the combined date is outside the range of dates that `Temporal.Date` can represent, then `constrain` mode will clamp the date to the allowed range.
+Both `balance` and `reject` mode will throw a `RangeError` in this case.
+
 Usage example:
 ```javascript
 md = Temporal.MonthDay.from('08-24');
