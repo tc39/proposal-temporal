@@ -43,6 +43,66 @@ describe('Duration', () => {
       equal(`${Duration.from({ seconds: 120, milliseconds: 3500 })}`, 'PT123.500S');
     });
   });
+  describe('min/max values', () => {
+    const units = ['years', 'months', 'days', 'hours', 'minutes', 'seconds', 'milliseconds', 'microseconds', 'nanoseconds'];
+    it('minimum is zero', () => {
+      equal(`${new Duration(0, 0, 0, 0, 0, 0, 0, 0, 0, 'reject')}`, 'PT0S');
+      units.forEach((unit) => equal(`${Duration.from({ [unit]: 0 })}`, 'PT0S'));
+      ['P0Y', 'P0M', 'P0D', 'PT0H', 'PT0M', 'PT0S'].forEach((str) =>
+        equal(`${Duration.from(str)}`, 'PT0S'));
+    });
+    it('infinity is not allowed', () => {
+      units.forEach((unit, ix) => {
+        throws(() => new Duration(...Array(ix).fill(0), Infinity, ...Array(8 - ix).fill(0), 'reject'));
+        throws(() => Duration.from({ [unit]: Infinity }));
+      });
+    });
+    it('unrepresentable number is not allowed', () => {
+      units.forEach((unit, ix) => {
+        throws(() => new Duration(...Array(ix).fill(0), 1e309, ...Array(8 - ix).fill(0), 'reject'));
+        throws(() => Duration.from({ [unit]: 1e309 }));
+      });
+      const manyNines = '9'.repeat(309);
+      [
+        `P${manyNines}Y`, `P${manyNines}M`, `P${manyNines}D`, `PT${manyNines}H`,
+        `PT${manyNines}M`, `PT${manyNines}S`,
+      ].forEach((str) => throws(() => Duration.from(str)));
+    });
+    it('max safe integer is allowed', () => {
+      [
+        'P9007199254740991Y', 'P9007199254740991M', 'P9007199254740991D',
+        'PT9007199254740991H', 'PT9007199254740991M', 'PT9007199254740991S',
+        'PT9007199254740.991S', 'PT9007199254.740991S', 'PT9007199.254740991S'
+      ].forEach((str, ix) => {
+        equal(`${new Duration(...Array(ix).fill(0), Number.MAX_SAFE_INTEGER, ...Array(8 - ix).fill(0), 'reject')}`, str);
+        equal(`${Duration.from({ [units[ix]]: Number.MAX_SAFE_INTEGER })}`, str);
+        equal(`${Duration.from(str)}`, str);
+      });
+    });
+    it('larger integers are allowed but may lose precision', () => {
+      function test(ix, prefix, suffix, infix = '') {
+        function doAsserts(duration) {
+          const str = duration.toString();
+          equal(str.slice(0, prefix.length + 10), `${prefix}1000000000`);
+          assert(str.includes(infix));
+          equal(str.slice(-1), suffix);
+          equal(str.length, prefix.length + suffix.length + infix.length + 27);
+        }
+        doAsserts(new Duration(...Array(ix).fill(0), 1e26, ...Array(8 - ix).fill(0), 'reject'));
+        doAsserts(Duration.from({ [units[ix]]: 1e26 }));
+        if (!infix) doAsserts(Duration.from(`${prefix}100000000000000000000000000${suffix}`));
+      }
+      test(0, 'P', 'Y');
+      test(1, 'P', 'M');
+      test(2, 'P', 'D');
+      test(3, 'PT', 'H');
+      test(4, 'PT', 'M');
+      test(5, 'PT', 'S');
+      test(6, 'PT', 'S', '.');
+      test(7, 'PT', 'S', '.');
+      test(8, 'PT', 'S', '.');
+    });
+  });
 });
 
 import { normalize } from 'path';
