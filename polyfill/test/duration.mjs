@@ -34,6 +34,15 @@ describe('Duration', () => {
     it(`Duration.from("P1D") == P1D`, () => equal(`${ Duration.from("P1D") }`, 'P1D'));
     it('Duration.from({}) throws', () => throws(() => Duration.from({}), RangeError));
   });
+  describe('toString()', () => {
+    it('excessive sub-second units balance themselves when serializing', () => {
+      equal(`${Duration.from({ milliseconds: 3500 })}`, 'PT3.500S');
+      equal(`${Duration.from({ microseconds: 3500 })}`, 'PT0.003500S');
+      equal(`${Duration.from({ nanoseconds: 3500 })}`, 'PT0.000003500S');
+      equal(`${new Duration(0, 0, 0, 0, 0, 0, 1111, 1111, 1111, 'reject')}`, 'PT1.112112111S');
+      equal(`${Duration.from({ seconds: 120, milliseconds: 3500 })}`, 'PT123.500S');
+    });
+  });
 });
 
 import { normalize } from 'path';

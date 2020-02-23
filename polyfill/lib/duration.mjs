@@ -129,15 +129,17 @@ export class Duration {
     if (GetSlot(this, MINUTES)) timeParts.push(`${GetSlot(this, MINUTES)}M`);
 
     const secondParts = [];
-    if (GetSlot(this, NANOSECONDS)) secondParts.unshift(`000${GetSlot(this, NANOSECONDS)}`.slice(-3));
-    if (GetSlot(this, MICROSECONDS) || secondParts.length) {
-      secondParts.unshift(`000${GetSlot(this, MICROSECONDS)}`.slice(-3));
-    }
-    if (GetSlot(this, MILLISECONDS) || secondParts.length) {
-      secondParts.unshift(`000${GetSlot(this, MILLISECONDS)}`.slice(-3));
-    }
+    let ms = GetSlot(this, MILLISECONDS);
+    let µs = GetSlot(this, MICROSECONDS);
+    let ns = GetSlot(this, NANOSECONDS);
+    let seconds;
+    ({ seconds, millisecond: ms, microsecond: µs, nanosecond: ns } = ES.BalanceSubSecond(ms, µs, ns));
+    const s = GetSlot(this, SECONDS) + seconds;
+    if (ns) secondParts.unshift(`${ns}`.padStart(3, '0'));
+    if (µs || secondParts.length) secondParts.unshift(`${µs}`.padStart(3, '0'));
+    if (ms || secondParts.length) secondParts.unshift(`${ms}`.padStart(3, '0'));
     if (secondParts.length) secondParts.unshift('.');
-    if (GetSlot(this, SECONDS) || secondParts.length) secondParts.unshift(`${this.seconds}`);
+    if (s || secondParts.length) secondParts.unshift(`${s}`);
     if (secondParts.length) timeParts.push(`${secondParts.join('')}S`);
     if (timeParts.length) timeParts.unshift('T');
     if (!dateParts.length && !timeParts.length) return 'PT0S';
