@@ -9,8 +9,7 @@ import assert from "assert";
  * @returns {Temporal.DateTime} Temporal.DateTime instance
  */
 function getDateTimeFromDate(esDate) {
-    const date = Temporal.DateTime.from(esDate.toISOString());
-    return date;
+    return Temporal.DateTime.from(esDate.toISOString());
 }
 
 const date = new Date("1970-01-01T00:00:01Z");
