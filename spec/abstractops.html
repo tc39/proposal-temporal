@@ -130,7 +130,7 @@
         1. Set _millis_ to `"000"`.
       1. If _millisecond_ is not 0, then
         1. Set _millis_ to _millisecond_ formatted as a three-digit decimal number, padded to the left with zeroes if necessary.
-      1. Let _decimal_ be the string-concatenation of _nanos_, _micros_, and _millis_.
+      1. Let _decimal_ be the string-concatenation of _millis_, _micros_, and _nanos_.
       1. Let _result_ be _second_ formatted as a two-digit decimal number, padded to the left with a zero if necessary.
       1. If _decimal_ is not empty, then
         1. Set _result_ to the string-concatenation of _result_, the code unit 0x002E (FULL STOP), and _decimal_.
