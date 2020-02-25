@@ -716,7 +716,32 @@
         1. Let _seconds_ be _duration_.[[Seconds]].
         1. Let _balanceResult_ be ! BalanceSubSecond(_duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
         1. Set _seconds_ to _seconds_ + _balanceResult_.[[Seconds]].
-        1. Return the concatenation of _years_, _months_, _days_, _hours_, _minutes_, _seconds_, _balanceResult_.[[Millisecond]], _balanceResult_.[[Microsecond]], _balanceResult_.[[Nanosecond]] in the format specified in RFC 3339 (https://www.ietf.org/rfc/rfc3339.txt) Appendix A.
+        1. Let _milliseconds_ be _balanceResult_.[[Millisecond]].
+        1. Let _microseconds_ be _balanceResult_.[[Microsecond]].
+        1. Let _nanoseconds_ be _balanceResult_.[[Nanosecond]].
+        1. If _years_, _months_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, and _nanoseconds_ are all 0, then
+          1. Return the string `"PT0S"`.
+        1. Let _datePart_ be `""`.
+        1. If _years_ is not 0, then
+          1. Set _datePart_ to the string concatenation of _years_ formatted as a decimal number and the code unit 0x0059 (LATIN CAPITAL LETTER Y).
+        1. If _months_ is not 0, then
+          1. Set _datePart_ to the string concatenation of _datePart_, _months_ formatted as a decimal number, and the code unit 0x004D (LATIN CAPITAL LETTER M).
+        1. If _days_ is not 0, then
+          1. Set _datePart_ to the string concatenation of _datePart_, _days_ formatted as a decimal number, and the code unit 0x0044 (LATIN CAPITAL LETTER D).
+        1. Let _timePart_ be `""`.
+        1. If _hours_ is not 0, then
+          1. Set _timePart_ to the string concatenation of _hours_ formatted as a decimal number and the code unit 0x0048 (LATIN CAPITAL LETTER H).
+        1. If _minutes_ is not 0, then
+          1. Set _timePart_ to the string concatenation of _timePart_, _minutes_ formatted as a decimal number, and the code unit 0x004D (LATIN CAPITAL LETTER M).
+        1. Let _secondsPart_ be ! FormatSecondsStringPart(_seconds_, _milliseconds_, _microseconds_, _nanoseconds_).
+        1. If the first code unit of _secondsPart_ is 0x003A (COLON), then
+          1. Set _secondsPart_ to the string containing all the code units of _secondsPart_ except the first.
+        1. If _secondsPart_ is not `""`, then
+          1. Set _secondsPart_ to the string concatenatoin of _secondsPart_ and the code unit 0x0053 (LATIN CAPITAL LETTER S).
+        1. Let _result_ be the string concatenation of the code unit 0x0050 (LATIN CAPITAL LETTER P) and _datePart_.
+        1. If _timePart_ is not `""`, then
+          1. Set _result_ to the string concatenation of _result_, the code unit 0x0054 (LATIN CAPITAL LETTER T), _timePart_, and _secondsPart_.
+        1. Return _result_.
       </emu-alg>
     </emu-clause>
 
