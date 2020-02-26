@@ -1,20 +1,11 @@
-import GetIntrinsic from 'es-abstract/GetIntrinsic.js';
 import ES2019 from 'es-abstract/es2019.js';
 
 const IntlDateTimeFormat = Intl.DateTimeFormat;
 const ObjectAssign = Object.assign;
 
-import { DateTime as TemporalDateTime } from './datetime.mjs';
-import { Date as TemporalDate } from './date.mjs';
-import { YearMonth as TemporalYearMonth } from './yearmonth.mjs';
-import { MonthDay as TemporalMonthDay } from './monthday.mjs';
-import { Time as TemporalTime } from './time.mjs';
-import { Absolute as TemporalAbsolute } from './absolute.mjs';
-import { TimeZone as TemporalTimeZone } from './timezone.mjs';
-import { Duration as TemporalDuration } from './duration.mjs';
-
 import bigInt from 'big-integer';
 
+import { GetIntrinsic } from './intrinsicclass.mjs';
 import {
   GetSlot,
   HasSlot,
@@ -46,17 +37,6 @@ const NS_MAX = bigInt(86400).multiply(1e17);
 const YEAR_MIN = -271821;
 const YEAR_MAX = 275760;
 
-const INTRINSICS = {
-  '%Temporal.DateTime%': TemporalDateTime,
-  '%Temporal.Date%': TemporalDate,
-  '%Temporal.YearMonth%': TemporalYearMonth,
-  '%Temporal.MonthDay%': TemporalMonthDay,
-  '%Temporal.Time%': TemporalTime,
-  '%Temporal.TimeZone%': TemporalTimeZone,
-  '%Temporal.Absolute%': TemporalAbsolute,
-  '%Temporal.Duration%': TemporalDuration
-};
-
 import * as PARSE from './regex.mjs';
 
 export const ES = ObjectAssign({}, ES2019, {
@@ -74,7 +54,8 @@ export const ES = ObjectAssign({}, ES2019, {
   IsTemporalMonthDay: (item) => HasSlot(item, MONTH, DAY) && !HasSlot(item, YEAR),
   ToTemporalTimeZone: (item) => {
     if (ES.IsTemporalTimeZone(item)) return item;
-    return new TemporalTimeZone(ES.TemporalTimeZoneFromString(ES.ToString(item)));
+    const TimeZone = GetIntrinsic('%Temporal.TimeZone%');
+    return new TimeZone(ES.TemporalTimeZoneFromString(ES.ToString(item)));
   },
   TemporalTimeZoneFromString: (stringIdent) => {
     const { zone, ianaName, offset } = ES.ParseTemporalTimeZoneString(stringIdent);
@@ -461,9 +442,6 @@ export const ES = ObjectAssign({}, ES2019, {
       throw new RangeError(`${largestUnit} not allowed as the largest unit here`);
     }
     return largestUnit;
-  },
-  GetIntrinsic: (intrinsic) => {
-    return intrinsic in INTRINSICS ? INTRINSICS[intrinsic] : GetIntrinsic(intrinsic);
   },
   ToPartialRecord: (bag, fields) => {
     if (!bag || 'object' !== typeof bag) return false;

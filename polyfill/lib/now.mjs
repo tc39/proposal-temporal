@@ -1,5 +1,5 @@
 import { ES } from './ecmascript.mjs';
-const Absolute = ES.GetIntrinsic('%Temporal.Absolute%');
+import { GetIntrinsic } from './intrinsicclass.mjs';
 
 export const now = {
   absolute,
@@ -10,6 +10,7 @@ export const now = {
 };
 
 function absolute() {
+  const Absolute = GetIntrinsic('%Temporal.Absolute%');
   return new Absolute(ES.SystemUTCEpochNanoSeconds());
 }
 function dateTime(temporalTimeZoneLike = timeZone()) {

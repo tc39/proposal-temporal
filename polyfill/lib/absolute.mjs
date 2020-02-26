@@ -1,5 +1,5 @@
 import { ES } from './ecmascript.mjs';
-import { MakeIntrinsicClass } from './intrinsicclass.mjs';
+import { GetIntrinsic, MakeIntrinsicClass } from './intrinsicclass.mjs';
 import { EPOCHNANOSECONDS, CreateSlots, GetSlot, SetSlot } from './slots.mjs';
 
 import bigInt from 'big-integer';
@@ -105,7 +105,7 @@ export class Absolute {
     const ms = +diff.divide(1e6).mod(1e3);
     const ss = +diff.divide(1e9);
 
-    const Duration = ES.GetIntrinsic('%Temporal.Duration%');
+    const Duration = GetIntrinsic('%Temporal.Duration%');
     const { days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.BalanceDuration(
       0,
       0,
@@ -125,7 +125,7 @@ export class Absolute {
   }
   toJSON() {
     if (!ES.IsTemporalAbsolute(this)) throw new TypeError('invalid receiver');
-    const TemporalTimeZone = ES.GetIntrinsic('%Temporal.TimeZone%');
+    const TemporalTimeZone = GetIntrinsic('%Temporal.TimeZone%');
     const timeZone = new TemporalTimeZone('UTC');
     return ES.TemporalAbsoluteToString(this, timeZone);
   }

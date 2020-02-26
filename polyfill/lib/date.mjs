@@ -1,5 +1,5 @@
 import { ES } from './ecmascript.mjs';
-import { MakeIntrinsicClass } from './intrinsicclass.mjs';
+import { GetIntrinsic, MakeIntrinsicClass } from './intrinsicclass.mjs';
 import {
   YEAR,
   MONTH,
@@ -128,7 +128,7 @@ export class Date {
     const largestUnit = ES.ToLargestTemporalUnit(options, 'days', ['hours', 'minutes', 'seconds']);
     const [smaller, larger] = [this, other].sort(Date.compare);
     const { years, months, days } = ES.DifferenceDate(smaller, larger, largestUnit);
-    const Duration = ES.GetIntrinsic('%Temporal.Duration%');
+    const Duration = GetIntrinsic('%Temporal.Duration%');
     return new Duration(years, months, days, 0, 0, 0, 0, 0, 0);
   }
   toString() {
@@ -155,17 +155,17 @@ export class Date {
     const millisecond = GetSlot(temporalTime, MILLISECOND);
     const microsecond = GetSlot(temporalTime, MICROSECOND);
     const nanosecond = GetSlot(temporalTime, NANOSECOND);
-    const DateTime = ES.GetIntrinsic('%Temporal.DateTime%');
+    const DateTime = GetIntrinsic('%Temporal.DateTime%');
     return new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
   }
   getYearMonth() {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
-    const YearMonth = ES.GetIntrinsic('%Temporal.YearMonth%');
+    const YearMonth = GetIntrinsic('%Temporal.YearMonth%');
     return new YearMonth(GetSlot(this, YEAR), GetSlot(this, MONTH));
   }
   getMonthDay() {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
-    const MonthDay = ES.GetIntrinsic('%Temporal.MonthDay%');
+    const MonthDay = GetIntrinsic('%Temporal.MonthDay%');
     return new MonthDay(GetSlot(this, MONTH), GetSlot(this, DAY));
   }
   static from(item, options = undefined) {

@@ -1,5 +1,5 @@
 import { ES } from './ecmascript.mjs';
-import { MakeIntrinsicClass } from './intrinsicclass.mjs';
+import { GetIntrinsic, MakeIntrinsicClass } from './intrinsicclass.mjs';
 import { IDENTIFIER, EPOCHNANOSECONDS, CreateSlots, GetSlot, SetSlot } from './slots.mjs';
 import { ZONES } from './zones.mjs';
 
@@ -34,7 +34,7 @@ export class TimeZone {
       microsecond,
       nanosecond
     } = ES.GetTimeZoneDateTimeParts(ns, GetSlot(this, IDENTIFIER));
-    const DateTime = ES.GetIntrinsic('%Temporal.DateTime%');
+    const DateTime = GetIntrinsic('%Temporal.DateTime%');
     return new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
   }
   getAbsoluteFor(dateTime, options) {
@@ -42,7 +42,7 @@ export class TimeZone {
     if (!ES.IsTemporalDateTime(dateTime)) throw new TypeError('invalid DateTime object');
     const disambiguation = ES.ToTimeZoneTemporalDisambiguation(options);
 
-    const Absolute = ES.GetIntrinsic('%Temporal.Absolute%');
+    const Absolute = GetIntrinsic('%Temporal.Absolute%');
     const { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = dateTime;
     const possibleEpochNs = ES.GetTimeZoneEpochValue(
       GetSlot(this, IDENTIFIER),
@@ -93,7 +93,7 @@ export class TimeZone {
     if (!ES.IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');
     if (!ES.IsTemporalAbsolute(startingPoint)) throw new TypeError('invalid Absolute object');
     let epochNanoseconds = GetSlot(startingPoint, EPOCHNANOSECONDS);
-    const Absolute = ES.GetIntrinsic('%Temporal.Absolute%');
+    const Absolute = GetIntrinsic('%Temporal.Absolute%');
     const timeZone = GetSlot(this, IDENTIFIER);
     const result = {
       next: () => {

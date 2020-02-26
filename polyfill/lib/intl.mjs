@@ -1,12 +1,5 @@
-import { ES } from './ecmascript.mjs';
+import { GetIntrinsic } from './intrinsicclass.mjs';
 import { TimeZone } from './timezone.mjs';
-
-const Absolute = ES.GetIntrinsic('%Temporal.Absolute%');
-const DateTime = ES.GetIntrinsic('%Temporal.DateTime%');
-const Date = ES.GetIntrinsic('%Temporal.Date%');
-const Time = ES.GetIntrinsic('%Temporal.Time%');
-const YearMonth = ES.GetIntrinsic('%Temporal.YearMonth%');
-const MonthDay = ES.GetIntrinsic('%Temporal.MonthDay%');
 
 const DATE = Symbol('date');
 const YM = Symbol('ym');
@@ -165,6 +158,13 @@ function hasTimeOptions(options) {
 
 function extractOverrides(datetime, main) {
   let formatter;
+  const Absolute = GetIntrinsic('%Temporal.Absolute%');
+  const Date = GetIntrinsic('%Temporal.Date%');
+  const DateTime = GetIntrinsic('%Temporal.DateTime%');
+  const MonthDay = GetIntrinsic('%Temporal.MonthDay%');
+  const Time = GetIntrinsic('%Temporal.Time%');
+  const YearMonth = GetIntrinsic('%Temporal.YearMonth%');
+
   if (datetime instanceof Time) {
     datetime = datetime.withDate(new Date(1970, 1, 1));
     formatter = main[TIME];
