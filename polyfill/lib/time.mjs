@@ -1,5 +1,5 @@
 import { ES } from './ecmascript.mjs';
-import { MakeIntrinsicClass } from './intrinsicclass.mjs';
+import { GetIntrinsic, MakeIntrinsicClass } from './intrinsicclass.mjs';
 
 import {
   YEAR,
@@ -188,7 +188,7 @@ export class Time {
       nanoseconds,
       largestUnit
     ));
-    const Duration = ES.GetIntrinsic('%Temporal.Duration%');
+    const Duration = GetIntrinsic('%Temporal.Duration%');
     return new Duration(0, 0, 0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
   }
 
@@ -222,7 +222,7 @@ export class Time {
     const millisecond = GetSlot(this, MILLISECOND);
     const microsecond = GetSlot(this, MICROSECOND);
     const nanosecond = GetSlot(this, NANOSECOND);
-    const DateTime = ES.GetIntrinsic('%Temporal.DateTime%');
+    const DateTime = GetIntrinsic('%Temporal.DateTime%');
     return new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
   }
 

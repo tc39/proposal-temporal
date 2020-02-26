@@ -1,5 +1,5 @@
 import { ES } from './ecmascript.mjs';
-import { MakeIntrinsicClass } from './intrinsicclass.mjs';
+import { GetIntrinsic, MakeIntrinsicClass } from './intrinsicclass.mjs';
 import { MONTH, DAY, CreateSlots, GetSlot, SetSlot } from './slots.mjs';
 
 export class MonthDay {
@@ -52,7 +52,7 @@ export class MonthDay {
     if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
     const month = GetSlot(this, MONTH);
     const day = GetSlot(this, DAY);
-    const Date = ES.GetIntrinsic('%Temporal.Date%');
+    const Date = GetIntrinsic('%Temporal.Date%');
     return new Date(year, month, day);
   }
   static from(item, options = undefined) {

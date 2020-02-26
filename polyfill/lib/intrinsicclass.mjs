@@ -1,3 +1,7 @@
+import ESGetIntrinsic from 'es-abstract/GetIntrinsic.js';
+
+const INTRINSICS = {};
+
 export function MakeIntrinsicClass(Class, name) {
   Object.defineProperty(Class.prototype, Symbol.toStringTag, {
     value: name,
@@ -31,4 +35,10 @@ export function MakeIntrinsicClass(Class, name) {
     desc.enumerable = false;
     Object.defineProperty(Class.prototype, prop, desc);
   }
+
+  INTRINSICS[`%${name}%`] = Class;
+}
+
+export function GetIntrinsic(intrinsic) {
+  return intrinsic in INTRINSICS ? INTRINSICS[intrinsic] : ESGetIntrinsic(intrinsic);
 }
