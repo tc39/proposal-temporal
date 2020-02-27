@@ -287,20 +287,44 @@ Temporal.now.absolute().minus({ days: 1 });
 Temporal.now.absolute().minus(&#39;P1D&#39;);
 oneDay = new Temporal.Duration(0, 0, 1);
 Temporal.now.absolute().minus(oneDay);</code></pre>
-<h3 id="absolutedifferenceother-temporalabsolute--temporalduration">absolute.<strong>difference</strong>(<em>other</em>: Temporal.Absolute) : Temporal.Duration</h3>
+<h3 id="absolutedifferenceother-temporalabsolute-largestunit-string--seconds--temporalduration">absolute.<strong>difference</strong>(<em>other</em>: Temporal.Absolute, <em>largestUnit</em>: string = &#39;seconds&#39;) : Temporal.Duration</h3>
 <p><strong>Parameters:</strong></p>
 <ul>
 <li><code>other</code> (<code>Temporal.Absolute</code>): Another time with which to compute the difference.</li>
+<li><code>largestUnit</code> (optional string): The largest unit of time to allow in the resulting <code>Temporal.Duration</code> object.
+Valid values are <code>&#39;days&#39;</code>, <code>&#39;hours&#39;</code>, <code>&#39;minutes&#39;</code>, and <code>&#39;seconds&#39;</code>.
+The default is <code>&quot;seconds&quot;</code>.</li>
 </ul>
 <p><strong>Returns:</strong> a <code>Temporal.Duration</code> representing the difference between <code>absolute</code> and <code>other</code>.</p>
 <p>This method computes the difference between the two times represented by <code>absolute</code> and <code>other</code>, and returns it as a <code>Temporal.Duration</code> object.
 The difference is always positive, no matter the order of <code>absolute</code> and <code>other</code>, because <code>Temporal.Duration</code> objects cannot represent negative durations.</p>
+<p>The <code>largestUnit</code> parameter controls how the resulting duration is expressed.
+The returned <code>Temporal.Duration</code> object will not have any nonzero fields that are larger than the unit in <code>largestUnit</code>.
+A difference of two hours will become 7200 seconds when <code>largestUnit</code> is <code>&quot;seconds&quot;</code>, for example.
+However, a difference of 30 seconds will still be 30 seconds even if <code>largestUnit</code> is <code>&quot;hours&quot;</code>.</p>
+<p>By default, the largest unit in the result is seconds.
+Unlike other Temporal types, months and years are not allowed.
+This is because in the ISO calendar, months and years can be different lengths depending on which month is meant and whether the year is a leap year.
+<code>Temporal.Absolute</code> is intended to be calendar-independent and therefore free of these ambiguities.</p>
 <p>Example usage:</p>
 <pre><code class="language-js">startOfMoonMission = Temporal.Absolute.from(&#39;1969-07-16T13:32:00Z&#39;);
 endOfMoonMission = Temporal.Absolute.from(&#39;1969-07-24T16:50:35Z&#39;);
-missionLength = startOfMoonMission.difference(endOfMoonMission);  // =&gt; P8DT3H18M35S
-endOfMoonMission.difference(startOfMoonMission);  // =&gt; P8DT3H18M35S
-missionLength.toLocaleString();  // example output: &#39;8 days 3 hours 18 minutes 35 seconds&#39;</code></pre>
+missionLength = startOfMoonMission.difference(endOfMoonMission, &#39;days&#39;);  // =&gt; P8DT3H18M35S
+endOfMoonMission.difference(startOfMoonMission, &#39;days&#39;);  // =&gt; P8DT3H18M35S
+missionLength.toLocaleString();  // example output: &#39;8 days 3 hours 18 minutes 35 seconds&#39;
+
+// A billion (10^9) seconds since the epoch in different units
+epoch = new Temporal.Absolute(0n);
+billion = Temporal.Absolute.fromEpochSeconds(1e9);
+epoch.difference(billion);  // =&gt; PT1000000000S
+epoch.difference(billion, &#39;hours&#39;)  // =&gt; PT277777H46M40S
+epoch.difference(billion, &#39;days&#39;)  // =&gt; P11574DT1H46M40S
+
+// If you really need to calculate the difference between two Absolutes
+// in years, you can eliminate the ambiguity by choosing your starting
+// point explicitly. For example, using the corresponding UTC date:
+utc = Temporal.TimeZone.from(&#39;UTC&#39;);
+epoch.inTimeZone(utc).difference(billion.inTimeZone(utc), &#39;years&#39;);  // =&gt; P31Y8M8DT1H46M40S</code></pre>
 <h3 id="absolutetostringtimezone-temporaltimezone--string--string">absolute.<strong>toString</strong>(<em>timeZone</em>?: Temporal.TimeZone | string) : string</h3>
 <p><strong>Parameters:</strong></p>
 <ul>

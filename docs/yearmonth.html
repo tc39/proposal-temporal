@@ -277,17 +277,34 @@ However, disambiguation may have an effect in other calendars where years can be
 <pre><code class="language-javascript">ym = Temporal.YearMonth.from(&#39;2019-06&#39;);
 ym.minus({years: 20, months: 4})  // =&gt; 1999-02
 ym.minus(&#39;P14Y&#39;)  // =&gt; 2005-06</code></pre>
-<h3 id="yearmonthdifferenceother-temporalyearmonth--temporalduration">yearMonth.<strong>difference</strong>(<em>other</em>: Temporal.YearMonth) : Temporal.Duration</h3>
+<h3 id="yearmonthdifferenceother-temporalyearmonth-largestunit-string--years--temporalduration">yearMonth.<strong>difference</strong>(<em>other</em>: Temporal.YearMonth, <em>largestUnit</em>: string = &#39;years&#39;) : Temporal.Duration</h3>
 <p><strong>Parameters:</strong></p>
 <ul>
 <li><code>other</code> (<code>Temporal.YearMonth</code>): Another month with which to compute the difference.</li>
+<li><code>largestUnit</code> (optional string): The largest unit of time to allow in the resulting <code>Temporal.Duration</code> object.
+Valid values are <code>&#39;years&#39;</code> and <code>&#39;months&#39;</code>.
+The default is <code>years</code>.</li>
 </ul>
 <p><strong>Returns:</strong> a <code>Temporal.Duration</code> representing the difference between <code>yearMonth</code> and <code>other</code>.</p>
 <p>This method computes the difference between the two months represented by <code>yearMonth</code> and <code>other</code>, and returns it as a <code>Temporal.Duration</code> object.
 The difference is always positive, no matter the order of <code>yearMonth</code> and <code>other</code>, because <code>Temporal.Duration</code> objects cannot represent negative durations.</p>
+<p>The <code>largestUnit</code> parameter controls how the resulting duration is expressed.
+The returned <code>Temporal.Duration</code> object will not have any nonzero fields that are larger than the unit in <code>largestUnit</code>.
+A difference of one year and two months will become 14 months when <code>largestUnit</code> is <code>&quot;months&quot;</code>, for example.
+However, a difference of one month will still be one month even if <code>largestUnit</code> is <code>&quot;years&quot;</code>.</p>
+<p>Unlike other Temporal types, days and lower units are not allowed, because the data model of <code>Temporal.YearMonth</code> doesn&#39;t have that accuracy.</p>
 <p>Usage example:</p>
 <pre><code class="language-javascript">ym = Temporal.YearMonth.from(&#39;2019-06&#39;);
-ym.difference(Temporal.YearMonth.from(&#39;2006-08&#39;))  // =&gt; P12Y10M</code></pre>
+other = Temporal.YearMonth.from(&#39;2006-08&#39;);
+ym.difference(other)            // =&gt; P12Y10M
+ym.difference(other, &#39;months&#39;)  // =&gt; P154M
+
+// If you really need to calculate the difference between two YearMonths
+// in days, you can eliminate the ambiguity by explicitly choosing the
+// day of the month (and if applicable, the time of that day) from which
+// you want to reckon the difference. For example, using the first of
+// the month to calculate a number of days:
+ym.withDay(1).difference(other.withDay(1), &#39;days&#39;);  // =&gt; P4687D</code></pre>
 <h3 id="yearmonthtostring--string">yearMonth.<strong>toString</strong>() : string</h3>
 <p><strong>Returns:</strong> a string in the ISO 8601 date format representing <code>yearMonth</code>.</p>
 <p>This method overrides the <code>Object.prototype.toString()</code> method and provides a convenient, unambiguous string representation of <code>yearMonth</code>.

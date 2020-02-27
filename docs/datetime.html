@@ -356,17 +356,35 @@ dt.minus(&#39;P14Y7MT7H14M21S&#39;)  // =&gt; 1981-05-06T20:10:09.000003500
 dt = Temporal.DateTime.from(&#39;2019-03-31T15:30&#39;)
 dt.minus({months: 1}, &#39;constrain&#39;)  // =&gt; 2019-02-28T15:30
 dt.minus({months: 1}, &#39;reject&#39;)  // =&gt; throws</code></pre>
-<h3 id="datetimedifferenceother-temporaldatetime--temporalduration">datetime.<strong>difference</strong>(<em>other</em>: Temporal.DateTime) : Temporal.Duration</h3>
+<h3 id="datetimedifferenceother-temporaldatetime-largestunit-string--days--temporalduration">datetime.<strong>difference</strong>(<em>other</em>: Temporal.DateTime, <em>largestUnit</em>: string = &#39;days&#39;) : Temporal.Duration</h3>
 <p><strong>Parameters:</strong></p>
 <ul>
 <li><code>other</code> (<code>Temporal.DateTime</code>): Another date/time with which to compute the difference.</li>
+<li><code>largestUnit</code> (optional string): The largest unit of time to allow in the resulting <code>Temporal.Duration</code> object.
+Valid values are <code>&#39;years&#39;</code>, <code>&#39;months&#39;</code>, <code>&#39;days&#39;</code>, <code>&#39;hours&#39;</code>, <code>&#39;minutes&#39;</code>, and <code>&#39;seconds&#39;</code>.
+The default is <code>days</code>.</li>
 </ul>
 <p><strong>Returns:</strong> a <code>Temporal.Duration</code> representing the difference between <code>datetime</code> and <code>other</code>.</p>
 <p>This method computes the difference between the two times represented by <code>datetime</code> and <code>other</code>, and returns it as a <code>Temporal.Duration</code> object.
 The difference is always positive, no matter the order of <code>datetime</code> and <code>other</code>, because <code>Temporal.Duration</code> objects cannot represent negative durations.</p>
+<p>The <code>largestUnit</code> parameter controls how the resulting duration is expressed.
+The returned <code>Temporal.Duration</code> object will not have any nonzero fields that are larger than the unit in <code>largestUnit</code>.
+A difference of two hours will become 7200 seconds when <code>largestUnit</code> is <code>&quot;seconds&quot;</code>, for example.
+However, a difference of 30 seconds will still be 30 seconds even if <code>largestUnit</code> is <code>&quot;hours&quot;</code>.</p>
+<p>By default, the largest unit in the result is days.
+This is because months and years can be different lengths depending on which month is meant and whether the year is a leap year.</p>
 <p>Usage example:</p>
-<pre><code class="language-javascript">dt = new Temporal.DateTime(1995, 12, 7, 3, 24, 30, 0, 3, 500);
-dt.difference(Temporal.DateTime.from(&#39;2019-01-31T15:30&#39;))  // =&gt; P23Y1M24DT12H5M29.999996500S</code></pre>
+<pre><code class="language-javascript">dt1 = Temporal.DateTime.from(&#39;1995-12-07T03:24:30.000003500&#39;);
+dt2 = Temporal.DateTime.from(&#39;2019-01-31T15:30&#39;);
+dt1.difference(dt2);           // =&gt;    P8456DT12H5M29.999996500S
+dt1.difference(dt2), &#39;years&#39;)  // =&gt; P23Y1M24DT12H5M29.999996500S
+
+// Months and years can be different lengths
+[jan1, feb1, mar1] = [1, 2, 3].map(month =&gt; Temporal.DateTime.from({year: 2020, month, day: 1}));
+jan1.difference(feb1);            // =&gt; P31D
+jan1.difference(feb1, &#39;months&#39;);  // =&gt; P1M
+feb1.difference(mar1);            // =&gt; P29D
+feb1.difference(mar1, &#39;months&#39;);  // =&gt; P1M</code></pre>
 <h3 id="datetimetostring--string">datetime.<strong>toString</strong>() : string</h3>
 <p><strong>Returns:</strong> a string in the ISO 8601 date format representing <code>datetime</code>.</p>
 <p>This method overrides the <code>Object.prototype.toString()</code> method and provides a convenient, unambiguous string representation of <code>datetime</code>.

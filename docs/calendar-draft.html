@@ -374,12 +374,12 @@ Temporal.Date.from(&quot;2019-12-03[c=foo]&quot;, {
     return this.calendar.plus(this, duration);
 }
 
-Temporal.Date.prototype.difference = function(other) {
+Temporal.Date.prototype.difference = function(other, options) {
     if (other.calendar !== this.calendar) {
         // Note: call intrinsic versions of these methods
         other = other.toISO().withCalendar(this.calendar);
     }
-    return this.calendar.difference(this, other);
+    return this.calendar.difference(this, other, options);
 }
 </code></pre>
 <h2 id="other-temporaldate-constructors">Other Temporal.Date constructors</h2>

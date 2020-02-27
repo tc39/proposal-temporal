@@ -102,7 +102,21 @@
 <h3 id="timewith-hour-number--thishour-minute-number--thisminute-second-numer--thissecond--disambiguation-constrain--balance--reject--constrain--temporaltime">time.<strong>with</strong>({ hour: number = this.hour, minute: number = this.minute, second: numer = this.second ...}, <em>disambiguation</em>: &#39;constrain&#39; | &#39;balance&#39; | &#39;reject&#39; = &#39;constrain&#39;) : Temporal.Time</h3>
 <h3 id="timeplusduration-string--object-disambiguation-constrain--reject--constrain--temporaltime">time.<strong>plus</strong>(<em>duration</em>: string | object, <em>disambiguation</em>: &#39;constrain&#39; | &#39;reject&#39; = &#39;constrain&#39;) : Temporal.Time</h3>
 <h3 id="timeminusduration-string--object-disambiguation-constrain--reject--constrain--temporaltime">time.<strong>minus</strong>(<em>duration</em>: string | object, <em>disambiguation</em>: &#39;constrain&#39; | &#39;reject&#39; = &#39;constrain&#39;) : Temporal.Time</h3>
-<h3 id="timedifferenceother-temporaltime--temporalduration">time.<strong>difference</strong>(<em>other</em>: Temporal.Time) : Temporal.Duration</h3>
+<h3 id="timedifferenceother-temporaltime-largestunit-string--hours--temporalduration">time.<strong>difference</strong>(<em>other</em>: Temporal.Time, <em>largestUnit</em>: string = &#39;hours&#39;) : Temporal.Duration</h3>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>other</code> (<code>Temporal.Time</code>): Another time with which to compute the difference.</li>
+<li><code>largestUnit</code> (optional string): The largest unit of time to allow in the resulting <code>Temporal.Duration</code> object.
+Valid values are <code>&#39;years&#39;</code>, <code>&#39;months&#39;</code>, <code>&#39;days&#39;</code>, <code>&#39;hours&#39;</code>, <code>&#39;minutes&#39;</code>, and <code>&#39;seconds&#39;</code>.
+The default is <code>days</code>.</li>
+</ul>
+<p><strong>TODO:</strong> Rest of the documentation in another pull request, this to be rebased</p>
+<p>The <code>largestUnit</code> parameter controls how the resulting duration is expressed.
+The returned <code>Temporal.Duration</code> object will not have any nonzero fields that are larger than the unit in <code>largestUnit</code>.
+A difference of two hours will become 7200 seconds when <code>largestUnit</code> is <code>&quot;seconds&quot;</code>, for example.
+However, a difference of 30 seconds will still be 30 seconds even if <code>largestUnit</code> is <code>&quot;hours&quot;</code>.</p>
+<p>The default largest unit in the result is hours.
+Since this method never returns any duration longer than 12 hours, largest units of years, months, or days, are by definition ignored and treated as hours.</p>
 <h3 id="timetostring--string">time.<strong>toString</strong>() : string</h3>
 <h3 id="timetolocalestringlocale-string-options-object--string">time.<strong>toLocaleString</strong>(<em>locale</em>?: string, <em>options</em>?: object) : string</h3>
 <h3 id="timewithdatedate-temporaldate--temporaldatetime">time.<strong>withDate</strong>(<em>date</em>: Temporal.Date) : Temporal.DateTime</h3>

@@ -321,17 +321,36 @@ date.minus(&#39;P14Y8D&#39;)  // =&gt; 1992-08-16
 date = Temporal.Date.from(&#39;2019-03-31&#39;)
 date.minus({months: 1}, &#39;constrain&#39;)  // =&gt; 2019-02-28
 date.minus({months: 1}, &#39;reject&#39;)  // =&gt; throws</code></pre>
-<h3 id="datedifferenceother-temporaldate--temporalduration">date.<strong>difference</strong>(<em>other</em>: Temporal.Date) : Temporal.Duration</h3>
+<h3 id="datedifferenceother-temporaldate-largestunit-string--days--temporalduration">date.<strong>difference</strong>(<em>other</em>: Temporal.Date, <em>largestUnit</em>: string = &#39;days&#39;) : Temporal.Duration</h3>
 <p><strong>Parameters:</strong></p>
 <ul>
 <li><code>other</code> (<code>Temporal.Date</code>): Another date with which to compute the difference.</li>
+<li><code>largestUnit</code> (optional string): The largest unit of time to allow in the resulting <code>Temporal.Duration</code> object.
+Valid values are <code>&#39;years&#39;</code>, <code>&#39;months&#39;</code>, and <code>&#39;days&#39;</code>.
+The default is <code>days</code>.</li>
 </ul>
 <p><strong>Returns:</strong> a <code>Temporal.Duration</code> representing the difference between <code>date</code> and <code>other</code>.</p>
 <p>This method computes the difference between the two dates represented by <code>date</code> and <code>other</code>, and returns it as a <code>Temporal.Duration</code> object.
 The difference is always positive, no matter the order of <code>date</code> and <code>other</code>, because <code>Temporal.Duration</code> objects cannot represent negative durations.</p>
+<p>The <code>largestUnit</code> parameter controls how the resulting duration is expressed.
+The returned <code>Temporal.Duration</code> object will not have any nonzero fields that are larger than the unit in <code>largestUnit</code>.
+A difference of two years will become 24 months when <code>largestUnit</code> is <code>&quot;months&quot;</code>, for example.
+However, a difference of two months will still be two months even if <code>largestUnit</code> is <code>&quot;years&quot;</code>.</p>
+<p>By default, the largest unit in the result is days.
+This is because months and years can be different lengths depending on which month is meant and whether the year is a leap year.
+Unlike other Temporal types, hours and lower are not allowed, because the data model of <code>Temporal.Date</code> doesn&#39;t have that accuracy.</p>
 <p>Usage example:</p>
 <pre><code class="language-javascript">date = Temporal.Date.from(&#39;2006-08-24&#39;);
-date.difference(Temporal.Date.from(&#39;2019-01-31&#39;))  // =&gt; P12Y5M7D</code></pre>
+other = Temporal.Date.from(&#39;2019-01-31&#39;);
+date.difference(other)           // =&gt; P4543D
+date.difference(other, &#39;years&#39;)  // =&gt; P12Y5M7D
+
+// If you really need to calculate the difference between two Dates in
+// hours, you can eliminate the ambiguity by explicitly choosing the
+// point in time from which you want to reckon the difference. For
+// example, using midnight:
+midnight = Temporal.Time.from(&#39;00:00&#39;);
+date.withTime(midnight).difference(other.withTime(midnight), &#39;hours&#39;)  // =&gt; PT109032H</code></pre>
 <h3 id="datetostring--string">date.<strong>toString</strong>() : string</h3>
 <p><strong>Returns:</strong> a string in the ISO 8601 date format representing <code>date</code>.</p>
 <p>This method overrides the <code>Object.prototype.toString()</code> method and provides a convenient, unambiguous string representation of <code>date</code>.
