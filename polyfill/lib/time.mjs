@@ -205,9 +205,9 @@ export class Time {
     return new Intl.DateTimeFormat(...args).format(this);
   }
 
-  withDate(dateLike = {}, disambiguation = 'constrain') {
+  withDate(dateLike) {
     if (!ES.IsTime(this)) throw new TypeError('invalid receiver');
-    let { year, month, day } = ES.ToDate(dateLike, disambiguation);
+    const { year, month, day } = ES.ToDate(dateLike, 'reject');
     let { hour, minute, second, millisecond, microsecond, nanosecond } = this;
     const DateTime = ES.GetIntrinsic('%Temporal.DateTime%');
     return new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);

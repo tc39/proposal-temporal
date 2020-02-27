@@ -48,7 +48,7 @@ export class MonthDay {
     if (!ES.IsMonthDay(this)) throw new TypeError('invalid receiver');
     return new Intl.DateTimeFormat(...args).format(this);
   }
-  withYear(year, disambiguation = 'constrain') {
+  withYear(year) {
     if (!ES.IsMonthDay(this)) throw new TypeError('invalid receiver');
     const month = GetSlot(this, MONTH);
     const day = GetSlot(this, DAY);
