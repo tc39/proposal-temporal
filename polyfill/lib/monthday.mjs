@@ -3,24 +3,11 @@ import { MakeIntrinsicClass } from './intrinsicclass.mjs';
 import { MONTH, DAY, CreateSlots, GetSlot, SetSlot } from './slots.mjs';
 
 export class MonthDay {
-  constructor(month, day, disambiguation = 'constrain') {
+  constructor(month, day) {
     month = ES.ToInteger(month);
     day = ES.ToInteger(day);
-    disambiguation = ES.ToString(disambiguation);
     const leapYear = 1972; // XXX #261 leap year
-    switch (disambiguation) {
-      case 'reject':
-        ES.RejectDate(leapYear, month, day);
-        break;
-      case 'constrain':
-        ({ month, day } = ES.ConstrainDate(leapYear, month, day));
-        break;
-      case 'balance':
-        ({ month, day } = ES.BalanceDate(leapYear, month, day));
-        break;
-      default:
-        throw new TypeError('disambiguation should be either reject, constrain or balance');
-    }
+    ES.RejectDate(leapYear, month, day);
 
     CreateSlots(this);
     SetSlot(this, MONTH, month);
@@ -43,8 +30,12 @@ export class MonthDay {
       throw new RangeError('invalid month-day-like');
     }
     const { month = GetSlot(this, MONTH), day = GetSlot(this, DAY) } = props;
+    const result = ES.ToMonthDay({ month, day }, disambiguation);
     const Construct = ES.SpeciesConstructor(this, MonthDay);
-    return new Construct(month, day, disambiguation);
+    return this === MonthDay ? result : new Construct(
+      GetSlot(result, MONTH),
+      GetSlot(result, DAY),
+    );
   }
   toString() {
     if (!ES.IsMonthDay(this)) throw new TypeError('invalid receiver');
@@ -62,14 +53,14 @@ export class MonthDay {
     const month = GetSlot(this, MONTH);
     const day = GetSlot(this, DAY);
     const Date = ES.GetIntrinsic('%Temporal.Date%');
-    return new Date(year, month, day, disambiguation);
+    return new Date(year, month, day);
   }
-  static from(arg) {
-    let result = ES.ToMonthDay(arg);
+  static from(arg, options) {
+    const disambiguation = ES.GetOption(options, 'disambiguation', ES.ToDisambiguation, 'constrain');
+    let result = ES.ToMonthDay(arg, disambiguation);
     return this === MonthDay ? result : new this(
       GetSlot(result, MONTH),
       GetSlot(result, DAY),
-      'reject'
     );
   }
   static compare(one, two) {

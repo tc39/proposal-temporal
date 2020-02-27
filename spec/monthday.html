@@ -18,7 +18,7 @@
     </p>
 
     <emu-clause id="sec-temporal.monthday">
-      <h1>Temporal.MonthDay ( _month_, _day_ [ , _disambiguation_ ] )</h1>
+      <h1>Temporal.MonthDay ( _month_, _day_ )</h1>
       <p>
         When the `Temporal.MonthDay` function is called, the following steps are taken:
       </p>
@@ -27,8 +27,6 @@
           1. Throw a *TypeError* exception.
         1. Let _m_ be ? ToInteger(_month_).
         1. Let _d_ be ? ToInteger(_day_).
-        1. Set _disambiguation_ to ? ToDisambiguation(_disambiguation_).
-        1. Let _result_ be ? RegulateMonthDay(_m_, _d_, _disambiguation_).
         1. Return ? CreateMonthDay(_result_.[[Month]], _result_.[[Day]], NewTarget).
       </emu-alg>
     </emu-clause>
@@ -46,16 +44,17 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal.monthday.from">
-      <h1>Temporal.MonthDay.from ( _arg_ )</h1>
+      <h1>Temporal.MonthDay.from ( _arg_ [ , _options_ ] )</h1>
       <p>
-        The `from` method takes one argument _arg_.
+        The `from` method takes two arguments, _arg_ and _options_.
         The following steps are taken:
       </p>
       <emu-alg>
+        1. Let _disambiguation_ be ? GetOption(_options_, *"disambiguation"*, « *"constrain"*, *"balance"*, *"reject"* », *"constrain"*).
         1. If Type(_arg_) is Object, then
-          1. Return ? ToMonthDay(_arg_).
+          1. Return ? ToMonthDay(_arg_, _disambiguation_).
         1. Let _string_ be ? ToString(_arg_).
-        1. Return ? MonthDayFromString(_string_).
+        1. Return ? MonthDayFromString(_string_, _disambiguation_).
       </emu-alg>
     </emu-clause>
 
@@ -295,7 +294,8 @@
     <emu-clause id="sec-temporal-createmonthday" aoid="CreateMonthDay">
       <h1>CreateMonthDay ( _month_, _day_ [ , _newTarget_ ] )</h1>
       <emu-alg>
-        1. Assert: ! ValidateMonthDay(_month_, _day_) is *true*.
+        1. If ! ValidateMonthDay(_month_, _day_) is *false*, then
+          1. Throw a *RangeError* exception.
         1. If _newTarget_ is not given, set it to %Temporal.MonthDay%.
         1. Let _object_ be ? OrdinaryCreateFromConstructor(_newTarget_, `"%Temporal.MonthDay.prototype%"`, « [[InitializedTemporalMonthDay]], [[Month]], [[Day]] »).
         1. Set _object_.[[Month]] to _month_.
@@ -321,19 +321,20 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal-monthdayfromstring" aoid="MonthDayFromString">
-      <h1>MonthDayFromString ( _monthDay_ )</h1>
+      <h1>MonthDayFromString ( _monthDay_, _disambiguation_ )</h1>
       <emu-alg>
         1. Assert: Type(_monthDay_) is String.
+        1. Assert: _disambiguation_ is one of *"constrain"*, *"balance"*, or *"reject"*.
         1. Let _result_ be ? ParseMonthDayString(_monthDay_).
-        1. If ! ValidateMonthDay(_result_.[[Month]], _result_.[[Day]]) is *false*, then
-          1. Throw a *TypeError* exception.
+        1. Set _result_ to ? RegulateMonthDay(_result_.[[Month]], _result_.[[Day]], _disambiguation_).
         1. Return ? CreateMonthDay(_result_.[[Month]], _result_.[[Day]]).
       </emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal-tomonthday" aoid="ToMonthDay">
-      <h1>ToMonthDay ( _monthDay_ )</h1>
+      <h1>ToMonthDay ( _monthDay_, _disambiguation_ )</h1>
       <emu-alg>
+        1. Assert: _disambiguation_ is one of *"constrain"*, *"balance"*, or *"reject"*.
         1. If Type(_monthDay_) is Object, then
           1. If _monthDay_ has an [[InitializedTemporalMonthDay]] internal slot, then
             1. Return _monthDay_.
@@ -345,8 +346,7 @@
               1. Throw a *TypeError* exception.
             1. Let _value_ be ? ToInteger(_value_).
             1. Set _result_'s internal slot whose name is the Internal Slot value of the current row to _value_.
-          1. If ! ValidateMonthDay(_result_.[[Month]], _result_.[[Day]]) is *false*, then
-            1. Throw a *TypeError* exception.
+          1. Set _result_ to ? RegulateMonthDay(_result_.[[Month]], _result_.[[Day]], _disambiguation_).
           1. Return ? CreateMonthDay(_result_.[[Month]], _result_.[[Day]]).
         1. Throw a *TypeError* exception.
       </emu-alg>

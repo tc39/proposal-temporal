@@ -115,7 +115,7 @@ export class Absolute {
       microseconds,
       nanoseconds,
     } = ES.BalanceDuration(0, 0, 0, ss, ms, us, ns, largestUnit);
-    return new Duration(0, 0, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 'reject');
+    return new Duration(0, 0, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
   }
   toString(timeZoneParam = 'UTC') {
     if (!ES.IsAbsolute(this)) throw new TypeError('invalid receiver');

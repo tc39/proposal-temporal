@@ -8,28 +8,20 @@ A `Temporal.MonthDay` can be converted into a `Temporal.Date` by combining it wi
 
 ## Constructor
 
-### **new Temporal.MonthDay**(_isoMonth_: number, _isoDay_: number, _disambiguation_: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.MonthDay
+### **new Temporal.MonthDay**(_isoMonth_: number, _isoDay_: number) : Temporal.MonthDay
 
 **Parameters:**
 - `isoMonth` (number): A month, ranging between 1 and 12 inclusive.
 - `isoDay` (number): A day of the month, ranging between 1 and 31 inclusive.
-- `disambiguation` (optional string): How to deal with out-of-range values of the other parameters.
-  Allowed values are `constrain`, `balance`, and `reject`.
-  The default is `constrain`.
 
 **Returns:** a new `Temporal.MonthDay` object.
 
-Use this constructor if you have the correct parameters for the date already as individual number values, or you need the disambiguation behaviour.
-Otherwise, `Temporal.MonthDay.from()`, which accepts more kinds of input, is probably more convenient.
+Use this constructor if you have the correct parameters for the date already as individual number values.
+Otherwise, `Temporal.MonthDay.from()`, which accepts more kinds of input and allows disambiguation behaviour, is probably more convenient.
 
 All values are given as reckoned in the [ISO 8601 calendar](https://en.wikipedia.org/wiki/ISO_8601#Dates).
-
-The `disambiguation` parameter works as follows:
-- In `constrain` mode (the default), any out-of-range values are clamped to the nearest in-range value.
-- In `balance` mode, any out-of-range values are resolved by balancing them with the next highest unit.
-- In `reject` mode, the presence of out-of-range values will cause the constructor to throw a `RangeError`.
-
-> **NOTE**: February 29 (Leap day in the ISO 8601 calendar) is a valid value for `Temporal.MonthDay`, even though that date does not occur every year.
+Together, `isoMonth` and `isoDay` must represent a valid date in at least one year of that calendar.
+For example, February 29 (Leap day in the ISO 8601 calendar) is a valid value for `Temporal.MonthDay`, even though that date does not occur every year.
 
 Usage examples:
 ```javascript
@@ -37,22 +29,19 @@ Usage examples:
 md = new Temporal.MonthDay(3, 14)  // => 03-14
 // Leap day
 md = new Temporal.MonthDay(2, 29)  // => 02-29
-
-// Different disambiguation modes
-md = new Temporal.MonthDay(13, 1, 'constrain')  // => 12-01
-md = new Temporal.MonthDay(-1, 1, 'constrain')  // => 01-01
-md = new Temporal.MonthDay(13, 1, 'balance')  // => 01-01
-md = new Temporal.MonthDay(-1, 1, 'balance')  // => 11-01
-md = new Temporal.MonthDay(13, 1, 'reject')  // throws
-md = new Temporal.MonthDay(-1, 1, 'reject')  // throws
 ```
 
 ## Static methods
 
-### Temporal.MonthDay.**from**(_thing_: string | object) : Temporal.MonthDay
+### Temporal.MonthDay.**from**(_thing_: string | object, _options_?: object) : Temporal.MonthDay
 
 **Parameters:**
 - `thing` (string or object): The value representing the desired date.
+- `options` (optional object): An object with properties representing options for constructing the date.
+  The following options are recognized:
+  - `disambiguation` (string): How to deal with out-of-range values in `thing`.
+    Allowed values are `constrain`, `balance`, and `reject`.
+    The default is `constrain`.
 
 **Returns:** a new `Temporal.MonthDay` object (or the same object if `thing` was a `Temporal.MonthDay` object.)
 
@@ -62,6 +51,11 @@ If the value is another `Temporal.MonthDay` object, the same object is returned.
 If the value is any other object, it must have `month` and `day` properties, and a `Temporal.MonthDay` will be constructed from them.
 
 Note that any year, time, or time zone part of an ISO 8601 string passed to this function is optional, and will be ignored.
+
+The `disambiguation` option works as follows:
+- In `constrain` mode (the default), any out-of-range values are clamped to the nearest in-range value.
+- In `balance` mode, any out-of-range values are resolved by balancing them with the next highest unit.
+- In `reject` mode, the presence of out-of-range values will cause the function to throw a `RangeError`.
 
 Example usage:
 ```javascript
@@ -76,6 +70,20 @@ md === Temporal.MonthDay.from(md)  // => true
 md = Temporal.MonthDay.from({month: 8, day: 24});  // => 08-24
 md = Temporal.MonthDay.from(Temporal.Date.from('2006-08-24'));
   // => same as above; Temporal.Date has month and day properties
+
+// Different disambiguation modes
+md = Temporal.MonthDay.from({ month: 13, day: 1 }, { disambiguation: 'constrain' })
+  // => 12-01
+md = Temporal.MonthDay.from({ month: -1, day: 1 }, { disambiguation: 'constrain' })
+  // => 01-01
+md = Temporal.MonthDay.from({ month: 13, day: 1 }, { disambiguation: 'balance' })
+  // => 01-01
+md = Temporal.MonthDay.from({ month: -1, day: 1 }, { disambiguation: 'balance' })
+  // => 11-01
+md = Temporal.MonthDay.from({ month: 13, day: 1 }, { disambiguation: 'reject' })
+  // throws
+md = Temporal.MonthDay.from({ month: -1, day: 1 }, { disambiguation: 'reject' })
+  // throws
 ```
 
 ### Temporal.MonthDay.**compare**(_one_: Temporal.MonthDay, _two_: Temporal.MonthDay) : number

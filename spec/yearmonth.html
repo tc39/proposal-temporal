@@ -18,7 +18,7 @@
     </p>
 
     <emu-clause id="sec-temporal.yearmonth">
-      <h1>Temporal.YearMonth ( _year_, _month_ [ , _disambiguation_ ] )</h1>
+      <h1>Temporal.YearMonth ( _year_, _month_ )</h1>
       <p>
         When the `Temporal.YearMonth` function is called, the following steps are taken:
       </p>
@@ -27,9 +27,7 @@
           1. Throw a *TypeError* exception.
         1. Let _y_ be ? ToInteger(_year_).
         1. Let _m_ be ? ToInteger(_month_).
-        1. Set _disambiguation_ to ? ToDisambiguation(_disambiguation_).
-        1. Let _result_ be ? RegulateYearMonth(_y_, _m_, _disambiguation_).
-        1. Return ? CreateYearMonth(_result_.[[Year]], _result_.[[Month]], NewTarget).
+        1. Return ? CreateYearMonth(_y_, _m_, NewTarget).
       </emu-alg>
     </emu-clause>
   </emu-clause>
@@ -46,16 +44,17 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal.yearmonth.from">
-      <h1>Temporal.YearMonth.from ( _arg_ )</h1>
+      <h1>Temporal.YearMonth.from ( _arg_ [ , _options_ ] )</h1>
       <p>
-        The `from` method takes one argument _arg_.
+        The `from` method takes two arguments, _arg_ and _options_.
         The following steps are taken:
       </p>
       <emu-alg>
+        1. Let _disambiguation_ be ? GetOption(_options_, *"disambiguation"*, « *"constrain"*, *"balance"*, *"reject"* », *"constrain"*).
         1. If Type(_arg_) is Object, then
-          1. Return ? ToYearMonth(_arg_).
+          1. Return ? ToYearMonth(_arg_, _disambiguation_).
         1. Let _string_ be ? ToString(_arg_).
-        1. Return ? YearMonthFromString(_string_).
+        1. Return ? YearMonthFromString(_string_, _disambiguation_).
       </emu-alg>
     </emu-clause>
 
@@ -430,7 +429,8 @@
     <emu-clause id="sec-temporal-createyearmonth" aoid="CreateYearMonth">
       <h1>CreateYearMonth ( _year_, _month_ [ , _newTarget_ ] )</h1>
       <emu-alg>
-        1. Assert: ! ValidateYearMonth(_year_, _month_) is *true*.
+        1. If ! ValidateYearMonth(_year_, _month_) is *false*, then
+          1. Throw a *RangeError* exception.
         1. If _newTarget_ is not given, set it to %Temporal.YearMonth%.
         1. Let _object_ be ? OrdinaryCreateFromConstructor(_newTarget_, `"%Temporal.YearMonth.prototype%"`, « [[InitializedTemporalYearMonth]], [[Year]], [[Month]] »).
         1. Set _object_.[[Year]] to _year_.
@@ -456,19 +456,19 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal-yearmonthfromstring" aoid="YearMonthFromString">
-      <h1>YearMonthFromString ( _yearMonth_ )</h1>
+      <h1>YearMonthFromString ( _yearMonth_, _disambiguation_ )</h1>
       <emu-alg>
         1. Assert: Type(_yearMonth_) is String.
         1. Let _result_ be ? ParseYearMonthString(_yearMonth_).
-        1. If ! ValidateYearMonth(_result_.[[Year]], _result_.[[Month]]) is *false*, then
-          1. Throw a *TypeError* exception.
+        1. Set _result_ to ? RegulateYearMonth(_result_.[[Year]], _result_.[[Month]], _disambiguation_).
         1. Return ? CreateYearMonth(_result_.[[Year]], _result_.[[Month]]).
       </emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal-toyearmonth" aoid="ToYearMonth">
-      <h1>ToYearMonth ( _yearMonth_ )</h1>
+      <h1>ToYearMonth ( _yearMonth_, _disambiguation_ )</h1>
       <emu-alg>
+        1. Assert: _disambiguation_ is one of *"constrain"*, *"balance"*, or *"reject"*.
         1. If Type(_yearMonth_) is Object, then
           1. If _yearMonth_ has an [[InitializedTemporalYearMonth]] internal slot, then
             1. Return _yearMonth_.
@@ -480,8 +480,7 @@
               1. Throw a *TypeError* exception.
             1. Let _value_ be ? ToInteger(_value_).
             1. Set _result_'s internal slot whose name is the Internal Slot value of the current row to _value_.
-          1. If ! ValidateYearMonth(_result_.[[Year]], _result_.[[Month]]) is *false*, then
-            1. Throw a *TypeError* exception.
+          1. Set _result_ to ? RegulateYearMonth(_result_.[[Year]], _result_.[[Month]], _disambiguation_).
           1. Return ? CreateYearMonth(_result_.[[Year]], _result_.[[Month]]).
         1. Throw a *TypeError* exception.
       </emu-alg>

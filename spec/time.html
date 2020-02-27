@@ -19,7 +19,7 @@
     </p>
 
     <emu-clause id="sec-temporal.time">
-      <h1>Temporal.Time ( [ _hour_ [ , _minute_ [ , _second_ [ , _millisecond_ [ , _microsecond_ [ , _nanosecond_ [ , _disambiguation_ ] ] ] ] ] ] ] )</h1>
+      <h1>Temporal.Time ( [ _hour_ [ , _minute_ [ , _second_ [ , _millisecond_ [ , _microsecond_ [ , _nanosecond_ ] ] ] ] ] ] )</h1>
       <p>
         When the `Temporal.Time` function is called, the following steps are taken:
       </p>
@@ -33,9 +33,7 @@
         1. Let _millisecond_ be ? ToInteger(_millisecond_).
         1. Let _microsecond_ be ? ToInteger(_microsecond_).
         1. Let _nanosecond_ be ? ToInteger(_nanosecond_).
-        1. Set _disambiguation_ to ? ToDisambiguation(_disambiguation_).
-        1. Let _result_ be ? RegulateTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _disambiguation_).
-        1. Return ? CreateTime(_result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]], NewTarget).
+        1. Return ? CreateTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, NewTarget).
       </emu-alg>
     </emu-clause>
   </emu-clause>
@@ -53,16 +51,17 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal.time.from">
-      <h1>Temporal.Time.from ( _arg_ )</h1>
+      <h1>Temporal.Time.from ( _arg_ [ , _options_ ] )</h1>
       <p>
-        The `from` method takes one argument _arg_.
+        The `from` method takes two arguments, _arg_ and _options_.
         The following steps are taken:
       </p>
       <emu-alg>
+        1. Let _disambiguation_ be ? GetOption(_options_, *"disambiguation"*, « *"constrain"*, *"balance"*, *"reject"* », *"constrain"*).
         1. If Type(_arg_) is Object, then
-          1. Return ? ToTime(_arg_).
+          1. Return ? ToTime(_arg_, _disambiguation_).
         1. Let _string_ be ? ToString(_arg_).
-        1. Return ? TimeFromString(_string_).
+        1. Return ? TimeFromString(_string_, _disambiguation_).
       </emu-alg>
     </emu-clause>
 
@@ -523,7 +522,8 @@
     <emu-clause id="sec-temporal-createtime" aoid="CreateTime">
       <h1>CreateTime ( _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_ [, _newTarget_] )</h1>
       <emu-alg>
-        1. Assert: ! ValidateTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_) is *true*.
+        1. If ! ValidateTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_) is *false*, then
+          1. Throw a *RangeError* exception.
         1. If _newTarget_ is not given, set it to %Temporal.Time%.
         1. Let _object_ be ? OrdinaryCreateFromConstructor(_newTarget_, `"%Temporal.Time.prototype%"`, « [[InitializedTemporalTime]], [[Hour]], [[Minute]], [[Second]], [[Millisecond]], [[Microsecond]], [[Nanosecond]] »).
         1. Set _object_.[[Hour]] to _hour_.
@@ -557,20 +557,21 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal-timefromstring" aoid="TimeFromString">
-      <h1>TimeFromString ( _time_ )</h1>
+      <h1>TimeFromString ( _time_, _disambiguation_ )</h1>
       <emu-alg>
         1. Assert: Type(_time_) is String.
+        1. Assert: _disambiguation_ is one of *"constrain"*, *"balance"*, or *"reject"*.
         1. Let _result_ be ? ParseTimeString(_time_).
-        1. If ! ValidateTime(_result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]) is *false*, then
-          1. Throw a *TypeError* exception.
+        1. Set _result_ to ? RegulateTime(_result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]], _disambiguation_).
         1. Return ? CreateTime(_result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]).
       </emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal-totime" aoid="ToTime">
-      <h1>ToTime ( _time_ )</h1>
+      <h1>ToTime ( _time_, _disambiguation_ )</h1>
       <emu-note>The value of ? ToInteger(*undefined*) is 0.</emu-note>
       <emu-alg>
+        1. Assert: _disambiguation_ is one of *"constrain"*, *"balance"*, or *"reject"*.
         1. If Type(_time_) is Object, then
           1. If _time_ has an [[InitializedTemporalTime]] internal slot, then
             1. Return _time_.
@@ -580,8 +581,7 @@
             1. Let _value_ be ? Get(_time_, _property_).
             1. Let _value_ be ? ToInteger(_value_).
             1. Set _result_'s internal slot whose name is the Internal Slot value of the current row to _value_.
-          1. If ! ValidateTime(_result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]) is *false*, then
-            1. Throw a *TypeError* exception.
+          1. Set _result_ to ? RegulateTime(_result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]], _disambiguation_).
           1. Return ? CreateTime(_result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]).
         1. Throw a *TypeError* exception.
       </emu-alg>

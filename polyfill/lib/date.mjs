@@ -16,27 +16,11 @@ import {
 } from './slots.mjs';
 
 export class Date {
-  constructor(year, month, day, disambiguation = 'constrain') {
+  constructor(year, month, day) {
     year = ES.ToInteger(year);
     month = ES.ToInteger(month);
     day = ES.ToInteger(day);
-    disambiguation = ES.ToString(disambiguation);
-    switch (disambiguation) {
-      case 'reject':
-        ES.RejectDate(year, month, day);
-        break;
-      case 'constrain':
-        ({ year, month, day } = ES.ConstrainDate(year, month, day));
-        break;
-      case 'balance':
-        ({ year, month, day } = ES.BalanceDate(year, month, day));
-        // Still rejected if balanced Date is outside valid range
-        ES.RejectDate(year, month, day);
-        break;
-      default:
-        throw new TypeError('disambiguation should be either reject, constrain or balance');
-    }
-
+    ES.RejectDate(year, month, day);
     CreateSlots(this);
     SetSlot(this, YEAR, year);
     SetSlot(this, MONTH, month);
@@ -85,8 +69,13 @@ export class Date {
       throw new RangeError('invalid date-like');
     }
     const { year = GetSlot(this, YEAR), month = GetSlot(this, MONTH), day = GetSlot(this, DAY) } = props;
+    const result = ES.ToDate({ year, month, day }, disambiguation);
     const Construct = ES.SpeciesConstructor(this, Date);
-    return new Construct(year, month, day, disambiguation);
+    return Construct === Date ? result : new Construct(
+      GetSlot(result, YEAR),
+      GetSlot(result, MONTH),
+      GetSlot(result, DAY),
+    );
   }
   plus(durationLike = {}, disambiguation = 'constrain') {
     if (!ES.IsDate(this)) throw new TypeError('invalid receiver');
@@ -95,8 +84,13 @@ export class Date {
     let { year, month, day } = this;
     const { years, months, days } = duration;
     ({ year, month, day } = ES.AddDate(year, month, day, years, months, days, disambiguation));
+    const result = ES.ToDate({ year, month, day }, disambiguation);
     const Construct = ES.SpeciesConstructor(this, Date);
-    return new Construct(year, month, day, disambiguation);
+    return Construct === Date ? result : new Construct(
+      GetSlot(result, YEAR),
+      GetSlot(result, MONTH),
+      GetSlot(result, DAY),
+    );
   }
   minus(durationLike = {}, disambiguation = 'constrain') {
     if (!ES.IsDate(this)) throw new TypeError('invalid receiver');
@@ -105,8 +99,13 @@ export class Date {
     let { year, month, day } = this;
     const { years, months, days } = duration;
     ({ year, month, day } = ES.SubtractDate(year, month, day, years, months, days, disambiguation));
+    const result = ES.ToDate({ year, month, day }, disambiguation);
     const Construct = ES.SpeciesConstructor(this, Date);
-    return new Construct(year, month, day, disambiguation);
+    return Construct === Date ? result : new Construct(
+      GetSlot(result, YEAR),
+      GetSlot(result, MONTH),
+      GetSlot(result, DAY),
+    );
   }
   difference(other, largestUnit = 'days') {
     if (!ES.IsDate(this)) throw new TypeError('invalid receiver');
@@ -134,10 +133,10 @@ export class Date {
     const year = GetSlot(this, YEAR);
     const month = GetSlot(this, MONTH);
     const day = GetSlot(this, DAY);
-    timeLike = ES.ToTime(timeLike);
+    timeLike = ES.ToTime(timeLike, disambiguation);
     const { hour, minute, second, millisecond, microsecond, nanosecond } = timeLike;
     const DateTime = ES.GetIntrinsic('%Temporal.DateTime%');
-    return new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, disambiguation);
+    return new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
   }
   getYearMonth() {
     if (!ES.IsDate(this)) throw new TypeError('invalid receiver');
@@ -149,13 +148,13 @@ export class Date {
     const MonthDay = ES.GetIntrinsic('%Temporal.MonthDay%');
     return new MonthDay(GetSlot(this, MONTH), GetSlot(this, DAY));
   }
-  static from(arg) {
-    let result = ES.ToDate(arg);
+  static from(arg, options) {
+    const disambiguation = ES.GetOption(options, 'disambiguation', ES.ToDisambiguation, 'constrain');
+    let result = ES.ToDate(arg, disambiguation);
     return this === Date ? result : new this(
       GetSlot(result, YEAR),
       GetSlot(result, MONTH),
       GetSlot(result, DAY),
-      'reject'
     );
   }
   static compare(one, two) {

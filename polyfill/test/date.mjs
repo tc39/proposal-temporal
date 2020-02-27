@@ -94,13 +94,6 @@ describe('Date', () => {
     it('date.dayOfYear is 323', () => equal(date.dayOfYear, 323));
     it('date.weekOfYear is 47', () => equal(date.weekOfYear, 47));
     it('`${date}` is 1976-11-18', () => equal(`${date}`, '1976-11-18'));
-
-    describe('Disambiguation', () => {
-      it('reject', () => throws(() => new Date(2019, 1, 32, 'reject'), RangeError));
-      it('constrain', () => equal(`${new Date(2019, 1, 32, 'constrain')}`, '2019-01-31'));
-      it('balance', () => equal(`${new Date(2019, 1, 32, 'balance')}`, '2019-02-01'));
-      it('throw when bad disambiguation', () => throws(() => new Date(2019, 1, 1, 'xyz'), TypeError));
-    });
   });
   describe('date fields', () => {
     const date = new Date(2019, 10, 6);
@@ -330,7 +323,21 @@ describe('Date', () => {
     it('Date.from(required prop undefined) throws', () =>
       throws(() => Date.from({ year: undefined, month: 11, day: 18 }), TypeError));
     it.skip('Date.from(number) is converted to string', () =>
-      equal(`${Date.from(19761118)}`, `${Date.from('19761118')}`))
+      equal(`${Date.from(19761118)}`, `${Date.from('19761118')}`));
+    describe('Disambiguation', () => {
+      const bad = { year: 2019, month: 1, day: 32 };
+      it('reject', () => throws(() => Date.from(bad, { disambiguation: 'reject' }), RangeError));
+      it('constrain', () => {
+        equal(`${Date.from(bad)}`, '2019-01-31');
+        equal(`${Date.from(bad, { disambiguation: 'constrain' })}`, '2019-01-31');
+      });
+      it('balance', () => equal(`${Date.from(bad, { disambiguation: 'balance' })}`, '2019-02-01'));
+      it('throw when bad disambiguation', () => {
+        throws(() => Date.from({ year: 2019, month: 1, day: 1 }, { disambiguation: 'xyz' }), RangeError);
+        throws(() => Date.from({ year: 2019, month: 1, day: 1 }, { disambiguation: 3 }), RangeError);
+        throws(() => Date.from({ year: 2019, month: 1, day: 1 }, { disambiguation: null }), RangeError);
+      });
+    });
   });
   describe('Date.compare works', () => {
     const d1 = Date.from('1976-11-18');
@@ -349,18 +356,32 @@ describe('Date', () => {
   });
   describe('Min/max range', () => {
     it('constructing from numbers', () => {
-      throws(() => new Date(-271821, 4, 18, 'reject'), RangeError);
-      throws(() => new Date(275760, 9, 14, 'reject'), RangeError);
-      throws(() => new Date(-271821, 4, 18, 'balance'), RangeError);
-      throws(() => new Date(275760, 9, 14, 'balance'), RangeError);
-      equal(`${new Date(-271821, 4, 18, 'constrain')}`, '-271821-04-19');
-      equal(`${new Date(275760, 9, 14, 'constrain')}`, '+275760-09-13');
-      equal(`${new Date(-271821, 4, 19, 'reject')}`, '-271821-04-19');
-      equal(`${new Date(275760, 9, 13, 'reject')}`, '+275760-09-13');
+      throws(() => new Date(-271821, 4, 18), RangeError);
+      throws(() => new Date(275760, 9, 14), RangeError);
+      equal(`${new Date(-271821, 4, 19)}`, '-271821-04-19');
+      equal(`${new Date(275760, 9, 13)}`, '+275760-09-13');
+    });
+    it('constructing from property bag', () => {
+      const tooEarly = { year: -271821, month: 4, day: 18 };
+      const tooLate = { year: 275760, month: 9, day: 14 };
+      [tooEarly, tooLate].forEach((props) => {
+        ['balance', 'reject'].forEach((disambiguation) => {
+          throws(() => Date.from(props, { disambiguation }), RangeError);
+        });
+      });
+      equal(`${Date.from(tooEarly)}`, '-271821-04-19');
+      equal(`${Date.from(tooLate)}`, '+275760-09-13');
+      equal(`${Date.from({ year: -271821, month: 4, day: 19 })}`, '-271821-04-19');
+      equal(`${Date.from({ year: 275760, month: 9, day: 13 })}`, '+275760-09-13');
     });
     it('constructing from ISO string', () => {
-      throws(() => Date.from('-271821-04-18'), RangeError);
-      throws(() => Date.from('+275760-09-14'), RangeError);
+      ['-271821-04-18', '+275760-09-14'].forEach((str) => {
+        ['balance', 'reject'].forEach((disambiguation) => {
+          throws(() => Date.from(str, { disambiguation }), RangeError);
+        });
+      });
+      equal(`${Date.from('-271821-04-18')}`, '-271821-04-19');
+      equal(`${Date.from('+275760-09-14')}`, '+275760-09-13');
       equal(`${Date.from('-271821-04-19')}`, '-271821-04-19');
       equal(`${Date.from('+275760-09-13')}`, '+275760-09-13');
     });
@@ -373,32 +394,28 @@ describe('Date', () => {
     it('converting from YearMonth', () => {
       const min = Temporal.YearMonth.from('-271821-04');
       const max = Temporal.YearMonth.from('+275760-09');
-      throws(() => min.withDay(1, 'reject'), RangeError);
-      throws(() => max.withDay(30, 'reject'), RangeError);
-      throws(() => min.withDay(1, 'balance'), RangeError);
-      throws(() => max.withDay(30, 'balance'), RangeError);
-      equal(`${min.withDay(1)}`, '-271821-04-19');
-      equal(`${max.withDay(30)}`, '+275760-09-13');
+      throws(() => min.withDay(1), RangeError);
+      throws(() => max.withDay(30), RangeError);
+      equal(`${min.withDay(19)}`, '-271821-04-19');
+      equal(`${max.withDay(13)}`, '+275760-09-13');
     });
     it('converting from MonthDay', () => {
       const jan1 = Temporal.MonthDay.from('01-01');
       const dec31 = Temporal.MonthDay.from('12-31');
       const minYear = -271821;
       const maxYear = 275760;
-      throws(() => jan1.withYear(minYear, 'reject'), RangeError);
-      throws(() => dec31.withYear(maxYear, 'reject'), RangeError);
-      throws(() => jan1.withYear(minYear, 'balance'), RangeError);
-      throws(() => dec31.withYear(maxYear, 'balance'), RangeError);
-      equal(`${jan1.withYear(minYear)}`, '-271821-04-19');
-      equal(`${dec31.withYear(maxYear)}`, '+275760-09-13');
+      throws(() => jan1.withYear(minYear), RangeError);
+      throws(() => dec31.withYear(maxYear), RangeError);
+      equal(`${jan1.withYear(minYear + 1)}`, '-271820-01-01');
+      equal(`${dec31.withYear(maxYear - 1)}`, '+275759-12-31');
     });
     it('adding and subtracting beyond limit', () => {
       const min = Date.from('-271821-04-19');
       const max = Date.from('+275760-09-13');
       equal(`${min.minus({days: 1})}`, '-271821-04-19');
       equal(`${max.plus({days: 1})}`, '+275760-09-13');
-      throws(() => min.minus({days: 1}, 'reject'), RangeError);
-      throws(() => max.plus({days: 1}, 'reject'), RangeError);
+      throws(() => min.minus({days: 1}, { disambiguation: 'reject' }), RangeError);
+      throws(() => max.plus({days: 1}, { disambiguation: 'reject' }), RangeError);
     });
   });
 });

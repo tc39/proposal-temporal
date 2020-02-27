@@ -39,7 +39,7 @@ export class TimeZone {
   }
   getAbsoluteFor(dateTime, disambiguation = 'earlier') {
     if (!ES.IsTimeZone(this)) throw new TypeError('invalid receiver');
-    dateTime = ES.ToDateTime(dateTime);
+    dateTime = ES.ToDateTime(dateTime, 'reject');
     disambiguation = ES.ToString(disambiguation);
     if (!~['earlier', 'later', 'reject'].indexOf(disambiguation)) {
       throw new RangeError(`"${disambiguation}" is not a valid value for the disambiguation argument`);
@@ -89,7 +89,7 @@ export class TimeZone {
     const after = ES.GetTimeZoneOffsetNanoseconds(utcns.plus(bigInt(86400 * 1e9)), GetSlot(this, IDENTIFIER));
     const diff = ES.ToDuration({
       nanoseconds: after.minus(before)
-    });
+    }, 'reject');
     switch (disambiguation) {
       case 'earlier': {
         const earlier = dateTime.minus(diff);

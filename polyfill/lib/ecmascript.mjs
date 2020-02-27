@@ -187,12 +187,12 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
     if (ES.IsAbsolute(item)) return item;
     const isoString = ES.ToString(item);
     const { zone, ...props } = ES.ParseAbsoluteString(isoString);
-    const datetime = ES.ToDateTime(props);
+    const datetime = ES.ToDateTime(props, 'reject');
     return datetime.inTimeZone(zone, 'reject');
   },
-  ToDateTime: (item) => {
+  ToDateTime: (item, disambiguation) => {
     if (ES.IsDateTime(item)) return item;
-    const props = ES.ValidDateTimeFrom(item, [
+    let props = ES.ValidDateTimeFrom(item, [
       'year',
       'month',
       'day',
@@ -204,46 +204,108 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
       'microsecond',
       'nanosecond'
     ]);
-    if (props) {
-      const {
-        hour = 0,
-        day,
-        microsecond = 0,
-        millisecond = 0,
-        minute = 0,
-        month,
-        nanosecond = 0,
-        second = 0,
-        year,
-      } = props;
-      return new TemporalDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, 'reject');
+    if (!props) {
+      const isoString = ES.ToString(item);
+      props = ES.ParseDateTimeString(isoString);
     }
-    const isoString = ES.ToString(item);
-    const {year, month, day, hour, minute, second, millisecond, microsecond, nanosecond} = ES.ParseDateTimeString(isoString);
-    return new TemporalDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, 'reject');
+    let {
+      hour = 0,
+      day,
+      microsecond = 0,
+      millisecond = 0,
+      minute = 0,
+      month,
+      nanosecond = 0,
+      second = 0,
+      year,
+    } = props;
+
+    switch (disambiguation) {
+      case 'reject':
+        ES.RejectDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
+        break;
+      case 'constrain':
+        ({
+          year,
+          month,
+          day,
+          hour,
+          minute,
+          second,
+          millisecond,
+          microsecond,
+          nanosecond,
+        } = ES.ConstrainDateTime(
+          year,
+          month,
+          day,
+          hour,
+          minute,
+          second,
+          millisecond,
+          microsecond,
+          nanosecond
+        ));
+        break;
+      case 'balance': {
+        let deltaDays;
+        ({ deltaDays, hour, minute, second, millisecond, microsecond, nanosecond } = ES.BalanceTime(
+          hour,
+          minute,
+          second,
+          millisecond,
+          microsecond,
+          nanosecond
+        ));
+        ({ year, month, day } = ES.BalanceDate(year, month, day + deltaDays));
+        // Still rejected if balanced DateTime is outside valid range
+        ES.RejectDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
+        break;
+      }
+      default:
+        throw new RangeError('disambiguation should be either reject, constrain or balance');
+    }
+
+    return new TemporalDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
   },
-  ToDate: (item) => {
+  ToDate: (item, disambiguation) => {
     if (ES.IsDate(item)) return item;
-    const props = ES.ValidDateTimeFrom(item, [
+    let props = ES.ValidDateTimeFrom(item, [
       'year',
       'month',
       'day'
     ]);
-    if (props) {
-      const {
-        day,
-        month,
-        year,
-      } = props;
-      return new TemporalDate(year, month, day, 'reject');
+    if (!props) {
+      const isoString = ES.ToString(item);
+      props = ES.ParseDateString(isoString);
     }
-    const isoString = ES.ToString(item);
-    const {year, month, day} = ES.ParseDateString(isoString);
-    return new TemporalDate(year, month, day, 'reject');
+    let {
+      day,
+      month,
+      year,
+    } = props;
+
+    switch (disambiguation) {
+      case 'reject':
+        ES.RejectDate(year, month, day);
+        break;
+      case 'constrain':
+        ({ year, month, day } = ES.ConstrainDate(year, month, day));
+        break;
+      case 'balance':
+        ({ year, month, day } = ES.BalanceDate(year, month, day));
+        // Still rejected if balanced Date is outside valid range
+        ES.RejectDate(year, month, day);
+        break;
+      default:
+        throw new RangeError('disambiguation should be either reject, constrain or balance');
+    }
+
+    return new TemporalDate(year, month, day);
   },
-  ToTime: (item) => {
+  ToTime: (item, disambiguation) => {
     if (ES.IsTime(item)) return item;
-    const props = ES.ValidDateTimeFrom(item, [], [
+    let props = ES.ValidDateTimeFrom(item, [], [
       'hour',
       'minute',
       'second',
@@ -251,58 +313,117 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
       'microsecond',
       'nanosecond'
     ]);
-    if (props) {
-      const {
-        hour = 0,
-        microsecond = 0,
-        millisecond = 0,
-        minute = 0,
-        nanosecond = 0,
-        second = 0,
-      } = props;
-      return new TemporalTime(hour, minute, second, millisecond, microsecond, nanosecond, 'reject');
+    if (!props) {
+      const isoString = ES.ToString(item);
+      props = ES.ParseTimeString(isoString);
     }
-    const isoString = ES.ToString(item);
-    const {hour, minute, second, millisecond, microsecond, nanosecond} = ES.ParseTimeString(isoString);
-    return new TemporalTime(hour, minute, second, millisecond, microsecond, nanosecond, 'reject');
+    let {
+      hour = 0,
+      microsecond = 0,
+      millisecond = 0,
+      minute = 0,
+      nanosecond = 0,
+      second = 0,
+    } = props;
+
+    switch (disambiguation) {
+      case 'reject':
+        ES.RejectTime(hour, minute, second, millisecond, microsecond, nanosecond);
+        break;
+      case 'constrain':
+        ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.ConstrainTime(
+          hour,
+          minute,
+          second,
+          millisecond,
+          microsecond,
+          nanosecond,
+        ));
+        break;
+      case 'balance':
+        ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.BalanceTime(
+          hour,
+          minute,
+          second,
+          millisecond,
+          microsecond,
+          nanosecond,
+        ));
+        break;
+      default:
+        throw new RangeError('disambiguation should be either reject, constrain or balance');
+    }
+
+    return new TemporalTime(hour, minute, second, millisecond, microsecond, nanosecond);
   },
-  ToYearMonth: (item) => {
+  ToYearMonth: (item, disambiguation) => {
     if (ES.IsYearMonth(item)) return item;
-    const props = ES.ValidDateTimeFrom(item, [
+    let props = ES.ValidDateTimeFrom(item, [
       'year',
       'month'
     ]);
-    if (props) {
-      const {
-        month,
-        year,
-      } = props;
-      return new TemporalYearMonth(year, month, 'reject');
+    if (!props) {
+      const isoString = ES.ToString(item);
+      props = ES.ParseYearMonthString(isoString);
     }
-    const isoString = ES.ToString(item);
-    const {year, month} = ES.ParseYearMonthString(isoString);
-    return new TemporalYearMonth(year, month, 'reject');
+    let {
+      month,
+      year,
+    } = props;
+
+    switch (disambiguation) {
+      case 'reject':
+        ES.RejectYearMonth(year, month);
+        break;
+      case 'constrain':
+        ({ year, month } = ES.ConstrainYearMonth(year, month));
+        break;
+      case 'balance':
+        ({ year, month } = ES.BalanceYearMonth(year, month));
+        // Still rejected if balanced YearMonth is outside valid range
+        ES.RejectYearMonth(year, month);
+        break;
+      default:
+        throw new RangeError('disambiguation should be either reject, constrain or balance');
+    }
+
+    return new TemporalYearMonth(year, month);
   },
-  ToMonthDay: (item) => {
+  ToMonthDay: (item, disambiguation) => {
     if (ES.IsMonthDay(item)) return item;
-    const props = ES.ValidDateTimeFrom(item, [
+    let props = ES.ValidDateTimeFrom(item, [
       'month',
       'day'
     ]);
-    if (props) {
-      const {
-        day,
-        month,
-      } = props;
-      return new TemporalMonthDay(month, day, 'reject');
+    if (!props) {
+      const isoString = ES.ToString(item);
+      props = ES.ParseMonthDayString(isoString);
     }
-    const isoString = ES.ToString(item);
-    const {month, day} = ES.ParseMonthDayString(isoString);
-    return new TemporalMonthDay(month, day, 'reject');
+    let {
+      day,
+      month,
+    } = props;
+
+    const leapYear = 1972;
+    switch (disambiguation) {
+      case 'reject':
+        ES.RejectDate(leapYear, month, day);
+        break;
+      case 'constrain':
+        ({ month, day } = ES.ConstrainDate(leapYear, month, day));
+        break;
+      case 'balance':
+        ({ month, day } = ES.BalanceDate(leapYear, month, day));
+        break;
+      default:
+        throw new RangeError('disambiguation should be either reject, constrain or balance');
+    }
+
+    return new TemporalMonthDay(month, day);
   },
-  ToDuration: (item) => {
+  ToDuration: (item, disambiguation) => {
     if (ES.IsDuration(item)) return item;
-    const props = ES.ValidPropertyBag(item, [
+    let props = ES.ValidPropertyBag(item, [
       'years',
       'months',
       'days',
@@ -313,32 +434,56 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
       'microseconds',
       'nanoseconds'
     ]);
-    if (props) {
-      const {
-        days = 0,
-        hours = 0,
-        microseconds = 0,
-        milliseconds = 0,
-        minutes = 0,
-        months = 0,
-        nanoseconds = 0,
-        seconds = 0,
-        years = 0,
-      } = props;
-      return new TemporalDuration(years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 'reject');
+    if (!props) {
+      const isoString = ES.ToString(item);
+      props = ES.ParseDurationString(isoString);
     }
-    const isoString = ES.ToString(item);
-    const {
-      years,
-      months,
-      days,
-      hours,
-      minutes,
-      seconds,
-      milliseconds,
-      microseconds,
-      nanoseconds,
-    } = ES.ParseDurationString(isoString);
+    let {
+      days = 0,
+      hours = 0,
+      microseconds = 0,
+      milliseconds = 0,
+      minutes = 0,
+      months = 0,
+      nanoseconds = 0,
+      seconds = 0,
+      years = 0,
+    } = props;
+
+    switch (ES.ToString(disambiguation)) {
+      case 'reject':
+        for (const prop of [years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds]) {
+          if (prop < 0) throw new RangeError('negative values not allowed as duration fields');
+          if (!Number.isFinite(prop)) throw new RangeError('infinite values not allowed as duration fields');
+        }
+        break;
+      case 'constrain': {
+        const arr = [years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds];
+        for (const idx in arr) {
+          if (arr[idx] < 0) arr[idx] = -arr[idx];
+          if (!Number.isFinite(arr[idx])) arr[idx] = Number.MAX_VALUE;
+        }
+        [years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds] = arr;
+        break;
+      }
+      case 'balance': {
+        ({
+          hours,
+          minutes,
+          seconds,
+          milliseconds,
+          microseconds,
+          nanoseconds,
+        } = ES.BalanceDuration(0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 'hours'));
+        for (const prop of [years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds]) {
+          if (!Number.isFinite(prop)) throw new RangeError('infinite values not allowed as duration fields');
+        }
+        break;
+      }
+      default:
+        throw new RangeError('disambiguation should be either reject, constrain or balance');
+    }
+
     return new TemporalDuration(
       years,
       months,
@@ -349,17 +494,23 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
       milliseconds,
       microseconds,
       nanoseconds,
-      'reject'
     );
   },
   ToLimitedDuration: (item, disallowedSlots = []) => {
-    const duration = ES.ToDuration(item);
+    const duration = ES.ToDuration(item, 'reject');
     for (let slot of disallowedSlots) {
       if (GetSlot(duration, slot) !== 0) {
         throw new RangeError(`invalid duration field ${slot}`);
       }
     }
     return duration;
+  },
+  ToDisambiguation: (disambiguation) => {
+    disambiguation = ES.ToString(disambiguation);
+    if (!['constrain', 'balance', 'reject'].includes(disambiguation)) {
+      throw new RangeError(`disambiguation should be constrain, balance, or reject, not ${disambiguation}`);
+    }
+    return disambiguation;
   },
   ToArithmeticDisambiguation: (disambiguation) => {
     disambiguation = ES.ToString(disambiguation);
@@ -1110,7 +1261,14 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
     const fmt = new IntlDateTimeFormat('en-us');
     return ES.ToTimeZone(fmt.resolvedOptions().timeZone);
   },
-  ComparisonResult: (value) => (value < 0 ? -1 : value > 0 ? 1 : value)
+  ComparisonResult: (value) => (value < 0 ? -1 : value > 0 ? 1 : value),
+  GetOption: (options, property, validation, fallback) => {
+    if (options === null || options === undefined) return fallback;
+    options = ES.ToObject(options);
+    let value = options[property];
+    if (value !== undefined) return validation(value);
+    return fallback;
+  },
 });
 
 import * as REGEX from './regex.mjs';
