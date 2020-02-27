@@ -103,6 +103,8 @@ However, a <code>Temporal.Absolute</code> can be created from any of several exp
 <p><code>epochNanoseconds</code> is the number of nanoseconds (10<sup>&minus;9</sup> seconds) between the Unix epoch (midnight UTC on January 1, 1970) and the desired point in time.</p>
 <p>Use this constructor directly if you know the precise number of nanoseconds already and have it in bigint form, for example from a database.
 Otherwise, <code>Temporal.Absolute.from()</code>, which accepts more kinds of input, is probably more convenient.</p>
+<p>The range of allowed values for this type is the same as the old-style JavaScript <code>Date</code>, 100 million (10<sup>8</sup>) days before or after the Unix epoch.
+This range covers approximately half a million years. If <code>epochNanoseconds</code> is outside of this range, a <code>RangeError</code> will be thrown.</p>
 <p>Example usage:</p>
 <pre><code class="language-js">abs = new Temporal.Absolute(1553906700000000000n);
 // When was the Unix epoch?
@@ -258,6 +260,7 @@ epoch.inTimeZone(tz);  // =&gt; 1969-12-31T19:00</code></pre>
 <li>any object with properties denoting a duration, such as <code>{ hours: 5, minutes: 30 }</code>;</li>
 <li>a string in ISO 8601 duration format, such as <code>PT5H30M</code>.</li>
 </ul>
+<p>If the result is outside the allowed range for <code>Temporal.Absolute</code>, a <code>RangeError</code> will be thrown.</p>
 <p>Example usage:</p>
 <pre><code class="language-js">// Temporal.Absolute representing five hours from now
 Temporal.now.absolute().plus({ hours: 5 });
@@ -277,6 +280,7 @@ Temporal.now.absolute().plus(fiveHours);</code></pre>
 <li>any object with properties denoting a duration, such as <code>{ hours: 5, minutes: 30 }</code>;</li>
 <li>a string in ISO 8601 duration format, such as <code>PT5H30M</code>.</li>
 </ul>
+<p>If the result is outside the allowed range for <code>Temporal.Absolute</code>, a <code>RangeError</code> will be thrown.</p>
 <p>Example usage:</p>
 <pre><code class="language-js">// Temporal.Absolute representing this time yesterday
 Temporal.now.absolute().minus({ days: 1 });

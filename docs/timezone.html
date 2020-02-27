@@ -227,6 +227,7 @@ It is identical to <a href="./datetime.html#inTimeZone"><code>dateTime.inTimeZon
 <li><code>reject</code>: Throw a <code>RangeError</code> instead.</li>
 </ul>
 <p>For usage examples and a more complete explanation of how this disambiguation works and why it is necessary, see <a href="./ambiguity.html">Resolving ambiguity</a>.</p>
+<p>If the result is outside the range that <code>Temporal.Absolute</code> can represent, then a <code>RangeError</code> will be thrown, no matter the value of <code>disambiguation</code>.</p>
 <h3 id="timezonegettransitionsstartingpoint-temporalabsolute--iteratortemporalabsolute">timeZone.<strong>getTransitions</strong>(<em>startingPoint</em>: Temporal.Absolute) : iterator&lt;Temporal.Absolute&gt;</h3>
 <p><strong>Parameters:</strong></p>
 <ul>

@@ -243,6 +243,8 @@ The converted object carries a copy of all the relevant fields of <code>monthDay
 <li>In <code>balance</code> mode, the result will be March 1.</li>
 <li>In <code>reject</code> mode, the method will throw a <code>RangeError</code>.</li>
 </ul>
+<p>Additionally, if the combined date is outside the range of dates that <code>Temporal.Date</code> can represent, then <code>constrain</code> mode will clamp the date to the allowed range.
+Both <code>balance</code> and <code>reject</code> mode will throw a <code>RangeError</code> in this case.</p>
 <p>Usage example:</p>
 <pre><code class="language-javascript">md = Temporal.MonthDay.from(&#39;08-24&#39;);
 md.withYear(2017)  // =&gt; 2017-08-24

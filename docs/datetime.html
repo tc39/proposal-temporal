@@ -124,6 +124,9 @@ Otherwise, <code>Temporal.DateTime.from()</code>, which accepts more kinds of in
 In the default <code>constrain</code> disambiguation mode, this will be converted to 59, and in <code>balance</code> mode, to 00 of the next minute.
 In <code>reject</code> mode, the constructor will throw, so if you have to interoperate with times that may contain leap seconds, don&#39;t use <code>reject</code>.</p>
 </blockquote>
+<p>The range of allowed values for this type is exactly enough that calling <a href="./absolute.html#inTimeZone"><code>inTimeZone()</code></a> on any valid <code>Temporal.Absolute</code> with any valid <code>Temporal.TimeZone</code> will succeed.
+If the parameters passed in to this constructor form a date outside of this range, then <code>constrain</code> mode will clamp the values to the limit of the allowed range.
+Both <code>balance</code> and <code>reject</code> mode will throw a <code>RangeError</code> in this case.</p>
 <p>Usage examples:</p>
 <pre><code class="language-javascript">// Leet hour on pi day in 2020
 datetime = new Temporal.DateTime(2020, 3, 14, 13, 37)  // =&gt; 2020-03-14T13:37
@@ -310,6 +313,8 @@ For these cases, the <code>disambiguation</code> argument tells what to do:</p>
 <li>In <code>constrain</code> mode (the default), out-of-range values are clamped to the nearest in-range value.</li>
 <li>In <code>reject</code> mode, an addition that would result in an out-of-range value fails, and a <code>RangeError</code> is thrown.</li>
 </ul>
+<p>Additionally, if the result is outside the range that <code>Temporal.DateTime</code> can represent, then <code>constrain</code> mode will clamp the result to the allowed range.
+The <code>reject</code> mode will throw a <code>RangeError</code> in this case.</p>
 <p>Usage example:</p>
 <pre><code class="language-javascript">dt = new Temporal.DateTime(1995, 12, 7, 3, 24, 30, 0, 3, 500);
 dt.plus({years: 20, months: 4, nanoseconds: 500})  // =&gt; 2016-04-07T03:24:30.000004
@@ -341,6 +346,8 @@ For these cases, the <code>disambiguation</code> argument tells what to do:</p>
 <li>In <code>constrain</code> mode (the default), out-of-range values are clamped to the nearest in-range value.</li>
 <li>In <code>reject</code> mode, an addition that would result in an out-of-range value fails, and a <code>RangeError</code> is thrown.</li>
 </ul>
+<p>Additionally, if the result is outside the range that <code>Temporal.DateTime</code> can represent, then <code>constrain</code> mode will clamp the result to the allowed range.
+The <code>reject</code> mode will throw a <code>RangeError</code> in this case.</p>
 <p>Usage example:</p>
 <pre><code class="language-javascript">dt = new Temporal.DateTime(1995, 12, 7, 3, 24, 30, 0, 3, 500);
 dt.minus({years: 20, months: 4, nanoseconds: 500})  // =&gt; 1975-08-07T03:24:30.000003
@@ -403,6 +410,7 @@ It is identical to <a href="./timezone.html#getAbsoluteFor"><code>(Temporal.Time
 <li><code>reject</code>: Throw a <code>RangeError</code> instead.</li>
 </ul>
 <p>For usage examples and a more complete explanation of how this disambiguation works and why it is necessary, see <a href="./ambiguity.html">Resolving ambiguity</a>.</p>
+<p>If the result is outside the range that <code>Temporal.Absolute</code> can represent, then a <code>RangeError</code> will be thrown, no matter the value of <code>disambiguation</code>.</p>
 <h3 id="datetimegetdate--temporaldate">datetime.<strong>getDate</strong>() : Temporal.Date</h3>
 <p><strong>Returns:</strong> a <code>Temporal.Date</code> object that is the same as the date portion of <code>datetime</code>.</p>
 <h3 id="datetimegetyearmonth--temporalyearmonth">datetime.<strong>getYearMonth</strong>() : Temporal.YearMonth</h3>

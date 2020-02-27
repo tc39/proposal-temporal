@@ -109,6 +109,9 @@ Otherwise, <code>Temporal.YearMonth.from()</code>, which accepts more kinds of i
 <li>In <code>balance</code> mode, any out-of-range values are resolved by balancing them with the next highest unit.</li>
 <li>In <code>reject</code> mode, the presence of out-of-range values will cause the constructor to throw a <code>RangeError</code>.</li>
 </ul>
+<p>The range of allowed values for this type is exactly enough that calling <a href="./date.html#getYearMonth"><code>getYearMonth()</code></a> on any valid <code>Temporal.Date</code> will succeed.
+If <code>isoYear</code> and <code>isoMonth</code> are outside of this range, then <code>constrain</code> mode will clamp the date to the limit of the allowed range.
+Both <code>balance</code> and <code>reject</code> mode will throw a <code>RangeError</code> in this case.</p>
 <p>Usage examples:</p>
 <pre><code class="language-javascript">// The June 2019 meeting
 ym = new Temporal.YearMonth(2019, 6)  // =&gt; 2019-06
@@ -229,7 +232,7 @@ ym.with({month: 12})  // =&gt; 2019-12</code></pre>
 <ul>
 <li><code>duration</code> (string or object): A <code>Temporal.Duration</code> object, a duration-like object, or a string from which to create a <code>Temporal.Duration</code>.</li>
 <li><code>disambiguation</code> (optional string): How to deal with additions that result in out-of-range values.
-Allowed values are <code>constrain</code>, <code>balance</code>, and <code>reject</code>.
+Allowed values are <code>constrain</code> and <code>reject</code>.
 The default is <code>constrain</code>.</li>
 </ul>
 <p><strong>Returns:</strong> a new <code>Temporal.YearMonth</code> object which is the month indicated by <code>yearMonth</code> plus <code>duration</code>.</p>
@@ -240,7 +243,9 @@ The default is <code>constrain</code>.</li>
 <li>any object with properties denoting a duration, such as <code>{ months: 5 }</code>;</li>
 <li>a string in ISO 8601 duration format, such as <code>P5M</code>.</li>
 </ul>
-<p>The <code>disambiguation</code> parameter has no effect in the default ISO calendar, because a year is always 12 months and therefore not ambiguous.
+<p>If the result is outside the range of dates that <code>Temporal.YearMonth</code> can represent, then <code>constrain</code> mode will clamp the result to the allowed range.
+The <code>reject</code> mode will throw a <code>RangeError</code> in this case.</p>
+<p>Other than for out-of-range values, the <code>disambiguation</code> parameter has no effect in the default ISO calendar, because a year is always 12 months and therefore not ambiguous.
 It doesn&#39;t matter in this case that years and months can be different numbers of days, as the resolution of <code>Temporal.YearMonth</code> does not distinguish days.
 However, disambiguation may have an effect in other calendars where years can be different numbers of months.</p>
 <p>Usage example:</p>
@@ -252,7 +257,7 @@ ym.plus(&#39;P14Y&#39;)  // =&gt; 2033-06</code></pre>
 <ul>
 <li><code>duration</code> (string or object): A <code>Temporal.Duration</code> object, a duration-like object, or a string from which to create a <code>Temporal.Duration</code>.</li>
 <li><code>disambiguation</code> (optional string): How to deal with additions that result in out-of-range values.
-Allowed values are <code>constrain</code>, <code>balance</code>, and <code>reject</code>.
+Allowed values are <code>constrain</code> and <code>reject</code>.
 The default is <code>constrain</code>.</li>
 </ul>
 <p><strong>Returns:</strong> a new <code>Temporal.YearMonth</code> object which is the month indicated by <code>yearMonth</code> minus <code>duration</code>.</p>
@@ -263,7 +268,9 @@ The default is <code>constrain</code>.</li>
 <li>any object with properties denoting a duration, such as <code>{ months: 5 }</code>;</li>
 <li>a string in ISO 8601 duration format, such as <code>P5M</code>.</li>
 </ul>
-<p>The <code>disambiguation</code> parameter has no effect in the default ISO calendar, because a year is always 12 months and therefore not ambiguous.
+<p>If the result is outside the range of dates that <code>Temporal.YearMonth</code> can represent, then <code>constrain</code> mode will clamp the result to the allowed range.
+The <code>reject</code> mode will throw a <code>RangeError</code> in this case.</p>
+<p>Other than for out-of-range values, the <code>disambiguation</code> parameter has no effect in the default ISO calendar, because a year is always 12 months and therefore not ambiguous.
 It doesn&#39;t matter in this case that years and months can be different numbers of days, as the resolution of <code>Temporal.YearMonth</code> does not distinguish days.
 However, disambiguation may have an effect in other calendars where years can be different numbers of months.</p>
 <p>Usage example:</p>

@@ -112,6 +112,9 @@ Otherwise, <code>Temporal.Date.from()</code>, which accepts more kinds of input,
 <li>In <code>balance</code> mode, any out-of-range values are resolved by balancing them with the next highest unit.</li>
 <li>In <code>reject</code> mode, the presence of out-of-range values will cause the constructor to throw a <code>RangeError</code>.</li>
 </ul>
+<p>The range of allowed values for this type is exactly enough that calling <a href="./datetime.html#getDate"><code>getDate()</code></a> on any valid <code>Temporal.DateTime</code> will succeed.
+If <code>isoYear</code>, <code>isoMonth</code>, and <code>isoDay</code> form a date outside of this range, then <code>constrain</code> mode will clamp the date to the limit of the allowed range.
+Both <code>balance</code> and <code>reject</code> mode will throw a <code>RangeError</code> in this case.</p>
 <p>Usage examples:</p>
 <pre><code class="language-javascript">// Pi day in 2020
 date = new Temporal.Date(2020, 3, 14)  // =&gt; 2020-03-14
@@ -275,6 +278,8 @@ For these cases, the <code>disambiguation</code> argument tells what to do:</p>
 <li>In <code>constrain</code> mode (the default), out-of-range values are clamped to the nearest in-range value.</li>
 <li>In <code>reject</code> mode, an addition that would result in an out-of-range value fails, and a <code>RangeError</code> is thrown.</li>
 </ul>
+<p>Additionally, if the result is outside the range of dates that <code>Temporal.Date</code> can represent, then <code>constrain</code> mode will clamp the result to the allowed range.
+The <code>reject</code> mode will throw a <code>RangeError</code> in this case.</p>
 <p>Usage example:</p>
 <pre><code class="language-javascript">date = Temporal.Date.from(&#39;2006-08-24&#39;);
 date.plus({years: 20, months: 4})  // =&gt; 2026-12-24
@@ -306,6 +311,8 @@ For these cases, the <code>disambiguation</code> argument tells what to do:</p>
 <li>In <code>constrain</code> mode (the default), out-of-range values are clamped to the nearest in-range value.</li>
 <li>In <code>reject</code> mode, an addition that would result in an out-of-range value fails, and a <code>RangeError</code> is thrown.</li>
 </ul>
+<p>Additionally, if the result is outside the range of dates that <code>Temporal.Date</code> can represent, then <code>constrain</code> mode will clamp the result to the allowed range.
+The <code>reject</code> mode will throw a <code>RangeError</code> in this case.</p>
 <p>Usage example:</p>
 <pre><code class="language-javascript">date = Temporal.Date.from(&#39;2006-08-24&#39;);
 date.minus({years: 20, months: 4})  // =&gt; 1986-04-24
