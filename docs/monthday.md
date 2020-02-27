@@ -190,26 +190,15 @@ md.toLocaleString('de-DE', {month: 'long', day: 'numeric'});  // => 24. August
 md.toLocaleString('en-US-u-nu-fullwide');  // => ８/２４
 ```
 
-### monthDay.**withYear**(_year_: number, _disambiguation_: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.Date
+### monthDay.**withYear**(_year_: number) : Temporal.Date
 
 **Parameters:**
-- `year` (number): A year.
-- `disambiguation` (optional string): How to deal with out-of-range values.
-  Allowed values are `constrain`, `balance`, and `reject`.
-  The default is `constrain`.
+- `year` (number): A year, which must have a day corresponding to `monthDay`.
 
 **Returns:** a `Temporal.Date` object that represents the calendar date of `monthDay` in `year`.
 
 This method can be used to convert `Temporal.MonthDay` into a `Temporal.Date`, by supplying a year to use.
 The converted object carries a copy of all the relevant fields of `monthDay`.
-
-The disambiguation parameter tells what should happen when translating a `Temporal.MonthDay` representing February 29 into a non-leap year:
-- In `constrain` mode (the default), the result will be February 28 of that year.
-- In `balance` mode, the result will be March 1.
-- In `reject` mode, the method will throw a `RangeError`.
-
-Additionally, if the combined date is outside the range of dates that `Temporal.Date` can represent, then `constrain` mode will clamp the date to the allowed range.
-Both `balance` and `reject` mode will throw a `RangeError` in this case.
 
 Usage example:
 ```javascript
@@ -217,7 +206,6 @@ md = Temporal.MonthDay.from('08-24');
 md.withYear(2017)  // => 2017-08-24
 
 md = Temporal.MonthDay.from('02-29');
-md.withYear(2017, 'constrain')  // => 2017-02-28
-md.withYear(2017, 'balance')    // => 2017-03-01
-md.withYear(2017, 'reject')     // throws
+md.withYear(2017)  // throws
+md.withYear(2020)  // => 2020-02-29
 ```

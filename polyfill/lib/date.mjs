@@ -128,12 +128,12 @@ export class Date {
     if (!ES.IsDate(this)) throw new TypeError('invalid receiver');
     return new Intl.DateTimeFormat(...args).format(this);
   }
-  withTime(timeLike, disambiguation = 'constrain') {
+  withTime(timeLike) {
     if (!ES.IsDate(this)) throw new TypeError('invalid receiver');
     const year = GetSlot(this, YEAR);
     const month = GetSlot(this, MONTH);
     const day = GetSlot(this, DAY);
-    timeLike = ES.ToTime(timeLike, disambiguation);
+    timeLike = ES.ToTime(timeLike, 'reject');
     const { hour, minute, second, millisecond, microsecond, nanosecond } = timeLike;
     const DateTime = ES.GetIntrinsic('%Temporal.DateTime%');
     return new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);

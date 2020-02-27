@@ -294,18 +294,16 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal.yearmonth.prototype.withday">
-      <h1>Temporal.YearMonth.prototype.withDay ( _day_ [ , _disambiguation_ ] )</h1>
+      <h1>Temporal.YearMonth.prototype.withDay ( _day_ )</h1>
       <p>
-        The `withDay` method takes two arguments, _day_ and _disambiguation_.
+        The `withDay` method takes one argument _day_.
         The following steps are taken:
       </p>
       <emu-alg>
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
         1. Let _d_ be ? ToInteger(_day_).
-        1. Set _disambiguation_ to ? ToDisambiguation(_disambiguation_).
-        1. Let _result_ be ? RegulateDate(_yearMonth_.[[Year]], _yearMonth_.[[Month]], _d_, _disambiguation_).
-        1. Return ? CreateDate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]]).
+        1. Return ? CreateDate(_yearMonth_.[[Year]], _yearMonth_.[[Month]], _d_).
       </emu-alg>
     </emu-clause>
   </emu-clause>

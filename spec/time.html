@@ -289,17 +289,15 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal.time.prototype.withdate">
-      <h1>Temporal.Time.prototype.withDate ( _date_ [ , _disambiguation_ ] )</h1>
+      <h1>Temporal.Time.prototype.withDate ( _date_ )</h1>
       <p>
-        The `withDate` method takes two arguments, _date_ and _disambiguation_.
+        The `withDate` method takes one argument _date_.
         The following steps are taken:
       </p>
       <emu-alg>
         1. Let _time_ be the *this* value.
         1. Perform ? RequireInternalSlot(_time_, [[InitializedTemporalTime]]).
         1. Perform ? RequireInternalSlot(_date_, [[InitializedTemporalDate]]).
-        1. Set _disambiguation_ to ? ToDisambiguation(_disambiguation_).
-        1. <mark>TODO: Consider _disambiguation_.</mark>
         1. Return ? CreateDateTime(_date_.[[Year]], _date_.[[Month]], _date_.[[Day]],
           _time_.[[Hour]], _time_.[[Minute]], _time_.[[Second]],
           _time_.[[Millisecond]], _time_.[[Microsecond]], _time_.[[Nanosecond]]).
