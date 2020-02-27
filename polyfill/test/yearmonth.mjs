@@ -42,13 +42,6 @@ describe('YearMonth', () => {
     it('ym.month is 11', () => equal(ym.month, 11));
     it('ym.daysInMonth is 30', () => equal(ym.daysInMonth, 30));
     it('ym.daysInYear is 366', () => equal(ym.daysInYear, 366));
-
-    describe('Disambiguation', () => {
-      it('reject', () => throws(() => new YearMonth(2019, 13, 'reject'), RangeError));
-      it('constrain', () => equal(`${new YearMonth(2019, 13, 'constrain')}`, '2019-12'));
-      it('balance', () => equal(`${new YearMonth(2019, 13, 'balance')}`, '2020-01'));
-      it('throw when bad disambiguation', () => throws(() => new YearMonth(2019, 1, 'xyz'), TypeError));
-    });
     describe('.from()', () => {
       it('YearMonth.from(2019-10) == 2019-10', () => equal(`${YearMonth.from('2019-10')}`, '2019-10'));
       it('YearMonth.from(2019-10-01T09:00:00Z) == 2019-10', () =>
@@ -67,7 +60,21 @@ describe('YearMonth', () => {
       it('YearMonth.from(required prop undefined) throws', () =>
         throws(() => YearMonth.from({ year: undefined, month: 6 }), TypeError));
       it.skip('YearMonth.from(number) is converted to string', () =>
-        equal(`${YearMonth.from(201906)}`, `${YearMonth.from('201906')}`))
+        equal(`${YearMonth.from(201906)}`, `${YearMonth.from('201906')}`));
+      describe('Disambiguation', () => {
+        const bad = { year: 2019, month: 13 };
+        it('reject', () => throws(() => YearMonth.from(bad, { disambiguation: 'reject' }), RangeError));
+        it('constrain', () => {
+          equal(`${YearMonth.from(bad)}`, '2019-12');
+          equal(`${YearMonth.from(bad, { disambiguation: 'constrain' })}`, '2019-12');
+        });
+        it('balance', () => equal(`${YearMonth.from(bad, { disambiguation: 'balance' })}`, '2020-01'));
+        it('throw when bad disambiguation', () => {
+          throws(() => YearMonth.from({ year: 2019, month: 1 }, { disambiguation: 'xyz' }), RangeError);
+          throws(() => YearMonth.from({ year: 2019, month: 1 }, { disambiguation: 3 }), RangeError);
+          throws(() => YearMonth.from({ year: 2019, month: 1 }, { disambiguation: null }), RangeError);
+        });
+      });
     });
   });
   describe('YearMonth.compare() works', () => {
@@ -139,18 +146,32 @@ describe('YearMonth', () => {
   });
   describe('Min/max range', () => {
     it('constructing from numbers', () => {
-      throws(() => new YearMonth(-271821, 3, 'reject'), RangeError);
-      throws(() => new YearMonth(275760, 10, 'reject'), RangeError);
-      throws(() => new YearMonth(-271821, 3, 'balance'), RangeError);
-      throws(() => new YearMonth(275760, 10, 'balance'), RangeError);
-      equal(`${new YearMonth(-271821, 4, 'constrain')}`, '-271821-04');
-      equal(`${new YearMonth(275760, 9, 'constrain')}`, '+275760-09');
-      equal(`${new YearMonth(-271821, 4, 'reject')}`, '-271821-04');
-      equal(`${new YearMonth(275760, 9, 'reject')}`, '+275760-09');
+      throws(() => new YearMonth(-271821, 3), RangeError);
+      throws(() => new YearMonth(275760, 10), RangeError);
+      equal(`${new YearMonth(-271821, 4)}`, '-271821-04');
+      equal(`${new YearMonth(275760, 9)}`, '+275760-09');
+    });
+    it('constructing from property bag', () => {
+      const tooEarly = {year: -271821, month: 3};
+      const tooLate = {year: 275760, month: 10};
+      [tooEarly, tooLate].forEach((props) => {
+        ['reject', 'balance'].forEach((disambiguation) => {
+          throws(() => YearMonth.from(props, { disambiguation }), RangeError);
+        })
+      });
+      equal(`${YearMonth.from(tooEarly)}`, '-271821-04');
+      equal(`${YearMonth.from(tooLate)}`, '+275760-09');
+      equal(`${YearMonth.from({ year: -271821, month: 4 })}`, '-271821-04');
+      equal(`${YearMonth.from({ year: 275760, month: 9 })}`, '+275760-09');
     });
     it('constructing from ISO string', () => {
-      throws(() => YearMonth.from('-271821-03'), RangeError);
-      throws(() => YearMonth.from('+275760-10'), RangeError);
+      ['-271821-03', '+275760-10'].forEach((str) => {
+        ['balance', 'reject'].forEach((disambiguation) => {
+          throws(() => YearMonth.from(str, { disambiguation }), RangeError);
+        });
+      });
+      equal(`${YearMonth.from('-271821-03')}`, '-271821-04');
+      equal(`${YearMonth.from('+275760-10')}`, '+275760-09');
       equal(`${YearMonth.from('-271821-04')}`, '-271821-04');
       equal(`${YearMonth.from('+275760-09')}`, '+275760-09');
     });

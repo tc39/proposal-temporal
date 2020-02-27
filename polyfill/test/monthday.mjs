@@ -24,17 +24,7 @@ describe('MonthDay', () => {
     });
   });
   describe('Construction', () => {
-    describe('Disambiguation', () => {
-      it('reject', () => throws(() => new MonthDay(1, 32, 'reject'), RangeError));
-      it('constrain', () => equal(`${new MonthDay(1, 32, 'constrain')}`, '01-31'));
-      it('balance', () => equal(`${new MonthDay(1, 32, 'balance')}`, '02-01'));
-      it('throw when bad disambiguation', () => throws(() => new MonthDay(1, 1, 'xyz'), TypeError));
-    });
-    describe('Leap day', () => {
-      it('reject', () => equal(`${new MonthDay(2, 29, 'reject')}`, '02-29'));
-      it('constrain', () => equal(`${new MonthDay(2, 29, 'constrain')}`, '02-29'));
-      it('balance', () => equal(`${new MonthDay(2, 29, 'balance')}`, '02-29'));
-    });
+    it('Leap day', () => equal(`${new MonthDay(2, 29)}`, '02-29'));
     describe('.from()', () => {
       it('MonthDay.from(10-01) == 10-01', () => equal(`${MonthDay.from('10-01')}`, '10-01'));
       it('MonthDay.from(2019-10-01T09:00:00Z) == 10-01', () =>
@@ -54,6 +44,25 @@ describe('MonthDay', () => {
         throws(() => MonthDay.from({ month: undefined, day: 15 }), TypeError));
       it.skip('MonthDay.from(number) is converted to string', () =>
         equal(`${MonthDay.from(1201)}`, `${MonthDay.from('12-01')}`));
+      describe('Disambiguation', () => {
+        const bad = { month: 1, day: 32 };
+        it('reject', () => throws(() => MonthDay.from(bad, { disambiguation: 'reject' }), RangeError));
+        it('constrain', () => {
+          equal(`${MonthDay.from(bad)}`, '01-31');
+          equal(`${MonthDay.from(bad, { disambiguation: 'constrain' })}`, '01-31');
+        });
+        it('balance', () => equal(`${MonthDay.from(bad, { disambiguation: 'balance' })}`, '02-01'));
+        it('throw when bad disambiguation', () => {
+          throws(() => MonthDay.from({ month: 1, day: 1 }, { disambiguation: 'xyz' }), RangeError);
+          throws(() => MonthDay.from({ month: 1, day: 1 }, { disambiguation: 3 }), RangeError);
+          throws(() => MonthDay.from({ month: 1, day: 1 }, { disambiguation: null }), RangeError);
+        });
+      });
+      describe('Leap day', () => {
+        ['reject', 'constrain', 'balance'].forEach((disambiguation) =>
+          it(disambiguation, () =>
+            equal(`${MonthDay.from({ month: 2, day: 29 }, { disambiguation })}`, '02-29')));
+      });
     });
     describe('getters', () => {
       let md = new MonthDay(1, 15);

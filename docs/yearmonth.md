@@ -8,26 +8,19 @@ A `Temporal.YearMonth` can be converted into a `Temporal.Date` by combining it w
 
 ## Constructor
 
-### **new Temporal.YearMonth**(_isoYear_: number, _isoMonth_: number, _disambiguation_: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.YearMonth
+### **new Temporal.YearMonth**(_isoYear_: number, _isoMonth_: number) : Temporal.YearMonth
 
 **Parameters:**
 - `isoYear` (number): A year.
 - `isoMonth` (number): A month, ranging between 1 and 12 inclusive.
-- `disambiguation` (optional string): How to deal with out-of-range values of the other parameters.
-  Allowed values are `constrain`, `balance`, and `reject`.
-  The default is `constrain`.
 
 **Returns:** a new `Temporal.YearMonth` object.
 
-Use this constructor if you have the correct parameters already as individual number values, or you need the disambiguation behaviour.
-Otherwise, `Temporal.YearMonth.from()`, which accepts more kinds of input, is probably more convenient.
+Use this constructor if you have the correct parameters already as individual number values.
+Otherwise, `Temporal.YearMonth.from()`, which accepts more kinds of input and allows disambiguation behaviour, is probably more convenient.
 
 All values are given as reckoned in the [ISO 8601 calendar](https://en.wikipedia.org/wiki/ISO_8601#Dates).
-
-The `disambiguation` parameter works as follows:
-- In `constrain` mode (the default), any out-of-range values are clamped to the nearest in-range value.
-- In `balance` mode, any out-of-range values are resolved by balancing them with the next highest unit.
-- In `reject` mode, the presence of out-of-range values will cause the constructor to throw a `RangeError`.
+Together, `isoYear` and `isoMonth` must represent a valid month in that calendar.
 
 The range of allowed values for this type is exactly enough that calling [`getYearMonth()`](./date.html#getYearMonth) on any valid `Temporal.Date` will succeed.
 If `isoYear` and `isoMonth` are outside of this range, then `constrain` mode will clamp the date to the limit of the allowed range.
@@ -37,22 +30,19 @@ Usage examples:
 ```javascript
 // The June 2019 meeting
 ym = new Temporal.YearMonth(2019, 6)  // => 2019-06
-
-// Different disambiguation modes
-ym = new Temporal.YearMonth(2001, 13, 'constrain')  // => 2001-12
-ym = new Temporal.YearMonth(2001, -1, 'constrain')  // => 2001-01
-ym = new Temporal.YearMonth(2001, 13, 'balance')  // => 2002-01
-ym = new Temporal.YearMonth(2001, -1, 'balance')  // => 2000-11
-ym = new Temporal.YearMonth(2001, 13, 'reject')  // throws
-ym = new Temporal.YearMonth(2001, -1, 'reject')  // throws
 ```
 
 ## Static methods
 
-### Temporal.YearMonth.**from**(_thing_: string | object) : Temporal.YearMonth
+### Temporal.YearMonth.**from**(_thing_: string | object, _options_?: object) : Temporal.YearMonth
 
 **Parameters:**
 - `thing` (string or object): The value representing the desired month.
+- `options` (optional object): An object with properties representing options for constructing the date.
+  The following options are recognized:
+  - `disambiguation` (string): How to deal with out-of-range values in `thing`.
+    Allowed values are `constrain`, `balance`, and `reject`.
+    The default is `constrain`.
 
 **Returns:** a new `Temporal.YearMonth` object (or the same object if `thing` was a `Temporal.YearMonth` object.)
 
@@ -61,6 +51,11 @@ If the value is a string, it must be in ISO 8601 format.
 Any parts of the string other than the year and the month will be ignored.
 If the value is another `Temporal.YearMonth` object, the same object is returned.
 If the value is any other object, it must have `year` and `month` properties, and a `Temporal.YearMonth` will be constructed from them.
+
+The `disambiguation` option works as follows:
+- In `constrain` mode (the default), any out-of-range values are clamped to the nearest in-range value.
+- In `balance` mode, any out-of-range values are resolved by balancing them with the next highest unit.
+- In `reject` mode, the presence of out-of-range values will cause the function to throw a `RangeError`.
 
 Example usage:
 ```javascript
@@ -75,6 +70,20 @@ ym === Temporal.YearMonth.from(ym)  // => true
 ym = Temporal.YearMonth.from({year: 2019, month: 6});  // => 2019-06
 ym = Temporal.YearMonth.from(Temporal.Date.from('2019-06-24'));
   // => same as above; Temporal.Date has year and month properties
+
+// Different disambiguation modes
+ym = Temporal.YearMonth.from({ year: 2001, month: 13 }, { disambiguation: 'constrain' })
+  // => 2001-12
+ym = Temporal.YearMonth.from({ year: 2001, month: -1 }, { disambiguation: 'constrain' })
+  // => 2001-01
+ym = Temporal.YearMonth.from({ year: 2001, month: 13 }, { disambiguation: 'balance' })
+  // => 2002-01
+ym = Temporal.YearMonth.from({ year: 2001, month: -1 }, { disambiguation: 'balance' })
+  // => 2000-11
+ym = Temporal.YearMonth.from({ year: 2001, month: 13 }, { disambiguation: 'reject' })
+  // throws
+ym = Temporal.YearMonth.from({ year: 2001, month: -1 }, { disambiguation: 'reject' })
+  // throws
 ```
 
 ### Temporal.YearMonth.**compare**(_one_: Temporal.YearMonth, _two_: Temporal.YearMonth) : number

@@ -11,27 +11,20 @@ A `Temporal.Date` can be converted into a `Temporal.DateTime` by combining it wi
 
 ## Constructor
 
-### **new Temporal.Date**(_isoYear_: number, _isoMonth_: number, _isoDay_: number, _disambiguation_: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.Date
+### **new Temporal.Date**(_isoYear_: number, _isoMonth_: number, _isoDay_: number) : Temporal.Date
 
 **Parameters:**
 - `isoYear` (number): A year.
 - `isoMonth` (number): A month, ranging between 1 and 12 inclusive.
 - `isoDay` (number): A day of the month, ranging between 1 and 31 inclusive.
-- `disambiguation` (optional string): How to deal with out-of-range values of the other parameters.
-  Allowed values are `constrain`, `balance`, and `reject`.
-  The default is `constrain`.
 
 **Returns:** a new `Temporal.Date` object.
 
-Use this constructor if you have the correct parameters for the date already as individual number values, or you need the disambiguation behaviour.
-Otherwise, `Temporal.Date.from()`, which accepts more kinds of input, is probably more convenient.
+Use this constructor if you have the correct parameters for the date already as individual number values.
+Otherwise, `Temporal.Date.from()`, which accepts more kinds of input and allows disambiguation behaviour, is probably more convenient.
 
 All values are given as reckoned in the [ISO 8601 calendar](https://en.wikipedia.org/wiki/ISO_8601#Dates).
-
-The `disambiguation` parameter works as follows:
-- In `constrain` mode (the default), any out-of-range values are clamped to the nearest in-range value.
-- In `balance` mode, any out-of-range values are resolved by balancing them with the next highest unit.
-- In `reject` mode, the presence of out-of-range values will cause the constructor to throw a `RangeError`.
+Together, `isoYear`, `isoMonth`, and `isoDay` must represent a valid date in that calendar.
 
 The range of allowed values for this type is exactly enough that calling [`getDate()`](./datetime.html#getDate) on any valid `Temporal.DateTime` will succeed.
 If `isoYear`, `isoMonth`, and `isoDay` form a date outside of this range, then `constrain` mode will clamp the date to the limit of the allowed range.
@@ -41,22 +34,19 @@ Usage examples:
 ```javascript
 // Pi day in 2020
 date = new Temporal.Date(2020, 3, 14)  // => 2020-03-14
-
-// Different disambiguation modes
-date = new Temporal.Date(2001, 13, 1, 'constrain')  // => 2001-12-01
-date = new Temporal.Date(2001, -1, 1, 'constrain')  // => 2001-01-01
-date = new Temporal.Date(2001, 13, 1, 'balance')  // => 2002-01-01
-date = new Temporal.Date(2001, -1, 1, 'balance')  // => 2000-11-01
-date = new Temporal.Date(2001, 13, 1, 'reject')  // throws
-date = new Temporal.Date(2001, -1, 1, 'reject')  // throws
 ```
 
 ## Static methods
 
-### Temporal.Date.**from**(_thing_: string | object) : Temporal.Date
+### Temporal.Date.**from**(_thing_: string | object, _options_?: object) : Temporal.Date
 
 **Parameters:**
 - `thing` (string or object): The value representing the desired date.
+- `options` (optional object): An object with properties representing options for constructing the date.
+  The following options are recognized:
+  - `disambiguation` (string): How to deal with out-of-range values in `thing`.
+    Allowed values are `constrain`, `balance`, and `reject`.
+    The default is `constrain`.
 
 **Returns:** a new `Temporal.Date` object (or the same object if `thing` was a `Temporal.Date` object.)
 
@@ -67,6 +57,11 @@ If the value is another `Temporal.Date` object, the same object is returned.
 If the value is any other object, it must have `year`, `month`, and `day` properties, and a `Temporal.Date` will be constructed from them.
 
 Note that any time or time zone part of an ISO 8601 string passed to this function is optional, and will be ignored.
+
+The `disambiguation` option works as follows:
+- In `constrain` mode (the default), any out-of-range values are clamped to the nearest in-range value.
+- In `balance` mode, any out-of-range values are resolved by balancing them with the next highest unit.
+- In `reject` mode, the presence of out-of-range values will cause the function to throw a `RangeError`.
 
 Example usage:
 ```javascript
@@ -80,6 +75,20 @@ date === Temporal.Date.from(date)  // => true
 date = Temporal.Date.from({year: 2006, month: 8, day: 24});  // => 2006-08-24
 date = Temporal.Date.from(Temporal.DateTime.from('2006-08-24T15:43:27'));
   // => same as above; Temporal.DateTime has year, month, and day properties
+
+// Different disambiguation modes
+date = Temporal.Date.from({ year: 2001, month: 13, day: 1 }, { disambiguation: 'constrain' })
+  // => 2001-12-01
+date = Temporal.Date.from({ year: 2001, month: -1, day: 1 }, { disambiguation: 'constrain' })
+  // => 2001-01-01
+date = Temporal.Date.from({ year: 2001, month: 13, day: 1 }, { disambiguation: 'balance' })
+  // => 2002-01-01
+date = Temporal.Date.from({ year: 2001, month: -1, day: 1 }, { disambiguation: 'balance' })
+  // => 2000-11-01
+date = Temporal.Date.from({ year: 2001, month: 13, day: 1 }, { disambiguation: 'reject' })
+  // throws
+date = Temporal.Date.from({ year: 2001, month: -1, day: 1 }, { disambiguation: 'reject' })
+  // throws
 ```
 
 ### Temporal.Date.**compare**(_one_: Temporal.Date, _two_: Temporal.Date) : number

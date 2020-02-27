@@ -18,7 +18,7 @@
     </p>
 
     <emu-clause id="sec-temporal.datetime">
-      <h1>Temporal.DateTime ( _year_, _month_, _day_ [ , _hour_ [ , _minute_ [ , _second_ [ , _millisecond_ [ , _microsecond_ [ , _nanosecond_ [ , _disambiguation_ ] ] ] ] ] ] ] )</h1>
+      <h1>Temporal.DateTime ( _year_, _month_, _day_ [ , _hour_ [ , _minute_ [ , _second_ [ , _millisecond_ [ , _microsecond_ [ , _nanosecond_ ] ] ] ] ] ] )</h1>
       <p>
         When the `Temporal.DateTime` function is called, the following steps are taken:
       </p>
@@ -35,9 +35,7 @@
         1. Let _millisecond_ be ? ToInteger(_millisecond_).
         1. Let _microsecond_ be ? ToInteger(_microsecond_).
         1. Let _nanosecond_ be ? ToInteger(_nanosecond_).
-        1. Set _disambiguation_ to ? ToDisambiguation(_disambiguation_).
-        1. Let _result_ be ? RegulateDateTime(_year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _disambiguation_).
-        1. Return ? CreateDateTime(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]], NewTarget).
+        1. Return ? CreateDateTime(_year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, NewTarget).
       </emu-alg>
     </emu-clause>
   </emu-clause>
@@ -54,16 +52,17 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal.datetime.from">
-      <h1>Temporal.DateTime.from ( _arg_ )</h1>
+      <h1>Temporal.DateTime.from ( _arg_ [ , _options_ ] )</h1>
       <p>
-        The `from` method takes one argument _arg_.
+        The `from` method takes two arguments, _arg_ and _options_.
         The following steps are taken:
       </p>
       <emu-alg>
+        1. Let _disambiguation_ be ? GetOption(_options_, *"disambiguation"*, « *"constrain"*, *"balance"*, *"reject"* », *"constrain"*).
         1. If Type(_arg_) is Object, then
-          1. Return ? ToDateTime(_arg_).
+          1. Return ? ToDateTime(_arg_, _disambiguation_).
         1. Let _string_ be ? ToString(_arg_).
-        1. Return ? DateTimeFromString(_string_).
+        1. Return ? DateTimeFromString(_string_, _disambiguation_).
       </emu-alg>
     </emu-clause>
 
@@ -669,7 +668,8 @@
     <emu-clause id="sec-temporal-createdatetime" aoid="CreateDateTime">
       <h1>CreateDateTime ( _year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_ [, _newTarget_] )</h1>
       <emu-alg>
-        1. Assert: ! ValidateDateTime(_year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_) is *true*.
+        1. If ! ValidateDateTime(_year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_) is *false*, then
+          1. Throw a *RangeError* exception.
         1. If _newTarget_ is not given, set it to %Temporal.DateTime%.
         1. Let _object_ be ? OrdinaryCreateFromConstructor(_newTarget_, `"%Temporal.DateTime.prototype%"`, « [[InitializedTemporalDateTime]], [[Year]], [[Month]], [[Day]], [[Hour]], [[Minute]], [[Second]], [[Millisecond]], [[Microsecond]], [[Nanosecond]] »).
         1. Set _object_.[[Year]] to _year_.
@@ -709,20 +709,21 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal-datetimefromstring" aoid="DateTimeFromString">
-      <h1>DateTimeFromString ( _dateTime_ )</h1>
+      <h1>DateTimeFromString ( _dateTime_, _disambiguation_ )</h1>
       <emu-alg>
         1. Assert: Type(_dateTime_) is String.
+        1. Assert: _disambiguation_ is one of *"constrain"*, *"balance"*, or *"reject"*.
         1. Let _result_ be ? ParseDateTimeString(_dateTime_).
-        1. If ! ValidateDateTime(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]) is *false*, then
-          1. Throw a *TypeError* exception.
+        1. Set _result_ to ? RegulateDateTime(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]], _disambiguation_).
         1. Return ? CreateDateTime(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]).
       </emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal-todatetime" aoid="ToDateTime">
-      <h1>ToDateTime ( _dateTime_ )</h1>
+      <h1>ToDateTime ( _dateTime_, _disambiguation_ )</h1>
       <emu-note>The value of ? ToInteger(*undefined*) is 0.</emu-note>
       <emu-alg>
+        1. Assert: _disambiguation_ is one of *"constrain"*, *"balance"*, or *"reject"*.
         1. If Type(_dateTime_) is Object, then
           1. If _dateTime_ has an [[InitializedTemporalDateTime]] internal slot, then
             1. Return _dateTime_.
@@ -734,8 +735,7 @@
               1. Throw a *TypeError* exception.
             1. Let _value_ be ? ToInteger(_value_).
             1. Set _result_'s internal slot whose name is the Internal Slot value of the current row to _value_.
-          1. If ! ValidateDateTime(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]) is *false*, then
-            1. Throw a *TypeError* exception.
+          1. Set _result_ to ? RegulateDateTime(_year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _disambiguation_).
           1. Return ? CreateDateTime(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]).
         1. Throw a *TypeError* exception.
       </emu-alg>

@@ -16,25 +16,10 @@ import {
 } from './slots.mjs';
 
 export class YearMonth {
-  constructor(year, month, disambiguation = 'constrain') {
+  constructor(year, month) {
     year = ES.ToInteger(year);
     month = ES.ToInteger(month);
-    disambiguation = ES.ToString(disambiguation);
-    switch (disambiguation) {
-      case 'reject':
-        ES.RejectYearMonth(year, month);
-        break;
-      case 'constrain':
-        ({ year, month } = ES.ConstrainYearMonth(year, month));
-        break;
-      case 'balance':
-        ({ year, month } = ES.BalanceYearMonth(year, month));
-        // Still rejected if balanced YearMonth is outside valid range
-        ES.RejectYearMonth(year, month);
-        break;
-      default:
-        throw new TypeError('disambiguation should be either reject, constrain or balance');
-    }
+    ES.RejectYearMonth(year, month);
     CreateSlots(this);
     SetSlot(this, YEAR, year);
     SetSlot(this, MONTH, month);
@@ -66,8 +51,12 @@ export class YearMonth {
       throw new RangeError('invalid year-month-like');
     }
     const { year = GetSlot(this, YEAR), month = GetSlot(this, MONTH) } = props;
+    const result = ES.ToYearMonth({ year, month }, disambiguation);
     const Construct = ES.SpeciesConstructor(this, YearMonth);
-    return new Construct(year, month, disambiguation);
+    return Construct === YearMonth ? result : new Construct(
+      GetSlot(result, YEAR),
+      GetSlot(result, MONTH),
+    );
   }
   plus(durationLike, disambiguation = 'constrain') {
     if (!ES.IsYearMonth(this)) throw new TypeError('invalid receiver');
@@ -77,8 +66,12 @@ export class YearMonth {
     const { years, months } = duration;
     ({ year, month } = ES.AddDate(year, month, 1, years, months, 0, disambiguation));
     ({ year, month } = ES.BalanceYearMonth(year, month));
+    const result = ES.ToYearMonth({ year, month }, disambiguation);
     const Construct = ES.SpeciesConstructor(this, YearMonth);
-    return new Construct(year, month);
+    return Construct === YearMonth ? result : new Construct(
+      GetSlot(result, YEAR),
+      GetSlot(result, MONTH),
+    );
   }
   minus(durationLike, disambiguation = 'constrain') {
     if (!ES.IsYearMonth(this)) throw new TypeError('invalid receiver');
@@ -88,8 +81,12 @@ export class YearMonth {
     const { years, months } = duration;
     ({ year, month } = ES.SubtractDate(year, month, 1, years, months, 0, disambiguation));
     ({ year, month } = ES.BalanceYearMonth(year, month));
+    const result = ES.ToYearMonth({ year, month }, disambiguation);
     const Construct = ES.SpeciesConstructor(this, YearMonth);
-    return new Construct(year, month);
+    return Construct === YearMonth ? result : new Construct(
+      GetSlot(result, YEAR),
+      GetSlot(result, MONTH),
+    );
   }
   difference(other, largestUnit = 'years') {
     if (!ES.IsYearMonth(this)) throw new TypeError('invalid receiver');
@@ -125,14 +122,14 @@ export class YearMonth {
     const year = GetSlot(this, YEAR);
     const month = GetSlot(this, MONTH);
     const Date = ES.GetIntrinsic('%Temporal.Date%');
-    return new Date(year, month, day, disambiguation);
+    return new Date(year, month, day);
   }
-  static from(arg) {
-    let result = ES.ToYearMonth(arg);
+  static from(arg, options) {
+    const disambiguation = ES.GetOption(options, 'disambiguation', ES.ToDisambiguation, 'constrain');
+    let result = ES.ToYearMonth(arg, disambiguation);
     return this === YearMonth ? result : new this(
       GetSlot(result, YEAR),
       GetSlot(result, MONTH),
-      'reject'
     );
   }
   static compare(one, two) {

@@ -28,7 +28,6 @@ export class Duration {
     milliseconds = 0,
     microseconds = 0,
     nanoseconds = 0,
-    disambiguation = 'constrain'
   ) {
     years = ES.ToInteger(years);
     months = ES.ToInteger(months);
@@ -40,38 +39,9 @@ export class Duration {
     microseconds = ES.ToInteger(microseconds);
     nanoseconds = ES.ToInteger(nanoseconds);
 
-    switch (ES.ToString(disambiguation)) {
-      case 'reject':
-        for (const prop of [years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds]) {
-          if (prop < 0) throw new RangeError('negative values not allowed as duration fields');
-          if (!Number.isFinite(prop)) throw new RangeError('infinite values not allowed as duration fields');
-        }
-        break;
-      case 'constrain': {
-        const arr = [years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds];
-        for (const idx in arr) {
-          if (arr[idx] < 0) arr[idx] = -arr[idx];
-          if (!Number.isFinite(arr[idx])) arr[idx] = Number.MAX_VALUE;
-        }
-        [years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds] = arr;
-        break;
-      }
-      case 'balance': {
-        ({
-          hours,
-          minutes,
-          seconds,
-          milliseconds,
-          microseconds,
-          nanoseconds,
-        } = ES.BalanceDuration(0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 'hours'));
-        for (const prop of [years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds]) {
-          if (!Number.isFinite(prop)) throw new RangeError('infinite values not allowed as duration fields');
-        }
-        break;
-      }
-      default:
-        throw new TypeError('disambiguation should be either reject, constrain or balance');
+    for (const prop of [years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds]) {
+      if (prop < 0) throw new RangeError('negative values not allowed as duration fields');
+      if (!Number.isFinite(prop)) throw new RangeError('infinite values not allowed as duration fields');
     }
 
     CreateSlots(this);
@@ -157,8 +127,9 @@ export class Duration {
     if (!ES.IsDuration(this)) throw new TypeError('invalid receiver');
     return new Intl.DateTimeFormat(...args).format(this);
   }
-  static from(arg) {
-    let result = ES.ToDuration(arg);
+  static from(arg, options) {
+    const disambiguation = ES.GetOption(options, 'disambiguation', ES.ToDisambiguation, 'constrain');
+    let result = ES.ToDuration(arg, disambiguation);
     return this === Duration ? result : new this(
       GetSlot(result, YEARS),
       GetSlot(result, MONTHS),
@@ -169,7 +140,6 @@ export class Duration {
       GetSlot(result, MILLISECONDS),
       GetSlot(result, MICROSECONDS),
       GetSlot(result, NANOSECONDS),
-      'reject'
     );
   }
 }

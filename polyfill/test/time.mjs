@@ -158,44 +158,6 @@ describe('Time', () => {
       const time = new Time();
       it('`${time}` is 00:00', () => equal(`${time}`, '00:00'));
     });
-    describe('balance tests', () => {
-      let balanceTests = [
-        [[15, 23, 30, 123, 456, -1000], [15, 23, 30, 123, 455, 0], 'nanosecond = -1000'],
-        [[15, 23, 30, 123, 456, -789], [15, 23, 30, 123, 455, 211], 'nanosecond = -789'],
-        [[15, 23, 30, 123, 456, 1000], [15, 23, 30, 123, 457, 0], 'nanosecond = 1000'],
-        [[15, 23, 30, 123, -1000, 456], [15, 23, 30, 122, 0, 456], 'microsecond = -1000'],
-        [[15, 23, 30, 123, -789, 456], [15, 23, 30, 122, 211, 456], 'microsecond = -789'],
-        [[15, 23, 30, 123, 1000, 456], [15, 23, 30, 124, 0, 456], 'microsecond = 1000'],
-        [[15, 23, 30, -1000, 123, 456], [15, 23, 29, 0, 123, 456], 'millisecond = -1000'],
-        [[15, 23, 30, -789, 123, 456], [15, 23, 29, 211, 123, 456], 'millisecond = -789'],
-        [[15, 23, 30, 1000, 123, 456], [15, 23, 31, 0, 123, 456], 'millisecond = 1000'],
-        [[15, 23, -60, 123, 456, 789], [15, 22, 0, 123, 456, 789], 'second = -60'],
-        [[15, 23, -34, 123, 456, 789], [15, 22, 26, 123, 456, 789], 'second = -34'],
-        [[15, 23, 60, 123, 456, 789], [15, 24, 0, 123, 456, 789], 'second = 60'],
-        [[15, -60, 23, 123, 456, 789], [14, 0, 23, 123, 456, 789], 'minute = -60'],
-        [[15, -34, 23, 123, 456, 789], [14, 26, 23, 123, 456, 789], 'minute = -34'],
-        [[15, 60, 23, 123, 456, 789], [16, 0, 23, 123, 456, 789], 'minute = 60'],
-        [[-24, 23, 30, 123, 456, 789], [0, 23, 30, 123, 456, 789], 'hour = -24'],
-        [[-3, 23, 30, 123, 456, 789], [21, 23, 30, 123, 456, 789], 'hour = -3'],
-        [[24, 23, 30, 123, 456, 789], [0, 23, 30, 123, 456, 789], 'hour = 24']
-      ];
-      for (const [args, expected, description] of balanceTests) {
-        describe(description, () => {
-          let time;
-          it('time can be constructed', () => {
-            time = new Time(...args, 'balance');
-            assert(time);
-            equal(typeof time, 'object');
-          });
-          it(`time.hour is ${expected[0]}`, () => equal(time.hour, expected[0]));
-          it(`time.minute is ${expected[1]}`, () => equal(time.minute, expected[1]));
-          it(`time.second is ${expected[2]}`, () => equal(time.second, expected[2]));
-          it(`time.millisecond is ${expected[3]}`, () => equal(time.millisecond, expected[3]));
-          it(`time.microsecond is ${expected[4]}`, () => equal(time.microsecond, expected[4]));
-          it(`time.nanosecond is ${expected[5]}`, () => equal(time.nanosecond, expected[5]));
-        });
-      }
-    });
     describe('.with manipulation', () => {
       const time = new Time(15, 23, 30, 123, 456, 789);
       it('time.with({ hour: 3 } works', () => {
@@ -410,21 +372,74 @@ describe('Time', () => {
       it('Time.from({})', () => equal(`${Time.from({})}`, `${new Time()}`));
       it('Time.from(ISO string leap second) is constrained', () => {
         equal(`${Time.from('23:59:60')}`, '23:59:59');
-      });
-      it('Time.from(property bag leap second) throws', () => {
-        throws(() => Time.from({ hour: 23, minute: 59, second: 60 }), RangeError);
+        equal(`${Time.from('23:59:60', { disambiguation: 'balance' })}`, '23:59:59');
+        equal(`${Time.from('23:59:60', { disambiguation: 'reject' })}`, '23:59:59');
       });
       it.skip('Time.from(number) is converted to string', () =>
         equal(`${Time.from(1523)}`, `${Time.from('1523')}`));
-    });
-    describe('Disambiguation', () => {
-      it('reject', () => throws(() => new Time(0, 0, 0, 0, 0, 1000, 'reject'), RangeError));
-      it('constrain', () => equal(`${new Time(0, 0, 0, 0, 0, 1000, 'constrain')}`, '00:00:00.000000999'));
-      it('balance', () => equal(`${new Time(0, 0, 0, 0, 0, 1000, 'balance')}`, '00:00:00.000001'));
-      it('throw when bad disambiguation', () => throws(() => new Time(0, 0, 0, 0, 0, 1, 'xyz'), TypeError));
-      it('reject leap second', () => throws(() => new Time(23, 59, 60, 0, 0, 0, 'reject'), RangeError));
-      it('constrain leap second', () => equal(`${new Time(23, 59, 60, 0, 0, 0, 'constrain')}`, '23:59:59'));
-      it('balance leap second', () => equal(`${new Time(23, 59, 60, 0, 0, 0, 'balance')}`, '00:00'));
+      describe('Disambiguation', () => {
+        const bad = { nanosecond: 1000 };
+        it('reject', () => throws(() => Time.from(bad, { disambiguation: 'reject' }), RangeError));
+        it('constrain', () => {
+          equal(`${Time.from(bad)}`, '00:00:00.000000999');
+          equal(`${Time.from(bad, { disambiguation: 'constrain' })}`, '00:00:00.000000999');
+        });
+        it('balance', () => equal(`${Time.from(bad, { disambiguation: 'balance' })}`, '00:00:00.000001'));
+        it('throw when bad disambiguation', () => {
+          throws(() => Time.from({ nanosecond: 1 }, { disambiguation: 'xyz' }), RangeError);
+          throws(() => Time.from({ nanosecond: 1 }, { disambiguation: 3}), RangeError);
+          throws(() => Time.from({ nanosecond: 1 }, { disambiguation: null }), RangeError);
+        });
+        const leap = { hour: 23, minute: 59, second: 60 };
+        it('reject leap second', () => throws(() => Time.from(leap, { disambiguation: 'reject' }), RangeError));
+        it('constrain leap second', () => equal(`${Time.from(leap)}`, '23:59:59'));
+        it('balance leap second', () => equal(`${Time.from(leap, { disambiguation: 'balance' })}`, '00:00'));
+      });
+      describe('balance tests', () => {
+        let balanceTests = [
+          [[15, 23, 30, 123, 456, -1000], [15, 23, 30, 123, 455, 0], 'nanosecond = -1000'],
+          [[15, 23, 30, 123, 456, -789], [15, 23, 30, 123, 455, 211], 'nanosecond = -789'],
+          [[15, 23, 30, 123, 456, 1000], [15, 23, 30, 123, 457, 0], 'nanosecond = 1000'],
+          [[15, 23, 30, 123, -1000, 456], [15, 23, 30, 122, 0, 456], 'microsecond = -1000'],
+          [[15, 23, 30, 123, -789, 456], [15, 23, 30, 122, 211, 456], 'microsecond = -789'],
+          [[15, 23, 30, 123, 1000, 456], [15, 23, 30, 124, 0, 456], 'microsecond = 1000'],
+          [[15, 23, 30, -1000, 123, 456], [15, 23, 29, 0, 123, 456], 'millisecond = -1000'],
+          [[15, 23, 30, -789, 123, 456], [15, 23, 29, 211, 123, 456], 'millisecond = -789'],
+          [[15, 23, 30, 1000, 123, 456], [15, 23, 31, 0, 123, 456], 'millisecond = 1000'],
+          [[15, 23, -60, 123, 456, 789], [15, 22, 0, 123, 456, 789], 'second = -60'],
+          [[15, 23, -34, 123, 456, 789], [15, 22, 26, 123, 456, 789], 'second = -34'],
+          [[15, 23, 60, 123, 456, 789], [15, 24, 0, 123, 456, 789], 'second = 60'],
+          [[15, -60, 23, 123, 456, 789], [14, 0, 23, 123, 456, 789], 'minute = -60'],
+          [[15, -34, 23, 123, 456, 789], [14, 26, 23, 123, 456, 789], 'minute = -34'],
+          [[15, 60, 23, 123, 456, 789], [16, 0, 23, 123, 456, 789], 'minute = 60'],
+          [[-24, 23, 30, 123, 456, 789], [0, 23, 30, 123, 456, 789], 'hour = -24'],
+          [[-3, 23, 30, 123, 456, 789], [21, 23, 30, 123, 456, 789], 'hour = -3'],
+          [[24, 23, 30, 123, 456, 789], [0, 23, 30, 123, 456, 789], 'hour = 24']
+        ];
+        for (const [args, expected, description] of balanceTests) {
+          describe(description, () => {
+            let time;
+            it(`Time.from(${description})`, () => {  // FIXME: remove it()
+              time = Time.from({
+                hour: args[0],
+                minute: args[1],
+                second: args[2],
+                millisecond: args[3],
+                microsecond: args[4],
+                nanosecond: args[5],
+              }, { disambiguation: 'balance' });
+              assert(time);
+              equal(typeof time, 'object');
+            });
+            it(`time.hour is ${expected[0]}`, () => equal(time.hour, expected[0]));
+            it(`time.minute is ${expected[1]}`, () => equal(time.minute, expected[1]));
+            it(`time.second is ${expected[2]}`, () => equal(time.second, expected[2]));
+            it(`time.millisecond is ${expected[3]}`, () => equal(time.millisecond, expected[3]));
+            it(`time.microsecond is ${expected[4]}`, () => equal(time.microsecond, expected[4]));
+            it(`time.nanosecond is ${expected[5]}`, () => equal(time.nanosecond, expected[5]));
+          });
+        }
+      });
     });
   });
   describe('time operations', () => {

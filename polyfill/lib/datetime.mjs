@@ -27,7 +27,6 @@ export class DateTime {
     millisecond = 0,
     microsecond = 0,
     nanosecond = 0,
-    disambiguation = 'constrain'
   ) {
     year = ES.ToInteger(year);
     month = ES.ToInteger(month);
@@ -38,53 +37,7 @@ export class DateTime {
     millisecond = ES.ToInteger(millisecond);
     microsecond = ES.ToInteger(microsecond);
     nanosecond = ES.ToInteger(nanosecond);
-    disambiguation = ES.ToString(disambiguation);
-    switch (disambiguation) {
-      case 'reject':
-        ES.RejectDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
-        break;
-      case 'constrain':
-        ({
-          year,
-          month,
-          day,
-          hour,
-          minute,
-          second,
-          millisecond,
-          microsecond,
-          nanosecond,
-        } = ES.ConstrainDateTime(
-          year,
-          month,
-          day,
-          hour,
-          minute,
-          second,
-          millisecond,
-          microsecond,
-          nanosecond
-        ));
-        break;
-      case 'balance': {
-        let deltaDays;
-        ({ deltaDays, hour, minute, second, millisecond, microsecond, nanosecond } = ES.BalanceTime(
-          hour,
-          minute,
-          second,
-          millisecond,
-          microsecond,
-          nanosecond
-        ));
-        ({ year, month, day } = ES.BalanceDate(year, month, day + deltaDays));
-        // Still rejected if balanced DateTime is outside valid range
-        ES.RejectDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
-        break;
-      }
-      default:
-        throw new TypeError('disambiguation should be either reject, constrain or balance');
-    }
-
+    ES.RejectDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
     CreateSlots(this);
     SetSlot(this, YEAR, year);
     SetSlot(this, MONTH, month);
@@ -183,8 +136,29 @@ export class DateTime {
       microsecond = GetSlot(this, MICROSECOND),
       nanosecond = GetSlot(this, NANOSECOND)
     } = props;
+    const result = ES.ToDateTime({
+      year,
+      month,
+      day,
+      hour,
+      minute,
+      second,
+      millisecond,
+      microsecond,
+      nanosecond,
+    }, disambiguation);
     const Construct = ES.SpeciesConstructor(this, DateTime);
-    return new Construct(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, disambiguation);
+    return Construct === DateTime ? result : new Construct(
+      GetSlot(result, YEAR),
+      GetSlot(result, MONTH),
+      GetSlot(result, DAY),
+      GetSlot(result, HOUR),
+      GetSlot(result, MINUTE),
+      GetSlot(result, SECOND),
+      GetSlot(result, MILLISECOND),
+      GetSlot(result, MICROSECOND),
+      GetSlot(result, NANOSECOND),
+    );
   }
   plus(durationLike, disambiguation = 'constrain') {
     if (!ES.IsDateTime(this)) throw new TypeError('invalid receiver');
@@ -210,8 +184,29 @@ export class DateTime {
     ));
     day += deltaDays;
     ({ year, month, day } = ES.BalanceDate(year, month, day));
+    const result = ES.ToDateTime({
+      year,
+      month,
+      day,
+      hour,
+      minute,
+      second,
+      millisecond,
+      microsecond,
+      nanosecond,
+    }, disambiguation);
     const Construct = ES.SpeciesConstructor(this, DateTime);
-    return new Construct(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, disambiguation);
+    return Construct === DateTime ? result : new Construct(
+      GetSlot(result, YEAR),
+      GetSlot(result, MONTH),
+      GetSlot(result, DAY),
+      GetSlot(result, HOUR),
+      GetSlot(result, MINUTE),
+      GetSlot(result, SECOND),
+      GetSlot(result, MILLISECOND),
+      GetSlot(result, MICROSECOND),
+      GetSlot(result, NANOSECOND),
+    );
   }
   minus(durationLike, disambiguation = 'constrain') {
     if (!ES.IsDateTime(this)) throw new TypeError('invalid receiver');
@@ -236,8 +231,29 @@ export class DateTime {
     ));
     days -= deltaDays;
     ({ year, month, day } = ES.SubtractDate(year, month, day, years, months, days, disambiguation));
+    const result = ES.ToDateTime({
+      year,
+      month,
+      day,
+      hour,
+      minute,
+      second,
+      millisecond,
+      microsecond,
+      nanosecond,
+    }, disambiguation);
     const Construct = ES.SpeciesConstructor(this, DateTime);
-    return new Construct(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, disambiguation);
+    return Construct === DateTime ? result : new Construct(
+      GetSlot(result, YEAR),
+      GetSlot(result, MONTH),
+      GetSlot(result, DAY),
+      GetSlot(result, HOUR),
+      GetSlot(result, MINUTE),
+      GetSlot(result, SECOND),
+      GetSlot(result, MILLISECOND),
+      GetSlot(result, MICROSECOND),
+      GetSlot(result, NANOSECOND),
+    );
   }
   difference(other, largestUnit = 'days') {
     if (!ES.IsDateTime(this)) throw new TypeError('invalid receiver');
@@ -326,8 +342,9 @@ export class DateTime {
     );
   }
 
-  static from(arg) {
-    let result = ES.ToDateTime(arg);
+  static from(arg, options) {
+    const disambiguation = ES.GetOption(options, 'disambiguation', ES.ToDisambiguation, 'constrain');
+    let result = ES.ToDateTime(arg, disambiguation);
     return this === DateTime ? result : new this(
       GetSlot(result, YEAR),
       GetSlot(result, MONTH),
@@ -338,7 +355,6 @@ export class DateTime {
       GetSlot(result, MILLISECOND),
       GetSlot(result, MICROSECOND),
       GetSlot(result, NANOSECOND),
-      'reject'
     );
   }
   static compare(one, two) {

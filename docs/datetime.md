@@ -12,7 +12,7 @@ A `Temporal.DateTime` can also be converted into any of the other `Temporal` obj
 
 ## Constructor
 
-### **new Temporal.DateTime**(_isoYear_: number, _isoMonth_: number, _isoDay_: number, _hour_: number = 0, _minute_: number = 0, _second_: number = 0, _millisecond_: number = 0, _microsecond_: number = 0, _nanosecond_: number = 0, _disambiguation_: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.DateTime
+### **new Temporal.DateTime**(_isoYear_: number, _isoMonth_: number, _isoDay_: number, _hour_: number = 0, _minute_: number = 0, _second_: number = 0, _millisecond_: number = 0, _microsecond_: number = 0, _nanosecond_: number = 0) : Temporal.DateTime
 
 **Parameters:**
 - `isoYear` (number): A year.
@@ -24,25 +24,17 @@ A `Temporal.DateTime` can also be converted into any of the other `Temporal` obj
 - `milliseconds` (optional number): A number of milliseconds, ranging between 0 and 999 inclusive.
 - `microseconds` (optional number): A number of microseconds, ranging between 0 and 999 inclusive.
 - `nanoseconds` (optional number): A number of nanoseconds, ranging between 0 and 999 inclusive.
-- `disambiguation` (optional string): How to deal with out-of-range values of the other parameters.
-  Allowed values are `constrain`, `balance`, and `reject`.
-  The default is `constrain`.
 
 **Returns:** a new `Temporal.DateTime` object.
 
-Use this constructor if you have the correct parameters for the date already as individual number values, or you need the disambiguation behaviour.
-Otherwise, `Temporal.DateTime.from()`, which accepts more kinds of input, is probably more convenient.
+Use this constructor if you have the correct parameters for the date already as individual number values.
+Otherwise, `Temporal.DateTime.from()`, which accepts more kinds of input and allows disambiguation behaviour, is probably more convenient.
 
 All values are given as reckoned in the [ISO 8601 calendar](https://en.wikipedia.org/wiki/ISO_8601#Dates).
-
-The `disambiguation` parameter works as follows:
-- In `constrain` mode (the default), any out-of-range values are clamped to the nearest in-range value.
-- In `balance` mode, any out-of-range values are resolved by balancing them with the next highest unit.
-- In `reject` mode, the presence of out-of-range values will cause the constructor to throw a `RangeError`.
+Together, `isoYear`, `isoMonth`, and `isoDay` must represent a valid date in that calendar, and the time parameters must represent a valid time of day.
 
 > **NOTE**: Although Temporal does not deal with leap seconds, dates coming from other software may have a `second` value of 60.
-> In the default `constrain` disambiguation mode, this will be converted to 59, and in `balance` mode, to 00 of the next minute.
-> In `reject` mode, the constructor will throw, so if you have to interoperate with times that may contain leap seconds, don't use `reject`.
+> This value will cause the constructor will throw, so if you have to interoperate with times that may contain leap seconds, use `Temporal.DateTime.from()` instead.
 
 The range of allowed values for this type is exactly enough that calling [`inTimeZone()`](./absolute.html#inTimeZone) on any valid `Temporal.Absolute` with any valid `Temporal.TimeZone` will succeed.
 If the parameters passed in to this constructor form a date outside of this range, then `constrain` mode will clamp the values to the limit of the allowed range.
@@ -52,22 +44,19 @@ Usage examples:
 ```javascript
 // Leet hour on pi day in 2020
 datetime = new Temporal.DateTime(2020, 3, 14, 13, 37)  // => 2020-03-14T13:37
-
-// Different disambiguation modes
-datetime = new Temporal.DateTime(2001, 13, 1, 0, 0, 0, 0, 0, 0, 'constrain')  // => 2001-12-01T00:00
-datetime = new Temporal.DateTime(2001, -1, 1, 0, 0, 0, 0, 0, 0, 'constrain')  // => 2001-01-01T00:00
-datetime = new Temporal.DateTime(2001, 13, 1, 0, 0, 0, 0, 0, 0, 'balance')  // => 2002-01-01T00:00
-datetime = new Temporal.DateTime(2001, -1, 1, 0, 0, 0, 0, 0, 0, 'balance')  // => 2000-11-01T00:00
-datetime = new Temporal.DateTime(2001, 13, 1, 0, 0, 0, 0, 0, 0, 'reject')  // throws
-datetime = new Temporal.DateTime(2001, -1, 1, 0, 0, 0, 0, 0, 0, 'reject')  // throws
 ```
 
 ## Static methods
 
-### Temporal.DateTime.**from**(_thing_: string | object) : Temporal.DateTime
+### Temporal.DateTime.**from**(_thing_: string | object, _options_?: object) : Temporal.DateTime
 
 **Parameters:**
 - `thing` (string or object): The value representing the desired date and time.
+- `options` (optional object): An object with properties representing options for constructing the date and time.
+  The following options are recognized:
+  - `disambiguation` (string): How to deal with out-of-range values in `thing`.
+    Allowed values are `constrain`, `balance`, and `reject`.
+    The default is `constrain`.
 
 **Returns:** a new `Temporal.DateTime` object (or the same object if `thing` was a `Temporal.DateTime` object.)
 
@@ -78,6 +67,15 @@ If the value is another `Temporal.DateTime` object, the same object is returned.
 If the value is any other object, a `Temporal.DateTime` will be constructed from the values of any `year`, `month`, `day`, `hour`, `minute`, `second`, `millisecond`, `microsecond`, and `nanosecond` properties that are present.
 At least the `year`, `month`, and `day` properties must be present.
 Any other missing ones will be assumed to be 0.
+
+The `disambiguation` option works as follows:
+- In `constrain` mode (the default), any out-of-range values are clamped to the nearest in-range value.
+- In `balance` mode, any out-of-range values are resolved by balancing them with the next highest unit.
+- In `reject` mode, the presence of out-of-range values will cause the function to throw a `RangeError`.
+
+> **NOTE**: Although Temporal does not deal with leap seconds, dates coming from other software may have a `second` value of 60.
+> In the default `constrain` disambiguation mode and when parsing an ISO 8601 string, this will be converted to 59, and in `balance` mode, to 00 of the next minute.
+> In `reject` mode, this function will throw, so if you have to interoperate with times that may contain leap seconds, don't use `reject`.
 
 Example usage:
 ```javascript
@@ -101,6 +99,20 @@ dt = Temporal.DateTime.from({
 dt = Temporal.DateTime.from({year: 1995, month: 12, day: 7});  // => 1995-12-07T00:00
 dt = Temporal.DateTime.from(Temporal.Date.from('1995-12-07T03:24:30'));
   // => same as above; Temporal.Date has year, month, and day properties
+
+// Different disambiguation modes
+dt = Temporal.DateTime.from({ year: 2001, month: 13, day: 1 }, { disambiguation: 'constrain' })
+  // => 2001-12-01T00:00
+dt = Temporal.DateTime.from({ year: 2001, month: -1, day: 1 }, { disambiguation: 'constrain' })
+  // => 2001-01-01T00:00
+dt = Temporal.DateTime.from({ year: 2001, month: 13, day: 1 }, { disambiguation: 'balance' })
+  // => 2002-01-01T00:00
+dt = Temporal.DateTime.from({ year: 2001, month: -1, day: 1 }, { disambiguation: 'balance' })
+  // => 2000-11-01T00:00
+dt = Temporal.DateTime.from({ year: 2001, month: 13, day: 1 }, { disambiguation: 'reject' })
+  // throws
+dt = Temporal.DateTime.from({ year: 2001, month: -1, day: 1 }, { disambiguation: 'reject' })
+  // throws
 ```
 
 ### Temporal.DateTime.**compare**(_one_: Temporal.DateTime, _two_: Temporal.DateTime) : number

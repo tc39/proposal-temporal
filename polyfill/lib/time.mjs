@@ -24,7 +24,6 @@ export class Time {
     millisecond = 0,
     microsecond = 0,
     nanosecond = 0,
-    disambiguation = 'constrain'
   ) {
     hour = ES.ToInteger(hour);
     minute = ES.ToInteger(minute);
@@ -32,33 +31,7 @@ export class Time {
     millisecond = ES.ToInteger(millisecond);
     microsecond = ES.ToInteger(microsecond);
     nanosecond = ES.ToInteger(nanosecond);
-    switch (disambiguation) {
-      case 'reject':
-        ES.RejectTime(hour, minute, second, millisecond, microsecond, nanosecond);
-        break;
-      case 'constrain':
-        ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.ConstrainTime(
-          hour,
-          minute,
-          second,
-          millisecond,
-          microsecond,
-          nanosecond
-        ));
-        break;
-      case 'balance':
-        ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.BalanceTime(
-          hour,
-          minute,
-          second,
-          millisecond,
-          microsecond,
-          nanosecond
-        ));
-        break;
-      default:
-        throw new TypeError('disambiguation should be either reject, constrain or balance');
-    }
+    ES.RejectTime(hour, minute, second, millisecond, microsecond, nanosecond);
 
     CreateSlots(this);
     SetSlot(this, HOUR, hour);
@@ -115,8 +88,16 @@ export class Time {
       microsecond = GetSlot(this, MICROSECOND),
       nanosecond = GetSlot(this, NANOSECOND)
     } = props;
+    const result = ES.ToTime({ hour, minute, second, millisecond, microsecond, nanosecond }, disambiguation);
     const Construct = ES.SpeciesConstructor(this, Time);
-    return new Construct(hour, minute, second, millisecond, microsecond, nanosecond, disambiguation);
+    return Construct === Time ? result : new Construct(
+      GetSlot(result, HOUR),
+      GetSlot(result, MINUTE),
+      GetSlot(result, SECOND),
+      GetSlot(result, MILLISECOND),
+      GetSlot(result, MICROSECOND),
+      GetSlot(result, NANOSECOND),
+    );
   }
   plus(durationLike, disambiguation = 'constrain') {
     if (!ES.IsTime(this)) throw new TypeError('invalid receiver');
@@ -138,8 +119,16 @@ export class Time {
       microseconds,
       nanoseconds
     ));
+    const result = ES.ToTime({ hour, minute, second, millisecond, microsecond, nanosecond }, disambiguation);
     const Construct = ES.SpeciesConstructor(this, Time);
-    return new Construct(hour, minute, second, millisecond, microsecond, nanosecond);
+    return Construct === Time ? result : new Construct(
+      GetSlot(result, HOUR),
+      GetSlot(result, MINUTE),
+      GetSlot(result, SECOND),
+      GetSlot(result, MILLISECOND),
+      GetSlot(result, MICROSECOND),
+      GetSlot(result, NANOSECOND),
+    );
   }
   minus(durationLike, disambiguation = 'constrain') {
     if (!ES.IsTime(this)) throw new TypeError('invalid receiver');
@@ -161,8 +150,16 @@ export class Time {
       microseconds,
       nanoseconds
     ));
+    const result = ES.ToTime({ hour, minute, second, millisecond, microsecond, nanosecond }, disambiguation);
     const Construct = ES.SpeciesConstructor(this, Time);
-    return new Construct(hour, minute, second, millisecond, microsecond, nanosecond);
+    return Construct === Time ? result : new Construct(
+      GetSlot(result, HOUR),
+      GetSlot(result, MINUTE),
+      GetSlot(result, SECOND),
+      GetSlot(result, MILLISECOND),
+      GetSlot(result, MICROSECOND),
+      GetSlot(result, NANOSECOND),
+    );
   }
   difference(other, largestUnit = 'hours') {
     if (!ES.IsTime(this)) throw new TypeError('invalid receiver');
@@ -187,7 +184,7 @@ export class Time {
       nanoseconds,
     } = ES.BalanceDuration(0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, largestUnit));
     const Duration = ES.GetIntrinsic('%Temporal.Duration%');
-    return new Duration(0, 0, 0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 'reject');
+    return new Duration(0, 0, 0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
   }
 
   toString() {
@@ -210,14 +207,15 @@ export class Time {
 
   withDate(dateLike = {}, disambiguation = 'constrain') {
     if (!ES.IsTime(this)) throw new TypeError('invalid receiver');
-    let { year, month, day } = ES.ToDate(dateLike);
+    let { year, month, day } = ES.ToDate(dateLike, disambiguation);
     let { hour, minute, second, millisecond, microsecond, nanosecond } = this;
     const DateTime = ES.GetIntrinsic('%Temporal.DateTime%');
-    return new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, disambiguation);
+    return new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
   }
 
-  static from(arg) {
-    let result = ES.ToTime(arg);
+  static from(arg, options) {
+    const disambiguation = ES.GetOption(options, 'disambiguation', ES.ToDisambiguation, 'constrain');
+    let result = ES.ToTime(arg, disambiguation);
     return this === Time ? result : new this(
       GetSlot(result, HOUR),
       GetSlot(result, MINUTE),
@@ -225,7 +223,6 @@ export class Time {
       GetSlot(result, MILLISECOND),
       GetSlot(result, MICROSECOND),
       GetSlot(result, NANOSECOND),
-      'reject'
     );
   }
   static compare(one, two) {

@@ -16,7 +16,7 @@
       Subclass constructors that intend to inherit the specified Date behaviour must include a super call to the %Temporal.Date% constructor to create and initialize subclass instances with the necessary internal slots.</p>
 
     <emu-clause id="sec-temporal.date">
-      <h1>Temporal.Date ( _year_, _month_, _day_ [ , _disambiguation_ ] )</h1>
+      <h1>Temporal.Date ( _year_, _month_, _day_ )</h1>
       <p>
         When the `Temporal.Date` function is called, the following steps are taken:
       </p>
@@ -26,9 +26,7 @@
         1. Let _y_ be ? ToInteger(_year_).
         1. Let _m_ be ? ToInteger(_month_).
         1. Let _d_ be ? ToInteger(_day_).
-        1. Set _disambiguation_ to ? ToDisambiguation(_disambiguation_).
-        1. Let _result_ be ? RegulateDate(_y_, _m_, _d_, _disambiguation_).
-        1. Return ? CreateDate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], NewTarget).
+        1. Return ? CreateDate(_y_, _m_, _d_, NewTarget).
       </emu-alg>
     </emu-clause>
   </emu-clause>
@@ -46,16 +44,17 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal.date.from">
-      <h1>Temporal.Date.from ( _arg_ )</h1>
+      <h1>Temporal.Date.from ( _arg_ [ , _options_ ] )</h1>
       <p>
-        The `from` method takes one argument _arg_.
+        The `from` method takes two arguments, _arg_ and _options_.
         The following steps are taken:
       </p>
       <emu-alg>
+        1. Let _disambiguation_ be ? GetOption(_options_, *"disambiguation"*, « *"constrain"*, *"balance"*, *"reject"* », *"constrain"*).
         1. If Type(_arg_) is Object, then
-          1. Return ? ToDate(_arg_).
+          1. Return ? ToDate(_arg_, _disambiguation_).
         1. Let _string_ be ? ToString(_arg_).
-        1. Return ? DateFromString(_string_).
+        1. Return ? DateFromString(_string_, _disambiguation_).
       </emu-alg>
     </emu-clause>
 
@@ -397,7 +396,8 @@
     <emu-clause id="sec-temporal-createdate" aoid="CreateDate">
       <h1>CreateDate ( _y_, _m_, _d_ [ , _newTarget_ ] )</h1>
       <emu-alg>
-        1. Assert: ! ValidateDate(_y_, _m_, _d_) is *true*.
+        1. If ! ValidateDate(_y_, _m_, _d_) is *false*, then
+          1. Throw a *RangeError* exception.
         1. If _newTarget_ is not given, set it to %Temporal.Date%.
         1. Let _object_ be ? OrdinaryCreateFromConstructor(_newTarget_, `"%Temporal.Date.prototype%"`, « [[InitializedTemporalDate]], [[Year]], [[Month]], [[Day]] »).
         1. Set _object_.[[Year]] to _y_.
@@ -408,9 +408,10 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal-datefromstring" aoid="DateFromString">
-      <h1>DateFromString ( _isostring_ )</h1>
+      <h1>DateFromString ( _isoString_, _disambiguation_ )</h1>
       <emu-alg>
-        1. Assert: Type(_isostring_) is String.
+        1. Assert: Type(_isoString_) is String.
+        1. Assert: _disambiguation_ is one of *"constrain"*, *"balance"*, or *"reject"*.
         1. Let _validSyntax_ be *true* if _isostring_ conforms to the format `YYYY-MM-DD`, and *false* otherwise, where:
           * `YYYY` is either four decimal digits or an expanded year of `"+"` or `"-"` followed by six decimal digits;
           * `-` is the code unit 0x002D (HYPHEN-MINUS);
@@ -420,7 +421,7 @@
         1. If _validSyntax_ is *false*, then
           1. Throw a *RangeError* exception.
         1. Let _year_, _month_, and _day_ be the respective parts of _isostring_, interpreted as decimal numbers.
-        1. Let _result_ be ? RegulateDate(_year_, _month_, _day_, `"reject"`).
+        1. Let _result_ be ? RegulateDate(_year_, _month_, _day_, _disambiguation_).
         1. Return ? CreateDate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]]).
       </emu-alg>
     </emu-clause>
@@ -468,8 +469,9 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal-todate" aoid="ToDate">
-      <h1>ToDate ( _date_ )</h1>
+      <h1>ToDate ( _date_, _disambiguation_ )</h1>
       <emu-alg>
+        1. Assert: _disambiguation_ is one of *"constrain"*, *"balance"*, or *"reject"*.
         1. If Type(_date_) is Object, then
           1. If _date_ has an [[InitializedTemporalDate]] internal slot, then
             1. Return _date_.
@@ -481,8 +483,7 @@
               1. Throw a *TypeError* exception.
             1. Let _value_ be ? ToInteger(_value_).
             1. Set _result_'s internal slot whose name is the Internal Slot value of the current row to _value_.
-          1. If ! ValidateDate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]]) is *false*, then
-            1. Throw a *TypeError* exception.
+          1. Set _result_ to ? RegulateDate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _disambiguation_).
           1. Return ? CreateDate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]]).
         1. Throw a *TypeError* exception.
       </emu-alg>
