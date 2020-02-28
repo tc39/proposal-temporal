@@ -486,6 +486,7 @@
         1. Set _millisecond_ to _millisecond_ + floor(_microsecond_ / 1000).
         1. Set _microsecond_ to ! NonNegativeModulo(_microsecond_, 1000).
         1. Let _seconds_ be floor(_millisecond_ / 1000).
+        1. Set _millisecond_ to NonNegativeModulo(_millisecond_, 1000).
         1. Return the new Record {
           [[Seconds]]: _seconds_,
           [[Millisecond]]: _millisecond_,
@@ -501,7 +502,6 @@
         1. Assert: _hour_, _minute_, _second_, _millisecond_, _microsecond_, and _nanosecond_ are integer Number values.
         1. Let _balanceResult_ be ! BalanceSubSecond(_millisecond_, _microsecond_, _nanosecond_).
         1. Set _second_ to _second_ + _balanceResult_.[[Seconds]].
-        1. Set _microsecond_ to NonNegativeModulo(_microsecond_, 1000).
         1. Set _minute_ to _minute_ + floor(_second_ / 60).
         1. Set _second_ to NonNegativeModulo(_second_, 60).
         1. Set _hour_ to _hour_ + floor(_minute_ / 60).
