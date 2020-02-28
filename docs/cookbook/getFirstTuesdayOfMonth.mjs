@@ -6,11 +6,11 @@ import assert from "assert";
  * @param {Temporal.YearMonth} queriedMonth YearMonth instance to query
  * @returns {Temporal.DateTime} DateTime Instance which gives first tuesday
  */
-function getFirstTuesday(queriedDate) {
+function getFirstTuesday(queriedMonth) {
     // We first need to convert to a date
     let date = Temporal.DateTime.from({
-        year: queriedDate.year,
-        month: queriedDate.month,
+        year: queriedMonth.year,
+        month: queriedMonth.month,
         day: 1
     });
 
