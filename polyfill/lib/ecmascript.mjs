@@ -446,17 +446,19 @@ export const ES = ObjectAssign({}, ES2019, {
       years = 0
     } = props;
 
+    for (const prop of [years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds]) {
+      if (prop < 0) throw new RangeError('negative values not allowed as duration fields');
+    }
+
     switch (disambiguation) {
       case 'reject':
         for (const prop of [years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds]) {
-          if (prop < 0) throw new RangeError('negative values not allowed as duration fields');
           if (!Number.isFinite(prop)) throw new RangeError('infinite values not allowed as duration fields');
         }
         break;
       case 'constrain': {
         const arr = [years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds];
         for (const idx in arr) {
-          if (arr[idx] < 0) arr[idx] = -arr[idx];
           if (!Number.isFinite(arr[idx])) arr[idx] = Number.MAX_VALUE;
         }
         [years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds] = arr;

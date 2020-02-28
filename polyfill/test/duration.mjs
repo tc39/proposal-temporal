@@ -10,6 +10,9 @@ const { throws, equal } = assert;
 import { Duration } from 'tc39-temporal';
 
 describe('Duration', () => {
+  describe('Construction', () => {
+    it('negative values throw', () => throws(() => new Duration(-1, -1, -1, -1, -1, -1, -1, -1, -1), RangeError));
+  });
   describe('from()', () => {
     it('Duration.from(P5Y) == P5Y', () => {
       const orig = new Duration(5);
@@ -21,25 +24,29 @@ describe('Duration', () => {
     it('Duration.from("P1D") == P1D', () => equal(`${Duration.from('P1D')}`, 'P1D'));
     it('Duration.from({}) throws', () => throws(() => Duration.from({}), RangeError));
     describe('Disambiguation', () => {
-      const negative = {
-        years: -1,
-        months: -1,
-        days: -1,
-        hours: -1,
-        minutes: -1,
-        seconds: -1,
-        milliseconds: -1,
-        microseconds: -1,
-        nanoseconds: -1
-      };
-      it('negative values throw when "reject"', () =>
-        throws(() => Duration.from(negative, { disambiguation: 'reject' }), RangeError));
+      it('negative values always throw', () => {
+        const negative = {
+          years: -1,
+          months: -1,
+          days: -1,
+          hours: -1,
+          minutes: -1,
+          seconds: -1,
+          milliseconds: -1,
+          microseconds: -1,
+          nanoseconds: -1
+        };
+        ['constrain', 'balance', 'reject'].forEach((disambiguation) =>
+          throws(() => Duration.from(negative, { disambiguation }), RangeError)
+        );
+      });
+      it('negative values cannot balance', () => {
+        ['constrain', 'balance', 'reject'].forEach((disambiguation) =>
+          throws(() => Duration.from({ hours: 1, minutes: -30 }, { disambiguation }), RangeError)
+        );
+      });
       it('excessive values unchanged when "reject"', () => {
         equal(`${Duration.from({ minutes: 100 }, { disambiguation: 'reject' })}`, 'PT100M');
-      });
-      it('negative values invert when "constrain"', () => {
-        equal(`${Duration.from(negative)}`, 'P1Y1M1DT1H1M1.001001001S');
-        equal(`${Duration.from(negative, { disambiguation: 'constrain' })}`, 'P1Y1M1DT1H1M1.001001001S');
       });
       it('excessive values unchanged when "constrain"', () => {
         equal(`${Duration.from({ minutes: 100 }, { disambiguation: 'constrain' })}`, 'PT100M');
