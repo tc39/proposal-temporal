@@ -427,9 +427,11 @@
           1. If ! ValidateTemporalDuration(_years_, _months_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_) is *false*,
             1. Throw a *RangeError* exception.
         1. Else if _disambiguation_ is *"constrain"*, then
-          1. For each of _years_, _months_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_, if any of the values is negative, let it be its own absolute value.
+          1. For each of _years_, _months_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_, if any of the values is negative, throw a *RangeError* exception.
           1. For each of _years_, _months_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_, if any of the values is infinite, let it be the largest possible finite value of the Number type.
         1. Else if _disambiguation_ is *"balance"*, then
+          1. If ! ValidateTemporalDuration(_years_, _months_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_) is *false*,
+            1. Throw a *RangeError* exception.
           1. Let _bd_ be ! BalanceDuration(0, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_, *"hours"*).
           1. Set _hours_ to _bd_.[[Hours]].
           1. Set _minutes_ to _bd_.[[Minutes]].
