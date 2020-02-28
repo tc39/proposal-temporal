@@ -115,8 +115,8 @@
         1. Else if _disambiguation_ is *"constrain"*, then
           1. For each of _y_, _mo_, _d_, _h_, _m_, _s_, _ms_, _mis_, _ns_, if any of the values is negative, let it be its own absolute value.
         1. Else if _disambiguation_ is *"balance"*, then
-          1. Let _bd_ be ! BalanceDuration(_d_, _h_, _m_, _s_, _ms_, _mis_, _ns_).
-          1. Return ? CreateDuration(_y_, _mo_, _bd_.[[Days]], _bd_.[[Hours]], _bd_.[[Minutes]], _bd_.[[Seconds]], _bd_.[[Milliseconds]], _bd_.[[Microseconds]], _bd_.[[NanoSeconds]], NewTarget).
+          1. Let _bd_ be ! BalanceDuration(0, _h_, _m_, _s_, _ms_, _mis_, _ns_, *"hours"*).
+          1. Return ? CreateDuration(_y_, _mo_, _d_, _bd_.[[Hours]], _bd_.[[Minutes]], _bd_.[[Seconds]], _bd_.[[Milliseconds]], _bd_.[[Microseconds]], _bd_.[[Nanoseconds]], NewTarget).
         1. Return ? CreateDuration(_y_, _mo_, _d_, _h_, _m_, _s_, _ms_, _mis_, _ns_, NewTarget).
       </emu-alg>
     </emu-clause>

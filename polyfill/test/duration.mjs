@@ -16,9 +16,21 @@ describe('Duration', () => {
         throws(() => new Duration(-1, -1, -1, -1, -1, -1, -1, -1, -1, 'reject'), RangeError));
       it('negative values invert when "constrain"', () =>
         equal(`${new Duration(-1, -1, -1, -1, -1, -1, -1, -1, -1, 'constrain')}`, 'P1Y1M1DT1H1M1.001001001S'));
-      it('excessive values balance when "balance"', () => {
+      it('excessive time units balance when "balance"', () => {
         equal(`${new Duration(0, 0, 0, 0, 0, 0, 0, 0, 1000, 'balance')}`, 'PT0.000001S');
-        equal(`${new Duration(0, 0, 0, 0, 0, 2 * 86400, 0, 0, 0, 'balance')}`, 'P2D');
+        equal(`${new Duration(0, 0, 0, 0, 0, 0, 0, 1000, 0, 'balance')}`, 'PT0.001S');
+        equal(`${new Duration(0, 0, 0, 0, 0, 0, 1000, 0, 0, 'balance')}`, 'PT1S');
+        equal(`${new Duration(0, 0, 0, 0, 0, 100, 0, 0, 0, 'balance')}`, 'PT1M40S');
+        equal(`${new Duration(0, 0, 0, 0, 100, 0, 0, 0, 0, 'balance')}`, 'PT1H40M');
+      });
+      it('excessive date units do not balance when "balance"', () => {
+        equal(`${new Duration(0, 12, 0, 0, 0, 0, 0, 0, 0, 'balance')}`, 'P12M');
+        equal(`${new Duration(0, 12, 0, 0, 0, 3600, 0, 0, 0, 'balance')}`, 'P12MT1H');
+        equal(`${new Duration(0, 0, 31, 0, 0, 0, 0, 0, 0, 'balance')}`, 'P31D');
+        equal(`${new Duration(0, 0, 31, 0, 0, 3600, 0, 0, 0, 'balance')}`, 'P31DT1H');
+        equal(`${new Duration(0, 0, 0, 24, 0, 0, 0, 0, 0, 'balance')}`, 'PT24H');
+        equal(`${new Duration(0, 0, 0, 0, 0, 2 * 86400, 0, 0, 0, 'balance')}`, 'PT48H');
+        equal(`${new Duration(0, 0, 0, 24, 0, 3600, 0, 0, 0, 'balance')}`, 'PT25H');
       });
       it('throw when bad disambiguation', () =>
         throws(() => new Duration(0, 0, 0, 0, 0, 0, 0, 0, 0, 'xyz'), TypeError));
