@@ -11,6 +11,9 @@ matrix:
   - name: "test262 tests"
     script:
     - npm run test262
+  - name: "cookbook"
+    script:
+    - npm run cookbook
   - name: "Specification compilation"
     script:
     - npm run build
