@@ -364,7 +364,7 @@
     <emu-clause id="sec-temporal-validatetemporalduration" aoid="ValidateTemporalDuration">
       <h1>ValidateTemporalDuration ( _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_ )</h1>
       <emu-alg>
-        1. For each of _years_, _months_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_, if any of the values is negative, return *false*.
+        1. For each of _years_, _months_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_, if any of the values is negative or infinite, return *false*.
         1. Return *true*.
       </emu-alg>
     </emu-clause>
@@ -424,23 +424,21 @@
       <emu-alg>
         1. Assert: _disambiguation_ is one of *"constrain"*, *"balance"*, or *"reject"*.
         1. If _disambiguation_ is *"reject"*, then
-          1. If ! ValidateDuration(_years_, _months_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_) is *false*,
+          1. If ! ValidateTemporalDuration(_years_, _months_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_) is *false*,
             1. Throw a *RangeError* exception.
         1. Else if _disambiguation_ is *"constrain"*, then
           1. For each of _years_, _months_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_, if any of the values is negative, let it be its own absolute value.
+          1. For each of _years_, _months_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_, if any of the values is infinite, let it be the largest possible finite value of the Number type.
         1. Else if _disambiguation_ is *"balance"*, then
           1. Let _bd_ be ! BalanceDuration(0, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_, *"hours"*).
-          1. Return the new Record {
-            [[Years]]: _years_,
-            [[Months]]: _months_,
-            [[Days]]: _days_,
-            [[Hours]]: _bd_.[[Hours]],
-            [[Minutes]]: _bd_.[[Minutes]],
-            [[Seconds]]: _bd_.[[Seconds]],
-            [[Milliseconds]]: _bd_.[[Milliseconds]],
-            [[Microseconds]]: _bd_.[[Microseconds]],
-            [[Nanoseconds]]: _bd_.[[Nanoseconds]]
-            }.
+          1. Set _hours_ to _bd_.[[Hours]].
+          1. Set _minutes_ to _bd_.[[Minutes]].
+          1. Set _seconds_ to _bd_.[[Seconds]].
+          1. Set _milliseconds_ to _bd_.[[Milliseconds]].
+          1. Set _microseconds_ to _bd_.[[Microseconds]].
+          1. Set _nanoseconds_ to _bd_.[[Nanoseconds]].
+          1. If ! ValidateTemporalDuration(_years_, _months_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_) is *false*,
+            1. Throw a *RangeError* exception.
         1. Return the new Record {
           [[Years]]: _years_,
           [[Months]]: _months_,
