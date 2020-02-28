@@ -53,9 +53,10 @@ describe('MonthDay', () => {
         });
         it('balance', () => equal(`${MonthDay.from(bad, { disambiguation: 'balance' })}`, '02-01'));
         it('throw when bad disambiguation', () => {
-          throws(() => MonthDay.from({ month: 1, day: 1 }, { disambiguation: 'xyz' }), RangeError);
-          throws(() => MonthDay.from({ month: 1, day: 1 }, { disambiguation: 3 }), RangeError);
-          throws(() => MonthDay.from({ month: 1, day: 1 }, { disambiguation: null }), RangeError);
+          [new MonthDay(11, 18), { month: 1, day: 1 }, '01-31'].forEach((input) => {
+            ['', 'CONSTRAIN', 'xyz', 3, null].forEach((disambiguation) =>
+              throws(() => MonthDay.from(input, { disambiguation }), RangeError));
+          });
         });
       });
       describe('Leap day', () => {
@@ -87,6 +88,12 @@ describe('MonthDay', () => {
     it("doesn't cast second argument", () => {
       throws(() => MonthDay.compare(jan15, { month: 2, day: 1 }), TypeError);
       throws(() => MonthDay.compare(jan15, '02-01'), TypeError);
+    });
+  });
+  describe('MonthDay.with()', () => {
+    it('throws on bad disambiguation', () => {
+      ['', 'CONSTRAIN', 'xyz', 3, null].forEach((disambiguation) =>
+        throws(() => MonthDay.from('01-15').with({ day: 1 }, disambiguation), RangeError));
     });
   });
 });

@@ -46,6 +46,7 @@ export class YearMonth {
   }
   with(dateLike = {}, disambiguation = 'constrain') {
     if (!ES.IsYearMonth(this)) throw new TypeError('invalid receiver');
+    disambiguation = ES.ToDisambiguation(disambiguation);
     const props = ES.ValidPropertyBag(dateLike, ['year', 'month']);
     if (!props) {
       throw new RangeError('invalid year-month-like');

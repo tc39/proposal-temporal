@@ -262,8 +262,6 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
         ES.RejectDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
         break;
       }
-      default:
-        throw new RangeError('disambiguation should be either reject, constrain or balance');
     }
 
     return new TemporalDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
@@ -297,8 +295,6 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
         // Still rejected if balanced Date is outside valid range
         ES.RejectDate(year, month, day);
         break;
-      default:
-        throw new RangeError('disambiguation should be either reject, constrain or balance');
     }
 
     return new TemporalDate(year, month, day);
@@ -350,8 +346,6 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
           nanosecond,
         ));
         break;
-      default:
-        throw new RangeError('disambiguation should be either reject, constrain or balance');
     }
 
     return new TemporalTime(hour, minute, second, millisecond, microsecond, nanosecond);
@@ -383,8 +377,6 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
         // Still rejected if balanced YearMonth is outside valid range
         ES.RejectYearMonth(year, month);
         break;
-      default:
-        throw new RangeError('disambiguation should be either reject, constrain or balance');
     }
 
     return new TemporalYearMonth(year, month);
@@ -415,8 +407,6 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
       case 'balance':
         ({ month, day } = ES.BalanceDate(leapYear, month, day));
         break;
-      default:
-        throw new RangeError('disambiguation should be either reject, constrain or balance');
     }
 
     return new TemporalMonthDay(month, day);
@@ -450,7 +440,7 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
       years = 0,
     } = props;
 
-    switch (ES.ToString(disambiguation)) {
+    switch (disambiguation) {
       case 'reject':
         for (const prop of [years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds]) {
           if (prop < 0) throw new RangeError('negative values not allowed as duration fields');
@@ -480,8 +470,6 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
         }
         break;
       }
-      default:
-        throw new RangeError('disambiguation should be either reject, constrain or balance');
     }
 
     return new TemporalDuration(
@@ -515,7 +503,14 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
   ToArithmeticDisambiguation: (disambiguation) => {
     disambiguation = ES.ToString(disambiguation);
     if (disambiguation !== 'constrain' && disambiguation !== 'reject') {
-      throw new RangeError(`disambiguation should be constrain or reject, not ${disambiguation}`)
+      throw new RangeError(`disambiguation should be constrain or reject, not ${disambiguation}`);
+    }
+    return disambiguation;
+  },
+  ToTimeZoneDisambiguation: (disambiguation) => {
+    disambiguation = ES.ToString(disambiguation);
+    if (!['earlier', 'later', 'reject'].includes(disambiguation)) {
+      throw new RangeError(`disambiguation should be earlier, later, or reject, not ${disambiguation}`);
     }
     return disambiguation;
   },
@@ -1151,8 +1146,6 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
       case 'constrain':
         ({ year, month, day } = ES.ConstrainDate(year, month, day));
         break;
-      default:
-        throw new Error('assert not reached');
     }
 
     day += days;
@@ -1204,8 +1197,6 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
       case 'constrain':
         ({ year, month, day } = ES.ConstrainDate(year, month, day));
         break;
-      default:
-        throw new Error('assert not reached');
     }
     return { year, month, day };
   },

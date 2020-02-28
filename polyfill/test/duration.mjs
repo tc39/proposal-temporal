@@ -44,9 +44,10 @@ describe('Duration', () => {
         equal(`${Duration.from({ hours: 24, seconds: 3600 }, { disambiguation: 'balance' })}`, 'PT25H');
       });
       it('throw when bad disambiguation', () => {
-        throws(() => Duration.from({ days: 0 }, { disambiguation: 'xyz' }), RangeError);
-        throws(() => Duration.from({ days: 0 }, { disambiguation: 3 }), RangeError);
-        throws(() => Duration.from({ days: 0 }, { disambiguation: null }), RangeError);
+        [new Duration(3), { days: 0 }, 'P5Y'].forEach((input) => {
+          ['', 'CONSTRAIN', 'xyz', 3, null].forEach((disambiguation) =>
+            throws(() => Duration.from(input, { disambiguation }), RangeError));
+        });
       });
     });
   });
