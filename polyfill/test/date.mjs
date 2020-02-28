@@ -120,6 +120,10 @@ describe('Date', () => {
       const date = original.with({ day: 17 });
       equal(`${date}`, '1976-11-17');
     });
+    it('invalid disambiguation', () => {
+      ['', 'CONSTRAIN', 'xyz', 3, null].forEach((disambiguation) =>
+        throws(() => original.with({ day: 17 }, disambiguation), RangeError));
+    });
   });
   describe('Date.withTime() works', () => {
     const date = Date.from('1976-11-18');
@@ -234,8 +238,10 @@ describe('Date', () => {
       const jan31 = Date.from('2020-01-31');
       throws(() => jan31.plus({ months: 1 }, 'reject'), RangeError);
     });
-    it('invalid disambiguation', () =>
-      throws(() => date.plus({ months: 1 }, 'balance'), RangeError));
+    it('invalid disambiguation', () => {
+      ['', 'CONSTRAIN', 'balance', 3, null].forEach((disambiguation) =>
+        throws(() => date.plus({ months: 1 }, disambiguation), RangeError));
+    });
   });
   describe('date.minus() works', () => {
     const date = Date.from('2019-11-18');
@@ -263,8 +269,10 @@ describe('Date', () => {
       const mar31 = Date.from('2020-03-31');
       throws(() => mar31.minus({ months: 1 }, 'reject'), RangeError);
     });
-    it('invalid disambiguation', () =>
-      throws(() => date.minus({ months: 1 }, 'balance'), RangeError));
+    it('invalid disambiguation', () => {
+      ['', 'CONSTRAIN', 'balance', 3, null].forEach((disambiguation) =>
+        throws(() => date.minus({ months: 1 }, disambiguation), RangeError));
+    });
   });
   describe('date.toString() works', () => {
     it('new Date(1976, 11, 18).toString()', () => {
@@ -333,9 +341,10 @@ describe('Date', () => {
       });
       it('balance', () => equal(`${Date.from(bad, { disambiguation: 'balance' })}`, '2019-02-01'));
       it('throw when bad disambiguation', () => {
-        throws(() => Date.from({ year: 2019, month: 1, day: 1 }, { disambiguation: 'xyz' }), RangeError);
-        throws(() => Date.from({ year: 2019, month: 1, day: 1 }, { disambiguation: 3 }), RangeError);
-        throws(() => Date.from({ year: 2019, month: 1, day: 1 }, { disambiguation: null }), RangeError);
+        [new Date(1976, 11, 18), { year: 2019, month: 1, day: 1 }, '2019-01-31'].forEach((input) => {
+          ['', 'CONSTRAIN', 'xyz', 3, null].forEach((disambiguation) =>
+            throws(() => Date.from(input, { disambiguation }), RangeError));
+        });
       });
     });
   });

@@ -111,6 +111,7 @@ export class DateTime {
   }
   with(dateTimeLike, disambiguation = 'constrain') {
     if (!ES.IsDateTime(this)) throw new TypeError('invalid receiver');
+    disambiguation = ES.ToDisambiguation(disambiguation);
     const props = ES.ValidPropertyBag(dateTimeLike, [
       'year',
       'month',
@@ -312,6 +313,7 @@ export class DateTime {
   inTimeZone(timeZoneParam = 'UTC', disambiguation = 'earlier') {
     if (!ES.IsDateTime(this)) throw new TypeError('invalid receiver');
     const timeZone = ES.ToTimeZone(timeZoneParam);
+    disambiguation = ES.ToTimeZoneDisambiguation(disambiguation);
     return timeZone.getAbsoluteFor(this, disambiguation);
   }
   getDate() {

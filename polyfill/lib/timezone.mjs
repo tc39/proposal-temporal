@@ -40,10 +40,7 @@ export class TimeZone {
   getAbsoluteFor(dateTime, disambiguation = 'earlier') {
     if (!ES.IsTimeZone(this)) throw new TypeError('invalid receiver');
     dateTime = ES.ToDateTime(dateTime, 'reject');
-    disambiguation = ES.ToString(disambiguation);
-    if (!~['earlier', 'later', 'reject'].indexOf(disambiguation)) {
-      throw new RangeError(`"${disambiguation}" is not a valid value for the disambiguation argument`);
-    }
+    disambiguation = ES.ToTimeZoneDisambiguation(disambiguation);
 
     const Absolute = ES.GetIntrinsic('%Temporal.Absolute%');
     const { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = dateTime;

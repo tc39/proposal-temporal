@@ -69,6 +69,7 @@ export class Time {
 
   with(timeLike = {}, disambiguation = 'constrain') {
     if (!ES.IsTime(this)) throw new TypeError('invalid receiver');
+    disambiguation = ES.ToDisambiguation(disambiguation);
     const props = ES.ValidPropertyBag(timeLike, [
       'hour',
       'minute',
@@ -103,7 +104,7 @@ export class Time {
     if (!ES.IsTime(this)) throw new TypeError('invalid receiver');
     let { hour, minute, second, millisecond, microsecond, nanosecond } = this;
     const duration = ES.ToLimitedDuration(durationLike, [YEARS, MONTHS, DAYS]);
-    ES.ToArithmeticDisambiguation(disambiguation);
+    disambiguation = ES.ToArithmeticDisambiguation(disambiguation);
     const { hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
     ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.AddTime(
       hour,
@@ -134,7 +135,7 @@ export class Time {
     if (!ES.IsTime(this)) throw new TypeError('invalid receiver');
     let { hour, minute, second, millisecond, microsecond, nanosecond } = this;
     const duration = ES.ToLimitedDuration(durationLike, [YEARS, MONTHS, DAYS]);
-    ES.ToArithmeticDisambiguation(disambiguation);
+    disambiguation = ES.ToArithmeticDisambiguation(disambiguation);
     const { hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
     ({ hour, minute, second, minute, microsecond, nanosecond } = ES.SubtractTime(
       hour,

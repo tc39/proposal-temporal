@@ -191,10 +191,10 @@ describe('TimeZone', ()=>{
             for (const disambiguation of [undefined, 'earlier', 'later', 'reject']) {
                 assert(zone.getAbsoluteFor(dtm, disambiguation) instanceof Temporal.Absolute);
             }
-            throws(() => zone.getAbsoluteFor(dtm, null), RangeError);
-            throws(() => zone.getAbsoluteFor(dtm, ''), RangeError);
-            throws(() => zone.getAbsoluteFor(dtm, 'EARLIER'), RangeError);
-            throws(() => zone.getAbsoluteFor(dtm, 'test'), RangeError);
+        });
+        it('throws on bad disambiguation', () => {
+            ['', 'EARLIER', 'test', 3, null].forEach((disambiguation) =>
+                throws(() => zone.getAbsoluteFor(dtm, disambiguation), RangeError));
         });
     });
 });

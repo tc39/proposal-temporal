@@ -25,6 +25,7 @@ export class MonthDay {
 
   with(dateLike, disambiguation = 'constrain') {
     if (!ES.IsMonthDay(this)) throw new TypeError('invalid receiver');
+    disambiguation = ES.ToDisambiguation(disambiguation);
     const props = ES.ValidPropertyBag(dateLike, ['month', 'day']);
     if (!props) {
       throw new RangeError('invalid month-day-like');

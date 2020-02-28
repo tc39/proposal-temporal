@@ -181,6 +181,10 @@ describe('Time', () => {
       it('time.with({ minute: 8, nanosecond: 3 } works', () => {
         equal(`${time.with({ minute: 8, nanosecond: 3 })}`, '15:08:30.123456003');
       });
+      it('invalid disambiguation', () => {
+        ['', 'CONSTRAIN', 'xyz', 3, null].forEach((disambiguation) =>
+          throws(() => time.with({ hour: 3 }, disambiguation), RangeError));
+      });
     });
   describe('time.withDate() works', () => {
     const time = Time.from('11:30:23.123456789');
@@ -317,8 +321,10 @@ describe('Time', () => {
       it('time.plus(durationObj)', () => {
         equal(`${time.plus(Temporal.Duration.from('PT16H'))}`, '07:23:30.123456789');
       });
-      it('invalid disambiguation', () =>
-        throws(() => time.plus({ hours: 1 }, 'balance'), RangeError));
+      it('invalid disambiguation', () => {
+        ['', 'CONSTRAIN', 'balance', 3, null].forEach((disambiguation) =>
+          throws(() => time.plus({ hours: 1 }, disambiguation), RangeError));
+      });
     });
     describe('time.minus() works', () => {
       const time = Time.from('15:23:30.123456789');
@@ -331,8 +337,10 @@ describe('Time', () => {
       it('time.minus(durationObj)', () => {
         equal(`${time.minus(Temporal.Duration.from('PT16H'))}`, '23:23:30.123456789');
       });
-      it('invalid disambiguation', () =>
-        throws(() => time.minus({ hours: 1 }, 'balance'), RangeError));
+      it('invalid disambiguation', () => {
+        ['', 'CONSTRAIN', 'balance', 3, null].forEach((disambiguation) =>
+          throws(() => time.minus({ hours: 1 }, disambiguation), RangeError));
+      });
     });
     describe('time.toString() works', () => {
       it('new Time(15, 23).toString()', () => {
@@ -386,9 +394,10 @@ describe('Time', () => {
         });
         it('balance', () => equal(`${Time.from(bad, { disambiguation: 'balance' })}`, '00:00:00.000001'));
         it('throw when bad disambiguation', () => {
-          throws(() => Time.from({ nanosecond: 1 }, { disambiguation: 'xyz' }), RangeError);
-          throws(() => Time.from({ nanosecond: 1 }, { disambiguation: 3}), RangeError);
-          throws(() => Time.from({ nanosecond: 1 }, { disambiguation: null }), RangeError);
+          [new Time(15), { hour: 15 }, '15:00'].forEach((input) => {
+            ['', 'CONSTRAIN', 'xyz', 3, null].forEach((disambiguation) =>
+              throws(() => Time.from(input, { disambiguation }), RangeError));
+          });
         });
         const leap = { hour: 23, minute: 59, second: 60 };
         it('reject leap second', () => throws(() => Time.from(leap, { disambiguation: 'reject' }), RangeError));
