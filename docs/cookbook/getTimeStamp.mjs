@@ -1,5 +1,3 @@
-import assert from "assert";
-
 /**
  * Get a (Unix) timestamp in JavaScript
  * This is the No.1 voted question on Stack Overflow for dates in JS
