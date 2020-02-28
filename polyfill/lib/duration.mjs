@@ -57,17 +57,14 @@ export class Duration {
         break;
       }
       case 'balance': {
-        let deltaDays;
         ({
-          deltaDays,
-          hour: hours,
-          minute: minutes,
-          second: seconds,
-          millisecond: milliseconds,
-          microsecond: microseconds,
-          nanosecond: nanoseconds
-        } = ES.BalanceTime(hours, minutes, seconds, milliseconds, microseconds, nanoseconds));
-        days += deltaDays;
+          hours,
+          minutes,
+          seconds,
+          milliseconds,
+          microseconds,
+          nanoseconds,
+        } = ES.BalanceDuration(0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 'hours'));
         for (const prop of [years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds]) {
           if (!Number.isFinite(prop)) throw new RangeError('infinite values not allowed as duration fields');
         }
