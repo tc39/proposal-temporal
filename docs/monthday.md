@@ -47,10 +47,11 @@ md = new Temporal.MonthDay(2, 29)  // => 02-29
 
 This static method creates a new `Temporal.MonthDay` object from another value.
 If the value is a string, it must be in ISO 8601 format.
+Any parts of the string other than the month and the day are optional and will be ignored.
+If the string isn't valid according to ISO 8601, then a `RangeError` will be thrown regardless of the value of `disambiguation`.
+
 If the value is another `Temporal.MonthDay` object, the same object is returned.
 If the value is any other object, it must have `month` and `day` properties, and a `Temporal.MonthDay` will be constructed from them.
-
-Note that any year, time, or time zone part of an ISO 8601 string passed to this function is optional, and will be ignored.
 
 The `disambiguation` option works as follows:
 - In `constrain` mode (the default), any out-of-range values are clamped to the nearest in-range value.

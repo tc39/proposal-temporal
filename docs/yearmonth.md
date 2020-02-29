@@ -48,7 +48,9 @@ ym = new Temporal.YearMonth(2019, 6)  // => 2019-06
 
 This static method creates a new `Temporal.YearMonth` object from another value.
 If the value is a string, it must be in ISO 8601 format.
-Any parts of the string other than the year and the month will be ignored.
+Any parts of the string other than the year and the month are optional and will be ignored.
+If the string isn't valid according to ISO 8601, then a `RangeError` will be thrown regardless of the value of `disambiguation`.
+
 If the value is another `Temporal.YearMonth` object, the same object is returned.
 If the value is any other object, it must have `year` and `month` properties, and a `Temporal.YearMonth` will be constructed from them.
 

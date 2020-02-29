@@ -62,7 +62,9 @@ datetime = new Temporal.DateTime(2020, 3, 14, 13, 37)  // => 2020-03-14T13:37
 
 This static method creates a new `Temporal.DateTime` object from another value.
 If the value is a string, it must be in ISO 8601 format.
-If the string designates a time zone, the time zone will be ignored.
+Any time zone part is optional and will be ignored.
+If the string isn't valid according to ISO 8601, then a `RangeError` will be thrown regardless of the value of `disambiguation`.
+
 If the value is another `Temporal.DateTime` object, the same object is returned.
 If the value is any other object, a `Temporal.DateTime` will be constructed from the values of any `year`, `month`, `day`, `hour`, `minute`, `second`, `millisecond`, `microsecond`, and `nanosecond` properties that are present.
 At least the `year`, `month`, and `day` properties must be present.
