@@ -52,11 +52,11 @@ date = new Temporal.Date(2020, 3, 14)  // => 2020-03-14
 
 This static method creates a new `Temporal.Date` object from another value.
 If the value is a string, it must be in ISO 8601 format.
-If the string designates a time zone, the time zone will be ignored.
+Any time or time zone part is optional and will be ignored.
+If the string isn't valid according to ISO 8601, then a `RangeError` will be thrown regardless of the value of `disambiguation`.
+
 If the value is another `Temporal.Date` object, the same object is returned.
 If the value is any other object, it must have `year`, `month`, and `day` properties, and a `Temporal.Date` will be constructed from them.
-
-Note that any time or time zone part of an ISO 8601 string passed to this function is optional, and will be ignored.
 
 The `disambiguation` option works as follows:
 - In `constrain` mode (the default), any out-of-range values are clamped to the nearest in-range value.
