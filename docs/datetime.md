@@ -107,16 +107,28 @@ dt = Temporal.DateTime.from({ year: 2001, month: 13, day: 1 }, { disambiguation:
   // => 2001-12-01T00:00
 dt = Temporal.DateTime.from({ year: 2001, month: -1, day: 1 }, { disambiguation: 'constrain' })
   // => 2001-01-01T00:00
+dt = Temporal.DateTime.from({ year: 2001, month: 1, day: 1, hour: 25 }, { disambiguation: 'constrain' })
+  // => 2001-01-01T23:00
+dt = Temporal.DateTime.from({ year: 2001, month: 1, day: 1, minute: 60 }, { disambiguation: 'constrain' })
+  // => 2001-01-01T00:59
 dt = Temporal.DateTime.from({ year: 2001, month: 13, day: 1 }, { disambiguation: 'balance' })
   // => 2002-01-01T00:00
 dt = Temporal.DateTime.from({ year: 2001, month: 0, day: 1 }, { disambiguation: 'balance' });
   // => 2000-12-01T00:00
 dt = Temporal.DateTime.from({ year: 2001, month: -1, day: 1 }, { disambiguation: 'balance' })
   // => 2000-11-01T00:00
+dt = Temporal.DateTime.from({ year: 2001, month: 1, day: 1, hour: 25 }, { disambiguation: 'balance' })
+  // => 2001-01-02T01:00
+dt = Temporal.DateTime.from({ year: 2001, month: 1, day: 1, minute: 60 }, { disambiguation: 'constrain' })
+  // => 2001-01-01T01:00
 dt = Temporal.DateTime.from({ year: 2001, month: 13, day: 1 }, { disambiguation: 'reject' })
   // throws
 dt = Temporal.DateTime.from({ year: 2001, month: -1, day: 1 }, { disambiguation: 'reject' })
   // throws
+dt = Temporal.DateTime.from({ year: 2001, month: 1, day: 1, hour: 25 }, { disambiguation: 'reject' })
+  // throws
+dt = Temporal.DateTime.from({ year: 2001, month: 1, day: 1, minute: 60 }, { disambiguation: 'reject' })
+  // => throws
 ```
 
 ### Temporal.DateTime.**compare**(_one_: Temporal.DateTime, _two_: Temporal.DateTime) : number
