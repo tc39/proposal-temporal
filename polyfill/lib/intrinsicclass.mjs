@@ -13,7 +13,7 @@ export function MakeIntrinsicClass(Class, name) {
       enumerable: false,
       configurable: true,
     });
-    Object.defineProperty(Class.prototype, Symbol.class, {
+    Object.defineProperty(Class, Symbol.species, {
       get: species,
       enumerable: false,
       configurable: true,
