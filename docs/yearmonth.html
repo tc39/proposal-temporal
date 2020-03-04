@@ -90,51 +90,49 @@ For example, it could be used to represent a particular instance of a monthly re
 <p><code>Temporal.YearMonth</code> refers to the whole of a specific month; if you need to refer to a calendar event on a certain day, use <code>Temporal.Date</code> or even <code>Temporal.DateTime</code>.
 A <code>Temporal.YearMonth</code> can be converted into a <code>Temporal.Date</code> by combining it with a day of the month, using the <code>withDay()</code> method.</p>
 <h2 id="constructor">Constructor</h2>
-<h3 id="new-temporalyearmonthisoyear-number-isomonth-number-disambiguation-constrain--balance--reject--constrain--temporalyearmonth"><strong>new Temporal.YearMonth</strong>(<em>isoYear</em>: number, <em>isoMonth</em>: number, <em>disambiguation</em>: &#39;constrain&#39; | &#39;balance&#39; | &#39;reject&#39; = &#39;constrain&#39;) : Temporal.YearMonth</h3>
+<h3 id="new-temporalyearmonthisoyear-number-isomonth-number--temporalyearmonth"><strong>new Temporal.YearMonth</strong>(<em>isoYear</em>: number, <em>isoMonth</em>: number) : Temporal.YearMonth</h3>
 <p><strong>Parameters:</strong></p>
 <ul>
 <li><code>isoYear</code> (number): A year.</li>
 <li><code>isoMonth</code> (number): A month, ranging between 1 and 12 inclusive.</li>
-<li><code>disambiguation</code> (optional string): How to deal with out-of-range values of the other parameters.
-Allowed values are <code>constrain</code>, <code>balance</code>, and <code>reject</code>.
-The default is <code>constrain</code>.</li>
 </ul>
 <p><strong>Returns:</strong> a new <code>Temporal.YearMonth</code> object.</p>
-<p>Use this constructor if you have the correct parameters already as individual number values, or you need the disambiguation behaviour.
-Otherwise, <code>Temporal.YearMonth.from()</code>, which accepts more kinds of input, is probably more convenient.</p>
-<p>All values are given as reckoned in the <a href="https://en.wikipedia.org/wiki/ISO_8601#Dates">ISO 8601 calendar</a>.</p>
-<p>The <code>disambiguation</code> parameter works as follows:</p>
-<ul>
-<li>In <code>constrain</code> mode (the default), any out-of-range values are clamped to the nearest in-range value.</li>
-<li>In <code>balance</code> mode, any out-of-range values are resolved by balancing them with the next highest unit.</li>
-<li>In <code>reject</code> mode, the presence of out-of-range values will cause the constructor to throw a <code>RangeError</code>.</li>
-</ul>
+<p>Use this constructor if you have the correct parameters already as individual number values.
+Otherwise, <code>Temporal.YearMonth.from()</code>, which accepts more kinds of input and allows disambiguation behaviour, is probably more convenient.</p>
+<p>All values are given as reckoned in the <a href="https://en.wikipedia.org/wiki/ISO_8601#Dates">ISO 8601 calendar</a>.
+Together, <code>isoYear</code> and <code>isoMonth</code> must represent a valid month in that calendar.</p>
 <p>The range of allowed values for this type is exactly enough that calling <a href="./date.html#getYearMonth"><code>getYearMonth()</code></a> on any valid <code>Temporal.Date</code> will succeed.
 If <code>isoYear</code> and <code>isoMonth</code> are outside of this range, then <code>constrain</code> mode will clamp the date to the limit of the allowed range.
 Both <code>balance</code> and <code>reject</code> mode will throw a <code>RangeError</code> in this case.</p>
 <p>Usage examples:</p>
 <pre><code class="language-javascript">// The June 2019 meeting
-ym = new Temporal.YearMonth(2019, 6)  // =&gt; 2019-06
-
-// Different disambiguation modes
-ym = new Temporal.YearMonth(2001, 13, &#39;constrain&#39;)  // =&gt; 2001-12
-ym = new Temporal.YearMonth(2001, -1, &#39;constrain&#39;)  // =&gt; 2001-01
-ym = new Temporal.YearMonth(2001, 13, &#39;balance&#39;)  // =&gt; 2002-01
-ym = new Temporal.YearMonth(2001, -1, &#39;balance&#39;)  // =&gt; 2000-11
-ym = new Temporal.YearMonth(2001, 13, &#39;reject&#39;)  // throws
-ym = new Temporal.YearMonth(2001, -1, &#39;reject&#39;)  // throws</code></pre>
+ym = new Temporal.YearMonth(2019, 6)  // =&gt; 2019-06</code></pre>
 <h2 id="static-methods">Static methods</h2>
-<h3 id="temporalyearmonthfromthing-string--object--temporalyearmonth">Temporal.YearMonth.<strong>from</strong>(<em>thing</em>: string | object) : Temporal.YearMonth</h3>
+<h3 id="temporalyearmonthfromthing-string--object-options-object--temporalyearmonth">Temporal.YearMonth.<strong>from</strong>(<em>thing</em>: string | object, <em>options</em>?: object) : Temporal.YearMonth</h3>
 <p><strong>Parameters:</strong></p>
 <ul>
 <li><code>thing</code> (string or object): The value representing the desired month.</li>
+<li><code>options</code> (optional object): An object with properties representing options for constructing the date.
+The following options are recognized:<ul>
+<li><code>disambiguation</code> (string): How to deal with out-of-range values in <code>thing</code>.
+Allowed values are <code>constrain</code>, <code>balance</code>, and <code>reject</code>.
+The default is <code>constrain</code>.</li>
+</ul>
+</li>
 </ul>
 <p><strong>Returns:</strong> a new <code>Temporal.YearMonth</code> object (or the same object if <code>thing</code> was a <code>Temporal.YearMonth</code> object.)</p>
 <p>This static method creates a new <code>Temporal.YearMonth</code> object from another value.
 If the value is a string, it must be in ISO 8601 format.
-Any parts of the string other than the year and the month will be ignored.
-If the value is another <code>Temporal.YearMonth</code> object, the same object is returned.
+Any parts of the string other than the year and the month are optional and will be ignored.
+If the string isn&#39;t valid according to ISO 8601, then a <code>RangeError</code> will be thrown regardless of the value of <code>disambiguation</code>.</p>
+<p>If the value is another <code>Temporal.YearMonth</code> object, the same object is returned.
 If the value is any other object, it must have <code>year</code> and <code>month</code> properties, and a <code>Temporal.YearMonth</code> will be constructed from them.</p>
+<p>The <code>disambiguation</code> option works as follows:</p>
+<ul>
+<li>In <code>constrain</code> mode (the default), any out-of-range values are clamped to the nearest in-range value.</li>
+<li>In <code>balance</code> mode, any out-of-range values are resolved by balancing them with the next highest unit.</li>
+<li>In <code>reject</code> mode, the presence of out-of-range values will cause the function to throw a <code>RangeError</code>.</li>
+</ul>
 <p>Example usage:</p>
 <pre><code class="language-javascript">ym = Temporal.YearMonth.from(&#39;2019-06&#39;);  // =&gt; 2019-06
 ym = Temporal.YearMonth.from(&#39;2019-06-24&#39;);  // =&gt; 2019-06
@@ -146,7 +144,23 @@ ym === Temporal.YearMonth.from(ym)  // =&gt; true
 
 ym = Temporal.YearMonth.from({year: 2019, month: 6});  // =&gt; 2019-06
 ym = Temporal.YearMonth.from(Temporal.Date.from(&#39;2019-06-24&#39;));
-  // =&gt; same as above; Temporal.Date has year and month properties</code></pre>
+  // =&gt; same as above; Temporal.Date has year and month properties
+
+// Different disambiguation modes
+ym = Temporal.YearMonth.from({ year: 2001, month: 13 }, { disambiguation: &#39;constrain&#39; })
+  // =&gt; 2001-12
+ym = Temporal.YearMonth.from({ year: 2001, month: -1 }, { disambiguation: &#39;constrain&#39; })
+  // =&gt; 2001-01
+ym = Temporal.YearMonth.from({ year: 2001, month: 13 }, { disambiguation: &#39;balance&#39; })
+  // =&gt; 2002-01
+ym = Temporal.YearMonth.from({ year: 2001, month: 0 }, { disambiguation: &#39;balance&#39; });
+  // =&gt; 2000-12
+ym = Temporal.YearMonth.from({ year: 2001, month: -1 }, { disambiguation: &#39;balance&#39; })
+  // =&gt; 2000-11
+ym = Temporal.YearMonth.from({ year: 2001, month: 13 }, { disambiguation: &#39;reject&#39; })
+  // throws
+ym = Temporal.YearMonth.from({ year: 2001, month: -1 }, { disambiguation: &#39;reject&#39; })
+  // throws</code></pre>
 <h3 id="temporalyearmonthcompareone-temporalyearmonth-two-temporalyearmonth--number">Temporal.YearMonth.<strong>compare</strong>(<em>one</em>: Temporal.YearMonth, <em>two</em>: Temporal.YearMonth) : number</h3>
 <p><strong>Parameters:</strong></p>
 <ul>

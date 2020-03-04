@@ -92,53 +92,50 @@ For example, it could be used to represent an event on a calendar which happens 
 A <code>Temporal.Date</code> can be converted into a <code>Temporal.DateTime</code> by combining it with a <code>Temporal.Time</code> using the <code>withTime()</code> method.</p>
 <p><code>Temporal.YearMonth</code> and <code>Temporal.MonthDay</code> carry less information than <code>Temporal.Date</code> and should be used when complete information is not required.</p>
 <h2 id="constructor">Constructor</h2>
-<h3 id="new-temporaldateisoyear-number-isomonth-number-isoday-number-disambiguation-constrain--balance--reject--constrain--temporaldate"><strong>new Temporal.Date</strong>(<em>isoYear</em>: number, <em>isoMonth</em>: number, <em>isoDay</em>: number, <em>disambiguation</em>: &#39;constrain&#39; | &#39;balance&#39; | &#39;reject&#39; = &#39;constrain&#39;) : Temporal.Date</h3>
+<h3 id="new-temporaldateisoyear-number-isomonth-number-isoday-number--temporaldate"><strong>new Temporal.Date</strong>(<em>isoYear</em>: number, <em>isoMonth</em>: number, <em>isoDay</em>: number) : Temporal.Date</h3>
 <p><strong>Parameters:</strong></p>
 <ul>
 <li><code>isoYear</code> (number): A year.</li>
 <li><code>isoMonth</code> (number): A month, ranging between 1 and 12 inclusive.</li>
 <li><code>isoDay</code> (number): A day of the month, ranging between 1 and 31 inclusive.</li>
-<li><code>disambiguation</code> (optional string): How to deal with out-of-range values of the other parameters.
-Allowed values are <code>constrain</code>, <code>balance</code>, and <code>reject</code>.
-The default is <code>constrain</code>.</li>
 </ul>
 <p><strong>Returns:</strong> a new <code>Temporal.Date</code> object.</p>
-<p>Use this constructor if you have the correct parameters for the date already as individual number values, or you need the disambiguation behaviour.
-Otherwise, <code>Temporal.Date.from()</code>, which accepts more kinds of input, is probably more convenient.</p>
-<p>All values are given as reckoned in the <a href="https://en.wikipedia.org/wiki/ISO_8601#Dates">ISO 8601 calendar</a>.</p>
-<p>The <code>disambiguation</code> parameter works as follows:</p>
-<ul>
-<li>In <code>constrain</code> mode (the default), any out-of-range values are clamped to the nearest in-range value.</li>
-<li>In <code>balance</code> mode, any out-of-range values are resolved by balancing them with the next highest unit.</li>
-<li>In <code>reject</code> mode, the presence of out-of-range values will cause the constructor to throw a <code>RangeError</code>.</li>
-</ul>
+<p>Use this constructor if you have the correct parameters for the date already as individual number values.
+Otherwise, <code>Temporal.Date.from()</code>, which accepts more kinds of input and allows disambiguation behaviour, is probably more convenient.</p>
+<p>All values are given as reckoned in the <a href="https://en.wikipedia.org/wiki/ISO_8601#Dates">ISO 8601 calendar</a>.
+Together, <code>isoYear</code>, <code>isoMonth</code>, and <code>isoDay</code> must represent a valid date in that calendar.</p>
 <p>The range of allowed values for this type is exactly enough that calling <a href="./datetime.html#getDate"><code>getDate()</code></a> on any valid <code>Temporal.DateTime</code> will succeed.
 If <code>isoYear</code>, <code>isoMonth</code>, and <code>isoDay</code> form a date outside of this range, then <code>constrain</code> mode will clamp the date to the limit of the allowed range.
 Both <code>balance</code> and <code>reject</code> mode will throw a <code>RangeError</code> in this case.</p>
 <p>Usage examples:</p>
 <pre><code class="language-javascript">// Pi day in 2020
-date = new Temporal.Date(2020, 3, 14)  // =&gt; 2020-03-14
-
-// Different disambiguation modes
-date = new Temporal.Date(2001, 13, 1, &#39;constrain&#39;)  // =&gt; 2001-12-01
-date = new Temporal.Date(2001, -1, 1, &#39;constrain&#39;)  // =&gt; 2001-01-01
-date = new Temporal.Date(2001, 13, 1, &#39;balance&#39;)  // =&gt; 2002-01-01
-date = new Temporal.Date(2001, -1, 1, &#39;balance&#39;)  // =&gt; 2000-11-01
-date = new Temporal.Date(2001, 13, 1, &#39;reject&#39;)  // throws
-date = new Temporal.Date(2001, -1, 1, &#39;reject&#39;)  // throws</code></pre>
+date = new Temporal.Date(2020, 3, 14)  // =&gt; 2020-03-14</code></pre>
 <h2 id="static-methods">Static methods</h2>
-<h3 id="temporaldatefromthing-string--object--temporaldate">Temporal.Date.<strong>from</strong>(<em>thing</em>: string | object) : Temporal.Date</h3>
+<h3 id="temporaldatefromthing-string--object-options-object--temporaldate">Temporal.Date.<strong>from</strong>(<em>thing</em>: string | object, <em>options</em>?: object) : Temporal.Date</h3>
 <p><strong>Parameters:</strong></p>
 <ul>
 <li><code>thing</code> (string or object): The value representing the desired date.</li>
+<li><code>options</code> (optional object): An object with properties representing options for constructing the date.
+The following options are recognized:<ul>
+<li><code>disambiguation</code> (string): How to deal with out-of-range values in <code>thing</code>.
+Allowed values are <code>constrain</code>, <code>balance</code>, and <code>reject</code>.
+The default is <code>constrain</code>.</li>
+</ul>
+</li>
 </ul>
 <p><strong>Returns:</strong> a new <code>Temporal.Date</code> object (or the same object if <code>thing</code> was a <code>Temporal.Date</code> object.)</p>
 <p>This static method creates a new <code>Temporal.Date</code> object from another value.
 If the value is a string, it must be in ISO 8601 format.
-If the string designates a time zone, the time zone will be ignored.
-If the value is another <code>Temporal.Date</code> object, the same object is returned.
+Any time or time zone part is optional and will be ignored.
+If the string isn&#39;t valid according to ISO 8601, then a <code>RangeError</code> will be thrown regardless of the value of <code>disambiguation</code>.</p>
+<p>If the value is another <code>Temporal.Date</code> object, the same object is returned.
 If the value is any other object, it must have <code>year</code>, <code>month</code>, and <code>day</code> properties, and a <code>Temporal.Date</code> will be constructed from them.</p>
-<p>Note that any time or time zone part of an ISO 8601 string passed to this function is optional, and will be ignored.</p>
+<p>The <code>disambiguation</code> option works as follows:</p>
+<ul>
+<li>In <code>constrain</code> mode (the default), any out-of-range values are clamped to the nearest in-range value.</li>
+<li>In <code>balance</code> mode, any out-of-range values are resolved by balancing them with the next highest unit.</li>
+<li>In <code>reject</code> mode, the presence of out-of-range values will cause the function to throw a <code>RangeError</code>.</li>
+</ul>
 <p>Example usage:</p>
 <pre><code class="language-javascript">date = Temporal.Date.from(&#39;2006-08-24&#39;);  // =&gt; 2006-08-24
 date = Temporal.Date.from(&#39;2006-08-24T15:43:27&#39;);  // =&gt; 2006-08-24
@@ -149,7 +146,23 @@ date === Temporal.Date.from(date)  // =&gt; true
 
 date = Temporal.Date.from({year: 2006, month: 8, day: 24});  // =&gt; 2006-08-24
 date = Temporal.Date.from(Temporal.DateTime.from(&#39;2006-08-24T15:43:27&#39;));
-  // =&gt; same as above; Temporal.DateTime has year, month, and day properties</code></pre>
+  // =&gt; same as above; Temporal.DateTime has year, month, and day properties
+
+// Different disambiguation modes
+date = Temporal.Date.from({ year: 2001, month: 13, day: 1 }, { disambiguation: &#39;constrain&#39; })
+  // =&gt; 2001-12-01
+date = Temporal.Date.from({ year: 2001, month: -1, day: 1 }, { disambiguation: &#39;constrain&#39; })
+  // =&gt; 2001-01-01
+date = Temporal.Date.from({ year: 2001, month: 13, day: 1 }, { disambiguation: &#39;balance&#39; })
+  // =&gt; 2002-01-01
+date = Temporal.Date.from({ year: 2001, month: 0, day: 1 }, { disambiguation: &#39;balance&#39; });
+  // =&gt; 2000-12-01
+date = Temporal.Date.from({ year: 2001, month: -1, day: 1 }, { disambiguation: &#39;balance&#39; })
+  // =&gt; 2000-11-01
+date = Temporal.Date.from({ year: 2001, month: 13, day: 1 }, { disambiguation: &#39;reject&#39; })
+  // throws
+date = Temporal.Date.from({ year: 2001, month: -1, day: 1 }, { disambiguation: &#39;reject&#39; })
+  // throws</code></pre>
 <h3 id="temporaldatecompareone-temporaldate-two-temporaldate--number">Temporal.Date.<strong>compare</strong>(<em>one</em>: Temporal.Date, <em>two</em>: Temporal.Date) : number</h3>
 <p><strong>Parameters:</strong></p>
 <ul>
