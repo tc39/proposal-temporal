@@ -47,8 +47,8 @@
       <p>This property has the attributes { [[Writable]]: *false*, [[Enumerable]]: *false*, [[Configurable]]: *false* }.</p>
     </emu-clause>
 
-    <emu-clause id="sec-temporal.timezone.prototype-@@iterator">
-      <h1>Temporal.TimeZone[ @@iterator ]</h1>
+    <emu-clause id="sec-temporal.timezone-@@iterator">
+      <h1>Temporal.TimeZone [ @@iterator ]</h1>
       <p>
         <mark>TODO</mark>
       </p>
@@ -142,7 +142,7 @@
         1. Let _timeZone_ be the *this* value.
         1. Perform ? RequireInternalSlot(_timeZone_, [[InitializedTemporalTimeZone]]).
         1. Perform ? RequireInternalSlot(_absolute_, [[InitializedTemporalAbsolute]]).
-        1. Return ? GetTemporalDateTimeFor(_timeZone_, _absolute_);
+        1. Return ? GetTemporalDateTimeFor(_timeZone_, _absolute_).
       </emu-alg>
     </emu-clause>
 

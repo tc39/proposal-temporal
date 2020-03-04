@@ -140,7 +140,7 @@
     <emu-clause id="sec-get-temporal.yearmonth.prototype.daysinyear">
       <h1>get Temporal.YearMonth.prototype.daysInYear</h1>
       <p>
-        `Temporal.YearMonth.prototype.daysInYear` is an accessor property whose set accessor is undefined.
+        `Temporal.YearMonth.prototype.daysInYear` is an accessor property whose set accessor function is undefined.
         Its get accessor function performs the following steps:
       </p>
       <emu-alg>
@@ -238,7 +238,7 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal.yearmonth.prototype.difference">
-      <h1>Temporal.YearMonth.prototype.difference ( _other_ [, _options_ ]. )</h1>
+      <h1>Temporal.YearMonth.prototype.difference ( _other_ [ , _options_ ] )</h1>
       <p>
         The `difference` method takes two arguments, _other_ and _options_.
         The following steps are taken:
@@ -433,7 +433,7 @@
           1. Set _month_ to ! ConstrainToRange(_month_, 1, 12).
         1. Return the Record {
           [[Year]]: _year_,
-          [[Month]]: _month_,
+          [[Month]]: _month_
           }.
       </emu-alg>
     </emu-clause>
