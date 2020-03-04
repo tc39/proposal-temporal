@@ -1,0 +1,5 @@
+---
+globals:
+  Temporal: readonly
+  assert: readonly
+  verifyProperty: readonly
