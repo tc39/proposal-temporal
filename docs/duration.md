@@ -185,6 +185,121 @@ duration = duration.with({ years, months }, { disambiguation: 'balance' });
   // => P4Y2M52DT3H40M
 ```
 
+### duration.**plus**(_other_: object, _options_?: object) : Temporal.Duration
+
+**Parameters:**
+- `other` (object): A `Temporal.Duration` object or a duration-like object.
+- `options` (optional object): An object with properties representing options for the addition.
+  The following options are recognized:
+  - `disambiguation` (string): How to deal with additions that result in out-of-range values.
+    Allowed values are `constrain` and `reject`.
+    The default is `constrain`.
+
+**Returns:** a new `Temporal.Duration` object which represents the sum of the durations of `duration` and `other`.
+
+This method adds `other` to `duration`, resulting in a longer duration.
+
+The `other` argument is an object with properties denoting a duration, such as `{ hours: 5, minutes: 30 }`, or a `Temporal.Duration` object.
+
+The `disambiguation` argument tells what to do in the case where the addition results in an out-of-range value:
+- In `constrain` mode (the default), additions that result in a value too large to be represented in a Number are capped at `Number.MAX_VALUE`.
+- In `reject` mode, if any addition results in a value too large to be represented in a Number, a `RangeError` is thrown.
+
+The fields of the resulting duration are never converted between each other.
+If you need this behaviour, use `Duration.from()` with balance disambiguation, which will convert overly large units into the next highest unit, up to days.
+
+No conversion is ever performed between years, months, days, and other units, as that could be ambiguous depending on the start date.
+If you need such a conversion, you must implement it yourself, since the rules can depend on the start date and the calendar in use.
+
+Usage example:
+```javascript
+hour = Temporal.Duration.from('PT1H');
+hour.plus({ minutes: 30 })  // => PT1H30M
+
+// Examples of balancing:
+one = Temporal.Duration.from({ hours: 1, minutes: 30 });
+two = Temporal.Duration.from({ hours: 2, minutes: 45 });
+result = one.plus(two)  // => PT3H75M
+result.with(result, { disambiguation: 'balance' })  // => PT4H15M
+
+fifty = Temporal.Duration.from('P50Y50M50DT50H50M50.500500500S');
+result = fifty.plus(fifty)  // => P100Y100M100DT100H100M101.001001S'
+// Temporal.Duration.from(result, { disambiguation: 'balance' }); - FIXME: https://github.com/tc39/proposal-temporal/issues/232
+result.with(result, { disambiguation: 'balance' })
+  // => P100Y100M104DT5H41M41.001001S
+
+// Example of not balancing:
+oneAndAHalfYear = Temporal.Duration.from({ years: 1, months: 6 });
+result = oneAndAHalfYear.plus(oneAndAHalfYear)  // => P2Y12M
+// Temporal.Duration.from(result, { disambiguation: 'balance' }); - FIXME: https://github.com/tc39/proposal-temporal/issues/232
+result.with(result, { disambiguation: 'balance' })  // => P2Y12M
+// Example of custom conversion using ISO calendar rules:
+function monthsToYears(duration) {
+    const { years, months } = duration;
+    years += Math.floor(months / 12);
+    months %= 12;
+    return duration.with({ years, months });
+}
+monthsToYears(result)  // => P3Y
+
+```
+
+### duration.**minus**(_other_: object, _options_?: object) : Temporal.Duration
+
+**Parameters:**
+- `other` (object): A `Temporal.Duration` object or a duration-like object.
+- `options` (optional object): An object with properties representing options for the subtraction.
+  The following options are recognized:
+  - `disambiguation` (string): How to deal with subtractions that result in out-of-range values.
+    Allowed values are `balanceConstrain` and `balance`.
+    The default is `balanceConstrain`.
+
+**Returns:** a new `Temporal.Duration` object which represents the duration of `duration` less the duration of `other`.
+
+This method subtracts `other` from `duration`, resulting in a shorter duration.
+
+The `other` argument is an object with properties denoting a duration, such as `{ hours: 5, minutes: 30 }`, or a `Temporal.Duration` object.
+
+If `other` is larger than `duration` and the subtraction would result in a negative duration, the method will throw a `RangeError`.
+
+In order to be valid, the resulting duration must not have any negative fields.
+However, it's possible to have one or more of the fields be negative while the overall duration is still positive.
+For example, "4 hours and 15 minutes" minus "2 hours and 30 minutes" results in "2 hours and &minus;15 minutes".
+The `disambiguation` option tells what to do in this case.
+- In `balanceConstrain` mode (the default), negative fields are balanced with the next highest field so that none of the fields are negative in the result.
+  If this is not possible, a `RangeError` is thrown.
+- In `balance` mode, all fields are balanced with the next highest field, no matter if they are negative or not.
+
+The fields of the resulting duration are only converted between each other if one unit is negative but a larger unit is positive, in which case the smaller is balanced with the larger to avoid having negative-valued fields.
+
+If you need the full balancing behaviour, use `Duration.from()` with balance disambiguation, which will convert overly large units into the next highest unit, up to hours.
+
+No conversion is ever performed between years, months, days, and other units, as that could be ambiguous depending on the start date.
+If you need such a conversion, you must implement it yourself, since the rules can depend on the start date and the calendar in use.
+
+Usage example:
+```javascript
+hourAndAHalf = Temporal.Duration.from('PT1H30M');
+hourAndAHalf.minus({ hours: 1 })  // => PT30M
+
+one = Temporal.Duration.from({ minutes: 180 });
+two = Temporal.Duration.from({ seconds: 30 });
+one.minus(two);  // => PT179M30S
+one.minus(two, { disambiguation: 'balance' });  // => PT2H59M30S
+
+// Example of not balancing:
+threeYears = Temporal.Duration.from({ years: 3 });
+oneAndAHalfYear = Temporal.Duration.from({ years: 1, months: 6 });
+threeYears.minus(oneAndAHalfYear)  // throws; months are negative and cannot be balanced
+// Example of a custom conversion using ISO calendar rules:
+function yearsToMonths(duration) {
+    const { years, months } = duration;
+    months += years * 12;
+    return duration.with({ years: 0, months });
+}
+yearsToMonths(threeYears).minus(yearsToMonths(oneAndAHalfYear))  // => P18M
+```
+
 ### duration.**toString**() : string
 
 **Returns:** the duration as an ISO 8601 string.

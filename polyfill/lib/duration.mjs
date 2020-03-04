@@ -126,6 +126,76 @@ export class Duration {
     if (!ES.IsTemporalDuration(result)) throw new TypeError('invalid result');
     return result;
   }
+  plus(other, options) {
+    if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
+    other = ES.ToLimitedTemporalDuration(other);
+    const disambiguation = ES.ToArithmeticTemporalDisambiguation(options);
+    const { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.AddDuration(
+      GetSlot(this, YEARS),
+      GetSlot(this, MONTHS),
+      GetSlot(this, DAYS),
+      GetSlot(this, HOURS),
+      GetSlot(this, MINUTES),
+      GetSlot(this, SECONDS),
+      GetSlot(this, MILLISECONDS),
+      GetSlot(this, MICROSECONDS),
+      GetSlot(this, NANOSECONDS),
+      GetSlot(other, YEARS),
+      GetSlot(other, MONTHS),
+      GetSlot(other, DAYS),
+      GetSlot(other, HOURS),
+      GetSlot(other, MINUTES),
+      GetSlot(other, SECONDS),
+      GetSlot(other, MILLISECONDS),
+      GetSlot(other, MICROSECONDS),
+      GetSlot(other, NANOSECONDS),
+      disambiguation
+    );
+    const Construct = ES.SpeciesConstructor(this, Duration);
+    const result = new Construct(years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+    if (!ES.IsTemporalDuration(result)) throw new TypeError('invalid result');
+    return result;
+  }
+  minus(other, options) {
+    if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
+    other = ES.ToLimitedTemporalDuration(other);
+    const disambiguation = ES.ToDurationSubtractionTemporalDisambiguation(options);
+    const {
+      years,
+      months,
+      days,
+      hours,
+      minutes,
+      seconds,
+      milliseconds,
+      microseconds,
+      nanoseconds
+    } = ES.SubtractDuration(
+      GetSlot(this, YEARS),
+      GetSlot(this, MONTHS),
+      GetSlot(this, DAYS),
+      GetSlot(this, HOURS),
+      GetSlot(this, MINUTES),
+      GetSlot(this, SECONDS),
+      GetSlot(this, MILLISECONDS),
+      GetSlot(this, MICROSECONDS),
+      GetSlot(this, NANOSECONDS),
+      GetSlot(other, YEARS),
+      GetSlot(other, MONTHS),
+      GetSlot(other, DAYS),
+      GetSlot(other, HOURS),
+      GetSlot(other, MINUTES),
+      GetSlot(other, SECONDS),
+      GetSlot(other, MILLISECONDS),
+      GetSlot(other, MICROSECONDS),
+      GetSlot(other, NANOSECONDS),
+      disambiguation
+    );
+    const Construct = ES.SpeciesConstructor(this, Duration);
+    const result = new Construct(years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+    if (!ES.IsTemporalDuration(result)) throw new TypeError('invalid result');
+    return result;
+  }
   toString() {
     function formatNumber(num) {
       if (num <= Number.MAX_SAFE_INTEGER) return num.toString(10);
