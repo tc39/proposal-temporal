@@ -354,7 +354,7 @@
         1. If _temporalTimeZoneLike_ is *undefined*, then
           1. Set _temporalTimeZoneLike_ to *"UTC"*.
         1. Let _timeZone_ be ? ToTemporalTimeZone(_temporalTimeZoneLike_).
-        1. Return ? GetTemporalDateTimeFor(_timeZone_, _absolute_);
+        1. Return ? GetTemporalDateTimeFor(_timeZone_, _absolute_).
       </emu-alg>
     </emu-clause>
   </emu-clause>
@@ -428,7 +428,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-ParseTemporalAbsolute" aoid="ParseTemporalAbsolute">
+    <emu-clause id="sec-temporal-parsetemporalabsolute" aoid="ParseTemporalAbsolute">
       <h1>ParseTemporalAbsolute ( _isoString_ )</h1>
       <emu-alg>
         1. Let _valid_ be *true* if _isoString_ matches <a href="https://github.com/tc39/proposal-temporal/blob/main/polyfill/lib/regex.mjs">the "absolute" regular expression in the polyfill</a> and *false* otherwise.
@@ -465,7 +465,7 @@
         1. Assert: _absolute_ has an [[InitializedTemporalAbsolute]] internal slot.
         1. Assert: Type(_timeZone_) is Object.
         1. Assert: _timeZone_ has an [[InitializedTemporalTimeZone]] internal slot.
-        1. Let _dateTime_ be ? GetTemporalDateTimeFor(_timeZone_, _absolute_);
+        1. Let _dateTime_ be ? GetTemporalDateTimeFor(_timeZone_, _absolute_).
         1. Let _dateTimeString_ be ! TemporalDateTimeToString(_dateTime_).
         1. Let _timeZoneString_ be ? ISOTimeZoneString(_timeZone_, _absolute_).
         1. Return the string-concatenation of _dateTimeString_ and _timeZoneString_.

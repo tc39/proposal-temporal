@@ -443,7 +443,7 @@
         1. Assert: _disambiguation_ is one of *"constrain"*, *"balance"*, or *"reject"*.
         1. Let _result_ be ? ParseTemporalDateString(_isoString_).
         1. Let _result_ be ? RegulateDate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _disambiguation_).
-        1. Return ? CreateDate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]]).
+        1. Return ? CreateTemporalDate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]]).
       </emu-alg>
     </emu-clause>
 
@@ -538,7 +538,7 @@
         1. Let _result_ be {
           [[Year]]: *undefined*,
           [[Month]]: *undefined*,
-          [[Day]]: *undefined*,
+          [[Day]]: *undefined*
           }.
         1. Let _any_ be *false*.
         1. For each row of <emu-xref href="#table-temporal-temporaldatelike-properties"></emu-xref>, except the header row, in table order, do
@@ -589,7 +589,7 @@
           1. Return the Record {
             [[Year]]: _year_,
             [[Month]]: _month_,
-            [[Day]]: _day_,
+            [[Day]]: _day_
             }.
         1. If _disambiguation_ is *"constrain"*, then
           1. Return ! ConstrainDate(_year_, _month_, _day_).
@@ -623,11 +623,11 @@
       <emu-alg>
         1. Assert: _year_, _month_, and _day_ are integer Number values.
         1. Let _yearMonth_ be ! ConstrainYearMonth(_year_, _month_).
-        1. Set _day_ to ! ConstrainToRange(_day_, 1, ! DaysInMonth(_yearMonth_.[[Year]], _yearMonth_.[[Month]]));
+        1. Set _day_ to ! ConstrainToRange(_day_, 1, ! DaysInMonth(_yearMonth_.[[Year]], _yearMonth_.[[Month]])).
         1. Return the Record {
           [[Year]]: _yearMonth_.[[Year]],
           [[Month]]: _yearMonth_.[[Month]],
-          [[Day]]: _day_,
+          [[Day]]: _day_
           }.
       </emu-alg>
     </emu-clause>
