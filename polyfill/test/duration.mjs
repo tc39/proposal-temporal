@@ -22,6 +22,12 @@ describe('Duration', () => {
       it('Duration.prototype.with is a Function', () => {
         equal(typeof Duration.prototype.with, 'function');
       });
+      it('Duration.prototype.plus is a Function', () => {
+        equal(typeof Duration.prototype.plus, 'function');
+      });
+      it('Duration.prototype.minus is a Function', () => {
+        equal(typeof Duration.prototype.minus, 'function');
+      });
     });
   });
   describe('Construction', () => {
@@ -245,6 +251,155 @@ describe('Duration', () => {
     it('invalid disambiguation', () => {
       ['', 'CONSTRAIN', 'xyz', 3, null].forEach((disambiguation) =>
         throws(() => duration.with({ day: 5 }, { disambiguation }), RangeError)
+      );
+    });
+  });
+  describe('Duration.plus()', () => {
+    const duration = Duration.from({ days: 1, minutes: 5 });
+    it('adds same units', () => {
+      equal(`${duration.plus({ days: 2, minutes: 5 })}`, 'P3DT10M');
+    });
+    it('adds different units', () => {
+      equal(`${duration.plus({ hours: 12, seconds: 30 })}`, 'P1DT12H5M30S');
+    });
+    it('does not balance units', () => {
+      const d = Duration.from('P50M50DT50H50M50.500500500S');
+      const result = d.plus(d);
+      equal(result.months, 100);
+      equal(result.days, 100);
+      equal(result.hours, 100);
+      equal(result.minutes, 100);
+      equal(result.seconds, 100);
+      equal(result.milliseconds, 1000);
+      equal(result.microseconds, 1000);
+      equal(result.nanoseconds, 1000);
+    });
+    const max = new Duration(...Array(9).fill(Number.MAX_VALUE));
+    it('caps values at Number.MAX_VALUE by default', () => {
+      const result = max.plus(max);
+      equal(result.years, Number.MAX_VALUE);
+      equal(result.months, Number.MAX_VALUE);
+      equal(result.days, Number.MAX_VALUE);
+      equal(result.hours, Number.MAX_VALUE);
+      equal(result.minutes, Number.MAX_VALUE);
+      equal(result.seconds, Number.MAX_VALUE);
+      equal(result.milliseconds, Number.MAX_VALUE);
+      equal(result.microseconds, Number.MAX_VALUE);
+      equal(result.nanoseconds, Number.MAX_VALUE);
+    });
+    it('caps values at Number.MAX_VALUE with constrain', () => {
+      const result = max.plus(max, { disambiguation: 'constrain' });
+      equal(result.years, Number.MAX_VALUE);
+      equal(result.months, Number.MAX_VALUE);
+      equal(result.days, Number.MAX_VALUE);
+      equal(result.hours, Number.MAX_VALUE);
+      equal(result.minutes, Number.MAX_VALUE);
+      equal(result.seconds, Number.MAX_VALUE);
+      equal(result.milliseconds, Number.MAX_VALUE);
+      equal(result.microseconds, Number.MAX_VALUE);
+      equal(result.nanoseconds, Number.MAX_VALUE);
+    });
+    it('throws if values become infinite with reject', () => {
+      throws(() => max.plus(max, { disambiguation: 'reject' }), RangeError);
+    });
+    it('throws on invalid disambiguation', () => {
+      ['', 'CONSTRAIN', 'balance', 3, null].forEach((disambiguation) =>
+        throws(() => duration.plus(duration, { disambiguation }), RangeError)
+      );
+    });
+  });
+  describe('Duration.minus()', () => {
+    const duration = Duration.from({ days: 3, hours: 1, minutes: 10 });
+    it('subtracts same units with positive result', () => {
+      equal(`${duration.minus({ days: 1, minutes: 5 })}`, 'P2DT1H5M');
+    });
+    it('subtracts same units with zero result', () => {
+      equal(`${duration.minus(duration)}`, 'PT0S');
+      equal(`${duration.minus({ days: 3 })}`, 'PT1H10M');
+      equal(`${duration.minus({ minutes: 10 })}`, 'P3DT1H');
+    });
+    it('balances when subtracting same units with negative result', () => {
+      equal(`${duration.minus({ minutes: 15 })}`, 'P3DT55M');
+    });
+    it('balances when subtracting different units', () => {
+      equal(`${duration.minus({ seconds: 30 })}`, 'P3DT1H9M30S');
+    });
+    it('never balances positive units in balanceConstrain mode', () => {
+      const d = Duration.from({
+        minutes: 100,
+        seconds: 100,
+        milliseconds: 2000,
+        microseconds: 2000,
+        nanoseconds: 2000
+      });
+      const less = Duration.from({
+        minutes: 10,
+        seconds: 10,
+        milliseconds: 500,
+        microseconds: 500,
+        nanoseconds: 500
+      });
+      let result = d.minus(less);
+      equal(result.minutes, 90);
+      equal(result.seconds, 90);
+      equal(result.milliseconds, 1500);
+      equal(result.microseconds, 1500);
+      equal(result.nanoseconds, 1500);
+
+      result = d.minus(less, { disambiguation: 'balanceConstrain' });
+      equal(result.minutes, 90);
+      equal(result.seconds, 90);
+      equal(result.milliseconds, 1500);
+      equal(result.microseconds, 1500);
+      equal(result.nanoseconds, 1500);
+    });
+    it('balances positive units in balance mode', () => {
+      const d = Duration.from({
+        minutes: 100,
+        seconds: 100,
+        milliseconds: 2000,
+        microseconds: 2000,
+        nanoseconds: 2000
+      });
+      const less = Duration.from({
+        minutes: 10,
+        seconds: 10,
+        milliseconds: 500,
+        microseconds: 500,
+        nanoseconds: 500
+      });
+      const result = d.minus(less, { disambiguation: 'balance' });
+      equal(result.hours, 1);
+      equal(result.minutes, 31);
+      equal(result.seconds, 31);
+      equal(result.milliseconds, 501);
+      equal(result.microseconds, 501);
+      equal(result.nanoseconds, 500);
+    });
+    it('does not balance with units higher than days', () => {
+      const d = Duration.from('P1M15D');
+      throws(() => d.minus({ days: 20 }), RangeError);
+    });
+    const tenYears = Duration.from('P10Y');
+    const tenMinutes = Duration.from('PT10M');
+    it('throws if result is negative', () => {
+      ['balanceConstrain', 'balance'].forEach((disambiguation) => {
+        throws(() => tenYears.minus({ years: 15 }, { disambiguation }), RangeError);
+        throws(() => tenMinutes.minus({ minutes: 15 }, { disambiguation }), RangeError);
+      });
+    });
+    it('throws if result cannot be determined to be positive or negative', () => {
+      ['balanceConstrain', 'balance'].forEach((disambiguation) => {
+        throws(() => tenYears.minus({ months: 5 }, { disambiguation }), RangeError);
+        throws(() => tenYears.minus({ days: 5 }, { disambiguation }), RangeError);
+        throws(() => tenYears.minus({ hours: 5 }, { disambiguation }), RangeError);
+        throws(() => tenYears.minus({ minutes: 5 }, { disambiguation }), RangeError);
+        throws(() => tenYears.minus({ seconds: 5 }, { disambiguation }), RangeError);
+      });
+    });
+    it('throws on invalid disambiguation', () => {
+      ['', 'BALANCE', 'constrain', 3, null].forEach((disambiguation) =>
+        throws(() => duration.minus(duration, { disambiguation }), RangeError)
       );
     });
   });

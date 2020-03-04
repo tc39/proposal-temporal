@@ -1,0 +1,38 @@
+// Copyright (C) 2020 Igalia, S.L. All rights reserved.
+// This code is governed by the BSD license found in the LICENSE file.
+
+/*---
+esid: sec-temporal.duration.prototype.minus
+includes: [compareArray.js]
+features: [Symbol.species]
+---*/
+
+let called = 0;
+
+class MyDuration extends Temporal.Duration {
+  constructor(years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds) {
+    assert.compareArray([years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds], [1, 2, 3, 4, 5, 6, 987, 654, 321], "constructor arguments");
+    ++called;
+    super(years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+  }
+}
+
+const instance = MyDuration.from("P1Y2M3DT4H5M6.987654321S");
+assert.sameValue(called, 1);
+
+MyDuration.prototype.constructor = {
+  [Symbol.species]: null,
+};
+
+const result = instance.minus({ nanoseconds: 1 });
+assert.sameValue(result.years, 1, "year result");
+assert.sameValue(result.months, 2, "month result");
+assert.sameValue(result.days, 3, "day result");
+assert.sameValue(result.hours, 4, "hour result");
+assert.sameValue(result.minutes, 5, "minute result");
+assert.sameValue(result.seconds, 6, "second result");
+assert.sameValue(result.milliseconds, 987, "millisecond result");
+assert.sameValue(result.microseconds, 654, "microsecond result");
+assert.sameValue(result.nanoseconds, 320, "nanosecond result");
+assert.sameValue(called, 1);
+assert.sameValue(Object.getPrototypeOf(result), Temporal.Duration.prototype);

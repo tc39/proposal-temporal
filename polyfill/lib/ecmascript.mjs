@@ -521,6 +521,9 @@ export const ES = ObjectAssign({}, ES2019, {
   ToTimeZoneTemporalDisambiguation: (options) => {
     return ES.GetOption(options, 'disambiguation', ['earlier', 'later', 'reject'], 'earlier');
   },
+  ToDurationSubtractionTemporalDisambiguation: (options) => {
+    return ES.GetOption(options, 'disambiguation', ['balanceConstrain', 'balance'], 'balanceConstrain');
+  },
   ToLargestTemporalUnit: (options, fallback, disallowedStrings = []) => {
     const largestUnit = ES.GetOption(
       options,
@@ -1305,6 +1308,127 @@ export const ES = ObjectAssign({}, ES2019, {
       nanosecond
     ));
     return { deltaDays, hour, minute, second, millisecond, microsecond, nanosecond };
+  },
+  AddDuration: (
+    y1,
+    mon1,
+    d1,
+    h1,
+    min1,
+    s1,
+    ms1,
+    µs1,
+    ns1,
+    y2,
+    mon2,
+    d2,
+    h2,
+    min2,
+    s2,
+    ms2,
+    µs2,
+    ns2,
+    disambiguation
+  ) => {
+    let years = y1 + y2;
+    let months = mon1 + mon2;
+    let days = d1 + d2;
+    let hours = h1 + h2;
+    let minutes = min1 + min2;
+    let seconds = s1 + s2;
+    let milliseconds = ms1 + ms2;
+    let microseconds = µs1 + µs2;
+    let nanoseconds = ns1 + ns2;
+
+    return ES.RegulateDuration(
+      years,
+      months,
+      days,
+      hours,
+      minutes,
+      seconds,
+      milliseconds,
+      microseconds,
+      nanoseconds,
+      disambiguation
+    );
+  },
+  SubtractDuration: (
+    y1,
+    mon1,
+    d1,
+    h1,
+    min1,
+    s1,
+    ms1,
+    µs1,
+    ns1,
+    y2,
+    mon2,
+    d2,
+    h2,
+    min2,
+    s2,
+    ms2,
+    µs2,
+    ns2,
+    disambiguation
+  ) => {
+    let years = y1 - y2;
+    let months = mon1 - mon2;
+    let days = d1 - d2;
+    let hours = h1 - h2;
+    let minutes = min1 - min2;
+    let seconds = s1 - s2;
+    let milliseconds = ms1 - ms2;
+    let microseconds = µs1 - µs2;
+    let nanoseconds = ns1 - ns2;
+
+    if (nanoseconds < 0) {
+      microseconds += Math.floor(nanoseconds / 1000);
+      nanoseconds = ES.NonNegativeModulo(nanoseconds, 1000);
+    }
+    if (microseconds < 0) {
+      milliseconds += Math.floor(microseconds / 1000);
+      microseconds = ES.NonNegativeModulo(microseconds, 1000);
+    }
+    if (milliseconds < 0) {
+      seconds += Math.floor(milliseconds / 1000);
+      milliseconds = ES.NonNegativeModulo(milliseconds, 1000);
+    }
+    if (seconds < 0) {
+      minutes += Math.floor(seconds / 60);
+      seconds = ES.NonNegativeModulo(seconds, 60);
+    }
+    if (minutes < 0) {
+      hours += Math.floor(minutes / 60);
+      minutes = ES.NonNegativeModulo(minutes, 60);
+    }
+    if (hours < 0) {
+      days += Math.floor(hours / 24);
+      hours = ES.NonNegativeModulo(hours, 24);
+    }
+
+    for (const prop of [years, months, days]) {
+      if (prop < 0) throw new RangeError('negative values not allowed as duration fields');
+    }
+
+    if (disambiguation === 'balance') {
+      return ES.RegulateDuration(
+        years,
+        months,
+        days,
+        hours,
+        minutes,
+        seconds,
+        milliseconds,
+        microseconds,
+        nanoseconds,
+        'balance'
+      );
+    }
+
+    return { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
   },
 
   AssertPositiveInteger: (num) => {
