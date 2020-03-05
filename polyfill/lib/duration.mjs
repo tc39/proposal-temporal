@@ -91,6 +91,41 @@ export class Duration {
     if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
     return GetSlot(this, NANOSECONDS);
   }
+  with(durationLike, options) {
+    if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
+    const disambiguation = ES.ToTemporalDisambiguation(options);
+    const props = ES.ValidDurationLike(durationLike);
+    if (!props) {
+      throw new RangeError('invalid duration-like');
+    }
+    let {
+      years = GetSlot(this, YEARS),
+      months = GetSlot(this, MONTHS),
+      days = GetSlot(this, DAYS),
+      hours = GetSlot(this, HOURS),
+      minutes = GetSlot(this, MINUTES),
+      seconds = GetSlot(this, SECONDS),
+      milliseconds = GetSlot(this, MILLISECONDS),
+      microseconds = GetSlot(this, MICROSECONDS),
+      nanoseconds = GetSlot(this, NANOSECONDS)
+    } = props;
+    ({ years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.RegulateDuration(
+      years,
+      months,
+      days,
+      hours,
+      minutes,
+      seconds,
+      milliseconds,
+      microseconds,
+      nanoseconds,
+      disambiguation
+    ));
+    const Construct = ES.SpeciesConstructor(this, Duration);
+    const result = new Construct(years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+    if (!ES.IsTemporalDuration(result)) throw new TypeError('invalid result');
+    return result;
+  }
   toString() {
     function formatNumber(num) {
       if (num <= Number.MAX_SAFE_INTEGER) return num.toString(10);

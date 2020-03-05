@@ -10,6 +10,20 @@ const { throws, equal } = assert;
 import { Duration } from 'tc39-temporal';
 
 describe('Duration', () => {
+  describe('Structure', () => {
+    it('Duration is a Function', () => {
+      equal(typeof Duration, 'function');
+    });
+    it('Duration has a prototype', () => {
+      assert(Duration.prototype);
+      equal(typeof Duration.prototype, 'object');
+    });
+    describe('Duration.prototype', () => {
+      it('Duration.prototype.with is a Function', () => {
+        equal(typeof Duration.prototype.with, 'function');
+      });
+    });
+  });
   describe('Construction', () => {
     it('negative values throw', () => throws(() => new Duration(-1, -1, -1, -1, -1, -1, -1, -1, -1), RangeError));
   });
@@ -160,6 +174,78 @@ describe('Duration', () => {
       test(6, 'PT', 'S', '.');
       test(7, 'PT', 'S', '.');
       test(8, 'PT', 'S', '.');
+    });
+  });
+  describe('Duration.with()', () => {
+    const duration = new Duration(5, 5, 5, 5, 5, 5, 5, 5, 5);
+    it('duration.with({ years: 1 } works', () => {
+      equal(`${duration.with({ years: 1 })}`, 'P1Y5M5DT5H5M5.005005005S');
+    });
+    it('duration.with({ months: 1 } works', () => {
+      equal(`${duration.with({ months: 1 })}`, 'P5Y1M5DT5H5M5.005005005S');
+    });
+    it('duration.with({ days: 1 } works', () => {
+      equal(`${duration.with({ days: 1 })}`, 'P5Y5M1DT5H5M5.005005005S');
+    });
+    it('duration.with({ hours: 1 } works', () => {
+      equal(`${duration.with({ hours: 1 })}`, 'P5Y5M5DT1H5M5.005005005S');
+    });
+    it('duration.with({ minutes: 1 } works', () => {
+      equal(`${duration.with({ minutes: 1 })}`, 'P5Y5M5DT5H1M5.005005005S');
+    });
+    it('duration.with({ seconds: 1 } works', () => {
+      equal(`${duration.with({ seconds: 1 })}`, 'P5Y5M5DT5H5M1.005005005S');
+    });
+    it('duration.with({ milliseconds: 1 } works', () => {
+      equal(`${duration.with({ milliseconds: 1 })}`, 'P5Y5M5DT5H5M5.001005005S');
+    });
+    it('duration.with({ microseconds: 1 } works', () => {
+      equal(`${duration.with({ microseconds: 1 })}`, 'P5Y5M5DT5H5M5.005001005S');
+    });
+    it('duration.with({ nanoseconds: 1 } works', () => {
+      equal(`${duration.with({ nanoseconds: 1 })}`, 'P5Y5M5DT5H5M5.005005001S');
+    });
+    it('duration.with({ months: 1, seconds: 15 } works', () => {
+      equal(`${duration.with({ months: 1, seconds: 15 })}`, 'P5Y1M5DT5H5M15.005005005S');
+    });
+    it('constrain clamps infinite values', () => {
+      const expected = `P5Y5M5DT${BigInt(Number.MAX_VALUE)}H5M5.005005005S`;
+      equal(`${duration.with({ hours: Infinity })}`, expected);
+      equal(`${duration.with({ hours: Infinity }, { disambiguation: 'constrain' })}`, expected);
+    });
+    it('reject throws on infinite values', () =>
+      throws(() => duration.with({ hours: Infinity }, { disambiguation: 'reject' }), RangeError));
+    it('balance balances all values up to days', () => {
+      const result = duration.with(
+        {
+          hours: 100,
+          minutes: 100,
+          seconds: 100,
+          milliseconds: 3000,
+          microseconds: 3000,
+          nanoseconds: 3001
+        },
+        { disambiguation: 'balance' }
+      );
+      equal(result.years, 5);
+      equal(result.months, 5);
+      equal(result.days, 9);
+      equal(result.hours, 5);
+      equal(result.minutes, 41);
+      equal(result.seconds, 43);
+      equal(result.milliseconds, 3);
+      equal(result.microseconds, 3);
+      equal(result.nanoseconds, 1);
+    });
+    it('negative values always throw', () => {
+      ['constrain', 'balance', 'reject'].forEach((disambiguation) =>
+        throws(() => duration.with({ minutes: -1 }, { disambiguation }), RangeError)
+      );
+    });
+    it('invalid disambiguation', () => {
+      ['', 'CONSTRAIN', 'xyz', 3, null].forEach((disambiguation) =>
+        throws(() => duration.with({ day: 5 }, { disambiguation }), RangeError)
+      );
     });
   });
 });

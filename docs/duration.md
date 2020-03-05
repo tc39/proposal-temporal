@@ -152,6 +152,39 @@ d.nanoseconds   // => 321
 
 ## Methods
 
+### duration.**with**(_durationLike_: object, _options_?: object) : Temporal.Duration
+
+**Parameters:**
+- `durationLike` (object): an object with some or all of the properties of a `Temporal.Duration`.
+- `options` (optional object): An object with properties representing options for the copy.
+  The following options are recognized:
+  - `disambiguation` (string): How to deal with out-of-range values.
+    Allowed values are `constrain`, `balance`, and `reject`.
+    The default is `constrain`.
+
+**Returns:** a new `Temporal.Duration` object.
+
+This method creates a new `Temporal.Duration` which is a copy of `duration`, but any properties present on `durationLike` override the ones already present on `duration`.
+
+Since `Temporal.Duration` objects are immutable, use this method instead of modifying one.
+
+The `disambiguation` option specifies what to do with out-of-range or overly large values.
+Negative numbers are never allowed as properties of `durationLike`.
+If a property of `durationLike` is infinity, then constrain mode will clamp it to `Number.MAX_VALUE`.
+Reject and balance modes will throw a `RangeError` in that case.
+Additionally, balance mode will behave like it does in `Duration.from()` and perform a balance operation on the result.
+
+Usage example:
+```javascript
+duration = Temporal.Duration.from({ months: 50, days: 50, hours: 50, minutes: 100 });
+// Perform a balance operation using additional ISO calendar rules:
+let { years, months } = duration;
+years += Math.floor(months / 12);
+months %= 12;
+duration = duration.with({ years, months }, { disambiguation: 'balance' });
+  // => P4Y2M52DT3H40M
+```
+
 ### duration.**toString**() : string
 
 **Returns:** the duration as an ISO 8601 string.
