@@ -419,17 +419,7 @@ export const ES = ObjectAssign({}, ES2019, {
   },
   ToTemporalDuration: (item, disambiguation) => {
     if (ES.IsTemporalDuration(item)) return item;
-    let props = ES.ValidPropertyBag(item, [
-      'years',
-      'months',
-      'days',
-      'hours',
-      'minutes',
-      'seconds',
-      'milliseconds',
-      'microseconds',
-      'nanoseconds'
-    ]);
+    let props = ES.ValidDurationLike(item);
     if (!props) {
       const isoString = ES.ToString(item);
       props = ES.ParseTemporalDurationString(isoString);
@@ -556,6 +546,28 @@ export const ES = ObjectAssign({}, ES2019, {
           any = any || {};
           any[prop] = value;
         }
+      }
+    }
+    return any ? any : false;
+  },
+  ValidDurationLike: (bag) => {
+    if (!bag || 'object' !== typeof bag) return false;
+    let any;
+    const anyof = [
+      'years',
+      'months',
+      'days',
+      'hours',
+      'minutes',
+      'seconds',
+      'milliseconds',
+      'microseconds',
+      'nanoseconds'
+    ];
+    for (let prop of anyof) {
+      if (prop in bag) {
+        any = any || {};
+        any[prop] = ES.ToNumber(bag[prop]);
       }
     }
     return any ? any : false;
