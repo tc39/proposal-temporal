@@ -242,6 +242,10 @@ The `duration` argument can be any value that could be passed to `Temporal.Durat
 - any object with properties denoting a duration, such as `{ hours: 5, minutes: 30 }`;
 - a string in ISO 8601 duration format, such as `PT5H30M`.
 
+The `years` and `months` fields of `duration` must be zero, because adding a year or a month to a `Temporal.Absolute` is invalid and will throw a `RangeError`.
+`Temporal.Absolute` is independent of time zones and calendars, and so years and months may be different lengths.
+If you need to do this, convert the `Temporal.Absolute` to a `Temporal.DateTime` by specifying the desired time zone, add the duration, and then convert it back.
+
 If the result is outside the allowed range for `Temporal.Absolute`, a `RangeError` will be thrown.
 
 Example usage:
@@ -266,6 +270,10 @@ The `duration` argument can be any value that could be passed to `Temporal.Durat
 - a `Temporal.Duration` object;
 - any object with properties denoting a duration, such as `{ hours: 5, minutes: 30 }`;
 - a string in ISO 8601 duration format, such as `PT5H30M`.
+
+The `years` and `months` fields of `duration` must be zero, because subtracting a year or a month from a `Temporal.Absolute` is invalid and will throw a `RangeError`.
+`Temporal.Absolute` is independent of time zones and calendars, and so years and months may be different lengths.
+If you need to do this, convert the `Temporal.Absolute` to a `Temporal.DateTime` by specifying the desired time zone, subtract the duration, and then convert it back.
 
 If the result is outside the allowed range for `Temporal.Absolute`, a `RangeError` will be thrown.
 
