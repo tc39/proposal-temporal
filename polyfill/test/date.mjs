@@ -239,6 +239,24 @@ describe('Date', () => {
       const jan31 = Date.from('2020-01-31');
       throws(() => jan31.plus({ months: 1 }, { disambiguation: 'reject' }), RangeError);
     });
+    it("ignores lower units that don't balance up to a day", () => {
+      equal(`${date.plus({ hours: 1 })}`, '1976-11-18');
+      equal(`${date.plus({ minutes: 1 })}`, '1976-11-18');
+      equal(`${date.plus({ seconds: 1 })}`, '1976-11-18');
+      equal(`${date.plus({ milliseconds: 1 })}`, '1976-11-18');
+      equal(`${date.plus({ microseconds: 1 })}`, '1976-11-18');
+      equal(`${date.plus({ nanoseconds: 1 })}`, '1976-11-18');
+    });
+    it('adds lower units that balance up to a day or more', () => {
+      equal(`${date.plus({ hours: 24 })}`, '1976-11-19');
+      equal(`${date.plus({ hours: 36 })}`, '1976-11-19');
+      equal(`${date.plus({ hours: 48 })}`, '1976-11-20');
+      equal(`${date.plus({ minutes: 1440 })}`, '1976-11-19');
+      equal(`${date.plus({ seconds: 86400 })}`, '1976-11-19');
+      equal(`${date.plus({ milliseconds: 86400_000 })}`, '1976-11-19');
+      equal(`${date.plus({ microseconds: 86400_000_000 })}`, '1976-11-19');
+      equal(`${date.plus({ nanoseconds: 86400_000_000_000 })}`, '1976-11-19');
+    });
     it('invalid disambiguation', () => {
       ['', 'CONSTRAIN', 'balance', 3, null].forEach((disambiguation) =>
         throws(() => date.plus({ months: 1 }, { disambiguation }), RangeError)
@@ -270,6 +288,24 @@ describe('Date', () => {
     it('throw when ambiguous result with reject', () => {
       const mar31 = Date.from('2020-03-31');
       throws(() => mar31.minus({ months: 1 }, { disambiguation: 'reject' }), RangeError);
+    });
+    it("ignores lower units that don't balance up to a day", () => {
+      equal(`${date.minus({ hours: 1 })}`, '2019-11-18');
+      equal(`${date.minus({ minutes: 1 })}`, '2019-11-18');
+      equal(`${date.minus({ seconds: 1 })}`, '2019-11-18');
+      equal(`${date.minus({ milliseconds: 1 })}`, '2019-11-18');
+      equal(`${date.minus({ microseconds: 1 })}`, '2019-11-18');
+      equal(`${date.minus({ nanoseconds: 1 })}`, '2019-11-18');
+    });
+    it('subtracts lower units that balance up to a day or more', () => {
+      equal(`${date.minus({ hours: 24 })}`, '2019-11-17');
+      equal(`${date.minus({ hours: 36 })}`, '2019-11-17');
+      equal(`${date.minus({ hours: 48 })}`, '2019-11-16');
+      equal(`${date.minus({ minutes: 1440 })}`, '2019-11-17');
+      equal(`${date.minus({ seconds: 86400 })}`, '2019-11-17');
+      equal(`${date.minus({ milliseconds: 86400_000 })}`, '2019-11-17');
+      equal(`${date.minus({ microseconds: 86400_000_000 })}`, '2019-11-17');
+      equal(`${date.minus({ nanoseconds: 86400_000_000_000 })}`, '2019-11-17');
     });
     it('invalid disambiguation', () => {
       ['', 'CONSTRAIN', 'balance', 3, null].forEach((disambiguation) =>

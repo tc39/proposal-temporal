@@ -13,10 +13,7 @@ import {
   NANOSECOND,
   CreateSlots,
   GetSlot,
-  SetSlot,
-  YEARS,
-  MONTHS,
-  DAYS
+  SetSlot
 } from './slots.mjs';
 
 export class Time {
@@ -102,7 +99,7 @@ export class Time {
   plus(temporalDurationLike, options) {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
     let { hour, minute, second, millisecond, microsecond, nanosecond } = this;
-    const duration = ES.ToLimitedTemporalDuration(temporalDurationLike, [YEARS, MONTHS, DAYS]);
+    const duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
     const disambiguation = ES.ToArithmeticTemporalDisambiguation(options);
     const { hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
     ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.AddTime(
@@ -136,7 +133,7 @@ export class Time {
   minus(temporalDurationLike, options) {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
     let { hour, minute, second, millisecond, microsecond, nanosecond } = this;
-    const duration = ES.ToLimitedTemporalDuration(temporalDurationLike, [YEARS, MONTHS, DAYS]);
+    const duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
     const disambiguation = ES.ToArithmeticTemporalDisambiguation(options);
     const { hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
     ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.SubtractTime(

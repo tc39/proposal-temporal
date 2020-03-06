@@ -143,6 +143,38 @@ describe('YearMonth', () => {
     it('yearMonth.plus(durationObj)', () => {
       equal(`${ym.plus(Temporal.Duration.from('P2M'))}`, '2020-01');
     });
+    it("ignores lower units that don't balance up to the length of the month", () => {
+      equal(`${ym.plus({ days: 1 })}`, '2019-11');
+      equal(`${ym.plus({ days: 29 })}`, '2019-11');
+      equal(`${ym.plus({ hours: 1 })}`, '2019-11');
+      equal(`${ym.plus({ minutes: 1 })}`, '2019-11');
+      equal(`${ym.plus({ seconds: 1 })}`, '2019-11');
+      equal(`${ym.plus({ milliseconds: 1 })}`, '2019-11');
+      equal(`${ym.plus({ microseconds: 1 })}`, '2019-11');
+      equal(`${ym.plus({ nanoseconds: 1 })}`, '2019-11');
+    });
+    it('adds lower units that balance up to a month or more', () => {
+      equal(`${ym.plus({ days: 30 })}`, '2019-12');
+      equal(`${ym.plus({ days: 31 })}`, '2019-12');
+      equal(`${ym.plus({ days: 60 })}`, '2019-12');
+      equal(`${ym.plus({ days: 61 })}`, '2020-01');
+      equal(`${ym.plus({ hours: 720 })}`, '2019-12');
+      equal(`${ym.plus({ minutes: 43200 })}`, '2019-12');
+      equal(`${ym.plus({ seconds: 2592000 })}`, '2019-12');
+      equal(`${ym.plus({ milliseconds: 2592000_000 })}`, '2019-12');
+      equal(`${ym.plus({ microseconds: 2592000_000_000 })}`, '2019-12');
+      equal(`${ym.plus({ nanoseconds: 2592000_000_000_000 })}`, '2019-12');
+    });
+    it('balances days to months based on the number of days in the ISO month', () => {
+      equal(`${YearMonth.from('2019-02').plus({ days: 27 })}`, '2019-02');
+      equal(`${YearMonth.from('2019-02').plus({ days: 28 })}`, '2019-03');
+      equal(`${YearMonth.from('2020-02').plus({ days: 28 })}`, '2020-02');
+      equal(`${YearMonth.from('2020-02').plus({ days: 29 })}`, '2020-03');
+      equal(`${YearMonth.from('2019-11').plus({ days: 29 })}`, '2019-11');
+      equal(`${YearMonth.from('2019-11').plus({ days: 30 })}`, '2019-12');
+      equal(`${YearMonth.from('2020-01').plus({ days: 30 })}`, '2020-01');
+      equal(`${YearMonth.from('2020-01').plus({ days: 31 })}`, '2020-02');
+    });
     it('invalid disambiguation', () => {
       ['', 'CONSTRAIN', 'balance', 3, null].forEach((disambiguation) =>
         throws(() => ym.plus({ months: 1 }, { disambiguation }), RangeError)
@@ -163,6 +195,37 @@ describe('YearMonth', () => {
     });
     it('yearMonth.minus(durationObj)', () => {
       equal(`${ym.minus(Temporal.Duration.from('P11M'))}`, '2018-12');
+    });
+    it("ignores lower units that don't balance up to the length of the month", () => {
+      equal(`${ym.minus({ days: 1 })}`, '2019-11');
+      equal(`${ym.minus({ hours: 1 })}`, '2019-11');
+      equal(`${ym.minus({ minutes: 1 })}`, '2019-11');
+      equal(`${ym.minus({ seconds: 1 })}`, '2019-11');
+      equal(`${ym.minus({ milliseconds: 1 })}`, '2019-11');
+      equal(`${ym.minus({ microseconds: 1 })}`, '2019-11');
+      equal(`${ym.minus({ nanoseconds: 1 })}`, '2019-11');
+    });
+    it('subtracts lower units that balance up to a day or more', () => {
+      equal(`${ym.minus({ days: 29 })}`, '2019-11');
+      equal(`${ym.minus({ days: 30 })}`, '2019-10');
+      equal(`${ym.minus({ days: 60 })}`, '2019-10');
+      equal(`${ym.minus({ days: 61 })}`, '2019-09');
+      equal(`${ym.minus({ hours: 720 })}`, '2019-10');
+      equal(`${ym.minus({ minutes: 43200 })}`, '2019-10');
+      equal(`${ym.minus({ seconds: 2592000 })}`, '2019-10');
+      equal(`${ym.minus({ milliseconds: 2592000_000 })}`, '2019-10');
+      equal(`${ym.minus({ microseconds: 2592000_000_000 })}`, '2019-10');
+      equal(`${ym.minus({ nanoseconds: 2592000_000_000_000 })}`, '2019-10');
+    });
+    it('balances days to months based on the number of days in the ISO month', () => {
+      equal(`${YearMonth.from('2019-02').minus({ days: 27 })}`, '2019-02');
+      equal(`${YearMonth.from('2019-02').minus({ days: 28 })}`, '2019-01');
+      equal(`${YearMonth.from('2020-02').minus({ days: 28 })}`, '2020-02');
+      equal(`${YearMonth.from('2020-02').minus({ days: 29 })}`, '2020-01');
+      equal(`${YearMonth.from('2019-11').minus({ days: 29 })}`, '2019-11');
+      equal(`${YearMonth.from('2019-11').minus({ days: 30 })}`, '2019-10');
+      equal(`${YearMonth.from('2020-01').minus({ days: 30 })}`, '2020-01');
+      equal(`${YearMonth.from('2020-01').minus({ days: 31 })}`, '2019-12');
     });
     it('invalid disambiguation', () => {
       ['', 'CONSTRAIN', 'balance', 3, null].forEach((disambiguation) =>
