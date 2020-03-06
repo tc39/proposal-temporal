@@ -1,9 +1,7 @@
 #!/bin/bash
 
 export NODE_PATH=$PWD/node_modules
-npm install
 npm run build-script
-npm install test262-harness
 if [ ! -d "test262" ]; then
   git clone --depth 1 https://github.com/tc39/test262.git
 else
