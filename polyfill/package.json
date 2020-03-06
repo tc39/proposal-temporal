@@ -8,7 +8,7 @@
     "test": "node --no-warnings --experimental-modules --icu-data-dir node_modules/full-icu/icudt64l.dat --loader ./test/resolve.source.mjs ./test/all.mjs",
     "cookbook": "node --no-warnings --experimental-modules --icu-data-dir node_modules/full-icu/icudt64l.dat --loader ./test/resolve.cookbook.mjs ../docs/cookbook/all.mjs",
     "test262": "./ci_test.sh",
-    "codecov": "npm install codecov && NODE_V8_COVERAGE=coverage/tmp npm run test && c8 report --reporter=text-lcov > coverage/tests.lcov && codecov",
+    "codecov": "NODE_V8_COVERAGE=coverage/tmp npm run test && c8 report --reporter=text-lcov > coverage/tests.lcov && codecov",
     "pretty": "prettier --write lib/*.*(m)js test/*.*(m)js",
     "build": "rollup -c rollup.config.js",
     "build-script": "rollup -c rollup-script.config.js",
@@ -36,9 +36,7 @@
   "homepage": "https://github.com/tc39/proposal-temporal#readme",
   "dependencies": {
     "big-integer": "^1.6.48",
-    "codecov": "^3.6.5",
-    "es-abstract": "^1.17.4",
-    "test262-harness": "^6.7.0"
+    "es-abstract": "^1.17.4"
   },
   "devDependencies": {
     "@babel/core": "^7.8.4",
@@ -47,6 +45,7 @@
     "@pipobscure/demitasse-pretty": "^1.0.10",
     "@types/big-integer": "0.0.31",
     "c8": "^6.0.1",
+    "codecov": "^3.6.5",
     "core-js": "^3.6.4",
     "full-icu": "^1.3.0",
     "prettier": "^1.18.2",
@@ -54,7 +53,8 @@
     "rollup-plugin-babel": "^4.3.3",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-node-resolve": "^5.2.0",
-    "rollup-plugin-uglify": "^6.0.4"
+    "rollup-plugin-uglify": "^6.0.4",
+    "test262-harness": "^6.7.0"
   },
   "prettier": {
     "printWidth": 120,
