@@ -37,14 +37,14 @@ export class TimeZone {
     const DateTime = ES.GetIntrinsic('%Temporal.DateTime%');
     return new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
   }
-  getAbsoluteFor(dateTime, disambiguation = 'earlier') {
+  getAbsoluteFor(dateTime, options) {
     if (!ES.IsTimeZone(this)) throw new TypeError('invalid receiver');
     dateTime = ES.ToDateTime(dateTime, 'reject');
-    disambiguation = ES.ToTimeZoneDisambiguation(disambiguation);
+    const disambiguation = ES.ToTimeZoneDisambiguation(options);
 
     const Absolute = ES.GetIntrinsic('%Temporal.Absolute%');
     const { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = dateTime;
-    const options = ES.GetTimeZoneEpochValue(
+    const possibleEpochNs = ES.GetTimeZoneEpochValue(
       GetSlot(this, IDENTIFIER),
       year,
       month,
@@ -56,13 +56,13 @@ export class TimeZone {
       microsecond,
       nanosecond
     );
-    if (options.length === 1) return new Absolute(options[0]);
-    if (options.length) {
+    if (possibleEpochNs.length === 1) return new Absolute(possibleEpochNs[0]);
+    if (possibleEpochNs.length) {
       switch (disambiguation) {
         case 'earlier':
-          return new Absolute(options[0]);
+          return new Absolute(possibleEpochNs[0]);
         case 'later':
-          return new Absolute(options[1]);
+          return new Absolute(possibleEpochNs[1]);
         case 'reject': {
           throw new RangeError(`multiple absolute found`);
         }

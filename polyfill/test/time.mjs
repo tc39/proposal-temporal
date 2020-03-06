@@ -183,7 +183,7 @@ describe('Time', () => {
       });
       it('invalid disambiguation', () => {
         ['', 'CONSTRAIN', 'xyz', 3, null].forEach((disambiguation) =>
-          throws(() => time.with({ hour: 3 }, disambiguation), RangeError));
+          throws(() => time.with({ hour: 3 }, { disambiguation }), RangeError));
       });
     });
   describe('time.withDate() works', () => {
@@ -280,16 +280,16 @@ describe('Time', () => {
       const time2 = Time.from('17:15:57');
       it('the default largest unit is at least hours', () => {
         equal(`${time1.difference(time2)}`, 'PT6H52M42S');
-        equal(`${time1.difference(time2, 'hours')}`, 'PT6H52M42S');
+        equal(`${time1.difference(time2, { largestUnit: 'hours' })}`, 'PT6H52M42S');
       });
       it('higher units have no effect', () => {
-        equal(`${time1.difference(time2, 'days')}`, 'PT6H52M42S');
-        equal(`${time1.difference(time2, 'months')}`, 'PT6H52M42S');
-        equal(`${time1.difference(time2, 'years')}`, 'PT6H52M42S');
+        equal(`${time1.difference(time2, { largestUnit: 'days' })}`, 'PT6H52M42S');
+        equal(`${time1.difference(time2, { largestUnit: 'months' })}`, 'PT6H52M42S');
+        equal(`${time1.difference(time2, { largestUnit: 'years' })}`, 'PT6H52M42S');
       });
       it('can return lower units', () => {
-        equal(`${time1.difference(time2, 'minutes')}`, 'PT412M42S');
-        equal(`${time1.difference(time2, 'seconds')}`, 'PT24762S');
+        equal(`${time1.difference(time2, { largestUnit: 'minutes' })}`, 'PT412M42S');
+        equal(`${time1.difference(time2, { largestUnit: 'seconds' })}`, 'PT24762S');
       });
     });
     describe('Time.compare() works', () => {
@@ -323,7 +323,7 @@ describe('Time', () => {
       });
       it('invalid disambiguation', () => {
         ['', 'CONSTRAIN', 'balance', 3, null].forEach((disambiguation) =>
-          throws(() => time.plus({ hours: 1 }, disambiguation), RangeError));
+          throws(() => time.plus({ hours: 1 }, { disambiguation }), RangeError));
       });
     });
     describe('time.minus() works', () => {
@@ -339,7 +339,7 @@ describe('Time', () => {
       });
       it('invalid disambiguation', () => {
         ['', 'CONSTRAIN', 'balance', 3, null].forEach((disambiguation) =>
-          throws(() => time.minus({ hours: 1 }, disambiguation), RangeError));
+          throws(() => time.minus({ hours: 1 }, { disambiguation }), RangeError));
       });
     });
     describe('time.toString() works', () => {

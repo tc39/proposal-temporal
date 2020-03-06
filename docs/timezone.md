@@ -168,20 +168,22 @@ tz = new Temporal.TimeZone('America/New_York');
 tz.getDateTimeFor(epoch);  // => 1969-12-31T19:00
 ```
 
-### timeZone.**getAbsoluteFor**(_dateTime_: Temporal.DateTime, _disambiguation_: 'earlier' | 'later' | 'reject' = 'earlier') : Temporal.Absolute
+### timeZone.**getAbsoluteFor**(_dateTime_: Temporal.DateTime, _options_?: object) : Temporal.Absolute
 
 **Parameters:**
 - `dateTime` (`Temporal.DateTime`): A calendar date and wall-clock time to convert.
-- `disambiguation` (optional `string`): How to disambiguate if the date and time given by `dateTime` does not exist in the time zone, or exists more than once.
-  Allowed values are `earlier`, `later`, and `reject`.
-  The default is `earlier`.
+- `options` (optional object): An object with properties representing options for the operation.
+  The following options are recognized:
+  - `disambiguation` (string): How to disambiguate if the date and time given by `dateTime` does not exist in the time zone, or exists more than once.
+    Allowed values are `earlier`, `later`, and `reject`.
+    The default is `earlier`.
 
 **Returns:** A `Temporal.Absolute` object indicating the absolute time in `timeZone` at the time of the calendar date and wall-clock time from `dateTime`.
 
 This method is one way to convert a `Temporal.DateTime` to a `Temporal.Absolute`.
 It is identical to [`dateTime.inTimeZone(timeZone, disambiguation)`](./datetime.html#inTimeZone).
 
-In the case of ambiguity, the `disambiguation` parameter controls what absolute time to return:
+In the case of ambiguity, the `disambiguation` option controls what absolute time to return:
 - `earlier`: The earlier of two possible times.
 - `later`: The later of two possible times.
 - `reject`: Throw a `RangeError` instead.

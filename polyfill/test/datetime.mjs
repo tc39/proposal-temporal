@@ -247,7 +247,7 @@ describe('DateTime', () => {
     });
     it('invalid disambiguation', () => {
       ['', 'CONSTRAIN', 'xyz', 3, null].forEach((disambiguation) =>
-        throws(() => datetime.with({ day: 5 }, disambiguation), RangeError));
+        throws(() => datetime.with({ day: 5 }, { disambiguation }), RangeError));
     });
   });
   describe('DateTime.compare() works', () => {
@@ -268,10 +268,10 @@ describe('DateTime', () => {
   describe('date/time maths', () => {
     const earlier = DateTime.from('1976-11-18T15:23:30.123456789');
     const later = DateTime.from('2019-10-29T10:46:38.271986102');
-    ['years', 'months', 'days', 'hours', 'minutes', 'seconds'].forEach(largest => {
-      const diff = earlier.difference(later, largest);
-      it(`(${earlier}).difference(${later}, ${largest}) == (${later}).difference(${earlier}, ${largest})`, () =>
-        equal(`${later.difference(earlier, largest)}`, `${diff}`));
+    ['years', 'months', 'days', 'hours', 'minutes', 'seconds'].forEach((largestUnit) => {
+      const diff = earlier.difference(later, { largestUnit });
+      it(`(${earlier}).difference(${later}, ${largestUnit}) == (${later}).difference(${earlier}, ${largestUnit})`, () =>
+        equal(`${later.difference(earlier, { largestUnit })}`, `${diff}`));
       it(`(${earlier}).plus(${diff}) == (${later})`, () => equal(`${earlier.plus(diff)}`, `${later}`));
       it(`(${later}).minus(${diff}) == (${earlier})`, () => equal(`${later.minus(diff)}`, `${earlier}`));
     })
@@ -285,30 +285,30 @@ describe('DateTime', () => {
     it('constrain when ambiguous result', () => {
       const jan31 = DateTime.from('2020-01-31T15:00');
       equal(`${jan31.plus({ months: 1 })}`, '2020-02-29T15:00');
-      equal(`${jan31.plus({ months: 1 }, 'constrain')}`, '2020-02-29T15:00');
+      equal(`${jan31.plus({ months: 1 }, { disambiguation: 'constrain' })}`, '2020-02-29T15:00');
     });
     it('throw when ambiguous result with reject', () => {
       const jan31 = DateTime.from('2020-01-31T15:00:00');
-      throws(() => jan31.plus({ months: 1 }, 'reject'), RangeError);
+      throws(() => jan31.plus({ months: 1 }, { disambiguation: 'reject' }), RangeError);
     });
     it('invalid disambiguation', () => {
       ['', 'CONSTRAIN', 'balance', 3, null].forEach((disambiguation) =>
-        throws(() => DateTime.from('2019-11-18T15:00').plus({ months: 1 }, disambiguation), RangeError));
+        throws(() => DateTime.from('2019-11-18T15:00').plus({ months: 1 }, { disambiguation }), RangeError));
     });
   });
   describe('date.minus() works', () => {
     it('constrain when ambiguous result', () => {
       const mar31 = DateTime.from('2020-03-31T15:00');
       equal(`${mar31.minus({ months: 1 })}`, '2020-02-29T15:00');
-      equal(`${mar31.minus({ months: 1 }, 'constrain')}`, '2020-02-29T15:00');
+      equal(`${mar31.minus({ months: 1 }, { disambiguation: 'constrain' })}`, '2020-02-29T15:00');
     });
     it('throw when ambiguous result with reject', () => {
       const mar31 = DateTime.from('2020-03-31T15:00');
-      throws(() => mar31.minus({ months: 1 }, 'reject'), RangeError);
+      throws(() => mar31.minus({ months: 1 }, { disambiguation: 'reject' }), RangeError);
     });
     it('invalid disambiguation', () => {
       ['', 'CONSTRAIN', 'balance', 3, null].forEach((disambiguation) =>
-        throws(() => DateTime.from('2019-11-18T15:00').minus({ months: 1 }, disambiguation), RangeError));
+        throws(() => DateTime.from('2019-11-18T15:00').minus({ months: 1 }, { disambiguation }), RangeError));
     });
   });
   describe('DateTime.difference()', () => {
@@ -321,23 +321,23 @@ describe('DateTime', () => {
     const feb21 = DateTime.from('2021-02-01T00:00');
     it('defaults to returning days', () => {
       equal(`${feb21.difference(feb20)}`, 'P366D');
-      equal(`${feb21.difference(feb20, 'days')}`, 'P366D');
+      equal(`${feb21.difference(feb20, { largestUnit: 'days' })}`, 'P366D');
       equal(`${DateTime.from('2021-02-01T00:00:00.000000001').difference(feb20)}`, 'P366DT0.000000001S');
       equal(`${feb21.difference(DateTime.from('2020-02-01T00:00:00.000000001'))}`, 'P365DT23H59M59.999999999S');
     });
     it('can return lower or higher units', () => {
-      equal(`${feb21.difference(feb20, 'years')}`, 'P1Y');
-      equal(`${feb21.difference(feb20, 'months')}`, 'P12M');
-      equal(`${feb21.difference(feb20, 'hours')}`, 'PT8784H');
-      equal(`${feb21.difference(feb20, 'minutes')}`, 'PT527040M');
-      equal(`${feb21.difference(feb20, 'seconds')}`, 'PT31622400S');
+      equal(`${feb21.difference(feb20, { largestUnit: 'years' })}`, 'P1Y');
+      equal(`${feb21.difference(feb20, { largestUnit: 'months' })}`, 'P12M');
+      equal(`${feb21.difference(feb20, { largestUnit: 'hours' })}`, 'PT8784H');
+      equal(`${feb21.difference(feb20, { largestUnit: 'minutes' })}`, 'PT527040M');
+      equal(`${feb21.difference(feb20, { largestUnit: 'seconds' })}`, 'PT31622400S');
     });
     it('does not include higher units than necessary', () => {
       const lastFeb20 = DateTime.from('2020-02-29T00:00');
       const lastFeb21 = DateTime.from('2021-02-28T00:00');
       equal(`${lastFeb21.difference(lastFeb20)}`, 'P365D');
-      equal(`${lastFeb21.difference(lastFeb20, 'months')}`, 'P11M30D');
-      equal(`${lastFeb21.difference(lastFeb20, 'years')}`, 'P11M30D');
+      equal(`${lastFeb21.difference(lastFeb20, { largestUnit: 'months' })}`, 'P11M30D');
+      equal(`${lastFeb21.difference(lastFeb20, { largestUnit: 'years' })}`, 'P11M30D');
     });
   });
   describe('DateTime.from() works', () => {
@@ -401,7 +401,7 @@ describe('DateTime', () => {
     });
     it('throws on bad disambiguation', () => {
       ['', 'EARLIER', 'xyz', 3, null].forEach((disambiguation) =>
-        throws(() => DateTime.from('2019-10-29T10:46').inTimeZone('UTC', disambiguation), RangeError));
+        throws(() => DateTime.from('2019-10-29T10:46').inTimeZone('UTC', { disambiguation }), RangeError));
     });
   });
   describe('Min/max range', () => {
@@ -459,8 +459,8 @@ describe('DateTime', () => {
       const max = DateTime.from('+275760-09-13T23:59:59.999999999');
       equal(`${min.minus({nanoseconds: 1})}`, '-271821-04-19T00:00:00.000000001');
       equal(`${max.plus({nanoseconds: 1})}`, '+275760-09-13T23:59:59.999999999');
-      throws(() => min.minus({nanoseconds: 1}, 'reject'), RangeError);
-      throws(() => max.plus({nanoseconds: 1}, 'reject'), RangeError);
+      throws(() => min.minus({nanoseconds: 1}, { disambiguation: 'reject' }), RangeError);
+      throws(() => max.plus({nanoseconds: 1}, { disambiguation: 'reject' }), RangeError);
     });
   });
 });

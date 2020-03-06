@@ -70,11 +70,11 @@ function build(name, sone, stwo) {
 function buildSub(one, two, largestUnits) {
   largestUnits.forEach(largestUnit => {
     describe(`< ${one} : ${two} (${largestUnit})>`, () => {
-      const dif = two.difference(one, largestUnit);
+      const dif = two.difference(one, { largestUnit });
       it(`(${one}).plus(${dif}) => ${two}`, () =>
-        equal(`${one.plus(dif, 'reject')}`, `${two}`, `(${one}).plus(${dif}) => ${two}`));
+        equal(`${one.plus(dif, { disambiguation: 'reject' })}`, `${two}`, `(${one}).plus(${dif}) => ${two}`));
       it(`(${two}).minus(${dif}) => ${one}`, () =>
-        equal(`${two.minus(dif, 'reject')}`, `${one}`, `(${two}).minus(${dif}) => ${one}`));
+        equal(`${two.minus(dif, { disambiguation: 'reject' })}`, `${one}`, `(${two}).minus(${dif}) => ${one}`));
     });
   });
 }

@@ -62,9 +62,9 @@ export class Date {
     if (!ES.IsDate(this)) throw new TypeError('invalid receiver');
     return ES.LeapYear(GetSlot(this, YEAR));
   }
-  with(dateLike = {}, disambiguation = 'constrain') {
+  with(dateLike = {}, options) {
     if (!ES.IsDate(this)) throw new TypeError('invalid receiver');
-    disambiguation = ES.ToDisambiguation(disambiguation);
+    const disambiguation = ES.ToDisambiguation(options);
     const props = ES.ValidPropertyBag(dateLike, ['year', 'month', 'day']);
     if (!props) {
       throw new RangeError('invalid date-like');
@@ -78,9 +78,9 @@ export class Date {
       GetSlot(result, DAY),
     );
   }
-  plus(durationLike = {}, disambiguation = 'constrain') {
+  plus(durationLike = {}, options) {
     if (!ES.IsDate(this)) throw new TypeError('invalid receiver');
-    disambiguation = ES.ToArithmeticDisambiguation(disambiguation);
+    const disambiguation = ES.ToArithmeticDisambiguation(options);
     const duration = ES.ToLimitedDuration(durationLike, [HOURS, MINUTES, SECONDS, MILLISECONDS, MICROSECONDS, NANOSECONDS]);
     let { year, month, day } = this;
     const { years, months, days } = duration;
@@ -93,9 +93,9 @@ export class Date {
       GetSlot(result, DAY),
     );
   }
-  minus(durationLike = {}, disambiguation = 'constrain') {
+  minus(durationLike = {}, options) {
     if (!ES.IsDate(this)) throw new TypeError('invalid receiver');
-    disambiguation = ES.ToArithmeticDisambiguation(disambiguation);
+    const disambiguation = ES.ToArithmeticDisambiguation(options);
     const duration = ES.ToLimitedDuration(durationLike, [HOURS, MINUTES, SECONDS, MILLISECONDS, MICROSECONDS, NANOSECONDS]);
     let { year, month, day } = this;
     const { years, months, days } = duration;
@@ -108,10 +108,10 @@ export class Date {
       GetSlot(result, DAY),
     );
   }
-  difference(other, largestUnit = 'days') {
+  difference(other, options) {
     if (!ES.IsDate(this)) throw new TypeError('invalid receiver');
     if (!ES.IsDate(other)) throw new TypeError('invalid Date object');
-    largestUnit = ES.ToLargestTemporalUnit(largestUnit, ['hours', 'minutes', 'seconds']);
+    const largestUnit = ES.ToLargestTemporalUnit(options, 'days', ['hours', 'minutes', 'seconds']);
     const [smaller, larger] = [this, other].sort(Date.compare);
     const { years, months, days } = ES.DifferenceDate(smaller, larger, largestUnit);
     const Duration = ES.GetIntrinsic('%Temporal.Duration%');
@@ -150,7 +150,7 @@ export class Date {
     return new MonthDay(GetSlot(this, MONTH), GetSlot(this, DAY));
   }
   static from(arg, options) {
-    const disambiguation = ES.GetOption(options, 'disambiguation', ES.ToDisambiguation, 'constrain');
+    const disambiguation = ES.ToDisambiguation(options);
     let result = ES.ToDate(arg, disambiguation);
     return this === Date ? result : new this(
       GetSlot(result, YEAR),

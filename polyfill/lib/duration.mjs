@@ -128,7 +128,7 @@ export class Duration {
     return new Intl.DateTimeFormat(...args).format(this);
   }
   static from(arg, options) {
-    const disambiguation = ES.GetOption(options, 'disambiguation', ES.ToDisambiguation, 'constrain');
+    const disambiguation = ES.ToDisambiguation(options);
     let result = ES.ToDuration(arg, disambiguation);
     return this === Duration ? result : new this(
       GetSlot(result, YEARS),

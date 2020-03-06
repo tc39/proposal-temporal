@@ -130,13 +130,15 @@ md.day    // => 24
 
 ## Methods
 
-### monthDay.**with**(_monthDayLike_: object, _disambiguation_: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.MonthDay
+### monthDay.**with**(_monthDayLike_: object, _options_?: object) : Temporal.MonthDay
 
 **Parameters:**
 - `monthDayLike` (object): an object with some or all of the properties of a `Temporal.MonthDay`.
-- `disambiguation` (optional string): How to deal with out-of-range values.
-  Allowed values are `constrain`, `balance`, and `reject`.
-  The default is `constrain`.
+- `options` (optional object): An object with properties representing options for the operation.
+  The following options are recognized:
+  - `disambiguation` (string): How to deal with out-of-range values.
+    Allowed values are `constrain`, `balance`, and `reject`.
+    The default is `constrain`.
 
 **Returns:** a new `Temporal.MonthDay` object.
 
@@ -155,8 +157,8 @@ Usage example:
 ```javascript
 md = Temporal.MonthDay.from('11-15');
 // What's the last day of that month?
-md.with({day: 31}, 'constrain')  // => 11-30
-Temporal.MonthDay.from('02-01').with({day: 31}, 'constrain');  // => 02-29
+md.with({ day: 31 })  // => 11-30
+Temporal.MonthDay.from('02-01').with({ day: 31 });  // => 02-29
 ```
 
 ### monthDay.**toString**() : string

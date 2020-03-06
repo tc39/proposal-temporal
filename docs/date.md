@@ -225,13 +225,15 @@ date.with({year: 2100}).leapYear  // => false
 
 ## Methods
 
-### date.**with**(_dateLike_: object, _disambiguation_: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.Date
+### date.**with**(_dateLike_: object, _options_?: object) : Temporal.Date
 
 **Parameters:**
 - `dateLike` (object): an object with some or all of the properties of a `Temporal.Date`.
-- `disambiguation` (optional string): How to deal with out-of-range values.
-  Allowed values are `constrain`, `balance`, and `reject`.
-  The default is `constrain`.
+- `options` (optional object): An object with properties representing options for the operation.
+  The following options are recognized:
+  - `disambiguation` (string): How to deal with out-of-range values.
+    Allowed values are `constrain`, `balance`, and `reject`.
+    The default is `constrain`.
 
 **Returns:** a new `Temporal.Date` object.
 
@@ -243,16 +245,18 @@ Usage example:
 ```javascript
 date = Temporal.Date.from('2006-08-24');
 // What's the first of the following month?
-date.with({day: 1, month: date.month + 1}, 'balance')  // => 2006-09-01
+date.with({day: 1, month: date.month + 1}, { disambiguation: 'balance' })  // => 2006-09-01
 ```
 
-### date.**plus**(_duration_: string | object, _disambiguation_: 'constrain' | 'reject' = 'constrain') : Temporal.Date
+### date.**plus**(_duration_: string | object, _options_?: object) : Temporal.Date
 
 **Parameters:**
 - `duration` (string or object): A `Temporal.Duration` object, a duration-like object, or a string from which to create a `Temporal.Duration`.
-- `disambiguation` (optional string): How to deal with additions that result in out-of-range values.
-  Allowed values are `constrain` and `reject`.
-  The default is `constrain`.
+- `options` (optional object): An object with properties representing options for the addition.
+  The following options are recognized:
+  - `disambiguation` (optional string): How to deal with additions that result in out-of-range values.
+    Allowed values are `constrain` and `reject`.
+    The default is `constrain`.
 
 **Returns:** a new `Temporal.Date` object which is the date indicated by `date` plus `duration`.
 
@@ -265,7 +269,7 @@ The `duration` argument can be any value that could be passed to `Temporal.Durat
 
 Some additions may be ambiguous, because months have different lengths.
 For example, adding one month to August 31 would result in September 31, which doesn't exist.
-For these cases, the `disambiguation` argument tells what to do:
+For these cases, the `disambiguation` option tells what to do:
 - In `constrain` mode (the default), out-of-range values are clamped to the nearest in-range value.
 - In `reject` mode, an addition that would result in an out-of-range value fails, and a `RangeError` is thrown.
 
@@ -279,17 +283,19 @@ date.plus({years: 20, months: 4})  // => 2026-12-24
 date.plus('P14Y8D')  // => 2020-09-01
 
 date = Temporal.Date.from('2019-01-31')
-date.plus({months: 1}, 'constrain')  // => 2019-02-28
-date.plus({months: 1}, 'reject')  // => throws
+date.plus({ months: 1 })  // => 2019-02-28
+date.plus({ months: 1 }, { disambiguation: 'reject' })  // => throws
 ```
 
-### date.**minus**(_duration_: string | object, _disambiguation_: 'constrain' | 'reject' = 'constrain') : Temporal.Date
+### date.**minus**(_duration_: string | object, _options_?: object) : Temporal.Date
 
 **Parameters:**
 - `duration` (string or object): A `Temporal.Duration` object, a duration-like object, or a string from which to create a `Temporal.Duration`.
-- `disambiguation` (optional string): How to deal with subtractions that result in out-of-range values.
-  Allowed values are `constrain` and `reject`.
-  The default is `constrain`.
+- `options` (optional object): An object with properties representing options for the subtraction.
+  The following options are recognized:
+  - `disambiguation` (string): How to deal with subtractions that result in out-of-range values.
+    Allowed values are `constrain` and `reject`.
+    The default is `constrain`.
 
 **Returns:** a new `Temporal.Date` object which is the date indicated by `date` minus `duration`.
 
@@ -302,7 +308,7 @@ The `duration` argument can be any value that could be passed to `Temporal.Durat
 
 Some subtractions may be ambiguous, because months have different lengths.
 For example, subtracting one month from July 31 would result in June 31, which doesn't exist.
-For these cases, the `disambiguation` argument tells what to do:
+For these cases, the `disambiguation` option tells what to do:
 - In `constrain` mode (the default), out-of-range values are clamped to the nearest in-range value.
 - In `reject` mode, an addition that would result in an out-of-range value fails, and a `RangeError` is thrown.
 
@@ -316,24 +322,26 @@ date.minus({years: 20, months: 4})  // => 1986-04-24
 date.minus('P14Y8D')  // => 1992-08-16
 
 date = Temporal.Date.from('2019-03-31')
-date.minus({months: 1}, 'constrain')  // => 2019-02-28
-date.minus({months: 1}, 'reject')  // => throws
+date.minus({ months: 1 })  // => 2019-02-28
+date.minus({ months: 1 }, { disambiguation: 'reject' })  // => throws
 ```
 
-### date.**difference**(_other_: Temporal.Date, _largestUnit_: string = 'days') : Temporal.Duration
+### date.**difference**(_other_: Temporal.Date, _options_?: object) : Temporal.Duration
 
 **Parameters:**
 - `other` (`Temporal.Date`): Another date with which to compute the difference.
-- `largestUnit` (optional string): The largest unit of time to allow in the resulting `Temporal.Duration` object.
-  Valid values are `'years'`, `'months'`, and `'days'`.
-  The default is `days`.
+- `options` (optional object): An object with properties representing options for the operation.
+  The following options are recognized:
+  - `largestUnit` (optional string): The largest unit of time to allow in the resulting `Temporal.Duration` object.
+    Valid values are `'years'`, `'months'`, and `'days'`.
+    The default is `days`.
 
 **Returns:** a `Temporal.Duration` representing the difference between `date` and `other`.
 
 This method computes the difference between the two dates represented by `date` and `other`, and returns it as a `Temporal.Duration` object.
 The difference is always positive, no matter the order of `date` and `other`, because `Temporal.Duration` objects cannot represent negative durations.
 
-The `largestUnit` parameter controls how the resulting duration is expressed.
+The `largestUnit` option controls how the resulting duration is expressed.
 The returned `Temporal.Duration` object will not have any nonzero fields that are larger than the unit in `largestUnit`.
 A difference of two years will become 24 months when `largestUnit` is `"months"`, for example.
 However, a difference of two months will still be two months even if `largestUnit` is `"years"`.
@@ -346,15 +354,16 @@ Usage example:
 ```javascript
 date = Temporal.Date.from('2006-08-24');
 other = Temporal.Date.from('2019-01-31');
-date.difference(other)           // => P4543D
-date.difference(other, 'years')  // => P12Y5M7D
+date.difference(other)                            // => P4543D
+date.difference(other, { largestUnit: 'years' })  // => P12Y5M7D
 
 // If you really need to calculate the difference between two Dates in
 // hours, you can eliminate the ambiguity by explicitly choosing the
 // point in time from which you want to reckon the difference. For
 // example, using midnight:
 midnight = Temporal.Time.from('00:00');
-date.withTime(midnight).difference(other.withTime(midnight), 'hours')  // => PT109032H
+date.withTime(midnight).difference(other.withTime(midnight), { largestUnit: 'hours' })
+  // => PT109032H
 ```
 
 ### date.**toString**() : string

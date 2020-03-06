@@ -50,7 +50,7 @@
         The following steps are taken:
       </p>
       <emu-alg>
-        1. Let _disambiguation_ be ? GetOption(_options_, *"disambiguation"*, « *"constrain"*, *"balance"*, *"reject"* », *"constrain"*).
+        1. Let _disambiguation_ be ? ToDisambiguation(_options_).
         1. If Type(_arg_) is Object, then
           1. Return ? ToYearMonth(_arg_, _disambiguation_).
         1. Let _string_ be ? ToString(_arg_).
@@ -164,16 +164,16 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal.yearmonth.prototype.with">
-      <h1>Temporal.YearMonth.prototype.with ( _otherYearMonth_ [ , _disambiguation_ ] )</h1>
+      <h1>Temporal.YearMonth.prototype.with ( _otherYearMonth_ [ , _options_ ] )</h1>
       <p>
-        The `with` method takes two arguments, _otherYearMonth_ and _disambiguation_.
+        The `with` method takes two arguments, _otherYearMonth_ and _options_.
         The following steps are taken:
       </p>
       <emu-alg>
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
         1. Let _otherYearMonth_ be ? ToPartialYearMonth(_otherYearMonth_).
-        1. Set _disambiguation_ to ? ToDisambiguation(_disambiguation_).
+        1. Let _disambiguation_ be ? ToDisambiguation(_options_).
         1. If _otherYearMonth_.[[Year]] is not *undefined*, then
           1. Let _y_ be _otherYearMonth_.[[Year]].
         1. Else
@@ -188,16 +188,16 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal.yearmonth.prototype.plus">
-      <h1>Temporal.YearMonth.prototype.plus ( _duration_ [ , _disambiguation_ ] )</h1>
+      <h1>Temporal.YearMonth.prototype.plus ( _duration_ [ , _options_ ] )</h1>
       <p>
-        The `plus` method takes two arguments, _duration_ and _disambiguation_.
+        The `plus` method takes two arguments, _duration_ and _options_.
         The following steps are taken:
       </p>
       <emu-alg>
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
         1. Let _duration_ be ? ToLimitedDuration(_duration_, « *"days"*, *"hours"*, *"minutes"*, *"seconds"*, *"milliseconds"*, *"microseconds"*, *"nanoseconds"* »).
-        1. Set _disambiguation_ to ? ToArithmeticDisambiguation(_disambiguation_).
+        1. Let _disambiguation_ be ? ToArithmeticDisambiguation(_options_).
         1. Let _y_ be _yearMonth_.[[Year]] + _duration_.[[Years]].
         1. Let _m_ be _yearMonth_.[[Month]] + _duration_.[[Months]].
         1. Let _result_ be ? RegulateYearMonth(_y_, _m_, _disambiguation_).
@@ -206,16 +206,16 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal.yearmonth.prototype.minus">
-      <h1>Temporal.YearMonth.prototype.minus ( _duration_ [ , _disambiguation_ ] )</h1>
+      <h1>Temporal.YearMonth.prototype.minus ( _duration_ [ , _options_ ] )</h1>
       <p>
-        The `minus` method takes two arguments, _duration_ and _disambiguation_.
+        The `minus` method takes two arguments, _duration_ and _options_.
         The following steps are taken:
       </p>
       <emu-alg>
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
         1. Let _duration_ be ? ToLimitedDuration(_duration_, « *"days"*, *"hours"*, *"minutes"*, *"seconds"*, *"milliseconds"*, *"microseconds"*, *"nanoseconds"* »).
-        1. Set _disambiguation_ to ? ToArithmeticDisambiguation(_disambiguation_).
+        1. Let _disambiguation_ be ? ToArithmeticDisambiguation(_options_).
         1. Let _y_ be _yearMonth_.[[Year]] - _duration_.[[Years]].
         1. Let _m_ be _yearMonth_.[[Month]] - _duration_.[[Months]].
         1. Let _result_ be ? RegulateYearMonth(_y_, _m_, _disambiguation_).
@@ -224,16 +224,16 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal.yearmonth.prototype.difference">
-      <h1>Temporal.YearMonth.prototype.difference ( _otherYearMonth_ [, _largestUnit_ ]. )</h1>
+      <h1>Temporal.YearMonth.prototype.difference ( _otherYearMonth_ [, _options_ ]. )</h1>
       <p>
-        The `difference` method takes two arguments, _otherYearMonth_ and _largestUnit_.
+        The `difference` method takes two arguments, _otherYearMonth_ and _options_.
         The following steps are taken:
       </p>
       <emu-alg>
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
         1. Perform ? RequireInternalSlot(_otherYearMonth_, [[InitializedTemporalYearMonth]]).
-        1. Set _largestUnit_ to ? ToLargestTemporalUnit(_largestUnit_, « `"days"`, `"hours"`, `"minutes"`, `"seconds"` », `"years"`).
+        1. Let _largestUnit_ be ? ToLargestTemporalUnit(_options_, « *"days"*, *"hours"*, *"minutes"*, *"seconds"* », *"years"*).
         1. If ! YearMonthCompare(_yearMonth_, _otherYearMonth_) &lt; 0, then
           1. Let _greater_ be _otherYearMonth_.
           1. Let _smaller_ be _yearMonth_.

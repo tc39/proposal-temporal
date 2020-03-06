@@ -28,19 +28,21 @@ A representation of wall-clock time.
 
 ## Methods
 
-### time.**with**({ hour: number = this.hour, minute: number = this.minute, second: numer = this.second ...}, _disambiguation_: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.Time
+### time.**with**({ hour: number = this.hour, minute: number = this.minute, second: numer = this.second ...}, _options_?: object) : Temporal.Time
 
-### time.**plus**(_duration_: string | object, _disambiguation_: 'constrain' | 'reject' = 'constrain') : Temporal.Time
+### time.**plus**(_duration_: string | object, _options_?: object) : Temporal.Time
 
-### time.**minus**(_duration_: string | object, _disambiguation_: 'constrain' | 'reject' = 'constrain') : Temporal.Time
+### time.**minus**(_duration_: string | object, _options_?: object) : Temporal.Time
 
-### time.**difference**(_other_: Temporal.Time, _largestUnit_: string = 'hours') : Temporal.Duration
+### time.**difference**(_other_: Temporal.Time, _options_?: object) : Temporal.Duration
 
 **Parameters:**
 - `other` (`Temporal.Time`): Another time with which to compute the difference.
-- `largestUnit` (optional string): The largest unit of time to allow in the resulting `Temporal.Duration` object.
-  Valid values are `'years'`, `'months'`, `'days'`, `'hours'`, `'minutes'`, and `'seconds'`.
-  The default is `days`.
+- `options` (optional object): An object with properties representing options for the operation.
+  The following options are recognized:
+  - `largestUnit` (string): The largest unit of time to allow in the resulting `Temporal.Duration` object.
+    Valid values are `'years'`, `'months'`, `'days'`, `'hours'`, `'minutes'`, and `'seconds'`.
+    The default is `days`.
 
 **TODO:** Rest of the documentation in another pull request, this to be rebased
 

@@ -57,7 +57,7 @@
         The following steps are taken:
       </p>
       <emu-alg>
-        1. Let _disambiguation_ be ? GetOption(_options_, *"disambiguation"*, « *"constrain"*, *"balance"*, *"reject"* », *"constrain"*).
+        1. Let _disambiguation_ be ? ToDisambiguation(_options_).
         1. If Type(_arg_) is Object, then
           1. Return ? ToTime(_arg_, _disambiguation_).
         1. Let _string_ be ? ToString(_arg_).
@@ -184,16 +184,16 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal.time.prototype.plus">
-      <h1>Temporal.Time.prototype.plus ( _duration_ [ , _disambiguation_ ] )</h1>
+      <h1>Temporal.Time.prototype.plus ( _duration_ [ , _options_ ] )</h1>
       <p>
-        The `plus` method takes two arguments, _duration_ and _disambiguation_.
+        The `plus` method takes two arguments, _duration_ and _options_.
         The following steps are taken:
       </p>
       <emu-alg>
         1. Let _time_ be the *this* value.
         1. Perform ? RequireInternalSlot(_time_, [[InitializedTemporalTime]]).
         1. Let _duration_ be ? ToLimitedDuration(_duration_, « *"years"*, *"months"*, *"days"* »).
-        1. Perform ? ToArithmeticDisambiguation(_disambiguation_).
+        1. Perform ? ToArithmeticDisambiguation(_options_).
         1. Let _result_ be ! AddTime(_time_.[[Hour]], _time_.[[Minute]], _time_.[[Second]], _time_.[[Millisecond]], _time_.[[Microsecond]], _time_.[[Nanosecond]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
         1. Let _result_ be ! BalanceTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_).
         1. Return ? CreateTime(_result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]).
@@ -201,16 +201,16 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal.time.prototype.minus">
-      <h1>Temporal.Time.prototype.minus ( _duration_ [ , _disambiguation_ ] )</h1>
+      <h1>Temporal.Time.prototype.minus ( _duration_ [ , _options_ ] )</h1>
       <p>
-        The `minus` method takes two arguments, _duration_ and _disambiguation_.
+        The `minus` method takes two arguments, _duration_ and _options_.
         The following steps are taken:
       </p>
       <emu-alg>
         1. Let _time_ be the *this* value.
         1. Perform ? RequireInternalSlot(_time_, [[InitializedTemporalTime]]).
         1. Let _duration_ be ? ToLimitedDuration(_duration_, « *"years"*, *"months"*, *"days"* »).
-        1. Perform ? ToArithmeticDisambiguation(_disambiguation_).
+        1. Perform ? ToArithmeticDisambiguation(_options_).
         1. Let _hour_ be _time_.[[Hour]] - _duration_.[[Hour]].
         1. Let _minute_ be _time_.[[Minute]] - _duration_.[[Minute]].
         1. Let _second_ be _time_.[[Second]] - _duration_.[[Second]].
@@ -223,16 +223,16 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal.time.prototype.with">
-      <h1>Temporal.Time.prototype.with ( _timelike_ [ , _disambiguation_ ] )</h1>
+      <h1>Temporal.Time.prototype.with ( _timelike_ [ , _options_ ] )</h1>
       <p>
-        The `with` method takes two arguments, _timelike_ and _disambiguation_.
+        The `with` method takes two arguments, _timelike_ and _options_.
         The following steps are taken:
       </p>
       <emu-alg>
         1. Let _time_ be the *this* value.
         1. Perform ? RequireInternalSlot(_time_, [[InitializedTemporalTime]]).
         1. Let _timelike_ be ? ToPartialTime(_timelike_).
-        1. Set _disambiguation_ to ? ToDisambiguation(_disambiguation_).
+        1. Let _disambiguation_ be ? ToDisambiguation(_options_).
         1. If _timelike_.[[Hour]] is not *undefined*, then
           1. Let _hour_ be _timelike_.[[Hour]].
         1. Else
@@ -263,16 +263,16 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal.time.prototype.difference">
-      <h1>Temporal.Time.prototype.difference ( _otherTime_ [, _largestUnit_ ] )</h1>
+      <h1>Temporal.Time.prototype.difference ( _otherTime_ [ , _options_ ] )</h1>
       <p>
-        The `difference` method takes two arguments, _otherTime_ and _largestUnit_.
+        The `difference` method takes two arguments, _otherTime_ and _options_.
         The following steps are taken:
       </p>
       <emu-alg>
         1. Let _time_ be the *this* value.
         1. Perform ? RequireInternalSlot(_time_, [[InitializedTemporalTime]]).
         1. Perform ? RequireInternalSlot(_otherTime_, [[InitializedTemporalTime]]).
-        1. Set _largestUnit_ to ? ToLargestTemporalUnit(_largestUnit_, « », `"hours"`).
+        1. Let _largestUnit_ be ? ToLargestTemporalUnit(_options_, « », *"hours"*).
         1. If ! TimeCompare(_time_, _otherTime_) &lt; 0, then
           1. Let _greater_ be _otherTime_.
           1. Let _smaller_ be _time_.

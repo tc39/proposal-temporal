@@ -109,16 +109,16 @@ describe('YearMonth', () => {
     const feb21 = YearMonth.from('2021-02');
     it('defaults to returning years', () => {
       equal(`${feb21.difference(feb20)}`, 'P1Y');
-      equal(`${feb21.difference(feb20, 'years')}`, 'P1Y');
+      equal(`${feb21.difference(feb20, { largestUnit: 'years' })}`, 'P1Y');
     });
     it('can return months', () => {
-      equal(`${feb21.difference(feb20, 'months')}`, 'P12M');
+      equal(`${feb21.difference(feb20, { largestUnit: 'months' })}`, 'P12M');
     });
     it('cannot return lower units', () => {
-      throws(() => feb21.difference(feb20, 'days'), RangeError);
-      throws(() => feb21.difference(feb20, 'hours'), RangeError);
-      throws(() => feb21.difference(feb20, 'minutes'), RangeError);
-      throws(() => feb21.difference(feb20, 'seconds'), RangeError);
+      throws(() => feb21.difference(feb20, { largestUnit: 'days' }), RangeError);
+      throws(() => feb21.difference(feb20, { largestUnit: 'hours' }), RangeError);
+      throws(() => feb21.difference(feb20, { largestUnit: 'minutes' }), RangeError);
+      throws(() => feb21.difference(feb20, { largestUnit: 'seconds' }), RangeError);
     });
   });
   describe('YearMonth.plus() works', () => {
@@ -132,7 +132,7 @@ describe('YearMonth', () => {
     });
     it('invalid disambiguation', () => {
       ['', 'CONSTRAIN', 'balance', 3, null].forEach((disambiguation) =>
-        throws(() => ym.plus({ months: 1 }, disambiguation), RangeError));
+        throws(() => ym.plus({ months: 1 }, { disambiguation }), RangeError));
     });
   });
   describe('YearMonth.minus() works', () => {
@@ -146,7 +146,7 @@ describe('YearMonth', () => {
     });
     it('invalid disambiguation', () => {
       ['', 'CONSTRAIN', 'balance', 3, null].forEach((disambiguation) =>
-        throws(() => ym.minus({ months: 1 }, disambiguation), RangeError));
+        throws(() => ym.minus({ months: 1 }, { disambiguation }), RangeError));
     });
   });
   describe('Min/max range', () => {
@@ -191,14 +191,14 @@ describe('YearMonth', () => {
       const max = YearMonth.from('+275760-09');
       equal(`${min.minus({months: 1})}`, '-271821-04');
       equal(`${max.plus({months: 1})}`, '+275760-09');
-      throws(() => min.minus({months: 1}, 'reject'), RangeError);
-      throws(() => max.plus({months: 1}, 'reject'), RangeError);
+      throws(() => min.minus({months: 1}, { disambiguation: 'reject' }), RangeError);
+      throws(() => max.plus({months: 1}, { disambiguation: 'reject' }), RangeError);
     });
   });
   describe('YearMonth.with()', () => {
     it('throws on bad disambiguation', () => {
       ['', 'CONSTRAIN', 'xyz', 3, null].forEach((disambiguation) =>
-        throws(() => YearMonth.from(2019, 1).with({ month: 2 }, disambiguation), RangeError));
+        throws(() => YearMonth.from(2019, 1).with({ month: 2 }, { disambiguation }), RangeError));
     })
   });
 });
