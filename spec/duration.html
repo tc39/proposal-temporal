@@ -141,7 +141,7 @@
         The following steps are taken:
       </p>
       <emu-alg>
-        1. Let _disambiguation_ be ? GetOption(_options_, *"disambiguation"*, « *"constrain"*, *"balance"*, *"reject"* », *"constrain"*).
+        1. Let _disambiguation_ be ? ToDisambiguation(_options_).
         1. If Type(_arg_) is Object, then
           1. Return ? ToDuration(_arg_, _disambiguation_).
         1. If Type(_arg_) is String, then

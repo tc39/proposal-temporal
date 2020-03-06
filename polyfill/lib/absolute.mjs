@@ -90,10 +90,10 @@ export class Absolute {
     const Construct = ES.SpeciesConstructor(this, Absolute);
     return new Construct(bigInt(ns));
   }
-  difference(other, largestUnit = 'seconds') {
+  difference(other, options) {
     if (!ES.IsAbsolute(this)) throw new TypeError('invalid receiver');
     if (!ES.IsAbsolute(other)) throw new TypeError('invalid Absolute object');
-    largestUnit = ES.ToLargestTemporalUnit(largestUnit, ['years', 'months']);
+    const largestUnit = ES.ToLargestTemporalUnit(options, 'seconds', ['years', 'months']);
 
     const [one, two] = [this, other].sort(Absolute.compare);
     const onens = GetSlot(one, EPOCHNANOSECONDS);

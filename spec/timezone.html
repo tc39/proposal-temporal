@@ -134,15 +134,15 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal.timezone.prototype.getabsolutefor">
-      <h1>Temporal.TimeZone.prototype.getAbsoluteFor ( _dateTime_ [ , _disambiguation_ ] )</h1>
+      <h1>Temporal.TimeZone.prototype.getAbsoluteFor ( _dateTime_ [ , _options_ ] )</h1>
       <p>
-        The `getAbsoluteFor` method takes two arguments, _dateTime_ and _disambiguation_.
+        The `getAbsoluteFor` method takes two arguments, _dateTime_ and _options_.
         The following steps are taken:
       </p>
       <emu-alg>
         1. Let _timeZone_ be the *this* value.
         1. Perform ? RequireInternalSlot(_timeZone_, [[InitializedTemporalTimeZone]]).
-        1. Set _disambiguation_ to ? ToTimeZoneDisambiguation(_disambiguation_).
+        1. Let _disambiguation_ be ? ToTimeZoneDisambiguation(_options_).
         1. <mark>TODO</mark>
       </emu-alg>
     </emu-clause>

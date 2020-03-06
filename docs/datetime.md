@@ -282,13 +282,15 @@ dt.with({year: 2100}).isLeapYear  // => false
 
 ## Methods
 
-### datetime.**with**(_dateTimeLike_: object, _disambiguation_: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.DateTime
+### datetime.**with**(_dateTimeLike_: object, _options_?: object) : Temporal.DateTime
 
 **Parameters:**
 - `dateTimeLike` (object): an object with some or all of the properties of a `Temporal.DateTime`.
-- `disambiguation` (optional string): How to deal with out-of-range values.
-  Allowed values are `constrain`, `balance`, and `reject`.
-  The default is `constrain`.
+- `options` (optional object): An object with properties representing options for the operation.
+  The following options are recognized:
+  - `disambiguation` (string): How to deal with out-of-range values.
+    Allowed values are `constrain`, `balance`, and `reject`.
+    The default is `constrain`.
 
 **Returns:** a new `Temporal.DateTime` object.
 
@@ -302,13 +304,15 @@ dt = new Temporal.DateTime(1995, 12, 7, 3, 24, 30, 0, 3, 500);
 dt.with({year: 2015, second: 31})  // => 2015-12-07T03:24:31.000003500
 ```
 
-### datetime.**plus**(_duration_: string | object, _disambiguation_: 'constrain' | 'reject' = 'constrain') : Temporal.DateTime
+### datetime.**plus**(_duration_: string | object, _options_?: object) : Temporal.DateTime
 
 **Parameters:**
 - `duration` (string or object): A `Temporal.Duration` object, a duration-like object, or a string from which to create a `Temporal.Duration`.
-- `disambiguation` (optional string): How to deal with additions that result in out-of-range values.
-  Allowed values are `constrain` and `reject`.
-  The default is `constrain`.
+- `options` (optional object): An object with properties representing options for the addition.
+  The following options are recognized:
+  - `disambiguation` (string): How to deal with additions that result in out-of-range values.
+    Allowed values are `constrain` and `reject`.
+    The default is `constrain`.
 
 **Returns:** a new `Temporal.DateTime` object which is the date and time indicated by `datetime` plus `duration`.
 
@@ -321,7 +325,7 @@ The `duration` argument can be any value that could be passed to `Temporal.Durat
 
 Some additions may be ambiguous, because months have different lengths.
 For example, adding one month to August 31 would result in September 31, which doesn't exist.
-For these cases, the `disambiguation` argument tells what to do:
+For these cases, the `disambiguation` option tells what to do:
 - In `constrain` mode (the default), out-of-range values are clamped to the nearest in-range value.
 - In `reject` mode, an addition that would result in an out-of-range value fails, and a `RangeError` is thrown.
 
@@ -335,17 +339,19 @@ dt.plus({years: 20, months: 4, nanoseconds: 500})  // => 2016-04-07T03:24:30.000
 dt.plus('P14Y7MT7H14M21S')  // => 2010-07-07T10:38:51.000003500
 
 dt = Temporal.DateTime.from('2019-01-31T15:30')
-dt.plus({months: 1}, 'constrain')  // => 2019-02-28T15:30
-dt.plus({months: 1}, 'reject')  // => throws
+dt.plus({ months: 1 })  // => 2019-02-28T15:30
+dt.plus({ months: 1 }, { disambiguation: 'reject' })  // => throws
 ```
 
-### datetime.**minus**(_duration_: string | object, _disambiguation_: 'constrain' | 'reject' = 'constrain') : Temporal.DateTime
+### datetime.**minus**(_duration_: string | object, _options_?: object) : Temporal.DateTime
 
 **Parameters:**
 - `duration` (string or object): A `Temporal.Duration` object, a duration-like object, or a string from which to create a `Temporal.Duration`.
-- `disambiguation` (optional string): How to deal with subtractions that result in out-of-range values.
-  Allowed values are `constrain` and `reject`.
-  The default is `constrain`.
+- `options` (optional object): An object with properties representing options for the subtraction.
+  The following options are recognized:
+  - `disambiguation` (string): How to deal with subtractions that result in out-of-range values.
+    Allowed values are `constrain` and `reject`.
+    The default is `constrain`.
 
 **Returns:** a new `Temporal.DateTime` object which is the time indicated by `datetime` minus `duration`.
 
@@ -358,7 +364,7 @@ The `duration` argument can be any value that could be passed to `Temporal.Durat
 
 Some subtractions may be ambiguous, because months have different lengths.
 For example, subtracting one month from July 31 would result in June 31, which doesn't exist.
-For these cases, the `disambiguation` argument tells what to do:
+For these cases, the `disambiguation` option tells what to do:
 - In `constrain` mode (the default), out-of-range values are clamped to the nearest in-range value.
 - In `reject` mode, an addition that would result in an out-of-range value fails, and a `RangeError` is thrown.
 
@@ -372,24 +378,26 @@ dt.minus({years: 20, months: 4, nanoseconds: 500})  // => 1975-08-07T03:24:30.00
 dt.minus('P14Y7MT7H14M21S')  // => 1981-05-06T20:10:09.000003500
 
 dt = Temporal.DateTime.from('2019-03-31T15:30')
-dt.minus({months: 1}, 'constrain')  // => 2019-02-28T15:30
-dt.minus({months: 1}, 'reject')  // => throws
+dt.minus({ months: 1 }, { disambiguation: 'constrain' })  // => 2019-02-28T15:30
+dt.minus({ months: 1 })  // => throws
 ```
 
-### datetime.**difference**(_other_: Temporal.DateTime, _largestUnit_: string = 'days') : Temporal.Duration
+### datetime.**difference**(_other_: Temporal.DateTime, _options_?: object) : Temporal.Duration
 
 **Parameters:**
 - `other` (`Temporal.DateTime`): Another date/time with which to compute the difference.
-- `largestUnit` (optional string): The largest unit of time to allow in the resulting `Temporal.Duration` object.
-  Valid values are `'years'`, `'months'`, `'days'`, `'hours'`, `'minutes'`, and `'seconds'`.
-  The default is `days`.
+- `options` (optional object): An object with properties representing options for the operation.
+  The following options are recognized:
+  - `largestUnit` (string): The largest unit of time to allow in the resulting `Temporal.Duration` object.
+    Valid values are `'years'`, `'months'`, `'days'`, `'hours'`, `'minutes'`, and `'seconds'`.
+    The default is `days`.
 
 **Returns:** a `Temporal.Duration` representing the difference between `datetime` and `other`.
 
 This method computes the difference between the two times represented by `datetime` and `other`, and returns it as a `Temporal.Duration` object.
 The difference is always positive, no matter the order of `datetime` and `other`, because `Temporal.Duration` objects cannot represent negative durations.
 
-The `largestUnit` parameter controls how the resulting duration is expressed.
+The `largestUnit` option controls how the resulting duration is expressed.
 The returned `Temporal.Duration` object will not have any nonzero fields that are larger than the unit in `largestUnit`.
 A difference of two hours will become 7200 seconds when `largestUnit` is `"seconds"`, for example.
 However, a difference of 30 seconds will still be 30 seconds even if `largestUnit` is `"hours"`.
@@ -401,15 +409,15 @@ Usage example:
 ```javascript
 dt1 = Temporal.DateTime.from('1995-12-07T03:24:30.000003500');
 dt2 = Temporal.DateTime.from('2019-01-31T15:30');
-dt1.difference(dt2);           // =>    P8456DT12H5M29.999996500S
-dt1.difference(dt2), 'years')  // => P23Y1M24DT12H5M29.999996500S
+dt1.difference(dt2);                            // =>    P8456DT12H5M29.999996500S
+dt1.difference(dt2), { largestUnit: 'years' })  // => P23Y1M24DT12H5M29.999996500S
 
 // Months and years can be different lengths
 [jan1, feb1, mar1] = [1, 2, 3].map(month => Temporal.DateTime.from({year: 2020, month, day: 1}));
-jan1.difference(feb1);            // => P31D
-jan1.difference(feb1, 'months');  // => P1M
-feb1.difference(mar1);            // => P29D
-feb1.difference(mar1, 'months');  // => P1M
+jan1.difference(feb1);                             // => P31D
+jan1.difference(feb1, { largestUnit: 'months' });  // => P1M
+feb1.difference(mar1);                             // => P29D
+feb1.difference(mar1, { largestUnit: 'months' });  // => P1M
 ```
 
 ### datetime.**toString**() : string
@@ -448,20 +456,22 @@ dt.toLocaleString('de-DE', { timeZone: 'Europe/Berlin', weekday: 'long' });  // 
 dt.toLocaleString('en-US-u-nu-fullwide-hc-h12');  // => １２/７/１９９５, ３:２４:３０ AM
 ```
 
-### datetime.**inTimeZone**(_timeZone_ : Temporal.TimeZone | string, _disambiguation_ : 'earlier' | 'later' | 'reject' = 'earlier') : Temporal.Absolute
+### datetime.**inTimeZone**(_timeZone_ : Temporal.TimeZone | string, _options_?: object) : Temporal.Absolute
 
 **Parameters:**
 - `timeZone` (optional string or `Temporal.TimeZone`): The time zone in which to interpret `dateTime`.
-- `disambiguation` (optional `string`): How to disambiguate if the date and time given by `dateTime` does not exist in the time zone, or exists more than once.
-  Allowed values are `earlier`, `later`, and `reject`.
-  The default is `earlier`.
+- `options` (optional object): An object with properties representing options for the operation.
+  The following options are recognized:
+  - `disambiguation` (string): How to disambiguate if the date and time given by `dateTime` does not exist in the time zone, or exists more than once.
+    Allowed values are `earlier`, `later`, and `reject`.
+    The default is `earlier`.
 
 **Returns:** A `Temporal.Absolute` object indicating the absolute time in `timeZone` at the time of the calendar date and wall-clock time from `dateTime`.
 
 This method is one way to convert a `Temporal.DateTime` to a `Temporal.Absolute`.
 It is identical to [`(Temporal.TimeZone.from(timeZone || 'UTC')).getAbsoluteFor(dateTime, disambiguation)`](./timezone.html#getAbsoluteFor).
 
-In the case of ambiguity, the `disambiguation` parameter controls what absolute time to return:
+In the case of ambiguity, the `disambiguation` option controls what absolute time to return:
 - `earlier`: The earlier of two possible times.
 - `later`: The later of two possible times.
 - `reject`: Throw a `RangeError` instead.

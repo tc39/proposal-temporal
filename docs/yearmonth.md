@@ -181,13 +181,15 @@ ym.with({year: 2100}).isLeapYear  // => false
 
 ## Methods
 
-### yearMonth.**with**(_yearMonthLike_: object, _disambiguation_: 'constrain' | 'balance' | 'reject' = 'constrain') : Temporal.YearMonth
+### yearMonth.**with**(_yearMonthLike_: object, _options_?: object) : Temporal.YearMonth
 
 **Parameters:**
 - `yearMonthLike` (object): an object with some or all of the properties of a `Temporal.YearMonth`.
-- `disambiguation` (optional string): How to deal with out-of-range values.
-  Allowed values are `constrain`, `balance`, and `reject`.
-  The default is `constrain`.
+- `options` (optional object): An object with properties representing options for the operation.
+  The following options are recognized:
+  - `disambiguation` (string): How to deal with out-of-range values.
+    Allowed values are `constrain`, `balance`, and `reject`.
+    The default is `constrain`.
 
 **Returns:** a new `Temporal.YearMonth` object.
 
@@ -202,13 +204,15 @@ ym = Temporal.YearMonth.from('2019-06');
 ym.with({month: 12})  // => 2019-12
 ```
 
-### yearMonth.**plus**(_duration_: string | object, _disambiguation_: 'constrain' | 'reject' = 'constrain') : Temporal.YearMonth
+### yearMonth.**plus**(_duration_: string | object, _options_?: object) : Temporal.YearMonth
 
 **Parameters:**
 - `duration` (string or object): A `Temporal.Duration` object, a duration-like object, or a string from which to create a `Temporal.Duration`.
-- `disambiguation` (optional string): How to deal with additions that result in out-of-range values.
-  Allowed values are `constrain` and `reject`.
-  The default is `constrain`.
+- `options` (optional object): An object with properties representing options for the addition.
+  The following options are recognized:
+  - `disambiguation` (string): How to deal with additions that result in out-of-range values.
+    Allowed values are `constrain` and `reject`.
+    The default is `constrain`.
 
 **Returns:** a new `Temporal.YearMonth` object which is the month indicated by `yearMonth` plus `duration`.
 
@@ -222,7 +226,7 @@ The `duration` argument can be any value that could be passed to `Temporal.Durat
 If the result is outside the range of dates that `Temporal.YearMonth` can represent, then `constrain` mode will clamp the result to the allowed range.
 The `reject` mode will throw a `RangeError` in this case.
 
-Other than for out-of-range values, the `disambiguation` parameter has no effect in the default ISO calendar, because a year is always 12 months and therefore not ambiguous.
+Other than for out-of-range values, the `disambiguation` option has no effect in the default ISO calendar, because a year is always 12 months and therefore not ambiguous.
 It doesn't matter in this case that years and months can be different numbers of days, as the resolution of `Temporal.YearMonth` does not distinguish days.
 However, disambiguation may have an effect in other calendars where years can be different numbers of months.
 
@@ -233,13 +237,15 @@ ym.plus({years: 20, months: 4})  // => 2039-10
 ym.plus('P14Y')  // => 2033-06
 ```
 
-### yearMonth.**minus**(_duration_: string | object, _disambiguation_: 'constrain' | 'reject' = 'constrain') : Temporal.YearMonth
+### yearMonth.**minus**(_duration_: string | object, _options_?: object) : Temporal.YearMonth
 
 **Parameters:**
 - `duration` (string or object): A `Temporal.Duration` object, a duration-like object, or a string from which to create a `Temporal.Duration`.
-- `disambiguation` (optional string): How to deal with additions that result in out-of-range values.
-  Allowed values are `constrain` and `reject`.
-  The default is `constrain`.
+- `options` (optional object): An object with properties representing options for the subtraction.
+  The following options are recognized:
+  - `disambiguation` (string): How to deal with additions that result in out-of-range values.
+    Allowed values are `constrain` and `reject`.
+    The default is `constrain`.
 
 **Returns:** a new `Temporal.YearMonth` object which is the month indicated by `yearMonth` minus `duration`.
 
@@ -253,7 +259,7 @@ The `duration` argument can be any value that could be passed to `Temporal.Durat
 If the result is outside the range of dates that `Temporal.YearMonth` can represent, then `constrain` mode will clamp the result to the allowed range.
 The `reject` mode will throw a `RangeError` in this case.
 
-Other than for out-of-range values, the `disambiguation` parameter has no effect in the default ISO calendar, because a year is always 12 months and therefore not ambiguous.
+Other than for out-of-range values, the `disambiguation` option has no effect in the default ISO calendar, because a year is always 12 months and therefore not ambiguous.
 It doesn't matter in this case that years and months can be different numbers of days, as the resolution of `Temporal.YearMonth` does not distinguish days.
 However, disambiguation may have an effect in other calendars where years can be different numbers of months.
 
@@ -264,13 +270,15 @@ ym.minus({years: 20, months: 4})  // => 1999-02
 ym.minus('P14Y')  // => 2005-06
 ```
 
-### yearMonth.**difference**(_other_: Temporal.YearMonth, _largestUnit_: string = 'years') : Temporal.Duration
+### yearMonth.**difference**(_other_: Temporal.YearMonth, _options_?: object) : Temporal.Duration
 
 **Parameters:**
 - `other` (`Temporal.YearMonth`): Another month with which to compute the difference.
-- `largestUnit` (optional string): The largest unit of time to allow in the resulting `Temporal.Duration` object.
-  Valid values are `'years'` and `'months'`.
-  The default is `years`.
+- `options` (optional object): An object with properties representing options for the operation.
+  The following options are recognized:
+  - `largestUnit` (string): The largest unit of time to allow in the resulting `Temporal.Duration` object.
+    Valid values are `'years'` and `'months'`.
+    The default is `years`.
 
 
 **Returns:** a `Temporal.Duration` representing the difference between `yearMonth` and `other`.
@@ -278,7 +286,7 @@ ym.minus('P14Y')  // => 2005-06
 This method computes the difference between the two months represented by `yearMonth` and `other`, and returns it as a `Temporal.Duration` object.
 The difference is always positive, no matter the order of `yearMonth` and `other`, because `Temporal.Duration` objects cannot represent negative durations.
 
-The `largestUnit` parameter controls how the resulting duration is expressed.
+The `largestUnit` option controls how the resulting duration is expressed.
 The returned `Temporal.Duration` object will not have any nonzero fields that are larger than the unit in `largestUnit`.
 A difference of one year and two months will become 14 months when `largestUnit` is `"months"`, for example.
 However, a difference of one month will still be one month even if `largestUnit` is `"years"`.
@@ -289,15 +297,15 @@ Usage example:
 ```javascript
 ym = Temporal.YearMonth.from('2019-06');
 other = Temporal.YearMonth.from('2006-08');
-ym.difference(other)            // => P12Y10M
-ym.difference(other, 'months')  // => P154M
+ym.difference(other)                             // => P12Y10M
+ym.difference(other, { largestUnit: 'months' })  // => P154M
 
 // If you really need to calculate the difference between two YearMonths
 // in days, you can eliminate the ambiguity by explicitly choosing the
 // day of the month (and if applicable, the time of that day) from which
 // you want to reckon the difference. For example, using the first of
 // the month to calculate a number of days:
-ym.withDay(1).difference(other.withDay(1), 'days');  // => P4687D
+ym.withDay(1).difference(other.withDay(1), { largestUnit: 'days' });  // => P4687D
 ```
 
 ### yearMonth.**toString**() : string

@@ -6,7 +6,7 @@ Converting a [`Temporal.DateTime`](./datetime.md) wall-clock time to a [`Tempora
 Due to DST time changes, there is a possibility that a wall-clock time either does not exist, or has existed twice.
 
 There are two mostly equivalent methods that accomplish this conversion: [`Temporal.DateTime.prototype.inTimeZone`](./datetime.html#inTimeZone) and [`Temporal.TimeZone.prototype.getAbsoluteFor`](./timezone.html#getAbsoluteFor).
-The `disambiguation` argument to these methods controls what absolute time to return in the case of ambiguity:
+The `disambiguation` option to these methods controls what absolute time to return in the case of ambiguity:
 - `earlier` (the default): The earlier of two possible absolute times will be returned.
 - `later`: The later of two possible absolute times will be returned.
 - `reject`: A `RangeError` will be thrown.
@@ -31,16 +31,16 @@ In `later` mode, the absolute time that is returned will be as if the pre-change
 ```javascript
 tz = new Temporal.TimeZone('Europe/Berlin');
 dt = new Temporal.DateTime(2019, 3, 31, 2, 45);
-tz.getAbsoluteFor(dt, 'earlier');  // => 2019-03-31T00:45Z
-tz.getAbsoluteFor(dt, 'later');    // => 2019-03-31T01:45Z
-tz.getAbsoluteFor(dt, 'reject');   // throws
+tz.getAbsoluteFor(dt, { disambiguation: 'earlier' });  // => 2019-03-31T00:45Z
+tz.getAbsoluteFor(dt, { disambiguation: 'later' });    // => 2019-03-31T01:45Z
+tz.getAbsoluteFor(dt, { disambiguation: 'reject' });   // throws
 ```
 
 In this example, the wall-clock time 2:45 doesn't exist, so it is treated as either 1:45 +01:00 or 3:45 +02:00, which can be seen by converting the absolute back to a wall-clock time in the time zone:
 
 ```javascript
-tz.getAbsoluteFor(dt, 'earlier').inTimeZone(tz);  // => 2019-03-31T01:45
-tz.getAbsoluteFor(dt, 'later').inTimeZone(tz);  // => 2019-03-31T03:45
+tz.getAbsoluteFor(dt, { disambiguation: 'earlier' }).inTimeZone(tz);  // => 2019-03-31T01:45
+tz.getAbsoluteFor(dt, { disambiguation: 'later' }).inTimeZone(tz);  // => 2019-03-31T03:45
 ```
 
 Likewise, at the end of DST, clocks move backward an hour.
@@ -51,9 +51,9 @@ In `later` mode, the absolute time will be the later instance of the duplicated 
 ```javascript
 tz = new Temporal.TimeZone('America/Sao_Paulo');
 dt = new Temporal.DateTime(2019, 2, 16, 23, 45);
-dt.inTimeZone(tz, 'earlier');  // => 2019-02-17T01:45Z
-dt.inTimeZone(tz, 'later');    // => 2019-02-17T02:45Z
-dt.inTimeZone(tz, 'reject');   // throws
+dt.inTimeZone(tz, { disambiguation: 'earlier' });  // => 2019-02-17T01:45Z
+dt.inTimeZone(tz, { disambiguation: 'later' });    // => 2019-02-17T02:45Z
+dt.inTimeZone(tz, { disambiguation: 'reject' });   // throws
 ```
 
 In this example, the wall-clock time 23:45 exists twice.

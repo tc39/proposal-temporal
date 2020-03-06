@@ -493,34 +493,20 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
     }
     return duration;
   },
-  ToDisambiguation: (disambiguation) => {
-    disambiguation = ES.ToString(disambiguation);
-    if (!['constrain', 'balance', 'reject'].includes(disambiguation)) {
-      throw new RangeError(`disambiguation should be constrain, balance, or reject, not ${disambiguation}`);
-    }
-    return disambiguation;
+  ToDisambiguation: (options) => {
+    return ES.GetOption(options, 'disambiguation', ['constrain', 'balance', 'reject'], 'constrain');
   },
-  ToArithmeticDisambiguation: (disambiguation) => {
-    disambiguation = ES.ToString(disambiguation);
-    if (disambiguation !== 'constrain' && disambiguation !== 'reject') {
-      throw new RangeError(`disambiguation should be constrain or reject, not ${disambiguation}`);
-    }
-    return disambiguation;
+  ToArithmeticDisambiguation: (options) => {
+    return ES.GetOption(options, 'disambiguation', ['constrain', 'reject'], 'constrain');
   },
-  ToTimeZoneDisambiguation: (disambiguation) => {
-    disambiguation = ES.ToString(disambiguation);
-    if (!['earlier', 'later', 'reject'].includes(disambiguation)) {
-      throw new RangeError(`disambiguation should be earlier, later, or reject, not ${disambiguation}`);
-    }
-    return disambiguation;
+  ToTimeZoneDisambiguation: (options) => {
+    return ES.GetOption(options, 'disambiguation', ['earlier', 'later', 'reject'], 'earlier');
   },
-  ToLargestTemporalUnit: (largestUnit, disallowedStrings = []) => {
-    largestUnit = ES.ToString(largestUnit);
+  ToLargestTemporalUnit: (options, fallback, disallowedStrings = []) => {
+    const largestUnit = ES.GetOption(options, 'largestUnit',
+      ['years', 'months', 'days', 'hours', 'minutes', 'seconds'], fallback);
     if (disallowedStrings.includes(largestUnit)) {
       throw new RangeError(`${largestUnit} not allowed as the largest unit here`);
-    }
-    if (!['years', 'months', 'days', 'hours', 'minutes', 'seconds'].includes(largestUnit)) {
-      throw new RangeError(`invalid largest unit ${largestUnit}`);
     }
     return largestUnit;
   },
@@ -1253,11 +1239,17 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
     return ES.ToTimeZone(fmt.resolvedOptions().timeZone);
   },
   ComparisonResult: (value) => (value < 0 ? -1 : value > 0 ? 1 : value),
-  GetOption: (options, property, validation, fallback) => {
+  GetOption: (options, property, allowedValues, fallback) => {
     if (options === null || options === undefined) return fallback;
     options = ES.ToObject(options);
     let value = options[property];
-    if (value !== undefined) return validation(value);
+    if (value !== undefined) {
+      value = ES.ToString(value);
+      if (!allowedValues.includes(value)) {
+        throw new RangeError(`${property} must be one of ${allowedValues.join(', ')}, not ${value}`)
+      }
+      return value;
+    }
     return fallback;
   },
 });

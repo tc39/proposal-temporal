@@ -93,7 +93,7 @@ describe('MonthDay', () => {
   describe('MonthDay.with()', () => {
     it('throws on bad disambiguation', () => {
       ['', 'CONSTRAIN', 'xyz', 3, null].forEach((disambiguation) =>
-        throws(() => MonthDay.from('01-15').with({ day: 1 }, disambiguation), RangeError));
+        throws(() => MonthDay.from('01-15').with({ day: 1 }, { disambiguation }), RangeError));
     });
   });
 });

@@ -44,9 +44,9 @@ export class YearMonth {
     if (!ES.IsYearMonth(this)) throw new TypeError('invalid receiver');
     return ES.LeapYear(GetSlot(this, YEAR));
   }
-  with(dateLike = {}, disambiguation = 'constrain') {
+  with(dateLike = {}, options) {
     if (!ES.IsYearMonth(this)) throw new TypeError('invalid receiver');
-    disambiguation = ES.ToDisambiguation(disambiguation);
+    const disambiguation = ES.ToDisambiguation(options);
     const props = ES.ValidPropertyBag(dateLike, ['year', 'month']);
     if (!props) {
       throw new RangeError('invalid year-month-like');
@@ -59,9 +59,9 @@ export class YearMonth {
       GetSlot(result, MONTH),
     );
   }
-  plus(durationLike, disambiguation = 'constrain') {
+  plus(durationLike, options) {
     if (!ES.IsYearMonth(this)) throw new TypeError('invalid receiver');
-    disambiguation = ES.ToArithmeticDisambiguation(disambiguation);
+    const disambiguation = ES.ToArithmeticDisambiguation(options);
     const duration = ES.ToLimitedDuration(durationLike, [DAYS, HOURS, MINUTES, SECONDS, MILLISECONDS, MICROSECONDS, NANOSECONDS]);
     let { year, month } = this;
     const { years, months } = duration;
@@ -74,9 +74,9 @@ export class YearMonth {
       GetSlot(result, MONTH),
     );
   }
-  minus(durationLike, disambiguation = 'constrain') {
+  minus(durationLike, options) {
     if (!ES.IsYearMonth(this)) throw new TypeError('invalid receiver');
-    disambiguation = ES.ToArithmeticDisambiguation(disambiguation);
+    const disambiguation = ES.ToArithmeticDisambiguation(options);
     const duration = ES.ToLimitedDuration(durationLike, [DAYS, HOURS, MINUTES, SECONDS, MILLISECONDS, MICROSECONDS, NANOSECONDS]);
     let { year, month } = this;
     const { years, months } = duration;
@@ -89,10 +89,10 @@ export class YearMonth {
       GetSlot(result, MONTH),
     );
   }
-  difference(other, largestUnit = 'years') {
+  difference(other, options) {
     if (!ES.IsYearMonth(this)) throw new TypeError('invalid receiver');
     if (!ES.IsYearMonth(other)) throw new TypeError('invalid YearMonth object');
-    largestUnit = ES.ToLargestTemporalUnit(largestUnit, ['days', 'hours', 'minutes', 'seconds']);
+    const largestUnit = ES.ToLargestTemporalUnit(options, 'years', ['days', 'hours', 'minutes', 'seconds']);
     const [one, two] = [this, other].sort(YearMonth.compare);
     let years = two.year - one.year;
     let months = two.month - one.month;
@@ -126,7 +126,7 @@ export class YearMonth {
     return new Date(year, month, day);
   }
   static from(arg, options) {
-    const disambiguation = ES.GetOption(options, 'disambiguation', ES.ToDisambiguation, 'constrain');
+    const disambiguation = ES.ToDisambiguation(options);
     let result = ES.ToYearMonth(arg, disambiguation);
     return this === YearMonth ? result : new this(
       GetSlot(result, YEAR),

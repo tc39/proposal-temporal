@@ -23,9 +23,9 @@ export class MonthDay {
     return GetSlot(this, DAY);
   }
 
-  with(dateLike, disambiguation = 'constrain') {
+  with(dateLike, options) {
     if (!ES.IsMonthDay(this)) throw new TypeError('invalid receiver');
-    disambiguation = ES.ToDisambiguation(disambiguation);
+    const disambiguation = ES.ToDisambiguation(options);
     const props = ES.ValidPropertyBag(dateLike, ['month', 'day']);
     if (!props) {
       throw new RangeError('invalid month-day-like');
@@ -57,7 +57,7 @@ export class MonthDay {
     return new Date(year, month, day);
   }
   static from(arg, options) {
-    const disambiguation = ES.GetOption(options, 'disambiguation', ES.ToDisambiguation, 'constrain');
+    const disambiguation = ES.ToDisambiguation(options);
     let result = ES.ToMonthDay(arg, disambiguation);
     return this === MonthDay ? result : new this(
       GetSlot(result, MONTH),

@@ -122,7 +122,7 @@ describe('Date', () => {
     });
     it('invalid disambiguation', () => {
       ['', 'CONSTRAIN', 'xyz', 3, null].forEach((disambiguation) =>
-        throws(() => original.with({ day: 17 }, disambiguation), RangeError));
+        throws(() => original.with({ day: 17 }, { disambiguation }), RangeError));
     });
   });
   describe('Date.withTime() works', () => {
@@ -150,8 +150,8 @@ describe('Date', () => {
       equal(duration.microseconds, 0);
       equal(duration.nanoseconds, 0);
     });
-    it('date.difference({ year: 2019, month: 11, day: 18 }, "years")', () => {
-      const duration = date.difference(Date.from({ year: 2019, month: 11, day: 18 }), 'years');
+    it('date.difference({ year: 2019, month: 11, day: 18 }, { largestUnit: "years" })', () => {
+      const duration = date.difference(Date.from({ year: 2019, month: 11, day: 18 }), { largestUnit: 'years' });
       equal(duration.years, 43);
       equal(duration.months, 0);
       equal(duration.days, 0);
@@ -193,23 +193,23 @@ describe('Date', () => {
     const feb21 = Date.from('2021-02-01');
     it('defaults to returning days', () => {
       equal(`${feb21.difference(feb20)}`, 'P366D');
-      equal(`${feb21.difference(feb20, 'days')}`, 'P366D');
+      equal(`${feb21.difference(feb20, { largestUnit: 'days' })}`, 'P366D');
     });
     it('can return higher units', () => {
-      equal(`${feb21.difference(feb20, 'years')}`, 'P1Y');
-      equal(`${feb21.difference(feb20, 'months')}`, 'P12M');
+      equal(`${feb21.difference(feb20, { largestUnit: 'years' })}`, 'P1Y');
+      equal(`${feb21.difference(feb20, { largestUnit: 'months' })}`, 'P12M');
     });
     it('cannot return lower units', () => {
-      throws(() => feb21.difference(feb20, 'hours'), RangeError);
-      throws(() => feb21.difference(feb20, 'minutes'), RangeError);
-      throws(() => feb21.difference(feb20, 'seconds'), RangeError);
+      throws(() => feb21.difference(feb20, { largestUnit: 'hours' }), RangeError);
+      throws(() => feb21.difference(feb20, { largestUnit: 'minutes' }), RangeError);
+      throws(() => feb21.difference(feb20, { largestUnit: 'seconds' }), RangeError);
     });
     it('does not include higher units than necessary', () => {
       const lastFeb20 = Date.from('2020-02-29');
       const lastFeb21 = Date.from('2021-02-28');
       equal(`${lastFeb21.difference(lastFeb20)}`, 'P365D');
-      equal(`${lastFeb21.difference(lastFeb20, 'months')}`, 'P11M30D');
-      equal(`${lastFeb21.difference(lastFeb20, 'years')}`, 'P11M30D');
+      equal(`${lastFeb21.difference(lastFeb20, { largestUnit: 'months' })}`, 'P11M30D');
+      equal(`${lastFeb21.difference(lastFeb20, { largestUnit: 'years' })}`, 'P11M30D');
     });
   });
   describe('date.plus() works', () => {
@@ -232,15 +232,15 @@ describe('Date', () => {
     it('constrain when ambiguous result', () => {
       const jan31 = Date.from('2020-01-31');
       equal(`${jan31.plus({ months: 1 })}`, '2020-02-29');
-      equal(`${jan31.plus({ months: 1 }, 'constrain')}`, '2020-02-29');
+      equal(`${jan31.plus({ months: 1 }, { disambiguation: 'constrain' })}`, '2020-02-29');
     });
     it('throw when ambiguous result with reject', () => {
       const jan31 = Date.from('2020-01-31');
-      throws(() => jan31.plus({ months: 1 }, 'reject'), RangeError);
+      throws(() => jan31.plus({ months: 1 }, { disambiguation: 'reject' }), RangeError);
     });
     it('invalid disambiguation', () => {
       ['', 'CONSTRAIN', 'balance', 3, null].forEach((disambiguation) =>
-        throws(() => date.plus({ months: 1 }, disambiguation), RangeError));
+        throws(() => date.plus({ months: 1 }, { disambiguation }), RangeError));
     });
   });
   describe('date.minus() works', () => {
@@ -263,15 +263,15 @@ describe('Date', () => {
     it('constrain when ambiguous result', () => {
       const mar31 = Date.from('2020-03-31');
       equal(`${mar31.minus({ months: 1 })}`, '2020-02-29');
-      equal(`${mar31.minus({ months: 1 }, 'constrain')}`, '2020-02-29');
+      equal(`${mar31.minus({ months: 1 }, { disambiguation: 'constrain' })}`, '2020-02-29');
     });
     it('throw when ambiguous result with reject', () => {
       const mar31 = Date.from('2020-03-31');
-      throws(() => mar31.minus({ months: 1 }, 'reject'), RangeError);
+      throws(() => mar31.minus({ months: 1 }, { disambiguation: 'reject' }), RangeError);
     });
     it('invalid disambiguation', () => {
       ['', 'CONSTRAIN', 'balance', 3, null].forEach((disambiguation) =>
-        throws(() => date.minus({ months: 1 }, disambiguation), RangeError));
+        throws(() => date.minus({ months: 1 }, { disambiguation }), RangeError));
     });
   });
   describe('date.toString() works', () => {

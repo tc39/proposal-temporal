@@ -140,16 +140,16 @@ describe('TimeZone', ()=>{
         it('clock moving forward', () => {
             const zone = new Temporal.TimeZone('Europe/Berlin');
             const dtm = new Temporal.DateTime(2019, 3, 31, 2, 45);
-            equal(`${zone.getAbsoluteFor(dtm, 'earlier')}`, '2019-03-31T00:45Z');
-            equal(`${zone.getAbsoluteFor(dtm, 'later')}`, '2019-03-31T01:45Z');
-            throws(() => zone.getAbsoluteFor(dtm, 'reject'), RangeError);
+            equal(`${zone.getAbsoluteFor(dtm, { disambiguation: 'earlier' })}`, '2019-03-31T00:45Z');
+            equal(`${zone.getAbsoluteFor(dtm, { disambiguation: 'later' })}`, '2019-03-31T01:45Z');
+            throws(() => zone.getAbsoluteFor(dtm, { disambiguation: 'reject' }), RangeError);
         });
         it('clock moving backward', () => {
             const zone = new Temporal.TimeZone('America/Sao_Paulo');
             const dtm = new Temporal.DateTime(2019, 2, 16, 23, 45);
-            equal(`${zone.getAbsoluteFor(dtm, 'earlier')}`, '2019-02-17T01:45Z');
-            equal(`${zone.getAbsoluteFor(dtm, 'later')}`, '2019-02-17T02:45Z');
-            throws(() => zone.getAbsoluteFor(dtm, 'reject'), RangeError);
+            equal(`${zone.getAbsoluteFor(dtm, { disambiguation: 'earlier' })}`, '2019-02-17T01:45Z');
+            equal(`${zone.getAbsoluteFor(dtm, { disambiguation: 'later' })}`, '2019-02-17T02:45Z');
+            throws(() => zone.getAbsoluteFor(dtm, { disambiguation: 'reject' }), RangeError);
         });
     });
     describe('Casting', () => {
@@ -189,12 +189,12 @@ describe('TimeZone', ()=>{
         const dtm = new Temporal.DateTime(2019, 2, 16, 23, 45);
         it("getAbsoluteFor() disambiguation", () => {
             for (const disambiguation of [undefined, 'earlier', 'later', 'reject']) {
-                assert(zone.getAbsoluteFor(dtm, disambiguation) instanceof Temporal.Absolute);
+                assert(zone.getAbsoluteFor(dtm, { disambiguation }) instanceof Temporal.Absolute);
             }
         });
         it('throws on bad disambiguation', () => {
             ['', 'EARLIER', 'test', 3, null].forEach((disambiguation) =>
-                throws(() => zone.getAbsoluteFor(dtm, disambiguation), RangeError));
+                throws(() => zone.getAbsoluteFor(dtm, { disambiguation }), RangeError));
         });
     });
 });

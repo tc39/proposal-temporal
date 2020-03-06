@@ -109,9 +109,9 @@ export class DateTime {
     if (!ES.IsDateTime(this)) throw new TypeError('invalid receiver');
     return ES.LeapYear(GetSlot(this, YEAR));
   }
-  with(dateTimeLike, disambiguation = 'constrain') {
+  with(dateTimeLike, options) {
     if (!ES.IsDateTime(this)) throw new TypeError('invalid receiver');
-    disambiguation = ES.ToDisambiguation(disambiguation);
+    const disambiguation = ES.ToDisambiguation(options);
     const props = ES.ValidPropertyBag(dateTimeLike, [
       'year',
       'month',
@@ -161,9 +161,9 @@ export class DateTime {
       GetSlot(result, NANOSECOND),
     );
   }
-  plus(durationLike, disambiguation = 'constrain') {
+  plus(durationLike, options) {
     if (!ES.IsDateTime(this)) throw new TypeError('invalid receiver');
-    disambiguation = ES.ToArithmeticDisambiguation(disambiguation);
+    const disambiguation = ES.ToArithmeticDisambiguation(options);
     const duration = ES.ToLimitedDuration(durationLike);
     let { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = this;
     let { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
@@ -209,9 +209,9 @@ export class DateTime {
       GetSlot(result, NANOSECOND),
     );
   }
-  minus(durationLike, disambiguation = 'constrain') {
+  minus(durationLike, options) {
     if (!ES.IsDateTime(this)) throw new TypeError('invalid receiver');
-    disambiguation = ES.ToArithmeticDisambiguation(disambiguation);
+    const disambiguation = ES.ToArithmeticDisambiguation(options);
     const duration = ES.ToLimitedDuration(durationLike);
     let { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = this;
     let { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
@@ -256,10 +256,10 @@ export class DateTime {
       GetSlot(result, NANOSECOND),
     );
   }
-  difference(other, largestUnit = 'days') {
+  difference(other, options) {
     if (!ES.IsDateTime(this)) throw new TypeError('invalid receiver');
     if (!ES.IsDateTime(other)) throw new TypeError('invalid DateTime object');
-    largestUnit = ES.ToLargestTemporalUnit(largestUnit);
+    const largestUnit = ES.ToLargestTemporalUnit(options, 'days');
     const [smaller, larger] = [this, other].sort(DateTime.compare);
     let { deltaDays, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.DifferenceTime(
       smaller,
@@ -310,10 +310,10 @@ export class DateTime {
     return new Intl.DateTimeFormat(...args).format(this);
   }
 
-  inTimeZone(timeZoneParam = 'UTC', disambiguation = 'earlier') {
+  inTimeZone(timeZoneParam = 'UTC', options) {
     if (!ES.IsDateTime(this)) throw new TypeError('invalid receiver');
     const timeZone = ES.ToTimeZone(timeZoneParam);
-    disambiguation = ES.ToTimeZoneDisambiguation(disambiguation);
+    const disambiguation = ES.ToTimeZoneDisambiguation(options);
     return timeZone.getAbsoluteFor(this, disambiguation);
   }
   getDate() {
@@ -345,7 +345,7 @@ export class DateTime {
   }
 
   static from(arg, options) {
-    const disambiguation = ES.GetOption(options, 'disambiguation', ES.ToDisambiguation, 'constrain');
+    const disambiguation = ES.ToDisambiguation(options);
     let result = ES.ToDateTime(arg, disambiguation);
     return this === DateTime ? result : new this(
       GetSlot(result, YEAR),
