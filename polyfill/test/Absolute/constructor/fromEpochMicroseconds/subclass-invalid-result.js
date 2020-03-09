@@ -5,7 +5,6 @@
 esid: sec-temporal.absolute.fromepochmicroseconds
 ---*/
 
-
 function createConstructor(result) {
   return function(ns) {
     assert.sameValue(ns, 10_000n);
