@@ -62,7 +62,11 @@
         The following steps are taken:
       </p>
       <emu-alg>
-        1. Return ? ToAbsolute(_arg_).
+        1. Let _absolute_ be ? ToAbsolute(_arg_).
+        1. Let _constructor_ be the *this* value.
+        1. If _constructor_ is %Temporal.Absolute%, then
+          1. Return _absolute_.
+        1. Return ? CreateAbsoluteFromStatic(_constructor_, _absolute_.[[Nanoseconds]]).
       </emu-alg>
     </emu-clause>
 
@@ -76,7 +80,9 @@
         1. Let _arg_ be ? ToNumber(_arg_).
         1. Let _arg_ be ? NumberToBigInt(_arg_).
         1. Let _epochNanoseconds_ be _arg_ × 1,000,000,000.
-        1. Return ? CreateAbsolute(_epochNanoseconds_).
+        1. Perform ? RejectAbsolute(_epochNanoseconds_).
+        1. Let _constructor_ be the *this* value.
+        1. Return ? CreateAbsoluteFromStatic(_constructor_, _epochNanoseconds_).
       </emu-alg>
     </emu-clause>
 
@@ -90,7 +96,9 @@
         1. Let _arg_ be ? ToNumber(_arg_).
         1. Let _arg_ be ? NumberToBigInt(_arg_).
         1. Let _epochNanoseconds_ be _arg_ × 1,000,000.
-        1. Return ? CreateAbsolute(_epochNanoseconds_).
+        1. Perform ? RejectAbsolute(_epochNanoseconds_).
+        1. Let _constructor_ be the *this* value.
+        1. Return ? CreateAbsoluteFromStatic(_constructor_, _epochNanoseconds_).
       </emu-alg>
     </emu-clause>
 
@@ -103,7 +111,9 @@
       <emu-alg>
         1. Let _arg_ be ? ToBigInt(_arg_).
         1. Let _epochNanoseconds_ be _arg_ × 1,000.
-        1. Return ? CreateAbsolute(_epochNanoseconds_).
+        1. Perform ? RejectAbsolute(_epochNanoseconds_).
+        1. Let _constructor_ be the *this* value.
+        1. Return ? CreateAbsoluteFromStatic(_constructor_, _epochNanoseconds_).
       </emu-alg>
     </emu-clause>
 
@@ -115,7 +125,9 @@
       </p>
       <emu-alg>
         1. Let _epochNanoseconds_ be ? ToBigInt(_arg_).
-        1. Return ? CreateAbsolute(_epochNanoseconds_).
+        1. Perform ? RejectAbsolute(_epochNanoseconds_).
+        1. Let _constructor_ be the *this* value.
+        1. Return ? CreateAbsoluteFromStatic(_constructor_, _epochNanoseconds_).
       </emu-alg>
     </emu-clause>
 
@@ -346,16 +358,46 @@
   <emu-clause id="sec-temporal-absolute-abstract-ops">
     <h1>Abstract operations</h1>
 
-    <emu-clause id="sec-temporal-createabsolute" aoid="CreateAbsolute">
-      <h1>CreateAbsolute ( _ns_ [ , _newTarget_] )</h1>
+    <emu-clause id="sec-temporal-validateabsolute" aoid="ValidateAbsolute">
+      <h1>ValidateAbsolute ( _ns_ )</h1>
       <emu-alg>
         1. Assert: Type(_ns_) is BigInt.
         1. If _ns_ &lt; &minus;8.64 &times; 10<sup>21</sup><sub>ℝ</sub> or _ns_ &gt; 8.64 &times; 10<sup>21</sup><sub>ℝ</sub>, then
+          1. Return *false*.
+        1. Return *true*.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-rejectabsolute" aoid="RejectAbsolute">
+      <h1>RejectAbsolute ( _ns_ )</h1>
+      <emu-alg>
+        1. Assert: Type(_ns_) is BigInt.
+        1. If ! ValidateAbsolute(_ns_) is *false*, then
           1. Throw a *RangeError* exception.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-createabsolute" aoid="CreateAbsolute">
+      <h1>CreateAbsolute ( _ns_ [ , _newTarget_ ] )</h1>
+      <emu-alg>
+        1. Assert: Type(_ns_) is BigInt.
+        1. Perform ? RejectAbsolute(_ns_).
         1. If _newTarget_ is not given, set it to %Temporal.Absolute%.
         1. Let _object_ be ? OrdinaryCreateFromConstructor(_newTarget_, `"%Temporal.Absolute.prototype%"`, « [[InitializedTemporalAbsolute]], [[Nanoseconds]] »).
         1. Set _object_.[[Nanoseconds]] to _ns_.
         1. Return _object_.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-createabsolutefromstatic" aoid="CreateAbsoluteFromStatic">
+      <h1>CreateAbsoluteFromStatic ( _constructor_, _ns_ )</h1>
+      <emu-alg>
+        1. Assert: ! ValidateAbsolute(_ns_) is *true*.
+        1. If ! IsConstructor(_constructor_) is *false*, then
+          1. Throw a *TypeError* exception.
+        1. Let _result_ be ? Construct(_constructor_, « _ns_ »).
+        1. Perform ? RequireInternalSlot(_result_, [[InitializedTemporalAbsolute]]).
+        1. Return _result_.
       </emu-alg>
     </emu-clause>
 
