@@ -269,13 +269,13 @@ describe('fromString regex', ()=>{
       ['1Y2M', { y: 1, mon: 2 }],
       ['1Y3D', { y: 1, d: 3 }],
       ['2M3D', { mon: 2, d: 3 }],
-      ['1Y2M3D', { y: 1, mon: 2, d: 3 }],
+      ['1Y2M3D', { y: 1, mon: 2, d: 3 }]
     ];
     const times = [
       ['', {}],
       ['4H', { h: 4 }],
       ['5M', { min: 5 }],
-      ['4H5M', { h: 4, min: 5 }],
+      ['4H5M', { h: 4, min: 5 }]
     ];
     const sec = [
       ['', {}],
@@ -285,7 +285,7 @@ describe('fromString regex', ()=>{
       ['9.123456789S', { s: 9, ms: 123, µs: 456, ns: 789 }],
       ['0.123S', { ms: 123 }],
       ['0.123456S', { ms: 123, µs: 456 }],
-      ['0.123456789S', { ms: 123, µs: 456, ns: 789 }],
+      ['0.123456789S', { ms: 123, µs: 456, ns: 789 }]
     ];
     const tim = sec.reduce((arr, [s, add]) =>
       arr.concat(times.map(([p, expect]) =>

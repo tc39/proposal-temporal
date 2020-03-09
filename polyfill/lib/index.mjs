@@ -5,7 +5,7 @@ Object.defineProperty(globalThis, 'Temporal', {
   value: {},
   writable: true,
   enumerable: false,
-  configurable: true,
+  configurable: true
 });
 copy(globalThis.Temporal, Temporal);
 copy(globalThis.Intl, Intl);
@@ -16,7 +16,7 @@ function copy(target, source) {
       value: source[prop],
       writable: true,
       enumerable: false,
-      configurable: true,
+      configurable: true
     });
   }
 }

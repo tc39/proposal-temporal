@@ -26,7 +26,7 @@ export class DateTime {
     second = 0,
     millisecond = 0,
     microsecond = 0,
-    nanosecond = 0,
+    nanosecond = 0
   ) {
     year = ES.ToInteger(year);
     month = ES.ToInteger(month);
@@ -158,7 +158,7 @@ export class DateTime {
       second,
       millisecond,
       microsecond,
-      nanosecond,
+      nanosecond
     );
     if (!ES.IsDateTime(result)) throw new TypeError('invalid result');
     return result;
@@ -208,7 +208,7 @@ export class DateTime {
       second,
       millisecond,
       microsecond,
-      nanosecond,
+      nanosecond
     );
     if (!ES.IsDateTime(result)) throw new TypeError('invalid result');
     return result;
@@ -257,7 +257,7 @@ export class DateTime {
       second,
       millisecond,
       microsecond,
-      nanosecond,
+      nanosecond
     );
     if (!ES.IsDateTime(result)) throw new TypeError('invalid result');
     return result;
@@ -289,7 +289,7 @@ export class DateTime {
       seconds,
       milliseconds,
       microseconds,
-      nanoseconds,
+      nanoseconds
     } = ES.BalanceDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, largestUnit));
 
     const Duration = ES.GetIntrinsic('%Temporal.Duration%');
@@ -363,7 +363,7 @@ export class DateTime {
       GetSlot(result, SECOND),
       GetSlot(result, MILLISECOND),
       GetSlot(result, MICROSECOND),
-      GetSlot(result, NANOSECOND),
+      GetSlot(result, NANOSECOND)
     );
   }
   static compare(one, two) {

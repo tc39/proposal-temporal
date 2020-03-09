@@ -131,7 +131,7 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
         second,
         millisecond,
         microsecond,
-        nanosecond,
+        nanosecond
       } = ES.ParseISODateTime(isoString, { zoneRequired: false }));
     }
     return { hour, minute, second, millisecond, microsecond, nanosecond };
@@ -194,7 +194,7 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
     let props = ES.ValidDateTimeFrom(item, [
       'year',
       'month',
-      'day',
+      'day'
     ], [
       'hour',
       'minute',
@@ -216,7 +216,7 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
       month,
       nanosecond = 0,
       second = 0,
-      year,
+      year
     } = props;
     ({
       year,
@@ -227,7 +227,7 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
       second,
       millisecond,
       microsecond,
-      nanosecond,
+      nanosecond
     } = ES.RegulateDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, disambiguation));
     return new TemporalDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
   },
@@ -246,7 +246,7 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
           second,
           millisecond,
           microsecond,
-          nanosecond,
+          nanosecond
         } = ES.ConstrainDateTime(
           year,
           month,
@@ -291,7 +291,7 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
     let {
       day,
       month,
-      year,
+      year
     } = props;
     ({ year, month, day } = ES.RegulateDate(year, month, day, disambiguation));
     return new TemporalDate(year, month, day);
@@ -332,7 +332,7 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
       millisecond = 0,
       minute = 0,
       nanosecond = 0,
-      second = 0,
+      second = 0
     } = props;
     ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.RegulateTime(hour, minute, second, millisecond, microsecond, nanosecond, disambiguation));
     return new TemporalTime(hour, minute, second, millisecond, microsecond, nanosecond);
@@ -349,7 +349,7 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
           second,
           millisecond,
           microsecond,
-          nanosecond,
+          nanosecond
         ));
         break;
       case 'balance':
@@ -359,7 +359,7 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
           second,
           millisecond,
           microsecond,
-          nanosecond,
+          nanosecond
         ));
         break;
     }
@@ -377,7 +377,7 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
     }
     let {
       month,
-      year,
+      year
     } = props;
     ({ year, month } = ES.RegulateYearMonth(year, month, disambiguation));
     return new TemporalYearMonth(year, month);
@@ -410,7 +410,7 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
     }
     let {
       day,
-      month,
+      month
     } = props;
     ({ month, day } = ES.RegulateMonthDay(month, day, disambiguation));
     return new TemporalMonthDay(month, day);
@@ -456,7 +456,7 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
       months = 0,
       nanoseconds = 0,
       seconds = 0,
-      years = 0,
+      years = 0
     } = props;
 
     switch (disambiguation) {
@@ -483,7 +483,7 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
           seconds,
           milliseconds,
           microseconds,
-          nanoseconds,
+          nanoseconds
         } = ES.BalanceDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 'days'));
         for (const prop of [years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds]) {
           if (!Number.isFinite(prop)) throw new RangeError('infinite values not allowed as duration fields');
@@ -501,7 +501,7 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
       seconds,
       milliseconds,
       microseconds,
-      nanoseconds,
+      nanoseconds
     );
   },
   ToLimitedDuration: (item, disallowedSlots = []) => {
@@ -963,7 +963,7 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
       second: seconds,
       millisecond: milliseconds,
       microsecond: microseconds,
-      nanosecond: nanoseconds,
+      nanosecond: nanoseconds
     } = ES.BalanceTime(hours, minutes, seconds, milliseconds, microseconds, nanoseconds));
     days += deltaDays;
 
@@ -1016,7 +1016,7 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
       second,
       millisecond,
       microsecond,
-      nanosecond,
+      nanosecond
     } = ES.ConstrainTime(hour, minute, second, millisecond, microsecond, nanosecond));
     // Constrain to within 24 hours outside the Absolute range
     if (year === YEAR_MIN &&
@@ -1284,7 +1284,7 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
       return value;
     }
     return fallback;
-  },
+  }
 });
 
 import * as REGEX from './regex.mjs';

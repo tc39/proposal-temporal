@@ -86,7 +86,7 @@ describe('Duration', () => {
       const manyNines = '9'.repeat(309);
       [
         `P${manyNines}Y`, `P${manyNines}M`, `P${manyNines}D`, `PT${manyNines}H`,
-        `PT${manyNines}M`, `PT${manyNines}S`,
+        `PT${manyNines}M`, `PT${manyNines}S`
       ].forEach((str) => throws(() => Duration.from(str, { disambiguation: 'reject' }), RangeError));
     });
     it('max safe integer is allowed', () => {

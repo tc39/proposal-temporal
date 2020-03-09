@@ -6,7 +6,7 @@ import {
   GetSlot,
   SetSlot,
   YEARS,
-  MONTHS,
+  MONTHS
 } from './slots.mjs';
 
 import bigInt from 'big-integer';
@@ -121,7 +121,7 @@ export class Absolute {
       seconds,
       milliseconds,
       microseconds,
-      nanoseconds,
+      nanoseconds
     } = ES.BalanceDuration(0, 0, 0, ss, ms, us, ns, largestUnit);
     return new Duration(0, 0, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
   }

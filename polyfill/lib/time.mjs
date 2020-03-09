@@ -16,7 +16,7 @@ import {
   SetSlot,
   YEARS,
   MONTHS,
-  DAYS,
+  DAYS
 } from './slots.mjs';
 
 export class Time {
@@ -26,7 +26,7 @@ export class Time {
     second = 0,
     millisecond = 0,
     microsecond = 0,
-    nanosecond = 0,
+    nanosecond = 0
   ) {
     hour = ES.ToInteger(hour);
     minute = ES.ToInteger(minute);
@@ -100,7 +100,7 @@ export class Time {
       second,
       millisecond,
       microsecond,
-      nanosecond,
+      nanosecond
     );
     if (!ES.IsTime(result)) throw new TypeError('invalid result');
     return result;
@@ -133,7 +133,7 @@ export class Time {
       second,
       millisecond,
       microsecond,
-      nanosecond,
+      nanosecond
     );
     if (!ES.IsTime(result)) throw new TypeError('invalid result');
     return result;
@@ -166,7 +166,7 @@ export class Time {
       second,
       millisecond,
       microsecond,
-      nanosecond,
+      nanosecond
     );
     if (!ES.IsTime(result)) throw new TypeError('invalid result');
     return result;
@@ -191,7 +191,7 @@ export class Time {
       seconds,
       milliseconds,
       microseconds,
-      nanoseconds,
+      nanoseconds
     } = ES.BalanceDuration(0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, largestUnit));
     const Duration = ES.GetIntrinsic('%Temporal.Duration%');
     return new Duration(0, 0, 0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
@@ -241,7 +241,7 @@ export class Time {
       GetSlot(result, SECOND),
       GetSlot(result, MILLISECOND),
       GetSlot(result, MICROSECOND),
-      GetSlot(result, NANOSECOND),
+      GetSlot(result, NANOSECOND)
     );
   }
   static compare(one, two) {
