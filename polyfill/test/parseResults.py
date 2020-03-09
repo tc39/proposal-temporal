@@ -31,7 +31,7 @@ def main(filename):
     for test in results:
         expected_failure = test["file"] in expected_failures
         actual_result = test["result"]["pass"]
-        print("{} {}".format(PREFIXES[expected_failure][actual_result], test["file"]))
+        print("{} {} ({})".format(PREFIXES[expected_failure][actual_result], test["file"], test["scenario"]))
         if actual_result == expected_failure:
             if not actual_result:
                 print(test["rawResult"]["stderr"])
