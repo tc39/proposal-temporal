@@ -14,7 +14,7 @@ export function resolve(specifier, parent, defaultResolve) {
 
 export async function transformSource(
   source, { url, format }, defaultTransformSource) {
-  if (typeof source === "string" && url !== "all.mjs") {
+  if (typeof source === 'string' && url !== 'all.mjs') {
     return {
       source: "import * as Temporal from 'tc39-temporal';\n" + source,
     };

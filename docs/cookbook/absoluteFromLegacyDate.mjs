@@ -1,4 +1,4 @@
-import assert from "assert";
+import assert from 'assert';
 
 /**
  * Converts a Date instance into a Temporal.Absolute instance
@@ -11,6 +11,6 @@ function getAbsoluteFromDate(esDate) {
   return date;
 }
 
-const date = new Date("1970-01-01T00:00:01Z");
+const date = new Date('1970-01-01T00:00:01Z');
 const absolute = getAbsoluteFromDate(date);
 assert(absolute instanceof Temporal.Absolute);

@@ -33,6 +33,10 @@ rules:
   object-curly-spacing:
     - error
     - always
+  quotes:
+    - error
+    - single
+    - avoidEscape: true
   semi: error
 overrides:
   - files:
@@ -49,3 +53,6 @@ overrides:
       Temporal: readonly
       assert: readonly
       verifyProperty: readonly
+    # test262 code complies to a different coding style
+    rules:
+      quotes: 'off'

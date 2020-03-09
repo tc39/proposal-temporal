@@ -18,7 +18,7 @@ import * as Temporal from 'tc39-temporal';
 
 describe('Exports', () => {
   const named = Object.keys(Temporal);
-  it(`should be 9 things`, () => {
+  it('should be 9 things', () => {
     equal(named.length, 9);
   });
   it('should contain `Absolute`', () => {

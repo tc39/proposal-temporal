@@ -1,13 +1,13 @@
-import commonjs from "@rollup/plugin-commonjs";
-import resolve from "@rollup/plugin-node-resolve";
+import commonjs from '@rollup/plugin-commonjs';
+import resolve from '@rollup/plugin-node-resolve';
 
 export default {
-  input: "lib/index.mjs",
+  input: 'lib/index.mjs',
   output: {
-    name: "temporal",
-    file: "script.js",
-    format: "iife",
-    lib: ["es6"],
+    name: 'temporal',
+    file: 'script.js',
+    format: 'iife',
+    lib: ['es6'],
     sourcemap: true,
   },
   plugins: [

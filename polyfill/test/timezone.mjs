@@ -187,7 +187,7 @@ describe('TimeZone', ()=>{
   describe('getAbsoluteFor disambiguation', () => {
     const zone = Temporal.TimeZone.from('+03:30');
     const dtm = new Temporal.DateTime(2019, 2, 16, 23, 45);
-    it("getAbsoluteFor() disambiguation", () => {
+    it('getAbsoluteFor() disambiguation', () => {
       for (const disambiguation of [undefined, 'earlier', 'later', 'reject']) {
         assert(zone.getAbsoluteFor(dtm, { disambiguation }) instanceof Temporal.Absolute);
       }
