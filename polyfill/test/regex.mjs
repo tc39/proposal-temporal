@@ -72,7 +72,7 @@ describe('fromString regex', ()=>{
     ['T', ' '].forEach((timeSep) => generateTest(`1976-11-18${timeSep}15:23`, ''));
     // Various forms of time zone
     ['+0100[Europe/Vienna]', '-0400', ''].forEach((zoneString) =>
-        generateTest(`1976-11-18T15:23`, zoneString));
+      generateTest(`1976-11-18T15:23`, zoneString));
     // Various numbers of decimal places
     test('1976-11-18T15:23:30.123', [1976, 11, 18, 15, 23, 30, 123]);
     test('1976-11-18T15:23:30.123456', [1976, 11, 18, 15, 23, 30, 123, 456]);
@@ -98,7 +98,7 @@ describe('fromString regex', ()=>{
     ['T', ' '].forEach((timeSep) => generateTest(`1976-11-18${timeSep}15:23`, ''));
     // Various forms of time zone
     ['+0100[Europe/Vienna]', '-0400', ''].forEach((zoneString) =>
-        generateTest(`1976-11-18T15:23`, zoneString));
+      generateTest(`1976-11-18T15:23`, zoneString));
     // Various numbers of decimal places
     ['123', '123456'].forEach((decimals) => test(`1976-11-18T15:23:30.${decimals}`, [1976, 11, 18]))
     // Date-only forms
@@ -131,7 +131,7 @@ describe('fromString regex', ()=>{
     ['T', ' '].forEach((timeSep) => generateTest(`1976-11-18${timeSep}15:23`, ''));
     // Various forms of time zone
     ['+0100[Europe/Vienna]', '-0400', ''].forEach((zoneString) =>
-        generateTest(`1976-11-18T15:23`, zoneString));
+      generateTest(`1976-11-18T15:23`, zoneString));
     // Various numbers of decimal places
     test('1976-11-18T15:23:30.123', [15, 23, 30, 123]);
     test('1976-11-18T15:23:30.123456', [15, 23, 30, 123, 456]);
@@ -158,7 +158,7 @@ describe('fromString regex', ()=>{
     ['T', ' '].forEach((timeSep) => generateTest(`1976-11-18${timeSep}15:23`, ''));
     // Various forms of time zone
     ['+0100[Europe/Vienna]', '-0400', ''].forEach((zoneString) =>
-        generateTest(`1976-11-18T15:23`, zoneString));
+      generateTest(`1976-11-18T15:23`, zoneString));
     // Various numbers of decimal places
     ['123', '123456'].forEach((decimals) => test(`1976-11-18T15:23:30.${decimals}`, [1976, 11]));
     // Date-only forms
@@ -192,7 +192,7 @@ describe('fromString regex', ()=>{
     ['T', ' '].forEach((timeSep) => generateTest(`1976-11-18${timeSep}15:23`, ''));
     // Various forms of time zone
     ['+0100[Europe/Vienna]', '-0400', ''].forEach((zoneString) =>
-        generateTest(`1976-11-18T15:23`, zoneString));
+      generateTest(`1976-11-18T15:23`, zoneString));
     // Various numbers of decimal places
     ['123', '123456'].forEach((decimals) => test(`1976-11-18T15:23:30.${decimals}`, [11, 18]));
     // Date-only forms

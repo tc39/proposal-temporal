@@ -26,6 +26,10 @@ rules:
   curly:
     - error
     - multi-line
+  indent:
+    - error
+    - 2
+    - SwitchCase: 1
 overrides:
   - files:
       - polyfill/test/Absolute/**/*.js

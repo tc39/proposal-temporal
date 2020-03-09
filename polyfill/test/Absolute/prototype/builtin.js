@@ -8,7 +8,7 @@ includes: [propertyHelper.js]
 const {Absolute} = Temporal;
 
 assert.sameValue(Object.isExtensible(Absolute.prototype), true,
-                 "Built-in objects must be extensible.");
+  "Built-in objects must be extensible.");
 
 assert.sameValue(Object.getPrototypeOf(Absolute.prototype), Object.prototype,
-                 "Built-in prototype objects must have Object.prototype as their prototype.");
+  "Built-in prototype objects must have Object.prototype as their prototype.");
