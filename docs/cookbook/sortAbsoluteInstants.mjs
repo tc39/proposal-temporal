@@ -11,7 +11,7 @@ import assert from 'assert';
  */
 function getSortedInstants(parseableAbsoluteStrings, reverse = false) {
   const sortedAbsoluteTimes = parseableAbsoluteStrings
-    .map(v => [v, Temporal.Absolute.from(v)])
+    .map((v) => [v, Temporal.Absolute.from(v)])
     .sort(([, abs1], [, abs2]) => Temporal.Absolute.compare(abs1, abs2))
     .map(([str]) => str);
 
