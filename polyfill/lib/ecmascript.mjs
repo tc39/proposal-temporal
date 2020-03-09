@@ -59,7 +59,6 @@ const INTRINSICS = {
 
 import * as PARSE from './regex.mjs';
 
-
 export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
   IsAbsolute: (item) => HasSlot(item, EPOCHNANOSECONDS),
   IsTimeZone: (item) => HasSlot(item, IDENTIFIER),

@@ -5,7 +5,6 @@
 esid: sec-temporal.absolute.from
 ---*/
 
-
 function createConstructor(result) {
   return function(ns) {
     assert.sameValue(ns, 217_175_010_123_456_789n);
