@@ -142,20 +142,39 @@ export class Absolute {
   }
 
   static fromEpochSeconds(epochSecondsParam) {
-    return new Absolute(bigInt(epochSecondsParam).multiply(1e9));
+    const epochNanoseconds = bigInt(epochSecondsParam).multiply(1e9);
+    ES.RejectAbsolute(epochNanoseconds);
+    const result = new this(epochNanoseconds.value);
+    if (!ES.IsAbsolute(result)) throw new TypeError('invalid result');
+    return result;
   }
   static fromEpochMilliseconds(epochMillisecondsParam) {
-    return new Absolute(bigInt(epochMillisecondsParam).multiply(1e6));
+    const epochNanoseconds = bigInt(epochMillisecondsParam).multiply(1e6);
+    ES.RejectAbsolute(epochNanoseconds);
+    const result = new this(epochNanoseconds.value);
+    if (!ES.IsAbsolute(result)) throw new TypeError('invalid result');
+    return result;
   }
   static fromEpochMicroseconds(epochMicroseconds) {
-    return new Absolute(bigInt(epochMicroseconds).multiply(1e3));
+    const epochNanoseconds = bigInt(epochMicroseconds).multiply(1e3);
+    ES.RejectAbsolute(epochNanoseconds);
+    const result = new this(epochNanoseconds.value);
+    if (!ES.IsAbsolute(result)) throw new TypeError('invalid result');
+    return result;
   }
   static fromEpochNanoseconds(epochNanoseconds) {
-    return new Absolute(bigInt(epochNanoseconds));
+    epochNanoseconds = bigInt(epochNanoseconds);
+    ES.RejectAbsolute(epochNanoseconds);
+    const result = new this(epochNanoseconds.value);
+    if (!ES.IsAbsolute(result)) throw new TypeError('invalid result');
+    return result;
   }
   static from(arg, zone) {
-    let result = ES.ToAbsolute(arg, zone);
-    return this === Absolute ? result : new this(GetSlot(result, EPOCHNANOSECONDS));
+    const absolute = ES.ToAbsolute(arg, zone);
+    if (this === Absolute) return absolute;
+    const result = new this(GetSlot(absolute, EPOCHNANOSECONDS).value);
+    if (!ES.IsAbsolute(result)) throw new TypeError('invalid result');
+    return result;
   }
   static compare(one, two) {
     if (!ES.IsAbsolute(one) || !ES.IsAbsolute(two)) throw new TypeError('invalid Absolute object');
