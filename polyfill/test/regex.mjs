@@ -247,7 +247,7 @@ describe('fromString regex', ()=>{
   describe('duration', () => {
     function test(isoString, components) {
       it(isoString, () => {
-        const {y = 0, mon = 0, d = 0, h = 0, min = 0, s = 0, ms = 0, µs = 0, ns = 0} = components;
+        const { y = 0, mon = 0, d = 0, h = 0, min = 0, s = 0, ms = 0, µs = 0, ns = 0 } = components;
         const duration = Temporal.Duration.from(isoString);
         equal(duration.years, y);
         equal(duration.months, mon);
@@ -263,39 +263,39 @@ describe('fromString regex', ()=>{
 
     const day = [
       ['', {}],
-      ['1Y', {y: 1}],
-      ['2M', {mon: 2}],
-      ['3D', {d: 3}],
-      ['1Y2M', {y: 1, mon: 2}],
-      ['1Y3D', {y: 1, d: 3}],
-      ['2M3D', {mon: 2, d: 3}],
-      ['1Y2M3D', {y: 1, mon: 2, d: 3}],
+      ['1Y', { y: 1 }],
+      ['2M', { mon: 2 }],
+      ['3D', { d: 3 }],
+      ['1Y2M', { y: 1, mon: 2 }],
+      ['1Y3D', { y: 1, d: 3 }],
+      ['2M3D', { mon: 2, d: 3 }],
+      ['1Y2M3D', { y: 1, mon: 2, d: 3 }],
     ];
     const times = [
       ['', {}],
-      ['4H', {h: 4}],
-      ['5M', {min: 5}],
-      ['4H5M', {h: 4, min: 5}],
+      ['4H', { h: 4 }],
+      ['5M', { min: 5 }],
+      ['4H5M', { h: 4, min: 5 }],
     ];
     const sec = [
       ['', {}],
-      ['6S', {s: 6}],
-      ['7.123S', {s: 7, ms: 123}],
-      ['8.123456S', {s: 8, ms: 123, µs: 456}],
-      ['9.123456789S', {s: 9, ms: 123, µs: 456, ns: 789}],
-      ['0.123S', {ms: 123}],
-      ['0.123456S', {ms: 123, µs: 456}],
-      ['0.123456789S', {ms: 123, µs: 456, ns: 789}],
+      ['6S', { s: 6 }],
+      ['7.123S', { s: 7, ms: 123 }],
+      ['8.123456S', { s: 8, ms: 123, µs: 456 }],
+      ['9.123456789S', { s: 9, ms: 123, µs: 456, ns: 789 }],
+      ['0.123S', { ms: 123 }],
+      ['0.123456S', { ms: 123, µs: 456 }],
+      ['0.123456789S', { ms: 123, µs: 456, ns: 789 }],
     ];
     const tim = sec.reduce((arr, [s, add]) =>
       arr.concat(times.map(([p, expect]) =>
-        [`${p}${s}`, {...expect, ...add}])), []);
+        [`${p}${s}`, { ...expect, ...add }])), []);
 
     day.forEach(([p, expect]) => test(`P${p}`, expect));
     tim.forEach(([p, expect]) => test(`PT${p}`, expect));
     for (let [d, dexpect] of day) {
       for (let [t, texpect] of tim) {
-        test(`P${d}T${t}`, {...dexpect, ...texpect});
+        test(`P${d}T${t}`, { ...dexpect, ...texpect });
       }
     }
   });

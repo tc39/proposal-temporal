@@ -421,10 +421,10 @@ describe('Date', () => {
     it('adding and subtracting beyond limit', () => {
       const min = Date.from('-271821-04-19');
       const max = Date.from('+275760-09-13');
-      equal(`${min.minus({days: 1})}`, '-271821-04-19');
-      equal(`${max.plus({days: 1})}`, '+275760-09-13');
-      throws(() => min.minus({days: 1}, { disambiguation: 'reject' }), RangeError);
-      throws(() => max.plus({days: 1}, { disambiguation: 'reject' }), RangeError);
+      equal(`${min.minus({ days: 1 })}`, '-271821-04-19');
+      equal(`${max.plus({ days: 1 })}`, '+275760-09-13');
+      throws(() => min.minus({ days: 1 }, { disambiguation: 'reject' }), RangeError);
+      throws(() => max.plus({ days: 1 }, { disambiguation: 'reject' }), RangeError);
     });
   });
 });

@@ -5,7 +5,7 @@
 includes: [propertyHelper.js]
 ---*/
 
-const {Absolute} = Temporal;
+const { Absolute } = Temporal;
 
 assert.sameValue(Object.isExtensible(Absolute.prototype), true,
   "Built-in objects must be extensible.");

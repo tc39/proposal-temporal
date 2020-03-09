@@ -5,7 +5,7 @@
 includes: [propertyHelper.js]
 ---*/
 
-const {Absolute} = Temporal;
+const { Absolute } = Temporal;
 
 assert.sameValue(typeof Absolute.prototype, "object");
 assert.notSameValue(Absolute.prototype, null);
