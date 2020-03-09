@@ -12,7 +12,7 @@ import {
   SECONDS,
   MILLISECONDS,
   MICROSECONDS,
-  NANOSECONDS,
+  NANOSECONDS
 } from './slots.mjs';
 
 export class YearMonth {

@@ -4,19 +4,19 @@ export function MakeIntrinsicClass(Class, name) {
       value: name,
       writable: false,
       enumerable: false,
-      configurable: true,
+      configurable: true
     });
     const species = function() { return this; };
     Object.defineProperty(species, 'name', {
       value: 'get [Symbol.species]',
       writable: false,
       enumerable: false,
-      configurable: true,
+      configurable: true
     });
     Object.defineProperty(Class, Symbol.species, {
       get: species,
       enumerable: false,
-      configurable: true,
+      configurable: true
     });
   }
   for (let prop of Object.getOwnPropertyNames(Class)) {

@@ -27,7 +27,7 @@ export class Duration {
     seconds = 0,
     milliseconds = 0,
     microseconds = 0,
-    nanoseconds = 0,
+    nanoseconds = 0
   ) {
     years = ES.ToInteger(years);
     months = ES.ToInteger(months);
@@ -140,7 +140,7 @@ export class Duration {
       GetSlot(result, SECONDS),
       GetSlot(result, MILLISECONDS),
       GetSlot(result, MICROSECONDS),
-      GetSlot(result, NANOSECONDS),
+      GetSlot(result, NANOSECONDS)
     );
   }
 }

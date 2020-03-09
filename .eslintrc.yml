@@ -23,6 +23,7 @@ ignorePatterns:
   - /polyfill/index.js
   - /polyfill/script.js
 rules:
+  comma-dangle: error
   curly:
     - error
     - multi-line
@@ -58,4 +59,5 @@ overrides:
       verifyProperty: readonly
     # test262 code complies to a different coding style
     rules:
+      comma-dangle: 'off'
       quotes: 'off'

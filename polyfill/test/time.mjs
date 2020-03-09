@@ -445,7 +445,7 @@ describe('Time', () => {
                 second: args[2],
                 millisecond: args[3],
                 microsecond: args[4],
-                nanosecond: args[5],
+                nanosecond: args[5]
               }, { disambiguation: 'balance' });
               assert(time);
               equal(typeof time, 'object');

@@ -8,10 +8,10 @@ export default {
     file: 'script.js',
     format: 'iife',
     lib: ['es6'],
-    sourcemap: true,
+    sourcemap: true
   },
   plugins: [
     commonjs(),
-    resolve({ preferBuiltins: false }),
+    resolve({ preferBuiltins: false })
   ]
 };
