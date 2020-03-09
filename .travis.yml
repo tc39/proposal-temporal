@@ -7,10 +7,10 @@ matrix:
     - npm run lint
   - name: "Polyfill tests"
     script:
-    - npm run codecov
+    - npm run codecov:tests
   - name: "test262 tests"
     script:
-    - npm run test262
+    - npm run codecov:test262
   - name: "cookbook"
     script:
     - npm run cookbook
