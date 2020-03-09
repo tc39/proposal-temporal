@@ -23,6 +23,9 @@ ignorePatterns:
   - /polyfill/index.js
   - /polyfill/script.js
 rules:
+  array-element-newline:
+    - error
+    - consistent
   arrow-parens: error
   comma-dangle: error
   curly:
@@ -38,6 +41,9 @@ rules:
   object-curly-spacing:
     - error
     - always
+  object-property-newline:
+    - error
+    - allowAllPropertiesOnSameLine: true
   quotes:
     - error
     - single
