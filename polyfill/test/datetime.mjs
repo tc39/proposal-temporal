@@ -279,7 +279,7 @@ describe('DateTime', () => {
   describe('date/time maths: hours overflow', () => {
     const later = DateTime.from('2019-10-29T10:46:38.271986102');
     const earlier = later.minus({ hours: 12 });
-    it("result", () => equal(`${earlier}`, '2019-10-28T22:46:38.271986102'));
+    it('result', () => equal(`${earlier}`, '2019-10-28T22:46:38.271986102'));
   });
   describe('DateTime.plus() works', () => {
     it('constrain when ambiguous result', () => {
@@ -341,10 +341,10 @@ describe('DateTime', () => {
     });
   });
   describe('DateTime.from() works', () => {
-    it('DateTime.from("1976-11-18 15:23:30")', () => equal(`${DateTime.from('1976-11-18 15:23:30')}`, "1976-11-18T15:23:30"));
-    it('DateTime.from("1976-11-18 15:23:30.001")', () => equal(`${DateTime.from('1976-11-18 15:23:30.001')}`, "1976-11-18T15:23:30.001"));
-    it('DateTime.from("1976-11-18 15:23:30.001123")', () => equal(`${DateTime.from('1976-11-18 15:23:30.001123')}`, "1976-11-18T15:23:30.001123"));
-    it('DateTime.from("1976-11-18 15:23:30.001123456")', () => equal(`${DateTime.from('1976-11-18 15:23:30.001123456')}`, "1976-11-18T15:23:30.001123456"));
+    it('DateTime.from("1976-11-18 15:23:30")', () => equal(`${DateTime.from('1976-11-18 15:23:30')}`, '1976-11-18T15:23:30'));
+    it('DateTime.from("1976-11-18 15:23:30.001")', () => equal(`${DateTime.from('1976-11-18 15:23:30.001')}`, '1976-11-18T15:23:30.001'));
+    it('DateTime.from("1976-11-18 15:23:30.001123")', () => equal(`${DateTime.from('1976-11-18 15:23:30.001123')}`, '1976-11-18T15:23:30.001123'));
+    it('DateTime.from("1976-11-18 15:23:30.001123456")', () => equal(`${DateTime.from('1976-11-18 15:23:30.001123456')}`, '1976-11-18T15:23:30.001123456'));
     it('DateTime.from(1976-11-18) == 1976-11-18', () => {
       const orig = new DateTime(1976, 11, 18, 15, 23, 20, 123, 456, 789);
       const actual = DateTime.from(orig);

@@ -1,4 +1,4 @@
-import assert from "assert";
+import assert from 'assert';
 
 /**
  * Converts an absolute point in time to a readable string of a specified time zone
@@ -14,7 +14,7 @@ function getParseableZonedStringAtInstant(absolute, ianaTimeZoneName) {
   return localDateTime.toString();
 }
 
-const absoluteTime = Temporal.Absolute.from("2020-01-03T10:41:51Z");
-const timeZone = "Europe/Paris";
+const absoluteTime = Temporal.Absolute.from('2020-01-03T10:41:51Z');
+const timeZone = 'Europe/Paris';
 const result = getParseableZonedStringAtInstant(absoluteTime, timeZone);
 assert.equal(result, '2020-01-03T11:41:51');

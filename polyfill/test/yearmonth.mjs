@@ -46,8 +46,8 @@ describe('YearMonth', () => {
       it('YearMonth.from(2019-10) == 2019-10', () => equal(`${YearMonth.from('2019-10')}`, '2019-10'));
       it('YearMonth.from(2019-10-01T09:00:00Z) == 2019-10', () =>
         equal(`${YearMonth.from('2019-10-01T09:00:00Z')}`, '2019-10'));
-      it(`YearMonth.from('1976-11') == (1976-11)`, () => equal(`${YearMonth.from('1976-11')}`, '1976-11'));
-      it(`YearMonth.from('1976-11-18') == (1976-11)`, () => equal(`${YearMonth.from('1976-11-18')}`, '1976-11'));
+      it("YearMonth.from('1976-11') == (1976-11)", () => equal(`${YearMonth.from('1976-11')}`, '1976-11'));
+      it("YearMonth.from('1976-11-18') == (1976-11)", () => equal(`${YearMonth.from('1976-11-18')}`, '1976-11'));
       it('YearMonth.from({ year: 2019, month: 11 }) == 2019-11', () => equal(`${ YearMonth.from({ year: 2019, month: 11 }) }`, '2019-11'));
       it('YearMonth.from(2019-11) == 2019-11', () => {
         const orig = new YearMonth(2019, 11);
@@ -130,13 +130,13 @@ describe('YearMonth', () => {
     const ym = YearMonth.from('2019-11');
     it('(2019-11) plus 2 months === 2020-01', () => {
       equal(`${ym.plus({ months: 2 })}`, '2020-01');
-      equal(`${ym.plus({ months: 2 }, { disambiguation: "constrain" })}`, '2020-01');
-      equal(`${ym.plus({ months: 2 }, { disambiguation: "reject" })}`, '2020-01');
+      equal(`${ym.plus({ months: 2 }, { disambiguation: 'constrain' })}`, '2020-01');
+      equal(`${ym.plus({ months: 2 }, { disambiguation: 'reject' })}`, '2020-01');
     });
     it('(2019-11) plus 1 year === 2020-11', () => {
       equal(`${ym.plus({ years: 1 })}`, '2020-11');
-      equal(`${ym.plus({ years: 1 }, { disambiguation: "constrain" })}`, '2020-11');
-      equal(`${ym.plus({ years: 1 }, { disambiguation: "reject" })}`, '2020-11');
+      equal(`${ym.plus({ years: 1 }, { disambiguation: 'constrain' })}`, '2020-11');
+      equal(`${ym.plus({ years: 1 }, { disambiguation: 'reject' })}`, '2020-11');
     });
     it('yearMonth.plus(durationObj)', () => {
       equal(`${ym.plus(Temporal.Duration.from('P2M'))}`, '2020-01');
@@ -150,13 +150,13 @@ describe('YearMonth', () => {
     const ym = YearMonth.from('2019-11');
     it('(2019-11) minus 11 months === 2018-12', () => {
       equal(`${ym.minus({ months: 11 })}`, '2018-12');
-      equal(`${ym.minus({ months: 11 }, { disambiguation: "constrain" })}`, '2018-12');
-      equal(`${ym.minus({ months: 11 }, { disambiguation: "reject" })}`, '2018-12');
+      equal(`${ym.minus({ months: 11 }, { disambiguation: 'constrain' })}`, '2018-12');
+      equal(`${ym.minus({ months: 11 }, { disambiguation: 'reject' })}`, '2018-12');
     });
     it('(2019-11) minus 12 years === 2007-11', () => {
       equal(`${ym.minus({ years: 12 })}`, '2007-11');
-      equal(`${ym.minus({ years: 12 }, { disambiguation: "constrain" })}`, '2007-11');
-      equal(`${ym.minus({ years: 12 }, { disambiguation: "reject" })}`, '2007-11');
+      equal(`${ym.minus({ years: 12 }, { disambiguation: 'constrain' })}`, '2007-11');
+      equal(`${ym.minus({ years: 12 }, { disambiguation: 'reject' })}`, '2007-11');
     });
     it('yearMonth.minus(durationObj)', () => {
       equal(`${ym.minus(Temporal.Duration.from('P11M'))}`, '2018-12');

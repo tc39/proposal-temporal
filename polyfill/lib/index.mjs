@@ -1,7 +1,7 @@
 import * as Temporal from './temporal.mjs';
 import * as Intl from './intl.mjs';
 
-Object.defineProperty(globalThis, "Temporal", {
+Object.defineProperty(globalThis, 'Temporal', {
   value: {},
   writable: true,
   enumerable: false,

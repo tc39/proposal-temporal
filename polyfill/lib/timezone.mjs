@@ -64,7 +64,7 @@ export class TimeZone {
         case 'later':
           return new Absolute(possibleEpochNs[1]);
         case 'reject': {
-          throw new RangeError(`multiple absolute found`);
+          throw new RangeError('multiple absolute found');
         }
       }
     }
@@ -97,7 +97,7 @@ export class TimeZone {
         return this.getAbsoluteFor(later, disambiguation);
       }
       case 'reject': {
-        throw new RangeError(`no such absolute found`);
+        throw new RangeError('no such absolute found');
       }
     }
   }
