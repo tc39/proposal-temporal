@@ -68,7 +68,7 @@ function build(name, sone, stwo) {
   });
 }
 function buildSub(one, two, largestUnits) {
-  largestUnits.forEach(largestUnit => {
+  largestUnits.forEach((largestUnit) => {
     describe(`< ${one} : ${two} (${largestUnit})>`, () => {
       const dif = two.difference(one, { largestUnit });
       it(`(${one}).plus(${dif}) => ${two}`, () =>

@@ -23,6 +23,7 @@ ignorePatterns:
   - /polyfill/index.js
   - /polyfill/script.js
 rules:
+  arrow-parens: error
   comma-dangle: error
   curly:
     - error
