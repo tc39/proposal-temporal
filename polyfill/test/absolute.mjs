@@ -379,8 +379,8 @@ describe('Absolute', () => {
     it('adding and subtracting beyond limit', () => {
       const min = Absolute.from('-271821-04-20T00:00Z');
       const max = Absolute.from('+275760-09-13T00:00Z');
-      throws(() => min.minus({nanoseconds: 1}), RangeError);
-      throws(() => max.plus({nanoseconds: 1}), RangeError);
+      throws(() => min.minus({ nanoseconds: 1 }), RangeError);
+      throws(() => max.plus({ nanoseconds: 1 }), RangeError);
     });
   });
   describe('Absolute.inTimeZone works', () => {

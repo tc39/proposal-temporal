@@ -5,7 +5,7 @@
 includes: [propertyHelper.js]
 ---*/
 
-const {Absolute} = Temporal;
+const { Absolute } = Temporal;
 assert.sameValue(
   typeof Absolute.prototype.inTimeZone,
   "function",

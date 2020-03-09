@@ -20,6 +20,6 @@ export async function transformSource(
     };
   } else { // source could be a buffer, e.g. for WASM
     return defaultTransformSource(
-      source, {url, format}, defaultTransformSource);
+      source, { url, format }, defaultTransformSource);
   }
 }

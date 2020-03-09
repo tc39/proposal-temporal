@@ -5,7 +5,7 @@
 includes: [propertyHelper.js]
 ---*/
 
-const {Absolute} = Temporal;
+const { Absolute } = Temporal;
 verifyProperty(Absolute.prototype, Symbol.toStringTag, {
   value: "Temporal.Absolute",
   writable: false,

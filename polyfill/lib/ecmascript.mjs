@@ -75,7 +75,7 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
   ToTimeZone: (item) => {
     if (ES.IsTimeZone(item)) return item;
     const stringIdent = ES.ToString(item);
-    const {zone, ianaName, offset} = ES.ParseTimeZoneString(stringIdent);
+    const { zone, ianaName, offset } = ES.ParseTimeZoneString(stringIdent);
     const result = new TemporalTimeZone(zone);
     if (offset && ianaName) {
       const absolute = TemporalAbsolute.from(stringIdent);
@@ -103,7 +103,7 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
     let ianaName = match[13];
     if (ianaName) ianaName = ES.GetCanonicalTimeZoneIdentifier(ianaName).toString();
     const zone = match[10] ? 'UTC' : ianaName || offset;
-    return {year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, zone, ianaName, offset};
+    return { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, zone, ianaName, offset };
   },
   ParseAbsoluteString: (isoString) => {
     return ES.ParseISODateTime(isoString, { zoneRequired: true });
@@ -135,7 +135,7 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
         nanosecond,
       } = ES.ParseISODateTime(isoString, { zoneRequired: false }));
     }
-    return {hour, minute, second, millisecond, microsecond, nanosecond};
+    return { hour, minute, second, millisecond, microsecond, nanosecond };
   },
   ParseYearMonthString: (isoString) => {
     const match = PARSE.yearmonth.exec(isoString);
@@ -144,9 +144,9 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
       year = ES.ToInteger(match[1]);
       month = ES.ToInteger(match[2]);
     } else {
-      ({year, month} = ES.ParseISODateTime(isoString, { zoneRequired: false }));
+      ({ year, month } = ES.ParseISODateTime(isoString, { zoneRequired: false }));
     }
-    return {year, month};
+    return { year, month };
   },
   ParseMonthDayString: (isoString) => {
     const match = PARSE.monthday.exec(isoString);
@@ -155,14 +155,14 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
       month = ES.ToInteger(match[1]);
       day = ES.ToInteger(match[2]);
     } else {
-      ({month, day} = ES.ParseISODateTime(isoString, { zoneRequired: false }));
+      ({ month, day } = ES.ParseISODateTime(isoString, { zoneRequired: false }));
     }
-    return {month, day};
+    return { month, day };
   },
   ParseTimeZoneString: (stringIdent) => {
     try {
       const canonicalIdent = ES.GetCanonicalTimeZoneIdentifier(stringIdent);
-      if (canonicalIdent) return {zone: canonicalIdent.toString()};
+      if (canonicalIdent) return { zone: canonicalIdent.toString() };
     } catch {
       // fall through
     }
@@ -181,7 +181,7 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
     const milliseconds = ES.ToInteger(match[7]);
     const microseconds = ES.ToInteger(match[8]);
     const nanoseconds = ES.ToInteger(match[9]);
-    return {years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds};
+    return { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
   },
   ToAbsolute: (item) => {
     if (ES.IsAbsolute(item)) return item;

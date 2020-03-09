@@ -314,7 +314,7 @@ describe('DateTime', () => {
   describe('DateTime.difference()', () => {
     const dt = DateTime.from('1976-11-18T15:23:30.123456789');
     it("doesn't cast argument", () => {
-      throws(() => dt.difference({ year: 2019, month: 10, day: 29, hour: 10}), TypeError);
+      throws(() => dt.difference({ year: 2019, month: 10, day: 29, hour: 10 }), TypeError);
       throws(() => dt.difference('2019-10-29T10:46:38.271986102'), TypeError);
     });
     const feb20 = DateTime.from('2020-02-01T00:00');
@@ -371,7 +371,7 @@ describe('DateTime', () => {
       });
       it('balance', () => equal(`${DateTime.from(bad, { disambiguation: 'balance' })}`, '2019-02-01T00:00'));
       it('throw when bad disambiguation', () => {
-        [new DateTime(1976, 11, 18, 15, 23), { year: 2019, month: 1, day: 1}, '2019-01-31T00:00'].forEach((input) => {
+        [new DateTime(1976, 11, 18, 15, 23), { year: 2019, month: 1, day: 1 }, '2019-01-31T00:00'].forEach((input) => {
           ['', 'CONSTRAIN', 'xyz', 3, null].forEach((disambiguation) =>
             throws(() => DateTime.from(input, { disambiguation }), RangeError));
         });
@@ -463,10 +463,10 @@ describe('DateTime', () => {
     it('adding and subtracting beyond limit', () => {
       const min = DateTime.from('-271821-04-19T00:00:00.000000001');
       const max = DateTime.from('+275760-09-13T23:59:59.999999999');
-      equal(`${min.minus({nanoseconds: 1})}`, '-271821-04-19T00:00:00.000000001');
-      equal(`${max.plus({nanoseconds: 1})}`, '+275760-09-13T23:59:59.999999999');
-      throws(() => min.minus({nanoseconds: 1}, { disambiguation: 'reject' }), RangeError);
-      throws(() => max.plus({nanoseconds: 1}, { disambiguation: 'reject' }), RangeError);
+      equal(`${min.minus({ nanoseconds: 1 })}`, '-271821-04-19T00:00:00.000000001');
+      equal(`${max.plus({ nanoseconds: 1 })}`, '+275760-09-13T23:59:59.999999999');
+      throws(() => min.minus({ nanoseconds: 1 }, { disambiguation: 'reject' }), RangeError);
+      throws(() => max.plus({ nanoseconds: 1 }, { disambiguation: 'reject' }), RangeError);
     });
   });
   describe('DateTime.inTimeZone() works', () => {
