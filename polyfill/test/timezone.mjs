@@ -16,9 +16,9 @@ const { ok: assert, equal, throws } = Assert;
 
 import * as Temporal from 'tc39-temporal';
 
-describe('TimeZone', ()=>{
-  describe('Structure', ()=>{
-    it('Temporal.TimeZone is a function', ()=>equal(typeof Temporal.TimeZone, 'function'));
+describe('TimeZone', () => {
+  describe('Structure', () => {
+    it('Temporal.TimeZone is a function', () => equal(typeof Temporal.TimeZone, 'function'));
     it('Temporal.TimeZone has prototype', () => equal(typeof Temporal.TimeZone.prototype, 'object'));
     describe('Temporal.TimeZone.prototype', () => {
       it('Temporal.TimeZone.prototype has name', () => assert('name' in Temporal.TimeZone.prototype));
@@ -30,7 +30,7 @@ describe('TimeZone', ()=>{
     });
     it('Temporal.TimeZone has from', () => equal(typeof Temporal.TimeZone.from, 'function'));
   });
-  describe('Construction', ()=>{
+  describe('Construction', () => {
     test('+01:00');
     test('-01:00');
     test('+0330');
@@ -104,12 +104,12 @@ describe('TimeZone', ()=>{
       throws(() => Temporal.TimeZone.from('1994-11-05T13:15:30-03[Europe/Brussels]'), RangeError);
     });
   });
-  describe('+01:00', ()=>{
+  describe('+01:00', () => {
     const zone = new Temporal.TimeZone('+01:00');
     const abs = Temporal.Absolute.fromEpochSeconds(Math.floor(Math.random() * 1e9));
-    const dtm = new Temporal.DateTime(1976, 11, 18, 15, 23, 30, 123,456,789);
-    it(`${zone} has name ${zone}`, ()=>equal(zone.name, `${zone}`));
-    it(`${zone} has offset +01:00`, ()=>equal(zone.getOffsetFor(abs), '+01:00'));
+    const dtm = new Temporal.DateTime(1976, 11, 18, 15, 23, 30, 123, 456, 789);
+    it(`${zone} has name ${zone}`, () => equal(zone.name, `${zone}`));
+    it(`${zone} has offset +01:00`, () => equal(zone.getOffsetFor(abs), '+01:00'));
     it(`(${zone}).getDateTimeFor(${abs})`, () => assert(zone.getDateTimeFor(abs) instanceof Temporal.DateTime));
     it(`(${zone}).getAbsoluteFor(${dtm})`, () => assert(zone.getAbsoluteFor(dtm) instanceof Temporal.Absolute));
     it(`(${zone}).getTransitions() => []`, () => equal(ArrayFrom(zone.getTransitions(abs), 4).length, 0));

@@ -27,14 +27,18 @@ rules:
     - error
     - consistent
   arrow-parens: error
+  arrow-spacing: error
   comma-dangle: error
+  comma-spacing: error
   curly:
     - error
     - multi-line
+  func-call-spacing: error
   indent:
     - error
     - 2
     - SwitchCase: 1
+  keyword-spacing: error
   no-multiple-empty-lines:
     - error
     - max: 1
@@ -49,6 +53,7 @@ rules:
     - single
     - avoidEscape: true
   semi: error
+  space-infix-ops: error
 overrides:
   - files:
       - polyfill/test/Absolute/**/*.js

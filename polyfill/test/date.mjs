@@ -319,7 +319,7 @@ describe('Date', () => {
       equal(date.month, 6);
       equal(date.day, 30);
     });
-    it ('Date.from(1976-11-18) == 1976-11-18', () => {
+    it('Date.from(1976-11-18) == 1976-11-18', () => {
       const orig = new Date(1976, 11, 18);
       const actual = Date.from(orig);
       equal(actual, orig);

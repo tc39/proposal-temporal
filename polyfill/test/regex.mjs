@@ -9,7 +9,7 @@ const { equal } = assert;
 
 import * as Temporal from 'tc39-temporal';
 
-describe('fromString regex', ()=>{
+describe('fromString regex', () => {
   describe('absolute', () => {
     function test(isoString, components) {
       it(isoString, () => {
