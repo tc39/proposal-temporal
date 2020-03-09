@@ -85,15 +85,25 @@ describe('Duration', () => {
       });
       const manyNines = '9'.repeat(309);
       [
-        `P${manyNines}Y`, `P${manyNines}M`, `P${manyNines}D`, `PT${manyNines}H`,
-        `PT${manyNines}M`, `PT${manyNines}S`
+        `P${manyNines}Y`,
+        `P${manyNines}M`,
+        `P${manyNines}D`,
+        `PT${manyNines}H`,
+        `PT${manyNines}M`,
+        `PT${manyNines}S`
       ].forEach((str) => throws(() => Duration.from(str, { disambiguation: 'reject' }), RangeError));
     });
     it('max safe integer is allowed', () => {
       [
-        'P9007199254740991Y', 'P9007199254740991M', 'P9007199254740991D',
-        'PT9007199254740991H', 'PT9007199254740991M', 'PT9007199254740991S',
-        'PT9007199254740.991S', 'PT9007199254.740991S', 'PT9007199.254740991S'
+        'P9007199254740991Y',
+        'P9007199254740991M',
+        'P9007199254740991D',
+        'PT9007199254740991H',
+        'PT9007199254740991M',
+        'PT9007199254740991S',
+        'PT9007199254740.991S',
+        'PT9007199254.740991S',
+        'PT9007199.254740991S'
       ].forEach((str, ix) => {
         equal(`${new Duration(...Array(ix).fill(0), Number.MAX_SAFE_INTEGER)}`, str);
         equal(`${Duration.from({ [units[ix]]: Number.MAX_SAFE_INTEGER }, { disambiguation: 'reject' })}`, str);
