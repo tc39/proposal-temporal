@@ -265,9 +265,9 @@ describe('Absolute', () => {
       equal(`${Absolute.from('2016-12-31T23:59:60Z')}`, '2016-12-31T23:59:59Z');
     });
   });
-  describe('Absolute.plus works', ()=>{
+  describe('Absolute.plus works', () => {
     const abs = Absolute.from('1969-12-25T12:23:45.678901234Z');
-    describe('cross epoch in ms', ()=>{
+    describe('cross epoch in ms', () => {
       const one = abs.minus({ days: 10, nanoseconds: 800 });
       const two = abs.plus({ days: 10, nanoseconds: 800 });
       const three = two.minus({ days: 20, nanoseconds: 1600 });

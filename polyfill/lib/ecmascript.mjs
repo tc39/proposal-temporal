@@ -1323,7 +1323,7 @@ function bisect(getState, left, right, lstate = getState(left), rstate = getStat
     if (mstate === lstate) {
       left = middle;
       lstate = mstate;
-    } else if(mstate === rstate) {
+    } else if (mstate === rstate) {
       right = middle;
       rstate = mstate;
     } else {

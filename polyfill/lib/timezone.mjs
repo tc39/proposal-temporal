@@ -115,7 +115,7 @@ export class TimeZone {
       }
     };
     if (typeof Symbol === 'function') {
-      result[Symbol.iterator] = ()=>result;
+      result[Symbol.iterator] = () => result;
     }
     return result;
   }
