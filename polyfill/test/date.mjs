@@ -165,7 +165,7 @@ describe('Date', () => {
     it("doesn't cast argument", () => {
       throws(() => date.difference({ year: 2019, month: 11, day: 5 }), TypeError);
       throws(() => date.difference('2019-11-05'), TypeError);
-    })
+    });
     it('takes days per month into account', () => {
       const date1 = Date.from('2019-01-01');
       const date2 = Date.from('2019-02-01');

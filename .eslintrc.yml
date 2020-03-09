@@ -33,6 +33,7 @@ rules:
   object-curly-spacing:
     - error
     - always
+  semi: error
 overrides:
   - files:
       - polyfill/test/Absolute/**/*.js

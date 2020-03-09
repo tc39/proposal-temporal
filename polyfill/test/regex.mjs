@@ -100,7 +100,7 @@ describe('fromString regex', ()=>{
     ['+0100[Europe/Vienna]', '-0400', ''].forEach((zoneString) =>
       generateTest(`1976-11-18T15:23`, zoneString));
     // Various numbers of decimal places
-    ['123', '123456'].forEach((decimals) => test(`1976-11-18T15:23:30.${decimals}`, [1976, 11, 18]))
+    ['123', '123456'].forEach((decimals) => test(`1976-11-18T15:23:30.${decimals}`, [1976, 11, 18]));
     // Date-only forms
     test('1976-11-18', [1976, 11, 18]);
     test('+199999-11-18', [199999, 11, 18]);

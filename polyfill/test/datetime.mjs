@@ -274,7 +274,7 @@ describe('DateTime', () => {
         equal(`${later.difference(earlier, { largestUnit })}`, `${diff}`));
       it(`(${earlier}).plus(${diff}) == (${later})`, () => equal(`${earlier.plus(diff)}`, `${later}`));
       it(`(${later}).minus(${diff}) == (${earlier})`, () => equal(`${later.minus(diff)}`, `${earlier}`));
-    })
+    });
   });
   describe('date/time maths: hours overflow', () => {
     const later = DateTime.from('2019-10-29T10:46:38.271986102');
@@ -434,7 +434,7 @@ describe('DateTime', () => {
       ['-271821-04-19T00:00', '+275760-09-14T00:00'].forEach((str) => {
         ['balance', 'reject'].forEach((disambiguation) => {
           throws(() => DateTime.from(str, { disambiguation }));
-        })
+        });
       });
       equal(`${DateTime.from('-271821-04-19T00:00')}`, '-271821-04-19T00:00:00.000000001');
       equal(`${DateTime.from('+275760-09-14T00:00')}`, '+275760-09-13T23:59:59.999999999');

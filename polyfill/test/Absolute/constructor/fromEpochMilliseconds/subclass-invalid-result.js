@@ -10,7 +10,7 @@ function createConstructor(result) {
   return function(ns) {
     assert.sameValue(ns, 10_000_000n);
     return result;
-  }
+  };
 }
 assert.throws(TypeError, () => Temporal.Absolute.fromEpochMilliseconds.call(createConstructor(undefined), 10), "undefined");
 assert.throws(TypeError, () => Temporal.Absolute.fromEpochMilliseconds.call(createConstructor(null), 10), "null");
