@@ -1280,7 +1280,7 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
     if (value !== undefined) {
       value = ES.ToString(value);
       if (!allowedValues.includes(value)) {
-        throw new RangeError(`${property} must be one of ${allowedValues.join(', ')}, not ${value}`)
+        throw new RangeError(`${property} must be one of ${allowedValues.join(', ')}, not ${value}`);
       }
       return value;
     }

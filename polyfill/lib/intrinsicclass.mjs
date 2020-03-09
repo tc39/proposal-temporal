@@ -6,7 +6,7 @@ export function MakeIntrinsicClass(Class, name) {
       enumerable: false,
       configurable: true,
     });
-    const species = function() { return this };
+    const species = function() { return this; };
     Object.defineProperty(species, "name", {
       value: "get [Symbol.species]",
       writable: false,

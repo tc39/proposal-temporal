@@ -10,7 +10,7 @@ function createConstructor(result) {
   return function(ns) {
     assert.sameValue(ns, 217_175_010_123_456_789n);
     return result;
-  }
+  };
 }
 
 assert.throws(TypeError, () => Temporal.Absolute.from.call(createConstructor(undefined), "1976-11-18T14:23:30.123456789Z"), "undefined");
