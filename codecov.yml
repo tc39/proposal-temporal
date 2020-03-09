@@ -1,0 +1,18 @@
+coverage:
+  status:
+    project:
+      default:
+        flags:
+          - tests
+          - test262
+      tests:
+        flags:
+          - tests
+      test262:
+        flags:
+          - test262
+    patch:
+      default:
+        flags:
+          - tests
+          - test262
