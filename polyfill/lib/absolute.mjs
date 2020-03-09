@@ -62,8 +62,12 @@ export class Absolute {
     add = add.plus(bigInt(days).multiply(24 * 60 * 60 * 1e9));
 
     const ns = bigInt(GetSlot(this, EPOCHNANOSECONDS)).plus(add);
+    ES.RejectAbsolute(ns);
+
     const Construct = ES.SpeciesConstructor(this, Absolute);
-    return new Construct(ns);
+    const result = new Construct(ns.value);
+    if (!ES.IsAbsolute(result)) throw new TypeError('invalid result');
+    return result;
   }
   minus(durationLike) {
     if (!ES.IsAbsolute(this)) throw new TypeError('invalid receiver');
@@ -87,8 +91,12 @@ export class Absolute {
     add = add.plus(bigInt(days).multiply(24 * 60 * 60 * 1e9));
 
     const ns = bigInt(GetSlot(this, EPOCHNANOSECONDS)).minus(add);
+    ES.RejectAbsolute(ns);
+
     const Construct = ES.SpeciesConstructor(this, Absolute);
-    return new Construct(bigInt(ns));
+    const result = new Construct(ns.value);
+    if (!ES.IsAbsolute(result)) throw new TypeError('invalid result');
+    return result;
   }
   difference(other, options) {
     if (!ES.IsAbsolute(this)) throw new TypeError('invalid receiver');

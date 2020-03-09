@@ -116,6 +116,7 @@
       <h1>SystemAbsolute ( )</h1>
       <emu-alg>
         1. Let _ns_ be the current UTC date and time, in nanoseconds since the epoch.
+        1. Assert: ! ValidateAbsolute(_ns_) is *true*.
         1. Return ? CreateAbsolute(_ns_).
       </emu-alg>
     </emu-clause>
