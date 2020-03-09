@@ -10,12 +10,12 @@ import assert from "assert";
  * @returns {string[]} the array from parseableAbsoluteStrings, sorted
  */
 function getSortedInstants(parseableAbsoluteStrings, reverse = false) {
-    const sortedAbsoluteTimes = parseableAbsoluteStrings
-        .map(v => [v, Temporal.Absolute.from(v)])
-        .sort(([, abs1], [, abs2]) => Temporal.Absolute.compare(abs1, abs2))
-        .map(([str]) => str);
+  const sortedAbsoluteTimes = parseableAbsoluteStrings
+    .map(v => [v, Temporal.Absolute.from(v)])
+    .sort(([, abs1], [, abs2]) => Temporal.Absolute.compare(abs1, abs2))
+    .map(([str]) => str);
 
-    return reverse ? sortedAbsoluteTimes.reverse() : sortedAbsoluteTimes;
+  return reverse ? sortedAbsoluteTimes.reverse() : sortedAbsoluteTimes;
 }
 
 const a = "2020-01-23T17:04:36.491865121-08:00";

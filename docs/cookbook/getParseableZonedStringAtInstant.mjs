@@ -8,10 +8,10 @@ import assert from "assert";
  * @returns {string} IANA Timezone
  */
 function getParseableZonedStringAtInstant(absolute, ianaTimeZoneName) {
-    // inTimeZone accepts either a timezone string or a Temporal.TimeZone object
-    // It returns a DateTime object
-    const localDateTime = absolute.inTimeZone(ianaTimeZoneName);
-    return localDateTime.toString();
+  // inTimeZone accepts either a timezone string or a Temporal.TimeZone object
+  // It returns a DateTime object
+  const localDateTime = absolute.inTimeZone(ianaTimeZoneName);
+  return localDateTime.toString();
 }
 
 const absoluteTime = Temporal.Absolute.from("2020-01-03T10:41:51Z");

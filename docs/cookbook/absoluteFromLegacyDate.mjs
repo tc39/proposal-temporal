@@ -7,8 +7,8 @@ import assert from "assert";
  * @returns {Temporal.Absolute} Temporal.Absolute instance
  */
 function getAbsoluteFromDate(esDate) {
-    const date = Temporal.Absolute.fromEpochMilliseconds(esDate.getTime());
-    return date;
+  const date = Temporal.Absolute.fromEpochMilliseconds(esDate.getTime());
+  return date;
 }
 
 const date = new Date("1970-01-01T00:00:01Z");
