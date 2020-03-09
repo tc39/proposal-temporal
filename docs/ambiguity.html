@@ -91,7 +91,7 @@
 <p>Converting a <a href="./datetime.html"><code>Temporal.DateTime</code></a> wall-clock time to a <a href="./absolute.md"><code>Temporal.Absolute</code></a> is not necessarily a one-to-one conversion.
 Due to DST time changes, there is a possibility that a wall-clock time either does not exist, or has existed twice.</p>
 <p>There are two mostly equivalent methods that accomplish this conversion: <a href="./datetime.html#inTimeZone"><code>Temporal.DateTime.prototype.inTimeZone</code></a> and <a href="./timezone.html#getAbsoluteFor"><code>Temporal.TimeZone.prototype.getAbsoluteFor</code></a>.
-The <code>disambiguation</code> argument to these methods controls what absolute time to return in the case of ambiguity:</p>
+The <code>disambiguation</code> option to these methods controls what absolute time to return in the case of ambiguity:</p>
 <ul>
 <li><code>earlier</code> (the default): The earlier of two possible absolute times will be returned.</li>
 <li><code>later</code>: The later of two possible absolute times will be returned.</li>
@@ -110,21 +110,21 @@ In <code>earlier</code> mode, the absolute time that is returned will be as if t
 In <code>later</code> mode, the absolute time that is returned will be as if the pre-change UTC offset had continued after the change, effectively skipping forwards by the amount of the DST gap.</p>
 <pre><code class="language-javascript">tz = new Temporal.TimeZone(&#39;Europe/Berlin&#39;);
 dt = new Temporal.DateTime(2019, 3, 31, 2, 45);
-tz.getAbsoluteFor(dt, &#39;earlier&#39;);  // =&gt; 2019-03-31T00:45Z
-tz.getAbsoluteFor(dt, &#39;later&#39;);    // =&gt; 2019-03-31T01:45Z
-tz.getAbsoluteFor(dt, &#39;reject&#39;);   // throws</code></pre>
+tz.getAbsoluteFor(dt, { disambiguation: &#39;earlier&#39; });  // =&gt; 2019-03-31T00:45Z
+tz.getAbsoluteFor(dt, { disambiguation: &#39;later&#39; });    // =&gt; 2019-03-31T01:45Z
+tz.getAbsoluteFor(dt, { disambiguation: &#39;reject&#39; });   // throws</code></pre>
 <p>In this example, the wall-clock time 2:45 doesn&#39;t exist, so it is treated as either 1:45 +01:00 or 3:45 +02:00, which can be seen by converting the absolute back to a wall-clock time in the time zone:</p>
-<pre><code class="language-javascript">tz.getAbsoluteFor(dt, &#39;earlier&#39;).inTimeZone(tz);  // =&gt; 2019-03-31T01:45
-tz.getAbsoluteFor(dt, &#39;later&#39;).inTimeZone(tz);  // =&gt; 2019-03-31T03:45</code></pre>
+<pre><code class="language-javascript">tz.getAbsoluteFor(dt, { disambiguation: &#39;earlier&#39; }).inTimeZone(tz);  // =&gt; 2019-03-31T01:45
+tz.getAbsoluteFor(dt, { disambiguation: &#39;later&#39; }).inTimeZone(tz);  // =&gt; 2019-03-31T03:45</code></pre>
 <p>Likewise, at the end of DST, clocks move backward an hour.
 In this case, the illusion is that an hour repeats itself.
 In <code>earlier</code> mode, the absolute time will be the earlier instance of the duplicated wall-clock time.
 In <code>later</code> mode, the absolute time will be the later instance of the duplicated time.</p>
 <pre><code class="language-javascript">tz = new Temporal.TimeZone(&#39;America/Sao_Paulo&#39;);
 dt = new Temporal.DateTime(2019, 2, 16, 23, 45);
-dt.inTimeZone(tz, &#39;earlier&#39;);  // =&gt; 2019-02-17T01:45Z
-dt.inTimeZone(tz, &#39;later&#39;);    // =&gt; 2019-02-17T02:45Z
-dt.inTimeZone(tz, &#39;reject&#39;);   // throws</code></pre>
+dt.inTimeZone(tz, { disambiguation: &#39;earlier&#39; });  // =&gt; 2019-02-17T01:45Z
+dt.inTimeZone(tz, { disambiguation: &#39;later&#39; });    // =&gt; 2019-02-17T02:45Z
+dt.inTimeZone(tz, { disambiguation: &#39;reject&#39; });   // throws</code></pre>
 <p>In this example, the wall-clock time 23:45 exists twice.</p>
 <blockquote>
 <p><em>Compatibility Note</em>: The built-in behaviour of the Moment Timezone and Luxon libraries is to give the same result as <code>earlier</code> when turning the clock back, and <code>later</code> when setting the clock forward.</p>

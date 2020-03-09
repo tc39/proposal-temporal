@@ -99,16 +99,20 @@
 <h3 id="timemicrosecond-number">time.<strong>microsecond</strong>: number</h3>
 <h3 id="timenanosecond-number">time.<strong>nanosecond</strong>: number</h3>
 <h2 id="methods">Methods</h2>
-<h3 id="timewith-hour-number--thishour-minute-number--thisminute-second-numer--thissecond--disambiguation-constrain--balance--reject--constrain--temporaltime">time.<strong>with</strong>({ hour: number = this.hour, minute: number = this.minute, second: numer = this.second ...}, <em>disambiguation</em>: &#39;constrain&#39; | &#39;balance&#39; | &#39;reject&#39; = &#39;constrain&#39;) : Temporal.Time</h3>
-<h3 id="timeplusduration-string--object-disambiguation-constrain--reject--constrain--temporaltime">time.<strong>plus</strong>(<em>duration</em>: string | object, <em>disambiguation</em>: &#39;constrain&#39; | &#39;reject&#39; = &#39;constrain&#39;) : Temporal.Time</h3>
-<h3 id="timeminusduration-string--object-disambiguation-constrain--reject--constrain--temporaltime">time.<strong>minus</strong>(<em>duration</em>: string | object, <em>disambiguation</em>: &#39;constrain&#39; | &#39;reject&#39; = &#39;constrain&#39;) : Temporal.Time</h3>
-<h3 id="timedifferenceother-temporaltime-largestunit-string--hours--temporalduration">time.<strong>difference</strong>(<em>other</em>: Temporal.Time, <em>largestUnit</em>: string = &#39;hours&#39;) : Temporal.Duration</h3>
+<h3 id="timewith-hour-number--thishour-minute-number--thisminute-second-numer--thissecond--options-object--temporaltime">time.<strong>with</strong>({ hour: number = this.hour, minute: number = this.minute, second: numer = this.second ...}, <em>options</em>?: object) : Temporal.Time</h3>
+<h3 id="timeplusduration-string--object-options-object--temporaltime">time.<strong>plus</strong>(<em>duration</em>: string | object, <em>options</em>?: object) : Temporal.Time</h3>
+<h3 id="timeminusduration-string--object-options-object--temporaltime">time.<strong>minus</strong>(<em>duration</em>: string | object, <em>options</em>?: object) : Temporal.Time</h3>
+<h3 id="timedifferenceother-temporaltime-options-object--temporalduration">time.<strong>difference</strong>(<em>other</em>: Temporal.Time, <em>options</em>?: object) : Temporal.Duration</h3>
 <p><strong>Parameters:</strong></p>
 <ul>
 <li><code>other</code> (<code>Temporal.Time</code>): Another time with which to compute the difference.</li>
-<li><code>largestUnit</code> (optional string): The largest unit of time to allow in the resulting <code>Temporal.Duration</code> object.
+<li><code>options</code> (optional object): An object with properties representing options for the operation.
+The following options are recognized:<ul>
+<li><code>largestUnit</code> (string): The largest unit of time to allow in the resulting <code>Temporal.Duration</code> object.
 Valid values are <code>&#39;years&#39;</code>, <code>&#39;months&#39;</code>, <code>&#39;days&#39;</code>, <code>&#39;hours&#39;</code>, <code>&#39;minutes&#39;</code>, and <code>&#39;seconds&#39;</code>.
 The default is <code>days</code>.</li>
+</ul>
+</li>
 </ul>
 <p><strong>TODO:</strong> Rest of the documentation in another pull request, this to be rebased</p>
 <p>The <code>largestUnit</code> parameter controls how the resulting duration is expressed.

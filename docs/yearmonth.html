@@ -226,13 +226,17 @@ ym.isLeapYear  // =&gt; false
 // Is 2100 a leap year? (no, because it&#39;s divisible by 100 and not 400)
 ym.with({year: 2100}).isLeapYear  // =&gt; false</code></pre>
 <h2 id="methods">Methods</h2>
-<h3 id="yearmonthwithyearmonthlike-object-disambiguation-constrain--balance--reject--constrain--temporalyearmonth">yearMonth.<strong>with</strong>(<em>yearMonthLike</em>: object, <em>disambiguation</em>: &#39;constrain&#39; | &#39;balance&#39; | &#39;reject&#39; = &#39;constrain&#39;) : Temporal.YearMonth</h3>
+<h3 id="yearmonthwithyearmonthlike-object-options-object--temporalyearmonth">yearMonth.<strong>with</strong>(<em>yearMonthLike</em>: object, <em>options</em>?: object) : Temporal.YearMonth</h3>
 <p><strong>Parameters:</strong></p>
 <ul>
 <li><code>yearMonthLike</code> (object): an object with some or all of the properties of a <code>Temporal.YearMonth</code>.</li>
-<li><code>disambiguation</code> (optional string): How to deal with out-of-range values.
+<li><code>options</code> (optional object): An object with properties representing options for the operation.
+The following options are recognized:<ul>
+<li><code>disambiguation</code> (string): How to deal with out-of-range values.
 Allowed values are <code>constrain</code>, <code>balance</code>, and <code>reject</code>.
 The default is <code>constrain</code>.</li>
+</ul>
+</li>
 </ul>
 <p><strong>Returns:</strong> a new <code>Temporal.YearMonth</code> object.</p>
 <p>This method creates a new <code>Temporal.YearMonth</code> which is a copy of <code>yearMonth</code>, but any properties present on <code>yearMonthLike</code> override the ones already present on <code>yearMonth</code>.</p>
@@ -241,13 +245,17 @@ The default is <code>constrain</code>.</li>
 <pre><code class="language-javascript">ym = Temporal.YearMonth.from(&#39;2019-06&#39;);
 // Get December of that year
 ym.with({month: 12})  // =&gt; 2019-12</code></pre>
-<h3 id="yearmonthplusduration-string--object-disambiguation-constrain--reject--constrain--temporalyearmonth">yearMonth.<strong>plus</strong>(<em>duration</em>: string | object, <em>disambiguation</em>: &#39;constrain&#39; | &#39;reject&#39; = &#39;constrain&#39;) : Temporal.YearMonth</h3>
+<h3 id="yearmonthplusduration-string--object-options-object--temporalyearmonth">yearMonth.<strong>plus</strong>(<em>duration</em>: string | object, <em>options</em>?: object) : Temporal.YearMonth</h3>
 <p><strong>Parameters:</strong></p>
 <ul>
 <li><code>duration</code> (string or object): A <code>Temporal.Duration</code> object, a duration-like object, or a string from which to create a <code>Temporal.Duration</code>.</li>
-<li><code>disambiguation</code> (optional string): How to deal with additions that result in out-of-range values.
+<li><code>options</code> (optional object): An object with properties representing options for the addition.
+The following options are recognized:<ul>
+<li><code>disambiguation</code> (string): How to deal with additions that result in out-of-range values.
 Allowed values are <code>constrain</code> and <code>reject</code>.
 The default is <code>constrain</code>.</li>
+</ul>
+</li>
 </ul>
 <p><strong>Returns:</strong> a new <code>Temporal.YearMonth</code> object which is the month indicated by <code>yearMonth</code> plus <code>duration</code>.</p>
 <p>This method adds <code>duration</code> to <code>yearMonth</code>, returning a month that is in the future relative to <code>yearMonth</code>.</p>
@@ -259,20 +267,24 @@ The default is <code>constrain</code>.</li>
 </ul>
 <p>If the result is outside the range of dates that <code>Temporal.YearMonth</code> can represent, then <code>constrain</code> mode will clamp the result to the allowed range.
 The <code>reject</code> mode will throw a <code>RangeError</code> in this case.</p>
-<p>Other than for out-of-range values, the <code>disambiguation</code> parameter has no effect in the default ISO calendar, because a year is always 12 months and therefore not ambiguous.
+<p>Other than for out-of-range values, the <code>disambiguation</code> option has no effect in the default ISO calendar, because a year is always 12 months and therefore not ambiguous.
 It doesn&#39;t matter in this case that years and months can be different numbers of days, as the resolution of <code>Temporal.YearMonth</code> does not distinguish days.
 However, disambiguation may have an effect in other calendars where years can be different numbers of months.</p>
 <p>Usage example:</p>
 <pre><code class="language-javascript">ym = Temporal.YearMonth.from(&#39;2019-06&#39;);
 ym.plus({years: 20, months: 4})  // =&gt; 2039-10
 ym.plus(&#39;P14Y&#39;)  // =&gt; 2033-06</code></pre>
-<h3 id="yearmonthminusduration-string--object-disambiguation-constrain--reject--constrain--temporalyearmonth">yearMonth.<strong>minus</strong>(<em>duration</em>: string | object, <em>disambiguation</em>: &#39;constrain&#39; | &#39;reject&#39; = &#39;constrain&#39;) : Temporal.YearMonth</h3>
+<h3 id="yearmonthminusduration-string--object-options-object--temporalyearmonth">yearMonth.<strong>minus</strong>(<em>duration</em>: string | object, <em>options</em>?: object) : Temporal.YearMonth</h3>
 <p><strong>Parameters:</strong></p>
 <ul>
 <li><code>duration</code> (string or object): A <code>Temporal.Duration</code> object, a duration-like object, or a string from which to create a <code>Temporal.Duration</code>.</li>
-<li><code>disambiguation</code> (optional string): How to deal with additions that result in out-of-range values.
+<li><code>options</code> (optional object): An object with properties representing options for the subtraction.
+The following options are recognized:<ul>
+<li><code>disambiguation</code> (string): How to deal with additions that result in out-of-range values.
 Allowed values are <code>constrain</code> and <code>reject</code>.
 The default is <code>constrain</code>.</li>
+</ul>
+</li>
 </ul>
 <p><strong>Returns:</strong> a new <code>Temporal.YearMonth</code> object which is the month indicated by <code>yearMonth</code> minus <code>duration</code>.</p>
 <p>This method subtracts <code>duration</code> from <code>yearMonth</code>, returning a month that is in the future relative to <code>yearMonth</code>.</p>
@@ -284,25 +296,29 @@ The default is <code>constrain</code>.</li>
 </ul>
 <p>If the result is outside the range of dates that <code>Temporal.YearMonth</code> can represent, then <code>constrain</code> mode will clamp the result to the allowed range.
 The <code>reject</code> mode will throw a <code>RangeError</code> in this case.</p>
-<p>Other than for out-of-range values, the <code>disambiguation</code> parameter has no effect in the default ISO calendar, because a year is always 12 months and therefore not ambiguous.
+<p>Other than for out-of-range values, the <code>disambiguation</code> option has no effect in the default ISO calendar, because a year is always 12 months and therefore not ambiguous.
 It doesn&#39;t matter in this case that years and months can be different numbers of days, as the resolution of <code>Temporal.YearMonth</code> does not distinguish days.
 However, disambiguation may have an effect in other calendars where years can be different numbers of months.</p>
 <p>Usage example:</p>
 <pre><code class="language-javascript">ym = Temporal.YearMonth.from(&#39;2019-06&#39;);
 ym.minus({years: 20, months: 4})  // =&gt; 1999-02
 ym.minus(&#39;P14Y&#39;)  // =&gt; 2005-06</code></pre>
-<h3 id="yearmonthdifferenceother-temporalyearmonth-largestunit-string--years--temporalduration">yearMonth.<strong>difference</strong>(<em>other</em>: Temporal.YearMonth, <em>largestUnit</em>: string = &#39;years&#39;) : Temporal.Duration</h3>
+<h3 id="yearmonthdifferenceother-temporalyearmonth-options-object--temporalduration">yearMonth.<strong>difference</strong>(<em>other</em>: Temporal.YearMonth, <em>options</em>?: object) : Temporal.Duration</h3>
 <p><strong>Parameters:</strong></p>
 <ul>
 <li><code>other</code> (<code>Temporal.YearMonth</code>): Another month with which to compute the difference.</li>
-<li><code>largestUnit</code> (optional string): The largest unit of time to allow in the resulting <code>Temporal.Duration</code> object.
+<li><code>options</code> (optional object): An object with properties representing options for the operation.
+The following options are recognized:<ul>
+<li><code>largestUnit</code> (string): The largest unit of time to allow in the resulting <code>Temporal.Duration</code> object.
 Valid values are <code>&#39;years&#39;</code> and <code>&#39;months&#39;</code>.
 The default is <code>years</code>.</li>
+</ul>
+</li>
 </ul>
 <p><strong>Returns:</strong> a <code>Temporal.Duration</code> representing the difference between <code>yearMonth</code> and <code>other</code>.</p>
 <p>This method computes the difference between the two months represented by <code>yearMonth</code> and <code>other</code>, and returns it as a <code>Temporal.Duration</code> object.
 The difference is always positive, no matter the order of <code>yearMonth</code> and <code>other</code>, because <code>Temporal.Duration</code> objects cannot represent negative durations.</p>
-<p>The <code>largestUnit</code> parameter controls how the resulting duration is expressed.
+<p>The <code>largestUnit</code> option controls how the resulting duration is expressed.
 The returned <code>Temporal.Duration</code> object will not have any nonzero fields that are larger than the unit in <code>largestUnit</code>.
 A difference of one year and two months will become 14 months when <code>largestUnit</code> is <code>&quot;months&quot;</code>, for example.
 However, a difference of one month will still be one month even if <code>largestUnit</code> is <code>&quot;years&quot;</code>.</p>
@@ -310,15 +326,15 @@ However, a difference of one month will still be one month even if <code>largest
 <p>Usage example:</p>
 <pre><code class="language-javascript">ym = Temporal.YearMonth.from(&#39;2019-06&#39;);
 other = Temporal.YearMonth.from(&#39;2006-08&#39;);
-ym.difference(other)            // =&gt; P12Y10M
-ym.difference(other, &#39;months&#39;)  // =&gt; P154M
+ym.difference(other)                             // =&gt; P12Y10M
+ym.difference(other, { largestUnit: &#39;months&#39; })  // =&gt; P154M
 
 // If you really need to calculate the difference between two YearMonths
 // in days, you can eliminate the ambiguity by explicitly choosing the
 // day of the month (and if applicable, the time of that day) from which
 // you want to reckon the difference. For example, using the first of
 // the month to calculate a number of days:
-ym.withDay(1).difference(other.withDay(1), &#39;days&#39;);  // =&gt; P4687D</code></pre>
+ym.withDay(1).difference(other.withDay(1), { largestUnit: &#39;days&#39; });  // =&gt; P4687D</code></pre>
 <h3 id="yearmonthtostring--string">yearMonth.<strong>toString</strong>() : string</h3>
 <p><strong>Returns:</strong> a string in the ISO 8601 date format representing <code>yearMonth</code>.</p>
 <p>This method overrides the <code>Object.prototype.toString()</code> method and provides a convenient, unambiguous string representation of <code>yearMonth</code>.

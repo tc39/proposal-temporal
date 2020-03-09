@@ -191,13 +191,17 @@ sorted.join(&#39; &#39;);  // =&gt; 02-18 07-14 08-24</code></pre>
 md.month  // =&gt; 8
 md.day    // =&gt; 24</code></pre>
 <h2 id="methods">Methods</h2>
-<h3 id="monthdaywithmonthdaylike-object-disambiguation-constrain--balance--reject--constrain--temporalmonthday">monthDay.<strong>with</strong>(<em>monthDayLike</em>: object, <em>disambiguation</em>: &#39;constrain&#39; | &#39;balance&#39; | &#39;reject&#39; = &#39;constrain&#39;) : Temporal.MonthDay</h3>
+<h3 id="monthdaywithmonthdaylike-object-options-object--temporalmonthday">monthDay.<strong>with</strong>(<em>monthDayLike</em>: object, <em>options</em>?: object) : Temporal.MonthDay</h3>
 <p><strong>Parameters:</strong></p>
 <ul>
 <li><code>monthDayLike</code> (object): an object with some or all of the properties of a <code>Temporal.MonthDay</code>.</li>
-<li><code>disambiguation</code> (optional string): How to deal with out-of-range values.
+<li><code>options</code> (optional object): An object with properties representing options for the operation.
+The following options are recognized:<ul>
+<li><code>disambiguation</code> (string): How to deal with out-of-range values.
 Allowed values are <code>constrain</code>, <code>balance</code>, and <code>reject</code>.
 The default is <code>constrain</code>.</li>
+</ul>
+</li>
 </ul>
 <p><strong>Returns:</strong> a new <code>Temporal.MonthDay</code> object.</p>
 <p>This method creates a new <code>Temporal.MonthDay</code> which is a copy of <code>monthDay</code>, but any properties present on <code>monthDayLike</code> override the ones already present on <code>monthDay</code>.</p>
@@ -214,8 +218,8 @@ The default is <code>constrain</code>.</li>
 <p>Usage example:</p>
 <pre><code class="language-javascript">md = Temporal.MonthDay.from(&#39;11-15&#39;);
 // What&#39;s the last day of that month?
-md.with({day: 31}, &#39;constrain&#39;)  // =&gt; 11-30
-Temporal.MonthDay.from(&#39;02-01&#39;).with({day: 31}, &#39;constrain&#39;);  // =&gt; 02-29</code></pre>
+md.with({ day: 31 })  // =&gt; 11-30
+Temporal.MonthDay.from(&#39;02-01&#39;).with({ day: 31 });  // =&gt; 02-29</code></pre>
 <h3 id="monthdaytostring--string">monthDay.<strong>toString</strong>() : string</h3>
 <p><strong>Returns:</strong> a string in the ISO 8601 date format representing <code>monthDay</code>.</p>
 <p>This method overrides the <code>Object.prototype.toString()</code> method and provides a convenient, unambiguous string representation of <code>monthDay</code>.

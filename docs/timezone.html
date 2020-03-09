@@ -209,18 +209,22 @@ tz.getDateTimeFor(timestamp);  // =&gt; 2019-03-31T01:45
 epoch = new Temporal.Absolute(0n);
 tz = new Temporal.TimeZone(&#39;America/New_York&#39;);
 tz.getDateTimeFor(epoch);  // =&gt; 1969-12-31T19:00</code></pre>
-<h3 id="timezonegetabsolutefordatetime-temporaldatetime-disambiguation-earlier--later--reject--earlier--temporalabsolute">timeZone.<strong>getAbsoluteFor</strong>(<em>dateTime</em>: Temporal.DateTime, <em>disambiguation</em>: &#39;earlier&#39; | &#39;later&#39; | &#39;reject&#39; = &#39;earlier&#39;) : Temporal.Absolute</h3>
+<h3 id="timezonegetabsolutefordatetime-temporaldatetime-options-object--temporalabsolute">timeZone.<strong>getAbsoluteFor</strong>(<em>dateTime</em>: Temporal.DateTime, <em>options</em>?: object) : Temporal.Absolute</h3>
 <p><strong>Parameters:</strong></p>
 <ul>
 <li><code>dateTime</code> (<code>Temporal.DateTime</code>): A calendar date and wall-clock time to convert.</li>
-<li><code>disambiguation</code> (optional <code>string</code>): How to disambiguate if the date and time given by <code>dateTime</code> does not exist in the time zone, or exists more than once.
+<li><code>options</code> (optional object): An object with properties representing options for the operation.
+The following options are recognized:<ul>
+<li><code>disambiguation</code> (string): How to disambiguate if the date and time given by <code>dateTime</code> does not exist in the time zone, or exists more than once.
 Allowed values are <code>earlier</code>, <code>later</code>, and <code>reject</code>.
 The default is <code>earlier</code>.</li>
+</ul>
+</li>
 </ul>
 <p><strong>Returns:</strong> A <code>Temporal.Absolute</code> object indicating the absolute time in <code>timeZone</code> at the time of the calendar date and wall-clock time from <code>dateTime</code>.</p>
 <p>This method is one way to convert a <code>Temporal.DateTime</code> to a <code>Temporal.Absolute</code>.
 It is identical to <a href="./datetime.html#inTimeZone"><code>dateTime.inTimeZone(timeZone, disambiguation)</code></a>.</p>
-<p>In the case of ambiguity, the <code>disambiguation</code> parameter controls what absolute time to return:</p>
+<p>In the case of ambiguity, the <code>disambiguation</code> option controls what absolute time to return:</p>
 <ul>
 <li><code>earlier</code>: The earlier of two possible times.</li>
 <li><code>later</code>: The later of two possible times.</li>
