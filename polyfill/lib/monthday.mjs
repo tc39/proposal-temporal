@@ -58,10 +58,8 @@ export class MonthDay {
   static from(arg, options = undefined) {
     const disambiguation = ES.ToDisambiguation(options);
     let result = ES.ToMonthDay(arg, disambiguation);
-    return this === MonthDay ? result : new this(
-      GetSlot(result, MONTH),
-      GetSlot(result, DAY),
-    );
+    if (this === MonthDay) return result;
+    return new this(GetSlot(result, MONTH), GetSlot(result, DAY));
   }
   static compare(one, two) {
     if (!ES.IsMonthDay(one) || !ES.IsMonthDay(two)) throw new TypeError('invalid MonthDay object');

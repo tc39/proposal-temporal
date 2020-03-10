@@ -126,9 +126,8 @@ export class TimeZone {
   }
   static from(arg) {
     let result = ES.ToTimeZone(arg);
-    return this === TimeZone ? result : new this(
-      GetSlot(result, IDENTIFIER)
-    );
+    if (this === TimeZone) return result;
+    return new this(GetSlot(result, IDENTIFIER));
   }
 }
 

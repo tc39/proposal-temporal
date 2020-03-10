@@ -353,7 +353,8 @@ export class DateTime {
   static from(arg, options = undefined) {
     const disambiguation = ES.ToDisambiguation(options);
     let result = ES.ToDateTime(arg, disambiguation);
-    return this === DateTime ? result : new this(
+    if (this === DateTime) return result;
+    return new this(
       GetSlot(result, YEAR),
       GetSlot(result, MONTH),
       GetSlot(result, DAY),
