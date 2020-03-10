@@ -146,11 +146,8 @@ export class Date {
   static from(arg, options = undefined) {
     const disambiguation = ES.ToDisambiguation(options);
     let result = ES.ToDate(arg, disambiguation);
-    return this === Date ? result : new this(
-      GetSlot(result, YEAR),
-      GetSlot(result, MONTH),
-      GetSlot(result, DAY),
-    );
+    if (this === Date) return result;
+    return new this(GetSlot(result, YEAR), GetSlot(result, MONTH), GetSlot(result, DAY));
   }
   static compare(one, two) {
     if (!ES.IsDate(one) || !ES.IsDate(two)) throw new TypeError('invalid Date object');

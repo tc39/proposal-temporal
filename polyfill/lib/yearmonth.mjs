@@ -125,10 +125,8 @@ export class YearMonth {
   static from(arg, options = undefined) {
     const disambiguation = ES.ToDisambiguation(options);
     let result = ES.ToYearMonth(arg, disambiguation);
-    return this === YearMonth ? result : new this(
-      GetSlot(result, YEAR),
-      GetSlot(result, MONTH),
-    );
+    if (this === YearMonth) return result;
+    return new this(GetSlot(result, YEAR), GetSlot(result, MONTH));
   }
   static compare(one, two) {
     if (!ES.IsYearMonth(one) || !ES.IsYearMonth(two)) throw new TypeError('invalid YearMonth object');

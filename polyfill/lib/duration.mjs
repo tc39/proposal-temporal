@@ -130,7 +130,8 @@ export class Duration {
   static from(arg, options = undefined) {
     const disambiguation = ES.ToDisambiguation(options);
     let result = ES.ToDuration(arg, disambiguation);
-    return this === Duration ? result : new this(
+    if (this === Duration) return result;
+    return new this(
       GetSlot(result, YEARS),
       GetSlot(result, MONTHS),
       GetSlot(result, DAYS),
