@@ -85,7 +85,14 @@ export class Date {
   plus(durationLike = {}, options) {
     if (!ES.IsDate(this)) throw new TypeError('invalid receiver');
     const disambiguation = ES.ToArithmeticDisambiguation(options);
-    const duration = ES.ToLimitedDuration(durationLike, [HOURS, MINUTES, SECONDS, MILLISECONDS, MICROSECONDS, NANOSECONDS]);
+    const duration = ES.ToLimitedDuration(durationLike, [
+      HOURS,
+      MINUTES,
+      SECONDS,
+      MILLISECONDS,
+      MICROSECONDS,
+      NANOSECONDS
+    ]);
     let { year, month, day } = this;
     const { years, months, days } = duration;
     ({ year, month, day } = ES.AddDate(year, month, day, years, months, days, disambiguation));
@@ -98,7 +105,14 @@ export class Date {
   minus(durationLike = {}, options) {
     if (!ES.IsDate(this)) throw new TypeError('invalid receiver');
     const disambiguation = ES.ToArithmeticDisambiguation(options);
-    const duration = ES.ToLimitedDuration(durationLike, [HOURS, MINUTES, SECONDS, MILLISECONDS, MICROSECONDS, NANOSECONDS]);
+    const duration = ES.ToLimitedDuration(durationLike, [
+      HOURS,
+      MINUTES,
+      SECONDS,
+      MILLISECONDS,
+      MICROSECONDS,
+      NANOSECONDS
+    ]);
     let { year, month, day } = this;
     const { years, months, days } = duration;
     ({ year, month, day } = ES.SubtractDate(year, month, day, years, months, days, disambiguation));

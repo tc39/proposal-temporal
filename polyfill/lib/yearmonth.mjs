@@ -61,7 +61,15 @@ export class YearMonth {
   plus(durationLike, options) {
     if (!ES.IsYearMonth(this)) throw new TypeError('invalid receiver');
     const disambiguation = ES.ToArithmeticDisambiguation(options);
-    const duration = ES.ToLimitedDuration(durationLike, [DAYS, HOURS, MINUTES, SECONDS, MILLISECONDS, MICROSECONDS, NANOSECONDS]);
+    const duration = ES.ToLimitedDuration(durationLike, [
+      DAYS,
+      HOURS,
+      MINUTES,
+      SECONDS,
+      MILLISECONDS,
+      MICROSECONDS,
+      NANOSECONDS
+    ]);
     let { year, month } = this;
     const { years, months } = duration;
     ({ year, month } = ES.AddDate(year, month, 1, years, months, 0, disambiguation));
@@ -75,7 +83,15 @@ export class YearMonth {
   minus(durationLike, options) {
     if (!ES.IsYearMonth(this)) throw new TypeError('invalid receiver');
     const disambiguation = ES.ToArithmeticDisambiguation(options);
-    const duration = ES.ToLimitedDuration(durationLike, [DAYS, HOURS, MINUTES, SECONDS, MILLISECONDS, MICROSECONDS, NANOSECONDS]);
+    const duration = ES.ToLimitedDuration(durationLike, [
+      DAYS,
+      HOURS,
+      MINUTES,
+      SECONDS,
+      MILLISECONDS,
+      MICROSECONDS,
+      NANOSECONDS
+    ]);
     let { year, month } = this;
     const { years, months } = duration;
     ({ year, month } = ES.SubtractDate(year, month, 1, years, months, 0, disambiguation));

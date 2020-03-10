@@ -386,7 +386,8 @@ describe('Time', () => {
         equal(`${Time.from('15:23:30.123456789')}`, '15:23:30.123456789');
       });
       it('Time.from({ hour: 15, minute: 23 })', () => equal(`${Time.from({ hour: 15, minute: 23 })}`, '15:23'));
-      it('Time.from({ minute: 30, microsecond: 555 })', () => equal(`${Time.from({ minute: 30, microsecond: 555 })}`, '00:30:00.000555'));
+      it('Time.from({ minute: 30, microsecond: 555 })', () =>
+        equal(`${Time.from({ minute: 30, microsecond: 555 })}`, '00:30:00.000555'));
       it('Time.from({})', () => equal(`${Time.from({})}`, `${new Time()}`));
       it('Time.from(ISO string leap second) is constrained', () => {
         equal(`${Time.from('23:59:60')}`, '23:59:59');

@@ -218,7 +218,7 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
       second = 0,
       year
     } = props;
-    ({
+    ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.RegulateDateTime(
       year,
       month,
       day,
@@ -227,8 +227,9 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
       second,
       millisecond,
       microsecond,
-      nanosecond
-    } = ES.RegulateDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, disambiguation));
+      nanosecond,
+      disambiguation
+    ));
     return new TemporalDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
   },
   RegulateDateTime: (year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, disambiguation) => {
@@ -334,7 +335,15 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
       nanosecond = 0,
       second = 0
     } = props;
-    ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.RegulateTime(hour, minute, second, millisecond, microsecond, nanosecond, disambiguation));
+    ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.RegulateTime(
+      hour,
+      minute,
+      second,
+      millisecond,
+      microsecond,
+      nanosecond,
+      disambiguation
+    ));
     return new TemporalTime(hour, minute, second, millisecond, microsecond, nanosecond);
   },
   RegulateTime: (hour, minute, second, millisecond, microsecond, nanosecond, disambiguation) => {
@@ -634,10 +643,17 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
   GetTimeZoneOffsetNanoseconds: (epochNanoseconds, timeZone) => {
     const offset = parseOffsetString(`${timeZone}`);
     if (offset !== null) return bigInt(offset).multiply(1e6);
-    const { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.GetTimeZoneDateTimeParts(
-      epochNanoseconds,
-      timeZone
-    );
+    const {
+      year,
+      month,
+      day,
+      hour,
+      minute,
+      second,
+      millisecond,
+      microsecond,
+      nanosecond
+    } = ES.GetTimeZoneDateTimeParts(epochNanoseconds, timeZone);
     const utc = ES.GetEpochFromParts(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
     if (utc === null) throw new RangeError('Date outside of supported range');
     return utc.minus(epochNanoseconds);
@@ -1019,14 +1035,20 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
       nanosecond
     } = ES.ConstrainTime(hour, minute, second, millisecond, microsecond, nanosecond));
     // Constrain to within 24 hours outside the Absolute range
-    if (year === YEAR_MIN &&
-      null === ES.GetEpochFromParts(year, month, day + 1, hour, minute, second, millisecond, microsecond, nanosecond - 1)) {
+    if (
+      year === YEAR_MIN &&
+      null ===
+        ES.GetEpochFromParts(year, month, day + 1, hour, minute, second, millisecond, microsecond, nanosecond - 1)
+    ) {
       month = 4;
       day = 19;
       hour = minute = second = millisecond = microsecond = 0;
       nanosecond = 1;
-    } else if (year === YEAR_MAX &&
-      null === ES.GetEpochFromParts(year, month, day - 1, hour, minute, second, millisecond, microsecond, nanosecond + 1)) {
+    } else if (
+      year === YEAR_MAX &&
+      null ===
+        ES.GetEpochFromParts(year, month, day - 1, hour, minute, second, millisecond, microsecond, nanosecond + 1)
+    ) {
       month = 9;
       day = 13;
       hour = 23;
@@ -1068,10 +1090,14 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
     ES.RejectToRange(day, 1, ES.DaysInMonth(year, month));
     ES.RejectTime(hour, minute, second, millisecond, microsecond, nanosecond);
     // Reject any DateTime 24 hours or more outside the Absolute range
-    if ((year === YEAR_MIN &&
-      null == ES.GetEpochFromParts(year, month, day + 1, hour, minute, second, millisecond, microsecond, nanosecond - 1)) ||
+    if (
+      (year === YEAR_MIN &&
+        null ==
+          ES.GetEpochFromParts(year, month, day + 1, hour, minute, second, millisecond, microsecond, nanosecond - 1)) ||
       (year === YEAR_MAX &&
-      null == ES.GetEpochFromParts(year, month, day - 1, hour, minute, second, millisecond, microsecond, nanosecond + 1))) {
+        null ==
+          ES.GetEpochFromParts(year, month, day - 1, hour, minute, second, millisecond, microsecond, nanosecond + 1))
+    ) {
       throw new RangeError('DateTime outside of supported range');
     }
   },
@@ -1100,11 +1126,23 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
       case 'months': {
         months = larger.month - smaller.month;
         let year, month;
-        ({ year, month, years, months } = ES.BalanceDurationDate(years, months, smaller.year, smaller.month, smaller.day));
+        ({ year, month, years, months } = ES.BalanceDurationDate(
+          years,
+          months,
+          smaller.year,
+          smaller.month,
+          smaller.day
+        ));
         days = ES.DayOfYear(larger.year, larger.month, larger.day) - ES.DayOfYear(year, month, smaller.day);
         if (days < 0) {
           months -= 1;
-          ({ year, month, years, months } = ES.BalanceDurationDate(years, months, smaller.year, smaller.month, smaller.day));
+          ({ year, month, years, months } = ES.BalanceDurationDate(
+            years,
+            months,
+            smaller.year,
+            smaller.month,
+            smaller.day
+          ));
           days = ES.DayOfYear(larger.year, larger.month, larger.day) - ES.DayOfYear(year, month, smaller.day);
           if (larger.year > year) days += ES.LeapYear(year) ? 366 : 365;
         }
@@ -1116,7 +1154,8 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
       }
       case 'days':
         months = 0;
-        days = ES.DayOfYear(larger.year, larger.month, larger.day) - ES.DayOfYear(smaller.year, smaller.month, smaller.day);
+        days =
+          ES.DayOfYear(larger.year, larger.month, larger.day) - ES.DayOfYear(smaller.year, smaller.month, smaller.day);
         while (years > 0) {
           days += ES.LeapYear(smaller.year + years - 1) ? 366 : 365;
           years -= 1;
