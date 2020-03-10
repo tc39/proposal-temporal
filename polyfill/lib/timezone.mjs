@@ -136,7 +136,8 @@ if ('undefined' !== typeof Symbol) {
     const iter = ZONES[Symbol.iterator]();
     return {
       next: () => {
-        while (true) {  // eslint-disable-line no-constant-condition
+        // eslint-disable-next-line no-constant-condition
+        while (true) {
           let { value, done } = iter.next();
           if (done) return { done };
           try {
