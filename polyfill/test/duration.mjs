@@ -16,11 +16,22 @@ describe('Duration', () => {
       const from = Duration.from(orig);
       equal(from, orig);
     });
-    it('Duration.from({ milliseconds: 5 }) == PT0.005S', () => equal(`${ Duration.from({ milliseconds: 5 }) }`, 'PT0.005S'));
-    it('Duration.from("P1D") == P1D', () => equal(`${ Duration.from('P1D') }`, 'P1D'));
+    it('Duration.from({ milliseconds: 5 }) == PT0.005S', () =>
+      equal(`${Duration.from({ milliseconds: 5 })}`, 'PT0.005S'));
+    it('Duration.from("P1D") == P1D', () => equal(`${Duration.from('P1D')}`, 'P1D'));
     it('Duration.from({}) throws', () => throws(() => Duration.from({}), RangeError));
     describe('Disambiguation', () => {
-      const negative = { years: -1, months: -1, days: -1, hours: -1, minutes: -1, seconds: -1, milliseconds: -1, microseconds: -1, nanoseconds: -1 };
+      const negative = {
+        years: -1,
+        months: -1,
+        days: -1,
+        hours: -1,
+        minutes: -1,
+        seconds: -1,
+        milliseconds: -1,
+        microseconds: -1,
+        nanoseconds: -1
+      };
       it('negative values throw when "reject"', () =>
         throws(() => Duration.from(negative, { disambiguation: 'reject' }), RangeError));
       it('excessive values unchanged when "reject"', () => {
@@ -65,7 +76,17 @@ describe('Duration', () => {
     });
   });
   describe('min/max values', () => {
-    const units = ['years', 'months', 'days', 'hours', 'minutes', 'seconds', 'milliseconds', 'microseconds', 'nanoseconds'];
+    const units = [
+      'years',
+      'months',
+      'days',
+      'hours',
+      'minutes',
+      'seconds',
+      'milliseconds',
+      'microseconds',
+      'nanoseconds'
+    ];
     it('minimum is zero', () => {
       equal(`${new Duration(0, 0, 0, 0, 0, 0, 0, 0, 0)}`, 'PT0S');
       units.forEach((unit) => equal(`${Duration.from({ [unit]: 0 })}`, 'PT0S'));

@@ -92,7 +92,15 @@ export class Time {
       microsecond = GetSlot(this, MICROSECOND),
       nanosecond = GetSlot(this, NANOSECOND)
     } = props;
-    ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.RegulateTime(hour, minute, second, millisecond, microsecond, nanosecond, disambiguation));
+    ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.RegulateTime(
+      hour,
+      minute,
+      second,
+      millisecond,
+      microsecond,
+      nanosecond,
+      disambiguation
+    ));
     const Construct = ES.SpeciesConstructor(this, Time);
     const result = new Construct(
       hour,
@@ -125,7 +133,15 @@ export class Time {
       microseconds,
       nanoseconds
     ));
-    ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.RegulateTime(hour, minute, second, millisecond, microsecond, nanosecond, disambiguation));
+    ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.RegulateTime(
+      hour,
+      minute,
+      second,
+      millisecond,
+      microsecond,
+      nanosecond,
+      disambiguation
+    ));
     const Construct = ES.SpeciesConstructor(this, Time);
     const result = new Construct(
       hour,
@@ -158,7 +174,15 @@ export class Time {
       microseconds,
       nanoseconds
     ));
-    ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.RegulateTime(hour, minute, second, millisecond, microsecond, nanosecond, disambiguation));
+    ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.RegulateTime(
+      hour,
+      minute,
+      second,
+      millisecond,
+      microsecond,
+      nanosecond,
+      disambiguation
+    ));
     const Construct = ES.SpeciesConstructor(this, Time);
     const result = new Construct(
       hour,

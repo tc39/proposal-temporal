@@ -13,7 +13,9 @@ import bigInt from 'big-integer';
 
 export class Absolute {
   constructor(epochNanoseconds) {
-    if (('bigint' !== typeof epochNanoseconds) && !bigInt.isInstance(epochNanoseconds)) throw RangeError('bigint required');
+    if (('bigint' !== typeof epochNanoseconds) && !bigInt.isInstance(epochNanoseconds)) {
+      throw RangeError('bigint required');
+    }
     const ns = bigInt(epochNanoseconds);
     ES.RejectAbsolute(ns);
     CreateSlots(this);

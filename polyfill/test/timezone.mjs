@@ -22,11 +22,16 @@ describe('TimeZone', () => {
     it('Temporal.TimeZone has prototype', () => equal(typeof Temporal.TimeZone.prototype, 'object'));
     describe('Temporal.TimeZone.prototype', () => {
       it('Temporal.TimeZone.prototype has name', () => assert('name' in Temporal.TimeZone.prototype));
-      it('Temporal.TimeZone.prototype has getOffsetFor', () => equal(typeof Temporal.TimeZone.prototype.getOffsetFor, 'function'));
-      it('Temporal.TimeZone.prototype has getDateTimeFor', () => equal(typeof Temporal.TimeZone.prototype.getDateTimeFor, 'function'));
-      it('Temporal.TimeZone.prototype has getAbsoluteFor', () => equal(typeof Temporal.TimeZone.prototype.getAbsoluteFor, 'function'));
-      it('Temporal.TimeZone.prototype has getTransitions', () => equal(typeof Temporal.TimeZone.prototype.getTransitions, 'function'));
-      it('Temporal.TimeZone.prototype has toString', () => equal(typeof Temporal.TimeZone.prototype.toString, 'function'));
+      it('Temporal.TimeZone.prototype has getOffsetFor', () =>
+        equal(typeof Temporal.TimeZone.prototype.getOffsetFor, 'function'));
+      it('Temporal.TimeZone.prototype has getDateTimeFor', () =>
+        equal(typeof Temporal.TimeZone.prototype.getDateTimeFor, 'function'));
+      it('Temporal.TimeZone.prototype has getAbsoluteFor', () =>
+        equal(typeof Temporal.TimeZone.prototype.getAbsoluteFor, 'function'));
+      it('Temporal.TimeZone.prototype has getTransitions', () =>
+        equal(typeof Temporal.TimeZone.prototype.getTransitions, 'function'));
+      it('Temporal.TimeZone.prototype has toString', () =>
+        equal(typeof Temporal.TimeZone.prototype.toString, 'function'));
     });
     it('Temporal.TimeZone has from', () => equal(typeof Temporal.TimeZone.from, 'function'));
   });
@@ -80,7 +85,8 @@ describe('TimeZone', () => {
       it(`TimeZone.from(${zone}) is a time zone`, () => equal(typeof timezoneFrom, 'object'));
       it(`TimeZone.from(${zone}) does the same thing as new TimeZone(${zone})`, () =>
         equal(timezoneFrom.name, timezoneObj.name));
-      it(`TimeZone.from(new TimeZone(${zone})) is the same object`, () => equal(Temporal.TimeZone.from(timezoneObj), timezoneObj));
+      it(`TimeZone.from(new TimeZone(${zone})) is the same object`, () =>
+        equal(Temporal.TimeZone.from(timezoneObj), timezoneObj));
     }
     it('TimeZone.from throws with bad identifier', () => {
       throws(() => Temporal.TimeZone.from('local'));

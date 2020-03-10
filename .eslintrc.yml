@@ -39,6 +39,10 @@ rules:
     - 2
     - SwitchCase: 1
   keyword-spacing: error
+  max-len:
+    - error
+    - code: 120
+      ignoreRegExpLiterals: true
   no-multiple-empty-lines:
     - error
     - max: 1
@@ -72,4 +76,5 @@ overrides:
     # test262 code complies to a different coding style
     rules:
       comma-dangle: 'off'
+      max-len: 'off'
       quotes: 'off'

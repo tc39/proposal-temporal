@@ -341,19 +341,28 @@ describe('DateTime', () => {
     });
   });
   describe('DateTime.from() works', () => {
-    it('DateTime.from("1976-11-18 15:23:30")', () => equal(`${DateTime.from('1976-11-18 15:23:30')}`, '1976-11-18T15:23:30'));
-    it('DateTime.from("1976-11-18 15:23:30.001")', () => equal(`${DateTime.from('1976-11-18 15:23:30.001')}`, '1976-11-18T15:23:30.001'));
-    it('DateTime.from("1976-11-18 15:23:30.001123")', () => equal(`${DateTime.from('1976-11-18 15:23:30.001123')}`, '1976-11-18T15:23:30.001123'));
-    it('DateTime.from("1976-11-18 15:23:30.001123456")', () => equal(`${DateTime.from('1976-11-18 15:23:30.001123456')}`, '1976-11-18T15:23:30.001123456'));
+    it('DateTime.from("1976-11-18 15:23:30")', () =>
+      equal(`${DateTime.from('1976-11-18 15:23:30')}`, '1976-11-18T15:23:30'));
+    it('DateTime.from("1976-11-18 15:23:30.001")', () =>
+      equal(`${DateTime.from('1976-11-18 15:23:30.001')}`, '1976-11-18T15:23:30.001'));
+    it('DateTime.from("1976-11-18 15:23:30.001123")', () =>
+      equal(`${DateTime.from('1976-11-18 15:23:30.001123')}`, '1976-11-18T15:23:30.001123'));
+    it('DateTime.from("1976-11-18 15:23:30.001123456")', () =>
+      equal(`${DateTime.from('1976-11-18 15:23:30.001123456')}`, '1976-11-18T15:23:30.001123456'));
     it('DateTime.from(1976-11-18) == 1976-11-18', () => {
       const orig = new DateTime(1976, 11, 18, 15, 23, 20, 123, 456, 789);
       const actual = DateTime.from(orig);
       equal(actual, orig);
     });
-    it('DateTime.from({ year: 1976, month: 11, day: 18 }) == 1976-11-18T00:00', () => equal(`${DateTime.from({ year: 1976, month: 11, day: 18 })}`, '1976-11-18T00:00'));
-    it('DateTime.from({ year: 1976, month: 11, day: 18, millisecond: 123 }) == 1976-11-18T00:00:00.123', () => equal(`${DateTime.from({ year: 1976, month: 11, day: 18, millisecond: 123 })}`, '1976-11-18T00:00:00.123'));
+    it('DateTime.from({ year: 1976, month: 11, day: 18 }) == 1976-11-18T00:00', () =>
+      equal(`${DateTime.from({ year: 1976, month: 11, day: 18 })}`, '1976-11-18T00:00'));
+    it('DateTime.from({ year: 1976, month: 11, day: 18, millisecond: 123 }) == 1976-11-18T00:00:00.123', () =>
+      equal(`${DateTime.from({ year: 1976, month: 11, day: 18, millisecond: 123 })}`, '1976-11-18T00:00:00.123'));
     it('DateTime.from({ month: 11, day: 18, hour: 15, minute: 23, second: 30, millisecond: 123 }) throws', () =>
-      throws(() => DateTime.from({ month: 11, day: 18, hour: 15, minute: 23, second: 30, millisecond: 123 }), TypeError));
+      throws(
+        () => DateTime.from({ month: 11, day: 18, hour: 15, minute: 23, second: 30, millisecond: 123 }),
+        TypeError
+      ));
     it('DateTime.from({}) throws', () => throws(() => DateTime.from({}), TypeError));
     it('DateTime.from(required prop undefined) throws', () =>
       throws(() => DateTime.from({ year: undefined, month: 11, day: 18 }), TypeError));
@@ -379,7 +388,8 @@ describe('DateTime', () => {
       const leap = { year: 2016, month: 12, day: 31, hour: 23, minute: 59, second: 60 };
       it('reject leap second', () => throws(() => DateTime.from(leap, { disambiguation: 'reject' }), RangeError));
       it('constrain leap second', () => equal(`${DateTime.from(leap)}`, '2016-12-31T23:59:59'));
-      it('balance leap second', () => equal(`${DateTime.from(leap, { disambiguation: 'balance' })}`, '2017-01-01T00:00'));
+      it('balance leap second', () =>
+        equal(`${DateTime.from(leap, { disambiguation: 'balance' })}`, '2017-01-01T00:00'));
     });
   });
   describe('DateTime.inTimeZone() works', () => {
@@ -427,8 +437,24 @@ describe('DateTime', () => {
       });
       equal(`${DateTime.from(tooEarly)}`, '-271821-04-19T00:00:00.000000001');
       equal(`${DateTime.from(tooLate)}`, '+275760-09-13T23:59:59.999999999');
-      equal(`${DateTime.from({ year: -271821, month: 4, day: 19, nanosecond: 1 })}`, '-271821-04-19T00:00:00.000000001');
-      equal(`${DateTime.from({ year: 275760, month: 9, day: 13, hour: 23, minute: 59, second: 59, millisecond: 999, microsecond: 999, nanosecond: 999 })}`, '+275760-09-13T23:59:59.999999999');
+      equal(
+        `${DateTime.from({ year: -271821, month: 4, day: 19, nanosecond: 1 })}`,
+        '-271821-04-19T00:00:00.000000001'
+      );
+      equal(
+        `${DateTime.from({
+          year: 275760,
+          month: 9,
+          day: 13,
+          hour: 23,
+          minute: 59,
+          second: 59,
+          millisecond: 999,
+          microsecond: 999,
+          nanosecond: 999
+        })}`,
+        '+275760-09-13T23:59:59.999999999'
+      );
     });
     it('constructing from ISO string', () => {
       ['-271821-04-19T00:00', '+275760-09-14T00:00'].forEach((str) => {

@@ -324,7 +324,8 @@ describe('Date', () => {
       const actual = Date.from(orig);
       equal(actual, orig);
     });
-    it('Date.from({ year: 1976, month: 11, day: 18 }) == 1976-11-18', () => equal(`${Date.from({ year: 1976, month: 11, day: 18 })}`, '1976-11-18'));
+    it('Date.from({ year: 1976, month: 11, day: 18 }) == 1976-11-18', () =>
+      equal(`${Date.from({ year: 1976, month: 11, day: 18 })}`, '1976-11-18'));
     it('Date.from({ year: 2019, day: 15 }) throws', () => throws(() => Date.from({ year: 2019, day: 15 }), TypeError));
     it('Date.from({ month: 12 }) throws', () => throws(() => Date.from({ month: 12 }), TypeError));
     it('Date.from({}) throws', () => throws(() => Date.from({}), TypeError));
