@@ -177,8 +177,8 @@ export class Absolute {
     if (!ES.IsAbsolute(result)) throw new TypeError('invalid result');
     return result;
   }
-  static from(arg, zone) {
-    const absolute = ES.ToAbsolute(arg, zone);
+  static from(arg) {
+    const absolute = ES.ToAbsolute(arg);
     if (this === Absolute) return absolute;
     const result = new this(GetSlot(absolute, EPOCHNANOSECONDS).value);
     if (!ES.IsAbsolute(result)) throw new TypeError('invalid result');

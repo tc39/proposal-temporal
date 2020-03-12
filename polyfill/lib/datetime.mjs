@@ -344,7 +344,7 @@ export class DateTime {
     );
   }
 
-  static from(arg, options) {
+  static from(arg, options = undefined) {
     const disambiguation = ES.ToDisambiguation(options);
     let result = ES.ToDateTime(arg, disambiguation);
     return this === DateTime ? result : new this(

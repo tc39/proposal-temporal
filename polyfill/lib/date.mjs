@@ -149,7 +149,7 @@ export class Date {
     const MonthDay = ES.GetIntrinsic('%Temporal.MonthDay%');
     return new MonthDay(GetSlot(this, MONTH), GetSlot(this, DAY));
   }
-  static from(arg, options) {
+  static from(arg, options = undefined) {
     const disambiguation = ES.ToDisambiguation(options);
     let result = ES.ToDate(arg, disambiguation);
     return this === Date ? result : new this(
