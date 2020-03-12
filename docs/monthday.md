@@ -174,7 +174,7 @@ md = Temporal.MonthDay.from('08-24');
 md.toString();  // => 08-24
 ```
 
-### monthDay.**toLocaleString**(_locale_?: string, _options_?: object) : string
+### monthDay.**toLocaleString**(_locales_?: string | array&lt;string&gt;, _options_?: object) : string
 
 **Parameters:**
 - `locales` (optional string or array of strings): A string with a BCP 47 language tag with an optional Unicode extension key, or an array of such strings.

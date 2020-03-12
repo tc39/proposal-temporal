@@ -379,7 +379,7 @@ date = Temporal.Date.from('2006-08-24');
 date.toString();  // => 2006-08-24
 ```
 
-### date.**toLocaleString**(_locale_?: string, _options_?: object) : string
+### date.**toLocaleString**(_locales_?: string | array&lt;string&gt;, _options_?: object) : string
 
 **Parameters:**
 - `locales` (optional string or array of strings): A string with a BCP 47 language tag with an optional Unicode extension key, or an array of such strings.

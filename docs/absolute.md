@@ -348,7 +348,7 @@ abs.toString(Temporal.TimeZone.from('UTC'));  // => 2019-11-18T10:52:01.816Z
 abs.toString('Asia/Seoul');  // => 2019-11-18T19:52:01.816+09:00[Asia/Seoul]
 ```
 
-### absolute.**toLocaleString**(_locales_?: string | array&lt;string&gt;, options?: object) : string
+### absolute.**toLocaleString**(_locales_?: string | array&lt;string&gt;, _options_?: object) : string
 
 **Parameters:**
 - `locales` (optional string or array of strings): A string with a BCP 47 language tag with an optional Unicode extension key, or an array of such strings.

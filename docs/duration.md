@@ -47,4 +47,4 @@ Creates a new `Duration` object that represents a duration of time.
 > This is because the ISO 8601 string format for durations does not allow for specifying sub-second units separately, only as a decimal fraction of seconds.
 > If you need to serialize a `Temporal.Duration` in a way that will preserve unbalanced sub-second fields, you will need to use a custom serialization format.
 
-### duration.**toLocaleString**(_locale_?: string, _options_?: object) : string
+### duration.**toLocaleString**(_locales_?: string | array&lt;string&gt;, _options_?: object) : string
