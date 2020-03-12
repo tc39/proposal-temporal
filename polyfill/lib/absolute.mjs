@@ -16,27 +16,27 @@ export class Absolute {
   }
 
   getEpochSeconds() {
-    if (!ES.IsAbsolute(this)) throw new TypeError('invalid receiver');
+    if (!ES.IsTemporalAbsolute(this)) throw new TypeError('invalid receiver');
     const value = GetSlot(this, EPOCHNANOSECONDS);
     return +value.divide(1e9);
   }
   getEpochMilliseconds() {
-    if (!ES.IsAbsolute(this)) throw new TypeError('invalid receiver');
+    if (!ES.IsTemporalAbsolute(this)) throw new TypeError('invalid receiver');
     const value = bigInt(GetSlot(this, EPOCHNANOSECONDS));
     return +value.divide(1e6);
   }
   getEpochMicroseconds() {
-    if (!ES.IsAbsolute(this)) throw new TypeError('invalid receiver');
+    if (!ES.IsTemporalAbsolute(this)) throw new TypeError('invalid receiver');
     const value = bigInt(GetSlot(this, EPOCHNANOSECONDS));
     return value.divide(1e3).value;
   }
   getEpochNanoseconds() {
-    if (!ES.IsAbsolute(this)) throw new TypeError('invalid receiver');
+    if (!ES.IsTemporalAbsolute(this)) throw new TypeError('invalid receiver');
     return bigInt(GetSlot(this, EPOCHNANOSECONDS)).value;
   }
 
   plus(durationLike) {
-    if (!ES.IsAbsolute(this)) throw new TypeError('invalid receiver');
+    if (!ES.IsTemporalAbsolute(this)) throw new TypeError('invalid receiver');
     const {
       days,
       hours,
@@ -45,7 +45,7 @@ export class Absolute {
       milliseconds,
       microseconds,
       nanoseconds
-    } = ES.ToLimitedDuration(durationLike, [YEARS, MONTHS]);
+    } = ES.ToLimitedTemporalDuration(durationLike, [YEARS, MONTHS]);
 
     let add = bigInt(0);
     add = add.plus(bigInt(nanoseconds));
@@ -61,11 +61,11 @@ export class Absolute {
 
     const Construct = ES.SpeciesConstructor(this, Absolute);
     const result = new Construct(ns.value);
-    if (!ES.IsAbsolute(result)) throw new TypeError('invalid result');
+    if (!ES.IsTemporalAbsolute(result)) throw new TypeError('invalid result');
     return result;
   }
   minus(durationLike) {
-    if (!ES.IsAbsolute(this)) throw new TypeError('invalid receiver');
+    if (!ES.IsTemporalAbsolute(this)) throw new TypeError('invalid receiver');
     const {
       days,
       hours,
@@ -74,7 +74,7 @@ export class Absolute {
       milliseconds,
       microseconds,
       nanoseconds
-    } = ES.ToLimitedDuration(durationLike, [YEARS, MONTHS]);
+    } = ES.ToLimitedTemporalDuration(durationLike, [YEARS, MONTHS]);
 
     let add = bigInt(0);
     add = add.plus(bigInt(nanoseconds));
@@ -90,12 +90,12 @@ export class Absolute {
 
     const Construct = ES.SpeciesConstructor(this, Absolute);
     const result = new Construct(ns.value);
-    if (!ES.IsAbsolute(result)) throw new TypeError('invalid result');
+    if (!ES.IsTemporalAbsolute(result)) throw new TypeError('invalid result');
     return result;
   }
   difference(other, options) {
-    if (!ES.IsAbsolute(this)) throw new TypeError('invalid receiver');
-    if (!ES.IsAbsolute(other)) throw new TypeError('invalid Absolute object');
+    if (!ES.IsTemporalAbsolute(this)) throw new TypeError('invalid receiver');
+    if (!ES.IsTemporalAbsolute(other)) throw new TypeError('invalid Absolute object');
     const largestUnit = ES.ToLargestTemporalUnit(options, 'seconds', ['years', 'months']);
 
     const [one, two] = [this, other].sort(Absolute.compare);
@@ -122,23 +122,23 @@ export class Absolute {
     return new Duration(0, 0, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
   }
   toString(timeZoneParam = 'UTC') {
-    if (!ES.IsAbsolute(this)) throw new TypeError('invalid receiver');
-    let timeZone = ES.ToTimeZone(timeZoneParam);
-    return ES.AbsoluteToString(this, timeZone);
+    if (!ES.IsTemporalAbsolute(this)) throw new TypeError('invalid receiver');
+    let timeZone = ES.ToTemporalTimeZone(timeZoneParam);
+    return ES.TemporalAbsoluteToString(this, timeZone);
   }
   toJSON() {
-    if (!ES.IsAbsolute(this)) throw new TypeError('invalid receiver');
+    if (!ES.IsTemporalAbsolute(this)) throw new TypeError('invalid receiver');
     const TemporalTimeZone = ES.GetIntrinsic('%Temporal.TimeZone%');
     const timeZone = new TemporalTimeZone('UTC');
-    return ES.AbsoluteToString(this, timeZone);
+    return ES.TemporalAbsoluteToString(this, timeZone);
   }
   toLocaleString(...args) {
-    if (!ES.IsAbsolute(this)) throw new TypeError('invalid receiver');
+    if (!ES.IsTemporalAbsolute(this)) throw new TypeError('invalid receiver');
     return new Intl.DateTimeFormat(...args).format(this);
   }
   inTimeZone(timeZoneParam = 'UTC') {
-    if (!ES.IsAbsolute(this)) throw new TypeError('invalid receiver');
-    const timeZone = ES.ToTimeZone(timeZoneParam);
+    if (!ES.IsTemporalAbsolute(this)) throw new TypeError('invalid receiver');
+    const timeZone = ES.ToTemporalTimeZone(timeZoneParam);
     return timeZone.getDateTimeFor(this);
   }
 
@@ -146,39 +146,39 @@ export class Absolute {
     const epochNanoseconds = bigInt(epochSecondsParam).multiply(1e9);
     ES.RejectAbsolute(epochNanoseconds);
     const result = new this(epochNanoseconds.value);
-    if (!ES.IsAbsolute(result)) throw new TypeError('invalid result');
+    if (!ES.IsTemporalAbsolute(result)) throw new TypeError('invalid result');
     return result;
   }
   static fromEpochMilliseconds(epochMillisecondsParam) {
     const epochNanoseconds = bigInt(epochMillisecondsParam).multiply(1e6);
     ES.RejectAbsolute(epochNanoseconds);
     const result = new this(epochNanoseconds.value);
-    if (!ES.IsAbsolute(result)) throw new TypeError('invalid result');
+    if (!ES.IsTemporalAbsolute(result)) throw new TypeError('invalid result');
     return result;
   }
   static fromEpochMicroseconds(epochMicroseconds) {
     const epochNanoseconds = bigInt(epochMicroseconds).multiply(1e3);
     ES.RejectAbsolute(epochNanoseconds);
     const result = new this(epochNanoseconds.value);
-    if (!ES.IsAbsolute(result)) throw new TypeError('invalid result');
+    if (!ES.IsTemporalAbsolute(result)) throw new TypeError('invalid result');
     return result;
   }
   static fromEpochNanoseconds(epochNanoseconds) {
     epochNanoseconds = bigInt(epochNanoseconds);
     ES.RejectAbsolute(epochNanoseconds);
     const result = new this(epochNanoseconds.value);
-    if (!ES.IsAbsolute(result)) throw new TypeError('invalid result');
+    if (!ES.IsTemporalAbsolute(result)) throw new TypeError('invalid result');
     return result;
   }
   static from(arg) {
-    const absolute = ES.ToAbsolute(arg);
+    const absolute = ES.ToTemporalAbsolute(arg);
     if (this === Absolute) return absolute;
     const result = new this(GetSlot(absolute, EPOCHNANOSECONDS).value);
-    if (!ES.IsAbsolute(result)) throw new TypeError('invalid result');
+    if (!ES.IsTemporalAbsolute(result)) throw new TypeError('invalid result');
     return result;
   }
   static compare(one, two) {
-    if (!ES.IsAbsolute(one) || !ES.IsAbsolute(two)) throw new TypeError('invalid Absolute object');
+    if (!ES.IsTemporalAbsolute(one) || !ES.IsTemporalAbsolute(two)) throw new TypeError('invalid Absolute object');
     one = GetSlot(one, EPOCHNANOSECONDS);
     two = GetSlot(two, EPOCHNANOSECONDS);
     if (bigInt(one).lesser(two)) return -1;

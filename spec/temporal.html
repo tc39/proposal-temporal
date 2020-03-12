@@ -84,7 +84,7 @@
       </p>
       <emu-alg>
         1. Let _dateTime_ be ? SystemDateTime(_timeZone_).
-        1. Return ? CreateDate(_dateTime_.[[Year]], _dateTime_.[[Month]], _dateTime_.[[Day]]).
+        1. Return ? CreateTemporalDate(_dateTime_.[[Year]], _dateTime_.[[Month]], _dateTime_.[[Day]]).
       </emu-alg>
     </emu-clause>
 
@@ -96,7 +96,7 @@
       </p>
       <emu-alg>
         1. Let _dateTime_ be ? SystemDateTime(_timeZone_).
-        1. Return ? CreateTime(_dateTime_.[[Hour]], _dateTime_.[[Minute]], _dateTime_.[[Second]], _dateTime_.[[Millisecond]], _dateTime_.[[Microsecond]], _dateTime_.[[Nanosecond]]).
+        1. Return ? CreateTemporalTime(_dateTime_.[[Hour]], _dateTime_.[[Minute]], _dateTime_.[[Second]], _dateTime_.[[Millisecond]], _dateTime_.[[Microsecond]], _dateTime_.[[Nanosecond]]).
       </emu-alg>
     </emu-clause>
   </emu-clause>
@@ -117,7 +117,7 @@
       <emu-alg>
         1. Let _ns_ be the current UTC date and time, in nanoseconds since the epoch.
         1. Assert: ! ValidateAbsolute(_ns_) is *true*.
-        1. Return ? CreateAbsolute(_ns_).
+        1. Return ? CreateTemporalAbsolute(_ns_).
       </emu-alg>
     </emu-clause>
 
@@ -127,9 +127,9 @@
         1. If _timeZone_ is *undefined*, then
             1. Set _timeZone_ to SystemTimeZone().
         1. Else,
-            1. Set _timeZone_ to ? ToTimeZone(_timeZone_).
+            1. Set _timeZone_ to ? ToTemporalTimeZone(_timeZone_).
         1. Let _absolute_ be ? SystemAbsolute().
-        1. Return ? GetDateTimeFor(_timeZone_, _absolute_).
+        1. Return ? GetTemporalDateTimeFor(_timeZone_, _absolute_).
       </emu-alg>
     </emu-clause>
   </emu-clause>

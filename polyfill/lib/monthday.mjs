@@ -15,17 +15,17 @@ export class MonthDay {
   }
 
   get month() {
-    if (!ES.IsMonthDay(this)) throw new TypeError('invalid receiver');
+    if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
     return GetSlot(this, MONTH);
   }
   get day() {
-    if (!ES.IsMonthDay(this)) throw new TypeError('invalid receiver');
+    if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
     return GetSlot(this, DAY);
   }
 
   with(dateLike, options) {
-    if (!ES.IsMonthDay(this)) throw new TypeError('invalid receiver');
-    const disambiguation = ES.ToDisambiguation(options);
+    if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
+    const disambiguation = ES.ToTemporalDisambiguation(options);
     const props = ES.ValidPropertyBag(dateLike, ['month', 'day']);
     if (!props) {
       throw new RangeError('invalid month-day-like');
@@ -34,35 +34,35 @@ export class MonthDay {
     ({ month, day } = ES.RegulateMonthDay(month, day, disambiguation));
     const Construct = ES.SpeciesConstructor(this, MonthDay);
     const result = new Construct(month, day);
-    if (!ES.IsMonthDay(result)) throw new TypeError('invalid result');
+    if (!ES.IsTemporalMonthDay(result)) throw new TypeError('invalid result');
     return result;
   }
   toString() {
-    if (!ES.IsMonthDay(this)) throw new TypeError('invalid receiver');
+    if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
     let month = ES.ISODateTimePartString(GetSlot(this, MONTH));
     let day = ES.ISODateTimePartString(GetSlot(this, DAY));
     let resultString = `${month}-${day}`;
     return resultString;
   }
   toLocaleString(...args) {
-    if (!ES.IsMonthDay(this)) throw new TypeError('invalid receiver');
+    if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
     return new Intl.DateTimeFormat(...args).format(this);
   }
   withYear(year) {
-    if (!ES.IsMonthDay(this)) throw new TypeError('invalid receiver');
+    if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
     const month = GetSlot(this, MONTH);
     const day = GetSlot(this, DAY);
     const Date = ES.GetIntrinsic('%Temporal.Date%');
     return new Date(year, month, day);
   }
   static from(arg, options = undefined) {
-    const disambiguation = ES.ToDisambiguation(options);
-    let result = ES.ToMonthDay(arg, disambiguation);
+    const disambiguation = ES.ToTemporalDisambiguation(options);
+    let result = ES.ToTemporalMonthDay(arg, disambiguation);
     if (this === MonthDay) return result;
     return new this(GetSlot(result, MONTH), GetSlot(result, DAY));
   }
   static compare(one, two) {
-    if (!ES.IsMonthDay(one) || !ES.IsMonthDay(two)) throw new TypeError('invalid MonthDay object');
+    if (!ES.IsTemporalMonthDay(one) || !ES.IsTemporalMonthDay(two)) throw new TypeError('invalid MonthDay object');
     if (one.month !== two.month) return ES.ComparisonResult(one.month - two.month);
     if (one.day !== two.day) return ES.ComparisonResult(one.day - two.day);
     return ES.ComparisonResult(0);

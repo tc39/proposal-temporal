@@ -33,44 +33,44 @@ export class Date {
     SetSlot(this, DAY, day);
   }
   get year() {
-    if (!ES.IsDate(this)) throw new TypeError('invalid receiver');
+    if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
     return GetSlot(this, YEAR);
   }
   get month() {
-    if (!ES.IsDate(this)) throw new TypeError('invalid receiver');
+    if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
     return GetSlot(this, MONTH);
   }
   get day() {
-    if (!ES.IsDate(this)) throw new TypeError('invalid receiver');
+    if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
     return GetSlot(this, DAY);
   }
   get dayOfWeek() {
-    if (!ES.IsDate(this)) throw new TypeError('invalid receiver');
+    if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
     return ES.DayOfWeek(GetSlot(this, YEAR), GetSlot(this, MONTH), GetSlot(this, DAY));
   }
   get dayOfYear() {
-    if (!ES.IsDate(this)) throw new TypeError('invalid receiver');
+    if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
     return ES.DayOfYear(GetSlot(this, YEAR), GetSlot(this, MONTH), GetSlot(this, DAY));
   }
   get weekOfYear() {
-    if (!ES.IsDate(this)) throw new TypeError('invalid receiver');
+    if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
     return ES.WeekOfYear(GetSlot(this, YEAR), GetSlot(this, MONTH), GetSlot(this, DAY));
   }
   get daysInYear() {
-    if (!ES.IsDate(this)) throw new TypeError('invalid receiver');
+    if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
     return ES.LeapYear(GetSlot(this, YEAR)) ? 366 : 365;
   }
   get daysInMonth() {
-    if (!ES.IsDate(this)) throw new TypeError('invalid receiver');
+    if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
     return ES.DaysInMonth(GetSlot(this, YEAR), GetSlot(this, MONTH));
   }
   get isLeapYear() {
-    if (!ES.IsDate(this)) throw new TypeError('invalid receiver');
+    if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
     return ES.LeapYear(GetSlot(this, YEAR));
   }
   with(dateLike = {}, options) {
-    if (!ES.IsDate(this)) throw new TypeError('invalid receiver');
-    const disambiguation = ES.ToDisambiguation(options);
+    if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
+    const disambiguation = ES.ToTemporalDisambiguation(options);
     const props = ES.ValidPropertyBag(dateLike, ['year', 'month', 'day']);
     if (!props) {
       throw new RangeError('invalid date-like');
@@ -79,13 +79,13 @@ export class Date {
     ({ year, month, day } = ES.RegulateDate(year, month, day, disambiguation));
     const Construct = ES.SpeciesConstructor(this, Date);
     const result = new Construct(year, month, day);
-    if (!ES.IsDate(result)) throw new TypeError('invalid result');
+    if (!ES.IsTemporalDate(result)) throw new TypeError('invalid result');
     return result;
   }
   plus(durationLike = {}, options) {
-    if (!ES.IsDate(this)) throw new TypeError('invalid receiver');
-    const disambiguation = ES.ToArithmeticDisambiguation(options);
-    const duration = ES.ToLimitedDuration(durationLike, [
+    if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
+    const disambiguation = ES.ToArithmeticTemporalDisambiguation(options);
+    const duration = ES.ToLimitedTemporalDuration(durationLike, [
       HOURS,
       MINUTES,
       SECONDS,
@@ -99,13 +99,13 @@ export class Date {
     ({ year, month, day } = ES.RegulateDate(year, month, day, disambiguation));
     const Construct = ES.SpeciesConstructor(this, Date);
     const result = new Construct(year, month, day);
-    if (!ES.IsDate(result)) throw new TypeError('invalid result');
+    if (!ES.IsTemporalDate(result)) throw new TypeError('invalid result');
     return result;
   }
   minus(durationLike = {}, options) {
-    if (!ES.IsDate(this)) throw new TypeError('invalid receiver');
-    const disambiguation = ES.ToArithmeticDisambiguation(options);
-    const duration = ES.ToLimitedDuration(durationLike, [
+    if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
+    const disambiguation = ES.ToArithmeticTemporalDisambiguation(options);
+    const duration = ES.ToLimitedTemporalDuration(durationLike, [
       HOURS,
       MINUTES,
       SECONDS,
@@ -119,12 +119,12 @@ export class Date {
     ({ year, month, day } = ES.RegulateDate(year, month, day, disambiguation));
     const Construct = ES.SpeciesConstructor(this, Date);
     const result = new Construct(year, month, day);
-    if (!ES.IsDate(result)) throw new TypeError('invalid result');
+    if (!ES.IsTemporalDate(result)) throw new TypeError('invalid result');
     return result;
   }
   difference(other, options) {
-    if (!ES.IsDate(this)) throw new TypeError('invalid receiver');
-    if (!ES.IsDate(other)) throw new TypeError('invalid Date object');
+    if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
+    if (!ES.IsTemporalDate(other)) throw new TypeError('invalid Date object');
     const largestUnit = ES.ToLargestTemporalUnit(options, 'days', ['hours', 'minutes', 'seconds']);
     const [smaller, larger] = [this, other].sort(Date.compare);
     const { years, months, days } = ES.DifferenceDate(smaller, larger, largestUnit);
@@ -132,7 +132,7 @@ export class Date {
     return new Duration(years, months, days, 0, 0, 0, 0, 0, 0);
   }
   toString() {
-    if (!ES.IsDate(this)) throw new TypeError('invalid receiver');
+    if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
     let year = ES.ISOYearString(GetSlot(this, YEAR));
     let month = ES.ISODateTimePartString(GetSlot(this, MONTH));
     let day = ES.ISODateTimePartString(GetSlot(this, DAY));
@@ -140,12 +140,12 @@ export class Date {
     return resultString;
   }
   toLocaleString(...args) {
-    if (!ES.IsDate(this)) throw new TypeError('invalid receiver');
+    if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
     return new Intl.DateTimeFormat(...args).format(this);
   }
   withTime(time) {
-    if (!ES.IsDate(this)) throw new TypeError('invalid receiver');
-    if (!ES.IsTime(time)) throw new TypeError('invalid Temporal.Time object');
+    if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
+    if (!ES.IsTemporalTime(time)) throw new TypeError('invalid Temporal.Time object');
     const year = GetSlot(this, YEAR);
     const month = GetSlot(this, MONTH);
     const day = GetSlot(this, DAY);
@@ -159,23 +159,23 @@ export class Date {
     return new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
   }
   getYearMonth() {
-    if (!ES.IsDate(this)) throw new TypeError('invalid receiver');
+    if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
     const YearMonth = ES.GetIntrinsic('%Temporal.YearMonth%');
     return new YearMonth(GetSlot(this, YEAR), GetSlot(this, MONTH));
   }
   getMonthDay() {
-    if (!ES.IsDate(this)) throw new TypeError('invalid receiver');
+    if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
     const MonthDay = ES.GetIntrinsic('%Temporal.MonthDay%');
     return new MonthDay(GetSlot(this, MONTH), GetSlot(this, DAY));
   }
   static from(arg, options = undefined) {
-    const disambiguation = ES.ToDisambiguation(options);
-    let result = ES.ToDate(arg, disambiguation);
+    const disambiguation = ES.ToTemporalDisambiguation(options);
+    let result = ES.ToTemporalDate(arg, disambiguation);
     if (this === Date) return result;
     return new this(GetSlot(result, YEAR), GetSlot(result, MONTH), GetSlot(result, DAY));
   }
   static compare(one, two) {
-    if (!ES.IsDate(one) || !ES.IsDate(two)) throw new TypeError('invalid Date object');
+    if (!ES.IsTemporalDate(one) || !ES.IsTemporalDate(two)) throw new TypeError('invalid Date object');
     if (one.year !== two.year) return ES.ComparisonResult(one.year - two.year);
     if (one.month !== two.month) return ES.ComparisonResult(one.month - two.month);
     if (one.day !== two.day) return ES.ComparisonResult(one.day - two.day);
