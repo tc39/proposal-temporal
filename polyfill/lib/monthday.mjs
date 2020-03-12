@@ -56,7 +56,7 @@ export class MonthDay {
     const Date = ES.GetIntrinsic('%Temporal.Date%');
     return new Date(year, month, day);
   }
-  static from(arg, options) {
+  static from(arg, options = undefined) {
     const disambiguation = ES.ToDisambiguation(options);
     let result = ES.ToMonthDay(arg, disambiguation);
     return this === MonthDay ? result : new this(

@@ -214,7 +214,7 @@ export class Time {
     return new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
   }
 
-  static from(arg, options) {
+  static from(arg, options = undefined) {
     const disambiguation = ES.ToDisambiguation(options);
     let result = ES.ToTime(arg, disambiguation);
     return this === Time ? result : new this(
