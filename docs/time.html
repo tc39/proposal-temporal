@@ -85,12 +85,114 @@
       It does not represent the final API of this proposal, nor even the current consensus.
     </div>
 <h1 id="temporaltime">Temporal.Time</h1>
-<p>A representation of wall-clock time.</p>
+<p>A <code>Temporal.Time</code> represents a wall-clock time, with a precision in nanoseconds, and without any time zone.
+&quot;Wall-clock time&quot; refers to the concept of a time as expressed in everyday usage &mdash; the time that you read off the clock on the wall.
+For example, it could be used to represent an event that happens daily at a certain time, no matter what time zone.</p>
+<p><code>Temporal.Time</code> refers to a time with no associated calendar date; if you need to refer to a specific time on a specific day, use <code>Temporal.DateTime</code>.
+A <code>Temporal.Time</code> can be converted into a <code>Temporal.DateTime</code> by combining it with a <code>Temporal.Date</code> using the <code>withDate()</code> method.</p>
 <h2 id="constructor">Constructor</h2>
 <h3 id="new-temporaltimehour-number--0-minute-number--0-second-number--0-millisecond-number--0-microsecond-number--0-nanosecond-number--0--temporaltime"><strong>new Temporal.Time</strong>(<em>hour</em>: number = 0, <em>minute</em>: number = 0, <em>second</em>: number = 0, <em>millisecond</em>: number = 0, <em>microsecond</em>: number = 0, <em>nanosecond</em>: number = 0) : Temporal.Time</h3>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>hour</code> (optional number): An hour of the day, ranging between 0 and 23 inclusive.</li>
+<li><code>minute</code> (optional number): A minute, ranging between 0 and 59 inclusive.</li>
+<li><code>second</code> (optional number): A second, ranging between 0 and 59 inclusive.</li>
+<li><code>millisecond</code> (optional number): A number of milliseconds, ranging between 0 and 999 inclusive.</li>
+<li><code>microsecond</code> (optional number): A number of microseconds, ranging between 0 and 999 inclusive.</li>
+<li><code>nanosecond</code> (optional number): A number of nanoseconds, ranging between 0 and 999 inclusive.</li>
+</ul>
+<p><strong>Returns:</strong> a new <code>Temporal.Time</code> object.</p>
+<p>Use this constructor if you have the correct parameters for the time already as individual number values.
+Otherwise, <code>Temporal.Time.from()</code>, which accepts more kinds of input and allows disambiguation behaviour, is probably more convenient.</p>
+<p>Usage examples:</p>
+<pre><code class="language-javascript">// Leet hour
+time = new Temporal.Time(13, 37)  // =&gt; 13:37</code></pre>
 <h2 id="static-methods">Static methods</h2>
 <h3 id="temporaltimefromthing-string--object-options-object--temporaltime">Temporal.Time.<strong>from</strong>(<em>thing</em>: string | object, <em>options</em>?: object) : Temporal.Time</h3>
-<h3 id="temporaltimecompareone-temporaltime-two-temporaltime--number">Temporal.Time.<strong>compare</strong>(<em>one</em>: Temporal.Time, <em>two</em>: Temporal.Time) : number;</h3>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>thing</code> (string or object): The value representing the desired time.</li>
+<li><code>options</code> (optional object): An object with properties representing options for constructing the time.
+The following options are recognized:<ul>
+<li><code>disambiguation</code> (optional string): How to deal with out-of-range values of the other parameters.
+Allowed values are <code>constrain</code>, <code>balance</code>, and <code>reject</code>.
+The default is <code>constrain</code>.</li>
+</ul>
+</li>
+</ul>
+<p><strong>Returns:</strong> a new <code>Temporal.Time</code> object (or the same object if <code>thing</code> was a <code>Temporal.Time</code> object.)</p>
+<p>This static method creates a new <code>Temporal.Time</code> object from another value.
+If the value is a string, it must be in ISO 8601 format.
+If the string designates a date or a time zone, they will be ignored.
+If the value is another <code>Temporal.Time</code> object, the same object is returned.
+If the value is any other object, a <code>Temporal.Time</code> will be constructed from the values of any <code>hour</code>, <code>minute</code>, <code>second</code>, <code>millisecond</code>, <code>microsecond</code>, and <code>nanosecond</code> properties that are present.
+Any missing ones will be assumed to be 0.</p>
+<p>The <code>disambiguation</code> option works as follows:</p>
+<ul>
+<li>In <code>constrain</code> mode (the default), any out-of-range values are clamped to the nearest in-range value.</li>
+<li>In <code>balance</code> mode, any out-of-range values are resolved by balancing them with the next highest unit.</li>
+<li>In <code>reject</code> mode, the presence of out-of-range values will cause the function to throw a <code>RangeError</code>.</li>
+</ul>
+<blockquote>
+<p><strong>NOTE</strong>: Although Temporal does not deal with leap seconds, times coming from other software may have a <code>second</code> value of 60.
+In the default <code>constrain</code> disambiguation mode, this will be converted to 59, and in <code>balance</code> mode, to 00 of the next minute.
+In <code>reject</code> mode, the constructor will throw, so if you have to interoperate with times that may contain leap seconds, don&#39;t use <code>reject</code>.
+However, if parsing an ISO 8601 string with a seconds component of <code>:60</code>, then it will always result in a <code>second</code> value of 59, in accordance with POSIX.</p>
+</blockquote>
+<p>Example usage:</p>
+<pre><code class="language-javascript">time = Temporal.Time.from(&#39;03:24:30&#39;);  // =&gt; 03:24:30
+time = Temporal.Time.from(&#39;1995-12-07T03:24:30&#39;);  // =&gt; 03:24:30
+time = Temporal.Time.from(&#39;1995-12-07T03:24:30Z&#39;);  // =&gt; 03:24:30
+time = Temporal.Time.from(&#39;1995-12-07T03:24:30+01:00[Europe/Brussels]&#39;);
+  // =&gt; same as above; time zone is ignored
+time === Temporal.Time.from(time)  // =&gt; true
+
+time = Temporal.Time.from({
+    hour: 19,
+    minute: 39,
+    second: 9,
+    millisecond: 68,
+    microsecond: 346,
+    nanosecond: 205
+});  // =&gt; 19:39:09.068346205
+time = Temporal.Time.from({ hour: 19, minute: 39, second: 9 });  // =&gt; 19:39:09
+time = Temporal.Time.from(Temporal.DateTime.from(&#39;2020-02-15T19:39:09&#39;));
+  // =&gt; same as above; Temporal.DateTime has hour, minute, etc. properties
+
+// Different disambiguation modes
+time = Temporal.Time.from({ hour: 15, minute: 60 }, { disambiguation: &#39;constrain&#39; });
+  // =&gt; 15:59
+time = Temporal.Time.from({ hour: 15, minute: -1 }, { disambiguation: &#39;constrain&#39; });
+  // =&gt; 15:00
+time = Temporal.Time.from({ hour: 15, minute: 60 }, { disambiguation: &#39;balance&#39; });
+  // =&gt; 16:00
+time = Temporal.Time.from({ hour: 15, minute: -1 }, { disambiguation: &#39;balance&#39; });
+  // =&gt; 14:59
+time = Temporal.Time.from({ hour: 15, minute: 60 }, { disambiguation: &#39;reject&#39; });
+  // throws
+time = Temporal.Time.from({ hour: 15, minute: -1 }, { disambiguation: &#39;reject&#39; });
+  // throws</code></pre>
+<h3 id="temporaltimecompareone-temporaltime-two-temporaltime--number">Temporal.Time.<strong>compare</strong>(<em>one</em>: Temporal.Time, <em>two</em>: Temporal.Time) : number</h3>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>one</code> (<code>Temporal.Time</code>): First time to compare.</li>
+<li><code>two</code> (<code>Temporal.Time</code>): Second time to compare.</li>
+</ul>
+<p><strong>Returns:</strong> &minus;1, 0, or 1.</p>
+<p>Compares two <code>Temporal.Time</code> objects.
+Returns an integer indicating whether <code>one</code> comes before or after or is equal to <code>two</code>.</p>
+<ul>
+<li>&minus;1 if <code>one</code> comes before <code>two</code>;</li>
+<li>0 if <code>one</code> and <code>two</code> are the same;</li>
+<li>1 if <code>one</code> comes after <code>two</code>.</li>
+</ul>
+<p>This function can be used to sort arrays of <code>Temporal.Time</code> objects.
+For example:</p>
+<pre><code class="language-javascript">one = Temporal.Time.from(&#39;03:24&#39;);
+two = Temporal.Time.from(&#39;01:24&#39;);
+three = Temporal.Time.from(&#39;01:24:05&#39;);
+sorted = [one, two, three].sort(Temporal.Time.compare);
+sorted.join(&#39; &#39;);  // =&gt; 01:24 01:24:05 03:24</code></pre>
 <h2 id="properties">Properties</h2>
 <h3 id="timehour-number">time.<strong>hour</strong>: number</h3>
 <h3 id="timeminute-number">time.<strong>minute</strong>: number</h3>
@@ -98,10 +200,96 @@
 <h3 id="timemillisecond-number">time.<strong>millisecond</strong>: number</h3>
 <h3 id="timemicrosecond-number">time.<strong>microsecond</strong>: number</h3>
 <h3 id="timenanosecond-number">time.<strong>nanosecond</strong>: number</h3>
+<p>The above read-only properties allow accessing each component of the time individually.</p>
+<p>Usage examples:</p>
+<pre><code class="language-javascript">time = Temporal.Time.from(&#39;19:39:09.068346205&#39;);
+time.hour         // =&gt; 19
+time.minute       // =&gt; 39
+time.second       // =&gt; 9
+time.millisecond  // =&gt; 68
+time.microsecond  // =&gt; 346
+time.nanosecond   // =&gt; 205</code></pre>
 <h2 id="methods">Methods</h2>
-<h3 id="timewith-hour-number--thishour-minute-number--thisminute-second-numer--thissecond--options-object--temporaltime">time.<strong>with</strong>({ hour: number = this.hour, minute: number = this.minute, second: numer = this.second ...}, <em>options</em>?: object) : Temporal.Time</h3>
+<h3 id="timewithtimelike-object-options-object--temporaltime">time.<strong>with</strong>(<em>timeLike</em>: object, <em>options</em>?: object) : Temporal.Time</h3>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>timeLike</code> (object): an object with some or all of the properties of a <code>Temporal.Time</code>.</li>
+<li><code>options</code> (optional object): An object with properties representing options for the operation.
+The following options are recognized:<ul>
+<li><code>disambiguation</code> (string): How to deal with out-of-range values.
+Allowed values are <code>constrain</code>, <code>balance</code>, and <code>reject</code>.
+The default is <code>constrain</code>.</li>
+</ul>
+</li>
+</ul>
+<p><strong>Returns:</strong> a new <code>Temporal.Time</code> object.</p>
+<p>This method creates a new <code>Temporal.Time</code> which is a copy of <code>time</code>, but any properties present on <code>timeLike</code> override the ones already present on <code>time</code>.</p>
+<p>Since <code>Temporal.Time</code> objects are immutable, use this method instead of modifying one.</p>
+<p>Usage example:</p>
+<pre><code class="language-javascript">time = Temporal.Time.from(&#39;19:39:09.068346205&#39;);
+// What&#39;s the top of the next hour?
+time.with({
+    hour: time.hour + 1,
+    minute: 0,
+    second: 0,
+    millisecond: 0,
+    microsecond: 0,
+    nanosecond: 0
+}, { disambiguation: &#39;balance&#39; })  // =&gt; 20:00</code></pre>
 <h3 id="timeplusduration-string--object-options-object--temporaltime">time.<strong>plus</strong>(<em>duration</em>: string | object, <em>options</em>?: object) : Temporal.Time</h3>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>duration</code> (string or object): A <code>Temporal.Duration</code> object, a duration-like object, or a string from which to create a <code>Temporal.Duration</code>.</li>
+<li><code>options</code> (optional object): An object with properties representing options for the addition.
+The following options are recognized:<ul>
+<li><code>disambiguation</code> (string): How to deal with additions that result in out-of-range values.
+Allowed values are <code>constrain</code> and <code>reject</code>.
+The default is <code>constrain</code>.</li>
+</ul>
+</li>
+</ul>
+<p><strong>Returns:</strong> a new <code>Temporal.Time</code> object which is the time indicated by <code>time</code> plus <code>duration</code>.</p>
+<p>This method adds <code>duration</code> to <code>time</code>.
+Due to times wrapping around when reaching 24 hours, the returned point in time may be either in the future or in the past relative to <code>time</code>, or even the same time.</p>
+<p>The <code>duration</code> argument can be any value that could be passed to <code>Temporal.Duration.from()</code>:</p>
+<ul>
+<li>a <code>Temporal.Duration</code> object;</li>
+<li>any object with properties denoting a duration, such as <code>{ hours: 5, minutes: 30 }</code>;</li>
+<li>a string in ISO 8601 duration format, such as <code>PT5H30M</code>.</li>
+</ul>
+<p>The <code>disambiguation</code> parameter has no effect in the default ISO calendar, because the units of hours, minutes, and seconds are always the same length and therefore not ambiguous.
+However, it may have an effect in other calendars where those units are not always the same length.</p>
+<p>Usage example:</p>
+<pre><code class="language-javascript">time = Temporal.Time.from(&#39;19:39:09.068346205&#39;);
+time.plus({ minutes: 5, nanoseconds: 800 })  // =&gt; 19:44:09.068347005
+time.plus(&#39;PT7H14M21S&#39;)  // =&gt; 02:53:30.068346205</code></pre>
 <h3 id="timeminusduration-string--object-options-object--temporaltime">time.<strong>minus</strong>(<em>duration</em>: string | object, <em>options</em>?: object) : Temporal.Time</h3>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>duration</code> (string or object): A <code>Temporal.Duration</code> object, a duration-like object, or a string from which to create a <code>Temporal.Duration</code>.</li>
+<li><code>options</code> (optional object): An object with properties representing options for the subtraction.
+The following options are recognized:<ul>
+<li><code>disambiguation</code> (string): How to deal with subtractions that result in out-of-range values.
+Allowed values are <code>constrain</code> and <code>reject</code>.
+The default is <code>constrain</code>.</li>
+</ul>
+</li>
+</ul>
+<p><strong>Returns:</strong> a new <code>Temporal.Time</code> object which is the time indicated by <code>time</code> minus <code>duration</code>.</p>
+<p>This method subtracts <code>duration</code> from <code>time</code>.
+Due to times wrapping around when reaching 24 hours, the returned point in time may be either in the future or in the past relative to <code>time</code>, or even the same time.</p>
+<p>The <code>duration</code> argument can be any value that could be passed to <code>Temporal.Duration.from()</code>:</p>
+<ul>
+<li>a <code>Temporal.Duration</code> object;</li>
+<li>any object with properties denoting a duration, such as <code>{ hours: 5, minutes: 30 }</code>;</li>
+<li>a string in ISO 8601 duration format, such as <code>PT5H30M</code>.</li>
+</ul>
+<p>The <code>disambiguation</code> parameter has no effect in the default ISO calendar, because the units of hours, minutes, and seconds are always the same length and therefore not ambiguous.
+However, it may have an effect in other calendars where those units are not always the same length.</p>
+<p>Usage example:</p>
+<pre><code class="language-javascript">time = Temporal.Time.from(&#39;19:39:09.068346205&#39;);
+time.minus({ minutes: 5, nanoseconds: 800 })  // =&gt; 19:34:09.068345405
+time.minus(&#39;PT7H14M21S&#39;)  // =&gt; 12:24:48.068346205</code></pre>
 <h3 id="timedifferenceother-temporaltime-options-object--temporalduration">time.<strong>difference</strong>(<em>other</em>: Temporal.Time, <em>options</em>?: object) : Temporal.Duration</h3>
 <p><strong>Parameters:</strong></p>
 <ul>
@@ -114,16 +302,59 @@ The default is <code>days</code>.</li>
 </ul>
 </li>
 </ul>
-<p><strong>TODO:</strong> Rest of the documentation in another pull request, this to be rebased</p>
+<p><strong>Returns:</strong> a <code>Temporal.Duration</code> representing the difference between <code>time</code> and <code>other</code>.</p>
+<p>This method computes the difference between the two times represented by <code>time</code> and <code>other</code>, and returns it as a <code>Temporal.Duration</code> object.
+The difference is always positive, and always 12 hours or less, no matter the order of <code>time</code> and <code>other</code>, because <code>Temporal.Duration</code> objects cannot represent negative durations.</p>
 <p>The <code>largestUnit</code> parameter controls how the resulting duration is expressed.
 The returned <code>Temporal.Duration</code> object will not have any nonzero fields that are larger than the unit in <code>largestUnit</code>.
 A difference of two hours will become 7200 seconds when <code>largestUnit</code> is <code>&quot;seconds&quot;</code>, for example.
 However, a difference of 30 seconds will still be 30 seconds even if <code>largestUnit</code> is <code>&quot;hours&quot;</code>.</p>
 <p>The default largest unit in the result is hours.
 Since this method never returns any duration longer than 12 hours, largest units of years, months, or days, are by definition ignored and treated as hours.</p>
+<p>Usage example:</p>
+<pre><code class="language-javascript">time = Temporal.Time.from(&#39;19:39:09.068346205&#39;);
+time.difference(Temporal.Time.from(&#39;20:13:20.971398099&#39;))  // =&gt; PT34M11.903051894S
+
+// The difference is always less than 12 hours, crossing midnight if needed
+Temporal.Time.from(&#39;01:00&#39;).difference(Temporal.Time.from(&#39;23:00&#39;))  // =&gt; P2H</code></pre>
 <h3 id="timetostring--string">time.<strong>toString</strong>() : string</h3>
-<h3 id="timetolocalestringlocale-string-options-object--string">time.<strong>toLocaleString</strong>(<em>locale</em>?: string, <em>options</em>?: object) : string</h3>
+<p><strong>Returns:</strong> a string in the ISO 8601 time format representing <code>time</code>.</p>
+<p>This method overrides the <code>Object.prototype.toString()</code> method and provides a convenient, unambiguous string representation of <code>time</code>.
+The string can be passed to <code>Temporal.Time.from()</code> to create a new <code>Temporal.Time</code> object.</p>
+<p>Example usage:</p>
+<pre><code class="language-js">time = Temporal.Time.from(&#39;19:39:09.068346205&#39;);
+time.toString();  // =&gt; 19:39:09.068346205</code></pre>
+<h3 id="timetolocalestringlocales-string--arraystring-options-object--string">time.<strong>toLocaleString</strong>(<em>locales</em>?: string | array&lt;string&gt;, <em>options</em>?: object) : string</h3>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>locales</code> (optional string or array of strings): A string with a BCP 47 language tag with an optional Unicode extension key, or an array of such strings.</li>
+<li><code>options</code> (optional object): An object with properties influencing the formatting.</li>
+</ul>
+<p><strong>Returns:</strong> a language-sensitive representation of <code>time</code>.</p>
+<p>This method overrides <code>Object.prototype.toLocaleString()</code> to provide a human-readable, language-sensitive representation of <code>time</code>.</p>
+<p>The <code>locales</code> and <code>options</code> arguments are the same as in the constructor to <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DateTimeFormat"><code>Intl.DateTimeFormat</code></a>.</p>
+<blockquote>
+<p><strong>NOTE</strong>: Unlike in <a href="./absolute.html#toLocaleString"><code>Temporal.Absolute.prototype.toLocaleString()</code></a>, <code>locales.timeZone</code> will have no effect, because <code>Temporal.Time</code> carries no time zone information and is just a wall-clock time.</p>
+</blockquote>
+<p>Example usage:</p>
+<pre><code class="language-js">time = Temporal.Time.from(&#39;19:39:09.068346205&#39;);
+time.toLocaleString();  // =&gt; example output: 7:39:09 p.m.
+time.toLocaleString(&#39;de-DE&#39;);  // =&gt; example output: 19:39:09
+time.toLocaleString(&#39;de-DE&#39;, { timeZone: &#39;Europe/Berlin&#39; });  // =&gt; 19:39:09
+time.toLocaleString(&#39;en-US-u-nu-fullwide-hc-h24&#39;);  // =&gt; １９:３９:０９</code></pre>
 <h3 id="timewithdatedate-temporaldate--temporaldatetime">time.<strong>withDate</strong>(<em>date</em>: Temporal.Date) : Temporal.DateTime</h3>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>date</code> (<code>Temporal.Date</code>): A calendar date on which to place <code>time</code>.</li>
+</ul>
+<p><strong>Returns:</strong> a <code>Temporal.DateTime</code> object that represents the wall-clock time <code>time</code> on the calendar date <code>date</code>.</p>
+<p>This method can be used to convert <code>Temporal.Time</code> into a <code>Temporal.DateTime</code>, by supplying the calendar date to use.
+The converted object carries a copy of all the relevant fields of <code>date</code> and <code>time</code>.</p>
+<p>This is exactly equivalent to <a href="./date.html#withTime"><code>date.withTime(time)</code></a>.</p>
+<p>Usage example:</p>
+<pre><code class="language-javascript">time = Temporal.Time.from(&#39;15:23:30.003&#39;);
+date = Temporal.Date.from(&#39;2006-08-24&#39;);
+time.withDate(date)  // =&gt; 2006-08-24T15:23:30.003</code></pre>
     <footer>
       <p>
         This page includes a script which loads an implementation of Temporal in your browser.

@@ -112,7 +112,7 @@ For example, 1000 nanoseconds will become 1 microsecond.</p>
 <p>This is because the ISO 8601 string format for durations does not allow for specifying sub-second units separately, only as a decimal fraction of seconds.
 If you need to serialize a <code>Temporal.Duration</code> in a way that will preserve unbalanced sub-second fields, you will need to use a custom serialization format.</p>
 </blockquote>
-<h3 id="durationtolocalestringlocale-string-options-object--string">duration.<strong>toLocaleString</strong>(<em>locale</em>?: string, <em>options</em>?: object) : string</h3>
+<h3 id="durationtolocalestringlocales-string--arraystring-options-object--string">duration.<strong>toLocaleString</strong>(<em>locales</em>?: string | array&lt;string&gt;, <em>options</em>?: object) : string</h3>
     <footer>
       <p>
         This page includes a script which loads an implementation of Temporal in your browser.

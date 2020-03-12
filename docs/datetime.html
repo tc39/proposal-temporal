@@ -102,9 +102,9 @@ A <code>Temporal.DateTime</code> can also be converted into any of the other <co
 <li><code>hour</code> (optional number): An hour of the day, ranging between 0 and 23 inclusive.</li>
 <li><code>minute</code> (optional number): A minute, ranging between 0 and 59 inclusive.</li>
 <li><code>second</code> (optional number): A second, ranging between 0 and 59 inclusive.</li>
-<li><code>milliseconds</code> (optional number): A number of milliseconds, ranging between 0 and 999 inclusive.</li>
-<li><code>microseconds</code> (optional number): A number of microseconds, ranging between 0 and 999 inclusive.</li>
-<li><code>nanoseconds</code> (optional number): A number of nanoseconds, ranging between 0 and 999 inclusive.</li>
+<li><code>millisecond</code> (optional number): A number of milliseconds, ranging between 0 and 999 inclusive.</li>
+<li><code>microsecond</code> (optional number): A number of microseconds, ranging between 0 and 999 inclusive.</li>
+<li><code>nanosecond</code> (optional number): A number of nanoseconds, ranging between 0 and 999 inclusive.</li>
 </ul>
 <p><strong>Returns:</strong> a new <code>Temporal.DateTime</code> object.</p>
 <p>Use this constructor if you have the correct parameters for the date already as individual number values.
@@ -438,7 +438,7 @@ The string can be passed to <code>Temporal.DateTime.from()</code> to create a ne
 <p>Example usage:</p>
 <pre><code class="language-js">dt = new Temporal.DateTime(1995, 12, 7, 3, 24, 30, 0, 3, 500);
 dt.toString();  // =&gt; 1995-12-07T03:24:30.000003500</code></pre>
-<h3 id="datetimetolocalestringlocale-string-options-object--string">datetime.<strong>toLocaleString</strong>(<em>locale</em>?: string, <em>options</em>?: object) : string</h3>
+<h3 id="datetimetolocalestringlocales-string--arraystring-options-object--string">datetime.<strong>toLocaleString</strong>(<em>locales</em>?: string | array&lt;string&gt;, <em>options</em>?: object) : string</h3>
 <p><strong>Parameters:</strong></p>
 <ul>
 <li><code>locales</code> (optional string or array of strings): A string with a BCP 47 language tag with an optional Unicode extension key, or an array of such strings.</li>
