@@ -433,7 +433,7 @@ dt = new Temporal.DateTime(1995, 12, 7, 3, 24, 30, 0, 3, 500);
 dt.toString();  // => 1995-12-07T03:24:30.000003500
 ```
 
-### datetime.**toLocaleString**(_locale_?: string, _options_?: object) : string
+### datetime.**toLocaleString**(_locales_?: string | array&lt;string&gt;, _options_?: object) : string
 
 **Parameters:**
 - `locales` (optional string or array of strings): A string with a BCP 47 language tag with an optional Unicode extension key, or an array of such strings.

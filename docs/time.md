@@ -56,6 +56,6 @@ Since this method never returns any duration longer than 12 hours, largest units
 
 ### time.**toString**() : string
 
-### time.**toLocaleString**(_locale_?: string, _options_?: object) : string
+### time.**toLocaleString**(_locales_?: string | array&lt;string&gt;, _options_?: object) : string
 
 ### time.**withDate**(_date_: Temporal.Date) : Temporal.DateTime
