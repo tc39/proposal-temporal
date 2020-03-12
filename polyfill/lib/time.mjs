@@ -39,33 +39,33 @@ export class Time {
   }
 
   get hour() {
-    if (!ES.IsTime(this)) throw new TypeError('invalid receiver');
+    if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
     return GetSlot(this, HOUR);
   }
   get minute() {
-    if (!ES.IsTime(this)) throw new TypeError('invalid receiver');
+    if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
     return GetSlot(this, MINUTE);
   }
   get second() {
-    if (!ES.IsTime(this)) throw new TypeError('invalid receiver');
+    if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
     return GetSlot(this, SECOND);
   }
   get millisecond() {
-    if (!ES.IsTime(this)) throw new TypeError('invalid receiver');
+    if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
     return GetSlot(this, MILLISECOND);
   }
   get microsecond() {
-    if (!ES.IsTime(this)) throw new TypeError('invalid receiver');
+    if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
     return GetSlot(this, MICROSECOND);
   }
   get nanosecond() {
-    if (!ES.IsTime(this)) throw new TypeError('invalid receiver');
+    if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
     return GetSlot(this, NANOSECOND);
   }
 
   with(timeLike = {}, options) {
-    if (!ES.IsTime(this)) throw new TypeError('invalid receiver');
-    const disambiguation = ES.ToDisambiguation(options);
+    if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
+    const disambiguation = ES.ToTemporalDisambiguation(options);
     const props = ES.ValidPropertyBag(timeLike, [
       'hour',
       'minute',
@@ -96,14 +96,14 @@ export class Time {
     ));
     const Construct = ES.SpeciesConstructor(this, Time);
     const result = new Construct(hour, minute, second, millisecond, microsecond, nanosecond);
-    if (!ES.IsTime(result)) throw new TypeError('invalid result');
+    if (!ES.IsTemporalTime(result)) throw new TypeError('invalid result');
     return result;
   }
   plus(durationLike, options) {
-    if (!ES.IsTime(this)) throw new TypeError('invalid receiver');
+    if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
     let { hour, minute, second, millisecond, microsecond, nanosecond } = this;
-    const duration = ES.ToLimitedDuration(durationLike, [YEARS, MONTHS, DAYS]);
-    const disambiguation = ES.ToArithmeticDisambiguation(options);
+    const duration = ES.ToLimitedTemporalDuration(durationLike, [YEARS, MONTHS, DAYS]);
+    const disambiguation = ES.ToArithmeticTemporalDisambiguation(options);
     const { hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
     ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.AddTime(
       hour,
@@ -130,14 +130,14 @@ export class Time {
     ));
     const Construct = ES.SpeciesConstructor(this, Time);
     const result = new Construct(hour, minute, second, millisecond, microsecond, nanosecond);
-    if (!ES.IsTime(result)) throw new TypeError('invalid result');
+    if (!ES.IsTemporalTime(result)) throw new TypeError('invalid result');
     return result;
   }
   minus(durationLike, options) {
-    if (!ES.IsTime(this)) throw new TypeError('invalid receiver');
+    if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
     let { hour, minute, second, millisecond, microsecond, nanosecond } = this;
-    const duration = ES.ToLimitedDuration(durationLike, [YEARS, MONTHS, DAYS]);
-    const disambiguation = ES.ToArithmeticDisambiguation(options);
+    const duration = ES.ToLimitedTemporalDuration(durationLike, [YEARS, MONTHS, DAYS]);
+    const disambiguation = ES.ToArithmeticTemporalDisambiguation(options);
     const { hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
     ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.SubtractTime(
       hour,
@@ -164,12 +164,12 @@ export class Time {
     ));
     const Construct = ES.SpeciesConstructor(this, Time);
     const result = new Construct(hour, minute, second, millisecond, microsecond, nanosecond);
-    if (!ES.IsTime(result)) throw new TypeError('invalid result');
+    if (!ES.IsTemporalTime(result)) throw new TypeError('invalid result');
     return result;
   }
   difference(other, options) {
-    if (!ES.IsTime(this)) throw new TypeError('invalid receiver');
-    if (!ES.IsTime(other)) throw new TypeError('invalid Time object');
+    if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
+    if (!ES.IsTemporalTime(other)) throw new TypeError('invalid Time object');
     const largestUnit = ES.ToLargestTemporalUnit(options, 'hours');
     const [earlier, later] = [this, other].sort(Time.compare);
     let { hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.DifferenceTime(earlier, later);
@@ -196,7 +196,7 @@ export class Time {
   }
 
   toString() {
-    if (!ES.IsTime(this)) throw new TypeError('invalid receiver');
+    if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
     let hour = ES.ISODateTimePartString(GetSlot(this, HOUR));
     let minute = ES.ISODateTimePartString(GetSlot(this, MINUTE));
     let seconds = ES.ISOSecondsString(
@@ -209,13 +209,13 @@ export class Time {
     return resultString;
   }
   toLocaleString(...args) {
-    if (!ES.IsTime(this)) throw new TypeError('invalid receiver');
+    if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
     return new Intl.DateTimeFormat(...args).format(this);
   }
 
   withDate(date) {
-    if (!ES.IsTime(this)) throw new TypeError('invalid receiver');
-    if (!ES.IsDate(date)) throw new TypeError('invalid Temporal.Date object');
+    if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
+    if (!ES.IsTemporalDate(date)) throw new TypeError('invalid Temporal.Date object');
     const year = GetSlot(date, YEAR);
     const month = GetSlot(date, MONTH);
     const day = GetSlot(date, DAY);
@@ -230,8 +230,8 @@ export class Time {
   }
 
   static from(arg, options = undefined) {
-    const disambiguation = ES.ToDisambiguation(options);
-    let result = ES.ToTime(arg, disambiguation);
+    const disambiguation = ES.ToTemporalDisambiguation(options);
+    let result = ES.ToTemporalTime(arg, disambiguation);
     if (this === Time) return result;
     return new this(
       GetSlot(result, HOUR),
@@ -243,7 +243,7 @@ export class Time {
     );
   }
   static compare(one, two) {
-    if (!ES.IsTime(one) || !ES.IsTime(two)) throw new TypeError('invalid Time object');
+    if (!ES.IsTemporalTime(one) || !ES.IsTemporalTime(two)) throw new TypeError('invalid Time object');
     if (one.hour !== two.hour) return ES.ComparisonResult(one.hour - two.hour);
     if (one.minute !== two.minute) return ES.ComparisonResult(one.minute - two.minute);
     if (one.second !== two.second) return ES.ComparisonResult(one.second - two.second);

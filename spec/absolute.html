@@ -27,7 +27,7 @@
           1. Throw a *TypeError* exception.
         1. Let _epochNanoseconds_ be ? ToBigInt(_epochNanoseconds_).
         1. Perform ? RejectAbsolute(_epochNanoseconds_).
-        1. Return ? CreateAbsolute(_epochNanoseconds_, NewTarget).
+        1. Return ? CreateTemporalAbsolute(_epochNanoseconds_, NewTarget).
       </emu-alg>
     </emu-clause>
   </emu-clause>
@@ -63,11 +63,11 @@
         The following steps are taken:
       </p>
       <emu-alg>
-        1. Let _absolute_ be ? ToAbsolute(_arg_).
+        1. Let _absolute_ be ? ToTemporalAbsolute(_arg_).
         1. Let _constructor_ be the *this* value.
         1. If _constructor_ is %Temporal.Absolute%, then
           1. Return _absolute_.
-        1. Return ? CreateAbsoluteFromStatic(_constructor_, _absolute_.[[Nanoseconds]]).
+        1. Return ? CreateTemporalAbsoluteFromStatic(_constructor_, _absolute_.[[Nanoseconds]]).
       </emu-alg>
     </emu-clause>
 
@@ -83,7 +83,7 @@
         1. Let _epochNanoseconds_ be _arg_ × 1,000,000,000.
         1. Perform ? RejectAbsolute(_epochNanoseconds_).
         1. Let _constructor_ be the *this* value.
-        1. Return ? CreateAbsoluteFromStatic(_constructor_, _epochNanoseconds_).
+        1. Return ? CreateTemporalAbsoluteFromStatic(_constructor_, _epochNanoseconds_).
       </emu-alg>
     </emu-clause>
 
@@ -99,7 +99,7 @@
         1. Let _epochNanoseconds_ be _arg_ × 1,000,000.
         1. Perform ? RejectAbsolute(_epochNanoseconds_).
         1. Let _constructor_ be the *this* value.
-        1. Return ? CreateAbsoluteFromStatic(_constructor_, _epochNanoseconds_).
+        1. Return ? CreateTemporalAbsoluteFromStatic(_constructor_, _epochNanoseconds_).
       </emu-alg>
     </emu-clause>
 
@@ -114,7 +114,7 @@
         1. Let _epochNanoseconds_ be _arg_ × 1,000.
         1. Perform ? RejectAbsolute(_epochNanoseconds_).
         1. Let _constructor_ be the *this* value.
-        1. Return ? CreateAbsoluteFromStatic(_constructor_, _epochNanoseconds_).
+        1. Return ? CreateTemporalAbsoluteFromStatic(_constructor_, _epochNanoseconds_).
       </emu-alg>
     </emu-clause>
 
@@ -128,7 +128,7 @@
         1. Let _epochNanoseconds_ be ? ToBigInt(_arg_).
         1. Perform ? RejectAbsolute(_epochNanoseconds_).
         1. Let _constructor_ be the *this* value.
-        1. Return ? CreateAbsoluteFromStatic(_constructor_, _epochNanoseconds_).
+        1. Return ? CreateTemporalAbsoluteFromStatic(_constructor_, _epochNanoseconds_).
       </emu-alg>
     </emu-clause>
 
@@ -141,7 +141,7 @@
       <emu-alg>
         1. Perform ? RequireInternalSlot(_one_, [[InitializedTemporalAbsolute]]).
         1. Perform ? RequireInternalSlot(_two_, [[InitializedTemporalAbsolute]]).
-        1. Return ! AbsoluteCompare(_one_, _two_).
+        1. Return ! CompareTemporalAbsolute(_one_, _two_).
       </emu-alg>
     </emu-clause>
   </emu-clause>
@@ -236,7 +236,7 @@
       <emu-alg>
         1. Let _absolute_ be the *this* value.
         1. Perform ? RequireInternalSlot(_absolute_, [[InitializedTemporalAbsolute]]).
-        1. Let _duration_ be ? ToLimitedDuration(_duration_, « *"years"*, *"months"* »).
+        1. Let _duration_ be ? ToLimitedTemporalDuration(_duration_, « *"years"*, *"months"* »).
         1. Let _ns_ be _absolute_.[[Nanoseconds]] +
             _duration_.[[Nanoseconds]] +
             _duration_.[[Microseconds]] × 1000 +
@@ -246,7 +246,7 @@
             _duration_.[[Hours]] × 3,600,000,000,000 +
             _duration_.[[Days]] × 86,400,000,000,000.
         1. Perform ? RejectAbsolute(_ns_).
-        1. Return ? CreateAbsoluteFromInstance(_absolute_, _ns_).
+        1. Return ? CreateTemporalAbsoluteFromInstance(_absolute_, _ns_).
       </emu-alg>
     </emu-clause>
 
@@ -259,7 +259,7 @@
       <emu-alg>
         1. Let _absolute_ be the *this* value.
         1. Perform ? RequireInternalSlot(_absolute_, [[InitializedTemporalAbsolute]]).
-        1. Let _duration_ be ? ToLimitedDuration(_duration_, « *"years"*, *"months"* »).
+        1. Let _duration_ be ? ToLimitedTemporalDuration(_duration_, « *"years"*, *"months"* »).
         1. Let _ns_ be _absolute_.[[Nanoseconds]] -
             _duration_.[[Nanoseconds]] -
             _duration_.[[Microseconds]] × 1000 -
@@ -269,7 +269,7 @@
             _duration_.[[Hours]] × 3,600,000,000,000 -
             _duration_.[[Days]] × 86,400,000,000,000.
         1. Perform ? RejectAbsolute(_ns_).
-        1. Return ? CreateAbsoluteFromInstance(_absolute_, _ns_).
+        1. Return ? CreateTemporalAbsoluteFromInstance(_absolute_, _ns_).
       </emu-alg>
     </emu-clause>
 
@@ -284,7 +284,7 @@
         1. Perform ? RequireInternalSlot(_absolute_, [[InitializedTemporalAbsolute]]).
         1. Perform ? RequireInternalSlot(_otherAbsolute_, [[InitializedTemporalAbsolute]]).
         1. Let _largestUnit_ be ? ToLargestTemporalUnit(_options_, « *"years"*, *"months"* », *"seconds"*).
-        1. If ! AbsoluteCompare(_absolute_, _otherAbsolute_) &lt; 0, then
+        1. If ! CompareTemporalAbsolute(_absolute_, _otherAbsolute_) &lt; 0, then
           1. Let _greater_ be _otherAbsolute_.
           1. Let _smaller_ be _absolute_.
         1. Else,
@@ -292,7 +292,7 @@
           1. Let _smaller_ be _otherAbsolute_.
         1. Let _ns_ be _greater_.[[Nanoseconds]] - _smaller_.[[Nanoseconds]].
         1. Let _result_ be ! BalanceDuration(0, 0, 0, 0, 0, 0, _ns_, _largestUnit_).
-        1. Return ? CreateDuration(0, 0, _result_.[[Days]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]).
+        1. Return ? CreateTemporalDuration(0, 0, _result_.[[Days]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]).
       </emu-alg>
     </emu-clause>
 
@@ -307,8 +307,8 @@
         1. Perform ? RequireInternalSlot(_absolute_, [[InitializedTemporalAbsolute]]).
         1. If _timeZone_ is *undefined*, then
           1. Set _timeZone_ to *"UTC"*.
-        1. Let _timeZone_ be ? ToTimeZone(_timeZone_).
-        1. Return ! AbsoluteToString(_absolute_, _timeZone_).
+        1. Let _timeZone_ be ? ToTemporalTimeZone(_timeZone_).
+        1. Return ! TemporalAbsoluteToString(_absolute_, _timeZone_).
       </emu-alg>
     </emu-clause>
 
@@ -322,8 +322,8 @@
         1. Let _absolute_ be the *this* value.
         1. Perform ? RequireInternalSlot(_absolute_, [[InitializedTemporalAbsolute]]).
         1. If the implementation does not include the ECMA-402 Internationalization API, then
-          1. Let _timeZone_ be ? CreateTimeZone(*"UTC"*).
-          1. Return ! AbsoluteToString(_absolute_, _timeZone_).
+          1. Let _timeZone_ be ? CreateTemporalTimeZone(*"UTC"*).
+          1. Return ! TemporalAbsoluteToString(_absolute_, _timeZone_).
         1. Let _dateFormat_ be ? Construct(%DateTimeFormat%, « _locales_, _options_ »).
         1. Return ? FormatDateTime(_dateFormat_, _absolute_).
       </emu-alg>
@@ -337,8 +337,8 @@
       <emu-alg>
         1. Let _absolute_ be the *this* value.
         1. Perform ? RequireInternalSlot(_absolute_, [[InitializedTemporalAbsolute]]).
-        1. Let _timeZone_ be ? CreateTimeZone(*"UTC"*).
-        1. Return ! AbsoluteToString(_absolute_, _timeZone_).
+        1. Let _timeZone_ be ? CreateTemporalTimeZone(*"UTC"*).
+        1. Return ! TemporalAbsoluteToString(_absolute_, _timeZone_).
       </emu-alg>
     </emu-clause>
 
@@ -353,8 +353,8 @@
         1. Perform ? RequireInternalSlot(_absolute_, [[InitializedTemporalAbsolute]]).
         1. If _timeZone_ is *undefined*, then
           1. Set _timeZone_ to *"UTC"*.
-        1. Let _timeZone_ be ? ToTimeZone(_timeZone_).
-        1. Return ? GetDateTimeFor(_timeZone_, _absolute_);
+        1. Let _timeZone_ be ? ToTemporalTimeZone(_timeZone_).
+        1. Return ? GetTemporalDateTimeFor(_timeZone_, _absolute_);
       </emu-alg>
     </emu-clause>
   </emu-clause>
@@ -381,8 +381,8 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-createabsolute" aoid="CreateAbsolute">
-      <h1>CreateAbsolute ( _ns_ [ , _newTarget_ ] )</h1>
+    <emu-clause id="sec-temporal-createtemporalabsolute" aoid="CreateTemporalAbsolute">
+      <h1>CreateTemporalAbsolute ( _ns_ [ , _newTarget_ ] )</h1>
       <emu-alg>
         1. Assert: Type(_ns_) is BigInt.
         1. Assert: ! ValidateAbsolute(_ns_) is *true*.
@@ -393,8 +393,8 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-createabsolutefromstatic" aoid="CreateAbsoluteFromStatic">
-      <h1>CreateAbsoluteFromStatic ( _constructor_, _ns_ )</h1>
+    <emu-clause id="sec-temporal-createtemporalabsolutefromstatic" aoid="CreateTemporalAbsoluteFromStatic">
+      <h1>CreateTemporalAbsoluteFromStatic ( _constructor_, _ns_ )</h1>
       <emu-alg>
         1. Assert: ! ValidateAbsolute(_ns_) is *true*.
         1. If ! IsConstructor(_constructor_) is *false*, then
@@ -405,8 +405,8 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-createabsolutefrominstance" aoid="CreateAbsoluteFromInstance">
-      <h1>CreateAbsoluteFromInstance ( _absolute_, _ns_ )</h1>
+    <emu-clause id="sec-temporal-createtemporalabsolutefrominstance" aoid="CreateTemporalAbsoluteFromInstance">
+      <h1>CreateTemporalAbsoluteFromInstance ( _absolute_, _ns_ )</h1>
       <emu-alg>
         1. Assert: Type(_absolute_) is Object and _absolute_ has an [[InitializedTemporalAbsolute]] internal slot.
         1. Assert: ! ValidateAbsolute(_ns_) is *true*.
@@ -417,8 +417,8 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-toabsolute" aoid="ToAbsolute">
-      <h1>ToAbsolute ( _absolute_ )</h1>
+    <emu-clause id="sec-temporal-totemporalabsolute" aoid="ToTemporalAbsolute">
+      <h1>ToTemporalAbsolute ( _absolute_ )</h1>
       <emu-alg>
         1. If Type(_absolute_) is Object and _absolute_ has an [[InitializedTemporalAbsolute]] internal slot, then
           1. Return _absolute_.
@@ -433,13 +433,13 @@
         1. <mark>Let _timeZone_ be some appropriate TimeZone object based on _abolute_.</mark>
         1. If ! ValidateDateTime(_year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_) is *false*, then
           1. Throw a *TypeError* exception.
-        1. Let _dateTime_ be ? CreateDateTime(_year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_).
+        1. Let _dateTime_ be ? CreateTemporalDateTime(_year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_).
         1. Return ? GetAbsoluteFor(_timeZone_, _dateTime_, *"reject"*).
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-absolutecompare" aoid="AbsoluteCompare">
-      <h1>AbsoluteCompare ( _one_, _two_ )</h1>
+    <emu-clause id="sec-temporal-comparetemporalabsolute" aoid="CompareTemporalAbsolute">
+      <h1>CompareTemporalAbsolute ( _one_, _two_ )</h1>
       <emu-alg>
         1. Assert: Type(_one_) is Object.
         1. Assert: _one_ has an [[InitializedTemporalAbsolute]] internal slot.
@@ -451,15 +451,15 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-absolutetostring" aoid="AbsoluteToString">
-      <h1>AbsoluteToString ( _absolute_, _timeZone_ )</h1>
+    <emu-clause id="sec-temporal-temporalabsolutetostring" aoid="TemporalAbsoluteToString">
+      <h1>TemporalAbsoluteToString ( _absolute_, _timeZone_ )</h1>
       <emu-alg>
         1. Assert: Type(_absolute_) is Object.
         1. Assert: _absolute_ has an [[InitializedTemporalAbsolute]] internal slot.
         1. Assert: Type(_timeZone_) is Object.
         1. Assert: _timeZone_ has an [[InitializedTemporalTimeZone]] internal slot.
-        1. Let _dateTime_ be ? GetDateTimeFor(_timeZone_, _absolute_);
-        1. Let _dateTimeString_ be ! DateTimeToString(_dateTime_).
+        1. Let _dateTime_ be ? GetTemporalDateTimeFor(_timeZone_, _absolute_);
+        1. Let _dateTimeString_ be ! TemporalDateTimeToString(_dateTime_).
         1. Let _timeZoneString_ be ? ISOTimeZoneString(_timeZone_, _absolute_).
         1. Return the string-concatenation of _dateTimeString_ and _timeZoneString_.
       </emu-alg>

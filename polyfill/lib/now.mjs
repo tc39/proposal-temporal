@@ -14,7 +14,7 @@ function absolute() {
   return new Absolute(ns);
 }
 function dateTime(zone = timeZone()) {
-  zone = ES.ToTimeZone(zone);
+  zone = ES.ToTemporalTimeZone(zone);
   const abs = absolute();
   const dateTime = zone.getDateTimeFor(abs);
   return dateTime;

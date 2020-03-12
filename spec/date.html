@@ -26,7 +26,7 @@
         1. Let _y_ be ? ToInteger(_year_).
         1. Let _m_ be ? ToInteger(_month_).
         1. Let _d_ be ? ToInteger(_day_).
-        1. Return ? CreateDate(_y_, _m_, _d_, NewTarget).
+        1. Return ? CreateTemporalDate(_y_, _m_, _d_, NewTarget).
       </emu-alg>
     </emu-clause>
   </emu-clause>
@@ -63,11 +63,11 @@
         The following steps are taken:
       </p>
       <emu-alg>
-        1. Let _disambiguation_ be ? ToDisambiguation(_options_).
+        1. Let _disambiguation_ be ? ToTemporalDisambiguation(_options_).
         1. If Type(_arg_) is Object, then
-          1. Return ? ToDate(_arg_, _disambiguation_).
+          1. Return ? ToTemporalDate(_arg_, _disambiguation_).
         1. Let _string_ be ? ToString(_arg_).
-        1. Return ? DateFromString(_string_, _disambiguation_).
+        1. Return ? TemporalDateFromString(_string_, _disambiguation_).
       </emu-alg>
     </emu-clause>
 
@@ -80,7 +80,7 @@
       <emu-alg>
         1. Perform ? RequireInternalSlot(_one_, [[InitializedTemporalDate]]).
         1. Perform ? RequireInternalSlot(_two_, [[InitializedTemporalDate]]).
-        1. Return ! DateCompare(_one_, _two_).
+        1. Return ! CompareTemporalDate(_one_, _two_).
       </emu-alg>
     </emu-clause>
   </emu-clause>
@@ -236,7 +236,7 @@
       <emu-alg>
         1. Let _date_ be the *this* value.
         1. Perform ? RequireInternalSlot(_date_, [[InitializedTemporalDate]]).
-        1. Return ? CreateYearMonth(_date_.[[Year]], _date_.[[Month]]).
+        1. Return ? CreateTemporalYearMonth(_date_.[[Year]], _date_.[[Month]]).
       </emu-alg>
     </emu-clause>
 
@@ -248,7 +248,7 @@
       <emu-alg>
         1. Let _date_ be the *this* value.
         1. Perform ? RequireInternalSlot(_date_, [[InitializedTemporalDate]]).
-        1. Return ? CreateMonthDay(_date_.[[Month]], _date_.[[Day]]).
+        1. Return ? CreateTemporalMonthDay(_date_.[[Month]], _date_.[[Day]]).
       </emu-alg>
     </emu-clause>
 
@@ -261,11 +261,11 @@
       <emu-alg>
         1. Let _date_ be the *this* value.
         1. Perform ? RequireInternalSlot(_date_, [[InitializedTemporalDate]]).
-        1. Let _duration_ be ? ToLimitedDuration(_duration_, « *"hours"*, *"minutes"*, *"seconds"*, *"milliseconds"*, *"microseconds"*, *"nanoseconds"* »).
-        1. Let _disambiguation_ be ? ToArithmeticDisambiguation(_options_).
+        1. Let _duration_ be ? ToLimitedTemporalDuration(_duration_, « *"hours"*, *"minutes"*, *"seconds"*, *"milliseconds"*, *"microseconds"*, *"nanoseconds"* »).
+        1. Let _disambiguation_ be ? ToArithmeticTemporalDisambiguation(_options_).
         1. Let _result_ be ? AddDate(_date_.[[Year]], _date_.[[Month]], _date_.[[Day]], _duration_.[[Years]], _duration_.[[Months]], _duration_.[[Days]], _disambiguation_).
         1. Assert: ! ValidateDate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]]) is *true*.
-        1. Return ? CreateDateFromInstance(_date_, _result_.[[Year]], _result_.[[Month]], _result_.[[Day]]).
+        1. Return ? CreateTemporalDateFromInstance(_date_, _result_.[[Year]], _result_.[[Month]], _result_.[[Day]]).
       </emu-alg>
     </emu-clause>
 
@@ -278,11 +278,11 @@
       <emu-alg>
         1. Let _date_ be the *this* value.
         1. Perform ? RequireInternalSlot(_date_, [[InitializedTemporalDate]]).
-        1. Let _duration_ be ? ToLimitedDuration(_duration_, « *"hours"*, *"minutes"*, *"seconds"*, *"milliseconds"*, *"microseconds"*, *"nanoseconds"* »).
-        1. Let _disambiguation_ be ? ToArithmeticDisambiguation(_options_).
+        1. Let _duration_ be ? ToLimitedTemporalDuration(_duration_, « *"hours"*, *"minutes"*, *"seconds"*, *"milliseconds"*, *"microseconds"*, *"nanoseconds"* »).
+        1. Let _disambiguation_ be ? ToArithmeticTemporalDisambiguation(_options_).
         1. Let _result_ be ? SubtractDate(_date_.[[Year]], _date_.[[Month]], _date_.[[Day]], _duration_.[[Years]], _duration_.[[Months]], _duration_.[[Days]], _disambiguation_).
         1. Assert: ! ValidateDate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]]) is *true*.
-        1. Return ? CreateDateFromInstance(_date_, _result_.[[Year]], _result_.[[Month]], _result_.[[Day]]).
+        1. Return ? CreateTemporalDateFromInstance(_date_, _result_.[[Year]], _result_.[[Month]], _result_.[[Day]]).
       </emu-alg>
     </emu-clause>
 
@@ -296,7 +296,7 @@
         1. Let _date_ be the *this* value.
         1. Perform ? RequireInternalSlot(_date_, [[InitializedTemporalDate]]).
         1. Let _otherDate_ be ? ToPartialDate(_otherDate_).
-        1. Let _disambiguation_ be ? ToDisambiguation(_options_).
+        1. Let _disambiguation_ be ? ToTemporalDisambiguation(_options_).
         1. If _otherDate_.[[Year]] is not *undefined*, then
           1. Let _y_ be _otherDate_.[[Year]].
         1. Else
@@ -311,7 +311,7 @@
           1. Let _d_ be _date_.[[Day]].
         1. Let _result_ be ? RegulateDate(_y_, _m_, _d_, _disambiguation_).
         1. Assert: ! ValidateDate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]]) is *true*.
-        1. Return ? CreateDateFromInstance(_date_, _result_.[[Year]], _result_.[[Month]], _result_.[[Day]]).
+        1. Return ? CreateTemporalDateFromInstance(_date_, _result_.[[Year]], _result_.[[Month]], _result_.[[Day]]).
       </emu-alg>
     </emu-clause>
 
@@ -326,14 +326,14 @@
         1. Perform ? RequireInternalSlot(_date_, [[InitializedTemporalDate]]).
         1. Perform ? RequireInternalSlot(_otherDate_, [[InitializedTemporalDate]]).
         1. Let _largestUnit_ be ? ToLargestTemporalUnit(_options_, « *"hours"*, *"minutes"*, *"seconds"* », *"days"*).
-        1. If ! DateCompare(_date_, _otherDate_) &lt; 0, then
+        1. If ! CompareTemporalDate(_date_, _otherDate_) &lt; 0, then
           1. Let _greater_ be _otherDate_.
           1. Let _smaller_ be _date_.
         1. Else,
           1. Let _greater_ be _date_.
           1. Let _smaller_ be _otherDate_.
         1. Let _result_ be ? DifferenceDate(_smaller_, _greater_, _largestUnit_).
-        1. Return ? CreateDuration(_result_.[[Years]], _result_.[[Months]], _result_.[[Days]], 0, 0, 0, 0, 0, 0).
+        1. Return ? CreateTemporalDuration(_result_.[[Years]], _result_.[[Months]], _result_.[[Days]], 0, 0, 0, 0, 0, 0).
       </emu-alg>
     </emu-clause>
 
@@ -347,7 +347,7 @@
         1. Let _date_ be the *this* value.
         1. Perform ? RequireInternalSlot(_date_, [[InitializedTemporalDate]]).
         1. Perform ? RequireInternalSlot(_time_, [[InitializedTemporalTime]]).
-        1. Return ? CreateDateTime(_date_.[[Year]], _date_.[[Month]], _date_.[[Day]],
+        1. Return ? CreateTemporalDateTime(_date_.[[Year]], _date_.[[Month]], _date_.[[Day]],
           _time_.[[Hour]], _time_.[[Minute]], _time_.[[Second]],
           _time_.[[Millisecond]], _time_.[[Microsecond]], _time_.[[Nanosecond]]).
       </emu-alg>
@@ -361,7 +361,7 @@
       <emu-alg>
         1. Let _date_ be the *this* value.
         1. Perform ? RequireInternalSlot(_date_, [[InitializedTemporalDate]]).
-        1. Return ! DateToString(_date_).
+        1. Return ! TemporalDateToString(_date_).
       </emu-alg>
     </emu-clause>
 
@@ -375,7 +375,7 @@
         1. Let _date_ be the *this* value.
         1. Perform ? RequireInternalSlot(_date_, [[InitializedTemporalDate]]).
         1. If the implementation does not include the ECMA-402 Internationalization API, then
-          1. Return ! DateToString(_date_).
+          1. Return ! TemporalDateToString(_date_).
         1. Let _dateFormat_ be ? Construct(%DateTimeFormat%, « _locales_, _options_ »).
         1. Return ? FormatDateTime(_dateFormat_, _date_).
       </emu-alg>
@@ -389,7 +389,7 @@
       <emu-alg>
         1. Let _date_ be the *this* value.
         1. Perform ? RequireInternalSlot(_date_, [[InitializedTemporalDate]]).
-        1. Return ! DateToString(_date_).
+        1. Return ! TemporalDateToString(_date_).
       </emu-alg>
     </emu-clause>
   </emu-clause>
@@ -409,8 +409,8 @@
   <emu-clause id="sec-temporal-date-abstract-ops">
     <h1>Abstract operations</h1>
 
-    <emu-clause id="sec-temporal-createdate" aoid="CreateDate">
-      <h1>CreateDate ( _y_, _m_, _d_ [ , _newTarget_ ] )</h1>
+    <emu-clause id="sec-temporal-createtemporaldate" aoid="CreateTemporalDate">
+      <h1>CreateTemporalDate ( _y_, _m_, _d_ [ , _newTarget_ ] )</h1>
       <emu-alg>
         1. Perform ? RejectDate(_y_, _m_, _d_).
         1. If _newTarget_ is not given, set it to %Temporal.Date%.
@@ -422,8 +422,8 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-createdatefrominstance" aoid="CreateDateFromInstance">
-      <h1>CreateDateFromInstance ( _date_, _year_, _month_, _day_ )</h1>
+    <emu-clause id="sec-temporal-createtemporaldatefrominstance" aoid="CreateTemporalDateFromInstance">
+      <h1>CreateTemporalDateFromInstance ( _date_, _year_, _month_, _day_ )</h1>
       <emu-alg>
         1. Assert: Type(_date_) is Object and _date_ has an [[InitializedTemporalDate]] internal slot.
         1. Assert: ! ValidateDate(_year_, _month_, _day_) is *true*.
@@ -434,19 +434,19 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-datefromstring" aoid="DateFromString">
-      <h1>DateFromString ( _isoString_, _disambiguation_ )</h1>
+    <emu-clause id="sec-temporal-temporaldatefromstring" aoid="TemporalDateFromString">
+      <h1>TemporalDateFromString ( _isoString_, _disambiguation_ )</h1>
       <emu-alg>
         1. Assert: Type(_isoString_) is String.
         1. Assert: _disambiguation_ is one of *"constrain"*, *"balance"*, or *"reject"*.
-        1. Let _result_ be ? ParseDateString(_isoString_).
+        1. Let _result_ be ? ParseTemporalDateString(_isoString_).
         1. Let _result_ be ? RegulateDate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _disambiguation_).
         1. Return ? CreateDate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]]).
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-parsedatestring" aoid="ParseDateString">
-      <h1>ParseDateString ( _isoString_ )</h1>
+    <emu-clause id="sec-temporal-parsetemporaldatestring" aoid="ParseTemporalDateString">
+      <h1>ParseTemporalDateString ( _isoString_ )</h1>
       <emu-alg>
         1. Assert: Type(_isoString_) is String.
         1. Let _validSyntax_ be *true* if _isostring_ conforms to the format `YYYY-MM-DD`, and *false* otherwise, where:
@@ -508,8 +508,8 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-todate" aoid="ToDate">
-      <h1>ToDate ( _date_, _disambiguation_ )</h1>
+    <emu-clause id="sec-temporal-totemporaldate" aoid="ToTemporalDate">
+      <h1>ToTemporalDate ( _date_, _disambiguation_ )</h1>
       <emu-alg>
         1. Assert: _disambiguation_ is one of *"constrain"*, *"balance"*, or *"reject"*.
         1. Assert: Type(_date_) is Object.
@@ -524,7 +524,7 @@
           1. Let _value_ be ? ToInteger(_value_).
           1. Set _result_'s internal slot whose name is the Internal Slot value of the current row to _value_.
         1. Set _result_ to ? RegulateDate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _disambiguation_).
-        1. Return ? CreateDate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]]).
+        1. Return ? CreateTemporalDate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]]).
       </emu-alg>
     </emu-clause>
 
@@ -706,8 +706,8 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-datetostring" aoid="DateToString">
-      <h1>DateToString ( _date_ )</h1>
+    <emu-clause id="sec-temporal-temporaldatetostring" aoid="TemporalDateToString">
+      <h1>TemporalDateToString ( _date_ )</h1>
       <emu-alg>
         1. Assert: Type(_date_) is Object.
         1. Assert: _date_ has an [[InitializedTemporalDate]] internal slot.
@@ -745,8 +745,8 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-datecompare" aoid="DateCompare">
-      <h1>DateCompare ( _one_, _two_ )</h1>
+    <emu-clause id="sec-temporal-comparetemporaldate" aoid="CompareTemporalDate">
+      <h1>CompareTemporalDate ( _one_, _two_ )</h1>
       <emu-alg>
         1. Assert: Type(_one_) is Object.
         1. Assert: _one_ has an [[InitializedTemporalDate]] internal slot.

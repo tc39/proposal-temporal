@@ -27,7 +27,7 @@
           1. Throw a *TypeError* exception.
         1. Let _m_ be ? ToInteger(_month_).
         1. Let _d_ be ? ToInteger(_day_).
-        1. Return ? CreateMonthDay(_result_.[[Month]], _result_.[[Day]], NewTarget).
+        1. Return ? CreateTemporalMonthDay(_result_.[[Month]], _result_.[[Day]], NewTarget).
       </emu-alg>
     </emu-clause>
   </emu-clause>
@@ -63,11 +63,11 @@
         The following steps are taken:
       </p>
       <emu-alg>
-        1. Let _disambiguation_ be ? ToDisambiguation(_options_).
+        1. Let _disambiguation_ be ? ToTemporalDisambiguation(_options_).
         1. If Type(_arg_) is Object, then
-          1. Return ? ToMonthDay(_arg_, _disambiguation_).
+          1. Return ? ToTemporalMonthDay(_arg_, _disambiguation_).
         1. Let _string_ be ? ToString(_arg_).
-        1. Return ? MonthDayFromString(_string_, _disambiguation_).
+        1. Return ? TemporalMonthDayFromString(_string_, _disambiguation_).
       </emu-alg>
     </emu-clause>
 
@@ -80,7 +80,7 @@
       <emu-alg>
         1. Perform ? RequireInternalSlot(_one_, [[InitializedTemporalMonthDay]]).
         1. Perform ? RequireInternalSlot(_two_, [[InitializedTemporalMonthDay]]).
-        1. Return ! MonthDayCompare(_one_, _two_).
+        1. Return ! CompareTemporalMonthDay(_one_, _two_).
       </emu-alg>
     </emu-clause>
   </emu-clause>
@@ -147,7 +147,7 @@
         1. Let _monthDay_ be the *this* value.
         1. Perform ? RequireInternalSlot(_monthDay_, [[InitializedTemporalMonthDay]]).
         1. Let _otherMonthDay_ be ? ToPartialMonthDay(_otherMonthDay_).
-        1. Let _disambiguation_ be ? ToDisambiguation(_options_).
+        1. Let _disambiguation_ be ? ToTemporalDisambiguation(_options_).
         1. If _otherMonthDay_.[[Month]] is not *undefined*, then
           1. Let _m_ be _otherMonthDay_.[[Month]].
         1. Else
@@ -157,7 +157,7 @@
         1. Else
           1. Let _d_ be _monthDay_.[[Day]].
         1. Let _result_ be ? RegulateMonthDay(_m_, _d_, _disambiguation_).
-        1. Return ? CreateMonthDayFromInstance(_monthDay_, _result_.[[Month]], _result_.[[Day]]).
+        1. Return ? CreateTemporalMonthDayFromInstance(_monthDay_, _result_.[[Month]], _result_.[[Day]]).
       </emu-alg>
     </emu-clause>
 
@@ -169,7 +169,7 @@
       <emu-alg>
         1. Let _monthDay_ be the *this* value.
         1. Perform ? RequireInternalSlot(_monthDay_, [[InitializedTemporalMonthDay]]).
-        1. Return ! MonthDayToString(_monthDay_).
+        1. Return ! TemporalMonthDayToString(_monthDay_).
       </emu-alg>
     </emu-clause>
 
@@ -183,7 +183,7 @@
         1. Let _monthDay_ be the *this* value.
         1. Perform ? RequireInternalSlot(_monthDay_, [[InitializedTemporalMonthDay]]).
         1. If the implementation does not include the ECMA-402 Internationalization API, then
-          1. Return ! MonthDayToString(_monthDay_).
+          1. Return ! TemporalMonthDayToString(_monthDay_).
         1. Let _dateFormat_ be ? Construct(%DateTimeFormat%, « _locales_, _options_ »).
         1. Return ? FormatDateTime(_dateFormat_, _monthDay_).
       </emu-alg>
@@ -197,7 +197,7 @@
       <emu-alg>
         1. Let _monthDay_ be the *this* value.
         1. Perform ? RequireInternalSlot(_monthDay_, [[InitializedTemporalMonthDay]]).
-        1. Return ! MonthDayToString(_monthDay_).
+        1. Return ! TemporalMonthDayToString(_monthDay_).
       </emu-alg>
     </emu-clause>
 
@@ -211,7 +211,7 @@
         1. Let _monthDay_ be the *this* value.
         1. Perform ? RequireInternalSlot(_monthDay_, [[InitializedTemporalMonthDay]]).
         1. Let _y_ be ? ToInteger(_year_).
-        1. Return ? CreateDate(_y_, _monthDay_.[[Month]], _monthDay_.[[Day]]).
+        1. Return ? CreateTemporalDate(_y_, _monthDay_.[[Month]], _monthDay_.[[Day]]).
       </emu-alg>
     </emu-clause>
   </emu-clause>
@@ -302,8 +302,8 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-createmonthday" aoid="CreateMonthDay">
-      <h1>CreateMonthDay ( _month_, _day_ [ , _newTarget_ ] )</h1>
+    <emu-clause id="sec-temporal-createtemporalmonthday" aoid="CreateTemporalMonthDay">
+      <h1>CreateTemporalMonthDay ( _month_, _day_ [ , _newTarget_ ] )</h1>
       <emu-alg>
         1. If ! ValidateMonthDay(_month_, _day_) is *false*, then
           1. Throw a *RangeError* exception.
@@ -315,8 +315,8 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-createmonthdayfrominstance" aoid="CreateMonthDayFromInstance">
-      <h1>CreateMonthDayFromInstance ( _monthDay_, _month_, _day_ )</h1>
+    <emu-clause id="sec-temporal-createtemporalmonthdayfrominstance" aoid="CreateTemporalMonthDayFromInstance">
+      <h1>CreateTemporalMonthDayFromInstance ( _monthDay_, _month_, _day_ )</h1>
       <emu-alg>
         1. Assert: Type(_monthDay_) is Object and _monthDay_ has an [[InitializedTemporalMonthDay]] internal slot.
         1. Assert: ! ValidateMonthDay(_month_, _day_) is *true*.
@@ -327,8 +327,8 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-parsemonthdaystring" aoid="ParseMonthDayString">
-      <h1>ParseMonthDayString ( _monthDay_ )</h1>
+    <emu-clause id="sec-temporal-parsetemporalmonthdaystring" aoid="ParseTemporalMonthDayString">
+      <h1>ParseTemporalMonthDayString ( _monthDay_ )</h1>
       <emu-alg>
         1. Assert: Type(_monthDay_) is String.
         1. Let _valid_ be *true* if _monthDay_ matches <a href="https://github.com/tc39/proposal-temporal/blob/main/polyfill/lib/regex.mjs">the "monthday" regular expression in the polyfill</a> and *false* otherwise.
@@ -343,19 +343,19 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-monthdayfromstring" aoid="MonthDayFromString">
-      <h1>MonthDayFromString ( _monthDay_, _disambiguation_ )</h1>
+    <emu-clause id="sec-temporal-temporalmonthdayfromstring" aoid="TemporalMonthDayFromString">
+      <h1>TemporalMonthDayFromString ( _monthDay_, _disambiguation_ )</h1>
       <emu-alg>
         1. Assert: Type(_monthDay_) is String.
         1. Assert: _disambiguation_ is one of *"constrain"*, *"balance"*, or *"reject"*.
-        1. Let _result_ be ? ParseMonthDayString(_monthDay_).
+        1. Let _result_ be ? ParseTemporalMonthDayString(_monthDay_).
         1. Set _result_ to ? RegulateMonthDay(_result_.[[Month]], _result_.[[Day]], _disambiguation_).
-        1. Return ? CreateMonthDay(_result_.[[Month]], _result_.[[Day]]).
+        1. Return ? CreateTemporalMonthDay(_result_.[[Month]], _result_.[[Day]]).
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-tomonthday" aoid="ToMonthDay">
-      <h1>ToMonthDay ( _monthDay_, _disambiguation_ )</h1>
+    <emu-clause id="sec-temporal-totemporalmonthday" aoid="ToTemporalMonthDay">
+      <h1>ToTemporalMonthDay ( _monthDay_, _disambiguation_ )</h1>
       <emu-alg>
         1. Assert: _disambiguation_ is one of *"constrain"*, *"balance"*, or *"reject"*.
         1. Assert: Type(_monthDay_) is Object.
@@ -370,12 +370,12 @@
           1. Let _value_ be ? ToInteger(_value_).
           1. Set _result_'s internal slot whose name is the Internal Slot value of the current row to _value_.
         1. Set _result_ to ? RegulateMonthDay(_result_.[[Month]], _result_.[[Day]], _disambiguation_).
-        1. Return ? CreateMonthDay(_result_.[[Month]], _result_.[[Day]]).
+        1. Return ? CreateTemporalMonthDay(_result_.[[Month]], _result_.[[Day]]).
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-monthdaytostring" aoid="MonthDayToString">
-      <h1>MonthDayToString ( _monthDay_ )</h1>
+    <emu-clause id="sec-temporal-temporalmonthdaytostring" aoid="TemporalMonthDayToString">
+      <h1>TemporalMonthDayToString ( _monthDay_ )</h1>
       <emu-alg>
         1. Assert: Type(_monthDay_) is Object.
         1. Assert: _monthDay_ has an [[InitializedTemporalMonthDay]] internal slot.
@@ -385,8 +385,8 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-monthdaycompare" aoid="MonthDayCompare">
-      <h1>MonthDayCompare ( _one_, _two_ )</h1>
+    <emu-clause id="sec-temporal-comparetemporalmonthday" aoid="CompareTemporalMonthDay">
+      <h1>CompareTemporalMonthDay ( _one_, _two_ )</h1>
       <emu-alg>
         1. Assert: Type(_one_) is Object.
         1. Assert: _one_ has an [[InitializedTemporalMonthDay]] internal slot.

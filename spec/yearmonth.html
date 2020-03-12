@@ -27,7 +27,7 @@
           1. Throw a *TypeError* exception.
         1. Let _y_ be ? ToInteger(_year_).
         1. Let _m_ be ? ToInteger(_month_).
-        1. Return ? CreateYearMonth(_y_, _m_, NewTarget).
+        1. Return ? CreateTemporalYearMonth(_y_, _m_, NewTarget).
       </emu-alg>
     </emu-clause>
   </emu-clause>
@@ -63,11 +63,11 @@
         The following steps are taken:
       </p>
       <emu-alg>
-        1. Let _disambiguation_ be ? ToDisambiguation(_options_).
+        1. Let _disambiguation_ be ? ToTemporalDisambiguation(_options_).
         1. If Type(_arg_) is Object, then
-          1. Return ? ToYearMonth(_arg_, _disambiguation_).
+          1. Return ? ToTemporalYearMonth(_arg_, _disambiguation_).
         1. Let _string_ be ? ToString(_arg_).
-        1. Return ? YearMonthFromString(_string_, _disambiguation_).
+        1. Return ? TemporalYearMonthFromString(_string_, _disambiguation_).
       </emu-alg>
     </emu-clause>
 
@@ -80,7 +80,7 @@
       <emu-alg>
         1. Perform ? RequireInternalSlot(_one_, [[InitializedTemporalYearMonth]]).
         1. Perform ? RequireInternalSlot(_two_, [[InitializedTemporalYearMonth]]).
-        1. Return ! YearMonthCompare(_one_, _two_).
+        1. Return ! CompareTemporalYearMonth(_one_, _two_).
       </emu-alg>
     </emu-clause>
   </emu-clause>
@@ -186,7 +186,7 @@
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
         1. Let _otherYearMonth_ be ? ToPartialYearMonth(_otherYearMonth_).
-        1. Let _disambiguation_ be ? ToDisambiguation(_options_).
+        1. Let _disambiguation_ be ? ToTemporalDisambiguation(_options_).
         1. If _otherYearMonth_.[[Year]] is not *undefined*, then
           1. Let _y_ be _otherYearMonth_.[[Year]].
         1. Else
@@ -196,7 +196,7 @@
         1. Else
           1. Let _m_ be _yearMonth_.[[Month]].
         1. Let _result_ be ? RegulateYearMonth(_y_, _m_, _disambiguation_).
-        1. Return ? CreateYearMonthFromInstance(_yearMonth_, _result_.[[Year]], _result_.[[Month]]).
+        1. Return ? CreateTemporalYearMonthFromInstance(_yearMonth_, _result_.[[Year]], _result_.[[Month]]).
       </emu-alg>
     </emu-clause>
 
@@ -209,13 +209,13 @@
       <emu-alg>
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
-        1. Let _duration_ be ? ToLimitedDuration(_duration_, « *"days"*, *"hours"*, *"minutes"*, *"seconds"*, *"milliseconds"*, *"microseconds"*, *"nanoseconds"* »).
-        1. Let _disambiguation_ be ? ToArithmeticDisambiguation(_options_).
+        1. Let _duration_ be ? ToLimitedTemporalDuration(_duration_, « *"days"*, *"hours"*, *"minutes"*, *"seconds"*, *"milliseconds"*, *"microseconds"*, *"nanoseconds"* »).
+        1. Let _disambiguation_ be ? ToArithmeticTemporalDisambiguation(_options_).
         1. Let _y_ be _yearMonth_.[[Year]] + _duration_.[[Years]].
         1. Let _m_ be _yearMonth_.[[Month]] + _duration_.[[Months]].
         1. Let _result_ be ! BalanceYearMonth(_y_, _m_).
         1. Let _result_ be ? RegulateYearMonth(_result_.[[Year]], _result_.[[Month]], _disambiguation_).
-        1. Return ? CreateYearMonthFromInstance(_yearMonth_, _result_.[[Year]], _result_.[[Month]]).
+        1. Return ? CreateTemporalYearMonthFromInstance(_yearMonth_, _result_.[[Year]], _result_.[[Month]]).
       </emu-alg>
     </emu-clause>
 
@@ -228,13 +228,13 @@
       <emu-alg>
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
-        1. Let _duration_ be ? ToLimitedDuration(_duration_, « *"days"*, *"hours"*, *"minutes"*, *"seconds"*, *"milliseconds"*, *"microseconds"*, *"nanoseconds"* »).
-        1. Let _disambiguation_ be ? ToArithmeticDisambiguation(_options_).
+        1. Let _duration_ be ? ToLimitedTemporalDuration(_duration_, « *"days"*, *"hours"*, *"minutes"*, *"seconds"*, *"milliseconds"*, *"microseconds"*, *"nanoseconds"* »).
+        1. Let _disambiguation_ be ? ToArithmeticTemporalDisambiguation(_options_).
         1. Let _y_ be _yearMonth_.[[Year]] - _duration_.[[Years]].
         1. Let _m_ be _yearMonth_.[[Month]] - _duration_.[[Months]].
         1. Let _result_ be ! BalanceYearMonth(_y_, _m_).
         1. Let _result_ be ? RegulateYearMonth(_result_.[[Year]], _result_.[[Month]], _disambiguation_).
-        1. Return ? CreateYearMonthFromInstance(_yearMonth_, _result_.[[Year]], _result_.[[Month]]).
+        1. Return ? CreateTemporalYearMonthFromInstance(_yearMonth_, _result_.[[Year]], _result_.[[Month]]).
       </emu-alg>
     </emu-clause>
 
@@ -249,7 +249,7 @@
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
         1. Perform ? RequireInternalSlot(_otherYearMonth_, [[InitializedTemporalYearMonth]]).
         1. Let _largestUnit_ be ? ToLargestTemporalUnit(_options_, « *"days"*, *"hours"*, *"minutes"*, *"seconds"* », *"years"*).
-        1. If ! YearMonthCompare(_yearMonth_, _otherYearMonth_) &lt; 0, then
+        1. If ! CompareTemporalYearMonth(_yearMonth_, _otherYearMonth_) &lt; 0, then
           1. Let _greater_ be _otherYearMonth_.
           1. Let _smaller_ be _yearMonth_.
         1. Else,
@@ -264,7 +264,7 @@
           1. Set _months_ to _months_ + _years_ &times; 12.
           1. Set _years_ to 0.
         1. <mark>Assert: _months_ ≥ 0.</mark>
-        1. Return ? CreateDuration(_years_, _months_, 0, 0, 0, 0, 0, 0, 0).
+        1. Return ? CreateTemporalDuration(_years_, _months_, 0, 0, 0, 0, 0, 0, 0).
       </emu-alg>
     </emu-clause>
 
@@ -276,7 +276,7 @@
       <emu-alg>
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
-        1. Return ! YearMonthToString(_yearMonth_).
+        1. Return ! TemporalYearMonthToString(_yearMonth_).
       </emu-alg>
     </emu-clause>
 
@@ -290,7 +290,7 @@
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
         1. If the implementation does not include the ECMA-402 Internationalization API, then
-          1. Return ! YearMonthToString(_yearMonth_).
+          1. Return ! TemporalYearMonthToString(_yearMonth_).
         1. Let _dateFormat_ be ? Construct(%DateTimeFormat%, « _locales_, _options_ »).
         1. Return ? FormatDateTime(_dateFormat_, _yearMonth_).
       </emu-alg>
@@ -304,7 +304,7 @@
       <emu-alg>
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
-        1. Return ! YearMonthToString(_yearMonth_).
+        1. Return ! TemporalYearMonthToString(_yearMonth_).
       </emu-alg>
     </emu-clause>
 
@@ -318,7 +318,7 @@
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
         1. Let _d_ be ? ToInteger(_day_).
-        1. Return ? CreateDate(_yearMonth_.[[Year]], _yearMonth_.[[Month]], _d_).
+        1. Return ? CreateTemporalDate(_yearMonth_.[[Year]], _yearMonth_.[[Month]], _d_).
       </emu-alg>
     </emu-clause>
   </emu-clause>
@@ -439,8 +439,8 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-createyearmonth" aoid="CreateYearMonth">
-      <h1>CreateYearMonth ( _year_, _month_ [ , _newTarget_ ] )</h1>
+    <emu-clause id="sec-temporal-createtemporalyearmonth" aoid="CreateTemporalYearMonth">
+      <h1>CreateTemporalYearMonth ( _year_, _month_ [ , _newTarget_ ] )</h1>
       <emu-alg>
         1. If ! ValidateYearMonth(_year_, _month_) is *false*, then
           1. Throw a *RangeError* exception.
@@ -452,8 +452,8 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-createyearmonthfrominstance" aoid="CreateYearMonthFromInstance">
-      <h1>CreateYearMonthFromInstance ( _yearMonth_, _year_, _month_ )</h1>
+    <emu-clause id="sec-temporal-createtemporalyearmonthfrominstance" aoid="CreateTemporalYearMonthFromInstance">
+      <h1>CreateTemporalYearMonthFromInstance ( _yearMonth_, _year_, _month_ )</h1>
       <emu-alg>
         1. Assert: Type(_yearMonth_) is Object and _yearMonth_ has an [[InitializedTemporalYearMonth]] internal slot.
         1. Assert: ! ValidateYearMonth(_year_, _month_) is *true*.
@@ -464,8 +464,8 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-parseyearmonthstring" aoid="ParseYearMonthString">
-      <h1>ParseYearMonthString ( _yearMonth_ )</h1>
+    <emu-clause id="sec-temporal-parsetemporalyearmonthstring" aoid="ParseTemporalYearMonthString">
+      <h1>ParseTemporalYearMonthString ( _yearMonth_ )</h1>
       <emu-alg>
         1. Assert: Type(_yearMonth_) is String.
         1. Let _valid_ be *true* if _yearMonth_ matches <a href="https://github.com/tc39/proposal-temporal/blob/main/polyfill/lib/regex.mjs">the "yearmonth" regular expression in the polyfill</a> and *false* otherwise.
@@ -480,18 +480,18 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-yearmonthfromstring" aoid="YearMonthFromString">
-      <h1>YearMonthFromString ( _yearMonth_, _disambiguation_ )</h1>
+    <emu-clause id="sec-temporal-temporalyearmonthfromstring" aoid="TemporalYearMonthFromString">
+      <h1>TemporalYearMonthFromString ( _yearMonth_, _disambiguation_ )</h1>
       <emu-alg>
         1. Assert: Type(_yearMonth_) is String.
-        1. Let _result_ be ? ParseYearMonthString(_yearMonth_).
+        1. Let _result_ be ? ParseTemporalYearMonthString(_yearMonth_).
         1. Set _result_ to ? RegulateYearMonth(_result_.[[Year]], _result_.[[Month]], _disambiguation_).
-        1. Return ? CreateYearMonth(_result_.[[Year]], _result_.[[Month]]).
+        1. Return ? CreateTemporalYearMonth(_result_.[[Year]], _result_.[[Month]]).
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-toyearmonth" aoid="ToYearMonth">
-      <h1>ToYearMonth ( _yearMonth_, _disambiguation_ )</h1>
+    <emu-clause id="sec-temporal-totemporalyearmonth" aoid="ToTemporalYearMonth">
+      <h1>ToTemporalYearMonth ( _yearMonth_, _disambiguation_ )</h1>
       <emu-alg>
         1. Assert: _disambiguation_ is one of *"constrain"*, *"balance"*, or *"reject"*.
         1. Assert: Type(_yearMonth_) is Object.
@@ -506,12 +506,12 @@
           1. Let _value_ be ? ToInteger(_value_).
           1. Set _result_'s internal slot whose name is the Internal Slot value of the current row to _value_.
         1. Set _result_ to ? RegulateYearMonth(_result_.[[Year]], _result_.[[Month]], _disambiguation_).
-        1. Return ? CreateYearMonth(_result_.[[Year]], _result_.[[Month]]).
+        1. Return ? CreateTemporalYearMonth(_result_.[[Year]], _result_.[[Month]]).
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-yearmonthtostring" aoid="YearMonthToString">
-      <h1>YearMonthToString ( _yearMonth_ )</h1>
+    <emu-clause id="sec-temporal-temporalyearmonthtostring" aoid="TemporalYearMonthToString">
+      <h1>TemporalYearMonthToString ( _yearMonth_ )</h1>
       <emu-alg>
         1. Assert: Type(_yearMonth_) is Object.
         1. Assert: _yearMonth_ has an [[InitializedTemporalYearMonth]] internal slot.
@@ -521,8 +521,8 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-yearmonthcompare" aoid="YearMonthCompare">
-      <h1>YearMonthCompare ( _one_, _two_ )</h1>
+    <emu-clause id="sec-temporal-comparetemporalyearmonth" aoid="CompareTemporalYearMonth">
+      <h1>CompareTemporalYearMonth ( _one_, _two_ )</h1>
       <emu-alg>
         1. Assert: Type(_one_) is Object.
         1. Assert: _one_ has an [[InitializedTemporalYearMonth]] internal slot.

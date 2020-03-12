@@ -56,39 +56,39 @@ export class Duration {
     SetSlot(this, NANOSECONDS, nanoseconds);
   }
   get years() {
-    if (!ES.IsDuration(this)) throw new TypeError('invalid receiver');
+    if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
     return GetSlot(this, YEARS);
   }
   get months() {
-    if (!ES.IsDuration(this)) throw new TypeError('invalid receiver');
+    if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
     return GetSlot(this, MONTHS);
   }
   get days() {
-    if (!ES.IsDuration(this)) throw new TypeError('invalid receiver');
+    if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
     return GetSlot(this, DAYS);
   }
   get hours() {
-    if (!ES.IsDuration(this)) throw new TypeError('invalid receiver');
+    if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
     return GetSlot(this, HOURS);
   }
   get minutes() {
-    if (!ES.IsDuration(this)) throw new TypeError('invalid receiver');
+    if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
     return GetSlot(this, MINUTES);
   }
   get seconds() {
-    if (!ES.IsDuration(this)) throw new TypeError('invalid receiver');
+    if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
     return GetSlot(this, SECONDS);
   }
   get milliseconds() {
-    if (!ES.IsDuration(this)) throw new TypeError('invalid receiver');
+    if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
     return GetSlot(this, MILLISECONDS);
   }
   get microseconds() {
-    if (!ES.IsDuration(this)) throw new TypeError('invalid receiver');
+    if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
     return GetSlot(this, MICROSECONDS);
   }
   get nanoseconds() {
-    if (!ES.IsDuration(this)) throw new TypeError('invalid receiver');
+    if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
     return GetSlot(this, NANOSECONDS);
   }
   toString() {
@@ -96,7 +96,7 @@ export class Duration {
       if (num <= Number.MAX_SAFE_INTEGER) return num.toString(10);
       return bigInt(num).toString();
     }
-    if (!ES.IsDuration(this)) throw new TypeError('invalid receiver');
+    if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
     const dateParts = [];
     if (GetSlot(this, YEARS)) dateParts.push(`${formatNumber(GetSlot(this, YEARS))}Y`);
     if (GetSlot(this, MONTHS)) dateParts.push(`${formatNumber(GetSlot(this, MONTHS))}M`);
@@ -124,16 +124,16 @@ export class Duration {
     return `P${dateParts.join('')}${timeParts.join('')}`;
   }
   toLocaleString(...args) {
-    if (!ES.IsDuration(this)) throw new TypeError('invalid receiver');
+    if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
     if (typeof Intl !== 'undefined' && typeof Intl.DurationFormat !== 'undefined') {
       return new Intl.DurationFormat(...args).format(this);
     }
     console.warn('Temporal.Duration.prototype.toLocaleString() requires Intl.DurationFormat.');
-    return ES.DurationToString(this);
+    return ES.TemporalDurationToString(this);
   }
   static from(arg, options = undefined) {
-    const disambiguation = ES.ToDisambiguation(options);
-    let result = ES.ToDuration(arg, disambiguation);
+    const disambiguation = ES.ToTemporalDisambiguation(options);
+    let result = ES.ToTemporalDuration(arg, disambiguation);
     if (this === Duration) return result;
     return new this(
       GetSlot(result, YEARS),

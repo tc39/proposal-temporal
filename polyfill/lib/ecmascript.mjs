@@ -60,21 +60,22 @@ const INTRINSICS = {
 import * as PARSE from './regex.mjs';
 
 export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
-  IsAbsolute: (item) => HasSlot(item, EPOCHNANOSECONDS),
-  IsTimeZone: (item) => HasSlot(item, IDENTIFIER),
-  IsDuration: (item) =>
+  IsTemporalAbsolute: (item) => HasSlot(item, EPOCHNANOSECONDS),
+  IsTemporalTimeZone: (item) => HasSlot(item, IDENTIFIER),
+  IsTemporalDuration: (item) =>
     HasSlot(item, YEARS, MONTHS, DAYS, HOURS, MINUTES, SECONDS, MILLISECONDS, MICROSECONDS, NANOSECONDS),
-  IsDate: (item) =>
+  IsTemporalDate: (item) =>
     HasSlot(item, YEAR, MONTH, DAY) && !HasSlot(item, HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND),
-  IsTime: (item) =>
+  IsTemporalTime: (item) =>
     HasSlot(item, HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND) && !HasSlot(item, YEAR, MONTH, DAY),
-  IsDateTime: (item) => HasSlot(item, YEAR, MONTH, DAY, HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND),
-  IsYearMonth: (item) => HasSlot(item, YEAR, MONTH) && !HasSlot(item, DAY),
-  IsMonthDay: (item) => HasSlot(item, MONTH, DAY) && !HasSlot(item, YEAR),
-  ToTimeZone: (item) => {
-    if (ES.IsTimeZone(item)) return item;
+  IsTemporalDateTime: (item) =>
+    HasSlot(item, YEAR, MONTH, DAY, HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND),
+  IsTemporalYearMonth: (item) => HasSlot(item, YEAR, MONTH) && !HasSlot(item, DAY),
+  IsTemporalMonthDay: (item) => HasSlot(item, MONTH, DAY) && !HasSlot(item, YEAR),
+  ToTemporalTimeZone: (item) => {
+    if (ES.IsTemporalTimeZone(item)) return item;
     const stringIdent = ES.ToString(item);
-    const { zone, ianaName, offset } = ES.ParseTimeZoneString(stringIdent);
+    const { zone, ianaName, offset } = ES.ParseTemporalTimeZoneString(stringIdent);
     const result = new TemporalTimeZone(zone);
     if (offset && ianaName) {
       const absolute = TemporalAbsolute.from(stringIdent);
@@ -104,16 +105,16 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
     const zone = match[10] ? 'UTC' : ianaName || offset;
     return { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, zone, ianaName, offset };
   },
-  ParseAbsoluteString: (isoString) => {
+  ParseTemporalAbsoluteString: (isoString) => {
     return ES.ParseISODateTime(isoString, { zoneRequired: true });
   },
-  ParseDateTimeString: (isoString) => {
+  ParseTemporalDateTimeString: (isoString) => {
     return ES.ParseISODateTime(isoString, { zoneRequired: false });
   },
-  ParseDateString: (isoString) => {
+  ParseTemporalDateString: (isoString) => {
     return ES.ParseISODateTime(isoString, { zoneRequired: false });
   },
-  ParseTimeString: (isoString) => {
+  ParseTemporalTimeString: (isoString) => {
     const match = PARSE.time.exec(isoString);
     let hour, minute, second, millisecond, microsecond, nanosecond;
     if (match) {
@@ -131,7 +132,7 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
     }
     return { hour, minute, second, millisecond, microsecond, nanosecond };
   },
-  ParseYearMonthString: (isoString) => {
+  ParseTemporalYearMonthString: (isoString) => {
     const match = PARSE.yearmonth.exec(isoString);
     let year, month;
     if (match) {
@@ -142,7 +143,7 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
     }
     return { year, month };
   },
-  ParseMonthDayString: (isoString) => {
+  ParseTemporalMonthDayString: (isoString) => {
     const match = PARSE.monthday.exec(isoString);
     let month, day;
     if (match) {
@@ -153,7 +154,7 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
     }
     return { month, day };
   },
-  ParseTimeZoneString: (stringIdent) => {
+  ParseTemporalTimeZoneString: (stringIdent) => {
     try {
       const canonicalIdent = ES.GetCanonicalTimeZoneIdentifier(stringIdent);
       if (canonicalIdent) return { zone: canonicalIdent.toString() };
@@ -163,7 +164,7 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
     // Try parsing ISO string instead
     return ES.ParseISODateTime(stringIdent, { zoneRequired: true });
   },
-  ParseDurationString: (isoString) => {
+  ParseTemporalDurationString: (isoString) => {
     const match = PARSE.duration.exec(isoString);
     if (!match) throw new RangeError(`invalid duration: ${isoString}`);
     const years = ES.ToInteger(match[1]);
@@ -177,15 +178,15 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
     const nanoseconds = ES.ToInteger(match[9]);
     return { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
   },
-  ToAbsolute: (item) => {
-    if (ES.IsAbsolute(item)) return item;
+  ToTemporalAbsolute: (item) => {
+    if (ES.IsTemporalAbsolute(item)) return item;
     const isoString = ES.ToString(item);
-    const { zone, ...props } = ES.ParseAbsoluteString(isoString);
-    const datetime = ES.ToDateTime(props, 'reject');
+    const { zone, ...props } = ES.ParseTemporalAbsoluteString(isoString);
+    const datetime = ES.ToTemporalDateTime(props, 'reject');
     return datetime.inTimeZone(zone, 'reject');
   },
-  ToDateTime: (item, disambiguation) => {
-    if (ES.IsDateTime(item)) return item;
+  ToTemporalDateTime: (item, disambiguation) => {
+    if (ES.IsTemporalDateTime(item)) return item;
     let props = ES.ValidDateTimeFrom(
       item,
       ['year', 'month', 'day'],
@@ -193,7 +194,7 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
     );
     if (!props) {
       const isoString = ES.ToString(item);
-      props = ES.ParseDateTimeString(isoString);
+      props = ES.ParseTemporalDateTimeString(isoString);
     }
     let {
       hour = 0,
@@ -256,12 +257,12 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
     }
     return { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond };
   },
-  ToDate: (item, disambiguation) => {
-    if (ES.IsDate(item)) return item;
+  ToTemporalDate: (item, disambiguation) => {
+    if (ES.IsTemporalDate(item)) return item;
     let props = ES.ValidDateTimeFrom(item, ['year', 'month', 'day']);
     if (!props) {
       const isoString = ES.ToString(item);
-      props = ES.ParseDateString(isoString);
+      props = ES.ParseTemporalDateString(isoString);
     }
     let { day, month, year } = props;
     ({ year, month, day } = ES.RegulateDate(year, month, day, disambiguation));
@@ -283,8 +284,8 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
     }
     return { year, month, day };
   },
-  ToTime: (item, disambiguation) => {
-    if (ES.IsTime(item)) return item;
+  ToTemporalTime: (item, disambiguation) => {
+    if (ES.IsTemporalTime(item)) return item;
     let props = ES.ValidDateTimeFrom(
       item,
       [],
@@ -292,7 +293,7 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
     );
     if (!props) {
       const isoString = ES.ToString(item);
-      props = ES.ParseTimeString(isoString);
+      props = ES.ParseTemporalTimeString(isoString);
     }
     let { hour = 0, microsecond = 0, millisecond = 0, minute = 0, nanosecond = 0, second = 0 } = props;
     ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.RegulateTime(
@@ -334,12 +335,12 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
     }
     return { hour, minute, second, millisecond, microsecond, nanosecond };
   },
-  ToYearMonth: (item, disambiguation) => {
-    if (ES.IsYearMonth(item)) return item;
+  ToTemporalYearMonth: (item, disambiguation) => {
+    if (ES.IsTemporalYearMonth(item)) return item;
     let props = ES.ValidDateTimeFrom(item, ['year', 'month']);
     if (!props) {
       const isoString = ES.ToString(item);
-      props = ES.ParseYearMonthString(isoString);
+      props = ES.ParseTemporalYearMonthString(isoString);
     }
     let { month, year } = props;
     ({ year, month } = ES.RegulateYearMonth(year, month, disambiguation));
@@ -361,12 +362,12 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
     }
     return { year, month };
   },
-  ToMonthDay: (item, disambiguation) => {
-    if (ES.IsMonthDay(item)) return item;
+  ToTemporalMonthDay: (item, disambiguation) => {
+    if (ES.IsTemporalMonthDay(item)) return item;
     let props = ES.ValidDateTimeFrom(item, ['month', 'day']);
     if (!props) {
       const isoString = ES.ToString(item);
-      props = ES.ParseMonthDayString(isoString);
+      props = ES.ParseTemporalMonthDayString(isoString);
     }
     let { day, month } = props;
     ({ month, day } = ES.RegulateMonthDay(month, day, disambiguation));
@@ -387,8 +388,8 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
     }
     return { month, day };
   },
-  ToDuration: (item, disambiguation) => {
-    if (ES.IsDuration(item)) return item;
+  ToTemporalDuration: (item, disambiguation) => {
+    if (ES.IsTemporalDuration(item)) return item;
     let props = ES.ValidPropertyBag(item, [
       'years',
       'months',
@@ -402,7 +403,7 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
     ]);
     if (!props) {
       const isoString = ES.ToString(item);
-      props = ES.ParseDurationString(isoString);
+      props = ES.ParseTemporalDurationString(isoString);
     }
     let {
       days = 0,
@@ -452,8 +453,8 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
 
     return new TemporalDuration(years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
   },
-  ToLimitedDuration: (item, disallowedSlots = []) => {
-    const duration = ES.ToDuration(item, 'reject');
+  ToLimitedTemporalDuration: (item, disallowedSlots = []) => {
+    const duration = ES.ToTemporalDuration(item, 'reject');
     for (let slot of disallowedSlots) {
       if (GetSlot(duration, slot) !== 0) {
         throw new RangeError(`invalid duration field ${slot}`);
@@ -461,13 +462,13 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
     }
     return duration;
   },
-  ToDisambiguation: (options) => {
+  ToTemporalDisambiguation: (options) => {
     return ES.GetOption(options, 'disambiguation', ['constrain', 'balance', 'reject'], 'constrain');
   },
-  ToArithmeticDisambiguation: (options) => {
+  ToArithmeticTemporalDisambiguation: (options) => {
     return ES.GetOption(options, 'disambiguation', ['constrain', 'reject'], 'constrain');
   },
-  ToTimeZoneDisambiguation: (options) => {
+  ToTimeZoneTemporalDisambiguation: (options) => {
     return ES.GetOption(options, 'disambiguation', ['earlier', 'later', 'reject'], 'earlier');
   },
   ToLargestTemporalUnit: (options, fallback, disallowedStrings = []) => {
@@ -555,7 +556,7 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
     let post = parts.length ? `.${parts.join('')}` : '';
     return `${secs}${post}`;
   },
-  AbsoluteToString: (absolute, timeZone) => {
+  TemporalAbsoluteToString: (absolute, timeZone) => {
     const dateTime = timeZone.getDateTimeFor(absolute);
     const year = ES.ISOYearString(dateTime.year);
     const month = ES.ISODateTimePartString(dateTime.month);
@@ -1261,7 +1262,7 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
   })(),
   SystemTimeZone: () => {
     const fmt = new IntlDateTimeFormat('en-us');
-    return ES.ToTimeZone(fmt.resolvedOptions().timeZone);
+    return ES.ToTemporalTimeZone(fmt.resolvedOptions().timeZone);
   },
   ComparisonResult: (value) => (value < 0 ? -1 : value > 0 ? 1 : value),
   GetOption: (options, property, allowedValues, fallback) => {
