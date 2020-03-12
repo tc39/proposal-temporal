@@ -68,13 +68,13 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal.timezone.from">
-      <h1>Temporal.TimeZone.from ( _arg_ )</h1>
+      <h1>Temporal.TimeZone.from ( _item_ )</h1>
       <p>
-        The `from` method takes one argument _arg_.
+        The `from` method takes one argument _item_.
         The following steps are taken:
       </p>
       <emu-alg>
-        1. Return ? ToTemporalTimeZone(_arg_).
+        1. Return ? ToTemporalTimeZone(_item_).
       </emu-alg>
     </emu-clause>
   </emu-clause>
@@ -147,9 +147,9 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal.timezone.prototype.getabsolutefor">
-      <h1>Temporal.TimeZone.prototype.getAbsoluteFor ( _dateTime_ [ , _options_ ] )</h1>
+      <h1>Temporal.TimeZone.prototype.getAbsoluteFor ( _temporalDateTimeLike_ [ , _options_ ] )</h1>
       <p>
-        The `getAbsoluteFor` method takes two arguments, _dateTime_ and _options_.
+        The `getAbsoluteFor` method takes two arguments, _temporalDateTimeLike_ and _options_.
         The following steps are taken:
       </p>
       <emu-alg>
@@ -204,19 +204,19 @@
     <h1>Abstract operations</h1>
 
     <emu-clause id="sec-temporal-temporaltimezonefromstring" aoid="TemporalTimeZoneFromString">
-      <h1>TemporalTimeZoneFromString ( _timeZone_ )</h1>
+      <h1>TemporalTimeZoneFromString ( _string_ )</h1>
       <emu-alg>
-        1. Assert: Type(_timeZone_) is String.
-        1. If _timeZone_ matches `/([+-][01]?[0-9]):?([0-5][0-9])/`, then
+        1. Assert: Type(_string_) is String.
+        1. If _string_ matches `/([+-][01]?[0-9]):?([0-5][0-9])/`, then
           1. <mark>TODO: Construct the time zone with the offset</mark>
-        1. If ! IsValidTimeZoneName(_timeZone_) is *true*, then
-          1. Let _canonical_ be ! CanonicalizeTimeZoneName(_timeZone_).
+        1. If ! IsValidTimeZoneName(_string_) is *true*, then
+          1. Let _canonical_ be ! CanonicalizeTimeZoneName(_string_).
           1. Return ? CreateTemporalTimeZone(_canonical_).
-        1. Let _valid_ be *true* if _timeZone_ matches <a href="https://github.com/tc39/proposal-temporal/blob/main/polyfill/lib/regex.mjs">the "timezone" regular expression in the polyfill</a> and *false* otherwise.
+        1. Let _valid_ be *true* if _string_ matches <a href="https://github.com/tc39/proposal-temporal/blob/main/polyfill/lib/regex.mjs">the "timezone" regular expression in the polyfill</a> and *false* otherwise.
         1. <mark>TODO: Actually specify this somehow.</mark>
         1. If _valid_ is *false*, then
           1. Throw a *RangeError* exception.
-        1. Let _identifier_ be the relevant part of _timeZone_.
+        1. Let _identifier_ be the relevant part of _string_.
         1. <mark>TODO: Use time zone name when present; offset otherwise.</mark>
         1. If _identifier_ is *"Z"*, then set _identifier_ to *"UTC"*.
         1. If ! IsValidTimeZoneName(_identifier_) is *false*, then
@@ -227,13 +227,13 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal-totemporaltimezone" aoid="ToTemporalTimeZone">
-      <h1>ToTemporalTimeZone ( _timeZone_ )</h1>
+      <h1>ToTemporalTimeZone ( _temporalTimeZoneLike_ )</h1>
       <emu-alg>
-        1. If Type(_timeZone_) is Object, then
-          1. If _timeZone_ has an [[InitializedTemporalTimeZone]] internal slot, then
-            1. Return _timeZone_.
-        1. Let _timeZone_ be ? ToString(_timeZone_).
-        1. Return ? TemporalTimeZoneFromString(_timeZone_).
+        1. If Type(_temporalTimeZoneLike_) is Object, then
+          1. If _temporalTimeZoneLike_ has an [[InitializedTemporalTimeZone]] internal slot, then
+            1. Return _temporalTimeZoneLike_.
+        1. Let _string_ be ? ToString(_temporalTimeZoneLike_).
+        1. Return ? TemporalTimeZoneFromString(_string_).
       </emu-alg>
     </emu-clause>
 

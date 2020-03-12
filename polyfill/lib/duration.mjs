@@ -131,9 +131,9 @@ export class Duration {
     console.warn('Temporal.Duration.prototype.toLocaleString() requires Intl.DurationFormat.');
     return ES.TemporalDurationToString(this);
   }
-  static from(arg, options = undefined) {
+  static from(item, options = undefined) {
     const disambiguation = ES.ToTemporalDisambiguation(options);
-    let result = ES.ToTemporalDuration(arg, disambiguation);
+    let result = ES.ToTemporalDuration(item, disambiguation);
     if (this === Duration) return result;
     return new this(
       GetSlot(result, YEARS),

@@ -68,10 +68,10 @@ export class Date {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
     return ES.LeapYear(GetSlot(this, YEAR));
   }
-  with(dateLike = {}, options) {
+  with(temporalDateLike = {}, options) {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
     const disambiguation = ES.ToTemporalDisambiguation(options);
-    const props = ES.ValidPropertyBag(dateLike, ['year', 'month', 'day']);
+    const props = ES.ValidPropertyBag(temporalDateLike, ['year', 'month', 'day']);
     if (!props) {
       throw new RangeError('invalid date-like');
     }
@@ -82,10 +82,10 @@ export class Date {
     if (!ES.IsTemporalDate(result)) throw new TypeError('invalid result');
     return result;
   }
-  plus(durationLike = {}, options) {
+  plus(temporalDurationLike = {}, options) {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
     const disambiguation = ES.ToArithmeticTemporalDisambiguation(options);
-    const duration = ES.ToLimitedTemporalDuration(durationLike, [
+    const duration = ES.ToLimitedTemporalDuration(temporalDurationLike, [
       HOURS,
       MINUTES,
       SECONDS,
@@ -102,10 +102,10 @@ export class Date {
     if (!ES.IsTemporalDate(result)) throw new TypeError('invalid result');
     return result;
   }
-  minus(durationLike = {}, options) {
+  minus(temporalDurationLike = {}, options) {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
     const disambiguation = ES.ToArithmeticTemporalDisambiguation(options);
-    const duration = ES.ToLimitedTemporalDuration(durationLike, [
+    const duration = ES.ToLimitedTemporalDuration(temporalDurationLike, [
       HOURS,
       MINUTES,
       SECONDS,
@@ -143,18 +143,18 @@ export class Date {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
     return new Intl.DateTimeFormat(...args).format(this);
   }
-  withTime(time) {
+  withTime(temporalTime) {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
-    if (!ES.IsTemporalTime(time)) throw new TypeError('invalid Temporal.Time object');
+    if (!ES.IsTemporalTime(temporalTime)) throw new TypeError('invalid Temporal.Time object');
     const year = GetSlot(this, YEAR);
     const month = GetSlot(this, MONTH);
     const day = GetSlot(this, DAY);
-    const hour = GetSlot(time, HOUR);
-    const minute = GetSlot(time, MINUTE);
-    const second = GetSlot(time, SECOND);
-    const millisecond = GetSlot(time, MILLISECOND);
-    const microsecond = GetSlot(time, MICROSECOND);
-    const nanosecond = GetSlot(time, NANOSECOND);
+    const hour = GetSlot(temporalTime, HOUR);
+    const minute = GetSlot(temporalTime, MINUTE);
+    const second = GetSlot(temporalTime, SECOND);
+    const millisecond = GetSlot(temporalTime, MILLISECOND);
+    const microsecond = GetSlot(temporalTime, MICROSECOND);
+    const nanosecond = GetSlot(temporalTime, NANOSECOND);
     const DateTime = ES.GetIntrinsic('%Temporal.DateTime%');
     return new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
   }
@@ -168,9 +168,9 @@ export class Date {
     const MonthDay = ES.GetIntrinsic('%Temporal.MonthDay%');
     return new MonthDay(GetSlot(this, MONTH), GetSlot(this, DAY));
   }
-  static from(arg, options = undefined) {
+  static from(item, options = undefined) {
     const disambiguation = ES.ToTemporalDisambiguation(options);
-    let result = ES.ToTemporalDate(arg, disambiguation);
+    let result = ES.ToTemporalDate(item, disambiguation);
     if (this === Date) return result;
     return new this(GetSlot(result, YEAR), GetSlot(result, MONTH), GetSlot(result, DAY));
   }

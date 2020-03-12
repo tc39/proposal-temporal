@@ -66,36 +66,36 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal.now.datetime">
-      <h1>Temporal.now.dateTime ( [ _timeZone_ ] )</h1>
+      <h1>Temporal.now.dateTime ( [ _temporalTimeZoneLike_ ] )</h1>
       <p>
-        The `dateTime` method takes one argument _timeZone_.
+        The `dateTime` method takes one argument _temporalTimeZoneLike_.
         The following steps are taken:
       </p>
       <emu-alg>
-        1. Return ? SystemDateTime(_timeZone_).
+        1. Return ? SystemDateTime(_temporalTimeZoneLike_).
       </emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal.now.date">
-      <h1>Temporal.now.date ( [ _timeZone_ ] )</h1>
+      <h1>Temporal.now.date ( [ _temporalTimeZoneLike_ ] )</h1>
       <p>
-        The `date` method takes one argument _timeZone_.
+        The `date` method takes one argument _temporalTimeZoneLike_.
         The following steps are taken:
       </p>
       <emu-alg>
-        1. Let _dateTime_ be ? SystemDateTime(_timeZone_).
+        1. Let _dateTime_ be ? SystemDateTime(_temporalTimeZoneLike_).
         1. Return ? CreateTemporalDate(_dateTime_.[[Year]], _dateTime_.[[Month]], _dateTime_.[[Day]]).
       </emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal.now.time">
-      <h1>Temporal.now.time ( [ _timeZone_ ] )</h1>
+      <h1>Temporal.now.time ( [ _temporalTimeZoneLike_ ] )</h1>
       <p>
-        The `time` method takes one argument _timeZone_.
+        The `time` method takes one argument _temporalTimeZoneLike_.
         The following steps are taken:
       </p>
       <emu-alg>
-        1. Let _dateTime_ be ? SystemDateTime(_timeZone_).
+        1. Let _dateTime_ be ? SystemDateTime(_temporalTimeZoneLike_).
         1. Return ? CreateTemporalTime(_dateTime_.[[Hour]], _dateTime_.[[Minute]], _dateTime_.[[Second]], _dateTime_.[[Millisecond]], _dateTime_.[[Microsecond]], _dateTime_.[[Nanosecond]]).
       </emu-alg>
     </emu-clause>
@@ -122,12 +122,12 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal-systemdatetime" aoid="SystemDateTime">
-      <h1>SystemDateTime ( [ _timeZone_ ] )</h1>
+      <h1>SystemDateTime ( [ _temporalTimeZoneLike_ ] )</h1>
       <emu-alg>
-        1. If _timeZone_ is *undefined*, then
-            1. Set _timeZone_ to SystemTimeZone().
+        1. If _temporalTimeZoneLike_ is *undefined*, then
+            1. Let _timeZone_ be SystemTimeZone().
         1. Else,
-            1. Set _timeZone_ to ? ToTemporalTimeZone(_timeZone_).
+            1. Let _timeZone_ be ? ToTemporalTimeZone(_temporalTimeZoneLike_).
         1. Let _absolute_ be ? SystemAbsolute().
         1. Return ? GetTemporalDateTimeFor(_timeZone_, _absolute_).
       </emu-alg>

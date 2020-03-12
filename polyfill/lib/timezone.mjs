@@ -112,8 +112,8 @@ export class TimeZone {
     if (!ES.IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');
     return this.name;
   }
-  static from(arg) {
-    let result = ES.ToTemporalTimeZone(arg);
+  static from(item) {
+    let result = ES.ToTemporalTimeZone(item);
     if (this === TimeZone) return result;
     return new this(GetSlot(result, IDENTIFIER));
   }

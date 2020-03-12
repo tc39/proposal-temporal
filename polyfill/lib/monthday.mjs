@@ -23,10 +23,10 @@ export class MonthDay {
     return GetSlot(this, DAY);
   }
 
-  with(dateLike, options) {
+  with(temporalMonthDayLike, options) {
     if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
     const disambiguation = ES.ToTemporalDisambiguation(options);
-    const props = ES.ValidPropertyBag(dateLike, ['month', 'day']);
+    const props = ES.ValidPropertyBag(temporalMonthDayLike, ['month', 'day']);
     if (!props) {
       throw new RangeError('invalid month-day-like');
     }
@@ -55,9 +55,9 @@ export class MonthDay {
     const Date = ES.GetIntrinsic('%Temporal.Date%');
     return new Date(year, month, day);
   }
-  static from(arg, options = undefined) {
+  static from(item, options = undefined) {
     const disambiguation = ES.ToTemporalDisambiguation(options);
-    let result = ES.ToTemporalMonthDay(arg, disambiguation);
+    let result = ES.ToTemporalMonthDay(item, disambiguation);
     if (this === MonthDay) return result;
     return new this(GetSlot(result, MONTH), GetSlot(result, DAY));
   }
