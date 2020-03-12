@@ -181,7 +181,7 @@
         1. Perform ? RequireInternalSlot(_absolute_, [[InitializedTemporalAbsolute]]).
         1. Let _ns_ be _absolute_.[[Nanoseconds]].
         1. Let _s_ be RoundTowardsZero(_ns_ / 1,000,000,000<sub>ℝ</sub>).
-        1. Return _s_.
+        1. Return the Number value for _s_.
       </emu-alg>
     </emu-clause>
 
@@ -195,7 +195,7 @@
         1. Perform ? RequireInternalSlot(_absolute_, [[InitializedTemporalAbsolute]]).
         1. Let _ns_ be _absolute_.[[Nanoseconds]].
         1. Let _ms_ be RoundTowardsZero(_ns_ / 1,000,000<sub>ℝ</sub>).
-        1. Return _ms_.
+        1. Return the Number value for _ms_.
       </emu-alg>
     </emu-clause>
 
