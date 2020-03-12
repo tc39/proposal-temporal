@@ -63,10 +63,10 @@ export class Time {
     return GetSlot(this, NANOSECOND);
   }
 
-  with(timeLike = {}, options) {
+  with(temporalTimeLike = {}, options) {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
     const disambiguation = ES.ToTemporalDisambiguation(options);
-    const props = ES.ValidPropertyBag(timeLike, [
+    const props = ES.ValidPropertyBag(temporalTimeLike, [
       'hour',
       'minute',
       'second',
@@ -99,10 +99,10 @@ export class Time {
     if (!ES.IsTemporalTime(result)) throw new TypeError('invalid result');
     return result;
   }
-  plus(durationLike, options) {
+  plus(temporalDurationLike, options) {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
     let { hour, minute, second, millisecond, microsecond, nanosecond } = this;
-    const duration = ES.ToLimitedTemporalDuration(durationLike, [YEARS, MONTHS, DAYS]);
+    const duration = ES.ToLimitedTemporalDuration(temporalDurationLike, [YEARS, MONTHS, DAYS]);
     const disambiguation = ES.ToArithmeticTemporalDisambiguation(options);
     const { hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
     ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.AddTime(
@@ -133,10 +133,10 @@ export class Time {
     if (!ES.IsTemporalTime(result)) throw new TypeError('invalid result');
     return result;
   }
-  minus(durationLike, options) {
+  minus(temporalDurationLike, options) {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
     let { hour, minute, second, millisecond, microsecond, nanosecond } = this;
-    const duration = ES.ToLimitedTemporalDuration(durationLike, [YEARS, MONTHS, DAYS]);
+    const duration = ES.ToLimitedTemporalDuration(temporalDurationLike, [YEARS, MONTHS, DAYS]);
     const disambiguation = ES.ToArithmeticTemporalDisambiguation(options);
     const { hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
     ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.SubtractTime(
@@ -213,12 +213,12 @@ export class Time {
     return new Intl.DateTimeFormat(...args).format(this);
   }
 
-  withDate(date) {
+  withDate(temporalDate) {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
-    if (!ES.IsTemporalDate(date)) throw new TypeError('invalid Temporal.Date object');
-    const year = GetSlot(date, YEAR);
-    const month = GetSlot(date, MONTH);
-    const day = GetSlot(date, DAY);
+    if (!ES.IsTemporalDate(temporalDate)) throw new TypeError('invalid Temporal.Date object');
+    const year = GetSlot(temporalDate, YEAR);
+    const month = GetSlot(temporalDate, MONTH);
+    const day = GetSlot(temporalDate, DAY);
     const hour = GetSlot(this, HOUR);
     const minute = GetSlot(this, MINUTE);
     const second = GetSlot(this, SECOND);
@@ -229,9 +229,9 @@ export class Time {
     return new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
   }
 
-  static from(arg, options = undefined) {
+  static from(item, options = undefined) {
     const disambiguation = ES.ToTemporalDisambiguation(options);
-    let result = ES.ToTemporalTime(arg, disambiguation);
+    let result = ES.ToTemporalTime(item, disambiguation);
     if (this === Time) return result;
     return new this(
       GetSlot(result, HOUR),

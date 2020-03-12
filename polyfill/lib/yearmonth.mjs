@@ -44,10 +44,10 @@ export class YearMonth {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
     return ES.LeapYear(GetSlot(this, YEAR));
   }
-  with(dateLike = {}, options) {
+  with(temporalYearMonthLike = {}, options) {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
     const disambiguation = ES.ToTemporalDisambiguation(options);
-    const props = ES.ValidPropertyBag(dateLike, ['year', 'month']);
+    const props = ES.ValidPropertyBag(temporalYearMonthLike, ['year', 'month']);
     if (!props) {
       throw new RangeError('invalid year-month-like');
     }
@@ -58,10 +58,10 @@ export class YearMonth {
     if (!ES.IsTemporalYearMonth(result)) throw new TypeError('invalid result');
     return result;
   }
-  plus(durationLike, options) {
+  plus(temporalDurationLike, options) {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
     const disambiguation = ES.ToArithmeticTemporalDisambiguation(options);
-    const duration = ES.ToLimitedTemporalDuration(durationLike, [
+    const duration = ES.ToLimitedTemporalDuration(temporalDurationLike, [
       DAYS,
       HOURS,
       MINUTES,
@@ -80,10 +80,10 @@ export class YearMonth {
     if (!ES.IsTemporalYearMonth(result)) throw new TypeError('invalid result');
     return result;
   }
-  minus(durationLike, options) {
+  minus(temporalDurationLike, options) {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
     const disambiguation = ES.ToArithmeticTemporalDisambiguation(options);
-    const duration = ES.ToLimitedTemporalDuration(durationLike, [
+    const duration = ES.ToLimitedTemporalDuration(temporalDurationLike, [
       DAYS,
       HOURS,
       MINUTES,
@@ -138,9 +138,9 @@ export class YearMonth {
     const Date = ES.GetIntrinsic('%Temporal.Date%');
     return new Date(year, month, day);
   }
-  static from(arg, options = undefined) {
+  static from(item, options = undefined) {
     const disambiguation = ES.ToTemporalDisambiguation(options);
-    let result = ES.ToTemporalYearMonth(arg, disambiguation);
+    let result = ES.ToTemporalYearMonth(item, disambiguation);
     if (this === YearMonth) return result;
     return new this(GetSlot(result, YEAR), GetSlot(result, MONTH));
   }

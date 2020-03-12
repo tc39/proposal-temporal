@@ -13,17 +13,17 @@ function absolute() {
   const ns = ES.SystemUTCEpochNanoSeconds();
   return new Absolute(ns);
 }
-function dateTime(zone = timeZone()) {
-  zone = ES.ToTemporalTimeZone(zone);
+function dateTime(temporalTimeZoneLike = timeZone()) {
+  const timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);
   const abs = absolute();
-  const dateTime = zone.getDateTimeFor(abs);
+  const dateTime = timeZone.getDateTimeFor(abs);
   return dateTime;
 }
-function date(zone) {
-  return dateTime(zone).getDate();
+function date(temporalTimeZoneLike) {
+  return dateTime(temporalTimeZoneLike).getDate();
 }
-function time(zone) {
-  return dateTime(zone).getTime();
+function time(temporalTimeZoneLike) {
+  return dateTime(temporalTimeZoneLike).getTime();
 }
 function timeZone() {
   return ES.SystemTimeZone();

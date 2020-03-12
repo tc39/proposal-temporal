@@ -99,10 +99,10 @@ export class DateTime {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     return ES.LeapYear(GetSlot(this, YEAR));
   }
-  with(dateTimeLike, options) {
+  with(temporalDateTimeLike, options) {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     const disambiguation = ES.ToTemporalDisambiguation(options);
-    const props = ES.ValidPropertyBag(dateTimeLike, [
+    const props = ES.ValidPropertyBag(temporalDateTimeLike, [
       'year',
       'month',
       'day',
@@ -144,10 +144,10 @@ export class DateTime {
     if (!ES.IsTemporalDateTime(result)) throw new TypeError('invalid result');
     return result;
   }
-  plus(durationLike, options) {
+  plus(temporalDurationLike, options) {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     const disambiguation = ES.ToArithmeticTemporalDisambiguation(options);
-    const duration = ES.ToLimitedTemporalDuration(durationLike);
+    const duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
     let { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = this;
     let { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
     ({ year, month, day } = ES.AddDate(year, month, day, years, months, days, disambiguation));
@@ -185,10 +185,10 @@ export class DateTime {
     if (!ES.IsTemporalDateTime(result)) throw new TypeError('invalid result');
     return result;
   }
-  minus(durationLike, options) {
+  minus(temporalDurationLike, options) {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     const disambiguation = ES.ToArithmeticTemporalDisambiguation(options);
-    const duration = ES.ToLimitedTemporalDuration(durationLike);
+    const duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
     let { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = this;
     let { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
     let deltaDays = 0;
@@ -280,9 +280,9 @@ export class DateTime {
     return new Intl.DateTimeFormat(...args).format(this);
   }
 
-  inTimeZone(timeZoneParam = 'UTC', options) {
+  inTimeZone(temporalTimeZoneLike = 'UTC', options) {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-    const timeZone = ES.ToTemporalTimeZone(timeZoneParam);
+    const timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);
     const disambiguation = ES.ToTimeZoneTemporalDisambiguation(options);
     return timeZone.getAbsoluteFor(this, { disambiguation });
   }
@@ -314,9 +314,9 @@ export class DateTime {
     );
   }
 
-  static from(arg, options = undefined) {
+  static from(item, options = undefined) {
     const disambiguation = ES.ToTemporalDisambiguation(options);
-    let result = ES.ToTemporalDateTime(arg, disambiguation);
+    let result = ES.ToTemporalDateTime(item, disambiguation);
     if (this === DateTime) return result;
     return new this(
       GetSlot(result, YEAR),
