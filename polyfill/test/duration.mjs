@@ -39,15 +39,13 @@ describe('Duration', () => {
         equal(`${Duration.from({ milliseconds: 1000 }, { disambiguation: 'balance' })}`, 'PT1S');
         equal(`${Duration.from({ seconds: 100 }, { disambiguation: 'balance' })}`, 'PT1M40S');
         equal(`${Duration.from({ minutes: 100 }, { disambiguation: 'balance' })}`, 'PT1H40M');
+        equal(`${Duration.from({ hours: 100 }, { disambiguation: 'balance' })}`, 'P4DT4H');
       });
       it('excessive date units do not balance when "balance"', () => {
         equal(`${Duration.from({ months: 12 }, { disambiguation: 'balance' })}`, 'P12M');
         equal(`${Duration.from({ months: 12, seconds: 3600 }, { disambiguation: 'balance' })}`, 'P12MT1H');
         equal(`${Duration.from({ days: 31 }, { disambiguation: 'balance' })}`, 'P31D');
         equal(`${Duration.from({ days: 31, seconds: 3600 }, { disambiguation: 'balance' })}`, 'P31DT1H');
-        equal(`${Duration.from({ hours: 24 }, { disambiguation: 'balance' })}`, 'PT24H');
-        equal(`${Duration.from({ seconds: 2 * 86400 }, { disambiguation: 'balance' })}`, 'PT48H');
-        equal(`${Duration.from({ hours: 24, seconds: 3600 }, { disambiguation: 'balance' })}`, 'PT25H');
       });
       it('throw when bad disambiguation', () => {
         [new Duration(3), { days: 0 }, 'P5Y'].forEach((input) => {

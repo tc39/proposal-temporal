@@ -478,13 +478,14 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
       }
       case 'balance': {
         ({
+          days,
           hours,
           minutes,
           seconds,
           milliseconds,
           microseconds,
           nanoseconds,
-        } = ES.BalanceDuration(0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 'hours'));
+        } = ES.BalanceDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 'days'));
         for (const prop of [years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds]) {
           if (!Number.isFinite(prop)) throw new RangeError('infinite values not allowed as duration fields');
         }
