@@ -72,7 +72,9 @@ export class Date {
     let { year = GetSlot(this, YEAR), month = GetSlot(this, MONTH), day = GetSlot(this, DAY) } = props;
     ({ year, month, day } = ES.RegulateDate(year, month, day, disambiguation));
     const Construct = ES.SpeciesConstructor(this, Date);
-    return new Construct(year, month, day);
+    const result = new Construct(year, month, day);
+    if (!ES.IsDate(result)) throw new TypeError('invalid result');
+    return result;
   }
   plus(durationLike = {}, options) {
     if (!ES.IsDate(this)) throw new TypeError('invalid receiver');
@@ -83,7 +85,9 @@ export class Date {
     ({ year, month, day } = ES.AddDate(year, month, day, years, months, days, disambiguation));
     ({ year, month, day } = ES.RegulateDate(year, month, day, disambiguation));
     const Construct = ES.SpeciesConstructor(this, Date);
-    return new Construct(year, month, day);
+    const result = new Construct(year, month, day);
+    if (!ES.IsDate(result)) throw new TypeError('invalid result');
+    return result;
   }
   minus(durationLike = {}, options) {
     if (!ES.IsDate(this)) throw new TypeError('invalid receiver');
@@ -94,7 +98,9 @@ export class Date {
     ({ year, month, day } = ES.SubtractDate(year, month, day, years, months, days, disambiguation));
     ({ year, month, day } = ES.RegulateDate(year, month, day, disambiguation));
     const Construct = ES.SpeciesConstructor(this, Date);
-    return new Construct(year, month, day);
+    const result = new Construct(year, month, day);
+    if (!ES.IsDate(result)) throw new TypeError('invalid result');
+    return result;
   }
   difference(other, options) {
     if (!ES.IsDate(this)) throw new TypeError('invalid receiver');
