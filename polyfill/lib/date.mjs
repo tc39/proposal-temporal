@@ -69,14 +69,10 @@ export class Date {
     if (!props) {
       throw new RangeError('invalid date-like');
     }
-    const { year = GetSlot(this, YEAR), month = GetSlot(this, MONTH), day = GetSlot(this, DAY) } = props;
-    const result = ES.ToDate({ year, month, day }, disambiguation);
+    let { year = GetSlot(this, YEAR), month = GetSlot(this, MONTH), day = GetSlot(this, DAY) } = props;
+    ({ year, month, day } = ES.RegulateDate(year, month, day, disambiguation));
     const Construct = ES.SpeciesConstructor(this, Date);
-    return Construct === Date ? result : new Construct(
-      GetSlot(result, YEAR),
-      GetSlot(result, MONTH),
-      GetSlot(result, DAY),
-    );
+    return new Construct(year, month, day);
   }
   plus(durationLike = {}, options) {
     if (!ES.IsDate(this)) throw new TypeError('invalid receiver');
@@ -85,13 +81,9 @@ export class Date {
     let { year, month, day } = this;
     const { years, months, days } = duration;
     ({ year, month, day } = ES.AddDate(year, month, day, years, months, days, disambiguation));
-    const result = ES.ToDate({ year, month, day }, disambiguation);
+    ({ year, month, day } = ES.RegulateDate(year, month, day, disambiguation));
     const Construct = ES.SpeciesConstructor(this, Date);
-    return Construct === Date ? result : new Construct(
-      GetSlot(result, YEAR),
-      GetSlot(result, MONTH),
-      GetSlot(result, DAY),
-    );
+    return new Construct(year, month, day);
   }
   minus(durationLike = {}, options) {
     if (!ES.IsDate(this)) throw new TypeError('invalid receiver');
@@ -100,13 +92,9 @@ export class Date {
     let { year, month, day } = this;
     const { years, months, days } = duration;
     ({ year, month, day } = ES.SubtractDate(year, month, day, years, months, days, disambiguation));
-    const result = ES.ToDate({ year, month, day }, disambiguation);
+    ({ year, month, day } = ES.RegulateDate(year, month, day, disambiguation));
     const Construct = ES.SpeciesConstructor(this, Date);
-    return Construct === Date ? result : new Construct(
-      GetSlot(result, YEAR),
-      GetSlot(result, MONTH),
-      GetSlot(result, DAY),
-    );
+    return new Construct(year, month, day);
   }
   difference(other, options) {
     if (!ES.IsDate(this)) throw new TypeError('invalid receiver');
