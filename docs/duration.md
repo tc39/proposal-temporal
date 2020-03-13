@@ -174,6 +174,8 @@ If a property of `durationLike` is infinity, then constrain mode will clamp it t
 Reject and balance modes will throw a `RangeError` in that case.
 Additionally, balance mode will behave like it does in `Duration.from()` and perform a balance operation on the result.
 
+For usage examples and a more complete explanation of how balancing works and why it is necessary, see [Duration balancing](./balancing.md).
+
 Usage example:
 ```javascript
 duration = Temporal.Duration.from({ months: 50, days: 50, hours: 50, minutes: 100 });
@@ -207,6 +209,8 @@ The `disambiguation` argument tells what to do in the case where the addition re
 
 The fields of the resulting duration are never converted between each other.
 If you need this behaviour, use `Duration.from()` with balance disambiguation, which will convert overly large units into the next highest unit, up to days.
+
+For usage examples and a more complete explanation of how balancing works and why it is necessary, see [Duration balancing](./balancing.md).
 
 No conversion is ever performed between years, months, days, and other units, as that could be ambiguous depending on the start date.
 If you need such a conversion, you must implement it yourself, since the rules can depend on the start date and the calendar in use.
@@ -270,12 +274,7 @@ The `disambiguation` option tells what to do in this case.
   If this is not possible, a `RangeError` is thrown.
 - In `balance` mode, all fields are balanced with the next highest field, no matter if they are negative or not.
 
-The fields of the resulting duration are only converted between each other if one unit is negative but a larger unit is positive, in which case the smaller is balanced with the larger to avoid having negative-valued fields.
-
-If you need the full balancing behaviour, use `Duration.from()` with balance disambiguation, which will convert overly large units into the next highest unit, up to hours.
-
-No conversion is ever performed between years, months, days, and other units, as that could be ambiguous depending on the start date.
-If you need such a conversion, you must implement it yourself, since the rules can depend on the start date and the calendar in use.
+For usage examples and a more complete explanation of how balancing works and why it is necessary, especially for subtracting `Temporal.Duration`, see [Duration balancing](./balancing.md#duration-arithmetic).
 
 Usage example:
 ```javascript
@@ -306,12 +305,8 @@ yearsToMonths(threeYears).minus(yearsToMonths(oneAndAHalfYear))  // => P18M
 
 This method overrides `Object.prototype.toString()` and provides the ISO 8601 description of the duration.
 
-> **NOTE**: If any of the `milliseconds`, `microseconds`, or `nanoseconds` properties are greater than 999, then `Temporal.Duration.from(duration.toString())` will not yield an identical `Temporal.Duration` object.
-> The returned object will represent an identical duration, but the sub-second fields will be balanced with the `seconds` field so that they become 999 or less.
-> For example, 1000 nanoseconds will become 1 microsecond.
->
-> This is because the ISO 8601 string format for durations does not allow for specifying sub-second units separately, only as a decimal fraction of seconds.
-> If you need to serialize a `Temporal.Duration` in a way that will preserve unbalanced sub-second fields, you will need to use a custom serialization format.
+> **NOTE**: If any of `duration.milliseconds`, `duration.microseconds`, or `duration.nanoseconds` are over 999, then deserializing from the result of `duration.toString()` will yield an equal but different object.
+> See [Duration balancing](./balancing.md#serialization) for more information.
 
 Usage examples:
 ```javascript
