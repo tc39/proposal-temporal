@@ -30,3 +30,4 @@ export const Time = ES.GetIntrinsic('%Temporal.Time%');
 export const Duration = ES.GetIntrinsic('%Temporal.Duration%');
 
 export { now } from './now.mjs';
+export { parse } from './parse.mjs';

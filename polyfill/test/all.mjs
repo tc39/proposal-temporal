@@ -27,9 +27,10 @@ import * as duration from './duration.mjs';
 import * as yearmonth from './yearmonth.mjs';
 import * as monthday from './monthday.mjs';
 import * as intl from './intl.mjs';
+import * as parse from './parse.mjs';
 
 void datemath, regex, ecmascript, exports, now, timezone, absolute, date, time,
-  datetime, duration, yearmonth, monthday, intl;
+  datetime, duration, yearmonth, monthday, intl, parse;
 
 Promise.resolve()
   .then(() => {
