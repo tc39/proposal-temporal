@@ -6,3 +6,5 @@ polyfill/script.js.map
 polyfill/test262/
 out/
 .vscode/
+**/pnpm-debug.log
+**/pnpm-lock.yaml
