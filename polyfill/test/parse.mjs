@@ -12,7 +12,7 @@ import Pretty from '@pipobscure/demitasse-pretty';
 const { reporter } = Pretty;
 
 import Assert from 'assert';
-const { ok: assert, strictEqual: equal, deepStrictEqual: dEqual } = Assert;
+const { ok: assert, strictEqual: equal, deepStrictEqual: dEqual, throws } = Assert;
 
 import * as Temporal from 'tc39-temporal';
 
@@ -23,10 +23,14 @@ describe('Temporal.parse', () => {
     it('is a function', () => equal(typeof Temporal.parse, 'function'));
     it('returns an object', () => equal(typeof Temporal.parse(sample), 'object'));
     it('returns an object with 2 properties', () => equal(Object.keys(Temporal.parse(sample)).length, 2));
-    it('has a TimeZone property', () => assert(Temporal.parse(sample).hasOwnProperty('TimeZone')));
-    it('has a DateTime property', () => assert(Temporal.parse(sample).hasOwnProperty('DateTime')));
+    it('has a TimeZone property', () =>
+      assert(Object.prototype.hasOwnProperty.call(Temporal.parse(sample), 'TimeZone')));
+    it('has a DateTime property', () =>
+      assert(Object.prototype.hasOwnProperty.call(Temporal.parse(sample), 'DateTime')));
   });
   describe('Behavior', () => {
+    it('should throw a TypeError on non-string arguments', () => throws(() => Temporal.parse(42), TypeError));
+    it('should throw a RangeError on invalid string arguments', () => throws(() => Temporal.parse('not a valid string'), RangeError));
     it('should work', () => {
       const result = Temporal.parse(sample);
       dEqual(result.DateTime, Temporal.DateTime.from('2019-10-29T10:46:38.271986102'));
