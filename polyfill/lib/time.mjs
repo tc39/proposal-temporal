@@ -91,7 +91,7 @@ export class Time {
     } = props;
     ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.RegulateTime(hour, minute, second, millisecond, microsecond, nanosecond, disambiguation));
     const Construct = ES.SpeciesConstructor(this, Time);
-    return new Construct(
+    const result = new Construct(
       hour,
       minute,
       second,
@@ -99,6 +99,8 @@ export class Time {
       microsecond,
       nanosecond,
     );
+    if (!ES.IsTime(result)) throw new TypeError('invalid result');
+    return result;
   }
   plus(durationLike, options) {
     if (!ES.IsTime(this)) throw new TypeError('invalid receiver');
@@ -122,7 +124,7 @@ export class Time {
     ));
     ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.RegulateTime(hour, minute, second, millisecond, microsecond, nanosecond, disambiguation));
     const Construct = ES.SpeciesConstructor(this, Time);
-    return new Construct(
+    const result = new Construct(
       hour,
       minute,
       second,
@@ -130,6 +132,8 @@ export class Time {
       microsecond,
       nanosecond,
     );
+    if (!ES.IsTime(result)) throw new TypeError('invalid result');
+    return result;
   }
   minus(durationLike, options) {
     if (!ES.IsTime(this)) throw new TypeError('invalid receiver');
@@ -153,7 +157,7 @@ export class Time {
     ));
     ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.RegulateTime(hour, minute, second, millisecond, microsecond, nanosecond, disambiguation));
     const Construct = ES.SpeciesConstructor(this, Time);
-    return new Construct(
+    const result = new Construct(
       hour,
       minute,
       second,
@@ -161,6 +165,8 @@ export class Time {
       microsecond,
       nanosecond,
     );
+    if (!ES.IsTime(result)) throw new TypeError('invalid result');
+    return result;
   }
   difference(other, options) {
     if (!ES.IsTime(this)) throw new TypeError('invalid receiver');
