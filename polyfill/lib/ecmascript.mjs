@@ -900,16 +900,13 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
   },
   BalanceSubSecond: (millisecond, microsecond, nanosecond) => {
     microsecond += Math.floor(nanosecond / 1000);
-    nanosecond = nanosecond % 1000;
-    nanosecond = nanosecond < 0 ? 1000 + nanosecond : nanosecond;
+    nanosecond = ES.NonNegativeModulo(nanosecond, 1000);
 
     millisecond += Math.floor(microsecond / 1000);
-    microsecond = microsecond % 1000;
-    microsecond = microsecond < 0 ? 1000 + microsecond : microsecond;
+    microsecond = ES.NonNegativeModulo(microsecond, 1000);
 
     const seconds = Math.floor(millisecond / 1000);
-    millisecond = millisecond % 1000;
-    millisecond = millisecond < 0 ? 1000 + millisecond : millisecond;
+    millisecond = ES.NonNegativeModulo(millisecond, 1000);
 
     return { seconds, millisecond, microsecond, nanosecond };
   },
@@ -920,16 +917,13 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
     second += seconds;
 
     minute += Math.floor(second / 60);
-    second = second % 60;
-    second = second < 0 ? 60 + second : second;
+    second = ES.NonNegativeModulo(second, 60);
 
     hour += Math.floor(minute / 60);
-    minute = minute % 60;
-    minute = minute < 0 ? 60 + minute : minute;
+    minute = ES.NonNegativeModulo(minute, 60);
 
     let deltaDays = Math.floor(hour / 24);
-    hour = hour % 24;
-    hour = hour < 0 ? 24 + hour : hour;
+    hour = ES.NonNegativeModulo(hour, 24);
 
     return { deltaDays, hour, minute, second, millisecond, microsecond, nanosecond };
   },
@@ -1243,6 +1237,13 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
     if (!Number.isFinite(num) || Math.abs(num) !== num) throw new RangeError(`invalid positive integer: ${num}`);
     return num;
   },
+  NonNegativeModulo: (x, y) => {
+    let result = x % y;
+    if (Object.is(result, -0)) return 0;
+    if (result < 0) result += y;
+    return result;
+  },
+
   // Note: This method returns values with bogus nanoseconds based on the previous iteration's
   // milliseconds. That way there is a guarantee that the full nanoseconds are always going to be
   // increasing at least and that the microsecond and nanosecond fields are likely to be non-zero.
