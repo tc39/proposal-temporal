@@ -10,7 +10,7 @@
     "babel-eslint": "^10.0.3",
     "ecmarkup": "^3.16.0",
     "eslint": "^6.8.0",
-    "mkdirp": "^0.5.1"
+    "mkdirp": "^1.0.0"
   },
   "scripts": {
     "test": "cd polyfill && npm install && npm test && npm run cookbook && npm run test262 && cd ..",
