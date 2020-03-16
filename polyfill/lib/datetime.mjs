@@ -126,7 +126,7 @@ export class DateTime {
     if (!props) {
       throw new RangeError('invalid date-time-like');
     }
-    const {
+    let {
       year = GetSlot(this, YEAR),
       month = GetSlot(this, MONTH),
       day = GetSlot(this, DAY),
@@ -137,7 +137,7 @@ export class DateTime {
       microsecond = GetSlot(this, MICROSECOND),
       nanosecond = GetSlot(this, NANOSECOND)
     } = props;
-    const result = ES.ToDateTime({
+    ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.RegulateDateTime(
       year,
       month,
       day,
@@ -147,18 +147,18 @@ export class DateTime {
       millisecond,
       microsecond,
       nanosecond,
-    }, disambiguation);
+      disambiguation));
     const Construct = ES.SpeciesConstructor(this, DateTime);
-    return Construct === DateTime ? result : new Construct(
-      GetSlot(result, YEAR),
-      GetSlot(result, MONTH),
-      GetSlot(result, DAY),
-      GetSlot(result, HOUR),
-      GetSlot(result, MINUTE),
-      GetSlot(result, SECOND),
-      GetSlot(result, MILLISECOND),
-      GetSlot(result, MICROSECOND),
-      GetSlot(result, NANOSECOND),
+    return new Construct(
+      year,
+      month,
+      day,
+      hour,
+      minute,
+      second,
+      millisecond,
+      microsecond,
+      nanosecond,
     );
   }
   plus(durationLike, options) {
@@ -185,7 +185,7 @@ export class DateTime {
     ));
     day += deltaDays;
     ({ year, month, day } = ES.BalanceDate(year, month, day));
-    const result = ES.ToDateTime({
+    ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.RegulateDateTime(
       year,
       month,
       day,
@@ -195,18 +195,18 @@ export class DateTime {
       millisecond,
       microsecond,
       nanosecond,
-    }, disambiguation);
+      disambiguation));
     const Construct = ES.SpeciesConstructor(this, DateTime);
-    return Construct === DateTime ? result : new Construct(
-      GetSlot(result, YEAR),
-      GetSlot(result, MONTH),
-      GetSlot(result, DAY),
-      GetSlot(result, HOUR),
-      GetSlot(result, MINUTE),
-      GetSlot(result, SECOND),
-      GetSlot(result, MILLISECOND),
-      GetSlot(result, MICROSECOND),
-      GetSlot(result, NANOSECOND),
+    return new Construct(
+      year,
+      month,
+      day,
+      hour,
+      minute,
+      second,
+      millisecond,
+      microsecond,
+      nanosecond,
     );
   }
   minus(durationLike, options) {
@@ -232,7 +232,7 @@ export class DateTime {
     ));
     days -= deltaDays;
     ({ year, month, day } = ES.SubtractDate(year, month, day, years, months, days, disambiguation));
-    const result = ES.ToDateTime({
+    ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.RegulateDateTime(
       year,
       month,
       day,
@@ -242,18 +242,18 @@ export class DateTime {
       millisecond,
       microsecond,
       nanosecond,
-    }, disambiguation);
+      disambiguation));
     const Construct = ES.SpeciesConstructor(this, DateTime);
-    return Construct === DateTime ? result : new Construct(
-      GetSlot(result, YEAR),
-      GetSlot(result, MONTH),
-      GetSlot(result, DAY),
-      GetSlot(result, HOUR),
-      GetSlot(result, MINUTE),
-      GetSlot(result, SECOND),
-      GetSlot(result, MILLISECOND),
-      GetSlot(result, MICROSECOND),
-      GetSlot(result, NANOSECOND),
+    return new Construct(
+      year,
+      month,
+      day,
+      hour,
+      minute,
+      second,
+      millisecond,
+      microsecond,
+      nanosecond,
     );
   }
   difference(other, options) {
