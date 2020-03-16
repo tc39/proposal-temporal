@@ -142,6 +142,8 @@
     <h1>NonNegativeModulo ( _x_, _y_ )</h1>
     <emu-alg>
       1. Let _result_ be _x_ modulo _y_.
+      1. If _result_ is *&minus;0*, then
+        1. Return 0.
       1. If _result_ &lt; 0, then
         1. Set _result_ to _result_ + _y_.
       1. Return _result_.
