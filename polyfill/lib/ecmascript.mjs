@@ -219,7 +219,20 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
       second = 0,
       year,
     } = props;
-
+    ({
+      year,
+      month,
+      day,
+      hour,
+      minute,
+      second,
+      millisecond,
+      microsecond,
+      nanosecond,
+    } = ES.RegulateDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, disambiguation));
+    return new TemporalDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
+  },
+  RegulateDateTime: (year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, disambiguation) => {
     switch (disambiguation) {
       case 'reject':
         ES.RejectDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
@@ -263,8 +276,7 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
         break;
       }
     }
-
-    return new TemporalDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
+    return { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond };
   },
   ToDate: (item, disambiguation) => {
     if (ES.IsDate(item)) return item;
