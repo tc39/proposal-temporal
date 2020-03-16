@@ -81,7 +81,7 @@ export class Time {
     if (!props) {
       throw new RangeError('invalid time-like');
     }
-    const {
+    let {
       hour = GetSlot(this, HOUR),
       minute = GetSlot(this, MINUTE),
       second = GetSlot(this, SECOND),
@@ -89,15 +89,15 @@ export class Time {
       microsecond = GetSlot(this, MICROSECOND),
       nanosecond = GetSlot(this, NANOSECOND)
     } = props;
-    const result = ES.ToTime({ hour, minute, second, millisecond, microsecond, nanosecond }, disambiguation);
+    ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.RegulateTime(hour, minute, second, millisecond, microsecond, nanosecond, disambiguation));
     const Construct = ES.SpeciesConstructor(this, Time);
-    return Construct === Time ? result : new Construct(
-      GetSlot(result, HOUR),
-      GetSlot(result, MINUTE),
-      GetSlot(result, SECOND),
-      GetSlot(result, MILLISECOND),
-      GetSlot(result, MICROSECOND),
-      GetSlot(result, NANOSECOND),
+    return new Construct(
+      hour,
+      minute,
+      second,
+      millisecond,
+      microsecond,
+      nanosecond,
     );
   }
   plus(durationLike, options) {
@@ -120,15 +120,15 @@ export class Time {
       microseconds,
       nanoseconds
     ));
-    const result = ES.ToTime({ hour, minute, second, millisecond, microsecond, nanosecond }, disambiguation);
+    ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.RegulateTime(hour, minute, second, millisecond, microsecond, nanosecond, disambiguation));
     const Construct = ES.SpeciesConstructor(this, Time);
-    return Construct === Time ? result : new Construct(
-      GetSlot(result, HOUR),
-      GetSlot(result, MINUTE),
-      GetSlot(result, SECOND),
-      GetSlot(result, MILLISECOND),
-      GetSlot(result, MICROSECOND),
-      GetSlot(result, NANOSECOND),
+    return new Construct(
+      hour,
+      minute,
+      second,
+      millisecond,
+      microsecond,
+      nanosecond,
     );
   }
   minus(durationLike, options) {
@@ -151,15 +151,15 @@ export class Time {
       microseconds,
       nanoseconds
     ));
-    const result = ES.ToTime({ hour, minute, second, millisecond, microsecond, nanosecond }, disambiguation);
+    ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.RegulateTime(hour, minute, second, millisecond, microsecond, nanosecond, disambiguation));
     const Construct = ES.SpeciesConstructor(this, Time);
-    return Construct === Time ? result : new Construct(
-      GetSlot(result, HOUR),
-      GetSlot(result, MINUTE),
-      GetSlot(result, SECOND),
-      GetSlot(result, MILLISECOND),
-      GetSlot(result, MICROSECOND),
-      GetSlot(result, NANOSECOND),
+    return new Construct(
+      hour,
+      minute,
+      second,
+      millisecond,
+      microsecond,
+      nanosecond,
     );
   }
   difference(other, options) {
