@@ -708,7 +708,7 @@
         1. Let _intermediate_ be ! BalanceDate(_year_, _month_, _day_ - _days_).
         1. Let _d_ be _intermediate_.[[Day]].
         1. Let _intermediate_ be ! BalanceYearMonth(_intermediate_.[[Year]] - _years_, _intermediate_.[[Month]] - _months_).
-        1. Return ? RegulateDate(_intermediate_.[[Year]], _intermediate_.[[Month]], _d_).
+        1. Return ? RegulateDate(_intermediate_.[[Year]], _intermediate_.[[Month]], _d_, _disambiguation_).
       </emu-alg>
     </emu-clause>
 
