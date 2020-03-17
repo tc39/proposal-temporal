@@ -131,8 +131,8 @@ describe('Date', () => {
     it('returns a Temporal.DateTime', () => assert(dt instanceof Temporal.DateTime));
     it('combines the date and time', () => equal(`${dt}`, '1976-11-18T11:30:23'));
     it("doesn't cast argument", () => {
-      throws(() => dt.withTime({ hours: 11, minutes: 30, seconds: 23 }), TypeError);
-      throws(() => dt.withTime('11:30:23'), TypeError);
+      throws(() => date.withTime({ hour: 11, minute: 30, second: 23 }), TypeError);
+      throws(() => date.withTime('11:30:23'), TypeError);
     });
   });
   describe('date.difference() works', () => {
