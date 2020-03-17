@@ -446,6 +446,32 @@ export const ES = ObjectAssign({}, ES2019, {
       years = 0
     } = props;
 
+    ({ years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.RegulateDuration(
+      years,
+      months,
+      days,
+      hours,
+      minutes,
+      seconds,
+      milliseconds,
+      microseconds,
+      nanoseconds,
+      disambiguation
+    ));
+    return new TemporalDuration(years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+  },
+  RegulateDuration: (
+    years,
+    months,
+    days,
+    hours,
+    minutes,
+    seconds,
+    milliseconds,
+    microseconds,
+    nanoseconds,
+    disambiguation
+  ) => {
     for (const prop of [years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds]) {
       if (prop < 0) throw new RangeError('negative values not allowed as duration fields');
     }
@@ -482,7 +508,7 @@ export const ES = ObjectAssign({}, ES2019, {
       }
     }
 
-    return new TemporalDuration(years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+    return { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
   },
   ToLimitedTemporalDuration: (item, disallowedSlots = []) => {
     if (typeof item !== 'object' || item === null) {
