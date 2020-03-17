@@ -155,6 +155,7 @@
       <emu-alg>
         1. Let _timeZone_ be the *this* value.
         1. Perform ? RequireInternalSlot(_timeZone_, [[InitializedTemporalTimeZone]]).
+        1. Set _dateTime_ to ? ToDateTime(_dateTime_, *"reject"*).
         1. Let _disambiguation_ be ? ToTimeZoneDisambiguation(_options_).
         1. <mark>TODO</mark>
       </emu-alg>
