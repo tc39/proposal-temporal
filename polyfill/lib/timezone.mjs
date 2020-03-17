@@ -103,7 +103,7 @@ export class TimeZone {
   }
   getTransitions(startingPoint) {
     if (!ES.IsTimeZone(this)) throw new TypeError('invalid receiver');
-    startingPoint = ES.ToAbsolute(startingPoint);
+    if (!ES.IsAbsolute(startingPoint)) throw new TypeError('invalid Absolute object');
     let epochNanoseconds = GetSlot(startingPoint, EPOCHNANOSECONDS);
     const Absolute = ES.GetIntrinsic('%Temporal.Absolute%');
     const timeZone = GetSlot(this, IDENTIFIER);
