@@ -364,10 +364,19 @@
       </emu-alg>
     </emu-clause>
 
+    <emu-clause id="sec-temporal-validatetemporalduration" aoid="ValidateTemporalDuration">
+      <h1>ValidateTemporalDuration ( _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_ )</h1>
+      <emu-alg>
+        1. For each of _years_, _months_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_, if any of the values is negative, return *false*.
+        1. Return *true*.
+      </emu-alg>
+    </emu-clause>
+
     <emu-clause id="sec-temporal-createtemporalduration" aoid="CreateTemporalDuration">
       <h1>CreateTemporalDuration ( _years_, _months_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_ [, _newTarget_] )</h1>
       <emu-alg>
-        1. For each of _years_, _months_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_, if any of the values is negative, throw a *RangeError* exception.
+        1. If ! ValidateTemporalDuration(_years_, _months_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_) is *false*,
+          1. Throw a *RangeError* exception.
         1. If _newTarget_ is not given, set it to %Temporal.Duration%.
         1. Let _object_ be ? OrdinaryCreateFromConstructor(_newTarget_, `"%Temporal.Duration.prototype%"`, « [[InitializedTemporalDuration]], [[Years]], [[Months]], [[Days]], [[Hours]], [[Minutes]], [[Seconds]], [[Milliseconds]], [[Microseconds]], [[Nanoseconds]] »).
         1. Set _object_.[[Years]] to _years_.
@@ -418,7 +427,8 @@
       <emu-alg>
         1. Assert: _disambiguation_ is one of *"constrain"*, *"balance"*, or *"reject"*.
         1. If _disambiguation_ is *"reject"*, then
-          1. For each of _years_, _months_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_, if any of the values is negative, throw a *RangeError* exception.
+          1. If ! ValidateDuration(_years_, _months_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_) is *false*,
+            1. Throw a *RangeError* exception.
         1. Else if _disambiguation_ is *"constrain"*, then
           1. For each of _years_, _months_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_, if any of the values is negative, let it be its own absolute value.
         1. Else if _disambiguation_ is *"balance"*, then
