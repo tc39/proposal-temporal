@@ -9,8 +9,7 @@
   "dependencies": {
     "babel-eslint": "^10.0.3",
     "ecmarkup": "^3.16.0",
-    "eslint": "^6.8.0",
-    "mkdirp": "^1.0.0"
+    "eslint": "^6.8.0"
   },
   "scripts": {
     "test": "cd polyfill && npm install && npm test && npm run cookbook && npm run test262 && cd ..",
@@ -19,12 +18,12 @@
     "cookbook": "cd polyfill && npm install && npm run cookbook && cd ..",
     "test262": "cd polyfill && npm install && npm run test262",
     "lint": "eslint . --ext js,mjs",
-    "build:prepare": "mkdirp out && mkdirp out/docs",
+    "build:prepare": "mkdir -p out/docs",
     "build:polyfill": "cd polyfill && npm install && npm run build && cd ..",
     "build:javascript": "npm run build:polyfill && cd docs && npm install && npm run build:javascript && cd .. && cp docs/*.js docs/*.js.map out/docs/",
     "build:docs": "cd docs && npm install && npm run build:html && cd .. && cp docs/*.html docs/*.css out/docs/",
     "build:spec": "ecmarkup spec.html out/index.html",
-    "prebuild": "mkdirp out && mkdirp out/docs",
+    "prebuild": "mkdir -p out/docs",
     "build": "npm run build:javascript && npm run build:docs && npm run build:spec"
   },
   "repository": {
