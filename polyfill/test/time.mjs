@@ -191,6 +191,10 @@ describe('Time', () => {
     const dt = time.withDate(Temporal.Date.from('1976-11-18'));
     it('returns a Temporal.DateTime', () => assert(dt instanceof Temporal.DateTime));
     it('combines the date and time', () => equal(`${dt}`, '1976-11-18T11:30:23.123456789'));
+    it("doesn't cast argument", () => {
+      throws(() => time.withDate({ year: 1976, month: 11, day: 18 }), TypeError);
+      throws(() => time.withDate('1976-11-18'), TypeError);
+    });
   });
     describe('time.difference() works', () => {
       const time = new Time(15, 23, 30, 123, 456, 789);

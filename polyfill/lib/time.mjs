@@ -2,6 +2,9 @@ import { ES } from './ecmascript.mjs';
 import { MakeIntrinsicClass } from './intrinsicclass.mjs';
 
 import {
+  YEAR,
+  MONTH,
+  DAY,
   HOUR,
   MINUTE,
   SECOND,
@@ -212,10 +215,18 @@ export class Time {
     return new Intl.DateTimeFormat(...args).format(this);
   }
 
-  withDate(dateLike) {
+  withDate(date) {
     if (!ES.IsTime(this)) throw new TypeError('invalid receiver');
-    const { year, month, day } = ES.ToDate(dateLike, 'reject');
-    let { hour, minute, second, millisecond, microsecond, nanosecond } = this;
+    if (!ES.IsDate(date)) throw new TypeError('invalid Temporal.Date object');
+    const year = GetSlot(date, YEAR);
+    const month = GetSlot(date, MONTH);
+    const day = GetSlot(date, DAY);
+    const hour = GetSlot(this, HOUR);
+    const minute = GetSlot(this, MINUTE);
+    const second = GetSlot(this, SECOND);
+    const millisecond = GetSlot(this, MILLISECOND);
+    const microsecond = GetSlot(this, MICROSECOND);
+    const nanosecond = GetSlot(this, NANOSECOND);
     const DateTime = ES.GetIntrinsic('%Temporal.DateTime%');
     return new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
   }

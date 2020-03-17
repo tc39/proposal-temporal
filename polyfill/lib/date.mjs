@@ -4,6 +4,12 @@ import {
   YEAR,
   MONTH,
   DAY,
+  HOUR,
+  MINUTE,
+  SECOND,
+  MILLISECOND,
+  MICROSECOND,
+  NANOSECOND,
   CreateSlots,
   GetSlot,
   SetSlot,
@@ -123,13 +129,18 @@ export class Date {
     if (!ES.IsDate(this)) throw new TypeError('invalid receiver');
     return new Intl.DateTimeFormat(...args).format(this);
   }
-  withTime(timeLike) {
+  withTime(time) {
     if (!ES.IsDate(this)) throw new TypeError('invalid receiver');
+    if (!ES.IsTime(time)) throw new TypeError('invalid Temporal.Time object');
     const year = GetSlot(this, YEAR);
     const month = GetSlot(this, MONTH);
     const day = GetSlot(this, DAY);
-    timeLike = ES.ToTime(timeLike, 'reject');
-    const { hour, minute, second, millisecond, microsecond, nanosecond } = timeLike;
+    const hour = GetSlot(time, HOUR);
+    const minute = GetSlot(time, MINUTE);
+    const second = GetSlot(time, SECOND);
+    const millisecond = GetSlot(time, MILLISECOND);
+    const microsecond = GetSlot(time, MICROSECOND);
+    const nanosecond = GetSlot(time, NANOSECOND);
     const DateTime = ES.GetIntrinsic('%Temporal.DateTime%');
     return new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
   }
