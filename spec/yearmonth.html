@@ -213,7 +213,8 @@
         1. Let _disambiguation_ be ? ToArithmeticDisambiguation(_options_).
         1. Let _y_ be _yearMonth_.[[Year]] + _duration_.[[Years]].
         1. Let _m_ be _yearMonth_.[[Month]] + _duration_.[[Months]].
-        1. Let _result_ be ? RegulateYearMonth(_y_, _m_, _disambiguation_).
+        1. Let _result_ be ! BalanceYearMonth(_y_, _m_).
+        1. Let _result_ be ? RegulateYearMonth(_result_.[[Year]], _result_.[[Month]], _disambiguation_).
         1. Return ? CreateYearMonth(_result_.[[Year]], _result_.[[Month]]).
       </emu-alg>
     </emu-clause>
@@ -231,7 +232,8 @@
         1. Let _disambiguation_ be ? ToArithmeticDisambiguation(_options_).
         1. Let _y_ be _yearMonth_.[[Year]] - _duration_.[[Years]].
         1. Let _m_ be _yearMonth_.[[Month]] - _duration_.[[Months]].
-        1. Let _result_ be ? RegulateYearMonth(_y_, _m_, _disambiguation_).
+        1. Let _result_ be ! BalanceYearMonth(_y_, _m_).
+        1. Let _result_ be ? RegulateYearMonth(_result_.[[Year]], _result_.[[Month]], _disambiguation_).
         1. Return ? CreateYearMonth(_result_.[[Year]], _result_.[[Month]]).
       </emu-alg>
     </emu-clause>
