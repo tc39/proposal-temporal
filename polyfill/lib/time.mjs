@@ -141,11 +141,11 @@ export class Time {
     const duration = ES.ToLimitedDuration(durationLike, [YEARS, MONTHS, DAYS]);
     const disambiguation = ES.ToArithmeticDisambiguation(options);
     const { hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
-    ({ hour, minute, second, minute, microsecond, nanosecond } = ES.SubtractTime(
+    ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.SubtractTime(
       hour,
       minute,
       second,
-      minute,
+      millisecond,
       microsecond,
       nanosecond,
       hours,

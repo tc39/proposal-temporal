@@ -332,6 +332,12 @@ describe('Time', () => {
         equal(`${time.minus({ hours: 16 })}`, '23:23:30.123456789'));
       it(`(${time}).minus({ minutes: 45 })`, () =>
         equal(`${time.minus({ minutes: 45 })}`, '14:38:30.123456789'));
+      it(`(${time}).minus({ seconds: 45 })`, () =>
+        equal(`${time.minus({ seconds: 45 })}`, '15:22:45.123456789'));
+      it(`(${time}).minus({ milliseconds: 800 })`, () =>
+        equal(`${time.minus({ milliseconds: 800 })}`, '15:23:29.323456789'));
+      it(`(${time}).minus({ microseconds: 800 })`, () =>
+        equal(`${time.minus({ microseconds: 800 })}`, '15:23:30.122656789'));
       it(`(${time}).minus({ nanoseconds: 800 })`, () =>
         equal(`${time.minus({ nanoseconds: 800 })}`, '15:23:30.123455989'));
       it('time.minus(durationObj)', () => {
