@@ -380,7 +380,10 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
       month,
       year,
     } = props;
-
+    ({ year, month } = ES.RegulateYearMonth(year, month, disambiguation));
+    return new TemporalYearMonth(year, month);
+  },
+  RegulateYearMonth: (year, month, disambiguation) => {
     switch (disambiguation) {
       case 'reject':
         ES.RejectYearMonth(year, month);
@@ -394,8 +397,7 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
         ES.RejectYearMonth(year, month);
         break;
     }
-
-    return new TemporalYearMonth(year, month);
+    return { year, month };
   },
   ToMonthDay: (item, disambiguation) => {
     if (ES.IsMonthDay(item)) return item;

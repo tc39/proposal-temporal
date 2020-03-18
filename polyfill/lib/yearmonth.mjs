@@ -51,13 +51,10 @@ export class YearMonth {
     if (!props) {
       throw new RangeError('invalid year-month-like');
     }
-    const { year = GetSlot(this, YEAR), month = GetSlot(this, MONTH) } = props;
-    const result = ES.ToYearMonth({ year, month }, disambiguation);
+    let { year = GetSlot(this, YEAR), month = GetSlot(this, MONTH) } = props;
+    ({ year, month } = ES.RegulateYearMonth(year, month, disambiguation));
     const Construct = ES.SpeciesConstructor(this, YearMonth);
-    return Construct === YearMonth ? result : new Construct(
-      GetSlot(result, YEAR),
-      GetSlot(result, MONTH),
-    );
+    return new Construct(year, month);
   }
   plus(durationLike, options) {
     if (!ES.IsYearMonth(this)) throw new TypeError('invalid receiver');
@@ -67,12 +64,9 @@ export class YearMonth {
     const { years, months } = duration;
     ({ year, month } = ES.AddDate(year, month, 1, years, months, 0, disambiguation));
     ({ year, month } = ES.BalanceYearMonth(year, month));
-    const result = ES.ToYearMonth({ year, month }, disambiguation);
+    ({ year, month } = ES.RegulateYearMonth(year, month, disambiguation));
     const Construct = ES.SpeciesConstructor(this, YearMonth);
-    return Construct === YearMonth ? result : new Construct(
-      GetSlot(result, YEAR),
-      GetSlot(result, MONTH),
-    );
+    return new Construct(year, month);
   }
   minus(durationLike, options) {
     if (!ES.IsYearMonth(this)) throw new TypeError('invalid receiver');
@@ -82,12 +76,9 @@ export class YearMonth {
     const { years, months } = duration;
     ({ year, month } = ES.SubtractDate(year, month, 1, years, months, 0, disambiguation));
     ({ year, month } = ES.BalanceYearMonth(year, month));
-    const result = ES.ToYearMonth({ year, month }, disambiguation);
+    ({ year, month } = ES.RegulateYearMonth(year, month, disambiguation));
     const Construct = ES.SpeciesConstructor(this, YearMonth);
-    return Construct === YearMonth ? result : new Construct(
-      GetSlot(result, YEAR),
-      GetSlot(result, MONTH),
-    );
+    return new Construct(year, month);
   }
   difference(other, options) {
     if (!ES.IsYearMonth(this)) throw new TypeError('invalid receiver');
