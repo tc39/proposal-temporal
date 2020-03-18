@@ -33,7 +33,9 @@ export class MonthDay {
     let { month = GetSlot(this, MONTH), day = GetSlot(this, DAY) } = props;
     ({ month, day } = ES.RegulateMonthDay(month, day, disambiguation));
     const Construct = ES.SpeciesConstructor(this, MonthDay);
-    return new Construct(month, day);
+    const result = new Construct(month, day);
+    if (!ES.IsMonthDay(result)) throw new TypeError('invalid result');
+    return result;
   }
   toString() {
     if (!ES.IsMonthDay(this)) throw new TypeError('invalid receiver');
