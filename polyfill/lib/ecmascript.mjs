@@ -532,8 +532,12 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
     return ES.GetOption(options, 'disambiguation', ['earlier', 'later', 'reject'], 'earlier');
   },
   ToLargestTemporalUnit: (options, fallback, disallowedStrings = []) => {
-    const largestUnit = ES.GetOption(options, 'largestUnit',
-      ['years', 'months', 'days', 'hours', 'minutes', 'seconds'], fallback);
+    const largestUnit = ES.GetOption(
+      options,
+      'largestUnit',
+      ['years', 'months', 'days', 'hours', 'minutes', 'seconds'],
+      fallback
+    );
     if (disallowedStrings.includes(largestUnit)) {
       throw new RangeError(`${largestUnit} not allowed as the largest unit here`);
     }
