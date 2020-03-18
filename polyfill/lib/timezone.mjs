@@ -69,17 +69,7 @@ export class TimeZone {
       }
     }
 
-    const utcns = ES.GetEpochFromParts(
-      year,
-      month,
-      day,
-      hour,
-      minute,
-      second,
-      millisecond,
-      microsecond,
-      nanosecond
-    );
+    const utcns = ES.GetEpochFromParts(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
     if (utcns === null) throw new RangeError('DateTime outside of supported range');
     const before = ES.GetTimeZoneOffsetNanoseconds(utcns.minus(bigInt(86400 * 1e9)), GetSlot(this, IDENTIFIER));
     const after = ES.GetTimeZoneOffsetNanoseconds(utcns.plus(bigInt(86400 * 1e9)), GetSlot(this, IDENTIFIER));

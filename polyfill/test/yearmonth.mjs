@@ -73,7 +73,8 @@ describe('YearMonth', () => {
         it('throw when bad disambiguation', () => {
           [new YearMonth(2019, 1), { year: 2019, month: 1 }, '2019-01'].forEach((input) => {
             ['', 'CONSTRAIN', 'xyz', 3, null].forEach((disambiguation) =>
-              throws(() => YearMonth.from(input, { disambiguation }), RangeError));
+              throws(() => YearMonth.from(input, { disambiguation }), RangeError)
+            );
           });
         });
       });
@@ -144,7 +145,8 @@ describe('YearMonth', () => {
     });
     it('invalid disambiguation', () => {
       ['', 'CONSTRAIN', 'balance', 3, null].forEach((disambiguation) =>
-        throws(() => ym.plus({ months: 1 }, { disambiguation }), RangeError));
+        throws(() => ym.plus({ months: 1 }, { disambiguation }), RangeError)
+      );
     });
   });
   describe('YearMonth.minus() works', () => {
@@ -164,7 +166,8 @@ describe('YearMonth', () => {
     });
     it('invalid disambiguation', () => {
       ['', 'CONSTRAIN', 'balance', 3, null].forEach((disambiguation) =>
-        throws(() => ym.minus({ months: 1 }, { disambiguation }), RangeError));
+        throws(() => ym.minus({ months: 1 }, { disambiguation }), RangeError)
+      );
     });
   });
   describe('Min/max range', () => {
@@ -216,7 +219,8 @@ describe('YearMonth', () => {
   describe('YearMonth.with()', () => {
     it('throws on bad disambiguation', () => {
       ['', 'CONSTRAIN', 'xyz', 3, null].forEach((disambiguation) =>
-        throws(() => YearMonth.from(2019, 1).with({ month: 2 }, { disambiguation }), RangeError));
+        throws(() => YearMonth.from(2019, 1).with({ month: 2 }, { disambiguation }), RangeError)
+      );
     });
   });
 });

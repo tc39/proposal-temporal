@@ -183,7 +183,8 @@ describe('Time', () => {
       });
       it('invalid disambiguation', () => {
         ['', 'CONSTRAIN', 'xyz', 3, null].forEach((disambiguation) =>
-          throws(() => time.with({ hour: 3 }, { disambiguation }), RangeError));
+          throws(() => time.with({ hour: 3 }, { disambiguation }), RangeError)
+        );
       });
     });
     describe('time.withDate() works', () => {
@@ -243,14 +244,18 @@ describe('Time', () => {
         equal(`${start2.difference(end)}`, 'PT11H');
       });
       it('returns the same duration no matter when the start time is', () => {
-        const hours = Array(24).fill().map((_, ix) => ix);
+        const hours = Array(24)
+          .fill()
+          .map((_, ix) => ix);
         hours.forEach((hour) => {
           const time1 = new Temporal.Time(hour);
           const time2 = time1.plus(Temporal.Duration.from('PT9H'));
           equal(`${time1.difference(time2)}`, 'PT9H');
         });
 
-        const zeroTo59 = Array(60).fill().map((_, ix) => ix);
+        const zeroTo59 = Array(60)
+          .fill()
+          .map((_, ix) => ix);
         zeroTo59.forEach((num) => {
           const minute1 = new Temporal.Time(23, num);
           const minute2 = minute1.plus(Temporal.Duration.from('PT45M'));
@@ -261,7 +266,9 @@ describe('Time', () => {
           equal(`${second1.difference(second2)}`, 'PT45S');
         });
 
-        const last10 = Array(10).fill().map((_, ix) => ix + 990);
+        const last10 = Array(10)
+          .fill()
+          .map((_, ix) => ix + 990);
         last10.forEach((num) => {
           const ms1 = new Temporal.Time(23, 59, 59, num);
           const ms2 = ms1.plus(Temporal.Duration.from('PT0.008S'));
@@ -327,17 +334,15 @@ describe('Time', () => {
       });
       it('invalid disambiguation', () => {
         ['', 'CONSTRAIN', 'balance', 3, null].forEach((disambiguation) =>
-          throws(() => time.plus({ hours: 1 }, { disambiguation }), RangeError));
+          throws(() => time.plus({ hours: 1 }, { disambiguation }), RangeError)
+        );
       });
     });
     describe('time.minus() works', () => {
       const time = Time.from('15:23:30.123456789');
-      it(`(${time}).minus({ hours: 16 })`, () =>
-        equal(`${time.minus({ hours: 16 })}`, '23:23:30.123456789'));
-      it(`(${time}).minus({ minutes: 45 })`, () =>
-        equal(`${time.minus({ minutes: 45 })}`, '14:38:30.123456789'));
-      it(`(${time}).minus({ seconds: 45 })`, () =>
-        equal(`${time.minus({ seconds: 45 })}`, '15:22:45.123456789'));
+      it(`(${time}).minus({ hours: 16 })`, () => equal(`${time.minus({ hours: 16 })}`, '23:23:30.123456789'));
+      it(`(${time}).minus({ minutes: 45 })`, () => equal(`${time.minus({ minutes: 45 })}`, '14:38:30.123456789'));
+      it(`(${time}).minus({ seconds: 45 })`, () => equal(`${time.minus({ seconds: 45 })}`, '15:22:45.123456789'));
       it(`(${time}).minus({ milliseconds: 800 })`, () =>
         equal(`${time.minus({ milliseconds: 800 })}`, '15:23:29.323456789'));
       it(`(${time}).minus({ microseconds: 800 })`, () =>
@@ -349,7 +354,8 @@ describe('Time', () => {
       });
       it('invalid disambiguation', () => {
         ['', 'CONSTRAIN', 'balance', 3, null].forEach((disambiguation) =>
-          throws(() => time.minus({ hours: 1 }, { disambiguation }), RangeError));
+          throws(() => time.minus({ hours: 1 }, { disambiguation }), RangeError)
+        );
       });
     });
     describe('time.toString() works', () => {
@@ -394,8 +400,7 @@ describe('Time', () => {
         equal(`${Time.from('23:59:60', { disambiguation: 'balance' })}`, '23:59:59');
         equal(`${Time.from('23:59:60', { disambiguation: 'reject' })}`, '23:59:59');
       });
-      it.skip('Time.from(number) is converted to string', () =>
-        equal(`${Time.from(1523)}`, `${Time.from('1523')}`));
+      it.skip('Time.from(number) is converted to string', () => equal(`${Time.from(1523)}`, `${Time.from('1523')}`));
       describe('Disambiguation', () => {
         const bad = { nanosecond: 1000 };
         it('reject', () => throws(() => Time.from(bad, { disambiguation: 'reject' }), RangeError));
@@ -407,7 +412,8 @@ describe('Time', () => {
         it('throw when bad disambiguation', () => {
           [new Time(15), { hour: 15 }, '15:00'].forEach((input) => {
             ['', 'CONSTRAIN', 'xyz', 3, null].forEach((disambiguation) =>
-              throws(() => Time.from(input, { disambiguation }), RangeError));
+              throws(() => Time.from(input, { disambiguation }), RangeError)
+            );
           });
         });
         const leap = { hour: 23, minute: 59, second: 60 };
@@ -439,15 +445,19 @@ describe('Time', () => {
         for (const [args, expected, description] of balanceTests) {
           describe(description, () => {
             let time;
-            it(`Time.from(${description})`, () => {  // FIXME: remove it()
-              time = Time.from({
-                hour: args[0],
-                minute: args[1],
-                second: args[2],
-                millisecond: args[3],
-                microsecond: args[4],
-                nanosecond: args[5]
-              }, { disambiguation: 'balance' });
+            // FIXME: remove it()
+            it(`Time.from(${description})`, () => {
+              time = Time.from(
+                {
+                  hour: args[0],
+                  minute: args[1],
+                  second: args[2],
+                  millisecond: args[3],
+                  microsecond: args[4],
+                  nanosecond: args[5]
+                },
+                { disambiguation: 'balance' }
+              );
               assert(time);
               equal(typeof time, 'object');
             });

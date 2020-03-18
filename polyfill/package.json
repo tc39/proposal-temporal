@@ -10,7 +10,6 @@
     "test262": "./ci_test.sh",
     "codecov:tests": "NODE_V8_COVERAGE=coverage/tmp npm run test && c8 report --reporter=text-lcov > coverage/tests.lcov && codecov -F tests -f coverage/tests.lcov",
     "codecov:test262": "COVERAGE=yes npm run test262 && codecov -F test262 -f coverage/test262.lcov",
-    "pretty": "prettier --write lib/*.*(m)js test/*.*(m)js",
     "build": "rollup -c rollup.config.js",
     "build-script": "rollup -c rollup-script.config.js",
     "prepublishOnly": "npm run build",
@@ -52,20 +51,10 @@
     "core-js": "^3.6.4",
     "full-icu": "^1.3.0",
     "nyc": "^15.0.0",
-    "prettier": "^1.18.2",
     "rollup": "^1.31.0",
     "rollup-plugin-babel": "^4.3.3",
     "rollup-plugin-uglify": "^6.0.4",
     "test262-harness": "^6.7.0",
     "uuid": "^7.0.2"
-  },
-  "prettier": {
-    "printWidth": 120,
-    "trailingComma": "none",
-    "tabWidth": 2,
-    "semi": true,
-    "singleQuote": true,
-    "bracketSpacing": true,
-    "arrowParens": "always"
   }
 }

@@ -61,7 +61,8 @@ describe('Duration', () => {
       it('throw when bad disambiguation', () => {
         [new Duration(3), { days: 0 }, 'P5Y'].forEach((input) => {
           ['', 'CONSTRAIN', 'xyz', 3, null].forEach((disambiguation) =>
-            throws(() => Duration.from(input, { disambiguation }), RangeError));
+            throws(() => Duration.from(input, { disambiguation }), RangeError)
+          );
         });
       });
     });
@@ -90,8 +91,7 @@ describe('Duration', () => {
     it('minimum is zero', () => {
       equal(`${new Duration(0, 0, 0, 0, 0, 0, 0, 0, 0)}`, 'PT0S');
       units.forEach((unit) => equal(`${Duration.from({ [unit]: 0 })}`, 'PT0S'));
-      ['P0Y', 'P0M', 'P0D', 'PT0H', 'PT0M', 'PT0S'].forEach((str) =>
-        equal(`${Duration.from(str)}`, 'PT0S'));
+      ['P0Y', 'P0M', 'P0D', 'PT0H', 'PT0M', 'PT0S'].forEach((str) => equal(`${Duration.from(str)}`, 'PT0S'));
     });
     it('infinity is not allowed', () => {
       units.forEach((unit, ix) => {

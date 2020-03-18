@@ -10,8 +10,5 @@ export default {
     lib: ['es6'],
     sourcemap: true
   },
-  plugins: [
-    commonjs(),
-    resolve({ preferBuiltins: false })
-  ]
+  plugins: [commonjs(), resolve({ preferBuiltins: false })]
 };

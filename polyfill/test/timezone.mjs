@@ -43,8 +43,8 @@ describe('TimeZone', () => {
     test('-08');
     test('Europe/Vienna');
     test('America/New_York');
-    test('Africa/CAIRO');  // capitalization
-    test('Asia/Ulan_Bator');  // IANA Link Name
+    test('Africa/CAIRO'); // capitalization
+    test('Asia/Ulan_Bator'); // IANA Link Name
     test('UTC');
     test('GMT');
     function test(zone) {
@@ -200,7 +200,8 @@ describe('TimeZone', () => {
     });
     it('throws on bad disambiguation', () => {
       ['', 'EARLIER', 'test', 3, null].forEach((disambiguation) =>
-        throws(() => zone.getAbsoluteFor(dtm, { disambiguation }), RangeError));
+        throws(() => zone.getAbsoluteFor(dtm, { disambiguation }), RangeError)
+      );
     });
   });
 });

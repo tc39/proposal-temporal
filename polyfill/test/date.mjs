@@ -122,7 +122,8 @@ describe('Date', () => {
     });
     it('invalid disambiguation', () => {
       ['', 'CONSTRAIN', 'xyz', 3, null].forEach((disambiguation) =>
-        throws(() => original.with({ day: 17 }, { disambiguation }), RangeError));
+        throws(() => original.with({ day: 17 }, { disambiguation }), RangeError)
+      );
     });
   });
   describe('Date.withTime() works', () => {
@@ -240,7 +241,8 @@ describe('Date', () => {
     });
     it('invalid disambiguation', () => {
       ['', 'CONSTRAIN', 'balance', 3, null].forEach((disambiguation) =>
-        throws(() => date.plus({ months: 1 }, { disambiguation }), RangeError));
+        throws(() => date.plus({ months: 1 }, { disambiguation }), RangeError)
+      );
     });
   });
   describe('date.minus() works', () => {
@@ -271,7 +273,8 @@ describe('Date', () => {
     });
     it('invalid disambiguation', () => {
       ['', 'CONSTRAIN', 'balance', 3, null].forEach((disambiguation) =>
-        throws(() => date.minus({ months: 1 }, { disambiguation }), RangeError));
+        throws(() => date.minus({ months: 1 }, { disambiguation }), RangeError)
+      );
     });
   });
   describe('date.toString() works', () => {
@@ -344,7 +347,8 @@ describe('Date', () => {
       it('throw when bad disambiguation', () => {
         [new Date(1976, 11, 18), { year: 2019, month: 1, day: 1 }, '2019-01-31'].forEach((input) => {
           ['', 'CONSTRAIN', 'xyz', 3, null].forEach((disambiguation) =>
-            throws(() => Date.from(input, { disambiguation }), RangeError));
+            throws(() => Date.from(input, { disambiguation }), RangeError)
+          );
         });
       });
     });
