@@ -34,6 +34,9 @@ rules:
     - error
     - multi-line
   func-call-spacing: error
+  function-call-argument-newline:
+    - error
+    - consistent
   indent:
     - error
     - 2
@@ -76,5 +79,6 @@ overrides:
     # test262 code complies to a different coding style
     rules:
       comma-dangle: 'off'
+      function-call-argument-newline: 'off'
       max-len: 'off'
       quotes: 'off'
