@@ -59,6 +59,9 @@ rules:
   object-property-newline:
     - error
     - allowAllPropertiesOnSameLine: true
+  quote-props:
+    - error
+    - as-needed
   quotes:
     - error
     - single

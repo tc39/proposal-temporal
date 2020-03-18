@@ -25,5 +25,5 @@ assert.sameValue(result.month, 4, "month result");
 assert.sameValue(result.day, 19, "day result");
 assert.sameValue(called, 2);
 
-assert.throws(RangeError, () => instance.minus({ days: 1 }, { "disambiguation": "reject" }));
+assert.throws(RangeError, () => instance.minus({ days: 1 }, { disambiguation: "reject" }));
 assert.sameValue(called, 2);

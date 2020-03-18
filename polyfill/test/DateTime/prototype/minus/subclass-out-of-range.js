@@ -31,5 +31,5 @@ assert.sameValue(result.microsecond, 0, "microsecond result");
 assert.sameValue(result.nanosecond, 1, "nanosecond result");
 assert.sameValue(called, 2);
 
-assert.throws(RangeError, () => instance.minus({ nanoseconds: 1 }, { "disambiguation": "reject" }));
+assert.throws(RangeError, () => instance.minus({ nanoseconds: 1 }, { disambiguation: "reject" }));
 assert.sameValue(called, 2);

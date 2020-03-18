@@ -24,5 +24,5 @@ assert.sameValue(result.year, -271821, "year result");
 assert.sameValue(result.month, 4, "month result");
 assert.sameValue(called, 2);
 
-assert.throws(RangeError, () => instance.minus({ months: 1 }, { "disambiguation": "reject" }));
+assert.throws(RangeError, () => instance.minus({ months: 1 }, { disambiguation: "reject" }));
 assert.sameValue(called, 2);
