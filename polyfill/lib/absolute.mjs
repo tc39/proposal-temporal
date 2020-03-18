@@ -1,19 +1,12 @@
 import { ES } from './ecmascript.mjs';
 import { MakeIntrinsicClass } from './intrinsicclass.mjs';
-import {
-  EPOCHNANOSECONDS,
-  CreateSlots,
-  GetSlot,
-  SetSlot,
-  YEARS,
-  MONTHS
-} from './slots.mjs';
+import { EPOCHNANOSECONDS, CreateSlots, GetSlot, SetSlot, YEARS, MONTHS } from './slots.mjs';
 
 import bigInt from 'big-integer';
 
 export class Absolute {
   constructor(epochNanoseconds) {
-    if (('bigint' !== typeof epochNanoseconds) && !bigInt.isInstance(epochNanoseconds)) {
+    if ('bigint' !== typeof epochNanoseconds && !bigInt.isInstance(epochNanoseconds)) {
       throw RangeError('bigint required');
     }
     const ns = bigInt(epochNanoseconds);
@@ -116,15 +109,16 @@ export class Absolute {
     const ss = diff.divide(1e9);
 
     const Duration = ES.GetIntrinsic('%Temporal.Duration%');
-    const {
-      days,
-      hours,
-      minutes,
-      seconds,
-      milliseconds,
-      microseconds,
-      nanoseconds
-    } = ES.BalanceDuration(0, 0, 0, ss, ms, us, ns, largestUnit);
+    const { days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.BalanceDuration(
+      0,
+      0,
+      0,
+      ss,
+      ms,
+      us,
+      ns,
+      largestUnit
+    );
     return new Duration(0, 0, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
   }
   toString(timeZoneParam = 'UTC') {

@@ -12,6 +12,9 @@
     "eslint": "^6.8.0",
     "mkdirp": "^1.0.0"
   },
+  "devDependencies": {
+    "prettier": "^1.19.1"
+  },
   "scripts": {
     "test": "cd polyfill && npm install && npm test && npm run cookbook && npm run test262 && cd ..",
     "codecov:tests": "cd polyfill && npm install && npm run codecov:tests && cd ..",
@@ -25,6 +28,7 @@
     "build:docs": "cd docs && npm install && npm run build:html && cd .. && cp docs/*.html docs/*.css out/docs/",
     "build:spec": "ecmarkup spec.html out/index.html",
     "prebuild": "mkdirp out && mkdirp out/docs",
+    "pretty": "prettier --write docs/cookbook/*.*js polyfill/lib/*.*js polyfill/test/*.*js",
     "build": "npm run build:javascript && npm run build:docs && npm run build:spec"
   },
   "repository": {
@@ -32,5 +36,14 @@
     "url": "git+https://github.com/tc39/proposal-temporal.git"
   },
   "author": "Ujjwal Sharma <usharma@igalia.com>",
-  "license": "SEE LICENSE IN https://tc39.github.io/ecma262/#sec-copyright-and-software-license"
+  "license": "SEE LICENSE IN https://tc39.github.io/ecma262/#sec-copyright-and-software-license",
+  "prettier": {
+    "printWidth": 120,
+    "trailingComma": "none",
+    "tabWidth": 2,
+    "semi": true,
+    "singleQuote": true,
+    "bracketSpacing": true,
+    "arrowParens": "always"
+  }
 }

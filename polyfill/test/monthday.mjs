@@ -56,14 +56,15 @@ describe('MonthDay', () => {
         it('throw when bad disambiguation', () => {
           [new MonthDay(11, 18), { month: 1, day: 1 }, '01-31'].forEach((input) => {
             ['', 'CONSTRAIN', 'xyz', 3, null].forEach((disambiguation) =>
-              throws(() => MonthDay.from(input, { disambiguation }), RangeError));
+              throws(() => MonthDay.from(input, { disambiguation }), RangeError)
+            );
           });
         });
       });
       describe('Leap day', () => {
         ['reject', 'constrain', 'balance'].forEach((disambiguation) =>
-          it(disambiguation, () =>
-            equal(`${MonthDay.from({ month: 2, day: 29 }, { disambiguation })}`, '02-29')));
+          it(disambiguation, () => equal(`${MonthDay.from({ month: 2, day: 29 }, { disambiguation })}`, '02-29'))
+        );
       });
     });
     describe('getters', () => {
@@ -99,7 +100,8 @@ describe('MonthDay', () => {
   describe('MonthDay.with()', () => {
     it('throws on bad disambiguation', () => {
       ['', 'CONSTRAIN', 'xyz', 3, null].forEach((disambiguation) =>
-        throws(() => MonthDay.from('01-15').with({ day: 1 }, { disambiguation }), RangeError));
+        throws(() => MonthDay.from('01-15').with({ day: 1 }, { disambiguation }), RangeError)
+      );
     });
   });
 });

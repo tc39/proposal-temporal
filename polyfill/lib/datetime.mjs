@@ -17,17 +17,7 @@ import {
 } from './slots.mjs';
 
 export class DateTime {
-  constructor(
-    year,
-    month,
-    day,
-    hour = 0,
-    minute = 0,
-    second = 0,
-    millisecond = 0,
-    microsecond = 0,
-    nanosecond = 0
-  ) {
+  constructor(year, month, day, hour = 0, minute = 0, second = 0, millisecond = 0, microsecond = 0, nanosecond = 0) {
     year = ES.ToInteger(year);
     month = ES.ToInteger(month);
     day = ES.ToInteger(day);
@@ -147,19 +137,10 @@ export class DateTime {
       millisecond,
       microsecond,
       nanosecond,
-      disambiguation));
+      disambiguation
+    ));
     const Construct = ES.SpeciesConstructor(this, DateTime);
-    const result = new Construct(
-      year,
-      month,
-      day,
-      hour,
-      minute,
-      second,
-      millisecond,
-      microsecond,
-      nanosecond
-    );
+    const result = new Construct(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
     if (!ES.IsDateTime(result)) throw new TypeError('invalid result');
     return result;
   }
@@ -197,19 +178,10 @@ export class DateTime {
       millisecond,
       microsecond,
       nanosecond,
-      disambiguation));
+      disambiguation
+    ));
     const Construct = ES.SpeciesConstructor(this, DateTime);
-    const result = new Construct(
-      year,
-      month,
-      day,
-      hour,
-      minute,
-      second,
-      millisecond,
-      microsecond,
-      nanosecond
-    );
+    const result = new Construct(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
     if (!ES.IsDateTime(result)) throw new TypeError('invalid result');
     return result;
   }
@@ -246,19 +218,10 @@ export class DateTime {
       millisecond,
       microsecond,
       nanosecond,
-      disambiguation));
+      disambiguation
+    ));
     const Construct = ES.SpeciesConstructor(this, DateTime);
-    const result = new Construct(
-      year,
-      month,
-      day,
-      hour,
-      minute,
-      second,
-      millisecond,
-      microsecond,
-      nanosecond
-    );
+    const result = new Construct(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
     if (!ES.IsDateTime(result)) throw new TypeError('invalid result');
     return result;
   }
@@ -282,15 +245,16 @@ export class DateTime {
 
     let { years, months, days } = ES.DifferenceDate(smaller, { year, month, day }, dateLargestUnit);
 
-    ({
+    ({ days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.BalanceDuration(
       days,
       hours,
       minutes,
       seconds,
       milliseconds,
       microseconds,
-      nanoseconds
-    } = ES.BalanceDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, largestUnit));
+      nanoseconds,
+      largestUnit
+    ));
 
     const Duration = ES.GetIntrinsic('%Temporal.Duration%');
     return new Duration(years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);

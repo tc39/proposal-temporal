@@ -247,7 +247,8 @@ describe('DateTime', () => {
     });
     it('invalid disambiguation', () => {
       ['', 'CONSTRAIN', 'xyz', 3, null].forEach((disambiguation) =>
-        throws(() => datetime.with({ day: 5 }, { disambiguation }), RangeError));
+        throws(() => datetime.with({ day: 5 }, { disambiguation }), RangeError)
+      );
     });
   });
   describe('DateTime.compare() works', () => {
@@ -293,7 +294,8 @@ describe('DateTime', () => {
     });
     it('invalid disambiguation', () => {
       ['', 'CONSTRAIN', 'balance', 3, null].forEach((disambiguation) =>
-        throws(() => DateTime.from('2019-11-18T15:00').plus({ months: 1 }, { disambiguation }), RangeError));
+        throws(() => DateTime.from('2019-11-18T15:00').plus({ months: 1 }, { disambiguation }), RangeError)
+      );
     });
   });
   describe('date.minus() works', () => {
@@ -308,7 +310,8 @@ describe('DateTime', () => {
     });
     it('invalid disambiguation', () => {
       ['', 'CONSTRAIN', 'balance', 3, null].forEach((disambiguation) =>
-        throws(() => DateTime.from('2019-11-18T15:00').minus({ months: 1 }, { disambiguation }), RangeError));
+        throws(() => DateTime.from('2019-11-18T15:00').minus({ months: 1 }, { disambiguation }), RangeError)
+      );
     });
   });
   describe('DateTime.difference()', () => {
@@ -382,7 +385,8 @@ describe('DateTime', () => {
       it('throw when bad disambiguation', () => {
         [new DateTime(1976, 11, 18, 15, 23), { year: 2019, month: 1, day: 1 }, '2019-01-31T00:00'].forEach((input) => {
           ['', 'CONSTRAIN', 'xyz', 3, null].forEach((disambiguation) =>
-            throws(() => DateTime.from(input, { disambiguation }), RangeError));
+            throws(() => DateTime.from(input, { disambiguation }), RangeError)
+          );
         });
       });
       const leap = { year: 2016, month: 12, day: 31, hour: 23, minute: 59, second: 60 };
@@ -417,7 +421,8 @@ describe('DateTime', () => {
     });
     it('throws on bad disambiguation', () => {
       ['', 'EARLIER', 'xyz', 3, null].forEach((disambiguation) =>
-        throws(() => DateTime.from('2019-10-29T10:46').inTimeZone('UTC', { disambiguation }), RangeError));
+        throws(() => DateTime.from('2019-10-29T10:46').inTimeZone('UTC', { disambiguation }), RangeError)
+      );
     });
   });
   describe('Min/max range', () => {

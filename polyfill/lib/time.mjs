@@ -20,14 +20,7 @@ import {
 } from './slots.mjs';
 
 export class Time {
-  constructor(
-    hour = 0,
-    minute = 0,
-    second = 0,
-    millisecond = 0,
-    microsecond = 0,
-    nanosecond = 0
-  ) {
+  constructor(hour = 0, minute = 0, second = 0, millisecond = 0, microsecond = 0, nanosecond = 0) {
     hour = ES.ToInteger(hour);
     minute = ES.ToInteger(minute);
     second = ES.ToInteger(second);
@@ -102,14 +95,7 @@ export class Time {
       disambiguation
     ));
     const Construct = ES.SpeciesConstructor(this, Time);
-    const result = new Construct(
-      hour,
-      minute,
-      second,
-      millisecond,
-      microsecond,
-      nanosecond
-    );
+    const result = new Construct(hour, minute, second, millisecond, microsecond, nanosecond);
     if (!ES.IsTime(result)) throw new TypeError('invalid result');
     return result;
   }
@@ -143,14 +129,7 @@ export class Time {
       disambiguation
     ));
     const Construct = ES.SpeciesConstructor(this, Time);
-    const result = new Construct(
-      hour,
-      minute,
-      second,
-      millisecond,
-      microsecond,
-      nanosecond
-    );
+    const result = new Construct(hour, minute, second, millisecond, microsecond, nanosecond);
     if (!ES.IsTime(result)) throw new TypeError('invalid result');
     return result;
   }
@@ -184,14 +163,7 @@ export class Time {
       disambiguation
     ));
     const Construct = ES.SpeciesConstructor(this, Time);
-    const result = new Construct(
-      hour,
-      minute,
-      second,
-      millisecond,
-      microsecond,
-      nanosecond
-    );
+    const result = new Construct(hour, minute, second, millisecond, microsecond, nanosecond);
     if (!ES.IsTime(result)) throw new TypeError('invalid result');
     return result;
   }
@@ -209,14 +181,16 @@ export class Time {
       microseconds *= -1;
       nanoseconds *= -1;
     }
-    ({
+    ({ hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.BalanceDuration(
+      0,
       hours,
       minutes,
       seconds,
       milliseconds,
       microseconds,
-      nanoseconds
-    } = ES.BalanceDuration(0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, largestUnit));
+      nanoseconds,
+      largestUnit
+    ));
     const Duration = ES.GetIntrinsic('%Temporal.Duration%');
     return new Duration(0, 0, 0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
   }

@@ -125,14 +125,9 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
       microsecond = ES.ToInteger(match[5]);
       nanosecond = ES.ToInteger(match[6]);
     } else {
-      ({
-        hour,
-        minute,
-        second,
-        millisecond,
-        microsecond,
-        nanosecond
-      } = ES.ParseISODateTime(isoString, { zoneRequired: false }));
+      ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.ParseISODateTime(isoString, {
+        zoneRequired: false
+      }));
     }
     return { hour, minute, second, millisecond, microsecond, nanosecond };
   },
@@ -191,18 +186,11 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
   },
   ToDateTime: (item, disambiguation) => {
     if (ES.IsDateTime(item)) return item;
-    let props = ES.ValidDateTimeFrom(item, [
-      'year',
-      'month',
-      'day'
-    ], [
-      'hour',
-      'minute',
-      'second',
-      'millisecond',
-      'microsecond',
-      'nanosecond'
-    ]);
+    let props = ES.ValidDateTimeFrom(
+      item,
+      ['year', 'month', 'day'],
+      ['hour', 'minute', 'second', 'millisecond', 'microsecond', 'nanosecond']
+    );
     if (!props) {
       const isoString = ES.ToString(item);
       props = ES.ParseDateTimeString(isoString);
@@ -238,17 +226,7 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
         ES.RejectDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
         break;
       case 'constrain':
-        ({
-          year,
-          month,
-          day,
-          hour,
-          minute,
-          second,
-          millisecond,
-          microsecond,
-          nanosecond
-        } = ES.ConstrainDateTime(
+        ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.ConstrainDateTime(
           year,
           month,
           day,
@@ -280,20 +258,12 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
   },
   ToDate: (item, disambiguation) => {
     if (ES.IsDate(item)) return item;
-    let props = ES.ValidDateTimeFrom(item, [
-      'year',
-      'month',
-      'day'
-    ]);
+    let props = ES.ValidDateTimeFrom(item, ['year', 'month', 'day']);
     if (!props) {
       const isoString = ES.ToString(item);
       props = ES.ParseDateString(isoString);
     }
-    let {
-      day,
-      month,
-      year
-    } = props;
+    let { day, month, year } = props;
     ({ year, month, day } = ES.RegulateDate(year, month, day, disambiguation));
     return new TemporalDate(year, month, day);
   },
@@ -315,26 +285,16 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
   },
   ToTime: (item, disambiguation) => {
     if (ES.IsTime(item)) return item;
-    let props = ES.ValidDateTimeFrom(item, [], [
-      'hour',
-      'minute',
-      'second',
-      'millisecond',
-      'microsecond',
-      'nanosecond'
-    ]);
+    let props = ES.ValidDateTimeFrom(
+      item,
+      [],
+      ['hour', 'minute', 'second', 'millisecond', 'microsecond', 'nanosecond']
+    );
     if (!props) {
       const isoString = ES.ToString(item);
       props = ES.ParseTimeString(isoString);
     }
-    let {
-      hour = 0,
-      microsecond = 0,
-      millisecond = 0,
-      minute = 0,
-      nanosecond = 0,
-      second = 0
-    } = props;
+    let { hour = 0, microsecond = 0, millisecond = 0, minute = 0, nanosecond = 0, second = 0 } = props;
     ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.RegulateTime(
       hour,
       minute,
@@ -376,18 +336,12 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
   },
   ToYearMonth: (item, disambiguation) => {
     if (ES.IsYearMonth(item)) return item;
-    let props = ES.ValidDateTimeFrom(item, [
-      'year',
-      'month'
-    ]);
+    let props = ES.ValidDateTimeFrom(item, ['year', 'month']);
     if (!props) {
       const isoString = ES.ToString(item);
       props = ES.ParseYearMonthString(isoString);
     }
-    let {
-      month,
-      year
-    } = props;
+    let { month, year } = props;
     ({ year, month } = ES.RegulateYearMonth(year, month, disambiguation));
     return new TemporalYearMonth(year, month);
   },
@@ -409,18 +363,12 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
   },
   ToMonthDay: (item, disambiguation) => {
     if (ES.IsMonthDay(item)) return item;
-    let props = ES.ValidDateTimeFrom(item, [
-      'month',
-      'day'
-    ]);
+    let props = ES.ValidDateTimeFrom(item, ['month', 'day']);
     if (!props) {
       const isoString = ES.ToString(item);
       props = ES.ParseMonthDayString(isoString);
     }
-    let {
-      day,
-      month
-    } = props;
+    let { day, month } = props;
     ({ month, day } = ES.RegulateMonthDay(month, day, disambiguation));
     return new TemporalMonthDay(month, day);
   },
@@ -485,15 +433,16 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
         break;
       }
       case 'balance': {
-        ({
+        ({ days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.BalanceDuration(
           days,
           hours,
           minutes,
           seconds,
           milliseconds,
           microseconds,
-          nanoseconds
-        } = ES.BalanceDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 'days'));
+          nanoseconds,
+          'days'
+        ));
         for (const prop of [years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds]) {
           if (!Number.isFinite(prop)) throw new RangeError('infinite values not allowed as duration fields');
         }
@@ -501,17 +450,7 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
       }
     }
 
-    return new TemporalDuration(
-      years,
-      months,
-      days,
-      hours,
-      minutes,
-      seconds,
-      milliseconds,
-      microseconds,
-      nanoseconds
-    );
+    return new TemporalDuration(years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
   },
   ToLimitedDuration: (item, disallowedSlots = []) => {
     const duration = ES.ToDuration(item, 'reject');
@@ -681,11 +620,14 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
   GetTimeZoneDateTimeParts: (epochNanoseconds, timeZone) => {
     const offset = parseOffsetString(timeZone);
     let nanos = bigInt(epochNanoseconds).mod(1e9);
-    let epochMilliseconds = bigInt(epochNanoseconds).divide(1e9).multiply(1e3).plus(Math.floor(nanos / 1e6));
+    let epochMilliseconds = bigInt(epochNanoseconds)
+      .divide(1e9)
+      .multiply(1e3)
+      .plus(Math.floor(nanos / 1e6));
     nanos = +((epochNanoseconds < 0 ? 1e9 : 0) + nanos);
     let millisecond = Math.floor(nanos / 1e6) % 1e3;
     let microsecond = Math.floor(nanos / 1e3) % 1e3;
-    let nanosecond = Math.floor(nanos / 1e0) % 1e3;
+    let nanosecond = Math.floor(nanos / 1) % 1e3;
 
     if (offset !== null) {
       millisecond += offset;
@@ -749,7 +691,7 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
     let rightNanos = leftNanos;
     let rightOffset = leftOffset;
     let weeks = 0;
-    while ((leftOffset === rightOffset) && (weeks < 104)) {
+    while (leftOffset === rightOffset && weeks < 104) {
       rightNanos = bigInt(leftNanos).plus(7 * 24 * DAYMILLIS * 1e6);
       rightOffset = ES.GetTimeZoneOffsetString(rightNanos, timeZone);
       if (leftOffset === rightOffset) {
@@ -1030,14 +972,14 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
     year = ES.ConstrainToRange(year, YEAR_MIN, YEAR_MAX);
     month = ES.ConstrainToRange(month, 1, 12);
     day = ES.ConstrainToRange(day, 1, ES.DaysInMonth(year, month));
-    ({
+    ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.ConstrainTime(
       hour,
       minute,
       second,
       millisecond,
       microsecond,
       nanosecond
-    } = ES.ConstrainTime(hour, minute, second, millisecond, microsecond, nanosecond));
+    ));
     // Constrain to within 24 hours outside the Absolute range
     if (
       year === YEAR_MIN &&
@@ -1059,7 +1001,7 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
       minute = second = 59;
       millisecond = microsecond = nanosecond = 999;
     }
-    return ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond });
+    return { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond };
   },
   ConstrainYearMonth: (year, month) => {
     year = ES.ConstrainToRange(year, YEAR_MIN, YEAR_MAX);
@@ -1070,7 +1012,7 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
     } else {
       month = ES.ConstrainToRange(month, 1, 12);
     }
-    return ({ year, month });
+    return { year, month };
   },
 
   RejectToRange: (value, min, max) => {
@@ -1305,7 +1247,9 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
     let ns = Date.now() % 1e6;
     return () => {
       const ms = Date.now();
-      const result = bigInt(ms).multiply(1e6).plus(ns);
+      const result = bigInt(ms)
+        .multiply(1e6)
+        .plus(ns);
       ns = ms % 1e6;
       return result;
     };
@@ -1343,7 +1287,7 @@ function parseOffsetString(string) {
 }
 function makeOffsetString(offsetMilliSeconds) {
   let offsetSeconds = Math.round(offsetMilliSeconds / 1000);
-  const sign = (offsetSeconds < 0) ? '-' : '+';
+  const sign = offsetSeconds < 0 ? '-' : '+';
   offsetSeconds = Math.abs(offsetSeconds);
   const offsetMinutes = Math.floor(offsetSeconds / 60) % 60;
   const offsetHours = Math.floor(offsetSeconds / 3600);
