@@ -322,22 +322,23 @@
         1. Let _absolute_ be the *this* value.
         1. Perform ? RequireInternalSlot(_absolute_, [[InitializedTemporalAbsolute]]).
         1. If the implementation does not include the ECMA-402 Internationalization API, then
-          1. Return ! AbsoluteToString(_absolute_).
+          1. Let _timeZone_ be ? CreateTimeZone(*"UTC"*).
+          1. Return ! AbsoluteToString(_absolute_, _timeZone_).
         1. Let _dateFormat_ be ? Construct(%DateTimeFormat%, « _locales_, _options_ »).
         1. Return ? FormatDateTime(_dateFormat_, _absolute_).
       </emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal.absolute.prototype.tojson">
-      <h1>Temporal.Absolute.prototype.toJSON ( [ _timeZone_ ] )</h1>
+      <h1>Temporal.Absolute.prototype.toJSON ( )</h1>
       <p>
-        The `toJSON` method takes one argument _timeZone_.
         The following steps are taken:
       </p>
       <emu-alg>
         1. Let _absolute_ be the *this* value.
         1. Perform ? RequireInternalSlot(_absolute_, [[InitializedTemporalAbsolute]]).
-        1. Return ! AbsoluteToString(_absolute_).
+        1. Let _timeZone_ be ? CreateTimeZone(*"UTC"*).
+        1. Return ! AbsoluteToString(_absolute_, _timeZone_).
       </emu-alg>
     </emu-clause>
 

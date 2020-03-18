@@ -79,6 +79,22 @@ describe('Absolute', () => {
       equal(abs.toString(tz), '1976-11-18T09:23:30.123456789-05:00[America/New_York]');
     });
   });
+  describe('Absolute.toJSON() works', () => {
+    it('`1976-11-18T15:23:30.123456789+01:00`.toJSON()', () => {
+      const abs = Absolute.from('1976-11-18T15:23:30.123456789+01:00');
+      assert(abs);
+      equal(abs.toJSON(), '1976-11-18T14:23:30.123456789Z');
+    });
+    it('`1963-02-13T10:36:29.123456789+01:00`.toJSON()', () => {
+      const abs = Absolute.from('1963-02-13T10:36:29.123456789+01:00');
+      assert(abs);
+      equal(abs.toJSON(), '1963-02-13T09:36:29.123456789Z');
+    });
+    it('argument is ignored', () => {
+      const abs = Absolute.from('1976-11-18T15:23:30.123456789+01:00');
+      equal(abs.toJSON('+01:00'), abs.toJSON());
+    });
+  });
   describe('Absolute.getEpochSeconds() works', () => {
     it('post-epoch', () => {
       const epochMs = Date.UTC(1976, 10, 18, 15, 23, 30, 123);

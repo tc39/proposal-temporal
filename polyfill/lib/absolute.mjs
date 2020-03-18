@@ -128,16 +128,13 @@ export class Absolute {
   toString(timeZoneParam = 'UTC') {
     if (!ES.IsAbsolute(this)) throw new TypeError('invalid receiver');
     let timeZone = ES.ToTimeZone(timeZoneParam);
-    let dateTime = timeZone.getDateTimeFor(this);
-    let year = ES.ISOYearString(dateTime.year);
-    let month = ES.ISODateTimePartString(dateTime.month);
-    let day = ES.ISODateTimePartString(dateTime.day);
-    let hour = ES.ISODateTimePartString(dateTime.hour);
-    let minute = ES.ISODateTimePartString(dateTime.minute);
-    let seconds = ES.ISOSecondsString(dateTime.second, dateTime.millisecond, dateTime.microsecond, dateTime.nanosecond);
-    let timeZoneString = ES.ISOTimeZoneString(timeZone, this);
-    let resultString = `${year}-${month}-${day}T${hour}:${minute}${seconds ? `:${seconds}` : ''}${timeZoneString}`;
-    return resultString;
+    return ES.AbsoluteToString(this, timeZone);
+  }
+  toJSON() {
+    if (!ES.IsAbsolute(this)) throw new TypeError('invalid receiver');
+    const TemporalTimeZone = ES.GetIntrinsic('%Temporal.TimeZone%');
+    const timeZone = new TemporalTimeZone('UTC');
+    return ES.AbsoluteToString(this, timeZone);
   }
   toLocaleString(...args) {
     if (!ES.IsAbsolute(this)) throw new TypeError('invalid receiver');
@@ -193,6 +190,5 @@ export class Absolute {
     return 0;
   }
 }
-Absolute.prototype.toJSON = Absolute.prototype.toString;
 
 MakeIntrinsicClass(Absolute, 'Temporal.Absolute');
