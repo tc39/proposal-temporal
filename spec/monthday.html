@@ -157,7 +157,7 @@
         1. Else
           1. Let _d_ be _monthDay_.[[Day]].
         1. Let _result_ be ? RegulateMonthDay(_m_, _d_, _disambiguation_).
-        1. Return ? CreateMonthDay(_result_.[[Month]], _result_.[[Day]]).
+        1. Return ? CreateMonthDayFromInstance(_monthDay_, _result_.[[Month]], _result_.[[Day]]).
       </emu-alg>
     </emu-clause>
 
@@ -312,6 +312,18 @@
         1. Set _object_.[[Month]] to _month_.
         1. Set _object_.[[Day]] to _day_.
         1. Return _object_.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-createmonthdayfrominstance" aoid="CreateMonthDayFromInstance">
+      <h1>CreateMonthDayFromInstance ( _monthDay_, _month_, _day_ )</h1>
+      <emu-alg>
+        1. Assert: Type(_monthDay_) is Object and _monthDay_ has an [[InitializedTemporalMonthDay]] internal slot.
+        1. Assert: ! ValidateMonthDay(_month_, _day_) is *true*.
+        1. Let _constructor_ be ? SpeciesConstructor(_monthDay_, %Temporal.MonthDay%).
+        1. Let _result_ be ? Construct(_constructor_, « _month_, _day_ »).
+        1. Perform ? RequireInternalSlot(_result_, [[InitializedTemporalMonthDay]]).
+        1. Return _result_.
       </emu-alg>
     </emu-clause>
 
