@@ -28,6 +28,9 @@ rules:
     - consistent
   arrow-parens: error
   arrow-spacing: error
+  brace-style:
+    - error
+    - 1tbs
   comma-dangle: error
   comma-spacing: error
   curly:
