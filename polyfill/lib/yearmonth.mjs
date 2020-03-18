@@ -54,7 +54,9 @@ export class YearMonth {
     let { year = GetSlot(this, YEAR), month = GetSlot(this, MONTH) } = props;
     ({ year, month } = ES.RegulateYearMonth(year, month, disambiguation));
     const Construct = ES.SpeciesConstructor(this, YearMonth);
-    return new Construct(year, month);
+    const result = new Construct(year, month);
+    if (!ES.IsYearMonth(result)) throw new TypeError('invalid result');
+    return result;
   }
   plus(durationLike, options) {
     if (!ES.IsYearMonth(this)) throw new TypeError('invalid receiver');
@@ -66,7 +68,9 @@ export class YearMonth {
     ({ year, month } = ES.BalanceYearMonth(year, month));
     ({ year, month } = ES.RegulateYearMonth(year, month, disambiguation));
     const Construct = ES.SpeciesConstructor(this, YearMonth);
-    return new Construct(year, month);
+    const result = new Construct(year, month);
+    if (!ES.IsYearMonth(result)) throw new TypeError('invalid result');
+    return result;
   }
   minus(durationLike, options) {
     if (!ES.IsYearMonth(this)) throw new TypeError('invalid receiver');
@@ -78,7 +82,9 @@ export class YearMonth {
     ({ year, month } = ES.BalanceYearMonth(year, month));
     ({ year, month } = ES.RegulateYearMonth(year, month, disambiguation));
     const Construct = ES.SpeciesConstructor(this, YearMonth);
-    return new Construct(year, month);
+    const result = new Construct(year, month);
+    if (!ES.IsYearMonth(result)) throw new TypeError('invalid result');
+    return result;
   }
   difference(other, options) {
     if (!ES.IsYearMonth(this)) throw new TypeError('invalid receiver');
