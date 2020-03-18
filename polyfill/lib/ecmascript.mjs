@@ -604,6 +604,18 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
     let post = parts.length ? `.${parts.join('')}` : '';
     return `${secs}${post}`;
   },
+  AbsoluteToString: (absolute, timeZone) => {
+    const dateTime = timeZone.getDateTimeFor(absolute);
+    const year = ES.ISOYearString(dateTime.year);
+    const month = ES.ISODateTimePartString(dateTime.month);
+    const day = ES.ISODateTimePartString(dateTime.day);
+    const hour = ES.ISODateTimePartString(dateTime.hour);
+    const minute = ES.ISODateTimePartString(dateTime.minute);
+    const seconds = ES.ISOSecondsString(dateTime.second, dateTime.millisecond, dateTime.microsecond, dateTime.nanosecond);
+    const timeZoneString = ES.ISOTimeZoneString(timeZone, absolute);
+    return `${year}-${month}-${day}T${hour}:${minute}${seconds ? `:${seconds}` : ''}${timeZoneString}`;
+  },
+
   GetCanonicalTimeZoneIdentifier: (timeZoneIdentifier) => {
     const offset = parseOffsetString(timeZoneIdentifier);
     if (offset !== null) return makeOffsetString(offset);
