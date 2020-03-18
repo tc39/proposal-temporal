@@ -30,13 +30,10 @@ export class MonthDay {
     if (!props) {
       throw new RangeError('invalid month-day-like');
     }
-    const { month = GetSlot(this, MONTH), day = GetSlot(this, DAY) } = props;
-    const result = ES.ToMonthDay({ month, day }, disambiguation);
+    let { month = GetSlot(this, MONTH), day = GetSlot(this, DAY) } = props;
+    ({ month, day } = ES.RegulateMonthDay(month, day, disambiguation));
     const Construct = ES.SpeciesConstructor(this, MonthDay);
-    return this === MonthDay ? result : new Construct(
-      GetSlot(result, MONTH),
-      GetSlot(result, DAY),
-    );
+    return new Construct(month, day);
   }
   toString() {
     if (!ES.IsMonthDay(this)) throw new TypeError('invalid receiver');

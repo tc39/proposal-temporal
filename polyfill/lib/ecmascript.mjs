@@ -411,7 +411,10 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
       day,
       month,
     } = props;
-
+    ({ month, day } = ES.RegulateMonthDay(month, day, disambiguation));
+    return new TemporalMonthDay(month, day);
+  },
+  RegulateMonthDay: (month, day, disambiguation) => {
     const leapYear = 1972;
     switch (disambiguation) {
       case 'reject':
@@ -424,8 +427,7 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
         ({ month, day } = ES.BalanceDate(leapYear, month, day));
         break;
     }
-
-    return new TemporalMonthDay(month, day);
+    return { month, day };
   },
   ToDuration: (item, disambiguation) => {
     if (ES.IsDuration(item)) return item;
