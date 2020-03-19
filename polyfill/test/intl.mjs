@@ -141,6 +141,29 @@ describe('Intl', () => {
     });
   });
 
+  describe('should work for Duration', () => {
+    const d = Temporal.Duration.from({ nanoseconds: 1e17 }, { disambiguation: 'balance' });
+    it('format', () => equal(us.format(d), '1157 days 9 hours 46 minutes 40 seconds'));
+    it('formatToParts', () =>
+      deepEqual(at.formatToParts(d), [
+        { type: 'days', value: '1157' },
+        { type: 'literal', value: ' ' },
+        { type: 'literal', value: 'Tage' },
+        { type: 'literal', value: ' ' },
+        { type: 'hours', value: '9' },
+        { type: 'literal', value: ' ' },
+        { type: 'literal', value: 'Stunden' },
+        { type: 'literal', value: ' ' },
+        { type: 'minutes', value: '46' },
+        { type: 'literal', value: ' ' },
+        { type: 'literal', value: 'Minuten' },
+        { type: 'literal', value: ' ' },
+        { type: 'seconds', value: '40' },
+        { type: 'literal', value: ' ' },
+        { type: 'literal', value: 'Sekunden' }
+      ]));
+  });
+
   describe('should not break Date', () => {
     const start = new Date('1922-12-30'); // ☭
     const end = new Date('1991-12-26');
