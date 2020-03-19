@@ -1,9 +1,9 @@
 Subclass-based Temporal Calendar API
 ====================================
 
-[calendar-draft.md](calendar-draft.md) discusses a design for calendar support in Temporal based on a single shared Temporal.Date type with a Temporal.Calendar.  This document discusses an alternative approach based on subclassing of Temporal.Date types.
+[calendar-draft.md](calendar-draft.md) discusses a design for calendar support in Temporal based on a single shared Temporal.Date type with a Temporal.Calendar.  This document discusses an alternative approach based on subclassing of Temporal.Date types, which was eliminated due to the drawbacks discussed in this document.
 
-In this document, the *Temporal.Calendar Approach* refers to the solution proposed in [calendar-draft.md](calendar-draft.md), and the *Temporal.Date Subclassing Approach* refers to the solution proposed in this document.
+In this document, the *Temporal.Calendar Approach* refers to the solution proposed in [calendar-draft.md](calendar-draft.md), and the *Temporal.Date Subclassing Approach* refers to the alternative, but eliminated, solution proposed in this document.
 
 ## Overview
 
@@ -69,6 +69,10 @@ class JapaneseDate extends Temporal.Date {
 }
 ```
 
+@ptomato said about this:
+
+> I'm not sure this approach would work, since you would have to call `super()` before setting the properties on `this`. By that time you'd already have the Temporal.Date.prototype getters defined, so I think you'd have to take an approach that was more similar to the calendar approach.
+
 ### Julian Change Dates
 
 The Temporal.Calendar Approach has a more natural way to implement calendars that themselves have properties.
@@ -81,7 +85,7 @@ The Temporal.Calendar Approach has a more natural way to implement calendars tha
 
 MonthDay is a type more naturaly represented by the subclassing approach.
 
-**Temporal.Calendar Approach:** There are several imperfect solutions for the Temporal.MonthDay data model, discussed in [#391](https://github.com/tc39/proposal-temporal/issues/391).
+**Temporal.Calendar Approach:** There are several imperfect solutions for the Temporal.MonthDay data model, discussed in [#391](https://github.com/tc39/proposal-temporal/issues/391).  The current workable proposed solution is to make the MonthDay data model the same as the Date data model.
 
 **Temporal.Date Subclassing Approach:** The calendar-specific type, like HebrewMonthDay, can represent data in its on form without risk of ambiguity.
 
