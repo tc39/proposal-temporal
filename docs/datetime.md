@@ -456,6 +456,44 @@ dt.toLocaleString('de-DE', { timeZone: 'Europe/Berlin', weekday: 'long' });  // 
 dt.toLocaleString('en-US-u-nu-fullwide-hc-h12');  // => １２/７/１９９５, ３:２４:３０ AM
 ```
 
+### datetime.**toJSON**() : string
+
+**Returns:** a string in the ISO 8601 date format representing `datetime`.
+
+This method is the same as `datetime.toString()`.
+It is usually not called directly, but it can be called automatically by `JSON.stringify()`.
+
+The reverse operation, recovering a `Temporal.DateTime` object from a string, is `Temporal.DateTime.from()`, but it cannot be called automatically by `JSON.parse()`.
+If you need to rebuild a `Temporal.DateTime` object from a JSON string, then you need to know the names of the keys that should be interpreted as `Temporal.DateTime`s.
+In that case you can build a custom "reviver" function for your use case.
+
+Example usage:
+```js
+const event = {
+  id: 311,
+  name: 'FictionalConf 2018',
+  openingDateTime: Temporal.DateTime.from('2018-07-06T10:00'),
+  closingDateTime: Temporal.DateTime.from('2018-07-08T18:15'),
+};
+const str = JSON.stringify(event, null, 2);
+console.log(str);
+// =>
+// {
+//   "id": 311,
+//   "name": "FictionalConf 2018",
+//   "openingDateTime": "2018-07-06T10:00",
+//   "closingDateTime": "2018-07-08T18:15"
+// }
+
+// To rebuild from the string:
+function reviver(key, value) {
+  if (key.endsWith('DateTime'))
+    return Temporal.DateTime.from(value);
+  return value;
+}
+JSON.parse(str, reviver);
+```
+
 ### datetime.**inTimeZone**(_timeZone_ : Temporal.TimeZone | string, _options_?: object) : Temporal.Absolute
 
 **Parameters:**
