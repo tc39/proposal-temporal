@@ -174,15 +174,9 @@ const properties = {
     enumerable: true,
     writable: false,
     configurable: true
-  },
-  formatRangeToParts: {
-    value: formatRangeToParts,
-    enumerable: true,
-    writable: false,
-    configurable: true
-  },
+  }
 };
-if (formatToParts in IntlDateTimeFormat.prototype) {
+if ('formatToParts' in IntlDateTimeFormat.prototype) {
   properties.formatToParts = {
     value: formatToParts,
     enumerable: true,
@@ -190,7 +184,7 @@ if (formatToParts in IntlDateTimeFormat.prototype) {
     configurable: true
   };
 }
-if (formatRangeToParts in IntlDateTimeFormat.prototype) {
+if ('formatRangeToParts' in IntlDateTimeFormat.prototype) {
   properties.formatRangeToParts = {
     value: formatRangeToParts,
     enumerable: true,
