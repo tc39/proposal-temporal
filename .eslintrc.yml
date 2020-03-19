@@ -2,7 +2,9 @@ env:
   browser: true
   es6: true
   node: true
-extends: 'eslint:recommended'
+extends:
+  - 'eslint:recommended'
+  - 'plugin:prettier/recommended'
 parser: babel-eslint  # for supporting dynamic import()
 globals:
   Atomics: readonly
@@ -84,8 +86,10 @@ overrides:
       assert: readonly
       verifyProperty: readonly
     # test262 code complies to a different coding style
+    extends: 'eslint:recommended'
     rules:
       comma-dangle: 'off'
       function-call-argument-newline: 'off'
       max-len: 'off'
+      prettier/prettier: 'off'
       quotes: 'off'

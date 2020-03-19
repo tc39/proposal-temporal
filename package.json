@@ -13,6 +13,8 @@
     "mkdirp": "^1.0.0"
   },
   "devDependencies": {
+    "eslint-config-prettier": "^6.10.0",
+    "eslint-plugin-prettier": "^3.1.2",
     "prettier": "^1.19.1"
   },
   "scripts": {
@@ -28,7 +30,7 @@
     "build:docs": "cd docs && npm install && npm run build:html && cd .. && cp docs/*.html docs/*.css out/docs/",
     "build:spec": "ecmarkup spec.html out/index.html",
     "prebuild": "mkdirp out && mkdirp out/docs",
-    "pretty": "prettier --write docs/cookbook/*.*js polyfill/lib/*.*js polyfill/test/*.*js",
+    "pretty": "eslint . --ext js,mjs --fix",
     "build": "npm run build:javascript && npm run build:docs && npm run build:spec"
   },
   "repository": {
