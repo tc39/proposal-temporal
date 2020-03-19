@@ -195,6 +195,40 @@ md.toLocaleString('de-DE', {month: 'long', day: 'numeric'});  // => 24. August
 md.toLocaleString('en-US-u-nu-fullwide');  // => ８/２４
 ```
 
+### monthDay.**toJSON**() : string
+
+**Returns:** a string in the ISO 8601 date format representing `monthDay`.
+
+This method is the same as `monthDay.toString()`.
+It is usually not called directly, but it can be called automatically by `JSON.stringify()`.
+
+The reverse operation, recovering a `Temporal.MonthDay` object from a string, is `Temporal.MonthDay.from()`, but it cannot be called automatically by `JSON.parse()`.
+If you need to rebuild a `Temporal.MonthDay` object from a JSON string, then you need to know the names of the keys that should be interpreted as `Temporal.MonthDay`s.
+In that case you can build a custom "reviver" function for your use case.
+
+Example usage:
+```js
+const holiday = {
+  name: 'Canada Day',
+  holidayMonthDay: Temporal.MonthDay.from({ month: 7, day: 1 }),
+};
+const str = JSON.stringify(holiday, null, 2);
+console.log(str);
+// =>
+// {
+//   "name": "Canada Day",
+//   "holidayMonthDay": "07-01"
+// }
+
+// To rebuild from the string:
+function reviver(key, value) {
+  if (key.endsWith('MonthDay'))
+    return Temporal.MonthDay.from(value);
+  return value;
+}
+JSON.parse(str, reviver);
+```
+
 ### monthDay.**withYear**(_year_: number) : Temporal.Date
 
 **Parameters:**

@@ -220,3 +220,41 @@ duration.toLocaleString();  // output will vary
 **Returns:** The string given by `timeZone.name`.
 
 This method overrides `Object.prototype.toString()` and provides the time zone's `name` property as a human-readable description.
+
+### timeZone.**toJSON**() : string
+
+**Returns:** the string given by `timeZone.name`.
+
+This method is the same as `timeZone.toString()`.
+It is usually not called directly, but it can be called automatically by `JSON.stringify()`.
+
+The reverse operation, recovering a `Temporal.TimeZone` object from a string, is `Temporal.TimeZone.from()`, but it cannot be called automatically by `JSON.parse()`.
+If you need to rebuild a `Temporal.TimeZone` object from a JSON string, then you need to know the names of the keys that should be interpreted as `Temporal.TimeZone`s.
+In that case you can build a custom "reviver" function for your use case.
+
+Example usage:
+```js
+const user = {
+  id: 775,
+  username: 'robotcat',
+  password: 'hunter2',  // Note: Don't really store passwords like that
+  userTimeZone: Temporal.TimeZone.from('Europe/Madrid'),
+};
+const str = JSON.stringify(user, null, 2);
+console.log(str);
+// =>
+// {
+//   "id": 775,
+//   "username": "robotcat",
+//   "password": "hunter2",
+//   "userTimeZone": "Europe/Madrid"
+// }
+
+// To rebuild from the string:
+function reviver(key, value) {
+  if (key.endsWith('TimeZone'))
+    return Temporal.TimeZone.from(value);
+  return value;
+}
+JSON.parse(str, reviver);
+```

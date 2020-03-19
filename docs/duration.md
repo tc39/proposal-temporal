@@ -184,9 +184,37 @@ console.log(`${bal}`, bal.seconds, bal.milliseconds);  // => PT3.500S 3 500
 
 **Returns:** a string representation of the duration that can be passed to `Temporal.Duration.from()`.
 
-This method uses `toString()` to usefully serialize `Temporal.Duration` objects during JSON serialization to a value that can be reconstructed during deserialization.
+This method is the same as `duration.toString()`.
+It is usually not called directly, but it can be called automatically by `JSON.stringify()`.
 
 > **NOTE**: The same caution about `milliseconds`, `microseconds`, or `nanoseconds` greater than 999 applies to this method as well.
+
+The reverse operation, recovering a `Temporal.Duration` object from a string, is `Temporal.Duration.from()`, but it cannot be called automatically by `JSON.parse()`.
+If you need to rebuild a `Temporal.Duration` object from a JSON string, then you need to know the names of the keys that should be interpreted as `Temporal.Duration`s.
+In that case you can build a custom "reviver" function for your use case.
+
+Example usage:
+```js
+const ban = {
+  reason: 'cooldown',
+  banDuration: Temporal.Duration.from({ hours: 48 }),
+};
+const str = JSON.stringify(ban, null, 2);
+console.log(str);
+// =>
+// {
+//   "reason": "cooldown",
+//   "banDuration": "PT48H"
+// }
+
+// To rebuild from the string:
+function reviver(key, value) {
+  if (key.endsWith('Duration'))
+    return Temporal.Duration.from(value);
+  return value;
+}
+JSON.parse(str, reviver);
+```
 
 ### duration.**toLocaleString**(_locales_?: string | array&lt;string&gt;, _options_?: object) : string
 

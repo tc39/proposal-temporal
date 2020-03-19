@@ -342,6 +342,48 @@ ym.toLocaleString('de-DE', {month: 'long', year: 'numeric'});  // => Juni 2019
 ym.toLocaleString('en-US-u-nu-fullwide');  // => ６/２０１９
 ```
 
+### yearMonth.**toJSON**() : string
+
+**Returns:** a string in the ISO 8601 date format representing `yearMonth`.
+
+This method is the same as `yearMonth.toString()`.
+It is usually not called directly, but it can be called automatically by `JSON.stringify()`.
+
+The reverse operation, recovering a `Temporal.YearMonth` object from a string, is `Temporal.YearMonth.from()`, but it cannot be called automatically by `JSON.parse()`.
+If you need to rebuild a `Temporal.YearMonth` object from a JSON string, then you need to know the names of the keys that should be interpreted as `Temporal.YearMonth`s.
+In that case you can build a custom "reviver" function for your use case.
+
+Example usage:
+```js
+const boardMeeting = {
+  id: 4,
+  agenda: [
+    'Roll call',
+    'Budget',
+  ],
+  meetingYearMonth: Temporal.YearMonth.from({ year: 2019, month: 3 }),
+};
+const str = JSON.stringify(boardMeeting, null, 2);
+console.log(str);
+// =>
+// {
+//   "id": 4,
+//   "agenda": [
+//     "Roll call",
+//     "Budget"
+//   ],
+//   "meetingYearMonth": "2019-03"
+// }
+
+// To rebuild from the string:
+function reviver(key, value) {
+  if (key.endsWith('YearMonth'))
+    return Temporal.YearMonth.from(value);
+  return value;
+}
+JSON.parse(str, reviver);
+```
+
 ### yearMonth.**withDay**(_day_: number) : Temporal.Date
 
 **Parameters:**

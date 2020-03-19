@@ -373,3 +373,43 @@ abs.toLocaleString('en-US-u-nu-fullwide-hc-h12', {
     timeZone: 'Asia/Kolkata',
 });  // => １１/１８/２０１９, ４:３０:００ PM
 ```
+
+### absolute.**toJSON**() : string
+
+**Returns:** a string in the ISO 8601 date format representing `absolute`, in the UTC time zone.
+
+This method is like `absolute.toString()` but always produces a string in UTC time.
+It is usually not called directly, but it can be called automatically by `JSON.stringify()`.
+
+The reverse operation, recovering a `Temporal.Absolute` object from a string, is `Temporal.Absolute.from()`, but it cannot be called automatically by `JSON.parse()`.
+If you need to rebuild a `Temporal.Absolute` object from a JSON string, then you need to know the names of the keys that should be interpreted as `Temporal.Absolute`s.
+In that case you can build a custom "reviver" function for your use case.
+
+Example usage:
+```js
+const meeting = {
+  id: 355,
+  name: 'Budget review',
+  location: 'https://meet.jit.si/ObjectiveTomatoesJokeSurely',
+  startAbsolute: Temporal.Absolute.from('2020-03-30T15:00-04:00[America/New_York]'),
+  endAbsolute: Temporal.Absolute.from('2020-03-30T16:00-04:00[America/New_York]'),
+};
+const str = JSON.stringify(meeting, null, 2);
+console.log(str);
+// =>
+// {
+//   "id": 355,
+//   "name": "Budget review",
+//   "location": "https://meet.jit.si/ObjectiveTomatoesJokeSurely",
+//   "startAbsolute": "2020-03-30T19:00Z",
+//   "endAbsolute": "2020-03-30T20:00Z"
+// }
+
+// To rebuild from the string:
+function reviver(key, value) {
+  if (key.endsWith('Absolute'))
+    return Temporal.Absolute.from(value);
+  return value;
+}
+JSON.parse(str, reviver);
+```
