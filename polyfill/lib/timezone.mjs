@@ -83,9 +83,8 @@ export class TimeZone {
     if (utcns === null) throw new RangeError('DateTime outside of supported range');
     const before = ES.GetTimeZoneOffsetNanoseconds(utcns.minus(bigInt(86400 * 1e9)), GetSlot(this, IDENTIFIER));
     const after = ES.GetTimeZoneOffsetNanoseconds(utcns.plus(bigInt(86400 * 1e9)), GetSlot(this, IDENTIFIER));
-    const diff = ES.ToDuration({
-      nanoseconds: after.minus(before)
-    }, 'reject');
+    const nanoseconds = after.minus(before);
+    const diff = ES.ToDuration({ nanoseconds }, 'reject');
     switch (disambiguation) {
       case 'earlier': {
         const earlier = dateTime.minus(diff);
