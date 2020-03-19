@@ -57,6 +57,7 @@ describe('Intl', () => {
 
   const us = new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York' });
   const at = new Intl.DateTimeFormat('de-AT', { timeZone: 'Europe/Vienna' });
+
   it('formatRange(absolute)', () => {
     const t1 = Temporal.Absolute.from('1976-11-18T14:23:30Z');
     const t2 = Temporal.Absolute.from('2020-02-20T15:44:56-08:00[America/New_York]');
@@ -119,6 +120,55 @@ describe('Intl', () => {
       { type: 'minute', value: '44', source: 'endRange' },
       { type: 'literal', value: ':', source: 'endRange' },
       { type: 'second', value: '56', source: 'endRange' }
+    ]);
+  });
+
+  it('should not break existing DateTimeFormat', () => {
+    const start = new Date('1922-12-30'); // ☭
+    const end = new Date('1991-12-26');
+    equal(us.format(start), '12/29/1922, 7:00:00 PM');
+    deepEqual(at.formatToParts(end), [
+      { type: 'day', value: '26' },
+      { type: 'literal', value: '.' },
+      { type: 'month', value: '12' },
+      { type: 'literal', value: '.' },
+      { type: 'year', value: '1991' },
+      { type: 'literal', value: ', ' },
+      { type: 'hour', value: '01' },
+      { type: 'literal', value: ':' },
+      { type: 'minute', value: '00' },
+      { type: 'literal', value: ':' },
+      { type: 'second', value: '00' }
+    ]);
+    equal(at.formatRange(start, end), '30.12.1922, 01:00:00 – 26.12.1991, 01:00:00');
+    deepEqual(us.formatRangeToParts(start, end), [
+      { type: 'month', value: '12', source: 'startRange' },
+      { type: 'literal', value: '/', source: 'startRange' },
+      { type: 'day', value: '29', source: 'startRange' },
+      { type: 'literal', value: '/', source: 'startRange' },
+      { type: 'year', value: '1922', source: 'startRange' },
+      { type: 'literal', value: ', ', source: 'startRange' },
+      { type: 'hour', value: '7', source: 'startRange' },
+      { type: 'literal', value: ':', source: 'startRange' },
+      { type: 'minute', value: '00', source: 'startRange' },
+      { type: 'literal', value: ':', source: 'startRange' },
+      { type: 'second', value: '00', source: 'startRange' },
+      { type: 'literal', value: ' ', source: 'startRange' },
+      { type: 'dayPeriod', value: 'PM', source: 'startRange' },
+      { type: 'literal', value: ' – ', source: 'shared' },
+      { type: 'month', value: '12', source: 'endRange' },
+      { type: 'literal', value: '/', source: 'endRange' },
+      { type: 'day', value: '25', source: 'endRange' },
+      { type: 'literal', value: '/', source: 'endRange' },
+      { type: 'year', value: '1991', source: 'endRange' },
+      { type: 'literal', value: ', ', source: 'endRange' },
+      { type: 'hour', value: '7', source: 'endRange' },
+      { type: 'literal', value: ':', source: 'endRange' },
+      { type: 'minute', value: '00', source: 'endRange' },
+      { type: 'literal', value: ':', source: 'endRange' },
+      { type: 'second', value: '00', source: 'endRange' },
+      { type: 'literal', value: ' ', source: 'endRange' },
+      { type: 'dayPeriod', value: 'PM', source: 'endRange' }
     ]);
   });
 });
