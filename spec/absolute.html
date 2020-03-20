@@ -427,14 +427,13 @@
         1. <mark>TODO: Actually specify this somehow.</mark>
         1. If _valid_ is *false*, then
           1. Throw a *RangeError* exception.
+        1. Let _offset_ and _ianaName_ be the respective parts of _absolute_, or *undefined* if not present.
         1. Let _year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_ be the respective parts of _absolute_ interpreted as decimal numbers.
         1. If _second_ is 60, then
           1. Set _second_ to 59.
-        1. <mark>Let _timeZone_ be some appropriate TimeZone object based on _abolute_.</mark>
-        1. If ! ValidateDateTime(_year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_) is *false*, then
-          1. Throw a *TypeError* exception.
-        1. Let _dateTime_ be ? CreateTemporalDateTime(_year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_).
-        1. Return ? GetAbsoluteFor(_timeZone_, _dateTime_, *"reject"*).
+        1. Let _timeZone_ be the first one of _ianaName_, _offset_, or *"UTC"* that is not *undefined*.
+        1. <mark>TODO: Let _possibleEpochNs_ be the List of possibilities for the number of nanoseconds since the Unix epoch in the time zone designated by _timeZone_ for the date and time designated by _year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, and _nanosecond_.</mark>
+        1. Return <mark>TODO</mark>.
       </emu-alg>
     </emu-clause>
 

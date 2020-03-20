@@ -257,6 +257,21 @@ describe('Absolute', () => {
         BigInt(Date.UTC(2020, 1, 12, 10, 42)) * BigInt(1e6)
       );
     });
+    it('2019-02-16T23:45-02:00[America/Sao_Paulo]', () => {
+      equal(
+        Absolute.from('2019-02-16T23:45-02:00[America/Sao_Paulo]').getEpochNanoseconds(),
+        BigInt(Date.UTC(2019, 1, 17, 1, 45)) * BigInt(1e6)
+      );
+    });
+    it('2019-02-16T23:45-03:00[America/Sao_Paulo]', () => {
+      equal(
+        Absolute.from('2019-02-16T23:45-03:00[America/Sao_Paulo]').getEpochNanoseconds(),
+        BigInt(Date.UTC(2019, 1, 17, 2, 45)) * BigInt(1e6)
+      );
+    });
+    it('throws when unable to disambiguate using offset', () => {
+      throws(() => Absolute.from('2019-02-16T23:45-04:00[America/Sao_Paulo]'), RangeError);
+    });
     it('Absolute.from(1) throws', () => throws(() => Absolute.from(1), RangeError));
     it('Absolute.from(-1) throws', () => throws(() => Absolute.from(-1), RangeError));
     it('Absolute.from(1n) throws', () => throws(() => Absolute.from(1n), RangeError));
