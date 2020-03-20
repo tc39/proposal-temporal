@@ -181,9 +181,38 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
   ToTemporalAbsolute: (item) => {
     if (ES.IsTemporalAbsolute(item)) return item;
     const isoString = ES.ToString(item);
-    const { zone, ...props } = ES.ParseTemporalAbsoluteString(isoString);
-    const datetime = ES.ToTemporalDateTime(props, 'reject');
-    return datetime.inTimeZone(zone, 'reject');
+    const {
+      year,
+      month,
+      day,
+      hour,
+      minute,
+      second,
+      millisecond,
+      microsecond,
+      nanosecond,
+      ianaName,
+      offset,
+      zone
+    } = ES.ParseTemporalAbsoluteString(isoString);
+    const possibleEpochNs = ES.GetTimeZoneEpochValue(
+      zone,
+      year,
+      month,
+      day,
+      hour,
+      minute,
+      second,
+      millisecond,
+      microsecond,
+      nanosecond
+    );
+    if (possibleEpochNs.length === 1) return new TemporalAbsolute(possibleEpochNs[0]);
+    for (const epochNs of possibleEpochNs) {
+      const possibleOffset = ES.GetTimeZoneOffsetString(epochNs, ianaName);
+      if (possibleOffset === offset) return new TemporalAbsolute(epochNs);
+    }
+    throw new RangeError(`'${isoString}' doesn't uniquely identify a Temporal.Absolute`);
   },
   ToTemporalDateTime: (item, disambiguation) => {
     if (ES.IsTemporalDateTime(item)) return item;
