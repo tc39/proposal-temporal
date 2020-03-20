@@ -144,7 +144,7 @@ class DurationFormat {
 export function DateTimeFormat(locale = IntlDateTimeFormat().resolvedOptions().locale, options = {}) {
   if (!(this instanceof DateTimeFormat)) return new DateTimeFormat(locale, options);
 
-  this[ORIGINAL] = new IntlDateTimeFormat(locale, datetimeAmend(options));
+  this[ORIGINAL] = new IntlDateTimeFormat(locale, options);
   this[TIMEZONE] = new TimeZone(this.resolvedOptions().timeZone);
   this[DATE] = new IntlDateTimeFormat(locale, dateAmend(options, {}));
   this[YM] = new IntlDateTimeFormat(locale, dateAmend(options, { day: false }));
