@@ -320,7 +320,7 @@ export class DateTime {
     if (!ES.IsDateTime(this)) throw new TypeError('invalid receiver');
     const timeZone = ES.ToTimeZone(timeZoneParam);
     const disambiguation = ES.ToTimeZoneDisambiguation(options);
-    return timeZone.getAbsoluteFor(this, disambiguation);
+    return timeZone.getAbsoluteFor(this, { disambiguation });
   }
   getDate() {
     if (!ES.IsDateTime(this)) throw new TypeError('invalid receiver');
