@@ -238,7 +238,7 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal-createtimezone" aoid="CreateTimeZone">
-      <h1>CreateTimeZone ( _identifier_ )</h1>
+      <h1>CreateTimeZone ( _identifier_ [ , _newTarget_ ] )</h1>
       <emu-alg>
         1. Assert: ! CanonicalizeTimeZoneName(_identifier_) is _identifier_.
         1. If _newTarget_ is not given, set it to %Temporal.TimeZone%.
