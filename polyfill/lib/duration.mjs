@@ -27,7 +27,7 @@ export class Duration {
     seconds = 0,
     milliseconds = 0,
     microseconds = 0,
-    nanoseconds = 0,
+    nanoseconds = 0
   ) {
     years = ES.ToInteger(years);
     months = ES.ToInteger(months);
@@ -123,9 +123,11 @@ export class Duration {
     if (!dateParts.length && !timeParts.length) return 'PT0S';
     return `P${dateParts.join('')}${timeParts.join('')}`;
   }
-  toLocaleString(...args) {
+  toLocaleString() {
+    // TODO fix this once Intl.DurationFormat has a working polyfill (or a spec).
     if (!ES.IsDuration(this)) throw new TypeError('invalid receiver');
-    return new Intl.DateTimeFormat(...args).format(this);
+    console.error('This function requires Intl.DurationFormat.');
+    return this.toString();
   }
   static from(arg, options = undefined) {
     const disambiguation = ES.ToDisambiguation(options);
@@ -140,7 +142,7 @@ export class Duration {
       GetSlot(result, SECONDS),
       GetSlot(result, MILLISECONDS),
       GetSlot(result, MICROSECONDS),
-      GetSlot(result, NANOSECONDS),
+      GetSlot(result, NANOSECONDS)
     );
   }
 }

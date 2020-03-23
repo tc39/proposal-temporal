@@ -8,14 +8,12 @@ const Date = ES.GetIntrinsic('%Temporal.Date%');
 const Time = ES.GetIntrinsic('%Temporal.Time%');
 const YearMonth = ES.GetIntrinsic('%Temporal.YearMonth%');
 const MonthDay = ES.GetIntrinsic('%Temporal.MonthDay%');
-const Duration = ES.GetIntrinsic('%Temporal.Duration%');
 
 const DATE = Symbol('date');
 const YM = Symbol('ym');
 const MD = Symbol('md');
 const TIME = Symbol('time');
 const DATETIME = Symbol('datetime');
-const DURATION = Symbol('duration');
 const ORIGINAL = Symbol('original');
 const TIMEZONE = Symbol('timezone');
 
@@ -81,17 +79,11 @@ function format(datetime, ...rest) {
   if (absolute && formatter) {
     return formatter.format(absolute.getEpochMilliseconds());
   }
-  if (datetime instanceof Duration) {
-    return this[DURATION].format(datetime, ...rest);
-  }
   return this[ORIGINAL].format(datetime, ...rest);
 }
 function formatToParts(datetime, ...rest) {
   const { absolute, formatter } = extractOverrides(datetime, this);
   if (absolute && formatter) return formatter.formatToParts(absolute.getEpochMilliseconds());
-  if (datetime instanceof Duration) {
-    return this[DURATION].formatToParts(datetime, ...rest);
-  }
   return this[ORIGINAL].formatToParts(datetime, ...rest);
 }
 function formatRange(a, b) {
