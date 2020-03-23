@@ -23,6 +23,11 @@
       "id": "sec-canonicalizetimezonename"
     },
     {
+      "type": "op",
+      "aoid": "DefaultTimeZone",
+      "id": "sec-defaulttimezone"
+    },
+    {
       "type": "clause",
       "number": "Internal slots",
       "id": "sec-intl.datetimeformat-internal-slots"
