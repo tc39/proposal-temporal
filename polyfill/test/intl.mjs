@@ -59,6 +59,7 @@ describe('Intl', () => {
   const at = new Intl.DateTimeFormat('de-AT', { timeZone: 'Europe/Vienna' });
 
   describe('should work for Absolute', () => {
+    // TODO why is the month different for DateTime for de-AT
     const t1 = Temporal.Absolute.from('1976-11-18T14:23:30Z');
     const t2 = Temporal.Absolute.from('2020-02-20T15:44:56-08:00[America/New_York]');
     it('format', () => {
@@ -141,7 +142,272 @@ describe('Intl', () => {
     });
   });
 
-  describe('should not break Date', () => {
+  describe('should work for DateTime', () => {
+    const t1 = Temporal.DateTime.from('1976-11-18T14:23:30Z');
+    const t2 = Temporal.DateTime.from('2020-02-20T15:44:56-08:00[America/New_York]');
+    it('format', () => {
+      equal(us.format(t1), '11/18/1976, 2:23:30 PM');
+    });
+    it('formatToParts', () => {
+      deepEqual(at.formatToParts(t2), [
+        { type: 'day', value: '20' },
+        { type: 'literal', value: '.' },
+        { type: 'month', value: '2' },
+        { type: 'literal', value: '.' },
+        { type: 'year', value: '2020' },
+        { type: 'literal', value: ', ' },
+        { type: 'hour', value: '15' },
+        { type: 'literal', value: ':' },
+        { type: 'minute', value: '44' },
+        { type: 'literal', value: ':' },
+        { type: 'second', value: '56' }
+      ]);
+    });
+    it('formatRange', () => {
+      equal(us.formatRange(t1, t2), '11/18/1976, 2:23:30 PM – 2/20/2020, 3:44:56 PM');
+      equal(at.formatRange(t1, t2), '18.11.1976, 14:23:30 – 20.2.2020, 15:44:56');
+    });
+    it('formatRangeToParts', () => {
+      deepEqual(us.formatRangeToParts(t1, t2), [
+        { type: 'month', value: '11', source: 'startRange' },
+        { type: 'literal', value: '/', source: 'startRange' },
+        { type: 'day', value: '18', source: 'startRange' },
+        { type: 'literal', value: '/', source: 'startRange' },
+        { type: 'year', value: '1976', source: 'startRange' },
+        { type: 'literal', value: ', ', source: 'startRange' },
+        { type: 'hour', value: '2', source: 'startRange' },
+        { type: 'literal', value: ':', source: 'startRange' },
+        { type: 'minute', value: '23', source: 'startRange' },
+        { type: 'literal', value: ':', source: 'startRange' },
+        { type: 'second', value: '30', source: 'startRange' },
+        { type: 'literal', value: ' ', source: 'startRange' },
+        { type: 'dayPeriod', value: 'PM', source: 'startRange' },
+        { type: 'literal', value: ' – ', source: 'shared' },
+        { type: 'month', value: '2', source: 'endRange' },
+        { type: 'literal', value: '/', source: 'endRange' },
+        { type: 'day', value: '20', source: 'endRange' },
+        { type: 'literal', value: '/', source: 'endRange' },
+        { type: 'year', value: '2020', source: 'endRange' },
+        { type: 'literal', value: ', ', source: 'endRange' },
+        { type: 'hour', value: '3', source: 'endRange' },
+        { type: 'literal', value: ':', source: 'endRange' },
+        { type: 'minute', value: '44', source: 'endRange' },
+        { type: 'literal', value: ':', source: 'endRange' },
+        { type: 'second', value: '56', source: 'endRange' },
+        { type: 'literal', value: ' ', source: 'endRange' },
+        { type: 'dayPeriod', value: 'PM', source: 'endRange' }
+      ]);
+      deepEqual(at.formatRangeToParts(t1, t2), [
+        { type: 'day', value: '18', source: 'startRange' },
+        { type: 'literal', value: '.', source: 'startRange' },
+        { type: 'month', value: '11', source: 'startRange' },
+        { type: 'literal', value: '.', source: 'startRange' },
+        { type: 'year', value: '1976', source: 'startRange' },
+        { type: 'literal', value: ', ', source: 'startRange' },
+        { type: 'hour', value: '14', source: 'startRange' },
+        { type: 'literal', value: ':', source: 'startRange' },
+        { type: 'minute', value: '23', source: 'startRange' },
+        { type: 'literal', value: ':', source: 'startRange' },
+        { type: 'second', value: '30', source: 'startRange' },
+        { type: 'literal', value: ' – ', source: 'shared' },
+        { type: 'day', value: '20', source: 'endRange' },
+        { type: 'literal', value: '.', source: 'endRange' },
+        { type: 'month', value: '2', source: 'endRange' },
+        { type: 'literal', value: '.', source: 'endRange' },
+        { type: 'year', value: '2020', source: 'endRange' },
+        { type: 'literal', value: ', ', source: 'endRange' },
+        { type: 'hour', value: '15', source: 'endRange' },
+        { type: 'literal', value: ':', source: 'endRange' },
+        { type: 'minute', value: '44', source: 'endRange' },
+        { type: 'literal', value: ':', source: 'endRange' },
+        { type: 'second', value: '56', source: 'endRange' }
+      ]);
+    });
+  });
+
+  describe('should work for Time', () => {
+    const t1 = Temporal.Time.from('1976-11-18T14:23:30Z');
+    const t2 = Temporal.Time.from('2020-02-20T15:44:56-08:00[America/New_York]');
+    it('format', () => {
+      equal(us.format(t1), '2:23:30 PM');
+    });
+    it('formatToParts', () => {
+      deepEqual(at.formatToParts(t2), [
+        { type: 'hour', value: '15' },
+        { type: 'literal', value: ':' },
+        { type: 'minute', value: '44' },
+        { type: 'literal', value: ':' },
+        { type: 'second', value: '56' }
+      ]);
+    });
+    it('formatRange', () => {
+      equal(us.formatRange(t1, t2), '2:23:30 PM – 3:44:56 PM');
+      equal(at.formatRange(t1, t2), '14:23:30 – 15:44:56');
+    });
+    it('formatRangeToParts', () => {
+      deepEqual(us.formatRangeToParts(t1, t2), [
+        { type: 'hour', value: '2', source: 'startRange' },
+        { type: 'literal', value: ':', source: 'startRange' },
+        { type: 'minute', value: '23', source: 'startRange' },
+        { type: 'literal', value: ':', source: 'startRange' },
+        { type: 'second', value: '30', source: 'startRange' },
+        { type: 'literal', value: ' ', source: 'startRange' },
+        { type: 'dayPeriod', value: 'PM', source: 'startRange' },
+        { type: 'literal', value: ' – ', source: 'shared' },
+        { type: 'hour', value: '3', source: 'endRange' },
+        { type: 'literal', value: ':', source: 'endRange' },
+        { type: 'minute', value: '44', source: 'endRange' },
+        { type: 'literal', value: ':', source: 'endRange' },
+        { type: 'second', value: '56', source: 'endRange' },
+        { type: 'literal', value: ' ', source: 'endRange' },
+        { type: 'dayPeriod', value: 'PM', source: 'endRange' }
+      ]);
+      deepEqual(at.formatRangeToParts(t1, t2), [
+        { type: 'hour', value: '14', source: 'startRange' },
+        { type: 'literal', value: ':', source: 'startRange' },
+        { type: 'minute', value: '23', source: 'startRange' },
+        { type: 'literal', value: ':', source: 'startRange' },
+        { type: 'second', value: '30', source: 'startRange' },
+        { type: 'literal', value: ' – ', source: 'shared' },
+        { type: 'hour', value: '15', source: 'endRange' },
+        { type: 'literal', value: ':', source: 'endRange' },
+        { type: 'minute', value: '44', source: 'endRange' },
+        { type: 'literal', value: ':', source: 'endRange' },
+        { type: 'second', value: '56', source: 'endRange' }
+      ]);
+    });
+  });
+
+  describe('should work for Date', () => {
+    const t1 = Temporal.Date.from('1976-11-18T14:23:30Z');
+    const t2 = Temporal.Date.from('2020-02-20T15:44:56-08:00[America/New_York]');
+    it('format', () => {
+      equal(us.format(t1), '11/18/1976');
+    });
+    it('formatToParts', () => {
+      deepEqual(at.formatToParts(t2), [
+        { type: 'day', value: '20' },
+        { type: 'literal', value: '.' },
+        { type: 'month', value: '2' },
+        { type: 'literal', value: '.' },
+        { type: 'year', value: '2020' }
+      ]);
+    });
+    it('formatRange', () => {
+      equal(us.formatRange(t1, t2), '11/18/1976 – 2/20/2020');
+      equal(at.formatRange(t1, t2), '18.11.1976 – 20.02.2020');
+    });
+    it('formatRangeToParts', () => {
+      deepEqual(us.formatRangeToParts(t1, t2), [
+        { type: 'month', value: '11', source: 'startRange' },
+        { type: 'literal', value: '/', source: 'startRange' },
+        { type: 'day', value: '18', source: 'startRange' },
+        { type: 'literal', value: '/', source: 'startRange' },
+        { type: 'year', value: '1976', source: 'startRange' },
+        { type: 'literal', value: ' – ', source: 'shared' },
+        { type: 'month', value: '2', source: 'endRange' },
+        { type: 'literal', value: '/', source: 'endRange' },
+        { type: 'day', value: '20', source: 'endRange' },
+        { type: 'literal', value: '/', source: 'endRange' },
+        { type: 'year', value: '2020', source: 'endRange' }
+      ]);
+      deepEqual(at.formatRangeToParts(t1, t2), [
+        { type: 'day', value: '18', source: 'startRange' },
+        { type: 'literal', value: '.', source: 'startRange' },
+        { type: 'month', value: '11', source: 'startRange' },
+        { type: 'literal', value: '.', source: 'startRange' },
+        { type: 'year', value: '1976', source: 'startRange' },
+        { type: 'literal', value: ' – ', source: 'shared' },
+        { type: 'day', value: '20', source: 'endRange' },
+        { type: 'literal', value: '.', source: 'endRange' },
+        { type: 'month', value: '02', source: 'endRange' },
+        { type: 'literal', value: '.', source: 'endRange' },
+        { type: 'year', value: '2020', source: 'endRange' }
+      ]);
+    });
+  });
+
+  describe('should work for YearMonth', () => {
+    const t1 = Temporal.YearMonth.from('1976-11-18T14:23:30Z');
+    const t2 = Temporal.YearMonth.from('2020-02-20T15:44:56-08:00[America/New_York]');
+    it('format', () => {
+      equal(us.format(t1), '11/1976');
+    });
+    it('formatToParts', () => {
+      deepEqual(at.formatToParts(t2), [
+        { type: 'month', value: '2' },
+        { type: 'literal', value: '.' },
+        { type: 'year', value: '2020' }
+      ]);
+    });
+    it('formatRange', () => {
+      equal(us.formatRange(t1, t2), '11/1976 – 2/2020');
+      equal(at.formatRange(t1, t2), '11.1976 – 02.2020');
+    });
+    it('formatRangeToParts', () => {
+      deepEqual(us.formatRangeToParts(t1, t2), [
+        { type: 'month', value: '11', source: 'startRange' },
+        { type: 'literal', value: '/', source: 'startRange' },
+        { type: 'year', value: '1976', source: 'startRange' },
+        { type: 'literal', value: ' – ', source: 'shared' },
+        { type: 'month', value: '2', source: 'endRange' },
+        { type: 'literal', value: '/', source: 'endRange' },
+        { type: 'year', value: '2020', source: 'endRange' }
+      ]);
+      deepEqual(at.formatRangeToParts(t1, t2), [
+        { type: 'month', value: '11', source: 'startRange' },
+        { type: 'literal', value: '.', source: 'startRange' },
+        { type: 'year', value: '1976', source: 'startRange' },
+        { type: 'literal', value: ' – ', source: 'shared' },
+        { type: 'month', value: '02', source: 'endRange' },
+        { type: 'literal', value: '.', source: 'endRange' },
+        { type: 'year', value: '2020', source: 'endRange' }
+      ]);
+    });
+  });
+
+  describe('should work for MonthDay', () => {
+    const t1 = Temporal.MonthDay.from('11-18');
+    const t2 = Temporal.MonthDay.from('02-20');
+    it('format', () => {
+      equal(us.format(t1), '11/18');
+    });
+    it('formatToParts', () => {
+      deepEqual(at.formatToParts(t2), [
+        { type: 'day', value: '20' },
+        { type: 'literal', value: '.' },
+        { type: 'month', value: '2' },
+        { type: 'literal', value: '.' }
+      ]);
+    });
+    it('formatRange', () => {
+      equal(us.formatRange(t2, t1), '2/20 – 11/18');
+      equal(at.formatRange(t2, t1), '20.02. – 18.11.');
+    });
+    it('formatRangeToParts', () => {
+      deepEqual(us.formatRangeToParts(t2, t1), [
+        { type: 'month', value: '2', source: 'startRange' },
+        { type: 'literal', value: '/', source: 'startRange' },
+        { type: 'day', value: '20', source: 'startRange' },
+        { type: 'literal', value: ' – ', source: 'shared' },
+        { type: 'month', value: '11', source: 'endRange' },
+        { type: 'literal', value: '/', source: 'endRange' },
+        { type: 'day', value: '18', source: 'endRange' }
+      ]);
+      deepEqual(at.formatRangeToParts(t2, t1), [
+        { type: 'day', value: '20', source: 'startRange' },
+        { type: 'literal', value: '.', source: 'startRange' },
+        { type: 'month', value: '02', source: 'startRange' },
+        { type: 'literal', value: '. – ', source: 'shared' },
+        { type: 'day', value: '18', source: 'endRange' },
+        { type: 'literal', value: '.', source: 'endRange' },
+        { type: 'month', value: '11', source: 'endRange' },
+        { type: 'literal', value: '.', source: 'shared' }
+      ]);
+    });
+  });
+
+  describe('should not break legacy Date', () => {
     const start = new Date('1922-12-30'); // ☭
     const end = new Date('1991-12-26');
     it('format', () => equal(us.format(start), '12/29/1922'));
