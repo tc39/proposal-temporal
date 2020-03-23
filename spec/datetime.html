@@ -552,6 +552,39 @@
   <emu-clause id="sec-temporal-datetime-abstract-ops">
     <h1>Abstract operations</h1>
 
+    <emu-clause id="sec-temporal-getepochfromparts" aoid="GetEpochFromParts">
+      <h1>GetEpochFromParts ( _year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_ )</h1>
+      <emu-alg>
+        1. Assert: _year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, and _nanosecond_ are integer Number values.
+        1. Assert: _month_ ≥ 1 and _month_ ≤ 12.
+        1. Assert: _day_ ≥ 1 and _day_ ≤ ! DaysInMonth(_year_, _month_).
+        1. Assert: ! ValidateTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_) is *true*.
+        1. Let _date_ be ! MakeDay(_year_, _month_, _day_).
+        1. Let _time_ be ! MakeTime(_hour_, _minute_, _second_, _millisecond_).
+        1. Let _ms_ be ! MakeDate(_date_, _time_).
+        1. Assert: _ms_ is finite.
+        1. Return _ms_ × 1,000,000 + _microsecond_ × 1,000 + _nanosecond_.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-datetimewithinlimits" aoid="DateTimeWithinLimits">
+      <h1>DateTimeWithinLimits ( _year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_ )</h1>
+      <emu-note>
+        <p>
+          Temporal.DateTime objects can represent points in time within 24 hours (8.64 × 10<sup>16</sup> nanoseconds) of the Temporal.Absolute boundaries
+          This ensures that a Temporal.Absolute object can be converted into a Temporal.DateTime object using any time zone.
+        </p>
+      </emu-note>
+      <emu-alg>
+        1. Let _ns_ be ! GetEpochFromParts(_year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_).
+        1. If _ns_ ≤ -8.64 × 10<sup>21</sup><sub>ℝ</sub> - 8.64 × 10<sup>16</sup><sub>ℝ</sub>, then
+          1. Return ~too early~.
+        1. If _ns_ ≥ 8.64 × 10<sup>21</sup><sub>ℝ</sub> + 8.64 × 10<sup>16</sup><sub>ℝ</sub>, then
+          1. Return ~too late~.
+        1. Return ~in range~.
+      </emu-alg>
+    </emu-clause>
+
     <emu-clause id="sec-temporal-topartialdatetime" aoid="ToPartialDateTime">
       <h1>ToPartialDateTime ( _dateTime_ )</h1>
       <emu-alg>
@@ -655,11 +688,39 @@
       <emu-alg>
         1. Assert: _disambiguation_ is one of `"constrain"`, `"balance"`, or `"reject"`.
         1. If _disambiguation_ is `"constrain"`, then
-          1. <mark>TODO: define.</mark>
+          1. Return ! ConstrainDateTime(_year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_).
         1. If _disambiguation_ is `"balance"`, then
-          1. <mark>TODO: define.</mark>
+          1. Let _balancedTime_ be ! BalanceTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_).
+          1. Let _balancedDate_ be ! BalanceDate(_year_, _month_, _day_ + _balancedTime_.[[Days]]).
+          1. If ! ValidateDateTime(_balancedDate_.[[Year]], _balancedDate_.[[Month]], _balancedDate_.[[Day]],
+              _balancedTime_.[[Hour]], _balancedTime_.[[Minute]], _balancedTime_.[[Second]],
+              _balancedTime_.[[Millisecond]], _balancedTime_.[[Microsecond]], _balancedTime_.[[Nanosecond]]) is *false*, then
+            1. Throw a *RangeError* exception.
+          1. Return the Record {
+            [[Year]]: _balancedDate_.[[Year]],
+            [[Month]]: _balancedDate_.[[Month]],
+            [[Day]]: _balancedDate_.[[Day]],
+            [[Hour]]: _balancedTime_.[[Hour]],
+            [[Minute]]: _balancedTime_.[[Minute]],
+            [[Second]]: _balancedTime_.[[Second]],
+            [[Millisecond]]: _balancedTime_.[[Millisecond]],
+            [[Microsecond]]: _balancedTime_.[[Microsecond]],
+            [[Nanosecond]]: _balancedTime_.[[Nanosecond]]
+            }.
         1. If _disambiguation_ is `"reject"`, then
-          1. <mark>TODO: define.</mark>
+          1. If ! ValidateDateTime(_year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_) is *false*, then
+            1. Throw a *RangeError* exception.
+          1. Return the Record {
+            [[Year]]: _year_,
+            [[Month]]: _month_,
+            [[Day]]: _day_,
+            [[Hour]]: _hour_,
+            [[Minute]]: _minute_,
+            [[Second]]: _second_,
+            [[Millisecond]]: _millisecond_,
+            [[Microsecond]]: _microsecond_,
+            [[Nanosecond]]: _nanosecond_
+            }.
       </emu-alg>
     </emu-clause>
 
@@ -676,8 +737,61 @@
           1. Return *false*.
         1. If ! ValidateTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_) is *false*, then
           1. Return *false*.
-        1. <mark>TODO: Reject any combination 24 hours or more outside the Absolute range. Need an abstract operation such as `ES.GetEpochFromParts` in the polyfill that converts DateTime parts in the ISO calendar, to epoch nanoseconds. Or make it explicit as in ConstrainYearMonth.</mark>
+        1. Let _withinLimits_ be ! DateTimeWithinLimits(_year_, _month_, _day_,
+            _hour_, _minute_, _second_,
+            _millisecond_, _microsecond_, _nanosecond_).
+        1. If _withinLimits_ is not ~in range~, then
+          1. Return *false*.
         1. Return *true*.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-constraindatetime" aoid="ConstrainDateTime">
+      <h1>ConstrainDateTime ( _year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_ )</h1>
+      <emu-alg>
+        1. Assert: _year_, _month_, and _day_ are integer Number values.
+        1. Set _year_ to ! ConstrainToRange(_year_, -271821, 275760).
+        1. Set _month_ to ! ConstrainToRange(_month_, 1, 12).
+        1. Set _day_ to ! ConstrainToRange(_day_, 1, ! DaysInMonth(_year_, _month_)).
+        1. Let _constrainedTime_ be ! ConstrainTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_).
+        1. Let _withinLimits_ be ! DateTimeWithinLimits(_year_, _month_, _day_,
+            _constrainedTime_.[[Hour]], _constrainedTime_.[[Minute]], _constrainedTime_.[[Second]],
+            _constrainedTime_.[[Millisecond]], _constrainedTime_.[[Microsecond]], _constrainedTime_.[[Nanosecond]]).
+        1. If _withinLimits_ is ~too early~, then
+          1. Return the Record {
+              [[Year]]: -271821,
+              [[Month]]: 4,
+              [[Day]]: 19,
+              [[Hour]]: 0,
+              [[Minute]]: 0,
+              [[Second]]: 0,
+              [[Millisecond]]: 0,
+              [[Microsecond]]: 0,
+              [[Nanosecond]]: 1
+            }.
+        1. If _withinLimits_ is ~too late~, then
+          1. Return the Record {
+              [[Year]]: 271821,
+              [[Month]]: 9,
+              [[Day]]: 13,
+              [[Hour]]: 23,
+              [[Minute]]: 59,
+              [[Second]]: 59,
+              [[Millisecond]]: 999,
+              [[Microsecond]]: 999,
+              [[Nanosecond]]: 999
+            }.
+        1. Return the Record {
+            [[Year]]: _year_,
+            [[Month]]: _month_,
+            [[Day]]: _day_,
+            [[Hour]]: _constrainedTime_.[[Hour]],
+            [[Minute]]: _constrainedTime_.[[Minute]],
+            [[Second]]: _constrainedTime_.[[Second]],
+            [[Millisecond]]: _constrainedTime_.[[Millisecond]],
+            [[Microsecond]]: _constrainedTime_.[[Microsecond]],
+            [[Nanosecond]]: _constrainedTime_.[[Nanosecond]]
+          }.
       </emu-alg>
     </emu-clause>
 
