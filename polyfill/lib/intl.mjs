@@ -17,6 +17,15 @@ const DATETIME = Symbol('datetime');
 const ORIGINAL = Symbol('original');
 const TIMEZONE = Symbol('timezone');
 
+const descriptor = (value) => {
+  return {
+    value,
+    enumerable: true,
+    writable: false,
+    configurable: true
+  };
+};
+
 const IntlDateTimeFormat = Intl.DateTimeFormat;
 
 export function DateTimeFormat(locale = IntlDateTimeFormat().resolvedOptions().locale, options = {}) {
@@ -30,50 +39,31 @@ export function DateTimeFormat(locale = IntlDateTimeFormat().resolvedOptions().l
   this[TIME] = new IntlDateTimeFormat(locale, timeAmend(options));
   this[DATETIME] = new IntlDateTimeFormat(locale, datetimeAmend(options));
 }
+
 DateTimeFormat.supportedLocalesOf = function(...args) {
   return IntlDateTimeFormat.supportedLocalesOf(...args);
 };
+
 const properties = {
-  resolvedOptions: {
-    value: resolvedOptions,
-    enumerable: true,
-    writable: false,
-    configurable: true
-  },
-  format: {
-    value: format,
-    enumerable: true,
-    writable: false,
-    configurable: true
-  },
-  formatRange: {
-    value: formatRange,
-    enumerable: true,
-    writable: false,
-    configurable: true
-  }
+  resolvedOptions: descriptor(resolvedOptions),
+  format: descriptor(format),
+  formatRange: descriptor(formatRange)
 };
+
 if ('formatToParts' in IntlDateTimeFormat.prototype) {
-  properties.formatToParts = {
-    value: formatToParts,
-    enumerable: true,
-    writable: false,
-    configurable: true
-  };
+  properties.formatToParts = descriptor(formatToParts);
 }
+
 if ('formatRangeToParts' in IntlDateTimeFormat.prototype) {
-  properties.formatRangeToParts = {
-    value: formatRangeToParts,
-    enumerable: true,
-    writable: false,
-    configurable: true
-  };
+  properties.formatRangeToParts = descriptor(formatRangeToParts);
 }
+
 DateTimeFormat.prototype = Object.create(IntlDateTimeFormat.prototype, properties);
 
 function resolvedOptions() {
   return this[ORIGINAL].resolvedOptions();
 }
+
 function format(datetime, ...rest) {
   const { absolute, formatter } = extractOverrides(datetime, this);
   if (absolute && formatter) {
@@ -81,11 +71,13 @@ function format(datetime, ...rest) {
   }
   return this[ORIGINAL].format(datetime, ...rest);
 }
+
 function formatToParts(datetime, ...rest) {
   const { absolute, formatter } = extractOverrides(datetime, this);
   if (absolute && formatter) return formatter.formatToParts(absolute.getEpochMilliseconds());
   return this[ORIGINAL].formatToParts(datetime, ...rest);
 }
+
 function formatRange(a, b) {
   if ('object' === typeof a && 'object' === typeof b && Object.getPrototypeOf(a) === Object.getPrototypeOf(b)) {
     const { absolute: aa, formatter: aformatter } = extractOverrides(a, this);
@@ -96,6 +88,7 @@ function formatRange(a, b) {
   }
   return this[ORIGINAL].formatRange(a, b);
 }
+
 function formatRangeToParts(a, b) {
   if ('object' === typeof a && 'object' === typeof b && Object.getPrototypeOf(a) === Object.getPrototypeOf(b)) {
     const { absolute: aa, formatter: aformatter } = extractOverrides(a, this);
@@ -115,6 +108,7 @@ function amend(options = {}, amended = {}) {
   }
   return options;
 }
+
 function timeAmend(options) {
   options = amend(options, { year: false, month: false, day: false });
   if (!hasTimeOptions(options)) {
@@ -126,6 +120,7 @@ function timeAmend(options) {
   }
   return options;
 }
+
 function dateAmend(options, amendments) {
   options = amend(options, { hour: false, minute: false, second: false });
   if (!hasDateOptions(options)) {
@@ -138,6 +133,7 @@ function dateAmend(options, amendments) {
   options = amend(options, amendments);
   return options;
 }
+
 function datetimeAmend(options) {
   options = ObjectAssign({}, options);
   if (!hasTimeOptions(options) && !hasDateOptions(options)) {
@@ -156,9 +152,11 @@ function datetimeAmend(options) {
 function hasDateOptions(options) {
   return 'year' in options || 'month' in options || 'day' in options;
 }
+
 function hasTimeOptions(options) {
   return 'hour' in options || 'minute' in options || 'second' in options;
 }
+
 function extractOverrides(datetime, main) {
   let formatter;
   if (datetime instanceof Time) {
