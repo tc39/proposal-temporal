@@ -260,6 +260,9 @@ epoch.inTimeZone(tz);  // =&gt; 1969-12-31T19:00</code></pre>
 <li>any object with properties denoting a duration, such as <code>{ hours: 5, minutes: 30 }</code>;</li>
 <li>a string in ISO 8601 duration format, such as <code>PT5H30M</code>.</li>
 </ul>
+<p>The <code>years</code> and <code>months</code> fields of <code>duration</code> must be zero, because adding a year or a month to a <code>Temporal.Absolute</code> is invalid and will throw a <code>RangeError</code>.
+<code>Temporal.Absolute</code> is independent of time zones and calendars, and so years and months may be different lengths.
+If you need to do this, convert the <code>Temporal.Absolute</code> to a <code>Temporal.DateTime</code> by specifying the desired time zone, add the duration, and then convert it back.</p>
 <p>If the result is outside the allowed range for <code>Temporal.Absolute</code>, a <code>RangeError</code> will be thrown.</p>
 <p>Example usage:</p>
 <pre><code class="language-js">// Temporal.Absolute representing five hours from now
@@ -280,6 +283,9 @@ Temporal.now.absolute().plus(fiveHours);</code></pre>
 <li>any object with properties denoting a duration, such as <code>{ hours: 5, minutes: 30 }</code>;</li>
 <li>a string in ISO 8601 duration format, such as <code>PT5H30M</code>.</li>
 </ul>
+<p>The <code>years</code> and <code>months</code> fields of <code>duration</code> must be zero, because subtracting a year or a month from a <code>Temporal.Absolute</code> is invalid and will throw a <code>RangeError</code>.
+<code>Temporal.Absolute</code> is independent of time zones and calendars, and so years and months may be different lengths.
+If you need to do this, convert the <code>Temporal.Absolute</code> to a <code>Temporal.DateTime</code> by specifying the desired time zone, subtract the duration, and then convert it back.</p>
 <p>If the result is outside the allowed range for <code>Temporal.Absolute</code>, a <code>RangeError</code> will be thrown.</p>
 <p>Example usage:</p>
 <pre><code class="language-js">// Temporal.Absolute representing this time yesterday
