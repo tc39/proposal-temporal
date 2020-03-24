@@ -134,7 +134,7 @@ describe('TimeZone', () => {
   });
   describe('America/Los_Angeles', () => {
     const zone = new Temporal.TimeZone('America/Los_Angeles');
-    const abs = Temporal.Absolute.fromEpochSeconds();
+    const abs = Temporal.Absolute.fromEpochSeconds(0n);
     const dtm = new Temporal.DateTime(1976, 11, 18, 15, 23, 30, 123, 456, 789);
     it(`${zone} has name ${zone}`, () => equal(zone.name, `${zone}`));
     it(`${zone} has offset -08:00`, () => equal(zone.getOffsetFor(abs), '-08:00'));

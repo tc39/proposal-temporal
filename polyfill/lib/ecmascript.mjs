@@ -1274,6 +1274,17 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
     if (result < 0) result += y;
     return result;
   },
+  ToBigInt: (arg) => {
+    if (bigInt.isInstance(arg)) return arg;
+    const prim = ES.ToPrimitive(arg, Number);
+    if (typeof prim === 'number') throw new TypeError('Use BigInt() to convert Number to BigInt');
+    try {
+      return bigInt(prim);
+    } catch (e) {
+      if (e instanceof Error && e.message.startsWith('Invalid integer')) throw new SyntaxError(e.message);
+      throw e;
+    }
+  },
 
   // Note: This method returns values with bogus nanoseconds based on the previous iteration's
   // milliseconds. That way there is a guarantee that the full nanoseconds are always going to be

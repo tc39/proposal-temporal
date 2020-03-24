@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.absolute.prototype.minus
+features: [BigInt]
 ---*/
 
 let called = 0;
@@ -14,7 +15,7 @@ class MyAbsolute extends Temporal.Absolute {
   }
 }
 
-const instance = MyAbsolute.fromEpochNanoseconds(-8640000000000000000000);
+const instance = MyAbsolute.fromEpochNanoseconds(-8640000000000000000000n);
 assert.sameValue(called, 1);
 
 assert.throws(RangeError, () => instance.minus({ nanoseconds: 1 }));
