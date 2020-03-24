@@ -204,10 +204,10 @@ ym = Temporal.YearMonth.from('2019-06');
 ym.with({month: 12})  // => 2019-12
 ```
 
-### yearMonth.**plus**(_duration_: string | object, _options_?: object) : Temporal.YearMonth
+### yearMonth.**plus**(_duration_: object, _options_?: object) : Temporal.YearMonth
 
 **Parameters:**
-- `duration` (string or object): A `Temporal.Duration` object, a duration-like object, or a string from which to create a `Temporal.Duration`.
+- `duration` (object): A `Temporal.Duration` object or a duration-like object.
 - `options` (optional object): An object with properties representing options for the addition.
   The following options are recognized:
   - `disambiguation` (string): How to deal with additions that result in out-of-range values.
@@ -218,10 +218,7 @@ ym.with({month: 12})  // => 2019-12
 
 This method adds `duration` to `yearMonth`, returning a month that is in the future relative to `yearMonth`.
 
-The `duration` argument can be any value that could be passed to `Temporal.Duration.from()`:
-- a `Temporal.Duration` object;
-- any object with properties denoting a duration, such as `{ months: 5 }`;
-- a string in ISO 8601 duration format, such as `P5M`.
+The `duration` argument is an object with properties denoting a duration, such as `{ months: 5 }`, or a `Temporal.Duration` object.
 
 If the result is outside the range of dates that `Temporal.YearMonth` can represent, then `constrain` mode will clamp the result to the allowed range.
 The `reject` mode will throw a `RangeError` in this case.
@@ -234,13 +231,12 @@ Usage example:
 ```javascript
 ym = Temporal.YearMonth.from('2019-06');
 ym.plus({years: 20, months: 4})  // => 2039-10
-ym.plus('P14Y')  // => 2033-06
 ```
 
-### yearMonth.**minus**(_duration_: string | object, _options_?: object) : Temporal.YearMonth
+### yearMonth.**minus**(_duration_: object, _options_?: object) : Temporal.YearMonth
 
 **Parameters:**
-- `duration` (string or object): A `Temporal.Duration` object, a duration-like object, or a string from which to create a `Temporal.Duration`.
+- `duration` (object): A `Temporal.Duration` object or a duration-like object.
 - `options` (optional object): An object with properties representing options for the subtraction.
   The following options are recognized:
   - `disambiguation` (string): How to deal with additions that result in out-of-range values.
@@ -251,10 +247,7 @@ ym.plus('P14Y')  // => 2033-06
 
 This method subtracts `duration` from `yearMonth`, returning a month that is in the future relative to `yearMonth`.
 
-The `duration` argument can be any value that could be passed to `Temporal.Duration.from()`:
-- a `Temporal.Duration` object;
-- any object with properties denoting a duration, such as `{ months: 5 }`;
-- a string in ISO 8601 duration format, such as `P5M`.
+The `duration` argument is an object with properties denoting a duration, such as `{ months: 5 }`, or a `Temporal.Duration` object.
 
 If the result is outside the range of dates that `Temporal.YearMonth` can represent, then `constrain` mode will clamp the result to the allowed range.
 The `reject` mode will throw a `RangeError` in this case.
@@ -267,7 +260,6 @@ Usage example:
 ```javascript
 ym = Temporal.YearMonth.from('2019-06');
 ym.minus({years: 20, months: 4})  // => 1999-02
-ym.minus('P14Y')  // => 2005-06
 ```
 
 ### yearMonth.**difference**(_other_: Temporal.YearMonth, _options_?: object) : Temporal.Duration

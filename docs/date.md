@@ -248,10 +248,10 @@ date = Temporal.Date.from('2006-08-24');
 date.with({day: 1, month: date.month + 1}, { disambiguation: 'balance' })  // => 2006-09-01
 ```
 
-### date.**plus**(_duration_: string | object, _options_?: object) : Temporal.Date
+### date.**plus**(_duration_: object, _options_?: object) : Temporal.Date
 
 **Parameters:**
-- `duration` (string or object): A `Temporal.Duration` object, a duration-like object, or a string from which to create a `Temporal.Duration`.
+- `duration` (object): A `Temporal.Duration` object or a duration-like object.
 - `options` (optional object): An object with properties representing options for the addition.
   The following options are recognized:
   - `disambiguation` (optional string): How to deal with additions that result in out-of-range values.
@@ -262,10 +262,7 @@ date.with({day: 1, month: date.month + 1}, { disambiguation: 'balance' })  // =>
 
 This method adds `duration` to `date`, returning a date that is in the future relative to `date`.
 
-The `duration` argument can be any value that could be passed to `Temporal.Duration.from()`:
-- a `Temporal.Duration` object;
-- any object with properties denoting a duration, such as `{ days: 5 }`;
-- a string in ISO 8601 duration format, such as `P5D`.
+The `duration` argument is an object with properties denoting a duration, such as `{ days: 5 }`, or a `Temporal.Duration` object.
 
 Some additions may be ambiguous, because months have different lengths.
 For example, adding one month to August 31 would result in September 31, which doesn't exist.
@@ -280,17 +277,16 @@ Usage example:
 ```javascript
 date = Temporal.Date.from('2006-08-24');
 date.plus({years: 20, months: 4})  // => 2026-12-24
-date.plus('P14Y8D')  // => 2020-09-01
 
 date = Temporal.Date.from('2019-01-31')
 date.plus({ months: 1 })  // => 2019-02-28
 date.plus({ months: 1 }, { disambiguation: 'reject' })  // => throws
 ```
 
-### date.**minus**(_duration_: string | object, _options_?: object) : Temporal.Date
+### date.**minus**(_duration_: object, _options_?: object) : Temporal.Date
 
 **Parameters:**
-- `duration` (string or object): A `Temporal.Duration` object, a duration-like object, or a string from which to create a `Temporal.Duration`.
+- `duration` (object): A `Temporal.Duration` object or a duration-like object.
 - `options` (optional object): An object with properties representing options for the subtraction.
   The following options are recognized:
   - `disambiguation` (string): How to deal with subtractions that result in out-of-range values.
@@ -301,10 +297,7 @@ date.plus({ months: 1 }, { disambiguation: 'reject' })  // => throws
 
 This method subtracts `duration` from `date`, returning a date that is in the past relative to `date`.
 
-The `duration` argument can be any value that could be passed to `Temporal.Duration.from()`:
-- a `Temporal.Duration` object;
-- any object with properties denoting a duration, such as `{ days: 5 }`;
-- a string in ISO 8601 duration format, such as `P5D`.
+The `duration` argument is an object with properties denoting a duration, such as `{ days: 5 }`, or a `Temporal.Duration` object.
 
 Some subtractions may be ambiguous, because months have different lengths.
 For example, subtracting one month from July 31 would result in June 31, which doesn't exist.
@@ -319,7 +312,6 @@ Usage example:
 ```javascript
 date = Temporal.Date.from('2006-08-24');
 date.minus({years: 20, months: 4})  // => 1986-04-24
-date.minus('P14Y8D')  // => 1992-08-16
 
 date = Temporal.Date.from('2019-03-31')
 date.minus({ months: 1 })  // => 2019-02-28

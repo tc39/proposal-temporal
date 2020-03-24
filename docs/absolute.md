@@ -228,19 +228,16 @@ tz = new Temporal.TimeZone('America/New_York');
 epoch.inTimeZone(tz);  // => 1969-12-31T19:00
 ```
 
-### absolute.**plus**(_duration_: string | object) : Temporal.Absolute
+### absolute.**plus**(_duration_: object) : Temporal.Absolute
 
 **Parameters:**
-- `duration` (string or object): A `Temporal.Duration` object, a duration-like object, or a string from which to create a `Temporal.Duration`.
+- `duration` (object): A `Temporal.Duration` object or a duration-like object.
 
 **Returns:** a new `Temporal.Absolute` object which is the time indicated by `absolute` plus `duration`.
 
 This method adds `duration` to `absolute`, returning a point in time that is in the future relative to `absolute`.
 
-The `duration` argument can be any value that could be passed to `Temporal.Duration.from()`:
-- a `Temporal.Duration` object;
-- any object with properties denoting a duration, such as `{ hours: 5, minutes: 30 }`;
-- a string in ISO 8601 duration format, such as `PT5H30M`.
+The `duration` argument is an object with properties denoting a duration, such as `{ hours: 5, minutes: 30 }`, or a `Temporal.Duration` object.
 
 The `years` and `months` fields of `duration` must be zero, because adding a year or a month to a `Temporal.Absolute` is invalid and will throw a `RangeError`.
 `Temporal.Absolute` is independent of time zones and calendars, and so years and months may be different lengths.
@@ -252,24 +249,20 @@ Example usage:
 ```js
 // Temporal.Absolute representing five hours from now
 Temporal.now.absolute().plus({ hours: 5 });
-Temporal.now.absolute().plus('PT5H');
 fiveHours = new Temporal.Duration(0, 0, 0, 5);
 Temporal.now.absolute().plus(fiveHours);
 ```
 
-### absolute.**minus**(_duration_: string | object) : Temporal.Absolute
+### absolute.**minus**(_duration_: object) : Temporal.Absolute
 
 **Parameters:**
-- `duration` (string or object): A `Temporal.Duration` object, a duration-like object, or a string from which to create a `Temporal.Duration`.
+- `duration` (object): A `Temporal.Duration` object or a duration-like object.
 
 **Returns:** a new `Temporal.Absolute` object which is the time indicated by `absolute` minus `duration`.
 
 This method subtracts `duration` from `absolute`, returning a point in time that is in the past relative to `absolute`.
 
-The `duration` argument can be any value that could be passed to `Temporal.Duration.from()`:
-- a `Temporal.Duration` object;
-- any object with properties denoting a duration, such as `{ hours: 5, minutes: 30 }`;
-- a string in ISO 8601 duration format, such as `PT5H30M`.
+The `duration` argument is an object with properties denoting a duration, such as `{ hours: 5, minutes: 30 }`, or a `Temporal.Duration` object.
 
 The `years` and `months` fields of `duration` must be zero, because subtracting a year or a month from a `Temporal.Absolute` is invalid and will throw a `RangeError`.
 `Temporal.Absolute` is independent of time zones and calendars, and so years and months may be different lengths.
@@ -281,7 +274,6 @@ Example usage:
 ```js
 // Temporal.Absolute representing this time yesterday
 Temporal.now.absolute().minus({ days: 1 });
-Temporal.now.absolute().minus('P1D');
 oneDay = new Temporal.Duration(0, 0, 1);
 Temporal.now.absolute().minus(oneDay);
 ```
