@@ -1,5 +1,4 @@
 import { ES } from './ecmascript.mjs';
-import { assign as ObjectAssign } from './compat.mjs';
 import { TimeZone } from './timezone.mjs';
 
 const Absolute = ES.GetIntrinsic('%Temporal.Absolute%');
@@ -27,6 +26,7 @@ const descriptor = (value) => {
 };
 
 const IntlDateTimeFormat = Intl.DateTimeFormat;
+const ObjectAssign = Object.assign;
 
 export function DateTimeFormat(locale = IntlDateTimeFormat().resolvedOptions().locale, options = {}) {
   if (!(this instanceof DateTimeFormat)) return new DateTimeFormat(locale, options);
