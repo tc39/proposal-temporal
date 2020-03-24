@@ -461,6 +461,8 @@
     <emu-clause id="sec-temporal-tolimitedtemporalduration" aoid="ToLimitedTemporalDuration">
       <h1>ToLimitedTemporalDuration ( _temporalDurationLike_ , _disallowedFields_ )</h1>
       <emu-alg>
+        1. If Type(_temporalDurationLike_) is not Object, then
+          1. Throw a *TypeError* exception.
         1. Let _duration_ be ? ToTemporalDuration(_temporalDurationLike_, *"reject"*).
         1. For each row of <emu-xref href="#table-temporal-temporaldurationlike-properties"></emu-xref>, except the header row, in table order, do
           1. Let _prop_ be the Property value of the current row.

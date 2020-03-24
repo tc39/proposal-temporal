@@ -180,10 +180,10 @@ time.with({
 }, { disambiguation: 'balance' })  // => 20:00
 ```
 
-### time.**plus**(_duration_: string | object, _options_?: object) : Temporal.Time
+### time.**plus**(_duration_: object, _options_?: object) : Temporal.Time
 
 **Parameters:**
-- `duration` (string or object): A `Temporal.Duration` object, a duration-like object, or a string from which to create a `Temporal.Duration`.
+- `duration` (object): A `Temporal.Duration` object or a duration-like object.
 - `options` (optional object): An object with properties representing options for the addition.
   The following options are recognized:
   - `disambiguation` (string): How to deal with additions that result in out-of-range values.
@@ -195,10 +195,7 @@ time.with({
 This method adds `duration` to `time`.
 Due to times wrapping around when reaching 24 hours, the returned point in time may be either in the future or in the past relative to `time`, or even the same time.
 
-The `duration` argument can be any value that could be passed to `Temporal.Duration.from()`:
-- a `Temporal.Duration` object;
-- any object with properties denoting a duration, such as `{ hours: 5, minutes: 30 }`;
-- a string in ISO 8601 duration format, such as `PT5H30M`.
+The `duration` argument is an object with properties denoting a duration, such as `{ hours: 5, minutes: 30 }`, or a `Temporal.Duration` object.
 
 The `disambiguation` parameter has no effect in the default ISO calendar, because the units of hours, minutes, and seconds are always the same length and therefore not ambiguous.
 However, it may have an effect in other calendars where those units are not always the same length.
@@ -207,13 +204,12 @@ Usage example:
 ```javascript
 time = Temporal.Time.from('19:39:09.068346205');
 time.plus({ minutes: 5, nanoseconds: 800 })  // => 19:44:09.068347005
-time.plus('PT7H14M21S')  // => 02:53:30.068346205
 ```
 
-### time.**minus**(_duration_: string | object, _options_?: object) : Temporal.Time
+### time.**minus**(_duration_: object, _options_?: object) : Temporal.Time
 
 **Parameters:**
-- `duration` (string or object): A `Temporal.Duration` object, a duration-like object, or a string from which to create a `Temporal.Duration`.
+- `duration` (object): A `Temporal.Duration` object or a duration-like object.
 - `options` (optional object): An object with properties representing options for the subtraction.
   The following options are recognized:
   - `disambiguation` (string): How to deal with subtractions that result in out-of-range values.
@@ -225,10 +221,7 @@ time.plus('PT7H14M21S')  // => 02:53:30.068346205
 This method subtracts `duration` from `time`.
 Due to times wrapping around when reaching 24 hours, the returned point in time may be either in the future or in the past relative to `time`, or even the same time.
 
-The `duration` argument can be any value that could be passed to `Temporal.Duration.from()`:
-- a `Temporal.Duration` object;
-- any object with properties denoting a duration, such as `{ hours: 5, minutes: 30 }`;
-- a string in ISO 8601 duration format, such as `PT5H30M`.
+The `duration` argument is an object with properties denoting a duration, such as `{ hours: 5, minutes: 30 }`, or a `Temporal.Duration` object.
 
 The `disambiguation` parameter has no effect in the default ISO calendar, because the units of hours, minutes, and seconds are always the same length and therefore not ambiguous.
 However, it may have an effect in other calendars where those units are not always the same length.
@@ -237,7 +230,6 @@ Usage example:
 ```javascript
 time = Temporal.Time.from('19:39:09.068346205');
 time.minus({ minutes: 5, nanoseconds: 800 })  // => 19:34:09.068345405
-time.minus('PT7H14M21S')  // => 12:24:48.068346205
 ```
 
 ### time.**difference**(_other_: Temporal.Time, _options_?: object) : Temporal.Duration

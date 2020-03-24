@@ -82,7 +82,7 @@ export class Date {
     if (!ES.IsTemporalDate(result)) throw new TypeError('invalid result');
     return result;
   }
-  plus(temporalDurationLike = {}, options) {
+  plus(temporalDurationLike, options) {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
     const disambiguation = ES.ToArithmeticTemporalDisambiguation(options);
     const duration = ES.ToLimitedTemporalDuration(temporalDurationLike, [
@@ -102,7 +102,7 @@ export class Date {
     if (!ES.IsTemporalDate(result)) throw new TypeError('invalid result');
     return result;
   }
-  minus(temporalDurationLike = {}, options) {
+  minus(temporalDurationLike, options) {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
     const disambiguation = ES.ToArithmeticTemporalDisambiguation(options);
     const duration = ES.ToLimitedTemporalDuration(temporalDurationLike, [

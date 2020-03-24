@@ -483,6 +483,9 @@ export const ES = ObjectAssign({}, ES2019, {
     return new TemporalDuration(years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
   },
   ToLimitedTemporalDuration: (item, disallowedSlots = []) => {
+    if (typeof item !== 'object' || item === null) {
+      throw new TypeError('Unexpected type for duration');
+    }
     const duration = ES.ToTemporalDuration(item, 'reject');
     for (let slot of disallowedSlots) {
       if (GetSlot(duration, slot) !== 0) {
