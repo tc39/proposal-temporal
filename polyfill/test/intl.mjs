@@ -5,7 +5,7 @@ import Pretty from '@pipobscure/demitasse-pretty';
 const { reporter } = Pretty;
 
 import Assert from 'assert';
-const { deepEqual, equal } = Assert;
+const { deepEqual, equal, ok: assert, throws } = Assert;
 
 import { DateTimeFormat } from '../lib/intl.mjs';
 Intl.DateTimeFormat = DateTimeFormat;
@@ -433,6 +433,18 @@ describe('Intl', () => {
         { type: 'literal', value: '/', source: 'endRange' },
         { type: 'year', value: '1991', source: 'endRange' }
       ]));
+  });
+
+  describe('DateTimeFormat', () => {
+    it('supportedLocalesOf should return an Array', () =>
+      assert(Array.isArray(Intl.DateTimeFormat.supportedLocalesOf())));
+
+    it('should throw a TypeError when called with dissimilar types', () => {
+      const t1 = Temporal.Absolute.from('1976-11-18T14:23:30Z');
+      const t2 = Temporal.DateTime.from('2020-02-20T15:44:56-08:00[America/New_York]');
+      throws(() => us.formatRange(t1, t2), TypeError);
+      throws(() => at.formatRangeToParts(t1, t2), TypeError);
+    });
   });
 });
 
