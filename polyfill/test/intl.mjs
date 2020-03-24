@@ -59,7 +59,6 @@ describe('Intl', () => {
   const at = new Intl.DateTimeFormat('de-AT', { timeZone: 'Europe/Vienna' });
 
   describe('should work for Absolute', () => {
-    // TODO why is the month different for DateTime for de-AT
     const t1 = Temporal.Absolute.from('1976-11-18T14:23:30Z');
     const t2 = Temporal.Absolute.from('2020-02-20T15:44:56-08:00[America/New_York]');
     it('format', () => {
