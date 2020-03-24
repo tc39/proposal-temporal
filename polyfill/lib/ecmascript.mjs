@@ -1,6 +1,5 @@
 import GetIntrinsic from 'es-abstract/GetIntrinsic.js';
 import ES2019 from 'es-abstract/es2019.js';
-import { unique } from './compat.mjs';
 
 const IntlDateTimeFormat = Intl.DateTimeFormat;
 const ObjectAssign = Object.assign;
@@ -1366,7 +1365,18 @@ function bisect(getState, left, right, lstate = getState(left), rstate = getStat
   }
   return right;
 }
-
+function unique(arr) {
+  const obj = Object.create(null);
+  for (var i = 0; i < arr.length; i++) {
+    var v = arr[i];
+    obj[v] = v;
+  }
+  var res = [];
+  for (var p in obj) {
+    res.push(obj[p]);
+  }
+  return res;
+}
 function tzIdent() {
   return this.resolvedOptions().timeZone;
 }
