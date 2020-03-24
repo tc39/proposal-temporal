@@ -1,8 +1,9 @@
 import GetIntrinsic from 'es-abstract/GetIntrinsic.js';
 import ES2019 from 'es-abstract/es2019.js';
-import { assign as ObjectAssign, unique } from './compat.mjs';
+import { unique } from './compat.mjs';
 
 const IntlDateTimeFormat = Intl.DateTimeFormat;
+const ObjectAssign = Object.assign;
 
 import { DateTime as TemporalDateTime } from './datetime.mjs';
 import { Date as TemporalDate } from './date.mjs';
@@ -59,7 +60,7 @@ const INTRINSICS = {
 
 import * as PARSE from './regex.mjs';
 
-export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
+export const ES = ObjectAssign({}, ES2019, {
   IsTemporalAbsolute: (item) => HasSlot(item, EPOCHNANOSECONDS),
   IsTemporalTimeZone: (item) => HasSlot(item, IDENTIFIER),
   IsTemporalDuration: (item) =>
