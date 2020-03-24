@@ -123,11 +123,13 @@ export class Duration {
     if (!dateParts.length && !timeParts.length) return 'PT0S';
     return `P${dateParts.join('')}${timeParts.join('')}`;
   }
-  toLocaleString() {
-    // TODO fix this once Intl.DurationFormat has a working polyfill (or a spec).
+  toLocaleString(...args) {
     if (!ES.IsDuration(this)) throw new TypeError('invalid receiver');
-    console.error('This function requires Intl.DurationFormat.');
-    return this.toString();
+    if (typeof Intl !== 'undefined' && typeof Intl.DurationFormat !== 'undefined') {
+      return new Intl.DurationFormat(...args).format(this);
+    }
+    console.warn('Temporal.Duration.prototype.toLocaleString() requires Intl.DurationFormat.');
+    return ES.DurationToString(this);
   }
   static from(arg, options = undefined) {
     const disambiguation = ES.ToDisambiguation(options);
