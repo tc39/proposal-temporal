@@ -1,23 +1,3 @@
-if ('undefined' === typeof Symbol) {
-  const gt = 'object' === typeof globalThis ? globalThis : new Function('return this')();
-  const ltr = Array(26)
-    .fill(0)
-    .map((_, idx) => String.fromCharCode(idx + 65));
-  const Symbol = (gt.Symbol = function Symbol(name) {
-    if (!(this instanceof Symbol)) return new Symbol(name);
-    const rnd = Array(100)
-      .fill(0)
-      .map(() => ltr[Math.floor(Math.random() * ltr.length)])
-      .join('');
-    this.id = `Symbol(${name})-${rnd}`;
-  });
-  Symbol.prototype.toString = function() {
-    return this.id;
-  };
-  Symbol.iterator = Symbol('iterator');
-  Symbol.toStringTag = Symbol('toStringTag');
-}
-
 import { ES } from './ecmascript.mjs';
 
 export const Absolute = ES.GetIntrinsic('%Temporal.Absolute%');

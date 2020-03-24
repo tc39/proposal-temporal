@@ -117,12 +117,7 @@ export class TimeZone {
     if (this === TimeZone) return result;
     return new this(GetSlot(result, IDENTIFIER));
   }
-}
-
-TimeZone.prototype.toJSON = TimeZone.prototype.toString;
-
-if ('undefined' !== typeof Symbol) {
-  TimeZone[Symbol.iterator] = function() {
+  static [Symbol.iterator]() {
     const iter = ZONES[Symbol.iterator]();
     return {
       next: () => {
@@ -140,7 +135,9 @@ if ('undefined' !== typeof Symbol) {
         }
       }
     };
-  };
+  }
 }
+
+TimeZone.prototype.toJSON = TimeZone.prototype.toString;
 
 MakeIntrinsicClass(TimeZone, 'Temporal.TimeZone');
