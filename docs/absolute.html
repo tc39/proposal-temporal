@@ -367,6 +367,39 @@ abs.toLocaleString(&#39;de-DE&#39;, {
 abs.toLocaleString(&#39;en-US-u-nu-fullwide-hc-h12&#39;, {
     timeZone: &#39;Asia/Kolkata&#39;,
 });  // =&gt; １１/１８/２０１９, ４:３０:００ PM</code></pre>
+<h3 id="absolutetojson--string">absolute.<strong>toJSON</strong>() : string</h3>
+<p><strong>Returns:</strong> a string in the ISO 8601 date format representing <code>absolute</code>, in the UTC time zone.</p>
+<p>This method is like <code>absolute.toString()</code> but always produces a string in UTC time.
+It is usually not called directly, but it can be called automatically by <code>JSON.stringify()</code>.</p>
+<p>The reverse operation, recovering a <code>Temporal.Absolute</code> object from a string, is <code>Temporal.Absolute.from()</code>, but it cannot be called automatically by <code>JSON.parse()</code>.
+If you need to rebuild a <code>Temporal.Absolute</code> object from a JSON string, then you need to know the names of the keys that should be interpreted as <code>Temporal.Absolute</code>s.
+In that case you can build a custom &quot;reviver&quot; function for your use case.</p>
+<p>Example usage:</p>
+<pre><code class="language-js">const meeting = {
+  id: 355,
+  name: &#39;Budget review&#39;,
+  location: &#39;https://meet.jit.si/ObjectiveTomatoesJokeSurely&#39;,
+  startAbsolute: Temporal.Absolute.from(&#39;2020-03-30T15:00-04:00[America/New_York]&#39;),
+  endAbsolute: Temporal.Absolute.from(&#39;2020-03-30T16:00-04:00[America/New_York]&#39;),
+};
+const str = JSON.stringify(meeting, null, 2);
+console.log(str);
+// =&gt;
+// {
+//   &quot;id&quot;: 355,
+//   &quot;name&quot;: &quot;Budget review&quot;,
+//   &quot;location&quot;: &quot;https://meet.jit.si/ObjectiveTomatoesJokeSurely&quot;,
+//   &quot;startAbsolute&quot;: &quot;2020-03-30T19:00Z&quot;,
+//   &quot;endAbsolute&quot;: &quot;2020-03-30T20:00Z&quot;
+// }
+
+// To rebuild from the string:
+function reviver(key, value) {
+  if (key.endsWith(&#39;Absolute&#39;))
+    return Temporal.Absolute.from(value);
+  return value;
+}
+JSON.parse(str, reviver);</code></pre>
     <footer>
       <p>
         This page includes a script which loads an implementation of Temporal in your browser.

@@ -266,10 +266,34 @@ bal = Temporal.Duration.from({ milliseconds: 3500 }, { disambiguation: &#39;bala
 console.log(`${bal}`, bal.seconds, bal.milliseconds);  // =&gt; PT3.500S 3 500</code></pre>
 <h3 id="durationtojson--string">duration.<strong>toJSON</strong>() : string</h3>
 <p><strong>Returns:</strong> a string representation of the duration that can be passed to <code>Temporal.Duration.from()</code>.</p>
-<p>This method uses <code>toString()</code> to usefully serialize <code>Temporal.Duration</code> objects during JSON serialization to a value that can be reconstructed during deserialization.</p>
+<p>This method is the same as <code>duration.toString()</code>.
+It is usually not called directly, but it can be called automatically by <code>JSON.stringify()</code>.</p>
 <blockquote>
 <p><strong>NOTE</strong>: The same caution about <code>milliseconds</code>, <code>microseconds</code>, or <code>nanoseconds</code> greater than 999 applies to this method as well.</p>
 </blockquote>
+<p>The reverse operation, recovering a <code>Temporal.Duration</code> object from a string, is <code>Temporal.Duration.from()</code>, but it cannot be called automatically by <code>JSON.parse()</code>.
+If you need to rebuild a <code>Temporal.Duration</code> object from a JSON string, then you need to know the names of the keys that should be interpreted as <code>Temporal.Duration</code>s.
+In that case you can build a custom &quot;reviver&quot; function for your use case.</p>
+<p>Example usage:</p>
+<pre><code class="language-js">const ban = {
+  reason: &#39;cooldown&#39;,
+  banDuration: Temporal.Duration.from({ hours: 48 }),
+};
+const str = JSON.stringify(ban, null, 2);
+console.log(str);
+// =&gt;
+// {
+//   &quot;reason&quot;: &quot;cooldown&quot;,
+//   &quot;banDuration&quot;: &quot;PT48H&quot;
+// }
+
+// To rebuild from the string:
+function reviver(key, value) {
+  if (key.endsWith(&#39;Duration&#39;))
+    return Temporal.Duration.from(value);
+  return value;
+}
+JSON.parse(str, reviver);</code></pre>
 <h3 id="durationtolocalestringlocales-string--arraystring-options-object--string">duration.<strong>toLocaleString</strong>(<em>locales</em>?: string | array&lt;string&gt;, <em>options</em>?: object) : string</h3>
 <p><strong>Parameters:</strong></p>
 <ul>

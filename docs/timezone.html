@@ -251,6 +251,37 @@ duration.toLocaleString();  // output will vary</code></pre>
 <h3 id="timezonetostring--string">timeZone.<strong>toString</strong>() : string</h3>
 <p><strong>Returns:</strong> The string given by <code>timeZone.name</code>.</p>
 <p>This method overrides <code>Object.prototype.toString()</code> and provides the time zone&#39;s <code>name</code> property as a human-readable description.</p>
+<h3 id="timezonetojson--string">timeZone.<strong>toJSON</strong>() : string</h3>
+<p><strong>Returns:</strong> the string given by <code>timeZone.name</code>.</p>
+<p>This method is the same as <code>timeZone.toString()</code>.
+It is usually not called directly, but it can be called automatically by <code>JSON.stringify()</code>.</p>
+<p>The reverse operation, recovering a <code>Temporal.TimeZone</code> object from a string, is <code>Temporal.TimeZone.from()</code>, but it cannot be called automatically by <code>JSON.parse()</code>.
+If you need to rebuild a <code>Temporal.TimeZone</code> object from a JSON string, then you need to know the names of the keys that should be interpreted as <code>Temporal.TimeZone</code>s.
+In that case you can build a custom &quot;reviver&quot; function for your use case.</p>
+<p>Example usage:</p>
+<pre><code class="language-js">const user = {
+  id: 775,
+  username: &#39;robotcat&#39;,
+  password: &#39;hunter2&#39;,  // Note: Don&#39;t really store passwords like that
+  userTimeZone: Temporal.TimeZone.from(&#39;Europe/Madrid&#39;),
+};
+const str = JSON.stringify(user, null, 2);
+console.log(str);
+// =&gt;
+// {
+//   &quot;id&quot;: 775,
+//   &quot;username&quot;: &quot;robotcat&quot;,
+//   &quot;password&quot;: &quot;hunter2&quot;,
+//   &quot;userTimeZone&quot;: &quot;Europe/Madrid&quot;
+// }
+
+// To rebuild from the string:
+function reviver(key, value) {
+  if (key.endsWith(&#39;TimeZone&#39;))
+    return Temporal.TimeZone.from(value);
+  return value;
+}
+JSON.parse(str, reviver);</code></pre>
     <footer>
       <p>
         This page includes a script which loads an implementation of Temporal in your browser.

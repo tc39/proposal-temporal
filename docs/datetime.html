@@ -456,6 +456,37 @@ dt.toLocaleString();  // =&gt; example output: 1995-12-07, 3:24:30 a.m.
 dt.toLocaleString(&#39;de-DE&#39;);  // =&gt; example output: 7.12.1995, 03:24:30
 dt.toLocaleString(&#39;de-DE&#39;, { timeZone: &#39;Europe/Berlin&#39;, weekday: &#39;long&#39; });  // =&gt; Donnerstag, 7.12.1995, 03:24:30
 dt.toLocaleString(&#39;en-US-u-nu-fullwide-hc-h12&#39;);  // =&gt; １２/７/１９９５, ３:２４:３０ AM</code></pre>
+<h3 id="datetimetojson--string">datetime.<strong>toJSON</strong>() : string</h3>
+<p><strong>Returns:</strong> a string in the ISO 8601 date format representing <code>datetime</code>.</p>
+<p>This method is the same as <code>datetime.toString()</code>.
+It is usually not called directly, but it can be called automatically by <code>JSON.stringify()</code>.</p>
+<p>The reverse operation, recovering a <code>Temporal.DateTime</code> object from a string, is <code>Temporal.DateTime.from()</code>, but it cannot be called automatically by <code>JSON.parse()</code>.
+If you need to rebuild a <code>Temporal.DateTime</code> object from a JSON string, then you need to know the names of the keys that should be interpreted as <code>Temporal.DateTime</code>s.
+In that case you can build a custom &quot;reviver&quot; function for your use case.</p>
+<p>Example usage:</p>
+<pre><code class="language-js">const event = {
+  id: 311,
+  name: &#39;FictionalConf 2018&#39;,
+  openingDateTime: Temporal.DateTime.from(&#39;2018-07-06T10:00&#39;),
+  closingDateTime: Temporal.DateTime.from(&#39;2018-07-08T18:15&#39;),
+};
+const str = JSON.stringify(event, null, 2);
+console.log(str);
+// =&gt;
+// {
+//   &quot;id&quot;: 311,
+//   &quot;name&quot;: &quot;FictionalConf 2018&quot;,
+//   &quot;openingDateTime&quot;: &quot;2018-07-06T10:00&quot;,
+//   &quot;closingDateTime&quot;: &quot;2018-07-08T18:15&quot;
+// }
+
+// To rebuild from the string:
+function reviver(key, value) {
+  if (key.endsWith(&#39;DateTime&#39;))
+    return Temporal.DateTime.from(value);
+  return value;
+}
+JSON.parse(str, reviver);</code></pre>
 <h3 id="datetimeintimezonetimezone--temporaltimezone--string-options-object--temporalabsolute">datetime.<strong>inTimeZone</strong>(<em>timeZone</em> : Temporal.TimeZone | string, <em>options</em>?: object) : Temporal.Absolute</h3>
 <p><strong>Parameters:</strong></p>
 <ul>

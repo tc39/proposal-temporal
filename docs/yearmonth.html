@@ -357,6 +357,41 @@ ym.toLocaleString();  // =&gt; example output: 2019-06
 ym.toLocaleString(&#39;de-DE&#39;);  // =&gt; example output: 6.2019
 ym.toLocaleString(&#39;de-DE&#39;, {month: &#39;long&#39;, year: &#39;numeric&#39;});  // =&gt; Juni 2019
 ym.toLocaleString(&#39;en-US-u-nu-fullwide&#39;);  // =&gt; ６/２０１９</code></pre>
+<h3 id="yearmonthtojson--string">yearMonth.<strong>toJSON</strong>() : string</h3>
+<p><strong>Returns:</strong> a string in the ISO 8601 date format representing <code>yearMonth</code>.</p>
+<p>This method is the same as <code>yearMonth.toString()</code>.
+It is usually not called directly, but it can be called automatically by <code>JSON.stringify()</code>.</p>
+<p>The reverse operation, recovering a <code>Temporal.YearMonth</code> object from a string, is <code>Temporal.YearMonth.from()</code>, but it cannot be called automatically by <code>JSON.parse()</code>.
+If you need to rebuild a <code>Temporal.YearMonth</code> object from a JSON string, then you need to know the names of the keys that should be interpreted as <code>Temporal.YearMonth</code>s.
+In that case you can build a custom &quot;reviver&quot; function for your use case.</p>
+<p>Example usage:</p>
+<pre><code class="language-js">const boardMeeting = {
+  id: 4,
+  agenda: [
+    &#39;Roll call&#39;,
+    &#39;Budget&#39;,
+  ],
+  meetingYearMonth: Temporal.YearMonth.from({ year: 2019, month: 3 }),
+};
+const str = JSON.stringify(boardMeeting, null, 2);
+console.log(str);
+// =&gt;
+// {
+//   &quot;id&quot;: 4,
+//   &quot;agenda&quot;: [
+//     &quot;Roll call&quot;,
+//     &quot;Budget&quot;
+//   ],
+//   &quot;meetingYearMonth&quot;: &quot;2019-03&quot;
+// }
+
+// To rebuild from the string:
+function reviver(key, value) {
+  if (key.endsWith(&#39;YearMonth&#39;))
+    return Temporal.YearMonth.from(value);
+  return value;
+}
+JSON.parse(str, reviver);</code></pre>
 <h3 id="yearmonthwithdayday-number--temporaldate">yearMonth.<strong>withDay</strong>(<em>day</em>: number) : Temporal.Date</h3>
 <p><strong>Parameters:</strong></p>
 <ul>

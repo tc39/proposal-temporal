@@ -403,6 +403,35 @@ date.toLocaleString();  // =&gt; example output: 8/24/2006
 date.toLocaleString(&#39;de-DE&#39;);  // =&gt; example output: 24.8.2006
 date.toLocaleString(&#39;de-DE&#39;, { weekday: &#39;long&#39; });  // =&gt; Donnerstag, 24.8.2006
 date.toLocaleString(&#39;en-US-u-nu-fullwide&#39;);  // =&gt; ８/２４/２００６</code></pre>
+<h3 id="datetojson--string">date.<strong>toJSON</strong>() : string</h3>
+<p><strong>Returns:</strong> a string in the ISO 8601 date format representing <code>date</code>.</p>
+<p>This method is the same as <code>date.toString()</code>.
+It is usually not called directly, but it can be called automatically by <code>JSON.stringify()</code>.</p>
+<p>The reverse operation, recovering a <code>Temporal.Date</code> object from a string, is <code>Temporal.Date.from()</code>, but it cannot be called automatically by <code>JSON.parse()</code>.
+If you need to rebuild a <code>Temporal.Date</code> object from a JSON string, then you need to know the names of the keys that should be interpreted as <code>Temporal.Date</code>s.
+In that case you can build a custom &quot;reviver&quot; function for your use case.</p>
+<p>Example usage:</p>
+<pre><code class="language-js">const student = {
+  id: 429,
+  name: &#39;Emilia Connor&#39;,
+  birthDate: Temporal.Date.from(&#39;1997-09-08&#39;),
+};
+const str = JSON.stringify(student, null, 2);
+console.log(str);
+// =&gt;
+// {
+//   &quot;id&quot;: 429,
+//   &quot;name&quot;: &quot;Emilia Connor&quot;,
+//   &quot;birthDate&quot;: &quot;1997-09-08&quot;
+// }
+
+// To rebuild from the string:
+function reviver(key, value) {
+  if (key.endsWith(&#39;Date&#39;))
+    return Temporal.Date.from(value);
+  return value;
+}
+JSON.parse(str, reviver);</code></pre>
 <h3 id="datewithtimetime-temporaltime--temporaldatetime">date.<strong>withTime</strong>(<em>time</em>: Temporal.Time) : Temporal.DateTime</h3>
 <p><strong>Parameters:</strong></p>
 <ul>
