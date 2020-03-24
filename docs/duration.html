@@ -85,12 +85,140 @@
       It does not represent the final API of this proposal, nor even the current consensus.
     </div>
 <h1 id="temporalduration">Temporal.Duration</h1>
-<p>A representations of a duration of time which can be used in date/time arithmetic.</p>
+<p>A <code>Temporal.Duration</code> represents an immutable duration of time which can be used in date/time arithmetic.</p>
+<p><code>Temporal.Duration</code> can be constructed directly or returned from <code>Temporal.Duration.from()</code>.
+It can also be obtained from the <code>difference()</code> method of any other <code>Temporal</code> type that supports arithmetic, and is used in those types&#39; <code>plus()</code> and <code>minus()</code> methods.</p>
+<p>When printed, a <code>Temporal.Duration</code> produces a string according to the ISO 8601 notation for durations.
+The examples in this page use this notation extensively.</p>
+<p>Briefly, the ISO 8601 notation consists of a <code>P</code> character, followed by years, months, and days, followed by a <code>T</code> character, followed by hours, minutes, and seconds with a decimal part, each with a single-letter suffix that indicates the unit.
+Any zero components may be omitted.
+For more detailed information, see the ISO 8601 standard or the <a href="https://en.wikipedia.org/wiki/ISO_8601#Durations">Wikipedia page</a>.</p>
+<table>
+<thead>
+<tr>
+<th>ISO 8601</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>P1Y1M1DT1H1M1.1S</strong></td>
+<td>One year, one month, one day, one hour, one minute, one second, and 100 milliseconds</td>
+</tr>
+<tr>
+<td><strong>P40D</strong></td>
+<td>Forty days</td>
+</tr>
+<tr>
+<td><strong>P1Y1D</strong></td>
+<td>A year and a day</td>
+</tr>
+<tr>
+<td><strong>P3DT4H59M</strong></td>
+<td>Three days, four hours and 59 minutes</td>
+</tr>
+<tr>
+<td><strong>PT2H30M</strong></td>
+<td>Two and a half hours</td>
+</tr>
+<tr>
+<td><strong>P1M</strong></td>
+<td>One month</td>
+</tr>
+<tr>
+<td><strong>PT1M</strong></td>
+<td>One minute</td>
+</tr>
+<tr>
+<td><strong>PT0.0021S</strong></td>
+<td>2.1 milliseconds (two milliseconds and 100 microseconds)</td>
+</tr>
+<tr>
+<td><strong>PT0S</strong></td>
+<td>Zero</td>
+</tr>
+<tr>
+<td><strong>P0D</strong></td>
+<td>Zero</td>
+</tr>
+</tbody></table>
 <h2 id="constructor">Constructor</h2>
 <h3 id="new-temporaldurationyears-number-months-number-days-number-hours-number-minutes-number-seconds-number-milliseconds-number-microseconds-number-nanoseconds-number--temporalduration"><strong>new Temporal.Duration</strong>(<em>years</em>?: number, <em>months</em>?: number, <em>days</em>?: number, <em>hours</em>?: number, <em>minutes</em>?: number, <em>seconds</em>?: number, <em>milliseconds</em>?: number, <em>microseconds</em>?: number, <em>nanoseconds</em>?: number) : Temporal.Duration</h3>
-<p>Creates a new <code>Duration</code> object that represents a duration of time.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>years</code> (optional number): A number of years.</li>
+<li><code>months</code> (optional number): A number of months.</li>
+<li><code>days</code> (optional number): A number of days.</li>
+<li><code>hours</code> (optional number): A number of hours.</li>
+<li><code>minutes</code> (optional number): A number of minutes.</li>
+<li><code>seconds</code> (optional number): A number of seconds.</li>
+<li><code>milliseconds</code> (optional number): A number of milliseconds.</li>
+<li><code>microseconds</code> (optional number): A number of microseconds.</li>
+<li><code>nanoseconds</code> (optional number): A number of nanoseconds.</li>
+</ul>
+<p><strong>Returns:</strong> a new <code>Temporal.Duration</code> object.</p>
+<p>All of the arguments are optional.
+Any missing or <code>undefined</code> numerical arguments are taken to be zero, and all non-integer numerical arguments are rounded down to the nearest integer.
+Negative numbers are not allowed.</p>
+<p>Use this constructor directly if you have the correct parameters already as numerical values, but otherwise <code>Temporal.Duration.from()</code>, which accepts more kinds of input and allows disambiguation behaviour, is probably more convenient.</p>
+<p>Usage examples:</p>
+<pre><code class="language-javascript">new Temporal.Duration(1, 2, 3, 4, 5, 6, 987, 654, 321)  // =&gt; P1Y2M3DT4H5M6.987654321S
+new Temporal.Duration(0, 0, 40)  // =&gt; P40D
+new Temporal.Duration(undefined, undefined, 40)  // =&gt; P40D
+new Temporal.Duration()  // =&gt; PT0S</code></pre>
 <h2 id="static-methods">Static methods</h2>
 <h3 id="temporaldurationfromthing-string--object-options-object--temporalduration">Temporal.Duration.<strong>from</strong>(<em>thing</em>: string | object, <em>options</em>?: object) : Temporal.Duration</h3>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>thing</code> (string or object): A <code>Duration</code>-like object or a string from which to create a <code>Temporal.Duration</code>.</li>
+<li><code>options</code> (optional object): An object with properties representing options for constructing the duration.
+The following options are recognized:<ul>
+<li><code>disambiguation</code> (optional string): How to disambiguate if any of the other arguments are out of range.
+Allowed values are <code>constrain</code>, <code>balance</code>, and <code>reject</code>.
+The default is <code>constrain</code>.</li>
+</ul>
+</li>
+</ul>
+<p><strong>Returns:</strong> a new <code>Temporal.Duration</code> object.</p>
+<p>This static method creates a new duration from another value.
+The value can be a string in the ISO 8601 format described above.
+Or, if the value is an object, it can either be another <code>Temporal.Duration</code> object, or a plain object with properties <code>years</code>, <code>months</code>, etc.</p>
+<p>When creating a duration from an object, this function is often more readable to use than <code>new Temporal.Duration()</code> because the names of the properties are visible in the code.</p>
+<p>The <code>disambiguation</code> option controls how out-of-range values are interpreted:</p>
+<ul>
+<li><code>constrain</code> (the default): Infinite values are clamped to <code>Number.MAX_VALUE</code>.
+Values higher than the next highest unit (for example, 90 minutes) are left as-is.</li>
+<li><code>balance</code>: Infinite values will cause the function to throw a <code>RangeError</code>.
+Values higher than the next highest unit, are converted to be in-range by incrementing the next highest unit accordingly.
+For example, 90 minutes becomes one hour and 30 minutes.</li>
+<li><code>reject</code>: Infinite values will cause the function to throw a <code>RangeError</code>.
+Values higher than the next highest unit (for example, 90 minutes) are left as-is.</li>
+</ul>
+<p>No matter which disambiguation mode is selected, negative values are never allowed and will cause the function to throw a <code>RangeError</code>.</p>
+<blockquote>
+<p><strong>NOTE:</strong> Years and months can have different lengths.
+In the default ISO calendar, a year can be 365 or 366 days, and a month can be 28, 29, 30, or 31 days.
+Therefore, any <code>Duration</code> object with nonzero years or months can refer to a different length of time depending on when the start date is.
+No conversion is ever performed between years, months, and days, even in <code>balance</code> disambiguation mode, because such conversion would be ambiguous.</p>
+</blockquote>
+<p>Usage examples:</p>
+<pre><code class="language-javascript">d = Temporal.Duration.from({ years: 1, days: 1 })  // =&gt; P1Y1D
+d = Temporal.Duration.from({ days: 2, hours: 12 })  // =&gt; P2DT12H
+
+Temporal.Duration.from(d) === d  // =&gt; true
+
+d = Temporal.Duration.from(&#39;P1Y1D&#39;)  // =&gt; P1Y1D
+d = Temporal.Duration.from(&#39;P2DT12H&#39;)  // =&gt; P2DT12H
+d = Temporal.Duration.from(&#39;P0D&#39;)  // =&gt; PT0S
+
+// Negative values are never allowed, even if overall positive:
+d = Temporal.Duration.from({ hours: 1, minutes: -30 })  // throws
+// FIXME https://github.com/tc39/proposal-temporal/issues/408
+
+// Disambiguation
+
+d = Temporal.Duration.from({ minutes: 120 }, { disambiguation: &#39;constrain&#39; })  // =&gt; PT120M
+d = Temporal.Duration.from({ minutes: 120 }, { disambiguation: &#39;balance&#39; })  // =&gt; PT2H
+d = Temporal.Duration.from({ minutes: 120 }, { disambiguation: &#39;reject&#39; })  // =&gt; PT120M</code></pre>
 <h2 id="properties">Properties</h2>
 <h3 id="durationyears--number">duration.<strong>years</strong> : number</h3>
 <h3 id="durationmonths--number">duration.<strong>months</strong> : number</h3>
@@ -101,10 +229,22 @@
 <h3 id="durationmilliseconds--number">duration.<strong>milliseconds</strong> : number</h3>
 <h3 id="durationmicroseconds--number">duration.<strong>microseconds</strong> : number</h3>
 <h3 id="durationnanoseconds--number">duration.<strong>nanoseconds</strong> : number</h3>
-<h3 id="durationyears--number-1">duration.<strong>years</strong> : number</h3>
+<p>The above read-only properties allow accessing each component of the duration individually.</p>
+<p>Usage examples:</p>
+<pre><code class="language-javascript">d = new Temporal.Duration(1, 2, 3, 4, 5, 6, 987, 654, 321);
+d.years         // =&gt; 1
+d.months        // =&gt; 2
+d.days          // =&gt; 3
+d.hours         // =&gt; 4
+d.minutes       // =&gt; 5
+d.seconds       // =&gt; 6
+d.milliseconds  // =&gt; 987
+d.microseconds  // =&gt; 654
+d.nanoseconds   // =&gt; 321</code></pre>
 <h2 id="methods">Methods</h2>
 <h3 id="durationtostring--string">duration.<strong>toString</strong>() : string</h3>
-<p><strong>FIXME</strong>: Rest of documentation in a different pull request, combine when rebasing.</p>
+<p><strong>Returns:</strong> the duration as an ISO 8601 string.</p>
+<p>This method overrides <code>Object.prototype.toString()</code> and provides the ISO 8601 description of the duration.</p>
 <blockquote>
 <p><strong>NOTE</strong>: If any of the <code>milliseconds</code>, <code>microseconds</code>, or <code>nanoseconds</code> properties are greater than 999, then <code>Temporal.Duration.from(duration.toString())</code> will not yield an identical <code>Temporal.Duration</code> object.
 The returned object will represent an identical duration, but the sub-second fields will be balanced with the <code>seconds</code> field so that they become 999 or less.
@@ -112,7 +252,38 @@ For example, 1000 nanoseconds will become 1 microsecond.</p>
 <p>This is because the ISO 8601 string format for durations does not allow for specifying sub-second units separately, only as a decimal fraction of seconds.
 If you need to serialize a <code>Temporal.Duration</code> in a way that will preserve unbalanced sub-second fields, you will need to use a custom serialization format.</p>
 </blockquote>
+<p>Usage examples:</p>
+<pre><code class="language-javascript">d = Temporal.Duration.from({ years: 1, days: 1 });
+d.toString();  // =&gt; P1Y1D
+d = Temporal.Duration.from({ milliseconds: 1000 });
+d.toString();  // =&gt; PT1S
+
+// The output format always balances units under 1 s, even if the
+// underlying Temporal.Duration object doesn&#39;t.
+nobal = Temporal.Duration.from({ milliseconds: 3500 });
+console.log(`${nobal}`, nobal.seconds, nobal.milliseconds);  // =&gt; PT3.500S 0 3500
+bal = Temporal.Duration.from({ milliseconds: 3500 }, { disambiguation: &#39;balance&#39;});
+console.log(`${bal}`, bal.seconds, bal.milliseconds);  // =&gt; PT3.500S 3 500</code></pre>
+<h3 id="durationtojson--string">duration.<strong>toJSON</strong>() : string</h3>
+<p><strong>Returns:</strong> a string representation of the duration that can be passed to <code>Temporal.Duration.from()</code>.</p>
+<p>This method uses <code>toString()</code> to usefully serialize <code>Temporal.Duration</code> objects during JSON serialization to a value that can be reconstructed during deserialization.</p>
+<blockquote>
+<p><strong>NOTE</strong>: The same caution about <code>milliseconds</code>, <code>microseconds</code>, or <code>nanoseconds</code> greater than 999 applies to this method as well.</p>
+</blockquote>
 <h3 id="durationtolocalestringlocales-string--arraystring-options-object--string">duration.<strong>toLocaleString</strong>(<em>locales</em>?: string | array&lt;string&gt;, <em>options</em>?: object) : string</h3>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>locales</code> (optional string or array of strings): A string with a BCP 47 language tag with an optional Unicode extension key, or an array of such strings.</li>
+<li><code>options</code> (optional object): An object with properties influencing the formatting.</li>
+</ul>
+<p><strong>Returns:</strong> a language-sensitive representation of the duration.</p>
+<p>This method overrides <code>Object.prototype.toLocaleString()</code> to provide a human-readable, language-sensitive representation of <code>duration</code>.</p>
+<p>The <code>locales</code> and <code>options</code> arguments are the same as in the constructor to <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DateTimeFormat"><code>Intl.DateTimeFormat</code></a>.</p>
+<p>Usage examples:</p>
+<pre><code class="language-javascript">d = Temporal.Duration.from(&#39;P1DT6H30M&#39;)
+d.toLocaleString()  // =&gt; 1 day 6 hours 30 minutes
+d.toLocaleString(&#39;de-DE&#39;)  // =&gt; 1 Tag 6 Stunden 30 Minuten
+d.toLocaleString(&#39;en-US&#39;, {day: &#39;numeric&#39;, hour: &#39;numeric&#39;})  // =&gt; 1 day 6 hours</code></pre>
     <footer>
       <p>
         This page includes a script which loads an implementation of Temporal in your browser.
