@@ -51,8 +51,9 @@ describe('Absolute', () => {
       equal(instant.getEpochSeconds(), Math.floor(Date.UTC(1976, 10, 18, 14, 23, 30, 123) / 1e3), 'getEpochSeconds');
       equal(instant.getEpochMilliseconds(), Date.UTC(1976, 10, 18, 14, 23, 30, 123), 'getEpochMilliseconds');
     });
-    it('throws on number', () => throws(() => new Absolute(1234)));
-    it('throws on string', () => throws(() => new Absolute('1234')));
+    it('constructs from string', () => equal(`${new Absolute('0')}`, '1970-01-01T00:00Z'));
+    it('throws on number', () => throws(() => new Absolute(1234), TypeError));
+    it('throws on string that does not convert to BigInt', () => throws(() => new Absolute('abc123'), SyntaxError));
   });
   describe('absolute.toString() works', () => {
     it('`1976-11-18T14:23:30.123456789Z`.toString()', () => {
