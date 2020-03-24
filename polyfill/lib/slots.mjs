@@ -26,21 +26,12 @@ export const MILLISECONDS = 'slot-milliseconds';
 export const MICROSECONDS = 'slot-microseconds';
 export const NANOSECONDS = 'slot-nanoseconds';
 
-const SLOTS = 'undefined' === typeof Symbol ? '_SLOTS' : Symbol('SLOTS');
-const slots = 'function' === typeof WeakMap ? new WeakMap() : null;
+const slots = new WeakMap();
 export function CreateSlots(container) {
-  if (!slots) {
-    container[SLOTS] = Object.create(null);
-  } else {
-    slots.set(container, Object.create(null));
-  }
+  slots.set(container, Object.create(null));
 }
 function GetSlots(container) {
-  if (!slots) {
-    return container[SLOTS];
-  } else {
-    return slots.get(container);
-  }
+  return slots.get(container);
 }
 export function HasSlot(container, ...ids) {
   if (!container || 'object' !== typeof container) return false;
