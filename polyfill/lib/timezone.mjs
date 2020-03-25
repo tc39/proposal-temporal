@@ -39,7 +39,7 @@ export class TimeZone {
   }
   getAbsoluteFor(dateTime, options) {
     if (!ES.IsTimeZone(this)) throw new TypeError('invalid receiver');
-    dateTime = ES.ToDateTime(dateTime, 'reject');
+    if (!ES.IsDateTime(dateTime)) throw new TypeError('invalid DateTime object');
     const disambiguation = ES.ToTimeZoneDisambiguation(options);
 
     const Absolute = ES.GetIntrinsic('%Temporal.Absolute%');
