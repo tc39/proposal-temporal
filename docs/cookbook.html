@@ -94,7 +94,7 @@
 <h2 id="construction">Construction</h2>
 <h3 id="absolute-from-legacy-date"><a href="./cookbook/absoluteFromLegacyDate.mjs">Absolute from legacy Date</a></h3>
 <p>Map a legacy ECMAScript Date instance into a Temporal.Absolute instance corresponding to the same instant in absolute time.</p>
-<pre><code class="language-javascript">import assert from &quot;assert&quot;;
+<pre><code class="language-javascript">import assert from &#39;assert&#39;;
 
 /**
  * Converts a Date instance into a Temporal.Absolute instance
@@ -103,16 +103,16 @@
  * @returns {Temporal.Absolute} Temporal.Absolute instance
  */
 function getAbsoluteFromDate(esDate) {
-    const date = Temporal.Absolute.fromEpochMilliseconds(esDate.getTime());
-    return date;
+  const date = Temporal.Absolute.fromEpochMilliseconds(esDate.getTime());
+  return date;
 }
 
-const date = new Date(&quot;1970-01-01T00:00:01Z&quot;);
+const date = new Date(&#39;1970-01-01T00:00:01Z&#39;);
 const absolute = getAbsoluteFromDate(date);
 assert(absolute instanceof Temporal.Absolute);</code></pre>
 <h3 id="zoned-instant-from-instant-and-time-zone"><a href="./cookbook/getParseableZonedStringAtInstant.mjs">Zoned instant from instant and time zone</a></h3>
 <p>Map a Temporal.Absolute instance and a time zone name into a string serialization of the local time in that zone corresponding to the instant in absolute time.</p>
-<pre><code class="language-javascript">import assert from &quot;assert&quot;;
+<pre><code class="language-javascript">import assert from &#39;assert&#39;;
 
 /**
  * Converts an absolute point in time to a readable string of a specified time zone
@@ -122,14 +122,14 @@ assert(absolute instanceof Temporal.Absolute);</code></pre>
  * @returns {string} IANA Timezone
  */
 function getParseableZonedStringAtInstant(absolute, ianaTimeZoneName) {
-    // inTimeZone accepts either a timezone string or a Temporal.TimeZone object
-    // It returns a DateTime object
-    const localDateTime = absolute.inTimeZone(ianaTimeZoneName);
-    return localDateTime.toString();
+  // inTimeZone accepts either a timezone string or a Temporal.TimeZone object
+  // It returns a DateTime object
+  const localDateTime = absolute.inTimeZone(ianaTimeZoneName);
+  return localDateTime.toString();
 }
 
-const absoluteTime = Temporal.Absolute.from(&quot;2020-01-03T10:41:51Z&quot;);
-const timeZone = &quot;Europe/Paris&quot;;
+const absoluteTime = Temporal.Absolute.from(&#39;2020-01-03T10:41:51Z&#39;);
+const timeZone = &#39;Europe/Paris&#39;;
 const result = getParseableZonedStringAtInstant(absoluteTime, timeZone);
 assert.equal(result, &#39;2020-01-03T11:41:51&#39;);</code></pre>
     <footer>
