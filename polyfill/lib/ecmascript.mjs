@@ -562,7 +562,12 @@ export const ES = ObjectAssign(ObjectAssign({}, ES2019), {
     const day = ES.ISODateTimePartString(dateTime.day);
     const hour = ES.ISODateTimePartString(dateTime.hour);
     const minute = ES.ISODateTimePartString(dateTime.minute);
-    const seconds = ES.ISOSecondsString(dateTime.second, dateTime.millisecond, dateTime.microsecond, dateTime.nanosecond);
+    const seconds = ES.ISOSecondsString(
+      dateTime.second,
+      dateTime.millisecond,
+      dateTime.microsecond,
+      dateTime.nanosecond
+    );
     const timeZoneString = ES.ISOTimeZoneString(timeZone, absolute);
     return `${year}-${month}-${day}T${hour}:${minute}${seconds ? `:${seconds}` : ''}${timeZoneString}`;
   },
