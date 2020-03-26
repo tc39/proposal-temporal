@@ -5,7 +5,7 @@ import Pretty from '@pipobscure/demitasse-pretty';
 const { reporter } = Pretty;
 
 import { strict as assert } from 'assert';
-const { throws, equal } = assert;
+const { throws, equal, notEqual } = assert;
 
 import { Duration } from 'tc39-temporal';
 
@@ -34,10 +34,10 @@ describe('Duration', () => {
     it('negative values throw', () => throws(() => new Duration(-1, -1, -1, -1, -1, -1, -1, -1, -1), RangeError));
   });
   describe('from()', () => {
-    it('Duration.from(P5Y) == P5Y', () => {
+    it('Duration.from(P5Y) is not the same object', () => {
       const orig = new Duration(5);
       const from = Duration.from(orig);
-      equal(from, orig);
+      notEqual(from, orig);
     });
     it('Duration.from({ milliseconds: 5 }) == PT0.005S', () =>
       equal(`${Duration.from({ milliseconds: 5 })}`, 'PT0.005S'));

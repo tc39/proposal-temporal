@@ -133,7 +133,6 @@ export class YearMonth {
   static from(item, options = undefined) {
     const disambiguation = ES.ToTemporalDisambiguation(options);
     let result = ES.ToTemporalYearMonth(item, disambiguation);
-    if (this === YearMonth) return result;
     return new this(GetSlot(result, YEAR), GetSlot(result, MONTH));
   }
   static compare(one, two) {

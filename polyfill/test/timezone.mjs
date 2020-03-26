@@ -12,7 +12,7 @@ import Pretty from '@pipobscure/demitasse-pretty';
 const { reporter } = Pretty;
 
 import { strict as assert } from 'assert';
-const { equal, throws } = assert;
+const { equal, notEqual, throws } = assert;
 
 import * as Temporal from 'tc39-temporal';
 
@@ -85,8 +85,8 @@ describe('TimeZone', () => {
       it(`TimeZone.from(${zone}) is a time zone`, () => equal(typeof timezoneFrom, 'object'));
       it(`TimeZone.from(${zone}) does the same thing as new TimeZone(${zone})`, () =>
         equal(timezoneFrom.name, timezoneObj.name));
-      it(`TimeZone.from(new TimeZone(${zone})) is the same object`, () =>
-        equal(Temporal.TimeZone.from(timezoneObj), timezoneObj));
+      it(`TimeZone.from(new TimeZone(${zone})) is a different object`, () =>
+        notEqual(Temporal.TimeZone.from(timezoneObj), timezoneObj));
     }
     it('TimeZone.from throws with bad identifier', () => {
       throws(() => Temporal.TimeZone.from('local'));

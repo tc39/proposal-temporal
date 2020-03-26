@@ -317,7 +317,6 @@ export class DateTime {
   static from(item, options = undefined) {
     const disambiguation = ES.ToTemporalDisambiguation(options);
     let result = ES.ToTemporalDateTime(item, disambiguation);
-    if (this === DateTime) return result;
     return new this(
       GetSlot(result, YEAR),
       GetSlot(result, MONTH),

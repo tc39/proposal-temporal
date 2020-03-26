@@ -12,7 +12,7 @@ import Pretty from '@pipobscure/demitasse-pretty';
 const { reporter } = Pretty;
 
 import { strict as assert } from 'assert';
-const { equal, throws } = assert;
+const { equal, notEqual, throws } = assert;
 
 import * as Temporal from 'tc39-temporal';
 const { DateTime } = Temporal;
@@ -355,7 +355,7 @@ describe('DateTime', () => {
     it('DateTime.from(1976-11-18) == 1976-11-18', () => {
       const orig = new DateTime(1976, 11, 18, 15, 23, 20, 123, 456, 789);
       const actual = DateTime.from(orig);
-      equal(actual, orig);
+      notEqual(actual, orig);
     });
     it('DateTime.from({ year: 1976, month: 11, day: 18 }) == 1976-11-18T00:00', () =>
       equal(`${DateTime.from({ year: 1976, month: 11, day: 18 })}`, '1976-11-18T00:00'));

@@ -219,7 +219,6 @@ export class Duration {
   static from(item, options = undefined) {
     const disambiguation = ES.ToTemporalDisambiguation(options);
     let result = ES.ToTemporalDuration(item, disambiguation);
-    if (this === Duration) return result;
     return new this(
       GetSlot(result, YEARS),
       GetSlot(result, MONTHS),

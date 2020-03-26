@@ -5,7 +5,7 @@ import Pretty from '@pipobscure/demitasse-pretty';
 const { reporter } = Pretty;
 
 import { strict as assert } from 'assert';
-const { throws, equal } = assert;
+const { throws, equal, notEqual } = assert;
 
 import * as Temporal from 'tc39-temporal';
 const { YearMonth } = Temporal;
@@ -50,10 +50,10 @@ describe('YearMonth', () => {
       it("YearMonth.from('1976-11-18') == (1976-11)", () => equal(`${YearMonth.from('1976-11-18')}`, '1976-11'));
       it('YearMonth.from({ year: 2019, month: 11 }) == 2019-11', () =>
         equal(`${YearMonth.from({ year: 2019, month: 11 })}`, '2019-11'));
-      it('YearMonth.from(2019-11) == 2019-11', () => {
+      it('YearMonth.from(2019-11) is not the same object', () => {
         const orig = new YearMonth(2019, 11);
         const actu = YearMonth.from(orig);
-        equal(actu, orig);
+        notEqual(actu, orig);
       });
       it('YearMonth.from({ year: 2019 }) throws', () => throws(() => YearMonth.from({ year: 2019 }), TypeError));
       it('YearMonth.from({ month: 6 }) throws', () => throws(() => YearMonth.from({ month: 6 }), TypeError));
