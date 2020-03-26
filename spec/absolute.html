@@ -65,8 +65,6 @@
       <emu-alg>
         1. Let _absolute_ be ? ToTemporalAbsolute(_item_).
         1. Let _constructor_ be the *this* value.
-        1. If _constructor_ is %Temporal.Absolute%, then
-          1. Return _absolute_.
         1. Return ? CreateTemporalAbsoluteFromStatic(_constructor_, _absolute_.[[Nanoseconds]]).
       </emu-alg>
     </emu-clause>
@@ -421,7 +419,7 @@
       <h1>ToTemporalAbsolute ( _absolute_ )</h1>
       <emu-alg>
         1. If Type(_absolute_) is Object and _absolute_ has an [[InitializedTemporalAbsolute]] internal slot, then
-          1. Return _absolute_.
+          1. Return ? CreateTemporalAbsolute(_absolute_.[[Nanoseconds]]).
         1. Let _string_ be ? ToString(_absolute_).
         1. Let _result_ be ? ParseTemporalAbsolute(_string_).
         1. Return ? CreateTemporalAbsolute(_result_).

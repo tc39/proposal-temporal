@@ -58,7 +58,6 @@ export class MonthDay {
   static from(item, options = undefined) {
     const disambiguation = ES.ToTemporalDisambiguation(options);
     let result = ES.ToTemporalMonthDay(item, disambiguation);
-    if (this === MonthDay) return result;
     return new this(GetSlot(result, MONTH), GetSlot(result, DAY));
   }
   static compare(one, two) {

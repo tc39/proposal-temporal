@@ -229,7 +229,6 @@ export class Time {
   static from(item, options = undefined) {
     const disambiguation = ES.ToTemporalDisambiguation(options);
     let result = ES.ToTemporalTime(item, disambiguation);
-    if (this === Time) return result;
     return new this(
       GetSlot(result, HOUR),
       GetSlot(result, MINUTE),

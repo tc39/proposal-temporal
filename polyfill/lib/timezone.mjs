@@ -114,7 +114,6 @@ export class TimeZone {
   }
   static from(item) {
     let result = ES.ToTemporalTimeZone(item);
-    if (this === TimeZone) return result;
     return new this(GetSlot(result, IDENTIFIER));
   }
   static [Symbol.iterator]() {

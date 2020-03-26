@@ -12,7 +12,7 @@ import Pretty from '@pipobscure/demitasse-pretty';
 const { reporter } = Pretty;
 
 import { strict as assert } from 'assert';
-const { equal, throws } = assert;
+const { equal, notEqual, throws } = assert;
 
 import * as Temporal from 'tc39-temporal';
 const { Time } = Temporal;
@@ -411,6 +411,10 @@ describe('Time', () => {
         equal(`${Time.from('23:59:60', { disambiguation: 'reject' })}`, '23:59:59');
       });
       it.skip('Time.from(number) is converted to string', () => equal(`${Time.from(1523)}`, `${Time.from('1523')}`));
+      it('Time.from(time) is not the same object', () => {
+        const t = Time.from('2020-02-12T11:42+01:00[Europe/Amsterdam]');
+        notEqual(Time.from(t), t);
+      });
       describe('Disambiguation', () => {
         const bad = { nanosecond: 1000 };
         it('reject', () => throws(() => Time.from(bad, { disambiguation: 'reject' }), RangeError));

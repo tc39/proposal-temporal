@@ -12,7 +12,7 @@ import Pretty from '@pipobscure/demitasse-pretty';
 const { reporter } = Pretty;
 
 import { strict as assert } from 'assert';
-const { equal, throws } = assert;
+const { equal, notEqual, throws } = assert;
 
 import * as Temporal from 'tc39-temporal';
 const { Date } = Temporal;
@@ -100,7 +100,7 @@ describe('Date', () => {
     const datetime = { year: 2019, month: 10, day: 1, hour: 14, minute: 20, second: 36 };
     const fromed = new Date(2019, 10, 1);
     it(`(${date}).dayOfWeek === 7`, () => equal(date.dayOfWeek, 7));
-    it(`Temporal.Date.from(${date}) === (${date})`, () => equal(Date.from(date), date));
+    it(`Temporal.Date.from(${date}) is not the same object)`, () => notEqual(Date.from(date), date));
     it(`Temporal.Date.from(${JSON.stringify(datetime)}) instanceof Temporal.date`, () =>
       assert(Date.from(datetime) instanceof Date));
     it(`Temporal.Date.from(${JSON.stringify(datetime)}) === (${fromed})`, () =>
@@ -358,10 +358,10 @@ describe('Date', () => {
       equal(date.month, 6);
       equal(date.day, 30);
     });
-    it('Date.from(1976-11-18) == 1976-11-18', () => {
+    it('Date.from(1976-11-18) is not the same object', () => {
       const orig = new Date(1976, 11, 18);
       const actual = Date.from(orig);
-      equal(actual, orig);
+      notEqual(actual, orig);
     });
     it('Date.from({ year: 1976, month: 11, day: 18 }) == 1976-11-18', () =>
       equal(`${Date.from({ year: 1976, month: 11, day: 18 })}`, '1976-11-18'));

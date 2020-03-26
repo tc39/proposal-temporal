@@ -495,7 +495,7 @@
         1. Assert: _disambiguation_ is one of *"constrain"*, *"balance"*, or *"reject"*.
         1. Assert: Type(_temporalYearMonthLike_) is Object.
         1. If _temporalYearMonthLike_ has an [[InitializedTemporalYearMonth]] internal slot, then
-          1. Return _temporalYearMonthLike_.
+          1. Return ? CreateTemporalYearMonth(_temporalYearMonthLike_.[[Year]], _temporalYearMonthLike_.[[Month]]).
         1. Let _result_ be a new Record with all the internal slots given in the Internal Slot column in <emu-xref href="#table-temporal-temporalyearmonthlike-properties"></emu-xref>.
         1. For each row of <emu-xref href="#table-temporal-temporalyearmonthlike-properties"></emu-xref>, except the header row, in table order, do
           1. Let _property_ be the Property value of the current row.

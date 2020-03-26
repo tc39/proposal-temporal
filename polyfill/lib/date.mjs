@@ -171,7 +171,6 @@ export class Date {
   static from(item, options = undefined) {
     const disambiguation = ES.ToTemporalDisambiguation(options);
     let result = ES.ToTemporalDate(item, disambiguation);
-    if (this === Date) return result;
     return new this(GetSlot(result, YEAR), GetSlot(result, MONTH), GetSlot(result, DAY));
   }
   static compare(one, two) {

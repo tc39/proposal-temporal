@@ -868,7 +868,7 @@
         1. Assert: Type(_temporalDateTimeLike_) is Object.
         1. Assert: _disambiguation_ is one of *"constrain"*, *"balance"*, or *"reject"*.
         1. If _temporalDateTimeLike_ has an [[InitializedTemporalDateTime]] internal slot, then
-          1. Return _temporalDateTimeLike_.
+          1. Return ? CreateTemporalDateTime(_temporalDateTimeLike_.[[Year]], _temporalDateTimeLike_.[[Month]], _temporalDateTimeLike_.[[Day]], _temporalDateTimeLike_.[[Hour]], _temporalDateTimeLike_.[[Minute]], _temporalDateTimeLike_.[[Second]], _temporalDateTimeLike_.[[Millisecond]], _temporalDateTimeLike_.[[Microsecond]], _temporalDateTimeLike_.[[Nanosecond]]).
         1. Let _result_ be a new Record with all the internal slots given in the Internal Slot column in <emu-xref href="#table-temporal-temporaldatetimelike-properties"></emu-xref>.
         1. For each row of <emu-xref href="#table-temporal-temporaldatetimelike-properties"></emu-xref>, except the header row, in table order, do
           1. Let _property_ be the Property value of the current row.

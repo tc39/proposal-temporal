@@ -231,7 +231,7 @@
       <emu-alg>
         1. If Type(_temporalTimeZoneLike_) is Object, then
           1. If _temporalTimeZoneLike_ has an [[InitializedTemporalTimeZone]] internal slot, then
-            1. Return _temporalTimeZoneLike_.
+            1. Return ? CreateTemporalTimeZone(_temporalTimeZoneLike_.[[Identifier]]).
         1. Let _string_ be ? ToString(_temporalTimeZoneLike_).
         1. Return ? TemporalTimeZoneFromString(_string_).
       </emu-alg>

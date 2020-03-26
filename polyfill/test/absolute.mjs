@@ -12,7 +12,7 @@ import Pretty from '@pipobscure/demitasse-pretty';
 const { reporter } = Pretty;
 
 import { strict as assert } from 'assert';
-const { equal, throws } = assert;
+const { equal, notEqual, throws } = assert;
 
 import * as Temporal from 'tc39-temporal';
 const { Absolute } = Temporal;
@@ -278,6 +278,10 @@ describe('Absolute', () => {
     it('Absolute.from(1n) throws', () => throws(() => Absolute.from(1n), RangeError));
     it('Absolute.from(-1n) throws', () => throws(() => Absolute.from(-1n), RangeError));
     it('Absolute.from({}) throws', () => throws(() => Absolute.from({}), RangeError));
+    it('Absolute.from(absolute) is not the same object', () => {
+      const abs = Absolute.from('2020-02-12T11:42+01:00[Europe/Amsterdam]');
+      notEqual(Absolute.from(abs), abs);
+    });
     it('Absolute.from(ISO string leap second) is constrained', () => {
       equal(`${Absolute.from('2016-12-31T23:59:60Z')}`, '2016-12-31T23:59:59Z');
     });

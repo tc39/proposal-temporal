@@ -618,7 +618,7 @@
         1. Assert: _disambiguation_ is one of *"constrain"*, *"balance"*, or *"reject"*.
         1. Assert: Type(_temporalTimeLike_) is Object.
         1. If _temporalTimeLike_ has an [[InitializedTemporalTime]] internal slot, then
-          1. Return _temporalTimeLike_.
+          1. Return ? CreateTemporalTime(_temporalTimeLike_.[[Hour]], _temporalTimeLike_.[[Minute]], _temporalTimeLike_.[[Second]], _temporalTimeLike_.[[Millisecond]], _temporalTimeLike_.[[Microsecond]], _temporalTimeLike_.[[Nanosecond]]).
         1. Let _result_ be a new Record with all the internal slots given in the Internal Slot column in <emu-xref href="#table-temporal-temporaltimelike-properties"></emu-xref>.
         1. For each row of <emu-xref href="#table-temporal-temporaltimelike-properties"></emu-xref>, except the header row, in table order, do
           1. Let _property_ be the Property value of the current row.
