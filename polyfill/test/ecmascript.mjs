@@ -4,8 +4,8 @@ const { describe, it, report } = Demitasse;
 import Pretty from '@pipobscure/demitasse-pretty';
 const { reporter } = Pretty;
 
-import Assert from 'assert';
-const { deepEqual } = Assert;
+import { strict as assert } from 'assert';
+const { deepEqual } = assert;
 
 import { ES } from '../lib/ecmascript.mjs';
 import { GetSlot, IDENTIFIER } from '../lib/slots.mjs';

@@ -4,7 +4,7 @@ const { describe, it, report } = Demitasse;
 import Pretty from '@pipobscure/demitasse-pretty';
 const { reporter } = Pretty;
 
-import assert from 'assert';
+import { strict as assert } from 'assert';
 const { equal } = assert;
 
 import * as Temporal from 'tc39-temporal';

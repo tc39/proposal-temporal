@@ -11,8 +11,8 @@ const { describe, it, report } = Demitasse;
 import Pretty from '@pipobscure/demitasse-pretty';
 const { reporter } = Pretty;
 
-import Assert from 'assert';
-const { ok: assert, equal, throws } = Assert;
+import { strict as assert } from 'assert';
+const { equal, throws } = assert;
 
 import * as Temporal from 'tc39-temporal';
 const { DateTime } = Temporal;
