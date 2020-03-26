@@ -4,8 +4,8 @@ const { describe, it, report } = Demitasse;
 import Pretty from '@pipobscure/demitasse-pretty';
 const { reporter } = Pretty;
 
-import Assert from 'assert';
-const { deepEqual, equal, ok: assert, throws } = Assert;
+import { strict as assert } from 'assert';
+const { deepEqual, equal, throws } = assert;
 
 import { DateTimeFormat } from '../lib/intl.mjs';
 Intl.DateTimeFormat = DateTimeFormat;
