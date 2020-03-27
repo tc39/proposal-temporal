@@ -2,7 +2,7 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
-esid: sec-temporal.monthday.with
+esid: sec-temporal.monthday.prototype.with
 ---*/
 
 function check(value, description) {
