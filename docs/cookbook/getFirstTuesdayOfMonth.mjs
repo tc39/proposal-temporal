@@ -1,30 +1,29 @@
-import assert from "assert";
+import assert from 'assert';
 
 /**
- * Gets the first tuesday of the month and returns its date
+ * Gets the first Tuesday of the month and returns its date
  *
  * @param {Temporal.YearMonth} queriedMonth YearMonth instance to query
  * @returns {Temporal.DateTime} DateTime Instance which gives first tuesday
  */
 function getFirstTuesday(queriedMonth) {
-    // We first need to convert to a date
-    let date = Temporal.DateTime.from({
-        year: queriedMonth.year,
-        month: queriedMonth.month,
-        day: 1
-    });
+  // We first need to convert to a date
+  let date = Temporal.DateTime.from({
+    year: queriedMonth.year,
+    month: queriedMonth.month,
+    day: 1
+  });
 
-    // Start at the beginning of the month then stop at the first tuesday
-    while (date.dayOfWeek !== 2) {
-        date = date.plus({ days: 1 });
-    }
+  // We have Monday = 1, Sunday = 7, and we want to add a positive number smaller than 7 to get to the first Tuesday.
+  // If we're already on a Tuesday (2) then we want to add 0.
+  // So for the first of the month being a Monday through Sunday the additions are:
+  //    1, 0, 6, 5, 4, 3, 2 which is given by that formula.
+  date = date.plus({ days: [1, 0, 6, 5, 4, 3, 2][date.dayOfWeek - 1] });
 
-    return date;
+  return date;
 }
 
-const myMonth = Temporal.YearMonth.from("2020-02");
+const myMonth = Temporal.YearMonth.from('2020-02');
 const firstTuesdayOfMonth = getFirstTuesday(myMonth);
-assert.equal(
-    firstTuesdayOfMonth.toLocaleString("en-UK", { weekday: "long" }),
-    "Tuesday, 2/4/2020, 12:00:00 AM"
-);
+assert(firstTuesdayOfMonth.toString(), '2020-02-04T00:00');
+assert(firstTuesdayOfMonth.dayOfWeek, 2);
