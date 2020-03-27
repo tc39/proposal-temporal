@@ -11,7 +11,7 @@ let called = 0;
 class MyDate extends Temporal.Date {
   constructor(year, month, day) {
     ++called;
-    assert.compareArray([year, month, day], [-271821, 4, 19]);
+    assert.compareArray([year, month, day], [-271821, 4, 19], "constructor arguments");
     super(year, month, day);
   }
 }

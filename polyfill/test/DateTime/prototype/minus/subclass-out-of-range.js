@@ -11,7 +11,7 @@ let called = 0;
 class MyDateTime extends Temporal.DateTime {
   constructor(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond) {
     ++called;
-    assert.compareArray([year, month, day, hour, minute, second, millisecond, microsecond, nanosecond], [-271821, 4, 19, 0, 0, 0, 0, 0, 1]);
+    assert.compareArray([year, month, day, hour, minute, second, millisecond, microsecond, nanosecond], [-271821, 4, 19, 0, 0, 0, 0, 0, 1], "constructor arguments");
     super(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
   }
 }
