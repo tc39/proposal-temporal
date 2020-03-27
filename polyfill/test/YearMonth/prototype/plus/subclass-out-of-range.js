@@ -11,7 +11,7 @@ let called = 0;
 class MyYearMonth extends Temporal.YearMonth {
   constructor(year, month) {
     ++called;
-    assert.compareArray([year, month], [275760, 9]);
+    assert.compareArray([year, month], [275760, 9], "constructor arguments");
     super(year, month);
   }
 }
