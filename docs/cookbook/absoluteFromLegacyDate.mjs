@@ -1,16 +1,8 @@
 import assert from 'assert';
 
-/**
- * Converts a Date instance into a Temporal.Absolute instance
- *
- * @param {Date} esDate This is a Date instance
- * @returns {Temporal.Absolute} Temporal.Absolute instance
- */
-function getAbsoluteFromDate(esDate) {
-  const date = Temporal.Absolute.fromEpochMilliseconds(esDate.getTime());
-  return date;
-}
+const legacyDate = new Date('1970-01-01T00:00:01Z');
 
-const date = new Date('1970-01-01T00:00:01Z');
-const absolute = getAbsoluteFromDate(date);
+// Convert legacy Date to Temporal.Absolute
+const absolute = Temporal.Absolute.fromEpochMilliseconds(legacyDate.getTime());
+
 assert(absolute instanceof Temporal.Absolute);
