@@ -5,5 +5,5 @@
  *
  */
 
-const date = Temporal.now.dateTime(); // Gets the current date
-date.toString(); // returns the date in ISO 8601 date format
+const dateTime = Temporal.now.dateTime(); // Gets the current date
+dateTime.toString(); // returns the date in ISO 8601 date format
