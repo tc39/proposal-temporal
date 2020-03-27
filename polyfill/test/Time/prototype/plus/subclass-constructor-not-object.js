@@ -2,7 +2,7 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
-esid: sec-temporal.time.plus
+esid: sec-temporal.time.prototype.plus
 ---*/
 
 function check(value, description) {

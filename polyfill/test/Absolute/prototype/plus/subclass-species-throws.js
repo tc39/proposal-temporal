@@ -2,7 +2,7 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
-esid: sec-temporal.absolute.plus
+esid: sec-temporal.absolute.prototype.plus
 features: [Symbol.species]
 ---*/
 

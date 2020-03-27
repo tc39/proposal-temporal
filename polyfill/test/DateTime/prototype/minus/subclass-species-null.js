@@ -2,7 +2,7 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
-esid: sec-temporal.datetime.minus
+esid: sec-temporal.datetime.prototype.minus
 includes: [compareArray.js]
 features: [Symbol.species]
 ---*/
