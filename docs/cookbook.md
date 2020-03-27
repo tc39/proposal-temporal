@@ -12,9 +12,30 @@ node --experimental-modules --no-warnings \
 
 _The above code allows `Temporal` to exist as a global object before the cookbook file runs._
 
-## Construction
+## Frequently Asked Questions
 
-### [Absolute from legacy Date](./cookbook/absoluteFromLegacyDate.mjs)
+These are some of the most common tasks that people ask questions about on StackOverflow with legacy Date.
+Here's how they would look using Temporal.
+
+### Current date and time
+
+How to get the current date and time in the local time zone?
+
+```javascript
+{{cookbook/getCurrentDate.mjs}}
+```
+
+### Unix timestamp
+
+How to get a Unix timestamp?
+
+```javascript
+{{cookbook/getTimeStamp.mjs}}
+```
+
+## Converting between Temporal types and legacy Date
+
+### Absolute from legacy Date
 
 Map a legacy ECMAScript Date instance into a Temporal.Absolute instance corresponding to the same instant in absolute time.
 
@@ -22,10 +43,33 @@ Map a legacy ECMAScript Date instance into a Temporal.Absolute instance correspo
 {{cookbook/absoluteFromLegacyDate.mjs}}
 ```
 
-### [Zoned instant from instant and time zone](./cookbook/getParseableZonedStringAtInstant.mjs)
+## Construction
+
+### Zoned instant from instant and time zone
 
 Map a Temporal.Absolute instance and a time zone name into a string serialization of the local time in that zone corresponding to the instant in absolute time.
 
 ```javascript
 {{cookbook/getParseableZonedStringAtInstant.mjs}}
+```
+
+## Sorting
+
+Each Temporal type has a `compare()` static method, which can be passed to `Array.prototype.sort()` as the compare function in order to sort an array of Temporal types.
+
+### Sort DateTimes
+
+Sort a list of `Temporal.DateTime`s, for example in order to get a conference schedule in the correct order.
+Sorting other Temporal types would work exactly the same way as this.
+
+```javascript
+{{cookbook/getSortedLocalDateTimes.mjs}}
+```
+
+### Sort ISO date/time strings
+
+Sort a list of ISO 8601 date/time strings, for example to place log entries in order.
+
+```javascript
+{{cookbook/sortAbsoluteInstants.mjs}}
 ```
