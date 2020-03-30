@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "babel-eslint": "^10.0.3",
-    "ecmarkup": "^3.16.0",
+    "ecmarkup": "^3.19.1",
     "eslint": "^6.8.0",
     "mkdirp": "^1.0.0"
   },
