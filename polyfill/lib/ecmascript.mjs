@@ -791,7 +791,8 @@ export const ES = ObjectAssign({}, ES2019, {
     if (nsLater.greater(NS_MAX)) nsLater = ns;
     const earliest = ES.GetTimeZoneOffsetNanoseconds(nsEarlier, timeZone);
     const latest = ES.GetTimeZoneOffsetNanoseconds(nsLater, timeZone);
-    const found = unique([earliest, latest])
+    const found = earliest.equals(latest) ? [earliest] : [earliest, latest];
+    return found
       .map((offsetNanoseconds) => {
         const epochNanoseconds = bigInt(ns).minus(offsetNanoseconds);
         const parts = ES.GetTimeZoneDateTimeParts(epochNanoseconds, timeZone);
@@ -811,7 +812,6 @@ export const ES = ObjectAssign({}, ES2019, {
         return epochNanoseconds;
       })
       .filter((x) => x !== undefined);
-    return found;
   },
   LeapYear: (year) => {
     if (undefined === year) return false;
@@ -1367,18 +1367,6 @@ function bisect(getState, left, right, lstate = getState(left), rstate = getStat
     }
   }
   return right;
-}
-function unique(arr) {
-  const obj = Object.create(null);
-  for (var i = 0; i < arr.length; i++) {
-    var v = arr[i];
-    obj[v] = v;
-  }
-  var res = [];
-  for (var p in obj) {
-    res.push(obj[p]);
-  }
-  return res;
 }
 function tzIdent() {
   return this.resolvedOptions().timeZone;
