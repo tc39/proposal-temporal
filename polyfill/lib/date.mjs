@@ -12,13 +12,7 @@ import {
   NANOSECOND,
   CreateSlots,
   GetSlot,
-  SetSlot,
-  HOURS,
-  MINUTES,
-  SECONDS,
-  MILLISECONDS,
-  MICROSECONDS,
-  NANOSECONDS
+  SetSlot
 } from './slots.mjs';
 
 export class Date {
@@ -85,16 +79,19 @@ export class Date {
   plus(temporalDurationLike, options) {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
     const disambiguation = ES.ToArithmeticTemporalDisambiguation(options);
-    const duration = ES.ToLimitedTemporalDuration(temporalDurationLike, [
-      HOURS,
-      MINUTES,
-      SECONDS,
-      MILLISECONDS,
-      MICROSECONDS,
-      NANOSECONDS
-    ]);
+    const duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
     let { year, month, day } = this;
-    const { years, months, days } = duration;
+    const { years, months, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
+    const { days } = ES.BalanceDuration(
+      duration.days,
+      hours,
+      minutes,
+      seconds,
+      milliseconds,
+      microseconds,
+      nanoseconds,
+      'days'
+    );
     ({ year, month, day } = ES.AddDate(year, month, day, years, months, days, disambiguation));
     ({ year, month, day } = ES.RegulateDate(year, month, day, disambiguation));
     const Construct = ES.SpeciesConstructor(this, Date);
@@ -105,16 +102,19 @@ export class Date {
   minus(temporalDurationLike, options) {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
     const disambiguation = ES.ToArithmeticTemporalDisambiguation(options);
-    const duration = ES.ToLimitedTemporalDuration(temporalDurationLike, [
-      HOURS,
-      MINUTES,
-      SECONDS,
-      MILLISECONDS,
-      MICROSECONDS,
-      NANOSECONDS
-    ]);
+    const duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
     let { year, month, day } = this;
-    const { years, months, days } = duration;
+    const { years, months, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
+    const { days } = ES.BalanceDuration(
+      duration.days,
+      hours,
+      minutes,
+      seconds,
+      milliseconds,
+      microseconds,
+      nanoseconds,
+      'days'
+    );
     ({ year, month, day } = ES.SubtractDate(year, month, day, years, months, days, disambiguation));
     ({ year, month, day } = ES.RegulateDate(year, month, day, disambiguation));
     const Construct = ES.SpeciesConstructor(this, Date);

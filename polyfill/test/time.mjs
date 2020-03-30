@@ -332,6 +332,11 @@ describe('Time', () => {
       it('time.plus(durationObj)', () => {
         equal(`${time.plus(Temporal.Duration.from('PT16H'))}`, '07:23:30.123456789');
       });
+      it('ignores higher units', () => {
+        equal(`${time.plus({ days: 1 })}`, '15:23:30.123456789');
+        equal(`${time.plus({ months: 1 })}`, '15:23:30.123456789');
+        equal(`${time.plus({ years: 1 })}`, '15:23:30.123456789');
+      });
       it('invalid disambiguation', () => {
         ['', 'CONSTRAIN', 'balance', 3, null].forEach((disambiguation) =>
           throws(() => time.plus({ hours: 1 }, { disambiguation }), RangeError)
@@ -351,6 +356,11 @@ describe('Time', () => {
         equal(`${time.minus({ nanoseconds: 800 })}`, '15:23:30.123455989'));
       it('time.minus(durationObj)', () => {
         equal(`${time.minus(Temporal.Duration.from('PT16H'))}`, '23:23:30.123456789');
+      });
+      it('ignores higher units', () => {
+        equal(`${time.minus({ days: 1 })}`, '15:23:30.123456789');
+        equal(`${time.minus({ months: 1 })}`, '15:23:30.123456789');
+        equal(`${time.minus({ years: 1 })}`, '15:23:30.123456789');
       });
       it('invalid disambiguation', () => {
         ['', 'CONSTRAIN', 'balance', 3, null].forEach((disambiguation) =>
