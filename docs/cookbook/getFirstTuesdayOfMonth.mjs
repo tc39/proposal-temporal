@@ -4,11 +4,11 @@ import assert from 'assert';
  * Gets the first Tuesday of the month and returns its date
  *
  * @param {Temporal.YearMonth} queriedMonth YearMonth instance to query
- * @returns {Temporal.DateTime} DateTime Instance which gives first tuesday
+ * @returns {Temporal.Date} Temporal.Date Instance which gives first tuesday
  */
 function getFirstTuesday(queriedMonth) {
   // We first need to convert to a date
-  let date = Temporal.DateTime.from({
+  let date = Temporal.Date.from({
     year: queriedMonth.year,
     month: queriedMonth.month,
     day: 1
@@ -25,5 +25,5 @@ function getFirstTuesday(queriedMonth) {
 
 const myMonth = Temporal.YearMonth.from('2020-02');
 const firstTuesdayOfMonth = getFirstTuesday(myMonth);
-assert(firstTuesdayOfMonth.toString(), '2020-02-04T00:00');
-assert(firstTuesdayOfMonth.dayOfWeek, 2);
+assert.equal(firstTuesdayOfMonth.toString(), '2020-02-04');
+assert.equal(firstTuesdayOfMonth.dayOfWeek, 2);
