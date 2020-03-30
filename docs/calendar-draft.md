@@ -10,7 +10,7 @@ Main issue: https://github.com/tc39/proposal-temporal/issues/290
 
 Temporal.Date currently has three internal slots: year, month, and day. (An "internal slot" refers to actual data, as opposed to "properties", which could be computed.)  In this proposal, those slots are renamed to `[[IsoYear]]`, `[[IsoMonth]]`, and `[[IsoDay]]`, and an additional `[[Calendar]]` slot is added.  The calendar slot contains an object implementing the Temporal.Calendar interface, described below.
 
-This data model makes the simple assumption that the concept of a "day" is a solar day (main issue: [#390](https://github.com/tc39/proposal-temporal/issues/390)).  Most or all modern-use calendars, even those with lunar month cycles, use a solar day (based on sunrise) instead of a lunar day (based of moonrise).  For calendars that do use a lunar day, such as the Hawaiian Moon Calendar, a Temporal.DateTime can be used instead of Temporal.Date when the distinction is important.
+This data model makes the simple assumption that the concept of a "day" is a solar day (main issues: [#390](https://github.com/tc39/proposal-temporal/issues/390), [#389](https://github.com/tc39/proposal-temporal/issues/389)).  Most or all modern-use calendars, even those with lunar month cycles, use a solar day (based on sunrise) instead of a lunar day (based of moonrise).  For calendars that do use a lunar day, such as the Hawaiian Moon Calendar, a Temporal.DateTime can be used instead of Temporal.Date when the distinction is important.
 
 ### Temporal.DateTime and Temporal.Time internal slots
 
