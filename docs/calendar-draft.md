@@ -44,7 +44,7 @@ Main issue: https://github.com/tc39/proposal-temporal/issues/289
 
 The new Temporal.Calendar interface is a mechanism to allow arbitrary calendar systems to be implemented on top of Temporal.  ***Most users will not encounter the Temporal.Calendar interface directly***, unless they are building or using a non-built-in calendar system.
 
-A valid implementation of the interface is an object that contains the string methods listed below.
+A valid implementation of the interface is an object that contains the string methods listed below.  We had also considered using symbols, but settled on strings after discussion with the plenary (main issue: [#310](https://github.com/tc39/proposal-temporal/issues/310)).
 
 ### Methods on the Temporal.Calendar interface
 
