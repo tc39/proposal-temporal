@@ -79,22 +79,22 @@ class Temporal.Calendar {
 	/** Constructs a Temporal.DateTime from a free-form option bag */
 	dateTimeFromFields(
 		fields: object
-	) : Temporal.Date;
+	) : Temporal.DateTime;
 
 	/** Constructs a Temporal.Time from a free-form option bag */
 	timeFromFields(
 		fields: object
-	) : Temporal.Date;
+	) : Temporal.Time;
 
 	/** Constructs a Temporal.YearMonth from a free-form option bag */
 	yearMonthFromFields(
 		fields: object
-	) : Temporal.Date;
+	) : Temporal.YearMonth;
 
 	/** Constructs a Temporal.MonthDay from a free-form option bag */
 	monthDayFromFields(
 		fields: object
-	) : Temporal.Date;
+	) : Temporal.MonthDay;
 
 	/** A string identifier for this calendar */
 	id : string;
