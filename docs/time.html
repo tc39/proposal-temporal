@@ -236,10 +236,10 @@ time.with({
     microsecond: 0,
     nanosecond: 0
 }, { disambiguation: &#39;balance&#39; })  // =&gt; 20:00</code></pre>
-<h3 id="timeplusduration-string--object-options-object--temporaltime">time.<strong>plus</strong>(<em>duration</em>: string | object, <em>options</em>?: object) : Temporal.Time</h3>
+<h3 id="timeplusduration-object-options-object--temporaltime">time.<strong>plus</strong>(<em>duration</em>: object, <em>options</em>?: object) : Temporal.Time</h3>
 <p><strong>Parameters:</strong></p>
 <ul>
-<li><code>duration</code> (string or object): A <code>Temporal.Duration</code> object, a duration-like object, or a string from which to create a <code>Temporal.Duration</code>.</li>
+<li><code>duration</code> (object): A <code>Temporal.Duration</code> object or a duration-like object.</li>
 <li><code>options</code> (optional object): An object with properties representing options for the addition.
 The following options are recognized:<ul>
 <li><code>disambiguation</code> (string): How to deal with additions that result in out-of-range values.
@@ -251,22 +251,16 @@ The default is <code>constrain</code>.</li>
 <p><strong>Returns:</strong> a new <code>Temporal.Time</code> object which is the time indicated by <code>time</code> plus <code>duration</code>.</p>
 <p>This method adds <code>duration</code> to <code>time</code>.
 Due to times wrapping around when reaching 24 hours, the returned point in time may be either in the future or in the past relative to <code>time</code>, or even the same time.</p>
-<p>The <code>duration</code> argument can be any value that could be passed to <code>Temporal.Duration.from()</code>:</p>
-<ul>
-<li>a <code>Temporal.Duration</code> object;</li>
-<li>any object with properties denoting a duration, such as <code>{ hours: 5, minutes: 30 }</code>;</li>
-<li>a string in ISO 8601 duration format, such as <code>PT5H30M</code>.</li>
-</ul>
+<p>The <code>duration</code> argument is an object with properties denoting a duration, such as <code>{ hours: 5, minutes: 30 }</code>, or a <code>Temporal.Duration</code> object.</p>
 <p>The <code>disambiguation</code> parameter has no effect in the default ISO calendar, because the units of hours, minutes, and seconds are always the same length and therefore not ambiguous.
 However, it may have an effect in other calendars where those units are not always the same length.</p>
 <p>Usage example:</p>
 <pre><code class="language-javascript">time = Temporal.Time.from(&#39;19:39:09.068346205&#39;);
-time.plus({ minutes: 5, nanoseconds: 800 })  // =&gt; 19:44:09.068347005
-time.plus(&#39;PT7H14M21S&#39;)  // =&gt; 02:53:30.068346205</code></pre>
-<h3 id="timeminusduration-string--object-options-object--temporaltime">time.<strong>minus</strong>(<em>duration</em>: string | object, <em>options</em>?: object) : Temporal.Time</h3>
+time.plus({ minutes: 5, nanoseconds: 800 })  // =&gt; 19:44:09.068347005</code></pre>
+<h3 id="timeminusduration-object-options-object--temporaltime">time.<strong>minus</strong>(<em>duration</em>: object, <em>options</em>?: object) : Temporal.Time</h3>
 <p><strong>Parameters:</strong></p>
 <ul>
-<li><code>duration</code> (string or object): A <code>Temporal.Duration</code> object, a duration-like object, or a string from which to create a <code>Temporal.Duration</code>.</li>
+<li><code>duration</code> (object): A <code>Temporal.Duration</code> object or a duration-like object.</li>
 <li><code>options</code> (optional object): An object with properties representing options for the subtraction.
 The following options are recognized:<ul>
 <li><code>disambiguation</code> (string): How to deal with subtractions that result in out-of-range values.
@@ -278,18 +272,12 @@ The default is <code>constrain</code>.</li>
 <p><strong>Returns:</strong> a new <code>Temporal.Time</code> object which is the time indicated by <code>time</code> minus <code>duration</code>.</p>
 <p>This method subtracts <code>duration</code> from <code>time</code>.
 Due to times wrapping around when reaching 24 hours, the returned point in time may be either in the future or in the past relative to <code>time</code>, or even the same time.</p>
-<p>The <code>duration</code> argument can be any value that could be passed to <code>Temporal.Duration.from()</code>:</p>
-<ul>
-<li>a <code>Temporal.Duration</code> object;</li>
-<li>any object with properties denoting a duration, such as <code>{ hours: 5, minutes: 30 }</code>;</li>
-<li>a string in ISO 8601 duration format, such as <code>PT5H30M</code>.</li>
-</ul>
+<p>The <code>duration</code> argument is an object with properties denoting a duration, such as <code>{ hours: 5, minutes: 30 }</code>, or a <code>Temporal.Duration</code> object.</p>
 <p>The <code>disambiguation</code> parameter has no effect in the default ISO calendar, because the units of hours, minutes, and seconds are always the same length and therefore not ambiguous.
 However, it may have an effect in other calendars where those units are not always the same length.</p>
 <p>Usage example:</p>
 <pre><code class="language-javascript">time = Temporal.Time.from(&#39;19:39:09.068346205&#39;);
-time.minus({ minutes: 5, nanoseconds: 800 })  // =&gt; 19:34:09.068345405
-time.minus(&#39;PT7H14M21S&#39;)  // =&gt; 12:24:48.068346205</code></pre>
+time.minus({ minutes: 5, nanoseconds: 800 })  // =&gt; 19:34:09.068345405</code></pre>
 <h3 id="timedifferenceother-temporaltime-options-object--temporalduration">time.<strong>difference</strong>(<em>other</em>: Temporal.Time, <em>options</em>?: object) : Temporal.Duration</h3>
 <p><strong>Parameters:</strong></p>
 <ul>

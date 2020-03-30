@@ -272,10 +272,10 @@ The default is <code>constrain</code>.</li>
 <pre><code class="language-javascript">date = Temporal.Date.from(&#39;2006-08-24&#39;);
 // What&#39;s the first of the following month?
 date.with({day: 1, month: date.month + 1}, { disambiguation: &#39;balance&#39; })  // =&gt; 2006-09-01</code></pre>
-<h3 id="dateplusduration-string--object-options-object--temporaldate">date.<strong>plus</strong>(<em>duration</em>: string | object, <em>options</em>?: object) : Temporal.Date</h3>
+<h3 id="dateplusduration-object-options-object--temporaldate">date.<strong>plus</strong>(<em>duration</em>: object, <em>options</em>?: object) : Temporal.Date</h3>
 <p><strong>Parameters:</strong></p>
 <ul>
-<li><code>duration</code> (string or object): A <code>Temporal.Duration</code> object, a duration-like object, or a string from which to create a <code>Temporal.Duration</code>.</li>
+<li><code>duration</code> (object): A <code>Temporal.Duration</code> object or a duration-like object.</li>
 <li><code>options</code> (optional object): An object with properties representing options for the addition.
 The following options are recognized:<ul>
 <li><code>disambiguation</code> (optional string): How to deal with additions that result in out-of-range values.
@@ -286,12 +286,7 @@ The default is <code>constrain</code>.</li>
 </ul>
 <p><strong>Returns:</strong> a new <code>Temporal.Date</code> object which is the date indicated by <code>date</code> plus <code>duration</code>.</p>
 <p>This method adds <code>duration</code> to <code>date</code>, returning a date that is in the future relative to <code>date</code>.</p>
-<p>The <code>duration</code> argument can be any value that could be passed to <code>Temporal.Duration.from()</code>:</p>
-<ul>
-<li>a <code>Temporal.Duration</code> object;</li>
-<li>any object with properties denoting a duration, such as <code>{ days: 5 }</code>;</li>
-<li>a string in ISO 8601 duration format, such as <code>P5D</code>.</li>
-</ul>
+<p>The <code>duration</code> argument is an object with properties denoting a duration, such as <code>{ days: 5 }</code>, or a <code>Temporal.Duration</code> object.</p>
 <p>Some additions may be ambiguous, because months have different lengths.
 For example, adding one month to August 31 would result in September 31, which doesn&#39;t exist.
 For these cases, the <code>disambiguation</code> option tells what to do:</p>
@@ -304,15 +299,14 @@ The <code>reject</code> mode will throw a <code>RangeError</code> in this case.<
 <p>Usage example:</p>
 <pre><code class="language-javascript">date = Temporal.Date.from(&#39;2006-08-24&#39;);
 date.plus({years: 20, months: 4})  // =&gt; 2026-12-24
-date.plus(&#39;P14Y8D&#39;)  // =&gt; 2020-09-01
 
 date = Temporal.Date.from(&#39;2019-01-31&#39;)
 date.plus({ months: 1 })  // =&gt; 2019-02-28
 date.plus({ months: 1 }, { disambiguation: &#39;reject&#39; })  // =&gt; throws</code></pre>
-<h3 id="dateminusduration-string--object-options-object--temporaldate">date.<strong>minus</strong>(<em>duration</em>: string | object, <em>options</em>?: object) : Temporal.Date</h3>
+<h3 id="dateminusduration-object-options-object--temporaldate">date.<strong>minus</strong>(<em>duration</em>: object, <em>options</em>?: object) : Temporal.Date</h3>
 <p><strong>Parameters:</strong></p>
 <ul>
-<li><code>duration</code> (string or object): A <code>Temporal.Duration</code> object, a duration-like object, or a string from which to create a <code>Temporal.Duration</code>.</li>
+<li><code>duration</code> (object): A <code>Temporal.Duration</code> object or a duration-like object.</li>
 <li><code>options</code> (optional object): An object with properties representing options for the subtraction.
 The following options are recognized:<ul>
 <li><code>disambiguation</code> (string): How to deal with subtractions that result in out-of-range values.
@@ -323,12 +317,7 @@ The default is <code>constrain</code>.</li>
 </ul>
 <p><strong>Returns:</strong> a new <code>Temporal.Date</code> object which is the date indicated by <code>date</code> minus <code>duration</code>.</p>
 <p>This method subtracts <code>duration</code> from <code>date</code>, returning a date that is in the past relative to <code>date</code>.</p>
-<p>The <code>duration</code> argument can be any value that could be passed to <code>Temporal.Duration.from()</code>:</p>
-<ul>
-<li>a <code>Temporal.Duration</code> object;</li>
-<li>any object with properties denoting a duration, such as <code>{ days: 5 }</code>;</li>
-<li>a string in ISO 8601 duration format, such as <code>P5D</code>.</li>
-</ul>
+<p>The <code>duration</code> argument is an object with properties denoting a duration, such as <code>{ days: 5 }</code>, or a <code>Temporal.Duration</code> object.</p>
 <p>Some subtractions may be ambiguous, because months have different lengths.
 For example, subtracting one month from July 31 would result in June 31, which doesn&#39;t exist.
 For these cases, the <code>disambiguation</code> option tells what to do:</p>
@@ -341,7 +330,6 @@ The <code>reject</code> mode will throw a <code>RangeError</code> in this case.<
 <p>Usage example:</p>
 <pre><code class="language-javascript">date = Temporal.Date.from(&#39;2006-08-24&#39;);
 date.minus({years: 20, months: 4})  // =&gt; 1986-04-24
-date.minus(&#39;P14Y8D&#39;)  // =&gt; 1992-08-16
 
 date = Temporal.Date.from(&#39;2019-03-31&#39;)
 date.minus({ months: 1 })  // =&gt; 2019-02-28

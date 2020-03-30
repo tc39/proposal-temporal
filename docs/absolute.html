@@ -247,19 +247,14 @@ timestamp.inTimeZone(&#39;-08:00&#39;);  // =&gt; 2019-02-01T16:45
 epoch = new Temporal.Absolute(0n);
 tz = new Temporal.TimeZone(&#39;America/New_York&#39;);
 epoch.inTimeZone(tz);  // =&gt; 1969-12-31T19:00</code></pre>
-<h3 id="absoluteplusduration-string--object--temporalabsolute">absolute.<strong>plus</strong>(<em>duration</em>: string | object) : Temporal.Absolute</h3>
+<h3 id="absoluteplusduration-object--temporalabsolute">absolute.<strong>plus</strong>(<em>duration</em>: object) : Temporal.Absolute</h3>
 <p><strong>Parameters:</strong></p>
 <ul>
-<li><code>duration</code> (string or object): A <code>Temporal.Duration</code> object, a duration-like object, or a string from which to create a <code>Temporal.Duration</code>.</li>
+<li><code>duration</code> (object): A <code>Temporal.Duration</code> object or a duration-like object.</li>
 </ul>
 <p><strong>Returns:</strong> a new <code>Temporal.Absolute</code> object which is the time indicated by <code>absolute</code> plus <code>duration</code>.</p>
 <p>This method adds <code>duration</code> to <code>absolute</code>, returning a point in time that is in the future relative to <code>absolute</code>.</p>
-<p>The <code>duration</code> argument can be any value that could be passed to <code>Temporal.Duration.from()</code>:</p>
-<ul>
-<li>a <code>Temporal.Duration</code> object;</li>
-<li>any object with properties denoting a duration, such as <code>{ hours: 5, minutes: 30 }</code>;</li>
-<li>a string in ISO 8601 duration format, such as <code>PT5H30M</code>.</li>
-</ul>
+<p>The <code>duration</code> argument is an object with properties denoting a duration, such as <code>{ hours: 5, minutes: 30 }</code>, or a <code>Temporal.Duration</code> object.</p>
 <p>The <code>years</code> and <code>months</code> fields of <code>duration</code> must be zero, because adding a year or a month to a <code>Temporal.Absolute</code> is invalid and will throw a <code>RangeError</code>.
 <code>Temporal.Absolute</code> is independent of time zones and calendars, and so years and months may be different lengths.
 If you need to do this, convert the <code>Temporal.Absolute</code> to a <code>Temporal.DateTime</code> by specifying the desired time zone, add the duration, and then convert it back.</p>
@@ -267,22 +262,16 @@ If you need to do this, convert the <code>Temporal.Absolute</code> to a <code>Te
 <p>Example usage:</p>
 <pre><code class="language-js">// Temporal.Absolute representing five hours from now
 Temporal.now.absolute().plus({ hours: 5 });
-Temporal.now.absolute().plus(&#39;PT5H&#39;);
 fiveHours = new Temporal.Duration(0, 0, 0, 5);
 Temporal.now.absolute().plus(fiveHours);</code></pre>
-<h3 id="absoluteminusduration-string--object--temporalabsolute">absolute.<strong>minus</strong>(<em>duration</em>: string | object) : Temporal.Absolute</h3>
+<h3 id="absoluteminusduration-object--temporalabsolute">absolute.<strong>minus</strong>(<em>duration</em>: object) : Temporal.Absolute</h3>
 <p><strong>Parameters:</strong></p>
 <ul>
-<li><code>duration</code> (string or object): A <code>Temporal.Duration</code> object, a duration-like object, or a string from which to create a <code>Temporal.Duration</code>.</li>
+<li><code>duration</code> (object): A <code>Temporal.Duration</code> object or a duration-like object.</li>
 </ul>
 <p><strong>Returns:</strong> a new <code>Temporal.Absolute</code> object which is the time indicated by <code>absolute</code> minus <code>duration</code>.</p>
 <p>This method subtracts <code>duration</code> from <code>absolute</code>, returning a point in time that is in the past relative to <code>absolute</code>.</p>
-<p>The <code>duration</code> argument can be any value that could be passed to <code>Temporal.Duration.from()</code>:</p>
-<ul>
-<li>a <code>Temporal.Duration</code> object;</li>
-<li>any object with properties denoting a duration, such as <code>{ hours: 5, minutes: 30 }</code>;</li>
-<li>a string in ISO 8601 duration format, such as <code>PT5H30M</code>.</li>
-</ul>
+<p>The <code>duration</code> argument is an object with properties denoting a duration, such as <code>{ hours: 5, minutes: 30 }</code>, or a <code>Temporal.Duration</code> object.</p>
 <p>The <code>years</code> and <code>months</code> fields of <code>duration</code> must be zero, because subtracting a year or a month from a <code>Temporal.Absolute</code> is invalid and will throw a <code>RangeError</code>.
 <code>Temporal.Absolute</code> is independent of time zones and calendars, and so years and months may be different lengths.
 If you need to do this, convert the <code>Temporal.Absolute</code> to a <code>Temporal.DateTime</code> by specifying the desired time zone, subtract the duration, and then convert it back.</p>
@@ -290,7 +279,6 @@ If you need to do this, convert the <code>Temporal.Absolute</code> to a <code>Te
 <p>Example usage:</p>
 <pre><code class="language-js">// Temporal.Absolute representing this time yesterday
 Temporal.now.absolute().minus({ days: 1 });
-Temporal.now.absolute().minus(&#39;P1D&#39;);
 oneDay = new Temporal.Duration(0, 0, 1);
 Temporal.now.absolute().minus(oneDay);</code></pre>
 <h3 id="absolutedifferenceother-temporalabsolute-options-object--temporalduration">absolute.<strong>difference</strong>(<em>other</em>: Temporal.Absolute, <em>options</em>?: object) : Temporal.Duration</h3>

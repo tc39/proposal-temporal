@@ -245,10 +245,10 @@ The default is <code>constrain</code>.</li>
 <pre><code class="language-javascript">ym = Temporal.YearMonth.from(&#39;2019-06&#39;);
 // Get December of that year
 ym.with({month: 12})  // =&gt; 2019-12</code></pre>
-<h3 id="yearmonthplusduration-string--object-options-object--temporalyearmonth">yearMonth.<strong>plus</strong>(<em>duration</em>: string | object, <em>options</em>?: object) : Temporal.YearMonth</h3>
+<h3 id="yearmonthplusduration-object-options-object--temporalyearmonth">yearMonth.<strong>plus</strong>(<em>duration</em>: object, <em>options</em>?: object) : Temporal.YearMonth</h3>
 <p><strong>Parameters:</strong></p>
 <ul>
-<li><code>duration</code> (string or object): A <code>Temporal.Duration</code> object, a duration-like object, or a string from which to create a <code>Temporal.Duration</code>.</li>
+<li><code>duration</code> (object): A <code>Temporal.Duration</code> object or a duration-like object.</li>
 <li><code>options</code> (optional object): An object with properties representing options for the addition.
 The following options are recognized:<ul>
 <li><code>disambiguation</code> (string): How to deal with additions that result in out-of-range values.
@@ -259,12 +259,7 @@ The default is <code>constrain</code>.</li>
 </ul>
 <p><strong>Returns:</strong> a new <code>Temporal.YearMonth</code> object which is the month indicated by <code>yearMonth</code> plus <code>duration</code>.</p>
 <p>This method adds <code>duration</code> to <code>yearMonth</code>, returning a month that is in the future relative to <code>yearMonth</code>.</p>
-<p>The <code>duration</code> argument can be any value that could be passed to <code>Temporal.Duration.from()</code>:</p>
-<ul>
-<li>a <code>Temporal.Duration</code> object;</li>
-<li>any object with properties denoting a duration, such as <code>{ months: 5 }</code>;</li>
-<li>a string in ISO 8601 duration format, such as <code>P5M</code>.</li>
-</ul>
+<p>The <code>duration</code> argument is an object with properties denoting a duration, such as <code>{ months: 5 }</code>, or a <code>Temporal.Duration</code> object.</p>
 <p>If the result is outside the range of dates that <code>Temporal.YearMonth</code> can represent, then <code>constrain</code> mode will clamp the result to the allowed range.
 The <code>reject</code> mode will throw a <code>RangeError</code> in this case.</p>
 <p>Other than for out-of-range values, the <code>disambiguation</code> option has no effect in the default ISO calendar, because a year is always 12 months and therefore not ambiguous.
@@ -272,12 +267,11 @@ It doesn&#39;t matter in this case that years and months can be different number
 However, disambiguation may have an effect in other calendars where years can be different numbers of months.</p>
 <p>Usage example:</p>
 <pre><code class="language-javascript">ym = Temporal.YearMonth.from(&#39;2019-06&#39;);
-ym.plus({years: 20, months: 4})  // =&gt; 2039-10
-ym.plus(&#39;P14Y&#39;)  // =&gt; 2033-06</code></pre>
-<h3 id="yearmonthminusduration-string--object-options-object--temporalyearmonth">yearMonth.<strong>minus</strong>(<em>duration</em>: string | object, <em>options</em>?: object) : Temporal.YearMonth</h3>
+ym.plus({years: 20, months: 4})  // =&gt; 2039-10</code></pre>
+<h3 id="yearmonthminusduration-object-options-object--temporalyearmonth">yearMonth.<strong>minus</strong>(<em>duration</em>: object, <em>options</em>?: object) : Temporal.YearMonth</h3>
 <p><strong>Parameters:</strong></p>
 <ul>
-<li><code>duration</code> (string or object): A <code>Temporal.Duration</code> object, a duration-like object, or a string from which to create a <code>Temporal.Duration</code>.</li>
+<li><code>duration</code> (object): A <code>Temporal.Duration</code> object or a duration-like object.</li>
 <li><code>options</code> (optional object): An object with properties representing options for the subtraction.
 The following options are recognized:<ul>
 <li><code>disambiguation</code> (string): How to deal with additions that result in out-of-range values.
@@ -288,12 +282,7 @@ The default is <code>constrain</code>.</li>
 </ul>
 <p><strong>Returns:</strong> a new <code>Temporal.YearMonth</code> object which is the month indicated by <code>yearMonth</code> minus <code>duration</code>.</p>
 <p>This method subtracts <code>duration</code> from <code>yearMonth</code>, returning a month that is in the future relative to <code>yearMonth</code>.</p>
-<p>The <code>duration</code> argument can be any value that could be passed to <code>Temporal.Duration.from()</code>:</p>
-<ul>
-<li>a <code>Temporal.Duration</code> object;</li>
-<li>any object with properties denoting a duration, such as <code>{ months: 5 }</code>;</li>
-<li>a string in ISO 8601 duration format, such as <code>P5M</code>.</li>
-</ul>
+<p>The <code>duration</code> argument is an object with properties denoting a duration, such as <code>{ months: 5 }</code>, or a <code>Temporal.Duration</code> object.</p>
 <p>If the result is outside the range of dates that <code>Temporal.YearMonth</code> can represent, then <code>constrain</code> mode will clamp the result to the allowed range.
 The <code>reject</code> mode will throw a <code>RangeError</code> in this case.</p>
 <p>Other than for out-of-range values, the <code>disambiguation</code> option has no effect in the default ISO calendar, because a year is always 12 months and therefore not ambiguous.
@@ -301,8 +290,7 @@ It doesn&#39;t matter in this case that years and months can be different number
 However, disambiguation may have an effect in other calendars where years can be different numbers of months.</p>
 <p>Usage example:</p>
 <pre><code class="language-javascript">ym = Temporal.YearMonth.from(&#39;2019-06&#39;);
-ym.minus({years: 20, months: 4})  // =&gt; 1999-02
-ym.minus(&#39;P14Y&#39;)  // =&gt; 2005-06</code></pre>
+ym.minus({years: 20, months: 4})  // =&gt; 1999-02</code></pre>
 <h3 id="yearmonthdifferenceother-temporalyearmonth-options-object--temporalduration">yearMonth.<strong>difference</strong>(<em>other</em>: Temporal.YearMonth, <em>options</em>?: object) : Temporal.Duration</h3>
 <p><strong>Parameters:</strong></p>
 <ul>
