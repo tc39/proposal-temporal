@@ -140,7 +140,7 @@ md = Temporal.MonthDay.from(&#39;2006-08-24T15:43:27&#39;);  // =&gt; 08-24
 md = Temporal.MonthDay.from(&#39;2006-08-24T15:43:27Z&#39;);  // =&gt; 08-24
 md = Temporal.MonthDay.from(&#39;2006-08-24T15:43:27+01:00[Europe/Brussels]&#39;);
   // =&gt; 08-24
-md === Temporal.MonthDay.from.html)  // =&gt; true
+md === Temporal.MonthDay.from(md)  // =&gt; true
 
 md = Temporal.MonthDay.from({month: 8, day: 24});  // =&gt; 08-24
 md = Temporal.MonthDay.from(Temporal.Date.from(&#39;2006-08-24&#39;));

@@ -88,7 +88,7 @@
 <blockquote>
 <p>This explanation was adapted from the <a href="https://github.com/moment/momentjs.com/blob/master/docs/moment-timezone/01-using-timezones/02-parsing-ambiguous-inputs.html">moment-timezone documentation</a>.</p>
 </blockquote>
-<p>Converting a <a href="./datetime.html"><code>Temporal.DateTime</code></a> wall-clock time to a <a href="./absolute.md"><code>Temporal.Absolute</code></a> is not necessarily a one-to-one conversion.
+<p>Converting a <a href="./datetime.html"><code>Temporal.DateTime</code></a> wall-clock time to a <a href="./absolute.html"><code>Temporal.Absolute</code></a> is not necessarily a one-to-one conversion.
 Due to DST time changes, there is a possibility that a wall-clock time either does not exist, or has existed twice.</p>
 <p>There are two mostly equivalent methods that accomplish this conversion: <a href="./datetime.html#inTimeZone"><code>Temporal.DateTime.prototype.inTimeZone</code></a> and <a href="./timezone.html#getAbsoluteFor"><code>Temporal.TimeZone.prototype.getAbsoluteFor</code></a>.
 The <code>disambiguation</code> option to these methods controls what absolute time to return in the case of ambiguity:</p>
