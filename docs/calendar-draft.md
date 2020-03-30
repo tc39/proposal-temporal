@@ -10,6 +10,8 @@ Main issue: https://github.com/tc39/proposal-temporal/issues/290
 
 Temporal.Date currently has three internal slots: year, month, and day. (An "internal slot" refers to actual data, as opposed to "properties", which could be computed.)  In this proposal, those slots are renamed to `[[IsoYear]]`, `[[IsoMonth]]`, and `[[IsoDay]]`, and an additional `[[Calendar]]` slot is added.  The calendar slot contains an object implementing the Temporal.Calendar interface, described below.
 
+No matter which calendar system is being represented, the *data model* in Temporal.Date remains indexed in the ISO calendar.  So, for instance, if you wanted to represent the Hebrew date 5 Nisan 5780, the data model would be 2020-03-30, and the calendar would be responsible for mapping that into the corresponding Hebrew fields, as described further down in this document.
+
 This data model makes the simple assumption that the concept of a "day" is a solar day (main issues: [#390](https://github.com/tc39/proposal-temporal/issues/390), [#389](https://github.com/tc39/proposal-temporal/issues/389)).  Most or all modern-use calendars, even those with lunar month cycles, use a solar day (based on sunrise) instead of a lunar day (based of moonrise).  For calendars that do use a lunar day, such as the Hawaiian Moon Calendar, a Temporal.DateTime can be used instead of Temporal.Date when the distinction is important.
 
 ### Temporal.DateTime and Temporal.Time internal slots
@@ -36,7 +38,7 @@ Temporal.MonthDay:
 - `[[Calendar]]`
 - `[[RefIsoYear]]`
 
-For calendars that use ISO-style months, such as Gregorian, Solar Buddhist, and Japanese, "RefIsoDay" and "RefIsoYear" can be ignored.  However, for lunar and lunisolar calendars, such as Hebrew, Saudi Arabian Islamic, and Chinese, these additional fields allow those calendars to disambiguate which YearMonth and MonthDay are being represented.
+For calendars that use ISO-style months, such as Gregorian, Solar Buddhist, and Japanese, "RefIsoDay" and "RefIsoYear" can be ignored.  However, for lunar and lunisolar calendars, such as Hebrew, Saudi Arabian Islamic, and Chinese, these additional fields allow those calendars to disambiguate which YearMonth and MonthDay are being represented.  The fields are called "Ref", or "reference", because they are only used in calendars that need them.
 
 ## Temporal.Calendar interface
 
@@ -44,14 +46,16 @@ Main issue: https://github.com/tc39/proposal-temporal/issues/289
 
 The new Temporal.Calendar interface is a mechanism to allow arbitrary calendar systems to be implemented on top of Temporal.  ***Most users will not encounter the Temporal.Calendar interface directly***, unless they are building or using a non-built-in calendar system.
 
-A valid implementation of the interface is an object that contains the string methods listed below.  We had also considered using symbols, but settled on strings after discussion with the plenary (main issue: [#310](https://github.com/tc39/proposal-temporal/issues/310)).
+All built-in calendars will be instances of Temporal.Calendar (main issue: [#300](https://github.com/tc39/proposal-temporal/issues/300)), and Temporal.Calendar can be subclassed.  However, an object need not be a subclass of Temporal.Calendar to conform to the interface, which are the string methods listed below.
+
+We had also considered using symbols, but settled on strings after discussion with the plenary (main issue: [#310](https://github.com/tc39/proposal-temporal/issues/310)).
 
 ### Methods on the Temporal.Calendar interface
 
 All of the following methods return new Temporal objects.
 
 ```javascript
-class MyCalendar {
+class Temporal.Calendar {
 
 	///////////////////
 	//  To/From ISO  //
@@ -176,7 +180,9 @@ An instance of `MyCalendar` is *expected* to have stateless behavior; i.e., call
 
 Main issue: https://github.com/tc39/proposal-temporal/issues/403
 
-If properties of Temporal.Date, etc., are to be enumerable, the calendar should choose which properties to expose; for example, the Japanese calendar might choose to make `.era` enumerable, whereas other calendars might not.  This operation can cake place in the factory methods of the Temporal.Calendar protocol, such as `.dateFromFields()`.
+If properties of Temporal.Date, etc., are to be enumerable, the calendar should choose which properties to expose.  This operation can cake place in the factory methods of the Temporal.Calendar protocol, such as `.dateFromFields()`.
+
+This is a work in progress, and this document will be updated once we reach consensus on #403.
 
 ## Default Calendar
 
