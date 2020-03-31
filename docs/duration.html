@@ -242,15 +242,142 @@ d.milliseconds  // =&gt; 987
 d.microseconds  // =&gt; 654
 d.nanoseconds   // =&gt; 321</code></pre>
 <h2 id="methods">Methods</h2>
+<h3 id="durationwithdurationlike-object-options-object--temporalduration">duration.<strong>with</strong>(<em>durationLike</em>: object, <em>options</em>?: object) : Temporal.Duration</h3>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>durationLike</code> (object): an object with some or all of the properties of a <code>Temporal.Duration</code>.</li>
+<li><code>options</code> (optional object): An object with properties representing options for the copy.
+The following options are recognized:<ul>
+<li><code>disambiguation</code> (string): How to deal with out-of-range values.
+Allowed values are <code>constrain</code>, <code>balance</code>, and <code>reject</code>.
+The default is <code>constrain</code>.</li>
+</ul>
+</li>
+</ul>
+<p><strong>Returns:</strong> a new <code>Temporal.Duration</code> object.</p>
+<p>This method creates a new <code>Temporal.Duration</code> which is a copy of <code>duration</code>, but any properties present on <code>durationLike</code> override the ones already present on <code>duration</code>.</p>
+<p>Since <code>Temporal.Duration</code> objects are immutable, use this method instead of modifying one.</p>
+<p>The <code>disambiguation</code> option specifies what to do with out-of-range or overly large values.
+Negative numbers are never allowed as properties of <code>durationLike</code>.
+If a property of <code>durationLike</code> is infinity, then constrain mode will clamp it to <code>Number.MAX_VALUE</code>.
+Reject and balance modes will throw a <code>RangeError</code> in that case.
+Additionally, balance mode will behave like it does in <code>Duration.from()</code> and perform a balance operation on the result.</p>
+<p>For usage examples and a more complete explanation of how balancing works and why it is necessary, see <a href="./balancing.html">Duration balancing</a>.</p>
+<p>Usage example:</p>
+<pre><code class="language-javascript">duration = Temporal.Duration.from({ months: 50, days: 50, hours: 50, minutes: 100 });
+// Perform a balance operation using additional ISO calendar rules:
+let { years, months } = duration;
+years += Math.floor(months / 12);
+months %= 12;
+duration = duration.with({ years, months }, { disambiguation: &#39;balance&#39; });
+  // =&gt; P4Y2M52DT3H40M</code></pre>
+<h3 id="durationplusother-object-options-object--temporalduration">duration.<strong>plus</strong>(<em>other</em>: object, <em>options</em>?: object) : Temporal.Duration</h3>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>other</code> (object): A <code>Temporal.Duration</code> object or a duration-like object.</li>
+<li><code>options</code> (optional object): An object with properties representing options for the addition.
+The following options are recognized:<ul>
+<li><code>disambiguation</code> (string): How to deal with additions that result in out-of-range values.
+Allowed values are <code>constrain</code> and <code>reject</code>.
+The default is <code>constrain</code>.</li>
+</ul>
+</li>
+</ul>
+<p><strong>Returns:</strong> a new <code>Temporal.Duration</code> object which represents the sum of the durations of <code>duration</code> and <code>other</code>.</p>
+<p>This method adds <code>other</code> to <code>duration</code>, resulting in a longer duration.</p>
+<p>The <code>other</code> argument is an object with properties denoting a duration, such as <code>{ hours: 5, minutes: 30 }</code>, or a <code>Temporal.Duration</code> object.</p>
+<p>The <code>disambiguation</code> argument tells what to do in the case where the addition results in an out-of-range value:</p>
+<ul>
+<li>In <code>constrain</code> mode (the default), additions that result in a value too large to be represented in a Number are capped at <code>Number.MAX_VALUE</code>.</li>
+<li>In <code>reject</code> mode, if any addition results in a value too large to be represented in a Number, a <code>RangeError</code> is thrown.</li>
+</ul>
+<p>The fields of the resulting duration are never converted between each other.
+If you need this behaviour, use <code>Duration.from()</code> with balance disambiguation, which will convert overly large units into the next highest unit, up to days.</p>
+<p>For usage examples and a more complete explanation of how balancing works and why it is necessary, see <a href="./balancing.html">Duration balancing</a>.</p>
+<p>No conversion is ever performed between years, months, days, and other units, as that could be ambiguous depending on the start date.
+If you need such a conversion, you must implement it yourself, since the rules can depend on the start date and the calendar in use.</p>
+<p>Usage example:</p>
+<pre><code class="language-javascript">hour = Temporal.Duration.from(&#39;PT1H&#39;);
+hour.plus({ minutes: 30 })  // =&gt; PT1H30M
+
+// Examples of balancing:
+one = Temporal.Duration.from({ hours: 1, minutes: 30 });
+two = Temporal.Duration.from({ hours: 2, minutes: 45 });
+result = one.plus(two)  // =&gt; PT3H75M
+result.with(result, { disambiguation: &#39;balance&#39; })  // =&gt; PT4H15M
+
+fifty = Temporal.Duration.from(&#39;P50Y50M50DT50H50M50.500500500S&#39;);
+result = fifty.plus(fifty)  // =&gt; P100Y100M100DT100H100M101.001001S&#39;
+// Temporal.Duration.from(result, { disambiguation: &#39;balance&#39; }); - FIXME: https://github.com/tc39/proposal-temporal/issues/232
+result.with(result, { disambiguation: &#39;balance&#39; })
+  // =&gt; P100Y100M104DT5H41M41.001001S
+
+// Example of not balancing:
+oneAndAHalfYear = Temporal.Duration.from({ years: 1, months: 6 });
+result = oneAndAHalfYear.plus(oneAndAHalfYear)  // =&gt; P2Y12M
+// Temporal.Duration.from(result, { disambiguation: &#39;balance&#39; }); - FIXME: https://github.com/tc39/proposal-temporal/issues/232
+result.with(result, { disambiguation: &#39;balance&#39; })  // =&gt; P2Y12M
+// Example of custom conversion using ISO calendar rules:
+function monthsToYears(duration) {
+    const { years, months } = duration;
+    years += Math.floor(months / 12);
+    months %= 12;
+    return duration.with({ years, months });
+}
+monthsToYears(result)  // =&gt; P3Y
+</code></pre>
+<h3 id="durationminusother-object-options-object--temporalduration">duration.<strong>minus</strong>(<em>other</em>: object, <em>options</em>?: object) : Temporal.Duration</h3>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>other</code> (object): A <code>Temporal.Duration</code> object or a duration-like object.</li>
+<li><code>options</code> (optional object): An object with properties representing options for the subtraction.
+The following options are recognized:<ul>
+<li><code>disambiguation</code> (string): How to deal with subtractions that result in out-of-range values.
+Allowed values are <code>balanceConstrain</code> and <code>balance</code>.
+The default is <code>balanceConstrain</code>.</li>
+</ul>
+</li>
+</ul>
+<p><strong>Returns:</strong> a new <code>Temporal.Duration</code> object which represents the duration of <code>duration</code> less the duration of <code>other</code>.</p>
+<p>This method subtracts <code>other</code> from <code>duration</code>, resulting in a shorter duration.</p>
+<p>The <code>other</code> argument is an object with properties denoting a duration, such as <code>{ hours: 5, minutes: 30 }</code>, or a <code>Temporal.Duration</code> object.</p>
+<p>If <code>other</code> is larger than <code>duration</code> and the subtraction would result in a negative duration, the method will throw a <code>RangeError</code>.</p>
+<p>In order to be valid, the resulting duration must not have any negative fields.
+However, it&#39;s possible to have one or more of the fields be negative while the overall duration is still positive.
+For example, &quot;4 hours and 15 minutes&quot; minus &quot;2 hours and 30 minutes&quot; results in &quot;2 hours and &minus;15 minutes&quot;.
+The <code>disambiguation</code> option tells what to do in this case.</p>
+<ul>
+<li>In <code>balanceConstrain</code> mode (the default), negative fields are balanced with the next highest field so that none of the fields are negative in the result.
+If this is not possible, a <code>RangeError</code> is thrown.</li>
+<li>In <code>balance</code> mode, all fields are balanced with the next highest field, no matter if they are negative or not.</li>
+</ul>
+<p>For usage examples and a more complete explanation of how balancing works and why it is necessary, especially for subtracting <code>Temporal.Duration</code>, see <a href="./balancing.html#duration-arithmetic">Duration balancing</a>.</p>
+<p>Usage example:</p>
+<pre><code class="language-javascript">hourAndAHalf = Temporal.Duration.from(&#39;PT1H30M&#39;);
+hourAndAHalf.minus({ hours: 1 })  // =&gt; PT30M
+
+one = Temporal.Duration.from({ minutes: 180 });
+two = Temporal.Duration.from({ seconds: 30 });
+one.minus(two);  // =&gt; PT179M30S
+one.minus(two, { disambiguation: &#39;balance&#39; });  // =&gt; PT2H59M30S
+
+// Example of not balancing:
+threeYears = Temporal.Duration.from({ years: 3 });
+oneAndAHalfYear = Temporal.Duration.from({ years: 1, months: 6 });
+threeYears.minus(oneAndAHalfYear)  // throws; months are negative and cannot be balanced
+// Example of a custom conversion using ISO calendar rules:
+function yearsToMonths(duration) {
+    const { years, months } = duration;
+    months += years * 12;
+    return duration.with({ years: 0, months });
+}
+yearsToMonths(threeYears).minus(yearsToMonths(oneAndAHalfYear))  // =&gt; P18M</code></pre>
 <h3 id="durationtostring--string">duration.<strong>toString</strong>() : string</h3>
 <p><strong>Returns:</strong> the duration as an ISO 8601 string.</p>
 <p>This method overrides <code>Object.prototype.toString()</code> and provides the ISO 8601 description of the duration.</p>
 <blockquote>
-<p><strong>NOTE</strong>: If any of the <code>milliseconds</code>, <code>microseconds</code>, or <code>nanoseconds</code> properties are greater than 999, then <code>Temporal.Duration.from(duration.toString())</code> will not yield an identical <code>Temporal.Duration</code> object.
-The returned object will represent an identical duration, but the sub-second fields will be balanced with the <code>seconds</code> field so that they become 999 or less.
-For example, 1000 nanoseconds will become 1 microsecond.</p>
-<p>This is because the ISO 8601 string format for durations does not allow for specifying sub-second units separately, only as a decimal fraction of seconds.
-If you need to serialize a <code>Temporal.Duration</code> in a way that will preserve unbalanced sub-second fields, you will need to use a custom serialization format.</p>
+<p><strong>NOTE</strong>: If any of <code>duration.milliseconds</code>, <code>duration.microseconds</code>, or <code>duration.nanoseconds</code> are over 999, then deserializing from the result of <code>duration.toString()</code> will yield an equal but different object.
+See <a href="./balancing.html#serialization">Duration balancing</a> for more information.</p>
 </blockquote>
 <p>Usage examples:</p>
 <pre><code class="language-javascript">d = Temporal.Duration.from({ years: 1, days: 1 });
