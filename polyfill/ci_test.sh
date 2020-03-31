@@ -1,5 +1,9 @@
 #!/bin/bash
 
+virtualenv -p python3 venv
+source venv/bin/activate
+pip install ijson
+
 export NODE_PATH=$PWD/node_modules
 npm run build-script
 if [ ! -d "test262" ]; then
