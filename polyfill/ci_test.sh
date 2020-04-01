@@ -29,8 +29,7 @@ test262-harness \
   --prelude "../$PRELUDE" \
   --transformer ./transform.test262.js \
   "./*/**/*.js" \
-  > ../exec.out
-./parseResults.py ../exec.out
+  | ./parseResults.py
 RESULT=$?
 
 cd ..
@@ -39,7 +38,6 @@ if [ "x$COVERAGE" = xyes ]; then
     nyc report -t coverage/tmp/transformer --reporter=text-lcov > coverage/test262.lcov
 fi
 
-rm exec.out
 rm -f script-instrumented.js
 rm -rf coverage/tmp/transformer
 
