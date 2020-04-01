@@ -22,22 +22,21 @@ def parse_expected_failures():
     return expected_failures
 
 
-def main(filename):
+def main(fp):
     expected_failures = parse_expected_failures()
-    with open(filename, "r") as fp:
-        results = ijson.items(fp, "item")
+    results = ijson.items(fp, "item")
 
-        unexpected_results = []
-        for test in results:
-            expected_failure = test["file"] in expected_failures
-            actual_result = test["result"]["pass"]
-            print("{} {} ({})".format(PREFIXES[expected_failure][actual_result], test["file"], test["scenario"]))
-            if actual_result == expected_failure:
-                if not actual_result:
-                    print(test["rawResult"]["stderr"])
-                    print(test["rawResult"]["stdout"])
-                    print(test["result"]["message"])
-                unexpected_results.append(test)
+    unexpected_results = []
+    for test in results:
+        expected_failure = test["file"] in expected_failures
+        actual_result = test["result"]["pass"]
+        print("{} {} ({})".format(PREFIXES[expected_failure][actual_result], test["file"], test["scenario"]))
+        if actual_result == expected_failure:
+            if not actual_result:
+                print(test["rawResult"]["stderr"])
+                print(test["rawResult"]["stdout"])
+                print(test["result"]["message"])
+            unexpected_results.append(test)
 
     if unexpected_results:
         print("{} unexpected results:".format(len(unexpected_results)))
@@ -50,4 +49,4 @@ def main(filename):
 
 
 if __name__ == "__main__":
-    sys.exit(0 if main(sys.argv[1]) else 1)
+    sys.exit(0 if main(sys.stdin) else 1)
