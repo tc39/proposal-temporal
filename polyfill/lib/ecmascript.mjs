@@ -539,7 +539,7 @@ export const ES = ObjectAssign({}, ES2019, {
   GetIntrinsic: (intrinsic) => {
     return intrinsic in INTRINSICS ? INTRINSICS[intrinsic] : GetIntrinsic(intrinsic);
   },
-  ValidPropertyBag: (bag, anyof = []) => {
+  ToPartialRecord: (bag, anyof = []) => {
     if (!bag || 'object' !== typeof bag) return false;
     let any;
     for (let prop of anyof) {

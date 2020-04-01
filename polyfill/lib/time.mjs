@@ -63,7 +63,7 @@ export class Time {
   with(temporalTimeLike = {}, options) {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
     const disambiguation = ES.ToTemporalDisambiguation(options);
-    const props = ES.ValidPropertyBag(temporalTimeLike, [
+    const props = ES.ToPartialRecord(temporalTimeLike, [
       'hour',
       'minute',
       'second',
