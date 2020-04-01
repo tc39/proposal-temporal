@@ -26,7 +26,7 @@ export class MonthDay {
   with(temporalMonthDayLike, options) {
     if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
     const disambiguation = ES.ToTemporalDisambiguation(options);
-    const props = ES.ValidPropertyBag(temporalMonthDayLike, ['month', 'day']);
+    const props = ES.ToPartialRecord(temporalMonthDayLike, ['month', 'day']);
     if (!props) {
       throw new RangeError('invalid month-day-like');
     }
