@@ -216,7 +216,7 @@ export const ES = ObjectAssign({}, ES2019, {
   },
   ToTemporalDateTime: (item, disambiguation) => {
     if (ES.IsTemporalDateTime(item)) return item;
-    let props = ES.ValidDateTimeFrom(
+    let props = ES.ToRecord(
       item,
       ['year', 'month', 'day'],
       ['hour', 'minute', 'second', 'millisecond', 'microsecond', 'nanosecond']
@@ -288,7 +288,7 @@ export const ES = ObjectAssign({}, ES2019, {
   },
   ToTemporalDate: (item, disambiguation) => {
     if (ES.IsTemporalDate(item)) return item;
-    let props = ES.ValidDateTimeFrom(item, ['year', 'month', 'day']);
+    let props = ES.ToRecord(item, ['year', 'month', 'day']);
     if (!props) {
       const isoString = ES.ToString(item);
       props = ES.ParseTemporalDateString(isoString);
@@ -315,7 +315,7 @@ export const ES = ObjectAssign({}, ES2019, {
   },
   ToTemporalTime: (item, disambiguation) => {
     if (ES.IsTemporalTime(item)) return item;
-    let props = ES.ValidDateTimeFrom(
+    let props = ES.ToRecord(
       item,
       [],
       ['hour', 'minute', 'second', 'millisecond', 'microsecond', 'nanosecond']
@@ -366,7 +366,7 @@ export const ES = ObjectAssign({}, ES2019, {
   },
   ToTemporalYearMonth: (item, disambiguation) => {
     if (ES.IsTemporalYearMonth(item)) return item;
-    let props = ES.ValidDateTimeFrom(item, ['year', 'month']);
+    let props = ES.ToRecord(item, ['year', 'month']);
     if (!props) {
       const isoString = ES.ToString(item);
       props = ES.ParseTemporalYearMonthString(isoString);
@@ -393,7 +393,7 @@ export const ES = ObjectAssign({}, ES2019, {
   },
   ToTemporalMonthDay: (item, disambiguation) => {
     if (ES.IsTemporalMonthDay(item)) return item;
-    let props = ES.ValidDateTimeFrom(item, ['month', 'day']);
+    let props = ES.ToRecord(item, ['month', 'day']);
     if (!props) {
       const isoString = ES.ToString(item);
       props = ES.ParseTemporalMonthDayString(isoString);
@@ -575,7 +575,7 @@ export const ES = ObjectAssign({}, ES2019, {
     }
     return any ? any : false;
   },
-  ValidDateTimeFrom: (bag, required, optional = []) => {
+  ToRecord: (bag, required, optional = []) => {
     if (!bag || 'object' !== typeof bag) return false;
     let result = {};
     for (let prop of required) {
