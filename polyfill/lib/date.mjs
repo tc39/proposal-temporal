@@ -65,7 +65,7 @@ export class Date {
   with(temporalDateLike = {}, options) {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
     const disambiguation = ES.ToTemporalDisambiguation(options);
-    const props = ES.ToPartialRecord(temporalDateLike, ['year', 'month', 'day']);
+    const props = ES.ToPartialRecord(temporalDateLike, ['day', 'month', 'year']);
     if (!props) {
       throw new RangeError('invalid date-like');
     }

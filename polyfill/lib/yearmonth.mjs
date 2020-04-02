@@ -34,7 +34,7 @@ export class YearMonth {
   with(temporalYearMonthLike = {}, options) {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
     const disambiguation = ES.ToTemporalDisambiguation(options);
-    const props = ES.ToPartialRecord(temporalYearMonthLike, ['year', 'month']);
+    const props = ES.ToPartialRecord(temporalYearMonthLike, ['month', 'year']);
     if (!props) {
       throw new RangeError('invalid year-month-like');
     }
