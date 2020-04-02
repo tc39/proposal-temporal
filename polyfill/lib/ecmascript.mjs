@@ -216,11 +216,17 @@ export const ES = ObjectAssign({}, ES2019, {
   },
   ToTemporalDateTime: (item, disambiguation) => {
     if (ES.IsTemporalDateTime(item)) return item;
-    let props = ES.ToRecord(
-      item,
-      ['year', 'month', 'day'],
-      ['hour', 'minute', 'second', 'millisecond', 'microsecond', 'nanosecond']
-    );
+    let props = ES.ToRecord(item, [
+      ['day'],
+      ['hour', 0],
+      ['microsecond', 0],
+      ['millisecond', 0],
+      ['minute', 0],
+      ['month'],
+      ['nanosecond', 0],
+      ['second', 0],
+      ['year']
+    ]);
     if (!props) {
       const isoString = ES.ToString(item);
       props = ES.ParseTemporalDateTimeString(isoString);
@@ -288,7 +294,7 @@ export const ES = ObjectAssign({}, ES2019, {
   },
   ToTemporalDate: (item, disambiguation) => {
     if (ES.IsTemporalDate(item)) return item;
-    let props = ES.ToRecord(item, ['year', 'month', 'day']);
+    let props = ES.ToRecord(item, [['day'], ['month'], ['year']]);
     if (!props) {
       const isoString = ES.ToString(item);
       props = ES.ParseTemporalDateString(isoString);
@@ -315,11 +321,14 @@ export const ES = ObjectAssign({}, ES2019, {
   },
   ToTemporalTime: (item, disambiguation) => {
     if (ES.IsTemporalTime(item)) return item;
-    let props = ES.ToRecord(
-      item,
-      [],
-      ['hour', 'minute', 'second', 'millisecond', 'microsecond', 'nanosecond']
-    );
+    let props = ES.ToRecord(item, [
+      ['hour', 0],
+      ['microsecond', 0],
+      ['millisecond', 0],
+      ['minute', 0],
+      ['nanosecond', 0],
+      ['second', 0]
+    ]);
     if (!props) {
       const isoString = ES.ToString(item);
       props = ES.ParseTemporalTimeString(isoString);
@@ -366,7 +375,7 @@ export const ES = ObjectAssign({}, ES2019, {
   },
   ToTemporalYearMonth: (item, disambiguation) => {
     if (ES.IsTemporalYearMonth(item)) return item;
-    let props = ES.ToRecord(item, ['year', 'month']);
+    let props = ES.ToRecord(item, [['month'], ['year']]);
     if (!props) {
       const isoString = ES.ToString(item);
       props = ES.ParseTemporalYearMonthString(isoString);
@@ -393,7 +402,7 @@ export const ES = ObjectAssign({}, ES2019, {
   },
   ToTemporalMonthDay: (item, disambiguation) => {
     if (ES.IsTemporalMonthDay(item)) return item;
-    let props = ES.ToRecord(item, ['month', 'day']);
+    let props = ES.ToRecord(item, [['day'], ['month']]);
     if (!props) {
       const isoString = ES.ToString(item);
       props = ES.ParseTemporalMonthDayString(isoString);
@@ -419,7 +428,17 @@ export const ES = ObjectAssign({}, ES2019, {
   },
   ToTemporalDuration: (item, disambiguation) => {
     if (ES.IsTemporalDuration(item)) return item;
-    let props = ES.ValidDurationLike(item);
+    let props = ES.ToRecord(item, [
+      ['days', 0],
+      ['hours', 0],
+      ['microseconds', 0],
+      ['milliseconds', 0],
+      ['minutes', 0],
+      ['months', 0],
+      ['nanoseconds', 0],
+      ['seconds', 0],
+      ['years', 0]
+    ]);
     if (!props) {
       const isoString = ES.ToString(item);
       props = ES.ParseTemporalDurationString(isoString);
@@ -539,56 +558,30 @@ export const ES = ObjectAssign({}, ES2019, {
   GetIntrinsic: (intrinsic) => {
     return intrinsic in INTRINSICS ? INTRINSICS[intrinsic] : GetIntrinsic(intrinsic);
   },
-  ToPartialRecord: (bag, anyof = []) => {
+  ToPartialRecord: (bag, fields) => {
     if (!bag || 'object' !== typeof bag) return false;
     let any;
-    for (let prop of anyof) {
-      if (prop in bag) {
-        const value = ES.ToNumber(bag[prop]);
-        if (Number.isFinite(value)) {
-          any = any || {};
-          any[prop] = value;
-        }
-      }
-    }
-    return any ? any : false;
-  },
-  ValidDurationLike: (bag) => {
-    if (!bag || 'object' !== typeof bag) return false;
-    let any;
-    const anyof = [
-      'years',
-      'months',
-      'days',
-      'hours',
-      'minutes',
-      'seconds',
-      'milliseconds',
-      'microseconds',
-      'nanoseconds'
-    ];
-    for (let prop of anyof) {
-      if (prop in bag) {
+    for (const property of fields) {
+      const value = bag[property];
+      if (value !== undefined) {
         any = any || {};
-        any[prop] = ES.ToNumber(bag[prop]);
+        any[property] = ES.ToInteger(value);
       }
     }
     return any ? any : false;
   },
-  ToRecord: (bag, required, optional = []) => {
+  ToRecord: (bag, fields) => {
     if (!bag || 'object' !== typeof bag) return false;
-    let result = {};
-    for (let prop of required) {
-      if (!(prop in bag) || typeof bag[prop] === 'undefined') {
-        throw new TypeError(`required property '${prop}' missing or undefined`);
+    const result = {};
+    for (const [property, defaultValue] of fields) {
+      let value = bag[property];
+      if (value === undefined) {
+        if (defaultValue === undefined) {
+          throw new TypeError(`required property '${property}' missing or undefined`);
+        }
+        value = defaultValue;
       }
-      result[prop] = ES.ToNumber(bag[prop]);
-    }
-    for (let prop of optional) {
-      if (prop in bag) {
-        const value = ES.ToNumber(bag[prop]);
-        if (Number.isFinite(value)) result[prop] = value;
-      }
+      result[property] = ES.ToInteger(value);
     }
     return result;
   },

@@ -103,15 +103,15 @@ export class DateTime {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     const disambiguation = ES.ToTemporalDisambiguation(options);
     const props = ES.ToPartialRecord(temporalDateTimeLike, [
-      'year',
-      'month',
       'day',
       'hour',
-      'minute',
-      'second',
-      'millisecond',
       'microsecond',
-      'nanosecond'
+      'millisecond',
+      'minute',
+      'month',
+      'nanosecond',
+      'second',
+      'year'
     ]);
     if (!props) {
       throw new RangeError('invalid date-time-like');

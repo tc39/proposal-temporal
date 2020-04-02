@@ -65,11 +65,11 @@ export class Time {
     const disambiguation = ES.ToTemporalDisambiguation(options);
     const props = ES.ToPartialRecord(temporalTimeLike, [
       'hour',
-      'minute',
-      'second',
-      'millisecond',
       'microsecond',
-      'nanosecond'
+      'millisecond',
+      'minute',
+      'nanosecond',
+      'second'
     ]);
     if (!props) {
       throw new RangeError('invalid time-like');

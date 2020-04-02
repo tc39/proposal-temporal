@@ -94,7 +94,17 @@ export class Duration {
   with(durationLike, options) {
     if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
     const disambiguation = ES.ToTemporalDisambiguation(options);
-    const props = ES.ValidDurationLike(durationLike);
+    const props = ES.ToPartialRecord(durationLike, [
+      'days',
+      'hours',
+      'microseconds',
+      'milliseconds',
+      'minutes',
+      'months',
+      'nanoseconds',
+      'seconds',
+      'years'
+    ]);
     if (!props) {
       throw new RangeError('invalid duration-like');
     }
