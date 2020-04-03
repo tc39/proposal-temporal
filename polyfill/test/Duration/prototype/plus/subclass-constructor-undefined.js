@@ -2,7 +2,7 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
-esid: sec-temporal.datetime.plus
+esid: sec-temporal.duration.prototype.plus
 includes: [compareArray.js]
 ---*/
 
@@ -23,7 +23,7 @@ MyDuration.prototype.constructor = undefined;
 
 const result = instance.plus({ nanoseconds: 1 });
 assert.sameValue(result.years, 1, "years result");
-assert.sameValue(result.months, 2, "month result");
+assert.sameValue(result.months, 2, "months result");
 assert.sameValue(result.days, 3, "days result");
 assert.sameValue(result.hours, 4, "hours result");
 assert.sameValue(result.minutes, 5, "minutes result");

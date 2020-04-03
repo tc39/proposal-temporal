@@ -2,7 +2,7 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
-esid: sec-temporal.duration.protoype.minus
+esid: sec-temporal.duration.prototype.minus
 ---*/
 
 function CustomError() {}
