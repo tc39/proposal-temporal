@@ -25,14 +25,14 @@ MyDuration.prototype.constructor = {
 };
 
 const result = instance.minus({ nanoseconds: 1 });
-assert.sameValue(result.years, 1, "year result");
-assert.sameValue(result.months, 2, "month result");
-assert.sameValue(result.days, 3, "day result");
-assert.sameValue(result.hours, 4, "hour result");
-assert.sameValue(result.minutes, 5, "minute result");
-assert.sameValue(result.seconds, 6, "second result");
-assert.sameValue(result.milliseconds, 987, "millisecond result");
-assert.sameValue(result.microseconds, 654, "microsecond result");
-assert.sameValue(result.nanoseconds, 320, "nanosecond result");
+assert.sameValue(result.years, 1, "years result");
+assert.sameValue(result.months, 2, "months result");
+assert.sameValue(result.days, 3, "days result");
+assert.sameValue(result.hours, 4, "hours result");
+assert.sameValue(result.minutes, 5, "minutes result");
+assert.sameValue(result.seconds, 6, "seconds result");
+assert.sameValue(result.milliseconds, 987, "milliseconds result");
+assert.sameValue(result.microseconds, 654, "microseconds result");
+assert.sameValue(result.nanoseconds, 320, "nanoseconds result");
 assert.sameValue(called, 1);
 assert.sameValue(Object.getPrototypeOf(result), Temporal.Duration.prototype);
