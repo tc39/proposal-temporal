@@ -170,8 +170,8 @@ export class Date {
   }
   static from(item, options = undefined) {
     const disambiguation = ES.ToTemporalDisambiguation(options);
-    let result = ES.ToTemporalDate(item, disambiguation);
-    return new this(GetSlot(result, YEAR), GetSlot(result, MONTH), GetSlot(result, DAY));
+    const { year, month, day } = ES.ToTemporalDate(item, disambiguation);
+    return new this(year, month, day);
   }
   static compare(one, two) {
     if (!ES.IsTemporalDate(one) || !ES.IsTemporalDate(two)) throw new TypeError('invalid Date object');

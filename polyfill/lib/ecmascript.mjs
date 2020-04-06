@@ -299,15 +299,20 @@ export const ES = ObjectAssign({}, ES2019, {
     return { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond };
   },
   ToTemporalDate: (item, disambiguation) => {
-    if (ES.IsTemporalDate(item)) return item;
+    if (ES.IsTemporalDate(item)) {
+      return {
+        year: GetSlot(item, YEAR),
+        month: GetSlot(item, MONTH),
+        day: GetSlot(item, DAY)
+      };
+    }
     let props = ES.ToRecord(item, [['day'], ['month'], ['year']]);
     if (!props) {
       const isoString = ES.ToString(item);
       props = ES.ParseTemporalDateString(isoString);
     }
-    let { day, month, year } = props;
-    ({ year, month, day } = ES.RegulateDate(year, month, day, disambiguation));
-    return new TemporalDate(year, month, day);
+    const { year, month, day } = props;
+    return ES.RegulateDate(year, month, day, disambiguation);
   },
   RegulateDate: (year, month, day, disambiguation) => {
     switch (disambiguation) {
