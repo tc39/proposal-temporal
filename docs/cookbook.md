@@ -45,6 +45,13 @@ Map a legacy ECMAScript Date instance into a Temporal.Absolute instance correspo
 
 ## Construction
 
+### Time zone object from name
+
+`Temporal.TimeZone.from()` can convert an IANA time zone name into a `Temporal.TimeZone` object.
+
+```javascript
+{{cookbook/getTimeZoneObjectFromIanaName.mjs}}
+```
 ### Zoned instant from instant and time zone
 
 Map a Temporal.Absolute instance and a time zone name into a string serialization of the local time in that zone corresponding to the instant in absolute time.
