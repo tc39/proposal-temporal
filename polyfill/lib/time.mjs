@@ -228,15 +228,8 @@ export class Time {
 
   static from(item, options = undefined) {
     const disambiguation = ES.ToTemporalDisambiguation(options);
-    let result = ES.ToTemporalTime(item, disambiguation);
-    return new this(
-      GetSlot(result, HOUR),
-      GetSlot(result, MINUTE),
-      GetSlot(result, SECOND),
-      GetSlot(result, MILLISECOND),
-      GetSlot(result, MICROSECOND),
-      GetSlot(result, NANOSECOND)
-    );
+    const { hour, minute, second, millisecond, microsecond, nanosecond } = ES.ToTemporalTime(item, disambiguation);
+    return new this(hour, minute, second, millisecond, microsecond, nanosecond);
   }
   static compare(one, two) {
     if (!ES.IsTemporalTime(one) || !ES.IsTemporalTime(two)) throw new TypeError('invalid Time object');

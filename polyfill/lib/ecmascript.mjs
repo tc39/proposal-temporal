@@ -331,7 +331,16 @@ export const ES = ObjectAssign({}, ES2019, {
     return { year, month, day };
   },
   ToTemporalTime: (item, disambiguation) => {
-    if (ES.IsTemporalTime(item)) return item;
+    if (ES.IsTemporalTime(item)) {
+      return {
+        hour: GetSlot(item, HOUR),
+        minute: GetSlot(item, MINUTE),
+        second: GetSlot(item, SECOND),
+        millisecond: GetSlot(item, MILLISECOND),
+        microsecond: GetSlot(item, MICROSECOND),
+        nanosecond: GetSlot(item, NANOSECOND)
+      };
+    }
     let props = ES.ToRecord(item, [
       ['hour', 0],
       ['microsecond', 0],
@@ -344,17 +353,8 @@ export const ES = ObjectAssign({}, ES2019, {
       const isoString = ES.ToString(item);
       props = ES.ParseTemporalTimeString(isoString);
     }
-    let { hour = 0, microsecond = 0, millisecond = 0, minute = 0, nanosecond = 0, second = 0 } = props;
-    ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.RegulateTime(
-      hour,
-      minute,
-      second,
-      millisecond,
-      microsecond,
-      nanosecond,
-      disambiguation
-    ));
-    return new TemporalTime(hour, minute, second, millisecond, microsecond, nanosecond);
+    const { hour, minute, second, millisecond, microsecond, nanosecond } = props;
+    return ES.RegulateTime(hour, minute, second, millisecond, microsecond, nanosecond, disambiguation);
   },
   RegulateTime: (hour, minute, second, millisecond, microsecond, nanosecond, disambiguation) => {
     switch (disambiguation) {
