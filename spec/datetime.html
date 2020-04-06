@@ -73,9 +73,12 @@
       <emu-alg>
         1. Let _disambiguation_ be ? ToTemporalDisambiguation(_options_).
         1. If Type(_item_) is Object, then
-          1. Return ? ToTemporalDateTime(_item_, _disambiguation_).
-        1. Let _string_ be ? ToString(_item_).
-        1. Return ? TemporalDateTimeFromString(_string_, _disambiguation_).
+          1. Let _result_ be ? ToTemporalDateTimeRecord(_item_).
+        1. Else,
+          1. Let _string_ be ? ToString(_item_).
+          1. Let _result_ be ? ParseTemporalDateTimeString(_string_).
+        1. Set _result_ to ? RegulateDateTime(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]], _disambiguation_).
+        1. Return ? CreateTemporalDateTime(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]).
       </emu-alg>
     </emu-clause>
 
@@ -850,25 +853,23 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-temporaldatetimefromstring" aoid="TemporalDateTimeFromString">
-      <h1>TemporalDateTimeFromString ( _isoString_, _disambiguation_ )</h1>
-      <emu-alg>
-        1. Assert: Type(_isoString_) is String.
-        1. Assert: _disambiguation_ is one of *"constrain"*, *"balance"*, or *"reject"*.
-        1. Let _result_ be ? ParseTemporalDateTimeString(_isoString_).
-        1. Set _result_ to ? RegulateDateTime(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]], _disambiguation_).
-        1. Return ? CreateTemporalDateTime(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]).
-      </emu-alg>
-    </emu-clause>
-
-    <emu-clause id="sec-temporal-totemporaldatetime" aoid="ToTemporalDateTime">
-      <h1>ToTemporalDateTime ( _temporalDateTimeLike_, _disambiguation_ )</h1>
+    <emu-clause id="sec-temporal-totemporaldatetimerecord" aoid="ToTemporalDateTimeRecord">
+      <h1>ToTemporalDateTimeRecord ( _temporalDateTimeLike_ )</h1>
       <emu-note>The value of ? ToInteger(*undefined*) is 0.</emu-note>
       <emu-alg>
         1. Assert: Type(_temporalDateTimeLike_) is Object.
-        1. Assert: _disambiguation_ is one of *"constrain"*, *"balance"*, or *"reject"*.
         1. If _temporalDateTimeLike_ has an [[InitializedTemporalDateTime]] internal slot, then
-          1. Return ? CreateTemporalDateTime(_temporalDateTimeLike_.[[Year]], _temporalDateTimeLike_.[[Month]], _temporalDateTimeLike_.[[Day]], _temporalDateTimeLike_.[[Hour]], _temporalDateTimeLike_.[[Minute]], _temporalDateTimeLike_.[[Second]], _temporalDateTimeLike_.[[Millisecond]], _temporalDateTimeLike_.[[Microsecond]], _temporalDateTimeLike_.[[Nanosecond]]).
+          1. Return the Record {
+              [[Year]]: _temporalDateTimeLike_.[[Year]],
+              [[Month]]: _temporalDateTimeLike_.[[Month]],
+              [[Day]]: _temporalDateTimeLike_.[[Day]],
+              [[Hour]]: _temporalDateTimeLike_.[[Hour]],
+              [[Minute]]: _temporalDateTimeLike_.[[Minute]],
+              [[Second]]: _temporalDateTimeLike_.[[Second]],
+              [[Millisecond]]: _temporalDateTimeLike_.[[Millisecond]],
+              [[Microsecond]]: _temporalDateTimeLike_.[[Microsecond]],
+              [[Nanosecond]]: _temporalDateTimeLike_.[[Nanosecond]]
+            }.
         1. Let _result_ be a new Record with all the internal slots given in the Internal Slot column in <emu-xref href="#table-temporal-temporaldatetimelike-properties"></emu-xref>.
         1. For each row of <emu-xref href="#table-temporal-temporaldatetimelike-properties"></emu-xref>, except the header row, in table order, do
           1. Let _property_ be the Property value of the current row.
@@ -877,8 +878,7 @@
             1. Throw a *TypeError* exception.
           1. Let _value_ be ? ToInteger(_value_).
           1. Set _result_'s internal slot whose name is the Internal Slot value of the current row to _value_.
-        1. Set _result_ to ? RegulateDateTime(_year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _disambiguation_).
-        1. Return ? CreateTemporalDateTime(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]).
+        1. Return _result_.
       </emu-alg>
     </emu-clause>
 

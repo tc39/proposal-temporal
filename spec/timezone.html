@@ -74,7 +74,12 @@
         The following steps are taken:
       </p>
       <emu-alg>
-        1. Return ? ToTemporalTimeZone(_item_).
+        1. If Type(_item_) is Object and _item_ has an [[InitializedTemporalTimeZone]] internal slot, then
+          1. Let _result_ be _item_.[[Identifier]].
+        1. Else,
+          1. Let _string_ be ? ToString(_item_).
+          1. Let _result_ be ? ParseTemporalTimeZoneString(_string_).
+        1. Return ? CreateTemporalTimeZone(_result_).
       </emu-alg>
     </emu-clause>
   </emu-clause>
@@ -203,15 +208,14 @@
   <emu-clause id="sec-temporal-timezone-abstract-ops">
     <h1>Abstract operations</h1>
 
-    <emu-clause id="sec-temporal-temporaltimezonefromstring" aoid="TemporalTimeZoneFromString">
-      <h1>TemporalTimeZoneFromString ( _string_ )</h1>
+    <emu-clause id="sec-temporal-parsetemporaltimezonestring" aoid="ParseTemporalTimeZoneString">
+      <h1>ParseTemporalTimeZoneString ( _string_ )</h1>
       <emu-alg>
         1. Assert: Type(_string_) is String.
         1. If _string_ matches `/([+-][01]?[0-9]):?([0-5][0-9])/`, then
           1. <mark>TODO: Construct the time zone with the offset</mark>
         1. If ! IsValidTimeZoneName(_string_) is *true*, then
-          1. Let _canonical_ be ! CanonicalizeTimeZoneName(_string_).
-          1. Return ? CreateTemporalTimeZone(_canonical_).
+          1. Return ! CanonicalizeTimeZoneName(_string_).
         1. Let _valid_ be *true* if _string_ matches <a href="https://github.com/tc39/proposal-temporal/blob/main/polyfill/lib/regex.mjs">the "timezone" regular expression in the polyfill</a> and *false* otherwise.
         1. <mark>TODO: Actually specify this somehow.</mark>
         1. If _valid_ is *false*, then
@@ -221,19 +225,7 @@
         1. If _identifier_ is *"Z"*, then set _identifier_ to *"UTC"*.
         1. If ! IsValidTimeZoneName(_identifier_) is *false*, then
           1. Throw a *TypeError* exception.
-        1. Let _canonical_ be ! CanonicalizeTimeZoneName(_identifier_).
-        1. Return ? CreateTemporalTimeZone(_canonical_).
-      </emu-alg>
-    </emu-clause>
-
-    <emu-clause id="sec-temporal-totemporaltimezone" aoid="ToTemporalTimeZone">
-      <h1>ToTemporalTimeZone ( _temporalTimeZoneLike_ )</h1>
-      <emu-alg>
-        1. If Type(_temporalTimeZoneLike_) is Object, then
-          1. If _temporalTimeZoneLike_ has an [[InitializedTemporalTimeZone]] internal slot, then
-            1. Return ? CreateTemporalTimeZone(_temporalTimeZoneLike_.[[Identifier]]).
-        1. Let _string_ be ? ToString(_temporalTimeZoneLike_).
-        1. Return ? TemporalTimeZoneFromString(_string_).
+        1. Return ! CanonicalizeTimeZoneName(_identifier_).
       </emu-alg>
     </emu-clause>
 
