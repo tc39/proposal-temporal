@@ -74,12 +74,14 @@ export const ES = ObjectAssign({}, ES2019, {
   IsTemporalMonthDay: (item) => HasSlot(item, MONTH, DAY) && !HasSlot(item, YEAR),
   ToTemporalTimeZone: (item) => {
     if (ES.IsTemporalTimeZone(item)) return item;
-    const stringIdent = ES.ToString(item);
+    return new TemporalTimeZone(ES.TemporalTimeZoneFromString(ES.ToString(item)));
+  },
+  TemporalTimeZoneFromString: (stringIdent) => {
     const { zone, ianaName, offset } = ES.ParseTemporalTimeZoneString(stringIdent);
-    const result = new TemporalTimeZone(zone);
+    const result = ES.GetCanonicalTimeZoneIdentifier(zone);
     if (offset && ianaName) {
-      const absolute = TemporalAbsolute.from(stringIdent);
-      if (result.getOffsetFor(absolute) !== offset) {
+      const ns = ES.TemporalAbsoluteFromString(stringIdent);
+      if (ES.GetTimeZoneOffsetString(ns, result) !== offset) {
         throw new RangeError(`invalid offset ${offset}[${ianaName}]`);
       }
     }
