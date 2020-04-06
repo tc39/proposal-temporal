@@ -7,11 +7,8 @@ Attendees:
 
 	Maggie Pint
 	Matt Johnson
-
 	Andrew Paprocki
-
 	Quiyi Zhang
-
 	Daniel Ehrenberg
 
 Agenda and notes:
