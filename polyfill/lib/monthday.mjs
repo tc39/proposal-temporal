@@ -57,8 +57,8 @@ export class MonthDay {
   }
   static from(item, options = undefined) {
     const disambiguation = ES.ToTemporalDisambiguation(options);
-    let result = ES.ToTemporalMonthDay(item, disambiguation);
-    return new this(GetSlot(result, MONTH), GetSlot(result, DAY));
+    const { month, day } = ES.ToTemporalMonthDay(item, disambiguation);
+    return new this(month, day);
   }
   static compare(one, two) {
     if (!ES.IsTemporalMonthDay(one) || !ES.IsTemporalMonthDay(two)) throw new TypeError('invalid MonthDay object');
