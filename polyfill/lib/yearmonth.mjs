@@ -132,7 +132,19 @@ export class YearMonth {
   }
   static from(item, options = undefined) {
     const disambiguation = ES.ToTemporalDisambiguation(options);
-    const { year, month } = ES.ToTemporalYearMonth(item, disambiguation);
+    let year, month;
+    if (typeof item === 'object' && item) {
+      if (ES.IsTemporalYearMonth(item)) {
+        year = GetSlot(item, YEAR);
+        month = GetSlot(item, MONTH);
+      } else {
+        // Intentionally alphabetical
+        ({ year, month } = ES.ToRecord(item, [['month'], ['year']]));
+      }
+    } else {
+      ({ year, month } = ES.ParseTemporalYearMonthString(ES.ToString(item)));
+    }
+    ({ year, month } = ES.RegulateYearMonth(year, month, disambiguation));
     return new this(year, month);
   }
   static compare(one, two) {

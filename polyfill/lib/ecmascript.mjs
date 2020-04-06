@@ -180,11 +180,6 @@ export const ES = ObjectAssign({}, ES2019, {
     const nanoseconds = ES.ToInteger(match[9]);
     return { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
   },
-  ToTemporalAbsolute: (item) => {
-    if (ES.IsTemporalAbsolute(item)) return GetSlot(item, EPOCHNANOSECONDS);
-    const isoString = ES.ToString(item);
-    return ES.TemporalAbsoluteFromString(isoString);
-  },
   TemporalAbsoluteFromString: (isoString) => {
     const {
       year,
@@ -218,49 +213,6 @@ export const ES = ObjectAssign({}, ES2019, {
       if (possibleOffset === offset) return epochNs;
     }
     throw new RangeError(`'${isoString}' doesn't uniquely identify a Temporal.Absolute`);
-  },
-  ToTemporalDateTime: (item, disambiguation) => {
-    if (ES.IsTemporalDateTime(item)) {
-      return {
-        year: GetSlot(item, YEAR),
-        month: GetSlot(item, MONTH),
-        day: GetSlot(item, DAY),
-        hour: GetSlot(item, HOUR),
-        minute: GetSlot(item, MINUTE),
-        second: GetSlot(item, SECOND),
-        millisecond: GetSlot(item, MILLISECOND),
-        microsecond: GetSlot(item, MICROSECOND),
-        nanosecond: GetSlot(item, NANOSECOND)
-      };
-    }
-    let props = ES.ToRecord(item, [
-      ['day'],
-      ['hour', 0],
-      ['microsecond', 0],
-      ['millisecond', 0],
-      ['minute', 0],
-      ['month'],
-      ['nanosecond', 0],
-      ['second', 0],
-      ['year']
-    ]);
-    if (!props) {
-      const isoString = ES.ToString(item);
-      props = ES.ParseTemporalDateTimeString(isoString);
-    }
-    const { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = props;
-    return ES.RegulateDateTime(
-      year,
-      month,
-      day,
-      hour,
-      minute,
-      second,
-      millisecond,
-      microsecond,
-      nanosecond,
-      disambiguation
-    );
   },
   RegulateDateTime: (year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, disambiguation) => {
     switch (disambiguation) {
@@ -298,22 +250,6 @@ export const ES = ObjectAssign({}, ES2019, {
     }
     return { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond };
   },
-  ToTemporalDate: (item, disambiguation) => {
-    if (ES.IsTemporalDate(item)) {
-      return {
-        year: GetSlot(item, YEAR),
-        month: GetSlot(item, MONTH),
-        day: GetSlot(item, DAY)
-      };
-    }
-    let props = ES.ToRecord(item, [['day'], ['month'], ['year']]);
-    if (!props) {
-      const isoString = ES.ToString(item);
-      props = ES.ParseTemporalDateString(isoString);
-    }
-    const { year, month, day } = props;
-    return ES.RegulateDate(year, month, day, disambiguation);
-  },
   RegulateDate: (year, month, day, disambiguation) => {
     switch (disambiguation) {
       case 'reject':
@@ -329,32 +265,6 @@ export const ES = ObjectAssign({}, ES2019, {
         break;
     }
     return { year, month, day };
-  },
-  ToTemporalTime: (item, disambiguation) => {
-    if (ES.IsTemporalTime(item)) {
-      return {
-        hour: GetSlot(item, HOUR),
-        minute: GetSlot(item, MINUTE),
-        second: GetSlot(item, SECOND),
-        millisecond: GetSlot(item, MILLISECOND),
-        microsecond: GetSlot(item, MICROSECOND),
-        nanosecond: GetSlot(item, NANOSECOND)
-      };
-    }
-    let props = ES.ToRecord(item, [
-      ['hour', 0],
-      ['microsecond', 0],
-      ['millisecond', 0],
-      ['minute', 0],
-      ['nanosecond', 0],
-      ['second', 0]
-    ]);
-    if (!props) {
-      const isoString = ES.ToString(item);
-      props = ES.ParseTemporalTimeString(isoString);
-    }
-    const { hour, minute, second, millisecond, microsecond, nanosecond } = props;
-    return ES.RegulateTime(hour, minute, second, millisecond, microsecond, nanosecond, disambiguation);
   },
   RegulateTime: (hour, minute, second, millisecond, microsecond, nanosecond, disambiguation) => {
     switch (disambiguation) {
@@ -384,21 +294,6 @@ export const ES = ObjectAssign({}, ES2019, {
     }
     return { hour, minute, second, millisecond, microsecond, nanosecond };
   },
-  ToTemporalYearMonth: (item, disambiguation) => {
-    if (ES.IsTemporalYearMonth(item)) {
-      return {
-        year: GetSlot(item, YEAR),
-        month: GetSlot(item, MONTH)
-      };
-    }
-    let props = ES.ToRecord(item, [['month'], ['year']]);
-    if (!props) {
-      const isoString = ES.ToString(item);
-      props = ES.ParseTemporalYearMonthString(isoString);
-    }
-    const { year, month } = props;
-    return ES.RegulateYearMonth(year, month, disambiguation);
-  },
   RegulateYearMonth: (year, month, disambiguation) => {
     switch (disambiguation) {
       case 'reject':
@@ -414,21 +309,6 @@ export const ES = ObjectAssign({}, ES2019, {
         break;
     }
     return { year, month };
-  },
-  ToTemporalMonthDay: (item, disambiguation) => {
-    if (ES.IsTemporalMonthDay(item)) {
-      return {
-        month: GetSlot(item, MONTH),
-        day: GetSlot(item, DAY)
-      };
-    }
-    let props = ES.ToRecord(item, [['day'], ['month']]);
-    if (!props) {
-      const isoString = ES.ToString(item);
-      props = ES.ParseTemporalMonthDayString(isoString);
-    }
-    const { month, day } = props;
-    return ES.RegulateMonthDay(month, day, disambiguation);
   },
   RegulateMonthDay: (month, day, disambiguation) => {
     const leapYear = 1972;

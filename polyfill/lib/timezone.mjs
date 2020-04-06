@@ -113,8 +113,13 @@ export class TimeZone {
     return this.name;
   }
   static from(item) {
-    let result = ES.ToTemporalTimeZone(item);
-    return new this(GetSlot(result, IDENTIFIER));
+    let timeZone;
+    if (ES.IsTemporalTimeZone(item)) {
+      timeZone = GetSlot(item, IDENTIFIER);
+    } else {
+      timeZone = ES.TemporalTimeZoneFromString(ES.ToString(item));
+    }
+    return new this(timeZone);
   }
   static [Symbol.iterator]() {
     const iter = ZONES[Symbol.iterator]();

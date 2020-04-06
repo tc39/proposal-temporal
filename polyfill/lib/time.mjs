@@ -228,7 +228,37 @@ export class Time {
 
   static from(item, options = undefined) {
     const disambiguation = ES.ToTemporalDisambiguation(options);
-    const { hour, minute, second, millisecond, microsecond, nanosecond } = ES.ToTemporalTime(item, disambiguation);
+    let hour, minute, second, millisecond, microsecond, nanosecond;
+    if (typeof item === 'object' && item) {
+      if (ES.IsTemporalTime(item)) {
+        minute = GetSlot(item, MINUTE);
+        second = GetSlot(item, SECOND);
+        millisecond = GetSlot(item, MILLISECOND);
+        microsecond = GetSlot(item, MICROSECOND);
+        nanosecond = GetSlot(item, NANOSECOND);
+      } else {
+        // Intentionally alphabetical
+        ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.ToRecord(item, [
+          ['hour', 0],
+          ['microsecond', 0],
+          ['millisecond', 0],
+          ['minute', 0],
+          ['nanosecond', 0],
+          ['second', 0]
+        ]));
+      }
+    } else {
+      ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.ParseTemporalTimeString(ES.ToString(item)));
+    }
+    ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.RegulateTime(
+      hour,
+      minute,
+      second,
+      millisecond,
+      microsecond,
+      nanosecond,
+      disambiguation
+    ));
     return new this(hour, minute, second, millisecond, microsecond, nanosecond);
   }
   static compare(one, two) {
