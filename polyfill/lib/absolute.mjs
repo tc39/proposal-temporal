@@ -1,6 +1,6 @@
 import { ES } from './ecmascript.mjs';
 import { MakeIntrinsicClass } from './intrinsicclass.mjs';
-import { EPOCHNANOSECONDS, CreateSlots, GetSlot, SetSlot, YEARS, MONTHS } from './slots.mjs';
+import { EPOCHNANOSECONDS, CreateSlots, GetSlot, SetSlot } from './slots.mjs';
 
 import bigInt from 'big-integer';
 
@@ -42,7 +42,7 @@ export class Absolute {
       milliseconds,
       microseconds,
       nanoseconds
-    } = ES.ToLimitedTemporalDuration(temporalDurationLike, [YEARS, MONTHS]);
+    } = ES.ToLimitedTemporalDuration(temporalDurationLike, ['years', 'months']);
 
     let add = bigInt(0);
     add = add.plus(bigInt(nanoseconds));
@@ -71,7 +71,7 @@ export class Absolute {
       milliseconds,
       microseconds,
       nanoseconds
-    } = ES.ToLimitedTemporalDuration(temporalDurationLike, [YEARS, MONTHS]);
+    } = ES.ToLimitedTemporalDuration(temporalDurationLike, ['years', 'months']);
 
     let add = bigInt(0);
     add = add.plus(bigInt(nanoseconds));
