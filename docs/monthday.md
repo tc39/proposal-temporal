@@ -33,25 +33,25 @@ md = new Temporal.MonthDay(2, 29)  // => 02-29
 
 ## Static methods
 
-### Temporal.MonthDay.**from**(_thing_: string | object, _options_?: object) : Temporal.MonthDay
+### Temporal.MonthDay.**from**(_thing_: any, _options_?: object) : Temporal.MonthDay
 
 **Parameters:**
-- `thing` (string or object): The value representing the desired date.
+- `thing`: The value representing the desired date.
 - `options` (optional object): An object with properties representing options for constructing the date.
   The following options are recognized:
   - `disambiguation` (string): How to deal with out-of-range values in `thing`.
     Allowed values are `constrain`, `balance`, and `reject`.
     The default is `constrain`.
 
-**Returns:** a new `Temporal.MonthDay` object (or the same object if `thing` was a `Temporal.MonthDay` object.)
+**Returns:** a new `Temporal.MonthDay` object.
 
 This static method creates a new `Temporal.MonthDay` object from another value.
-If the value is a string, it must be in ISO 8601 format.
+If the value is another `Temporal.MonthDay` object, a new object representing the same month and day is returned.
+If the value is any other object, it must have `month` and `day` properties, and a `Temporal.MonthDay` will be constructed from them.
+
+Any non-object value will be converted to a string, which is expected to be in ISO 8601 format.
 Any parts of the string other than the month and the day are optional and will be ignored.
 If the string isn't valid according to ISO 8601, then a `RangeError` will be thrown regardless of the value of `disambiguation`.
-
-If the value is another `Temporal.MonthDay` object, the same object is returned.
-If the value is any other object, it must have `month` and `day` properties, and a `Temporal.MonthDay` will be constructed from them.
 
 The `disambiguation` option works as follows:
 - In `constrain` mode (the default), any out-of-range values are clamped to the nearest in-range value.

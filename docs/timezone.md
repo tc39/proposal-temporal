@@ -52,18 +52,19 @@ tz2.getTransitions(now).next().done;  // => false
 
 ## Static methods
 
-### Temporal.TimeZone.**from**(_thing_: string | object) : Temporal.TimeZone
+### Temporal.TimeZone.**from**(_thing_: any) : Temporal.TimeZone
 
 **Parameters:**
-- `thing` (string or object): A `Temporal.TimeZone` object or a string from which to create a `Temporal.TimeZone`.
+- `thing`: A `Temporal.TimeZone` object or a value from which to create a `Temporal.TimeZone`.
 
 **Returns:** a new `Temporal.TimeZone` object.
 
 This static method creates a new time zone from another value.
-If the value is a string, it can be:
-- a string that is accepted by `new Temporal.TimeZone()`;
+If the value is another `Temporal.TimeZone` object, a new object representing the same time zone is returned.
+
+Any other value is converted to a string, which is expected to be either:
+- a string that is accepted by `new Temporal.TimeZone()`; or
 - a string in the ISO 8601 format including a time zone offset part.
-Or, if the value is an object, it can be another `Temporal.TimeZone` object, which is returned directly.
 
 Note that the ISO 8601 string can optionally be extended with an IANA time zone name in square brackets appended to it.
 

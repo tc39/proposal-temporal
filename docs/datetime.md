@@ -48,27 +48,27 @@ datetime = new Temporal.DateTime(2020, 3, 14, 13, 37)  // => 2020-03-14T13:37
 
 ## Static methods
 
-### Temporal.DateTime.**from**(_thing_: string | object, _options_?: object) : Temporal.DateTime
+### Temporal.DateTime.**from**(_thing_: any, _options_?: object) : Temporal.DateTime
 
 **Parameters:**
-- `thing` (string or object): The value representing the desired date and time.
+- `thing`: The value representing the desired date and time.
 - `options` (optional object): An object with properties representing options for constructing the date and time.
   The following options are recognized:
   - `disambiguation` (string): How to deal with out-of-range values in `thing`.
     Allowed values are `constrain`, `balance`, and `reject`.
     The default is `constrain`.
 
-**Returns:** a new `Temporal.DateTime` object (or the same object if `thing` was a `Temporal.DateTime` object.)
+**Returns:** a new `Temporal.DateTime` object.
 
 This static method creates a new `Temporal.DateTime` object from another value.
-If the value is a string, it must be in ISO 8601 format.
-Any time zone part is optional and will be ignored.
-If the string isn't valid according to ISO 8601, then a `RangeError` will be thrown regardless of the value of `disambiguation`.
-
-If the value is another `Temporal.DateTime` object, the same object is returned.
+If the value is another `Temporal.DateTime` object, a new object representing the same date and time is returned.
 If the value is any other object, a `Temporal.DateTime` will be constructed from the values of any `year`, `month`, `day`, `hour`, `minute`, `second`, `millisecond`, `microsecond`, and `nanosecond` properties that are present.
 At least the `year`, `month`, and `day` properties must be present.
 Any other missing ones will be assumed to be 0.
+
+Any non-object value is converted to a string, which is expected to be in ISO 8601 format.
+Any time zone part is optional and will be ignored.
+If the string isn't valid according to ISO 8601, then a `RangeError` will be thrown regardless of the value of `disambiguation`.
 
 The `disambiguation` option works as follows:
 - In `constrain` mode (the default), any out-of-range values are clamped to the nearest in-range value.

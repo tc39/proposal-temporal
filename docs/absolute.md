@@ -41,18 +41,18 @@ turnOfTheCentury = new Temporal.Absolute(-2208988800000000000n);  // => 1900-01-
 
 ## Static methods
 
-### Temporal.Absolute.**from**(_thing_: string | Temporal.Absolute) : Temporal.Absolute
+### Temporal.Absolute.**from**(_thing_: any) : Temporal.Absolute
 
 **Parameters:**
-- `thing` (string or `Temporal.Absolute`): The value representing the desired point in time.
+- `thing`: The value representing the desired point in time.
 
-**Returns:** a new `Temporal.Absolute` object (or the same object if `thing` was a `Temporal.Absolute` object.)
+**Returns:** a new `Temporal.Absolute` object.
 
 This static method creates a new `Temporal.Absolute` object from another value.
-If the value is a string, it must be in ISO 8601 format, including a date, a time, and a time zone.
-If the value is an object, it must be another `Temporal.Absolute` object, in which case the same object is returned.
+If the value is another `Temporal.Absolute` object, a new object representing the same point in time is returned.
 
-If `thing` is a string, and the point in time cannot be uniquely determined from the string, then this function throws an exception.
+Any other value is converted to a string, which is expected to be in ISO 8601 format, including a date, a time, and a time zone.
+If the point in time cannot be uniquely determined from the string, then this function throws an exception.
 This includes the case when `thing` is a validly-formatted ISO 8601 string denoting a time that doesn't exist, for example because it was skipped in a daylight saving time transition.
 
 Example usage:

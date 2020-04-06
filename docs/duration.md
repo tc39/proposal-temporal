@@ -58,10 +58,10 @@ new Temporal.Duration()  // => PT0S
 
 ## Static methods
 
-### Temporal.Duration.**from**(_thing_: string | object, _options_?: object) : Temporal.Duration
+### Temporal.Duration.**from**(_thing_: any, _options_?: object) : Temporal.Duration
 
 **Parameters:**
-- `thing` (string or object): A `Duration`-like object or a string from which to create a `Temporal.Duration`.
+- `thing`: A `Duration`-like object or a string from which to create a `Temporal.Duration`.
 - `options` (optional object): An object with properties representing options for constructing the duration.
   The following options are recognized:
   - `disambiguation` (optional string): How to disambiguate if any of the other arguments are out of range.
@@ -70,11 +70,12 @@ new Temporal.Duration()  // => PT0S
 
 **Returns:** a new `Temporal.Duration` object.
 
-This static method creates a new duration from another value.
-The value can be a string in the ISO 8601 format described above.
-Or, if the value is an object, it can either be another `Temporal.Duration` object, or a plain object with properties `years`, `months`, etc.
+This static method creates a new `Temporal.Duration` from another value.
+If the value is another `Temporal.Duration` object, a new object representing the same duration is returned.
+If the value is any other object, a `Temporal.Duration` will be constructed from the values of any `years`, `months`, `days`, `hours`, `minutes`, `seconds`, `milliseconds`, `microseconds`, and `nanoseconds` properties that are present.
+Any missing ones will be assumed to be 0.
 
-When creating a duration from an object, this function is often more readable to use than `new Temporal.Duration()` because the names of the properties are visible in the code.
+Any non-object value is converted to a string, which is expected to be in ISO 8601 format.
 
 The `disambiguation` option controls how out-of-range values are interpreted:
 - `constrain` (the default): Infinite values are clamped to `Number.MAX_VALUE`.

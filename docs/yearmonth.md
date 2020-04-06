@@ -34,25 +34,25 @@ ym = new Temporal.YearMonth(2019, 6)  // => 2019-06
 
 ## Static methods
 
-### Temporal.YearMonth.**from**(_thing_: string | object, _options_?: object) : Temporal.YearMonth
+### Temporal.YearMonth.**from**(_thing_: any, _options_?: object) : Temporal.YearMonth
 
 **Parameters:**
-- `thing` (string or object): The value representing the desired month.
+- `thing`: The value representing the desired month.
 - `options` (optional object): An object with properties representing options for constructing the date.
   The following options are recognized:
   - `disambiguation` (string): How to deal with out-of-range values in `thing`.
     Allowed values are `constrain`, `balance`, and `reject`.
     The default is `constrain`.
 
-**Returns:** a new `Temporal.YearMonth` object (or the same object if `thing` was a `Temporal.YearMonth` object.)
+**Returns:** a new `Temporal.YearMonth` object.
 
 This static method creates a new `Temporal.YearMonth` object from another value.
-If the value is a string, it must be in ISO 8601 format.
+If the value is another `Temporal.YearMonth` object, a new object representing the same month is returned.
+If the value is any other object, it must have `year` and `month` properties, and a `Temporal.YearMonth` will be constructed from them.
+
+Any non-object value is converted to a string, which is expected to be in ISO 8601 format.
 Any parts of the string other than the year and the month are optional and will be ignored.
 If the string isn't valid according to ISO 8601, then a `RangeError` will be thrown regardless of the value of `disambiguation`.
-
-If the value is another `Temporal.YearMonth` object, the same object is returned.
-If the value is any other object, it must have `year` and `month` properties, and a `Temporal.YearMonth` will be constructed from them.
 
 The `disambiguation` option works as follows:
 - In `constrain` mode (the default), any out-of-range values are clamped to the nearest in-range value.

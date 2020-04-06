@@ -32,24 +32,25 @@ time = new Temporal.Time(13, 37)  // => 13:37
 
 ## Static methods
 
-### Temporal.Time.**from**(_thing_: string | object, _options_?: object) : Temporal.Time
+### Temporal.Time.**from**(_thing_: any, _options_?: object) : Temporal.Time
 
 **Parameters:**
-- `thing` (string or object): The value representing the desired time.
+- `thing`: The value representing the desired time.
 - `options` (optional object): An object with properties representing options for constructing the time.
   The following options are recognized:
   - `disambiguation` (optional string): How to deal with out-of-range values of the other parameters.
     Allowed values are `constrain`, `balance`, and `reject`.
     The default is `constrain`.
 
-**Returns:** a new `Temporal.Time` object (or the same object if `thing` was a `Temporal.Time` object.)
+**Returns:** a new `Temporal.Time` object.
 
 This static method creates a new `Temporal.Time` object from another value.
-If the value is a string, it must be in ISO 8601 format.
-If the string designates a date or a time zone, they will be ignored.
-If the value is another `Temporal.Time` object, the same object is returned.
+If the value is another `Temporal.Time` object, a new object representing the same time is returned.
 If the value is any other object, a `Temporal.Time` will be constructed from the values of any `hour`, `minute`, `second`, `millisecond`, `microsecond`, and `nanosecond` properties that are present.
 Any missing ones will be assumed to be 0.
+
+Any non-object value will be converted to a string, which is expected to be in ISO 8601 format.
+If the string designates a date or a time zone, they will be ignored.
 
 The `disambiguation` option works as follows:
 - In `constrain` mode (the default), any out-of-range values are clamped to the nearest in-range value.
