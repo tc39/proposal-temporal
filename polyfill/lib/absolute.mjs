@@ -171,8 +171,8 @@ export class Absolute {
     return result;
   }
   static from(item) {
-    const absolute = ES.ToTemporalAbsolute(item);
-    const result = new this(bigIntIfAvailable(GetSlot(absolute, EPOCHNANOSECONDS)));
+    const ns = ES.ToTemporalAbsolute(item);
+    const result = new this(bigIntIfAvailable(ns));
     if (!ES.IsTemporalAbsolute(result)) throw new TypeError('invalid result');
     return result;
   }

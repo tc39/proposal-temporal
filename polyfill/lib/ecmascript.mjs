@@ -181,10 +181,9 @@ export const ES = ObjectAssign({}, ES2019, {
     return { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
   },
   ToTemporalAbsolute: (item) => {
-    if (ES.IsTemporalAbsolute(item)) return item;
+    if (ES.IsTemporalAbsolute(item)) return GetSlot(item, EPOCHNANOSECONDS);
     const isoString = ES.ToString(item);
-    const epochNs = ES.TemporalAbsoluteFromString(isoString);
-    return new TemporalAbsolute(epochNs);
+    return ES.TemporalAbsoluteFromString(isoString);
   },
   TemporalAbsoluteFromString: (isoString) => {
     const {
