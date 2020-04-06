@@ -446,7 +446,19 @@ export const ES = ObjectAssign({}, ES2019, {
     return { month, day };
   },
   ToTemporalDuration: (item, disambiguation) => {
-    if (ES.IsTemporalDuration(item)) return item;
+    if (ES.IsTemporalDuration(item)) {
+      return {
+        years: GetSlot(item, YEARS),
+        months: GetSlot(item, MONTHS),
+        days: GetSlot(item, DAYS),
+        hours: GetSlot(item, HOURS),
+        minutes: GetSlot(item, MINUTES),
+        seconds: GetSlot(item, SECONDS),
+        milliseconds: GetSlot(item, MILLISECONDS),
+        microseconds: GetSlot(item, MICROSECONDS),
+        nanoseconds: GetSlot(item, NANOSECONDS)
+      };
+    }
     let props = ES.ToRecord(item, [
       ['days', 0],
       ['hours', 0],
@@ -462,19 +474,9 @@ export const ES = ObjectAssign({}, ES2019, {
       const isoString = ES.ToString(item);
       props = ES.ParseTemporalDurationString(isoString);
     }
-    let {
-      days = 0,
-      hours = 0,
-      microseconds = 0,
-      milliseconds = 0,
-      minutes = 0,
-      months = 0,
-      nanoseconds = 0,
-      seconds = 0,
-      years = 0
-    } = props;
+    const { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = props;
 
-    ({ years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.RegulateDuration(
+    return ES.RegulateDuration(
       years,
       months,
       days,
@@ -485,8 +487,7 @@ export const ES = ObjectAssign({}, ES2019, {
       microseconds,
       nanoseconds,
       disambiguation
-    ));
-    return new TemporalDuration(years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+    );
   },
   RegulateDuration: (
     years,
@@ -538,14 +539,14 @@ export const ES = ObjectAssign({}, ES2019, {
 
     return { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
   },
-  ToLimitedTemporalDuration: (item, disallowedSlots = []) => {
+  ToLimitedTemporalDuration: (item, disallowedProperties = []) => {
     if (typeof item !== 'object' || item === null) {
       throw new TypeError('Unexpected type for duration');
     }
     const duration = ES.ToTemporalDuration(item, 'reject');
-    for (let slot of disallowedSlots) {
-      if (GetSlot(duration, slot) !== 0) {
-        throw new RangeError(`invalid duration field ${slot}`);
+    for (const property of disallowedProperties) {
+      if (duration[property] !== 0) {
+        throw new RangeError(`invalid duration field ${property}`);
       }
     }
     return duration;
