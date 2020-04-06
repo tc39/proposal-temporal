@@ -65,9 +65,12 @@
       <emu-alg>
         1. Let _disambiguation_ be ? ToTemporalDisambiguation(_options_).
         1. If Type(_item_) is Object, then
-          1. Return ? ToTemporalDate(_item_, _disambiguation_).
-        1. Let _string_ be ? ToString(_item_).
-        1. Return ? TemporalDateFromString(_string_, _disambiguation_).
+          1. Let _result_ be ? ToTemporalDateRecord(_item_).
+        1. Else,
+          1. Let _string_ be ? ToString(_item_).
+          1. Let _result_ be ? ParseTemporalDateString(_string_).
+        1. Set _result_ to ? RegulateDate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _disambiguation_).
+        1. Return ? CreateTemporalDate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]]).
       </emu-alg>
     </emu-clause>
 
@@ -436,17 +439,6 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-temporaldatefromstring" aoid="TemporalDateFromString">
-      <h1>TemporalDateFromString ( _isoString_, _disambiguation_ )</h1>
-      <emu-alg>
-        1. Assert: Type(_isoString_) is String.
-        1. Assert: _disambiguation_ is one of *"constrain"*, *"balance"*, or *"reject"*.
-        1. Let _result_ be ? ParseTemporalDateString(_isoString_).
-        1. Let _result_ be ? RegulateDate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _disambiguation_).
-        1. Return ? CreateTemporalDate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]]).
-      </emu-alg>
-    </emu-clause>
-
     <emu-clause id="sec-temporal-parsetemporaldatestring" aoid="ParseTemporalDateString">
       <h1>ParseTemporalDateString ( _isoString_ )</h1>
       <emu-alg>
@@ -510,13 +502,19 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-totemporaldate" aoid="ToTemporalDate">
-      <h1>ToTemporalDate ( _temporalDateLike_, _disambiguation_ )</h1>
+    <emu-clause id="sec-temporal-totemporaldaterecord" aoid="ToTemporalDateRecord">
+      <h1>ToTemporalDateRecord ( _temporalDateLike_ )</h1>
       <emu-alg>
-        1. Assert: _disambiguation_ is one of *"constrain"*, *"balance"*, or *"reject"*.
         1. Assert: Type(_temporalDateLike_) is Object.
         1. If _temporalDateLike_ has an [[InitializedTemporalDate]] internal slot, then
-          1. Return ? CreateTemporalDate(_temporalDateLike_.[[Year]], _temporalDateLike_.[[Month]], _temporalDateLike_.[[Day]]).
+          1. Return the Record {
+              [[Hour]]: _temporalDateLike_.[[Hour]],
+              [[Minute]]: _temporalDateLike_.[[Minute]],
+              [[Second]]: _temporalDateLike_.[[Second]],
+              [[Millisecond]]: _temporalDateLike_.[[Millisecond]],
+              [[Microsecond]]: _temporalDateLike_.[[Microsecond]],
+              [[Nanosecond]]: _temporalDateLike_.[[Nanosecond]]
+            }.
         1. Let _result_ be a new Record with all the internal slots given in the Internal Slot column in <emu-xref href="#table-temporal-temporaldatelike-properties"></emu-xref>.
         1. For each row of <emu-xref href="#table-temporal-temporaldatelike-properties"></emu-xref>, except the header row, in table order, do
           1. Let _property_ be the Property value of the current row.
@@ -525,8 +523,7 @@
             1. Throw a *TypeError* exception.
           1. Let _value_ be ? ToInteger(_value_).
           1. Set _result_'s internal slot whose name is the Internal Slot value of the current row to _value_.
-        1. Set _result_ to ? RegulateDate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _disambiguation_).
-        1. Return ? CreateTemporalDate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]]).
+        1. Return _result_.
       </emu-alg>
     </emu-clause>
 

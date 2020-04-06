@@ -65,9 +65,12 @@
       <emu-alg>
         1. Let _disambiguation_ be ? ToTemporalDisambiguation(_options_).
         1. If Type(_item_) is Object, then
-          1. Return ? ToTemporalYearMonth(_item_, _disambiguation_).
-        1. Let _string_ be ? ToString(_item_).
-        1. Return ? TemporalYearMonthFromString(_string_, _disambiguation_).
+          1. Let _result_ be ? ToTemporalYearMonthRecord(_item_).
+        1. Else,
+          1. Let _string_ be ? ToString(_item_).
+          1. Let _result_ be ? ParseTemporalYearMonthString(_string_).
+        1. Set _result_ to ? RegulateYearMonth(_result_.[[Year]], _result_.[[Month]], _disambiguation_).
+        1. Return ? CreateTemporalYearMonth(_result_.[[Year]], _result_.[[Month]]).
       </emu-alg>
     </emu-clause>
 
@@ -479,23 +482,15 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-temporalyearmonthfromstring" aoid="TemporalYearMonthFromString">
-      <h1>TemporalYearMonthFromString ( _isoString_, _disambiguation_ )</h1>
+    <emu-clause id="sec-temporal-totemporalyearmonthrecord" aoid="ToTemporalYearMonthRecord">
+      <h1>ToTemporalYearMonthRecord ( _temporalYearMonthLike_ )</h1>
       <emu-alg>
-        1. Assert: Type(_isoString_) is String.
-        1. Let _result_ be ? ParseTemporalYearMonthString(_isoString_).
-        1. Set _result_ to ? RegulateYearMonth(_result_.[[Year]], _result_.[[Month]], _disambiguation_).
-        1. Return ? CreateTemporalYearMonth(_result_.[[Year]], _result_.[[Month]]).
-      </emu-alg>
-    </emu-clause>
-
-    <emu-clause id="sec-temporal-totemporalyearmonth" aoid="ToTemporalYearMonth">
-      <h1>ToTemporalYearMonth ( _temporalYearMonthLike_, _disambiguation_ )</h1>
-      <emu-alg>
-        1. Assert: _disambiguation_ is one of *"constrain"*, *"balance"*, or *"reject"*.
         1. Assert: Type(_temporalYearMonthLike_) is Object.
         1. If _temporalYearMonthLike_ has an [[InitializedTemporalYearMonth]] internal slot, then
-          1. Return ? CreateTemporalYearMonth(_temporalYearMonthLike_.[[Year]], _temporalYearMonthLike_.[[Month]]).
+          1. Return the Record {
+              [[Year]]: _temporalYearMonthLike_.[[Year]],
+              [[Month]]: _temporalYearMonthLike_.[[Month]]
+            }.
         1. Let _result_ be a new Record with all the internal slots given in the Internal Slot column in <emu-xref href="#table-temporal-temporalyearmonthlike-properties"></emu-xref>.
         1. For each row of <emu-xref href="#table-temporal-temporalyearmonthlike-properties"></emu-xref>, except the header row, in table order, do
           1. Let _property_ be the Property value of the current row.
@@ -504,8 +499,7 @@
             1. Throw a *TypeError* exception.
           1. Let _value_ be ? ToInteger(_value_).
           1. Set _result_'s internal slot whose name is the Internal Slot value of the current row to _value_.
-        1. Set _result_ to ? RegulateYearMonth(_result_.[[Year]], _result_.[[Month]], _disambiguation_).
-        1. Return ? CreateTemporalYearMonth(_result_.[[Year]], _result_.[[Month]]).
+        1. Return _result_.
       </emu-alg>
     </emu-clause>
 

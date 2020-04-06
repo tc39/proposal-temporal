@@ -72,9 +72,12 @@
       <emu-alg>
         1. Let _disambiguation_ be ? ToTemporalDisambiguation(_options_).
         1. If Type(_item_) is Object, then
-          1. Return ? ToTemporalTime(_item_, _disambiguation_).
-        1. Let _string_ be ? ToString(_item_).
-        1. Return ? TemporalTimeFromString(_string_, _disambiguation_).
+          1. Let _result_ be ? ToTemporalTimeRecord(_item_).
+        1. Else,
+          1. Let _string_ be ? ToString(_item_).
+          1. Let _result_ be ? ParseTemporalTimeString(_string_).
+        1. Set _result_ to ? RegulateTime(_result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]], _disambiguation_).
+        1. Return ? CreateTemporalTime(_result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]).
       </emu-alg>
     </emu-clause>
 
@@ -600,33 +603,27 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-temporaltimefromstring" aoid="TemporalTimeFromString">
-      <h1>TemporalTimeFromString ( _isoString_, _disambiguation_ )</h1>
-      <emu-alg>
-        1. Assert: Type(_isoString_) is String.
-        1. Assert: _disambiguation_ is one of *"constrain"*, *"balance"*, or *"reject"*.
-        1. Let _result_ be ? ParseTemporalTimeString(_isoString_).
-        1. Set _result_ to ? RegulateTime(_result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]], _disambiguation_).
-        1. Return ? CreateTemporalTime(_result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]).
-      </emu-alg>
-    </emu-clause>
-
-    <emu-clause id="sec-temporal-totemporaltime" aoid="ToTemporalTime">
-      <h1>ToTemporalTime ( _temporalTimeLike_, _disambiguation_ )</h1>
+    <emu-clause id="sec-temporal-totemporaltimerecord" aoid="ToTemporalTimeRecord">
+      <h1>ToTemporalTimeRecord ( _temporalTimeLike_ )</h1>
       <emu-note>The value of ? ToInteger(*undefined*) is 0.</emu-note>
       <emu-alg>
-        1. Assert: _disambiguation_ is one of *"constrain"*, *"balance"*, or *"reject"*.
         1. Assert: Type(_temporalTimeLike_) is Object.
         1. If _temporalTimeLike_ has an [[InitializedTemporalTime]] internal slot, then
-          1. Return ? CreateTemporalTime(_temporalTimeLike_.[[Hour]], _temporalTimeLike_.[[Minute]], _temporalTimeLike_.[[Second]], _temporalTimeLike_.[[Millisecond]], _temporalTimeLike_.[[Microsecond]], _temporalTimeLike_.[[Nanosecond]]).
+          1. Return the Record {
+              [[Hour]]: _temporalTimeLike_.[[Hour]],
+              [[Minute]]: _temporalTimeLike_.[[Minute]],
+              [[Second]]: _temporalTimeLike_.[[Second]],
+              [[Millisecond]]: _temporalTimeLike_.[[Millisecond]],
+              [[Microsecond]]: _temporalTimeLike_.[[Microsecond]],
+              [[Nanosecond]]: _temporalTimeLike_.[[Nanosecond]]
+            }.
         1. Let _result_ be a new Record with all the internal slots given in the Internal Slot column in <emu-xref href="#table-temporal-temporaltimelike-properties"></emu-xref>.
         1. For each row of <emu-xref href="#table-temporal-temporaltimelike-properties"></emu-xref>, except the header row, in table order, do
           1. Let _property_ be the Property value of the current row.
           1. Let _value_ be ? Get(_temporalTimeLike_, _property_).
           1. Let _value_ be ? ToInteger(_value_).
           1. Set _result_'s internal slot whose name is the Internal Slot value of the current row to _value_.
-        1. Set _result_ to ? RegulateTime(_result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]], _disambiguation_).
-        1. Return ? CreateTemporalTime(_result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]).
+        1. Return _result_.
       </emu-alg>
     </emu-clause>
 
