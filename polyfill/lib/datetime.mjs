@@ -316,18 +316,11 @@ export class DateTime {
 
   static from(item, options = undefined) {
     const disambiguation = ES.ToTemporalDisambiguation(options);
-    let result = ES.ToTemporalDateTime(item, disambiguation);
-    return new this(
-      GetSlot(result, YEAR),
-      GetSlot(result, MONTH),
-      GetSlot(result, DAY),
-      GetSlot(result, HOUR),
-      GetSlot(result, MINUTE),
-      GetSlot(result, SECOND),
-      GetSlot(result, MILLISECOND),
-      GetSlot(result, MICROSECOND),
-      GetSlot(result, NANOSECOND)
+    const { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.ToTemporalDateTime(
+      item,
+      disambiguation
     );
+    return new this(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
   }
   static compare(one, two) {
     if (!ES.IsTemporalDateTime(one) || !ES.IsTemporalDateTime(two)) throw new TypeError('invalid DateTime object');
