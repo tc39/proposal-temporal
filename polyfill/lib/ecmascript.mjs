@@ -325,7 +325,7 @@ export const ES = ObjectAssign({}, ES2019, {
     }
     return { month, day };
   },
-  ToTemporalDuration: (item, disambiguation) => {
+  ToTemporalDurationRecord: (item) => {
     if (ES.IsTemporalDuration(item)) {
       return {
         years: GetSlot(item, YEARS),
@@ -339,7 +339,7 @@ export const ES = ObjectAssign({}, ES2019, {
         nanoseconds: GetSlot(item, NANOSECONDS)
       };
     }
-    let props = ES.ToRecord(item, [
+    return ES.ToRecord(item, [
       ['days', 0],
       ['hours', 0],
       ['microseconds', 0],
@@ -350,24 +350,6 @@ export const ES = ObjectAssign({}, ES2019, {
       ['seconds', 0],
       ['years', 0]
     ]);
-    if (!props) {
-      const isoString = ES.ToString(item);
-      props = ES.ParseTemporalDurationString(isoString);
-    }
-    const { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = props;
-
-    return ES.RegulateDuration(
-      years,
-      months,
-      days,
-      hours,
-      minutes,
-      seconds,
-      milliseconds,
-      microseconds,
-      nanoseconds,
-      disambiguation
-    );
   },
   RegulateDuration: (
     years,
@@ -423,7 +405,7 @@ export const ES = ObjectAssign({}, ES2019, {
     if (typeof item !== 'object' || item === null) {
       throw new TypeError('Unexpected type for duration');
     }
-    const duration = ES.ToTemporalDuration(item, 'reject');
+    const duration = ES.ToTemporalDurationRecord(item, 'reject');
     for (const property of disallowedProperties) {
       if (duration[property] !== 0) {
         throw new RangeError(`invalid duration field ${property}`);

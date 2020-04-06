@@ -74,7 +74,7 @@ export class TimeZone {
     const before = ES.GetTimeZoneOffsetNanoseconds(utcns.minus(bigInt(86400 * 1e9)), GetSlot(this, IDENTIFIER));
     const after = ES.GetTimeZoneOffsetNanoseconds(utcns.plus(bigInt(86400 * 1e9)), GetSlot(this, IDENTIFIER));
     const nanoseconds = after.minus(before);
-    const diff = ES.ToTemporalDuration({ nanoseconds }, 'reject');
+    const diff = ES.ToTemporalDurationRecord({ nanoseconds }, 'reject');
     switch (disambiguation) {
       case 'earlier': {
         const earlier = dateTime.minus(diff);

@@ -228,7 +228,33 @@ export class Duration {
   }
   static from(item, options = undefined) {
     const disambiguation = ES.ToTemporalDisambiguation(options);
-    const {
+    let years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds;
+    if (typeof item === 'object' && item) {
+      ({
+        years,
+        months,
+        days,
+        hours,
+        minutes,
+        seconds,
+        milliseconds,
+        microseconds,
+        nanoseconds
+      } = ES.ToTemporalDurationRecord(item));
+    } else {
+      ({
+        years,
+        months,
+        days,
+        hours,
+        minutes,
+        seconds,
+        milliseconds,
+        microseconds,
+        nanoseconds
+      } = ES.ParseTemporalDurationString(ES.ToString(item)));
+    }
+    ({ years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.RegulateDuration(
       years,
       months,
       days,
@@ -237,8 +263,9 @@ export class Duration {
       seconds,
       milliseconds,
       microseconds,
-      nanoseconds
-    } = ES.ToTemporalDuration(item, disambiguation);
+      nanoseconds,
+      disambiguation
+    ));
     return new this(years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
   }
 }
