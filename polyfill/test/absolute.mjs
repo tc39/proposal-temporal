@@ -273,6 +273,14 @@ describe('Absolute', () => {
     it('throws when unable to disambiguate using offset', () => {
       throws(() => Absolute.from('2019-02-16T23:45-04:00[America/Sao_Paulo]'), RangeError);
     });
+    it('Absolute.from(string-convertible) converts to string', () => {
+      const obj = {
+        toString() {
+          return '2020-02-12T11:42+01:00[Europe/Amsterdam]';
+        }
+      };
+      equal(`${Absolute.from(obj)}`, '2020-02-12T10:42Z');
+    });
     it('Absolute.from(1) throws', () => throws(() => Absolute.from(1), RangeError));
     it('Absolute.from(-1) throws', () => throws(() => Absolute.from(-1), RangeError));
     it('Absolute.from(1n) throws', () => throws(() => Absolute.from(1n), RangeError));

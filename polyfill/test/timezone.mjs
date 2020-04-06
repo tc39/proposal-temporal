@@ -93,6 +93,14 @@ describe('TimeZone', () => {
       throws(() => Temporal.TimeZone.from('Z'));
       throws(() => Temporal.TimeZone.from('-08:00[America/Vancouver]'));
     });
+    it('TimeZone.from(string-convertible) converts to string', () => {
+      const obj = {
+        toString() {
+          return '2020-02-12T11:42+01:00[Europe/Amsterdam]';
+        }
+      };
+      equal(`${Temporal.TimeZone.from(obj)}`, 'Europe/Amsterdam');
+    });
   });
   describe('TimeZone.from(ISO string)', () => {
     test('1994-11-05T08:15:30-05:00', '-05:00');
