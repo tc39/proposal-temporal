@@ -52,9 +52,15 @@ Map a legacy ECMAScript Date instance into a Temporal.Absolute instance correspo
 ```javascript
 {{cookbook/getTimeZoneObjectFromIanaName.mjs}}
 ```
+
+## Serialization
+
 ### Zoned instant from instant and time zone
 
-Map a Temporal.Absolute instance and a time zone name into a string serialization of the local time in that zone corresponding to the instant in absolute time.
+Use the optional parameter of `Temporal.Absolute.prototype.toString()` to map a Temporal.Absolute instance and a time zone name into a string serialization of the local time in that zone corresponding to the instant in absolute time.
+
+Without the parameter, `Temporal.Absolute.prototype.toString()` gives a serialization in UTC time.
+Using the parameter is useful if you need your serialized strings to be in a specific time zone.
 
 ```javascript
 {{cookbook/getParseableZonedStringAtInstant.mjs}}
