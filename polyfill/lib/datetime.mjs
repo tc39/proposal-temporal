@@ -316,10 +316,55 @@ export class DateTime {
 
   static from(item, options = undefined) {
     const disambiguation = ES.ToTemporalDisambiguation(options);
-    const { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.ToTemporalDateTime(
-      item,
+    let year, month, day, hour, minute, second, millisecond, microsecond, nanosecond;
+    if (typeof item === 'object' && item) {
+      if (ES.IsTemporalDateTime(item)) {
+        year = GetSlot(item, YEAR);
+        month = GetSlot(item, MONTH);
+        day = GetSlot(item, DAY);
+        minute = GetSlot(item, MINUTE);
+        second = GetSlot(item, SECOND);
+        millisecond = GetSlot(item, MILLISECOND);
+        microsecond = GetSlot(item, MICROSECOND);
+        nanosecond = GetSlot(item, NANOSECOND);
+      } else {
+        ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.ToRecord(item, [
+          ['day'],
+          ['hour', 0],
+          ['microsecond', 0],
+          ['millisecond', 0],
+          ['minute', 0],
+          ['month'],
+          ['nanosecond', 0],
+          ['second', 0],
+          ['year']
+        ]));
+      }
+    } else {
+      ({
+        year,
+        month,
+        day,
+        hour,
+        minute,
+        second,
+        millisecond,
+        microsecond,
+        nanosecond
+      } = ES.ParseTemporalDateTimeString(ES.ToString(item)));
+    }
+    ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.RegulateDateTime(
+      year,
+      month,
+      day,
+      hour,
+      minute,
+      second,
+      millisecond,
+      microsecond,
+      nanosecond,
       disambiguation
-    );
+    ));
     return new this(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
   }
   static compare(one, two) {

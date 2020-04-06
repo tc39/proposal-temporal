@@ -170,7 +170,20 @@ export class Date {
   }
   static from(item, options = undefined) {
     const disambiguation = ES.ToTemporalDisambiguation(options);
-    const { year, month, day } = ES.ToTemporalDate(item, disambiguation);
+    let year, month, day;
+    if (typeof item === 'object' && item) {
+      if (ES.IsTemporalDate(item)) {
+        year = GetSlot(item, YEAR);
+        month = GetSlot(item, MONTH);
+        day = GetSlot(item, DAY);
+      } else {
+        // Intentionally alphabetical
+        ({ year, month, day } = ES.ToRecord(item, [['day'], ['month'], ['year']]));
+      }
+    } else {
+      ({ year, month, day } = ES.ParseTemporalDateString(ES.ToString(item)));
+    }
+    ({ year, month, day } = ES.RegulateDate(year, month, day, disambiguation));
     return new this(year, month, day);
   }
   static compare(one, two) {

@@ -57,7 +57,19 @@ export class MonthDay {
   }
   static from(item, options = undefined) {
     const disambiguation = ES.ToTemporalDisambiguation(options);
-    const { month, day } = ES.ToTemporalMonthDay(item, disambiguation);
+    let month, day;
+    if (typeof item === 'object' && item) {
+      if (ES.IsTemporalMonthDay(item)) {
+        month = GetSlot(item, MONTH);
+        day = GetSlot(item, DAY);
+      } else {
+        // Intentionally alphabetical
+        ({ month, day } = ES.ToRecord(item, [['day'], ['month']]));
+      }
+    } else {
+      ({ month, day } = ES.ParseTemporalMonthDayString(ES.ToString(item)));
+    }
+    ({ month, day } = ES.RegulateMonthDay(month, day, disambiguation));
     return new this(month, day);
   }
   static compare(one, two) {
