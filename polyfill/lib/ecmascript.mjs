@@ -416,15 +416,19 @@ export const ES = ObjectAssign({}, ES2019, {
     return { year, month };
   },
   ToTemporalMonthDay: (item, disambiguation) => {
-    if (ES.IsTemporalMonthDay(item)) return item;
+    if (ES.IsTemporalMonthDay(item)) {
+      return {
+        month: GetSlot(item, MONTH),
+        day: GetSlot(item, DAY)
+      };
+    }
     let props = ES.ToRecord(item, [['day'], ['month']]);
     if (!props) {
       const isoString = ES.ToString(item);
       props = ES.ParseTemporalMonthDayString(isoString);
     }
-    let { day, month } = props;
-    ({ month, day } = ES.RegulateMonthDay(month, day, disambiguation));
-    return new TemporalMonthDay(month, day);
+    const { month, day } = props;
+    return ES.RegulateMonthDay(month, day, disambiguation);
   },
   RegulateMonthDay: (month, day, disambiguation) => {
     const leapYear = 1972;
