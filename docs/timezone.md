@@ -143,6 +143,11 @@ tz.getOffsetFor(timestamp);  // => -08:00
 // UTC is always 0 offset
 tz = new Temporal.TimeZone('UTC');
 tz.getOffsetFor(timestamp);  // => +00:00
+
+// Differences between DST and non-DST
+tz = Temporal.TimeZone.from('Europe/London');
+tz.getOffsetFor(Temporal.Absolute.from('2020-08-06T15:00Z'));  // => +01:00
+tz.getOffsetFor(Temporal.Absolute.from('2020-11-06T01:00Z'));  // => +00:00
 ```
 
 ### timeZone.**getDateTimeFor**(_absolute_: Temporal.Absolute) : Temporal.DateTime
