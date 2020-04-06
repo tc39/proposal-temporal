@@ -132,8 +132,8 @@ export class YearMonth {
   }
   static from(item, options = undefined) {
     const disambiguation = ES.ToTemporalDisambiguation(options);
-    let result = ES.ToTemporalYearMonth(item, disambiguation);
-    return new this(GetSlot(result, YEAR), GetSlot(result, MONTH));
+    const { year, month } = ES.ToTemporalYearMonth(item, disambiguation);
+    return new this(year, month);
   }
   static compare(one, two) {
     if (!ES.IsTemporalYearMonth(one) || !ES.IsTemporalYearMonth(two)) throw new TypeError('invalid YearMonth object');

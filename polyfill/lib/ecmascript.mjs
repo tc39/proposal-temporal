@@ -385,15 +385,19 @@ export const ES = ObjectAssign({}, ES2019, {
     return { hour, minute, second, millisecond, microsecond, nanosecond };
   },
   ToTemporalYearMonth: (item, disambiguation) => {
-    if (ES.IsTemporalYearMonth(item)) return item;
+    if (ES.IsTemporalYearMonth(item)) {
+      return {
+        year: GetSlot(item, YEAR),
+        month: GetSlot(item, MONTH)
+      };
+    }
     let props = ES.ToRecord(item, [['month'], ['year']]);
     if (!props) {
       const isoString = ES.ToString(item);
       props = ES.ParseTemporalYearMonthString(isoString);
     }
-    let { month, year } = props;
-    ({ year, month } = ES.RegulateYearMonth(year, month, disambiguation));
-    return new TemporalYearMonth(year, month);
+    const { year, month } = props;
+    return ES.RegulateYearMonth(year, month, disambiguation);
   },
   RegulateYearMonth: (year, month, disambiguation) => {
     switch (disambiguation) {
