@@ -6,6 +6,9 @@ Since `Temporal.Absolute` and `Temporal.DateTime` do not contain any time zone i
 
 Finally, the `Temporal.TimeZone` object itself provides access to a list of the time zones in the IANA time zone database.
 
+An API for creating custom time zones is under discussion.
+See [Custom Time Zone Draft](./timezone-draft.md) for more information.
+
 ## Constructor
 
 ### **new Temporal.TimeZone**(_timeZoneIdentifier_: string) : Temporal.TimeZone
