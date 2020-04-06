@@ -181,6 +181,10 @@ export const ES = ObjectAssign({}, ES2019, {
   ToTemporalAbsolute: (item) => {
     if (ES.IsTemporalAbsolute(item)) return item;
     const isoString = ES.ToString(item);
+    const epochNs = ES.TemporalAbsoluteFromString(isoString);
+    return new TemporalAbsolute(epochNs);
+  },
+  TemporalAbsoluteFromString: (isoString) => {
     const {
       year,
       month,
@@ -207,10 +211,10 @@ export const ES = ObjectAssign({}, ES2019, {
       microsecond,
       nanosecond
     );
-    if (possibleEpochNs.length === 1) return new TemporalAbsolute(possibleEpochNs[0]);
+    if (possibleEpochNs.length === 1) return possibleEpochNs[0];
     for (const epochNs of possibleEpochNs) {
       const possibleOffset = ES.GetTimeZoneOffsetString(epochNs, ianaName);
-      if (possibleOffset === offset) return new TemporalAbsolute(epochNs);
+      if (possibleOffset === offset) return epochNs;
     }
     throw new RangeError(`'${isoString}' doesn't uniquely identify a Temporal.Absolute`);
   },
