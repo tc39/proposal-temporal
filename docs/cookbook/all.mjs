@@ -4,6 +4,7 @@ import './getBusinessOpenStateText.mjs';
 import './getCurrentDate.mjs';
 import './getElapsedDurationSinceInstant.mjs';
 import './getFirstTuesdayOfMonth.mjs';
+import './getInstantBeforeOldRecord.mjs';
 import './getLocalizedArrival.mjs';
 import './getParseableZonedStringAtInstant.mjs';
 import './getParseableZonedStringWithLocalTimeInOtherZone.mjs';
