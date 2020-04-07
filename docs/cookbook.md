@@ -150,6 +150,15 @@ Map localized departure time and duration into localized arrival time.
 {{cookbook/getLocalizedArrival.mjs}}
 ```
 
+### Schedule a reminder ahead of matching a record-setting duration
+
+Map a `Temporal.Absolute` instance, a previous-record `Temporal.Duration`, and an advance-notice `Temporal.Duration` into a `Temporal.Absolute` instance corresponding with an absolute instant ahead of the instant at which the previous record will be matched by the specified window.
+This could be used for workout tracking, racing (including _long_ and potentially time-zone-crossing races like the Bullrun Rally, Iditarod, Self-Transcendence 3100, and Clipper Round The World), or even open-ended analogs like event-every-day "streaks".
+
+```javascript
+{{cookbook/getInstantBeforeOldRecord.mjs}}
+```
+
 ### Nth weekday of the month
 
 Example of getting a `Temporal.Date` representing the first Tuesday of the given `Temporal.YearMonth`, adaptable to other weekdays.
