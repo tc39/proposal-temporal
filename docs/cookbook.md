@@ -100,3 +100,11 @@ It's a bit more complicated to do the above mapping as a number of seconds inste
 ```javascript
 {{cookbook/getUtcOffsetSecondsAtInstant.mjs}}
 ```
+
+### Offset between two time zones at an instant
+
+With a small variation on the previous recipe we can map a `Temporal.Absolute` instance and two time zones into the signed difference of UTC offsets between those time zones at that instant, as a number of seconds.
+
+```javascript
+{{cookbook/getUtcOffsetDifferenceSecondsAtInstant.mjs}}
+```
