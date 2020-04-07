@@ -84,3 +84,11 @@ This could be used when converting user-input date-time values between time zone
 ```javascript
 {{cookbook/getParseableZonedStringWithLocalTimeInOtherZone.mjs}}
 ```
+
+### UTC offset for a zoned event, as a string
+
+Use `Temporal.TimeZone.getOffsetFor()` to map a `Temporal.Absolute` instance and a time zone into the UTC offset at that instant in that time zone, as a string.
+
+```javascript
+{{cookbook/getUtcOffsetStringAtInstant.mjs}}
+```
