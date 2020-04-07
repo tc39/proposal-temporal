@@ -92,3 +92,11 @@ Use `Temporal.TimeZone.getOffsetFor()` to map a `Temporal.Absolute` instance and
 ```javascript
 {{cookbook/getUtcOffsetStringAtInstant.mjs}}
 ```
+
+### UTC offset for a zoned event, as a number of seconds
+
+It's a bit more complicated to do the above mapping as a number of seconds instead of a string.
+
+```javascript
+{{cookbook/getUtcOffsetSecondsAtInstant.mjs}}
+```
