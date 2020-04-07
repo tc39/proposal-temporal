@@ -124,6 +124,14 @@ With a small variation on the previous recipe we can map a `Temporal.Absolute` i
 
 ## Arithmetic
 
+### Unit-constrained duration between now and a past/future zoned event
+
+Map two Temporal.Absolute instances into an ascending/descending order indicator and a Temporal.Duration instance representing the duration between the two instants without using units coarser than specified (e.g., for presenting a meaningful countdown with vs. without using months or days).
+
+```javascript
+{{cookbook/getElapsedDurationSinceInstant.mjs}}
+```
+
 ### Nth weekday of the month
 
 Example of getting a `Temporal.Date` representing the first Tuesday of the given `Temporal.YearMonth`, adaptable to other weekdays.
