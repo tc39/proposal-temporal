@@ -7,6 +7,7 @@ import './getParseableZonedStringWithLocalTimeInOtherZone.mjs';
 import './getSortedLocalDateTimes.mjs';
 import './getTimeStamp.mjs';
 import './getTimeZoneObjectFromIanaName.mjs';
+import './getUtcOffsetSecondsAtInstant.mjs';
 import './getUtcOffsetStringAtInstant.mjs';
 import './legacyDateFromDateTime.mjs';
 import './sortAbsoluteInstants.mjs';
