@@ -1,6 +1,7 @@
 import './absoluteFromLegacyDate.mjs';
 import './dateTimeFromLegacyDate.mjs';
 import './getCurrentDate.mjs';
+import './getElapsedDurationSinceInstant.mjs';
 import './getFirstTuesdayOfMonth.mjs';
 import './getParseableZonedStringAtInstant.mjs';
 import './getParseableZonedStringWithLocalTimeInOtherZone.mjs';
