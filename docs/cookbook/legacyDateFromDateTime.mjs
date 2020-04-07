@@ -23,7 +23,7 @@ function getLegacyDateInUTCFromDateTime(dateTime) {
 
 const dateTime = Temporal.DateTime.from('2020-01-01T00:00:01Z');
 const result = getLegacyDateInUTCFromDateTime(dateTime);
-assert.equal(result.getDate(), 1); // Day of the month
-assert.equal(result.getFullYear(), 2020);
-assert.equal(result.getMonth(), 0); // the month (zero-indexed)
+assert.equal(result.getUTCDate(), 1); // Day of the month
+assert.equal(result.getUTCFullYear(), 2020);
+assert.equal(result.getUTCMonth(), 0); // the month (zero-indexed)
 assert.equal(result.toISOString(), '2020-01-01T00:00:01.000Z');
