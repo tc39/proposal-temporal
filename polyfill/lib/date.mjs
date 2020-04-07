@@ -184,7 +184,9 @@ export class Date {
       ({ year, month, day } = ES.ParseTemporalDateString(ES.ToString(item)));
     }
     ({ year, month, day } = ES.RegulateDate(year, month, day, disambiguation));
-    return new this(year, month, day);
+    const result = new this(year, month, day);
+    if (!ES.IsTemporalDate(result)) throw new TypeError('invalid result');
+    return result;
   }
   static compare(one, two) {
     if (!ES.IsTemporalDate(one) || !ES.IsTemporalDate(two)) throw new TypeError('invalid Date object');

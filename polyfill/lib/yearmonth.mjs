@@ -145,7 +145,9 @@ export class YearMonth {
       ({ year, month } = ES.ParseTemporalYearMonthString(ES.ToString(item)));
     }
     ({ year, month } = ES.RegulateYearMonth(year, month, disambiguation));
-    return new this(year, month);
+    const result = new this(year, month);
+    if (!ES.IsTemporalYearMonth(result)) throw new TypeError('invalid result');
+    return result;
   }
   static compare(one, two) {
     if (!ES.IsTemporalYearMonth(one) || !ES.IsTemporalYearMonth(two)) throw new TypeError('invalid YearMonth object');

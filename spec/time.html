@@ -76,8 +76,9 @@
         1. Else,
           1. Let _string_ be ? ToString(_item_).
           1. Let _result_ be ? ParseTemporalTimeString(_string_).
+        1. Let _constructor_ be the *this* value.
         1. Set _result_ to ? RegulateTime(_result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]], _disambiguation_).
-        1. Return ? CreateTemporalTime(_result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]).
+        1. Return ? CreateTemporalTimeFromStatic(_constructor_, _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]).
       </emu-alg>
     </emu-clause>
 
@@ -600,6 +601,18 @@
           [[Microsecond]]: _microsecond_,
           [[Nanosecond]]: _nanosecond_
           }.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-createtemporaltimefromstatic" aoid="CreateTemporalTimeFromStatic">
+      <h1>CreateTemporalTimeFromStatic ( _constructor_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_ )</h1>
+      <emu-alg>
+        1. Assert: ! ValidateTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_) is *true*.
+        1. If ! IsConstructor(_constructor_) is *false*, then
+          1. Throw a *TypeError* exception.
+        1. Let _result_ be ? Construct(_constructor_, « _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_ »).
+        1. Perform ? RequireInternalSlot(_result_, [[InitializedTemporalTime]]).
+        1. Return _result_.
       </emu-alg>
     </emu-clause>
 

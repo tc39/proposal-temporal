@@ -259,7 +259,9 @@ export class Time {
       nanosecond,
       disambiguation
     ));
-    return new this(hour, minute, second, millisecond, microsecond, nanosecond);
+    const result = new this(hour, minute, second, millisecond, microsecond, nanosecond);
+    if (!ES.IsTemporalTime(result)) throw new TypeError('invalid result');
+    return result;
   }
   static compare(one, two) {
     if (!ES.IsTemporalTime(one) || !ES.IsTemporalTime(two)) throw new TypeError('invalid Time object');

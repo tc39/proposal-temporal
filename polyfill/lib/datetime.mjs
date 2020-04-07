@@ -365,7 +365,9 @@ export class DateTime {
       nanosecond,
       disambiguation
     ));
-    return new this(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
+    const result = new this(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
+    if (!ES.IsTemporalDateTime(result)) throw new TypeError('invalid result');
+    return result;
   }
   static compare(one, two) {
     if (!ES.IsTemporalDateTime(one) || !ES.IsTemporalDateTime(two)) throw new TypeError('invalid DateTime object');
