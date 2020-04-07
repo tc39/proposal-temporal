@@ -23,6 +23,8 @@
   - [UTC offset for a zoned event, as a number of seconds](#utc-offset-for-a-zoned-event-as-a-number-of-seconds)
   - [Offset between two time zones at an instant](#offset-between-two-time-zones-at-an-instant)
 - [Arithmetic](#arithmetic)
+  - [Unit-constrained duration between now and a past/future zoned event](#unit-constrained-duration-between-now-and-a-pastfuture-zoned-event)
+  - [Comparison of an instant to business hours](#comparison-of-an-instant-to-business-hours)
   - [Nth weekday of the month](#nth-weekday-of-the-month)
 
 <!-- /MarkdownTOC -->
@@ -157,6 +159,14 @@ Map two Temporal.Absolute instances into an ascending/descending order indicator
 
 ```javascript
 {{cookbook/getElapsedDurationSinceInstant.mjs}}
+```
+
+### Comparison of an instant to business hours
+
+This example takes a roster of opening and closing times for a business, and maps a localized date and time of day into a time-sensitive state indicator ("opening soon" vs. "open" vs. "closing soon" vs. "closed").
+
+```javascript
+{{cookbook/getBusinessOpenStateText.mjs}}
 ```
 
 ### Nth weekday of the month
