@@ -266,7 +266,9 @@ export class Duration {
       nanoseconds,
       disambiguation
     ));
-    return new this(years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+    const result = new this(years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+    if (!ES.IsTemporalDuration(result)) throw new TypeError('invalid result');
+    return result;
   }
 }
 Duration.prototype.toJSON = Duration.prototype.toString;

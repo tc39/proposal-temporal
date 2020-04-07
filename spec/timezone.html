@@ -79,7 +79,8 @@
         1. Else,
           1. Let _string_ be ? ToString(_item_).
           1. Let _result_ be ? ParseTemporalTimeZoneString(_string_).
-        1. Return ? CreateTemporalTimeZone(_result_).
+        1. Let _constructor_ be the *this* value.
+        1. Return ? CreateTemporalTimeZoneFromStatic(_constructor_, _result_).
       </emu-alg>
     </emu-clause>
   </emu-clause>
@@ -207,6 +208,18 @@
 
   <emu-clause id="sec-temporal-timezone-abstract-ops">
     <h1>Abstract operations</h1>
+
+    <emu-clause id="sec-temporal-createtemporaltimezonefromstatic" aoid="CreateTemporalTimeZoneFromStatic">
+      <h1>CreateTemporalTimeZoneFromStatic ( _constructor_, _identifier_ )</h1>
+      <emu-alg>
+        1. Assert: ! IsValidTimeZoneName(_identifier_) is *true*.
+        1. If ! IsConstructor(_constructor_) is *false*, then
+          1. Throw a *TypeError* exception.
+        1. Let _result_ be ? Construct(_constructor_, « _identifier_ »).
+        1. Perform ? RequireInternalSlot(_result_, [[InitializedTemporalTimeZone]]).
+        1. Return _result_.
+      </emu-alg>
+    </emu-clause>
 
     <emu-clause id="sec-temporal-parsetemporaltimezonestring" aoid="ParseTemporalTimeZoneString">
       <h1>ParseTemporalTimeZoneString ( _string_ )</h1>

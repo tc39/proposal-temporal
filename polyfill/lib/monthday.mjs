@@ -70,7 +70,9 @@ export class MonthDay {
       ({ month, day } = ES.ParseTemporalMonthDayString(ES.ToString(item)));
     }
     ({ month, day } = ES.RegulateMonthDay(month, day, disambiguation));
-    return new this(month, day);
+    const result = new this(month, day);
+    if (!ES.IsTemporalMonthDay(result)) throw new TypeError('invalid result');
+    return result;
   }
   static compare(one, two) {
     if (!ES.IsTemporalMonthDay(one) || !ES.IsTemporalMonthDay(two)) throw new TypeError('invalid MonthDay object');

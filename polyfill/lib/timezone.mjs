@@ -119,7 +119,9 @@ export class TimeZone {
     } else {
       timeZone = ES.TemporalTimeZoneFromString(ES.ToString(item));
     }
-    return new this(timeZone);
+    const result = new this(timeZone);
+    if (!ES.IsTemporalTimeZone(result)) throw new TypeError('invalid result');
+    return result;
   }
   static [Symbol.iterator]() {
     const iter = ZONES[Symbol.iterator]();
