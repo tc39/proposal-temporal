@@ -4,8 +4,8 @@ import assert from 'assert';
  * corresponding local date and time of day (e.g., for building a conference schedule).
  *
  *
- * @param {Temporal.DateTime[]} dateTimes This is a DateTime instance
- * @param {boolean} direction reverse
+ * @param {Temporal.DateTime[]} dateTimes - This is a DateTime instance
+ * @param {boolean} direction - reverse
  * @returns {Temporal.DateTime[]} the array from dateTimes, sorted
  */
 function getSortedLocalDateTimes(dateTimes, reverse = false) {
