@@ -3,7 +3,7 @@ import assert from 'assert';
 /**
  * Gets the first Tuesday of the month and returns its date
  *
- * @param {Temporal.YearMonth} queriedMonth YearMonth instance to query
+ * @param {Temporal.YearMonth} queriedMonth - YearMonth instance to query
  * @returns {Temporal.Date} Temporal.Date Instance which gives first tuesday
  */
 function getFirstTuesday(queriedMonth) {

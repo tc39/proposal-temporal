@@ -4,7 +4,7 @@ import assert from 'assert';
  * Converts a Temporal.DateTime instance into a Date.
  * This is the inverse of dateTimeFrom legacy Date example
  *
- * @param {Temporal.DateTime} dateTime This is a DateTime instance
+ * @param {Temporal.DateTime} dateTime - This is a DateTime instance
  * @returns {Date} legacy Date instance
  */
 function getLegacyDateInUTCFromDateTime(dateTime) {

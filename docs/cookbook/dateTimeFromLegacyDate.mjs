@@ -5,7 +5,7 @@ import assert from 'assert';
  * DateTime accepts an ISO String in its from() method, so if you need to convert a date to a datetime
  * you're best off passing the result of that
  *
- * @param {Date} legacyDate This is a Date instance
+ * @param {Date} legacyDate - This is a Date instance
  * @returns {Temporal.DateTime} Temporal.DateTime instance
  */
 function getDateTimeFromLegacyDate(legacyDate) {
