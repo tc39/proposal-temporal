@@ -15,8 +15,6 @@ import {
   SetSlot
 } from './slots.mjs';
 
-import bigInt from 'big-integer';
-
 export class Duration {
   constructor(
     years = 0,
@@ -207,36 +205,8 @@ export class Duration {
     return result;
   }
   toString() {
-    function formatNumber(num) {
-      if (num <= Number.MAX_SAFE_INTEGER) return num.toString(10);
-      return bigInt(num).toString();
-    }
     if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
-    const dateParts = [];
-    if (GetSlot(this, YEARS)) dateParts.push(`${formatNumber(GetSlot(this, YEARS))}Y`);
-    if (GetSlot(this, MONTHS)) dateParts.push(`${formatNumber(GetSlot(this, MONTHS))}M`);
-    if (GetSlot(this, DAYS)) dateParts.push(`${formatNumber(GetSlot(this, DAYS))}D`);
-
-    const timeParts = [];
-    if (GetSlot(this, HOURS)) timeParts.push(`${formatNumber(GetSlot(this, HOURS))}H`);
-    if (GetSlot(this, MINUTES)) timeParts.push(`${formatNumber(GetSlot(this, MINUTES))}M`);
-
-    const secondParts = [];
-    let ms = GetSlot(this, MILLISECONDS);
-    let µs = GetSlot(this, MICROSECONDS);
-    let ns = GetSlot(this, NANOSECONDS);
-    let seconds;
-    ({ seconds, millisecond: ms, microsecond: µs, nanosecond: ns } = ES.BalanceSubSecond(ms, µs, ns));
-    const s = GetSlot(this, SECONDS) + seconds;
-    if (ns) secondParts.unshift(`${ns}`.padStart(3, '0'));
-    if (µs || secondParts.length) secondParts.unshift(`${µs}`.padStart(3, '0'));
-    if (ms || secondParts.length) secondParts.unshift(`${ms}`.padStart(3, '0'));
-    if (secondParts.length) secondParts.unshift('.');
-    if (s || secondParts.length) secondParts.unshift(formatNumber(s));
-    if (secondParts.length) timeParts.push(`${secondParts.join('')}S`);
-    if (timeParts.length) timeParts.unshift('T');
-    if (!dateParts.length && !timeParts.length) return 'PT0S';
-    return `P${dateParts.join('')}${timeParts.join('')}`;
+    return ES.TemporalDurationToString(this);
   }
   toLocaleString(...args) {
     if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');

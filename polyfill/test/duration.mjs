@@ -103,6 +103,12 @@ describe('Duration', () => {
       equal(`${Duration.from({ seconds: 120, milliseconds: 3500 })}`, 'PT123.500S');
     });
   });
+  describe('toLocaleString()', () => {
+    it('produces an implementation-defined string', () => {
+      const duration = Duration.from({ hours: 12, minutes: 30 });
+      equal(typeof duration.toLocaleString(), 'string');
+    });
+  });
   describe('min/max values', () => {
     const units = [
       'years',

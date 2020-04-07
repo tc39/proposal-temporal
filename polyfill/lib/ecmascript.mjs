@@ -640,6 +640,37 @@ export const ES = ObjectAssign({}, ES2019, {
     const timeZoneString = ES.ISOTimeZoneString(timeZone, absolute);
     return `${year}-${month}-${day}T${hour}:${minute}${seconds ? `:${seconds}` : ''}${timeZoneString}`;
   },
+  TemporalDurationToString: (duration) => {
+    function formatNumber(num) {
+      if (num <= Number.MAX_SAFE_INTEGER) return num.toString(10);
+      return bigInt(num).toString();
+    }
+    const dateParts = [];
+    if (GetSlot(duration, YEARS)) dateParts.push(`${formatNumber(GetSlot(duration, YEARS))}Y`);
+    if (GetSlot(duration, MONTHS)) dateParts.push(`${formatNumber(GetSlot(duration, MONTHS))}M`);
+    if (GetSlot(duration, DAYS)) dateParts.push(`${formatNumber(GetSlot(duration, DAYS))}D`);
+
+    const timeParts = [];
+    if (GetSlot(duration, HOURS)) timeParts.push(`${formatNumber(GetSlot(duration, HOURS))}H`);
+    if (GetSlot(duration, MINUTES)) timeParts.push(`${formatNumber(GetSlot(duration, MINUTES))}M`);
+
+    const secondParts = [];
+    let ms = GetSlot(duration, MILLISECONDS);
+    let µs = GetSlot(duration, MICROSECONDS);
+    let ns = GetSlot(duration, NANOSECONDS);
+    let seconds;
+    ({ seconds, millisecond: ms, microsecond: µs, nanosecond: ns } = ES.BalanceSubSecond(ms, µs, ns));
+    const s = GetSlot(duration, SECONDS) + seconds;
+    if (ns) secondParts.unshift(`${ns}`.padStart(3, '0'));
+    if (µs || secondParts.length) secondParts.unshift(`${µs}`.padStart(3, '0'));
+    if (ms || secondParts.length) secondParts.unshift(`${ms}`.padStart(3, '0'));
+    if (secondParts.length) secondParts.unshift('.');
+    if (s || secondParts.length) secondParts.unshift(formatNumber(s));
+    if (secondParts.length) timeParts.push(`${secondParts.join('')}S`);
+    if (timeParts.length) timeParts.unshift('T');
+    if (!dateParts.length && !timeParts.length) return 'PT0S';
+    return `P${dateParts.join('')}${timeParts.join('')}`;
+  },
 
   GetCanonicalTimeZoneIdentifier: (timeZoneIdentifier) => {
     const offset = parseOffsetString(timeZoneIdentifier);
