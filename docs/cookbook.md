@@ -144,6 +144,20 @@ This example takes a roster of opening and closing times for a business, and map
 {{cookbook/getBusinessOpenStateText.mjs}}
 ```
 
+### Flight arrival/departure/duration
+
+Map localized trip departure and arrival times into trip duration in units no larger than hours.
+
+```javascript
+{{cookbook/getTripDurationInHrMinSec.mjs}}
+```
+
+Map localized departure time and duration into localized arrival time.
+
+```javascript
+{{cookbook/getLocalizedArrival.mjs}}
+```
+
 ### Nth weekday of the month
 
 Example of getting a `Temporal.Date` representing the first Tuesday of the given `Temporal.YearMonth`, adaptable to other weekdays.
