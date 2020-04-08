@@ -16,4 +16,5 @@ import './getUtcOffsetDifferenceSecondsAtInstant.mjs';
 import './getUtcOffsetSecondsAtInstant.mjs';
 import './getUtcOffsetStringAtInstant.mjs';
 import './legacyDateFromDateTime.mjs';
+import './nextWeeklyOccurrence.mjs';
 import './sortAbsoluteInstants.mjs';
