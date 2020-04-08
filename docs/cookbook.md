@@ -166,3 +166,11 @@ Example of getting a `Temporal.Date` representing the first Tuesday of the given
 ```javascript
 {{cookbook/getFirstTuesdayOfMonth.mjs}}
 ```
+
+### Next weekly occurrence
+
+From a `Temporal.Absolute` instance and a local `Temporal.TimeZone`, get a `Temporal.DateTime` representing the next occurrence of a weekly event that is scheduled on a particular weekday and time in a particular time zone. (For example, "weekly on Thursdays at 08:45 California time").
+
+```javascript
+{{cookbook/nextWeeklyOccurrence.mjs}}
+```
