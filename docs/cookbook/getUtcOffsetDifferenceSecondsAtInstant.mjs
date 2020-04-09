@@ -22,8 +22,6 @@ function getUtcOffsetDifferenceSecondsAtInstant(instant, sourceTimeZone, targetT
   );
 }
 
-import assert from 'assert';
-
 const instant = Temporal.Absolute.from('2020-01-09T00:00Z');
 const nyc = Temporal.TimeZone.from('America/New_York');
 const chicago = Temporal.TimeZone.from('America/Chicago');

@@ -1,4 +1,3 @@
-import assert from 'assert';
 /**
  * getSortedLocalDateTimes will sort an array of zoneless Temporal.DateTime instances by the
  * corresponding local date and time of day (e.g., for building a conference schedule).

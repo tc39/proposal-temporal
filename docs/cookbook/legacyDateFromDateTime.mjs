@@ -1,5 +1,3 @@
-import assert from 'assert';
-
 /**
  * Converts a Temporal.DateTime instance into a Date.
  * This is the inverse of dateTimeFrom legacy Date example

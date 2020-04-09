@@ -20,8 +20,6 @@ function getUtcOffsetSecondsAtInstant(instant, timeZone) {
   );
 }
 
-import assert from 'assert';
-
 const instant = Temporal.Absolute.from('2020-01-09T00:00Z');
 const nyc = Temporal.TimeZone.from('America/New_York');
 
