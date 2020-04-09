@@ -121,3 +121,13 @@ With a small variation on the previous recipe we can map a `Temporal.Absolute` i
 ```javascript
 {{cookbook/getUtcOffsetDifferenceSecondsAtInstant.mjs}}
 ```
+
+## Arithmetic
+
+### Nth weekday of the month
+
+Example of getting a `Temporal.Date` representing the first Tuesday of the given `Temporal.YearMonth`, adaptable to other weekdays.
+
+```javascript
+{{cookbook/getFirstTuesdayOfMonth.mjs}}
+```
