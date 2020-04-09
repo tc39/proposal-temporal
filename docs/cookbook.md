@@ -205,6 +205,18 @@ Example of getting a `Temporal.Date` representing the first Tuesday of the given
 {{cookbook/getFirstTuesdayOfMonth.mjs}}
 ```
 
+Given a `Temporal.YearMonth` instance and an ISO 8601 ordinal calendar day of the week ranging from 1 (Monday) to 7 (Sunday), return a chronologically ordered array of `Temporal.Date` instances corresponding with every day in the month that is the specified day of the week (of which there will always be either four or five).
+
+```javascript
+{{cookbook/getWeeklyDaysInMonth.mjs}}
+```
+
+Given a `Temporal.Date` instance, return the count of preceding days in its month that share its day of the week.
+
+```javascript
+{{cookbook/countPrecedingWeeklyDaysInMonth.mjs}}
+```
+
 ### Next weekly occurrence
 
 From a `Temporal.Absolute` instance and a local `Temporal.TimeZone`, get a `Temporal.DateTime` representing the next occurrence of a weekly event that is scheduled on a particular weekday and time in a particular time zone. (For example, "weekly on Thursdays at 08:45 California time").

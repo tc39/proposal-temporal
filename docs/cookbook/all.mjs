@@ -1,6 +1,7 @@
 import './absoluteFromLegacyDate.mjs';
 import './bridgePublicHolidays.mjs';
 import './calculateDailyOccurrence.mjs';
+import './countPrecedingWeeklyDaysInMonth.mjs';
 import './dateTimeFromLegacyDate.mjs';
 import './getBusinessOpenStateText.mjs';
 import './getCurrentDate.mjs';
@@ -18,6 +19,7 @@ import './getTripDurationInHrMinSec.mjs';
 import './getUtcOffsetDifferenceSecondsAtInstant.mjs';
 import './getUtcOffsetSecondsAtInstant.mjs';
 import './getUtcOffsetStringAtInstant.mjs';
+import './getWeeklyDaysInMonth.mjs';
 import './legacyDateFromDateTime.mjs';
 import './localTimeForFutureEvents.mjs';
 import './nextWeeklyOccurrence.mjs';
