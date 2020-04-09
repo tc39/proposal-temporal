@@ -1,5 +1,3 @@
-import assert from 'assert';
-
 /**
  * getSortedInstants will sort an array of strings (each of which is parseable
  * as a Temporal.Absolute and may or may not include an IANA time zone name)

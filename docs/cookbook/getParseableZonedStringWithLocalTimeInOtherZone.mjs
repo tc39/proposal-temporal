@@ -26,8 +26,6 @@ function getParseableZonedStringWithLocalTimeInOtherZone(
   return instant.toString(targetTimeZone);
 }
 
-import assert from 'assert';
-
 const result = getParseableZonedStringWithLocalTimeInOtherZone(
   Temporal.DateTime.from('2020-01-09T00:00'),
   Temporal.TimeZone.from('America/Chicago'),

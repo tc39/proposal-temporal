@@ -1,5 +1,3 @@
-import assert from 'assert';
-
 /**
  * Converts a Date instance into a Temporal.DateTime instance
  * DateTime accepts an ISO String in its from() method, so if you need to convert a date to a datetime

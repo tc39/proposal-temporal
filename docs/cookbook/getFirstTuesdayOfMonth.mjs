@@ -1,5 +1,3 @@
-import assert from 'assert';
-
 /**
  * Gets the first Tuesday of the month and returns its date
  *
