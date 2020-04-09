@@ -1,0 +1,77 @@
+# Apr 2, 2020
+
+## Attendees:
+
+- Ujjwal Sharma (USA)
+- Jase Williams (JWS)
+- Philip Chimento (PFC)
+- Philipp Dunkel (PDL)
+- Han Jiang (HJG)
+- Ms2ger (MS2)
+- Richard Gibson (RGN)
+- Shane Carr (SFC)
+
+## Agenda:
+
+- TC39 presentation!
+  - We are satisfied with how it went.
+  - JWS: I was expecting more questions.
+  - PDL: I think people have been following it for the past few years, since I've given plenty of updates, and getting their questions answered that way. As long as we keep engaging with people, then we tend to talk about conclusions rather than issues in plenary.
+  - PDL: I expect this podcast thing will happen in the next few weeks, so we may get more people experimenting with the polyfill.
+- USA: GCL suggested that we should allow non-24-hour days.
+  - Some discussion about how far we already support that with Calendars.
+  - Will open an issue about this if there is more to discuss.
+- [#387](https://github.com/tc39/proposal-temporal/issues/387) species use in from()
+  - MS2: I have some work-in-progress on this topic, so we should land it first as well.
+  - SFC: With the Calendar data model, from() delegates to the Calendar. If the Calendar has to decide what type it's going to be constructing, I don't see how you would make Calendar.dateFromFields() construct a polymorphic date. It would just construct the default Date.
+  - PFC: dateFromFields could receive the constructor, or it could return a property bag.
+  - SFC: We had a separate discussion about what type it should return, and I think it should return a Date object.
+  - PDL: I think the original behaviour described in the issue is the expected behaviour.
+  - SFC: I agree, but this is about dateFromFields not being able to return a polymorphic Date.
+  - PFC: from() could also copy the Temporal.Date returned from dateFromFields into the polymorphic type.
+  - SFC: OK, we can close the issue.
+  - RGN: This increases the burden for virtualization. Anything that has a secret reference to a constructor has to be patched for SES, for example.
+  - PDL: That is not correct. All the Temporal classes would remain the same across SES. What we want to disallow is data from the outside.
+  - RGN: Is it not the case that e.g. DateTime.from has reference to data from outside Temporal, e.g. time zones?
+  - PFC: All time zone access goes through Temporal.TimeZone.
+  - RGN: Right, but it can't have secret access, it has to do a Get.
+  - MS2: That's the case.
+  - SFC: Another possibility is to give Calendar a field for DateTimeConstructor, e.g.
+  - RGN: I don't want to go down that road if everything looks OK as is.
+- [#403](https://github.com/tc39/proposal-temporal/issues/403) solve enumerability with a toObject() method?
+  - USA: What do people think of this suggestion?
+  - SFC: I would prefer toJSON() return the object and toISOString() return the string. It would help preserve the calendar information in serialization.
+  - PDL: How do you clearly separate inside a JSON whether a particular object is a Temporal object? With string parsing, you can easily see whether a string is an ISO 8601 string. And if you keep it as a string, then most databases can also correctly handle it as a date.
+  - RGN: I disagree; detecting when deserializing JSON whether any given value is or is not Temporal, is equally challenging whether that value is a string or object. However, I don't think that affects the decision whether toJSON() should return a string or object. For example, if you say that anything that *can* deserialize to a Temporal.Date, *should*, then you will include things that should not be included, and that's the case regardless of strings or objects.
+  - USA: You can pass either strings or property bags to from(), so that doesn't matter for deserialization.
+  - PDL: I'm thinking in terms of what the typical web developer does. If you are serializing a Temporal object to send as a request payload to some backend, then an ISO string is far more convenient.
+  - RGN: I agree, in the common case, then you probably want toJSON() to be a string, because it's probably for interchange with a remote system.
+  - PDL: I agree with having a toObject() but I don't want toJSON() to return an object.
+  - USA: raw() that returns a record?
+  - SFC: getFields()?
+  - PDL: I don't want to wait for the records proposal.
+  - RGN: We'd want to add toRecord() later if the records proposal makes it in.
+  - PDL: I second getFields() or toFields().
+  - USA: Agreed. By Record I meant the generic sense.
+  - RGN: Slight preference for getFields() over toFields().
+  - Consensus on calling the method getFields(). It returns a new JS object whose prototype is Object, with all the fields as enumerable, writable own data properties. 
+- Next steps for calendar
+  - [#354](https://github.com/tc39/proposal-temporal/issues/354) How is data passed into the calendar methods?
+    - SFC: We have Calendar.p.dateFromFields that works as expected. But when you call Temporal.Date.p.
+    - PDL: Am I understanding correctly? Because we proxy operations into Calendar, only full Temporal objects are passed into Calendar operations, so it should throw if it gets an object that doesn't have the slots?
+    - SFC: But how does a custom calendar access those slots? Built-in calendars would access the slots directly.
+    - USA: With getFields()?
+    - SFC: If you don't have getters, then they shouldn't be on getFields() (??)
+    - PDL: We do have the guarantee that the Date object being passed into plus/minus/etc., that it has a calendar property that is identical to the calendar that it's being proxied into. So the calendar doesn't actually need to get the ISO fields.
+    - SFC: There's still a loop, though, because (??)
+    - PDL: I second the proposal of option 1. I would also go further and add isoHour, isoMinute, and so on.
+    - USA: All the hours are ISO hours.
+    - PDL: I don't think that's correct, since the day may not begin at midnight.
+    - SFC: I agree, on DateTime and Time we'd have the isoHour, etc. fields as well.
+    - PDL: This makes it clearer why ISO is our default, as well, because any object, no matter what calendar, has knowledge of what it is in ISO.
+    - PFC: I'm not opposed to option 1, but the reason why I prefer option 2 is because I think the less API that we add to deal with calendars, the better. I think it will be confusing for programmers, to see year, month, day, isoYear, isoMonth, isoDay getters, when in the common case they'll be identical. We'll see code that mixes them depending on which came up first in the programmer's documentation search.
+    - JWS: Agreed.
+    - SFC: Is there any other type in the JS ecosystem where you pass data to a constructor and can never get it again? That seems strange.
+    - PDL: Option 3 would be a middle ground between option 1 and option 2 in that regard.
+    - USA: Can we get consensus on getISOFields() (slightly modified option 3)?
+    - Consensus on getISOFields().

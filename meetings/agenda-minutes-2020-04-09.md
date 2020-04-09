@@ -1,0 +1,52 @@
+# Apr 9, 2020
+
+## Attendees:
+- Ujjwal Sharma (USA)
+- Shane F. Carr (SFC)
+- Philip Chimento (PFC)
+- Richard Gibson (RGN)
+- Hemanth H.M (HHM)
+
+## Agenda:
+- Intl.DurationFormat
+  - SFC hopes to get this to stage 2 in June and may have more time to work on it in Q2.
+- Next steps for calendar
+  - [#357](https://github.com/tc39/proposal-temporal/issues/357) Should Temporal.Duration have a [[Calendar]] slot?
+    - SFC: Build a Date with the Hebrew calendar, make a Duration with months field, and then call plus(). The arithmetic operation uses the calendar inside the Date. That means that depending on the Date that you are adding the Duration to, the result is different. Maybe it makes more sense if there's also a calendar associated with the Duration? Then when you do the arithmetic operation you would throw if it doesn't match the calendar from the Date. Date would still need to have a calendar, for the getters. This also means we use a calendar from three different sources: Date for the getters, Duration for arithmetic, and the provided one in toLocaleString, so I was wondering what people think about that.
+    - RGN: My comment that you're referencing probably pre-dates some stabilization of calendars. Right now I'm mostly against Duration having a calendar, because it introduces the potential for conflict in arithmetic operations. If you're adding a month to a Date, I don't think it makes sense for the month to have its own calendar system. You would switch the Date into the desired calendar system, and then add the Duration. Duration is more like a "number" than any of the other types.
+    - SFC: Good point, it's already the case in ISO that when you add a month, the actual amount of time you are adding is already dependent on the Date.
+    - USA: Agreed.
+    - PFC: Agreed.
+    - RGN: What's the strongest argument that we'd have for adding a calendar slot to Duration?
+    - USA: It would make Durations less ambiguous because "one month" would be better defined.
+    - SFC: Another argument is that it's strange to have the same ISO date in two different calendars, add a month, and get a different ISO date out. But I don't think that's a strong argument, because arithmetic already adds a different number of days depending on the year, month, and day fields.
+    - Consensus is to close the issue and not add a calendar slot to Duration.
+  - [#355](https://github.com/tc39/proposal-temporal/issues/355) Should custom calendars be able to cache information on Temporal objects?
+    - SFC: For built-in calendars, we allow a private slot to cache potentially expensive calculations. Custom calendars could write to a `_cache` property. Do we want to build a solution for this, and if so what should it be? Or do we leave it to user land?
+    - RGN: Adding properties in user land should be discouraged, though I don't know if I want to forbid it. Custom calendars should use WeakMap for this purpose, with the Temporal object as the key.
+    - SFC: Good solution.
+    - USA: The calendar object could store the WeakMap in a private field.
+    - SFC: I'll add a section to the Markdown explainer suggesting to use WeakMaps.
+- Volunteers to finish / review stalled pull requests
+  - [#302](https://github.com/tc39/proposal-temporal/issues/302) what's the correct license for the repo?
+    - USA: This contributor suggests there seem to be two licenses applying to the repo. I'm not sure that was intentional. I think I was the one who originally added the license field.
+    - PFC: Is there any specific license that TC39 stuff is supposed to carry? Is there any reason we shouldn't just make everything under the same license?
+    - USA: I can make everything BSD-3-clause, and see if any objections surface, any objections here?
+    - No.
+  - [#441](https://github.com/tc39/proposal-temporal/issues/441) pull request with win32 support
+    - USA: Win32 support isn't a priority but since there's a pull request for it, it seems fine. It's stalled on an argument about whether to use the mkdirp package. Any opinions?
+    - PFC: I don't care, but if I had to choose I'd choose the mkdirp package.
+    - USA: We could also just leave the PR open if neither of the participants has asked the champions group for consensus.
+    - HHM: Is it hard to make the current PR platform agnostic?
+    - USA: It is already platform agnostic either way.
+- Can we consolidate chat channels?
+  - USA: We have a Temporal calendar chat, and a Matrix chat room. Can we consolidate these or should we keep a separate channel for calendar chat?
+  - SFC: This is the one I use most. I wasn't aware of the Matrix chat room. Personally I'd prefer not opening another chat window.
+  - USA: If anyone wants to join the Matrix chat room, ping me.
+- Proposal: how to go about organizing the meetings.
+  - USA: Let's use a GitHub issue to organize the meetings. That way we get links from the agenda issue to all the discussed issues and pull requests. An example is https://github.com/nodejs/TSC/issues/846 although we could be less verbose than that.
+  - PFC: Are these meetings open to TC39 delegates?
+  - SFC: We're an informal working group governed by the TC39 IPA. The meeting is on the TC39 events calendar which has a lot more working groups on it, which any delegates / invited experts can join. Personally I don't think it's worth the extra trouble of putting the agendas on GitHub since we're an informal group. Tagging issues with the issue label works fine.
+  - USA: Sounds good. We just have to have a good process for checking the notes into the repo.
+  - SFC: Since notes are always associated with an issue, we could also copy the notes from each agenda item into a comment on that issue.
+  - USA: DE suggested that it would be good to have permalinks.
