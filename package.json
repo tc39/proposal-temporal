@@ -38,7 +38,7 @@
     "url": "git+https://github.com/tc39/proposal-temporal.git"
   },
   "author": "Ujjwal Sharma <usharma@igalia.com>",
-  "license": "SEE LICENSE IN https://tc39.github.io/ecma262/#sec-copyright-and-software-license",
+  "license": "BSD-3-Clause",
   "prettier": {
     "printWidth": 120,
     "trailingComma": "none",
