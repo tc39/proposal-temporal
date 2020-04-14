@@ -12,7 +12,7 @@
  *  `sourceDateTime`
  * @param {Temporal.TimeZone} targetTimeZone - The time zone for the
  *  return value
- * @param {string} [sourceDisambguationPolicy=reject] - what to do when
+ * @param {string} [sourceDisambiguationPolicy=reject] - what to do when
  *  `sourceDateTime` is ambiguous
  * @returns {string} String indicating the time with time zone designation
  */
@@ -20,9 +20,9 @@ function getParseableZonedStringWithLocalTimeInOtherZone(
   sourceDateTime,
   sourceTimeZone,
   targetTimeZone,
-  sourceDisambguationPolicy = 'reject'
+  sourceDisambiguationPolicy = 'reject'
 ) {
-  let instant = sourceDateTime.inTimeZone(sourceTimeZone, { disambiguation: sourceDisambguationPolicy });
+  let instant = sourceDateTime.inTimeZone(sourceTimeZone, { disambiguation: sourceDisambiguationPolicy });
   return instant.toString(targetTimeZone);
 }
 
