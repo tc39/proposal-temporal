@@ -94,6 +94,14 @@ This could be used when converting user-input date-time values between time zone
 {{cookbook/getParseableZonedStringWithLocalTimeInOtherZone.mjs}}
 ```
 
+### Daily occurrence in local time
+
+Similar to the previous recipe, calculate the absolute times of a daily occurrence that happens at a particular local time in a particular time zone.
+
+```javascript
+{{cookbook/calculateDailyOccurrence.mjs}}
+```
+
 ### UTC offset for a zoned event, as a string
 
 Use `Temporal.TimeZone.getOffsetFor()` to map a `Temporal.Absolute` instance and a time zone into the UTC offset at that instant in that time zone, as a string.
