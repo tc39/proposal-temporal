@@ -261,6 +261,47 @@ assert.equal(results[1], &#39;2019-03-25T01:45:00-06:00[America/New_York]&#39;);
 assert.equal(results[2], &#39;2019-03-30T01:45:00+01:00[Europe/Berlin]&#39;);
 assert.equal(results[3], &#39;2020-01-23T17:04:36.491865121-08:00&#39;);
 assert.equal(results[4], &#39;2020-02-10T17:04:36.491865121-08:00&#39;);</code></pre>
+<h2 id="time-zone-conversion">Time zone conversion</h2>
+<h3 id="preserving-absolute-instant">Preserving absolute instant</h3>
+<p>Map a zoned date and time of day into a string serialization of the local time in a target zone at the corresponding instant in absolute time.
+This could be used when converting user-input date-time values between time zones.</p>
+<pre><code class="language-javascript">/**
+ * Takes a local date and time in one time zone, and serializes it to a string
+ * expressing the local date and time in another time zone.
+ *
+ * If `sourceDateTime` doesn&#39;t exist in `sourceTimeZone`, or exists twice, then
+ * an error will be thrown by default.
+ * Usually this is what you want. (FIXME: but is it?)
+ * Use `sourceDisambiguationPolicy` to change this behaviour.
+ *
+ * @param {Temporal.DateTime} sourceDateTime - The local date and time
+ * @param {Temporal.TimeZone} sourceTimeZone - The time zone for
+ *  `sourceDateTime`
+ * @param {Temporal.TimeZone} targetTimeZone - The time zone for the
+ *  return value
+ * @param {string} [sourceDisambiguationPolicy=reject] - what to do when
+ *  `sourceDateTime` is ambiguous
+ * @returns {string} String indicating the time with time zone designation
+ */
+function getParseableZonedStringWithLocalTimeInOtherZone(
+  sourceDateTime,
+  sourceTimeZone,
+  targetTimeZone,
+  sourceDisambiguationPolicy = &#39;reject&#39;
+) {
+  let instant = sourceDateTime.inTimeZone(sourceTimeZone, { disambiguation: sourceDisambiguationPolicy });
+  return instant.toString(targetTimeZone);
+}
+
+import assert from &#39;assert&#39;;
+
+const result = getParseableZonedStringWithLocalTimeInOtherZone(
+  Temporal.DateTime.from(&#39;2020-01-09T00:00&#39;),
+  Temporal.TimeZone.from(&#39;America/Chicago&#39;),
+  Temporal.TimeZone.from(&#39;America/Los_Angeles&#39;)
+);
+// On this date, when it&#39;s midnight in Chicago, it&#39;s 10 PM the previous night in LA
+assert.equal(result, &#39;2020-01-08T22:00-08:00[America/Los_Angeles]&#39;);</code></pre>
     <footer>
       <p>
         This page includes a script which loads an implementation of Temporal in your browser.
