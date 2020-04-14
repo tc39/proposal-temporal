@@ -3,6 +3,7 @@ import './dateTimeFromLegacyDate.mjs';
 import './getCurrentDate.mjs';
 import './getFirstTuesdayOfMonth.mjs';
 import './getParseableZonedStringAtInstant.mjs';
+import './getParseableZonedStringWithLocalTimeInOtherZone.mjs';
 import './getSortedLocalDateTimes.mjs';
 import './getTimeStamp.mjs';
 import './getTimeZoneObjectFromIanaName.mjs';

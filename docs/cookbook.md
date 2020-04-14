@@ -73,3 +73,14 @@ Sort a list of ISO 8601 date/time strings, for example to place log entries in o
 ```javascript
 {{cookbook/sortAbsoluteInstants.mjs}}
 ```
+
+## Time zone conversion
+
+### Preserving absolute instant
+
+Map a zoned date and time of day into a string serialization of the local time in a target zone at the corresponding instant in absolute time.
+This could be used when converting user-input date-time values between time zones.
+
+```javascript
+{{cookbook/getParseableZonedStringWithLocalTimeInOtherZone.mjs}}
+```
