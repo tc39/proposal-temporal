@@ -154,6 +154,36 @@ With a small variation on the previous recipe we can map a `Temporal.Absolute` i
 
 ## Arithmetic
 
+### How many days until a future date
+
+An example HTML form inspired by [Days Calculator](https://www.timeanddate.com/date/durationresult.html) on timeanddate.com:
+
+<form action="#how-many-days-until-a-future-date">
+  <label>
+    Enter future date:
+    <input type="date" name="futuredate">
+  </label>
+  <button>Submit</button>
+</form>
+
+<div id="futuredate-results"></div>
+
+<script type="text/javascript">
+{
+  // Do initialization that doesn't necessarily need to be included in
+  // the example; see 'Calendar input element'
+  const futureDatePicker = document.querySelector('input[name="futuredate"]');
+  const today = Temporal.now.date();
+  futureDatePicker.min = today;
+  futureDatePicker.value = today.plus({ months: 1 });
+}
+{{cookbook/futureDateForm.js}}
+</script>
+
+```javascript
+{{cookbook/futureDateForm.js}}
+```
+
 ### Unit-constrained duration between now and a past/future zoned event
 
 Map two Temporal.Absolute instances into an ascending/descending order indicator and a Temporal.Duration instance representing the duration between the two instants without using units coarser than specified (e.g., for presenting a meaningful countdown with vs. without using months or days).
