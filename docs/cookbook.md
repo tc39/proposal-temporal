@@ -49,6 +49,21 @@ Map a legacy ECMAScript Date instance into a Temporal.Absolute instance correspo
 {{cookbook/getTimeZoneObjectFromIanaName.mjs}}
 ```
 
+### Calendar input element
+
+You can use Temporal objects to set properties on a calendar control.
+Here is an example using an HTML `<input type="date">` element with any day beyond “today” disabled and not selectable.
+
+<input type="date" id="calendar-input">
+
+<script type="text/javascript">
+{{cookbook/calendarInput.js}}
+</script>
+
+```javascript
+{{cookbook/calendarInput.js}}
+```
+
 ## Serialization
 
 ### Zoned instant from instant and time zone
