@@ -152,6 +152,33 @@ With a small variation on the previous recipe we can map a `Temporal.Absolute` i
 {{cookbook/getUtcOffsetDifferenceSecondsAtInstant.mjs}}
 ```
 
+### Dealing with dates and times in a fixed location
+
+Here is an example of Temporal used in a graph, showing fictitious activity for a storage tank in a fixed location (Stockholm, Sweden).
+The graph always starts at midnight in the tank's location, but the graph labels are in the viewer's time zone.
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+
+<canvas id="storage-tank" width="600" height="400"></canvas>
+
+<script type="text/javascript">
+// Generate fictitious "data"
+const start = Temporal.now.absolute().minus({ hours: 24 });
+const blank = Array(24 * 12);
+const tankDataX = Array.from(blank, (_, ix) => start.plus({ minutes: ix * 5 }));
+const tankDataY = Array.from(blank);
+tankDataY[0] = 25;
+for (let ix = 1; ix < tankDataY.length; ix++) {
+  tankDataY[ix] = Math.max(0, tankDataY[ix - 1] + 3 * (Math.random() - 0.5));
+}
+
+{{cookbook/storageTank.js}}
+</script>
+
+```javascript
+{{cookbook/storageTank.js}}
+```
+
 ## Arithmetic
 
 ### How many days until a future date
