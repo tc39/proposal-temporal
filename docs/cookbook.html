@@ -302,6 +302,76 @@ const result = getParseableZonedStringWithLocalTimeInOtherZone(
 );
 // On this date, when it&#39;s midnight in Chicago, it&#39;s 10 PM the previous night in LA
 assert.equal(result, &#39;2020-01-08T22:00-08:00[America/Los_Angeles]&#39;);</code></pre>
+<h3 id="utc-offset-for-a-zoned-event-as-a-string">UTC offset for a zoned event, as a string</h3>
+<p>Use <code>Temporal.TimeZone.getOffsetFor()</code> to map a <code>Temporal.Absolute</code> instance and a time zone into the UTC offset at that instant in that time zone, as a string.</p>
+<pre><code class="language-javascript">const instant = Temporal.Absolute.from(&#39;2020-01-09T00:00Z&#39;);
+const nyc = Temporal.TimeZone.from(&#39;America/New_York&#39;);
+
+nyc.getOffsetFor(instant); // =&gt; -05:00</code></pre>
+<h3 id="utc-offset-for-a-zoned-event-as-a-number-of-seconds">UTC offset for a zoned event, as a number of seconds</h3>
+<p>It&#39;s a bit more complicated to do the above mapping as a number of seconds instead of a string.</p>
+<pre><code class="language-javascript">/**
+ * Returns the number of seconds in the UTC offset of a time zone, at a
+ * particular moment in time.
+ *
+ * @param {Temporal.Absolute} instant - A moment in time
+ * @param {Temporal.TimeZone} timeZone - A time zone to examine
+ * @returns {number} The number of seconds in the time zone&#39;s UTC offset
+ */
+function getUtcOffsetSecondsAtInstant(instant, timeZone) {
+  const utcWallTime = instant.inTimeZone(&#39;UTC&#39;);
+  const localWallTime = instant.inTimeZone(timeZone);
+  const difference = utcWallTime.difference(localWallTime, { largestUnit: &#39;seconds&#39; });
+  const sign = Temporal.DateTime.compare(localWallTime, utcWallTime) &lt; 0 ? -1 : 1;
+  return (
+    sign *
+    (difference.seconds +
+      difference.milliseconds * 1e-3 +
+      difference.microseconds * 1e-6 +
+      difference.nanoseconds * 1e-9)
+  );
+}
+
+import assert from &#39;assert&#39;;
+
+const instant = Temporal.Absolute.from(&#39;2020-01-09T00:00Z&#39;);
+const nyc = Temporal.TimeZone.from(&#39;America/New_York&#39;);
+
+assert.equal(getUtcOffsetSecondsAtInstant(instant, nyc), -18000);</code></pre>
+<h3 id="offset-between-two-time-zones-at-an-instant">Offset between two time zones at an instant</h3>
+<p>With a small variation on the previous recipe we can map a <code>Temporal.Absolute</code> instance and two time zones into the signed difference of UTC offsets between those time zones at that instant, as a number of seconds.</p>
+<pre><code class="language-javascript">/**
+ * Returns the number of seconds&#39; difference between the UTC offsets of two time
+ * zones, at a particular moment in time.
+ *
+ * @param {Temporal.Absolute} instant - A moment in time
+ * @param {Temporal.TimeZone} sourceTimeZone - A time zone to examine
+ * @param {Temporal.TimeZone} targetTimeZone - A second time zone to examine
+ * @returns {number} The number of seconds difference between the time zones&#39;
+ *   UTC offsets
+ */
+function getUtcOffsetDifferenceSecondsAtInstant(instant, sourceTimeZone, targetTimeZone) {
+  const sourceWallTime = instant.inTimeZone(sourceTimeZone);
+  const targetWallTime = instant.inTimeZone(targetTimeZone);
+  const difference = sourceWallTime.difference(targetWallTime, { largestUnit: &#39;seconds&#39; });
+  const sign = Temporal.DateTime.compare(targetWallTime, sourceWallTime) &lt; 0 ? -1 : 1;
+  return (
+    sign *
+    (difference.seconds +
+      difference.milliseconds * 1e-3 +
+      difference.microseconds * 1e-6 +
+      difference.nanoseconds * 1e-9)
+  );
+}
+
+import assert from &#39;assert&#39;;
+
+const instant = Temporal.Absolute.from(&#39;2020-01-09T00:00Z&#39;);
+const nyc = Temporal.TimeZone.from(&#39;America/New_York&#39;);
+const chicago = Temporal.TimeZone.from(&#39;America/Chicago&#39;);
+
+// At this instant, Chicago is 3600 seconds earlier than New York
+assert.equal(getUtcOffsetDifferenceSecondsAtInstant(instant, nyc, chicago), -3600);</code></pre>
     <footer>
       <p>
         This page includes a script which loads an implementation of Temporal in your browser.
