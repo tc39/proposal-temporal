@@ -123,72 +123,57 @@ timeStamp.getEpochSeconds();</code></pre>
 <h2 id="converting-between-temporal-types-and-legacy-date">Converting between Temporal types and legacy Date</h2>
 <h3 id="absolute-from-legacy-date">Absolute from legacy Date</h3>
 <p>Map a legacy ECMAScript Date instance into a Temporal.Absolute instance corresponding to the same instant in absolute time.</p>
-<pre><code class="language-javascript">import assert from &#39;assert&#39;;
-
-const legacyDate = new Date(&#39;1970-01-01T00:00:01Z&#39;);
+<pre><code class="language-javascript">const legacyDate = new Date(&#39;1970-01-01T00:00:01Z&#39;);
 
 // Convert legacy Date to Temporal.Absolute
 const absolute = Temporal.Absolute.fromEpochMilliseconds(legacyDate.getTime());
 
 assert(absolute instanceof Temporal.Absolute);</code></pre>
 <h2 id="construction">Construction</h2>
+<h3 id="time-zone-object-from-name">Time zone object from name</h3>
+<p><code>Temporal.TimeZone.from()</code> can convert an IANA time zone name into a <code>Temporal.TimeZone</code> object.</p>
+<pre><code class="language-javascript">// Construct a Temporal.TimeZone from an IANA name:
+const tz = Temporal.TimeZone.from(&#39;Europe/London&#39;);
+
+// Cast the timezone back to an IANA name, two ways:
+tz.toString(); // Europe/London
+tz.name; // Europe/London</code></pre>
+<h2 id="serialization">Serialization</h2>
 <h3 id="zoned-instant-from-instant-and-time-zone">Zoned instant from instant and time zone</h3>
-<p>Map a Temporal.Absolute instance and a time zone name into a string serialization of the local time in that zone corresponding to the instant in absolute time.</p>
-<pre><code class="language-javascript">import assert from &#39;assert&#39;;
+<p>Use the optional parameter of <code>Temporal.Absolute.prototype.toString()</code> to map a Temporal.Absolute instance and a time zone name into a string serialization of the local time in that zone corresponding to the instant in absolute time.</p>
+<p>Without the parameter, <code>Temporal.Absolute.prototype.toString()</code> gives a serialization in UTC time.
+Using the parameter is useful if you need your serialized strings to be in a specific time zone.</p>
+<pre><code class="language-javascript">const absoluteTime = Temporal.Absolute.from(&#39;2020-01-03T10:41:51Z&#39;);
 
-/**
- * Converts an absolute point in time to a string with the time in the specified
- * time zone and a time zone designation.
- *
- * @param {Temporal.Absolute} absolute An absolute point in time
- * @param {string} ianaTimeZoneName IANA name of a time zone
- * @returns {string} String indicating the time with time zone designation
- */
-function getParseableIanaZonedStringAtInstant(absolute, ianaTimeZoneName) {
-  const timeZoneObject = Temporal.TimeZone.from(ianaTimeZoneName);
-  return getParseableZonedStringAtInstant(absolute, timeZoneObject);
-}
+const result = absoluteTime.toString(&#39;Europe/Paris&#39;);
 
-/**
- * Converts an absolute point in time to a string with the time in the specified
- * time zone and a time zone designation.
- *
- * @param {Temporal.Absolute} absolute An absolute point in time
- * @param {Temporal.TimeZone} timeZone The target time zone
- * @returns {string} String indicating the time with time zone designation
- */
-function getParseableZonedStringAtInstant(absolute, timeZone) {
-  const dateTimeInZone = absolute.inTimeZone(timeZone);
-  const offset = timeZone.getOffsetFor(absolute);
-  // If the time zone has only an offset and not an IANA name, then the .name
-  // property will be identical to the offset. In that case, don&#39;t append it
-  // in square brackets.
-  const name = timeZone.name === offset ? &#39;&#39; : `[${timeZone.name}]`;
-  return `${dateTimeInZone}${offset}${name}`;
-}
-
-const absoluteTime = Temporal.Absolute.from(&#39;2020-01-03T10:41:51Z&#39;);
-const result = getParseableIanaZonedStringAtInstant(absoluteTime, &#39;Europe/Paris&#39;);
 assert.equal(result, &#39;2020-01-03T11:41:51+01:00[Europe/Paris]&#39;);
 assert.equal(Temporal.Absolute.compare(absoluteTime, Temporal.Absolute.from(result)), 0);
 
-const offsetTimeZone = Temporal.TimeZone.from(&#39;-07:00&#39;);
-const result2 = getParseableZonedStringAtInstant(absoluteTime, offsetTimeZone);
+// With an offset:
+
+const result2 = absoluteTime.toString(&#39;-07:00&#39;);
+
 assert.equal(result2, &#39;2020-01-03T03:41:51-07:00&#39;);
-assert.equal(Temporal.Absolute.compare(absoluteTime, Temporal.Absolute.from(result2)), 0);</code></pre>
+
+// With a Temporal.TimeZone object:
+
+const timeZone = Temporal.TimeZone.from(&#39;Asia/Seoul&#39;);
+const result3 = absoluteTime.toString(timeZone);
+
+assert.equal(result3, &#39;2020-01-03T19:41:51+09:00[Asia/Seoul]&#39;);</code></pre>
 <h2 id="sorting">Sorting</h2>
 <p>Each Temporal type has a <code>compare()</code> static method, which can be passed to <code>Array.prototype.sort()</code> as the compare function in order to sort an array of Temporal types.</p>
 <h3 id="sort-datetimes">Sort DateTimes</h3>
 <p>Sort a list of <code>Temporal.DateTime</code>s, for example in order to get a conference schedule in the correct order.
 Sorting other Temporal types would work exactly the same way as this.</p>
-<pre><code class="language-javascript">import assert from &#39;assert&#39;;
-/**
+<pre><code class="language-javascript">/**
  * getSortedLocalDateTimes will sort an array of zoneless Temporal.DateTime instances by the
  * corresponding local date and time of day (e.g., for building a conference schedule).
  *
  *
- * @param {Temporal.DateTime[]} dateTimes This is a DateTime instance
- * @param {boolean} direction reverse
+ * @param {Temporal.DateTime[]} dateTimes - This is a DateTime instance
+ * @param {boolean} direction - reverse
  * @returns {Temporal.DateTime[]} the array from dateTimes, sorted
  */
 function getSortedLocalDateTimes(dateTimes, reverse = false) {
@@ -225,9 +210,7 @@ assert.equal(results[1], c);
 assert.equal(results[2], b);</code></pre>
 <h3 id="sort-iso-datetime-strings">Sort ISO date/time strings</h3>
 <p>Sort a list of ISO 8601 date/time strings, for example to place log entries in order.</p>
-<pre><code class="language-javascript">import assert from &#39;assert&#39;;
-
-/**
+<pre><code class="language-javascript">/**
  * getSortedInstants will sort an array of strings (each of which is parseable
  * as a Temporal.Absolute and may or may not include an IANA time zone name)
  * by the corresponding absolute time (e.g., for presenting global log events
@@ -235,7 +218,7 @@ assert.equal(results[2], b);</code></pre>
  *
  *
  * @param {string[]} parseableAbsoluteStrings - a group of ISO Strings
- * @param {boolean} reverse ascending or descending order
+ * @param {boolean} reverse - ascending or descending order
  * @returns {string[]} the array from parseableAbsoluteStrings, sorted
  */
 function getSortedInstants(parseableAbsoluteStrings, reverse = false) {
@@ -293,8 +276,6 @@ function getParseableZonedStringWithLocalTimeInOtherZone(
   return instant.toString(targetTimeZone);
 }
 
-import assert from &#39;assert&#39;;
-
 const result = getParseableZonedStringWithLocalTimeInOtherZone(
   Temporal.DateTime.from(&#39;2020-01-09T00:00&#39;),
   Temporal.TimeZone.from(&#39;America/Chicago&#39;),
@@ -332,8 +313,6 @@ function getUtcOffsetSecondsAtInstant(instant, timeZone) {
   );
 }
 
-import assert from &#39;assert&#39;;
-
 const instant = Temporal.Absolute.from(&#39;2020-01-09T00:00Z&#39;);
 const nyc = Temporal.TimeZone.from(&#39;America/New_York&#39;);
 
@@ -364,14 +343,39 @@ function getUtcOffsetDifferenceSecondsAtInstant(instant, sourceTimeZone, targetT
   );
 }
 
-import assert from &#39;assert&#39;;
-
 const instant = Temporal.Absolute.from(&#39;2020-01-09T00:00Z&#39;);
 const nyc = Temporal.TimeZone.from(&#39;America/New_York&#39;);
 const chicago = Temporal.TimeZone.from(&#39;America/Chicago&#39;);
 
 // At this instant, Chicago is 3600 seconds earlier than New York
 assert.equal(getUtcOffsetDifferenceSecondsAtInstant(instant, nyc, chicago), -3600);</code></pre>
+<h2 id="arithmetic">Arithmetic</h2>
+<h3 id="nth-weekday-of-the-month">Nth weekday of the month</h3>
+<p>Example of getting a <code>Temporal.Date</code> representing the first Tuesday of the given <code>Temporal.YearMonth</code>, adaptable to other weekdays.</p>
+<pre><code class="language-javascript">/**
+ * Gets the first Tuesday of the month and returns its date
+ *
+ * @param {Temporal.YearMonth} queriedMonth - YearMonth instance to query
+ * @returns {Temporal.Date} Temporal.Date Instance which gives first tuesday
+ */
+function getFirstTuesday(queriedMonth) {
+  // We first need to convert to a date
+  const firstOfMonth = queriedMonth.withDay(1);
+
+  // We have Monday = 1, Sunday = 7, and we want to add a positive number
+  // smaller than 7 to get to the first Tuesday.
+  // If we&#39;re already on a Tuesday (2) then we want to add 0.
+  // So for the first of the month being a Monday through Sunday the additions are:
+  //    1, 0, 6, 5, 4, 3, 2 which is given by that formula.
+  // This lookup table makes this example easier to read, but you can also
+  // calculate the answer: (7 + desiredWeekday - firstOfMonth.dayOfWeek) % 7
+  return firstOfMonth.plus({ days: [1, 0, 6, 5, 4, 3, 2][firstOfMonth.dayOfWeek - 1] });
+}
+
+const myMonth = Temporal.YearMonth.from(&#39;2020-02&#39;);
+const firstTuesdayOfMonth = getFirstTuesday(myMonth);
+assert.equal(firstTuesdayOfMonth.toString(), &#39;2020-02-04&#39;);
+assert.equal(firstTuesdayOfMonth.dayOfWeek, 2);</code></pre>
     <footer>
       <p>
         This page includes a script which loads an implementation of Temporal in your browser.
