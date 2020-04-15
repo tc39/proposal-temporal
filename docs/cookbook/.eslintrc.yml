@@ -1,3 +1,6 @@
 globals:
+  Chart: readonly
   Temporal: readonly
   assert: readonly
+  tankDataX: readonly
+  tankDataY: readonly
