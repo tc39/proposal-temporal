@@ -94,6 +94,17 @@ This could be used when converting user-input date-time values between time zone
 {{cookbook/getParseableZonedStringWithLocalTimeInOtherZone.mjs}}
 ```
 
+Here is another example similar to the previous one, using the time zone for future events.
+The times and locations of a series of future meetings are stored as a pair of strings: one for the calendar date and wall-clock time, and one for the time zone.
+They cannot be stored as an absolute point in UTC because between now and the time when the event happens, the time zone rules for daylight saving time could change &mdash; for example, Brazil abolished daylight saving time in 2019 &mdash; but the meeting would still be held at the same wall-clock time on that date.
+So if the time zone rules changed, the event's absolute point in time would change.
+
+This example calculates the starting times of all the Ecma TC39 meetings in 2019, in local time in Tokyo.
+
+```javascript
+{{cookbook/localTimeForFutureEvents.mjs}}
+```
+
 ### Daily occurrence in local time
 
 Similar to the previous recipe, calculate the absolute times of a daily occurrence that happens at a particular local time in a particular time zone.
