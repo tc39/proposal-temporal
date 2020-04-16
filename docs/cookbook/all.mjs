@@ -5,6 +5,7 @@ import './getCurrentDate.mjs';
 import './getElapsedDurationSinceInstant.mjs';
 import './getFirstTuesdayOfMonth.mjs';
 import './getInstantBeforeOldRecord.mjs';
+import './getInstantOfNearestOffsetTransitionToInstant.mjs';
 import './getLocalizedArrival.mjs';
 import './getParseableZonedStringAtInstant.mjs';
 import './getParseableZonedStringWithLocalTimeInOtherZone.mjs';
