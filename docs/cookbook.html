@@ -85,6 +85,47 @@
       It does not represent the final API of this proposal, nor even the current consensus.
     </div>
 <h1 id="temporal-cookbook">Temporal Cookbook</h1>
+<h2 id="overview">Overview</h2>
+<!-- MarkdownTOC autolink="true" -->
+
+<ul>
+<li><a href="#running-the-cookbook-files">Running the cookbook files</a></li>
+<li><a href="#frequently-asked-questions">Frequently Asked Questions</a><ul>
+<li><a href="#current-date-and-time">Current date and time</a></li>
+<li><a href="#unix-timestamp">Unix timestamp</a></li>
+</ul>
+</li>
+<li><a href="#converting-between-temporal-types-and-legacy-date">Converting between Temporal types and legacy Date</a><ul>
+<li><a href="#absolute-from-legacy-date">Absolute from legacy Date</a></li>
+</ul>
+</li>
+<li><a href="#construction">Construction</a><ul>
+<li><a href="#time-zone-object-from-name">Time zone object from name</a></li>
+</ul>
+</li>
+<li><a href="#serialization">Serialization</a><ul>
+<li><a href="#zoned-instant-from-instant-and-time-zone">Zoned instant from instant and time zone</a></li>
+</ul>
+</li>
+<li><a href="#sorting">Sorting</a><ul>
+<li><a href="#sort-datetimes">Sort DateTimes</a></li>
+<li><a href="#sort-iso-datetime-strings">Sort ISO date/time strings</a></li>
+</ul>
+</li>
+<li><a href="#time-zone-conversion">Time zone conversion</a><ul>
+<li><a href="#preserving-absolute-instant">Preserving absolute instant</a></li>
+<li><a href="#utc-offset-for-a-zoned-event-as-a-string">UTC offset for a zoned event, as a string</a></li>
+<li><a href="#utc-offset-for-a-zoned-event-as-a-number-of-seconds">UTC offset for a zoned event, as a number of seconds</a></li>
+<li><a href="#offset-between-two-time-zones-at-an-instant">Offset between two time zones at an instant</a></li>
+</ul>
+</li>
+<li><a href="#arithmetic">Arithmetic</a><ul>
+<li><a href="#nth-weekday-of-the-month">Nth weekday of the month</a></li>
+</ul>
+</li>
+</ul>
+<!-- /MarkdownTOC -->
+
 <h2 id="running-the-cookbook-files">Running the cookbook files</h2>
 <p>Running cookbook files:</p>
 <pre><code class="language-sh">node --experimental-modules --no-warnings \
