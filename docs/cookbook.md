@@ -128,6 +128,14 @@ Map two Temporal.Absolute instances into an ascending/descending order indicator
 {{cookbook/getElapsedDurationSinceInstant.mjs}}
 ```
 
+### Nearest offset transition in a time zone
+
+Map a Temporal.Absolute instance and a Temporal.TimeZone object into a Temporal.Absolute instance representing the nearest following instant at which there is an offset transition in the time zone (e.g., for setting reminders).
+
+```javascript
+{{cookbook/getInstantOfNearestOffsetTransitionToInstant.mjs}}
+```
+
 ### Comparison of an instant to business hours
 
 This example takes a roster of opening and closing times for a business, and maps a localized date and time of day into a time-sensitive state indicator ("opening soon" vs. "open" vs. "closing soon" vs. "closed").
