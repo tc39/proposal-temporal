@@ -2,38 +2,13 @@
 
 ## Overview
 
-<!-- MarkdownTOC autolink="true" -->
-
-- [Running the cookbook files](#running-the-cookbook-files)
-- [Frequently Asked Questions](#frequently-asked-questions)
-  - [Current date and time](#current-date-and-time)
-  - [Unix timestamp](#unix-timestamp)
-- [Converting between Temporal types and legacy Date](#converting-between-temporal-types-and-legacy-date)
-  - [Absolute from legacy Date](#absolute-from-legacy-date)
-- [Construction](#construction)
-  - [Time zone object from name](#time-zone-object-from-name)
-- [Serialization](#serialization)
-  - [Zoned instant from instant and time zone](#zoned-instant-from-instant-and-time-zone)
-- [Sorting](#sorting)
-  - [Sort DateTimes](#sort-datetimes)
-  - [Sort ISO date/time strings](#sort-iso-datetime-strings)
-- [Time zone conversion](#time-zone-conversion)
-  - [Preserving absolute instant](#preserving-absolute-instant)
-  - [UTC offset for a zoned event, as a string](#utc-offset-for-a-zoned-event-as-a-string)
-  - [UTC offset for a zoned event, as a number of seconds](#utc-offset-for-a-zoned-event-as-a-number-of-seconds)
-  - [Offset between two time zones at an instant](#offset-between-two-time-zones-at-an-instant)
-- [Arithmetic](#arithmetic)
-  - [Unit-constrained duration between now and a past/future zoned event](#unit-constrained-duration-between-now-and-a-pastfuture-zoned-event)
-  - [Comparison of an instant to business hours](#comparison-of-an-instant-to-business-hours)
-  - [Nth weekday of the month](#nth-weekday-of-the-month)
-
-<!-- /MarkdownTOC -->
+<!-- toc -->
 
 ## Running the cookbook files
 
 Running cookbook files:
 
-```sh
+```bash
 node --experimental-modules --no-warnings \
 	--icu-data-dir ./polyfill/node_modules/full-icu/ \
 	-r ./polyfill/index.js ./docs/cookbook/${cookbookFile}

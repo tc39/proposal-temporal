@@ -6,7 +6,7 @@
   "private": true,
   "scripts": {
     "build:javascript": "rollup -m -c rollup.config.ejs",
-    "build:html": "for FILE in *.md; do cat $FILE | sed 's/\\.md\\([)#]\\)/.html\\1/g' | awk -f include.awk | marked -o ${FILE%.md}.html.part; cat head.html.part ${FILE%.md}.html.part tail.html.part > ${FILE%.md}.html; rm -f ${FILE%.md}.html.part; done && cp README.html index.html"
+    "build:html": "node processMarkdown.js *.md && cp README.html index.html && cp node_modules/prismjs/themes/prism.css ."
   },
   "repository": {
     "type": "git",
@@ -29,6 +29,7 @@
     "@rollup/plugin-commonjs": "^11.0.2",
     "@rollup/plugin-node-resolve": "^7.1.1",
     "marked": "^0.7.0",
+    "prismjs": "^1.20.0",
     "rollup": "^1.23.1",
     "rollup-plugin-babel": "^4.3.3",
     "rollup-plugin-node-builtins": "^2.1.2",
