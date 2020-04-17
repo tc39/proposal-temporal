@@ -391,6 +391,48 @@ const chicago = Temporal.TimeZone.from(&#39;America/Chicago&#39;);
 // At this instant, Chicago is 3600 seconds earlier than New York
 assert.equal(getUtcOffsetDifferenceSecondsAtInstant(instant, nyc, chicago), -3600);</code></pre>
 <h2 id="arithmetic">Arithmetic</h2>
+<h3 id="unit-constrained-duration-between-now-and-a-pastfuture-zoned-event">Unit-constrained duration between now and a past/future zoned event</h3>
+<p>Map two Temporal.Absolute instances into an ascending/descending order indicator and a Temporal.Duration instance representing the duration between the two instants without using units coarser than specified (e.g., for presenting a meaningful countdown with vs. without using months or days).</p>
+<pre><code class="language-javascript">/**
+ * @typedef {Object} ElapsedDuration
+ * @property {string} return.sign - &quot;+&quot; or &quot;-&quot;
+ * @property {Temporal.Duration} return.duration - Elapsed duration
+ */
+/**
+ * Compute the difference between two instants, suitable for use in a countdown,
+ * for example.
+ *
+ * @param {Temporal.Absolute} then - Instant since when to measure the duration
+ * @param {Temporal.Absolute} now - Instant until when to measure the duration
+ * @param {string} [largestUnit=days] - Largest time unit to have in the result
+ * @returns {ElapsedDuration} Time between `then` and `now`
+ */
+function getElapsedDurationSinceInstant(then, now, largestUnit = &#39;days&#39;) {
+  const sign = Temporal.Absolute.compare(now, then) &lt; 0 ? &#39;-&#39; : &#39;+&#39;;
+  const duration = now.difference(then, { largestUnit });
+  return { sign, duration };
+}
+
+const result = getElapsedDurationSinceInstant(
+  Temporal.Absolute.from(&#39;2020-01-09T00:00Z&#39;),
+  Temporal.Absolute.from(&#39;2020-01-09T04:00Z&#39;)
+);
+assert.equal(`${result.sign}${result.duration}`, &#39;+PT4H&#39;);
+
+const result2 = getElapsedDurationSinceInstant(
+  Temporal.Absolute.from(&#39;2020-01-09T04:00Z&#39;),
+  Temporal.Absolute.from(&#39;2020-01-09T00:00Z&#39;),
+  &#39;minutes&#39;
+);
+assert.equal(`${result2.sign}${result2.duration}`, &#39;-PT240M&#39;);
+
+// Example of using it in a countdown:
+
+const { sign, duration } = getElapsedDurationSinceInstant(
+  Temporal.Absolute.from(&#39;2020-04-01T13:00-07:00[America/Los_Angeles]&#39;),
+  Temporal.now.absolute()
+);
+`It&#39;s ${duration.toLocaleString()} ${sign &lt; 0 ? &#39;until&#39; : &#39;since&#39;} the TC39 Temporal presentation`;</code></pre>
 <h3 id="nth-weekday-of-the-month">Nth weekday of the month</h3>
 <p>Example of getting a <code>Temporal.Date</code> representing the first Tuesday of the given <code>Temporal.YearMonth</code>, adaptable to other weekdays.</p>
 <pre><code class="language-javascript">/**
