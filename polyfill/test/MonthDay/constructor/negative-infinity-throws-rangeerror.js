@@ -8,6 +8,7 @@ esid: sec-temporal.monthday
 
 assert.throws(RangeError, () => new Temporal.MonthDay(-Infinity, 1));
 assert.throws(RangeError, () => new Temporal.MonthDay(1, -Infinity));
+assert.throws(RangeError, () => new Temporal.MonthDay(1, 1, -Infinity));
 
 let calls = 0;
 const obj = {
@@ -21,3 +22,5 @@ assert.throws(RangeError, () => new Temporal.MonthDay(obj, 1));
 assert.sameValue(calls, 1, "it fails after fetching the primitive value");
 assert.throws(RangeError, () => new Temporal.MonthDay(1, obj));
 assert.sameValue(calls, 2, "it fails after fetching the primitive value");
+assert.throws(RangeError, () => new Temporal.MonthDay(1, 1, obj));
+assert.sameValue(calls, 3, "it fails after fetching the primitive value");
