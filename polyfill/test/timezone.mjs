@@ -211,8 +211,20 @@ describe('TimeZone', () => {
       const a1 = Temporal.Absolute.from('2020-04-16T21:01Z');
       const a2 = Temporal.Absolute.from('1800-01-01T00:00Z');
 
-      equal(nyc.getTransitions(a1).next().value.toString(), '2020-11-01T06:00Z');
-      equal(nyc.getTransitions(a2).next().value.toString(), '1883-11-18T17:00Z');
+      equal(
+        nyc
+          .getTransitions(a1)
+          .next()
+          .value.toString(),
+        '2020-11-01T06:00Z'
+      );
+      equal(
+        nyc
+          .getTransitions(a2)
+          .next()
+          .value.toString(),
+        '1883-11-18T17:00Z'
+      );
     });
   });
 });
