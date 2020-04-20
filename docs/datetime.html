@@ -6,7 +6,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/kognise/water.css@latest/dist/light.min.css">
     <script type="application/javascript" src="./playground.js"></script>
     <script type="application/javascript" src="./mermaid.js"></script>
-    <script type="application/javascript" src="./prism.js"></script>
     <link rel="stylesheet" type="text/css" href="./prism.css">
     <script>mermaid.initialize({startOnLoad:true,flowchart:{useMaxWidth:false}});</script>
     <script>
@@ -84,7 +83,7 @@
       <strong>This polyfill is a work in progress.</strong>
       It does not represent the final API of this proposal, nor even the current consensus.
     </div>
-<h1 id="temporaldatetime">Temporal.DateTime</h1>
+<h1 id="temporaldatetime-1">Temporal.DateTime</h1>
 <p>A <code>Temporal.DateTime</code> represents a calendar date and wall-clock time, with a precision in nanoseconds, and without any time zone.
 Of the <code>Temporal</code> classes carrying human-readable time information, it is the most general and complete one.
 <code>Temporal.Date</code>, <code>Temporal.Time</code>, <code>Temporal.YearMonth</code>, and <code>Temporal.MonthDay</code> all carry less information and should be used when complete information is not required.</p>
@@ -92,9 +91,8 @@ Of the <code>Temporal</code> classes carrying human-readable time information, i
 <code>Temporal.DateTime</code> does not represent an absolute, unique point in time; that is what <code>Temporal.Absolute</code> is for.</p>
 <p>A <code>Temporal.DateTime</code> can be converted to a <code>Temporal.Absolute</code> using a <code>Temporal.TimeZone</code>.
 A <code>Temporal.DateTime</code> can also be converted into any of the other <code>Temporal</code> objects that carry less information, such as <code>Temporal.Date</code> for the date or <code>Temporal.Time</code> for the time.</p>
-<h2 id="constructor">Constructor</h2>
-<h3 id="new-temporaldatetimeisoyear-number-isomonth-number-isoday-number-hour-number--0-minute-number--0-second-number--0-millisecond-number--0-microsecond-number--0-nanosecond-number--0--temporaldatetime"><strong>new Temporal.DateTime</strong>(<em>isoYear</em>: number, <em>isoMonth</em>: number, <em>isoDay</em>: number, <em>hour</em>: number = 0, <em>minute</em>: number = 0, <em>second</em>: number = 0, <em>millisecond</em>: number = 0, <em>microsecond</em>: number = 0, <em>nanosecond</em>: number = 0) : Temporal.DateTime</h3>
-<p><strong>Parameters:</strong></p>
+<h2 id="constructor-1">Constructor</h2>
+<h3 id="new-Temporal-DateTime"><a class="heading-link" href="#new-Temporal-DateTime"></a><strong>new Temporal.DateTime</strong>(<em>isoYear</em>: number, <em>isoMonth</em>: number, <em>isoDay</em>: number, <em>hour</em>: number = 0, <em>minute</em>: number = 0, <em>second</em>: number = 0, <em>millisecond</em>: number = 0, <em>microsecond</em>: number = 0, <em>nanosecond</em>: number = 0) : Temporal.DateTime</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>isoYear</code> (number): A year.</li>
 <li><code>isoMonth</code> (number): A month, ranging between 1 and 12 inclusive.</li>
@@ -119,11 +117,9 @@ This value will cause the constructor will throw, so if you have to interoperate
 If the parameters passed in to this constructor form a date outside of this range, then <code>constrain</code> mode will clamp the values to the limit of the allowed range.
 Both <code>balance</code> and <code>reject</code> mode will throw a <code>RangeError</code> in this case.</p>
 <p>Usage examples:</p>
-<pre><code class="language-javascript">// Leet hour on pi day in 2020
-datetime = new Temporal.DateTime(2020, 3, 14, 13, 37)  // =&gt; 2020-03-14T13:37</code></pre>
-<h2 id="static-methods">Static methods</h2>
-<h3 id="temporaldatetimefromthing-string--object-options-object--temporaldatetime">Temporal.DateTime.<strong>from</strong>(<em>thing</em>: string | object, <em>options</em>?: object) : Temporal.DateTime</h3>
-<p><strong>Parameters:</strong></p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Leet hour on pi day in 2020</span>
+datetime <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>DateTime</span><span class="token punctuation">(</span><span class="token number">2020</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">14</span><span class="token punctuation">,</span> <span class="token number">13</span><span class="token punctuation">,</span> <span class="token number">37</span><span class="token punctuation">)</span>  <span class="token comment">// => 2020-03-14T13:37</span></code></pre><h2 id="static-methods-1">Static methods</h2>
+<h3 id="from"><a class="heading-link" href="#from"></a>Temporal.DateTime.<strong>from</strong>(<em>thing</em>: string | object, <em>options</em>?: object) : Temporal.DateTime</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>thing</code> (string or object): The value representing the desired date and time.</li>
 <li><code>options</code> (optional object): An object with properties representing options for constructing the date and time.
@@ -155,56 +151,54 @@ In the default <code>constrain</code> disambiguation mode and when parsing an IS
 In <code>reject</code> mode, this function will throw, so if you have to interoperate with times that may contain leap seconds, don&#39;t use <code>reject</code>.</p>
 </blockquote>
 <p>Example usage:</p>
-<pre><code class="language-javascript">dt = Temporal.DateTime.from(&#39;1995-12-07T03:24:30&#39;);
-dt = Temporal.DateTime.from(&#39;1995-12-07T03:24:30Z&#39;);  // =&gt; 1995-12-07T03:24:30
-dt = Temporal.DateTime.from(&#39;1995-12-07T03:24:30+01:00[Europe/Brussels]&#39;);
-  // =&gt; same as above; time zone is ignored
-dt === Temporal.DateTime.from(dt)  // =&gt; true
+<pre class="language-javascript"><code class="language-javascript">dt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'1995-12-07T03:24:30'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+dt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'1995-12-07T03:24:30Z'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// => 1995-12-07T03:24:30</span>
+dt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'1995-12-07T03:24:30+01:00[Europe/Brussels]'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// => same as above; time zone is ignored</span>
+dt <span class="token operator">===</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>dt<span class="token punctuation">)</span>  <span class="token comment">// => true</span>
 
-dt = Temporal.DateTime.from({
-    year: 1995,
-    month: 12,
-    day: 7,
-    hour: 3,
-    minute: 24,
-    second: 30,
-    millisecond: 0,
-    microsecond: 3,
-    nanosecond: 500
-});  // =&gt; 1995-12-07T03:24:30.000003500
-dt = Temporal.DateTime.from({year: 1995, month: 12, day: 7});  // =&gt; 1995-12-07T00:00
-dt = Temporal.DateTime.from(Temporal.Date.from(&#39;1995-12-07T03:24:30&#39;));
-  // =&gt; same as above; Temporal.Date has year, month, and day properties
+dt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+    year<span class="token operator">:</span> <span class="token number">1995</span><span class="token punctuation">,</span>
+    month<span class="token operator">:</span> <span class="token number">12</span><span class="token punctuation">,</span>
+    day<span class="token operator">:</span> <span class="token number">7</span><span class="token punctuation">,</span>
+    hour<span class="token operator">:</span> <span class="token number">3</span><span class="token punctuation">,</span>
+    minute<span class="token operator">:</span> <span class="token number">24</span><span class="token punctuation">,</span>
+    second<span class="token operator">:</span> <span class="token number">30</span><span class="token punctuation">,</span>
+    millisecond<span class="token operator">:</span> <span class="token number">0</span><span class="token punctuation">,</span>
+    microsecond<span class="token operator">:</span> <span class="token number">3</span><span class="token punctuation">,</span>
+    nanosecond<span class="token operator">:</span> <span class="token number">500</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// => 1995-12-07T03:24:30.000003500</span>
+dt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span>year<span class="token operator">:</span> <span class="token number">1995</span><span class="token punctuation">,</span> month<span class="token operator">:</span> <span class="token number">12</span><span class="token punctuation">,</span> day<span class="token operator">:</span> <span class="token number">7</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// => 1995-12-07T00:00</span>
+dt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'1995-12-07T03:24:30'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// => same as above; Temporal.Date has year, month, and day properties</span>
 
-// Different disambiguation modes
-dt = Temporal.DateTime.from({ year: 2001, month: 13, day: 1 }, { disambiguation: &#39;constrain&#39; })
-  // =&gt; 2001-12-01T00:00
-dt = Temporal.DateTime.from({ year: 2001, month: -1, day: 1 }, { disambiguation: &#39;constrain&#39; })
-  // =&gt; 2001-01-01T00:00
-dt = Temporal.DateTime.from({ year: 2001, month: 1, day: 1, hour: 25 }, { disambiguation: &#39;constrain&#39; })
-  // =&gt; 2001-01-01T23:00
-dt = Temporal.DateTime.from({ year: 2001, month: 1, day: 1, minute: 60 }, { disambiguation: &#39;constrain&#39; })
-  // =&gt; 2001-01-01T00:59
-dt = Temporal.DateTime.from({ year: 2001, month: 13, day: 1 }, { disambiguation: &#39;balance&#39; })
-  // =&gt; 2002-01-01T00:00
-dt = Temporal.DateTime.from({ year: 2001, month: 0, day: 1 }, { disambiguation: &#39;balance&#39; });
-  // =&gt; 2000-12-01T00:00
-dt = Temporal.DateTime.from({ year: 2001, month: -1, day: 1 }, { disambiguation: &#39;balance&#39; })
-  // =&gt; 2000-11-01T00:00
-dt = Temporal.DateTime.from({ year: 2001, month: 1, day: 1, hour: 25 }, { disambiguation: &#39;balance&#39; })
-  // =&gt; 2001-01-02T01:00
-dt = Temporal.DateTime.from({ year: 2001, month: 1, day: 1, minute: 60 }, { disambiguation: &#39;constrain&#39; })
-  // =&gt; 2001-01-01T01:00
-dt = Temporal.DateTime.from({ year: 2001, month: 13, day: 1 }, { disambiguation: &#39;reject&#39; })
-  // throws
-dt = Temporal.DateTime.from({ year: 2001, month: -1, day: 1 }, { disambiguation: &#39;reject&#39; })
-  // throws
-dt = Temporal.DateTime.from({ year: 2001, month: 1, day: 1, hour: 25 }, { disambiguation: &#39;reject&#39; })
-  // throws
-dt = Temporal.DateTime.from({ year: 2001, month: 1, day: 1, minute: 60 }, { disambiguation: &#39;reject&#39; })
-  // =&gt; throws</code></pre>
-<h3 id="temporaldatetimecompareone-temporaldatetime-two-temporaldatetime--number">Temporal.DateTime.<strong>compare</strong>(<em>one</em>: Temporal.DateTime, <em>two</em>: Temporal.DateTime) : number</h3>
-<p><strong>Parameters:</strong></p>
+<span class="token comment">// Different disambiguation modes</span>
+dt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> year<span class="token operator">:</span> <span class="token number">2001</span><span class="token punctuation">,</span> month<span class="token operator">:</span> <span class="token number">13</span><span class="token punctuation">,</span> day<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> disambiguation<span class="token operator">:</span> <span class="token string">'constrain'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>
+  <span class="token comment">// => 2001-12-01T00:00</span>
+dt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> year<span class="token operator">:</span> <span class="token number">2001</span><span class="token punctuation">,</span> month<span class="token operator">:</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span> day<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> disambiguation<span class="token operator">:</span> <span class="token string">'constrain'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>
+  <span class="token comment">// => 2001-01-01T00:00</span>
+dt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> year<span class="token operator">:</span> <span class="token number">2001</span><span class="token punctuation">,</span> month<span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">,</span> day<span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">,</span> hour<span class="token operator">:</span> <span class="token number">25</span> <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> disambiguation<span class="token operator">:</span> <span class="token string">'constrain'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>
+  <span class="token comment">// => 2001-01-01T23:00</span>
+dt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> year<span class="token operator">:</span> <span class="token number">2001</span><span class="token punctuation">,</span> month<span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">,</span> day<span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">,</span> minute<span class="token operator">:</span> <span class="token number">60</span> <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> disambiguation<span class="token operator">:</span> <span class="token string">'constrain'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>
+  <span class="token comment">// => 2001-01-01T00:59</span>
+dt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> year<span class="token operator">:</span> <span class="token number">2001</span><span class="token punctuation">,</span> month<span class="token operator">:</span> <span class="token number">13</span><span class="token punctuation">,</span> day<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> disambiguation<span class="token operator">:</span> <span class="token string">'balance'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>
+  <span class="token comment">// => 2002-01-01T00:00</span>
+dt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> year<span class="token operator">:</span> <span class="token number">2001</span><span class="token punctuation">,</span> month<span class="token operator">:</span> <span class="token number">0</span><span class="token punctuation">,</span> day<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> disambiguation<span class="token operator">:</span> <span class="token string">'balance'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// => 2000-12-01T00:00</span>
+dt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> year<span class="token operator">:</span> <span class="token number">2001</span><span class="token punctuation">,</span> month<span class="token operator">:</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span> day<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> disambiguation<span class="token operator">:</span> <span class="token string">'balance'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>
+  <span class="token comment">// => 2000-11-01T00:00</span>
+dt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> year<span class="token operator">:</span> <span class="token number">2001</span><span class="token punctuation">,</span> month<span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">,</span> day<span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">,</span> hour<span class="token operator">:</span> <span class="token number">25</span> <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> disambiguation<span class="token operator">:</span> <span class="token string">'balance'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>
+  <span class="token comment">// => 2001-01-02T01:00</span>
+dt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> year<span class="token operator">:</span> <span class="token number">2001</span><span class="token punctuation">,</span> month<span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">,</span> day<span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">,</span> minute<span class="token operator">:</span> <span class="token number">60</span> <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> disambiguation<span class="token operator">:</span> <span class="token string">'constrain'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>
+  <span class="token comment">// => 2001-01-01T01:00</span>
+dt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> year<span class="token operator">:</span> <span class="token number">2001</span><span class="token punctuation">,</span> month<span class="token operator">:</span> <span class="token number">13</span><span class="token punctuation">,</span> day<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> disambiguation<span class="token operator">:</span> <span class="token string">'reject'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>
+  <span class="token comment">// throws</span>
+dt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> year<span class="token operator">:</span> <span class="token number">2001</span><span class="token punctuation">,</span> month<span class="token operator">:</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span> day<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> disambiguation<span class="token operator">:</span> <span class="token string">'reject'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>
+  <span class="token comment">// throws</span>
+dt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> year<span class="token operator">:</span> <span class="token number">2001</span><span class="token punctuation">,</span> month<span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">,</span> day<span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">,</span> hour<span class="token operator">:</span> <span class="token number">25</span> <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> disambiguation<span class="token operator">:</span> <span class="token string">'reject'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>
+  <span class="token comment">// throws</span>
+dt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> year<span class="token operator">:</span> <span class="token number">2001</span><span class="token punctuation">,</span> month<span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">,</span> day<span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">,</span> minute<span class="token operator">:</span> <span class="token number">60</span> <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> disambiguation<span class="token operator">:</span> <span class="token string">'reject'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>
+  <span class="token comment">// => throws</span></code></pre><h3 id="compare"><a class="heading-link" href="#compare"></a>Temporal.DateTime.<strong>compare</strong>(<em>one</em>: Temporal.DateTime, <em>two</em>: Temporal.DateTime) : number</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>one</code> (<code>Temporal.DateTime</code>): First date/time to compare.</li>
 <li><code>two</code> (<code>Temporal.DateTime</code>): Second date/time to compare.</li>
@@ -219,95 +213,71 @@ Returns an integer indicating whether <code>one</code> comes before or after or 
 </ul>
 <p>This function can be used to sort arrays of <code>Temporal.DateTime</code> objects.
 For example:</p>
-<pre><code class="language-javascript">one = Temporal.DateTime.from(&#39;1995-12-07T03:24&#39;);
-two = Temporal.DateTime.from(&#39;1995-12-07T01:24&#39;);
-three = Temporal.DateTime.from(&#39;2015-12-07T01:24&#39;);
-sorted = [one, two, three].sort(Temporal.DateTime.compare);
-sorted.join(&#39; &#39;);
-// =&gt; 1995-12-07T01:24 1995-12-07T03:24 2015-12-07T01:24</code></pre>
-<h2 id="properties">Properties</h2>
-<h3 id="datetimeyear--number">datetime.<strong>year</strong> : number</h3>
-<h3 id="datetimemonth--number">datetime.<strong>month</strong> : number</h3>
-<h3 id="datetimeday--number">datetime.<strong>day</strong> : number</h3>
-<h3 id="datetimehour-number">datetime.<strong>hour</strong>: number</h3>
-<h3 id="datetimeminute-number">datetime.<strong>minute</strong>: number</h3>
-<h3 id="datetimesecond-number">datetime.<strong>second</strong>: number</h3>
-<h3 id="datetimemillisecond-number">datetime.<strong>millisecond</strong>: number</h3>
-<h3 id="datetimemicrosecond-number">datetime.<strong>microsecond</strong>: number</h3>
-<h3 id="datetimenanosecond-number">datetime.<strong>nanosecond</strong>: number</h3>
-<p>The above read-only properties allow accessing each component of the date or time individually.</p>
+<pre class="language-javascript"><code class="language-javascript">one <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'1995-12-07T03:24'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+two <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'1995-12-07T01:24'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+three <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2015-12-07T01:24'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+sorted <span class="token operator">=</span> <span class="token punctuation">[</span>one<span class="token punctuation">,</span> two<span class="token punctuation">,</span> three<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">sort</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span>compare<span class="token punctuation">)</span><span class="token punctuation">;</span>
+sorted<span class="token punctuation">.</span><span class="token function">join</span><span class="token punctuation">(</span><span class="token string">' '</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// => 1995-12-07T01:24 1995-12-07T03:24 2015-12-07T01:24</span></code></pre><h2 id="properties-1">Properties</h2>
+<h3 id="year"><a class="heading-link" href="#year"></a>datetime.<strong>year</strong> : number</h3><h3 id="month"><a class="heading-link" href="#month"></a>datetime.<strong>month</strong> : number</h3><h3 id="day"><a class="heading-link" href="#day"></a>datetime.<strong>day</strong> : number</h3><h3 id="hour"><a class="heading-link" href="#hour"></a>datetime.<strong>hour</strong>: number</h3><h3 id="minute"><a class="heading-link" href="#minute"></a>datetime.<strong>minute</strong>: number</h3><h3 id="second"><a class="heading-link" href="#second"></a>datetime.<strong>second</strong>: number</h3><h3 id="millisecond"><a class="heading-link" href="#millisecond"></a>datetime.<strong>millisecond</strong>: number</h3><h3 id="microsecond"><a class="heading-link" href="#microsecond"></a>datetime.<strong>microsecond</strong>: number</h3><h3 id="nanosecond"><a class="heading-link" href="#nanosecond"></a>datetime.<strong>nanosecond</strong>: number</h3><p>The above read-only properties allow accessing each component of the date or time individually.</p>
 <p>Usage examples:</p>
-<pre><code class="language-javascript">dt = new Temporal.DateTime(1995, 12, 7, 3, 24, 30, 0, 3, 500);
-dt.year         // =&gt; 1995
-dt.month        // =&gt; 12
-dt.day          // =&gt; 7
-dt.hour         // =&gt; 3
-dt.minute       // =&gt; 24
-dt.second       // =&gt; 30
-dt.millisecond  // =&gt; 0
-dt.microsecond  // =&gt; 3
-dt.nanosecond   // =&gt; 500</code></pre>
-<h3 id="datetimedayofweek--number">datetime.<strong>dayOfWeek</strong> : number</h3>
-<p>The <code>dayOfWeek</code> read-only property gives the weekday number that the date falls on.
+<pre class="language-javascript"><code class="language-javascript">dt <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>DateTime</span><span class="token punctuation">(</span><span class="token number">1995</span><span class="token punctuation">,</span> <span class="token number">12</span><span class="token punctuation">,</span> <span class="token number">7</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">24</span><span class="token punctuation">,</span> <span class="token number">30</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">500</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+dt<span class="token punctuation">.</span>year         <span class="token comment">// => 1995</span>
+dt<span class="token punctuation">.</span>month        <span class="token comment">// => 12</span>
+dt<span class="token punctuation">.</span>day          <span class="token comment">// => 7</span>
+dt<span class="token punctuation">.</span>hour         <span class="token comment">// => 3</span>
+dt<span class="token punctuation">.</span>minute       <span class="token comment">// => 24</span>
+dt<span class="token punctuation">.</span>second       <span class="token comment">// => 30</span>
+dt<span class="token punctuation">.</span>millisecond  <span class="token comment">// => 0</span>
+dt<span class="token punctuation">.</span>microsecond  <span class="token comment">// => 3</span>
+dt<span class="token punctuation">.</span>nanosecond   <span class="token comment">// => 500</span></code></pre><h3 id="dayOfWeek"><a class="heading-link" href="#dayOfWeek"></a>datetime.<strong>dayOfWeek</strong> : number</h3><p>The <code>dayOfWeek</code> read-only property gives the weekday number that the date falls on.
 The weekday number is defined as in the ISO 8601 standard: a value between 1 and 7, inclusive, with Monday being 1, and Sunday 7.
 For an overview, see <a href="https://en.wikipedia.org/wiki/ISO_8601#Week_dates">ISO 8601 on Wikipedia</a>.</p>
 <p>Usage example:</p>
-<pre><code class="language-javascript">dt = new Temporal.DateTime(1995, 12, 7, 3, 24, 30, 0, 3, 500);
-[&#39;MON&#39;, &#39;TUE&#39;, &#39;WED&#39;, &#39;THU&#39;, &#39;FRI&#39;, &#39;SAT&#39;, &#39;SUN&#39;][dt.dayOfWeek - 1]  // =&gt; THU</code></pre>
-<h3 id="datetimedayofyear--number">datetime.<strong>dayOfYear</strong> : number</h3>
-<p>The <code>dayOfYear</code> read-only property gives the ordinal day of the year that the date falls on.
+<pre class="language-javascript"><code class="language-javascript">dt <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>DateTime</span><span class="token punctuation">(</span><span class="token number">1995</span><span class="token punctuation">,</span> <span class="token number">12</span><span class="token punctuation">,</span> <span class="token number">7</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">24</span><span class="token punctuation">,</span> <span class="token number">30</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">500</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">[</span><span class="token string">'MON'</span><span class="token punctuation">,</span> <span class="token string">'TUE'</span><span class="token punctuation">,</span> <span class="token string">'WED'</span><span class="token punctuation">,</span> <span class="token string">'THU'</span><span class="token punctuation">,</span> <span class="token string">'FRI'</span><span class="token punctuation">,</span> <span class="token string">'SAT'</span><span class="token punctuation">,</span> <span class="token string">'SUN'</span><span class="token punctuation">]</span><span class="token punctuation">[</span>dt<span class="token punctuation">.</span>dayOfWeek <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">]</span>  <span class="token comment">// => THU</span></code></pre><h3 id="dayOfYear"><a class="heading-link" href="#dayOfYear"></a>datetime.<strong>dayOfYear</strong> : number</h3><p>The <code>dayOfYear</code> read-only property gives the ordinal day of the year that the date falls on.
 This is a value between 1 and 365, or 366 in a leap year.</p>
 <p>Usage example:</p>
-<pre><code class="language-javascript">dt = new Temporal.DateTime(1995, 12, 7, 3, 24, 30, 0, 3, 500);
-// ISO ordinal date
-console.log(dt.year, dt.dayOfYear);  // =&gt; 1995 341</code></pre>
-<h3 id="datetimeweekofyear--number">datetime.<strong>weekOfYear</strong> : number</h3>
-<p>The <code>weekOfYear</code> read-only property gives the ISO week number of the date.
+<pre class="language-javascript"><code class="language-javascript">dt <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>DateTime</span><span class="token punctuation">(</span><span class="token number">1995</span><span class="token punctuation">,</span> <span class="token number">12</span><span class="token punctuation">,</span> <span class="token number">7</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">24</span><span class="token punctuation">,</span> <span class="token number">30</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">500</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// ISO ordinal date</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>dt<span class="token punctuation">.</span>year<span class="token punctuation">,</span> dt<span class="token punctuation">.</span>dayOfYear<span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// => 1995 341</span></code></pre><h3 id="weekOfYear"><a class="heading-link" href="#weekOfYear"></a>datetime.<strong>weekOfYear</strong> : number</h3><p>The <code>weekOfYear</code> read-only property gives the ISO week number of the date.
 This is normally a value between 1 and 52, but in a few cases it can be 53 as well.
 ISO week 1 is the week containing the first Thursday of the year.
 For more information on ISO week numbers, see for example the Wikipedia article on <a href="https://en.wikipedia.org/wiki/ISO_week_date">ISO week date</a>.</p>
 <p>Usage example:</p>
-<pre><code class="language-javascript">dt = new Temporal.DateTime(1995, 12, 7, 3, 24, 30, 0, 3, 500);
-// ISO week date
-console.log(dt.year, dt.weekOfYear, dt.dayOfWeek);  // =&gt; 1995 49 4</code></pre>
-<h3 id="datetimedaysinmonth--number">datetime.<strong>daysInMonth</strong> : number</h3>
-<p>The <code>daysInMonth</code> read-only property gives the number of days in the month that the date falls in.
+<pre class="language-javascript"><code class="language-javascript">dt <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>DateTime</span><span class="token punctuation">(</span><span class="token number">1995</span><span class="token punctuation">,</span> <span class="token number">12</span><span class="token punctuation">,</span> <span class="token number">7</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">24</span><span class="token punctuation">,</span> <span class="token number">30</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">500</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// ISO week date</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>dt<span class="token punctuation">.</span>year<span class="token punctuation">,</span> dt<span class="token punctuation">.</span>weekOfYear<span class="token punctuation">,</span> dt<span class="token punctuation">.</span>dayOfWeek<span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// => 1995 49 4</span></code></pre><h3 id="daysInMonth"><a class="heading-link" href="#daysInMonth"></a>datetime.<strong>daysInMonth</strong> : number</h3><p>The <code>daysInMonth</code> read-only property gives the number of days in the month that the date falls in.
 This is 28, 29, 30, or 31, depending on the month and whether the year is a leap year.</p>
 <p>Usage example:</p>
-<pre><code class="language-javascript">// Attempt to write some mnemonic poetry
-const monthsByDays = {};
-for (let month = 1; month &lt;= 12; month++) {
-    const dt = Temporal.now.dateTime().with({month});
-    monthsByDays[dt.daysInMonth] = (monthsByDays[dt.daysInMonth] || []).concat(dt);
-}
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Attempt to write some mnemonic poetry</span>
+<span class="token keyword">const</span> monthsByDays <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> month <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span> month <span class="token operator">&lt;=</span> <span class="token number">12</span><span class="token punctuation">;</span> month<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> dt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">dateTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span><span class="token punctuation">{</span>month<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    monthsByDays<span class="token punctuation">[</span>dt<span class="token punctuation">.</span>daysInMonth<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">(</span>monthsByDays<span class="token punctuation">[</span>dt<span class="token punctuation">.</span>daysInMonth<span class="token punctuation">]</span> <span class="token operator">||</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">concat</span><span class="token punctuation">(</span>dt<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
 
-const strings = monthsByDays[30].map(dt =&gt; dt.toLocaleString(&#39;en&#39;, {month: &#39;long&#39;}));
-// Shuffle to improve poem as determined empirically
-strings.unshift(strings.pop());
-const format = new Intl.ListFormat(&#39;en&#39;);
-const poem = `Thirty days hath ${format.format(strings)}`;
+<span class="token keyword">const</span> strings <span class="token operator">=</span> monthsByDays<span class="token punctuation">[</span><span class="token number">30</span><span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span><span class="token parameter">dt</span> <span class="token operator">=></span> dt<span class="token punctuation">.</span><span class="token function">toLocaleString</span><span class="token punctuation">(</span><span class="token string">'en'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>month<span class="token operator">:</span> <span class="token string">'long'</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// Shuffle to improve poem as determined empirically</span>
+strings<span class="token punctuation">.</span><span class="token function">unshift</span><span class="token punctuation">(</span>strings<span class="token punctuation">.</span><span class="token function">pop</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> format <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Intl<span class="token punctuation">.</span>ListFormat</span><span class="token punctuation">(</span><span class="token string">'en'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> poem <span class="token operator">=</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">Thirty days hath </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>format<span class="token punctuation">.</span><span class="token function">format</span><span class="token punctuation">(</span>strings<span class="token punctuation">)</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>
 
-console.log(poem);</code></pre>
-<h3 id="datetimedaysinyear--number">datetime.<strong>daysInYear</strong> : number</h3>
-<p>The <code>daysInYear</code> read-only property gives the number of days in the year that the date falls in.
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>poem<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre><h3 id="daysInYear"><a class="heading-link" href="#daysInYear"></a>datetime.<strong>daysInYear</strong> : number</h3><p>The <code>daysInYear</code> read-only property gives the number of days in the year that the date falls in.
 This is 365 or 366, depending on whether the year is a leap year.</p>
 <p>Usage example:</p>
-<pre><code class="language-javascript">dt = Temporal.now.dateTime();
-percent = dt.dayOfYear / dt.daysInYear;
-`The year is ${percent.toLocaleString(&#39;en&#39;, {style: &#39;percent&#39;})} over!`
-// example output: &quot;The year is 10% over!&quot;</code></pre>
-<h3 id="datetimeisleapyear--boolean">datetime.<strong>isLeapYear</strong> : boolean</h3>
-<p>The <code>isLeapYear</code> read-only property tells whether the year that the date falls in is a leap year or not.
+<pre class="language-javascript"><code class="language-javascript">dt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">dateTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+percent <span class="token operator">=</span> dt<span class="token punctuation">.</span>dayOfYear <span class="token operator">/</span> dt<span class="token punctuation">.</span>daysInYear<span class="token punctuation">;</span>
+<span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">The year is </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>percent<span class="token punctuation">.</span><span class="token function">toLocaleString</span><span class="token punctuation">(</span><span class="token string">'en'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>style<span class="token operator">:</span> <span class="token string">'percent'</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token string"> over!</span><span class="token template-punctuation string">`</span></span>
+<span class="token comment">// example output: "The year is 10% over!"</span></code></pre><h3 id="isLeapYear"><a class="heading-link" href="#isLeapYear"></a>datetime.<strong>isLeapYear</strong> : boolean</h3><p>The <code>isLeapYear</code> read-only property tells whether the year that the date falls in is a leap year or not.
 Its value is <code>true</code> if the year is a leap year, and <code>false</code> if not.</p>
 <p>Usage example:</p>
-<pre><code class="language-javascript">// Is this year a leap year?
-dt = Temporal.now.dateTime();
-dt.isLeapYear  // example output: true
-// Is 2100 a leap year? (no, because it&#39;s divisible by 100 and not 400)
-dt.with({year: 2100}).isLeapYear  // =&gt; false</code></pre>
-<h2 id="methods">Methods</h2>
-<h3 id="datetimewithdatetimelike-object-options-object--temporaldatetime">datetime.<strong>with</strong>(<em>dateTimeLike</em>: object, <em>options</em>?: object) : Temporal.DateTime</h3>
-<p><strong>Parameters:</strong></p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Is this year a leap year?</span>
+dt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">dateTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+dt<span class="token punctuation">.</span>isLeapYear  <span class="token comment">// example output: true</span>
+<span class="token comment">// Is 2100 a leap year? (no, because it's divisible by 100 and not 400)</span>
+dt<span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span><span class="token punctuation">{</span>year<span class="token operator">:</span> <span class="token number">2100</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span>isLeapYear  <span class="token comment">// => false</span></code></pre><h2 id="methods-1">Methods</h2>
+<h3 id="with"><a class="heading-link" href="#with"></a>datetime.<strong>with</strong>(<em>dateTimeLike</em>: object, <em>options</em>?: object) : Temporal.DateTime</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>dateTimeLike</code> (object): an object with some or all of the properties of a <code>Temporal.DateTime</code>.</li>
 <li><code>options</code> (optional object): An object with properties representing options for the operation.
@@ -322,10 +292,8 @@ The default is <code>constrain</code>.</li>
 <p>This method creates a new <code>Temporal.DateTime</code> which is a copy of <code>datetime</code>, but any properties present on <code>dateTimeLike</code> override the ones already present on <code>datetime</code>.</p>
 <p>Since <code>Temporal.DateTime</code> objects are immutable, use this method instead of modifying one.</p>
 <p>Usage example:</p>
-<pre><code class="language-javascript">dt = new Temporal.DateTime(1995, 12, 7, 3, 24, 30, 0, 3, 500);
-dt.with({year: 2015, second: 31})  // =&gt; 2015-12-07T03:24:31.000003500</code></pre>
-<h3 id="datetimeplusduration-object-options-object--temporaldatetime">datetime.<strong>plus</strong>(<em>duration</em>: object, <em>options</em>?: object) : Temporal.DateTime</h3>
-<p><strong>Parameters:</strong></p>
+<pre class="language-javascript"><code class="language-javascript">dt <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>DateTime</span><span class="token punctuation">(</span><span class="token number">1995</span><span class="token punctuation">,</span> <span class="token number">12</span><span class="token punctuation">,</span> <span class="token number">7</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">24</span><span class="token punctuation">,</span> <span class="token number">30</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">500</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+dt<span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span><span class="token punctuation">{</span>year<span class="token operator">:</span> <span class="token number">2015</span><span class="token punctuation">,</span> second<span class="token operator">:</span> <span class="token number">31</span><span class="token punctuation">}</span><span class="token punctuation">)</span>  <span class="token comment">// => 2015-12-07T03:24:31.000003500</span></code></pre><h3 id="plus"><a class="heading-link" href="#plus"></a>datetime.<strong>plus</strong>(<em>duration</em>: object, <em>options</em>?: object) : Temporal.DateTime</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>duration</code> (object): A <code>Temporal.Duration</code> object or a duration-like object.</li>
 <li><code>options</code> (optional object): An object with properties representing options for the addition.
@@ -349,14 +317,12 @@ For these cases, the <code>disambiguation</code> option tells what to do:</p>
 <p>Additionally, if the result is outside the range that <code>Temporal.DateTime</code> can represent, then <code>constrain</code> mode will clamp the result to the allowed range.
 The <code>reject</code> mode will throw a <code>RangeError</code> in this case.</p>
 <p>Usage example:</p>
-<pre><code class="language-javascript">dt = new Temporal.DateTime(1995, 12, 7, 3, 24, 30, 0, 3, 500);
-dt.plus({years: 20, months: 4, nanoseconds: 500})  // =&gt; 2016-04-07T03:24:30.000004
+<pre class="language-javascript"><code class="language-javascript">dt <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>DateTime</span><span class="token punctuation">(</span><span class="token number">1995</span><span class="token punctuation">,</span> <span class="token number">12</span><span class="token punctuation">,</span> <span class="token number">7</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">24</span><span class="token punctuation">,</span> <span class="token number">30</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">500</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+dt<span class="token punctuation">.</span><span class="token function">plus</span><span class="token punctuation">(</span><span class="token punctuation">{</span>years<span class="token operator">:</span> <span class="token number">20</span><span class="token punctuation">,</span> months<span class="token operator">:</span> <span class="token number">4</span><span class="token punctuation">,</span> nanoseconds<span class="token operator">:</span> <span class="token number">500</span><span class="token punctuation">}</span><span class="token punctuation">)</span>  <span class="token comment">// => 2016-04-07T03:24:30.000004</span>
 
-dt = Temporal.DateTime.from(&#39;2019-01-31T15:30&#39;)
-dt.plus({ months: 1 })  // =&gt; 2019-02-28T15:30
-dt.plus({ months: 1 }, { disambiguation: &#39;reject&#39; })  // =&gt; throws</code></pre>
-<h3 id="datetimeminusduration-object-options-object--temporaldatetime">datetime.<strong>minus</strong>(<em>duration</em>: object, <em>options</em>?: object) : Temporal.DateTime</h3>
-<p><strong>Parameters:</strong></p>
+dt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2019-01-31T15:30'</span><span class="token punctuation">)</span>
+dt<span class="token punctuation">.</span><span class="token function">plus</span><span class="token punctuation">(</span><span class="token punctuation">{</span> months<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>  <span class="token comment">// => 2019-02-28T15:30</span>
+dt<span class="token punctuation">.</span><span class="token function">plus</span><span class="token punctuation">(</span><span class="token punctuation">{</span> months<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> disambiguation<span class="token operator">:</span> <span class="token string">'reject'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>  <span class="token comment">// => throws</span></code></pre><h3 id="minus"><a class="heading-link" href="#minus"></a>datetime.<strong>minus</strong>(<em>duration</em>: object, <em>options</em>?: object) : Temporal.DateTime</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>duration</code> (object): A <code>Temporal.Duration</code> object or a duration-like object.</li>
 <li><code>options</code> (optional object): An object with properties representing options for the subtraction.
@@ -380,14 +346,12 @@ For these cases, the <code>disambiguation</code> option tells what to do:</p>
 <p>Additionally, if the result is outside the range that <code>Temporal.DateTime</code> can represent, then <code>constrain</code> mode will clamp the result to the allowed range.
 The <code>reject</code> mode will throw a <code>RangeError</code> in this case.</p>
 <p>Usage example:</p>
-<pre><code class="language-javascript">dt = new Temporal.DateTime(1995, 12, 7, 3, 24, 30, 0, 3, 500);
-dt.minus({years: 20, months: 4, nanoseconds: 500})  // =&gt; 1975-08-07T03:24:30.000003
+<pre class="language-javascript"><code class="language-javascript">dt <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>DateTime</span><span class="token punctuation">(</span><span class="token number">1995</span><span class="token punctuation">,</span> <span class="token number">12</span><span class="token punctuation">,</span> <span class="token number">7</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">24</span><span class="token punctuation">,</span> <span class="token number">30</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">500</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+dt<span class="token punctuation">.</span><span class="token function">minus</span><span class="token punctuation">(</span><span class="token punctuation">{</span>years<span class="token operator">:</span> <span class="token number">20</span><span class="token punctuation">,</span> months<span class="token operator">:</span> <span class="token number">4</span><span class="token punctuation">,</span> nanoseconds<span class="token operator">:</span> <span class="token number">500</span><span class="token punctuation">}</span><span class="token punctuation">)</span>  <span class="token comment">// => 1975-08-07T03:24:30.000003</span>
 
-dt = Temporal.DateTime.from(&#39;2019-03-31T15:30&#39;)
-dt.minus({ months: 1 }, { disambiguation: &#39;constrain&#39; })  // =&gt; 2019-02-28T15:30
-dt.minus({ months: 1 })  // =&gt; throws</code></pre>
-<h3 id="datetimedifferenceother-temporaldatetime-options-object--temporalduration">datetime.<strong>difference</strong>(<em>other</em>: Temporal.DateTime, <em>options</em>?: object) : Temporal.Duration</h3>
-<p><strong>Parameters:</strong></p>
+dt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2019-03-31T15:30'</span><span class="token punctuation">)</span>
+dt<span class="token punctuation">.</span><span class="token function">minus</span><span class="token punctuation">(</span><span class="token punctuation">{</span> months<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> disambiguation<span class="token operator">:</span> <span class="token string">'constrain'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>  <span class="token comment">// => 2019-02-28T15:30</span>
+dt<span class="token punctuation">.</span><span class="token function">minus</span><span class="token punctuation">(</span><span class="token punctuation">{</span> months<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>  <span class="token comment">// => throws</span></code></pre><h3 id="difference"><a class="heading-link" href="#difference"></a>datetime.<strong>difference</strong>(<em>other</em>: Temporal.DateTime, <em>options</em>?: object) : Temporal.Duration</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>other</code> (<code>Temporal.DateTime</code>): Another date/time with which to compute the difference.</li>
 <li><code>options</code> (optional object): An object with properties representing options for the operation.
@@ -408,26 +372,22 @@ However, a difference of 30 seconds will still be 30 seconds even if <code>large
 <p>By default, the largest unit in the result is days.
 This is because months and years can be different lengths depending on which month is meant and whether the year is a leap year.</p>
 <p>Usage example:</p>
-<pre><code class="language-javascript">dt1 = Temporal.DateTime.from(&#39;1995-12-07T03:24:30.000003500&#39;);
-dt2 = Temporal.DateTime.from(&#39;2019-01-31T15:30&#39;);
-dt1.difference(dt2);                            // =&gt;    P8456DT12H5M29.999996500S
-dt1.difference(dt2), { largestUnit: &#39;years&#39; })  // =&gt; P23Y1M24DT12H5M29.999996500S
+<pre class="language-javascript"><code class="language-javascript">dt1 <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'1995-12-07T03:24:30.000003500'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+dt2 <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2019-01-31T15:30'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+dt1<span class="token punctuation">.</span><span class="token function">difference</span><span class="token punctuation">(</span>dt2<span class="token punctuation">)</span><span class="token punctuation">;</span>                            <span class="token comment">// =>    P8456DT12H5M29.999996500S</span>
+dt1<span class="token punctuation">.</span><span class="token function">difference</span><span class="token punctuation">(</span>dt2<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> largestUnit<span class="token operator">:</span> <span class="token string">'years'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>  <span class="token comment">// => P23Y1M24DT12H5M29.999996500S</span>
 
-// Months and years can be different lengths
-[jan1, feb1, mar1] = [1, 2, 3].map(month =&gt; Temporal.DateTime.from({year: 2020, month, day: 1}));
-jan1.difference(feb1);                             // =&gt; P31D
-jan1.difference(feb1, { largestUnit: &#39;months&#39; });  // =&gt; P1M
-feb1.difference(mar1);                             // =&gt; P29D
-feb1.difference(mar1, { largestUnit: &#39;months&#39; });  // =&gt; P1M</code></pre>
-<h3 id="datetimetostring--string">datetime.<strong>toString</strong>() : string</h3>
-<p><strong>Returns:</strong> a string in the ISO 8601 date format representing <code>datetime</code>.</p>
+<span class="token comment">// Months and years can be different lengths</span>
+<span class="token punctuation">[</span>jan1<span class="token punctuation">,</span> feb1<span class="token punctuation">,</span> mar1<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span><span class="token parameter">month</span> <span class="token operator">=></span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span>year<span class="token operator">:</span> <span class="token number">2020</span><span class="token punctuation">,</span> month<span class="token punctuation">,</span> day<span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+jan1<span class="token punctuation">.</span><span class="token function">difference</span><span class="token punctuation">(</span>feb1<span class="token punctuation">)</span><span class="token punctuation">;</span>                             <span class="token comment">// => P31D</span>
+jan1<span class="token punctuation">.</span><span class="token function">difference</span><span class="token punctuation">(</span>feb1<span class="token punctuation">,</span> <span class="token punctuation">{</span> largestUnit<span class="token operator">:</span> <span class="token string">'months'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// => P1M</span>
+feb1<span class="token punctuation">.</span><span class="token function">difference</span><span class="token punctuation">(</span>mar1<span class="token punctuation">)</span><span class="token punctuation">;</span>                             <span class="token comment">// => P29D</span>
+feb1<span class="token punctuation">.</span><span class="token function">difference</span><span class="token punctuation">(</span>mar1<span class="token punctuation">,</span> <span class="token punctuation">{</span> largestUnit<span class="token operator">:</span> <span class="token string">'months'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// => P1M</span></code></pre><h3 id="toString"><a class="heading-link" href="#toString"></a>datetime.<strong>toString</strong>() : string</h3><p><strong>Returns:</strong> a string in the ISO 8601 date format representing <code>datetime</code>.</p>
 <p>This method overrides the <code>Object.prototype.toString()</code> method and provides a convenient, unambiguous string representation of <code>datetime</code>.
 The string can be passed to <code>Temporal.DateTime.from()</code> to create a new <code>Temporal.DateTime</code> object.</p>
 <p>Example usage:</p>
-<pre><code class="language-js">dt = new Temporal.DateTime(1995, 12, 7, 3, 24, 30, 0, 3, 500);
-dt.toString();  // =&gt; 1995-12-07T03:24:30.000003500</code></pre>
-<h3 id="datetimetolocalestringlocales-string--arraystring-options-object--string">datetime.<strong>toLocaleString</strong>(<em>locales</em>?: string | array&lt;string&gt;, <em>options</em>?: object) : string</h3>
-<p><strong>Parameters:</strong></p>
+<pre class="language-js"><code class="language-js">dt <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>DateTime</span><span class="token punctuation">(</span><span class="token number">1995</span><span class="token punctuation">,</span> <span class="token number">12</span><span class="token punctuation">,</span> <span class="token number">7</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">24</span><span class="token punctuation">,</span> <span class="token number">30</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">500</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+dt<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// => 1995-12-07T03:24:30.000003500</span></code></pre><h3 id="toLocaleString"><a class="heading-link" href="#toLocaleString"></a>datetime.<strong>toLocaleString</strong>(<em>locales</em>?: string | array&lt;string&gt;, <em>options</em>?: object) : string</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>locales</code> (optional string or array of strings): A string with a BCP 47 language tag with an optional Unicode extension key, or an array of such strings.</li>
 <li><code>options</code> (optional object): An object with properties influencing the formatting.</li>
@@ -439,44 +399,40 @@ dt.toString();  // =&gt; 1995-12-07T03:24:30.000003500</code></pre>
 <p><strong>NOTE</strong>: Unlike in <a href="./absolute.html#toLocaleString"><code>Temporal.Absolute.prototype.toLocaleString()</code></a>, <code>locales.timeZone</code> will have no effect, because <code>Temporal.DateTime</code> carries no time zone information and is just a wall-clock time.</p>
 </blockquote>
 <p>Example usage:</p>
-<pre><code class="language-js">dt = new Temporal.DateTime(1995, 12, 7, 3, 24, 30, 0, 3, 500);
-dt.toLocaleString();  // =&gt; example output: 1995-12-07, 3:24:30 a.m.
-dt.toLocaleString(&#39;de-DE&#39;);  // =&gt; example output: 7.12.1995, 03:24:30
-dt.toLocaleString(&#39;de-DE&#39;, { timeZone: &#39;Europe/Berlin&#39;, weekday: &#39;long&#39; });  // =&gt; Donnerstag, 7.12.1995, 03:24:30
-dt.toLocaleString(&#39;en-US-u-nu-fullwide-hc-h12&#39;);  // =&gt; １２/７/１９９５, ３:２４:３０ AM</code></pre>
-<h3 id="datetimetojson--string">datetime.<strong>toJSON</strong>() : string</h3>
-<p><strong>Returns:</strong> a string in the ISO 8601 date format representing <code>datetime</code>.</p>
+<pre class="language-js"><code class="language-js">dt <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>DateTime</span><span class="token punctuation">(</span><span class="token number">1995</span><span class="token punctuation">,</span> <span class="token number">12</span><span class="token punctuation">,</span> <span class="token number">7</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">24</span><span class="token punctuation">,</span> <span class="token number">30</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">500</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+dt<span class="token punctuation">.</span><span class="token function">toLocaleString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// => example output: 1995-12-07, 3:24:30 a.m.</span>
+dt<span class="token punctuation">.</span><span class="token function">toLocaleString</span><span class="token punctuation">(</span><span class="token string">'de-DE'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// => example output: 7.12.1995, 03:24:30</span>
+dt<span class="token punctuation">.</span><span class="token function">toLocaleString</span><span class="token punctuation">(</span><span class="token string">'de-DE'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> timeZone<span class="token operator">:</span> <span class="token string">'Europe/Berlin'</span><span class="token punctuation">,</span> weekday<span class="token operator">:</span> <span class="token string">'long'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// => Donnerstag, 7.12.1995, 03:24:30</span>
+dt<span class="token punctuation">.</span><span class="token function">toLocaleString</span><span class="token punctuation">(</span><span class="token string">'en-US-u-nu-fullwide-hc-h12'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// => １２/７/１９９５, ３:２４:３０ AM</span></code></pre><h3 id="toJSON"><a class="heading-link" href="#toJSON"></a>datetime.<strong>toJSON</strong>() : string</h3><p><strong>Returns:</strong> a string in the ISO 8601 date format representing <code>datetime</code>.</p>
 <p>This method is the same as <code>datetime.toString()</code>.
 It is usually not called directly, but it can be called automatically by <code>JSON.stringify()</code>.</p>
 <p>The reverse operation, recovering a <code>Temporal.DateTime</code> object from a string, is <code>Temporal.DateTime.from()</code>, but it cannot be called automatically by <code>JSON.parse()</code>.
 If you need to rebuild a <code>Temporal.DateTime</code> object from a JSON string, then you need to know the names of the keys that should be interpreted as <code>Temporal.DateTime</code>s.
 In that case you can build a custom &quot;reviver&quot; function for your use case.</p>
 <p>Example usage:</p>
-<pre><code class="language-js">const event = {
-  id: 311,
-  name: &#39;FictionalConf 2018&#39;,
-  openingDateTime: Temporal.DateTime.from(&#39;2018-07-06T10:00&#39;),
-  closingDateTime: Temporal.DateTime.from(&#39;2018-07-08T18:15&#39;),
-};
-const str = JSON.stringify(event, null, 2);
-console.log(str);
-// =&gt;
-// {
-//   &quot;id&quot;: 311,
-//   &quot;name&quot;: &quot;FictionalConf 2018&quot;,
-//   &quot;openingDateTime&quot;: &quot;2018-07-06T10:00&quot;,
-//   &quot;closingDateTime&quot;: &quot;2018-07-08T18:15&quot;
-// }
+<pre class="language-js"><code class="language-js"><span class="token keyword">const</span> event <span class="token operator">=</span> <span class="token punctuation">{</span>
+  id<span class="token operator">:</span> <span class="token number">311</span><span class="token punctuation">,</span>
+  name<span class="token operator">:</span> <span class="token string">'FictionalConf 2018'</span><span class="token punctuation">,</span>
+  openingDateTime<span class="token operator">:</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2018-07-06T10:00'</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  closingDateTime<span class="token operator">:</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2018-07-08T18:15'</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> str <span class="token operator">=</span> <span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">stringify</span><span class="token punctuation">(</span>event<span class="token punctuation">,</span> <span class="token keyword">null</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>str<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// =></span>
+<span class="token comment">// {</span>
+<span class="token comment">//   "id": 311,</span>
+<span class="token comment">//   "name": "FictionalConf 2018",</span>
+<span class="token comment">//   "openingDateTime": "2018-07-06T10:00",</span>
+<span class="token comment">//   "closingDateTime": "2018-07-08T18:15"</span>
+<span class="token comment">// }</span>
 
-// To rebuild from the string:
-function reviver(key, value) {
-  if (key.endsWith(&#39;DateTime&#39;))
-    return Temporal.DateTime.from(value);
-  return value;
-}
-JSON.parse(str, reviver);</code></pre>
-<h3 id="datetimeintimezonetimezone--temporaltimezone--string-options-object--temporalabsolute">datetime.<strong>inTimeZone</strong>(<em>timeZone</em> : Temporal.TimeZone | string, <em>options</em>?: object) : Temporal.Absolute</h3>
-<p><strong>Parameters:</strong></p>
+<span class="token comment">// To rebuild from the string:</span>
+<span class="token keyword">function</span> <span class="token function">reviver</span><span class="token punctuation">(</span><span class="token parameter">key<span class="token punctuation">,</span> value</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>key<span class="token punctuation">.</span><span class="token function">endsWith</span><span class="token punctuation">(</span><span class="token string">'DateTime'</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token keyword">return</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">return</span> value<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span>str<span class="token punctuation">,</span> reviver<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre><h3 id="inTimeZone"><a class="heading-link" href="#inTimeZone"></a>datetime.<strong>inTimeZone</strong>(<em>timeZone</em> : Temporal.TimeZone | string, <em>options</em>?: object) : Temporal.Absolute</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>timeZone</code> (optional string or <code>Temporal.TimeZone</code>): The time zone in which to interpret <code>dateTime</code>.</li>
 <li><code>options</code> (optional object): An object with properties representing options for the operation.
@@ -498,48 +454,23 @@ It is identical to <a href="./timezone.html#getAbsoluteFor"><code>(Temporal.Time
 </ul>
 <p>For usage examples and a more complete explanation of how this disambiguation works and why it is necessary, see <a href="./ambiguity.html">Resolving ambiguity</a>.</p>
 <p>If the result is outside the range that <code>Temporal.Absolute</code> can represent, then a <code>RangeError</code> will be thrown, no matter the value of <code>disambiguation</code>.</p>
-<h3 id="datetimegetdate--temporaldate">datetime.<strong>getDate</strong>() : Temporal.Date</h3>
-<p><strong>Returns:</strong> a <code>Temporal.Date</code> object that is the same as the date portion of <code>datetime</code>.</p>
-<h3 id="datetimegetyearmonth--temporalyearmonth">datetime.<strong>getYearMonth</strong>() : Temporal.YearMonth</h3>
-<p><strong>Returns:</strong> a <code>Temporal.YearMonth</code> object that is the same as the year and month of <code>datetime</code>.</p>
-<h3 id="datetimegetmonthday--temporalmonthday">datetime.<strong>getMonthDay</strong>() : Temporal.MonthDay</h3>
-<p><strong>Returns:</strong> a <code>Temporal.MonthDay</code> object that is the same as the month and day of <code>datetime</code>.</p>
-<h3 id="datetimegettime--temporaltime">datetime.<strong>getTime</strong>() : Temporal.Time</h3>
-<p><strong>Returns:</strong> a <code>Temporal.Time</code> object that is the same as the wall-clock time portion of <code>datetime</code>.</p>
+<h3 id="getDate"><a class="heading-link" href="#getDate"></a>datetime.<strong>getDate</strong>() : Temporal.Date</h3><p><strong>Returns:</strong> a <code>Temporal.Date</code> object that is the same as the date portion of <code>datetime</code>.</p>
+<h3 id="getYearMonth"><a class="heading-link" href="#getYearMonth"></a>datetime.<strong>getYearMonth</strong>() : Temporal.YearMonth</h3><p><strong>Returns:</strong> a <code>Temporal.YearMonth</code> object that is the same as the year and month of <code>datetime</code>.</p>
+<h3 id="getMonthDay"><a class="heading-link" href="#getMonthDay"></a>datetime.<strong>getMonthDay</strong>() : Temporal.MonthDay</h3><p><strong>Returns:</strong> a <code>Temporal.MonthDay</code> object that is the same as the month and day of <code>datetime</code>.</p>
+<h3 id="getTime"><a class="heading-link" href="#getTime"></a>datetime.<strong>getTime</strong>() : Temporal.Time</h3><p><strong>Returns:</strong> a <code>Temporal.Time</code> object that is the same as the wall-clock time portion of <code>datetime</code>.</p>
 <p>The above four methods can be used to convert <code>Temporal.DateTime</code> into a <code>Temporal.Date</code>, <code>Temporal.YearMonth</code>, <code>Temporal.MonthDay</code>, or <code>Temporal.Time</code> respectively.
 The converted object carries a copy of all the relevant fields of <code>datetime</code> (for example, in <code>getDate()</code>, the <code>year</code>, <code>month</code>, and <code>day</code> properties are copied.)</p>
 <p>Usage example:</p>
-<pre><code class="language-javascript">dt = new Temporal.DateTime(1995, 12, 7, 3, 24, 30, 0, 3, 500);
-dt.getDate()  // =&gt; 1995-12-07
-dt.getYearMonth()  // =&gt; 1995-12
-dt.getMonthDay()  // =&gt; 12-07
-dt.getTime()  // =&gt; 03:24:30.000003500</code></pre>
-    <footer>
+<pre class="language-javascript"><code class="language-javascript">dt <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>DateTime</span><span class="token punctuation">(</span><span class="token number">1995</span><span class="token punctuation">,</span> <span class="token number">12</span><span class="token punctuation">,</span> <span class="token number">7</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">24</span><span class="token punctuation">,</span> <span class="token number">30</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">500</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+dt<span class="token punctuation">.</span><span class="token function">getDate</span><span class="token punctuation">(</span><span class="token punctuation">)</span>  <span class="token comment">// => 1995-12-07</span>
+dt<span class="token punctuation">.</span><span class="token function">getYearMonth</span><span class="token punctuation">(</span><span class="token punctuation">)</span>  <span class="token comment">// => 1995-12</span>
+dt<span class="token punctuation">.</span><span class="token function">getMonthDay</span><span class="token punctuation">(</span><span class="token punctuation">)</span>  <span class="token comment">// => 12-07</span>
+dt<span class="token punctuation">.</span><span class="token function">getTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span>  <span class="token comment">// => 03:24:30.000003500</span></code></pre>    <footer>
       <p>
         This page includes a script which loads an implementation of Temporal in your browser.
         You can open a console in your browser's developer tools and try it out directly!
       </p>
       <p>View this or help contribute on <a href="https://github.com/tc39/proposal-temporal">GitHub</a>.</p>
     </footer>
-    <script>
-      // Add permalinks to all <h3> elements (function documentation headings)
-      const h3s = document.getElementsByTagName('h3');
-      for (let h3 of h3s) {
-        const anchor = document.createElement('a');
-        anchor.className = 'heading-link';
-
-        // Use the **function name** as the link ID, otherwise fall back to the
-        // ID generated by markdown
-        let id = h3.getAttribute('id');
-        const bold = h3.getElementsByTagName('strong');
-        if (bold[0]) {
-          id = bold[0].textContent.replace(/[^a-zA-Z]/g, '-');
-          h3.setAttribute('id', id);
-        }
-
-        anchor.setAttribute('href', `#${id}`);
-        h3.prepend(anchor);
-      };
-    </script>
   </body>
 </html>

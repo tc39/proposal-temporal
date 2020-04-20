@@ -6,7 +6,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/kognise/water.css@latest/dist/light.min.css">
     <script type="application/javascript" src="./playground.js"></script>
     <script type="application/javascript" src="./mermaid.js"></script>
-    <script type="application/javascript" src="./prism.js"></script>
     <link rel="stylesheet" type="text/css" href="./prism.css">
     <script>mermaid.initialize({startOnLoad:true,flowchart:{useMaxWidth:false}});</script>
     <script>
@@ -84,13 +83,12 @@
       <strong>This polyfill is a work in progress.</strong>
       It does not represent the final API of this proposal, nor even the current consensus.
     </div>
-<h1 id="temporaltimezone">Temporal.TimeZone</h1>
+<h1 id="temporaltimezone-1">Temporal.TimeZone</h1>
 <p>A <code>Temporal.TimeZone</code> is a representation of a time zone: either an <a href="https://www.iana.org/time-zones">IANA time zone</a>, including information about the time zone such as the offset between the local time and UTC at a particular time, and daylight saving time (DST) changes; or simply a particular UTC offset with no DST.</p>
 <p>Since <code>Temporal.Absolute</code> and <code>Temporal.DateTime</code> do not contain any time zone information, a <code>Temporal.TimeZone</code> object is required to convert between the two.</p>
 <p>Finally, the <code>Temporal.TimeZone</code> object itself provides access to a list of the time zones in the IANA time zone database.</p>
-<h2 id="constructor">Constructor</h2>
-<h3 id="new-temporaltimezonetimezoneidentifier-string--temporaltimezone"><strong>new Temporal.TimeZone</strong>(<em>timeZoneIdentifier</em>: string) : Temporal.TimeZone</h3>
-<p><strong>Parameters:</strong></p>
+<h2 id="constructor-1">Constructor</h2>
+<h3 id="new-Temporal-TimeZone"><a class="heading-link" href="#new-Temporal-TimeZone"></a><strong>new Temporal.TimeZone</strong>(<em>timeZoneIdentifier</em>: string) : Temporal.TimeZone</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>timeZoneIdentifier</code> (string): A description of the time zone; either its IANA name, or a UTC offset.</li>
 </ul>
@@ -103,25 +101,22 @@ If no time zone can be determined from <code>timeZoneIdentifier</code>, then a <
 <p>Use this constructor directly if you have a string that is known to be a correct time zone identifier.
 If you have an ISO 8601 date-time string, <code>Temporal.TimeZone.from()</code> is probably more convenient.</p>
 <p>Example usage:</p>
-<pre><code class="language-javascript">tz = new Temporal.TimeZone(&#39;UTC&#39;);
-tz = new Temporal.TimeZone(&#39;Africa/Cairo&#39;);
-tz = new Temporal.TimeZone(&#39;america/VANCOUVER&#39;);
-tz = new Temporal.TimeZone(&#39;Asia/Katmandu&#39;);  // alias of Asia/Kathmandu
-tz = new Temporal.TimeZone(&#39;-04:00&#39;);
-tz = new Temporal.TimeZone(&#39;+0645&#39;);
-/* WRONG */ tz = new Temporal.TimeZone(&#39;local&#39;);  // not a time zone, throws</code></pre>
-<h4 id="difference-between-iana-time-zones-and-utc-offsets">Difference between IANA time zones and UTC offsets</h4>
+<pre class="language-javascript"><code class="language-javascript">tz <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>TimeZone</span><span class="token punctuation">(</span><span class="token string">'UTC'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+tz <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>TimeZone</span><span class="token punctuation">(</span><span class="token string">'Africa/Cairo'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+tz <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>TimeZone</span><span class="token punctuation">(</span><span class="token string">'america/VANCOUVER'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+tz <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>TimeZone</span><span class="token punctuation">(</span><span class="token string">'Asia/Katmandu'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// alias of Asia/Kathmandu</span>
+tz <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>TimeZone</span><span class="token punctuation">(</span><span class="token string">'-04:00'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+tz <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>TimeZone</span><span class="token punctuation">(</span><span class="token string">'+0645'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">/* WRONG */</span> tz <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>TimeZone</span><span class="token punctuation">(</span><span class="token string">'local'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// not a time zone, throws</span></code></pre><h4 id="difference-between-iana-time-zones-and-utc-offsets-1">Difference between IANA time zones and UTC offsets</h4>
 <p>The returned time zone object behaves slightly differently depending on whether an IANA time zone name (e.g. <code>Europe/Berlin</code>) is given, or a UTC offset (e.g. <code>+01:00</code>).
 IANA time zones may have DST transitions, and UTC offsets do not.
 For example:</p>
-<pre><code class="language-javascript">tz1 = new Temporal.TimeZone(&#39;-08:00&#39;);
-tz2 = new Temporal.TimeZone(&#39;America/Vancouver&#39;);
-now = Temporal.now.absolute();
-tz1.getTransitions(now).next().done;  // =&gt; true
-tz2.getTransitions(now).next().done;  // =&gt; false</code></pre>
-<h2 id="static-methods">Static methods</h2>
-<h3 id="temporaltimezonefromthing-string--object--temporaltimezone">Temporal.TimeZone.<strong>from</strong>(<em>thing</em>: string | object) : Temporal.TimeZone</h3>
-<p><strong>Parameters:</strong></p>
+<pre class="language-javascript"><code class="language-javascript">tz1 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>TimeZone</span><span class="token punctuation">(</span><span class="token string">'-08:00'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+tz2 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>TimeZone</span><span class="token punctuation">(</span><span class="token string">'America/Vancouver'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+now <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">absolute</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+tz1<span class="token punctuation">.</span><span class="token function">getTransitions</span><span class="token punctuation">(</span>now<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>done<span class="token punctuation">;</span>  <span class="token comment">// => true</span>
+tz2<span class="token punctuation">.</span><span class="token function">getTransitions</span><span class="token punctuation">(</span>now<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>done<span class="token punctuation">;</span>  <span class="token comment">// => false</span></code></pre><h2 id="static-methods-1">Static methods</h2>
+<h3 id="from"><a class="heading-link" href="#from"></a>Temporal.TimeZone.<strong>from</strong>(<em>thing</em>: string | object) : Temporal.TimeZone</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>thing</code> (string or object): A <code>Temporal.TimeZone</code> object or a string from which to create a <code>Temporal.TimeZone</code>.</li>
 </ul>
@@ -136,43 +131,38 @@ Or, if the value is an object, it can be another <code>Temporal.TimeZone</code> 
 <p>Note that the ISO 8601 string can optionally be extended with an IANA time zone name in square brackets appended to it.</p>
 <p>This function is often more convenient to use than <code>new Temporal.TimeZone()</code> because it handles a wider range of input.</p>
 <p>Usage examples:</p>
-<pre><code class="language-javascript">// IANA time zone names and UTC offsets
-tz = Temporal.TimeZone.from(&#39;UTC&#39;);
-tz = Temporal.TimeZone.from(&#39;Africa/Cairo&#39;);
-tz = Temporal.TimeZone.from(&#39;america/VANCOUVER&#39;);
-tz = Temporal.TimeZone.from(&#39;Asia/Katmandu&#39;);  // alias of Asia/Kathmandu
-tz = Temporal.TimeZone.from(&#39;-04:00&#39;);
-tz = Temporal.TimeZone.from(&#39;+0645&#39;);
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">// IANA time zone names and UTC offsets</span>
+tz <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'UTC'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+tz <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'Africa/Cairo'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+tz <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'america/VANCOUVER'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+tz <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'Asia/Katmandu'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// alias of Asia/Kathmandu</span>
+tz <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'-04:00'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+tz <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'+0645'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-// ISO 8601 string with time zone offset part
-tz = Temporal.TimeZone.from(&#39;2020-01-14T00:31:00.065858086Z&#39;);
-tz = Temporal.TimeZone.from(&#39;2020-01-13T16:31:00.065858086-08:00&#39;);
-tz = Temporal.TimeZone.from(&#39;2020-01-13T16:31:00.065858086-08:00[America/Vancouver]&#39;);
+<span class="token comment">// ISO 8601 string with time zone offset part</span>
+tz <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-01-14T00:31:00.065858086Z'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+tz <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-01-13T16:31:00.065858086-08:00'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+tz <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-01-13T16:31:00.065858086-08:00[America/Vancouver]'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-// Existing TimeZone object
-tz2 = Temporal.TimeZone.from(tz);
+<span class="token comment">// Existing TimeZone object</span>
+tz2 <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>tz<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-/* WRONG */ tz = Temporal.TimeZone.from(&#39;local&#39;);  // not a time zone, throws
-/* WRONG */ tz = Temporal.TimeZone.from({name: &#39;UTC&#39;});  // not a TimeZone object, throws
-/* WRONG */ tz = Temporal.TimeZone.from(&#39;2020-01-14T00:31:00&#39;);  // ISO 8601 string without time zone offset part, throws
-/* WRONG */ tz = Temporal.TimeZone.from(&#39;-08:00[America/Vancouver]&#39;)  // ISO 8601 string without date-time part, throws</code></pre>
-<h3 id="temporaltimezone-iteratortemporaltimezone"><strong>Temporal.TimeZone</strong>: iterator&lt;Temporal.TimeZone&gt;</h3>
-<p>The <code>Temporal.TimeZone</code> object is itself iterable, and can be used to iterate through all of the IANA time zones supported by the implementation.</p>
+<span class="token comment">/* WRONG */</span> tz <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'local'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// not a time zone, throws</span>
+<span class="token comment">/* WRONG */</span> tz <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span>name<span class="token operator">:</span> <span class="token string">'UTC'</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// not a TimeZone object, throws</span>
+<span class="token comment">/* WRONG */</span> tz <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-01-14T00:31:00'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// ISO 8601 string without time zone offset part, throws</span>
+<span class="token comment">/* WRONG */</span> tz <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'-08:00[America/Vancouver]'</span><span class="token punctuation">)</span>  <span class="token comment">// ISO 8601 string without date-time part, throws</span></code></pre><h3 id="Temporal-TimeZone"><a class="heading-link" href="#Temporal-TimeZone"></a><strong>Temporal.TimeZone</strong>: iterator&lt;Temporal.TimeZone&gt;</h3><p>The <code>Temporal.TimeZone</code> object is itself iterable, and can be used to iterate through all of the IANA time zones supported by the implementation.</p>
 <p>Example usage:</p>
-<pre><code class="language-javascript">// List all supported IANA time zones
-for (let zone of Temporal.TimeZone) console.log(zone.name);
-// example output:
-// Africa/Abidjan
-// Africa/Accra
-// Africa/Addis_Ababa
-// ...and many more</code></pre>
-<h2 id="properties">Properties</h2>
-<h3 id="timezonename--string">timeZone.<strong>name</strong> : string</h3>
-<p>The <code>name</code> property gives an unambiguous identifier for the time zone.
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">// List all supported IANA time zones</span>
+<span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> zone <span class="token keyword">of</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">)</span> console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>zone<span class="token punctuation">.</span>name<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// example output:</span>
+<span class="token comment">// Africa/Abidjan</span>
+<span class="token comment">// Africa/Accra</span>
+<span class="token comment">// Africa/Addis_Ababa</span>
+<span class="token comment">// ...and many more</span></code></pre><h2 id="properties-1">Properties</h2>
+<h3 id="name"><a class="heading-link" href="#name"></a>timeZone.<strong>name</strong> : string</h3><p>The <code>name</code> property gives an unambiguous identifier for the time zone.
 Effectively, this is the canonicalized version of whatever <code>timeZoneIdentifier</code> was passed as a parameter to the constructor.</p>
-<h2 id="methods">Methods</h2>
-<h3 id="timezonegetoffsetforabsolute-temporalabsolute--string">timeZone.<strong>getOffsetFor</strong>(<em>absolute</em>: Temporal.Absolute) : string</h3>
-<p><strong>Parameters:</strong></p>
+<h2 id="methods-1">Methods</h2>
+<h3 id="getOffsetFor"><a class="heading-link" href="#getOffsetFor"></a>timeZone.<strong>getOffsetFor</strong>(<em>absolute</em>: Temporal.Absolute) : string</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>absolute</code> (<code>Temporal.Absolute</code>): The time for which to compute the time zone&#39;s UTC offset.</li>
 </ul>
@@ -181,41 +171,37 @@ Effectively, this is the canonicalized version of whatever <code>timeZoneIdentif
 <p>Note that only <code>Temporal.TimeZone</code> objects constructed from an IANA time zone name may have DST transitions; those constructed from a UTC offset do not.
 If <code>timeZone</code> is a UTC offset time zone, the return value of this method is effectively the same as <code>timeZone.name</code>.</p>
 <p>Example usage:</p>
-<pre><code class="language-javascript">// Getting the UTC offset for a time zone at a particular time
-timestamp = new Temporal.Absolute(1553993100000000000n);
-tz = new Temporal.TimeZone(&#39;Europe/Berlin&#39;);
-tz.getOffsetFor(timestamp);  // =&gt; +01:00
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Getting the UTC offset for a time zone at a particular time</span>
+timestamp <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>Absolute</span><span class="token punctuation">(</span><span class="token number">1553993100000000000n</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+tz <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>TimeZone</span><span class="token punctuation">(</span><span class="token string">'Europe/Berlin'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+tz<span class="token punctuation">.</span><span class="token function">getOffsetFor</span><span class="token punctuation">(</span>timestamp<span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// => +01:00</span>
 
-// TimeZone with a fixed UTC offset
-tz = new Temporal.TimeZone(&#39;-08:00&#39;);
-tz.getOffsetFor(timestamp);  // =&gt; -08:00
-// UTC is always 0 offset
-tz = new Temporal.TimeZone(&#39;UTC&#39;);
-tz.getOffsetFor(timestamp);  // =&gt; +00:00
+<span class="token comment">// TimeZone with a fixed UTC offset</span>
+tz <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>TimeZone</span><span class="token punctuation">(</span><span class="token string">'-08:00'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+tz<span class="token punctuation">.</span><span class="token function">getOffsetFor</span><span class="token punctuation">(</span>timestamp<span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// => -08:00</span>
+<span class="token comment">// UTC is always 0 offset</span>
+tz <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>TimeZone</span><span class="token punctuation">(</span><span class="token string">'UTC'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+tz<span class="token punctuation">.</span><span class="token function">getOffsetFor</span><span class="token punctuation">(</span>timestamp<span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// => +00:00</span>
 
-// Differences between DST and non-DST
-tz = Temporal.TimeZone.from(&#39;Europe/London&#39;);
-tz.getOffsetFor(Temporal.Absolute.from(&#39;2020-08-06T15:00Z&#39;));  // =&gt; +01:00
-tz.getOffsetFor(Temporal.Absolute.from(&#39;2020-11-06T01:00Z&#39;));  // =&gt; +00:00</code></pre>
-<h3 id="timezonegetdatetimeforabsolute-temporalabsolute--temporaldatetime">timeZone.<strong>getDateTimeFor</strong>(<em>absolute</em>: Temporal.Absolute) : Temporal.DateTime</h3>
-<p><strong>Parameters:</strong></p>
+<span class="token comment">// Differences between DST and non-DST</span>
+tz <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'Europe/London'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+tz<span class="token punctuation">.</span><span class="token function">getOffsetFor</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>Absolute<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-08-06T15:00Z'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// => +01:00</span>
+tz<span class="token punctuation">.</span><span class="token function">getOffsetFor</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>Absolute<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-11-06T01:00Z'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// => +00:00</span></code></pre><h3 id="getDateTimeFor"><a class="heading-link" href="#getDateTimeFor"></a>timeZone.<strong>getDateTimeFor</strong>(<em>absolute</em>: Temporal.Absolute) : Temporal.DateTime</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>absolute</code> (<code>Temporal.Absolute</code>): An absolute time to convert.</li>
 </ul>
 <p><strong>Returns:</strong> A <code>Temporal.DateTime</code> object indicating the calendar date and wall-clock time in <code>timeZone</code> at the absolute time indicated by <code>absolute</code>.</p>
 <p>This method is one way to convert a <code>Temporal.Absolute</code> to a <code>Temporal.DateTime</code>.</p>
 <p>Example usage:</p>
-<pre><code class="language-javascript">// Converting a specific absolute time to a calendar date / wall-clock time
-timestamp = new Temporal.Absolute(1553993100000000000n);
-tz = new Temporal.TimeZone(&#39;Europe/Berlin&#39;);
-tz.getDateTimeFor(timestamp);  // =&gt; 2019-03-31T01:45
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Converting a specific absolute time to a calendar date / wall-clock time</span>
+timestamp <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>Absolute</span><span class="token punctuation">(</span><span class="token number">1553993100000000000n</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+tz <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>TimeZone</span><span class="token punctuation">(</span><span class="token string">'Europe/Berlin'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+tz<span class="token punctuation">.</span><span class="token function">getDateTimeFor</span><span class="token punctuation">(</span>timestamp<span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// => 2019-03-31T01:45</span>
 
-// What time was the Unix Epoch (timestamp 0) in Bell Labs (Murray Hill, New Jersey, USA)?
-epoch = new Temporal.Absolute(0n);
-tz = new Temporal.TimeZone(&#39;America/New_York&#39;);
-tz.getDateTimeFor(epoch);  // =&gt; 1969-12-31T19:00</code></pre>
-<h3 id="timezonegetabsolutefordatetime-temporaldatetime-options-object--temporalabsolute">timeZone.<strong>getAbsoluteFor</strong>(<em>dateTime</em>: Temporal.DateTime, <em>options</em>?: object) : Temporal.Absolute</h3>
-<p><strong>Parameters:</strong></p>
+<span class="token comment">// What time was the Unix Epoch (timestamp 0) in Bell Labs (Murray Hill, New Jersey, USA)?</span>
+epoch <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>Absolute</span><span class="token punctuation">(</span><span class="token number">0n</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+tz <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>TimeZone</span><span class="token punctuation">(</span><span class="token string">'America/New_York'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+tz<span class="token punctuation">.</span><span class="token function">getDateTimeFor</span><span class="token punctuation">(</span>epoch<span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// => 1969-12-31T19:00</span></code></pre><h3 id="getAbsoluteFor"><a class="heading-link" href="#getAbsoluteFor"></a>timeZone.<strong>getAbsoluteFor</strong>(<em>dateTime</em>: Temporal.DateTime, <em>options</em>?: object) : Temporal.Absolute</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>dateTime</code> (<code>Temporal.DateTime</code>): A calendar date and wall-clock time to convert.</li>
 <li><code>options</code> (optional object): An object with properties representing options for the operation.
@@ -237,8 +223,7 @@ It is identical to <a href="./datetime.html#inTimeZone"><code>dateTime.inTimeZon
 </ul>
 <p>For usage examples and a more complete explanation of how this disambiguation works and why it is necessary, see <a href="./ambiguity.html">Resolving ambiguity</a>.</p>
 <p>If the result is outside the range that <code>Temporal.Absolute</code> can represent, then a <code>RangeError</code> will be thrown, no matter the value of <code>disambiguation</code>.</p>
-<h3 id="timezonegettransitionsstartingpoint-temporalabsolute--iteratortemporalabsolute">timeZone.<strong>getTransitions</strong>(<em>startingPoint</em>: Temporal.Absolute) : iterator&lt;Temporal.Absolute&gt;</h3>
-<p><strong>Parameters:</strong></p>
+<h3 id="getTransitions"><a class="heading-link" href="#getTransitions"></a>timeZone.<strong>getTransitions</strong>(<em>startingPoint</em>: Temporal.Absolute) : iterator&lt;Temporal.Absolute&gt;</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>startingPoint</code> (<code>Temporal.Absolute</code>): Time after which to start calculating DST transitions.</li>
 </ul>
@@ -247,72 +232,48 @@ It is identical to <a href="./datetime.html#inTimeZone"><code>dateTime.inTimeZon
 <p>Note that if the time zone was constructed from a UTC offset, there will be no DST transitions.
 In that case, the iterable will be empty.</p>
 <p>Example usage:</p>
-<pre><code class="language-javascript">// How long until the next DST change from now, in the current location?
-tz = Temporal.now.timeZone();
-now = Temporal.now.absolute();
-[nextTransition] = tz.getTransitions(now);
-duration = nextTransition.difference(now);
-duration.toLocaleString();  // output will vary</code></pre>
-<h3 id="timezonetostring--string">timeZone.<strong>toString</strong>() : string</h3>
-<p><strong>Returns:</strong> The string given by <code>timeZone.name</code>.</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">// How long until the next DST change from now, in the current location?</span>
+tz <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">timeZone</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+now <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">absolute</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">[</span>nextTransition<span class="token punctuation">]</span> <span class="token operator">=</span> tz<span class="token punctuation">.</span><span class="token function">getTransitions</span><span class="token punctuation">(</span>now<span class="token punctuation">)</span><span class="token punctuation">;</span>
+duration <span class="token operator">=</span> nextTransition<span class="token punctuation">.</span><span class="token function">difference</span><span class="token punctuation">(</span>now<span class="token punctuation">)</span><span class="token punctuation">;</span>
+duration<span class="token punctuation">.</span><span class="token function">toLocaleString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// output will vary</span></code></pre><h3 id="toString"><a class="heading-link" href="#toString"></a>timeZone.<strong>toString</strong>() : string</h3><p><strong>Returns:</strong> The string given by <code>timeZone.name</code>.</p>
 <p>This method overrides <code>Object.prototype.toString()</code> and provides the time zone&#39;s <code>name</code> property as a human-readable description.</p>
-<h3 id="timezonetojson--string">timeZone.<strong>toJSON</strong>() : string</h3>
-<p><strong>Returns:</strong> the string given by <code>timeZone.name</code>.</p>
+<h3 id="toJSON"><a class="heading-link" href="#toJSON"></a>timeZone.<strong>toJSON</strong>() : string</h3><p><strong>Returns:</strong> the string given by <code>timeZone.name</code>.</p>
 <p>This method is the same as <code>timeZone.toString()</code>.
 It is usually not called directly, but it can be called automatically by <code>JSON.stringify()</code>.</p>
 <p>The reverse operation, recovering a <code>Temporal.TimeZone</code> object from a string, is <code>Temporal.TimeZone.from()</code>, but it cannot be called automatically by <code>JSON.parse()</code>.
 If you need to rebuild a <code>Temporal.TimeZone</code> object from a JSON string, then you need to know the names of the keys that should be interpreted as <code>Temporal.TimeZone</code>s.
 In that case you can build a custom &quot;reviver&quot; function for your use case.</p>
 <p>Example usage:</p>
-<pre><code class="language-js">const user = {
-  id: 775,
-  username: &#39;robotcat&#39;,
-  password: &#39;hunter2&#39;,  // Note: Don&#39;t really store passwords like that
-  userTimeZone: Temporal.TimeZone.from(&#39;Europe/Madrid&#39;),
-};
-const str = JSON.stringify(user, null, 2);
-console.log(str);
-// =&gt;
-// {
-//   &quot;id&quot;: 775,
-//   &quot;username&quot;: &quot;robotcat&quot;,
-//   &quot;password&quot;: &quot;hunter2&quot;,
-//   &quot;userTimeZone&quot;: &quot;Europe/Madrid&quot;
-// }
+<pre class="language-js"><code class="language-js"><span class="token keyword">const</span> user <span class="token operator">=</span> <span class="token punctuation">{</span>
+  id<span class="token operator">:</span> <span class="token number">775</span><span class="token punctuation">,</span>
+  username<span class="token operator">:</span> <span class="token string">'robotcat'</span><span class="token punctuation">,</span>
+  password<span class="token operator">:</span> <span class="token string">'hunter2'</span><span class="token punctuation">,</span>  <span class="token comment">// Note: Don't really store passwords like that</span>
+  userTimeZone<span class="token operator">:</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'Europe/Madrid'</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> str <span class="token operator">=</span> <span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">stringify</span><span class="token punctuation">(</span>user<span class="token punctuation">,</span> <span class="token keyword">null</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>str<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// =></span>
+<span class="token comment">// {</span>
+<span class="token comment">//   "id": 775,</span>
+<span class="token comment">//   "username": "robotcat",</span>
+<span class="token comment">//   "password": "hunter2",</span>
+<span class="token comment">//   "userTimeZone": "Europe/Madrid"</span>
+<span class="token comment">// }</span>
 
-// To rebuild from the string:
-function reviver(key, value) {
-  if (key.endsWith(&#39;TimeZone&#39;))
-    return Temporal.TimeZone.from(value);
-  return value;
-}
-JSON.parse(str, reviver);</code></pre>
-    <footer>
+<span class="token comment">// To rebuild from the string:</span>
+<span class="token keyword">function</span> <span class="token function">reviver</span><span class="token punctuation">(</span><span class="token parameter">key<span class="token punctuation">,</span> value</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>key<span class="token punctuation">.</span><span class="token function">endsWith</span><span class="token punctuation">(</span><span class="token string">'TimeZone'</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token keyword">return</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">return</span> value<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span>str<span class="token punctuation">,</span> reviver<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>    <footer>
       <p>
         This page includes a script which loads an implementation of Temporal in your browser.
         You can open a console in your browser's developer tools and try it out directly!
       </p>
       <p>View this or help contribute on <a href="https://github.com/tc39/proposal-temporal">GitHub</a>.</p>
     </footer>
-    <script>
-      // Add permalinks to all <h3> elements (function documentation headings)
-      const h3s = document.getElementsByTagName('h3');
-      for (let h3 of h3s) {
-        const anchor = document.createElement('a');
-        anchor.className = 'heading-link';
-
-        // Use the **function name** as the link ID, otherwise fall back to the
-        // ID generated by markdown
-        let id = h3.getAttribute('id');
-        const bold = h3.getElementsByTagName('strong');
-        if (bold[0]) {
-          id = bold[0].textContent.replace(/[^a-zA-Z]/g, '-');
-          h3.setAttribute('id', id);
-        }
-
-        anchor.setAttribute('href', `#${id}`);
-        h3.prepend(anchor);
-      };
-    </script>
   </body>
 </html>

@@ -6,7 +6,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/kognise/water.css@latest/dist/light.min.css">
     <script type="application/javascript" src="./playground.js"></script>
     <script type="application/javascript" src="./mermaid.js"></script>
-    <script type="application/javascript" src="./prism.js"></script>
     <link rel="stylesheet" type="text/css" href="./prism.css">
     <script>mermaid.initialize({startOnLoad:true,flowchart:{useMaxWidth:false}});</script>
     <script>
@@ -84,133 +83,145 @@
       <strong>This polyfill is a work in progress.</strong>
       It does not represent the final API of this proposal, nor even the current consensus.
     </div>
-<h1 id="temporal-cookbook">Temporal Cookbook</h1>
-<h2 id="overview">Overview</h2>
-<!-- MarkdownTOC autolink="true" -->
-
+<h1 id="temporal-cookbook-1">Temporal Cookbook</h1>
+<h2 id="overview-1">Overview</h2>
 <ul>
-<li><a href="#running-the-cookbook-files">Running the cookbook files</a></li>
-<li><a href="#frequently-asked-questions">Frequently Asked Questions</a><ul>
-<li><a href="#current-date-and-time">Current date and time</a></li>
-<li><a href="#unix-timestamp">Unix timestamp</a></li>
-</ul>
+<li><a href="#running-the-cookbook-files">Running the cookbook files</a>
 </li>
-<li><a href="#converting-between-temporal-types-and-legacy-date">Converting between Temporal types and legacy Date</a><ul>
-<li><a href="#absolute-from-legacy-date">Absolute from legacy Date</a></li>
-</ul>
+<li><a href="#frequently-asked-questions">Frequently Asked Questions</a>
+<ul>
+<li><a href="#current-date-and-time">Current date and time</a>
 </li>
-<li><a href="#construction">Construction</a><ul>
-<li><a href="#time-zone-object-from-name">Time zone object from name</a></li>
-</ul>
-</li>
-<li><a href="#serialization">Serialization</a><ul>
-<li><a href="#zoned-instant-from-instant-and-time-zone">Zoned instant from instant and time zone</a></li>
-</ul>
-</li>
-<li><a href="#sorting">Sorting</a><ul>
-<li><a href="#sort-datetimes">Sort DateTimes</a></li>
-<li><a href="#sort-iso-datetime-strings">Sort ISO date/time strings</a></li>
-</ul>
-</li>
-<li><a href="#time-zone-conversion">Time zone conversion</a><ul>
-<li><a href="#preserving-absolute-instant">Preserving absolute instant</a></li>
-<li><a href="#utc-offset-for-a-zoned-event-as-a-string">UTC offset for a zoned event, as a string</a></li>
-<li><a href="#utc-offset-for-a-zoned-event-as-a-number-of-seconds">UTC offset for a zoned event, as a number of seconds</a></li>
-<li><a href="#offset-between-two-time-zones-at-an-instant">Offset between two time zones at an instant</a></li>
-</ul>
-</li>
-<li><a href="#arithmetic">Arithmetic</a><ul>
-<li><a href="#unit-constrained-duration-between-now-and-a-pastfuture-zoned-event">Unit-constrained duration between now and a past/future zoned event</a></li>
-<li><a href="#comparison-of-an-instant-to-business-hours">Comparison of an instant to business hours</a></li>
-<li><a href="#nth-weekday-of-the-month">Nth weekday of the month</a></li>
-</ul>
+<li><a href="#unix-timestamp">Unix timestamp</a>
 </li>
 </ul>
-<!-- /MarkdownTOC -->
+</li>
+<li><a href="#converting-between-temporal-types-and-legacy-date">Converting between Temporal types and legacy Date</a>
+<ul>
+<li><a href="#absolute-from-legacy-date">Absolute from legacy Date</a>
+</li>
+</ul>
+</li>
+<li><a href="#construction">Construction</a>
+<ul>
+<li><a href="#time-zone-object-from-name">Time zone object from name</a>
+</li>
+</ul>
+</li>
+<li><a href="#serialization">Serialization</a>
+<ul>
+<li><a href="#zoned-instant-from-instant-and-time-zone">Zoned instant from instant and time zone</a>
+</li>
+</ul>
+</li>
+<li><a href="#sorting">Sorting</a>
+<ul>
+<li><a href="#sort-datetimes">Sort DateTimes</a>
+</li>
+<li><a href="#sort-iso-datetime-strings">Sort ISO date/time strings</a>
+</li>
+</ul>
+</li>
+<li><a href="#time-zone-conversion">Time zone conversion</a>
+<ul>
+<li><a href="#preserving-absolute-instant">Preserving absolute instant</a>
+</li>
+<li><a href="#utc-offset-for-a-zoned-event-as-a-string">UTC offset for a zoned event, as a string</a>
+</li>
+<li><a href="#utc-offset-for-a-zoned-event-as-a-number-of-seconds">UTC offset for a zoned event, as a number of seconds</a>
+</li>
+<li><a href="#offset-between-two-time-zones-at-an-instant">Offset between two time zones at an instant</a>
+</li>
+</ul>
+</li>
+<li><a href="#arithmetic">Arithmetic</a>
+<ul>
+<li><a href="#unit-constrained-duration-between-now-and-a-pastfuture-zoned-event">Unit-constrained duration between now and a past/future zoned event</a>
+</li>
+<li><a href="#comparison-of-an-instant-to-business-hours">Comparison of an instant to business hours</a>
+</li>
+<li><a href="#nth-weekday-of-the-month">Nth weekday of the month</a>
+</li>
+</ul>
+</li>
+</ul>
 
-<h2 id="running-the-cookbook-files">Running the cookbook files</h2>
+<h2 id="running-the-cookbook-files-1">Running the cookbook files</h2>
 <p>Running cookbook files:</p>
-<pre><code class="language-sh">node --experimental-modules --no-warnings \
-    --icu-data-dir ./polyfill/node_modules/full-icu/ \
-    -r ./polyfill/index.js ./docs/cookbook/${cookbookFile}</code></pre>
-<p><em>The above code allows <code>Temporal</code> to exist as a global object before the cookbook file runs.</em></p>
-<h2 id="frequently-asked-questions">Frequently Asked Questions</h2>
+<pre class="language-bash"><code class="language-bash">node --experimental-modules --no-warnings <span class="token punctuation">\</span>
+    --icu-data-dir ./polyfill/node_modules/full-icu/ <span class="token punctuation">\</span>
+    -r ./polyfill/index.js ./docs/cookbook/<span class="token variable">${cookbookFile}</span></code></pre><p><em>The above code allows <code>Temporal</code> to exist as a global object before the cookbook file runs.</em></p>
+<h2 id="frequently-asked-questions-1">Frequently Asked Questions</h2>
 <p>These are some of the most common tasks that people ask questions about on StackOverflow with legacy Date.
 Here&#39;s how they would look using Temporal.</p>
-<h3 id="current-date-and-time">Current date and time</h3>
-<p>How to get the current date and time in the local time zone?</p>
-<pre><code class="language-javascript">/**
+<h3 id="current-date-and-time"><a class="heading-link" href="#current-date-and-time"></a>Current date and time</h3><p>How to get the current date and time in the local time zone?</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">/**
  * Get the current date in JavaScript
  * This is a popular question on Stack Overflow for dates in JS
  * https://stackoverflow.com/questions/1531093/how-do-i-get-the-current-date-in-javascript
  *
- */
+ */</span>
 
-const dateTime = Temporal.now.dateTime(); // Gets the current date
-dateTime.toString(); // returns the date in ISO 8601 date format</code></pre>
-<h3 id="unix-timestamp">Unix timestamp</h3>
-<p>How to get a Unix timestamp?</p>
-<pre><code class="language-javascript">/**
+<span class="token keyword">const</span> dateTime <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">dateTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// Gets the current date</span>
+dateTime<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// returns the date in ISO 8601 date format</span>
+</code></pre><h3 id="unix-timestamp"><a class="heading-link" href="#unix-timestamp"></a>Unix timestamp</h3><p>How to get a Unix timestamp?</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">/**
  * Get a (Unix) timestamp in JavaScript
  * This is the No.1 voted question on Stack Overflow for dates in JS
  * https://stackoverflow.com/questions/221294/how-do-you-get-a-timestamp-in-javascript
  *
- */
+ */</span>
 
-const timeStamp = Temporal.now.absolute();
+<span class="token keyword">const</span> timeStamp <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">absolute</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-// Timestamp in Milliseconds
-timeStamp.getEpochMilliseconds();
-// Timestamp in Seconds
-timeStamp.getEpochSeconds();</code></pre>
-<h2 id="converting-between-temporal-types-and-legacy-date">Converting between Temporal types and legacy Date</h2>
-<h3 id="absolute-from-legacy-date">Absolute from legacy Date</h3>
-<p>Map a legacy ECMAScript Date instance into a Temporal.Absolute instance corresponding to the same instant in absolute time.</p>
-<pre><code class="language-javascript">const legacyDate = new Date(&#39;1970-01-01T00:00:01Z&#39;);
+<span class="token comment">// Timestamp in Milliseconds</span>
+timeStamp<span class="token punctuation">.</span><span class="token function">getEpochMilliseconds</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// Timestamp in Seconds</span>
+timeStamp<span class="token punctuation">.</span><span class="token function">getEpochSeconds</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre><h2 id="converting-between-temporal-types-and-legacy-date-1">Converting between Temporal types and legacy Date</h2>
+<h3 id="absolute-from-legacy-date"><a class="heading-link" href="#absolute-from-legacy-date"></a>Absolute from legacy Date</h3><p>Map a legacy ECMAScript Date instance into a Temporal.Absolute instance corresponding to the same instant in absolute time.</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token keyword">const</span> legacyDate <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Date</span><span class="token punctuation">(</span><span class="token string">'1970-01-01T00:00:01Z'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-// Convert legacy Date to Temporal.Absolute
-const absolute = Temporal.Absolute.fromEpochMilliseconds(legacyDate.getTime());
+<span class="token comment">// Convert legacy Date to Temporal.Absolute</span>
+<span class="token keyword">const</span> absolute <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Absolute<span class="token punctuation">.</span><span class="token function">fromEpochMilliseconds</span><span class="token punctuation">(</span>legacyDate<span class="token punctuation">.</span><span class="token function">getTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-assert(absolute instanceof Temporal.Absolute);</code></pre>
-<h2 id="construction">Construction</h2>
-<h3 id="time-zone-object-from-name">Time zone object from name</h3>
-<p><code>Temporal.TimeZone.from()</code> can convert an IANA time zone name into a <code>Temporal.TimeZone</code> object.</p>
-<pre><code class="language-javascript">// Construct a Temporal.TimeZone from an IANA name:
-const tz = Temporal.TimeZone.from(&#39;Europe/London&#39;);
+<span class="token function">assert</span><span class="token punctuation">(</span>absolute <span class="token keyword">instanceof</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>Absolute</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre><h2 id="construction-1">Construction</h2>
+<h3 id="time-zone-object-from-name"><a class="heading-link" href="#time-zone-object-from-name"></a>Time zone object from name</h3><p><code>Temporal.TimeZone.from()</code> can convert an IANA time zone name into a <code>Temporal.TimeZone</code> object.</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Construct a Temporal.TimeZone from an IANA name:</span>
+<span class="token keyword">const</span> tz <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'Europe/London'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-// Cast the timezone back to an IANA name, two ways:
-tz.toString(); // Europe/London
-tz.name; // Europe/London</code></pre>
-<h2 id="serialization">Serialization</h2>
-<h3 id="zoned-instant-from-instant-and-time-zone">Zoned instant from instant and time zone</h3>
-<p>Use the optional parameter of <code>Temporal.Absolute.prototype.toString()</code> to map a Temporal.Absolute instance and a time zone name into a string serialization of the local time in that zone corresponding to the instant in absolute time.</p>
+<span class="token comment">// Cast the timezone back to an IANA name, two ways:</span>
+tz<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// Europe/London</span>
+tz<span class="token punctuation">.</span>name<span class="token punctuation">;</span> <span class="token comment">// Europe/London</span>
+</code></pre><h2 id="serialization-1">Serialization</h2>
+<h3 id="zoned-instant-from-instant-and-time-zone"><a class="heading-link" href="#zoned-instant-from-instant-and-time-zone"></a>Zoned instant from instant and time zone</h3><p>Use the optional parameter of <code>Temporal.Absolute.prototype.toString()</code> to map a Temporal.Absolute instance and a time zone name into a string serialization of the local time in that zone corresponding to the instant in absolute time.</p>
 <p>Without the parameter, <code>Temporal.Absolute.prototype.toString()</code> gives a serialization in UTC time.
 Using the parameter is useful if you need your serialized strings to be in a specific time zone.</p>
-<pre><code class="language-javascript">const absoluteTime = Temporal.Absolute.from(&#39;2020-01-03T10:41:51Z&#39;);
+<pre class="language-javascript"><code class="language-javascript"><span class="token keyword">const</span> absoluteTime <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Absolute<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-01-03T10:41:51Z'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-const result = absoluteTime.toString(&#39;Europe/Paris&#39;);
+<span class="token keyword">const</span> result <span class="token operator">=</span> absoluteTime<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token string">'Europe/Paris'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-assert.equal(result, &#39;2020-01-03T11:41:51+01:00[Europe/Paris]&#39;);
-assert.equal(Temporal.Absolute.compare(absoluteTime, Temporal.Absolute.from(result)), 0);
+assert<span class="token punctuation">.</span><span class="token function">equal</span><span class="token punctuation">(</span>result<span class="token punctuation">,</span> <span class="token string">'2020-01-03T11:41:51+01:00[Europe/Paris]'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+assert<span class="token punctuation">.</span><span class="token function">equal</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>Absolute<span class="token punctuation">.</span><span class="token function">compare</span><span class="token punctuation">(</span>absoluteTime<span class="token punctuation">,</span> Temporal<span class="token punctuation">.</span>Absolute<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>result<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-// With an offset:
+<span class="token comment">// With an offset:</span>
 
-const result2 = absoluteTime.toString(&#39;-07:00&#39;);
+<span class="token keyword">const</span> result2 <span class="token operator">=</span> absoluteTime<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token string">'-07:00'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-assert.equal(result2, &#39;2020-01-03T03:41:51-07:00&#39;);
+assert<span class="token punctuation">.</span><span class="token function">equal</span><span class="token punctuation">(</span>result2<span class="token punctuation">,</span> <span class="token string">'2020-01-03T03:41:51-07:00'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-// With a Temporal.TimeZone object:
+<span class="token comment">// With a Temporal.TimeZone object:</span>
 
-const timeZone = Temporal.TimeZone.from(&#39;Asia/Seoul&#39;);
-const result3 = absoluteTime.toString(timeZone);
+<span class="token keyword">const</span> timeZone <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'Asia/Seoul'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> result3 <span class="token operator">=</span> absoluteTime<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span>timeZone<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-assert.equal(result3, &#39;2020-01-03T19:41:51+09:00[Asia/Seoul]&#39;);</code></pre>
-<h2 id="sorting">Sorting</h2>
+assert<span class="token punctuation">.</span><span class="token function">equal</span><span class="token punctuation">(</span>result3<span class="token punctuation">,</span> <span class="token string">'2020-01-03T19:41:51+09:00[Asia/Seoul]'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre><h2 id="sorting-1">Sorting</h2>
 <p>Each Temporal type has a <code>compare()</code> static method, which can be passed to <code>Array.prototype.sort()</code> as the compare function in order to sort an array of Temporal types.</p>
-<h3 id="sort-datetimes">Sort DateTimes</h3>
-<p>Sort a list of <code>Temporal.DateTime</code>s, for example in order to get a conference schedule in the correct order.
+<h3 id="sort-datetimes"><a class="heading-link" href="#sort-datetimes"></a>Sort DateTimes</h3><p>Sort a list of <code>Temporal.DateTime</code>s, for example in order to get a conference schedule in the correct order.
 Sorting other Temporal types would work exactly the same way as this.</p>
-<pre><code class="language-javascript">/**
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">/**
  * getSortedLocalDateTimes will sort an array of zoneless Temporal.DateTime instances by the
  * corresponding local date and time of day (e.g., for building a conference schedule).
  *
@@ -218,42 +229,41 @@ Sorting other Temporal types would work exactly the same way as this.</p>
  * @param {Temporal.DateTime[]} dateTimes - This is a DateTime instance
  * @param {boolean} direction - reverse
  * @returns {Temporal.DateTime[]} the array from dateTimes, sorted
- */
-function getSortedLocalDateTimes(dateTimes, reverse = false) {
-  let newDateTimes = Array.from(dateTimes).sort(Temporal.DateTime.compare);
+ */</span>
+<span class="token keyword">function</span> <span class="token function">getSortedLocalDateTimes</span><span class="token punctuation">(</span><span class="token parameter">dateTimes<span class="token punctuation">,</span> reverse <span class="token operator">=</span> <span class="token boolean">false</span></span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">let</span> newDateTimes <span class="token operator">=</span> Array<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>dateTimes<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">sort</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span>compare<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-  return reverse ? newDateTimes.reverse() : newDateTimes;
-}
+  <span class="token keyword">return</span> reverse <span class="token operator">?</span> newDateTimes<span class="token punctuation">.</span><span class="token function">reverse</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">:</span> newDateTimes<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
 
-// Sorting some conferences without timezones for example vue.js Amsterdam 2020
-let a = Temporal.DateTime.from({
-  year: 2020,
-  day: 20,
-  month: 2,
-  hour: 8,
-  minute: 45
-}); // Introduction
-let b = Temporal.DateTime.from({
-  year: 2020,
-  day: 21,
-  month: 2,
-  hour: 13,
-  minute: 10
-}); // Lunch Break
-let c = Temporal.DateTime.from({
-  year: 2020,
-  day: 20,
-  month: 2,
-  hour: 15,
-  minute: 30
-}); // Coffee Break
-const results = getSortedLocalDateTimes([a, b, c]);
-assert.equal(results[0], a);
-assert.equal(results[1], c);
-assert.equal(results[2], b);</code></pre>
-<h3 id="sort-iso-datetime-strings">Sort ISO date/time strings</h3>
-<p>Sort a list of ISO 8601 date/time strings, for example to place log entries in order.</p>
-<pre><code class="language-javascript">/**
+<span class="token comment">// Sorting some conferences without timezones for example vue.js Amsterdam 2020</span>
+<span class="token keyword">let</span> a <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  year<span class="token operator">:</span> <span class="token number">2020</span><span class="token punctuation">,</span>
+  day<span class="token operator">:</span> <span class="token number">20</span><span class="token punctuation">,</span>
+  month<span class="token operator">:</span> <span class="token number">2</span><span class="token punctuation">,</span>
+  hour<span class="token operator">:</span> <span class="token number">8</span><span class="token punctuation">,</span>
+  minute<span class="token operator">:</span> <span class="token number">45</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// Introduction</span>
+<span class="token keyword">let</span> b <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  year<span class="token operator">:</span> <span class="token number">2020</span><span class="token punctuation">,</span>
+  day<span class="token operator">:</span> <span class="token number">21</span><span class="token punctuation">,</span>
+  month<span class="token operator">:</span> <span class="token number">2</span><span class="token punctuation">,</span>
+  hour<span class="token operator">:</span> <span class="token number">13</span><span class="token punctuation">,</span>
+  minute<span class="token operator">:</span> <span class="token number">10</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// Lunch Break</span>
+<span class="token keyword">let</span> c <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  year<span class="token operator">:</span> <span class="token number">2020</span><span class="token punctuation">,</span>
+  day<span class="token operator">:</span> <span class="token number">20</span><span class="token punctuation">,</span>
+  month<span class="token operator">:</span> <span class="token number">2</span><span class="token punctuation">,</span>
+  hour<span class="token operator">:</span> <span class="token number">15</span><span class="token punctuation">,</span>
+  minute<span class="token operator">:</span> <span class="token number">30</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// Coffee Break</span>
+<span class="token keyword">const</span> results <span class="token operator">=</span> <span class="token function">getSortedLocalDateTimes</span><span class="token punctuation">(</span><span class="token punctuation">[</span>a<span class="token punctuation">,</span> b<span class="token punctuation">,</span> c<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+assert<span class="token punctuation">.</span><span class="token function">equal</span><span class="token punctuation">(</span>results<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">,</span> a<span class="token punctuation">)</span><span class="token punctuation">;</span>
+assert<span class="token punctuation">.</span><span class="token function">equal</span><span class="token punctuation">(</span>results<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">,</span> c<span class="token punctuation">)</span><span class="token punctuation">;</span>
+assert<span class="token punctuation">.</span><span class="token function">equal</span><span class="token punctuation">(</span>results<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">,</span> b<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre><h3 id="sort-iso-datetime-strings"><a class="heading-link" href="#sort-iso-datetime-strings"></a>Sort ISO date/time strings</h3><p>Sort a list of ISO 8601 date/time strings, for example to place log entries in order.</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">/**
  * getSortedInstants will sort an array of strings (each of which is parseable
  * as a Temporal.Absolute and may or may not include an IANA time zone name)
  * by the corresponding absolute time (e.g., for presenting global log events
@@ -263,39 +273,38 @@ assert.equal(results[2], b);</code></pre>
  * @param {string[]} parseableAbsoluteStrings - a group of ISO Strings
  * @param {boolean} reverse - ascending or descending order
  * @returns {string[]} the array from parseableAbsoluteStrings, sorted
- */
-function getSortedInstants(parseableAbsoluteStrings, reverse = false) {
-  const sortedAbsoluteTimes = parseableAbsoluteStrings
-    .map((v) =&gt; [v, Temporal.Absolute.from(v)])
-    .sort(([, abs1], [, abs2]) =&gt; Temporal.Absolute.compare(abs1, abs2))
-    .map(([str]) =&gt; str);
+ */</span>
+<span class="token keyword">function</span> <span class="token function">getSortedInstants</span><span class="token punctuation">(</span><span class="token parameter">parseableAbsoluteStrings<span class="token punctuation">,</span> reverse <span class="token operator">=</span> <span class="token boolean">false</span></span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> sortedAbsoluteTimes <span class="token operator">=</span> parseableAbsoluteStrings
+    <span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">v</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">[</span>v<span class="token punctuation">,</span> Temporal<span class="token punctuation">.</span>Absolute<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>v<span class="token punctuation">)</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+    <span class="token punctuation">.</span><span class="token function">sort</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">[</span><span class="token punctuation">,</span> abs1<span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token punctuation">,</span> abs2<span class="token punctuation">]</span></span><span class="token punctuation">)</span> <span class="token operator">=></span> Temporal<span class="token punctuation">.</span>Absolute<span class="token punctuation">.</span><span class="token function">compare</span><span class="token punctuation">(</span>abs1<span class="token punctuation">,</span> abs2<span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">[</span>str<span class="token punctuation">]</span></span><span class="token punctuation">)</span> <span class="token operator">=></span> str<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-  return reverse ? sortedAbsoluteTimes.reverse() : sortedAbsoluteTimes;
-}
+  <span class="token keyword">return</span> reverse <span class="token operator">?</span> sortedAbsoluteTimes<span class="token punctuation">.</span><span class="token function">reverse</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">:</span> sortedAbsoluteTimes<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
 
-const a = &#39;2020-01-23T17:04:36.491865121-08:00&#39;;
-const b = &#39;2020-02-10T17:04:36.491865121-08:00&#39;;
-const c = &#39;2019-03-30T01:45:00+01:00[Europe/Berlin]&#39;;
-const d = &#39;2019-03-16T01:45:00+00:00[Europe/London]&#39;;
-const e = &#39;2019-03-25T01:45:00-06:00[America/New_York]&#39;;
+<span class="token keyword">const</span> a <span class="token operator">=</span> <span class="token string">'2020-01-23T17:04:36.491865121-08:00'</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> b <span class="token operator">=</span> <span class="token string">'2020-02-10T17:04:36.491865121-08:00'</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> c <span class="token operator">=</span> <span class="token string">'2019-03-30T01:45:00+01:00[Europe/Berlin]'</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> d <span class="token operator">=</span> <span class="token string">'2019-03-16T01:45:00+00:00[Europe/London]'</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> e <span class="token operator">=</span> <span class="token string">'2019-03-25T01:45:00-06:00[America/New_York]'</span><span class="token punctuation">;</span>
 
-const results = getSortedInstants([a, b, c, d, e]);
+<span class="token keyword">const</span> results <span class="token operator">=</span> <span class="token function">getSortedInstants</span><span class="token punctuation">(</span><span class="token punctuation">[</span>a<span class="token punctuation">,</span> b<span class="token punctuation">,</span> c<span class="token punctuation">,</span> d<span class="token punctuation">,</span> e<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-// results will have correct order
-assert.equal(results[0], &#39;2019-03-16T01:45:00+00:00[Europe/London]&#39;);
-assert.equal(results[1], &#39;2019-03-25T01:45:00-06:00[America/New_York]&#39;);
-assert.equal(results[2], &#39;2019-03-30T01:45:00+01:00[Europe/Berlin]&#39;);
-assert.equal(results[3], &#39;2020-01-23T17:04:36.491865121-08:00&#39;);
-assert.equal(results[4], &#39;2020-02-10T17:04:36.491865121-08:00&#39;);</code></pre>
-<h2 id="time-zone-conversion">Time zone conversion</h2>
-<h3 id="preserving-absolute-instant">Preserving absolute instant</h3>
-<p>Map a zoned date and time of day into a string serialization of the local time in a target zone at the corresponding instant in absolute time.
+<span class="token comment">// results will have correct order</span>
+assert<span class="token punctuation">.</span><span class="token function">equal</span><span class="token punctuation">(</span>results<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token string">'2019-03-16T01:45:00+00:00[Europe/London]'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+assert<span class="token punctuation">.</span><span class="token function">equal</span><span class="token punctuation">(</span>results<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token string">'2019-03-25T01:45:00-06:00[America/New_York]'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+assert<span class="token punctuation">.</span><span class="token function">equal</span><span class="token punctuation">(</span>results<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token string">'2019-03-30T01:45:00+01:00[Europe/Berlin]'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+assert<span class="token punctuation">.</span><span class="token function">equal</span><span class="token punctuation">(</span>results<span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token string">'2020-01-23T17:04:36.491865121-08:00'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+assert<span class="token punctuation">.</span><span class="token function">equal</span><span class="token punctuation">(</span>results<span class="token punctuation">[</span><span class="token number">4</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token string">'2020-02-10T17:04:36.491865121-08:00'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre><h2 id="time-zone-conversion-1">Time zone conversion</h2>
+<h3 id="preserving-absolute-instant"><a class="heading-link" href="#preserving-absolute-instant"></a>Preserving absolute instant</h3><p>Map a zoned date and time of day into a string serialization of the local time in a target zone at the corresponding instant in absolute time.
 This could be used when converting user-input date-time values between time zones.</p>
-<pre><code class="language-javascript">/**
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">/**
  * Takes a local date and time in one time zone, and serializes it to a string
  * expressing the local date and time in another time zone.
  *
- * If `sourceDateTime` doesn&#39;t exist in `sourceTimeZone`, or exists twice, then
+ * If `sourceDateTime` doesn't exist in `sourceTimeZone`, or exists twice, then
  * an error will be thrown by default.
  * Usually this is what you want. (FIXME: but is it?)
  * Use `sourceDisambiguationPolicy` to change this behaviour.
@@ -308,99 +317,95 @@ This could be used when converting user-input date-time values between time zone
  * @param {string} [sourceDisambiguationPolicy=reject] - what to do when
  *  `sourceDateTime` is ambiguous
  * @returns {string} String indicating the time with time zone designation
- */
-function getParseableZonedStringWithLocalTimeInOtherZone(
-  sourceDateTime,
-  sourceTimeZone,
-  targetTimeZone,
-  sourceDisambiguationPolicy = &#39;reject&#39;
-) {
-  let instant = sourceDateTime.inTimeZone(sourceTimeZone, { disambiguation: sourceDisambiguationPolicy });
-  return instant.toString(targetTimeZone);
-}
+ */</span>
+<span class="token keyword">function</span> <span class="token function">getParseableZonedStringWithLocalTimeInOtherZone</span><span class="token punctuation">(</span>
+  sourceDateTime<span class="token punctuation">,</span>
+  sourceTimeZone<span class="token punctuation">,</span>
+  targetTimeZone<span class="token punctuation">,</span>
+  sourceDisambiguationPolicy <span class="token operator">=</span> <span class="token string">'reject'</span>
+<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">let</span> instant <span class="token operator">=</span> sourceDateTime<span class="token punctuation">.</span><span class="token function">inTimeZone</span><span class="token punctuation">(</span>sourceTimeZone<span class="token punctuation">,</span> <span class="token punctuation">{</span> disambiguation<span class="token operator">:</span> sourceDisambiguationPolicy <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">return</span> instant<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span>targetTimeZone<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
 
-const result = getParseableZonedStringWithLocalTimeInOtherZone(
-  Temporal.DateTime.from(&#39;2020-01-09T00:00&#39;),
-  Temporal.TimeZone.from(&#39;America/Chicago&#39;),
-  Temporal.TimeZone.from(&#39;America/Los_Angeles&#39;)
-);
-// On this date, when it&#39;s midnight in Chicago, it&#39;s 10 PM the previous night in LA
-assert.equal(result, &#39;2020-01-08T22:00-08:00[America/Los_Angeles]&#39;);</code></pre>
-<h3 id="utc-offset-for-a-zoned-event-as-a-string">UTC offset for a zoned event, as a string</h3>
-<p>Use <code>Temporal.TimeZone.getOffsetFor()</code> to map a <code>Temporal.Absolute</code> instance and a time zone into the UTC offset at that instant in that time zone, as a string.</p>
-<pre><code class="language-javascript">const instant = Temporal.Absolute.from(&#39;2020-01-09T00:00Z&#39;);
-const nyc = Temporal.TimeZone.from(&#39;America/New_York&#39;);
+<span class="token keyword">const</span> result <span class="token operator">=</span> <span class="token function">getParseableZonedStringWithLocalTimeInOtherZone</span><span class="token punctuation">(</span>
+  Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-01-09T00:00'</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'America/Chicago'</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'America/Los_Angeles'</span><span class="token punctuation">)</span>
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// On this date, when it's midnight in Chicago, it's 10 PM the previous night in LA</span>
+assert<span class="token punctuation">.</span><span class="token function">equal</span><span class="token punctuation">(</span>result<span class="token punctuation">,</span> <span class="token string">'2020-01-08T22:00-08:00[America/Los_Angeles]'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre><h3 id="utc-offset-for-a-zoned-event-as-a-string"><a class="heading-link" href="#utc-offset-for-a-zoned-event-as-a-string"></a>UTC offset for a zoned event, as a string</h3><p>Use <code>Temporal.TimeZone.getOffsetFor()</code> to map a <code>Temporal.Absolute</code> instance and a time zone into the UTC offset at that instant in that time zone, as a string.</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token keyword">const</span> instant <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Absolute<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-01-09T00:00Z'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> nyc <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'America/New_York'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-nyc.getOffsetFor(instant); // =&gt; -05:00</code></pre>
-<h3 id="utc-offset-for-a-zoned-event-as-a-number-of-seconds">UTC offset for a zoned event, as a number of seconds</h3>
-<p>It&#39;s a bit more complicated to do the above mapping as a number of seconds instead of a string.</p>
-<pre><code class="language-javascript">/**
+nyc<span class="token punctuation">.</span><span class="token function">getOffsetFor</span><span class="token punctuation">(</span>instant<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => -05:00</span>
+</code></pre><h3 id="utc-offset-for-a-zoned-event-as-a-number-of-seconds"><a class="heading-link" href="#utc-offset-for-a-zoned-event-as-a-number-of-seconds"></a>UTC offset for a zoned event, as a number of seconds</h3><p>It&#39;s a bit more complicated to do the above mapping as a number of seconds instead of a string.</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">/**
  * Returns the number of seconds in the UTC offset of a time zone, at a
  * particular moment in time.
  *
  * @param {Temporal.Absolute} instant - A moment in time
  * @param {Temporal.TimeZone} timeZone - A time zone to examine
- * @returns {number} The number of seconds in the time zone&#39;s UTC offset
- */
-function getUtcOffsetSecondsAtInstant(instant, timeZone) {
-  const utcWallTime = instant.inTimeZone(&#39;UTC&#39;);
-  const localWallTime = instant.inTimeZone(timeZone);
-  const difference = utcWallTime.difference(localWallTime, { largestUnit: &#39;seconds&#39; });
-  const sign = Temporal.DateTime.compare(localWallTime, utcWallTime) &lt; 0 ? -1 : 1;
-  return (
-    sign *
-    (difference.seconds +
-      difference.milliseconds * 1e-3 +
-      difference.microseconds * 1e-6 +
-      difference.nanoseconds * 1e-9)
-  );
-}
+ * @returns {number} The number of seconds in the time zone's UTC offset
+ */</span>
+<span class="token keyword">function</span> <span class="token function">getUtcOffsetSecondsAtInstant</span><span class="token punctuation">(</span><span class="token parameter">instant<span class="token punctuation">,</span> timeZone</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> utcWallTime <span class="token operator">=</span> instant<span class="token punctuation">.</span><span class="token function">inTimeZone</span><span class="token punctuation">(</span><span class="token string">'UTC'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">const</span> localWallTime <span class="token operator">=</span> instant<span class="token punctuation">.</span><span class="token function">inTimeZone</span><span class="token punctuation">(</span>timeZone<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">const</span> difference <span class="token operator">=</span> utcWallTime<span class="token punctuation">.</span><span class="token function">difference</span><span class="token punctuation">(</span>localWallTime<span class="token punctuation">,</span> <span class="token punctuation">{</span> largestUnit<span class="token operator">:</span> <span class="token string">'seconds'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">const</span> sign <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">compare</span><span class="token punctuation">(</span>localWallTime<span class="token punctuation">,</span> utcWallTime<span class="token punctuation">)</span> <span class="token operator">&lt;</span> <span class="token number">0</span> <span class="token operator">?</span> <span class="token operator">-</span><span class="token number">1</span> <span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">;</span>
+  <span class="token keyword">return</span> <span class="token punctuation">(</span>
+    sign <span class="token operator">*</span>
+    <span class="token punctuation">(</span>difference<span class="token punctuation">.</span>seconds <span class="token operator">+</span>
+      difference<span class="token punctuation">.</span>milliseconds <span class="token operator">*</span> <span class="token number">1e-3</span> <span class="token operator">+</span>
+      difference<span class="token punctuation">.</span>microseconds <span class="token operator">*</span> <span class="token number">1e-6</span> <span class="token operator">+</span>
+      difference<span class="token punctuation">.</span>nanoseconds <span class="token operator">*</span> <span class="token number">1e-9</span><span class="token punctuation">)</span>
+  <span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
 
-const instant = Temporal.Absolute.from(&#39;2020-01-09T00:00Z&#39;);
-const nyc = Temporal.TimeZone.from(&#39;America/New_York&#39;);
+<span class="token keyword">const</span> instant <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Absolute<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-01-09T00:00Z'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> nyc <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'America/New_York'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-assert.equal(getUtcOffsetSecondsAtInstant(instant, nyc), -18000);</code></pre>
-<h3 id="offset-between-two-time-zones-at-an-instant">Offset between two time zones at an instant</h3>
-<p>With a small variation on the previous recipe we can map a <code>Temporal.Absolute</code> instance and two time zones into the signed difference of UTC offsets between those time zones at that instant, as a number of seconds.</p>
-<pre><code class="language-javascript">/**
- * Returns the number of seconds&#39; difference between the UTC offsets of two time
+assert<span class="token punctuation">.</span><span class="token function">equal</span><span class="token punctuation">(</span><span class="token function">getUtcOffsetSecondsAtInstant</span><span class="token punctuation">(</span>instant<span class="token punctuation">,</span> nyc<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">18000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre><h3 id="offset-between-two-time-zones-at-an-instant"><a class="heading-link" href="#offset-between-two-time-zones-at-an-instant"></a>Offset between two time zones at an instant</h3><p>With a small variation on the previous recipe we can map a <code>Temporal.Absolute</code> instance and two time zones into the signed difference of UTC offsets between those time zones at that instant, as a number of seconds.</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">/**
+ * Returns the number of seconds' difference between the UTC offsets of two time
  * zones, at a particular moment in time.
  *
  * @param {Temporal.Absolute} instant - A moment in time
  * @param {Temporal.TimeZone} sourceTimeZone - A time zone to examine
  * @param {Temporal.TimeZone} targetTimeZone - A second time zone to examine
- * @returns {number} The number of seconds difference between the time zones&#39;
+ * @returns {number} The number of seconds difference between the time zones'
  *   UTC offsets
- */
-function getUtcOffsetDifferenceSecondsAtInstant(instant, sourceTimeZone, targetTimeZone) {
-  const sourceWallTime = instant.inTimeZone(sourceTimeZone);
-  const targetWallTime = instant.inTimeZone(targetTimeZone);
-  const difference = sourceWallTime.difference(targetWallTime, { largestUnit: &#39;seconds&#39; });
-  const sign = Temporal.DateTime.compare(targetWallTime, sourceWallTime) &lt; 0 ? -1 : 1;
-  return (
-    sign *
-    (difference.seconds +
-      difference.milliseconds * 1e-3 +
-      difference.microseconds * 1e-6 +
-      difference.nanoseconds * 1e-9)
-  );
-}
+ */</span>
+<span class="token keyword">function</span> <span class="token function">getUtcOffsetDifferenceSecondsAtInstant</span><span class="token punctuation">(</span><span class="token parameter">instant<span class="token punctuation">,</span> sourceTimeZone<span class="token punctuation">,</span> targetTimeZone</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> sourceWallTime <span class="token operator">=</span> instant<span class="token punctuation">.</span><span class="token function">inTimeZone</span><span class="token punctuation">(</span>sourceTimeZone<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">const</span> targetWallTime <span class="token operator">=</span> instant<span class="token punctuation">.</span><span class="token function">inTimeZone</span><span class="token punctuation">(</span>targetTimeZone<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">const</span> difference <span class="token operator">=</span> sourceWallTime<span class="token punctuation">.</span><span class="token function">difference</span><span class="token punctuation">(</span>targetWallTime<span class="token punctuation">,</span> <span class="token punctuation">{</span> largestUnit<span class="token operator">:</span> <span class="token string">'seconds'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">const</span> sign <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">compare</span><span class="token punctuation">(</span>targetWallTime<span class="token punctuation">,</span> sourceWallTime<span class="token punctuation">)</span> <span class="token operator">&lt;</span> <span class="token number">0</span> <span class="token operator">?</span> <span class="token operator">-</span><span class="token number">1</span> <span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">;</span>
+  <span class="token keyword">return</span> <span class="token punctuation">(</span>
+    sign <span class="token operator">*</span>
+    <span class="token punctuation">(</span>difference<span class="token punctuation">.</span>seconds <span class="token operator">+</span>
+      difference<span class="token punctuation">.</span>milliseconds <span class="token operator">*</span> <span class="token number">1e-3</span> <span class="token operator">+</span>
+      difference<span class="token punctuation">.</span>microseconds <span class="token operator">*</span> <span class="token number">1e-6</span> <span class="token operator">+</span>
+      difference<span class="token punctuation">.</span>nanoseconds <span class="token operator">*</span> <span class="token number">1e-9</span><span class="token punctuation">)</span>
+  <span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
 
-const instant = Temporal.Absolute.from(&#39;2020-01-09T00:00Z&#39;);
-const nyc = Temporal.TimeZone.from(&#39;America/New_York&#39;);
-const chicago = Temporal.TimeZone.from(&#39;America/Chicago&#39;);
+<span class="token keyword">const</span> instant <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Absolute<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-01-09T00:00Z'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> nyc <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'America/New_York'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> chicago <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'America/Chicago'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-// At this instant, Chicago is 3600 seconds earlier than New York
-assert.equal(getUtcOffsetDifferenceSecondsAtInstant(instant, nyc, chicago), -3600);</code></pre>
-<h2 id="arithmetic">Arithmetic</h2>
-<h3 id="unit-constrained-duration-between-now-and-a-pastfuture-zoned-event">Unit-constrained duration between now and a past/future zoned event</h3>
-<p>Map two Temporal.Absolute instances into an ascending/descending order indicator and a Temporal.Duration instance representing the duration between the two instants without using units coarser than specified (e.g., for presenting a meaningful countdown with vs. without using months or days).</p>
-<pre><code class="language-javascript">/**
+<span class="token comment">// At this instant, Chicago is 3600 seconds earlier than New York</span>
+assert<span class="token punctuation">.</span><span class="token function">equal</span><span class="token punctuation">(</span><span class="token function">getUtcOffsetDifferenceSecondsAtInstant</span><span class="token punctuation">(</span>instant<span class="token punctuation">,</span> nyc<span class="token punctuation">,</span> chicago<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">3600</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre><h2 id="arithmetic-1">Arithmetic</h2>
+<h3 id="unit-constrained-duration-between-now-and-a-pastfuture-zoned-event"><a class="heading-link" href="#unit-constrained-duration-between-now-and-a-pastfuture-zoned-event"></a>Unit-constrained duration between now and a past/future zoned event</h3><p>Map two Temporal.Absolute instances into an ascending/descending order indicator and a Temporal.Duration instance representing the duration between the two instants without using units coarser than specified (e.g., for presenting a meaningful countdown with vs. without using months or days).</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">/**
  * @typedef {Object} ElapsedDuration
- * @property {string} return.sign - &quot;+&quot; or &quot;-&quot;
+ * @property {string} return.sign - "+" or "-"
  * @property {Temporal.Duration} return.duration - Elapsed duration
- */
-/**
+ */</span>
+<span class="token comment">/**
  * Compute the difference between two instants, suitable for use in a countdown,
  * for example.
  *
@@ -408,39 +413,38 @@ assert.equal(getUtcOffsetDifferenceSecondsAtInstant(instant, nyc, chicago), -360
  * @param {Temporal.Absolute} now - Instant until when to measure the duration
  * @param {string} [largestUnit=days] - Largest time unit to have in the result
  * @returns {ElapsedDuration} Time between `then` and `now`
- */
-function getElapsedDurationSinceInstant(then, now, largestUnit = &#39;days&#39;) {
-  const sign = Temporal.Absolute.compare(now, then) &lt; 0 ? &#39;-&#39; : &#39;+&#39;;
-  const duration = now.difference(then, { largestUnit });
-  return { sign, duration };
-}
+ */</span>
+<span class="token keyword">function</span> <span class="token function">getElapsedDurationSinceInstant</span><span class="token punctuation">(</span>then<span class="token punctuation">,</span> now<span class="token punctuation">,</span> largestUnit <span class="token operator">=</span> <span class="token string">'days'</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> sign <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Absolute<span class="token punctuation">.</span><span class="token function">compare</span><span class="token punctuation">(</span>now<span class="token punctuation">,</span> then<span class="token punctuation">)</span> <span class="token operator">&lt;</span> <span class="token number">0</span> <span class="token operator">?</span> <span class="token string">'-'</span> <span class="token operator">:</span> <span class="token string">'+'</span><span class="token punctuation">;</span>
+  <span class="token keyword">const</span> duration <span class="token operator">=</span> now<span class="token punctuation">.</span><span class="token function">difference</span><span class="token punctuation">(</span>then<span class="token punctuation">,</span> <span class="token punctuation">{</span> largestUnit <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">return</span> <span class="token punctuation">{</span> sign<span class="token punctuation">,</span> duration <span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
 
-const result = getElapsedDurationSinceInstant(
-  Temporal.Absolute.from(&#39;2020-01-09T00:00Z&#39;),
-  Temporal.Absolute.from(&#39;2020-01-09T04:00Z&#39;)
-);
-assert.equal(`${result.sign}${result.duration}`, &#39;+PT4H&#39;);
+<span class="token keyword">const</span> result <span class="token operator">=</span> <span class="token function">getElapsedDurationSinceInstant</span><span class="token punctuation">(</span>
+  Temporal<span class="token punctuation">.</span>Absolute<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-01-09T00:00Z'</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  Temporal<span class="token punctuation">.</span>Absolute<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-01-09T04:00Z'</span><span class="token punctuation">)</span>
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+assert<span class="token punctuation">.</span><span class="token function">equal</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>result<span class="token punctuation">.</span>sign<span class="token interpolation-punctuation punctuation">}</span></span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>result<span class="token punctuation">.</span>duration<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">,</span> <span class="token string">'+PT4H'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-const result2 = getElapsedDurationSinceInstant(
-  Temporal.Absolute.from(&#39;2020-01-09T04:00Z&#39;),
-  Temporal.Absolute.from(&#39;2020-01-09T00:00Z&#39;),
-  &#39;minutes&#39;
-);
-assert.equal(`${result2.sign}${result2.duration}`, &#39;-PT240M&#39;);
+<span class="token keyword">const</span> result2 <span class="token operator">=</span> <span class="token function">getElapsedDurationSinceInstant</span><span class="token punctuation">(</span>
+  Temporal<span class="token punctuation">.</span>Absolute<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-01-09T04:00Z'</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  Temporal<span class="token punctuation">.</span>Absolute<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-01-09T00:00Z'</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  <span class="token string">'minutes'</span>
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+assert<span class="token punctuation">.</span><span class="token function">equal</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>result2<span class="token punctuation">.</span>sign<span class="token interpolation-punctuation punctuation">}</span></span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>result2<span class="token punctuation">.</span>duration<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">,</span> <span class="token string">'-PT240M'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-// Example of using it in a countdown:
+<span class="token comment">// Example of using it in a countdown:</span>
 
-const { sign, duration } = getElapsedDurationSinceInstant(
-  Temporal.Absolute.from(&#39;2020-04-01T13:00-07:00[America/Los_Angeles]&#39;),
-  Temporal.now.absolute()
-);
-`It&#39;s ${duration.toLocaleString()} ${sign &lt; 0 ? &#39;until&#39; : &#39;since&#39;} the TC39 Temporal presentation`;</code></pre>
-<h3 id="comparison-of-an-instant-to-business-hours">Comparison of an instant to business hours</h3>
-<p>This example takes a roster of opening and closing times for a business, and maps a localized date and time of day into a time-sensitive state indicator (&quot;opening soon&quot; vs. &quot;open&quot; vs. &quot;closing soon&quot; vs. &quot;closed&quot;).</p>
-<pre><code class="language-javascript">/**
+<span class="token keyword">const</span> <span class="token punctuation">{</span> sign<span class="token punctuation">,</span> duration <span class="token punctuation">}</span> <span class="token operator">=</span> <span class="token function">getElapsedDurationSinceInstant</span><span class="token punctuation">(</span>
+  Temporal<span class="token punctuation">.</span>Absolute<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-04-01T13:00-07:00[America/Los_Angeles]'</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">absolute</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">It's </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>duration<span class="token punctuation">.</span><span class="token function">toLocaleString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token string"> </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>sign <span class="token operator">&lt;</span> <span class="token number">0</span> <span class="token operator">?</span> <span class="token string">'until'</span> <span class="token operator">:</span> <span class="token string">'since'</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token string"> the TC39 Temporal presentation</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>
+</code></pre><h3 id="comparison-of-an-instant-to-business-hours"><a class="heading-link" href="#comparison-of-an-instant-to-business-hours"></a>Comparison of an instant to business hours</h3><p>This example takes a roster of opening and closing times for a business, and maps a localized date and time of day into a time-sensitive state indicator (&quot;opening soon&quot; vs. &quot;open&quot; vs. &quot;closing soon&quot; vs. &quot;closed&quot;).</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">/**
  * Compare the given time to the business hours of a business located in a
  * particular time zone, and return a string indicating whether the business is
- * open, closed, opening soon, or closing soon. The length of &quot;soon&quot; can be
+ * open, closed, opening soon, or closing soon. The length of "soon" can be
  * controlled using the `soonWindow` parameter.
  *
  * @param {Temporal.Absolute} now - Time at which to consider whether the
@@ -454,132 +458,111 @@ const { sign, duration } = getElapsedDurationSinceInstant(
  * @param {Temporal.Time} businessHours[].close - Time at which the business
  *  closes
  * @param {Temporal.Duration} soonWindow - Length of time before the opening or
- *  closing time during which the business should be considered &quot;opening soon&quot;
- *  or &quot;closing soon&quot;
- * @returns {string} &quot;open&quot;, &quot;closed&quot;, &quot;opening soon&quot;, or &quot;closing soon&quot;
- */
-function getBusinessOpenStateText(now, timeZone, businessHours, soonWindow) {
-  function inRange(dateTime, start, end) {
-    return Temporal.DateTime.compare(dateTime, start) &gt;= 0 &amp;&amp; Temporal.DateTime.compare(dateTime, end) &lt; 0;
-  }
+ *  closing time during which the business should be considered "opening soon"
+ *  or "closing soon"
+ * @returns {string} "open", "closed", "opening soon", or "closing soon"
+ */</span>
+<span class="token keyword">function</span> <span class="token function">getBusinessOpenStateText</span><span class="token punctuation">(</span><span class="token parameter">now<span class="token punctuation">,</span> timeZone<span class="token punctuation">,</span> businessHours<span class="token punctuation">,</span> soonWindow</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">function</span> <span class="token function">inRange</span><span class="token punctuation">(</span><span class="token parameter">dateTime<span class="token punctuation">,</span> start<span class="token punctuation">,</span> end</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">compare</span><span class="token punctuation">(</span>dateTime<span class="token punctuation">,</span> start<span class="token punctuation">)</span> <span class="token operator">>=</span> <span class="token number">0</span> <span class="token operator">&amp;&amp;</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">compare</span><span class="token punctuation">(</span>dateTime<span class="token punctuation">,</span> end<span class="token punctuation">)</span> <span class="token operator">&lt;</span> <span class="token number">0</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
 
-  const dateTime = now.inTimeZone(timeZone);
-  const weekday = dateTime.dayOfWeek % 7; // convert to 0-based, for array indexing
+  <span class="token keyword">const</span> dateTime <span class="token operator">=</span> now<span class="token punctuation">.</span><span class="token function">inTimeZone</span><span class="token punctuation">(</span>timeZone<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">const</span> weekday <span class="token operator">=</span> dateTime<span class="token punctuation">.</span>dayOfWeek <span class="token operator">%</span> <span class="token number">7</span><span class="token punctuation">;</span> <span class="token comment">// convert to 0-based, for array indexing</span>
 
-  // Because of times wrapping around at midnight, we may need to consider
-  // yesterday&#39;s and tomorrow&#39;s hours as well
-  const today = dateTime.getDate();
-  const yesterday = today.minus({ days: 1 });
-  const tomorrow = today.plus({ days: 1 });
+  <span class="token comment">// Because of times wrapping around at midnight, we may need to consider</span>
+  <span class="token comment">// yesterday's and tomorrow's hours as well</span>
+  <span class="token keyword">const</span> today <span class="token operator">=</span> dateTime<span class="token punctuation">.</span><span class="token function">getDate</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">const</span> yesterday <span class="token operator">=</span> today<span class="token punctuation">.</span><span class="token function">minus</span><span class="token punctuation">(</span><span class="token punctuation">{</span> days<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">const</span> tomorrow <span class="token operator">=</span> today<span class="token punctuation">.</span><span class="token function">plus</span><span class="token punctuation">(</span><span class="token punctuation">{</span> days<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-  // Push any of the businessHours that overlap today&#39;s date into an array,
-  // that we will subsequently check. Convert the businessHours Times into
-  // DateTimes so that they no longer wrap around.
-  const businessHoursOverlappingToday = [];
-  const yesterdayHours = businessHours[(weekday + 6) % 7];
-  if (yesterdayHours) {
-    const { open, close } = yesterdayHours;
-    if (Temporal.Time.compare(close, open) &lt; 0) {
-      businessHoursOverlappingToday.push({
-        open: yesterday.withTime(open),
-        close: today.withTime(close)
-      });
-    }
-  }
-  const todayHours = businessHours[weekday];
-  if (todayHours) {
-    const { open, close } = todayHours;
-    businessHoursOverlappingToday.push({
-      open: today.withTime(open),
-      close: (Temporal.Time.compare(close, open) &gt;= 0 ? today : tomorrow).withTime(close)
-    });
-  }
+  <span class="token comment">// Push any of the businessHours that overlap today's date into an array,</span>
+  <span class="token comment">// that we will subsequently check. Convert the businessHours Times into</span>
+  <span class="token comment">// DateTimes so that they no longer wrap around.</span>
+  <span class="token keyword">const</span> businessHoursOverlappingToday <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+  <span class="token keyword">const</span> yesterdayHours <span class="token operator">=</span> businessHours<span class="token punctuation">[</span><span class="token punctuation">(</span>weekday <span class="token operator">+</span> <span class="token number">6</span><span class="token punctuation">)</span> <span class="token operator">%</span> <span class="token number">7</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>yesterdayHours<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> <span class="token punctuation">{</span> open<span class="token punctuation">,</span> close <span class="token punctuation">}</span> <span class="token operator">=</span> yesterdayHours<span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">compare</span><span class="token punctuation">(</span>close<span class="token punctuation">,</span> open<span class="token punctuation">)</span> <span class="token operator">&lt;</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      businessHoursOverlappingToday<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+        open<span class="token operator">:</span> yesterday<span class="token punctuation">.</span><span class="token function">withTime</span><span class="token punctuation">(</span>open<span class="token punctuation">)</span><span class="token punctuation">,</span>
+        close<span class="token operator">:</span> today<span class="token punctuation">.</span><span class="token function">withTime</span><span class="token punctuation">(</span>close<span class="token punctuation">)</span>
+      <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+  <span class="token keyword">const</span> todayHours <span class="token operator">=</span> businessHours<span class="token punctuation">[</span>weekday<span class="token punctuation">]</span><span class="token punctuation">;</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>todayHours<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> <span class="token punctuation">{</span> open<span class="token punctuation">,</span> close <span class="token punctuation">}</span> <span class="token operator">=</span> todayHours<span class="token punctuation">;</span>
+    businessHoursOverlappingToday<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+      open<span class="token operator">:</span> today<span class="token punctuation">.</span><span class="token function">withTime</span><span class="token punctuation">(</span>open<span class="token punctuation">)</span><span class="token punctuation">,</span>
+      close<span class="token operator">:</span> <span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">compare</span><span class="token punctuation">(</span>close<span class="token punctuation">,</span> open<span class="token punctuation">)</span> <span class="token operator">>=</span> <span class="token number">0</span> <span class="token operator">?</span> today <span class="token operator">:</span> tomorrow<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">withTime</span><span class="token punctuation">(</span>close<span class="token punctuation">)</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
 
-  // Check if any of the candidate business hours include the given time
-  const soon = dateTime.plus(soonWindow);
-  let openNow = false;
-  let openSoon = false;
-  for (const { open, close } of businessHoursOverlappingToday) {
-    openNow = openNow || inRange(dateTime, open, close);
-    openSoon = openSoon || inRange(soon, open, close);
-  }
+  <span class="token comment">// Check if any of the candidate business hours include the given time</span>
+  <span class="token keyword">const</span> soon <span class="token operator">=</span> dateTime<span class="token punctuation">.</span><span class="token function">plus</span><span class="token punctuation">(</span>soonWindow<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">let</span> openNow <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+  <span class="token keyword">let</span> openSoon <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+  <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">const</span> <span class="token punctuation">{</span> open<span class="token punctuation">,</span> close <span class="token punctuation">}</span> <span class="token keyword">of</span> businessHoursOverlappingToday<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    openNow <span class="token operator">=</span> openNow <span class="token operator">||</span> <span class="token function">inRange</span><span class="token punctuation">(</span>dateTime<span class="token punctuation">,</span> open<span class="token punctuation">,</span> close<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    openSoon <span class="token operator">=</span> openSoon <span class="token operator">||</span> <span class="token function">inRange</span><span class="token punctuation">(</span>soon<span class="token punctuation">,</span> open<span class="token punctuation">,</span> close<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
 
-  if (openNow) {
-    if (!openSoon) return &#39;closing soon&#39;;
-    return &#39;open&#39;;
-  }
-  if (openSoon) return &#39;opening soon&#39;;
-  return &#39;closed&#39;;
-}
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>openNow<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>openSoon<span class="token punctuation">)</span> <span class="token keyword">return</span> <span class="token string">'closing soon'</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token string">'open'</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>openSoon<span class="token punctuation">)</span> <span class="token keyword">return</span> <span class="token string">'opening soon'</span><span class="token punctuation">;</span>
+  <span class="token keyword">return</span> <span class="token string">'closed'</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
 
-// For example, a restaurant or bar might have opening hours that go past
-// midnight; make sure this is handled correctly
-const businessHours = [
-  /* Sun */ { open: Temporal.Time.from(&#39;13:00&#39;), close: Temporal.Time.from(&#39;20:30&#39;) },
-  /* Mon */ null, // closed Mondays
-  /* Tue */ { open: Temporal.Time.from(&#39;11:00&#39;), close: Temporal.Time.from(&#39;20:30&#39;) },
-  /* Wed */ { open: Temporal.Time.from(&#39;11:00&#39;), close: Temporal.Time.from(&#39;20:30&#39;) },
-  /* Thu */ { open: Temporal.Time.from(&#39;11:00&#39;), close: Temporal.Time.from(&#39;22:00&#39;) },
-  /* Fri */ { open: Temporal.Time.from(&#39;11:00&#39;), close: Temporal.Time.from(&#39;00:00&#39;) },
-  /* Sat */ { open: Temporal.Time.from(&#39;11:00&#39;), close: Temporal.Time.from(&#39;02:00&#39;) }
-];
+<span class="token comment">// For example, a restaurant or bar might have opening hours that go past</span>
+<span class="token comment">// midnight; make sure this is handled correctly</span>
+<span class="token keyword">const</span> businessHours <span class="token operator">=</span> <span class="token punctuation">[</span>
+  <span class="token comment">/* Sun */</span> <span class="token punctuation">{</span> open<span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'13:00'</span><span class="token punctuation">)</span><span class="token punctuation">,</span> close<span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'20:30'</span><span class="token punctuation">)</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token comment">/* Mon */</span> <span class="token keyword">null</span><span class="token punctuation">,</span> <span class="token comment">// closed Mondays</span>
+  <span class="token comment">/* Tue */</span> <span class="token punctuation">{</span> open<span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'11:00'</span><span class="token punctuation">)</span><span class="token punctuation">,</span> close<span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'20:30'</span><span class="token punctuation">)</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token comment">/* Wed */</span> <span class="token punctuation">{</span> open<span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'11:00'</span><span class="token punctuation">)</span><span class="token punctuation">,</span> close<span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'20:30'</span><span class="token punctuation">)</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token comment">/* Thu */</span> <span class="token punctuation">{</span> open<span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'11:00'</span><span class="token punctuation">)</span><span class="token punctuation">,</span> close<span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'22:00'</span><span class="token punctuation">)</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token comment">/* Fri */</span> <span class="token punctuation">{</span> open<span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'11:00'</span><span class="token punctuation">)</span><span class="token punctuation">,</span> close<span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'00:00'</span><span class="token punctuation">)</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token comment">/* Sat */</span> <span class="token punctuation">{</span> open<span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'11:00'</span><span class="token punctuation">)</span><span class="token punctuation">,</span> close<span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'02:00'</span><span class="token punctuation">)</span> <span class="token punctuation">}</span>
+<span class="token punctuation">]</span><span class="token punctuation">;</span>
 
-const now = Temporal.Absolute.from(&#39;2019-04-07T00:00+01:00[Europe/Berlin]&#39;);
-const tz = Temporal.TimeZone.from(&#39;Europe/Berlin&#39;);
-const saturdayNightState = getBusinessOpenStateText(now, tz, businessHours, Temporal.Duration.from({ minutes: 30 }));
-assert.equal(saturdayNightState, &#39;open&#39;);</code></pre>
-<h3 id="nth-weekday-of-the-month">Nth weekday of the month</h3>
-<p>Example of getting a <code>Temporal.Date</code> representing the first Tuesday of the given <code>Temporal.YearMonth</code>, adaptable to other weekdays.</p>
-<pre><code class="language-javascript">/**
+<span class="token keyword">const</span> now <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Absolute<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2019-04-07T00:00+01:00[Europe/Berlin]'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> tz <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'Europe/Berlin'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> saturdayNightState <span class="token operator">=</span> <span class="token function">getBusinessOpenStateText</span><span class="token punctuation">(</span>now<span class="token punctuation">,</span> tz<span class="token punctuation">,</span> businessHours<span class="token punctuation">,</span> Temporal<span class="token punctuation">.</span>Duration<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> minutes<span class="token operator">:</span> <span class="token number">30</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+assert<span class="token punctuation">.</span><span class="token function">equal</span><span class="token punctuation">(</span>saturdayNightState<span class="token punctuation">,</span> <span class="token string">'open'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre><h3 id="nth-weekday-of-the-month"><a class="heading-link" href="#nth-weekday-of-the-month"></a>Nth weekday of the month</h3><p>Example of getting a <code>Temporal.Date</code> representing the first Tuesday of the given <code>Temporal.YearMonth</code>, adaptable to other weekdays.</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">/**
  * Gets the first Tuesday of the month and returns its date
  *
  * @param {Temporal.YearMonth} queriedMonth - YearMonth instance to query
  * @returns {Temporal.Date} Temporal.Date Instance which gives first tuesday
- */
-function getFirstTuesday(queriedMonth) {
-  // We first need to convert to a date
-  const firstOfMonth = queriedMonth.withDay(1);
+ */</span>
+<span class="token keyword">function</span> <span class="token function">getFirstTuesday</span><span class="token punctuation">(</span><span class="token parameter">queriedMonth</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// We first need to convert to a date</span>
+  <span class="token keyword">const</span> firstOfMonth <span class="token operator">=</span> queriedMonth<span class="token punctuation">.</span><span class="token function">withDay</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-  // We have Monday = 1, Sunday = 7, and we want to add a positive number
-  // smaller than 7 to get to the first Tuesday.
-  // If we&#39;re already on a Tuesday (2) then we want to add 0.
-  // So for the first of the month being a Monday through Sunday the additions are:
-  //    1, 0, 6, 5, 4, 3, 2 which is given by that formula.
-  // This lookup table makes this example easier to read, but you can also
-  // calculate the answer: (7 + desiredWeekday - firstOfMonth.dayOfWeek) % 7
-  return firstOfMonth.plus({ days: [1, 0, 6, 5, 4, 3, 2][firstOfMonth.dayOfWeek - 1] });
-}
+  <span class="token comment">// We have Monday = 1, Sunday = 7, and we want to add a positive number</span>
+  <span class="token comment">// smaller than 7 to get to the first Tuesday.</span>
+  <span class="token comment">// If we're already on a Tuesday (2) then we want to add 0.</span>
+  <span class="token comment">// So for the first of the month being a Monday through Sunday the additions are:</span>
+  <span class="token comment">//    1, 0, 6, 5, 4, 3, 2 which is given by that formula.</span>
+  <span class="token comment">// This lookup table makes this example easier to read, but you can also</span>
+  <span class="token comment">// calculate the answer: (7 + desiredWeekday - firstOfMonth.dayOfWeek) % 7</span>
+  <span class="token keyword">return</span> firstOfMonth<span class="token punctuation">.</span><span class="token function">plus</span><span class="token punctuation">(</span><span class="token punctuation">{</span> days<span class="token operator">:</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">6</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">[</span>firstOfMonth<span class="token punctuation">.</span>dayOfWeek <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">]</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
 
-const myMonth = Temporal.YearMonth.from(&#39;2020-02&#39;);
-const firstTuesdayOfMonth = getFirstTuesday(myMonth);
-assert.equal(firstTuesdayOfMonth.toString(), &#39;2020-02-04&#39;);
-assert.equal(firstTuesdayOfMonth.dayOfWeek, 2);</code></pre>
-    <footer>
+<span class="token keyword">const</span> myMonth <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>YearMonth<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-02'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> firstTuesdayOfMonth <span class="token operator">=</span> <span class="token function">getFirstTuesday</span><span class="token punctuation">(</span>myMonth<span class="token punctuation">)</span><span class="token punctuation">;</span>
+assert<span class="token punctuation">.</span><span class="token function">equal</span><span class="token punctuation">(</span>firstTuesdayOfMonth<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token string">'2020-02-04'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+assert<span class="token punctuation">.</span><span class="token function">equal</span><span class="token punctuation">(</span>firstTuesdayOfMonth<span class="token punctuation">.</span>dayOfWeek<span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>    <footer>
       <p>
         This page includes a script which loads an implementation of Temporal in your browser.
         You can open a console in your browser's developer tools and try it out directly!
       </p>
       <p>View this or help contribute on <a href="https://github.com/tc39/proposal-temporal">GitHub</a>.</p>
     </footer>
-    <script>
-      // Add permalinks to all <h3> elements (function documentation headings)
-      const h3s = document.getElementsByTagName('h3');
-      for (let h3 of h3s) {
-        const anchor = document.createElement('a');
-        anchor.className = 'heading-link';
-
-        // Use the **function name** as the link ID, otherwise fall back to the
-        // ID generated by markdown
-        let id = h3.getAttribute('id');
-        const bold = h3.getElementsByTagName('strong');
-        if (bold[0]) {
-          id = bold[0].textContent.replace(/[^a-zA-Z]/g, '-');
-          h3.setAttribute('id', id);
-        }
-
-        anchor.setAttribute('href', `#${id}`);
-        h3.prepend(anchor);
-      };
-    </script>
   </body>
 </html>
