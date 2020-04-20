@@ -1,15 +1,17 @@
 import { ES } from './ecmascript.mjs';
 import { GetIntrinsic, MakeIntrinsicClass } from './intrinsicclass.mjs';
-import { ISO_YEAR, ISO_MONTH, CreateSlots, GetSlot, SetSlot } from './slots.mjs';
+import { ISO_YEAR, ISO_MONTH, REF_ISO_DAY, CreateSlots, GetSlot, SetSlot } from './slots.mjs';
 
 export class YearMonth {
-  constructor(isoYear, isoMonth) {
+  constructor(isoYear, isoMonth, refISODay = 1) {
     isoYear = ES.ToInteger(isoYear);
     isoMonth = ES.ToInteger(isoMonth);
-    ES.RejectYearMonth(isoYear, isoMonth);
+    refISODay = ES.ToInteger(refISODay);
+    ES.RejectYearMonth(isoYear, isoMonth, refISODay);
     CreateSlots(this);
     SetSlot(this, ISO_YEAR, isoYear);
     SetSlot(this, ISO_MONTH, isoMonth);
+    SetSlot(this, REF_ISO_DAY, refISODay);
   }
   get year() {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
@@ -152,25 +154,29 @@ export class YearMonth {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
     return {
       year: GetSlot(this, ISO_YEAR),
-      month: GetSlot(this, ISO_MONTH)
+      month: GetSlot(this, ISO_MONTH),
+      refISODay: GetSlot(this, REF_ISO_DAY)
     };
   }
   static from(item, options = undefined) {
     const disambiguation = ES.ToTemporalDisambiguation(options);
-    let year, month;
+    let year, month, refISODay;
     if (typeof item === 'object' && item) {
       if (ES.IsTemporalYearMonth(item)) {
         year = GetSlot(item, ISO_YEAR);
         month = GetSlot(item, ISO_MONTH);
+        refISODay = GetSlot(item, REF_ISO_DAY);
       } else {
         // Intentionally alphabetical
         ({ year, month } = ES.ToRecord(item, [['month'], ['year']]));
+        refISODay = 1;
       }
     } else {
       ({ year, month } = ES.ParseTemporalYearMonthString(ES.ToString(item)));
+      refISODay = 1;
     }
     ({ year, month } = ES.RegulateYearMonth(year, month, disambiguation));
-    const result = new this(year, month);
+    const result = new this(year, month, refISODay);
     if (!ES.IsTemporalYearMonth(result)) throw new TypeError('invalid result');
     return result;
   }

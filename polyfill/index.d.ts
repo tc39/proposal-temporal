@@ -325,6 +325,7 @@ export namespace Temporal {
   export type MonthDayISOCalendarFields = {
     month: number;
     day: number;
+    refISOYear: number;
   };
 
   /**
@@ -437,6 +438,7 @@ export namespace Temporal {
   export type YearMonthISOCalendarFields = {
     year: number;
     month: number;
+    refISODay: number;
   };
 
   /**

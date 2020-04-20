@@ -1,17 +1,18 @@
 import { ES } from './ecmascript.mjs';
 import { GetIntrinsic, MakeIntrinsicClass } from './intrinsicclass.mjs';
-import { ISO_MONTH, ISO_DAY, CreateSlots, GetSlot, SetSlot } from './slots.mjs';
+import { ISO_MONTH, ISO_DAY, REF_ISO_YEAR, CreateSlots, GetSlot, SetSlot } from './slots.mjs';
 
 export class MonthDay {
-  constructor(isoMonth, isoDay) {
+  constructor(isoMonth, isoDay, refISOYear = 1972) {
     isoMonth = ES.ToInteger(isoMonth);
     isoDay = ES.ToInteger(isoDay);
-    const leapYear = 1972; // XXX #261 leap year
-    ES.RejectDate(leapYear, isoMonth, isoDay);
+    refISOYear = ES.ToInteger(refISOYear);
+    ES.RejectDate(refISOYear, isoMonth, isoDay);
 
     CreateSlots(this);
     SetSlot(this, ISO_MONTH, isoMonth);
     SetSlot(this, ISO_DAY, isoDay);
+    SetSlot(this, REF_ISO_YEAR, refISOYear);
   }
 
   get month() {
@@ -83,25 +84,29 @@ export class MonthDay {
     if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
     return {
       month: GetSlot(this, ISO_MONTH),
-      day: GetSlot(this, ISO_DAY)
+      day: GetSlot(this, ISO_DAY),
+      refISOYear: GetSlot(this, REF_ISO_YEAR)
     };
   }
   static from(item, options = undefined) {
     const disambiguation = ES.ToTemporalDisambiguation(options);
-    let month, day;
+    let month, day, refISOYear;
     if (typeof item === 'object' && item) {
       if (ES.IsTemporalMonthDay(item)) {
         month = GetSlot(item, ISO_MONTH);
         day = GetSlot(item, ISO_DAY);
+        refISOYear = GetSlot(item, REF_ISO_YEAR);
       } else {
         // Intentionally alphabetical
         ({ month, day } = ES.ToRecord(item, [['day'], ['month']]));
+        refISOYear = 1972;
       }
     } else {
       ({ month, day } = ES.ParseTemporalMonthDayString(ES.ToString(item)));
+      refISOYear = 1972;
     }
     ({ month, day } = ES.RegulateMonthDay(month, day, disambiguation));
-    const result = new this(month, day);
+    const result = new this(month, day, refISOYear);
     if (!ES.IsTemporalMonthDay(result)) throw new TypeError('invalid result');
     return result;
   }

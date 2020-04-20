@@ -20,6 +20,8 @@ import {
   MILLISECOND,
   MICROSECOND,
   NANOSECOND,
+  REF_ISO_YEAR,
+  REF_ISO_DAY,
   YEARS,
   MONTHS,
   DAYS,
@@ -52,8 +54,8 @@ export const ES = ObjectAssign({}, ES2019, {
     !HasSlot(item, ISO_YEAR, ISO_MONTH, ISO_DAY),
   IsTemporalDateTime: (item) =>
     HasSlot(item, ISO_YEAR, ISO_MONTH, ISO_DAY, HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND),
-  IsTemporalYearMonth: (item) => HasSlot(item, ISO_YEAR, ISO_MONTH) && !HasSlot(item, ISO_DAY),
-  IsTemporalMonthDay: (item) => HasSlot(item, ISO_MONTH, ISO_DAY) && !HasSlot(item, ISO_YEAR),
+  IsTemporalYearMonth: (item) => HasSlot(item, ISO_YEAR, ISO_MONTH, REF_ISO_DAY),
+  IsTemporalMonthDay: (item) => HasSlot(item, ISO_MONTH, ISO_DAY, REF_ISO_YEAR),
   ToTemporalTimeZone: (item) => {
     if (ES.IsTemporalTimeZone(item)) return item;
     const TimeZone = GetIntrinsic('%Temporal.TimeZone%');
@@ -282,9 +284,10 @@ export const ES = ObjectAssign({}, ES2019, {
     return { hour, minute, second, millisecond, microsecond, nanosecond };
   },
   RegulateYearMonth: (year, month, disambiguation) => {
+    const refISODay = 1;
     switch (disambiguation) {
       case 'reject':
-        ES.RejectYearMonth(year, month);
+        ES.RejectYearMonth(year, month, refISODay);
         break;
       case 'constrain':
         ({ year, month } = ES.ConstrainYearMonth(year, month));
@@ -292,22 +295,22 @@ export const ES = ObjectAssign({}, ES2019, {
       case 'balance':
         ({ year, month } = ES.BalanceYearMonth(year, month));
         // Still rejected if balanced YearMonth is outside valid range
-        ES.RejectYearMonth(year, month);
+        ES.RejectYearMonth(year, month, refISODay);
         break;
     }
     return { year, month };
   },
   RegulateMonthDay: (month, day, disambiguation) => {
-    const leapYear = 1972;
+    const refISOYear = 1972;
     switch (disambiguation) {
       case 'reject':
-        ES.RejectDate(leapYear, month, day);
+        ES.RejectDate(refISOYear, month, day);
         break;
       case 'constrain':
-        ({ month, day } = ES.ConstrainDate(leapYear, month, day));
+        ({ month, day } = ES.ConstrainDate(refISOYear, month, day));
         break;
       case 'balance':
-        ({ month, day } = ES.BalanceDate(leapYear, month, day));
+        ({ month, day } = ES.BalanceDate(refISOYear, month, day));
         break;
     }
     return { month, day };
@@ -1034,7 +1037,7 @@ export const ES = ObjectAssign({}, ES2019, {
       throw new RangeError('Absolute outside of supported range');
     }
   },
-  RejectYearMonth: (year, month) => {
+  RejectYearMonth: (year, month, refISODay) => {
     ES.RejectToRange(year, YEAR_MIN, YEAR_MAX);
     if (year === YEAR_MIN) {
       ES.RejectToRange(month, 4, 12);
@@ -1043,6 +1046,7 @@ export const ES = ObjectAssign({}, ES2019, {
     } else {
       ES.RejectToRange(month, 1, 12);
     }
+    ES.RejectToRange(refISODay, 1, ES.DaysInMonth(year, month));
   },
 
   DifferenceDate: (smaller, larger, largestUnit = 'days') => {

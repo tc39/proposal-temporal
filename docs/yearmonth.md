@@ -13,19 +13,21 @@ A `Temporal.YearMonth` can be converted into a `Temporal.Date` by combining it w
 
 ## Constructor
 
-### **new Temporal.YearMonth**(_isoYear_: number, _isoMonth_: number) : Temporal.YearMonth
+### **new Temporal.YearMonth**(_isoYear_: number, _isoMonth_: number, _refISODay_: number = 1) : Temporal.YearMonth
 
 **Parameters:**
 - `isoYear` (number): A year.
 - `isoMonth` (number): A month, ranging between 1 and 12 inclusive.
+- `refISODay` (optional number): A reference day, used for disambiguation when implementing other calendar systems.
+  You can omit this parameter unless using a non-ISO-8601 calendar.
 
 **Returns:** a new `Temporal.YearMonth` object.
 
-Use this constructor if you have the correct parameters already as individual number values.
+Use this constructor if you have the correct parameters already as individual number values, or you are implementing a custom calendar.
 Otherwise, `Temporal.YearMonth.from()`, which accepts more kinds of input and allows disambiguation behaviour, is probably more convenient.
 
 All values are given as reckoned in the [ISO 8601 calendar](https://en.wikipedia.org/wiki/ISO_8601#Dates).
-Together, `isoYear` and `isoMonth` must represent a valid month in that calendar.
+Together, `isoYear`, `isoMonth`, and `refISODay` must represent a valid date in that calendar.
 
 The range of allowed values for this type is exactly enough that calling [`getYearMonth()`](./date.html#getYearMonth) on any valid `Temporal.Date` will succeed.
 If `isoYear` and `isoMonth` are outside of this range, then `constrain` mode will clamp the date to the limit of the allowed range.
@@ -452,7 +454,7 @@ Object.assign({}, ym).year  // => undefined
 Object.assign({}, ym.getFields()).year  // => 2019
 ```
 
-### yearMonth.**getISOCalendarFields**(): { year: number, month: number }
+### yearMonth.**getISOCalendarFields**(): { year: number, month: number, refISODay: number }
 
 **Returns:** a plain object with properties expressing `yearMonth` in the ISO 8601 calendar.
 
