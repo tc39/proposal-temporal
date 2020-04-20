@@ -1,9 +1,9 @@
 import { ES } from './ecmascript.mjs';
 import { GetIntrinsic, MakeIntrinsicClass } from './intrinsicclass.mjs';
 import {
-  YEAR,
-  MONTH,
-  DAY,
+  ISO_YEAR,
+  ISO_MONTH,
+  ISO_DAY,
   HOUR,
   MINUTE,
   SECOND,
@@ -22,45 +22,45 @@ export class Date {
     day = ES.ToInteger(day);
     ES.RejectDate(year, month, day);
     CreateSlots(this);
-    SetSlot(this, YEAR, year);
-    SetSlot(this, MONTH, month);
-    SetSlot(this, DAY, day);
+    SetSlot(this, ISO_YEAR, year);
+    SetSlot(this, ISO_MONTH, month);
+    SetSlot(this, ISO_DAY, day);
   }
   get year() {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
-    return GetSlot(this, YEAR);
+    return GetSlot(this, ISO_YEAR);
   }
   get month() {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
-    return GetSlot(this, MONTH);
+    return GetSlot(this, ISO_MONTH);
   }
   get day() {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
-    return GetSlot(this, DAY);
+    return GetSlot(this, ISO_DAY);
   }
   get dayOfWeek() {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
-    return ES.DayOfWeek(GetSlot(this, YEAR), GetSlot(this, MONTH), GetSlot(this, DAY));
+    return ES.DayOfWeek(GetSlot(this, ISO_YEAR), GetSlot(this, ISO_MONTH), GetSlot(this, ISO_DAY));
   }
   get dayOfYear() {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
-    return ES.DayOfYear(GetSlot(this, YEAR), GetSlot(this, MONTH), GetSlot(this, DAY));
+    return ES.DayOfYear(GetSlot(this, ISO_YEAR), GetSlot(this, ISO_MONTH), GetSlot(this, ISO_DAY));
   }
   get weekOfYear() {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
-    return ES.WeekOfYear(GetSlot(this, YEAR), GetSlot(this, MONTH), GetSlot(this, DAY));
+    return ES.WeekOfYear(GetSlot(this, ISO_YEAR), GetSlot(this, ISO_MONTH), GetSlot(this, ISO_DAY));
   }
   get daysInYear() {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
-    return ES.LeapYear(GetSlot(this, YEAR)) ? 366 : 365;
+    return ES.LeapYear(GetSlot(this, ISO_YEAR)) ? 366 : 365;
   }
   get daysInMonth() {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
-    return ES.DaysInMonth(GetSlot(this, YEAR), GetSlot(this, MONTH));
+    return ES.DaysInMonth(GetSlot(this, ISO_YEAR), GetSlot(this, ISO_MONTH));
   }
   get isLeapYear() {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
-    return ES.LeapYear(GetSlot(this, YEAR));
+    return ES.LeapYear(GetSlot(this, ISO_YEAR));
   }
   with(temporalDateLike = {}, options) {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
@@ -69,7 +69,7 @@ export class Date {
     if (!props) {
       throw new RangeError('invalid date-like');
     }
-    let { year = GetSlot(this, YEAR), month = GetSlot(this, MONTH), day = GetSlot(this, DAY) } = props;
+    let { year = GetSlot(this, ISO_YEAR), month = GetSlot(this, ISO_MONTH), day = GetSlot(this, ISO_DAY) } = props;
     ({ year, month, day } = ES.RegulateDate(year, month, day, disambiguation));
     const Construct = ES.SpeciesConstructor(this, Date);
     const result = new Construct(year, month, day);
@@ -133,9 +133,9 @@ export class Date {
   }
   toString() {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
-    let year = ES.ISOYearString(GetSlot(this, YEAR));
-    let month = ES.ISODateTimePartString(GetSlot(this, MONTH));
-    let day = ES.ISODateTimePartString(GetSlot(this, DAY));
+    let year = ES.ISOYearString(GetSlot(this, ISO_YEAR));
+    let month = ES.ISODateTimePartString(GetSlot(this, ISO_MONTH));
+    let day = ES.ISODateTimePartString(GetSlot(this, ISO_DAY));
     let resultString = `${year}-${month}-${day}`;
     return resultString;
   }
@@ -146,9 +146,9 @@ export class Date {
   withTime(temporalTime) {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
     if (!ES.IsTemporalTime(temporalTime)) throw new TypeError('invalid Temporal.Time object');
-    const year = GetSlot(this, YEAR);
-    const month = GetSlot(this, MONTH);
-    const day = GetSlot(this, DAY);
+    const year = GetSlot(this, ISO_YEAR);
+    const month = GetSlot(this, ISO_MONTH);
+    const day = GetSlot(this, ISO_DAY);
     const hour = GetSlot(temporalTime, HOUR);
     const minute = GetSlot(temporalTime, MINUTE);
     const second = GetSlot(temporalTime, SECOND);
@@ -161,12 +161,12 @@ export class Date {
   getYearMonth() {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
     const YearMonth = GetIntrinsic('%Temporal.YearMonth%');
-    return new YearMonth(GetSlot(this, YEAR), GetSlot(this, MONTH));
+    return new YearMonth(GetSlot(this, ISO_YEAR), GetSlot(this, ISO_MONTH));
   }
   getMonthDay() {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
     const MonthDay = GetIntrinsic('%Temporal.MonthDay%');
-    return new MonthDay(GetSlot(this, MONTH), GetSlot(this, DAY));
+    return new MonthDay(GetSlot(this, ISO_MONTH), GetSlot(this, ISO_DAY));
   }
   getFields() {
     const fields = ES.ToRecord(this, [['day'], ['month'], ['year']]);
@@ -178,9 +178,9 @@ export class Date {
     let year, month, day;
     if (typeof item === 'object' && item) {
       if (ES.IsTemporalDate(item)) {
-        year = GetSlot(item, YEAR);
-        month = GetSlot(item, MONTH);
-        day = GetSlot(item, DAY);
+        year = GetSlot(item, ISO_YEAR);
+        month = GetSlot(item, ISO_MONTH);
+        day = GetSlot(item, ISO_DAY);
       } else {
         // Intentionally alphabetical
         ({ year, month, day } = ES.ToRecord(item, [['day'], ['month'], ['year']]));

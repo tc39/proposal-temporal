@@ -2,9 +2,9 @@ import { ES } from './ecmascript.mjs';
 import { GetIntrinsic, MakeIntrinsicClass } from './intrinsicclass.mjs';
 
 import {
-  YEAR,
-  MONTH,
-  DAY,
+  ISO_YEAR,
+  ISO_MONTH,
+  ISO_DAY,
   HOUR,
   MINUTE,
   SECOND,
@@ -213,9 +213,9 @@ export class Time {
   withDate(temporalDate) {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
     if (!ES.IsTemporalDate(temporalDate)) throw new TypeError('invalid Temporal.Date object');
-    const year = GetSlot(temporalDate, YEAR);
-    const month = GetSlot(temporalDate, MONTH);
-    const day = GetSlot(temporalDate, DAY);
+    const year = GetSlot(temporalDate, ISO_YEAR);
+    const month = GetSlot(temporalDate, ISO_MONTH);
+    const day = GetSlot(temporalDate, ISO_DAY);
     const hour = GetSlot(this, HOUR);
     const minute = GetSlot(this, MINUTE);
     const second = GetSlot(this, SECOND);
