@@ -120,6 +120,8 @@
 </ul>
 </li>
 <li><a href="#arithmetic">Arithmetic</a><ul>
+<li><a href="#unit-constrained-duration-between-now-and-a-pastfuture-zoned-event">Unit-constrained duration between now and a past/future zoned event</a></li>
+<li><a href="#comparison-of-an-instant-to-business-hours">Comparison of an instant to business hours</a></li>
 <li><a href="#nth-weekday-of-the-month">Nth weekday of the month</a></li>
 </ul>
 </li>
@@ -433,6 +435,99 @@ const { sign, duration } = getElapsedDurationSinceInstant(
   Temporal.now.absolute()
 );
 `It&#39;s ${duration.toLocaleString()} ${sign &lt; 0 ? &#39;until&#39; : &#39;since&#39;} the TC39 Temporal presentation`;</code></pre>
+<h3 id="comparison-of-an-instant-to-business-hours">Comparison of an instant to business hours</h3>
+<p>This example takes a roster of opening and closing times for a business, and maps a localized date and time of day into a time-sensitive state indicator (&quot;opening soon&quot; vs. &quot;open&quot; vs. &quot;closing soon&quot; vs. &quot;closed&quot;).</p>
+<pre><code class="language-javascript">/**
+ * Compare the given time to the business hours of a business located in a
+ * particular time zone, and return a string indicating whether the business is
+ * open, closed, opening soon, or closing soon. The length of &quot;soon&quot; can be
+ * controlled using the `soonWindow` parameter.
+ *
+ * @param {Temporal.Absolute} now - Time at which to consider whether the
+ *  business is open
+ * @param {Temporal.TimeZone} timeZone - Time zone in which the business is
+ *  located
+ * @param {(Object|null)[]} businessHours - Array of length 7 indicating
+ *  business hours during the week
+ * @param {Temporal.Time} businessHours[].open - Time at which the business
+ *  opens
+ * @param {Temporal.Time} businessHours[].close - Time at which the business
+ *  closes
+ * @param {Temporal.Duration} soonWindow - Length of time before the opening or
+ *  closing time during which the business should be considered &quot;opening soon&quot;
+ *  or &quot;closing soon&quot;
+ * @returns {string} &quot;open&quot;, &quot;closed&quot;, &quot;opening soon&quot;, or &quot;closing soon&quot;
+ */
+function getBusinessOpenStateText(now, timeZone, businessHours, soonWindow) {
+  function inRange(dateTime, start, end) {
+    return Temporal.DateTime.compare(dateTime, start) &gt;= 0 &amp;&amp; Temporal.DateTime.compare(dateTime, end) &lt; 0;
+  }
+
+  const dateTime = now.inTimeZone(timeZone);
+  const weekday = dateTime.dayOfWeek % 7; // convert to 0-based, for array indexing
+
+  // Because of times wrapping around at midnight, we may need to consider
+  // yesterday&#39;s and tomorrow&#39;s hours as well
+  const today = dateTime.getDate();
+  const yesterday = today.minus({ days: 1 });
+  const tomorrow = today.plus({ days: 1 });
+
+  // Push any of the businessHours that overlap today&#39;s date into an array,
+  // that we will subsequently check. Convert the businessHours Times into
+  // DateTimes so that they no longer wrap around.
+  const businessHoursOverlappingToday = [];
+  const yesterdayHours = businessHours[(weekday + 6) % 7];
+  if (yesterdayHours) {
+    const { open, close } = yesterdayHours;
+    if (Temporal.Time.compare(close, open) &lt; 0) {
+      businessHoursOverlappingToday.push({
+        open: yesterday.withTime(open),
+        close: today.withTime(close)
+      });
+    }
+  }
+  const todayHours = businessHours[weekday];
+  if (todayHours) {
+    const { open, close } = todayHours;
+    businessHoursOverlappingToday.push({
+      open: today.withTime(open),
+      close: (Temporal.Time.compare(close, open) &gt;= 0 ? today : tomorrow).withTime(close)
+    });
+  }
+
+  // Check if any of the candidate business hours include the given time
+  const soon = dateTime.plus(soonWindow);
+  let openNow = false;
+  let openSoon = false;
+  for (const { open, close } of businessHoursOverlappingToday) {
+    openNow = openNow || inRange(dateTime, open, close);
+    openSoon = openSoon || inRange(soon, open, close);
+  }
+
+  if (openNow) {
+    if (!openSoon) return &#39;closing soon&#39;;
+    return &#39;open&#39;;
+  }
+  if (openSoon) return &#39;opening soon&#39;;
+  return &#39;closed&#39;;
+}
+
+// For example, a restaurant or bar might have opening hours that go past
+// midnight; make sure this is handled correctly
+const businessHours = [
+  /* Sun */ { open: Temporal.Time.from(&#39;13:00&#39;), close: Temporal.Time.from(&#39;20:30&#39;) },
+  /* Mon */ null, // closed Mondays
+  /* Tue */ { open: Temporal.Time.from(&#39;11:00&#39;), close: Temporal.Time.from(&#39;20:30&#39;) },
+  /* Wed */ { open: Temporal.Time.from(&#39;11:00&#39;), close: Temporal.Time.from(&#39;20:30&#39;) },
+  /* Thu */ { open: Temporal.Time.from(&#39;11:00&#39;), close: Temporal.Time.from(&#39;22:00&#39;) },
+  /* Fri */ { open: Temporal.Time.from(&#39;11:00&#39;), close: Temporal.Time.from(&#39;00:00&#39;) },
+  /* Sat */ { open: Temporal.Time.from(&#39;11:00&#39;), close: Temporal.Time.from(&#39;02:00&#39;) }
+];
+
+const now = Temporal.Absolute.from(&#39;2019-04-07T00:00+01:00[Europe/Berlin]&#39;);
+const tz = Temporal.TimeZone.from(&#39;Europe/Berlin&#39;);
+const saturdayNightState = getBusinessOpenStateText(now, tz, businessHours, Temporal.Duration.from({ minutes: 30 }));
+assert.equal(saturdayNightState, &#39;open&#39;);</code></pre>
 <h3 id="nth-weekday-of-the-month">Nth weekday of the month</h3>
 <p>Example of getting a <code>Temporal.Date</code> representing the first Tuesday of the given <code>Temporal.YearMonth</code>, adaptable to other weekdays.</p>
 <pre><code class="language-javascript">/**
