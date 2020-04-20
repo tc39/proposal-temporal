@@ -10,8 +10,7 @@ export const now = {
 };
 
 function absolute() {
-  const ns = ES.SystemUTCEpochNanoSeconds();
-  return new Absolute(ns);
+  return new Absolute(ES.SystemUTCEpochNanoSeconds());
 }
 function dateTime(temporalTimeZoneLike = timeZone()) {
   const timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);
