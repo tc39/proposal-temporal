@@ -2,7 +2,7 @@
 export const EPOCHNANOSECONDS = 'slot-epochNanoSeconds';
 
 // TimeZone
-export const IDENTIFIER = 'slot-identifier';
+export const TIMEZONE_ID = 'slot-timezone-identifier';
 
 // DateTime, Date, Time, YearMonth, MonthDay
 export const ISO_YEAR = 'slot-year';
