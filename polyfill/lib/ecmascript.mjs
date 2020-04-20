@@ -791,8 +791,7 @@ export const ES = ObjectAssign({}, ES2019, {
       return null;
     }
 
-    const current = new TemporalAbsolute(ES.SystemUTCEpochNanoSeconds());
-    const uppercap = current.plus({ days: 366 }).getEpochNanoseconds();
+    const uppercap = ES.SystemUTCEpochNanoSeconds() + 366 * DAYMILLIS * 1e6;
     let leftNanos = epochNanoseconds;
     let leftOffset = ES.GetTimeZoneOffsetString(leftNanos, timeZone);
     let rightNanos = leftNanos;
