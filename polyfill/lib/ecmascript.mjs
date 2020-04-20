@@ -11,9 +11,9 @@ import {
   HasSlot,
   EPOCHNANOSECONDS,
   IDENTIFIER,
-  YEAR,
-  MONTH,
-  DAY,
+  ISO_YEAR,
+  ISO_MONTH,
+  ISO_DAY,
   HOUR,
   MINUTE,
   SECOND,
@@ -45,13 +45,15 @@ export const ES = ObjectAssign({}, ES2019, {
   IsTemporalDuration: (item) =>
     HasSlot(item, YEARS, MONTHS, DAYS, HOURS, MINUTES, SECONDS, MILLISECONDS, MICROSECONDS, NANOSECONDS),
   IsTemporalDate: (item) =>
-    HasSlot(item, YEAR, MONTH, DAY) && !HasSlot(item, HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND),
+    HasSlot(item, ISO_YEAR, ISO_MONTH, ISO_DAY) &&
+    !HasSlot(item, HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND),
   IsTemporalTime: (item) =>
-    HasSlot(item, HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND) && !HasSlot(item, YEAR, MONTH, DAY),
+    HasSlot(item, HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND) &&
+    !HasSlot(item, ISO_YEAR, ISO_MONTH, ISO_DAY),
   IsTemporalDateTime: (item) =>
-    HasSlot(item, YEAR, MONTH, DAY, HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND),
-  IsTemporalYearMonth: (item) => HasSlot(item, YEAR, MONTH) && !HasSlot(item, DAY),
-  IsTemporalMonthDay: (item) => HasSlot(item, MONTH, DAY) && !HasSlot(item, YEAR),
+    HasSlot(item, ISO_YEAR, ISO_MONTH, ISO_DAY, HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND),
+  IsTemporalYearMonth: (item) => HasSlot(item, ISO_YEAR, ISO_MONTH) && !HasSlot(item, ISO_DAY),
+  IsTemporalMonthDay: (item) => HasSlot(item, ISO_MONTH, ISO_DAY) && !HasSlot(item, ISO_YEAR),
   ToTemporalTimeZone: (item) => {
     if (ES.IsTemporalTimeZone(item)) return item;
     const TimeZone = GetIntrinsic('%Temporal.TimeZone%');

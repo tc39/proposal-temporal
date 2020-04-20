@@ -5,9 +5,9 @@ export const EPOCHNANOSECONDS = 'slot-epochNanoSeconds';
 export const IDENTIFIER = 'slot-identifier';
 
 // DateTime, Date, Time, YearMonth, MonthDay
-export const YEAR = 'slot-year';
-export const MONTH = 'slot-month';
-export const DAY = 'slot-day';
+export const ISO_YEAR = 'slot-year';
+export const ISO_MONTH = 'slot-month';
+export const ISO_DAY = 'slot-day';
 export const HOUR = 'slot-hour';
 export const MINUTE = 'slot-minute';
 export const SECOND = 'slot-second';
