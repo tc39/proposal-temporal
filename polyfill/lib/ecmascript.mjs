@@ -791,18 +791,17 @@ export const ES = ObjectAssign({}, ES2019, {
       return null;
     }
 
+    const uppercap = ES.SystemUTCEpochNanoSeconds() + 366 * DAYMILLIS * 1e6;
     let leftNanos = epochNanoseconds;
     let leftOffset = ES.GetTimeZoneOffsetString(leftNanos, timeZone);
     let rightNanos = leftNanos;
     let rightOffset = leftOffset;
-    let weeks = 0;
-    while (leftOffset === rightOffset && weeks < 104) {
-      rightNanos = bigInt(leftNanos).plus(7 * 24 * DAYMILLIS * 1e6);
+    while (leftOffset === rightOffset && bigInt(leftNanos).compare(uppercap) === -1) {
+      rightNanos = bigInt(leftNanos).plus(2 * 7 * DAYMILLIS * 1e6);
       rightOffset = ES.GetTimeZoneOffsetString(rightNanos, timeZone);
       if (leftOffset === rightOffset) {
         leftNanos = rightNanos;
       }
-      weeks++;
     }
     if (leftOffset === rightOffset) return null;
     const result = bisect(
