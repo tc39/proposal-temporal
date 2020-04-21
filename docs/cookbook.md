@@ -6,15 +6,7 @@
 
 ## Running the cookbook files
 
-Running cookbook files:
-
-```bash
-node --experimental-modules --no-warnings \
-	--icu-data-dir ./polyfill/node_modules/full-icu/ \
-	-r ./polyfill/index.js ./docs/cookbook/${cookbookFile}
-```
-
-_The above code allows `Temporal` to exist as a global object before the cookbook file runs._
+Running cookbook files: see instructions in ../polyfill/README.md
 
 ## Frequently Asked Questions
 
