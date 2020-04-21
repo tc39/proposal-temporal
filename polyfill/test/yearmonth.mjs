@@ -23,6 +23,9 @@ describe('YearMonth', () => {
       it('YearMonth.prototype.difference is a Function', () => {
         equal(typeof YearMonth.prototype.difference, 'function');
       });
+      it('YearMonth.prototype.getFields is a Function', () => {
+        equal(typeof YearMonth.prototype.getFields, 'function');
+      });
       it('YearMonth.prototype has daysInYear', () => {
         assert('daysInYear' in YearMonth.prototype);
       });
@@ -309,6 +312,27 @@ describe('YearMonth', () => {
       ['', 'CONSTRAIN', 'xyz', 3, null].forEach((disambiguation) =>
         throws(() => YearMonth.from(2019, 1).with({ month: 2 }, { disambiguation }), RangeError)
       );
+    });
+  });
+  describe('yearMonth.getFields() works', () => {
+    const ym1 = YearMonth.from('1976-11');
+    const fields = ym1.getFields();
+    it('fields', () => {
+      equal(fields.year, 1976);
+      equal(fields.month, 11);
+    });
+    it('enumerable', () => {
+      const fields2 = { ...fields };
+      equal(fields2.year, 1976);
+      equal(fields2.month, 11);
+    });
+    it('as input to from()', () => {
+      const ym2 = YearMonth.from(fields);
+      equal(YearMonth.compare(ym1, ym2), 0);
+    });
+    it('as input to with()', () => {
+      const ym2 = YearMonth.from('2019-06').with(fields);
+      equal(YearMonth.compare(ym1, ym2), 0);
     });
   });
 });

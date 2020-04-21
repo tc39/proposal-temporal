@@ -19,6 +19,11 @@ describe('MonthDay', () => {
       assert(MonthDay.prototype);
       equal(typeof MonthDay.prototype, 'object');
     });
+    describe('MonthDay.prototype', () => {
+      it('MonthDay.prototype.getFields is a Function', () => {
+        equal(typeof MonthDay.prototype.getFields, 'function');
+      });
+    });
     it('MonthDay.compare is a Function', () => {
       equal(typeof MonthDay.compare, 'function');
     });
@@ -150,6 +155,27 @@ describe('MonthDay', () => {
     it('converts a non-object argument to integer', () => {
       equal(`${md.withYear('2002')}`, '2002-01-22');
       equal(`${md.withYear(null)}`, '+000000-01-22');
+    });
+  });
+  describe('monthDay.getFields() works', () => {
+    const md1 = MonthDay.from('11-18');
+    const fields = md1.getFields();
+    it('fields', () => {
+      equal(fields.month, 11);
+      equal(fields.day, 18);
+    });
+    it('enumerable', () => {
+      const fields2 = { ...fields };
+      equal(fields2.month, 11);
+      equal(fields2.day, 18);
+    });
+    it('as input to from()', () => {
+      const md2 = MonthDay.from(fields);
+      equal(MonthDay.compare(md1, md2), 0);
+    });
+    it('as input to with()', () => {
+      const md2 = MonthDay.from('06-30').with(fields);
+      equal(MonthDay.compare(md1, md2), 0);
     });
   });
 });

@@ -256,6 +256,23 @@
       </emu-alg>
     </emu-clause>
 
+    <emu-clause id="sec-temporal.date.prototype.getfields">
+      <h1>Temporal.Date.prototype.getFields ( )</h1>
+      <p>
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _temporalDate_ be the *this* value.
+        1. Let _record_ be ? ToPartialDate(_temporalDate_).
+        1. Let _fields_ be ? ObjectCreate(%ObjectPrototype%).
+        1. For each row of <emu-xref href="#table-temporal-temporaldatelike-properties"></emu-xref>, except the header row, in table order, do
+          1. Let _p_ be the Property value of the current row.
+          1. Let _v_ be the value of _record_'s internal slot whose name is the Internal Slot value of the current row.
+          1. Perform ! CreateDataPropertyOrThrow(_fields_, _p_, _v_).
+        1. Return _fields_.
+      </emu-alg>
+    </emu-clause>
+
     <emu-clause id="sec-temporal.date.prototype.plus">
       <h1>Temporal.Date.prototype.plus ( _temporalDurationLike_ [ , _options_ ] )</h1>
       <p>

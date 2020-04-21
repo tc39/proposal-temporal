@@ -300,6 +300,20 @@ function yearsToMonths(duration) {
 yearsToMonths(threeYears).minus(yearsToMonths(oneAndAHalfYear))  // => P18M
 ```
 
+### duration.**getFields**() : { years: number, months: number, days: number, hours: number, minutes: number, seconds: number, milliseconds: number, microseconds: number, nanoseconds: number }
+
+**Returns:** a plain object with properties equal to the fields of `duration`.
+
+This method can be used to convert a `Temporal.Duration` into a record-like data structure.
+It returns a new plain JavaScript object, with all the fields as enumerable, writable, own data properties.
+
+Usage example:
+```javascript
+d = Temporal.Duration.from('P1Y2M3DT4H5M6.987654321S');
+Object.assign({}, d).days  // => undefined
+Object.assign({}, d.getFields()).days  // => 3
+```
+
 ### duration.**toString**() : string
 
 **Returns:** the duration as an ISO 8601 string.

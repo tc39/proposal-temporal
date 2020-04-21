@@ -66,6 +66,9 @@ describe('Date', () => {
       it('Date.prototype.getMonthDay is a Function', () => {
         equal(typeof Date.prototype.getMonthDay, 'function');
       });
+      it('Date.prototype.getFields is a Function', () => {
+        equal(typeof Date.prototype.getFields, 'function');
+      });
       it('Date.prototype.toString is a Function', () => {
         equal(typeof Date.prototype.toString, 'function');
       });
@@ -485,6 +488,29 @@ describe('Date', () => {
       equal(`${max.plus({ days: 1 })}`, '+275760-09-13');
       throws(() => min.minus({ days: 1 }, { disambiguation: 'reject' }), RangeError);
       throws(() => max.plus({ days: 1 }, { disambiguation: 'reject' }), RangeError);
+    });
+  });
+  describe('date.getFields() works', () => {
+    const d1 = Date.from('1976-11-18');
+    const fields = d1.getFields();
+    it('fields', () => {
+      equal(fields.year, 1976);
+      equal(fields.month, 11);
+      equal(fields.day, 18);
+    });
+    it('enumerable', () => {
+      const fields2 = { ...fields };
+      equal(fields2.year, 1976);
+      equal(fields2.month, 11);
+      equal(fields2.day, 18);
+    });
+    it('as input to from()', () => {
+      const d2 = Date.from(fields);
+      equal(Date.compare(d1, d2), 0);
+    });
+    it('as input to with()', () => {
+      const d2 = Date.from('2019-06-30').with(fields);
+      equal(Date.compare(d1, d2), 0);
     });
   });
 });
