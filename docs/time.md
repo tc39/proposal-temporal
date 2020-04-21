@@ -357,3 +357,17 @@ time = Temporal.Time.from('15:23:30.003');
 date = Temporal.Date.from('2006-08-24');
 time.withDate(date)  // => 2006-08-24T15:23:30.003
 ```
+
+### time.**getFields**() : { hour: number, minute: number, second: number, millisecond: number, microsecond: number, nanosecond: number }
+
+**Returns:** a plain object with properties equal to the fields of `time`.
+
+This method can be used to convert a `Temporal.Time` into a record-like data structure.
+It returns a new plain JavaScript object, with all the fields as enumerable, writable, own data properties.
+
+Usage example:
+```javascript
+time = Temporal.Time.from('15:23:30.003');
+Object.assign({}, time).minute  // => undefined
+Object.assign({}, time.getFields()).minute  // => 23
+```

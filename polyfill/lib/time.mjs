@@ -225,6 +225,18 @@ export class Time {
     const DateTime = GetIntrinsic('%Temporal.DateTime%');
     return new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
   }
+  getFields() {
+    const fields = ES.ToRecord(this, [
+      ['hour'],
+      ['microsecond'],
+      ['millisecond'],
+      ['minute'],
+      ['nanosecond'],
+      ['second']
+    ]);
+    if (!fields) throw new TypeError('invalid receiver');
+    return fields;
+  }
 
   static from(item, options = undefined) {
     const disambiguation = ES.ToTemporalDisambiguation(options);

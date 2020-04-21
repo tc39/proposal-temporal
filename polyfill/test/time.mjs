@@ -60,6 +60,9 @@ describe('Time', () => {
       it('Time.prototype.withDate is a Function', () => {
         equal(typeof Time.prototype.withDate, 'function');
       });
+      it('Time.prototype.getFields is a Function', () => {
+        equal(typeof Time.prototype.getFields, 'function');
+      });
       it('Time.prototype.toString is a Function', () => {
         equal(typeof Time.prototype.toString, 'function');
       });
@@ -537,6 +540,35 @@ describe('Time', () => {
 
     const iso = '20:18:32';
     it(`Temporal.Time.from("${iso}") === (${iso})`, () => equal(`${Time.from(iso)}`, iso));
+  });
+  describe('time.getFields() works', () => {
+    const t1 = Time.from('15:23:30.123456789');
+    const fields = t1.getFields();
+    it('fields', () => {
+      equal(fields.hour, 15);
+      equal(fields.minute, 23);
+      equal(fields.second, 30);
+      equal(fields.millisecond, 123);
+      equal(fields.microsecond, 456);
+      equal(fields.nanosecond, 789);
+    });
+    it('enumerable', () => {
+      const fields2 = { ...fields };
+      equal(fields2.hour, 15);
+      equal(fields2.minute, 23);
+      equal(fields2.second, 30);
+      equal(fields2.millisecond, 123);
+      equal(fields2.microsecond, 456);
+      equal(fields2.nanosecond, 789);
+    });
+    it('as input to from()', () => {
+      const t2 = Time.from(fields);
+      equal(Time.compare(t1, t2), 0);
+    });
+    it('as input to with()', () => {
+      const t2 = Time.from('20:18:32').with(fields);
+      equal(Time.compare(t1, t2), 0);
+    });
   });
 });
 

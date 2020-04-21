@@ -541,3 +541,20 @@ dt.getYearMonth()  // => 1995-12
 dt.getMonthDay()  // => 12-07
 dt.getTime()  // => 03:24:30.000003500
 ```
+
+### datetime.**getFields**() : { year: number, month: number, day: number, hour: number, minute: number, second: number, millisecond: number, microsecond: number, nanosecond: number, [propName: string]: unknown }
+
+**Returns:** a plain object with properties equal to the fields of `datetime`.
+
+This method can be used to convert a `Temporal.DateTime` into a record-like data structure.
+It returns a new plain JavaScript object, with all the fields as enumerable, writable, own data properties.
+
+Note that if using a different calendar from ISO 8601, these will be the calendar-specific values.
+To get the ISO 8601 values, use `datetime.getISOFields()`.
+
+Usage example:
+```javascript
+dt = Temporal.DateTime.from('1995-12-07T03:24:30.000003500');
+Object.assign({}, dt).day  // => undefined
+Object.assign({}, dt.getFields()).day  // => 7
+```

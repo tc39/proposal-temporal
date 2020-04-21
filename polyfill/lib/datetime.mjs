@@ -313,6 +313,21 @@ export class DateTime {
       GetSlot(this, NANOSECOND)
     );
   }
+  getFields() {
+    const fields = ES.ToRecord(this, [
+      ['day'],
+      ['hour'],
+      ['microsecond'],
+      ['millisecond'],
+      ['minute'],
+      ['month'],
+      ['nanosecond'],
+      ['second'],
+      ['year']
+    ]);
+    if (!fields) throw new TypeError('invalid receiver');
+    return fields;
+  }
 
   static from(item, options = undefined) {
     const disambiguation = ES.ToTemporalDisambiguation(options);

@@ -465,3 +465,19 @@ date.getYearMonth()  // => 2006-08
 date.getMonthDay()  // => 08-24
 ```
 
+### date.**getFields**() : { year: number, month: number, day: number, [propName: string]: unknown }
+
+**Returns:** a plain object with properties equal to the fields of `date`.
+
+This method can be used to convert a `Temporal.Date` into a record-like data structure.
+It returns a new plain JavaScript object, with all the fields as enumerable, writable, own data properties.
+
+Note that if using a different calendar from ISO 8601, these will be the calendar-specific values.
+To get the ISO 8601 values, use `date.getISOFields()`.
+
+Usage example:
+```javascript
+date = Temporal.Date.from('2006-08-24');
+Object.assign({}, date).day  // => undefined
+Object.assign({}, date.getFields()).day  // => 24
+```

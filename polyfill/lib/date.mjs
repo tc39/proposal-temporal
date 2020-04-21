@@ -168,6 +168,11 @@ export class Date {
     const MonthDay = GetIntrinsic('%Temporal.MonthDay%');
     return new MonthDay(GetSlot(this, MONTH), GetSlot(this, DAY));
   }
+  getFields() {
+    const fields = ES.ToRecord(this, [['day'], ['month'], ['year']]);
+    if (!fields) throw new TypeError('invalid receiver');
+    return fields;
+  }
   static from(item, options = undefined) {
     const disambiguation = ES.ToTemporalDisambiguation(options);
     let year, month, day;

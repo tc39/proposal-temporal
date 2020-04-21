@@ -551,6 +551,23 @@
         1. Return ? CreateTemporalTime(_dateTime_.[[Hour]], _dateTime_.[[Minute]], _dateTime_.[[Second]], _dateTime_.[[Millisecond]], _dateTime_.[[Microsecond]], _dateTime_.[[Nanosecond]]).
       </emu-alg>
     </emu-clause>
+
+    <emu-clause id="sec-temporal.datetime.prototype.getfields">
+      <h1>Temporal.DateTime.prototype.getFields ( )</h1>
+      <p>
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _dateTime_ be the *this* value.
+        1. Let _record_ be ? ToPartialDateTime(_dateTime_).
+        1. Let _fields_ be ? ObjectCreate(%ObjectPrototype%).
+        1. For each row of <emu-xref href="#table-temporal-temporaldatetimelike-properties"></emu-xref>, except the header row, in table order, do
+          1. Let _p_ be the Property value of the current row.
+          1. Let _v_ be the value of _record_'s internal slot whose name is the Internal Slot value of the current row.
+          1. Perform ! CreateDataPropertyOrThrow(_fields_, _p_, _v_).
+        1. Return _fields_.
+      </emu-alg>
+    </emu-clause>
   </emu-clause>
 
   <emu-clause id="sec-temporal-datetime-abstract-ops">

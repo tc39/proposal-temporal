@@ -251,3 +251,20 @@ md.withYear(2020)  // => 2020-02-29
 ```
 
 In calendars where more information than just the year is needed to convert a `Temporal.MonthDay` to a `Temporal.Date`, you can pass an object to `withYear()` that contains the necessary properties.
+
+### monthDay.**getFields**() : { month: number, day: number, [propName: string]: unknown }
+
+**Returns:** a plain object with properties equal to the fields of `monthDay`.
+
+This method can be used to convert a `Temporal.MonthDay` into a record-like data structure.
+It returns a new plain JavaScript object, with all the fields as enumerable, writable, own data properties.
+
+Note that if using a different calendar from ISO 8601, these will be the calendar-specific values.
+To get the ISO 8601 values, use `datetime.getISOFields()`.
+
+Usage example:
+```javascript
+md = Temporal.MonthDay.from('08-24');
+Object.assign({}, md).day  // => undefined
+Object.assign({}, md.getFields()).day  // => 24
+```

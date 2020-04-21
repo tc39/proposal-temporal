@@ -324,6 +324,23 @@
         1. Return ? CreateTemporalDate(_yearMonth_.[[Year]], _yearMonth_.[[Month]], _d_).
       </emu-alg>
     </emu-clause>
+
+    <emu-clause id="sec-temporal.yearmonth.prototype.getfields">
+      <h1>Temporal.YearMonth.prototype.getFields ( )</h1>
+      <p>
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _yearMonth_ be the *this* value.
+        1. Let _record_ be ? ToPartialYearMonth(_yearMonth_).
+        1. Let _fields_ be ? ObjectCreate(%ObjectPrototype%).
+        1. For each row of <emu-xref href="#table-temporal-temporalyearmonthlike-properties"></emu-xref>, except the header row, in table order, do
+          1. Let _p_ be the Property value of the current row.
+          1. Let _v_ be the value of _record_'s internal slot whose name is the Internal Slot value of the current row.
+          1. Perform ! CreateDataPropertyOrThrow(_fields_, _p_, _v_).
+        1. Return _fields_.
+      </emu-alg>
+    </emu-clause>
   </emu-clause>
 
   <emu-clause id="sec-temporal-yearmonth-abstract-ops">
