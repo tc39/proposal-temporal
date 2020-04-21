@@ -10,7 +10,9 @@
     "babel-eslint": "^10.0.3",
     "ecmarkup": "^3.19.1",
     "eslint": "^6.8.0",
-    "mkdirp": "^1.0.0"
+    "mkdirp": "^1.0.0",
+    "big-integer": "^1.6.48",
+    "es-abstract": "^1.17.4"
   },
   "devDependencies": {
     "eslint-config-prettier": "^6.10.0",
