@@ -6,6 +6,7 @@
   "engines": {
     "node": ">=12.16.0"
   },
+  "main": "polyfill/lib/index.mjs",
   "dependencies": {
     "babel-eslint": "^10.0.3",
     "ecmarkup": "^3.19.1",
