@@ -7,7 +7,6 @@ export default {
     name: 'temporal',
     file: 'script.js',
     format: 'iife',
-    lib: ['es6'],
     sourcemap: true
   },
   plugins: [commonjs(), resolve({ preferBuiltins: false })]
