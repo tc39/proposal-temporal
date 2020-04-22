@@ -397,15 +397,11 @@ export class DateTime {
   }
   static compare(one, two) {
     if (!ES.IsTemporalDateTime(one) || !ES.IsTemporalDateTime(two)) throw new TypeError('invalid DateTime object');
-    if (one.year !== two.year) return ES.ComparisonResult(one.year - two.year);
-    if (one.month !== two.month) return ES.ComparisonResult(one.month - two.month);
-    if (one.day !== two.day) return ES.ComparisonResult(one.day - two.day);
-    if (one.hour !== two.hour) return ES.ComparisonResult(one.hour - two.hour);
-    if (one.minute !== two.minute) return ES.ComparisonResult(one.minute - two.minute);
-    if (one.second !== two.second) return ES.ComparisonResult(one.second - two.second);
-    if (one.millisecond !== two.millisecond) return ES.ComparisonResult(one.millisecond - two.millisecond);
-    if (one.microsecond !== two.microsecond) return ES.ComparisonResult(one.microsecond - two.microsecond);
-    if (one.nanosecond !== two.nanosecond) return ES.ComparisonResult(one.nanosecond - two.nanosecond);
+    for (const slot of [ISO_YEAR, ISO_MONTH, ISO_DAY, HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND]) {
+      const val1 = GetSlot(one, slot);
+      const val2 = GetSlot(two, slot);
+      if (val1 !== val2) return ES.ComparisonResult(val1 - val2);
+    }
     return ES.ComparisonResult(0);
   }
 }
