@@ -23,7 +23,10 @@ fi
 
 cd test/
 
-test262-harness \
+threads=$(nproc --ignore 1)
+if [ $threads -gt 2 ]; then threads=2; fi
+
+test262-harness -t $threads \
   -r json \
   --test262Dir ../test262 \
   --prelude "../$PRELUDE" \
