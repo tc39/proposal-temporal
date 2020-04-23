@@ -142,6 +142,8 @@
 </li>
 <li><a href="#flight-arrivaldepartureduration">Flight arrival/departure/duration</a>
 </li>
+<li><a href="#schedule-a-reminder-ahead-of-matching-a-record-setting-duration">Schedule a reminder ahead of matching a record-setting duration</a>
+</li>
 <li><a href="#nth-weekday-of-the-month">Nth weekday of the month</a>
 </li>
 </ul>
@@ -574,6 +576,32 @@ assert<span class="token punctuation">.</span><span class="token function">equal
   <span class="token string">'America/Los_Angeles'</span>
 <span class="token punctuation">)</span><span class="token punctuation">;</span>
 assert<span class="token punctuation">.</span><span class="token function">equal</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>arrival<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">,</span> <span class="token string">'2020-03-08T09:50'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre><h3 id="schedule-a-reminder-ahead-of-matching-a-record-setting-duration"><a class="heading-link" href="#schedule-a-reminder-ahead-of-matching-a-record-setting-duration"></a>Schedule a reminder ahead of matching a record-setting duration</h3><p>Map a <code>Temporal.Absolute</code> instance, a previous-record <code>Temporal.Duration</code>, and an advance-notice <code>Temporal.Duration</code> into a <code>Temporal.Absolute</code> instance corresponding with an absolute instant ahead of the instant at which the previous record will be matched by the specified window.
+This could be used for workout tracking, racing (including <em>long</em> and potentially time-zone-crossing races like the Bullrun Rally, Iditarod, Self-Transcendence 3100, and Clipper Round The World), or even open-ended analogs like event-every-day &quot;streaks&quot;.</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">/**
+ * Retrieve a time at which to give advance notice of a record that is
+ * potentially about to be broken.
+ *
+ * @param {Temporal.Absolute} start - Start time of the event
+ * @param {Temporal.Duration} previousRecord - Existing record to be broken
+ * @param {Temporal.Duration} noticeWindow - Advance notice time
+ * @returns {Temporal.Absolute} Time at which to give advance notice of breaking
+ *  the record
+ */</span>
+<span class="token keyword">function</span> <span class="token function">getInstantBeforeOldRecord</span><span class="token punctuation">(</span><span class="token parameter">start<span class="token punctuation">,</span> previousRecord<span class="token punctuation">,</span> noticeWindow</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">return</span> start<span class="token punctuation">.</span><span class="token function">plus</span><span class="token punctuation">(</span>previousRecord<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">minus</span><span class="token punctuation">(</span>noticeWindow<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">// Start of the men's 10000 meters at the Rio de Janeiro 2016 Olympic Games</span>
+<span class="token keyword">const</span> raceStart <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Absolute<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2016-08-13T21:27-03:00[America/Sao_Paulo]'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// Kenenisa Bekele's world record set in 2005</span>
+<span class="token keyword">const</span> record <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Duration<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> minutes<span class="token operator">:</span> <span class="token number">26</span><span class="token punctuation">,</span> seconds<span class="token operator">:</span> <span class="token number">17</span><span class="token punctuation">,</span> milliseconds<span class="token operator">:</span> <span class="token number">530</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> noticeWindow <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Duration<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> minutes<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// Time to send a "hurry up, can you finish the race in 1 minute?" push</span>
+<span class="token comment">// notification to all the runners</span>
+<span class="token keyword">const</span> reminderAt <span class="token operator">=</span> <span class="token function">getInstantBeforeOldRecord</span><span class="token punctuation">(</span>raceStart<span class="token punctuation">,</span> record<span class="token punctuation">,</span> noticeWindow<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+assert<span class="token punctuation">.</span><span class="token function">equal</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>reminderAt<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">,</span> <span class="token string">'2016-08-14T00:52:17.530Z'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 </code></pre><h3 id="nth-weekday-of-the-month"><a class="heading-link" href="#nth-weekday-of-the-month"></a>Nth weekday of the month</h3><p>Example of getting a <code>Temporal.Date</code> representing the first Tuesday of the given <code>Temporal.YearMonth</code>, adaptable to other weekdays.</p>
 <pre class="language-javascript"><code class="language-javascript"><span class="token comment">/**
  * Gets the first Tuesday of the month and returns its date
