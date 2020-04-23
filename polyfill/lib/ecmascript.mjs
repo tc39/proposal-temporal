@@ -80,7 +80,7 @@ export const ES = ObjectAssign({}, ES2019, {
     const { zone, ianaName, offset } = ES.ParseTemporalTimeZoneString(stringIdent);
     const result = ES.GetCanonicalTimeZoneIdentifier(zone);
     if (offset && ianaName) {
-      const ns = ES.TemporalAbsoluteFromString(stringIdent);
+      const ns = ES.ParseTemporalAbsolute(stringIdent);
       if (ES.GetTimeZoneOffsetString(ns, result) !== offset) {
         throw new RangeError(`invalid offset ${offset}[${ianaName}]`);
       }
@@ -180,7 +180,7 @@ export const ES = ObjectAssign({}, ES2019, {
     const nanoseconds = ES.ToInteger(match[9]);
     return { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
   },
-  TemporalAbsoluteFromString: (isoString) => {
+  ParseTemporalAbsolute: (isoString) => {
     const {
       year,
       month,
