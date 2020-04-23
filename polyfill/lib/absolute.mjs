@@ -175,7 +175,7 @@ export class Absolute {
     if (ES.IsTemporalAbsolute(item)) {
       ns = GetSlot(item, EPOCHNANOSECONDS);
     } else {
-      ns = ES.TemporalAbsoluteFromString(ES.ToString(item));
+      ns = ES.ParseTemporalAbsolute(ES.ToString(item));
     }
     const result = new this(bigIntIfAvailable(ns));
     if (!ES.IsTemporalAbsolute(result)) throw new TypeError('invalid result');
