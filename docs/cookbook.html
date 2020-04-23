@@ -146,6 +146,8 @@
 </li>
 <li><a href="#nth-weekday-of-the-month">Nth weekday of the month</a>
 </li>
+<li><a href="#next-weekly-occurrence">Next weekly occurrence</a>
+</li>
 </ul>
 </li>
 </ul>
@@ -627,6 +629,44 @@ assert<span class="token punctuation">.</span><span class="token function">equal
 <span class="token keyword">const</span> firstTuesdayOfMonth <span class="token operator">=</span> <span class="token function">getFirstTuesday</span><span class="token punctuation">(</span>myMonth<span class="token punctuation">)</span><span class="token punctuation">;</span>
 assert<span class="token punctuation">.</span><span class="token function">equal</span><span class="token punctuation">(</span>firstTuesdayOfMonth<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token string">'2020-02-04'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 assert<span class="token punctuation">.</span><span class="token function">equal</span><span class="token punctuation">(</span>firstTuesdayOfMonth<span class="token punctuation">.</span>dayOfWeek<span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre><h3 id="next-weekly-occurrence"><a class="heading-link" href="#next-weekly-occurrence"></a>Next weekly occurrence</h3><p>From a <code>Temporal.Absolute</code> instance and a local <code>Temporal.TimeZone</code>, get a <code>Temporal.DateTime</code> representing the next occurrence of a weekly event that is scheduled on a particular weekday and time in a particular time zone. (For example, &quot;weekly on Thursdays at 08:45 California time&quot;).</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">/**
+ * Returns the local date and time for the next occurrence of a weekly occurring
+ * event.
+ *
+ * @param {Temporal.Absolute} now - Starting point
+ * @param {Temporal.TimeZone} localTimeZone - Time zone for return value
+ * @param {number} weekday - Weekday event occurs on (Monday=1, Sunday=7)
+ * @param {Temporal.Time} eventTime - Time event occurs at
+ * @param {Temporal.TimeZone} eventTimeZone - Time zone where event is planned
+ * @returns {Temporal.DateTime} Local date and time of next occurrence
+ */</span>
+<span class="token keyword">function</span> <span class="token function">nextWeeklyOccurrence</span><span class="token punctuation">(</span><span class="token parameter">now<span class="token punctuation">,</span> localTimeZone<span class="token punctuation">,</span> weekday<span class="token punctuation">,</span> eventTime<span class="token punctuation">,</span> eventTimeZone</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> dateTime <span class="token operator">=</span> now<span class="token punctuation">.</span><span class="token function">inTimeZone</span><span class="token punctuation">(</span>eventTimeZone<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">const</span> nextDate <span class="token operator">=</span> dateTime<span class="token punctuation">.</span><span class="token function">getDate</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">plus</span><span class="token punctuation">(</span><span class="token punctuation">{</span> days<span class="token operator">:</span> <span class="token punctuation">(</span>weekday <span class="token operator">+</span> <span class="token number">7</span> <span class="token operator">-</span> dateTime<span class="token punctuation">.</span>dayOfWeek<span class="token punctuation">)</span> <span class="token operator">%</span> <span class="token number">7</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">let</span> nextOccurrence <span class="token operator">=</span> nextDate<span class="token punctuation">.</span><span class="token function">withTime</span><span class="token punctuation">(</span>eventTime<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token comment">// Handle the case where the event is today but already happened</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">compare</span><span class="token punctuation">(</span>dateTime<span class="token punctuation">,</span> nextOccurrence<span class="token punctuation">)</span> <span class="token operator">></span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    nextOccurrence <span class="token operator">=</span> nextOccurrence<span class="token punctuation">.</span><span class="token function">plus</span><span class="token punctuation">(</span><span class="token punctuation">{</span> days<span class="token operator">:</span> <span class="token number">7</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token keyword">return</span> nextOccurrence<span class="token punctuation">.</span><span class="token function">inTimeZone</span><span class="token punctuation">(</span>eventTimeZone<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">inTimeZone</span><span class="token punctuation">(</span>localTimeZone<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">// "Weekly on Thursdays at 08:45 California time":</span>
+<span class="token keyword">const</span> weekday <span class="token operator">=</span> <span class="token number">4</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> eventTime <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'08:45'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> eventTimeZone <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'America/Los_Angeles'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token keyword">const</span> rightBefore <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Absolute<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-03-26T08:30-07:00[America/Los_Angeles]'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> localTimeZone <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'Europe/London'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">let</span> next <span class="token operator">=</span> <span class="token function">nextWeeklyOccurrence</span><span class="token punctuation">(</span>rightBefore<span class="token punctuation">,</span> localTimeZone<span class="token punctuation">,</span> weekday<span class="token punctuation">,</span> eventTime<span class="token punctuation">,</span> eventTimeZone<span class="token punctuation">)</span><span class="token punctuation">;</span>
+assert<span class="token punctuation">.</span><span class="token function">equal</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>next<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">,</span> <span class="token string">'2020-03-26T15:45'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token keyword">const</span> rightAfter <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Absolute<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-03-26T09:00-07:00[America/Los_Angeles]'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+next <span class="token operator">=</span> <span class="token function">nextWeeklyOccurrence</span><span class="token punctuation">(</span>rightAfter<span class="token punctuation">,</span> localTimeZone<span class="token punctuation">,</span> weekday<span class="token punctuation">,</span> eventTime<span class="token punctuation">,</span> eventTimeZone<span class="token punctuation">)</span><span class="token punctuation">;</span>
+assert<span class="token punctuation">.</span><span class="token function">equal</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>next<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">,</span> <span class="token string">'2020-04-02T16:45'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 </code></pre>    <footer>
       <p>
         This page includes a script which loads an implementation of Temporal in your browser.
