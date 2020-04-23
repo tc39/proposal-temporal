@@ -105,9 +105,9 @@ For example, February 29 (Leap day in the ISO 8601 calendar) is a valid value fo
 md <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>MonthDay</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">14</span><span class="token punctuation">)</span>  <span class="token comment">// => 03-14</span>
 <span class="token comment">// Leap day</span>
 md <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>MonthDay</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">29</span><span class="token punctuation">)</span>  <span class="token comment">// => 02-29</span></code></pre><h2 id="static-methods-1">Static methods</h2>
-<h3 id="from"><a class="heading-link" href="#from"></a>Temporal.MonthDay.<strong>from</strong>(<em>thing</em>: string | object, <em>options</em>?: object) : Temporal.MonthDay</h3><p><strong>Parameters:</strong></p>
+<h3 id="from"><a class="heading-link" href="#from"></a>Temporal.MonthDay.<strong>from</strong>(<em>thing</em>: any, <em>options</em>?: object) : Temporal.MonthDay</h3><p><strong>Parameters:</strong></p>
 <ul>
-<li><code>thing</code> (string or object): The value representing the desired date.</li>
+<li><code>thing</code>: The value representing the desired date.</li>
 <li><code>options</code> (optional object): An object with properties representing options for constructing the date.
 The following options are recognized:<ul>
 <li><code>disambiguation</code> (string): How to deal with out-of-range values in <code>thing</code>.
@@ -116,13 +116,13 @@ The default is <code>constrain</code>.</li>
 </ul>
 </li>
 </ul>
-<p><strong>Returns:</strong> a new <code>Temporal.MonthDay</code> object (or the same object if <code>thing</code> was a <code>Temporal.MonthDay</code> object.)</p>
+<p><strong>Returns:</strong> a new <code>Temporal.MonthDay</code> object.</p>
 <p>This static method creates a new <code>Temporal.MonthDay</code> object from another value.
-If the value is a string, it must be in ISO 8601 format.
+If the value is another <code>Temporal.MonthDay</code> object, a new object representing the same month and day is returned.
+If the value is any other object, it must have <code>month</code> and <code>day</code> properties, and a <code>Temporal.MonthDay</code> will be constructed from them.</p>
+<p>Any non-object value will be converted to a string, which is expected to be in ISO 8601 format.
 Any parts of the string other than the month and the day are optional and will be ignored.
 If the string isn&#39;t valid according to ISO 8601, then a <code>RangeError</code> will be thrown regardless of the value of <code>disambiguation</code>.</p>
-<p>If the value is another <code>Temporal.MonthDay</code> object, the same object is returned.
-If the value is any other object, it must have <code>month</code> and <code>day</code> properties, and a <code>Temporal.MonthDay</code> will be constructed from them.</p>
 <p>The <code>disambiguation</code> option works as follows:</p>
 <ul>
 <li>In <code>constrain</code> mode (the default), any out-of-range values are clamped to the nearest in-range value.</li>

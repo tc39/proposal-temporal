@@ -109,15 +109,15 @@ This range covers approximately half a million years. If <code>epochNanoseconds<
 epoch <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>Absolute</span><span class="token punctuation">(</span><span class="token number">0n</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// => 1970-01-01T00:00Z</span>
 <span class="token comment">// Dates before the Unix epoch are negative</span>
 turnOfTheCentury <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>Absolute</span><span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">2208988800000000000n</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// => 1900-01-01T00:00Z</span></code></pre><h2 id="static-methods-1">Static methods</h2>
-<h3 id="from"><a class="heading-link" href="#from"></a>Temporal.Absolute.<strong>from</strong>(<em>thing</em>: string | Temporal.Absolute) : Temporal.Absolute</h3><p><strong>Parameters:</strong></p>
+<h3 id="from"><a class="heading-link" href="#from"></a>Temporal.Absolute.<strong>from</strong>(<em>thing</em>: any) : Temporal.Absolute</h3><p><strong>Parameters:</strong></p>
 <ul>
-<li><code>thing</code> (string or <code>Temporal.Absolute</code>): The value representing the desired point in time.</li>
+<li><code>thing</code>: The value representing the desired point in time.</li>
 </ul>
-<p><strong>Returns:</strong> a new <code>Temporal.Absolute</code> object (or the same object if <code>thing</code> was a <code>Temporal.Absolute</code> object.)</p>
+<p><strong>Returns:</strong> a new <code>Temporal.Absolute</code> object.</p>
 <p>This static method creates a new <code>Temporal.Absolute</code> object from another value.
-If the value is a string, it must be in ISO 8601 format, including a date, a time, and a time zone.
-If the value is an object, it must be another <code>Temporal.Absolute</code> object, in which case the same object is returned.</p>
-<p>If <code>thing</code> is a string, and the point in time cannot be uniquely determined from the string, then this function throws an exception.
+If the value is another <code>Temporal.Absolute</code> object, a new object representing the same point in time is returned.</p>
+<p>Any other value is converted to a string, which is expected to be in ISO 8601 format, including a date, a time, and a time zone.
+If the point in time cannot be uniquely determined from the string, then this function throws an exception.
 This includes the case when <code>thing</code> is a validly-formatted ISO 8601 string denoting a time that doesn&#39;t exist, for example because it was skipped in a daylight saving time transition.</p>
 <p>Example usage:</p>
 <pre class="language-js"><code class="language-js">abs <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Absolute<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2019-03-30T01:45:00+01:00[Europe/Berlin]'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>

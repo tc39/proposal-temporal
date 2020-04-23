@@ -105,9 +105,9 @@ Otherwise, <code>Temporal.Time.from()</code>, which accepts more kinds of input 
 <p>Usage examples:</p>
 <pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Leet hour</span>
 time <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>Time</span><span class="token punctuation">(</span><span class="token number">13</span><span class="token punctuation">,</span> <span class="token number">37</span><span class="token punctuation">)</span>  <span class="token comment">// => 13:37</span></code></pre><h2 id="static-methods-1">Static methods</h2>
-<h3 id="from"><a class="heading-link" href="#from"></a>Temporal.Time.<strong>from</strong>(<em>thing</em>: string | object, <em>options</em>?: object) : Temporal.Time</h3><p><strong>Parameters:</strong></p>
+<h3 id="from"><a class="heading-link" href="#from"></a>Temporal.Time.<strong>from</strong>(<em>thing</em>: any, <em>options</em>?: object) : Temporal.Time</h3><p><strong>Parameters:</strong></p>
 <ul>
-<li><code>thing</code> (string or object): The value representing the desired time.</li>
+<li><code>thing</code>: The value representing the desired time.</li>
 <li><code>options</code> (optional object): An object with properties representing options for constructing the time.
 The following options are recognized:<ul>
 <li><code>disambiguation</code> (optional string): How to deal with out-of-range values of the other parameters.
@@ -116,13 +116,13 @@ The default is <code>constrain</code>.</li>
 </ul>
 </li>
 </ul>
-<p><strong>Returns:</strong> a new <code>Temporal.Time</code> object (or the same object if <code>thing</code> was a <code>Temporal.Time</code> object.)</p>
+<p><strong>Returns:</strong> a new <code>Temporal.Time</code> object.</p>
 <p>This static method creates a new <code>Temporal.Time</code> object from another value.
-If the value is a string, it must be in ISO 8601 format.
-If the string designates a date or a time zone, they will be ignored.
-If the value is another <code>Temporal.Time</code> object, the same object is returned.
+If the value is another <code>Temporal.Time</code> object, a new object representing the same time is returned.
 If the value is any other object, a <code>Temporal.Time</code> will be constructed from the values of any <code>hour</code>, <code>minute</code>, <code>second</code>, <code>millisecond</code>, <code>microsecond</code>, and <code>nanosecond</code> properties that are present.
 Any missing ones will be assumed to be 0.</p>
+<p>Any non-object value will be converted to a string, which is expected to be in ISO 8601 format.
+If the string designates a date or a time zone, they will be ignored.</p>
 <p>The <code>disambiguation</code> option works as follows:</p>
 <ul>
 <li>In <code>constrain</code> mode (the default), any out-of-range values are clamped to the nearest in-range value.</li>

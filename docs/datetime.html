@@ -119,9 +119,9 @@ Both <code>balance</code> and <code>reject</code> mode will throw a <code>RangeE
 <p>Usage examples:</p>
 <pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Leet hour on pi day in 2020</span>
 datetime <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>DateTime</span><span class="token punctuation">(</span><span class="token number">2020</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">14</span><span class="token punctuation">,</span> <span class="token number">13</span><span class="token punctuation">,</span> <span class="token number">37</span><span class="token punctuation">)</span>  <span class="token comment">// => 2020-03-14T13:37</span></code></pre><h2 id="static-methods-1">Static methods</h2>
-<h3 id="from"><a class="heading-link" href="#from"></a>Temporal.DateTime.<strong>from</strong>(<em>thing</em>: string | object, <em>options</em>?: object) : Temporal.DateTime</h3><p><strong>Parameters:</strong></p>
+<h3 id="from"><a class="heading-link" href="#from"></a>Temporal.DateTime.<strong>from</strong>(<em>thing</em>: any, <em>options</em>?: object) : Temporal.DateTime</h3><p><strong>Parameters:</strong></p>
 <ul>
-<li><code>thing</code> (string or object): The value representing the desired date and time.</li>
+<li><code>thing</code>: The value representing the desired date and time.</li>
 <li><code>options</code> (optional object): An object with properties representing options for constructing the date and time.
 The following options are recognized:<ul>
 <li><code>disambiguation</code> (string): How to deal with out-of-range values in <code>thing</code>.
@@ -130,15 +130,15 @@ The default is <code>constrain</code>.</li>
 </ul>
 </li>
 </ul>
-<p><strong>Returns:</strong> a new <code>Temporal.DateTime</code> object (or the same object if <code>thing</code> was a <code>Temporal.DateTime</code> object.)</p>
+<p><strong>Returns:</strong> a new <code>Temporal.DateTime</code> object.</p>
 <p>This static method creates a new <code>Temporal.DateTime</code> object from another value.
-If the value is a string, it must be in ISO 8601 format.
-Any time zone part is optional and will be ignored.
-If the string isn&#39;t valid according to ISO 8601, then a <code>RangeError</code> will be thrown regardless of the value of <code>disambiguation</code>.</p>
-<p>If the value is another <code>Temporal.DateTime</code> object, the same object is returned.
+If the value is another <code>Temporal.DateTime</code> object, a new object representing the same date and time is returned.
 If the value is any other object, a <code>Temporal.DateTime</code> will be constructed from the values of any <code>year</code>, <code>month</code>, <code>day</code>, <code>hour</code>, <code>minute</code>, <code>second</code>, <code>millisecond</code>, <code>microsecond</code>, and <code>nanosecond</code> properties that are present.
 At least the <code>year</code>, <code>month</code>, and <code>day</code> properties must be present.
 Any other missing ones will be assumed to be 0.</p>
+<p>Any non-object value is converted to a string, which is expected to be in ISO 8601 format.
+Any time zone part is optional and will be ignored.
+If the string isn&#39;t valid according to ISO 8601, then a <code>RangeError</code> will be thrown regardless of the value of <code>disambiguation</code>.</p>
 <p>The <code>disambiguation</code> option works as follows:</p>
 <ul>
 <li>In <code>constrain</code> mode (the default), any out-of-range values are clamped to the nearest in-range value.</li>

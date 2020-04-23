@@ -163,9 +163,9 @@ Negative numbers are not allowed.</p>
 <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>Duration</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">40</span><span class="token punctuation">)</span>  <span class="token comment">// => P40D</span>
 <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>Duration</span><span class="token punctuation">(</span><span class="token keyword">undefined</span><span class="token punctuation">,</span> <span class="token keyword">undefined</span><span class="token punctuation">,</span> <span class="token number">40</span><span class="token punctuation">)</span>  <span class="token comment">// => P40D</span>
 <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>Duration</span><span class="token punctuation">(</span><span class="token punctuation">)</span>  <span class="token comment">// => PT0S</span></code></pre><h2 id="static-methods-1">Static methods</h2>
-<h3 id="from"><a class="heading-link" href="#from"></a>Temporal.Duration.<strong>from</strong>(<em>thing</em>: string | object, <em>options</em>?: object) : Temporal.Duration</h3><p><strong>Parameters:</strong></p>
+<h3 id="from"><a class="heading-link" href="#from"></a>Temporal.Duration.<strong>from</strong>(<em>thing</em>: any, <em>options</em>?: object) : Temporal.Duration</h3><p><strong>Parameters:</strong></p>
 <ul>
-<li><code>thing</code> (string or object): A <code>Duration</code>-like object or a string from which to create a <code>Temporal.Duration</code>.</li>
+<li><code>thing</code>: A <code>Duration</code>-like object or a string from which to create a <code>Temporal.Duration</code>.</li>
 <li><code>options</code> (optional object): An object with properties representing options for constructing the duration.
 The following options are recognized:<ul>
 <li><code>disambiguation</code> (optional string): How to disambiguate if any of the other arguments are out of range.
@@ -175,10 +175,11 @@ The default is <code>constrain</code>.</li>
 </li>
 </ul>
 <p><strong>Returns:</strong> a new <code>Temporal.Duration</code> object.</p>
-<p>This static method creates a new duration from another value.
-The value can be a string in the ISO 8601 format described above.
-Or, if the value is an object, it can either be another <code>Temporal.Duration</code> object, or a plain object with properties <code>years</code>, <code>months</code>, etc.</p>
-<p>When creating a duration from an object, this function is often more readable to use than <code>new Temporal.Duration()</code> because the names of the properties are visible in the code.</p>
+<p>This static method creates a new <code>Temporal.Duration</code> from another value.
+If the value is another <code>Temporal.Duration</code> object, a new object representing the same duration is returned.
+If the value is any other object, a <code>Temporal.Duration</code> will be constructed from the values of any <code>years</code>, <code>months</code>, <code>days</code>, <code>hours</code>, <code>minutes</code>, <code>seconds</code>, <code>milliseconds</code>, <code>microseconds</code>, and <code>nanoseconds</code> properties that are present.
+Any missing ones will be assumed to be 0.</p>
+<p>Any non-object value is converted to a string, which is expected to be in ISO 8601 format.</p>
 <p>The <code>disambiguation</code> option controls how out-of-range values are interpreted:</p>
 <ul>
 <li><code>constrain</code> (the default): Infinite values are clamped to <code>Number.MAX_VALUE</code>.

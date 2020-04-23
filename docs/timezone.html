@@ -116,17 +116,17 @@ tz2 <span class="token operator">=</span> <span class="token keyword">new</span>
 now <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">absolute</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 tz1<span class="token punctuation">.</span><span class="token function">getTransitions</span><span class="token punctuation">(</span>now<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>done<span class="token punctuation">;</span>  <span class="token comment">// => true</span>
 tz2<span class="token punctuation">.</span><span class="token function">getTransitions</span><span class="token punctuation">(</span>now<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>done<span class="token punctuation">;</span>  <span class="token comment">// => false</span></code></pre><h2 id="static-methods-1">Static methods</h2>
-<h3 id="from"><a class="heading-link" href="#from"></a>Temporal.TimeZone.<strong>from</strong>(<em>thing</em>: string | object) : Temporal.TimeZone</h3><p><strong>Parameters:</strong></p>
+<h3 id="from"><a class="heading-link" href="#from"></a>Temporal.TimeZone.<strong>from</strong>(<em>thing</em>: any) : Temporal.TimeZone</h3><p><strong>Parameters:</strong></p>
 <ul>
-<li><code>thing</code> (string or object): A <code>Temporal.TimeZone</code> object or a string from which to create a <code>Temporal.TimeZone</code>.</li>
+<li><code>thing</code>: A <code>Temporal.TimeZone</code> object or a value from which to create a <code>Temporal.TimeZone</code>.</li>
 </ul>
 <p><strong>Returns:</strong> a new <code>Temporal.TimeZone</code> object.</p>
 <p>This static method creates a new time zone from another value.
-If the value is a string, it can be:</p>
+If the value is another <code>Temporal.TimeZone</code> object, a new object representing the same time zone is returned.</p>
+<p>Any other value is converted to a string, which is expected to be either:</p>
 <ul>
-<li>a string that is accepted by <code>new Temporal.TimeZone()</code>;</li>
-<li>a string in the ISO 8601 format including a time zone offset part.
-Or, if the value is an object, it can be another <code>Temporal.TimeZone</code> object, which is returned directly.</li>
+<li>a string that is accepted by <code>new Temporal.TimeZone()</code>; or</li>
+<li>a string in the ISO 8601 format including a time zone offset part.</li>
 </ul>
 <p>Note that the ISO 8601 string can optionally be extended with an IANA time zone name in square brackets appended to it.</p>
 <p>This function is often more convenient to use than <code>new Temporal.TimeZone()</code> because it handles a wider range of input.</p>
