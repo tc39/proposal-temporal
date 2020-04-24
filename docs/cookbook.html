@@ -138,6 +138,8 @@
 <ul>
 <li><a href="#unit-constrained-duration-between-now-and-a-pastfuture-zoned-event">Unit-constrained duration between now and a past/future zoned event</a>
 </li>
+<li><a href="#nearest-offset-transition-in-a-time-zone">Nearest offset transition in a time zone</a>
+</li>
 <li><a href="#comparison-of-an-instant-to-business-hours">Comparison of an instant to business hours</a>
 </li>
 <li><a href="#flight-arrivaldepartureduration">Flight arrival/departure/duration</a>
@@ -443,6 +445,41 @@ assert<span class="token punctuation">.</span><span class="token function">equal
   Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">absolute</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
 <span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">It's </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>duration<span class="token punctuation">.</span><span class="token function">toLocaleString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token string"> </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>sign <span class="token operator">&lt;</span> <span class="token number">0</span> <span class="token operator">?</span> <span class="token string">'until'</span> <span class="token operator">:</span> <span class="token string">'since'</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token string"> the TC39 Temporal presentation</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>
+</code></pre><h3 id="nearest-offset-transition-in-a-time-zone"><a class="heading-link" href="#nearest-offset-transition-in-a-time-zone"></a>Nearest offset transition in a time zone</h3><p>Map a Temporal.Absolute instance and a Temporal.TimeZone object into a Temporal.Absolute instance representing the nearest following instant at which there is an offset transition in the time zone (e.g., for setting reminders).</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">/**
+ * Get the nearest following instant that the given time zone transitions to
+ * another UTC offset, inclusive or exclusive.
+ *
+ * @param {Temporal.Absolute} absolute - Start time to consider
+ * @param {Temporal.TimeZone} timeZone - Time zone to consider
+ * @param {boolean} inclusive - Include the start time, or not
+ * @returns {(Temporal.Absolute|null)} - Next UTC offset transition, or null if
+ *   none known at this time
+ */</span>
+<span class="token keyword">function</span> <span class="token function">getInstantOfNearestOffsetTransitionToInstant</span><span class="token punctuation">(</span><span class="token parameter">absolute<span class="token punctuation">,</span> timeZone<span class="token punctuation">,</span> inclusive</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">let</span> nearest<span class="token punctuation">;</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>inclusive<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// In case absolute itself is the moment of a transition:</span>
+    <span class="token punctuation">[</span>nearest<span class="token punctuation">]</span> <span class="token operator">=</span> timeZone<span class="token punctuation">.</span><span class="token function">getTransitions</span><span class="token punctuation">(</span>absolute<span class="token punctuation">.</span><span class="token function">minus</span><span class="token punctuation">(</span><span class="token punctuation">{</span> nanoseconds<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+    <span class="token punctuation">[</span>nearest<span class="token punctuation">]</span> <span class="token operator">=</span> timeZone<span class="token punctuation">.</span><span class="token function">getTransitions</span><span class="token punctuation">(</span>absolute<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  <span class="token keyword">return</span> nearest<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">const</span> absolute <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Absolute<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-04-16T21:01Z'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token keyword">const</span> nyc <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'America/New_York'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> nextTransition <span class="token operator">=</span> <span class="token function">getInstantOfNearestOffsetTransitionToInstant</span><span class="token punctuation">(</span>absolute<span class="token punctuation">,</span> nyc<span class="token punctuation">,</span> <span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+assert<span class="token punctuation">.</span><span class="token function">equal</span><span class="token punctuation">(</span>nextTransition<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token string">'2020-11-01T06:00Z'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// Inclusive</span>
+<span class="token keyword">const</span> sameTransition <span class="token operator">=</span> <span class="token function">getInstantOfNearestOffsetTransitionToInstant</span><span class="token punctuation">(</span>nextTransition<span class="token punctuation">,</span> nyc<span class="token punctuation">,</span> <span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+assert<span class="token punctuation">.</span><span class="token function">equal</span><span class="token punctuation">(</span>sameTransition<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> nextTransition<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// No known future DST transitions in a time zone</span>
+<span class="token keyword">const</span> regina <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'America/Regina'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+assert<span class="token punctuation">.</span><span class="token function">equal</span><span class="token punctuation">(</span><span class="token function">getInstantOfNearestOffsetTransitionToInstant</span><span class="token punctuation">(</span>absolute<span class="token punctuation">,</span> regina<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token keyword">null</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 </code></pre><h3 id="comparison-of-an-instant-to-business-hours"><a class="heading-link" href="#comparison-of-an-instant-to-business-hours"></a>Comparison of an instant to business hours</h3><p>This example takes a roster of opening and closing times for a business, and maps a localized date and time of day into a time-sensitive state indicator (&quot;opening soon&quot; vs. &quot;open&quot; vs. &quot;closing soon&quot; vs. &quot;closed&quot;).</p>
 <pre class="language-javascript"><code class="language-javascript"><span class="token comment">/**
  * Compare the given time to the business hours of a business located in a
