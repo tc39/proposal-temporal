@@ -216,7 +216,7 @@ describe('TimeZone', () => {
     it('should not have bug #510', () => {
       // See https://github.com/tc39/proposal-temporal/issues/510 for more.
       const nyc = Temporal.TimeZone.from('America/New_York');
-      const a1 = Temporal.Absolute.from('2020-04-16T21:01Z');
+      const a1 = Temporal.Absolute.from('2019-04-16T21:01Z');
       const a2 = Temporal.Absolute.from('1800-01-01T00:00Z');
 
       equal(
@@ -224,7 +224,7 @@ describe('TimeZone', () => {
           .getTransitions(a1)
           .next()
           .value.toString(),
-        '2020-11-01T06:00Z'
+        '2019-11-03T06:00Z'
       );
       equal(
         nyc

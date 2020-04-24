@@ -19,11 +19,11 @@ function getInstantOfNearestOffsetTransitionToInstant(absolute, timeZone, inclus
   return nearest;
 }
 
-const absolute = Temporal.Absolute.from('2020-04-16T21:01Z');
+const absolute = Temporal.Absolute.from('2019-04-16T21:01Z');
 
 const nyc = Temporal.TimeZone.from('America/New_York');
 const nextTransition = getInstantOfNearestOffsetTransitionToInstant(absolute, nyc, false);
-assert.equal(nextTransition.toString(), '2020-11-01T06:00Z');
+assert.equal(nextTransition.toString(), '2019-11-03T06:00Z');
 
 // Inclusive
 const sameTransition = getInstantOfNearestOffsetTransitionToInstant(nextTransition, nyc, true);
