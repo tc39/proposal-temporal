@@ -16,4 +16,4 @@ const flightTime = getTripDurationInHrMinSec(
   '2020-03-08T11:55:00+08:00[Asia/Hong_Kong]',
   '2020-03-08T09:50:00-07:00[America/Los_Angeles]'
 );
-assert.equal(`${flightTime}`, 'PT12H55M');
+assert.equal(flightTime.toString(), 'PT12H55M');

@@ -30,8 +30,8 @@ const eventTimeZone = Temporal.TimeZone.from('America/Los_Angeles');
 const rightBefore = Temporal.Absolute.from('2020-03-26T08:30-07:00[America/Los_Angeles]');
 const localTimeZone = Temporal.TimeZone.from('Europe/London');
 let next = nextWeeklyOccurrence(rightBefore, localTimeZone, weekday, eventTime, eventTimeZone);
-assert.equal(`${next}`, '2020-03-26T15:45');
+assert.equal(next.toString(), '2020-03-26T15:45');
 
 const rightAfter = Temporal.Absolute.from('2020-03-26T09:00-07:00[America/Los_Angeles]');
 next = nextWeeklyOccurrence(rightAfter, localTimeZone, weekday, eventTime, eventTimeZone);
-assert.equal(`${next}`, '2020-04-02T16:45');
+assert.equal(next.toString(), '2020-04-02T16:45');

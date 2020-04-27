@@ -6,7 +6,7 @@
 
 ## Running the cookbook files
 
-Running cookbook files: see instructions in ../polyfill/README.md
+Running cookbook files: see instructions in [../polyfill/README.md](https://github.com/tc39/proposal-temporal/tree/main/polyfill#running-cookbook-files)
 
 ## Frequently Asked Questions
 
@@ -160,7 +160,10 @@ Map localized departure time and duration into localized arrival time.
 
 ### Schedule a reminder ahead of matching a record-setting duration
 
-Map a `Temporal.Absolute` instance, a previous-record `Temporal.Duration`, and an advance-notice `Temporal.Duration` into a `Temporal.Absolute` instance corresponding with an absolute instant ahead of the instant at which the previous record will be matched by the specified window.
+When considering a record (for example, a personal-best time in a sport), you might want to receive an alert just before the record is about to be broken.
+This example takes a record as a `Temporal.Duration`, the starting instant of the current attempt as a `Temporal.Absolute`, and another `Temporal.Duration` indicating how long before the potentially record-setting instant you would like to receive an alert.
+It returns the instant at which a notification could be sent, for example "Keep going! 5 more minutes and it will be your personal best!"
+
 This could be used for workout tracking, racing (including _long_ and potentially time-zone-crossing races like the Bullrun Rally, Iditarod, Self-Transcendence 3100, and Clipper Round The World), or even open-ended analogs like event-every-day "streaks".
 
 ```javascript

@@ -21,4 +21,4 @@ const noticeWindow = Temporal.Duration.from({ minutes: 1 });
 // notification to all the runners
 const reminderAt = getInstantBeforeOldRecord(raceStart, record, noticeWindow);
 
-assert.equal(`${reminderAt}`, '2016-08-14T00:52:17.530Z');
+assert.equal(reminderAt.toString(), '2016-08-14T00:52:17.530Z');
