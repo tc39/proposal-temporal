@@ -7,6 +7,10 @@ Of the `Temporal` classes carrying human-readable time information, it is the mo
 "Calendar date" and "wall-clock time" refer to the concept of time as expressed in everyday usage.
 `Temporal.DateTime` does not represent an absolute, unique point in time; that is what `Temporal.Absolute` is for.
 
+One example of when it would be appropriate to use `Temporal.DateTime` and not `Temporal.Absolute` is when integrating with wearable devices.
+FitBit, for example, always records sleep data in the user's wall-clock time, wherever they are in the world.
+Otherwise they would be recorded as sleeping at strange hours when travelling, even if their sleep rhythm was on a healthy schedule for the time zone they were in.
+
 A `Temporal.DateTime` can be converted to a `Temporal.Absolute` using a `Temporal.TimeZone`.
 A `Temporal.DateTime` can also be converted into any of the other `Temporal` objects that carry less information, such as `Temporal.Date` for the date or `Temporal.Time` for the time.
 
