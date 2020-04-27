@@ -201,3 +201,12 @@ From a `Temporal.Absolute` instance and a local `Temporal.TimeZone`, get a `Temp
 ```javascript
 {{cookbook/nextWeeklyOccurrence.mjs}}
 ```
+
+### Weekday of yearly occurrence
+
+In some countries, when a public holiday falls on a Tuesday or Thursday, an extra "bridge" public holiday is observed on Monday or Friday in order to give workers a long weekend off.
+The following example calculates this.
+
+```javascript
+{{cookbook/bridgePublicHolidays.mjs}}
+```
