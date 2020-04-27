@@ -19,4 +19,4 @@ const arrival = getLocalizedArrival(
   Temporal.Duration.from({ minutes: 775 }),
   'America/Los_Angeles'
 );
-assert.equal(`${arrival}`, '2020-03-08T09:50');
+assert.equal(arrival.toString(), '2020-03-08T09:50');

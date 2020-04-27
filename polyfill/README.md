@@ -37,5 +37,3 @@ $ npm run cookbook
 # Run a single cookbook file:
 $ env TEST=dateTimeFromLegacyDate npm run cookbook-one
 ```
-
-_The above code allows `Temporal` to exist as a global object before the cookbook file runs._
