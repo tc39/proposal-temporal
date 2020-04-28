@@ -186,7 +186,7 @@ A partial ISO calendar would be one implemented as follows:
 
 ```javascript
 const PartialIsoCalendar = {
-	[Temporal.Calendar.id] = "iso",
+	id: "iso",
 
 	dateFromFields(fields) {
 		const { year, month, day } = fields;
@@ -195,10 +195,10 @@ const PartialIsoCalendar = {
 	// Same for dateTimeFromFields, etc.
 
 	// ALL OTHER METHODS:
-	[Temporal.Calendar.plus] = () => {
+	plus() {
 		throw new TypeError("Unsupported operation: full calendar required");
 	}
-	// Same for [Temporal.Calendar.minus], etc.
+	// Same for minus, etc.
 }
 ```
 
