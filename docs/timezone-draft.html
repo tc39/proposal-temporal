@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/kognise/water.css@latest/dist/light.min.css">
+    <script type="application/javascript" src="./playground.js"></script>
+    <script type="application/javascript" src="./mermaid.js"></script>
+    <link rel="stylesheet" type="text/css" href="./prism.css">
+    <script>mermaid.initialize({startOnLoad:true,flowchart:{useMaxWidth:false}});</script>
+    <script>
+      Temporal = { ...temporal.Temporal };
+      Object.assign(Intl, temporal.Intl);
+    </script>
+    <style>
+      /* https://github.com/kognise/water.css/blob/master/src/variables-light.css */
+      :root {
+        --background: #efefef;
+        --text-muted: #999999;
+        --text-bright: #000000;
+        --text-width: 900px;
+        --variable: #39a33c;
+      }
+      .mermaid svg { height: 13em; }
+      body {
+        font-size: 18px;
+        max-width: var(--text-width);
+        padding-top: 40px;  /* extra padding for banner */
+      }
+      pre { border-left: 4px solid var(--variable); }
+      pre code[class*="language-"] { font-size: 0.85em; }
+      pre[class*="language-"] { padding: 0.5em; }
+      h2 { border-bottom: 2px solid var(--text-muted); margin-top: 2em; }
+      h3 {
+        border-bottom: 1px solid var(--text-muted);
+        color: var(--text-muted);
+        font-weight: normal;
+      }
+      h3 em { font-weight: bold; }
+      h3 strong { color: var(--text-bright); }
+      :not(h2) + h3 { margin-top: 2em; }
+      footer {
+        border-top: 1px solid var(--background);
+        color: var(--text-muted);
+        font-size: 0.8em;
+        margin-top: 2em;
+        padding-top: 10px;
+      }
+      .heading-link {
+        left: calc((100vw - var(--text-width)) / 2 - 1.5em);
+        opacity: 0;
+        position: absolute;
+        transition: opacity 150ms;
+      }
+      .heading-link:hover { text-decoration: none; }
+      .heading-link::before { content: '¶'; }
+      h3:hover .heading-link { opacity: 1; }
+      .banner {
+        /* Gradient from https://joshnh.com/weblog/how-to-make-an-alert-bar/ */
+        background-color: #fce94f;
+        background-image: linear-gradient(135deg,
+                                          transparent,
+                                          transparent 25%,
+                                          rgba(0, 0, 0, .05) 25%,
+                                          rgba(0, 0, 0, .05) 50%,
+                                          transparent 50%,
+                                          transparent 75%,
+                                          rgba(0, 0, 0, .05) 75%,
+                                          rgba(0, 0, 0, .05));
+        background-size: 20px 20px;
+        box-shadow: 0 5px 0 rgba(0, 0, 0, .1);
+        left: 0;
+        padding: 0.4em 0;
+        position: absolute;
+        text-align: center;
+        top: 0;
+        width: 100vw;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="banner">
+      <strong>This polyfill is a work in progress.</strong>
+      It does not represent the final API of this proposal, nor even the current consensus.
+    </div>
+<h1 id="draft-design-of-custom-time-zone-api-1">Draft design of custom time zone API</h1>
+<h2 id="why-1">Why?</h2>
+<p>Currently, <code>Temporal.TimeZone</code> objects can only be obtained by passing an identifier to the constructor or to <code>Temporal.TimeZone.from()</code>.
+These identifiers can be:</p>
+<ul>
+<li>an offset string such as <code>-07:00</code>, in which case a time zone object is returned with a constant offset, with no daylight saving changes ever;</li>
+<li>an IANA time zone name such as <code>America/New_York</code>, in which case a time zone object is returned that will give a different offset depending on the date that it is queried with, which attempts to be historically accurate (within reason) as to the actual time that clocks showed there.</li>
+</ul>
+<p>No other identifiers than the ones deemed valid by one of the above two rules (<code>±HH:MM</code> or <a href="https://tc39.es/ecma402/#sec-isvalidtimezonename">IsValidTimeZoneName</a>), are currently permitted.</p>
+<p>Custom time zones are a desirable feature because implementations may want to prevent leaking information about what historical revision of the time zone data is present on the host system, or control what information about the host system&#39;s current time zone is exposed.
+See <a href="https://github.com/tc39/proposal-temporal/issues/273">issue #273</a>.</p>
+<p>API users may also want to perform time zone calculations with older, or newer, or more accurate versions of the time zone data than what is present in their implementation.</p>
+<p>As an example, the <code>America/Chicago</code> time zone in the tzdata database is based on the historical time in Chicago.
+Before the year 1883, when the US introduced time zones due to the influence of railroads, Chicago observed the local mean time of GMT-05:50:36.
+Other cities in what is now the <code>America/Chicago</code> time zone would have observed their own local mean times.
+If a user wanted to do accurate calculations for times occurring before 1883 in places in the <code>America/Chicago</code> time zone other than Chicago, a custom time zone would be required.
+For example, St. Louis&#39;s local mean time is GMT-06:00:49.11 (<a href="https://books.google.ca/books?id=Xfg3AAAAMAAJ&amp;pg=PA63">Byrd, Mary E., 1899, <em>A Laboratory Manual In Astronomy</em>, p. 63. Athenaeum Press: Boston.</a>)</p>
+<h2 id="usage-of-a-custom-time-zone-1">Usage of a custom time zone</h2>
+<p>Like built-in time zones, custom time zones have an <code>[[Identifier]]</code>.
+In these examples we assume a custom time zone class <code>StLouisTime</code> with the identifier <code>America/St_Louis</code>.
+(See the following section for how such a time zone object would be obtained.)</p>
+<p>When parsing an ISO 8601 string, the only places the time zone identifier is taken into account are <code>Temporal.Absolute.from()</code> and <code>Temporal.TimeZone.from()</code>.</p>
+<p>These functions gain an <code>options</code> parameter with an <code>idToTimeZone</code> option, whose value is a function returning the appropriate time zone object for the <code>id</code> passed in, or <code>null</code> to indicate that the time zone doesn&#39;t exist.</p>
+<p>If the option is not given, <code>Temporal.TimeZone.fromId()</code> is called.
+This is a new static method of <code>Temporal.TimeZone</code>.</p>
+<p><code>Temporal.TimeZone.fromId()</code> can be monkeypatched by time zone implementors if it is necessary to make new time zones available globally.
+The expectation is that it would rarely be necessary to do so, because if you have implemented a custom time zone for a particular calculation, you probably don&#39;t need it to be available globally.</p>
+<blockquote>
+<p><strong>FIXME:</strong> Note that there is an issue open regarding this behaviour for calendars: <a href="https://github.com/tc39/proposal-temporal/issues/294">#294</a></p>
+</blockquote>
+<pre class="language-javascript"><code class="language-javascript"><span class="token keyword">function</span> <span class="token function">idToTimeZone</span><span class="token punctuation">(</span><span class="token parameter">id</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>id <span class="token operator">===</span> <span class="token string">'America/St_Louis'</span><span class="token punctuation">)</span>
+    <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">StLouisTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">return</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">fromId</span><span class="token punctuation">(</span>id<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+Temporal<span class="token punctuation">.</span>Absolute<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'1820-04-01T18:16:25-06:00[America/St_Louis]'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> idToTimeZone <span class="token punctuation">}</span><span class="token punctuation">)</span>
+  <span class="token comment">// returns the Absolute corresponding to 1820-04-02T00:17:14.110Z</span>
+
+Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'1820-04-01T18:16:25-06:00[America/St_Louis]'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> idToTimeZone <span class="token punctuation">}</span><span class="token punctuation">)</span>
+  <span class="token comment">// returns a new StLouisTime instance</span></code></pre><blockquote>
+<p><strong>FIXME:</strong> Passing a custom time zone&#39;s identifier to the built-in <code>Temporal.TimeZone</code> constructor currently doesn&#39;t work: <code>new Temporal.TimeZone(&#39;America/St_Louis&#39;)</code> throws.
+However, this must change, because implementations would need to call <code>super(id)</code> to set the <em>[[Identifier]]</em> and <em>[[InitializedTemporalTimeZone]]</em> internal slots.
+Maybe we need to only throw if <code>new.target === Temporal.TimeZone</code>?</p>
+</blockquote>
+<p>In order to lock down any leakage of information about the host system&#39;s time zone database, one would monkeypatch the <code>Temporal.TimeZone.fromId()</code> function which performs the built-in mapping, change the list of allowed time zones that <code>Temporal.TimeZone</code> iterates through, and replace <code>Temporal.now.timeZone()</code> to avoid exposing the current time zone.
+Or just replace the <code>Temporal.TimeZone</code> class and <code>Temporal.now</code> object altogether:</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">// For example, to allow only offset time zones:</span>
+
+TemporalTimeZone_fromId <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span>fromId<span class="token punctuation">;</span>
+Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function-variable function">fromId</span> <span class="token operator">=</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">id</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token regex">/^[+-]\d{2}:?\d{2}$/</span><span class="token punctuation">.</span><span class="token function">test</span><span class="token punctuation">(</span>id<span class="token punctuation">)</span> <span class="token operator">||</span> id <span class="token operator">===</span> <span class="token string">'UTC'</span><span class="token punctuation">)</span>
+    <span class="token keyword">return</span> <span class="token function">TemporalTimeZone_fromId</span><span class="token punctuation">(</span>id<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">return</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">[</span>Symbol<span class="token punctuation">.</span>iterator<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token operator">*</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span> <span class="token keyword">return</span> <span class="token keyword">null</span><span class="token punctuation">;</span> <span class="token punctuation">}</span>
+Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function-variable function">timeZone</span> <span class="token operator">=</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span> <span class="token keyword">return</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">fromId</span><span class="token punctuation">(</span><span class="token string">'UTC'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token punctuation">}</span>
+
+<span class="token comment">// or, to replace the built-in implementation altogether:</span>
+
+Temporal<span class="token punctuation">.</span>TimeZone <span class="token operator">=</span> LockedDownTimeZoneImplementation<span class="token punctuation">;</span>
+Temporal<span class="token punctuation">.</span>now <span class="token operator">=</span> lockedDownNowObject<span class="token punctuation">;</span></code></pre><h2 id="implementation-of-a-custom-time-zone-1">Implementation of a custom time zone</h2>
+<h3 id="timezone-interface"><a class="heading-link" href="#timezone-interface"></a>TimeZone interface</h3><pre class="language-javascript"><code class="language-javascript"><span class="token keyword">class</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>TimeZone</span> <span class="token punctuation">{</span>
+  <span class="token comment">/** Sets the [[Identifier]] internal slot to @id, and creates the
+   * [[InitializedTemporalTimeZone]] internal slot. A subclassed custom
+   * time zone must chain up to this constructor. */</span>
+  <span class="token function">constructor</span><span class="token punctuation">(</span>id <span class="token operator">:</span> string<span class="token punctuation">)</span> <span class="token operator">:</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">;</span>
+
+  <span class="token comment">// Methods that a subclassed custom time zone must implement</span>
+
+  <span class="token comment">/** Given an absolute instant returns this time zone's corresponding
+   * UTC offset, in nanoseconds (signed). */</span>
+  <span class="token function">getOffsetAtInstant</span><span class="token punctuation">(</span>absolute <span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Absolute<span class="token punctuation">)</span> <span class="token operator">:</span> number<span class="token punctuation">;</span>
+
+  <span class="token comment">/** Given the calendar/wall-clock time, returns an array of 0, 1, or
+   * 2 absolute instants that are possible points on the timeline
+   * corresponding to it. In getAbsoluteFor(), one of these will be
+   * selected, depending on the disambiguation option. */</span>
+  <span class="token function">possibleInstants</span><span class="token punctuation">(</span>dateTime <span class="token operator">:</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">)</span> <span class="token operator">:</span> array<span class="token operator">&lt;</span>Temporal<span class="token punctuation">.</span>Absolute<span class="token operator">></span><span class="token punctuation">;</span>
+
+  <span class="token comment">/** Returns an iterator of all following offset transitions, starting
+   * from @startingPoint. */</span>
+  <span class="token operator">*</span><span class="token function">getTransitions</span><span class="token punctuation">(</span>startingPoint <span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Absolute<span class="token punctuation">)</span> <span class="token operator">:</span> iterator<span class="token operator">&lt;</span>Temporal<span class="token punctuation">.</span>Absolute<span class="token operator">></span><span class="token punctuation">;</span>
+
+  <span class="token comment">// API methods that a subclassed custom time zone doesn't need to touch</span>
+
+  <span class="token keyword">get</span> <span class="token function">name</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">:</span> string<span class="token punctuation">;</span>
+  <span class="token function">getDateTimeFor</span><span class="token punctuation">(</span>absolute <span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Absolute<span class="token punctuation">)</span> <span class="token operator">:</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">;</span>
+  <span class="token function">getAbsoluteFor</span><span class="token punctuation">(</span>
+      dateTime <span class="token operator">:</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">,</span>
+      options<span class="token operator">?</span><span class="token operator">:</span> object
+  <span class="token punctuation">)</span> <span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Absolute<span class="token punctuation">;</span>
+  <span class="token function">getOffsetFor</span><span class="token punctuation">(</span>absolute <span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Absolute<span class="token punctuation">)</span> <span class="token operator">:</span> string<span class="token punctuation">;</span>
+  <span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">:</span> string<span class="token punctuation">;</span>
+  <span class="token function">toJSON</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">:</span> string<span class="token punctuation">;</span>
+
+  <span class="token keyword">static</span> <span class="token keyword">from</span><span class="token punctuation">(</span>item <span class="token operator">:</span> any<span class="token punctuation">,</span> options<span class="token operator">?</span><span class="token operator">:</span> object<span class="token punctuation">)</span> <span class="token operator">:</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">;</span>
+  <span class="token keyword">static</span> <span class="token function">fromId</span><span class="token punctuation">(</span>id<span class="token operator">:</span> string<span class="token punctuation">)</span> <span class="token operator">:</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">;</span>
+  <span class="token keyword">static</span> <span class="token punctuation">[</span>Symbol<span class="token punctuation">.</span>iterator<span class="token punctuation">]</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">:</span> iterator<span class="token operator">&lt;</span>Temporal<span class="token punctuation">.</span>TimeZone<span class="token operator">></span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre><p>All the methods that custom time zones inherit from <code>Temporal.TimeZone</code> are implemented in terms of <code>getOffsetAtInstant()</code>, <code>possibleInstants()</code>, and the value of the <em>[[Identifier]]</em> internal slot.
+For example, <code>getOffsetFor()</code> and <code>getDateTimeFor()</code> call <code>getOffsetAtInstant()</code>, and <code>getAbsoluteFor()</code> calls both.</p>
+<blockquote>
+<p><strong>FIXME:</strong> These names are not very good.
+Help is welcome in determining the color of this bike shed.</p>
+</blockquote>
+<p>Alternatively, a custom time zone doesn&#39;t have to be a subclass of <code>Temporal.TimeZone</code>.
+In this case, it can be a plain object, which must implement <code>getOffsetAtInstant()</code>, <code>possibleInstants()</code>, and <code>toString()</code>.</p>
+<blockquote>
+<p><strong>FIXME:</strong> This means we have to remove any checks for the <em>[[InitializedTemporalTimeZone]]</em> slot in all APIs, so that plain objects can use them with e.g. <code>Temporal.TimeZone.prototype.getOffsetFor.call(plainObject, absolute)</code>.</p>
+</blockquote>
+<blockquote>
+<p><strong>FIXME:</strong> <code>Temporal.TimeZone</code> is supposed to be an iterable through all time zones known to the implementation, but what do we do about custom time zones there?</p>
+</blockquote>
+<h2 id="show-me-the-code-1">Show Me The Code</h2>
+<p>Here&#39;s what it could look like to implement the built-in offset-based time zones as custom time zones.
+The <code>MakeDate</code>, <code>MakeDay</code>, and <code>MakeTime</code> functions are as in the <a href="https://tc39.es/ecma262/#sec-overview-of-date-objects-and-definitions-of-abstract-operations">ECMA-262 specification</a>, except that instead of milliseconds, <code>MakeDate</code> and <code>MakeDay</code> return BigInt-typed nanoseconds, and <code>MakeTime</code> returns Number-typed nanoseconds.
+(This example leaves out all the type checking, range checking, and error handling, just to show the bare bones.)</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token keyword">class</span> <span class="token class-name">OffsetTimeZone</span> <span class="token keyword">extends</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>TimeZone</span> <span class="token punctuation">{</span>
+  #offsetNs<span class="token punctuation">;</span>
+  <span class="token function">constructor</span><span class="token punctuation">(</span><span class="token parameter">sign <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">,</span> h <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">,</span> min <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">,</span> s <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">,</span> ms <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">,</span> µs <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">,</span> ns <span class="token operator">=</span> <span class="token number">0</span></span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> offsetNs <span class="token operator">=</span> <span class="token function">MakeTime</span><span class="token punctuation">(</span>h<span class="token punctuation">,</span> min<span class="token punctuation">,</span> s<span class="token punctuation">,</span> ms<span class="token punctuation">,</span> µs<span class="token punctuation">,</span> ns<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>sign <span class="token operator">===</span> <span class="token operator">-</span><span class="token number">1</span> <span class="token operator">&amp;&amp;</span> offsetNs <span class="token operator">===</span> <span class="token number">0</span><span class="token punctuation">)</span> sign <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>  <span class="token comment">// "-00:00" is "+00:00"</span>
+    <span class="token keyword">const</span> hourString <span class="token operator">=</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>h<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">.</span><span class="token function">padStart</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token string">'0'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> minuteString <span class="token operator">=</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>min<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">.</span><span class="token function">padStart</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token string">'0'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> name <span class="token operator">=</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>sign <span class="token operator">&lt;</span> <span class="token number">0</span> <span class="token operator">?</span> <span class="token string">'-'</span> <span class="token operator">:</span> <span class="token string">'+'</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>hourString<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">:</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>minuteString<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>
+    <span class="token keyword">super</span><span class="token punctuation">(</span>name<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>#offsetNs <span class="token operator">=</span> sign <span class="token operator">*</span> offsetNs<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token function">getOffsetAtInstant</span><span class="token punctuation">(</span><span class="token comment">/* absolute */</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token punctuation">.</span>#offsetNs<span class="token punctuation">;</span> <span class="token comment">// offset is always the same</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token function">possibleInstants</span><span class="token punctuation">(</span><span class="token parameter">dateTime</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> iso <span class="token operator">=</span> dateTime<span class="token punctuation">.</span><span class="token function">getISOFields</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> epochNs <span class="token operator">=</span> <span class="token function">MakeDate</span><span class="token punctuation">(</span>
+      <span class="token function">MakeDay</span><span class="token punctuation">(</span>iso<span class="token punctuation">.</span>year<span class="token punctuation">,</span> iso<span class="token punctuation">.</span>month<span class="token punctuation">,</span> iso<span class="token punctuation">.</span>day<span class="token punctuation">)</span><span class="token punctuation">,</span>
+      <span class="token function">MakeTime</span><span class="token punctuation">(</span>iso<span class="token punctuation">.</span>hour<span class="token punctuation">,</span> iso<span class="token punctuation">.</span>minute<span class="token punctuation">,</span> iso<span class="token punctuation">.</span>second<span class="token punctuation">,</span> iso<span class="token punctuation">.</span>millisecond<span class="token punctuation">,</span> iso<span class="token punctuation">.</span>microsecond<span class="token punctuation">,</span> iso<span class="token punctuation">.</span>nanosecond<span class="token punctuation">)</span>
+    <span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token punctuation">[</span>Temporal<span class="token punctuation">.</span><span class="token function">Absolute</span><span class="token punctuation">(</span>epochNs <span class="token operator">+</span> <span class="token function">BigInt</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>#offsetNs<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token operator">*</span><span class="token function">getTransitions</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token keyword">null</span><span class="token punctuation">;</span> <span class="token comment">// no transitions ever</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token keyword">static</span> <span class="token function">fromId</span><span class="token punctuation">(</span><span class="token parameter">id</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> match <span class="token operator">=</span> <span class="token regex">/^([+-])(\d{2}):?(\d{2})$/</span><span class="token punctuation">.</span><span class="token function">exec</span><span class="token punctuation">(</span>id<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>match<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">const</span> <span class="token punctuation">[</span><span class="token punctuation">,</span> sign<span class="token punctuation">,</span> hours<span class="token punctuation">,</span> minutes<span class="token punctuation">]</span> <span class="token operator">=</span> result<span class="token punctuation">;</span>
+      <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">OffsetTimeZone</span><span class="token punctuation">(</span>sign <span class="token operator">===</span> <span class="token string">'-'</span> <span class="token operator">?</span> <span class="token operator">-</span><span class="token number">1</span> <span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token operator">+</span>hours<span class="token punctuation">,</span> <span class="token operator">+</span>minutes<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">return</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">fromId</span><span class="token punctuation">(</span>id<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre>    <footer>
+      <p>
+        This page includes a script which loads an implementation of Temporal in your browser.
+        You can open a console in your browser's developer tools and try it out directly!
+      </p>
+      <p>View this or help contribute on <a href="https://github.com/tc39/proposal-temporal">GitHub</a>.</p>
+    </footer>
+  </body>
+</html>
