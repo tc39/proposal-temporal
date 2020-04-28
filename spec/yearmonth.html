@@ -381,7 +381,7 @@
         1. If _disambiguation_ is `"constrain"`, then
           1. Return ! ConstrainYearMonth(_year_, _month_).
         1. If _disambiguation_ is `"balance"`, then
-          1. Let _result_ be ! BalanceYearMonth(_year_, _month_).
+          1. Let _result_ be ? BalanceYearMonth(_year_, _month_).
           1. If ! ValidateYearMonth(_result_.[[Year]], _result_.[[Month]]) is *false*, then
             1. Throw a *RangeError* exception.
           1. Return _result_.
@@ -415,6 +415,8 @@
       <h1>BalanceYearMonth ( _year_, _month_ )</h1>
       <emu-alg>
         1. Assert: _year_ and _month_ are integer Number values.
+        1. If _year_ is *+&infin;* or *&minus;&infin;*, or _month_ is *+&infin;* or *&minus;&infin;*, then
+          1. Throw a *RangeError* exception.
         1. Set _year_ to _year_ + floor((_month_ - 1) / 12).
         1. Set _month_ to NonNegativeModulo(_month_ - 1, 12) + 1.
         1. Return the new Record {

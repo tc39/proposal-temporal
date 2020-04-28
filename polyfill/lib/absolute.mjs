@@ -100,10 +100,10 @@ export class Absolute {
     const twons = GetSlot(two, EPOCHNANOSECONDS);
     const diff = twons.minus(onens);
 
-    const ns = diff.mod(1e3);
-    const us = diff.divide(1e3).mod(1e3);
-    const ms = diff.divide(1e6).mod(1e3);
-    const ss = diff.divide(1e9);
+    const ns = +diff.mod(1e3);
+    const us = +diff.divide(1e3).mod(1e3);
+    const ms = +diff.divide(1e6).mod(1e3);
+    const ss = +diff.divide(1e9);
 
     const Duration = ES.GetIntrinsic('%Temporal.Duration%');
     const { days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.BalanceDuration(

@@ -211,8 +211,8 @@
         1. Perform ? RequireInternalSlot(_temporalTime_, [[InitializedTemporalTime]]).
         1. Let _duration_ be ? ToLimitedTemporalDuration(_temporalDurationLike_, « »).
         1. Perform ? ToArithmeticTemporalDisambiguation(_options_).
-        1. Let _result_ be ! AddTime(_temporalTime_.[[Hour]], _temporalTime_.[[Minute]], _temporalTime_.[[Second]], _temporalTime_.[[Millisecond]], _temporalTime_.[[Microsecond]], _temporalTime_.[[Nanosecond]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
-        1. Let _result_ be ! BalanceTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_).
+        1. Let _result_ be ? AddTime(_temporalTime_.[[Hour]], _temporalTime_.[[Minute]], _temporalTime_.[[Second]], _temporalTime_.[[Millisecond]], _temporalTime_.[[Microsecond]], _temporalTime_.[[Nanosecond]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
+        1. Let _result_ be ? BalanceTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_).
         1. Return ? CreateTemporalTimeFromInstance(_temporalTime_, _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]).
       </emu-alg>
     </emu-clause>
@@ -234,7 +234,7 @@
         1. Let _millisecond_ be _temporalTime_.[[Millisecond]] - _duration_.[[Millisecond]].
         1. Let _microsecond_ be _temporalTime_.[[Microsecond]] - _duration_.[[Microsecond]].
         1. Let _nanosecond_ be _temporalTime_.[[Nanosecond]] - _duration_.[[Nanosecond]].
-        1. Let _result_ be ! BalanceTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_).
+        1. Let _result_ be ? BalanceTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_).
         1. Return ? CreateTemporalTimeFromInstance(_temporalTime_, _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]).
       </emu-alg>
     </emu-clause>
@@ -374,7 +374,7 @@
         1. Let _millisecond_ be _greater_.[[Millisecond]] - _smaller_.[[Millisecond]].
         1. Let _microsecond_ be _greater_.[[Microsecond]] - _smaller_.[[Microsecond]].
         1. Let _nanosecond_ be _greater_.[[Nanosecond]] - _smaller_.[[Nanosecond]].
-        1. Return ! BalanceTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_).
+        1. Return ? BalanceTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_).
       </emu-alg>
     </emu-clause>
 
@@ -455,7 +455,7 @@
         1. If _disambiguation_ is `"constrain"`, then
           1. Return ! ConstrainTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_).
         1. If _disambiguation_ is `"balance"`, then
-          1. Return ! BalanceTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_).
+          1. Return ? BalanceTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_).
         1. If _disambiguation_ is `"reject"`, then
           1. If ! ValidateTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_) is *false*, then
             1. Throw a *RangeError* exception.
@@ -495,6 +495,8 @@
       <h1>BalanceSubSecond ( _millisecond_, _microsecond_, _nanosecond_ )</h1>
       <emu-alg>
         1. Assert: _millisecond_, _microsecond_, and _nanosecond_ are integer Number values.
+        1. If _millisecond_ is *+&infin;* or *&minus;&infin;*, or _microsecond_ is *+&infin;* or *&minus;&infin;*, or _nanosecond_ is *+&infin;* or *&minus;&infin;*, then
+          1. Throw a *RangeError* exception.
         1. Set _microsecond_ to _microsecond_ + floor(_nanosecond_ / 1000).
         1. Set _nanosecond_ to ! NonNegativeModulo(_nanosecond_, 1000).
         1. Set _millisecond_ to _millisecond_ + floor(_microsecond_ / 1000).
@@ -514,7 +516,9 @@
       <h1>BalanceTime ( _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_ )</h1>
       <emu-alg>
         1. Assert: _hour_, _minute_, _second_, _millisecond_, _microsecond_, and _nanosecond_ are integer Number values.
-        1. Let _balanceResult_ be ! BalanceSubSecond(_millisecond_, _microsecond_, _nanosecond_).
+        1. If _hour_ is *+&infin;* or *&minus;&infin;*, or _minute_ is *+&infin;* or *&minus;&infin;*, or _second_ is *+&infin;* or *&minus;&infin;*, then
+          1. Throw a *RangeError* exception.
+        1. Let _balanceResult_ be ? BalanceSubSecond(_millisecond_, _microsecond_, _nanosecond_).
         1. Set _second_ to _second_ + _balanceResult_.[[Seconds]].
         1. Set _minute_ to _minute_ + floor(_second_ / 60).
         1. Set _second_ to NonNegativeModulo(_second_, 60).
@@ -685,7 +689,7 @@
         1. Let _millisecond_ be _millisecond_ + _milliseconds_.
         1. Let _microsecond_ be _microsecond_ + _microseconds_.
         1. Let _nanosecond_ be _nanosecond_ + _nanoseconds_.
-        1. Return ! BalanceTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_).
+        1. Return ? BalanceTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_).
       </emu-alg>
     </emu-clause>
   </emu-clause>

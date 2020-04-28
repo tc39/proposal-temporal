@@ -492,13 +492,13 @@
             [[Days]]: _days_
           }.
         1. Let _months_ be _greater_.[[Month]] &minus; _smaller_.[[Month]].
-        1. Let _balanceResult_ be ! BalanceDurationDate(_years_, _months_, _smaller_.[[Year]], _smaller_.[[Month]], _smaller_.[[Day]]).
+        1. Let _balanceResult_ be ? BalanceDurationDate(_years_, _months_, _smaller_.[[Year]], _smaller_.[[Month]], _smaller_.[[Day]]).
         1. Set _years_ to _balanceResult_.[[Years]].
         1. Set _months_ to _balanceResult_.[[Months]].
         1. Let _days_ be ! ToDayOfYear(_greater_.[[Year]], _greater_.[[Month]], _greater_.[[Day]]) &minus; ! ToDayOfYear(_balanceResult_.[[Year]], _balanceResult_.[[Month]], _smaller_.[[Day]]).
         1. If _days_ &lt; 0, then
           1. Set _months_ to _months_ &minus; 1.
-          1. Set _balanceResult_ to ! BalanceDurationDate(_years_, _months_, _smaller_.[[Year]], _smaller_.[[Month]], _smaller_.[[Day]]).
+          1. Set _balanceResult_ to ? BalanceDurationDate(_years_, _months_, _smaller_.[[Year]], _smaller_.[[Month]], _smaller_.[[Day]]).
           1. Set _years_ to _balanceResult_.[[Years]].
           1. Set _months_ to _balanceResult_.[[Months]].
           1. Set _days_ to ! ToDayOfYear(_greater_.[[Year]], _greater_.[[Month]], _greater_.[[Day]]) &minus; ! ToDayOfYear(_balanceResult_.[[Year]], _balanceResult_.[[Month]], _smaller_.[[Day]]).
@@ -604,7 +604,7 @@
         1. If _disambiguation_ is *"constrain"*, then
           1. Return ! ConstrainDate(_year_, _month_, _day_).
         1. If _disambiguation_ is *"balance"*, then
-          1. Let _result be ! BalanceDate(_year_, _month_, _day_).
+          1. Let _result be ? BalanceDate(_year_, _month_, _day_).
           1. Perform ? RejectDate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]]).
           1. Return _result_.
       </emu-alg>
@@ -645,7 +645,9 @@
     <emu-clause id="sec-temporal-balancedate" aoid="BalanceDate">
       <h1>BalanceDate ( _year_, _month_, _day_ )</h1>
       <emu-alg>
-        1. Let _balancedYearMonth_ be ! BalanceYearMonth(_year_, _month_).
+        1. If _day_ is *+&infin;* or *&minus;&infin;*, then
+          1. Throw a *RangeError* exception.
+        1. Let _balancedYearMonth_ be ? BalanceYearMonth(_year_, _month_).
         1. Let _month_ be _balancedYearMonth_.[[Month]].
         1. Let _year_ be _balancedYearMonth_.[[Year]].
         1. NOTE: To deal with negative numbers of days whose absolute value is greater than the number of days in a year, the following section subtracts years and adds days until the number of days is greater than &minus;366 or &minus;365.
@@ -666,14 +668,14 @@
           1. Set _testYear_ to _testYear_ + 1.
         1. NOTE: To deal with negative numbers of days whose absolute value greater than the number of days in the current month, the following section subtracts months and adds days until the number of days is greater than 0.
         1. Repeat, while _day_ &lt; 1
-          1. Set _balancedYearMonth_ be ! BalanceYearMonth(_year_, _month_ &minus; 1).
+          1. Set _balancedYearMonth_ be ? BalanceYearMonth(_year_, _month_ &minus; 1).
           1. Set _year_ to _balancedYearMonth_.[[Year]].
           1. Set _month_ to _balancedYearMonth_.[[Month]].
           1. Set _day_ to _day_ + ! DaysInMonth(_year_, _month_).
         1. NOTE: To deal with numbers of days greater than the number of days in the current month, the following section adds months and subtracts days until the number of days is less than the number of days in the month.
         1. Repeat, while _day_ &gt; ! DaysInMonth(_year_, _month_)
           1. Set _day_ to _day_ &minus; ! DaysInMonth(_year_, _month_).
-          1. Set _balancedYearMonth_ be ! BalanceYearMonth(_year_, _month_ + 1).
+          1. Set _balancedYearMonth_ be ? BalanceYearMonth(_year_, _month_ + 1).
           1. Set _year_ to _balancedYearMonth_.[[Year]].
           1. Set _month_ to _balancedYearMonth_.[[Month]].
         1. Return the new Record {
@@ -690,13 +692,13 @@
         1. If _months_ &lt; 0, then
           1. Set _years_ to _years_ &minus; 1.
           1. Set _months_ to _months_ + 12.
-        1. Let _balanceResult_ be ! BalanceYearMonth(_startYear_ + _years_, _startMonth_ + _months_).
+        1. Let _balanceResult_ be ? BalanceYearMonth(_startYear_ + _years_, _startMonth_ + _months_).
         1. Repeat, while _startDay_ &gt; ! DaysInMonth(_balanceResult_.[[Year]], _balanceResult_.[[Month]])
           1. Set _months_ to _months_ &minus; 1.
           1. If _months_ &lt; 0, then
             1. Set _years_ to _years_ &minus; 1.
             1. Set _months_ to _months_ + 12.
-          1. Set _balanceResult_ to ! BalanceYearMonth(_startYear_ + _years_, _startMonth_ + _months_).
+          1. Set _balanceResult_ to ? BalanceYearMonth(_startYear_ + _years_, _startMonth_ + _months_).
         1. Return the new Record {
           [[Year]]: _balanceResult_.[[Year]],
           [[Month]]: _balanceResult_.[[Month]],
@@ -737,10 +739,10 @@
         1. Assert: _disambiguation_ is one of `"constrain"`, `"balance"`, or `"reject"`.
         1. Let _y_ be _year_ + _years_.
         1. Let _m_ be _month_ + _months_.
-        1. Let _intermediate_ be ! BalanceYearMonth(_y_, _m_).
+        1. Let _intermediate_ be ? BalanceYearMonth(_y_, _m_).
         1. Let _intermediate_ be ? RegulateDate(_intermediate_.[[Year]], _intermediate_.[[Month]], _day_, _disambiguation_).
         1. Let _d_ be _intermediate_.[[Day]] + _days_.
-        1. Let _intermediate_ be ! BalanceDate(_intermediate_.[[Year]], _intermediate_.[[Month]], _d_).
+        1. Let _intermediate_ be ? BalanceDate(_intermediate_.[[Year]], _intermediate_.[[Month]], _d_).
         1. Return ? RegulateDate(_intermediate_.[[Year]], _intermediate_.[[Month]], _intermediate_.[[Day]], _disambiguation_).
       </emu-alg>
     </emu-clause>
@@ -750,9 +752,9 @@
       <emu-alg>
         1. Assert: _year_, _month_, _day_, _years_, _months_, and _days_ are integer Number values.
         1. Assert: _disambiguation_ is one of `"constrain"`, `"balance"`, or `"reject"`.
-        1. Let _intermediate_ be ! BalanceDate(_year_, _month_, _day_ - _days_).
+        1. Let _intermediate_ be ? BalanceDate(_year_, _month_, _day_ - _days_).
         1. Let _d_ be _intermediate_.[[Day]].
-        1. Let _intermediate_ be ! BalanceYearMonth(_intermediate_.[[Year]] - _years_, _intermediate_.[[Month]] - _months_).
+        1. Let _intermediate_ be ? BalanceYearMonth(_intermediate_.[[Year]] - _years_, _intermediate_.[[Month]] - _months_).
         1. Return ? RegulateDate(_intermediate_.[[Year]], _intermediate_.[[Month]], _d_, _disambiguation_).
       </emu-alg>
     </emu-clause>
