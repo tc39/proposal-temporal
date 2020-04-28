@@ -56,21 +56,6 @@ All of the following methods return new Temporal objects.
 
 ```javascript
 class Temporal.Calendar {
-
-	///////////////////
-	//  To/From ISO  //
-	///////////////////
-
-	/** Returns the projection of self in the ISO calendar */
-	toISO(
-		self: Temporal.Date
-	) : Temporal.Date;
-
-	/** Returns the projection of isoDate in the custom calendar */
-	fromISO(
-		isoDate: Temporal.Date
-	) : Temporal.Date;
-
 	/** Constructs a Temporal.Date from a free-form option bag */
 	dateFromFields(
 		fields: object
@@ -201,15 +186,13 @@ A partial ISO calendar would be one implemented as follows:
 
 ```javascript
 const PartialIsoCalendar = {
-	[Temporal.Calendar.toISO] = (self) => {
-		return self;
-	},
-
-	[Temporal.Calendar.fromISO] = (isoDate) => {
-		return isoDate;
-	},
-
 	[Temporal.Calendar.id] = "iso",
+
+	dateFromFields(fields) {
+		const { year, month, day } = fields;
+		return new Temporal.Date(year, month, day, this);
+	}
+	// Same for dateTimeFromFields, etc.
 
 	// ALL OTHER METHODS:
 	[Temporal.Calendar.plus] = () => {
@@ -270,23 +253,14 @@ The calendar IDs are less clear.  If the partial ISO calendar used ID `"iso"`, t
 
 ### New Temporal.Date instance methods
 
-The following methods involving ISO conversion would be added:
+Temporal.Date.prototype.with does *not* modify the calendar. A new method is added for that:
 
 ```javascript
-Temporal.Date.prototype.toISO = function(): Temporal.Date {
-	const isoDate = this.calendar.toISO(this);
-	// assert: isoDate.calendar === Temporal.Calendar.iso
-	return isoDate;
-}
-
-// Temporal.Date.prototype.with does *not* modify the calendar. A new method
-// is added for that:
-
-Temporal.Date.prototype.withCalendar = function(newCalendar: Calendar) {
-	const isoDate = this.toISO();  // note: call intrinsic version
-	const otherDate = newCalendar.fromISO(isoDate);
-	// assert: otherDate.calendar === newCalendar
-	return otherDate;
+Temporal.Date.prototype.withCalendar = function(newCalendar: Calendar): Temporal.Date {
+	const { year, month, day } = this.getISOFields();
+	// note: call intrinsic version
+	return new Temporal.Date(year, month, day, newCalendar);
+	// note: use species constructor
 }
 ```
 
@@ -303,7 +277,7 @@ Temporal.Date.prototype.toString = function() {
 		isoDate = this;
 	} else {
 		calendarKeyword = this.calendar.id;
-		isoDate = this.toISO();  // call intrinsic
+		isoDate = this.withCalendar(Temporal.Calendar.iso);  // call intrinsic
 	}
 	// return an ISO string for isoDate with calendar in brackets:
 	// "2019-12-06[c=hebrew]"
@@ -343,7 +317,7 @@ Temporal.Date.from = function(thing: string | object, options: object) {
 }
 ```
 
-Anoter example based on the toISO/fromISO methods (different semantics):
+Another example based on the withCalendar method (different semantics):
 
 ```javascript
 Temporal.Date.from = function(thing: string | object, options: object) {
@@ -384,8 +358,8 @@ Temporal.Date.prototype.plus = function(duration) {
 
 Temporal.Date.prototype.difference = function(other, options) {
 	if (other.calendar !== this.calendar) {
-		// Note: call intrinsic versions of these methods
-		other = other.toISO().withCalendar(this.calendar);
+		// Note: call intrinsic versions of this method
+		other = other.withCalendar(this.calendar);
 	}
 	return this.calendar.difference(this, other, options);
 }
@@ -404,7 +378,7 @@ The API here would depend on the decision for whether to require an explicit def
 // Default calendar option 2 only
 Temporal.Absolute.prototype.inTimeZone = function(timeZone, calendar) {
 	const isoDate = // compute the ISO date from the time zone
-	return calendar.fromISO(isoDate);
+	return isoDate.withCalendar(calendar);
 }
 ```
 
