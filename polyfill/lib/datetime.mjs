@@ -322,6 +322,7 @@ export class DateTime {
         year = GetSlot(item, YEAR);
         month = GetSlot(item, MONTH);
         day = GetSlot(item, DAY);
+        hour = GetSlot(item, HOUR);
         minute = GetSlot(item, MINUTE);
         second = GetSlot(item, SECOND);
         millisecond = GetSlot(item, MILLISECOND);
