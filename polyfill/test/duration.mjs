@@ -126,12 +126,6 @@ describe('Duration', () => {
       units.forEach((unit) => equal(`${Duration.from({ [unit]: 0 })}`, 'PT0S'));
       ['P0Y', 'P0M', 'P0D', 'PT0H', 'PT0M', 'PT0S'].forEach((str) => equal(`${Duration.from(str)}`, 'PT0S'));
     });
-    it('infinity is not allowed', () => {
-      units.forEach((unit, ix) => {
-        throws(() => new Duration(...Array(ix).fill(0), Infinity), RangeError);
-        throws(() => Duration.from({ [unit]: Infinity }, { disambiguation: 'reject' }), RangeError);
-      });
-    });
     it('unrepresentable number is not allowed', () => {
       units.forEach((unit, ix) => {
         throws(() => new Duration(...Array(ix).fill(0), 1e309), RangeError);
@@ -220,13 +214,6 @@ describe('Duration', () => {
     it('duration.with({ months: 1, seconds: 15 } works', () => {
       equal(`${duration.with({ months: 1, seconds: 15 })}`, 'P5Y1M5DT5H5M15.005005005S');
     });
-    it('constrain clamps infinite values', () => {
-      const expected = `P5Y5M5DT${BigInt(Number.MAX_VALUE)}H5M5.005005005S`;
-      equal(`${duration.with({ hours: Infinity })}`, expected);
-      equal(`${duration.with({ hours: Infinity }, { disambiguation: 'constrain' })}`, expected);
-    });
-    it('reject throws on infinite values', () =>
-      throws(() => duration.with({ hours: Infinity }, { disambiguation: 'reject' }), RangeError));
     it('balance balances all values up to days', () => {
       const result = duration.with(
         {
