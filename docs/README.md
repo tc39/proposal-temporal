@@ -89,8 +89,10 @@ See [Temporal.now Documentation](./now.md) for more detailed documentation.
 
 ### **Temporal.Calendar**
 
-A Calendar API is under discussion.
-See [Calendar Draft](./calendar-draft.md) for more information.
+A `Temporal.Calendar` represents a calendar system.
+Most code will use the ISO 8601 calendar, but other calendar systems are available.
+
+See [Temporal.Calendar Documentation](./calendar.md) for more detailed documentation.
 
 ## Object Relationship
 

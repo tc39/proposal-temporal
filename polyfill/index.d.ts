@@ -1,5 +1,6 @@
 export namespace Temporal {
   export type ComparisonResult = -1 | 0 | 1;
+  type ConstructorOf<T> = new (...args: unknown[]) => T;
 
   /**
    * Options for assigning fields using `with()` or entire objects with
@@ -183,6 +184,58 @@ export namespace Temporal {
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
     toString(tzLike?: Temporal.TimeZone | string): string;
+  }
+
+  /**
+   * A `Temporal.Calendar` is a representation of a calendar system. It includes
+   * information about how many days are in each year, how many months are in
+   * each year, how many days are in each month, and how to do arithmetic in\
+   * that calendar system.
+   *
+   * See https://tc39.es/proposal-temporal/docs/calendar.html for more details.
+   */
+  export class Calendar {
+    static from(item: Temporal.Calendar | string): Temporal.Calendar;
+    constructor(calendarIdentifier: string);
+    readonly id: string;
+    year(date: Temporal.Date): number;
+    month(date: Temporal.Date): number;
+    day(date: Temporal.Date): number;
+    dayOfWeek(date: Temporal.Date): number;
+    dayOfYear(date: Temporal.Date): number;
+    weekOfYear(date: Temporal.Date): number;
+    daysInMonth(date: Temporal.Date): number;
+    daysInYear(date: Temporal.Date): number;
+    isLeapYear(date: Temporal.Date): boolean;
+    dateFromFields(
+      fields: DateLike,
+      options: AssignmentOptions,
+      constructor: ConstructorOf<Temporal.Date>
+    ): Temporal.Date;
+    yearMonthFromFields(
+      fields: YearMonthLike,
+      options: AssignmentOptions,
+      constructor: ConstructorOf<Temporal.YearMonth>
+    ): Temporal.YearMonth;
+    monthDayFromFields(
+      fields: MonthDayLike,
+      options: AssignmentOptions,
+      constructor: ConstructorOf<Temporal.MonthDay>
+    ): Temporal.MonthDay;
+    plus(
+      date: Temporal.Date,
+      duration: Temporal.Duration,
+      options: ArithmeticOptions,
+      constructor: ConstructorOf<Temporal.Date>
+    ): Temporal.Date;
+    minus(
+      date: Temporal.Date,
+      duration: Temporal.Duration,
+      options: ArithmeticOptions,
+      constructor: ConstructorOf<Temporal.Date>
+    ): Temporal.Date;
+    difference(smaller: Temporal.Date, larger: Temporal.Date, options: DifferenceOptions);
+    toString(): string;
   }
 
   export type DateLike = {

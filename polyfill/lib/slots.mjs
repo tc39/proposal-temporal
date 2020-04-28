@@ -28,6 +28,9 @@ export const MILLISECONDS = 'slot-milliseconds';
 export const MICROSECONDS = 'slot-microseconds';
 export const NANOSECONDS = 'slot-nanoseconds';
 
+// Calendar
+export const CALENDAR_ID = 'slot-calendar-identifier';
+
 const slots = new WeakMap();
 export function CreateSlots(container) {
   slots.set(container, Object.create(null));
