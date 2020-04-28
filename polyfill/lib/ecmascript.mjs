@@ -11,6 +11,7 @@ import {
   HasSlot,
   EPOCHNANOSECONDS,
   TIMEZONE_ID,
+  CALENDAR_ID,
   ISO_YEAR,
   ISO_MONTH,
   ISO_DAY,
@@ -39,11 +40,16 @@ const NS_MAX = bigInt(86400).multiply(1e17);
 const YEAR_MIN = -271821;
 const YEAR_MAX = 275760;
 
+const BUILTIN_CALENDARS = {
+  // To be filled in as builtin calendars are implemented
+};
+
 import * as PARSE from './regex.mjs';
 
 export const ES = ObjectAssign({}, ES2019, {
   IsTemporalAbsolute: (item) => HasSlot(item, EPOCHNANOSECONDS),
   IsTemporalTimeZone: (item) => HasSlot(item, TIMEZONE_ID),
+  IsTemporalCalendar: (item) => HasSlot(item, CALENDAR_ID),
   IsTemporalDuration: (item) =>
     HasSlot(item, YEARS, MONTHS, DAYS, HOURS, MINUTES, SECONDS, MILLISECONDS, MICROSECONDS, NANOSECONDS),
   IsTemporalDate: (item) =>
@@ -71,6 +77,15 @@ export const ES = ObjectAssign({}, ES2019, {
       }
     }
     return result;
+  },
+  GetBuiltinCalendar: (id) => {
+    if (!(id in BUILTIN_CALENDARS)) throw new RangeError(`unknown calendar ${id}`);
+    return new BUILTIN_CALENDARS[id]();
+  },
+  ToTemporalCalendar: (item) => {
+    if (ES.IsTemporalCalendar(item)) return item;
+    const stringIdent = ES.ToString(item);
+    return ES.GetBuiltinCalendar(stringIdent);
   },
   ParseISODateTime: (isoString, { zoneRequired }) => {
     const regex = zoneRequired ? PARSE.absolute : PARSE.datetime;
