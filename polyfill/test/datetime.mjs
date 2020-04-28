@@ -464,7 +464,7 @@ describe('DateTime', () => {
     it('constructing from ISO string', () => {
       ['-271821-04-19T00:00', '+275760-09-14T00:00'].forEach((str) => {
         ['balance', 'reject'].forEach((disambiguation) => {
-          throws(() => DateTime.from(str, { disambiguation }));
+          throws(() => DateTime.from(str, { disambiguation }), RangeError);
         });
       });
       equal(`${DateTime.from('-271821-04-19T00:00')}`, '-271821-04-19T00:00:00.000000001');
