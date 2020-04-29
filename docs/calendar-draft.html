@@ -115,21 +115,6 @@
 <p>We had also considered using symbols, but settled on strings after discussion with the plenary (main issue: <a href="https://github.com/tc39/proposal-temporal/issues/310">#310</a>).</p>
 <h3 id="methods-on-the-temporalcalendar-interface"><a class="heading-link" href="#methods-on-the-temporalcalendar-interface"></a>Methods on the Temporal.Calendar interface</h3><p>All of the following methods return new Temporal objects.</p>
 <pre class="language-javascript"><code class="language-javascript"><span class="token keyword">class</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>Calendar</span> <span class="token punctuation">{</span>
-
-    <span class="token comment">///////////////////</span>
-    <span class="token comment">//  To/From ISO  //</span>
-    <span class="token comment">///////////////////</span>
-
-    <span class="token comment">/** Returns the projection of self in the ISO calendar */</span>
-    <span class="token function">toISO</span><span class="token punctuation">(</span>
-        self<span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Date
-    <span class="token punctuation">)</span> <span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">;</span>
-
-    <span class="token comment">/** Returns the projection of isoDate in the custom calendar */</span>
-    <span class="token function">fromISO</span><span class="token punctuation">(</span>
-        isoDate<span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Date
-    <span class="token punctuation">)</span> <span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">;</span>
-
     <span class="token comment">/** Constructs a Temporal.Date from a free-form option bag */</span>
     <span class="token function">dateFromFields</span><span class="token punctuation">(</span>
         fields<span class="token operator">:</span> object
@@ -238,21 +223,19 @@
 </ol>
 <h3 id="partial-iso-calendar-option-3"><a class="heading-link" href="#partial-iso-calendar-option-3"></a>Partial ISO Calendar (Option 3)</h3><p>A partial ISO calendar would be one implemented as follows:</p>
 <pre class="language-javascript"><code class="language-javascript"><span class="token keyword">const</span> PartialIsoCalendar <span class="token operator">=</span> <span class="token punctuation">{</span>
-    <span class="token punctuation">[</span>Temporal<span class="token punctuation">.</span>Calendar<span class="token punctuation">.</span>toISO<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token parameter">self</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
-        <span class="token keyword">return</span> self<span class="token punctuation">;</span>
-    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    id<span class="token operator">:</span> <span class="token string">"iso"</span><span class="token punctuation">,</span>
 
-    <span class="token punctuation">[</span>Temporal<span class="token punctuation">.</span>Calendar<span class="token punctuation">.</span>fromISO<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token parameter">isoDate</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
-        <span class="token keyword">return</span> isoDate<span class="token punctuation">;</span>
-    <span class="token punctuation">}</span><span class="token punctuation">,</span>
-
-    <span class="token punctuation">[</span>Temporal<span class="token punctuation">.</span>Calendar<span class="token punctuation">.</span>id<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token string">"iso"</span><span class="token punctuation">,</span>
+    <span class="token function">dateFromFields</span><span class="token punctuation">(</span><span class="token parameter">fields</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">const</span> <span class="token punctuation">{</span> year<span class="token punctuation">,</span> month<span class="token punctuation">,</span> day <span class="token punctuation">}</span> <span class="token operator">=</span> fields<span class="token punctuation">;</span>
+        <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>Date</span><span class="token punctuation">(</span>year<span class="token punctuation">,</span> month<span class="token punctuation">,</span> day<span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token comment">// Same for dateTimeFromFields, etc.</span>
 
     <span class="token comment">// ALL OTHER METHODS:</span>
-    <span class="token punctuation">[</span>Temporal<span class="token punctuation">.</span>Calendar<span class="token punctuation">.</span>plus<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    <span class="token function">plus</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
         <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">TypeError</span><span class="token punctuation">(</span><span class="token string">"Unsupported operation: full calendar required"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
-    <span class="token comment">// Same for [Temporal.Calendar.minus], etc.</span>
+    <span class="token comment">// Same for minus, etc.</span>
 <span class="token punctuation">}</span></code></pre><p>It would in effect render default Temporal.Date (and Temporal.DateTime) with fewer operations until you specify a calendar.  The following methods/getters would throw:</p>
 <ul>
 <li>.dayOfWeek</li>
@@ -323,21 +306,12 @@ Temporal<span class="token punctuation">.</span>Date<span class="token punctuati
 </tbody></table>
 <p>*<em>See <a href="https://github.com/tc39/proposal-temporal/issues/240#issuecomment-557726669">https://github.com/tc39/proposal-temporal/issues/240#issuecomment-557726669</a></em></p>
 <h2 id="temporaldate-api-changes-1">Temporal.Date API changes</h2>
-<h3 id="new-temporaldate-instance-methods"><a class="heading-link" href="#new-temporaldate-instance-methods"></a>New Temporal.Date instance methods</h3><p>The following methods involving ISO conversion would be added:</p>
-<pre class="language-javascript"><code class="language-javascript">Temporal<span class="token punctuation">.</span><span class="token class-name">Date</span><span class="token punctuation">.</span>prototype<span class="token punctuation">.</span><span class="token function-variable function">toISO</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Date <span class="token punctuation">{</span>
-    <span class="token keyword">const</span> isoDate <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>calendar<span class="token punctuation">.</span><span class="token function">toISO</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token comment">// assert: isoDate.calendar === Temporal.Calendar.iso</span>
-    <span class="token keyword">return</span> isoDate<span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-
-<span class="token comment">// Temporal.Date.prototype.with does *not* modify the calendar. A new method</span>
-<span class="token comment">// is added for that:</span>
-
-Temporal<span class="token punctuation">.</span><span class="token class-name">Date</span><span class="token punctuation">.</span>prototype<span class="token punctuation">.</span><span class="token function-variable function">withCalendar</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">newCalendar<span class="token operator">:</span> Calendar</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token keyword">const</span> isoDate <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">toISO</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// note: call intrinsic version</span>
-    <span class="token keyword">const</span> otherDate <span class="token operator">=</span> newCalendar<span class="token punctuation">.</span><span class="token function">fromISO</span><span class="token punctuation">(</span>isoDate<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token comment">// assert: otherDate.calendar === newCalendar</span>
-    <span class="token keyword">return</span> otherDate<span class="token punctuation">;</span>
+<h3 id="new-temporaldate-instance-methods"><a class="heading-link" href="#new-temporaldate-instance-methods"></a>New Temporal.Date instance methods</h3><p>Temporal.Date.prototype.with does <em>not</em> modify the calendar. A new method is added for that:</p>
+<pre class="language-javascript"><code class="language-javascript">Temporal<span class="token punctuation">.</span><span class="token class-name">Date</span><span class="token punctuation">.</span>prototype<span class="token punctuation">.</span><span class="token function-variable function">withCalendar</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">newCalendar<span class="token operator">:</span> Calendar</span><span class="token punctuation">)</span><span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Date <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> <span class="token punctuation">{</span> year<span class="token punctuation">,</span> month<span class="token punctuation">,</span> day <span class="token punctuation">}</span> <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">getISOFields</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">// note: call intrinsic version</span>
+    <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>Date</span><span class="token punctuation">(</span>year<span class="token punctuation">,</span> month<span class="token punctuation">,</span> day<span class="token punctuation">,</span> newCalendar<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">// note: use species constructor</span>
 <span class="token punctuation">}</span></code></pre><h3 id="iso-strings-with-calendar-hint"><a class="heading-link" href="#iso-strings-with-calendar-hint"></a>ISO strings with calendar hint</h3><p>This is an open question being discussed in <a href="https://github.com/tc39/proposal-temporal/issues/293">#293</a>.  The issue is that we do not want <code>toString()</code> to be lossy by losing the <code>calendar</code> field.  One proposal is to append the <code>Temporal.Calendar.id</code> field in <code>[c=ID]</code> following the date.  For example, <code>2019-12-06[c=hebrew]</code> refers to 2019-12-06 projected into the Hebrew calendar.</p>
 <pre class="language-javascript"><code class="language-javascript">Temporal<span class="token punctuation">.</span><span class="token class-name">Date</span><span class="token punctuation">.</span>prototype<span class="token punctuation">.</span><span class="token function-variable function">toString</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
     <span class="token keyword">let</span> calendarKeyword<span class="token punctuation">,</span> isoDate<span class="token punctuation">;</span>
@@ -347,7 +321,7 @@ Temporal<span class="token punctuation">.</span><span class="token class-name">D
         isoDate <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
         calendarKeyword <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>calendar<span class="token punctuation">.</span>id<span class="token punctuation">;</span>
-        isoDate <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">toISO</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// call intrinsic</span>
+        isoDate <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">withCalendar</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>Calendar<span class="token punctuation">.</span>iso<span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// call intrinsic</span>
     <span class="token punctuation">}</span>
     <span class="token comment">// return an ISO string for isoDate with calendar in brackets:</span>
     <span class="token comment">// "2019-12-06[c=hebrew]"</span>
@@ -372,7 +346,7 @@ Temporal<span class="token punctuation">.</span>Date<span class="token punctuati
         <span class="token keyword">let</span> calendar <span class="token operator">=</span> <span class="token comment">// ...</span>
         <span class="token keyword">return</span> calendar<span class="token punctuation">.</span><span class="token function">dateFromFields</span><span class="token punctuation">(</span>thing<span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre><p>Anoter example based on the toISO/fromISO methods (different semantics):</p>
+<span class="token punctuation">}</span></code></pre><p>Another example based on the withCalendar method (different semantics):</p>
 <pre class="language-javascript"><code class="language-javascript">Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">.</span><span class="token function-variable function">from</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">thing<span class="token operator">:</span> string <span class="token operator">|</span> object<span class="token punctuation">,</span> options<span class="token operator">:</span> object</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
     <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">typeof</span> thing <span class="token operator">===</span> <span class="token string">"string"</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
         object <span class="token operator">=</span> <span class="token comment">// components of string</span>
@@ -404,8 +378,8 @@ Temporal<span class="token punctuation">.</span>Date<span class="token punctuati
 
 Temporal<span class="token punctuation">.</span><span class="token class-name">Date</span><span class="token punctuation">.</span>prototype<span class="token punctuation">.</span><span class="token function-variable function">difference</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">other<span class="token punctuation">,</span> options</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
     <span class="token keyword">if</span> <span class="token punctuation">(</span>other<span class="token punctuation">.</span>calendar <span class="token operator">!==</span> <span class="token keyword">this</span><span class="token punctuation">.</span>calendar<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token comment">// Note: call intrinsic versions of these methods</span>
-        other <span class="token operator">=</span> other<span class="token punctuation">.</span><span class="token function">toISO</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">withCalendar</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>calendar<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment">// Note: call intrinsic versions of this method</span>
+        other <span class="token operator">=</span> other<span class="token punctuation">.</span><span class="token function">withCalendar</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>calendar<span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
     <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token punctuation">.</span>calendar<span class="token punctuation">.</span><span class="token function">difference</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">,</span> other<span class="token punctuation">,</span> options<span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span>
@@ -415,7 +389,7 @@ Temporal<span class="token punctuation">.</span><span class="token class-name">D
 <pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Default calendar option 2 only</span>
 Temporal<span class="token punctuation">.</span><span class="token class-name">Absolute</span><span class="token punctuation">.</span>prototype<span class="token punctuation">.</span><span class="token function-variable function">inTimeZone</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">timeZone<span class="token punctuation">,</span> calendar</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
     <span class="token keyword">const</span> isoDate <span class="token operator">=</span> <span class="token comment">// compute the ISO date from the time zone</span>
-    <span class="token keyword">return</span> calendar<span class="token punctuation">.</span><span class="token function">fromISO</span><span class="token punctuation">(</span>isoDate<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> isoDate<span class="token punctuation">.</span><span class="token function">withCalendar</span><span class="token punctuation">(</span>calendar<span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span></code></pre><h3 id="temporalnow"><a class="heading-link" href="#temporalnow"></a>Temporal.now</h3><p>The fourth way to get a Temporal.Date is to get the current time according to the environment (or mocked for SES).</p>
 <p>As above, this API depends on whether we decide to use a default calendar.  If we require an explicit calendar, it would be similar to above:</p>
 <pre class="language-javascript"><code class="language-javascript">Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function-variable function">date</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">calendar</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
