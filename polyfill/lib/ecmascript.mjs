@@ -405,7 +405,29 @@ export const ES = ObjectAssign({}, ES2019, {
     if (typeof item !== 'object' || item === null) {
       throw new TypeError('Unexpected type for duration');
     }
-    const duration = ES.ToTemporalDurationRecord(item, 'reject');
+    const {
+      years,
+      months,
+      days,
+      hours,
+      minutes,
+      seconds,
+      milliseconds,
+      microseconds,
+      nanoseconds
+    } = ES.ToTemporalDurationRecord(item);
+    const duration = ES.RegulateDuration(
+      years,
+      months,
+      days,
+      hours,
+      minutes,
+      seconds,
+      milliseconds,
+      microseconds,
+      nanoseconds,
+      'reject'
+    );
     for (const property of disallowedProperties) {
       if (duration[property] !== 0) {
         throw new RangeError(`invalid duration field ${property}`);
