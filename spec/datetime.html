@@ -591,6 +591,28 @@
         1. Return _fields_.
       </emu-alg>
     </emu-clause>
+
+    <emu-clause id="sec-temporal.datetime.prototype.getisocalendarfields">
+      <h1>Temporal.DateTime.prototype.getISOCalendarFields ( )</h1>
+      <p>
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _dateTime_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
+        1. Let _fields_ be ? ObjectCreate(%ObjectPrototype%).
+        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"year"*, _dateTime_.[[IsoYear]]).
+        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"month"*, _dateTime_.[[IsoMonth]]).
+        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"day"*, _dateTime_.[[IsoDay]]).
+        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"hour"*, _dateTime_.[[Hour]]).
+        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"minute"*, _dateTime_.[[Minute]]).
+        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"second"*, _dateTime_.[[Second]]).
+        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"millisecond"*, _dateTime_.[[Millisecond]]).
+        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"microsecond"*, _dateTime_.[[Microsecond]]).
+        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"nanosecond"*, _dateTime_.[[Nanosecond]]).
+        1. Return _fields_.
+      </emu-alg>
+    </emu-clause>
   </emu-clause>
 
   <emu-clause id="sec-temporal-datetime-abstract-ops">

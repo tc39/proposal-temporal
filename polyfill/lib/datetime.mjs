@@ -348,6 +348,20 @@ export class DateTime {
     if (!fields) throw new TypeError('invalid receiver');
     return fields;
   }
+  getISOCalendarFields() {
+    if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+    return {
+      year: GetSlot(this, ISO_YEAR),
+      month: GetSlot(this, ISO_MONTH),
+      day: GetSlot(this, ISO_DAY),
+      hour: GetSlot(this, HOUR),
+      minute: GetSlot(this, MINUTE),
+      second: GetSlot(this, SECOND),
+      millisecond: GetSlot(this, MILLISECOND),
+      microsecond: GetSlot(this, MICROSECOND),
+      nanosecond: GetSlot(this, NANOSECOND)
+    };
+  }
 
   static from(item, options = undefined) {
     const disambiguation = ES.ToTemporalDisambiguation(options);

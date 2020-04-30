@@ -191,6 +191,12 @@ export namespace Temporal {
     day?: number;
   };
 
+  export type DateISOCalendarFields = {
+    year: number;
+    month: number;
+    day: number;
+  };
+
   /**
    * A `Temporal.Date` represents a calendar date. "Calendar date" refers to the
    * concept of a date as expressed in everyday usage, independent of any time
@@ -222,6 +228,7 @@ export namespace Temporal {
     getYearMonth(): Temporal.YearMonth;
     getMonthDay(): Temporal.MonthDay;
     getFields(): Required<DateLike>;
+    getISOCalendarFields(): DateISOCalendarFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
     toString(): string;
@@ -237,6 +244,18 @@ export namespace Temporal {
     millisecond?: number;
     microsecond?: number;
     nanosecond?: number;
+  };
+
+  export type DateTimeISOCalendarFields = {
+    year: number;
+    month: number;
+    day: number;
+    hour: number;
+    minute: number;
+    second: number;
+    millisecond: number;
+    microsecond: number;
+    nanosecond: number;
   };
 
   /**
@@ -292,6 +311,7 @@ export namespace Temporal {
     getMonthDay(): Temporal.MonthDay;
     getTime(): Temporal.Time;
     getFields(): Required<DateTimeLike>;
+    getISOCalendarFields(): DateTimeISOCalendarFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
     toString(): string;
@@ -300,6 +320,11 @@ export namespace Temporal {
   export type MonthDayLike = {
     month?: number;
     day?: number;
+  };
+
+  export type MonthDayISOCalendarFields = {
+    month: number;
+    day: number;
   };
 
   /**
@@ -318,6 +343,7 @@ export namespace Temporal {
     with(monthDayLike: MonthDayLike, options?: AssignmentOptions): Temporal.MonthDay;
     withYear(year: number | { year: number }): Temporal.Date;
     getFields(): Required<MonthDayLike>;
+    getISOCalendarFields(): MonthDayISOCalendarFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
     toString(): string;
@@ -408,6 +434,11 @@ export namespace Temporal {
     month?: number;
   };
 
+  export type YearMonthISOCalendarFields = {
+    year: number;
+    month: number;
+  };
+
   /**
    * A `Temporal.YearMonth` represents a particular month on the calendar. For
    * example, it could be used to represent a particular instance of a monthly
@@ -431,6 +462,7 @@ export namespace Temporal {
     difference(other: Temporal.YearMonth, options: DifferenceOptions<'years' | 'months'>): Temporal.Duration;
     withDay(day: number): Temporal.Date;
     getFields(): Required<YearMonthLike>;
+    getISOCalendarFields(): YearMonthISOCalendarFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
     toString(): string;

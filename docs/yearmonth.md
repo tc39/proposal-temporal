@@ -436,7 +436,6 @@ This method can be used to convert a `Temporal.YearMonth` into a record-like dat
 It returns a new plain JavaScript object, with all the fields as enumerable, writable, own data properties.
 
 Note that if using a different calendar from ISO 8601, these will be the calendar-specific values.
-To get the ISO 8601 values, use `yearMonth.getISOFields()`.
 
 > **NOTE**: The possible values for the `month` property of the returned object start at 1, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
 
@@ -445,4 +444,18 @@ Usage example:
 ym = Temporal.DateTime.from('2019-06');
 Object.assign({}, ym).year  // => undefined
 Object.assign({}, ym.getFields()).year  // => 2019
+```
+
+### yearMonth.**getISOCalendarFields**(): { year: number, month: number }
+
+**Returns:** a plain object with properties expressing `yearMonth` in the ISO 8601 calendar.
+
+This method is mainly useful if you are implementing a custom calendar.
+Most code will not need to use it.
+Use `yearMonth.getFields()` instead.
+
+Usage example:
+```javascript
+ym = Temporal.YearMonth.from('2019-06');
+ym.getISOCalendarFields().year  // => 2019
 ```

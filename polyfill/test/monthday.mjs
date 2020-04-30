@@ -26,6 +26,9 @@ describe('MonthDay', () => {
       it('MonthDay.prototype.getFields is a Function', () => {
         equal(typeof MonthDay.prototype.getFields, 'function');
       });
+      it('MonthDay.prototype.getISOCalendarFields is a Function', () => {
+        equal(typeof MonthDay.prototype.getISOCalendarFields, 'function');
+      });
     });
   });
   describe('Construction', () => {
@@ -155,6 +158,27 @@ describe('MonthDay', () => {
   describe('monthDay.getFields() works', () => {
     const md1 = MonthDay.from('11-18');
     const fields = md1.getFields();
+    it('fields', () => {
+      equal(fields.month, 11);
+      equal(fields.day, 18);
+    });
+    it('enumerable', () => {
+      const fields2 = { ...fields };
+      equal(fields2.month, 11);
+      equal(fields2.day, 18);
+    });
+    it('as input to from()', () => {
+      const md2 = MonthDay.from(fields);
+      assert(md1.equals(md2));
+    });
+    it('as input to with()', () => {
+      const md2 = MonthDay.from('06-30').with(fields);
+      assert(md1.equals(md2));
+    });
+  });
+  describe('monthDay.getISOCalendarFields() works', () => {
+    const md1 = MonthDay.from('11-18');
+    const fields = md1.getISOCalendarFields();
     it('fields', () => {
       equal(fields.month, 11);
       equal(fields.day, 18);

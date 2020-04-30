@@ -76,6 +76,13 @@ export class MonthDay {
     if (!fields) throw new TypeError('invalid receiver');
     return fields;
   }
+  getISOCalendarFields() {
+    if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
+    return {
+      month: GetSlot(this, ISO_MONTH),
+      day: GetSlot(this, ISO_DAY)
+    };
+  }
   static from(item, options = undefined) {
     const disambiguation = ES.ToTemporalDisambiguation(options);
     let month, day;
