@@ -87,9 +87,27 @@ export const ES = ObjectAssign({}, ES2019, {
     }
     return result;
   },
-  ParseISODateTime: (isoString, { zoneRequired }) => {
-    const regex = zoneRequired ? PARSE.absolute : PARSE.datetime;
-    const match = regex.exec(isoString);
+  ParseFullISOString: (isoString) => {
+    const match = PARSE.absolute.exec(isoString);
+    if (!match) throw new RangeError(`invalid ISO 8601 string: ${isoString}`);
+    const year = ES.ToInteger(match[3]);
+    const month = ES.ToInteger(match[4]);
+    const day = ES.ToInteger(match[5]);
+    const hour = ES.ToInteger(match[7]);
+    const minute = ES.ToInteger(match[8]);
+    let second = ES.ToInteger(match[9]);
+    if (second === 60) second = 59;
+    const millisecond = ES.ToInteger(match[10]);
+    const microsecond = ES.ToInteger(match[11]);
+    const nanosecond = ES.ToInteger(match[12]);
+    const offset = `${match[15]}:${match[16] || '00'}`;
+    let ianaName = match[17];
+    if (ianaName) ianaName = ES.GetCanonicalTimeZoneIdentifier(ianaName).toString();
+    const zone = match[14] ? 'UTC' : ianaName || offset;
+    return { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, zone, ianaName, offset };
+  },
+  ParseISODateTime: (isoString) => {
+    const match = PARSE.datetime.exec(isoString);
     if (!match) throw new RangeError(`invalid ISO 8601 string: ${isoString}`);
     const year = ES.ToInteger(match[1]);
     const month = ES.ToInteger(match[2]);
@@ -108,13 +126,13 @@ export const ES = ObjectAssign({}, ES2019, {
     return { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, zone, ianaName, offset };
   },
   ParseTemporalAbsoluteString: (isoString) => {
-    return ES.ParseISODateTime(isoString, { zoneRequired: true });
+    return ES.ParseFullISOString(isoString);
   },
   ParseTemporalDateTimeString: (isoString) => {
-    return ES.ParseISODateTime(isoString, { zoneRequired: false });
+    return ES.ParseISODateTime(isoString);
   },
   ParseTemporalDateString: (isoString) => {
-    return ES.ParseISODateTime(isoString, { zoneRequired: false });
+    return ES.ParseISODateTime(isoString);
   },
   ParseTemporalTimeString: (isoString) => {
     const match = PARSE.time.exec(isoString);
