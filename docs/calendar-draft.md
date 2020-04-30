@@ -58,27 +58,32 @@ All of the following methods return new Temporal objects.
 class Temporal.Calendar {
 	/** Constructs a Temporal.Date from a free-form option bag */
 	dateFromFields(
-		fields: object
+		fields: object,
+		constructor: function
 	) : Temporal.Date;
 
 	/** Constructs a Temporal.DateTime from a free-form option bag */
 	dateTimeFromFields(
-		fields: object
+		fields: object,
+		constructor: function
 	) : Temporal.DateTime;
 
 	/** Constructs a Temporal.Time from a free-form option bag */
 	timeFromFields(
-		fields: object
+		fields: object,
+		constructor: function
 	) : Temporal.Time;
 
 	/** Constructs a Temporal.YearMonth from a free-form option bag */
 	yearMonthFromFields(
-		fields: object
+		fields: object,
+		constructor: function
 	) : Temporal.YearMonth;
 
 	/** Constructs a Temporal.MonthDay from a free-form option bag */
 	monthDayFromFields(
-		fields: object
+		fields: object,
+		constructor: function
 	) : Temporal.MonthDay;
 
 	/** A string identifier for this calendar */
@@ -92,14 +97,16 @@ class Temporal.Calendar {
 	plus(
 		input: Temporal.Date,
 		duration: Temporal.Duration,
-		options: /* options bag */
+		options: /* options bag */,
+		constructor: function
 	) : Temporal.Date;
 
 	/** Returns input minus duration according to the calendar rules. */
 	minus(
 		input: Temporal.Date,
 		duration: Temporal.Duration,
-		options: /* options bag */
+		options: /* options bag */,
+		constructor: function
 	) : Temporal.Date;
 
 	/** Returns left minus right, which are dates in the same calendar. */
@@ -188,9 +195,9 @@ A partial ISO calendar would be one implemented as follows:
 const PartialIsoCalendar = {
 	id: "iso",
 
-	dateFromFields(fields) {
+	dateFromFields(fields, constructor) {
 		const { year, month, day } = fields;
-		return new Temporal.Date(year, month, day, this);
+		return new constructor(year, month, day, this);
 	}
 	// Same for dateTimeFromFields, etc.
 
@@ -307,12 +314,12 @@ The exact behavior of this method depends on a few open discussions, but some lo
 Temporal.Date.from = function(thing: string | object, options: object) {
 	if (typeof thing === "string") {
 		let object = // components of string
-		return Temporal.Calendar.iso.dateFromFields(object);
+		return Temporal.Calendar.iso.dateFromFields(object, this);
 	} else {
 		// Get the calendar object, either the default calendar or something based
 		// on thing.calendar (string lookup or object)
 		let calendar = // ...
-		return calendar.dateFromFields(thing);
+		return calendar.dateFromFields(thing, this);
 	}
 }
 ```
@@ -352,8 +359,9 @@ Temporal.Date.from = function(thing: string | object, options: object) {
 As discussed earlier, Temporal.Date will defer to Temporal.Calendar methods wherever necessary.  Example implementation of selected Temporal.Date methods:
 
 ```javascript
-Temporal.Date.prototype.plus = function(duration) {
-	return this.calendar.plus(this, duration);
+Temporal.Date.prototype.plus = function(duration, options) {
+	const constructor = ES.SpeciesConstructor(this, Temporal.Date);
+	return this.calendar.plus(this, duration, options, constructor);
 }
 
 Temporal.Date.prototype.difference = function(other, options) {
