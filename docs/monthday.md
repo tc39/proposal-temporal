@@ -270,7 +270,6 @@ This method can be used to convert a `Temporal.MonthDay` into a record-like data
 It returns a new plain JavaScript object, with all the fields as enumerable, writable, own data properties.
 
 Note that if using a different calendar from ISO 8601, these will be the calendar-specific values.
-To get the ISO 8601 values, use `datetime.getISOFields()`.
 
 > **NOTE**: The possible values for the `month` property of the returned object start at 1, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
 
@@ -279,4 +278,18 @@ Usage example:
 md = Temporal.MonthDay.from('08-24');
 Object.assign({}, md).day  // => undefined
 Object.assign({}, md.getFields()).day  // => 24
+```
+
+### monthDay.**getISOCalendarFields**(): { month: number, day: number }
+
+**Returns:** a plain object with properties expressing `monthDay` in the ISO 8601 calendar.
+
+This method is mainly useful if you are implementing a custom calendar.
+Most code will not need to use it.
+Use `monthDay.getFields()` instead.
+
+Usage example:
+```javascript
+md = Temporal.MonthDay.from('08-24');
+md.getISOCalendarFields().day  // => 24
 ```

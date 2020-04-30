@@ -273,6 +273,22 @@
       </emu-alg>
     </emu-clause>
 
+    <emu-clause id="sec-temporal.date.prototype.getisocalendarfields">
+      <h1>Temporal.Date.prototype.getISOCalendarFields ( )</h1>
+      <p>
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _temporalDate_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_temporalDate_, [[InitializedTemporalDate]]).
+        1. Let _fields_ be ? ObjectCreate(%ObjectPrototype%).
+        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"year"*, _temporalDate_.[[IsoYear]]).
+        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"month"*, _temporalDate_.[[IsoMonth]]).
+        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"day"*, _temporalDate_.[[IsoDay]]).
+        1. Return _fields_.
+      </emu-alg>
+    </emu-clause>
+
     <emu-clause id="sec-temporal.date.prototype.plus">
       <h1>Temporal.Date.prototype.plus ( _temporalDurationLike_ [ , _options_ ] )</h1>
       <p>
