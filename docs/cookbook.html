@@ -349,6 +349,59 @@ This could be used when converting user-input date-time values between time zone
 <span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token comment">// On this date, when it's midnight in Chicago, it's 10 PM the previous night in LA</span>
 assert<span class="token punctuation">.</span><span class="token function">equal</span><span class="token punctuation">(</span>result<span class="token punctuation">,</span> <span class="token string">'2020-01-08T22:00-08:00[America/Los_Angeles]'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre><p>Here is another example similar to the previous one, using the time zone for future events.
+The times and locations of a series of future meetings are stored as a pair of strings: one for the calendar date and wall-clock time, and one for the time zone.
+They cannot be stored as an absolute point in UTC because between now and the time when the event happens, the time zone rules for daylight saving time could change &mdash; for example, Brazil abolished daylight saving time in 2019 &mdash; but the meeting would still be held at the same wall-clock time on that date.
+So if the time zone rules changed, the event&#39;s absolute point in time would change.</p>
+<p>This example calculates the starting times of all the Ecma TC39 meetings in 2019, in local time in Tokyo.</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Dates of the 2019 TC39 meetings:</span>
+<span class="token keyword">const</span> tc39meetings <span class="token operator">=</span> <span class="token punctuation">[</span>
+  <span class="token punctuation">{</span>
+    dateTime<span class="token operator">:</span> <span class="token string">'2019-01-28T10:00'</span><span class="token punctuation">,</span>
+    timeZone<span class="token operator">:</span> <span class="token string">'America/Phoenix'</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token punctuation">{</span>
+    dateTime<span class="token operator">:</span> <span class="token string">'2019-03-26T10:00'</span><span class="token punctuation">,</span>
+    timeZone<span class="token operator">:</span> <span class="token string">'America/New_York'</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token punctuation">{</span>
+    dateTime<span class="token operator">:</span> <span class="token string">'2019-06-04T10:00'</span><span class="token punctuation">,</span>
+    timeZone<span class="token operator">:</span> <span class="token string">'Europe/Berlin'</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token punctuation">{</span>
+    dateTime<span class="token operator">:</span> <span class="token string">'2019-07-23T10:00'</span><span class="token punctuation">,</span>
+    timeZone<span class="token operator">:</span> <span class="token string">'America/Los_Angeles'</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token punctuation">{</span>
+    dateTime<span class="token operator">:</span> <span class="token string">'2019-10-01T10:00'</span><span class="token punctuation">,</span>
+    timeZone<span class="token operator">:</span> <span class="token string">'America/New_York'</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token punctuation">{</span>
+    dateTime<span class="token operator">:</span> <span class="token string">'2019-12-03T10:00'</span><span class="token punctuation">,</span>
+    timeZone<span class="token operator">:</span> <span class="token string">'America/Los_Angeles'</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">]</span><span class="token punctuation">;</span>
+
+<span class="token comment">// To follow the meetings remotely from Tokyo, calculate the times you would</span>
+<span class="token comment">// need to join:</span>
+<span class="token keyword">const</span> localTimeZone <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'Asia/Tokyo'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> localTimes <span class="token operator">=</span> tc39meetings<span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> dateTime<span class="token punctuation">,</span> timeZone <span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+  <span class="token keyword">return</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>dateTime<span class="token punctuation">)</span>
+    <span class="token punctuation">.</span><span class="token function">inTimeZone</span><span class="token punctuation">(</span>timeZone<span class="token punctuation">,</span> <span class="token punctuation">{</span> disambiguation<span class="token operator">:</span> <span class="token string">'reject'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>
+    <span class="token punctuation">.</span><span class="token function">inTimeZone</span><span class="token punctuation">(</span>localTimeZone<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+assert<span class="token punctuation">.</span><span class="token function">deepEqual</span><span class="token punctuation">(</span>
+  localTimes<span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">dt</span><span class="token punctuation">)</span> <span class="token operator">=></span> dt<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  <span class="token punctuation">[</span>
+    <span class="token string">'2019-01-29T02:00'</span><span class="token punctuation">,</span>
+    <span class="token string">'2019-03-26T23:00'</span><span class="token punctuation">,</span>
+    <span class="token string">'2019-06-04T17:00'</span><span class="token punctuation">,</span>
+    <span class="token string">'2019-07-24T02:00'</span><span class="token punctuation">,</span>
+    <span class="token string">'2019-10-01T23:00'</span><span class="token punctuation">,</span>
+    <span class="token string">'2019-12-04T03:00'</span>
+  <span class="token punctuation">]</span>
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
 </code></pre><h3 id="daily-occurrence-in-local-time"><a class="heading-link" href="#daily-occurrence-in-local-time"></a>Daily occurrence in local time</h3><p>Similar to the previous recipe, calculate the absolute times of a daily occurrence that happens at a particular local time in a particular time zone.</p>
 <pre class="language-javascript"><code class="language-javascript"><span class="token comment">/**
  * Returns an iterator of the absolute times corresponding to a daily occurrence
