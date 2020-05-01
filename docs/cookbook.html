@@ -154,6 +154,8 @@
 </li>
 <li><a href="#next-weekly-occurrence">Next weekly occurrence</a>
 </li>
+<li><a href="#weekday-of-yearly-occurrence">Weekday of yearly occurrence</a>
+</li>
 </ul>
 </li>
 </ul>
@@ -763,6 +765,53 @@ assert<span class="token punctuation">.</span><span class="token function">equal
 <span class="token keyword">const</span> rightAfter <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Absolute<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-03-26T09:00-07:00[America/Los_Angeles]'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 next <span class="token operator">=</span> <span class="token function">nextWeeklyOccurrence</span><span class="token punctuation">(</span>rightAfter<span class="token punctuation">,</span> localTimeZone<span class="token punctuation">,</span> weekday<span class="token punctuation">,</span> eventTime<span class="token punctuation">,</span> eventTimeZone<span class="token punctuation">)</span><span class="token punctuation">;</span>
 assert<span class="token punctuation">.</span><span class="token function">equal</span><span class="token punctuation">(</span>next<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token string">'2020-04-02T16:45'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre><h3 id="weekday-of-yearly-occurrence"><a class="heading-link" href="#weekday-of-yearly-occurrence"></a>Weekday of yearly occurrence</h3><p>In some countries, when a public holiday falls on a Tuesday or Thursday, an extra &quot;bridge&quot; public holiday is observed on Monday or Friday in order to give workers a long weekend off.
+The following example calculates this.</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">/**
+ * Calculates the days that need to be taken off work in order to have a long
+ * weekend around a public holiday, "bridging" the holiday if it falls on a
+ * Tuesday or Thursday.
+ *
+ * @param {Temporal.MonthDay} holiday - Yearly date on the calendar
+ * @param {number} year - Year in which to calculate the bridge days
+ * @returns {Temporal.Date[]} List of dates to be taken off work
+ */</span>
+<span class="token keyword">function</span> <span class="token function">bridgePublicHolidays</span><span class="token punctuation">(</span><span class="token parameter">holiday<span class="token punctuation">,</span> year</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> date <span class="token operator">=</span> holiday<span class="token punctuation">.</span><span class="token function">withYear</span><span class="token punctuation">(</span>year<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">switch</span> <span class="token punctuation">(</span>date<span class="token punctuation">.</span>dayOfWeek<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">case</span> <span class="token number">1</span><span class="token operator">:</span> <span class="token comment">// Mon</span>
+    <span class="token keyword">case</span> <span class="token number">3</span><span class="token operator">:</span> <span class="token comment">// Wed</span>
+    <span class="token keyword">case</span> <span class="token number">5</span><span class="token operator">:</span> <span class="token comment">// Fri</span>
+      <span class="token keyword">return</span> <span class="token punctuation">[</span>date<span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token keyword">case</span> <span class="token number">2</span><span class="token operator">:</span> <span class="token comment">// Tue; take Monday off</span>
+      <span class="token keyword">return</span> <span class="token punctuation">[</span>date<span class="token punctuation">.</span><span class="token function">minus</span><span class="token punctuation">(</span><span class="token punctuation">{</span> days<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">,</span> date<span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token keyword">case</span> <span class="token number">4</span><span class="token operator">:</span> <span class="token comment">// Thu; take Friday off</span>
+      <span class="token keyword">return</span> <span class="token punctuation">[</span>date<span class="token punctuation">,</span> date<span class="token punctuation">.</span><span class="token function">plus</span><span class="token punctuation">(</span><span class="token punctuation">{</span> days<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token keyword">case</span> <span class="token number">6</span><span class="token operator">:</span> <span class="token comment">// Sat</span>
+    <span class="token keyword">case</span> <span class="token number">7</span><span class="token operator">:</span> <span class="token comment">// Sun</span>
+      <span class="token keyword">return</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">const</span> labourDay <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>MonthDay<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'05-01'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// No bridge day</span>
+assert<span class="token punctuation">.</span><span class="token function">deepEqual</span><span class="token punctuation">(</span>
+  <span class="token function">bridgePublicHolidays</span><span class="token punctuation">(</span>labourDay<span class="token punctuation">,</span> <span class="token number">2020</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">d</span><span class="token punctuation">)</span> <span class="token operator">=></span> d<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  <span class="token punctuation">[</span><span class="token string">'2020-05-01'</span><span class="token punctuation">]</span>
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// Bridge day</span>
+assert<span class="token punctuation">.</span><span class="token function">deepEqual</span><span class="token punctuation">(</span>
+  <span class="token function">bridgePublicHolidays</span><span class="token punctuation">(</span>labourDay<span class="token punctuation">,</span> <span class="token number">2018</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">d</span><span class="token punctuation">)</span> <span class="token operator">=></span> d<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  <span class="token punctuation">[</span><span class="token string">'2018-04-30'</span><span class="token punctuation">,</span> <span class="token string">'2018-05-01'</span><span class="token punctuation">]</span>
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// Bad luck, the holiday is already on a weekend</span>
+assert<span class="token punctuation">.</span><span class="token function">deepEqual</span><span class="token punctuation">(</span>
+  <span class="token function">bridgePublicHolidays</span><span class="token punctuation">(</span>labourDay<span class="token punctuation">,</span> <span class="token number">2021</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">d</span><span class="token punctuation">)</span> <span class="token operator">=></span> d<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  <span class="token punctuation">[</span><span class="token punctuation">]</span>
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
 </code></pre>    <footer>
       <p>
         This page includes a script which loads an implementation of Temporal in your browser.
