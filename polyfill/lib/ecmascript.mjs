@@ -90,9 +90,15 @@ export const ES = ObjectAssign({}, ES2019, {
   ParseFullISOString: (isoString) => {
     const match = PARSE.absolute.exec(isoString);
     if (!match) throw new RangeError(`invalid ISO 8601 string: ${isoString}`);
+    const absolute = match[0];
+    const dateTime = match[1];
+    const date = match[2];
+    const yearMonth = `${match[3]}-${match[4]}`;
+    const monthDay = `${match[4]}-${match[5]}`;
     const year = ES.ToInteger(match[3]);
     const month = ES.ToInteger(match[4]);
     const day = ES.ToInteger(match[5]);
+    const time = match[6];
     const hour = ES.ToInteger(match[7]);
     const minute = ES.ToInteger(match[8]);
     let second = ES.ToInteger(match[9]);
@@ -100,11 +106,30 @@ export const ES = ObjectAssign({}, ES2019, {
     const millisecond = ES.ToInteger(match[10]);
     const microsecond = ES.ToInteger(match[11]);
     const nanosecond = ES.ToInteger(match[12]);
-    const offset = `${match[15]}:${match[16] || '00'}`;
-    let ianaName = match[17];
+    const offset = `${match[14]}:${match[15] || '00'}`;
+    let ianaName = match[16];
     if (ianaName) ianaName = ES.GetCanonicalTimeZoneIdentifier(ianaName).toString();
-    const zone = match[14] ? 'UTC' : ianaName || offset;
-    return { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, zone, ianaName, offset };
+    const zone = match[13] ? 'UTC' : ianaName || offset;
+    return {
+      year,
+      month,
+      day,
+      hour,
+      minute,
+      second,
+      millisecond,
+      microsecond,
+      nanosecond,
+      zone,
+      ianaName,
+      offset,
+      absolute,
+      date,
+      dateTime,
+      yearMonth,
+      monthDay,
+      time
+    };
   },
   ParseISODateTime: (isoString) => {
     const match = PARSE.datetime.exec(isoString);
