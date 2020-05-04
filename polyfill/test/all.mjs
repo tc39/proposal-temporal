@@ -27,6 +27,7 @@ import * as duration from './duration.mjs';
 import * as yearmonth from './yearmonth.mjs';
 import * as monthday from './monthday.mjs';
 import * as intl from './intl.mjs';
+import * as parse from './parse.mjs';
 
 void datemath;
 void regex;
@@ -42,6 +43,7 @@ void duration;
 void yearmonth;
 void monthday;
 void intl;
+void parse;
 
 Promise.resolve()
   .then(() => {
