@@ -5,7 +5,7 @@ const loadLanguages = require('prismjs/components/');
 
 const encoding = 'utf-8';
 
-loadLanguages(['bash']);
+loadLanguages(['bash', 'typescript']);
 
 // From marked/helpers.js
 const escapeReplacements = {

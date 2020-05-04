@@ -89,6 +89,15 @@ See [Temporal.Duration Documentation](./duration.md) for more detailed documenta
 
 See [Temporal.now Documentation](./now.md) for more detailed documentation.
 
+### **Temporal.parse**
+
+`Temporal.parse` is a utility method for parsing a full ISO string and selecting
+a single component from it. It is mainly intended to produce strings that can be
+used to construct Temporal objects from a complete ISO string.
+
+See [Temporal.parse Documentation](./parse.md) for more detailed documentation.
+
+
 ### **Temporal.Calendar**
 
 A Calendar API is under discussion.
