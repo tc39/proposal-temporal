@@ -9,39 +9,24 @@ import Demitasse from '@pipobscure/demitasse';
 import Pretty from '@pipobscure/demitasse-pretty';
 
 // tests with long tedious output
-import * as datemath from './datemath.mjs';
-import * as regex from './regex.mjs';
+import './datemath.mjs';
+import './regex.mjs';
 
 // tests of internals
-import * as ecmascript from './ecmascript.mjs';
+import './ecmascript.mjs';
 
 // tests of public API
-import * as exports from './exports.mjs';
-import * as now from './now.mjs';
-import * as timezone from './timezone.mjs';
-import * as absolute from './absolute.mjs';
-import * as date from './date.mjs';
-import * as time from './time.mjs';
-import * as datetime from './datetime.mjs';
-import * as duration from './duration.mjs';
-import * as yearmonth from './yearmonth.mjs';
-import * as monthday from './monthday.mjs';
-import * as intl from './intl.mjs';
-
-void datemath;
-void regex;
-void ecmascript;
-void exports;
-void now;
-void timezone;
-void absolute;
-void date;
-void time;
-void datetime;
-void duration;
-void yearmonth;
-void monthday;
-void intl;
+import './exports.mjs';
+import './now.mjs';
+import './timezone.mjs';
+import './absolute.mjs';
+import './date.mjs';
+import './time.mjs';
+import './datetime.mjs';
+import './duration.mjs';
+import './yearmonth.mjs';
+import './monthday.mjs';
+import './intl.mjs';
 
 Promise.resolve()
   .then(() => {
