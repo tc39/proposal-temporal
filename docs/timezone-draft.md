@@ -57,8 +57,7 @@ Temporal.TimeZone.from('1820-04-01T18:16:25-06:00[America/St_Louis]', { idToTime
 > However, this must change, because implementations would need to call `super(id)` to set the _[[Identifier]]_ and _[[InitializedTemporalTimeZone]]_ internal slots.
 > Maybe we need to only throw if `new.target === Temporal.TimeZone`?
 
-In order to lock down any leakage of information about the host system's time zone database, one would monkeypatch the `Temporal.TimeZone.fromId()` function which performs the built-in mapping, change the list of allowed time zones that `Temporal.TimeZone` iterates through, and replace `Temporal.now.timeZone()` to avoid exposing the current time zone.
-Or just replace the `Temporal.TimeZone` class and `Temporal.now` object altogether:
+In order to lock down any leakage of information about the host system's time zone database, one would monkeypatch the `Temporal.TimeZone.fromId()` function which performs the built-in mapping, change the list of allowed time zones that `Temporal.TimeZone` iterates through, and replace `Temporal.now.timeZone()` to avoid exposing the current time zone:
 
 ```javascript
 // For example, to allow only offset time zones:
@@ -71,11 +70,6 @@ Temporal.TimeZone.fromId = function (id) {
 }
 Temporal.TimeZone[Symbol.iterator] = function* () { return null; }
 Temporal.now.timeZone = function () { return Temporal.TimeZone.fromId('UTC'); }
-
-// or, to replace the built-in implementation altogether:
-
-Temporal.TimeZone = LockedDownTimeZoneImplementation;
-Temporal.now = lockedDownNowObject;
 ```
 
 ## Implementation of a custom time zone
