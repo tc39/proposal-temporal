@@ -44,7 +44,8 @@ class CustomRenderer extends marked.Renderer {
   heading(text, level, raw, slugger) {
     let id = this.options.headerPrefix + slugger.slug(raw); // marked.js default
 
-    if (level !== 3) {
+    if (level !== 3 || !text.includes('.') || !text.includes(':')) {
+      // Only do this for h3 headers that have function signatures
       this.toc.push({ id, level, raw });
       return super.heading(text, level, raw, slugger);
     }

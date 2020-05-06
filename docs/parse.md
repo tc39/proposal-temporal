@@ -15,12 +15,12 @@ const parseResult = Temporal.parse(input);
 
 ### Parameters
 
-- `input` (`string`): The input string to be parsed. It should be a full valid
+- `input` (string): The input string to be parsed. It should be a full valid
 ISO string, but it may or may not represent a valid absolute.
 
 ### Returns
 
-The returned value is an `object` that contains all the components of the parsed
+The returned value is an object that contains all the components of the parsed
 ISO string. It has a structure described by the following TypeScript interface:
 
 ```typescript
