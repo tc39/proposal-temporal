@@ -20,9 +20,8 @@ describe('Temporal.parse', () => {
   it('does not fail for valid ISO strings', () => assert(() => Temporal.parse('1937-01-01T12:00:27.870+00:20')));
 
   it('can be used to salvage valid parts of invalid ISO strings', () => {
-    const date = Temporal.Date.from('1922-12-30');
     const salvagedDate = Temporal.Date.from(Temporal.parse('1922-12-30T99:99:99Z').date);
-    equal(date.toString(), salvagedDate.toString());
+    equal(salvagedDate.toString(), '1922-12-30');
   });
 
   const parsed = Temporal.parse('1937-01-01T12:00:27.870+00:20');
