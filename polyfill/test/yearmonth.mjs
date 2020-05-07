@@ -118,6 +118,11 @@ describe('YearMonth', () => {
       it('with(09)', () => equal(`${ym.with({ month: 9 })}`, '2019-09'));
     });
   });
+  describe('YearMonth.with() works', () => {
+    it('throws on trying to change the calendar', () => {
+      throws(() => YearMonth.from('2019-10').with({ calendar: 'gregory' }), RangeError);
+    });
+  });
   describe('YearMonth.compare() works', () => {
     const nov94 = YearMonth.from('1994-11');
     const jun13 = YearMonth.from('2013-06');
@@ -133,8 +138,9 @@ describe('YearMonth', () => {
       throws(() => YearMonth.compare(nov94, '2013-06'), TypeError);
     });
     it('takes [[RefISODay]] into account', () => {
-      const ym1 = new YearMonth(2000, 1, 1);
-      const ym2 = new YearMonth(2000, 1, 2);
+      const iso = Temporal.Calendar.from('iso8601');
+      const ym1 = new YearMonth(2000, 1, iso, 1);
+      const ym2 = new YearMonth(2000, 1, iso, 2);
       equal(YearMonth.compare(ym1, ym2), -1);
     });
   });
@@ -148,8 +154,9 @@ describe('YearMonth', () => {
       throws(() => nov94.equals('1994-11'), TypeError);
     });
     it('takes [[RefISODay]] into account', () => {
-      const ym1 = new YearMonth(2000, 1, 1);
-      const ym2 = new YearMonth(2000, 1, 2);
+      const iso = Temporal.Calendar.from('iso8601');
+      const ym1 = new YearMonth(2000, 1, iso, 1);
+      const ym2 = new YearMonth(2000, 1, iso, 2);
       assert(!ym1.equals(ym2));
     });
   });
@@ -348,23 +355,22 @@ describe('YearMonth', () => {
     });
   });
   describe('yearMonth.getFields() works', () => {
-    const ym1 = YearMonth.from('1976-11');
+    const calendar = Temporal.Calendar.from('iso8601');
+    const ym1 = YearMonth.from({ year: 1976, month: 11, calendar });
     const fields = ym1.getFields();
     it('fields', () => {
       equal(fields.year, 1976);
       equal(fields.month, 11);
+      equal(fields.calendar, calendar);
     });
     it('enumerable', () => {
       const fields2 = { ...fields };
       equal(fields2.year, 1976);
       equal(fields2.month, 11);
+      equal(fields2.calendar, calendar);
     });
     it('as input to from()', () => {
       const ym2 = YearMonth.from(fields);
-      equal(YearMonth.compare(ym1, ym2), 0);
-    });
-    it('as input to with()', () => {
-      const ym2 = YearMonth.from('2019-06').with(fields);
       equal(YearMonth.compare(ym1, ym2), 0);
     });
   });

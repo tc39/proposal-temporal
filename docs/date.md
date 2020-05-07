@@ -16,20 +16,21 @@ A `Temporal.Date` can be converted into a `Temporal.DateTime` by combining it wi
 
 ## Constructor
 
-### **new Temporal.Date**(_isoYear_: number, _isoMonth_: number, _isoDay_: number) : Temporal.Date
+### **new Temporal.Date**(_isoYear_: number, _isoMonth_: number, _isoDay_: number, _calendar_?: Temporal.Calendar) : Temporal.Date
 
 **Parameters:**
 - `isoYear` (number): A year.
 - `isoMonth` (number): A month, ranging between 1 and 12 inclusive.
 - `isoDay` (number): A day of the month, ranging between 1 and 31 inclusive.
+- `calendar` (optional `Temporal.Calendar`): A calendar to project the date into.
 
 **Returns:** a new `Temporal.Date` object.
 
-Use this constructor if you have the correct parameters for the date already as individual number values.
-Otherwise, `Temporal.Date.from()`, which accepts more kinds of input and allows disambiguation behaviour, is probably more convenient.
+Use this constructor if you have the correct parameters for the date already as individual number values in the ISO 8601 calendar.
+Otherwise, `Temporal.Date.from()`, which accepts more kinds of input, allows inputting dates in different calendar reckonings, and allows disambiguation behaviour, is probably more convenient.
 
 All values are given as reckoned in the [ISO 8601 calendar](https://en.wikipedia.org/wiki/ISO_8601#Dates).
-Together, `isoYear`, `isoMonth`, and `isoDay` must represent a valid date in that calendar.
+Together, `isoYear`, `isoMonth`, and `isoDay` must represent a valid date in that calendar, even if you are passing a different calendar as the `calendar` parameter.
 
 The range of allowed values for this type is exactly enough that calling [`getDate()`](./datetime.html#getDate) on any valid `Temporal.DateTime` will succeed.
 If `isoYear`, `isoMonth`, and `isoDay` form a date outside of this range, then `constrain` mode will clamp the values to the limit of the allowed range, while `reject` mode will throw a `RangeError`.
@@ -58,7 +59,8 @@ date = new Temporal.Date(2020, 3, 14)  // => 2020-03-14
 
 This static method creates a new `Temporal.Date` object from another value.
 If the value is another `Temporal.Date` object, a new object representing the same date is returned.
-If the value is any other object, it must have `year`, `month`, and `day` properties, and a `Temporal.Date` will be constructed from them.
+If the value is any other object, it must have `year`, `month`, and `day` properties, and optionally a `calendar` property.
+A `Temporal.Date` will be constructed from these properties.
 
 Any non-object value is converted to a string, which is expected to be in ISO 8601 format.
 Any time or time zone part is optional and will be ignored.
@@ -82,6 +84,11 @@ date === Temporal.Date.from(date)  // => true
 date = Temporal.Date.from({year: 2006, month: 8, day: 24});  // => 2006-08-24
 date = Temporal.Date.from(Temporal.DateTime.from('2006-08-24T15:43:27'));
   // => same as above; Temporal.DateTime has year, month, and day properties
+
+calendar = Temporal.Calendar.from('islamic');
+date = Temporal.Date.from({ year: 1427, month; 8, day: 1, calendar });  // => 2006-08-24[c=islamic]
+date = Temporal.Date.from({ year: 1427, month: 8, day: 1, calendar: 'islamic' });
+  // => same as above
 
 // Different disambiguation modes
 date = Temporal.Date.from({ year: 2001, month: 13, day: 1 }, { disambiguation: 'constrain' })
@@ -138,10 +145,14 @@ date.month  // => 8
 date.day    // => 24
 ```
 
+### date.**calendar** : Temporal.Calendar
+
+The `calendar` read-only property gives the calendar that the `year`, `month`, and `day` properties are interpreted in.
+
 ### date.**dayOfWeek** : number
 
 The `dayOfWeek` read-only property gives the weekday number that the date falls on.
-The weekday number is defined as in the ISO 8601 standard: a value between 1 and 7, inclusive, with Monday being 1, and Sunday 7.
+For the ISO 8601 calendar, the weekday number is defined as in the ISO 8601 standard: a value between 1 and 7, inclusive, with Monday being 1, and Sunday 7.
 For an overview, see [ISO 8601 on Wikipedia](https://en.wikipedia.org/wiki/ISO_8601#Week_dates).
 
 Usage example:
@@ -153,7 +164,7 @@ date = Temporal.Date.from('2006-08-24');
 ### date.**dayOfYear** : number
 
 The `dayOfYear` read-only property gives the ordinal day of the year that the date falls on.
-This is a value between 1 and 365, or 366 in a leap year.
+For the ISO 8601 calendar, this is a value between 1 and 365, or 366 in a leap year.
 
 Usage example:
 ```javascript
@@ -165,7 +176,7 @@ console.log(date.year, date.dayOfYear);  // 2006 236
 ### date.**weekOfYear** : number
 
 The `weekOfYear` read-only property gives the ISO week number of the date.
-This is normally a value between 1 and 52, but in a few cases it can be 53 as well.
+For the ISO 8601 calendar, this is normally a value between 1 and 52, but in a few cases it can be 53 as well.
 ISO week 1 is the week containing the first Thursday of the year.
 For more information on ISO week numbers, see for example the Wikipedia article on [ISO week date](https://en.wikipedia.org/wiki/ISO_week_date).
 
@@ -179,7 +190,7 @@ console.log(date.year, date.weekOfYear, date.dayOfWeek);  // 2006 34 4
 ### date.**daysInMonth** : number
 
 The `daysInMonth` read-only property gives the number of days in the month that the date falls in.
-This is 28, 29, 30, or 31, depending on the month and whether the year is a leap year.
+For the ISO 8601 calendar, this is 28, 29, 30, or 31, depending on the month and whether the year is a leap year.
 
 Usage example:
 ```javascript
@@ -202,7 +213,7 @@ console.log(poem);
 ### date.**daysInYear** : number
 
 The `daysInYear` read-only property gives the number of days in the year that the date falls in.
-This is 365 or 366, depending on whether the year is a leap year.
+For the ISO 8601 calendar, this is 365 or 366, depending on whether the year is a leap year.
 
 Usage example:
 ```javascript
@@ -245,6 +256,9 @@ This method creates a new `Temporal.Date` which is a copy of `date`, but any pro
 Since `Temporal.Date` objects are immutable, use this method instead of modifying one.
 
 > **NOTE**: The allowed values for the `dateLike.month` property start at 1, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
+
+> **NOTE**: If a `calendar` property is provided on `dateLike`, the new calendar is applied first, before any of the other properties.
+> If you are passing in an object with _only_ a `calendar` property, it is recommended to use the `withCalendar` method instead.
 
 Usage example:
 ```javascript
@@ -501,7 +515,7 @@ date.getYearMonth()  // => 2006-08
 date.getMonthDay()  // => 08-24
 ```
 
-### date.**getFields**() : { year: number, month: number, day: number, [propName: string]: unknown }
+### date.**getFields**() : { year: number, month: number, day: number, calendar: Temporal.Calendar, [propName: string]: unknown }
 
 **Returns:** a plain object with properties equal to the fields of `date`.
 
@@ -525,10 +539,18 @@ Object.assign({}, date.getFields()).day  // => 24
 
 This method is mainly useful if you are implementing a custom calendar.
 Most code will not need to use it.
-Use `date.getFields()` instead.
+Use `date.getFields()` instead, or `date.withCalendar('iso8601').getFields()`.
 
 Usage example:
 ```javascript
 date = Temporal.Date.from('2006-08-24');
 date.getISOCalendarFields().day  // => 24
+
+// Date in other calendar
+date = date.withCalendar('hebrew');
+date.getFields().day  // => 30
+date.getISOCalendarFields().day  // => 24
+
+// Most likely what you need is this:
+date.withCalendar('iso8601').day  // => 24
 ```

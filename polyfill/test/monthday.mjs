@@ -123,6 +123,9 @@ describe('MonthDay', () => {
         throws(() => MonthDay.from('01-15').with({ day: 1 }, { disambiguation }), RangeError)
       );
     });
+    it('throws on trying to change the calendar', () => {
+      throws(() => MonthDay.from('01-15').with({ calendar: 'gregory' }), RangeError);
+    });
   });
   describe('MonthDay.equals()', () => {
     const md1 = MonthDay.from('01-22');
@@ -134,8 +137,9 @@ describe('MonthDay', () => {
       throws(() => md1.equals({ month: 1, day: 22 }), TypeError);
     });
     it('takes [[RefISOYear]] into account', () => {
-      const md1 = new MonthDay(1, 1, 1972);
-      const md2 = new MonthDay(1, 1, 2000);
+      const iso = Temporal.Calendar.from('iso8601');
+      const md1 = new MonthDay(1, 1, iso, 1972);
+      const md2 = new MonthDay(1, 1, iso, 2000);
       assert(!md1.equals(md2));
     });
   });
@@ -167,23 +171,22 @@ describe('MonthDay', () => {
     });
   });
   describe('monthDay.getFields() works', () => {
-    const md1 = MonthDay.from('11-18');
+    const calendar = Temporal.Calendar.from('iso8601');
+    const md1 = MonthDay.from({ month: 11, day: 18, calendar });
     const fields = md1.getFields();
     it('fields', () => {
       equal(fields.month, 11);
       equal(fields.day, 18);
+      equal(fields.calendar, calendar);
     });
     it('enumerable', () => {
       const fields2 = { ...fields };
       equal(fields2.month, 11);
       equal(fields2.day, 18);
+      equal(fields2.calendar, calendar);
     });
     it('as input to from()', () => {
       const md2 = MonthDay.from(fields);
-      assert(md1.equals(md2));
-    });
-    it('as input to with()', () => {
-      const md2 = MonthDay.from('06-30').with(fields);
       assert(md1.equals(md2));
     });
   });

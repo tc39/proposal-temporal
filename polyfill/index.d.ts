@@ -266,6 +266,14 @@ export namespace Temporal {
     year?: number;
     month?: number;
     day?: number;
+    calendar?: string | Temporal.Calendar;
+  };
+
+  type DateFields = {
+    year: number;
+    month: number;
+    day: number;
+    calendar: Temporal.Calendar;
   };
 
   type DateISOCalendarFields = {
@@ -286,10 +294,11 @@ export namespace Temporal {
   export class Date implements Required<DateLike> {
     static from(item: Temporal.Date | DateLike | string, options?: AssignmentOptions): Temporal.Date;
     static compare(one: Temporal.Date, two: Temporal.Date): ComparisonResult;
-    constructor(isoYear: number, isoMonth: number, isoDay: number);
+    constructor(isoYear: number, isoMonth: number, isoDay: number, calendar?: Temporal.Calendar);
     readonly year: number;
     readonly month: number;
     readonly day: number;
+    readonly calendar: Temporal.Calendar;
     readonly dayOfWeek: number;
     readonly dayOfYear: number;
     readonly weekOfYear: number;
@@ -307,7 +316,7 @@ export namespace Temporal {
     withTime(temporalTime: Temporal.Time): Temporal.DateTime;
     getYearMonth(): Temporal.YearMonth;
     getMonthDay(): Temporal.MonthDay;
-    getFields(): Required<DateLike>;
+    getFields(): DateFields;
     getISOCalendarFields(): DateISOCalendarFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
@@ -324,6 +333,20 @@ export namespace Temporal {
     millisecond?: number;
     microsecond?: number;
     nanosecond?: number;
+    calendar?: string | Temporal.Calendar;
+  };
+
+  type DateTimeFields = {
+    year: number;
+    month: number;
+    day: number;
+    hour: number;
+    minute: number;
+    second: number;
+    millisecond: number;
+    microsecond: number;
+    nanosecond: number;
+    calendar: Temporal.Calendar;
   };
 
   type DateTimeISOCalendarFields = {
@@ -360,7 +383,8 @@ export namespace Temporal {
       second?: number,
       millisecond?: number,
       microsecond?: number,
-      nanosecond?: number
+      nanosecond?: number,
+      calendar?: Temporal.Calendar
     );
     readonly year: number;
     readonly month: number;
@@ -371,6 +395,7 @@ export namespace Temporal {
     readonly millisecond: number;
     readonly microsecond: number;
     readonly nanosecond: number;
+    readonly calendar: Temporal.Calendar;
     readonly dayOfWeek: number;
     readonly dayOfYear: number;
     readonly weekOfYear: number;
@@ -390,7 +415,7 @@ export namespace Temporal {
     getYearMonth(): Temporal.YearMonth;
     getMonthDay(): Temporal.MonthDay;
     getTime(): Temporal.Time;
-    getFields(): Required<DateTimeLike>;
+    getFields(): DateTimeFields;
     getISOCalendarFields(): DateTimeISOCalendarFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
@@ -402,6 +427,12 @@ export namespace Temporal {
     day?: number;
   };
 
+  type MonthDayFields = {
+    month: number;
+    day: number;
+    calendar: Temporal.Calendar;
+  };
+
   /**
    * A `Temporal.MonthDay` represents a particular day on the calendar, but
    * without a year. For example, it could be used to represent a yearly
@@ -411,13 +442,14 @@ export namespace Temporal {
    */
   export class MonthDay implements Required<MonthDayLike> {
     static from(item: Temporal.MonthDay | MonthDayLike | string, options?: AssignmentOptions): Temporal.MonthDay;
-    constructor(isoMonth: number, isoDay: number);
+    constructor(isoMonth: number, isoDay: number, calendar?: Temporal.Calendar, refISOYear?: number);
     readonly month: number;
     readonly day: number;
+    readonly calendar: Temporal.Calendar;
     equals(other: Temporal.MonthDay): boolean;
     with(monthDayLike: MonthDayLike, options?: AssignmentOptions): Temporal.MonthDay;
     withYear(year: number | { year: number }): Temporal.Date;
-    getFields(): Required<MonthDayLike>;
+    getFields(): MonthDayFields;
     getISOCalendarFields(): DateISOCalendarFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
@@ -524,6 +556,12 @@ export namespace Temporal {
     month?: number;
   };
 
+  type YearMonthFields = {
+    year: number;
+    month: number;
+    calendar: Temporal.Calendar;
+  };
+
   /**
    * A `Temporal.YearMonth` represents a particular month on the calendar. For
    * example, it could be used to represent a particular instance of a monthly
@@ -534,9 +572,10 @@ export namespace Temporal {
   export class YearMonth implements Required<YearMonthLike> {
     static from(item: Temporal.YearMonth | YearMonthLike | string, options?: AssignmentOptions): Temporal.YearMonth;
     static compare(one: Temporal.YearMonth, two: Temporal.YearMonth): ComparisonResult;
-    constructor(isoYear: number, isoMonth: number);
+    constructor(isoYear: number, isoMonth: number, calendar?: Temporal.Calendar, refISODay?: number);
     readonly year: number;
     readonly month: number;
+    readonly calendar: Temporal.Calendar;
     readonly daysInMonth: number;
     readonly daysInYear: number;
     readonly isLeapYear: boolean;
@@ -546,7 +585,7 @@ export namespace Temporal {
     minus(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.YearMonth;
     difference(other: Temporal.YearMonth, options?: DifferenceOptions<'years' | 'months'>): Temporal.Duration;
     withDay(day: number): Temporal.Date;
-    getFields(): Required<YearMonthLike>;
+    getFields(): YearMonthFields;
     getISOCalendarFields(): DateISOCalendarFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;

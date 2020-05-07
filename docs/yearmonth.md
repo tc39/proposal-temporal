@@ -13,21 +13,22 @@ A `Temporal.YearMonth` can be converted into a `Temporal.Date` by combining it w
 
 ## Constructor
 
-### **new Temporal.YearMonth**(_isoYear_: number, _isoMonth_: number, _refISODay_: number = 1) : Temporal.YearMonth
+### **new Temporal.YearMonth**(_isoYear_: number, _isoMonth_: number, _calendar_?: Temporal.Calendar, _refISODay_: number = 1) : Temporal.YearMonth
 
 **Parameters:**
 - `isoYear` (number): A year.
 - `isoMonth` (number): A month, ranging between 1 and 12 inclusive.
+- `calendar` (optional `Temporal.Calendar`): A calendar to project the month into.
 - `refISODay` (optional number): A reference day, used for disambiguation when implementing other calendar systems.
   You can omit this parameter unless using a non-ISO-8601 calendar.
 
 **Returns:** a new `Temporal.YearMonth` object.
 
-Use this constructor if you have the correct parameters already as individual number values, or you are implementing a custom calendar.
-Otherwise, `Temporal.YearMonth.from()`, which accepts more kinds of input and allows disambiguation behaviour, is probably more convenient.
+Use this constructor if you have the correct parameters already as individual number values in the ISO 8601 calendar, or you are implementing a custom calendar.
+Otherwise, `Temporal.YearMonth.from()`, which accepts more kinds of input, allows months in other calendar systems, and allows disambiguation behaviour, is probably more convenient.
 
 All values are given as reckoned in the [ISO 8601 calendar](https://en.wikipedia.org/wiki/ISO_8601#Dates).
-Together, `isoYear`, `isoMonth`, and `refISODay` must represent a valid date in that calendar.
+Together, `isoYear`, `isoMonth`, and `refISODay` must represent a valid date in that calendar, even if you are passing a different calendar as the `calendar` parameter.
 
 The range of allowed values for this type is exactly enough that calling [`getYearMonth()`](./date.html#getYearMonth) on any valid `Temporal.Date` will succeed.
 If `isoYear` and `isoMonth` are outside of this range, then `constrain` mode will clamp the date to the limit of the allowed range.
@@ -135,6 +136,10 @@ ym.year   // => 2019
 ym.month  // => 6
 ```
 
+### yearMonth.**calendar** : Temporal.Calendar
+
+The `calendar` read-only property gives the calendar that the `year` and `month` properties are interpreted in.
+
 ### yearMonth.**daysInMonth** : number
 
 The `daysInMonth` read-only property gives the number of days in the month.
@@ -204,6 +209,10 @@ This method creates a new `Temporal.YearMonth` which is a copy of `yearMonth`, b
 Since `Temporal.YearMonth` objects are immutable, use this method instead of modifying one.
 
 > **NOTE**: The allowed values for the `yearMonthLike.month` property start at 1, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
+
+> **NOTE**: Unlike in `Temporal.Date.prototype.with()`, a `calendar` property is not allowed on `yearMonthLike`.
+> It is not possible to convert a `Temporal.YearMonth` to another calendar system without knowing the day of the month.
+> If you need to do this, use `yearMonth.withDay(day).withCalendar(calendar).getYearMonth()`.
 
 Usage example:
 ```javascript
@@ -429,7 +438,7 @@ ym = Temporal.YearMonth.from('2019-06');
 ym.withDay(24)  // => 2019-06-24
 ```
 
-### yearMonth.**getFields**() : { year: number, month: number, [propName: string]: unknown }
+### yearMonth.**getFields**() : { year: number, month: number, calendar: Temporal.Calendar, [propName: string]: unknown }
 
 **Returns:** a plain object with properties equal to the fields of `yearMonth`.
 

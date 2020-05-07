@@ -11,10 +11,13 @@ import {
   MILLISECOND,
   MICROSECOND,
   NANOSECOND,
+  CALENDAR,
   CreateSlots,
   GetSlot,
   SetSlot
 } from './slots.mjs';
+
+const ObjectAssign = Object.assign;
 
 export class DateTime {
   constructor(
@@ -26,7 +29,8 @@ export class DateTime {
     second = 0,
     millisecond = 0,
     microsecond = 0,
-    nanosecond = 0
+    nanosecond = 0,
+    calendar = undefined
   ) {
     isoYear = ES.ToInteger(isoYear);
     isoMonth = ES.ToInteger(isoMonth);
@@ -37,8 +41,10 @@ export class DateTime {
     millisecond = ES.ToInteger(millisecond);
     microsecond = ES.ToInteger(microsecond);
     nanosecond = ES.ToInteger(nanosecond);
+    if (calendar === undefined) calendar = ES.GetDefaultCalendar();
     ES.RejectDateTime(isoYear, isoMonth, isoDay, hour, minute, second, millisecond, microsecond, nanosecond);
     ES.RejectDateTimeRange(isoYear, isoMonth, isoDay, hour, minute, second, millisecond, microsecond, nanosecond);
+    if (!calendar || typeof calendar !== 'object') throw new RangeError('invalid calendar');
     CreateSlots(this);
     SetSlot(this, ISO_YEAR, isoYear);
     SetSlot(this, ISO_MONTH, isoMonth);
@@ -49,18 +55,19 @@ export class DateTime {
     SetSlot(this, MILLISECOND, millisecond);
     SetSlot(this, MICROSECOND, microsecond);
     SetSlot(this, NANOSECOND, nanosecond);
+    SetSlot(this, CALENDAR, calendar);
   }
   get year() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-    return GetSlot(this, ISO_YEAR);
+    return GetSlot(this, CALENDAR).year(this);
   }
   get month() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-    return GetSlot(this, ISO_MONTH);
+    return GetSlot(this, CALENDAR).month(this);
   }
   get day() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-    return GetSlot(this, ISO_DAY);
+    return GetSlot(this, CALENDAR).day(this);
   }
   get hour() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
@@ -86,33 +93,58 @@ export class DateTime {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     return GetSlot(this, NANOSECOND);
   }
+  get calendar() {
+    if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+    return GetSlot(this, CALENDAR);
+  }
   get dayOfWeek() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-    return ES.DayOfWeek(GetSlot(this, ISO_YEAR), GetSlot(this, ISO_MONTH), GetSlot(this, ISO_DAY));
+    return GetSlot(this, CALENDAR).dayOfWeek(this);
   }
   get dayOfYear() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-    return ES.DayOfYear(GetSlot(this, ISO_YEAR), GetSlot(this, ISO_MONTH), GetSlot(this, ISO_DAY));
+    return GetSlot(this, CALENDAR).dayOfYear(this);
   }
   get weekOfYear() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-    return ES.WeekOfYear(GetSlot(this, ISO_YEAR), GetSlot(this, ISO_MONTH), GetSlot(this, ISO_DAY));
+    return GetSlot(this, CALENDAR).weekOfYear(this);
   }
   get daysInYear() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-    return ES.LeapYear(GetSlot(this, ISO_YEAR)) ? 366 : 365;
+    return GetSlot(this, CALENDAR).daysInYear(this);
   }
   get daysInMonth() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-    return ES.DaysInMonth(GetSlot(this, ISO_YEAR), GetSlot(this, ISO_MONTH));
+    return GetSlot(this, CALENDAR).daysInMonth(this);
   }
   get isLeapYear() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-    return ES.LeapYear(GetSlot(this, ISO_YEAR));
+    return GetSlot(this, CALENDAR).isLeapYear(this);
   }
   with(temporalDateTimeLike, options) {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     const disambiguation = ES.ToTemporalDisambiguation(options);
+    let source;
+    let calendar = temporalDateTimeLike.calendar;
+    if (calendar) {
+      const TemporalCalendar = GetIntrinsic('%Temporal.Calendar%');
+      calendar = TemporalCalendar.from(calendar);
+      source = new DateTime(
+        GetSlot(this, ISO_YEAR),
+        GetSlot(this, ISO_MONTH),
+        GetSlot(this, ISO_DAY),
+        GetSlot(this, HOUR),
+        GetSlot(this, MINUTE),
+        GetSlot(this, SECOND),
+        GetSlot(this, MILLISECOND),
+        GetSlot(this, MICROSECOND),
+        GetSlot(this, NANOSECOND),
+        calendar
+      );
+    } else {
+      calendar = GetSlot(this, CALENDAR);
+      source = this;
+    }
     const props = ES.ToPartialRecord(temporalDateTimeLike, [
       'day',
       'hour',
@@ -127,21 +159,24 @@ export class DateTime {
     if (!props) {
       throw new RangeError('invalid date-time-like');
     }
-    let {
-      year = GetSlot(this, ISO_YEAR),
-      month = GetSlot(this, ISO_MONTH),
-      day = GetSlot(this, ISO_DAY),
-      hour = GetSlot(this, HOUR),
-      minute = GetSlot(this, MINUTE),
-      second = GetSlot(this, SECOND),
-      millisecond = GetSlot(this, MILLISECOND),
-      microsecond = GetSlot(this, MICROSECOND),
-      nanosecond = GetSlot(this, NANOSECOND)
-    } = props;
-    ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.RegulateDateTime(
-      year,
-      month,
-      day,
+    const fields = ES.ToRecord(source, [
+      ['day'],
+      ['hour'],
+      ['microsecond'],
+      ['millisecond'],
+      ['minute'],
+      ['month'],
+      ['nanosecond'],
+      ['second'],
+      ['year']
+    ]);
+    ObjectAssign(fields, props);
+    const date = calendar.dateFromFields(fields, options, GetIntrinsic('%Temporal.Date%'));
+    let year = GetSlot(date, ISO_YEAR);
+    let month = GetSlot(date, ISO_MONTH);
+    let day = GetSlot(date, ISO_DAY);
+    let { hour, minute, second, millisecond, microsecond, nanosecond } = fields;
+    ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.RegulateTime(
       hour,
       minute,
       second,
@@ -163,17 +198,40 @@ export class DateTime {
       disambiguation
     ));
     const Construct = ES.SpeciesConstructor(this, DateTime);
-    const result = new Construct(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
+    const result = new Construct(
+      year,
+      month,
+      day,
+      hour,
+      minute,
+      second,
+      millisecond,
+      microsecond,
+      nanosecond,
+      calendar
+    );
     if (!ES.IsTemporalDateTime(result)) throw new TypeError('invalid result');
     return result;
   }
   plus(temporalDurationLike, options) {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     const disambiguation = ES.ToTemporalDisambiguation(options);
-    const duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
-    let { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = this;
-    let { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
-    ({ year, month, day } = ES.AddDate(year, month, day, years, months, weeks, days, disambiguation));
+    let duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
+    let { years, months, days, weeks, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
+    ({ days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.BalanceDuration(
+      days,
+      hours,
+      minutes,
+      seconds,
+      milliseconds,
+      microseconds,
+      nanoseconds,
+      'days'
+    ));
+    duration = { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
+
+    // Add the time part
+    let { hour, minute, second, millisecond, microsecond, nanosecond } = this;
     let deltaDays = 0;
     ({ deltaDays, hour, minute, second, millisecond, microsecond, nanosecond } = ES.AddTime(
       hour,
@@ -189,8 +247,40 @@ export class DateTime {
       microseconds,
       nanoseconds
     ));
-    day += deltaDays;
-    ({ year, month, day } = ES.BalanceDate(year, month, day));
+    duration.days += deltaDays;
+
+    // Delegate the date part addition to the calendar
+    const calendar = GetSlot(this, CALENDAR);
+    const TemporalDate = GetIntrinsic('%Temporal.Date%');
+    const datePart = new TemporalDate(
+      GetSlot(this, ISO_YEAR),
+      GetSlot(this, ISO_MONTH),
+      GetSlot(this, ISO_DAY),
+      calendar
+    );
+    const addedDate = calendar.plus(datePart, duration, options, TemporalDate);
+    let year = GetSlot(addedDate, ISO_YEAR);
+    let month = GetSlot(addedDate, ISO_MONTH);
+    let day = GetSlot(addedDate, ISO_DAY);
+
+    if (disambiguation === 'constrain') {
+      // Special case to determine if the date was clipped by dateFromFields
+      // and therefore the time possibly needs to be clipped too
+      try {
+        calendar.plus(datePart, duration, { disambiguation: 'reject' }, TemporalDate);
+      } catch {
+        // Date was clipped
+        if (year === 275760 && month === 9 && day === 13) {
+          // Clipped at end of range
+          day += 1;
+        } else if (year === -271821 && month === 4 && day === 19) {
+          // Clipped at beginning of range
+          day -= 1;
+        }
+        ({ year, month, day } = ES.BalanceDate(year, month, day));
+      }
+    }
+
     ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.RegulateDateTimeRange(
       year,
       month,
@@ -204,16 +294,40 @@ export class DateTime {
       disambiguation
     ));
     const Construct = ES.SpeciesConstructor(this, DateTime);
-    const result = new Construct(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
+    const result = new Construct(
+      year,
+      month,
+      day,
+      hour,
+      minute,
+      second,
+      millisecond,
+      microsecond,
+      nanosecond,
+      calendar
+    );
     if (!ES.IsTemporalDateTime(result)) throw new TypeError('invalid result');
     return result;
   }
   minus(temporalDurationLike, options) {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     const disambiguation = ES.ToTemporalDisambiguation(options);
-    const duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
-    let { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = this;
-    let { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
+    let duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
+    let { years, months, days, weeks, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
+    ({ days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.BalanceDuration(
+      days,
+      hours,
+      minutes,
+      seconds,
+      milliseconds,
+      microseconds,
+      nanoseconds,
+      'days'
+    ));
+    duration = { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
+
+    // Subtract the time part
+    let { hour, minute, second, millisecond, microsecond, nanosecond } = this;
     let deltaDays = 0;
     ({ deltaDays, hour, minute, second, millisecond, microsecond, nanosecond } = ES.SubtractTime(
       hour,
@@ -229,8 +343,40 @@ export class DateTime {
       microseconds,
       nanoseconds
     ));
-    days -= deltaDays;
-    ({ year, month, day } = ES.SubtractDate(year, month, day, years, months, weeks, days, disambiguation));
+    duration.days -= deltaDays;
+
+    // Delegate the date part subtraction to the calendar
+    const calendar = GetSlot(this, CALENDAR);
+    const TemporalDate = GetIntrinsic('%Temporal.Date%');
+    const datePart = new TemporalDate(
+      GetSlot(this, ISO_YEAR),
+      GetSlot(this, ISO_MONTH),
+      GetSlot(this, ISO_DAY),
+      calendar
+    );
+    const addedDate = calendar.minus(datePart, duration, options, TemporalDate);
+    let year = GetSlot(addedDate, ISO_YEAR);
+    let month = GetSlot(addedDate, ISO_MONTH);
+    let day = GetSlot(addedDate, ISO_DAY);
+
+    if (disambiguation === 'constrain') {
+      // Special case to determine if the date was clipped by dateFromFields
+      // and therefore the time possibly needs to be clipped too
+      try {
+        calendar.minus(datePart, duration, { disambiguation: 'reject' }, TemporalDate);
+      } catch {
+        // Date was clipped
+        if (year === 275760 && month === 9 && day === 13) {
+          // Clipped at end of range
+          day += 1;
+        } else if (year === -271821 && month === 4 && day === 19) {
+          // Clipped at beginning of range
+          day -= 1;
+        }
+        ({ year, month, day } = ES.BalanceDate(year, month, day));
+      }
+    }
+
     ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.RegulateDateTimeRange(
       year,
       month,
@@ -244,32 +390,62 @@ export class DateTime {
       disambiguation
     ));
     const Construct = ES.SpeciesConstructor(this, DateTime);
-    const result = new Construct(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
+    const result = new Construct(
+      year,
+      month,
+      day,
+      hour,
+      minute,
+      second,
+      millisecond,
+      microsecond,
+      nanosecond,
+      calendar
+    );
     if (!ES.IsTemporalDateTime(result)) throw new TypeError('invalid result');
     return result;
   }
   difference(other, options) {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     if (!ES.IsTemporalDateTime(other)) throw new TypeError('invalid DateTime object');
+    const calendar = GetSlot(this, CALENDAR);
+    if (calendar.id !== GetSlot(other, CALENDAR).id) {
+      other = new DateTime(
+        GetSlot(other, ISO_YEAR),
+        GetSlot(other, ISO_MONTH),
+        GetSlot(other, ISO_DAY),
+        GetSlot(other, HOUR),
+        GetSlot(other, MINUTE),
+        GetSlot(other, SECOND),
+        GetSlot(other, MILLISECOND),
+        GetSlot(other, MICROSECOND),
+        GetSlot(other, NANOSECOND),
+        calendar
+      );
+    }
     const largestUnit = ES.ToLargestTemporalUnit(options, 'days');
     const [smaller, larger] = [this, other].sort(DateTime.compare);
     let { deltaDays, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.DifferenceTime(
       smaller,
       larger
     );
-    let { year, month, day } = larger;
-    day += deltaDays;
+    let year = GetSlot(larger, ISO_YEAR);
+    let month = GetSlot(larger, ISO_MONTH);
+    let day = GetSlot(larger, ISO_DAY) + deltaDays;
     ({ year, month, day } = ES.BalanceDate(year, month, day));
 
+    const TemporalDate = GetIntrinsic('%Temporal.Date%');
+    const adjustedLarger = new TemporalDate(year, month, day, GetSlot(larger, CALENDAR));
     let dateLargestUnit = 'days';
     if (largestUnit === 'years' || largestUnit === 'months' || largestUnit === 'weeks') {
       dateLargestUnit = largestUnit;
     }
+    const dateOptions = ObjectAssign({}, options, { largestUnit: dateLargestUnit });
+    const dateDifference = calendar.difference(smaller, adjustedLarger, dateOptions);
 
-    let { years, months, weeks, days } = ES.DifferenceDate(smaller, { year, month, day }, dateLargestUnit);
-
+    let days;
     ({ days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.BalanceDuration(
-      days,
+      dateDifference.days,
       hours,
       minutes,
       seconds,
@@ -280,7 +456,18 @@ export class DateTime {
     ));
 
     const Duration = GetIntrinsic('%Temporal.Duration%');
-    return new Duration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+    return new Duration(
+      dateDifference.years,
+      dateDifference.months,
+      dateDifference.weeks,
+      days,
+      hours,
+      minutes,
+      seconds,
+      milliseconds,
+      microseconds,
+      nanoseconds
+    );
   }
   equals(other) {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
@@ -290,7 +477,7 @@ export class DateTime {
       const val2 = GetSlot(other, slot);
       if (val1 !== val2) return false;
     }
-    return true;
+    return GetSlot(this, CALENDAR).id === GetSlot(other, CALENDAR).id;
   }
   toString() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
@@ -327,17 +514,21 @@ export class DateTime {
   getDate() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     const Date = GetIntrinsic('%Temporal.Date%');
-    return new Date(GetSlot(this, ISO_YEAR), GetSlot(this, ISO_MONTH), GetSlot(this, ISO_DAY));
+    return new Date(GetSlot(this, ISO_YEAR), GetSlot(this, ISO_MONTH), GetSlot(this, ISO_DAY), GetSlot(this, CALENDAR));
   }
   getYearMonth() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     const YearMonth = GetIntrinsic('%Temporal.YearMonth%');
-    return new YearMonth(GetSlot(this, ISO_YEAR), GetSlot(this, ISO_MONTH));
+    const calendar = GetSlot(this, CALENDAR);
+    const fields = ES.ToRecord(this, [['month'], ['year']]);
+    return calendar.yearMonthFromFields(fields, {}, YearMonth);
   }
   getMonthDay() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     const MonthDay = GetIntrinsic('%Temporal.MonthDay%');
-    return new MonthDay(GetSlot(this, ISO_MONTH), GetSlot(this, ISO_DAY));
+    const calendar = GetSlot(this, CALENDAR);
+    const fields = ES.ToRecord(this, [['day'], ['month']]);
+    return calendar.monthDayFromFields(fields, {}, MonthDay);
   }
   getTime() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
@@ -364,6 +555,7 @@ export class DateTime {
       ['year']
     ]);
     if (!fields) throw new TypeError('invalid receiver');
+    fields.calendar = GetSlot(this, CALENDAR);
     return fields;
   }
   getISOCalendarFields() {
@@ -383,20 +575,26 @@ export class DateTime {
 
   static from(item, options = undefined) {
     const disambiguation = ES.ToTemporalDisambiguation(options);
-    let year, month, day, hour, minute, second, millisecond, microsecond, nanosecond;
+    const TemporalCalendar = GetIntrinsic('%Temporal.Calendar%');
+    let result;
     if (typeof item === 'object' && item) {
       if (ES.IsTemporalDateTime(item)) {
-        year = GetSlot(item, ISO_YEAR);
-        month = GetSlot(item, ISO_MONTH);
-        day = GetSlot(item, ISO_DAY);
-        hour = GetSlot(item, HOUR);
-        minute = GetSlot(item, MINUTE);
-        second = GetSlot(item, SECOND);
-        millisecond = GetSlot(item, MILLISECOND);
-        microsecond = GetSlot(item, MICROSECOND);
-        nanosecond = GetSlot(item, NANOSECOND);
+        const year = GetSlot(item, ISO_YEAR);
+        const month = GetSlot(item, ISO_MONTH);
+        const day = GetSlot(item, ISO_DAY);
+        const hour = GetSlot(item, HOUR);
+        const minute = GetSlot(item, MINUTE);
+        const second = GetSlot(item, SECOND);
+        const millisecond = GetSlot(item, MILLISECOND);
+        const microsecond = GetSlot(item, MICROSECOND);
+        const nanosecond = GetSlot(item, NANOSECOND);
+        const calendar = GetSlot(item, CALENDAR);
+        result = new this(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
       } else {
-        ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.ToRecord(item, [
+        let calendar = item.calendar;
+        if (calendar === undefined) calendar = ES.GetDefaultCalendar();
+        calendar = TemporalCalendar.from(calendar);
+        const fields = ES.ToRecord(item, [
           ['day'],
           ['hour', 0],
           ['microsecond', 0],
@@ -406,10 +604,57 @@ export class DateTime {
           ['nanosecond', 0],
           ['second', 0],
           ['year']
-        ]));
+        ]);
+        const TemporalDate = GetIntrinsic('%Temporal.Date%');
+        const date = calendar.dateFromFields(fields, options, TemporalDate);
+        let year = GetSlot(date, ISO_YEAR);
+        let month = GetSlot(date, ISO_MONTH);
+        let day = GetSlot(date, ISO_DAY);
+
+        if (disambiguation === 'constrain') {
+          // Special case to determine if the date was clipped by dateFromFields
+          // and therefore the time possibly needs to be clipped too
+          try {
+            calendar.dateFromFields(fields, { disambiguation: 'reject' }, TemporalDate);
+          } catch {
+            // Date was clipped
+            if (year === 275760 && month === 9 && day === 13) {
+              // Clipped at end of range
+              day += 1;
+            } else if (year === -271821 && month === 4 && day === 19) {
+              // Clipped at beginning of range
+              day -= 1;
+            }
+            ({ year, month, day } = ES.BalanceDate(year, month, day));
+          }
+        }
+
+        let { hour, minute, second, millisecond, microsecond, nanosecond } = fields;
+        ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.RegulateTime(
+          hour,
+          minute,
+          second,
+          millisecond,
+          microsecond,
+          nanosecond,
+          disambiguation
+        ));
+        ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.RegulateDateTimeRange(
+          year,
+          month,
+          day,
+          hour,
+          minute,
+          second,
+          millisecond,
+          microsecond,
+          nanosecond,
+          disambiguation
+        ));
+        result = new this(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
       }
     } else {
-      ({
+      let {
         year,
         month,
         day,
@@ -419,33 +664,22 @@ export class DateTime {
         millisecond,
         microsecond,
         nanosecond
-      } = ES.ParseTemporalDateTimeString(ES.ToString(item)));
+      } = ES.ParseTemporalDateTimeString(ES.ToString(item));
+      ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.RegulateDateTimeRange(
+        year,
+        month,
+        day,
+        hour,
+        minute,
+        second,
+        millisecond,
+        microsecond,
+        nanosecond,
+        disambiguation
+      ));
+      const calendar = ES.GetDefaultCalendar();
+      result = new this(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
     }
-    ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.RegulateDateTime(
-      year,
-      month,
-      day,
-      hour,
-      minute,
-      second,
-      millisecond,
-      microsecond,
-      nanosecond,
-      disambiguation
-    ));
-    ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.RegulateDateTimeRange(
-      year,
-      month,
-      day,
-      hour,
-      minute,
-      second,
-      millisecond,
-      microsecond,
-      nanosecond,
-      disambiguation
-    ));
-    const result = new this(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
     if (!ES.IsTemporalDateTime(result)) throw new TypeError('invalid result');
     return result;
   }
@@ -456,7 +690,9 @@ export class DateTime {
       const val2 = GetSlot(two, slot);
       if (val1 !== val2) return ES.ComparisonResult(val1 - val2);
     }
-    return ES.ComparisonResult(0);
+    const cal1 = GetSlot(one, CALENDAR).id;
+    const cal2 = GetSlot(two, CALENDAR).id;
+    return ES.ComparisonResult(cal1 < cal2 ? -1 : cal1 > cal2 ? 1 : 0);
   }
 }
 DateTime.prototype.toJSON = DateTime.prototype.toString;

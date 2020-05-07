@@ -16,6 +16,7 @@ export const MICROSECOND = 'slot-microsecond';
 export const NANOSECOND = 'slot-nanosecond';
 export const REF_ISO_YEAR = 'slot-ref-iso-year';
 export const REF_ISO_DAY = 'slot-ref-iso-day';
+export const CALENDAR = 'slot-calendar';
 
 // Duration
 export const YEARS = 'slot-years';

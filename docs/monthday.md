@@ -13,11 +13,12 @@ A `Temporal.MonthDay` can be converted into a `Temporal.Date` by combining it wi
 
 ## Constructor
 
-### **new Temporal.MonthDay**(_isoMonth_: number, _isoDay_: number, _refISOYear_?: number) : Temporal.MonthDay
+### **new Temporal.MonthDay**(_isoMonth_: number, _isoDay_: number, _calendar_?: Temporal.Calendar, _refISOYear_?: number) : Temporal.MonthDay
 
 **Parameters:**
 - `isoMonth` (number): A month, ranging between 1 and 12 inclusive.
 - `isoDay` (number): A day of the month, ranging between 1 and 31 inclusive.
+- `calendar` (optional `Temporal.Calendar`): A calendar to project the date into.
 - `refISOYear` (optional number): A reference year, used for disambiguation when implementing other calendar systems.
   The default is the first leap year after the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time).
   You can omit this parameter unless using a non-ISO-8601 calendar.
@@ -25,7 +26,7 @@ A `Temporal.MonthDay` can be converted into a `Temporal.Date` by combining it wi
 **Returns:** a new `Temporal.MonthDay` object.
 
 Use this constructor if you have the correct parameters for the date already as individual number values, or you are implementing a custom calendar.
-Otherwise, `Temporal.MonthDay.from()`, which accepts more kinds of input and allows disambiguation behaviour, is probably more convenient.
+Otherwise, `Temporal.MonthDay.from()`, which accepts more kinds of input, allows inputting dates in different calendar reckonings, and allows disambiguation behaviour, is probably more convenient.
 
 All values are given as reckoned in the [ISO 8601 calendar](https://en.wikipedia.org/wiki/ISO_8601#Dates).
 Together, `refISOYear`, `isoMonth` and `isoDay` must represent a valid date in that calendar.
@@ -57,7 +58,7 @@ md = new Temporal.MonthDay(2, 29)  // => 02-29
 
 This static method creates a new `Temporal.MonthDay` object from another value.
 If the value is another `Temporal.MonthDay` object, a new object representing the same month and day is returned.
-If the value is any other object, it must have `month` and `day` properties, and a `Temporal.MonthDay` will be constructed from them.
+If the value is any other object, it must have `month` and `day` properties, and optionally a `calendar` property, and a `Temporal.MonthDay` will be constructed from these properties.
 
 Any non-object value will be converted to a string, which is expected to be in ISO 8601 format.
 Any parts of the string other than the month and the day are optional and will be ignored.
@@ -111,6 +112,10 @@ md.month  // => 8
 md.day    // => 24
 ```
 
+### monthDay.**calendar** : Temporal.Calendar
+
+The `calendar` read-only property gives the calendar that the `month` and `day` properties are interpreted in.
+
 ## Methods
 
 ### monthDay.**with**(_monthDayLike_: object, _options_?: object) : Temporal.MonthDay
@@ -136,6 +141,10 @@ The disambiguation parameter tells what should happen when out-of-range values a
 > **NOTE**: The allowed values for the `monthDayLike.month` property start at 1, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
 
 Since `Temporal.MonthDay` objects are immutable, use this method instead of modifying one.
+
+> **NOTE**: Unlike in `Temporal.Date.prototype.with()`, a `calendar` property is not allowed on `monthDayLike`.
+> It is not possible to convert a `Temporal.MonthDay` to another calendar system without knowing the year.
+> If you need to do this, use `monthDay.withYear(year).withCalendar(calendar).getMonthDay()`.
 
 Usage example:
 ```javascript
@@ -263,7 +272,7 @@ md.withYear(2020)  // => 2020-02-29
 
 In calendars where more information than just the year is needed to convert a `Temporal.MonthDay` to a `Temporal.Date`, you can pass an object to `withYear()` that contains the necessary properties.
 
-### monthDay.**getFields**() : { month: number, day: number, [propName: string]: unknown }
+### monthDay.**getFields**() : { month: number, day: number, calendar: Temporal.Calendar, [propName: string]: unknown }
 
 **Returns:** a plain object with properties equal to the fields of `monthDay`.
 

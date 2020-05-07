@@ -6,6 +6,7 @@ const ObjectAssign = Object.assign;
 import bigInt from 'big-integer';
 
 import { GetIntrinsic } from './intrinsicclass.mjs';
+import { ISO8601 as CalendarISO8601 } from './calendar.mjs';
 import {
   GetSlot,
   HasSlot,
@@ -42,6 +43,7 @@ const YEAR_MIN = -271821;
 const YEAR_MAX = 275760;
 
 const BUILTIN_CALENDARS = {
+  iso8601: CalendarISO8601
   // To be filled in as builtin calendars are implemented
 };
 
@@ -79,6 +81,7 @@ export const ES = ObjectAssign({}, ES2019, {
     if (!(id in BUILTIN_CALENDARS)) throw new RangeError(`unknown calendar ${id}`);
     return new BUILTIN_CALENDARS[id]();
   },
+  GetDefaultCalendar: () => ES.GetBuiltinCalendar('iso8601'),
   ParseISODateTime: (isoString, { zoneRequired }) => {
     const regex = zoneRequired ? PARSE.absolute : PARSE.datetime;
     const match = regex.exec(isoString);
@@ -513,7 +516,13 @@ export const ES = ObjectAssign({}, ES2019, {
       const value = bag[property];
       if (value !== undefined) {
         any = any || {};
-        any[property] = ES.ToInteger(value);
+        if (property === 'calendar') {
+          // FIXME: this is terrible
+          const TemporalCalendar = GetIntrinsic('%Temporal.Calendar%');
+          any.calendar = TemporalCalendar.from(value);
+        } else {
+          any[property] = ES.ToInteger(value);
+        }
       }
     }
     return any ? any : false;
@@ -529,7 +538,13 @@ export const ES = ObjectAssign({}, ES2019, {
         }
         value = defaultValue;
       }
-      result[property] = ES.ToInteger(value);
+      if (property === 'calendar') {
+        // FIXME: this is terrible
+        const TemporalCalendar = GetIntrinsic('%Temporal.Calendar%');
+        result.calendar = TemporalCalendar.from(value);
+      } else {
+        result[property] = ES.ToInteger(value);
+      }
     }
     return result;
   },

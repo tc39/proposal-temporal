@@ -91,14 +91,16 @@ describe('Date', () => {
   });
   describe('Construction', () => {
     let date;
+    const calendar = Temporal.Calendar.from('iso8601');
     it('date can be constructed', () => {
-      date = new Date(1976, 11, 18);
+      date = new Date(1976, 11, 18, calendar);
       assert(date);
       equal(typeof date, 'object');
     });
     it('date.year is 1976', () => equal(date.year, 1976));
     it('date.month is 11', () => equal(date.month, 11));
     it('date.day is 18', () => equal(date.day, 18));
+    it('date.calendar is the object', () => equal(date.calendar, calendar));
     it('date.dayOfWeek is 4', () => equal(date.dayOfWeek, 4));
     it('date.dayOfYear is 323', () => equal(date.dayOfYear, 323));
     it('date.weekOfYear is 47', () => equal(date.weekOfYear, 47));
@@ -525,18 +527,21 @@ describe('Date', () => {
     });
   });
   describe('date.getFields() works', () => {
-    const d1 = Date.from('1976-11-18');
+    const calendar = Temporal.Calendar.from('iso8601');
+    const d1 = Date.from({ year: 1976, month: 11, day: 18, calendar });
     const fields = d1.getFields();
     it('fields', () => {
       equal(fields.year, 1976);
       equal(fields.month, 11);
       equal(fields.day, 18);
+      equal(fields.calendar, calendar);
     });
     it('enumerable', () => {
       const fields2 = { ...fields };
       equal(fields2.year, 1976);
       equal(fields2.month, 11);
       equal(fields2.day, 18);
+      equal(fields2.calendar, calendar);
     });
     it('as input to from()', () => {
       const d2 = Date.from(fields);
