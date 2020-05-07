@@ -291,19 +291,36 @@ Temporal.Date.prototype.toString = function() {
 }
 ```
 
-In this scenario, `Temporal.Date.from` would take a new optional `options` argument, with a single field `idToCalendar` specifying a function to map from identifiers to Calendar objects.  If not present, the `Intl.Calendar` namespace will be searched.  Example call site with custom calendars:
+In this scenario, `Temporal.Date.from()` will call `Temporal.Calendar.from()` to resolve the ID into a Calendar object.
+`Temporal.parse()` will have to add a new `calendar` member to the object it returns, whose value is the string ID given in a `[c=ID]` comment, or `null` if not given.
+
+`Temporal.Calendar.from()` can be monkeypatched by calendar implementors if it is necessary to make new time zones available globally.
+The expectation is that it would rarely be necessary to do so, because if you have implemented a custom calendar for a particular application, you probably don't need it to be available globally.
+
+Example of monkeypatching for a custom calendar:
 
 ```javascript
 const fooCalendar = new FooCalendar();
-
-Temporal.Date.from("2019-12-03[c=foo]", {
-	idToCalendar: function(id) {
-		if (id === "foo") {
-			return fooCalendar;
+const originalTemporalCalendarFrom = Temporal.Calendar.from;
+Temporal.Calendar.from = function (item) {
+	let id;
+	if (item instanceof Temporal.Calendar) {
+		({ id } = item);
+	} else {
+		const string = `${item}`;
+		try {
+			id = Temporal.parse(item).calendar;
+		} catch {
+			id = string;
 		}
-		return null;
 	}
-});
+	if (id === 'foo')
+		return fooCalendar;
+	return originalTemporalCalendarFrom.call(this, item);
+}
+
+Temporal.Date.from("2019-12-03[c=foo]");
+	// 2019-12-03 projected into the foo calendar
 ```
 
 ### New behavior of Temporal.Date.from
@@ -320,36 +337,6 @@ Temporal.Date.from = function(thing: string | object, options: object) {
 		// on thing.calendar (string lookup or object)
 		let calendar = // ...
 		return calendar.dateFromFields(thing, this);
-	}
-}
-```
-
-Another example based on the withCalendar method (different semantics):
-
-```javascript
-Temporal.Date.from = function(thing: string | object, options: object) {
-	if (typeof thing === "string") {
-		object = // components of string
-	}
-
-	const isoDate = // a date in the ISO calendar with fields from object
-
-	if (typeof object.calendar === "string") {
-		// Note: Do we want this implicit escape hatch? If a lookup function is provided,
-		// maybe it should be treated as 100% authoritative.
-		const calendar = options?.idToCalendar?.(object.calendar)
-			?? Temporal.Calendar.idToCalendar(id);  // call intrinsic
-		if (!calendar) {
-			throw new RangeError("Unknown calendar");
-		}
-		if (calendar[Temporal.Calendar.id] !== object.calendar) {
-			throw new RangeError("Calendar IDs do not match")
-		}
-		return isoDate.withCalendar(calendar);  // call intrinsic
-	} else if (object.calendar) {
-		return isoDate.withCalendar(object.calendar);  // call intrinsic
-	} else {
-		return isoDate;
 	}
 }
 ```
