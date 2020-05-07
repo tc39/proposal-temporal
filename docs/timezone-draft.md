@@ -28,28 +28,43 @@ In these examples we assume a custom time zone class `StLouisTime` with the iden
 (See the following section for how such a time zone object would be obtained.)
 
 When parsing an ISO 8601 string, the only places the time zone identifier is taken into account are `Temporal.Absolute.from()` and `Temporal.TimeZone.from()`.
+`Temporal.Absolute.from()` will call `Temporal.TimeZone.from()` to resolve the time zone identifier into a `Temporal.TimeZone` object.
 
-These functions gain an `options` parameter with an `idToTimeZone` option, whose value is a function returning the appropriate time zone object for the `id` passed in, or `null` to indicate that the time zone doesn't exist.
-
-If the option is not given, `Temporal.TimeZone.fromId()` is called.
-This is a new static method of `Temporal.TimeZone`.
-
-`Temporal.TimeZone.fromId()` can be monkeypatched by time zone implementors if it is necessary to make new time zones available globally.
+`Temporal.TimeZone.from()` and `Temporal.TimeZone[Symbol.iterator]` can be monkeypatched by time zone implementors if it is necessary to make new time zones available globally.
 The expectation is that it would rarely be necessary to do so, because if you have implemented a custom time zone for a particular calculation, you probably don't need it to be available globally.
 
-> **FIXME:** Note that there is an issue open regarding this behaviour for calendars: [#294](https://github.com/tc39/proposal-temporal/issues/294)
+Example of monkeypatching to make St. Louis mean time available globally:
 
 ```javascript
-function idToTimeZone(id) {
+const originalTemporalTimeZoneFrom = Temporal.TimeZone.from;
+Temporal.TimeZone.from = function (item) {
+  let id;
+  if (item instanceof Temporal.TimeZone) {
+    id = item.name;
+  } else {
+    const string = `${item}`;
+    try {
+      const { zone } = Temporal.parse(string);
+      id = zone.ianaName || zone.offset;
+    } catch {
+      id = string;
+    }
+  }
   if (id === 'America/St_Louis')
     return new StLouisTime();
-  return Temporal.TimeZone.fromId(id);
+  return originalTemporalTimeZoneFrom.call(this, id);
 }
 
-Temporal.Absolute.from('1820-04-01T18:16:25-06:00[America/St_Louis]', { idToTimeZone })
+const originalTemporalTimeZoneSymbolIterator = Temporal.TimeZone[Symbol.iterator];
+Temporal.TimeZone[Symbol.iterator] = function* () {
+  yield* originalTemporalTimeZoneSymbolIterator();
+  yield 'America/St_Louis';
+}
+
+Temporal.Absolute.from('1820-04-01T18:16:25-06:00[America/St_Louis]')
   // returns the Absolute corresponding to 1820-04-02T00:17:14.110Z
 
-Temporal.TimeZone.from('1820-04-01T18:16:25-06:00[America/St_Louis]', { idToTimeZone })
+Temporal.TimeZone.from('1820-04-01T18:16:25-06:00[America/St_Louis]')
   // returns a new StLouisTime instance
 ```
 
@@ -57,19 +72,34 @@ Temporal.TimeZone.from('1820-04-01T18:16:25-06:00[America/St_Louis]', { idToTime
 > However, this must change, because implementations would need to call `super(id)` to set the _[[Identifier]]_ and _[[InitializedTemporalTimeZone]]_ internal slots.
 > Maybe we need to only throw if `new.target === Temporal.TimeZone`?
 
-In order to lock down any leakage of information about the host system's time zone database, one would monkeypatch the `Temporal.TimeZone.fromId()` function which performs the built-in mapping, change the list of allowed time zones that `Temporal.TimeZone` iterates through, and replace `Temporal.now.timeZone()` to avoid exposing the current time zone:
+In order to lock down any leakage of information about the host system's time zone database, one would monkeypatch the `Temporal.TimeZone.from()` function which performs the built-in mapping, change the list of allowed time zones that `Temporal.TimeZone` iterates through, and replace `Temporal.now.timeZone()` to avoid exposing the current time zone.
+
+For example, to allow only offset time zones, and make the current time zone always UTC:
 
 ```javascript
-// For example, to allow only offset time zones:
-
-TemporalTimeZone_fromId = Temporal.TimeZone.fromId;
-Temporal.TimeZone.fromId = function (id) {
+const originalTemporalTimeZoneFrom = Temporal.TimeZone.from;
+Temporal.TimeZone.from = function (item) {
+  let id;
+  if (item instanceof Temporal.TimeZone) {
+    id = item.name;
+  } else {
+    const string = `${item}`;
+    try {
+      const { zone } = Temporal.parse(string);
+      if (zone.ianaName === 'UTC')
+        id = 'UTC';
+      else
+        id = zone.offset;
+    } catch {
+      id = string;
+    }
+  }
   if (/^[+-]\d{2}:?\d{2}$/.test(id) || id === 'UTC')
-    return TemporalTimeZone_fromId(id);
-  return null;
+    return originalTemporalTimeZoneFrom.call(this, id);
+  throw new RangeError('invalid time zone');
 }
 Temporal.TimeZone[Symbol.iterator] = function* () { return null; }
-Temporal.now.timeZone = function () { return Temporal.TimeZone.fromId('UTC'); }
+Temporal.now.timeZone = function () { return Temporal.TimeZone.from('UTC'); }
 ```
 
 ## Implementation of a custom time zone
@@ -111,8 +141,7 @@ class Temporal.TimeZone {
   toString() : string;
   toJSON() : string;
 
-  static from(item : any, options?: object) : Temporal.TimeZone;
-  static fromId(id: string) : Temporal.TimeZone;
+  static from(item : any) : Temporal.TimeZone;
   static [Symbol.iterator]() : iterator<Temporal.TimeZone>;
 }
 ```
@@ -164,15 +193,6 @@ class OffsetTimeZone extends Temporal.TimeZone {
 
   *getTransitions() {
     return null; // no transitions ever
-  }
-
-  static fromId(id) {
-    const match = /^([+-])(\d{2}):?(\d{2})$/.exec(id);
-    if (match) {
-      const [, sign, hours, minutes] = result;
-      return new OffsetTimeZone(sign === '-' ? -1 : 1, +hours, +minutes, 0, 0, 0, 0);
-    }
-    return Temporal.TimeZone.fromId(id);
   }
 }
 ```
