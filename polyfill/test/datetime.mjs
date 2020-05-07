@@ -108,10 +108,11 @@ describe('DateTime', () => {
     });
   });
   describe('Construction', () => {
-    describe('new DateTime(1976, 11, 18, 15, 23, 30, 123, 456, 789)', () => {
+    describe('new DateTime(1976, 11, 18, 15, 23, 30, 123, 456, 789, calendar)', () => {
       let datetime;
+      const calendar = Temporal.Calendar.from('iso8601');
       it('datetime can be constructed', () => {
-        datetime = new DateTime(1976, 11, 18, 15, 23, 30, 123, 456, 789);
+        datetime = new DateTime(1976, 11, 18, 15, 23, 30, 123, 456, 789, calendar);
         assert(datetime);
         equal(typeof datetime, 'object');
       });
@@ -124,6 +125,7 @@ describe('DateTime', () => {
       it('datetime.millisecond is 123', () => equal(datetime.millisecond, 123));
       it('datetime.microsecond is 456', () => equal(datetime.microsecond, 456));
       it('datetime.nanosecond is 789', () => equal(datetime.nanosecond, 789));
+      it('datetime.calendar is the object', () => equal(datetime.calendar, calendar));
       it('datetime.dayOfWeek is 4', () => equal(datetime.dayOfWeek, 4));
       it('datetime.dayOfYear is 323', () => equal(datetime.dayOfYear, 323));
       it('datetime.weekOfYear is 47', () => equal(datetime.weekOfYear, 47));
@@ -595,7 +597,19 @@ describe('DateTime', () => {
     });
   });
   describe('dateTime.getFields() works', () => {
-    const dt1 = DateTime.from('1976-11-18T15:23:30.123456789');
+    const calendar = Temporal.Calendar.from('iso8601');
+    const dt1 = DateTime.from({
+      year: 1976,
+      month: 11,
+      day: 18,
+      hour: 15,
+      minute: 23,
+      second: 30,
+      millisecond: 123,
+      microsecond: 456,
+      nanosecond: 789,
+      calendar
+    });
     const fields = dt1.getFields();
     it('fields', () => {
       equal(fields.year, 1976);
@@ -607,6 +621,7 @@ describe('DateTime', () => {
       equal(fields.millisecond, 123);
       equal(fields.microsecond, 456);
       equal(fields.nanosecond, 789);
+      equal(fields.calendar, calendar);
     });
     it('enumerable', () => {
       const fields2 = { ...fields };
@@ -619,6 +634,7 @@ describe('DateTime', () => {
       equal(fields2.millisecond, 123);
       equal(fields2.microsecond, 456);
       equal(fields2.nanosecond, 789);
+      equal(fields2.calendar, calendar);
     });
     it('as input to from()', () => {
       const dt2 = DateTime.from(fields);

@@ -11,6 +11,7 @@ import {
   MILLISECOND,
   MICROSECOND,
   NANOSECOND,
+  CALENDAR,
   CreateSlots,
   GetSlot,
   SetSlot
@@ -235,8 +236,9 @@ export class Time {
     const millisecond = GetSlot(this, MILLISECOND);
     const microsecond = GetSlot(this, MICROSECOND);
     const nanosecond = GetSlot(this, NANOSECOND);
+    const calendar = GetSlot(temporalDate, CALENDAR);
     const DateTime = GetIntrinsic('%Temporal.DateTime%');
-    return new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
+    return new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
   }
   getFields() {
     const fields = ES.ToRecord(this, [

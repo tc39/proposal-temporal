@@ -21,7 +21,7 @@ A `Temporal.DateTime` can also be converted into any of the other `Temporal` obj
 
 ## Constructor
 
-### **new Temporal.DateTime**(_isoYear_: number, _isoMonth_: number, _isoDay_: number, _hour_: number = 0, _minute_: number = 0, _second_: number = 0, _millisecond_: number = 0, _microsecond_: number = 0, _nanosecond_: number = 0) : Temporal.DateTime
+### **new Temporal.DateTime**(_isoYear_: number, _isoMonth_: number, _isoDay_: number, _hour_: number = 0, _minute_: number = 0, _second_: number = 0, _millisecond_: number = 0, _microsecond_: number = 0, _nanosecond_: number = 0, _calendar_?: Temporal.Calendar) : Temporal.DateTime
 
 **Parameters:**
 - `isoYear` (number): A year.
@@ -33,14 +33,15 @@ A `Temporal.DateTime` can also be converted into any of the other `Temporal` obj
 - `millisecond` (optional number): A number of milliseconds, ranging between 0 and 999 inclusive.
 - `microsecond` (optional number): A number of microseconds, ranging between 0 and 999 inclusive.
 - `nanosecond` (optional number): A number of nanoseconds, ranging between 0 and 999 inclusive.
+- `calendar` (optional `Temporal.Calendar`): A calendar to project the date into.
 
 **Returns:** a new `Temporal.DateTime` object.
 
-Use this constructor if you have the correct parameters for the date already as individual number values.
-Otherwise, `Temporal.DateTime.from()`, which accepts more kinds of input and allows disambiguation behaviour, is probably more convenient.
+Use this constructor if you have the correct parameters for the date already as individual number values in the ISO 8601 calendar.
+Otherwise, `Temporal.DateTime.from()`, which accepts more kinds of input, allows inputting dates in different calendar reckonings, and allows disambiguation behaviour, is probably more convenient.
 
 All values are given as reckoned in the [ISO 8601 calendar](https://en.wikipedia.org/wiki/ISO_8601#Dates).
-Together, `isoYear`, `isoMonth`, and `isoDay` must represent a valid date in that calendar, and the time parameters must represent a valid time of day.
+Together, `isoYear`, `isoMonth`, and `isoDay` must represent a valid date in that calendar, even if you are passing a different calendar as the `calendar` parameter, and the time parameters must represent a valid time of day.
 
 > **NOTE**: Although Temporal does not deal with leap seconds, dates coming from other software may have a `second` value of 60.
 > This value will cause the constructor will throw, so if you have to interoperate with times that may contain leap seconds, use `Temporal.DateTime.from()` instead.
@@ -72,8 +73,9 @@ datetime = new Temporal.DateTime(2020, 3, 14, 13, 37)  // => 2020-03-14T13:37
 
 This static method creates a new `Temporal.DateTime` object from another value.
 If the value is another `Temporal.DateTime` object, a new object representing the same date and time is returned.
-If the value is any other object, a `Temporal.DateTime` will be constructed from the values of any `year`, `month`, `day`, `hour`, `minute`, `second`, `millisecond`, `microsecond`, and `nanosecond` properties that are present.
+If the value is any other object, a `Temporal.DateTime` will be constructed from the values of any `year`, `month`, `day`, `hour`, `minute`, `second`, `millisecond`, `microsecond`, `nanosecond`, and `calendar` properties that are present.
 At least the `year`, `month`, and `day` properties must be present.
+If `calendar` is missing, it will be assumed to be `Temporal.Calendar.from('iso8601')`.
 Any other missing ones will be assumed to be 0.
 
 Any non-object value is converted to a string, which is expected to be in ISO 8601 format.
@@ -112,6 +114,12 @@ dt = Temporal.DateTime.from({
 dt = Temporal.DateTime.from({year: 1995, month: 12, day: 7});  // => 1995-12-07T00:00
 dt = Temporal.DateTime.from(Temporal.Date.from('1995-12-07T03:24:30'));
   // => same as above; Temporal.Date has year, month, and day properties
+
+calendar = Temporal.Calendar.from('hebrew');
+dt = Temporal.DateTime.from({ year: 5756, month: 3, day: 14, hour: 3, minute: 24, second: 30, calendar });
+  // => 1995-12-07T03:24:30[c=hebrew]
+dt = Temporal.DateTime.from({ year: 5756, month: 3, day: 14, hour: 3, minute: 24, second: 30, calendar: 'hebrew' });
+  // => same as above
 
 // Different disambiguation modes
 dt = Temporal.DateTime.from({ year: 2001, month: 13, day: 1 }, { disambiguation: 'constrain' })
@@ -197,10 +205,14 @@ dt.microsecond  // => 3
 dt.nanosecond   // => 500
 ```
 
+### datetime.**calendar** : Temporal.Calendar
+
+The `calendar` read-only property gives the calendar that the `year`, `month`, and `day` properties are interpreted in.
+
 ### datetime.**dayOfWeek** : number
 
 The `dayOfWeek` read-only property gives the weekday number that the date falls on.
-The weekday number is defined as in the ISO 8601 standard: a value between 1 and 7, inclusive, with Monday being 1, and Sunday 7.
+For the ISO 8601 calendar, the weekday number is defined as in the ISO 8601 standard: a value between 1 and 7, inclusive, with Monday being 1, and Sunday 7.
 For an overview, see [ISO 8601 on Wikipedia](https://en.wikipedia.org/wiki/ISO_8601#Week_dates).
 
 Usage example:
@@ -212,7 +224,7 @@ dt = new Temporal.DateTime(1995, 12, 7, 3, 24, 30, 0, 3, 500);
 ### datetime.**dayOfYear** : number
 
 The `dayOfYear` read-only property gives the ordinal day of the year that the date falls on.
-This is a value between 1 and 365, or 366 in a leap year.
+For the ISO 8601 calendar, this is a value between 1 and 365, or 366 in a leap year.
 
 Usage example:
 ```javascript
@@ -224,7 +236,7 @@ console.log(dt.year, dt.dayOfYear);  // => 1995 341
 ### datetime.**weekOfYear** : number
 
 The `weekOfYear` read-only property gives the ISO week number of the date.
-This is normally a value between 1 and 52, but in a few cases it can be 53 as well.
+For the ISO 8601 calendar, this is normally a value between 1 and 52, but in a few cases it can be 53 as well.
 ISO week 1 is the week containing the first Thursday of the year.
 For more information on ISO week numbers, see for example the Wikipedia article on [ISO week date](https://en.wikipedia.org/wiki/ISO_week_date).
 
@@ -238,7 +250,7 @@ console.log(dt.year, dt.weekOfYear, dt.dayOfWeek);  // => 1995 49 4
 ### datetime.**daysInMonth** : number
 
 The `daysInMonth` read-only property gives the number of days in the month that the date falls in.
-This is 28, 29, 30, or 31, depending on the month and whether the year is a leap year.
+For the ISO 8601 calendar, this is 28, 29, 30, or 31, depending on the month and whether the year is a leap year.
 
 Usage example:
 ```javascript
@@ -261,7 +273,7 @@ console.log(poem);
 ### datetime.**daysInYear** : number
 
 The `daysInYear` read-only property gives the number of days in the year that the date falls in.
-This is 365 or 366, depending on whether the year is a leap year.
+For the ISO 8601 calendar, this is 365 or 366, depending on whether the year is a leap year.
 
 Usage example:
 ```javascript
@@ -304,6 +316,9 @@ This method creates a new `Temporal.DateTime` which is a copy of `datetime`, but
 Since `Temporal.DateTime` objects are immutable, use this method instead of modifying one.
 
 > **NOTE**: The allowed values for the `dateTimeLike.month` property start at 1, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
+
+> **NOTE**: If a `calendar` property is provided on `dateTimeLike`, the new calendar is applied first, before any of the other properties.
+> If you are passing in an object with _only_ a `calendar` property, it is recommended to use the `withCalendar` method instead.
 
 Usage example:
 ```javascript
@@ -574,7 +589,7 @@ dt.getMonthDay()  // => 12-07
 dt.getTime()  // => 03:24:30.000003500
 ```
 
-### datetime.**getFields**() : { year: number, month: number, day: number, hour: number, minute: number, second: number, millisecond: number, microsecond: number, nanosecond: number, [propName: string]: unknown }
+### datetime.**getFields**() : { year: number, month: number, day: number, hour: number, minute: number, second: number, millisecond: number, microsecond: number, nanosecond: number, calendar: Temporal.Calendar, [propName: string]: unknown }
 
 **Returns:** a plain object with properties equal to the fields of `datetime`.
 
@@ -598,10 +613,18 @@ Object.assign({}, dt.getFields()).day  // => 7
 
 This method is mainly useful if you are implementing a custom calendar.
 Most code will not need to use it.
-Use `datetime.getFields()` instead.
+Use `datetime.getFields()` instead, or `datetime.withCalendar('iso8601').getFields()`.
 
 Usage example:
 ```javascript
 dt = Temporal.Date.from('1995-12-07T03:24:30.000003500');
 date.getISOCalendarFields().day  // => 7
+
+// Date in other calendar
+dt = dt.withCalendar('hebrew');
+dt.getFields().day  // => 14
+dt.getISOCalendarFields().day  // => 7
+
+// Most likely what you need is this:
+dt.withCalendar('iso8601').day  // => 7
 ```

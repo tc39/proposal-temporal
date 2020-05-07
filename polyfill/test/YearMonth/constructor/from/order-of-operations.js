@@ -7,6 +7,8 @@ includes: [compareArray.js]
 ---*/
 
 const expected = [
+  "get calendar",
+  "toString calendar",
   "get month",
   "valueOf month",
   "get year",
@@ -16,6 +18,7 @@ const actual = [];
 const fields = {
   year: 1.7,
   month: 1.7,
+  calendar: "iso8601",
 };
 const argument = new Proxy(fields, {
   get(target, key) {
@@ -25,6 +28,10 @@ const argument = new Proxy(fields, {
       valueOf() {
         actual.push(`valueOf ${key}`);
         return result;
+      },
+      toString() {
+        actual.push(`toString ${key}`);
+        return result.toString();
       }
     };
   },
@@ -36,4 +43,5 @@ const argument = new Proxy(fields, {
 const result = Temporal.YearMonth.from(argument);
 assert.sameValue(result.year, 1, "year result");
 assert.sameValue(result.month, 1, "month result");
+assert.sameValue(result.calendar.id, "iso8601", "calendar result");
 assert.compareArray(actual, expected, "order of operations");

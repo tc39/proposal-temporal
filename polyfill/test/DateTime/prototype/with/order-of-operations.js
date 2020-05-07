@@ -8,6 +8,8 @@ includes: [compareArray.js]
 
 const instance = new Temporal.DateTime(2000, 5, 2, 12, 34, 56, 987, 654, 321);
 const expected = [
+  "get calendar",
+  "toString calendar",
   "get day",
   "valueOf day",
   "get hour",
@@ -38,6 +40,7 @@ const fields = {
   millisecond: 1.7,
   microsecond: 1.7,
   nanosecond: 1.7,
+  calendar: "iso8601",
 };
 const argument = new Proxy(fields, {
   get(target, key) {
@@ -50,6 +53,10 @@ const argument = new Proxy(fields, {
       valueOf() {
         actual.push(`valueOf ${key}`);
         return result;
+      },
+      toString() {
+        actual.push(`toString ${key}`);
+        return result.toString();
       }
     };
   },
@@ -68,4 +75,5 @@ assert.sameValue(result.second, 1, "second result");
 assert.sameValue(result.millisecond, 1, "millisecond result");
 assert.sameValue(result.microsecond, 1, "microsecond result");
 assert.sameValue(result.nanosecond, 1, "nanosecond result");
+assert.sameValue(result.calendar.id, "iso8601", "calendar result");
 assert.compareArray(actual, expected, "order of operations");
