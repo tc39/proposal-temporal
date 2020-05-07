@@ -145,7 +145,7 @@ export class DateTime {
       calendar = GetSlot(this, CALENDAR);
       source = this;
     }
-    const props = ES.ToPartialRecord(temporalDateTimeLike, [
+    const fieldNames = calendar.fields([
       'day',
       'hour',
       'microsecond',
@@ -156,20 +156,14 @@ export class DateTime {
       'second',
       'year'
     ]);
+    const props = ES.ToPartialRecord(temporalDateTimeLike, fieldNames);
     if (!props) {
       throw new RangeError('invalid date-time-like');
     }
-    const fields = ES.ToRecord(source, [
-      ['day'],
-      ['hour'],
-      ['microsecond'],
-      ['millisecond'],
-      ['minute'],
-      ['month'],
-      ['nanosecond'],
-      ['second'],
-      ['year']
-    ]);
+    const fields = ES.ToRecord(
+      source,
+      fieldNames.map((name) => [name])
+    );
     ObjectAssign(fields, props);
     const date = calendar.dateFromFields(fields, options, GetIntrinsic('%Temporal.Date%'));
     let year = GetSlot(date, ISO_YEAR);
@@ -541,14 +535,22 @@ export class DateTime {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     const YearMonth = GetIntrinsic('%Temporal.YearMonth%');
     const calendar = GetSlot(this, CALENDAR);
-    const fields = ES.ToRecord(this, [['month'], ['year']]);
+    const fieldNames = calendar.fields(['month', 'year']);
+    const fields = ES.ToRecord(
+      this,
+      fieldNames.map((name) => [name])
+    );
     return calendar.yearMonthFromFields(fields, {}, YearMonth);
   }
   getMonthDay() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     const MonthDay = GetIntrinsic('%Temporal.MonthDay%');
     const calendar = GetSlot(this, CALENDAR);
-    const fields = ES.ToRecord(this, [['day'], ['month']]);
+    const fieldNames = calendar.fields(['day', 'month']);
+    const fields = ES.ToRecord(
+      this,
+      fieldNames.map((name) => [name])
+    );
     return calendar.monthDayFromFields(fields, {}, MonthDay);
   }
   getTime() {
@@ -564,19 +566,25 @@ export class DateTime {
     );
   }
   getFields() {
-    const fields = ES.ToRecord(this, [
-      ['day'],
-      ['hour'],
-      ['microsecond'],
-      ['millisecond'],
-      ['minute'],
-      ['month'],
-      ['nanosecond'],
-      ['second'],
-      ['year']
+    if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+    const calendar = GetSlot(this, CALENDAR);
+    const fieldNames = calendar.fields([
+      'day',
+      'hour',
+      'microsecond',
+      'millisecond',
+      'minute',
+      'month',
+      'nanosecond',
+      'second',
+      'year'
     ]);
+    const fields = ES.ToRecord(
+      this,
+      fieldNames.map((name) => [name])
+    );
     if (!fields) throw new TypeError('invalid receiver');
-    fields.calendar = GetSlot(this, CALENDAR);
+    fields.calendar = calendar;
     return fields;
   }
   getISOCalendarFields() {

@@ -85,11 +85,15 @@ export class Date {
       calendar = GetSlot(this, CALENDAR);
       source = this;
     }
-    const props = ES.ToPartialRecord(temporalDateLike, ['day', 'month', 'year']);
+    const fieldNames = calendar.fields(['day', 'month', 'year']);
+    const props = ES.ToPartialRecord(temporalDateLike, fieldNames);
     if (!props) {
       throw new RangeError('invalid date-like');
     }
-    const fields = ES.ToRecord(source, [['day'], ['month'], ['year']]);
+    const fields = ES.ToRecord(
+      source,
+      fieldNames.map((name) => [name])
+    );
     ObjectAssign(fields, props);
     const Construct = ES.SpeciesConstructor(this, Date);
     const result = calendar.dateFromFields(fields, options, Construct);
@@ -201,20 +205,33 @@ export class Date {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
     const YearMonth = GetIntrinsic('%Temporal.YearMonth%');
     const calendar = GetSlot(this, CALENDAR);
-    const fields = ES.ToRecord(this, [['month'], ['year']]);
+    const fieldNames = calendar.fields(['month', 'year']);
+    const fields = ES.ToRecord(
+      this,
+      fieldNames.map((name) => [name])
+    );
     return calendar.yearMonthFromFields(fields, {}, YearMonth);
   }
   getMonthDay() {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
     const MonthDay = GetIntrinsic('%Temporal.MonthDay%');
     const calendar = GetSlot(this, CALENDAR);
-    const fields = ES.ToRecord(this, [['day'], ['month']]);
+    const fieldNames = calendar.fields(['day', 'month']);
+    const fields = ES.ToRecord(
+      this,
+      fieldNames.map((name) => [name])
+    );
     return calendar.monthDayFromFields(fields, {}, MonthDay);
   }
   getFields() {
-    const fields = ES.ToRecord(this, [['day'], ['month'], ['year']]);
+    const calendar = GetSlot(this, CALENDAR);
+    const fieldNames = calendar.fields(['day', 'month', 'year']);
+    const fields = ES.ToRecord(
+      this,
+      fieldNames.map((name) => [name])
+    );
     if (!fields) throw new TypeError('invalid receiver');
-    fields.calendar = GetSlot(this, CALENDAR);
+    fields.calendar = calendar;
     return fields;
   }
   getISOCalendarFields() {

@@ -95,6 +95,10 @@ class Temporal.Calendar {
 	/** A string identifier for this calendar */
 	id : string;
 
+	fields(
+		fields: array<string>
+	) : array<string>;
+
 	//////////////////
 	//  Arithmetic  //
 	//////////////////
@@ -171,6 +175,9 @@ get foo(...args) {
 
 
 Calendars can add additional *calendar-specific accessors*, such as the year type ("kesidran", "chaser", "maleh") in the Hebrew calendar, and may add conforming accessor methods to Temporal.Date.prototype.
+
+If any of these accessors are needed for constructing a Temporal.Date from fields (ex.: `era` in the Japanese calendar), then the calendar should implement `fields()` which, given an array of fields names in the ISO calendar, returns an array of equivalent field names in the calendar.
+Example: in the Japanese calendar, `era` is added to any array containing `year` and the rest of the array is left unchanged.
 
 An instance of `MyCalendar` is *expected* to have stateless behavior; i.e., calling a method with the same arguments should return the same result each time.  There would be no mechanism for enforcing that user-land calendars are stateless; the calendar author should test this expectation on their own in order to prevent unexpected behavior such as the lack of round-tripping.
 
