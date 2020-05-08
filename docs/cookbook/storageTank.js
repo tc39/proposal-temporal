@@ -16,7 +16,7 @@ const labelFormatter = new Intl.DateTimeFormat(undefined, {
   weekday: 'short',
   hour: 'numeric',
   minute: 'numeric',
-  timeZone: Temporal.now.timeZone().name
+  timeZone: Temporal.now.timeZone()
 });
 const graphLabels = tankDataX.slice(dataStartIndex).map((x) => labelFormatter.format(x));
 const graphPoints = tankDataY.slice(dataStartIndex);
