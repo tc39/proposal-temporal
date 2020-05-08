@@ -136,6 +136,8 @@
 </li>
 <li><a href="#offset-between-two-time-zones-at-an-instant">Offset between two time zones at an instant</a>
 </li>
+<li><a href="#dealing-with-dates-and-times-in-a-fixed-location">Dealing with dates and times in a fixed location</a>
+</li>
 </ul>
 </li>
 <li><a href="#arithmetic">Arithmetic</a>
@@ -512,6 +514,129 @@ assert<span class="token punctuation">.</span><span class="token function">equal
 
 <span class="token comment">// At this instant, Chicago is 3600 seconds earlier than New York</span>
 assert<span class="token punctuation">.</span><span class="token function">equal</span><span class="token punctuation">(</span><span class="token function">getUtcOffsetDifferenceSecondsAtInstant</span><span class="token punctuation">(</span>instant<span class="token punctuation">,</span> nyc<span class="token punctuation">,</span> chicago<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">3600</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre><h3 id="dealing-with-dates-and-times-in-a-fixed-location"><a class="heading-link" href="#dealing-with-dates-and-times-in-a-fixed-location"></a>Dealing with dates and times in a fixed location</h3><p>Here is an example of Temporal used in a graph, showing fictitious activity for a storage tank in a fixed location (Stockholm, Sweden).
+The graph always starts at midnight in the tank&#39;s location, but the graph labels are in the viewer&#39;s time zone.</p>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+
+<p><canvas id="storage-tank" width="600" height="400"></canvas></p>
+<script type="text/javascript">
+// Generate fictitious "data"
+const start = Temporal.now.absolute().minus({ hours: 24 });
+const blank = Array(24 * 12);
+const tankDataX = Array.from(blank, (_, ix) => start.plus({ minutes: ix * 5 }));
+const tankDataY = Array.from(blank);
+tankDataY[0] = 25;
+for (let ix = 1; ix < tankDataY.length; ix++) {
+  tankDataY[ix] = Math.max(0, tankDataY[ix - 1] + 3 * (Math.random() - 0.5));
+}
+
+// tankDataX and tankDataY are X and Y-axis data for the last 24 hours,
+// obtained from elsewhere, e.g. const [tankDataX, tankDataY] = fetchData();
+// tankDataX is an array of Temporal.Absolute, and tankDataY is an array of numbers.
+
+// Show data starting from the most recent midnight in the tank's location (Stockholm)
+const tankTimeZone = Temporal.TimeZone.from('Europe/Stockholm');
+const tankMidnight = Temporal.now
+  .absolute()
+  .inTimeZone(tankTimeZone)
+  .getDate()
+  .withTime(Temporal.Time.from('00:00'))
+  .inTimeZone(tankTimeZone);
+const atOrAfterMidnight = (x) => Temporal.Absolute.compare(x, tankMidnight) >= 0;
+const dataStartIndex = tankDataX.findIndex(atOrAfterMidnight);
+const labelFormatter = new Intl.DateTimeFormat(undefined, {
+  weekday: 'short',
+  hour: 'numeric',
+  minute: 'numeric',
+  timeZone: Temporal.now.timeZone().name
+});
+const graphLabels = tankDataX.slice(dataStartIndex).map((x) => labelFormatter.format(x));
+const graphPoints = tankDataY.slice(dataStartIndex);
+
+const ctx = document.getElementById('storage-tank').getContext('2d');
+// The graph is made with Chart.js (https://www.chartjs.org/)
+new Chart(ctx, {
+  type: 'line',
+  data: {
+    labels: graphLabels,
+    datasets: [
+      {
+        label: 'Fill level',
+        data: graphPoints
+      }
+    ]
+  },
+  options: {
+    title: {
+      display: true,
+      text: 'Stockholm storage tank'
+    },
+    scales: {
+      yAxes: [
+        {
+          ticks: {
+            beginAtZero: true
+          }
+        }
+      ]
+    }
+  }
+});
+
+</script>
+
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">// tankDataX and tankDataY are X and Y-axis data for the last 24 hours,</span>
+<span class="token comment">// obtained from elsewhere, e.g. const [tankDataX, tankDataY] = fetchData();</span>
+<span class="token comment">// tankDataX is an array of Temporal.Absolute, and tankDataY is an array of numbers.</span>
+
+<span class="token comment">// Show data starting from the most recent midnight in the tank's location (Stockholm)</span>
+<span class="token keyword">const</span> tankTimeZone <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'Europe/Stockholm'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> tankMidnight <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>now
+  <span class="token punctuation">.</span><span class="token function">absolute</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">inTimeZone</span><span class="token punctuation">(</span>tankTimeZone<span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">getDate</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">withTime</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'00:00'</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">inTimeZone</span><span class="token punctuation">(</span>tankTimeZone<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> <span class="token function-variable function">atOrAfterMidnight</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token parameter">x</span><span class="token punctuation">)</span> <span class="token operator">=></span> Temporal<span class="token punctuation">.</span>Absolute<span class="token punctuation">.</span><span class="token function">compare</span><span class="token punctuation">(</span>x<span class="token punctuation">,</span> tankMidnight<span class="token punctuation">)</span> <span class="token operator">>=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> dataStartIndex <span class="token operator">=</span> tankDataX<span class="token punctuation">.</span><span class="token function">findIndex</span><span class="token punctuation">(</span>atOrAfterMidnight<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> labelFormatter <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Intl<span class="token punctuation">.</span>DateTimeFormat</span><span class="token punctuation">(</span><span class="token keyword">undefined</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+  weekday<span class="token operator">:</span> <span class="token string">'short'</span><span class="token punctuation">,</span>
+  hour<span class="token operator">:</span> <span class="token string">'numeric'</span><span class="token punctuation">,</span>
+  minute<span class="token operator">:</span> <span class="token string">'numeric'</span><span class="token punctuation">,</span>
+  timeZone<span class="token operator">:</span> Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">timeZone</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>name
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> graphLabels <span class="token operator">=</span> tankDataX<span class="token punctuation">.</span><span class="token function">slice</span><span class="token punctuation">(</span>dataStartIndex<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">x</span><span class="token punctuation">)</span> <span class="token operator">=></span> labelFormatter<span class="token punctuation">.</span><span class="token function">format</span><span class="token punctuation">(</span>x<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> graphPoints <span class="token operator">=</span> tankDataY<span class="token punctuation">.</span><span class="token function">slice</span><span class="token punctuation">(</span>dataStartIndex<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token keyword">const</span> ctx <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'storage-tank'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getContext</span><span class="token punctuation">(</span><span class="token string">'2d'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// The graph is made with Chart.js (https://www.chartjs.org/)</span>
+<span class="token keyword">new</span> <span class="token class-name">Chart</span><span class="token punctuation">(</span>ctx<span class="token punctuation">,</span> <span class="token punctuation">{</span>
+  type<span class="token operator">:</span> <span class="token string">'line'</span><span class="token punctuation">,</span>
+  data<span class="token operator">:</span> <span class="token punctuation">{</span>
+    labels<span class="token operator">:</span> graphLabels<span class="token punctuation">,</span>
+    datasets<span class="token operator">:</span> <span class="token punctuation">[</span>
+      <span class="token punctuation">{</span>
+        label<span class="token operator">:</span> <span class="token string">'Fill level'</span><span class="token punctuation">,</span>
+        data<span class="token operator">:</span> graphPoints
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">]</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  options<span class="token operator">:</span> <span class="token punctuation">{</span>
+    title<span class="token operator">:</span> <span class="token punctuation">{</span>
+      display<span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+      text<span class="token operator">:</span> <span class="token string">'Stockholm storage tank'</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    scales<span class="token operator">:</span> <span class="token punctuation">{</span>
+      yAxes<span class="token operator">:</span> <span class="token punctuation">[</span>
+        <span class="token punctuation">{</span>
+          ticks<span class="token operator">:</span> <span class="token punctuation">{</span>
+            beginAtZero<span class="token operator">:</span> <span class="token boolean">true</span>
+          <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span>
+      <span class="token punctuation">]</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 </code></pre><h2 id="arithmetic-1">Arithmetic</h2>
 <h3 id="how-many-days-until-a-future-date"><a class="heading-link" href="#how-many-days-until-a-future-date"></a>How many days until a future date</h3><p>An example HTML form inspired by <a href="https://www.timeanddate.com/date/durationresult.html">Days Calculator</a> on timeanddate.com:</p>
 <form action="#how-many-days-until-a-future-date">
