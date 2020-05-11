@@ -48,8 +48,14 @@ export class MonthDay {
     if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
     return new Intl.DateTimeFormat(...args).format(this);
   }
-  withYear(year) {
+  withYear(item) {
     if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
+    let year;
+    if (typeof item === 'object') {
+      ({ year } = ES.ToRecord(item, [['year']]));
+    } else {
+      year = ES.ToInteger(item);
+    }
     const month = GetSlot(this, MONTH);
     const day = GetSlot(this, DAY);
     const Date = GetIntrinsic('%Temporal.Date%');

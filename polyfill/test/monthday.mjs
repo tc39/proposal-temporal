@@ -136,6 +136,22 @@ describe('MonthDay', () => {
       equal(`${md.with({ month: 999999 * 12 }, { disambiguation: 'balance' })}`, '12-01');
     });
   });
+  describe('MonthDay.withYear()', () => {
+    const md = MonthDay.from('01-22');
+    it('takes a number argument', () => {
+      equal(`${md.withYear(2002)}`, '2002-01-22');
+    });
+    it('takes an object argument with year property', () => {
+      equal(`${md.withYear({ year: 2002 })}`, '2002-01-22');
+    });
+    it('needs at least a year property on the object in the ISO calendar', () => {
+      throws(() => md.withYear({ something: 'nothing' }), TypeError);
+    });
+    it('converts a non-object argument to integer', () => {
+      equal(`${md.withYear('2002')}`, '2002-01-22');
+      equal(`${md.withYear(null)}`, '+000000-01-22');
+    });
+  });
 });
 
 import { normalize } from 'path';
