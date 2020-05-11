@@ -117,27 +117,32 @@
 <pre class="language-javascript"><code class="language-javascript"><span class="token keyword">class</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>Calendar</span> <span class="token punctuation">{</span>
     <span class="token comment">/** Constructs a Temporal.Date from a free-form option bag */</span>
     <span class="token function">dateFromFields</span><span class="token punctuation">(</span>
-        fields<span class="token operator">:</span> object
+        fields<span class="token operator">:</span> object<span class="token punctuation">,</span>
+        <span class="token function-variable function">constructor</span><span class="token operator">:</span> <span class="token keyword">function</span>
     <span class="token punctuation">)</span> <span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">;</span>
 
     <span class="token comment">/** Constructs a Temporal.DateTime from a free-form option bag */</span>
     <span class="token function">dateTimeFromFields</span><span class="token punctuation">(</span>
-        fields<span class="token operator">:</span> object
+        fields<span class="token operator">:</span> object<span class="token punctuation">,</span>
+        <span class="token function-variable function">constructor</span><span class="token operator">:</span> <span class="token keyword">function</span>
     <span class="token punctuation">)</span> <span class="token operator">:</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">;</span>
 
     <span class="token comment">/** Constructs a Temporal.Time from a free-form option bag */</span>
     <span class="token function">timeFromFields</span><span class="token punctuation">(</span>
-        fields<span class="token operator">:</span> object
+        fields<span class="token operator">:</span> object<span class="token punctuation">,</span>
+        <span class="token function-variable function">constructor</span><span class="token operator">:</span> <span class="token keyword">function</span>
     <span class="token punctuation">)</span> <span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">;</span>
 
     <span class="token comment">/** Constructs a Temporal.YearMonth from a free-form option bag */</span>
     <span class="token function">yearMonthFromFields</span><span class="token punctuation">(</span>
-        fields<span class="token operator">:</span> object
+        fields<span class="token operator">:</span> object<span class="token punctuation">,</span>
+        <span class="token function-variable function">constructor</span><span class="token operator">:</span> <span class="token keyword">function</span>
     <span class="token punctuation">)</span> <span class="token operator">:</span> Temporal<span class="token punctuation">.</span>YearMonth<span class="token punctuation">;</span>
 
     <span class="token comment">/** Constructs a Temporal.MonthDay from a free-form option bag */</span>
     <span class="token function">monthDayFromFields</span><span class="token punctuation">(</span>
-        fields<span class="token operator">:</span> object
+        fields<span class="token operator">:</span> object<span class="token punctuation">,</span>
+        <span class="token function-variable function">constructor</span><span class="token operator">:</span> <span class="token keyword">function</span>
     <span class="token punctuation">)</span> <span class="token operator">:</span> Temporal<span class="token punctuation">.</span>MonthDay<span class="token punctuation">;</span>
 
     <span class="token comment">/** A string identifier for this calendar */</span>
@@ -151,14 +156,16 @@
     <span class="token function">plus</span><span class="token punctuation">(</span>
         input<span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">,</span>
         duration<span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Duration<span class="token punctuation">,</span>
-        options<span class="token operator">:</span> <span class="token comment">/* options bag */</span>
+        options<span class="token operator">:</span> <span class="token comment">/* options bag */</span><span class="token punctuation">,</span>
+        <span class="token function-variable function">constructor</span><span class="token operator">:</span> <span class="token keyword">function</span>
     <span class="token punctuation">)</span> <span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">;</span>
 
     <span class="token comment">/** Returns input minus duration according to the calendar rules. */</span>
     <span class="token function">minus</span><span class="token punctuation">(</span>
         input<span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">,</span>
         duration<span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Duration<span class="token punctuation">,</span>
-        options<span class="token operator">:</span> <span class="token comment">/* options bag */</span>
+        options<span class="token operator">:</span> <span class="token comment">/* options bag */</span><span class="token punctuation">,</span>
+        <span class="token function-variable function">constructor</span><span class="token operator">:</span> <span class="token keyword">function</span>
     <span class="token punctuation">)</span> <span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">;</span>
 
     <span class="token comment">/** Returns left minus right, which are dates in the same calendar. */</span>
@@ -225,9 +232,9 @@
 <pre class="language-javascript"><code class="language-javascript"><span class="token keyword">const</span> PartialIsoCalendar <span class="token operator">=</span> <span class="token punctuation">{</span>
     id<span class="token operator">:</span> <span class="token string">"iso"</span><span class="token punctuation">,</span>
 
-    <span class="token function">dateFromFields</span><span class="token punctuation">(</span><span class="token parameter">fields</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token function">dateFromFields</span><span class="token punctuation">(</span><span class="token parameter">fields<span class="token punctuation">,</span> constructor</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
         <span class="token keyword">const</span> <span class="token punctuation">{</span> year<span class="token punctuation">,</span> month<span class="token punctuation">,</span> day <span class="token punctuation">}</span> <span class="token operator">=</span> fields<span class="token punctuation">;</span>
-        <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>Date</span><span class="token punctuation">(</span>year<span class="token punctuation">,</span> month<span class="token punctuation">,</span> day<span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">constructor</span><span class="token punctuation">(</span>year<span class="token punctuation">,</span> month<span class="token punctuation">,</span> day<span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
     <span class="token comment">// Same for dateTimeFromFields, etc.</span>
 
@@ -339,12 +346,12 @@ Temporal<span class="token punctuation">.</span>Date<span class="token punctuati
 <pre class="language-javascript"><code class="language-javascript">Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">.</span><span class="token function-variable function">from</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">thing<span class="token operator">:</span> string <span class="token operator">|</span> object<span class="token punctuation">,</span> options<span class="token operator">:</span> object</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
     <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">typeof</span> thing <span class="token operator">===</span> <span class="token string">"string"</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
         <span class="token keyword">let</span> object <span class="token operator">=</span> <span class="token comment">// components of string</span>
-        <span class="token keyword">return</span> Temporal<span class="token punctuation">.</span>Calendar<span class="token punctuation">.</span>iso<span class="token punctuation">.</span><span class="token function">dateFromFields</span><span class="token punctuation">(</span>object<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> Temporal<span class="token punctuation">.</span>Calendar<span class="token punctuation">.</span>iso<span class="token punctuation">.</span><span class="token function">dateFromFields</span><span class="token punctuation">(</span>object<span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
         <span class="token comment">// Get the calendar object, either the default calendar or something based</span>
         <span class="token comment">// on thing.calendar (string lookup or object)</span>
         <span class="token keyword">let</span> calendar <span class="token operator">=</span> <span class="token comment">// ...</span>
-        <span class="token keyword">return</span> calendar<span class="token punctuation">.</span><span class="token function">dateFromFields</span><span class="token punctuation">(</span>thing<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> calendar<span class="token punctuation">.</span><span class="token function">dateFromFields</span><span class="token punctuation">(</span>thing<span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
 <span class="token punctuation">}</span></code></pre><p>Another example based on the withCalendar method (different semantics):</p>
 <pre class="language-javascript"><code class="language-javascript">Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">.</span><span class="token function-variable function">from</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">thing<span class="token operator">:</span> string <span class="token operator">|</span> object<span class="token punctuation">,</span> options<span class="token operator">:</span> object</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -372,8 +379,9 @@ Temporal<span class="token punctuation">.</span>Date<span class="token punctuati
         <span class="token keyword">return</span> isoDate<span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
 <span class="token punctuation">}</span></code></pre><h3 id="semantics-of-existing-temporaldate-instance-methods"><a class="heading-link" href="#semantics-of-existing-temporaldate-instance-methods"></a>Semantics of existing Temporal.Date instance methods</h3><p>As discussed earlier, Temporal.Date will defer to Temporal.Calendar methods wherever necessary.  Example implementation of selected Temporal.Date methods:</p>
-<pre class="language-javascript"><code class="language-javascript">Temporal<span class="token punctuation">.</span><span class="token class-name">Date</span><span class="token punctuation">.</span>prototype<span class="token punctuation">.</span><span class="token function-variable function">plus</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">duration</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token punctuation">.</span>calendar<span class="token punctuation">.</span><span class="token function">plus</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">,</span> duration<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<pre class="language-javascript"><code class="language-javascript">Temporal<span class="token punctuation">.</span><span class="token class-name">Date</span><span class="token punctuation">.</span>prototype<span class="token punctuation">.</span><span class="token function-variable function">plus</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">duration<span class="token punctuation">,</span> options</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> constructor <span class="token operator">=</span> <span class="token constant">ES</span><span class="token punctuation">.</span><span class="token function">SpeciesConstructor</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">,</span> Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token punctuation">.</span>calendar<span class="token punctuation">.</span><span class="token function">plus</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">,</span> duration<span class="token punctuation">,</span> options<span class="token punctuation">,</span> constructor<span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span>
 
 Temporal<span class="token punctuation">.</span><span class="token class-name">Date</span><span class="token punctuation">.</span>prototype<span class="token punctuation">.</span><span class="token function-variable function">difference</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">other<span class="token punctuation">,</span> options</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
