@@ -412,3 +412,12 @@ All of the following APIs would gain an internal slot for the calendar.
 - Temporal.Time
 - Temporal.YearMonth
 - Temporal.MonthDay
+
+### New behaviour of Temporal.MonthDay.withYear
+
+In some calendars (such as the Japanese imperial calendar) a year is not enough information to be able to convert Temporal.MonthDay to Temporal.Date.
+Temporal.MonthDay.withYear, which previously took a number argument (the year), can now be passed an object which must have properties that provide the needed information.
+(In the Japanese calendar, it needs to have `era` and `year` properties.)
+
+Passing a numerical year argument `num` is equivalent to passing `{ year: num }`.
+The calendar can decide what to do in the case of missing information, in `dateFromFields`.

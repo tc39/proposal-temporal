@@ -206,15 +206,21 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal.monthday.prototype.withyear">
-      <h1>Temporal.MonthDay.prototype.withYear ( _year_ )</h1>
+      <h1>Temporal.MonthDay.prototype.withYear ( _item_ )</h1>
       <p>
-        The `withYear` method takes one argument _year_.
+        The `withYear` method takes one argument _item_.
         The following steps are taken:
       </p>
       <emu-alg>
         1. Let _monthDay_ be the *this* value.
         1. Perform ? RequireInternalSlot(_monthDay_, [[InitializedTemporalMonthDay]]).
-        1. Let _y_ be ? ToInteger(_year_).
+        1. If Type(_item_) is Object, then
+          1. Let _y_ be ? Get(_item_, *"year"*).
+          1. If _y_ is *undefined*, then
+            1. Throw a *TypeError* exception.
+          1. Let _y_ be ? ToInteger(_y_).
+        1. Else,
+          1. Let _y_ be ? ToInteger(_item_).
         1. Return ? CreateTemporalDate(_y_, _monthDay_.[[Month]], _monthDay_.[[Day]]).
       </emu-alg>
     </emu-clause>

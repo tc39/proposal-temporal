@@ -229,7 +229,7 @@ function reviver(key, value) {
 JSON.parse(str, reviver);
 ```
 
-### monthDay.**withYear**(_year_: number) : Temporal.Date
+### monthDay.**withYear**(_year_: number | object) : Temporal.Date
 
 **Parameters:**
 - `year` (number): A year, which must have a day corresponding to `monthDay`.
@@ -243,8 +243,11 @@ Usage example:
 ```javascript
 md = Temporal.MonthDay.from('08-24');
 md.withYear(2017)  // => 2017-08-24
+md.withYear({ year: 2017 })  // equivalent to above
 
 md = Temporal.MonthDay.from('02-29');
 md.withYear(2017)  // throws
 md.withYear(2020)  // => 2020-02-29
 ```
+
+In calendars where more information than just the year is needed to convert a `Temporal.MonthDay` to a `Temporal.Date`, you can pass an object to `withYear()` that contains the necessary properties.
