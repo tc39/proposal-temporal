@@ -372,7 +372,17 @@ Temporal.Date.prototype.difference = function(other, options) {
 	return this.calendar.difference(this, other, options);
 }
 
+Temporal.Date.prototype.with = function(overrides) {
+  const newFields = Object.assign({}, this.getFields(), overrides);
+  return this.calendar.dateFromFields(newFields);
+}
+
+Temporal.Date.prototype.getYearMonth = function() {
+  return this.calendar.yearMonthFromFields(this.getFields());
+}
 ```
+
+Note that the arguments to methods like `with`, `withDate`, etc., are interpreted in the instance's calendar.
 
 ## Other Temporal.Date constructors
 
