@@ -1,5 +1,10 @@
 # Temporal.DateTime
 
+<details>
+  <summary><strong>Table of Contents</strong></summary>
+<!-- toc -->
+</details>
+
 A `Temporal.DateTime` represents a calendar date and wall-clock time, with a precision in nanoseconds, and without any time zone.
 Of the `Temporal` classes carrying human-readable time information, it is the most general and complete one.
 `Temporal.Date`, `Temporal.Time`, `Temporal.YearMonth`, and `Temporal.MonthDay` all carry less information and should be used when complete information is not required.

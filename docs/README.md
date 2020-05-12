@@ -1,5 +1,10 @@
 # Temporal
 
+<details>
+  <summary><strong>Table of Contents</strong></summary>
+<!-- toc -->
+</details>
+
 ## Introduction
 
 `Date` has been a long-standing pain point in ECMAScript.

@@ -1,5 +1,10 @@
 # Temporal.MonthDay
 
+<details>
+  <summary><strong>Table of Contents</strong></summary>
+<!-- toc -->
+</details>
+
 A `Temporal.MonthDay` represents a particular day on the calendar, but without a year.
 For example, it could be used to represent a yearly recurring event, like "Bastille Day is on the 14th of July."
 

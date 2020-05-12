@@ -1,5 +1,10 @@
 # Temporal.Time
 
+<details>
+  <summary><strong>Table of Contents</strong></summary>
+<!-- toc -->
+</details>
+
 A `Temporal.Time` represents a wall-clock time, with a precision in nanoseconds, and without any time zone.
 "Wall-clock time" refers to the concept of a time as expressed in everyday usage &mdash; the time that you read off the clock on the wall.
 For example, it could be used to represent an event that happens daily at a certain time, no matter what time zone.

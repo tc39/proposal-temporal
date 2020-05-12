@@ -1,5 +1,10 @@
 # `Temporal.now`
 
+<details>
+  <summary><strong>Table of Contents</strong></summary>
+<!-- toc -->
+</details>
+
 The `Temporal.now` object has several methods which give information about the current time and date.
 
 ## Methods

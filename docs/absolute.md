@@ -1,5 +1,10 @@
 # Temporal.Absolute
 
+<details>
+  <summary><strong>Table of Contents</strong></summary>
+<!-- toc -->
+</details>
+
 A `Temporal.Absolute` is an absolute point in time, with a precision in nanoseconds.
 No time zone or calendar information is present.
 As such `Temporal.Absolute` has no concept of days, months or even hours.
