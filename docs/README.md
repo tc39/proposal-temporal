@@ -1,29 +1,24 @@
 # Temporal
 
-## Object Relationship
+## Introduction
 
-<div class="mermaid">
-graph LR;
-  timezone(TimeZone);
-  subgraph " ";
-    absolute(Absolute);
-  end;
-  subgraph " ";
-    datetime(DateTime);
-      date(Date);
-        yearmonth(YearMonth);
-        monthday(MonthDay);
-      time(Time);
-    datetime --- date;
-    datetime --- time;
-    date --- yearmonth;
-    date --- monthday;
-  end;
-  absolute === timezone;
-  timezone === datetime;
-</div>
+`Date` has been a long-standing pain point in ECMAScript.
+This is a proposal for `Temporal`, a global `Object` that acts as a top-level namespace (like `Math`), that brings a modern date/time API to the ECMAScript language.
+For a detailed look at some of the problems with `Date`, and the motivations for Temporal, see:
+[Fixing JavaScript Date](https://maggiepint.com/2017/04/09/fixing-javascript-date-getting-started/).
 
-## API Overview
+Temporal fixes these problems by:
+
+- Providing easy-to-use APIs for date and time computations
+- Dealing only with immutable objects
+- Parsing a strictly specified string format
+- Supporting non-Gregorian calendars, and time zones other than the user's local time and UTC
+
+## Cookbook
+
+A cookbook to help you get started and learn the ins and outs of Temporal is available [here](./cookbook.md).
+
+## API Documentation
 
 ### **Temporal.Absolute**
 
@@ -94,6 +89,25 @@ See [Temporal.now Documentation](./now.md) for more detailed documentation.
 A Calendar API is under discussion.
 See [Calendar Draft](./calendar-draft.md) for more information.
 
-## Cookbook
+## Object Relationship
 
-A cookbook to help you get started and learn the ins and outs of Temporal is available [here](./cookbook.md).
+<div class="mermaid">
+graph LR;
+  timezone(TimeZone);
+  subgraph " ";
+    absolute(Absolute);
+  end;
+  subgraph " ";
+    datetime(DateTime);
+      date(Date);
+        yearmonth(YearMonth);
+        monthday(MonthDay);
+      time(Time);
+    datetime --- date;
+    datetime --- time;
+    date --- yearmonth;
+    date --- monthday;
+  end;
+  absolute === timezone;
+  timezone === datetime;
+</div>
