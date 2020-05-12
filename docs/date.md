@@ -1,5 +1,10 @@
 # Temporal.Date
 
+<details>
+  <summary><strong>Table of Contents</strong></summary>
+<!-- toc -->
+</details>
+
 A `Temporal.Date` represents a calendar date.
 "Calendar date" refers to the concept of a date as expressed in everyday usage, independent of any time zone.
 For example, it could be used to represent an event on a calendar which happens during the whole day no matter which time zone it's happening in.

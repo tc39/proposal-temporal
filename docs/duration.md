@@ -1,5 +1,10 @@
 # Temporal.Duration
 
+<details>
+  <summary><strong>Table of Contents</strong></summary>
+<!-- toc -->
+</details>
+
 A `Temporal.Duration` represents an immutable duration of time which can be used in date/time arithmetic.
 
 `Temporal.Duration` can be constructed directly or returned from `Temporal.Duration.from()`.

@@ -1,5 +1,10 @@
 # Temporal.YearMonth
 
+<details>
+  <summary><strong>Table of Contents</strong></summary>
+<!-- toc -->
+</details>
+
 A `Temporal.YearMonth` represents a particular month on the calendar.
 For example, it could be used to represent a particular instance of a monthly recurring event, like "the June 2019 meeting".
 
