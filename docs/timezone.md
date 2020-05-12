@@ -9,8 +9,6 @@ A `Temporal.TimeZone` is a representation of a time zone: either an [IANA time z
 
 Since `Temporal.Absolute` and `Temporal.DateTime` do not contain any time zone information, a `Temporal.TimeZone` object is required to convert between the two.
 
-Finally, the `Temporal.TimeZone` object itself provides access to a list of the time zones in the IANA time zone database.
-
 An API for creating custom time zones is under discussion.
 See [Custom Time Zone Draft](./timezone-draft.md) for more information.
 
@@ -100,22 +98,6 @@ tz2 = Temporal.TimeZone.from(tz);
 /* WRONG */ tz = Temporal.TimeZone.from({name: 'UTC'});  // not a TimeZone object, throws
 /* WRONG */ tz = Temporal.TimeZone.from('2020-01-14T00:31:00');  // ISO 8601 string without time zone offset part, throws
 /* WRONG */ tz = Temporal.TimeZone.from('-08:00[America/Vancouver]')  // ISO 8601 string without date-time part, throws
-```
-
-### **Temporal.TimeZone**: iterator<Temporal.TimeZone>
-
-The `Temporal.TimeZone` object is itself iterable, and can be used to iterate through all of the IANA time zones supported by the implementation.
-
-Example usage:
-
-```javascript
-// List all supported IANA time zones
-for (let zone of Temporal.TimeZone) console.log(zone.name);
-// example output:
-// Africa/Abidjan
-// Africa/Accra
-// Africa/Addis_Ababa
-// ...and many more
 ```
 
 ## Properties
