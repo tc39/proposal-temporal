@@ -54,7 +54,7 @@ class CustomRenderer extends marked.Renderer {
     const match = text.match(/<strong>(.*)<\/strong>/);
     if (match) id = match[1].replace(/[^a-zA-Z]/g, '-');
 
-    this.toc.push({ id, level, raw });
+    this.toc.push({ id, level, raw: match ? match[1] : raw });
     return `<h3 id="${id}"><a class="heading-link" href="#${id}"></a>${text}</h3>`;
   }
 
