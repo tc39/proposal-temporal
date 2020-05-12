@@ -131,6 +131,10 @@ describe('MonthDay', () => {
         throws(() => MonthDay.from('01-15').with({ day: 1 }, { disambiguation }), RangeError)
       );
     });
+    it('cannot lead to an out-of-range MonthDay', () => {
+      const md = MonthDay.from('01-01');
+      equal(`${md.with({ month: 999999 * 12 }, { disambiguation: 'balance' })}`, '12-01');
+    });
   });
 });
 

@@ -272,12 +272,16 @@
       <h1>RegulateMonthDay ( _month_, _day_, _disambiguation_ )</h1>
       <emu-alg>
         1. Assert: _disambiguation_ is one of `"constrain"`, `"balance"`, or `"reject"`.
-        1. Let _leapYear_ be 1972.
-        1. Let _date_ be ! RegulateDate(_leapYear_, _month_, _disambiguation_).
-        1. Return the Record {
-            [[Month]]: _date_.[[Month]],
-            [[Day]]: _date_.[[Day]]
-          }.
+        1. If _disambiguation_ is *"reject"*, then
+          1. Perform ? RejectMonthDay(_month_, _day_).
+          1. Return the Record {
+              [[Month]]: _month_,
+              [[Day]]: _day_
+            }.
+        1. If _disambiguation_ is *"constrain"*, then
+          1. Return ! ConstrainMonthDay(_month_, _day_).
+        1. If _disambiguation_ is *"balance"*, then
+          1. Return ! BalanceMonthDay(_month_, _day_).
       </emu-alg>
     </emu-clause>
 
@@ -292,6 +296,26 @@
           1. Return *false*.
         1. Return *true*.
       </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-rejectmonthday" aoid="RejectMonthDay">
+      <h1>RejectMonthDay ( _month_, _day_ )</h1>
+      <emu-alg>
+        1. Assert: _month_ and _day_ are integer Number values.
+        1. If ! ValidateMonthDay(_month_, _day_) is *false*, then
+          1. Throw a *RangeError* exception.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-constrainmonthday" aoid="ConstrainMonthDay">
+      <h1>ConstrainMonthDay ( _month_, _day_ )</h1>
+      <emu-alg>
+        1. Assert: _month_ and _day_ are integer Number values.
+        1. Let _result_ be ! ConstrainDate(1972, _month_, _day_).
+        1. Return the new Record {
+            [[Month]]: _result_.[[Month]],
+            [[Day]]: _result_.[[Day]]
+          }.
     </emu-clause>
 
     <emu-clause id="sec-temporal-balancemonthday" aoid="BalanceMonthDay">
