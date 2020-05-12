@@ -1,7 +1,6 @@
 import { ES } from './ecmascript.mjs';
 import { GetIntrinsic, MakeIntrinsicClass } from './intrinsicclass.mjs';
 import { IDENTIFIER, EPOCHNANOSECONDS, CreateSlots, GetSlot, SetSlot } from './slots.mjs';
-import { ZONES } from './zones.mjs';
 
 import bigInt from 'big-integer';
 
@@ -122,25 +121,6 @@ export class TimeZone {
     const result = new this(timeZone);
     if (!ES.IsTemporalTimeZone(result)) throw new TypeError('invalid result');
     return result;
-  }
-  static [Symbol.iterator]() {
-    const iter = ZONES[Symbol.iterator]();
-    return {
-      next: () => {
-        // eslint-disable-next-line no-constant-condition
-        while (true) {
-          let { value, done } = iter.next();
-          if (done) return { done };
-          try {
-            value = new TimeZone(value);
-            done = false;
-            return { done, value };
-          } catch (ex) {
-            continue;
-          }
-        }
-      }
-    };
   }
 }
 
