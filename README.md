@@ -16,7 +16,7 @@ Provides standard objects and functions for working with dates and times.
 
 ## Status
 
-This proposal is currently stage 2
+This proposal is currently stage 2.
 
 Stage 3 Reviewers:
 
@@ -33,18 +33,18 @@ For a detailed breakdown of motivations, see:
 
 ### Principles:
 
--   All temporal APIs are non-mutating. All temporal objects are effectively immutable.
--   All date values are based on the [Proleptic Gregorian Calendar](https://en.wikipedia.org/wiki/Proleptic_Gregorian_calendar). Other calendar systems are out-of-scope for this proposal. However, we will consider how future APIs may interact with this one such that extending it to support other calendars may be possible in a future proposal.
--   All time-of-day values are based on a standard 24-hour clock.
--   [Leap seconds](https://en.wikipedia.org/wiki/Leap_second) are not represented.
+- All Temporal objects are immutable.
+- Date values can be represented in local calendar systems, but they should be convertable to and from the [Proleptic Gregorian Calendar](https://en.wikipedia.org/wiki/Proleptic_Gregorian_calendar).
+- All time-of-day values are based on a standard 24-hour clock.
+- [Leap seconds](https://en.wikipedia.org/wiki/Leap_second) are not represented.
 
 ## Specification Text
 
-**The specification text is currently being updated to match the polyfill. Please rely on the polyfill linked from here for authoritative information until then.**
+The specification text can be found [here](https://tc39.es/proposal-temporal/).
 
 ## Polyfill
 
-A complete polyfill can be found [here](./polyfill). It is being developed as specification in code.
+A complete polyfill can be found [here](./polyfill).
 When viewing the [reference documentation](https://tc39.es/proposal-temporal/docs/index.html), the polyfill is automatically loaded in your browser, so you can try it out by opening your browser's developer tools.
 
 ## Cookbook
