@@ -80,7 +80,7 @@ class CustomRenderer extends marked.Renderer {
     }
     const lines = [];
     lines.push('<ul>');
-    build(this.toc, 2, 1, lines);
+    build(this.toc, 1, 1, lines);
     lines.push('</ul>');
     return lines.join('\n');
   }
