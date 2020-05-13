@@ -251,7 +251,7 @@ console<span class="token punctuation">.</span><span class="token function">log<
     <span class="token keyword">return</span> Temporal<span class="token punctuation">.</span>MonthDay<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token keyword">return</span> value<span class="token punctuation">;</span>
 <span class="token punctuation">}</span>
-<span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span>str<span class="token punctuation">,</span> reviver<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre><h3 id="withYear"><a class="heading-link" href="#withYear"></a>monthDay.<strong>withYear</strong>(<em>year</em>: number) : Temporal.Date</h3><p><strong>Parameters:</strong></p>
+<span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span>str<span class="token punctuation">,</span> reviver<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre><h3 id="withYear"><a class="heading-link" href="#withYear"></a>monthDay.<strong>withYear</strong>(<em>year</em>: number | object) : Temporal.Date</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>year</code> (number): A year, which must have a day corresponding to <code>monthDay</code>.</li>
 </ul>
@@ -261,10 +261,12 @@ The converted object carries a copy of all the relevant fields of <code>monthDay
 <p>Usage example:</p>
 <pre class="language-javascript"><code class="language-javascript">md <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>MonthDay<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'08-24'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 md<span class="token punctuation">.</span><span class="token function">withYear</span><span class="token punctuation">(</span><span class="token number">2017</span><span class="token punctuation">)</span>  <span class="token comment">// => 2017-08-24</span>
+md<span class="token punctuation">.</span><span class="token function">withYear</span><span class="token punctuation">(</span><span class="token punctuation">{</span> year<span class="token operator">:</span> <span class="token number">2017</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>  <span class="token comment">// equivalent to above</span>
 
 md <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>MonthDay<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'02-29'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 md<span class="token punctuation">.</span><span class="token function">withYear</span><span class="token punctuation">(</span><span class="token number">2017</span><span class="token punctuation">)</span>  <span class="token comment">// throws</span>
-md<span class="token punctuation">.</span><span class="token function">withYear</span><span class="token punctuation">(</span><span class="token number">2020</span><span class="token punctuation">)</span>  <span class="token comment">// => 2020-02-29</span></code></pre>    <footer>
+md<span class="token punctuation">.</span><span class="token function">withYear</span><span class="token punctuation">(</span><span class="token number">2020</span><span class="token punctuation">)</span>  <span class="token comment">// => 2020-02-29</span></code></pre><p>In calendars where more information than just the year is needed to convert a <code>Temporal.MonthDay</code> to a <code>Temporal.Date</code>, you can pass an object to <code>withYear()</code> that contains the necessary properties.</p>
+    <footer>
       <p>
         This page includes a script which loads an implementation of Temporal in your browser.
         You can open a console in your browser's developer tools and try it out directly!

@@ -391,7 +391,16 @@ Temporal<span class="token punctuation">.</span><span class="token class-name">D
     <span class="token punctuation">}</span>
     <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token punctuation">.</span>calendar<span class="token punctuation">.</span><span class="token function">difference</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">,</span> other<span class="token punctuation">,</span> options<span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span>
-</code></pre><h2 id="other-temporaldate-constructors-1">Other Temporal.Date constructors</h2>
+
+Temporal<span class="token punctuation">.</span><span class="token class-name">Date</span><span class="token punctuation">.</span>prototype<span class="token punctuation">.</span><span class="token function-variable function">with</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">overrides</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> newFields <span class="token operator">=</span> Object<span class="token punctuation">.</span><span class="token function">assign</span><span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">getFields</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> overrides<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token punctuation">.</span>calendar<span class="token punctuation">.</span><span class="token function">dateFromFields</span><span class="token punctuation">(</span>newFields<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+Temporal<span class="token punctuation">.</span><span class="token class-name">Date</span><span class="token punctuation">.</span>prototype<span class="token punctuation">.</span><span class="token function-variable function">getYearMonth</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token punctuation">.</span>calendar<span class="token punctuation">.</span><span class="token function">yearMonthFromFields</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">getFields</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre><p>Note that the arguments to methods like <code>with</code>, <code>withDate</code>, etc., are interpreted in the instance&#39;s calendar.</p>
+<h2 id="other-temporaldate-constructors-1">Other Temporal.Date constructors</h2>
 <h3 id="temporalabsoluteprototypeintimezone"><a class="heading-link" href="#temporalabsoluteprototypeintimezone"></a>Temporal.Absolute.prototype.inTimeZone</h3><p>The third way to get a Temporal.Date (besides from a string and an object) is to convert it from a Temporal.Absolute.</p>
 <p>The API here would depend on the decision for whether to require an explicit default calendar.  If we decide to use a default calendar (options 1, 3, and 4), no API change would be required for this method.  If we decide to require an explicit calendar, then the API would likely be changed as follows:</p>
 <pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Default calendar option 2 only</span>
@@ -412,6 +421,11 @@ Temporal<span class="token punctuation">.</span><span class="token class-name">A
 <li>Temporal.YearMonth</li>
 <li>Temporal.MonthDay</li>
 </ul>
+<h3 id="new-behaviour-of-temporalmonthdaywithyear"><a class="heading-link" href="#new-behaviour-of-temporalmonthdaywithyear"></a>New behaviour of Temporal.MonthDay.withYear</h3><p>In some calendars (such as the Japanese imperial calendar) a year is not enough information to be able to convert Temporal.MonthDay to Temporal.Date.
+Temporal.MonthDay.withYear, which previously took a number argument (the year), can now be passed an object which must have properties that provide the needed information.
+(In the Japanese calendar, it needs to have <code>era</code> and <code>year</code> properties.)</p>
+<p>Passing a numerical year argument <code>num</code> is equivalent to passing <code>{ year: num }</code>.
+The calendar can decide what to do in the case of missing information, in <code>dateFromFields</code>.</p>
     <footer>
       <p>
         This page includes a script which loads an implementation of Temporal in your browser.
