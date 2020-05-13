@@ -471,7 +471,7 @@ export const ES = ObjectAssign({}, ES2019, {
     return result;
   },
   ISOTimeZoneString: (timeZone, absolute) => {
-    let offset = timeZone.getOffsetFor(absolute);
+    const offset = timeZone.getOffsetStringFor(absolute);
     let timeZoneString;
     switch (true) {
       case 'UTC' === timeZone.name:

@@ -159,7 +159,7 @@ Similar to the previous recipe, calculate the absolute times of a daily occurren
 
 ### UTC offset for a zoned event, as a string
 
-Use `Temporal.TimeZone.getOffsetFor()` to map a `Temporal.Absolute` instance and a time zone into the UTC offset at that instant in that time zone, as a string.
+Use `Temporal.TimeZone.getOffsetStringFor()` to map a `Temporal.Absolute` instance and a time zone into the UTC offset at that instant in that time zone, as a string.
 
 ```javascript
 {{cookbook/getUtcOffsetStringAtInstant.mjs}}

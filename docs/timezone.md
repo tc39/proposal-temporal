@@ -109,7 +109,7 @@ Effectively, this is the canonicalized version of whatever `timeZoneIdentifier` 
 
 ## Methods
 
-### timeZone.**getOffsetFor**(_absolute_: Temporal.Absolute) : string
+### timeZone.**getOffsetStringFor**(_absolute_: Temporal.Absolute) : string
 
 **Parameters:**
 - `absolute` (`Temporal.Absolute`): The time for which to compute the time zone's UTC offset.
@@ -126,19 +126,19 @@ Example usage:
 // Getting the UTC offset for a time zone at a particular time
 timestamp = new Temporal.Absolute(1553993100000000000n);
 tz = new Temporal.TimeZone('Europe/Berlin');
-tz.getOffsetFor(timestamp);  // => +01:00
+tz.getOffsetStringFor(timestamp);  // => +01:00
 
 // TimeZone with a fixed UTC offset
 tz = new Temporal.TimeZone('-08:00');
-tz.getOffsetFor(timestamp);  // => -08:00
+tz.getOffsetStringFor(timestamp);  // => -08:00
 // UTC is always 0 offset
 tz = new Temporal.TimeZone('UTC');
-tz.getOffsetFor(timestamp);  // => +00:00
+tz.getOffsetStringFor(timestamp);  // => +00:00
 
 // Differences between DST and non-DST
 tz = Temporal.TimeZone.from('Europe/London');
-tz.getOffsetFor(Temporal.Absolute.from('2020-08-06T15:00Z'));  // => +01:00
-tz.getOffsetFor(Temporal.Absolute.from('2020-11-06T01:00Z'));  // => +00:00
+tz.getOffsetStringFor(Temporal.Absolute.from('2020-08-06T15:00Z'));  // => +01:00
+tz.getOffsetStringFor(Temporal.Absolute.from('2020-11-06T01:00Z'));  // => +00:00
 ```
 
 ### timeZone.**getDateTimeFor**(_absolute_: Temporal.Absolute) : Temporal.DateTime
