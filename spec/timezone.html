@@ -126,6 +126,20 @@
       </emu-alg>
     </emu-clause>
 
+    <emu-clause id="sec-temporal.timezone.prototype.getoffsetnanosecondsfor">
+      <h1>Temporal.TimeZone.prototype.getOffsetNanosecondsFor ( _absolute_ )</h1>
+      <p>
+        The `getOffsetNanosecondsFor` method takes one argument _absolute_.
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _timeZone_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_timeZone_, [[InitializedTemporalTimeZone]]).
+        1. Perform ? RequireInternalSlot(_absolute_, [[InitializedTemporalAbsolute]]).
+        1. Return ? GetTimeZoneOffsetNanoseconds(_absolute_.[[Nanoseconds]], _timeZone_.[[Identifier]]).
+      </emu-alg>
+    </emu-clause>
+
     <emu-clause id="sec-temporal.timezone.prototype.getoffsetstringfor">
       <h1>Temporal.TimeZone.prototype.getOffsetStringFor ( _absolute_ )</h1>
       <p>

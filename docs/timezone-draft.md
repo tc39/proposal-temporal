@@ -116,7 +116,7 @@ class Temporal.TimeZone {
 
   /** Given an absolute instant returns this time zone's corresponding
    * UTC offset, in nanoseconds (signed). */
-  getOffsetAtInstant(absolute : Temporal.Absolute) : number;
+  getOffsetNanosecondsFor(absolute : Temporal.Absolute) : number;
 
   /** Given the calendar/wall-clock time, returns an array of 0, 1, or
    * 2 absolute instants that are possible points on the timeline
@@ -144,14 +144,14 @@ class Temporal.TimeZone {
 }
 ```
 
-All the methods that custom time zones inherit from `Temporal.TimeZone` are implemented in terms of `getOffsetAtInstant()`, `possibleInstants()`, and the value of the _[[Identifier]]_ internal slot.
-For example, `getOffsetStringFor()` and `getDateTimeFor()` call `getOffsetAtInstant()`, and `getAbsoluteFor()` calls both.
+All the methods that custom time zones inherit from `Temporal.TimeZone` are implemented in terms of `getOffsetNanosecondsFor()`, `possibleInstants()`, and the value of the _[[Identifier]]_ internal slot.
+For example, `getOffsetStringFor()` and `getDateTimeFor()` call `getOffsetNanosecondsFor()`, and `getAbsoluteFor()` calls both.
 
 > **FIXME:** These names are not very good.
 > Help is welcome in determining the color of this bike shed.
 
 Alternatively, a custom time zone doesn't have to be a subclass of `Temporal.TimeZone`.
-In this case, it can be a plain object, which must implement `getOffsetAtInstant()`, `possibleInstants()`, and `toString()`.
+In this case, it can be a plain object, which must implement `getOffsetNanosecondsFor()`, `possibleInstants()`, and `toString()`.
 
 > **FIXME:** This means we have to remove any checks for the _[[InitializedTemporalTimeZone]]_ slot in all APIs, so that plain objects can use them with e.g. `Temporal.TimeZone.prototype.getOffsetStringFor.call(plainObject, absolute)`.
 
@@ -174,7 +174,7 @@ class OffsetTimeZone extends Temporal.TimeZone {
     this.#offsetNs = sign * offsetNs;
   }
 
-  getOffsetAtInstant(/* absolute */) {
+  getOffsetNanosecondsFor(/* absolute */) {
     return this.#offsetNs; // offset is always the same
   }
 

@@ -13,6 +13,11 @@ export class TimeZone {
     if (!ES.IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');
     return String(GetSlot(this, IDENTIFIER));
   }
+  getOffsetNanosecondsFor(absolute) {
+    if (!ES.IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');
+    if (!ES.IsTemporalAbsolute(absolute)) throw new TypeError('invalid Absolute object');
+    return ES.GetTimeZoneOffsetNanoseconds(GetSlot(absolute, EPOCHNANOSECONDS), GetSlot(this, IDENTIFIER)).toJSNumber();
+  }
   getOffsetStringFor(absolute) {
     if (!ES.IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');
     if (!ES.IsTemporalAbsolute(absolute)) throw new TypeError('invalid Absolute object');

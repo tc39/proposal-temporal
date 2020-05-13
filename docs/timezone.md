@@ -109,6 +109,38 @@ Effectively, this is the canonicalized version of whatever `timeZoneIdentifier` 
 
 ## Methods
 
+### timeZone.**getOffsetNanosecondsFor**(_absolute_: Temporal.Absolute) : number
+
+**Parameters:**
+- `absolute` (`Temporal.Absolute`): The time for which to compute the time zone's UTC offset.
+
+**Returns:** The UTC offset at the given time, in nanoseconds.
+
+Since the UTC offset can change throughout the year in time zones that employ DST, this method queries the UTC offset at a particular time.
+
+Note that only `Temporal.TimeZone` objects constructed from an IANA time zone name may have DST transitions; those constructed from a UTC offset do not.
+If `timeZone` is a UTC offset time zone, the return value of this method is always the same regardless of `absolute`.
+
+Example usage:
+```javascript
+// Getting the UTC offset for a time zone at a particular time
+timestamp = Temporal.Absolute.fromEpochSeconds(1553993100);
+tz = Temporal.TimeZone.from('Europe/Berlin');
+tz.getOffsetNanosecondsFor(timestamp);  // => 3600000000000
+
+// TimeZone with a fixed UTC offset
+tz = Temporal.TimeZone.from('-08:00');
+tz.getOffsetNanosecondsFor(timestamp);  // => -28800000000000
+// UTC is always 0 offset
+tz = Temporal.TimeZone.from('UTC');
+tz.getOffsetNanosecondsFor(timestamp);  // => 0
+
+// Differences between DST and non-DST
+tz = Temporal.TimeZone.from('Europe/London');
+tz.getOffsetNanosecondsFor(Temporal.Absolute.from('2020-08-06T15:00Z'));  // => 3600000000000
+tz.getOffsetNanosecondsFor(Temporal.Absolute.from('2020-11-06T01:00Z'));  // => 0
+```
+
 ### timeZone.**getOffsetStringFor**(_absolute_: Temporal.Absolute) : string
 
 **Parameters:**
@@ -116,9 +148,8 @@ Effectively, this is the canonicalized version of whatever `timeZoneIdentifier` 
 
 **Returns**: a string indicating the UTC offset at the given time.
 
-Since the UTC offset can change throughout the year in time zones that employ DST, this method queries the UTC offset at a particular time.
+This method is similar to `timeZone.getOffsetNanosecondsFor()`, but returns the offset formatted as a string, with sign, hours, and minutes.
 
-Note that only `Temporal.TimeZone` objects constructed from an IANA time zone name may have DST transitions; those constructed from a UTC offset do not.
 If `timeZone` is a UTC offset time zone, the return value of this method is effectively the same as `timeZone.name`.
 
 Example usage:
@@ -131,14 +162,6 @@ tz.getOffsetStringFor(timestamp);  // => +01:00
 // TimeZone with a fixed UTC offset
 tz = new Temporal.TimeZone('-08:00');
 tz.getOffsetStringFor(timestamp);  // => -08:00
-// UTC is always 0 offset
-tz = new Temporal.TimeZone('UTC');
-tz.getOffsetStringFor(timestamp);  // => +00:00
-
-// Differences between DST and non-DST
-tz = Temporal.TimeZone.from('Europe/London');
-tz.getOffsetStringFor(Temporal.Absolute.from('2020-08-06T15:00Z'));  // => +01:00
-tz.getOffsetStringFor(Temporal.Absolute.from('2020-11-06T01:00Z'));  // => +00:00
 ```
 
 ### timeZone.**getDateTimeFor**(_absolute_: Temporal.Absolute) : Temporal.DateTime
