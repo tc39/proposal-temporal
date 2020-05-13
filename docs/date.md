@@ -30,6 +30,8 @@ The range of allowed values for this type is exactly enough that calling [`getDa
 If `isoYear`, `isoMonth`, and `isoDay` form a date outside of this range, then `constrain` mode will clamp the date to the limit of the allowed range.
 Both `balance` and `reject` mode will throw a `RangeError` in this case.
 
+> **NOTE**: The `isoMonth` argument ranges from 1 to 12, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
+
 Usage examples:
 ```javascript
 // Pi day in 2020
@@ -62,6 +64,8 @@ The `disambiguation` option works as follows:
 - In `constrain` mode (the default), any out-of-range values are clamped to the nearest in-range value.
 - In `balance` mode, any out-of-range values are resolved by balancing them with the next highest unit.
 - In `reject` mode, the presence of out-of-range values will cause the function to throw a `RangeError`.
+
+> **NOTE**: The allowed values for the `thing.month` property start at 1, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
 
 Example usage:
 ```javascript
@@ -126,6 +130,8 @@ sorted.join(' ');  // => 1930-02-18 2006-08-24 2015-07-14
 ### date.**day** : number
 
 The above read-only properties allow accessing each component of the date individually.
+
+> **NOTE**: The possible values for the `month` property start at 1, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
 
 Usage examples:
 ```javascript
@@ -240,6 +246,8 @@ date.with({year: 2100}).leapYear  // => false
 This method creates a new `Temporal.Date` which is a copy of `date`, but any properties present on `dateLike` override the ones already present on `date`.
 
 Since `Temporal.Date` objects are immutable, use this method instead of modifying one.
+
+> **NOTE**: The allowed values for the `dateLike.month` property start at 1, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
 
 Usage example:
 ```javascript
@@ -474,6 +482,8 @@ It returns a new plain JavaScript object, with all the fields as enumerable, wri
 
 Note that if using a different calendar from ISO 8601, these will be the calendar-specific values.
 To get the ISO 8601 values, use `date.getISOFields()`.
+
+> **NOTE**: The possible values for the `month` property of the returned object start at 1, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
 
 Usage example:
 ```javascript
