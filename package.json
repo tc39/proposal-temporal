@@ -24,7 +24,7 @@
     "test": "cd polyfill && npm install && npm test && npm run cookbook && npm run test262 && cd ..",
     "codecov:tests": "cd polyfill && npm install && npm run codecov:tests && cd ..",
     "codecov:test262": "cd polyfill && npm install && npm run codecov:test262 && cd ..",
-    "cookbook": "cd polyfill && npm install && npm run cookbook && cd ..",
+    "test-cookbook": "cd polyfill && npm install && npm run test-cookbook && cd ..",
     "test262": "cd polyfill && npm install && npm run test262",
     "lint": "eslint . --ext js,mjs",
     "build:prepare": "mkdirp out && mkdirp out/docs",
