@@ -13,7 +13,7 @@ matrix:
     - npm run codecov:test262
   - name: "cookbook"
     script:
-    - npm run cookbook
+    - npm run test-cookbook
   - name: "Specification compilation"
     script:
     - npm run build

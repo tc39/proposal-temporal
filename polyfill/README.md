@@ -32,8 +32,8 @@ From this directory:
 
 ```bash
 # Run all cookbook files:
-$ npm run cookbook
+$ npm run test-cookbook
 
 # Run a single cookbook file:
-$ env TEST=dateTimeFromLegacyDate npm run cookbook-one
+$ env TEST=dateTimeFromLegacyDate npm run test-cookbook-one
 ```
