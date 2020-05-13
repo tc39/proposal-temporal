@@ -46,8 +46,8 @@ Example usage:
 tz = Temporal.now.timeZone();
 now = Temporal.now.absolute();
 [nextTransition] = tz.getTransitions(now);
-before = tz.getOffsetFor(nextTransition.minus({nanoseconds: 1}));
-after = tz.getOffsetFor(nextTransition.plus({nanoseconds: 1}));
+before = tz.getOffsetStringFor(nextTransition.minus({nanoseconds: 1}));
+after = tz.getOffsetStringFor(nextTransition.plus({nanoseconds: 1}));
 console.log(`On ${nextTransition.inTimeZone(tz)} the clock will change from UTC ${before} to ${after}`);
 nextTransition.inTimeZone(tz);
 // example output:
