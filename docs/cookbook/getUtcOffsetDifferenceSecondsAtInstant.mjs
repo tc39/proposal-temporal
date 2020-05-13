@@ -9,17 +9,9 @@
  *   UTC offsets
  */
 function getUtcOffsetDifferenceSecondsAtInstant(instant, sourceTimeZone, targetTimeZone) {
-  const sourceWallTime = instant.inTimeZone(sourceTimeZone);
-  const targetWallTime = instant.inTimeZone(targetTimeZone);
-  const difference = sourceWallTime.difference(targetWallTime, { largestUnit: 'seconds' });
-  const sign = Temporal.DateTime.compare(targetWallTime, sourceWallTime) < 0 ? -1 : 1;
-  return (
-    sign *
-    (difference.seconds +
-      difference.milliseconds * 1e-3 +
-      difference.microseconds * 1e-6 +
-      difference.nanoseconds * 1e-9)
-  );
+  const sourceOffsetNs = sourceTimeZone.getOffsetNanosecondsFor(instant);
+  const targetOffsetNs = targetTimeZone.getOffsetNanosecondsFor(instant);
+  return (targetOffsetNs - sourceOffsetNs) / 1e9;
 }
 
 const instant = Temporal.Absolute.from('2020-01-09T00:00Z');

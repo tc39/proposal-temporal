@@ -22,6 +22,8 @@ describe('TimeZone', () => {
     it('Temporal.TimeZone has prototype', () => equal(typeof Temporal.TimeZone.prototype, 'object'));
     describe('Temporal.TimeZone.prototype', () => {
       it('Temporal.TimeZone.prototype has name', () => assert('name' in Temporal.TimeZone.prototype));
+      it('Temporal.TimeZone.prototype has getOffsetNanosecondsFor', () =>
+        equal(typeof Temporal.TimeZone.prototype.getOffsetNanosecondsFor, 'function'));
       it('Temporal.TimeZone.prototype has getOffsetStringFor', () =>
         equal(typeof Temporal.TimeZone.prototype.getOffsetStringFor, 'function'));
       it('Temporal.TimeZone.prototype has getDateTimeFor', () =>
@@ -123,6 +125,7 @@ describe('TimeZone', () => {
     const abs = Temporal.Absolute.fromEpochSeconds(Math.floor(Math.random() * 1e9));
     const dtm = new Temporal.DateTime(1976, 11, 18, 15, 23, 30, 123, 456, 789);
     it(`${zone} has name ${zone}`, () => equal(zone.name, `${zone}`));
+    it(`${zone} has offset +01:00 in ns`, () => equal(zone.getOffsetNanosecondsFor(abs), 3600e9));
     it(`${zone} has offset +01:00`, () => equal(zone.getOffsetStringFor(abs), '+01:00'));
     it(`(${zone}).getDateTimeFor(${abs})`, () => assert(zone.getDateTimeFor(abs) instanceof Temporal.DateTime));
     it(`(${zone}).getAbsoluteFor(${dtm})`, () => assert(zone.getAbsoluteFor(dtm) instanceof Temporal.Absolute));
@@ -135,6 +138,7 @@ describe('TimeZone', () => {
     const abs = Temporal.Absolute.fromEpochSeconds(Math.floor(Math.random() * 1e9));
     const dtm = new Temporal.DateTime(1976, 11, 18, 15, 23, 30, 123, 456, 789);
     it(`${zone} has name ${zone}`, () => equal(zone.name, `${zone}`));
+    it(`${zone} has offset +00:00 in ns`, () => equal(zone.getOffsetNanosecondsFor(abs), 0));
     it(`${zone} has offset +00:00`, () => equal(zone.getOffsetStringFor(abs), '+00:00'));
     it(`(${zone}).getDateTimeFor(${abs})`, () => assert(zone.getDateTimeFor(abs) instanceof Temporal.DateTime));
     it(`(${zone}).getAbsoluteFor(${dtm})`, () => assert(zone.getAbsoluteFor(dtm) instanceof Temporal.Absolute));
@@ -145,6 +149,7 @@ describe('TimeZone', () => {
     const abs = Temporal.Absolute.fromEpochSeconds(0n);
     const dtm = new Temporal.DateTime(1976, 11, 18, 15, 23, 30, 123, 456, 789);
     it(`${zone} has name ${zone}`, () => equal(zone.name, `${zone}`));
+    it(`${zone} has offset -08:00 in ns`, () => equal(zone.getOffsetNanosecondsFor(abs), -8 * 3600e9));
     it(`${zone} has offset -08:00`, () => equal(zone.getOffsetStringFor(abs), '-08:00'));
     it(`(${zone}).getDateTimeFor(${abs})`, () => assert(zone.getDateTimeFor(abs) instanceof Temporal.DateTime));
     it(`(${zone}).getAbsoluteFor(${dtm})`, () => assert(zone.getAbsoluteFor(dtm) instanceof Temporal.Absolute));
@@ -168,6 +173,11 @@ describe('TimeZone', () => {
   });
   describe('Casting', () => {
     const zone = Temporal.TimeZone.from('+03:30');
+    it("getOffsetNanosecondsFor() doesn't cast its argument", () => {
+      throws(() => zone.getOffsetNanosecondsFor(0n), TypeError);
+      throws(() => zone.getOffsetNanosecondsFor('2019-02-17T01:45Z'), TypeError);
+      throws(() => zone.getOffsetNanosecondsFor({}), TypeError);
+    });
     it("getOffsetStringFor() doesn't cast its argument", () => {
       throws(() => zone.getOffsetStringFor(0n), TypeError);
       throws(() => zone.getOffsetStringFor('2019-02-17T01:45Z'), TypeError);

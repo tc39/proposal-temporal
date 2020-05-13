@@ -167,7 +167,8 @@ Use `Temporal.TimeZone.getOffsetStringFor()` to map a `Temporal.Absolute` instan
 
 ### UTC offset for a zoned event, as a number of seconds
 
-It's a bit more complicated to do the above mapping as a number of seconds instead of a string.
+Similarly, use `Temporal.TimeZone.getOffsetNanosecondsFor()` to do the same thing for the offset as a number of seconds.
+(Remember to divide by 10<sup>9</sup> to convert nanoseconds to seconds.)
 
 ```javascript
 {{cookbook/getUtcOffsetSecondsAtInstant.mjs}}
@@ -175,7 +176,7 @@ It's a bit more complicated to do the above mapping as a number of seconds inste
 
 ### Offset between two time zones at an instant
 
-With a small variation on the previous recipe we can map a `Temporal.Absolute` instance and two time zones into the signed difference of UTC offsets between those time zones at that instant, as a number of seconds.
+Also using `Temporal.TimeZone.getOffsetNanosecondsFor()`, we can map a `Temporal.Absolute` instance and two time zones into the signed difference of UTC offsets between those time zones at that instant, as a number of seconds.
 
 ```javascript
 {{cookbook/getUtcOffsetDifferenceSecondsAtInstant.mjs}}
