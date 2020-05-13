@@ -23,6 +23,8 @@ All values are given as reckoned in the [ISO 8601 calendar](https://en.wikipedia
 Together, `isoMonth` and `isoDay` must represent a valid date in at least one year of that calendar.
 For example, February 29 (Leap day in the ISO 8601 calendar) is a valid value for `Temporal.MonthDay`, even though that date does not occur every year.
 
+> **NOTE**: The `isoMonth` argument ranges from 1 to 12, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
+
 Usage examples:
 ```javascript
 // Pi day
@@ -57,6 +59,8 @@ The `disambiguation` option works as follows:
 - In `constrain` mode (the default), any out-of-range values are clamped to the nearest in-range value.
 - In `balance` mode, any out-of-range values are resolved by balancing them with the next highest unit.
 - In `reject` mode, the presence of out-of-range values will cause the function to throw a `RangeError`.
+
+> **NOTE**: The allowed values for the `thing.month` property start at 1, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
 
 Example usage:
 ```javascript
@@ -121,6 +125,8 @@ sorted.join(' ');  // => 02-18 07-14 08-24
 
 The above read-only properties allow accessing each component of the date individually.
 
+> **NOTE**: The possible values for the `month` property start at 1, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
+
 Usage examples:
 ```javascript
 md = Temporal.MonthDay.from('08-24');
@@ -150,6 +156,8 @@ The disambiguation parameter tells what should happen when out-of-range values a
 - In `reject` mode, the presence of out-of-range values will cause the constructor to throw a `RangeError`.
 
 > **NOTE:** For the purpose of this method, February is treated as having 29 days, so that it remains possible to construct a `Temporal.MonthDay` for February 29.
+
+> **NOTE**: The allowed values for the `monthDayLike.month` property start at 1, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
 
 Since `Temporal.MonthDay` objects are immutable, use this method instead of modifying one.
 
@@ -261,6 +269,8 @@ It returns a new plain JavaScript object, with all the fields as enumerable, wri
 
 Note that if using a different calendar from ISO 8601, these will be the calendar-specific values.
 To get the ISO 8601 values, use `datetime.getISOFields()`.
+
+> **NOTE**: The possible values for the `month` property of the returned object start at 1, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
 
 Usage example:
 ```javascript

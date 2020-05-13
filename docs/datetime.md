@@ -44,6 +44,8 @@ The range of allowed values for this type is exactly enough that calling [`inTim
 If the parameters passed in to this constructor form a date outside of this range, then `constrain` mode will clamp the values to the limit of the allowed range.
 Both `balance` and `reject` mode will throw a `RangeError` in this case.
 
+> **NOTE**: The `isoMonth` argument ranges from 1 to 12, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
+
 Usage examples:
 ```javascript
 // Leet hour on pi day in 2020
@@ -82,6 +84,8 @@ The `disambiguation` option works as follows:
 > **NOTE**: Although Temporal does not deal with leap seconds, dates coming from other software may have a `second` value of 60.
 > In the default `constrain` disambiguation mode and when parsing an ISO 8601 string, this will be converted to 59, and in `balance` mode, to 00 of the next minute.
 > In `reject` mode, this function will throw, so if you have to interoperate with times that may contain leap seconds, don't use `reject`.
+
+> **NOTE**: The allowed values for the `thing.month` property start at 1, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
 
 Example usage:
 ```javascript
@@ -181,6 +185,8 @@ sorted.join(' ');
 ### datetime.**nanosecond**: number
 
 The above read-only properties allow accessing each component of the date or time individually.
+
+> **NOTE**: The possible values for the `month` property start at 1, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
 
 Usage examples:
 ```javascript
@@ -301,6 +307,8 @@ dt.with({year: 2100}).isLeapYear  // => false
 This method creates a new `Temporal.DateTime` which is a copy of `datetime`, but any properties present on `dateTimeLike` override the ones already present on `datetime`.
 
 Since `Temporal.DateTime` objects are immutable, use this method instead of modifying one.
+
+> **NOTE**: The allowed values for the `dateTimeLike.month` property start at 1, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
 
 Usage example:
 ```javascript
@@ -551,6 +559,8 @@ It returns a new plain JavaScript object, with all the fields as enumerable, wri
 
 Note that if using a different calendar from ISO 8601, these will be the calendar-specific values.
 To get the ISO 8601 values, use `datetime.getISOFields()`.
+
+> **NOTE**: The possible values for the `month` property of the returned object start at 1, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
 
 Usage example:
 ```javascript
