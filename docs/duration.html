@@ -84,6 +84,64 @@
       It does not represent the final API of this proposal, nor even the current consensus.
     </div>
 <h1 id="temporalduration-1">Temporal.Duration</h1>
+<details>
+  <summary><strong>Table of Contents</strong></summary>
+<ul>
+<li><a href="#constructor">Constructor</a>
+<ul>
+<li><a href="#new-Temporal-Duration">new Temporal.Duration</a>
+</li>
+</ul>
+</li>
+<li><a href="#static-methods">Static methods</a>
+<ul>
+<li><a href="#from">from</a>
+</li>
+</ul>
+</li>
+<li><a href="#properties">Properties</a>
+<ul>
+<li><a href="#years">years</a>
+</li>
+<li><a href="#months">months</a>
+</li>
+<li><a href="#days">days</a>
+</li>
+<li><a href="#hours">hours</a>
+</li>
+<li><a href="#minutes">minutes</a>
+</li>
+<li><a href="#seconds">seconds</a>
+</li>
+<li><a href="#milliseconds">milliseconds</a>
+</li>
+<li><a href="#microseconds">microseconds</a>
+</li>
+<li><a href="#nanoseconds">nanoseconds</a>
+</li>
+</ul>
+</li>
+<li><a href="#methods">Methods</a>
+<ul>
+<li><a href="#with">with</a>
+</li>
+<li><a href="#plus">plus</a>
+</li>
+<li><a href="#minus">minus</a>
+</li>
+<li><a href="#getFields">getFields</a>
+</li>
+<li><a href="#toString">toString</a>
+</li>
+<li><a href="#toJSON">toJSON</a>
+</li>
+<li><a href="#toLocaleString">toLocaleString</a>
+</li>
+</ul>
+</li>
+</ul>
+</details>
+
 <p>A <code>Temporal.Duration</code> represents an immutable duration of time which can be used in date/time arithmetic.</p>
 <p><code>Temporal.Duration</code> can be constructed directly or returned from <code>Temporal.Duration.from()</code>.
 It can also be obtained from the <code>difference()</code> method of any other <code>Temporal</code> type that supports arithmetic, and is used in those types&#39; <code>plus()</code> and <code>minus()</code> methods.</p>

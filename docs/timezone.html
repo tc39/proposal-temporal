@@ -84,6 +84,52 @@
       It does not represent the final API of this proposal, nor even the current consensus.
     </div>
 <h1 id="temporaltimezone-1">Temporal.TimeZone</h1>
+<details>
+  <summary><strong>Table of Contents</strong></summary>
+<ul>
+<li><a href="#constructor">Constructor</a>
+<ul>
+<li><a href="#new-Temporal-TimeZone">new Temporal.TimeZone</a>
+<ul>
+<li><a href="#difference-between-iana-time-zones-and-utc-offsets">Difference between IANA time zones and UTC offsets</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#static-methods">Static methods</a>
+<ul>
+<li><a href="#from">from</a>
+</li>
+<li><a href="#Temporal-TimeZone">Temporal.TimeZone</a>
+</li>
+</ul>
+</li>
+<li><a href="#properties">Properties</a>
+<ul>
+<li><a href="#name">name</a>
+</li>
+</ul>
+</li>
+<li><a href="#methods">Methods</a>
+<ul>
+<li><a href="#getOffsetFor">getOffsetFor</a>
+</li>
+<li><a href="#getDateTimeFor">getDateTimeFor</a>
+</li>
+<li><a href="#getAbsoluteFor">getAbsoluteFor</a>
+</li>
+<li><a href="#getTransitions">getTransitions</a>
+</li>
+<li><a href="#toString">toString</a>
+</li>
+<li><a href="#toJSON">toJSON</a>
+</li>
+</ul>
+</li>
+</ul>
+</details>
+
 <p>A <code>Temporal.TimeZone</code> is a representation of a time zone: either an <a href="https://www.iana.org/time-zones">IANA time zone</a>, including information about the time zone such as the offset between the local time and UTC at a particular time, and daylight saving time (DST) changes; or simply a particular UTC offset with no DST.</p>
 <p>Since <code>Temporal.Absolute</code> and <code>Temporal.DateTime</code> do not contain any time zone information, a <code>Temporal.TimeZone</code> object is required to convert between the two.</p>
 <p>Finally, the <code>Temporal.TimeZone</code> object itself provides access to a list of the time zones in the IANA time zone database.</p>

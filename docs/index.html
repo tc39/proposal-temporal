@@ -84,29 +84,57 @@
       It does not represent the final API of this proposal, nor even the current consensus.
     </div>
 <h1 id="temporal-1">Temporal</h1>
-<h2 id="object-relationship-1">Object Relationship</h2>
-<div class="mermaid">
-graph LR;
-  timezone(TimeZone);
-  subgraph " ";
-    absolute(Absolute);
-  end;
-  subgraph " ";
-    datetime(DateTime);
-      date(Date);
-        yearmonth(YearMonth);
-        monthday(MonthDay);
-      time(Time);
-    datetime --- date;
-    datetime --- time;
-    date --- yearmonth;
-    date --- monthday;
-  end;
-  absolute === timezone;
-  timezone === datetime;
-</div>
+<details>
+  <summary><strong>Table of Contents</strong></summary>
+<ul>
+<li><a href="#introduction">Introduction</a>
+</li>
+<li><a href="#cookbook">Cookbook</a>
+</li>
+<li><a href="#api-documentation">API Documentation</a>
+<ul>
+<li><a href="#Temporal-Absolute">Temporal.Absolute</a>
+</li>
+<li><a href="#Temporal-TimeZone">Temporal.TimeZone</a>
+</li>
+<li><a href="#Temporal-DateTime">Temporal.DateTime</a>
+</li>
+<li><a href="#Temporal-Time">Temporal.Time</a>
+</li>
+<li><a href="#Temporal-Date">Temporal.Date</a>
+</li>
+<li><a href="#Temporal-YearMonth">Temporal.YearMonth</a>
+</li>
+<li><a href="#Temporal-MonthDay">Temporal.MonthDay</a>
+</li>
+<li><a href="#Temporal-Duration">Temporal.Duration</a>
+</li>
+<li><a href="#Temporal-now">Temporal.now</a>
+</li>
+<li><a href="#Temporal-Calendar">Temporal.Calendar</a>
+</li>
+</ul>
+</li>
+<li><a href="#object-relationship">Object Relationship</a>
+</li>
+</ul>
+</details>
 
-<h2 id="api-overview-1">API Overview</h2>
+<h2 id="introduction-1">Introduction</h2>
+<p><code>Date</code> has been a long-standing pain point in ECMAScript.
+This is a proposal for <code>Temporal</code>, a global <code>Object</code> that acts as a top-level namespace (like <code>Math</code>), that brings a modern date/time API to the ECMAScript language.
+For a detailed look at some of the problems with <code>Date</code>, and the motivations for Temporal, see:
+<a href="https://maggiepint.com/2017/04/09/fixing-javascript-date-getting-started/">Fixing JavaScript Date</a>.</p>
+<p>Temporal fixes these problems by:</p>
+<ul>
+<li>Providing easy-to-use APIs for date and time computations</li>
+<li>Dealing only with immutable objects</li>
+<li>Parsing a strictly specified string format</li>
+<li>Supporting non-Gregorian calendars, and time zones other than the user&#39;s local time and UTC</li>
+</ul>
+<h2 id="cookbook-1">Cookbook</h2>
+<p>A cookbook to help you get started and learn the ins and outs of Temporal is available <a href="./cookbook.html">here</a>.</p>
+<h2 id="api-documentation-1">API Documentation</h2>
 <h3 id="Temporal-Absolute"><a class="heading-link" href="#Temporal-Absolute"></a><strong>Temporal.Absolute</strong></h3><p>A <code>Temporal.Absolute</code> represents a fixed point in time, without regard to calendar or location.</p>
 <p>See <a href="./absolute.html">Temporal.Absolute Documentation</a> for more detailed documentation.</p>
 <h3 id="Temporal-TimeZone"><a class="heading-link" href="#Temporal-TimeZone"></a><strong>Temporal.TimeZone</strong></h3><p>A <code>Temporal.TimeZone</code> represents an IANA time zone, a specific UTC offset or UTC itself. Because of this <code>Temporal.TimeZone</code> can be used to convert between <code>Temporal.Absolute</code> and <code>Temporal.DateTime</code> as well as finding out the offset at a specific <code>Temporal.Absolute</code>.</p>
@@ -136,8 +164,27 @@ graph LR;
 <p>See <a href="./now.html">Temporal.now Documentation</a> for more detailed documentation.</p>
 <h3 id="Temporal-Calendar"><a class="heading-link" href="#Temporal-Calendar"></a><strong>Temporal.Calendar</strong></h3><p>A Calendar API is under discussion.
 See <a href="./calendar-draft.html">Calendar Draft</a> for more information.</p>
-<h2 id="cookbook-1">Cookbook</h2>
-<p>A cookbook to help you get started and learn the ins and outs of Temporal is available <a href="./cookbook.html">here</a>.</p>
+<h2 id="object-relationship-1">Object Relationship</h2>
+<div class="mermaid">
+graph LR;
+  timezone(TimeZone);
+  subgraph " ";
+    absolute(Absolute);
+  end;
+  subgraph " ";
+    datetime(DateTime);
+      date(Date);
+        yearmonth(YearMonth);
+        monthday(MonthDay);
+      time(Time);
+    datetime --- date;
+    datetime --- time;
+    date --- yearmonth;
+    date --- monthday;
+  end;
+  absolute === timezone;
+  timezone === datetime;
+</div>
     <footer>
       <p>
         This page includes a script which loads an implementation of Temporal in your browser.
