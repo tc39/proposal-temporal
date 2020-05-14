@@ -1,4 +1,7 @@
 import './absoluteFromLegacyDate.mjs';
+import './adjustDayOfMonth.mjs';
+import './adjustMonth.mjs';
+import './birthdayIn2030.mjs';
 import './bridgePublicHolidays.mjs';
 import './calculateDailyOccurrence.mjs';
 import './countPrecedingWeeklyDaysInMonth.mjs';
@@ -23,5 +26,7 @@ import './getWeeklyDaysInMonth.mjs';
 import './legacyDateFromDateTime.mjs';
 import './localTimeForFutureEvents.mjs';
 import './nextWeeklyOccurrence.mjs';
+import './noonOnDate.mjs';
 import './plusAndRoundToMonthStart.mjs';
+import './roundDownToWholeHours.mjs';
 import './sortAbsoluteInstants.mjs';

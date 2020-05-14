@@ -64,6 +64,24 @@ Here is an example using an HTML `<input type="date">` element with any day beyo
 {{cookbook/calendarInput.js}}
 ```
 
+## Converting between types
+
+### Noon on a particular date
+
+An example of combining a calendar date (`Temporal.Date`) and a wall-clock time (`Temporal.Time`) into a `Temporal.DateTime`.
+
+```javascript
+{{cookbook/noonOnDate.mjs}}
+```
+
+### Birthday in 2030
+
+An example of combining a day on the calendar (`Temporal.MonthDay`) and a year into a `Temporal.Date`.
+
+```javascript
+{{cookbook/birthdayIn2030.mjs}}
+```
+
 ## Serialization
 
 ### Zoned instant from instant and time zone
@@ -96,6 +114,17 @@ Sort a list of ISO 8601 date/time strings, for example to place log entries in o
 
 ```javascript
 {{cookbook/sortAbsoluteInstants.mjs}}
+```
+
+## Rounding
+
+### Round a time down to whole hours
+
+Use the `with()` method of each Temporal type if you want to round or balance the fields.
+Here's an example of rounding a time _down_ to the previously occurring whole hour:
+
+```javascript
+{{cookbook/roundDownToWholeHours.mjs}}
 ```
 
 ## Time zone conversion
@@ -351,6 +380,24 @@ Given a `Temporal.Date` instance, return the count of preceding days in its mont
 
 ```javascript
 {{cookbook/countPrecedingWeeklyDaysInMonth.mjs}}
+```
+
+### Manipulating the day of the month
+
+Here are some examples of taking an existing date, and adjusting the day of the month.
+
+```javascript
+{{cookbook/adjustDayOfMonth.mjs}}
+```
+
+### Same date in another month
+
+Likewise, here are some examples of taking an existing date and adjusting the month, but keeping the day and year the same.
+
+Depending on the behaviour you want, you will need to pick the right `disambiguation` option, but the default of `"constrain"` should be correct for most cases.
+
+```javascript
+{{cookbook/adjustMonth.mjs}}
 ```
 
 ### Next weekly occurrence
