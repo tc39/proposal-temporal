@@ -100,6 +100,9 @@ Otherwise, <code>Temporal.MonthDay.from()</code>, which accepts more kinds of in
 <p>All values are given as reckoned in the <a href="https://en.wikipedia.org/wiki/ISO_8601#Dates">ISO 8601 calendar</a>.
 Together, <code>isoMonth</code> and <code>isoDay</code> must represent a valid date in at least one year of that calendar.
 For example, February 29 (Leap day in the ISO 8601 calendar) is a valid value for <code>Temporal.MonthDay</code>, even though that date does not occur every year.</p>
+<blockquote>
+<p><strong>NOTE</strong>: The <code>isoMonth</code> argument ranges from 1 to 12, which is different from legacy <code>Date</code> where months are represented by zero-based indices (0 to 11).</p>
+</blockquote>
 <p>Usage examples:</p>
 <pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Pi day</span>
 md <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>MonthDay</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">14</span><span class="token punctuation">)</span>  <span class="token comment">// => 03-14</span>
@@ -129,6 +132,9 @@ If the string isn&#39;t valid according to ISO 8601, then a <code>RangeError</co
 <li>In <code>balance</code> mode, any out-of-range values are resolved by balancing them with the next highest unit.</li>
 <li>In <code>reject</code> mode, the presence of out-of-range values will cause the function to throw a <code>RangeError</code>.</li>
 </ul>
+<blockquote>
+<p><strong>NOTE</strong>: The allowed values for the <code>thing.month</code> property start at 1, which is different from legacy <code>Date</code> where months are represented by zero-based indices (0 to 11).</p>
+</blockquote>
 <p>Example usage:</p>
 <pre class="language-javascript"><code class="language-javascript">md <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>MonthDay<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'08-24'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// => 08-24</span>
 md <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>MonthDay<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2006-08-24'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// => 08-24</span>
@@ -177,6 +183,9 @@ three <span class="token operator">=</span> Temporal<span class="token punctuati
 sorted <span class="token operator">=</span> <span class="token punctuation">[</span>one<span class="token punctuation">,</span> two<span class="token punctuation">,</span> three<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">sort</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>MonthDay<span class="token punctuation">.</span>compare<span class="token punctuation">)</span><span class="token punctuation">;</span>
 sorted<span class="token punctuation">.</span><span class="token function">join</span><span class="token punctuation">(</span><span class="token string">' '</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// => 02-18 07-14 08-24</span></code></pre><h2 id="properties-1">Properties</h2>
 <h3 id="month"><a class="heading-link" href="#month"></a>monthDay.<strong>month</strong> : number</h3><h3 id="day"><a class="heading-link" href="#day"></a>monthDay.<strong>day</strong> : number</h3><p>The above read-only properties allow accessing each component of the date individually.</p>
+<blockquote>
+<p><strong>NOTE</strong>: The possible values for the <code>month</code> property start at 1, which is different from legacy <code>Date</code> where months are represented by zero-based indices (0 to 11).</p>
+</blockquote>
 <p>Usage examples:</p>
 <pre class="language-javascript"><code class="language-javascript">md <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>MonthDay<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'08-24'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 md<span class="token punctuation">.</span>month  <span class="token comment">// => 8</span>
@@ -202,6 +211,9 @@ The default is <code>constrain</code>.</li>
 </ul>
 <blockquote>
 <p><strong>NOTE:</strong> For the purpose of this method, February is treated as having 29 days, so that it remains possible to construct a <code>Temporal.MonthDay</code> for February 29.</p>
+</blockquote>
+<blockquote>
+<p><strong>NOTE</strong>: The allowed values for the <code>monthDayLike.month</code> property start at 1, which is different from legacy <code>Date</code> where months are represented by zero-based indices (0 to 11).</p>
 </blockquote>
 <p>Since <code>Temporal.MonthDay</code> objects are immutable, use this method instead of modifying one.</p>
 <p>Usage example:</p>
@@ -271,6 +283,9 @@ md<span class="token punctuation">.</span><span class="token function">withYear<
 It returns a new plain JavaScript object, with all the fields as enumerable, writable, own data properties.</p>
 <p>Note that if using a different calendar from ISO 8601, these will be the calendar-specific values.
 To get the ISO 8601 values, use <code>datetime.getISOFields()</code>.</p>
+<blockquote>
+<p><strong>NOTE</strong>: The possible values for the <code>month</code> property of the returned object start at 1, which is different from legacy <code>Date</code> where months are represented by zero-based indices (0 to 11).</p>
+</blockquote>
 <p>Usage example:</p>
 <pre class="language-javascript"><code class="language-javascript">md <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>MonthDay<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'08-24'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 Object<span class="token punctuation">.</span><span class="token function">assign</span><span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span> md<span class="token punctuation">)</span><span class="token punctuation">.</span>day  <span class="token comment">// => undefined</span>
