@@ -140,6 +140,8 @@
 </li>
 <li><a href="#dealing-with-dates-and-times-in-a-fixed-location">Dealing with dates and times in a fixed location</a>
 </li>
+<li><a href="#book-a-meeting-across-time-zones">Book a meeting across time zones</a>
+</li>
 </ul>
 </li>
 <li><a href="#arithmetic">Arithmetic</a>
@@ -550,7 +552,7 @@ const labelFormatter = new Intl.DateTimeFormat(undefined, {
   weekday: 'short',
   hour: 'numeric',
   minute: 'numeric',
-  timeZone: Temporal.now.timeZone().name
+  timeZone: Temporal.now.timeZone()
 });
 const graphLabels = tankDataX.slice(dataStartIndex).map((x) => labelFormatter.format(x));
 const graphPoints = tankDataY.slice(dataStartIndex);
@@ -605,7 +607,7 @@ new Chart(ctx, {
   weekday<span class="token operator">:</span> <span class="token string">'short'</span><span class="token punctuation">,</span>
   hour<span class="token operator">:</span> <span class="token string">'numeric'</span><span class="token punctuation">,</span>
   minute<span class="token operator">:</span> <span class="token string">'numeric'</span><span class="token punctuation">,</span>
-  timeZone<span class="token operator">:</span> Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">timeZone</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>name
+  timeZone<span class="token operator">:</span> Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">timeZone</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token keyword">const</span> graphLabels <span class="token operator">=</span> tankDataX<span class="token punctuation">.</span><span class="token function">slice</span><span class="token punctuation">(</span>dataStartIndex<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">x</span><span class="token punctuation">)</span> <span class="token operator">=></span> labelFormatter<span class="token punctuation">.</span><span class="token function">format</span><span class="token punctuation">(</span>x<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token keyword">const</span> graphPoints <span class="token operator">=</span> tankDataY<span class="token punctuation">.</span><span class="token function">slice</span><span class="token punctuation">(</span>dataStartIndex<span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -638,6 +640,159 @@ new Chart(ctx, {
       <span class="token punctuation">]</span>
     <span class="token punctuation">}</span>
   <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre><h3 id="book-a-meeting-across-time-zones"><a class="heading-link" href="#book-a-meeting-across-time-zones"></a>Book a meeting across time zones</h3><p>Across the web there are several tools for finding meeting times that are appropriate for all the participants&#39; time zones, such as <a href="https://www.worldtimebuddy.com/">World Time Buddy</a>, <a href="https://www.timeanddate.com/worldclock/meeting.html">World Clock Meeting Planner</a>, and built into various calendar software.</p>
+<style>
+  #meeting-planner {
+    border-collapse: separate;
+    border-spacing: 0 10px;
+    font-size: 0.6rem;
+    text-align: center;
+  }
+
+  /* https://materializecss.com/color.html */
+  .time-0, .time-1, .time-2, .time-3, .time-4, .time-5,
+  .time-22, .time-23 {
+    background-color: #ef9a9a;  /* red lighten-3 */
+    border-color: #e57373;  /* red lighten-2 */
+    border-style: solid;
+    border-width: 0 1px;
+  }
+  .time-6, .time-7, .time-18, .time-19, .time-20, .time-21 {
+    background-color: #fff59d;  /* yellow lighten-3 */
+    border-color: #ffd54f;  /* amber lighten-2 */
+    border-style: solid;
+    border-width: 0 1px;
+  }
+  .time-8, .time-9, .time-10, .time-11, .time-12, .time-13,
+  .time-14, .time-15, .time-16, .time-17 {
+    background-color: #a5d6a7;  /* green lighten-3 */
+    border-color: #81c784;  /* green lighten-2 */
+    border-style: solid;
+    border-width: 0 1px;
+  }
+
+  .time-0 {
+    border-bottom-left-radius: 12px;
+    border-left-color: white;
+    border-left-width: 2px;
+    border-top-left-radius: 12px;
+    font-weight: bold;
+  }
+  .time-23 {
+    border-bottom-right-radius: 12px;
+    border-right-color: white;
+    border-right-width: 2px;
+    border-top-right-radius: 12px;
+  }
+
+  .time-current {
+    border: 2px solid black;
+  }
+</style>
+
+<table id="meeting-planner">
+</table>
+
+<script type="text/javascript" id="meeting-planner-source">
+// Display local time zone and three others
+const here = Temporal.now.timeZone();
+const now = Temporal.now.absolute();
+const timeZones = [
+  { name: 'Here', tz: here },
+  { name: 'New York', tz: Temporal.TimeZone.from('America/New_York') },
+  { name: 'London', tz: Temporal.TimeZone.from('Europe/London') },
+  { name: 'Tokyo', tz: Temporal.TimeZone.from('Asia/Tokyo') }
+];
+
+// Start the table at midnight local time
+const calendarNow = now.inTimeZone(here);
+const startTime = calendarNow
+  .getDate()
+  .withTime(Temporal.Time.from('00:00')) // midnight
+  .inTimeZone(here);
+
+// Build the table
+const table = document.getElementById('meeting-planner');
+timeZones.forEach(({ name, tz }) => {
+  const row = document.createElement('tr');
+
+  const title = document.createElement('td');
+  title.textContent = `${name} (UTC${tz.getOffsetFor(now)})`;
+  row.appendChild(title);
+
+  for (let hours = 0; hours < 24; hours++) {
+    const cell = document.createElement('td');
+
+    const dt = startTime.plus({ hours }).inTimeZone(tz);
+    cell.className = `time-${dt.hour}`;
+
+    // Highlight the current hour in each row
+    if (hours === calendarNow.hour) cell.className += ' time-current';
+
+    // Show the date in midnight cells
+    let formatOptions;
+    if (dt.hour === 0) {
+      formatOptions = { month: 'short', day: 'numeric' };
+    } else {
+      formatOptions = { hour: 'numeric' };
+    }
+    cell.textContent = dt.toLocaleString(undefined, formatOptions);
+    row.appendChild(cell);
+  }
+
+  table.appendChild(row);
+});
+
+</script>
+
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Display local time zone and three others</span>
+<span class="token keyword">const</span> here <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">timeZone</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> now <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">absolute</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> timeZones <span class="token operator">=</span> <span class="token punctuation">[</span>
+  <span class="token punctuation">{</span> name<span class="token operator">:</span> <span class="token string">'Here'</span><span class="token punctuation">,</span> tz<span class="token operator">:</span> here <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token punctuation">{</span> name<span class="token operator">:</span> <span class="token string">'New York'</span><span class="token punctuation">,</span> tz<span class="token operator">:</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'America/New_York'</span><span class="token punctuation">)</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token punctuation">{</span> name<span class="token operator">:</span> <span class="token string">'London'</span><span class="token punctuation">,</span> tz<span class="token operator">:</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'Europe/London'</span><span class="token punctuation">)</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token punctuation">{</span> name<span class="token operator">:</span> <span class="token string">'Tokyo'</span><span class="token punctuation">,</span> tz<span class="token operator">:</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'Asia/Tokyo'</span><span class="token punctuation">)</span> <span class="token punctuation">}</span>
+<span class="token punctuation">]</span><span class="token punctuation">;</span>
+
+<span class="token comment">// Start the table at midnight local time</span>
+<span class="token keyword">const</span> calendarNow <span class="token operator">=</span> now<span class="token punctuation">.</span><span class="token function">inTimeZone</span><span class="token punctuation">(</span>here<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> startTime <span class="token operator">=</span> calendarNow
+  <span class="token punctuation">.</span><span class="token function">getDate</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">withTime</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'00:00'</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token comment">// midnight</span>
+  <span class="token punctuation">.</span><span class="token function">inTimeZone</span><span class="token punctuation">(</span>here<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// Build the table</span>
+<span class="token keyword">const</span> table <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'meeting-planner'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+timeZones<span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> name<span class="token punctuation">,</span> tz <span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> row <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">createElement</span><span class="token punctuation">(</span><span class="token string">'tr'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">const</span> title <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">createElement</span><span class="token punctuation">(</span><span class="token string">'td'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  title<span class="token punctuation">.</span>textContent <span class="token operator">=</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>name<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string"> (UTC</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>tz<span class="token punctuation">.</span><span class="token function">getOffsetFor</span><span class="token punctuation">(</span>now<span class="token punctuation">)</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">)</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>
+  row<span class="token punctuation">.</span><span class="token function">appendChild</span><span class="token punctuation">(</span>title<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> hours <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> hours <span class="token operator">&lt;</span> <span class="token number">24</span><span class="token punctuation">;</span> hours<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> cell <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">createElement</span><span class="token punctuation">(</span><span class="token string">'td'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">const</span> dt <span class="token operator">=</span> startTime<span class="token punctuation">.</span><span class="token function">plus</span><span class="token punctuation">(</span><span class="token punctuation">{</span> hours <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">inTimeZone</span><span class="token punctuation">(</span>tz<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    cell<span class="token punctuation">.</span>className <span class="token operator">=</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">time-</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>dt<span class="token punctuation">.</span>hour<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>
+
+    <span class="token comment">// Highlight the current hour in each row</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>hours <span class="token operator">===</span> calendarNow<span class="token punctuation">.</span>hour<span class="token punctuation">)</span> cell<span class="token punctuation">.</span>className <span class="token operator">+=</span> <span class="token string">' time-current'</span><span class="token punctuation">;</span>
+
+    <span class="token comment">// Show the date in midnight cells</span>
+    <span class="token keyword">let</span> formatOptions<span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>dt<span class="token punctuation">.</span>hour <span class="token operator">===</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      formatOptions <span class="token operator">=</span> <span class="token punctuation">{</span> month<span class="token operator">:</span> <span class="token string">'short'</span><span class="token punctuation">,</span> day<span class="token operator">:</span> <span class="token string">'numeric'</span> <span class="token punctuation">}</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+      formatOptions <span class="token operator">=</span> <span class="token punctuation">{</span> hour<span class="token operator">:</span> <span class="token string">'numeric'</span> <span class="token punctuation">}</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    cell<span class="token punctuation">.</span>textContent <span class="token operator">=</span> dt<span class="token punctuation">.</span><span class="token function">toLocaleString</span><span class="token punctuation">(</span><span class="token keyword">undefined</span><span class="token punctuation">,</span> formatOptions<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    row<span class="token punctuation">.</span><span class="token function">appendChild</span><span class="token punctuation">(</span>cell<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  table<span class="token punctuation">.</span><span class="token function">appendChild</span><span class="token punctuation">(</span>row<span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 </code></pre><h2 id="arithmetic-1">Arithmetic</h2>
 <h3 id="how-many-days-until-a-future-date"><a class="heading-link" href="#how-many-days-until-a-future-date"></a>How many days until a future date</h3><p>An example HTML form inspired by <a href="https://www.timeanddate.com/date/durationresult.html">Days Calculator</a> on timeanddate.com:</p>
