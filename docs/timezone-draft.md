@@ -119,10 +119,11 @@ class Temporal.TimeZone {
   getOffsetNanosecondsFor(absolute : Temporal.Absolute) : number;
 
   /** Given the calendar/wall-clock time, returns an array of 0, 1, or
-   * 2 absolute instants that are possible points on the timeline
+   * 2 (or theoretically more, but not in any currently known time zone)
+   * absolute times, that are possible points on the timeline
    * corresponding to it. In getAbsoluteFor(), one of these will be
    * selected, depending on the disambiguation option. */
-  possibleInstants(dateTime : Temporal.DateTime) : array<Temporal.Absolute>;
+  getPossibleAbsolutesFor(dateTime : Temporal.DateTime) : array<Temporal.Absolute>;
 
   /** Returns an iterator of all following offset transitions, starting
    * from @startingPoint. */
@@ -144,14 +145,14 @@ class Temporal.TimeZone {
 }
 ```
 
-All the methods that custom time zones inherit from `Temporal.TimeZone` are implemented in terms of `getOffsetNanosecondsFor()`, `possibleInstants()`, and the value of the _[[Identifier]]_ internal slot.
+All the methods that custom time zones inherit from `Temporal.TimeZone` are implemented in terms of `getOffsetNanosecondsFor()`, `getPossibleAbsolutesFor()`, and the value of the _[[Identifier]]_ internal slot.
 For example, `getOffsetStringFor()` and `getDateTimeFor()` call `getOffsetNanosecondsFor()`, and `getAbsoluteFor()` calls both.
 
 > **FIXME:** These names are not very good.
 > Help is welcome in determining the color of this bike shed.
 
 Alternatively, a custom time zone doesn't have to be a subclass of `Temporal.TimeZone`.
-In this case, it can be a plain object, which must implement `getOffsetNanosecondsFor()`, `possibleInstants()`, and `toString()`.
+In this case, it can be a plain object, which must implement `getOffsetNanosecondsFor()`, `getPossibleAbsolutesFor()`, and `toString()`.
 
 > **FIXME:** This means we have to remove any checks for the _[[InitializedTemporalTimeZone]]_ slot in all APIs, so that plain objects can use them with e.g. `Temporal.TimeZone.prototype.getOffsetStringFor.call(plainObject, absolute)`.
 
@@ -178,7 +179,7 @@ class OffsetTimeZone extends Temporal.TimeZone {
     return this.#offsetNs; // offset is always the same
   }
 
-  possibleInstants(dateTime) {
+  getPossibleAbsolutesFor(dateTime) {
     const iso = dateTime.getISOFields();
     const epochNs = MakeDate(
       MakeDay(iso.year, iso.month, iso.day),

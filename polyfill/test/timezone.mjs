@@ -12,7 +12,7 @@ import Pretty from '@pipobscure/demitasse-pretty';
 const { reporter } = Pretty;
 
 import { strict as assert } from 'assert';
-const { equal, notEqual, throws } = assert;
+const { deepEqual, equal, notEqual, throws } = assert;
 
 import * as Temporal from 'tc39-temporal';
 
@@ -30,6 +30,8 @@ describe('TimeZone', () => {
         equal(typeof Temporal.TimeZone.prototype.getDateTimeFor, 'function'));
       it('Temporal.TimeZone.prototype has getAbsoluteFor', () =>
         equal(typeof Temporal.TimeZone.prototype.getAbsoluteFor, 'function'));
+      it('Temporal.TimeZone.prototype has getPossibleAbsolutesFor', () =>
+        equal(typeof Temporal.TimeZone.prototype.getPossibleAbsolutesFor, 'function'));
       it('Temporal.TimeZone.prototype has getTransitions', () =>
         equal(typeof Temporal.TimeZone.prototype.getTransitions, 'function'));
       it('Temporal.TimeZone.prototype has toString', () =>
@@ -227,6 +229,29 @@ describe('TimeZone', () => {
       const zone = Temporal.TimeZone.from('+03:30');
       ['', 'EARLIER', 'test', 3, null].forEach((disambiguation) =>
         throws(() => zone.getAbsoluteFor(dtm, { disambiguation }), RangeError)
+      );
+    });
+  });
+  describe('getPossibleAbsolutesFor', () => {
+    it('with constant offset', () => {
+      const zone = Temporal.TimeZone.from('+03:30');
+      const dt = Temporal.DateTime.from('2019-02-16T23:45');
+      deepEqual(
+        zone.getPossibleAbsolutesFor(dt).map((a) => `${a}`),
+        ['2019-02-16T20:15Z']
+      );
+    });
+    it('with clock moving forward', () => {
+      const zone = Temporal.TimeZone.from('Europe/Berlin');
+      const dt = Temporal.DateTime.from('2019-03-31T02:45');
+      deepEqual(zone.getPossibleAbsolutesFor(dt), []);
+    });
+    it('with clock moving backward', () => {
+      const zone = Temporal.TimeZone.from('America/Sao_Paulo');
+      const dt = Temporal.DateTime.from('2019-02-16T23:45');
+      deepEqual(
+        zone.getPossibleAbsolutesFor(dt).map((a) => `${a}`),
+        ['2019-02-17T01:45Z', '2019-02-17T02:45Z']
       );
     });
   });

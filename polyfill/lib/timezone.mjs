@@ -93,6 +93,25 @@ export class TimeZone {
       }
     }
   }
+  getPossibleAbsolutesFor(dateTime) {
+    if (!ES.IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');
+    if (!ES.IsTemporalDateTime(dateTime)) throw new TypeError('invalid DateTime object');
+    const Absolute = GetIntrinsic('%Temporal.Absolute%');
+    const { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = dateTime;
+    const possibleEpochNs = ES.GetTimeZoneEpochValue(
+      GetSlot(this, IDENTIFIER),
+      year,
+      month,
+      day,
+      hour,
+      minute,
+      second,
+      millisecond,
+      microsecond,
+      nanosecond
+    );
+    return possibleEpochNs.map((ns) => new Absolute(ns));
+  }
   getTransitions(startingPoint) {
     if (!ES.IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');
     if (!ES.IsTemporalAbsolute(startingPoint)) throw new TypeError('invalid Absolute object');

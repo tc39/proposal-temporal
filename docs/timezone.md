@@ -211,6 +211,21 @@ For usage examples and a more complete explanation of how this disambiguation wo
 
 If the result is outside the range that `Temporal.Absolute` can represent, then a `RangeError` will be thrown, no matter the value of `disambiguation`.
 
+### timeZone.**getPossibleAbsolutesFor**(_dateTime_: Temporal.DateTime) : array&lt;Temporal.Absolute&gt;
+
+**Parameters:**
+- `dateTime` (`Temporal.DateTime`): A calendar date and wall-clock time to convert.
+
+**Returns:** An array of `Temporal.Absolute` objects, which may be empty.
+
+This method returns an array of all the possible absolute times that could correspond to the calendar date and wall-clock time indicated by `dateTime`.
+
+Normally there is only one possible absolute time corresponding to a wall-clock time, but around a daylight saving change, a wall-clock time may not exist, or the same wall-clock time may exist twice in a row.
+See [Resolving ambiguity](./ambiguity.md) for usage examples and a more complete explanation.
+
+Usually you won't have to use this method; `Temporal.TimeZone.prototype.getAbsoluteFor()` will be more convenient for most use cases.
+This method is useful for implementing a custom time zone or custom disambiguation behaviour.
+
 ### timeZone.**getTransitions**(_startingPoint_: Temporal.Absolute) : iterator<Temporal.Absolute>
 
 **Parameters:**
