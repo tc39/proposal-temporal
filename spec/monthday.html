@@ -74,19 +74,6 @@
         1. Return ? CreateTemporalMonthDayFromStatic(_constructor_, _result_.[[Month]], _result_.[[Day]]).
       </emu-alg>
     </emu-clause>
-
-    <emu-clause id="sec-temporal.monthday.compare">
-      <h1>Temporal.MonthDay.compare ( _one_, _two_ )</h1>
-      <p>
-        The `compare` method takes two arguments, _one_ and _two_.
-        The following steps are taken:
-      </p>
-      <emu-alg>
-        1. Perform ? RequireInternalSlot(_one_, [[InitializedTemporalMonthDay]]).
-        1. Perform ? RequireInternalSlot(_two_, [[InitializedTemporalMonthDay]]).
-        1. Return ! CompareTemporalMonthDay(_one_, _two_).
-      </emu-alg>
-    </emu-clause>
   </emu-clause>
 
   <emu-clause id="sec-properties-of-the-temporal-MonthDay-prototype-object">
@@ -419,21 +406,6 @@
         1. Let _month_ be _monthDay_.[[ISOMonth]] formatted as a two-digit decimal number, padded to the left with a zero if necessary.
         1. Let _day_ be _monthDay_.[[ISODay]] formatted as a two-digit decimal number, padded to the left with a zero if necessary.
         1. Return the string-concatenation of _month_, the code unit 0x002D (HYPHEN-MINUS), and _day_.
-      </emu-alg>
-    </emu-clause>
-
-    <emu-clause id="sec-temporal-comparetemporalmonthday" aoid="CompareTemporalMonthDay">
-      <h1>CompareTemporalMonthDay ( _one_, _two_ )</h1>
-      <emu-alg>
-        1. Assert: Type(_one_) is Object.
-        1. Assert: _one_ has an [[InitializedTemporalMonthDay]] internal slot.
-        1. Assert: Type(_two_) is Object.
-        1. Assert: _two_ has an [[InitializedTemporalMonthDay]] internal slot.
-        1. If _one_.[[Month]] &gt; _two_.[[Month]], return 1.
-        1. If _one_.[[Month]] &lt; _two_.[[Month]], return -1.
-        1. If _one_.[[Day]] &gt; _two_.[[Day]], return 1.
-        1. If _one_.[[Day]] &lt; _two_.[[Day]], return -1.
-        1. Return +0.
       </emu-alg>
     </emu-clause>
   </emu-clause>
