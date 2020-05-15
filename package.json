@@ -21,7 +21,7 @@
     "prettier": "^1.19.1"
   },
   "scripts": {
-    "test": "cd polyfill && npm install && npm test && npm run cookbook && npm run test262 && cd ..",
+    "test": "cd polyfill && npm install && npm test && npm run test-cookbook && npm run test262 && cd ..",
     "codecov:tests": "cd polyfill && npm install && npm run codecov:tests && cd ..",
     "codecov:test262": "cd polyfill && npm install && npm run codecov:test262 && cd ..",
     "test-cookbook": "cd polyfill && npm install && npm run test-cookbook && cd ..",
