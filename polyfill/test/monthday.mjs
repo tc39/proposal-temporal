@@ -24,9 +24,6 @@ describe('MonthDay', () => {
         equal(typeof MonthDay.prototype.getFields, 'function');
       });
     });
-    it('MonthDay.compare is a Function', () => {
-      equal(typeof MonthDay.compare, 'function');
-    });
   });
   describe('Construction', () => {
     it('Leap day', () => equal(`${new MonthDay(2, 29)}`, '02-29'));
@@ -115,21 +112,6 @@ describe('MonthDay', () => {
       it('with(-15)', () => equal(`${md.with({ day: 15 })}`, '01-15'));
     });
   });
-  describe('MonthDay.compare() works', () => {
-    const jan15 = MonthDay.from('01-15');
-    const feb1 = MonthDay.from('02-01');
-    it('equal', () => equal(MonthDay.compare(jan15, jan15), 0));
-    it('smaller/larger', () => equal(MonthDay.compare(jan15, feb1), -1));
-    it('larger/smaller', () => equal(MonthDay.compare(feb1, jan15), 1));
-    it("doesn't cast first argument", () => {
-      throws(() => MonthDay.compare({ month: 1, day: 15 }, feb1), TypeError);
-      throws(() => MonthDay.compare('01-15', feb1), TypeError);
-    });
-    it("doesn't cast second argument", () => {
-      throws(() => MonthDay.compare(jan15, { month: 2, day: 1 }), TypeError);
-      throws(() => MonthDay.compare(jan15, '02-01'), TypeError);
-    });
-  });
   describe('MonthDay.with()', () => {
     it('throws on bad disambiguation', () => {
       ['', 'CONSTRAIN', 'xyz', 3, null].forEach((disambiguation) =>
@@ -171,11 +153,11 @@ describe('MonthDay', () => {
     });
     it('as input to from()', () => {
       const md2 = MonthDay.from(fields);
-      equal(MonthDay.compare(md1, md2), 0);
+      equal(`${md1}`, `${md2}`);
     });
     it('as input to with()', () => {
       const md2 = MonthDay.from('06-30').with(fields);
-      equal(MonthDay.compare(md1, md2), 0);
+      equal(`${md1}`, `${md2}`);
     });
   });
 });

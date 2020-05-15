@@ -98,30 +98,6 @@ md = Temporal.MonthDay.from({ month: -1, day: 1 }, { disambiguation: 'reject' })
   // throws
 ```
 
-### Temporal.MonthDay.**compare**(_one_: Temporal.MonthDay, _two_: Temporal.MonthDay) : number
-
-**Parameters:**
-- `one` (`Temporal.MonthDay`): First date to compare.
-- `two` (`Temporal.MonthDay`): Second date to compare.
-
-**Returns:** &minus;1, 0, or 1.
-
-Compares two `Temporal.MonthDay` objects.
-Returns an integer indicating whether `one` comes before or after or is equal to `two`, assuming they occur in the same year..
-- &minus;1 if `one` comes before `two`;
-- 0 if `one` and `two` are the same;
-- 1 if `one` comes after `two`.
-
-This function can be used to sort arrays of `Temporal.MonthDay` objects.
-For example:
-```javascript
-one = Temporal.MonthDay.from('08-24');
-two = Temporal.MonthDay.from('07-14');
-three = Temporal.MonthDay.from('02-18');
-sorted = [one, two, three].sort(Temporal.MonthDay.compare);
-sorted.join(' ');  // => 02-18 07-14 08-24
-```
-
 ## Properties
 
 ### monthDay.**month** : number
