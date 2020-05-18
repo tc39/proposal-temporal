@@ -112,6 +112,14 @@
 </li>
 </ul>
 </li>
+<li><a href="#converting-between-types">Converting between types</a>
+<ul>
+<li><a href="#noon-on-a-particular-date">Noon on a particular date</a>
+</li>
+<li><a href="#birthday-in-2030">Birthday in 2030</a>
+</li>
+</ul>
+</li>
 <li><a href="#serialization">Serialization</a>
 <ul>
 <li><a href="#zoned-instant-from-instant-and-time-zone">Zoned instant from instant and time zone</a>
@@ -123,6 +131,12 @@
 <li><a href="#sort-datetimes">Sort DateTimes</a>
 </li>
 <li><a href="#sort-iso-datetime-strings">Sort ISO date/time strings</a>
+</li>
+</ul>
+</li>
+<li><a href="#rounding">Rounding</a>
+<ul>
+<li><a href="#round-a-time-down-to-whole-hours">Round a time down to whole hours</a>
 </li>
 </ul>
 </li>
@@ -161,6 +175,10 @@
 <li><a href="#schedule-a-reminder-ahead-of-matching-a-record-setting-duration">Schedule a reminder ahead of matching a record-setting duration</a>
 </li>
 <li><a href="#nth-weekday-of-the-month">Nth weekday of the month</a>
+</li>
+<li><a href="#manipulating-the-day-of-the-month">Manipulating the day of the month</a>
+</li>
+<li><a href="#same-date-in-another-month">Same date in another month</a>
 </li>
 <li><a href="#next-weekly-occurrence">Next weekly occurrence</a>
 </li>
@@ -231,6 +249,22 @@ datePicker.value = today;
 <span class="token keyword">const</span> today <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">date</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 datePicker<span class="token punctuation">.</span>max <span class="token operator">=</span> today<span class="token punctuation">;</span>
 datePicker<span class="token punctuation">.</span>value <span class="token operator">=</span> today<span class="token punctuation">;</span>
+</code></pre><h2 id="converting-between-types-1">Converting between types</h2>
+<h3 id="noon-on-a-particular-date"><a class="heading-link" href="#noon-on-a-particular-date"></a>Noon on a particular date</h3><p>An example of combining a calendar date (<code>Temporal.Date</code>) and a wall-clock time (<code>Temporal.Time</code>) into a <code>Temporal.DateTime</code>.</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token keyword">const</span> date <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-05-14'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token keyword">const</span> noonOnDate <span class="token operator">=</span> date<span class="token punctuation">.</span><span class="token function">withTime</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> hour<span class="token operator">:</span> <span class="token number">12</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token function">assert</span><span class="token punctuation">(</span>noonOnDate <span class="token keyword">instanceof</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>DateTime</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+assert<span class="token punctuation">.</span><span class="token function">equal</span><span class="token punctuation">(</span>noonOnDate<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token string">'2020-05-14T12:00'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre><h3 id="birthday-in-2030"><a class="heading-link" href="#birthday-in-2030"></a>Birthday in 2030</h3><p>An example of combining a day on the calendar (<code>Temporal.MonthDay</code>) and a year into a <code>Temporal.Date</code>.</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token keyword">const</span> birthday <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>MonthDay<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'12-15'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token keyword">const</span> birthdayIn2030 <span class="token operator">=</span> birthday<span class="token punctuation">.</span><span class="token function">withYear</span><span class="token punctuation">(</span><span class="token number">2030</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+birthdayIn2030<span class="token punctuation">.</span>dayOfWeek<span class="token punctuation">;</span> <span class="token comment">// => 7</span>
+
+<span class="token function">assert</span><span class="token punctuation">(</span>birthdayIn2030 <span class="token keyword">instanceof</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>Date</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+assert<span class="token punctuation">.</span><span class="token function">equal</span><span class="token punctuation">(</span>birthdayIn2030<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token string">'2030-12-15'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 </code></pre><h2 id="serialization-1">Serialization</h2>
 <h3 id="zoned-instant-from-instant-and-time-zone"><a class="heading-link" href="#zoned-instant-from-instant-and-time-zone"></a>Zoned instant from instant and time zone</h3><p>Use the optional parameter of <code>Temporal.Absolute.prototype.toString()</code> to map a Temporal.Absolute instance and a time zone name into a string serialization of the local time in that zone corresponding to the instant in absolute time.</p>
 <p>Without the parameter, <code>Temporal.Absolute.prototype.toString()</code> gives a serialization in UTC time.
@@ -337,6 +371,18 @@ assert<span class="token punctuation">.</span><span class="token function">deepE
   <span class="token string">'2020-04-01T05:01:00-05:00[America/New_York]'</span><span class="token punctuation">,</span>
   <span class="token string">'2020-04-01T11:02:00+02:00[Europe/Berlin]'</span>
 <span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre><h2 id="rounding-1">Rounding</h2>
+<h3 id="round-a-time-down-to-whole-hours"><a class="heading-link" href="#round-a-time-down-to-whole-hours"></a>Round a time down to whole hours</h3><p>Use the <code>with()</code> method of each Temporal type if you want to round or balance the fields.
+Here&#39;s an example of rounding a time <em>down</em> to the previously occurring whole hour:</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token keyword">const</span> time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'12:38:28.138818731'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// explicitly:</span>
+<span class="token keyword">let</span> wholeHour <span class="token operator">=</span> time<span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span><span class="token punctuation">{</span> minute<span class="token operator">:</span> <span class="token number">0</span><span class="token punctuation">,</span> second<span class="token operator">:</span> <span class="token number">0</span><span class="token punctuation">,</span> millisecond<span class="token operator">:</span> <span class="token number">0</span><span class="token punctuation">,</span> microsecond<span class="token operator">:</span> <span class="token number">0</span><span class="token punctuation">,</span> nanosecond<span class="token operator">:</span> <span class="token number">0</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+assert<span class="token punctuation">.</span><span class="token function">equal</span><span class="token punctuation">(</span>wholeHour<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token string">'12:00'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// or, taking advantage of 0 being the default for time fields:</span>
+wholeHour <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> hour<span class="token operator">:</span> time<span class="token punctuation">.</span>hour <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+assert<span class="token punctuation">.</span><span class="token function">equal</span><span class="token punctuation">(</span>wholeHour<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token string">'12:00'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 </code></pre><h2 id="time-zone-conversion-1">Time zone conversion</h2>
 <h3 id="preserving-absolute-instant"><a class="heading-link" href="#preserving-absolute-instant"></a>Preserving absolute instant</h3><p>Map a zoned date and time of day into a string serialization of the local time in a target zone at the corresponding instant in absolute time.
 This could be used when converting user-input date-time values between time zones.</p>
@@ -1230,6 +1276,43 @@ assert<span class="token punctuation">.</span><span class="token function">equal
 
 assert<span class="token punctuation">.</span><span class="token function">equal</span><span class="token punctuation">(</span><span class="token function">countPrecedingWeeklyDaysInMonth</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-02-28'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 assert<span class="token punctuation">.</span><span class="token function">equal</span><span class="token punctuation">(</span><span class="token function">countPrecedingWeeklyDaysInMonth</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-02-29'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre><h3 id="manipulating-the-day-of-the-month"><a class="heading-link" href="#manipulating-the-day-of-the-month"></a>Manipulating the day of the month</h3><p>Here are some examples of taking an existing date, and adjusting the day of the month.</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token keyword">const</span> date <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-04-14'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// Third day of next month:</span>
+
+<span class="token keyword">const</span> thirdOfNextMonth <span class="token operator">=</span> date<span class="token punctuation">.</span><span class="token function">plus</span><span class="token punctuation">(</span><span class="token punctuation">{</span> months<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span><span class="token punctuation">{</span> day<span class="token operator">:</span> <span class="token number">3</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+assert<span class="token punctuation">.</span><span class="token function">equal</span><span class="token punctuation">(</span>thirdOfNextMonth<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token string">'2020-05-03'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// Last day of this month:</span>
+
+<span class="token keyword">const</span> lastOfThisMonth <span class="token operator">=</span> date<span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span><span class="token punctuation">{</span> day<span class="token operator">:</span> date<span class="token punctuation">.</span>daysInMonth <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+assert<span class="token punctuation">.</span><span class="token function">equal</span><span class="token punctuation">(</span>lastOfThisMonth<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token string">'2020-04-30'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// On the 18th of this month at 8 PM:</span>
+
+<span class="token keyword">const</span> thisMonth18thAt8PM <span class="token operator">=</span> date<span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span><span class="token punctuation">{</span> day<span class="token operator">:</span> <span class="token number">18</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">withTime</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'20:00'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+assert<span class="token punctuation">.</span><span class="token function">equal</span><span class="token punctuation">(</span>thisMonth18thAt8PM<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token string">'2020-04-18T20:00'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre><h3 id="same-date-in-another-month"><a class="heading-link" href="#same-date-in-another-month"></a>Same date in another month</h3><p>Likewise, here are some examples of taking an existing date and adjusting the month, but keeping the day and year the same.</p>
+<p>Depending on the behaviour you want, you will need to pick the right <code>disambiguation</code> option, but the default of <code>&quot;constrain&quot;</code> should be correct for most cases.</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token keyword">const</span> date <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-05-31'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// Same date and time, but in February</span>
+<span class="token comment">// (and use the last day if the date doesn't exist in February):</span>
+
+<span class="token keyword">const</span> feb <span class="token operator">=</span> date<span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span><span class="token punctuation">{</span> month<span class="token operator">:</span> <span class="token number">2</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+assert<span class="token punctuation">.</span><span class="token function">equal</span><span class="token punctuation">(</span>feb<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token string">'2020-02-29'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// Same date and time, but in April</span>
+<span class="token comment">// (and throw an exception if the date doesn't exist in April):</span>
+
+assert<span class="token punctuation">.</span><span class="token function">throws</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+  date<span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span><span class="token punctuation">{</span> month<span class="token operator">:</span> <span class="token number">4</span> <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> disambiguation<span class="token operator">:</span> <span class="token string">'reject'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 </code></pre><h3 id="next-weekly-occurrence"><a class="heading-link" href="#next-weekly-occurrence"></a>Next weekly occurrence</h3><p>From a <code>Temporal.Absolute</code> instance and a local <code>Temporal.TimeZone</code>, get a <code>Temporal.DateTime</code> representing the next occurrence of a weekly event that is scheduled on a particular weekday and time in a particular time zone. (For example, &quot;weekly on Thursdays at 08:45 California time&quot;).</p>
 <pre class="language-javascript"><code class="language-javascript"><span class="token comment">/**
  * Returns the local date and time for the next occurrence of a weekly occurring
