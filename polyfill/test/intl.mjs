@@ -27,6 +27,9 @@ describe('Intl', () => {
       equal(`${datetime.toLocaleString('en', { timeZone: 'America/New_York' })}`, '11/18/1976, 3:23:30 PM'));
     it(`(${datetime.toString()}).toLocaleString('de-AT', { timeZone: 'Europe/Vienna' })`, () =>
       equal(`${datetime.toLocaleString('de', { timeZone: 'Europe/Vienna' })}`, '18.11.1976, 15:23:30'));
+    it('should ignore units not in the data type', () => {
+      equal(datetime.toLocaleString('en', { timeZoneName: 'long' }), '11/18/1976, 3:23:30 PM');
+    });
   });
   describe('time.toLocaleString()', () => {
     const time = Temporal.Time.from('1976-11-18T15:23:30');
@@ -34,6 +37,12 @@ describe('Intl', () => {
       equal(`${time.toLocaleString('en', { timeZone: 'America/New_York' })}`, '3:23:30 PM'));
     it(`(${time.toString()}).toLocaleString('de-AT', { timeZone: 'Europe/Vienna' })`, () =>
       equal(`${time.toLocaleString('de', { timeZone: 'Europe/Vienna' })}`, '15:23:30'));
+    it('should ignore units not in the data type', () => {
+      equal(time.toLocaleString('en', { timeZoneName: 'long' }), '3:23:30 PM');
+      equal(time.toLocaleString('en', { year: 'numeric' }), '3:23:30 PM');
+      equal(time.toLocaleString('en', { month: 'numeric' }), '3:23:30 PM');
+      equal(time.toLocaleString('en', { day: 'numeric' }), '3:23:30 PM');
+    });
   });
   describe('date.toLocaleString()', () => {
     const date = Temporal.Date.from('1976-11-18T15:23:30');
@@ -41,6 +50,12 @@ describe('Intl', () => {
       equal(`${date.toLocaleString('en', { timeZone: 'America/New_York' })}`, '11/18/1976'));
     it(`(${date.toString()}).toLocaleString('de-AT', { timeZone: 'Europe/Vienna' })`, () =>
       equal(`${date.toLocaleString('de', { timeZone: 'Europe/Vienna' })}`, '18.11.1976'));
+    it('should ignore units not in the data type', () => {
+      equal(date.toLocaleString('en', { timeZoneName: 'long' }), '11/18/1976');
+      equal(date.toLocaleString('en', { hour: 'numeric' }), '11/18/1976');
+      equal(date.toLocaleString('en', { minute: 'numeric' }), '11/18/1976');
+      equal(date.toLocaleString('en', { second: 'numeric' }), '11/18/1976');
+    });
   });
   describe('yearmonth.toLocaleString()', () => {
     const yearmonth = Temporal.YearMonth.from('1976-11-18T15:23:30');
@@ -48,6 +63,13 @@ describe('Intl', () => {
       equal(`${yearmonth.toLocaleString('en', { timeZone: 'America/New_York' })}`, '11/1976'));
     it(`(${yearmonth.toString()}).toLocaleString('de-AT', { timeZone: 'Europe/Vienna' })`, () =>
       equal(`${yearmonth.toLocaleString('de', { timeZone: 'Europe/Vienna' })}`, '11.1976'));
+    it('should ignore units not in the data type', () => {
+      equal(yearmonth.toLocaleString('en', { timeZoneName: 'long' }), '11/1976');
+      equal(yearmonth.toLocaleString('en', { day: 'numeric' }), '11/1976');
+      equal(yearmonth.toLocaleString('en', { hour: 'numeric' }), '11/1976');
+      equal(yearmonth.toLocaleString('en', { minute: 'numeric' }), '11/1976');
+      equal(yearmonth.toLocaleString('en', { second: 'numeric' }), '11/1976');
+    });
   });
   describe('monthday.toLocaleString()', () => {
     const monthday = Temporal.MonthDay.from('1976-11-18T15:23:30');
@@ -55,6 +77,13 @@ describe('Intl', () => {
       equal(`${monthday.toLocaleString('en', { timeZone: 'America/New_York' })}`, '11/18'));
     it(`(${monthday.toString()}).toLocaleString('de-AT', { timeZone: 'Europe/Vienna' })`, () =>
       equal(`${monthday.toLocaleString('de', { timeZone: 'Europe/Vienna' })}`, '18.11.'));
+    it('should ignore units not in the data type', () => {
+      equal(monthday.toLocaleString('en', { timeZoneName: 'long' }), '11/18');
+      equal(monthday.toLocaleString('en', { year: 'numeric' }), '11/18');
+      equal(monthday.toLocaleString('en', { hour: 'numeric' }), '11/18');
+      equal(monthday.toLocaleString('en', { minute: 'numeric' }), '11/18');
+      equal(monthday.toLocaleString('en', { second: 'numeric' }), '11/18');
+    });
   });
 
   describe('DateTimeFormat', () => {
