@@ -454,7 +454,7 @@ This method overrides `Object.prototype.toLocaleString()` to provide a human-rea
 
 The `locales` and `options` arguments are the same as in the constructor to [`Intl.DateTimeFormat`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DateTimeFormat).
 
-> **NOTE**: Unlike in [`Temporal.Absolute.prototype.toLocaleString()`](./absolute.html#toLocaleString), `locales.timeZone` will have no effect, because `Temporal.DateTime` carries no time zone information and is just a wall-clock time.
+> **NOTE**: Unlike in [`Temporal.Absolute.prototype.toLocaleString()`](./absolute.html#toLocaleString), `options.timeZone` will have no effect, because `Temporal.DateTime` carries no time zone information and is just a wall-clock time.
 
 Example usage:
 ```js
