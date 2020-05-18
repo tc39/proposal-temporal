@@ -309,7 +309,7 @@ console<span class="token punctuation">.</span><span class="token function">log<
 <span class="token punctuation">}</span>
 <span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span>str<span class="token punctuation">,</span> reviver<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre><h3 id="withYear"><a class="heading-link" href="#withYear"></a>monthDay.<strong>withYear</strong>(<em>year</em>: number | object) : Temporal.Date</h3><p><strong>Parameters:</strong></p>
 <ul>
-<li><code>year</code> (number): A year, which must have a day corresponding to <code>monthDay</code>.</li>
+<li><code>year</code> (number | object): A year, which must have a day corresponding to <code>monthDay</code>. Additionally, an object with a <code>&#39;year&#39;</code> property is also accepted.</li>
 </ul>
 <p><strong>Returns:</strong> a <code>Temporal.Date</code> object that represents the calendar date of <code>monthDay</code> in <code>year</code>.</p>
 <p>This method can be used to convert <code>Temporal.MonthDay</code> into a <code>Temporal.Date</code>, by supplying a year to use.
