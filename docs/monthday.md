@@ -245,7 +245,7 @@ JSON.parse(str, reviver);
 ### monthDay.**withYear**(_year_: number | object) : Temporal.Date
 
 **Parameters:**
-- `year` (number): A year, which must have a day corresponding to `monthDay`.
+- `year` (number | object): A year, which must have a day corresponding to `monthDay`. Additionally, an object with a `'year'` field is also accepted.
 
 **Returns:** a `Temporal.Date` object that represents the calendar date of `monthDay` in `year`.
 
