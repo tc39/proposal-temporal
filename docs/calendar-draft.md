@@ -12,7 +12,7 @@ Temporal.Date currently has three internal slots: year, month, and day. (An "int
 
 No matter which calendar system is being represented, the *data model* in Temporal.Date remains indexed in the ISO calendar.  So, for instance, if you wanted to represent the Hebrew date 5 Nisan 5780, the data model would be 2020-03-30, and the calendar would be responsible for mapping that into the corresponding Hebrew fields, as described further down in this document.
 
-This data model makes the simple assumption that the concept of a "day" is a solar day (main issues: [#390](https://github.com/tc39/proposal-temporal/issues/390), [#389](https://github.com/tc39/proposal-temporal/issues/389)).  Most or all modern-use calendars, even those with lunar month cycles, use a solar day (based on sunrise) instead of a lunar day (based of moonrise).  For calendars that do use a lunar day, such as the Hawaiian Moon Calendar, a Temporal.DateTime can be used instead of Temporal.Date when the distinction is important.
+This data model makes the simple assumption that the concept of a "day" is a solar day (main issues: [#390](https://github.com/tc39/proposal-temporal/issues/390), [#389](https://github.com/tc39/proposal-temporal/issues/389)).  Most or all modern-use calendars, even those with lunar month cycles, use a solar day, which is based on the time it takes for the Earth to complete one rotation relative to the Sun.  Some historical calendars, such as the Hawaiian Moon Calendar, define a day as the time it takes for the Earth to complete one rotation relative to the moon (instead of the Sun), which is slightly shorter on average.  For calendars that use a lunar day, a Temporal.DateTime can be used instead of Temporal.Date when the distinction is important.
 
 ### Temporal.DateTime and Temporal.Time internal slots
 
@@ -180,12 +180,14 @@ This is a work in progress, and this document will be updated once we reach cons
 
 Main issue: https://github.com/tc39/proposal-temporal/issues/292
 
-An open question is what the behavior should be if the programmer does not specify a calendar, or if we should require the programmer to always specify a calendar.  Four choices are on the table:
+An open question is what the behavior should be if the programmer does not specify a calendar, or if we should require the programmer to always specify a calendar.  Six choices are on the table:
 
 1. Default to full ISO (Gregorian) calendar.
 2. Require the user to explicitly specify the calendar.
 3. Default to a partial ISO calendar (explained below).
 4. Default to `Intl.defaultCalendar` (a new symbol), or ISO if that field doesn't exist.
+5. Create separate types for when a calendar is not present (explained below).
+6. Add factory methods for ISO and non-ISO (explained below).
 
 ### Partial ISO Calendar (Option 3)
 
@@ -250,28 +252,88 @@ Temporal.Date.from("2019-12-06").withCalendar(request.calendar).weekOfYear;
 
 The calendar IDs are less clear.  If the partial ISO calendar used ID `"iso"`, then what would the full ISO calendar use?  ID "gregory" ([why not "gregorian"?](https://github.com/tc39/ecma402/issues/212)) is misleading because there are Gregorian calendars that do not all agree on the same rules for things like weeks of the year.  One solution could be to use a nullish ID like `null` or `""` for the partial ISO calendar and `"iso"` for the full ISO calendar.  Alternatively, "iso8601", the identifier defined by CLDR as "Gregorian calendar using the ISO 8601 calendar week rules", could be the identifier for the full ISO calendar.
 
+### New Non-Calendar Types (Option 5)
+
+In this option, objects without a calendar would have their own type, and calendar-specific types would be used only when calendar-dependent functionality is required.  This is similar in spirit to Partial ISO (Option 3), except that new types are used, rather than simply a null calendar on the existing type.
+
+For example, name bikeshedding aside, `Temporal.ZonedAbsolute` (main issue: [#569](https://github.com/tc39/proposal-temporal/issues/569)) could become an intermediate type between `Temporal.Absolute` and `Temporal.DateTime` that does not include arithmetic or calendar-dependent functionality.  A calendar would be necessary when converting from `Temporal.ZonedAbsolute` into `Temporal.DateTime`.
+
+- `Temporal.Absolute` = a point in time, not specific to a certain place.
+	- Data Model: [[EpochNanoseconds]]
+- `Temporal.ZonedAbsolute` = a point in time at a place on Earth.
+	- Data Model: [[EpochNanoseconds]] + [[TimeZone]]
+- `Temporal.DateTime` = a wall clock time, not specific to a certain place.
+	- Data Model: [[Calendar]] + ISO fields
+
+Conversion methods between these three types could be:
+
+```javascript
+// Absolute <=> ZonedAbsolute
+Temporal.Absolute.prototype.withZone(tz) : Temporal.ZonedAbsolute;
+Temporal.ZonedAbsolute.prototype.toAbsolute() : Temporal.Absolute;
+
+// ZonedAbsolute <=> DateTime
+Temporal.ZonedAbsolute.prototype.withCalendar(cal) : Temporal.DateTime;
+Temporal.DateTime.prototype.withZone(tz) : Temporal.ZonedAbsolute;
+```
+
+We could add a similar intermediate type for dates without times.  Name bikeshedding aside, this second new type could be `Temporal.AbstractDate`.  The semantics would be:
+
+- `Temporal.AbstractDate` = a solar day at a place on Earth
+	- Data Model: [[EpochDays]] + [[TimeZone]]
+- `Temporal.Date` = a wall clock date, not specific to a certain place.
+	- Data Model: [[Calendar]] + ISO fields
+
+Conversion methods:
+
+```javascript
+// ZonedAbsolute <=> AbstractDate
+Temporal.ZonedAbsolute.prototype.getDate() : Temporal.AbstractDate;
+Temporal.AbstractDate.prototype.withTime() : Temporal.ZonedAbsolute;
+
+// AbstractDate <=> Date
+Temporal.AbstractDate.prototype.withCalendar(cal) : Temporal.Date;
+Temporal.Date.prototype.withZone(tz) : Temporal.AbstractDate;
+
+// Date <=> DateTime
+Temporal.DateTime.prototype.getDate() : Temporal.Date;
+Temporal.Date.prototype.withTime() : Temporal.DateTime;
+```
+
+An additional type, `Temporal.EpochDays`, could be added as an analog of `Temporal.Absolute` but with days instead of nanoseconds since epoch.
+
+Here is an illustrated version of this option:
+
+![Potential Temporal Data Types](assets/new-data-types.svg)
+
+### New Factory Methods (Option 6)
+
+With this option, separate methods would indicate whether the Full ISO calendar should be used versus a potentially non-ISO calendar.  For example, `Temporal.fromISO` would be added to supplement `Temporal.from`.  See the full table below.
+
 ### Methods of Construction
 
-With all four options, the calendar may be specified at the point where one of the affected Temporal types is constructed.  These methods may have different semantics when it comes to applying the default calendar.
+The main way the six options differ is by how and when a calendar is specified when creating calendar-sensitive Temporal objects.
 
-The question of default calendar only affects those methods with an ambiguous default.
+The following table describes these semantics.  Option 5 is not shown because the constructors will be different than in options 1-4 and 6.
 
-#### Methods With Full ISO Always Implied
+| Method | Option 1 | Option 2 | Option 3 | Option 4 | Option 6 |
+|---|---|---|---|---|---|
+| T.Date.from(string) | Full ISO | Full ISO | Full ISO | Environ. | N/A |
+| T.Date.fromISO(string) | N/A | N/A | N/A | N/A | Full ISO |
+| T.Date.from(fields) | Full ISO | Explicit | Explicit | Explicit | Explicit |
+| T.Date.fromISO(fields) | N/A | N/A | N/A | N/A | Full ISO |
+| new T.Date() | Full ISO | Full ISO | Full ISO | Full ISO | Full ISO |
+| T.now.date() | Full ISO | Explicit | Partial ISO | Environ. | Explicit |
+| T.now.isoDate() | N/A | N/A | N/A | N/A | Full ISO |
+| absolute.inTimeZone() | Full ISO | Explicit | Partial ISO | Environ. | Explicit |
+| absolute.inZoneISO() | N/A | N/A | N/A | N/A | Full ISO |
+| HTML input | Full ISO | Full ISO | Full ISO | Full ISO | Full ISO |
 
-- Temporal.from(string)
-	- Condition: as long as a calendar ID is able to be in the string (main issue: [#293](https://github.com/tc39/proposal-temporal/issues/293)).
-- new Temporal.XYZ()
-	- The constructor is low-level and feeds the ISO data model directly.
-- HTML input
-	- The HTML5 spec only supports ISO-8601 ([reference](https://html.spec.whatwg.org/multipage/common-microsyntaxes.html#concept-date))
+*Note 1:* from(string) may carry the calendar ID in the string (main issue: [#293](https://github.com/tc39/proposal-temporal/issues/293)).
 
-#### Methods With Ambiguous Default
+*Note 2:* The HTML5 spec only supports ISO-8601 ([reference](https://html.spec.whatwg.org/multipage/common-microsyntaxes.html#concept-date)).
 
-- Temporal.from(fields)
-- Temporal.now
-- Temporal.Absolute.inTimeZone
-
-### Errors That Partial ISO Helps Prevent
+### Preventing I18n Errors
 
 As compared to option 1 (always default to Full ISO), the following are examples of programming errors that Partial ISO would help prevent.
 
@@ -294,18 +356,24 @@ Correct output:
 Code:
 
 ```javascript
-/// BUGGY CODE ///
+/// Options 1 and 4: calendar implicit
 const today = Temporal.now.date();
 console.log("Today is:", today.toLocaleString());
-// BUG: Arithmetic in months must take place in the user calendar
+// OPTION 1 BUG:
+// Arithmetic in months must take place in the user calendar
 const nextMonth = today.plus({ months: 1 });
 console.log("Next month is: ", nextMonth.toLocaleString());
 
-/// CORRECT CODE ///
+/// Options 2 and 6: calendar in factory method
+const calendar = navigator.locales[0].getLikelyCalendar();
+const today = Temporal.now.date(calendar);
+console.log("Today is:", today.toLocaleString());
+const nextMonth = today.plus({ months: 1 });
+console.log("Next month is: ", nextMonth.toLocaleString());
 
+/// Options 3 and 5: calendar only when needed
 const today = Temporal.now.date();
 console.log("Today is:", today.toLocaleString());
-// FIX: Call .withCalendar() before .plus()
 const calendar = navigator.locales[0].getLikelyCalendar();
 const nextMonth = today.withCalendar(calendar).plus({ months: 1 });
 console.log("Next month is: ", nextMonth.toLocaleString());
@@ -326,20 +394,25 @@ Correct output:
 Code:
 
 ```javascript
-/// BUGGY CODE ///
-
+/// Options 1 and 4: calendar implicit
 const date = Temporal.now.date();
 console.log("Today is:", date.toLocaleString());
-// BUG: The MonthDay needs to be represented in the user calendar; otherwise,
+// OPTION 1 BUG:
+// The MonthDay needs to be represented in the user calendar; otherwise,
 // toLocaleString must format in the ISO calendar.
 const monthDay = date.getMonthDay();
 console.log(`Is ${monthDay.toLocaleString()} your birthday?`);
 
-/// CORRECT CODE ///
+/// Options 2 and 6: calendar in factory method
+const calendar = navigator.locales[0].getLikelyCalendar();
+const date = Temporal.now.date(calendar);
+console.log("Today is:", date.toLocaleString());
+const monthDay = date.getMonthDay();
+console.log(`Is ${monthDay.toLocaleString()} your birthday?`);
 
+/// Options 3 and 5: calendar only when needed
 const date = Temporal.now.date();
 console.log("Today is:", date.toLocaleString());
-// FIX: Call .withCalendar() before .getMonthDay()
 const calendar = navigator.locales[0].getLikelyCalendar();
 const monthDay = date.withCalendar(calendar).getMonthDay();
 console.log(`Is ${monthDay.toLocaleString()} your birthday?`);
@@ -360,18 +433,23 @@ Correct output:
 Code:
 
 ```javascript
-/// BUGGY CODE ///
-
+/// Options 1 and 4: calendar implicit
 const date = Temporal.now.date();
-// BUG: The YearMonth needs to be represented in the user calendar
+// OPTION 1 BUG:
+// The YearMonth needs to be represented in the user calendar
 const yearMonth = date.getYearMonth();
 console.log("Today is:", date.toLocaleString());
 console.log("Number of days this month:", yearMonth.daysInMonth);
 
-/// CORRECT CODE ///
+/// Options 2 and 6: calendar in factory method
+const calendar = navigator.locales[0].getLikelyCalendar();
+const date = Temporal.now.date(calendar);
+const yearMonth = date.getYearMonth();
+console.log("Today is:", date.toLocaleString());
+console.log("Number of days this month:", yearMonth.daysInMonth);
 
+/// Options 3 and 5: calendar only when needed
 const date = Temporal.now.date();
-// FIX: Call .withCalendar() before .getYearMonth()
 const calendar = navigator.locales[0].getLikelyCalendar();
 const yearMonth = date.withCalendar(calendar).getYearMonth();
 console.log("Today is:", date.toLocaleString());
