@@ -24,8 +24,7 @@ function bridgePublicHolidays(holiday, year) {
   }
 }
 
-// Note: The logic in this file is calendar-dependent, but an ISO string is used.
-const labourDay = Temporal.MonthDay.from('05-01');  // from string => ISO calendar
+const labourDay = Temporal.MonthDay.from('05-01');
 
 // No bridge day
 assert.deepEqual(

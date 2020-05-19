@@ -17,5 +17,3 @@ const flightTime = getTripDurationInHrMinSec(
   '2020-03-08T09:50:00-07:00[America/Los_Angeles]'
 );
 assert.equal(flightTime.toString(), 'PT12H55M');
-
-// Note: This file deals with only Temporal.Absolute, so it is calendar-independent.

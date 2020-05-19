@@ -34,5 +34,3 @@ assert.deepEqual(results, [
   '2020-04-01T05:01:00-05:00[America/New_York]',
   '2020-04-01T11:02:00+02:00[Europe/Berlin]'
 ]);
-
-// Note: This file is calendar-independent.

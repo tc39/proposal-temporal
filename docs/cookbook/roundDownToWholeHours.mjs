@@ -7,5 +7,3 @@ assert.equal(wholeHour.toString(), '12:00');
 // or, taking advantage of 0 being the default for time fields:
 wholeHour = Temporal.Time.from({ hour: time.hour });
 assert.equal(wholeHour.toString(), '12:00');
-
-// Note: This file is calendar-independent.

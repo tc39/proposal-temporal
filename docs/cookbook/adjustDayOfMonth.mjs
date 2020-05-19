@@ -1,5 +1,4 @@
-// Note: The logic in this file is calendar-dependent, but an ISO string is used.
-const date = Temporal.Date.from('2020-04-14');  // from string => ISO calendar
+const date = Temporal.Date.from('2020-04-14');
 
 // Third day of next month:
 
