@@ -458,12 +458,12 @@ console.log("Number of days this month:", yearMonth.daysInMonth);
 
 ### Default Calendar Options: Pros and Cons
 
-| Description | Full ISO (option 1) | No Default (option 2) | Partial ISO (option 3) | User Preference (option 4) |
-|-------------|---------------------|-----------------------|------------------------|----------------------------|
-| API consistency & predictability | 😃 Consistent and predictable | 😃 Consistent and predictable | 😐 Predictable behavior, but call sites may or may not require an explicit calendar | ☹️ Consistent API, but unpredictable behavior based on user's or server's location |
-| Impact on Temporal call sites | 😃 No changes | ☹️ All call sites require extra boilerplate | 🙂 Most* operations work; some require extra boilerplate | 😃 No changes |
-| Impact on i18n correctness | ☹️ Programmer needs to know to "opt in" to use the user's calendar preference | 😃 All operations require an explicit choice | 😃 Calendar-sensitive operations require an explicit choice | 🙂 Correct on front end, but programmer needs to know to "opt in" on back end |
-| Impact on interoperability | 😃 ISO is the industry standard format | 😃 Explicit choice | 😃 I/O operations operate in the ISO calendar space | ☹️ Temporal objects may not interop with the ISO calendar |
+| Option | API consistency & predictability | Impact on Temporal call sites | Impact on i18n correctness | Impact on interoperability |
+|---|---|---|---|---|
+| Full ISO (option 1) | 😃 Consistent and predictable | 😃 No changes | ☹️ Programmer needs to know to "opt in" to use the user's calendar preference | 😃 ISO is the industry standard format |
+| No Default (option 2) | 😃 Consistent and predictable | ☹️ All call sites require extra boilerplate | 😃 All operations require an explicit choice | 😃 Explicit choice |
+| Partial ISO (option 3) | 😐 Predictable behavior, but call sites may or may not require an explicit calendar | 🙂 Most* operations work; some require extra boilerplate | 😃 Calendar-sensitive operations require an explicit choice | 😃 I/O operations operate in the ISO calendar space |
+| User Preference (option 4) | ☹️ Consistent API, but unpredictable behavior based on user's or server's location | 😃 No changes | 🙂 Correct on front end, but programmer needs to know to "opt in" on back end | ☹️ Temporal objects may not interop with the ISO calendar |
 
 \**See https://github.com/tc39/proposal-temporal/issues/240#issuecomment-557726669*
 
