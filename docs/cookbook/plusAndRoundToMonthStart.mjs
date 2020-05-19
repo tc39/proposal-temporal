@@ -12,7 +12,7 @@ function plusAndRoundToMonthStart(date, delayDays) {
   return delayedDate.with({ month, day: 1 }, { disambiguation: 'balance' });
 }
 
-const oldLaunchDate = Temporal.Date.from('2019-06-01');
+const oldLaunchDate = Temporal.Date.from('2019-06-01');  // from string => ISO calendar
 
 const fifteenDaysDelay = plusAndRoundToMonthStart(oldLaunchDate, 15);
 assert.equal(fifteenDaysDelay.toString(), '2019-07-01');

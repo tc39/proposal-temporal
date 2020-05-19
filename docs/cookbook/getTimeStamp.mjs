@@ -11,3 +11,5 @@ const timeStamp = Temporal.now.absolute();
 timeStamp.getEpochMilliseconds();
 // Timestamp in Seconds
 timeStamp.getEpochSeconds();
+
+// Note: This is all calendar-independent

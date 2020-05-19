@@ -20,3 +20,5 @@ const chicago = Temporal.TimeZone.from('America/Chicago');
 
 // At this instant, Chicago is 3600 seconds earlier than New York
 assert.equal(getUtcOffsetDifferenceSecondsAtInstant(instant, nyc, chicago), -3600);
+
+// Note: This file deals with only Temporal.Absolute, so it is calendar-independent.

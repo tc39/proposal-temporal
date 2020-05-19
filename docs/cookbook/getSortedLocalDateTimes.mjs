@@ -14,6 +14,8 @@ function getSortedLocalDateTimes(dateTimes, reverse = false) {
 }
 
 // Sorting some conferences without timezones for example vue.js Amsterdam 2020
+// Note: the logic in this file is calendar-independent, but a calendar would need to be
+// provided to the .from() methods if one were explicitly required
 let a = Temporal.DateTime.from({
   year: 2020,
   day: 20,

@@ -6,17 +6,21 @@
  * @returns {Date} legacy Date instance
  */
 function getLegacyDateInUTCFromDateTime(dateTime) {
+  const fields = dateTime.getISOFields();
   return new Date(
     Date.UTC(
-      dateTime.year,
-      dateTime.month - 1,
-      dateTime.day,
-      dateTime.hour,
-      dateTime.minute,
-      dateTime.second,
-      dateTime.millisecond
+      fields.year,
+      fields.month - 1,
+      fields.day,
+      fields.hour,
+      fields.minute,
+      fields.second,
+      fields.millisecond
     )
   );
+
+  // Equivalent:
+  // return new Date(dateTime.inTimeZone("UTC").getEpochMilliseconds());
 }
 
 const dateTime = Temporal.DateTime.from('2020-01-01T00:00:01Z');
@@ -25,3 +29,5 @@ assert.equal(result.getUTCDate(), 1); // Day of the month
 assert.equal(result.getUTCFullYear(), 2020);
 assert.equal(result.getUTCMonth(), 0); // the month (zero-indexed)
 assert.equal(result.toISOString(), '2020-01-01T00:00:01.000Z');
+
+// Note: this operation is calendar-independent, but from string implies ISO calendar

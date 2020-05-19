@@ -14,7 +14,8 @@ function* calculateDailyOccurrence(startDate, time, timeZone) {
 }
 
 // Daily meeting at 8 AM California time
-const startDate = Temporal.Date.from('2017-03-10');
+// Note: calendar is not required for arithmetic with days and lower
+const startDate = Temporal.Date.from('2017-03-10');  // from string => ISO calendar
 const time = Temporal.Time.from('08:00');
 const timeZone = Temporal.TimeZone.from('America/Los_Angeles');
 const iter = calculateDailyOccurrence(startDate, time, timeZone);

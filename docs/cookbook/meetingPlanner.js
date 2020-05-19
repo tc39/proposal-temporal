@@ -9,6 +9,8 @@ const timeZones = [
 ];
 
 // Start the table at midnight local time
+// Note: the logic in this file is calendar-independent, but the following line would
+// need a calendar argument if a calendar were needed explicitly.
 const calendarNow = now.inTimeZone(here);
 const startTime = calendarNow
   .getDate()

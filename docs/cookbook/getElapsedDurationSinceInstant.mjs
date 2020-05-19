@@ -38,3 +38,5 @@ const { sign, duration } = getElapsedDurationSinceInstant(
   Temporal.now.absolute()
 );
 `It's ${duration.toLocaleString()} ${sign < 0 ? 'until' : 'since'} the TC39 Temporal presentation`;
+
+// Note: This file deals with only Temporal.Absolute, so it is calendar-independent.

@@ -1,4 +1,4 @@
-const date = Temporal.Date.from('2020-05-14');
+const date = Temporal.Date.from('2020-05-14');  // from string => ISO calendar
 
 const noonOnDate = date.withTime(Temporal.Time.from({ hour: 12 }));
 

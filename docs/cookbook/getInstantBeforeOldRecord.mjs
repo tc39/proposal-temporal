@@ -22,3 +22,5 @@ const noticeWindow = Temporal.Duration.from({ minutes: 1 });
 const reminderAt = getInstantBeforeOldRecord(raceStart, record, noticeWindow);
 
 assert.equal(reminderAt.toString(), '2016-08-14T00:52:17.530Z');
+
+// Note: This file deals with only Temporal.Absolute, so it is calendar-independent.

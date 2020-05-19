@@ -1,4 +1,5 @@
-const birthday = Temporal.MonthDay.from('12-15');
+// Note: The logic in this file is calendar-dependent, but an ISO string is used.
+const birthday = Temporal.MonthDay.from('12-15');  // from string => ISO calendar
 
 const birthdayIn2030 = birthday.withYear(2030);
 birthdayIn2030.dayOfWeek; // => 7

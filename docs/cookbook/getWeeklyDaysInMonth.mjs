@@ -25,3 +25,5 @@ assert.equal(
   getWeeklyDaysInMonth(Temporal.YearMonth.from('2020-02'), 6).join(' '),
   '2020-02-01 2020-02-08 2020-02-15 2020-02-22 2020-02-29'
 );
+
+// Note: These are very much calendar-sensitive operations, but from string => ISO calendar.

@@ -207,3 +207,20 @@ function extractOverrides(datetime, main) {
     return {};
   }
 }
+
+// To make the cookbook compile, patch getLikelyCalendar() into Intl.Locale.
+// See https://github.com/tc39/ecma402/issues/409
+const IntlLocale = Intl.Locale;
+function getLikelyCalendar() {
+  if (this[ORIGINAL].calendar) {
+    return this[ORIGINAL].calendar;
+  } else {
+    return "gregory";
+  }
+}
+export function Locale(...args) {
+  this[ORIGINAL] = new IntlLocale(...args);
+}
+Locale.prototype = Object.create(IntlLocale.prototype, {
+  getLikelyCalendar: descriptor(getLikelyCalendar)
+});
