@@ -27,7 +27,8 @@ function getParseableZonedStringWithLocalTimeInOtherZone(
 }
 
 const result = getParseableZonedStringWithLocalTimeInOtherZone(
-  Temporal.DateTime.from('2020-01-09T00:00'),
+  // Note: the logic in this file is calendar-independent
+  Temporal.DateTime.from('2020-01-09T00:00'),  // from string => ISO calendar
   Temporal.TimeZone.from('America/Chicago'),
   Temporal.TimeZone.from('America/Los_Angeles')
 );

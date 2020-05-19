@@ -32,3 +32,5 @@ assert.equal(sameTransition.toString(), nextTransition.toString());
 // No known future DST transitions in a time zone
 const regina = Temporal.TimeZone.from('America/Regina');
 assert.equal(getInstantOfNearestOffsetTransitionToInstant(absolute, regina), null);
+
+// Note: This file deals with only Temporal.Absolute, so it is calendar-independent.
