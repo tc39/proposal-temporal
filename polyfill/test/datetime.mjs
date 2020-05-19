@@ -75,6 +75,9 @@ describe('DateTime', () => {
       it('DateTime.prototype.difference is a Function', () => {
         equal(typeof DateTime.prototype.difference, 'function');
       });
+      it('DateTime.prototype.equals is a Function', () => {
+        equal(typeof DateTime.prototype.equals, 'function');
+      });
       it('DateTime.prototype.inTimeZone is a Function', () => {
         equal(typeof DateTime.prototype.inTimeZone, 'function');
       });
@@ -269,6 +272,16 @@ describe('DateTime', () => {
       throws(() => DateTime.compare('2019-10-29T10:46:38.271986102', dt2), TypeError);
     });
   });
+  describe('DateTime.equals() works', () => {
+    const dt1 = DateTime.from('1976-11-18T15:23:30.123456789');
+    const dt2 = DateTime.from('2019-10-29T10:46:38.271986102');
+    it('equal', () => assert(dt1.equals(dt1)));
+    it('unequal', () => assert(!dt1.equals(dt2)));
+    it("doesn't cast argument", () => {
+      throws(() => dt2.equals({ year: 1976, month: 11, day: 18, hour: 15 }), TypeError);
+      throws(() => dt2.equals('1976-11-18T15:23:30.123456789'), TypeError);
+    });
+  });
   describe('date/time maths', () => {
     const earlier = DateTime.from('1976-11-18T15:23:30.123456789');
     const later = DateTime.from('2019-10-29T10:46:38.271986102');
@@ -276,8 +289,8 @@ describe('DateTime', () => {
       const diff = earlier.difference(later, { largestUnit });
       it(`(${earlier}).difference(${later}, ${largestUnit}) == (${later}).difference(${earlier}, ${largestUnit})`, () =>
         equal(`${later.difference(earlier, { largestUnit })}`, `${diff}`));
-      it(`(${earlier}).plus(${diff}) == (${later})`, () => equal(`${earlier.plus(diff)}`, `${later}`));
-      it(`(${later}).minus(${diff}) == (${earlier})`, () => equal(`${later.minus(diff)}`, `${earlier}`));
+      it(`(${earlier}).plus(${diff}) == (${later})`, () => earlier.plus(diff).equals(later));
+      it(`(${later}).minus(${diff}) == (${earlier})`, () => later.minus(diff).equals(earlier));
     });
   });
   describe('date/time maths: hours overflow', () => {
@@ -376,7 +389,7 @@ describe('DateTime', () => {
       equal(`${DateTime.from('2016-12-31T23:59:60')}`, '2016-12-31T23:59:59');
     });
     it('DateTime.from(number) is converted to string', () =>
-      equal(`${DateTime.from(19761118)}`, `${DateTime.from('19761118')}`));
+      assert(DateTime.from(19761118).equals(DateTime.from('19761118'))));
     describe('Disambiguation', () => {
       const bad = { year: 2019, month: 1, day: 32 };
       it('reject', () => throws(() => DateTime.from(bad, { disambiguation: 'reject' }), RangeError));

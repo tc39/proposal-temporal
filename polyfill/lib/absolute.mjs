@@ -118,6 +118,13 @@ export class Absolute {
     );
     return new Duration(0, 0, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
   }
+  equals(other) {
+    if (!ES.IsTemporalAbsolute(this)) throw new TypeError('invalid receiver');
+    if (!ES.IsTemporalAbsolute(other)) throw new TypeError('invalid Absolute object');
+    const one = GetSlot(this, EPOCHNANOSECONDS);
+    const two = GetSlot(other, EPOCHNANOSECONDS);
+    return bigInt(one).equals(two);
+  }
   toString(temporalTimeZoneLike = 'UTC') {
     if (!ES.IsTemporalAbsolute(this)) throw new TypeError('invalid receiver');
     const timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);

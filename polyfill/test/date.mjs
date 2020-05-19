@@ -57,6 +57,9 @@ describe('Date', () => {
       it('Date.prototype.difference is a Function', () => {
         equal(typeof Date.prototype.difference, 'function');
       });
+      it('Date.prototype.equals is a Function', () => {
+        equal(typeof Date.prototype.equals, 'function');
+      });
       it('Date.prototype.withTime is a Function', () => {
         equal(typeof Date.prototype.withTime, 'function');
       });
@@ -107,7 +110,7 @@ describe('Date', () => {
     it(`Temporal.Date.from(${JSON.stringify(datetime)}) instanceof Temporal.date`, () =>
       assert(Date.from(datetime) instanceof Date));
     it(`Temporal.Date.from(${JSON.stringify(datetime)}) === (${fromed})`, () =>
-      equal(`${Date.from(datetime)}`, `${fromed}`));
+      assert(Date.from(datetime).equals(fromed)));
   });
   describe('.with manipulation', () => {
     const original = new Date(1976, 11, 18);
@@ -373,7 +376,7 @@ describe('Date', () => {
     it('Date.from({}) throws', () => throws(() => Date.from({}), TypeError));
     it('Date.from(required prop undefined) throws', () =>
       throws(() => Date.from({ year: undefined, month: 11, day: 18 }), TypeError));
-    it('Date.from(number) is converted to string', () => equal(`${Date.from(19761118)}`, `${Date.from('19761118')}`));
+    it('Date.from(number) is converted to string', () => Date.from(19761118).equals(Date.from('19761118')));
     it('basic format', () => {
       equal(`${Date.from('19761118')}`, '1976-11-18');
       equal(`${Date.from('+0019761118')}`, '1976-11-18');
@@ -424,6 +427,16 @@ describe('Date', () => {
     it("doesn't cast second argument", () => {
       throws(() => Date.compare(d1, { year: 2019, month: 6, day: 30 }), TypeError);
       throws(() => Date.compare(d1, '2019-06-30'), TypeError);
+    });
+  });
+  describe('Date.equal works', () => {
+    const d1 = Date.from('1976-11-18');
+    const d2 = Date.from('2019-06-30');
+    it('equal', () => assert(d1.equals(d1)));
+    it('unequal', () => assert(!d1.equals(d2)));
+    it("doesn't cast argument", () => {
+      throws(() => d2.equals({ year: 1976, month: 11, day: 18 }), TypeError);
+      throws(() => d2.equals('1976-11-18'), TypeError);
     });
   });
   describe('Min/max range', () => {

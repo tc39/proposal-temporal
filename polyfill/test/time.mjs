@@ -57,6 +57,9 @@ describe('Time', () => {
       it('Time.prototype.difference is a Function', () => {
         equal(typeof Time.prototype.difference, 'function');
       });
+      it('Time.prototype.equals is a Function', () => {
+        equal(typeof Time.prototype.equals, 'function');
+      });
       it('Time.prototype.withDate is a Function', () => {
         equal(typeof Time.prototype.withDate, 'function');
       });
@@ -321,6 +324,16 @@ describe('Time', () => {
         throws(() => Time.compare(t1, '16:34'), TypeError);
       });
     });
+    describe('time.equals() works', () => {
+      const t1 = Time.from('08:44:15.321');
+      const t2 = Time.from('14:23:30.123');
+      it('equal', () => assert(t1.equals(t1)));
+      it('unequal', () => assert(!t1.equals(t2)));
+      it("doesn't cast argument", () => {
+        throws(() => t1.equals('08:44:15.321'), TypeError);
+        throws(() => t1.equals({ hour: 8, minute: 44, second: 15, millisecond: 321 }), TypeError);
+      });
+    });
     describe('time.plus() works', () => {
       const time = new Time(15, 23, 30, 123, 456, 789);
       it(`(${time}).plus({ hours: 16 })`, () => {
@@ -536,7 +549,7 @@ describe('Time', () => {
     it(`Temporal.Time.from(${JSON.stringify(datetime)}) instanceof Temporal.Time`, () =>
       assert(Time.from(datetime) instanceof Time));
     it(`Temporal.Time.from(${JSON.stringify(datetime)}) === ${fromed}`, () =>
-      equal(`${Time.from(datetime)}`, `${fromed}`));
+      assert(Time.from(datetime).equals(fromed)));
 
     const iso = '20:18:32';
     it(`Temporal.Time.from("${iso}") === (${iso})`, () => equal(`${Time.from(iso)}`, iso));

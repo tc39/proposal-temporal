@@ -270,6 +270,27 @@ time.difference(Temporal.Time.from('20:13:20.971398099'))  // => PT34M11.9030518
 Temporal.Time.from('01:00').difference(Temporal.Time.from('23:00'))  // => P2H
 ```
 
+### time.**equals**(_other_: Temporal.Time) : boolean
+
+**Parameters:**
+- `other` (`Temporal.Time`): Another time to compare.
+
+**Returns:** `true` if `time` and `other` are equal, or `false` if not.
+
+Compares two `Temporal.Time` objects for equality.
+
+This function exists because it's not possible to compare using `time == other` or `time === other`, due to ambiguity in the primitive representation and between Temporal types.
+
+If you don't need to know the order in which the two dates occur, then this function may be less typing and more efficient than `Temporal.Time.compare`.
+
+Example usage:
+```javascript
+time = Temporal.Time.from('19:39:09.068346205');
+other = Temporal.Time.from('20:13:20.971398099');
+time.equals(other)  // => false
+time.equals(time)  // => true
+```
+
 ### time.**toString**() : string
 
 **Returns:** a string in the ISO 8601 time format representing `time`.

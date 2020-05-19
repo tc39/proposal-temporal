@@ -37,6 +37,16 @@ export class MonthDay {
     if (!ES.IsTemporalMonthDay(result)) throw new TypeError('invalid result');
     return result;
   }
+  equals(other) {
+    if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
+    if (!ES.IsTemporalMonthDay(other)) throw new TypeError('invalid MonthDay object');
+    for (const slot of [ISO_MONTH, ISO_DAY]) {
+      const val1 = GetSlot(this, slot);
+      const val2 = GetSlot(other, slot);
+      if (val1 !== val2) return false;
+    }
+    return true;
+  }
   toString() {
     if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
     let month = ES.ISODateTimePartString(GetSlot(this, ISO_MONTH));

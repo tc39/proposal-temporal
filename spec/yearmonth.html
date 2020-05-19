@@ -271,6 +271,22 @@
       </emu-alg>
     </emu-clause>
 
+    <emu-clause id="sec-temporal.yearmonth.prototype.equals">
+      <h1>Temporal.YearMonth.prototype.equals ( _other_ )</h1>
+      <p>
+        The `equals` method takes one argument _other_.
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _yearMonth_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
+        1. Perform ? RequireInternalSlot(_other_, [[InitializedTemporalYearMonth]]).
+        1. If _yearMonth_.[[Year]] &ne; _other_.[[Year]], return *false*.
+        1. If _yearMonth_.[[Month]] &ne; _other_.[[Month]], return *false*.
+        1. Return *true*.
+      </emu-alg>
+    </emu-clause>
+
     <emu-clause id="sec-temporal.yearmonth.prototype.tostring">
       <h1>Temporal.YearMonth.prototype.toString ( )</h1>
       <p>

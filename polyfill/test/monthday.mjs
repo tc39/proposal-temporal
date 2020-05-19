@@ -20,6 +20,9 @@ describe('MonthDay', () => {
       equal(typeof MonthDay.prototype, 'object');
     });
     describe('MonthDay.prototype', () => {
+      it('MonthDay.prototype.equals is a Function', () => {
+        equal(typeof MonthDay.prototype.equals, 'function');
+      });
       it('MonthDay.prototype.getFields is a Function', () => {
         equal(typeof MonthDay.prototype.getFields, 'function');
       });
@@ -46,7 +49,7 @@ describe('MonthDay', () => {
       it('MonthDay.from(required prop undefined) throws', () =>
         throws(() => MonthDay.from({ month: undefined, day: 15 }), TypeError));
       it('MonthDay.from(number) is converted to string', () =>
-        equal(`${MonthDay.from(1201)}`, `${MonthDay.from('12-01')}`));
+        assert(MonthDay.from(1201).equals(MonthDay.from('12-01'))));
       it('basic format', () => {
         equal(`${MonthDay.from('1118')}`, '11-18');
       });
@@ -123,6 +126,16 @@ describe('MonthDay', () => {
       equal(`${md.with({ month: 999999 * 12 }, { disambiguation: 'balance' })}`, '12-01');
     });
   });
+  describe('MonthDay.equals()', () => {
+    const md1 = MonthDay.from('01-22');
+    const md2 = MonthDay.from('12-15');
+    it('equal', () => assert(md1.equals(md1)));
+    it('unequal', () => assert(!md1.equals(md2)));
+    it("doesn't cast argument", () => {
+      throws(() => md1.equals('01-22'), TypeError);
+      throws(() => md1.equals({ month: 1, day: 22 }), TypeError);
+    });
+  });
   describe('MonthDay.withYear()', () => {
     const md = MonthDay.from('01-22');
     it('takes a number argument', () => {
@@ -153,11 +166,11 @@ describe('MonthDay', () => {
     });
     it('as input to from()', () => {
       const md2 = MonthDay.from(fields);
-      equal(`${md1}`, `${md2}`);
+      assert(md1.equals(md2));
     });
     it('as input to with()', () => {
       const md2 = MonthDay.from('06-30').with(fields);
-      equal(`${md1}`, `${md2}`);
+      assert(md1.equals(md2));
     });
   });
 });

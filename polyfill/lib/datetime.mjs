@@ -269,6 +269,16 @@ export class DateTime {
     const Duration = GetIntrinsic('%Temporal.Duration%');
     return new Duration(years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
   }
+  equals(other) {
+    if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+    if (!ES.IsTemporalDateTime(other)) throw new TypeError('invalid Date object');
+    for (const slot of [ISO_YEAR, ISO_MONTH, ISO_DAY, HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND]) {
+      const val1 = GetSlot(this, slot);
+      const val2 = GetSlot(other, slot);
+      if (val1 !== val2) return false;
+    }
+    return true;
+  }
   toString() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     let year = ES.ISOYearString(GetSlot(this, ISO_YEAR));

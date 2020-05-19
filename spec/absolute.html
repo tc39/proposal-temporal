@@ -298,6 +298,21 @@
       </emu-alg>
     </emu-clause>
 
+    <emu-clause id="sec-temporal.absolute.prototype.equals">
+      <h1>Temporal.Absolute.prototype.equals ( _other_ )</h1>
+      <p>
+        The `equals` method takes one argument _other_.
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _absolute_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_absolute_, [[InitializedTemporalAbsolute]]).
+        1. Perform ? RequireInternalSlot(_other_, [[InitializedTemporalAbsolute]]).
+        1. If _absolute_.[[Nanoseconds]] &ne; _other_.[[Nanoseconds]], return *false*.
+        1. Return *true*.
+      </emu-alg>
+    </emu-clause>
+
     <emu-clause id="sec-temporal.absolute.prototype.tostring">
       <h1>Temporal.Absolute.prototype.toString ( [ _temporalTimeZoneLike_ ] )</h1>
       <p>

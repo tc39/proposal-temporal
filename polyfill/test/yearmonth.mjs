@@ -23,6 +23,9 @@ describe('YearMonth', () => {
       it('YearMonth.prototype.difference is a Function', () => {
         equal(typeof YearMonth.prototype.difference, 'function');
       });
+      it('YearMonth.prototype.equals is a Function', () => {
+        equal(typeof YearMonth.prototype.equals, 'function');
+      });
       it('YearMonth.prototype.getFields is a Function', () => {
         equal(typeof YearMonth.prototype.getFields, 'function');
       });
@@ -64,7 +67,7 @@ describe('YearMonth', () => {
       it('YearMonth.from(required prop undefined) throws', () =>
         throws(() => YearMonth.from({ year: undefined, month: 6 }), TypeError));
       it('YearMonth.from(number) is converted to string', () =>
-        equal(`${YearMonth.from(201906)}`, `${YearMonth.from('201906')}`));
+        assert(YearMonth.from(201906).equals(YearMonth.from('201906'))));
       it('basic format', () => {
         equal(`${YearMonth.from('197611')}`, '1976-11');
         equal(`${YearMonth.from('+00197611')}`, '1976-11');
@@ -128,14 +131,24 @@ describe('YearMonth', () => {
       throws(() => YearMonth.compare(nov94, '2013-06'), TypeError);
     });
   });
+  describe('YearMonth.equals() works', () => {
+    const nov94 = YearMonth.from('1994-11');
+    const jun13 = YearMonth.from('2013-06');
+    it('equal', () => assert(nov94.equals(nov94)));
+    it('unequal', () => assert(!nov94.equals(jun13)));
+    it("doesn't cast argument", () => {
+      throws(() => nov94.equals({ year: 1994, month: 11 }), TypeError);
+      throws(() => nov94.equals('1994-11'), TypeError);
+    });
+  });
   describe('YearMonth.difference() works', () => {
     const nov94 = YearMonth.from('1994-11');
     const jun13 = YearMonth.from('2013-06');
     const diff = nov94.difference(jun13);
     it(`${nov94}.difference(${jun13}) == ${jun13}.difference(${nov94})`, () =>
       equal(`${diff}`, `${jun13.difference(nov94)}`));
-    it(`${nov94}.plus(${diff}) == ${jun13}`, () => equal(`${nov94.plus(diff)}`, `${jun13}`));
-    it(`${jun13}.minus(${diff}) == ${nov94}`, () => equal(`${jun13.minus(diff)}`, `${nov94}`));
+    it(`${nov94}.plus(${diff}) == ${jun13}`, () => nov94.plus(diff).equals(jun13));
+    it(`${jun13}.minus(${diff}) == ${nov94}`, () => jun13.minus(diff).equals(nov94));
     it("doesn't cast argument", () => {
       throws(() => nov94.difference({ year: 2013, month: 6 }), TypeError);
       throws(() => nov94.difference('2013-06'), TypeError);
