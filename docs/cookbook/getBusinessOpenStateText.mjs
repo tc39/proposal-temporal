@@ -24,9 +24,7 @@ function getBusinessOpenStateText(now, timeZone, businessHours, soonWindow) {
     return Temporal.DateTime.compare(dateTime, start) >= 0 && Temporal.DateTime.compare(dateTime, end) < 0;
   }
 
-  // Since this function explicitly deals with 7-day weeks, we hard-code the ISO calendar
-  const dateTime = now.inTimeZone(timeZone).withCalendar('iso');
-  // Note: .dayOfWeek needs a calendar
+  const dateTime = now.inTimeZone(timeZone);
   const weekday = dateTime.dayOfWeek % 7; // convert to 0-based, for array indexing
 
   // Because of times wrapping around at midnight, we may need to consider

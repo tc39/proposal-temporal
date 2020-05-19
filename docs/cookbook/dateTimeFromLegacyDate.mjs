@@ -7,12 +7,11 @@
  * @returns {Temporal.DateTime} Temporal.DateTime instance
  */
 function getDateTimeFromLegacyDate(legacyDate) {
-  return Temporal.DateTime.from(legacyDate.toISOString());  // from string => ISO calendar
+  return Temporal.DateTime.from(legacyDate.toISOString());
 }
 
 const date = new Date('1970-01-01T00:00:01Z');
 const result = getDateTimeFromLegacyDate(date);
-// .day, .month, and .year require a calendar
 assert.equal(result.day, 1);
 assert.equal(result.month, 1);
 assert.equal(result.year, 1970);

@@ -18,8 +18,7 @@ function getFirstTuesday(queriedMonth) {
   return firstOfMonth.plus({ days: [1, 0, 6, 5, 4, 3, 2][firstOfMonth.dayOfWeek - 1] });
 }
 
-// Note: The logic in this file is calendar-dependent, but an ISO string is used.
-const myMonth = Temporal.YearMonth.from('2020-02');  // from string => ISO calendar
+const myMonth = Temporal.YearMonth.from('2020-02');
 const firstTuesdayOfMonth = getFirstTuesday(myMonth);
 assert.equal(firstTuesdayOfMonth.toString(), '2020-02-04');
 assert.equal(firstTuesdayOfMonth.dayOfWeek, 2);
