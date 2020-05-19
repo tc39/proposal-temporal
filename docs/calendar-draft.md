@@ -458,12 +458,21 @@ console.log("Number of days this month:", yearMonth.daysInMonth);
 
 ### Default Calendar Options: Pros and Cons
 
-| Option | API consistency & predictability | Impact on Temporal call sites | Impact on i18n correctness | Impact on interoperability |
-|---|---|---|---|---|
-| Full ISO (option 1) | 😃 Consistent and predictable | 😃 No changes | ☹️ Programmer needs to know to "opt in" to use the user's calendar preference | 😃 ISO is the industry standard format |
-| No Default (option 2) | 😃 Consistent and predictable | ☹️ All call sites require extra boilerplate | 😃 All operations require an explicit choice | 😃 Explicit choice |
-| Partial ISO (option 3) | 😐 Predictable behavior, but call sites may or may not require an explicit calendar | 🙂 Most* operations work; some require extra boilerplate | 😃 Calendar-sensitive operations require an explicit choice | 😃 I/O operations operate in the ISO calendar space |
-| User Preference (option 4) | ☹️ Consistent API, but unpredictable behavior based on user's or server's location | 😃 No changes | 🙂 Correct on front end, but programmer needs to know to "opt in" on back end | ☹️ Temporal objects may not interop with the ISO calendar |
+Legend:
+
+- 😃 = Strong advantage
+- 🙂 = Mixed advantage
+- 😐 = Surmountable disadvantage
+- ☹️ = Insurmountable disadvantage
+
+| Option | API consistency & predictability | Impact on Temporal call sites | Impact on i18n correctness | Impact on interoperability | Logistics |
+|---|---|---|---|---|---|
+| Full ISO (option 1) | 😃 Consistent and predictable | 😃 No changes | ☹️ Programmer needs to know to "opt in" to use the user's calendar preference | 😃 ISO is the industry standard format | 😃 No changes |
+| No Default (option 2) | 😃 Consistent and predictable | 😐 All call sites require extra boilerplate | 😃 All operations require an explicit choice | 😃 Explicit choice | 🙂 Minimal API changes |
+| Partial ISO (option 3) | 😐 Predictable behavior, but call sites may or may not require an explicit calendar | 🙂 Most* operations work; some require extra boilerplate | 😃 Calendar-sensitive operations require an explicit choice | 😃 I/O operations operate in the ISO calendar space | 🙂 No API changes, but edge cases to hash out |
+| User Preference (option 4) | 😐 Consistent API, but unpredictable behavior based on user's or server's location | 😃 No changes | 🙂 Correct on front end, but programmer needs to know to "opt in" on back end | 😐 Certain operations implicitly use a non-ISO calendar | 🙂 Minimal API changes |
+| New Types (option 5) | 🙂 Consistent, but the new types may increase mental load | 🙂 Most\* operations work; some require extra boilerplate | 😃 Calendar-sensitive operations require an explicit choice | 😃 I/O operations operate in the ISO calendar space | 😐 Lots of new types and API changes |
+| ISO Factories (option 6) | 😐 Unclear whether to use ISO or non-ISO factories | 🙂 Method names at call sites may change | 🙂 Likely to be correct, but users could call the ISO factories incorrectly | 😃 ISO-specific methods for interop | 🙂 Minimal API changes |
 
 \**See https://github.com/tc39/proposal-temporal/issues/240#issuecomment-557726669*
 
