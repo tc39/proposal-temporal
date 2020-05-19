@@ -10,6 +10,8 @@
  * @returns {Temporal.DateTime} Local date and time of next occurrence
  */
 function nextWeeklyOccurrence(now, localTimeZone, weekday, eventTime, eventTimeZone) {
+  // Note: the following line would need a calendar argument, although the operations in
+  // this file are calendar-independent
   const dateTime = now.inTimeZone(eventTimeZone);
   const nextDate = dateTime.getDate().plus({ days: (weekday + 7 - dateTime.dayOfWeek) % 7 });
   let nextOccurrence = nextDate.withTime(eventTime);

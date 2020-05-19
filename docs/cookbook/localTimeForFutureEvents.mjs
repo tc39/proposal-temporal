@@ -30,9 +30,9 @@ const tc39meetings = [
 // need to join:
 const localTimeZone = Temporal.TimeZone.from('Asia/Tokyo');
 const localTimes = tc39meetings.map(({ dateTime, timeZone }) => {
-  return Temporal.DateTime.from(dateTime)
+  return Temporal.DateTime.from(dateTime)  // from string => ISO calendar
     .inTimeZone(timeZone, { disambiguation: 'reject' })
-    .inTimeZone(localTimeZone);
+    .inTimeZone(localTimeZone);  // Note: this line would need a calendar argument
 });
 
 assert.deepEqual(

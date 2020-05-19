@@ -3,10 +3,11 @@
 // tankDataX is an array of Temporal.Absolute, and tankDataY is an array of numbers.
 
 // Show data starting from the most recent midnight in the tank's location (Stockholm)
+// Note: the logic in this file is calendar-independent
 const tankTimeZone = Temporal.TimeZone.from('Europe/Stockholm');
 const tankMidnight = Temporal.now
   .absolute()
-  .inTimeZone(tankTimeZone)
+  .inTimeZone(tankTimeZone)  // this line would need a time zone argument
   .getDate()
   .withTime(Temporal.Time.from('00:00'))
   .inTimeZone(tankTimeZone);

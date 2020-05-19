@@ -1,4 +1,5 @@
-const date = Temporal.Date.from('2020-05-31');
+// Note: The logic in this file is calendar-dependent, but an ISO string is used.
+const date = Temporal.Date.from('2020-05-31');  // from string => ISO calendar
 
 // Same date and time, but in February
 // (and use the last day if the date doesn't exist in February):

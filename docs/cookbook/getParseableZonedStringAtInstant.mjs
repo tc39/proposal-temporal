@@ -17,3 +17,5 @@ const timeZone = Temporal.TimeZone.from('Asia/Seoul');
 const result3 = absoluteTime.toString(timeZone);
 
 assert.equal(result3, '2020-01-03T19:41:51+09:00[Asia/Seoul]');
+
+// Note: This file deals with only Temporal.Absolute, so it is calendar-independent.
