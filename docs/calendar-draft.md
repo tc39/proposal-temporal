@@ -216,11 +216,16 @@ It would in effect render default Temporal.Date (and Temporal.DateTime) with few
 - .daysInMonth
 - .daysInYear
 - .isLeapYear
-- .plus() -- *might* be OK if the programmer requests only time units
-- .minus() -- *might* be OK if the programmer requests only time units
-- .difference() -- *might* be OK if the programmer requests only time units
+- .year
+- .month
+- .day
+- .plus()\*
+- .minus()\*
+- .difference()\*
 - .getYearMonth()
 - .getMonthDay()
+
+\* *We could allow the arithmetic methods to work in Partial ISO if the duration units are days or smaller, with the same semantics as Temporal.Absolute.*
 
 The following methods/getters would still work:
 
@@ -244,6 +249,134 @@ Temporal.Date.from("2019-12-06").withCalendar(request.calendar).weekOfYear;
 ```
 
 The calendar IDs are less clear.  If the partial ISO calendar used ID `"iso"`, then what would the full ISO calendar use?  ID "gregory" ([why not "gregorian"?](https://github.com/tc39/ecma402/issues/212)) is misleading because there are Gregorian calendars that do not all agree on the same rules for things like weeks of the year.  One solution could be to use a nullish ID like `null` or `""` for the partial ISO calendar and `"iso"` for the full ISO calendar.  Alternatively, "iso8601", the identifier defined by CLDR as "Gregorian calendar using the ISO 8601 calendar week rules", could be the identifier for the full ISO calendar.
+
+### Methods of Construction
+
+With all four options, the calendar may be specified at the point where one of the affected Temporal types is constructed.  These methods may have different semantics when it comes to applying the default calendar.
+
+The question of default calendar only affects those methods with an ambiguous default.
+
+#### Methods With Full ISO Always Implied
+
+- Temporal.from(string)
+	- Condition: as long as a calendar ID is able to be in the string (main issue: [#293](https://github.com/tc39/proposal-temporal/issues/293)).
+- new Temporal.XYZ()
+	- The constructor is low-level and feeds the ISO data model directly.
+- HTML input
+	- The HTML5 spec only supports ISO-8601 ([reference](https://html.spec.whatwg.org/multipage/common-microsyntaxes.html#concept-date))
+
+#### Methods With Ambiguous Default
+
+- Temporal.from(fields)
+- Temporal.now
+- Temporal.Absolute.inTimeZone
+
+### Errors That Partial ISO Helps Prevent
+
+As compared to option 1 (always default to Full ISO), the following are examples of programming errors that Partial ISO would help prevent.
+
+These errors are most common in the four regions that use non-ISO calendars as their default: Saudi Arabia, Iran, Afghanistan, and Thailand.  However, they could also manifest if the user has overridden their preferred calendar in browser settings.
+
+For the purposes of illustration, the following examples will use the locale "en-SA" (English in Saudi Arabia) on 2020-05-18.
+
+#### Get this date next month
+
+Buggy output:
+
+	Today is: Ramadan 24, 1441 AH
+	Next month is: Shawwal 25, 1441 AH
+
+Correct output:
+
+	Today is: Ramadan 24, 1441 AH
+	Next month is: Shawwal 24, 1441 AH
+
+Code:
+
+```javascript
+/// BUGGY CODE ///
+const today = Temporal.now.date();
+console.log("Today is:", today.toLocaleString());
+// BUG: Arithmetic in months must take place in the user calendar
+const nextMonth = today.plus({ months: 1 });
+console.log("Next month is: ", nextMonth.toLocaleString());
+
+/// CORRECT CODE ///
+
+const today = Temporal.now.date();
+console.log("Today is:", today.toLocaleString());
+// FIX: Call .withCalendar() before .plus()
+const calendar = navigator.locales[0].getLikelyCalendar();
+const nextMonth = today.withCalendar(calendar).plus({ months: 1 });
+console.log("Next month is: ", nextMonth.toLocaleString());
+```
+
+#### Get a month and a day
+
+Buggy output:
+
+	Today is: Ramadan 24, 1441 AH
+	Is May 18 your birthday?
+
+Correct output:
+
+	Today is: Ramadan 24, 1441 AH
+	Is Ramadan 24 your birthday?
+
+Code:
+
+```javascript
+/// BUGGY CODE ///
+
+const date = Temporal.now.date();
+console.log("Today is:", date.toLocaleString());
+// BUG: The MonthDay needs to be represented in the user calendar; otherwise,
+// toLocaleString must format in the ISO calendar.
+const monthDay = date.getMonthDay();
+console.log(`Is ${monthDay.toLocaleString()} your birthday?`);
+
+/// CORRECT CODE ///
+
+const date = Temporal.now.date();
+console.log("Today is:", date.toLocaleString());
+// FIX: Call .withCalendar() before .getMonthDay()
+const calendar = navigator.locales[0].getLikelyCalendar();
+const monthDay = date.withCalendar(calendar).getMonthDay();
+console.log(`Is ${monthDay.toLocaleString()} your birthday?`);
+```
+
+#### Get a month-related property
+
+Buggy output:
+
+	Today is: Ramadan 24, 1441 AH
+	Number of days this month: 31
+
+Correct output:
+
+	Today is: Ramadan 24, 1441 AH
+	Number of days this month: 30
+
+Code:
+
+```javascript
+/// BUGGY CODE ///
+
+const date = Temporal.now.date();
+// BUG: The YearMonth needs to be represented in the user calendar
+const yearMonth = date.getYearMonth();
+console.log("Today is:", date.toLocaleString());
+console.log("Number of days this month:", yearMonth.daysInMonth);
+
+/// CORRECT CODE ///
+
+const date = Temporal.now.date();
+// FIX: Call .withCalendar() before .getYearMonth()
+const calendar = navigator.locales[0].getLikelyCalendar();
+const yearMonth = date.withCalendar(calendar).getYearMonth();
+console.log("Today is:", date.toLocaleString());
+console.log("Number of days this month:", yearMonth.daysInMonth);
+```
 
 ### Default Calendar Options: Pros and Cons
 
