@@ -226,12 +226,13 @@ It would in effect render default Temporal.Date (and Temporal.DateTime) with few
 - .difference()\*
 - .getYearMonth()
 - .getMonthDay()
+- .with()
 
 \* *We could allow the arithmetic methods to work in Partial ISO if the duration units are days or smaller, with the same semantics as Temporal.Absolute.*
 
 The following methods/getters would still work:
 
-- .with()
+- .inTimeZone()
 - .withTime()
 - .toString()
 - .toLocaleString()
@@ -318,20 +319,24 @@ The following table describes these semantics.  Option 5 is not shown because th
 
 | Method | Option 1 | Option 2 | Option 3 | Option 4 | Option 6 |
 |---|---|---|---|---|---|
-| T.Date.from(string) | Full ISO | Full ISO | Full ISO | Environ. | N/A |
+| T.Date.from(string)\* | Full ISO | Full ISO | Full ISO | Environ. | N/A |
 | T.Date.fromISO(string) | N/A | N/A | N/A | N/A | Full ISO |
-| T.Date.from(fields) | Full ISO | Explicit | Explicit | Explicit | Explicit |
+| T.Date.from(fields)\*\* | Full ISO | Explicit | Explicit | Explicit | Explicit |
 | T.Date.fromISO(fields) | N/A | N/A | N/A | N/A | Full ISO |
 | new T.Date() | Full ISO | Full ISO | Full ISO | Full ISO | Full ISO |
 | T.now.date() | Full ISO | Explicit | Partial ISO | Environ. | Explicit |
 | T.now.isoDate() | N/A | N/A | N/A | N/A | Full ISO |
 | absolute.inTimeZone() | Full ISO | Explicit | Partial ISO | Environ. | Explicit |
 | absolute.inZoneISO() | N/A | N/A | N/A | N/A | Full ISO |
-| HTML input | Full ISO | Full ISO | Full ISO | Full ISO | Full ISO |
+| HTML input\*\*\* | Full ISO | Full ISO | Full ISO | Full ISO | Full ISO |
 
-*Note 1:* from(string) may carry the calendar ID in the string (main issue: [#293](https://github.com/tc39/proposal-temporal/issues/293)).
+Footnotes:
 
-*Note 2:* The HTML5 spec only supports ISO-8601 ([reference](https://html.spec.whatwg.org/multipage/common-microsyntaxes.html#concept-date)).
+\* from(string) may carry the calendar ID in the string (main issue: [#293](https://github.com/tc39/proposal-temporal/issues/293)).
+
+\*\* @ptomato [pointed out](https://github.com/tc39/proposal-temporal/pull/590#discussion_r427527732) that "if you write Temporal.Date.from({ year: 2020, month: 5, day: 19 }) with no calendar specified, then realistically what else do you mean besides the full ISO calendar?"  This row may change to make Full ISO the default for from(fields) pending the results of that discussion.
+
+\*\*\* The HTML5 spec only supports ISO-8601 ([reference](https://html.spec.whatwg.org/multipage/common-microsyntaxes.html#concept-date)).
 
 ### Preventing I18n Errors
 
