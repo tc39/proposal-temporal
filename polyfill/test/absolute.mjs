@@ -22,6 +22,15 @@ describe('Absolute', () => {
     it('Absolute is a Function', () => {
       equal(typeof Absolute, 'function');
     });
+    it('Absolute has a prototype', () => {
+      assert(Absolute.prototype);
+      equal(typeof Absolute.prototype, 'object');
+    });
+    describe('Absolute.prototype', () => {
+      it('Absolute.prototype.equals is a Function', () => {
+        equal(typeof Absolute.prototype.equals, 'function');
+      });
+    });
     it('Absolute.fromEpochSeconds is a Function', () => {
       equal(typeof Absolute.fromEpochSeconds, 'function');
     });
@@ -345,8 +354,8 @@ describe('Absolute', () => {
         equal(`${one}`, '1969-12-15T12:23:45.678900434Z'));
       it(`(${abs}).plus({ days: 10, nanoseconds: 800 }) = ${two}`, () =>
         equal(`${two}`, '1970-01-04T12:23:45.678902034Z'));
-      it(`(${two}).minus({ days: 20, nanoseconds: 1600 }) = ${one}`, () => equal(`${three}`, `${one}`));
-      it(`(${one}).plus( days: 20, nanoseconds: 1600 }) = ${two}`, () => equal(`${four}`, `${two}`));
+      it(`(${two}).minus({ days: 20, nanoseconds: 1600 }) = ${one}`, () => assert(three.equals(one)));
+      it(`(${one}).plus( days: 20, nanoseconds: 1600 }) = ${two}`, () => assert(four.equals(two)));
     });
     it('abs.plus(durationObj)', () => {
       const later = abs.plus(Temporal.Duration.from('P10DT0.000000800S'));
@@ -387,14 +396,27 @@ describe('Absolute', () => {
       throws(() => Absolute.compare({}, abs2), TypeError);
     });
   });
+  describe('Absolute.equals works', () => {
+    const abs1 = Absolute.from('1963-02-13T09:36:29.123456789Z');
+    const abs2 = Absolute.from('1976-11-18T15:23:30.123456789Z');
+    const abs3 = Absolute.from('1981-12-15T14:34:31.987654321Z');
+    it('pre epoch equal', () => assert(abs1.equals(abs1)));
+    it('epoch equal', () => assert(abs2.equals(abs2)));
+    it('cross epoch unequal', () => assert(!abs1.equals(abs2)));
+    it('epoch unequal', () => assert(!abs2.equals(abs3)));
+    it("doesn't cast argument", () => {
+      throws(() => abs1.equals(abs1.getEpochNanoseconds()), TypeError);
+      throws(() => abs1.equals({}), TypeError);
+    });
+  });
   describe('Absolute.difference works', () => {
     const earlier = Absolute.from('1976-11-18T15:23:30.123456789Z');
     const later = Absolute.from('2019-10-29T10:46:38.271986102Z');
     const diff = earlier.difference(later);
     it(`(${earlier}).difference(${later}) == (${later}).difference(${earlier})`, () =>
       equal(`${later.difference(earlier)}`, `${diff}`));
-    it(`(${earlier}).plus(${diff}) == (${later})`, () => equal(`${earlier.plus(diff)}`, `${later}`));
-    it(`(${later}).minus(${diff}) == (${earlier})`, () => equal(`${later.minus(diff)}`, `${earlier}`));
+    it(`(${earlier}).plus(${diff}) == (${later})`, () => assert(earlier.plus(diff).equals(later)));
+    it(`(${later}).minus(${diff}) == (${earlier})`, () => assert(later.minus(diff).equals(earlier)));
     it("doesn't cast argument", () => {
       throws(() => earlier.difference(later.toString()), TypeError);
       throws(() => earlier.difference({}), TypeError);

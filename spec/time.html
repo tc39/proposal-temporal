@@ -305,6 +305,26 @@
       </emu-alg>
     </emu-clause>
 
+    <emu-clause id="sec-temporal.time.prototype.equals">
+      <h1>Temporal.Time.prototype.equals ( _other_ )</h1>
+      <p>
+        The `equals` method takes one argument _other_.
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _temporalTime_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_temporalTime_, [[InitializedTemporalTime]]).
+        1. Perform ? RequireInternalSlot(_other_, [[InitializedTemporalTime]]).
+        1. If _temporalTime_.[[Hour]] &ne; _other_.[[Hour]], return *false*.
+        1. If _temporalTime_.[[Minute]] &ne; _other_.[[Minute]], return *false*.
+        1. If _temporalTime_.[[Second]] &ne; _other_.[[Second]], return *false*.
+        1. If _temporalTime_.[[Millisecond]] &ne; _other_.[[Millisecond]], return *false*.
+        1. If _temporalTime_.[[Microsecond]] &ne; _other_.[[Microsecond]], return *false*.
+        1. If _temporalTime_.[[Nanosecond]] &ne; _other_.[[Nanosecond]], return *false*.
+        1. Return *true*.
+      </emu-alg>
+    </emu-clause>
+
     <emu-clause id="sec-temporal.time.prototype.withdate">
       <h1>Temporal.Time.prototype.withDate ( _temporalDate_ )</h1>
       <p>

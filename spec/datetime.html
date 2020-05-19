@@ -447,6 +447,29 @@
       </emu-alg>
     </emu-clause>
 
+    <emu-clause id="sec-temporal.datetime.prototype.equals">
+      <h1>Temporal.DateTime.prototype.equals ( _other_ )</h1>
+      <p>
+        The `equals` method takes one argument _other_.
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _dateTime_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
+        1. Perform ? RequireInternalSlot(_other_, [[InitializedTemporalDateTime]]).
+        1. If _dateTime_.[[Year]] &ne; _other_.[[Year]], return *false*.
+        1. If _dateTime_.[[Month]] &ne; _other_.[[Month]], return *false*.
+        1. If _dateTime_.[[Day]] &ne; _other_.[[Day]], return *false*.
+        1. If _dateTime_.[[Hour]] &ne; _other_.[[Hour]], return *false*.
+        1. If _dateTime_.[[Minute]] &ne; _other_.[[Minute]], return *false*.
+        1. If _dateTime_.[[Second]] &ne; _other_.[[Second]], return *false*.
+        1. If _dateTime_.[[Millisecond]] &ne; _other_.[[Millisecond]], return *false*.
+        1. If _dateTime_.[[Microsecond]] &ne; _other_.[[Microsecond]], return *false*.
+        1. If _dateTime_.[[Nanosecond]] &ne; _other_.[[Nanosecond]], return *false*.
+        1. Return *true*.
+      </emu-alg>
+    </emu-clause>
+
     <emu-clause id="sec-temporal.datetime.prototype.tostring">
       <h1>Temporal.DateTime.prototype.toString ( )</h1>
       <p>

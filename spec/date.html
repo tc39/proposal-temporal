@@ -360,6 +360,23 @@
       </emu-alg>
     </emu-clause>
 
+    <emu-clause id="sec-temporal.date.prototype.equals">
+      <h1>Temporal.Date.prototype.equals ( _other_ )</h1>
+      <p>
+        The `equals` method takes one argument _other_.
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _temporalDate_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_temporalDate_, [[InitializedTemporalDate]]).
+        1. Perform ? RequireInternalSlot(_other_, [[InitializedTemporalDate]]).
+        1. If _temporalDate_.[[Year]] &ne; _other_.[[Year]], return *false*.
+        1. If _temporalDate_.[[Month]] &ne; _other_.[[Month]], return *false*.
+        1. If _temporalDate_.[[Day]] &ne; _other_.[[Day]], return *false*.
+        1. Return *true*.
+      </emu-alg>
+    </emu-clause>
+
     <emu-clause id="sec-temporal.date.prototype.withtime">
       <h1>Temporal.Date.prototype.withTime ( _temporalTime_ )</h1>
       <p>

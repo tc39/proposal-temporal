@@ -191,6 +191,16 @@ export class Time {
     const Duration = GetIntrinsic('%Temporal.Duration%');
     return new Duration(0, 0, 0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
   }
+  equals(other) {
+    if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
+    if (!ES.IsTemporalTime(other)) throw new TypeError('invalid Time object');
+    for (const slot of [HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND]) {
+      const val1 = GetSlot(this, slot);
+      const val2 = GetSlot(other, slot);
+      if (val1 !== val2) return false;
+    }
+    return true;
+  }
 
   toString() {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');

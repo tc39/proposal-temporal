@@ -112,6 +112,16 @@ export class YearMonth {
     const Duration = GetIntrinsic('%Temporal.Duration%');
     return new Duration(years, months);
   }
+  equals(other) {
+    if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
+    if (!ES.IsTemporalYearMonth(other)) throw new TypeError('invalid YearMonth object');
+    for (const slot of [ISO_YEAR, ISO_MONTH]) {
+      const val1 = GetSlot(this, slot);
+      const val2 = GetSlot(other, slot);
+      if (val1 !== val2) return false;
+    }
+    return true;
+  }
   toString() {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
     let year = ES.ISOYearString(GetSlot(this, ISO_YEAR));
