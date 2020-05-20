@@ -381,6 +381,22 @@ describe('ECMAScript', () => {
       it(`${nanos} @ ${zone}`, () => deepEqual(ES.GetTimeZoneDateTimeParts(nanos, zone), expected));
     }
   });
+
+  describe('GetFormatterParts', () => {
+    // https://github.com/tc39/proposal-temporal/issues/575
+    test(1589670000000, GetSlot(ES.ToTemporalTimeZone('Europe/London'), IDENTIFIER), [
+      { type: 'year', value: 2020 },
+      { type: 'month', value: 5 },
+      { type: 'day', value: 17 },
+      { type: 'hour', value: 0 },
+      { type: 'minute', value: 0 },
+      { type: 'second', value: 0 }
+    ]);
+
+    function test(nanos, zone, expected) {
+      it(`${nanos} @ ${zone}`, () => deepEqual(ES.GetFormatterParts(zone, nanos), expected));
+    }
+  });
 });
 
 import { normalize } from 'path';
