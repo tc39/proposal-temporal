@@ -13,6 +13,7 @@ Provides standard objects and functions for working with dates and times.
 -   Shane Carr ([@sffc](https://github.com/sffc))
 -   Ujjwal Sharma ([@ryzokuken](https://github.com/ryzokuken))
 -   Philip Chimento ([@ptomato](https://github.com/ptomato))
+-   Jason Williams ([@jasonwilliams](https://github.com/jasonwilliams))
 
 ## Status
 
