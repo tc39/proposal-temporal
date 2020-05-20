@@ -89,7 +89,7 @@
 <h3 id="temporaldate-internal-slots"><a class="heading-link" href="#temporaldate-internal-slots"></a>Temporal.Date internal slots</h3><p>Main issue: <a href="https://github.com/tc39/proposal-temporal/issues/290">https://github.com/tc39/proposal-temporal/issues/290</a></p>
 <p>Temporal.Date currently has three internal slots: year, month, and day. (An &quot;internal slot&quot; refers to actual data, as opposed to &quot;properties&quot;, which could be computed.)  In this proposal, those slots are renamed to <code>[[IsoYear]]</code>, <code>[[IsoMonth]]</code>, and <code>[[IsoDay]]</code>, and an additional <code>[[Calendar]]</code> slot is added.  The calendar slot contains an object implementing the Temporal.Calendar interface, described below.</p>
 <p>No matter which calendar system is being represented, the <em>data model</em> in Temporal.Date remains indexed in the ISO calendar.  So, for instance, if you wanted to represent the Hebrew date 5 Nisan 5780, the data model would be 2020-03-30, and the calendar would be responsible for mapping that into the corresponding Hebrew fields, as described further down in this document.</p>
-<p>This data model makes the simple assumption that the concept of a &quot;day&quot; is a solar day (main issues: <a href="https://github.com/tc39/proposal-temporal/issues/390">#390</a>, <a href="https://github.com/tc39/proposal-temporal/issues/389">#389</a>).  Most or all modern-use calendars, even those with lunar month cycles, use a solar day (based on sunrise) instead of a lunar day (based of moonrise).  For calendars that do use a lunar day, such as the Hawaiian Moon Calendar, a Temporal.DateTime can be used instead of Temporal.Date when the distinction is important.</p>
+<p>This data model makes the simple assumption that the concept of a &quot;day&quot; is a solar day (main issues: <a href="https://github.com/tc39/proposal-temporal/issues/390">#390</a>, <a href="https://github.com/tc39/proposal-temporal/issues/389">#389</a>).  Most or all modern-use calendars, even those with lunar month cycles, use a solar day, which is based on the time it takes for the Earth to complete one rotation relative to the Sun.  Some historical calendars, such as the Hawaiian Moon Calendar, define a day as the time it takes for the Earth to complete one rotation relative to the moon (instead of the Sun), which is slightly shorter on average.  For calendars that use a lunar day, a Temporal.DateTime can be used instead of Temporal.Date when the distinction is important.</p>
 <h3 id="temporaldatetime-and-temporaltime-internal-slots"><a class="heading-link" href="#temporaldatetime-and-temporaltime-internal-slots"></a>Temporal.DateTime and Temporal.Time internal slots</h3><p>As with Temporal.Date, all of these types will gain a <code>[[Calendar]]</code> slot, and year, month, and day will be renamed <code>[[IsoYear]]</code>, <code>[[IsoMonth]]</code>, and <code>[[IsoDay]]</code>.</p>
 <h3 id="temporalyearmonth-and-temporalmonthday-internal-slots"><a class="heading-link" href="#temporalyearmonth-and-temporalmonthday-internal-slots"></a>Temporal.YearMonth and Temporal.MonthDay internal slots</h3><p>Main issue: <a href="https://github.com/tc39/proposal-temporal/issues/391">https://github.com/tc39/proposal-temporal/issues/391</a></p>
 <p>For reasons explained above, using the ISO calendar as the internal data model has many advantages.  However, there are several challenges for these two &quot;incomplete&quot; types: lunar months don&#39;t line up with solar months, and not every lunar month occurs in every solar year.  After discussing several data model alternatives, we reached the conclusion that the simplest data model for Temporal.YearMonth and Temporal.MonthDay is to make it share the same data model as Temporal.Date, with the following slots:</p>
@@ -221,12 +221,14 @@
 <p>This is a work in progress, and this document will be updated once we reach consensus on #403.</p>
 <h2 id="default-calendar-1">Default Calendar</h2>
 <p>Main issue: <a href="https://github.com/tc39/proposal-temporal/issues/292">https://github.com/tc39/proposal-temporal/issues/292</a></p>
-<p>An open question is what the behavior should be if the programmer does not specify a calendar, or if we should require the programmer to always specify a calendar.  Four choices are on the table:</p>
+<p>An open question is what the behavior should be if the programmer does not specify a calendar, or if we should require the programmer to always specify a calendar.  Six choices are on the table:</p>
 <ol>
 <li>Default to full ISO (Gregorian) calendar.</li>
 <li>Require the user to explicitly specify the calendar.</li>
 <li>Default to a partial ISO calendar (explained below).</li>
 <li>Default to <code>Intl.defaultCalendar</code> (a new symbol), or ISO if that field doesn&#39;t exist.</li>
+<li>Create separate types for when a calendar is not present (explained below).</li>
+<li>Add factory methods for ISO and non-ISO (explained below).</li>
 </ol>
 <h3 id="partial-iso-calendar-option-3"><a class="heading-link" href="#partial-iso-calendar-option-3"></a>Partial ISO Calendar (Option 3)</h3><p>A partial ISO calendar would be one implemented as follows:</p>
 <pre class="language-javascript"><code class="language-javascript"><span class="token keyword">const</span> PartialIsoCalendar <span class="token operator">=</span> <span class="token punctuation">{</span>
@@ -250,15 +252,20 @@
 <li>.daysInMonth</li>
 <li>.daysInYear</li>
 <li>.isLeapYear</li>
-<li>.plus() -- <em>might</em> be OK if the programmer requests only time units</li>
-<li>.minus() -- <em>might</em> be OK if the programmer requests only time units</li>
-<li>.difference() -- <em>might</em> be OK if the programmer requests only time units</li>
+<li>.year</li>
+<li>.month</li>
+<li>.day</li>
+<li>.plus()*</li>
+<li>.minus()*</li>
+<li>.difference()*</li>
 <li>.getYearMonth()</li>
 <li>.getMonthDay()</li>
+<li>.with()</li>
 </ul>
+<p>* <em>We could allow the arithmetic methods to work in Partial ISO if the duration units are days or smaller, with the same semantics as Temporal.Absolute.</em></p>
 <p>The following methods/getters would still work:</p>
 <ul>
-<li>.with()</li>
+<li>.inTimeZone()</li>
 <li>.withTime()</li>
 <li>.toString()</li>
 <li>.toLocaleString()</li>
@@ -272,43 +279,300 @@ Temporal<span class="token punctuation">.</span>Date<span class="token punctuati
 <span class="token comment">// Use a calendar from another source:</span>
 Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">"2019-12-06"</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">withCalendar</span><span class="token punctuation">(</span>Intl<span class="token punctuation">.</span>defaultCalendar<span class="token punctuation">)</span><span class="token punctuation">.</span>weekOfYear<span class="token punctuation">;</span>
 Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">"2019-12-06"</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">withCalendar</span><span class="token punctuation">(</span>request<span class="token punctuation">.</span>calendar<span class="token punctuation">)</span><span class="token punctuation">.</span>weekOfYear<span class="token punctuation">;</span></code></pre><p>The calendar IDs are less clear.  If the partial ISO calendar used ID <code>&quot;iso&quot;</code>, then what would the full ISO calendar use?  ID &quot;gregory&quot; (<a href="https://github.com/tc39/ecma402/issues/212">why not &quot;gregorian&quot;?</a>) is misleading because there are Gregorian calendars that do not all agree on the same rules for things like weeks of the year.  One solution could be to use a nullish ID like <code>null</code> or <code>&quot;&quot;</code> for the partial ISO calendar and <code>&quot;iso&quot;</code> for the full ISO calendar.  Alternatively, &quot;iso8601&quot;, the identifier defined by CLDR as &quot;Gregorian calendar using the ISO 8601 calendar week rules&quot;, could be the identifier for the full ISO calendar.</p>
-<h3 id="default-calendar-options-pros-and-cons"><a class="heading-link" href="#default-calendar-options-pros-and-cons"></a>Default Calendar Options: Pros and Cons</h3><table>
+<h3 id="new-non-calendar-types-option-5"><a class="heading-link" href="#new-non-calendar-types-option-5"></a>New Non-Calendar Types (Option 5)</h3><p>In this option, objects without a calendar would have their own type, and calendar-specific types would be used only when calendar-dependent functionality is required.  This is similar in spirit to Partial ISO (Option 3), except that new types are used, rather than simply a null calendar on the existing type.</p>
+<p>For example, name bikeshedding aside, <code>Temporal.ZonedAbsolute</code> (main issue: <a href="https://github.com/tc39/proposal-temporal/issues/569">#569</a>) could become an intermediate type between <code>Temporal.Absolute</code> and <code>Temporal.DateTime</code> that does not include arithmetic or calendar-dependent functionality.  A calendar would be necessary when converting from <code>Temporal.ZonedAbsolute</code> into <code>Temporal.DateTime</code>.</p>
+<ul>
+<li><code>Temporal.Absolute</code> = a point in time, not specific to a certain place.<ul>
+<li>Data Model: [[EpochNanoseconds]]</li>
+</ul>
+</li>
+<li><code>Temporal.ZonedAbsolute</code> = a point in time at a place on Earth.<ul>
+<li>Data Model: [[EpochNanoseconds]] + [[TimeZone]]</li>
+</ul>
+</li>
+<li><code>Temporal.DateTime</code> = a wall clock time, not specific to a certain place.<ul>
+<li>Data Model: [[Calendar]] + ISO fields</li>
+</ul>
+</li>
+</ul>
+<p>Conversion methods between these three types could be:</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Absolute &lt;=> ZonedAbsolute</span>
+Temporal<span class="token punctuation">.</span><span class="token class-name">Absolute</span><span class="token punctuation">.</span>prototype<span class="token punctuation">.</span><span class="token function">withZone</span><span class="token punctuation">(</span>tz<span class="token punctuation">)</span> <span class="token operator">:</span> Temporal<span class="token punctuation">.</span>ZonedAbsolute<span class="token punctuation">;</span>
+Temporal<span class="token punctuation">.</span><span class="token class-name">ZonedAbsolute</span><span class="token punctuation">.</span>prototype<span class="token punctuation">.</span><span class="token function">toAbsolute</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Absolute<span class="token punctuation">;</span>
+
+<span class="token comment">// ZonedAbsolute &lt;=> DateTime</span>
+Temporal<span class="token punctuation">.</span><span class="token class-name">ZonedAbsolute</span><span class="token punctuation">.</span>prototype<span class="token punctuation">.</span><span class="token function">withCalendar</span><span class="token punctuation">(</span>cal<span class="token punctuation">)</span> <span class="token operator">:</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">;</span>
+Temporal<span class="token punctuation">.</span><span class="token class-name">DateTime</span><span class="token punctuation">.</span>prototype<span class="token punctuation">.</span><span class="token function">withZone</span><span class="token punctuation">(</span>tz<span class="token punctuation">)</span> <span class="token operator">:</span> Temporal<span class="token punctuation">.</span>ZonedAbsolute<span class="token punctuation">;</span></code></pre><p>We could add a similar intermediate type for dates without times.  Name bikeshedding aside, this second new type could be <code>Temporal.AbstractDate</code>.  The semantics would be:</p>
+<ul>
+<li><code>Temporal.AbstractDate</code> = a solar day at a place on Earth<ul>
+<li>Data Model: [[EpochDays]] + [[TimeZone]]</li>
+</ul>
+</li>
+<li><code>Temporal.Date</code> = a wall clock date, not specific to a certain place.<ul>
+<li>Data Model: [[Calendar]] + ISO fields</li>
+</ul>
+</li>
+</ul>
+<p>Conversion methods:</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">// ZonedAbsolute &lt;=> AbstractDate</span>
+Temporal<span class="token punctuation">.</span><span class="token class-name">ZonedAbsolute</span><span class="token punctuation">.</span>prototype<span class="token punctuation">.</span><span class="token function">getDate</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">:</span> Temporal<span class="token punctuation">.</span>AbstractDate<span class="token punctuation">;</span>
+Temporal<span class="token punctuation">.</span><span class="token class-name">AbstractDate</span><span class="token punctuation">.</span>prototype<span class="token punctuation">.</span><span class="token function">withTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">:</span> Temporal<span class="token punctuation">.</span>ZonedAbsolute<span class="token punctuation">;</span>
+
+<span class="token comment">// AbstractDate &lt;=> Date</span>
+Temporal<span class="token punctuation">.</span><span class="token class-name">AbstractDate</span><span class="token punctuation">.</span>prototype<span class="token punctuation">.</span><span class="token function">withCalendar</span><span class="token punctuation">(</span>cal<span class="token punctuation">)</span> <span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">;</span>
+Temporal<span class="token punctuation">.</span><span class="token class-name">Date</span><span class="token punctuation">.</span>prototype<span class="token punctuation">.</span><span class="token function">withZone</span><span class="token punctuation">(</span>tz<span class="token punctuation">)</span> <span class="token operator">:</span> Temporal<span class="token punctuation">.</span>AbstractDate<span class="token punctuation">;</span>
+
+<span class="token comment">// Date &lt;=> DateTime</span>
+Temporal<span class="token punctuation">.</span><span class="token class-name">DateTime</span><span class="token punctuation">.</span>prototype<span class="token punctuation">.</span><span class="token function">getDate</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">;</span>
+Temporal<span class="token punctuation">.</span><span class="token class-name">Date</span><span class="token punctuation">.</span>prototype<span class="token punctuation">.</span><span class="token function">withTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">:</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">;</span></code></pre><p>An additional type, <code>Temporal.EpochDays</code>, could be added as an analog of <code>Temporal.Absolute</code> but with days instead of nanoseconds since epoch.</p>
+<p>Here is an illustrated version of this option:</p>
+<p><img src="assets/new-data-types.svg" alt="Potential Temporal Data Types"></p>
+<h3 id="new-factory-methods-option-6"><a class="heading-link" href="#new-factory-methods-option-6"></a>New Factory Methods (Option 6)</h3><p>With this option, separate methods would indicate whether the Full ISO calendar should be used versus a potentially non-ISO calendar.  For example, <code>Temporal.fromISO</code> would be added to supplement <code>Temporal.from</code>.  See the full table below.</p>
+<h3 id="methods-of-construction"><a class="heading-link" href="#methods-of-construction"></a>Methods of Construction</h3><p>The main way the six options differ is by how and when a calendar is specified when creating calendar-sensitive Temporal objects.</p>
+<p>The following table describes these semantics.  Option 5 is not shown because the constructors will be different than in options 1-4 and 6.</p>
+<table>
 <thead>
 <tr>
-<th>Description</th>
-<th>Full ISO (option 1)</th>
-<th>No Default (option 2)</th>
-<th>Partial ISO (option 3)</th>
-<th>User Preference (option 4)</th>
+<th>Method</th>
+<th>Option 1</th>
+<th>Option 2</th>
+<th>Option 3</th>
+<th>Option 4</th>
+<th>Option 6</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>API consistency &amp; predictability</td>
-<td>😃 Consistent and predictable</td>
-<td>😃 Consistent and predictable</td>
-<td>😐 Predictable behavior, but call sites may or may not require an explicit calendar</td>
-<td>☹️ Consistent API, but unpredictable behavior based on user&#39;s or server&#39;s location</td>
+<td>T.Date.from(string)*</td>
+<td>Full ISO</td>
+<td>Full ISO</td>
+<td>Full ISO</td>
+<td>Environ.</td>
+<td>N/A</td>
 </tr>
 <tr>
-<td>Impact on Temporal call sites</td>
-<td>😃 No changes</td>
-<td>☹️ All call sites require extra boilerplate</td>
-<td>🙂 Most* operations work; some require extra boilerplate</td>
-<td>😃 No changes</td>
+<td>T.Date.fromISO(string)</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>Full ISO</td>
 </tr>
 <tr>
-<td>Impact on i18n correctness</td>
+<td>T.Date.from(fields)**</td>
+<td>Full ISO</td>
+<td>Explicit</td>
+<td>Explicit</td>
+<td>Explicit</td>
+<td>Explicit</td>
+</tr>
+<tr>
+<td>T.Date.fromISO(fields)</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>Full ISO</td>
+</tr>
+<tr>
+<td>new T.Date()</td>
+<td>Full ISO</td>
+<td>Full ISO</td>
+<td>Full ISO</td>
+<td>Full ISO</td>
+<td>Full ISO</td>
+</tr>
+<tr>
+<td>T.now.date()</td>
+<td>Full ISO</td>
+<td>Explicit</td>
+<td>Partial ISO</td>
+<td>Environ.</td>
+<td>Explicit</td>
+</tr>
+<tr>
+<td>T.now.isoDate()</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>Full ISO</td>
+</tr>
+<tr>
+<td>absolute.inTimeZone()</td>
+<td>Full ISO</td>
+<td>Explicit</td>
+<td>Partial ISO</td>
+<td>Environ.</td>
+<td>Explicit</td>
+</tr>
+<tr>
+<td>absolute.inZoneISO()</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>Full ISO</td>
+</tr>
+<tr>
+<td>HTML input***</td>
+<td>Full ISO</td>
+<td>Full ISO</td>
+<td>Full ISO</td>
+<td>Full ISO</td>
+<td>Full ISO</td>
+</tr>
+</tbody></table>
+<p>Footnotes:</p>
+<p>* from(string) may carry the calendar ID in the string (main issue: <a href="https://github.com/tc39/proposal-temporal/issues/293">#293</a>).</p>
+<p>** @ptomato <a href="https://github.com/tc39/proposal-temporal/pull/590#discussion_r427527732">pointed out</a> that &quot;if you write Temporal.Date.from({ year: 2020, month: 5, day: 19 }) with no calendar specified, then realistically what else do you mean besides the full ISO calendar?&quot;  This row may change to make Full ISO the default for from(fields) pending the results of that discussion.</p>
+<p>*** The HTML5 spec only supports ISO-8601 (<a href="https://html.spec.whatwg.org/multipage/common-microsyntaxes.html#concept-date">reference</a>).</p>
+<h3 id="preventing-i18n-errors"><a class="heading-link" href="#preventing-i18n-errors"></a>Preventing I18n Errors</h3><p>As compared to option 1 (always default to Full ISO), the following are examples of programming errors that Partial ISO would help prevent.</p>
+<p>These errors are most common in the four regions that use non-ISO calendars as their default: Saudi Arabia, Iran, Afghanistan, and Thailand.  However, they could also manifest if the user has overridden their preferred calendar in browser settings.</p>
+<p>For the purposes of illustration, the following examples will use the locale &quot;en-SA&quot; (English in Saudi Arabia) on 2020-05-18.</p>
+<h4 id="get-this-date-next-month-1">Get this date next month</h4>
+<p>Buggy output:</p>
+<pre><code>Today is: Ramadan 24, 1441 AH
+Next month is: Shawwal 25, 1441 AH</code></pre><p>Correct output:</p>
+<pre><code>Today is: Ramadan 24, 1441 AH
+Next month is: Shawwal 24, 1441 AH</code></pre><p>Code:</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">/// Options 1 and 4: calendar implicit</span>
+<span class="token keyword">const</span> today <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">date</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"Today is:"</span><span class="token punctuation">,</span> today<span class="token punctuation">.</span><span class="token function">toLocaleString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// OPTION 1 BUG:</span>
+<span class="token comment">// Arithmetic in months must take place in the user calendar</span>
+<span class="token keyword">const</span> nextMonth <span class="token operator">=</span> today<span class="token punctuation">.</span><span class="token function">plus</span><span class="token punctuation">(</span><span class="token punctuation">{</span> months<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"Next month is: "</span><span class="token punctuation">,</span> nextMonth<span class="token punctuation">.</span><span class="token function">toLocaleString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">/// Options 2 and 6: calendar in factory method</span>
+<span class="token keyword">const</span> calendar <span class="token operator">=</span> navigator<span class="token punctuation">.</span>locales<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">getLikelyCalendar</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> today <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">date</span><span class="token punctuation">(</span>calendar<span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"Today is:"</span><span class="token punctuation">,</span> today<span class="token punctuation">.</span><span class="token function">toLocaleString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> nextMonth <span class="token operator">=</span> today<span class="token punctuation">.</span><span class="token function">plus</span><span class="token punctuation">(</span><span class="token punctuation">{</span> months<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"Next month is: "</span><span class="token punctuation">,</span> nextMonth<span class="token punctuation">.</span><span class="token function">toLocaleString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">/// Options 3 and 5: calendar only when needed</span>
+<span class="token keyword">const</span> today <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">date</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"Today is:"</span><span class="token punctuation">,</span> today<span class="token punctuation">.</span><span class="token function">toLocaleString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> calendar <span class="token operator">=</span> navigator<span class="token punctuation">.</span>locales<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">getLikelyCalendar</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> nextMonth <span class="token operator">=</span> today<span class="token punctuation">.</span><span class="token function">withCalendar</span><span class="token punctuation">(</span>calendar<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">plus</span><span class="token punctuation">(</span><span class="token punctuation">{</span> months<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"Next month is: "</span><span class="token punctuation">,</span> nextMonth<span class="token punctuation">.</span><span class="token function">toLocaleString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre><h4 id="get-a-month-and-a-day-1">Get a month and a day</h4>
+<p>Buggy output:</p>
+<pre><code>Today is: Ramadan 24, 1441 AH
+Is May 18 your birthday?</code></pre><p>Correct output:</p>
+<pre><code>Today is: Ramadan 24, 1441 AH
+Is Ramadan 24 your birthday?</code></pre><p>Code:</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">/// Options 1 and 4: calendar implicit</span>
+<span class="token keyword">const</span> date <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">date</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"Today is:"</span><span class="token punctuation">,</span> date<span class="token punctuation">.</span><span class="token function">toLocaleString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// OPTION 1 BUG:</span>
+<span class="token comment">// The MonthDay needs to be represented in the user calendar; otherwise,</span>
+<span class="token comment">// toLocaleString must format in the ISO calendar.</span>
+<span class="token keyword">const</span> monthDay <span class="token operator">=</span> date<span class="token punctuation">.</span><span class="token function">getMonthDay</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">Is </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>monthDay<span class="token punctuation">.</span><span class="token function">toLocaleString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token string"> your birthday?</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">/// Options 2 and 6: calendar in factory method</span>
+<span class="token keyword">const</span> calendar <span class="token operator">=</span> navigator<span class="token punctuation">.</span>locales<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">getLikelyCalendar</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> date <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">date</span><span class="token punctuation">(</span>calendar<span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"Today is:"</span><span class="token punctuation">,</span> date<span class="token punctuation">.</span><span class="token function">toLocaleString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> monthDay <span class="token operator">=</span> date<span class="token punctuation">.</span><span class="token function">getMonthDay</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">Is </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>monthDay<span class="token punctuation">.</span><span class="token function">toLocaleString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token string"> your birthday?</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">/// Options 3 and 5: calendar only when needed</span>
+<span class="token keyword">const</span> date <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">date</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"Today is:"</span><span class="token punctuation">,</span> date<span class="token punctuation">.</span><span class="token function">toLocaleString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> calendar <span class="token operator">=</span> navigator<span class="token punctuation">.</span>locales<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">getLikelyCalendar</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> monthDay <span class="token operator">=</span> date<span class="token punctuation">.</span><span class="token function">withCalendar</span><span class="token punctuation">(</span>calendar<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getMonthDay</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">Is </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>monthDay<span class="token punctuation">.</span><span class="token function">toLocaleString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token string"> your birthday?</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre><h4 id="get-a-month-related-property-1">Get a month-related property</h4>
+<p>Buggy output:</p>
+<pre><code>Today is: Ramadan 24, 1441 AH
+Number of days this month: 31</code></pre><p>Correct output:</p>
+<pre><code>Today is: Ramadan 24, 1441 AH
+Number of days this month: 30</code></pre><p>Code:</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">/// Options 1 and 4: calendar implicit</span>
+<span class="token keyword">const</span> date <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">date</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// OPTION 1 BUG:</span>
+<span class="token comment">// The YearMonth needs to be represented in the user calendar</span>
+<span class="token keyword">const</span> yearMonth <span class="token operator">=</span> date<span class="token punctuation">.</span><span class="token function">getYearMonth</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"Today is:"</span><span class="token punctuation">,</span> date<span class="token punctuation">.</span><span class="token function">toLocaleString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"Number of days this month:"</span><span class="token punctuation">,</span> yearMonth<span class="token punctuation">.</span>daysInMonth<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">/// Options 2 and 6: calendar in factory method</span>
+<span class="token keyword">const</span> calendar <span class="token operator">=</span> navigator<span class="token punctuation">.</span>locales<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">getLikelyCalendar</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> date <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">date</span><span class="token punctuation">(</span>calendar<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> yearMonth <span class="token operator">=</span> date<span class="token punctuation">.</span><span class="token function">getYearMonth</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"Today is:"</span><span class="token punctuation">,</span> date<span class="token punctuation">.</span><span class="token function">toLocaleString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"Number of days this month:"</span><span class="token punctuation">,</span> yearMonth<span class="token punctuation">.</span>daysInMonth<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">/// Options 3 and 5: calendar only when needed</span>
+<span class="token keyword">const</span> date <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">date</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> calendar <span class="token operator">=</span> navigator<span class="token punctuation">.</span>locales<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">getLikelyCalendar</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> yearMonth <span class="token operator">=</span> date<span class="token punctuation">.</span><span class="token function">withCalendar</span><span class="token punctuation">(</span>calendar<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getYearMonth</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"Today is:"</span><span class="token punctuation">,</span> date<span class="token punctuation">.</span><span class="token function">toLocaleString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"Number of days this month:"</span><span class="token punctuation">,</span> yearMonth<span class="token punctuation">.</span>daysInMonth<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre><h3 id="default-calendar-options-pros-and-cons"><a class="heading-link" href="#default-calendar-options-pros-and-cons"></a>Default Calendar Options: Pros and Cons</h3><p>Legend:</p>
+<ul>
+<li>😃 = Strong advantage</li>
+<li>🙂 = Mixed advantage</li>
+<li>😐 = Surmountable disadvantage</li>
+<li>☹️ = Insurmountable disadvantage</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>API consistency &amp; predictability</th>
+<th>Impact on Temporal call sites</th>
+<th>Impact on i18n correctness</th>
+<th>Impact on interoperability</th>
+<th>Logistics</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Full ISO (option 1)</td>
+<td>😃 Consistent and predictable</td>
+<td>😃 No changes</td>
 <td>☹️ Programmer needs to know to &quot;opt in&quot; to use the user&#39;s calendar preference</td>
-<td>😃 All operations require an explicit choice</td>
-<td>😃 Calendar-sensitive operations require an explicit choice</td>
-<td>🙂 Correct on front end, but programmer needs to know to &quot;opt in&quot; on back end</td>
+<td>😃 ISO is the industry standard format</td>
+<td>😃 No changes</td>
 </tr>
 <tr>
-<td>Impact on interoperability</td>
-<td>😃 ISO is the industry standard format</td>
+<td>No Default (option 2)</td>
+<td>😃 Consistent and predictable</td>
+<td>😐 All call sites require extra boilerplate</td>
+<td>😃 All operations require an explicit choice</td>
 <td>😃 Explicit choice</td>
+<td>🙂 Minimal API changes</td>
+</tr>
+<tr>
+<td>Partial ISO (option 3)</td>
+<td>😐 Predictable behavior, but call sites may or may not require an explicit calendar</td>
+<td>🙂 Most* operations work; some require extra boilerplate</td>
+<td>😃 Calendar-sensitive operations require an explicit choice</td>
 <td>😃 I/O operations operate in the ISO calendar space</td>
-<td>☹️ Temporal objects may not interop with the ISO calendar</td>
+<td>🙂 No API changes, but edge cases to hash out</td>
+</tr>
+<tr>
+<td>User Preference (option 4)</td>
+<td>😐 Consistent API, but unpredictable behavior based on user&#39;s or server&#39;s location</td>
+<td>😃 No changes</td>
+<td>🙂 Correct on front end, but programmer needs to know to &quot;opt in&quot; on back end</td>
+<td>😐 Certain operations implicitly use a non-ISO calendar</td>
+<td>🙂 Minimal API changes</td>
+</tr>
+<tr>
+<td>New Types (option 5)</td>
+<td>🙂 Consistent, but the new types may increase mental load</td>
+<td>🙂 Most* operations work; some require extra boilerplate</td>
+<td>😃 Calendar-sensitive operations require an explicit choice</td>
+<td>😃 I/O operations operate in the ISO calendar space</td>
+<td>😐 Lots of new types and API changes</td>
+</tr>
+<tr>
+<td>ISO Factories (option 6)</td>
+<td>😐 Unclear whether to use ISO or non-ISO factories</td>
+<td>🙂 Method names at call sites may change</td>
+<td>🙂 Likely to be correct, but users could call the ISO factories incorrectly</td>
+<td>😃 ISO-specific methods for interop</td>
+<td>🙂 Minimal API changes</td>
 </tr>
 </tbody></table>
 <p>*<em>See <a href="https://github.com/tc39/proposal-temporal/issues/240#issuecomment-557726669">https://github.com/tc39/proposal-temporal/issues/240#issuecomment-557726669</a></em></p>
