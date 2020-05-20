@@ -720,7 +720,7 @@ export const ES = ObjectAssign({}, ES2019, {
       { type: 'year', value: era === 'BC' ? -year + 1 : +year },
       { type: 'month', value: +month },
       { type: 'day', value: +day },
-      { type: 'hour', value: +hour },
+      { type: 'hour', value: hour === '24' ? 0 : +hour }, // bugs.chromium.org/p/chromium/issues/detail?id=1045791
       { type: 'minute', value: +minute },
       { type: 'second', value: +second }
     ];
