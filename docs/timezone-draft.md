@@ -148,9 +148,6 @@ class Temporal.TimeZone {
 All the methods that custom time zones inherit from `Temporal.TimeZone` are implemented in terms of `getOffsetNanosecondsFor()`, `getPossibleAbsolutesFor()`, and the value of the _[[Identifier]]_ internal slot.
 For example, `getOffsetStringFor()` and `getDateTimeFor()` call `getOffsetNanosecondsFor()`, and `getAbsoluteFor()` calls both.
 
-> **FIXME:** These names are not very good.
-> Help is welcome in determining the color of this bike shed.
-
 Alternatively, a custom time zone doesn't have to be a subclass of `Temporal.TimeZone`.
 In this case, it can be a plain object, which must implement `getOffsetNanosecondsFor()`, `getPossibleAbsolutesFor()`, and `toString()`.
 
@@ -185,11 +182,11 @@ class OffsetTimeZone extends Temporal.TimeZone {
       MakeDay(iso.year, iso.month, iso.day),
       MakeTime(iso.hour, iso.minute, iso.second, iso.millisecond, iso.microsecond, iso.nanosecond)
     );
-    return [Temporal.Absolute(epochNs + BigInt(this.#offsetNs))];
+    return [new Temporal.Absolute(epochNs + BigInt(this.#offsetNs))];
   }
 
-  *getTransitions() {
-    return null; // no transitions ever
+  *getTransitions(/* startingPoint */) {
+    // no transitions ever
   }
 }
 ```
