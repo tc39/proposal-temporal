@@ -17,8 +17,6 @@ import {
   SetSlot
 } from './slots.mjs';
 
-import bigInt from 'big-integer';
-
 export class TimeZone {
   constructor(timeZoneIdentifier) {
     CreateSlots(this);
@@ -67,25 +65,26 @@ export class TimeZone {
     const disambiguation = ES.ToTimeZoneTemporalDisambiguation(options);
 
     const Absolute = GetIntrinsic('%Temporal.Absolute%');
-    const possibleEpochNs = ES.GetTimeZoneEpochValue(
-      GetSlot(this, TIMEZONE_ID),
-      GetSlot(dateTime, ISO_YEAR),
-      GetSlot(dateTime, ISO_MONTH),
-      GetSlot(dateTime, ISO_DAY),
-      GetSlot(dateTime, HOUR),
-      GetSlot(dateTime, MINUTE),
-      GetSlot(dateTime, SECOND),
-      GetSlot(dateTime, MILLISECOND),
-      GetSlot(dateTime, MICROSECOND),
-      GetSlot(dateTime, NANOSECOND)
-    );
-    if (possibleEpochNs.length === 1) return new Absolute(possibleEpochNs[0]);
-    if (possibleEpochNs.length) {
+    const possibleAbsolutes = this.getPossibleAbsolutesFor(dateTime);
+    if (!Array.isArray(possibleAbsolutes)) {
+      throw new TypeError('bad return from getPossibleAbsolutesFor');
+    }
+    const numAbsolutes = possibleAbsolutes.length;
+
+    function validateAbsolute(absolute) {
+      if (!ES.IsTemporalAbsolute(absolute)) {
+        throw new TypeError('bad return from getPossibleAbsolutesFor');
+      }
+      return absolute;
+    }
+
+    if (numAbsolutes === 1) return validateAbsolute(possibleAbsolutes[0]);
+    if (numAbsolutes) {
       switch (disambiguation) {
         case 'earlier':
-          return new Absolute(possibleEpochNs[0]);
+          return validateAbsolute(possibleAbsolutes[0]);
         case 'later':
-          return new Absolute(possibleEpochNs[1]);
+          return validateAbsolute(possibleAbsolutes[numAbsolutes - 1]);
         case 'reject': {
           throw new RangeError('multiple absolute found');
         }
@@ -104,9 +103,11 @@ export class TimeZone {
       GetSlot(dateTime, NANOSECOND)
     );
     if (utcns === null) throw new RangeError('DateTime outside of supported range');
-    const before = ES.GetTimeZoneOffsetNanoseconds(utcns.minus(bigInt(86400 * 1e9)), GetSlot(this, TIMEZONE_ID));
-    const after = ES.GetTimeZoneOffsetNanoseconds(utcns.plus(bigInt(86400 * 1e9)), GetSlot(this, TIMEZONE_ID));
-    const nanoseconds = after - before;
+    const dayBefore = new Absolute(utcns.minus(86400e9));
+    const dayAfter = new Absolute(utcns.plus(86400e9));
+    const offsetBefore = this.getOffsetNanosecondsFor(dayBefore);
+    const offsetAfter = this.getOffsetNanosecondsFor(dayAfter);
+    const nanoseconds = offsetAfter - offsetBefore;
     const diff = ES.ToTemporalDurationRecord({ nanoseconds }, 'reject');
     switch (disambiguation) {
       case 'earlier': {
