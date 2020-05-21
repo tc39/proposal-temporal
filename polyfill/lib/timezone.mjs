@@ -1,6 +1,21 @@
 import { ES } from './ecmascript.mjs';
 import { GetIntrinsic, MakeIntrinsicClass } from './intrinsicclass.mjs';
-import { IDENTIFIER, EPOCHNANOSECONDS, CreateSlots, GetSlot, SetSlot } from './slots.mjs';
+import {
+  IDENTIFIER,
+  EPOCHNANOSECONDS,
+  ISO_YEAR,
+  ISO_MONTH,
+  ISO_DAY,
+  HOUR,
+  MINUTE,
+  SECOND,
+  MILLISECOND,
+  MICROSECOND,
+  NANOSECOND,
+  CreateSlots,
+  GetSlot,
+  SetSlot
+} from './slots.mjs';
 
 import bigInt from 'big-integer';
 
@@ -47,18 +62,17 @@ export class TimeZone {
     const disambiguation = ES.ToTimeZoneTemporalDisambiguation(options);
 
     const Absolute = GetIntrinsic('%Temporal.Absolute%');
-    const { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = dateTime;
     const possibleEpochNs = ES.GetTimeZoneEpochValue(
       GetSlot(this, IDENTIFIER),
-      year,
-      month,
-      day,
-      hour,
-      minute,
-      second,
-      millisecond,
-      microsecond,
-      nanosecond
+      GetSlot(dateTime, ISO_YEAR),
+      GetSlot(dateTime, ISO_MONTH),
+      GetSlot(dateTime, ISO_DAY),
+      GetSlot(dateTime, HOUR),
+      GetSlot(dateTime, MINUTE),
+      GetSlot(dateTime, SECOND),
+      GetSlot(dateTime, MILLISECOND),
+      GetSlot(dateTime, MICROSECOND),
+      GetSlot(dateTime, NANOSECOND)
     );
     if (possibleEpochNs.length === 1) return new Absolute(possibleEpochNs[0]);
     if (possibleEpochNs.length) {
@@ -73,7 +87,17 @@ export class TimeZone {
       }
     }
 
-    const utcns = ES.GetEpochFromParts(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
+    const utcns = ES.GetEpochFromParts(
+      GetSlot(dateTime, ISO_YEAR),
+      GetSlot(dateTime, ISO_MONTH),
+      GetSlot(dateTime, ISO_DAY),
+      GetSlot(dateTime, HOUR),
+      GetSlot(dateTime, MINUTE),
+      GetSlot(dateTime, SECOND),
+      GetSlot(dateTime, MILLISECOND),
+      GetSlot(dateTime, MICROSECOND),
+      GetSlot(dateTime, NANOSECOND)
+    );
     if (utcns === null) throw new RangeError('DateTime outside of supported range');
     const before = ES.GetTimeZoneOffsetNanoseconds(utcns.minus(bigInt(86400 * 1e9)), GetSlot(this, IDENTIFIER));
     const after = ES.GetTimeZoneOffsetNanoseconds(utcns.plus(bigInt(86400 * 1e9)), GetSlot(this, IDENTIFIER));
@@ -98,18 +122,17 @@ export class TimeZone {
     if (!ES.IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');
     if (!ES.IsTemporalDateTime(dateTime)) throw new TypeError('invalid DateTime object');
     const Absolute = GetIntrinsic('%Temporal.Absolute%');
-    const { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = dateTime;
     const possibleEpochNs = ES.GetTimeZoneEpochValue(
       GetSlot(this, IDENTIFIER),
-      year,
-      month,
-      day,
-      hour,
-      minute,
-      second,
-      millisecond,
-      microsecond,
-      nanosecond
+      GetSlot(dateTime, ISO_YEAR),
+      GetSlot(dateTime, ISO_MONTH),
+      GetSlot(dateTime, ISO_DAY),
+      GetSlot(dateTime, HOUR),
+      GetSlot(dateTime, MINUTE),
+      GetSlot(dateTime, SECOND),
+      GetSlot(dateTime, MILLISECOND),
+      GetSlot(dateTime, MICROSECOND),
+      GetSlot(dateTime, NANOSECOND)
     );
     return possibleEpochNs.map((ns) => new Absolute(ns));
   }
