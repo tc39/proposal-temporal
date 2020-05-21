@@ -150,7 +150,13 @@
         1. Let _timeZone_ be the *this* value.
         1. Perform ? RequireInternalSlot(_timeZone_, [[InitializedTemporalTimeZone]]).
         1. Perform ? RequireInternalSlot(_absolute_, [[InitializedTemporalAbsolute]]).
-        1. Return ? GetTimeZoneOffsetString(_absolute_.[[Nanoseconds]], _timeZone_.[[Identifier]]).
+        1. Let _getOffsetNanosecondsFor_ be ? Get(_timeZone_, *"getOffsetNanosecondsFor"*).
+        1. Let _offsetNanoseconds_ be ? Call(_getOffsetNanosecondsFor_, _timeZone_, « _absolute_ »).
+        1. If Type(_offsetNanoseconds_) is not Number, then
+          1. Throw a *TypeError* exception.
+        1. If _offsetNanoseconds_ is not an integer Number value between &minus;86400 &times; 10<sup>9</sup> and 86400 &times; 10<sup>9</sup> exclusive, then
+          1. Throw a *RangeError* exception.
+        1. Return ? FormatTimeZoneOffsetString(_offsetNanoseconds_).
       </emu-alg>
     </emu-clause>
 

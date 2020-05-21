@@ -73,7 +73,8 @@ export const ES = ObjectAssign({}, ES2019, {
     const result = ES.GetCanonicalTimeZoneIdentifier(zone);
     if (offset && ianaName) {
       const ns = ES.ParseTemporalAbsolute(stringIdent);
-      if (ES.GetTimeZoneOffsetString(ns, result) !== offset) {
+      const offsetNs = ES.GetTimeZoneOffsetNanoseconds(ns, result);
+      if (ES.FormatTimeZoneOffsetString(offsetNs) !== offset) {
         throw new RangeError(`invalid offset ${offset}[${ianaName}]`);
       }
     }
@@ -209,8 +210,8 @@ export const ES = ObjectAssign({}, ES2019, {
     );
     if (possibleEpochNs.length === 1) return possibleEpochNs[0];
     for (const epochNs of possibleEpochNs) {
-      const possibleOffset = ES.GetTimeZoneOffsetString(epochNs, ianaName);
-      if (possibleOffset === offset) return epochNs;
+      const possibleOffsetNs = ES.GetTimeZoneOffsetNanoseconds(epochNs, ianaName);
+      if (ES.FormatTimeZoneOffsetString(possibleOffsetNs) === offset) return epochNs;
     }
     throw new RangeError(`'${isoString}' doesn't uniquely identify a Temporal.Absolute`);
   },
@@ -566,7 +567,7 @@ export const ES = ObjectAssign({}, ES2019, {
 
   GetCanonicalTimeZoneIdentifier: (timeZoneIdentifier) => {
     const offsetNs = parseOffsetString(timeZoneIdentifier);
-    if (offsetNs !== null) return makeOffsetString(offsetNs);
+    if (offsetNs !== null) return ES.FormatTimeZoneOffsetString(offsetNs);
     const formatter = new IntlDateTimeFormat('en-us', {
       timeZone: String(timeZoneIdentifier),
       hour12: false,
@@ -598,10 +599,13 @@ export const ES = ObjectAssign({}, ES2019, {
     if (utc === null) throw new RangeError('Date outside of supported range');
     return +utc.minus(epochNanoseconds);
   },
-  GetTimeZoneOffsetString: (epochNanoseconds, timeZone) => {
-    const offsetNanos = ES.GetTimeZoneOffsetNanoseconds(epochNanoseconds, timeZone);
-    const offsetString = makeOffsetString(offsetNanos);
-    return offsetString;
+  FormatTimeZoneOffsetString: (offsetNanoseconds) => {
+    const sign = offsetNanoseconds < 0 ? '-' : '+';
+    offsetNanoseconds = Math.abs(offsetNanoseconds);
+    const offsetMinutes = Math.floor(offsetNanoseconds / 60e9);
+    const offsetMinuteString = `00${offsetMinutes % 60}`.slice(-2);
+    const offsetHourString = `00${Math.floor(offsetMinutes / 60)}`.slice(-2);
+    return `${sign}${offsetHourString}:${offsetMinuteString}`;
   },
   GetEpochFromParts: (year, month, day, hour, minute, second, millisecond, microsecond, nanosecond) => {
     let ms = Date.UTC(year, month - 1, day, hour, minute, second, millisecond);
@@ -645,30 +649,27 @@ export const ES = ObjectAssign({}, ES2019, {
     return ES.BalanceDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
   },
   GetTimeZoneNextTransition: (epochNanoseconds, timeZone) => {
-    const offset = parseOffsetString(timeZone);
-    if (offset !== null) {
-      return null;
-    }
+    if (parseOffsetString(timeZone) !== null) return null;
 
     const uppercap = ES.SystemUTCEpochNanoSeconds() + 366 * DAYMILLIS * 1e6;
     let leftNanos = epochNanoseconds;
-    let leftOffset = ES.GetTimeZoneOffsetString(leftNanos, timeZone);
+    let leftOffsetNs = ES.GetTimeZoneOffsetNanoseconds(leftNanos, timeZone);
     let rightNanos = leftNanos;
-    let rightOffset = leftOffset;
-    while (leftOffset === rightOffset && bigInt(leftNanos).compare(uppercap) === -1) {
+    let rightOffsetNs = leftOffsetNs;
+    while (leftOffsetNs === rightOffsetNs && bigInt(leftNanos).compare(uppercap) === -1) {
       rightNanos = bigInt(leftNanos).plus(2 * 7 * DAYMILLIS * 1e6);
-      rightOffset = ES.GetTimeZoneOffsetString(rightNanos, timeZone);
-      if (leftOffset === rightOffset) {
+      rightOffsetNs = ES.GetTimeZoneOffsetNanoseconds(rightNanos, timeZone);
+      if (leftOffsetNs === rightOffsetNs) {
         leftNanos = rightNanos;
       }
     }
-    if (leftOffset === rightOffset) return null;
+    if (leftOffsetNs === rightOffsetNs) return null;
     const result = bisect(
-      (epochNS) => ES.GetTimeZoneOffsetString(epochNS, timeZone),
+      (epochNs) => ES.GetTimeZoneOffsetNanoseconds(epochNs, timeZone),
       leftNanos,
       rightNanos,
-      leftOffset,
-      rightOffset
+      leftOffsetNs,
+      rightOffsetNs
     );
     return result;
   },
@@ -1417,14 +1418,6 @@ function parseOffsetString(string) {
   const hours = +match[2];
   const minutes = +(match[3] || 0);
   return sign * (hours * 60 + minutes) * 60 * 1e9;
-}
-function makeOffsetString(offsetNanoseconds) {
-  const sign = offsetNanoseconds < 0 ? '-' : '+';
-  offsetNanoseconds = Math.abs(offsetNanoseconds);
-  const offsetMinutes = Math.floor(offsetNanoseconds / 60e9);
-  const offsetMinuteString = `00${offsetMinutes % 60}`.slice(-2);
-  const offsetHourString = `00${Math.floor(offsetMinutes / 60)}`.slice(-2);
-  return `${sign}${offsetHourString}:${offsetMinuteString}`;
 }
 function reduceParts(res, item) {
   if (item.type === 'literal') return res;

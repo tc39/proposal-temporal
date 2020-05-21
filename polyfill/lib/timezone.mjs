@@ -34,9 +34,14 @@ export class TimeZone {
     return ES.GetTimeZoneOffsetNanoseconds(GetSlot(absolute, EPOCHNANOSECONDS), GetSlot(this, TIMEZONE_ID));
   }
   getOffsetStringFor(absolute) {
-    if (!ES.IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');
-    if (!ES.IsTemporalAbsolute(absolute)) throw new TypeError('invalid Absolute object');
-    return ES.GetTimeZoneOffsetString(GetSlot(absolute, EPOCHNANOSECONDS), GetSlot(this, TIMEZONE_ID));
+    const offsetNs = this.getOffsetNanosecondsFor(absolute);
+    if (typeof offsetNs !== 'number') {
+      throw new TypeError('bad return from getOffsetNanosecondsFor');
+    }
+    if (!Number.isInteger(offsetNs) || Math.abs(offsetNs) > 86400e9) {
+      throw new RangeError('out-of-range return from getOffsetNanosecondsFor');
+    }
+    return ES.FormatTimeZoneOffsetString(offsetNs);
   }
   getDateTimeFor(absolute) {
     if (!ES.IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');
