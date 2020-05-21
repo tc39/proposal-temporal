@@ -82,11 +82,12 @@ export class TimeZone {
     switch (disambiguation) {
       case 'earlier': {
         const earlier = dateTime.minus(diff);
-        return this.getAbsoluteFor(earlier, disambiguation);
+        return this.getPossibleAbsolutesFor(earlier)[0];
       }
       case 'later': {
         const later = dateTime.plus(diff);
-        return this.getAbsoluteFor(later, disambiguation);
+        const possible = this.getPossibleAbsolutesFor(later);
+        return possible[possible.length - 1];
       }
       case 'reject': {
         throw new RangeError('no such absolute found');
