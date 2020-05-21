@@ -577,7 +577,7 @@ export const ES = ObjectAssign({}, ES2019, {
   },
   GetTimeZoneOffsetNanoseconds: (epochNanoseconds, timeZone) => {
     const offset = parseOffsetString(`${timeZone}`);
-    if (offset !== null) return bigInt(offset).multiply(1e6);
+    if (offset !== null) return offset * 1e6;
     const {
       year,
       month,
@@ -591,11 +591,11 @@ export const ES = ObjectAssign({}, ES2019, {
     } = ES.GetTimeZoneDateTimeParts(epochNanoseconds, timeZone);
     const utc = ES.GetEpochFromParts(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
     if (utc === null) throw new RangeError('Date outside of supported range');
-    return utc.minus(epochNanoseconds);
+    return +utc.minus(epochNanoseconds);
   },
   GetTimeZoneOffsetString: (epochNanoseconds, timeZone) => {
-    const offsetNanos = bigInt(ES.GetTimeZoneOffsetNanoseconds(epochNanoseconds, timeZone));
-    const offsetString = makeOffsetString(offsetNanos.divide(1e6));
+    const offsetNanos = ES.GetTimeZoneOffsetNanoseconds(epochNanoseconds, timeZone);
+    const offsetString = makeOffsetString(offsetNanos / 1e6);
     return offsetString;
   },
   GetEpochFromParts: (year, month, day, hour, minute, second, millisecond, microsecond, nanosecond) => {
@@ -744,7 +744,7 @@ export const ES = ObjectAssign({}, ES2019, {
     if (nsLater.greater(NS_MAX)) nsLater = ns;
     const earliest = ES.GetTimeZoneOffsetNanoseconds(nsEarlier, timeZone);
     const latest = ES.GetTimeZoneOffsetNanoseconds(nsLater, timeZone);
-    const found = earliest.equals(latest) ? [earliest] : [earliest, latest];
+    const found = earliest === latest ? [earliest] : [earliest, latest];
     return found
       .map((offsetNanoseconds) => {
         const epochNanoseconds = bigInt(ns).minus(offsetNanoseconds);

@@ -16,7 +16,7 @@ export class TimeZone {
   getOffsetNanosecondsFor(absolute) {
     if (!ES.IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');
     if (!ES.IsTemporalAbsolute(absolute)) throw new TypeError('invalid Absolute object');
-    return ES.GetTimeZoneOffsetNanoseconds(GetSlot(absolute, EPOCHNANOSECONDS), GetSlot(this, IDENTIFIER)).toJSNumber();
+    return ES.GetTimeZoneOffsetNanoseconds(GetSlot(absolute, EPOCHNANOSECONDS), GetSlot(this, IDENTIFIER));
   }
   getOffsetStringFor(absolute) {
     if (!ES.IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');
@@ -77,7 +77,7 @@ export class TimeZone {
     if (utcns === null) throw new RangeError('DateTime outside of supported range');
     const before = ES.GetTimeZoneOffsetNanoseconds(utcns.minus(bigInt(86400 * 1e9)), GetSlot(this, IDENTIFIER));
     const after = ES.GetTimeZoneOffsetNanoseconds(utcns.plus(bigInt(86400 * 1e9)), GetSlot(this, IDENTIFIER));
-    const nanoseconds = after.minus(before);
+    const nanoseconds = after - before;
     const diff = ES.ToTemporalDurationRecord({ nanoseconds }, 'reject');
     switch (disambiguation) {
       case 'earlier': {
