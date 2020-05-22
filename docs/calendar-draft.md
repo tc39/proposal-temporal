@@ -12,7 +12,13 @@ Temporal.Date currently has three internal slots: year, month, and day. (An "int
 
 No matter which calendar system is being represented, the *data model* in Temporal.Date remains indexed in the ISO calendar.  So, for instance, if you wanted to represent the Hebrew date 5 Nisan 5780, the data model would be 2020-03-30, and the calendar would be responsible for mapping that into the corresponding Hebrew fields, as described further down in this document.
 
-This data model makes the simple assumption that the concept of a "day" is a solar day (main issues: [#390](https://github.com/tc39/proposal-temporal/issues/390), [#389](https://github.com/tc39/proposal-temporal/issues/389)).  Most or all modern-use calendars, even those with lunar month cycles, use a solar day, which is based on the time it takes for the Earth to complete one rotation relative to the Sun.  Some historical calendars, such as the Hawaiian Moon Calendar, define a day as the time it takes for the Earth to complete one rotation relative to the moon (instead of the Sun), which is slightly shorter on average.  For calendars that use a lunar day, a Temporal.DateTime can be used instead of Temporal.Date when the distinction is important.
+This data model makes the simple assumption that the concept of a "day" is a solar day (main issues: [#390](https://github.com/tc39/proposal-temporal/issues/390), [#389](https://github.com/tc39/proposal-temporal/issues/389)).  Most or all modern-use calendars, even those with lunar month cycles, use a solar day, which is based on the time it takes for the Earth to complete one rotation relative to the Sun.
+
+The acclaimed researchers Edward M. Reingold and Nachum Dershowitz discuss this subject in [*Calendrical Calculations*](https://www.cambridge.org/fr/academic/subjects/computer-science/computing-general-interest/calendrical-calculations-ultimate-edition-4th-edition):
+
+> The sun moves from east to west, and night follows day with predictable regularity. This apparent motion of the sun as viewed by an earthbound observer provided the earliest time-keeping standard for humankind. The day is, accordingly, the basic unit of time underlying all calendars, but various calendars use different conventions to structure days into larger units: weeks, months, years, and cycles of years.
+
+Some historical calendars, such as the Hawaiian Moon Calendar, define a day as the time it takes for the Earth to complete one rotation relative to the moon (instead of the Sun), which is slightly shorter on average.  For calendars that use a lunar day, a Temporal.DateTime can be used instead of Temporal.Date when the distinction is important.
 
 ### Temporal.DateTime and Temporal.Time internal slots
 
