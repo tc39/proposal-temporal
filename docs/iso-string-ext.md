@@ -20,7 +20,7 @@ The ISO-8601 specification makes no mention of this syntax.  It is adopted here 
 
 The time zone string is written according to the rules of the time zone database (see [timezone.md](timezone.md)).  These rules are documented [here](https://htmlpreview.github.io/?https://github.com/eggert/tz/blob/master/theory.html):
 
-> Use only valid POSIX file name components (i.e., the parts of names other than '/'). Do not use the file name components '.' and '..'. Within a file name component, use only ASCII letters, '.', '-' and '_'. Do not use digits, as that might create an ambiguity with POSIX TZ strings. A file name component must not exceed 14 characters or start with '-'.
+> Use only valid POSIX file name components (i.e., the parts of names other than `'/'`). Do not use the file name components `'.'` and `'..'`. Within a file name component, use only ASCII letters, `'.'`, `'-'` and `'_'`. Do not use digits, as that might create an ambiguity with POSIX TZ strings. A file name component must not exceed 14 characters or start with `'-'`.
 
 ## MonthDay Syntax
 
@@ -31,6 +31,8 @@ ISO-8601 specifies syntax appropriate for Temporal.Date, Temporal.DateTime, and 
 ```
 
 The above string would signify July 4 in the ISO calendar.
+
+RFC 3339 also has `--07-04` for a date without year component.  In the current spec, we accept this but don't emit it.
 
 ## Calendar Systems
 
@@ -49,6 +51,7 @@ The syntax of the prefix is open for debate.  Options we have considered:
 - `[c=hebrew]`, using the same non-standard syntax as time zone names, with `c=` to distinguish the calendar identifier from a time zone identifier.
 - `[hebrew]`, distinguished from time zone names by starting with a lowercase letter.
 - `{hebrew}`, using a different type of bracket.
+- `{ca-hebrew}`, including a UTS 35 locale identifier key.
 
 The calendar identifiers [are defined by CLDR](http://unicode.org/reports/tr35/#UnicodeCalendarIdentifier) as [a sequence of 3-8 character BCP47 subtags](http://unicode.org/reports/tr35/#unicode_locale_extensions).  The list of calendar identifiers currently supported by CLDR is:
 
