@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/kognise/water.css@latest/dist/light.min.css">
+    <script type="application/javascript" src="./playground.js"></script>
+    <script type="application/javascript" src="./mermaid.js"></script>
+    <link rel="stylesheet" type="text/css" href="./prism.css">
+    <script>mermaid.initialize({startOnLoad:true,flowchart:{useMaxWidth:false}});</script>
+    <script>
+      Temporal = { ...temporal.Temporal };
+      Object.assign(Intl, temporal.Intl);
+    </script>
+    <style>
+      /* https://github.com/kognise/water.css/blob/master/src/variables-light.css */
+      :root {
+        --background: #efefef;
+        --text-muted: #999999;
+        --text-bright: #000000;
+        --text-width: 900px;
+        --variable: #39a33c;
+      }
+      .mermaid svg { height: 13em; }
+      body {
+        font-size: 18px;
+        max-width: var(--text-width);
+        padding-top: 40px;  /* extra padding for banner */
+      }
+      pre { border-left: 4px solid var(--variable); }
+      pre code[class*="language-"] { font-size: 0.85em; }
+      pre[class*="language-"] { padding: 0.5em; }
+      h2 { border-bottom: 2px solid var(--text-muted); margin-top: 2em; }
+      h3 {
+        border-bottom: 1px solid var(--text-muted);
+        color: var(--text-muted);
+        font-weight: normal;
+      }
+      h3 em { font-weight: bold; }
+      h3 strong { color: var(--text-bright); }
+      :not(h2) + h3 { margin-top: 2em; }
+      footer {
+        border-top: 1px solid var(--background);
+        color: var(--text-muted);
+        font-size: 0.8em;
+        margin-top: 2em;
+        padding-top: 10px;
+      }
+      .heading-link {
+        left: calc((100vw - var(--text-width)) / 2 - 1.5em);
+        opacity: 0;
+        position: absolute;
+        transition: opacity 150ms;
+      }
+      .heading-link:hover { text-decoration: none; }
+      .heading-link::before { content: '¶'; }
+      h3:hover .heading-link { opacity: 1; }
+      .banner {
+        /* Gradient from https://joshnh.com/weblog/how-to-make-an-alert-bar/ */
+        background-color: #fce94f;
+        background-image: linear-gradient(135deg,
+                                          transparent,
+                                          transparent 25%,
+                                          rgba(0, 0, 0, .05) 25%,
+                                          rgba(0, 0, 0, .05) 50%,
+                                          transparent 50%,
+                                          transparent 75%,
+                                          rgba(0, 0, 0, .05) 75%,
+                                          rgba(0, 0, 0, .05));
+        background-size: 20px 20px;
+        box-shadow: 0 5px 0 rgba(0, 0, 0, .1);
+        left: 0;
+        padding: 0.4em 0;
+        position: absolute;
+        text-align: center;
+        top: 0;
+        width: 100vw;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="banner">
+      <strong>This polyfill is a work in progress.</strong>
+      It does not represent the final API of this proposal, nor even the current consensus.
+    </div>
+<h1 id="ecmascript-extended-iso-8601-strings-1">ECMAScript Extended ISO-8601 Strings</h1>
+<p>ISO-8601 is the industry standard when it comes to serialization of dates and times in a computer.  However, there are two key use cases that are helpful for ECMAScript users that are not covered in ISO-8601:</p>
+<ol>
+<li>IANA Time Zone Names</li>
+<li>Calendar systems</li>
+</ol>
+<p>This document addresses addenda to the ISO-8601 spec for string serialization in the ECMAScript Temporal proposal.</p>
+<h2 id="iana-time-zone-names-1">IANA Time Zone Names</h2>
+<p>There is precedent in other popular datetime libraries, such as Joda Time (now java.time), for appending time zone names in brackets.  We intend to fully support this syntax in ECMAScript, both input and output.  For example:</p>
+<pre><code>2007-12-03T10:15:30+01:00[Europe/Paris]</code></pre><p>The ISO-8601 specification makes no mention of this syntax.  It is adopted here as a de-facto industry standard.</p>
+<p>The time zone string is written according to the rules of the time zone database (see <a href="timezone.html">timezone.md</a>).  These rules are documented <a href="https://htmlpreview.github.io/?https://github.com/eggert/tz/blob/master/theory.html">here</a>:</p>
+<blockquote>
+<p>Use only valid POSIX file name components (i.e., the parts of names other than <code>&#39;/&#39;</code>). Do not use the file name components <code>&#39;.&#39;</code> and <code>&#39;..&#39;</code>. Within a file name component, use only ASCII letters, <code>&#39;.&#39;</code>, <code>&#39;-&#39;</code> and <code>&#39;_&#39;</code>. Do not use digits, as that might create an ambiguity with POSIX TZ strings. A file name component must not exceed 14 characters or start with <code>&#39;-&#39;</code>.</p>
+</blockquote>
+<h2 id="monthday-syntax-1">MonthDay Syntax</h2>
+<p>ISO-8601 specifies syntax appropriate for Temporal.Date, Temporal.DateTime, and Temporal.YearMonth, but not Temporal.MonthDay, except in the special case of a duration.  We are establishing the following convention:</p>
+<pre><code>07-04</code></pre><p>The above string would signify July 4 in the ISO calendar.</p>
+<p>RFC 3339 also has <code>--07-04</code> for a date without year component.  In the current spec, we accept this but don&#39;t emit it.</p>
+<h2 id="calendar-systems-1">Calendar Systems</h2>
+<p>With ECMAScript Temporal&#39;s first-class calendar system support, we have found the desire to add a calendar system identifier to the string syntax, allowing for Temporal types to round-trip to strings.</p>
+<p>The authors of this proposal are unaware of existing precedent for expressing a calendar system in an ISO-8601 string.  Therefore, we are considering the following data model: <em>Calendar-specific dates are expressed as their equivalent date in the ISO calendar system, with a suffix signifying the calendar system into which the ISO date should be converted when read by a computer.</em></p>
+<p>For example, when parsed, the following string would represent the date <strong>28 Iyar 5780</strong> in the Hebrew calendar:</p>
+<pre><code>2020-05-22[c=hebrew]</code></pre><p>The syntax of the prefix is open for debate.  Options we have considered:</p>
+<ul>
+<li><code>[c=hebrew]</code>, using the same non-standard syntax as time zone names, with <code>c=</code> to distinguish the calendar identifier from a time zone identifier.</li>
+<li><code>[hebrew]</code>, distinguished from time zone names by starting with a lowercase letter.</li>
+<li><code>{hebrew}</code>, using a different type of bracket.</li>
+<li><code>{ca-hebrew}</code>, including a UTS 35 locale identifier key.</li>
+</ul>
+<p>The calendar identifiers <a href="http://unicode.org/reports/tr35/#UnicodeCalendarIdentifier">are defined by CLDR</a> as <a href="http://unicode.org/reports/tr35/#unicode_locale_extensions">a sequence of 3-8 character BCP47 subtags</a>.  The list of calendar identifiers currently supported by CLDR is:</p>
+<ul>
+<li><code>buddhist</code></li>
+<li><code>chinese</code></li>
+<li><code>coptic</code></li>
+<li><code>dangi</code></li>
+<li><code>ethioaa</code></li>
+<li><code>ethiopic</code></li>
+<li><code>gregory</code></li>
+<li><code>hebrew</code></li>
+<li><code>indian</code></li>
+<li><code>islamic</code></li>
+<li><code>islamic-umalqura</code></li>
+<li><code>islamic-tbla</code></li>
+<li><code>islamic-civil</code></li>
+<li><code>islamic-rgsa</code></li>
+<li><code>iso8601</code></li>
+<li><code>japanese</code></li>
+<li><code>persian</code></li>
+<li><code>roc</code></li>
+<li><code>islamicc</code> (deprecated in favor of <code>islamic-civil</code>)</li>
+</ul>
+<p>Example of a maximal length string containing both an IANA time zone name and a calendar system:</p>
+<pre><code>2020-05-22T07:19:35.356-04:00[America/Indiana/Indianapolis]{islamic-umalqura}</code></pre><h3 id="calendar-dependent-yearmonth-and-monthday"><a class="heading-link" href="#calendar-dependent-yearmonth-and-monthday"></a>Calendar-dependent YearMonth and MonthDay</h3><p>Based on the data model discussion in <a href="https://github.com/tc39/proposal-temporal/issues/391">#391</a>, YearMonth and MonthDay use the Temporal.Date data model when in a non-ISO calendar system.  For example, the Hebrew calendar might express the YearMonth &quot;Iyar 5780&quot; as 2020-03-25, the first day of that month in the ISO calendar.</p>
+<p>When expressed as an ISO string, we would say:</p>
+<pre><code>2020-03-25{hebrew}</code></pre><p>Since it is ambiguous whether that string represents a Date, YearMonth, or MonthDay, the appropriate Temporal constructor must be chosen in order to get the expected data type back out.</p>
+    <footer>
+      <p>
+        This page includes a script which loads an implementation of Temporal in your browser.
+        You can open a console in your browser's developer tools and try it out directly!
+      </p>
+      <p>View this or help contribute on <a href="https://github.com/tc39/proposal-temporal">GitHub</a>.</p>
+    </footer>
+  </body>
+</html>
