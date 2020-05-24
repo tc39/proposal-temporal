@@ -1,1 +1,7 @@
 rollup.config.js
+rollup-script.config.js
+test
+test262
+types
+tsconfig.json
+*.sh
