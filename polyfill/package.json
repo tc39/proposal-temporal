@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "TC39 Proposal: Temporal",
   "main": "index.js",
+  "types": "index.d.ts",
   "scripts": {
     "coverage": "c8 report --reporter html",
     "test": "node --no-warnings --experimental-modules --icu-data-dir node_modules/full-icu --loader ./test/resolve.source.mjs ./test/all.mjs",
