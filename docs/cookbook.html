@@ -142,6 +142,8 @@
 </li>
 <li><a href="#time-zone-conversion">Time zone conversion</a>
 <ul>
+<li><a href="#preserving-local-time">Preserving local time</a>
+</li>
 <li><a href="#preserving-absolute-instant">Preserving absolute instant</a>
 </li>
 <li><a href="#daily-occurrence-in-local-time">Daily occurrence in local time</a>
@@ -384,7 +386,101 @@ assert<span class="token punctuation">.</span><span class="token function">equal
 wholeHour <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> hour<span class="token operator">:</span> time<span class="token punctuation">.</span>hour <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 assert<span class="token punctuation">.</span><span class="token function">equal</span><span class="token punctuation">(</span>wholeHour<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token string">'12:00'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 </code></pre><h2 id="time-zone-conversion-1">Time zone conversion</h2>
-<h3 id="preserving-absolute-instant"><a class="heading-link" href="#preserving-absolute-instant"></a>Preserving absolute instant</h3><p>Map a zoned date and time of day into a string serialization of the local time in a target zone at the corresponding instant in absolute time.
+<h3 id="preserving-local-time"><a class="heading-link" href="#preserving-local-time"></a>Preserving local time</h3><p>Map a zoneless date and time of day into a <code>Temporal.Absolute</code> instance at which the local date and time of day in a specified time zone matches it.
+This is easily done with <code>dateTime.inTimeZone()</code>, but here is an example of implementing different disambiguation behaviours than the <code>&quot;earlier&quot;</code>, <code>&quot;later&quot;</code>, and <code>&quot;reject&#39;</code> ones built in to Temporal.</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">/**
+ * Get an absolute time corresponding with a calendar date / wall-clock time in
+ * a particular time zone, the same as Temporal.TimeZone.getAbsoluteFor() or
+ * Temporal.DateTime.inTimeZone(), but with more disambiguation options.
+ *
+ * As well as the default Temporal disambiguation options 'earlier', 'later',
+ * and 'reject', there are additional options possible:
+ *
+ * - 'earlierLater': Same as what the Moment Timezone and Luxon libraries do;
+ *   equivalent to 'earlier' when turning the clock back, and 'later' when
+ *   setting the clock forward.
+ * - 'clipEarlier': Equivalent to 'earlier' when turning the clock back, and
+ *   when setting the clock forward returns the time just before the clock
+ *   changes.
+ * - 'clipLater': Equivalent to 'later' when turning the clock back, and when
+ *   setting the clock forward returns the exact time of the clock change.
+ *
+ * @param {Temporal.DateTime} dateTime - Calendar date and wall-clock time to
+ *   convert
+ * @param {Temporal.TimeZone} timeZone - Time zone in which to consider the
+ *   wall-clock time
+ * @param {string} disambiguation - Disambiguation mode, see description.
+ * @returns {Temporal.Absolute} Absolute time in timeZone at the time of the
+ *   calendar date and wall-clock time from dateTime
+ */</span>
+<span class="token keyword">function</span> <span class="token function">getInstantWithLocalTimeInZone</span><span class="token punctuation">(</span>dateTime<span class="token punctuation">,</span> timeZone<span class="token punctuation">,</span> disambiguation <span class="token operator">=</span> <span class="token string">'earlier'</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// Handle the built-in modes first</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">'earlier'</span><span class="token punctuation">,</span> <span class="token string">'later'</span><span class="token punctuation">,</span> <span class="token string">'reject'</span><span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">includes</span><span class="token punctuation">(</span>disambiguation<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> timeZone<span class="token punctuation">.</span><span class="token function">getAbsoluteFor</span><span class="token punctuation">(</span>dateTime<span class="token punctuation">,</span> <span class="token punctuation">{</span> disambiguation <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token keyword">const</span> possible <span class="token operator">=</span> timeZone<span class="token punctuation">.</span><span class="token function">getPossibleAbsolutesFor</span><span class="token punctuation">(</span>dateTime<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token comment">// Return only possibility if no disambiguation needed</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>possible<span class="token punctuation">.</span>length <span class="token operator">===</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token keyword">return</span> possible<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">switch</span> <span class="token punctuation">(</span>disambiguation<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">case</span> <span class="token string">'earlierLater'</span><span class="token operator">:</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>possible<span class="token punctuation">.</span>length <span class="token operator">===</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token keyword">return</span> timeZone<span class="token punctuation">.</span><span class="token function">getAbsoluteFor</span><span class="token punctuation">(</span>dateTime<span class="token punctuation">,</span> <span class="token punctuation">{</span> disambiguation<span class="token operator">:</span> <span class="token string">'later'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">return</span> possible<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token keyword">case</span> <span class="token string">'clipEarlier'</span><span class="token operator">:</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>possible<span class="token punctuation">.</span>length <span class="token operator">===</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">const</span> before <span class="token operator">=</span> dateTime<span class="token punctuation">.</span><span class="token function">inTimeZone</span><span class="token punctuation">(</span>timeZone<span class="token punctuation">,</span> <span class="token punctuation">{</span> disambiguation<span class="token operator">:</span> <span class="token string">'earlier'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> timeZone
+          <span class="token punctuation">.</span><span class="token function">getTransitions</span><span class="token punctuation">(</span>before<span class="token punctuation">)</span>
+          <span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+          <span class="token punctuation">.</span>value<span class="token punctuation">.</span><span class="token function">minus</span><span class="token punctuation">(</span><span class="token punctuation">{</span> nanoseconds<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+      <span class="token keyword">return</span> possible<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token keyword">case</span> <span class="token string">'clipLater'</span><span class="token operator">:</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>possible<span class="token punctuation">.</span>length <span class="token operator">===</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">const</span> before <span class="token operator">=</span> dateTime<span class="token punctuation">.</span><span class="token function">inTimeZone</span><span class="token punctuation">(</span>timeZone<span class="token punctuation">,</span> <span class="token punctuation">{</span> disambiguation<span class="token operator">:</span> <span class="token string">'earlier'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> timeZone<span class="token punctuation">.</span><span class="token function">getTransitions</span><span class="token punctuation">(</span>before<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>value<span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+      <span class="token keyword">return</span> possible<span class="token punctuation">[</span>possible<span class="token punctuation">.</span>length <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">RangeError</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">invalid disambiguation </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>disambiguation<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">const</span> germany <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'Europe/Berlin'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> nonexistentGermanWallTime <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2019-03-31T02:45'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token keyword">const</span> germanResults <span class="token operator">=</span> <span class="token punctuation">{</span>
+  earlier<span class="token operator">:</span> <span class="token comment">/*     */</span> <span class="token string">'2019-03-31T01:45+01:00[Europe/Berlin]'</span><span class="token punctuation">,</span>
+  later<span class="token operator">:</span> <span class="token comment">/*       */</span> <span class="token string">'2019-03-31T03:45+02:00[Europe/Berlin]'</span><span class="token punctuation">,</span>
+  earlierLater<span class="token operator">:</span> <span class="token comment">/**/</span> <span class="token string">'2019-03-31T03:45+02:00[Europe/Berlin]'</span><span class="token punctuation">,</span>
+  clipEarlier<span class="token operator">:</span> <span class="token comment">/* */</span> <span class="token string">'2019-03-31T01:59:59.999999999+01:00[Europe/Berlin]'</span><span class="token punctuation">,</span>
+  clipLater<span class="token operator">:</span> <span class="token comment">/*   */</span> <span class="token string">'2019-03-31T03:00+02:00[Europe/Berlin]'</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">const</span> <span class="token punctuation">[</span>disambiguation<span class="token punctuation">,</span> result<span class="token punctuation">]</span> <span class="token keyword">of</span> Object<span class="token punctuation">.</span><span class="token function">entries</span><span class="token punctuation">(</span>germanResults<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  assert<span class="token punctuation">.</span><span class="token function">equal</span><span class="token punctuation">(</span>
+    <span class="token function">getInstantWithLocalTimeInZone</span><span class="token punctuation">(</span>nonexistentGermanWallTime<span class="token punctuation">,</span> germany<span class="token punctuation">,</span> disambiguation<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span>germany<span class="token punctuation">)</span><span class="token punctuation">,</span>
+    result
+  <span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">const</span> brazilEast <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'America/Sao_Paulo'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> doubleEasternBrazilianWallTime <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2019-02-16T23:45'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token keyword">const</span> brazilianResults <span class="token operator">=</span> <span class="token punctuation">{</span>
+  earlier<span class="token operator">:</span> <span class="token comment">/*     */</span> <span class="token string">'2019-02-16T23:45-02:00[America/Sao_Paulo]'</span><span class="token punctuation">,</span>
+  later<span class="token operator">:</span> <span class="token comment">/*       */</span> <span class="token string">'2019-02-16T23:45-03:00[America/Sao_Paulo]'</span><span class="token punctuation">,</span>
+  earlierLater<span class="token operator">:</span> <span class="token comment">/**/</span> <span class="token string">'2019-02-16T23:45-02:00[America/Sao_Paulo]'</span><span class="token punctuation">,</span>
+  clipEarlier<span class="token operator">:</span> <span class="token comment">/* */</span> <span class="token string">'2019-02-16T23:45-02:00[America/Sao_Paulo]'</span><span class="token punctuation">,</span>
+  clipLater<span class="token operator">:</span> <span class="token comment">/*   */</span> <span class="token string">'2019-02-16T23:45-03:00[America/Sao_Paulo]'</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">const</span> <span class="token punctuation">[</span>disambiguation<span class="token punctuation">,</span> result<span class="token punctuation">]</span> <span class="token keyword">of</span> Object<span class="token punctuation">.</span><span class="token function">entries</span><span class="token punctuation">(</span>brazilianResults<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  assert<span class="token punctuation">.</span><span class="token function">equal</span><span class="token punctuation">(</span>
+    <span class="token function">getInstantWithLocalTimeInZone</span><span class="token punctuation">(</span>doubleEasternBrazilianWallTime<span class="token punctuation">,</span> brazilEast<span class="token punctuation">,</span> disambiguation<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span>brazilEast<span class="token punctuation">)</span><span class="token punctuation">,</span>
+    result
+  <span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre><h3 id="preserving-absolute-instant"><a class="heading-link" href="#preserving-absolute-instant"></a>Preserving absolute instant</h3><p>Map a zoned date and time of day into a string serialization of the local time in a target zone at the corresponding instant in absolute time.
 This could be used when converting user-input date-time values between time zones.</p>
 <pre class="language-javascript"><code class="language-javascript"><span class="token comment">/**
  * Takes a local date and time in one time zone, and serializes it to a string

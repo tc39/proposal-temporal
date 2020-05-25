@@ -180,10 +180,11 @@ Temporal<span class="token punctuation">.</span>now<span class="token punctuatio
   <span class="token function">getOffsetNanosecondsFor</span><span class="token punctuation">(</span>absolute <span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Absolute<span class="token punctuation">)</span> <span class="token operator">:</span> number<span class="token punctuation">;</span>
 
   <span class="token comment">/** Given the calendar/wall-clock time, returns an array of 0, 1, or
-   * 2 absolute instants that are possible points on the timeline
+   * 2 (or theoretically more, but not in any currently known time zone)
+   * absolute times, that are possible points on the timeline
    * corresponding to it. In getAbsoluteFor(), one of these will be
    * selected, depending on the disambiguation option. */</span>
-  <span class="token function">possibleInstants</span><span class="token punctuation">(</span>dateTime <span class="token operator">:</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">)</span> <span class="token operator">:</span> array<span class="token operator">&lt;</span>Temporal<span class="token punctuation">.</span>Absolute<span class="token operator">></span><span class="token punctuation">;</span>
+  <span class="token function">getPossibleAbsolutesFor</span><span class="token punctuation">(</span>dateTime <span class="token operator">:</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">)</span> <span class="token operator">:</span> array<span class="token operator">&lt;</span>Temporal<span class="token punctuation">.</span>Absolute<span class="token operator">></span><span class="token punctuation">;</span>
 
   <span class="token comment">/** Returns an iterator of all following offset transitions, starting
    * from @startingPoint. */</span>
@@ -202,14 +203,14 @@ Temporal<span class="token punctuation">.</span>now<span class="token punctuatio
   <span class="token function">toJSON</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">:</span> string<span class="token punctuation">;</span>
 
   <span class="token keyword">static</span> <span class="token keyword">from</span><span class="token punctuation">(</span>item <span class="token operator">:</span> any<span class="token punctuation">)</span> <span class="token operator">:</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre><p>All the methods that custom time zones inherit from <code>Temporal.TimeZone</code> are implemented in terms of <code>getOffsetNanosecondsFor()</code>, <code>possibleInstants()</code>, and the value of the <em>[[Identifier]]</em> internal slot.
+<span class="token punctuation">}</span></code></pre><p>All the methods that custom time zones inherit from <code>Temporal.TimeZone</code> are implemented in terms of <code>getOffsetNanosecondsFor()</code>, <code>getPossibleAbsolutesFor()</code>, and the value of the <em>[[Identifier]]</em> internal slot.
 For example, <code>getOffsetStringFor()</code> and <code>getDateTimeFor()</code> call <code>getOffsetNanosecondsFor()</code>, and <code>getAbsoluteFor()</code> calls both.</p>
 <blockquote>
 <p><strong>FIXME:</strong> These names are not very good.
 Help is welcome in determining the color of this bike shed.</p>
 </blockquote>
 <p>Alternatively, a custom time zone doesn&#39;t have to be a subclass of <code>Temporal.TimeZone</code>.
-In this case, it can be a plain object, which must implement <code>getOffsetNanosecondsFor()</code>, <code>possibleInstants()</code>, and <code>toString()</code>.</p>
+In this case, it can be a plain object, which must implement <code>getOffsetNanosecondsFor()</code>, <code>getPossibleAbsolutesFor()</code>, and <code>toString()</code>.</p>
 <blockquote>
 <p><strong>FIXME:</strong> This means we have to remove any checks for the <em>[[InitializedTemporalTimeZone]]</em> slot in all APIs, so that plain objects can use them with e.g. <code>Temporal.TimeZone.prototype.getOffsetStringFor.call(plainObject, absolute)</code>.</p>
 </blockquote>
@@ -233,7 +234,7 @@ The <code>MakeDate</code>, <code>MakeDay</code>, and <code>MakeTime</code> funct
     <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token punctuation">.</span>#offsetNs<span class="token punctuation">;</span> <span class="token comment">// offset is always the same</span>
   <span class="token punctuation">}</span>
 
-  <span class="token function">possibleInstants</span><span class="token punctuation">(</span><span class="token parameter">dateTime</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token function">getPossibleAbsolutesFor</span><span class="token punctuation">(</span><span class="token parameter">dateTime</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
     <span class="token keyword">const</span> iso <span class="token operator">=</span> dateTime<span class="token punctuation">.</span><span class="token function">getISOFields</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token keyword">const</span> epochNs <span class="token operator">=</span> <span class="token function">MakeDate</span><span class="token punctuation">(</span>
       <span class="token function">MakeDay</span><span class="token punctuation">(</span>iso<span class="token punctuation">.</span>year<span class="token punctuation">,</span> iso<span class="token punctuation">.</span>month<span class="token punctuation">,</span> iso<span class="token punctuation">.</span>day<span class="token punctuation">)</span><span class="token punctuation">,</span>
