@@ -115,10 +115,10 @@ class Temporal.Calendar {
 		constructor: function
 	) : Temporal.Date;
 
-	/** Returns left minus right, which are dates in the same calendar. */
+	/** Returns larger minus smaller, which are dates in the same calendar. */
 	difference(
-		left: Temporal.Date,
-		right: Temporal.Date,
+		smaller: Temporal.Date,
+		larger: Temporal.Date,
 		options: /* options bag */
 	) : Temporal.Duration;
 
