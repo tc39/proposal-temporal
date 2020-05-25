@@ -45,7 +45,15 @@ export class TimeZone {
     if (!ES.IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');
     if (!ES.IsTemporalAbsolute(absolute)) throw new TypeError('invalid Absolute object');
     const ns = GetSlot(absolute, EPOCHNANOSECONDS);
-    const {
+    const offsetNs = this.getOffsetNanosecondsFor(absolute);
+    if (typeof offsetNs !== 'number') {
+      throw new TypeError('bad return from getOffsetNanosecondsFor');
+    }
+    if (!Number.isInteger(offsetNs) || Math.abs(offsetNs) > 86400e9) {
+      throw new RangeError('out-of-range return from getOffsetNanosecondsFor');
+    }
+    let { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.GetPartsFromEpoch(ns);
+    ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.BalanceDateTime(
       year,
       month,
       day,
@@ -54,8 +62,8 @@ export class TimeZone {
       second,
       millisecond,
       microsecond,
-      nanosecond
-    } = ES.GetTimeZoneDateTimeParts(ns, GetSlot(this, TIMEZONE_ID));
+      nanosecond + offsetNs
+    ));
     const DateTime = GetIntrinsic('%Temporal.DateTime%');
     return new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
   }
