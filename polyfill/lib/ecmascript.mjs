@@ -73,7 +73,7 @@ export const ES = ObjectAssign({}, ES2019, {
     const result = ES.GetCanonicalTimeZoneIdentifier(zone);
     if (offset && ianaName) {
       const ns = ES.ParseTemporalAbsolute(stringIdent);
-      const offsetNs = ES.GetTimeZoneOffsetNanoseconds(ns, result);
+      const offsetNs = ES.GetIANATimeZoneOffsetNanoseconds(ns, result);
       if (ES.FormatTimeZoneOffsetString(offsetNs) !== offset) {
         throw new RangeError(`invalid offset ${offset}[${ianaName}]`);
       }
@@ -192,26 +192,21 @@ export const ES = ObjectAssign({}, ES2019, {
       millisecond,
       microsecond,
       nanosecond,
-      ianaName,
       offset,
       zone
     } = ES.ParseTemporalAbsoluteString(isoString);
-    const possibleEpochNs = ES.GetTimeZoneEpochValue(
-      zone,
-      year,
-      month,
-      day,
-      hour,
-      minute,
-      second,
-      millisecond,
-      microsecond,
-      nanosecond
-    );
-    if (possibleEpochNs.length === 1) return possibleEpochNs[0];
-    for (const epochNs of possibleEpochNs) {
-      const possibleOffsetNs = ES.GetTimeZoneOffsetNanoseconds(epochNs, ianaName);
-      if (ES.FormatTimeZoneOffsetString(possibleOffsetNs) === offset) return epochNs;
+
+    const DateTime = GetIntrinsic('%Temporal.DateTime%');
+    const TimeZone = GetIntrinsic('%Temporal.TimeZone%');
+
+    const dt = new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
+    const tz = new TimeZone(zone);
+
+    const possibleAbsolutes = tz.getPossibleAbsolutesFor(dt);
+    if (possibleAbsolutes.length === 1) return GetSlot(possibleAbsolutes[0], EPOCHNANOSECONDS);
+    for (const absolute of possibleAbsolutes) {
+      const possibleOffsetNs = tz.getOffsetNanosecondsFor(absolute);
+      if (ES.FormatTimeZoneOffsetString(possibleOffsetNs) === offset) return GetSlot(absolute, EPOCHNANOSECONDS);
     }
     throw new RangeError(`'${isoString}' doesn't uniquely identify a Temporal.Absolute`);
   },
@@ -581,9 +576,7 @@ export const ES = ObjectAssign({}, ES2019, {
     formatter.toString = tzIdent;
     return formatter;
   },
-  GetTimeZoneOffsetNanoseconds: (epochNanoseconds, timeZone) => {
-    const offsetNs = parseOffsetString(`${timeZone}`);
-    if (offsetNs !== null) return offsetNs;
+  GetIANATimeZoneOffsetNanoseconds: (epochNanoseconds, id) => {
     const {
       year,
       month,
@@ -594,7 +587,7 @@ export const ES = ObjectAssign({}, ES2019, {
       millisecond,
       microsecond,
       nanosecond
-    } = ES.GetIANATimeZoneDateTimeParts(epochNanoseconds, timeZone);
+    } = ES.GetIANATimeZoneDateTimeParts(epochNanoseconds, id);
     const utc = ES.GetEpochFromParts(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
     if (utc === null) throw new RangeError('Date outside of supported range');
     return +utc.minus(epochNanoseconds);
@@ -647,24 +640,22 @@ export const ES = ObjectAssign({}, ES2019, {
     );
     return ES.BalanceDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
   },
-  GetTimeZoneNextTransition: (epochNanoseconds, timeZone) => {
-    if (parseOffsetString(timeZone) !== null) return null;
-
+  GetIANATimeZoneNextTransition: (epochNanoseconds, id) => {
     const uppercap = ES.SystemUTCEpochNanoSeconds() + 366 * DAYMILLIS * 1e6;
     let leftNanos = epochNanoseconds;
-    let leftOffsetNs = ES.GetTimeZoneOffsetNanoseconds(leftNanos, timeZone);
+    let leftOffsetNs = ES.GetIANATimeZoneOffsetNanoseconds(leftNanos, id);
     let rightNanos = leftNanos;
     let rightOffsetNs = leftOffsetNs;
     while (leftOffsetNs === rightOffsetNs && bigInt(leftNanos).compare(uppercap) === -1) {
       rightNanos = bigInt(leftNanos).plus(2 * 7 * DAYMILLIS * 1e6);
-      rightOffsetNs = ES.GetTimeZoneOffsetNanoseconds(rightNanos, timeZone);
+      rightOffsetNs = ES.GetIANATimeZoneOffsetNanoseconds(rightNanos, id);
       if (leftOffsetNs === rightOffsetNs) {
         leftNanos = rightNanos;
       }
     }
     if (leftOffsetNs === rightOffsetNs) return null;
     const result = bisect(
-      (epochNs) => ES.GetTimeZoneOffsetNanoseconds(epochNs, timeZone),
+      (epochNs) => ES.GetIANATimeZoneOffsetNanoseconds(epochNs, id),
       leftNanos,
       rightNanos,
       leftOffsetNs,
@@ -699,25 +690,21 @@ export const ES = ObjectAssign({}, ES2019, {
       { type: 'second', value: +second }
     ];
   },
-  GetTimeZoneEpochValue: (timeZone, year, month, day, hour, minute, second, millisecond, microsecond, nanosecond) => {
-    const offsetNs = parseOffsetString(timeZone);
+  GetIANATimeZoneEpochValue: (id, year, month, day, hour, minute, second, millisecond, microsecond, nanosecond) => {
     let ns = ES.GetEpochFromParts(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
     if (ns === null) throw new RangeError('DateTime outside of supported range');
-
-    if (offsetNs !== null) return [ns.minus(offsetNs)];
-
     const dayNanos = bigInt(DAYMILLIS).multiply(1e6);
     let nsEarlier = ns.minus(dayNanos);
     if (nsEarlier.lesser(NS_MIN)) nsEarlier = ns;
     let nsLater = ns.plus(dayNanos);
     if (nsLater.greater(NS_MAX)) nsLater = ns;
-    const earliest = ES.GetTimeZoneOffsetNanoseconds(nsEarlier, timeZone);
-    const latest = ES.GetTimeZoneOffsetNanoseconds(nsLater, timeZone);
+    const earliest = ES.GetIANATimeZoneOffsetNanoseconds(nsEarlier, id);
+    const latest = ES.GetIANATimeZoneOffsetNanoseconds(nsLater, id);
     const found = earliest === latest ? [earliest] : [earliest, latest];
     return found
       .map((offsetNanoseconds) => {
         const epochNanoseconds = bigInt(ns).minus(offsetNanoseconds);
-        const parts = ES.GetIANATimeZoneDateTimeParts(epochNanoseconds, timeZone);
+        const parts = ES.GetIANATimeZoneDateTimeParts(epochNanoseconds, id);
         if (
           year !== parts.year ||
           month !== parts.month ||

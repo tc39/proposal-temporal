@@ -17,6 +17,18 @@ import {
   SetSlot
 } from './slots.mjs';
 
+import * as REGEX from './regex.mjs';
+const OFFSET = new RegExp(`^${REGEX.offset.source}$`);
+
+function parseOffsetString(string) {
+  const match = OFFSET.exec(String(string));
+  if (!match) return null;
+  const sign = match[1] === '-' ? -1 : +1;
+  const hours = +match[2];
+  const minutes = +(match[3] || 0);
+  return sign * (hours * 60 + minutes) * 60 * 1e9;
+}
+
 export class TimeZone {
   constructor(timeZoneIdentifier) {
     CreateSlots(this);
@@ -29,7 +41,12 @@ export class TimeZone {
   getOffsetNanosecondsFor(absolute) {
     if (!ES.IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');
     if (!ES.IsTemporalAbsolute(absolute)) throw new TypeError('invalid Absolute object');
-    return ES.GetTimeZoneOffsetNanoseconds(GetSlot(absolute, EPOCHNANOSECONDS), GetSlot(this, TIMEZONE_ID));
+    const id = GetSlot(this, TIMEZONE_ID);
+
+    const offsetNs = parseOffsetString(id);
+    if (offsetNs !== null) return offsetNs;
+
+    return ES.GetIANATimeZoneOffsetNanoseconds(GetSlot(absolute, EPOCHNANOSECONDS), id);
   }
   getOffsetStringFor(absolute) {
     const offsetNs = this.getOffsetNanosecondsFor(absolute);
@@ -136,8 +153,26 @@ export class TimeZone {
     if (!ES.IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');
     if (!ES.IsTemporalDateTime(dateTime)) throw new TypeError('invalid DateTime object');
     const Absolute = GetIntrinsic('%Temporal.Absolute%');
-    const possibleEpochNs = ES.GetTimeZoneEpochValue(
-      GetSlot(this, TIMEZONE_ID),
+    const id = GetSlot(this, TIMEZONE_ID);
+
+    const offsetNs = parseOffsetString(id);
+    if (offsetNs !== null) {
+      const epochNs = ES.GetEpochFromParts(
+        GetSlot(dateTime, ISO_YEAR),
+        GetSlot(dateTime, ISO_MONTH),
+        GetSlot(dateTime, ISO_DAY),
+        GetSlot(dateTime, HOUR),
+        GetSlot(dateTime, MINUTE),
+        GetSlot(dateTime, SECOND),
+        GetSlot(dateTime, MILLISECOND),
+        GetSlot(dateTime, MICROSECOND),
+        GetSlot(dateTime, NANOSECOND)
+      );
+      return [new Absolute(epochNs.minus(offsetNs))];
+    }
+
+    const possibleEpochNs = ES.GetIANATimeZoneEpochValue(
+      id,
       GetSlot(dateTime, ISO_YEAR),
       GetSlot(dateTime, ISO_MONTH),
       GetSlot(dateTime, ISO_DAY),
@@ -153,12 +188,26 @@ export class TimeZone {
   getTransitions(startingPoint) {
     if (!ES.IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');
     if (!ES.IsTemporalAbsolute(startingPoint)) throw new TypeError('invalid Absolute object');
+    const id = GetSlot(this, TIMEZONE_ID);
+
+    // Offset time zones have no transitions
+    if (parseOffsetString(id) !== null) {
+      const result = {
+        next() {
+          return { value: undefined, done: true };
+        }
+      };
+      if (typeof Symbol === 'function') {
+        result[Symbol.iterator] = () => result;
+      }
+      return result;
+    }
+
     let epochNanoseconds = GetSlot(startingPoint, EPOCHNANOSECONDS);
     const Absolute = GetIntrinsic('%Temporal.Absolute%');
-    const timeZone = GetSlot(this, TIMEZONE_ID);
     const result = {
       next: () => {
-        epochNanoseconds = ES.GetTimeZoneNextTransition(epochNanoseconds, timeZone);
+        epochNanoseconds = ES.GetIANATimeZoneNextTransition(epochNanoseconds, id);
         const done = epochNanoseconds === null;
         const value = epochNanoseconds === null ? null : new Absolute(epochNanoseconds);
         return { done, value };
