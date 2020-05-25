@@ -11,7 +11,7 @@ import { ES } from '../lib/ecmascript.mjs';
 import { GetSlot, TIMEZONE_ID } from '../lib/slots.mjs';
 
 describe('ECMAScript', () => {
-  describe('GetTimeZoneDateTimeParts', () => {
+  describe('GetIANATimeZoneDateTimeParts', () => {
     describe('epoch', () => {
       test(0n, GetSlot(ES.ToTemporalTimeZone('America/Los_Angeles'), TIMEZONE_ID), {
         year: 1969,
@@ -378,7 +378,7 @@ describe('ECMAScript', () => {
     });
 
     function test(nanos, zone, expected) {
-      it(`${nanos} @ ${zone}`, () => deepEqual(ES.GetTimeZoneDateTimeParts(nanos, zone), expected));
+      it(`${nanos} @ ${zone}`, () => deepEqual(ES.GetIANATimeZoneDateTimeParts(nanos, zone), expected));
     }
   });
 
