@@ -17,21 +17,31 @@ import {
 } from './slots.mjs';
 
 export class DateTime {
-  constructor(year, month, day, hour = 0, minute = 0, second = 0, millisecond = 0, microsecond = 0, nanosecond = 0) {
-    year = ES.ToInteger(year);
-    month = ES.ToInteger(month);
-    day = ES.ToInteger(day);
+  constructor(
+    isoYear,
+    isoMonth,
+    isoDay,
+    hour = 0,
+    minute = 0,
+    second = 0,
+    millisecond = 0,
+    microsecond = 0,
+    nanosecond = 0
+  ) {
+    isoYear = ES.ToInteger(isoYear);
+    isoMonth = ES.ToInteger(isoMonth);
+    isoDay = ES.ToInteger(isoDay);
     hour = ES.ToInteger(hour);
     minute = ES.ToInteger(minute);
     second = ES.ToInteger(second);
     millisecond = ES.ToInteger(millisecond);
     microsecond = ES.ToInteger(microsecond);
     nanosecond = ES.ToInteger(nanosecond);
-    ES.RejectDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
+    ES.RejectDateTime(isoYear, isoMonth, isoDay, hour, minute, second, millisecond, microsecond, nanosecond);
     CreateSlots(this);
-    SetSlot(this, ISO_YEAR, year);
-    SetSlot(this, ISO_MONTH, month);
-    SetSlot(this, ISO_DAY, day);
+    SetSlot(this, ISO_YEAR, isoYear);
+    SetSlot(this, ISO_MONTH, isoMonth);
+    SetSlot(this, ISO_DAY, isoDay);
     SetSlot(this, HOUR, hour);
     SetSlot(this, MINUTE, minute);
     SetSlot(this, SECOND, second);

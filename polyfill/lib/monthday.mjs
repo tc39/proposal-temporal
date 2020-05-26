@@ -3,15 +3,15 @@ import { GetIntrinsic, MakeIntrinsicClass } from './intrinsicclass.mjs';
 import { ISO_MONTH, ISO_DAY, CreateSlots, GetSlot, SetSlot } from './slots.mjs';
 
 export class MonthDay {
-  constructor(month, day) {
-    month = ES.ToInteger(month);
-    day = ES.ToInteger(day);
+  constructor(isoMonth, isoDay) {
+    isoMonth = ES.ToInteger(isoMonth);
+    isoDay = ES.ToInteger(isoDay);
     const leapYear = 1972; // XXX #261 leap year
-    ES.RejectDate(leapYear, month, day);
+    ES.RejectDate(leapYear, isoMonth, isoDay);
 
     CreateSlots(this);
-    SetSlot(this, ISO_MONTH, month);
-    SetSlot(this, ISO_DAY, day);
+    SetSlot(this, ISO_MONTH, isoMonth);
+    SetSlot(this, ISO_DAY, isoDay);
   }
 
   get month() {

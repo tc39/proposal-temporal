@@ -16,15 +16,15 @@ import {
 } from './slots.mjs';
 
 export class Date {
-  constructor(year, month, day) {
-    year = ES.ToInteger(year);
-    month = ES.ToInteger(month);
-    day = ES.ToInteger(day);
-    ES.RejectDate(year, month, day);
+  constructor(isoYear, isoMonth, isoDay) {
+    isoYear = ES.ToInteger(isoYear);
+    isoMonth = ES.ToInteger(isoMonth);
+    isoDay = ES.ToInteger(isoDay);
+    ES.RejectDate(isoYear, isoMonth, isoDay);
     CreateSlots(this);
-    SetSlot(this, ISO_YEAR, year);
-    SetSlot(this, ISO_MONTH, month);
-    SetSlot(this, ISO_DAY, day);
+    SetSlot(this, ISO_YEAR, isoYear);
+    SetSlot(this, ISO_MONTH, isoMonth);
+    SetSlot(this, ISO_DAY, isoDay);
   }
   get year() {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
