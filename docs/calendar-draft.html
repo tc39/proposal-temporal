@@ -173,10 +173,10 @@
         <span class="token function-variable function">constructor</span><span class="token operator">:</span> <span class="token keyword">function</span>
     <span class="token punctuation">)</span> <span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">;</span>
 
-    <span class="token comment">/** Returns left minus right, which are dates in the same calendar. */</span>
+    <span class="token comment">/** Returns larger minus smaller, which are dates in the same calendar. */</span>
     <span class="token function">difference</span><span class="token punctuation">(</span>
-        left<span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">,</span>
-        right<span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">,</span>
+        smaller<span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">,</span>
+        larger<span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">,</span>
         options<span class="token operator">:</span> <span class="token comment">/* options bag */</span>
     <span class="token punctuation">)</span> <span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Duration<span class="token punctuation">;</span>
 
@@ -580,7 +580,7 @@ console<span class="token punctuation">.</span><span class="token function">log<
 <td>🙂 Minimal API changes</td>
 </tr>
 </tbody></table>
-<p>*<em>See <a href="https://github.com/tc39/proposal-temporal/issues/240#issuecomment-557726669">https://github.com/tc39/proposal-temporal/issues/240#issuecomment-557726669</a></em></p>
+<p>**See <a href="https://github.com/tc39/proposal-temporal/issues/240#issuecomment-557726669">https://github.com/tc39/proposal-temporal/issues/240#issuecomment-557726669</a> *</p>
 <h2 id="temporaldate-api-changes-1">Temporal.Date API changes</h2>
 <h3 id="new-temporaldate-instance-methods"><a class="heading-link" href="#new-temporaldate-instance-methods"></a>New Temporal.Date instance methods</h3><p>Temporal.Date.prototype.with does <em>not</em> modify the calendar. A new method is added for that:</p>
 <pre class="language-javascript"><code class="language-javascript">Temporal<span class="token punctuation">.</span><span class="token class-name">Date</span><span class="token punctuation">.</span>prototype<span class="token punctuation">.</span><span class="token function-variable function">withCalendar</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">newCalendar<span class="token operator">:</span> Calendar</span><span class="token punctuation">)</span><span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Date <span class="token punctuation">{</span>
