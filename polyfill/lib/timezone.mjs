@@ -31,8 +31,11 @@ function parseOffsetString(string) {
 
 export class TimeZone {
   constructor(timeZoneIdentifier) {
+    if (new.target === TimeZone) {
+      timeZoneIdentifier = ES.GetCanonicalTimeZoneIdentifier(timeZoneIdentifier);
+    }
     CreateSlots(this);
-    SetSlot(this, TIMEZONE_ID, ES.GetCanonicalTimeZoneIdentifier(timeZoneIdentifier));
+    SetSlot(this, TIMEZONE_ID, timeZoneIdentifier);
   }
   get name() {
     if (!ES.IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');

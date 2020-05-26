@@ -9,8 +9,11 @@ A `Temporal.TimeZone` is a representation of a time zone: either an [IANA time z
 
 Since `Temporal.Absolute` and `Temporal.DateTime` do not contain any time zone information, a `Temporal.TimeZone` object is required to convert between the two.
 
-An API for creating custom time zones is under discussion.
-See [Custom Time Zone Draft](./timezone-draft.md) for more information.
+## Custom time zones
+
+For specialized applications where you need to do calculations in a time zone that is not supported by Intl, you can also implement your own `Temporal.TimeZone` object.
+To do this, create a class inheriting from `Temporal.TimeZone`, call `super()` in the constructor with a time zone identifier, and implement the methods `getOffsetNanosecondsFor()`, `getPossibleAbsolutesFor()`, and `getTransitions()`.
+Any subclass of `Temporal.TimeZone` will be accepted in Temporal APIs where a built-in `Temporal.TimeZone` would work.
 
 ## Constructor
 

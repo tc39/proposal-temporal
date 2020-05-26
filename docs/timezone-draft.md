@@ -62,10 +62,6 @@ Temporal.TimeZone.from('1820-04-01T18:16:25-06:00[America/St_Louis]')
   // returns a new StLouisTime instance
 ```
 
-> **FIXME:** Passing a custom time zone's identifier to the built-in `Temporal.TimeZone` constructor currently doesn't work: `new Temporal.TimeZone('America/St_Louis')` throws.
-> However, this must change, because implementations would need to call `super(id)` to set the _[[Identifier]]_ and _[[InitializedTemporalTimeZone]]_ internal slots.
-> Maybe we need to only throw if `new.target === Temporal.TimeZone`?
-
 In order to lock down any leakage of information about the host system's time zone database, one would monkeypatch the `Temporal.TimeZone.from()` function which performs the built-in mapping, and replace `Temporal.now.timeZone()` to avoid exposing the current time zone.
 
 For example, to allow only offset time zones, and make the current time zone always UTC:
