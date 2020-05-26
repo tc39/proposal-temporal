@@ -133,6 +133,8 @@
 </li>
 <li><a href="#difference">difference</a>
 </li>
+<li><a href="#equals">equals</a>
+</li>
 <li><a href="#toString">toString</a>
 </li>
 <li><a href="#toLocaleString">toLocaleString</a>
@@ -418,7 +420,20 @@ date<span class="token punctuation">.</span><span class="token function">differe
 <span class="token comment">// example, using midnight:</span>
 midnight <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'00:00'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 date<span class="token punctuation">.</span><span class="token function">withTime</span><span class="token punctuation">(</span>midnight<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">difference</span><span class="token punctuation">(</span>other<span class="token punctuation">.</span><span class="token function">withTime</span><span class="token punctuation">(</span>midnight<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> largestUnit<span class="token operator">:</span> <span class="token string">'hours'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>
-  <span class="token comment">// => PT109032H</span></code></pre><h3 id="toString"><a class="heading-link" href="#toString"></a>date.<strong>toString</strong>() : string</h3><p><strong>Returns:</strong> a string in the ISO 8601 date format representing <code>date</code>.</p>
+  <span class="token comment">// => PT109032H</span></code></pre><h3 id="equals"><a class="heading-link" href="#equals"></a>date.<strong>equals</strong>(<em>other</em>: Temporal.Date) : boolean</h3><p><strong>Parameters:</strong></p>
+<ul>
+<li><code>other</code> (<code>Temporal.Date</code>): Another date to compare.</li>
+</ul>
+<p><strong>Returns:</strong> <code>true</code> if <code>date</code> and <code>other</code> are equal, or <code>false</code> if not.</p>
+<p>Compares two <code>Temporal.Date</code> objects for equality.</p>
+<p>This function exists because it&#39;s not possible to compare using <code>date == other</code> or <code>date === other</code>, due to ambiguity in the primitive representation and between Temporal types.</p>
+<p>If you don&#39;t need to know the order in which the two dates occur, then this function may be less typing and more efficient than <code>Temporal.Date.compare</code>.</p>
+<p>Note that this function will return <code>true</code> if the two dates are equal, even if they are expressed in different calendar systems.</p>
+<p>Example usage:</p>
+<pre class="language-javascript"><code class="language-javascript">date <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2006-08-24'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+other <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2019-01-31'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+date<span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span>other<span class="token punctuation">)</span>  <span class="token comment">// => false</span>
+date<span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span>date<span class="token punctuation">)</span>  <span class="token comment">// => true</span></code></pre><h3 id="toString"><a class="heading-link" href="#toString"></a>date.<strong>toString</strong>() : string</h3><p><strong>Returns:</strong> a string in the ISO 8601 date format representing <code>date</code>.</p>
 <p>This method overrides the <code>Object.prototype.toString()</code> method and provides a convenient, unambiguous string representation of <code>date</code>.
 The string can be passed to <code>Temporal.Date.from()</code> to create a new <code>Temporal.Date</code> object.</p>
 <p>Example usage:</p>

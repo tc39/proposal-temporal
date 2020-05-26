@@ -97,8 +97,6 @@
 <ul>
 <li><a href="#from">from</a>
 </li>
-<li><a href="#compare">compare</a>
-</li>
 </ul>
 </li>
 <li><a href="#properties">Properties</a>
@@ -112,6 +110,8 @@
 <li><a href="#methods">Methods</a>
 <ul>
 <li><a href="#with">with</a>
+</li>
+<li><a href="#equals">equals</a>
 </li>
 <li><a href="#toString">toString</a>
 </li>
@@ -206,26 +206,7 @@ md <span class="token operator">=</span> Temporal<span class="token punctuation"
 md <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>MonthDay<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> month<span class="token operator">:</span> <span class="token number">13</span><span class="token punctuation">,</span> day<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> disambiguation<span class="token operator">:</span> <span class="token string">'reject'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>
   <span class="token comment">// throws</span>
 md <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>MonthDay<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> month<span class="token operator">:</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span> day<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> disambiguation<span class="token operator">:</span> <span class="token string">'reject'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>
-  <span class="token comment">// throws</span></code></pre><h3 id="compare"><a class="heading-link" href="#compare"></a>Temporal.MonthDay.<strong>compare</strong>(<em>one</em>: Temporal.MonthDay, <em>two</em>: Temporal.MonthDay) : number</h3><p><strong>Parameters:</strong></p>
-<ul>
-<li><code>one</code> (<code>Temporal.MonthDay</code>): First date to compare.</li>
-<li><code>two</code> (<code>Temporal.MonthDay</code>): Second date to compare.</li>
-</ul>
-<p><strong>Returns:</strong> &minus;1, 0, or 1.</p>
-<p>Compares two <code>Temporal.MonthDay</code> objects.
-Returns an integer indicating whether <code>one</code> comes before or after or is equal to <code>two</code>, assuming they occur in the same year..</p>
-<ul>
-<li>&minus;1 if <code>one</code> comes before <code>two</code>;</li>
-<li>0 if <code>one</code> and <code>two</code> are the same;</li>
-<li>1 if <code>one</code> comes after <code>two</code>.</li>
-</ul>
-<p>This function can be used to sort arrays of <code>Temporal.MonthDay</code> objects.
-For example:</p>
-<pre class="language-javascript"><code class="language-javascript">one <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>MonthDay<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'08-24'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-two <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>MonthDay<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'07-14'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-three <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>MonthDay<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'02-18'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-sorted <span class="token operator">=</span> <span class="token punctuation">[</span>one<span class="token punctuation">,</span> two<span class="token punctuation">,</span> three<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">sort</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>MonthDay<span class="token punctuation">.</span>compare<span class="token punctuation">)</span><span class="token punctuation">;</span>
-sorted<span class="token punctuation">.</span><span class="token function">join</span><span class="token punctuation">(</span><span class="token string">' '</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// => 02-18 07-14 08-24</span></code></pre><h2 id="properties-1">Properties</h2>
+  <span class="token comment">// throws</span></code></pre><h2 id="properties-1">Properties</h2>
 <h3 id="month"><a class="heading-link" href="#month"></a>monthDay.<strong>month</strong> : number</h3><h3 id="day"><a class="heading-link" href="#day"></a>monthDay.<strong>day</strong> : number</h3><p>The above read-only properties allow accessing each component of the date individually.</p>
 <blockquote>
 <p><strong>NOTE</strong>: The possible values for the <code>month</code> property start at 1, which is different from legacy <code>Date</code> where months are represented by zero-based indices (0 to 11).</p>
@@ -264,7 +245,19 @@ The default is <code>constrain</code>.</li>
 <pre class="language-javascript"><code class="language-javascript">md <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>MonthDay<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'11-15'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token comment">// What's the last day of that month?</span>
 md<span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span><span class="token punctuation">{</span> day<span class="token operator">:</span> <span class="token number">31</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>  <span class="token comment">// => 11-30</span>
-Temporal<span class="token punctuation">.</span>MonthDay<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'02-01'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span><span class="token punctuation">{</span> day<span class="token operator">:</span> <span class="token number">31</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// => 02-29</span></code></pre><h3 id="toString"><a class="heading-link" href="#toString"></a>monthDay.<strong>toString</strong>() : string</h3><p><strong>Returns:</strong> a string in the ISO 8601 date format representing <code>monthDay</code>.</p>
+Temporal<span class="token punctuation">.</span>MonthDay<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'02-01'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span><span class="token punctuation">{</span> day<span class="token operator">:</span> <span class="token number">31</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// => 02-29</span></code></pre><h3 id="equals"><a class="heading-link" href="#equals"></a>monthDay.<strong>equals</strong>(<em>other</em>: Temporal.MonthDay) : boolean</h3><p><strong>Parameters:</strong></p>
+<ul>
+<li><code>other</code> (<code>Temporal.MonthDay</code>): Another month-day to compare.</li>
+</ul>
+<p><strong>Returns:</strong> <code>true</code> if <code>monthDay</code> and <code>other</code> are equal, or <code>false</code> if not.</p>
+<p>Compares two <code>Temporal.MonthDay</code> objects for equality.</p>
+<p>This function exists because it&#39;s not possible to compare using <code>monthDay == other</code> or <code>monthDay === other</code>, due to ambiguity in the primitive representation and between Temporal types.</p>
+<p>Note that two <code>Temporal.MonthDay</code>s expressed in different calendar systems can never be equal, because it&#39;s impossible to tell whether they fall on the same day without knowing the year.</p>
+<p>Example usage:</p>
+<pre class="language-javascript"><code class="language-javascript">dt1 <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'1995-12-07T03:24:30.000003500'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+dt2 <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2019-01-31T15:30'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+dt1<span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span>dt2<span class="token punctuation">)</span>  <span class="token comment">// => false</span>
+dt1<span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span>dt1<span class="token punctuation">)</span>  <span class="token comment">// => true</span></code></pre><h3 id="toString"><a class="heading-link" href="#toString"></a>monthDay.<strong>toString</strong>() : string</h3><p><strong>Returns:</strong> a string in the ISO 8601 date format representing <code>monthDay</code>.</p>
 <p>This method overrides the <code>Object.prototype.toString()</code> method and provides a convenient, unambiguous string representation of <code>monthDay</code>.
 The string can be passed to <code>Temporal.MonthDay.from()</code> to create a new <code>Temporal.MonthDay</code> object.</p>
 <p>Example usage:</p>
