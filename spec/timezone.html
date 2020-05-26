@@ -256,7 +256,11 @@
       <emu-alg>
         1. Assert: Type(_string_) is String.
         1. Let _result_ be ? ParseTemporalTimeZoneString(_string_).
-        1. Let _offset_ be ! FormatTimeZoneOffset(_result_.[[TimeZoneOffsetHour]], _result_.[[TimeZoneOffsetMinute]]).
+        1. If any of _result_.[[OffsetSign]], _result_.[[OffsetHour]], or _result_.[[OffsetMinute]] are *undefined*, then
+          1. Let _offset_ be *undefined*.
+        1. Else,
+          1. Let _offsetNanoseconds_ be _result_.[[OffsetSign]] &times; (_result_.[[OffsetHour]] &times; 60 + _result_.[[OffsetMinute]]) &times; 60 &times; 10<sup>9</sup>.
+          1. Let _offset_ be ! FormatTimeZoneOffsetString(_offsetNanoseconds_).
         1. Let _identifier_ be the first one of _result_.[[TimeZoneName]], _offset_, or *"UTC"* that is not *undefined*.
         1. If ! IsValidTimeZoneName(_identifier_) is *false*, then
           1. Throw a *TypeError* exception.
@@ -287,14 +291,14 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-formattimezoneoffset" aoid="FormatTimeZoneOffset">
-      <h1>FormatTimeZoneOffset ( _hour_, _minute_ )</h1>
+    <emu-clause id="sec-temporal-formattimezoneoffsetstring" aoid="FormatTimeZoneOffsetString">
+      <h1>FormatTimeZoneOffsetString ( _offsetNanoseconds_ )</h1>
       <emu-alg>
-        1. If either of _hour_ or _minute_ are *undefined*, return *undefined*.
-        1. Assert: _hour_ and _minute_ are integer Number values.
-        1. If _hour_ ≥ 0, let _sign_ be `"+"`; otherwise, let _sign_ be `"-"`.
-        1. Let _h_ be abs(_hour_), formatted as a two-digit decimal number, padded to the left with a zero if necessary.
-        1. Let _m_ be abs(_minute_), formatted as a two-digit decimal number, padded to the left with a zero if necessary.
+        1. Assert: _offsetNanoseconds_ is an integer Number value.
+        1. If _offsetNanoseconds_ ≥ 0, let _sign_ be *"+"*; otherwise, let _sign_ be *"-"*.
+        1. Let _offsetMinutes_ be floor(abs(_offsetNanoseconds_) / (60 &times; 10<sup>9</sup>)).
+        1. Let _h_ be floor(_offsetMinutes_ / 60), formatted as a two-digit decimal number, padded to the left with a zero if necessary.
+        1. Let _m_ be _offsetMinutes_ modulo 60, formatted as a two-digit decimal number, padded to the left with a zero if necessary.
         1. Return the string-concatenation of _sign_, _h_, the code unit 0x003A (COLON), and _m_.
       </emu-alg>
     </emu-clause>
