@@ -522,10 +522,10 @@ This method overrides `Object.prototype.valueOf()` and always throws an exceptio
 This is because it's not possible to compare `Temporal.DateTime` objects with the relational operators `<`, `<=`, `>`, or `>=`.
 Use `Temporal.DateTime.compare()` for this, or `datetime.equals()` for equality.
 
-### datetime.**inTimeZone**(_timeZone_ : Temporal.TimeZone | string, _options_?: object) : Temporal.Absolute
+### datetime.**inTimeZone**(_timeZone_ : object | string, _options_?: object) : Temporal.Absolute
 
 **Parameters:**
-- `timeZone` (optional string or `Temporal.TimeZone`): The time zone in which to interpret `dateTime`.
+- `timeZone` (optional string or object): The time zone in which to interpret `dateTime`, as a `Temporal.TimeZone` object, an object implementing the [time zone protocol](./timezone.md#protocol), or a string.
 - `options` (optional object): An object with properties representing options for the operation.
   The following options are recognized:
   - `disambiguation` (string): How to disambiguate if the date and time given by `dateTime` does not exist in the time zone, or exists more than once.

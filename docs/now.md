@@ -54,10 +54,10 @@ nextTransition.inTimeZone(tz);
 // On 2020-03-08T03:00 the clock will change from UTC -08:00 to -07:00
 ```
 
-### Temporal.now.**dateTime**(_timeZone_: Temporal.TimeZone | string = Temporal.now.timeZone()) : Temporal.DateTime
+### Temporal.now.**dateTime**(_timeZone_: object | string = Temporal.now.timeZone()) : Temporal.DateTime
 
 **Parameters:**
-- `timeZone` (optional `Temporal.TimeZone` or string): The time zone to get the current date and time in.
+- `timeZone` (optional object or string): The time zone to get the current date and time in, as a `Temporal.TimeZone` object, an object implementing the [time zone protocol](./timezone.md#protocol), or a string.
   If not given, the current system time zone will be used.
 
 **Returns:** a `Temporal.DateTime` object representing the current system date and time.
@@ -83,10 +83,10 @@ Object.entries(financialCentres).forEach(([name, timeZone]) => {
 // Tokyo: 2020-01-25T14:52:14.759534758
 ```
 
-### Temporal.now.**date**(_timeZone_: Temporal.TimeZone | string = Temporal.now.timeZone()) : Temporal.Date
+### Temporal.now.**date**(_timeZone_: object | string = Temporal.now.timeZone()) : Temporal.Date
 
 **Parameters:**
-- `timeZone` (optional `Temporal.TimeZone` or string): The time zone to get the current date and time in.
+- `timeZone` (optional object or string): The time zone to get the current date and time in, as a `Temporal.TimeZone` object, an object implementing the [time zone protocol](./timezone.md#protocol), or a string.
   If not given, the current system time zone will be used.
 
 **Returns:** a `Temporal.Date` object representing the current system date.
@@ -98,10 +98,10 @@ date = Temporal.now.date();
 if (date.month === 2 && date.day === 29) console.log('Leap Day!');
 ```
 
-### Temporal.now.**time**(_timeZone_: Temporal.TimeZone | string = Temporal.now.timeZone()) : Temporal.Time
+### Temporal.now.**time**(_timeZone_: object | string = Temporal.now.timeZone()) : Temporal.Time
 
 **Parameters:**
-- `timeZone` (optional `Temporal.TimeZone` or string): The time zone to get the current date and time in.
+- `timeZone` (optional object or string): The time zone to get the current date and time in, as a `Temporal.TimeZone` object, an object implementing the [time zone protocol](./timezone.md#protocol), or a string.
   If not given, the current system time zone will be used.
 
 **Returns:** a `Temporal.Time` object representing the current system time.

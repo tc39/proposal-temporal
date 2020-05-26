@@ -479,7 +479,13 @@ export const ES = ObjectAssign({}, ES2019, {
     return result;
   },
   ISOTimeZoneString: (timeZone, absolute) => {
-    const offset = timeZone.getOffsetStringFor(absolute);
+    let offset;
+    if (typeof timeZone.getOffsetStringFor === 'function') {
+      offset = timeZone.getOffsetStringFor(absolute);
+    } else {
+      const TemporalTimeZone = GetIntrinsic('%Temporal.TimeZone%');
+      offset = TemporalTimeZone.prototype.getOffsetStringFor.call(timeZone, absolute);
+    }
     let timeZoneString;
     switch (true) {
       case 'UTC' === timeZone.name:
@@ -489,7 +495,7 @@ export const ES = ObjectAssign({}, ES2019, {
         timeZoneString = offset;
         break;
       default:
-        timeZoneString = `${offset}[${timeZone.name}]`;
+        timeZoneString = `${offset}[${timeZone.toString()}]`;
         break;
     }
     return timeZoneString;
@@ -518,7 +524,13 @@ export const ES = ObjectAssign({}, ES2019, {
     return `${secs}${post}`;
   },
   TemporalAbsoluteToString: (absolute, timeZone) => {
-    const dateTime = timeZone.getDateTimeFor(absolute);
+    let dateTime;
+    if (typeof timeZone.getDateTimeFor === 'function') {
+      dateTime = timeZone.getDateTimeFor(absolute);
+    } else {
+      const TemporalTimeZone = GetIntrinsic('%Temporal.TimeZone%');
+      dateTime = TemporalTimeZone.prototype.getDateTimeFor.call(timeZone, absolute);
+    }
     const year = ES.ISOYearString(dateTime.year);
     const month = ES.ISODateTimePartString(dateTime.month);
     const day = ES.ISODateTimePartString(dateTime.day);

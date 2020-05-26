@@ -62,7 +62,6 @@ export class TimeZone {
     return ES.FormatTimeZoneOffsetString(offsetNs);
   }
   getDateTimeFor(absolute) {
-    if (!ES.IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');
     if (!ES.IsTemporalAbsolute(absolute)) throw new TypeError('invalid Absolute object');
     const ns = GetSlot(absolute, EPOCHNANOSECONDS);
     const offsetNs = this.getOffsetNanosecondsFor(absolute);
@@ -88,7 +87,6 @@ export class TimeZone {
     return new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
   }
   getAbsoluteFor(dateTime, options) {
-    if (!ES.IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');
     if (!ES.IsTemporalDateTime(dateTime)) throw new TypeError('invalid DateTime object');
     const disambiguation = ES.ToTimeZoneTemporalDisambiguation(options);
 

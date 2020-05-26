@@ -206,10 +206,10 @@ Same as `getEpochSeconds()`, but with nanosecond (10<sup>&minus;9</sup> second) 
 
 The value returned from this method is suitable to be passed to `new Temporal.Absolute()`.
 
-### absolute.**inTimeZone**(_timeZone_: Temporal.TimeZone | string) : Temporal.DateTime
+### absolute.**inTimeZone**(_timeZone_: object | string) : Temporal.DateTime
 
 **Parameters:**
-- `timeZone` (object or string): A `Temporal.TimeZone` object, or a string description of the time zone; either its IANA name or UTC offset.
+- `timeZone` (object or string): A `Temporal.TimeZone` object, or an object implementing the [time zone protocol](./timezone.md#protocol), or a string description of the time zone; either its IANA name or UTC offset.
 
 **Returns:** a `Temporal.DateTime` object indicating the calendar date and wall-clock time in `timeZone` at the absolute time indicated by `absolute`.
 
@@ -355,10 +355,10 @@ one.equals(two)  // => false
 one.equals(one)  // => true
 ```
 
-### absolute.**toString**(_timeZone_?: Temporal.TimeZone | string) : string
+### absolute.**toString**(_timeZone_?: object | string) : string
 
 **Parameters:**
-- `timeZone` (optional string or `Temporal.TimeZone`): the time zone to express `absolute` in.
+- `timeZone` (optional string or object): the time zone to express `absolute` in, as a `Temporal.TimeZone` object, an object implementing the [time zone protocol](./timezone.md#protocol), or a string.
   The default is to use UTC.
 
 **Returns:** a string in the ISO 8601 date format representing `absolute`.
