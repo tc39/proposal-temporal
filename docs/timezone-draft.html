@@ -205,10 +205,6 @@ Temporal<span class="token punctuation">.</span>now<span class="token punctuatio
   <span class="token keyword">static</span> <span class="token keyword">from</span><span class="token punctuation">(</span>item <span class="token operator">:</span> any<span class="token punctuation">)</span> <span class="token operator">:</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">;</span>
 <span class="token punctuation">}</span></code></pre><p>All the methods that custom time zones inherit from <code>Temporal.TimeZone</code> are implemented in terms of <code>getOffsetNanosecondsFor()</code>, <code>getPossibleAbsolutesFor()</code>, and the value of the <em>[[Identifier]]</em> internal slot.
 For example, <code>getOffsetStringFor()</code> and <code>getDateTimeFor()</code> call <code>getOffsetNanosecondsFor()</code>, and <code>getAbsoluteFor()</code> calls both.</p>
-<blockquote>
-<p><strong>FIXME:</strong> These names are not very good.
-Help is welcome in determining the color of this bike shed.</p>
-</blockquote>
 <p>Alternatively, a custom time zone doesn&#39;t have to be a subclass of <code>Temporal.TimeZone</code>.
 In this case, it can be a plain object, which must implement <code>getOffsetNanosecondsFor()</code>, <code>getPossibleAbsolutesFor()</code>, and <code>toString()</code>.</p>
 <blockquote>
@@ -240,11 +236,11 @@ The <code>MakeDate</code>, <code>MakeDay</code>, and <code>MakeTime</code> funct
       <span class="token function">MakeDay</span><span class="token punctuation">(</span>iso<span class="token punctuation">.</span>year<span class="token punctuation">,</span> iso<span class="token punctuation">.</span>month<span class="token punctuation">,</span> iso<span class="token punctuation">.</span>day<span class="token punctuation">)</span><span class="token punctuation">,</span>
       <span class="token function">MakeTime</span><span class="token punctuation">(</span>iso<span class="token punctuation">.</span>hour<span class="token punctuation">,</span> iso<span class="token punctuation">.</span>minute<span class="token punctuation">,</span> iso<span class="token punctuation">.</span>second<span class="token punctuation">,</span> iso<span class="token punctuation">.</span>millisecond<span class="token punctuation">,</span> iso<span class="token punctuation">.</span>microsecond<span class="token punctuation">,</span> iso<span class="token punctuation">.</span>nanosecond<span class="token punctuation">)</span>
     <span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">return</span> <span class="token punctuation">[</span>Temporal<span class="token punctuation">.</span><span class="token function">Absolute</span><span class="token punctuation">(</span>epochNs <span class="token operator">+</span> <span class="token function">BigInt</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>#offsetNs<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token punctuation">[</span><span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>Absolute</span><span class="token punctuation">(</span>epochNs <span class="token operator">+</span> <span class="token function">BigInt</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>#offsetNs<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
   <span class="token punctuation">}</span>
 
-  <span class="token operator">*</span><span class="token function">getTransitions</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token keyword">return</span> <span class="token keyword">null</span><span class="token punctuation">;</span> <span class="token comment">// no transitions ever</span>
+  <span class="token operator">*</span><span class="token function">getTransitions</span><span class="token punctuation">(</span><span class="token comment">/* startingPoint */</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// no transitions ever</span>
   <span class="token punctuation">}</span>
 <span class="token punctuation">}</span></code></pre>    <footer>
       <p>
