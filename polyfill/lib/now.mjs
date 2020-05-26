@@ -17,8 +17,8 @@ function dateTime(temporalTimeZoneLike = timeZone()) {
   const TemporalTimeZone = GetIntrinsic('%Temporal.TimeZone%');
   const timeZone = TemporalTimeZone.from(temporalTimeZoneLike);
   const abs = absolute();
-  const dateTime = timeZone.getDateTimeFor(abs);
-  return dateTime;
+  if (typeof timeZone.getDateTimeFor === 'function') return timeZone.getDateTimeFor(abs);
+  return TemporalTimeZone.prototype.getDateTimeFor.call(timeZone, abs);
 }
 function date(temporalTimeZoneLike) {
   return dateTime(temporalTimeZoneLike).getDate();

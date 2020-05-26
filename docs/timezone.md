@@ -15,6 +15,12 @@ For specialized applications where you need to do calculations in a time zone th
 To do this, create a class inheriting from `Temporal.TimeZone`, call `super()` in the constructor with a time zone identifier, and implement the methods `getOffsetNanosecondsFor()`, `getPossibleAbsolutesFor()`, and `getTransitions()`.
 Any subclass of `Temporal.TimeZone` will be accepted in Temporal APIs where a built-in `Temporal.TimeZone` would work.
 
+### Protocol
+
+It's also possible for a plain object to be a custom time zone, without subclassing.
+The object must have `getOffsetNanosecondsFor()`, `getPossibleAbsolutesFor()`, and `toString()` methods.
+It is possible to pass such an object into any Temporal API that would normally take a built-in `Temporal.TimeZone`.
+
 ## Constructor
 
 ### **new Temporal.TimeZone**(_timeZoneIdentifier_: string) : Temporal.TimeZone

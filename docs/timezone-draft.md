@@ -141,8 +141,6 @@ For example, `getOffsetStringFor()` and `getDateTimeFor()` call `getOffsetNanose
 Alternatively, a custom time zone doesn't have to be a subclass of `Temporal.TimeZone`.
 In this case, it can be a plain object, which must implement `getOffsetNanosecondsFor()`, `getPossibleAbsolutesFor()`, and `toString()`.
 
-> **FIXME:** This means we have to remove any checks for the _[[InitializedTemporalTimeZone]]_ slot in all APIs, so that plain objects can use them with e.g. `Temporal.TimeZone.prototype.getOffsetStringFor.call(plainObject, absolute)`.
-
 ## Show Me The Code
 
 Here's what it could look like to implement the built-in offset-based time zones as custom time zones.
