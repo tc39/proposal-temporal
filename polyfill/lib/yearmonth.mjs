@@ -3,13 +3,13 @@ import { GetIntrinsic, MakeIntrinsicClass } from './intrinsicclass.mjs';
 import { ISO_YEAR, ISO_MONTH, CreateSlots, GetSlot, SetSlot } from './slots.mjs';
 
 export class YearMonth {
-  constructor(year, month) {
-    year = ES.ToInteger(year);
-    month = ES.ToInteger(month);
-    ES.RejectYearMonth(year, month);
+  constructor(isoYear, isoMonth) {
+    isoYear = ES.ToInteger(isoYear);
+    isoMonth = ES.ToInteger(isoMonth);
+    ES.RejectYearMonth(isoYear, isoMonth);
     CreateSlots(this);
-    SetSlot(this, ISO_YEAR, year);
-    SetSlot(this, ISO_MONTH, month);
+    SetSlot(this, ISO_YEAR, isoYear);
+    SetSlot(this, ISO_MONTH, isoMonth);
   }
   get year() {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
