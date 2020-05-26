@@ -565,8 +565,8 @@ export const ES = ObjectAssign({}, ES2019, {
   },
 
   GetCanonicalTimeZoneIdentifier: (timeZoneIdentifier) => {
-    const offset = parseOffsetString(timeZoneIdentifier);
-    if (offset !== null) return makeOffsetString(offset);
+    const offsetNs = parseOffsetString(timeZoneIdentifier);
+    if (offsetNs !== null) return makeOffsetString(offsetNs);
     const formatter = new IntlDateTimeFormat('en-us', {
       timeZone: String(timeZoneIdentifier),
       hour12: false,
@@ -581,8 +581,8 @@ export const ES = ObjectAssign({}, ES2019, {
     return formatter;
   },
   GetTimeZoneOffsetNanoseconds: (epochNanoseconds, timeZone) => {
-    const offset = parseOffsetString(`${timeZone}`);
-    if (offset !== null) return offset * 1e6;
+    const offsetNs = parseOffsetString(`${timeZone}`);
+    if (offsetNs !== null) return offsetNs;
     const {
       year,
       month,
@@ -600,7 +600,7 @@ export const ES = ObjectAssign({}, ES2019, {
   },
   GetTimeZoneOffsetString: (epochNanoseconds, timeZone) => {
     const offsetNanos = ES.GetTimeZoneOffsetNanoseconds(epochNanoseconds, timeZone);
-    const offsetString = makeOffsetString(offsetNanos / 1e6);
+    const offsetString = makeOffsetString(offsetNanos);
     return offsetString;
   },
   GetEpochFromParts: (year, month, day, hour, minute, second, millisecond, microsecond, nanosecond) => {
@@ -615,7 +615,7 @@ export const ES = ObjectAssign({}, ES2019, {
     return ns;
   },
   GetTimeZoneDateTimeParts: (epochNanoseconds, timeZone) => {
-    const offset = parseOffsetString(timeZone);
+    const offsetNs = parseOffsetString(timeZone);
     let nanos = bigInt(epochNanoseconds).mod(1e9);
     let epochMilliseconds = bigInt(epochNanoseconds)
       .divide(1e9)
@@ -627,8 +627,8 @@ export const ES = ObjectAssign({}, ES2019, {
     let nanosecond = Math.floor(nanos / 1) % 1e3;
 
     let year, month, day, hour, minute, second;
-    if (offset !== null) {
-      millisecond += offset;
+    if (offsetNs !== null) {
+      nanosecond += offsetNs;
       let item = new Date(+epochMilliseconds);
       year = item.getUTCFullYear();
       month = item.getUTCMonth() + 1;
@@ -700,14 +700,11 @@ export const ES = ObjectAssign({}, ES2019, {
     ];
   },
   GetTimeZoneEpochValue: (timeZone, year, month, day, hour, minute, second, millisecond, microsecond, nanosecond) => {
-    const offset = parseOffsetString(timeZone);
+    const offsetNs = parseOffsetString(timeZone);
     let ns = ES.GetEpochFromParts(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
     if (ns === null) throw new RangeError('DateTime outside of supported range');
 
-    if (offset !== null) {
-      ns = ns.minus(bigInt(offset).multiply(1e6));
-      return [ns];
-    }
+    if (offsetNs !== null) return [ns.minus(offsetNs)];
 
     const dayNanos = bigInt(DAYMILLIS).multiply(1e6);
     let nsEarlier = ns.minus(dayNanos);
@@ -1419,16 +1416,14 @@ function parseOffsetString(string) {
   const sign = match[1] === '-' ? -1 : +1;
   const hours = +match[2];
   const minutes = +(match[3] || 0);
-  return sign * (hours * 60 + minutes) * 60 * 1000;
+  return sign * (hours * 60 + minutes) * 60 * 1e9;
 }
-function makeOffsetString(offsetMilliSeconds) {
-  let offsetSeconds = Math.round(offsetMilliSeconds / 1000);
-  const sign = offsetSeconds < 0 ? '-' : '+';
-  offsetSeconds = Math.abs(offsetSeconds);
-  const offsetMinutes = Math.floor(offsetSeconds / 60) % 60;
-  const offsetHours = Math.floor(offsetSeconds / 3600);
-  const offsetMinuteString = `00${offsetMinutes}`.slice(-2);
-  const offsetHourString = `00${offsetHours}`.slice(-2);
+function makeOffsetString(offsetNanoseconds) {
+  const sign = offsetNanoseconds < 0 ? '-' : '+';
+  offsetNanoseconds = Math.abs(offsetNanoseconds);
+  const offsetMinutes = Math.floor(offsetNanoseconds / 60e9);
+  const offsetMinuteString = `00${offsetMinutes % 60}`.slice(-2);
+  const offsetHourString = `00${Math.floor(offsetMinutes / 60)}`.slice(-2);
   return `${sign}${offsetHourString}:${offsetMinuteString}`;
 }
 function reduceParts(res, item) {
