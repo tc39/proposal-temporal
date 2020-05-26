@@ -63,11 +63,6 @@ export const ES = ObjectAssign({}, ES2019, {
     HasSlot(item, ISO_YEAR, ISO_MONTH, ISO_DAY, HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND),
   IsTemporalYearMonth: (item) => HasSlot(item, ISO_YEAR, ISO_MONTH, REF_ISO_DAY),
   IsTemporalMonthDay: (item) => HasSlot(item, ISO_MONTH, ISO_DAY, REF_ISO_YEAR),
-  ToTemporalTimeZone: (item) => {
-    if (ES.IsTemporalTimeZone(item)) return item;
-    const TimeZone = GetIntrinsic('%Temporal.TimeZone%');
-    return new TimeZone(ES.TemporalTimeZoneFromString(ES.ToString(item)));
-  },
   TemporalTimeZoneFromString: (stringIdent) => {
     const { zone, ianaName, offset } = ES.ParseTemporalTimeZoneString(stringIdent);
     const result = ES.GetCanonicalTimeZoneIdentifier(zone);
@@ -211,7 +206,7 @@ export const ES = ObjectAssign({}, ES2019, {
     const TimeZone = GetIntrinsic('%Temporal.TimeZone%');
 
     const dt = new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
-    const tz = new TimeZone(zone);
+    const tz = TimeZone.from(zone);
 
     const possibleAbsolutes = tz.getPossibleAbsolutesFor(dt);
     if (possibleAbsolutes.length === 1) return GetSlot(possibleAbsolutes[0], EPOCHNANOSECONDS);
@@ -1386,7 +1381,8 @@ export const ES = ObjectAssign({}, ES2019, {
   })(),
   SystemTimeZone: () => {
     const fmt = new IntlDateTimeFormat('en-us');
-    return ES.ToTemporalTimeZone(fmt.resolvedOptions().timeZone);
+    const TemporalTimeZone = GetIntrinsic('%Temporal.TimeZone%');
+    return new TemporalTimeZone(ES.TemporalTimeZoneFromString(fmt.resolvedOptions().timeZone));
   },
   ComparisonResult: (value) => (value < 0 ? -1 : value > 0 ? 1 : value),
   GetOption: (options, property, allowedValues, fallback) => {

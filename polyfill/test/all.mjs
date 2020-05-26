@@ -28,6 +28,9 @@ import './yearmonth.mjs';
 import './monthday.mjs';
 import './intl.mjs';
 
+// tests of userland objects
+import './usertimezone.mjs';
+
 Promise.resolve()
   .then(() => {
     return Demitasse.report(Pretty.reporter);

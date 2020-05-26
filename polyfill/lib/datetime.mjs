@@ -305,7 +305,8 @@ export class DateTime {
 
   inTimeZone(temporalTimeZoneLike, options) {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-    const timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);
+    const TemporalTimeZone = GetIntrinsic('%Temporal.TimeZone%');
+    const timeZone = TemporalTimeZone.from(temporalTimeZoneLike);
     const disambiguation = ES.ToTimeZoneTemporalDisambiguation(options);
     return timeZone.getAbsoluteFor(this, { disambiguation });
   }
