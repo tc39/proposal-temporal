@@ -30,7 +30,7 @@ In these examples we assume a custom time zone class `StLouisTime` with the iden
 When parsing an ISO 8601 string, the only places the time zone identifier is taken into account are `Temporal.Absolute.from()` and `Temporal.TimeZone.from()`.
 `Temporal.Absolute.from()` will call `Temporal.TimeZone.from()` to resolve the time zone identifier into a `Temporal.TimeZone` object.
 
-`Temporal.TimeZone.from()` and `Temporal.TimeZone[Symbol.iterator]` can be monkeypatched by time zone implementors if it is necessary to make new time zones available globally.
+`Temporal.TimeZone.from()` can be monkeypatched by time zone implementors if it is necessary to make new time zones available globally.
 The expectation is that it would rarely be necessary to do so, because if you have implemented a custom time zone for a particular calculation, you probably don't need it to be available globally.
 
 Example of monkeypatching to make St. Louis mean time available globally:
@@ -53,12 +53,6 @@ Temporal.TimeZone.from = function (item) {
   if (id === 'America/St_Louis')
     return new StLouisTime();
   return originalTemporalTimeZoneFrom.call(this, id);
-}
-
-const originalTemporalTimeZoneSymbolIterator = Temporal.TimeZone[Symbol.iterator];
-Temporal.TimeZone[Symbol.iterator] = function* () {
-  yield* originalTemporalTimeZoneSymbolIterator();
-  yield 'America/St_Louis';
 }
 
 Temporal.Absolute.from('1820-04-01T18:16:25-06:00[America/St_Louis]')
