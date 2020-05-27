@@ -18,9 +18,9 @@ export namespace Temporal {
      *
      * - In `'constrain'` mode, out-of-range values are clamped to the nearest
      *   in-range value.
-     * - In `'balance mode'`, out-of-range values are resolved by balancing them
+     * - In `'balance'` mode, out-of-range values are resolved by balancing them
      *   with the next highest unit.
-     * - In `'reject mode'`, out-of-range values will cause the function to
+     * - In `'reject'` mode, out-of-range values will cause the function to
      *   throw a RangeError.
      *
      * The default is `'constrain'`.
@@ -126,11 +126,8 @@ export namespace Temporal {
     nanoseconds?: number;
   };
 
-  export class Duration extends Required<DurationLike> {
-    static from(
-      item: Temporal.Duration | DurationLike | string | object,
-      options?: AssignmentOptions
-    ): Temporal.Duration;
+  export class Duration implements Required<DurationLike> {
+    static from(item: Temporal.Duration | DurationLike | string, options?: AssignmentOptions): Temporal.Duration;
     constructor(
       years?: number,
       months?: number,
@@ -152,37 +149,38 @@ export namespace Temporal {
     readonly microseconds: number;
     readonly nanoseconds: number;
     with(durationLike: DurationLike, options: AssignmentOptions): Temporal.Duration;
-    plus(other: Temporal.Duration, options: ArithmeticOptions): Temporal.Duration;
-    minus(other: Temporal.Duration, options: DurationMinusOptions): Temporal.Duration;
+    plus(other: Temporal.Duration | DurationLike, options: ArithmeticOptions): Temporal.Duration;
+    minus(other: Temporal.Duration | DurationLike, options: DurationMinusOptions): Temporal.Duration;
     getFields(): Required<DurationLike>;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
     toString(): string;
   }
 
-  export class Absolute extends Required<AbsoluteLike> {
+  export class Absolute {
     static fromEpochSeconds(epochSeconds: number): Temporal.Absolute;
     static fromEpochMilliseconds(epochMilliseconds: number): Temporal.Absolute;
     static fromEpochMicroseconds(epochMicroseconds: bigint): Temporal.Absolute;
     static fromEpochNanoseconds(epochNanoseconds: bigint): Temporal.Absolute;
-    static from(item: Temporal.Absolute | string | object): Temporal.Absolute;
-    static compare(one: Temporal.Absolute, two: Temporal.Absolute): 1 | -1 | 0;
+    static from(item: Temporal.Absolute | string): Temporal.Absolute;
+    static compare(one: Temporal.Absolute, two: Temporal.Absolute): ComparisonResult;
+    static equals(one: Temporal.Absolute, two: Temporal.Absolute): boolean;
     constructor(epochNanoseconds: bigint);
     getEpochSeconds(): number;
     getEpochMilliseconds(): number;
     getEpochMicroseconds(): bigint;
     getEpochNanoseconds(): bigint;
-    plus(temporalDurationLike: DurationLike): Temporal.Absolute;
-    minus(temporalDurationLike: DurationLike): Temporal.Absolute;
+    plus(durationLike: Temporal.Duration | DurationLike): Temporal.Absolute;
+    minus(durationLike: Temporal.Duration | DurationLike): Temporal.Absolute;
     difference(
       other: Temporal.Absolute,
       options?: DifferenceOptions<'days' | 'hours' | 'minutes' | 'seconds'>
     ): Temporal.Duration;
     // Should Absolute and DateTime have different names for `inTimeZone`? See #574.
-    inTimeZone(temporalTimeZoneLike?: TimeZoneLike): Temporal.DateTime;
+    inTimeZone(tzLike?: Temporal.TimeZone | string): Temporal.DateTime;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
-    toString(temporalTimeZoneLike?: TimeZoneLike): string;
+    toString(tzLike?: Temporal.TimeZone | string): string;
   }
 
   export type DateLike = {
@@ -191,9 +189,10 @@ export namespace Temporal {
     day?: number;
   };
 
-  export class Date extends Required<DateLike> {
-    static from(item: Temporal.Date | string | object, options?: AssignmentOptions): Temporal.Date;
+  export class Date implements Required<DateLike> {
+    static from(item: Temporal.Date | DateLike | string, options?: AssignmentOptions): Temporal.Date;
     static compare(one: Temporal.Date, two: Temporal.Date): ComparisonResult;
+    static equals(one: Temporal.Date, two: Temporal.Date): boolean;
     constructor(year: number, month: number, day: number);
     readonly year: number;
     readonly month: number;
@@ -204,9 +203,9 @@ export namespace Temporal {
     readonly daysInYear: number;
     readonly daysInMonth: number;
     readonly isLeapYear: boolean;
-    with(temporalDateLike: DateLike, options?: AssignmentOptions): Temporal.Date;
-    plus(temporalDurationLike: DurationLike, options?: ArithmeticOptions): Temporal.Date;
-    minus(temporalDurationLike: DurationLike, options?: ArithmeticOptions): Temporal.Date;
+    with(dateLike: DateLike, options?: AssignmentOptions): Temporal.Date;
+    plus(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.Date;
+    minus(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.Date;
     difference(other: Temporal.Date, options?: DifferenceOptions<'years' | 'months' | 'days'>): Temporal.Duration;
     withTime(temporalTime: Temporal.Time): Temporal.DateTime;
     getYearMonth(): Temporal.YearMonth;
@@ -229,9 +228,10 @@ export namespace Temporal {
     nanosecond?: number;
   };
 
-  export class DateTime extends Required<DateTimeLike> {
-    static from(item: Temporal.DateTime | string | object, options?: AssignmentOptions): Temporal.DateTime;
+  export class DateTime implements Required<DateTimeLike> {
+    static from(item: Temporal.DateTime | DateTimeLike | string, options?: AssignmentOptions): Temporal.DateTime;
     static compare(one: Temporal.DateTime, two: Temporal.DateTime): ComparisonResult;
+    static equals(one: Temporal.DateTime, two: Temporal.DateTime): boolean;
     constructor(
       year: number,
       month: number,
@@ -258,15 +258,15 @@ export namespace Temporal {
     readonly daysInYear: number;
     readonly daysInMonth: number;
     readonly isLeapYear: boolean;
-    with(temporalDateTimeLike: DateTimeLike, options?: AssignmentOptions): Temporal.DateTime;
-    plus(temporalDurationLike: DurationLike, options?: ArithmeticOptions): Temporal.DateTime;
-    minus(temporalDurationLike: DurationLike, options?: ArithmeticOptions): Temporal.DateTime;
+    with(dateTimeLike: DateTimeLike, options?: AssignmentOptions): Temporal.DateTime;
+    plus(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.DateTime;
+    minus(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.DateTime;
     difference(
       other: Temporal.DateTime,
       options?: DifferenceOptions<'years' | 'months' | 'days' | 'hours' | 'minutes' | 'seconds'>
     ): Temporal.Duration;
     // Should Absolute and DateTime have different names for `inTimeZone`? See #574.
-    inTimeZone(temporalTimeZoneLike: TimeZoneLike, options?: ToAbsoluteOptions): Temporal.Absolute;
+    inTimeZone(tzLike: Temporal.TimeZone | string, options?: ToAbsoluteOptions): Temporal.Absolute;
     getDate(): Temporal.Date;
     getYearMonth(): Temporal.YearMonth;
     getMonthDay(): Temporal.MonthDay;
@@ -282,13 +282,13 @@ export namespace Temporal {
     day?: number;
   };
 
-  export class MonthDay extends Required<MonthDayLike> {
-    static from(item: Temporal.MonthDay | string | object, options?: AssignmentOptions): Temporal.MonthDay;
-    static compare(one: Temporal.MonthDay, two: Temporal.MonthDay): ComparisonResult;
+  export class MonthDay implements Required<MonthDayLike> {
+    static from(item: Temporal.MonthDay | MonthDayLike | string, options?: AssignmentOptions): Temporal.MonthDay;
+    static equals(one: Temporal.MonthDay, two: Temporal.MonthDay): boolean;
     constructor(month: number, day: number);
     readonly month: number;
     readonly day: number;
-    with(temporalMonthDayLike: MonthDayLike, options?: AssignmentOptions): Temporal.MonthDay;
+    with(monthDayLike: MonthDayLike, options?: AssignmentOptions): Temporal.MonthDay;
     withYear(year: number | { year: number }): Temporal.Date;
     getFields(): Required<MonthDayLike>;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
@@ -305,9 +305,10 @@ export namespace Temporal {
     nanosecond?: number;
   };
 
-  export class Time extends Required<TimeLike> {
-    static from(item: Temporal.Time | string | object, options?: AssignmentOptions): Temporal.Time;
+  export class Time implements Required<TimeLike> {
+    static from(item: Temporal.Time | TimeLike | string, options?: AssignmentOptions): Temporal.Time;
     static compare(one: Temporal.Time, two: Temporal.Time): ComparisonResult;
+    static equals(one: Temporal.Time, two: Temporal.Time): boolean;
     constructor(
       hour?: number,
       minute?: number,
@@ -322,9 +323,9 @@ export namespace Temporal {
     readonly millisecond: number;
     readonly microsecond: number;
     readonly nanosecond: number;
-    with(temporalTimeLike: TimeLike, options?: AssignmentOptions): Temporal.Time;
-    plus(temporalDurationLike: DurationLike, options?: ArithmeticOptions): Temporal.Time;
-    minus(temporalDurationLike: DurationLike, options?: ArithmeticOptions): Temporal.Time;
+    with(timeLike: Temporal.Time | TimeLike, options?: AssignmentOptions): Temporal.Time;
+    plus(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.Time;
+    minus(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.Time;
     // TODO: should 'days' be included?  Or would that be false advertising? See #580.
     difference(other: Temporal.Time, options?: DifferenceOptions<'hours' | 'minutes' | 'seconds'>): Temporal.Duration;
     withDate(temporalDate: Temporal.Date): Temporal.DateTime;
@@ -334,10 +335,8 @@ export namespace Temporal {
     toString(): string;
   }
 
-  export type TimeZoneLike = Temporal.TimeZone | string;
-
   export class TimeZone {
-    static from(timeZone: TimeZoneLike): Temporal.TimeZone;
+    static from(timeZone: Temporal.TimeZone | string): Temporal.TimeZone;
     constructor(timeZoneIdentifier: string);
     readonly name: string;
     getOffsetNanosecondsFor(absolute: Temporal.Absolute): number;
@@ -346,6 +345,7 @@ export namespace Temporal {
     getAbsoluteFor(dateTime: Temporal.DateTime, options?: ToAbsoluteOptions): Temporal.Absolute;
     // TODO: should this be changed to getNextTransition/getPreviousTransition? See #613.
     getTransitions(startingPoint: Temporal.Absolute): IteratorResult<Temporal.Absolute>;
+    getPossibleAbsolutesFor(dateTime: Temporal.DateTime): Temporal.Absolute[];
     toString(): string;
     toJSON(): string;
   }
@@ -355,18 +355,19 @@ export namespace Temporal {
     month?: number;
   };
 
-  export class YearMonth extends Required<YearMonthLike> {
-    static from(item: string | object, options?: AssignmentOptions): Temporal.YearMonth;
+  export class YearMonth implements Required<YearMonthLike> {
+    static from(item: Temporal.YearMonth | YearMonthLike | string, options?: AssignmentOptions): Temporal.YearMonth;
     static compare(one: Temporal.YearMonth, two: Temporal.YearMonth): ComparisonResult;
+    static equals(one: Temporal.YearMonth, two: Temporal.YearMonth): boolean;
     constructor(year: number, month: number);
     readonly year: number;
     readonly month: number;
     readonly daysInMonth: number;
     readonly daysInYear: number;
     readonly isLeapYear: boolean;
-    with(temporalYearMonthLike: YearMonthLike, options: AssignmentOptions): Temporal.YearMonth;
-    plus(temporalDurationLike: YearMonthLike, options: ArithmeticOptions): Temporal.YearMonth;
-    minus(temporalDurationLike: DurationLike, options: ArithmeticOptions): Temporal.YearMonth;
+    with(yearMonthLike: YearMonthLike, options: AssignmentOptions): Temporal.YearMonth;
+    plus(durationLike: Temporal.Duration | DurationLike, options: ArithmeticOptions): Temporal.YearMonth;
+    minus(durationLike: Temporal.Duration | DurationLike, options: ArithmeticOptions): Temporal.YearMonth;
     difference(other: Temporal.YearMonth, options: DifferenceOptions<'years' | 'months'>): Temporal.Duration;
     withDay(day: number): Temporal.Date;
     getFields(): Required<YearMonthLike>;
@@ -376,10 +377,10 @@ export namespace Temporal {
   }
 
   export namespace now {
-    function absolute(): Temporal.Absolute;
-    function dateTime(temporalTimeZoneLike?: TimeZoneLike): Temporal.DateTime;
-    function date(temporalTimeZoneLike?: TimeZoneLike): Temporal.Date;
-    function time(temporalTimeZoneLike?: TimeZoneLike): Temporal.Time;
-    function timeZone(): Temporal.TimeZone;
+    export function absolute(): Temporal.Absolute;
+    export function dateTime(tzLike?: Temporal.TimeZone | string): Temporal.DateTime;
+    export function date(tzLike?: Temporal.TimeZone | string): Temporal.Date;
+    export function time(tzLike?: Temporal.TimeZone | string): Temporal.Time;
+    export function timeZone(): Temporal.TimeZone;
   }
 }
