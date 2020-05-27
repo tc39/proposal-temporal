@@ -164,12 +164,12 @@ export namespace Temporal {
     static fromEpochNanoseconds(epochNanoseconds: bigint): Temporal.Absolute;
     static from(item: Temporal.Absolute | string): Temporal.Absolute;
     static compare(one: Temporal.Absolute, two: Temporal.Absolute): ComparisonResult;
-    static equals(one: Temporal.Absolute, two: Temporal.Absolute): boolean;
     constructor(epochNanoseconds: bigint);
     getEpochSeconds(): number;
     getEpochMilliseconds(): number;
     getEpochMicroseconds(): bigint;
     getEpochNanoseconds(): bigint;
+    equals(other: Temporal.Absolute): boolean;
     plus(durationLike: Temporal.Duration | DurationLike): Temporal.Absolute;
     minus(durationLike: Temporal.Duration | DurationLike): Temporal.Absolute;
     difference(
@@ -192,7 +192,6 @@ export namespace Temporal {
   export class Date implements Required<DateLike> {
     static from(item: Temporal.Date | DateLike | string, options?: AssignmentOptions): Temporal.Date;
     static compare(one: Temporal.Date, two: Temporal.Date): ComparisonResult;
-    static equals(one: Temporal.Date, two: Temporal.Date): boolean;
     constructor(year: number, month: number, day: number);
     readonly year: number;
     readonly month: number;
@@ -203,6 +202,7 @@ export namespace Temporal {
     readonly daysInYear: number;
     readonly daysInMonth: number;
     readonly isLeapYear: boolean;
+    equals(other: Temporal.Date): boolean;
     with(dateLike: DateLike, options?: AssignmentOptions): Temporal.Date;
     plus(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.Date;
     minus(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.Date;
@@ -231,7 +231,6 @@ export namespace Temporal {
   export class DateTime implements Required<DateTimeLike> {
     static from(item: Temporal.DateTime | DateTimeLike | string, options?: AssignmentOptions): Temporal.DateTime;
     static compare(one: Temporal.DateTime, two: Temporal.DateTime): ComparisonResult;
-    static equals(one: Temporal.DateTime, two: Temporal.DateTime): boolean;
     constructor(
       year: number,
       month: number,
@@ -258,6 +257,7 @@ export namespace Temporal {
     readonly daysInYear: number;
     readonly daysInMonth: number;
     readonly isLeapYear: boolean;
+    equals(other: Temporal.DateTime): boolean;
     with(dateTimeLike: DateTimeLike, options?: AssignmentOptions): Temporal.DateTime;
     plus(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.DateTime;
     minus(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.DateTime;
@@ -284,10 +284,10 @@ export namespace Temporal {
 
   export class MonthDay implements Required<MonthDayLike> {
     static from(item: Temporal.MonthDay | MonthDayLike | string, options?: AssignmentOptions): Temporal.MonthDay;
-    static equals(one: Temporal.MonthDay, two: Temporal.MonthDay): boolean;
     constructor(month: number, day: number);
     readonly month: number;
     readonly day: number;
+    equals(other: Temporal.MonthDay): boolean;
     with(monthDayLike: MonthDayLike, options?: AssignmentOptions): Temporal.MonthDay;
     withYear(year: number | { year: number }): Temporal.Date;
     getFields(): Required<MonthDayLike>;
@@ -308,7 +308,6 @@ export namespace Temporal {
   export class Time implements Required<TimeLike> {
     static from(item: Temporal.Time | TimeLike | string, options?: AssignmentOptions): Temporal.Time;
     static compare(one: Temporal.Time, two: Temporal.Time): ComparisonResult;
-    static equals(one: Temporal.Time, two: Temporal.Time): boolean;
     constructor(
       hour?: number,
       minute?: number,
@@ -323,6 +322,7 @@ export namespace Temporal {
     readonly millisecond: number;
     readonly microsecond: number;
     readonly nanosecond: number;
+    equals(other: Temporal.Time): boolean;
     with(timeLike: Temporal.Time | TimeLike, options?: AssignmentOptions): Temporal.Time;
     plus(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.Time;
     minus(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.Time;
@@ -358,13 +358,13 @@ export namespace Temporal {
   export class YearMonth implements Required<YearMonthLike> {
     static from(item: Temporal.YearMonth | YearMonthLike | string, options?: AssignmentOptions): Temporal.YearMonth;
     static compare(one: Temporal.YearMonth, two: Temporal.YearMonth): ComparisonResult;
-    static equals(one: Temporal.YearMonth, two: Temporal.YearMonth): boolean;
     constructor(year: number, month: number);
     readonly year: number;
     readonly month: number;
     readonly daysInMonth: number;
     readonly daysInYear: number;
     readonly isLeapYear: boolean;
+    equals(other: Temporal.YearMonth): boolean;
     with(yearMonthLike: YearMonthLike, options: AssignmentOptions): Temporal.YearMonth;
     plus(durationLike: Temporal.Duration | DurationLike, options: ArithmeticOptions): Temporal.YearMonth;
     minus(durationLike: Temporal.Duration | DurationLike, options: ArithmeticOptions): Temporal.YearMonth;
