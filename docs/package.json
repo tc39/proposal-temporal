@@ -6,7 +6,7 @@
   "private": true,
   "scripts": {
     "build:javascript": "rollup -m -c rollup.config.ejs",
-    "build:html": "node processMarkdown.js *.md && cp README.html index.html && cp node_modules/prismjs/themes/prism.css ."
+    "build:docs": "node buildDocs.js"
   },
   "repository": {
     "type": "git",

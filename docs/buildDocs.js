@@ -1,5 +1,6 @@
 const fs = require('fs').promises;
 const marked = require('marked');
+const path = require('path');
 const Prism = require('prismjs');
 const loadLanguages = require('prismjs/components/');
 
@@ -103,21 +104,55 @@ async function render(markdownFile, head, tail) {
   let htmlText = head + marked(markdownText, { renderer }) + tail;
   htmlText = htmlText.replace(/^<!-- toc -->$/m, () => renderer.renderTOC());
 
-  const htmlFile = markdownFile.replace(/\.md$/, '') + '.html';
+  const htmlFile = path.resolve('../out/docs', markdownFile.replace(/\.md$/, '') + '.html');
   console.log(`${markdownFile} => ${htmlFile}`);
   await fs.writeFile(htmlFile, htmlText, { encoding });
 }
 
-async function go(files) {
+async function go() {
   try {
     const head = await fs.readFile('head.html.part', { encoding });
     const tail = await fs.readFile('tail.html.part', { encoding });
-    await Promise.all(files.map((file) => render(file, head, tail)));
+    // copy or render /docs/* to /out/docs/
+    await Promise.all(
+      (await fs.readdir('.')).map((file) => {
+        switch (file !== 'buildDocs.js' && path.extname(file)) {
+          // copy files *.css, *.html, *.js, *.map, *.svg to /out/docs
+          case '.css':
+          case '.html':
+          case '.js':
+          case '.map':
+          case '.svg':
+            return fs.copyFile(file, path.resolve('../out/docs/' + file));
+          // convert files *.md to /out/docs/*.html
+          case '.md':
+            return render(file, head, tail);
+          // skip remaining files
+          default:
+            return new Promise((resolve) => resolve());
+        }
+      })
+    );
+    // copy /docs/assets/* to /out/docs/assets/
+    await Promise.all(
+      (await fs.readdir('assets')).map((file) => {
+        return fs.copyFile(path.resolve('assets', file), path.resolve('../out/docs/assets', file));
+      })
+    );
+    // copy misc files to /out/docs/
+    await Promise.all(
+      [
+        ['../out/docs/README.html', '../out/docs/index.html'],
+        ['node_modules/prismjs/themes/prism.css', '../out/docs/prism.css']
+      ].map(([file1, file2]) => {
+        return fs.copyFile(path.resolve(file1), path.resolve(file2));
+      })
+    );
   } catch (e) {
     console.error(e);
-    return 1;
+    process.exit(1);
   }
-  return 0;
+  process.exit();
 }
 
-go(process.argv.slice(2)).then(process.exit);
+go();
