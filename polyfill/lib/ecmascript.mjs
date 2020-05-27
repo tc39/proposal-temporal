@@ -101,7 +101,14 @@ export const ES = ObjectAssign({}, ES2019, {
     const nanosecond = ES.ToInteger(fraction.slice(6, 9));
     const offset = `${match[14]}:${match[15] || '00'}`;
     let ianaName = match[16];
-    if (ianaName) ianaName = ES.GetCanonicalTimeZoneIdentifier(ianaName).toString();
+    if (ianaName) {
+      try {
+        // Canonicalize name if it is an IANA link name or is capitalized wrong
+        ianaName = ES.GetCanonicalTimeZoneIdentifier(ianaName).toString();
+      } catch {
+        // Not an IANA name, may be a custom ID, pass through unchanged
+      }
+    }
     const zone = match[13] ? 'UTC' : ianaName || offset;
     return { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, zone, ianaName, offset };
   },
