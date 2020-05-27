@@ -8,14 +8,16 @@
   },
   "main": "polyfill/lib/index.mjs",
   "dependencies": {
-    "babel-eslint": "^10.0.3",
     "ecmarkup": "^3.19.1",
-    "eslint": "^6.8.0",
+    "eslint": "^7.1.0",
     "mkdirp": "^1.0.0",
     "big-integer": "^1.6.48",
     "es-abstract": "^1.17.4"
   },
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^3.0.1",
+    "@typescript-eslint/parser": "^3.0.1",
+    "typescript": "^3.9.3",
     "eslint-config-prettier": "^6.10.0",
     "eslint-plugin-prettier": "^3.1.2",
     "prettier": "^1.19.1"
@@ -26,14 +28,14 @@
     "codecov:test262": "cd polyfill && npm install && npm run codecov:test262 && cd ..",
     "test-cookbook": "cd polyfill && npm install && npm run test-cookbook && cd ..",
     "test262": "cd polyfill && npm install && npm run test262",
-    "lint": "eslint . --ext js,mjs",
+    "lint": "eslint . --ext js,mjs,.d.ts",
     "build:prepare": "mkdirp out && mkdirp out/docs",
     "build:polyfill": "cd polyfill && npm install && npm run build && cd ..",
     "build:javascript": "npm run build:polyfill && cd docs && npm install && npm run build:javascript && cd .. && cp docs/playground.js docs/playground.js.map out/docs/",
     "build:docs": "cd docs && npm install && npm run build:html && cd .. && cp docs/*.html docs/*.css docs/mermaid.js out/docs/ && cp -r docs/assets out/docs/",
     "build:spec": "ecmarkup spec.html out/index.html",
     "prebuild": "mkdirp out && mkdirp out/docs",
-    "pretty": "eslint . --ext js,mjs --fix",
+    "pretty": "eslint . --ext js,mjs,.d.ts --fix",
     "build": "npm run build:javascript && npm run build:docs && npm run build:spec"
   },
   "repository": {
