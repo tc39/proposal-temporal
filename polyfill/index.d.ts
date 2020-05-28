@@ -1,13 +1,6 @@
 export namespace Temporal {
   export type ComparisonResult = -1 | 0 | 1;
 
-  // TODO: the `XXXOptions` types below helper types below are useful while
-  // Temporal is being designed, beacuse they make it easier to understand how
-  // options are shared across types and methods. But once the API is finalized
-  // it may make sense to explicitly list all options inside each method
-  // declaration, because later changes to options accepted by some but not all
-  // methods won't result in a breaking change.
-
   /**
    * Options for assigning fields using `with()` or entire objects with
    * `from()`.
@@ -26,8 +19,6 @@ export namespace Temporal {
      * The default is `'constrain'`.
      */
     disambiguation: 'constrain' | 'balance' | 'reject';
-    // TODO: should change name from `disambiguation` to `overflow`? See #607.
-    // TODO: should remove `balance` from non-Duration types? See #609.
   };
 
   /**
@@ -56,8 +47,6 @@ export namespace Temporal {
      *
      * */
     disambiguation: 'earlier' | 'later' | 'reject';
-    // TODO: should there be a `compatible` (to legacy `Date`, moment, etc.)
-    //       disambiguation option? See #614.
   };
 
   /**
@@ -73,7 +62,6 @@ export namespace Temporal {
      * The default is `'constrain'`.
      */
     disambiguation: 'constrain' | 'reject';
-    // TODO: may change name from `disambiguation` to `overflow`. See #607.
   };
 
   /**
@@ -90,10 +78,7 @@ export namespace Temporal {
      * In `'balance'` mode, all fields are balanced with the next highest field,
      * no matter if they are negative or not.
      *
-     * TODO: add an example of each mode.
-     *
      * The default is `'balanceConstrain'`.
-     *
      */
     disambiguation: 'balanceConstrain' | 'balance';
   };
@@ -108,8 +93,6 @@ export namespace Temporal {
      * `hours` is not accepted by `Date.prototype.difference()`.
      *
      * The default depends on the type being used.
-     *
-     * TODO: document which types use which defaults.
      */
     largestUnit: T;
   }
@@ -125,7 +108,13 @@ export namespace Temporal {
     microseconds?: number;
     nanoseconds?: number;
   };
-
+  /**
+   *
+   * A `Temporal.Duration` represents an immutable duration of time which can be
+   * used in date/time arithmetic.
+   *
+   * See https://tc39.es/proposal-temporal/docs/duration.html for more details.
+   */
   export class Duration implements Required<DurationLike> {
     static from(item: Temporal.Duration | DurationLike | string, options?: AssignmentOptions): Temporal.Duration;
     constructor(
@@ -157,6 +146,20 @@ export namespace Temporal {
     toString(): string;
   }
 
+  /**
+   * A `Temporal.Absolute` is an absolute point in time, with a precision in
+   * nanoseconds. No time zone or calendar information is present. Therefore,
+   * `Temporal.Absolute` has no concept of days, months, or even hours.
+   *
+   * For convenience of interoperability, it internally uses nanoseconds since
+   * the {@link https://en.wikipedia.org/wiki/Unix_time|Unix epoch} (midnight
+   * UTC on January 1, 1970). However, a `Temporal.Absolute` can be created from
+   * any of several expressions that refer to a single point in time, including
+   * an {@link https://en.wikipedia.org/wiki/ISO_8601|ISO 8601 string} with a
+   * time zone offset such as '2020-01-23T17:04:36.491865121-08:00'.
+   *
+   * See https://tc39.es/proposal-temporal/docs/absolute.html for more details.
+   */
   export class Absolute {
     static fromEpochSeconds(epochSeconds: number): Temporal.Absolute;
     static fromEpochMilliseconds(epochMilliseconds: number): Temporal.Absolute;
@@ -176,7 +179,6 @@ export namespace Temporal {
       other: Temporal.Absolute,
       options?: DifferenceOptions<'days' | 'hours' | 'minutes' | 'seconds'>
     ): Temporal.Duration;
-    // Should Absolute and DateTime have different names for `inTimeZone`? See #574.
     inTimeZone(tzLike?: Temporal.TimeZone | string): Temporal.DateTime;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
@@ -189,10 +191,19 @@ export namespace Temporal {
     day?: number;
   };
 
+  /**
+   * A `Temporal.Date` represents a calendar date. "Calendar date" refers to the
+   * concept of a date as expressed in everyday usage, independent of any time
+   * zone. For example, it could be used to represent an event on a calendar
+   * which happens during the whole day no matter which time zone it's happening
+   * in.
+   *
+   * See https://tc39.es/proposal-temporal/docs/date.html for more details.
+   */
   export class Date implements Required<DateLike> {
     static from(item: Temporal.Date | DateLike | string, options?: AssignmentOptions): Temporal.Date;
     static compare(one: Temporal.Date, two: Temporal.Date): ComparisonResult;
-    constructor(year: number, month: number, day: number);
+    constructor(isoYear: number, isoMonth: number, isoDay: number);
     readonly year: number;
     readonly month: number;
     readonly day: number;
@@ -228,13 +239,23 @@ export namespace Temporal {
     nanosecond?: number;
   };
 
+  /**
+   * A `Temporal.DateTime` represents a calendar date and wall-clock time, with
+   * a precision in nanoseconds, and without any time zone. Of the Temporal
+   * classes carrying human-readable time information, it is the most general
+   * and complete one. `Temporal.Date`, `Temporal.Time`, `Temporal.YearMonth`,
+   * and `Temporal.MonthDay` all carry less information and should be used when
+   * complete information is not required.
+   *
+   * See https://tc39.es/proposal-temporal/docs/datetime.html for more details.
+   */
   export class DateTime implements Required<DateTimeLike> {
     static from(item: Temporal.DateTime | DateTimeLike | string, options?: AssignmentOptions): Temporal.DateTime;
     static compare(one: Temporal.DateTime, two: Temporal.DateTime): ComparisonResult;
     constructor(
-      year: number,
-      month: number,
-      day: number,
+      isoYear: number,
+      isoMonth: number,
+      isoDay: number,
       hour?: number,
       minute?: number,
       second?: number,
@@ -265,7 +286,6 @@ export namespace Temporal {
       other: Temporal.DateTime,
       options?: DifferenceOptions<'years' | 'months' | 'days' | 'hours' | 'minutes' | 'seconds'>
     ): Temporal.Duration;
-    // Should Absolute and DateTime have different names for `inTimeZone`? See #574.
     inTimeZone(tzLike: Temporal.TimeZone | string, options?: ToAbsoluteOptions): Temporal.Absolute;
     getDate(): Temporal.Date;
     getYearMonth(): Temporal.YearMonth;
@@ -282,9 +302,16 @@ export namespace Temporal {
     day?: number;
   };
 
+  /**
+   * A `Temporal.MonthDay` represents a particular day on the calendar, but
+   * without a year. For example, it could be used to represent a yearly
+   * recurring event, like "Bastille Day is on the 14th of July."
+   *
+   * See https://tc39.es/proposal-temporal/docs/monthday.html for more details.
+   */
   export class MonthDay implements Required<MonthDayLike> {
     static from(item: Temporal.MonthDay | MonthDayLike | string, options?: AssignmentOptions): Temporal.MonthDay;
-    constructor(month: number, day: number);
+    constructor(isoMonth: number, isoDay: number);
     readonly month: number;
     readonly day: number;
     equals(other: Temporal.MonthDay): boolean;
@@ -305,6 +332,21 @@ export namespace Temporal {
     nanosecond?: number;
   };
 
+  /**
+   * A `Temporal.Time` represents a wall-clock time, with a precision in
+   * nanoseconds, and without any time zone. "Wall-clock time" refers to the
+   * concept of a time as expressed in everyday usage — the time that you read
+   * off the clock on the wall. For example, it could be used to represent an
+   * event that happens daily at a certain time, no matter what time zone.
+   *
+   * `Temporal.Time` refers to a time with no associated calendar date; if you
+   * need to refer to a specific time on a specific day, use
+   * `Temporal.DateTime`. A `Temporal.Time` can be converted into a
+   * `Temporal.DateTime` by combining it with a `Temporal.Date` using the
+   * `withDate()` method.
+   *
+   * See https://tc39.es/proposal-temporal/docs/time.html for more details.
+   */
   export class Time implements Required<TimeLike> {
     static from(item: Temporal.Time | TimeLike | string, options?: AssignmentOptions): Temporal.Time;
     static compare(one: Temporal.Time, two: Temporal.Time): ComparisonResult;
@@ -326,7 +368,6 @@ export namespace Temporal {
     with(timeLike: Temporal.Time | TimeLike, options?: AssignmentOptions): Temporal.Time;
     plus(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.Time;
     minus(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.Time;
-    // TODO: should 'days' be included?  Or would that be false advertising? See #580.
     difference(other: Temporal.Time, options?: DifferenceOptions<'hours' | 'minutes' | 'seconds'>): Temporal.Duration;
     withDate(temporalDate: Temporal.Date): Temporal.DateTime;
     getFields(): Required<TimeLike>;
@@ -335,6 +376,19 @@ export namespace Temporal {
     toString(): string;
   }
 
+  /**
+   * A `Temporal.TimeZone` is a representation of a time zone: either an
+   * {@link https://www.iana.org/time-zones|IANA time zone}, including
+   * information about the time zone such as the offset between the local time
+   * and UTC at a particular time, and daylight saving time (DST) changes; or
+   * simply a particular UTC offset with no DST.
+   *
+   * Since `Temporal.Absolute` and `Temporal.DateTime` do not contain any time
+   * zone information, a `Temporal.TimeZone` object is required to convert
+   * between the two.
+   *
+   * See https://tc39.es/proposal-temporal/docs/timezone.html for more details.
+   */
   export class TimeZone {
     static from(timeZone: Temporal.TimeZone | string): Temporal.TimeZone;
     constructor(timeZoneIdentifier: string);
@@ -343,7 +397,6 @@ export namespace Temporal {
     getOffsetStringFor(absolute: Temporal.Absolute): string;
     getDateTimeFor(absolute: Temporal.Absolute): Temporal.DateTime;
     getAbsoluteFor(dateTime: Temporal.DateTime, options?: ToAbsoluteOptions): Temporal.Absolute;
-    // TODO: should this be changed to getNextTransition/getPreviousTransition? See #613.
     getTransitions(startingPoint: Temporal.Absolute): IteratorResult<Temporal.Absolute>;
     getPossibleAbsolutesFor(dateTime: Temporal.DateTime): Temporal.Absolute[];
     toString(): string;
@@ -355,10 +408,17 @@ export namespace Temporal {
     month?: number;
   };
 
+  /**
+   * A `Temporal.YearMonth` represents a particular month on the calendar. For
+   * example, it could be used to represent a particular instance of a monthly
+   * recurring event, like "the June 2019 meeting".
+   *
+   * See https://tc39.es/proposal-temporal/docs/yearmonth.html for more details.
+   */
   export class YearMonth implements Required<YearMonthLike> {
     static from(item: Temporal.YearMonth | YearMonthLike | string, options?: AssignmentOptions): Temporal.YearMonth;
     static compare(one: Temporal.YearMonth, two: Temporal.YearMonth): ComparisonResult;
-    constructor(year: number, month: number);
+    constructor(isoYear: number, isoMonth: number);
     readonly year: number;
     readonly month: number;
     readonly daysInMonth: number;
@@ -376,11 +436,60 @@ export namespace Temporal {
     toString(): string;
   }
 
+  /**
+   * The `Temporal.now` object has several methods which give information about
+   * the current date, time, and time zone.
+   *
+   * See https://tc39.es/proposal-temporal/docs/now.html for more details.
+   */
   export namespace now {
+    /**
+     * Get the system date and time as a `Temporal.Absolute`.
+     *
+     * This method gets the current absolute system time, without regard to
+     * calendar or time zone. This is a good way to get a timestamp for an
+     * event, for example. It works like the old-style JavaScript `Date.now()`,
+     * but with nanosecond precision instead of milliseconds.
+     * */
     export function absolute(): Temporal.Absolute;
+
+    /**
+     * Get the current calendar date and clock time in a specific time zone.
+     *
+     * @param {Temporal.TimeZone | string} [tzLike] -
+     * {@link https://en.wikipedia.org/wiki/List_of_tz_database_time_zones|IANA time zone identifier}
+     * string (e.g. `'Europe/London'`) or a `Temporal.TimeZone` instance. If omitted,
+     * the environment's current time zone will be used.
+     */
     export function dateTime(tzLike?: Temporal.TimeZone | string): Temporal.DateTime;
+
+    /**
+     * Get the current calendar date in a specific time zone.
+     *
+     * @param {Temporal.TimeZone | string} [tzLike] -
+     * {@link https://en.wikipedia.org/wiki/List_of_tz_database_time_zones|IANA time zone identifier}
+     * string (e.g. `'Europe/London'`) or a `Temporal.TimeZone` instance. If omitted,
+     * the environment's current time zone will be used.
+     */
     export function date(tzLike?: Temporal.TimeZone | string): Temporal.Date;
+
+    /**
+     * Get the current clock time in a specific time zone.
+     *
+     * @param {Temporal.TimeZone | string} [tzLike] -
+     * {@link https://en.wikipedia.org/wiki/List_of_tz_database_time_zones|IANA time zone identifier}
+     * string (e.g. `'Europe/London'`) or a `Temporal.TimeZone` instance. If omitted,
+     * the environment's current time zone will be used.
+     */
     export function time(tzLike?: Temporal.TimeZone | string): Temporal.Time;
+
+    /**
+     * Get the environment's current time zone.
+     *
+     * This method gets the current system time zone. This will usually be a
+     * named
+     * {@link https://en.wikipedia.org/wiki/List_of_tz_database_time_zones|IANA time zone}.
+     */
     export function timeZone(): Temporal.TimeZone;
   }
 }
