@@ -43,6 +43,12 @@ tz.getAbsoluteFor(dt, { disambiguation: 'earlier' }).inTimeZone(tz);  // => 2019
 tz.getAbsoluteFor(dt, { disambiguation: 'later' }).inTimeZone(tz);  // => 2019-03-31T03:45
 ```
 
+Using [`Temporal.TimeZone.prototype.getPossibleAbsolutesFor`](./timezone.html#getPossibleAbsolutesFor) we can show that the wall-clock time doesn't exist:
+
+```javascript
+tz.getPossibleAbsolutesFor(dt);  // => []
+```
+
 Likewise, at the end of DST, clocks move backward an hour.
 In this case, the illusion is that an hour repeats itself.
 In `earlier` mode, the absolute time will be the earlier instance of the duplicated wall-clock time.
@@ -56,6 +62,11 @@ dt.inTimeZone(tz, { disambiguation: 'later' });    // => 2019-02-17T02:45Z
 dt.inTimeZone(tz, { disambiguation: 'reject' });   // throws
 ```
 
-In this example, the wall-clock time 23:45 exists twice.
+In this example, the wall-clock time 23:45 exists twice, which can also be verified with `getPossibleAbsolutesFor`:
+
+```javascript
+tz.getPossibleAbsolutesFor(dt)  // => [2019-02-17T01:45Z, 2019-02-17T02:45Z]
+```
 
 > *Compatibility Note*: The built-in behaviour of the Moment Timezone and Luxon libraries is to give the same result as `earlier` when turning the clock back, and `later` when setting the clock forward.
+This disambiguation behaviour isn't available by default in Temporal, but you can implement it yourself using `getPossibleAbsolutesFor`.

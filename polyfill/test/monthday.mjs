@@ -20,12 +20,12 @@ describe('MonthDay', () => {
       equal(typeof MonthDay.prototype, 'object');
     });
     describe('MonthDay.prototype', () => {
+      it('MonthDay.prototype.equals is a Function', () => {
+        equal(typeof MonthDay.prototype.equals, 'function');
+      });
       it('MonthDay.prototype.getFields is a Function', () => {
         equal(typeof MonthDay.prototype.getFields, 'function');
       });
-    });
-    it('MonthDay.compare is a Function', () => {
-      equal(typeof MonthDay.compare, 'function');
     });
   });
   describe('Construction', () => {
@@ -49,7 +49,7 @@ describe('MonthDay', () => {
       it('MonthDay.from(required prop undefined) throws', () =>
         throws(() => MonthDay.from({ month: undefined, day: 15 }), TypeError));
       it('MonthDay.from(number) is converted to string', () =>
-        equal(`${MonthDay.from(1201)}`, `${MonthDay.from('12-01')}`));
+        assert(MonthDay.from(1201).equals(MonthDay.from('12-01'))));
       it('basic format', () => {
         equal(`${MonthDay.from('1118')}`, '11-18');
       });
@@ -115,21 +115,6 @@ describe('MonthDay', () => {
       it('with(-15)', () => equal(`${md.with({ day: 15 })}`, '01-15'));
     });
   });
-  describe('MonthDay.compare() works', () => {
-    const jan15 = MonthDay.from('01-15');
-    const feb1 = MonthDay.from('02-01');
-    it('equal', () => equal(MonthDay.compare(jan15, jan15), 0));
-    it('smaller/larger', () => equal(MonthDay.compare(jan15, feb1), -1));
-    it('larger/smaller', () => equal(MonthDay.compare(feb1, jan15), 1));
-    it("doesn't cast first argument", () => {
-      throws(() => MonthDay.compare({ month: 1, day: 15 }, feb1), TypeError);
-      throws(() => MonthDay.compare('01-15', feb1), TypeError);
-    });
-    it("doesn't cast second argument", () => {
-      throws(() => MonthDay.compare(jan15, { month: 2, day: 1 }), TypeError);
-      throws(() => MonthDay.compare(jan15, '02-01'), TypeError);
-    });
-  });
   describe('MonthDay.with()', () => {
     it('throws on bad disambiguation', () => {
       ['', 'CONSTRAIN', 'xyz', 3, null].forEach((disambiguation) =>
@@ -139,6 +124,16 @@ describe('MonthDay', () => {
     it('cannot lead to an out-of-range MonthDay', () => {
       const md = MonthDay.from('01-01');
       equal(`${md.with({ month: 999999 * 12 }, { disambiguation: 'balance' })}`, '12-01');
+    });
+  });
+  describe('MonthDay.equals()', () => {
+    const md1 = MonthDay.from('01-22');
+    const md2 = MonthDay.from('12-15');
+    it('equal', () => assert(md1.equals(md1)));
+    it('unequal', () => assert(!md1.equals(md2)));
+    it("doesn't cast argument", () => {
+      throws(() => md1.equals('01-22'), TypeError);
+      throws(() => md1.equals({ month: 1, day: 22 }), TypeError);
     });
   });
   describe('MonthDay.withYear()', () => {
@@ -171,11 +166,11 @@ describe('MonthDay', () => {
     });
     it('as input to from()', () => {
       const md2 = MonthDay.from(fields);
-      equal(MonthDay.compare(md1, md2), 0);
+      assert(md1.equals(md2));
     });
     it('as input to with()', () => {
       const md2 = MonthDay.from('06-30').with(fields);
-      equal(MonthDay.compare(md1, md2), 0);
+      assert(md1.equals(md2));
     });
   });
 });

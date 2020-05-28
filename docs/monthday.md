@@ -98,30 +98,6 @@ md = Temporal.MonthDay.from({ month: -1, day: 1 }, { disambiguation: 'reject' })
   // throws
 ```
 
-### Temporal.MonthDay.**compare**(_one_: Temporal.MonthDay, _two_: Temporal.MonthDay) : number
-
-**Parameters:**
-- `one` (`Temporal.MonthDay`): First date to compare.
-- `two` (`Temporal.MonthDay`): Second date to compare.
-
-**Returns:** &minus;1, 0, or 1.
-
-Compares two `Temporal.MonthDay` objects.
-Returns an integer indicating whether `one` comes before or after or is equal to `two`, assuming they occur in the same year..
-- &minus;1 if `one` comes before `two`;
-- 0 if `one` and `two` are the same;
-- 1 if `one` comes after `two`.
-
-This function can be used to sort arrays of `Temporal.MonthDay` objects.
-For example:
-```javascript
-one = Temporal.MonthDay.from('08-24');
-two = Temporal.MonthDay.from('07-14');
-three = Temporal.MonthDay.from('02-18');
-sorted = [one, two, three].sort(Temporal.MonthDay.compare);
-sorted.join(' ');  // => 02-18 07-14 08-24
-```
-
 ## Properties
 
 ### monthDay.**month** : number
@@ -172,6 +148,27 @@ md = Temporal.MonthDay.from('11-15');
 // What's the last day of that month?
 md.with({ day: 31 })  // => 11-30
 Temporal.MonthDay.from('02-01').with({ day: 31 });  // => 02-29
+```
+
+### monthDay.**equals**(_other_: Temporal.MonthDay) : boolean
+
+**Parameters:**
+- `other` (`Temporal.MonthDay`): Another month-day to compare.
+
+**Returns:** `true` if `monthDay` and `other` are equal, or `false` if not.
+
+Compares two `Temporal.MonthDay` objects for equality.
+
+This function exists because it's not possible to compare using `monthDay == other` or `monthDay === other`, due to ambiguity in the primitive representation and between Temporal types.
+
+Note that two `Temporal.MonthDay`s expressed in different calendar systems can never be equal, because it's impossible to tell whether they fall on the same day without knowing the year.
+
+Example usage:
+```javascript
+dt1 = Temporal.DateTime.from('1995-12-07T03:24:30.000003500');
+dt2 = Temporal.DateTime.from('2019-01-31T15:30');
+dt1.equals(dt2)  // => false
+dt1.equals(dt1)  // => true
 ```
 
 ### monthDay.**toString**() : string

@@ -115,10 +115,10 @@ class Temporal.Calendar {
 		constructor: function
 	) : Temporal.Date;
 
-	/** Returns left minus right, which are dates in the same calendar. */
+	/** Returns larger minus smaller, which are dates in the same calendar. */
 	difference(
-		left: Temporal.Date,
-		right: Temporal.Date,
+		smaller: Temporal.Date,
+		larger: Temporal.Date,
 		options: /* options bag */
 	) : Temporal.Duration;
 
@@ -485,7 +485,7 @@ Legend:
 | New Types (option 5) | 🙂 Consistent, but the new types may increase mental load | 🙂 Most\* operations work; some require extra boilerplate | 😃 Calendar-sensitive operations require an explicit choice | 😃 I/O operations operate in the ISO calendar space | 😐 Lots of new types and API changes |
 | ISO Factories (option 6) | 😐 Unclear whether to use ISO or non-ISO factories | 🙂 Method names at call sites may change | 🙂 Likely to be correct, but users could call the ISO factories incorrectly | 😃 ISO-specific methods for interop | 🙂 Minimal API changes |
 
-\**See https://github.com/tc39/proposal-temporal/issues/240#issuecomment-557726669*
+\**See https://github.com/tc39/proposal-temporal/issues/240#issuecomment-557726669 *
 
 ## Temporal.Date API changes
 

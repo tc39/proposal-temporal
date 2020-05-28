@@ -1,35 +1,35 @@
 import { ES } from './ecmascript.mjs';
 import { GetIntrinsic, MakeIntrinsicClass } from './intrinsicclass.mjs';
-import { YEAR, MONTH, CreateSlots, GetSlot, SetSlot } from './slots.mjs';
+import { ISO_YEAR, ISO_MONTH, CreateSlots, GetSlot, SetSlot } from './slots.mjs';
 
 export class YearMonth {
-  constructor(year, month) {
-    year = ES.ToInteger(year);
-    month = ES.ToInteger(month);
-    ES.RejectYearMonth(year, month);
+  constructor(isoYear, isoMonth) {
+    isoYear = ES.ToInteger(isoYear);
+    isoMonth = ES.ToInteger(isoMonth);
+    ES.RejectYearMonth(isoYear, isoMonth);
     CreateSlots(this);
-    SetSlot(this, YEAR, year);
-    SetSlot(this, MONTH, month);
+    SetSlot(this, ISO_YEAR, isoYear);
+    SetSlot(this, ISO_MONTH, isoMonth);
   }
   get year() {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
-    return GetSlot(this, YEAR);
+    return GetSlot(this, ISO_YEAR);
   }
   get month() {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
-    return GetSlot(this, MONTH);
+    return GetSlot(this, ISO_MONTH);
   }
   get daysInMonth() {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
-    return ES.DaysInMonth(GetSlot(this, YEAR), GetSlot(this, MONTH));
+    return ES.DaysInMonth(GetSlot(this, ISO_YEAR), GetSlot(this, ISO_MONTH));
   }
   get daysInYear() {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
-    return ES.LeapYear(GetSlot(this, YEAR)) ? 366 : 365;
+    return ES.LeapYear(GetSlot(this, ISO_YEAR)) ? 366 : 365;
   }
   get isLeapYear() {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
-    return ES.LeapYear(GetSlot(this, YEAR));
+    return ES.LeapYear(GetSlot(this, ISO_YEAR));
   }
   with(temporalYearMonthLike = {}, options) {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
@@ -38,7 +38,7 @@ export class YearMonth {
     if (!props) {
       throw new RangeError('invalid year-month-like');
     }
-    let { year = GetSlot(this, YEAR), month = GetSlot(this, MONTH) } = props;
+    let { year = GetSlot(this, ISO_YEAR), month = GetSlot(this, ISO_MONTH) } = props;
     ({ year, month } = ES.RegulateYearMonth(year, month, disambiguation));
     const Construct = ES.SpeciesConstructor(this, YearMonth);
     const result = new Construct(year, month);
@@ -112,10 +112,20 @@ export class YearMonth {
     const Duration = GetIntrinsic('%Temporal.Duration%');
     return new Duration(years, months);
   }
+  equals(other) {
+    if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
+    if (!ES.IsTemporalYearMonth(other)) throw new TypeError('invalid YearMonth object');
+    for (const slot of [ISO_YEAR, ISO_MONTH]) {
+      const val1 = GetSlot(this, slot);
+      const val2 = GetSlot(other, slot);
+      if (val1 !== val2) return false;
+    }
+    return true;
+  }
   toString() {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
-    let year = ES.ISOYearString(GetSlot(this, YEAR));
-    let month = ES.ISODateTimePartString(GetSlot(this, MONTH));
+    let year = ES.ISOYearString(GetSlot(this, ISO_YEAR));
+    let month = ES.ISODateTimePartString(GetSlot(this, ISO_MONTH));
     let resultString = `${year}-${month}`;
     return resultString;
   }
@@ -125,8 +135,8 @@ export class YearMonth {
   }
   withDay(day) {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
-    const year = GetSlot(this, YEAR);
-    const month = GetSlot(this, MONTH);
+    const year = GetSlot(this, ISO_YEAR);
+    const month = GetSlot(this, ISO_MONTH);
     const Date = GetIntrinsic('%Temporal.Date%');
     return new Date(year, month, day);
   }
@@ -140,8 +150,8 @@ export class YearMonth {
     let year, month;
     if (typeof item === 'object' && item) {
       if (ES.IsTemporalYearMonth(item)) {
-        year = GetSlot(item, YEAR);
-        month = GetSlot(item, MONTH);
+        year = GetSlot(item, ISO_YEAR);
+        month = GetSlot(item, ISO_MONTH);
       } else {
         // Intentionally alphabetical
         ({ year, month } = ES.ToRecord(item, [['month'], ['year']]));
@@ -156,8 +166,11 @@ export class YearMonth {
   }
   static compare(one, two) {
     if (!ES.IsTemporalYearMonth(one) || !ES.IsTemporalYearMonth(two)) throw new TypeError('invalid YearMonth object');
-    if (one.year !== two.year) return ES.ComparisonResult(one.year - two.year);
-    if (one.month !== two.month) return ES.ComparisonResult(one.month - two.month);
+    for (const slot of [ISO_YEAR, ISO_MONTH]) {
+      const val1 = GetSlot(one, slot);
+      const val2 = GetSlot(two, slot);
+      if (val1 !== val2) return ES.ComparisonResult(val1 - val2);
+    }
     return ES.ComparisonResult(0);
   }
 }

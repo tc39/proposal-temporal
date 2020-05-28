@@ -2,9 +2,9 @@ import { ES } from './ecmascript.mjs';
 import { GetIntrinsic, MakeIntrinsicClass } from './intrinsicclass.mjs';
 
 import {
-  YEAR,
-  MONTH,
-  DAY,
+  ISO_YEAR,
+  ISO_MONTH,
+  ISO_DAY,
   HOUR,
   MINUTE,
   SECOND,
@@ -191,6 +191,16 @@ export class Time {
     const Duration = GetIntrinsic('%Temporal.Duration%');
     return new Duration(0, 0, 0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
   }
+  equals(other) {
+    if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
+    if (!ES.IsTemporalTime(other)) throw new TypeError('invalid Time object');
+    for (const slot of [HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND]) {
+      const val1 = GetSlot(this, slot);
+      const val2 = GetSlot(other, slot);
+      if (val1 !== val2) return false;
+    }
+    return true;
+  }
 
   toString() {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
@@ -213,9 +223,9 @@ export class Time {
   withDate(temporalDate) {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
     if (!ES.IsTemporalDate(temporalDate)) throw new TypeError('invalid Temporal.Date object');
-    const year = GetSlot(temporalDate, YEAR);
-    const month = GetSlot(temporalDate, MONTH);
-    const day = GetSlot(temporalDate, DAY);
+    const year = GetSlot(temporalDate, ISO_YEAR);
+    const month = GetSlot(temporalDate, ISO_MONTH);
+    const day = GetSlot(temporalDate, ISO_DAY);
     const hour = GetSlot(this, HOUR);
     const minute = GetSlot(this, MINUTE);
     const second = GetSlot(this, SECOND);
@@ -277,12 +287,11 @@ export class Time {
   }
   static compare(one, two) {
     if (!ES.IsTemporalTime(one) || !ES.IsTemporalTime(two)) throw new TypeError('invalid Time object');
-    if (one.hour !== two.hour) return ES.ComparisonResult(one.hour - two.hour);
-    if (one.minute !== two.minute) return ES.ComparisonResult(one.minute - two.minute);
-    if (one.second !== two.second) return ES.ComparisonResult(one.second - two.second);
-    if (one.millisecond !== two.millisecond) return ES.ComparisonResult(one.millisecond - two.millisecond);
-    if (one.microsecond !== two.microsecond) return ES.ComparisonResult(one.microsecond - two.microsecond);
-    if (one.nanosecond !== two.nanosecond) return ES.ComparisonResult(one.nanosecond - two.nanosecond);
+    for (const slot of [HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND]) {
+      const val1 = GetSlot(one, slot);
+      const val2 = GetSlot(two, slot);
+      if (val1 !== val2) return ES.ComparisonResult(val1 - val2);
+    }
     return ES.ComparisonResult(0);
   }
 }

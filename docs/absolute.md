@@ -334,6 +334,27 @@ epoch.inTimeZone(utc).difference(billion.inTimeZone(utc), { largestUnit: 'years'
   // => P31Y8M8DT1H46M40S
 ```
 
+### absolute.**equals**(_other_: Temporal.Absolute) : boolean
+
+**Parameters:**
+- `other` (`Temporal.Absolute`): Another time to compare.
+
+**Returns:** `true` if `absolute` and `other` are equal, or `false` if not.
+
+Compares two `Temporal.Absolute` objects for equality.
+
+This function exists because it's not possible to compare using `absolute == other` or `absolute === other`, due to ambiguity in the primitive representation and between Temporal types.
+
+If you don't need to know the order in which the two times occur, then this function may be less typing and more efficient than `Temporal.Absolute.compare`.
+
+Example usage:
+```javascript
+one = Temporal.Absolute.fromEpochSeconds(1.0e9);
+two = Temporal.Absolute.fromEpochSeconds(1.1e9);
+one.equals(two)  // => false
+one.equals(one)  // => true
+```
+
 ### absolute.**toString**(_timeZone_?: Temporal.TimeZone | string) : string
 
 **Parameters:**

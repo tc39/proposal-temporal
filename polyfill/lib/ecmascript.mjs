@@ -10,10 +10,10 @@ import {
   GetSlot,
   HasSlot,
   EPOCHNANOSECONDS,
-  IDENTIFIER,
-  YEAR,
-  MONTH,
-  DAY,
+  TIMEZONE_ID,
+  ISO_YEAR,
+  ISO_MONTH,
+  ISO_DAY,
   HOUR,
   MINUTE,
   SECOND,
@@ -41,17 +41,19 @@ import * as PARSE from './regex.mjs';
 
 export const ES = ObjectAssign({}, ES2019, {
   IsTemporalAbsolute: (item) => HasSlot(item, EPOCHNANOSECONDS),
-  IsTemporalTimeZone: (item) => HasSlot(item, IDENTIFIER),
+  IsTemporalTimeZone: (item) => HasSlot(item, TIMEZONE_ID),
   IsTemporalDuration: (item) =>
     HasSlot(item, YEARS, MONTHS, DAYS, HOURS, MINUTES, SECONDS, MILLISECONDS, MICROSECONDS, NANOSECONDS),
   IsTemporalDate: (item) =>
-    HasSlot(item, YEAR, MONTH, DAY) && !HasSlot(item, HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND),
+    HasSlot(item, ISO_YEAR, ISO_MONTH, ISO_DAY) &&
+    !HasSlot(item, HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND),
   IsTemporalTime: (item) =>
-    HasSlot(item, HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND) && !HasSlot(item, YEAR, MONTH, DAY),
+    HasSlot(item, HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND) &&
+    !HasSlot(item, ISO_YEAR, ISO_MONTH, ISO_DAY),
   IsTemporalDateTime: (item) =>
-    HasSlot(item, YEAR, MONTH, DAY, HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND),
-  IsTemporalYearMonth: (item) => HasSlot(item, YEAR, MONTH) && !HasSlot(item, DAY),
-  IsTemporalMonthDay: (item) => HasSlot(item, MONTH, DAY) && !HasSlot(item, YEAR),
+    HasSlot(item, ISO_YEAR, ISO_MONTH, ISO_DAY, HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND),
+  IsTemporalYearMonth: (item) => HasSlot(item, ISO_YEAR, ISO_MONTH) && !HasSlot(item, ISO_DAY),
+  IsTemporalMonthDay: (item) => HasSlot(item, ISO_MONTH, ISO_DAY) && !HasSlot(item, ISO_YEAR),
   ToTemporalTimeZone: (item) => {
     if (ES.IsTemporalTimeZone(item)) return item;
     const TimeZone = GetIntrinsic('%Temporal.TimeZone%');
@@ -217,8 +219,10 @@ export const ES = ObjectAssign({}, ES2019, {
         ));
         break;
       case 'balance': {
-        let deltaDays;
-        ({ deltaDays, hour, minute, second, millisecond, microsecond, nanosecond } = ES.BalanceTime(
+        ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.BalanceDateTime(
+          year,
+          month,
+          day,
           hour,
           minute,
           second,
@@ -226,7 +230,6 @@ export const ES = ObjectAssign({}, ES2019, {
           microsecond,
           nanosecond
         ));
-        ({ year, month, day } = ES.BalanceDate(year, month, day + deltaDays));
         // Still rejected if balanced DateTime is outside valid range
         ES.RejectDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
         break;
@@ -575,7 +578,7 @@ export const ES = ObjectAssign({}, ES2019, {
   },
   GetTimeZoneOffsetNanoseconds: (epochNanoseconds, timeZone) => {
     const offset = parseOffsetString(`${timeZone}`);
-    if (offset !== null) return bigInt(offset).multiply(1e6);
+    if (offset !== null) return offset * 1e6;
     const {
       year,
       month,
@@ -589,11 +592,11 @@ export const ES = ObjectAssign({}, ES2019, {
     } = ES.GetTimeZoneDateTimeParts(epochNanoseconds, timeZone);
     const utc = ES.GetEpochFromParts(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
     if (utc === null) throw new RangeError('Date outside of supported range');
-    return utc.minus(epochNanoseconds);
+    return +utc.minus(epochNanoseconds);
   },
   GetTimeZoneOffsetString: (epochNanoseconds, timeZone) => {
-    const offsetNanos = bigInt(ES.GetTimeZoneOffsetNanoseconds(epochNanoseconds, timeZone));
-    const offsetString = makeOffsetString(offsetNanos.divide(1e6));
+    const offsetNanos = ES.GetTimeZoneOffsetNanoseconds(epochNanoseconds, timeZone);
+    const offsetString = makeOffsetString(offsetNanos / 1e6);
     return offsetString;
   },
   GetEpochFromParts: (year, month, day, hour, minute, second, millisecond, microsecond, nanosecond) => {
@@ -619,56 +622,23 @@ export const ES = ObjectAssign({}, ES2019, {
     let microsecond = Math.floor(nanos / 1e3) % 1e3;
     let nanosecond = Math.floor(nanos / 1) % 1e3;
 
+    let year, month, day, hour, minute, second;
     if (offset !== null) {
       millisecond += offset;
       let item = new Date(+epochMilliseconds);
-      let year = item.getUTCFullYear();
-      let month = item.getUTCMonth() + 1;
-      let day = item.getUTCDate();
-      let hour = item.getUTCHours();
-      let minute = item.getUTCMinutes();
-      let second = item.getUTCSeconds();
-
-      let deltaDays = 0;
-      ({ deltaDays, hour, minute, second, millisecond, microsecond, nanosecond } = ES.BalanceTime(
-        hour,
-        minute,
-        second,
-        millisecond,
-        microsecond,
-        nanosecond
+      year = item.getUTCFullYear();
+      month = item.getUTCMonth() + 1;
+      day = item.getUTCDate();
+      hour = item.getUTCHours();
+      minute = item.getUTCMinutes();
+      second = item.getUTCSeconds();
+    } else {
+      ({ year, month, day, hour, minute, second } = ES.GetFormatterParts(timeZone, epochMilliseconds).reduce(
+        reduceParts,
+        {}
       ));
-      day += deltaDays;
-      ({ year, month, day } = ES.BalanceDate(year, month, day));
-      return {
-        year,
-        month,
-        day,
-        hour,
-        minute,
-        second,
-        millisecond,
-        microsecond,
-        nanosecond
-      };
     }
-    let year, month, day, hour, minute, second;
-    ({ year, month, day, hour, minute, second } = ES.GetFormatterParts(timeZone, epochMilliseconds).reduce(
-      reduceParts,
-      {}
-    ));
-    let deltaDays = 0;
-    ({ deltaDays, hour, minute, second, millisecond, microsecond, nanosecond } = ES.BalanceTime(
-      hour,
-      minute,
-      second,
-      millisecond,
-      microsecond,
-      nanosecond
-    ));
-    day += deltaDays;
-    ({ year, month, day } = ES.BalanceDate(year, month, day));
-    return { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond };
+    return ES.BalanceDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
   },
   GetTimeZoneNextTransition: (epochNanoseconds, timeZone) => {
     const offset = parseOffsetString(timeZone);
@@ -742,7 +712,7 @@ export const ES = ObjectAssign({}, ES2019, {
     if (nsLater.greater(NS_MAX)) nsLater = ns;
     const earliest = ES.GetTimeZoneOffsetNanoseconds(nsEarlier, timeZone);
     const latest = ES.GetTimeZoneOffsetNanoseconds(nsLater, timeZone);
-    const found = earliest.equals(latest) ? [earliest] : [earliest, latest];
+    const found = earliest === latest ? [earliest] : [earliest, latest];
     return found
       .map((offsetNanoseconds) => {
         const epochNanoseconds = bigInt(ns).minus(offsetNanoseconds);
@@ -861,6 +831,19 @@ export const ES = ObjectAssign({}, ES2019, {
     }
 
     return { year, month, day };
+  },
+  BalanceDateTime: (year, month, day, hour, minute, second, millisecond, microsecond, nanosecond) => {
+    let deltaDays;
+    ({ deltaDays, hour, minute, second, millisecond, microsecond, nanosecond } = ES.BalanceTime(
+      hour,
+      minute,
+      second,
+      millisecond,
+      microsecond,
+      nanosecond
+    ));
+    ({ year, month, day } = ES.BalanceDate(year, month, day + deltaDays));
+    return { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond };
   },
   BalanceSubSecond: (millisecond, microsecond, nanosecond) => {
     if (!Number.isFinite(millisecond) || !Number.isFinite(microsecond) || !Number.isFinite(nanosecond)) {

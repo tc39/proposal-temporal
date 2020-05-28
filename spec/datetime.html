@@ -18,7 +18,7 @@
     </p>
 
     <emu-clause id="sec-temporal.datetime">
-      <h1>Temporal.DateTime ( _year_, _month_, _day_ [ , _hour_ [ , _minute_ [ , _second_ [ , _millisecond_ [ , _microsecond_ [ , _nanosecond_ ] ] ] ] ] ] )</h1>
+      <h1>Temporal.DateTime ( _isoYear_, _isoMonth_, _isoDay_ [ , _hour_ [ , _minute_ [ , _second_ [ , _millisecond_ [ , _microsecond_ [ , _nanosecond_ ] ] ] ] ] ] )</h1>
       <p>
         When the `Temporal.DateTime` function is called, the following steps are taken:
       </p>
@@ -26,16 +26,16 @@
       <emu-alg>
         1. If NewTarget is *undefined*, then
           1. Throw a *TypeError* exception.
-        1. Let _year_ be ? ToInteger(_year_).
-        1. Let _month_ be ? ToInteger(_month_).
-        1. Let _day_ be ? ToInteger(_day_).
+        1. Let _isoYear_ be ? ToInteger(_isoYear_).
+        1. Let _isoMonth_ be ? ToInteger(_isoMonth_).
+        1. Let _isoDay_ be ? ToInteger(_isoDay_).
         1. Let _hour_ be ? ToInteger(_hour_).
         1. Let _minute_ be ? ToInteger(_minute_).
         1. Let _second_ be ? ToInteger(_second_).
         1. Let _millisecond_ be ? ToInteger(_millisecond_).
         1. Let _microsecond_ be ? ToInteger(_microsecond_).
         1. Let _nanosecond_ be ? ToInteger(_nanosecond_).
-        1. Return ? CreateTemporalDateTime(_year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, NewTarget).
+        1. Return ? CreateTemporalDateTime(_isoYear_, _isoMonth_, _isoDay_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, NewTarget).
       </emu-alg>
     </emu-clause>
   </emu-clause>
@@ -132,7 +132,7 @@
       <emu-alg>
         1. Let _dateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
-        1. Return _dateTime_.[[Year]].
+        1. Return _dateTime_.[[ISOYear]].
       </emu-alg>
     </emu-clause>
 
@@ -145,7 +145,7 @@
       <emu-alg>
         1. Let _dateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
-        1. Return _dateTime_.[[Month]].
+        1. Return _dateTime_.[[ISOMonth]].
       </emu-alg>
     </emu-clause>
 
@@ -158,7 +158,7 @@
       <emu-alg>
         1. Let _dateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
-        1. Return _dateTime_.[[Day]].
+        1. Return _dateTime_.[[ISODay]].
       </emu-alg>
     </emu-clause>
 
@@ -249,7 +249,7 @@
       <emu-alg>
         1. Let _dateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
-        1. Return ! ToDayOfWeek(_dateTime_.[[Year]], _dateTime_.[[Month]], _dateTime_.[[Day]]).
+        1. Return ! ToDayOfWeek(_dateTime_.[[ISOYear]], _dateTime_.[[ISOMonth]], _dateTime_.[[ISODay]]).
       </emu-alg>
     </emu-clause>
 
@@ -262,7 +262,7 @@
       <emu-alg>
         1. Let _dateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
-        1. Return ! ToDayOfYear(_dateTime_.[[Year]], _dateTime_.[[Month]], _dateTime_.[[Day]]).
+        1. Return ! ToDayOfYear(_dateTime_.[[ISOYear]], _dateTime_.[[ISOMonth]], _dateTime_.[[ISODay]]).
       </emu-alg>
     </emu-clause>
 
@@ -275,7 +275,7 @@
       <emu-alg>
         1. Let _dateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
-        1. Return ! ToWeekOfYear(_dateTime_.[[Year]], _dateTime_.[[Month]], _dateTime_.[[Day]]).
+        1. Return ! ToWeekOfYear(_dateTime_.[[ISOYear]], _dateTime_.[[ISOMonth]], _dateTime_.[[ISODay]]).
       </emu-alg>
     </emu-clause>
 
@@ -288,7 +288,7 @@
       <emu-alg>
         1. Let _dateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
-        1. Return ! DaysInYear(_dateTime_.[[Year]]).
+        1. Return ! DaysInYear(_dateTime_.[[ISOYear]]).
       </emu-alg>
     </emu-clause>
 
@@ -301,7 +301,7 @@
       <emu-alg>
         1. Let _dateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
-        1. Return ! DaysInMonth(_dateTime_.[[Year]], _dateTime_.[[Month]]).
+        1. Return ! DaysInMonth(_dateTime_.[[ISOYear]], _dateTime_.[[ISOMonth]]).
       </emu-alg>
     </emu-clause>
 
@@ -314,7 +314,7 @@
       <emu-alg>
         1. Let _dateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
-        1. Return ! IsLeapYear(_dateTime_.[[Year]]).
+        1. Return ! IsLeapYear(_dateTime_.[[ISOYear]]).
       </emu-alg>
     </emu-clause>
 
@@ -332,15 +332,15 @@
         1. If _partialDateTime_.[[Year]] is not *undefined*, then
           1. Let _year_ be _partialDateTime_.[[Year]].
         1. Else
-          1. Let _year_ be _dateTime_.[[Year]].
+          1. Let _year_ be _dateTime_.[[ISOYear]].
         1. If _partialDateTime_.[[Month]] is not *undefined*, then
           1. Let _month_ be _partialDateTime_.[[Month]].
         1. Else
-          1. Let _month_ be _dateTime_.[[Month]].
+          1. Let _month_ be _dateTime_.[[ISOMonth]].
         1. If _partialDateTime_.[[Day]] is not *undefined*, then
           1. Let _day_ be _partialDateTime_.[[Day]].
         1. Else
-          1. Let _day_ be _dateTime_.[[Day]].
+          1. Let _day_ be _dateTime_.[[ISODay]].
         1. If _partialDateTime_.[[Hour]] is not *undefined*, then
           1. Let _hour_ be _partialDateTime_.[[Hour]].
         1. Else
@@ -383,7 +383,7 @@
         1. Let _duration_ be ? ToLimitedTemporalDuration(_temporalDurationLike_, « »).
         1. Let _disambiguation_ be ? ToArithmeticTemporalDisambiguation(_options_).
         1. Let _timePart_ be ? AddTime(_dateTime_.[[Hour]], _dateTime_.[[Minute]], _dateTime_.[[Second]], _dateTime_.[[Millisecond]], _dateTime_.[[Microsecond]], _dateTime_.[[Nanosecond]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
-        1. Let _datePart_ be ? AddDate(_dateTime_.[[Year]], _dateTime_.[[Month]], _dateTime_.[[Day]], _duration_.[[Years]], _duration_.[[Months]], _duration_.[[Days]], _disambiguation_).
+        1. Let _datePart_ be ? AddDate(_dateTime_.[[ISOYear]], _dateTime_.[[ISOMonth]], _dateTime_.[[ISODay]], _duration_.[[Years]], _duration_.[[Months]], _duration_.[[Days]], _disambiguation_).
         1. Let _datePart_ be ? BalanceDate(_datePart_.[[Year]], _datePart_.[[Month]], _datePart_.[[Day]] + _timePart_.[[Day]]).
         1. Let _result_ be ? RegulateDateTime(_datePart_.[[Year]], _datePart_.[[Month]], _datePart_.[[Day]], _timePart_.[[Hour]], _timePart_.[[Minute]], _timePart_.[[Second]], _timePart_.[[Millisecond]], _timePart_.[[Microsecond]], _timePart_.[[Nanosecond]], _disambiguation_).
         1. Assert: ! ValidateDateTime(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]) is *true*.
@@ -403,7 +403,7 @@
         1. Let _duration_ be ? ToLimitedTemporalDuration(_temporalDurationLike_, « »).
         1. Let _disambiguation_ be ? ToArithmeticTemporalDisambiguation(_options_).
         1. Let _timePart_ be ? SubtractTime(_dateTime_.[[Hour]], _dateTime_.[[Minute]], _dateTime_.[[Second]], _dateTime_.[[Millisecond]], _dateTime_.[[Microsecond]], _dateTime_.[[Nanosecond]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
-        1. Let _datePart_ be ? SubtractDate(_dateTime_.[[Year]], _dateTime_.[[Month]], _dateTime_.[[Day]], _duration_.[[Years]], _duration_.[[Months]], _duration_.[[Days]] - _timePart_.[[Day]], _disambiguation_).
+        1. Let _datePart_ be ? SubtractDate(_dateTime_.[[ISOYear]], _dateTime_.[[ISOMonth]], _dateTime_.[[ISODay]], _duration_.[[Years]], _duration_.[[Months]], _duration_.[[Days]] - _timePart_.[[Day]], _disambiguation_).
         1. Let _result_ be ? RegulateDateTime(_datePart_.[[Year]], _datePart_.[[Month]], _datePart_.[[Day]], _timePart_.[[Hour]], _timePart_.[[Minute]], _timePart_.[[Second]], _timePart_.[[Millisecond]], _timePart_.[[Microsecond]], _timePart_.[[Nanosecond]], _disambiguation_).
         1. Assert: ! ValidateDateTime(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]) is *true*.
         1. Return ? CreateTemporalDateTimeFromInstance(_dateTime_, _result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]).
@@ -428,7 +428,7 @@
           1. Let _greater_ be _dateTime_.
           1. Let _smaller_ be _other_.
         1. Let _timeDifference_ be ! DifferenceTime(_smaller_, _greater_).
-        1. Let _balanceResult_ be ? BalanceDate(_greater_.[[Year]], _greater_.[[Month]], _greater_.[[Day]] + _timeDifference_.[[Days]]).
+        1. Let _balanceResult_ be ? BalanceDate(_greater_.[[ISOYear]], _greater_.[[ISOMonth]], _greater_.[[ISODay]] + _timeDifference_.[[Days]]).
         1. Let _dateDifference_ be ! DifferenceDate(_smaller_, _balanceResult_, _largestUnit_).
         1. Let _days_ be _dateDifference_.[[Days]].
         1. Let _hours_ be _timeDifference_.[[Hour]].
@@ -444,6 +444,29 @@
           1. Set _seconds_ to _seconds_ + 60 &times; _minutes_.
           1. Set _minutes_ to 0.
         1. Return ? CreateTemporalDuration(_dateDifference_.[[Years]], _dateDifference_.[[Months]], _days_, _hours_, _minutes_, _seconds_, _timeDifference_.[[Millisecond]], _timeDifference_.[[Microsecond]], _timeDifference_.[[Nanosecond]]).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal.datetime.prototype.equals">
+      <h1>Temporal.DateTime.prototype.equals ( _other_ )</h1>
+      <p>
+        The `equals` method takes one argument _other_.
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _dateTime_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
+        1. Perform ? RequireInternalSlot(_other_, [[InitializedTemporalDateTime]]).
+        1. If _dateTime_.[[Year]] &ne; _other_.[[Year]], return *false*.
+        1. If _dateTime_.[[Month]] &ne; _other_.[[Month]], return *false*.
+        1. If _dateTime_.[[Day]] &ne; _other_.[[Day]], return *false*.
+        1. If _dateTime_.[[Hour]] &ne; _other_.[[Hour]], return *false*.
+        1. If _dateTime_.[[Minute]] &ne; _other_.[[Minute]], return *false*.
+        1. If _dateTime_.[[Second]] &ne; _other_.[[Second]], return *false*.
+        1. If _dateTime_.[[Millisecond]] &ne; _other_.[[Millisecond]], return *false*.
+        1. If _dateTime_.[[Microsecond]] &ne; _other_.[[Microsecond]], return *false*.
+        1. If _dateTime_.[[Nanosecond]] &ne; _other_.[[Nanosecond]], return *false*.
+        1. Return *true*.
       </emu-alg>
     </emu-clause>
 
@@ -512,7 +535,7 @@
       <emu-alg>
         1. Let _dateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
-        1. Return ? CreateTemporalDate(_dateTime_.[[Year]], _dateTime_.[[Month]], _dateTime_.[[Day]]).
+        1. Return ? CreateTemporalDate(_dateTime_.[[ISOYear]], _dateTime_.[[ISOMonth]], _dateTime_.[[ISODay]]).
       </emu-alg>
     </emu-clause>
 
@@ -524,7 +547,7 @@
       <emu-alg>
         1. Let _dateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
-        1. Return ? CreateTemporalYearMonth(_dateTime_.[[Year]], _dateTime_.[[Month]]).
+        1. Return ? CreateTemporalYearMonth(_dateTime_.[[ISOYear]], _dateTime_.[[ISOMonth]]).
       </emu-alg>
     </emu-clause>
 
@@ -536,7 +559,7 @@
       <emu-alg>
         1. Let _dateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
-        1. Return ? CreateTemporalMonthDay(_dateTime_.[[Month]], _dateTime_.[[Day]]).
+        1. Return ? CreateTemporalMonthDay(_dateTime_.[[ISOMonth]], _dateTime_.[[ISODay]]).
       </emu-alg>
     </emu-clause>
 
@@ -563,7 +586,7 @@
         1. Let _fields_ be ? ObjectCreate(%ObjectPrototype%).
         1. For each row of <emu-xref href="#table-temporal-temporaldatetimelike-properties"></emu-xref>, except the header row, in table order, do
           1. Let _p_ be the Property value of the current row.
-          1. Let _v_ be the value of _record_'s internal slot whose name is the Internal Slot value of the current row.
+          1. Let _v_ be the value of _record_'s field whose name is the Internal Slot value of the current row.
           1. Perform ! CreateDataPropertyOrThrow(_fields_, _p_, _v_).
         1. Return _fields_.
       </emu-alg>
@@ -711,23 +734,12 @@
         1. If _disambiguation_ is `"constrain"`, then
           1. Return ! ConstrainDateTime(_year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_).
         1. If _disambiguation_ is `"balance"`, then
-          1. Let _balancedTime_ be ? BalanceTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_).
-          1. Let _balancedDate_ be ? BalanceDate(_year_, _month_, _day_ + _balancedTime_.[[Days]]).
-          1. If ! ValidateDateTime(_balancedDate_.[[Year]], _balancedDate_.[[Month]], _balancedDate_.[[Day]],
-              _balancedTime_.[[Hour]], _balancedTime_.[[Minute]], _balancedTime_.[[Second]],
-              _balancedTime_.[[Millisecond]], _balancedTime_.[[Microsecond]], _balancedTime_.[[Nanosecond]]) is *false*, then
+          1. Let _result_ be ? BalanceDateTime(_year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_).
+          1. If ! ValidateDateTime(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]],
+              _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]],
+              _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]) is *false*, then
             1. Throw a *RangeError* exception.
-          1. Return the Record {
-            [[Year]]: _balancedDate_.[[Year]],
-            [[Month]]: _balancedDate_.[[Month]],
-            [[Day]]: _balancedDate_.[[Day]],
-            [[Hour]]: _balancedTime_.[[Hour]],
-            [[Minute]]: _balancedTime_.[[Minute]],
-            [[Second]]: _balancedTime_.[[Second]],
-            [[Millisecond]]: _balancedTime_.[[Millisecond]],
-            [[Microsecond]]: _balancedTime_.[[Microsecond]],
-            [[Nanosecond]]: _balancedTime_.[[Nanosecond]]
-            }.
+          1. Return _result_.
         1. If _disambiguation_ is `"reject"`, then
           1. If ! ValidateDateTime(_year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_) is *false*, then
             1. Throw a *RangeError* exception.
@@ -816,16 +828,35 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-createtemporaldatetime" aoid="CreateTemporalDateTime">
-      <h1>CreateTemporalDateTime ( _year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_ [, _newTarget_] )</h1>
+    <emu-clause id="sec-temporal-balancedatetime" aoid="BalanceDateTime">
+      <h1>BalanceDateTime ( _year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_ )</h1>
       <emu-alg>
-        1. If ! ValidateDateTime(_year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_) is *false*, then
+        1. Let _balancedTime_ be ? BalanceTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_).
+        1. Let _balancedDate_ be ? BalanceDate(_year_, _month_, _day_ + _balancedTime_.[[Days]]).
+        1. Return the Record {
+            [[Year]]: _balancedDate_.[[Year]],
+            [[Month]]: _balancedDate_.[[Month]],
+            [[Day]]: _balancedDate_.[[Day]],
+            [[Hour]]: _balancedTime_.[[Hour]],
+            [[Minute]]: _balancedTime_.[[Minute]],
+            [[Second]]: _balancedTime_.[[Second]],
+            [[Millisecond]]: _balancedTime_.[[Millisecond]],
+            [[Microsecond]]: _balancedTime_.[[Microsecond]],
+            [[Nanosecond]]: _balancedTime_.[[Nanosecond]]
+          }.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-createtemporaldatetime" aoid="CreateTemporalDateTime">
+      <h1>CreateTemporalDateTime ( _isoYear_, _isoMonth_, _isoDay_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_ [, _newTarget_] )</h1>
+      <emu-alg>
+        1. If ! ValidateDateTime(_isoYear_, _isoMonth_, _isoDay_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_) is *false*, then
           1. Throw a *RangeError* exception.
         1. If _newTarget_ is not given, set it to %Temporal.DateTime%.
-        1. Let _object_ be ? OrdinaryCreateFromConstructor(_newTarget_, `"%Temporal.DateTime.prototype%"`, « [[InitializedTemporalDateTime]], [[Year]], [[Month]], [[Day]], [[Hour]], [[Minute]], [[Second]], [[Millisecond]], [[Microsecond]], [[Nanosecond]] »).
-        1. Set _object_.[[Year]] to _year_.
-        1. Set _object_.[[Month]] to _month_.
-        1. Set _object_.[[Day]] to _day_.
+        1. Let _object_ be ? OrdinaryCreateFromConstructor(_newTarget_, `"%Temporal.DateTime.prototype%"`, « [[InitializedTemporalDateTime]], [[ISOYear]], [[ISOMonth]], [[ISODay]], [[Hour]], [[Minute]], [[Second]], [[Millisecond]], [[Microsecond]], [[Nanosecond]] »).
+        1. Set _object_.[[ISOYear]] to _isoYear_.
+        1. Set _object_.[[ISOMonth]] to _isoMonth_.
+        1. Set _object_.[[ISODay]] to _isoDay_.
         1. Set _object_.[[Hour]] to _hour_.
         1. Set _object_.[[Minute]] to _minute_.
         1. Set _object_.[[Second]] to _second_.
@@ -837,12 +868,12 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal-createtemporaldatetimefrominstance" aoid="CreateTemporalDateTimeFromInstance">
-      <h1>CreateTemporalDateTimeFromInstance ( _dateTime_, _year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_ )</h1>
+      <h1>CreateTemporalDateTimeFromInstance ( _dateTime_, _isoYear_, _isoMonth_, _isoDay_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_ )</h1>
       <emu-alg>
         1. Assert: Type(_dateTime_) is Object and _dateTime_ has an [[InitializedTemporalDateTime]] internal slot.
-        1. Assert: ! ValidateDateTime(_year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_) is *true*.
+        1. Assert: ! ValidateDateTime(_isoYear_, _isoMonth_, _isoDay_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_) is *true*.
         1. Let _constructor_ be ? SpeciesConstructor(_dateTime_, %Temporal.DateTime%).
-        1. Let _result_ be ? Construct(_constructor_, « _year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_ »).
+        1. Let _result_ be ? Construct(_constructor_, « _isoYear_, _isoMonth_, _isoDay_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_ »).
         1. Perform ? RequireInternalSlot(_result_, [[InitializedTemporalDateTime]]).
         1. Return _result_.
       </emu-alg>
@@ -894,9 +925,9 @@
       <emu-alg>
         1. Assert: Type(_dateTime_) is Object.
         1. Assert: _dateTime_ has an [[InitializedTemporalDateTime]] internal slot.
-        1. Let _year_ be ! PadYear(_dateTime_.[[Year]]).
-        1. Let _month_ be _dateTime_.[[Month]] formatted as a two-digit decimal number, padded to the left with a zero if necessary.
-        1. Let _day_ be _dateTime_.[[Day]] formatted as a two-digit decimal number, padded to the left with a zero if necessary.
+        1. Let _year_ be ! PadYear(_dateTime_.[[ISOYear]]).
+        1. Let _month_ be _dateTime_.[[ISOMonth]] formatted as a two-digit decimal number, padded to the left with a zero if necessary.
+        1. Let _day_ be _dateTime_.[[ISODay]] formatted as a two-digit decimal number, padded to the left with a zero if necessary.
         1. Let _hour_ be _dateTime_.[[Hour]] formatted as a two-digit decimal number, padded to the left with a zero if necessary.
         1. Let _minute_ be _dateTime_.[[Minute]] formatted as a two-digit decimal number, padded to the left with a zero if necessary.
         1. Let _seconds_ be ! FormatSecondsStringPart(_dateTime_.[[Second]], _dateTime_.[[Millisecond]], _dateTime_.[[Microsecond]], _dateTime_.[[Nanosecond]]).
@@ -911,12 +942,12 @@
         1. Assert: _one_ has an [[InitializedTemporalDateTime]] internal slot.
         1. Assert: Type(_two_) is Object.
         1. Assert: _two_ has an [[InitializedTemporalDateTime]] internal slot.
-        1. If _one_.[[Year]] &gt; _two_.[[Year]], return 1.
-        1. If _one_.[[Year]] &lt; _two_.[[Year]], return -1.
-        1. If _one_.[[Month]] &gt; _two_.[[Month]], return 1.
-        1. If _one_.[[Month]] &lt; _two_.[[Month]], return -1.
-        1. If _one_.[[Day]] &gt; _two_.[[Day]], return 1.
-        1. If _one_.[[Day]] &lt; _two_.[[Day]], return -1.
+        1. If _one_.[[ISOYear]] &gt; _two_.[[ISOYear]], return 1.
+        1. If _one_.[[ISOYear]] &lt; _two_.[[ISOYear]], return -1.
+        1. If _one_.[[ISOMonth]] &gt; _two_.[[ISOMonth]], return 1.
+        1. If _one_.[[ISOMonth]] &lt; _two_.[[ISOMonth]], return -1.
+        1. If _one_.[[ISODay]] &gt; _two_.[[ISODay]], return 1.
+        1. If _one_.[[ISODay]] &lt; _two_.[[ISODay]], return -1.
         1. If _one_.[[Hour]] &gt; _two_.[[Hour]], return 1.
         1. If _one_.[[Hour]] &lt; _two_.[[Hour]], return -1.
         1. If _one_.[[Minute]] &gt; _two_.[[Minute]], return 1.

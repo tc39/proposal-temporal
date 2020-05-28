@@ -2,9 +2,9 @@ import { ES } from './ecmascript.mjs';
 import { GetIntrinsic, MakeIntrinsicClass } from './intrinsicclass.mjs';
 
 import {
-  YEAR,
-  MONTH,
-  DAY,
+  ISO_YEAR,
+  ISO_MONTH,
+  ISO_DAY,
   HOUR,
   MINUTE,
   SECOND,
@@ -17,21 +17,31 @@ import {
 } from './slots.mjs';
 
 export class DateTime {
-  constructor(year, month, day, hour = 0, minute = 0, second = 0, millisecond = 0, microsecond = 0, nanosecond = 0) {
-    year = ES.ToInteger(year);
-    month = ES.ToInteger(month);
-    day = ES.ToInteger(day);
+  constructor(
+    isoYear,
+    isoMonth,
+    isoDay,
+    hour = 0,
+    minute = 0,
+    second = 0,
+    millisecond = 0,
+    microsecond = 0,
+    nanosecond = 0
+  ) {
+    isoYear = ES.ToInteger(isoYear);
+    isoMonth = ES.ToInteger(isoMonth);
+    isoDay = ES.ToInteger(isoDay);
     hour = ES.ToInteger(hour);
     minute = ES.ToInteger(minute);
     second = ES.ToInteger(second);
     millisecond = ES.ToInteger(millisecond);
     microsecond = ES.ToInteger(microsecond);
     nanosecond = ES.ToInteger(nanosecond);
-    ES.RejectDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
+    ES.RejectDateTime(isoYear, isoMonth, isoDay, hour, minute, second, millisecond, microsecond, nanosecond);
     CreateSlots(this);
-    SetSlot(this, YEAR, year);
-    SetSlot(this, MONTH, month);
-    SetSlot(this, DAY, day);
+    SetSlot(this, ISO_YEAR, isoYear);
+    SetSlot(this, ISO_MONTH, isoMonth);
+    SetSlot(this, ISO_DAY, isoDay);
     SetSlot(this, HOUR, hour);
     SetSlot(this, MINUTE, minute);
     SetSlot(this, SECOND, second);
@@ -41,15 +51,15 @@ export class DateTime {
   }
   get year() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-    return GetSlot(this, YEAR);
+    return GetSlot(this, ISO_YEAR);
   }
   get month() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-    return GetSlot(this, MONTH);
+    return GetSlot(this, ISO_MONTH);
   }
   get day() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-    return GetSlot(this, DAY);
+    return GetSlot(this, ISO_DAY);
   }
   get hour() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
@@ -77,27 +87,27 @@ export class DateTime {
   }
   get dayOfWeek() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-    return ES.DayOfWeek(GetSlot(this, YEAR), GetSlot(this, MONTH), GetSlot(this, DAY));
+    return ES.DayOfWeek(GetSlot(this, ISO_YEAR), GetSlot(this, ISO_MONTH), GetSlot(this, ISO_DAY));
   }
   get dayOfYear() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-    return ES.DayOfYear(GetSlot(this, YEAR), GetSlot(this, MONTH), GetSlot(this, DAY));
+    return ES.DayOfYear(GetSlot(this, ISO_YEAR), GetSlot(this, ISO_MONTH), GetSlot(this, ISO_DAY));
   }
   get weekOfYear() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-    return ES.WeekOfYear(GetSlot(this, YEAR), GetSlot(this, MONTH), GetSlot(this, DAY));
+    return ES.WeekOfYear(GetSlot(this, ISO_YEAR), GetSlot(this, ISO_MONTH), GetSlot(this, ISO_DAY));
   }
   get daysInYear() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-    return ES.LeapYear(GetSlot(this, YEAR)) ? 366 : 365;
+    return ES.LeapYear(GetSlot(this, ISO_YEAR)) ? 366 : 365;
   }
   get daysInMonth() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-    return ES.DaysInMonth(GetSlot(this, YEAR), GetSlot(this, MONTH));
+    return ES.DaysInMonth(GetSlot(this, ISO_YEAR), GetSlot(this, ISO_MONTH));
   }
   get isLeapYear() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-    return ES.LeapYear(GetSlot(this, YEAR));
+    return ES.LeapYear(GetSlot(this, ISO_YEAR));
   }
   with(temporalDateTimeLike, options) {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
@@ -117,9 +127,9 @@ export class DateTime {
       throw new RangeError('invalid date-time-like');
     }
     let {
-      year = GetSlot(this, YEAR),
-      month = GetSlot(this, MONTH),
-      day = GetSlot(this, DAY),
+      year = GetSlot(this, ISO_YEAR),
+      month = GetSlot(this, ISO_MONTH),
+      day = GetSlot(this, ISO_DAY),
       hour = GetSlot(this, HOUR),
       minute = GetSlot(this, MINUTE),
       second = GetSlot(this, SECOND),
@@ -259,11 +269,21 @@ export class DateTime {
     const Duration = GetIntrinsic('%Temporal.Duration%');
     return new Duration(years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
   }
+  equals(other) {
+    if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+    if (!ES.IsTemporalDateTime(other)) throw new TypeError('invalid Date object');
+    for (const slot of [ISO_YEAR, ISO_MONTH, ISO_DAY, HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND]) {
+      const val1 = GetSlot(this, slot);
+      const val2 = GetSlot(other, slot);
+      if (val1 !== val2) return false;
+    }
+    return true;
+  }
   toString() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-    let year = ES.ISOYearString(GetSlot(this, YEAR));
-    let month = ES.ISODateTimePartString(GetSlot(this, MONTH));
-    let day = ES.ISODateTimePartString(GetSlot(this, DAY));
+    let year = ES.ISOYearString(GetSlot(this, ISO_YEAR));
+    let month = ES.ISODateTimePartString(GetSlot(this, ISO_MONTH));
+    let day = ES.ISODateTimePartString(GetSlot(this, ISO_DAY));
     let hour = ES.ISODateTimePartString(GetSlot(this, HOUR));
     let minute = ES.ISODateTimePartString(GetSlot(this, MINUTE));
     let second = ES.ISOSecondsString(
@@ -289,17 +309,17 @@ export class DateTime {
   getDate() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     const Date = GetIntrinsic('%Temporal.Date%');
-    return new Date(GetSlot(this, YEAR), GetSlot(this, MONTH), GetSlot(this, DAY));
+    return new Date(GetSlot(this, ISO_YEAR), GetSlot(this, ISO_MONTH), GetSlot(this, ISO_DAY));
   }
   getYearMonth() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     const YearMonth = GetIntrinsic('%Temporal.YearMonth%');
-    return new YearMonth(GetSlot(this, YEAR), GetSlot(this, MONTH));
+    return new YearMonth(GetSlot(this, ISO_YEAR), GetSlot(this, ISO_MONTH));
   }
   getMonthDay() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     const MonthDay = GetIntrinsic('%Temporal.MonthDay%');
-    return new MonthDay(GetSlot(this, MONTH), GetSlot(this, DAY));
+    return new MonthDay(GetSlot(this, ISO_MONTH), GetSlot(this, ISO_DAY));
   }
   getTime() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
@@ -334,9 +354,9 @@ export class DateTime {
     let year, month, day, hour, minute, second, millisecond, microsecond, nanosecond;
     if (typeof item === 'object' && item) {
       if (ES.IsTemporalDateTime(item)) {
-        year = GetSlot(item, YEAR);
-        month = GetSlot(item, MONTH);
-        day = GetSlot(item, DAY);
+        year = GetSlot(item, ISO_YEAR);
+        month = GetSlot(item, ISO_MONTH);
+        day = GetSlot(item, ISO_DAY);
         hour = GetSlot(item, HOUR);
         minute = GetSlot(item, MINUTE);
         second = GetSlot(item, SECOND);
@@ -387,15 +407,11 @@ export class DateTime {
   }
   static compare(one, two) {
     if (!ES.IsTemporalDateTime(one) || !ES.IsTemporalDateTime(two)) throw new TypeError('invalid DateTime object');
-    if (one.year !== two.year) return ES.ComparisonResult(one.year - two.year);
-    if (one.month !== two.month) return ES.ComparisonResult(one.month - two.month);
-    if (one.day !== two.day) return ES.ComparisonResult(one.day - two.day);
-    if (one.hour !== two.hour) return ES.ComparisonResult(one.hour - two.hour);
-    if (one.minute !== two.minute) return ES.ComparisonResult(one.minute - two.minute);
-    if (one.second !== two.second) return ES.ComparisonResult(one.second - two.second);
-    if (one.millisecond !== two.millisecond) return ES.ComparisonResult(one.millisecond - two.millisecond);
-    if (one.microsecond !== two.microsecond) return ES.ComparisonResult(one.microsecond - two.microsecond);
-    if (one.nanosecond !== two.nanosecond) return ES.ComparisonResult(one.nanosecond - two.nanosecond);
+    for (const slot of [ISO_YEAR, ISO_MONTH, ISO_DAY, HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND]) {
+      const val1 = GetSlot(one, slot);
+      const val2 = GetSlot(two, slot);
+      if (val1 !== val2) return ES.ComparisonResult(val1 - val2);
+    }
     return ES.ComparisonResult(0);
   }
 }
