@@ -2,10 +2,14 @@ env:
   browser: true
   es6: true
   node: true
+plugins:
+  - prettier
+  - '@typescript-eslint'
 extends:
   - 'eslint:recommended'
   - 'plugin:prettier/recommended'
-parser: babel-eslint  # for supporting dynamic import()
+  - 'plugin:@typescript-eslint/recommended'
+parser: '@typescript-eslint/parser' # for index.d.ts
 globals:
   Atomics: readonly
   BigInt: readonly
@@ -70,6 +74,9 @@ rules:
     - avoidEscape: true
   semi: error
   space-infix-ops: error
+  '@typescript-eslint/explicit-module-boundary-types': off
+  '@typescript-eslint/no-empty-function': off
+  '@typescript-eslint/no-var-requires': off
 overrides:
   - files:
       - polyfill/test/Absolute/**/*.js
