@@ -285,6 +285,17 @@ describe('DateTime', () => {
       throws(() => dt2.equals('1976-11-18T15:23:30.123456789'), TypeError);
     });
   });
+  describe("Comparison operators don't work", () => {
+    const dt1 = DateTime.from('1963-02-13T09:36:29.123456789');
+    const dt1again = DateTime.from('1963-02-13T09:36:29.123456789');
+    const dt2 = DateTime.from('1976-11-18T15:23:30.123456789');
+    it('=== is object equality', () => equal(dt1, dt1));
+    it('!== is object equality', () => notEqual(dt1, dt1again));
+    it('<', () => throws(() => dt1 < dt2));
+    it('>', () => throws(() => dt1 > dt2));
+    it('<=', () => throws(() => dt1 <= dt2));
+    it('>=', () => throws(() => dt1 >= dt2));
+  });
   describe('date/time maths', () => {
     const earlier = DateTime.from('1976-11-18T15:23:30.123456789');
     const later = DateTime.from('2019-10-29T10:46:38.271986102');

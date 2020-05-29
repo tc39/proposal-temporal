@@ -299,6 +299,9 @@ export class DateTime {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     return new Intl.DateTimeFormat(...args).format(this);
   }
+  valueOf() {
+    throw new TypeError('use compare() or equals() to compare Temporal.DateTime');
+  }
 
   inTimeZone(temporalTimeZoneLike = 'UTC', options) {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');

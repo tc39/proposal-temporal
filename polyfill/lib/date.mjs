@@ -153,6 +153,9 @@ export class Date {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
     return new Intl.DateTimeFormat(...args).format(this);
   }
+  valueOf() {
+    throw new TypeError('use compare() or equals() to compare Temporal.Date');
+  }
   withTime(temporalTime) {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
     if (!ES.IsTemporalTime(temporalTime)) throw new TypeError('invalid Temporal.Time object');

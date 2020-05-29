@@ -241,6 +241,9 @@ export class Duration {
     console.warn('Temporal.Duration.prototype.toLocaleString() requires Intl.DurationFormat.');
     return ES.TemporalDurationToString(this);
   }
+  valueOf() {
+    throw new TypeError('not possible to compare Temporal.Duration');
+  }
   static from(item, options = undefined) {
     const disambiguation = ES.ToTemporalDisambiguation(options);
     let years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds;

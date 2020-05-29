@@ -526,6 +526,12 @@ function reviver(key, value) {
 JSON.parse(str, reviver);
 ```
 
+### datetime.**valueOf**()
+
+This method overrides `Object.prototype.valueOf()` and always throws an exception.
+This is because it's not possible to compare `Temporal.DateTime` objects with the relational operators `<`, `<=`, `>`, or `>=`.
+Use `Temporal.DateTime.compare()` for this, or `datetime.equals()` for equality.
+
 ### datetime.**inTimeZone**(_timeZone_ : Temporal.TimeZone | string, _options_?: object) : Temporal.Absolute
 
 **Parameters:**

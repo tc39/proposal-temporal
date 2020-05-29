@@ -58,6 +58,9 @@ export class MonthDay {
     if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
     return new Intl.DateTimeFormat(...args).format(this);
   }
+  valueOf() {
+    throw new TypeError('use equals() to compare Temporal.MonthDay');
+  }
   withYear(item) {
     if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
     let year;
