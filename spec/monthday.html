@@ -336,7 +336,8 @@
         1. Assert: _month_ and _day_ are integer Number values.
         1. If _month_ &lt; 1 or _month_ &gt; 12, then
           1. Return *false*.
-        1. Let _maxDay_ be ! DaysInMonth(1972, _m_).
+        1. Let _leapYear_ be the first leap year after the Unix epoch (1972).
+        1. Let _maxDay_ be ! DaysInMonth(_leapYear_, _m_).
         1. If _d_ &lt; 1 or _d_ &gt; _maxDay_, then
           1. Return *false*.
         1. Return *true*.
@@ -356,7 +357,8 @@
       <h1>ConstrainMonthDay ( _month_, _day_ )</h1>
       <emu-alg>
         1. Assert: _month_ and _day_ are integer Number values.
-        1. Let _result_ be ! ConstrainDate(1972, _month_, _day_).
+        1. Let _leapYear_ be the first leap year after the Unix epoch (1972).
+        1. Let _result_ be ! ConstrainDate(_leapYear_, _month_, _day_).
         1. Return the new Record {
             [[Month]]: _result_.[[Month]],
             [[Day]]: _result_.[[Day]]
@@ -367,7 +369,8 @@
       <h1>BalanceMonthDay ( _month_, _day_ )</h1>
       <emu-alg>
         1. Assert: _month_ and _day_ are integer Number values.
-        1. Let _result_ be ! BalanceDate(1972, _month_, _day_).
+        1. Let _leapYear_ be the first leap year after the Unix epoch (1972).
+        1. Let _result_ be ! BalanceDate(_leapYear_, _month_, _day_).
         1. Return the new Record {
             [[Month]]: _result_.[[Month]],
             [[Day]]: _result_.[[Day]]
