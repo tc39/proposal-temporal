@@ -354,7 +354,7 @@ For these cases, the <code>disambiguation</code> option tells what to do:</p>
 <li>In <code>constrain</code> mode (the default), out-of-range values are clamped to the nearest in-range value.</li>
 <li>In <code>reject</code> mode, an addition that would result in an out-of-range value fails, and a <code>RangeError</code> is thrown.</li>
 </ul>
-<p>Additionally, if the result is outside the range of dates that <code>Temporal.Date</code> can represent, then <code>constrain</code> mode will clamp the result to the allowed range.
+<p>Additionally, if the result is earlier or later than the range of dates that <code>Temporal.Date</code> can represent (approximately half a million years centered on the <a href="https://en.wikipedia.org/wiki/Unix_time">Unix epoch</a>), then <code>constrain</code> mode will clamp the result to the allowed range.
 The <code>reject</code> mode will throw a <code>RangeError</code> in this case.</p>
 <p>Usage example:</p>
 <pre class="language-javascript"><code class="language-javascript">date <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2006-08-24'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -383,7 +383,7 @@ For these cases, the <code>disambiguation</code> option tells what to do:</p>
 <li>In <code>constrain</code> mode (the default), out-of-range values are clamped to the nearest in-range value.</li>
 <li>In <code>reject</code> mode, an addition that would result in an out-of-range value fails, and a <code>RangeError</code> is thrown.</li>
 </ul>
-<p>Additionally, if the result is outside the range of dates that <code>Temporal.Date</code> can represent, then <code>constrain</code> mode will clamp the result to the allowed range.
+<p>Additionally, if the result is earlier or later than the range of dates that <code>Temporal.Date</code> can represent (approximately half a million years centered on the <a href="https://en.wikipedia.org/wiki/Unix_time">Unix epoch</a>), then <code>constrain</code> mode will clamp the result to the allowed range.
 The <code>reject</code> mode will throw a <code>RangeError</code> in this case.</p>
 <p>Usage example:</p>
 <pre class="language-javascript"><code class="language-javascript">date <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2006-08-24'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>

@@ -315,7 +315,7 @@ The default is <code>constrain</code>.</li>
 <p><strong>Returns:</strong> a new <code>Temporal.YearMonth</code> object which is the month indicated by <code>yearMonth</code> plus <code>duration</code>.</p>
 <p>This method adds <code>duration</code> to <code>yearMonth</code>, returning a month that is in the future relative to <code>yearMonth</code>.</p>
 <p>The <code>duration</code> argument is an object with properties denoting a duration, such as <code>{ months: 5 }</code>, or a <code>Temporal.Duration</code> object.</p>
-<p>If the result is outside the range of dates that <code>Temporal.YearMonth</code> can represent, then <code>constrain</code> mode will clamp the result to the allowed range.
+<p>If the result is earlier or later than the range of dates that <code>Temporal.YearMonth</code> can represent (approximately half a million years centered on the <a href="https://en.wikipedia.org/wiki/Unix_time">Unix epoch</a>), then <code>constrain</code> mode will clamp the result to the allowed range.
 The <code>reject</code> mode will throw a <code>RangeError</code> in this case.</p>
 <p>Other than for out-of-range values, the <code>disambiguation</code> option has no effect in the default ISO calendar, because a year is always 12 months and therefore not ambiguous.
 It doesn&#39;t matter in this case that years and months can be different numbers of days, as the resolution of <code>Temporal.YearMonth</code> does not distinguish days.
@@ -336,7 +336,7 @@ The default is <code>constrain</code>.</li>
 <p><strong>Returns:</strong> a new <code>Temporal.YearMonth</code> object which is the month indicated by <code>yearMonth</code> minus <code>duration</code>.</p>
 <p>This method subtracts <code>duration</code> from <code>yearMonth</code>, returning a month that is in the future relative to <code>yearMonth</code>.</p>
 <p>The <code>duration</code> argument is an object with properties denoting a duration, such as <code>{ months: 5 }</code>, or a <code>Temporal.Duration</code> object.</p>
-<p>If the result is outside the range of dates that <code>Temporal.YearMonth</code> can represent, then <code>constrain</code> mode will clamp the result to the allowed range.
+<p>If the result is earlier or later than the range of dates that <code>Temporal.YearMonth</code> can represent (approximately half a million years centered on the <a href="https://en.wikipedia.org/wiki/Unix_time">Unix epoch</a>), then <code>constrain</code> mode will clamp the result to the allowed range.
 The <code>reject</code> mode will throw a <code>RangeError</code> in this case.</p>
 <p>Other than for out-of-range values, the <code>disambiguation</code> option has no effect in the default ISO calendar, because a year is always 12 months and therefore not ambiguous.
 It doesn&#39;t matter in this case that years and months can be different numbers of days, as the resolution of <code>Temporal.YearMonth</code> does not distinguish days.
