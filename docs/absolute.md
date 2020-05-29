@@ -248,7 +248,7 @@ The `years` and `months` fields of `duration` must be zero, because adding a yea
 `Temporal.Absolute` is independent of time zones and calendars, and so years and months may be different lengths.
 If you need to do this, convert the `Temporal.Absolute` to a `Temporal.DateTime` by specifying the desired time zone, add the duration, and then convert it back.
 
-If the result is outside the allowed range for `Temporal.Absolute`, a `RangeError` will be thrown.
+If the result is earlier or later than the range that `Temporal.Absolute` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), a `RangeError` will be thrown.
 
 Example usage:
 ```js
@@ -273,7 +273,7 @@ The `years` and `months` fields of `duration` must be zero, because subtracting 
 `Temporal.Absolute` is independent of time zones and calendars, and so years and months may be different lengths.
 If you need to do this, convert the `Temporal.Absolute` to a `Temporal.DateTime` by specifying the desired time zone, subtract the duration, and then convert it back.
 
-If the result is outside the allowed range for `Temporal.Absolute`, a `RangeError` will be thrown.
+If the result is earlier or later than the range that `Temporal.Absolute` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), a `RangeError` will be thrown.
 
 Example usage:
 ```js

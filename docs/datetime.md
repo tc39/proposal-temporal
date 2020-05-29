@@ -343,7 +343,7 @@ For these cases, the `disambiguation` option tells what to do:
 - In `constrain` mode (the default), out-of-range values are clamped to the nearest in-range value.
 - In `reject` mode, an addition that would result in an out-of-range value fails, and a `RangeError` is thrown.
 
-Additionally, if the result is outside the range that `Temporal.DateTime` can represent, then `constrain` mode will clamp the result to the allowed range.
+Additionally, if the result is earlier or later than the range that `Temporal.DateTime` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then `constrain` mode will clamp the result to the allowed range.
 The `reject` mode will throw a `RangeError` in this case.
 
 Usage example:
@@ -378,7 +378,7 @@ For these cases, the `disambiguation` option tells what to do:
 - In `constrain` mode (the default), out-of-range values are clamped to the nearest in-range value.
 - In `reject` mode, an addition that would result in an out-of-range value fails, and a `RangeError` is thrown.
 
-Additionally, if the result is outside the range that `Temporal.DateTime` can represent, then `constrain` mode will clamp the result to the allowed range.
+Additionally, if the result is earlier or later than the range that `Temporal.DateTime` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then `constrain` mode will clamp the result to the allowed range.
 The `reject` mode will throw a `RangeError` in this case.
 
 Usage example:
@@ -554,7 +554,7 @@ In the case of ambiguity, the `disambiguation` option controls what absolute tim
 
 For usage examples and a more complete explanation of how this disambiguation works and why it is necessary, see [Resolving ambiguity](./ambiguity.md).
 
-If the result is outside the range that `Temporal.Absolute` can represent, then a `RangeError` will be thrown, no matter the value of `disambiguation`.
+If the result is earlier or later than the range that `Temporal.Absolute` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then a `RangeError` will be thrown, no matter the value of `disambiguation`.
 
 ### datetime.**getDate**() : Temporal.Date
 
