@@ -135,6 +135,8 @@
 </li>
 <li><a href="#toJSON">toJSON</a>
 </li>
+<li><a href="#valueOf">valueOf</a>
+</li>
 </ul>
 </li>
 </ul>
@@ -429,7 +431,10 @@ console<span class="token punctuation">.</span><span class="token function">log<
     <span class="token keyword">return</span> Temporal<span class="token punctuation">.</span>Absolute<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token keyword">return</span> value<span class="token punctuation">;</span>
 <span class="token punctuation">}</span>
-<span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span>str<span class="token punctuation">,</span> reviver<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>    <footer>
+<span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span>str<span class="token punctuation">,</span> reviver<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre><h3 id="valueOf"><a class="heading-link" href="#valueOf"></a>absolute.<strong>valueOf</strong>()</h3><p>This method overrides <code>Object.prototype.valueOf()</code> and always throws an exception.
+This is because it&#39;s not possible to compare <code>Temporal.Absolute</code> objects with the relational operators <code>&lt;</code>, <code>&lt;=</code>, <code>&gt;</code>, or <code>&gt;=</code>.
+Use <code>Temporal.Absolute.compare()</code> for this, or <code>absolute.equals()</code> for equality.</p>
+    <footer>
       <p>
         This page includes a script which loads an implementation of Temporal in your browser.
         You can open a console in your browser's developer tools and try it out directly!

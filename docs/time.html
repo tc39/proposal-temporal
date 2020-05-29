@@ -135,6 +135,8 @@
 </li>
 <li><a href="#toJSON">toJSON</a>
 </li>
+<li><a href="#valueOf">valueOf</a>
+</li>
 <li><a href="#withDate">withDate</a>
 </li>
 <li><a href="#getFields">getFields</a>
@@ -405,7 +407,10 @@ console<span class="token punctuation">.</span><span class="token function">log<
     <span class="token keyword">return</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token keyword">return</span> value<span class="token punctuation">;</span>
 <span class="token punctuation">}</span>
-<span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span>str<span class="token punctuation">,</span> reviver<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre><h3 id="withDate"><a class="heading-link" href="#withDate"></a>time.<strong>withDate</strong>(<em>date</em>: Temporal.Date) : Temporal.DateTime</h3><p><strong>Parameters:</strong></p>
+<span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span>str<span class="token punctuation">,</span> reviver<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre><h3 id="valueOf"><a class="heading-link" href="#valueOf"></a>time.<strong>valueOf</strong>()</h3><p>This method overrides <code>Object.prototype.valueOf()</code> and always throws an exception.
+This is because it&#39;s not possible to compare <code>Temporal.Time</code> objects with the relational operators <code>&lt;</code>, <code>&lt;=</code>, <code>&gt;</code>, or <code>&gt;=</code>.
+Use <code>Temporal.Time.compare()</code> for this, or <code>time.equals()</code> for equality.</p>
+<h3 id="withDate"><a class="heading-link" href="#withDate"></a>time.<strong>withDate</strong>(<em>date</em>: Temporal.Date) : Temporal.DateTime</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>date</code> (<code>Temporal.Date</code>): A calendar date on which to place <code>time</code>.</li>
 </ul>

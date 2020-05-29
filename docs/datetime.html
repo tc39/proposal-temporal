@@ -153,6 +153,8 @@
 </li>
 <li><a href="#toJSON">toJSON</a>
 </li>
+<li><a href="#valueOf">valueOf</a>
+</li>
 <li><a href="#inTimeZone">inTimeZone</a>
 </li>
 <li><a href="#getDate">getDate</a>
@@ -548,7 +550,10 @@ console<span class="token punctuation">.</span><span class="token function">log<
     <span class="token keyword">return</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token keyword">return</span> value<span class="token punctuation">;</span>
 <span class="token punctuation">}</span>
-<span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span>str<span class="token punctuation">,</span> reviver<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre><h3 id="inTimeZone"><a class="heading-link" href="#inTimeZone"></a>datetime.<strong>inTimeZone</strong>(<em>timeZone</em> : Temporal.TimeZone | string, <em>options</em>?: object) : Temporal.Absolute</h3><p><strong>Parameters:</strong></p>
+<span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span>str<span class="token punctuation">,</span> reviver<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre><h3 id="valueOf"><a class="heading-link" href="#valueOf"></a>datetime.<strong>valueOf</strong>()</h3><p>This method overrides <code>Object.prototype.valueOf()</code> and always throws an exception.
+This is because it&#39;s not possible to compare <code>Temporal.DateTime</code> objects with the relational operators <code>&lt;</code>, <code>&lt;=</code>, <code>&gt;</code>, or <code>&gt;=</code>.
+Use <code>Temporal.DateTime.compare()</code> for this, or <code>datetime.equals()</code> for equality.</p>
+<h3 id="inTimeZone"><a class="heading-link" href="#inTimeZone"></a>datetime.<strong>inTimeZone</strong>(<em>timeZone</em> : Temporal.TimeZone | string, <em>options</em>?: object) : Temporal.Absolute</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>timeZone</code> (optional string or <code>Temporal.TimeZone</code>): The time zone in which to interpret <code>dateTime</code>.</li>
 <li><code>options</code> (optional object): An object with properties representing options for the operation.
