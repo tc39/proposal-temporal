@@ -137,17 +137,20 @@ For example, it could be used to represent a yearly recurring event, like &quot;
 <p>If you need to refer to a certain instance of a calendar event, in a particular year, use <code>Temporal.Date</code> or even <code>Temporal.DateTime</code>.
 A <code>Temporal.MonthDay</code> can be converted into a <code>Temporal.Date</code> by combining it with a year, using the <code>withYear()</code> method.</p>
 <h2 id="constructor-1">Constructor</h2>
-<h3 id="new-Temporal-MonthDay"><a class="heading-link" href="#new-Temporal-MonthDay"></a><strong>new Temporal.MonthDay</strong>(<em>isoMonth</em>: number, <em>isoDay</em>: number) : Temporal.MonthDay</h3><p><strong>Parameters:</strong></p>
+<h3 id="new-Temporal-MonthDay"><a class="heading-link" href="#new-Temporal-MonthDay"></a><strong>new Temporal.MonthDay</strong>(<em>isoMonth</em>: number, <em>isoDay</em>: number, <em>refISOYear</em>?: number) : Temporal.MonthDay</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>isoMonth</code> (number): A month, ranging between 1 and 12 inclusive.</li>
 <li><code>isoDay</code> (number): A day of the month, ranging between 1 and 31 inclusive.</li>
+<li><code>refISOYear</code> (optional number): A reference year, used for disambiguation when implementing other calendar systems.
+The default is the first leap year after the <a href="https://en.wikipedia.org/wiki/Unix_time">Unix epoch</a>.
+You can omit this parameter unless using a non-ISO-8601 calendar.</li>
 </ul>
 <p><strong>Returns:</strong> a new <code>Temporal.MonthDay</code> object.</p>
-<p>Use this constructor if you have the correct parameters for the date already as individual number values.
+<p>Use this constructor if you have the correct parameters for the date already as individual number values, or you are implementing a custom calendar.
 Otherwise, <code>Temporal.MonthDay.from()</code>, which accepts more kinds of input and allows disambiguation behaviour, is probably more convenient.</p>
 <p>All values are given as reckoned in the <a href="https://en.wikipedia.org/wiki/ISO_8601#Dates">ISO 8601 calendar</a>.
-Together, <code>isoMonth</code> and <code>isoDay</code> must represent a valid date in at least one year of that calendar.
-For example, February 29 (Leap day in the ISO 8601 calendar) is a valid value for <code>Temporal.MonthDay</code>, even though that date does not occur every year.</p>
+Together, <code>refISOYear</code>, <code>isoMonth</code> and <code>isoDay</code> must represent a valid date in that calendar.
+For example, February 29 (Leap day in the ISO 8601 calendar) is a valid value for <code>Temporal.MonthDay</code>, even though that date does not occur every year, because the default value of <code>refISOYear</code> is a leap year.</p>
 <blockquote>
 <p><strong>NOTE</strong>: The <code>isoMonth</code> argument ranges from 1 to 12, which is different from legacy <code>Date</code> where months are represented by zero-based indices (0 to 11).</p>
 </blockquote>
@@ -332,7 +335,7 @@ It returns a new plain JavaScript object, with all the fields as enumerable, wri
 <p>Usage example:</p>
 <pre class="language-javascript"><code class="language-javascript">md <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>MonthDay<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'08-24'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 Object<span class="token punctuation">.</span><span class="token function">assign</span><span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span> md<span class="token punctuation">)</span><span class="token punctuation">.</span>day  <span class="token comment">// => undefined</span>
-Object<span class="token punctuation">.</span><span class="token function">assign</span><span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span> md<span class="token punctuation">.</span><span class="token function">getFields</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span>day  <span class="token comment">// => 24</span></code></pre><h3 id="getISOCalendarFields"><a class="heading-link" href="#getISOCalendarFields"></a>monthDay.<strong>getISOCalendarFields</strong>(): { month: number, day: number }</h3><p><strong>Returns:</strong> a plain object with properties expressing <code>monthDay</code> in the ISO 8601 calendar.</p>
+Object<span class="token punctuation">.</span><span class="token function">assign</span><span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span> md<span class="token punctuation">.</span><span class="token function">getFields</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span>day  <span class="token comment">// => 24</span></code></pre><h3 id="getISOCalendarFields"><a class="heading-link" href="#getISOCalendarFields"></a>monthDay.<strong>getISOCalendarFields</strong>(): { month: number, day: number, refISOYear: number }</h3><p><strong>Returns:</strong> a plain object with properties expressing <code>monthDay</code> in the ISO 8601 calendar.</p>
 <p>This method is mainly useful if you are implementing a custom calendar.
 Most code will not need to use it.
 Use <code>monthDay.getFields()</code> instead.</p>
