@@ -233,7 +233,7 @@ This method adds `duration` to `yearMonth`, returning a month that is in the fut
 
 The `duration` argument is an object with properties denoting a duration, such as `{ months: 5 }`, or a `Temporal.Duration` object.
 
-If the result is outside the range of dates that `Temporal.YearMonth` can represent, then `constrain` mode will clamp the result to the allowed range.
+If the result is earlier or later than the range of dates that `Temporal.YearMonth` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then `constrain` mode will clamp the result to the allowed range.
 The `reject` mode will throw a `RangeError` in this case.
 
 Other than for out-of-range values, the `disambiguation` option has no effect in the default ISO calendar, because a year is always 12 months and therefore not ambiguous.
@@ -262,7 +262,7 @@ This method subtracts `duration` from `yearMonth`, returning a month that is in 
 
 The `duration` argument is an object with properties denoting a duration, such as `{ months: 5 }`, or a `Temporal.Duration` object.
 
-If the result is outside the range of dates that `Temporal.YearMonth` can represent, then `constrain` mode will clamp the result to the allowed range.
+If the result is earlier or later than the range of dates that `Temporal.YearMonth` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then `constrain` mode will clamp the result to the allowed range.
 The `reject` mode will throw a `RangeError` in this case.
 
 Other than for out-of-range values, the `disambiguation` option has no effect in the default ISO calendar, because a year is always 12 months and therefore not ambiguous.
