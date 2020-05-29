@@ -133,6 +133,9 @@ export class YearMonth {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
     return new Intl.DateTimeFormat(...args).format(this);
   }
+  valueOf() {
+    throw new TypeError('use compare() or equals() to compare Temporal.YearMonth');
+  }
   withDay(day) {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
     const year = GetSlot(this, ISO_YEAR);

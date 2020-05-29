@@ -144,6 +144,17 @@ describe('YearMonth', () => {
       throws(() => nov94.equals('1994-11'), TypeError);
     });
   });
+  describe("Comparison operators don't work", () => {
+    const ym1 = YearMonth.from('1963-02');
+    const ym1again = YearMonth.from('1963-02');
+    const ym2 = YearMonth.from('1976-11');
+    it('=== is object equality', () => equal(ym1, ym1));
+    it('!== is object equality', () => notEqual(ym1, ym1again));
+    it('<', () => throws(() => ym1 < ym2));
+    it('>', () => throws(() => ym1 > ym2));
+    it('<=', () => throws(() => ym1 <= ym2));
+    it('>=', () => throws(() => ym1 >= ym2));
+  });
   describe('YearMonth.difference() works', () => {
     const nov94 = YearMonth.from('1994-11');
     const jun13 = YearMonth.from('2013-06');

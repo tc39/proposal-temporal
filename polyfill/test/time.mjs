@@ -334,6 +334,17 @@ describe('Time', () => {
         throws(() => t1.equals({ hour: 8, minute: 44, second: 15, millisecond: 321 }), TypeError);
       });
     });
+    describe("Comparison operators don't work", () => {
+      const t1 = Time.from('09:36:29.123456789');
+      const t1again = Time.from('09:36:29.123456789');
+      const t2 = Time.from('15:23:30.123456789');
+      it('=== is object equality', () => equal(t1, t1));
+      it('!== is object equality', () => notEqual(t1, t1again));
+      it('<', () => throws(() => t1 < t2));
+      it('>', () => throws(() => t1 > t2));
+      it('<=', () => throws(() => t1 <= t2));
+      it('>=', () => throws(() => t1 >= t2));
+    });
     describe('time.plus() works', () => {
       const time = new Time(15, 23, 30, 123, 456, 789);
       it(`(${time}).plus({ hours: 16 })`, () => {

@@ -140,6 +140,9 @@ export class Absolute {
     if (!ES.IsTemporalAbsolute(this)) throw new TypeError('invalid receiver');
     return new Intl.DateTimeFormat(...args).format(this);
   }
+  valueOf() {
+    throw new TypeError('use compare() or equals() to compare Temporal.Absolute');
+  }
   inTimeZone(temporalTimeZoneLike = 'UTC') {
     if (!ES.IsTemporalAbsolute(this)) throw new TypeError('invalid receiver');
     const timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);

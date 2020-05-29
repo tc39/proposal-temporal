@@ -442,6 +442,17 @@ describe('Date', () => {
       throws(() => d2.equals('1976-11-18'), TypeError);
     });
   });
+  describe("Comparison operators don't work", () => {
+    const d1 = Date.from('1963-02-13');
+    const d1again = Date.from('1963-02-13');
+    const d2 = Date.from('1976-11-18');
+    it('=== is object equality', () => equal(d1, d1));
+    it('!== is object equality', () => notEqual(d1, d1again));
+    it('<', () => throws(() => d1 < d2));
+    it('>', () => throws(() => d1 > d2));
+    it('<=', () => throws(() => d1 <= d2));
+    it('>=', () => throws(() => d1 >= d2));
+  });
   describe('Min/max range', () => {
     it('constructing from numbers', () => {
       throws(() => new Date(-271821, 4, 18), RangeError);

@@ -464,6 +464,12 @@ function reviver(key, value) {
 JSON.parse(str, reviver);
 ```
 
+### date.**valueOf**()
+
+This method overrides `Object.prototype.valueOf()` and always throws an exception.
+This is because it's not possible to compare `Temporal.Date` objects with the relational operators `<`, `<=`, `>`, or `>=`.
+Use `Temporal.Date.compare()` for this, or `date.equals()` for equality.
+
 ### date.**withTime**(_time_: Temporal.Time) : Temporal.DateTime
 
 **Parameters:**

@@ -409,6 +409,17 @@ describe('Absolute', () => {
       throws(() => abs1.equals({}), TypeError);
     });
   });
+  describe("Comparison operators don't work", () => {
+    const abs1 = Absolute.from('1963-02-13T09:36:29.123456789Z');
+    const abs1again = Absolute.from('1963-02-13T09:36:29.123456789Z');
+    const abs2 = Absolute.from('1976-11-18T15:23:30.123456789Z');
+    it('=== is object equality', () => equal(abs1, abs1));
+    it('!== is object equality', () => notEqual(abs1, abs1again));
+    it('<', () => throws(() => abs1 < abs2));
+    it('>', () => throws(() => abs1 > abs2));
+    it('<=', () => throws(() => abs1 <= abs2));
+    it('>=', () => throws(() => abs1 >= abs2));
+  });
   describe('Absolute.difference works', () => {
     const earlier = Absolute.from('1976-11-18T15:23:30.123456789Z');
     const later = Absolute.from('2019-10-29T10:46:38.271986102Z');

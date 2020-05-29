@@ -465,6 +465,17 @@ describe('Duration', () => {
       equal(d2.nanoseconds, 5);
     });
   });
+  describe("Comparison operators don't work", () => {
+    const d1 = Duration.from('P3DT1H');
+    const d1again = Duration.from('P3DT1H');
+    const d2 = Duration.from('PT2H20M30S');
+    it('=== is object equality', () => equal(d1, d1));
+    it('!== is object equality', () => notEqual(d1, d1again));
+    it('<', () => throws(() => d1 < d2));
+    it('>', () => throws(() => d1 > d2));
+    it('<=', () => throws(() => d1 <= d2));
+    it('>=', () => throws(() => d1 >= d2));
+  });
 });
 
 import { normalize } from 'path';

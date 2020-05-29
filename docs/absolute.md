@@ -439,3 +439,9 @@ function reviver(key, value) {
 }
 JSON.parse(str, reviver);
 ```
+
+### absolute.**valueOf**()
+
+This method overrides `Object.prototype.valueOf()` and always throws an exception.
+This is because it's not possible to compare `Temporal.Absolute` objects with the relational operators `<`, `<=`, `>`, or `>=`.
+Use `Temporal.Absolute.compare()` for this, or `absolute.equals()` for equality.

@@ -398,3 +398,8 @@ d.toLocaleString()  // => 1 day 6 hours 30 minutes
 d.toLocaleString('de-DE')  // => 1 Tag 6 Stunden 30 Minuten
 d.toLocaleString('en-US', {day: 'numeric', hour: 'numeric'})  // => 1 day 6 hours
 ```
+
+### duration.**valueOf**()
+
+This method overrides `Object.prototype.valueOf()` and always throws an exception.
+This is because it's not possible to compare `Temporal.Duration` objects with the relational operators `<`, `<=`, `>`, or `>=`.

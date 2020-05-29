@@ -139,6 +139,17 @@ describe('MonthDay', () => {
       throws(() => md1.equals({ month: 1, day: 22 }), TypeError);
     });
   });
+  describe("Comparison operators don't work", () => {
+    const md1 = MonthDay.from('02-13');
+    const md1again = MonthDay.from('02-13');
+    const md2 = MonthDay.from('11-18');
+    it('=== is object equality', () => equal(md1, md1));
+    it('!== is object equality', () => notEqual(md1, md1again));
+    it('<', () => throws(() => md1 < md2));
+    it('>', () => throws(() => md1 > md2));
+    it('<=', () => throws(() => md1 <= md2));
+    it('>=', () => throws(() => md1 >= md2));
+  });
   describe('MonthDay.withYear()', () => {
     const md = MonthDay.from('01-22');
     it('takes a number argument', () => {
