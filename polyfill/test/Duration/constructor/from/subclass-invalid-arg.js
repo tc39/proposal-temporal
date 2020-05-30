@@ -8,9 +8,9 @@ esid: sec-temporal.duration.from
 let called = false;
 
 class MyDuration extends Temporal.Duration {
-  constructor(years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds) {
+  constructor(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds) {
     called = true;
-    super(years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+    super(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
   }
 }
 

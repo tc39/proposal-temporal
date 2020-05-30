@@ -101,6 +101,7 @@ export namespace Temporal {
   export type DurationLike = {
     years?: number;
     months?: number;
+    weeks?: number;
     days?: number;
     hours?: number;
     minutes?: number;
@@ -121,6 +122,7 @@ export namespace Temporal {
     constructor(
       years?: number,
       months?: number,
+      weeks?: number,
       days?: number,
       hours?: number,
       minutes?: number,
@@ -131,6 +133,7 @@ export namespace Temporal {
     );
     readonly years: number;
     readonly months: number;
+    readonly weeks: number;
     readonly days: number;
     readonly hours: number;
     readonly minutes: number;
@@ -276,7 +279,10 @@ export namespace Temporal {
     with(dateLike: DateLike, options?: AssignmentOptions): Temporal.Date;
     plus(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.Date;
     minus(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.Date;
-    difference(other: Temporal.Date, options?: DifferenceOptions<'years' | 'months' | 'days'>): Temporal.Duration;
+    difference(
+      other: Temporal.Date,
+      options?: DifferenceOptions<'years' | 'months' | 'weeks' | 'days'>
+    ): Temporal.Duration;
     withTime(temporalTime: Temporal.Time): Temporal.DateTime;
     getYearMonth(): Temporal.YearMonth;
     getMonthDay(): Temporal.MonthDay;
@@ -356,7 +362,7 @@ export namespace Temporal {
     minus(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.DateTime;
     difference(
       other: Temporal.DateTime,
-      options?: DifferenceOptions<'years' | 'months' | 'days' | 'hours' | 'minutes' | 'seconds'>
+      options?: DifferenceOptions<'years' | 'months' | 'weeks' | 'days' | 'hours' | 'minutes' | 'seconds'>
     ): Temporal.Duration;
     inTimeZone(tzLike: Temporal.TimeZone | string, options?: ToAbsoluteOptions): Temporal.Absolute;
     getDate(): Temporal.Date;

@@ -23,6 +23,7 @@ const expected = [
   "valueOf nanoseconds",
   "get seconds",
   "valueOf seconds",
+  "get weeks",
   "get years",
 ];
 const actual = [];

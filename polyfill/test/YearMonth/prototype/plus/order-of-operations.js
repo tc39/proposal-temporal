@@ -24,6 +24,8 @@ const expected = [
   "valueOf nanoseconds",
   "get seconds",
   "valueOf seconds",
+  "get weeks",
+  "valueOf weeks",
   "get years",
   "valueOf years",
 ];
@@ -31,6 +33,7 @@ const actual = [];
 const fields = {
   years: 1.7,
   months: 1.7,
+  weeks: 1.7,
   days: 1.7,
   hours: 1.7,
   minutes: 1.7,

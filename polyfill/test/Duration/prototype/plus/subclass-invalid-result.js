@@ -7,7 +7,7 @@ features: [Symbol.species]
 ---*/
 
 function check(value, description) {
-  const duration = Temporal.Duration.from({ years: 1, months: 2, days: 3, hours: 4, minutes: 5, seconds: 6, milliseconds: 987, microseconds: 654, nanoseconds: 321 });
+  const duration = Temporal.Duration.from({ years: 1, months: 2, weeks: 3, days: 4, hours: 5, minutes: 6, seconds: 7, milliseconds: 987, microseconds: 654, nanoseconds: 321 });
   duration.constructor = {
     [Symbol.species]: function() {
       return value;

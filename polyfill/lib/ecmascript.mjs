@@ -25,6 +25,7 @@ import {
   REF_ISO_DAY,
   YEARS,
   MONTHS,
+  WEEKS,
   DAYS,
   HOURS,
   MINUTES,
@@ -173,15 +174,16 @@ export const ES = ObjectAssign({}, ES2019, {
     if (!match) throw new RangeError(`invalid duration: ${isoString}`);
     const years = ES.ToInteger(match[1]);
     const months = ES.ToInteger(match[2]);
-    const days = ES.ToInteger(match[3]);
-    const hours = ES.ToInteger(match[4]);
-    const minutes = ES.ToInteger(match[5]);
-    const seconds = ES.ToInteger(match[6]);
-    const fraction = match[7] + '000000000';
+    const weeks = ES.ToInteger(match[3]);
+    const days = ES.ToInteger(match[4]);
+    const hours = ES.ToInteger(match[5]);
+    const minutes = ES.ToInteger(match[6]);
+    const seconds = ES.ToInteger(match[7]);
+    const fraction = match[8] + '000000000';
     const milliseconds = ES.ToInteger(fraction.slice(0, 3));
     const microseconds = ES.ToInteger(fraction.slice(3, 6));
     const nanoseconds = ES.ToInteger(fraction.slice(6, 9));
-    return { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
+    return { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
   },
   ParseTemporalAbsolute: (isoString) => {
     const {
@@ -335,6 +337,7 @@ export const ES = ObjectAssign({}, ES2019, {
       return {
         years: GetSlot(item, YEARS),
         months: GetSlot(item, MONTHS),
+        weeks: GetSlot(item, WEEKS),
         days: GetSlot(item, DAYS),
         hours: GetSlot(item, HOURS),
         minutes: GetSlot(item, MINUTES),
@@ -353,12 +356,14 @@ export const ES = ObjectAssign({}, ES2019, {
       ['months', 0],
       ['nanoseconds', 0],
       ['seconds', 0],
+      ['weeks', 0],
       ['years', 0]
     ]);
   },
   RegulateDuration: (
     years,
     months,
+    weeks,
     days,
     hours,
     minutes,
@@ -368,22 +373,33 @@ export const ES = ObjectAssign({}, ES2019, {
     nanoseconds,
     disambiguation
   ) => {
-    for (const prop of [years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds]) {
+    for (const prop of [years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds]) {
       if (prop < 0) throw new RangeError('negative values not allowed as duration fields');
     }
 
     switch (disambiguation) {
       case 'reject':
-        for (const prop of [years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds]) {
+        for (const prop of [
+          years,
+          months,
+          weeks,
+          days,
+          hours,
+          minutes,
+          seconds,
+          milliseconds,
+          microseconds,
+          nanoseconds
+        ]) {
           if (!Number.isFinite(prop)) throw new RangeError('infinite values not allowed as duration fields');
         }
         break;
       case 'constrain': {
-        const arr = [years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds];
+        const arr = [years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds];
         for (const idx in arr) {
           if (!Number.isFinite(arr[idx])) arr[idx] = Number.MAX_VALUE;
         }
-        [years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds] = arr;
+        [years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds] = arr;
         break;
       }
       case 'balance': {
@@ -397,14 +413,25 @@ export const ES = ObjectAssign({}, ES2019, {
           nanoseconds,
           'days'
         ));
-        for (const prop of [years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds]) {
+        for (const prop of [
+          years,
+          months,
+          weeks,
+          days,
+          hours,
+          minutes,
+          seconds,
+          milliseconds,
+          microseconds,
+          nanoseconds
+        ]) {
           if (!Number.isFinite(prop)) throw new RangeError('infinite values not allowed as duration fields');
         }
         break;
       }
     }
 
-    return { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
+    return { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
   },
   ToLimitedTemporalDuration: (item, disallowedProperties = []) => {
     if (typeof item !== 'object' || item === null) {
@@ -413,6 +440,7 @@ export const ES = ObjectAssign({}, ES2019, {
     const {
       years,
       months,
+      weeks,
       days,
       hours,
       minutes,
@@ -424,6 +452,7 @@ export const ES = ObjectAssign({}, ES2019, {
     const duration = ES.RegulateDuration(
       years,
       months,
+      weeks,
       days,
       hours,
       minutes,
@@ -456,7 +485,7 @@ export const ES = ObjectAssign({}, ES2019, {
     const largestUnit = ES.GetOption(
       options,
       'largestUnit',
-      ['years', 'months', 'days', 'hours', 'minutes', 'seconds'],
+      ['years', 'months', 'weeks', 'days', 'hours', 'minutes', 'seconds'],
       fallback
     );
     if (disallowedStrings.includes(largestUnit)) {
@@ -554,6 +583,7 @@ export const ES = ObjectAssign({}, ES2019, {
     const dateParts = [];
     if (GetSlot(duration, YEARS)) dateParts.push(`${formatNumber(GetSlot(duration, YEARS))}Y`);
     if (GetSlot(duration, MONTHS)) dateParts.push(`${formatNumber(GetSlot(duration, MONTHS))}M`);
+    if (GetSlot(duration, WEEKS)) dateParts.push(`${formatNumber(GetSlot(duration, WEEKS))}W`);
     if (GetSlot(duration, DAYS)) dateParts.push(`${formatNumber(GetSlot(duration, DAYS))}D`);
 
     const timeParts = [];
@@ -944,6 +974,7 @@ export const ES = ObjectAssign({}, ES2019, {
         break;
       case 'years':
       case 'months':
+      case 'weeks':
       case 'days':
         break;
       default:
@@ -1066,6 +1097,7 @@ export const ES = ObjectAssign({}, ES2019, {
 
   DifferenceDate: (smaller, larger, largestUnit = 'days') => {
     let years = larger.year - smaller.year;
+    let weeks = 0;
     let months, days;
 
     switch (largestUnit) {
@@ -1099,6 +1131,7 @@ export const ES = ObjectAssign({}, ES2019, {
         }
         break;
       }
+      case 'weeks':
       case 'days':
         months = 0;
         days =
@@ -1107,11 +1140,15 @@ export const ES = ObjectAssign({}, ES2019, {
           days += ES.LeapYear(smaller.year + years - 1) ? 366 : 365;
           years -= 1;
         }
+        if (largestUnit === 'weeks') {
+          weeks = Math.floor(days / 7);
+          days %= 7;
+        }
         break;
       default:
         throw new Error('assert not reached');
     }
-    return { years, months, days };
+    return { years, months, weeks, days };
   },
   DifferenceTime(earlier, later) {
     let hours = later.hour - earlier.hour;
@@ -1132,7 +1169,7 @@ export const ES = ObjectAssign({}, ES2019, {
     } = ES.BalanceTime(hours, minutes, seconds, milliseconds, microseconds, nanoseconds));
     return { deltaDays, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
   },
-  AddDate: (year, month, day, years, months, days, disambiguation) => {
+  AddDate: (year, month, day, years, months, weeks, days, disambiguation) => {
     year += years;
     month += months;
     ({ year, month } = ES.BalanceYearMonth(year, month));
@@ -1146,6 +1183,7 @@ export const ES = ObjectAssign({}, ES2019, {
         break;
     }
 
+    days += 7 * weeks;
     day += days;
     ({ year, month, day } = ES.BalanceDate(year, month, day));
     return { year, month, day };
@@ -1181,7 +1219,8 @@ export const ES = ObjectAssign({}, ES2019, {
     ));
     return { deltaDays, hour, minute, second, millisecond, microsecond, nanosecond };
   },
-  SubtractDate: (year, month, day, years, months, days, disambiguation) => {
+  SubtractDate: (year, month, day, years, months, weeks, days, disambiguation) => {
+    days += 7 * weeks;
     day -= days;
     ({ year, month, day } = ES.BalanceDate(year, month, day));
     month -= months;
@@ -1232,6 +1271,7 @@ export const ES = ObjectAssign({}, ES2019, {
   AddDuration: (
     y1,
     mon1,
+    w1,
     d1,
     h1,
     min1,
@@ -1241,6 +1281,7 @@ export const ES = ObjectAssign({}, ES2019, {
     ns1,
     y2,
     mon2,
+    w2,
     d2,
     h2,
     min2,
@@ -1252,6 +1293,7 @@ export const ES = ObjectAssign({}, ES2019, {
   ) => {
     let years = y1 + y2;
     let months = mon1 + mon2;
+    let weeks = w1 + w2;
     let days = d1 + d2;
     let hours = h1 + h2;
     let minutes = min1 + min2;
@@ -1263,6 +1305,7 @@ export const ES = ObjectAssign({}, ES2019, {
     return ES.RegulateDuration(
       years,
       months,
+      weeks,
       days,
       hours,
       minutes,
@@ -1276,6 +1319,7 @@ export const ES = ObjectAssign({}, ES2019, {
   SubtractDuration: (
     y1,
     mon1,
+    w1,
     d1,
     h1,
     min1,
@@ -1285,6 +1329,7 @@ export const ES = ObjectAssign({}, ES2019, {
     ns1,
     y2,
     mon2,
+    w2,
     d2,
     h2,
     min2,
@@ -1296,6 +1341,7 @@ export const ES = ObjectAssign({}, ES2019, {
   ) => {
     let years = y1 - y2;
     let months = mon1 - mon2;
+    let weeks = w1 - w2;
     let days = d1 - d2;
     let hours = h1 - h2;
     let minutes = min1 - min2;
@@ -1329,7 +1375,7 @@ export const ES = ObjectAssign({}, ES2019, {
       hours = ES.NonNegativeModulo(hours, 24);
     }
 
-    for (const prop of [years, months, days]) {
+    for (const prop of [years, months, weeks, days]) {
       if (prop < 0) throw new RangeError('negative values not allowed as duration fields');
     }
 
@@ -1337,6 +1383,7 @@ export const ES = ObjectAssign({}, ES2019, {
       return ES.RegulateDuration(
         years,
         months,
+        weeks,
         days,
         hours,
         minutes,
@@ -1348,7 +1395,7 @@ export const ES = ObjectAssign({}, ES2019, {
       );
     }
 
-    return { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
+    return { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
   },
 
   AssertPositiveInteger: (num) => {

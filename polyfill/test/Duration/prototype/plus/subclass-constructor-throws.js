@@ -7,7 +7,7 @@ esid: sec-temporal.duration.prototype.plus
 
 function CustomError() {}
 
-const duration = Temporal.Duration.from({ years: 1, months: 2, days: 3, hours: 4, minutes: 5, seconds: 6, milliseconds: 987, microseconds: 654, nanoseconds: 321 });
+const duration = Temporal.Duration.from({ years: 1, months: 2, weeks: 3, days: 4, hours: 5, minutes: 6, seconds: 7, milliseconds: 987, microseconds: 654, nanoseconds: 321 });
 Object.defineProperty(duration, "constructor", {
   get() {
     throw new CustomError();

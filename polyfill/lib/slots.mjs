@@ -20,6 +20,7 @@ export const REF_ISO_DAY = 'slot-ref-iso-day';
 // Duration
 export const YEARS = 'slot-years';
 export const MONTHS = 'slot-months';
+export const WEEKS = 'slot-weeks';
 export const DAYS = 'slot-days';
 export const HOURS = 'slot-hours';
 export const MINUTES = 'slot-minutes';

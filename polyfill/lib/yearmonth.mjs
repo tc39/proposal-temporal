@@ -52,7 +52,7 @@ export class YearMonth {
     const disambiguation = ES.ToArithmeticTemporalDisambiguation(options);
     const duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
     let { year, month } = this;
-    const { years, months, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
+    const { years, months, weeks, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
     const { days } = ES.BalanceDuration(
       duration.days,
       hours,
@@ -63,7 +63,7 @@ export class YearMonth {
       nanoseconds,
       'days'
     );
-    ({ year, month } = ES.AddDate(year, month, 1, years, months, days, disambiguation));
+    ({ year, month } = ES.AddDate(year, month, 1, years, months, weeks, days, disambiguation));
     ({ year, month } = ES.BalanceYearMonth(year, month));
     ({ year, month } = ES.RegulateYearMonth(year, month, disambiguation));
     const Construct = ES.SpeciesConstructor(this, YearMonth);
@@ -76,7 +76,7 @@ export class YearMonth {
     const disambiguation = ES.ToArithmeticTemporalDisambiguation(options);
     const duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
     let { year, month } = this;
-    const { years, months, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
+    const { years, months, weeks, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
     const { days } = ES.BalanceDuration(
       duration.days,
       hours,
@@ -88,7 +88,7 @@ export class YearMonth {
       'days'
     );
     const lastDay = ES.DaysInMonth(year, month);
-    ({ year, month } = ES.SubtractDate(year, month, lastDay, years, months, days, disambiguation));
+    ({ year, month } = ES.SubtractDate(year, month, lastDay, years, months, weeks, days, disambiguation));
     ({ year, month } = ES.BalanceYearMonth(year, month));
     ({ year, month } = ES.RegulateYearMonth(year, month, disambiguation));
     const Construct = ES.SpeciesConstructor(this, YearMonth);
@@ -99,7 +99,7 @@ export class YearMonth {
   difference(other, options) {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
     if (!ES.IsTemporalYearMonth(other)) throw new TypeError('invalid YearMonth object');
-    const largestUnit = ES.ToLargestTemporalUnit(options, 'years', ['days', 'hours', 'minutes', 'seconds']);
+    const largestUnit = ES.ToLargestTemporalUnit(options, 'years', ['weeks', 'days', 'hours', 'minutes', 'seconds']);
     const [one, two] = [this, other].sort(YearMonth.compare);
     let years = two.year - one.year;
     let months = two.month - one.month;

@@ -445,7 +445,8 @@ describe('Absolute', () => {
       equal(`${feb21.difference(feb20, { largestUnit: 'minutes' })}`, 'PT527040M');
       equal(`${feb21.difference(feb20, { largestUnit: 'days' })}`, 'P366D');
     });
-    it('cannot return months and years', () => {
+    it('cannot return weeks, months, and years', () => {
+      throws(() => feb21.difference(feb20, { largestUnit: 'weeks' }), RangeError);
       throws(() => feb21.difference(feb20, { largestUnit: 'months' }), RangeError);
       throws(() => feb21.difference(feb20, { largestUnit: 'years' }), RangeError);
     });

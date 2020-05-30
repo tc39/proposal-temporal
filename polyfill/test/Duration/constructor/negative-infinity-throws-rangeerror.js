@@ -15,6 +15,7 @@ assert.throws(RangeError, () => new Temporal.Duration(0, 0, 0, 0, 0, -Infinity))
 assert.throws(RangeError, () => new Temporal.Duration(0, 0, 0, 0, 0, 0, -Infinity));
 assert.throws(RangeError, () => new Temporal.Duration(0, 0, 0, 0, 0, 0, 0, -Infinity));
 assert.throws(RangeError, () => new Temporal.Duration(0, 0, 0, 0, 0, 0, 0, 0, -Infinity));
+assert.throws(RangeError, () => new Temporal.Duration(0, 0, 0, 0, 0, 0, 0, 0, 0, -Infinity));
 
 let calls = 0;
 const obj = {
@@ -42,3 +43,5 @@ assert.throws(RangeError, () => new Temporal.Duration(0, 0, 0, 0, 0, 0, 0, obj))
 assert.sameValue(calls, 8, "it fails after fetching the primitive value");
 assert.throws(RangeError, () => new Temporal.Duration(0, 0, 0, 0, 0, 0, 0, 0, obj));
 assert.sameValue(calls, 9, "it fails after fetching the primitive value");
+assert.throws(RangeError, () => new Temporal.Duration(0, 0, 0, 0, 0, 0, 0, 0, 0, obj));
+assert.sameValue(calls, 10, "it fails after fetching the primitive value");

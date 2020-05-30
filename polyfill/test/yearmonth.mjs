@@ -177,6 +177,7 @@ describe('YearMonth', () => {
       equal(`${feb21.difference(feb20, { largestUnit: 'months' })}`, 'P12M');
     });
     it('cannot return lower units', () => {
+      throws(() => feb21.difference(feb20, { largestUnit: 'weeks' }), RangeError);
       throws(() => feb21.difference(feb20, { largestUnit: 'days' }), RangeError);
       throws(() => feb21.difference(feb20, { largestUnit: 'hours' }), RangeError);
       throws(() => feb21.difference(feb20, { largestUnit: 'minutes' }), RangeError);

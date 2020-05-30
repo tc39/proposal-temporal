@@ -81,7 +81,7 @@ export class Date {
     const disambiguation = ES.ToArithmeticTemporalDisambiguation(options);
     const duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
     let { year, month, day } = this;
-    const { years, months, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
+    const { years, months, weeks, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
     const { days } = ES.BalanceDuration(
       duration.days,
       hours,
@@ -92,7 +92,7 @@ export class Date {
       nanoseconds,
       'days'
     );
-    ({ year, month, day } = ES.AddDate(year, month, day, years, months, days, disambiguation));
+    ({ year, month, day } = ES.AddDate(year, month, day, years, months, weeks, days, disambiguation));
     ({ year, month, day } = ES.RegulateDate(year, month, day, disambiguation));
     const Construct = ES.SpeciesConstructor(this, Date);
     const result = new Construct(year, month, day);
@@ -104,7 +104,7 @@ export class Date {
     const disambiguation = ES.ToArithmeticTemporalDisambiguation(options);
     const duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
     let { year, month, day } = this;
-    const { years, months, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
+    const { years, months, weeks, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
     const { days } = ES.BalanceDuration(
       duration.days,
       hours,
@@ -115,7 +115,7 @@ export class Date {
       nanoseconds,
       'days'
     );
-    ({ year, month, day } = ES.SubtractDate(year, month, day, years, months, days, disambiguation));
+    ({ year, month, day } = ES.SubtractDate(year, month, day, years, months, weeks, days, disambiguation));
     ({ year, month, day } = ES.RegulateDate(year, month, day, disambiguation));
     const Construct = ES.SpeciesConstructor(this, Date);
     const result = new Construct(year, month, day);
@@ -127,9 +127,9 @@ export class Date {
     if (!ES.IsTemporalDate(other)) throw new TypeError('invalid Date object');
     const largestUnit = ES.ToLargestTemporalUnit(options, 'days', ['hours', 'minutes', 'seconds']);
     const [smaller, larger] = [this, other].sort(Date.compare);
-    const { years, months, days } = ES.DifferenceDate(smaller, larger, largestUnit);
+    const { years, months, weeks, days } = ES.DifferenceDate(smaller, larger, largestUnit);
     const Duration = GetIntrinsic('%Temporal.Duration%');
-    return new Duration(years, months, days, 0, 0, 0, 0, 0, 0);
+    return new Duration(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
   }
   equals(other) {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');

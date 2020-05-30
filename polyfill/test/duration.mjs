@@ -34,7 +34,7 @@ describe('Duration', () => {
     });
   });
   describe('Construction', () => {
-    it('negative values throw', () => throws(() => new Duration(-1, -1, -1, -1, -1, -1, -1, -1, -1), RangeError));
+    it('negative values throw', () => throws(() => new Duration(-1, -1, -1, -1, -1, -1, -1, -1, -1, -1), RangeError));
   });
   describe('from()', () => {
     it('Duration.from(P5Y) is not the same object', () => {
@@ -48,18 +48,18 @@ describe('Duration', () => {
     it('Duration.from({})', () => equal(`${Duration.from({})}`, `${new Duration()}`));
     it('lowercase variant', () => equal(`${Duration.from('p1y1m1dt1h1m1s')}`, 'P1Y1M1DT1H1M1S'));
     it('any number of decimal places works', () => {
-      equal(`${Duration.from('P1Y1M1DT1H1M1.1S')}`, 'P1Y1M1DT1H1M1.100S');
-      equal(`${Duration.from('P1Y1M1DT1H1M1.12S')}`, 'P1Y1M1DT1H1M1.120S');
-      equal(`${Duration.from('P1Y1M1DT1H1M1.123S')}`, 'P1Y1M1DT1H1M1.123S');
-      equal(`${Duration.from('P1Y1M1DT1H1M1.1234S')}`, 'P1Y1M1DT1H1M1.123400S');
-      equal(`${Duration.from('P1Y1M1DT1H1M1.12345S')}`, 'P1Y1M1DT1H1M1.123450S');
-      equal(`${Duration.from('P1Y1M1DT1H1M1.123456S')}`, 'P1Y1M1DT1H1M1.123456S');
-      equal(`${Duration.from('P1Y1M1DT1H1M1.1234567S')}`, 'P1Y1M1DT1H1M1.123456700S');
-      equal(`${Duration.from('P1Y1M1DT1H1M1.12345678S')}`, 'P1Y1M1DT1H1M1.123456780S');
-      equal(`${Duration.from('P1Y1M1DT1H1M1.123456789S')}`, 'P1Y1M1DT1H1M1.123456789S');
+      equal(`${Duration.from('P1Y1M1W1DT1H1M1.1S')}`, 'P1Y1M1W1DT1H1M1.100S');
+      equal(`${Duration.from('P1Y1M1W1DT1H1M1.12S')}`, 'P1Y1M1W1DT1H1M1.120S');
+      equal(`${Duration.from('P1Y1M1W1DT1H1M1.123S')}`, 'P1Y1M1W1DT1H1M1.123S');
+      equal(`${Duration.from('P1Y1M1W1DT1H1M1.1234S')}`, 'P1Y1M1W1DT1H1M1.123400S');
+      equal(`${Duration.from('P1Y1M1W1DT1H1M1.12345S')}`, 'P1Y1M1W1DT1H1M1.123450S');
+      equal(`${Duration.from('P1Y1M1W1DT1H1M1.123456S')}`, 'P1Y1M1W1DT1H1M1.123456S');
+      equal(`${Duration.from('P1Y1M1W1DT1H1M1.1234567S')}`, 'P1Y1M1W1DT1H1M1.123456700S');
+      equal(`${Duration.from('P1Y1M1W1DT1H1M1.12345678S')}`, 'P1Y1M1W1DT1H1M1.123456780S');
+      equal(`${Duration.from('P1Y1M1W1DT1H1M1.123456789S')}`, 'P1Y1M1W1DT1H1M1.123456789S');
     });
     it('variant decimal separator', () => {
-      equal(`${Duration.from('P1Y1M1DT1H1M1,12S')}`, 'P1Y1M1DT1H1M1.120S');
+      equal(`${Duration.from('P1Y1M1W1DT1H1M1,12S')}`, 'P1Y1M1W1DT1H1M1.120S');
     });
     describe('Disambiguation', () => {
       it('negative values always throw', () => {
@@ -100,6 +100,8 @@ describe('Duration', () => {
       it('excessive date units do not balance when "balance"', () => {
         equal(`${Duration.from({ months: 12 }, { disambiguation: 'balance' })}`, 'P12M');
         equal(`${Duration.from({ months: 12, seconds: 3600 }, { disambiguation: 'balance' })}`, 'P12MT1H');
+        equal(`${Duration.from({ weeks: 6 }, { disambiguation: 'balance' })}`, 'P6W');
+        equal(`${Duration.from({ weeks: 6, seconds: 3600 }, { disambiguation: 'balance' })}`, 'P6WT1H');
         equal(`${Duration.from({ days: 31 }, { disambiguation: 'balance' })}`, 'P31D');
         equal(`${Duration.from({ days: 31, seconds: 3600 }, { disambiguation: 'balance' })}`, 'P31DT1H');
       });
@@ -117,7 +119,7 @@ describe('Duration', () => {
       equal(`${Duration.from({ milliseconds: 3500 })}`, 'PT3.500S');
       equal(`${Duration.from({ microseconds: 3500 })}`, 'PT0.003500S');
       equal(`${Duration.from({ nanoseconds: 3500 })}`, 'PT0.000003500S');
-      equal(`${new Duration(0, 0, 0, 0, 0, 0, 1111, 1111, 1111)}`, 'PT1.112112111S');
+      equal(`${new Duration(0, 0, 0, 0, 0, 0, 0, 1111, 1111, 1111)}`, 'PT1.112112111S');
       equal(`${Duration.from({ seconds: 120, milliseconds: 3500 })}`, 'PT123.500S');
     });
   });
@@ -131,6 +133,7 @@ describe('Duration', () => {
     const units = [
       'years',
       'months',
+      'weeks',
       'days',
       'hours',
       'minutes',
@@ -140,9 +143,9 @@ describe('Duration', () => {
       'nanoseconds'
     ];
     it('minimum is zero', () => {
-      equal(`${new Duration(0, 0, 0, 0, 0, 0, 0, 0, 0)}`, 'PT0S');
+      equal(`${new Duration(0, 0, 0, 0, 0, 0, 0, 0, 0, 0)}`, 'PT0S');
       units.forEach((unit) => equal(`${Duration.from({ [unit]: 0 })}`, 'PT0S'));
-      ['P0Y', 'P0M', 'P0D', 'PT0H', 'PT0M', 'PT0S'].forEach((str) => equal(`${Duration.from(str)}`, 'PT0S'));
+      ['P0Y', 'P0M', 'P0W', 'P0D', 'PT0H', 'PT0M', 'PT0S'].forEach((str) => equal(`${Duration.from(str)}`, 'PT0S'));
     });
     it('unrepresentable number is not allowed', () => {
       units.forEach((unit, ix) => {
@@ -153,6 +156,7 @@ describe('Duration', () => {
       [
         `P${manyNines}Y`,
         `P${manyNines}M`,
+        `P${manyNines}W`,
         `P${manyNines}D`,
         `PT${manyNines}H`,
         `PT${manyNines}M`,
@@ -163,6 +167,7 @@ describe('Duration', () => {
       [
         'P9007199254740991Y',
         'P9007199254740991M',
+        'P9007199254740991W',
         'P9007199254740991D',
         'PT9007199254740991H',
         'PT9007199254740991M',
@@ -185,52 +190,56 @@ describe('Duration', () => {
           equal(str.slice(-1), suffix);
           equal(str.length, prefix.length + suffix.length + infix.length + 27);
         }
-        doAsserts(new Duration(...Array(ix).fill(0), 1e26, ...Array(8 - ix).fill(0), 'reject'));
+        doAsserts(new Duration(...Array(ix).fill(0), 1e26, ...Array(9 - ix).fill(0), 'reject'));
         doAsserts(Duration.from({ [units[ix]]: 1e26 }));
         if (!infix) doAsserts(Duration.from(`${prefix}100000000000000000000000000${suffix}`));
       }
       test(0, 'P', 'Y');
       test(1, 'P', 'M');
-      test(2, 'P', 'D');
-      test(3, 'PT', 'H');
-      test(4, 'PT', 'M');
-      test(5, 'PT', 'S');
-      test(6, 'PT', 'S', '.');
+      test(2, 'P', 'W');
+      test(3, 'P', 'D');
+      test(4, 'PT', 'H');
+      test(5, 'PT', 'M');
+      test(6, 'PT', 'S');
       test(7, 'PT', 'S', '.');
       test(8, 'PT', 'S', '.');
+      test(9, 'PT', 'S', '.');
     });
   });
   describe('Duration.with()', () => {
-    const duration = new Duration(5, 5, 5, 5, 5, 5, 5, 5, 5);
+    const duration = new Duration(5, 5, 5, 5, 5, 5, 5, 5, 5, 5);
     it('duration.with({ years: 1 } works', () => {
-      equal(`${duration.with({ years: 1 })}`, 'P1Y5M5DT5H5M5.005005005S');
+      equal(`${duration.with({ years: 1 })}`, 'P1Y5M5W5DT5H5M5.005005005S');
     });
     it('duration.with({ months: 1 } works', () => {
-      equal(`${duration.with({ months: 1 })}`, 'P5Y1M5DT5H5M5.005005005S');
+      equal(`${duration.with({ months: 1 })}`, 'P5Y1M5W5DT5H5M5.005005005S');
+    });
+    it('duration.with({ weeks: 1 } works', () => {
+      equal(`${duration.with({ weeks: 1 })}`, 'P5Y5M1W5DT5H5M5.005005005S');
     });
     it('duration.with({ days: 1 } works', () => {
-      equal(`${duration.with({ days: 1 })}`, 'P5Y5M1DT5H5M5.005005005S');
+      equal(`${duration.with({ days: 1 })}`, 'P5Y5M5W1DT5H5M5.005005005S');
     });
     it('duration.with({ hours: 1 } works', () => {
-      equal(`${duration.with({ hours: 1 })}`, 'P5Y5M5DT1H5M5.005005005S');
+      equal(`${duration.with({ hours: 1 })}`, 'P5Y5M5W5DT1H5M5.005005005S');
     });
     it('duration.with({ minutes: 1 } works', () => {
-      equal(`${duration.with({ minutes: 1 })}`, 'P5Y5M5DT5H1M5.005005005S');
+      equal(`${duration.with({ minutes: 1 })}`, 'P5Y5M5W5DT5H1M5.005005005S');
     });
     it('duration.with({ seconds: 1 } works', () => {
-      equal(`${duration.with({ seconds: 1 })}`, 'P5Y5M5DT5H5M1.005005005S');
+      equal(`${duration.with({ seconds: 1 })}`, 'P5Y5M5W5DT5H5M1.005005005S');
     });
     it('duration.with({ milliseconds: 1 } works', () => {
-      equal(`${duration.with({ milliseconds: 1 })}`, 'P5Y5M5DT5H5M5.001005005S');
+      equal(`${duration.with({ milliseconds: 1 })}`, 'P5Y5M5W5DT5H5M5.001005005S');
     });
     it('duration.with({ microseconds: 1 } works', () => {
-      equal(`${duration.with({ microseconds: 1 })}`, 'P5Y5M5DT5H5M5.005001005S');
+      equal(`${duration.with({ microseconds: 1 })}`, 'P5Y5M5W5DT5H5M5.005001005S');
     });
     it('duration.with({ nanoseconds: 1 } works', () => {
-      equal(`${duration.with({ nanoseconds: 1 })}`, 'P5Y5M5DT5H5M5.005005001S');
+      equal(`${duration.with({ nanoseconds: 1 })}`, 'P5Y5M5W5DT5H5M5.005005001S');
     });
     it('duration.with({ months: 1, seconds: 15 } works', () => {
-      equal(`${duration.with({ months: 1, seconds: 15 })}`, 'P5Y1M5DT5H5M15.005005005S');
+      equal(`${duration.with({ months: 1, seconds: 15 })}`, 'P5Y1M5W5DT5H5M15.005005005S');
     });
     it('balance balances all values up to days', () => {
       const result = duration.with(
@@ -274,9 +283,10 @@ describe('Duration', () => {
       equal(`${duration.plus({ hours: 12, seconds: 30 })}`, 'P1DT12H5M30S');
     });
     it('does not balance units', () => {
-      const d = Duration.from('P50M50DT50H50M50.500500500S');
+      const d = Duration.from('P50M50W50DT50H50M50.500500500S');
       const result = d.plus(d);
       equal(result.months, 100);
+      equal(result.weeks, 100);
       equal(result.days, 100);
       equal(result.hours, 100);
       equal(result.minutes, 100);
@@ -285,11 +295,12 @@ describe('Duration', () => {
       equal(result.microseconds, 1000);
       equal(result.nanoseconds, 1000);
     });
-    const max = new Duration(...Array(9).fill(Number.MAX_VALUE));
+    const max = new Duration(...Array(10).fill(Number.MAX_VALUE));
     it('caps values at Number.MAX_VALUE by default', () => {
       const result = max.plus(max);
       equal(result.years, Number.MAX_VALUE);
       equal(result.months, Number.MAX_VALUE);
+      equal(result.weeks, Number.MAX_VALUE);
       equal(result.days, Number.MAX_VALUE);
       equal(result.hours, Number.MAX_VALUE);
       equal(result.minutes, Number.MAX_VALUE);
@@ -302,6 +313,7 @@ describe('Duration', () => {
       const result = max.plus(max, { disambiguation: 'constrain' });
       equal(result.years, Number.MAX_VALUE);
       equal(result.months, Number.MAX_VALUE);
+      equal(result.weeks, Number.MAX_VALUE);
       equal(result.days, Number.MAX_VALUE);
       equal(result.hours, Number.MAX_VALUE);
       equal(result.minutes, Number.MAX_VALUE);
@@ -388,8 +400,10 @@ describe('Duration', () => {
       equal(result.nanoseconds, 500);
     });
     it('does not balance with units higher than days', () => {
-      const d = Duration.from('P1M15D');
+      let d = Duration.from('P1M15D');
       throws(() => d.minus({ days: 20 }), RangeError);
+      d = Duration.from('P1W5D');
+      throws(() => d.minus({ days: 10 }), RangeError);
     });
     const tenYears = Duration.from('P10Y');
     const tenMinutes = Duration.from('PT10M');
@@ -402,6 +416,7 @@ describe('Duration', () => {
     it('throws if result cannot be determined to be positive or negative', () => {
       ['balanceConstrain', 'balance'].forEach((disambiguation) => {
         throws(() => tenYears.minus({ months: 5 }, { disambiguation }), RangeError);
+        throws(() => tenYears.minus({ weeks: 5 }, { disambiguation }), RangeError);
         throws(() => tenYears.minus({ days: 5 }, { disambiguation }), RangeError);
         throws(() => tenYears.minus({ hours: 5 }, { disambiguation }), RangeError);
         throws(() => tenYears.minus({ minutes: 5 }, { disambiguation }), RangeError);
@@ -415,11 +430,12 @@ describe('Duration', () => {
     });
   });
   describe('duration.getFields() works', () => {
-    const d1 = new Duration(5, 5, 5, 5, 5, 5, 5, 5, 5);
+    const d1 = new Duration(5, 5, 5, 5, 5, 5, 5, 5, 5, 5);
     const fields = d1.getFields();
     it('fields', () => {
       equal(fields.years, 5);
       equal(fields.months, 5);
+      equal(fields.weeks, 5);
       equal(fields.days, 5);
       equal(fields.hours, 5);
       equal(fields.minutes, 5);
@@ -432,6 +448,7 @@ describe('Duration', () => {
       const fields2 = { ...fields };
       equal(fields2.years, 5);
       equal(fields2.months, 5);
+      equal(fields2.weeks, 5);
       equal(fields2.days, 5);
       equal(fields2.hours, 5);
       equal(fields2.minutes, 5);
@@ -444,6 +461,7 @@ describe('Duration', () => {
       const d2 = Duration.from(fields);
       equal(d2.years, 5);
       equal(d2.months, 5);
+      equal(d2.weeks, 5);
       equal(d2.days, 5);
       equal(d2.hours, 5);
       equal(d2.minutes, 5);
@@ -456,6 +474,7 @@ describe('Duration', () => {
       const d2 = Duration.from('P300YT20S').with(fields);
       equal(d2.years, 5);
       equal(d2.months, 5);
+      equal(d2.weeks, 5);
       equal(d2.days, 5);
       equal(d2.hours, 5);
       equal(d2.minutes, 5);
