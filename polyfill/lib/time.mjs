@@ -189,7 +189,7 @@ export class Time {
       largestUnit
     ));
     const Duration = GetIntrinsic('%Temporal.Duration%');
-    return new Duration(0, 0, 0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+    return new Duration(0, 0, 0, 0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
   }
   equals(other) {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');

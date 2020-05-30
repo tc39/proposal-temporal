@@ -159,8 +159,8 @@ export class DateTime {
     const disambiguation = ES.ToArithmeticTemporalDisambiguation(options);
     const duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
     let { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = this;
-    let { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
-    ({ year, month, day } = ES.AddDate(year, month, day, years, months, days, disambiguation));
+    let { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
+    ({ year, month, day } = ES.AddDate(year, month, day, years, months, weeks, days, disambiguation));
     let deltaDays = 0;
     ({ deltaDays, hour, minute, second, millisecond, microsecond, nanosecond } = ES.AddTime(
       hour,
@@ -200,7 +200,7 @@ export class DateTime {
     const disambiguation = ES.ToArithmeticTemporalDisambiguation(options);
     const duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
     let { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = this;
-    let { years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
+    let { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
     let deltaDays = 0;
     ({ deltaDays, hour, minute, second, millisecond, microsecond, nanosecond } = ES.SubtractTime(
       hour,
@@ -217,7 +217,7 @@ export class DateTime {
       nanoseconds
     ));
     days -= deltaDays;
-    ({ year, month, day } = ES.SubtractDate(year, month, day, years, months, days, disambiguation));
+    ({ year, month, day } = ES.SubtractDate(year, month, day, years, months, weeks, days, disambiguation));
     ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.RegulateDateTime(
       year,
       month,
@@ -249,11 +249,11 @@ export class DateTime {
     ({ year, month, day } = ES.BalanceDate(year, month, day));
 
     let dateLargestUnit = 'days';
-    if (largestUnit === 'years' || largestUnit === 'months') {
+    if (largestUnit === 'years' || largestUnit === 'months' || largestUnit === 'weeks') {
       dateLargestUnit = largestUnit;
     }
 
-    let { years, months, days } = ES.DifferenceDate(smaller, { year, month, day }, dateLargestUnit);
+    let { years, months, weeks, days } = ES.DifferenceDate(smaller, { year, month, day }, dateLargestUnit);
 
     ({ days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.BalanceDuration(
       days,
@@ -267,7 +267,7 @@ export class DateTime {
     ));
 
     const Duration = GetIntrinsic('%Temporal.Duration%');
-    return new Duration(years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+    return new Duration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
   }
   equals(other) {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');

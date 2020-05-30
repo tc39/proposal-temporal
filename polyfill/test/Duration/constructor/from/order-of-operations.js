@@ -23,6 +23,8 @@ const expected = [
   "valueOf nanoseconds",
   "get seconds",
   "valueOf seconds",
+  "get weeks",
+  "valueOf weeks",
   "get years",
   "valueOf years",
 ];
@@ -30,6 +32,7 @@ const actual = [];
 const fields = {
   years: 1.7,
   months: 1.7,
+  weeks: 1.7,
   days: 1.7,
   hours: 1.7,
   minutes: 1.7,
@@ -57,6 +60,7 @@ const argument = new Proxy(fields, {
 const result = Temporal.Duration.from(argument);
 assert.sameValue(result.years, 1, "years result");
 assert.sameValue(result.months, 1, "months result");
+assert.sameValue(result.weeks, 1, "weeks result");
 assert.sameValue(result.days, 1, "days result");
 assert.sameValue(result.hours, 1, "hours result");
 assert.sameValue(result.minutes, 1, "minutes result");

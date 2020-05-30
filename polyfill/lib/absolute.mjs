@@ -93,7 +93,7 @@ export class Absolute {
   difference(other, options) {
     if (!ES.IsTemporalAbsolute(this)) throw new TypeError('invalid receiver');
     if (!ES.IsTemporalAbsolute(other)) throw new TypeError('invalid Absolute object');
-    const largestUnit = ES.ToLargestTemporalUnit(options, 'seconds', ['years', 'months']);
+    const largestUnit = ES.ToLargestTemporalUnit(options, 'seconds', ['years', 'months', 'weeks']);
 
     const [one, two] = [this, other].sort(Absolute.compare);
     const onens = GetSlot(one, EPOCHNANOSECONDS);
@@ -116,7 +116,7 @@ export class Absolute {
       ns,
       largestUnit
     );
-    return new Duration(0, 0, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+    return new Duration(0, 0, 0, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
   }
   equals(other) {
     if (!ES.IsTemporalAbsolute(this)) throw new TypeError('invalid receiver');

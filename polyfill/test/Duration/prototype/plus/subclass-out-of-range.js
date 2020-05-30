@@ -9,10 +9,10 @@ includes: [compareArray.js]
 let called = 0;
 
 class MyDuration extends Temporal.Duration {
-  constructor(years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds) {
+  constructor(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds) {
     ++called;
-    assert.compareArray([years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds], [0, 0, 0, 0, 0, 0, 0, 0, Number.MAX_VALUE]);
-    super(years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+    assert.compareArray([years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds], [0, 0, 0, 0, 0, 0, 0, 0, 0, Number.MAX_VALUE]);
+    super(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
   }
 }
 
@@ -22,6 +22,7 @@ assert.sameValue(called, 1);
 const result = instance.plus({ nanoseconds: Number.MAX_VALUE });
 assert.sameValue(result.years, 0, "years result");
 assert.sameValue(result.months, 0, "months result");
+assert.sameValue(result.weeks, 0, "weekss result");
 assert.sameValue(result.days, 0, "days result");
 assert.sameValue(result.hours, 0, "hours result");
 assert.sameValue(result.minutes, 0, "minutes result");

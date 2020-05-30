@@ -3,6 +3,7 @@ import { MakeIntrinsicClass } from './intrinsicclass.mjs';
 import {
   YEARS,
   MONTHS,
+  WEEKS,
   DAYS,
   HOURS,
   MINUTES,
@@ -19,6 +20,7 @@ export class Duration {
   constructor(
     years = 0,
     months = 0,
+    weeks = 0,
     days = 0,
     hours = 0,
     minutes = 0,
@@ -29,6 +31,7 @@ export class Duration {
   ) {
     years = ES.ToInteger(years);
     months = ES.ToInteger(months);
+    weeks = ES.ToInteger(weeks);
     days = ES.ToInteger(days);
     hours = ES.ToInteger(hours);
     minutes = ES.ToInteger(minutes);
@@ -37,7 +40,7 @@ export class Duration {
     microseconds = ES.ToInteger(microseconds);
     nanoseconds = ES.ToInteger(nanoseconds);
 
-    for (const prop of [years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds]) {
+    for (const prop of [years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds]) {
       if (prop < 0) throw new RangeError('negative values not allowed as duration fields');
       if (!Number.isFinite(prop)) throw new RangeError('infinite values not allowed as duration fields');
     }
@@ -45,6 +48,7 @@ export class Duration {
     CreateSlots(this);
     SetSlot(this, YEARS, years);
     SetSlot(this, MONTHS, months);
+    SetSlot(this, WEEKS, weeks);
     SetSlot(this, DAYS, days);
     SetSlot(this, HOURS, hours);
     SetSlot(this, MINUTES, minutes);
@@ -60,6 +64,10 @@ export class Duration {
   get months() {
     if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
     return GetSlot(this, MONTHS);
+  }
+  get weeks() {
+    if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
+    return GetSlot(this, WEEKS);
   }
   get days() {
     if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
@@ -101,6 +109,7 @@ export class Duration {
       'months',
       'nanoseconds',
       'seconds',
+      'weeks',
       'years'
     ]);
     if (!props) {
@@ -109,6 +118,7 @@ export class Duration {
     let {
       years = GetSlot(this, YEARS),
       months = GetSlot(this, MONTHS),
+      weeks = GetSlot(this, WEEKS),
       days = GetSlot(this, DAYS),
       hours = GetSlot(this, HOURS),
       minutes = GetSlot(this, MINUTES),
@@ -117,9 +127,21 @@ export class Duration {
       microseconds = GetSlot(this, MICROSECONDS),
       nanoseconds = GetSlot(this, NANOSECONDS)
     } = props;
-    ({ years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.RegulateDuration(
+    ({
       years,
       months,
+      weeks,
+      days,
+      hours,
+      minutes,
+      seconds,
+      milliseconds,
+      microseconds,
+      nanoseconds
+    } = ES.RegulateDuration(
+      years,
+      months,
+      weeks,
       days,
       hours,
       minutes,
@@ -130,7 +152,18 @@ export class Duration {
       disambiguation
     ));
     const Construct = ES.SpeciesConstructor(this, Duration);
-    const result = new Construct(years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+    const result = new Construct(
+      years,
+      months,
+      weeks,
+      days,
+      hours,
+      minutes,
+      seconds,
+      milliseconds,
+      microseconds,
+      nanoseconds
+    );
     if (!ES.IsTemporalDuration(result)) throw new TypeError('invalid result');
     return result;
   }
@@ -139,6 +172,7 @@ export class Duration {
     let {
       years,
       months,
+      weeks,
       days,
       hours,
       minutes,
@@ -148,9 +182,10 @@ export class Duration {
       nanoseconds
     } = ES.ToLimitedTemporalDuration(other);
     const disambiguation = ES.ToArithmeticTemporalDisambiguation(options);
-    ({ years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.AddDuration(
+    ({ years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.AddDuration(
       GetSlot(this, YEARS),
       GetSlot(this, MONTHS),
+      GetSlot(this, WEEKS),
       GetSlot(this, DAYS),
       GetSlot(this, HOURS),
       GetSlot(this, MINUTES),
@@ -160,6 +195,7 @@ export class Duration {
       GetSlot(this, NANOSECONDS),
       years,
       months,
+      weeks,
       days,
       hours,
       minutes,
@@ -170,7 +206,18 @@ export class Duration {
       disambiguation
     ));
     const Construct = ES.SpeciesConstructor(this, Duration);
-    const result = new Construct(years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+    const result = new Construct(
+      years,
+      months,
+      weeks,
+      days,
+      hours,
+      minutes,
+      seconds,
+      milliseconds,
+      microseconds,
+      nanoseconds
+    );
     if (!ES.IsTemporalDuration(result)) throw new TypeError('invalid result');
     return result;
   }
@@ -179,6 +226,7 @@ export class Duration {
     let {
       years,
       months,
+      weeks,
       days,
       hours,
       minutes,
@@ -188,9 +236,21 @@ export class Duration {
       nanoseconds
     } = ES.ToLimitedTemporalDuration(other);
     const disambiguation = ES.ToDurationSubtractionTemporalDisambiguation(options);
-    ({ years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.SubtractDuration(
+    ({
+      years,
+      months,
+      weeks,
+      days,
+      hours,
+      minutes,
+      seconds,
+      milliseconds,
+      microseconds,
+      nanoseconds
+    } = ES.SubtractDuration(
       GetSlot(this, YEARS),
       GetSlot(this, MONTHS),
+      GetSlot(this, WEEKS),
       GetSlot(this, DAYS),
       GetSlot(this, HOURS),
       GetSlot(this, MINUTES),
@@ -200,6 +260,7 @@ export class Duration {
       GetSlot(this, NANOSECONDS),
       years,
       months,
+      weeks,
       days,
       hours,
       minutes,
@@ -210,7 +271,18 @@ export class Duration {
       disambiguation
     ));
     const Construct = ES.SpeciesConstructor(this, Duration);
-    const result = new Construct(years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+    const result = new Construct(
+      years,
+      months,
+      weeks,
+      days,
+      hours,
+      minutes,
+      seconds,
+      milliseconds,
+      microseconds,
+      nanoseconds
+    );
     if (!ES.IsTemporalDuration(result)) throw new TypeError('invalid result');
     return result;
   }
@@ -224,6 +296,7 @@ export class Duration {
       ['months'],
       ['nanoseconds'],
       ['seconds'],
+      ['weeks'],
       ['years']
     ]);
     if (!fields) throw new TypeError('invalid receiver');
@@ -246,11 +319,12 @@ export class Duration {
   }
   static from(item, options = undefined) {
     const disambiguation = ES.ToTemporalDisambiguation(options);
-    let years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds;
+    let years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds;
     if (typeof item === 'object' && item) {
       ({
         years,
         months,
+        weeks,
         days,
         hours,
         minutes,
@@ -263,6 +337,7 @@ export class Duration {
       ({
         years,
         months,
+        weeks,
         days,
         hours,
         minutes,
@@ -272,9 +347,21 @@ export class Duration {
         nanoseconds
       } = ES.ParseTemporalDurationString(ES.ToString(item)));
     }
-    ({ years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.RegulateDuration(
+    ({
       years,
       months,
+      weeks,
+      days,
+      hours,
+      minutes,
+      seconds,
+      milliseconds,
+      microseconds,
+      nanoseconds
+    } = ES.RegulateDuration(
+      years,
+      months,
+      weeks,
       days,
       hours,
       minutes,
@@ -284,7 +371,18 @@ export class Duration {
       nanoseconds,
       disambiguation
     ));
-    const result = new this(years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+    const result = new this(
+      years,
+      months,
+      weeks,
+      days,
+      hours,
+      minutes,
+      seconds,
+      milliseconds,
+      microseconds,
+      nanoseconds
+    );
     if (!ES.IsTemporalDuration(result)) throw new TypeError('invalid result');
     return result;
   }

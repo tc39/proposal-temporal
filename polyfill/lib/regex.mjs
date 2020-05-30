@@ -16,4 +16,4 @@ export const yearmonth = new RegExp(`^(${yearpart.source})-?(\\d{2})$`);
 export const monthday = /^(?:--)?(\d{2})-?(\d{2})$/;
 
 export const offset = /([+-])([0-2][0-9])(?::?([0-5][0-9]))?/;
-export const duration = /P(?:(\d+)Y)?(?:(\d+)M)?(?:(\d+)D)?(?:T(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)(?:[.,](\d{1,9}))?S)?)?/i;
+export const duration = /P(?:(\d+)Y)?(?:(\d+)M)?(?:(\d+)W)?(?:(\d+)D)?(?:T(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)(?:[.,](\d{1,9}))?S)?)?/i;

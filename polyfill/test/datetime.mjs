@@ -299,7 +299,7 @@ describe('DateTime', () => {
   describe('date/time maths', () => {
     const earlier = DateTime.from('1976-11-18T15:23:30.123456789');
     const later = DateTime.from('2019-10-29T10:46:38.271986102');
-    ['years', 'months', 'days', 'hours', 'minutes', 'seconds'].forEach((largestUnit) => {
+    ['years', 'months', 'weeks', 'days', 'hours', 'minutes', 'seconds'].forEach((largestUnit) => {
       const diff = earlier.difference(later, { largestUnit });
       it(`(${earlier}).difference(${later}, ${largestUnit}) == (${later}).difference(${earlier}, ${largestUnit})`, () =>
         equal(`${later.difference(earlier, { largestUnit })}`, `${diff}`));
@@ -371,6 +371,15 @@ describe('DateTime', () => {
       equal(`${lastFeb21.difference(lastFeb20)}`, 'P365D');
       equal(`${lastFeb21.difference(lastFeb20, { largestUnit: 'months' })}`, 'P11M30D');
       equal(`${lastFeb21.difference(lastFeb20, { largestUnit: 'years' })}`, 'P11M30D');
+    });
+    it('weeks and months are mutually exclusive', () => {
+      const laterDateTime = dt.plus({ days: 42, hours: 3 });
+      const weeksDifference = laterDateTime.difference(dt, { largestUnit: 'weeks' });
+      notEqual(weeksDifference.weeks, 0);
+      equal(weeksDifference.months, 0);
+      const monthsDifference = laterDateTime.difference(dt, { largestUnit: 'months' });
+      equal(monthsDifference.weeks, 0);
+      notEqual(monthsDifference.months, 0);
     });
   });
   describe('DateTime.from() works', () => {

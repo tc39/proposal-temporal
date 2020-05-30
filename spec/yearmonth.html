@@ -220,7 +220,7 @@
         1. Let _duration_ be ? ToLimitedTemporalDuration(_temporalDurationLike_, « »).
         1. Let _balanceResult_ be ? BalanceDuration(_duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]], *"days"*).
         1. Let _disambiguation_ be ? ToArithmeticTemporalDisambiguation(_options_).
-        1. Let _result_ be ? AddDate(_yearMonth_.[[ISOYear]], _yearMonth_.[[ISOMonth]], 1, _duration_.[[Years]], _duration_.[[Months]], _balanceResult_.[[Days]], _disambiguation_).
+        1. Let _result_ be ? AddDate(_yearMonth_.[[ISOYear]], _yearMonth_.[[ISOMonth]], 1, _duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _balanceResult_.[[Days]], _disambiguation_).
         1. Let _result_ be ? RegulateYearMonth(_result_.[[Year]], _result_.[[Month]], _disambiguation_).
         1. Return ? CreateTemporalYearMonthFromInstance(_yearMonth_, _result_.[[Year]], _result_.[[Month]]).
       </emu-alg>
@@ -239,7 +239,7 @@
         1. Let _balanceResult_ be ? BalanceDuration(_duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]], *"days"*).
         1. Let _disambiguation_ be ? ToArithmeticTemporalDisambiguation(_options_).
         1. Let _lastDay_ be ! DaysInMonth(_yearMonth_.[[ISOYear]], _yearMonth_.[[ISOMonth]]).
-        1. Let _result_ be ? SubtractDate(_yearMonth_.[[ISOYear]], _yearMonth_.[[ISOMonth]], _lastDay_, _duration_.[[Years]], _duration_.[[Months]], _balanceResult_.[[Days]], _disambiguation_).
+        1. Let _result_ be ? SubtractDate(_yearMonth_.[[ISOYear]], _yearMonth_.[[ISOMonth]], _lastDay_, _duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _balanceResult_.[[Days]], _disambiguation_).
         1. Let _result_ be ? RegulateYearMonth(_result_.[[Year]], _result_.[[Month]], _disambiguation_).
         1. Return ? CreateTemporalYearMonthFromInstance(_yearMonth_, _result_.[[Year]], _result_.[[Month]]).
       </emu-alg>
@@ -255,7 +255,7 @@
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
         1. Perform ? RequireInternalSlot(_other_, [[InitializedTemporalYearMonth]]).
-        1. Let _largestUnit_ be ? ToLargestTemporalUnit(_options_, « *"days"*, *"hours"*, *"minutes"*, *"seconds"* », *"years"*).
+        1. Let _largestUnit_ be ? ToLargestTemporalUnit(_options_, « *"weeks"*, *"days"*, *"hours"*, *"minutes"*, *"seconds"* », *"years"*).
         1. If ! CompareTemporalYearMonth(_yearMonth_, _other_) &lt; 0, then
           1. Let _greater_ be _other_.
           1. Let _smaller_ be _yearMonth_.

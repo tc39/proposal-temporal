@@ -338,7 +338,7 @@ date.minus({ months: 1 }, { disambiguation: 'reject' })  // => throws
 - `options` (optional object): An object with properties representing options for the operation.
   The following options are recognized:
   - `largestUnit` (optional string): The largest unit of time to allow in the resulting `Temporal.Duration` object.
-    Valid values are `'years'`, `'months'`, and `'days'`.
+    Valid values are `'years'`, `'months'`, `'weeks'`, and `'days'`.
     The default is `days`.
 
 **Returns:** a `Temporal.Duration` representing the difference between `date` and `other`.

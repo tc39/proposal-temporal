@@ -90,3 +90,8 @@ When expressed as an ISO string, we would say:
     2020-03-25{hebrew}
 
 Since it is ambiguous whether that string represents a Date, YearMonth, or MonthDay, the appropriate Temporal constructor must be chosen in order to get the expected data type back out.
+
+## Duration weeks
+
+The ISO 8601 standard allows durations in units of weeks (`P3W` for three weeks), but weeks are not allowed to appear together with any other units.
+Temporal.Duration does support combining weeks with other units, so we propose the convention of strings such as `P3W1DT1H` for three weeks, one day, and one hour.
