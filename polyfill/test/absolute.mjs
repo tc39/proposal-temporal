@@ -342,6 +342,8 @@ describe('Absolute', () => {
       equal(`${Absolute.from('1976-11-18T15:23:30+00')}`, '1976-11-18T15:23:30Z');
       equal(`${Absolute.from('1976-11-18T15Z')}`, '1976-11-18T15:00Z');
     });
+    it('ignores any specified calendar', () =>
+      equal(`${Absolute.from('1976-11-18T15:23:30.123456789Z[c=discordian]')}`, '1976-11-18T15:23:30.123456789Z'));
   });
   describe('Absolute.plus works', () => {
     const abs = Absolute.from('1969-12-25T12:23:45.678901234Z');

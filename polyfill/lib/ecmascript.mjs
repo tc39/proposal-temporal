@@ -82,6 +82,10 @@ export const ES = ObjectAssign({}, ES2019, {
     return new BUILTIN_CALENDARS[id]();
   },
   GetDefaultCalendar: () => ES.GetBuiltinCalendar('iso8601'),
+  FormatCalendarAnnotation: (calendar) => {
+    if (calendar.id === 'iso8601') return '';
+    return `[c=${calendar.id}]`;
+  },
   ParseISODateTime: (isoString, { zoneRequired }) => {
     const regex = zoneRequired ? PARSE.absolute : PARSE.datetime;
     const match = regex.exec(isoString);
@@ -108,7 +112,22 @@ export const ES = ObjectAssign({}, ES2019, {
       }
     }
     const zone = match[13] ? 'UTC' : ianaName || offset;
-    return { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, zone, ianaName, offset };
+    const calendar = match[17] || null;
+    return {
+      year,
+      month,
+      day,
+      hour,
+      minute,
+      second,
+      millisecond,
+      microsecond,
+      nanosecond,
+      zone,
+      ianaName,
+      offset,
+      calendar
+    };
   },
   ParseTemporalAbsoluteString: (isoString) => {
     return ES.ParseISODateTime(isoString, { zoneRequired: true });
@@ -140,25 +159,28 @@ export const ES = ObjectAssign({}, ES2019, {
   },
   ParseTemporalYearMonthString: (isoString) => {
     const match = PARSE.yearmonth.exec(isoString);
-    let year, month;
+    let year, month, calendar, refISODay;
     if (match) {
       year = ES.ToInteger(match[1]);
       month = ES.ToInteger(match[2]);
+      calendar = match[3] || null;
     } else {
-      ({ year, month } = ES.ParseISODateTime(isoString, { zoneRequired: false }));
+      ({ year, month, calendar, day: refISODay } = ES.ParseISODateTime(isoString, { zoneRequired: false }));
+      if (!calendar) refISODay = undefined;
     }
-    return { year, month };
+    return { year, month, calendar, refISODay };
   },
   ParseTemporalMonthDayString: (isoString) => {
     const match = PARSE.monthday.exec(isoString);
-    let month, day;
+    let month, day, calendar, refISOYear;
     if (match) {
       month = ES.ToInteger(match[1]);
       day = ES.ToInteger(match[2]);
     } else {
-      ({ month, day } = ES.ParseISODateTime(isoString, { zoneRequired: false }));
+      ({ month, day, calendar, year: refISOYear } = ES.ParseISODateTime(isoString, { zoneRequired: false }));
+      if (!calendar) refISOYear = undefined;
     }
-    return { month, day };
+    return { month, day, calendar, refISOYear };
   },
   ParseTemporalTimeZoneString: (stringIdent) => {
     try {

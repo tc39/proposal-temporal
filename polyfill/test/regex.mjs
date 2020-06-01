@@ -70,7 +70,7 @@ describe('fromString regex', () => {
   describe('datetime', () => {
     function test(isoString, components) {
       it(isoString, () => {
-        const [y, mon, d, h = 0, min = 0, s = 0, ms = 0, µs = 0, ns = 0] = components;
+        const [y, mon, d, h = 0, min = 0, s = 0, ms = 0, µs = 0, ns = 0, cid = 'iso8601'] = components;
         const datetime = Temporal.DateTime.from(isoString);
         equal(datetime.year, y);
         equal(datetime.month, mon);
@@ -81,6 +81,7 @@ describe('fromString regex', () => {
         equal(datetime.millisecond, ms);
         equal(datetime.microsecond, µs);
         equal(datetime.nanosecond, ns);
+        equal(datetime.calendar.id, cid);
       });
     }
     function generateTest(dateTimeString, zoneString) {
@@ -115,16 +116,21 @@ describe('fromString regex', () => {
     // Representations with reduced precision
     test('1976-11-18T15', [1976, 11, 18, 15]);
     test('1976-11-18', [1976, 11, 18]);
+    // Representations with calendar
+    ['', 'Z', '+01:00[Europe/Vienna]'].forEach((zoneString) =>
+      test(`1976-11-18T15:23:30.123456789${zoneString}[c=iso8601]`, [1976, 11, 18, 15, 23, 30, 123, 456, 789])
+    );
   });
 
   describe('date', () => {
     function test(isoString, components) {
       it(isoString, () => {
-        const [y, m, d] = components;
+        const [y, m, d, cid = 'iso8601'] = components;
         const date = Temporal.Date.from(isoString);
         equal(date.year, y);
         equal(date.month, m);
         equal(date.day, d);
+        equal(date.calendar.id, cid);
       });
     }
     function generateTest(dateTimeString, zoneString) {
@@ -152,7 +158,7 @@ describe('fromString regex', () => {
       '19761118T152330.1234'
     ].forEach((str) => test(str, [1976, 11, 18]));
     // Representations with reduced precision
-    test('1976-11-18T15', [1976, 11, 18, 15]);
+    test('1976-11-18T15', [1976, 11, 18]);
     // Date-only forms
     test('1976-11-18', [1976, 11, 18]);
     test('19761118', [1976, 11, 18]);
@@ -162,6 +168,11 @@ describe('fromString regex', () => {
     test('-0003001118', [-300, 11, 18]);
     test('1512-11-18', [1512, 11, 18]);
     test('15121118', [1512, 11, 18]);
+    // Representations with calendar
+    ['', 'Z', '+01:00[Europe/Vienna]'].forEach((zoneString) =>
+      test(`1976-11-18T15:23:30.123456789${zoneString}[c=iso8601]`, [1976, 11, 18])
+    );
+    test('1976-11-18[c=iso8601]', [1976, 11, 18]);
   });
 
   describe('time', () => {
@@ -210,15 +221,21 @@ describe('fromString regex', () => {
     // Time-only forms
     generateTest('15:23', '');
     ['+01:00[Europe/Vienna]', '-04:00', 'Z', ''].forEach((zoneStr) => test(`15${zoneStr}`, [15]));
+    // Representations with calendar
+    ['', 'Z', '+01:00[Europe/Vienna]'].forEach((zoneString) =>
+      test(`1976-11-18T15:23:30.123456789${zoneString}[c=iso8601]`, [15, 23, 30, 123, 456, 789])
+    );
+    test('15:23:30.123456789[c=iso8601]', [15, 23, 30, 123, 456, 789]);
   });
 
   describe('yearmonth', () => {
     function test(isoString, components) {
       it(isoString, () => {
-        const [y, m] = components;
+        const [y, m, cid = 'iso8601'] = components;
         const yearMonth = Temporal.YearMonth.from(isoString);
         equal(yearMonth.year, y);
         equal(yearMonth.month, m);
+        equal(yearMonth.calendar.id, cid);
       });
     }
     function generateTest(dateTimeString, zoneString) {
@@ -265,15 +282,21 @@ describe('fromString regex', () => {
     test('-00030011', [-300, 11]);
     test('1512-11', [1512, 11]);
     test('151211', [1512, 11]);
+    // Representations with calendar
+    ['', 'Z', '+01:00[Europe/Vienna]'].forEach((zoneString) =>
+      test(`1976-11-18T15:23:30.123456789${zoneString}[c=iso8601]`, [1976, 11])
+    );
+    test('1976-11-01[c=iso8601]', [1976, 11]);
   });
 
   describe('monthday', () => {
     function test(isoString, components) {
       it(isoString, () => {
-        const [m, d] = components;
+        const [m, d, cid = 'iso8601'] = components;
         const monthDay = Temporal.MonthDay.from(isoString);
         equal(monthDay.month, m);
         equal(monthDay.day, d);
+        equal(monthDay.calendar.id, cid);
       });
     }
     function generateTest(dateTimeString, zoneString) {
@@ -323,6 +346,11 @@ describe('fromString regex', () => {
     // RFC 3339 month-day form
     test('--11-18', [11, 18]);
     test('--1118', [11, 18]);
+    // Representations with calendar
+    ['', 'Z', '+01:00[Europe/Vienna]'].forEach((zoneString) =>
+      test(`1976-11-18T15:23:30.123456789${zoneString}[c=iso8601]`, [11, 18])
+    );
+    test('1972-11-18[c=iso8601]', [11, 18]);
   });
 
   describe('timezone', () => {
@@ -382,6 +410,10 @@ describe('fromString regex', () => {
     test('-03:00', '-03:00');
     test('+03', '+03:00');
     test('-03', '-03:00');
+    // Representations with calendar
+    test('1976-11-18T15:23:30.123456789Z[c=iso8601]', 'UTC');
+    test('1976-11-18T15:23:30.123456789-04:00[c=iso8601]', '-04:00');
+    test('1976-11-18T15:23:30.123456789+01:00[Europe/Vienna][c=iso8601]', 'Europe/Vienna');
   });
 
   describe('duration', () => {
