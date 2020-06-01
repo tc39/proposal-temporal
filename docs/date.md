@@ -269,6 +269,21 @@ date.with({day: 1});  // => 2006-01-01
 date.plus({months: 1}).with({day: date.daysInMonth});  // => 2006-02-28
 ```
 
+### date.**withCalendar**(_calendar_: Temporal.Calendar | string) : Temporal.Date
+
+**Parameters:**
+- `calendar` (`Temporal.Calendar` or string): The calendar into which to project `date`.
+
+**Returns:** a new `Temporal.Date` object which is the date indicated by `date`, projected into `calendar`.
+
+This method is the same as `date.with({ calendar })`, but may be more efficient.
+
+Usage example:
+```javascript
+date = Temporal.Date.from('2006-08-24[c=japanese]');
+date.withCalendar('iso8601')  // => 2006-08-24
+```
+
 ### date.**plus**(_duration_: object, _options_?: object) : Temporal.Date
 
 **Parameters:**

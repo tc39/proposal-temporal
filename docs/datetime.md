@@ -326,6 +326,21 @@ dt = new Temporal.DateTime(1995, 12, 7, 3, 24, 30, 0, 3, 500);
 dt.with({year: 2015, second: 31})  // => 2015-12-07T03:24:31.000003500
 ```
 
+### datetime.**withCalendar**(_calendar_: Temporal.Calendar | string) : Temporal.DateTime
+
+**Parameters:**
+- `calendar` (`Temporal.Calendar` or string): The calendar into which to project `datetime`.
+
+**Returns:** a new `Temporal.DateTime` object which is the date indicated by `datetime`, projected into `calendar`.
+
+This method is the same as `datetime.with({ calendar })`, but may be more efficient.
+
+Usage example:
+```javascript
+dt = Temporal.DateTime.from('1995-12-07T03:24:30.000003500[c=japanese]');
+dt.withCalendar('iso8601')  // => 1995-12-07T03:24:30.000003500
+```
+
 ### datetime.**plus**(_duration_: object, _options_?: object) : Temporal.DateTime
 
 **Parameters:**
