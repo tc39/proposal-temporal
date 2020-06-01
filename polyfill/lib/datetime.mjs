@@ -213,6 +213,26 @@ export class DateTime {
     if (!ES.IsTemporalDateTime(result)) throw new TypeError('invalid result');
     return result;
   }
+  withCalendar(calendar) {
+    if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+    const TemporalCalendar = GetIntrinsic('%Temporal.Calendar%');
+    calendar = TemporalCalendar.from(calendar);
+    const Construct = ES.SpeciesConstructor(this, DateTime);
+    const result = new Construct(
+      GetSlot(this, ISO_YEAR),
+      GetSlot(this, ISO_MONTH),
+      GetSlot(this, ISO_DAY),
+      GetSlot(this, HOUR),
+      GetSlot(this, MINUTE),
+      GetSlot(this, SECOND),
+      GetSlot(this, MILLISECOND),
+      GetSlot(this, MICROSECOND),
+      GetSlot(this, NANOSECOND),
+      calendar
+    );
+    if (!ES.IsTemporalDateTime(result)) throw new TypeError('invalid result');
+    return result;
+  }
   plus(temporalDurationLike, options) {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     const disambiguation = ES.ToTemporalDisambiguation(options);

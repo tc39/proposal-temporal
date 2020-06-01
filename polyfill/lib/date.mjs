@@ -96,6 +96,15 @@ export class Date {
     if (!ES.IsTemporalDate(result)) throw new TypeError('invalid result');
     return result;
   }
+  withCalendar(calendar) {
+    if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
+    const TemporalCalendar = GetIntrinsic('%Temporal.Calendar%');
+    calendar = TemporalCalendar.from(calendar);
+    const Construct = ES.SpeciesConstructor(this, Date);
+    const result = new Construct(GetSlot(this, ISO_YEAR), GetSlot(this, ISO_MONTH), GetSlot(this, ISO_DAY), calendar);
+    if (!ES.IsTemporalDate(result)) throw new TypeError('invalid result');
+    return result;
+  }
   plus(temporalDurationLike, options) {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
     let duration = ES.ToLimitedTemporalDuration(temporalDurationLike);

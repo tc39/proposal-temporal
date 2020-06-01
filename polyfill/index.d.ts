@@ -307,6 +307,7 @@ export namespace Temporal {
     readonly isLeapYear: boolean;
     equals(other: Temporal.Date): boolean;
     with(dateLike: DateLike, options?: AssignmentOptions): Temporal.Date;
+    withCalendar(calendar: string | Temporal.Calendar): Temporal.Date;
     plus(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.Date;
     minus(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.Date;
     difference(
@@ -404,6 +405,7 @@ export namespace Temporal {
     readonly isLeapYear: boolean;
     equals(other: Temporal.DateTime): boolean;
     with(dateTimeLike: DateTimeLike, options?: AssignmentOptions): Temporal.DateTime;
+    withCalendar(calendar: string | Temporal.Calendar): Temporal.DateTime;
     plus(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.DateTime;
     minus(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.DateTime;
     difference(

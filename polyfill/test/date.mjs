@@ -575,6 +575,16 @@ describe('Date', () => {
       equal(Date.compare(d1, d2), 0);
     });
   });
+  describe('date.withCalendar()', () => {
+    const d1 = Date.from('1976-11-18');
+    it('works', () => {
+      const calendar = Temporal.Calendar.from('iso8601');
+      equal(`${d1.withCalendar(calendar)}`, '1976-11-18');
+    });
+    it('casts its argument', () => {
+      equal(`${d1.withCalendar('iso8601')}`, '1976-11-18');
+    });
+  });
 });
 
 import { normalize } from 'path';
