@@ -244,7 +244,7 @@ export namespace Temporal {
     day?: number;
   };
 
-  export type DateISOCalendarFields = {
+  type DateISOCalendarFields = {
     year: number;
     month: number;
     day: number;
@@ -299,7 +299,7 @@ export namespace Temporal {
     nanosecond?: number;
   };
 
-  export type DateTimeISOCalendarFields = {
+  type DateTimeISOCalendarFields = {
     year: number;
     month: number;
     day: number;
@@ -375,7 +375,7 @@ export namespace Temporal {
     day?: number;
   };
 
-  export type MonthDayISOCalendarFields = {
+  type MonthDayISOCalendarFields = {
     month: number;
     day: number;
     refISOYear: number;
@@ -488,7 +488,7 @@ export namespace Temporal {
     month?: number;
   };
 
-  export type YearMonthISOCalendarFields = {
+  type YearMonthISOCalendarFields = {
     year: number;
     month: number;
     refISODay: number;
