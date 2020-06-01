@@ -512,7 +512,8 @@ export class DateTime {
       GetSlot(this, MICROSECOND),
       GetSlot(this, NANOSECOND)
     );
-    let resultString = `${year}-${month}-${day}T${hour}:${minute}${second ? `:${second}` : ''}`;
+    const calendar = ES.FormatCalendarAnnotation(GetSlot(this, CALENDAR));
+    let resultString = `${year}-${month}-${day}T${hour}:${minute}${second ? `:${second}` : ''}${calendar}`;
     return resultString;
   }
   toLocaleString(...args) {
@@ -683,7 +684,8 @@ export class DateTime {
         second,
         millisecond,
         microsecond,
-        nanosecond
+        nanosecond,
+        calendar
       } = ES.ParseTemporalDateTimeString(ES.ToString(item));
       ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.RegulateDateTimeRange(
         year,
@@ -697,7 +699,8 @@ export class DateTime {
         nanosecond,
         disambiguation
       ));
-      const calendar = ES.GetDefaultCalendar();
+      if (!calendar) calendar = ES.GetDefaultCalendar();
+      calendar = TemporalCalendar.from(calendar);
       result = new this(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
     }
     if (!ES.IsTemporalDateTime(result)) throw new TypeError('invalid result');

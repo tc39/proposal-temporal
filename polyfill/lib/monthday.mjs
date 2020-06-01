@@ -65,6 +65,11 @@ export class MonthDay {
     let month = ES.ISODateTimePartString(GetSlot(this, ISO_MONTH));
     let day = ES.ISODateTimePartString(GetSlot(this, ISO_DAY));
     let resultString = `${month}-${day}`;
+    const calendar = ES.FormatCalendarAnnotation(GetSlot(this, CALENDAR));
+    if (calendar) {
+      const year = ES.ISOYearString(GetSlot(this, REF_ISO_YEAR));
+      resultString = `${year}-${resultString}${calendar}`;
+    }
     return resultString;
   }
   toLocaleString(...args) {
@@ -120,10 +125,11 @@ export class MonthDay {
         result = calendar.monthDayFromFields(item, options, this);
       }
     } else {
-      let { month, day } = ES.ParseTemporalMonthDayString(ES.ToString(item));
+      let { month, day, refISOYear, calendar } = ES.ParseTemporalMonthDayString(ES.ToString(item));
       ({ month, day } = ES.RegulateMonthDay(month, day, disambiguation));
-      const calendar = ES.GetDefaultCalendar();
-      const refISOYear = 1972;
+      if (!calendar) calendar = ES.GetDefaultCalendar();
+      calendar = TemporalCalendar.from(calendar);
+      if (refISOYear === undefined) refISOYear = 1972;
       result = new this(month, day, calendar, refISOYear);
     }
     if (!ES.IsTemporalMonthDay(result)) throw new TypeError('invalid result');

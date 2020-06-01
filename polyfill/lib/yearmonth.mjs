@@ -146,6 +146,11 @@ export class YearMonth {
     let year = ES.ISOYearString(GetSlot(this, ISO_YEAR));
     let month = ES.ISODateTimePartString(GetSlot(this, ISO_MONTH));
     let resultString = `${year}-${month}`;
+    const calendar = ES.FormatCalendarAnnotation(GetSlot(this, CALENDAR));
+    if (calendar) {
+      const day = ES.ISODateTimePartString(GetSlot(this, REF_ISO_DAY));
+      resultString = `${resultString}-${day}${calendar}`;
+    }
     return resultString;
   }
   toLocaleString(...args) {
@@ -199,6 +204,7 @@ export class YearMonth {
       ({ year, month } = ES.RegulateYearMonth(year, month, disambiguation));
       ({ year, month } = ES.RegulateYearMonthRange(year, month, disambiguation));
       if (!calendar) calendar = ES.GetDefaultCalendar();
+      calendar = TemporalCalendar.from(calendar);
       if (refISODay === undefined) refISODay = 1;
       result = new this(year, month, calendar, refISODay);
     }
