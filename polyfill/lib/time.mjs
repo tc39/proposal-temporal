@@ -100,7 +100,7 @@ export class Time {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
     let { hour, minute, second, millisecond, microsecond, nanosecond } = this;
     const duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
-    const disambiguation = ES.ToArithmeticTemporalDisambiguation(options);
+    const disambiguation = ES.ToTemporalDisambiguation(options);
     const { hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
     ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.AddTime(
       hour,
@@ -134,7 +134,7 @@ export class Time {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
     let { hour, minute, second, millisecond, microsecond, nanosecond } = this;
     const duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
-    const disambiguation = ES.ToArithmeticTemporalDisambiguation(options);
+    const disambiguation = ES.ToTemporalDisambiguation(options);
     const { hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
     ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.SubtractTime(
       hour,

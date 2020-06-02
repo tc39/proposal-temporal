@@ -91,7 +91,7 @@ export class Duration {
   }
   with(durationLike, options) {
     if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
-    const disambiguation = ES.ToTemporalDisambiguation(options);
+    const disambiguation = ES.ToDurationTemporalDisambiguation(options);
     const props = ES.ToPartialRecord(durationLike, [
       'days',
       'hours',
@@ -147,7 +147,7 @@ export class Duration {
       microseconds,
       nanoseconds
     } = ES.ToLimitedTemporalDuration(other);
-    const disambiguation = ES.ToArithmeticTemporalDisambiguation(options);
+    const disambiguation = ES.ToTemporalDisambiguation(options);
     ({ years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.AddDuration(
       GetSlot(this, YEARS),
       GetSlot(this, MONTHS),
@@ -245,7 +245,7 @@ export class Duration {
     throw new TypeError('not possible to compare Temporal.Duration');
   }
   static from(item, options = undefined) {
-    const disambiguation = ES.ToTemporalDisambiguation(options);
+    const disambiguation = ES.ToDurationTemporalDisambiguation(options);
     let years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds;
     if (typeof item === 'object' && item) {
       ({
