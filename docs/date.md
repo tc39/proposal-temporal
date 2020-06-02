@@ -32,8 +32,7 @@ All values are given as reckoned in the [ISO 8601 calendar](https://en.wikipedia
 Together, `isoYear`, `isoMonth`, and `isoDay` must represent a valid date in that calendar.
 
 The range of allowed values for this type is exactly enough that calling [`getDate()`](./datetime.html#getDate) on any valid `Temporal.DateTime` will succeed.
-If `isoYear`, `isoMonth`, and `isoDay` form a date outside of this range, then `constrain` mode will clamp the date to the limit of the allowed range.
-Both `balance` and `reject` mode will throw a `RangeError` in this case.
+If `isoYear`, `isoMonth`, and `isoDay` form a date outside of this range, a `RangeError` will be thrown.
 
 > **NOTE**: The `isoMonth` argument ranges from 1 to 12, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
 
@@ -52,7 +51,7 @@ date = new Temporal.Date(2020, 3, 14)  // => 2020-03-14
 - `options` (optional object): An object with properties representing options for constructing the date.
   The following options are recognized:
   - `disambiguation` (string): How to deal with out-of-range values in `thing`.
-    Allowed values are `constrain`, `balance`, and `reject`.
+    Allowed values are `constrain` and `reject`.
     The default is `constrain`.
 
 **Returns:** a new `Temporal.Date` object.
@@ -67,7 +66,6 @@ If the string isn't valid according to ISO 8601, then a `RangeError` will be thr
 
 The `disambiguation` option works as follows:
 - In `constrain` mode (the default), any out-of-range values are clamped to the nearest in-range value.
-- In `balance` mode, any out-of-range values are resolved by balancing them with the next highest unit.
 - In `reject` mode, the presence of out-of-range values will cause the function to throw a `RangeError`.
 
 > **NOTE**: The allowed values for the `thing.month` property start at 1, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
@@ -90,12 +88,6 @@ date = Temporal.Date.from({ year: 2001, month: 13, day: 1 }, { disambiguation: '
   // => 2001-12-01
 date = Temporal.Date.from({ year: 2001, month: -1, day: 1 }, { disambiguation: 'constrain' })
   // => 2001-01-01
-date = Temporal.Date.from({ year: 2001, month: 13, day: 1 }, { disambiguation: 'balance' })
-  // => 2002-01-01
-date = Temporal.Date.from({ year: 2001, month: 0, day: 1 }, { disambiguation: 'balance' });
-  // => 2000-12-01
-date = Temporal.Date.from({ year: 2001, month: -1, day: 1 }, { disambiguation: 'balance' })
-  // => 2000-11-01
 date = Temporal.Date.from({ year: 2001, month: 13, day: 1 }, { disambiguation: 'reject' })
   // throws
 date = Temporal.Date.from({ year: 2001, month: -1, day: 1 }, { disambiguation: 'reject' })
@@ -243,7 +235,7 @@ date.with({year: 2100}).leapYear  // => false
 - `options` (optional object): An object with properties representing options for the operation.
   The following options are recognized:
   - `disambiguation` (string): How to deal with out-of-range values.
-    Allowed values are `constrain`, `balance`, and `reject`.
+    Allowed values are `constrain` and `reject`.
     The default is `constrain`.
 
 **Returns:** a new `Temporal.Date` object.
@@ -256,9 +248,11 @@ Since `Temporal.Date` objects are immutable, use this method instead of modifyin
 
 Usage example:
 ```javascript
-date = Temporal.Date.from('2006-08-24');
-// What's the first of the following month?
-date.with({day: 1, month: date.month + 1}, { disambiguation: 'balance' })  // => 2006-09-01
+date = Temporal.Date.from('2006-01-24');
+// What's the first day of this month?
+date.with({day: 1});  // => 2006-01-01
+// What's the last day of the next month?
+date.plus({months: 1}).with({day: date.daysInMonth});  // => 2006-02-28
 ```
 
 ### date.**plus**(_duration_: object, _options_?: object) : Temporal.Date

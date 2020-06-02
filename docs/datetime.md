@@ -46,8 +46,7 @@ Together, `isoYear`, `isoMonth`, and `isoDay` must represent a valid date in tha
 > This value will cause the constructor will throw, so if you have to interoperate with times that may contain leap seconds, use `Temporal.DateTime.from()` instead.
 
 The range of allowed values for this type is exactly enough that calling [`inTimeZone()`](./absolute.html#inTimeZone) on any valid `Temporal.Absolute` with any valid `Temporal.TimeZone` will succeed.
-If the parameters passed in to this constructor form a date outside of this range, then `constrain` mode will clamp the values to the limit of the allowed range.
-Both `balance` and `reject` mode will throw a `RangeError` in this case.
+If the parameters passed in to this constructor form a date outside of this range, then `constrain` mode will clamp the values to the limit of the allowed range, while `reject` mode will throw a `RangeError`.
 
 > **NOTE**: The `isoMonth` argument ranges from 1 to 12, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
 
@@ -66,7 +65,7 @@ datetime = new Temporal.DateTime(2020, 3, 14, 13, 37)  // => 2020-03-14T13:37
 - `options` (optional object): An object with properties representing options for constructing the date and time.
   The following options are recognized:
   - `disambiguation` (string): How to deal with out-of-range values in `thing`.
-    Allowed values are `constrain`, `balance`, and `reject`.
+    Allowed values are `constrain` and `reject`.
     The default is `constrain`.
 
 **Returns:** a new `Temporal.DateTime` object.
@@ -83,11 +82,10 @@ If the string isn't valid according to ISO 8601, then a `RangeError` will be thr
 
 The `disambiguation` option works as follows:
 - In `constrain` mode (the default), any out-of-range values are clamped to the nearest in-range value.
-- In `balance` mode, any out-of-range values are resolved by balancing them with the next highest unit.
 - In `reject` mode, the presence of out-of-range values will cause the function to throw a `RangeError`.
 
 > **NOTE**: Although Temporal does not deal with leap seconds, dates coming from other software may have a `second` value of 60.
-> In the default `constrain` disambiguation mode and when parsing an ISO 8601 string, this will be converted to 59, and in `balance` mode, to 00 of the next minute.
+> In the default `constrain` disambiguation mode and when parsing an ISO 8601 string, this will be converted to 59.
 > In `reject` mode, this function will throw, so if you have to interoperate with times that may contain leap seconds, don't use `reject`.
 
 > **NOTE**: The allowed values for the `thing.month` property start at 1, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
@@ -124,14 +122,6 @@ dt = Temporal.DateTime.from({ year: 2001, month: 1, day: 1, hour: 25 }, { disamb
   // => 2001-01-01T23:00
 dt = Temporal.DateTime.from({ year: 2001, month: 1, day: 1, minute: 60 }, { disambiguation: 'constrain' })
   // => 2001-01-01T00:59
-dt = Temporal.DateTime.from({ year: 2001, month: 13, day: 1 }, { disambiguation: 'balance' })
-  // => 2002-01-01T00:00
-dt = Temporal.DateTime.from({ year: 2001, month: 0, day: 1 }, { disambiguation: 'balance' });
-  // => 2000-12-01T00:00
-dt = Temporal.DateTime.from({ year: 2001, month: -1, day: 1 }, { disambiguation: 'balance' })
-  // => 2000-11-01T00:00
-dt = Temporal.DateTime.from({ year: 2001, month: 1, day: 1, hour: 25 }, { disambiguation: 'balance' })
-  // => 2001-01-02T01:00
 dt = Temporal.DateTime.from({ year: 2001, month: 1, day: 1, minute: 60 }, { disambiguation: 'constrain' })
   // => 2001-01-01T01:00
 dt = Temporal.DateTime.from({ year: 2001, month: 13, day: 1 }, { disambiguation: 'reject' })
@@ -304,7 +294,7 @@ dt.with({year: 2100}).isLeapYear  // => false
 - `options` (optional object): An object with properties representing options for the operation.
   The following options are recognized:
   - `disambiguation` (string): How to deal with out-of-range values.
-    Allowed values are `constrain`, `balance`, and `reject`.
+    Allowed values are `constrain` and `reject`.
     The default is `constrain`.
 
 **Returns:** a new `Temporal.DateTime` object.
