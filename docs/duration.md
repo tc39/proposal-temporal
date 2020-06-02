@@ -30,6 +30,93 @@ For more detailed information, see the ISO 8601 standard or the [Wikipedia page]
 | **PT0S**             | Zero |
 | **P0D**              | Zero |
 
+### **Kinds of Durations and Daylight Saving Time (DST)**
+
+There are two kinds of durations that can be stored in a `Temporal.Duration`:
+* An "absolute duration" counts real-world elapsed time between two instants, like a stopwatch does.  To get an absolute duration, use  the `difference()` method of `Temporal.Absolute`.
+* A "date/time duration" counts the difference in calendar days and local clock time. To get a date/time duration, use  the `difference()` method of `Temporal.DateTime`, `Temporal.Date`, `Temporal.Time`, or `Temporal.YearMonth` .
+
+Both kinds of durations usually have the same value. But if a DST transition (or other timezone-offset change) happened during the duration being measured, then the date/time duration will be smaller or larger than the real-world time reported by an absolute duration. This occasional difference can lead to subtle bugs in your code, like charging a customer for a 2-day rental on the 25-hour day when DST ends in the Fall.
+
+To avoid DST-related bugs when using `Temporal.Duration`, follow three best practices: 
+
+1. **Don't assume that every day is 24 hours long.**<br/>
+For example, don't add 24 hours to a `Temporal.Absolute` and expect that the result will exactly be one day later in local time. To add full calendar days, first convert absolute times to a `Temporal.DateTime`, then add days, and finally convert back to `Temporal.Absolute`. When working with absolute times or absolute durations, rely on `Temporal` to convert hours into days (or vice versa) instead of multiplying or dividing by 24 in your code.
+```js
+const dt = new Temporal.DateTime(2020, 11, 1); // midnight on the day DST starts
+const tz = Temporal.TimeZone.from('America/Los_Angeles');
+const abs = dt.inTimeZone(tz);
+//
+// WRONG - don't assume all days are 24 hours long
+abs.plus({hours: 24}).toString(); 
+// => "2020-11-02T07:00Z"  WRONG: 11:00PM in local clock time
+//
+// CORRECT - add days in local time zone, then convert back to absolute
+abs.inTimeZone(tz).plus({days: 1}).inTimeZone(tz).toString();
+// => "2020-11-02T08:00Z"  CORRECT: midnight local time
+```
+
+2. **Only use absolute durations with `Temporal.Absolute` methods.**<br/>
+On the other hand, date/time durations should only be used with `Temporal.DateTime`, `Temporal.Date`, `Temporal.Time`, or `Temporal.YearMonth` and should never be used with `Temporal.Absolute` methods.  Example:
+```js
+const dt = new Temporal.DateTime(2020, 11, 1); // midnight on the day DST starts
+const abs = dt.inTimeZone('America/Los_Angeles')
+const absLater = abs.plus({hours: 13}); // corresponds to noon (1 hour lost to DST)
+//
+// WRONG - will return incorrect local time around DST transitions
+function addAbsoluteDifferenceWrong(dateTime, abs1, abs2) {
+	const diff = abs2.difference(abs1);
+	return dateTime.plus(diff);  // BUG: don't add absolute duration to `Temporal.DateTime`
+}
+addAbsoluteDifferenceWrong(dt, abs, absLater).toString();
+//  => "2020-11-01T13:00"
+//
+// CORRECT - even across DST transitions
+function addAbsoluteDifference(dateTime, abs1, abs2, timeZone) {
+	const diff = abs2.difference(abs1);
+	const absBase = dateTime.inTimeZone(timeZone); 
+	const added = absBase.plus(diff);  // GOOD: add absolute duration to `Temporal.Absolute`
+	return added.inTimeZone(timeZone);
+} 
+addAbsoluteDifference(dt, abs, absLater, 'America/Los_Angeles').toString();
+// => "2020-11-01T12:00" (12 clock hours, but 13 real-world hours)
+```
+3. **Don't combine different kinds of durations.**<br/>
+Dont mix kinds of durations when using `Temporal.Duration`'s  `plus()`, `minus()`, `difference()`, or `with()` methods.  First convert one of them to the other kind and only then combine the durations.
+```js
+const dt = new Temporal.DateTime(2020, 11, 1); // midnight on the day DST starts
+const dtLater = new Temporal.DateTime(2020, 11, 1, 12); // noon is 13 hours later
+const dateTimeDiff = dtLater.difference(dt)
+const abs = dt.inTimeZone('America/Los_Angeles')
+const absLater = abs.plus({hours: 2});
+const absoluteDiff = absLater.difference(abs);
+const balance = d => Temporal.Duration.from(d, {disambiguation: 'balance'});
+//
+// WRONG - don't combine different kinds of durations
+// Expected: 15 hours, Actual: 14 hours.
+const totalAbsoluteDiffWrong = balance(absoluteDiff.plus(dateTimeDiff));
+//
+// CORRECT - convert durations before combining
+const otherAbsoluteDiff = toAbsoluteDuration(dateTimeDiff, abs, 'America/Los_Angeles');
+const totalAbsoluteDiff = balance(absoluteDiff.plus(otherAbsoluteDiff));
+//
+// convert a date/time duration (clock difference) to an absolute duration (stopwatch)
+function toAbsoluteDuration(dtDuration, absStart, timeZone, diffOptions) {
+	const dtBase = absStart.inTimeZone(timeZone); 
+	const dtAdded = dtBase.plus(dtDuration);  // GOOD: add date/time duration to `Temporal.DateTime`
+	const absAdded = dtAdded.inTimeZone(timeZone);
+	return absAdded.difference(absStart, diffOptions);
+}
+//
+// convert an absolute duration (stopwatch) to a date/time duration (clock difference)
+function toDateTimeDuration(absDuration, dtStart, timeZone, diffOptions) {
+	const absBase = dtStart.inTimeZone(timeZone);
+	const absAdded = absBase.plus(absDuration);  // GOOD: add absolute duration to `Temporal.Absolute`
+	const dateTimeAdded = absAdded.inTimeZone(timeZone);
+	return dateTimeAdded.difference(dtStart, diffOptions);
+}
+```
+
 ## Constructor
 
 ### **new Temporal.Duration**(_years_?: number, _months_?: number, _days_?: number, _hours_?: number, _minutes_?: number, _seconds_?: number, _milliseconds_?: number, _microseconds_?: number, _nanoseconds_?: number) : Temporal.Duration
