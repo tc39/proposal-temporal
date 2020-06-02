@@ -7,9 +7,10 @@
  * @returns {Temporal.Date} - Beginning of the next month after the delay
  */
 function plusAndRoundToMonthStart(date, delayDays) {
-  const delayedDate = date.plus({ days: delayDays });
-  const month = delayedDate.month + 1;
-  return delayedDate.with({ month, day: 1 }, { disambiguation: 'balance' });
+  return date
+    .plus({ days: delayDays })
+    .plus({ months: 1 }) // constrains to end of month if needed, e.g. Jan 31 -> Feb 28
+    .with({ day: 1 });
 }
 
 const oldLaunchDate = Temporal.Date.from('2019-06-01');
