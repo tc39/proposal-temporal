@@ -300,7 +300,7 @@
         1. Perform ? RequireInternalSlot(_temporalDate_, [[InitializedTemporalDate]]).
         1. Let _duration_ be ? ToLimitedTemporalDuration(_temporalDurationLike_, « »).
         1. Let _balanceResult_ be ? BalanceDuration(_duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]], *"days"*).
-        1. Let _disambiguation_ be ? ToArithmeticTemporalDisambiguation(_options_).
+        1. Let _disambiguation_ be ? ToTemporalDisambiguation(_options_).
         1. Let _result_ be ? AddDate(_temporalDate_.[[ISOYear]], _temporalDate_.[[ISOMonth]], _temporalDate_.[[ISODay]], _duration_.[[Years]], _duration_.[[Months]], _balanceResult_.[[Days]], _disambiguation_).
         1. Assert: ! ValidateDate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]]) is *true*.
         1. Return ? CreateTemporalDateFromInstance(_temporalDate_, _result_.[[Year]], _result_.[[Month]], _result_.[[Day]]).
@@ -318,7 +318,7 @@
         1. Perform ? RequireInternalSlot(_temporalDate_, [[InitializedTemporalDate]]).
         1. Let _duration_ be ? ToLimitedTemporalDuration(_temporalDurationLike_, « »).
         1. Let _balanceResult_ be ? BalanceDuration(_duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]], *"days"*).
-        1. Let _disambiguation_ be ? ToArithmeticTemporalDisambiguation(_options_).
+        1. Let _disambiguation_ be ? ToTemporalDisambiguation(_options_).
         1. Let _result_ be ? SubtractDate(_temporalDate_.[[ISOYear]], _temporalDate_.[[ISOMonth]], _temporalDate_.[[ISODay]], _duration_.[[Years]], _duration_.[[Months]], _balanceResult_.[[Days]], _disambiguation_).
         1. Assert: ! ValidateDate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]]) is *true*.
         1. Return ? CreateTemporalDateFromInstance(_temporalDate_, _result_.[[Year]], _result_.[[Month]], _result_.[[Day]]).
@@ -450,15 +450,15 @@
     </emu-clause>
   </emu-clause>
 
-    <emu-clause id="sec-temporal.date.prototype.valueof">
-      <h1>Temporal.Date.prototype.valueOf ( )</h1>
-      <p>
-        The following steps are taken:
-      </p>
-      <emu-alg>
-        1. Throw a *TypeError* exception.
-      </emu-alg>
-    </emu-clause>
+  <emu-clause id="sec-temporal.date.prototype.valueof">
+    <h1>Temporal.Date.prototype.valueOf ( )</h1>
+    <p>
+      The following steps are taken:
+    </p>
+    <emu-alg>
+      1. Throw a *TypeError* exception.
+    </emu-alg>
+  </emu-clause>
 
   <emu-clause id="sec-properties-of-temporal-date-instances">
     <h1>Properties of Temporal.Date Instances</h1>
