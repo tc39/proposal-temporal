@@ -138,6 +138,9 @@
 <pre><code>2020-05-22T07:19:35.356-04:00[America/Indiana/Indianapolis]{islamic-umalqura}</code></pre><h3 id="calendar-dependent-yearmonth-and-monthday"><a class="heading-link" href="#calendar-dependent-yearmonth-and-monthday"></a>Calendar-dependent YearMonth and MonthDay</h3><p>Based on the data model discussion in <a href="https://github.com/tc39/proposal-temporal/issues/391">#391</a>, YearMonth and MonthDay use the Temporal.Date data model when in a non-ISO calendar system.  For example, the Hebrew calendar might express the YearMonth &quot;Iyar 5780&quot; as 2020-03-25, the first day of that month in the ISO calendar.</p>
 <p>When expressed as an ISO string, we would say:</p>
 <pre><code>2020-03-25{hebrew}</code></pre><p>Since it is ambiguous whether that string represents a Date, YearMonth, or MonthDay, the appropriate Temporal constructor must be chosen in order to get the expected data type back out.</p>
+<h2 id="duration-weeks-1">Duration weeks</h2>
+<p>The ISO 8601 standard allows durations in units of weeks (<code>P3W</code> for three weeks), but weeks are not allowed to appear together with any other units.
+Temporal.Duration does support combining weeks with other units, so we propose the convention of strings such as <code>P3W1DT1H</code> for three weeks, one day, and one hour.</p>
     <footer>
       <p>
         This page includes a script which loads an implementation of Temporal in your browser.
