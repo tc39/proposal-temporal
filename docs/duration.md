@@ -82,7 +82,7 @@ addAbsoluteDifference(dt, abs, absLater, 'America/Los_Angeles').toString();
 // => "2020-11-01T12:00" (12 clock hours, but 13 real-world hours)
 ```
 3. **Don't combine different kinds of durations.**<br/>
-Dont mix kinds of durations when using `Temporal.Duration`'s  `plus()`, `minus()`, `difference()`, or `with()` methods.  First convert one of them to the other kind and only then combine the durations.
+Don't mix kinds of durations when using `Temporal.Duration`'s  `plus()`, `minus()`, `difference()`, or `with()` methods.  First convert one of them to the other kind and only then combine the durations.
 ```js
 const dt = new Temporal.DateTime(2020, 11, 1); // midnight on the day DST starts
 const dtLater = new Temporal.DateTime(2020, 11, 1, 12); // noon is 13 hours later
