@@ -152,6 +152,7 @@ describe('Date', () => {
 
       equal(duration.years, 0);
       equal(duration.months, 0);
+      equal(duration.weeks, 0);
       equal(duration.days, 44);
       equal(duration.hours, 0);
       equal(duration.minutes, 0);
@@ -164,6 +165,7 @@ describe('Date', () => {
       const duration = date.difference(Date.from({ year: 2019, month: 11, day: 18 }), { largestUnit: 'years' });
       equal(duration.years, 43);
       equal(duration.months, 0);
+      equal(duration.weeks, 0);
       equal(duration.days, 0);
       equal(duration.hours, 0);
       equal(duration.minutes, 0);
@@ -208,6 +210,7 @@ describe('Date', () => {
     it('can return higher units', () => {
       equal(`${feb21.difference(feb20, { largestUnit: 'years' })}`, 'P1Y');
       equal(`${feb21.difference(feb20, { largestUnit: 'months' })}`, 'P12M');
+      equal(`${feb21.difference(feb20, { largestUnit: 'weeks' })}`, 'P52W2D');
     });
     it('cannot return lower units', () => {
       throws(() => feb21.difference(feb20, { largestUnit: 'hours' }), RangeError);
@@ -220,6 +223,15 @@ describe('Date', () => {
       equal(`${lastFeb21.difference(lastFeb20)}`, 'P365D');
       equal(`${lastFeb21.difference(lastFeb20, { largestUnit: 'months' })}`, 'P11M30D');
       equal(`${lastFeb21.difference(lastFeb20, { largestUnit: 'years' })}`, 'P11M30D');
+    });
+    it('weeks and months are mutually exclusive', () => {
+      const laterDate = date.plus({ days: 42 });
+      const weeksDifference = laterDate.difference(date, { largestUnit: 'weeks' });
+      notEqual(weeksDifference.weeks, 0);
+      equal(weeksDifference.months, 0);
+      const monthsDifference = laterDate.difference(date, { largestUnit: 'months' });
+      equal(monthsDifference.weeks, 0);
+      notEqual(monthsDifference.months, 0);
     });
   });
   describe('date.plus() works', () => {

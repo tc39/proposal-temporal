@@ -301,7 +301,7 @@
         1. Let _duration_ be ? ToLimitedTemporalDuration(_temporalDurationLike_, « »).
         1. Let _balanceResult_ be ? BalanceDuration(_duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]], *"days"*).
         1. Let _disambiguation_ be ? ToTemporalDisambiguation(_options_).
-        1. Let _result_ be ? AddDate(_temporalDate_.[[ISOYear]], _temporalDate_.[[ISOMonth]], _temporalDate_.[[ISODay]], _duration_.[[Years]], _duration_.[[Months]], _balanceResult_.[[Days]], _disambiguation_).
+        1. Let _result_ be ? AddDate(_temporalDate_.[[ISOYear]], _temporalDate_.[[ISOMonth]], _temporalDate_.[[ISODay]], _duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _balanceResult_.[[Days]], _disambiguation_).
         1. Assert: ! ValidateDate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]]) is *true*.
         1. Return ? CreateTemporalDateFromInstance(_temporalDate_, _result_.[[Year]], _result_.[[Month]], _result_.[[Day]]).
       </emu-alg>
@@ -319,7 +319,7 @@
         1. Let _duration_ be ? ToLimitedTemporalDuration(_temporalDurationLike_, « »).
         1. Let _balanceResult_ be ? BalanceDuration(_duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]], *"days"*).
         1. Let _disambiguation_ be ? ToTemporalDisambiguation(_options_).
-        1. Let _result_ be ? SubtractDate(_temporalDate_.[[ISOYear]], _temporalDate_.[[ISOMonth]], _temporalDate_.[[ISODay]], _duration_.[[Years]], _duration_.[[Months]], _balanceResult_.[[Days]], _disambiguation_).
+        1. Let _result_ be ? SubtractDate(_temporalDate_.[[ISOYear]], _temporalDate_.[[ISOMonth]], _temporalDate_.[[ISODay]], _duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _balanceResult_.[[Days]], _disambiguation_).
         1. Assert: ! ValidateDate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]]) is *true*.
         1. Return ? CreateTemporalDateFromInstance(_temporalDate_, _result_.[[Year]], _result_.[[Month]], _result_.[[Day]]).
       </emu-alg>
@@ -372,7 +372,7 @@
           1. Let _greater_ be _temporalDate_.
           1. Let _smaller_ be _other_.
         1. Let _result_ be ? DifferenceDate(_smaller_, _greater_, _largestUnit_).
-        1. Return ? CreateTemporalDuration(_result_.[[Years]], _result_.[[Months]], _result_.[[Days]], 0, 0, 0, 0, 0, 0).
+        1. Return ? CreateTemporalDuration(_result_.[[Years]], _result_.[[Months]], _result_.[[Weeks]], _result_.[[Days]], 0, 0, 0, 0, 0, 0).
       </emu-alg>
     </emu-clause>
 
@@ -515,19 +515,24 @@
     <emu-clause id="sec-temporal-differencedate" aoid="DifferenceDate">
       <h1>DifferenceDate ( _smaller_, _greater_, _largestUnit_ )</h1>
       <emu-alg>
-        1. Assert: _largestUnit_ is one of `"years"`, `"months"`, `"days"`, `"hours"`, `"minutes"`, or `"seconds"`.
-        1. If _largestUnit_ is not `"years"` or `"months"`,
+        1. Assert: _largestUnit_ is one of *"years"*, *"months"*, *"weeks"*, *"days"*, *"hours"*, *"minutes"*, or *"seconds"*.
+        1. If _largestUnit_ is not *"years"*, *"months"*, or *"weeks"*,
           1. Set _largestUnit_ to `"days"`.
         1. Let _years_ be _greater_.[[ISOYear]] &minus; _smaller_.[[ISOYear]].
-        1. If _largestUnit_ is `"days"`, then
+        1. If _largestUnit_ is *"days"* or *"weeks"*, then
+          1. Let _weeks_ be 0.
           1. Let _days_ be ! ToDayOfYear(_greater_.[[ISOYear]], _greater_.[[ISOMonth]], _greater_.[[ISODay]]) &minus; ! ToDayOfYear(_smaller_.[[ISOYear]], _smaller_.[[ISOMonth]], _smaller_.[[ISODay]]).
           1. Assert: _years_ ≥ 0.
           1. Repeat, while _years_ &gt; 0
             1. Set _days_ to _days_ + ! DaysInYear(_smaller_.[[ISOYear]] + _years_ &minus; 1).
             1. Set _years_ to _years_ &minus; 1.
+          1. If _largestUnit_ is *"weeks"*, then
+            1. Set _weeks_ to floor(_days_ / 7).
+            1. Set _days_ to _days_ mod 7.
           1. Return the Record {
             [[Years]]: 0,
             [[Months]]: 0,
+            [[Weeks]]: _weeks_,
             [[Days]]: _days_
           }.
         1. Let _months_ be _greater_.[[ISOMonth]] &minus; _smaller_.[[ISOMonth]].
@@ -549,6 +554,7 @@
         1. Return the Record {
           [[Years]]: _years_,
           [[Months]]: _months_,
+          [[Weeks]]: 0,
           [[Days]]: _days_
           }.
       </emu-alg>
@@ -772,14 +778,15 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal-adddate" aoid="AddDate">
-      <h1>AddDate ( _year_, _month_, _day_, _years_, _months_, _days_, _disambiguation_ )</h1>
+      <h1>AddDate ( _year_, _month_, _day_, _years_, _months_, _weeks_, _days_, _disambiguation_ )</h1>
       <emu-alg>
-        1. Assert: _year_, _month_, _day_, _years_, _months_, and _days_ are integer Number values.
+        1. Assert: _year_, _month_, _day_, _years_, _months_, _weeks_, and _days_ are integer Number values.
         1. Assert: _disambiguation_ is one of `"constrain"`, `"balance"`, or `"reject"`.
         1. Let _y_ be _year_ + _years_.
         1. Let _m_ be _month_ + _months_.
         1. Let _intermediate_ be ? BalanceYearMonth(_y_, _m_).
         1. Let _intermediate_ be ? RegulateDate(_intermediate_.[[Year]], _intermediate_.[[Month]], _day_, _disambiguation_).
+        1. Set _days_ to _days_ + 7 &times; _weeks_.
         1. Let _d_ be _intermediate_.[[Day]] + _days_.
         1. Let _intermediate_ be ? BalanceDate(_intermediate_.[[Year]], _intermediate_.[[Month]], _d_).
         1. Return ? RegulateDate(_intermediate_.[[Year]], _intermediate_.[[Month]], _intermediate_.[[Day]], _disambiguation_).
@@ -791,6 +798,7 @@
       <emu-alg>
         1. Assert: _year_, _month_, _day_, _years_, _months_, and _days_ are integer Number values.
         1. Assert: _disambiguation_ is one of `"constrain"`, `"balance"`, or `"reject"`.
+        1. Set _days_ to _days_ + 7 &times; _weeks_.
         1. Let _intermediate_ be ? BalanceDate(_year_, _month_, _day_ - _days_).
         1. Let _d_ be _intermediate_.[[Day]].
         1. Let _intermediate_ be ? BalanceYearMonth(_intermediate_.[[Year]] - _years_, _intermediate_.[[Month]] - _months_).

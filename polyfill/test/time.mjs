@@ -301,6 +301,7 @@ describe('Time', () => {
       });
       it('higher units have no effect', () => {
         equal(`${time1.difference(time2, { largestUnit: 'days' })}`, 'PT6H52M42S');
+        equal(`${time1.difference(time2, { largestUnit: 'weeks' })}`, 'PT6H52M42S');
         equal(`${time1.difference(time2, { largestUnit: 'months' })}`, 'PT6H52M42S');
         equal(`${time1.difference(time2, { largestUnit: 'years' })}`, 'PT6H52M42S');
       });

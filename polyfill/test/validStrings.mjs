@@ -162,6 +162,7 @@ const durationDesignator = character('Pp');
 const secondsDesignator = character('Ss');
 const dateTimeSeparator = character(' Tt');
 const durationTimeDesignator = character('Tt');
+const weeksDesignator = character('Ww');
 const yearsDesignator = character('Yy');
 const utcDesignator = withCode(character('Zz'), (data) => {
   data.zoneHour = 0;
@@ -253,17 +254,22 @@ const durationDays = seq(
   withCode(oneOrMore(digit()), (data, result) => (data.days = +result)),
   daysDesignator
 );
+const durationWeeks = seq(
+  withCode(oneOrMore(digit()), (data, result) => (data.weeks = +result)),
+  weeksDesignator,
+  [durationDays]
+);
 const durationMonths = seq(
   withCode(oneOrMore(digit()), (data, result) => (data.months = +result)),
   monthsDesignator,
-  [durationDays]
+  [durationWeeks]
 );
 const durationYears = seq(
   withCode(oneOrMore(digit()), (data, result) => (data.years = +result)),
   yearsDesignator,
   [durationMonths]
 );
-const durationDate = seq(choice(durationYears, durationMonths, durationDays), [durationTime]);
+const durationDate = seq(choice(durationYears, durationMonths, durationWeeks, durationDays), [durationTime]);
 const duration = seq(durationDesignator, choice(durationDate, durationTime));
 
 const absolute = seq(date, dateTimeSeparator, timeSpec, timeZone);
@@ -299,7 +305,7 @@ for (let count = 0; count < 1000; count++) {
   const generatedData = {};
   const fuzzed = goals[mode].generate(generatedData);
   try {
-    const parsed = ES[`Parse${mode}String`](fuzzed);
+    const parsed = ES[`ParseTemporal${mode}String`](fuzzed);
     for (let prop of comparisonItems[mode]) {
       assert.equal(parsed[prop], generatedData[prop] || 0);
     }

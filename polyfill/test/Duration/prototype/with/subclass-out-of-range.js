@@ -9,15 +9,15 @@ includes: [compareArray.js]
 let called = 0;
 
 const constructorArguments = [
-  Array(9).fill(0),
-  [0, 0, Number.MAX_VALUE, 0, 0, 0, 0, 0, 0],
+  Array(10).fill(0),
+  [0, 0, 0, Number.MAX_VALUE, 0, 0, 0, 0, 0, 0],
 ];
 
 class MyDuration extends Temporal.Duration {
-  constructor(years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds) {
+  constructor(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds) {
     ++called;
-    assert.compareArray([years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds], constructorArguments.shift(), "constructor arguments");
-    super(years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+    assert.compareArray([years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds], constructorArguments.shift(), "constructor arguments");
+    super(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
   }
 }
 
@@ -27,6 +27,7 @@ assert.sameValue(called, 1);
 const result = instance.with({ days: Infinity });
 assert.sameValue(result.years, 0, "years result");
 assert.sameValue(result.months, 0, "months result");
+assert.sameValue(result.weeks, 0, "weeks result");
 assert.sameValue(result.days, Number.MAX_VALUE, "days result");
 assert.sameValue(result.hours, 0, "hours result");
 assert.sameValue(result.minutes, 0, "minutes result");

@@ -1,5 +1,6 @@
 export namespace Temporal {
   export type ComparisonResult = -1 | 0 | 1;
+  type ConstructorOf<T> = new (...args: unknown[]) => T;
 
   /**
    * Options for assigning fields using `with()` or entire objects with
@@ -118,6 +119,7 @@ export namespace Temporal {
   export type DurationLike = {
     years?: number;
     months?: number;
+    weeks?: number;
     days?: number;
     hours?: number;
     minutes?: number;
@@ -141,6 +143,7 @@ export namespace Temporal {
     constructor(
       years?: number,
       months?: number,
+      weeks?: number,
       days?: number,
       hours?: number,
       minutes?: number,
@@ -151,6 +154,7 @@ export namespace Temporal {
     );
     readonly years: number;
     readonly months: number;
+    readonly weeks: number;
     readonly days: number;
     readonly hours: number;
     readonly minutes: number;
@@ -206,13 +210,65 @@ export namespace Temporal {
     toString(tzLike?: Temporal.TimeZone | string): string;
   }
 
+  /**
+   * A `Temporal.Calendar` is a representation of a calendar system. It includes
+   * information about how many days are in each year, how many months are in
+   * each year, how many days are in each month, and how to do arithmetic in\
+   * that calendar system.
+   *
+   * See https://tc39.es/proposal-temporal/docs/calendar.html for more details.
+   */
+  export class Calendar {
+    static from(item: Temporal.Calendar | string): Temporal.Calendar;
+    constructor(calendarIdentifier: string);
+    readonly id: string;
+    year(date: Temporal.Date): number;
+    month(date: Temporal.Date): number;
+    day(date: Temporal.Date): number;
+    dayOfWeek(date: Temporal.Date): number;
+    dayOfYear(date: Temporal.Date): number;
+    weekOfYear(date: Temporal.Date): number;
+    daysInMonth(date: Temporal.Date): number;
+    daysInYear(date: Temporal.Date): number;
+    isLeapYear(date: Temporal.Date): boolean;
+    dateFromFields(
+      fields: DateLike,
+      options: AssignmentOptions,
+      constructor: ConstructorOf<Temporal.Date>
+    ): Temporal.Date;
+    yearMonthFromFields(
+      fields: YearMonthLike,
+      options: AssignmentOptions,
+      constructor: ConstructorOf<Temporal.YearMonth>
+    ): Temporal.YearMonth;
+    monthDayFromFields(
+      fields: MonthDayLike,
+      options: AssignmentOptions,
+      constructor: ConstructorOf<Temporal.MonthDay>
+    ): Temporal.MonthDay;
+    plus(
+      date: Temporal.Date,
+      duration: Temporal.Duration,
+      options: ArithmeticOptions,
+      constructor: ConstructorOf<Temporal.Date>
+    ): Temporal.Date;
+    minus(
+      date: Temporal.Date,
+      duration: Temporal.Duration,
+      options: ArithmeticOptions,
+      constructor: ConstructorOf<Temporal.Date>
+    ): Temporal.Date;
+    difference(smaller: Temporal.Date, larger: Temporal.Date, options: DifferenceOptions);
+    toString(): string;
+  }
+
   export type DateLike = {
     year?: number;
     month?: number;
     day?: number;
   };
 
-  export type DateISOCalendarFields = {
+  type DateISOCalendarFields = {
     year: number;
     month: number;
     day: number;
@@ -244,7 +300,10 @@ export namespace Temporal {
     with(dateLike: DateLike, options?: AssignmentOptions): Temporal.Date;
     plus(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.Date;
     minus(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.Date;
-    difference(other: Temporal.Date, options?: DifferenceOptions<'years' | 'months' | 'days'>): Temporal.Duration;
+    difference(
+      other: Temporal.Date,
+      options?: DifferenceOptions<'years' | 'months' | 'weeks' | 'days'>
+    ): Temporal.Duration;
     withTime(temporalTime: Temporal.Time): Temporal.DateTime;
     getYearMonth(): Temporal.YearMonth;
     getMonthDay(): Temporal.MonthDay;
@@ -267,7 +326,7 @@ export namespace Temporal {
     nanosecond?: number;
   };
 
-  export type DateTimeISOCalendarFields = {
+  type DateTimeISOCalendarFields = {
     year: number;
     month: number;
     day: number;
@@ -324,7 +383,7 @@ export namespace Temporal {
     minus(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.DateTime;
     difference(
       other: Temporal.DateTime,
-      options?: DifferenceOptions<'years' | 'months' | 'days' | 'hours' | 'minutes' | 'seconds'>
+      options?: DifferenceOptions<'years' | 'months' | 'weeks' | 'days' | 'hours' | 'minutes' | 'seconds'>
     ): Temporal.Duration;
     inTimeZone(tzLike: Temporal.TimeZone | string, options?: ToAbsoluteOptions): Temporal.Absolute;
     getDate(): Temporal.Date;
@@ -343,7 +402,7 @@ export namespace Temporal {
     day?: number;
   };
 
-  export type MonthDayISOCalendarFields = {
+  type MonthDayISOCalendarFields = {
     month: number;
     day: number;
     refISOYear: number;
@@ -456,7 +515,7 @@ export namespace Temporal {
     month?: number;
   };
 
-  export type YearMonthISOCalendarFields = {
+  type YearMonthISOCalendarFields = {
     year: number;
     month: number;
     refISODay: number;

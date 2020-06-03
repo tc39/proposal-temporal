@@ -13,7 +13,7 @@ It can also be obtained from the `difference()` method of any other `Temporal` t
 When printed, a `Temporal.Duration` produces a string according to the ISO 8601 notation for durations.
 The examples in this page use this notation extensively.
 
-Briefly, the ISO 8601 notation consists of a `P` character, followed by years, months, and days, followed by a `T` character, followed by hours, minutes, and seconds with a decimal part, each with a single-letter suffix that indicates the unit.
+Briefly, the ISO 8601 notation consists of a `P` character, followed by years, months, weeks, and days, followed by a `T` character, followed by hours, minutes, and seconds with a decimal part, each with a single-letter suffix that indicates the unit.
 Any zero components may be omitted.
 For more detailed information, see the ISO 8601 standard or the [Wikipedia page](https://en.wikipedia.org/wiki/ISO_8601#Durations).
 
@@ -30,6 +30,10 @@ For more detailed information, see the ISO 8601 standard or the [Wikipedia page]
 | **PT0S**             | Zero |
 | **P0D**              | Zero |
 
+> **NOTE:** According to the ISO 8601 standard, weeks are not allowed to appear together with any other units.
+> As an extension to the standard, Temporal supports combining weeks with other units.
+> If you intend to use a string such as **P3W1D** for interoperability, note that other programs may not accept it.
+
 ## Constructor
 
 ### **new Temporal.Duration**(_years_?: number, _months_?: number, _days_?: number, _hours_?: number, _minutes_?: number, _seconds_?: number, _milliseconds_?: number, _microseconds_?: number, _nanoseconds_?: number) : Temporal.Duration
@@ -37,6 +41,7 @@ For more detailed information, see the ISO 8601 standard or the [Wikipedia page]
 **Parameters:**
 - `years` (optional number): A number of years.
 - `months` (optional number): A number of months.
+- `weeks` (optional number): A number of weeks.
 - `days` (optional number): A number of days.
 - `hours` (optional number): A number of hours.
 - `minutes` (optional number): A number of minutes.
@@ -55,9 +60,9 @@ Use this constructor directly if you have the correct parameters already as nume
 
 Usage examples:
 ```javascript
-new Temporal.Duration(1, 2, 3, 4, 5, 6, 987, 654, 321)  // => P1Y2M3DT4H5M6.987654321S
-new Temporal.Duration(0, 0, 40)  // => P40D
-new Temporal.Duration(undefined, undefined, 40)  // => P40D
+new Temporal.Duration(1, 2, 3, 4, 5, 6, 7, 987, 654, 321)  // => P1Y2M3W4DT5H6M7.987654321S
+new Temporal.Duration(0, 0, 0, 40)  // => P40D
+new Temporal.Duration(undefined, undefined, undefined, 40)  // => P40D
 new Temporal.Duration()  // => PT0S
 ```
 
@@ -77,7 +82,7 @@ new Temporal.Duration()  // => PT0S
 
 This static method creates a new `Temporal.Duration` from another value.
 If the value is another `Temporal.Duration` object, a new object representing the same duration is returned.
-If the value is any other object, a `Temporal.Duration` will be constructed from the values of any `years`, `months`, `days`, `hours`, `minutes`, `seconds`, `milliseconds`, `microseconds`, and `nanoseconds` properties that are present.
+If the value is any other object, a `Temporal.Duration` will be constructed from the values of any `years`, `months`, `weeks`, `days`, `hours`, `minutes`, `seconds`, `milliseconds`, `microseconds`, and `nanoseconds` properties that are present.
 Any missing ones will be assumed to be 0.
 
 Any non-object value is converted to a string, which is expected to be in ISO 8601 format.
@@ -96,7 +101,10 @@ No matter which disambiguation mode is selected, negative values are never allow
 > **NOTE:** Years and months can have different lengths.
 In the default ISO calendar, a year can be 365 or 366 days, and a month can be 28, 29, 30, or 31 days.
 Therefore, any `Duration` object with nonzero years or months can refer to a different length of time depending on when the start date is.
-No conversion is ever performed between years, months, and days, even in `balance` disambiguation mode, because such conversion would be ambiguous.
+No conversion is ever performed between years, months, weeks, and days, even in `balance` disambiguation mode, because such conversion would be ambiguous.
+
+> **NOTE:** This function understands strings where weeks and other units are combined, which are technically not valid ISO 8601 strings.
+> (For example, `P3W1D` is understood to mean three weeks and one day, although it is not valid according to ISO 8601.)
 
 Usage examples:
 ```javascript
@@ -126,6 +134,8 @@ d = Temporal.Duration.from({ minutes: 120 }, { disambiguation: 'reject' })  // =
 
 ### duration.**months** : number
 
+### duration.**weeks** : number
+
 ### duration.**days** : number
 
 ### duration.**hours** : number
@@ -144,13 +154,14 @@ The above read-only properties allow accessing each component of the duration in
 
 Usage examples:
 ```javascript
-d = new Temporal.Duration(1, 2, 3, 4, 5, 6, 987, 654, 321);
+d = new Temporal.Duration(1, 2, 3, 4, 5, 6, 7, 987, 654, 321);
 d.years         // => 1
 d.months        // => 2
-d.days          // => 3
-d.hours         // => 4
-d.minutes       // => 5
-d.seconds       // => 6
+d.weeks         // => 3
+d.days          // => 4
+d.hours         // => 5
+d.minutes       // => 6
+d.seconds       // => 7
 d.milliseconds  // => 987
 d.microseconds  // => 654
 d.nanoseconds   // => 321
@@ -305,7 +316,7 @@ function yearsToMonths(duration) {
 yearsToMonths(threeYears).minus(yearsToMonths(oneAndAHalfYear))  // => P18M
 ```
 
-### duration.**getFields**() : { years: number, months: number, days: number, hours: number, minutes: number, seconds: number, milliseconds: number, microseconds: number, nanoseconds: number }
+### duration.**getFields**() : { years: number, months: number, weeks: number, days: number, hours: number, minutes: number, seconds: number, milliseconds: number, microseconds: number, nanoseconds: number }
 
 **Returns:** a plain object with properties equal to the fields of `duration`.
 
@@ -327,6 +338,9 @@ This method overrides `Object.prototype.toString()` and provides the ISO 8601 de
 
 > **NOTE**: If any of `duration.milliseconds`, `duration.microseconds`, or `duration.nanoseconds` are over 999, then deserializing from the result of `duration.toString()` will yield an equal but different object.
 > See [Duration balancing](./balancing.md#serialization) for more information.
+
+> **NOTE**: The output of `duration.toString()` may combine weeks with other units, which is technically invalid according to ISO 8601.
+> (For example, `P3W` for three weeks is valid, but `P3W1D` for three weeks and one day is not.)
 
 Usage examples:
 ```javascript

@@ -24,6 +24,8 @@ const expected = [
   "valueOf nanoseconds",
   "get seconds",
   "valueOf seconds",
+  "get weeks",
+  "valueOf weeks",
   "get years",
   "valueOf years",
 ];
@@ -31,6 +33,7 @@ const actual = [];
 const fields = {
   years: 1.7,
   months: 1.7,
+  weeks: 1.7,
   days: 1.7,
   hours: 1.7,
   minutes: 1.7,
@@ -60,6 +63,6 @@ const argument = new Proxy(fields, {
 });
 const result = instance.minus(argument);
 assert.sameValue(result.year, 1999, "year result");
-assert.sameValue(result.month, 4, "month result");
-assert.sameValue(result.day, 1, "day result");
+assert.sameValue(result.month, 3, "month result");
+assert.sameValue(result.day, 24, "day result");
 assert.compareArray(actual, expected, "order of operations");

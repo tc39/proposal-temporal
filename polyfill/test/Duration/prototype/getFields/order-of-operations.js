@@ -24,6 +24,8 @@ const expected = [
   "valueOf nanoseconds",
   "get seconds",
   "valueOf seconds",
+  "get weeks",
+  "valueOf weeks",
   "get years",
   "valueOf years"
 ];
@@ -48,6 +50,7 @@ class ObservedDuration extends Temporal.Duration {}
 Object.defineProperties(ObservedDuration.prototype, {
   years: createGetter('years'),
   months: createGetter('months'),
+  weeks: createGetter('weeks'),
   days: createGetter('days'),
   hours: createGetter('hours'),
   minutes: createGetter('minutes'),
@@ -56,15 +59,16 @@ Object.defineProperties(ObservedDuration.prototype, {
   microseconds: createGetter('microseconds'),
   nanoseconds: createGetter('nanoseconds')
 });
-const instance = new ObservedDuration(1, 2, 3, 4, 5, 6, 987, 654, 321);
+const instance = new ObservedDuration(1, 2, 3, 4, 5, 6, 7, 987, 654, 321);
 
 const result = instance.getFields();
 assert.sameValue(result.years, 1, "years result");
 assert.sameValue(result.months, 2, "months result");
-assert.sameValue(result.days, 3, "days result");
-assert.sameValue(result.hours, 4, "hours result");
-assert.sameValue(result.minutes, 5, "minutes result");
-assert.sameValue(result.seconds, 6, "seconds result");
+assert.sameValue(result.weeks, 3, "weeks result");
+assert.sameValue(result.days, 4, "days result");
+assert.sameValue(result.hours, 5, "hours result");
+assert.sameValue(result.minutes, 6, "minutes result");
+assert.sameValue(result.seconds, 7, "seconds result");
 assert.sameValue(result.milliseconds, 987, "milliseconds result");
 assert.sameValue(result.microseconds, 654, "microseconds result");
 assert.sameValue(result.nanoseconds, 321, "nanoseconds result");

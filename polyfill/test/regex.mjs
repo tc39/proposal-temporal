@@ -387,10 +387,11 @@ describe('fromString regex', () => {
   describe('duration', () => {
     function test(isoString, components) {
       it(isoString, () => {
-        const { y = 0, mon = 0, d = 0, h = 0, min = 0, s = 0, ms = 0, µs = 0, ns = 0 } = components;
+        const { y = 0, mon = 0, w = 0, d = 0, h = 0, min = 0, s = 0, ms = 0, µs = 0, ns = 0 } = components;
         const duration = Temporal.Duration.from(isoString);
         equal(duration.years, y);
         equal(duration.months, mon);
+        equal(duration.weeks, w);
         equal(duration.days, d);
         equal(duration.hours, h);
         equal(duration.minutes, min);
@@ -405,11 +406,14 @@ describe('fromString regex', () => {
       ['', {}],
       ['1Y', { y: 1 }],
       ['2M', { mon: 2 }],
+      ['4W', { w: 4 }],
       ['3D', { d: 3 }],
       ['1Y2M', { y: 1, mon: 2 }],
       ['1Y3D', { y: 1, d: 3 }],
       ['2M3D', { mon: 2, d: 3 }],
-      ['1Y2M3D', { y: 1, mon: 2, d: 3 }]
+      ['4W3D', { w: 4, d: 3 }],
+      ['1Y2M3D', { y: 1, mon: 2, d: 3 }],
+      ['1Y2M4W3D', { y: 1, mon: 2, w: 4, d: 3 }]
     ];
     const times = [
       ['', {}],

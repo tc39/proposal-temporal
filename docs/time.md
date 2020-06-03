@@ -239,7 +239,7 @@ time.minus({ minutes: 5, nanoseconds: 800 })  // => 19:34:09.068345405
 - `options` (optional object): An object with properties representing options for the operation.
   The following options are recognized:
   - `largestUnit` (string): The largest unit of time to allow in the resulting `Temporal.Duration` object.
-    Valid values are `'years'`, `'months'`, `'days'`, `'hours'`, `'minutes'`, and `'seconds'`.
+    Valid values are `'years'`, `'months'`, `'weeks'`, `'days'`, `'hours'`, `'minutes'`, and `'seconds'`.
     The default is effectively `'hours'`.
 
 **Returns:** a `Temporal.Duration` representing the difference between `time` and `other`.
