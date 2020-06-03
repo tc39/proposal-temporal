@@ -32,7 +32,7 @@ All values are given as reckoned in the [ISO 8601 calendar](https://en.wikipedia
 Together, `isoYear`, `isoMonth`, and `isoDay` must represent a valid date in that calendar.
 
 The range of allowed values for this type is exactly enough that calling [`getDate()`](./datetime.html#getDate) on any valid `Temporal.DateTime` will succeed.
-If `isoYear`, `isoMonth`, and `isoDay` form a date outside of this range, a `RangeError` will be thrown.
+If `isoYear`, `isoMonth`, and `isoDay` form a date outside of this range, then `constrain` mode will clamp the values to the limit of the allowed range, while `reject` mode will throw a `RangeError`..
 
 > **NOTE**: The `isoMonth` argument ranges from 1 to 12, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
 
