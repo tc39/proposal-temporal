@@ -41,7 +41,7 @@ export class MonthDay {
   equals(other) {
     if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
     if (!ES.IsTemporalMonthDay(other)) throw new TypeError('invalid MonthDay object');
-    for (const slot of [ISO_MONTH, ISO_DAY]) {
+    for (const slot of [ISO_MONTH, ISO_DAY, REF_ISO_YEAR]) {
       const val1 = GetSlot(this, slot);
       const val2 = GetSlot(other, slot);
       if (val1 !== val2) return false;

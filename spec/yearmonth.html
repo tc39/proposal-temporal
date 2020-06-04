@@ -285,8 +285,9 @@
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
         1. Perform ? RequireInternalSlot(_other_, [[InitializedTemporalYearMonth]]).
-        1. If _yearMonth_.[[Year]] &ne; _other_.[[Year]], return *false*.
-        1. If _yearMonth_.[[Month]] &ne; _other_.[[Month]], return *false*.
+        1. If _yearMonth_.[[ISOYear]] &ne; _other_.[[ISOYear]], return *false*.
+        1. If _yearMonth_.[[ISOMonth]] &ne; _other_.[[ISOMonth]], return *false*.
+        1. If _yearMonth_.[[RefISODay]] &ne; _other_.[[RefISODay]], return *false*.
         1. Return *true*.
       </emu-alg>
     </emu-clause>
@@ -589,6 +590,8 @@
         1. If _one_.[[ISOYear]] &lt; _two_.[[ISOYear]], return -1.
         1. If _one_.[[ISOMonth]] &gt; _two_.[[ISOMonth]], return 1.
         1. If _one_.[[ISOMonth]] &lt; _two_.[[ISOMonth]], return -1.
+        1. If _one_.[[RefISODay]] &gt; _two_.[[RefISODay]], return 1.
+        1. If _one_.[[RefISODay]] &lt; _two_.[[RefISODay]], return -1.
         1. Return +0.
       </emu-alg>
     </emu-clause>
