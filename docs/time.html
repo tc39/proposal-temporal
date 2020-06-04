@@ -173,7 +173,7 @@ time <span class="token operator">=</span> <span class="token keyword">new</span
 <li><code>options</code> (optional object): An object with properties representing options for constructing the time.
 The following options are recognized:<ul>
 <li><code>disambiguation</code> (optional string): How to deal with out-of-range values of the other parameters.
-Allowed values are <code>constrain</code>, <code>balance</code>, and <code>reject</code>.
+Allowed values are <code>constrain</code> and <code>reject</code>.
 The default is <code>constrain</code>.</li>
 </ul>
 </li>
@@ -188,12 +188,11 @@ If the string designates a date or a time zone, they will be ignored.</p>
 <p>The <code>disambiguation</code> option works as follows:</p>
 <ul>
 <li>In <code>constrain</code> mode (the default), any out-of-range values are clamped to the nearest in-range value.</li>
-<li>In <code>balance</code> mode, any out-of-range values are resolved by balancing them with the next highest unit.</li>
 <li>In <code>reject</code> mode, the presence of out-of-range values will cause the function to throw a <code>RangeError</code>.</li>
 </ul>
 <blockquote>
 <p><strong>NOTE</strong>: Although Temporal does not deal with leap seconds, times coming from other software may have a <code>second</code> value of 60.
-In the default <code>constrain</code> disambiguation mode, this will be converted to 59, and in <code>balance</code> mode, to 00 of the next minute.
+In the default <code>constrain</code> disambiguation mode, this will be converted to 59.
 In <code>reject</code> mode, the constructor will throw, so if you have to interoperate with times that may contain leap seconds, don&#39;t use <code>reject</code>.
 However, if parsing an ISO 8601 string with a seconds component of <code>:60</code>, then it will always result in a <code>second</code> value of 59, in accordance with POSIX.</p>
 </blockquote>
@@ -222,10 +221,6 @@ time <span class="token operator">=</span> Temporal<span class="token punctuatio
   <span class="token comment">// => 15:59</span>
 time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> hour<span class="token operator">:</span> <span class="token number">15</span><span class="token punctuation">,</span> minute<span class="token operator">:</span> <span class="token operator">-</span><span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> disambiguation<span class="token operator">:</span> <span class="token string">'constrain'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token comment">// => 15:00</span>
-time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> hour<span class="token operator">:</span> <span class="token number">15</span><span class="token punctuation">,</span> minute<span class="token operator">:</span> <span class="token number">60</span> <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> disambiguation<span class="token operator">:</span> <span class="token string">'balance'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token comment">// => 16:00</span>
-time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> hour<span class="token operator">:</span> <span class="token number">15</span><span class="token punctuation">,</span> minute<span class="token operator">:</span> <span class="token operator">-</span><span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> disambiguation<span class="token operator">:</span> <span class="token string">'balance'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token comment">// => 14:59</span>
 time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> hour<span class="token operator">:</span> <span class="token number">15</span><span class="token punctuation">,</span> minute<span class="token operator">:</span> <span class="token number">60</span> <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> disambiguation<span class="token operator">:</span> <span class="token string">'reject'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token comment">// throws</span>
 time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> hour<span class="token operator">:</span> <span class="token number">15</span><span class="token punctuation">,</span> minute<span class="token operator">:</span> <span class="token operator">-</span><span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> disambiguation<span class="token operator">:</span> <span class="token string">'reject'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -264,7 +259,7 @@ time<span class="token punctuation">.</span>nanosecond   <span class="token comm
 <li><code>options</code> (optional object): An object with properties representing options for the operation.
 The following options are recognized:<ul>
 <li><code>disambiguation</code> (string): How to deal with out-of-range values.
-Allowed values are <code>constrain</code>, <code>balance</code>, and <code>reject</code>.
+Allowed values are <code>constrain</code> and <code>reject</code>.
 The default is <code>constrain</code>.</li>
 </ul>
 </li>
@@ -275,14 +270,13 @@ The default is <code>constrain</code>.</li>
 <p>Usage example:</p>
 <pre class="language-javascript"><code class="language-javascript">time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'19:39:09.068346205'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token comment">// What's the top of the next hour?</span>
-time<span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
-    hour<span class="token operator">:</span> time<span class="token punctuation">.</span>hour <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">,</span>
+time<span class="token punctuation">.</span><span class="token function">plus</span><span class="token punctuation">(</span><span class="token punctuation">{</span>hours<span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
     minute<span class="token operator">:</span> <span class="token number">0</span><span class="token punctuation">,</span>
     second<span class="token operator">:</span> <span class="token number">0</span><span class="token punctuation">,</span>
     millisecond<span class="token operator">:</span> <span class="token number">0</span><span class="token punctuation">,</span>
     microsecond<span class="token operator">:</span> <span class="token number">0</span><span class="token punctuation">,</span>
     nanosecond<span class="token operator">:</span> <span class="token number">0</span>
-<span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> disambiguation<span class="token operator">:</span> <span class="token string">'balance'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>  <span class="token comment">// => 20:00</span></code></pre><h3 id="plus"><a class="heading-link" href="#plus"></a>time.<strong>plus</strong>(<em>duration</em>: object, <em>options</em>?: object) : Temporal.Time</h3><p><strong>Parameters:</strong></p>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>  <span class="token comment">// => 20:00</span></code></pre><h3 id="plus"><a class="heading-link" href="#plus"></a>time.<strong>plus</strong>(<em>duration</em>: object, <em>options</em>?: object) : Temporal.Time</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>duration</code> (object): A <code>Temporal.Duration</code> object or a duration-like object.</li>
 <li><code>options</code> (optional object): An object with properties representing options for the addition.
