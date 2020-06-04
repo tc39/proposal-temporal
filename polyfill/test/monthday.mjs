@@ -133,6 +133,11 @@ describe('MonthDay', () => {
       throws(() => md1.equals('01-22'), TypeError);
       throws(() => md1.equals({ month: 1, day: 22 }), TypeError);
     });
+    it('takes [[RefISOYear]] into account', () => {
+      const md1 = new MonthDay(1, 1, 1972);
+      const md2 = new MonthDay(1, 1, 2000);
+      assert(!md1.equals(md2));
+    });
   });
   describe("Comparison operators don't work", () => {
     const md1 = MonthDay.from('02-13');

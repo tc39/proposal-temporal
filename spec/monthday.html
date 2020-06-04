@@ -166,8 +166,9 @@
         1. Let _monthDay_ be the *this* value.
         1. Perform ? RequireInternalSlot(_monthDay_, [[InitializedTemporalMonthDay]]).
         1. Perform ? RequireInternalSlot(_other_, [[InitializedTemporalMonthDay]]).
-        1. If _monthDay_.[[Month]] &ne; _other_.[[Month]], return *false*.
-        1. If _monthDay_.[[Day]] &ne; _other_.[[Day]], return *false*.
+        1. If _monthDay_.[[ISOMonth]] &ne; _other_.[[ISOMonth]], return *false*.
+        1. If _monthDay_.[[ISODay]] &ne; _other_.[[ISODay]], return *false*.
+        1. If _monthDay_.[[RefISOYear]] &ne; _other_.[[RefISOYear]], return *false*.
         1. Return *true*.
       </emu-alg>
     </emu-clause>

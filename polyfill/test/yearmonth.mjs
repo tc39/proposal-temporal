@@ -132,6 +132,11 @@ describe('YearMonth', () => {
       throws(() => YearMonth.compare(nov94, { year: 2013, month: 6 }), TypeError);
       throws(() => YearMonth.compare(nov94, '2013-06'), TypeError);
     });
+    it('takes [[RefISODay]] into account', () => {
+      const ym1 = new YearMonth(2000, 1, 1);
+      const ym2 = new YearMonth(2000, 1, 2);
+      equal(YearMonth.compare(ym1, ym2), -1);
+    });
   });
   describe('YearMonth.equals() works', () => {
     const nov94 = YearMonth.from('1994-11');
@@ -141,6 +146,11 @@ describe('YearMonth', () => {
     it("doesn't cast argument", () => {
       throws(() => nov94.equals({ year: 1994, month: 11 }), TypeError);
       throws(() => nov94.equals('1994-11'), TypeError);
+    });
+    it('takes [[RefISODay]] into account', () => {
+      const ym1 = new YearMonth(2000, 1, 1);
+      const ym2 = new YearMonth(2000, 1, 2);
+      assert(!ym1.equals(ym2));
     });
   });
   describe("Comparison operators don't work", () => {

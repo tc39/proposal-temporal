@@ -117,7 +117,7 @@ export class YearMonth {
   equals(other) {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
     if (!ES.IsTemporalYearMonth(other)) throw new TypeError('invalid YearMonth object');
-    for (const slot of [ISO_YEAR, ISO_MONTH]) {
+    for (const slot of [ISO_YEAR, ISO_MONTH, REF_ISO_DAY]) {
       const val1 = GetSlot(this, slot);
       const val2 = GetSlot(other, slot);
       if (val1 !== val2) return false;
@@ -182,7 +182,7 @@ export class YearMonth {
   }
   static compare(one, two) {
     if (!ES.IsTemporalYearMonth(one) || !ES.IsTemporalYearMonth(two)) throw new TypeError('invalid YearMonth object');
-    for (const slot of [ISO_YEAR, ISO_MONTH]) {
+    for (const slot of [ISO_YEAR, ISO_MONTH, REF_ISO_DAY]) {
       const val1 = GetSlot(one, slot);
       const val2 = GetSlot(two, slot);
       if (val1 !== val2) return ES.ComparisonResult(val1 - val2);
