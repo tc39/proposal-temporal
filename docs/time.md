@@ -44,7 +44,7 @@ time = new Temporal.Time(13, 37)  // => 13:37
 - `options` (optional object): An object with properties representing options for constructing the time.
   The following options are recognized:
   - `disambiguation` (optional string): How to deal with out-of-range values of the other parameters.
-    Allowed values are `constrain`, `balance`, and `reject`.
+    Allowed values are `constrain` and `reject`.
     The default is `constrain`.
 
 **Returns:** a new `Temporal.Time` object.
@@ -59,11 +59,10 @@ If the string designates a date or a time zone, they will be ignored.
 
 The `disambiguation` option works as follows:
 - In `constrain` mode (the default), any out-of-range values are clamped to the nearest in-range value.
-- In `balance` mode, any out-of-range values are resolved by balancing them with the next highest unit.
 - In `reject` mode, the presence of out-of-range values will cause the function to throw a `RangeError`.
 
 > **NOTE**: Although Temporal does not deal with leap seconds, times coming from other software may have a `second` value of 60.
-> In the default `constrain` disambiguation mode, this will be converted to 59, and in `balance` mode, to 00 of the next minute.
+> In the default `constrain` disambiguation mode, this will be converted to 59.
 > In `reject` mode, the constructor will throw, so if you have to interoperate with times that may contain leap seconds, don't use `reject`.
 > However, if parsing an ISO 8601 string with a seconds component of `:60`, then it will always result in a `second` value of 59, in accordance with POSIX.
 
@@ -93,10 +92,6 @@ time = Temporal.Time.from({ hour: 15, minute: 60 }, { disambiguation: 'constrain
   // => 15:59
 time = Temporal.Time.from({ hour: 15, minute: -1 }, { disambiguation: 'constrain' });
   // => 15:00
-time = Temporal.Time.from({ hour: 15, minute: 60 }, { disambiguation: 'balance' });
-  // => 16:00
-time = Temporal.Time.from({ hour: 15, minute: -1 }, { disambiguation: 'balance' });
-  // => 14:59
 time = Temporal.Time.from({ hour: 15, minute: 60 }, { disambiguation: 'reject' });
   // throws
 time = Temporal.Time.from({ hour: 15, minute: -1 }, { disambiguation: 'reject' });
@@ -163,7 +158,7 @@ time.nanosecond   // => 205
 - `options` (optional object): An object with properties representing options for the operation.
   The following options are recognized:
   - `disambiguation` (string): How to deal with out-of-range values.
-    Allowed values are `constrain`, `balance`, and `reject`.
+    Allowed values are `constrain` and `reject`.
     The default is `constrain`.
 
 **Returns:** a new `Temporal.Time` object.
@@ -176,14 +171,13 @@ Usage example:
 ```javascript
 time = Temporal.Time.from('19:39:09.068346205');
 // What's the top of the next hour?
-time.with({
-    hour: time.hour + 1,
+time.plus({hours: 1}).with({
     minute: 0,
     second: 0,
     millisecond: 0,
     microsecond: 0,
     nanosecond: 0
-}, { disambiguation: 'balance' })  // => 20:00
+})  // => 20:00
 ```
 
 ### time.**plus**(_duration_: object, _options_?: object) : Temporal.Time

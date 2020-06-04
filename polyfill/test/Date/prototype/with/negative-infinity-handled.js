@@ -23,12 +23,6 @@ assert.sameValue(result.year, 2000);
 assert.sameValue(result.month, 5);
 assert.sameValue(result.day, 1);
 
-// balance
-
-assert.throws(RangeError, () => instance.with({ year: -Infinity }, { disambiguation: 'balance' }));
-assert.throws(RangeError, () => instance.with({ month: -Infinity }, { disambiguation: 'balance' }));
-assert.throws(RangeError, () => instance.with({ day: -Infinity }, { disambiguation: 'balance' }));
-
 // reject
 
 assert.throws(RangeError, () => instance.with({ year: -Infinity }, { disambiguation: 'reject' }));
@@ -50,16 +44,9 @@ assert.sameValue(calls, 2, "it fetches the primitive value");
 result = instance.with({ day: obj }, { disambiguation: 'constrain' });
 assert.sameValue(calls, 3, "it fetches the primitive value");
 
-assert.throws(RangeError, () => instance.with({ year: obj }, { disambiguation: 'balance' }));
-assert.sameValue(calls, 4, "it fails after fetching the primitive value");
-assert.throws(RangeError, () => instance.with({ month: obj }, { disambiguation: 'balance' }));
-assert.sameValue(calls, 5, "it fails after fetching the primitive value");
-assert.throws(RangeError, () => instance.with({ day: obj }, { disambiguation: 'balance' }));
-assert.sameValue(calls, 6, "it fails after fetching the primitive value");
-
 assert.throws(RangeError, () => instance.with({ year: obj }, { disambiguation: 'reject' }));
-assert.sameValue(calls, 7, "it fails after fetching the primitive value");
+assert.sameValue(calls, 4, "it fails after fetching the primitive value");
 assert.throws(RangeError, () => instance.with({ month: obj }, { disambiguation: 'reject' }));
-assert.sameValue(calls, 8, "it fails after fetching the primitive value");
+assert.sameValue(calls, 5, "it fails after fetching the primitive value");
 assert.throws(RangeError, () => instance.with({ day: obj }, { disambiguation: 'reject' }));
-assert.sameValue(calls, 9, "it fails after fetching the primitive value");
+assert.sameValue(calls, 6, "it fails after fetching the primitive value");

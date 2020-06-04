@@ -237,22 +237,6 @@ export const ES = ObjectAssign({}, ES2019, {
           nanosecond
         ));
         break;
-      case 'balance': {
-        ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.BalanceDateTime(
-          year,
-          month,
-          day,
-          hour,
-          minute,
-          second,
-          millisecond,
-          microsecond,
-          nanosecond
-        ));
-        // Still rejected if balanced DateTime is outside valid range
-        ES.RejectDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
-        break;
-      }
     }
     return { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond };
   },
@@ -264,11 +248,6 @@ export const ES = ObjectAssign({}, ES2019, {
       case 'constrain':
         ({ year, month, day } = ES.ConstrainDate(year, month, day));
         break;
-      case 'balance':
-        ({ year, month, day } = ES.BalanceDate(year, month, day));
-        // Still rejected if balanced Date is outside valid range
-        ES.RejectDate(year, month, day);
-        break;
     }
     return { year, month, day };
   },
@@ -279,16 +258,6 @@ export const ES = ObjectAssign({}, ES2019, {
         break;
       case 'constrain':
         ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.ConstrainTime(
-          hour,
-          minute,
-          second,
-          millisecond,
-          microsecond,
-          nanosecond
-        ));
-        break;
-      case 'balance':
-        ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.BalanceTime(
           hour,
           minute,
           second,
@@ -309,11 +278,6 @@ export const ES = ObjectAssign({}, ES2019, {
       case 'constrain':
         ({ year, month } = ES.ConstrainYearMonth(year, month));
         break;
-      case 'balance':
-        ({ year, month } = ES.BalanceYearMonth(year, month));
-        // Still rejected if balanced YearMonth is outside valid range
-        ES.RejectYearMonth(year, month, refISODay);
-        break;
     }
     return { year, month };
   },
@@ -325,9 +289,6 @@ export const ES = ObjectAssign({}, ES2019, {
         break;
       case 'constrain':
         ({ month, day } = ES.ConstrainDate(refISOYear, month, day));
-        break;
-      case 'balance':
-        ({ month, day } = ES.BalanceDate(refISOYear, month, day));
         break;
     }
     return { month, day };
@@ -469,10 +430,10 @@ export const ES = ObjectAssign({}, ES2019, {
     }
     return duration;
   },
-  ToTemporalDisambiguation: (options) => {
+  ToDurationTemporalDisambiguation: (options) => {
     return ES.GetOption(options, 'disambiguation', ['constrain', 'balance', 'reject'], 'constrain');
   },
-  ToArithmeticTemporalDisambiguation: (options) => {
+  ToTemporalDisambiguation: (options) => {
     return ES.GetOption(options, 'disambiguation', ['constrain', 'reject'], 'constrain');
   },
   ToTimeZoneTemporalDisambiguation: (options) => {

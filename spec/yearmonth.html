@@ -219,7 +219,7 @@
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
         1. Let _duration_ be ? ToLimitedTemporalDuration(_temporalDurationLike_, « »).
         1. Let _balanceResult_ be ? BalanceDuration(_duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]], *"days"*).
-        1. Let _disambiguation_ be ? ToArithmeticTemporalDisambiguation(_options_).
+        1. Let _disambiguation_ be ? ToTemporalDisambiguation(_options_).
         1. Let _result_ be ? AddDate(_yearMonth_.[[ISOYear]], _yearMonth_.[[ISOMonth]], 1, _duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _balanceResult_.[[Days]], _disambiguation_).
         1. Let _result_ be ? RegulateYearMonth(_result_.[[Year]], _result_.[[Month]], _disambiguation_).
         1. Return ? CreateTemporalYearMonthFromInstance(_yearMonth_, _result_.[[Year]], _result_.[[Month]]).
@@ -237,7 +237,7 @@
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
         1. Let _duration_ be ? ToLimitedTemporalDuration(_temporalDurationLike_, « »).
         1. Let _balanceResult_ be ? BalanceDuration(_duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]], *"days"*).
-        1. Let _disambiguation_ be ? ToArithmeticTemporalDisambiguation(_options_).
+        1. Let _disambiguation_ be ? ToTemporalDisambiguation(_options_).
         1. Let _lastDay_ be ! DaysInMonth(_yearMonth_.[[ISOYear]], _yearMonth_.[[ISOMonth]]).
         1. Let _result_ be ? SubtractDate(_yearMonth_.[[ISOYear]], _yearMonth_.[[ISOMonth]], _lastDay_, _duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _balanceResult_.[[Days]], _disambiguation_).
         1. Let _result_ be ? RegulateYearMonth(_result_.[[Year]], _result_.[[Month]], _disambiguation_).

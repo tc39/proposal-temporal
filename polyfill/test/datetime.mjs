@@ -255,7 +255,7 @@ describe('DateTime', () => {
       equal(`${datetime.with({ month: 5, second: 15 })}`, '1976-05-18T15:23:15.123456789');
     });
     it('invalid disambiguation', () => {
-      ['', 'CONSTRAIN', 'xyz', 3, null].forEach((disambiguation) =>
+      ['', 'CONSTRAIN', 'balance', 3, null].forEach((disambiguation) =>
         throws(() => datetime.with({ day: 5 }, { disambiguation }), RangeError)
       );
     });
@@ -420,10 +420,9 @@ describe('DateTime', () => {
         equal(`${DateTime.from(bad)}`, '2019-01-31T00:00');
         equal(`${DateTime.from(bad, { disambiguation: 'constrain' })}`, '2019-01-31T00:00');
       });
-      it('balance', () => equal(`${DateTime.from(bad, { disambiguation: 'balance' })}`, '2019-02-01T00:00'));
       it('throw when bad disambiguation', () => {
         [new DateTime(1976, 11, 18, 15, 23), { year: 2019, month: 1, day: 1 }, '2019-01-31T00:00'].forEach((input) => {
-          ['', 'CONSTRAIN', 'xyz', 3, null].forEach((disambiguation) =>
+          ['', 'CONSTRAIN', 'balance', 3, null].forEach((disambiguation) =>
             throws(() => DateTime.from(input, { disambiguation }), RangeError)
           );
         });
@@ -431,8 +430,6 @@ describe('DateTime', () => {
       const leap = { year: 2016, month: 12, day: 31, hour: 23, minute: 59, second: 60 };
       it('reject leap second', () => throws(() => DateTime.from(leap, { disambiguation: 'reject' }), RangeError));
       it('constrain leap second', () => equal(`${DateTime.from(leap)}`, '2016-12-31T23:59:59'));
-      it('balance leap second', () =>
-        equal(`${DateTime.from(leap, { disambiguation: 'balance' })}`, '2017-01-01T00:00'));
     });
     it('variant time separators', () => {
       equal(`${DateTime.from('1976-11-18t15:23Z')}`, '1976-11-18T15:23');
@@ -514,9 +511,7 @@ describe('DateTime', () => {
       const tooEarly = { year: -271821, month: 4, day: 19 };
       const tooLate = { year: 275760, month: 9, day: 14 };
       [tooEarly, tooLate].forEach((props) => {
-        ['balance', 'reject'].forEach((disambiguation) => {
-          throws(() => DateTime.from(props, { disambiguation }), RangeError);
-        });
+        throws(() => DateTime.from(props, { disambiguation: 'reject' }), RangeError);
       });
       equal(`${DateTime.from(tooEarly)}`, '-271821-04-19T00:00:00.000000001');
       equal(`${DateTime.from(tooLate)}`, '+275760-09-13T23:59:59.999999999');
@@ -541,9 +536,7 @@ describe('DateTime', () => {
     });
     it('constructing from ISO string', () => {
       ['-271821-04-19T00:00', '+275760-09-14T00:00'].forEach((str) => {
-        ['balance', 'reject'].forEach((disambiguation) => {
-          throws(() => DateTime.from(str, { disambiguation }), RangeError);
-        });
+        throws(() => DateTime.from(str, { disambiguation: 'reject' }), RangeError);
       });
       equal(`${DateTime.from('-271821-04-19T00:00')}`, '-271821-04-19T00:00:00.000000001');
       equal(`${DateTime.from('+275760-09-14T00:00')}`, '+275760-09-13T23:59:59.999999999');

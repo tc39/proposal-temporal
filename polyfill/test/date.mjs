@@ -130,7 +130,7 @@ describe('Date', () => {
       equal(`${date}`, '1976-11-17');
     });
     it('invalid disambiguation', () => {
-      ['', 'CONSTRAIN', 'xyz', 3, null].forEach((disambiguation) =>
+      ['', 'CONSTRAIN', 'balance', 3, null].forEach((disambiguation) =>
         throws(() => original.with({ day: 17 }, { disambiguation }), RangeError)
       );
     });
@@ -419,10 +419,9 @@ describe('Date', () => {
         equal(`${Date.from(bad)}`, '2019-01-31');
         equal(`${Date.from(bad, { disambiguation: 'constrain' })}`, '2019-01-31');
       });
-      it('balance', () => equal(`${Date.from(bad, { disambiguation: 'balance' })}`, '2019-02-01'));
       it('throw when bad disambiguation', () => {
         [new Date(1976, 11, 18), { year: 2019, month: 1, day: 1 }, '2019-01-31'].forEach((input) => {
-          ['', 'CONSTRAIN', 'xyz', 3, null].forEach((disambiguation) =>
+          ['', 'CONSTRAIN', 'balance', 3, null].forEach((disambiguation) =>
             throws(() => Date.from(input, { disambiguation }), RangeError)
           );
         });
@@ -476,9 +475,7 @@ describe('Date', () => {
       const tooEarly = { year: -271821, month: 4, day: 18 };
       const tooLate = { year: 275760, month: 9, day: 14 };
       [tooEarly, tooLate].forEach((props) => {
-        ['balance', 'reject'].forEach((disambiguation) => {
-          throws(() => Date.from(props, { disambiguation }), RangeError);
-        });
+        throws(() => Date.from(props, { disambiguation: 'reject' }), RangeError);
       });
       equal(`${Date.from(tooEarly)}`, '-271821-04-19');
       equal(`${Date.from(tooLate)}`, '+275760-09-13');
@@ -487,9 +484,7 @@ describe('Date', () => {
     });
     it('constructing from ISO string', () => {
       ['-271821-04-18', '+275760-09-14'].forEach((str) => {
-        ['balance', 'reject'].forEach((disambiguation) => {
-          throws(() => Date.from(str, { disambiguation }), RangeError);
-        });
+        throws(() => Date.from(str, { disambiguation: 'reject' }), RangeError);
       });
       equal(`${Date.from('-271821-04-18')}`, '-271821-04-19');
       equal(`${Date.from('+275760-09-14')}`, '+275760-09-13');

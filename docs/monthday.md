@@ -50,7 +50,7 @@ md = new Temporal.MonthDay(2, 29)  // => 02-29
 - `options` (optional object): An object with properties representing options for constructing the date.
   The following options are recognized:
   - `disambiguation` (string): How to deal with out-of-range values in `thing`.
-    Allowed values are `constrain`, `balance`, and `reject`.
+    Allowed values are `constrain` and `reject`.
     The default is `constrain`.
 
 **Returns:** a new `Temporal.MonthDay` object.
@@ -65,7 +65,6 @@ If the string isn't valid according to ISO 8601, then a `RangeError` will be thr
 
 The `disambiguation` option works as follows:
 - In `constrain` mode (the default), any out-of-range values are clamped to the nearest in-range value.
-- In `balance` mode, any out-of-range values are resolved by balancing them with the next highest unit.
 - In `reject` mode, the presence of out-of-range values will cause the function to throw a `RangeError`.
 
 > **NOTE**: The allowed values for the `thing.month` property start at 1, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
@@ -89,12 +88,6 @@ md = Temporal.MonthDay.from({ month: 13, day: 1 }, { disambiguation: 'constrain'
   // => 12-01
 md = Temporal.MonthDay.from({ month: -1, day: 1 }, { disambiguation: 'constrain' })
   // => 01-01
-md = Temporal.MonthDay.from({ month: 13, day: 1 }, { disambiguation: 'balance' })
-  // => 01-01
-md = Temporal.MonthDay.from({ month: 0, day: 1 }, { disambiguation: 'balance' });
-  // => 12-01
-md = Temporal.MonthDay.from({ month: -1, day: 1 }, { disambiguation: 'balance' })
-  // => 11-01
 md = Temporal.MonthDay.from({ month: 13, day: 1 }, { disambiguation: 'reject' })
   // throws
 md = Temporal.MonthDay.from({ month: -1, day: 1 }, { disambiguation: 'reject' })
@@ -127,7 +120,7 @@ md.day    // => 24
 - `options` (optional object): An object with properties representing options for the operation.
   The following options are recognized:
   - `disambiguation` (string): How to deal with out-of-range values.
-    Allowed values are `constrain`, `balance`, and `reject`.
+    Allowed values are `constrain` and `reject`.
     The default is `constrain`.
 
 **Returns:** a new `Temporal.MonthDay` object.
@@ -136,7 +129,6 @@ This method creates a new `Temporal.MonthDay` which is a copy of `monthDay`, but
 
 The disambiguation parameter tells what should happen when out-of-range values are given or when the result would be an invalid month-day combination, such as "June 31":
 - In `constrain` mode (the default), any out-of-range values are clamped to the nearest in-range value, so June 31 would become June 30.
-- In `balance` mode, an out-of-range value for the day is resolved by balancing them with the next highest unit, so June 31 would become July 1; and an out-of-range value for the month wraps around, so `{month: 13}` would end up as January.
 - In `reject` mode, the presence of out-of-range values will cause the constructor to throw a `RangeError`.
 
 > **NOTE:** For the purpose of this method, February is treated as having 29 days, so that it remains possible to construct a `Temporal.MonthDay` for February 29.

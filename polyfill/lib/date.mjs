@@ -78,7 +78,7 @@ export class Date {
   }
   plus(temporalDurationLike, options) {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
-    const disambiguation = ES.ToArithmeticTemporalDisambiguation(options);
+    const disambiguation = ES.ToTemporalDisambiguation(options);
     const duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
     let { year, month, day } = this;
     const { years, months, weeks, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
@@ -101,7 +101,7 @@ export class Date {
   }
   minus(temporalDurationLike, options) {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
-    const disambiguation = ES.ToArithmeticTemporalDisambiguation(options);
+    const disambiguation = ES.ToTemporalDisambiguation(options);
     const duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
     let { year, month, day } = this;
     const { years, months, weeks, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;

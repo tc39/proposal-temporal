@@ -103,10 +103,9 @@ describe('YearMonth', () => {
           equal(`${YearMonth.from(bad)}`, '2019-12');
           equal(`${YearMonth.from(bad, { disambiguation: 'constrain' })}`, '2019-12');
         });
-        it('balance', () => equal(`${YearMonth.from(bad, { disambiguation: 'balance' })}`, '2020-01'));
         it('throw when bad disambiguation', () => {
           [new YearMonth(2019, 1), { year: 2019, month: 1 }, '2019-01'].forEach((input) => {
-            ['', 'CONSTRAIN', 'xyz', 3, null].forEach((disambiguation) =>
+            ['', 'CONSTRAIN', 'balance', 3, null].forEach((disambiguation) =>
               throws(() => YearMonth.from(input, { disambiguation }), RangeError)
             );
           });
@@ -300,9 +299,7 @@ describe('YearMonth', () => {
       const tooEarly = { year: -271821, month: 3 };
       const tooLate = { year: 275760, month: 10 };
       [tooEarly, tooLate].forEach((props) => {
-        ['reject', 'balance'].forEach((disambiguation) => {
-          throws(() => YearMonth.from(props, { disambiguation }), RangeError);
-        });
+        throws(() => YearMonth.from(props, { disambiguation: 'reject' }), RangeError);
       });
       equal(`${YearMonth.from(tooEarly)}`, '-271821-04');
       equal(`${YearMonth.from(tooLate)}`, '+275760-09');
@@ -311,9 +308,7 @@ describe('YearMonth', () => {
     });
     it('constructing from ISO string', () => {
       ['-271821-03', '+275760-10'].forEach((str) => {
-        ['balance', 'reject'].forEach((disambiguation) => {
-          throws(() => YearMonth.from(str, { disambiguation }), RangeError);
-        });
+        throws(() => YearMonth.from(str, { disambiguation: 'reject' }), RangeError);
       });
       equal(`${YearMonth.from('-271821-03')}`, '-271821-04');
       equal(`${YearMonth.from('+275760-10')}`, '+275760-09');
@@ -337,7 +332,7 @@ describe('YearMonth', () => {
   });
   describe('YearMonth.with()', () => {
     it('throws on bad disambiguation', () => {
-      ['', 'CONSTRAIN', 'xyz', 3, null].forEach((disambiguation) =>
+      ['', 'CONSTRAIN', 'balance', 3, null].forEach((disambiguation) =>
         throws(() => YearMonth.from(2019, 1).with({ month: 2 }, { disambiguation }), RangeError)
       );
     });

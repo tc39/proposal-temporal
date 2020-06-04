@@ -12,6 +12,24 @@ export namespace Temporal {
      *
      * - In `'constrain'` mode, out-of-range values are clamped to the nearest
      *   in-range value.
+     * - In `'reject'` mode, out-of-range values will cause the function to
+     *   throw a RangeError.
+     *
+     * The default is `'constrain'`.
+     */
+    disambiguation: 'constrain' | 'reject';
+  };
+
+  /**
+   * Options for assigning fields using `Duration.prototype.with()` or entire
+   * objects with `Duration.prototype.from()`.
+   * */
+  export type DurationAssignmentOptions = {
+    /**
+     * How to deal with out-of-range values
+     *
+     * - In `'constrain'` mode, out-of-range values are clamped to the nearest
+     *   in-range value.
      * - In `'balance'` mode, out-of-range values are resolved by balancing them
      *   with the next highest unit.
      * - In `'reject'` mode, out-of-range values will cause the function to
@@ -118,7 +136,10 @@ export namespace Temporal {
    * See https://tc39.es/proposal-temporal/docs/duration.html for more details.
    */
   export class Duration implements Required<DurationLike> {
-    static from(item: Temporal.Duration | DurationLike | string, options?: AssignmentOptions): Temporal.Duration;
+    static from(
+      item: Temporal.Duration | DurationLike | string,
+      options?: DurationAssignmentOptions
+    ): Temporal.Duration;
     constructor(
       years?: number,
       months?: number,
@@ -141,7 +162,7 @@ export namespace Temporal {
     readonly milliseconds: number;
     readonly microseconds: number;
     readonly nanoseconds: number;
-    with(durationLike: DurationLike, options: AssignmentOptions): Temporal.Duration;
+    with(durationLike: DurationLike, options: DurationAssignmentOptions): Temporal.Duration;
     plus(other: Temporal.Duration | DurationLike, options: ArithmeticOptions): Temporal.Duration;
     minus(other: Temporal.Duration | DurationLike, options: DurationMinusOptions): Temporal.Duration;
     getFields(): Required<DurationLike>;
