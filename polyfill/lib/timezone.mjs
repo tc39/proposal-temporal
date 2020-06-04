@@ -61,7 +61,7 @@ export class TimeZone {
     }
     return ES.FormatTimeZoneOffsetString(offsetNs);
   }
-  getDateTimeFor(absolute) {
+  getDateTimeFor(absolute, calendar = 'iso8601') {
     if (!ES.IsTemporalAbsolute(absolute)) throw new TypeError('invalid Absolute object');
     const ns = GetSlot(absolute, EPOCHNANOSECONDS);
     const offsetNs = this.getOffsetNanosecondsFor(absolute);
@@ -83,8 +83,10 @@ export class TimeZone {
       microsecond,
       nanosecond + offsetNs
     ));
+    const TemporalCalendar = GetIntrinsic('%Temporal.Calendar%');
+    calendar = TemporalCalendar.from(calendar);
     const DateTime = GetIntrinsic('%Temporal.DateTime%');
-    return new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
+    return new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
   }
   getAbsoluteFor(dateTime, options) {
     if (!ES.IsTemporalDateTime(dateTime)) throw new TypeError('invalid DateTime object');
