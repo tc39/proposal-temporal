@@ -206,15 +206,19 @@ Same as `getEpochSeconds()`, but with nanosecond (10<sup>&minus;9</sup> second) 
 
 The value returned from this method is suitable to be passed to `new Temporal.Absolute()`.
 
-### absolute.**inTimeZone**(_timeZone_: object | string) : Temporal.DateTime
+### absolute.**inTimeZone**(_timeZone_: object | string, _calendar_?: Temporal.Calendar | string) : Temporal.DateTime
 
 **Parameters:**
 - `timeZone` (object or string): A `Temporal.TimeZone` object, or an object implementing the [time zone protocol](./timezone.md#protocol), or a string description of the time zone; either its IANA name or UTC offset.
+- `calendar` (optional object or string): A `Temporal.Calendar` object, or a calendar identifier.
+  The default is to use the ISO 8601 calendar.
 
-**Returns:** a `Temporal.DateTime` object indicating the calendar date and wall-clock time in `timeZone` at the absolute time indicated by `absolute`.
+**Returns:** a `Temporal.DateTime` object indicating the calendar date and wall-clock time in `timeZone`, according to the reckoning of `calendar`, at the absolute time indicated by `absolute`.
 
 For a list of IANA time zone names, see the current version of the [IANA time zone database](https://www.iana.org/time-zones).
 A convenient list is also available [on Wikipedia](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones), although it might not reflect the latest official status.
+
+For a list of calendar identifiers, see the documentation for [Intl.DateTimeFormat](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/DateTimeFormat#Parameters).
 
 This method is one way to convert a `Temporal.Absolute` to a `Temporal.DateTime`.
 

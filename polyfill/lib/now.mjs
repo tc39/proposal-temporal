@@ -13,15 +13,15 @@ function absolute() {
   const Absolute = GetIntrinsic('%Temporal.Absolute%');
   return new Absolute(ES.SystemUTCEpochNanoSeconds());
 }
-function dateTime(temporalTimeZoneLike = timeZone()) {
+function dateTime(temporalTimeZoneLike = timeZone(), calendar = undefined) {
   const TemporalTimeZone = GetIntrinsic('%Temporal.TimeZone%');
   const timeZone = TemporalTimeZone.from(temporalTimeZoneLike);
   const abs = absolute();
-  if (typeof timeZone.getDateTimeFor === 'function') return timeZone.getDateTimeFor(abs);
-  return TemporalTimeZone.prototype.getDateTimeFor.call(timeZone, abs);
+  if (typeof timeZone.getDateTimeFor === 'function') return timeZone.getDateTimeFor(abs, calendar);
+  return TemporalTimeZone.prototype.getDateTimeFor.call(timeZone, abs, calendar);
 }
-function date(temporalTimeZoneLike) {
-  return dateTime(temporalTimeZoneLike).getDate();
+function date(temporalTimeZoneLike, calendar = undefined) {
+  return dateTime(temporalTimeZoneLike, calendar).getDate();
 }
 function time(temporalTimeZoneLike) {
   return dateTime(temporalTimeZoneLike).getTime();

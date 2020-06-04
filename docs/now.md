@@ -54,16 +54,18 @@ nextTransition.inTimeZone(tz);
 // On 2020-03-08T03:00 the clock will change from UTC -08:00 to -07:00
 ```
 
-### Temporal.now.**dateTime**(_timeZone_: object | string = Temporal.now.timeZone()) : Temporal.DateTime
+### Temporal.now.**dateTime**(_timeZone_: object | string = Temporal.now.timeZone(), _calendar_: Temporal.Calendar | string = 'iso8601') : Temporal.DateTime
 
 **Parameters:**
 - `timeZone` (optional object or string): The time zone to get the current date and time in, as a `Temporal.TimeZone` object, an object implementing the [time zone protocol](./timezone.md#protocol), or a string.
   If not given, the current system time zone will be used.
+- `calendar` (optional `Temporal.Calendar` or string): The calendar system to get the current date and time in.
+  If not given, the ISO 8601 calendar will be used.
 
 **Returns:** a `Temporal.DateTime` object representing the current system date and time.
 
 This method gets the current calendar date and wall-clock time according to the system settings.
-Optionally a time zone can be given in which the time is computed.
+Optionally a time zone can be given in which the time is computed, and a calendar system in which the date is reckoned.
 
 Example usage:
 ```js
@@ -83,11 +85,13 @@ Object.entries(financialCentres).forEach(([name, timeZone]) => {
 // Tokyo: 2020-01-25T14:52:14.759534758
 ```
 
-### Temporal.now.**date**(_timeZone_: object | string = Temporal.now.timeZone()) : Temporal.Date
+### Temporal.now.**date**(_timeZone_: object | string = Temporal.now.timeZone(), _calendar_: Temporal.Calendar | string = 'iso8601') : Temporal.Date
 
 **Parameters:**
 - `timeZone` (optional object or string): The time zone to get the current date and time in, as a `Temporal.TimeZone` object, an object implementing the [time zone protocol](./timezone.md#protocol), or a string.
   If not given, the current system time zone will be used.
+- `calendar` (optional `Temporal.Calendar` or string): The calendar system to get the current date and time in.
+  If not given, the ISO 8601 calendar will be used.
 
 **Returns:** a `Temporal.Date` object representing the current system date.
 
