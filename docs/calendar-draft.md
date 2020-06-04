@@ -334,7 +334,7 @@ The following table describes these semantics.  Option 5 is not shown because th
 | T.now.isoDate() | N/A | N/A | N/A | N/A | Full ISO |
 | absolute.inTimeZone() | Full ISO | Explicit | Partial ISO | Environ. | Explicit |
 | absolute.inZoneISO() | N/A | N/A | N/A | N/A | Full ISO |
-| date.getMonthDay() | Full ISO | Inherit | Explicit | Environ. | Inherit |
+| date.getMonthDay()\*\*\*\* | Inherit | Inherit | Explicit | Inherit | Inherit |
 | HTML input\*\*\* | Full ISO | Full ISO | Full ISO | Full ISO | Full ISO |
 
 Footnotes:
@@ -344,6 +344,8 @@ Footnotes:
 \*\* @ptomato [pointed out](https://github.com/tc39/proposal-temporal/pull/590#discussion_r427527732) that "if you write Temporal.Date.from({ year: 2020, month: 5, day: 19 }) with no calendar specified, then realistically what else do you mean besides the full ISO calendar?"  This row may change to make Full ISO the default for from(fields) pending the results of that discussion.
 
 \*\*\* The HTML5 spec only supports ISO-8601 ([reference](https://html.spec.whatwg.org/multipage/common-microsyntaxes.html#concept-date)).
+
+\*\*\*\* An argument could be added to `getMonthDay()` in Options 3 and 5 to reduce boilerplate.
 
 ### Preventing I18n Errors
 
@@ -378,11 +380,24 @@ const today = Temporal.now.date(calendar);
 const monthDay = today.getMonthDay();
 console.log("Today is:", monthDay.toLocaleString());
 
-/// Options 3 and 5: calendar only when needed
+/// Option 3 and 5: getMonthDay() requires a calendar to be given
+const today = Temporal.now.date();
+const calendar = navigator.locales[0].getLikelyCalendar();
+const monthDay = today.withCalendar(calendar).getMonthDay();
+console.log("Today is:", monthDay.toLocaleString());
+
+/// Option 3 and 5 alternative: add argument to getMonthDay()
 const today = Temporal.now.date();
 const calendar = navigator.locales[0].getLikelyCalendar();
 const monthDay = today.getMonthDay(calendar);
 console.log("Today is:", monthDay.toLocaleString());
+
+/// Alternative using Intl settings
+const today = Temporal.now.date();
+console.log("Today is:", today.toLocaleString(undefined, {
+  month: "long",
+  day: "numeric"
+}));
 ```
 
 #### Get this date next month
