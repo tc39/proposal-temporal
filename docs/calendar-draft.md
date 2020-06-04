@@ -334,6 +334,7 @@ The following table describes these semantics.  Option 5 is not shown because th
 | T.now.isoDate() | N/A | N/A | N/A | N/A | Full ISO |
 | absolute.inTimeZone() | Full ISO | Explicit | Partial ISO | Environ. | Explicit |
 | absolute.inZoneISO() | N/A | N/A | N/A | N/A | Full ISO |
+| date.getMonthDay() | Full ISO | Inherit | Explicit | Environ. | Inherit |
 | HTML input\*\*\* | Full ISO | Full ISO | Full ISO | Full ISO | Full ISO |
 
 Footnotes:
@@ -350,7 +351,39 @@ As compared to option 1 (always default to Full ISO), the following are examples
 
 These errors are most common in the four regions that use non-ISO calendars as their default: Saudi Arabia, Iran, Afghanistan, and Thailand.  However, they could also manifest if the user has overridden their preferred calendar in browser settings.
 
-For the purposes of illustration, the following examples will use the locale "en-SA" (English in Saudi Arabia) on 2020-05-18.
+For the purposes of illustration, the following examples will use the locale "en-SA" (English in Saudi Arabia) on 2020-05-17.
+
+#### Format a month and day from a date
+
+Buggy output:
+
+	Today is: May 17
+
+Correct output:
+
+	Today is: Ramadan 24
+
+Code:
+
+```javascript
+/// Options 1 and 4: calendar implicit
+const today = Temporal.now.date();
+// OPTION 1 BUG: the ISO calendar is implicit when creating the MonthDay
+const monthDay = today.getMonthDay();
+console.log("Today is:", monthDay.toLocaleString());
+
+/// Options 2 and 6: calendar in factory method
+const calendar = navigator.locales[0].getLikelyCalendar();
+const today = Temporal.now.date(calendar);
+const monthDay = today.getMonthDay();
+console.log("Today is:", monthDay.toLocaleString());
+
+/// Options 3 and 5: calendar only when needed
+const today = Temporal.now.date();
+const calendar = navigator.locales[0].getLikelyCalendar();
+const monthDay = today.getMonthDay(calendar);
+console.log("Today is:", monthDay.toLocaleString());
+```
 
 #### Get this date next month
 
