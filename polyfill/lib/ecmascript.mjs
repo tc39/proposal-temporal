@@ -161,13 +161,17 @@ export const ES = ObjectAssign({}, ES2019, {
   },
   ParseTemporalTimeZoneString: (stringIdent) => {
     try {
-      const canonicalIdent = ES.GetCanonicalTimeZoneIdentifier(stringIdent);
-      if (canonicalIdent) return { zone: canonicalIdent.toString() };
+      try {
+        const canonicalIdent = ES.GetCanonicalTimeZoneIdentifier(stringIdent);
+        if (canonicalIdent) return { zone: canonicalIdent.toString() };
+      } catch {
+        // fall through
+      }
+      // Try parsing ISO string instead
+      return ES.ParseISODateTime(stringIdent, { zoneRequired: true });
     } catch {
-      // fall through
+      throw new RangeError(`Invalid time zone: ${stringIdent}`);
     }
-    // Try parsing ISO string instead
-    return ES.ParseISODateTime(stringIdent, { zoneRequired: true });
   },
   ParseTemporalDurationString: (isoString) => {
     const match = PARSE.duration.exec(isoString);
