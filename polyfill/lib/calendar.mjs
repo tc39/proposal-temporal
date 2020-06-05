@@ -99,8 +99,9 @@ export class Calendar {
 MakeIntrinsicClass(Calendar, 'Temporal.Calendar');
 
 export class ISO8601 extends Calendar {
-  constructor() {
-    super('iso8601');
+  constructor(id = 'iso8601') {
+    // Needs to be subclassable, that's why the ID is a default argument
+    super(id);
   }
   dateFromFields(fields, options, constructor) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
