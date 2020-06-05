@@ -67,7 +67,7 @@ cal = new Temporal.Calendar('gregory');
 **Returns:** a new `Temporal.Calendar` object.
 
 This static method creates a new calendar from another value.
-If the value is another `Temporal.Calendar` object, a new object representing the same time zone is returned.
+If the value is another `Temporal.Calendar` object, a new object representing the same calendar is returned.
 
 Any other value is converted to a string, which is expected to be either:
 - a string that is accepted by `new Temporal.Calendar()`; or
@@ -91,9 +91,9 @@ cal = Temporal.Calendar.from('2020-01-13T16:31:00.065858086-08:00[America/Vancou
 // Existing calendar object
 cal2 = Temporal.Calendar.from(cal);
 
-/*⚠️*/ tz = Temporal.Calendar.from('discordian');  // not a built-in calendar, throws
-/*⚠️*/ tz = Temporal.Calendar.from({id: 'iso8601'});  // not a Calendar object, throws
-/*⚠️*/ tz = Temporal.Calendar.from('[c=iso8601]');  // lone annotation not a valid ISO 8601 string
+/*⚠️*/ cal = Temporal.Calendar.from('discordian');  // not a built-in calendar, throws
+/*⚠️*/ cal = Temporal.Calendar.from({id: 'iso8601'});  // not a Calendar object, throws
+/*⚠️*/ cal = Temporal.Calendar.from('[c=iso8601]');  // lone annotation not a valid ISO 8601 string
 ```
 
 ## Properties
