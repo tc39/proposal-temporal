@@ -90,7 +90,7 @@ export class Calendar {
     return GetSlot(this, CALENDAR_ID);
   }
   static from(item) {
-    if (ES.IsTemporalCalendar(item)) return item;
+    if (ES.IsTemporalCalendar(item) || (typeof item === 'object' && item)) return item;
     const stringIdent = ES.ToString(item);
     return ES.GetBuiltinCalendar(stringIdent);
   }

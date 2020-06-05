@@ -173,11 +173,11 @@ tz = new Temporal.TimeZone('-08:00');
 tz.getOffsetStringFor(timestamp);  // => -08:00
 ```
 
-### timeZone.**getDateTimeFor**(_absolute_: Temporal.Absolute, _calendar_?: Temporal.Calendar | string) : Temporal.DateTime
+### timeZone.**getDateTimeFor**(_absolute_: Temporal.Absolute, _calendar_?: object | string) : Temporal.DateTime
 
 **Parameters:**
 - `absolute` (`Temporal.Absolute`): An absolute time to convert.
-- `calendar` (optional object or string): A `Temporal.Calendar` object, or a calendar identifier.
+- `calendar` (optional object or string): A `Temporal.Calendar` object, or a plain object, or a calendar identifier.
   The default is to use the ISO 8601 calendar.
 
 **Returns:** A `Temporal.DateTime` object indicating the calendar date and wall-clock time in `timeZone`, according to the reckoning of `calendar`, at the absolute time indicated by `absolute`.

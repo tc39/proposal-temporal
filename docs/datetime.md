@@ -21,7 +21,7 @@ A `Temporal.DateTime` can also be converted into any of the other `Temporal` obj
 
 ## Constructor
 
-### **new Temporal.DateTime**(_isoYear_: number, _isoMonth_: number, _isoDay_: number, _hour_: number = 0, _minute_: number = 0, _second_: number = 0, _millisecond_: number = 0, _microsecond_: number = 0, _nanosecond_: number = 0, _calendar_?: Temporal.Calendar) : Temporal.DateTime
+### **new Temporal.DateTime**(_isoYear_: number, _isoMonth_: number, _isoDay_: number, _hour_: number = 0, _minute_: number = 0, _second_: number = 0, _millisecond_: number = 0, _microsecond_: number = 0, _nanosecond_: number = 0, _calendar_?: object) : Temporal.DateTime
 
 **Parameters:**
 - `isoYear` (number): A year.
@@ -33,7 +33,7 @@ A `Temporal.DateTime` can also be converted into any of the other `Temporal` obj
 - `millisecond` (optional number): A number of milliseconds, ranging between 0 and 999 inclusive.
 - `microsecond` (optional number): A number of microseconds, ranging between 0 and 999 inclusive.
 - `nanosecond` (optional number): A number of nanoseconds, ranging between 0 and 999 inclusive.
-- `calendar` (optional `Temporal.Calendar`): A calendar to project the date into.
+- `calendar` (optional `Temporal.Calendar` or plain object): A calendar to project the date into.
 
 **Returns:** a new `Temporal.DateTime` object.
 
@@ -205,7 +205,7 @@ dt.microsecond  // => 3
 dt.nanosecond   // => 500
 ```
 
-### datetime.**calendar** : Temporal.Calendar
+### datetime.**calendar** : object
 
 The `calendar` read-only property gives the calendar that the `year`, `month`, and `day` properties are interpreted in.
 
@@ -326,10 +326,10 @@ dt = new Temporal.DateTime(1995, 12, 7, 3, 24, 30, 0, 3, 500);
 dt.with({year: 2015, second: 31})  // => 2015-12-07T03:24:31.000003500
 ```
 
-### datetime.**withCalendar**(_calendar_: Temporal.Calendar | string) : Temporal.DateTime
+### datetime.**withCalendar**(_calendar_: object | string) : Temporal.DateTime
 
 **Parameters:**
-- `calendar` (`Temporal.Calendar` or string): The calendar into which to project `datetime`.
+- `calendar` (`Temporal.Calendar` or plain object or string): The calendar into which to project `datetime`.
 
 **Returns:** a new `Temporal.DateTime` object which is the date indicated by `datetime`, projected into `calendar`.
 
@@ -604,7 +604,7 @@ dt.getMonthDay()  // => 12-07
 dt.getTime()  // => 03:24:30.000003500
 ```
 
-### datetime.**getFields**() : { year: number, month: number, day: number, hour: number, minute: number, second: number, millisecond: number, microsecond: number, nanosecond: number, calendar: Temporal.Calendar, [propName: string]: unknown }
+### datetime.**getFields**() : { year: number, month: number, day: number, hour: number, minute: number, second: number, millisecond: number, microsecond: number, nanosecond: number, calendar: object, [propName: string]: unknown }
 
 **Returns:** a plain object with properties equal to the fields of `datetime`.
 

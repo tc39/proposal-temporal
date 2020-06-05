@@ -13,12 +13,12 @@ A `Temporal.YearMonth` can be converted into a `Temporal.Date` by combining it w
 
 ## Constructor
 
-### **new Temporal.YearMonth**(_isoYear_: number, _isoMonth_: number, _calendar_?: Temporal.Calendar, _refISODay_: number = 1) : Temporal.YearMonth
+### **new Temporal.YearMonth**(_isoYear_: number, _isoMonth_: number, _calendar_?: object, _refISODay_: number = 1) : Temporal.YearMonth
 
 **Parameters:**
 - `isoYear` (number): A year.
 - `isoMonth` (number): A month, ranging between 1 and 12 inclusive.
-- `calendar` (optional `Temporal.Calendar`): A calendar to project the month into.
+- `calendar` (optional `Temporal.Calendar` or plain object): A calendar to project the month into.
 - `refISODay` (optional number): A reference day, used for disambiguation when implementing other calendar systems.
   You can omit this parameter unless using a non-ISO-8601 calendar.
 
@@ -136,7 +136,7 @@ ym.year   // => 2019
 ym.month  // => 6
 ```
 
-### yearMonth.**calendar** : Temporal.Calendar
+### yearMonth.**calendar** : object
 
 The `calendar` read-only property gives the calendar that the `year` and `month` properties are interpreted in.
 
@@ -438,7 +438,7 @@ ym = Temporal.YearMonth.from('2019-06');
 ym.withDay(24)  // => 2019-06-24
 ```
 
-### yearMonth.**getFields**() : { year: number, month: number, calendar: Temporal.Calendar, [propName: string]: unknown }
+### yearMonth.**getFields**() : { year: number, month: number, calendar: object, [propName: string]: unknown }
 
 **Returns:** a plain object with properties equal to the fields of `yearMonth`.
 

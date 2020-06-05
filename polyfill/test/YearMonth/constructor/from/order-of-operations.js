@@ -8,7 +8,6 @@ includes: [compareArray.js]
 
 const expected = [
   "get calendar",
-  "toString calendar",
   "get month",
   "valueOf month",
   "get year",
@@ -18,11 +17,11 @@ const actual = [];
 const fields = {
   year: 1.7,
   month: 1.7,
-  calendar: "iso8601",
 };
 const argument = new Proxy(fields, {
   get(target, key) {
     actual.push(`get ${key}`);
+    if (key === "calendar") return Temporal.Calendar.from('iso8601');
     const result = target[key];
     return {
       valueOf() {

@@ -206,11 +206,11 @@ Same as `getEpochSeconds()`, but with nanosecond (10<sup>&minus;9</sup> second) 
 
 The value returned from this method is suitable to be passed to `new Temporal.Absolute()`.
 
-### absolute.**inTimeZone**(_timeZone_: object | string, _calendar_?: Temporal.Calendar | string) : Temporal.DateTime
+### absolute.**inTimeZone**(_timeZone_: object | string, _calendar_?: object | string) : Temporal.DateTime
 
 **Parameters:**
 - `timeZone` (object or string): A `Temporal.TimeZone` object, or an object implementing the [time zone protocol](./timezone.md#protocol), or a string description of the time zone; either its IANA name or UTC offset.
-- `calendar` (optional object or string): A `Temporal.Calendar` object, or a calendar identifier.
+- `calendar` (optional object or string): A `Temporal.Calendar` object, or a plain object, or a calendar identifier.
   The default is to use the ISO 8601 calendar.
 
 **Returns:** a `Temporal.DateTime` object indicating the calendar date and wall-clock time in `timeZone`, according to the reckoning of `calendar`, at the absolute time indicated by `absolute`.
