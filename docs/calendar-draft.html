@@ -419,6 +419,14 @@ Temporal<span class="token punctuation">.</span><span class="token class-name">D
 <td>Full ISO</td>
 </tr>
 <tr>
+<td>date.getMonthDay()****</td>
+<td>Inherit</td>
+<td>Inherit</td>
+<td>Explicit</td>
+<td>Inherit</td>
+<td>Inherit</td>
+</tr>
+<tr>
 <td>HTML input***</td>
 <td>Full ISO</td>
 <td>Full ISO</td>
@@ -431,10 +439,44 @@ Temporal<span class="token punctuation">.</span><span class="token class-name">D
 <p>* from(string) may carry the calendar ID in the string (main issue: <a href="https://github.com/tc39/proposal-temporal/issues/293">#293</a>).</p>
 <p>** @ptomato <a href="https://github.com/tc39/proposal-temporal/pull/590#discussion_r427527732">pointed out</a> that &quot;if you write Temporal.Date.from({ year: 2020, month: 5, day: 19 }) with no calendar specified, then realistically what else do you mean besides the full ISO calendar?&quot;  This row may change to make Full ISO the default for from(fields) pending the results of that discussion.</p>
 <p>*** The HTML5 spec only supports ISO-8601 (<a href="https://html.spec.whatwg.org/multipage/common-microsyntaxes.html#concept-date">reference</a>).</p>
+<p>**** An argument could be added to <code>getMonthDay()</code> in Options 3 and 5 to reduce boilerplate.</p>
 <h3 id="preventing-i18n-errors"><a class="heading-link" href="#preventing-i18n-errors"></a>Preventing I18n Errors</h3><p>As compared to option 1 (always default to Full ISO), the following are examples of programming errors that Partial ISO would help prevent.</p>
 <p>These errors are most common in the four regions that use non-ISO calendars as their default: Saudi Arabia, Iran, Afghanistan, and Thailand.  However, they could also manifest if the user has overridden their preferred calendar in browser settings.</p>
-<p>For the purposes of illustration, the following examples will use the locale &quot;en-SA&quot; (English in Saudi Arabia) on 2020-05-18.</p>
-<h4 id="get-this-date-next-month-1">Get this date next month</h4>
+<p>For the purposes of illustration, the following examples will use the locale &quot;en-SA&quot; (English in Saudi Arabia) on 2020-05-17.</p>
+<h4 id="format-a-month-and-day-from-a-date-1">Format a month and day from a date</h4>
+<p>Buggy output:</p>
+<pre><code>Today is: May 17</code></pre><p>Correct output:</p>
+<pre><code>Today is: Ramadan 24</code></pre><p>Code:</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">/// Options 1 and 4: calendar implicit</span>
+<span class="token keyword">const</span> today <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">date</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// OPTION 1 BUG: the ISO calendar is implicit when creating the MonthDay</span>
+<span class="token keyword">const</span> monthDay <span class="token operator">=</span> today<span class="token punctuation">.</span><span class="token function">getMonthDay</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"Today is:"</span><span class="token punctuation">,</span> monthDay<span class="token punctuation">.</span><span class="token function">toLocaleString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">/// Options 2 and 6: calendar in factory method</span>
+<span class="token keyword">const</span> calendar <span class="token operator">=</span> navigator<span class="token punctuation">.</span>locales<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">getLikelyCalendar</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> today <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">date</span><span class="token punctuation">(</span>calendar<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> monthDay <span class="token operator">=</span> today<span class="token punctuation">.</span><span class="token function">getMonthDay</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"Today is:"</span><span class="token punctuation">,</span> monthDay<span class="token punctuation">.</span><span class="token function">toLocaleString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">/// Option 3 and 5: getMonthDay() requires a calendar to be given</span>
+<span class="token keyword">const</span> today <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">date</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> calendar <span class="token operator">=</span> navigator<span class="token punctuation">.</span>locales<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">getLikelyCalendar</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> monthDay <span class="token operator">=</span> today<span class="token punctuation">.</span><span class="token function">withCalendar</span><span class="token punctuation">(</span>calendar<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getMonthDay</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"Today is:"</span><span class="token punctuation">,</span> monthDay<span class="token punctuation">.</span><span class="token function">toLocaleString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">/// Option 3 and 5 alternative: add argument to getMonthDay()</span>
+<span class="token keyword">const</span> today <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">date</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> calendar <span class="token operator">=</span> navigator<span class="token punctuation">.</span>locales<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">getLikelyCalendar</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> monthDay <span class="token operator">=</span> today<span class="token punctuation">.</span><span class="token function">getMonthDay</span><span class="token punctuation">(</span>calendar<span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"Today is:"</span><span class="token punctuation">,</span> monthDay<span class="token punctuation">.</span><span class="token function">toLocaleString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">/// Alternative using Intl settings</span>
+<span class="token keyword">const</span> today <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">date</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"Today is:"</span><span class="token punctuation">,</span> today<span class="token punctuation">.</span><span class="token function">toLocaleString</span><span class="token punctuation">(</span><span class="token keyword">undefined</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+  month<span class="token operator">:</span> <span class="token string">"long"</span><span class="token punctuation">,</span>
+  day<span class="token operator">:</span> <span class="token string">"numeric"</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre><h4 id="get-this-date-next-month-1">Get this date next month</h4>
 <p>Buggy output:</p>
 <pre><code>Today is: Ramadan 24, 1441 AH
 Next month is: Shawwal 25, 1441 AH</code></pre><p>Correct output:</p>
