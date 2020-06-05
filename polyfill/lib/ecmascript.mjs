@@ -83,11 +83,6 @@ export const ES = ObjectAssign({}, ES2019, {
     if (!(id in BUILTIN_CALENDARS)) throw new RangeError(`unknown calendar ${id}`);
     return new BUILTIN_CALENDARS[id]();
   },
-  ToTemporalCalendar: (item) => {
-    if (ES.IsTemporalCalendar(item)) return item;
-    const stringIdent = ES.ToString(item);
-    return ES.GetBuiltinCalendar(stringIdent);
-  },
   ParseISODateTime: (isoString, { zoneRequired }) => {
     const regex = zoneRequired ? PARSE.absolute : PARSE.datetime;
     const match = regex.exec(isoString);
