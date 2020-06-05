@@ -374,21 +374,13 @@ describe('YearMonth', () => {
     it('fields', () => {
       equal(fields.year, 1976);
       equal(fields.month, 11);
-      equal(typeof fields.refISODay, 'number');
+      equal(typeof fields.day, 'number');
     });
     it('enumerable', () => {
       const fields2 = { ...fields };
       equal(fields2.year, 1976);
       equal(fields2.month, 11);
-      equal(typeof fields2.refISODay, 'number');
-    });
-    it('as input to from()', () => {
-      const ym2 = YearMonth.from(fields);
-      equal(YearMonth.compare(ym1, ym2), 0);
-    });
-    it('as input to with()', () => {
-      const ym2 = YearMonth.from('2019-06').with(fields);
-      equal(YearMonth.compare(ym1, ym2), 0);
+      equal(typeof fields2.day, 'number');
     });
   });
 });

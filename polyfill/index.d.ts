@@ -402,12 +402,6 @@ export namespace Temporal {
     day?: number;
   };
 
-  type MonthDayISOCalendarFields = {
-    month: number;
-    day: number;
-    refISOYear: number;
-  };
-
   /**
    * A `Temporal.MonthDay` represents a particular day on the calendar, but
    * without a year. For example, it could be used to represent a yearly
@@ -424,7 +418,7 @@ export namespace Temporal {
     with(monthDayLike: MonthDayLike, options?: AssignmentOptions): Temporal.MonthDay;
     withYear(year: number | { year: number }): Temporal.Date;
     getFields(): Required<MonthDayLike>;
-    getISOCalendarFields(): MonthDayISOCalendarFields;
+    getISOCalendarFields(): DateISOCalendarFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
     toString(): string;
@@ -515,12 +509,6 @@ export namespace Temporal {
     month?: number;
   };
 
-  type YearMonthISOCalendarFields = {
-    year: number;
-    month: number;
-    refISODay: number;
-  };
-
   /**
    * A `Temporal.YearMonth` represents a particular month on the calendar. For
    * example, it could be used to represent a particular instance of a monthly
@@ -544,7 +532,7 @@ export namespace Temporal {
     difference(other: Temporal.YearMonth, options?: DifferenceOptions<'years' | 'months'>): Temporal.Duration;
     withDay(day: number): Temporal.Date;
     getFields(): Required<YearMonthLike>;
-    getISOCalendarFields(): YearMonthISOCalendarFields;
+    getISOCalendarFields(): DateISOCalendarFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
     toString(): string;
