@@ -35,6 +35,12 @@ const calendar = new Intl.DateTimeFormat().resolvedOptions().calendar;
 date.withCalendar(calendar).plus({ months: 1 })
 ```
 
+### Custom calendars
+
+For specialized applications where you need to do calculations in a calendar system that is not supported by Intl, you can also implement your own `Temporal.Calendar` object.
+To do this, create a class inheriting from `Temporal.Calendar`, call `super()` in the constructor with a calendar identifier, and implement all the methods.
+Any subclass of `Temporal.Calendar` will be accepted in Temporal APIs where a built-in `Temporal.Calendar` would work.
+
 ## Constructor
 
 ### **new Temporal.Calendar**(_calendarIdentifier_: string) : Temporal.Calendar

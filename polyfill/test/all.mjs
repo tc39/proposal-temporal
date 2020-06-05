@@ -30,6 +30,7 @@ import './intl.mjs';
 
 // tests of userland objects
 import './usertimezone.mjs';
+import './usercalendar.mjs';
 
 Promise.resolve()
   .then(() => {
