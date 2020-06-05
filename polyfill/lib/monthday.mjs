@@ -83,9 +83,9 @@ export class MonthDay {
   getISOCalendarFields() {
     if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
     return {
+      year: GetSlot(this, REF_ISO_YEAR),
       month: GetSlot(this, ISO_MONTH),
-      day: GetSlot(this, ISO_DAY),
-      refISOYear: GetSlot(this, REF_ISO_YEAR)
+      day: GetSlot(this, ISO_DAY)
     };
   }
   static from(item, options = undefined) {

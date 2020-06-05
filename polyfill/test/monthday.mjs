@@ -193,21 +193,13 @@ describe('MonthDay', () => {
     it('fields', () => {
       equal(fields.month, 11);
       equal(fields.day, 18);
-      equal(typeof fields.refISOYear, 'number');
+      equal(typeof fields.year, 'number');
     });
     it('enumerable', () => {
       const fields2 = { ...fields };
       equal(fields2.month, 11);
       equal(fields2.day, 18);
-      equal(typeof fields2.refISOYear, 'number');
-    });
-    it('as input to from()', () => {
-      const md2 = MonthDay.from(fields);
-      assert(md1.equals(md2));
-    });
-    it('as input to with()', () => {
-      const md2 = MonthDay.from('06-30').with(fields);
-      assert(md1.equals(md2));
+      equal(typeof fields2.year, 'number');
     });
   });
 });

@@ -155,7 +155,7 @@ export class YearMonth {
     return {
       year: GetSlot(this, ISO_YEAR),
       month: GetSlot(this, ISO_MONTH),
-      refISODay: GetSlot(this, REF_ISO_DAY)
+      day: GetSlot(this, REF_ISO_DAY)
     };
   }
   static from(item, options = undefined) {
