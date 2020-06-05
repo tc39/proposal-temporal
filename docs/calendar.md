@@ -41,6 +41,12 @@ For specialized applications where you need to do calculations in a calendar sys
 To do this, create a class inheriting from `Temporal.Calendar`, call `super()` in the constructor with a calendar identifier, and implement all the methods.
 Any subclass of `Temporal.Calendar` will be accepted in Temporal APIs where a built-in `Temporal.Calendar` would work.
 
+### Protocol
+
+It's also possible for a plain object to be a custom calendar, without subclassing.
+The object must implement the `Temporal.Calendar` methods and have an `id` property.
+It is possible to pass such an object into any Temporal API that would normally take a built-in `Temporal.Calendar`.
+
 ## Constructor
 
 ### **new Temporal.Calendar**(_calendarIdentifier_: string) : Temporal.Calendar
@@ -97,8 +103,10 @@ cal = Temporal.Calendar.from('2020-01-13T16:31:00.065858086-08:00[America/Vancou
 // Existing calendar object
 cal2 = Temporal.Calendar.from(cal);
 
+// Custom calendar that is a plain object (this calendar does not do much)
+cal = Temporal.Calendar.from({id: 'mycalendar'});
+
 /*⚠️*/ cal = Temporal.Calendar.from('discordian');  // not a built-in calendar, throws
-/*⚠️*/ cal = Temporal.Calendar.from({id: 'iso8601'});  // not a Calendar object, throws
 /*⚠️*/ cal = Temporal.Calendar.from('[c=iso8601]');  // lone annotation not a valid ISO 8601 string
 ```
 

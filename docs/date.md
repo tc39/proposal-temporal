@@ -16,13 +16,13 @@ A `Temporal.Date` can be converted into a `Temporal.DateTime` by combining it wi
 
 ## Constructor
 
-### **new Temporal.Date**(_isoYear_: number, _isoMonth_: number, _isoDay_: number, _calendar_?: Temporal.Calendar) : Temporal.Date
+### **new Temporal.Date**(_isoYear_: number, _isoMonth_: number, _isoDay_: number, _calendar_?: object) : Temporal.Date
 
 **Parameters:**
 - `isoYear` (number): A year.
 - `isoMonth` (number): A month, ranging between 1 and 12 inclusive.
 - `isoDay` (number): A day of the month, ranging between 1 and 31 inclusive.
-- `calendar` (optional `Temporal.Calendar`): A calendar to project the date into.
+- `calendar` (optional `Temporal.Calendar` or plain object): A calendar to project the date into.
 
 **Returns:** a new `Temporal.Date` object.
 
@@ -145,7 +145,7 @@ date.month  // => 8
 date.day    // => 24
 ```
 
-### date.**calendar** : Temporal.Calendar
+### date.**calendar** : object
 
 The `calendar` read-only property gives the calendar that the `year`, `month`, and `day` properties are interpreted in.
 
@@ -269,10 +269,10 @@ date.with({day: 1});  // => 2006-01-01
 date.plus({months: 1}).with({day: date.daysInMonth});  // => 2006-02-28
 ```
 
-### date.**withCalendar**(_calendar_: Temporal.Calendar | string) : Temporal.Date
+### date.**withCalendar**(_calendar_: object | string) : Temporal.Date
 
 **Parameters:**
-- `calendar` (`Temporal.Calendar` or string): The calendar into which to project `date`.
+- `calendar` (`Temporal.Calendar` or plain object or string): The calendar into which to project `date`.
 
 **Returns:** a new `Temporal.Date` object which is the date indicated by `date`, projected into `calendar`.
 
@@ -530,7 +530,7 @@ date.getYearMonth()  // => 2006-08
 date.getMonthDay()  // => 08-24
 ```
 
-### date.**getFields**() : { year: number, month: number, day: number, calendar: Temporal.Calendar, [propName: string]: unknown }
+### date.**getFields**() : { year: number, month: number, day: number, calendar: object, [propName: string]: unknown }
 
 **Returns:** a plain object with properties equal to the fields of `date`.
 

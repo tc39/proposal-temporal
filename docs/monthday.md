@@ -13,12 +13,12 @@ A `Temporal.MonthDay` can be converted into a `Temporal.Date` by combining it wi
 
 ## Constructor
 
-### **new Temporal.MonthDay**(_isoMonth_: number, _isoDay_: number, _calendar_?: Temporal.Calendar, _refISOYear_?: number) : Temporal.MonthDay
+### **new Temporal.MonthDay**(_isoMonth_: number, _isoDay_: number, _calendar_?: object, _refISOYear_?: number) : Temporal.MonthDay
 
 **Parameters:**
 - `isoMonth` (number): A month, ranging between 1 and 12 inclusive.
 - `isoDay` (number): A day of the month, ranging between 1 and 31 inclusive.
-- `calendar` (optional `Temporal.Calendar`): A calendar to project the date into.
+- `calendar` (optional `Temporal.Calendar` or plain object): A calendar to project the date into.
 - `refISOYear` (optional number): A reference year, used for disambiguation when implementing other calendar systems.
   The default is the first leap year after the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time).
   You can omit this parameter unless using a non-ISO-8601 calendar.
@@ -112,7 +112,7 @@ md.month  // => 8
 md.day    // => 24
 ```
 
-### monthDay.**calendar** : Temporal.Calendar
+### monthDay.**calendar** : object
 
 The `calendar` read-only property gives the calendar that the `month` and `day` properties are interpreted in.
 
@@ -272,7 +272,7 @@ md.withYear(2020)  // => 2020-02-29
 
 In calendars where more information than just the year is needed to convert a `Temporal.MonthDay` to a `Temporal.Date`, you can pass an object to `withYear()` that contains the necessary properties.
 
-### monthDay.**getFields**() : { month: number, day: number, calendar: Temporal.Calendar, [propName: string]: unknown }
+### monthDay.**getFields**() : { month: number, day: number, calendar: object, [propName: string]: unknown }
 
 **Returns:** a plain object with properties equal to the fields of `monthDay`.
 
