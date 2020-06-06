@@ -162,9 +162,9 @@ export namespace Temporal {
     readonly milliseconds: number;
     readonly microseconds: number;
     readonly nanoseconds: number;
-    with(durationLike: DurationLike, options: DurationAssignmentOptions): Temporal.Duration;
-    plus(other: Temporal.Duration | DurationLike, options: ArithmeticOptions): Temporal.Duration;
-    minus(other: Temporal.Duration | DurationLike, options: DurationMinusOptions): Temporal.Duration;
+    with(durationLike: DurationLike, options?: DurationAssignmentOptions): Temporal.Duration;
+    plus(other: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.Duration;
+    minus(other: Temporal.Duration | DurationLike, options?: DurationMinusOptions): Temporal.Duration;
     getFields(): Required<DurationLike>;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
@@ -233,32 +233,32 @@ export namespace Temporal {
     isLeapYear(date: Temporal.Date): boolean;
     dateFromFields(
       fields: DateLike,
-      options: AssignmentOptions,
+      options?: AssignmentOptions,
       constructor: ConstructorOf<Temporal.Date>
     ): Temporal.Date;
     yearMonthFromFields(
       fields: YearMonthLike,
-      options: AssignmentOptions,
+      options?: AssignmentOptions,
       constructor: ConstructorOf<Temporal.YearMonth>
     ): Temporal.YearMonth;
     monthDayFromFields(
       fields: MonthDayLike,
-      options: AssignmentOptions,
+      options?: AssignmentOptions,
       constructor: ConstructorOf<Temporal.MonthDay>
     ): Temporal.MonthDay;
     plus(
       date: Temporal.Date,
       duration: Temporal.Duration,
-      options: ArithmeticOptions,
+      options?: ArithmeticOptions,
       constructor: ConstructorOf<Temporal.Date>
     ): Temporal.Date;
     minus(
       date: Temporal.Date,
       duration: Temporal.Duration,
-      options: ArithmeticOptions,
+      options?: ArithmeticOptions,
       constructor: ConstructorOf<Temporal.Date>
     ): Temporal.Date;
-    difference(smaller: Temporal.Date, larger: Temporal.Date, options: DifferenceOptions);
+    difference(smaller: Temporal.Date, larger: Temporal.Date, options?: DifferenceOptions);
     toString(): string;
   }
 
@@ -538,10 +538,10 @@ export namespace Temporal {
     readonly daysInYear: number;
     readonly isLeapYear: boolean;
     equals(other: Temporal.YearMonth): boolean;
-    with(yearMonthLike: YearMonthLike, options: AssignmentOptions): Temporal.YearMonth;
-    plus(durationLike: Temporal.Duration | DurationLike, options: ArithmeticOptions): Temporal.YearMonth;
-    minus(durationLike: Temporal.Duration | DurationLike, options: ArithmeticOptions): Temporal.YearMonth;
-    difference(other: Temporal.YearMonth, options: DifferenceOptions<'years' | 'months'>): Temporal.Duration;
+    with(yearMonthLike: YearMonthLike, options?: AssignmentOptions): Temporal.YearMonth;
+    plus(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.YearMonth;
+    minus(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.YearMonth;
+    difference(other: Temporal.YearMonth, options?: DifferenceOptions<'years' | 'months'>): Temporal.Duration;
     withDay(day: number): Temporal.Date;
     getFields(): Required<YearMonthLike>;
     getISOCalendarFields(): YearMonthISOCalendarFields;
