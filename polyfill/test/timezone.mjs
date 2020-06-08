@@ -12,7 +12,7 @@ import Pretty from '@pipobscure/demitasse-pretty';
 const { reporter } = Pretty;
 
 import { strict as assert } from 'assert';
-const { deepEqual, equal, notEqual, throws } = assert;
+const { deepEqual, equal, throws } = assert;
 
 import * as Temporal from 'tc39-temporal';
 
@@ -89,21 +89,11 @@ describe('TimeZone', () => {
       it(`TimeZone.from(${zone}) is a time zone`, () => equal(typeof timezoneFrom, 'object'));
       it(`TimeZone.from(${zone}) does the same thing as new TimeZone(${zone})`, () =>
         equal(timezoneFrom.name, timezoneObj.name));
-      it(`TimeZone.from(new TimeZone(${zone})) is a different object`, () =>
-        notEqual(Temporal.TimeZone.from(timezoneObj), timezoneObj));
     }
     it('TimeZone.from throws with bad identifier', () => {
       throws(() => Temporal.TimeZone.from('local'));
       throws(() => Temporal.TimeZone.from('Z'));
       throws(() => Temporal.TimeZone.from('-08:00[America/Vancouver]'));
-    });
-    it('TimeZone.from(string-convertible) converts to string', () => {
-      const obj = {
-        toString() {
-          return '2020-02-12T11:42+01:00[Europe/Amsterdam]';
-        }
-      };
-      equal(`${Temporal.TimeZone.from(obj)}`, 'Europe/Amsterdam');
     });
   });
   describe('TimeZone.from(ISO string)', () => {

@@ -223,12 +223,8 @@ export class TimeZone {
     return this.name;
   }
   static from(item) {
-    let timeZone;
-    if (ES.IsTemporalTimeZone(item)) {
-      timeZone = GetSlot(item, TIMEZONE_ID);
-    } else {
-      timeZone = ES.TemporalTimeZoneFromString(ES.ToString(item));
-    }
+    if (ES.IsTemporalTimeZone(item) || (typeof item === 'object' && item)) return item;
+    const timeZone = ES.TemporalTimeZoneFromString(ES.ToString(item));
     const result = new this(timeZone);
     if (!ES.IsTemporalTimeZone(result)) throw new TypeError('invalid result');
     return result;
