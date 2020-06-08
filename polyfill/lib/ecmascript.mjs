@@ -584,8 +584,7 @@ export const ES = ObjectAssign({}, ES2019, {
       minute: 'numeric',
       second: 'numeric'
     });
-    formatter.toString = tzIdent;
-    return formatter;
+    return formatter.resolvedOptions().timeZone;
   },
   GetIANATimeZoneOffsetNanoseconds: (epochNanoseconds, id) => {
     const {
@@ -1439,7 +1438,4 @@ function bisect(getState, left, right, lstate = getState(left), rstate = getStat
     }
   }
   return right;
-}
-function tzIdent() {
-  return this.resolvedOptions().timeZone;
 }
