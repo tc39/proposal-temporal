@@ -237,6 +237,38 @@ export const ES = ObjectAssign({}, ES2019, {
     }
     return { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond };
   },
+  RegulateDateTimeRange: (
+    year,
+    month,
+    day,
+    hour,
+    minute,
+    second,
+    millisecond,
+    microsecond,
+    nanosecond,
+    disambiguation
+  ) => {
+    switch (disambiguation) {
+      case 'reject':
+        ES.RejectDateTimeRange(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
+        break;
+      case 'constrain':
+        ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.ConstrainDateTimeRange(
+          year,
+          month,
+          day,
+          hour,
+          minute,
+          second,
+          millisecond,
+          microsecond,
+          nanosecond
+        ));
+        break;
+    }
+    return { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond };
+  },
   RegulateDate: (year, month, day, disambiguation) => {
     switch (disambiguation) {
       case 'reject':
@@ -244,6 +276,17 @@ export const ES = ObjectAssign({}, ES2019, {
         break;
       case 'constrain':
         ({ year, month, day } = ES.ConstrainDate(year, month, day));
+        break;
+    }
+    return { year, month, day };
+  },
+  RegulateDateRange: (year, month, day, disambiguation) => {
+    switch (disambiguation) {
+      case 'reject':
+        ES.RejectDateRange(year, month, day);
+        break;
+      case 'constrain':
+        ({ year, month, day } = ES.ConstrainDateRange(year, month, day));
         break;
     }
     return { year, month, day };
@@ -270,10 +313,22 @@ export const ES = ObjectAssign({}, ES2019, {
     const refISODay = 1;
     switch (disambiguation) {
       case 'reject':
-        ES.RejectYearMonth(year, month, refISODay);
+        ES.RejectDate(year, month, refISODay);
         break;
       case 'constrain':
-        ({ year, month } = ES.ConstrainYearMonth(year, month));
+        ({ year, month } = ES.ConstrainDate(year, month));
+        break;
+    }
+    return { year, month };
+  },
+  RegulateYearMonthRange: (year, month, disambiguation) => {
+    const refISODay = 1;
+    switch (disambiguation) {
+      case 'reject':
+        ES.RejectYearMonthRange(year, month, refISODay);
+        break;
+      case 'constrain':
+        ({ year, month } = ES.ConstrainYearMonthRange(year, month));
         break;
     }
     return { year, month };
@@ -943,8 +998,13 @@ export const ES = ObjectAssign({}, ES2019, {
 
   ConstrainToRange: (value, min, max) => Math.min(max, Math.max(min, value)),
   ConstrainDate: (year, month, day) => {
+    month = ES.ConstrainToRange(month, 1, 12);
+    day = ES.ConstrainToRange(day, 1, ES.DaysInMonth(year, month));
+    return { year, month, day };
+  },
+  ConstrainDateRange: (year, month, day) => {
     // Noon avoids trouble at edges of DateTime range (excludes midnight)
-    ({ year, month, day } = ES.ConstrainDateTime(year, month, day, 12, 0, 0, 0, 0, 0));
+    ({ year, month, day } = ES.ConstrainDateTimeRange(year, month, day, 12, 0, 0, 0, 0, 0));
     return { year, month, day };
   },
   ConstrainTime: (hour, minute, second, millisecond, microsecond, nanosecond) => {
@@ -957,9 +1017,7 @@ export const ES = ObjectAssign({}, ES2019, {
     return { hour, minute, second, millisecond, microsecond, nanosecond };
   },
   ConstrainDateTime: (year, month, day, hour, minute, second, millisecond, microsecond, nanosecond) => {
-    year = ES.ConstrainToRange(year, YEAR_MIN, YEAR_MAX);
-    month = ES.ConstrainToRange(month, 1, 12);
-    day = ES.ConstrainToRange(day, 1, ES.DaysInMonth(year, month));
+    ({ year, month, day } = ES.ConstrainDate(year, month, day));
     ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.ConstrainTime(
       hour,
       minute,
@@ -968,6 +1026,10 @@ export const ES = ObjectAssign({}, ES2019, {
       microsecond,
       nanosecond
     ));
+    return { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond };
+  },
+  ConstrainDateTimeRange: (year, month, day, hour, minute, second, millisecond, microsecond, nanosecond) => {
+    year = ES.ConstrainToRange(year, YEAR_MIN, YEAR_MAX);
     // Constrain to within 24 hours outside the Absolute range
     if (
       year === YEAR_MIN &&
@@ -991,14 +1053,12 @@ export const ES = ObjectAssign({}, ES2019, {
     }
     return { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond };
   },
-  ConstrainYearMonth: (year, month) => {
+  ConstrainYearMonthRange: (year, month) => {
     year = ES.ConstrainToRange(year, YEAR_MIN, YEAR_MAX);
     if (year === YEAR_MIN) {
       month = ES.ConstrainToRange(month, 4, 12);
     } else if (year === YEAR_MAX) {
       month = ES.ConstrainToRange(month, 1, 9);
-    } else {
-      month = ES.ConstrainToRange(month, 1, 12);
     }
     return { year, month };
   },
@@ -1007,8 +1067,12 @@ export const ES = ObjectAssign({}, ES2019, {
     if (value < min || value > max) throw new RangeError(`value out of range: ${min} <= ${value} <= ${max}`);
   },
   RejectDate: (year, month, day) => {
+    ES.RejectToRange(month, 1, 12);
+    ES.RejectToRange(day, 1, ES.DaysInMonth(year, month));
+  },
+  RejectDateRange: (year, month, day) => {
     // Noon avoids trouble at edges of DateTime range (excludes midnight)
-    ES.RejectDateTime(year, month, day, 12, 0, 0, 0, 0, 0);
+    ES.RejectDateTimeRange(year, month, day, 12, 0, 0, 0, 0, 0);
   },
   RejectTime: (hour, minute, second, millisecond, microsecond, nanosecond) => {
     ES.RejectToRange(hour, 0, 23);
@@ -1019,10 +1083,11 @@ export const ES = ObjectAssign({}, ES2019, {
     ES.RejectToRange(nanosecond, 0, 999);
   },
   RejectDateTime: (year, month, day, hour, minute, second, millisecond, microsecond, nanosecond) => {
-    ES.RejectToRange(year, YEAR_MIN, YEAR_MAX);
-    ES.RejectToRange(month, 1, 12);
-    ES.RejectToRange(day, 1, ES.DaysInMonth(year, month));
+    ES.RejectDate(year, month, day);
     ES.RejectTime(hour, minute, second, millisecond, microsecond, nanosecond);
+  },
+  RejectDateTimeRange: (year, month, day, hour, minute, second, millisecond, microsecond, nanosecond) => {
+    ES.RejectToRange(year, YEAR_MIN, YEAR_MAX);
     // Reject any DateTime 24 hours or more outside the Absolute range
     if (
       (year === YEAR_MIN &&
@@ -1035,21 +1100,18 @@ export const ES = ObjectAssign({}, ES2019, {
       throw new RangeError('DateTime outside of supported range');
     }
   },
-  RejectAbsolute: (epochNanoseconds) => {
+  RejectAbsoluteRange: (epochNanoseconds) => {
     if (epochNanoseconds.lesser(NS_MIN) || epochNanoseconds.greater(NS_MAX)) {
       throw new RangeError('Absolute outside of supported range');
     }
   },
-  RejectYearMonth: (year, month, refISODay) => {
+  RejectYearMonthRange: (year, month) => {
     ES.RejectToRange(year, YEAR_MIN, YEAR_MAX);
     if (year === YEAR_MIN) {
       ES.RejectToRange(month, 4, 12);
     } else if (year === YEAR_MAX) {
       ES.RejectToRange(month, 1, 9);
-    } else {
-      ES.RejectToRange(month, 1, 12);
     }
-    ES.RejectToRange(refISODay, 1, ES.DaysInMonth(year, month));
   },
 
   DifferenceDate: (smaller, larger, largestUnit = 'days') => {
@@ -1130,16 +1192,7 @@ export const ES = ObjectAssign({}, ES2019, {
     year += years;
     month += months;
     ({ year, month } = ES.BalanceYearMonth(year, month));
-
-    switch (disambiguation) {
-      case 'reject':
-        ES.RejectDate(year, month, day);
-        break;
-      case 'constrain':
-        ({ year, month, day } = ES.ConstrainDate(year, month, day));
-        break;
-    }
-
+    ({ year, month, day } = ES.RegulateDate(year, month, day, disambiguation));
     days += 7 * weeks;
     day += days;
     ({ year, month, day } = ES.BalanceDate(year, month, day));
@@ -1183,15 +1236,7 @@ export const ES = ObjectAssign({}, ES2019, {
     month -= months;
     year -= years;
     ({ year, month } = ES.BalanceYearMonth(year, month));
-
-    switch (disambiguation) {
-      case 'reject':
-        ES.RejectDate(year, month, day);
-        break;
-      case 'constrain':
-        ({ year, month, day } = ES.ConstrainDate(year, month, day));
-        break;
-    }
+    ({ year, month, day } = ES.RegulateDate(year, month, day, disambiguation));
     return { year, month, day };
   },
   SubtractTime: (
