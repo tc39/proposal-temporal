@@ -162,8 +162,12 @@ export const ES = ObjectAssign({}, ES2019, {
     } catch {
       // fall through
     }
-    // Try parsing ISO string instead
-    return ES.ParseISODateTime(stringIdent, { zoneRequired: true });
+    try {
+      // Try parsing ISO string instead
+      return ES.ParseISODateTime(stringIdent, { zoneRequired: true });
+    } catch {
+      throw new RangeError(`Invalid time zone: ${stringIdent}`);
+    }
   },
   ParseTemporalDurationString: (isoString) => {
     const match = PARSE.duration.exec(isoString);

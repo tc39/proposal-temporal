@@ -303,7 +303,7 @@ export class DateTime {
     throw new TypeError('use compare() or equals() to compare Temporal.DateTime');
   }
 
-  inTimeZone(temporalTimeZoneLike = 'UTC', options) {
+  inTimeZone(temporalTimeZoneLike, options) {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     const timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);
     const disambiguation = ES.ToTimeZoneTemporalDisambiguation(options);

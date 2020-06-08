@@ -491,18 +491,16 @@ describe('Absolute', () => {
   describe('Absolute.inTimeZone works', () => {
     const iso = '1976-11-18T14:23:30.123456789Z';
     const abs = Absolute.from(iso);
-    it('without optional parameter', () => {
-      const dt = abs.inTimeZone();
-      equal(abs.getEpochNanoseconds(), dt.inTimeZone().getEpochNanoseconds());
-      equal(`${dt}`, '1976-11-18T14:23:30.123456789');
+    it('without parameter', () => {
+      throws(() => abs.inTimeZone(), RangeError);
     });
-    it('optional time zone parameter UTC', () => {
+    it('time zone parameter UTC', () => {
       const tz = Temporal.TimeZone.from('UTC');
       const dt = abs.inTimeZone(tz);
       equal(abs.getEpochNanoseconds(), dt.inTimeZone(tz).getEpochNanoseconds());
       equal(`${dt}`, '1976-11-18T14:23:30.123456789');
     });
-    it('optional time zone parameter non-UTC', () => {
+    it('time zone parameter non-UTC', () => {
       const tz = Temporal.TimeZone.from('America/New_York');
       const dt = abs.inTimeZone(tz);
       equal(abs.getEpochNanoseconds(), dt.inTimeZone(tz).getEpochNanoseconds());

@@ -573,16 +573,15 @@ describe('DateTime', () => {
   });
   describe('DateTime.inTimeZone() works', () => {
     const dt = DateTime.from('1976-11-18T15:23:30.123456789');
-    it('without optional parameter', () => {
-      const abs = dt.inTimeZone();
-      equal(`${abs}`, '1976-11-18T15:23:30.123456789Z');
+    it('without parameter', () => {
+      throws(() => dt.inTimeZone(), RangeError);
     });
-    it('optional time zone parameter UTC', () => {
+    it('time zone parameter UTC', () => {
       const tz = Temporal.TimeZone.from('UTC');
       const abs = dt.inTimeZone(tz);
       equal(`${abs}`, '1976-11-18T15:23:30.123456789Z');
     });
-    it('optional time zone parameter non-UTC', () => {
+    it('time zone parameter non-UTC', () => {
       const tz = Temporal.TimeZone.from('America/New_York');
       const abs = dt.inTimeZone(tz);
       equal(`${abs}`, '1976-11-18T20:23:30.123456789Z');
