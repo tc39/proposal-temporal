@@ -8,6 +8,7 @@ export class MonthDay {
     isoDay = ES.ToInteger(isoDay);
     refISOYear = ES.ToInteger(refISOYear);
     ES.RejectDate(refISOYear, isoMonth, isoDay);
+    ES.RejectDateRange(refISOYear, isoMonth, isoDay);
 
     CreateSlots(this);
     SetSlot(this, ISO_MONTH, isoMonth);

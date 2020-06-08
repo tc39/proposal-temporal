@@ -7,7 +7,8 @@ export class YearMonth {
     isoYear = ES.ToInteger(isoYear);
     isoMonth = ES.ToInteger(isoMonth);
     refISODay = ES.ToInteger(refISODay);
-    ES.RejectYearMonth(isoYear, isoMonth, refISODay);
+    ES.RejectDate(isoYear, isoMonth, refISODay);
+    ES.RejectYearMonthRange(isoYear, isoMonth);
     CreateSlots(this);
     SetSlot(this, ISO_YEAR, isoYear);
     SetSlot(this, ISO_MONTH, isoMonth);
@@ -42,6 +43,7 @@ export class YearMonth {
     }
     let { year = GetSlot(this, ISO_YEAR), month = GetSlot(this, ISO_MONTH) } = props;
     ({ year, month } = ES.RegulateYearMonth(year, month, disambiguation));
+    ({ year, month } = ES.RegulateYearMonthRange(year, month, disambiguation));
     const Construct = ES.SpeciesConstructor(this, YearMonth);
     const result = new Construct(year, month);
     if (!ES.IsTemporalYearMonth(result)) throw new TypeError('invalid result');
@@ -65,7 +67,7 @@ export class YearMonth {
     );
     ({ year, month } = ES.AddDate(year, month, 1, years, months, weeks, days, disambiguation));
     ({ year, month } = ES.BalanceYearMonth(year, month));
-    ({ year, month } = ES.RegulateYearMonth(year, month, disambiguation));
+    ({ year, month } = ES.RegulateYearMonthRange(year, month, disambiguation));
     const Construct = ES.SpeciesConstructor(this, YearMonth);
     const result = new Construct(year, month);
     if (!ES.IsTemporalYearMonth(result)) throw new TypeError('invalid result');
@@ -90,7 +92,7 @@ export class YearMonth {
     const lastDay = ES.DaysInMonth(year, month);
     ({ year, month } = ES.SubtractDate(year, month, lastDay, years, months, weeks, days, disambiguation));
     ({ year, month } = ES.BalanceYearMonth(year, month));
-    ({ year, month } = ES.RegulateYearMonth(year, month, disambiguation));
+    ({ year, month } = ES.RegulateYearMonthRange(year, month, disambiguation));
     const Construct = ES.SpeciesConstructor(this, YearMonth);
     const result = new Construct(year, month);
     if (!ES.IsTemporalYearMonth(result)) throw new TypeError('invalid result');
@@ -176,6 +178,7 @@ export class YearMonth {
       refISODay = 1;
     }
     ({ year, month } = ES.RegulateYearMonth(year, month, disambiguation));
+    ({ year, month } = ES.RegulateYearMonthRange(year, month, disambiguation));
     const result = new this(year, month, refISODay);
     if (!ES.IsTemporalYearMonth(result)) throw new TypeError('invalid result');
     return result;

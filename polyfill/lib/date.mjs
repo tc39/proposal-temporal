@@ -21,6 +21,7 @@ export class Date {
     isoMonth = ES.ToInteger(isoMonth);
     isoDay = ES.ToInteger(isoDay);
     ES.RejectDate(isoYear, isoMonth, isoDay);
+    ES.RejectDateRange(isoYear, isoMonth, isoDay);
     CreateSlots(this);
     SetSlot(this, ISO_YEAR, isoYear);
     SetSlot(this, ISO_MONTH, isoMonth);
@@ -71,6 +72,7 @@ export class Date {
     }
     let { year = GetSlot(this, ISO_YEAR), month = GetSlot(this, ISO_MONTH), day = GetSlot(this, ISO_DAY) } = props;
     ({ year, month, day } = ES.RegulateDate(year, month, day, disambiguation));
+    ({ year, month, day } = ES.RegulateDateRange(year, month, day, disambiguation));
     const Construct = ES.SpeciesConstructor(this, Date);
     const result = new Construct(year, month, day);
     if (!ES.IsTemporalDate(result)) throw new TypeError('invalid result');
@@ -93,7 +95,7 @@ export class Date {
       'days'
     );
     ({ year, month, day } = ES.AddDate(year, month, day, years, months, weeks, days, disambiguation));
-    ({ year, month, day } = ES.RegulateDate(year, month, day, disambiguation));
+    ({ year, month, day } = ES.RegulateDateRange(year, month, day, disambiguation));
     const Construct = ES.SpeciesConstructor(this, Date);
     const result = new Construct(year, month, day);
     if (!ES.IsTemporalDate(result)) throw new TypeError('invalid result');
@@ -116,7 +118,7 @@ export class Date {
       'days'
     );
     ({ year, month, day } = ES.SubtractDate(year, month, day, years, months, weeks, days, disambiguation));
-    ({ year, month, day } = ES.RegulateDate(year, month, day, disambiguation));
+    ({ year, month, day } = ES.RegulateDateRange(year, month, day, disambiguation));
     const Construct = ES.SpeciesConstructor(this, Date);
     const result = new Construct(year, month, day);
     if (!ES.IsTemporalDate(result)) throw new TypeError('invalid result');
@@ -210,6 +212,7 @@ export class Date {
       ({ year, month, day } = ES.ParseTemporalDateString(ES.ToString(item)));
     }
     ({ year, month, day } = ES.RegulateDate(year, month, day, disambiguation));
+    ({ year, month, day } = ES.RegulateDateRange(year, month, day, disambiguation));
     const result = new this(year, month, day);
     if (!ES.IsTemporalDate(result)) throw new TypeError('invalid result');
     return result;

@@ -38,6 +38,7 @@ export class DateTime {
     microsecond = ES.ToInteger(microsecond);
     nanosecond = ES.ToInteger(nanosecond);
     ES.RejectDateTime(isoYear, isoMonth, isoDay, hour, minute, second, millisecond, microsecond, nanosecond);
+    ES.RejectDateTimeRange(isoYear, isoMonth, isoDay, hour, minute, second, millisecond, microsecond, nanosecond);
     CreateSlots(this);
     SetSlot(this, ISO_YEAR, isoYear);
     SetSlot(this, ISO_MONTH, isoMonth);
@@ -149,6 +150,18 @@ export class DateTime {
       nanosecond,
       disambiguation
     ));
+    ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.RegulateDateTimeRange(
+      year,
+      month,
+      day,
+      hour,
+      minute,
+      second,
+      millisecond,
+      microsecond,
+      nanosecond,
+      disambiguation
+    ));
     const Construct = ES.SpeciesConstructor(this, DateTime);
     const result = new Construct(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
     if (!ES.IsTemporalDateTime(result)) throw new TypeError('invalid result');
@@ -178,7 +191,7 @@ export class DateTime {
     ));
     day += deltaDays;
     ({ year, month, day } = ES.BalanceDate(year, month, day));
-    ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.RegulateDateTime(
+    ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.RegulateDateTimeRange(
       year,
       month,
       day,
@@ -218,7 +231,7 @@ export class DateTime {
     ));
     days -= deltaDays;
     ({ year, month, day } = ES.SubtractDate(year, month, day, years, months, weeks, days, disambiguation));
-    ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.RegulateDateTime(
+    ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.RegulateDateTimeRange(
       year,
       month,
       day,
@@ -409,6 +422,18 @@ export class DateTime {
       } = ES.ParseTemporalDateTimeString(ES.ToString(item)));
     }
     ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.RegulateDateTime(
+      year,
+      month,
+      day,
+      hour,
+      minute,
+      second,
+      millisecond,
+      microsecond,
+      nanosecond,
+      disambiguation
+    ));
+    ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.RegulateDateTimeRange(
       year,
       month,
       day,
