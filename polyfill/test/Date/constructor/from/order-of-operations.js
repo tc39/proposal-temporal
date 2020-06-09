@@ -10,6 +10,7 @@ const expected = [
   "get calendar",
   "get day",
   "valueOf day",
+  "get era",
   "get month",
   "valueOf month",
   "get year",
@@ -43,6 +44,7 @@ const argument = new Proxy(fields, {
   },
 });
 const result = Temporal.Date.from(argument);
+assert.sameValue(result.era, undefined, "era result");
 assert.sameValue(result.year, 1, "year result");
 assert.sameValue(result.month, 1, "month result");
 assert.sameValue(result.day, 1, "day result");

@@ -61,6 +61,10 @@ export class Calendar {
     void date;
     throw new Error('not implemented');
   }
+  era(date) {
+    void date;
+    throw new Error('not implemented');
+  }
   dayOfWeek(date) {
     void date;
     throw new Error('not implemented');
@@ -107,7 +111,7 @@ export class ISO8601 extends Calendar {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
     const disambiguation = ES.ToTemporalDisambiguation(options);
     // Intentionally alphabetical
-    let { year, month, day } = ES.ToRecord(fields, [['day'], ['month'], ['year']]);
+    let { year, month, day } = ES.ToRecord(fields, [['day'], ['era', undefined], ['month'], ['year']]);
     ({ year, month, day } = ES.RegulateDate(year, month, day, disambiguation));
     ({ year, month, day } = ES.RegulateDateRange(year, month, day, disambiguation));
     return new constructor(year, month, day, this);
@@ -116,7 +120,7 @@ export class ISO8601 extends Calendar {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
     const disambiguation = ES.ToTemporalDisambiguation(options);
     // Intentionally alphabetical
-    let { year, month } = ES.ToRecord(fields, [['month'], ['year']]);
+    let { year, month } = ES.ToRecord(fields, [['era', undefined], ['month'], ['year']]);
     ({ year, month } = ES.RegulateYearMonth(year, month, disambiguation));
     ({ year, month } = ES.RegulateYearMonthRange(year, month, disambiguation));
     return new constructor(year, month, this, /* refIsoDay = */ 1);
@@ -169,6 +173,10 @@ export class ISO8601 extends Calendar {
   day(date) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
     return GetSlot(date, ISO_DAY);
+  }
+  era(date) {
+    void date;
+    return undefined;
   }
   dayOfWeek(date) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');

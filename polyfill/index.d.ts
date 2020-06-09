@@ -215,6 +215,7 @@ export namespace Temporal {
     year(date: Temporal.Date): number;
     month(date: Temporal.Date): number;
     day(date: Temporal.Date): number;
+    era(date: Temporal.Date): unknown;
     dayOfWeek?(date: Temporal.Date): number;
     dayOfYear?(date: Temporal.Date): number;
     weekOfYear?(date: Temporal.Date): number;
@@ -266,6 +267,7 @@ export namespace Temporal {
     year(date: Temporal.Date): number;
     month(date: Temporal.Date): number;
     day(date: Temporal.Date): number;
+    era(date: Temporal.Date): unknown;
     dayOfWeek(date: Temporal.Date): number;
     dayOfYear(date: Temporal.Date): number;
     weekOfYear(date: Temporal.Date): number;
@@ -304,6 +306,7 @@ export namespace Temporal {
   }
 
   export type DateLike = {
+    era?: unknown;
     year?: number;
     month?: number;
     day?: number;
@@ -311,6 +314,7 @@ export namespace Temporal {
   };
 
   type DateFields = {
+    era: unknown;
     year: number;
     month: number;
     day: number;
@@ -340,6 +344,7 @@ export namespace Temporal {
     readonly month: number;
     readonly day: number;
     readonly calendar: CalendarProtocol;
+    readonly era: unknown;
     readonly dayOfWeek: number;
     readonly dayOfYear: number;
     readonly weekOfYear: number;
@@ -366,6 +371,7 @@ export namespace Temporal {
   }
 
   export type DateTimeLike = {
+    era?: unknown;
     year?: number;
     month?: number;
     day?: number;
@@ -379,6 +385,7 @@ export namespace Temporal {
   };
 
   type DateTimeFields = {
+    era: unknown;
     year: number;
     month: number;
     day: number;
@@ -438,6 +445,7 @@ export namespace Temporal {
     readonly microsecond: number;
     readonly nanosecond: number;
     readonly calendar: CalendarProtocol;
+    readonly era: unknown;
     readonly dayOfWeek: number;
     readonly dayOfYear: number;
     readonly weekOfYear: number;
@@ -491,7 +499,7 @@ export namespace Temporal {
     readonly calendar: CalendarProtocol;
     equals(other: Temporal.MonthDay): boolean;
     with(monthDayLike: MonthDayLike, options?: AssignmentOptions): Temporal.MonthDay;
-    withYear(year: number | { year: number }): Temporal.Date;
+    withYear(year: number | { era?: unknown; year: number }): Temporal.Date;
     getFields(): MonthDayFields;
     getISOCalendarFields(): DateISOCalendarFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
@@ -595,11 +603,13 @@ export namespace Temporal {
   }
 
   export type YearMonthLike = {
+    era?: unknown;
     year?: number;
     month?: number;
   };
 
   type YearMonthFields = {
+    era: unknown;
     year: number;
     month: number;
     calendar: CalendarProtocol;
@@ -619,6 +629,7 @@ export namespace Temporal {
     readonly year: number;
     readonly month: number;
     readonly calendar: CalendarProtocol;
+    readonly era: unknown;
     readonly daysInMonth: number;
     readonly daysInYear: number;
     readonly isLeapYear: boolean;

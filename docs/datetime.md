@@ -209,6 +209,11 @@ dt.nanosecond   // => 500
 
 The `calendar` read-only property gives the calendar that the `year`, `month`, and `day` properties are interpreted in.
 
+### datetime.**era** : unknown
+
+The `era` read-only property is `undefined` when using the ISO 8601 calendar.
+It's used for calendar systems that specify an era in addition to the year.
+
 ### datetime.**dayOfWeek** : number
 
 The `dayOfWeek` read-only property gives the weekday number that the date falls on.

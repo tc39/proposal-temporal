@@ -275,6 +275,9 @@ describe('Userland calendar', () => {
       day(date) {
         const { days } = isoToDecimal(date);
         return (days % 10) + 1;
+      },
+      era() {
+        return undefined;
       }
     };
 

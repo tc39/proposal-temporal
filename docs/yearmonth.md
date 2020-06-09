@@ -140,6 +140,11 @@ ym.month  // => 6
 
 The `calendar` read-only property gives the calendar that the `year` and `month` properties are interpreted in.
 
+### yearmonth.**era** : unknown
+
+The `era` read-only property is `undefined` when using the ISO 8601 calendar.
+It's used for calendar systems that specify an era in addition to the year.
+
 ### yearMonth.**daysInMonth** : number
 
 The `daysInMonth` read-only property gives the number of days in the month.
