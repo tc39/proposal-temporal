@@ -185,11 +185,13 @@ function extractOverrides(datetime, main) {
     formatter = main[TIME];
   }
   if (datetime instanceof YearMonth) {
-    datetime = datetime.withDay(1);
+    const { year, month, day } = datetime.getISOCalendarFields();
+    datetime = new Date(year, month, day, datetime.calendar);
     formatter = main[YM];
   }
   if (datetime instanceof MonthDay) {
-    datetime = datetime.withYear(2004); // use a leap-year for maximum range
+    const { year, month, day } = datetime.getISOCalendarFields();
+    datetime = new Date(year, month, day, datetime.calendar);
     formatter = main[MD];
   }
   if (datetime instanceof Date) {
