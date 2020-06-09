@@ -543,9 +543,9 @@ console<span class="token punctuation">.</span><span class="token function">log<
 <span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span>str<span class="token punctuation">,</span> reviver<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre><h3 id="valueOf"><a class="heading-link" href="#valueOf"></a>datetime.<strong>valueOf</strong>()</h3><p>This method overrides <code>Object.prototype.valueOf()</code> and always throws an exception.
 This is because it&#39;s not possible to compare <code>Temporal.DateTime</code> objects with the relational operators <code>&lt;</code>, <code>&lt;=</code>, <code>&gt;</code>, or <code>&gt;=</code>.
 Use <code>Temporal.DateTime.compare()</code> for this, or <code>datetime.equals()</code> for equality.</p>
-<h3 id="inTimeZone"><a class="heading-link" href="#inTimeZone"></a>datetime.<strong>inTimeZone</strong>(<em>timeZone</em> : Temporal.TimeZone | string, <em>options</em>?: object) : Temporal.Absolute</h3><p><strong>Parameters:</strong></p>
+<h3 id="inTimeZone"><a class="heading-link" href="#inTimeZone"></a>datetime.<strong>inTimeZone</strong>(<em>timeZone</em> : object | string, <em>options</em>?: object) : Temporal.Absolute</h3><p><strong>Parameters:</strong></p>
 <ul>
-<li><code>timeZone</code> (optional string or <code>Temporal.TimeZone</code>): The time zone in which to interpret <code>dateTime</code>.</li>
+<li><code>timeZone</code> (optional string or object): The time zone in which to interpret <code>dateTime</code>, as a <code>Temporal.TimeZone</code> object, an object implementing the <a href="./timezone.html#protocol">time zone protocol</a>, or a string.</li>
 <li><code>options</code> (optional object): An object with properties representing options for the operation.
 The following options are recognized:<ul>
 <li><code>disambiguation</code> (string): How to disambiguate if the date and time given by <code>dateTime</code> does not exist in the time zone, or exists more than once.

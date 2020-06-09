@@ -266,9 +266,9 @@ An example:</p>
 <h3 id="getEpochNanoseconds"><a class="heading-link" href="#getEpochNanoseconds"></a>absolute.<strong>getEpochNanoseconds</strong>() : bigint</h3><p><strong>Returns:</strong> a number of nanoseconds, as a bigint.</p>
 <p>Same as <code>getEpochSeconds()</code>, but with nanosecond (10<sup>&minus;9</sup> second) precision.</p>
 <p>The value returned from this method is suitable to be passed to <code>new Temporal.Absolute()</code>.</p>
-<h3 id="inTimeZone"><a class="heading-link" href="#inTimeZone"></a>absolute.<strong>inTimeZone</strong>(<em>timeZone</em>: Temporal.TimeZone | string) : Temporal.DateTime</h3><p><strong>Parameters:</strong></p>
+<h3 id="inTimeZone"><a class="heading-link" href="#inTimeZone"></a>absolute.<strong>inTimeZone</strong>(<em>timeZone</em>: object | string) : Temporal.DateTime</h3><p><strong>Parameters:</strong></p>
 <ul>
-<li><code>timeZone</code> (object or string): A <code>Temporal.TimeZone</code> object, or a string description of the time zone; either its IANA name or UTC offset.</li>
+<li><code>timeZone</code> (object or string): A <code>Temporal.TimeZone</code> object, or an object implementing the <a href="./timezone.html#protocol">time zone protocol</a>, or a string description of the time zone; either its IANA name or UTC offset.</li>
 </ul>
 <p><strong>Returns:</strong> a <code>Temporal.DateTime</code> object indicating the calendar date and wall-clock time in <code>timeZone</code> at the absolute time indicated by <code>absolute</code>.</p>
 <p>For a list of IANA time zone names, see the current version of the <a href="https://www.iana.org/time-zones">IANA time zone database</a>.
@@ -370,9 +370,9 @@ epoch<span class="token punctuation">.</span><span class="token function">inTime
 <pre class="language-javascript"><code class="language-javascript">one <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Absolute<span class="token punctuation">.</span><span class="token function">fromEpochSeconds</span><span class="token punctuation">(</span><span class="token number">1.0e9</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 two <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Absolute<span class="token punctuation">.</span><span class="token function">fromEpochSeconds</span><span class="token punctuation">(</span><span class="token number">1.1e9</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 one<span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span>two<span class="token punctuation">)</span>  <span class="token comment">// => false</span>
-one<span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span>one<span class="token punctuation">)</span>  <span class="token comment">// => true</span></code></pre><h3 id="toString"><a class="heading-link" href="#toString"></a>absolute.<strong>toString</strong>(<em>timeZone</em>?: Temporal.TimeZone | string) : string</h3><p><strong>Parameters:</strong></p>
+one<span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span>one<span class="token punctuation">)</span>  <span class="token comment">// => true</span></code></pre><h3 id="toString"><a class="heading-link" href="#toString"></a>absolute.<strong>toString</strong>(<em>timeZone</em>?: object | string) : string</h3><p><strong>Parameters:</strong></p>
 <ul>
-<li><code>timeZone</code> (optional string or <code>Temporal.TimeZone</code>): the time zone to express <code>absolute</code> in.
+<li><code>timeZone</code> (optional string or object): the time zone to express <code>absolute</code> in, as a <code>Temporal.TimeZone</code> object, an object implementing the <a href="./timezone.html#protocol">time zone protocol</a>, or a string.
 The default is to use UTC.</li>
 </ul>
 <p><strong>Returns:</strong> a string in the ISO 8601 date format representing <code>absolute</code>.</p>

@@ -106,7 +106,7 @@ In these examples we assume a custom time zone class <code>StLouisTime</code> wi
 (See the following section for how such a time zone object would be obtained.)</p>
 <p>When parsing an ISO 8601 string, the only places the time zone identifier is taken into account are <code>Temporal.Absolute.from()</code> and <code>Temporal.TimeZone.from()</code>.
 <code>Temporal.Absolute.from()</code> will call <code>Temporal.TimeZone.from()</code> to resolve the time zone identifier into a <code>Temporal.TimeZone</code> object.</p>
-<p><code>Temporal.TimeZone.from()</code> and <code>Temporal.TimeZone[Symbol.iterator]</code> can be monkeypatched by time zone implementors if it is necessary to make new time zones available globally.
+<p><code>Temporal.TimeZone.from()</code> can be monkeypatched by time zone implementors if it is necessary to make new time zones available globally.
 The expectation is that it would rarely be necessary to do so, because if you have implemented a custom time zone for a particular calculation, you probably don&#39;t need it to be available globally.</p>
 <p>Example of monkeypatching to make St. Louis mean time available globally:</p>
 <pre class="language-javascript"><code class="language-javascript"><span class="token keyword">const</span> originalTemporalTimeZoneFrom <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span>from<span class="token punctuation">;</span>
@@ -128,22 +128,11 @@ Temporal<span class="token punctuation">.</span>TimeZone<span class="token punct
   <span class="token keyword">return</span> <span class="token function">originalTemporalTimeZoneFrom</span><span class="token punctuation">.</span><span class="token function">call</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">,</span> id<span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span>
 
-<span class="token keyword">const</span> originalTemporalTimeZoneSymbolIterator <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">[</span>Symbol<span class="token punctuation">.</span>iterator<span class="token punctuation">]</span><span class="token punctuation">;</span>
-Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">[</span>Symbol<span class="token punctuation">.</span>iterator<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token operator">*</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  <span class="token keyword">yield</span><span class="token operator">*</span> <span class="token function">originalTemporalTimeZoneSymbolIterator</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token keyword">yield</span> <span class="token string">'America/St_Louis'</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-
 Temporal<span class="token punctuation">.</span>Absolute<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'1820-04-01T18:16:25-06:00[America/St_Louis]'</span><span class="token punctuation">)</span>
   <span class="token comment">// returns the Absolute corresponding to 1820-04-02T00:17:14.110Z</span>
 
 Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'1820-04-01T18:16:25-06:00[America/St_Louis]'</span><span class="token punctuation">)</span>
-  <span class="token comment">// returns a new StLouisTime instance</span></code></pre><blockquote>
-<p><strong>FIXME:</strong> Passing a custom time zone&#39;s identifier to the built-in <code>Temporal.TimeZone</code> constructor currently doesn&#39;t work: <code>new Temporal.TimeZone(&#39;America/St_Louis&#39;)</code> throws.
-However, this must change, because implementations would need to call <code>super(id)</code> to set the <em>[[Identifier]]</em> and <em>[[InitializedTemporalTimeZone]]</em> internal slots.
-Maybe we need to only throw if <code>new.target === Temporal.TimeZone</code>?</p>
-</blockquote>
-<p>In order to lock down any leakage of information about the host system&#39;s time zone database, one would monkeypatch the <code>Temporal.TimeZone.from()</code> function which performs the built-in mapping, and replace <code>Temporal.now.timeZone()</code> to avoid exposing the current time zone.</p>
+  <span class="token comment">// returns a new StLouisTime instance</span></code></pre><p>In order to lock down any leakage of information about the host system&#39;s time zone database, one would monkeypatch the <code>Temporal.TimeZone.from()</code> function which performs the built-in mapping, and replace <code>Temporal.now.timeZone()</code> to avoid exposing the current time zone.</p>
 <p>For example, to allow only offset time zones, and make the current time zone always UTC:</p>
 <pre class="language-javascript"><code class="language-javascript"><span class="token keyword">const</span> originalTemporalTimeZoneFrom <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span>from<span class="token punctuation">;</span>
 Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function-variable function">from</span> <span class="token operator">=</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">item</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -207,9 +196,6 @@ Temporal<span class="token punctuation">.</span>now<span class="token punctuatio
 For example, <code>getOffsetStringFor()</code> and <code>getDateTimeFor()</code> call <code>getOffsetNanosecondsFor()</code>, and <code>getAbsoluteFor()</code> calls both.</p>
 <p>Alternatively, a custom time zone doesn&#39;t have to be a subclass of <code>Temporal.TimeZone</code>.
 In this case, it can be a plain object, which must implement <code>getOffsetNanosecondsFor()</code>, <code>getPossibleAbsolutesFor()</code>, and <code>toString()</code>.</p>
-<blockquote>
-<p><strong>FIXME:</strong> This means we have to remove any checks for the <em>[[InitializedTemporalTimeZone]]</em> slot in all APIs, so that plain objects can use them with e.g. <code>Temporal.TimeZone.prototype.getOffsetStringFor.call(plainObject, absolute)</code>.</p>
-</blockquote>
 <h2 id="show-me-the-code-1">Show Me The Code</h2>
 <p>Here&#39;s what it could look like to implement the built-in offset-based time zones as custom time zones.
 The <code>MakeDate</code>, <code>MakeDay</code>, and <code>MakeTime</code> functions are as in the <a href="https://tc39.es/ecma262/#sec-overview-of-date-objects-and-definitions-of-abstract-operations">ECMA-262 specification</a>, except that instead of milliseconds, <code>MakeDate</code> and <code>MakeDay</code> return BigInt-typed nanoseconds, and <code>MakeTime</code> returns Number-typed nanoseconds.

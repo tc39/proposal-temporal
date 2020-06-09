@@ -87,6 +87,12 @@
 <details>
   <summary><strong>Table of Contents</strong></summary>
 <ul>
+<li><a href="#custom-time-zones">Custom time zones</a>
+<ul>
+<li><a href="#protocol">Protocol</a>
+</li>
+</ul>
+</li>
 <li><a href="#constructor">Constructor</a>
 <ul>
 <li><a href="#new-Temporal-TimeZone">new Temporal.TimeZone</a>
@@ -134,8 +140,13 @@
 
 <p>A <code>Temporal.TimeZone</code> is a representation of a time zone: either an <a href="https://www.iana.org/time-zones">IANA time zone</a>, including information about the time zone such as the offset between the local time and UTC at a particular time, and daylight saving time (DST) changes; or simply a particular UTC offset with no DST.</p>
 <p>Since <code>Temporal.Absolute</code> and <code>Temporal.DateTime</code> do not contain any time zone information, a <code>Temporal.TimeZone</code> object is required to convert between the two.</p>
-<p>An API for creating custom time zones is under discussion.
-See <a href="./timezone-draft.html">Custom Time Zone Draft</a> for more information.</p>
+<h2 id="custom-time-zones-1">Custom time zones</h2>
+<p>For specialized applications where you need to do calculations in a time zone that is not supported by Intl, you can also implement your own <code>Temporal.TimeZone</code> object.
+To do this, create a class inheriting from <code>Temporal.TimeZone</code>, call <code>super()</code> in the constructor with a time zone identifier, and implement the methods <code>getOffsetNanosecondsFor()</code>, <code>getPossibleAbsolutesFor()</code>, and <code>getTransitions()</code>.
+Any subclass of <code>Temporal.TimeZone</code> will be accepted in Temporal APIs where a built-in <code>Temporal.TimeZone</code> would work.</p>
+<h3 id="protocol"><a class="heading-link" href="#protocol"></a>Protocol</h3><p>It&#39;s also possible for a plain object to be a custom time zone, without subclassing.
+The object must have <code>getOffsetNanosecondsFor()</code>, <code>getPossibleAbsolutesFor()</code>, and <code>toString()</code> methods.
+It is possible to pass such an object into any Temporal API that would normally take a built-in <code>Temporal.TimeZone</code>.</p>
 <h2 id="constructor-1">Constructor</h2>
 <h3 id="new-Temporal-TimeZone"><a class="heading-link" href="#new-Temporal-TimeZone"></a><strong>new Temporal.TimeZone</strong>(<em>timeZoneIdentifier</em>: string) : Temporal.TimeZone</h3><p><strong>Parameters:</strong></p>
 <ul>
