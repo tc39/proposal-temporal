@@ -81,9 +81,9 @@ export class MonthDay {
   }
   withYear(item) {
     if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
-    let year;
+    let era, year;
     if (typeof item === 'object' && item !== null) {
-      ({ year } = ES.ToRecord(item, [['year']]));
+      ({ era, year } = ES.ToRecord(item, [['era', undefined], ['year']]));
     } else {
       year = ES.ToInteger(item);
     }
@@ -91,7 +91,7 @@ export class MonthDay {
     const day = calendar.day(this);
     const month = calendar.month(this);
     const Date = GetIntrinsic('%Temporal.Date%');
-    return calendar.dateFromFields({ year, month, day }, { disambiguation: 'reject' }, Date);
+    return calendar.dateFromFields({ era, year, month, day }, { disambiguation: 'reject' }, Date);
   }
   getFields() {
     const fields = ES.ToRecord(this, [['day'], ['month']]);

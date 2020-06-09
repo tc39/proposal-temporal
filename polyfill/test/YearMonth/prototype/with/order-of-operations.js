@@ -9,6 +9,7 @@ includes: [compareArray.js]
 const instance = new Temporal.YearMonth(2000, 5);
 const expected = [
   "has calendar",
+  "get era",
   "get month",
   "valueOf month",
   "get year",
@@ -39,6 +40,7 @@ const argument = new Proxy(fields, {
   },
 });
 const result = instance.with(argument);
+assert.sameValue(result.era, undefined, "era result");
 assert.sameValue(result.year, 1, "year result");
 assert.sameValue(result.month, 1, "month result");
 assert.compareArray(actual, expected, "order of operations");

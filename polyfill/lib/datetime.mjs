@@ -97,6 +97,10 @@ export class DateTime {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     return GetSlot(this, CALENDAR);
   }
+  get era() {
+    if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+    return GetSlot(this, CALENDAR).era(this);
+  }
   get dayOfWeek() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     return GetSlot(this, CALENDAR).dayOfWeek(this);
@@ -147,6 +151,7 @@ export class DateTime {
     }
     const props = ES.ToPartialRecord(temporalDateTimeLike, [
       'day',
+      'era',
       'hour',
       'microsecond',
       'millisecond',
@@ -161,6 +166,7 @@ export class DateTime {
     }
     const fields = ES.ToRecord(source, [
       ['day'],
+      ['era', undefined],
       ['hour'],
       ['microsecond'],
       ['millisecond'],
@@ -541,7 +547,7 @@ export class DateTime {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     const YearMonth = GetIntrinsic('%Temporal.YearMonth%');
     const calendar = GetSlot(this, CALENDAR);
-    const fields = ES.ToRecord(this, [['month'], ['year']]);
+    const fields = ES.ToRecord(this, [['era', undefined], ['month'], ['year']]);
     return calendar.yearMonthFromFields(fields, {}, YearMonth);
   }
   getMonthDay() {
@@ -566,6 +572,7 @@ export class DateTime {
   getFields() {
     const fields = ES.ToRecord(this, [
       ['day'],
+      ['era', undefined],
       ['hour'],
       ['microsecond'],
       ['millisecond'],
@@ -617,6 +624,7 @@ export class DateTime {
         calendar = TemporalCalendar.from(calendar);
         const fields = ES.ToRecord(item, [
           ['day'],
+          ['era', undefined],
           ['hour', 0],
           ['microsecond', 0],
           ['millisecond', 0],

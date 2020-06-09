@@ -542,6 +542,8 @@ export const ES = ObjectAssign({}, ES2019, {
           // FIXME: this is terrible
           const TemporalCalendar = GetIntrinsic('%Temporal.Calendar%');
           any.calendar = TemporalCalendar.from(value);
+        } else if (property === 'era') {
+          any.era = value;
         } else {
           any[property] = ES.ToInteger(value);
         }
@@ -552,10 +554,11 @@ export const ES = ObjectAssign({}, ES2019, {
   ToRecord: (bag, fields) => {
     if (!bag || 'object' !== typeof bag) return false;
     const result = {};
-    for (const [property, defaultValue] of fields) {
+    for (const fieldRecord of fields) {
+      const [property, defaultValue] = fieldRecord;
       let value = bag[property];
       if (value === undefined) {
-        if (defaultValue === undefined) {
+        if (fieldRecord.length === 1) {
           throw new TypeError(`required property '${property}' missing or undefined`);
         }
         value = defaultValue;
@@ -564,6 +567,8 @@ export const ES = ObjectAssign({}, ES2019, {
         // FIXME: this is terrible
         const TemporalCalendar = GetIntrinsic('%Temporal.Calendar%');
         result.calendar = TemporalCalendar.from(value);
+      } else if (property === 'era') {
+        result.era = value;
       } else {
         result[property] = ES.ToInteger(value);
       }

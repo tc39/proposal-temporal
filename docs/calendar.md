@@ -125,6 +125,8 @@ Effectively, this is whatever `calendarIdentifier` was passed as a parameter to 
 
 ### calendar.**day**(_date_: Temporal.Date) : number
 
+### calendar.**era**(_date_: Temporal.Date) : unknown
+
 ### calendar.**dayOfWeek**(_date_: Temporal.Date): number
 
 ### calendar.**dayOfYear**(_date_: Temporal.Date): number
