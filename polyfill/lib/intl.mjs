@@ -57,17 +57,35 @@ function resolvedOptions() {
   return this[ORIGINAL].resolvedOptions();
 }
 
+function adjustFormatterCalendar(formatter, calendar) {
+  const options = formatter.resolvedOptions();
+  if (!calendar || calendar === options.calendar || calendar === 'gregory' || calendar === 'iso8601') return formatter;
+  const locale = `${options.locale}-u-ca-${calendar}`;
+  return new IntlDateTimeFormat(locale, options);
+}
+
+function pickRangeCalendar(a, b) {
+  if (!a) return b;
+  if (!b) return a;
+  if (a === b) return a;
+  if (a === 'iso8601' || a === 'gregory') return b;
+  if (b === 'iso8601' || b === 'gregory') return a;
+  throw new RangeError(`cannot format range between two dates of ${a} and ${b} calendars`);
+}
+
 function format(datetime, ...rest) {
-  const { absolute, formatter } = extractOverrides(datetime, this);
+  const { absolute, formatter, calendar } = extractOverrides(datetime, this);
   if (absolute && formatter) {
-    return formatter.format(absolute.getEpochMilliseconds());
+    return adjustFormatterCalendar(formatter, calendar).format(absolute.getEpochMilliseconds());
   }
   return this[ORIGINAL].format(datetime, ...rest);
 }
 
 function formatToParts(datetime, ...rest) {
-  const { absolute, formatter } = extractOverrides(datetime, this);
-  if (absolute && formatter) return formatter.formatToParts(absolute.getEpochMilliseconds());
+  const { absolute, formatter, calendar } = extractOverrides(datetime, this);
+  if (absolute && formatter) {
+    return adjustFormatterCalendar(formatter, calendar).formatToParts(absolute.getEpochMilliseconds());
+  }
   return this[ORIGINAL].formatToParts(datetime, ...rest);
 }
 
@@ -76,10 +94,12 @@ function formatRange(a, b) {
     if (Object.getPrototypeOf(a) !== Object.getPrototypeOf(b)) {
       throw new TypeError('Intl.DateTimeFormat accepts two values of the same type');
     }
-    const { absolute: aa, formatter: aformatter } = extractOverrides(a, this);
-    const { absolute: bb, formatter: bformatter } = extractOverrides(b, this);
+    const { absolute: aa, formatter: aformatter, calendar: acalendar } = extractOverrides(a, this);
+    const { absolute: bb, formatter: bformatter, calendar: bcalendar } = extractOverrides(b, this);
+    const calendar = pickRangeCalendar(acalendar, bcalendar);
     if (aa && bb && aformatter && bformatter && aformatter === bformatter) {
-      return aformatter.formatRange(aa.getEpochMilliseconds(), bb.getEpochMilliseconds());
+      const formatter = adjustFormatterCalendar(aformatter, calendar);
+      return formatter.formatRange(aa.getEpochMilliseconds(), bb.getEpochMilliseconds());
     }
   }
   return this[ORIGINAL].formatRange(a, b);
@@ -90,10 +110,12 @@ function formatRangeToParts(a, b) {
     if (Object.getPrototypeOf(a) !== Object.getPrototypeOf(b)) {
       throw new TypeError('Intl.DateTimeFormat accepts two values of the same type');
     }
-    const { absolute: aa, formatter: aformatter } = extractOverrides(a, this);
-    const { absolute: bb, formatter: bformatter } = extractOverrides(b, this);
+    const { absolute: aa, formatter: aformatter, calendar: acalendar } = extractOverrides(a, this);
+    const { absolute: bb, formatter: bformatter, calendar: bcalendar } = extractOverrides(b, this);
+    const calendar = pickRangeCalendar(acalendar, bcalendar);
     if (aa && bb && aformatter && bformatter && aformatter === bformatter) {
-      return aformatter.formatRangeToParts(aa.getEpochMilliseconds(), bb.getEpochMilliseconds());
+      const formatter = adjustFormatterCalendar(aformatter, calendar);
+      return formatter.formatRangeToParts(aa.getEpochMilliseconds(), bb.getEpochMilliseconds());
     }
   }
   return this[ORIGINAL].formatRangeToParts(a, b);
@@ -172,7 +194,7 @@ function hasTimeOptions(options) {
 }
 
 function extractOverrides(datetime, main) {
-  let formatter;
+  let formatter, calendar;
   const Absolute = GetIntrinsic('%Temporal.Absolute%');
   const Date = GetIntrinsic('%Temporal.Date%');
   const DateTime = GetIntrinsic('%Temporal.DateTime%');
@@ -185,26 +207,30 @@ function extractOverrides(datetime, main) {
     formatter = main[TIME];
   }
   if (datetime instanceof YearMonth) {
+    calendar = datetime.calendar.id;
     const { year, month, day } = datetime.getISOCalendarFields();
     datetime = new Date(year, month, day, datetime.calendar);
     formatter = main[YM];
   }
   if (datetime instanceof MonthDay) {
+    calendar = datetime.calendar.id;
     const { year, month, day } = datetime.getISOCalendarFields();
     datetime = new Date(year, month, day, datetime.calendar);
     formatter = main[MD];
   }
   if (datetime instanceof Date) {
+    calendar = calendar || datetime.calendar.id;
     datetime = datetime.withTime(new Time(12, 0));
     formatter = formatter || main[DATE];
   }
   if (datetime instanceof DateTime) {
+    calendar = calendar || datetime.calendar.id;
     formatter = formatter || main[DATETIME];
     datetime = main[TIMEZONE].getAbsoluteFor(datetime, 'earlier');
   }
   if (datetime instanceof Absolute) {
     formatter = formatter || main[DATETIME];
-    return { absolute: datetime, formatter };
+    return { absolute: datetime, formatter, calendar };
   } else {
     return {};
   }
