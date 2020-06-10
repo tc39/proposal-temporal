@@ -212,3 +212,92 @@ export class Gregorian extends ISO8601 {
     super('gregory');
   }
 }
+
+// Implementation details for Japanese calendar
+//
+// NOTE: For convenience, this hacky class only supports the most recent five
+// eras, those of the modern period. For the full list, see:
+// https://github.com/unicode-org/cldr/blob/master/common/supplemental/supplementalData.xml#L4310-L4546
+//
+// NOTE: Japan started using the Gregorian calendar in 6 Meiji, replacing a
+// lunisolar calendar. So the day before January 1 of 6 Meiji (1873) was not
+// December 31, but December 2, of 5 Meiji (1872). The existing Ecma-402
+// Japanese calendar doesn't seem to take this into account, so neither do we:
+// > args = ['en-ca-u-ca-japanese', { era: 'short' }]
+// > new Date('1873-01-01T12:00').toLocaleString(...args)
+// '1 1, 6 Meiji, 12:00:00 PM'
+// > new Date('1872-12-31T12:00').toLocaleString(...args)
+// '12 31, 5 Meiji, 12:00:00 PM'
+const jpn = {
+  eraStartDates: ['1868-09-08', '1912-07-30', '1926-12-25', '1989-01-08', '2019-05-01'],
+  eraAddends: [1867, 1911, 1925, 1988, 2018],
+
+  // This is what API consumers pass in as the value of the 'era' field. We use
+  // string constants consisting of the romanized name
+  // Unfortunately these are not unique throughout history, so this should be
+  // solved: https://github.com/tc39/proposal-temporal/issues/526
+  // Otherwise, we'd have to introduce some era numbering system, which (as far
+  // as I can tell from Wikipedia) the calendar doesn't have, so would be
+  // non-standard and confusing, requiring API consumers to figure out "now what
+  // number is the Reiwa (current) era?" My understanding is also that this
+  // starting point for eras (0645-06-19) is not the only possible one, since
+  // there are unofficial eras before that.
+  // https://en.wikipedia.org/wiki/Japanese_era_name
+  eraNames: ['meiji', 'taisho', 'showa', 'heisei', 'reiwa'],
+  // Note: C locale era names available at
+  // https://github.com/unicode-org/icu/blob/master/icu4c/source/data/locales/root.txt#L1582-L1818
+
+  compareDate(one, two) {
+    for (const slot of [ISO_YEAR, ISO_MONTH, ISO_DAY]) {
+      const val1 = GetSlot(one, slot);
+      const val2 = GetSlot(two, slot);
+      if (val1 !== val2) return ES.ComparisonResult(val1 - val2);
+    }
+  },
+
+  findEra(date) {
+    const TemporalDate = GetIntrinsic('%Temporal.Date%');
+    const idx = jpn.eraStartDates.findIndex((dateStr) => {
+      const { year, month, day } = ES.ParseTemporalDateString(dateStr);
+      const startDate = new TemporalDate(year, month, day);
+      return jpn.compareDate(date, startDate) < 0;
+    });
+    if (idx === -1) return jpn.eraStartDates.length - 1;
+    if (idx === 0) return 0;
+    return idx - 1;
+  },
+
+  isoYear(year, era) {
+    const eraIdx = jpn.eraNames.indexOf(era);
+    if (eraIdx === -1) throw new RangeError(`invalid era ${era}`);
+
+    return year + jpn.eraAddends[eraIdx];
+  }
+};
+
+export class Japanese extends ISO8601 {
+  constructor() {
+    super('japanese');
+  }
+
+  era(date) {
+    return jpn.eraNames[jpn.findEra(date)];
+  }
+  year(date) {
+    const eraIdx = jpn.findEra(date);
+    return GetSlot(date, ISO_YEAR) - jpn.eraAddends[eraIdx];
+  }
+
+  dateFromFields(fields, options, constructor) {
+    // Intentionally alphabetical
+    fields = ES.ToRecord(fields, [['day'], ['era'], ['month'], ['year']]);
+    const isoYear = jpn.isoYear(fields.year, fields.era);
+    return super.dateFromFields({ ...fields, year: isoYear }, options, constructor);
+  }
+  yearMonthFromFields(fields, options, constructor) {
+    // Intentionally alphabetical
+    fields = ES.ToRecord(fields, [['era'], ['month'], ['year']]);
+    const isoYear = jpn.isoYear(fields.year, fields.era);
+    return super.yearMonthFromFields({ ...fields, year: isoYear }, options, constructor);
+  }
+}
