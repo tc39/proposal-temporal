@@ -203,3 +203,12 @@ export class ISO8601 extends Calendar {
     return ES.LeapYear(GetSlot(date, ISO_YEAR));
   }
 }
+
+// According to documentation for Intl.Locale.prototype.calendar on MDN,
+// 'iso8601' calendar is equivalent to 'gregory' except for ISO 8601 week
+// numbering rules, which we do not currently use in Temporal.
+export class Gregorian extends ISO8601 {
+  constructor() {
+    super('gregory');
+  }
+}
