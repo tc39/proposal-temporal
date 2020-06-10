@@ -308,9 +308,16 @@ describe('DateTime', () => {
     });
   });
   describe('date/time maths: hours overflow', () => {
-    const later = DateTime.from('2019-10-29T10:46:38.271986102');
-    const earlier = later.minus({ hours: 12 });
-    it('result', () => equal(`${earlier}`, '2019-10-28T22:46:38.271986102'));
+    it('minus result', () => {
+      const later = DateTime.from('2019-10-29T10:46:38.271986102');
+      const earlier = later.minus({ hours: 12 });
+      equal(`${earlier}`, '2019-10-28T22:46:38.271986102');
+    });
+    it('plus result', () => {
+      const earlier = DateTime.from('2020-05-31T23:12:38.271986102');
+      const later = earlier.plus({ hours: 2 });
+      equal(`${later}`, '2020-06-01T01:12:38.271986102');
+    });
   });
   describe('DateTime.plus() works', () => {
     it('constrain when ambiguous result', () => {
