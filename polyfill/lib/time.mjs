@@ -241,14 +241,7 @@ export class Time {
     return new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
   }
   getFields() {
-    const fields = ES.ToRecord(this, [
-      ['hour'],
-      ['microsecond'],
-      ['millisecond'],
-      ['minute'],
-      ['nanosecond'],
-      ['second']
-    ]);
+    const fields = ES.ToTemporalTimeRecord(this);
     if (!fields) throw new TypeError('invalid receiver');
     return fields;
   }
@@ -265,14 +258,7 @@ export class Time {
         nanosecond = GetSlot(item, NANOSECOND);
       } else {
         // Intentionally alphabetical
-        ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.ToRecord(item, [
-          ['hour', 0],
-          ['microsecond', 0],
-          ['millisecond', 0],
-          ['minute', 0],
-          ['nanosecond', 0],
-          ['second', 0]
-        ]));
+        ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.ToTemporalTimeRecord(item));
       }
     } else {
       ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.ParseTemporalTimeString(ES.ToString(item)));
