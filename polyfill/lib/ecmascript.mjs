@@ -6,7 +6,11 @@ const ObjectAssign = Object.assign;
 import bigInt from 'big-integer';
 
 import { GetIntrinsic } from './intrinsicclass.mjs';
-import { Gregorian as CalendarGregorian, ISO8601 as CalendarISO8601 } from './calendar.mjs';
+import {
+  Gregorian as CalendarGregorian,
+  ISO8601 as CalendarISO8601,
+  Japanese as CalendarJapanese
+} from './calendar.mjs';
 import {
   GetSlot,
   HasSlot,
@@ -44,7 +48,8 @@ const YEAR_MAX = 275760;
 
 const BUILTIN_CALENDARS = {
   gregory: CalendarGregorian,
-  iso8601: CalendarISO8601
+  iso8601: CalendarISO8601,
+  japanese: CalendarJapanese
   // To be filled in as builtin calendars are implemented
 };
 
