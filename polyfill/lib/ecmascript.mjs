@@ -575,6 +575,40 @@ export const ES = ObjectAssign({}, ES2019, {
     }
     return result;
   },
+  // field access in the following operations is intentionally alphabetical
+  ToTemporalDateRecord: (bag) => {
+    return ES.ToRecord(bag, [['day'], ['era', undefined], ['month'], ['year']]);
+  },
+  ToTemporalDateTimeRecord: (bag) => {
+    return ES.ToRecord(bag, [
+      ['day'],
+      ['era', undefined],
+      ['hour', 0],
+      ['microsecond', 0],
+      ['millisecond', 0],
+      ['minute', 0],
+      ['month'],
+      ['nanosecond', 0],
+      ['second', 0],
+      ['year']
+    ]);
+  },
+  ToTemporalMonthDayRecord: (bag) => {
+    return ES.ToRecord(bag, [['day'], ['month']]);
+  },
+  ToTemporalTimeRecord: (bag) => {
+    return ES.ToRecord(bag, [
+      ['hour', 0],
+      ['microsecond', 0],
+      ['millisecond', 0],
+      ['minute', 0],
+      ['nanosecond', 0],
+      ['second', 0]
+    ]);
+  },
+  ToTemporalYearMonthRecord: (bag) => {
+    return ES.ToRecord(bag, [['era', undefined], ['month'], ['year']]);
+  },
   ISOTimeZoneString: (timeZone, absolute) => {
     let offset;
     if (typeof timeZone.getOffsetStringFor === 'function') {

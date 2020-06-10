@@ -56,7 +56,7 @@ export class YearMonth {
     if (!props) {
       throw new RangeError('invalid year-month-like');
     }
-    const fields = ES.ToRecord(this, [['era', undefined], ['month'], ['year']]);
+    const fields = ES.ToTemporalYearMonthRecord(this);
     ObjectAssign(fields, props);
     const Construct = ES.SpeciesConstructor(this, YearMonth);
     const result = GetSlot(this, CALENDAR).yearMonthFromFields(fields, options, Construct);
@@ -80,10 +80,8 @@ export class YearMonth {
 
     const TemporalDate = GetIntrinsic('%Temporal.Date%');
     const calendar = GetSlot(this, CALENDAR);
-    const era = calendar.era(this);
-    const year = calendar.year(this);
-    const month = calendar.month(this);
-    const firstOfCalendarMonth = calendar.dateFromFields({ era, year, month, day: 1 }, {}, TemporalDate);
+    const fields = ES.ToTemporalYearMonthRecord(this);
+    const firstOfCalendarMonth = calendar.dateFromFields({ ...fields, day: 1 }, {}, TemporalDate);
     const addedDate = calendar.plus(firstOfCalendarMonth, { ...duration, days }, options, TemporalDate);
 
     const Construct = ES.SpeciesConstructor(this, YearMonth);
@@ -108,11 +106,9 @@ export class YearMonth {
 
     const TemporalDate = GetIntrinsic('%Temporal.Date%');
     const calendar = GetSlot(this, CALENDAR);
-    const era = calendar.era(this);
-    const year = calendar.year(this);
-    const month = calendar.month(this);
+    const fields = ES.ToTemporalYearMonthRecord(this);
     const lastDay = calendar.daysInMonth(this);
-    const lastOfCalendarMonth = calendar.dateFromFields({ era, year, month, day: lastDay }, {}, TemporalDate);
+    const lastOfCalendarMonth = calendar.dateFromFields({ ...fields, day: lastDay }, {}, TemporalDate);
     const subtractedDate = calendar.minus(lastOfCalendarMonth, { ...duration, days }, options, TemporalDate);
 
     const Construct = ES.SpeciesConstructor(this, YearMonth);
@@ -130,8 +126,8 @@ export class YearMonth {
     const largestUnit = ES.ToLargestTemporalUnit(options, 'years', ['weeks', 'days', 'hours', 'minutes', 'seconds']);
     const [one, two] = [this, other].sort(YearMonth.compare);
 
-    const smallerFields = ES.ToRecord(one, [['era', undefined], ['month'], ['year']]);
-    const largerFields = ES.ToRecord(two, [['era', undefined], ['month'], ['year']]);
+    const smallerFields = ES.ToTemporalYearMonthRecord(one);
+    const largerFields = ES.ToTemporalYearMonthRecord(two);
     const TemporalDate = GetIntrinsic('%Temporal.Date%');
     const smaller = calendar.dateFromFields({ ...smallerFields, day: 1 }, {}, TemporalDate);
     const larger = calendar.dateFromFields({ ...largerFields, day: 1 }, {}, TemporalDate);
@@ -169,14 +165,12 @@ export class YearMonth {
   withDay(day) {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
     const calendar = GetSlot(this, CALENDAR);
-    const era = calendar.era(this);
-    const month = calendar.month(this);
-    const year = calendar.year(this);
+    const fields = ES.ToTemporalYearMonthRecord(this);
     const Date = GetIntrinsic('%Temporal.Date%');
-    return calendar.dateFromFields({ era, year, month, day }, { disambiguation: 'reject' }, Date);
+    return calendar.dateFromFields({ ...fields, day }, { disambiguation: 'reject' }, Date);
   }
   getFields() {
-    const fields = ES.ToRecord(this, [['era', undefined], ['month'], ['year']]);
+    const fields = ES.ToTemporalYearMonthRecord(this);
     if (!fields) throw new TypeError('invalid receiver');
     fields.calendar = GetSlot(this, CALENDAR);
     return fields;

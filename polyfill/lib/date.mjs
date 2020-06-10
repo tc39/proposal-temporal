@@ -93,7 +93,7 @@ export class Date {
     if (!props) {
       throw new RangeError('invalid date-like');
     }
-    const fields = ES.ToRecord(source, [['day'], ['era', undefined], ['month'], ['year']]);
+    const fields = ES.ToTemporalDateRecord(source);
     ObjectAssign(fields, props);
     const Construct = ES.SpeciesConstructor(this, Date);
     const result = calendar.dateFromFields(fields, options, Construct);
@@ -205,18 +205,18 @@ export class Date {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
     const YearMonth = GetIntrinsic('%Temporal.YearMonth%');
     const calendar = GetSlot(this, CALENDAR);
-    const fields = ES.ToRecord(this, [['era', undefined], ['month'], ['year']]);
+    const fields = ES.ToTemporalDateRecord(this);
     return calendar.yearMonthFromFields(fields, {}, YearMonth);
   }
   getMonthDay() {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
     const MonthDay = GetIntrinsic('%Temporal.MonthDay%');
     const calendar = GetSlot(this, CALENDAR);
-    const fields = ES.ToRecord(this, [['day'], ['month']]);
+    const fields = ES.ToTemporalDateRecord(this);
     return calendar.monthDayFromFields(fields, {}, MonthDay);
   }
   getFields() {
-    const fields = ES.ToRecord(this, [['day'], ['era', undefined], ['month'], ['year']]);
+    const fields = ES.ToTemporalDateRecord(this);
     if (!fields) throw new TypeError('invalid receiver');
     fields.calendar = GetSlot(this, CALENDAR);
     return fields;
