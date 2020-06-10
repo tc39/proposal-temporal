@@ -565,7 +565,8 @@
         1. Else if _disambiguation_ is *"balance"*, then
           1. If ! ValidateTemporalDuration(_years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_) is *false*,
             1. Throw a *RangeError* exception.
-          1. Let _bd_ be ! BalanceDuration(0, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_, *"hours"*).
+          1. Let _bd_ be ! BalanceDuration(_days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_, *"days"*).
+          1. Set _days_ to _bd_.[[Days]].
           1. Set _hours_ to _bd_.[[Hours]].
           1. Set _minutes_ to _bd_.[[Minutes]].
           1. Set _seconds_ to _bd_.[[Seconds]].
