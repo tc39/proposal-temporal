@@ -52,10 +52,8 @@ When viewing the [reference documentation](https://tc39.es/proposal-temporal/doc
 The API will change before the proposal reaches Stage 3, based on feedback that we receive during this time.
 Please give us your feedback in the [issue tracker](https://github.com/tc39/proposal-temporal/issues).
 
-## Cookbook
+## Documentation
 
-A cookbook to help you get started and learn the ins and outs of Temporal is available [here](./docs/cookbook.md)
+Reference documentation and examples can be found [here](https://tc39.es/proposal-temporal/docs/index.html).
 
-## API Documentation
-
-Reference documentation and examples are in progress and can be found [here](https://tc39.es/proposal-temporal/docs/index.html).
+A cookbook to help you get started and learn the ins and outs of Temporal is available [here](https://tc39.es/proposal-temporal/docs/index.html)

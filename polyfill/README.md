@@ -8,18 +8,28 @@ Please give us your feedback in the [issue tracker](https://github.com/tc39/prop
 
 Please run the polyfill with Node.js 12 or later.
 
+## Documentation
+
+Reference documentation and examples can be found [here](https://tc39.es/proposal-temporal/docs/index.html).
+
+A cookbook to help you get started and learn the ins and outs of Temporal is available [here](https://tc39.es/proposal-temporal/docs/index.html)
+
 ## Import as a Module
 
 You can depend on the unstable Temporal polyfill in your personal projects:
 
 ```bash
-$ npm install --save tc39/proposal-temporal
+$ npm install --save tc39-temporal
 ```
 
 In code:
-
 ```javascript
-import { Temporal } from "proposal-temporal/polyfill/lib/index.mjs";
+const { Temporal, Intl } = require('tc39-temporal');
+```
+
+Or, import the polyfill as an ES6 module:
+```javascript
+import { Temporal, Intl } from 'tc39-temporal/lib/index.mjs';
 ```
 
 ## Node REPL with Temporal
