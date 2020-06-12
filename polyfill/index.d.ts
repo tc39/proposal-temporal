@@ -569,8 +569,8 @@ export namespace Temporal {
     getOffsetStringFor?(absolute: Temporal.Absolute): string;
     getDateTimeFor?(absolute: Temporal.Absolute): Temporal.DateTime;
     getAbsoluteFor?(dateTime: Temporal.DateTime, options?: ToAbsoluteOptions): Temporal.Absolute;
-    getNextTransition?(startingPoint: Temporal.Absolute): Temporal.Absolute | null | undefined;
-    getPreviousTransition?(startingPoint: Temporal.Absolute): Temporal.Absolute | null | undefined;
+    getNextTransition?(startingPoint: Temporal.Absolute): Temporal.Absolute | null;
+    getPreviousTransition?(startingPoint: Temporal.Absolute): Temporal.Absolute | null;
     getPossibleAbsolutesFor(dateTime: Temporal.DateTime): Temporal.Absolute[];
     toString(): string;
     toJSON?(): string;
@@ -597,8 +597,8 @@ export namespace Temporal {
     getOffsetStringFor(absolute: Temporal.Absolute): string;
     getDateTimeFor(absolute: Temporal.Absolute, calendar?: CalendarProtocol | string): Temporal.DateTime;
     getAbsoluteFor(dateTime: Temporal.DateTime, options?: ToAbsoluteOptions): Temporal.Absolute;
-    getNextTransition?(startingPoint: Temporal.Absolute): Temporal.Absolute | null | undefined;
-    getPreviousTransition?(startingPoint: Temporal.Absolute): Temporal.Absolute | null | undefined;
+    getNextTransition?(startingPoint: Temporal.Absolute): Temporal.Absolute | null;
+    getPreviousTransition?(startingPoint: Temporal.Absolute): Temporal.Absolute | null;
     getPossibleAbsolutesFor(dateTime: Temporal.DateTime): Temporal.Absolute[];
     toString(): string;
     toJSON(): string;

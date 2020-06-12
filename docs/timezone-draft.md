@@ -116,10 +116,10 @@ class Temporal.TimeZone {
   getPossibleAbsolutesFor(dateTime : Temporal.DateTime) : array<Temporal.Absolute>;
 
   /** Return the next time zone transition after `startingPoint`. */
-  getNextTransition(startingPoint : Temporal.Absolute) : Temporal.Absolute;
+  getNextTransition(startingPoint : Temporal.Absolute) : Temporal.Absolute | null;
 
   /** Return the previous time zone transition before `startingPoint`. */
-  getPreviousTransition(startingPoint : Temporal.Absolute) : Temporal.Absolute;
+  getPreviousTransition(startingPoint : Temporal.Absolute) : Temporal.Absolute | null;
 
   // API methods that a subclassed custom time zone doesn't need to touch
 
@@ -176,11 +176,11 @@ class OffsetTimeZone extends Temporal.TimeZone {
   }
 
   getNextTransition(/* startingPoint */) {
-    return undefined; // no transitions ever
+    return null; // no transitions ever
   }
 
   getPreviousTransition(/* startingPoint */) {
-    return undefined; // no transitions ever
+    return null; // no transitions ever
   }
 }
 ```

@@ -30,8 +30,12 @@ describe('Userland time zone', () => {
         const epochNs = MakeDate(dayNum, time);
         return [new Temporal.Absolute(epochNs)];
       }
-      getNextTransition(/* absolute */) {}
-      getPreviousTransition(/* absolute */) {}
+      getNextTransition(/* absolute */) {
+        return null;
+      }
+      getPreviousTransition(/* absolute */) {
+        return null;
+      }
     }
 
     const obj = new CustomUTCSubclass();

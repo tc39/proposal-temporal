@@ -195,7 +195,7 @@ export class TimeZone {
 
     // Offset time zones have no transitions
     if (parseOffsetString(id) !== null) {
-      return undefined;
+      return null;
     }
 
     let epochNanoseconds = GetSlot(startingPoint, EPOCHNANOSECONDS);
@@ -210,7 +210,7 @@ export class TimeZone {
 
     // Offset time zones have no transitions
     if (parseOffsetString(id) !== null) {
-      return undefined;
+      return null;
     }
 
     let epochNanoseconds = GetSlot(startingPoint, EPOCHNANOSECONDS);

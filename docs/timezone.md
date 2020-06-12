@@ -61,7 +61,7 @@ For example:
 tz1 = new Temporal.TimeZone('-08:00');
 tz2 = new Temporal.TimeZone('America/Vancouver');
 abs = Temporal.DateTime.from({year: 2020, month: 1, day: 1}).inTimeZone(tz2);
-tz1.getNextTransition(abs);  // => undefined
+tz1.getNextTransition(abs);  // => null
 tz2.getPreviousTransition(abs);  // => 2020-03-08T10:00Z
 ```
 
@@ -248,7 +248,7 @@ This method is used to calculate future DST transitions after `startingPoint` fo
 
 
 Note that if the time zone was constructed from a UTC offset, there will be no DST transitions.
-In that case, this method will return `undefined`.
+In that case, this method will return `null`.
 
 Example usage:
 
@@ -271,7 +271,7 @@ duration.toLocaleString();  // output will vary
 This method is used to calculate past DST transitions before `startingPoint` for this time zone.
 
 Note that if the time zone was constructed from a UTC offset, there will be no DST transitions.
-In that case, this method will return `undefined`.
+In that case, this method will return `null`.
 
 Example usage:
 

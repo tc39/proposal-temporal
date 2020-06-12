@@ -123,8 +123,8 @@ describe('TimeZone', () => {
     it(`${zone} has offset +01:00`, () => equal(zone.getOffsetStringFor(abs), '+01:00'));
     it(`(${zone}).getDateTimeFor(${abs})`, () => assert(zone.getDateTimeFor(abs) instanceof Temporal.DateTime));
     it(`(${zone}).getAbsoluteFor(${dtm})`, () => assert(zone.getAbsoluteFor(dtm) instanceof Temporal.Absolute));
-    it(`(${zone}).getNextTransition(${abs})`, () => zone.getNextTransition(abs), undefined);
-    it(`(${zone}).getPreviousTransition(${abs})`, () => zone.getPreviousTransition(abs), undefined);
+    it(`(${zone}).getNextTransition(${abs})`, () => zone.getNextTransition(abs), null);
+    it(`(${zone}).getPreviousTransition(${abs})`, () => zone.getPreviousTransition(abs), null);
     it('wraps around to the next day', () =>
       equal(`${zone.getDateTimeFor(Temporal.Absolute.from('2020-02-06T23:59Z'))}`, '2020-02-07T00:59'));
   });
