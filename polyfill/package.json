@@ -1,8 +1,10 @@
 {
   "name": "tc39-temporal",
-  "version": "1.0.0",
-  "description": "TC39 Proposal: Temporal",
+  "version": "0.1.0",
+  "description": "Experimental polyfill for the TC39 Temporal proposal",
+  "type": "commonjs",
   "main": "index.js",
+  "browser": "index.js",
   "types": "index.d.ts",
   "scripts": {
     "coverage": "c8 report --reporter html",
@@ -14,28 +16,55 @@
     "codecov:test262": "COVERAGE=yes npm run test262 && codecov -F test262 -f coverage/test262.lcov",
     "build": "rollup -c rollup.config.js",
     "build-script": "rollup -c rollup-script.config.js",
-    "prepublishOnly": "npm run build",
+    "prepare": "npm run build",
     "playground": "node --experimental-modules --no-warnings --icu-data-dir node_modules/full-icu -r ./lib/initialise.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/tc39/proposal-temporal.git"
+    "url": "git+https://github.com/tc39/proposal-temporal.git",
+    "directory": "polyfill"
   },
   "keywords": [
-    "TC39",
-    "Polyfill",
+    "Absolute",
+    "Calendar",
     "Date",
-    "Time",
     "DateTime",
+    "Duration",
+    "MonthDay",
+    "Polyfill",
+    "TC39",
+    "Temporal",
+    "Time",
+    "Timestamp",
     "TimeZone",
-    "Duration"
+    "YearMonth"
   ],
   "author": "Philipp Dunkel <pip@pipobscure.com>",
+  "contributors": [
+    "Daniel Ehrenberg",
+    "Jason Williams",
+    "Justin Grant",
+    "Maggie Johnson-Pint",
+    "Matt Johnson-Pint",
+    "Ms2ger",
+    "Philip Chimento",
+    "Philipp Dunkel",
+    "Sasha Pierson",
+    "Shane F. Carr",
+    "Ujjwal Sharma"
+  ],
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/tc39/proposal-temporal/issues"
   },
-  "homepage": "https://github.com/tc39/proposal-temporal#readme",
+  "homepage": "https://tc39.es/proposal-temporal/docs/index.html",
+  "files": [
+    "index.d.ts",
+    "index.js.map",
+    "rollup.config.js",
+    "rollup-script.config.js",
+    "lib/*"
+  ],
   "dependencies": {
     "big-integer": "^1.6.48",
     "es-abstract": "^1.17.4"
