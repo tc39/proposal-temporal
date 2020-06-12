@@ -12,7 +12,7 @@ Since `Temporal.Absolute` and `Temporal.DateTime` do not contain any time zone i
 ## Custom time zones
 
 For specialized applications where you need to do calculations in a time zone that is not supported by Intl, you can also implement your own `Temporal.TimeZone` object.
-To do this, create a class inheriting from `Temporal.TimeZone`, call `super()` in the constructor with a time zone identifier, and implement the methods `getOffsetNanosecondsFor()`, `getPossibleAbsolutesFor()`, and `getTransitions()`.
+To do this, create a class inheriting from `Temporal.TimeZone`, call `super()` in the constructor with a time zone identifier, and implement the methods `getOffsetNanosecondsFor()`, `getPossibleAbsolutesFor()`, `getNextTransition()`, and `getPreviousTransition()`.
 Any subclass of `Temporal.TimeZone` will be accepted in Temporal APIs where a built-in `Temporal.TimeZone` would work.
 
 ### Protocol
@@ -60,9 +60,9 @@ For example:
 ```javascript
 tz1 = new Temporal.TimeZone('-08:00');
 tz2 = new Temporal.TimeZone('America/Vancouver');
-now = Temporal.now.absolute();
-tz1.getTransitions(now).next().done;  // => true
-tz2.getTransitions(now).next().done;  // => false
+abs = Temporal.DateTime.from({year: 2020, month: 1, day: 1}).inTimeZone(tz2);
+tz1.getNextTransition(abs);  // => undefined
+tz2.getPreviousTransition(abs);  // => 2020-03-08T10:00Z
 ```
 
 ## Static methods
@@ -237,17 +237,18 @@ See [Resolving ambiguity](./ambiguity.md) for usage examples and a more complete
 Usually you won't have to use this method; `Temporal.TimeZone.prototype.getAbsoluteFor()` will be more convenient for most use cases.
 This method is useful for implementing a custom time zone or custom disambiguation behaviour.
 
-### timeZone.**getTransitions**(_startingPoint_: Temporal.Absolute) : iterator<Temporal.Absolute>
+### timeZone.**getNextTransition**(_startingPoint_: Temporal.Absolute) : Temporal.Absolute
 
 **Parameters:**
-- `startingPoint` (`Temporal.Absolute`): Time after which to start calculating DST transitions.
+- `startingPoint` (`Temporal.Absolute`): Time after which to find the next DST transition.
 
-**Returns:** An iterable yielding `Temporal.Absolute` objects indicating subsequent DST transitions in the given time zone.
+**Returns:** A `Temporal.Absolute` object representing the next DST transition in this time zone, or `null` if no transitions later than `startingPoint` could be found.
 
-This method is used to calculate future DST transitions for the time zone, starting at `startingPoint`.
+This method is used to calculate future DST transitions after `startingPoint` for this time zone.
+
 
 Note that if the time zone was constructed from a UTC offset, there will be no DST transitions.
-In that case, the iterable will be empty.
+In that case, this method will return `undefined`.
 
 Example usage:
 
@@ -255,8 +256,31 @@ Example usage:
 // How long until the next DST change from now, in the current location?
 tz = Temporal.now.timeZone();
 now = Temporal.now.absolute();
-[nextTransition] = tz.getTransitions(now);
+nextTransition = tz.getNextTransition(now);
 duration = nextTransition.difference(now);
+duration.toLocaleString();  // output will vary
+```
+
+### timeZone.**getPreviousTransition**(_startingPoint_: Temporal.Absolute) : Temporal.Absolute
+
+**Parameters:**
+- `startingPoint` (`Temporal.Absolute`): Time before which to find the previous DST transition.
+
+**Returns:** A `Temporal.Absolute` object representing the previous DST transition in this time zone, or `null` if no transitions earlier than `startingPoint` could be found.
+
+This method is used to calculate past DST transitions before `startingPoint` for this time zone.
+
+Note that if the time zone was constructed from a UTC offset, there will be no DST transitions.
+In that case, this method will return `undefined`.
+
+Example usage:
+
+```javascript
+// How long until the previous DST change from now, in the current location?
+tz = Temporal.now.timeZone();
+now = Temporal.now.absolute();
+previousTransition = tz.getPreviousTransition(now); 
+duration = now.difference(previousTransition);
 duration.toLocaleString();  // output will vary
 ```
 

@@ -45,7 +45,7 @@ Example usage:
 // When is the next daylight saving change from now, in the current location?
 tz = Temporal.now.timeZone();
 now = Temporal.now.absolute();
-[nextTransition] = tz.getTransitions(now);
+nextTransition = tz.getNextTransition(now);
 before = tz.getOffsetStringFor(nextTransition.minus({nanoseconds: 1}));
 after = tz.getOffsetStringFor(nextTransition.plus({nanoseconds: 1}));
 console.log(`On ${nextTransition.inTimeZone(tz)} the clock will change from UTC ${before} to ${after}`);
