@@ -48,6 +48,10 @@ The specification text can be found [here](https://tc39.es/proposal-temporal/).
 A complete polyfill can be found [here](./polyfill).
 When viewing the [reference documentation](https://tc39.es/proposal-temporal/docs/index.html), the polyfill is automatically loaded in your browser, so you can try it out by opening your browser's developer tools.
 
+**NOTE:** We encourage you to experiment with the polyfill, but don't use it in production!
+The API will change before the proposal reaches Stage 3, based on feedback that we receive during this time.
+Please give us your feedback in the [issue tracker](https://github.com/tc39/proposal-temporal/issues).
+
 ## Cookbook
 
 A cookbook to help you get started and learn the ins and outs of Temporal is available [here](./docs/cookbook.md)
