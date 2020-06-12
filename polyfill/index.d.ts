@@ -249,7 +249,11 @@ export namespace Temporal {
       options: ArithmeticOptions,
       constructor: ConstructorOf<Temporal.Date>
     ): Temporal.Date;
-    difference?(smaller: Temporal.Date, larger: Temporal.Date, options: DifferenceOptions);
+    difference?(
+      smaller: Temporal.Date,
+      larger: Temporal.Date,
+      options: DifferenceOptions<'years' | 'months' | 'weeks' | 'days'>
+    );
   };
 
   /**
@@ -276,32 +280,36 @@ export namespace Temporal {
     isLeapYear(date: Temporal.Date): boolean;
     dateFromFields(
       fields: DateLike,
-      options?: AssignmentOptions,
+      options: AssignmentOptions,
       constructor: ConstructorOf<Temporal.Date>
     ): Temporal.Date;
     yearMonthFromFields(
       fields: YearMonthLike,
-      options?: AssignmentOptions,
+      options: AssignmentOptions,
       constructor: ConstructorOf<Temporal.YearMonth>
     ): Temporal.YearMonth;
     monthDayFromFields(
       fields: MonthDayLike,
-      options?: AssignmentOptions,
+      options: AssignmentOptions,
       constructor: ConstructorOf<Temporal.MonthDay>
     ): Temporal.MonthDay;
     plus(
       date: Temporal.Date,
       duration: Temporal.Duration,
-      options?: ArithmeticOptions,
+      options: ArithmeticOptions,
       constructor: ConstructorOf<Temporal.Date>
     ): Temporal.Date;
     minus(
       date: Temporal.Date,
       duration: Temporal.Duration,
-      options?: ArithmeticOptions,
+      options: ArithmeticOptions,
       constructor: ConstructorOf<Temporal.Date>
     ): Temporal.Date;
-    difference(smaller: Temporal.Date, larger: Temporal.Date, options?: DifferenceOptions);
+    difference(
+      smaller: Temporal.Date,
+      larger: Temporal.Date,
+      options?: DifferenceOptions<'years' | 'months' | 'weeks' | 'days'>
+    );
     toString(): string;
   }
 
