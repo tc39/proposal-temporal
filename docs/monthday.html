@@ -105,6 +105,8 @@
 </li>
 <li><a href="#day">day</a>
 </li>
+<li><a href="#calendar">calendar</a>
+</li>
 </ul>
 </li>
 <li><a href="#methods">Methods</a>
@@ -137,17 +139,18 @@ For example, it could be used to represent a yearly recurring event, like &quot;
 <p>If you need to refer to a certain instance of a calendar event, in a particular year, use <code>Temporal.Date</code> or even <code>Temporal.DateTime</code>.
 A <code>Temporal.MonthDay</code> can be converted into a <code>Temporal.Date</code> by combining it with a year, using the <code>withYear()</code> method.</p>
 <h2 id="constructor-1">Constructor</h2>
-<h3 id="new-Temporal-MonthDay"><a class="heading-link" href="#new-Temporal-MonthDay"></a><strong>new Temporal.MonthDay</strong>(<em>isoMonth</em>: number, <em>isoDay</em>: number, <em>refISOYear</em>?: number) : Temporal.MonthDay</h3><p><strong>Parameters:</strong></p>
+<h3 id="new-Temporal-MonthDay"><a class="heading-link" href="#new-Temporal-MonthDay"></a><strong>new Temporal.MonthDay</strong>(<em>isoMonth</em>: number, <em>isoDay</em>: number, <em>calendar</em>?: object, <em>refISOYear</em>?: number) : Temporal.MonthDay</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>isoMonth</code> (number): A month, ranging between 1 and 12 inclusive.</li>
 <li><code>isoDay</code> (number): A day of the month, ranging between 1 and 31 inclusive.</li>
+<li><code>calendar</code> (optional <code>Temporal.Calendar</code> or plain object): A calendar to project the date into.</li>
 <li><code>refISOYear</code> (optional number): A reference year, used for disambiguation when implementing other calendar systems.
 The default is the first leap year after the <a href="https://en.wikipedia.org/wiki/Unix_time">Unix epoch</a>.
 You can omit this parameter unless using a non-ISO-8601 calendar.</li>
 </ul>
 <p><strong>Returns:</strong> a new <code>Temporal.MonthDay</code> object.</p>
 <p>Use this constructor if you have the correct parameters for the date already as individual number values, or you are implementing a custom calendar.
-Otherwise, <code>Temporal.MonthDay.from()</code>, which accepts more kinds of input and allows disambiguation behaviour, is probably more convenient.</p>
+Otherwise, <code>Temporal.MonthDay.from()</code>, which accepts more kinds of input, allows inputting dates in different calendar reckonings, and allows disambiguation behaviour, is probably more convenient.</p>
 <p>All values are given as reckoned in the <a href="https://en.wikipedia.org/wiki/ISO_8601#Dates">ISO 8601 calendar</a>.
 Together, <code>refISOYear</code>, <code>isoMonth</code> and <code>isoDay</code> must represent a valid date in that calendar.
 For example, February 29 (Leap day in the ISO 8601 calendar) is a valid value for <code>Temporal.MonthDay</code>, even though that date does not occur every year, because the default value of <code>refISOYear</code> is a leap year.</p>
@@ -173,7 +176,7 @@ The default is <code>constrain</code>.</li>
 <p><strong>Returns:</strong> a new <code>Temporal.MonthDay</code> object.</p>
 <p>This static method creates a new <code>Temporal.MonthDay</code> object from another value.
 If the value is another <code>Temporal.MonthDay</code> object, a new object representing the same month and day is returned.
-If the value is any other object, it must have <code>month</code> and <code>day</code> properties, and a <code>Temporal.MonthDay</code> will be constructed from them.</p>
+If the value is any other object, it must have <code>month</code> and <code>day</code> properties, and optionally a <code>calendar</code> property, and a <code>Temporal.MonthDay</code> will be constructed from these properties.</p>
 <p>Any non-object value will be converted to a string, which is expected to be in ISO 8601 format.
 Any parts of the string other than the month and the day are optional and will be ignored.
 If the string isn&#39;t valid according to ISO 8601, then a <code>RangeError</code> will be thrown regardless of the value of <code>disambiguation</code>.</p>
@@ -214,7 +217,8 @@ md <span class="token operator">=</span> Temporal<span class="token punctuation"
 <p>Usage examples:</p>
 <pre class="language-javascript"><code class="language-javascript">md <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>MonthDay<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'08-24'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 md<span class="token punctuation">.</span>month  <span class="token comment">// => 8</span>
-md<span class="token punctuation">.</span>day    <span class="token comment">// => 24</span></code></pre><h2 id="methods-1">Methods</h2>
+md<span class="token punctuation">.</span>day    <span class="token comment">// => 24</span></code></pre><h3 id="calendar"><a class="heading-link" href="#calendar"></a>monthDay.<strong>calendar</strong> : object</h3><p>The <code>calendar</code> read-only property gives the calendar that the <code>month</code> and <code>day</code> properties are interpreted in.</p>
+<h2 id="methods-1">Methods</h2>
 <h3 id="with"><a class="heading-link" href="#with"></a>monthDay.<strong>with</strong>(<em>monthDayLike</em>: object, <em>options</em>?: object) : Temporal.MonthDay</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>monthDayLike</code> (object): an object with some or all of the properties of a <code>Temporal.MonthDay</code>.</li>
@@ -240,6 +244,11 @@ The default is <code>constrain</code>.</li>
 <p><strong>NOTE</strong>: The allowed values for the <code>monthDayLike.month</code> property start at 1, which is different from legacy <code>Date</code> where months are represented by zero-based indices (0 to 11).</p>
 </blockquote>
 <p>Since <code>Temporal.MonthDay</code> objects are immutable, use this method instead of modifying one.</p>
+<blockquote>
+<p><strong>NOTE</strong>: Unlike in <code>Temporal.Date.prototype.with()</code>, a <code>calendar</code> property is not allowed on <code>monthDayLike</code>.
+It is not possible to convert a <code>Temporal.MonthDay</code> to another calendar system without knowing the year.
+If you need to do this, use <code>monthDay.withYear(year).withCalendar(calendar).getMonthDay()</code>.</p>
+</blockquote>
 <p>Usage example:</p>
 <pre class="language-javascript"><code class="language-javascript">md <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>MonthDay<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'11-15'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token comment">// What's the last day of that month?</span>
@@ -317,7 +326,14 @@ md<span class="token punctuation">.</span><span class="token function">withYear<
 md <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>MonthDay<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'02-29'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 md<span class="token punctuation">.</span><span class="token function">withYear</span><span class="token punctuation">(</span><span class="token number">2017</span><span class="token punctuation">)</span>  <span class="token comment">// throws</span>
 md<span class="token punctuation">.</span><span class="token function">withYear</span><span class="token punctuation">(</span><span class="token number">2020</span><span class="token punctuation">)</span>  <span class="token comment">// => 2020-02-29</span></code></pre><p>In calendars where more information than just the year is needed to convert a <code>Temporal.MonthDay</code> to a <code>Temporal.Date</code>, you can pass an object to <code>withYear()</code> that contains the necessary properties.</p>
-<h3 id="getFields"><a class="heading-link" href="#getFields"></a>monthDay.<strong>getFields</strong>() : { month: number, day: number, [propName: string]: unknown }</h3><p><strong>Returns:</strong> a plain object with properties equal to the fields of <code>monthDay</code>.</p>
+<p>Example:</p>
+<pre class="language-javascript"><code class="language-javascript">md <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>MonthDay<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  calendar<span class="token operator">:</span> <span class="token string">'japanese'</span><span class="token punctuation">,</span>
+  month<span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">,</span>
+  day<span class="token operator">:</span> <span class="token number">1</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+date <span class="token operator">=</span> md<span class="token punctuation">.</span><span class="token function">withYear</span><span class="token punctuation">(</span><span class="token punctuation">{</span> era<span class="token operator">:</span> <span class="token string">'reiwa'</span><span class="token punctuation">,</span> year<span class="token operator">:</span> <span class="token number">2</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre><h3 id="getFields"><a class="heading-link" href="#getFields"></a>monthDay.<strong>getFields</strong>() : { month: number, day: number, calendar: object, [propName: string]: unknown }</h3><p><strong>Returns:</strong> a plain object with properties equal to the fields of <code>monthDay</code>.</p>
 <p>This method can be used to convert a <code>Temporal.MonthDay</code> into a record-like data structure.
 It returns a new plain JavaScript object, with all the fields as enumerable, writable, own data properties.</p>
 <p>Note that if using a different calendar from ISO 8601, these will be the calendar-specific values.</p>

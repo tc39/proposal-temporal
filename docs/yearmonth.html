@@ -107,6 +107,10 @@
 </li>
 <li><a href="#month">month</a>
 </li>
+<li><a href="#calendar">calendar</a>
+</li>
+<li><a href="#era">era</a>
+</li>
 <li><a href="#daysInMonth">daysInMonth</a>
 </li>
 <li><a href="#daysInYear">daysInYear</a>
@@ -151,18 +155,19 @@ For example, it could be used to represent a particular instance of a monthly re
 <p><code>Temporal.YearMonth</code> refers to the whole of a specific month; if you need to refer to a calendar event on a certain day, use <code>Temporal.Date</code> or even <code>Temporal.DateTime</code>.
 A <code>Temporal.YearMonth</code> can be converted into a <code>Temporal.Date</code> by combining it with a day of the month, using the <code>withDay()</code> method.</p>
 <h2 id="constructor-1">Constructor</h2>
-<h3 id="new-Temporal-YearMonth"><a class="heading-link" href="#new-Temporal-YearMonth"></a><strong>new Temporal.YearMonth</strong>(<em>isoYear</em>: number, <em>isoMonth</em>: number, <em>refISODay</em>: number = 1) : Temporal.YearMonth</h3><p><strong>Parameters:</strong></p>
+<h3 id="new-Temporal-YearMonth"><a class="heading-link" href="#new-Temporal-YearMonth"></a><strong>new Temporal.YearMonth</strong>(<em>isoYear</em>: number, <em>isoMonth</em>: number, <em>calendar</em>?: object, <em>refISODay</em>: number = 1) : Temporal.YearMonth</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>isoYear</code> (number): A year.</li>
 <li><code>isoMonth</code> (number): A month, ranging between 1 and 12 inclusive.</li>
+<li><code>calendar</code> (optional <code>Temporal.Calendar</code> or plain object): A calendar to project the month into.</li>
 <li><code>refISODay</code> (optional number): A reference day, used for disambiguation when implementing other calendar systems.
 You can omit this parameter unless using a non-ISO-8601 calendar.</li>
 </ul>
 <p><strong>Returns:</strong> a new <code>Temporal.YearMonth</code> object.</p>
-<p>Use this constructor if you have the correct parameters already as individual number values, or you are implementing a custom calendar.
-Otherwise, <code>Temporal.YearMonth.from()</code>, which accepts more kinds of input and allows disambiguation behaviour, is probably more convenient.</p>
+<p>Use this constructor if you have the correct parameters already as individual number values in the ISO 8601 calendar, or you are implementing a custom calendar.
+Otherwise, <code>Temporal.YearMonth.from()</code>, which accepts more kinds of input, allows months in other calendar systems, and allows disambiguation behaviour, is probably more convenient.</p>
 <p>All values are given as reckoned in the <a href="https://en.wikipedia.org/wiki/ISO_8601#Dates">ISO 8601 calendar</a>.
-Together, <code>isoYear</code>, <code>isoMonth</code>, and <code>refISODay</code> must represent a valid date in that calendar.</p>
+Together, <code>isoYear</code>, <code>isoMonth</code>, and <code>refISODay</code> must represent a valid date in that calendar, even if you are passing a different calendar as the <code>calendar</code> parameter.</p>
 <p>The range of allowed values for this type is exactly enough that calling <a href="./date.html#getYearMonth"><code>getYearMonth()</code></a> on any valid <code>Temporal.Date</code> will succeed.
 If <code>isoYear</code> and <code>isoMonth</code> are outside of this range, then <code>constrain</code> mode will clamp the date to the limit of the allowed range.
 Both <code>balance</code> and <code>reject</code> mode will throw a <code>RangeError</code> in this case.</p>
@@ -246,7 +251,10 @@ sorted<span class="token punctuation">.</span><span class="token function">join<
 <p>Usage examples:</p>
 <pre class="language-javascript"><code class="language-javascript">ym <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>YearMonth<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2019-06'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 ym<span class="token punctuation">.</span>year   <span class="token comment">// => 2019</span>
-ym<span class="token punctuation">.</span>month  <span class="token comment">// => 6</span></code></pre><h3 id="daysInMonth"><a class="heading-link" href="#daysInMonth"></a>yearMonth.<strong>daysInMonth</strong> : number</h3><p>The <code>daysInMonth</code> read-only property gives the number of days in the month.
+ym<span class="token punctuation">.</span>month  <span class="token comment">// => 6</span></code></pre><h3 id="calendar"><a class="heading-link" href="#calendar"></a>yearMonth.<strong>calendar</strong> : object</h3><p>The <code>calendar</code> read-only property gives the calendar that the <code>year</code> and <code>month</code> properties are interpreted in.</p>
+<h3 id="era"><a class="heading-link" href="#era"></a>yearmonth.<strong>era</strong> : unknown</h3><p>The <code>era</code> read-only property is <code>undefined</code> when using the ISO 8601 calendar.
+It&#39;s used for calendar systems that specify an era in addition to the year.</p>
+<h3 id="daysInMonth"><a class="heading-link" href="#daysInMonth"></a>yearMonth.<strong>daysInMonth</strong> : number</h3><p>The <code>daysInMonth</code> read-only property gives the number of days in the month.
 This is 28, 29, 30, or 31, depending on the month and whether the year is a leap year.</p>
 <p>Usage example:</p>
 <pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Attempt to write some mnemonic poetry</span>
@@ -292,6 +300,11 @@ The default is <code>constrain</code>.</li>
 <p>Since <code>Temporal.YearMonth</code> objects are immutable, use this method instead of modifying one.</p>
 <blockquote>
 <p><strong>NOTE</strong>: The allowed values for the <code>yearMonthLike.month</code> property start at 1, which is different from legacy <code>Date</code> where months are represented by zero-based indices (0 to 11).</p>
+</blockquote>
+<blockquote>
+<p><strong>NOTE</strong>: Unlike in <code>Temporal.Date.prototype.with()</code>, a <code>calendar</code> property is not allowed on <code>yearMonthLike</code>.
+It is not possible to convert a <code>Temporal.YearMonth</code> to another calendar system without knowing the day of the month.
+If you need to do this, use <code>yearMonth.withDay(day).withCalendar(calendar).getYearMonth()</code>.</p>
 </blockquote>
 <p>Usage example:</p>
 <pre class="language-javascript"><code class="language-javascript">ym <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>YearMonth<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2019-06'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -444,7 +457,7 @@ Use <code>Temporal.YearMonth.compare()</code> for this, or <code>yearMonth.equal
 The converted object carries a copy of all the relevant fields of <code>yearMonth</code>.</p>
 <p>Usage example:</p>
 <pre class="language-javascript"><code class="language-javascript">ym <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>YearMonth<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2019-06'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-ym<span class="token punctuation">.</span><span class="token function">withDay</span><span class="token punctuation">(</span><span class="token number">24</span><span class="token punctuation">)</span>  <span class="token comment">// => 2019-06-24</span></code></pre><h3 id="getFields"><a class="heading-link" href="#getFields"></a>yearMonth.<strong>getFields</strong>() : { year: number, month: number, [propName: string]: unknown }</h3><p><strong>Returns:</strong> a plain object with properties equal to the fields of <code>yearMonth</code>.</p>
+ym<span class="token punctuation">.</span><span class="token function">withDay</span><span class="token punctuation">(</span><span class="token number">24</span><span class="token punctuation">)</span>  <span class="token comment">// => 2019-06-24</span></code></pre><h3 id="getFields"><a class="heading-link" href="#getFields"></a>yearMonth.<strong>getFields</strong>() : { year: number, month: number, calendar: object, [propName: string]: unknown }</h3><p><strong>Returns:</strong> a plain object with properties equal to the fields of <code>yearMonth</code>.</p>
 <p>This method can be used to convert a <code>Temporal.YearMonth</code> into a record-like data structure.
 It returns a new plain JavaScript object, with all the fields as enumerable, writable, own data properties.</p>
 <p>Note that if using a different calendar from ISO 8601, these will be the calendar-specific values.</p>

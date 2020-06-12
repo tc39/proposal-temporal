@@ -121,6 +121,10 @@
 </li>
 <li><a href="#nanosecond">nanosecond</a>
 </li>
+<li><a href="#calendar">calendar</a>
+</li>
+<li><a href="#era">era</a>
+</li>
 <li><a href="#dayOfWeek">dayOfWeek</a>
 </li>
 <li><a href="#dayOfYear">dayOfYear</a>
@@ -138,6 +142,8 @@
 <li><a href="#methods">Methods</a>
 <ul>
 <li><a href="#with">with</a>
+</li>
+<li><a href="#withCalendar">withCalendar</a>
 </li>
 <li><a href="#plus">plus</a>
 </li>
@@ -185,7 +191,7 @@ Otherwise they would be recorded as sleeping at strange hours when travelling, e
 <p>A <code>Temporal.DateTime</code> can be converted to a <code>Temporal.Absolute</code> using a <code>Temporal.TimeZone</code>.
 A <code>Temporal.DateTime</code> can also be converted into any of the other <code>Temporal</code> objects that carry less information, such as <code>Temporal.Date</code> for the date or <code>Temporal.Time</code> for the time.</p>
 <h2 id="constructor-1">Constructor</h2>
-<h3 id="new-Temporal-DateTime"><a class="heading-link" href="#new-Temporal-DateTime"></a><strong>new Temporal.DateTime</strong>(<em>isoYear</em>: number, <em>isoMonth</em>: number, <em>isoDay</em>: number, <em>hour</em>: number = 0, <em>minute</em>: number = 0, <em>second</em>: number = 0, <em>millisecond</em>: number = 0, <em>microsecond</em>: number = 0, <em>nanosecond</em>: number = 0) : Temporal.DateTime</h3><p><strong>Parameters:</strong></p>
+<h3 id="new-Temporal-DateTime"><a class="heading-link" href="#new-Temporal-DateTime"></a><strong>new Temporal.DateTime</strong>(<em>isoYear</em>: number, <em>isoMonth</em>: number, <em>isoDay</em>: number, <em>hour</em>: number = 0, <em>minute</em>: number = 0, <em>second</em>: number = 0, <em>millisecond</em>: number = 0, <em>microsecond</em>: number = 0, <em>nanosecond</em>: number = 0, <em>calendar</em>?: object) : Temporal.DateTime</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>isoYear</code> (number): A year.</li>
 <li><code>isoMonth</code> (number): A month, ranging between 1 and 12 inclusive.</li>
@@ -196,12 +202,13 @@ A <code>Temporal.DateTime</code> can also be converted into any of the other <co
 <li><code>millisecond</code> (optional number): A number of milliseconds, ranging between 0 and 999 inclusive.</li>
 <li><code>microsecond</code> (optional number): A number of microseconds, ranging between 0 and 999 inclusive.</li>
 <li><code>nanosecond</code> (optional number): A number of nanoseconds, ranging between 0 and 999 inclusive.</li>
+<li><code>calendar</code> (optional <code>Temporal.Calendar</code> or plain object): A calendar to project the date into.</li>
 </ul>
 <p><strong>Returns:</strong> a new <code>Temporal.DateTime</code> object.</p>
-<p>Use this constructor if you have the correct parameters for the date already as individual number values.
-Otherwise, <code>Temporal.DateTime.from()</code>, which accepts more kinds of input and allows disambiguation behaviour, is probably more convenient.</p>
+<p>Use this constructor if you have the correct parameters for the date already as individual number values in the ISO 8601 calendar.
+Otherwise, <code>Temporal.DateTime.from()</code>, which accepts more kinds of input, allows inputting dates in different calendar reckonings, and allows disambiguation behaviour, is probably more convenient.</p>
 <p>All values are given as reckoned in the <a href="https://en.wikipedia.org/wiki/ISO_8601#Dates">ISO 8601 calendar</a>.
-Together, <code>isoYear</code>, <code>isoMonth</code>, and <code>isoDay</code> must represent a valid date in that calendar, and the time parameters must represent a valid time of day.</p>
+Together, <code>isoYear</code>, <code>isoMonth</code>, and <code>isoDay</code> must represent a valid date in that calendar, even if you are passing a different calendar as the <code>calendar</code> parameter, and the time parameters must represent a valid time of day.</p>
 <blockquote>
 <p><strong>NOTE</strong>: Although Temporal does not deal with leap seconds, dates coming from other software may have a <code>second</code> value of 60.
 This value will cause the constructor will throw, so if you have to interoperate with times that may contain leap seconds, use <code>Temporal.DateTime.from()</code> instead.</p>
@@ -228,8 +235,9 @@ The default is <code>constrain</code>.</li>
 <p><strong>Returns:</strong> a new <code>Temporal.DateTime</code> object.</p>
 <p>This static method creates a new <code>Temporal.DateTime</code> object from another value.
 If the value is another <code>Temporal.DateTime</code> object, a new object representing the same date and time is returned.
-If the value is any other object, a <code>Temporal.DateTime</code> will be constructed from the values of any <code>year</code>, <code>month</code>, <code>day</code>, <code>hour</code>, <code>minute</code>, <code>second</code>, <code>millisecond</code>, <code>microsecond</code>, and <code>nanosecond</code> properties that are present.
+If the value is any other object, a <code>Temporal.DateTime</code> will be constructed from the values of any <code>year</code>, <code>month</code>, <code>day</code>, <code>hour</code>, <code>minute</code>, <code>second</code>, <code>millisecond</code>, <code>microsecond</code>, <code>nanosecond</code>, and <code>calendar</code> properties that are present.
 At least the <code>year</code>, <code>month</code>, and <code>day</code> properties must be present.
+If <code>calendar</code> is missing, it will be assumed to be <code>Temporal.Calendar.from(&#39;iso8601&#39;)</code>.
 Any other missing ones will be assumed to be 0.</p>
 <p>Any non-object value is converted to a string, which is expected to be in ISO 8601 format.
 Any time zone part is optional and will be ignored.
@@ -268,6 +276,12 @@ dt <span class="token operator">=</span> Temporal<span class="token punctuation"
 dt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span>year<span class="token operator">:</span> <span class="token number">1995</span><span class="token punctuation">,</span> month<span class="token operator">:</span> <span class="token number">12</span><span class="token punctuation">,</span> day<span class="token operator">:</span> <span class="token number">7</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// => 1995-12-07T00:00</span>
 dt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'1995-12-07T03:24:30'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token comment">// => same as above; Temporal.Date has year, month, and day properties</span>
+
+calendar <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Calendar<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'hebrew'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+dt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> year<span class="token operator">:</span> <span class="token number">5756</span><span class="token punctuation">,</span> month<span class="token operator">:</span> <span class="token number">3</span><span class="token punctuation">,</span> day<span class="token operator">:</span> <span class="token number">14</span><span class="token punctuation">,</span> hour<span class="token operator">:</span> <span class="token number">3</span><span class="token punctuation">,</span> minute<span class="token operator">:</span> <span class="token number">24</span><span class="token punctuation">,</span> second<span class="token operator">:</span> <span class="token number">30</span><span class="token punctuation">,</span> calendar <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// => 1995-12-07T03:24:30[c=hebrew]</span>
+dt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> year<span class="token operator">:</span> <span class="token number">5756</span><span class="token punctuation">,</span> month<span class="token operator">:</span> <span class="token number">3</span><span class="token punctuation">,</span> day<span class="token operator">:</span> <span class="token number">14</span><span class="token punctuation">,</span> hour<span class="token operator">:</span> <span class="token number">3</span><span class="token punctuation">,</span> minute<span class="token operator">:</span> <span class="token number">24</span><span class="token punctuation">,</span> second<span class="token operator">:</span> <span class="token number">30</span><span class="token punctuation">,</span> calendar<span class="token operator">:</span> <span class="token string">'hebrew'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// => same as above</span>
 
 <span class="token comment">// Different disambiguation modes</span>
 dt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> year<span class="token operator">:</span> <span class="token number">2001</span><span class="token punctuation">,</span> month<span class="token operator">:</span> <span class="token number">13</span><span class="token punctuation">,</span> day<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> disambiguation<span class="token operator">:</span> <span class="token string">'constrain'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>
@@ -322,25 +336,28 @@ dt<span class="token punctuation">.</span>minute       <span class="token commen
 dt<span class="token punctuation">.</span>second       <span class="token comment">// => 30</span>
 dt<span class="token punctuation">.</span>millisecond  <span class="token comment">// => 0</span>
 dt<span class="token punctuation">.</span>microsecond  <span class="token comment">// => 3</span>
-dt<span class="token punctuation">.</span>nanosecond   <span class="token comment">// => 500</span></code></pre><h3 id="dayOfWeek"><a class="heading-link" href="#dayOfWeek"></a>datetime.<strong>dayOfWeek</strong> : number</h3><p>The <code>dayOfWeek</code> read-only property gives the weekday number that the date falls on.
-The weekday number is defined as in the ISO 8601 standard: a value between 1 and 7, inclusive, with Monday being 1, and Sunday 7.
+dt<span class="token punctuation">.</span>nanosecond   <span class="token comment">// => 500</span></code></pre><h3 id="calendar"><a class="heading-link" href="#calendar"></a>datetime.<strong>calendar</strong> : object</h3><p>The <code>calendar</code> read-only property gives the calendar that the <code>year</code>, <code>month</code>, and <code>day</code> properties are interpreted in.</p>
+<h3 id="era"><a class="heading-link" href="#era"></a>datetime.<strong>era</strong> : unknown</h3><p>The <code>era</code> read-only property is <code>undefined</code> when using the ISO 8601 calendar.
+It&#39;s used for calendar systems that specify an era in addition to the year.</p>
+<h3 id="dayOfWeek"><a class="heading-link" href="#dayOfWeek"></a>datetime.<strong>dayOfWeek</strong> : number</h3><p>The <code>dayOfWeek</code> read-only property gives the weekday number that the date falls on.
+For the ISO 8601 calendar, the weekday number is defined as in the ISO 8601 standard: a value between 1 and 7, inclusive, with Monday being 1, and Sunday 7.
 For an overview, see <a href="https://en.wikipedia.org/wiki/ISO_8601#Week_dates">ISO 8601 on Wikipedia</a>.</p>
 <p>Usage example:</p>
 <pre class="language-javascript"><code class="language-javascript">dt <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>DateTime</span><span class="token punctuation">(</span><span class="token number">1995</span><span class="token punctuation">,</span> <span class="token number">12</span><span class="token punctuation">,</span> <span class="token number">7</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">24</span><span class="token punctuation">,</span> <span class="token number">30</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">500</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">[</span><span class="token string">'MON'</span><span class="token punctuation">,</span> <span class="token string">'TUE'</span><span class="token punctuation">,</span> <span class="token string">'WED'</span><span class="token punctuation">,</span> <span class="token string">'THU'</span><span class="token punctuation">,</span> <span class="token string">'FRI'</span><span class="token punctuation">,</span> <span class="token string">'SAT'</span><span class="token punctuation">,</span> <span class="token string">'SUN'</span><span class="token punctuation">]</span><span class="token punctuation">[</span>dt<span class="token punctuation">.</span>dayOfWeek <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">]</span>  <span class="token comment">// => THU</span></code></pre><h3 id="dayOfYear"><a class="heading-link" href="#dayOfYear"></a>datetime.<strong>dayOfYear</strong> : number</h3><p>The <code>dayOfYear</code> read-only property gives the ordinal day of the year that the date falls on.
-This is a value between 1 and 365, or 366 in a leap year.</p>
+For the ISO 8601 calendar, this is a value between 1 and 365, or 366 in a leap year.</p>
 <p>Usage example:</p>
 <pre class="language-javascript"><code class="language-javascript">dt <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>DateTime</span><span class="token punctuation">(</span><span class="token number">1995</span><span class="token punctuation">,</span> <span class="token number">12</span><span class="token punctuation">,</span> <span class="token number">7</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">24</span><span class="token punctuation">,</span> <span class="token number">30</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">500</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token comment">// ISO ordinal date</span>
 console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>dt<span class="token punctuation">.</span>year<span class="token punctuation">,</span> dt<span class="token punctuation">.</span>dayOfYear<span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// => 1995 341</span></code></pre><h3 id="weekOfYear"><a class="heading-link" href="#weekOfYear"></a>datetime.<strong>weekOfYear</strong> : number</h3><p>The <code>weekOfYear</code> read-only property gives the ISO week number of the date.
-This is normally a value between 1 and 52, but in a few cases it can be 53 as well.
+For the ISO 8601 calendar, this is normally a value between 1 and 52, but in a few cases it can be 53 as well.
 ISO week 1 is the week containing the first Thursday of the year.
 For more information on ISO week numbers, see for example the Wikipedia article on <a href="https://en.wikipedia.org/wiki/ISO_week_date">ISO week date</a>.</p>
 <p>Usage example:</p>
 <pre class="language-javascript"><code class="language-javascript">dt <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>DateTime</span><span class="token punctuation">(</span><span class="token number">1995</span><span class="token punctuation">,</span> <span class="token number">12</span><span class="token punctuation">,</span> <span class="token number">7</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">24</span><span class="token punctuation">,</span> <span class="token number">30</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">500</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token comment">// ISO week date</span>
 console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>dt<span class="token punctuation">.</span>year<span class="token punctuation">,</span> dt<span class="token punctuation">.</span>weekOfYear<span class="token punctuation">,</span> dt<span class="token punctuation">.</span>dayOfWeek<span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// => 1995 49 4</span></code></pre><h3 id="daysInMonth"><a class="heading-link" href="#daysInMonth"></a>datetime.<strong>daysInMonth</strong> : number</h3><p>The <code>daysInMonth</code> read-only property gives the number of days in the month that the date falls in.
-This is 28, 29, 30, or 31, depending on the month and whether the year is a leap year.</p>
+For the ISO 8601 calendar, this is 28, 29, 30, or 31, depending on the month and whether the year is a leap year.</p>
 <p>Usage example:</p>
 <pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Attempt to write some mnemonic poetry</span>
 <span class="token keyword">const</span> monthsByDays <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
@@ -356,7 +373,7 @@ strings<span class="token punctuation">.</span><span class="token function">unsh
 <span class="token keyword">const</span> poem <span class="token operator">=</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">Thirty days hath </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>format<span class="token punctuation">.</span><span class="token function">format</span><span class="token punctuation">(</span>strings<span class="token punctuation">)</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>
 
 console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>poem<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre><h3 id="daysInYear"><a class="heading-link" href="#daysInYear"></a>datetime.<strong>daysInYear</strong> : number</h3><p>The <code>daysInYear</code> read-only property gives the number of days in the year that the date falls in.
-This is 365 or 366, depending on whether the year is a leap year.</p>
+For the ISO 8601 calendar, this is 365 or 366, depending on whether the year is a leap year.</p>
 <p>Usage example:</p>
 <pre class="language-javascript"><code class="language-javascript">dt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">dateTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 percent <span class="token operator">=</span> dt<span class="token punctuation">.</span>dayOfYear <span class="token operator">/</span> dt<span class="token punctuation">.</span>daysInYear<span class="token punctuation">;</span>
@@ -386,9 +403,21 @@ The default is <code>constrain</code>.</li>
 <blockquote>
 <p><strong>NOTE</strong>: The allowed values for the <code>dateTimeLike.month</code> property start at 1, which is different from legacy <code>Date</code> where months are represented by zero-based indices (0 to 11).</p>
 </blockquote>
+<blockquote>
+<p><strong>NOTE</strong>: If a <code>calendar</code> property is provided on <code>dateTimeLike</code>, the new calendar is applied first, before any of the other properties.
+If you are passing in an object with <em>only</em> a <code>calendar</code> property, it is recommended to use the <code>withCalendar</code> method instead.</p>
+</blockquote>
 <p>Usage example:</p>
 <pre class="language-javascript"><code class="language-javascript">dt <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>DateTime</span><span class="token punctuation">(</span><span class="token number">1995</span><span class="token punctuation">,</span> <span class="token number">12</span><span class="token punctuation">,</span> <span class="token number">7</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">24</span><span class="token punctuation">,</span> <span class="token number">30</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">500</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-dt<span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span><span class="token punctuation">{</span>year<span class="token operator">:</span> <span class="token number">2015</span><span class="token punctuation">,</span> second<span class="token operator">:</span> <span class="token number">31</span><span class="token punctuation">}</span><span class="token punctuation">)</span>  <span class="token comment">// => 2015-12-07T03:24:31.000003500</span></code></pre><h3 id="plus"><a class="heading-link" href="#plus"></a>datetime.<strong>plus</strong>(<em>duration</em>: object, <em>options</em>?: object) : Temporal.DateTime</h3><p><strong>Parameters:</strong></p>
+dt<span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span><span class="token punctuation">{</span>year<span class="token operator">:</span> <span class="token number">2015</span><span class="token punctuation">,</span> second<span class="token operator">:</span> <span class="token number">31</span><span class="token punctuation">}</span><span class="token punctuation">)</span>  <span class="token comment">// => 2015-12-07T03:24:31.000003500</span></code></pre><h3 id="withCalendar"><a class="heading-link" href="#withCalendar"></a>datetime.<strong>withCalendar</strong>(<em>calendar</em>: object | string) : Temporal.DateTime</h3><p><strong>Parameters:</strong></p>
+<ul>
+<li><code>calendar</code> (<code>Temporal.Calendar</code> or plain object or string): The calendar into which to project <code>datetime</code>.</li>
+</ul>
+<p><strong>Returns:</strong> a new <code>Temporal.DateTime</code> object which is the date indicated by <code>datetime</code>, projected into <code>calendar</code>.</p>
+<p>This method is the same as <code>datetime.with({ calendar })</code>, but may be more efficient.</p>
+<p>Usage example:</p>
+<pre class="language-javascript"><code class="language-javascript">dt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'1995-12-07T03:24:30.000003500[c=japanese]'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+dt<span class="token punctuation">.</span><span class="token function">withCalendar</span><span class="token punctuation">(</span><span class="token string">'iso8601'</span><span class="token punctuation">)</span>  <span class="token comment">// => 1995-12-07T03:24:30.000003500</span></code></pre><h3 id="plus"><a class="heading-link" href="#plus"></a>datetime.<strong>plus</strong>(<em>duration</em>: object, <em>options</em>?: object) : Temporal.DateTime</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>duration</code> (object): A <code>Temporal.Duration</code> object or a duration-like object.</li>
 <li><code>options</code> (optional object): An object with properties representing options for the addition.
@@ -576,7 +605,7 @@ The converted object carries a copy of all the relevant fields of <code>datetime
 dt<span class="token punctuation">.</span><span class="token function">getDate</span><span class="token punctuation">(</span><span class="token punctuation">)</span>  <span class="token comment">// => 1995-12-07</span>
 dt<span class="token punctuation">.</span><span class="token function">getYearMonth</span><span class="token punctuation">(</span><span class="token punctuation">)</span>  <span class="token comment">// => 1995-12</span>
 dt<span class="token punctuation">.</span><span class="token function">getMonthDay</span><span class="token punctuation">(</span><span class="token punctuation">)</span>  <span class="token comment">// => 12-07</span>
-dt<span class="token punctuation">.</span><span class="token function">getTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span>  <span class="token comment">// => 03:24:30.000003500</span></code></pre><h3 id="getFields"><a class="heading-link" href="#getFields"></a>datetime.<strong>getFields</strong>() : { year: number, month: number, day: number, hour: number, minute: number, second: number, millisecond: number, microsecond: number, nanosecond: number, [propName: string]: unknown }</h3><p><strong>Returns:</strong> a plain object with properties equal to the fields of <code>datetime</code>.</p>
+dt<span class="token punctuation">.</span><span class="token function">getTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span>  <span class="token comment">// => 03:24:30.000003500</span></code></pre><h3 id="getFields"><a class="heading-link" href="#getFields"></a>datetime.<strong>getFields</strong>() : { year: number, month: number, day: number, hour: number, minute: number, second: number, millisecond: number, microsecond: number, nanosecond: number, calendar: object, [propName: string]: unknown }</h3><p><strong>Returns:</strong> a plain object with properties equal to the fields of <code>datetime</code>.</p>
 <p>This method can be used to convert a <code>Temporal.DateTime</code> into a record-like data structure.
 It returns a new plain JavaScript object, with all the fields as enumerable, writable, own data properties.</p>
 <p>Note that if using a different calendar from ISO 8601, these will be the calendar-specific values.</p>
@@ -589,10 +618,18 @@ Object<span class="token punctuation">.</span><span class="token function">assig
 Object<span class="token punctuation">.</span><span class="token function">assign</span><span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span> dt<span class="token punctuation">.</span><span class="token function">getFields</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span>day  <span class="token comment">// => 7</span></code></pre><h3 id="getISOCalendarFields"><a class="heading-link" href="#getISOCalendarFields"></a>datetime.<strong>getISOCalendarFields</strong>(): { year: number, month: number, day: number, hour: number, minute: number, second: number, millisecond: number, microsecond: number, nanosecond: number }</h3><p><strong>Returns:</strong> a plain object with properties expressing <code>datetime</code> in the ISO 8601 calendar.</p>
 <p>This method is mainly useful if you are implementing a custom calendar.
 Most code will not need to use it.
-Use <code>datetime.getFields()</code> instead.</p>
+Use <code>datetime.getFields()</code> instead, or <code>datetime.withCalendar(&#39;iso8601&#39;).getFields()</code>.</p>
 <p>Usage example:</p>
 <pre class="language-javascript"><code class="language-javascript">dt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'1995-12-07T03:24:30.000003500'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-date<span class="token punctuation">.</span><span class="token function">getISOCalendarFields</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>day  <span class="token comment">// => 7</span></code></pre>    <footer>
+date<span class="token punctuation">.</span><span class="token function">getISOCalendarFields</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>day  <span class="token comment">// => 7</span>
+
+<span class="token comment">// Date in other calendar</span>
+dt <span class="token operator">=</span> dt<span class="token punctuation">.</span><span class="token function">withCalendar</span><span class="token punctuation">(</span><span class="token string">'hebrew'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+dt<span class="token punctuation">.</span><span class="token function">getFields</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>day  <span class="token comment">// => 14</span>
+dt<span class="token punctuation">.</span><span class="token function">getISOCalendarFields</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>day  <span class="token comment">// => 7</span>
+
+<span class="token comment">// Most likely what you need is this:</span>
+dt<span class="token punctuation">.</span><span class="token function">withCalendar</span><span class="token punctuation">(</span><span class="token string">'iso8601'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>day  <span class="token comment">// => 7</span></code></pre>    <footer>
       <p>
         This page includes a script which loads an implementation of Temporal in your browser.
         You can open a console in your browser's developer tools and try it out directly!
