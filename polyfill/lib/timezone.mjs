@@ -193,8 +193,8 @@ export class TimeZone {
     if (!ES.IsTemporalAbsolute(startingPoint)) throw new TypeError('invalid Absolute object');
     const id = GetSlot(this, TIMEZONE_ID);
 
-    // Offset time zones have no transitions
-    if (parseOffsetString(id) !== null) {
+    // Offset time zones or UTC have no transitions
+    if (parseOffsetString(id) !== null || id === 'UTC') {
       return null;
     }
 
@@ -208,8 +208,8 @@ export class TimeZone {
     if (!ES.IsTemporalAbsolute(startingPoint)) throw new TypeError('invalid Absolute object');
     const id = GetSlot(this, TIMEZONE_ID);
 
-    // Offset time zones have no transitions
-    if (parseOffsetString(id) !== null) {
+    // Offset time zones or UTC have no transitions
+    if (parseOffsetString(id) !== null || id === 'UTC') {
       return null;
     }
 
