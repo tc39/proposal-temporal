@@ -422,11 +422,9 @@
         1. Perform ? RequireInternalSlot(_other_, [[InitializedTemporalDateTime]]).
         1. Let _largestUnit_ be ? ToLargestTemporalUnit(_options_, « », *"days"*).
         1. If ! CompareTemporalDateTime(_dateTime_, _other_) &lt; 0, then
-          1. Let _greater_ be _other_.
-          1. Let _smaller_ be _dateTime_.
-        1. Else,
-          1. Let _greater_ be _dateTime_.
-          1. Let _smaller_ be _other_.
+          1. Throw a *RangeError* exception.
+        1. Let _greater_ be _dateTime_.
+        1. Let _smaller_ be _other_.
         1. Let _timeDifference_ be ! DifferenceTime(_smaller_, _greater_).
         1. Let _balanceResult_ be ? BalanceDate(_greater_.[[ISOYear]], _greater_.[[ISOMonth]], _greater_.[[ISODay]] + _timeDifference_.[[Days]]).
         1. Let _dateDifference_ be ! DifferenceDate(_smaller_, _balanceResult_, _largestUnit_).

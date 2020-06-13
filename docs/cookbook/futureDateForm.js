@@ -14,8 +14,8 @@ function englishPlural(n, singular, plural) {
 if (futuredateParam !== null) {
   const futureDate = Temporal.Date.from(futuredateParam);
   const today = Temporal.now.date();
-  const until = today.difference(futureDate, { largestUnit: 'days' });
-  const untilMonths = today.difference(futureDate, { largestUnit: 'months' });
+  const until = futureDate.difference(today, { largestUnit: 'days' });
+  const untilMonths = futureDate.difference(today, { largestUnit: 'months' });
 
   const dayString = englishPlural(until.days, 'day', 'days');
   const monthString =

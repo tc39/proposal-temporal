@@ -245,23 +245,21 @@ time.minus({ minutes: 5, nanoseconds: 800 })  // => 19:34:09.068345405
 **Returns:** a `Temporal.Duration` representing the difference between `time` and `other`.
 
 This method computes the difference between the two times represented by `time` and `other`, and returns it as a `Temporal.Duration` object.
-The difference is always positive, and always 12 hours or less, no matter the order of `time` and `other`, because `Temporal.Duration` objects cannot represent negative durations.
+A `RangeError` will be thrown if `other` is later than `time`, because `Temporal.Duration` objects cannot represent negative durations.
 
 The `largestUnit` parameter controls how the resulting duration is expressed.
 The returned `Temporal.Duration` object will not have any nonzero fields that are larger than the unit in `largestUnit`.
-A difference of two hours will become 7200 seconds when `largestUnit` is `"seconds"`, for example.
-However, a difference of 30 seconds will still be 30 seconds even if `largestUnit` is `"hours"`.
+A difference of two hours will become 7200 seconds when `largestUnit` is `'seconds'`, for example.
+However, a difference of 30 seconds will still be 30 seconds even if `largestUnit` is `'hours'`.
 
-The default largest unit in the result is technically days, for consistency with other Temporal types' `difference` methods.
-However, since this method never returns any duration longer than 12 hours, largest units of years, months, or days, are by definition treated as hours.
+The default largest unit in the result is technically `'days'`, for consistency with other Temporal types' `difference` methods.
+However, since time differences are always shorter than one day, largest units of `'years'`, `'months'`, or `'days'` are treated as `'hours'`.
 
 Usage example:
 ```javascript
-time = Temporal.Time.from('19:39:09.068346205');
-time.difference(Temporal.Time.from('20:13:20.971398099'))  // => PT34M11.903051894S
-
-// The difference is always less than 12 hours, crossing midnight if needed
-Temporal.Time.from('01:00').difference(Temporal.Time.from('23:00'))  // => P2H
+time = Temporal.Time.from('20:13:20.971398099');
+time.difference(Temporal.Time.from('19:39:09.068346205'))  // => PT34M11.903051894S
+time.difference(Temporal.Time.from('22:39:09.068346205'))  // => throws RangeError
 ```
 
 ### time.**equals**(_other_: Temporal.Time) : boolean

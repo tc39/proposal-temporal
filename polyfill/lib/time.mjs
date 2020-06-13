@@ -169,16 +169,9 @@ export class Time {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
     if (!ES.IsTemporalTime(other)) throw new TypeError('invalid Time object');
     const largestUnit = ES.ToLargestTemporalUnit(options, 'hours');
-    const [earlier, later] = [this, other].sort(Time.compare);
-    let { hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.DifferenceTime(earlier, later);
-    if (hours >= 12) {
-      hours = 24 - hours;
-      minutes *= -1;
-      seconds *= -1;
-      milliseconds *= -1;
-      microseconds *= -1;
-      nanoseconds *= -1;
-    }
+    const comparison = Time.compare(this, other);
+    if (comparison < 0) throw new RangeError('other instance cannot be larger than `this`');
+    let { hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.DifferenceTime(other, this);
     ({ hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.BalanceDuration(
       0,
       hours,

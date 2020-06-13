@@ -273,12 +273,12 @@ For example:
 ```javascript
 d1 = Temporal.Date.from('2020-07-29').withCalendar('chinese');
 d2 = Temporal.Date.from('2020-08-29').withCalendar('chinese');
-d1.difference(d2, { largestUnit: 'months' })  // => P1M2D
+d2.difference(d1, { largestUnit: 'months' })  // => P1M2D
 
 // same result, but calling the method directly:
 Temporal.Calendar.from('chinese').difference(
-    Temporal.Date.from('2020-07-29'),
     Temporal.Date.from('2020-08-29'),
+    Temporal.Date.from('2020-07-29'),
     { largestUnit: 'months' }
 )  // => P1M2D
 ```

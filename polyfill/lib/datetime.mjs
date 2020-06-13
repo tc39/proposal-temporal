@@ -439,24 +439,25 @@ export class DateTime {
       );
     }
     const largestUnit = ES.ToLargestTemporalUnit(options, 'days');
-    const [smaller, larger] = [this, other].sort(DateTime.compare);
+    const comparison = DateTime.compare(this, other);
+    if (comparison < 0) throw new RangeError('other instance cannot be larger than `this`');
     let { deltaDays, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.DifferenceTime(
-      smaller,
-      larger
+      other,
+      this
     );
-    let year = GetSlot(larger, ISO_YEAR);
-    let month = GetSlot(larger, ISO_MONTH);
-    let day = GetSlot(larger, ISO_DAY) + deltaDays;
+    let year = GetSlot(this, ISO_YEAR);
+    let month = GetSlot(this, ISO_MONTH);
+    let day = GetSlot(this, ISO_DAY) + deltaDays;
     ({ year, month, day } = ES.BalanceDate(year, month, day));
 
     const TemporalDate = GetIntrinsic('%Temporal.Date%');
-    const adjustedLarger = new TemporalDate(year, month, day, GetSlot(larger, CALENDAR));
+    const adjustedLarger = new TemporalDate(year, month, day, GetSlot(this, CALENDAR));
     let dateLargestUnit = 'days';
     if (largestUnit === 'years' || largestUnit === 'months' || largestUnit === 'weeks') {
       dateLargestUnit = largestUnit;
     }
     const dateOptions = ObjectAssign({}, options, { largestUnit: dateLargestUnit });
-    const dateDifference = calendar.difference(smaller, adjustedLarger, dateOptions);
+    const dateDifference = calendar.difference(other, adjustedLarger, dateOptions);
 
     let days;
     ({ days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.BalanceDuration(

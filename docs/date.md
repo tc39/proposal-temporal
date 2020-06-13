@@ -372,7 +372,7 @@ date.minus({ months: 1 }, { disambiguation: 'reject' })  // => throws
 **Returns:** a `Temporal.Duration` representing the difference between `date` and `other`.
 
 This method computes the difference between the two dates represented by `date` and `other`, and returns it as a `Temporal.Duration` object.
-The difference is always positive, no matter the order of `date` and `other`, because `Temporal.Duration` objects cannot represent negative durations.
+A `RangeError` will be thrown if `other` is later than `date`, because `Temporal.Duration` objects cannot represent negative durations.
 
 The `largestUnit` option controls how the resulting duration is expressed.
 The returned `Temporal.Duration` object will not have any nonzero fields that are larger than the unit in `largestUnit`.
@@ -385,10 +385,11 @@ Unlike other Temporal types, hours and lower are not allowed, because the data m
 
 Usage example:
 ```javascript
-date = Temporal.Date.from('2006-08-24');
-other = Temporal.Date.from('2019-01-31');
+date = Temporal.Date.from('2019-01-31');
+other = Temporal.Date.from('2006-08-24');
 date.difference(other)                            // => P4543D
 date.difference(other, { largestUnit: 'years' })  // => P12Y5M7D
+other.difference(date, { largestUnit: 'years' })  // => throws RangeError
 
 // If you really need to calculate the difference between two Dates in
 // hours, you can eliminate the ambiguity by explicitly choosing the
