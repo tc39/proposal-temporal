@@ -9,17 +9,17 @@
   "main": "polyfill/lib/index.mjs",
   "dependencies": {
     "ecmarkup": "^3.21.1",
-    "eslint": "^7.1.0",
+    "eslint": "^7.2.0",
     "mkdirp": "^1.0.0",
     "big-integer": "^1.6.48",
     "es-abstract": "^1.17.4"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^3.0.1",
-    "@typescript-eslint/parser": "^3.0.1",
-    "typescript": "^3.9.3",
-    "eslint-config-prettier": "^6.10.0",
-    "eslint-plugin-prettier": "^3.1.2",
+    "@typescript-eslint/eslint-plugin": "^3.2.0",
+    "@typescript-eslint/parser": "^3.2.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-prettier": "^3.1.3",
+    "typescript": "^3.9.5",
     "prettier": "^1.19.1"
   },
   "scripts": {
@@ -28,7 +28,8 @@
     "codecov:test262": "cd polyfill && npm install && npm run codecov:test262 && cd ..",
     "test-cookbook": "cd polyfill && npm install && npm run test-cookbook && cd ..",
     "test262": "cd polyfill && npm install && npm run test262",
-    "lint": "eslint . --ext js,mjs,.d.ts",
+    "lint": "eslint . --ext js,mjs,.d.ts && npm run tscheck",
+    "tscheck": "tsc polyfill/index.d.ts --noEmit --lib ESNext",
     "build:polyfill": "cd polyfill && npm install && npm run build && cd ..",
     "build:javascript": "npm run build:polyfill && cd docs && npm install && npm run build:javascript",
     "build:docs": "cd docs && npm install && npm run build:docs",
