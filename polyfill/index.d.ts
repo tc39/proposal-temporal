@@ -128,6 +128,9 @@ export namespace Temporal {
     microseconds?: number;
     nanoseconds?: number;
   };
+
+  export type DurationFields = Required<DurationLike>;
+
   /**
    *
    * A `Temporal.Duration` represents an immutable duration of time which can be
@@ -135,7 +138,7 @@ export namespace Temporal {
    *
    * See https://tc39.es/proposal-temporal/docs/duration.html for more details.
    */
-  export class Duration implements Required<DurationLike> {
+  export class Duration implements DurationFields {
     static from(
       item: Temporal.Duration | DurationLike | string,
       options?: DurationAssignmentOptions
@@ -165,7 +168,7 @@ export namespace Temporal {
     with(durationLike: DurationLike, options?: DurationAssignmentOptions): Temporal.Duration;
     plus(other: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.Duration;
     minus(other: Temporal.Duration | DurationLike, options?: DurationMinusOptions): Temporal.Duration;
-    getFields(): Required<DurationLike>;
+    getFields(): DurationFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
     toString(): string;
@@ -253,7 +256,7 @@ export namespace Temporal {
       smaller: Temporal.Date,
       larger: Temporal.Date,
       options: DifferenceOptions<'years' | 'months' | 'weeks' | 'days'>
-    );
+    ): Temporal.Duration;
   };
 
   /**
@@ -309,7 +312,7 @@ export namespace Temporal {
       smaller: Temporal.Date,
       larger: Temporal.Date,
       options?: DifferenceOptions<'years' | 'months' | 'weeks' | 'days'>
-    );
+    ): Temporal.Duration;
     toString(): string;
   }
 
@@ -344,7 +347,7 @@ export namespace Temporal {
    *
    * See https://tc39.es/proposal-temporal/docs/date.html for more details.
    */
-  export class Date implements Required<DateLike> {
+  export class Date implements DateFields {
     static from(item: Temporal.Date | DateLike | string, options?: AssignmentOptions): Temporal.Date;
     static compare(one: Temporal.Date, two: Temporal.Date): ComparisonResult;
     constructor(isoYear: number, isoMonth: number, isoDay: number, calendar?: CalendarProtocol);
@@ -428,7 +431,7 @@ export namespace Temporal {
    *
    * See https://tc39.es/proposal-temporal/docs/datetime.html for more details.
    */
-  export class DateTime implements Required<DateTimeLike> {
+  export class DateTime implements DateTimeFields {
     static from(item: Temporal.DateTime | DateTimeLike | string, options?: AssignmentOptions): Temporal.DateTime;
     static compare(one: Temporal.DateTime, two: Temporal.DateTime): ComparisonResult;
     constructor(
@@ -499,7 +502,7 @@ export namespace Temporal {
    *
    * See https://tc39.es/proposal-temporal/docs/monthday.html for more details.
    */
-  export class MonthDay implements Required<MonthDayLike> {
+  export class MonthDay implements MonthDayFields {
     static from(item: Temporal.MonthDay | MonthDayLike | string, options?: AssignmentOptions): Temporal.MonthDay;
     constructor(isoMonth: number, isoDay: number, calendar?: CalendarProtocol, refISOYear?: number);
     readonly month: number;
@@ -524,6 +527,8 @@ export namespace Temporal {
     nanosecond?: number;
   };
 
+  export type TimeFields = Required<TimeLike>;
+
   /**
    * A `Temporal.Time` represents a wall-clock time, with a precision in
    * nanoseconds, and without any time zone. "Wall-clock time" refers to the
@@ -539,7 +544,7 @@ export namespace Temporal {
    *
    * See https://tc39.es/proposal-temporal/docs/time.html for more details.
    */
-  export class Time implements Required<TimeLike> {
+  export class Time implements TimeFields {
     static from(item: Temporal.Time | TimeLike | string, options?: AssignmentOptions): Temporal.Time;
     static compare(one: Temporal.Time, two: Temporal.Time): ComparisonResult;
     constructor(
@@ -562,7 +567,7 @@ export namespace Temporal {
     minus(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.Time;
     difference(other: Temporal.Time, options?: DifferenceOptions<'hours' | 'minutes' | 'seconds'>): Temporal.Duration;
     withDate(temporalDate: Temporal.Date): Temporal.DateTime;
-    getFields(): Required<TimeLike>;
+    getFields(): TimeFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
     toString(): string;
@@ -630,7 +635,7 @@ export namespace Temporal {
    *
    * See https://tc39.es/proposal-temporal/docs/yearmonth.html for more details.
    */
-  export class YearMonth implements Required<YearMonthLike> {
+  export class YearMonth implements YearMonthFields {
     static from(item: Temporal.YearMonth | YearMonthLike | string, options?: AssignmentOptions): Temporal.YearMonth;
     static compare(one: Temporal.YearMonth, two: Temporal.YearMonth): ComparisonResult;
     constructor(isoYear: number, isoMonth: number, calendar?: CalendarProtocol, refISODay?: number);
