@@ -32,8 +32,10 @@ describe('TimeZone', () => {
         equal(typeof Temporal.TimeZone.prototype.getAbsoluteFor, 'function'));
       it('Temporal.TimeZone.prototype has getPossibleAbsolutesFor', () =>
         equal(typeof Temporal.TimeZone.prototype.getPossibleAbsolutesFor, 'function'));
-      it('Temporal.TimeZone.prototype has getTransitions', () =>
-        equal(typeof Temporal.TimeZone.prototype.getTransitions, 'function'));
+      it('Temporal.TimeZone.prototype has getNextTransition', () =>
+        equal(typeof Temporal.TimeZone.prototype.getNextTransition, 'function'));
+      it('Temporal.TimeZone.prototype has getPreviousTransition', () =>
+        equal(typeof Temporal.TimeZone.prototype.getPreviousTransition, 'function'));
       it('Temporal.TimeZone.prototype has toString', () =>
         equal(typeof Temporal.TimeZone.prototype.toString, 'function'));
     });
@@ -121,7 +123,8 @@ describe('TimeZone', () => {
     it(`${zone} has offset +01:00`, () => equal(zone.getOffsetStringFor(abs), '+01:00'));
     it(`(${zone}).getDateTimeFor(${abs})`, () => assert(zone.getDateTimeFor(abs) instanceof Temporal.DateTime));
     it(`(${zone}).getAbsoluteFor(${dtm})`, () => assert(zone.getAbsoluteFor(dtm) instanceof Temporal.Absolute));
-    it(`(${zone}).getTransitions() => []`, () => equal(ArrayFrom(zone.getTransitions(abs), 4).length, 0));
+    it(`(${zone}).getNextTransition(${abs})`, () => zone.getNextTransition(abs), null);
+    it(`(${zone}).getPreviousTransition(${abs})`, () => zone.getPreviousTransition(abs), null);
     it('wraps around to the next day', () =>
       equal(`${zone.getDateTimeFor(Temporal.Absolute.from('2020-02-06T23:59Z'))}`, '2020-02-07T00:59'));
   });
@@ -134,7 +137,8 @@ describe('TimeZone', () => {
     it(`${zone} has offset +00:00`, () => equal(zone.getOffsetStringFor(abs), '+00:00'));
     it(`(${zone}).getDateTimeFor(${abs})`, () => assert(zone.getDateTimeFor(abs) instanceof Temporal.DateTime));
     it(`(${zone}).getAbsoluteFor(${dtm})`, () => assert(zone.getAbsoluteFor(dtm) instanceof Temporal.Absolute));
-    it(`(${zone}).getTransitions() => []`, () => equal(ArrayFrom(zone.getTransitions(abs), 4).length, 0));
+    it(`(${zone}).getNextTransition(${abs})`, () => zone.getNextTransition(abs), null);
+    it(`(${zone}).getPreviousTransition(${abs})`, () => zone.getPreviousTransition(abs), null);
   });
   describe('America/Los_Angeles', () => {
     const zone = new Temporal.TimeZone('America/Los_Angeles');
@@ -145,7 +149,18 @@ describe('TimeZone', () => {
     it(`${zone} has offset -08:00`, () => equal(zone.getOffsetStringFor(abs), '-08:00'));
     it(`(${zone}).getDateTimeFor(${abs})`, () => assert(zone.getDateTimeFor(abs) instanceof Temporal.DateTime));
     it(`(${zone}).getAbsoluteFor(${dtm})`, () => assert(zone.getAbsoluteFor(dtm) instanceof Temporal.Absolute));
-    it(`(${zone}).getTransitions() => [4-transitions]`, () => equal(ArrayFrom(zone.getTransitions(abs), 4).length, 4));
+    it(`(${zone}).getNextTransition() x 4 transitions`, () => {
+      for (let i = 0, txn = abs; i < 4; i++) {
+        const transition = zone.getNextTransition(txn);
+        assert(transition);
+      }
+    });
+    it(`(${zone}).getPreviousTransition() x 4 transitions`, () => {
+      for (let i = 0, txn = abs; i < 4; i++) {
+        const transition = zone.getPreviousTransition(txn);
+        assert(transition);
+      }
+    });
   });
   describe('with DST change', () => {
     it('clock moving forward', () => {
@@ -245,39 +260,30 @@ describe('TimeZone', () => {
       );
     });
   });
-  describe('getTransitions works as expected', () => {
+  describe('getNextTransition works as expected', () => {
     it('should not have bug #510', () => {
       // See https://github.com/tc39/proposal-temporal/issues/510 for more.
       const nyc = Temporal.TimeZone.from('America/New_York');
       const a1 = Temporal.Absolute.from('2019-04-16T21:01Z');
       const a2 = Temporal.Absolute.from('1800-01-01T00:00Z');
 
-      equal(
-        nyc
-          .getTransitions(a1)
-          .next()
-          .value.toString(),
-        '2019-11-03T06:00Z'
-      );
-      equal(
-        nyc
-          .getTransitions(a2)
-          .next()
-          .value.toString(),
-        '1883-11-18T17:00Z'
-      );
+      equal(nyc.getNextTransition(a1).toString(), '2019-11-03T06:00Z');
+      equal(nyc.getNextTransition(a2).toString(), '1883-11-18T17:00Z');
+    });
+  });
+
+  describe('getPreviousTransition works as expected', () => {
+    it('should return first and last transition', () => {
+      const london = Temporal.TimeZone.from('Europe/London');
+      const a1 = Temporal.Absolute.from('2020-06-11T21:01Z');
+      const a2 = Temporal.Absolute.from('1848-01-01T00:00Z');
+
+      equal(london.getPreviousTransition(a1).toString(), '2020-03-29T01:00Z');
+      equal(london.getPreviousTransition(a2).toString(), '1847-12-01T00:01:15Z');
     });
   });
 });
 
-function ArrayFrom(iter, limit = Number.POSITIVE_INFINITY) {
-  const result = [];
-  for (let item of iter) {
-    if (result.length >= limit) return result;
-    result.push(item);
-  }
-  return result;
-}
 import { normalize } from 'path';
 if (normalize(import.meta.url.slice(8)) === normalize(process.argv[1])) {
   report(reporter).then((failed) => process.exit(failed ? 1 : 0));

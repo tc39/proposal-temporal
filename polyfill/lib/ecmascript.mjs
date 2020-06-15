@@ -45,6 +45,7 @@ const NS_MIN = bigInt(-86400).multiply(1e17);
 const NS_MAX = bigInt(86400).multiply(1e17);
 const YEAR_MIN = -271821;
 const YEAR_MAX = 275760;
+const BEFORE_FIRST_DST = bigInt(-388152).multiply(1e13); // 1847-01-01T00:00:00Z
 
 const BUILTIN_CALENDARS = {
   gregory: CalendarGregorian,
@@ -808,6 +809,29 @@ export const ES = ObjectAssign({}, ES2019, {
       }
     }
     if (leftOffsetNs === rightOffsetNs) return null;
+    const result = bisect(
+      (epochNs) => ES.GetIANATimeZoneOffsetNanoseconds(epochNs, id),
+      leftNanos,
+      rightNanos,
+      leftOffsetNs,
+      rightOffsetNs
+    );
+    return result;
+  },
+  GetIANATimeZonePreviousTransition: (epochNanoseconds, id) => {
+    const lowercap = BEFORE_FIRST_DST; // 1847-01-01T00:00:00Z
+    let rightNanos = epochNanoseconds;
+    let rightOffsetNs = ES.GetIANATimeZoneOffsetNanoseconds(rightNanos, id);
+    let leftNanos = rightNanos;
+    let leftOffsetNs = rightOffsetNs;
+    while (rightOffsetNs === leftOffsetNs && bigInt(rightNanos).compare(lowercap) === 1) {
+      leftNanos = bigInt(rightNanos).minus(2 * 7 * DAYMILLIS * 1e6);
+      leftOffsetNs = ES.GetIANATimeZoneOffsetNanoseconds(leftNanos, id);
+      if (rightOffsetNs === leftOffsetNs) {
+        rightNanos = leftNanos;
+      }
+    }
+    if (rightOffsetNs === leftOffsetNs) return null;
     const result = bisect(
       (epochNs) => ES.GetIANATimeZoneOffsetNanoseconds(epochNs, id),
       leftNanos,

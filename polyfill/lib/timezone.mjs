@@ -188,38 +188,35 @@ export class TimeZone {
     );
     return possibleEpochNs.map((ns) => new Absolute(ns));
   }
-  getTransitions(startingPoint) {
+  getNextTransition(startingPoint) {
     if (!ES.IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');
     if (!ES.IsTemporalAbsolute(startingPoint)) throw new TypeError('invalid Absolute object');
     const id = GetSlot(this, TIMEZONE_ID);
 
-    // Offset time zones have no transitions
-    if (parseOffsetString(id) !== null) {
-      const result = {
-        next() {
-          return { value: undefined, done: true };
-        }
-      };
-      if (typeof Symbol === 'function') {
-        result[Symbol.iterator] = () => result;
-      }
-      return result;
+    // Offset time zones or UTC have no transitions
+    if (parseOffsetString(id) !== null || id === 'UTC') {
+      return null;
     }
 
     let epochNanoseconds = GetSlot(startingPoint, EPOCHNANOSECONDS);
     const Absolute = GetIntrinsic('%Temporal.Absolute%');
-    const result = {
-      next: () => {
-        epochNanoseconds = ES.GetIANATimeZoneNextTransition(epochNanoseconds, id);
-        const done = epochNanoseconds === null;
-        const value = epochNanoseconds === null ? null : new Absolute(epochNanoseconds);
-        return { done, value };
-      }
-    };
-    if (typeof Symbol === 'function') {
-      result[Symbol.iterator] = () => result;
+    epochNanoseconds = ES.GetIANATimeZoneNextTransition(epochNanoseconds, id);
+    return epochNanoseconds === null ? null : new Absolute(epochNanoseconds);
+  }
+  getPreviousTransition(startingPoint) {
+    if (!ES.IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');
+    if (!ES.IsTemporalAbsolute(startingPoint)) throw new TypeError('invalid Absolute object');
+    const id = GetSlot(this, TIMEZONE_ID);
+
+    // Offset time zones or UTC have no transitions
+    if (parseOffsetString(id) !== null || id === 'UTC') {
+      return null;
     }
-    return result;
+
+    let epochNanoseconds = GetSlot(startingPoint, EPOCHNANOSECONDS);
+    const Absolute = GetIntrinsic('%Temporal.Absolute%');
+    epochNanoseconds = ES.GetIANATimeZonePreviousTransition(epochNanoseconds, id);
+    return epochNanoseconds === null ? null : new Absolute(epochNanoseconds);
   }
   toString() {
     if (!ES.IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');

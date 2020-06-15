@@ -30,7 +30,12 @@ describe('Userland time zone', () => {
         const epochNs = MakeDate(dayNum, time);
         return [new Temporal.Absolute(epochNs)];
       }
-      *getTransitions(/* absolute */) {}
+      getNextTransition(/* absolute */) {
+        return null;
+      }
+      getPreviousTransition(/* absolute */) {
+        return null;
+      }
     }
 
     const obj = new CustomUTCSubclass();
@@ -56,7 +61,8 @@ describe('Userland time zone', () => {
     it('converts to string', () => equal(`${obj}`, obj.name));
     it('prints in absolute.toString', () =>
       equal(abs.toString(obj), '1970-01-01T00:00+00:00[Etc/Custom_UTC_Subclass]'));
-    it('transitions -> []', () => equal(Array.from(obj.getTransitions()).length, 0));
+    it('has no next transitions', () => assert.equal(obj.getNextTransition(), null));
+    it('has no previous transitions', () => assert.equal(obj.getPreviousTransition(), null));
     it('works in Temporal.now', () => {
       assert(Temporal.now.dateTime(obj) instanceof Temporal.DateTime);
       assert(Temporal.now.date(obj) instanceof Temporal.Date);
