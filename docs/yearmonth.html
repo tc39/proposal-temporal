@@ -364,7 +364,7 @@ The default is <code>years</code>.</li>
 </ul>
 <p><strong>Returns:</strong> a <code>Temporal.Duration</code> representing the difference between <code>yearMonth</code> and <code>other</code>.</p>
 <p>This method computes the difference between the two months represented by <code>yearMonth</code> and <code>other</code>, and returns it as a <code>Temporal.Duration</code> object.
-The difference is always positive, no matter the order of <code>yearMonth</code> and <code>other</code>, because <code>Temporal.Duration</code> objects cannot represent negative durations.</p>
+A <code>RangeError</code> will be thrown if <code>other</code> is later than <code>yearMonth</code>, because <code>Temporal.Duration</code> objects cannot represent negative durations.</p>
 <p>The <code>largestUnit</code> option controls how the resulting duration is expressed.
 The returned <code>Temporal.Duration</code> object will not have any nonzero fields that are larger than the unit in <code>largestUnit</code>.
 A difference of one year and two months will become 14 months when <code>largestUnit</code> is <code>&quot;months&quot;</code>, for example.
@@ -375,6 +375,7 @@ However, a difference of one month will still be one month even if <code>largest
 other <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>YearMonth<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2006-08'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 ym<span class="token punctuation">.</span><span class="token function">difference</span><span class="token punctuation">(</span>other<span class="token punctuation">)</span>                             <span class="token comment">// => P12Y10M</span>
 ym<span class="token punctuation">.</span><span class="token function">difference</span><span class="token punctuation">(</span>other<span class="token punctuation">,</span> <span class="token punctuation">{</span> largestUnit<span class="token operator">:</span> <span class="token string">'months'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>  <span class="token comment">// => P154M</span>
+other<span class="token punctuation">.</span><span class="token function">difference</span><span class="token punctuation">(</span>ym<span class="token punctuation">,</span> <span class="token punctuation">{</span> largestUnit<span class="token operator">:</span> <span class="token string">'months'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>  <span class="token comment">// => throws RangeError</span>
 
 <span class="token comment">// If you really need to calculate the difference between two YearMonths</span>
 <span class="token comment">// in days, you can eliminate the ambiguity by explicitly choosing the</span>
