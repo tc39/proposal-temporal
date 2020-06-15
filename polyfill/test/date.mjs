@@ -164,7 +164,8 @@ describe('Date', () => {
       equal(duration.nanoseconds, 0);
     });
     it('date.difference({ year: 2019, month: 11, day: 18 }, { largestUnit: "years" })', () => {
-      const duration = date.difference(Date.from({ year: 2019, month: 11, day: 18 }), { largestUnit: 'years' });
+      const later = Date.from({ year: 2019, month: 11, day: 18 });
+      const duration = later.difference(date, { largestUnit: 'years' });
       equal(duration.years, 43);
       equal(duration.months, 0);
       equal(duration.weeks, 0);
@@ -184,12 +185,12 @@ describe('Date', () => {
       const date1 = Date.from('2019-01-01');
       const date2 = Date.from('2019-02-01');
       const date3 = Date.from('2019-03-01');
-      equal(`${date1.difference(date2)}`, 'P31D');
-      equal(`${date2.difference(date3)}`, 'P28D');
+      equal(`${date2.difference(date1)}`, 'P31D');
+      equal(`${date3.difference(date2)}`, 'P28D');
 
       const date4 = Date.from('2020-02-01');
       const date5 = Date.from('2020-03-01');
-      equal(`${date4.difference(date5)}`, 'P29D');
+      equal(`${date5.difference(date4)}`, 'P29D');
     });
     it('takes days per year into account', () => {
       const date1 = Date.from('2019-01-01');
@@ -198,10 +199,10 @@ describe('Date', () => {
       const date4 = Date.from('2020-06-01');
       const date5 = Date.from('2021-01-01');
       const date6 = Date.from('2021-06-01');
-      equal(`${date1.difference(date3)}`, 'P365D');
-      equal(`${date3.difference(date5)}`, 'P366D');
-      equal(`${date2.difference(date4)}`, 'P366D');
-      equal(`${date4.difference(date6)}`, 'P365D');
+      equal(`${date3.difference(date1)}`, 'P365D');
+      equal(`${date5.difference(date3)}`, 'P366D');
+      equal(`${date4.difference(date2)}`, 'P366D');
+      equal(`${date6.difference(date4)}`, 'P365D');
     });
     const feb20 = Date.from('2020-02-01');
     const feb21 = Date.from('2021-02-01');

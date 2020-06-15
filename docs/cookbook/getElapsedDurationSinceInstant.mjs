@@ -14,7 +14,7 @@
  */
 function getElapsedDurationSinceInstant(then, now, largestUnit = 'days') {
   const sign = Temporal.Absolute.compare(now, then) < 0 ? '-' : '+';
-  const duration = now.difference(then, { largestUnit });
+  const duration = sign === '-' ? then.difference(now, { largestUnit }) : now.difference(then, { largestUnit });
   return { sign, duration };
 }
 

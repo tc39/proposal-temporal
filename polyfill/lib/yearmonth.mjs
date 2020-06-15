@@ -124,10 +124,11 @@ export class YearMonth {
       other = new Date(GetSlot(other, ISO_YEAR), GetSlot(other, ISO_MONTH), calendar, GetSlot(other, REF_ISO_DAY));
     }
     const largestUnit = ES.ToLargestTemporalUnit(options, 'years', ['weeks', 'days', 'hours', 'minutes', 'seconds']);
-    const [one, two] = [this, other].sort(YearMonth.compare);
+    const comparison = YearMonth.compare(this, other);
+    if (comparison < 0) throw new RangeError('other instance cannot be larger than `this`');
 
-    const smallerFields = ES.ToTemporalYearMonthRecord(one);
-    const largerFields = ES.ToTemporalYearMonthRecord(two);
+    const smallerFields = ES.ToTemporalYearMonthRecord(other);
+    const largerFields = ES.ToTemporalYearMonthRecord(this);
     const TemporalDate = GetIntrinsic('%Temporal.Date%');
     const smaller = calendar.dateFromFields({ ...smallerFields, day: 1 }, {}, TemporalDate);
     const larger = calendar.dateFromFields({ ...largerFields, day: 1 }, {}, TemporalDate);

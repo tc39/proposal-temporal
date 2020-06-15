@@ -429,7 +429,7 @@ dt.minus({ months: 1 })  // => throws
 **Returns:** a `Temporal.Duration` representing the difference between `datetime` and `other`.
 
 This method computes the difference between the two times represented by `datetime` and `other`, and returns it as a `Temporal.Duration` object.
-The difference is always positive, no matter the order of `datetime` and `other`, because `Temporal.Duration` objects cannot represent negative durations.
+A `RangeError` will be thrown if `other` is later than `datetime`, because `Temporal.Duration` objects cannot represent negative durations.
 
 The `largestUnit` option controls how the resulting duration is expressed.
 The returned `Temporal.Duration` object will not have any nonzero fields that are larger than the unit in `largestUnit`.
@@ -443,15 +443,16 @@ Usage example:
 ```javascript
 dt1 = Temporal.DateTime.from('1995-12-07T03:24:30.000003500');
 dt2 = Temporal.DateTime.from('2019-01-31T15:30');
-dt1.difference(dt2);                            // =>    P8456DT12H5M29.999996500S
-dt1.difference(dt2), { largestUnit: 'years' })  // => P23Y1M24DT12H5M29.999996500S
+dt2.difference(dt1);                            // =>    P8456DT12H5M29.999996500S
+dt2.difference(dt1), { largestUnit: 'years' })  // => P23Y1M24DT12H5M29.999996500S
+dt1.difference(dt2), { largestUnit: 'years' })  // => throws RangeError
 
 // Months and years can be different lengths
 [jan1, feb1, mar1] = [1, 2, 3].map(month => Temporal.DateTime.from({year: 2020, month, day: 1}));
-jan1.difference(feb1);                             // => P31D
-jan1.difference(feb1, { largestUnit: 'months' });  // => P1M
-feb1.difference(mar1);                             // => P29D
-feb1.difference(mar1, { largestUnit: 'months' });  // => P1M
+feb1.difference(jan1);                             // => P31D
+feb1.difference(jan1, { largestUnit: 'months' });  // => P1M
+mar1.difference(feb1);                             // => P29D
+mar1.difference(feb1, { largestUnit: 'months' });  // => P1M
 ```
 
 ### datetime.**equals**(_other_: Temporal.DateTime) : boolean

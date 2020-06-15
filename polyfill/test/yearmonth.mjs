@@ -174,9 +174,8 @@ describe('YearMonth', () => {
   describe('YearMonth.difference() works', () => {
     const nov94 = YearMonth.from('1994-11');
     const jun13 = YearMonth.from('2013-06');
-    const diff = nov94.difference(jun13);
-    it(`${nov94}.difference(${jun13}) == ${jun13}.difference(${nov94})`, () =>
-      equal(`${diff}`, `${jun13.difference(nov94)}`));
+    const diff = jun13.difference(nov94);
+    it('throws if out of order', () => throws(() => nov94.difference(jun13), RangeError));
     it(`${nov94}.plus(${diff}) == ${jun13}`, () => nov94.plus(diff).equals(jun13));
     it(`${jun13}.minus(${diff}) == ${nov94}`, () => jun13.minus(diff).equals(nov94));
     it("doesn't cast argument", () => {

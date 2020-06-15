@@ -291,11 +291,9 @@
         1. Perform ? RequireInternalSlot(_other_, [[InitializedTemporalTime]]).
         1. Let _largestUnit_ be ? ToLargestTemporalUnit(_options_, « », *"hours"*).
         1. If ! CompareTemporalTime(_temporalTime_, _other_) &lt; 0, then
-          1. Let _greater_ be _other_.
-          1. Let _smaller_ be _temporalTime_.
-        1. Else,
-          1. Let _greater_ be _temporalTime_.
-          1. Let _smaller_ be _other_.
+          1. Throw a *RangeError* exception.
+        1. Let _greater_ be _temporalTime_.
+        1. Let _smaller_ be _other_.
         1. Let _result_ be ! DifferenceTime(_smaller_, _greater_).
         1. If _result_.[[Hour]] &geq; 12, then
           1. Set _result_ to ! BalanceDuration(0, 24 &minus; _result_.[[Hour]], &minus;_result_.[[Minute]], &minus;_result_.[[Second]], &minus;_result_.[[Millisecond]], &minus;_result_.[[Microsecond]], &minus;_result_.[[Nanosecond]], _largestUnit_).

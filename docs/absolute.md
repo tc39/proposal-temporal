@@ -300,7 +300,7 @@ Temporal.now.absolute().minus(oneDay);
 **Returns:** a `Temporal.Duration` representing the difference between `absolute` and `other`.
 
 This method computes the difference between the two times represented by `absolute` and `other`, and returns it as a `Temporal.Duration` object.
-The difference is always positive, no matter the order of `absolute` and `other`, because `Temporal.Duration` objects cannot represent negative durations.
+A `RangeError` will be thrown if `other` is later than `absolute`, because `Temporal.Duration` objects cannot represent negative durations.
 
 The `largestUnit` option controls how the resulting duration is expressed.
 The returned `Temporal.Duration` object will not have any nonzero fields that are larger than the unit in `largestUnit`.
@@ -316,25 +316,25 @@ Example usage:
 ```js
 startOfMoonMission = Temporal.Absolute.from('1969-07-16T13:32:00Z');
 endOfMoonMission = Temporal.Absolute.from('1969-07-24T16:50:35Z');
-missionLength = startOfMoonMission.difference(endOfMoonMission, { largestUnit: 'days' });
+missionLength = endOfMoonMission.difference(startOfMoonMission, { largestUnit: 'days' });
   // => P8DT3H18M35S
-endOfMoonMission.difference(startOfMoonMission, { largestUnit: 'days' });
-  // => P8DT3H18M35S
+startOfMoonMission.difference(endOfMoonMission, { largestUnit: 'days' });
+  // => throws RangeError
 missionLength.toLocaleString();
   // example output: '8 days 3 hours 18 minutes 35 seconds'
 
 // A billion (10^9) seconds since the epoch in different units
 epoch = new Temporal.Absolute(0n);
 billion = Temporal.Absolute.fromEpochSeconds(1e9);
-epoch.difference(billion);  // => PT1000000000S
-epoch.difference(billion, { largestUnit: 'hours' })  // => PT277777H46M40S
-epoch.difference(billion, { largestUnit: 'days' })  // => P11574DT1H46M40S
+billion.difference(epoch);  // => PT1000000000S
+billion.difference(epoch, { largestUnit: 'hours' })  // => PT277777H46M40S
+billion.difference(epoch, { largestUnit: 'days' })  // => P11574DT1H46M40S
 
 // If you really need to calculate the difference between two Absolutes
 // in years, you can eliminate the ambiguity by choosing your starting
 // point explicitly. For example, using the corresponding UTC date:
 utc = Temporal.TimeZone.from('UTC');
-epoch.inTimeZone(utc).difference(billion.inTimeZone(utc), { largestUnit: 'years' });
+billion.inTimeZone(utc).difference(epoch.inTimeZone(utc), { largestUnit: 'years' });
   // => P31Y8M8DT1H46M40S
 ```
 

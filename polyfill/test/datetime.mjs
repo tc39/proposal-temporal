@@ -302,9 +302,8 @@ describe('DateTime', () => {
     const earlier = DateTime.from('1976-11-18T15:23:30.123456789');
     const later = DateTime.from('2019-10-29T10:46:38.271986102');
     ['years', 'months', 'weeks', 'days', 'hours', 'minutes', 'seconds'].forEach((largestUnit) => {
-      const diff = earlier.difference(later, { largestUnit });
-      it(`(${earlier}).difference(${later}, ${largestUnit}) == (${later}).difference(${earlier}, ${largestUnit})`, () =>
-        equal(`${later.difference(earlier, { largestUnit })}`, `${diff}`));
+      const diff = later.difference(earlier, { largestUnit });
+      it('throws if out of order', () => throws(() => earlier.difference(later), RangeError));
       it(`(${earlier}).plus(${diff}) == (${later})`, () => earlier.plus(diff).equals(later));
       it(`(${later}).minus(${diff}) == (${earlier})`, () => later.minus(diff).equals(earlier));
     });
