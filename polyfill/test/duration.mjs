@@ -7,7 +7,7 @@ const { reporter } = Pretty;
 import { strict as assert } from 'assert';
 const { throws, equal, notEqual } = assert;
 
-import { Duration } from 'tc39-temporal';
+import { Duration } from 'proposal-temporal';
 
 describe('Duration', () => {
   describe('Structure', () => {

@@ -1,5 +1,5 @@
 {
-  "name": "tc39-temporal",
+  "name": "proposal-temporal",
   "version": "0.1.0",
   "description": "Experimental polyfill for the TC39 Temporal proposal",
   "type": "commonjs",

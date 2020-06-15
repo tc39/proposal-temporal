@@ -13,7 +13,7 @@ const { reporter } = Pretty;
 
 import { strict as assert } from 'assert';
 
-import * as Temporal from 'tc39-temporal';
+import * as Temporal from 'proposal-temporal';
 
 describe('Date.difference(simple, simple)', () => {
   build('Before Leap Day', '2020-01-03', '2020-02-15');
