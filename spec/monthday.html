@@ -145,11 +145,11 @@
         1. Let _disambiguation_ be ? ToTemporalDisambiguation(_options_).
         1. If _partialMonthDay_.[[Month]] is not *undefined*, then
           1. Let _m_ be _partialMonthDay_.[[Month]].
-        1. Else
+        1. Else,
           1. Let _m_ be _monthDay_.[[ISOMonth]].
         1. If _partialMonthDay_.[[Day]] is not *undefined*, then
           1. Let _d_ be _partialMonthDay_.[[Day]].
-        1. Else
+        1. Else,
           1. Let _d_ be _monthDay_.[[ISODay]].
         1. Let _result_ be ? RegulateMonthDay(_m_, _d_, _disambiguation_).
         1. Return ? CreateTemporalMonthDayFromInstance(_monthDay_, _result_.[[Month]], _result_.[[Day]]).
@@ -374,6 +374,7 @@
             [[Month]]: _result_.[[Month]],
             [[Day]]: _result_.[[Day]]
           }.
+      </emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal-balancemonthday" aoid="BalanceMonthDay">
@@ -390,7 +391,7 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal-createtemporalmonthday" aoid="CreateTemporalMonthDay">
-      <h1>CreateTemporalMonthDay ( _isoMonth_, _isoDay_ , _refISOYear_ [ , _newTarget_ ] )</h1>
+      <h1>CreateTemporalMonthDay ( _isoMonth_, _isoDay_, _refISOYear_ [ , _newTarget_ ] )</h1>
       <emu-alg>
         1. If ! ValidateDate(_refISOYear_, _month_, _day_) is *false*, then
           1. Throw a *RangeError* exception.

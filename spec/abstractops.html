@@ -265,7 +265,7 @@
           Sign Digit Digit Digit Digit Digit Digit
 
       DateYear :
-          DateBasicYear
+          DateFourDigitYear
           DateExtendedYear
 
       DateMonth :
@@ -404,7 +404,7 @@
           DurationDesignator DurationTime
 
       TemporalAbsoluteString :
-          Date DateTimeSeparator TimeSpecBase TimeZone
+          Date DateTimeSeparator TimeSpec TimeZone
 
       TemporalDateString :
           DateTime
@@ -450,11 +450,11 @@
       1. Set _year_ to ! ToInteger(_year_).
       1. If _month_ is *undefined*, then
         1. Set _month_ to 1.
-      1. Else
+      1. Else,
         1. Set _month_ to ! ToInteger(_month_).
       1. If _day_ is *undefined*, then
         1. Set _day_ to 1.
-      1. Else
+      1. Else,
         1. Set _day_ to ! ToInteger(_day_).
       1. Set _hour_ to ! ToInteger(_hour_).
       1. Set _minute_ to ! ToInteger(_minute_).
@@ -469,7 +469,7 @@
         1. Set _microsecond_ to ! ToInteger(_microsecond_).
         1. Let _nanosecond_ be the String value equal to the substring of _fraction_ consisting of the code units with indices 6 (inclusive) through 9 (exclusive).
         1. Set _nanosecond_ to ! ToInteger(_nanosecond_).
-      1. Else
+      1. Else,
         1. Let _millisecond_ be 0.
         1. Let _microsecond_ be 0.
         1. Let _nanosecond_ be 0.
@@ -581,7 +581,7 @@
         1. Set _microseconds_ to ! ToInteger(_microseconds_).
         1. Let _nanoseconds_ be the String value equal to the substring of _fraction_ consisting of the code units with indices 6 (inclusive) through 9 (exclusive).
         1. Set _nanoseconds_ to ! ToInteger(_nanoseconds_).
-      1. Else
+      1. Else,
         1. Let _milliseconds_ be 0.
         1. Let _microseconds_ be 0.
         1. Let _nanoseconds_ be 0.
@@ -613,11 +613,11 @@
       1. Let _month_ and _day_ be the parts of _isoString_ produced respectively by the |DateMonth| and |DateDay| productions, or *undefined* if not present.
       1. If _month_ is *undefined*, then
         1. Set _month_ to 1.
-      1. Else
+      1. Else,
         1. Set _month_ to ! ToInteger(_month_).
       1. If _day_ is *undefined*, then
         1. Set _day_ to 1.
-      1. Else
+      1. Else,
         1. Set _day_ to ! ToInteger(_day_).
       1. Return the new Record {
         [[Month]]: _month_,
