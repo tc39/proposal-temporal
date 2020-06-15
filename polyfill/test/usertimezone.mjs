@@ -61,8 +61,8 @@ describe('Userland time zone', () => {
     it('converts to string', () => equal(`${obj}`, obj.name));
     it('prints in absolute.toString', () =>
       equal(abs.toString(obj), '1970-01-01T00:00+00:00[Etc/Custom_UTC_Subclass]'));
-    it('has no next transitions', () => obj.getNextTransition());
-    it('has no previous transitions', () => obj.getPreviousTransition());
+    it('has no next transitions', () => assert.equal(obj.getNextTransition(), null));
+    it('has no previous transitions', () => assert.equal(obj.getPreviousTransition(), null));
     it('works in Temporal.now', () => {
       assert(Temporal.now.dateTime(obj) instanceof Temporal.DateTime);
       assert(Temporal.now.date(obj) instanceof Temporal.Date);
