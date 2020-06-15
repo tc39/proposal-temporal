@@ -129,7 +129,7 @@ export namespace Temporal {
     nanoseconds?: number;
   };
 
-  export type DurationFields = Required<DurationLike>;
+  type DurationFields = Required<DurationLike>;
 
   /**
    *
@@ -213,7 +213,7 @@ export namespace Temporal {
     toString(tzLike?: TimeZoneProtocol | string): string;
   }
 
-  type CalendarProtocol = {
+  export interface CalendarProtocol {
     id: string;
     year(date: Temporal.Date): number;
     month(date: Temporal.Date): number;
@@ -257,7 +257,7 @@ export namespace Temporal {
       larger: Temporal.Date,
       options: DifferenceOptions<'years' | 'months' | 'weeks' | 'days'>
     ): Temporal.Duration;
-  };
+  }
 
   /**
    * A `Temporal.Calendar` is a representation of a calendar system. It includes
@@ -527,7 +527,7 @@ export namespace Temporal {
     nanosecond?: number;
   };
 
-  export type TimeFields = Required<TimeLike>;
+  type TimeFields = Required<TimeLike>;
 
   /**
    * A `Temporal.Time` represents a wall-clock time, with a precision in
@@ -576,7 +576,7 @@ export namespace Temporal {
   /**
    * A plain object implementing the protocol for a custom time zone.
    */
-  class TimeZoneProtocol {
+  export interface TimeZoneProtocol {
     name?: string;
     getOffsetNanosecondsFor(absolute: Temporal.Absolute): number;
     getOffsetStringFor?(absolute: Temporal.Absolute): string;
