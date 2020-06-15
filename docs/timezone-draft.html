@@ -175,9 +175,11 @@ Temporal<span class="token punctuation">.</span>now<span class="token punctuatio
    * selected, depending on the disambiguation option. */</span>
   <span class="token function">getPossibleAbsolutesFor</span><span class="token punctuation">(</span>dateTime <span class="token operator">:</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">)</span> <span class="token operator">:</span> array<span class="token operator">&lt;</span>Temporal<span class="token punctuation">.</span>Absolute<span class="token operator">></span><span class="token punctuation">;</span>
 
-  <span class="token comment">/** Returns an iterator of all following offset transitions, starting
-   * from @startingPoint. */</span>
-  <span class="token operator">*</span><span class="token function">getTransitions</span><span class="token punctuation">(</span>startingPoint <span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Absolute<span class="token punctuation">)</span> <span class="token operator">:</span> iterator<span class="token operator">&lt;</span>Temporal<span class="token punctuation">.</span>Absolute<span class="token operator">></span><span class="token punctuation">;</span>
+  <span class="token comment">/** Return the next time zone transition after `startingPoint`. */</span>
+  <span class="token function">getNextTransition</span><span class="token punctuation">(</span>startingPoint <span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Absolute<span class="token punctuation">)</span> <span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Absolute <span class="token operator">|</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+
+  <span class="token comment">/** Return the previous time zone transition before `startingPoint`. */</span>
+  <span class="token function">getPreviousTransition</span><span class="token punctuation">(</span>startingPoint <span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Absolute<span class="token punctuation">)</span> <span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Absolute <span class="token operator">|</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
 
   <span class="token comment">// API methods that a subclassed custom time zone doesn't need to touch</span>
 
@@ -225,8 +227,12 @@ The <code>MakeDate</code>, <code>MakeDay</code>, and <code>MakeTime</code> funct
     <span class="token keyword">return</span> <span class="token punctuation">[</span><span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>Absolute</span><span class="token punctuation">(</span>epochNs <span class="token operator">+</span> <span class="token function">BigInt</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>#offsetNs<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
   <span class="token punctuation">}</span>
 
-  <span class="token operator">*</span><span class="token function">getTransitions</span><span class="token punctuation">(</span><span class="token comment">/* startingPoint */</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token comment">// no transitions ever</span>
+  <span class="token function">getNextTransition</span><span class="token punctuation">(</span><span class="token comment">/* startingPoint */</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token keyword">null</span><span class="token punctuation">;</span> <span class="token comment">// no transitions ever</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token function">getPreviousTransition</span><span class="token punctuation">(</span><span class="token comment">/* startingPoint */</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token keyword">null</span><span class="token punctuation">;</span> <span class="token comment">// no transitions ever</span>
   <span class="token punctuation">}</span>
 <span class="token punctuation">}</span></code></pre>    <footer>
       <p>

@@ -127,7 +127,9 @@
 </li>
 <li><a href="#getPossibleAbsolutesFor">getPossibleAbsolutesFor</a>
 </li>
-<li><a href="#getTransitions">getTransitions</a>
+<li><a href="#getNextTransition">getNextTransition</a>
+</li>
+<li><a href="#getPreviousTransition">getPreviousTransition</a>
 </li>
 <li><a href="#toString">toString</a>
 </li>
@@ -142,7 +144,7 @@
 <p>Since <code>Temporal.Absolute</code> and <code>Temporal.DateTime</code> do not contain any time zone information, a <code>Temporal.TimeZone</code> object is required to convert between the two.</p>
 <h2 id="custom-time-zones-1">Custom time zones</h2>
 <p>For specialized applications where you need to do calculations in a time zone that is not supported by Intl, you can also implement your own <code>Temporal.TimeZone</code> object.
-To do this, create a class inheriting from <code>Temporal.TimeZone</code>, call <code>super()</code> in the constructor with a time zone identifier, and implement the methods <code>getOffsetNanosecondsFor()</code>, <code>getPossibleAbsolutesFor()</code>, and <code>getTransitions()</code>.
+To do this, create a class inheriting from <code>Temporal.TimeZone</code>, call <code>super()</code> in the constructor with a time zone identifier, and implement the methods <code>getOffsetNanosecondsFor()</code>, <code>getPossibleAbsolutesFor()</code>, <code>getNextTransition()</code>, and <code>getPreviousTransition()</code>.
 Any subclass of <code>Temporal.TimeZone</code> will be accepted in Temporal APIs where a built-in <code>Temporal.TimeZone</code> would work.</p>
 <h3 id="protocol"><a class="heading-link" href="#protocol"></a>Protocol</h3><p>It&#39;s also possible for a plain object to be a custom time zone, without subclassing.
 The object must have <code>getOffsetNanosecondsFor()</code>, <code>getPossibleAbsolutesFor()</code>, and <code>toString()</code> methods.
@@ -173,9 +175,9 @@ IANA time zones may have DST transitions, and UTC offsets do not.
 For example:</p>
 <pre class="language-javascript"><code class="language-javascript">tz1 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>TimeZone</span><span class="token punctuation">(</span><span class="token string">'-08:00'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 tz2 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>TimeZone</span><span class="token punctuation">(</span><span class="token string">'America/Vancouver'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-now <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">absolute</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-tz1<span class="token punctuation">.</span><span class="token function">getTransitions</span><span class="token punctuation">(</span>now<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>done<span class="token punctuation">;</span>  <span class="token comment">// => true</span>
-tz2<span class="token punctuation">.</span><span class="token function">getTransitions</span><span class="token punctuation">(</span>now<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>done<span class="token punctuation">;</span>  <span class="token comment">// => false</span></code></pre><h2 id="static-methods-1">Static methods</h2>
+abs <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span>year<span class="token operator">:</span> <span class="token number">2020</span><span class="token punctuation">,</span> month<span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">,</span> day<span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">inTimeZone</span><span class="token punctuation">(</span>tz2<span class="token punctuation">)</span><span class="token punctuation">;</span>
+tz1<span class="token punctuation">.</span><span class="token function">getNextTransition</span><span class="token punctuation">(</span>abs<span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// => null</span>
+tz2<span class="token punctuation">.</span><span class="token function">getPreviousTransition</span><span class="token punctuation">(</span>abs<span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// => 2020-03-08T10:00Z</span></code></pre><h2 id="static-methods-1">Static methods</h2>
 <h3 id="from"><a class="heading-link" href="#from"></a>Temporal.TimeZone.<strong>from</strong>(<em>thing</em>: any) : Temporal.TimeZone</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>thing</code>: A <code>Temporal.TimeZone</code> object or a value from which to create a <code>Temporal.TimeZone</code>.</li>
@@ -302,20 +304,34 @@ It is identical to <a href="./datetime.html#inTimeZone"><code>dateTime.inTimeZon
 See <a href="./ambiguity.html">Resolving ambiguity</a> for usage examples and a more complete explanation.</p>
 <p>Usually you won&#39;t have to use this method; <code>Temporal.TimeZone.prototype.getAbsoluteFor()</code> will be more convenient for most use cases.
 This method is useful for implementing a custom time zone or custom disambiguation behaviour.</p>
-<h3 id="getTransitions"><a class="heading-link" href="#getTransitions"></a>timeZone.<strong>getTransitions</strong>(<em>startingPoint</em>: Temporal.Absolute) : iterator&lt;Temporal.Absolute&gt;</h3><p><strong>Parameters:</strong></p>
+<h3 id="getNextTransition"><a class="heading-link" href="#getNextTransition"></a>timeZone.<strong>getNextTransition</strong>(<em>startingPoint</em>: Temporal.Absolute) : Temporal.Absolute</h3><p><strong>Parameters:</strong></p>
 <ul>
-<li><code>startingPoint</code> (<code>Temporal.Absolute</code>): Time after which to start calculating DST transitions.</li>
+<li><code>startingPoint</code> (<code>Temporal.Absolute</code>): Time after which to find the next DST transition.</li>
 </ul>
-<p><strong>Returns:</strong> An iterable yielding <code>Temporal.Absolute</code> objects indicating subsequent DST transitions in the given time zone.</p>
-<p>This method is used to calculate future DST transitions for the time zone, starting at <code>startingPoint</code>.</p>
+<p><strong>Returns:</strong> A <code>Temporal.Absolute</code> object representing the next DST transition in this time zone, or <code>null</code> if no transitions later than <code>startingPoint</code> could be found.</p>
+<p>This method is used to calculate future DST transitions after <code>startingPoint</code> for this time zone.</p>
 <p>Note that if the time zone was constructed from a UTC offset, there will be no DST transitions.
-In that case, the iterable will be empty.</p>
+In that case, this method will return <code>null</code>.</p>
 <p>Example usage:</p>
 <pre class="language-javascript"><code class="language-javascript"><span class="token comment">// How long until the next DST change from now, in the current location?</span>
 tz <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">timeZone</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 now <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">absolute</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">[</span>nextTransition<span class="token punctuation">]</span> <span class="token operator">=</span> tz<span class="token punctuation">.</span><span class="token function">getTransitions</span><span class="token punctuation">(</span>now<span class="token punctuation">)</span><span class="token punctuation">;</span>
+nextTransition <span class="token operator">=</span> tz<span class="token punctuation">.</span><span class="token function">getNextTransition</span><span class="token punctuation">(</span>now<span class="token punctuation">)</span><span class="token punctuation">;</span>
 duration <span class="token operator">=</span> nextTransition<span class="token punctuation">.</span><span class="token function">difference</span><span class="token punctuation">(</span>now<span class="token punctuation">)</span><span class="token punctuation">;</span>
+duration<span class="token punctuation">.</span><span class="token function">toLocaleString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// output will vary</span></code></pre><h3 id="getPreviousTransition"><a class="heading-link" href="#getPreviousTransition"></a>timeZone.<strong>getPreviousTransition</strong>(<em>startingPoint</em>: Temporal.Absolute) : Temporal.Absolute</h3><p><strong>Parameters:</strong></p>
+<ul>
+<li><code>startingPoint</code> (<code>Temporal.Absolute</code>): Time before which to find the previous DST transition.</li>
+</ul>
+<p><strong>Returns:</strong> A <code>Temporal.Absolute</code> object representing the previous DST transition in this time zone, or <code>null</code> if no transitions earlier than <code>startingPoint</code> could be found.</p>
+<p>This method is used to calculate past DST transitions before <code>startingPoint</code> for this time zone.</p>
+<p>Note that if the time zone was constructed from a UTC offset, there will be no DST transitions.
+In that case, this method will return <code>null</code>.</p>
+<p>Example usage:</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">// How long until the previous DST change from now, in the current location?</span>
+tz <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">timeZone</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+now <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">absolute</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+previousTransition <span class="token operator">=</span> tz<span class="token punctuation">.</span><span class="token function">getPreviousTransition</span><span class="token punctuation">(</span>now<span class="token punctuation">)</span><span class="token punctuation">;</span> 
+duration <span class="token operator">=</span> now<span class="token punctuation">.</span><span class="token function">difference</span><span class="token punctuation">(</span>previousTransition<span class="token punctuation">)</span><span class="token punctuation">;</span>
 duration<span class="token punctuation">.</span><span class="token function">toLocaleString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// output will vary</span></code></pre><h3 id="toString"><a class="heading-link" href="#toString"></a>timeZone.<strong>toString</strong>() : string</h3><p><strong>Returns:</strong> The string given by <code>timeZone.name</code>.</p>
 <p>This method overrides <code>Object.prototype.toString()</code> and provides the time zone&#39;s <code>name</code> property as a human-readable description.</p>
 <h3 id="toJSON"><a class="heading-link" href="#toJSON"></a>timeZone.<strong>toJSON</strong>() : string</h3><p><strong>Returns:</strong> the string given by <code>timeZone.name</code>.</p>
