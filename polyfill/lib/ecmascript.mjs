@@ -7,11 +7,6 @@ import bigInt from 'big-integer';
 
 import { GetIntrinsic } from './intrinsicclass.mjs';
 import {
-  Gregorian as CalendarGregorian,
-  ISO8601 as CalendarISO8601,
-  Japanese as CalendarJapanese
-} from './calendar.mjs';
-import {
   GetSlot,
   HasSlot,
   EPOCHNANOSECONDS,
@@ -47,13 +42,6 @@ const YEAR_MIN = -271821;
 const YEAR_MAX = 275760;
 const BEFORE_FIRST_DST = bigInt(-388152).multiply(1e13); // 1847-01-01T00:00:00Z
 
-const BUILTIN_CALENDARS = {
-  gregory: CalendarGregorian,
-  iso8601: CalendarISO8601,
-  japanese: CalendarJapanese
-  // To be filled in as builtin calendars are implemented
-};
-
 import * as PARSE from './regex.mjs';
 
 export const ES = ObjectAssign({}, ES2019, {
@@ -84,11 +72,6 @@ export const ES = ObjectAssign({}, ES2019, {
     }
     return result;
   },
-  GetBuiltinCalendar: (id) => {
-    if (!(id in BUILTIN_CALENDARS)) throw new RangeError(`unknown calendar ${id}`);
-    return new BUILTIN_CALENDARS[id]();
-  },
-  GetDefaultCalendar: () => ES.GetBuiltinCalendar('iso8601'),
   FormatCalendarAnnotation: (calendar) => {
     if (calendar.id === 'iso8601') return '';
     return `[c=${calendar.id}]`;

@@ -96,13 +96,13 @@ export class Calendar {
   static from(item) {
     if (ES.IsTemporalCalendar(item) || (typeof item === 'object' && item)) return item;
     const stringIdent = ES.ToString(item);
-    return ES.GetBuiltinCalendar(stringIdent);
+    return GetBuiltinCalendar(stringIdent);
   }
 }
 
 MakeIntrinsicClass(Calendar, 'Temporal.Calendar');
 
-export class ISO8601 extends Calendar {
+class ISO8601 extends Calendar {
   constructor(id = 'iso8601') {
     // Needs to be subclassable, that's why the ID is a default argument
     super(id);
@@ -207,7 +207,7 @@ export class ISO8601 extends Calendar {
 // According to documentation for Intl.Locale.prototype.calendar on MDN,
 // 'iso8601' calendar is equivalent to 'gregory' except for ISO 8601 week
 // numbering rules, which we do not currently use in Temporal.
-export class Gregorian extends ISO8601 {
+class Gregorian extends ISO8601 {
   constructor() {
     super('gregory');
   }
@@ -275,7 +275,7 @@ const jpn = {
   }
 };
 
-export class Japanese extends ISO8601 {
+class Japanese extends ISO8601 {
   constructor() {
     super('japanese');
   }
@@ -300,4 +300,19 @@ export class Japanese extends ISO8601 {
     const isoYear = jpn.isoYear(fields.year, fields.era);
     return super.yearMonthFromFields({ ...fields, year: isoYear }, options, constructor);
   }
+}
+
+const BUILTIN_CALENDARS = {
+  gregory: Gregorian,
+  iso8601: ISO8601,
+  japanese: Japanese
+  // To be filled in as builtin calendars are implemented
+};
+
+function GetBuiltinCalendar(id) {
+  if (!(id in BUILTIN_CALENDARS)) throw new RangeError(`unknown calendar ${id}`);
+  return new BUILTIN_CALENDARS[id]();
+}
+export function GetDefaultCalendar() {
+  return GetBuiltinCalendar('iso8601');
 }

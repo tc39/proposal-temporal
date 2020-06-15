@@ -1,3 +1,4 @@
+import { GetDefaultCalendar } from './calendar.mjs';
 import { ES } from './ecmascript.mjs';
 import { GetIntrinsic, MakeIntrinsicClass } from './intrinsicclass.mjs';
 
@@ -41,7 +42,7 @@ export class DateTime {
     millisecond = ES.ToInteger(millisecond);
     microsecond = ES.ToInteger(microsecond);
     nanosecond = ES.ToInteger(nanosecond);
-    if (calendar === undefined) calendar = ES.GetDefaultCalendar();
+    if (calendar === undefined) calendar = GetDefaultCalendar();
     ES.RejectDateTime(isoYear, isoMonth, isoDay, hour, minute, second, millisecond, microsecond, nanosecond);
     ES.RejectDateTimeRange(isoYear, isoMonth, isoDay, hour, minute, second, millisecond, microsecond, nanosecond);
     if (!calendar || typeof calendar !== 'object') throw new RangeError('invalid calendar');
@@ -599,7 +600,7 @@ export class DateTime {
         result = new this(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
       } else {
         let calendar = item.calendar;
-        if (calendar === undefined) calendar = ES.GetDefaultCalendar();
+        if (calendar === undefined) calendar = GetDefaultCalendar();
         calendar = TemporalCalendar.from(calendar);
         const fields = ES.ToTemporalDateTimeRecord(item);
         const TemporalDate = GetIntrinsic('%Temporal.Date%');
@@ -675,7 +676,7 @@ export class DateTime {
         nanosecond,
         disambiguation
       ));
-      if (!calendar) calendar = ES.GetDefaultCalendar();
+      if (!calendar) calendar = GetDefaultCalendar();
       calendar = TemporalCalendar.from(calendar);
       result = new this(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
     }

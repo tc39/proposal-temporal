@@ -1,3 +1,4 @@
+import { GetDefaultCalendar } from './calendar.mjs';
 import { ES } from './ecmascript.mjs';
 import { GetIntrinsic, MakeIntrinsicClass } from './intrinsicclass.mjs';
 import {
@@ -23,7 +24,7 @@ export class Date {
     isoYear = ES.ToInteger(isoYear);
     isoMonth = ES.ToInteger(isoMonth);
     isoDay = ES.ToInteger(isoDay);
-    if (calendar === undefined) calendar = ES.GetDefaultCalendar();
+    if (calendar === undefined) calendar = GetDefaultCalendar();
     ES.RejectDate(isoYear, isoMonth, isoDay);
     ES.RejectDateRange(isoYear, isoMonth, isoDay);
     if (!calendar || typeof calendar !== 'object') throw new RangeError('invalid calendar');
@@ -243,7 +244,7 @@ export class Date {
         result = new this(year, month, day, calendar);
       } else {
         let calendar = item.calendar;
-        if (calendar === undefined) calendar = ES.GetDefaultCalendar();
+        if (calendar === undefined) calendar = GetDefaultCalendar();
         calendar = TemporalCalendar.from(calendar);
         result = calendar.dateFromFields(item, options, this);
       }
@@ -251,7 +252,7 @@ export class Date {
       let { year, month, day, calendar } = ES.ParseTemporalDateString(ES.ToString(item));
       ({ year, month, day } = ES.RegulateDate(year, month, day, disambiguation));
       ({ year, month, day } = ES.RegulateDateRange(year, month, day, disambiguation));
-      if (!calendar) calendar = ES.GetDefaultCalendar();
+      if (!calendar) calendar = GetDefaultCalendar();
       calendar = TemporalCalendar.from(calendar);
       result = new this(year, month, day, calendar);
     }
