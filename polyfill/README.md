@@ -19,17 +19,17 @@ A cookbook to help you get started and learn the ins and outs of Temporal is ava
 You can depend on the unstable Temporal polyfill in your personal projects:
 
 ```bash
-$ npm install --save tc39-temporal
+$ npm install --save proposal-temporal
 ```
 
 In code:
 ```javascript
-const { Temporal, Intl } = require('tc39-temporal');
+const { Temporal, Intl } = require('proposal-temporal');
 ```
 
 Or, import the polyfill as an ES6 module:
 ```javascript
-import { Temporal, Intl } from 'tc39-temporal/lib/index.mjs';
+import { Temporal, Intl } from 'proposal-temporal/lib/index.mjs';
 ```
 
 ## Node REPL with Temporal

@@ -1,4 +1,4 @@
-import * as Temporal from 'tc39-temporal';
+import * as Temporal from 'proposal-temporal';
 
 const all = process.argv[2] === 'all';
 const start = new Temporal.Date(1999, 1, 1);

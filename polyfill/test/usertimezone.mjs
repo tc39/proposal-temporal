@@ -12,7 +12,7 @@ const { reporter } = Pretty;
 import { strict as assert } from 'assert';
 const { equal, throws } = assert;
 
-import * as Temporal from 'tc39-temporal';
+import * as Temporal from 'proposal-temporal';
 
 describe('Userland time zone', () => {
   describe('Trivial subclass', () => {
