@@ -331,39 +331,39 @@
         1. Let _disambiguation_ be ? ToTemporalDisambiguation(_options_).
         1. If _partialDateTime_.[[Year]] is not *undefined*, then
           1. Let _year_ be _partialDateTime_.[[Year]].
-        1. Else
+        1. Else,
           1. Let _year_ be _dateTime_.[[ISOYear]].
         1. If _partialDateTime_.[[Month]] is not *undefined*, then
           1. Let _month_ be _partialDateTime_.[[Month]].
-        1. Else
+        1. Else,
           1. Let _month_ be _dateTime_.[[ISOMonth]].
         1. If _partialDateTime_.[[Day]] is not *undefined*, then
           1. Let _day_ be _partialDateTime_.[[Day]].
-        1. Else
+        1. Else,
           1. Let _day_ be _dateTime_.[[ISODay]].
         1. If _partialDateTime_.[[Hour]] is not *undefined*, then
           1. Let _hour_ be _partialDateTime_.[[Hour]].
-        1. Else
+        1. Else,
           1. Let _hour_ be _dateTime_.[[Hour]].
         1. If _partialDateTime_.[[Minute]] is not *undefined*, then
           1. Let _minute_ be _partialDateTime_.[[Minute]].
-        1. Else
+        1. Else,
           1. Let _minute_ be _dateTime_.[[Minute]].
         1. If _partialDateTime_.[[Second]] is not *undefined*, then
           1. Let _second_ be _partialDateTime_.[[Second]].
-        1. Else
+        1. Else,
           1. Let _second_ be _dateTime_.[[Second]].
         1. If _partialDateTime_.[[Millisecond]] is not *undefined*, then
           1. Let _millisecond_ be _partialDateTime_.[[Millisecond]].
-        1. Else
+        1. Else,
           1. Let _millisecond_ be _dateTime_.[[Millisecond]].
         1. If _partialDateTime_.[[Microsecond]] is not *undefined*, then
           1. Let _microsecond_ be _partialDateTime_.[[Microsecond]].
-        1. Else
+        1. Else,
           1. Let _microsecond_ be _dateTime_.[[Microsecond]].
         1. If _partialDateTime_.[[Nanosecond]] is not *undefined*, then
           1. Let _nanosecond_ be _partialDateTime_.[[Nanosecond]].
-        1. Else
+        1. Else,
           1. Let _nanosecond_ be _dateTime_.[[Nanosecond]].
         1. Let _result_ be ? RegulateDateTime(_year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _disambiguation_).
         1. Assert: ! ValidateDateTime(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]) is *true*.
@@ -876,7 +876,7 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal-createtemporaldatetime" aoid="CreateTemporalDateTime">
-      <h1>CreateTemporalDateTime ( _isoYear_, _isoMonth_, _isoDay_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_ [, _newTarget_] )</h1>
+      <h1>CreateTemporalDateTime ( _isoYear_, _isoMonth_, _isoDay_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_ [ , _newTarget_ ] )</h1>
       <emu-alg>
         1. If ! ValidateDateTime(_isoYear_, _isoMonth_, _isoDay_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_) is *false*, then
           1. Throw a *RangeError* exception.
