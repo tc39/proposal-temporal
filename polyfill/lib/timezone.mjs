@@ -222,6 +222,9 @@ export class TimeZone {
     if (!ES.IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');
     return this.name;
   }
+  toJSON() {
+    return this.toString();
+  }
   static from(item) {
     if (ES.IsTemporalTimeZone(item) || (typeof item === 'object' && item)) return item;
     const timeZone = ES.TemporalTimeZoneFromString(ES.ToString(item));
@@ -230,7 +233,5 @@ export class TimeZone {
     return result;
   }
 }
-
-TimeZone.prototype.toJSON = TimeZone.prototype.toString;
 
 MakeIntrinsicClass(TimeZone, 'Temporal.TimeZone');
