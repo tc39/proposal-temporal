@@ -8,7 +8,7 @@
   },
   "main": "polyfill/lib/index.mjs",
   "dependencies": {
-    "ecmarkup": "^3.21.1",
+    "ecmarkup": "^3.22.0",
     "eslint": "^7.2.0",
     "mkdirp": "^1.0.0",
     "big-integer": "^1.6.48",
