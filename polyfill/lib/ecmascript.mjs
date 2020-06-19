@@ -1546,8 +1546,7 @@ export const ES = ObjectAssign({}, ES2019, {
   }
 });
 
-import * as REGEX from './regex.mjs';
-const OFFSET = new RegExp(`^${REGEX.offset.source}$`);
+const OFFSET = new RegExp(`^${PARSE.offset.source}$`);
 
 function parseOffsetString(string) {
   const match = OFFSET.exec(String(string));
