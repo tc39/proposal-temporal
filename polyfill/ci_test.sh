@@ -23,7 +23,11 @@ fi
 
 cd test/
 
-threads=$(nproc --ignore 1)
+if [ "$(uname)" = 'Darwin' ]; then
+  threads=$(sysctl -n hw.logicalcpu)
+else
+  threads=$(nproc --ignore 1)
+fi
 if [ $threads -gt 2 ]; then threads=2; fi
 
 test262-harness \
