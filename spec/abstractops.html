@@ -15,6 +15,7 @@
     <emu-alg>
       1. If _options_ is *undefined* or *null*, then
         1. Return _fallback_.
+      1. Assert: Type(_options_) is Object.
       1. Set _options_ to ? ToObject(_options_).
       1. Let _value_ be ? Get(_options_, _property_).
       1. If _value_ is not *undefined*, then
