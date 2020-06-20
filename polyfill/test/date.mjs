@@ -152,6 +152,12 @@ describe('Date', () => {
         throws(() => original.with({ day: 17 }, { disambiguation }), RangeError)
       );
     });
+    it('options may only be an object or undefined', () => {
+      [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
+        throws(() => original.with({ day: 17 }, badOptions), TypeError)
+      );
+      [{}, () => {}, undefined].forEach((options) => equal(`${original.with({ day: 17 }, options)}`, '1976-11-17'));
+    });
   });
   describe('Date.toDateTime() works', () => {
     const date = Date.from('1976-11-18');
@@ -263,6 +269,12 @@ describe('Date', () => {
       const date2 = new Date(2000, 1, 1, Temporal.Calendar.from('japanese'));
       throws(() => date1.difference(date2), RangeError);
     });
+    it('options may only be an object or undefined', () => {
+      [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
+        throws(() => feb21.difference(feb20, badOptions), TypeError)
+      );
+      [{}, () => {}, undefined].forEach((options) => equal(`${feb21.difference(feb20, options)}`, 'P366D'));
+    });
   });
   describe('date.plus() works', () => {
     let date = new Date(1976, 11, 18);
@@ -324,6 +336,12 @@ describe('Date', () => {
         throws(() => date.plus({ months: 1, days: -30 }, { disambiguation }), RangeError)
       );
     });
+    it('options may only be an object or undefined', () => {
+      [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
+        throws(() => date.plus({ months: 1 }, badOptions), TypeError)
+      );
+      [{}, () => {}, undefined].forEach((options) => equal(`${date.plus({ months: 1 }, options)}`, '1976-12-18'));
+    });
   });
   describe('date.minus() works', () => {
     const date = Date.from('2019-11-18');
@@ -384,6 +402,12 @@ describe('Date', () => {
       ['constrain', 'reject'].forEach((disambiguation) =>
         throws(() => date.minus({ months: 1, days: -30 }, { disambiguation }), RangeError)
       );
+    });
+    it('options may only be an object or undefined', () => {
+      [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
+        throws(() => date.minus({ months: 1 }, badOptions), TypeError)
+      );
+      [{}, () => {}, undefined].forEach((options) => equal(`${date.minus({ months: 1 }, options)}`, '2019-10-18'));
     });
   });
   describe('date.toString() works', () => {
@@ -465,6 +489,14 @@ describe('Date', () => {
       equal(`${Date.from('+0019761118T152330.1+0000')}`, '1976-11-18');
     });
     it('no junk at end of string', () => throws(() => Date.from('1976-11-18junk'), RangeError));
+    it('options may only be an object or undefined', () => {
+      [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
+        throws(() => Date.from({ year: 1976, month: 11, day: 18 }, badOptions), TypeError)
+      );
+      [{}, () => {}, undefined].forEach((options) =>
+        equal(`${Date.from({ year: 1976, month: 11, day: 18 }, options)}`, '1976-11-18')
+      );
+    });
     describe('Disambiguation', () => {
       const bad = { year: 2019, month: 1, day: 32 };
       it('reject', () => throws(() => Date.from(bad, { disambiguation: 'reject' }), RangeError));

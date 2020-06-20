@@ -244,6 +244,16 @@ describe('TimeZone', () => {
       const namedTz = Temporal.TimeZone.from('America/Godthab');
       throws(() => namedTz.getAbsoluteFor(max), RangeError);
     });
+    it('options may only be an object or undefined', () => {
+      const dt = Temporal.DateTime.from('2019-10-29T10:46:38.271986102');
+      const tz = Temporal.TimeZone.from('America/Sao_Paulo');
+      [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
+        throws(() => tz.getAbsoluteFor(dt, badOptions), TypeError)
+      );
+      [{}, () => {}, undefined].forEach((options) =>
+        equal(`${tz.getAbsoluteFor(dt, options)}`, '2019-10-29T13:46:38.271986102Z')
+      );
+    });
   });
   describe('getAbsoluteFor disambiguation', () => {
     const dtm = new Temporal.DateTime(2019, 2, 16, 23, 45);

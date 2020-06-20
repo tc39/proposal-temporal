@@ -1,12 +1,12 @@
 const IntlDateTimeFormat = globalThis.Intl.DateTimeFormat;
 const ObjectAssign = Object.assign;
+const ObjectCreate = Object.create;
 
 import bigInt from 'big-integer';
 import Call from 'es-abstract/2019/Call.js';
 import SpeciesConstructor from 'es-abstract/2019/SpeciesConstructor.js';
 import ToInteger from 'es-abstract/2019/ToInteger.js';
 import ToNumber from 'es-abstract/2019/ToNumber.js';
-import ToObject from 'es-abstract/2019/ToObject.js';
 import ToPrimitive from 'es-abstract/2019/ToPrimitive.js';
 import ToString from 'es-abstract/2019/ToString.js';
 import Type from 'es-abstract/2019/Type.js';
@@ -56,7 +56,6 @@ const ES2019 = {
   SpeciesConstructor,
   ToInteger,
   ToNumber,
-  ToObject,
   ToPrimitive,
   ToString,
   Type
@@ -466,12 +465,15 @@ export const ES = ObjectAssign({}, ES2019, {
     return duration;
   },
   ToDurationTemporalDisambiguation: (options) => {
+    options = ES.NormalizeOptionsObject(options);
     return ES.GetOption(options, 'disambiguation', ['constrain', 'balance', 'reject'], 'constrain');
   },
   ToTemporalDisambiguation: (options) => {
+    options = ES.NormalizeOptionsObject(options);
     return ES.GetOption(options, 'disambiguation', ['constrain', 'reject'], 'constrain');
   },
   ToTimeZoneTemporalDisambiguation: (options) => {
+    options = ES.NormalizeOptionsObject(options);
     return ES.GetOption(options, 'disambiguation', ['compatible', 'earlier', 'later', 'reject'], 'compatible');
   },
   ToLargestTemporalUnit: (options, fallback, disallowedStrings = []) => {
@@ -490,6 +492,7 @@ export const ES = ObjectAssign({}, ES2019, {
     for (const s of disallowedStrings) {
       allowed.delete(s);
     }
+    options = ES.NormalizeOptionsObject(options);
     return ES.GetOption(options, 'largestUnit', [...allowed], fallback);
   },
   ToPartialRecord: (bag, fields) => {
@@ -1635,9 +1638,14 @@ export const ES = ObjectAssign({}, ES2019, {
     return new TemporalTimeZone(ES.TemporalTimeZoneFromString(fmt.resolvedOptions().timeZone));
   },
   ComparisonResult: (value) => (value < 0 ? -1 : value > 0 ? 1 : value),
+  NormalizeOptionsObject: (options) => {
+    if (options === undefined) return ObjectCreate(null);
+    if (ES.Type(options) === 'Object') return options;
+    throw new TypeError(
+      `Options parameter must be an object, not ${options === null ? 'null' : `a ${typeof options}`}`
+    );
+  },
   GetOption: (options, property, allowedValues, fallback) => {
-    if (options === null || options === undefined) return fallback;
-    options = ES.ToObject(options);
     let value = options[property];
     if (value !== undefined) {
       value = ES.ToString(value);

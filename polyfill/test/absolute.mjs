@@ -485,6 +485,12 @@ describe('Absolute', () => {
       throws(() => feb21.difference(feb20, { largestUnit: 'months' }), RangeError);
       throws(() => feb21.difference(feb20, { largestUnit: 'years' }), RangeError);
     });
+    it('options may only be an object or undefined', () => {
+      [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
+        throws(() => feb21.difference(feb20, badOptions), TypeError)
+      );
+      [{}, () => {}, undefined].forEach((options) => equal(`${feb21.difference(feb20, options)}`, 'PT31622400S'));
+    });
   });
   describe('Min/max range', () => {
     it('constructing from ns', () => {

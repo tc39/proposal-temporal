@@ -293,6 +293,14 @@ describe('DateTime', () => {
         throws(() => datetime.with({ day: 5 }, { disambiguation }), RangeError)
       );
     });
+    it('options may only be an object or undefined', () => {
+      [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
+        throws(() => datetime.with({ day: 5 }, badOptions), TypeError)
+      );
+      [{}, () => {}, undefined].forEach((options) =>
+        equal(`${datetime.with({ day: 5 }, options)}`, '1976-11-05T15:23:30.123456789')
+      );
+    });
   });
   describe('DateTime.compare() works', () => {
     const dt1 = DateTime.from('1976-11-18T15:23:30.123456789');
@@ -384,6 +392,12 @@ describe('DateTime', () => {
         throws(() => jan31.plus({ hours: 1, minutes: -30 }, { disambiguation }), RangeError)
       );
     });
+    it('options may only be an object or undefined', () => {
+      [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
+        throws(() => jan31.plus({ years: 1 }, badOptions), TypeError)
+      );
+      [{}, () => {}, undefined].forEach((options) => equal(`${jan31.plus({ years: 1 }, options)}`, '2021-01-31T15:00'));
+    });
   });
   describe('date.minus() works', () => {
     const mar31 = DateTime.from('2020-03-31T15:00');
@@ -406,6 +420,14 @@ describe('DateTime', () => {
     it('mixed positive and negative values always throw', () => {
       ['constrain', 'reject'].forEach((disambiguation) =>
         throws(() => mar31.plus({ hours: 1, minutes: -30 }, { disambiguation }), RangeError)
+      );
+    });
+    it('options may only be an object or undefined', () => {
+      [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
+        throws(() => mar31.minus({ years: 1 }, badOptions), TypeError)
+      );
+      [{}, () => {}, undefined].forEach((options) =>
+        equal(`${mar31.minus({ years: 1 }, options)}`, '2019-03-31T15:00')
       );
     });
   });
@@ -468,6 +490,12 @@ describe('DateTime', () => {
       const dt1 = new DateTime(2000, 1, 1, 0, 0, 0, 0, 0, 0);
       const dt2 = new DateTime(2000, 1, 1, 0, 0, 0, 0, 0, 0, Temporal.Calendar.from('japanese'));
       throws(() => dt1.difference(dt2), RangeError);
+    });
+    it('options may only be an object or undefined', () => {
+      [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
+        throws(() => feb21.difference(feb20, badOptions), TypeError)
+      );
+      [{}, () => {}, undefined].forEach((options) => equal(`${feb21.difference(feb20, options)}`, 'P366D'));
     });
   });
   describe('DateTime.from() works', () => {
@@ -563,6 +591,14 @@ describe('DateTime', () => {
       equal(`${DateTime.from('1976-11-18')}`, '1976-11-18T00:00');
     });
     it('no junk at end of string', () => throws(() => DateTime.from('1976-11-18T15:23:30.123456789junk'), RangeError));
+    it('options may only be an object or undefined', () => {
+      [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
+        throws(() => DateTime.from({ year: 1976, month: 11, day: 18 }, badOptions), TypeError)
+      );
+      [{}, () => {}, undefined].forEach((options) =>
+        equal(`${DateTime.from({ year: 1976, month: 11, day: 18 }, options)}`, '1976-11-18T00:00')
+      );
+    });
   });
   describe('DateTime.toAbsolute() works', () => {
     it('recent date', () => {
@@ -610,6 +646,15 @@ describe('DateTime', () => {
     it('throws on bad disambiguation', () => {
       ['', 'EARLIER', 'xyz', 3, null].forEach((disambiguation) =>
         throws(() => DateTime.from('2019-10-29T10:46').toAbsolute('UTC', { disambiguation }), RangeError)
+      );
+    });
+    it('options may only be an object or undefined', () => {
+      const dt = DateTime.from('2019-10-29T10:46:38.271986102');
+      [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
+        throws(() => dt.toAbsolute('America/Sao_Paulo', badOptions), TypeError)
+      );
+      [{}, () => {}, undefined].forEach((options) =>
+        equal(`${dt.toAbsolute('America/Sao_Paulo', options)}`, '2019-10-29T13:46:38.271986102Z')
       );
     });
   });

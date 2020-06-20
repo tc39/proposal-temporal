@@ -4,31 +4,43 @@
 <emu-clause id="sec-temporal-abstract-ops">
   <h1>Abstract operations</h1>
 
-  <!-- Based on ECMA-402 9.2.10 GetOption -->
+  <!-- Based on ECMA-402 9.2.10 NormalizeOptionsObject and GetOption -->
+  <emu-clause id="sec-normalizeoptionsobject" aoid="NormalizeOptionsObject">
+    <h1>NormalizeOptionsObject ( _options_ )</h1>
+    <p>
+      The abstract operation NormalizeOptionsObject massages _options_ into an Object to be subsequently passed to GetOption.
+      It throws a TypeError if _options_ is not undefined and not an Object.
+    </p>
+    <emu-alg>
+      1. If _options_ is *undefined*, then
+        1. Return ! ObjectCreate(*null*).
+      1. If Type(_options_) is Object, then
+        1. Return _options_.
+      1. Throw a *TypeError* exception.
+    </emu-alg>
+  </emu-clause>
+
   <emu-clause id="sec-getoption" aoid="GetOption">
     <h1>GetOption ( _options_, _property_, _values_, _fallback_ )</h1>
 
     <p>
-      The abstract operation GetOption extracts the value of the property named _property_ from the provided _options_ object, converts it to a string, checks whether it is one of a List of allowed _values_, and fills in a _fallback_ value if necessary. If _values_ is *undefined*, there is no fixed set of values and any is permitted. If _options_ is *undefined*, then _fallback_ is returned.
+      The abstract operation GetOption extracts the value of the property named _property_ from the provided _options_ object, converts it to a string, checks whether it is one of a List of allowed _values_, and fills in a _fallback_ value if necessary. If _values_ is *undefined*, there is no fixed set of values and any is permitted.
     </p>
 
     <emu-alg>
-      1. If _options_ is *undefined* or *null*, then
-        1. Return _fallback_.
-      1. Set _options_ to ? ToObject(_options_).
+      1. Assert: Type(_options_) is Object.
       1. Let _value_ be ? Get(_options_, _property_).
-      1. If _value_ is not *undefined*, then
-        1. Set _value_ to ? ToString(_value_).
-        1. If _values_ is not *undefined*, then
-          1. If _values_ does not contain an element equal to _value_, throw a *RangeError* exception.
-        1. Return _value_.
-      1. Else, return _fallback_.
+      1. If _value_ is *undefined*, return _fallback_.
+      1. Let _value_ be ? ToString(_value_).
+      1. If _values_ is not *undefined* and _values_ does not contain an element equal to _value_, throw a *RangeError* exception.
+      1. Return _value_.
     </emu-alg>
   </emu-clause>
 
   <emu-clause id="sec-temporal-todurationtemporaldisambiguation" aoid="ToDurationTemporalDisambiguation">
     <h1>ToDurationTemporalDisambiguation ( _options_ )</h1>
     <emu-alg>
+      1. Set _options_ to ? NormalizeOptionsObject(_options_).
       1. Return ? GetOption(_options_, *"disambiguation"*, « *"constrain"*, *"balance"*, *"reject"* », *"constrain"*).
     </emu-alg>
   </emu-clause>
@@ -36,6 +48,7 @@
   <emu-clause id="sec-temporal-totemporaldisambiguation" aoid="ToTemporalDisambiguation">
     <h1>ToTemporalDisambiguation ( _options_ )</h1>
     <emu-alg>
+      1. Set _options_ to ? NormalizeOptionsObject(_options_).
       1. Return ? GetOption(_options_, *"disambiguation"*, « *"constrain"*, *"reject"* », *"constrain"*).
     </emu-alg>
   </emu-clause>
@@ -43,6 +56,7 @@
   <emu-clause id="sec-temporal-totimezonetemporaldisambiguation" aoid="ToTimeZoneTemporalDisambiguation">
     <h1>ToTimeZoneTemporalDisambiguation ( _options_ )</h1>
     <emu-alg>
+      1. Set _options_ to ? NormalizeOptionsObject(_options_).
       1. Return ? GetOption(_options_, *"disambiguation"*, « *"compatible"*, *"earlier"*, *"later"*, *"reject"* », *"compatible"*).
     </emu-alg>
   </emu-clause>
@@ -51,6 +65,7 @@
     <h1>ToLargestTemporalUnit ( _largestUnit_, _disallowedUnits_, _defaultUnit_ )</h1>
     <emu-alg>
       1. Assert: _disallowedUnits_ does not contain _defaultUnit_.
+      1. Set _options_ to ? NormalizeOptionsObject(_options_).
       1. Let _largestUnit_ be GetOption(_options_, *"largestUnit"*, « *"years"*, *"months"*, *"days"*, *"hours"*, *"minutes"*, *"seconds"*, *"milliseconds"*, *"microseconds"*, *"nanoseconds"* », _defaultUnit_).
       1. If _disallowedUnits_ contains _largestUnit_, then
         1. Throw a *RangeError* exception.

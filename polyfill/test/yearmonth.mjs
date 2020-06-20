@@ -105,6 +105,14 @@ describe('YearMonth', () => {
         equal(`${YearMonth.from('1976-11-18')}`, '1976-11');
       });
       it('no junk at end of string', () => throws(() => YearMonth.from('1976-11junk'), RangeError));
+      it('options may only be an object or undefined', () => {
+        [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
+          throws(() => YearMonth.from({ year: 1976, month: 11 }, badOptions), TypeError)
+        );
+        [{}, () => {}, undefined].forEach((options) =>
+          equal(`${YearMonth.from({ year: 1976, month: 11 }, options)}`, '1976-11')
+        );
+      });
       describe('Disambiguation', () => {
         const bad = { year: 2019, month: 13 };
         it('reject', () => throws(() => YearMonth.from(bad, { disambiguation: 'reject' }), RangeError));
@@ -128,8 +136,15 @@ describe('YearMonth', () => {
     });
   });
   describe('YearMonth.with() works', () => {
+    const ym = YearMonth.from('2019-10');
     it('throws on trying to change the calendar', () => {
-      throws(() => YearMonth.from('2019-10').with({ calendar: 'gregory' }), RangeError);
+      throws(() => ym.with({ calendar: 'gregory' }), RangeError);
+    });
+    it('options may only be an object or undefined', () => {
+      [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
+        throws(() => ym.with({ year: 2020 }, badOptions), TypeError)
+      );
+      [{}, () => {}, undefined].forEach((options) => equal(`${ym.with({ year: 2020 }, options)}`, '2020-10'));
     });
   });
   describe('YearMonth.compare() works', () => {
@@ -216,6 +231,12 @@ describe('YearMonth', () => {
       const ym2 = new YearMonth(2000, 1, Temporal.Calendar.from('japanese'));
       throws(() => ym1.difference(ym2), RangeError);
     });
+    it('options may only be an object or undefined', () => {
+      [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
+        throws(() => feb21.difference(feb20, badOptions), TypeError)
+      );
+      [{}, () => {}, undefined].forEach((options) => equal(`${feb21.difference(feb20, options)}`, 'P1Y'));
+    });
   });
   describe('YearMonth.plus() works', () => {
     const ym = YearMonth.from('2019-11');
@@ -278,6 +299,12 @@ describe('YearMonth', () => {
         throws(() => ym.plus({ years: 1, months: -6 }, { disambiguation }), RangeError)
       );
     });
+    it('options may only be an object or undefined', () => {
+      [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
+        throws(() => ym.plus({ months: 1 }, badOptions), TypeError)
+      );
+      [{}, () => {}, undefined].forEach((options) => equal(`${ym.plus({ months: 1 }, options)}`, '2019-12'));
+    });
   });
   describe('YearMonth.minus() works', () => {
     const ym = YearMonth.from('2019-11');
@@ -339,6 +366,12 @@ describe('YearMonth', () => {
         throws(() => ym.minus({ years: 1, months: -6 }, { disambiguation }), RangeError)
       );
     });
+    it('options may only be an object or undefined', () => {
+      [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
+        throws(() => ym.minus({ months: 1 }, badOptions), TypeError)
+      );
+      [{}, () => {}, undefined].forEach((options) => equal(`${ym.minus({ months: 1 }, options)}`, '2019-10'));
+    });
   });
   describe('Min/max range', () => {
     it('constructing from numbers', () => {
@@ -385,7 +418,7 @@ describe('YearMonth', () => {
   describe('YearMonth.with()', () => {
     it('throws on bad disambiguation', () => {
       ['', 'CONSTRAIN', 'balance', 3, null].forEach((disambiguation) =>
-        throws(() => YearMonth.from(2019, 1).with({ month: 2 }, { disambiguation }), RangeError)
+        throws(() => YearMonth.from({ year: 2019, month: 1 }).with({ month: 2 }, { disambiguation }), RangeError)
       );
     });
   });

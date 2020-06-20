@@ -167,6 +167,12 @@ describe('Duration', () => {
       throws(() => Duration.from('P-1Y1M'), RangeError);
       throws(() => Duration.from('P1Y-1M'), RangeError);
     });
+    it('options may only be an object or undefined', () => {
+      [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
+        throws(() => Duration.from({ hours: 1 }, badOptions), TypeError)
+      );
+      [{}, () => {}, undefined].forEach((options) => equal(Duration.from({ hours: 1 }, options).hours, 1));
+    });
     describe('Disambiguation', () => {
       it('mixed positive and negative values always throw', () => {
         ['constrain', 'balance', 'reject'].forEach((disambiguation) =>
@@ -389,6 +395,12 @@ describe('Duration', () => {
     it('sign cannot be manipulated independently', () => {
       throws(() => duration.with({ sign: -1 }), RangeError);
     });
+    it('options may only be an object or undefined', () => {
+      [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
+        throws(() => duration.with({ days: 5 }, badOptions), TypeError)
+      );
+      [{}, () => {}, undefined].forEach((options) => equal(duration.with({ days: 5 }, options).days, 5));
+    });
   });
   describe('Duration.plus()', () => {
     const duration = Duration.from({ days: 1, minutes: 5 });
@@ -457,6 +469,12 @@ describe('Duration', () => {
       ['constrain', 'balance', 'reject'].forEach((disambiguation) =>
         throws(() => duration.plus({ hours: 1, minutes: -30 }, { disambiguation }), RangeError)
       );
+    });
+    it('options may only be an object or undefined', () => {
+      [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
+        throws(() => duration.plus({ hours: 1 }, badOptions), TypeError)
+      );
+      [{}, () => {}, undefined].forEach((options) => equal(duration.plus({ hours: 1 }, options).hours, 1));
     });
   });
   describe('Duration.minus()', () => {
@@ -568,6 +586,12 @@ describe('Duration', () => {
       ['constrain', 'balance', 'reject'].forEach((disambiguation) =>
         throws(() => duration.minus({ hours: 1, minutes: -30 }, { disambiguation }), RangeError)
       );
+    });
+    it('options may only be an object or undefined', () => {
+      [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
+        throws(() => duration.minus({ hours: 1 }, badOptions), TypeError)
+      );
+      [{}, () => {}, undefined].forEach((options) => equal(duration.minus({ hours: 1 }, options).hours, 0));
     });
   });
   describe('duration.getFields() works', () => {
