@@ -11,7 +11,7 @@ Since `Temporal.Absolute` and `Temporal.DateTime` do not contain any time zone i
 
 ## Custom time zones
 
-For specialized applications where you need to do calculations in a time zone that is not supported by Intl, you can also implement your own `Temporal.TimeZone` object.
+For specialized applications where you need to do calculations in a time zone that is not supported by `Intl`, you can also implement your own `Temporal.TimeZone` object.
 To do this, create a class inheriting from `Temporal.TimeZone`, call `super()` in the constructor with a time zone identifier, and implement the methods `getOffsetNanosecondsFor()`, `getPossibleAbsolutesFor()`, `getNextTransition()`, and `getPreviousTransition()`.
 Any subclass of `Temporal.TimeZone` will be accepted in Temporal APIs where a built-in `Temporal.TimeZone` would work.
 
@@ -205,8 +205,8 @@ tz.getDateTimeFor(epoch);  // => 1969-12-31T19:00
 - `options` (optional object): An object with properties representing options for the operation.
   The following options are recognized:
   - `disambiguation` (string): How to disambiguate if the date and time given by `dateTime` does not exist in the time zone, or exists more than once.
-    Allowed values are `earlier`, `later`, and `reject`.
-    The default is `earlier`.
+    Allowed values are `'compatible'`, `'earlier'`, `'later'`, and `'reject'`.
+    The default is `'compatible'`.
 
 **Returns:** A `Temporal.Absolute` object indicating the absolute time in `timeZone` at the time of the calendar date and wall-clock time from `dateTime`.
 
@@ -214,9 +214,14 @@ This method is one way to convert a `Temporal.DateTime` to a `Temporal.Absolute`
 It is identical to [`dateTime.inTimeZone(timeZone, disambiguation)`](./datetime.html#inTimeZone).
 
 In the case of ambiguity, the `disambiguation` option controls what absolute time to return:
-- `earlier`: The earlier of two possible times.
-- `later`: The later of two possible times.
-- `reject`: Throw a `RangeError` instead.
+- `'compatible'` (the default): Acts like `'earlier'` for backward transitions like the start of DST in the Spring, and `'later'` for forward transitions like the end of DST in the Fall.
+  This matches the behavior of legacy `Date`, of libraries like moment.js, Luxon, and date-fns, and of cross-platform standards like [RFC 5545 (iCalendar)](https://tools.ietf.org/html/rfc5545).
+- `'earlier'`: The earlier of two possible times.
+- `'later'`: The later of two possible times.
+- `'reject'`: Throw a `RangeError` instead.
+
+During "skipped" clock time like the hour after DST starts in the Spring, this method interprets invalid times using the pre-transition time zone offset if `'compatible'` or `'later'` is used or the post-transition time zone offset if `'earlier'` is used.
+This behavior avoids exceptions when converting non-existent `Temporal.DateTime` values to `Temporal.Absolute`, but it also means that values during these periods will result in a different `Temporal.DateTime` in "round-trip" conversions to `Temporal.Absolute` and back again.
 
 For usage examples and a more complete explanation of how this disambiguation works and why it is necessary, see [Resolving ambiguity](./ambiguity.md).
 
@@ -234,8 +239,8 @@ This method returns an array of all the possible absolute times that could corre
 Normally there is only one possible absolute time corresponding to a wall-clock time, but around a daylight saving change, a wall-clock time may not exist, or the same wall-clock time may exist twice in a row.
 See [Resolving ambiguity](./ambiguity.md) for usage examples and a more complete explanation.
 
-Usually you won't have to use this method; `Temporal.TimeZone.prototype.getAbsoluteFor()` will be more convenient for most use cases.
-This method is useful for implementing a custom time zone or custom disambiguation behaviour.
+Although this method is useful for implementing a custom time zone or custom disambiguation behaviour, usually you won't have to use this method; `Temporal.TimeZone.prototype.getAbsoluteFor()` will be more convenient for most use cases.
+During "skipped" clock time like the hour after DST starts in the Spring, `Temporal.TimeZone.prototype.getAbsoluteFor()` returns a `Temporal.Absolute` (by default interpreting the `Temporal.DateTime` using the pre-transition time zone offset), while this method returns zero results during those skipped periods.
 
 ### timeZone.**getNextTransition**(_startingPoint_: Temporal.Absolute) : Temporal.Absolute
 

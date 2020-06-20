@@ -132,7 +132,7 @@ Here's an example of rounding a time _down_ to the previously occurring whole ho
 ### Preserving local time
 
 Map a zoneless date and time of day into a `Temporal.Absolute` instance at which the local date and time of day in a specified time zone matches it.
-This is easily done with `dateTime.inTimeZone()`, but here is an example of implementing different disambiguation behaviours than the `"earlier"`, `"later"`, and `"reject'` ones built in to Temporal.
+This is easily done with `dateTime.inTimeZone()`, but here is an example of implementing different disambiguation behaviors than the `'compatible'`, `'earlier'`, `'later'`, and `'reject'` ones built in to Temporal.
 
 ```javascript
 {{cookbook/getInstantWithLocalTimeInZone.mjs}}

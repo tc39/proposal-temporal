@@ -30,6 +30,10 @@ describe('Intl', () => {
     it('should ignore units not in the data type', () => {
       equal(datetime.toLocaleString('en', { timeZoneName: 'long' }), '11/18/1976, 3:23:30 PM');
     });
+    it('should use compatible disambiguation option', () => {
+      const dstStart = new Temporal.DateTime(2020, 3, 8, 2, 30);
+      equal(`${dstStart.toLocaleString('en', { timeZone: 'America/Los_Angeles' })}`, '3/8/2020, 3:30:00 AM');
+    });
   });
   describe('time.toLocaleString()', () => {
     const time = Temporal.Time.from('1976-11-18T15:23:30');

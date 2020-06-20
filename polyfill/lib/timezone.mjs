@@ -109,6 +109,8 @@ export class TimeZone {
     if (numAbsolutes === 1) return validateAbsolute(possibleAbsolutes[0]);
     if (numAbsolutes) {
       switch (disambiguation) {
+        case 'compatible':
+        // fall through because 'compatible' means 'earlier' for "fall back" transitions
         case 'earlier':
           return validateAbsolute(possibleAbsolutes[0]);
         case 'later':
@@ -142,6 +144,8 @@ export class TimeZone {
         const earlier = dateTime.minus(diff);
         return this.getPossibleAbsolutesFor(earlier)[0];
       }
+      case 'compatible':
+      // fall through because 'compatible' means 'later' for "spring forward" transitions
       case 'later': {
         const later = dateTime.plus(diff);
         const possible = this.getPossibleAbsolutesFor(later);

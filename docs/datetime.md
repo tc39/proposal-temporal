@@ -565,8 +565,8 @@ Use `Temporal.DateTime.compare()` for this, or `datetime.equals()` for equality.
 - `options` (optional object): An object with properties representing options for the operation.
   The following options are recognized:
   - `disambiguation` (string): How to disambiguate if the date and time given by `dateTime` does not exist in the time zone, or exists more than once.
-    Allowed values are `earlier`, `later`, and `reject`.
-    The default is `earlier`.
+    Allowed values are `'compatible'`, `'earlier'`, `'later'`, and `'reject'`.
+    The default is `'compatible'`.
 
 **Returns:** A `Temporal.Absolute` object indicating the absolute time in `timeZone` at the time of the calendar date and wall-clock time from `dateTime`.
 
@@ -574,9 +574,14 @@ This method is one way to convert a `Temporal.DateTime` to a `Temporal.Absolute`
 It is identical to [`(Temporal.TimeZone.from(timeZone || 'UTC')).getAbsoluteFor(dateTime, disambiguation)`](./timezone.html#getAbsoluteFor).
 
 In the case of ambiguity, the `disambiguation` option controls what absolute time to return:
-- `earlier`: The earlier of two possible times.
-- `later`: The later of two possible times.
-- `reject`: Throw a `RangeError` instead.
+- `'compatible'` (the default): Acts like `'earlier'` for backward transitions like the start of DST in the Spring, and `'later'` for forward transitions like the end of DST in the Fall.
+  This matches the behavior of legacy `Date`, of libraries like moment.js, Luxon, and date-fns, and of cross-platform standards like [RFC 5545 (iCalendar)](https://tools.ietf.org/html/rfc5545).
+- `'earlier'`: The earlier of two possible times.
+- `'later'`: The later of two possible times.
+- `'reject'`: Throw a `RangeError` instead.
+
+During "skipped" clock time like the hour after DST starts in the Spring, this method interprets invalid times using the pre-transition time zone offset if `'compatible'` or `'later'` is used or the post-transition time zone offset if `'earlier'` is used.
+This behavior avoids exceptions when converting non-existent `Temporal.DateTime` values to `Temporal.Absolute`, but it also means that values during these periods will result in a different `Temporal.DateTime` in "round-trip" conversions to `Temporal.Absolute` and back again.
 
 For usage examples and a more complete explanation of how this disambiguation works and why it is necessary, see [Resolving ambiguity](./ambiguity.md).
 

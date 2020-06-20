@@ -504,7 +504,7 @@ export const ES = ObjectAssign({}, ES2019, {
     return ES.GetOption(options, 'disambiguation', ['constrain', 'reject'], 'constrain');
   },
   ToTimeZoneTemporalDisambiguation: (options) => {
-    return ES.GetOption(options, 'disambiguation', ['earlier', 'later', 'reject'], 'earlier');
+    return ES.GetOption(options, 'disambiguation', ['compatible', 'earlier', 'later', 'reject'], 'compatible');
   },
   ToDurationSubtractionTemporalDisambiguation: (options) => {
     return ES.GetOption(options, 'disambiguation', ['balanceConstrain', 'balance'], 'balanceConstrain');
