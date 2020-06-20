@@ -22,6 +22,8 @@ ignorePatterns:
   - node_modules/
   - /out/
   - /polyfill/test262/
+  - /polyfill/venv/
+  - /polyfill/coverage/
   # Specific vendored or generated files
   - /docs/mermaid.js
   - /docs/playground.js
@@ -77,6 +79,7 @@ rules:
   '@typescript-eslint/explicit-module-boundary-types': off
   '@typescript-eslint/no-empty-function': off
   '@typescript-eslint/no-var-requires': off
+  '@typescript-eslint/ban-ts-comment': off
 overrides:
   - files:
       - polyfill/test/Absolute/**/*.js
