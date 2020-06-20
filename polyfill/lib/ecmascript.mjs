@@ -1533,6 +1533,9 @@ export const ES = ObjectAssign({}, ES2019, {
   ComparisonResult: (value) => (value < 0 ? -1 : value > 0 ? 1 : value),
   GetOption: (options, property, allowedValues, fallback) => {
     if (options === null || options === undefined) return fallback;
+    if (typeof options !== 'object') {
+      throw new TypeError(`Options parameter must be 'object', not '${typeof options}'`);
+    }
     options = ES.ToObject(options);
     let value = options[property];
     if (value !== undefined) {

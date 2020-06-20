@@ -5,7 +5,7 @@ import Pretty from '@pipobscure/demitasse-pretty';
 const { reporter } = Pretty;
 
 import { strict as assert } from 'assert';
-const { deepEqual } = assert;
+const { deepEqual, throws } = assert;
 
 import { ES } from '../lib/ecmascript.mjs';
 import { GetSlot, TIMEZONE_ID } from '../lib/slots.mjs';
@@ -397,6 +397,15 @@ describe('ECMAScript', () => {
     function test(nanos, zone, expected) {
       it(`${nanos} @ ${zone}`, () => deepEqual(ES.GetFormatterParts(zone, nanos), expected));
     }
+  });
+
+  describe('GetOption', () => {
+    // https://github.com/tc39/proposal-temporal/issues/692
+    it('Options parameter must be `object` or `undefined`', () => {
+      [1, 'hello', () => 1, true, Symbol('1'), BigInt(1)].forEach((options) =>
+        throws(() => ES.GetOption(options, 'disambiguation', ['constrain', 'reject'], 'constrain'), TypeError)
+      );
+    });
   });
 });
 
