@@ -1,8 +1,8 @@
 import commonjs from "@rollup/plugin-commonjs";
-import babel from "rollup-plugin-babel";
+import babel from "@rollup/plugin-babel";
 import builtins from "rollup-plugin-node-builtins";
 import resolve from "@rollup/plugin-node-resolve";
-import {uglify} from 'rollup-plugin-uglify';
+import { terser } from 'rollup-plugin-terser';
 
 export default {
   input: "../polyfill/lib/index.mjs",
@@ -10,7 +10,6 @@ export default {
     name: "temporal",
     file: "playground.js",
     format: "umd",
-    lib: ["es6"]
   },
   plugins: [
     commonjs(),
@@ -18,6 +17,7 @@ export default {
     resolve({ preferBuiltins: false }),
     babel({
       exclude: '../polyfill/lib/node_modules/**',
+      babelHelpers: 'bundled',
       presets: [
         [
           "@babel/preset-env",
@@ -29,6 +29,6 @@ export default {
         ]
       ]
     }),
-    uglify()
+    terser()
   ]
 };

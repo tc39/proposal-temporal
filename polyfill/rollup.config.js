@@ -1,7 +1,7 @@
 import commonjs from '@rollup/plugin-commonjs';
 import resolve from '@rollup/plugin-node-resolve';
-import babel from 'rollup-plugin-babel';
-import { uglify } from 'rollup-plugin-uglify';
+import babel from '@rollup/plugin-babel';
+import { terser } from 'rollup-plugin-terser';
 import { env } from 'process';
 
 const config = {
@@ -10,7 +10,6 @@ const config = {
     name: 'temporal',
     file: 'index.js',
     format: 'commonjs',
-    lib: ['es6'],
     sourcemap: true
   },
   plugins: [
@@ -18,6 +17,7 @@ const config = {
     resolve({ preferBuiltins: false }),
     babel({
       exclude: 'node_modules/**',
+      babelHelpers: 'bundled',
       presets: [
         [
           '@babel/preset-env',
@@ -33,7 +33,7 @@ const config = {
 };
 
 if (env.NODE_ENV === 'production') {
-  config.plugins.push(uglify());
+  config.plugins.push(terser());
 }
 
 export default config;
