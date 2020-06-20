@@ -33,7 +33,7 @@ export function DateTimeFormat(locale = IntlDateTimeFormat().resolvedOptions().l
   this[DATETIME] = new IntlDateTimeFormat(locale, datetimeAmend(options));
 }
 
-DateTimeFormat.supportedLocalesOf = function(...args) {
+DateTimeFormat.supportedLocalesOf = function (...args) {
   return IntlDateTimeFormat.supportedLocalesOf(...args);
 };
 

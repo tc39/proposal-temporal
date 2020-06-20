@@ -127,7 +127,7 @@ describe('Userland calendar', () => {
     describe('Making available globally', () => {
       const originalTemporalCalendarFrom = Temporal.Calendar.from;
       before(() => {
-        Temporal.Calendar.from = function(item) {
+        Temporal.Calendar.from = function (item) {
           let id;
           if (item instanceof Temporal.Calendar) {
             id = item.id;
@@ -367,7 +367,7 @@ describe('Userland calendar', () => {
     describe('Making available globally', () => {
       const originalTemporalCalendarFrom = Temporal.Calendar.from;
       before(() => {
-        Temporal.Calendar.from = function(item) {
+        Temporal.Calendar.from = function (item) {
           let id;
           if (item instanceof Temporal.Calendar) {
             id = item.id;
