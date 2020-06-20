@@ -71,7 +71,7 @@ describe('Userland time zone', () => {
     describe('Making available globally', () => {
       const originalTemporalTimeZoneFrom = Temporal.TimeZone.from;
       before(() => {
-        Temporal.TimeZone.from = function(item) {
+        Temporal.TimeZone.from = function (item) {
           let id;
           if (item instanceof Temporal.TimeZone) {
             id = item.name;
@@ -157,7 +157,7 @@ describe('Userland time zone', () => {
     describe('Making available globally', () => {
       const originalTemporalTimeZoneFrom = Temporal.TimeZone.from;
       before(() => {
-        Temporal.TimeZone.from = function(item) {
+        Temporal.TimeZone.from = function (item) {
           let id;
           if (item instanceof Temporal.TimeZone) {
             id = item.name;
