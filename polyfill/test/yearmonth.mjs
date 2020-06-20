@@ -349,7 +349,7 @@ describe('YearMonth', () => {
   describe('YearMonth.with()', () => {
     it('throws on bad disambiguation', () => {
       ['', 'CONSTRAIN', 'balance', 3, null].forEach((disambiguation) =>
-        throws(() => YearMonth.from(2019, 1).with({ month: 2 }, { disambiguation }), RangeError)
+        throws(() => YearMonth.from({ year: 2019, month: 1 }).with({ month: 2 }, { disambiguation }), RangeError)
       );
     });
   });
