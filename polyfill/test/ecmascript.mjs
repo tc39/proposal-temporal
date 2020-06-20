@@ -5,7 +5,7 @@ import Pretty from '@pipobscure/demitasse-pretty';
 const { reporter } = Pretty;
 
 import { strict as assert } from 'assert';
-const { deepEqual } = assert;
+const { deepEqual, throws } = assert;
 
 import { ES } from '../lib/ecmascript.mjs';
 import { GetSlot, TIMEZONE_ID } from '../lib/slots.mjs';
@@ -397,6 +397,14 @@ describe('ECMAScript', () => {
     function test(nanos, zone, expected) {
       it(`${nanos} @ ${zone}`, () => deepEqual(ES.GetFormatterParts(zone, nanos), expected));
     }
+  });
+
+  describe('NormalizeOptionsObject', () => {
+    it('Options parameter can only be an object or undefined', () => {
+      [null, 1, 'hello', true, Symbol('1'), 1n].forEach((options) =>
+        throws(() => ES.NormalizeOptionsObject(options), TypeError)
+      );
+    });
   });
 });
 

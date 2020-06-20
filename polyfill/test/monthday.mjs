@@ -82,6 +82,14 @@ describe('MonthDay', () => {
         equal(`${MonthDay.from('--1118')}`, '11-18');
       });
       it('no junk at end of string', () => throws(() => MonthDay.from('11-18junk'), RangeError));
+      it('options may only be an object or undefined', () => {
+        [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
+          throws(() => MonthDay.from({ month: 11, day: 18 }, badOptions), TypeError)
+        );
+        [{}, () => {}, undefined].forEach((options) =>
+          equal(`${MonthDay.from({ month: 11, day: 18 }, options)}`, '11-18')
+        );
+      });
       describe('Disambiguation', () => {
         const bad = { month: 1, day: 32 };
         it('reject', () => throws(() => MonthDay.from(bad, { disambiguation: 'reject' }), RangeError));
@@ -119,13 +127,20 @@ describe('MonthDay', () => {
     });
   });
   describe('MonthDay.with()', () => {
+    const md = MonthDay.from('01-15');
     it('throws on bad disambiguation', () => {
       ['', 'CONSTRAIN', 'balance', 3, null].forEach((disambiguation) =>
-        throws(() => MonthDay.from('01-15').with({ day: 1 }, { disambiguation }), RangeError)
+        throws(() => md.with({ day: 1 }, { disambiguation }), RangeError)
       );
     });
     it('throws on trying to change the calendar', () => {
-      throws(() => MonthDay.from('01-15').with({ calendar: 'gregory' }), RangeError);
+      throws(() => md.with({ calendar: 'gregory' }), RangeError);
+    });
+    it('options may only be an object or undefined', () => {
+      [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
+        throws(() => md.with({ day: 1 }, badOptions), TypeError)
+      );
+      [{}, () => {}, undefined].forEach((options) => equal(`${md.with({ day: 1 }, options)}`, '01-01'));
     });
   });
   describe('MonthDay.equals()', () => {

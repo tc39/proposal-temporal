@@ -192,6 +192,14 @@ describe('Time', () => {
           throws(() => time.with({ hour: 3 }, { disambiguation }), RangeError)
         );
       });
+      it('options may only be an object or undefined', () => {
+        [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
+          throws(() => time.with({ hour: 3 }, badOptions), TypeError)
+        );
+        [{}, () => {}, undefined].forEach((options) =>
+          equal(`${time.with({ hour: 3 }, options)}`, '03:23:30.123456789')
+        );
+      });
     });
     describe('time.toDateTime() works', () => {
       const time = Time.from('11:30:23.123456789');
@@ -253,6 +261,12 @@ describe('Time', () => {
         const nsDiff = time3.difference(time1, { largestUnit: 'nanoseconds' });
         equal(nsDiff.microseconds, 0);
         equal(nsDiff.nanoseconds, 24762250250250);
+      });
+      it('options may only be an object or undefined', () => {
+        [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
+          throws(() => time.difference(one, badOptions), TypeError)
+        );
+        [{}, () => {}, undefined].forEach((options) => equal(`${time.difference(one, options)}`, 'PT1H'));
       });
     });
     describe('Time.compare() works', () => {
@@ -325,6 +339,14 @@ describe('Time', () => {
           throws(() => time.plus({ hours: 1, minutes: -30 }, { disambiguation }), RangeError)
         );
       });
+      it('options may only be an object or undefined', () => {
+        [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
+          throws(() => time.plus({ hours: 1 }, badOptions), TypeError)
+        );
+        [{}, () => {}, undefined].forEach((options) =>
+          equal(`${time.plus({ hours: 1 }, options)}`, '16:23:30.123456789')
+        );
+      });
     });
     describe('time.minus() works', () => {
       const time = Time.from('15:23:30.123456789');
@@ -361,6 +383,14 @@ describe('Time', () => {
       it('mixed positive and negative values always throw', () => {
         ['constrain', 'reject'].forEach((disambiguation) =>
           throws(() => time.minus({ hours: 1, minutes: -30 }, { disambiguation }), RangeError)
+        );
+      });
+      it('options may only be an object or undefined', () => {
+        [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
+          throws(() => time.minus({ hours: 1 }, badOptions), TypeError)
+        );
+        [{}, () => {}, undefined].forEach((options) =>
+          equal(`${time.minus({ hours: 1 }, options)}`, '14:23:30.123456789')
         );
       });
     });
@@ -463,6 +493,12 @@ describe('Time', () => {
         equal(`${Time.from('15')}`, '15:00');
       });
       it('no junk at end of string', () => throws(() => Time.from('15:23:30.100junk'), RangeError));
+      it('options may only be an object or undefined', () => {
+        [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
+          throws(() => Time.from({ hour: 12 }, badOptions), TypeError)
+        );
+        [{}, () => {}, undefined].forEach((options) => equal(`${Time.from({ hour: 12 }, options)}`, '12:00'));
+      });
       describe('Disambiguation', () => {
         const bad = { nanosecond: 1000 };
         it('reject', () => throws(() => Time.from(bad, { disambiguation: 'reject' }), RangeError));
