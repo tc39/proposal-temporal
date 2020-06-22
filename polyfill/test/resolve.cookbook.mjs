@@ -15,7 +15,7 @@ export function resolve(specifier, parent, defaultResolve) {
 export async function transformSource(source, { url, format }, defaultTransformSource) {
   if (typeof source === 'string' && url !== 'all.mjs' && !url.endsWith('polyfill/lib/index.mjs')) {
     return {
-      source: `import { Temporal } from '${PKG.name}';\nimport assert from 'assert';\n` + source
+      source: `import { Temporal } from '${PKG.name}';import assert from 'assert';` + source
     };
   } else {
     // source could be a buffer, e.g. for WASM
