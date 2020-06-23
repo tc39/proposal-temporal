@@ -3,12 +3,9 @@
  * a particular time zone, the same as Temporal.TimeZone.getAbsoluteFor() or
  * Temporal.DateTime.inTimeZone(), but with more disambiguation options.
  *
- * As well as the default Temporal disambiguation options 'earlier', 'later',
- * and 'reject', there are additional options possible:
+ * As well as the default Temporal disambiguation options 'compatible',
+ * 'earlier', 'later', and 'reject', there are additional options possible:
  *
- * - 'earlierLater': Same as what the Moment Timezone and Luxon libraries do;
- *   equivalent to 'earlier' when turning the clock back, and 'later' when
- *   setting the clock forward.
  * - 'clipEarlier': Equivalent to 'earlier' when turning the clock back, and
  *   when setting the clock forward returns the time just before the clock
  *   changes.
@@ -25,7 +22,7 @@
  */
 function getInstantWithLocalTimeInZone(dateTime, timeZone, disambiguation = 'earlier') {
   // Handle the built-in modes first
-  if (['earlier', 'later', 'reject'].includes(disambiguation)) {
+  if (['compatible', 'earlier', 'later', 'reject'].includes(disambiguation)) {
     return timeZone.getAbsoluteFor(dateTime, { disambiguation });
   }
 
@@ -35,9 +32,6 @@ function getInstantWithLocalTimeInZone(dateTime, timeZone, disambiguation = 'ear
   if (possible.length === 1) return possible[0];
 
   switch (disambiguation) {
-    case 'earlierLater':
-      if (possible.length === 0) return timeZone.getAbsoluteFor(dateTime, { disambiguation: 'later' });
-      return possible[0];
     case 'clipEarlier':
       if (possible.length === 0) {
         const before = dateTime.inTimeZone(timeZone, { disambiguation: 'earlier' });
@@ -60,7 +54,7 @@ const nonexistentGermanWallTime = Temporal.DateTime.from('2019-03-31T02:45');
 const germanResults = {
   earlier: /*     */ '2019-03-31T01:45+01:00[Europe/Berlin]',
   later: /*       */ '2019-03-31T03:45+02:00[Europe/Berlin]',
-  earlierLater: /**/ '2019-03-31T03:45+02:00[Europe/Berlin]',
+  compatible: /*  */ '2019-03-31T03:45+02:00[Europe/Berlin]',
   clipEarlier: /* */ '2019-03-31T01:59:59.999999999+01:00[Europe/Berlin]',
   clipLater: /*   */ '2019-03-31T03:00+02:00[Europe/Berlin]'
 };
@@ -77,7 +71,7 @@ const doubleEasternBrazilianWallTime = Temporal.DateTime.from('2019-02-16T23:45'
 const brazilianResults = {
   earlier: /*     */ '2019-02-16T23:45-02:00[America/Sao_Paulo]',
   later: /*       */ '2019-02-16T23:45-03:00[America/Sao_Paulo]',
-  earlierLater: /**/ '2019-02-16T23:45-02:00[America/Sao_Paulo]',
+  compatible: /*  */ '2019-02-16T23:45-02:00[America/Sao_Paulo]',
   clipEarlier: /* */ '2019-02-16T23:45-02:00[America/Sao_Paulo]',
   clipLater: /*   */ '2019-02-16T23:45-03:00[America/Sao_Paulo]'
 };

@@ -166,15 +166,19 @@ describe('TimeZone', () => {
     it('clock moving forward', () => {
       const zone = new Temporal.TimeZone('Europe/Berlin');
       const dtm = new Temporal.DateTime(2019, 3, 31, 2, 45);
+      equal(`${zone.getAbsoluteFor(dtm)}`, '2019-03-31T01:45Z');
       equal(`${zone.getAbsoluteFor(dtm, { disambiguation: 'earlier' })}`, '2019-03-31T00:45Z');
       equal(`${zone.getAbsoluteFor(dtm, { disambiguation: 'later' })}`, '2019-03-31T01:45Z');
+      equal(`${zone.getAbsoluteFor(dtm, { disambiguation: 'compatible' })}`, '2019-03-31T01:45Z');
       throws(() => zone.getAbsoluteFor(dtm, { disambiguation: 'reject' }), RangeError);
     });
     it('clock moving backward', () => {
       const zone = new Temporal.TimeZone('America/Sao_Paulo');
       const dtm = new Temporal.DateTime(2019, 2, 16, 23, 45);
+      equal(`${zone.getAbsoluteFor(dtm)}`, '2019-02-17T01:45Z');
       equal(`${zone.getAbsoluteFor(dtm, { disambiguation: 'earlier' })}`, '2019-02-17T01:45Z');
       equal(`${zone.getAbsoluteFor(dtm, { disambiguation: 'later' })}`, '2019-02-17T02:45Z');
+      equal(`${zone.getAbsoluteFor(dtm, { disambiguation: 'compatible' })}`, '2019-02-17T01:45Z');
       throws(() => zone.getAbsoluteFor(dtm, { disambiguation: 'reject' }), RangeError);
     });
   });
@@ -219,16 +223,26 @@ describe('TimeZone', () => {
     const dtm = new Temporal.DateTime(2019, 2, 16, 23, 45);
     it('with constant offset', () => {
       const zone = Temporal.TimeZone.from('+03:30');
-      for (const disambiguation of [undefined, 'earlier', 'later', 'reject']) {
+      for (const disambiguation of [undefined, 'compatible', 'earlier', 'later', 'reject']) {
         assert(zone.getAbsoluteFor(dtm, { disambiguation }) instanceof Temporal.Absolute);
       }
     });
-    it('with daylight saving change', () => {
+    it('with daylight saving change - Fall', () => {
       const zone = Temporal.TimeZone.from('America/Sao_Paulo');
       equal(`${zone.getAbsoluteFor(dtm)}`, '2019-02-17T01:45Z');
       equal(`${zone.getAbsoluteFor(dtm, { disambiguation: 'earlier' })}`, '2019-02-17T01:45Z');
       equal(`${zone.getAbsoluteFor(dtm, { disambiguation: 'later' })}`, '2019-02-17T02:45Z');
+      equal(`${zone.getAbsoluteFor(dtm, { disambiguation: 'compatible' })}`, '2019-02-17T01:45Z');
       throws(() => zone.getAbsoluteFor(dtm, { disambiguation: 'reject' }), RangeError);
+    });
+    it('with daylight saving change - Spring', () => {
+      const dtmLA = new Temporal.DateTime(2020, 3, 8, 2, 30);
+      const zone = Temporal.TimeZone.from('America/Los_Angeles');
+      equal(`${zone.getAbsoluteFor(dtmLA)}`, '2020-03-08T10:30Z');
+      equal(`${zone.getAbsoluteFor(dtmLA, { disambiguation: 'earlier' })}`, '2020-03-08T09:30Z');
+      equal(`${zone.getAbsoluteFor(dtmLA, { disambiguation: 'later' })}`, '2020-03-08T10:30Z');
+      equal(`${zone.getAbsoluteFor(dtmLA, { disambiguation: 'compatible' })}`, '2020-03-08T10:30Z');
+      throws(() => zone.getAbsoluteFor(dtmLA, { disambiguation: 'reject' }), RangeError);
     });
     it('throws on bad disambiguation', () => {
       const zone = Temporal.TimeZone.from('+03:30');

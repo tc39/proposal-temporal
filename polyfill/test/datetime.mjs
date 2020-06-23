@@ -496,11 +496,21 @@ describe('DateTime', () => {
       dt = DateTime.from('-001000-10-29T10:46:38.271986102');
       equal(`${dt.inTimeZone('+06:00')}`, '-001000-10-29T04:46:38.271986102Z');
     });
-    it('datetime with multiple absolute', () => {
+    it('datetime with multiple absolute - Fall DST in Brazil', () => {
       const dt = DateTime.from('2019-02-16T23:45');
+      equal(`${dt.inTimeZone('America/Sao_Paulo')}`, '2019-02-17T01:45Z');
+      equal(`${dt.inTimeZone('America/Sao_Paulo', { disambiguation: 'compatible' })}`, '2019-02-17T01:45Z');
       equal(`${dt.inTimeZone('America/Sao_Paulo', { disambiguation: 'earlier' })}`, '2019-02-17T01:45Z');
       equal(`${dt.inTimeZone('America/Sao_Paulo', { disambiguation: 'later' })}`, '2019-02-17T02:45Z');
       throws(() => dt.inTimeZone('America/Sao_Paulo', { disambiguation: 'reject' }), RangeError);
+    });
+    it('datetime with multiple absolute - Spring DST in Los Angeles', () => {
+      const dt = DateTime.from('2020-03-08T02:30');
+      equal(`${dt.inTimeZone('America/Los_Angeles')}`, '2020-03-08T10:30Z');
+      equal(`${dt.inTimeZone('America/Los_Angeles', { disambiguation: 'compatible' })}`, '2020-03-08T10:30Z');
+      equal(`${dt.inTimeZone('America/Los_Angeles', { disambiguation: 'earlier' })}`, '2020-03-08T09:30Z');
+      equal(`${dt.inTimeZone('America/Los_Angeles', { disambiguation: 'later' })}`, '2020-03-08T10:30Z');
+      throws(() => dt.inTimeZone('America/Los_Angeles', { disambiguation: 'reject' }), RangeError);
     });
     it('throws on bad disambiguation', () => {
       ['', 'EARLIER', 'xyz', 3, null].forEach((disambiguation) =>

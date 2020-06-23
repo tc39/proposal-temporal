@@ -54,18 +54,20 @@ export namespace Temporal {
      *
      * In case of ambiguous or non-existent times, this option controls what
      * absolute time to return:
+     * - `'compatible'`: Equivalent to `'earlier'` for backward transitions like
+     *   the start of DST in the Spring, and `'later'` for forward transitions
+     *   like the end of DST in the Fall. This matches the behavior of legacy
+     *   `Date`, of libraries like moment.js, Luxon, or date-fns, and of
+     *   cross-platform standards like [RFC 5545
+     *   (iCalendar)](https://tools.ietf.org/html/rfc5545).
      * - `'earlier'`: The earlier time of two possible times
      * - `'later'`: The later of two possible times
-     * - `'reject'`: Throw a RangeError instead.
+     * - `'reject'`: Throw a RangeError instead
      *
-     * The default is `'earlier'`.
-     *
-     * Compatibility Note: the legacy `Date` object (and libraries like
-     * moment.js and Luxon) gives the same result as `earlier` when turning the
-     * clock back, and `later` when setting the clock forward.
+     * The default is `'compatible'`.
      *
      * */
-    disambiguation: 'earlier' | 'later' | 'reject';
+    disambiguation: 'compatible' | 'earlier' | 'later' | 'reject';
   };
 
   /**

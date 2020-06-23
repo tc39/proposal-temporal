@@ -43,7 +43,7 @@
   <emu-clause id="sec-temporal-totimezonetemporaldisambiguation" aoid="ToTimeZoneTemporalDisambiguation">
     <h1>ToTimeZoneTemporalDisambiguation ( _options_ )</h1>
     <emu-alg>
-      1. Return ? GetOption(_options_, *"disambiguation"*, « *"earlier"*, *"later"*, *"reject"* », *"earlier"*).
+      1. Return ? GetOption(_options_, *"disambiguation"*, « *"compatible"*, *"earlier"*, *"later"*, *"reject"* », *"compatible"*).
     </emu-alg>
   </emu-clause>
 
@@ -120,7 +120,7 @@
       1. Let _date_ be the date given by _year_, _month_, and _day_.
       1. Return _date_'s week number according to ISO-8601.
     </emu-alg>
-    <emu-note>Beware that dates at the begining of a year may be part of a week from the preceding year, and dates at the end of a year may be part of a week at the beginning of the next year, as the first week of any year is defined as the week that contains the first Thursday of the year.</emu-note>
+    <emu-note>Beware that dates at the beginning of a year may be part of a week from the preceding year, and dates at the end of a year may be part of a week at the beginning of the next year, as the first week of any year is defined as the week that contains the first Thursday of the year.</emu-note>
   </emu-clause>
 
   <emu-clause id="sec-temporal-formatsecondsstringpart" aoid="FormatSecondsStringPart">

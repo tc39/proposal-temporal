@@ -226,7 +226,7 @@ function extractOverrides(datetime, main) {
   if (datetime instanceof DateTime) {
     calendar = calendar || datetime.calendar.id;
     formatter = formatter || main[DATETIME];
-    datetime = main[TIMEZONE].getAbsoluteFor(datetime, 'earlier');
+    datetime = main[TIMEZONE].getAbsoluteFor(datetime);
   }
   if (datetime instanceof Absolute) {
     formatter = formatter || main[DATETIME];
