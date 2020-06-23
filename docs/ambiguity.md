@@ -8,11 +8,13 @@ Due to DST time changes, there is a possibility that a wall-clock time either do
 There are two mostly equivalent methods that accomplish this conversion: [`Temporal.DateTime.prototype.inTimeZone`](./datetime.html#inTimeZone) and [`Temporal.TimeZone.prototype.getAbsoluteFor`](./timezone.html#getAbsoluteFor).
 The `disambiguation` option to these methods controls what absolute time to return in the case of ambiguity:
 
-- `'compatible'` (the default): Acts like `'earlier'` for backward transitions like the start of DST in the Spring, and `'later'` for forward transitions like the end of DST in the Fall.
-  This matches the behavior of legacy `Date`, of libraries like moment.js, Luxon, and date-fns, and of cross-platform standards like [RFC 5545 (iCalendar)](https://tools.ietf.org/html/rfc5545).
+- `'compatible'` (the default): Acts like `'earlier'` for backward transitions and `'later'` for forward transitions.
 - `'earlier'`: The earlier of two possible absolute times will be returned.
 - `'later'`: The later of two possible absolute times will be returned.
 - `'reject'`: A `RangeError` will be thrown.
+
+When interoperating with existing code or services, `'compatible'` mode matches the behavior of legacy `Date` as well as libraries like moment.js, Luxon, and date-fns.
+This mode also matches the behavior of cross-platform standards like [RFC 5545 (iCalendar)](https://tools.ietf.org/html/rfc5545).
 
 When entering DST, clocks move forward an hour.
 In reality, it is not time that is moving, it is the offset moving.

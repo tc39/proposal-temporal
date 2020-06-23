@@ -214,11 +214,13 @@ This method is one way to convert a `Temporal.DateTime` to a `Temporal.Absolute`
 It is identical to [`dateTime.inTimeZone(timeZone, disambiguation)`](./datetime.html#inTimeZone).
 
 In the case of ambiguity, the `disambiguation` option controls what absolute time to return:
-- `'compatible'` (the default): Acts like `'earlier'` for backward transitions like the start of DST in the Spring, and `'later'` for forward transitions like the end of DST in the Fall.
-  This matches the behavior of legacy `Date`, of libraries like moment.js, Luxon, and date-fns, and of cross-platform standards like [RFC 5545 (iCalendar)](https://tools.ietf.org/html/rfc5545).
+- `'compatible'` (the default): Acts like `'earlier'` for backward transitions and `'later'` for forward transitions.
 - `'earlier'`: The earlier of two possible times.
 - `'later'`: The later of two possible times.
 - `'reject'`: Throw a `RangeError` instead.
+
+When interoperating with existing code or services, `'compatible'` mode matches the behavior of legacy `Date` as well as libraries like moment.js, Luxon, and date-fns.
+This mode also matches the behavior of cross-platform standards like [RFC 5545 (iCalendar)](https://tools.ietf.org/html/rfc5545).
 
 During "skipped" clock time like the hour after DST starts in the Spring, this method interprets invalid times using the pre-transition time zone offset if `'compatible'` or `'later'` is used or the post-transition time zone offset if `'earlier'` is used.
 This behavior avoids exceptions when converting non-existent `Temporal.DateTime` values to `Temporal.Absolute`, but it also means that values during these periods will result in a different `Temporal.DateTime` in "round-trip" conversions to `Temporal.Absolute` and back again.
