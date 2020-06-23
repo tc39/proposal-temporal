@@ -460,9 +460,17 @@
       <h1>ValidateYearMonth ( _year_, _month_ )</h1>
       <emu-alg>
         1. Assert: _year_ and _month_ are integer Number values.
-        1. If _year_ &lt; &minus;271821 or _year_ &gt; 275760, then
-          1. Return *false*.
         1. If _month_ &lt; 1 or _month_ &gt; 12, then
+          1. Return *false*.
+        1. Return *true*.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-validateyearmonthrange" aoid="ValidateYearMonthRange">
+      <h1>ValidateYearMonthRange ( _year_, _month_ )</h1>
+      <emu-alg>
+        1. Assert: _year_ and _month_ are integer Number values.
+        1. If _year_ &lt; &minus;271821 or _year_ &gt; 275760, then
           1. Return *false*.
         1. If _year_ is &minus;271821 and _month_ &lt; 4, then
           1. Return *false*.
@@ -491,13 +499,7 @@
       <h1>ConstrainYearMonth ( _year_, _month_ )</h1>
       <emu-alg>
         1. Assert: _year_ and _month_ are integer Number values.
-        1. Set _year_ to ! ConstrainToRange(_year_, &minus;271821, 275760).
-        1. If _year_ is &minus;271821, then
-          1. Set _month_ to ! ConstrainToRange(_month_, 4, 12).
-        1. Else if _year_ is 275760, then
-          1. Set _month_ to ! ConstrainToRange(_month_, 1, 9).
-        1. Else,
-          1. Set _month_ to ! ConstrainToRange(_month_, 1, 12).
+        1. Set _month_ to ! ConstrainToRange(_month_, 1, 12).
         1. Return the Record {
           [[Year]]: _year_,
           [[Month]]: _month_
@@ -509,6 +511,8 @@
       <h1>CreateTemporalYearMonth ( _isoYear_, _isoMonth_, _refISODay_ [ , _newTarget_ ] )</h1>
       <emu-alg>
         1. If ! ValidateDate(_isoYear_, _isoMonth_, _refISODay_) is *false*, then
+          1. Throw a *RangeError* exception.
+        1. If ! ValidateYearMonthRange(_isoYear_, _isoMonth_) is *false*, then
           1. Throw a *RangeError* exception.
         1. If _newTarget_ is not given, set it to %Temporal.YearMonth%.
         1. Let _object_ be ? OrdinaryCreateFromConstructor(_newTarget_, `"%Temporal.YearMonth.prototype%"`, « [[InitializedTemporalYearMonth]], [[ISOYear]], [[ISOMonth]], [[RefISODay]] »).

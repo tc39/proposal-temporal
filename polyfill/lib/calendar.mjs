@@ -113,7 +113,6 @@ class ISO8601 extends Calendar {
     // Intentionally alphabetical
     let { year, month, day } = ES.ToTemporalDateRecord(fields);
     ({ year, month, day } = ES.RegulateDate(year, month, day, disambiguation));
-    ({ year, month, day } = ES.RegulateDateRange(year, month, day, disambiguation));
     return new constructor(year, month, day, this);
   }
   yearMonthFromFields(fields, options, constructor) {
@@ -122,7 +121,6 @@ class ISO8601 extends Calendar {
     // Intentionally alphabetical
     let { year, month } = ES.ToTemporalYearMonthRecord(fields);
     ({ year, month } = ES.RegulateYearMonth(year, month, disambiguation));
-    ({ year, month } = ES.RegulateYearMonthRange(year, month, disambiguation));
     return new constructor(year, month, this, /* refIsoDay = */ 1);
   }
   monthDayFromFields(fields, options, constructor) {
@@ -141,7 +139,6 @@ class ISO8601 extends Calendar {
     let month = GetSlot(date, ISO_MONTH);
     let day = GetSlot(date, ISO_DAY);
     ({ year, month, day } = ES.AddDate(year, month, day, years, months, weeks, days, disambiguation));
-    ({ year, month, day } = ES.RegulateDateRange(year, month, day, disambiguation));
     return new constructor(year, month, day, this);
   }
   minus(date, duration, options, constructor) {
@@ -152,7 +149,6 @@ class ISO8601 extends Calendar {
     let month = GetSlot(date, ISO_MONTH);
     let day = GetSlot(date, ISO_DAY);
     ({ year, month, day } = ES.SubtractDate(year, month, day, years, months, weeks, days, disambiguation));
-    ({ year, month, day } = ES.RegulateDateRange(year, month, day, disambiguation));
     return new constructor(year, month, day, this);
   }
   difference(smaller, larger, options) {

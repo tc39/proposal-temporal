@@ -8,17 +8,8 @@ esid: sec-temporal.datetime.from
 
 // constrain
 
-let result = Temporal.DateTime.from({ year: Infinity, month: 1, day: 1 }, { disambiguation: 'constrain' });
-assert.sameValue(result.year, 275760);
-assert.sameValue(result.month, 1);
-assert.sameValue(result.day, 1);
-assert.sameValue(result.hour, 0);
-assert.sameValue(result.minute, 0);
-assert.sameValue(result.second, 0);
-assert.sameValue(result.millisecond, 0);
-assert.sameValue(result.microsecond, 0);
-assert.sameValue(result.nanosecond, 0);
-result = Temporal.DateTime.from({ year: 1970, month: Infinity, day: 1 }, { disambiguation: 'constrain' });
+assert.throws(RangeError, () => Temporal.DateTime.from({ year: Infinity, month: 1, day: 1 }, { disambiguation: 'constrain' }));
+let result = Temporal.DateTime.from({ year: 1970, month: Infinity, day: 1 }, { disambiguation: 'constrain' });
 assert.sameValue(result.year, 1970);
 assert.sameValue(result.month, 12);
 assert.sameValue(result.day, 1);
@@ -119,8 +110,8 @@ const obj = {
   }
 };
 
-result = Temporal.DateTime.from({ year: obj, month: 1, day: 1 }, { disambiguation: 'constrain' });
-assert.sameValue(calls, 1, "it fetches the primitive value");
+assert.throws(RangeError, () => Temporal.DateTime.from({ year: obj, month: 1, day: 1 }, { disambiguation: 'constrain' }));
+assert.sameValue(calls, 1, "it fails after fetching the primitive value");
 result = Temporal.DateTime.from({ year: 1970, month: obj, day: 1 }, { disambiguation: 'constrain' });
 assert.sameValue(calls, 2, "it fetches the primitive value");
 result = Temporal.DateTime.from({ year: 1970, month: 1, day: obj }, { disambiguation: 'constrain' });

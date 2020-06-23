@@ -251,7 +251,6 @@ export class Date {
     } else {
       let { year, month, day, calendar } = ES.ParseTemporalDateString(ES.ToString(item));
       ({ year, month, day } = ES.RegulateDate(year, month, day, disambiguation));
-      ({ year, month, day } = ES.RegulateDateRange(year, month, day, disambiguation));
       if (!calendar) calendar = GetDefaultCalendar();
       calendar = TemporalCalendar.from(calendar);
       result = new this(year, month, day, calendar);

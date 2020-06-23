@@ -314,20 +314,20 @@ describe('YearMonth', () => {
     it('constructing from property bag', () => {
       const tooEarly = { year: -271821, month: 3 };
       const tooLate = { year: 275760, month: 10 };
-      [tooEarly, tooLate].forEach((props) => {
-        throws(() => YearMonth.from(props, { disambiguation: 'reject' }), RangeError);
+      ['reject', 'constrain'].forEach((disambiguation) => {
+        [tooEarly, tooLate].forEach((props) => {
+          throws(() => YearMonth.from(props, { disambiguation }), RangeError);
+        });
       });
-      equal(`${YearMonth.from(tooEarly)}`, '-271821-04');
-      equal(`${YearMonth.from(tooLate)}`, '+275760-09');
       equal(`${YearMonth.from({ year: -271821, month: 4 })}`, '-271821-04');
       equal(`${YearMonth.from({ year: 275760, month: 9 })}`, '+275760-09');
     });
     it('constructing from ISO string', () => {
-      ['-271821-03', '+275760-10'].forEach((str) => {
-        throws(() => YearMonth.from(str, { disambiguation: 'reject' }), RangeError);
+      ['reject', 'constrain'].forEach((disambiguation) => {
+        ['-271821-03', '+275760-10'].forEach((str) => {
+          throws(() => YearMonth.from(str, { disambiguation }), RangeError);
+        });
       });
-      equal(`${YearMonth.from('-271821-03')}`, '-271821-04');
-      equal(`${YearMonth.from('+275760-10')}`, '+275760-09');
       equal(`${YearMonth.from('-271821-04')}`, '-271821-04');
       equal(`${YearMonth.from('+275760-09')}`, '+275760-09');
     });
@@ -340,10 +340,10 @@ describe('YearMonth', () => {
     it('adding and subtracting beyond limit', () => {
       const min = YearMonth.from('-271821-04');
       const max = YearMonth.from('+275760-09');
-      equal(`${min.minus({ months: 1 })}`, '-271821-04');
-      equal(`${max.plus({ months: 1 })}`, '+275760-09');
-      throws(() => min.minus({ months: 1 }, { disambiguation: 'reject' }), RangeError);
-      throws(() => max.plus({ months: 1 }, { disambiguation: 'reject' }), RangeError);
+      ['reject', 'constrain'].forEach((disambiguation) => {
+        throws(() => min.minus({ months: 1 }, { disambiguation }), RangeError);
+        throws(() => max.plus({ months: 1 }, { disambiguation }), RangeError);
+      });
     });
   });
   describe('YearMonth.with()', () => {
