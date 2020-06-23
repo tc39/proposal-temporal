@@ -4,7 +4,8 @@
 
 **NOTE:** We encourage you to experiment with the polyfill, but don't use it in production!
 The API will change before the proposal reaches Stage 3, based on feedback that we receive during this time.
-Please give us your feedback in the [issue tracker](https://github.com/tc39/proposal-temporal/issues).
+Please give us your feedback in the [issue tracker](https://github.com/tc39/proposal-temporal/issues) and by taking the [survey](https://forms.gle/iL9iZg7Y9LvH41Nv8).
+More info: https://blogs.igalia.com/compilers/2020/06/23/dates-and-times-in-javascript/
 
 Please run the polyfill with Node.js 12 or later.
 
