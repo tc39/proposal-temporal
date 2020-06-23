@@ -580,8 +580,8 @@ Use <code>Temporal.DateTime.compare()</code> for this, or <code>datetime.equals(
 <li><code>options</code> (optional object): An object with properties representing options for the operation.
 The following options are recognized:<ul>
 <li><code>disambiguation</code> (string): How to disambiguate if the date and time given by <code>dateTime</code> does not exist in the time zone, or exists more than once.
-Allowed values are <code>earlier</code>, <code>later</code>, and <code>reject</code>.
-The default is <code>earlier</code>.</li>
+Allowed values are <code>&#39;compatible&#39;</code>, <code>&#39;earlier&#39;</code>, <code>&#39;later&#39;</code>, and <code>&#39;reject&#39;</code>.
+The default is <code>&#39;compatible&#39;</code>.</li>
 </ul>
 </li>
 </ul>
@@ -590,10 +590,15 @@ The default is <code>earlier</code>.</li>
 It is identical to <a href="./timezone.html#getAbsoluteFor"><code>(Temporal.TimeZone.from(timeZone || &#39;UTC&#39;)).getAbsoluteFor(dateTime, disambiguation)</code></a>.</p>
 <p>In the case of ambiguity, the <code>disambiguation</code> option controls what absolute time to return:</p>
 <ul>
-<li><code>earlier</code>: The earlier of two possible times.</li>
-<li><code>later</code>: The later of two possible times.</li>
-<li><code>reject</code>: Throw a <code>RangeError</code> instead.</li>
+<li><code>&#39;compatible&#39;</code> (the default): Acts like <code>&#39;earlier&#39;</code> for backward transitions and <code>&#39;later&#39;</code> for forward transitions.</li>
+<li><code>&#39;earlier&#39;</code>: The earlier of two possible times.</li>
+<li><code>&#39;later&#39;</code>: The later of two possible times.</li>
+<li><code>&#39;reject&#39;</code>: Throw a <code>RangeError</code> instead.</li>
 </ul>
+<p>When interoperating with existing code or services, <code>&#39;compatible&#39;</code> mode matches the behavior of legacy <code>Date</code> as well as libraries like moment.js, Luxon, and date-fns.
+This mode also matches the behavior of cross-platform standards like <a href="https://tools.ietf.org/html/rfc5545">RFC 5545 (iCalendar)</a>.</p>
+<p>During &quot;skipped&quot; clock time like the hour after DST starts in the Spring, this method interprets invalid times using the pre-transition time zone offset if <code>&#39;compatible&#39;</code> or <code>&#39;later&#39;</code> is used or the post-transition time zone offset if <code>&#39;earlier&#39;</code> is used.
+This behavior avoids exceptions when converting non-existent <code>Temporal.DateTime</code> values to <code>Temporal.Absolute</code>, but it also means that values during these periods will result in a different <code>Temporal.DateTime</code> in &quot;round-trip&quot; conversions to <code>Temporal.Absolute</code> and back again.</p>
 <p>For usage examples and a more complete explanation of how this disambiguation works and why it is necessary, see <a href="./ambiguity.html">Resolving ambiguity</a>.</p>
 <p>If the result is earlier or later than the range that <code>Temporal.Absolute</code> can represent (approximately half a million years centered on the <a href="https://en.wikipedia.org/wiki/Unix_time">Unix epoch</a>), then a <code>RangeError</code> will be thrown, no matter the value of <code>disambiguation</code>.</p>
 <h3 id="getDate"><a class="heading-link" href="#getDate"></a>datetime.<strong>getDate</strong>() : Temporal.Date</h3><p><strong>Returns:</strong> a <code>Temporal.Date</code> object that is the same as the date portion of <code>datetime</code>.</p>
