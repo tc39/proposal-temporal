@@ -8,10 +8,8 @@ esid: sec-temporal.yearmonth.from
 
 // constrain
 
-let result = Temporal.YearMonth.from({ year: -Infinity, month: 1 }, { disambiguation: 'constrain' });
-assert.sameValue(result.year, -271821);
-assert.sameValue(result.month, 4);
-result = Temporal.YearMonth.from({ year: 1970, month: -Infinity }, { disambiguation: 'constrain' });
+assert.throws(RangeError, () => Temporal.YearMonth.from({ year: -Infinity, month: 1 }, { disambiguation: 'constrain' }));
+let result = Temporal.YearMonth.from({ year: 1970, month: -Infinity }, { disambiguation: 'constrain' });
 assert.sameValue(result.year, 1970);
 assert.sameValue(result.month, 1);
 
@@ -28,8 +26,8 @@ const obj = {
   }
 };
 
-result = Temporal.YearMonth.from({ year: obj, month: 1 }, { disambiguation: 'constrain' });
-assert.sameValue(calls, 1, "it fetches the primitive value");
+assert.throws(RangeError, () => Temporal.YearMonth.from({ year: obj, month: 1 }, { disambiguation: 'constrain' }));
+assert.sameValue(calls, 1, "it fails after fetching the primitive value");
 result = Temporal.YearMonth.from({ year: 1970, month: obj }, { disambiguation: 'constrain' });
 assert.sameValue(calls, 2, "it fetches the primitive value");
 

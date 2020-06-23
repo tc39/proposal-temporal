@@ -762,12 +762,7 @@
         1. If _disambiguation_ is `"constrain"`, then
           1. Return ! ConstrainDateTime(_year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_).
         1. If _disambiguation_ is `"balance"`, then
-          1. Let _result_ be ? BalanceDateTime(_year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_).
-          1. If ! ValidateDateTime(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]],
-              _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]],
-              _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]) is *false*, then
-            1. Throw a *RangeError* exception.
-          1. Return _result_.
+          1. Return ? BalanceDateTime(_year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_).
         1. If _disambiguation_ is `"reject"`, then
           1. If ! ValidateDateTime(_year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_) is *false*, then
             1. Throw a *RangeError* exception.
@@ -789,19 +784,12 @@
       <h1>ValidateDateTime ( _year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_ )</h1>
       <emu-alg>
         1. Assert: _year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, and _nanosecond_ are integer Number values.
-        1. If _year_ &lt; &minus;271821 or _year_ &gt; 275760, then
-          1. Return *false*.
         1. If _month_ &lt; 1 or _month_ &gt; 12, then
           1. Return *false*.
         1. Let _maxDay_ be ! DaysInMonth(_year_, _month_).
         1. If _day_ &lt; 1 or _day_ &gt; _maxDay_, then
           1. Return *false*.
         1. If ! ValidateTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_) is *false*, then
-          1. Return *false*.
-        1. Let _withinLimits_ be ! DateTimeWithinLimits(_year_, _month_, _day_,
-            _hour_, _minute_, _second_,
-            _millisecond_, _microsecond_, _nanosecond_).
-        1. If _withinLimits_ is not ~in range~, then
           1. Return *false*.
         1. Return *true*.
       </emu-alg>
@@ -811,37 +799,9 @@
       <h1>ConstrainDateTime ( _year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_ )</h1>
       <emu-alg>
         1. Assert: _year_, _month_, and _day_ are integer Number values.
-        1. Set _year_ to ! ConstrainToRange(_year_, -271821, 275760).
         1. Set _month_ to ! ConstrainToRange(_month_, 1, 12).
         1. Set _day_ to ! ConstrainToRange(_day_, 1, ! DaysInMonth(_year_, _month_)).
         1. Let _constrainedTime_ be ! ConstrainTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_).
-        1. Let _withinLimits_ be ! DateTimeWithinLimits(_year_, _month_, _day_,
-            _constrainedTime_.[[Hour]], _constrainedTime_.[[Minute]], _constrainedTime_.[[Second]],
-            _constrainedTime_.[[Millisecond]], _constrainedTime_.[[Microsecond]], _constrainedTime_.[[Nanosecond]]).
-        1. If _withinLimits_ is ~too early~, then
-          1. Return the Record {
-              [[Year]]: -271821,
-              [[Month]]: 4,
-              [[Day]]: 19,
-              [[Hour]]: 0,
-              [[Minute]]: 0,
-              [[Second]]: 0,
-              [[Millisecond]]: 0,
-              [[Microsecond]]: 0,
-              [[Nanosecond]]: 1
-            }.
-        1. If _withinLimits_ is ~too late~, then
-          1. Return the Record {
-              [[Year]]: 271821,
-              [[Month]]: 9,
-              [[Day]]: 13,
-              [[Hour]]: 23,
-              [[Minute]]: 59,
-              [[Second]]: 59,
-              [[Millisecond]]: 999,
-              [[Microsecond]]: 999,
-              [[Nanosecond]]: 999
-            }.
         1. Return the Record {
             [[Year]]: _year_,
             [[Month]]: _month_,
@@ -879,6 +839,8 @@
       <h1>CreateTemporalDateTime ( _isoYear_, _isoMonth_, _isoDay_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_ [ , _newTarget_ ] )</h1>
       <emu-alg>
         1. If ! ValidateDateTime(_isoYear_, _isoMonth_, _isoDay_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_) is *false*, then
+          1. Throw a *RangeError* exception.
+        1. If ! DateTimeWithinLimits(_isoYear_, _isoMonth_, _isoDay_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_) is not ~in range~, then
           1. Throw a *RangeError* exception.
         1. If _newTarget_ is not given, set it to %Temporal.DateTime%.
         1. Let _object_ be ? OrdinaryCreateFromConstructor(_newTarget_, `"%Temporal.DateTime.prototype%"`, « [[InitializedTemporalDateTime]], [[ISOYear]], [[ISOMonth]], [[ISODay]], [[Hour]], [[Minute]], [[Second]], [[Millisecond]], [[Microsecond]], [[Nanosecond]] »).

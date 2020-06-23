@@ -205,7 +205,6 @@ export class YearMonth {
     } else {
       let { year, month, refISODay, calendar } = ES.ParseTemporalYearMonthString(ES.ToString(item));
       ({ year, month } = ES.RegulateYearMonth(year, month, disambiguation));
-      ({ year, month } = ES.RegulateYearMonthRange(year, month, disambiguation));
       if (!calendar) calendar = GetDefaultCalendar();
       calendar = TemporalCalendar.from(calendar);
       if (refISODay === undefined) refISODay = 1;

@@ -10,17 +10,8 @@ const instance = new Temporal.DateTime(2000, 5, 2, 12, 34, 56, 987, 654, 321);
 
 // constrain
 
-let result = instance.with({ year: -Infinity }, { disambiguation: 'constrain' });
-assert.sameValue(result.year, -271821);
-assert.sameValue(result.month, 5);
-assert.sameValue(result.day, 2);
-assert.sameValue(result.hour, 12);
-assert.sameValue(result.minute, 34);
-assert.sameValue(result.second, 56);
-assert.sameValue(result.millisecond, 987);
-assert.sameValue(result.microsecond, 654);
-assert.sameValue(result.nanosecond, 321);
-result = instance.with({ month: -Infinity }, { disambiguation: 'constrain' });
+assert.throws(RangeError, () => instance.with({ year: -Infinity }, { disambiguation: 'constrain' }));
+let result = instance.with({ month: -Infinity }, { disambiguation: 'constrain' });
 assert.sameValue(result.year, 2000);
 assert.sameValue(result.month, 1);
 assert.sameValue(result.day, 2);
@@ -121,8 +112,8 @@ const obj = {
   }
 };
 
-result = instance.with({ year: obj }, { disambiguation: 'constrain' });
-assert.sameValue(calls, 1, "it fetches the primitive value");
+assert.throws(RangeError, () => instance.with({ year: obj }, { disambiguation: 'constrain' }));
+assert.sameValue(calls, 1, "it fails after fetching the primitive value");
 result = instance.with({ month: obj }, { disambiguation: 'constrain' });
 assert.sameValue(calls, 2, "it fetches the primitive value");
 result = instance.with({ day: obj }, { disambiguation: 'constrain' });

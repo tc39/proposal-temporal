@@ -477,20 +477,20 @@ describe('Date', () => {
     it('constructing from property bag', () => {
       const tooEarly = { year: -271821, month: 4, day: 18 };
       const tooLate = { year: 275760, month: 9, day: 14 };
-      [tooEarly, tooLate].forEach((props) => {
-        throws(() => Date.from(props, { disambiguation: 'reject' }), RangeError);
+      ['reject', 'constrain'].forEach((disambiguation) => {
+        [tooEarly, tooLate].forEach((props) => {
+          throws(() => Date.from(props, { disambiguation }), RangeError);
+        });
       });
-      equal(`${Date.from(tooEarly)}`, '-271821-04-19');
-      equal(`${Date.from(tooLate)}`, '+275760-09-13');
       equal(`${Date.from({ year: -271821, month: 4, day: 19 })}`, '-271821-04-19');
       equal(`${Date.from({ year: 275760, month: 9, day: 13 })}`, '+275760-09-13');
     });
     it('constructing from ISO string', () => {
-      ['-271821-04-18', '+275760-09-14'].forEach((str) => {
-        throws(() => Date.from(str, { disambiguation: 'reject' }), RangeError);
+      ['reject', 'constrain'].forEach((disambiguation) => {
+        ['-271821-04-18', '+275760-09-14'].forEach((str) => {
+          throws(() => Date.from(str, { disambiguation }), RangeError);
+        });
       });
-      equal(`${Date.from('-271821-04-18')}`, '-271821-04-19');
-      equal(`${Date.from('+275760-09-14')}`, '+275760-09-13');
       equal(`${Date.from('-271821-04-19')}`, '-271821-04-19');
       equal(`${Date.from('+275760-09-13')}`, '+275760-09-13');
     });
@@ -521,10 +521,10 @@ describe('Date', () => {
     it('adding and subtracting beyond limit', () => {
       const min = Date.from('-271821-04-19');
       const max = Date.from('+275760-09-13');
-      equal(`${min.minus({ days: 1 })}`, '-271821-04-19');
-      equal(`${max.plus({ days: 1 })}`, '+275760-09-13');
-      throws(() => min.minus({ days: 1 }, { disambiguation: 'reject' }), RangeError);
-      throws(() => max.plus({ days: 1 }, { disambiguation: 'reject' }), RangeError);
+      ['reject', 'constrain'].forEach((disambiguation) => {
+        throws(() => min.minus({ days: 1 }, { disambiguation }), RangeError);
+        throws(() => max.plus({ days: 1 }, { disambiguation }), RangeError);
+      });
     });
   });
   describe('date.getFields() works', () => {

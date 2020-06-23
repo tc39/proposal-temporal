@@ -181,18 +181,6 @@ export class DateTime {
       nanosecond,
       disambiguation
     ));
-    ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.RegulateDateTimeRange(
-      year,
-      month,
-      day,
-      hour,
-      minute,
-      second,
-      millisecond,
-      microsecond,
-      nanosecond,
-      disambiguation
-    ));
     const Construct = ES.SpeciesConstructor(this, DateTime);
     const result = new Construct(
       year,
@@ -279,36 +267,6 @@ export class DateTime {
     let month = GetSlot(addedDate, ISO_MONTH);
     let day = GetSlot(addedDate, ISO_DAY);
 
-    if (disambiguation === 'constrain') {
-      // Special case to determine if the date was clipped by dateFromFields
-      // and therefore the time possibly needs to be clipped too
-      try {
-        calendar.plus(datePart, duration, { disambiguation: 'reject' }, TemporalDate);
-      } catch {
-        // Date was clipped
-        if (year === 275760 && month === 9 && day === 13) {
-          // Clipped at end of range
-          day += 1;
-        } else if (year === -271821 && month === 4 && day === 19) {
-          // Clipped at beginning of range
-          day -= 1;
-        }
-        ({ year, month, day } = ES.BalanceDate(year, month, day));
-      }
-    }
-
-    ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.RegulateDateTimeRange(
-      year,
-      month,
-      day,
-      hour,
-      minute,
-      second,
-      millisecond,
-      microsecond,
-      nanosecond,
-      disambiguation
-    ));
     const Construct = ES.SpeciesConstructor(this, DateTime);
     const result = new Construct(
       year,
@@ -370,41 +328,11 @@ export class DateTime {
       GetSlot(this, ISO_DAY),
       calendar
     );
-    const addedDate = calendar.minus(datePart, duration, options, TemporalDate);
-    let year = GetSlot(addedDate, ISO_YEAR);
-    let month = GetSlot(addedDate, ISO_MONTH);
-    let day = GetSlot(addedDate, ISO_DAY);
+    const subtractedDate = calendar.minus(datePart, duration, options, TemporalDate);
+    let year = GetSlot(subtractedDate, ISO_YEAR);
+    let month = GetSlot(subtractedDate, ISO_MONTH);
+    let day = GetSlot(subtractedDate, ISO_DAY);
 
-    if (disambiguation === 'constrain') {
-      // Special case to determine if the date was clipped by dateFromFields
-      // and therefore the time possibly needs to be clipped too
-      try {
-        calendar.minus(datePart, duration, { disambiguation: 'reject' }, TemporalDate);
-      } catch {
-        // Date was clipped
-        if (year === 275760 && month === 9 && day === 13) {
-          // Clipped at end of range
-          day += 1;
-        } else if (year === -271821 && month === 4 && day === 19) {
-          // Clipped at beginning of range
-          day -= 1;
-        }
-        ({ year, month, day } = ES.BalanceDate(year, month, day));
-      }
-    }
-
-    ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.RegulateDateTimeRange(
-      year,
-      month,
-      day,
-      hour,
-      minute,
-      second,
-      millisecond,
-      microsecond,
-      nanosecond,
-      disambiguation
-    ));
     const Construct = ES.SpeciesConstructor(this, DateTime);
     const result = new Construct(
       year,
@@ -637,18 +565,6 @@ export class DateTime {
           nanosecond,
           disambiguation
         ));
-        ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.RegulateDateTimeRange(
-          year,
-          month,
-          day,
-          hour,
-          minute,
-          second,
-          millisecond,
-          microsecond,
-          nanosecond,
-          disambiguation
-        ));
         result = new this(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
       }
     } else {
@@ -664,18 +580,6 @@ export class DateTime {
         nanosecond,
         calendar
       } = ES.ParseTemporalDateTimeString(ES.ToString(item));
-      ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.RegulateDateTimeRange(
-        year,
-        month,
-        day,
-        hour,
-        minute,
-        second,
-        millisecond,
-        microsecond,
-        nanosecond,
-        disambiguation
-      ));
       if (!calendar) calendar = GetDefaultCalendar();
       calendar = TemporalCalendar.from(calendar);
       result = new this(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);

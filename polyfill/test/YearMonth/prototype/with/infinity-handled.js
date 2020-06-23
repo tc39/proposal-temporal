@@ -10,10 +10,8 @@ const instance = new Temporal.YearMonth(2000, 5);
 
 // constrain
 
-let result = instance.with({ year: Infinity }, { disambiguation: 'constrain' });
-assert.sameValue(result.year, 275760);
-assert.sameValue(result.month, 5);
-result = instance.with({ month: Infinity }, { disambiguation: 'constrain' });
+assert.throws(RangeError, () => instance.with({ year: Infinity }, { disambiguation: 'constrain' }));
+let result = instance.with({ month: Infinity }, { disambiguation: 'constrain' });
 assert.sameValue(result.year, 2000);
 assert.sameValue(result.month, 12);
 
@@ -30,8 +28,8 @@ const obj = {
   }
 };
 
-result = instance.with({ year: obj }, { disambiguation: 'constrain' });
-assert.sameValue(calls, 1, "it fetches the primitive value");
+assert.throws(RangeError, () => instance.with({ year: obj }, { disambiguation: 'constrain' }));
+assert.sameValue(calls, 1, "it fails after fetching the primitive value");
 result = instance.with({ month: obj }, { disambiguation: 'constrain' });
 assert.sameValue(calls, 2, "it fetches the primitive value");
 

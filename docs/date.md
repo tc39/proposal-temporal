@@ -33,7 +33,7 @@ All values are given as reckoned in the [ISO 8601 calendar](https://en.wikipedia
 Together, `isoYear`, `isoMonth`, and `isoDay` must represent a valid date in that calendar, even if you are passing a different calendar as the `calendar` parameter.
 
 The range of allowed values for this type is exactly enough that calling [`getDate()`](./datetime.html#getDate) on any valid `Temporal.DateTime` will succeed.
-If `isoYear`, `isoMonth`, and `isoDay` form a date outside of this range, then `constrain` mode will clamp the values to the limit of the allowed range, while `reject` mode will throw a `RangeError`.
+If `isoYear`, `isoMonth`, and `isoDay` form a date outside of this range, then this function will throw a `RangeError`.
 
 > **NOTE**: The `isoMonth` argument ranges from 1 to 12, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
 
@@ -69,6 +69,8 @@ If the string isn't valid according to ISO 8601, then a `RangeError` will be thr
 The `disambiguation` option works as follows:
 - In `constrain` mode (the default), any out-of-range values are clamped to the nearest in-range value.
 - In `reject` mode, the presence of out-of-range values will cause the function to throw a `RangeError`.
+
+Additionally, if the result is earlier or later than the range of dates that `Temporal.Date` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then this function will throw a `RangeError` regardless of `disambiguation`.
 
 > **NOTE**: The allowed values for the `thing.month` property start at 1, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
 
@@ -260,6 +262,8 @@ This method creates a new `Temporal.Date` which is a copy of `date`, but any pro
 
 Since `Temporal.Date` objects are immutable, use this method instead of modifying one.
 
+If the result is earlier or later than the range of dates that `Temporal.Date` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then this method will throw a `RangeError` regardless of `disambiguation`.
+
 > **NOTE**: The allowed values for the `dateLike.month` property start at 1, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
 
 > **NOTE**: If a `calendar` property is provided on `dateLike`, the new calendar is applied first, before any of the other properties.
@@ -311,8 +315,7 @@ For these cases, the `disambiguation` option tells what to do:
 - In `constrain` mode (the default), out-of-range values are clamped to the nearest in-range value.
 - In `reject` mode, an addition that would result in an out-of-range value fails, and a `RangeError` is thrown.
 
-Additionally, if the result is earlier or later than the range of dates that `Temporal.Date` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then `constrain` mode will clamp the result to the allowed range.
-The `reject` mode will throw a `RangeError` in this case.
+Additionally, if the result is earlier or later than the range of dates that `Temporal.Date` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then this method will throw a `RangeError` regardless of `disambiguation`.
 
 Usage example:
 ```javascript
@@ -346,8 +349,7 @@ For these cases, the `disambiguation` option tells what to do:
 - In `constrain` mode (the default), out-of-range values are clamped to the nearest in-range value.
 - In `reject` mode, an addition that would result in an out-of-range value fails, and a `RangeError` is thrown.
 
-Additionally, if the result is earlier or later than the range of dates that `Temporal.Date` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then `constrain` mode will clamp the result to the allowed range.
-The `reject` mode will throw a `RangeError` in this case.
+Additionally, if the result is earlier or later than the range of dates that `Temporal.Date` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then this method will throw a `RangeError` regardless of `disambiguation`.
 
 Usage example:
 ```javascript

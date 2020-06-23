@@ -528,11 +528,11 @@ describe('DateTime', () => {
     it('constructing from property bag', () => {
       const tooEarly = { year: -271821, month: 4, day: 19 };
       const tooLate = { year: 275760, month: 9, day: 14 };
-      [tooEarly, tooLate].forEach((props) => {
-        throws(() => DateTime.from(props, { disambiguation: 'reject' }), RangeError);
+      ['reject', 'constrain'].forEach((disambiguation) => {
+        [tooEarly, tooLate].forEach((props) => {
+          throws(() => DateTime.from(props, { disambiguation }), RangeError);
+        });
       });
-      equal(`${DateTime.from(tooEarly)}`, '-271821-04-19T00:00:00.000000001');
-      equal(`${DateTime.from(tooLate)}`, '+275760-09-13T23:59:59.999999999');
       equal(
         `${DateTime.from({ year: -271821, month: 4, day: 19, nanosecond: 1 })}`,
         '-271821-04-19T00:00:00.000000001'
@@ -553,11 +553,11 @@ describe('DateTime', () => {
       );
     });
     it('constructing from ISO string', () => {
-      ['-271821-04-19T00:00', '+275760-09-14T00:00'].forEach((str) => {
-        throws(() => DateTime.from(str, { disambiguation: 'reject' }), RangeError);
+      ['reject', 'constrain'].forEach((disambiguation) => {
+        ['-271821-04-19T00:00', '+275760-09-14T00:00'].forEach((str) => {
+          throws(() => DateTime.from(str, { disambiguation }), RangeError);
+        });
       });
-      equal(`${DateTime.from('-271821-04-19T00:00')}`, '-271821-04-19T00:00:00.000000001');
-      equal(`${DateTime.from('+275760-09-14T00:00')}`, '+275760-09-13T23:59:59.999999999');
       equal(`${DateTime.from('-271821-04-19T00:00:00.000000001')}`, '-271821-04-19T00:00:00.000000001');
       equal(`${DateTime.from('+275760-09-13T23:59:59.999999999')}`, '+275760-09-13T23:59:59.999999999');
     });
@@ -583,10 +583,10 @@ describe('DateTime', () => {
     it('adding and subtracting beyond limit', () => {
       const min = DateTime.from('-271821-04-19T00:00:00.000000001');
       const max = DateTime.from('+275760-09-13T23:59:59.999999999');
-      equal(`${min.minus({ nanoseconds: 1 })}`, '-271821-04-19T00:00:00.000000001');
-      equal(`${max.plus({ nanoseconds: 1 })}`, '+275760-09-13T23:59:59.999999999');
-      throws(() => min.minus({ nanoseconds: 1 }, { disambiguation: 'reject' }), RangeError);
-      throws(() => max.plus({ nanoseconds: 1 }, { disambiguation: 'reject' }), RangeError);
+      ['reject', 'constrain'].forEach((disambiguation) => {
+        throws(() => min.minus({ nanoseconds: 1 }, { disambiguation }), RangeError);
+        throws(() => max.plus({ nanoseconds: 1 }, { disambiguation }), RangeError);
+      });
     });
   });
   describe('DateTime.inTimeZone() works', () => {

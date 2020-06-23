@@ -14,6 +14,5 @@ class MyYearMonth extends Temporal.YearMonth {
   }
 }
 
-assert.throws(RangeError, () => MyYearMonth.from("+275760-10", { disambiguation: "reject" }));
-assert.throws(RangeError, () => MyYearMonth.from("-271821-03", { disambiguation: "reject" }));
+assert.throws(RangeError, () => MyYearMonth.from({ year: 2020, month: 13 }, { disambiguation: "reject" }));
 assert.sameValue(called, false);
