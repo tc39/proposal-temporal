@@ -215,7 +215,7 @@ Together, <code>isoYear</code>, <code>isoMonth</code>, and <code>isoDay</code> m
 This value will cause the constructor will throw, so if you have to interoperate with times that may contain leap seconds, use <code>Temporal.DateTime.from()</code> instead.</p>
 </blockquote>
 <p>The range of allowed values for this type is exactly enough that calling <a href="./absolute.html#inTimeZone"><code>inTimeZone()</code></a> on any valid <code>Temporal.Absolute</code> with any valid <code>Temporal.TimeZone</code> will succeed.
-If the parameters passed in to this constructor form a date outside of this range, then <code>constrain</code> mode will clamp the values to the limit of the allowed range, while <code>reject</code> mode will throw a <code>RangeError</code>.</p>
+If the parameters passed in to this constructor form a date outside of this range, then this function will throw a <code>RangeError</code>.</p>
 <blockquote>
 <p><strong>NOTE</strong>: The <code>isoMonth</code> argument ranges from 1 to 12, which is different from legacy <code>Date</code> where months are represented by zero-based indices (0 to 11).</p>
 </blockquote>
@@ -248,6 +248,7 @@ If the string isn&#39;t valid according to ISO 8601, then a <code>RangeError</co
 <li>In <code>constrain</code> mode (the default), any out-of-range values are clamped to the nearest in-range value.</li>
 <li>In <code>reject</code> mode, the presence of out-of-range values will cause the function to throw a <code>RangeError</code>.</li>
 </ul>
+<p>Additionally, if the result is earlier or later than the range of dates that <code>Temporal.DateTime</code> can represent (approximately half a million years centered on the <a href="https://en.wikipedia.org/wiki/Unix_time">Unix epoch</a>), then this method will throw a <code>RangeError</code> regardless of <code>disambiguation</code>.</p>
 <blockquote>
 <p><strong>NOTE</strong>: Although Temporal does not deal with leap seconds, dates coming from other software may have a <code>second</code> value of 60.
 In the default <code>constrain</code> disambiguation mode and when parsing an ISO 8601 string, this will be converted to 59.
@@ -401,6 +402,7 @@ The default is <code>constrain</code>.</li>
 <p><strong>Returns:</strong> a new <code>Temporal.DateTime</code> object.</p>
 <p>This method creates a new <code>Temporal.DateTime</code> which is a copy of <code>datetime</code>, but any properties present on <code>dateTimeLike</code> override the ones already present on <code>datetime</code>.</p>
 <p>Since <code>Temporal.DateTime</code> objects are immutable, use this method instead of modifying one.</p>
+<p>If the result is earlier or later than the range of dates that <code>Temporal.DateTime</code> can represent (approximately half a million years centered on the <a href="https://en.wikipedia.org/wiki/Unix_time">Unix epoch</a>), then this method will throw a <code>RangeError</code> regardless of <code>disambiguation</code>.</p>
 <blockquote>
 <p><strong>NOTE</strong>: The allowed values for the <code>dateTimeLike.month</code> property start at 1, which is different from legacy <code>Date</code> where months are represented by zero-based indices (0 to 11).</p>
 </blockquote>
@@ -439,8 +441,7 @@ For these cases, the <code>disambiguation</code> option tells what to do:</p>
 <li>In <code>constrain</code> mode (the default), out-of-range values are clamped to the nearest in-range value.</li>
 <li>In <code>reject</code> mode, an addition that would result in an out-of-range value fails, and a <code>RangeError</code> is thrown.</li>
 </ul>
-<p>Additionally, if the result is earlier or later than the range that <code>Temporal.DateTime</code> can represent (approximately half a million years centered on the <a href="https://en.wikipedia.org/wiki/Unix_time">Unix epoch</a>), then <code>constrain</code> mode will clamp the result to the allowed range.
-The <code>reject</code> mode will throw a <code>RangeError</code> in this case.</p>
+<p>Additionally, if the result is earlier or later than the range of dates that <code>Temporal.DateTime</code> can represent (approximately half a million years centered on the <a href="https://en.wikipedia.org/wiki/Unix_time">Unix epoch</a>), then this method will throw a <code>RangeError</code> regardless of <code>disambiguation</code>.</p>
 <p>Usage example:</p>
 <pre class="language-javascript"><code class="language-javascript">dt <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>DateTime</span><span class="token punctuation">(</span><span class="token number">1995</span><span class="token punctuation">,</span> <span class="token number">12</span><span class="token punctuation">,</span> <span class="token number">7</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">24</span><span class="token punctuation">,</span> <span class="token number">30</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">500</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 dt<span class="token punctuation">.</span><span class="token function">plus</span><span class="token punctuation">(</span><span class="token punctuation">{</span>years<span class="token operator">:</span> <span class="token number">20</span><span class="token punctuation">,</span> months<span class="token operator">:</span> <span class="token number">4</span><span class="token punctuation">,</span> nanoseconds<span class="token operator">:</span> <span class="token number">500</span><span class="token punctuation">}</span><span class="token punctuation">)</span>  <span class="token comment">// => 2016-04-07T03:24:30.000004</span>
@@ -468,8 +469,7 @@ For these cases, the <code>disambiguation</code> option tells what to do:</p>
 <li>In <code>constrain</code> mode (the default), out-of-range values are clamped to the nearest in-range value.</li>
 <li>In <code>reject</code> mode, an addition that would result in an out-of-range value fails, and a <code>RangeError</code> is thrown.</li>
 </ul>
-<p>Additionally, if the result is earlier or later than the range that <code>Temporal.DateTime</code> can represent (approximately half a million years centered on the <a href="https://en.wikipedia.org/wiki/Unix_time">Unix epoch</a>), then <code>constrain</code> mode will clamp the result to the allowed range.
-The <code>reject</code> mode will throw a <code>RangeError</code> in this case.</p>
+<p>Additionally, if the result is earlier or later than the range of dates that <code>Temporal.DateTime</code> can represent (approximately half a million years centered on the <a href="https://en.wikipedia.org/wiki/Unix_time">Unix epoch</a>), then this method will throw a <code>RangeError</code> regardless of <code>disambiguation</code>.</p>
 <p>Usage example:</p>
 <pre class="language-javascript"><code class="language-javascript">dt <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>DateTime</span><span class="token punctuation">(</span><span class="token number">1995</span><span class="token punctuation">,</span> <span class="token number">12</span><span class="token punctuation">,</span> <span class="token number">7</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">24</span><span class="token punctuation">,</span> <span class="token number">30</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">500</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 dt<span class="token punctuation">.</span><span class="token function">minus</span><span class="token punctuation">(</span><span class="token punctuation">{</span>years<span class="token operator">:</span> <span class="token number">20</span><span class="token punctuation">,</span> months<span class="token operator">:</span> <span class="token number">4</span><span class="token punctuation">,</span> nanoseconds<span class="token operator">:</span> <span class="token number">500</span><span class="token punctuation">}</span><span class="token punctuation">)</span>  <span class="token comment">// => 1975-08-07T03:24:30.000003</span>

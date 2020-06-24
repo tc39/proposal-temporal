@@ -170,8 +170,7 @@ Otherwise, <code>Temporal.YearMonth.from()</code>, which accepts more kinds of i
 <p>All values are given as reckoned in the <a href="https://en.wikipedia.org/wiki/ISO_8601#Dates">ISO 8601 calendar</a>.
 Together, <code>isoYear</code>, <code>isoMonth</code>, and <code>refISODay</code> must represent a valid date in that calendar, even if you are passing a different calendar as the <code>calendar</code> parameter.</p>
 <p>The range of allowed values for this type is exactly enough that calling <a href="./date.html#getYearMonth"><code>getYearMonth()</code></a> on any valid <code>Temporal.Date</code> will succeed.
-If <code>isoYear</code> and <code>isoMonth</code> are outside of this range, then <code>constrain</code> mode will clamp the date to the limit of the allowed range.
-Both <code>balance</code> and <code>reject</code> mode will throw a <code>RangeError</code> in this case.</p>
+If <code>isoYear</code> and <code>isoMonth</code> are outside of this range, then this function will throw a <code>RangeError</code>.</p>
 <blockquote>
 <p><strong>NOTE</strong>: The <code>isoMonth</code> argument ranges from 1 to 12, which is different from legacy <code>Date</code> where months are represented by zero-based indices (0 to 11).</p>
 </blockquote>
@@ -201,6 +200,7 @@ If the string isn&#39;t valid according to ISO 8601, then a <code>RangeError</co
 <li>In <code>constrain</code> mode (the default), any out-of-range values are clamped to the nearest in-range value.</li>
 <li>In <code>reject</code> mode, the presence of out-of-range values will cause the function to throw a <code>RangeError</code>.</li>
 </ul>
+<p>Additionally, if the result is earlier or later than the range of dates that <code>Temporal.YearMonth</code> can represent (approximately half a million years centered on the <a href="https://en.wikipedia.org/wiki/Unix_time">Unix epoch</a>), then this method will throw a <code>RangeError</code> regardless of <code>disambiguation</code>.</p>
 <blockquote>
 <p><strong>NOTE</strong>: The allowed values for the <code>thing.month</code> property start at 1, which is different from legacy <code>Date</code> where months are represented by zero-based indices (0 to 11).</p>
 </blockquote>
@@ -299,6 +299,7 @@ The default is <code>constrain</code>.</li>
 <p><strong>Returns:</strong> a new <code>Temporal.YearMonth</code> object.</p>
 <p>This method creates a new <code>Temporal.YearMonth</code> which is a copy of <code>yearMonth</code>, but any properties present on <code>yearMonthLike</code> override the ones already present on <code>yearMonth</code>.</p>
 <p>Since <code>Temporal.YearMonth</code> objects are immutable, use this method instead of modifying one.</p>
+<p>If the result is earlier or later than the range of dates that <code>Temporal.YearMonth</code> can represent (approximately half a million years centered on the <a href="https://en.wikipedia.org/wiki/Unix_time">Unix epoch</a>), then this method will throw a <code>RangeError</code> regardless of <code>disambiguation</code>.</p>
 <blockquote>
 <p><strong>NOTE</strong>: The allowed values for the <code>yearMonthLike.month</code> property start at 1, which is different from legacy <code>Date</code> where months are represented by zero-based indices (0 to 11).</p>
 </blockquote>
@@ -324,8 +325,7 @@ The default is <code>constrain</code>.</li>
 <p><strong>Returns:</strong> a new <code>Temporal.YearMonth</code> object which is the month indicated by <code>yearMonth</code> plus <code>duration</code>.</p>
 <p>This method adds <code>duration</code> to <code>yearMonth</code>, returning a month that is in the future relative to <code>yearMonth</code>.</p>
 <p>The <code>duration</code> argument is an object with properties denoting a duration, such as <code>{ months: 5 }</code>, or a <code>Temporal.Duration</code> object.</p>
-<p>If the result is earlier or later than the range of dates that <code>Temporal.YearMonth</code> can represent (approximately half a million years centered on the <a href="https://en.wikipedia.org/wiki/Unix_time">Unix epoch</a>), then <code>constrain</code> mode will clamp the result to the allowed range.
-The <code>reject</code> mode will throw a <code>RangeError</code> in this case.</p>
+<p>If the result is earlier or later than the range of dates that <code>Temporal.YearMonth</code> can represent (approximately half a million years centered on the <a href="https://en.wikipedia.org/wiki/Unix_time">Unix epoch</a>), then this method will throw a <code>RangeError</code> regardless of <code>disambiguation</code>.</p>
 <p>Other than for out-of-range values, the <code>disambiguation</code> option has no effect in the default ISO calendar, because a year is always 12 months and therefore not ambiguous.
 It doesn&#39;t matter in this case that years and months can be different numbers of days, as the resolution of <code>Temporal.YearMonth</code> does not distinguish days.
 However, disambiguation may have an effect in other calendars where years can be different numbers of months.</p>
@@ -345,8 +345,7 @@ The default is <code>constrain</code>.</li>
 <p><strong>Returns:</strong> a new <code>Temporal.YearMonth</code> object which is the month indicated by <code>yearMonth</code> minus <code>duration</code>.</p>
 <p>This method subtracts <code>duration</code> from <code>yearMonth</code>, returning a month that is in the future relative to <code>yearMonth</code>.</p>
 <p>The <code>duration</code> argument is an object with properties denoting a duration, such as <code>{ months: 5 }</code>, or a <code>Temporal.Duration</code> object.</p>
-<p>If the result is earlier or later than the range of dates that <code>Temporal.YearMonth</code> can represent (approximately half a million years centered on the <a href="https://en.wikipedia.org/wiki/Unix_time">Unix epoch</a>), then <code>constrain</code> mode will clamp the result to the allowed range.
-The <code>reject</code> mode will throw a <code>RangeError</code> in this case.</p>
+<p>If the result is earlier or later than the range of dates that <code>Temporal.YearMonth</code> can represent (approximately half a million years centered on the <a href="https://en.wikipedia.org/wiki/Unix_time">Unix epoch</a>), then this method will throw a <code>RangeError</code> regardless of <code>disambiguation</code>.</p>
 <p>Other than for out-of-range values, the <code>disambiguation</code> option has no effect in the default ISO calendar, because a year is always 12 months and therefore not ambiguous.
 It doesn&#39;t matter in this case that years and months can be different numbers of days, as the resolution of <code>Temporal.YearMonth</code> does not distinguish days.
 However, disambiguation may have an effect in other calendars where years can be different numbers of months.</p>
