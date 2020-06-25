@@ -476,8 +476,8 @@ describe('Absolute', () => {
     it('converting from DateTime', () => {
       const min = Temporal.DateTime.from('-271821-04-19T00:00:00.000000001');
       const max = Temporal.DateTime.from('+275760-09-13T23:59:59.999999999');
-      throws(() => min.inTimeZone('UTC'), RangeError);
-      throws(() => max.inTimeZone('UTC'), RangeError);
+      throws(() => min.toAbsolute('UTC'), RangeError);
+      throws(() => max.toAbsolute('UTC'), RangeError);
       const utc = Temporal.TimeZone.from('UTC');
       throws(() => utc.getAbsoluteFor(min), RangeError);
       throws(() => utc.getAbsoluteFor(max), RangeError);
@@ -489,22 +489,22 @@ describe('Absolute', () => {
       throws(() => max.plus({ nanoseconds: 1 }), RangeError);
     });
   });
-  describe('Absolute.inTimeZone works', () => {
+  describe('Absolute.toDateTime works', () => {
     const iso = '1976-11-18T14:23:30.123456789Z';
     const abs = Absolute.from(iso);
     it('without parameter', () => {
-      throws(() => abs.inTimeZone(), RangeError);
+      throws(() => abs.toDateTime(), RangeError);
     });
     it('time zone parameter UTC', () => {
       const tz = Temporal.TimeZone.from('UTC');
-      const dt = abs.inTimeZone(tz);
-      equal(abs.getEpochNanoseconds(), dt.inTimeZone(tz).getEpochNanoseconds());
+      const dt = abs.toDateTime(tz);
+      equal(abs.getEpochNanoseconds(), dt.toAbsolute(tz).getEpochNanoseconds());
       equal(`${dt}`, '1976-11-18T14:23:30.123456789');
     });
     it('time zone parameter non-UTC', () => {
       const tz = Temporal.TimeZone.from('America/New_York');
-      const dt = abs.inTimeZone(tz);
-      equal(abs.getEpochNanoseconds(), dt.inTimeZone(tz).getEpochNanoseconds());
+      const dt = abs.toDateTime(tz);
+      equal(abs.getEpochNanoseconds(), dt.toAbsolute(tz).getEpochNanoseconds());
       equal(`${dt}`, '1976-11-18T09:23:30.123456789');
     });
   });

@@ -78,8 +78,8 @@ describe('DateTime', () => {
       it('DateTime.prototype.equals is a Function', () => {
         equal(typeof DateTime.prototype.equals, 'function');
       });
-      it('DateTime.prototype.inTimeZone is a Function', () => {
-        equal(typeof DateTime.prototype.inTimeZone, 'function');
+      it('DateTime.prototype.toAbsolute is a Function', () => {
+        equal(typeof DateTime.prototype.toAbsolute, 'function');
       });
       it('DateTime.prototype.getDate is a Function', () => {
         equal(typeof DateTime.prototype.getDate, 'function');
@@ -495,42 +495,42 @@ describe('DateTime', () => {
       equal(`${DateTime.from('1976-11-18')}`, '1976-11-18T00:00');
     });
   });
-  describe('DateTime.inTimeZone() works', () => {
+  describe('DateTime.toAbsolute() works', () => {
     it('recent date', () => {
       const dt = DateTime.from('2019-10-29T10:46:38.271986102');
       const tz = Temporal.TimeZone.from('Europe/Amsterdam');
-      equal(`${dt.inTimeZone(tz)}`, '2019-10-29T09:46:38.271986102Z');
-      equal(`${dt.inTimeZone('Europe/Amsterdam')}`, '2019-10-29T09:46:38.271986102Z');
+      equal(`${dt.toAbsolute(tz)}`, '2019-10-29T09:46:38.271986102Z');
+      equal(`${dt.toAbsolute('Europe/Amsterdam')}`, '2019-10-29T09:46:38.271986102Z');
     });
     it('year ≤ 99', () => {
       const dt = DateTime.from('+000098-10-29T10:46:38.271986102');
-      equal(`${dt.inTimeZone('+06:00')}`, '+000098-10-29T04:46:38.271986102Z');
+      equal(`${dt.toAbsolute('+06:00')}`, '+000098-10-29T04:46:38.271986102Z');
     });
     it('year < 1', () => {
       let dt = DateTime.from('+000000-10-29T10:46:38.271986102');
-      equal(`${dt.inTimeZone('+06:00')}`, '+000000-10-29T04:46:38.271986102Z');
+      equal(`${dt.toAbsolute('+06:00')}`, '+000000-10-29T04:46:38.271986102Z');
       dt = DateTime.from('-001000-10-29T10:46:38.271986102');
-      equal(`${dt.inTimeZone('+06:00')}`, '-001000-10-29T04:46:38.271986102Z');
+      equal(`${dt.toAbsolute('+06:00')}`, '-001000-10-29T04:46:38.271986102Z');
     });
     it('datetime with multiple absolute - Fall DST in Brazil', () => {
       const dt = DateTime.from('2019-02-16T23:45');
-      equal(`${dt.inTimeZone('America/Sao_Paulo')}`, '2019-02-17T01:45Z');
-      equal(`${dt.inTimeZone('America/Sao_Paulo', { disambiguation: 'compatible' })}`, '2019-02-17T01:45Z');
-      equal(`${dt.inTimeZone('America/Sao_Paulo', { disambiguation: 'earlier' })}`, '2019-02-17T01:45Z');
-      equal(`${dt.inTimeZone('America/Sao_Paulo', { disambiguation: 'later' })}`, '2019-02-17T02:45Z');
-      throws(() => dt.inTimeZone('America/Sao_Paulo', { disambiguation: 'reject' }), RangeError);
+      equal(`${dt.toAbsolute('America/Sao_Paulo')}`, '2019-02-17T01:45Z');
+      equal(`${dt.toAbsolute('America/Sao_Paulo', { disambiguation: 'compatible' })}`, '2019-02-17T01:45Z');
+      equal(`${dt.toAbsolute('America/Sao_Paulo', { disambiguation: 'earlier' })}`, '2019-02-17T01:45Z');
+      equal(`${dt.toAbsolute('America/Sao_Paulo', { disambiguation: 'later' })}`, '2019-02-17T02:45Z');
+      throws(() => dt.toAbsolute('America/Sao_Paulo', { disambiguation: 'reject' }), RangeError);
     });
     it('datetime with multiple absolute - Spring DST in Los Angeles', () => {
       const dt = DateTime.from('2020-03-08T02:30');
-      equal(`${dt.inTimeZone('America/Los_Angeles')}`, '2020-03-08T10:30Z');
-      equal(`${dt.inTimeZone('America/Los_Angeles', { disambiguation: 'compatible' })}`, '2020-03-08T10:30Z');
-      equal(`${dt.inTimeZone('America/Los_Angeles', { disambiguation: 'earlier' })}`, '2020-03-08T09:30Z');
-      equal(`${dt.inTimeZone('America/Los_Angeles', { disambiguation: 'later' })}`, '2020-03-08T10:30Z');
-      throws(() => dt.inTimeZone('America/Los_Angeles', { disambiguation: 'reject' }), RangeError);
+      equal(`${dt.toAbsolute('America/Los_Angeles')}`, '2020-03-08T10:30Z');
+      equal(`${dt.toAbsolute('America/Los_Angeles', { disambiguation: 'compatible' })}`, '2020-03-08T10:30Z');
+      equal(`${dt.toAbsolute('America/Los_Angeles', { disambiguation: 'earlier' })}`, '2020-03-08T09:30Z');
+      equal(`${dt.toAbsolute('America/Los_Angeles', { disambiguation: 'later' })}`, '2020-03-08T10:30Z');
+      throws(() => dt.toAbsolute('America/Los_Angeles', { disambiguation: 'reject' }), RangeError);
     });
     it('throws on bad disambiguation', () => {
       ['', 'EARLIER', 'xyz', 3, null].forEach((disambiguation) =>
-        throws(() => DateTime.from('2019-10-29T10:46').inTimeZone('UTC', { disambiguation }), RangeError)
+        throws(() => DateTime.from('2019-10-29T10:46').toAbsolute('UTC', { disambiguation }), RangeError)
       );
     });
   });
@@ -580,8 +580,8 @@ describe('DateTime', () => {
     it('converting from Absolute', () => {
       const min = Temporal.Absolute.from('-271821-04-20T00:00Z');
       const max = Temporal.Absolute.from('+275760-09-13T00:00Z');
-      equal(`${min.inTimeZone('-23:59')}`, '-271821-04-19T00:01');
-      equal(`${max.inTimeZone('+23:59')}`, '+275760-09-13T23:59');
+      equal(`${min.toDateTime('-23:59')}`, '-271821-04-19T00:01');
+      equal(`${max.toDateTime('+23:59')}`, '+275760-09-13T23:59');
     });
     it('converting from Date and Time', () => {
       const midnight = Temporal.Time.from('00:00');
@@ -605,19 +605,19 @@ describe('DateTime', () => {
       });
     });
   });
-  describe('DateTime.inTimeZone() works', () => {
+  describe('DateTime.toAbsolute() works', () => {
     const dt = DateTime.from('1976-11-18T15:23:30.123456789');
     it('without parameter', () => {
-      throws(() => dt.inTimeZone(), RangeError);
+      throws(() => dt.toAbsolute(), RangeError);
     });
     it('time zone parameter UTC', () => {
       const tz = Temporal.TimeZone.from('UTC');
-      const abs = dt.inTimeZone(tz);
+      const abs = dt.toAbsolute(tz);
       equal(`${abs}`, '1976-11-18T15:23:30.123456789Z');
     });
     it('time zone parameter non-UTC', () => {
       const tz = Temporal.TimeZone.from('America/New_York');
-      const abs = dt.inTimeZone(tz);
+      const abs = dt.toAbsolute(tz);
       equal(`${abs}`, '1976-11-18T20:23:30.123456789Z');
     });
   });

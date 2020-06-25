@@ -458,7 +458,7 @@ export class DateTime {
     throw new TypeError('use compare() or equals() to compare Temporal.DateTime');
   }
 
-  inTimeZone(temporalTimeZoneLike, options) {
+  toAbsolute(temporalTimeZoneLike, options) {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     const TemporalTimeZone = GetIntrinsic('%Temporal.TimeZone%');
     const timeZone = TemporalTimeZone.from(temporalTimeZoneLike);

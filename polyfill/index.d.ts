@@ -209,7 +209,7 @@ export namespace Temporal {
       other: Temporal.Absolute,
       options?: DifferenceOptions<'days' | 'hours' | 'minutes' | 'seconds'>
     ): Temporal.Duration;
-    inTimeZone(tzLike: TimeZoneProtocol | string, calendar?: CalendarProtocol | string): Temporal.DateTime;
+    toDateTime(tzLike: TimeZoneProtocol | string, calendar?: CalendarProtocol | string): Temporal.DateTime;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
     toString(tzLike?: TimeZoneProtocol | string): string;
@@ -474,7 +474,7 @@ export namespace Temporal {
       other: Temporal.DateTime,
       options?: DifferenceOptions<'years' | 'months' | 'weeks' | 'days' | 'hours' | 'minutes' | 'seconds'>
     ): Temporal.Duration;
-    inTimeZone(tzLike: TimeZoneProtocol | string, options?: ToAbsoluteOptions): Temporal.Absolute;
+    toAbsolute(tzLike: TimeZoneProtocol | string, options?: ToAbsoluteOptions): Temporal.Absolute;
     getDate(): Temporal.Date;
     getYearMonth(): Temporal.YearMonth;
     getMonthDay(): Temporal.MonthDay;
