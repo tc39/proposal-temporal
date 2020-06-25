@@ -52,11 +52,11 @@ describe('Userland time zone', () => {
     it('has offset string +00:00', () => equal(obj.getOffsetStringFor(abs), '+00:00'));
     it('converts to DateTime', () => {
       equal(`${obj.getDateTimeFor(abs)}`, '1970-01-01T00:00');
-      equal(`${abs.inTimeZone(obj)}`, '1970-01-01T00:00');
+      equal(`${abs.toDateTime(obj)}`, '1970-01-01T00:00');
     });
     it('converts to Absolute', () => {
       equal(`${obj.getAbsoluteFor(dt)}`, '1976-11-18T15:23:30.123456789Z');
-      equal(`${dt.inTimeZone(obj)}`, '1976-11-18T15:23:30.123456789Z');
+      equal(`${dt.toAbsolute(obj)}`, '1976-11-18T15:23:30.123456789Z');
     });
     it('converts to string', () => equal(`${obj}`, obj.name));
     it('prints in absolute.toString', () =>
@@ -99,13 +99,13 @@ describe('Userland time zone', () => {
         const abs = Temporal.Absolute.fromEpochSeconds(0);
         equal(abs.toString('Etc/Custom_UTC_Subclass'), '1970-01-01T00:00+00:00[Etc/Custom_UTC_Subclass]');
       });
-      it('works for Absolute.inTimeZone', () => {
+      it('works for Absolute.toDateTime', () => {
         const abs = Temporal.Absolute.fromEpochSeconds(0);
-        equal(`${abs.inTimeZone('Etc/Custom_UTC_Subclass')}`, '1970-01-01T00:00');
+        equal(`${abs.toDateTime('Etc/Custom_UTC_Subclass')}`, '1970-01-01T00:00');
       });
-      it('works for DateTime.inTimeZone', () => {
+      it('works for DateTime.toAbsolute', () => {
         const dt = Temporal.DateTime.from('1970-01-01T00:00');
-        equal(dt.inTimeZone('Etc/Custom_UTC_Subclass').getEpochSeconds(), 0);
+        equal(dt.toAbsolute('Etc/Custom_UTC_Subclass').getEpochSeconds(), 0);
       });
       it('works for Temporal.now', () => {
         assert(Temporal.now.dateTime('Etc/Custom_UTC_Subclass') instanceof Temporal.DateTime);
@@ -141,11 +141,11 @@ describe('Userland time zone', () => {
       equal(Temporal.TimeZone.prototype.getOffsetStringFor.call(obj, abs), '+00:00'));
     it('converts to DateTime', () => {
       equal(`${Temporal.TimeZone.prototype.getDateTimeFor.call(obj, abs)}`, '1970-01-01T00:00');
-      equal(`${abs.inTimeZone(obj)}`, '1970-01-01T00:00');
+      equal(`${abs.toDateTime(obj)}`, '1970-01-01T00:00');
     });
     it('converts to Absolute', () => {
       equal(`${Temporal.TimeZone.prototype.getAbsoluteFor.call(obj, dt)}`, '1976-11-18T15:23:30.123456789Z');
-      equal(`${dt.inTimeZone(obj)}`, '1976-11-18T15:23:30.123456789Z');
+      equal(`${dt.toAbsolute(obj)}`, '1976-11-18T15:23:30.123456789Z');
     });
     it('prints in absolute.toString', () =>
       equal(abs.toString(obj), '1970-01-01T00:00+00:00[Etc/Custom_UTC_Protocol]'));
@@ -185,13 +185,13 @@ describe('Userland time zone', () => {
         const abs = Temporal.Absolute.fromEpochSeconds(0);
         equal(abs.toString('Etc/Custom_UTC_Protocol'), '1970-01-01T00:00+00:00[Etc/Custom_UTC_Protocol]');
       });
-      it('works for Absolute.inTimeZone', () => {
+      it('works for Absolute.toDateTime', () => {
         const abs = Temporal.Absolute.fromEpochSeconds(0);
-        equal(`${abs.inTimeZone('Etc/Custom_UTC_Protocol')}`, '1970-01-01T00:00');
+        equal(`${abs.toDateTime('Etc/Custom_UTC_Protocol')}`, '1970-01-01T00:00');
       });
-      it('works for DateTime.inTimeZone', () => {
+      it('works for DateTime.toAbsolute', () => {
         const dt = Temporal.DateTime.from('1970-01-01T00:00');
-        equal(dt.inTimeZone('Etc/Custom_UTC_Protocol').getEpochSeconds(), 0);
+        equal(dt.toAbsolute('Etc/Custom_UTC_Protocol').getEpochSeconds(), 0);
       });
       it('works for Temporal.now', () => {
         assert(Temporal.now.dateTime('Etc/Custom_UTC_Protocol') instanceof Temporal.DateTime);

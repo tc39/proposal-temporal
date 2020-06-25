@@ -111,9 +111,9 @@ describe('Userland calendar', () => {
       const dt = tz.getDateTimeFor(abs, obj);
       equal(dt.calendar.id, obj.id);
     });
-    it('absolute.inTimeZone()', () => {
+    it('absolute.toDateTime()', () => {
       const abs = Temporal.Absolute.fromEpochSeconds(0);
-      const dt = abs.inTimeZone('UTC', obj);
+      const dt = abs.toDateTime('UTC', obj);
       equal(dt.calendar.id, obj.id);
     });
     it('Temporal.now.dateTime()', () => {
@@ -204,9 +204,9 @@ describe('Userland calendar', () => {
         const dt = tz.getDateTimeFor(abs, 'zerobased');
         equal(dt.calendar.id, 'zerobased');
       });
-      it('works for Absolute.inTimeZone', () => {
+      it('works for Absolute.toDateTime', () => {
         const abs = Temporal.Absolute.fromEpochSeconds(0);
-        const dt = abs.inTimeZone('UTC', 'zerobased');
+        const dt = abs.toDateTime('UTC', 'zerobased');
         equal(dt.calendar.id, 'zerobased');
       });
       it('works for Temporal.now.dateTime', () => {
@@ -351,9 +351,9 @@ describe('Userland calendar', () => {
       const dt = tz.getDateTimeFor(abs, obj);
       equal(dt.calendar.id, obj.id);
     });
-    it('absolute.inTimeZone()', () => {
+    it('absolute.toDateTime()', () => {
       const abs = Temporal.Absolute.fromEpochSeconds(0);
-      const dt = abs.inTimeZone('UTC', obj);
+      const dt = abs.toDateTime('UTC', obj);
       equal(dt.calendar.id, obj.id);
     });
     it('Temporal.now.dateTime()', () => {
@@ -444,9 +444,9 @@ describe('Userland calendar', () => {
         const dt = tz.getDateTimeFor(abs, 'decimal');
         equal(dt.calendar.id, 'decimal');
       });
-      it('works for Absolute.inTimeZone', () => {
+      it('works for Absolute.toDateTime', () => {
         const abs = Temporal.Absolute.fromEpochSeconds(0);
-        const dt = abs.inTimeZone('UTC', 'decimal');
+        const dt = abs.toDateTime('UTC', 'decimal');
         equal(dt.calendar.id, 'decimal');
       });
       it('works for Temporal.now.dateTime', () => {

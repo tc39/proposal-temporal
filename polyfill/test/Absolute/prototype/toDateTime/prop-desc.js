@@ -7,12 +7,12 @@ includes: [propertyHelper.js]
 
 const { Absolute } = Temporal;
 assert.sameValue(
-  typeof Absolute.prototype.inTimeZone,
+  typeof Absolute.prototype.toDateTime,
   "function",
-  "`typeof Absolute.prototype.inTimeZone` is `function`"
+  "`typeof Absolute.prototype.toDateTime` is `function`"
 );
 
-verifyProperty(Absolute.prototype, "inTimeZone", {
+verifyProperty(Absolute.prototype, "toDateTime", {
   writable: true,
   enumerable: false,
   configurable: true,
