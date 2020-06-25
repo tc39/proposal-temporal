@@ -1,7 +1,7 @@
 /**
  * Get an absolute time corresponding with a calendar date / wall-clock time in
  * a particular time zone, the same as Temporal.TimeZone.getAbsoluteFor() or
- * Temporal.DateTime.inTimeZone(), but with more disambiguation options.
+ * Temporal.DateTime.toAbsolute(), but with more disambiguation options.
  *
  * As well as the default Temporal disambiguation options 'compatible',
  * 'earlier', 'later', and 'reject', there are additional options possible:
@@ -34,13 +34,13 @@ function getInstantWithLocalTimeInZone(dateTime, timeZone, disambiguation = 'ear
   switch (disambiguation) {
     case 'clipEarlier':
       if (possible.length === 0) {
-        const before = dateTime.inTimeZone(timeZone, { disambiguation: 'earlier' });
+        const before = dateTime.toAbsolute(timeZone, { disambiguation: 'earlier' });
         return timeZone.getNextTransition(before).minus({ nanoseconds: 1 });
       }
       return possible[0];
     case 'clipLater':
       if (possible.length === 0) {
-        const before = dateTime.inTimeZone(timeZone, { disambiguation: 'earlier' });
+        const before = dateTime.toAbsolute(timeZone, { disambiguation: 'earlier' });
         return timeZone.getNextTransition(before);
       }
       return possible[possible.length - 1];

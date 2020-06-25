@@ -22,7 +22,7 @@ function getParseableZonedStringWithLocalTimeInOtherZone(
   targetTimeZone,
   sourceDisambiguationPolicy = 'reject'
 ) {
-  let instant = sourceDateTime.inTimeZone(sourceTimeZone, { disambiguation: sourceDisambiguationPolicy });
+  let instant = sourceDateTime.toAbsolute(sourceTimeZone, { disambiguation: sourceDisambiguationPolicy });
   return instant.toString(targetTimeZone);
 }
 

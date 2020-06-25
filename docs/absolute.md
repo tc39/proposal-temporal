@@ -206,7 +206,7 @@ Same as `getEpochSeconds()`, but with nanosecond (10<sup>&minus;9</sup> second) 
 
 The value returned from this method is suitable to be passed to `new Temporal.Absolute()`.
 
-### absolute.**inTimeZone**(_timeZone_: object | string, _calendar_?: object | string) : Temporal.DateTime
+### absolute.**toDateTime**(_timeZone_: object | string, _calendar_?: object | string) : Temporal.DateTime
 
 **Parameters:**
 - `timeZone` (object or string): A `Temporal.TimeZone` object, or an object implementing the [time zone protocol](./timezone.md#protocol), or a string description of the time zone; either its IANA name or UTC offset.
@@ -227,14 +227,14 @@ Example usage:
 ```js
 // Converting a specific absolute time to a calendar date / wall-clock time
 timestamp = new Temporal.Absolute(1553993100000000000n);
-timestamp.inTimeZone('Europe/Berlin');  // => 2019-03-31T01:45
-timestamp.inTimeZone('UTC');  // => 2019-03-31T00:45
-timestamp.inTimeZone('-08:00');  // => 2019-02-01T16:45
+timestamp.toDateTime('Europe/Berlin');  // => 2019-03-31T01:45
+timestamp.toDateTime('UTC');  // => 2019-03-31T00:45
+timestamp.toDateTime('-08:00');  // => 2019-02-01T16:45
 
 // What time was the Unix epoch (timestamp 0) in Bell Labs (Murray Hill, New Jersey, USA)?
 epoch = new Temporal.Absolute(0n);
 tz = new Temporal.TimeZone('America/New_York');
-epoch.inTimeZone(tz);  // => 1969-12-31T19:00
+epoch.toDateTime(tz);  // => 1969-12-31T19:00
 ```
 
 ### absolute.**plus**(_duration_: object) : Temporal.Absolute
@@ -334,7 +334,7 @@ billion.difference(epoch, { largestUnit: 'days' })  // => P11574DT1H46M40S
 // in years, you can eliminate the ambiguity by choosing your starting
 // point explicitly. For example, using the corresponding UTC date:
 utc = Temporal.TimeZone.from('UTC');
-billion.inTimeZone(utc).difference(epoch.inTimeZone(utc), { largestUnit: 'years' });
+billion.toDateTime(utc).difference(epoch.toDateTime(utc), { largestUnit: 'years' });
   // => P31Y8M8DT1H46M40S
 ```
 
