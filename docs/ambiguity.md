@@ -5,7 +5,7 @@
 Converting a [`Temporal.DateTime`](./datetime.md) wall-clock time to a [`Temporal.Absolute`](./absolute.md) is not necessarily a one-to-one conversion.
 Due to DST time changes, there is a possibility that a wall-clock time either does not exist, or has existed twice.
 
-There are two mostly equivalent methods that accomplish this conversion: [`Temporal.DateTime.prototype.inTimeZone`](./datetime.html#inTimeZone) and [`Temporal.TimeZone.prototype.getAbsoluteFor`](./timezone.html#getAbsoluteFor).
+There are two mostly equivalent methods that accomplish this conversion: [`Temporal.DateTime.prototype.toAbsolute`](./datetime.html#toAbsolute) and [`Temporal.TimeZone.prototype.getAbsoluteFor`](./timezone.html#getAbsoluteFor).
 The `disambiguation` option to these methods controls what absolute time to return in the case of ambiguity:
 
 - `'compatible'` (the default): Acts like `'earlier'` for backward transitions and `'later'` for forward transitions.
@@ -46,9 +46,9 @@ tz.getAbsoluteFor(dt, { disambiguation: 'reject' }); // throws
 In this example, the wall-clock time 2:45 doesn't exist, so it is treated as either 1:45 +01:00 or 3:45 +02:00, which can be seen by converting the absolute back to a wall-clock time in the time zone:
 
 ```javascript
-tz.getAbsoluteFor(dt, { disambiguation: 'earlier' }).inTimeZone(tz); // => 2019-03-31T01:45
-tz.getAbsoluteFor(dt, { disambiguation: 'later' }).inTimeZone(tz); // => 2019-03-31T03:45
-tz.getAbsoluteFor(dt, { disambiguation: 'compatible' }).inTimeZone(tz); // => 2019-03-31T03:45
+tz.getAbsoluteFor(dt, { disambiguation: 'earlier' }).toDateTime(tz); // => 2019-03-31T01:45
+tz.getAbsoluteFor(dt, { disambiguation: 'later' }).toDateTime(tz); // => 2019-03-31T03:45
+tz.getAbsoluteFor(dt, { disambiguation: 'compatible' }).toDateTime(tz); // => 2019-03-31T03:45
 ```
 
 Using [`Temporal.TimeZone.prototype.getPossibleAbsolutesFor`](./timezone.html#getPossibleAbsolutesFor) we can show that the wall-clock time doesn't exist:
@@ -66,10 +66,10 @@ In `'compatible'` mode, the same time is returned as `'earlier'` mode, which mat
 ```javascript
 tz = new Temporal.TimeZone('America/Sao_Paulo');
 dt = new Temporal.DateTime(2019, 2, 16, 23, 45);
-dt.inTimeZone(tz, { disambiguation: 'earlier' }); // => 2019-02-17T01:45Z
-dt.inTimeZone(tz, { disambiguation: 'later' }); // => 2019-02-17T02:45Z
-dt.inTimeZone(tz, { disambiguation: 'compatible' }); // => 2019-02-17T01:45Z
-dt.inTimeZone(tz, { disambiguation: 'reject' }); // throws
+dt.toAbsolute(tz, { disambiguation: 'earlier' }); // => 2019-02-17T01:45Z
+dt.toAbsolute(tz, { disambiguation: 'later' }); // => 2019-02-17T02:45Z
+dt.toAbsolute(tz, { disambiguation: 'compatible' }); // => 2019-02-17T01:45Z
+dt.toAbsolute(tz, { disambiguation: 'reject' }); // throws
 ```
 
 In this example, the wall-clock time 23:45 exists twice, which can also be verified with `getPossibleAbsolutesFor`:

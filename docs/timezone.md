@@ -60,7 +60,7 @@ For example:
 ```javascript
 tz1 = new Temporal.TimeZone('-08:00');
 tz2 = new Temporal.TimeZone('America/Vancouver');
-abs = Temporal.DateTime.from({year: 2020, month: 1, day: 1}).inTimeZone(tz2);
+abs = Temporal.DateTime.from({year: 2020, month: 1, day: 1}).toAbsolute(tz2);
 tz1.getNextTransition(abs);  // => null
 tz2.getPreviousTransition(abs);  // => 2020-03-08T10:00Z
 ```
@@ -211,7 +211,7 @@ tz.getDateTimeFor(epoch);  // => 1969-12-31T19:00
 **Returns:** A `Temporal.Absolute` object indicating the absolute time in `timeZone` at the time of the calendar date and wall-clock time from `dateTime`.
 
 This method is one way to convert a `Temporal.DateTime` to a `Temporal.Absolute`.
-It is identical to [`dateTime.inTimeZone(timeZone, disambiguation)`](./datetime.html#inTimeZone).
+It is identical to [`dateTime.toAbsolute(timeZone, disambiguation)`](./datetime.html#toAbsolute).
 
 In the case of ambiguity, the `disambiguation` option controls what absolute time to return:
 - `'compatible'` (the default): Acts like `'earlier'` for backward transitions and `'later'` for forward transitions.
@@ -286,7 +286,7 @@ Example usage:
 // How long until the previous DST change from now, in the current location?
 tz = Temporal.now.timeZone();
 now = Temporal.now.absolute();
-previousTransition = tz.getPreviousTransition(now); 
+previousTransition = tz.getPreviousTransition(now);
 duration = now.difference(previousTransition);
 duration.toLocaleString();  // output will vary
 ```

@@ -9,10 +9,10 @@ const timeZones = [
 ];
 
 // Start the table at midnight local time
-const calendarNow = now.inTimeZone(here);
+const calendarNow = now.toDateTime(here);
 const startTime = calendarNow
   .with(Temporal.Time.from('00:00')) // midnight
-  .inTimeZone(here);
+  .toAbsolute(here);
 
 // Build the table
 const table = document.getElementById('meeting-planner');
@@ -26,7 +26,7 @@ timeZones.forEach(({ name, tz }) => {
   for (let hours = 0; hours < 24; hours++) {
     const cell = document.createElement('td');
 
-    const dt = startTime.plus({ hours }).inTimeZone(tz);
+    const dt = startTime.plus({ hours }).toDateTime(tz);
     cell.className = `time-${dt.hour}`;
 
     // Highlight the current hour in each row

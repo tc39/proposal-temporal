@@ -46,7 +46,7 @@ Together, `isoYear`, `isoMonth`, and `isoDay` must represent a valid date in tha
 > **NOTE**: Although Temporal does not deal with leap seconds, dates coming from other software may have a `second` value of 60.
 > This value will cause the constructor will throw, so if you have to interoperate with times that may contain leap seconds, use `Temporal.DateTime.from()` instead.
 
-The range of allowed values for this type is exactly enough that calling [`inTimeZone()`](./absolute.html#inTimeZone) on any valid `Temporal.Absolute` with any valid `Temporal.TimeZone` will succeed.
+The range of allowed values for this type is exactly enough that calling [`toDateTime()`](./absolute.html#toDateTime) on any valid `Temporal.Absolute` with any valid `Temporal.TimeZone` will succeed.
 If the parameters passed in to this constructor form a date outside of this range, then this function will throw a `RangeError`.
 
 > **NOTE**: The `isoMonth` argument ranges from 1 to 12, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
@@ -573,7 +573,7 @@ This method overrides `Object.prototype.valueOf()` and always throws an exceptio
 This is because it's not possible to compare `Temporal.DateTime` objects with the relational operators `<`, `<=`, `>`, or `>=`.
 Use `Temporal.DateTime.compare()` for this, or `datetime.equals()` for equality.
 
-### datetime.**inTimeZone**(_timeZone_ : object | string, _options_?: object) : Temporal.Absolute
+### datetime.**toAbsolute**(_timeZone_ : object | string, _options_?: object) : Temporal.Absolute
 
 **Parameters:**
 - `timeZone` (optional string or object): The time zone in which to interpret `dateTime`, as a `Temporal.TimeZone` object, an object implementing the [time zone protocol](./timezone.md#protocol), or a string.
