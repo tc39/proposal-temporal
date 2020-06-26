@@ -1,6 +1,7 @@
 import commonjs from '@rollup/plugin-commonjs';
 import resolve from '@rollup/plugin-node-resolve';
 import babel from '@rollup/plugin-babel';
+import replace from '@rollup/plugin-replace';
 import { terser } from 'rollup-plugin-terser';
 import { env } from 'process';
 
@@ -13,6 +14,10 @@ const config = {
     { name: libName, file: './dist/index.umd.js', format: 'umd', sourcemap: true }
   ],
   plugins: [
+    replace({
+      exclude: 'node_modules/**',
+      __debug__: env.NODE_ENV !== 'production'
+    }),
     commonjs(),
     resolve({ preferBuiltins: false }),
     babel({
