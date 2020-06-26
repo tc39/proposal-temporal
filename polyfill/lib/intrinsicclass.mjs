@@ -1,6 +1,35 @@
+/* global __debug__ */
+
 import ESGetIntrinsic from 'es-abstract/GetIntrinsic.js';
 
 const INTRINSICS = {};
+
+const customUtilInspectFormatters = {
+  ['Temporal.Duration'](depth, options) {
+    const descr = options.stylize(`${this[Symbol.toStringTag]} <${this}>`, 'special');
+    if (depth < 1) return descr;
+    const entries = [];
+    for (const prop of [
+      'years',
+      'months',
+      'weeks',
+      'days',
+      'hours',
+      'minutes',
+      'seconds',
+      'milliseconds',
+      'microseconds',
+      'nanoseconds'
+    ]) {
+      if (this[prop] !== 0) entries.push(`  ${prop}: ${options.stylize(this[prop], 'number')}`);
+    }
+    return descr + ' {\n' + entries.join(',\n') + '\n}';
+  }
+};
+
+function defaultUtilInspectFormatter(depth, options) {
+  return options.stylize(`${this[Symbol.toStringTag]} <${this}>`, 'special');
+}
 
 export function MakeIntrinsicClass(Class, name) {
   Object.defineProperty(Class.prototype, Symbol.toStringTag, {
@@ -9,6 +38,14 @@ export function MakeIntrinsicClass(Class, name) {
     enumerable: false,
     configurable: true
   });
+  if (typeof __debug__ !== 'undefined' && __debug__) {
+    Object.defineProperty(Class.prototype, Symbol.for('nodejs.util.inspect.custom'), {
+      value: customUtilInspectFormatters[name] || defaultUtilInspectFormatter,
+      writable: false,
+      enumerable: false,
+      configurable: true
+    });
+  }
   const species = function () {
     return this;
   };
