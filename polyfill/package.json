@@ -3,8 +3,8 @@
   "version": "0.2.0",
   "description": "Experimental polyfill for the TC39 Temporal proposal",
   "type": "commonjs",
-  "main": "index.js",
-  "browser": "index.js",
+  "main": "/dist/index.js",
+  "browser": "/dist/index.umd.js",
   "types": "index.d.ts",
   "scripts": {
     "coverage": "c8 report --reporter html",
@@ -60,10 +60,8 @@
   "homepage": "https://tc39.es/proposal-temporal/docs/index.html",
   "files": [
     "index.d.ts",
-    "index.js.map",
-    "rollup.config.js",
-    "rollup-script.config.js",
-    "lib/*"
+    "dist",
+    "lib"
   ],
   "dependencies": {
     "big-integer": "^1.6.48",
