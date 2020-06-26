@@ -1,3 +1,5 @@
+/* global __debug__ */
+
 import { ES } from './ecmascript.mjs';
 import { MakeIntrinsicClass } from './intrinsicclass.mjs';
 import {
@@ -56,6 +58,15 @@ export class Duration {
     SetSlot(this, MILLISECONDS, milliseconds);
     SetSlot(this, MICROSECONDS, microseconds);
     SetSlot(this, NANOSECONDS, nanoseconds);
+
+    if (typeof __debug__ !== 'undefined' && __debug__) {
+      Object.defineProperty(this, '_repr_', {
+        value: `${this[Symbol.toStringTag]} <${this}>`,
+        writable: false,
+        enumerable: false,
+        configurable: false
+      });
+    }
   }
   get years() {
     if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');

@@ -1,3 +1,5 @@
+/* global __debug__ */
+
 import { GetDefaultCalendar } from './calendar.mjs';
 import { ES } from './ecmascript.mjs';
 import { GetIntrinsic, MakeIntrinsicClass } from './intrinsicclass.mjs';
@@ -57,6 +59,15 @@ export class DateTime {
     SetSlot(this, MICROSECOND, microsecond);
     SetSlot(this, NANOSECOND, nanosecond);
     SetSlot(this, CALENDAR, calendar);
+
+    if (typeof __debug__ !== 'undefined' && __debug__) {
+      Object.defineProperty(this, '_repr_', {
+        value: `${this[Symbol.toStringTag]} <${this}>`,
+        writable: false,
+        enumerable: false,
+        configurable: false
+      });
+    }
   }
   get year() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');

@@ -1,3 +1,5 @@
+/* global __debug__ */
+
 import { ES } from './ecmascript.mjs';
 import { GetIntrinsic, MakeIntrinsicClass } from './intrinsicclass.mjs';
 import { CALENDAR_ID, ISO_YEAR, ISO_MONTH, ISO_DAY, CreateSlots, GetSlot, SetSlot } from './slots.mjs';
@@ -6,6 +8,15 @@ export class Calendar {
   constructor(id) {
     CreateSlots(this);
     SetSlot(this, CALENDAR_ID, id);
+
+    if (typeof __debug__ !== 'undefined' && __debug__) {
+      Object.defineProperty(this, '_repr_', {
+        value: `${this[Symbol.toStringTag]} <${this}>`,
+        writable: false,
+        enumerable: false,
+        configurable: false
+      });
+    }
   }
   get id() {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
