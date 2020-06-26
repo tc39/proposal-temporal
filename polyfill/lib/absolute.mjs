@@ -1,3 +1,5 @@
+/* global __debug__ */
+
 import { ES } from './ecmascript.mjs';
 import { GetIntrinsic, MakeIntrinsicClass } from './intrinsicclass.mjs';
 import { EPOCHNANOSECONDS, CreateSlots, GetSlot, SetSlot } from './slots.mjs';
@@ -10,6 +12,15 @@ export class Absolute {
     ES.RejectAbsoluteRange(ns);
     CreateSlots(this);
     SetSlot(this, EPOCHNANOSECONDS, ns);
+
+    if (typeof __debug__ !== 'undefined' && __debug__) {
+      Object.defineProperty(this, '_repr_', {
+        value: `${this[Symbol.toStringTag]} <${this}>`,
+        writable: false,
+        enumerable: false,
+        configurable: false
+      });
+    }
   }
 
   getEpochSeconds() {

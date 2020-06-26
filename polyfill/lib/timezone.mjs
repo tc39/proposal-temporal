@@ -1,3 +1,5 @@
+/* global __debug__ */
+
 import { ES } from './ecmascript.mjs';
 import { GetIntrinsic, MakeIntrinsicClass } from './intrinsicclass.mjs';
 import {
@@ -36,6 +38,15 @@ export class TimeZone {
     }
     CreateSlots(this);
     SetSlot(this, TIMEZONE_ID, timeZoneIdentifier);
+
+    if (typeof __debug__ !== 'undefined' && __debug__) {
+      Object.defineProperty(this, '_repr_', {
+        value: `${this[Symbol.toStringTag]} <${this}>`,
+        writable: false,
+        enumerable: false,
+        configurable: false
+      });
+    }
   }
   get name() {
     if (!ES.IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');

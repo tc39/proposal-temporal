@@ -1,3 +1,5 @@
+/* global __debug__ */
+
 import { GetDefaultCalendar } from './calendar.mjs';
 import { ES } from './ecmascript.mjs';
 import { GetIntrinsic, MakeIntrinsicClass } from './intrinsicclass.mjs';
@@ -19,6 +21,15 @@ export class YearMonth {
     SetSlot(this, ISO_MONTH, isoMonth);
     SetSlot(this, REF_ISO_DAY, refISODay);
     SetSlot(this, CALENDAR, calendar);
+
+    if (typeof __debug__ !== 'undefined' && __debug__) {
+      Object.defineProperty(this, '_repr_', {
+        value: `${this[Symbol.toStringTag]} <${this}>`,
+        writable: false,
+        enumerable: false,
+        configurable: false
+      });
+    }
   }
   get year() {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
