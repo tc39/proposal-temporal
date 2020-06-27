@@ -1,15 +1,15 @@
-import commonjs from "@rollup/plugin-commonjs";
-import babel from "@rollup/plugin-babel";
-import builtins from "rollup-plugin-node-builtins";
+import commonjs from '@rollup/plugin-commonjs';
+import babel from '@rollup/plugin-babel';
+import builtins from 'rollup-plugin-node-builtins';
 import replace from '@rollup/plugin-replace';
-import resolve from "@rollup/plugin-node-resolve";
+import resolve from '@rollup/plugin-node-resolve';
 
 export default {
-  input: "../polyfill/lib/index.mjs",
+  input: '../polyfill/lib/index.mjs',
   output: {
-    name: "temporal",
-    file: "playground.js",
-    format: "umd",
+    name: 'temporal',
+    file: 'playground.js',
+    format: 'umd'
   },
   plugins: [
     replace({
@@ -24,11 +24,11 @@ export default {
       babelHelpers: 'bundled',
       presets: [
         [
-          "@babel/preset-env",
+          '@babel/preset-env',
           {
             corejs: 3,
-            useBuiltIns: "entry",
-            targets: "> 0.25%, not dead"
+            useBuiltIns: 'entry',
+            targets: '> 0.25%, not dead'
           }
         ]
       ]

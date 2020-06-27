@@ -5,7 +5,7 @@
   "main": "index.js",
   "private": true,
   "scripts": {
-    "build:javascript": "rollup -m -c rollup.config.ejs",
+    "build:javascript": "rollup -m -c rollup.config.js",
     "build:docs": "node buildDocs.js"
   },
   "repository": {
