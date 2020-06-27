@@ -28,7 +28,7 @@
     "codecov:test262": "cd polyfill && npm install && npm run codecov:test262 && cd ..",
     "test-cookbook": "cd polyfill && npm install && npm run test-cookbook && cd ..",
     "test262": "cd polyfill && npm install && npm run test262",
-    "lint": "eslint . --ext js,mjs,.d.ts --cache && npm run tscheck",
+    "lint": "eslint . --ext js,mjs,.d.ts --max-warnings 0 --cache && npm run tscheck",
     "tscheck": "tsc polyfill/index.d.ts --noEmit --strict --lib ESNext",
     "build:polyfill": "cd polyfill && npm install && npm run build && cd ..",
     "build:javascript": "npm run build:polyfill && cd docs && npm install && npm run build:javascript",
