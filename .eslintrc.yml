@@ -21,6 +21,7 @@ parserOptions:
 ignorePatterns:
   - node_modules/
   - /out/
+  - /polyfill/dist/
   - /polyfill/test262/
   - /polyfill/venv/
   - /polyfill/coverage/
