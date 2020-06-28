@@ -5,7 +5,7 @@
   "type": "commonjs",
   "main": "dist/index.js",
   "browser": "dist/index.umd.js",
-  "types": "index.d.ts",
+  "types": "poc.d.ts",
   "scripts": {
     "coverage": "c8 report --reporter html",
     "test": "node --no-warnings --experimental-modules --icu-data-dir node_modules/full-icu --loader ./test/resolve.source.mjs ./test/all.mjs",
@@ -58,7 +58,7 @@
   },
   "homepage": "https://tc39.es/proposal-temporal/docs/index.html",
   "files": [
-    "index.d.ts",
+    "poc.d.ts",
     "dist",
     "lib"
   ],
@@ -76,6 +76,7 @@
     "@rollup/plugin-commonjs": "^15.1.0",
     "@rollup/plugin-node-resolve": "^9.0.0",
     "@rollup/plugin-replace": "^2.3.3",
+    "@types/es-abstract": "^1.16.4",
     "c8": "^7.3.1",
     "codecov": "^3.7.2",
     "core-js": "^3.6.4",

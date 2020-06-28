@@ -1,4 +1,5 @@
-const instant = Temporal.Instant.from('2020-01-09T00:00Z');
-const nyc = Temporal.TimeZone.from('America/New_York');
+const ldt = Temporal.Instant.from('2020-01-09T00:00Z').toLocalDateTime('America/New_York', 'iso8601');
 
-nyc.getOffsetNanosecondsFor(instant) / 1e9; // => -18000
+ldt.timeZoneOffsetNanoseconds / 1e9; // => -18000
+
+assert.equal(ldt.timeZoneOffsetNanoseconds / 1e9, '-18000');

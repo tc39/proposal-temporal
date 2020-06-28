@@ -248,6 +248,13 @@ export class Instant {
     const calendar = GetISO8601Calendar();
     return ES.GetTemporalDateTimeFor(timeZone, this, calendar);
   }
+  toLocalDateTime(temporalTimeZoneLike, calendar = undefined) {
+    if (!ES.IsTemporalAbsolute(this)) throw new TypeError('invalid receiver');
+    const TemporalTimeZone = GetIntrinsic('%Temporal.TimeZone%');
+    const timeZone = TemporalTimeZone.from(temporalTimeZoneLike);
+    const TemporalLocalDateTime = GetIntrinsic('%Temporal.LocalDateTime%');
+    return new TemporalLocalDateTime(this, timeZone, calendar);
+  }
 
   static fromEpochSeconds(epochSeconds) {
     epochSeconds = ES.ToNumber(epochSeconds);

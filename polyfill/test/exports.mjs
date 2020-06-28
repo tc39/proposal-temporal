@@ -18,8 +18,11 @@ import * as Temporal from 'proposal-temporal';
 
 describe('Exports', () => {
   const named = Object.keys(Temporal);
-  it('should be 10 things', () => {
-    equal(named.length, 10);
+  it('should be 11 things', () => {
+    equal(named.length, 11);
+  });
+  it('should contain `LocalDateTime`', () => {
+    assert(named.includes('LocalDateTime'));
   });
   it('should contain `Instant`', () => {
     assert(named.includes('Instant'));

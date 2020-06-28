@@ -5,3 +5,4 @@ test262
 types
 tsconfig.json
 *.sh
+lib/poc

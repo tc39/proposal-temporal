@@ -16,7 +16,9 @@ export async function transformSource(source, { url, format }, defaultTransformS
   if (typeof source !== 'string') source = source.toString();
   if (url !== 'all.mjs' && !url.endsWith('polyfill/lib/index.mjs')) {
     return {
-      source: `import '${PKG.name}';import assert from 'assert';` + source
+      source:
+        `import '${PKG.name}';import assert from 'assert';` +
+        source.replace('const Temporal =', 'const UnusedTemporal = ')
     };
   } else {
     return defaultTransformSource(source, { url, format }, defaultTransformSource);

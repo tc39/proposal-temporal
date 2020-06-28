@@ -1,76 +1,50 @@
+// LocalDateTime POC notes
+// - This sample's original implementation had a DST bug #698 that would have
+//   been easier to prevent using `LocalDateTime`.
+// - The result will be easier to work with because it has its time zone already
+//   baked in.
+
 /**
  * Compare the given exact time to the business hours of a business located in
  * a particular time zone, and return a string indicating whether the business
  * is open, closed, opening soon, or closing soon. The length of "soon" can be
  * controlled using the `soonWindow` parameter.
  *
- * @param {Temporal.Instant} now - Exact time at which to consider whether the
- *  business is open
- * @param {Temporal.TimeZone} timeZone - Time zone in which the business is
- *  located
+ * @param {Temporal.LocalDateTime} now - Date and Time at which to consider
+ *  whether the business is open
  * @param {(Object|null)[]} businessHours - Array of length 7 indicating
  *  business hours during the week
  * @param {Temporal.Time} businessHours[].open - Time at which the business
  *  opens
  * @param {Temporal.Time} businessHours[].close - Time at which the business
- *  closes
- * @param {Temporal.Duration} soonWindow - Length of time before the opening
- *  or closing time during which the business should be considered "opening
- *  soon" or "closing soon"
+ *  closes. If this time is smaller than the `open` time, it means that the
+ *  business hours wrap around midnight, so this time represents the closing
+ *  time on the next day.
+ * @param {Temporal.Duration} soonWindow - Length of time before the opening or
+ *  closing time during which the business should be considered "opening soon"
+ *  or "closing soon"
  * @returns {string} "open", "closed", "opening soon", or "closing soon"
  */
-function getBusinessOpenStateText(now, timeZone, businessHours, soonWindow) {
-  function inRange(i, start, end) {
-    return Temporal.Instant.compare(i, start) >= 0 && Temporal.Instant.compare(i, end) < 0;
-  }
-
-  const dateTime = now.toDateTimeISO(timeZone);
-  const weekday = dateTime.dayOfWeek % 7; // convert to 0-based, for array indexing
+function getBusinessOpenStateText(now, businessHours, soonWindow) {
+  const inRange = (localDateTime, start, end) =>
+    Temporal.LocalDateTime.compare(localDateTime, start) >= 0 && Temporal.LocalDateTime.compare(localDateTime, end) < 0;
 
   // Because of times wrapping around at midnight, we may need to consider
   // yesterday's and tomorrow's hours as well
-  const today = dateTime.toDate();
-  const yesterday = today.subtract({ days: 1 });
-  const tomorrow = today.add({ days: 1 });
-
-  // Push any of the businessHours that overlap today's date into an array,
-  // that we will subsequently check. Convert the businessHours Times into
-  // DateTimes so that they no longer wrap around.
-  const businessHoursOverlappingToday = [];
-  const yesterdayHours = businessHours[(weekday + 6) % 7];
-  if (yesterdayHours) {
-    const { open, close } = yesterdayHours;
-    if (Temporal.Time.compare(close, open) < 0) {
-      businessHoursOverlappingToday.push({
-        open: yesterday.toDateTime(open).toInstant(timeZone),
-        close: today.toDateTime(close).toInstant(timeZone)
-      });
+  for (const delta of [-1, 0, 1]) {
+    const index = (now.dayOfWeek + 7 + delta) % 7; // convert to 0-based, for array indexing
+    if (!businessHours[index]) continue;
+    const openDate = now.toDate().add({ days: delta });
+    const { open: openTime, close: closeTime } = businessHours[index];
+    const open = now.with({ ...openDate.getFields(), ...openTime.getFields() });
+    const isWrap = Temporal.Time.compare(closeTime, openTime) < 0;
+    const closeDate = isWrap ? openDate.add({ days: 1 }) : openDate;
+    const close = now.with({ ...closeDate.getFields(), ...closeTime.getFields() });
+    if (inRange(now, open, close)) {
+      return Temporal.LocalDateTime.compare(now, close.subtract(soonWindow)) >= 0 ? 'closing soon' : 'open';
     }
+    if (inRange(now.plus(soonWindow), open, close)) return 'opening soon';
   }
-  const todayHours = businessHours[weekday];
-  if (todayHours) {
-    const { open, close } = todayHours;
-    const todayOrTomorrow = Temporal.Time.compare(close, open) >= 0 ? today : tomorrow;
-    businessHoursOverlappingToday.push({
-      open: today.toDateTime(open).toInstant(timeZone),
-      close: todayOrTomorrow.toDateTime(close).toInstant(timeZone)
-    });
-  }
-
-  // Check if any of the candidate business hours include the given time
-  const soon = now.add(soonWindow);
-  let openNow = false;
-  let openSoon = false;
-  for (const { open, close } of businessHoursOverlappingToday) {
-    openNow = openNow || inRange(now, open, close);
-    openSoon = openSoon || inRange(soon, open, close);
-  }
-
-  if (openNow) {
-    if (!openSoon) return 'closing soon';
-    return 'open';
-  }
-  if (openSoon) return 'opening soon';
   return 'closed';
 }
 
@@ -86,8 +60,22 @@ const businessHours = [
   /* Sat */ { open: Temporal.Time.from('11:00'), close: Temporal.Time.from('02:00') }
 ];
 
-const now = Temporal.Instant.from('2019-04-07T00:00+01:00[Europe/Berlin]');
-const tz = Temporal.TimeZone.from('Europe/Berlin');
+// This ISO string is intentionally conflicting, because the real TZ offset for
+// that date is +02:00. The default behavior of from() on ISO strings is to
+// assume that the offset is correct and the time zone definition has changed
+// since the time was stored. (The user can get different behavior via the
+// `prefer` option.)
+const now = Temporal.LocalDateTime.from('2019-04-07T00:00+01:00[Europe/Berlin]');
+assert.equal(now.toString(), '2019-04-07T01:00+02:00[Europe/Berlin]');
 const soonWindow = Temporal.Duration.from({ minutes: 30 });
-const saturdayNightState = getBusinessOpenStateText(now, tz, businessHours, soonWindow);
+const saturdayNightState = getBusinessOpenStateText(now, businessHours, soonWindow);
 assert.equal(saturdayNightState, 'open');
+
+const lastCall = now.plus({ minutes: 50 });
+assert.equal(lastCall.toString(), '2019-04-07T01:50+02:00[Europe/Berlin]');
+const lastCallState = getBusinessOpenStateText(lastCall, businessHours, soonWindow);
+assert.equal(lastCallState, 'closing soon');
+
+const tuesdayEarly = now.plus({ days: 2, hours: 6 });
+const tuesdayEarlyState = getBusinessOpenStateText(tuesdayEarly, businessHours, soonWindow);
+assert.equal(tuesdayEarlyState, 'closed');

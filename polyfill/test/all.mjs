@@ -28,6 +28,7 @@ import './yearmonth.mjs';
 import './monthday.mjs';
 import './intl.mjs';
 import './calendar.mjs';
+import './localdatetime.mjs';
 
 // tests of userland objects
 import './usertimezone.mjs';

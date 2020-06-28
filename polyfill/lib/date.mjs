@@ -269,6 +269,15 @@ export class Date {
     const nanosecond = GetSlot(temporalTime, NANOSECOND);
     return new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
   }
+  toLocalDateTime(temporalTimeZoneLike, temporalTime, options) {
+    if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
+    // TODO: switch to `toDateTime()` after that lands
+    const dateTime = this.withTime(temporalTime);
+    const TemporalTimeZone = GetIntrinsic('%Temporal.TimeZone%');
+    const timeZone = TemporalTimeZone.from(temporalTimeZoneLike);
+    const TemporalLocalDateTime = GetIntrinsic('%Temporal.LocalDateTime%');
+    return TemporalLocalDateTime.from({ ...dateTime.getFields(), timeZone }, options);
+  }
   toYearMonth() {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
     const YearMonth = GetIntrinsic('%Temporal.YearMonth%');

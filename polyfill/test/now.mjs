@@ -19,7 +19,8 @@ import * as Temporal from 'proposal-temporal';
 describe('Temporal.now', () => {
   describe('Structure', () => {
     it('Temporal.now is an object', () => equal(typeof Temporal.now, 'object'));
-    it('Temporal.now has 7 properties', () => equal(Object.keys(Temporal.now).length, 7));
+    it('Temporal.now has 8 properties', () => equal(Object.keys(Temporal.now).length, 8));
+    it('Temporal.now.localDateTime is a function', () => equal(typeof Temporal.now.localDateTime, 'function'));
     it('Temporal.now.instant is a function', () => equal(typeof Temporal.now.instant, 'function'));
     it('Temporal.now.dateTime is a function', () => equal(typeof Temporal.now.dateTime, 'function'));
     it('Temporal.now.dateTimeISO is a function', () => equal(typeof Temporal.now.dateTimeISO, 'function'));
@@ -27,6 +28,20 @@ describe('Temporal.now', () => {
     it('Temporal.now.dateISO is a function', () => equal(typeof Temporal.now.dateISO, 'function'));
     it('Temporal.now.timeISO is a function', () => equal(typeof Temporal.now.timeISO, 'function'));
     it('Temporal.now.timeZone is a function', () => equal(typeof Temporal.now.timeZone, 'function'));
+  });
+  describe('Temporal.now.localDateTime()', () => {
+    it('Temporal.now.localDateTime() returns a LocalDateTime', () =>
+      assert(Temporal.now.localDateTime() instanceof Temporal.LocalDateTime));
+    it('Temporal.now.localDateTime() matches other now methods', () => {
+      const isSmallDiff = (d) => d.seconds * 1e9 + d.milliseconds * 1e6 + d.microseconds * 1e3 + d.nanoseconds < 1e8;
+      const dt = Temporal.now.dateTime();
+      const abs = Temporal.now.absolute();
+      const tz = Temporal.now.timeZone();
+      const ldt = Temporal.now.localDateTime();
+      assert(isSmallDiff(ldt.toDateTime().difference(dt, { largestUnit: 'seconds' })));
+      assert(isSmallDiff(ldt.absolute.difference(abs, { largestUnit: 'seconds' })));
+      assert(ldt.timeZone.name === tz.name);
+    });
   });
   describe('Temporal.now.instant()', () => {
     it('Temporal.now.instant() returns an Instant', () => assert(Temporal.now.instant() instanceof Temporal.Instant));

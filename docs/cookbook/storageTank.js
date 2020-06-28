@@ -3,17 +3,17 @@
 // tankDataX is an array of Temporal.Instant, and tankDataY is an array of numbers.
 
 // Show data starting from the most recent midnight in the tank's location (Stockholm)
+const browserCalendar = labelFormatter.resolvedOptions().calendar;
 const tankTimeZone = Temporal.TimeZone.from('Europe/Stockholm');
+const tankMidnight = Temporal.now.date(browserCalendar, tankTimeZone).toLocalDateTime(tankTimeZone);
+const atOrAfterMidnight = (x) => Temporal.Instant.compare(x, tankMidnight.toInstant()) >= 0;
+const dataStartIndex = tankDataX.findIndex(atOrAfterMidnight);
 const labelFormatter = new Intl.DateTimeFormat(undefined, {
   weekday: 'short',
   hour: 'numeric',
   minute: 'numeric',
   timeZone: Temporal.now.timeZone()
 });
-const browserCalendar = labelFormatter.resolvedOptions().calendar;
-const tankMidnight = Temporal.now.date(browserCalendar, tankTimeZone).toDateTime().toInstant(tankTimeZone);
-const atOrAfterMidnight = (x) => Temporal.Instant.compare(x, tankMidnight) >= 0;
-const dataStartIndex = tankDataX.findIndex(atOrAfterMidnight);
 const graphLabels = tankDataX.slice(dataStartIndex).map((x) => labelFormatter.format(x));
 const graphPoints = tankDataY.slice(dataStartIndex);
 
