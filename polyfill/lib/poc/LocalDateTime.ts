@@ -296,7 +296,7 @@ function fromIsoString(isoString: string, options?: LocalDateTimeAssignmentOptio
         absolute = possibleAbsolutes[1];
         break;
       case 'compatible':
-        absolute = timeZone.getPossibleAbsolutesFor(dt)[0] ?? dt.inTimeZone(timeZone, { disambiguation: 'later' });
+        absolute = timeZone.getPossibleAbsolutesFor(dt)[0] || dt.inTimeZone(timeZone, { disambiguation: 'later' });
         break;
       case 'reject':
       default:
