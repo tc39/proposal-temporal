@@ -203,7 +203,7 @@ function extractOverrides(datetime, main) {
   const YearMonth = GetIntrinsic('%Temporal.YearMonth%');
 
   if (datetime instanceof Time) {
-    datetime = datetime.withDate(new Date(1970, 1, 1));
+    datetime = datetime.toDateTime(new Date(1970, 1, 1));
     formatter = main[TIME];
   }
   if (datetime instanceof YearMonth) {

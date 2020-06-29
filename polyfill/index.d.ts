@@ -542,7 +542,7 @@ export namespace Temporal {
    * need to refer to a specific time on a specific day, use
    * `Temporal.DateTime`. A `Temporal.Time` can be converted into a
    * `Temporal.DateTime` by combining it with a `Temporal.Date` using the
-   * `withDate()` method.
+   * `toDateTime()` method.
    *
    * See https://tc39.es/proposal-temporal/docs/time.html for more details.
    */
@@ -568,7 +568,7 @@ export namespace Temporal {
     plus(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.Time;
     minus(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.Time;
     difference(other: Temporal.Time, options?: DifferenceOptions<'hours' | 'minutes' | 'seconds'>): Temporal.Duration;
-    withDate(temporalDate: Temporal.Date): Temporal.DateTime;
+    toDateTime(temporalDate: Temporal.Date): Temporal.DateTime;
     getFields(): TimeFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
