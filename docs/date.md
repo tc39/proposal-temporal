@@ -517,7 +517,7 @@ Use `Temporal.Date.compare()` for this, or `date.equals()` for equality.
 This method can be used to convert `Temporal.Date` into a `Temporal.DateTime`, by supplying the time of day to use.
 The converted object carries a copy of all the relevant fields of `date` and `time`.
 
-This is exactly equivalent to [`time.withDate(date)`](./time.html#withDate).
+This is exactly equivalent to [`time.toDateTime(date)`](./time.html#toDateTime).
 
 Usage example:
 ```javascript
