@@ -373,7 +373,7 @@ Use `Temporal.Time.compare()` for this, or `time.equals()` for equality.
 This method can be used to convert `Temporal.Time` into a `Temporal.DateTime`, by supplying the calendar date to use.
 The converted object carries a copy of all the relevant fields of `date` and `time`.
 
-This is exactly equivalent to [`date.withTime(time)`](./date.html#withTime).
+This is exactly equivalent to [`date.toDateTime(time)`](./date.html#toDateTime).
 
 Usage example:
 ```javascript

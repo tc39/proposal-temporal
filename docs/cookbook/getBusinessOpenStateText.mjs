@@ -42,8 +42,8 @@ function getBusinessOpenStateText(now, timeZone, businessHours, soonWindow) {
     const { open, close } = yesterdayHours;
     if (Temporal.Time.compare(close, open) < 0) {
       businessHoursOverlappingToday.push({
-        open: yesterday.withTime(open).inTimeZone(timeZone),
-        close: today.withTime(close).inTimeZone(timeZone)
+        open: yesterday.toDateTime(open).toAbsolute(timeZone),
+        close: today.toDateTime(close).toAbsolute(timeZone)
       });
     }
   }
@@ -52,8 +52,8 @@ function getBusinessOpenStateText(now, timeZone, businessHours, soonWindow) {
     const { open, close } = todayHours;
     const todayOrTomorrow = Temporal.Time.compare(close, open) >= 0 ? today : tomorrow;
     businessHoursOverlappingToday.push({
-      open: today.withTime(open).inTimeZone(timeZone),
-      close: todayOrTomorrow.withTime(close).inTimeZone(timeZone)
+      open: today.toDateTime(open).toAbsolute(timeZone),
+      close: todayOrTomorrow.toDateTime(close).toAbsolute(timeZone)
     });
   }
 
