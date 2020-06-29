@@ -154,20 +154,20 @@ describe('MonthDay', () => {
     it('<=', () => throws(() => md1 <= md2));
     it('>=', () => throws(() => md1 >= md2));
   });
-  describe('MonthDay.withYear()', () => {
+  describe('MonthDay.toDate()', () => {
     const md = MonthDay.from('01-22');
     it('takes a number argument', () => {
-      equal(`${md.withYear(2002)}`, '2002-01-22');
+      equal(`${md.toDate(2002)}`, '2002-01-22');
     });
     it('takes an object argument with year property', () => {
-      equal(`${md.withYear({ year: 2002 })}`, '2002-01-22');
+      equal(`${md.toDate({ year: 2002 })}`, '2002-01-22');
     });
     it('needs at least a year property on the object in the ISO calendar', () => {
-      throws(() => md.withYear({ something: 'nothing' }), TypeError);
+      throws(() => md.toDate({ something: 'nothing' }), TypeError);
     });
     it('converts a non-object argument to integer', () => {
-      equal(`${md.withYear('2002')}`, '2002-01-22');
-      equal(`${md.withYear(null)}`, '+000000-01-22');
+      equal(`${md.toDate('2002')}`, '2002-01-22');
+      equal(`${md.toDate(null)}`, '+000000-01-22');
     });
   });
   describe('monthDay.getFields() works', () => {
