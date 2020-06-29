@@ -228,7 +228,7 @@ export class Time {
     throw new TypeError('use compare() or equals() to compare Temporal.Time');
   }
 
-  withDate(temporalDate) {
+  toDateTime(temporalDate) {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
     if (!ES.IsTemporalDate(temporalDate)) throw new TypeError('invalid Temporal.Date object');
     const year = GetSlot(temporalDate, ISO_YEAR);
