@@ -91,7 +91,7 @@ export class MonthDay {
   valueOf() {
     throw new TypeError('use equals() to compare Temporal.MonthDay');
   }
-  withYear(item) {
+  toDate(item) {
     if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
     let era, year;
     if (typeof item === 'object' && item !== null) {
