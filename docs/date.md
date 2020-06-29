@@ -10,7 +10,7 @@ A `Temporal.Date` represents a calendar date.
 For example, it could be used to represent an event on a calendar which happens during the whole day no matter which time zone it's happening in.
 
 `Temporal.Date` refers to the whole of a specific day; if you need to refer to a specific time on that day, use `Temporal.DateTime`.
-A `Temporal.Date` can be converted into a `Temporal.DateTime` by combining it with a `Temporal.Time` using the `withTime()` method.
+A `Temporal.Date` can be converted into a `Temporal.DateTime` by combining it with a `Temporal.Time` using the `toDateTime()` method.
 
 `Temporal.YearMonth` and `Temporal.MonthDay` carry less information than `Temporal.Date` and should be used when complete information is not required.
 
@@ -404,7 +404,7 @@ other.difference(date, { largestUnit: 'years' })  // => throws RangeError
 // point in time from which you want to reckon the difference. For
 // example, using midnight:
 midnight = Temporal.Time.from('00:00');
-date.withTime(midnight).difference(other.withTime(midnight), { largestUnit: 'hours' })
+date.toDateTime(midnight).difference(other.toDateTime(midnight), { largestUnit: 'hours' })
   // => PT109032H
 ```
 
@@ -507,7 +507,7 @@ This method overrides `Object.prototype.valueOf()` and always throws an exceptio
 This is because it's not possible to compare `Temporal.Date` objects with the relational operators `<`, `<=`, `>`, or `>=`.
 Use `Temporal.Date.compare()` for this, or `date.equals()` for equality.
 
-### date.**withTime**(_time_: Temporal.Time) : Temporal.DateTime
+### date.**toDateTime**(_time_: Temporal.Time) : Temporal.DateTime
 
 **Parameters:**
 - `time` (`Temporal.Time`): A time of day on `date`.
@@ -523,7 +523,7 @@ Usage example:
 ```javascript
 date = Temporal.Date.from('2006-08-24');
 time = Temporal.Time.from('15:23:30.003');
-date.withTime(time)  // => 2006-08-24T15:23:30.003
+date.toDateTime(time)  // => 2006-08-24T15:23:30.003
 ```
 
 ### date.**getYearMonth**() : Temporal.YearMonth
