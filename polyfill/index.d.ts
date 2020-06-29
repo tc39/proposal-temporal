@@ -373,7 +373,7 @@ export namespace Temporal {
       other: Temporal.Date,
       options?: DifferenceOptions<'years' | 'months' | 'weeks' | 'days'>
     ): Temporal.Duration;
-    withTime(temporalTime: Temporal.Time): Temporal.DateTime;
+    toDateTime(temporalTime: Temporal.Time): Temporal.DateTime;
     getYearMonth(): Temporal.YearMonth;
     getMonthDay(): Temporal.MonthDay;
     getFields(): DateFields;
