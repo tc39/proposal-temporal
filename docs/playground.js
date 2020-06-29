@@ -1,2 +1,13213 @@
-!function(e,r){"object"==typeof exports&&"undefined"!=typeof module?r(exports):"function"==typeof define&&define.amd?define(["exports"],r):r((e=e||self).temporal={})}(this,(function(e){"use strict";function r(e){return(r="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(e){return typeof e}:function(e){return e&&"function"==typeof Symbol&&e.constructor===Symbol&&e!==Symbol.prototype?"symbol":typeof e})(e)}function t(e,r){if(!(e instanceof r))throw new TypeError("Cannot call a class as a function")}function n(e,r){for(var t=0;t<r.length;t++){var n=r[t];n.enumerable=n.enumerable||!1,n.configurable=!0,"value"in n&&(n.writable=!0),Object.defineProperty(e,n.key,n)}}function o(e,r,t){return r&&n(e.prototype,r),t&&n(e,t),e}function i(e,r,t){return r in e?Object.defineProperty(e,r,{value:t,enumerable:!0,configurable:!0,writable:!0}):e[r]=t,e}function a(e,r){var t=Object.keys(e);if(Object.getOwnPropertySymbols){var n=Object.getOwnPropertySymbols(e);r&&(n=n.filter((function(r){return Object.getOwnPropertyDescriptor(e,r).enumerable}))),t.push.apply(t,n)}return t}function s(e){for(var r=1;r<arguments.length;r++){var t=null!=arguments[r]?arguments[r]:{};r%2?a(Object(t),!0).forEach((function(r){i(e,r,t[r])})):Object.getOwnPropertyDescriptors?Object.defineProperties(e,Object.getOwnPropertyDescriptors(t)):a(Object(t)).forEach((function(r){Object.defineProperty(e,r,Object.getOwnPropertyDescriptor(t,r))}))}return e}function u(e,r){if("function"!=typeof r&&null!==r)throw new TypeError("Super expression must either be null or a function");e.prototype=Object.create(r&&r.prototype,{constructor:{value:e,writable:!0,configurable:!0}}),r&&c(e,r)}function l(e){return(l=Object.setPrototypeOf?Object.getPrototypeOf:function(e){return e.__proto__||Object.getPrototypeOf(e)})(e)}function c(e,r){return(c=Object.setPrototypeOf||function(e,r){return e.__proto__=r,e})(e,r)}function f(){if("undefined"==typeof Reflect||!Reflect.construct)return!1;if(Reflect.construct.sham)return!1;if("function"==typeof Proxy)return!0;try{return Date.prototype.toString.call(Reflect.construct(Date,[],(function(){}))),!0}catch(e){return!1}}function p(e,r,t){return(p=f()?Reflect.construct:function(e,r,t){var n=[null];n.push.apply(n,r);var o=new(Function.bind.apply(e,n));return t&&c(o,t.prototype),o}).apply(null,arguments)}function h(e,r){return!r||"object"!=typeof r&&"function"!=typeof r?function(e){if(void 0===e)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return e}(e):r}function y(e){var r=f();return function(){var t,n=l(e);if(r){var o=l(this).constructor;t=Reflect.construct(n,arguments,o)}else t=n.apply(this,arguments);return h(this,t)}}function m(e,r,t){return(m="undefined"!=typeof Reflect&&Reflect.get?Reflect.get:function(e,r,t){var n=function(e,r){for(;!Object.prototype.hasOwnProperty.call(e,r)&&null!==(e=l(e)););return e}(e,r);if(n){var o=Object.getOwnPropertyDescriptor(n,r);return o.get?o.get.call(t):o.value}})(e,r,t||e)}function d(e,r){return function(e){if(Array.isArray(e))return e}(e)||function(e,r){if("undefined"==typeof Symbol||!(Symbol.iterator in Object(e)))return;var t=[],n=!0,o=!1,i=void 0;try{for(var a,s=e[Symbol.iterator]();!(n=(a=s.next()).done)&&(t.push(a.value),!r||t.length!==r);n=!0);}catch(e){o=!0,i=e}finally{try{n||null==s.return||s.return()}finally{if(o)throw i}}return t}(e,r)||v(e,r)||function(){throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}()}function v(e,r){if(e){if("string"==typeof e)return g(e,r);var t=Object.prototype.toString.call(e).slice(8,-1);return"Object"===t&&e.constructor&&(t=e.constructor.name),"Map"===t||"Set"===t?Array.from(e):"Arguments"===t||/^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t)?g(e,r):void 0}}function g(e,r){(null==r||r>e.length)&&(r=e.length);for(var t=0,n=new Array(r);t<r;t++)n[t]=e[t];return n}function w(e,r){var t;if("undefined"==typeof Symbol||null==e[Symbol.iterator]){if(Array.isArray(e)||(t=v(e))||r&&e&&"number"==typeof e.length){t&&(e=t);var n=0,o=function(){};return{s:o,n:function(){return n>=e.length?{done:!0}:{done:!1,value:e[n++]}},e:function(e){throw e},f:o}}throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}var i,a=!0,s=!1;return{s:function(){t=e[Symbol.iterator]()},n:function(){var e=t.next();return a=e.done,e},e:function(e){s=!0,i=e},f:function(){try{a||null==t.return||t.return()}finally{if(s)throw i}}}}var T="undefined"!=typeof globalThis?globalThis:"undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof self?self:{};function b(e,r){return e(r={exports:{}},r.exports),r.exports}var S=function(){if("function"!=typeof Symbol||"function"!=typeof Object.getOwnPropertySymbols)return!1;if("symbol"===r(Symbol.iterator))return!0;var e={},t=Symbol("test"),n=Object(t);if("string"==typeof t)return!1;if("[object Symbol]"!==Object.prototype.toString.call(t))return!1;if("[object Symbol]"!==Object.prototype.toString.call(n))return!1;for(t in e[t]=42,e)return!1;if("function"==typeof Object.keys&&0!==Object.keys(e).length)return!1;if("function"==typeof Object.getOwnPropertyNames&&0!==Object.getOwnPropertyNames(e).length)return!1;var o=Object.getOwnPropertySymbols(e);if(1!==o.length||o[0]!==t)return!1;if(!Object.prototype.propertyIsEnumerable.call(e,t))return!1;if("function"==typeof Object.getOwnPropertyDescriptor){var i=Object.getOwnPropertyDescriptor(e,t);if(42!==i.value||!0!==i.enumerable)return!1}return!0},E=T.Symbol,I=function(){return"function"==typeof E&&("function"==typeof Symbol&&("symbol"===r(E("foo"))&&("symbol"===r(Symbol("bar"))&&S())))},D="Function.prototype.bind called on incompatible ",O=Array.prototype.slice,A=Object.prototype.toString,j=Function.prototype.bind||function(e){var r=this;if("function"!=typeof r||"[object Function]"!==A.call(r))throw new TypeError(D+r);for(var t,n=O.call(arguments,1),o=function(){if(this instanceof t){var o=r.apply(this,n.concat(O.call(arguments)));return Object(o)===o?o:this}return r.apply(e,n.concat(O.call(arguments)))},i=Math.max(0,r.length-n.length),a=[],s=0;s<i;s++)a.push("$"+s);if(t=Function("binder","return function ("+a.join(",")+"){ return binder.apply(this,arguments); }")(o),r.prototype){var u=function(){};u.prototype=r.prototype,t.prototype=new u,u.prototype=null}return t},P=TypeError,k=Object.getOwnPropertyDescriptor;if(k)try{k({},"")}catch(e){k=null}var R=function(){throw new P},M=k?function(){try{return R}catch(e){try{return k(arguments,"callee").get}catch(e){return R}}}():R,N=I(),F=Object.getPrototypeOf||function(e){return e.__proto__},C="undefined"==typeof Uint8Array?void 0:F(Uint8Array),x={"%Array%":Array,"%ArrayBuffer%":"undefined"==typeof ArrayBuffer?void 0:ArrayBuffer,"%ArrayBufferPrototype%":"undefined"==typeof ArrayBuffer?void 0:ArrayBuffer.prototype,"%ArrayIteratorPrototype%":N?F([][Symbol.iterator]()):void 0,"%ArrayPrototype%":Array.prototype,"%ArrayProto_entries%":Array.prototype.entries,"%ArrayProto_forEach%":Array.prototype.forEach,"%ArrayProto_keys%":Array.prototype.keys,"%ArrayProto_values%":Array.prototype.values,"%AsyncFromSyncIteratorPrototype%":void 0,"%AsyncFunction%":void 0,"%AsyncFunctionPrototype%":void 0,"%AsyncGenerator%":void 0,"%AsyncGeneratorFunction%":void 0,"%AsyncGeneratorPrototype%":void 0,"%AsyncIteratorPrototype%":void 0,"%Atomics%":"undefined"==typeof Atomics?void 0:Atomics,"%Boolean%":Boolean,"%BooleanPrototype%":Boolean.prototype,"%DataView%":"undefined"==typeof DataView?void 0:DataView,"%DataViewPrototype%":"undefined"==typeof DataView?void 0:DataView.prototype,"%Date%":Date,"%DatePrototype%":Date.prototype,"%decodeURI%":decodeURI,"%decodeURIComponent%":decodeURIComponent,"%encodeURI%":encodeURI,"%encodeURIComponent%":encodeURIComponent,"%Error%":Error,"%ErrorPrototype%":Error.prototype,"%eval%":eval,"%EvalError%":EvalError,"%EvalErrorPrototype%":EvalError.prototype,"%Float32Array%":"undefined"==typeof Float32Array?void 0:Float32Array,"%Float32ArrayPrototype%":"undefined"==typeof Float32Array?void 0:Float32Array.prototype,"%Float64Array%":"undefined"==typeof Float64Array?void 0:Float64Array,"%Float64ArrayPrototype%":"undefined"==typeof Float64Array?void 0:Float64Array.prototype,"%Function%":Function,"%FunctionPrototype%":Function.prototype,"%Generator%":void 0,"%GeneratorFunction%":void 0,"%GeneratorPrototype%":void 0,"%Int8Array%":"undefined"==typeof Int8Array?void 0:Int8Array,"%Int8ArrayPrototype%":"undefined"==typeof Int8Array?void 0:Int8Array.prototype,"%Int16Array%":"undefined"==typeof Int16Array?void 0:Int16Array,"%Int16ArrayPrototype%":"undefined"==typeof Int16Array?void 0:Int8Array.prototype,"%Int32Array%":"undefined"==typeof Int32Array?void 0:Int32Array,"%Int32ArrayPrototype%":"undefined"==typeof Int32Array?void 0:Int32Array.prototype,"%isFinite%":isFinite,"%isNaN%":isNaN,"%IteratorPrototype%":N?F(F([][Symbol.iterator]())):void 0,"%JSON%":"object"===("undefined"==typeof JSON?"undefined":r(JSON))?JSON:void 0,"%JSONParse%":"object"===("undefined"==typeof JSON?"undefined":r(JSON))?JSON.parse:void 0,"%Map%":"undefined"==typeof Map?void 0:Map,"%MapIteratorPrototype%":"undefined"!=typeof Map&&N?F((new Map)[Symbol.iterator]()):void 0,"%MapPrototype%":"undefined"==typeof Map?void 0:Map.prototype,"%Math%":Math,"%Number%":Number,"%NumberPrototype%":Number.prototype,"%Object%":Object,"%ObjectPrototype%":Object.prototype,"%ObjProto_toString%":Object.prototype.toString,"%ObjProto_valueOf%":Object.prototype.valueOf,"%parseFloat%":parseFloat,"%parseInt%":parseInt,"%Promise%":"undefined"==typeof Promise?void 0:Promise,"%PromisePrototype%":"undefined"==typeof Promise?void 0:Promise.prototype,"%PromiseProto_then%":"undefined"==typeof Promise?void 0:Promise.prototype.then,"%Promise_all%":"undefined"==typeof Promise?void 0:Promise.all,"%Promise_reject%":"undefined"==typeof Promise?void 0:Promise.reject,"%Promise_resolve%":"undefined"==typeof Promise?void 0:Promise.resolve,"%Proxy%":"undefined"==typeof Proxy?void 0:Proxy,"%RangeError%":RangeError,"%RangeErrorPrototype%":RangeError.prototype,"%ReferenceError%":ReferenceError,"%ReferenceErrorPrototype%":ReferenceError.prototype,"%Reflect%":"undefined"==typeof Reflect?void 0:Reflect,"%RegExp%":RegExp,"%RegExpPrototype%":RegExp.prototype,"%Set%":"undefined"==typeof Set?void 0:Set,"%SetIteratorPrototype%":"undefined"!=typeof Set&&N?F((new Set)[Symbol.iterator]()):void 0,"%SetPrototype%":"undefined"==typeof Set?void 0:Set.prototype,"%SharedArrayBuffer%":"undefined"==typeof SharedArrayBuffer?void 0:SharedArrayBuffer,"%SharedArrayBufferPrototype%":"undefined"==typeof SharedArrayBuffer?void 0:SharedArrayBuffer.prototype,"%String%":String,"%StringIteratorPrototype%":N?F(""[Symbol.iterator]()):void 0,"%StringPrototype%":String.prototype,"%Symbol%":N?Symbol:void 0,"%SymbolPrototype%":N?Symbol.prototype:void 0,"%SyntaxError%":SyntaxError,"%SyntaxErrorPrototype%":SyntaxError.prototype,"%ThrowTypeError%":M,"%TypedArray%":C,"%TypedArrayPrototype%":C?C.prototype:void 0,"%TypeError%":P,"%TypeErrorPrototype%":P.prototype,"%Uint8Array%":"undefined"==typeof Uint8Array?void 0:Uint8Array,"%Uint8ArrayPrototype%":"undefined"==typeof Uint8Array?void 0:Uint8Array.prototype,"%Uint8ClampedArray%":"undefined"==typeof Uint8ClampedArray?void 0:Uint8ClampedArray,"%Uint8ClampedArrayPrototype%":"undefined"==typeof Uint8ClampedArray?void 0:Uint8ClampedArray.prototype,"%Uint16Array%":"undefined"==typeof Uint16Array?void 0:Uint16Array,"%Uint16ArrayPrototype%":"undefined"==typeof Uint16Array?void 0:Uint16Array.prototype,"%Uint32Array%":"undefined"==typeof Uint32Array?void 0:Uint32Array,"%Uint32ArrayPrototype%":"undefined"==typeof Uint32Array?void 0:Uint32Array.prototype,"%URIError%":URIError,"%URIErrorPrototype%":URIError.prototype,"%WeakMap%":"undefined"==typeof WeakMap?void 0:WeakMap,"%WeakMapPrototype%":"undefined"==typeof WeakMap?void 0:WeakMap.prototype,"%WeakSet%":"undefined"==typeof WeakSet?void 0:WeakSet,"%WeakSetPrototype%":"undefined"==typeof WeakSet?void 0:WeakSet.prototype},Y=j.call(Function.call,String.prototype.replace),B=/[^%.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\\]|\\.)*?)\2)\]|(?=(?:\.|\[\])(?:\.|\[\]|%$))/g,U=/\\(\\)?/g,Z=function(e){var r=[];return Y(e,B,(function(e,t,n,o){r[r.length]=n?Y(o,U,"$1"):t||e})),r},q=function(e,r){if(!(e in x))throw new SyntaxError("intrinsic "+e+" does not exist!");if(void 0===x[e]&&!r)throw new P("intrinsic "+e+" exists, but is not available. Please file an issue!");return x[e]},L=function(e,r){if("string"!=typeof e||0===e.length)throw new TypeError("intrinsic name must be a non-empty string");if(arguments.length>1&&"boolean"!=typeof r)throw new TypeError('"allowMissing" argument must be a boolean');for(var t=Z(e),n=q("%"+(t.length>0?t[0]:"")+"%",r),o=1;o<t.length;o+=1)if(null!=n)if(k&&o+1>=t.length){var i=k(n,t[o]);if(!r&&!(t[o]in n))throw new P("base intrinsic for "+e+" exists, but the property is not available.");n=i?i.get||i.value:n[t[o]]}else n=n[t[o]];return n},G=L("%Function.prototype.apply%"),W=L("%Function.prototype.call%"),_=L("%Reflect.apply%",!0)||j.call(W,G),V=function(){return _(j,W,arguments)};V.apply=function(){return _(j,G,arguments)};var $,z,J=V(L("String.prototype.indexOf")),H=function(e,r){var t=L(e,!!r);return"function"==typeof t&&J(e,".prototype.")?V(t):t},K=L("RegExp.prototype.test"),X=function(e){return V(K,e)},Q=function(e){return null===e||"function"!=typeof e&&"object"!==r(e)},ee=function(e){return null===e||"function"!=typeof e&&"object"!==r(e)},re=Function.prototype.toString,te="object"===("undefined"==typeof Reflect?"undefined":r(Reflect))&&null!==Reflect&&Reflect.apply;if("function"==typeof te&&"function"==typeof Object.defineProperty)try{$=Object.defineProperty({},"length",{get:function(){throw z}}),z={}}catch(e){te=null}else te=null;var ne=/^\s*class\b/,oe=function(e){try{var r=re.call(e);return ne.test(r)}catch(e){return!1}},ie=Object.prototype.toString,ae="function"==typeof Symbol&&"symbol"===r(Symbol.toStringTag),se=te?function(e){if(!e)return!1;if("function"!=typeof e&&"object"!==r(e))return!1;if("function"==typeof e&&!e.prototype)return!0;try{te(e,null,$)}catch(e){if(e!==z)return!1}return!oe(e)}:function(e){if(!e)return!1;if("function"!=typeof e&&"object"!==r(e))return!1;if("function"==typeof e&&!e.prototype)return!0;if(ae)return function(e){try{return!oe(e)&&(re.call(e),!0)}catch(e){return!1}}(e);if(oe(e))return!1;var t=ie.call(e);return"[object Function]"===t||"[object GeneratorFunction]"===t},ue=Date.prototype.getDay,le=Object.prototype.toString,ce="function"==typeof Symbol&&"symbol"===r(Symbol.toStringTag),fe=function(e){return"object"===r(e)&&null!==e&&(ce?function(e){try{return ue.call(e),!0}catch(e){return!1}}(e):"[object Date]"===le.call(e))},pe=b((function(e){var t=Object.prototype.toString;if(I()){var n=Symbol.prototype.toString,o=/^Symbol\(.*\)$/;e.exports=function(e){if("symbol"===r(e))return!0;if("[object Symbol]"!==t.call(e))return!1;try{return function(e){return"symbol"===r(e.valueOf())&&o.test(n.call(e))}(e)}catch(e){return!1}}}else e.exports=function(e){return!1}})),he="function"==typeof Symbol&&"symbol"===r(Symbol.iterator),ye=function(e,r){if(null==e)throw new TypeError("Cannot call method on "+e);if("string"!=typeof r||"number"!==r&&"string"!==r)throw new TypeError('hint must be "string" or "number"');var t,n,o,i="string"===r?["toString","valueOf"]:["valueOf","toString"];for(o=0;o<i.length;++o)if(t=e[i[o]],se(t)&&(n=t.call(e),ee(n)))return n;throw new TypeError("No default value")},me=function(e,r){var t=e[r];if(null!=t){if(!se(t))throw new TypeError(t+" returned for property "+r+" of object "+e+" is not a function");return t}},de=function(e){if(ee(e))return e;var r,t="default";if(arguments.length>1&&(arguments[1]===String?t="string":arguments[1]===Number&&(t="number")),he&&(Symbol.toPrimitive?r=me(e,Symbol.toPrimitive):pe(e)&&(r=Symbol.prototype.valueOf)),void 0!==r){var n=r.call(e,t);if(ee(n))return n;throw new TypeError("unable to convert exotic object to primitive")}return"default"===t&&(fe(e)||pe(e))&&(t="string"),ye(e,"default"===t?"number":t)},ve=function(e){return arguments.length>1?de(e,arguments[1]):de(e)},ge=L("%TypeError%"),we=L("%Number%"),Te=L("%RegExp%"),be=L("%parseInt%"),Se=H("String.prototype.slice"),Ee=X(/^0b[01]+$/i),Ie=X(/^0o[0-7]+$/i),De=X(/^[-+]0x[0-9a-f]+$/i),Oe=X(new Te("["+["","​","￾"].join("")+"]","g")),Ae=["\t\n\v\f\r   ᠎    ","         　\u2028","\u2029\ufeff"].join(""),je=new RegExp("(^["+Ae+"]+)|(["+Ae+"]+$)","g"),Pe=H("String.prototype.replace"),ke=function e(t){var n=Q(t)?t:ve(t,we);if("symbol"===r(n))throw new ge("Cannot convert a Symbol value to a number");if("string"==typeof n){if(Ee(n))return e(be(Se(n,2),2));if(Ie(n))return e(be(Se(n,2),8));if(Oe(n)||De(n))return NaN;var o=function(e){return Pe(e,je,"")}(n);if(o!==n)return e(o)}return we(n)},Re=function(e){return"symbol"===r(e)?"Symbol":function(e){return null===e?"Null":void 0===e?"Undefined":"function"==typeof e||"object"===r(e)?"Object":"number"==typeof e?"Number":"boolean"==typeof e?"Boolean":"string"==typeof e?"String":void 0}(e)},Me=Number.isNaN||function(e){return e!=e},Ne=Number.isNaN||function(e){return e!=e},Fe=Number.isFinite||function(e){return"number"==typeof e&&!Ne(e)&&e!==1/0&&e!==-1/0},Ce=H("String.prototype.slice"),xe=function(e,r){return e===r||!(e.length>r.length)&&Ce(r,0,e.length)===e},Ye=L("%Number%"),Be=L("%TypeError%");Object.create;function Ue(e,r){var t={seen:[],stylize:qe};return arguments.length>=3&&(t.depth=arguments[2]),arguments.length>=4&&(t.colors=arguments[3]),Ve(r)?t.showHidden=r:r&&nr(t,r),He(t.showHidden)&&(t.showHidden=!1),He(t.depth)&&(t.depth=2),He(t.colors)&&(t.colors=!1),He(t.customInspect)&&(t.customInspect=!0),t.colors&&(t.stylize=Ze),Le(t,e,t.depth)}function Ze(e,r){var t=Ue.styles[r];return t?"["+Ue.colors[t][0]+"m"+e+"["+Ue.colors[t][1]+"m":e}function qe(e,r){return e}function Le(e,r,t){if(e.customInspect&&r&&rr(r.inspect)&&r.inspect!==Ue&&(!r.constructor||r.constructor.prototype!==r)){var n=r.inspect(t,e);return Je(n)||(n=Le(e,n,t)),n}var o=function(e,r){if(He(r))return e.stylize("undefined","undefined");if(Je(r)){var t="'"+JSON.stringify(r).replace(/^"|"$/g,"").replace(/'/g,"\\'").replace(/\\"/g,'"')+"'";return e.stylize(t,"string")}if(ze(r))return e.stylize(""+r,"number");if(Ve(r))return e.stylize(""+r,"boolean");if($e(r))return e.stylize("null","null")}(e,r);if(o)return o;var i=Object.keys(r),a=function(e){var r={};return e.forEach((function(e,t){r[e]=!0})),r}(i);if(e.showHidden&&(i=Object.getOwnPropertyNames(r)),er(r)&&(i.indexOf("message")>=0||i.indexOf("description")>=0))return Ge(r);if(0===i.length){if(rr(r)){var s=r.name?": "+r.name:"";return e.stylize("[Function"+s+"]","special")}if(Ke(r))return e.stylize(RegExp.prototype.toString.call(r),"regexp");if(Qe(r))return e.stylize(Date.prototype.toString.call(r),"date");if(er(r))return Ge(r)}var u,l="",c=!1,f=["{","}"];(_e(r)&&(c=!0,f=["[","]"]),rr(r))&&(l=" [Function"+(r.name?": "+r.name:"")+"]");return Ke(r)&&(l=" "+RegExp.prototype.toString.call(r)),Qe(r)&&(l=" "+Date.prototype.toUTCString.call(r)),er(r)&&(l=" "+Ge(r)),0!==i.length||c&&0!=r.length?t<0?Ke(r)?e.stylize(RegExp.prototype.toString.call(r),"regexp"):e.stylize("[Object]","special"):(e.seen.push(r),u=c?function(e,r,t,n,o){for(var i=[],a=0,s=r.length;a<s;++a)or(r,String(a))?i.push(We(e,r,t,n,String(a),!0)):i.push("");return o.forEach((function(o){o.match(/^\d+$/)||i.push(We(e,r,t,n,o,!0))})),i}(e,r,t,a,i):i.map((function(n){return We(e,r,t,a,n,c)})),e.seen.pop(),function(e,r,t){if(e.reduce((function(e,r){return r.indexOf("\n"),e+r.replace(/\u001b\[\d\d?m/g,"").length+1}),0)>60)return t[0]+(""===r?"":r+"\n ")+" "+e.join(",\n  ")+" "+t[1];return t[0]+r+" "+e.join(", ")+" "+t[1]}(u,l,f)):f[0]+l+f[1]}function Ge(e){return"["+Error.prototype.toString.call(e)+"]"}function We(e,r,t,n,o,i){var a,s,u;if((u=Object.getOwnPropertyDescriptor(r,o)||{value:r[o]}).get?s=u.set?e.stylize("[Getter/Setter]","special"):e.stylize("[Getter]","special"):u.set&&(s=e.stylize("[Setter]","special")),or(n,o)||(a="["+o+"]"),s||(e.seen.indexOf(u.value)<0?(s=$e(t)?Le(e,u.value,null):Le(e,u.value,t-1)).indexOf("\n")>-1&&(s=i?s.split("\n").map((function(e){return"  "+e})).join("\n").substr(2):"\n"+s.split("\n").map((function(e){return"   "+e})).join("\n")):s=e.stylize("[Circular]","special")),He(a)){if(i&&o.match(/^\d+$/))return s;(a=JSON.stringify(""+o)).match(/^"([a-zA-Z_][a-zA-Z_0-9]*)"$/)?(a=a.substr(1,a.length-2),a=e.stylize(a,"name")):(a=a.replace(/'/g,"\\'").replace(/\\"/g,'"').replace(/(^"|"$)/g,"'"),a=e.stylize(a,"string"))}return a+": "+s}function _e(e){return Array.isArray(e)}function Ve(e){return"boolean"==typeof e}function $e(e){return null===e}function ze(e){return"number"==typeof e}function Je(e){return"string"==typeof e}function He(e){return void 0===e}function Ke(e){return Xe(e)&&"[object RegExp]"===tr(e)}function Xe(e){return"object"===r(e)&&null!==e}function Qe(e){return Xe(e)&&"[object Date]"===tr(e)}function er(e){return Xe(e)&&("[object Error]"===tr(e)||e instanceof Error)}function rr(e){return"function"==typeof e}function tr(e){return Object.prototype.toString.call(e)}Ue.colors={bold:[1,22],italic:[3,23],underline:[4,24],inverse:[7,27],white:[37,39],grey:[90,39],black:[30,39],blue:[34,39],cyan:[36,39],green:[32,39],magenta:[35,39],red:[31,39],yellow:[33,39]},Ue.styles={special:"cyan",number:"yellow",boolean:"yellow",undefined:"grey",null:"bold",string:"green",date:"magenta",regexp:"red"};function nr(e,r){if(!r||!Xe(r))return e;for(var t=Object.keys(r),n=t.length;n--;)e[t[n]]=r[t[n]];return e}function or(e,r){return Object.prototype.hasOwnProperty.call(e,r)}var ir=Ue,ar="function"==typeof Map&&Map.prototype,sr=Object.getOwnPropertyDescriptor&&ar?Object.getOwnPropertyDescriptor(Map.prototype,"size"):null,ur=ar&&sr&&"function"==typeof sr.get?sr.get:null,lr=ar&&Map.prototype.forEach,cr="function"==typeof Set&&Set.prototype,fr=Object.getOwnPropertyDescriptor&&cr?Object.getOwnPropertyDescriptor(Set.prototype,"size"):null,pr=cr&&fr&&"function"==typeof fr.get?fr.get:null,hr=cr&&Set.prototype.forEach,yr="function"==typeof WeakMap&&WeakMap.prototype?WeakMap.prototype.has:null,mr="function"==typeof WeakSet&&WeakSet.prototype?WeakSet.prototype.has:null,dr=Boolean.prototype.valueOf,vr=Object.prototype.toString,gr=Function.prototype.toString,wr=String.prototype.match,Tr="function"==typeof BigInt?BigInt.prototype.valueOf:null,br=ir.custom,Sr=br&&Ar(br)?br:null,Er=function e(t,n,o,i){var a=n||{};if(Pr(a,"quoteStyle")&&"single"!==a.quoteStyle&&"double"!==a.quoteStyle)throw new TypeError('option "quoteStyle" must be "single" or "double"');if(Pr(a,"maxStringLength")&&("number"==typeof a.maxStringLength?a.maxStringLength<0&&a.maxStringLength!==1/0:null!==a.maxStringLength))throw new TypeError('option "maxStringLength", if provided, must be a positive integer, Infinity, or `null`');var s=!Pr(a,"customInspect")||a.customInspect;if("boolean"!=typeof s)throw new TypeError('option "customInspect", if provided, must be `true` or `false`');if(Pr(a,"indent")&&null!==a.indent&&"\t"!==a.indent&&!(parseInt(a.indent,10)===a.indent&&a.indent>0))throw new TypeError('options "indent" must be "\\t", an integer > 0, or `null`');if(void 0===t)return"undefined";if(null===t)return"null";if("boolean"==typeof t)return t?"true":"false";if("string"==typeof t)return function e(r,t){if(r.length>t.maxStringLength){var n=r.length-t.maxStringLength,o="... "+n+" more character"+(n>1?"s":"");return e(r.slice(0,t.maxStringLength),t)+o}return Ir(r.replace(/(['\\])/g,"\\$1").replace(/[\x00-\x1f]/g,Mr),"single",t)}(t,a);if("number"==typeof t)return 0===t?1/0/t>0?"0":"-0":String(t);if("bigint"==typeof t)return String(t)+"n";var u=void 0===a.depth?5:a.depth;if(void 0===o&&(o=0),o>=u&&u>0&&"object"===r(t))return Or(t)?"[Array]":"[Object]";var l=function(e,r){var t;if("\t"===e.indent)t="\t";else{if(!("number"==typeof e.indent&&e.indent>0))return null;t=Array(e.indent+1).join(" ")}return{base:t,prev:Array(r+1).join(t)}}(a,o);if(void 0===i)i=[];else if(Rr(i,t)>=0)return"[Circular]";function c(r,t,n){if(t&&(i=i.slice()).push(t),n){var s={depth:a.depth};return Pr(a,"quoteStyle")&&(s.quoteStyle=a.quoteStyle),e(r,s,o+1,i)}return e(r,a,o+1,i)}if("function"==typeof t){var f=function(e){if(e.name)return e.name;var r=wr.call(gr.call(e),/^function\s*([\w$]+)/);if(r)return r[1];return null}(t);return"[Function"+(f?": "+f:" (anonymous)")+"]"}if(Ar(t)){var p=Symbol.prototype.toString.call(t);return"object"===r(t)?Nr(p):p}if(function(e){if(!e||"object"!==r(e))return!1;if("undefined"!=typeof HTMLElement&&e instanceof HTMLElement)return!0;return"string"==typeof e.nodeName&&"function"==typeof e.getAttribute}(t)){for(var h="<"+String(t.nodeName).toLowerCase(),y=t.attributes||[],m=0;m<y.length;m++)h+=" "+y[m].name+"="+Ir(Dr(y[m].value),"double",a);return h+=">",t.childNodes&&t.childNodes.length&&(h+="..."),h+="</"+String(t.nodeName).toLowerCase()+">"}if(Or(t)){if(0===t.length)return"[]";var d=Yr(t,c);return l&&!function(e){for(var r=0;r<e.length;r++)if(Rr(e[r],"\n")>=0)return!1;return!0}(d)?"["+xr(d,l)+"]":"[ "+d.join(", ")+" ]"}if(function(e){return"[object Error]"===kr(e)}(t)){var v=Yr(t,c);return 0===v.length?"["+String(t)+"]":"{ ["+String(t)+"] "+v.join(", ")+" }"}if("object"===r(t)&&s){if(Sr&&"function"==typeof t[Sr])return t[Sr]();if("function"==typeof t.inspect)return t.inspect()}if(function(e){if(!ur||!e||"object"!==r(e))return!1;try{ur.call(e);try{pr.call(e)}catch(e){return!0}return e instanceof Map}catch(e){}return!1}(t)){var g=[];return lr.call(t,(function(e,r){g.push(c(r,t,!0)+" => "+c(e,t))})),Cr("Map",ur.call(t),g,l)}if(function(e){if(!pr||!e||"object"!==r(e))return!1;try{pr.call(e);try{ur.call(e)}catch(e){return!0}return e instanceof Set}catch(e){}return!1}(t)){var w=[];return hr.call(t,(function(e){w.push(c(e,t))})),Cr("Set",pr.call(t),w,l)}if(function(e){if(!yr||!e||"object"!==r(e))return!1;try{yr.call(e,yr);try{mr.call(e,mr)}catch(e){return!0}return e instanceof WeakMap}catch(e){}return!1}(t))return Fr("WeakMap");if(function(e){if(!mr||!e||"object"!==r(e))return!1;try{mr.call(e,mr);try{yr.call(e,yr)}catch(e){return!0}return e instanceof WeakSet}catch(e){}return!1}(t))return Fr("WeakSet");if(function(e){return"[object Number]"===kr(e)}(t))return Nr(c(Number(t)));if(function(e){return"[object BigInt]"===kr(e)}(t))return Nr(c(Tr.call(t)));if(function(e){return"[object Boolean]"===kr(e)}(t))return Nr(dr.call(t));if(function(e){return"[object String]"===kr(e)}(t))return Nr(c(String(t)));if(!function(e){return"[object Date]"===kr(e)}(t)&&!function(e){return"[object RegExp]"===kr(e)}(t)){var T=Yr(t,c);return 0===T.length?"{}":l?"{"+xr(T,l)+"}":"{ "+T.join(", ")+" }"}return String(t)};function Ir(e,r,t){var n="double"===(t.quoteStyle||r)?'"':"'";return n+e+n}function Dr(e){return String(e).replace(/"/g,"&quot;")}function Or(e){return"[object Array]"===kr(e)}function Ar(e){return"[object Symbol]"===kr(e)}var jr=Object.prototype.hasOwnProperty||function(e){return e in this};function Pr(e,r){return jr.call(e,r)}function kr(e){return vr.call(e)}function Rr(e,r){if(e.indexOf)return e.indexOf(r);for(var t=0,n=e.length;t<n;t++)if(e[t]===r)return t;return-1}function Mr(e){var r=e.charCodeAt(0),t={8:"b",9:"t",10:"n",12:"f",13:"r"}[r];return t?"\\"+t:"\\x"+(r<16?"0":"")+r.toString(16)}function Nr(e){return"Object("+e+")"}function Fr(e){return e+" { ? }"}function Cr(e,r,t,n){return e+" ("+r+") {"+(n?xr(t,n):t.join(", "))+"}"}function xr(e,r){if(0===e.length)return"";var t="\n"+r.prev+r.base;return t+e.join(","+t)+"\n"+r.prev}function Yr(e,r){var t=Or(e),n=[];if(t){n.length=e.length;for(var o=0;o<e.length;o++)n[o]=Pr(e,o)?r(e[o],e):""}for(var i in e)Pr(e,i)&&(t&&String(Number(i))===i&&i<e.length||(/[^\w$]/.test(i)?n.push(r(i,e)+": "+r(e[i],e)):n.push(i+": "+r(e[i],e))));return n}var Br,Ur=L("%Reflect.apply%",!0)||H("%Function.prototype.apply%"),Zr=function(e,r){var t=arguments.length>2?arguments[2]:[];return Ur(e,r,t)},qr=function(e){return"string"==typeof e||"symbol"===r(e)},Lr=L("%TypeError%"),Gr=function(e,r){if("Object"!==Re(e))throw new Lr("Assertion failed: Type(O) is not Object");if(!qr(r))throw new Lr("Assertion failed: IsPropertyKey(P) is not true, got "+Er(r));return e[r]},Wr=I(),_r=L("%Symbol.iterator%",!0),Vr=H("String.prototype.slice"),$r=function(e,r){var t;return Wr?t=e.GetMethod(r,_r):e.IsArray(r)?t=function(){var e=-1,r=this;return{next:function(){return{done:(e+=1)>=r.length,value:r[e]}}}}:"String"===e.Type(r)&&(t=function(){var t=0;return{next:function(){var n=e.AdvanceStringIndex(r,t,!0),o=Vr(r,t,n);return t=n,{done:n>r.length,value:o}}}}),t},zr=L("%Math%"),Jr=zr.floor,Hr=zr.abs,Kr=function(e){if("number"!=typeof e||Me(e)||!Fe(e))return!1;var r=Hr(e);return Jr(r)===r},Xr=L("%Math%"),Qr=L("%Number%").MAX_SAFE_INTEGER||Xr.pow(2,53)-1,et=L("%TypeError%"),rt=H("String.prototype.charCodeAt"),tt=function(e,r,t){if("String"!==Re(e))throw new et("Assertion failed: `S` must be a String");if(!Kr(r)||r<0||r>Qr)throw new et("Assertion failed: `length` must be an integer >= 0 and <= 2**53");if("Boolean"!==Re(t))throw new et("Assertion failed: `unicode` must be a Boolean");if(!t)return r+1;if(r+1>=e.length)return r+1;var n=rt(e,r);if(n<55296||n>56319)return r+1;var o=rt(e,r+1);return o<56320||o>57343?r+1:r+2},nt=L("%TypeError%"),ot=function(e,r){if(null==e)throw new nt(r||"Cannot call method on "+e);return e},it=L("%Object%"),at=function(e){return ot(e),it(e)},st=L("%TypeError%"),ut=function(e,r){if(!qr(r))throw new st("Assertion failed: IsPropertyKey(P) is not true");return at(e)[r]},lt=se,ct=L("%TypeError%"),ft=function(e,r){if(!qr(r))throw new ct("Assertion failed: IsPropertyKey(P) is not true");var t=ut(e,r);if(null!=t){if(!lt(t))throw new ct(r+"is not a function");return t}},pt=L("%Array%"),ht=!pt.isArray&&H("Object.prototype.toString"),yt=pt.isArray||function(e){return"[object Array]"===ht(e)},mt=L("%TypeError%"),dt=function(e,r){var t=r;arguments.length<2&&(t=$r({AdvanceStringIndex:tt,GetMethod:ft,IsArray:yt,Type:Re},e));var n=Zr(t,e);if("Object"!==Re(n))throw new mt("iterator must return an object");return n},vt=L("%TypeError%"),gt=function(e,r){if("Object"!==Re(e))throw new vt("Assertion failed: Type(iterator) is not Object");if(!lt(r))throw new vt("Assertion failed: completion is not a thunk for a Completion Record");var t,n=r,o=ft(e,"return");if(void 0===o)return n();try{var i=Zr(o,e,[])}catch(e){throw n(),n=null,e}if(t=n(),n=null,"Object"!==Re(i))throw new vt("iterator .return must return an object");return t},wt=function(e){return!!e},Tt=L("%TypeError%"),bt=function(e){if("Object"!==Re(e))throw new Tt("Assertion failed: Type(iterResult) is not Object");return wt(Gr(e,"done"))},St=L("%TypeError%"),Et=H("Array.prototype.slice"),It=function(e,r){if(!qr(r))throw new St("P must be a Property Key");var t=Et(arguments,2),n=ut(e,r);return Zr(n,e,t)},Dt=L("%TypeError%"),Ot=function(e,r){var t=It(e,"next",arguments.length<2?[]:[r]);if("Object"!==Re(t))throw new Dt("iterator next must return an object");return t},At=function(e){var r=Ot(e);return!0!==bt(r)&&r},jt=L("%TypeError%"),Pt=function(e){if("Object"!==Re(e))throw new jt("Assertion failed: Type(iterResult) is not Object");return Gr(e,"value")},kt=L("%TypeError%"),Rt=L("%Array.prototype%"),Mt=L("%RangeError%"),Nt=L("%SyntaxError%"),Ft=L("%TypeError%"),Ct=Math.pow(2,32)-1,xt=L("%Object.setPrototypeOf%",!0)||([].__proto__!==Rt?null:function(e,r){return e.__proto__=r,e}),Yt=Object.prototype.toString,Bt=function(e){var t=Yt.call(e),n="[object Arguments]"===t;return n||(n="[object Array]"!==t&&null!==e&&"object"===r(e)&&"number"==typeof e.length&&e.length>=0&&"[object Function]"===Yt.call(e.callee)),n};if(!Object.keys){var Ut=Object.prototype.hasOwnProperty,Zt=Object.prototype.toString,qt=Bt,Lt=Object.prototype.propertyIsEnumerable,Gt=!Lt.call({toString:null},"toString"),Wt=Lt.call((function(){}),"prototype"),_t=["toString","toLocaleString","valueOf","hasOwnProperty","isPrototypeOf","propertyIsEnumerable","constructor"],Vt=function(e){var r=e.constructor;return r&&r.prototype===e},$t={$applicationCache:!0,$console:!0,$external:!0,$frame:!0,$frameElement:!0,$frames:!0,$innerHeight:!0,$innerWidth:!0,$onmozfullscreenchange:!0,$onmozfullscreenerror:!0,$outerHeight:!0,$outerWidth:!0,$pageXOffset:!0,$pageYOffset:!0,$parent:!0,$scrollLeft:!0,$scrollTop:!0,$scrollX:!0,$scrollY:!0,$self:!0,$webkitIndexedDB:!0,$webkitStorageInfo:!0,$window:!0},zt=function(){if("undefined"==typeof window)return!1;for(var e in window)try{if(!$t["$"+e]&&Ut.call(window,e)&&null!==window[e]&&"object"===r(window[e]))try{Vt(window[e])}catch(e){return!0}}catch(e){return!0}return!1}();Br=function(e){var t=null!==e&&"object"===r(e),n="[object Function]"===Zt.call(e),o=qt(e),i=t&&"[object String]"===Zt.call(e),a=[];if(!t&&!n&&!o)throw new TypeError("Object.keys called on a non-object");var s=Wt&&n;if(i&&e.length>0&&!Ut.call(e,0))for(var u=0;u<e.length;++u)a.push(String(u));if(o&&e.length>0)for(var l=0;l<e.length;++l)a.push(String(l));else for(var c in e)s&&"prototype"===c||!Ut.call(e,c)||a.push(String(c));if(Gt)for(var f=function(e){if("undefined"==typeof window||!zt)return Vt(e);try{return Vt(e)}catch(e){return!1}}(e),p=0;p<_t.length;++p)f&&"constructor"===_t[p]||!Ut.call(e,_t[p])||a.push(_t[p]);return a}}var Jt=Br,Ht=Array.prototype.slice,Kt=Object.keys,Xt=Kt?function(e){return Kt(e)}:Jt,Qt=Object.keys;Xt.shim=function(){Object.keys?function(){var e=Object.keys(arguments);return e&&e.length===arguments.length}(1,2)||(Object.keys=function(e){return Bt(e)?Qt(Ht.call(e)):Qt(e)}):Object.keys=Xt;return Object.keys||Xt};var en=Xt,rn="function"==typeof Symbol&&"symbol"===r(Symbol("foo")),tn=Object.prototype.toString,nn=Array.prototype.concat,on=Object.defineProperty,an=on&&function(){var e={};try{for(var r in on(e,"x",{enumerable:!1,value:e}),e)return!1;return e.x===e}catch(e){return!1}}(),sn=function(e,r,t,n){var o;(!(r in e)||"function"==typeof(o=n)&&"[object Function]"===tn.call(o)&&n())&&(an?on(e,r,{configurable:!0,enumerable:!1,value:t,writable:!0}):e[r]=t)},un=function(e,r){var t=arguments.length>2?arguments[2]:{},n=en(r);rn&&(n=nn.call(n,Object.getOwnPropertySymbols(r)));for(var o=0;o<n.length;o+=1)sn(e,n[o],r[n[o]],t[n[o]])};un.supportsDescriptors=!!an;var ln=un,cn=function(e){return null!=e},fn=S(),pn=Object,hn=j.call(Function.call,Array.prototype.push),yn=j.call(Function.call,Object.prototype.propertyIsEnumerable),mn=fn?Object.getOwnPropertySymbols:null,dn=function(e,r){if(!cn(e))throw new TypeError("target must be an object");var t,n,o,i,a,s,u,l=pn(e);for(t=1;t<arguments.length;++t){n=pn(arguments[t]),i=en(n);var c=fn&&(Object.getOwnPropertySymbols||mn);if(c)for(a=c(n),o=0;o<a.length;++o)u=a[o],yn(n,u)&&hn(i,u);for(o=0;o<i.length;++o)s=n[u=i[o]],yn(n,u)&&(l[u]=s)}return l},vn=function(){return Object.assign?function(){if(!Object.assign)return!1;for(var e="abcdefghijklmnopqrst",r=e.split(""),t={},n=0;n<r.length;++n)t[r[n]]=r[n];var o=Object.assign({},t),i="";for(var a in o)i+=a;return e!==i}()||function(){if(!Object.assign||!Object.preventExtensions)return!1;var e=Object.preventExtensions({1:2});try{Object.assign(e,"xy")}catch(r){return"y"===e[1]}return!1}()?dn:Object.assign:dn},gn=vn();ln(gn,{getPolyfill:vn,implementation:dn,shim:function(){var e=vn();return ln(Object,{assign:e},{assign:function(){return Object.assign!==e}}),e}});var wn=gn,Tn=j.call(Function.call,Object.prototype.hasOwnProperty),bn=L("%TypeError%"),Sn=function(e,r){if("Object"!==e.Type(r))return!1;var t={"[[Configurable]]":!0,"[[Enumerable]]":!0,"[[Get]]":!0,"[[Set]]":!0,"[[Value]]":!0,"[[Writable]]":!0};for(var n in r)if(Tn(r,n)&&!t[n])return!1;if(e.IsDataDescriptor(r)&&e.IsAccessorDescriptor(r))throw new bn("Property Descriptors may not be both accessor and data descriptors");return!0},En=L("%TypeError%"),In=L("%SyntaxError%"),Dn={"Property Descriptor":function(e,r){if("Object"!==e(r))return!1;var t={"[[Configurable]]":!0,"[[Enumerable]]":!0,"[[Get]]":!0,"[[Set]]":!0,"[[Value]]":!0,"[[Writable]]":!0};for(var n in r)if(Tn(r,n)&&!t[n])return!1;var o=Tn(r,"[[Value]]"),i=Tn(r,"[[Get]]")||Tn(r,"[[Set]]");if(o&&i)throw new En("Property Descriptors may not be both accessor and data descriptors");return!0}},On=function(e,r,t,n){var o=Dn[r];if("function"!=typeof o)throw new In("unknown record type: "+r);if(!o(e,n))throw new En(t+" must be a "+r)},An=function(e){return void 0!==e&&(On(Re,"Property Descriptor","Desc",e),!(!Tn(e,"[[Get]]")&&!Tn(e,"[[Set]]")))},jn=function(e){return void 0!==e&&(On(Re,"Property Descriptor","Desc",e),!(!Tn(e,"[[Value]]")&&!Tn(e,"[[Writable]]")))},Pn=L("%Object.getOwnPropertyDescriptor%");if(Pn)try{Pn([],"length")}catch(e){Pn=null}var kn=Pn,Rn=L("%Object%"),Mn=Rn.preventExtensions,Nn=Rn.isExtensible,Fn=Mn?function(e){return!Q(e)&&Nn(e)}:function(e){return!Q(e)},Cn=L("%TypeError%"),xn=function(e){if("Object"!==Re(e))throw new Cn("ToPropertyDescriptor requires an object");var r={};if(Tn(e,"enumerable")&&(r["[[Enumerable]]"]=wt(e.enumerable)),Tn(e,"configurable")&&(r["[[Configurable]]"]=wt(e.configurable)),Tn(e,"value")&&(r["[[Value]]"]=e.value),Tn(e,"writable")&&(r["[[Writable]]"]=wt(e.writable)),Tn(e,"get")){var t=e.get;if(void 0!==t&&!lt(t))throw new TypeError("getter must be a function");r["[[Get]]"]=t}if(Tn(e,"set")){var n=e.set;if(void 0!==n&&!lt(n))throw new Cn("setter must be a function");r["[[Set]]"]=n}if((Tn(r,"[[Get]]")||Tn(r,"[[Set]]"))&&(Tn(r,"[[Value]]")||Tn(r,"[[Writable]]")))throw new Cn("Invalid property descriptor. Cannot both specify accessors and a value or writable attribute");return r},Yn=function(e,r){return e===r?0!==e||1/e==1/r:Me(e)&&Me(r)},Bn=L("%Object.defineProperty%",!0);if(Bn)try{Bn({},"a",{value:1})}catch(e){Bn=null}var Un,Zn,qn,Ln=H("Object.prototype.propertyIsEnumerable"),Gn=function(e,r,t,n,o,i){if(!Bn){if(!e(i))return!1;if(!i["[[Configurable]]"]||!i["[[Writable]]"])return!1;if(o in n&&Ln(n,o)!==!!i["[[Enumerable]]"])return!1;var a=i["[[Value]]"];return n[o]=a,r(n[o],a)}return Bn(n,o,t(i)),!0},Wn=function(e,r){for(var t=0;t<e.length;t+=1)if(!r(e[t],t,e))return!1;return!0},_n=function(e){if(void 0===e)return e;On(Re,"Property Descriptor","Desc",e);var r={};return"[[Value]]"in e&&(r.value=e["[[Value]]"]),"[[Writable]]"in e&&(r.writable=e["[[Writable]]"]),"[[Get]]"in e&&(r.get=e["[[Get]]"]),"[[Set]]"in e&&(r.set=e["[[Set]]"]),"[[Enumerable]]"in e&&(r.enumerable=e["[[Enumerable]]"]),"[[Configurable]]"in e&&(r.configurable=e["[[Configurable]]"]),r},Vn=function(e){return void 0!==e&&(On(Re,"Property Descriptor","Desc",e),!An(e)&&!jn(e))},$n=L("%TypeError%"),zn=function(e,r,t,n,o){var i=Re(e);if("Undefined"!==i&&"Object"!==i)throw new $n("Assertion failed: O must be undefined or an Object");if("Boolean"!==Re(t))throw new $n("Assertion failed: extensible must be a Boolean");if(!Sn({Type:Re,IsDataDescriptor:jn,IsAccessorDescriptor:An},n))throw new $n("Assertion failed: Desc must be a Property Descriptor");if("Undefined"!==Re(o)&&!Sn({Type:Re,IsDataDescriptor:jn,IsAccessorDescriptor:An},o))throw new $n("Assertion failed: current must be a Property Descriptor, or undefined");if("Undefined"!==i&&!qr(r))throw new $n("Assertion failed: if O is not undefined, P must be a Property Key");if("Undefined"===Re(o)){if(!t)return!1;if(Vn(n)||jn(n))"Undefined"!==i&&Gn(jn,Yn,_n,e,r,{"[[Configurable]]":n["[[Configurable]]"],"[[Enumerable]]":n["[[Enumerable]]"],"[[Value]]":n["[[Value]]"],"[[Writable]]":n["[[Writable]]"]});else{if(!An(n))throw new $n("Assertion failed: Desc is not an accessor descriptor");if("Undefined"!==i)return Gn(jn,Yn,_n,e,r,n)}return!0}if(Vn(n)&&!("[[Configurable]]"in n)&&!("[[Enumerable]]"in n))return!0;if(function(e,r,t){return Wn(["[[Configurable]]","[[Enumerable]]","[[Get]]","[[Set]]","[[Value]]","[[Writable]]"],(function(n){return n in r==n in t&&e.SameValue(r[n],t[n])}))}({SameValue:Yn},n,o))return!0;if(!o["[[Configurable]]"]){if(n["[[Configurable]]"])return!1;if("[[Enumerable]]"in n&&!n["[[Enumerable]]"]==!!o["[[Enumerable]]"])return!1}if(Vn(n));else if(jn(o)!==jn(n)){if(!o["[[Configurable]]"])return!1;jn(o)?"Undefined"!==i&&Gn(jn,Yn,_n,e,r,{"[[Configurable]]":o["[[Configurable]]"],"[[Enumerable]]":o["[[Enumerable]]"],"[[Get]]":void 0}):"Undefined"!==i&&Gn(jn,Yn,_n,e,r,{"[[Configurable]]":o["[[Configurable]]"],"[[Enumerable]]":o["[[Enumerable]]"],"[[Value]]":void 0})}else if(jn(o)&&jn(n)){if(!o["[[Configurable]]"]&&!o["[[Writable]]"])return(!("[[Writable]]"in n)||!n["[[Writable]]"])&&!("[[Value]]"in n&&!Yn(n["[[Value]]"],o["[[Value]]"]))}else{if(!An(o)||!An(n))throw new $n("Assertion failed: current and Desc are not both data, both accessors, or one accessor and one data.");if(!o["[[Configurable]]"])return!("[[Set]]"in n&&!Yn(n["[[Set]]"],o["[[Set]]"]))&&!("[[Get]]"in n&&!Yn(n["[[Get]]"],o["[[Get]]"]))}return"Undefined"===i||Gn(jn,Yn,_n,e,r,n)},Jn=L("%SyntaxError%"),Hn=L("%TypeError%"),Kn=function(e,r,t){if("Object"!==Re(e))throw new Hn("Assertion failed: O must be an Object");if(!qr(r))throw new Hn("Assertion failed: P must be a Property Key");if(!Sn({Type:Re,IsDataDescriptor:jn,IsAccessorDescriptor:An},t))throw new Hn("Assertion failed: Desc must be a Property Descriptor");if(!kn){if(An(t))throw new Jn("This environment does not support accessor property descriptors.");var n=!(r in e)&&t["[[Writable]]"]&&t["[[Enumerable]]"]&&t["[[Configurable]]"]&&"[[Value]]"in t,o=r in e&&(!("[[Configurable]]"in t)||t["[[Configurable]]"])&&(!("[[Enumerable]]"in t)||t["[[Enumerable]]"])&&(!("[[Writable]]"in t)||t["[[Writable]]"])&&"[[Value]]"in t;if(n||o)return e[r]=t["[[Value]]"],Yn(e[r],t["[[Value]]"]);throw new Jn("This environment does not support defining non-writable, non-enumerable, or non-configurable properties")}var i=kn(e,r),a=i&&xn(i),s=Fn(e);return zn(e,r,s,t,a)},Xn=I()&&"symbol"===r(Symbol.toStringTag);if(Xn){Un=Function.call.bind(RegExp.prototype.exec),Zn={};var Qn=function(){throw Zn};qn={toString:Qn,valueOf:Qn},"symbol"===r(Symbol.toPrimitive)&&(qn[Symbol.toPrimitive]=Qn)}var eo,ro=Object.prototype.toString,to=Xn?function(e){if(!e||"object"!==r(e))return!1;try{Un(e,qn)}catch(e){return e===Zn}}:function(e){return!(!e||"object"!==r(e)&&"function"!=typeof e)&&"[object RegExp]"===ro.call(e)},no=L("%Symbol.match%",!0),oo=function(e){if(!e||"object"!==r(e))return!1;if(no){var t=e[no];if(void 0!==t)return wt(t)}return to(e)},io=L("%TypeError%"),ao=H("Object.prototype.propertyIsEnumerable"),so=function(e,r){if("Object"!==Re(e))throw new io("Assertion failed: O must be an Object");if(!qr(r))throw new io("Assertion failed: P must be a Property Key");if(Tn(e,r)){if(!kn){var t=yt(e)&&"length"===r,n=oo(e)&&"lastIndex"===r;return{"[[Configurable]]":!(t||n),"[[Enumerable]]":ao(e,r),"[[Value]]":e[r],"[[Writable]]":!0}}return xn(kn(e,r))}},uo=L("%String%"),lo=L("%TypeError%"),co=function(e){if("symbol"===r(e))throw new lo("Cannot convert a Symbol value to a string");return uo(e)},fo=function(e){return ke(e)>>>0},po=L("%RangeError%"),ho=L("%TypeError%"),yo=L("%TypeError%"),mo=function(e,r,t){if("Object"!==Re(e))throw new yo("Assertion failed: Type(O) is not Object");if(!qr(r))throw new yo("Assertion failed: IsPropertyKey(P) is not true");var n=Sn({Type:Re,IsDataDescriptor:jn,IsAccessorDescriptor:An},t)?t:xn(t);if(!Sn({Type:Re,IsDataDescriptor:jn,IsAccessorDescriptor:An},n))throw new yo("Assertion failed: Desc is not a valid Property Descriptor");return Gn(jn,Yn,_n,e,r,n)},vo=b((function(e){var r=L("%Reflect.construct%",!0),t=mo;try{t({},"",{"[[Get]]":function(){}})}catch(e){t=null}if(t&&r){var n={},o={};t(o,"length",{"[[Get]]":function(){throw n},"[[Enumerable]]":!0}),e.exports=function(e){try{r(e,o)}catch(e){return e===n}}}else e.exports=function(e){return"function"==typeof e&&!!e.prototype}})),go=L("%Array%"),wo=L("%Symbol.species%",!0),To=L("%TypeError%"),bo=L("%TypeError%"),So=function(e,r){for(var t=0;t<e.length;t+=1)r(e[t],t,e)},Eo=L("%Reflect.ownKeys%",!0),Io=V.apply(L("%Array.prototype.push%")),Do=H("Symbol.prototype.valueOf",!0),Oo=L("%Object.getOwnPropertyNames%",!0),Ao=Do?L("%Object.getOwnPropertySymbols%"):null,jo=Eo||function(e){var r=(Oo||en)(e);return Ao&&Io(r,Ao(e)),r},Po=L("%TypeError%"),ko=function(e,r,t){if("Object"!==Re(e))throw new Po("Assertion failed: Type(O) is not Object");if(!qr(r))throw new Po("Assertion failed: IsPropertyKey(P) is not true");var n=so(e,r),o=!n||Fn(e);return!(n&&(!n["[[Writable]]"]||!n["[[Configurable]]"])||!o)&&Gn(jn,Yn,_n,e,r,{"[[Configurable]]":!0,"[[Enumerable]]":!0,"[[Value]]":t,"[[Writable]]":!0})},Ro=H("Object.prototype.propertyIsEnumerable"),Mo=L("%TypeError%"),No=function(e,r,t){if("Object"!==Re(e))throw new Mo("Assertion failed: Type(O) is not Object");if(!qr(r))throw new Mo("Assertion failed: IsPropertyKey(P) is not true");var n=ko(e,r,t);if(!n)throw new Mo("unable to create data property");return n},Fo=L("%TypeError%"),Co=H("String.prototype.replace"),xo=L("%TypeError%"),Yo=function(e){return e>=0?1:-1},Bo=L("%Math%"),Uo=Bo.floor,Zo=Bo.abs,qo=function(e){return function(e){var r=function(e){return+e}(e);return Me(r)?0:0!==r&&Fe(r)?Yo(r)*Uo(Zo(r)):r}(ke(e))},Lo=function(e){var r=qo(e);return r<=0?0:r>Qr?Qr:r},Go=L("%TypeError%"),Wo=H("Array.prototype.indexOf",!0)||H("String.prototype.indexOf"),_o=H("Array.prototype.push"),Vo=L("%TypeError%"),$o={HoursPerDay:24,MinutesPerHour:60,SecondsPerMinute:60,msPerSecond:1e3,msPerMinute:6e4,msPerHour:36e5,msPerDay:864e5},zo=L("%Math.floor%"),Jo=$o.msPerDay,Ho=function(e){return zo(e/Jo)},Ko=L("%Math.floor%"),Xo=function(e){return 365*(e-1970)+Ko((e-1969)/4)-Ko((e-1901)/100)+Ko((e-1601)/400)},Qo=L("%Date%"),ei=H("Date.prototype.getUTCFullYear"),ri=function(e){return ei(new Qo(e))},ti=function(e){return Ho(e)-Xo(ri(e))},ni=Math.floor,oi=function(e,r){var t=e%r;return ni(t>=0?t:t+r)},ii=function(e){return 0!==oi(e,4)?365:0!==oi(e,100)?366:0!==oi(e,400)?365:366},ai=L("%EvalError%"),si=function(e){var r=ii(ri(e));if(365===r)return 0;if(366===r)return 1;throw new ai("Assertion failed: there are not 365 or 366 days in a year, got: "+r)},ui=function(e){var r=ti(e);if(0<=r&&r<31)return 0;var t=si(e);return 31<=r&&r<59+t?1:59+t<=r&&r<90+t?2:90+t<=r&&r<120+t?3:120+t<=r&&r<151+t?4:151+t<=r&&r<181+t?5:181+t<=r&&r<212+t?6:212+t<=r&&r<243+t?7:243+t<=r&&r<273+t?8:273+t<=r&&r<304+t?9:304+t<=r&&r<334+t?10:334+t<=r&&r<365+t?11:void 0},li=L("%EvalError%"),ci=function(e){var r=ui(e),t=ti(e);if(0===r)return t+1;if(1===r)return t-30;var n=si(e);if(2===r)return t-58-n;if(3===r)return t-89-n;if(4===r)return t-119-n;if(5===r)return t-150-n;if(6===r)return t-180-n;if(7===r)return t-211-n;if(8===r)return t-242-n;if(9===r)return t-272-n;if(10===r)return t-303-n;if(11===r)return t-333-n;throw new li("Assertion failed: MonthFromTime returned an impossible value: "+r)},fi=H("String.prototype.slice"),pi=function(e,r){return fi("00"+e,-(r||2))},hi=function(e){return oi(Ho(e)+4,7)},yi=L("%TypeError%"),mi=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],di=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],vi=L("%TypeError%"),gi=L("%TypeError%"),wi=H("Object.prototype.propertyIsEnumerable"),Ti=V.apply(L("%Array.prototype.push%")),bi=L("%TypeError%"),Si=function(e,r){if("Object"!==Re(e))throw new bi("Assertion failed: `O` must be an Object");if(!qr(r))throw new bi("Assertion failed: `P` must be a Property Key");return r in e},Ei=L("%TypeError%"),Ii=I(),Di=L("%TypeError%"),Oi=L("%Object.getOwnPropertyNames%"),Ai=Ii&&L("%Object.getOwnPropertySymbols%"),ji=L("%Function%"),Pi=L("%TypeError%"),ki=L("%TypeError%"),Ri=H("String.prototype.charAt"),Mi=H("String.prototype.slice"),Ni=H("String.prototype.indexOf"),Fi=parseInt,Ci=X(/^[0-9]$/),xi=0 in[void 0],Yi=function(e,r,t){return"String"===Re(e)||(xi?!(r in t):"Undefined"===Re(e))},Bi=L("%TypeError%"),Ui=L("%Math.floor%"),Zi=$o.msPerHour,qi=$o.HoursPerDay,Li=function(e){return oi(Ui(e/Zi),qi)},Gi=L("%TypeError%"),Wi=function(e,r){if(!1===lt(e))return!1;if("Object"!==Re(r))return!1;var t=Gr(e,"prototype");if("Object"!==Re(t))throw new Gi("OrdinaryHasInstance called on an object with an invalid prototype property.");return r instanceof e},_i=L("%TypeError%"),Vi=L("Symbol.hasInstance",!0),$i=L("%Symbol.isConcatSpreadable%",!0),zi=H("Promise.prototype.then",!0),Ji=L("%TypeError%"),Hi=H("Array.prototype.push"),Ki=$o.msPerDay,Xi=L("%Math.floor%"),Qi=L("%Date.UTC%"),ea=$o.msPerSecond,ra=$o.msPerMinute,ta=$o.msPerHour,na=L("%Math.floor%"),oa=$o.msPerMinute,ia=$o.MinutesPerHour,aa=function(e){return oi(na(e/oa),ia)},sa=$o.msPerSecond,ua=L("%String%"),la=L("%Object.create%",!0),ca=L("%TypeError%"),fa=L("%SyntaxError%"),pa=!({__proto__:null}instanceof Object),ha=L("%Object.getPrototypeOf%",!0),ya=L("%Array.prototype%"),ma=ha||([].__proto__===ya?function(e){return e.__proto__}:null),da=L("%TypeError%"),va=function(e){if("Object"!==Re(e))throw new da("Assertion failed: O must be an Object");if(!ma)throw new da("This environment does not support fetching prototypes.");return ma(e)},ga=L("%Object.setPrototypeOf%",!0),wa=L("%Array.prototype%"),Ta=ga||([].__proto__!==wa?null:function(e,r){return e.__proto__=r,e}),ba=L("%TypeError%"),Sa=L("%TypeError%"),Ea=H("Promise.resolve",!0),Ia=L("%TypeError%"),Da=H("RegExp.prototype.exec"),Oa=L("%TypeError%"),Aa=function(e,r){return e===r||Me(e)&&Me(r)},ja=L("%Math.floor%"),Pa=$o.msPerSecond,ka=$o.SecondsPerMinute,Ra=function(e){return oi(ja(e/Pa),ka)},Ma=L("%TypeError%"),Na=function(){try{return delete[].length,!0}catch(e){return!1}}();try{eo=Function("s","return { [s]() {} }[s].name;")}catch(e){}var Fa=eo&&"inferred"===function(){}.name?eo:null,Ca=L("%SyntaxError%"),xa=L("%Symbol.keyFor%",!0),Ya=H("%Symbol.prototype.valueOf%",!0),Ba=H("Symbol.prototype.toString",!0),Ua=H("%Symbol.prototype.description%",!0)||function(e){if(!Ya)throw new Ca("Symbols are not supported in this environment");var r,t=Ya(e);if(Fa){var n=Fa(t);if(""===n)return;return n.slice(1,-1)}return xa&&"string"==typeof(r=xa(t))?r:(r=Ba(t).slice(7,-1))||void 0},Za=L("%TypeError%"),qa=L("%SyntaxError%"),La=L("%TypeError%"),Ga=L("%Object.preventExtensions%"),Wa=L("%Object.getOwnPropertyNames%"),_a=L("%Symbol.species%",!0),Va=L("%TypeError%"),$a=L("%TypeError%"),za=H("Symbol.prototype.toString",!0),Ja=L("%Object.getOwnPropertyNames%"),Ha=L("%TypeError%"),Ka=H("Boolean.prototype.valueOf"),Xa=H("Number.prototype.valueOf"),Qa=H("String.prototype.valueOf"),es=H("Symbol.prototype.valueOf",!0),rs=H("Date.prototype.valueOf"),ts=function(e){return rs(e)},ns=L("%Date%"),os=L("%Number%"),is=L("%Math.abs%"),as=$o.msPerDay,ss=L("%TypeError%"),us=$o.msPerDay,ls=L("%TypeError%"),cs=L("%Date%"),fs=L("%RangeError%"),ps=L("%Math%"),hs=ps.floor,ys=ps.abs,ms=function(e){var r=ke(e);if(Me(r)||0===r||!Fe(r))return 0;var t=Yo(r)*hs(ys(r));return oi(t,65536)},ds=L("%Math%"),vs=ds.floor,gs=ds.abs,ws=function(e){var r=ke(e);if(Me(r)||0===r||!Fe(r))return 0;var t=Yo(r)*vs(gs(r));return oi(t,256)},Ts=L("%String%"),bs=L("%Math%").floor,Ss=V(String.prototype.replace),Es=/^[\x09\x0A\x0B\x0C\x0D\x20\xA0\u1680\u180E\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200A\u202F\u205F\u3000\u2028\u2029\uFEFF]*/,Is=function(){return Ss(this,Es,"")},Ds=function(){if(!String.prototype.trimStart&&!String.prototype.trimLeft)return Is;return"​"!==("​".trimStart?"​".trimStart():"​".trimLeft())?Is:String.prototype.trimStart||String.prototype.trimLeft},Os=V(Ds());ln(Os,{getPolyfill:Ds,implementation:Is,shim:function(){var e=Ds();return ln(String.prototype,{trimStart:e},{trimStart:function(){return String.prototype.trimStart!==e}}),e}});var As=Os,js=H("String.prototype.replace"),Ps=/[\x09\x0A\x0B\x0C\x0D\x20\xA0\u1680\u180E\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200A\u202F\u205F\u3000\u2028\u2029\uFEFF]*$/,ks=function(){return js(this,Ps,"")},Rs=function(){if(!String.prototype.trimEnd&&!String.prototype.trimRight)return ks;return"​"!==("​".trimEnd?"​".trimEnd():"​".trimRight())?ks:String.prototype.trimEnd||String.prototype.trimRight},Ms=V(Rs());ln(Ms,{getPolyfill:Rs,implementation:ks,shim:function(){var e=Rs();return ln(String.prototype,{trimEnd:e},{trimEnd:function(){return String.prototype.trimEnd!==e}}),e}});var Ns=Ms,Fs=L("%TypeError%"),Cs={"Abstract Equality Comparison":function e(r,t){var n=Re(r),o=Re(t);return n===o?r===t:null==r&&null==t||("Number"===n&&"String"===o?e(r,ke(t)):"String"===n&&"Number"===o||"Boolean"===n?e(ke(r),t):"Boolean"===o?e(r,ke(t)):"String"!==n&&"Number"!==n&&"Symbol"!==n||"Object"!==o?"Object"===n&&("String"===o||"Number"===o||"Symbol"===o)&&e(ve(r),t):e(r,ve(t)))},"Abstract Relational Comparison":function(e,r,t){if("Boolean"!==Re(t))throw new Be("Assertion failed: LeftFirst argument must be a Boolean");var n,o;if(t?(n=ve(e,Ye),o=ve(r,Ye)):(o=ve(r,Ye),n=ve(e,Ye)),!("String"===Re(n)&&"String"===Re(o))){var i=ke(n),a=ke(o);if(Me(i)||Me(a))return;return(!Fe(i)||!Fe(a)||i!==a)&&((0!==i||0!==a)&&(i!==1/0&&(a===1/0||a!==-1/0&&(i===-1/0||i<a))))}return!xe(o,n)&&(!!xe(n,o)||n<o)},"Strict Equality Comparison":function(e,r){var t=Re(e);return t===Re(r)&&("Undefined"===t||"Null"===t||e===r)},AddEntriesFromIterable:function(e,r,t){if(!lt(t))throw new kt("Assertion failed: `adder` is not callable");if(null==r)throw new kt("Assertion failed: `iterable` is present, and not nullish");for(var n=dt(r);;){var o=At(n);if(!o)return e;var i=Pt(o);if("Object"!==Re(i)){var a=new kt("iterator next must return an Object, got "+Er(i));return gt(n,(function(){throw a}))}try{var s=Gr(i,"0"),u=Gr(i,"1");Zr(t,e,[s,u])}catch(e){return gt(n,(function(){throw e}))}}},AdvanceStringIndex:tt,ArrayCreate:function(e){if(!Kr(e)||e<0)throw new Ft("Assertion failed: `length` must be an integer Number >= 0");if(e>Ct)throw new Mt("length is greater than (2**32 - 1)");var r=arguments.length>1?arguments[1]:Rt,t=[];if(r!==Rt){if(!xt)throw new Nt("ArrayCreate: a `proto` argument that is not `Array.prototype` is not supported in an environment that does not support setting the [[Prototype]]");xt(t,r)}return 0!==e&&(t.length=e),t},ArraySetLength:function(e,r){if(!yt(e))throw new ho("Assertion failed: A must be an Array");if(!Sn({Type:Re,IsDataDescriptor:jn,IsAccessorDescriptor:An},r))throw new ho("Assertion failed: Desc must be a Property Descriptor");if(!("[[Value]]"in r))return Kn(e,"length",r);var t=wn({},r),n=fo(r["[[Value]]"]);if(n!==ke(r["[[Value]]"]))throw new po("Invalid array length");t["[[Value]]"]=n;var o=so(e,"length");if(!jn(o))throw new ho("Assertion failed: an array had a non-data descriptor on `length`");var i,a=o["[[Value]]"];if(n>=a)return Kn(e,"length",t);if(!o["[[Writable]]"])return!1;if(!("[[Writable]]"in t)||t["[[Writable]]"]?i=!0:(i=!1,t["[[Writable]]"]=!0),!Kn(e,"length",t))return!1;for(;n<a;){if(!delete e[co(a-=1)]&&(t["[[Value]]"]=a+1,!i))return t["[[Writable]]"]=!1,Kn(e,"length",t),!1}return!!i||Kn(e,"length",{"[[Writable]]":!1})},ArraySpeciesCreate:function(e,r){if(!Kr(r)||r<0)throw new To("Assertion failed: length must be an integer >= 0");var t,n=0===r?0:r;if(yt(e)&&(t=Gr(e,"constructor"),wo&&"Object"===Re(t)&&null===(t=Gr(t,wo))&&(t=void 0)),void 0===t)return go(n);if(!vo(t))throw new To("C must be a constructor");return new t(n)},Call:Zr,CanonicalNumericIndexString:function(e){if("String"!==Re(e))throw new bo("Assertion failed: `argument` must be a String");if("-0"===e)return-0;var r=ke(e);return Yn(co(r),e)?r:void 0},CompletePropertyDescriptor:function(e){return On(Re,"Property Descriptor","Desc",e),Vn(e)||jn(e)?(Tn(e,"[[Value]]")||(e["[[Value]]"]=void 0),Tn(e,"[[Writable]]")||(e["[[Writable]]"]=!1)):(Tn(e,"[[Get]]")||(e["[[Get]]"]=void 0),Tn(e,"[[Set]]")||(e["[[Set]]"]=void 0)),Tn(e,"[[Enumerable]]")||(e["[[Enumerable]]"]=!1),Tn(e,"[[Configurable]]")||(e["[[Configurable]]"]=!1),e},CopyDataProperties:function(e,r,t){if("Object"!==Re(e))throw new TypeError('Assertion failed: "target" must be an Object');if(!yt(t))throw new TypeError('Assertion failed: "excludedItems" must be a List of Property Keys');for(var n=0;n<t.length;n+=1)if(!qr(t[n]))throw new TypeError('Assertion failed: "excludedItems" must be a List of Property Keys');if(null==r)return e;var o=at(r),i=jo(o);return So(i,(function(n){var i=!1;So(t,(function(e){!0===Yn(e,n)&&(i=!0)}));var a=Ro(o,n)||"string"==typeof r&&n>=0&&Kr(ke(n));if(!1===i&&a){var s=Gr(o,n);ko(e,n,s)}})),e},CreateDataProperty:ko,CreateDataPropertyOrThrow:No,CreateHTML:function(e,r,t,n){if("String"!==Re(r)||"String"!==Re(t))throw new Fo("Assertion failed: `tag` and `attribute` must be strings");var o=ot(e),i=co(o),a="<"+r;if(""!==t){var s=co(n);a+=" "+t+'="'+Co(s,/\x22/g,"&quot;")+'"'}return a+">"+i+"</"+r+">"},CreateIterResultObject:function(e,r){if("Boolean"!==Re(r))throw new xo("Assertion failed: Type(done) is not Boolean");return{value:e,done:r}},CreateListFromArrayLike:function(e){var r=arguments.length>1?arguments[1]:["Undefined","Null","Boolean","String","Symbol","Number","Object"];if("Object"!==Re(e))throw new Go("Assertion failed: `obj` must be an Object");if(!yt(r))throw new Go("Assertion failed: `elementTypes`, if provided, must be an array");for(var t=Lo(Gr(e,"length")),n=[],o=0;o<t;){var i=co(o),a=Gr(e,i),s=Re(a);if(Wo(r,s)<0)throw new Go("item type "+s+" is not a valid elementType");_o(n,a),o+=1}return n},CreateMethodProperty:function(e,r,t){if("Object"!==Re(e))throw new Vo("Assertion failed: Type(O) is not Object");if(!qr(r))throw new Vo("Assertion failed: IsPropertyKey(P) is not true");return Gn(jn,Yn,_n,e,r,{"[[Configurable]]":!0,"[[Enumerable]]":!1,"[[Value]]":t,"[[Writable]]":!0})},DateFromTime:ci,DateString:function(e){if("Number"!==Re(e)||Me(e))throw new yi("Assertion failed: `tv` must be a non-NaN Number");return mi[hi(e)]+" "+di[ui(e)]+" "+pi(ci(e))+" "+pi(ri(e),4)},Day:Ho,DayFromYear:Xo,DaysInYear:ii,DayWithinYear:ti,DefinePropertyOrThrow:mo,DeletePropertyOrThrow:function(e,r){if("Object"!==Re(e))throw new vi("Assertion failed: Type(O) is not Object");if(!qr(r))throw new vi("Assertion failed: IsPropertyKey(P) is not true");var t=delete e[r];if(!t)throw new vi("Attempt to delete property failed.");return t},EnumerableOwnPropertyNames:function(e,r){if("Object"!==Re(e))throw new gi("Assertion failed: Type(O) is not Object");var t=en(e);if("key"===r)return t;if("value"===r||"key+value"===r){var n=[];return So(t,(function(t){wi(e,t)&&Ti(n,["value"===r?e[t]:[t,e[t]]])})),n}throw new gi('Assertion failed: "kind" is not "key", "value", or "key+value": '+r)},FlattenIntoArray:function e(r,t,n,o,i){var a;arguments.length>5&&(a=arguments[5]);for(var s=o,u=0;u<n;){var l=co(u),c=Si(t,l);if(!0===c){var f=Gr(t,l);if(void 0!==a){if(arguments.length<=6)throw new Ei("Assertion failed: thisArg is required when mapperFunction is provided");f=Zr(a,arguments[6],[f,u,t])}var p=!1;if(i>0&&(p=yt(f)),p){var h=Lo(Gr(f,"length"));s=e(r,f,h,s,i-1)}else{if(s>=Qr)throw new Ei("index too large");No(r,co(s),f),s+=1}}u+=1}return s},FromPropertyDescriptor:_n,Get:Gr,GetIterator:dt,GetMethod:ft,GetOwnPropertyKeys:function(e,r){if("Object"!==Re(e))throw new Di("Assertion failed: Type(O) is not Object");if("Symbol"===r)return Ai?Ai(e):[];if("String"===r)return Oi?Oi(e):en(e);throw new Di('Assertion failed: `Type` must be `"String"` or `"Symbol"`')},GetPrototypeFromConstructor:function(e,r){var t=L(r);if(!vo(e))throw new Pi("Assertion failed: `constructor` must be a constructor");var n=Gr(e,"prototype");if("Object"!==Re(n)){if(!(e instanceof ji))throw new Pi("cross-realm constructors not currently supported");n=t}return n},GetSubstitution:function(e,r,t,n,o,i){if("String"!==Re(e))throw new ki("Assertion failed: `matched` must be a String");var a=e.length;if("String"!==Re(r))throw new ki("Assertion failed: `str` must be a String");var s=r.length;if(!Kr(t)||t<0||t>s)throw new ki("Assertion failed: `position` must be a nonnegative integer, and less than or equal to the length of `string`, got "+Er(t));if(!yt(n)||!Wn(n,Yi))throw new ki("Assertion failed: `captures` must be a List of Strings, got "+Er(n));if("String"!==Re(i))throw new ki("Assertion failed: `replacement` must be a String");var u=t+a,l=n.length;"Undefined"!==Re(o)&&(o=at(o));for(var c="",f=0;f<i.length;f+=1){var p=Ri(i,f),h=f+1>=i.length,y=f+2>=i.length;if("$"!==p||h)c+=Ri(i,f);else{var m=Ri(i,f+1);if("$"===m)c+="$",f+=1;else if("&"===m)c+=e,f+=1;else if("`"===m)c+=0===t?"":Mi(r,0,t-1),f+=1;else if("'"===m)c+=u>=s?"":Mi(r,u),f+=1;else{var d=y?null:Ri(i,f+2);if(!Ci(m)||"0"===m||!y&&Ci(d))if(Ci(m)&&(y||Ci(d))){var v=m+d,g=Fi(v,10)-1;c+=v<=l&&"Undefined"===Re(n[g])?"":n[g],f+=2}else if("<"===m)if("Undefined"===Re(o))c+="$<",f+=2;else{var w=Ni(i,">",f);if(w>-1){var T=Mi(i,f,w),b=Gr(o,T);"Undefined"!==Re(b)&&(c+=co(b)),f+="$<"+T+">".length}}else c+="$";else{var S=Fi(m,10);c+=S<=l&&"Undefined"===Re(n[S-1])?"":n[S-1],f+=1}}}}return c},GetV:ut,HasOwnProperty:function(e,r){if("Object"!==Re(e))throw new Bi("Assertion failed: `O` must be an Object");if(!qr(r))throw new Bi("Assertion failed: `P` must be a Property Key");return Tn(e,r)},HasProperty:Si,HourFromTime:Li,InLeapYear:si,InstanceofOperator:function(e,r){if("Object"!==Re(e))throw new _i("Assertion failed: Type(O) is not Object");var t=Vi?ft(r,Vi):void 0;if(void 0!==t)return wt(Zr(t,r,[e]));if(!lt(r))throw new _i("`C` is not Callable");return Wi(r,e)},Invoke:It,IsAccessorDescriptor:An,IsArray:yt,IsCallable:lt,IsConcatSpreadable:function(e){if("Object"!==Re(e))return!1;if($i){var r=Gr(e,$i);if(void 0!==r)return wt(r)}return yt(e)},IsConstructor:vo,IsDataDescriptor:jn,IsExtensible:Fn,IsGenericDescriptor:Vn,IsInteger:Kr,IsPromise:function(e){if("Object"!==Re(e))return!1;if(!zi)return!1;try{zi(e)}catch(e){return!1}return!0},IsPropertyKey:qr,IsRegExp:oo,IsStringPrefix:function(e,r){if("String"!==Re(e))throw new Ji('Assertion failed: "p" must be a String');if("String"!==Re(r))throw new Ji('Assertion failed: "q" must be a String');return xe(e,r)},IterableToList:function(e,r){for(var t=dt(e,r),n=[],o=!0;o;)if(o=At(t)){var i=Pt(o);Hi(n,i)}return n},IteratorClose:gt,IteratorComplete:bt,IteratorNext:Ot,IteratorStep:At,IteratorValue:Pt,MakeDate:function(e,r){return Fe(e)&&Fe(r)?e*Ki+r:NaN},MakeDay:function(e,r,t){if(!Fe(e)||!Fe(r)||!Fe(t))return NaN;var n=qo(e),o=qo(r),i=qo(t),a=n+Xi(o/12),s=oi(o,12),u=Qi(a,s,1);return ri(u)!==a||ui(u)!==s||1!==ci(u)?NaN:Ho(u)+i-1},MakeTime:function(e,r,t,n){if(!(Fe(e)&&Fe(r)&&Fe(t)&&Fe(n)))return NaN;var o=qo(e),i=qo(r),a=qo(t),s=qo(n);return o*ta+i*ra+a*ea+s},MinFromTime:aa,modulo:function(e,r){return oi(e,r)},MonthFromTime:ui,msFromTime:function(e){return oi(e,sa)},NumberToString:function(e){if("Number"!==Re(e))throw new TypeError('Assertion failed: "m" must be a String');return ua(e)},ObjectCreate:function(e,r){if(null!==e&&"Object"!==Re(e))throw new ca("Assertion failed: `proto` must be null or an object");var t=arguments.length<2?[]:r;if(t.length>0)throw new fa("es-abstract does not yet support internal slots");if(la)return la(e);if(pa)return{__proto__:e};if(null===e)throw new fa("native Object.create support is required to create null objects");var n=function(){};return n.prototype=e,new n},OrdinaryDefineOwnProperty:Kn,OrdinaryGetOwnProperty:so,OrdinaryGetPrototypeOf:va,OrdinarySetPrototypeOf:function(e,r){if("Object"!==Re(r)&&"Null"!==Re(r))throw new ba("Assertion failed: V must be Object or Null");try{Ta(e,r)}catch(e){return!1}return va(e)===r},OrdinaryHasInstance:Wi,OrdinaryHasProperty:function(e,r){if("Object"!==Re(e))throw new Sa("Assertion failed: Type(O) is not Object");if(!qr(r))throw new Sa("Assertion failed: P must be a Property Key");return r in e},PromiseResolve:function(e,r){if(!Ea)throw new SyntaxError("This environment does not support Promises.");return Ea(e,r)},RegExpExec:function(e,r){if("Object"!==Re(e))throw new Ia("Assertion failed: `R` must be an Object");if("String"!==Re(r))throw new Ia("Assertion failed: `S` must be a String");var t=Gr(e,"exec");if(lt(t)){var n=Zr(t,e,[r]);if(null===n||"Object"===Re(n))return n;throw new Ia('"exec" method must return `null` or an Object')}return Da(e,r)},RequireObjectCoercible:ot,SameValue:Yn,SameValueNonNumber:function(e,t){if("number"==typeof e||r(e)!==r(t))throw new Oa("SameValueNonNumber requires two non-number values of the same type.");return Yn(e,t)},SameValueZero:Aa,SecFromTime:Ra,Set:function(e,r,t,n){if("Object"!==Re(e))throw new Ma("Assertion failed: `O` must be an Object");if(!qr(r))throw new Ma("Assertion failed: `P` must be a Property Key");if("Boolean"!==Re(n))throw new Ma("Assertion failed: `Throw` must be a Boolean");if(n){if(e[r]=t,Na&&!Yn(e[r],t))throw new Ma("Attempted to assign to readonly property.");return!0}try{return e[r]=t,!Na||Yn(e[r],t)}catch(e){return!1}},SetFunctionName:function(e,r){if("function"!=typeof e)throw new Za("Assertion failed: `F` must be a function");if(!Fn(e)||Tn(e,"name"))throw new Za("Assertion failed: `F` must be extensible, and must not have a `name` own property");var t=Re(r);if("Symbol"!==t&&"String"!==t)throw new Za("Assertion failed: `name` must be a Symbol or a String");if("Symbol"===t){var n=Ua(r);r=void 0===n?"":"["+n+"]"}if(arguments.length>2){var o=arguments[2];r=o+" "+r}return mo(e,"name",{"[[Value]]":r,"[[Writable]]":!1,"[[Enumerable]]":!1,"[[Configurable]]":!0})},SetIntegrityLevel:function(e,r){if("Object"!==Re(e))throw new La("Assertion failed: Type(O) is not Object");if("sealed"!==r&&"frozen"!==r)throw new La('Assertion failed: `level` must be `"sealed"` or `"frozen"`');if(!Ga)throw new qa("SetIntegrityLevel requires native `Object.preventExtensions` support");if(!Ga(e))return!1;if(!Wa)throw new qa("SetIntegrityLevel requires native `Object.getOwnPropertyNames` support");var t=Wa(e);return"sealed"===r?So(t,(function(r){mo(e,r,{configurable:!1})})):"frozen"===r&&So(t,(function(r){var t,n=kn(e,r);void 0!==n&&(t=An(xn(n))?{configurable:!1}:{configurable:!1,writable:!1},mo(e,r,t))})),!0},SpeciesConstructor:function(e,r){if("Object"!==Re(e))throw new Va("Assertion failed: Type(O) is not Object");var t=e.constructor;if(void 0===t)return r;if("Object"!==Re(t))throw new Va("O.constructor is not an Object");var n=_a?t[_a]:void 0;if(null==n)return r;if(vo(n))return n;throw new Va("no constructor found")},SymbolDescriptiveString:function(e){if("Symbol"!==Re(e))throw new $a("Assertion failed: `sym` must be a Symbol");return za(e)},TestIntegrityLevel:function(e,r){if("Object"!==Re(e))throw new Ha("Assertion failed: Type(O) is not Object");if("sealed"!==r&&"frozen"!==r)throw new Ha('Assertion failed: `level` must be `"sealed"` or `"frozen"`');if(Fn(e))return!1;var t=Ja(e);return 0===t.length||Wn(t,(function(t){var n=kn(e,t);if(void 0!==n){if(n.configurable)return!1;if("frozen"===r&&jn(xn(n))&&n.writable)return!1}return!0}))},thisBooleanValue:function(e){return"Boolean"===Re(e)?e:Ka(e)},thisNumberValue:function(e){return"Number"===Re(e)?e:Xa(e)},thisStringValue:function(e){return"String"===Re(e)?e:Qa(e)},thisSymbolValue:function(e){if(!es)throw new SyntaxError("Symbols are not supported; thisSymbolValue requires that `value` be a Symbol or a Symbol object");return"Symbol"===Re(e)?e:es(e)},thisTimeValue:ts,TimeClip:function(e){return!Fe(e)||is(e)>864e13?NaN:os(new ns(ke(e)))},TimeFromYear:function(e){return as*Xo(e)},TimeString:function(e){if("Number"!==Re(e)||Me(e))throw new ss("Assertion failed: `tv` must be a non-NaN Number");var r=Li(e),t=aa(e),n=Ra(e);return pi(r)+":"+pi(t)+":"+pi(n)+" GMT"},TimeWithinDay:function(e){return oi(e,us)},ToBoolean:wt,ToDateString:function(e){if("Number"!==Re(e))throw new ls("Assertion failed: `tv` must be a Number");return Me(e)?"Invalid Date":cs(e)},ToIndex:function(e){if(void 0===e)return 0;var r=qo(e);if(r<0)throw new fs("index must be >= 0");var t=Lo(r);if(!Aa(r,t))throw new fs("index must be >= 0 and < 2 ** 53 - 1");return t},ToInt16:function(e){var r=ms(e);return r>=32768?r-65536:r},ToInt32:function(e){return ke(e)>>0},ToInt8:function(e){var r=ws(e);return r>=128?r-256:r},ToInteger:qo,ToLength:Lo,ToNumber:ke,ToObject:at,ToPrimitive:ve,ToPropertyDescriptor:xn,ToPropertyKey:function(e){var t=ve(e,Ts);return"symbol"===r(t)?t:co(t)},ToString:co,ToUint16:ms,ToUint32:fo,ToUint8:ws,ToUint8Clamp:function(e){var r=ke(e);if(Me(r)||r<=0)return 0;if(r>=255)return 255;var t=bs(e);return t+.5<r?t+1:r<t+.5?t:t%2!=0?t+1:t},TrimString:function(e,r){var t,n=ot(e),o=co(n);if("start"===r)t=As(o);else if("end"===r)t=Ns(o);else{if("start+end"!==r)throw new Fs('Assertion failed: invalid `where` value; must be "start", "end", or "start+end"');t=As(Ns(o))}return t},Type:Re,ValidateAndApplyPropertyDescriptor:zn,WeekDay:hi,YearFromTime:ri},xs=b((function(e){var r=function(e){var t=1e7,n=9007199254740992,o=f(n),i="function"==typeof BigInt;function a(e,r,t,n){return void 0===e?a[0]:void 0!==r&&(10!=+r||t)?Z(e,r,t,n):_(e)}function s(e,r){this.value=e,this.sign=r,this.isSmall=!1}function u(e){this.value=e,this.sign=e<0,this.isSmall=!0}function l(e){this.value=e}function c(e){return-n<e&&e<n}function f(e){return e<1e7?[e]:e<1e14?[e%1e7,Math.floor(e/1e7)]:[e%1e7,Math.floor(e/1e7)%1e7,Math.floor(e/1e14)]}function p(e){h(e);var r=e.length;if(r<4&&j(e,o)<0)switch(r){case 0:return 0;case 1:return e[0];case 2:return e[0]+e[1]*t;default:return e[0]+(e[1]+e[2]*t)*t}return e}function h(e){for(var r=e.length;0===e[--r];);e.length=r+1}function y(e){for(var r=new Array(e),t=-1;++t<e;)r[t]=0;return r}function m(e){return e>0?Math.floor(e):Math.ceil(e)}function d(e,r){var n,o,i=e.length,a=r.length,s=new Array(i),u=0,l=t;for(o=0;o<a;o++)u=(n=e[o]+r[o]+u)>=l?1:0,s[o]=n-u*l;for(;o<i;)u=(n=e[o]+u)===l?1:0,s[o++]=n-u*l;return u>0&&s.push(u),s}function v(e,r){return e.length>=r.length?d(e,r):d(r,e)}function g(e,r){var n,o,i=e.length,a=new Array(i),s=t;for(o=0;o<i;o++)n=e[o]-s+r,r=Math.floor(n/s),a[o]=n-r*s,r+=1;for(;r>0;)a[o++]=r%s,r=Math.floor(r/s);return a}function w(e,r){var t,n,o=e.length,i=r.length,a=new Array(o),s=0;for(t=0;t<i;t++)(n=e[t]-s-r[t])<0?(n+=1e7,s=1):s=0,a[t]=n;for(t=i;t<o;t++){if(!((n=e[t]-s)<0)){a[t++]=n;break}n+=1e7,a[t]=n}for(;t<o;t++)a[t]=e[t];return h(a),a}function T(e,r,t){var n,o,i=e.length,a=new Array(i),l=-r;for(n=0;n<i;n++)o=e[n]+l,l=Math.floor(o/1e7),o%=1e7,a[n]=o<0?o+1e7:o;return"number"==typeof(a=p(a))?(t&&(a=-a),new u(a)):new s(a,t)}function b(e,r){var t,n,o,i,a=e.length,s=r.length,u=y(a+s);for(o=0;o<a;++o){i=e[o];for(var l=0;l<s;++l)t=i*r[l]+u[o+l],n=Math.floor(t/1e7),u[o+l]=t-1e7*n,u[o+l+1]+=n}return h(u),u}function S(e,r){var n,o,i=e.length,a=new Array(i),s=t,u=0;for(o=0;o<i;o++)n=e[o]*r+u,u=Math.floor(n/s),a[o]=n-u*s;for(;u>0;)a[o++]=u%s,u=Math.floor(u/s);return a}function E(e,r){for(var t=[];r-- >0;)t.push(0);return t.concat(e)}function I(e,r,n){return new s(e<t?S(r,e):b(r,f(e)),n)}function D(e){var r,t,n,o,i=e.length,a=y(i+i);for(n=0;n<i;n++){t=0-(o=e[n])*o;for(var s=n;s<i;s++)r=o*e[s]*2+a[n+s]+t,t=Math.floor(r/1e7),a[n+s]=r-1e7*t;a[n+i]=t}return h(a),a}function O(e,r){var t,n,o,i,a=e.length,s=y(a);for(o=0,t=a-1;t>=0;--t)o=(i=1e7*o+e[t])-(n=m(i/r))*r,s[t]=0|n;return[s,0|o]}function A(e,r){var n,o=_(r);if(i)return[new l(e.value/o.value),new l(e.value%o.value)];var c,d=e.value,v=o.value;if(0===v)throw new Error("Cannot divide by zero");if(e.isSmall)return o.isSmall?[new u(m(d/v)),new u(d%v)]:[a[0],e];if(o.isSmall){if(1===v)return[e,a[0]];if(-1==v)return[e.negate(),a[0]];var g=Math.abs(v);if(g<t){c=p((n=O(d,g))[0]);var T=n[1];return e.sign&&(T=-T),"number"==typeof c?(e.sign!==o.sign&&(c=-c),[new u(c),new u(T)]):[new s(c,e.sign!==o.sign),new u(T)]}v=f(g)}var b=j(d,v);if(-1===b)return[a[0],e];if(0===b)return[a[e.sign===o.sign?1:-1],a[0]];c=(n=d.length+v.length<=200?function(e,r){var n,o,i,a,s,u,l,c=e.length,f=r.length,h=t,m=y(r.length),d=r[f-1],v=Math.ceil(h/(2*d)),g=S(e,v),w=S(r,v);for(g.length<=c&&g.push(0),w.push(0),d=w[f-1],o=c-f;o>=0;o--){for(n=h-1,g[o+f]!==d&&(n=Math.floor((g[o+f]*h+g[o+f-1])/d)),i=0,a=0,u=w.length,s=0;s<u;s++)i+=n*w[s],l=Math.floor(i/h),a+=g[o+s]-(i-l*h),i=l,a<0?(g[o+s]=a+h,a=-1):(g[o+s]=a,a=0);for(;0!==a;){for(n-=1,i=0,s=0;s<u;s++)(i+=g[o+s]-h+w[s])<0?(g[o+s]=i+h,i=0):(g[o+s]=i,i=1);a+=i}m[o]=n}return g=O(g,v)[0],[p(m),p(g)]}(d,v):function(e,r){for(var t,n,o,i,a,s=e.length,u=r.length,l=[],c=[];s;)if(c.unshift(e[--s]),h(c),j(c,r)<0)l.push(0);else{o=1e7*c[(n=c.length)-1]+c[n-2],i=1e7*r[u-1]+r[u-2],n>u&&(o=1e7*(o+1)),t=Math.ceil(o/i);do{if(j(a=S(r,t),c)<=0)break;t--}while(t);l.push(t),c=w(c,a)}return l.reverse(),[p(l),p(c)]}(d,v))[0];var E=e.sign!==o.sign,I=n[1],D=e.sign;return"number"==typeof c?(E&&(c=-c),c=new u(c)):c=new s(c,E),"number"==typeof I?(D&&(I=-I),I=new u(I)):I=new s(I,D),[c,I]}function j(e,r){if(e.length!==r.length)return e.length>r.length?1:-1;for(var t=e.length-1;t>=0;t--)if(e[t]!==r[t])return e[t]>r[t]?1:-1;return 0}function P(e){var r=e.abs();return!r.isUnit()&&(!!(r.equals(2)||r.equals(3)||r.equals(5))||!(r.isEven()||r.isDivisibleBy(3)||r.isDivisibleBy(5))&&(!!r.lesser(49)||void 0))}function k(e,t){for(var n,o,i,a=e.prev(),s=a,u=0;s.isEven();)s=s.divide(2),u++;e:for(o=0;o<t.length;o++)if(!e.lesser(t[o])&&!(i=r(t[o]).modPow(s,e)).isUnit()&&!i.equals(a)){for(n=u-1;0!=n;n--){if((i=i.square().mod(e)).isUnit())return!1;if(i.equals(a))continue e}return!1}return!0}s.prototype=Object.create(a.prototype),u.prototype=Object.create(a.prototype),l.prototype=Object.create(a.prototype),s.prototype.add=function(e){var r=_(e);if(this.sign!==r.sign)return this.subtract(r.negate());var t=this.value,n=r.value;return r.isSmall?new s(g(t,Math.abs(n)),this.sign):new s(v(t,n),this.sign)},s.prototype.plus=s.prototype.add,u.prototype.add=function(e){var r=_(e),t=this.value;if(t<0!==r.sign)return this.subtract(r.negate());var n=r.value;if(r.isSmall){if(c(t+n))return new u(t+n);n=f(Math.abs(n))}return new s(g(n,Math.abs(t)),t<0)},u.prototype.plus=u.prototype.add,l.prototype.add=function(e){return new l(this.value+_(e).value)},l.prototype.plus=l.prototype.add,s.prototype.subtract=function(e){var r=_(e);if(this.sign!==r.sign)return this.add(r.negate());var t=this.value,n=r.value;return r.isSmall?T(t,Math.abs(n),this.sign):function(e,r,t){var n;return j(e,r)>=0?n=w(e,r):(n=w(r,e),t=!t),"number"==typeof(n=p(n))?(t&&(n=-n),new u(n)):new s(n,t)}(t,n,this.sign)},s.prototype.minus=s.prototype.subtract,u.prototype.subtract=function(e){var r=_(e),t=this.value;if(t<0!==r.sign)return this.add(r.negate());var n=r.value;return r.isSmall?new u(t-n):T(n,Math.abs(t),t>=0)},u.prototype.minus=u.prototype.subtract,l.prototype.subtract=function(e){return new l(this.value-_(e).value)},l.prototype.minus=l.prototype.subtract,s.prototype.negate=function(){return new s(this.value,!this.sign)},u.prototype.negate=function(){var e=this.sign,r=new u(-this.value);return r.sign=!e,r},l.prototype.negate=function(){return new l(-this.value)},s.prototype.abs=function(){return new s(this.value,!1)},u.prototype.abs=function(){return new u(Math.abs(this.value))},l.prototype.abs=function(){return new l(this.value>=0?this.value:-this.value)},s.prototype.multiply=function(e){var r,n,o,i=_(e),u=this.value,l=i.value,c=this.sign!==i.sign;if(i.isSmall){if(0===l)return a[0];if(1===l)return this;if(-1===l)return this.negate();if((r=Math.abs(l))<t)return new s(S(u,r),c);l=f(r)}return n=u.length,o=l.length,new s(-.012*n-.012*o+15e-6*n*o>0?function e(r,t){var n=Math.max(r.length,t.length);if(n<=30)return b(r,t);n=Math.ceil(n/2);var o=r.slice(n),i=r.slice(0,n),a=t.slice(n),s=t.slice(0,n),u=e(i,s),l=e(o,a),c=e(v(i,o),v(s,a)),f=v(v(u,E(w(w(c,u),l),n)),E(l,2*n));return h(f),f}(u,l):b(u,l),c)},s.prototype.times=s.prototype.multiply,u.prototype._multiplyBySmall=function(e){return c(e.value*this.value)?new u(e.value*this.value):I(Math.abs(e.value),f(Math.abs(this.value)),this.sign!==e.sign)},s.prototype._multiplyBySmall=function(e){return 0===e.value?a[0]:1===e.value?this:-1===e.value?this.negate():I(Math.abs(e.value),this.value,this.sign!==e.sign)},u.prototype.multiply=function(e){return _(e)._multiplyBySmall(this)},u.prototype.times=u.prototype.multiply,l.prototype.multiply=function(e){return new l(this.value*_(e).value)},l.prototype.times=l.prototype.multiply,s.prototype.square=function(){return new s(D(this.value),!1)},u.prototype.square=function(){var e=this.value*this.value;return c(e)?new u(e):new s(D(f(Math.abs(this.value))),!1)},l.prototype.square=function(e){return new l(this.value*this.value)},s.prototype.divmod=function(e){var r=A(this,e);return{quotient:r[0],remainder:r[1]}},l.prototype.divmod=u.prototype.divmod=s.prototype.divmod,s.prototype.divide=function(e){return A(this,e)[0]},l.prototype.over=l.prototype.divide=function(e){return new l(this.value/_(e).value)},u.prototype.over=u.prototype.divide=s.prototype.over=s.prototype.divide,s.prototype.mod=function(e){return A(this,e)[1]},l.prototype.mod=l.prototype.remainder=function(e){return new l(this.value%_(e).value)},u.prototype.remainder=u.prototype.mod=s.prototype.remainder=s.prototype.mod,s.prototype.pow=function(e){var r,t,n,o=_(e),i=this.value,s=o.value;if(0===s)return a[1];if(0===i)return a[0];if(1===i)return a[1];if(-1===i)return o.isEven()?a[1]:a[-1];if(o.sign)return a[0];if(!o.isSmall)throw new Error("The exponent "+o.toString()+" is too large.");if(this.isSmall&&c(r=Math.pow(i,s)))return new u(m(r));for(t=this,n=a[1];!0&s&&(n=n.times(t),--s),0!==s;)s/=2,t=t.square();return n},u.prototype.pow=s.prototype.pow,l.prototype.pow=function(e){var r=_(e),t=this.value,n=r.value,o=BigInt(0),i=BigInt(1),s=BigInt(2);if(n===o)return a[1];if(t===o)return a[0];if(t===i)return a[1];if(t===BigInt(-1))return r.isEven()?a[1]:a[-1];if(r.isNegative())return new l(o);for(var u=this,c=a[1];(n&i)===i&&(c=c.times(u),--n),n!==o;)n/=s,u=u.square();return c},s.prototype.modPow=function(e,r){if(e=_(e),(r=_(r)).isZero())throw new Error("Cannot take modPow with modulus 0");var t=a[1],n=this.mod(r);for(e.isNegative()&&(e=e.multiply(a[-1]),n=n.modInv(r));e.isPositive();){if(n.isZero())return a[0];e.isOdd()&&(t=t.multiply(n).mod(r)),e=e.divide(2),n=n.square().mod(r)}return t},l.prototype.modPow=u.prototype.modPow=s.prototype.modPow,s.prototype.compareAbs=function(e){var r=_(e),t=this.value,n=r.value;return r.isSmall?1:j(t,n)},u.prototype.compareAbs=function(e){var r=_(e),t=Math.abs(this.value),n=r.value;return r.isSmall?t===(n=Math.abs(n))?0:t>n?1:-1:-1},l.prototype.compareAbs=function(e){var r=this.value,t=_(e).value;return(r=r>=0?r:-r)===(t=t>=0?t:-t)?0:r>t?1:-1},s.prototype.compare=function(e){if(e===1/0)return-1;if(e===-1/0)return 1;var r=_(e),t=this.value,n=r.value;return this.sign!==r.sign?r.sign?1:-1:r.isSmall?this.sign?-1:1:j(t,n)*(this.sign?-1:1)},s.prototype.compareTo=s.prototype.compare,u.prototype.compare=function(e){if(e===1/0)return-1;if(e===-1/0)return 1;var r=_(e),t=this.value,n=r.value;return r.isSmall?t==n?0:t>n?1:-1:t<0!==r.sign?t<0?-1:1:t<0?1:-1},u.prototype.compareTo=u.prototype.compare,l.prototype.compare=function(e){if(e===1/0)return-1;if(e===-1/0)return 1;var r=this.value,t=_(e).value;return r===t?0:r>t?1:-1},l.prototype.compareTo=l.prototype.compare,s.prototype.equals=function(e){return 0===this.compare(e)},l.prototype.eq=l.prototype.equals=u.prototype.eq=u.prototype.equals=s.prototype.eq=s.prototype.equals,s.prototype.notEquals=function(e){return 0!==this.compare(e)},l.prototype.neq=l.prototype.notEquals=u.prototype.neq=u.prototype.notEquals=s.prototype.neq=s.prototype.notEquals,s.prototype.greater=function(e){return this.compare(e)>0},l.prototype.gt=l.prototype.greater=u.prototype.gt=u.prototype.greater=s.prototype.gt=s.prototype.greater,s.prototype.lesser=function(e){return this.compare(e)<0},l.prototype.lt=l.prototype.lesser=u.prototype.lt=u.prototype.lesser=s.prototype.lt=s.prototype.lesser,s.prototype.greaterOrEquals=function(e){return this.compare(e)>=0},l.prototype.geq=l.prototype.greaterOrEquals=u.prototype.geq=u.prototype.greaterOrEquals=s.prototype.geq=s.prototype.greaterOrEquals,s.prototype.lesserOrEquals=function(e){return this.compare(e)<=0},l.prototype.leq=l.prototype.lesserOrEquals=u.prototype.leq=u.prototype.lesserOrEquals=s.prototype.leq=s.prototype.lesserOrEquals,s.prototype.isEven=function(){return 0==(1&this.value[0])},u.prototype.isEven=function(){return 0==(1&this.value)},l.prototype.isEven=function(){return(this.value&BigInt(1))===BigInt(0)},s.prototype.isOdd=function(){return 1==(1&this.value[0])},u.prototype.isOdd=function(){return 1==(1&this.value)},l.prototype.isOdd=function(){return(this.value&BigInt(1))===BigInt(1)},s.prototype.isPositive=function(){return!this.sign},u.prototype.isPositive=function(){return this.value>0},l.prototype.isPositive=u.prototype.isPositive,s.prototype.isNegative=function(){return this.sign},u.prototype.isNegative=function(){return this.value<0},l.prototype.isNegative=u.prototype.isNegative,s.prototype.isUnit=function(){return!1},u.prototype.isUnit=function(){return 1===Math.abs(this.value)},l.prototype.isUnit=function(){return this.abs().value===BigInt(1)},s.prototype.isZero=function(){return!1},u.prototype.isZero=function(){return 0===this.value},l.prototype.isZero=function(){return this.value===BigInt(0)},s.prototype.isDivisibleBy=function(e){var r=_(e);return!r.isZero()&&(!!r.isUnit()||(0===r.compareAbs(2)?this.isEven():this.mod(r).isZero()))},l.prototype.isDivisibleBy=u.prototype.isDivisibleBy=s.prototype.isDivisibleBy,s.prototype.isPrime=function(e){var t=P(this);if(void 0!==t)return t;var n=this.abs(),o=n.bitLength();if(o<=64)return k(n,[2,3,5,7,11,13,17,19,23,29,31,37]);for(var i=Math.log(2)*o.toJSNumber(),a=Math.ceil(!0===e?2*Math.pow(i,2):i),s=[],u=0;u<a;u++)s.push(r(u+2));return k(n,s)},l.prototype.isPrime=u.prototype.isPrime=s.prototype.isPrime,s.prototype.isProbablePrime=function(e,t){var n=P(this);if(void 0!==n)return n;for(var o=this.abs(),i=void 0===e?5:e,a=[],s=0;s<i;s++)a.push(r.randBetween(2,o.minus(2),t));return k(o,a)},l.prototype.isProbablePrime=u.prototype.isProbablePrime=s.prototype.isProbablePrime,s.prototype.modInv=function(e){for(var t,n,o,i=r.zero,a=r.one,s=_(e),u=this.abs();!u.isZero();)t=s.divide(u),n=i,o=s,i=a,s=u,a=n.subtract(t.multiply(a)),u=o.subtract(t.multiply(u));if(!s.isUnit())throw new Error(this.toString()+" and "+e.toString()+" are not co-prime");return-1===i.compare(0)&&(i=i.add(e)),this.isNegative()?i.negate():i},l.prototype.modInv=u.prototype.modInv=s.prototype.modInv,s.prototype.next=function(){var e=this.value;return this.sign?T(e,1,this.sign):new s(g(e,1),this.sign)},u.prototype.next=function(){var e=this.value;return e+1<n?new u(e+1):new s(o,!1)},l.prototype.next=function(){return new l(this.value+BigInt(1))},s.prototype.prev=function(){var e=this.value;return this.sign?new s(g(e,1),!0):T(e,1,this.sign)},u.prototype.prev=function(){var e=this.value;return e-1>-n?new u(e-1):new s(o,!0)},l.prototype.prev=function(){return new l(this.value-BigInt(1))};for(var R=[1];2*R[R.length-1]<=t;)R.push(2*R[R.length-1]);var M=R.length,N=R[M-1];function F(e){return Math.abs(e)<=t}function C(e,t,n){t=_(t);for(var o=e.isNegative(),i=t.isNegative(),a=o?e.not():e,s=i?t.not():t,u=0,l=0,c=null,f=null,p=[];!a.isZero()||!s.isZero();)u=(c=A(a,N))[1].toJSNumber(),o&&(u=N-1-u),l=(f=A(s,N))[1].toJSNumber(),i&&(l=N-1-l),a=c[0],s=f[0],p.push(n(u,l));for(var h=0!==n(o?1:0,i?1:0)?r(-1):r(0),y=p.length-1;y>=0;y-=1)h=h.multiply(N).add(r(p[y]));return h}s.prototype.shiftLeft=function(e){var r=_(e).toJSNumber();if(!F(r))throw new Error(String(r)+" is too large for shifting.");if(r<0)return this.shiftRight(-r);var t=this;if(t.isZero())return t;for(;r>=M;)t=t.multiply(N),r-=M-1;return t.multiply(R[r])},l.prototype.shiftLeft=u.prototype.shiftLeft=s.prototype.shiftLeft,s.prototype.shiftRight=function(e){var r,t=_(e).toJSNumber();if(!F(t))throw new Error(String(t)+" is too large for shifting.");if(t<0)return this.shiftLeft(-t);for(var n=this;t>=M;){if(n.isZero()||n.isNegative()&&n.isUnit())return n;n=(r=A(n,N))[1].isNegative()?r[0].prev():r[0],t-=M-1}return(r=A(n,R[t]))[1].isNegative()?r[0].prev():r[0]},l.prototype.shiftRight=u.prototype.shiftRight=s.prototype.shiftRight,s.prototype.not=function(){return this.negate().prev()},l.prototype.not=u.prototype.not=s.prototype.not,s.prototype.and=function(e){return C(this,e,(function(e,r){return e&r}))},l.prototype.and=u.prototype.and=s.prototype.and,s.prototype.or=function(e){return C(this,e,(function(e,r){return e|r}))},l.prototype.or=u.prototype.or=s.prototype.or,s.prototype.xor=function(e){return C(this,e,(function(e,r){return e^r}))},l.prototype.xor=u.prototype.xor=s.prototype.xor;function x(e){var r=e.value,n="number"==typeof r?r|1<<30:"bigint"==typeof r?r|BigInt(1<<30):r[0]+r[1]*t|1073758208;return n&-n}function Y(e,r){return e=_(e),r=_(r),e.greater(r)?e:r}function B(e,r){return e=_(e),r=_(r),e.lesser(r)?e:r}function U(e,r){if(e=_(e).abs(),r=_(r).abs(),e.equals(r))return e;if(e.isZero())return r;if(r.isZero())return e;for(var t,n,o=a[1];e.isEven()&&r.isEven();)t=B(x(e),x(r)),e=e.divide(t),r=r.divide(t),o=o.multiply(t);for(;e.isEven();)e=e.divide(x(e));do{for(;r.isEven();)r=r.divide(x(r));e.greater(r)&&(n=r,r=e,e=n),r=r.subtract(e)}while(!r.isZero());return o.isUnit()?e:e.multiply(o)}s.prototype.bitLength=function(){var e=this;return e.compareTo(r(0))<0&&(e=e.negate().subtract(r(1))),0===e.compareTo(r(0))?r(0):r(function e(t,n){if(n.compareTo(t)<=0){var o=e(t,n.square(n)),i=o.p,a=o.e,s=i.multiply(n);return s.compareTo(t)<=0?{p:s,e:2*a+1}:{p:i,e:2*a}}return{p:r(1),e:0}}(e,r(2)).e).add(r(1))},l.prototype.bitLength=u.prototype.bitLength=s.prototype.bitLength;var Z=function(e,r,t,n){t=t||"0123456789abcdefghijklmnopqrstuvwxyz",e=String(e),n||(e=e.toLowerCase(),t=t.toLowerCase());var o,i=e.length,a=Math.abs(r),s={};for(o=0;o<t.length;o++)s[t[o]]=o;for(o=0;o<i;o++){if("-"!==(c=e[o])&&(c in s&&s[c]>=a)){if("1"===c&&1===a)continue;throw new Error(c+" is not a valid digit in base "+r+".")}}r=_(r);var u=[],l="-"===e[0];for(o=l?1:0;o<e.length;o++){var c;if((c=e[o])in s)u.push(_(s[c]));else{if("<"!==c)throw new Error(c+" is not a valid character");var f=o;do{o++}while(">"!==e[o]&&o<e.length);u.push(_(e.slice(f+1,o)))}}return q(u,r,l)};function q(e,r,t){var n,o=a[0],i=a[1];for(n=e.length-1;n>=0;n--)o=o.add(e[n].times(i)),i=i.times(r);return t?o.negate():o}function L(e,t){if((t=r(t)).isZero()){if(e.isZero())return{value:[0],isNegative:!1};throw new Error("Cannot convert nonzero numbers to base 0.")}if(t.equals(-1)){if(e.isZero())return{value:[0],isNegative:!1};if(e.isNegative())return{value:[].concat.apply([],Array.apply(null,Array(-e.toJSNumber())).map(Array.prototype.valueOf,[1,0])),isNegative:!1};var n=Array.apply(null,Array(e.toJSNumber()-1)).map(Array.prototype.valueOf,[0,1]);return n.unshift([1]),{value:[].concat.apply([],n),isNegative:!1}}var o=!1;if(e.isNegative()&&t.isPositive()&&(o=!0,e=e.abs()),t.isUnit())return e.isZero()?{value:[0],isNegative:!1}:{value:Array.apply(null,Array(e.toJSNumber())).map(Number.prototype.valueOf,1),isNegative:o};for(var i,a=[],s=e;s.isNegative()||s.compareAbs(t)>=0;){i=s.divmod(t),s=i.quotient;var u=i.remainder;u.isNegative()&&(u=t.minus(u).abs(),s=s.next()),a.push(u.toJSNumber())}return a.push(s.toJSNumber()),{value:a.reverse(),isNegative:o}}function G(e,r,t){var n=L(e,r);return(n.isNegative?"-":"")+n.value.map((function(e){return function(e,r){return e<(r=r||"0123456789abcdefghijklmnopqrstuvwxyz").length?r[e]:"<"+e+">"}(e,t)})).join("")}function W(e){if(c(+e)){var r=+e;if(r===m(r))return i?new l(BigInt(r)):new u(r);throw new Error("Invalid integer: "+e)}var t="-"===e[0];t&&(e=e.slice(1));var n=e.split(/e/i);if(n.length>2)throw new Error("Invalid integer: "+n.join("e"));if(2===n.length){var o=n[1];if("+"===o[0]&&(o=o.slice(1)),(o=+o)!==m(o)||!c(o))throw new Error("Invalid integer: "+o+" is not a valid exponent.");var a=n[0],f=a.indexOf(".");if(f>=0&&(o-=a.length-f-1,a=a.slice(0,f)+a.slice(f+1)),o<0)throw new Error("Cannot include negative exponent part for integers");e=a+=new Array(o+1).join("0")}if(!/^([0-9][0-9]*)$/.test(e))throw new Error("Invalid integer: "+e);if(i)return new l(BigInt(t?"-"+e:e));for(var p=[],y=e.length,d=y-7;y>0;)p.push(+e.slice(d,y)),(d-=7)<0&&(d=0),y-=7;return h(p),new s(p,t)}function _(e){return"number"==typeof e?function(e){if(i)return new l(BigInt(e));if(c(e)){if(e!==m(e))throw new Error(e+" is not an integer.");return new u(e)}return W(e.toString())}(e):"string"==typeof e?W(e):"bigint"==typeof e?new l(e):e}s.prototype.toArray=function(e){return L(this,e)},u.prototype.toArray=function(e){return L(this,e)},l.prototype.toArray=function(e){return L(this,e)},s.prototype.toString=function(e,r){if(void 0===e&&(e=10),10!==e)return G(this,e,r);for(var t,n=this.value,o=n.length,i=String(n[--o]);--o>=0;)t=String(n[o]),i+="0000000".slice(t.length)+t;return(this.sign?"-":"")+i},u.prototype.toString=function(e,r){return void 0===e&&(e=10),10!=e?G(this,e,r):String(this.value)},l.prototype.toString=u.prototype.toString,l.prototype.toJSON=s.prototype.toJSON=u.prototype.toJSON=function(){return this.toString()},s.prototype.valueOf=function(){return parseInt(this.toString(),10)},s.prototype.toJSNumber=s.prototype.valueOf,u.prototype.valueOf=function(){return this.value},u.prototype.toJSNumber=u.prototype.valueOf,l.prototype.valueOf=l.prototype.toJSNumber=function(){return parseInt(this.toString(),10)};for(var V=0;V<1e3;V++)a[V]=_(V),V>0&&(a[-V]=_(-V));return a.one=a[1],a.zero=a[0],a.minusOne=a[-1],a.max=Y,a.min=B,a.gcd=U,a.lcm=function(e,r){return e=_(e).abs(),r=_(r).abs(),e.divide(U(e,r)).multiply(r)},a.isInstance=function(e){return e instanceof s||e instanceof u||e instanceof l},a.randBetween=function(e,r,n){e=_(e),r=_(r);var o=n||Math.random,i=B(e,r),s=Y(e,r).subtract(i).add(1);if(s.isSmall)return i.add(Math.floor(o()*s));for(var u=L(s,t).value,l=[],c=!0,f=0;f<u.length;f++){var p=c?u[f]:t,h=m(o()*p);l.push(h),h<p&&(c=!1)}return i.add(a.fromArray(l,t,!1))},a.fromArray=function(e,r,t){return q(e.map(_),_(r||10),t)},a}();e.hasOwnProperty("exports")&&(e.exports=r)})),Ys={};function Bs(e,r){Object.defineProperty(e.prototype,Symbol.toStringTag,{value:r,writable:!1,enumerable:!1,configurable:!0});var t=function(){return this};Object.defineProperty(t,"name",{value:"get [Symbol.species]",writable:!1,enumerable:!1,configurable:!0}),Object.defineProperty(e,Symbol.species,{get:t,enumerable:!1,configurable:!0});var n,o=w(Object.getOwnPropertyNames(e));try{for(o.s();!(n=o.n()).done;){var i=n.value,a=Object.getOwnPropertyDescriptor(e,i);a.configurable&&a.enumerable&&(a.enumerable=!1,Object.defineProperty(e,i,a))}}catch(e){o.e(e)}finally{o.f()}var s,u=w(Object.getOwnPropertyNames(e.prototype));try{for(u.s();!(s=u.n()).done;){var l=s.value,c=Object.getOwnPropertyDescriptor(e.prototype,l);c.configurable&&c.enumerable&&(c.enumerable=!1,Object.defineProperty(e.prototype,l,c))}}catch(e){u.e(e)}finally{u.f()}Ys["%".concat(r,"%")]=e}function Us(e){return e in Ys?Ys[e]:L(e)}var Zs="slot-epochNanoSeconds",qs="slot-timezone-identifier",Ls="slot-year",Gs="slot-month",Ws="slot-day",_s="slot-hour",Vs="slot-minute",$s="slot-second",zs="slot-millisecond",Js="slot-microsecond",Hs="slot-nanosecond",Ks="slot-ref-iso-year",Xs="slot-ref-iso-day",Qs="slot-calendar",eu="slot-years",ru="slot-months",tu="slot-weeks",nu="slot-days",ou="slot-hours",iu="slot-minutes",au="slot-seconds",su="slot-milliseconds",uu="slot-microseconds",lu="slot-nanoseconds",cu="slot-calendar-identifier",fu=new WeakMap;function pu(e){fu.set(e,Object.create(null))}function hu(e){return fu.get(e)}function yu(e){if(!e||"object"!==r(e))return!1;for(var t=hu(e),n=arguments.length,o=new Array(n>1?n-1:0),i=1;i<n;i++)o[i-1]=arguments[i];return!!t&&o.reduce((function(e,r){return e&&r in t}),!0)}function mu(e,r){return hu(e)[r]}function du(e,r,t){hu(e)[r]=t}var vu,gu=/(?:[+-]\d{6}|\d{4})/,wu=new RegExp("(".concat(gu.source,")(?:-(\\d{2})-(\\d{2})|(\\d{2})(\\d{2}))")),Tu=/(\d{2})(?::(\d{2})(?::(\d{2})(?:[.,](\d{1,9}))?)?|(\d{2})(?:(\d{2})(?:[.,](\d{1,9}))?)?)?/,bu=/(?:([zZ])|(?:([+-]\d{2})(?::?(\d{2}))?(?:\[([^c\]\s](?:[^=\]\s][^\]\s]*))?\])?))/,Su=/\[c=([^\]\s]+)\]/,Eu=new RegExp("^".concat(wu.source,"(?:T|\\s+)").concat(Tu.source).concat(bu.source,"(?:").concat(Su.source,")?$"),"i"),Iu=new RegExp("^".concat(wu.source,"(?:(?:T|\\s+)").concat(Tu.source,"(?:").concat(bu.source,")?)?(?:").concat(Su.source,")?$"),"i"),Du=new RegExp("^".concat(Tu.source,"(?:").concat(bu.source,")?(?:").concat(Su.source,")?$"),"i"),Ou=new RegExp("^(".concat(gu.source,")-?(\\d{2})$")),Au=/^(?:--)?(\d{2})-?(\d{2})$/,ju=/([+-])([0-2][0-9])(?::?([0-5][0-9]))?/,Pu=/P(?:(\d+)Y)?(?:(\d+)M)?(?:(\d+)W)?(?:(\d+)D)?(?:T(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)(?:[.,](\d{1,9}))?S)?)?/i,ku=Intl.DateTimeFormat,Ru=Object.assign,Mu=xs(-86400).multiply(1e17),Nu=xs(86400).multiply(1e17),Fu=xs(-388152).multiply(1e13),Cu=Ru({},Cs,{IsTemporalAbsolute:function(e){return yu(e,Zs)},IsTemporalTimeZone:function(e){return yu(e,qs)},IsTemporalCalendar:function(e){return yu(e,cu)},IsTemporalDuration:function(e){return yu(e,eu,ru,nu,ou,iu,au,su,uu,lu)},IsTemporalDate:function(e){return yu(e,Ls,Gs,Ws)&&!yu(e,_s,Vs,$s,zs,Js,Hs)},IsTemporalTime:function(e){return yu(e,_s,Vs,$s,zs,Js,Hs)&&!yu(e,Ls,Gs,Ws)},IsTemporalDateTime:function(e){return yu(e,Ls,Gs,Ws,_s,Vs,$s,zs,Js,Hs)},IsTemporalYearMonth:function(e){return yu(e,Ls,Gs,Xs)},IsTemporalMonthDay:function(e){return yu(e,Gs,Ws,Ks)},TemporalTimeZoneFromString:function(e){var r=Cu.ParseTemporalTimeZoneString(e),t=r.zone,n=r.ianaName,o=r.offset,i=Cu.GetCanonicalTimeZoneIdentifier(t);if(o&&n){var a=Cu.ParseTemporalAbsolute(e),s=Cu.GetIANATimeZoneOffsetNanoseconds(a,i);if(Cu.FormatTimeZoneOffsetString(s)!==o)throw new RangeError("invalid offset ".concat(o,"[").concat(n,"]"))}return i},FormatCalendarAnnotation:function(e){return"iso8601"===e.id?"":"[c=".concat(e.id,"]")},ParseISODateTime:function(e,r){var t=(r.zoneRequired?Eu:Iu).exec(e);if(!t)throw new RangeError("invalid ISO 8601 string: ".concat(e));var n=Cu.ToInteger(t[1]),o=Cu.ToInteger(t[2]||t[4]),i=Cu.ToInteger(t[3]||t[5]),a=Cu.ToInteger(t[6]),s=Cu.ToInteger(t[7]||t[10]),u=Cu.ToInteger(t[8]||t[11]);60===u&&(u=59);var l=(t[9]||t[12])+"000000000",c=Cu.ToInteger(l.slice(0,3)),f=Cu.ToInteger(l.slice(3,6)),p=Cu.ToInteger(l.slice(6,9)),h="".concat(t[14],":").concat(t[15]||"00"),y=t[16];if(y)try{y=Cu.GetCanonicalTimeZoneIdentifier(y).toString()}catch(e){}return{year:n,month:o,day:i,hour:a,minute:s,second:u,millisecond:c,microsecond:f,nanosecond:p,zone:t[13]?"UTC":y||h,ianaName:y,offset:h,calendar:t[17]||null}},ParseTemporalAbsoluteString:function(e){return Cu.ParseISODateTime(e,{zoneRequired:!0})},ParseTemporalDateTimeString:function(e){return Cu.ParseISODateTime(e,{zoneRequired:!1})},ParseTemporalDateString:function(e){return Cu.ParseISODateTime(e,{zoneRequired:!1})},ParseTemporalTimeString:function(e){var r,t,n,o,i,a,s=Du.exec(e);if(s){r=Cu.ToInteger(s[1]),t=Cu.ToInteger(s[2]||s[5]),60===(n=Cu.ToInteger(s[3]||s[6]))&&(n=59);var u=(s[4]||s[7])+"000000000";o=Cu.ToInteger(u.slice(0,3)),i=Cu.ToInteger(u.slice(3,6)),a=Cu.ToInteger(u.slice(6,9))}else{var l=Cu.ParseISODateTime(e,{zoneRequired:!1});r=l.hour,t=l.minute,n=l.second,o=l.millisecond,i=l.microsecond,a=l.nanosecond}return{hour:r,minute:t,second:n,millisecond:o,microsecond:i,nanosecond:a}},ParseTemporalYearMonthString:function(e){var r,t,n,o,i=Ou.exec(e);if(i)r=Cu.ToInteger(i[1]),t=Cu.ToInteger(i[2]),n=i[3]||null;else{var a=Cu.ParseISODateTime(e,{zoneRequired:!1});r=a.year,t=a.month,n=a.calendar,o=a.day,n||(o=void 0)}return{year:r,month:t,calendar:n,refISODay:o}},ParseTemporalMonthDayString:function(e){var r,t,n,o,i=Au.exec(e);if(i)r=Cu.ToInteger(i[1]),t=Cu.ToInteger(i[2]);else{var a=Cu.ParseISODateTime(e,{zoneRequired:!1});r=a.month,t=a.day,n=a.calendar,o=a.year,n||(o=void 0)}return{month:r,day:t,calendar:n,refISOYear:o}},ParseTemporalTimeZoneString:function(e){try{var r=Cu.GetCanonicalTimeZoneIdentifier(e);if(r)return{zone:r.toString()}}catch(e){}try{return Cu.ParseISODateTime(e,{zoneRequired:!0})}catch(r){throw new RangeError("Invalid time zone: ".concat(e))}},ParseTemporalDurationString:function(e){var r=Pu.exec(e);if(!r)throw new RangeError("invalid duration: ".concat(e));var t=Cu.ToInteger(r[1]),n=Cu.ToInteger(r[2]),o=Cu.ToInteger(r[3]),i=Cu.ToInteger(r[4]),a=Cu.ToInteger(r[5]),s=Cu.ToInteger(r[6]),u=Cu.ToInteger(r[7]),l=r[8]+"000000000";return{years:t,months:n,weeks:o,days:i,hours:a,minutes:s,seconds:u,milliseconds:Cu.ToInteger(l.slice(0,3)),microseconds:Cu.ToInteger(l.slice(3,6)),nanoseconds:Cu.ToInteger(l.slice(6,9))}},ParseTemporalAbsolute:function(e){var r=Cu.ParseTemporalAbsoluteString(e),t=r.year,n=r.month,o=r.day,i=r.hour,a=r.minute,s=r.second,u=r.millisecond,l=r.microsecond,c=r.nanosecond,f=r.offset,p=r.zone,h=Us("%Temporal.DateTime%"),y=Us("%Temporal.TimeZone%"),m=new h(t,n,o,i,a,s,u,l,c),d=y.from(p),v=d.getPossibleAbsolutesFor(m);if(1===v.length)return mu(v[0],Zs);var g,T=w(v);try{for(T.s();!(g=T.n()).done;){var b=g.value,S=d.getOffsetNanosecondsFor(b);if(Cu.FormatTimeZoneOffsetString(S)===f)return mu(b,Zs)}}catch(e){T.e(e)}finally{T.f()}throw new RangeError("'".concat(e,"' doesn't uniquely identify a Temporal.Absolute"))},RegulateDateTime:function(e,r,t,n,o,i,a,s,u,l){switch(l){case"reject":Cu.RejectDateTime(e,r,t,n,o,i,a,s,u);break;case"constrain":var c=Cu.ConstrainDateTime(e,r,t,n,o,i,a,s,u);e=c.year,r=c.month,t=c.day,n=c.hour,o=c.minute,i=c.second,a=c.millisecond,s=c.microsecond,u=c.nanosecond}return{year:e,month:r,day:t,hour:n,minute:o,second:i,millisecond:a,microsecond:s,nanosecond:u}},RegulateDate:function(e,r,t,n){switch(n){case"reject":Cu.RejectDate(e,r,t);break;case"constrain":var o=Cu.ConstrainDate(e,r,t);e=o.year,r=o.month,t=o.day}return{year:e,month:r,day:t}},RegulateTime:function(e,r,t,n,o,i,a){switch(a){case"reject":Cu.RejectTime(e,r,t,n,o,i);break;case"constrain":var s=Cu.ConstrainTime(e,r,t,n,o,i);e=s.hour,r=s.minute,t=s.second,n=s.millisecond,o=s.microsecond,i=s.nanosecond}return{hour:e,minute:r,second:t,millisecond:n,microsecond:o,nanosecond:i}},RegulateYearMonth:function(e,r,t){switch(t){case"reject":Cu.RejectDate(e,r,1);break;case"constrain":var n=Cu.ConstrainDate(e,r);e=n.year,r=n.month}return{year:e,month:r}},RegulateMonthDay:function(e,r,t){switch(t){case"reject":Cu.RejectDate(1972,e,r);break;case"constrain":var n=Cu.ConstrainDate(1972,e,r);e=n.month,r=n.day}return{month:e,day:r}},ToTemporalDurationRecord:function(e){return Cu.IsTemporalDuration(e)?{years:mu(e,eu),months:mu(e,ru),weeks:mu(e,tu),days:mu(e,nu),hours:mu(e,ou),minutes:mu(e,iu),seconds:mu(e,au),milliseconds:mu(e,su),microseconds:mu(e,uu),nanoseconds:mu(e,lu)}:Cu.ToRecord(e,[["days",0],["hours",0],["microseconds",0],["milliseconds",0],["minutes",0],["months",0],["nanoseconds",0],["seconds",0],["weeks",0],["years",0]])},RegulateDuration:function(e,r,t,n,o,i,a,s,u,l,c){for(var f=0,p=[e,r,t,n,o,i,a,s,u,l];f<p.length;f++){if(p[f]<0)throw new RangeError("negative values not allowed as duration fields")}switch(c){case"reject":for(var h=0,y=[e,r,t,n,o,i,a,s,u,l];h<y.length;h++){var m=y[h];if(!Number.isFinite(m))throw new RangeError("infinite values not allowed as duration fields")}break;case"constrain":var d=[e,r,t,n,o,i,a,s,u,l];for(var v in d)Number.isFinite(d[v])||(d[v]=Number.MAX_VALUE);e=d[0],r=d[1],t=d[2],n=d[3],o=d[4],i=d[5],a=d[6],s=d[7],u=d[8],l=d[9];break;case"balance":for(var g=Cu.BalanceDuration(n,o,i,a,s,u,l,"days"),w=0,T=[e,r,t,n=g.days,o=g.hours,i=g.minutes,a=g.seconds,s=g.milliseconds,u=g.microseconds,l=g.nanoseconds];w<T.length;w++){var b=T[w];if(!Number.isFinite(b))throw new RangeError("infinite values not allowed as duration fields")}}return{years:e,months:r,weeks:t,days:n,hours:o,minutes:i,seconds:a,milliseconds:s,microseconds:u,nanoseconds:l}},ToLimitedTemporalDuration:function(e){var t=arguments.length>1&&void 0!==arguments[1]?arguments[1]:[];if("object"!==r(e)||null===e)throw new TypeError("Unexpected type for duration");var n,o=Cu.ToTemporalDurationRecord(e),i=o.years,a=o.months,s=o.weeks,u=o.days,l=o.hours,c=o.minutes,f=o.seconds,p=o.milliseconds,h=o.microseconds,y=o.nanoseconds,m=Cu.RegulateDuration(i,a,s,u,l,c,f,p,h,y,"reject"),d=w(t);try{for(d.s();!(n=d.n()).done;){var v=n.value;if(0!==m[v])throw new RangeError("invalid duration field ".concat(v))}}catch(e){d.e(e)}finally{d.f()}return m},ToDurationTemporalDisambiguation:function(e){return Cu.GetOption(e,"disambiguation",["constrain","balance","reject"],"constrain")},ToTemporalDisambiguation:function(e){return Cu.GetOption(e,"disambiguation",["constrain","reject"],"constrain")},ToTimeZoneTemporalDisambiguation:function(e){return Cu.GetOption(e,"disambiguation",["compatible","earlier","later","reject"],"compatible")},ToDurationSubtractionTemporalDisambiguation:function(e){return Cu.GetOption(e,"disambiguation",["balanceConstrain","balance"],"balanceConstrain")},ToLargestTemporalUnit:function(e,r){var t=arguments.length>2&&void 0!==arguments[2]?arguments[2]:[],n=Cu.GetOption(e,"largestUnit",["years","months","weeks","days","hours","minutes","seconds"],r);if(t.includes(n))throw new RangeError("".concat(n," not allowed as the largest unit here"));return n},ToPartialRecord:function(e,t){if(!e||"object"!==r(e))return!1;var n,o,i=w(t);try{for(i.s();!(o=i.n()).done;){var a=o.value,s=e[a];if(void 0!==s)if(n=n||{},"calendar"===a){var u=Us("%Temporal.Calendar%");n.calendar=u.from(s)}else"era"===a?n.era=s:n[a]=Cu.ToInteger(s)}}catch(e){i.e(e)}finally{i.f()}return n||!1},ToRecord:function(e,t){if(!e||"object"!==r(e))return!1;var n,o={},i=w(t);try{for(i.s();!(n=i.n()).done;){var a=n.value,s=d(a,2),u=s[0],l=s[1],c=e[u];if(void 0===c){if(1===a.length)throw new TypeError("required property '".concat(u,"' missing or undefined"));c=l}if("calendar"===u){var f=Us("%Temporal.Calendar%");o.calendar=f.from(c)}else"era"===u?o.era=c:o[u]=Cu.ToInteger(c)}}catch(e){i.e(e)}finally{i.f()}return o},ToTemporalDateRecord:function(e){return Cu.ToRecord(e,[["day"],["era",void 0],["month"],["year"]])},ToTemporalDateTimeRecord:function(e){return Cu.ToRecord(e,[["day"],["era",void 0],["hour",0],["microsecond",0],["millisecond",0],["minute",0],["month"],["nanosecond",0],["second",0],["year"]])},ToTemporalMonthDayRecord:function(e){return Cu.ToRecord(e,[["day"],["month"]])},ToTemporalTimeRecord:function(e){return Cu.ToRecord(e,[["hour",0],["microsecond",0],["millisecond",0],["minute",0],["nanosecond",0],["second",0]])},ToTemporalYearMonthRecord:function(e){return Cu.ToRecord(e,[["era",void 0],["month"],["year"]])},ISOTimeZoneString:function(e,r){var t,n;"function"==typeof e.getOffsetStringFor?t=e.getOffsetStringFor(r):t=Us("%Temporal.TimeZone%").prototype.getOffsetStringFor.call(e,r);switch(!0){case"UTC"===e.name:n="Z";break;case e.name===t:n=t;break;default:n="".concat(t,"[").concat(e.toString(),"]")}return n},ISOYearString:function(e){var r;if(e<1e3||e>9999){var t=e<0?"-":"+",n=Math.abs(e);r=t+"000000".concat(n).slice(-6)}else r="".concat(e);return r},ISODateTimePartString:function(e){return"00".concat(e).slice(-2)},ISOSecondsString:function(e,r,t,n){if(!(e||r||t||n))return"";var o=[];n&&o.unshift("000".concat(n||0).slice(-3)),(t||o.length)&&o.unshift("000".concat(t||0).slice(-3)),(r||o.length)&&o.unshift("000".concat(r||0).slice(-3));var i="00".concat(e).slice(-2),a=o.length?".".concat(o.join("")):"";return"".concat(i).concat(a)},TemporalAbsoluteToString:function(e,r){var t;"function"==typeof r.getDateTimeFor?t=r.getDateTimeFor(e):t=Us("%Temporal.TimeZone%").prototype.getDateTimeFor.call(r,e);var n=Cu.ISOYearString(t.year),o=Cu.ISODateTimePartString(t.month),i=Cu.ISODateTimePartString(t.day),a=Cu.ISODateTimePartString(t.hour),s=Cu.ISODateTimePartString(t.minute),u=Cu.ISOSecondsString(t.second,t.millisecond,t.microsecond,t.nanosecond),l=Cu.ISOTimeZoneString(r,e);return"".concat(n,"-").concat(o,"-").concat(i,"T").concat(a,":").concat(s).concat(u?":".concat(u):"").concat(l)},TemporalDurationToString:function(e){function r(e){return e<=Number.MAX_SAFE_INTEGER?e.toString(10):xs(e).toString()}var t=[];mu(e,eu)&&t.push("".concat(r(mu(e,eu)),"Y")),mu(e,ru)&&t.push("".concat(r(mu(e,ru)),"M")),mu(e,tu)&&t.push("".concat(r(mu(e,tu)),"W")),mu(e,nu)&&t.push("".concat(r(mu(e,nu)),"D"));var n=[];mu(e,ou)&&n.push("".concat(r(mu(e,ou)),"H")),mu(e,iu)&&n.push("".concat(r(mu(e,iu)),"M"));var o,i=[],a=mu(e,su),s=mu(e,uu),u=mu(e,lu),l=Cu.BalanceSubSecond(a,s,u);o=l.seconds,a=l.millisecond,s=l.microsecond,u=l.nanosecond;var c=mu(e,au)+o;return u&&i.unshift("".concat(u).padStart(3,"0")),(s||i.length)&&i.unshift("".concat(s).padStart(3,"0")),(a||i.length)&&i.unshift("".concat(a).padStart(3,"0")),i.length&&i.unshift("."),(c||i.length)&&i.unshift(r(c)),i.length&&n.push("".concat(i.join(""),"S")),n.length&&n.unshift("T"),t.length||n.length?"P".concat(t.join("")).concat(n.join("")):"PT0S"},GetCanonicalTimeZoneIdentifier:function(e){var r=function(e){var r=xu.exec(String(e));if(!r)return null;var t="-"===r[1]?-1:1,n=+r[2],o=+(r[3]||0);return t*(60*n+o)*60*1e9}(e);return null!==r?Cu.FormatTimeZoneOffsetString(r):new ku("en-us",{timeZone:String(e),hour12:!1,year:"numeric",month:"numeric",day:"numeric",hour:"numeric",minute:"numeric",second:"numeric"}).resolvedOptions().timeZone},GetIANATimeZoneOffsetNanoseconds:function(e,r){var t=Cu.GetIANATimeZoneDateTimeParts(e,r),n=t.year,o=t.month,i=t.day,a=t.hour,s=t.minute,u=t.second,l=t.millisecond,c=t.microsecond,f=t.nanosecond,p=Cu.GetEpochFromParts(n,o,i,a,s,u,l,c,f);if(null===p)throw new RangeError("Date outside of supported range");return+p.minus(e)},FormatTimeZoneOffsetString:function(e){var r=e<0?"-":"+";e=Math.abs(e);var t=Math.floor(e/6e10),n="00".concat(t%60).slice(-2),o="00".concat(Math.floor(t/60)).slice(-2);return"".concat(r).concat(o,":").concat(n)},GetEpochFromParts:function(e,r,t,n,o,i,a,s,u){var l=Date.UTC(e,r-1,t,n,o,i,a);if(Number.isNaN(l))return null;e>=0&&e<100&&(l=new Date(l).setUTCFullYear(e));var c=xs(l).multiply(1e6);return(c=(c=c.plus(xs(s).multiply(1e3))).plus(xs(u))).lesser(Mu)||c.greater(Nu)?null:c},GetPartsFromEpoch:function(e){var r=xs(e).mod(1e9),t=xs(e).divide(1e9).multiply(1e3).plus(Math.floor(r/1e6));r=+((e<0?1e9:0)+r);var n=Math.floor(r/1e6)%1e3,o=Math.floor(r/1e3)%1e3,i=Math.floor(r/1)%1e3,a=new Date(t);return{epochMilliseconds:t,year:a.getUTCFullYear(),month:a.getUTCMonth()+1,day:a.getUTCDate(),hour:a.getUTCHours(),minute:a.getUTCMinutes(),second:a.getUTCSeconds(),millisecond:n,microsecond:o,nanosecond:i}},GetIANATimeZoneDateTimeParts:function(e,r){var t=Cu.GetPartsFromEpoch(e),n=t.epochMilliseconds,o=t.millisecond,i=t.microsecond,a=t.nanosecond,s=Cu.GetFormatterParts(r,n).reduce(Yu,{}),u=s.year,l=s.month,c=s.day,f=s.hour,p=s.minute,h=s.second;return Cu.BalanceDateTime(u,l,c,f,p,h,o,i,a)},GetIANATimeZoneNextTransition:function(e,r){for(var t=Cu.SystemUTCEpochNanoSeconds()+316224e11,n=e,o=Cu.GetIANATimeZoneOffsetNanoseconds(n,r),i=n,a=o;o===a&&-1===xs(n).compare(t);)i=xs(n).plus(12096e11),o===(a=Cu.GetIANATimeZoneOffsetNanoseconds(i,r))&&(n=i);return o===a?null:Bu((function(e){return Cu.GetIANATimeZoneOffsetNanoseconds(e,r)}),n,i,o,a)},GetIANATimeZonePreviousTransition:function(e,r){for(var t=Fu,n=e,o=Cu.GetIANATimeZoneOffsetNanoseconds(n,r),i=n,a=o;o===a&&1===xs(n).compare(t);)i=xs(n).minus(12096e11),o===(a=Cu.GetIANATimeZoneOffsetNanoseconds(i,r))&&(n=i);return o===a?null:Bu((function(e){return Cu.GetIANATimeZoneOffsetNanoseconds(e,r)}),i,n,a,o)},GetFormatterParts:function(e,r){var t=d(new ku("en-us",{timeZone:e,hour12:!1,era:"short",year:"numeric",month:"numeric",day:"numeric",hour:"numeric",minute:"numeric",second:"numeric"}).format(new Date(r)).split(/,\s+/),3),n=t[0],o=t[1],i=t[2],a=d(n.split(" "),2),s=a[0],u=a[1],l=d(o.split(" "),2),c=l[0],f=l[1],p=d(i.split(":"),3),h=p[0];return[{type:"year",value:"BC"===f?1-c:+c},{type:"month",value:+s},{type:"day",value:+u},{type:"hour",value:"24"===h?0:+h},{type:"minute",value:+p[1]},{type:"second",value:+p[2]}]},GetIANATimeZoneEpochValue:function(e,r,t,n,o,i,a,s,u,l){var c=Cu.GetEpochFromParts(r,t,n,o,i,a,s,u,l);if(null===c)throw new RangeError("DateTime outside of supported range");var f=xs(864e5).multiply(1e6),p=c.minus(f);p.lesser(Mu)&&(p=c);var h=c.plus(f);h.greater(Nu)&&(h=c);var y=Cu.GetIANATimeZoneOffsetNanoseconds(p,e),m=Cu.GetIANATimeZoneOffsetNanoseconds(h,e);return(y===m?[y]:[y,m]).map((function(f){var p=xs(c).minus(f),h=Cu.GetIANATimeZoneDateTimeParts(p,e);if(r===h.year&&t===h.month&&n===h.day&&o===h.hour&&i===h.minute&&a===h.second&&s===h.millisecond&&u===h.microsecond&&l===h.nanosecond)return p})).filter((function(e){return void 0!==e}))},LeapYear:function(e){return void 0!==e&&(e%4==0&&(!(e%100==0)||e%400==0))},DaysInMonth:function(e,r){return{standard:[31,28,31,30,31,30,31,31,30,31,30,31],leapyear:[31,29,31,30,31,30,31,31,30,31,30,31]}[Cu.LeapYear(e)?"leapyear":"standard"][r-1]},DayOfWeek:function(e,r,t){var n=r+(r<3?10:-2),o=e-(r<3?1:0),i=Math.floor(o/100),a=o-100*i,s=(t+Math.floor(2.6*n-.2)+(a+Math.floor(a/4))+(Math.floor(i/4)-2*i))%7;return s+(s<=0?7:0)},DayOfYear:function(e,r,t){for(var n=t,o=r-1;o>0;o--)n+=Cu.DaysInMonth(e,o);return n},WeekOfYear:function(e,r,t){var n=Cu.DayOfYear(e,r,t),o=Cu.DayOfWeek(e,r,t)||7,i=Cu.DayOfWeek(e,1,1),a=Math.floor((n-o+10)/7);return a<1?i===(Cu.LeapYear(e)?5:6)?53:52:53===a&&(Cu.LeapYear(e)?366:365)-n<4-o?1:a},BalanceYearMonth:function(e,r){if(!Number.isFinite(e)||!Number.isFinite(r))throw new RangeError("infinity is out of range");return r-=1,e+=Math.floor(r/12),(r%=12)<0&&(r+=12),{year:e,month:r+=1}},BalanceDate:function(e,r,t){if(!Number.isFinite(t))throw new RangeError("infinity is out of range");var n=Cu.BalanceYearMonth(e,r);e=n.year;for(var o=0,i=(r=n.month)>2?e:e-1;t<-(o=Cu.LeapYear(i)?366:365);)e-=1,i-=1,t+=o;for(i+=1;t>(o=Cu.LeapYear(i)?366:365);)e+=1,i+=1,t-=o;for(;t<1;){var a=Cu.BalanceYearMonth(e,r-1);e=a.year,r=a.month,t+=Cu.DaysInMonth(e,r)}for(;t>Cu.DaysInMonth(e,r);){t-=Cu.DaysInMonth(e,r);var s=Cu.BalanceYearMonth(e,r+1);e=s.year,r=s.month}return{year:e,month:r,day:t}},BalanceDateTime:function(e,r,t,n,o,i,a,s,u){var l,c=Cu.BalanceTime(n,o,i,a,s,u);l=c.deltaDays,n=c.hour,o=c.minute,i=c.second,a=c.millisecond,s=c.microsecond,u=c.nanosecond;var f=Cu.BalanceDate(e,r,t+l);return{year:e=f.year,month:r=f.month,day:t=f.day,hour:n,minute:o,second:i,millisecond:a,microsecond:s,nanosecond:u}},BalanceSubSecond:function(e,r,t){if(!Number.isFinite(e)||!Number.isFinite(r)||!Number.isFinite(t))throw new RangeError("infinity is out of range");return r+=Math.floor(t/1e3),t=Cu.NonNegativeModulo(t,1e3),e+=Math.floor(r/1e3),r=Cu.NonNegativeModulo(r,1e3),{seconds:Math.floor(e/1e3),millisecond:e=Cu.NonNegativeModulo(e,1e3),microsecond:r,nanosecond:t}},BalanceTime:function(e,r,t,n,o,i){if(!Number.isFinite(e)||!Number.isFinite(r)||!Number.isFinite(t))throw new RangeError("infinity is out of range");var a,s=Cu.BalanceSubSecond(n,o,i);return a=s.seconds,n=s.millisecond,o=s.microsecond,i=s.nanosecond,t+=a,r+=Math.floor(t/60),t=Cu.NonNegativeModulo(t,60),e+=Math.floor(r/60),r=Cu.NonNegativeModulo(r,60),{deltaDays:Math.floor(e/24),hour:e=Cu.NonNegativeModulo(e,24),minute:r,second:t,millisecond:n,microsecond:o,nanosecond:i}},BalanceDurationDate:function(e,r,t,n,o){r<0&&(e-=1,r+=12);for(var i=Cu.BalanceYearMonth(t+e,n+r),a=i.year,s=i.month;o>Cu.DaysInMonth(a,s);){(r-=1)<0&&(e-=1,r+=12);var u=Cu.BalanceYearMonth(t+e,n+r);a=u.year,s=u.month}return{year:a,month:s,years:e,months:r}},BalanceDuration:function(e,r,t,n,o,i,a,s){var u,l=Cu.BalanceTime(r,t,n,o,i,a);switch(u=l.deltaDays,r=l.hour,t=l.minute,n=l.second,o=l.millisecond,i=l.microsecond,a=l.nanosecond,e+=u,s){case"hours":r+=24*e,e=0;break;case"minutes":t+=60*(r+24*e),r=e=0;break;case"seconds":n+=60*(t+60*(r+24*e)),t=r=e=0;break;case"years":case"months":case"weeks":case"days":break;default:throw new Error("assert not reached")}return{days:e,hours:r,minutes:t,seconds:n,milliseconds:o,microseconds:i,nanoseconds:a}},ConstrainToRange:function(e,r,t){return Math.min(t,Math.max(r,e))},ConstrainDate:function(e,r,t){return{year:e,month:r=Cu.ConstrainToRange(r,1,12),day:t=Cu.ConstrainToRange(t,1,Cu.DaysInMonth(e,r))}},ConstrainTime:function(e,r,t,n,o,i){return{hour:e=Cu.ConstrainToRange(e,0,23),minute:r=Cu.ConstrainToRange(r,0,59),second:t=Cu.ConstrainToRange(t,0,59),millisecond:n=Cu.ConstrainToRange(n,0,999),microsecond:o=Cu.ConstrainToRange(o,0,999),nanosecond:i=Cu.ConstrainToRange(i,0,999)}},ConstrainDateTime:function(e,r,t,n,o,i,a,s,u){var l=Cu.ConstrainDate(e,r,t);e=l.year,r=l.month,t=l.day;var c=Cu.ConstrainTime(n,o,i,a,s,u);return{year:e,month:r,day:t,hour:n=c.hour,minute:o=c.minute,second:i=c.second,millisecond:a=c.millisecond,microsecond:s=c.microsecond,nanosecond:u=c.nanosecond}},RejectToRange:function(e,r,t){if(e<r||e>t)throw new RangeError("value out of range: ".concat(r," <= ").concat(e," <= ").concat(t))},RejectDate:function(e,r,t){Cu.RejectToRange(r,1,12),Cu.RejectToRange(t,1,Cu.DaysInMonth(e,r))},RejectDateRange:function(e,r,t){Cu.RejectDateTimeRange(e,r,t,12,0,0,0,0,0)},RejectTime:function(e,r,t,n,o,i){Cu.RejectToRange(e,0,23),Cu.RejectToRange(r,0,59),Cu.RejectToRange(t,0,59),Cu.RejectToRange(n,0,999),Cu.RejectToRange(o,0,999),Cu.RejectToRange(i,0,999)},RejectDateTime:function(e,r,t,n,o,i,a,s,u){Cu.RejectDate(e,r,t),Cu.RejectTime(n,o,i,a,s,u)},RejectDateTimeRange:function(e,r,t,n,o,i,a,s,u){if(Cu.RejectToRange(e,-271821,275760),-271821===e&&null==Cu.GetEpochFromParts(e,r,t+1,n,o,i,a,s,u-1)||275760===e&&null==Cu.GetEpochFromParts(e,r,t-1,n,o,i,a,s,u+1))throw new RangeError("DateTime outside of supported range")},RejectAbsoluteRange:function(e){if(e.lesser(Mu)||e.greater(Nu))throw new RangeError("Absolute outside of supported range")},RejectYearMonthRange:function(e,r){Cu.RejectToRange(e,-271821,275760),-271821===e?Cu.RejectToRange(r,4,12):275760===e&&Cu.RejectToRange(r,1,9)},DifferenceDate:function(e,r){var t,n,o=arguments.length>2&&void 0!==arguments[2]?arguments[2]:"days",i=r.year-e.year,a=0;switch(o){case"years":case"months":var s,u;t=r.month-e.month;var l=Cu.BalanceDurationDate(i,t,e.year,e.month,e.day);if(s=l.year,u=l.month,i=l.years,t=l.months,(n=Cu.DayOfYear(r.year,r.month,r.day)-Cu.DayOfYear(s,u,e.day))<0){t-=1;var c=Cu.BalanceDurationDate(i,t,e.year,e.month,e.day);s=c.year,u=c.month,i=c.years,t=c.months,n=Cu.DayOfYear(r.year,r.month,r.day)-Cu.DayOfYear(s,u,e.day),r.year>s&&(n+=Cu.LeapYear(s)?366:365)}"months"===o&&(t+=12*i,i=0);break;case"weeks":case"days":for(t=0,n=Cu.DayOfYear(r.year,r.month,r.day)-Cu.DayOfYear(e.year,e.month,e.day);i>0;)n+=Cu.LeapYear(e.year+i-1)?366:365,i-=1;"weeks"===o&&(a=Math.floor(n/7),n%=7);break;default:throw new Error("assert not reached")}return{years:i,months:t,weeks:a,days:n}},DifferenceTime:function(e,r){var t=r.hour-e.hour,n=r.minute-e.minute,o=r.second-e.second,i=r.millisecond-e.millisecond,a=r.microsecond-e.microsecond,s=r.nanosecond-e.nanosecond,u=Cu.BalanceTime(t,n,o,i,a,s);return{deltaDays:u.deltaDays,hours:t=u.hour,minutes:n=u.minute,seconds:o=u.second,milliseconds:i=u.millisecond,microseconds:a=u.microsecond,nanoseconds:s=u.nanosecond}},AddDate:function(e,r,t,n,o,i,a,s){e+=n,r+=o;var u=Cu.BalanceYearMonth(e,r);e=u.year,r=u.month;var l=Cu.RegulateDate(e,r,t,s);e=l.year,r=l.month,t=l.day,t+=a+=7*i;var c=Cu.BalanceDate(e,r,t);return{year:e=c.year,month:r=c.month,day:t=c.day}},AddTime:function(e,r,t,n,o,i,a,s,u,l,c,f){e+=a,r+=s,t+=u,n+=l,o+=c,i+=f;var p=Cu.BalanceTime(e,r,t,n,o,i);return{deltaDays:p.deltaDays,hour:e=p.hour,minute:r=p.minute,second:t=p.second,millisecond:n=p.millisecond,microsecond:o=p.microsecond,nanosecond:i=p.nanosecond}},SubtractDate:function(e,r,t,n,o,i,a,s){t-=a+=7*i;var u=Cu.BalanceDate(e,r,t);e=u.year,r=u.month,t=u.day,r-=o,e-=n;var l=Cu.BalanceYearMonth(e,r);e=l.year,r=l.month;var c=Cu.RegulateDate(e,r,t,s);return{year:e=c.year,month:r=c.month,day:t=c.day}},SubtractTime:function(e,r,t,n,o,i,a,s,u,l,c,f){e-=a,r-=s,t-=u,n-=l,o-=c,i-=f;var p=Cu.BalanceTime(e,r,t,n,o,i);return{deltaDays:p.deltaDays,hour:e=p.hour,minute:r=p.minute,second:t=p.second,millisecond:n=p.millisecond,microsecond:o=p.microsecond,nanosecond:i=p.nanosecond}},AddDuration:function(e,r,t,n,o,i,a,s,u,l,c,f,p,h,y,m,d,v,g,w,T){var b=e+c,S=r+f,E=t+p,I=n+h,D=o+y,O=i+m,A=a+d,j=s+v,P=u+g,k=l+w;return Cu.RegulateDuration(b,S,E,I,D,O,A,j,P,k,T)},SubtractDuration:function(e,r,t,n,o,i,a,s,u,l,c,f,p,h,y,m,d,v,g,w,T){var b=e-c,S=r-f,E=t-p,I=n-h,D=o-y,O=i-m,A=a-d,j=s-v,P=u-g,k=l-w;k<0&&(P+=Math.floor(k/1e3),k=Cu.NonNegativeModulo(k,1e3)),P<0&&(j+=Math.floor(P/1e3),P=Cu.NonNegativeModulo(P,1e3)),j<0&&(A+=Math.floor(j/1e3),j=Cu.NonNegativeModulo(j,1e3)),A<0&&(O+=Math.floor(A/60),A=Cu.NonNegativeModulo(A,60)),O<0&&(D+=Math.floor(O/60),O=Cu.NonNegativeModulo(O,60)),D<0&&(I+=Math.floor(D/24),D=Cu.NonNegativeModulo(D,24));for(var R=0,M=[b,S,E,I];R<M.length;R++){if(M[R]<0)throw new RangeError("negative values not allowed as duration fields")}return"balance"===T?Cu.RegulateDuration(b,S,E,I,D,O,A,j,P,k,"balance"):{years:b,months:S,weeks:E,days:I,hours:D,minutes:O,seconds:A,milliseconds:j,microseconds:P,nanoseconds:k}},AssertPositiveInteger:function(e){if(!Number.isFinite(e)||Math.abs(e)!==e)throw new RangeError("invalid positive integer: ".concat(e));return e},NonNegativeModulo:function(e,r){var t=e%r;return Object.is(t,-0)?0:(t<0&&(t+=r),t)},ToBigInt:function(e){if(xs.isInstance(e))return e;var r=Cu.ToPrimitive(e,Number);if("number"==typeof r)throw new TypeError("Use BigInt() to convert Number to BigInt");try{return xs(r)}catch(e){if(e instanceof Error&&e.message.startsWith("Invalid integer"))throw new SyntaxError(e.message);throw e}},SystemUTCEpochNanoSeconds:(vu=Date.now()%1e6,function(){var e=Date.now(),r=xs(e).multiply(1e6).plus(vu);return vu=e%1e6,r}),SystemTimeZone:function(){var e=new ku("en-us");return new(Us("%Temporal.TimeZone%"))(Cu.TemporalTimeZoneFromString(e.resolvedOptions().timeZone))},ComparisonResult:function(e){return e<0?-1:e>0?1:e},GetOption:function(e,r,t,n){if(null==e)return n;var o=(e=Cu.ToObject(e))[r];if(void 0!==o){if(o=Cu.ToString(o),!t.includes(o))throw new RangeError("".concat(r," must be one of ").concat(t.join(", "),", not ").concat(o));return o}return n}}),xu=new RegExp("^".concat(ju.source,"$"));function Yu(e,r){return"literal"===r.type||"timeZoneName"===r.type||(e[r.type]=parseInt(r.value,10)),e}function Bu(e,r,t){var n=arguments.length>3&&void 0!==arguments[3]?arguments[3]:e(r),o=arguments.length>4&&void 0!==arguments[4]?arguments[4]:e(t);for(r=xs(r),t=xs(t);t.minus(r).greater(1);){var i=r.plus(t).divide(2),a=e(i);if(a===n)r=i,n=a;else{if(a!==o)throw new Error("invalid state in bisection ".concat(n," - ").concat(a," - ").concat(o));t=i,o=a}}return t}var Uu=function(){function e(r){t(this,e);var n=Cu.ToBigInt(r);Cu.RejectAbsoluteRange(n),pu(this),du(this,Zs,n)}return o(e,[{key:"getEpochSeconds",value:function(){if(!Cu.IsTemporalAbsolute(this))throw new TypeError("invalid receiver");return+mu(this,Zs).divide(1e9)}},{key:"getEpochMilliseconds",value:function(){if(!Cu.IsTemporalAbsolute(this))throw new TypeError("invalid receiver");return+xs(mu(this,Zs)).divide(1e6)}},{key:"getEpochMicroseconds",value:function(){if(!Cu.IsTemporalAbsolute(this))throw new TypeError("invalid receiver");return Zu(mu(this,Zs).divide(1e3))}},{key:"getEpochNanoseconds",value:function(){if(!Cu.IsTemporalAbsolute(this))throw new TypeError("invalid receiver");return Zu(mu(this,Zs))}},{key:"plus",value:function(r){if(!Cu.IsTemporalAbsolute(this))throw new TypeError("invalid receiver");var t=Cu.ToLimitedTemporalDuration(r,["years","months"]),n=t.days,o=t.hours,i=t.minutes,a=t.seconds,s=t.milliseconds,u=t.microseconds,l=t.nanoseconds,c=xs(0);c=(c=(c=(c=(c=(c=(c=c.plus(xs(l))).plus(xs(u).multiply(1e3))).plus(xs(s).multiply(1e6))).plus(xs(a).multiply(1e9))).plus(xs(i).multiply(6e10))).plus(xs(o).multiply(36e11))).plus(xs(n).multiply(864e11));var f=xs(mu(this,Zs)).plus(c);Cu.RejectAbsoluteRange(f);var p=new(Cu.SpeciesConstructor(this,e))(Zu(f));if(!Cu.IsTemporalAbsolute(p))throw new TypeError("invalid result");return p}},{key:"minus",value:function(r){if(!Cu.IsTemporalAbsolute(this))throw new TypeError("invalid receiver");var t=Cu.ToLimitedTemporalDuration(r,["years","months"]),n=t.days,o=t.hours,i=t.minutes,a=t.seconds,s=t.milliseconds,u=t.microseconds,l=t.nanoseconds,c=xs(0);c=(c=(c=(c=(c=(c=(c=c.plus(xs(l))).plus(xs(u).multiply(1e3))).plus(xs(s).multiply(1e6))).plus(xs(a).multiply(1e9))).plus(xs(i).multiply(6e10))).plus(xs(o).multiply(36e11))).plus(xs(n).multiply(864e11));var f=xs(mu(this,Zs)).minus(c);Cu.RejectAbsoluteRange(f);var p=new(Cu.SpeciesConstructor(this,e))(Zu(f));if(!Cu.IsTemporalAbsolute(p))throw new TypeError("invalid result");return p}},{key:"difference",value:function(r,t){if(!Cu.IsTemporalAbsolute(this))throw new TypeError("invalid receiver");if(!Cu.IsTemporalAbsolute(r))throw new TypeError("invalid Absolute object");var n=Cu.ToLargestTemporalUnit(t,"seconds",["years","months","weeks"]);if(e.compare(this,r)<0)throw new RangeError("other instance cannot be larger than `this`");var o=mu(r,Zs),i=mu(this,Zs).minus(o),a=+i.mod(1e3),s=+i.divide(1e3).mod(1e3),u=+i.divide(1e6).mod(1e3),l=+i.divide(1e9),c=Us("%Temporal.Duration%"),f=Cu.BalanceDuration(0,0,0,l,u,s,a,n);return new c(0,0,0,f.days,f.hours,f.minutes,f.seconds,f.milliseconds,f.microseconds,f.nanoseconds)}},{key:"equals",value:function(e){if(!Cu.IsTemporalAbsolute(this))throw new TypeError("invalid receiver");if(!Cu.IsTemporalAbsolute(e))throw new TypeError("invalid Absolute object");var r=mu(this,Zs),t=mu(e,Zs);return xs(r).equals(t)}},{key:"toString",value:function(){var e=arguments.length>0&&void 0!==arguments[0]?arguments[0]:"UTC";if(!Cu.IsTemporalAbsolute(this))throw new TypeError("invalid receiver");var r=Us("%Temporal.TimeZone%"),t=r.from(e);return Cu.TemporalAbsoluteToString(this,t)}},{key:"toJSON",value:function(){if(!Cu.IsTemporalAbsolute(this))throw new TypeError("invalid receiver");var e=new(Us("%Temporal.TimeZone%"))("UTC");return Cu.TemporalAbsoluteToString(this,e)}},{key:"toLocaleString",value:function(){if(!Cu.IsTemporalAbsolute(this))throw new TypeError("invalid receiver");for(var e=arguments.length,r=new Array(e),t=0;t<e;t++)r[t]=arguments[t];return p(Intl.DateTimeFormat,r).format(this)}},{key:"valueOf",value:function(){throw new TypeError("use compare() or equals() to compare Temporal.Absolute")}},{key:"inTimeZone",value:function(e){var r=arguments.length>1&&void 0!==arguments[1]?arguments[1]:void 0;if(!Cu.IsTemporalAbsolute(this))throw new TypeError("invalid receiver");var t=Us("%Temporal.TimeZone%"),n=t.from(e);return"function"==typeof n.getDateTimeFor?n.getDateTimeFor(this,r):t.prototype.getDateTimeFor.call(n,this,r)}}],[{key:"fromEpochSeconds",value:function(e){e=Cu.ToNumber(e);var r=xs(e).multiply(1e9);Cu.RejectAbsoluteRange(r);var t=new this(Zu(r));if(!Cu.IsTemporalAbsolute(t))throw new TypeError("invalid result");return t}},{key:"fromEpochMilliseconds",value:function(e){e=Cu.ToNumber(e);var r=xs(e).multiply(1e6);Cu.RejectAbsoluteRange(r);var t=new this(Zu(r));if(!Cu.IsTemporalAbsolute(t))throw new TypeError("invalid result");return t}},{key:"fromEpochMicroseconds",value:function(e){var r=(e=Cu.ToBigInt(e)).multiply(1e3);Cu.RejectAbsoluteRange(r);var t=new this(Zu(r));if(!Cu.IsTemporalAbsolute(t))throw new TypeError("invalid result");return t}},{key:"fromEpochNanoseconds",value:function(e){e=Cu.ToBigInt(e),Cu.RejectAbsoluteRange(e);var r=new this(Zu(e));if(!Cu.IsTemporalAbsolute(r))throw new TypeError("invalid result");return r}},{key:"from",value:function(e){var r=new this(Zu(Cu.IsTemporalAbsolute(e)?mu(e,Zs):Cu.ParseTemporalAbsolute(Cu.ToString(e))));if(!Cu.IsTemporalAbsolute(r))throw new TypeError("invalid result");return r}},{key:"compare",value:function(e,r){if(!Cu.IsTemporalAbsolute(e)||!Cu.IsTemporalAbsolute(r))throw new TypeError("invalid Absolute object");return e=mu(e,Zs),r=mu(r,Zs),xs(e).lesser(r)?-1:xs(e).greater(r)?1:0}}]),e}();function Zu(e){return"undefined"==typeof BigInt?e:e.value}Bs(Uu,"Temporal.Absolute");var qu=function(){function e(r){t(this,e),pu(this),du(this,cu,r)}return o(e,[{key:"dateFromFields",value:function(e,r,t){throw new Error("not implemented")}},{key:"yearMonthFromFields",value:function(e,r,t){throw new Error("not implemented")}},{key:"monthDayFromFields",value:function(e,r,t){throw new Error("not implemented")}},{key:"plus",value:function(e,r,t,n){throw new Error("not implemented")}},{key:"minus",value:function(e,r,t,n){throw new Error("not implemented")}},{key:"difference",value:function(e,r,t){throw new Error("not implemented")}},{key:"year",value:function(e){throw new Error("not implemented")}},{key:"month",value:function(e){throw new Error("not implemented")}},{key:"day",value:function(e){throw new Error("not implemented")}},{key:"era",value:function(e){throw new Error("not implemented")}},{key:"dayOfWeek",value:function(e){throw new Error("not implemented")}},{key:"dayOfYear",value:function(e){throw new Error("not implemented")}},{key:"weekOfYear",value:function(e){throw new Error("not implemented")}},{key:"daysInMonth",value:function(e){throw new Error("not implemented")}},{key:"daysInYear",value:function(e){throw new Error("not implemented")}},{key:"isLeapYear",value:function(e){throw new Error("not implemented")}},{key:"toString",value:function(){if(!Cu.IsTemporalCalendar(this))throw new TypeError("invalid receiver");return mu(this,cu)}},{key:"id",get:function(){if(!Cu.IsTemporalCalendar(this))throw new TypeError("invalid receiver");return mu(this,cu)}}],[{key:"from",value:function(e){return Cu.IsTemporalCalendar(e)||"object"===r(e)&&e?e:_u(Cu.ToString(e))}}]),e}();Bs(qu,"Temporal.Calendar");var Lu=function(e){u(n,e);var r=y(n);function n(){var e=arguments.length>0&&void 0!==arguments[0]?arguments[0]:"iso8601";return t(this,n),r.call(this,e)}return o(n,[{key:"dateFromFields",value:function(e,r,t){if(!Cu.IsTemporalCalendar(this))throw new TypeError("invalid receiver");var n=Cu.ToTemporalDisambiguation(r),o=Cu.ToTemporalDateRecord(e),i=o.year,a=o.month,s=o.day,u=Cu.RegulateDate(i,a,s,n);return new t(i=u.year,a=u.month,s=u.day,this)}},{key:"yearMonthFromFields",value:function(e,r,t){if(!Cu.IsTemporalCalendar(this))throw new TypeError("invalid receiver");var n=Cu.ToTemporalDisambiguation(r),o=Cu.ToTemporalYearMonthRecord(e),i=o.year,a=o.month,s=Cu.RegulateYearMonth(i,a,n);return new t(i=s.year,a=s.month,this,1)}},{key:"monthDayFromFields",value:function(e,r,t){if(!Cu.IsTemporalCalendar(this))throw new TypeError("invalid receiver");var n=Cu.ToTemporalDisambiguation(r),o=Cu.ToTemporalMonthDayRecord(e),i=o.month,a=o.day,s=Cu.RegulateMonthDay(i,a,n);return new t(i=s.month,a=s.day,this,1972)}},{key:"plus",value:function(e,r,t,n){if(!Cu.IsTemporalCalendar(this))throw new TypeError("invalid receiver");var o=Cu.ToTemporalDisambiguation(t),i=r.years,a=r.months,s=r.weeks,u=r.days,l=mu(e,Ls),c=mu(e,Gs),f=mu(e,Ws),p=Cu.AddDate(l,c,f,i,a,s,u,o);return new n(l=p.year,c=p.month,f=p.day,this)}},{key:"minus",value:function(e,r,t,n){if(!Cu.IsTemporalCalendar(this))throw new TypeError("invalid receiver");var o=Cu.ToTemporalDisambiguation(t),i=r.years,a=r.months,s=r.weeks,u=r.days,l=mu(e,Ls),c=mu(e,Gs),f=mu(e,Ws),p=Cu.SubtractDate(l,c,f,i,a,s,u,o);return new n(l=p.year,c=p.month,f=p.day,this)}},{key:"difference",value:function(e,r,t){if(!Cu.IsTemporalCalendar(this))throw new TypeError("invalid receiver");var n=Cu.ToLargestTemporalUnit(t,"days",["hours","minutes","seconds"]),o=Cu.DifferenceDate(e,r,n),i=o.years,a=o.months,s=o.weeks,u=o.days;return new(Us("%Temporal.Duration%"))(i,a,s,u,0,0,0,0,0,0)}},{key:"year",value:function(e){if(!Cu.IsTemporalCalendar(this))throw new TypeError("invalid receiver");return mu(e,Ls)}},{key:"month",value:function(e){if(!Cu.IsTemporalCalendar(this))throw new TypeError("invalid receiver");return mu(e,Gs)}},{key:"day",value:function(e){if(!Cu.IsTemporalCalendar(this))throw new TypeError("invalid receiver");return mu(e,Ws)}},{key:"era",value:function(e){}},{key:"dayOfWeek",value:function(e){if(!Cu.IsTemporalCalendar(this))throw new TypeError("invalid receiver");return Cu.DayOfWeek(mu(e,Ls),mu(e,Gs),mu(e,Ws))}},{key:"dayOfYear",value:function(e){if(!Cu.IsTemporalCalendar(this))throw new TypeError("invalid receiver");return Cu.DayOfYear(mu(e,Ls),mu(e,Gs),mu(e,Ws))}},{key:"weekOfYear",value:function(e){if(!Cu.IsTemporalCalendar(this))throw new TypeError("invalid receiver");return Cu.WeekOfYear(mu(e,Ls),mu(e,Gs),mu(e,Ws))}},{key:"daysInMonth",value:function(e){if(!Cu.IsTemporalCalendar(this))throw new TypeError("invalid receiver");return Cu.DaysInMonth(mu(e,Ls),mu(e,Gs))}},{key:"daysInYear",value:function(e){if(!Cu.IsTemporalCalendar(this))throw new TypeError("invalid receiver");return Cu.LeapYear(mu(e,Ls))?366:365}},{key:"isLeapYear",value:function(e){if(!Cu.IsTemporalCalendar(this))throw new TypeError("invalid receiver");return Cu.LeapYear(mu(e,Ls))}}]),n}(qu),Gu={eraStartDates:["1868-09-08","1912-07-30","1926-12-25","1989-01-08","2019-05-01"],eraAddends:[1867,1911,1925,1988,2018],eraNames:["meiji","taisho","showa","heisei","reiwa"],compareDate:function(e,r){for(var t=0,n=[Ls,Gs,Ws];t<n.length;t++){var o=n[t],i=mu(e,o),a=mu(r,o);if(i!==a)return Cu.ComparisonResult(i-a)}},findEra:function(e){var r=Us("%Temporal.Date%"),t=Gu.eraStartDates.findIndex((function(t){var n=Cu.ParseTemporalDateString(t),o=n.year,i=n.month,a=n.day,s=new r(o,i,a);return Gu.compareDate(e,s)<0}));return-1===t?Gu.eraStartDates.length-1:0===t?0:t-1},isoYear:function(e,r){var t=Gu.eraNames.indexOf(r);if(-1===t)throw new RangeError("invalid era ".concat(r));return e+Gu.eraAddends[t]}},Wu={gregory:function(e){u(n,e);var r=y(n);function n(){return t(this,n),r.call(this,"gregory")}return n}(Lu),iso8601:Lu,japanese:function(e){u(n,e);var r=y(n);function n(){return t(this,n),r.call(this,"japanese")}return o(n,[{key:"era",value:function(e){return Gu.eraNames[Gu.findEra(e)]}},{key:"year",value:function(e){var r=Gu.findEra(e);return mu(e,Ls)-Gu.eraAddends[r]}},{key:"dateFromFields",value:function(e,r,t){e=Cu.ToRecord(e,[["day"],["era"],["month"],["year"]]);var o=Gu.isoYear(e.year,e.era);return m(l(n.prototype),"dateFromFields",this).call(this,s(s({},e),{},{year:o}),r,t)}},{key:"yearMonthFromFields",value:function(e,r,t){e=Cu.ToRecord(e,[["era"],["month"],["year"]]);var o=Gu.isoYear(e.year,e.era);return m(l(n.prototype),"yearMonthFromFields",this).call(this,s(s({},e),{},{year:o}),r,t)}}]),n}(Lu)};function _u(e){if(!(e in Wu))throw new RangeError("unknown calendar ".concat(e));return new Wu[e]}function Vu(){return _u("iso8601")}var $u=Object.assign,zu=function(){function e(n,o,i){var a=arguments.length>3&&void 0!==arguments[3]?arguments[3]:void 0;if(t(this,e),n=Cu.ToInteger(n),o=Cu.ToInteger(o),i=Cu.ToInteger(i),void 0===a&&(a=Vu()),Cu.RejectDate(n,o,i),Cu.RejectDateRange(n,o,i),!a||"object"!==r(a))throw new RangeError("invalid calendar");pu(this),du(this,Ls,n),du(this,Gs,o),du(this,Ws,i),du(this,Qs,a)}return o(e,[{key:"with",value:function(){var r,t=arguments.length>0&&void 0!==arguments[0]?arguments[0]:{},n=arguments.length>1?arguments[1]:void 0;if(!Cu.IsTemporalDate(this))throw new TypeError("invalid receiver");var o=t.calendar;if(o){var i=Us("%Temporal.Calendar%");o=i.from(o),r=new e(mu(this,Ls),mu(this,Gs),mu(this,Ws),o)}else o=mu(this,Qs),r=this;var a=Cu.ToPartialRecord(t,["day","era","month","year"]);if(!a)throw new RangeError("invalid date-like");var s=Cu.ToTemporalDateRecord(r);$u(s,a);var u=Cu.SpeciesConstructor(this,e),l=o.dateFromFields(s,n,u);if(!Cu.IsTemporalDate(l))throw new TypeError("invalid result");return l}},{key:"withCalendar",value:function(r){if(!Cu.IsTemporalDate(this))throw new TypeError("invalid receiver");r=Us("%Temporal.Calendar%").from(r);var t=new(Cu.SpeciesConstructor(this,e))(mu(this,Ls),mu(this,Gs),mu(this,Ws),r);if(!Cu.IsTemporalDate(t))throw new TypeError("invalid result");return t}},{key:"plus",value:function(r,t){if(!Cu.IsTemporalDate(this))throw new TypeError("invalid receiver");var n=Cu.ToLimitedTemporalDuration(r),o=n,i=o.years,a=o.months,s=o.weeks,u=o.hours,l=o.minutes,c=o.seconds,f=o.milliseconds,p=o.microseconds,h=o.nanoseconds;n={years:i,months:a,weeks:s,days:Cu.BalanceDuration(n.days,u,l,c,f,p,h,"days").days};var y=Cu.SpeciesConstructor(this,e),m=mu(this,Qs).plus(this,n,t,y);if(!Cu.IsTemporalDate(m))throw new TypeError("invalid result");return m}},{key:"minus",value:function(r,t){if(!Cu.IsTemporalDate(this))throw new TypeError("invalid receiver");var n=Cu.ToLimitedTemporalDuration(r),o=n,i=o.years,a=o.months,s=o.weeks,u=o.hours,l=o.minutes,c=o.seconds,f=o.milliseconds,p=o.microseconds,h=o.nanoseconds;n={years:i,months:a,weeks:s,days:Cu.BalanceDuration(n.days,u,l,c,f,p,h,"days").days};var y=Cu.SpeciesConstructor(this,e),m=mu(this,Qs).minus(this,n,t,y);if(!Cu.IsTemporalDate(m))throw new TypeError("invalid result");return m}},{key:"difference",value:function(r,t){if(!Cu.IsTemporalDate(this))throw new TypeError("invalid receiver");if(!Cu.IsTemporalDate(r))throw new TypeError("invalid Date object");var n=mu(this,Qs);if(n.id!==mu(r,Qs).id&&(r=new e(mu(r,Ls),mu(r,Gs),mu(r,Ws),n)),e.compare(this,r)<0)throw new RangeError("other instance cannot be larger than `this`");return n.difference(r,this,t)}},{key:"equals",value:function(e){if(!Cu.IsTemporalDate(this))throw new TypeError("invalid receiver");if(!Cu.IsTemporalDate(e))throw new TypeError("invalid Date object");for(var r=0,t=[Ls,Gs,Ws];r<t.length;r++){var n=t[r];if(mu(this,n)!==mu(e,n))return!1}return mu(this,Qs).id===mu(e,Qs).id}},{key:"toString",value:function(){if(!Cu.IsTemporalDate(this))throw new TypeError("invalid receiver");var e=Cu.ISOYearString(mu(this,Ls)),r=Cu.ISODateTimePartString(mu(this,Gs)),t=Cu.ISODateTimePartString(mu(this,Ws)),n=Cu.FormatCalendarAnnotation(mu(this,Qs));return"".concat(e,"-").concat(r,"-").concat(t).concat(n)}},{key:"toLocaleString",value:function(){if(!Cu.IsTemporalDate(this))throw new TypeError("invalid receiver");for(var e=arguments.length,r=new Array(e),t=0;t<e;t++)r[t]=arguments[t];return p(Intl.DateTimeFormat,r).format(this)}},{key:"valueOf",value:function(){throw new TypeError("use compare() or equals() to compare Temporal.Date")}},{key:"withTime",value:function(e){if(!Cu.IsTemporalDate(this))throw new TypeError("invalid receiver");if(!Cu.IsTemporalTime(e))throw new TypeError("invalid Temporal.Time object");var r=mu(this,Ls),t=mu(this,Gs),n=mu(this,Ws),o=mu(this,Qs),i=mu(e,_s),a=mu(e,Vs),s=mu(e,$s),u=mu(e,zs),l=mu(e,Js),c=mu(e,Hs);return new(Us("%Temporal.DateTime%"))(r,t,n,i,a,s,u,l,c,o)}},{key:"getYearMonth",value:function(){if(!Cu.IsTemporalDate(this))throw new TypeError("invalid receiver");var e=Us("%Temporal.YearMonth%"),r=mu(this,Qs),t=Cu.ToTemporalDateRecord(this);return r.yearMonthFromFields(t,{},e)}},{key:"getMonthDay",value:function(){if(!Cu.IsTemporalDate(this))throw new TypeError("invalid receiver");var e=Us("%Temporal.MonthDay%"),r=mu(this,Qs),t=Cu.ToTemporalDateRecord(this);return r.monthDayFromFields(t,{},e)}},{key:"getFields",value:function(){var e=Cu.ToTemporalDateRecord(this);if(!e)throw new TypeError("invalid receiver");return e.calendar=mu(this,Qs),e}},{key:"getISOCalendarFields",value:function(){if(!Cu.IsTemporalDate(this))throw new TypeError("invalid receiver");return{year:mu(this,Ls),month:mu(this,Gs),day:mu(this,Ws)}}},{key:"year",get:function(){if(!Cu.IsTemporalDate(this))throw new TypeError("invalid receiver");return mu(this,Qs).year(this)}},{key:"month",get:function(){if(!Cu.IsTemporalDate(this))throw new TypeError("invalid receiver");return mu(this,Qs).month(this)}},{key:"day",get:function(){if(!Cu.IsTemporalDate(this))throw new TypeError("invalid receiver");return mu(this,Qs).day(this)}},{key:"calendar",get:function(){if(!Cu.IsTemporalDate(this))throw new TypeError("invalid receiver");return mu(this,Qs)}},{key:"era",get:function(){if(!Cu.IsTemporalDate(this))throw new TypeError("invalid receiver");return mu(this,Qs).era(this)}},{key:"dayOfWeek",get:function(){if(!Cu.IsTemporalDate(this))throw new TypeError("invalid receiver");return mu(this,Qs).dayOfWeek(this)}},{key:"dayOfYear",get:function(){if(!Cu.IsTemporalDate(this))throw new TypeError("invalid receiver");return mu(this,Qs).dayOfYear(this)}},{key:"weekOfYear",get:function(){if(!Cu.IsTemporalDate(this))throw new TypeError("invalid receiver");return mu(this,Qs).weekOfYear(this)}},{key:"daysInYear",get:function(){if(!Cu.IsTemporalDate(this))throw new TypeError("invalid receiver");return mu(this,Qs).daysInYear(this)}},{key:"daysInMonth",get:function(){if(!Cu.IsTemporalDate(this))throw new TypeError("invalid receiver");return mu(this,Qs).daysInMonth(this)}},{key:"isLeapYear",get:function(){if(!Cu.IsTemporalDate(this))throw new TypeError("invalid receiver");return mu(this,Qs).isLeapYear(this)}}],[{key:"from",value:function(e){var t,n=arguments.length>1&&void 0!==arguments[1]?arguments[1]:void 0,o=Cu.ToTemporalDisambiguation(n),i=Us("%Temporal.Calendar%");if("object"===r(e)&&e)if(Cu.IsTemporalDate(e)){var a=mu(e,Ls),s=mu(e,Gs),u=mu(e,Ws),l=mu(e,Qs);t=new this(a,s,u,l)}else{var c=e.calendar;void 0===c&&(c=Vu()),t=(c=i.from(c)).dateFromFields(e,n,this)}else{var f=Cu.ParseTemporalDateString(Cu.ToString(e)),p=f.year,h=f.month,y=f.day,m=f.calendar,d=Cu.RegulateDate(p,h,y,o);p=d.year,h=d.month,y=d.day,m||(m=Vu()),t=new this(p,h,y,m=i.from(m))}if(!Cu.IsTemporalDate(t))throw new TypeError("invalid result");return t}},{key:"compare",value:function(e,r){if(!Cu.IsTemporalDate(e)||!Cu.IsTemporalDate(r))throw new TypeError("invalid Date object");for(var t=0,n=[Ls,Gs,Ws];t<n.length;t++){var o=n[t],i=mu(e,o),a=mu(r,o);if(i!==a)return Cu.ComparisonResult(i-a)}var s=mu(e,Qs).id,u=mu(r,Qs).id;return Cu.ComparisonResult(s<u?-1:s>u?1:0)}}]),e}();zu.prototype.toJSON=zu.prototype.toString,Bs(zu,"Temporal.Date");var Ju=Object.assign,Hu=function(){function e(n,o,i){var a=arguments.length>3&&void 0!==arguments[3]?arguments[3]:0,s=arguments.length>4&&void 0!==arguments[4]?arguments[4]:0,u=arguments.length>5&&void 0!==arguments[5]?arguments[5]:0,l=arguments.length>6&&void 0!==arguments[6]?arguments[6]:0,c=arguments.length>7&&void 0!==arguments[7]?arguments[7]:0,f=arguments.length>8&&void 0!==arguments[8]?arguments[8]:0,p=arguments.length>9&&void 0!==arguments[9]?arguments[9]:void 0;if(t(this,e),n=Cu.ToInteger(n),o=Cu.ToInteger(o),i=Cu.ToInteger(i),a=Cu.ToInteger(a),s=Cu.ToInteger(s),u=Cu.ToInteger(u),l=Cu.ToInteger(l),c=Cu.ToInteger(c),f=Cu.ToInteger(f),void 0===p&&(p=Vu()),Cu.RejectDateTime(n,o,i,a,s,u,l,c,f),Cu.RejectDateTimeRange(n,o,i,a,s,u,l,c,f),!p||"object"!==r(p))throw new RangeError("invalid calendar");pu(this),du(this,Ls,n),du(this,Gs,o),du(this,Ws,i),du(this,_s,a),du(this,Vs,s),du(this,$s,u),du(this,zs,l),du(this,Js,c),du(this,Hs,f),du(this,Qs,p)}return o(e,[{key:"with",value:function(r,t){if(!Cu.IsTemporalDateTime(this))throw new TypeError("invalid receiver");var n,o=Cu.ToTemporalDisambiguation(t),i=r.calendar;i?(i=Us("%Temporal.Calendar%").from(i),n=new e(mu(this,Ls),mu(this,Gs),mu(this,Ws),mu(this,_s),mu(this,Vs),mu(this,$s),mu(this,zs),mu(this,Js),mu(this,Hs),i)):(i=mu(this,Qs),n=this);var a=Cu.ToPartialRecord(r,["day","era","hour","microsecond","millisecond","minute","month","nanosecond","second","year"]);if(!a)throw new RangeError("invalid date-time-like");var s=Cu.ToTemporalDateTimeRecord(n);Ju(s,a);var u=i.dateFromFields(s,t,Us("%Temporal.Date%")),l=mu(u,Ls),c=mu(u,Gs),f=mu(u,Ws),p=s.hour,h=s.minute,y=s.second,m=s.millisecond,d=s.microsecond,v=s.nanosecond,g=Cu.RegulateTime(p,h,y,m,d,v,o);p=g.hour,h=g.minute,y=g.second,m=g.millisecond,d=g.microsecond,v=g.nanosecond;var w=new(Cu.SpeciesConstructor(this,e))(l,c,f,p,h,y,m,d,v,i);if(!Cu.IsTemporalDateTime(w))throw new TypeError("invalid result");return w}},{key:"withCalendar",value:function(r){if(!Cu.IsTemporalDateTime(this))throw new TypeError("invalid receiver");r=Us("%Temporal.Calendar%").from(r);var t=new(Cu.SpeciesConstructor(this,e))(mu(this,Ls),mu(this,Gs),mu(this,Ws),mu(this,_s),mu(this,Vs),mu(this,$s),mu(this,zs),mu(this,Js),mu(this,Hs),r);if(!Cu.IsTemporalDateTime(t))throw new TypeError("invalid result");return t}},{key:"plus",value:function(r,t){if(!Cu.IsTemporalDateTime(this))throw new TypeError("invalid receiver");Cu.ToTemporalDisambiguation(t);var n=Cu.ToLimitedTemporalDuration(r),o=n,i=o.years,a=o.months,s=o.days,u=o.weeks,l=o.hours,c=o.minutes,f=o.seconds,p=o.milliseconds,h=o.microseconds,y=o.nanoseconds,m=Cu.BalanceDuration(s,l,c,f,p,h,y,"days");n={years:i,months:a,weeks:u,days:s=m.days,hours:l=m.hours,minutes:c=m.minutes,seconds:f=m.seconds,milliseconds:p=m.milliseconds,microseconds:h=m.microseconds,nanoseconds:y=m.nanoseconds};var d,v=this.hour,g=this.minute,w=this.second,T=this.millisecond,b=this.microsecond,S=this.nanosecond,E=Cu.AddTime(v,g,w,T,b,S,l,c,f,p,h,y);d=E.deltaDays,v=E.hour,g=E.minute,w=E.second,T=E.millisecond,b=E.microsecond,S=E.nanosecond,n.days+=d;var I=mu(this,Qs),D=Us("%Temporal.Date%"),O=new D(mu(this,Ls),mu(this,Gs),mu(this,Ws),I),A=I.plus(O,n,t,D),j=mu(A,Ls),P=mu(A,Gs),k=mu(A,Ws),R=new(Cu.SpeciesConstructor(this,e))(j,P,k,v,g,w,T,b,S,I);if(!Cu.IsTemporalDateTime(R))throw new TypeError("invalid result");return R}},{key:"minus",value:function(r,t){if(!Cu.IsTemporalDateTime(this))throw new TypeError("invalid receiver");Cu.ToTemporalDisambiguation(t);var n=Cu.ToLimitedTemporalDuration(r),o=n,i=o.years,a=o.months,s=o.days,u=o.weeks,l=o.hours,c=o.minutes,f=o.seconds,p=o.milliseconds,h=o.microseconds,y=o.nanoseconds,m=Cu.BalanceDuration(s,l,c,f,p,h,y,"days");n={years:i,months:a,weeks:u,days:s=m.days,hours:l=m.hours,minutes:c=m.minutes,seconds:f=m.seconds,milliseconds:p=m.milliseconds,microseconds:h=m.microseconds,nanoseconds:y=m.nanoseconds};var d,v=this.hour,g=this.minute,w=this.second,T=this.millisecond,b=this.microsecond,S=this.nanosecond,E=Cu.SubtractTime(v,g,w,T,b,S,l,c,f,p,h,y);d=E.deltaDays,v=E.hour,g=E.minute,w=E.second,T=E.millisecond,b=E.microsecond,S=E.nanosecond,n.days-=d;var I=mu(this,Qs),D=Us("%Temporal.Date%"),O=new D(mu(this,Ls),mu(this,Gs),mu(this,Ws),I),A=I.minus(O,n,t,D),j=mu(A,Ls),P=mu(A,Gs),k=mu(A,Ws),R=new(Cu.SpeciesConstructor(this,e))(j,P,k,v,g,w,T,b,S,I);if(!Cu.IsTemporalDateTime(R))throw new TypeError("invalid result");return R}},{key:"difference",value:function(r,t){if(!Cu.IsTemporalDateTime(this))throw new TypeError("invalid receiver");if(!Cu.IsTemporalDateTime(r))throw new TypeError("invalid DateTime object");var n=mu(this,Qs);n.id!==mu(r,Qs).id&&(r=new e(mu(r,Ls),mu(r,Gs),mu(r,Ws),mu(r,_s),mu(r,Vs),mu(r,$s),mu(r,zs),mu(r,Js),mu(r,Hs),n));var o=Cu.ToLargestTemporalUnit(t,"days");if(e.compare(this,r)<0)throw new RangeError("other instance cannot be larger than `this`");var i=Cu.DifferenceTime(r,this),a=i.deltaDays,s=i.hours,u=i.minutes,l=i.seconds,c=i.milliseconds,f=i.microseconds,p=i.nanoseconds,h=mu(this,Ls),y=mu(this,Gs),m=mu(this,Ws)+a,d=Cu.BalanceDate(h,y,m);h=d.year,y=d.month,m=d.day;var v=new(Us("%Temporal.Date%"))(h,y,m,mu(this,Qs)),g="days";"years"!==o&&"months"!==o&&"weeks"!==o||(g=o);var w,T=Ju({},t,{largestUnit:g}),b=n.difference(r,v,T),S=Cu.BalanceDuration(b.days,s,u,l,c,f,p,o);return w=S.days,s=S.hours,u=S.minutes,l=S.seconds,c=S.milliseconds,f=S.microseconds,p=S.nanoseconds,new(Us("%Temporal.Duration%"))(b.years,b.months,b.weeks,w,s,u,l,c,f,p)}},{key:"equals",value:function(e){if(!Cu.IsTemporalDateTime(this))throw new TypeError("invalid receiver");if(!Cu.IsTemporalDateTime(e))throw new TypeError("invalid Date object");for(var r=0,t=[Ls,Gs,Ws,_s,Vs,$s,zs,Js,Hs];r<t.length;r++){var n=t[r];if(mu(this,n)!==mu(e,n))return!1}return mu(this,Qs).id===mu(e,Qs).id}},{key:"toString",value:function(){if(!Cu.IsTemporalDateTime(this))throw new TypeError("invalid receiver");var e=Cu.ISOYearString(mu(this,Ls)),r=Cu.ISODateTimePartString(mu(this,Gs)),t=Cu.ISODateTimePartString(mu(this,Ws)),n=Cu.ISODateTimePartString(mu(this,_s)),o=Cu.ISODateTimePartString(mu(this,Vs)),i=Cu.ISOSecondsString(mu(this,$s),mu(this,zs),mu(this,Js),mu(this,Hs)),a=Cu.FormatCalendarAnnotation(mu(this,Qs));return"".concat(e,"-").concat(r,"-").concat(t,"T").concat(n,":").concat(o).concat(i?":".concat(i):"").concat(a)}},{key:"toLocaleString",value:function(){if(!Cu.IsTemporalDateTime(this))throw new TypeError("invalid receiver");for(var e=arguments.length,r=new Array(e),t=0;t<e;t++)r[t]=arguments[t];return p(Intl.DateTimeFormat,r).format(this)}},{key:"valueOf",value:function(){throw new TypeError("use compare() or equals() to compare Temporal.DateTime")}},{key:"inTimeZone",value:function(e,r){if(!Cu.IsTemporalDateTime(this))throw new TypeError("invalid receiver");var t=Us("%Temporal.TimeZone%"),n=t.from(e),o=Cu.ToTimeZoneTemporalDisambiguation(r);return"function"==typeof n.getAbsoluteFor?n.getAbsoluteFor(this,{disambiguation:o}):t.prototype.getAbsoluteFor.call(n,this,{disambiguation:o})}},{key:"getDate",value:function(){if(!Cu.IsTemporalDateTime(this))throw new TypeError("invalid receiver");return new(Us("%Temporal.Date%"))(mu(this,Ls),mu(this,Gs),mu(this,Ws),mu(this,Qs))}},{key:"getYearMonth",value:function(){if(!Cu.IsTemporalDateTime(this))throw new TypeError("invalid receiver");var e=Us("%Temporal.YearMonth%"),r=mu(this,Qs),t=Cu.ToTemporalDateTimeRecord(this);return r.yearMonthFromFields(t,{},e)}},{key:"getMonthDay",value:function(){if(!Cu.IsTemporalDateTime(this))throw new TypeError("invalid receiver");var e=Us("%Temporal.MonthDay%"),r=mu(this,Qs),t=Cu.ToTemporalDateTimeRecord(this);return r.monthDayFromFields(t,{},e)}},{key:"getTime",value:function(){if(!Cu.IsTemporalDateTime(this))throw new TypeError("invalid receiver");return new(Us("%Temporal.Time%"))(mu(this,_s),mu(this,Vs),mu(this,$s),mu(this,zs),mu(this,Js),mu(this,Hs))}},{key:"getFields",value:function(){var e=Cu.ToTemporalDateTimeRecord(this);if(!e)throw new TypeError("invalid receiver");return e.calendar=mu(this,Qs),e}},{key:"getISOCalendarFields",value:function(){if(!Cu.IsTemporalDateTime(this))throw new TypeError("invalid receiver");return{year:mu(this,Ls),month:mu(this,Gs),day:mu(this,Ws),hour:mu(this,_s),minute:mu(this,Vs),second:mu(this,$s),millisecond:mu(this,zs),microsecond:mu(this,Js),nanosecond:mu(this,Hs)}}},{key:"year",get:function(){if(!Cu.IsTemporalDateTime(this))throw new TypeError("invalid receiver");return mu(this,Qs).year(this)}},{key:"month",get:function(){if(!Cu.IsTemporalDateTime(this))throw new TypeError("invalid receiver");return mu(this,Qs).month(this)}},{key:"day",get:function(){if(!Cu.IsTemporalDateTime(this))throw new TypeError("invalid receiver");return mu(this,Qs).day(this)}},{key:"hour",get:function(){if(!Cu.IsTemporalDateTime(this))throw new TypeError("invalid receiver");return mu(this,_s)}},{key:"minute",get:function(){if(!Cu.IsTemporalDateTime(this))throw new TypeError("invalid receiver");return mu(this,Vs)}},{key:"second",get:function(){if(!Cu.IsTemporalDateTime(this))throw new TypeError("invalid receiver");return mu(this,$s)}},{key:"millisecond",get:function(){if(!Cu.IsTemporalDateTime(this))throw new TypeError("invalid receiver");return mu(this,zs)}},{key:"microsecond",get:function(){if(!Cu.IsTemporalDateTime(this))throw new TypeError("invalid receiver");return mu(this,Js)}},{key:"nanosecond",get:function(){if(!Cu.IsTemporalDateTime(this))throw new TypeError("invalid receiver");return mu(this,Hs)}},{key:"calendar",get:function(){if(!Cu.IsTemporalDateTime(this))throw new TypeError("invalid receiver");return mu(this,Qs)}},{key:"era",get:function(){if(!Cu.IsTemporalDateTime(this))throw new TypeError("invalid receiver");return mu(this,Qs).era(this)}},{key:"dayOfWeek",get:function(){if(!Cu.IsTemporalDateTime(this))throw new TypeError("invalid receiver");return mu(this,Qs).dayOfWeek(this)}},{key:"dayOfYear",get:function(){if(!Cu.IsTemporalDateTime(this))throw new TypeError("invalid receiver");return mu(this,Qs).dayOfYear(this)}},{key:"weekOfYear",get:function(){if(!Cu.IsTemporalDateTime(this))throw new TypeError("invalid receiver");return mu(this,Qs).weekOfYear(this)}},{key:"daysInYear",get:function(){if(!Cu.IsTemporalDateTime(this))throw new TypeError("invalid receiver");return mu(this,Qs).daysInYear(this)}},{key:"daysInMonth",get:function(){if(!Cu.IsTemporalDateTime(this))throw new TypeError("invalid receiver");return mu(this,Qs).daysInMonth(this)}},{key:"isLeapYear",get:function(){if(!Cu.IsTemporalDateTime(this))throw new TypeError("invalid receiver");return mu(this,Qs).isLeapYear(this)}}],[{key:"from",value:function(e){var t,n=arguments.length>1&&void 0!==arguments[1]?arguments[1]:void 0,o=Cu.ToTemporalDisambiguation(n),i=Us("%Temporal.Calendar%");if("object"===r(e)&&e)if(Cu.IsTemporalDateTime(e)){var a=mu(e,Ls),s=mu(e,Gs),u=mu(e,Ws),l=mu(e,_s),c=mu(e,Vs),f=mu(e,$s),p=mu(e,zs),h=mu(e,Js),y=mu(e,Hs),m=mu(e,Qs);t=new this(a,s,u,l,c,f,p,h,y,m)}else{var d=e.calendar;void 0===d&&(d=Vu()),d=i.from(d);var v=Cu.ToTemporalDateTimeRecord(e),g=Us("%Temporal.Date%"),w=d.dateFromFields(v,n,g),T=mu(w,Ls),b=mu(w,Gs),S=mu(w,Ws);if("constrain"===o)try{d.dateFromFields(v,{disambiguation:"reject"},g)}catch(e){275760===T&&9===b&&13===S?S+=1:-271821===T&&4===b&&19===S&&(S-=1);var E=Cu.BalanceDate(T,b,S);T=E.year,b=E.month,S=E.day}var I=v.hour,D=v.minute,O=v.second,A=v.millisecond,j=v.microsecond,P=v.nanosecond,k=Cu.RegulateTime(I,D,O,A,j,P,o);t=new this(T,b,S,I=k.hour,D=k.minute,O=k.second,A=k.millisecond,j=k.microsecond,P=k.nanosecond,d)}else{var R=Cu.ParseTemporalDateTimeString(Cu.ToString(e)),M=R.year,N=R.month,F=R.day,C=R.hour,x=R.minute,Y=R.second,B=R.millisecond,U=R.microsecond,Z=R.nanosecond,q=R.calendar;q||(q=Vu()),t=new this(M,N,F,C,x,Y,B,U,Z,q=i.from(q))}if(!Cu.IsTemporalDateTime(t))throw new TypeError("invalid result");return t}},{key:"compare",value:function(e,r){if(!Cu.IsTemporalDateTime(e)||!Cu.IsTemporalDateTime(r))throw new TypeError("invalid DateTime object");for(var t=0,n=[Ls,Gs,Ws,_s,Vs,$s,zs,Js,Hs];t<n.length;t++){var o=n[t],i=mu(e,o),a=mu(r,o);if(i!==a)return Cu.ComparisonResult(i-a)}var s=mu(e,Qs).id,u=mu(r,Qs).id;return Cu.ComparisonResult(s<u?-1:s>u?1:0)}}]),e}();Hu.prototype.toJSON=Hu.prototype.toString,Bs(Hu,"Temporal.DateTime");var Ku=function(){function e(){var r=arguments.length>0&&void 0!==arguments[0]?arguments[0]:0,n=arguments.length>1&&void 0!==arguments[1]?arguments[1]:0,o=arguments.length>2&&void 0!==arguments[2]?arguments[2]:0,i=arguments.length>3&&void 0!==arguments[3]?arguments[3]:0,a=arguments.length>4&&void 0!==arguments[4]?arguments[4]:0,s=arguments.length>5&&void 0!==arguments[5]?arguments[5]:0,u=arguments.length>6&&void 0!==arguments[6]?arguments[6]:0,l=arguments.length>7&&void 0!==arguments[7]?arguments[7]:0,c=arguments.length>8&&void 0!==arguments[8]?arguments[8]:0,f=arguments.length>9&&void 0!==arguments[9]?arguments[9]:0;t(this,e);for(var p=0,h=[r=Cu.ToInteger(r),n=Cu.ToInteger(n),o=Cu.ToInteger(o),i=Cu.ToInteger(i),a=Cu.ToInteger(a),s=Cu.ToInteger(s),u=Cu.ToInteger(u),l=Cu.ToInteger(l),c=Cu.ToInteger(c),f=Cu.ToInteger(f)];p<h.length;p++){var y=h[p];if(y<0)throw new RangeError("negative values not allowed as duration fields");if(!Number.isFinite(y))throw new RangeError("infinite values not allowed as duration fields")}pu(this),du(this,eu,r),du(this,ru,n),du(this,tu,o),du(this,nu,i),du(this,ou,a),du(this,iu,s),du(this,au,u),du(this,su,l),du(this,uu,c),du(this,lu,f)}return o(e,[{key:"with",value:function(r,t){if(!Cu.IsTemporalDuration(this))throw new TypeError("invalid receiver");var n=Cu.ToDurationTemporalDisambiguation(t),o=Cu.ToPartialRecord(r,["days","hours","microseconds","milliseconds","minutes","months","nanoseconds","seconds","weeks","years"]);if(!o)throw new RangeError("invalid duration-like");var i=o.years,a=void 0===i?mu(this,eu):i,s=o.months,u=void 0===s?mu(this,ru):s,l=o.weeks,c=void 0===l?mu(this,tu):l,f=o.days,p=void 0===f?mu(this,nu):f,h=o.hours,y=void 0===h?mu(this,ou):h,m=o.minutes,d=void 0===m?mu(this,iu):m,v=o.seconds,g=void 0===v?mu(this,au):v,w=o.milliseconds,T=void 0===w?mu(this,su):w,b=o.microseconds,S=void 0===b?mu(this,uu):b,E=o.nanoseconds,I=void 0===E?mu(this,lu):E,D=Cu.RegulateDuration(a,u,c,p,y,d,g,T,S,I,n);a=D.years,u=D.months,c=D.weeks,p=D.days,y=D.hours,d=D.minutes,g=D.seconds,T=D.milliseconds,S=D.microseconds,I=D.nanoseconds;var O=new(Cu.SpeciesConstructor(this,e))(a,u,c,p,y,d,g,T,S,I);if(!Cu.IsTemporalDuration(O))throw new TypeError("invalid result");return O}},{key:"plus",value:function(r,t){if(!Cu.IsTemporalDuration(this))throw new TypeError("invalid receiver");var n=Cu.ToLimitedTemporalDuration(r),o=n.years,i=n.months,a=n.weeks,s=n.days,u=n.hours,l=n.minutes,c=n.seconds,f=n.milliseconds,p=n.microseconds,h=n.nanoseconds,y=Cu.ToTemporalDisambiguation(t),m=Cu.AddDuration(mu(this,eu),mu(this,ru),mu(this,tu),mu(this,nu),mu(this,ou),mu(this,iu),mu(this,au),mu(this,su),mu(this,uu),mu(this,lu),o,i,a,s,u,l,c,f,p,h,y);o=m.years,i=m.months,a=m.weeks,s=m.days,u=m.hours,l=m.minutes,c=m.seconds,f=m.milliseconds,p=m.microseconds,h=m.nanoseconds;var d=new(Cu.SpeciesConstructor(this,e))(o,i,a,s,u,l,c,f,p,h);if(!Cu.IsTemporalDuration(d))throw new TypeError("invalid result");return d}},{key:"minus",value:function(r,t){if(!Cu.IsTemporalDuration(this))throw new TypeError("invalid receiver");var n=Cu.ToLimitedTemporalDuration(r),o=n.years,i=n.months,a=n.weeks,s=n.days,u=n.hours,l=n.minutes,c=n.seconds,f=n.milliseconds,p=n.microseconds,h=n.nanoseconds,y=Cu.ToDurationSubtractionTemporalDisambiguation(t),m=Cu.SubtractDuration(mu(this,eu),mu(this,ru),mu(this,tu),mu(this,nu),mu(this,ou),mu(this,iu),mu(this,au),mu(this,su),mu(this,uu),mu(this,lu),o,i,a,s,u,l,c,f,p,h,y);o=m.years,i=m.months,a=m.weeks,s=m.days,u=m.hours,l=m.minutes,c=m.seconds,f=m.milliseconds,p=m.microseconds,h=m.nanoseconds;var d=new(Cu.SpeciesConstructor(this,e))(o,i,a,s,u,l,c,f,p,h);if(!Cu.IsTemporalDuration(d))throw new TypeError("invalid result");return d}},{key:"getFields",value:function(){var e=Cu.ToRecord(this,[["days"],["hours"],["microseconds"],["milliseconds"],["minutes"],["months"],["nanoseconds"],["seconds"],["weeks"],["years"]]);if(!e)throw new TypeError("invalid receiver");return e}},{key:"toString",value:function(){if(!Cu.IsTemporalDuration(this))throw new TypeError("invalid receiver");return Cu.TemporalDurationToString(this)}},{key:"toLocaleString",value:function(){if(!Cu.IsTemporalDuration(this))throw new TypeError("invalid receiver");if("undefined"!=typeof Intl&&void 0!==Intl.DurationFormat){for(var e=arguments.length,r=new Array(e),t=0;t<e;t++)r[t]=arguments[t];return p(Intl.DurationFormat,r).format(this)}return console.warn("Temporal.Duration.prototype.toLocaleString() requires Intl.DurationFormat."),Cu.TemporalDurationToString(this)}},{key:"valueOf",value:function(){throw new TypeError("not possible to compare Temporal.Duration")}},{key:"years",get:function(){if(!Cu.IsTemporalDuration(this))throw new TypeError("invalid receiver");return mu(this,eu)}},{key:"months",get:function(){if(!Cu.IsTemporalDuration(this))throw new TypeError("invalid receiver");return mu(this,ru)}},{key:"weeks",get:function(){if(!Cu.IsTemporalDuration(this))throw new TypeError("invalid receiver");return mu(this,tu)}},{key:"days",get:function(){if(!Cu.IsTemporalDuration(this))throw new TypeError("invalid receiver");return mu(this,nu)}},{key:"hours",get:function(){if(!Cu.IsTemporalDuration(this))throw new TypeError("invalid receiver");return mu(this,ou)}},{key:"minutes",get:function(){if(!Cu.IsTemporalDuration(this))throw new TypeError("invalid receiver");return mu(this,iu)}},{key:"seconds",get:function(){if(!Cu.IsTemporalDuration(this))throw new TypeError("invalid receiver");return mu(this,au)}},{key:"milliseconds",get:function(){if(!Cu.IsTemporalDuration(this))throw new TypeError("invalid receiver");return mu(this,su)}},{key:"microseconds",get:function(){if(!Cu.IsTemporalDuration(this))throw new TypeError("invalid receiver");return mu(this,uu)}},{key:"nanoseconds",get:function(){if(!Cu.IsTemporalDuration(this))throw new TypeError("invalid receiver");return mu(this,lu)}}],[{key:"from",value:function(e){var t,n,o,i,a,s,u,l,c,f,p=arguments.length>1&&void 0!==arguments[1]?arguments[1]:void 0,h=Cu.ToDurationTemporalDisambiguation(p);if("object"===r(e)&&e){var y=Cu.ToTemporalDurationRecord(e);t=y.years,n=y.months,o=y.weeks,i=y.days,a=y.hours,s=y.minutes,u=y.seconds,l=y.milliseconds,c=y.microseconds,f=y.nanoseconds}else{var m=Cu.ParseTemporalDurationString(Cu.ToString(e));t=m.years,n=m.months,o=m.weeks,i=m.days,a=m.hours,s=m.minutes,u=m.seconds,l=m.milliseconds,c=m.microseconds,f=m.nanoseconds}var d=Cu.RegulateDuration(t,n,o,i,a,s,u,l,c,f,h),v=new this(t=d.years,n=d.months,o=d.weeks,i=d.days,a=d.hours,s=d.minutes,u=d.seconds,l=d.milliseconds,c=d.microseconds,f=d.nanoseconds);if(!Cu.IsTemporalDuration(v))throw new TypeError("invalid result");return v}}]),e}();Ku.prototype.toJSON=Ku.prototype.toString,Bs(Ku,"Temporal.Duration");var Xu=Object.assign,Qu=function(){function e(n,o){var i=arguments.length>2&&void 0!==arguments[2]?arguments[2]:void 0,a=arguments.length>3&&void 0!==arguments[3]?arguments[3]:1972;if(t(this,e),n=Cu.ToInteger(n),o=Cu.ToInteger(o),void 0===i&&(i=Vu()),a=Cu.ToInteger(a),Cu.RejectDate(a,n,o),Cu.RejectDateRange(a,n,o),!i||"object"!==r(i))throw new RangeError("invalid calendar");pu(this),du(this,Gs,n),du(this,Ws,o),du(this,Ks,a),du(this,Qs,i)}return o(e,[{key:"with",value:function(r,t){if(!Cu.IsTemporalMonthDay(this))throw new TypeError("invalid receiver");if("calendar"in r)throw new RangeError("invalid calendar property in month-day-like");var n=Cu.ToPartialRecord(r,["day","month"]);if(!n)throw new RangeError("invalid month-day-like");var o=Cu.ToTemporalMonthDayRecord(this);Xu(o,n);var i=Cu.SpeciesConstructor(this,e),a=mu(this,Qs).monthDayFromFields(o,t,i);if(!Cu.IsTemporalMonthDay(a))throw new TypeError("invalid result");return a}},{key:"equals",value:function(e){if(!Cu.IsTemporalMonthDay(this))throw new TypeError("invalid receiver");if(!Cu.IsTemporalMonthDay(e))throw new TypeError("invalid MonthDay object");for(var r=0,t=[Gs,Ws,Ks];r<t.length;r++){var n=t[r];if(mu(this,n)!==mu(e,n))return!1}return mu(this,Qs).id===mu(e,Qs).id}},{key:"toString",value:function(){if(!Cu.IsTemporalMonthDay(this))throw new TypeError("invalid receiver");var e=Cu.ISODateTimePartString(mu(this,Gs)),r=Cu.ISODateTimePartString(mu(this,Ws)),t="".concat(e,"-").concat(r),n=Cu.FormatCalendarAnnotation(mu(this,Qs));if(n){var o=Cu.ISOYearString(mu(this,Ks));t="".concat(o,"-").concat(t).concat(n)}return t}},{key:"toLocaleString",value:function(){if(!Cu.IsTemporalMonthDay(this))throw new TypeError("invalid receiver");for(var e=arguments.length,r=new Array(e),t=0;t<e;t++)r[t]=arguments[t];return p(Intl.DateTimeFormat,r).format(this)}},{key:"valueOf",value:function(){throw new TypeError("use equals() to compare Temporal.MonthDay")}},{key:"withYear",value:function(e){if(!Cu.IsTemporalMonthDay(this))throw new TypeError("invalid receiver");var t,n;if("object"===r(e)&&null!==e){var o=Cu.ToRecord(e,[["era",void 0],["year"]]);t=o.era,n=o.year}else n=Cu.ToInteger(e);var i=mu(this,Qs),a=Cu.ToTemporalMonthDayRecord(this),u=Us("%Temporal.Date%");return i.dateFromFields(s(s({},a),{},{era:t,year:n}),{disambiguation:"reject"},u)}},{key:"getFields",value:function(){var e=Cu.ToTemporalMonthDayRecord(this);if(!e)throw new TypeError("invalid receiver");return e.calendar=mu(this,Qs),e}},{key:"getISOCalendarFields",value:function(){if(!Cu.IsTemporalMonthDay(this))throw new TypeError("invalid receiver");return{year:mu(this,Ks),month:mu(this,Gs),day:mu(this,Ws)}}},{key:"month",get:function(){if(!Cu.IsTemporalMonthDay(this))throw new TypeError("invalid receiver");return mu(this,Qs).month(this)}},{key:"day",get:function(){if(!Cu.IsTemporalMonthDay(this))throw new TypeError("invalid receiver");return mu(this,Qs).day(this)}},{key:"calendar",get:function(){if(!Cu.IsTemporalMonthDay(this))throw new TypeError("invalid receiver");return mu(this,Qs)}}],[{key:"from",value:function(e){var t,n=arguments.length>1&&void 0!==arguments[1]?arguments[1]:void 0,o=Cu.ToTemporalDisambiguation(n),i=Us("%Temporal.Calendar%");if("object"===r(e)&&e)if(Cu.IsTemporalMonthDay(e)){var a=mu(e,Gs),s=mu(e,Ws),u=mu(e,Qs),l=mu(e,Ks);t=new this(a,s,u,l)}else{var c=e.calendar;void 0===c&&(c=Vu()),t=(c=i.from(c)).monthDayFromFields(e,n,this)}else{var f=Cu.ParseTemporalMonthDayString(Cu.ToString(e)),p=f.month,h=f.day,y=f.refISOYear,m=f.calendar,d=Cu.RegulateMonthDay(p,h,o);p=d.month,h=d.day,m||(m=Vu()),void 0===y&&(y=1972),t=new this(p,h,m=i.from(m),y)}if(!Cu.IsTemporalMonthDay(t))throw new TypeError("invalid result");return t}}]),e}();Qu.prototype.toJSON=Qu.prototype.toString,Bs(Qu,"Temporal.MonthDay");var el={absolute:rl,dateTime:tl,date:function(e){var r=arguments.length>1&&void 0!==arguments[1]?arguments[1]:void 0;return tl(e,r).getDate()},time:function(e){return tl(e).getTime()},timeZone:nl};function rl(){return new(Us("%Temporal.Absolute%"))(Cu.SystemUTCEpochNanoSeconds())}function tl(){var e=arguments.length>0&&void 0!==arguments[0]?arguments[0]:nl(),r=arguments.length>1&&void 0!==arguments[1]?arguments[1]:void 0;return function(){var t=Us("%Temporal.TimeZone%"),n=t.from(e),o=rl();return"function"==typeof n.getDateTimeFor?n.getDateTimeFor(o,r):t.prototype.getDateTimeFor.call(n,o,r)}()}function nl(){return Cu.SystemTimeZone()}var ol=function(){function e(){var r=arguments.length>0&&void 0!==arguments[0]?arguments[0]:0,n=arguments.length>1&&void 0!==arguments[1]?arguments[1]:0,o=arguments.length>2&&void 0!==arguments[2]?arguments[2]:0,i=arguments.length>3&&void 0!==arguments[3]?arguments[3]:0,a=arguments.length>4&&void 0!==arguments[4]?arguments[4]:0,s=arguments.length>5&&void 0!==arguments[5]?arguments[5]:0;t(this,e),r=Cu.ToInteger(r),n=Cu.ToInteger(n),o=Cu.ToInteger(o),i=Cu.ToInteger(i),a=Cu.ToInteger(a),s=Cu.ToInteger(s),Cu.RejectTime(r,n,o,i,a,s),pu(this),du(this,_s,r),du(this,Vs,n),du(this,$s,o),du(this,zs,i),du(this,Js,a),du(this,Hs,s)}return o(e,[{key:"with",value:function(){var r=arguments.length>0&&void 0!==arguments[0]?arguments[0]:{},t=arguments.length>1?arguments[1]:void 0;if(!Cu.IsTemporalTime(this))throw new TypeError("invalid receiver");var n=Cu.ToTemporalDisambiguation(t),o=Cu.ToPartialRecord(r,["hour","microsecond","millisecond","minute","nanosecond","second"]);if(!o)throw new RangeError("invalid time-like");var i=o.hour,a=void 0===i?mu(this,_s):i,s=o.minute,u=void 0===s?mu(this,Vs):s,l=o.second,c=void 0===l?mu(this,$s):l,f=o.millisecond,p=void 0===f?mu(this,zs):f,h=o.microsecond,y=void 0===h?mu(this,Js):h,m=o.nanosecond,d=void 0===m?mu(this,Hs):m,v=Cu.RegulateTime(a,u,c,p,y,d,n);a=v.hour,u=v.minute,c=v.second,p=v.millisecond,y=v.microsecond,d=v.nanosecond;var g=Cu.SpeciesConstructor(this,e),w=new g(a,u,c,p,y,d);if(!Cu.IsTemporalTime(w))throw new TypeError("invalid result");return w}},{key:"plus",value:function(r,t){if(!Cu.IsTemporalTime(this))throw new TypeError("invalid receiver");var n=this.hour,o=this.minute,i=this.second,a=this.millisecond,s=this.microsecond,u=this.nanosecond,l=Cu.ToLimitedTemporalDuration(r),c=Cu.ToTemporalDisambiguation(t),f=l.hours,p=l.minutes,h=l.seconds,y=l.milliseconds,m=l.microseconds,d=l.nanoseconds,v=Cu.AddTime(n,o,i,a,s,u,f,p,h,y,m,d);n=v.hour,o=v.minute,i=v.second,a=v.millisecond,s=v.microsecond,u=v.nanosecond;var g=Cu.RegulateTime(n,o,i,a,s,u,c);n=g.hour,o=g.minute,i=g.second,a=g.millisecond,s=g.microsecond,u=g.nanosecond;var w=new(Cu.SpeciesConstructor(this,e))(n,o,i,a,s,u);if(!Cu.IsTemporalTime(w))throw new TypeError("invalid result");return w}},{key:"minus",value:function(r,t){if(!Cu.IsTemporalTime(this))throw new TypeError("invalid receiver");var n=this.hour,o=this.minute,i=this.second,a=this.millisecond,s=this.microsecond,u=this.nanosecond,l=Cu.ToLimitedTemporalDuration(r),c=Cu.ToTemporalDisambiguation(t),f=l.hours,p=l.minutes,h=l.seconds,y=l.milliseconds,m=l.microseconds,d=l.nanoseconds,v=Cu.SubtractTime(n,o,i,a,s,u,f,p,h,y,m,d);n=v.hour,o=v.minute,i=v.second,a=v.millisecond,s=v.microsecond,u=v.nanosecond;var g=Cu.RegulateTime(n,o,i,a,s,u,c);n=g.hour,o=g.minute,i=g.second,a=g.millisecond,s=g.microsecond,u=g.nanosecond;var w=new(Cu.SpeciesConstructor(this,e))(n,o,i,a,s,u);if(!Cu.IsTemporalTime(w))throw new TypeError("invalid result");return w}},{key:"difference",value:function(r,t){if(!Cu.IsTemporalTime(this))throw new TypeError("invalid receiver");if(!Cu.IsTemporalTime(r))throw new TypeError("invalid Time object");var n=Cu.ToLargestTemporalUnit(t,"hours");if(e.compare(this,r)<0)throw new RangeError("other instance cannot be larger than `this`");var o=Cu.DifferenceTime(r,this),i=o.hours,a=o.minutes,s=o.seconds,u=o.milliseconds,l=o.microseconds,c=o.nanoseconds,f=Cu.BalanceDuration(0,i,a,s,u,l,c,n);return i=f.hours,a=f.minutes,s=f.seconds,u=f.milliseconds,l=f.microseconds,c=f.nanoseconds,new(Us("%Temporal.Duration%"))(0,0,0,0,i,a,s,u,l,c)}},{key:"equals",value:function(e){if(!Cu.IsTemporalTime(this))throw new TypeError("invalid receiver");if(!Cu.IsTemporalTime(e))throw new TypeError("invalid Time object");for(var r=0,t=[_s,Vs,$s,zs,Js,Hs];r<t.length;r++){var n=t[r];if(mu(this,n)!==mu(e,n))return!1}return!0}},{key:"toString",value:function(){if(!Cu.IsTemporalTime(this))throw new TypeError("invalid receiver");var e=Cu.ISODateTimePartString(mu(this,_s)),r=Cu.ISODateTimePartString(mu(this,Vs)),t=Cu.ISOSecondsString(mu(this,$s),mu(this,zs),mu(this,Js),mu(this,Hs));return"".concat(e,":").concat(r).concat(t?":".concat(t):"")}},{key:"toLocaleString",value:function(){if(!Cu.IsTemporalTime(this))throw new TypeError("invalid receiver");for(var e=arguments.length,r=new Array(e),t=0;t<e;t++)r[t]=arguments[t];return p(Intl.DateTimeFormat,r).format(this)}},{key:"valueOf",value:function(){throw new TypeError("use compare() or equals() to compare Temporal.Time")}},{key:"withDate",value:function(e){if(!Cu.IsTemporalTime(this))throw new TypeError("invalid receiver");if(!Cu.IsTemporalDate(e))throw new TypeError("invalid Temporal.Date object");var r=mu(e,Ls),t=mu(e,Gs),n=mu(e,Ws),o=mu(this,_s),i=mu(this,Vs),a=mu(this,$s),s=mu(this,zs),u=mu(this,Js),l=mu(this,Hs),c=mu(e,Qs);return new(Us("%Temporal.DateTime%"))(r,t,n,o,i,a,s,u,l,c)}},{key:"getFields",value:function(){var e=Cu.ToTemporalTimeRecord(this);if(!e)throw new TypeError("invalid receiver");return e}},{key:"hour",get:function(){if(!Cu.IsTemporalTime(this))throw new TypeError("invalid receiver");return mu(this,_s)}},{key:"minute",get:function(){if(!Cu.IsTemporalTime(this))throw new TypeError("invalid receiver");return mu(this,Vs)}},{key:"second",get:function(){if(!Cu.IsTemporalTime(this))throw new TypeError("invalid receiver");return mu(this,$s)}},{key:"millisecond",get:function(){if(!Cu.IsTemporalTime(this))throw new TypeError("invalid receiver");return mu(this,zs)}},{key:"microsecond",get:function(){if(!Cu.IsTemporalTime(this))throw new TypeError("invalid receiver");return mu(this,Js)}},{key:"nanosecond",get:function(){if(!Cu.IsTemporalTime(this))throw new TypeError("invalid receiver");return mu(this,Hs)}}],[{key:"from",value:function(e){var t,n,o,i,a,s,u=arguments.length>1&&void 0!==arguments[1]?arguments[1]:void 0,l=Cu.ToTemporalDisambiguation(u);if("object"===r(e)&&e)if(Cu.IsTemporalTime(e))n=mu(e,Vs),o=mu(e,$s),i=mu(e,zs),a=mu(e,Js),s=mu(e,Hs);else{var c=Cu.ToTemporalTimeRecord(e);t=c.hour,n=c.minute,o=c.second,i=c.millisecond,a=c.microsecond,s=c.nanosecond}else{var f=Cu.ParseTemporalTimeString(Cu.ToString(e));t=f.hour,n=f.minute,o=f.second,i=f.millisecond,a=f.microsecond,s=f.nanosecond}var p=Cu.RegulateTime(t,n,o,i,a,s,l),h=new this(t=p.hour,n=p.minute,o=p.second,i=p.millisecond,a=p.microsecond,s=p.nanosecond);if(!Cu.IsTemporalTime(h))throw new TypeError("invalid result");return h}},{key:"compare",value:function(e,r){if(!Cu.IsTemporalTime(e)||!Cu.IsTemporalTime(r))throw new TypeError("invalid Time object");for(var t=0,n=[_s,Vs,$s,zs,Js,Hs];t<n.length;t++){var o=n[t],i=mu(e,o),a=mu(r,o);if(i!==a)return Cu.ComparisonResult(i-a)}return Cu.ComparisonResult(0)}}]),e}();ol.prototype.toJSON=ol.prototype.toString,Bs(ol,"Temporal.Time");var il=new RegExp("^".concat(ju.source,"$"));function al(e){var r=il.exec(String(e));return r?("-"===r[1]?-1:1)*(60*+r[2]+ +(r[3]||0))*60*1e9:null}var sl=function(){function e(r){t(this,e),(this instanceof e?this.constructor:void 0)===e&&(r=Cu.GetCanonicalTimeZoneIdentifier(r)),pu(this),du(this,qs,r)}return o(e,[{key:"getOffsetNanosecondsFor",value:function(e){if(!Cu.IsTemporalTimeZone(this))throw new TypeError("invalid receiver");if(!Cu.IsTemporalAbsolute(e))throw new TypeError("invalid Absolute object");var r=mu(this,qs),t=al(r);return null!==t?t:Cu.GetIANATimeZoneOffsetNanoseconds(mu(e,Zs),r)}},{key:"getOffsetStringFor",value:function(e){var r=this.getOffsetNanosecondsFor(e);if("number"!=typeof r)throw new TypeError("bad return from getOffsetNanosecondsFor");if(!Number.isInteger(r)||Math.abs(r)>864e11)throw new RangeError("out-of-range return from getOffsetNanosecondsFor");return Cu.FormatTimeZoneOffsetString(r)}},{key:"getDateTimeFor",value:function(e){var r=arguments.length>1&&void 0!==arguments[1]?arguments[1]:"iso8601";if(!Cu.IsTemporalAbsolute(e))throw new TypeError("invalid Absolute object");var t=mu(e,Zs),n=this.getOffsetNanosecondsFor(e);if("number"!=typeof n)throw new TypeError("bad return from getOffsetNanosecondsFor");if(!Number.isInteger(n)||Math.abs(n)>864e11)throw new RangeError("out-of-range return from getOffsetNanosecondsFor");var o=Cu.GetPartsFromEpoch(t),i=o.year,a=o.month,s=o.day,u=o.hour,l=o.minute,c=o.second,f=o.millisecond,p=o.microsecond,h=o.nanosecond,y=Cu.BalanceDateTime(i,a,s,u,l,c,f,p,h+n);i=y.year,a=y.month,s=y.day,u=y.hour,l=y.minute,c=y.second,f=y.millisecond,p=y.microsecond,h=y.nanosecond;var m=Us("%Temporal.Calendar%");r=m.from(r);var d=Us("%Temporal.DateTime%");return new d(i,a,s,u,l,c,f,p,h,r)}},{key:"getAbsoluteFor",value:function(e,r){if(!Cu.IsTemporalDateTime(e))throw new TypeError("invalid DateTime object");var t=Cu.ToTimeZoneTemporalDisambiguation(r),n=Us("%Temporal.Absolute%"),o=this.getPossibleAbsolutesFor(e);if(!Array.isArray(o))throw new TypeError("bad return from getPossibleAbsolutesFor");var i=o.length;function a(e){if(!Cu.IsTemporalAbsolute(e))throw new TypeError("bad return from getPossibleAbsolutesFor");return e}if(1===i)return a(o[0]);if(i)switch(t){case"compatible":case"earlier":return a(o[0]);case"later":return a(o[i-1]);case"reject":throw new RangeError("multiple absolute found")}var s=Cu.GetEpochFromParts(mu(e,Ls),mu(e,Gs),mu(e,Ws),mu(e,_s),mu(e,Vs),mu(e,$s),mu(e,zs),mu(e,Js),mu(e,Hs));if(null===s)throw new RangeError("DateTime outside of supported range");var u=new n(s.minus(864e11)),l=new n(s.plus(864e11)),c=this.getOffsetNanosecondsFor(u),f=this.getOffsetNanosecondsFor(l)-c,p=Cu.ToTemporalDurationRecord({nanoseconds:f},"reject");switch(t){case"earlier":var h=e.minus(p);return this.getPossibleAbsolutesFor(h)[0];case"compatible":case"later":var y=e.plus(p),m=this.getPossibleAbsolutesFor(y);return m[m.length-1];case"reject":throw new RangeError("no such absolute found")}}},{key:"getPossibleAbsolutesFor",value:function(e){if(!Cu.IsTemporalTimeZone(this))throw new TypeError("invalid receiver");if(!Cu.IsTemporalDateTime(e))throw new TypeError("invalid DateTime object");var r=Us("%Temporal.Absolute%"),t=mu(this,qs),n=al(t);if(null!==n){var o=Cu.GetEpochFromParts(mu(e,Ls),mu(e,Gs),mu(e,Ws),mu(e,_s),mu(e,Vs),mu(e,$s),mu(e,zs),mu(e,Js),mu(e,Hs));return[new r(o.minus(n))]}return Cu.GetIANATimeZoneEpochValue(t,mu(e,Ls),mu(e,Gs),mu(e,Ws),mu(e,_s),mu(e,Vs),mu(e,$s),mu(e,zs),mu(e,Js),mu(e,Hs)).map((function(e){return new r(e)}))}},{key:"getNextTransition",value:function(e){if(!Cu.IsTemporalTimeZone(this))throw new TypeError("invalid receiver");if(!Cu.IsTemporalAbsolute(e))throw new TypeError("invalid Absolute object");var r=mu(this,qs);if(null!==al(r)||"UTC"===r)return null;var t=mu(e,Zs),n=Us("%Temporal.Absolute%");return null===(t=Cu.GetIANATimeZoneNextTransition(t,r))?null:new n(t)}},{key:"getPreviousTransition",value:function(e){if(!Cu.IsTemporalTimeZone(this))throw new TypeError("invalid receiver");if(!Cu.IsTemporalAbsolute(e))throw new TypeError("invalid Absolute object");var r=mu(this,qs);if(null!==al(r)||"UTC"===r)return null;var t=mu(e,Zs),n=Us("%Temporal.Absolute%");return null===(t=Cu.GetIANATimeZonePreviousTransition(t,r))?null:new n(t)}},{key:"toString",value:function(){if(!Cu.IsTemporalTimeZone(this))throw new TypeError("invalid receiver");return this.name}},{key:"toJSON",value:function(){return this.toString()}},{key:"name",get:function(){if(!Cu.IsTemporalTimeZone(this))throw new TypeError("invalid receiver");return String(mu(this,qs))}}],[{key:"from",value:function(e){if(Cu.IsTemporalTimeZone(e)||"object"===r(e)&&e)return e;var t=new this(Cu.TemporalTimeZoneFromString(Cu.ToString(e)));if(!Cu.IsTemporalTimeZone(t))throw new TypeError("invalid result");return t}}]),e}();Bs(sl,"Temporal.TimeZone");var ul=Object.assign,ll=function(){function e(n,o){var i=arguments.length>2&&void 0!==arguments[2]?arguments[2]:void 0,a=arguments.length>3&&void 0!==arguments[3]?arguments[3]:1;if(t(this,e),n=Cu.ToInteger(n),o=Cu.ToInteger(o),void 0===i&&(i=Vu()),a=Cu.ToInteger(a),Cu.RejectDate(n,o,a),Cu.RejectYearMonthRange(n,o),!i||"object"!==r(i))throw new RangeError("invalid calendar");pu(this),du(this,Ls,n),du(this,Gs,o),du(this,Xs,a),du(this,Qs,i)}return o(e,[{key:"with",value:function(){var r=arguments.length>0&&void 0!==arguments[0]?arguments[0]:{},t=arguments.length>1?arguments[1]:void 0;if(!Cu.IsTemporalYearMonth(this))throw new TypeError("invalid receiver");if("calendar"in r)throw new RangeError("invalid calendar property in year-month-like");var n=Cu.ToPartialRecord(r,["era","month","year"]);if(!n)throw new RangeError("invalid year-month-like");var o=Cu.ToTemporalYearMonthRecord(this);ul(o,n);var i=Cu.SpeciesConstructor(this,e),a=mu(this,Qs).yearMonthFromFields(o,t,i);if(!Cu.IsTemporalYearMonth(a))throw new TypeError("invalid result");return a}},{key:"plus",value:function(r,t){if(!Cu.IsTemporalYearMonth(this))throw new TypeError("invalid receiver");var n=Cu.ToLimitedTemporalDuration(r),o=n.hours,i=n.minutes,a=n.seconds,u=n.milliseconds,l=n.microseconds,c=n.nanoseconds,f=Cu.BalanceDuration(n.days,o,i,a,u,l,c,"days").days,p=Us("%Temporal.Date%"),h=mu(this,Qs),y=Cu.ToTemporalYearMonthRecord(this),m=h.dateFromFields(s(s({},y),{},{day:1}),{},p),d=h.plus(m,s(s({},n),{},{days:f}),t,p),v=Cu.SpeciesConstructor(this,e),g=h.yearMonthFromFields(d,t,v);if(!Cu.IsTemporalYearMonth(g))throw new TypeError("invalid result");return g}},{key:"minus",value:function(r,t){if(!Cu.IsTemporalYearMonth(this))throw new TypeError("invalid receiver");var n=Cu.ToLimitedTemporalDuration(r),o=n.hours,i=n.minutes,a=n.seconds,u=n.milliseconds,l=n.microseconds,c=n.nanoseconds,f=Cu.BalanceDuration(n.days,o,i,a,u,l,c,"days").days,p=Us("%Temporal.Date%"),h=mu(this,Qs),y=Cu.ToTemporalYearMonthRecord(this),m=h.daysInMonth(this),d=h.dateFromFields(s(s({},y),{},{day:m}),{},p),v=h.minus(d,s(s({},n),{},{days:f}),t,p),g=Cu.SpeciesConstructor(this,e),w=h.yearMonthFromFields(v,t,g);if(!Cu.IsTemporalYearMonth(w))throw new TypeError("invalid result");return w}},{key:"difference",value:function(r,t){if(!Cu.IsTemporalYearMonth(this))throw new TypeError("invalid receiver");if(!Cu.IsTemporalYearMonth(r))throw new TypeError("invalid YearMonth object");var n=mu(this,Qs);n.id!==mu(r,Qs).id&&(r=new Date(mu(r,Ls),mu(r,Gs),n,mu(r,Xs)));var o=Cu.ToLargestTemporalUnit(t,"years",["weeks","days","hours","minutes","seconds"]);if(e.compare(this,r)<0)throw new RangeError("other instance cannot be larger than `this`");var i=Cu.ToTemporalYearMonthRecord(r),a=Cu.ToTemporalYearMonthRecord(this),u=Us("%Temporal.Date%"),l=n.dateFromFields(s(s({},i),{},{day:1}),{},u),c=n.dateFromFields(s(s({},a),{},{day:1}),{},u);return n.difference(l,c,s(s({},t),{},{largestUnit:o}))}},{key:"equals",value:function(e){if(!Cu.IsTemporalYearMonth(this))throw new TypeError("invalid receiver");if(!Cu.IsTemporalYearMonth(e))throw new TypeError("invalid YearMonth object");for(var r=0,t=[Ls,Gs,Xs];r<t.length;r++){var n=t[r];if(mu(this,n)!==mu(e,n))return!1}return mu(this,Qs).id===mu(e,Qs).id}},{key:"toString",value:function(){if(!Cu.IsTemporalYearMonth(this))throw new TypeError("invalid receiver");var e=Cu.ISOYearString(mu(this,Ls)),r=Cu.ISODateTimePartString(mu(this,Gs)),t="".concat(e,"-").concat(r),n=Cu.FormatCalendarAnnotation(mu(this,Qs));if(n){var o=Cu.ISODateTimePartString(mu(this,Xs));t="".concat(t,"-").concat(o).concat(n)}return t}},{key:"toLocaleString",value:function(){if(!Cu.IsTemporalYearMonth(this))throw new TypeError("invalid receiver");for(var e=arguments.length,r=new Array(e),t=0;t<e;t++)r[t]=arguments[t];return p(Intl.DateTimeFormat,r).format(this)}},{key:"valueOf",value:function(){throw new TypeError("use compare() or equals() to compare Temporal.YearMonth")}},{key:"withDay",value:function(e){if(!Cu.IsTemporalYearMonth(this))throw new TypeError("invalid receiver");var r=mu(this,Qs),t=Cu.ToTemporalYearMonthRecord(this),n=Us("%Temporal.Date%");return r.dateFromFields(s(s({},t),{},{day:e}),{disambiguation:"reject"},n)}},{key:"getFields",value:function(){var e=Cu.ToTemporalYearMonthRecord(this);if(!e)throw new TypeError("invalid receiver");return e.calendar=mu(this,Qs),e}},{key:"getISOCalendarFields",value:function(){if(!Cu.IsTemporalYearMonth(this))throw new TypeError("invalid receiver");return{year:mu(this,Ls),month:mu(this,Gs),day:mu(this,Xs)}}},{key:"year",get:function(){if(!Cu.IsTemporalYearMonth(this))throw new TypeError("invalid receiver");return mu(this,Qs).year(this)}},{key:"month",get:function(){if(!Cu.IsTemporalYearMonth(this))throw new TypeError("invalid receiver");return mu(this,Qs).month(this)}},{key:"calendar",get:function(){if(!Cu.IsTemporalYearMonth(this))throw new TypeError("invalid receiver");return mu(this,Qs)}},{key:"era",get:function(){if(!Cu.IsTemporalYearMonth(this))throw new TypeError("invalid receiver");return mu(this,Qs).era(this)}},{key:"daysInMonth",get:function(){if(!Cu.IsTemporalYearMonth(this))throw new TypeError("invalid receiver");return mu(this,Qs).daysInMonth(this)}},{key:"daysInYear",get:function(){if(!Cu.IsTemporalYearMonth(this))throw new TypeError("invalid receiver");return mu(this,Qs).daysInYear(this)}},{key:"isLeapYear",get:function(){if(!Cu.IsTemporalYearMonth(this))throw new TypeError("invalid receiver");return mu(this,Qs).isLeapYear(this)}}],[{key:"from",value:function(e){var t,n=arguments.length>1&&void 0!==arguments[1]?arguments[1]:void 0,o=Cu.ToTemporalDisambiguation(n),i=Us("%Temporal.Calendar%");if("object"===r(e)&&e)if(Cu.IsTemporalYearMonth(e)){var a=mu(e,Ls),s=mu(e,Gs),u=mu(e,Qs),l=mu(e,Xs);t=new this(a,s,u,l)}else{var c=e.calendar;void 0===c&&(c=Vu()),t=(c=i.from(c)).yearMonthFromFields(e,n,this)}else{var f=Cu.ParseTemporalYearMonthString(Cu.ToString(e)),p=f.year,h=f.month,y=f.refISODay,m=f.calendar,d=Cu.RegulateYearMonth(p,h,o);p=d.year,h=d.month,m||(m=Vu()),void 0===y&&(y=1),t=new this(p,h,m=i.from(m),y)}if(!Cu.IsTemporalYearMonth(t))throw new TypeError("invalid result");return t}},{key:"compare",value:function(e,r){if(!Cu.IsTemporalYearMonth(e)||!Cu.IsTemporalYearMonth(r))throw new TypeError("invalid YearMonth object");for(var t=0,n=[Ls,Gs,Xs];t<n.length;t++){var o=n[t],i=mu(e,o),a=mu(r,o);if(i!==a)return Cu.ComparisonResult(i-a)}var s=mu(e,Qs).id,u=mu(r,Qs).id;return Cu.ComparisonResult(s<u?-1:s>u?1:0)}}]),e}();ll.prototype.toJSON=ll.prototype.toString,Bs(ll,"Temporal.YearMonth");var cl=Object.freeze({__proto__:null,Absolute:Uu,Calendar:qu,Date:zu,DateTime:Hu,Duration:Ku,MonthDay:Qu,now:el,Time:ol,TimeZone:sl,YearMonth:ll}),fl=Symbol("date"),pl=Symbol("ym"),hl=Symbol("md"),yl=Symbol("time"),ml=Symbol("datetime"),dl=Symbol("original"),vl=Symbol("timezone"),gl=function(e){return{value:e,enumerable:!0,writable:!1,configurable:!0}},wl=Intl.DateTimeFormat,Tl=Object.assign;function bl(){var e=arguments.length>0&&void 0!==arguments[0]?arguments[0]:wl().resolvedOptions().locale,r=arguments.length>1&&void 0!==arguments[1]?arguments[1]:{};if(!(this instanceof bl))return new bl(e,r);this[dl]=new wl(e,r),this[vl]=new sl(this.resolvedOptions().timeZone),this[fl]=new wl(e,Pl(r)),this[pl]=new wl(e,Al(r)),this[hl]=new wl(e,jl(r)),this[yl]=new wl(e,Ol(r)),this[ml]=new wl(e,kl(r))}bl.supportedLocalesOf=function(){return wl.supportedLocalesOf.apply(wl,arguments)};var Sl={resolvedOptions:gl((function(){return this[dl].resolvedOptions()})),format:gl((function(e){var r,t=Nl(e,this),n=t.absolute,o=t.formatter,i=t.calendar;if(n&&o)return El(o,i).format(n.getEpochMilliseconds());for(var a=arguments.length,s=new Array(a>1?a-1:0),u=1;u<a;u++)s[u-1]=arguments[u];return(r=this[dl]).format.apply(r,[e].concat(s))})),formatRange:gl((function(e,t){if("object"===r(e)&&"object"===r(t)&&e&&t){if(Object.getPrototypeOf(e)!==Object.getPrototypeOf(t))throw new TypeError("Intl.DateTimeFormat accepts two values of the same type");var n=Nl(e,this),o=n.absolute,i=n.formatter,a=n.calendar,s=Nl(t,this),u=s.absolute,l=s.formatter,c=s.calendar,f=Il(a,c);if(o&&u&&i&&l&&i===l)return El(i,f).formatRange(o.getEpochMilliseconds(),u.getEpochMilliseconds())}return this[dl].formatRange(e,t)}))};function El(e,r){var t=e.resolvedOptions();if(!r||r===t.calendar||"gregory"===r||"iso8601"===r)return e;var n="".concat(t.locale,"-u-ca-").concat(r);return new wl(n,t)}function Il(e,r){if(!e)return r;if(!r)return e;if(e===r)return e;if("iso8601"===e||"gregory"===e)return r;if("iso8601"===r||"gregory"===r)return e;throw new RangeError("cannot format range between two dates of ".concat(e," and ").concat(r," calendars"))}function Dl(){var e=arguments.length>0&&void 0!==arguments[0]?arguments[0]:{},r=arguments.length>1&&void 0!==arguments[1]?arguments[1]:{};e=Tl({},e);for(var t=0,n=["year","month","day","hour","minute","second","timeZoneName"];t<n.length;t++){var o=n[t];e[o]=o in r?r[o]:e[o],!1!==e[o]&&void 0!==e[o]||delete e[o]}return e}function Ol(e){return Ml(e=Dl(e,{year:!1,month:!1,day:!1,timeZoneName:!1}))||(e=Tl(e,{hour:"numeric",minute:"numeric",second:"numeric"})),e}function Al(e){return"year"in(e=Dl(e,{day:!1,hour:!1,minute:!1,second:!1,timeZoneName:!1}))||"month"in e||(e=Tl(e,{year:"numeric",month:"numeric"})),e}function jl(e){return"month"in(e=Dl(e,{year:!1,hour:!1,minute:!1,second:!1,timeZoneName:!1}))||"day"in e||(e=Tl(e,{month:"numeric",day:"numeric"})),e}function Pl(e){return Rl(e=Dl(e,{hour:!1,minute:!1,second:!1,timeZoneName:!1}))||(e=Tl(e,{year:"numeric",month:"numeric",day:"numeric"})),e}function kl(e){return Ml(e=Dl(e,{timeZoneName:!1}))||Rl(e)||Tl(e,{year:"numeric",month:"numeric",day:"numeric",hour:"numeric",minute:"numeric",second:"numeric"}),e}function Rl(e){return"year"in e||"month"in e||"day"in e}function Ml(e){return"hour"in e||"minute"in e||"second"in e}function Nl(e,r){var t,n,o=Us("%Temporal.Absolute%"),i=Us("%Temporal.Date%"),a=Us("%Temporal.DateTime%"),s=Us("%Temporal.MonthDay%"),u=Us("%Temporal.Time%"),l=Us("%Temporal.YearMonth%");if(e instanceof u&&(e=e.withDate(new i(1970,1,1)),t=r[yl]),e instanceof l){n=e.calendar.id;var c=e.getISOCalendarFields();e=new i(c.year,c.month,c.day,e.calendar),t=r[pl]}if(e instanceof s){n=e.calendar.id;var f=e.getISOCalendarFields();e=new i(f.year,f.month,f.day,e.calendar),t=r[hl]}return e instanceof i&&(n=n||e.calendar.id,e=e.withTime(new u(12,0)),t=t||r[fl]),e instanceof a&&(n=n||e.calendar.id,t=t||r[ml],e=r[vl].getAbsoluteFor(e)),e instanceof o?{absolute:e,formatter:t=t||r[ml],calendar:n}:{}}"formatToParts"in wl.prototype&&(Sl.formatToParts=gl((function(e){var r,t=Nl(e,this),n=t.absolute,o=t.formatter,i=t.calendar;if(n&&o)return El(o,i).formatToParts(n.getEpochMilliseconds());for(var a=arguments.length,s=new Array(a>1?a-1:0),u=1;u<a;u++)s[u-1]=arguments[u];return(r=this[dl]).formatToParts.apply(r,[e].concat(s))}))),"formatRangeToParts"in wl.prototype&&(Sl.formatRangeToParts=gl((function(e,t){if("object"===r(e)&&"object"===r(t)&&e&&t){if(Object.getPrototypeOf(e)!==Object.getPrototypeOf(t))throw new TypeError("Intl.DateTimeFormat accepts two values of the same type");var n=Nl(e,this),o=n.absolute,i=n.formatter,a=n.calendar,s=Nl(t,this),u=s.absolute,l=s.formatter,c=s.calendar,f=Il(a,c);if(o&&u&&i&&l&&i===l)return El(i,f).formatRangeToParts(o.getEpochMilliseconds(),u.getEpochMilliseconds())}return this[dl].formatRangeToParts(e,t)}))),bl.prototype=Object.create(wl.prototype,Sl);var Fl=Object.freeze({__proto__:null,DateTimeFormat:bl});function Cl(e,r){var t,n=w(Object.getOwnPropertyNames(r));try{for(n.s();!(t=n.n()).done;){var o=t.value;Object.defineProperty(e,o,{value:r[o],writable:!0,enumerable:!1,configurable:!0})}}catch(e){n.e(e)}finally{n.f()}}Object.defineProperty(globalThis,"Temporal",{value:{},writable:!0,enumerable:!1,configurable:!0}),Cl(globalThis.Temporal,cl),Cl(globalThis.Intl,Fl),e.Intl=Fl,e.Temporal=cl,Object.defineProperty(e,"__esModule",{value:!0})}));
+(function (global, factory) {
+  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
+  typeof define === 'function' && define.amd ? define(['exports'], factory) :
+  (global = global || self, factory(global.temporal = {}));
+}(this, (function (exports) { 'use strict';
+
+  function _typeof(obj) {
+    "@babel/helpers - typeof";
+
+    if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
+      _typeof = function (obj) {
+        return typeof obj;
+      };
+    } else {
+      _typeof = function (obj) {
+        return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+      };
+    }
+
+    return _typeof(obj);
+  }
+
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
+  }
+
+  function _defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];
+      descriptor.enumerable = descriptor.enumerable || false;
+      descriptor.configurable = true;
+      if ("value" in descriptor) descriptor.writable = true;
+      Object.defineProperty(target, descriptor.key, descriptor);
+    }
+  }
+
+  function _createClass(Constructor, protoProps, staticProps) {
+    if (protoProps) _defineProperties(Constructor.prototype, protoProps);
+    if (staticProps) _defineProperties(Constructor, staticProps);
+    return Constructor;
+  }
+
+  function _defineProperty(obj, key, value) {
+    if (key in obj) {
+      Object.defineProperty(obj, key, {
+        value: value,
+        enumerable: true,
+        configurable: true,
+        writable: true
+      });
+    } else {
+      obj[key] = value;
+    }
+
+    return obj;
+  }
+
+  function ownKeys(object, enumerableOnly) {
+    var keys = Object.keys(object);
+
+    if (Object.getOwnPropertySymbols) {
+      var symbols = Object.getOwnPropertySymbols(object);
+      if (enumerableOnly) symbols = symbols.filter(function (sym) {
+        return Object.getOwnPropertyDescriptor(object, sym).enumerable;
+      });
+      keys.push.apply(keys, symbols);
+    }
+
+    return keys;
+  }
+
+  function _objectSpread2(target) {
+    for (var i = 1; i < arguments.length; i++) {
+      var source = arguments[i] != null ? arguments[i] : {};
+
+      if (i % 2) {
+        ownKeys(Object(source), true).forEach(function (key) {
+          _defineProperty(target, key, source[key]);
+        });
+      } else if (Object.getOwnPropertyDescriptors) {
+        Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
+      } else {
+        ownKeys(Object(source)).forEach(function (key) {
+          Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
+        });
+      }
+    }
+
+    return target;
+  }
+
+  function _inherits(subClass, superClass) {
+    if (typeof superClass !== "function" && superClass !== null) {
+      throw new TypeError("Super expression must either be null or a function");
+    }
+
+    subClass.prototype = Object.create(superClass && superClass.prototype, {
+      constructor: {
+        value: subClass,
+        writable: true,
+        configurable: true
+      }
+    });
+    if (superClass) _setPrototypeOf(subClass, superClass);
+  }
+
+  function _getPrototypeOf(o) {
+    _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) {
+      return o.__proto__ || Object.getPrototypeOf(o);
+    };
+    return _getPrototypeOf(o);
+  }
+
+  function _setPrototypeOf(o, p) {
+    _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) {
+      o.__proto__ = p;
+      return o;
+    };
+
+    return _setPrototypeOf(o, p);
+  }
+
+  function _isNativeReflectConstruct() {
+    if (typeof Reflect === "undefined" || !Reflect.construct) return false;
+    if (Reflect.construct.sham) return false;
+    if (typeof Proxy === "function") return true;
+
+    try {
+      Date.prototype.toString.call(Reflect.construct(Date, [], function () {}));
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  function _construct(Parent, args, Class) {
+    if (_isNativeReflectConstruct()) {
+      _construct = Reflect.construct;
+    } else {
+      _construct = function _construct(Parent, args, Class) {
+        var a = [null];
+        a.push.apply(a, args);
+        var Constructor = Function.bind.apply(Parent, a);
+        var instance = new Constructor();
+        if (Class) _setPrototypeOf(instance, Class.prototype);
+        return instance;
+      };
+    }
+
+    return _construct.apply(null, arguments);
+  }
+
+  function _assertThisInitialized(self) {
+    if (self === void 0) {
+      throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+    }
+
+    return self;
+  }
+
+  function _possibleConstructorReturn(self, call) {
+    if (call && (typeof call === "object" || typeof call === "function")) {
+      return call;
+    }
+
+    return _assertThisInitialized(self);
+  }
+
+  function _createSuper(Derived) {
+    var hasNativeReflectConstruct = _isNativeReflectConstruct();
+
+    return function _createSuperInternal() {
+      var Super = _getPrototypeOf(Derived),
+          result;
+
+      if (hasNativeReflectConstruct) {
+        var NewTarget = _getPrototypeOf(this).constructor;
+
+        result = Reflect.construct(Super, arguments, NewTarget);
+      } else {
+        result = Super.apply(this, arguments);
+      }
+
+      return _possibleConstructorReturn(this, result);
+    };
+  }
+
+  function _superPropBase(object, property) {
+    while (!Object.prototype.hasOwnProperty.call(object, property)) {
+      object = _getPrototypeOf(object);
+      if (object === null) break;
+    }
+
+    return object;
+  }
+
+  function _get(target, property, receiver) {
+    if (typeof Reflect !== "undefined" && Reflect.get) {
+      _get = Reflect.get;
+    } else {
+      _get = function _get(target, property, receiver) {
+        var base = _superPropBase(target, property);
+
+        if (!base) return;
+        var desc = Object.getOwnPropertyDescriptor(base, property);
+
+        if (desc.get) {
+          return desc.get.call(receiver);
+        }
+
+        return desc.value;
+      };
+    }
+
+    return _get(target, property, receiver || target);
+  }
+
+  function _slicedToArray(arr, i) {
+    return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest();
+  }
+
+  function _arrayWithHoles(arr) {
+    if (Array.isArray(arr)) return arr;
+  }
+
+  function _iterableToArrayLimit(arr, i) {
+    if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return;
+    var _arr = [];
+    var _n = true;
+    var _d = false;
+    var _e = undefined;
+
+    try {
+      for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
+        _arr.push(_s.value);
+
+        if (i && _arr.length === i) break;
+      }
+    } catch (err) {
+      _d = true;
+      _e = err;
+    } finally {
+      try {
+        if (!_n && _i["return"] != null) _i["return"]();
+      } finally {
+        if (_d) throw _e;
+      }
+    }
+
+    return _arr;
+  }
+
+  function _unsupportedIterableToArray(o, minLen) {
+    if (!o) return;
+    if (typeof o === "string") return _arrayLikeToArray(o, minLen);
+    var n = Object.prototype.toString.call(o).slice(8, -1);
+    if (n === "Object" && o.constructor) n = o.constructor.name;
+    if (n === "Map" || n === "Set") return Array.from(o);
+    if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);
+  }
+
+  function _arrayLikeToArray(arr, len) {
+    if (len == null || len > arr.length) len = arr.length;
+
+    for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];
+
+    return arr2;
+  }
+
+  function _nonIterableRest() {
+    throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+  }
+
+  function _createForOfIteratorHelper(o, allowArrayLike) {
+    var it;
+
+    if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) {
+      if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") {
+        if (it) o = it;
+        var i = 0;
+
+        var F = function () {};
+
+        return {
+          s: F,
+          n: function () {
+            if (i >= o.length) return {
+              done: true
+            };
+            return {
+              done: false,
+              value: o[i++]
+            };
+          },
+          e: function (e) {
+            throw e;
+          },
+          f: F
+        };
+      }
+
+      throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+    }
+
+    var normalCompletion = true,
+        didErr = false,
+        err;
+    return {
+      s: function () {
+        it = o[Symbol.iterator]();
+      },
+      n: function () {
+        var step = it.next();
+        normalCompletion = step.done;
+        return step;
+      },
+      e: function (e) {
+        didErr = true;
+        err = e;
+      },
+      f: function () {
+        try {
+          if (!normalCompletion && it.return != null) it.return();
+        } finally {
+          if (didErr) throw err;
+        }
+      }
+    };
+  }
+
+  var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
+
+  function createCommonjsModule(fn, module) {
+  	return module = { exports: {} }, fn(module, module.exports), module.exports;
+  }
+
+  var shams = function hasSymbols() {
+    if (typeof Symbol !== 'function' || typeof Object.getOwnPropertySymbols !== 'function') {
+      return false;
+    }
+
+    if (_typeof(Symbol.iterator) === 'symbol') {
+      return true;
+    }
+
+    var obj = {};
+    var sym = Symbol('test');
+    var symObj = Object(sym);
+
+    if (typeof sym === 'string') {
+      return false;
+    }
+
+    if (Object.prototype.toString.call(sym) !== '[object Symbol]') {
+      return false;
+    }
+
+    if (Object.prototype.toString.call(symObj) !== '[object Symbol]') {
+      return false;
+    } // temp disabled per https://github.com/ljharb/object.assign/issues/17
+    // if (sym instanceof Symbol) { return false; }
+    // temp disabled per https://github.com/WebReflection/get-own-property-symbols/issues/4
+    // if (!(symObj instanceof Symbol)) { return false; }
+    // if (typeof Symbol.prototype.toString !== 'function') { return false; }
+    // if (String(sym) !== Symbol.prototype.toString.call(sym)) { return false; }
+
+
+    var symVal = 42;
+    obj[sym] = symVal;
+
+    for (sym in obj) {
+      return false;
+    } // eslint-disable-line no-restricted-syntax
+
+
+    if (typeof Object.keys === 'function' && Object.keys(obj).length !== 0) {
+      return false;
+    }
+
+    if (typeof Object.getOwnPropertyNames === 'function' && Object.getOwnPropertyNames(obj).length !== 0) {
+      return false;
+    }
+
+    var syms = Object.getOwnPropertySymbols(obj);
+
+    if (syms.length !== 1 || syms[0] !== sym) {
+      return false;
+    }
+
+    if (!Object.prototype.propertyIsEnumerable.call(obj, sym)) {
+      return false;
+    }
+
+    if (typeof Object.getOwnPropertyDescriptor === 'function') {
+      var descriptor = Object.getOwnPropertyDescriptor(obj, sym);
+
+      if (descriptor.value !== symVal || descriptor.enumerable !== true) {
+        return false;
+      }
+    }
+
+    return true;
+  };
+
+  var origSymbol = commonjsGlobal.Symbol;
+
+  var hasSymbols = function hasNativeSymbols() {
+    if (typeof origSymbol !== 'function') {
+      return false;
+    }
+
+    if (typeof Symbol !== 'function') {
+      return false;
+    }
+
+    if (_typeof(origSymbol('foo')) !== 'symbol') {
+      return false;
+    }
+
+    if (_typeof(Symbol('bar')) !== 'symbol') {
+      return false;
+    }
+
+    return shams();
+  };
+
+  /* eslint no-invalid-this: 1 */
+
+  var ERROR_MESSAGE = 'Function.prototype.bind called on incompatible ';
+  var slice = Array.prototype.slice;
+  var toStr = Object.prototype.toString;
+  var funcType = '[object Function]';
+
+  var implementation = function bind(that) {
+    var target = this;
+
+    if (typeof target !== 'function' || toStr.call(target) !== funcType) {
+      throw new TypeError(ERROR_MESSAGE + target);
+    }
+
+    var args = slice.call(arguments, 1);
+    var bound;
+
+    var binder = function binder() {
+      if (this instanceof bound) {
+        var result = target.apply(this, args.concat(slice.call(arguments)));
+
+        if (Object(result) === result) {
+          return result;
+        }
+
+        return this;
+      } else {
+        return target.apply(that, args.concat(slice.call(arguments)));
+      }
+    };
+
+    var boundLength = Math.max(0, target.length - args.length);
+    var boundArgs = [];
+
+    for (var i = 0; i < boundLength; i++) {
+      boundArgs.push('$' + i);
+    }
+
+    bound = Function('binder', 'return function (' + boundArgs.join(',') + '){ return binder.apply(this,arguments); }')(binder);
+
+    if (target.prototype) {
+      var Empty = function Empty() {};
+
+      Empty.prototype = target.prototype;
+      bound.prototype = new Empty();
+      Empty.prototype = null;
+    }
+
+    return bound;
+  };
+
+  var functionBind = Function.prototype.bind || implementation;
+
+  /* globals
+  	Atomics,
+  	SharedArrayBuffer,
+  */
+
+
+  var undefined$1;
+  var $TypeError = TypeError;
+  var $gOPD = Object.getOwnPropertyDescriptor;
+
+  if ($gOPD) {
+    try {
+      $gOPD({}, '');
+    } catch (e) {
+      $gOPD = null; // this is IE 8, which has a broken gOPD
+    }
+  }
+
+  var throwTypeError = function throwTypeError() {
+    throw new $TypeError();
+  };
+
+  var ThrowTypeError = $gOPD ? function () {
+    try {
+      // eslint-disable-next-line no-unused-expressions, no-caller, no-restricted-properties
+      arguments.callee; // IE 8 does not throw here
+
+      return throwTypeError;
+    } catch (calleeThrows) {
+      try {
+        // IE 8 throws on Object.getOwnPropertyDescriptor(arguments, '')
+        return $gOPD(arguments, 'callee').get;
+      } catch (gOPDthrows) {
+        return throwTypeError;
+      }
+    }
+  }() : throwTypeError;
+  var hasSymbols$1 = hasSymbols();
+
+  var getProto = Object.getPrototypeOf || function (x) {
+    return x.__proto__;
+  }; // eslint-disable-line no-proto
+
+  var generatorFunction =  undefined$1;
+
+  var asyncFunction =  undefined$1;
+
+  var asyncGenFunction =  undefined$1;
+  var TypedArray = typeof Uint8Array === 'undefined' ? undefined$1 : getProto(Uint8Array);
+  var INTRINSICS = {
+    '%Array%': Array,
+    '%ArrayBuffer%': typeof ArrayBuffer === 'undefined' ? undefined$1 : ArrayBuffer,
+    '%ArrayBufferPrototype%': typeof ArrayBuffer === 'undefined' ? undefined$1 : ArrayBuffer.prototype,
+    '%ArrayIteratorPrototype%': hasSymbols$1 ? getProto([][Symbol.iterator]()) : undefined$1,
+    '%ArrayPrototype%': Array.prototype,
+    '%ArrayProto_entries%': Array.prototype.entries,
+    '%ArrayProto_forEach%': Array.prototype.forEach,
+    '%ArrayProto_keys%': Array.prototype.keys,
+    '%ArrayProto_values%': Array.prototype.values,
+    '%AsyncFromSyncIteratorPrototype%': undefined$1,
+    '%AsyncFunction%': asyncFunction,
+    '%AsyncFunctionPrototype%':  undefined$1,
+    '%AsyncGenerator%':  undefined$1,
+    '%AsyncGeneratorFunction%': asyncGenFunction,
+    '%AsyncGeneratorPrototype%':  undefined$1,
+    '%AsyncIteratorPrototype%':  undefined$1,
+    '%Atomics%': typeof Atomics === 'undefined' ? undefined$1 : Atomics,
+    '%Boolean%': Boolean,
+    '%BooleanPrototype%': Boolean.prototype,
+    '%DataView%': typeof DataView === 'undefined' ? undefined$1 : DataView,
+    '%DataViewPrototype%': typeof DataView === 'undefined' ? undefined$1 : DataView.prototype,
+    '%Date%': Date,
+    '%DatePrototype%': Date.prototype,
+    '%decodeURI%': decodeURI,
+    '%decodeURIComponent%': decodeURIComponent,
+    '%encodeURI%': encodeURI,
+    '%encodeURIComponent%': encodeURIComponent,
+    '%Error%': Error,
+    '%ErrorPrototype%': Error.prototype,
+    '%eval%': eval,
+    // eslint-disable-line no-eval
+    '%EvalError%': EvalError,
+    '%EvalErrorPrototype%': EvalError.prototype,
+    '%Float32Array%': typeof Float32Array === 'undefined' ? undefined$1 : Float32Array,
+    '%Float32ArrayPrototype%': typeof Float32Array === 'undefined' ? undefined$1 : Float32Array.prototype,
+    '%Float64Array%': typeof Float64Array === 'undefined' ? undefined$1 : Float64Array,
+    '%Float64ArrayPrototype%': typeof Float64Array === 'undefined' ? undefined$1 : Float64Array.prototype,
+    '%Function%': Function,
+    '%FunctionPrototype%': Function.prototype,
+    '%Generator%':  undefined$1,
+    '%GeneratorFunction%': generatorFunction,
+    '%GeneratorPrototype%':  undefined$1,
+    '%Int8Array%': typeof Int8Array === 'undefined' ? undefined$1 : Int8Array,
+    '%Int8ArrayPrototype%': typeof Int8Array === 'undefined' ? undefined$1 : Int8Array.prototype,
+    '%Int16Array%': typeof Int16Array === 'undefined' ? undefined$1 : Int16Array,
+    '%Int16ArrayPrototype%': typeof Int16Array === 'undefined' ? undefined$1 : Int8Array.prototype,
+    '%Int32Array%': typeof Int32Array === 'undefined' ? undefined$1 : Int32Array,
+    '%Int32ArrayPrototype%': typeof Int32Array === 'undefined' ? undefined$1 : Int32Array.prototype,
+    '%isFinite%': isFinite,
+    '%isNaN%': isNaN,
+    '%IteratorPrototype%': hasSymbols$1 ? getProto(getProto([][Symbol.iterator]())) : undefined$1,
+    '%JSON%': (typeof JSON === "undefined" ? "undefined" : _typeof(JSON)) === 'object' ? JSON : undefined$1,
+    '%JSONParse%': (typeof JSON === "undefined" ? "undefined" : _typeof(JSON)) === 'object' ? JSON.parse : undefined$1,
+    '%Map%': typeof Map === 'undefined' ? undefined$1 : Map,
+    '%MapIteratorPrototype%': typeof Map === 'undefined' || !hasSymbols$1 ? undefined$1 : getProto(new Map()[Symbol.iterator]()),
+    '%MapPrototype%': typeof Map === 'undefined' ? undefined$1 : Map.prototype,
+    '%Math%': Math,
+    '%Number%': Number,
+    '%NumberPrototype%': Number.prototype,
+    '%Object%': Object,
+    '%ObjectPrototype%': Object.prototype,
+    '%ObjProto_toString%': Object.prototype.toString,
+    '%ObjProto_valueOf%': Object.prototype.valueOf,
+    '%parseFloat%': parseFloat,
+    '%parseInt%': parseInt,
+    '%Promise%': typeof Promise === 'undefined' ? undefined$1 : Promise,
+    '%PromisePrototype%': typeof Promise === 'undefined' ? undefined$1 : Promise.prototype,
+    '%PromiseProto_then%': typeof Promise === 'undefined' ? undefined$1 : Promise.prototype.then,
+    '%Promise_all%': typeof Promise === 'undefined' ? undefined$1 : Promise.all,
+    '%Promise_reject%': typeof Promise === 'undefined' ? undefined$1 : Promise.reject,
+    '%Promise_resolve%': typeof Promise === 'undefined' ? undefined$1 : Promise.resolve,
+    '%Proxy%': typeof Proxy === 'undefined' ? undefined$1 : Proxy,
+    '%RangeError%': RangeError,
+    '%RangeErrorPrototype%': RangeError.prototype,
+    '%ReferenceError%': ReferenceError,
+    '%ReferenceErrorPrototype%': ReferenceError.prototype,
+    '%Reflect%': typeof Reflect === 'undefined' ? undefined$1 : Reflect,
+    '%RegExp%': RegExp,
+    '%RegExpPrototype%': RegExp.prototype,
+    '%Set%': typeof Set === 'undefined' ? undefined$1 : Set,
+    '%SetIteratorPrototype%': typeof Set === 'undefined' || !hasSymbols$1 ? undefined$1 : getProto(new Set()[Symbol.iterator]()),
+    '%SetPrototype%': typeof Set === 'undefined' ? undefined$1 : Set.prototype,
+    '%SharedArrayBuffer%': typeof SharedArrayBuffer === 'undefined' ? undefined$1 : SharedArrayBuffer,
+    '%SharedArrayBufferPrototype%': typeof SharedArrayBuffer === 'undefined' ? undefined$1 : SharedArrayBuffer.prototype,
+    '%String%': String,
+    '%StringIteratorPrototype%': hasSymbols$1 ? getProto(''[Symbol.iterator]()) : undefined$1,
+    '%StringPrototype%': String.prototype,
+    '%Symbol%': hasSymbols$1 ? Symbol : undefined$1,
+    '%SymbolPrototype%': hasSymbols$1 ? Symbol.prototype : undefined$1,
+    '%SyntaxError%': SyntaxError,
+    '%SyntaxErrorPrototype%': SyntaxError.prototype,
+    '%ThrowTypeError%': ThrowTypeError,
+    '%TypedArray%': TypedArray,
+    '%TypedArrayPrototype%': TypedArray ? TypedArray.prototype : undefined$1,
+    '%TypeError%': $TypeError,
+    '%TypeErrorPrototype%': $TypeError.prototype,
+    '%Uint8Array%': typeof Uint8Array === 'undefined' ? undefined$1 : Uint8Array,
+    '%Uint8ArrayPrototype%': typeof Uint8Array === 'undefined' ? undefined$1 : Uint8Array.prototype,
+    '%Uint8ClampedArray%': typeof Uint8ClampedArray === 'undefined' ? undefined$1 : Uint8ClampedArray,
+    '%Uint8ClampedArrayPrototype%': typeof Uint8ClampedArray === 'undefined' ? undefined$1 : Uint8ClampedArray.prototype,
+    '%Uint16Array%': typeof Uint16Array === 'undefined' ? undefined$1 : Uint16Array,
+    '%Uint16ArrayPrototype%': typeof Uint16Array === 'undefined' ? undefined$1 : Uint16Array.prototype,
+    '%Uint32Array%': typeof Uint32Array === 'undefined' ? undefined$1 : Uint32Array,
+    '%Uint32ArrayPrototype%': typeof Uint32Array === 'undefined' ? undefined$1 : Uint32Array.prototype,
+    '%URIError%': URIError,
+    '%URIErrorPrototype%': URIError.prototype,
+    '%WeakMap%': typeof WeakMap === 'undefined' ? undefined$1 : WeakMap,
+    '%WeakMapPrototype%': typeof WeakMap === 'undefined' ? undefined$1 : WeakMap.prototype,
+    '%WeakSet%': typeof WeakSet === 'undefined' ? undefined$1 : WeakSet,
+    '%WeakSetPrototype%': typeof WeakSet === 'undefined' ? undefined$1 : WeakSet.prototype
+  };
+  var $replace = functionBind.call(Function.call, String.prototype.replace);
+  /* adapted from https://github.com/lodash/lodash/blob/4.17.15/dist/lodash.js#L6735-L6744 */
+
+  var rePropName = /[^%.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\\]|\\.)*?)\2)\]|(?=(?:\.|\[\])(?:\.|\[\]|%$))/g;
+  var reEscapeChar = /\\(\\)?/g;
+  /** Used to match backslashes in property paths. */
+
+  var stringToPath = function stringToPath(string) {
+    var result = [];
+    $replace(string, rePropName, function (match, number, quote, subString) {
+      result[result.length] = quote ? $replace(subString, reEscapeChar, '$1') : number || match;
+    });
+    return result;
+  };
+  /* end adaptation */
+
+
+  var getBaseIntrinsic = function getBaseIntrinsic(name, allowMissing) {
+    if (!(name in INTRINSICS)) {
+      throw new SyntaxError('intrinsic ' + name + ' does not exist!');
+    } // istanbul ignore if // hopefully this is impossible to test :-)
+
+
+    if (typeof INTRINSICS[name] === 'undefined' && !allowMissing) {
+      throw new $TypeError('intrinsic ' + name + ' exists, but is not available. Please file an issue!');
+    }
+
+    return INTRINSICS[name];
+  };
+
+  var GetIntrinsic = function GetIntrinsic(name, allowMissing) {
+    if (typeof name !== 'string' || name.length === 0) {
+      throw new TypeError('intrinsic name must be a non-empty string');
+    }
+
+    if (arguments.length > 1 && typeof allowMissing !== 'boolean') {
+      throw new TypeError('"allowMissing" argument must be a boolean');
+    }
+
+    var parts = stringToPath(name);
+    var value = getBaseIntrinsic('%' + (parts.length > 0 ? parts[0] : '') + '%', allowMissing);
+
+    for (var i = 1; i < parts.length; i += 1) {
+      if (value != null) {
+        if ($gOPD && i + 1 >= parts.length) {
+          var desc = $gOPD(value, parts[i]);
+
+          if (!allowMissing && !(parts[i] in value)) {
+            throw new $TypeError('base intrinsic for ' + name + ' exists, but the property is not available.');
+          }
+
+          value = desc ? desc.get || desc.value : value[parts[i]];
+        } else {
+          value = value[parts[i]];
+        }
+      }
+    }
+
+    return value;
+  };
+
+  var $apply = GetIntrinsic('%Function.prototype.apply%');
+  var $call = GetIntrinsic('%Function.prototype.call%');
+  var $reflectApply = GetIntrinsic('%Reflect.apply%', true) || functionBind.call($call, $apply);
+
+  var callBind = function callBind() {
+    return $reflectApply(functionBind, $call, arguments);
+  };
+
+  var apply = function applyBind() {
+    return $reflectApply(functionBind, $apply, arguments);
+  };
+  callBind.apply = apply;
+
+  var $indexOf = callBind(GetIntrinsic('String.prototype.indexOf'));
+
+  var callBound = function callBoundIntrinsic(name, allowMissing) {
+    var intrinsic = GetIntrinsic(name, !!allowMissing);
+
+    if (typeof intrinsic === 'function' && $indexOf(name, '.prototype.')) {
+      return callBind(intrinsic);
+    }
+
+    return intrinsic;
+  };
+
+  var $test = GetIntrinsic('RegExp.prototype.test');
+
+  var regexTester = function regexTester(regex) {
+    return callBind($test, regex);
+  };
+
+  var isPrimitive = function isPrimitive(value) {
+    return value === null || typeof value !== 'function' && _typeof(value) !== 'object';
+  };
+
+  var isPrimitive$1 = function isPrimitive(value) {
+    return value === null || typeof value !== 'function' && _typeof(value) !== 'object';
+  };
+
+  var fnToStr = Function.prototype.toString;
+  var reflectApply = (typeof Reflect === "undefined" ? "undefined" : _typeof(Reflect)) === 'object' && Reflect !== null && Reflect.apply;
+  var badArrayLike;
+  var isCallableMarker;
+
+  if (typeof reflectApply === 'function' && typeof Object.defineProperty === 'function') {
+    try {
+      badArrayLike = Object.defineProperty({}, 'length', {
+        get: function get() {
+          throw isCallableMarker;
+        }
+      });
+      isCallableMarker = {};
+    } catch (_) {
+      reflectApply = null;
+    }
+  } else {
+    reflectApply = null;
+  }
+
+  var constructorRegex = /^\s*class\b/;
+
+  var isES6ClassFn = function isES6ClassFunction(value) {
+    try {
+      var fnStr = fnToStr.call(value);
+      return constructorRegex.test(fnStr);
+    } catch (e) {
+      return false; // not a function
+    }
+  };
+
+  var tryFunctionObject = function tryFunctionToStr(value) {
+    try {
+      if (isES6ClassFn(value)) {
+        return false;
+      }
+
+      fnToStr.call(value);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  };
+
+  var toStr$1 = Object.prototype.toString;
+  var fnClass = '[object Function]';
+  var genClass = '[object GeneratorFunction]';
+  var hasToStringTag = typeof Symbol === 'function' && _typeof(Symbol.toStringTag) === 'symbol';
+  var isCallable = reflectApply ? function isCallable(value) {
+    if (!value) {
+      return false;
+    }
+
+    if (typeof value !== 'function' && _typeof(value) !== 'object') {
+      return false;
+    }
+
+    if (typeof value === 'function' && !value.prototype) {
+      return true;
+    }
+
+    try {
+      reflectApply(value, null, badArrayLike);
+    } catch (e) {
+      if (e !== isCallableMarker) {
+        return false;
+      }
+    }
+
+    return !isES6ClassFn(value);
+  } : function isCallable(value) {
+    if (!value) {
+      return false;
+    }
+
+    if (typeof value !== 'function' && _typeof(value) !== 'object') {
+      return false;
+    }
+
+    if (typeof value === 'function' && !value.prototype) {
+      return true;
+    }
+
+    if (hasToStringTag) {
+      return tryFunctionObject(value);
+    }
+
+    if (isES6ClassFn(value)) {
+      return false;
+    }
+
+    var strClass = toStr$1.call(value);
+    return strClass === fnClass || strClass === genClass;
+  };
+
+  var getDay = Date.prototype.getDay;
+
+  var tryDateObject = function tryDateGetDayCall(value) {
+    try {
+      getDay.call(value);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  };
+
+  var toStr$2 = Object.prototype.toString;
+  var dateClass = '[object Date]';
+  var hasToStringTag$1 = typeof Symbol === 'function' && _typeof(Symbol.toStringTag) === 'symbol';
+
+  var isDateObject = function isDateObject(value) {
+    if (_typeof(value) !== 'object' || value === null) {
+      return false;
+    }
+
+    return hasToStringTag$1 ? tryDateObject(value) : toStr$2.call(value) === dateClass;
+  };
+
+  var isSymbol = createCommonjsModule(function (module) {
+
+    var toStr = Object.prototype.toString;
+    var hasSymbols$1 = hasSymbols();
+
+    if (hasSymbols$1) {
+      var symToStr = Symbol.prototype.toString;
+      var symStringRegex = /^Symbol\(.*\)$/;
+
+      var isSymbolObject = function isRealSymbolObject(value) {
+        if (_typeof(value.valueOf()) !== 'symbol') {
+          return false;
+        }
+
+        return symStringRegex.test(symToStr.call(value));
+      };
+
+      module.exports = function isSymbol(value) {
+        if (_typeof(value) === 'symbol') {
+          return true;
+        }
+
+        if (toStr.call(value) !== '[object Symbol]') {
+          return false;
+        }
+
+        try {
+          return isSymbolObject(value);
+        } catch (e) {
+          return false;
+        }
+      };
+    } else {
+      module.exports = function isSymbol(value) {
+        // this environment does not support Symbols.
+        return false ;
+      };
+    }
+  });
+
+  var hasSymbols$2 = typeof Symbol === 'function' && _typeof(Symbol.iterator) === 'symbol';
+
+  var ordinaryToPrimitive = function OrdinaryToPrimitive(O, hint) {
+    if (typeof O === 'undefined' || O === null) {
+      throw new TypeError('Cannot call method on ' + O);
+    }
+
+    if (typeof hint !== 'string' || hint !== 'number' && hint !== 'string') {
+      throw new TypeError('hint must be "string" or "number"');
+    }
+
+    var methodNames = hint === 'string' ? ['toString', 'valueOf'] : ['valueOf', 'toString'];
+    var method, result, i;
+
+    for (i = 0; i < methodNames.length; ++i) {
+      method = O[methodNames[i]];
+
+      if (isCallable(method)) {
+        result = method.call(O);
+
+        if (isPrimitive$1(result)) {
+          return result;
+        }
+      }
+    }
+
+    throw new TypeError('No default value');
+  };
+
+  var GetMethod = function GetMethod(O, P) {
+    var func = O[P];
+
+    if (func !== null && typeof func !== 'undefined') {
+      if (!isCallable(func)) {
+        throw new TypeError(func + ' returned for property ' + P + ' of object ' + O + ' is not a function');
+      }
+
+      return func;
+    }
+
+    return void 0;
+  }; // http://www.ecma-international.org/ecma-262/6.0/#sec-toprimitive
+
+
+  var es2015 = function ToPrimitive(input) {
+    if (isPrimitive$1(input)) {
+      return input;
+    }
+
+    var hint = 'default';
+
+    if (arguments.length > 1) {
+      if (arguments[1] === String) {
+        hint = 'string';
+      } else if (arguments[1] === Number) {
+        hint = 'number';
+      }
+    }
+
+    var exoticToPrim;
+
+    if (hasSymbols$2) {
+      if (Symbol.toPrimitive) {
+        exoticToPrim = GetMethod(input, Symbol.toPrimitive);
+      } else if (isSymbol(input)) {
+        exoticToPrim = Symbol.prototype.valueOf;
+      }
+    }
+
+    if (typeof exoticToPrim !== 'undefined') {
+      var result = exoticToPrim.call(input, hint);
+
+      if (isPrimitive$1(result)) {
+        return result;
+      }
+
+      throw new TypeError('unable to convert exotic object to primitive');
+    }
+
+    if (hint === 'default' && (isDateObject(input) || isSymbol(input))) {
+      hint = 'string';
+    }
+
+    return ordinaryToPrimitive(input, hint === 'default' ? 'number' : hint);
+  };
+
+  var ToPrimitive = function ToPrimitive(input) {
+    if (arguments.length > 1) {
+      return es2015(input, arguments[1]);
+    }
+
+    return es2015(input);
+  };
+
+  var $TypeError$1 = GetIntrinsic('%TypeError%');
+  var $Number = GetIntrinsic('%Number%');
+  var $RegExp = GetIntrinsic('%RegExp%');
+  var $parseInteger = GetIntrinsic('%parseInt%');
+  var $strSlice = callBound('String.prototype.slice');
+  var isBinary = regexTester(/^0b[01]+$/i);
+  var isOctal = regexTester(/^0o[0-7]+$/i);
+  var isInvalidHexLiteral = regexTester(/^[-+]0x[0-9a-f]+$/i);
+  var nonWS = ["\x85", "\u200B", "\uFFFE"].join('');
+  var nonWSregex = new $RegExp('[' + nonWS + ']', 'g');
+  var hasNonWS = regexTester(nonWSregex); // whitespace from: https://es5.github.io/#x15.5.4.20
+  // implementation from https://github.com/es-shims/es5-shim/blob/v3.4.0/es5-shim.js#L1304-L1324
+
+  var ws = ["\t\n\x0B\f\r \xA0\u1680\u180E\u2000\u2001\u2002\u2003", "\u2004\u2005\u2006\u2007\u2008\u2009\u200A\u202F\u205F\u3000\u2028", "\u2029\uFEFF"].join('');
+  var trimRegex = new RegExp('(^[' + ws + ']+)|([' + ws + ']+$)', 'g');
+  var $replace$1 = callBound('String.prototype.replace');
+
+  var $trim = function $trim(value) {
+    return $replace$1(value, trimRegex, '');
+  }; // https://www.ecma-international.org/ecma-262/6.0/#sec-tonumber
+
+
+  var ToNumber = function ToNumber(argument) {
+    var value = isPrimitive(argument) ? argument : ToPrimitive(argument, $Number);
+
+    if (_typeof(value) === 'symbol') {
+      throw new $TypeError$1('Cannot convert a Symbol value to a number');
+    }
+
+    if (typeof value === 'string') {
+      if (isBinary(value)) {
+        return ToNumber($parseInteger($strSlice(value, 2), 2));
+      } else if (isOctal(value)) {
+        return ToNumber($parseInteger($strSlice(value, 2), 8));
+      } else if (hasNonWS(value) || isInvalidHexLiteral(value)) {
+        return NaN;
+      } else {
+        var trimmed = $trim(value);
+
+        if (trimmed !== value) {
+          return ToNumber(trimmed);
+        }
+      }
+    }
+
+    return $Number(value);
+  };
+
+  var Type = function Type(x) {
+    if (x === null) {
+      return 'Null';
+    }
+
+    if (typeof x === 'undefined') {
+      return 'Undefined';
+    }
+
+    if (typeof x === 'function' || _typeof(x) === 'object') {
+      return 'Object';
+    }
+
+    if (typeof x === 'number') {
+      return 'Number';
+    }
+
+    if (typeof x === 'boolean') {
+      return 'Boolean';
+    }
+
+    if (typeof x === 'string') {
+      return 'String';
+    }
+  };
+
+  var Type$1 = function Type$1(x) {
+    if (_typeof(x) === 'symbol') {
+      return 'Symbol';
+    }
+
+    return Type(x);
+  };
+
+  var AbstractEqualityComparison = function AbstractEqualityComparison(x, y) {
+    var xType = Type$1(x);
+    var yType = Type$1(y);
+
+    if (xType === yType) {
+      return x === y; // ES6+ specified this shortcut anyways.
+    }
+
+    if (x == null && y == null) {
+      return true;
+    }
+
+    if (xType === 'Number' && yType === 'String') {
+      return AbstractEqualityComparison(x, ToNumber(y));
+    }
+
+    if (xType === 'String' && yType === 'Number') {
+      return AbstractEqualityComparison(ToNumber(x), y);
+    }
+
+    if (xType === 'Boolean') {
+      return AbstractEqualityComparison(ToNumber(x), y);
+    }
+
+    if (yType === 'Boolean') {
+      return AbstractEqualityComparison(x, ToNumber(y));
+    }
+
+    if ((xType === 'String' || xType === 'Number' || xType === 'Symbol') && yType === 'Object') {
+      return AbstractEqualityComparison(x, ToPrimitive(y));
+    }
+
+    if (xType === 'Object' && (yType === 'String' || yType === 'Number' || yType === 'Symbol')) {
+      return AbstractEqualityComparison(ToPrimitive(x), y);
+    }
+
+    return false;
+  };
+
+  var _isNaN = Number.isNaN || function isNaN(a) {
+    return a !== a;
+  };
+
+  var $isNaN = Number.isNaN || function (a) {
+    return a !== a;
+  };
+
+  var _isFinite = Number.isFinite || function (x) {
+    return typeof x === 'number' && !$isNaN(x) && x !== Infinity && x !== -Infinity;
+  };
+
+  var $strSlice$1 = callBound('String.prototype.slice');
+
+  var isPrefixOf = function isPrefixOf(prefix, string) {
+    if (prefix === string) {
+      return true;
+    }
+
+    if (prefix.length > string.length) {
+      return false;
+    }
+
+    return $strSlice$1(string, 0, prefix.length) === prefix;
+  };
+
+  var $Number$1 = GetIntrinsic('%Number%');
+  var $TypeError$2 = GetIntrinsic('%TypeError%'); // https://www.ecma-international.org/ecma-262/5.1/#sec-11.8.5
+  // eslint-disable-next-line max-statements
+
+  var AbstractRelationalComparison = function AbstractRelationalComparison(x, y, LeftFirst) {
+    if (Type$1(LeftFirst) !== 'Boolean') {
+      throw new $TypeError$2('Assertion failed: LeftFirst argument must be a Boolean');
+    }
+
+    var px;
+    var py;
+
+    if (LeftFirst) {
+      px = ToPrimitive(x, $Number$1);
+      py = ToPrimitive(y, $Number$1);
+    } else {
+      py = ToPrimitive(y, $Number$1);
+      px = ToPrimitive(x, $Number$1);
+    }
+
+    var bothStrings = Type$1(px) === 'String' && Type$1(py) === 'String';
+
+    if (!bothStrings) {
+      var nx = ToNumber(px);
+      var ny = ToNumber(py);
+
+      if (_isNaN(nx) || _isNaN(ny)) {
+        return undefined;
+      }
+
+      if (_isFinite(nx) && _isFinite(ny) && nx === ny) {
+        return false;
+      }
+
+      if (nx === 0 && ny === 0) {
+        return false;
+      }
+
+      if (nx === Infinity) {
+        return false;
+      }
+
+      if (ny === Infinity) {
+        return true;
+      }
+
+      if (ny === -Infinity) {
+        return false;
+      }
+
+      if (nx === -Infinity) {
+        return true;
+      }
+
+      return nx < ny; // by now, these are both nonzero, finite, and not equal
+    }
+
+    if (isPrefixOf(py, px)) {
+      return false;
+    }
+
+    if (isPrefixOf(px, py)) {
+      return true;
+    }
+
+    return px < py; // both strings, neither a prefix of the other. shortcut for steps c-f
+  };
+
+  var StrictEqualityComparison = function StrictEqualityComparison(x, y) {
+    var xType = Type$1(x);
+    var yType = Type$1(y);
+
+    if (xType !== yType) {
+      return false;
+    }
+
+    if (xType === 'Undefined' || xType === 'Null') {
+      return true;
+    }
+
+    return x === y; // shortcut for steps 4-7
+  };
+
+  var inherits;
+
+  if (typeof Object.create === 'function') {
+    inherits = function inherits(ctor, superCtor) {
+      // implementation from standard node.js 'util' module
+      ctor.super_ = superCtor;
+      ctor.prototype = Object.create(superCtor.prototype, {
+        constructor: {
+          value: ctor,
+          enumerable: false,
+          writable: true,
+          configurable: true
+        }
+      });
+    };
+  } else {
+    inherits = function inherits(ctor, superCtor) {
+      ctor.super_ = superCtor;
+
+      var TempCtor = function TempCtor() {};
+
+      TempCtor.prototype = superCtor.prototype;
+      ctor.prototype = new TempCtor();
+      ctor.prototype.constructor = ctor;
+    };
+  }
+
+  var inherits$1 = inherits;
+
+  var formatRegExp = /%[sdj%]/g;
+  function format(f) {
+    if (!isString(f)) {
+      var objects = [];
+
+      for (var i = 0; i < arguments.length; i++) {
+        objects.push(inspect(arguments[i]));
+      }
+
+      return objects.join(' ');
+    }
+
+    var i = 1;
+    var args = arguments;
+    var len = args.length;
+    var str = String(f).replace(formatRegExp, function (x) {
+      if (x === '%%') return '%';
+      if (i >= len) return x;
+
+      switch (x) {
+        case '%s':
+          return String(args[i++]);
+
+        case '%d':
+          return Number(args[i++]);
+
+        case '%j':
+          try {
+            return JSON.stringify(args[i++]);
+          } catch (_) {
+            return '[Circular]';
+          }
+
+        default:
+          return x;
+      }
+    });
+
+    for (var x = args[i]; i < len; x = args[++i]) {
+      if (isNull(x) || !isObject(x)) {
+        str += ' ' + x;
+      } else {
+        str += ' ' + inspect(x);
+      }
+    }
+
+    return str;
+  }
+  // Returns a modified function which warns once by default.
+  // If --no-deprecation is set, then it is a no-op.
+
+  function deprecate(fn, msg) {
+    // Allow for deprecating things in the process of starting up.
+    if (isUndefined(global.process)) {
+      return function () {
+        return deprecate(fn, msg).apply(this, arguments);
+      };
+    }
+
+    var warned = false;
+
+    function deprecated() {
+      if (!warned) {
+        {
+          console.error(msg);
+        }
+
+        warned = true;
+      }
+
+      return fn.apply(this, arguments);
+    }
+
+    return deprecated;
+  }
+  var debugs = {};
+  var debugEnviron;
+  function debuglog(set) {
+    if (isUndefined(debugEnviron)) debugEnviron =  '';
+    set = set.toUpperCase();
+
+    if (!debugs[set]) {
+      if (new RegExp('\\b' + set + '\\b', 'i').test(debugEnviron)) {
+        var pid = 0;
+
+        debugs[set] = function () {
+          var msg = format.apply(null, arguments);
+          console.error('%s %d: %s', set, pid, msg);
+        };
+      } else {
+        debugs[set] = function () {};
+      }
+    }
+
+    return debugs[set];
+  }
+  /**
+   * Echos the value of a value. Trys to print the value out
+   * in the best way possible given the different types.
+   *
+   * @param {Object} obj The object to print out.
+   * @param {Object} opts Optional options object that alters the output.
+   */
+
+  /* legacy: obj, showHidden, depth, colors*/
+
+  function inspect(obj, opts) {
+    // default options
+    var ctx = {
+      seen: [],
+      stylize: stylizeNoColor
+    }; // legacy...
+
+    if (arguments.length >= 3) ctx.depth = arguments[2];
+    if (arguments.length >= 4) ctx.colors = arguments[3];
+
+    if (isBoolean(opts)) {
+      // legacy...
+      ctx.showHidden = opts;
+    } else if (opts) {
+      // got an "options" object
+      _extend(ctx, opts);
+    } // set default options
+
+
+    if (isUndefined(ctx.showHidden)) ctx.showHidden = false;
+    if (isUndefined(ctx.depth)) ctx.depth = 2;
+    if (isUndefined(ctx.colors)) ctx.colors = false;
+    if (isUndefined(ctx.customInspect)) ctx.customInspect = true;
+    if (ctx.colors) ctx.stylize = stylizeWithColor;
+    return formatValue(ctx, obj, ctx.depth);
+  } // http://en.wikipedia.org/wiki/ANSI_escape_code#graphics
+
+  inspect.colors = {
+    'bold': [1, 22],
+    'italic': [3, 23],
+    'underline': [4, 24],
+    'inverse': [7, 27],
+    'white': [37, 39],
+    'grey': [90, 39],
+    'black': [30, 39],
+    'blue': [34, 39],
+    'cyan': [36, 39],
+    'green': [32, 39],
+    'magenta': [35, 39],
+    'red': [31, 39],
+    'yellow': [33, 39]
+  }; // Don't use 'blue' not visible on cmd.exe
+
+  inspect.styles = {
+    'special': 'cyan',
+    'number': 'yellow',
+    'boolean': 'yellow',
+    'undefined': 'grey',
+    'null': 'bold',
+    'string': 'green',
+    'date': 'magenta',
+    // "name": intentionally not styling
+    'regexp': 'red'
+  };
+
+  function stylizeWithColor(str, styleType) {
+    var style = inspect.styles[styleType];
+
+    if (style) {
+      return "\x1B[" + inspect.colors[style][0] + 'm' + str + "\x1B[" + inspect.colors[style][1] + 'm';
+    } else {
+      return str;
+    }
+  }
+
+  function stylizeNoColor(str, styleType) {
+    return str;
+  }
+
+  function arrayToHash(array) {
+    var hash = {};
+    array.forEach(function (val, idx) {
+      hash[val] = true;
+    });
+    return hash;
+  }
+
+  function formatValue(ctx, value, recurseTimes) {
+    // Provide a hook for user-specified inspect functions.
+    // Check that value is an object with an inspect function on it
+    if (ctx.customInspect && value && isFunction(value.inspect) && // Filter out the util module, it's inspect function is special
+    value.inspect !== inspect && // Also filter out any prototype objects using the circular check.
+    !(value.constructor && value.constructor.prototype === value)) {
+      var ret = value.inspect(recurseTimes, ctx);
+
+      if (!isString(ret)) {
+        ret = formatValue(ctx, ret, recurseTimes);
+      }
+
+      return ret;
+    } // Primitive types cannot have properties
+
+
+    var primitive = formatPrimitive(ctx, value);
+
+    if (primitive) {
+      return primitive;
+    } // Look up the keys of the object.
+
+
+    var keys = Object.keys(value);
+    var visibleKeys = arrayToHash(keys);
+
+    if (ctx.showHidden) {
+      keys = Object.getOwnPropertyNames(value);
+    } // IE doesn't make error fields non-enumerable
+    // http://msdn.microsoft.com/en-us/library/ie/dww52sbt(v=vs.94).aspx
+
+
+    if (isError(value) && (keys.indexOf('message') >= 0 || keys.indexOf('description') >= 0)) {
+      return formatError(value);
+    } // Some type of object without properties can be shortcutted.
+
+
+    if (keys.length === 0) {
+      if (isFunction(value)) {
+        var name = value.name ? ': ' + value.name : '';
+        return ctx.stylize('[Function' + name + ']', 'special');
+      }
+
+      if (isRegExp(value)) {
+        return ctx.stylize(RegExp.prototype.toString.call(value), 'regexp');
+      }
+
+      if (isDate(value)) {
+        return ctx.stylize(Date.prototype.toString.call(value), 'date');
+      }
+
+      if (isError(value)) {
+        return formatError(value);
+      }
+    }
+
+    var base = '',
+        array = false,
+        braces = ['{', '}']; // Make Array say that they are Array
+
+    if (isArray(value)) {
+      array = true;
+      braces = ['[', ']'];
+    } // Make functions say that they are functions
+
+
+    if (isFunction(value)) {
+      var n = value.name ? ': ' + value.name : '';
+      base = ' [Function' + n + ']';
+    } // Make RegExps say that they are RegExps
+
+
+    if (isRegExp(value)) {
+      base = ' ' + RegExp.prototype.toString.call(value);
+    } // Make dates with properties first say the date
+
+
+    if (isDate(value)) {
+      base = ' ' + Date.prototype.toUTCString.call(value);
+    } // Make error with message first say the error
+
+
+    if (isError(value)) {
+      base = ' ' + formatError(value);
+    }
+
+    if (keys.length === 0 && (!array || value.length == 0)) {
+      return braces[0] + base + braces[1];
+    }
+
+    if (recurseTimes < 0) {
+      if (isRegExp(value)) {
+        return ctx.stylize(RegExp.prototype.toString.call(value), 'regexp');
+      } else {
+        return ctx.stylize('[Object]', 'special');
+      }
+    }
+
+    ctx.seen.push(value);
+    var output;
+
+    if (array) {
+      output = formatArray(ctx, value, recurseTimes, visibleKeys, keys);
+    } else {
+      output = keys.map(function (key) {
+        return formatProperty(ctx, value, recurseTimes, visibleKeys, key, array);
+      });
+    }
+
+    ctx.seen.pop();
+    return reduceToSingleString(output, base, braces);
+  }
+
+  function formatPrimitive(ctx, value) {
+    if (isUndefined(value)) return ctx.stylize('undefined', 'undefined');
+
+    if (isString(value)) {
+      var simple = '\'' + JSON.stringify(value).replace(/^"|"$/g, '').replace(/'/g, "\\'").replace(/\\"/g, '"') + '\'';
+      return ctx.stylize(simple, 'string');
+    }
+
+    if (isNumber(value)) return ctx.stylize('' + value, 'number');
+    if (isBoolean(value)) return ctx.stylize('' + value, 'boolean'); // For some reason typeof null is "object", so special case here.
+
+    if (isNull(value)) return ctx.stylize('null', 'null');
+  }
+
+  function formatError(value) {
+    return '[' + Error.prototype.toString.call(value) + ']';
+  }
+
+  function formatArray(ctx, value, recurseTimes, visibleKeys, keys) {
+    var output = [];
+
+    for (var i = 0, l = value.length; i < l; ++i) {
+      if (hasOwnProperty(value, String(i))) {
+        output.push(formatProperty(ctx, value, recurseTimes, visibleKeys, String(i), true));
+      } else {
+        output.push('');
+      }
+    }
+
+    keys.forEach(function (key) {
+      if (!key.match(/^\d+$/)) {
+        output.push(formatProperty(ctx, value, recurseTimes, visibleKeys, key, true));
+      }
+    });
+    return output;
+  }
+
+  function formatProperty(ctx, value, recurseTimes, visibleKeys, key, array) {
+    var name, str, desc;
+    desc = Object.getOwnPropertyDescriptor(value, key) || {
+      value: value[key]
+    };
+
+    if (desc.get) {
+      if (desc.set) {
+        str = ctx.stylize('[Getter/Setter]', 'special');
+      } else {
+        str = ctx.stylize('[Getter]', 'special');
+      }
+    } else {
+      if (desc.set) {
+        str = ctx.stylize('[Setter]', 'special');
+      }
+    }
+
+    if (!hasOwnProperty(visibleKeys, key)) {
+      name = '[' + key + ']';
+    }
+
+    if (!str) {
+      if (ctx.seen.indexOf(desc.value) < 0) {
+        if (isNull(recurseTimes)) {
+          str = formatValue(ctx, desc.value, null);
+        } else {
+          str = formatValue(ctx, desc.value, recurseTimes - 1);
+        }
+
+        if (str.indexOf('\n') > -1) {
+          if (array) {
+            str = str.split('\n').map(function (line) {
+              return '  ' + line;
+            }).join('\n').substr(2);
+          } else {
+            str = '\n' + str.split('\n').map(function (line) {
+              return '   ' + line;
+            }).join('\n');
+          }
+        }
+      } else {
+        str = ctx.stylize('[Circular]', 'special');
+      }
+    }
+
+    if (isUndefined(name)) {
+      if (array && key.match(/^\d+$/)) {
+        return str;
+      }
+
+      name = JSON.stringify('' + key);
+
+      if (name.match(/^"([a-zA-Z_][a-zA-Z_0-9]*)"$/)) {
+        name = name.substr(1, name.length - 2);
+        name = ctx.stylize(name, 'name');
+      } else {
+        name = name.replace(/'/g, "\\'").replace(/\\"/g, '"').replace(/(^"|"$)/g, "'");
+        name = ctx.stylize(name, 'string');
+      }
+    }
+
+    return name + ': ' + str;
+  }
+
+  function reduceToSingleString(output, base, braces) {
+    var length = output.reduce(function (prev, cur) {
+      if (cur.indexOf('\n') >= 0) ;
+      return prev + cur.replace(/\u001b\[\d\d?m/g, '').length + 1;
+    }, 0);
+
+    if (length > 60) {
+      return braces[0] + (base === '' ? '' : base + '\n ') + ' ' + output.join(',\n  ') + ' ' + braces[1];
+    }
+
+    return braces[0] + base + ' ' + output.join(', ') + ' ' + braces[1];
+  } // NOTE: These type checking functions intentionally don't use `instanceof`
+  // because it is fragile and can be easily faked with `Object.create()`.
+
+
+  function isArray(ar) {
+    return Array.isArray(ar);
+  }
+  function isBoolean(arg) {
+    return typeof arg === 'boolean';
+  }
+  function isNull(arg) {
+    return arg === null;
+  }
+  function isNullOrUndefined(arg) {
+    return arg == null;
+  }
+  function isNumber(arg) {
+    return typeof arg === 'number';
+  }
+  function isString(arg) {
+    return typeof arg === 'string';
+  }
+  function isSymbol$1(arg) {
+    return _typeof(arg) === 'symbol';
+  }
+  function isUndefined(arg) {
+    return arg === void 0;
+  }
+  function isRegExp(re) {
+    return isObject(re) && objectToString(re) === '[object RegExp]';
+  }
+  function isObject(arg) {
+    return _typeof(arg) === 'object' && arg !== null;
+  }
+  function isDate(d) {
+    return isObject(d) && objectToString(d) === '[object Date]';
+  }
+  function isError(e) {
+    return isObject(e) && (objectToString(e) === '[object Error]' || e instanceof Error);
+  }
+  function isFunction(arg) {
+    return typeof arg === 'function';
+  }
+  function isPrimitive$2(arg) {
+    return arg === null || typeof arg === 'boolean' || typeof arg === 'number' || typeof arg === 'string' || _typeof(arg) === 'symbol' || // ES6 symbol
+    typeof arg === 'undefined';
+  }
+  function isBuffer(maybeBuf) {
+    return Buffer.isBuffer(maybeBuf);
+  }
+
+  function objectToString(o) {
+    return Object.prototype.toString.call(o);
+  }
+
+  function pad(n) {
+    return n < 10 ? '0' + n.toString(10) : n.toString(10);
+  }
+
+  var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']; // 26 Feb 16:19:34
+
+  function timestamp() {
+    var d = new Date();
+    var time = [pad(d.getHours()), pad(d.getMinutes()), pad(d.getSeconds())].join(':');
+    return [d.getDate(), months[d.getMonth()], time].join(' ');
+  } // log is just a thin wrapper to console.log that prepends a timestamp
+
+
+  function log() {
+    console.log('%s - %s', timestamp(), format.apply(null, arguments));
+  }
+  function _extend(origin, add) {
+    // Don't do anything if add isn't an object
+    if (!add || !isObject(add)) return origin;
+    var keys = Object.keys(add);
+    var i = keys.length;
+
+    while (i--) {
+      origin[keys[i]] = add[keys[i]];
+    }
+
+    return origin;
+  }
+
+  function hasOwnProperty(obj, prop) {
+    return Object.prototype.hasOwnProperty.call(obj, prop);
+  }
+
+  var require$$0 = {
+    inherits: inherits$1,
+    _extend: _extend,
+    log: log,
+    isBuffer: isBuffer,
+    isPrimitive: isPrimitive$2,
+    isFunction: isFunction,
+    isError: isError,
+    isDate: isDate,
+    isObject: isObject,
+    isRegExp: isRegExp,
+    isUndefined: isUndefined,
+    isSymbol: isSymbol$1,
+    isString: isString,
+    isNumber: isNumber,
+    isNullOrUndefined: isNullOrUndefined,
+    isNull: isNull,
+    isBoolean: isBoolean,
+    isArray: isArray,
+    inspect: inspect,
+    deprecate: deprecate,
+    format: format,
+    debuglog: debuglog
+  };
+
+  var util_inspect = require$$0.inspect;
+
+  var hasMap = typeof Map === 'function' && Map.prototype;
+  var mapSizeDescriptor = Object.getOwnPropertyDescriptor && hasMap ? Object.getOwnPropertyDescriptor(Map.prototype, 'size') : null;
+  var mapSize = hasMap && mapSizeDescriptor && typeof mapSizeDescriptor.get === 'function' ? mapSizeDescriptor.get : null;
+  var mapForEach = hasMap && Map.prototype.forEach;
+  var hasSet = typeof Set === 'function' && Set.prototype;
+  var setSizeDescriptor = Object.getOwnPropertyDescriptor && hasSet ? Object.getOwnPropertyDescriptor(Set.prototype, 'size') : null;
+  var setSize = hasSet && setSizeDescriptor && typeof setSizeDescriptor.get === 'function' ? setSizeDescriptor.get : null;
+  var setForEach = hasSet && Set.prototype.forEach;
+  var hasWeakMap = typeof WeakMap === 'function' && WeakMap.prototype;
+  var weakMapHas = hasWeakMap ? WeakMap.prototype.has : null;
+  var hasWeakSet = typeof WeakSet === 'function' && WeakSet.prototype;
+  var weakSetHas = hasWeakSet ? WeakSet.prototype.has : null;
+  var booleanValueOf = Boolean.prototype.valueOf;
+  var objectToString$1 = Object.prototype.toString;
+  var functionToString = Function.prototype.toString;
+  var match = String.prototype.match;
+  var bigIntValueOf = typeof BigInt === 'function' ? BigInt.prototype.valueOf : null;
+  var inspectCustom = util_inspect.custom;
+  var inspectSymbol = inspectCustom && isSymbol$2(inspectCustom) ? inspectCustom : null;
+
+  var objectInspect = function inspect_(obj, options, depth, seen) {
+    var opts = options || {};
+
+    if (has(opts, 'quoteStyle') && opts.quoteStyle !== 'single' && opts.quoteStyle !== 'double') {
+      throw new TypeError('option "quoteStyle" must be "single" or "double"');
+    }
+
+    if (has(opts, 'maxStringLength') && (typeof opts.maxStringLength === 'number' ? opts.maxStringLength < 0 && opts.maxStringLength !== Infinity : opts.maxStringLength !== null)) {
+      throw new TypeError('option "maxStringLength", if provided, must be a positive integer, Infinity, or `null`');
+    }
+
+    var customInspect = has(opts, 'customInspect') ? opts.customInspect : true;
+
+    if (typeof customInspect !== 'boolean') {
+      throw new TypeError('option "customInspect", if provided, must be `true` or `false`');
+    }
+
+    if (has(opts, 'indent') && opts.indent !== null && opts.indent !== '\t' && !(parseInt(opts.indent, 10) === opts.indent && opts.indent > 0)) {
+      throw new TypeError('options "indent" must be "\\t", an integer > 0, or `null`');
+    }
+
+    if (typeof obj === 'undefined') {
+      return 'undefined';
+    }
+
+    if (obj === null) {
+      return 'null';
+    }
+
+    if (typeof obj === 'boolean') {
+      return obj ? 'true' : 'false';
+    }
+
+    if (typeof obj === 'string') {
+      return inspectString(obj, opts);
+    }
+
+    if (typeof obj === 'number') {
+      if (obj === 0) {
+        return Infinity / obj > 0 ? '0' : '-0';
+      }
+
+      return String(obj);
+    }
+
+    if (typeof obj === 'bigint') {
+      // eslint-disable-line valid-typeof
+      return String(obj) + 'n';
+    }
+
+    var maxDepth = typeof opts.depth === 'undefined' ? 5 : opts.depth;
+
+    if (typeof depth === 'undefined') {
+      depth = 0;
+    }
+
+    if (depth >= maxDepth && maxDepth > 0 && _typeof(obj) === 'object') {
+      return isArray$1(obj) ? '[Array]' : '[Object]';
+    }
+
+    var indent = getIndent(opts, depth);
+
+    if (typeof seen === 'undefined') {
+      seen = [];
+    } else if (indexOf(seen, obj) >= 0) {
+      return '[Circular]';
+    }
+
+    function inspect(value, from, noIndent) {
+      if (from) {
+        seen = seen.slice();
+        seen.push(from);
+      }
+
+      if (noIndent) {
+        var newOpts = {
+          depth: opts.depth
+        };
+
+        if (has(opts, 'quoteStyle')) {
+          newOpts.quoteStyle = opts.quoteStyle;
+        }
+
+        return inspect_(value, newOpts, depth + 1, seen);
+      }
+
+      return inspect_(value, opts, depth + 1, seen);
+    }
+
+    if (typeof obj === 'function') {
+      var name = nameOf(obj);
+      return '[Function' + (name ? ': ' + name : ' (anonymous)') + ']';
+    }
+
+    if (isSymbol$2(obj)) {
+      var symString = Symbol.prototype.toString.call(obj);
+      return _typeof(obj) === 'object' ? markBoxed(symString) : symString;
+    }
+
+    if (isElement(obj)) {
+      var s = '<' + String(obj.nodeName).toLowerCase();
+      var attrs = obj.attributes || [];
+
+      for (var i = 0; i < attrs.length; i++) {
+        s += ' ' + attrs[i].name + '=' + wrapQuotes(quote(attrs[i].value), 'double', opts);
+      }
+
+      s += '>';
+
+      if (obj.childNodes && obj.childNodes.length) {
+        s += '...';
+      }
+
+      s += '</' + String(obj.nodeName).toLowerCase() + '>';
+      return s;
+    }
+
+    if (isArray$1(obj)) {
+      if (obj.length === 0) {
+        return '[]';
+      }
+
+      var xs = arrObjKeys(obj, inspect);
+
+      if (indent && !singleLineValues(xs)) {
+        return '[' + indentedJoin(xs, indent) + ']';
+      }
+
+      return '[ ' + xs.join(', ') + ' ]';
+    }
+
+    if (isError$1(obj)) {
+      var parts = arrObjKeys(obj, inspect);
+
+      if (parts.length === 0) {
+        return '[' + String(obj) + ']';
+      }
+
+      return '{ [' + String(obj) + '] ' + parts.join(', ') + ' }';
+    }
+
+    if (_typeof(obj) === 'object' && customInspect) {
+      if (inspectSymbol && typeof obj[inspectSymbol] === 'function') {
+        return obj[inspectSymbol]();
+      } else if (typeof obj.inspect === 'function') {
+        return obj.inspect();
+      }
+    }
+
+    if (isMap(obj)) {
+      var mapParts = [];
+      mapForEach.call(obj, function (value, key) {
+        mapParts.push(inspect(key, obj, true) + ' => ' + inspect(value, obj));
+      });
+      return collectionOf('Map', mapSize.call(obj), mapParts, indent);
+    }
+
+    if (isSet(obj)) {
+      var setParts = [];
+      setForEach.call(obj, function (value) {
+        setParts.push(inspect(value, obj));
+      });
+      return collectionOf('Set', setSize.call(obj), setParts, indent);
+    }
+
+    if (isWeakMap(obj)) {
+      return weakCollectionOf('WeakMap');
+    }
+
+    if (isWeakSet(obj)) {
+      return weakCollectionOf('WeakSet');
+    }
+
+    if (isNumber$1(obj)) {
+      return markBoxed(inspect(Number(obj)));
+    }
+
+    if (isBigInt(obj)) {
+      return markBoxed(inspect(bigIntValueOf.call(obj)));
+    }
+
+    if (isBoolean$1(obj)) {
+      return markBoxed(booleanValueOf.call(obj));
+    }
+
+    if (isString$1(obj)) {
+      return markBoxed(inspect(String(obj)));
+    }
+
+    if (!isDate$1(obj) && !isRegExp$1(obj)) {
+      var ys = arrObjKeys(obj, inspect);
+
+      if (ys.length === 0) {
+        return '{}';
+      }
+
+      if (indent) {
+        return '{' + indentedJoin(ys, indent) + '}';
+      }
+
+      return '{ ' + ys.join(', ') + ' }';
+    }
+
+    return String(obj);
+  };
+
+  function wrapQuotes(s, defaultStyle, opts) {
+    var quoteChar = (opts.quoteStyle || defaultStyle) === 'double' ? '"' : "'";
+    return quoteChar + s + quoteChar;
+  }
+
+  function quote(s) {
+    return String(s).replace(/"/g, '&quot;');
+  }
+
+  function isArray$1(obj) {
+    return toStr$3(obj) === '[object Array]';
+  }
+
+  function isDate$1(obj) {
+    return toStr$3(obj) === '[object Date]';
+  }
+
+  function isRegExp$1(obj) {
+    return toStr$3(obj) === '[object RegExp]';
+  }
+
+  function isError$1(obj) {
+    return toStr$3(obj) === '[object Error]';
+  }
+
+  function isSymbol$2(obj) {
+    return toStr$3(obj) === '[object Symbol]';
+  }
+
+  function isString$1(obj) {
+    return toStr$3(obj) === '[object String]';
+  }
+
+  function isNumber$1(obj) {
+    return toStr$3(obj) === '[object Number]';
+  }
+
+  function isBigInt(obj) {
+    return toStr$3(obj) === '[object BigInt]';
+  }
+
+  function isBoolean$1(obj) {
+    return toStr$3(obj) === '[object Boolean]';
+  }
+
+  var hasOwn = Object.prototype.hasOwnProperty || function (key) {
+    return key in this;
+  };
+
+  function has(obj, key) {
+    return hasOwn.call(obj, key);
+  }
+
+  function toStr$3(obj) {
+    return objectToString$1.call(obj);
+  }
+
+  function nameOf(f) {
+    if (f.name) {
+      return f.name;
+    }
+
+    var m = match.call(functionToString.call(f), /^function\s*([\w$]+)/);
+
+    if (m) {
+      return m[1];
+    }
+
+    return null;
+  }
+
+  function indexOf(xs, x) {
+    if (xs.indexOf) {
+      return xs.indexOf(x);
+    }
+
+    for (var i = 0, l = xs.length; i < l; i++) {
+      if (xs[i] === x) {
+        return i;
+      }
+    }
+
+    return -1;
+  }
+
+  function isMap(x) {
+    if (!mapSize || !x || _typeof(x) !== 'object') {
+      return false;
+    }
+
+    try {
+      mapSize.call(x);
+
+      try {
+        setSize.call(x);
+      } catch (s) {
+        return true;
+      }
+
+      return x instanceof Map; // core-js workaround, pre-v2.5.0
+    } catch (e) {}
+
+    return false;
+  }
+
+  function isWeakMap(x) {
+    if (!weakMapHas || !x || _typeof(x) !== 'object') {
+      return false;
+    }
+
+    try {
+      weakMapHas.call(x, weakMapHas);
+
+      try {
+        weakSetHas.call(x, weakSetHas);
+      } catch (s) {
+        return true;
+      }
+
+      return x instanceof WeakMap; // core-js workaround, pre-v2.5.0
+    } catch (e) {}
+
+    return false;
+  }
+
+  function isSet(x) {
+    if (!setSize || !x || _typeof(x) !== 'object') {
+      return false;
+    }
+
+    try {
+      setSize.call(x);
+
+      try {
+        mapSize.call(x);
+      } catch (m) {
+        return true;
+      }
+
+      return x instanceof Set; // core-js workaround, pre-v2.5.0
+    } catch (e) {}
+
+    return false;
+  }
+
+  function isWeakSet(x) {
+    if (!weakSetHas || !x || _typeof(x) !== 'object') {
+      return false;
+    }
+
+    try {
+      weakSetHas.call(x, weakSetHas);
+
+      try {
+        weakMapHas.call(x, weakMapHas);
+      } catch (s) {
+        return true;
+      }
+
+      return x instanceof WeakSet; // core-js workaround, pre-v2.5.0
+    } catch (e) {}
+
+    return false;
+  }
+
+  function isElement(x) {
+    if (!x || _typeof(x) !== 'object') {
+      return false;
+    }
+
+    if (typeof HTMLElement !== 'undefined' && x instanceof HTMLElement) {
+      return true;
+    }
+
+    return typeof x.nodeName === 'string' && typeof x.getAttribute === 'function';
+  }
+
+  function inspectString(str, opts) {
+    if (str.length > opts.maxStringLength) {
+      var remaining = str.length - opts.maxStringLength;
+      var trailer = '... ' + remaining + ' more character' + (remaining > 1 ? 's' : '');
+      return inspectString(str.slice(0, opts.maxStringLength), opts) + trailer;
+    } // eslint-disable-next-line no-control-regex
+
+
+    var s = str.replace(/(['\\])/g, '\\$1').replace(/[\x00-\x1f]/g, lowbyte);
+    return wrapQuotes(s, 'single', opts);
+  }
+
+  function lowbyte(c) {
+    var n = c.charCodeAt(0);
+    var x = {
+      8: 'b',
+      9: 't',
+      10: 'n',
+      12: 'f',
+      13: 'r'
+    }[n];
+
+    if (x) {
+      return '\\' + x;
+    }
+
+    return '\\x' + (n < 0x10 ? '0' : '') + n.toString(16);
+  }
+
+  function markBoxed(str) {
+    return 'Object(' + str + ')';
+  }
+
+  function weakCollectionOf(type) {
+    return type + ' { ? }';
+  }
+
+  function collectionOf(type, size, entries, indent) {
+    var joinedEntries = indent ? indentedJoin(entries, indent) : entries.join(', ');
+    return type + ' (' + size + ') {' + joinedEntries + '}';
+  }
+
+  function singleLineValues(xs) {
+    for (var i = 0; i < xs.length; i++) {
+      if (indexOf(xs[i], '\n') >= 0) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  function getIndent(opts, depth) {
+    var baseIndent;
+
+    if (opts.indent === '\t') {
+      baseIndent = '\t';
+    } else if (typeof opts.indent === 'number' && opts.indent > 0) {
+      baseIndent = Array(opts.indent + 1).join(' ');
+    } else {
+      return null;
+    }
+
+    return {
+      base: baseIndent,
+      prev: Array(depth + 1).join(baseIndent)
+    };
+  }
+
+  function indentedJoin(xs, indent) {
+    if (xs.length === 0) {
+      return '';
+    }
+
+    var lineJoiner = '\n' + indent.prev + indent.base;
+    return lineJoiner + xs.join(',' + lineJoiner) + '\n' + indent.prev;
+  }
+
+  function arrObjKeys(obj, inspect) {
+    var isArr = isArray$1(obj);
+    var xs = [];
+
+    if (isArr) {
+      xs.length = obj.length;
+
+      for (var i = 0; i < obj.length; i++) {
+        xs[i] = has(obj, i) ? inspect(obj[i], obj) : '';
+      }
+    }
+
+    for (var key in obj) {
+      // eslint-disable-line no-restricted-syntax
+      if (!has(obj, key)) {
+        continue;
+      } // eslint-disable-line no-restricted-syntax, no-continue
+
+
+      if (isArr && String(Number(key)) === key && key < obj.length) {
+        continue;
+      } // eslint-disable-line no-restricted-syntax, no-continue
+
+
+      if (/[^\w$]/.test(key)) {
+        xs.push(inspect(key, obj) + ': ' + inspect(obj[key], obj));
+      } else {
+        xs.push(key + ': ' + inspect(obj[key], obj));
+      }
+    }
+
+    return xs;
+  }
+
+  var $apply$1 = GetIntrinsic('%Reflect.apply%', true) || callBound('%Function.prototype.apply%'); // https://www.ecma-international.org/ecma-262/6.0/#sec-call
+
+  var Call = function Call(F, V) {
+    var args = arguments.length > 2 ? arguments[2] : [];
+    return $apply$1(F, V, args);
+  };
+
+  var IsPropertyKey = function IsPropertyKey(argument) {
+    return typeof argument === 'string' || _typeof(argument) === 'symbol';
+  };
+
+  var $TypeError$3 = GetIntrinsic('%TypeError%');
+  /**
+   * 7.3.1 Get (O, P) - https://ecma-international.org/ecma-262/6.0/#sec-get-o-p
+   * 1. Assert: Type(O) is Object.
+   * 2. Assert: IsPropertyKey(P) is true.
+   * 3. Return O.[[Get]](P, O).
+   */
+
+  var Get = function Get(O, P) {
+    // 7.3.1.1
+    if (Type$1(O) !== 'Object') {
+      throw new $TypeError$3('Assertion failed: Type(O) is not Object');
+    } // 7.3.1.2
+
+
+    if (!IsPropertyKey(P)) {
+      throw new $TypeError$3('Assertion failed: IsPropertyKey(P) is not true, got ' + objectInspect(P));
+    } // 7.3.1.3
+
+
+    return O[P];
+  };
+
+  var hasSymbols$3 = hasSymbols();
+  var $iterator = GetIntrinsic('%Symbol.iterator%', true);
+  var $stringSlice = callBound('String.prototype.slice');
+
+  var getIteratorMethod = function getIteratorMethod(ES, iterable) {
+    var usingIterator;
+
+    if (hasSymbols$3) {
+      usingIterator = ES.GetMethod(iterable, $iterator);
+    } else if (ES.IsArray(iterable)) {
+      usingIterator = function usingIterator() {
+        var i = -1;
+        var arr = this; // eslint-disable-line no-invalid-this
+
+        return {
+          next: function next() {
+            i += 1;
+            return {
+              done: i >= arr.length,
+              value: arr[i]
+            };
+          }
+        };
+      };
+    } else if (ES.Type(iterable) === 'String') {
+      usingIterator = function usingIterator() {
+        var i = 0;
+        return {
+          next: function next() {
+            var nextIndex = ES.AdvanceStringIndex(iterable, i, true);
+            var value = $stringSlice(iterable, i, nextIndex);
+            i = nextIndex;
+            return {
+              done: nextIndex > iterable.length,
+              value: value
+            };
+          }
+        };
+      };
+    }
+
+    return usingIterator;
+  };
+
+  var $Math = GetIntrinsic('%Math%');
+  var $floor = $Math.floor;
+  var $abs = $Math.abs; // https://www.ecma-international.org/ecma-262/6.0/#sec-isinteger
+
+  var IsInteger = function IsInteger(argument) {
+    if (typeof argument !== 'number' || _isNaN(argument) || !_isFinite(argument)) {
+      return false;
+    }
+
+    var abs = $abs(argument);
+    return $floor(abs) === abs;
+  };
+
+  var $Math$1 = GetIntrinsic('%Math%');
+  var $Number$2 = GetIntrinsic('%Number%');
+  var maxSafeInteger = $Number$2.MAX_SAFE_INTEGER || $Math$1.pow(2, 53) - 1;
+
+  var $TypeError$4 = GetIntrinsic('%TypeError%');
+  var $charCodeAt = callBound('String.prototype.charCodeAt'); // https://ecma-international.org/ecma-262/6.0/#sec-advancestringindex
+
+  var AdvanceStringIndex = function AdvanceStringIndex(S, index, unicode) {
+    if (Type$1(S) !== 'String') {
+      throw new $TypeError$4('Assertion failed: `S` must be a String');
+    }
+
+    if (!IsInteger(index) || index < 0 || index > maxSafeInteger) {
+      throw new $TypeError$4('Assertion failed: `length` must be an integer >= 0 and <= 2**53');
+    }
+
+    if (Type$1(unicode) !== 'Boolean') {
+      throw new $TypeError$4('Assertion failed: `unicode` must be a Boolean');
+    }
+
+    if (!unicode) {
+      return index + 1;
+    }
+
+    var length = S.length;
+
+    if (index + 1 >= length) {
+      return index + 1;
+    }
+
+    var first = $charCodeAt(S, index);
+
+    if (first < 0xD800 || first > 0xDBFF) {
+      return index + 1;
+    }
+
+    var second = $charCodeAt(S, index + 1);
+
+    if (second < 0xDC00 || second > 0xDFFF) {
+      return index + 1;
+    }
+
+    return index + 2;
+  };
+
+  var $TypeError$5 = GetIntrinsic('%TypeError%'); // http://www.ecma-international.org/ecma-262/5.1/#sec-9.10
+
+  var CheckObjectCoercible = function CheckObjectCoercible(value, optMessage) {
+    if (value == null) {
+      throw new $TypeError$5(optMessage || 'Cannot call method on ' + value);
+    }
+
+    return value;
+  };
+
+  var RequireObjectCoercible = CheckObjectCoercible;
+
+  var $Object = GetIntrinsic('%Object%'); // https://www.ecma-international.org/ecma-262/6.0/#sec-toobject
+
+  var ToObject = function ToObject(value) {
+    RequireObjectCoercible(value);
+    return $Object(value);
+  };
+
+  var $TypeError$6 = GetIntrinsic('%TypeError%');
+  /**
+   * 7.3.2 GetV (V, P)
+   * 1. Assert: IsPropertyKey(P) is true.
+   * 2. Let O be ToObject(V).
+   * 3. ReturnIfAbrupt(O).
+   * 4. Return O.[[Get]](P, V).
+   */
+
+  var GetV = function GetV(V, P) {
+    // 7.3.2.1
+    if (!IsPropertyKey(P)) {
+      throw new $TypeError$6('Assertion failed: IsPropertyKey(P) is not true');
+    } // 7.3.2.2-3
+
+
+    var O = ToObject(V); // 7.3.2.4
+
+    return O[P];
+  };
+
+  var IsCallable = isCallable;
+
+  var $TypeError$7 = GetIntrinsic('%TypeError%');
+  /**
+   * 7.3.9 - https://ecma-international.org/ecma-262/6.0/#sec-getmethod
+   * 1. Assert: IsPropertyKey(P) is true.
+   * 2. Let func be GetV(O, P).
+   * 3. ReturnIfAbrupt(func).
+   * 4. If func is either undefined or null, return undefined.
+   * 5. If IsCallable(func) is false, throw a TypeError exception.
+   * 6. Return func.
+   */
+
+  var GetMethod$1 = function GetMethod(O, P) {
+    // 7.3.9.1
+    if (!IsPropertyKey(P)) {
+      throw new $TypeError$7('Assertion failed: IsPropertyKey(P) is not true');
+    } // 7.3.9.2
+
+
+    var func = GetV(O, P); // 7.3.9.4
+
+    if (func == null) {
+      return void 0;
+    } // 7.3.9.5
+
+
+    if (!IsCallable(func)) {
+      throw new $TypeError$7(P + 'is not a function');
+    } // 7.3.9.6
+
+
+    return func;
+  };
+
+  var $Array = GetIntrinsic('%Array%'); // eslint-disable-next-line global-require
+
+  var toStr$4 = !$Array.isArray && callBound('Object.prototype.toString'); // https://www.ecma-international.org/ecma-262/6.0/#sec-isarray
+
+  var IsArray = $Array.isArray || function IsArray(argument) {
+    return toStr$4(argument) === '[object Array]';
+  };
+
+  var $TypeError$8 = GetIntrinsic('%TypeError%'); // https://ecma-international.org/ecma-262/6.0/#sec-getiterator
+
+  var GetIterator = function GetIterator(obj, method) {
+    var actualMethod = method;
+
+    if (arguments.length < 2) {
+      actualMethod = getIteratorMethod({
+        AdvanceStringIndex: AdvanceStringIndex,
+        GetMethod: GetMethod$1,
+        IsArray: IsArray,
+        Type: Type$1
+      }, obj);
+    }
+
+    var iterator = Call(actualMethod, obj);
+
+    if (Type$1(iterator) !== 'Object') {
+      throw new $TypeError$8('iterator must return an object');
+    }
+
+    return iterator;
+  };
+
+  var $TypeError$9 = GetIntrinsic('%TypeError%'); // https://ecma-international.org/ecma-262/6.0/#sec-iteratorclose
+
+  var IteratorClose = function IteratorClose(iterator, completion) {
+    if (Type$1(iterator) !== 'Object') {
+      throw new $TypeError$9('Assertion failed: Type(iterator) is not Object');
+    }
+
+    if (!IsCallable(completion)) {
+      throw new $TypeError$9('Assertion failed: completion is not a thunk for a Completion Record');
+    }
+
+    var completionThunk = completion;
+    var iteratorReturn = GetMethod$1(iterator, 'return');
+
+    if (typeof iteratorReturn === 'undefined') {
+      return completionThunk();
+    }
+
+    var completionRecord;
+
+    try {
+      var innerResult = Call(iteratorReturn, iterator, []);
+    } catch (e) {
+      // if we hit here, then "e" is the innerResult completion that needs re-throwing
+      // if the completion is of type "throw", this will throw.
+      completionThunk();
+      completionThunk = null; // ensure it's not called twice.
+      // if not, then return the innerResult completion
+
+      throw e;
+    }
+
+    completionRecord = completionThunk(); // if innerResult worked, then throw if the completion does
+
+    completionThunk = null; // ensure it's not called twice.
+
+    if (Type$1(innerResult) !== 'Object') {
+      throw new $TypeError$9('iterator .return must return an object');
+    }
+
+    return completionRecord;
+  };
+
+  var ToBoolean = function ToBoolean(value) {
+    return !!value;
+  };
+
+  var $TypeError$a = GetIntrinsic('%TypeError%'); // https://ecma-international.org/ecma-262/6.0/#sec-iteratorcomplete
+
+  var IteratorComplete = function IteratorComplete(iterResult) {
+    if (Type$1(iterResult) !== 'Object') {
+      throw new $TypeError$a('Assertion failed: Type(iterResult) is not Object');
+    }
+
+    return ToBoolean(Get(iterResult, 'done'));
+  };
+
+  var $TypeError$b = GetIntrinsic('%TypeError%');
+  var $arraySlice = callBound('Array.prototype.slice'); // https://ecma-international.org/ecma-262/6.0/#sec-invoke
+
+  var Invoke = function Invoke(O, P) {
+    if (!IsPropertyKey(P)) {
+      throw new $TypeError$b('P must be a Property Key');
+    }
+
+    var argumentsList = $arraySlice(arguments, 2);
+    var func = GetV(O, P);
+    return Call(func, O, argumentsList);
+  };
+
+  var $TypeError$c = GetIntrinsic('%TypeError%'); // https://ecma-international.org/ecma-262/6.0/#sec-iteratornext
+
+  var IteratorNext = function IteratorNext(iterator, value) {
+    var result = Invoke(iterator, 'next', arguments.length < 2 ? [] : [value]);
+
+    if (Type$1(result) !== 'Object') {
+      throw new $TypeError$c('iterator next must return an object');
+    }
+
+    return result;
+  };
+
+  var IteratorStep = function IteratorStep(iterator) {
+    var result = IteratorNext(iterator);
+    var done = IteratorComplete(result);
+    return done === true ? false : result;
+  };
+
+  var $TypeError$d = GetIntrinsic('%TypeError%'); // https://ecma-international.org/ecma-262/6.0/#sec-iteratorvalue
+
+  var IteratorValue = function IteratorValue(iterResult) {
+    if (Type$1(iterResult) !== 'Object') {
+      throw new $TypeError$d('Assertion failed: Type(iterResult) is not Object');
+    }
+
+    return Get(iterResult, 'value');
+  };
+
+  var $TypeError$e = GetIntrinsic('%TypeError%'); // https://tc39.es/ecma262/#sec-add-entries-from-iterable
+
+  var AddEntriesFromIterable = function AddEntriesFromIterable(target, iterable, adder) {
+    if (!IsCallable(adder)) {
+      throw new $TypeError$e('Assertion failed: `adder` is not callable');
+    }
+
+    if (iterable == null) {
+      throw new $TypeError$e('Assertion failed: `iterable` is present, and not nullish');
+    }
+
+    var iteratorRecord = GetIterator(iterable);
+
+    while (true) {
+      // eslint-disable-line no-constant-condition
+      var next = IteratorStep(iteratorRecord);
+
+      if (!next) {
+        return target;
+      }
+
+      var nextItem = IteratorValue(next);
+
+      if (Type$1(nextItem) !== 'Object') {
+        var error = new $TypeError$e('iterator next must return an Object, got ' + objectInspect(nextItem));
+        return IteratorClose(iteratorRecord, function () {
+          throw error;
+        } // eslint-disable-line no-loop-func
+        );
+      }
+
+      try {
+        var k = Get(nextItem, '0');
+        var v = Get(nextItem, '1');
+        Call(adder, target, [k, v]);
+      } catch (e) {
+        return IteratorClose(iteratorRecord, function () {
+          throw e;
+        });
+      }
+    }
+  };
+
+  var $ArrayPrototype = GetIntrinsic('%Array.prototype%');
+  var $RangeError = GetIntrinsic('%RangeError%');
+  var $SyntaxError = GetIntrinsic('%SyntaxError%');
+  var $TypeError$f = GetIntrinsic('%TypeError%');
+  var MAX_ARRAY_LENGTH = Math.pow(2, 32) - 1;
+  var $setProto = GetIntrinsic('%Object.setPrototypeOf%', true) || ( // eslint-disable-next-line no-proto, no-negated-condition
+  [].__proto__ !== $ArrayPrototype ? null : function (O, proto) {
+    O.__proto__ = proto; // eslint-disable-line no-proto, no-param-reassign
+
+    return O;
+  }); // https://www.ecma-international.org/ecma-262/6.0/#sec-arraycreate
+
+  var ArrayCreate = function ArrayCreate(length) {
+    if (!IsInteger(length) || length < 0) {
+      throw new $TypeError$f('Assertion failed: `length` must be an integer Number >= 0');
+    }
+
+    if (length > MAX_ARRAY_LENGTH) {
+      throw new $RangeError('length is greater than (2**32 - 1)');
+    }
+
+    var proto = arguments.length > 1 ? arguments[1] : $ArrayPrototype;
+    var A = []; // steps 5 - 7, and 9
+
+    if (proto !== $ArrayPrototype) {
+      // step 8
+      if (!$setProto) {
+        throw new $SyntaxError('ArrayCreate: a `proto` argument that is not `Array.prototype` is not supported in an environment that does not support setting the [[Prototype]]');
+      }
+
+      $setProto(A, proto);
+    }
+
+    if (length !== 0) {
+      // bypasses the need for step 2
+      A.length = length;
+    }
+    /* step 10, the above as a shortcut for the below
+       OrdinaryDefineOwnProperty(A, 'length', {
+           '[[Configurable]]': false,
+           '[[Enumerable]]': false,
+           '[[Value]]': length,
+           '[[Writable]]': true
+       });
+       */
+
+
+    return A;
+  };
+
+  var toStr$5 = Object.prototype.toString;
+
+  var isArguments = function isArguments(value) {
+    var str = toStr$5.call(value);
+    var isArgs = str === '[object Arguments]';
+
+    if (!isArgs) {
+      isArgs = str !== '[object Array]' && value !== null && _typeof(value) === 'object' && typeof value.length === 'number' && value.length >= 0 && toStr$5.call(value.callee) === '[object Function]';
+    }
+
+    return isArgs;
+  };
+
+  var keysShim;
+
+  if (!Object.keys) {
+    // modified from https://github.com/es-shims/es5-shim
+    var has$1 = Object.prototype.hasOwnProperty;
+    var toStr$6 = Object.prototype.toString;
+    var isArgs = isArguments; // eslint-disable-line global-require
+
+    var isEnumerable = Object.prototype.propertyIsEnumerable;
+    var hasDontEnumBug = !isEnumerable.call({
+      toString: null
+    }, 'toString');
+    var hasProtoEnumBug = isEnumerable.call(function () {}, 'prototype');
+    var dontEnums = ['toString', 'toLocaleString', 'valueOf', 'hasOwnProperty', 'isPrototypeOf', 'propertyIsEnumerable', 'constructor'];
+
+    var equalsConstructorPrototype = function equalsConstructorPrototype(o) {
+      var ctor = o.constructor;
+      return ctor && ctor.prototype === o;
+    };
+
+    var excludedKeys = {
+      $applicationCache: true,
+      $console: true,
+      $external: true,
+      $frame: true,
+      $frameElement: true,
+      $frames: true,
+      $innerHeight: true,
+      $innerWidth: true,
+      $onmozfullscreenchange: true,
+      $onmozfullscreenerror: true,
+      $outerHeight: true,
+      $outerWidth: true,
+      $pageXOffset: true,
+      $pageYOffset: true,
+      $parent: true,
+      $scrollLeft: true,
+      $scrollTop: true,
+      $scrollX: true,
+      $scrollY: true,
+      $self: true,
+      $webkitIndexedDB: true,
+      $webkitStorageInfo: true,
+      $window: true
+    };
+
+    var hasAutomationEqualityBug = function () {
+      /* global window */
+      if (typeof window === 'undefined') {
+        return false;
+      }
+
+      for (var k in window) {
+        try {
+          if (!excludedKeys['$' + k] && has$1.call(window, k) && window[k] !== null && _typeof(window[k]) === 'object') {
+            try {
+              equalsConstructorPrototype(window[k]);
+            } catch (e) {
+              return true;
+            }
+          }
+        } catch (e) {
+          return true;
+        }
+      }
+
+      return false;
+    }();
+
+    var equalsConstructorPrototypeIfNotBuggy = function equalsConstructorPrototypeIfNotBuggy(o) {
+      /* global window */
+      if (typeof window === 'undefined' || !hasAutomationEqualityBug) {
+        return equalsConstructorPrototype(o);
+      }
+
+      try {
+        return equalsConstructorPrototype(o);
+      } catch (e) {
+        return false;
+      }
+    };
+
+    keysShim = function keys(object) {
+      var isObject = object !== null && _typeof(object) === 'object';
+      var isFunction = toStr$6.call(object) === '[object Function]';
+      var isArguments = isArgs(object);
+      var isString = isObject && toStr$6.call(object) === '[object String]';
+      var theKeys = [];
+
+      if (!isObject && !isFunction && !isArguments) {
+        throw new TypeError('Object.keys called on a non-object');
+      }
+
+      var skipProto = hasProtoEnumBug && isFunction;
+
+      if (isString && object.length > 0 && !has$1.call(object, 0)) {
+        for (var i = 0; i < object.length; ++i) {
+          theKeys.push(String(i));
+        }
+      }
+
+      if (isArguments && object.length > 0) {
+        for (var j = 0; j < object.length; ++j) {
+          theKeys.push(String(j));
+        }
+      } else {
+        for (var name in object) {
+          if (!(skipProto && name === 'prototype') && has$1.call(object, name)) {
+            theKeys.push(String(name));
+          }
+        }
+      }
+
+      if (hasDontEnumBug) {
+        var skipConstructor = equalsConstructorPrototypeIfNotBuggy(object);
+
+        for (var k = 0; k < dontEnums.length; ++k) {
+          if (!(skipConstructor && dontEnums[k] === 'constructor') && has$1.call(object, dontEnums[k])) {
+            theKeys.push(dontEnums[k]);
+          }
+        }
+      }
+
+      return theKeys;
+    };
+  }
+
+  var implementation$1 = keysShim;
+
+  var slice$1 = Array.prototype.slice;
+  var origKeys = Object.keys;
+  var keysShim$1 = origKeys ? function keys(o) {
+    return origKeys(o);
+  } : implementation$1;
+  var originalKeys = Object.keys;
+
+  keysShim$1.shim = function shimObjectKeys() {
+    if (Object.keys) {
+      var keysWorksWithArguments = function () {
+        // Safari 5.0 bug
+        var args = Object.keys(arguments);
+        return args && args.length === arguments.length;
+      }(1, 2);
+
+      if (!keysWorksWithArguments) {
+        Object.keys = function keys(object) {
+          // eslint-disable-line func-name-matching
+          if (isArguments(object)) {
+            return originalKeys(slice$1.call(object));
+          }
+
+          return originalKeys(object);
+        };
+      }
+    } else {
+      Object.keys = keysShim$1;
+    }
+
+    return Object.keys || keysShim$1;
+  };
+
+  var objectKeys = keysShim$1;
+
+  var hasSymbols$4 = typeof Symbol === 'function' && _typeof(Symbol('foo')) === 'symbol';
+  var toStr$7 = Object.prototype.toString;
+  var concat = Array.prototype.concat;
+  var origDefineProperty = Object.defineProperty;
+
+  var isFunction$1 = function isFunction(fn) {
+    return typeof fn === 'function' && toStr$7.call(fn) === '[object Function]';
+  };
+
+  var arePropertyDescriptorsSupported = function arePropertyDescriptorsSupported() {
+    var obj = {};
+
+    try {
+      origDefineProperty(obj, 'x', {
+        enumerable: false,
+        value: obj
+      }); // eslint-disable-next-line no-unused-vars, no-restricted-syntax
+
+      for (var _ in obj) {
+        // jscs:ignore disallowUnusedVariables
+        return false;
+      }
+
+      return obj.x === obj;
+    } catch (e) {
+      /* this is IE 8. */
+      return false;
+    }
+  };
+
+  var supportsDescriptors = origDefineProperty && arePropertyDescriptorsSupported();
+
+  var defineProperty = function defineProperty(object, name, value, predicate) {
+    if (name in object && (!isFunction$1(predicate) || !predicate())) {
+      return;
+    }
+
+    if (supportsDescriptors) {
+      origDefineProperty(object, name, {
+        configurable: true,
+        enumerable: false,
+        value: value,
+        writable: true
+      });
+    } else {
+      object[name] = value;
+    }
+  };
+
+  var defineProperties = function defineProperties(object, map) {
+    var predicates = arguments.length > 2 ? arguments[2] : {};
+    var props = objectKeys(map);
+
+    if (hasSymbols$4) {
+      props = concat.call(props, Object.getOwnPropertySymbols(map));
+    }
+
+    for (var i = 0; i < props.length; i += 1) {
+      defineProperty(object, props[i], map[props[i]], predicates[props[i]]);
+    }
+  };
+
+  defineProperties.supportsDescriptors = !!supportsDescriptors;
+  var defineProperties_1 = defineProperties;
+
+  var canBeObject = function canBeObject(obj) {
+    return typeof obj !== 'undefined' && obj !== null;
+  };
+
+  var hasSymbols$5 = shams();
+  var toObject = Object;
+  var push = functionBind.call(Function.call, Array.prototype.push);
+  var propIsEnumerable = functionBind.call(Function.call, Object.prototype.propertyIsEnumerable);
+  var originalGetSymbols = hasSymbols$5 ? Object.getOwnPropertySymbols : null;
+
+  var implementation$2 = function assign(target, source1) {
+    if (!canBeObject(target)) {
+      throw new TypeError('target must be an object');
+    }
+
+    var objTarget = toObject(target);
+    var s, source, i, props, syms, value, key;
+
+    for (s = 1; s < arguments.length; ++s) {
+      source = toObject(arguments[s]);
+      props = objectKeys(source);
+      var getSymbols = hasSymbols$5 && (Object.getOwnPropertySymbols || originalGetSymbols);
+
+      if (getSymbols) {
+        syms = getSymbols(source);
+
+        for (i = 0; i < syms.length; ++i) {
+          key = syms[i];
+
+          if (propIsEnumerable(source, key)) {
+            push(props, key);
+          }
+        }
+      }
+
+      for (i = 0; i < props.length; ++i) {
+        key = props[i];
+        value = source[key];
+
+        if (propIsEnumerable(source, key)) {
+          objTarget[key] = value;
+        }
+      }
+    }
+
+    return objTarget;
+  };
+
+  var lacksProperEnumerationOrder = function lacksProperEnumerationOrder() {
+    if (!Object.assign) {
+      return false;
+    } // v8, specifically in node 4.x, has a bug with incorrect property enumeration order
+    // note: this does not detect the bug unless there's 20 characters
+
+
+    var str = 'abcdefghijklmnopqrst';
+    var letters = str.split('');
+    var map = {};
+
+    for (var i = 0; i < letters.length; ++i) {
+      map[letters[i]] = letters[i];
+    }
+
+    var obj = Object.assign({}, map);
+    var actual = '';
+
+    for (var k in obj) {
+      actual += k;
+    }
+
+    return str !== actual;
+  };
+
+  var assignHasPendingExceptions = function assignHasPendingExceptions() {
+    if (!Object.assign || !Object.preventExtensions) {
+      return false;
+    } // Firefox 37 still has "pending exception" logic in its Object.assign implementation,
+    // which is 72% slower than our shim, and Firefox 40's native implementation.
+
+
+    var thrower = Object.preventExtensions({
+      1: 2
+    });
+
+    try {
+      Object.assign(thrower, 'xy');
+    } catch (e) {
+      return thrower[1] === 'y';
+    }
+
+    return false;
+  };
+
+  var polyfill = function getPolyfill() {
+    if (!Object.assign) {
+      return implementation$2;
+    }
+
+    if (lacksProperEnumerationOrder()) {
+      return implementation$2;
+    }
+
+    if (assignHasPendingExceptions()) {
+      return implementation$2;
+    }
+
+    return Object.assign;
+  };
+
+  var shim = function shimAssign() {
+    var polyfill$1 = polyfill();
+    defineProperties_1(Object, {
+      assign: polyfill$1
+    }, {
+      assign: function assign() {
+        return Object.assign !== polyfill$1;
+      }
+    });
+    return polyfill$1;
+  };
+
+  var polyfill$1 = polyfill();
+  defineProperties_1(polyfill$1, {
+    getPolyfill: polyfill,
+    implementation: implementation$2,
+    shim: shim
+  });
+  var object_assign = polyfill$1;
+
+  var src = functionBind.call(Function.call, Object.prototype.hasOwnProperty);
+
+  var $TypeError$g = GetIntrinsic('%TypeError%');
+
+  var isPropertyDescriptor = function IsPropertyDescriptor(ES, Desc) {
+    if (ES.Type(Desc) !== 'Object') {
+      return false;
+    }
+
+    var allowed = {
+      '[[Configurable]]': true,
+      '[[Enumerable]]': true,
+      '[[Get]]': true,
+      '[[Set]]': true,
+      '[[Value]]': true,
+      '[[Writable]]': true
+    };
+
+    for (var key in Desc) {
+      // eslint-disable-line no-restricted-syntax
+      if (src(Desc, key) && !allowed[key]) {
+        return false;
+      }
+    }
+
+    if (ES.IsDataDescriptor(Desc) && ES.IsAccessorDescriptor(Desc)) {
+      throw new $TypeError$g('Property Descriptors may not be both accessor and data descriptors');
+    }
+
+    return true;
+  };
+
+  var $TypeError$h = GetIntrinsic('%TypeError%');
+  var $SyntaxError$1 = GetIntrinsic('%SyntaxError%');
+  var predicates = {
+    // https://ecma-international.org/ecma-262/6.0/#sec-property-descriptor-specification-type
+    'Property Descriptor': function isPropertyDescriptor(Type, Desc) {
+      if (Type(Desc) !== 'Object') {
+        return false;
+      }
+
+      var allowed = {
+        '[[Configurable]]': true,
+        '[[Enumerable]]': true,
+        '[[Get]]': true,
+        '[[Set]]': true,
+        '[[Value]]': true,
+        '[[Writable]]': true
+      };
+
+      for (var key in Desc) {
+        // eslint-disable-line
+        if (src(Desc, key) && !allowed[key]) {
+          return false;
+        }
+      }
+
+      var isData = src(Desc, '[[Value]]');
+      var IsAccessor = src(Desc, '[[Get]]') || src(Desc, '[[Set]]');
+
+      if (isData && IsAccessor) {
+        throw new $TypeError$h('Property Descriptors may not be both accessor and data descriptors');
+      }
+
+      return true;
+    }
+  };
+
+  var assertRecord = function assertRecord(Type, recordType, argumentName, value) {
+    var predicate = predicates[recordType];
+
+    if (typeof predicate !== 'function') {
+      throw new $SyntaxError$1('unknown record type: ' + recordType);
+    }
+
+    if (!predicate(Type, value)) {
+      throw new $TypeError$h(argumentName + ' must be a ' + recordType);
+    }
+  };
+
+  var IsAccessorDescriptor = function IsAccessorDescriptor(Desc) {
+    if (typeof Desc === 'undefined') {
+      return false;
+    }
+
+    assertRecord(Type$1, 'Property Descriptor', 'Desc', Desc);
+
+    if (!src(Desc, '[[Get]]') && !src(Desc, '[[Set]]')) {
+      return false;
+    }
+
+    return true;
+  };
+
+  var IsDataDescriptor = function IsDataDescriptor(Desc) {
+    if (typeof Desc === 'undefined') {
+      return false;
+    }
+
+    assertRecord(Type$1, 'Property Descriptor', 'Desc', Desc);
+
+    if (!src(Desc, '[[Value]]') && !src(Desc, '[[Writable]]')) {
+      return false;
+    }
+
+    return true;
+  };
+
+  var $gOPD$1 = GetIntrinsic('%Object.getOwnPropertyDescriptor%');
+
+  if ($gOPD$1) {
+    try {
+      $gOPD$1([], 'length');
+    } catch (e) {
+      // IE 8 has a broken gOPD
+      $gOPD$1 = null;
+    }
+  }
+
+  var getOwnPropertyDescriptor = $gOPD$1;
+
+  var $Object$1 = GetIntrinsic('%Object%');
+  var $preventExtensions = $Object$1.preventExtensions;
+  var $isExtensible = $Object$1.isExtensible; // https://www.ecma-international.org/ecma-262/6.0/#sec-isextensible-o
+
+  var IsExtensible = $preventExtensions ? function IsExtensible(obj) {
+    return !isPrimitive(obj) && $isExtensible(obj);
+  } : function IsExtensible(obj) {
+    return !isPrimitive(obj);
+  };
+
+  var $TypeError$i = GetIntrinsic('%TypeError%'); // https://ecma-international.org/ecma-262/5.1/#sec-8.10.5
+
+  var ToPropertyDescriptor = function ToPropertyDescriptor(Obj) {
+    if (Type$1(Obj) !== 'Object') {
+      throw new $TypeError$i('ToPropertyDescriptor requires an object');
+    }
+
+    var desc = {};
+
+    if (src(Obj, 'enumerable')) {
+      desc['[[Enumerable]]'] = ToBoolean(Obj.enumerable);
+    }
+
+    if (src(Obj, 'configurable')) {
+      desc['[[Configurable]]'] = ToBoolean(Obj.configurable);
+    }
+
+    if (src(Obj, 'value')) {
+      desc['[[Value]]'] = Obj.value;
+    }
+
+    if (src(Obj, 'writable')) {
+      desc['[[Writable]]'] = ToBoolean(Obj.writable);
+    }
+
+    if (src(Obj, 'get')) {
+      var getter = Obj.get;
+
+      if (typeof getter !== 'undefined' && !IsCallable(getter)) {
+        throw new TypeError('getter must be a function');
+      }
+
+      desc['[[Get]]'] = getter;
+    }
+
+    if (src(Obj, 'set')) {
+      var setter = Obj.set;
+
+      if (typeof setter !== 'undefined' && !IsCallable(setter)) {
+        throw new $TypeError$i('setter must be a function');
+      }
+
+      desc['[[Set]]'] = setter;
+    }
+
+    if ((src(desc, '[[Get]]') || src(desc, '[[Set]]')) && (src(desc, '[[Value]]') || src(desc, '[[Writable]]'))) {
+      throw new $TypeError$i('Invalid property descriptor. Cannot both specify accessors and a value or writable attribute');
+    }
+
+    return desc;
+  };
+
+  var SameValue = function SameValue(x, y) {
+    if (x === y) {
+      // 0 === -0, but they are not identical.
+      if (x === 0) {
+        return 1 / x === 1 / y;
+      }
+
+      return true;
+    }
+
+    return _isNaN(x) && _isNaN(y);
+  };
+
+  var $defineProperty = GetIntrinsic('%Object.defineProperty%', true);
+
+  if ($defineProperty) {
+    try {
+      $defineProperty({}, 'a', {
+        value: 1
+      });
+    } catch (e) {
+      // IE 8 has a broken defineProperty
+      $defineProperty = null;
+    }
+  }
+
+  var $isEnumerable = callBound('Object.prototype.propertyIsEnumerable'); // eslint-disable-next-line max-params
+
+  var DefineOwnProperty = function DefineOwnProperty(IsDataDescriptor, SameValue, FromPropertyDescriptor, O, P, desc) {
+    if (!$defineProperty) {
+      if (!IsDataDescriptor(desc)) {
+        // ES3 does not support getters/setters
+        return false;
+      }
+
+      if (!desc['[[Configurable]]'] || !desc['[[Writable]]']) {
+        return false;
+      } // fallback for ES3
+
+
+      if (P in O && $isEnumerable(O, P) !== !!desc['[[Enumerable]]']) {
+        // a non-enumerable existing property
+        return false;
+      } // property does not exist at all, or exists but is enumerable
+
+
+      var V = desc['[[Value]]']; // eslint-disable-next-line no-param-reassign
+
+      O[P] = V; // will use [[Define]]
+
+      return SameValue(O[P], V);
+    }
+
+    $defineProperty(O, P, FromPropertyDescriptor(desc));
+    return true;
+  };
+
+  var every = function every(array, predicate) {
+    for (var i = 0; i < array.length; i += 1) {
+      if (!predicate(array[i], i, array)) {
+        return false;
+      }
+    }
+
+    return true;
+  };
+
+  var isSamePropertyDescriptor = function isSamePropertyDescriptor(ES, D1, D2) {
+    var fields = ['[[Configurable]]', '[[Enumerable]]', '[[Get]]', '[[Set]]', '[[Value]]', '[[Writable]]'];
+    return every(fields, function (field) {
+      if (field in D1 !== field in D2) {
+        return false;
+      }
+
+      return ES.SameValue(D1[field], D2[field]);
+    });
+  };
+
+  var FromPropertyDescriptor = function FromPropertyDescriptor(Desc) {
+    if (typeof Desc === 'undefined') {
+      return Desc;
+    }
+
+    assertRecord(Type$1, 'Property Descriptor', 'Desc', Desc);
+    var obj = {};
+
+    if ('[[Value]]' in Desc) {
+      obj.value = Desc['[[Value]]'];
+    }
+
+    if ('[[Writable]]' in Desc) {
+      obj.writable = Desc['[[Writable]]'];
+    }
+
+    if ('[[Get]]' in Desc) {
+      obj.get = Desc['[[Get]]'];
+    }
+
+    if ('[[Set]]' in Desc) {
+      obj.set = Desc['[[Set]]'];
+    }
+
+    if ('[[Enumerable]]' in Desc) {
+      obj.enumerable = Desc['[[Enumerable]]'];
+    }
+
+    if ('[[Configurable]]' in Desc) {
+      obj.configurable = Desc['[[Configurable]]'];
+    }
+
+    return obj;
+  };
+
+  var IsGenericDescriptor = function IsGenericDescriptor(Desc) {
+    if (typeof Desc === 'undefined') {
+      return false;
+    }
+
+    assertRecord(Type$1, 'Property Descriptor', 'Desc', Desc);
+
+    if (!IsAccessorDescriptor(Desc) && !IsDataDescriptor(Desc)) {
+      return true;
+    }
+
+    return false;
+  };
+
+  var $TypeError$j = GetIntrinsic('%TypeError%'); // https://www.ecma-international.org/ecma-262/6.0/#sec-validateandapplypropertydescriptor
+  // https://www.ecma-international.org/ecma-262/8.0/#sec-validateandapplypropertydescriptor
+  // eslint-disable-next-line max-lines-per-function, max-statements, max-params
+
+  var ValidateAndApplyPropertyDescriptor = function ValidateAndApplyPropertyDescriptor(O, P, extensible, Desc, current) {
+    // this uses the ES2017+ logic, since it fixes a number of bugs in the ES2015 logic.
+    var oType = Type$1(O);
+
+    if (oType !== 'Undefined' && oType !== 'Object') {
+      throw new $TypeError$j('Assertion failed: O must be undefined or an Object');
+    }
+
+    if (Type$1(extensible) !== 'Boolean') {
+      throw new $TypeError$j('Assertion failed: extensible must be a Boolean');
+    }
+
+    if (!isPropertyDescriptor({
+      Type: Type$1,
+      IsDataDescriptor: IsDataDescriptor,
+      IsAccessorDescriptor: IsAccessorDescriptor
+    }, Desc)) {
+      throw new $TypeError$j('Assertion failed: Desc must be a Property Descriptor');
+    }
+
+    if (Type$1(current) !== 'Undefined' && !isPropertyDescriptor({
+      Type: Type$1,
+      IsDataDescriptor: IsDataDescriptor,
+      IsAccessorDescriptor: IsAccessorDescriptor
+    }, current)) {
+      throw new $TypeError$j('Assertion failed: current must be a Property Descriptor, or undefined');
+    }
+
+    if (oType !== 'Undefined' && !IsPropertyKey(P)) {
+      throw new $TypeError$j('Assertion failed: if O is not undefined, P must be a Property Key');
+    }
+
+    if (Type$1(current) === 'Undefined') {
+      if (!extensible) {
+        return false;
+      }
+
+      if (IsGenericDescriptor(Desc) || IsDataDescriptor(Desc)) {
+        if (oType !== 'Undefined') {
+          DefineOwnProperty(IsDataDescriptor, SameValue, FromPropertyDescriptor, O, P, {
+            '[[Configurable]]': Desc['[[Configurable]]'],
+            '[[Enumerable]]': Desc['[[Enumerable]]'],
+            '[[Value]]': Desc['[[Value]]'],
+            '[[Writable]]': Desc['[[Writable]]']
+          });
+        }
+      } else {
+        if (!IsAccessorDescriptor(Desc)) {
+          throw new $TypeError$j('Assertion failed: Desc is not an accessor descriptor');
+        }
+
+        if (oType !== 'Undefined') {
+          return DefineOwnProperty(IsDataDescriptor, SameValue, FromPropertyDescriptor, O, P, Desc);
+        }
+      }
+
+      return true;
+    }
+
+    if (IsGenericDescriptor(Desc) && !('[[Configurable]]' in Desc) && !('[[Enumerable]]' in Desc)) {
+      return true;
+    }
+
+    if (isSamePropertyDescriptor({
+      SameValue: SameValue
+    }, Desc, current)) {
+      return true; // removed by ES2017, but should still be correct
+    } // "if every field in Desc is absent, return true" can't really match the assertion that it's a Property Descriptor
+
+
+    if (!current['[[Configurable]]']) {
+      if (Desc['[[Configurable]]']) {
+        return false;
+      }
+
+      if ('[[Enumerable]]' in Desc && !Desc['[[Enumerable]]'] === !!current['[[Enumerable]]']) {
+        return false;
+      }
+    }
+
+    if (IsGenericDescriptor(Desc)) ; else if (IsDataDescriptor(current) !== IsDataDescriptor(Desc)) {
+      if (!current['[[Configurable]]']) {
+        return false;
+      }
+
+      if (IsDataDescriptor(current)) {
+        if (oType !== 'Undefined') {
+          DefineOwnProperty(IsDataDescriptor, SameValue, FromPropertyDescriptor, O, P, {
+            '[[Configurable]]': current['[[Configurable]]'],
+            '[[Enumerable]]': current['[[Enumerable]]'],
+            '[[Get]]': undefined
+          });
+        }
+      } else if (oType !== 'Undefined') {
+        DefineOwnProperty(IsDataDescriptor, SameValue, FromPropertyDescriptor, O, P, {
+          '[[Configurable]]': current['[[Configurable]]'],
+          '[[Enumerable]]': current['[[Enumerable]]'],
+          '[[Value]]': undefined
+        });
+      }
+    } else if (IsDataDescriptor(current) && IsDataDescriptor(Desc)) {
+      if (!current['[[Configurable]]'] && !current['[[Writable]]']) {
+        if ('[[Writable]]' in Desc && Desc['[[Writable]]']) {
+          return false;
+        }
+
+        if ('[[Value]]' in Desc && !SameValue(Desc['[[Value]]'], current['[[Value]]'])) {
+          return false;
+        }
+
+        return true;
+      }
+    } else if (IsAccessorDescriptor(current) && IsAccessorDescriptor(Desc)) {
+      if (!current['[[Configurable]]']) {
+        if ('[[Set]]' in Desc && !SameValue(Desc['[[Set]]'], current['[[Set]]'])) {
+          return false;
+        }
+
+        if ('[[Get]]' in Desc && !SameValue(Desc['[[Get]]'], current['[[Get]]'])) {
+          return false;
+        }
+
+        return true;
+      }
+    } else {
+      throw new $TypeError$j('Assertion failed: current and Desc are not both data, both accessors, or one accessor and one data.');
+    }
+
+    if (oType !== 'Undefined') {
+      return DefineOwnProperty(IsDataDescriptor, SameValue, FromPropertyDescriptor, O, P, Desc);
+    }
+
+    return true;
+  };
+
+  var $SyntaxError$2 = GetIntrinsic('%SyntaxError%');
+  var $TypeError$k = GetIntrinsic('%TypeError%'); // https://www.ecma-international.org/ecma-262/6.0/#sec-ordinarydefineownproperty
+
+  var OrdinaryDefineOwnProperty = function OrdinaryDefineOwnProperty(O, P, Desc) {
+    if (Type$1(O) !== 'Object') {
+      throw new $TypeError$k('Assertion failed: O must be an Object');
+    }
+
+    if (!IsPropertyKey(P)) {
+      throw new $TypeError$k('Assertion failed: P must be a Property Key');
+    }
+
+    if (!isPropertyDescriptor({
+      Type: Type$1,
+      IsDataDescriptor: IsDataDescriptor,
+      IsAccessorDescriptor: IsAccessorDescriptor
+    }, Desc)) {
+      throw new $TypeError$k('Assertion failed: Desc must be a Property Descriptor');
+    }
+
+    if (!getOwnPropertyDescriptor) {
+      // ES3/IE 8 fallback
+      if (IsAccessorDescriptor(Desc)) {
+        throw new $SyntaxError$2('This environment does not support accessor property descriptors.');
+      }
+
+      var creatingNormalDataProperty = !(P in O) && Desc['[[Writable]]'] && Desc['[[Enumerable]]'] && Desc['[[Configurable]]'] && '[[Value]]' in Desc;
+      var settingExistingDataProperty = P in O && (!('[[Configurable]]' in Desc) || Desc['[[Configurable]]']) && (!('[[Enumerable]]' in Desc) || Desc['[[Enumerable]]']) && (!('[[Writable]]' in Desc) || Desc['[[Writable]]']) && '[[Value]]' in Desc;
+
+      if (creatingNormalDataProperty || settingExistingDataProperty) {
+        O[P] = Desc['[[Value]]']; // eslint-disable-line no-param-reassign
+
+        return SameValue(O[P], Desc['[[Value]]']);
+      }
+
+      throw new $SyntaxError$2('This environment does not support defining non-writable, non-enumerable, or non-configurable properties');
+    }
+
+    var desc = getOwnPropertyDescriptor(O, P);
+    var current = desc && ToPropertyDescriptor(desc);
+    var extensible = IsExtensible(O);
+    return ValidateAndApplyPropertyDescriptor(O, P, extensible, Desc, current);
+  };
+
+  var hasSymbols$6 = hasSymbols();
+  var hasToStringTag$2 = hasSymbols$6 && _typeof(Symbol.toStringTag) === 'symbol';
+  var regexExec;
+  var isRegexMarker;
+  var badStringifier;
+
+  if (hasToStringTag$2) {
+    regexExec = Function.call.bind(RegExp.prototype.exec);
+    isRegexMarker = {};
+
+    var throwRegexMarker = function throwRegexMarker() {
+      throw isRegexMarker;
+    };
+
+    badStringifier = {
+      toString: throwRegexMarker,
+      valueOf: throwRegexMarker
+    };
+
+    if (_typeof(Symbol.toPrimitive) === 'symbol') {
+      badStringifier[Symbol.toPrimitive] = throwRegexMarker;
+    }
+  }
+
+  var toStr$8 = Object.prototype.toString;
+  var regexClass = '[object RegExp]';
+  var isRegex = hasToStringTag$2 // eslint-disable-next-line consistent-return
+  ? function isRegex(value) {
+    if (!value || _typeof(value) !== 'object') {
+      return false;
+    }
+
+    try {
+      regexExec(value, badStringifier);
+    } catch (e) {
+      return e === isRegexMarker;
+    }
+  } : function isRegex(value) {
+    // In older browsers, typeof regex incorrectly returns 'function'
+    if (!value || _typeof(value) !== 'object' && typeof value !== 'function') {
+      return false;
+    }
+
+    return toStr$8.call(value) === regexClass;
+  };
+
+  var $match = GetIntrinsic('%Symbol.match%', true); // https://ecma-international.org/ecma-262/6.0/#sec-isregexp
+
+  var IsRegExp = function IsRegExp(argument) {
+    if (!argument || _typeof(argument) !== 'object') {
+      return false;
+    }
+
+    if ($match) {
+      var isRegExp = argument[$match];
+
+      if (typeof isRegExp !== 'undefined') {
+        return ToBoolean(isRegExp);
+      }
+    }
+
+    return isRegex(argument);
+  };
+
+  var $TypeError$l = GetIntrinsic('%TypeError%');
+  var $isEnumerable$1 = callBound('Object.prototype.propertyIsEnumerable'); // https://www.ecma-international.org/ecma-262/6.0/#sec-ordinarygetownproperty
+
+  var OrdinaryGetOwnProperty = function OrdinaryGetOwnProperty(O, P) {
+    if (Type$1(O) !== 'Object') {
+      throw new $TypeError$l('Assertion failed: O must be an Object');
+    }
+
+    if (!IsPropertyKey(P)) {
+      throw new $TypeError$l('Assertion failed: P must be a Property Key');
+    }
+
+    if (!src(O, P)) {
+      return void 0;
+    }
+
+    if (!getOwnPropertyDescriptor) {
+      // ES3 / IE 8 fallback
+      var arrayLength = IsArray(O) && P === 'length';
+      var regexLastIndex = IsRegExp(O) && P === 'lastIndex';
+      return {
+        '[[Configurable]]': !(arrayLength || regexLastIndex),
+        '[[Enumerable]]': $isEnumerable$1(O, P),
+        '[[Value]]': O[P],
+        '[[Writable]]': true
+      };
+    }
+
+    return ToPropertyDescriptor(getOwnPropertyDescriptor(O, P));
+  };
+
+  var $String = GetIntrinsic('%String%');
+  var $TypeError$m = GetIntrinsic('%TypeError%'); // https://www.ecma-international.org/ecma-262/6.0/#sec-tostring
+
+  var ToString = function ToString(argument) {
+    if (_typeof(argument) === 'symbol') {
+      throw new $TypeError$m('Cannot convert a Symbol value to a string');
+    }
+
+    return $String(argument);
+  };
+
+  var ToUint32 = function ToUint32(x) {
+    return ToNumber(x) >>> 0;
+  };
+
+  var $RangeError$1 = GetIntrinsic('%RangeError%');
+  var $TypeError$n = GetIntrinsic('%TypeError%'); // https://www.ecma-international.org/ecma-262/6.0/#sec-arraysetlength
+  // eslint-disable-next-line max-statements, max-lines-per-function
+
+  var ArraySetLength = function ArraySetLength(A, Desc) {
+    if (!IsArray(A)) {
+      throw new $TypeError$n('Assertion failed: A must be an Array');
+    }
+
+    if (!isPropertyDescriptor({
+      Type: Type$1,
+      IsDataDescriptor: IsDataDescriptor,
+      IsAccessorDescriptor: IsAccessorDescriptor
+    }, Desc)) {
+      throw new $TypeError$n('Assertion failed: Desc must be a Property Descriptor');
+    }
+
+    if (!('[[Value]]' in Desc)) {
+      return OrdinaryDefineOwnProperty(A, 'length', Desc);
+    }
+
+    var newLenDesc = object_assign({}, Desc);
+    var newLen = ToUint32(Desc['[[Value]]']);
+    var numberLen = ToNumber(Desc['[[Value]]']);
+
+    if (newLen !== numberLen) {
+      throw new $RangeError$1('Invalid array length');
+    }
+
+    newLenDesc['[[Value]]'] = newLen;
+    var oldLenDesc = OrdinaryGetOwnProperty(A, 'length');
+
+    if (!IsDataDescriptor(oldLenDesc)) {
+      throw new $TypeError$n('Assertion failed: an array had a non-data descriptor on `length`');
+    }
+
+    var oldLen = oldLenDesc['[[Value]]'];
+
+    if (newLen >= oldLen) {
+      return OrdinaryDefineOwnProperty(A, 'length', newLenDesc);
+    }
+
+    if (!oldLenDesc['[[Writable]]']) {
+      return false;
+    }
+
+    var newWritable;
+
+    if (!('[[Writable]]' in newLenDesc) || newLenDesc['[[Writable]]']) {
+      newWritable = true;
+    } else {
+      newWritable = false;
+      newLenDesc['[[Writable]]'] = true;
+    }
+
+    var succeeded = OrdinaryDefineOwnProperty(A, 'length', newLenDesc);
+
+    if (!succeeded) {
+      return false;
+    }
+
+    while (newLen < oldLen) {
+      oldLen -= 1; // eslint-disable-next-line no-param-reassign
+
+      var deleteSucceeded = delete A[ToString(oldLen)];
+
+      if (!deleteSucceeded) {
+        newLenDesc['[[Value]]'] = oldLen + 1;
+
+        if (!newWritable) {
+          newLenDesc['[[Writable]]'] = false;
+          OrdinaryDefineOwnProperty(A, 'length', newLenDesc);
+          return false;
+        }
+      }
+    }
+
+    if (!newWritable) {
+      return OrdinaryDefineOwnProperty(A, 'length', {
+        '[[Writable]]': false
+      });
+    }
+
+    return true;
+  };
+
+  var $TypeError$o = GetIntrinsic('%TypeError%'); // https://www.ecma-international.org/ecma-262/6.0/#sec-definepropertyorthrow
+
+  var DefinePropertyOrThrow = function DefinePropertyOrThrow(O, P, desc) {
+    if (Type$1(O) !== 'Object') {
+      throw new $TypeError$o('Assertion failed: Type(O) is not Object');
+    }
+
+    if (!IsPropertyKey(P)) {
+      throw new $TypeError$o('Assertion failed: IsPropertyKey(P) is not true');
+    }
+
+    var Desc = isPropertyDescriptor({
+      Type: Type$1,
+      IsDataDescriptor: IsDataDescriptor,
+      IsAccessorDescriptor: IsAccessorDescriptor
+    }, desc) ? desc : ToPropertyDescriptor(desc);
+
+    if (!isPropertyDescriptor({
+      Type: Type$1,
+      IsDataDescriptor: IsDataDescriptor,
+      IsAccessorDescriptor: IsAccessorDescriptor
+    }, Desc)) {
+      throw new $TypeError$o('Assertion failed: Desc is not a valid Property Descriptor');
+    }
+
+    return DefineOwnProperty(IsDataDescriptor, SameValue, FromPropertyDescriptor, O, P, Desc);
+  };
+
+  var IsConstructor = createCommonjsModule(function (module) {
+
+    var $construct = GetIntrinsic('%Reflect.construct%', true);
+    var DefinePropertyOrThrow$1 = DefinePropertyOrThrow;
+
+    try {
+      DefinePropertyOrThrow$1({}, '', {
+        '[[Get]]': function Get() {}
+      });
+    } catch (e) {
+      // Accessor properties aren't supported
+      DefinePropertyOrThrow$1 = null;
+    } // https://www.ecma-international.org/ecma-262/6.0/#sec-isconstructor
+
+
+    if (DefinePropertyOrThrow$1 && $construct) {
+      var isConstructorMarker = {};
+      var badArrayLike = {};
+      DefinePropertyOrThrow$1(badArrayLike, 'length', {
+        '[[Get]]': function Get() {
+          throw isConstructorMarker;
+        },
+        '[[Enumerable]]': true
+      });
+
+      module.exports = function IsConstructor(argument) {
+        try {
+          // `Reflect.construct` invokes `IsConstructor(target)` before `Get(args, 'length')`:
+          $construct(argument, badArrayLike);
+        } catch (err) {
+          return err === isConstructorMarker;
+        }
+      };
+    } else {
+      module.exports = function IsConstructor(argument) {
+        // unfortunately there's no way to truly check this without try/catch `new argument` in old environments
+        return typeof argument === 'function' && !!argument.prototype;
+      };
+    }
+  });
+
+  var $Array$1 = GetIntrinsic('%Array%');
+  var $species = GetIntrinsic('%Symbol.species%', true);
+  var $TypeError$p = GetIntrinsic('%TypeError%'); // https://ecma-international.org/ecma-262/6.0/#sec-arrayspeciescreate
+
+  var ArraySpeciesCreate = function ArraySpeciesCreate(originalArray, length) {
+    if (!IsInteger(length) || length < 0) {
+      throw new $TypeError$p('Assertion failed: length must be an integer >= 0');
+    }
+
+    var len = length === 0 ? 0 : length;
+    var C;
+    var isArray = IsArray(originalArray);
+
+    if (isArray) {
+      C = Get(originalArray, 'constructor'); // TODO: figure out how to make a cross-realm normal Array, a same-realm Array
+      // if (IsConstructor(C)) {
+      // 	if C is another realm's Array, C = undefined
+      // 	Object.getPrototypeOf(Object.getPrototypeOf(Object.getPrototypeOf(Array))) === null ?
+      // }
+
+      if ($species && Type$1(C) === 'Object') {
+        C = Get(C, $species);
+
+        if (C === null) {
+          C = void 0;
+        }
+      }
+    }
+
+    if (typeof C === 'undefined') {
+      return $Array$1(len);
+    }
+
+    if (!IsConstructor(C)) {
+      throw new $TypeError$p('C must be a constructor');
+    }
+
+    return new C(len); // Construct(C, len);
+  };
+
+  var $TypeError$q = GetIntrinsic('%TypeError%'); // https://ecma-international.org/ecma-262/6.0/#sec-canonicalnumericindexstring
+
+  var CanonicalNumericIndexString = function CanonicalNumericIndexString(argument) {
+    if (Type$1(argument) !== 'String') {
+      throw new $TypeError$q('Assertion failed: `argument` must be a String');
+    }
+
+    if (argument === '-0') {
+      return -0;
+    }
+
+    var n = ToNumber(argument);
+
+    if (SameValue(ToString(n), argument)) {
+      return n;
+    }
+
+    return void 0;
+  };
+
+  var CompletePropertyDescriptor = function CompletePropertyDescriptor(Desc) {
+    /* eslint no-param-reassign: 0 */
+    assertRecord(Type$1, 'Property Descriptor', 'Desc', Desc);
+
+    if (IsGenericDescriptor(Desc) || IsDataDescriptor(Desc)) {
+      if (!src(Desc, '[[Value]]')) {
+        Desc['[[Value]]'] = void 0;
+      }
+
+      if (!src(Desc, '[[Writable]]')) {
+        Desc['[[Writable]]'] = false;
+      }
+    } else {
+      if (!src(Desc, '[[Get]]')) {
+        Desc['[[Get]]'] = void 0;
+      }
+
+      if (!src(Desc, '[[Set]]')) {
+        Desc['[[Set]]'] = void 0;
+      }
+    }
+
+    if (!src(Desc, '[[Enumerable]]')) {
+      Desc['[[Enumerable]]'] = false;
+    }
+
+    if (!src(Desc, '[[Configurable]]')) {
+      Desc['[[Configurable]]'] = false;
+    }
+
+    return Desc;
+  };
+
+  var forEach = function forEach(array, callback) {
+    for (var i = 0; i < array.length; i += 1) {
+      callback(array[i], i, array); // eslint-disable-line callback-return
+    }
+  };
+
+  var $ownKeys = GetIntrinsic('%Reflect.ownKeys%', true);
+  var $pushApply = callBind.apply(GetIntrinsic('%Array.prototype.push%'));
+  var $SymbolValueOf = callBound('Symbol.prototype.valueOf', true);
+  var $gOPN = GetIntrinsic('%Object.getOwnPropertyNames%', true);
+  var $gOPS = $SymbolValueOf ? GetIntrinsic('%Object.getOwnPropertySymbols%') : null;
+
+  var OwnPropertyKeys = $ownKeys || function OwnPropertyKeys(source) {
+    var ownKeys = ($gOPN || objectKeys)(source);
+
+    if ($gOPS) {
+      $pushApply(ownKeys, $gOPS(source));
+    }
+
+    return ownKeys;
+  };
+
+  var $TypeError$r = GetIntrinsic('%TypeError%'); // https://www.ecma-international.org/ecma-262/6.0/#sec-createdataproperty
+
+  var CreateDataProperty = function CreateDataProperty(O, P, V) {
+    if (Type$1(O) !== 'Object') {
+      throw new $TypeError$r('Assertion failed: Type(O) is not Object');
+    }
+
+    if (!IsPropertyKey(P)) {
+      throw new $TypeError$r('Assertion failed: IsPropertyKey(P) is not true');
+    }
+
+    var oldDesc = OrdinaryGetOwnProperty(O, P);
+    var extensible = !oldDesc || IsExtensible(O);
+    var immutable = oldDesc && (!oldDesc['[[Writable]]'] || !oldDesc['[[Configurable]]']);
+
+    if (immutable || !extensible) {
+      return false;
+    }
+
+    return DefineOwnProperty(IsDataDescriptor, SameValue, FromPropertyDescriptor, O, P, {
+      '[[Configurable]]': true,
+      '[[Enumerable]]': true,
+      '[[Value]]': V,
+      '[[Writable]]': true
+    });
+  };
+
+  var $isEnumerable$2 = callBound('Object.prototype.propertyIsEnumerable'); // https://www.ecma-international.org/ecma-262/9.0/#sec-copydataproperties
+
+  var CopyDataProperties = function CopyDataProperties(target, source, excludedItems) {
+    if (Type$1(target) !== 'Object') {
+      throw new TypeError('Assertion failed: "target" must be an Object');
+    }
+
+    if (!IsArray(excludedItems)) {
+      throw new TypeError('Assertion failed: "excludedItems" must be a List of Property Keys');
+    }
+
+    for (var i = 0; i < excludedItems.length; i += 1) {
+      if (!IsPropertyKey(excludedItems[i])) {
+        throw new TypeError('Assertion failed: "excludedItems" must be a List of Property Keys');
+      }
+    }
+
+    if (typeof source === 'undefined' || source === null) {
+      return target;
+    }
+
+    var fromObj = ToObject(source);
+    var sourceKeys = OwnPropertyKeys(fromObj);
+    forEach(sourceKeys, function (nextKey) {
+      var excluded = false;
+      forEach(excludedItems, function (e) {
+        if (SameValue(e, nextKey) === true) {
+          excluded = true;
+        }
+      });
+      var enumerable = $isEnumerable$2(fromObj, nextKey) || // this is to handle string keys being non-enumerable in older engines
+      typeof source === 'string' && nextKey >= 0 && IsInteger(ToNumber(nextKey));
+
+      if (excluded === false && enumerable) {
+        var propValue = Get(fromObj, nextKey);
+        CreateDataProperty(target, nextKey, propValue);
+      }
+    });
+    return target;
+  };
+
+  var $TypeError$s = GetIntrinsic('%TypeError%'); // // https://ecma-international.org/ecma-262/6.0/#sec-createdatapropertyorthrow
+
+  var CreateDataPropertyOrThrow = function CreateDataPropertyOrThrow(O, P, V) {
+    if (Type$1(O) !== 'Object') {
+      throw new $TypeError$s('Assertion failed: Type(O) is not Object');
+    }
+
+    if (!IsPropertyKey(P)) {
+      throw new $TypeError$s('Assertion failed: IsPropertyKey(P) is not true');
+    }
+
+    var success = CreateDataProperty(O, P, V);
+
+    if (!success) {
+      throw new $TypeError$s('unable to create data property');
+    }
+
+    return success;
+  };
+
+  var $TypeError$t = GetIntrinsic('%TypeError%');
+  var $replace$2 = callBound('String.prototype.replace'); // https://www.ecma-international.org/ecma-262/6.0/#sec-createhtml
+
+  var CreateHTML = function CreateHTML(string, tag, attribute, value) {
+    if (Type$1(tag) !== 'String' || Type$1(attribute) !== 'String') {
+      throw new $TypeError$t('Assertion failed: `tag` and `attribute` must be strings');
+    }
+
+    var str = RequireObjectCoercible(string);
+    var S = ToString(str);
+    var p1 = '<' + tag;
+
+    if (attribute !== '') {
+      var V = ToString(value);
+      var escapedV = $replace$2(V, /\x22/g, '&quot;');
+      p1 += '\x20' + attribute + '\x3D\x22' + escapedV + '\x22';
+    }
+
+    return p1 + '>' + S + '</' + tag + '>';
+  };
+
+  var $TypeError$u = GetIntrinsic('%TypeError%'); // https://ecma-international.org/ecma-262/6.0/#sec-createiterresultobject
+
+  var CreateIterResultObject = function CreateIterResultObject(value, done) {
+    if (Type$1(done) !== 'Boolean') {
+      throw new $TypeError$u('Assertion failed: Type(done) is not Boolean');
+    }
+
+    return {
+      value: value,
+      done: done
+    };
+  };
+
+  var ToNumber$1 = function ToNumber(value) {
+    return +value; // eslint-disable-line no-implicit-coercion
+  };
+
+  var sign = function sign(number) {
+    return number >= 0 ? 1 : -1;
+  };
+
+  var $Math$2 = GetIntrinsic('%Math%');
+  var $floor$1 = $Math$2.floor;
+  var $abs$1 = $Math$2.abs; // http://www.ecma-international.org/ecma-262/5.1/#sec-9.4
+
+  var ToInteger = function ToInteger(value) {
+    var number = ToNumber$1(value);
+
+    if (_isNaN(number)) {
+      return 0;
+    }
+
+    if (number === 0 || !_isFinite(number)) {
+      return number;
+    }
+
+    return sign(number) * $floor$1($abs$1(number));
+  };
+
+  var ToInteger$1 = function ToInteger$1(value) {
+    var number = ToNumber(value);
+    return ToInteger(number);
+  };
+
+  var ToLength = function ToLength(argument) {
+    var len = ToInteger$1(argument);
+
+    if (len <= 0) {
+      return 0;
+    } // includes converting -0 to +0
+
+
+    if (len > maxSafeInteger) {
+      return maxSafeInteger;
+    }
+
+    return len;
+  };
+
+  var $TypeError$v = GetIntrinsic('%TypeError%');
+  var $indexOf$1 = callBound('Array.prototype.indexOf', true) || callBound('String.prototype.indexOf');
+  var $push = callBound('Array.prototype.push'); // https://ecma-international.org/ecma-262/6.0/#sec-createlistfromarraylike
+
+  var CreateListFromArrayLike = function CreateListFromArrayLike(obj) {
+    var elementTypes = arguments.length > 1 ? arguments[1] : ['Undefined', 'Null', 'Boolean', 'String', 'Symbol', 'Number', 'Object'];
+
+    if (Type$1(obj) !== 'Object') {
+      throw new $TypeError$v('Assertion failed: `obj` must be an Object');
+    }
+
+    if (!IsArray(elementTypes)) {
+      throw new $TypeError$v('Assertion failed: `elementTypes`, if provided, must be an array');
+    }
+
+    var len = ToLength(Get(obj, 'length'));
+    var list = [];
+    var index = 0;
+
+    while (index < len) {
+      var indexName = ToString(index);
+      var next = Get(obj, indexName);
+      var nextType = Type$1(next);
+
+      if ($indexOf$1(elementTypes, nextType) < 0) {
+        throw new $TypeError$v('item type ' + nextType + ' is not a valid elementType');
+      }
+
+      $push(list, next);
+      index += 1;
+    }
+
+    return list;
+  };
+
+  var $TypeError$w = GetIntrinsic('%TypeError%'); // https://www.ecma-international.org/ecma-262/6.0/#sec-createmethodproperty
+
+  var CreateMethodProperty = function CreateMethodProperty(O, P, V) {
+    if (Type$1(O) !== 'Object') {
+      throw new $TypeError$w('Assertion failed: Type(O) is not Object');
+    }
+
+    if (!IsPropertyKey(P)) {
+      throw new $TypeError$w('Assertion failed: IsPropertyKey(P) is not true');
+    }
+
+    var newDesc = {
+      '[[Configurable]]': true,
+      '[[Enumerable]]': false,
+      '[[Value]]': V,
+      '[[Writable]]': true
+    };
+    return DefineOwnProperty(IsDataDescriptor, SameValue, FromPropertyDescriptor, O, P, newDesc);
+  };
+
+  var HoursPerDay = 24;
+  var MinutesPerHour = 60;
+  var SecondsPerMinute = 60;
+  var msPerSecond = 1e3;
+  var msPerMinute = msPerSecond * SecondsPerMinute;
+  var msPerHour = msPerMinute * MinutesPerHour;
+  var msPerDay = 86400000;
+  var timeConstants = {
+    HoursPerDay: HoursPerDay,
+    MinutesPerHour: MinutesPerHour,
+    SecondsPerMinute: SecondsPerMinute,
+    msPerSecond: msPerSecond,
+    msPerMinute: msPerMinute,
+    msPerHour: msPerHour,
+    msPerDay: msPerDay
+  };
+
+  var $floor$2 = GetIntrinsic('%Math.floor%');
+  var msPerDay$1 = timeConstants.msPerDay; // https://ecma-international.org/ecma-262/5.1/#sec-15.9.1.2
+
+  var Day = function Day(t) {
+    return $floor$2(t / msPerDay$1);
+  };
+
+  var $floor$3 = GetIntrinsic('%Math.floor%'); // https://ecma-international.org/ecma-262/5.1/#sec-15.9.1.3
+
+  var DayFromYear = function DayFromYear(y) {
+    return 365 * (y - 1970) + $floor$3((y - 1969) / 4) - $floor$3((y - 1901) / 100) + $floor$3((y - 1601) / 400);
+  };
+
+  var $Date = GetIntrinsic('%Date%');
+  var $getUTCFullYear = callBound('Date.prototype.getUTCFullYear'); // https://ecma-international.org/ecma-262/5.1/#sec-15.9.1.3
+
+  var YearFromTime = function YearFromTime(t) {
+    // largest y such that this.TimeFromYear(y) <= t
+    return $getUTCFullYear(new $Date(t));
+  };
+
+  var DayWithinYear = function DayWithinYear(t) {
+    return Day(t) - DayFromYear(YearFromTime(t));
+  };
+
+  var $floor$4 = Math.floor;
+
+  var mod = function mod(number, modulo) {
+    var remain = number % modulo;
+    return $floor$4(remain >= 0 ? remain : remain + modulo);
+  };
+
+  var DaysInYear = function DaysInYear(y) {
+    if (mod(y, 4) !== 0) {
+      return 365;
+    }
+
+    if (mod(y, 100) !== 0) {
+      return 366;
+    }
+
+    if (mod(y, 400) !== 0) {
+      return 365;
+    }
+
+    return 366;
+  };
+
+  var $EvalError = GetIntrinsic('%EvalError%'); // https://ecma-international.org/ecma-262/5.1/#sec-15.9.1.3
+
+  var InLeapYear = function InLeapYear(t) {
+    var days = DaysInYear(YearFromTime(t));
+
+    if (days === 365) {
+      return 0;
+    }
+
+    if (days === 366) {
+      return 1;
+    }
+
+    throw new $EvalError('Assertion failed: there are not 365 or 366 days in a year, got: ' + days);
+  };
+
+  var MonthFromTime = function MonthFromTime(t) {
+    var day = DayWithinYear(t);
+
+    if (0 <= day && day < 31) {
+      return 0;
+    }
+
+    var leap = InLeapYear(t);
+
+    if (31 <= day && day < 59 + leap) {
+      return 1;
+    }
+
+    if (59 + leap <= day && day < 90 + leap) {
+      return 2;
+    }
+
+    if (90 + leap <= day && day < 120 + leap) {
+      return 3;
+    }
+
+    if (120 + leap <= day && day < 151 + leap) {
+      return 4;
+    }
+
+    if (151 + leap <= day && day < 181 + leap) {
+      return 5;
+    }
+
+    if (181 + leap <= day && day < 212 + leap) {
+      return 6;
+    }
+
+    if (212 + leap <= day && day < 243 + leap) {
+      return 7;
+    }
+
+    if (243 + leap <= day && day < 273 + leap) {
+      return 8;
+    }
+
+    if (273 + leap <= day && day < 304 + leap) {
+      return 9;
+    }
+
+    if (304 + leap <= day && day < 334 + leap) {
+      return 10;
+    }
+
+    if (334 + leap <= day && day < 365 + leap) {
+      return 11;
+    }
+  };
+
+  var $EvalError$1 = GetIntrinsic('%EvalError%'); // https://ecma-international.org/ecma-262/5.1/#sec-15.9.1.5
+
+  var DateFromTime = function DateFromTime(t) {
+    var m = MonthFromTime(t);
+    var d = DayWithinYear(t);
+
+    if (m === 0) {
+      return d + 1;
+    }
+
+    if (m === 1) {
+      return d - 30;
+    }
+
+    var leap = InLeapYear(t);
+
+    if (m === 2) {
+      return d - 58 - leap;
+    }
+
+    if (m === 3) {
+      return d - 89 - leap;
+    }
+
+    if (m === 4) {
+      return d - 119 - leap;
+    }
+
+    if (m === 5) {
+      return d - 150 - leap;
+    }
+
+    if (m === 6) {
+      return d - 180 - leap;
+    }
+
+    if (m === 7) {
+      return d - 211 - leap;
+    }
+
+    if (m === 8) {
+      return d - 242 - leap;
+    }
+
+    if (m === 9) {
+      return d - 272 - leap;
+    }
+
+    if (m === 10) {
+      return d - 303 - leap;
+    }
+
+    if (m === 11) {
+      return d - 333 - leap;
+    }
+
+    throw new $EvalError$1('Assertion failed: MonthFromTime returned an impossible value: ' + m);
+  };
+
+  var $strSlice$2 = callBound('String.prototype.slice');
+
+  var padTimeComponent = function padTimeComponent(c, count) {
+    return $strSlice$2('00' + c, -(count || 2));
+  };
+
+  var WeekDay = function WeekDay(t) {
+    return mod(Day(t) + 4, 7);
+  };
+
+  var $TypeError$x = GetIntrinsic('%TypeError%');
+  var weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  var months$1 = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']; // https://www.ecma-international.org/ecma-262/9.0/#sec-datestring
+
+  var DateString = function DateString(tv) {
+    if (Type$1(tv) !== 'Number' || _isNaN(tv)) {
+      throw new $TypeError$x('Assertion failed: `tv` must be a non-NaN Number');
+    }
+
+    var weekday = weekdays[WeekDay(tv)];
+    var month = months$1[MonthFromTime(tv)];
+    var day = padTimeComponent(DateFromTime(tv));
+    var year = padTimeComponent(YearFromTime(tv), 4);
+    return weekday + '\x20' + month + '\x20' + day + '\x20' + year;
+  };
+
+  var $TypeError$y = GetIntrinsic('%TypeError%'); // https://www.ecma-international.org/ecma-262/6.0/#sec-deletepropertyorthrow
+
+  var DeletePropertyOrThrow = function DeletePropertyOrThrow(O, P) {
+    if (Type$1(O) !== 'Object') {
+      throw new $TypeError$y('Assertion failed: Type(O) is not Object');
+    }
+
+    if (!IsPropertyKey(P)) {
+      throw new $TypeError$y('Assertion failed: IsPropertyKey(P) is not true');
+    } // eslint-disable-next-line no-param-reassign
+
+
+    var success = delete O[P];
+
+    if (!success) {
+      throw new $TypeError$y('Attempt to delete property failed.');
+    }
+
+    return success;
+  };
+
+  var $TypeError$z = GetIntrinsic('%TypeError%');
+  var $isEnumerable$3 = callBound('Object.prototype.propertyIsEnumerable');
+  var $pushApply$1 = callBind.apply(GetIntrinsic('%Array.prototype.push%')); // https://www.ecma-international.org/ecma-262/8.0/#sec-enumerableownproperties
+
+  var EnumerableOwnPropertyNames = function EnumerableOwnProperties(O, kind) {
+    if (Type$1(O) !== 'Object') {
+      throw new $TypeError$z('Assertion failed: Type(O) is not Object');
+    }
+
+    var keys = objectKeys(O);
+
+    if (kind === 'key') {
+      return keys;
+    }
+
+    if (kind === 'value' || kind === 'key+value') {
+      var results = [];
+      forEach(keys, function (key) {
+        if ($isEnumerable$3(O, key)) {
+          $pushApply$1(results, [kind === 'value' ? O[key] : [key, O[key]]]);
+        }
+      });
+      return results;
+    }
+
+    throw new $TypeError$z('Assertion failed: "kind" is not "key", "value", or "key+value": ' + kind);
+  };
+
+  var $TypeError$A = GetIntrinsic('%TypeError%'); // https://ecma-international.org/ecma-262/6.0/#sec-hasproperty
+
+  var HasProperty = function HasProperty(O, P) {
+    if (Type$1(O) !== 'Object') {
+      throw new $TypeError$A('Assertion failed: `O` must be an Object');
+    }
+
+    if (!IsPropertyKey(P)) {
+      throw new $TypeError$A('Assertion failed: `P` must be a Property Key');
+    }
+
+    return P in O;
+  };
+
+  var $TypeError$B = GetIntrinsic('%TypeError%'); // https://ecma-international.org/ecma-262/10.0/#sec-flattenintoarray
+  // eslint-disable-next-line max-params, max-statements
+
+  var FlattenIntoArray = function FlattenIntoArray(target, source, sourceLen, start, depth) {
+    var mapperFunction;
+
+    if (arguments.length > 5) {
+      mapperFunction = arguments[5];
+    }
+
+    var targetIndex = start;
+    var sourceIndex = 0;
+
+    while (sourceIndex < sourceLen) {
+      var P = ToString(sourceIndex);
+      var exists = HasProperty(source, P);
+
+      if (exists === true) {
+        var element = Get(source, P);
+
+        if (typeof mapperFunction !== 'undefined') {
+          if (arguments.length <= 6) {
+            throw new $TypeError$B('Assertion failed: thisArg is required when mapperFunction is provided');
+          }
+
+          element = Call(mapperFunction, arguments[6], [element, sourceIndex, source]);
+        }
+
+        var shouldFlatten = false;
+
+        if (depth > 0) {
+          shouldFlatten = IsArray(element);
+        }
+
+        if (shouldFlatten) {
+          var elementLen = ToLength(Get(element, 'length'));
+          targetIndex = FlattenIntoArray(target, element, elementLen, targetIndex, depth - 1);
+        } else {
+          if (targetIndex >= maxSafeInteger) {
+            throw new $TypeError$B('index too large');
+          }
+
+          CreateDataPropertyOrThrow(target, ToString(targetIndex), element);
+          targetIndex += 1;
+        }
+      }
+
+      sourceIndex += 1;
+    }
+
+    return targetIndex;
+  };
+
+  var hasSymbols$7 = hasSymbols();
+  var $TypeError$C = GetIntrinsic('%TypeError%');
+  var $gOPN$1 = GetIntrinsic('%Object.getOwnPropertyNames%');
+  var $gOPS$1 = hasSymbols$7 && GetIntrinsic('%Object.getOwnPropertySymbols%'); // https://www.ecma-international.org/ecma-262/6.0/#sec-getownpropertykeys
+
+  var GetOwnPropertyKeys = function GetOwnPropertyKeys(O, Type) {
+    if (Type$1(O) !== 'Object') {
+      throw new $TypeError$C('Assertion failed: Type(O) is not Object');
+    }
+
+    if (Type === 'Symbol') {
+      return $gOPS$1 ? $gOPS$1(O) : [];
+    }
+
+    if (Type === 'String') {
+      if (!$gOPN$1) {
+        return objectKeys(O);
+      }
+
+      return $gOPN$1(O);
+    }
+
+    throw new $TypeError$C('Assertion failed: `Type` must be `"String"` or `"Symbol"`');
+  };
+
+  var $Function = GetIntrinsic('%Function%');
+  var $TypeError$D = GetIntrinsic('%TypeError%'); // https://ecma-international.org/ecma-262/6.0/#sec-getprototypefromconstructor
+
+  var GetPrototypeFromConstructor = function GetPrototypeFromConstructor(constructor, intrinsicDefaultProto) {
+    var intrinsic = GetIntrinsic(intrinsicDefaultProto); // throws if not a valid intrinsic
+
+    if (!IsConstructor(constructor)) {
+      throw new $TypeError$D('Assertion failed: `constructor` must be a constructor');
+    }
+
+    var proto = Get(constructor, 'prototype');
+
+    if (Type$1(proto) !== 'Object') {
+      if (!(constructor instanceof $Function)) {
+        // ignore other realms, for now
+        throw new $TypeError$D('cross-realm constructors not currently supported');
+      }
+
+      proto = intrinsic;
+    }
+
+    return proto;
+  };
+
+  var $TypeError$E = GetIntrinsic('%TypeError%');
+  var $charAt = callBound('String.prototype.charAt');
+  var $strSlice$3 = callBound('String.prototype.slice');
+  var $indexOf$2 = callBound('String.prototype.indexOf');
+  var $parseInt = parseInt;
+  var isDigit = regexTester(/^[0-9]$/);
+  var canDistinguishSparseFromUndefined = (0 in [undefined]); // IE 6 - 8 have a bug where this returns false
+
+  var isStringOrHole = function isStringOrHole(capture, index, arr) {
+    return Type$1(capture) === 'String' || (canDistinguishSparseFromUndefined ? !(index in arr) : Type$1(capture) === 'Undefined');
+  }; // http://www.ecma-international.org/ecma-262/9.0/#sec-getsubstitution
+  // eslint-disable-next-line max-statements, max-params, max-lines-per-function
+
+
+  var GetSubstitution = function GetSubstitution(matched, str, position, captures, namedCaptures, replacement) {
+    if (Type$1(matched) !== 'String') {
+      throw new $TypeError$E('Assertion failed: `matched` must be a String');
+    }
+
+    var matchLength = matched.length;
+
+    if (Type$1(str) !== 'String') {
+      throw new $TypeError$E('Assertion failed: `str` must be a String');
+    }
+
+    var stringLength = str.length;
+
+    if (!IsInteger(position) || position < 0 || position > stringLength) {
+      throw new $TypeError$E('Assertion failed: `position` must be a nonnegative integer, and less than or equal to the length of `string`, got ' + objectInspect(position));
+    }
+
+    if (!IsArray(captures) || !every(captures, isStringOrHole)) {
+      throw new $TypeError$E('Assertion failed: `captures` must be a List of Strings, got ' + objectInspect(captures));
+    }
+
+    if (Type$1(replacement) !== 'String') {
+      throw new $TypeError$E('Assertion failed: `replacement` must be a String');
+    }
+
+    var tailPos = position + matchLength;
+    var m = captures.length;
+
+    if (Type$1(namedCaptures) !== 'Undefined') {
+      namedCaptures = ToObject(namedCaptures); // eslint-disable-line no-param-reassign
+    }
+
+    var result = '';
+
+    for (var i = 0; i < replacement.length; i += 1) {
+      // if this is a $, and it's not the end of the replacement
+      var current = $charAt(replacement, i);
+      var isLast = i + 1 >= replacement.length;
+      var nextIsLast = i + 2 >= replacement.length;
+
+      if (current === '$' && !isLast) {
+        var next = $charAt(replacement, i + 1);
+
+        if (next === '$') {
+          result += '$';
+          i += 1;
+        } else if (next === '&') {
+          result += matched;
+          i += 1;
+        } else if (next === '`') {
+          result += position === 0 ? '' : $strSlice$3(str, 0, position - 1);
+          i += 1;
+        } else if (next === "'") {
+          result += tailPos >= stringLength ? '' : $strSlice$3(str, tailPos);
+          i += 1;
+        } else {
+          var nextNext = nextIsLast ? null : $charAt(replacement, i + 2);
+
+          if (isDigit(next) && next !== '0' && (nextIsLast || !isDigit(nextNext))) {
+            // $1 through $9, and not followed by a digit
+            var n = $parseInt(next, 10); // if (n > m, impl-defined)
+
+            result += n <= m && Type$1(captures[n - 1]) === 'Undefined' ? '' : captures[n - 1];
+            i += 1;
+          } else if (isDigit(next) && (nextIsLast || isDigit(nextNext))) {
+            // $00 through $99
+            var nn = next + nextNext;
+            var nnI = $parseInt(nn, 10) - 1; // if nn === '00' or nn > m, impl-defined
+
+            result += nn <= m && Type$1(captures[nnI]) === 'Undefined' ? '' : captures[nnI];
+            i += 2;
+          } else if (next === '<') {
+            // eslint-disable-next-line max-depth
+            if (Type$1(namedCaptures) === 'Undefined') {
+              result += '$<';
+              i += 2;
+            } else {
+              var endIndex = $indexOf$2(replacement, '>', i); // eslint-disable-next-line max-depth
+
+              if (endIndex > -1) {
+                var groupName = $strSlice$3(replacement, i, endIndex);
+                var capture = Get(namedCaptures, groupName); // eslint-disable-next-line max-depth
+
+                if (Type$1(capture) !== 'Undefined') {
+                  result += ToString(capture);
+                }
+
+                i += '$<' + groupName + '>'.length;
+              }
+            }
+          } else {
+            result += '$';
+          }
+        }
+      } else {
+        // the final $, or else not a $
+        result += $charAt(replacement, i);
+      }
+    }
+
+    return result;
+  };
+
+  var $TypeError$F = GetIntrinsic('%TypeError%'); // https://ecma-international.org/ecma-262/6.0/#sec-hasownproperty
+
+  var HasOwnProperty = function HasOwnProperty(O, P) {
+    if (Type$1(O) !== 'Object') {
+      throw new $TypeError$F('Assertion failed: `O` must be an Object');
+    }
+
+    if (!IsPropertyKey(P)) {
+      throw new $TypeError$F('Assertion failed: `P` must be a Property Key');
+    }
+
+    return src(O, P);
+  };
+
+  var $floor$5 = GetIntrinsic('%Math.floor%');
+  var msPerHour$1 = timeConstants.msPerHour;
+  var HoursPerDay$1 = timeConstants.HoursPerDay; // https://ecma-international.org/ecma-262/5.1/#sec-15.9.1.10
+
+  var HourFromTime = function HourFromTime(t) {
+    return mod($floor$5(t / msPerHour$1), HoursPerDay$1);
+  };
+
+  var $TypeError$G = GetIntrinsic('%TypeError%'); // https://www.ecma-international.org/ecma-262/6.0/#sec-ordinaryhasinstance
+
+  var OrdinaryHasInstance = function OrdinaryHasInstance(C, O) {
+    if (IsCallable(C) === false) {
+      return false;
+    }
+
+    if (Type$1(O) !== 'Object') {
+      return false;
+    }
+
+    var P = Get(C, 'prototype');
+
+    if (Type$1(P) !== 'Object') {
+      throw new $TypeError$G('OrdinaryHasInstance called on an object with an invalid prototype property.');
+    }
+
+    return O instanceof C;
+  };
+
+  var $TypeError$H = GetIntrinsic('%TypeError%');
+  var $hasInstance = GetIntrinsic('Symbol.hasInstance', true); // https://www.ecma-international.org/ecma-262/6.0/#sec-instanceofoperator
+
+  var InstanceofOperator = function InstanceofOperator(O, C) {
+    if (Type$1(O) !== 'Object') {
+      throw new $TypeError$H('Assertion failed: Type(O) is not Object');
+    }
+
+    var instOfHandler = $hasInstance ? GetMethod$1(C, $hasInstance) : void 0;
+
+    if (typeof instOfHandler !== 'undefined') {
+      return ToBoolean(Call(instOfHandler, C, [O]));
+    }
+
+    if (!IsCallable(C)) {
+      throw new $TypeError$H('`C` is not Callable');
+    }
+
+    return OrdinaryHasInstance(C, O);
+  };
+
+  var $isConcatSpreadable = GetIntrinsic('%Symbol.isConcatSpreadable%', true); // https://ecma-international.org/ecma-262/6.0/#sec-isconcatspreadable
+
+  var IsConcatSpreadable = function IsConcatSpreadable(O) {
+    if (Type$1(O) !== 'Object') {
+      return false;
+    }
+
+    if ($isConcatSpreadable) {
+      var spreadable = Get(O, $isConcatSpreadable);
+
+      if (typeof spreadable !== 'undefined') {
+        return ToBoolean(spreadable);
+      }
+    }
+
+    return IsArray(O);
+  };
+
+  var $PromiseThen = callBound('Promise.prototype.then', true); // https://www.ecma-international.org/ecma-262/6.0/#sec-ispromise
+
+  var IsPromise = function IsPromise(x) {
+    if (Type$1(x) !== 'Object') {
+      return false;
+    }
+
+    if (!$PromiseThen) {
+      // Promises are not supported
+      return false;
+    }
+
+    try {
+      $PromiseThen(x); // throws if not a promise
+    } catch (e) {
+      return false;
+    }
+
+    return true;
+  };
+
+  var $TypeError$I = GetIntrinsic('%TypeError%'); // var callBound = require('../helpers/callBound');
+  // var $charAt = callBound('String.prototype.charAt');
+  // https://www.ecma-international.org/ecma-262/9.0/#sec-isstringprefix
+
+  var IsStringPrefix = function IsStringPrefix(p, q) {
+    if (Type$1(p) !== 'String') {
+      throw new $TypeError$I('Assertion failed: "p" must be a String');
+    }
+
+    if (Type$1(q) !== 'String') {
+      throw new $TypeError$I('Assertion failed: "q" must be a String');
+    }
+
+    return isPrefixOf(p, q);
+    /*
+    if (p === q || p === '') {
+    	return true;
+    }
+    	var pLength = p.length;
+    var qLength = q.length;
+    if (pLength >= qLength) {
+    	return false;
+    }
+    	// assert: pLength < qLength
+    	for (var i = 0; i < pLength; i += 1) {
+    	if ($charAt(p, i) !== $charAt(q, i)) {
+    		return false;
+    	}
+    }
+    return true;
+    */
+  };
+
+  var $arrayPush = callBound('Array.prototype.push'); // https://www.ecma-international.org/ecma-262/8.0/#sec-iterabletolist
+
+  var IterableToList = function IterableToList(items, method) {
+    var iterator = GetIterator(items, method);
+    var values = [];
+    var next = true;
+
+    while (next) {
+      next = IteratorStep(iterator);
+
+      if (next) {
+        var nextValue = IteratorValue(next);
+        $arrayPush(values, nextValue);
+      }
+    }
+
+    return values;
+  };
+
+  var msPerDay$2 = timeConstants.msPerDay; // https://ecma-international.org/ecma-262/5.1/#sec-15.9.1.13
+
+  var MakeDate = function MakeDate(day, time) {
+    if (!_isFinite(day) || !_isFinite(time)) {
+      return NaN;
+    }
+
+    return day * msPerDay$2 + time;
+  };
+
+  var $floor$6 = GetIntrinsic('%Math.floor%');
+  var $DateUTC = GetIntrinsic('%Date.UTC%'); // https://ecma-international.org/ecma-262/5.1/#sec-15.9.1.12
+
+  var MakeDay = function MakeDay(year, month, date) {
+    if (!_isFinite(year) || !_isFinite(month) || !_isFinite(date)) {
+      return NaN;
+    }
+
+    var y = ToInteger$1(year);
+    var m = ToInteger$1(month);
+    var dt = ToInteger$1(date);
+    var ym = y + $floor$6(m / 12);
+    var mn = mod(m, 12);
+    var t = $DateUTC(ym, mn, 1);
+
+    if (YearFromTime(t) !== ym || MonthFromTime(t) !== mn || DateFromTime(t) !== 1) {
+      return NaN;
+    }
+
+    return Day(t) + dt - 1;
+  };
+
+  var msPerSecond$1 = timeConstants.msPerSecond;
+  var msPerMinute$1 = timeConstants.msPerMinute;
+  var msPerHour$2 = timeConstants.msPerHour; // https://ecma-international.org/ecma-262/5.1/#sec-15.9.1.11
+
+  var MakeTime = function MakeTime(hour, min, sec, ms) {
+    if (!_isFinite(hour) || !_isFinite(min) || !_isFinite(sec) || !_isFinite(ms)) {
+      return NaN;
+    }
+
+    var h = ToInteger$1(hour);
+    var m = ToInteger$1(min);
+    var s = ToInteger$1(sec);
+    var milli = ToInteger$1(ms);
+    var t = h * msPerHour$2 + m * msPerMinute$1 + s * msPerSecond$1 + milli;
+    return t;
+  };
+
+  var $floor$7 = GetIntrinsic('%Math.floor%');
+  var msPerMinute$2 = timeConstants.msPerMinute;
+  var MinutesPerHour$1 = timeConstants.MinutesPerHour; // https://ecma-international.org/ecma-262/5.1/#sec-15.9.1.10
+
+  var MinFromTime = function MinFromTime(t) {
+    return mod($floor$7(t / msPerMinute$2), MinutesPerHour$1);
+  };
+
+  var modulo = function modulo(x, y) {
+    return mod(x, y);
+  };
+
+  var msPerSecond$2 = timeConstants.msPerSecond; // https://ecma-international.org/ecma-262/5.1/#sec-15.9.1.10
+
+  var msFromTime = function msFromTime(t) {
+    return mod(t, msPerSecond$2);
+  };
+
+  var $String$1 = GetIntrinsic('%String%'); // https://www.ecma-international.org/ecma-262/9.0/#sec-tostring-applied-to-the-number-type
+
+  var NumberToString = function NumberToString(m) {
+    if (Type$1(m) !== 'Number') {
+      throw new TypeError('Assertion failed: "m" must be a String');
+    }
+
+    return $String$1(m);
+  };
+
+  var $ObjectCreate = GetIntrinsic('%Object.create%', true);
+  var $TypeError$J = GetIntrinsic('%TypeError%');
+  var $SyntaxError$3 = GetIntrinsic('%SyntaxError%');
+  var hasProto = !({
+    __proto__: null
+  } instanceof Object); // https://www.ecma-international.org/ecma-262/6.0/#sec-objectcreate
+
+  var ObjectCreate = function ObjectCreate(proto, internalSlotsList) {
+    if (proto !== null && Type$1(proto) !== 'Object') {
+      throw new $TypeError$J('Assertion failed: `proto` must be null or an object');
+    }
+
+    var slots = arguments.length < 2 ? [] : internalSlotsList;
+
+    if (slots.length > 0) {
+      throw new $SyntaxError$3('es-abstract does not yet support internal slots');
+    }
+
+    if ($ObjectCreate) {
+      return $ObjectCreate(proto);
+    }
+
+    if (hasProto) {
+      return {
+        __proto__: proto
+      };
+    }
+
+    if (proto === null) {
+      throw new $SyntaxError$3('native Object.create support is required to create null objects');
+    }
+
+    var T = function T() {};
+
+    T.prototype = proto;
+    return new T();
+  };
+
+  var originalGetProto = GetIntrinsic('%Object.getPrototypeOf%', true);
+  var $ArrayProto = GetIntrinsic('%Array.prototype%');
+  var getProto$1 = originalGetProto || ( // eslint-disable-next-line no-proto
+  [].__proto__ === $ArrayProto ? function (O) {
+    return O.__proto__; // eslint-disable-line no-proto
+  } : null);
+
+  var $TypeError$K = GetIntrinsic('%TypeError%'); // https://ecma-international.org/ecma-262/7.0/#sec-ordinarygetprototypeof
+
+  var OrdinaryGetPrototypeOf = function OrdinaryGetPrototypeOf(O) {
+    if (Type$1(O) !== 'Object') {
+      throw new $TypeError$K('Assertion failed: O must be an Object');
+    }
+
+    if (!getProto$1) {
+      throw new $TypeError$K('This environment does not support fetching prototypes.');
+    }
+
+    return getProto$1(O);
+  };
+
+  var originalSetProto = GetIntrinsic('%Object.setPrototypeOf%', true);
+  var $ArrayProto$1 = GetIntrinsic('%Array.prototype%');
+  var setProto = originalSetProto || ( // eslint-disable-next-line no-proto, no-negated-condition
+  [].__proto__ !== $ArrayProto$1 ? null : function (O, proto) {
+    O.__proto__ = proto; // eslint-disable-line no-proto, no-param-reassign
+
+    return O;
+  });
+
+  var $TypeError$L = GetIntrinsic('%TypeError%'); // https://ecma-international.org/ecma-262/7.0/#sec-ordinarysetprototypeof
+
+  var OrdinarySetPrototypeOf = function OrdinarySetPrototypeOf(O, V) {
+    if (Type$1(V) !== 'Object' && Type$1(V) !== 'Null') {
+      throw new $TypeError$L('Assertion failed: V must be Object or Null');
+    }
+    /*
+       var extensible = IsExtensible(O);
+       var current = OrdinaryGetPrototypeOf(O);
+       if (SameValue(V, current)) {
+           return true;
+       }
+       if (!extensible) {
+           return false;
+       }
+       */
+
+
+    try {
+      setProto(O, V);
+    } catch (e) {
+      return false;
+    }
+
+    return OrdinaryGetPrototypeOf(O) === V;
+    /*
+       var p = V;
+       var done = false;
+       while (!done) {
+           if (p === null) {
+               done = true;
+           } else if (SameValue(p, O)) {
+               return false;
+           } else {
+               if (wat) {
+                   done = true;
+               } else {
+                   p = p.[[Prototype]];
+               }
+           }
+        }
+        O.[[Prototype]] = V;
+        return true;
+        */
+  };
+
+  var $TypeError$M = GetIntrinsic('%TypeError%'); // https://www.ecma-international.org/ecma-262/6.0/#sec-ordinaryhasproperty
+
+  var OrdinaryHasProperty = function OrdinaryHasProperty(O, P) {
+    if (Type$1(O) !== 'Object') {
+      throw new $TypeError$M('Assertion failed: Type(O) is not Object');
+    }
+
+    if (!IsPropertyKey(P)) {
+      throw new $TypeError$M('Assertion failed: P must be a Property Key');
+    }
+
+    return P in O;
+  };
+
+  var $PromiseResolve = callBound('Promise.resolve', true); // https://ecma-international.org/ecma-262/9.0/#sec-promise-resolve
+
+  var PromiseResolve = function PromiseResolve(C, x) {
+    if (!$PromiseResolve) {
+      throw new SyntaxError('This environment does not support Promises.');
+    }
+
+    return $PromiseResolve(C, x);
+  };
+
+  var $TypeError$N = GetIntrinsic('%TypeError%');
+  var regexExec$1 = callBound('RegExp.prototype.exec'); // https://ecma-international.org/ecma-262/6.0/#sec-regexpexec
+
+  var RegExpExec = function RegExpExec(R, S) {
+    if (Type$1(R) !== 'Object') {
+      throw new $TypeError$N('Assertion failed: `R` must be an Object');
+    }
+
+    if (Type$1(S) !== 'String') {
+      throw new $TypeError$N('Assertion failed: `S` must be a String');
+    }
+
+    var exec = Get(R, 'exec');
+
+    if (IsCallable(exec)) {
+      var result = Call(exec, R, [S]);
+
+      if (result === null || Type$1(result) === 'Object') {
+        return result;
+      }
+
+      throw new $TypeError$N('"exec" method must return `null` or an Object');
+    }
+
+    return regexExec$1(R, S);
+  };
+
+  var $TypeError$O = GetIntrinsic('%TypeError%'); // https://www.ecma-international.org/ecma-262/7.0/#sec-samevaluenonnumber
+
+  var SameValueNonNumber = function SameValueNonNumber(x, y) {
+    if (typeof x === 'number' || _typeof(x) !== _typeof(y)) {
+      throw new $TypeError$O('SameValueNonNumber requires two non-number values of the same type.');
+    }
+
+    return SameValue(x, y);
+  };
+
+  var SameValueZero = function SameValueZero(x, y) {
+    return x === y || _isNaN(x) && _isNaN(y);
+  };
+
+  var $floor$8 = GetIntrinsic('%Math.floor%');
+  var msPerSecond$3 = timeConstants.msPerSecond;
+  var SecondsPerMinute$1 = timeConstants.SecondsPerMinute; // https://ecma-international.org/ecma-262/5.1/#sec-15.9.1.10
+
+  var SecFromTime = function SecFromTime(t) {
+    return mod($floor$8(t / msPerSecond$3), SecondsPerMinute$1);
+  };
+
+  var $TypeError$P = GetIntrinsic('%TypeError%'); // IE 9 does not throw in strict mode when writability/configurability/extensibility is violated
+
+  var noThrowOnStrictViolation = function () {
+    try {
+      delete [].length;
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }(); // https://ecma-international.org/ecma-262/6.0/#sec-set-o-p-v-throw
+
+
+  var _Set = function Set(O, P, V, Throw) {
+    if (Type$1(O) !== 'Object') {
+      throw new $TypeError$P('Assertion failed: `O` must be an Object');
+    }
+
+    if (!IsPropertyKey(P)) {
+      throw new $TypeError$P('Assertion failed: `P` must be a Property Key');
+    }
+
+    if (Type$1(Throw) !== 'Boolean') {
+      throw new $TypeError$P('Assertion failed: `Throw` must be a Boolean');
+    }
+
+    if (Throw) {
+      O[P] = V; // eslint-disable-line no-param-reassign
+
+      if (noThrowOnStrictViolation && !SameValue(O[P], V)) {
+        throw new $TypeError$P('Attempted to assign to readonly property.');
+      }
+
+      return true;
+    } else {
+      try {
+        O[P] = V; // eslint-disable-line no-param-reassign
+
+        return noThrowOnStrictViolation ? SameValue(O[P], V) : true;
+      } catch (e) {
+        return false;
+      }
+    }
+  };
+
+  var getInferredName;
+
+  try {
+    // eslint-disable-next-line no-new-func
+    getInferredName = Function('s', 'return { [s]() {} }[s].name;');
+  } catch (e) {}
+
+  var inferred = function inferred() {};
+
+  var getInferredName_1 = getInferredName && inferred.name === 'inferred' ? getInferredName : null;
+
+  var $SyntaxError$4 = GetIntrinsic('%SyntaxError%');
+  var getGlobalSymbolDescription = GetIntrinsic('%Symbol.keyFor%', true);
+  var thisSymbolValue = callBound('%Symbol.prototype.valueOf%', true);
+  var symToStr = callBound('Symbol.prototype.toString', true);
+  /* eslint-disable consistent-return */
+
+  var getSymbolDescription = callBound('%Symbol.prototype.description%', true) || function getSymbolDescription(symbol) {
+    if (!thisSymbolValue) {
+      throw new $SyntaxError$4('Symbols are not supported in this environment');
+    } // will throw if not a symbol primitive or wrapper object
+
+
+    var sym = thisSymbolValue(symbol);
+
+    if (getInferredName_1) {
+      var name = getInferredName_1(sym);
+
+      if (name === '') {
+        return;
+      }
+
+      return name.slice(1, -1); // name.slice('['.length, -']'.length);
+    }
+
+    var desc;
+
+    if (getGlobalSymbolDescription) {
+      desc = getGlobalSymbolDescription(sym);
+
+      if (typeof desc === 'string') {
+        return desc;
+      }
+    }
+
+    desc = symToStr(sym).slice(7, -1); // str.slice('Symbol('.length, -')'.length);
+
+    if (desc) {
+      return desc;
+    }
+  };
+
+  var $TypeError$Q = GetIntrinsic('%TypeError%'); // https://ecma-international.org/ecma-262/6.0/#sec-setfunctionname
+
+  var SetFunctionName = function SetFunctionName(F, name) {
+    if (typeof F !== 'function') {
+      throw new $TypeError$Q('Assertion failed: `F` must be a function');
+    }
+
+    if (!IsExtensible(F) || src(F, 'name')) {
+      throw new $TypeError$Q('Assertion failed: `F` must be extensible, and must not have a `name` own property');
+    }
+
+    var nameType = Type$1(name);
+
+    if (nameType !== 'Symbol' && nameType !== 'String') {
+      throw new $TypeError$Q('Assertion failed: `name` must be a Symbol or a String');
+    }
+
+    if (nameType === 'Symbol') {
+      var description = getSymbolDescription(name); // eslint-disable-next-line no-param-reassign
+
+      name = typeof description === 'undefined' ? '' : '[' + description + ']';
+    }
+
+    if (arguments.length > 2) {
+      var prefix = arguments[2]; // eslint-disable-next-line no-param-reassign
+
+      name = prefix + ' ' + name;
+    }
+
+    return DefinePropertyOrThrow(F, 'name', {
+      '[[Value]]': name,
+      '[[Writable]]': false,
+      '[[Enumerable]]': false,
+      '[[Configurable]]': true
+    });
+  };
+
+  var $SyntaxError$5 = GetIntrinsic('%SyntaxError%');
+  var $TypeError$R = GetIntrinsic('%TypeError%');
+  var $preventExtensions$1 = GetIntrinsic('%Object.preventExtensions%');
+  var $gOPN$2 = GetIntrinsic('%Object.getOwnPropertyNames%'); // https://www.ecma-international.org/ecma-262/6.0/#sec-setintegritylevel
+
+  var SetIntegrityLevel = function SetIntegrityLevel(O, level) {
+    if (Type$1(O) !== 'Object') {
+      throw new $TypeError$R('Assertion failed: Type(O) is not Object');
+    }
+
+    if (level !== 'sealed' && level !== 'frozen') {
+      throw new $TypeError$R('Assertion failed: `level` must be `"sealed"` or `"frozen"`');
+    }
+
+    if (!$preventExtensions$1) {
+      throw new $SyntaxError$5('SetIntegrityLevel requires native `Object.preventExtensions` support');
+    }
+
+    var status = $preventExtensions$1(O);
+
+    if (!status) {
+      return false;
+    }
+
+    if (!$gOPN$2) {
+      throw new $SyntaxError$5('SetIntegrityLevel requires native `Object.getOwnPropertyNames` support');
+    }
+
+    var theKeys = $gOPN$2(O);
+
+    if (level === 'sealed') {
+      forEach(theKeys, function (k) {
+        DefinePropertyOrThrow(O, k, {
+          configurable: false
+        });
+      });
+    } else if (level === 'frozen') {
+      forEach(theKeys, function (k) {
+        var currentDesc = getOwnPropertyDescriptor(O, k);
+
+        if (typeof currentDesc !== 'undefined') {
+          var desc;
+
+          if (IsAccessorDescriptor(ToPropertyDescriptor(currentDesc))) {
+            desc = {
+              configurable: false
+            };
+          } else {
+            desc = {
+              configurable: false,
+              writable: false
+            };
+          }
+
+          DefinePropertyOrThrow(O, k, desc);
+        }
+      });
+    }
+
+    return true;
+  };
+
+  var $species$1 = GetIntrinsic('%Symbol.species%', true);
+  var $TypeError$S = GetIntrinsic('%TypeError%'); // https://ecma-international.org/ecma-262/6.0/#sec-speciesconstructor
+
+  var SpeciesConstructor = function SpeciesConstructor(O, defaultConstructor) {
+    if (Type$1(O) !== 'Object') {
+      throw new $TypeError$S('Assertion failed: Type(O) is not Object');
+    }
+
+    var C = O.constructor;
+
+    if (typeof C === 'undefined') {
+      return defaultConstructor;
+    }
+
+    if (Type$1(C) !== 'Object') {
+      throw new $TypeError$S('O.constructor is not an Object');
+    }
+
+    var S = $species$1 ? C[$species$1] : void 0;
+
+    if (S == null) {
+      return defaultConstructor;
+    }
+
+    if (IsConstructor(S)) {
+      return S;
+    }
+
+    throw new $TypeError$S('no constructor found');
+  };
+
+  var $TypeError$T = GetIntrinsic('%TypeError%');
+  var $SymbolToString = callBound('Symbol.prototype.toString', true); // https://www.ecma-international.org/ecma-262/6.0/#sec-symboldescriptivestring
+
+  var SymbolDescriptiveString = function SymbolDescriptiveString(sym) {
+    if (Type$1(sym) !== 'Symbol') {
+      throw new $TypeError$T('Assertion failed: `sym` must be a Symbol');
+    }
+
+    return $SymbolToString(sym);
+  };
+
+  var $gOPN$3 = GetIntrinsic('%Object.getOwnPropertyNames%');
+  var $TypeError$U = GetIntrinsic('%TypeError%'); // https://www.ecma-international.org/ecma-262/6.0/#sec-testintegritylevel
+
+  var TestIntegrityLevel = function TestIntegrityLevel(O, level) {
+    if (Type$1(O) !== 'Object') {
+      throw new $TypeError$U('Assertion failed: Type(O) is not Object');
+    }
+
+    if (level !== 'sealed' && level !== 'frozen') {
+      throw new $TypeError$U('Assertion failed: `level` must be `"sealed"` or `"frozen"`');
+    }
+
+    var status = IsExtensible(O);
+
+    if (status) {
+      return false;
+    }
+
+    var theKeys = $gOPN$3(O);
+    return theKeys.length === 0 || every(theKeys, function (k) {
+      var currentDesc = getOwnPropertyDescriptor(O, k);
+
+      if (typeof currentDesc !== 'undefined') {
+        if (currentDesc.configurable) {
+          return false;
+        }
+
+        if (level === 'frozen' && IsDataDescriptor(ToPropertyDescriptor(currentDesc)) && currentDesc.writable) {
+          return false;
+        }
+      }
+
+      return true;
+    });
+  };
+
+  var $BooleanValueOf = callBound('Boolean.prototype.valueOf'); // https://ecma-international.org/ecma-262/6.0/#sec-properties-of-the-boolean-prototype-object
+
+  var thisBooleanValue = function thisBooleanValue(value) {
+    if (Type$1(value) === 'Boolean') {
+      return value;
+    }
+
+    return $BooleanValueOf(value);
+  };
+
+  var $NumberValueOf = callBound('Number.prototype.valueOf'); // https://ecma-international.org/ecma-262/6.0/#sec-properties-of-the-number-prototype-object
+
+  var thisNumberValue = function thisNumberValue(value) {
+    if (Type$1(value) === 'Number') {
+      return value;
+    }
+
+    return $NumberValueOf(value);
+  };
+
+  var $StringValueOf = callBound('String.prototype.valueOf'); // https://ecma-international.org/ecma-262/6.0/#sec-properties-of-the-string-prototype-object
+
+  var thisStringValue = function thisStringValue(value) {
+    if (Type$1(value) === 'String') {
+      return value;
+    }
+
+    return $StringValueOf(value);
+  };
+
+  var $SymbolValueOf$1 = callBound('Symbol.prototype.valueOf', true); // https://ecma-international.org/ecma-262/9.0/#sec-thissymbolvalue
+
+  var thisSymbolValue$1 = function thisSymbolValue(value) {
+    if (!$SymbolValueOf$1) {
+      throw new SyntaxError('Symbols are not supported; thisSymbolValue requires that `value` be a Symbol or a Symbol object');
+    }
+
+    if (Type$1(value) === 'Symbol') {
+      return value;
+    }
+
+    return $SymbolValueOf$1(value);
+  };
+
+  var $DateValueOf = callBound('Date.prototype.valueOf'); // https://ecma-international.org/ecma-262/6.0/#sec-properties-of-the-date-prototype-object
+
+  var thisTimeValue = function thisTimeValue(value) {
+    return $DateValueOf(value);
+  };
+
+  var thisTimeValue$1 = thisTimeValue;
+
+  var $Date$1 = GetIntrinsic('%Date%');
+  var $Number$3 = GetIntrinsic('%Number%');
+  var $abs$2 = GetIntrinsic('%Math.abs%'); // https://ecma-international.org/ecma-262/5.1/#sec-15.9.1.14
+
+  var TimeClip = function TimeClip(time) {
+    if (!_isFinite(time) || $abs$2(time) > 8.64e15) {
+      return NaN;
+    }
+
+    return $Number$3(new $Date$1(ToNumber(time)));
+  };
+
+  var msPerDay$3 = timeConstants.msPerDay; // https://ecma-international.org/ecma-262/5.1/#sec-15.9.1.3
+
+  var TimeFromYear = function TimeFromYear(y) {
+    return msPerDay$3 * DayFromYear(y);
+  };
+
+  var $TypeError$V = GetIntrinsic('%TypeError%'); // https://www.ecma-international.org/ecma-262/9.0/#sec-timestring
+
+  var TimeString = function TimeString(tv) {
+    if (Type$1(tv) !== 'Number' || _isNaN(tv)) {
+      throw new $TypeError$V('Assertion failed: `tv` must be a non-NaN Number');
+    }
+
+    var hour = HourFromTime(tv);
+    var minute = MinFromTime(tv);
+    var second = SecFromTime(tv);
+    return padTimeComponent(hour) + ':' + padTimeComponent(minute) + ':' + padTimeComponent(second) + '\x20GMT';
+  };
+
+  var msPerDay$4 = timeConstants.msPerDay; // https://ecma-international.org/ecma-262/5.1/#sec-15.9.1.2
+
+  var TimeWithinDay = function TimeWithinDay(t) {
+    return mod(t, msPerDay$4);
+  };
+
+  var $TypeError$W = GetIntrinsic('%TypeError%');
+  var $Date$2 = GetIntrinsic('%Date%'); // https://ecma-international.org/ecma-262/6.0/#sec-todatestring
+
+  var ToDateString = function ToDateString(tv) {
+    if (Type$1(tv) !== 'Number') {
+      throw new $TypeError$W('Assertion failed: `tv` must be a Number');
+    }
+
+    if (_isNaN(tv)) {
+      return 'Invalid Date';
+    }
+
+    return $Date$2(tv);
+  };
+
+  var $RangeError$2 = GetIntrinsic('%RangeError%'); // https://www.ecma-international.org/ecma-262/8.0/#sec-toindex
+
+  var ToIndex = function ToIndex(value) {
+    if (typeof value === 'undefined') {
+      return 0;
+    }
+
+    var integerIndex = ToInteger$1(value);
+
+    if (integerIndex < 0) {
+      throw new $RangeError$2('index must be >= 0');
+    }
+
+    var index = ToLength(integerIndex);
+
+    if (!SameValueZero(integerIndex, index)) {
+      throw new $RangeError$2('index must be >= 0 and < 2 ** 53 - 1');
+    }
+
+    return index;
+  };
+
+  var $Math$3 = GetIntrinsic('%Math%');
+  var $floor$9 = $Math$3.floor;
+  var $abs$3 = $Math$3.abs; // http://www.ecma-international.org/ecma-262/5.1/#sec-9.7
+
+  var ToUint16 = function ToUint16(value) {
+    var number = ToNumber(value);
+
+    if (_isNaN(number) || number === 0 || !_isFinite(number)) {
+      return 0;
+    }
+
+    var posInt = sign(number) * $floor$9($abs$3(number));
+    return mod(posInt, 0x10000);
+  };
+
+  var ToInt16 = function ToInt16(argument) {
+    var int16bit = ToUint16(argument);
+    return int16bit >= 0x8000 ? int16bit - 0x10000 : int16bit;
+  };
+
+  var ToInt32 = function ToInt32(x) {
+    return ToNumber(x) >> 0;
+  };
+
+  var $Math$4 = GetIntrinsic('%Math%');
+  var $floor$a = $Math$4.floor;
+  var $abs$4 = $Math$4.abs;
+
+  var ToUint8 = function ToUint8(argument) {
+    var number = ToNumber(argument);
+
+    if (_isNaN(number) || number === 0 || !_isFinite(number)) {
+      return 0;
+    }
+
+    var posInt = sign(number) * $floor$a($abs$4(number));
+    return mod(posInt, 0x100);
+  };
+
+  var ToInt8 = function ToInt8(argument) {
+    var int8bit = ToUint8(argument);
+    return int8bit >= 0x80 ? int8bit - 0x100 : int8bit;
+  };
+
+  var $String$2 = GetIntrinsic('%String%'); // https://www.ecma-international.org/ecma-262/6.0/#sec-topropertykey
+
+  var ToPropertyKey = function ToPropertyKey(argument) {
+    var key = ToPrimitive(argument, $String$2);
+    return _typeof(key) === 'symbol' ? key : ToString(key);
+  };
+
+  var $Math$5 = GetIntrinsic('%Math%');
+  var $floor$b = $Math$5.floor; // https://www.ecma-international.org/ecma-262/6.0/#sec-touint8clamp
+
+  var ToUint8Clamp = function ToUint8Clamp(argument) {
+    var number = ToNumber(argument);
+
+    if (_isNaN(number) || number <= 0) {
+      return 0;
+    }
+
+    if (number >= 0xFF) {
+      return 0xFF;
+    }
+
+    var f = $floor$b(argument);
+
+    if (f + 0.5 < number) {
+      return f + 1;
+    }
+
+    if (number < f + 0.5) {
+      return f;
+    }
+
+    if (f % 2 !== 0) {
+      return f + 1;
+    }
+
+    return f;
+  };
+
+  var replace = callBind(String.prototype.replace);
+  /* eslint-disable no-control-regex */
+
+  var startWhitespace = /^[\x09\x0A\x0B\x0C\x0D\x20\xA0\u1680\u180E\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200A\u202F\u205F\u3000\u2028\u2029\uFEFF]*/;
+  /* eslint-enable no-control-regex */
+
+  var implementation$3 = function trimStart() {
+    return replace(this, startWhitespace, '');
+  };
+
+  var polyfill$2 = function getPolyfill() {
+    if (!String.prototype.trimStart && !String.prototype.trimLeft) {
+      return implementation$3;
+    }
+
+    var zeroWidthSpace = "\u200B";
+    var trimmed = zeroWidthSpace.trimStart ? zeroWidthSpace.trimStart() : zeroWidthSpace.trimLeft();
+
+    if (trimmed !== zeroWidthSpace) {
+      return implementation$3;
+    }
+
+    return String.prototype.trimStart || String.prototype.trimLeft;
+  };
+
+  var shim$1 = function shimTrimStart() {
+    var polyfill = polyfill$2();
+    defineProperties_1(String.prototype, {
+      trimStart: polyfill
+    }, {
+      trimStart: function trimStart() {
+        return String.prototype.trimStart !== polyfill;
+      }
+    });
+    return polyfill;
+  };
+
+  var bound = callBind(polyfill$2());
+  defineProperties_1(bound, {
+    getPolyfill: polyfill$2,
+    implementation: implementation$3,
+    shim: shim$1
+  });
+  var string_prototype_trimstart = bound;
+
+  var $replace$3 = callBound('String.prototype.replace');
+  /* eslint-disable no-control-regex */
+
+  var endWhitespace = /[\x09\x0A\x0B\x0C\x0D\x20\xA0\u1680\u180E\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200A\u202F\u205F\u3000\u2028\u2029\uFEFF]*$/;
+  /* eslint-enable no-control-regex */
+
+  var implementation$4 = function trimEnd() {
+    return $replace$3(this, endWhitespace, '');
+  };
+
+  var polyfill$3 = function getPolyfill() {
+    if (!String.prototype.trimEnd && !String.prototype.trimRight) {
+      return implementation$4;
+    }
+
+    var zeroWidthSpace = "\u200B";
+    var trimmed = zeroWidthSpace.trimEnd ? zeroWidthSpace.trimEnd() : zeroWidthSpace.trimRight();
+
+    if (trimmed !== zeroWidthSpace) {
+      return implementation$4;
+    }
+
+    return String.prototype.trimEnd || String.prototype.trimRight;
+  };
+
+  var shim$2 = function shimTrimEnd() {
+    var polyfill = polyfill$3();
+    defineProperties_1(String.prototype, {
+      trimEnd: polyfill
+    }, {
+      trimEnd: function trimEnd() {
+        return String.prototype.trimEnd !== polyfill;
+      }
+    });
+    return polyfill;
+  };
+
+  var bound$1 = callBind(polyfill$3());
+  defineProperties_1(bound$1, {
+    getPolyfill: polyfill$3,
+    implementation: implementation$4,
+    shim: shim$2
+  });
+  var string_prototype_trimend = bound$1;
+
+  var $TypeError$X = GetIntrinsic('%TypeError%'); // https://ecma-international.org/ecma-262/10.0/#sec-trimstring
+
+  var TrimString = function TrimString(string, where) {
+    var str = RequireObjectCoercible(string);
+    var S = ToString(str);
+    var T;
+
+    if (where === 'start') {
+      T = string_prototype_trimstart(S);
+    } else if (where === 'end') {
+      T = string_prototype_trimend(S);
+    } else if (where === 'start+end') {
+      T = string_prototype_trimstart(string_prototype_trimend(S));
+    } else {
+      throw new $TypeError$X('Assertion failed: invalid `where` value; must be "start", "end", or "start+end"');
+    }
+
+    return T;
+  };
+
+  /* eslint global-require: 0 */
+  // https://www.ecma-international.org/ecma-262/10.0/#sec-abstract-operations
+
+
+  var ES2019 = {
+    'Abstract Equality Comparison': AbstractEqualityComparison,
+    'Abstract Relational Comparison': AbstractRelationalComparison,
+    'Strict Equality Comparison': StrictEqualityComparison,
+    AddEntriesFromIterable: AddEntriesFromIterable,
+    AdvanceStringIndex: AdvanceStringIndex,
+    ArrayCreate: ArrayCreate,
+    ArraySetLength: ArraySetLength,
+    ArraySpeciesCreate: ArraySpeciesCreate,
+    Call: Call,
+    CanonicalNumericIndexString: CanonicalNumericIndexString,
+    CompletePropertyDescriptor: CompletePropertyDescriptor,
+    CopyDataProperties: CopyDataProperties,
+    CreateDataProperty: CreateDataProperty,
+    CreateDataPropertyOrThrow: CreateDataPropertyOrThrow,
+    CreateHTML: CreateHTML,
+    CreateIterResultObject: CreateIterResultObject,
+    CreateListFromArrayLike: CreateListFromArrayLike,
+    CreateMethodProperty: CreateMethodProperty,
+    DateFromTime: DateFromTime,
+    DateString: DateString,
+    Day: Day,
+    DayFromYear: DayFromYear,
+    DaysInYear: DaysInYear,
+    DayWithinYear: DayWithinYear,
+    DefinePropertyOrThrow: DefinePropertyOrThrow,
+    DeletePropertyOrThrow: DeletePropertyOrThrow,
+    EnumerableOwnPropertyNames: EnumerableOwnPropertyNames,
+    FlattenIntoArray: FlattenIntoArray,
+    FromPropertyDescriptor: FromPropertyDescriptor,
+    Get: Get,
+    GetIterator: GetIterator,
+    GetMethod: GetMethod$1,
+    GetOwnPropertyKeys: GetOwnPropertyKeys,
+    GetPrototypeFromConstructor: GetPrototypeFromConstructor,
+    GetSubstitution: GetSubstitution,
+    GetV: GetV,
+    HasOwnProperty: HasOwnProperty,
+    HasProperty: HasProperty,
+    HourFromTime: HourFromTime,
+    InLeapYear: InLeapYear,
+    InstanceofOperator: InstanceofOperator,
+    Invoke: Invoke,
+    IsAccessorDescriptor: IsAccessorDescriptor,
+    IsArray: IsArray,
+    IsCallable: IsCallable,
+    IsConcatSpreadable: IsConcatSpreadable,
+    IsConstructor: IsConstructor,
+    IsDataDescriptor: IsDataDescriptor,
+    IsExtensible: IsExtensible,
+    IsGenericDescriptor: IsGenericDescriptor,
+    IsInteger: IsInteger,
+    IsPromise: IsPromise,
+    IsPropertyKey: IsPropertyKey,
+    IsRegExp: IsRegExp,
+    IsStringPrefix: IsStringPrefix,
+    IterableToList: IterableToList,
+    IteratorClose: IteratorClose,
+    IteratorComplete: IteratorComplete,
+    IteratorNext: IteratorNext,
+    IteratorStep: IteratorStep,
+    IteratorValue: IteratorValue,
+    MakeDate: MakeDate,
+    MakeDay: MakeDay,
+    MakeTime: MakeTime,
+    MinFromTime: MinFromTime,
+    modulo: modulo,
+    MonthFromTime: MonthFromTime,
+    msFromTime: msFromTime,
+    NumberToString: NumberToString,
+    ObjectCreate: ObjectCreate,
+    OrdinaryDefineOwnProperty: OrdinaryDefineOwnProperty,
+    OrdinaryGetOwnProperty: OrdinaryGetOwnProperty,
+    OrdinaryGetPrototypeOf: OrdinaryGetPrototypeOf,
+    OrdinarySetPrototypeOf: OrdinarySetPrototypeOf,
+    OrdinaryHasInstance: OrdinaryHasInstance,
+    OrdinaryHasProperty: OrdinaryHasProperty,
+    PromiseResolve: PromiseResolve,
+    RegExpExec: RegExpExec,
+    RequireObjectCoercible: RequireObjectCoercible,
+    SameValue: SameValue,
+    SameValueNonNumber: SameValueNonNumber,
+    SameValueZero: SameValueZero,
+    SecFromTime: SecFromTime,
+    Set: _Set,
+    SetFunctionName: SetFunctionName,
+    SetIntegrityLevel: SetIntegrityLevel,
+    SpeciesConstructor: SpeciesConstructor,
+    SymbolDescriptiveString: SymbolDescriptiveString,
+    TestIntegrityLevel: TestIntegrityLevel,
+    thisBooleanValue: thisBooleanValue,
+    thisNumberValue: thisNumberValue,
+    thisStringValue: thisStringValue,
+    thisSymbolValue: thisSymbolValue$1,
+    thisTimeValue: thisTimeValue$1,
+    TimeClip: TimeClip,
+    TimeFromYear: TimeFromYear,
+    TimeString: TimeString,
+    TimeWithinDay: TimeWithinDay,
+    ToBoolean: ToBoolean,
+    ToDateString: ToDateString,
+    ToIndex: ToIndex,
+    ToInt16: ToInt16,
+    ToInt32: ToInt32,
+    ToInt8: ToInt8,
+    ToInteger: ToInteger$1,
+    ToLength: ToLength,
+    ToNumber: ToNumber,
+    ToObject: ToObject,
+    ToPrimitive: ToPrimitive,
+    ToPropertyDescriptor: ToPropertyDescriptor,
+    ToPropertyKey: ToPropertyKey,
+    ToString: ToString,
+    ToUint16: ToUint16,
+    ToUint32: ToUint32,
+    ToUint8: ToUint8,
+    ToUint8Clamp: ToUint8Clamp,
+    TrimString: TrimString,
+    Type: Type$1,
+    ValidateAndApplyPropertyDescriptor: ValidateAndApplyPropertyDescriptor,
+    WeekDay: WeekDay,
+    YearFromTime: YearFromTime
+  };
+  var es2019 = ES2019;
+
+  var BigInteger = createCommonjsModule(function (module) {
+    var bigInt = function (undefined$1) {
+
+      var BASE = 1e7,
+          LOG_BASE = 7,
+          MAX_INT = 9007199254740992,
+          MAX_INT_ARR = smallToArray(MAX_INT),
+          DEFAULT_ALPHABET = "0123456789abcdefghijklmnopqrstuvwxyz";
+      var supportsNativeBigInt = typeof BigInt === "function";
+
+      function Integer(v, radix, alphabet, caseSensitive) {
+        if (typeof v === "undefined") return Integer[0];
+        if (typeof radix !== "undefined") return +radix === 10 && !alphabet ? parseValue(v) : parseBase(v, radix, alphabet, caseSensitive);
+        return parseValue(v);
+      }
+
+      function BigInteger(value, sign) {
+        this.value = value;
+        this.sign = sign;
+        this.isSmall = false;
+      }
+
+      BigInteger.prototype = Object.create(Integer.prototype);
+
+      function SmallInteger(value) {
+        this.value = value;
+        this.sign = value < 0;
+        this.isSmall = true;
+      }
+
+      SmallInteger.prototype = Object.create(Integer.prototype);
+
+      function NativeBigInt(value) {
+        this.value = value;
+      }
+
+      NativeBigInt.prototype = Object.create(Integer.prototype);
+
+      function isPrecise(n) {
+        return -MAX_INT < n && n < MAX_INT;
+      }
+
+      function smallToArray(n) {
+        // For performance reasons doesn't reference BASE, need to change this function if BASE changes
+        if (n < 1e7) return [n];
+        if (n < 1e14) return [n % 1e7, Math.floor(n / 1e7)];
+        return [n % 1e7, Math.floor(n / 1e7) % 1e7, Math.floor(n / 1e14)];
+      }
+
+      function arrayToSmall(arr) {
+        // If BASE changes this function may need to change
+        trim(arr);
+        var length = arr.length;
+
+        if (length < 4 && compareAbs(arr, MAX_INT_ARR) < 0) {
+          switch (length) {
+            case 0:
+              return 0;
+
+            case 1:
+              return arr[0];
+
+            case 2:
+              return arr[0] + arr[1] * BASE;
+
+            default:
+              return arr[0] + (arr[1] + arr[2] * BASE) * BASE;
+          }
+        }
+
+        return arr;
+      }
+
+      function trim(v) {
+        var i = v.length;
+
+        while (v[--i] === 0) {
+        }
+
+        v.length = i + 1;
+      }
+
+      function createArray(length) {
+        // function shamelessly stolen from Yaffle's library https://github.com/Yaffle/BigInteger
+        var x = new Array(length);
+        var i = -1;
+
+        while (++i < length) {
+          x[i] = 0;
+        }
+
+        return x;
+      }
+
+      function truncate(n) {
+        if (n > 0) return Math.floor(n);
+        return Math.ceil(n);
+      }
+
+      function add(a, b) {
+        // assumes a and b are arrays with a.length >= b.length
+        var l_a = a.length,
+            l_b = b.length,
+            r = new Array(l_a),
+            carry = 0,
+            base = BASE,
+            sum,
+            i;
+
+        for (i = 0; i < l_b; i++) {
+          sum = a[i] + b[i] + carry;
+          carry = sum >= base ? 1 : 0;
+          r[i] = sum - carry * base;
+        }
+
+        while (i < l_a) {
+          sum = a[i] + carry;
+          carry = sum === base ? 1 : 0;
+          r[i++] = sum - carry * base;
+        }
+
+        if (carry > 0) r.push(carry);
+        return r;
+      }
+
+      function addAny(a, b) {
+        if (a.length >= b.length) return add(a, b);
+        return add(b, a);
+      }
+
+      function addSmall(a, carry) {
+        // assumes a is array, carry is number with 0 <= carry < MAX_INT
+        var l = a.length,
+            r = new Array(l),
+            base = BASE,
+            sum,
+            i;
+
+        for (i = 0; i < l; i++) {
+          sum = a[i] - base + carry;
+          carry = Math.floor(sum / base);
+          r[i] = sum - carry * base;
+          carry += 1;
+        }
+
+        while (carry > 0) {
+          r[i++] = carry % base;
+          carry = Math.floor(carry / base);
+        }
+
+        return r;
+      }
+
+      BigInteger.prototype.add = function (v) {
+        var n = parseValue(v);
+
+        if (this.sign !== n.sign) {
+          return this.subtract(n.negate());
+        }
+
+        var a = this.value,
+            b = n.value;
+
+        if (n.isSmall) {
+          return new BigInteger(addSmall(a, Math.abs(b)), this.sign);
+        }
+
+        return new BigInteger(addAny(a, b), this.sign);
+      };
+
+      BigInteger.prototype.plus = BigInteger.prototype.add;
+
+      SmallInteger.prototype.add = function (v) {
+        var n = parseValue(v);
+        var a = this.value;
+
+        if (a < 0 !== n.sign) {
+          return this.subtract(n.negate());
+        }
+
+        var b = n.value;
+
+        if (n.isSmall) {
+          if (isPrecise(a + b)) return new SmallInteger(a + b);
+          b = smallToArray(Math.abs(b));
+        }
+
+        return new BigInteger(addSmall(b, Math.abs(a)), a < 0);
+      };
+
+      SmallInteger.prototype.plus = SmallInteger.prototype.add;
+
+      NativeBigInt.prototype.add = function (v) {
+        return new NativeBigInt(this.value + parseValue(v).value);
+      };
+
+      NativeBigInt.prototype.plus = NativeBigInt.prototype.add;
+
+      function subtract(a, b) {
+        // assumes a and b are arrays with a >= b
+        var a_l = a.length,
+            b_l = b.length,
+            r = new Array(a_l),
+            borrow = 0,
+            base = BASE,
+            i,
+            difference;
+
+        for (i = 0; i < b_l; i++) {
+          difference = a[i] - borrow - b[i];
+
+          if (difference < 0) {
+            difference += base;
+            borrow = 1;
+          } else borrow = 0;
+
+          r[i] = difference;
+        }
+
+        for (i = b_l; i < a_l; i++) {
+          difference = a[i] - borrow;
+          if (difference < 0) difference += base;else {
+            r[i++] = difference;
+            break;
+          }
+          r[i] = difference;
+        }
+
+        for (; i < a_l; i++) {
+          r[i] = a[i];
+        }
+
+        trim(r);
+        return r;
+      }
+
+      function subtractAny(a, b, sign) {
+        var value;
+
+        if (compareAbs(a, b) >= 0) {
+          value = subtract(a, b);
+        } else {
+          value = subtract(b, a);
+          sign = !sign;
+        }
+
+        value = arrayToSmall(value);
+
+        if (typeof value === "number") {
+          if (sign) value = -value;
+          return new SmallInteger(value);
+        }
+
+        return new BigInteger(value, sign);
+      }
+
+      function subtractSmall(a, b, sign) {
+        // assumes a is array, b is number with 0 <= b < MAX_INT
+        var l = a.length,
+            r = new Array(l),
+            carry = -b,
+            base = BASE,
+            i,
+            difference;
+
+        for (i = 0; i < l; i++) {
+          difference = a[i] + carry;
+          carry = Math.floor(difference / base);
+          difference %= base;
+          r[i] = difference < 0 ? difference + base : difference;
+        }
+
+        r = arrayToSmall(r);
+
+        if (typeof r === "number") {
+          if (sign) r = -r;
+          return new SmallInteger(r);
+        }
+
+        return new BigInteger(r, sign);
+      }
+
+      BigInteger.prototype.subtract = function (v) {
+        var n = parseValue(v);
+
+        if (this.sign !== n.sign) {
+          return this.add(n.negate());
+        }
+
+        var a = this.value,
+            b = n.value;
+        if (n.isSmall) return subtractSmall(a, Math.abs(b), this.sign);
+        return subtractAny(a, b, this.sign);
+      };
+
+      BigInteger.prototype.minus = BigInteger.prototype.subtract;
+
+      SmallInteger.prototype.subtract = function (v) {
+        var n = parseValue(v);
+        var a = this.value;
+
+        if (a < 0 !== n.sign) {
+          return this.add(n.negate());
+        }
+
+        var b = n.value;
+
+        if (n.isSmall) {
+          return new SmallInteger(a - b);
+        }
+
+        return subtractSmall(b, Math.abs(a), a >= 0);
+      };
+
+      SmallInteger.prototype.minus = SmallInteger.prototype.subtract;
+
+      NativeBigInt.prototype.subtract = function (v) {
+        return new NativeBigInt(this.value - parseValue(v).value);
+      };
+
+      NativeBigInt.prototype.minus = NativeBigInt.prototype.subtract;
+
+      BigInteger.prototype.negate = function () {
+        return new BigInteger(this.value, !this.sign);
+      };
+
+      SmallInteger.prototype.negate = function () {
+        var sign = this.sign;
+        var small = new SmallInteger(-this.value);
+        small.sign = !sign;
+        return small;
+      };
+
+      NativeBigInt.prototype.negate = function () {
+        return new NativeBigInt(-this.value);
+      };
+
+      BigInteger.prototype.abs = function () {
+        return new BigInteger(this.value, false);
+      };
+
+      SmallInteger.prototype.abs = function () {
+        return new SmallInteger(Math.abs(this.value));
+      };
+
+      NativeBigInt.prototype.abs = function () {
+        return new NativeBigInt(this.value >= 0 ? this.value : -this.value);
+      };
+
+      function multiplyLong(a, b) {
+        var a_l = a.length,
+            b_l = b.length,
+            l = a_l + b_l,
+            r = createArray(l),
+            base = BASE,
+            product,
+            carry,
+            i,
+            a_i,
+            b_j;
+
+        for (i = 0; i < a_l; ++i) {
+          a_i = a[i];
+
+          for (var j = 0; j < b_l; ++j) {
+            b_j = b[j];
+            product = a_i * b_j + r[i + j];
+            carry = Math.floor(product / base);
+            r[i + j] = product - carry * base;
+            r[i + j + 1] += carry;
+          }
+        }
+
+        trim(r);
+        return r;
+      }
+
+      function multiplySmall(a, b) {
+        // assumes a is array, b is number with |b| < BASE
+        var l = a.length,
+            r = new Array(l),
+            base = BASE,
+            carry = 0,
+            product,
+            i;
+
+        for (i = 0; i < l; i++) {
+          product = a[i] * b + carry;
+          carry = Math.floor(product / base);
+          r[i] = product - carry * base;
+        }
+
+        while (carry > 0) {
+          r[i++] = carry % base;
+          carry = Math.floor(carry / base);
+        }
+
+        return r;
+      }
+
+      function shiftLeft(x, n) {
+        var r = [];
+
+        while (n-- > 0) {
+          r.push(0);
+        }
+
+        return r.concat(x);
+      }
+
+      function multiplyKaratsuba(x, y) {
+        var n = Math.max(x.length, y.length);
+        if (n <= 30) return multiplyLong(x, y);
+        n = Math.ceil(n / 2);
+        var b = x.slice(n),
+            a = x.slice(0, n),
+            d = y.slice(n),
+            c = y.slice(0, n);
+        var ac = multiplyKaratsuba(a, c),
+            bd = multiplyKaratsuba(b, d),
+            abcd = multiplyKaratsuba(addAny(a, b), addAny(c, d));
+        var product = addAny(addAny(ac, shiftLeft(subtract(subtract(abcd, ac), bd), n)), shiftLeft(bd, 2 * n));
+        trim(product);
+        return product;
+      } // The following function is derived from a surface fit of a graph plotting the performance difference
+      // between long multiplication and karatsuba multiplication versus the lengths of the two arrays.
+
+
+      function useKaratsuba(l1, l2) {
+        return -0.012 * l1 - 0.012 * l2 + 0.000015 * l1 * l2 > 0;
+      }
+
+      BigInteger.prototype.multiply = function (v) {
+        var n = parseValue(v),
+            a = this.value,
+            b = n.value,
+            sign = this.sign !== n.sign,
+            abs;
+
+        if (n.isSmall) {
+          if (b === 0) return Integer[0];
+          if (b === 1) return this;
+          if (b === -1) return this.negate();
+          abs = Math.abs(b);
+
+          if (abs < BASE) {
+            return new BigInteger(multiplySmall(a, abs), sign);
+          }
+
+          b = smallToArray(abs);
+        }
+
+        if (useKaratsuba(a.length, b.length)) // Karatsuba is only faster for certain array sizes
+          return new BigInteger(multiplyKaratsuba(a, b), sign);
+        return new BigInteger(multiplyLong(a, b), sign);
+      };
+
+      BigInteger.prototype.times = BigInteger.prototype.multiply;
+
+      function multiplySmallAndArray(a, b, sign) {
+        // a >= 0
+        if (a < BASE) {
+          return new BigInteger(multiplySmall(b, a), sign);
+        }
+
+        return new BigInteger(multiplyLong(b, smallToArray(a)), sign);
+      }
+
+      SmallInteger.prototype._multiplyBySmall = function (a) {
+        if (isPrecise(a.value * this.value)) {
+          return new SmallInteger(a.value * this.value);
+        }
+
+        return multiplySmallAndArray(Math.abs(a.value), smallToArray(Math.abs(this.value)), this.sign !== a.sign);
+      };
+
+      BigInteger.prototype._multiplyBySmall = function (a) {
+        if (a.value === 0) return Integer[0];
+        if (a.value === 1) return this;
+        if (a.value === -1) return this.negate();
+        return multiplySmallAndArray(Math.abs(a.value), this.value, this.sign !== a.sign);
+      };
+
+      SmallInteger.prototype.multiply = function (v) {
+        return parseValue(v)._multiplyBySmall(this);
+      };
+
+      SmallInteger.prototype.times = SmallInteger.prototype.multiply;
+
+      NativeBigInt.prototype.multiply = function (v) {
+        return new NativeBigInt(this.value * parseValue(v).value);
+      };
+
+      NativeBigInt.prototype.times = NativeBigInt.prototype.multiply;
+
+      function square(a) {
+        //console.assert(2 * BASE * BASE < MAX_INT);
+        var l = a.length,
+            r = createArray(l + l),
+            base = BASE,
+            product,
+            carry,
+            i,
+            a_i,
+            a_j;
+
+        for (i = 0; i < l; i++) {
+          a_i = a[i];
+          carry = 0 - a_i * a_i;
+
+          for (var j = i; j < l; j++) {
+            a_j = a[j];
+            product = 2 * (a_i * a_j) + r[i + j] + carry;
+            carry = Math.floor(product / base);
+            r[i + j] = product - carry * base;
+          }
+
+          r[i + l] = carry;
+        }
+
+        trim(r);
+        return r;
+      }
+
+      BigInteger.prototype.square = function () {
+        return new BigInteger(square(this.value), false);
+      };
+
+      SmallInteger.prototype.square = function () {
+        var value = this.value * this.value;
+        if (isPrecise(value)) return new SmallInteger(value);
+        return new BigInteger(square(smallToArray(Math.abs(this.value))), false);
+      };
+
+      NativeBigInt.prototype.square = function (v) {
+        return new NativeBigInt(this.value * this.value);
+      };
+
+      function divMod1(a, b) {
+        // Left over from previous version. Performs faster than divMod2 on smaller input sizes.
+        var a_l = a.length,
+            b_l = b.length,
+            base = BASE,
+            result = createArray(b.length),
+            divisorMostSignificantDigit = b[b_l - 1],
+            // normalization
+        lambda = Math.ceil(base / (2 * divisorMostSignificantDigit)),
+            remainder = multiplySmall(a, lambda),
+            divisor = multiplySmall(b, lambda),
+            quotientDigit,
+            shift,
+            carry,
+            borrow,
+            i,
+            l,
+            q;
+        if (remainder.length <= a_l) remainder.push(0);
+        divisor.push(0);
+        divisorMostSignificantDigit = divisor[b_l - 1];
+
+        for (shift = a_l - b_l; shift >= 0; shift--) {
+          quotientDigit = base - 1;
+
+          if (remainder[shift + b_l] !== divisorMostSignificantDigit) {
+            quotientDigit = Math.floor((remainder[shift + b_l] * base + remainder[shift + b_l - 1]) / divisorMostSignificantDigit);
+          } // quotientDigit <= base - 1
+
+
+          carry = 0;
+          borrow = 0;
+          l = divisor.length;
+
+          for (i = 0; i < l; i++) {
+            carry += quotientDigit * divisor[i];
+            q = Math.floor(carry / base);
+            borrow += remainder[shift + i] - (carry - q * base);
+            carry = q;
+
+            if (borrow < 0) {
+              remainder[shift + i] = borrow + base;
+              borrow = -1;
+            } else {
+              remainder[shift + i] = borrow;
+              borrow = 0;
+            }
+          }
+
+          while (borrow !== 0) {
+            quotientDigit -= 1;
+            carry = 0;
+
+            for (i = 0; i < l; i++) {
+              carry += remainder[shift + i] - base + divisor[i];
+
+              if (carry < 0) {
+                remainder[shift + i] = carry + base;
+                carry = 0;
+              } else {
+                remainder[shift + i] = carry;
+                carry = 1;
+              }
+            }
+
+            borrow += carry;
+          }
+
+          result[shift] = quotientDigit;
+        } // denormalization
+
+
+        remainder = divModSmall(remainder, lambda)[0];
+        return [arrayToSmall(result), arrayToSmall(remainder)];
+      }
+
+      function divMod2(a, b) {
+        // Implementation idea shamelessly stolen from Silent Matt's library http://silentmatt.com/biginteger/
+        // Performs faster than divMod1 on larger input sizes.
+        var a_l = a.length,
+            b_l = b.length,
+            result = [],
+            part = [],
+            base = BASE,
+            guess,
+            xlen,
+            highx,
+            highy,
+            check;
+
+        while (a_l) {
+          part.unshift(a[--a_l]);
+          trim(part);
+
+          if (compareAbs(part, b) < 0) {
+            result.push(0);
+            continue;
+          }
+
+          xlen = part.length;
+          highx = part[xlen - 1] * base + part[xlen - 2];
+          highy = b[b_l - 1] * base + b[b_l - 2];
+
+          if (xlen > b_l) {
+            highx = (highx + 1) * base;
+          }
+
+          guess = Math.ceil(highx / highy);
+
+          do {
+            check = multiplySmall(b, guess);
+            if (compareAbs(check, part) <= 0) break;
+            guess--;
+          } while (guess);
+
+          result.push(guess);
+          part = subtract(part, check);
+        }
+
+        result.reverse();
+        return [arrayToSmall(result), arrayToSmall(part)];
+      }
+
+      function divModSmall(value, lambda) {
+        var length = value.length,
+            quotient = createArray(length),
+            base = BASE,
+            i,
+            q,
+            remainder,
+            divisor;
+        remainder = 0;
+
+        for (i = length - 1; i >= 0; --i) {
+          divisor = remainder * base + value[i];
+          q = truncate(divisor / lambda);
+          remainder = divisor - q * lambda;
+          quotient[i] = q | 0;
+        }
+
+        return [quotient, remainder | 0];
+      }
+
+      function divModAny(self, v) {
+        var value,
+            n = parseValue(v);
+
+        if (supportsNativeBigInt) {
+          return [new NativeBigInt(self.value / n.value), new NativeBigInt(self.value % n.value)];
+        }
+
+        var a = self.value,
+            b = n.value;
+        var quotient;
+        if (b === 0) throw new Error("Cannot divide by zero");
+
+        if (self.isSmall) {
+          if (n.isSmall) {
+            return [new SmallInteger(truncate(a / b)), new SmallInteger(a % b)];
+          }
+
+          return [Integer[0], self];
+        }
+
+        if (n.isSmall) {
+          if (b === 1) return [self, Integer[0]];
+          if (b == -1) return [self.negate(), Integer[0]];
+          var abs = Math.abs(b);
+
+          if (abs < BASE) {
+            value = divModSmall(a, abs);
+            quotient = arrayToSmall(value[0]);
+            var remainder = value[1];
+            if (self.sign) remainder = -remainder;
+
+            if (typeof quotient === "number") {
+              if (self.sign !== n.sign) quotient = -quotient;
+              return [new SmallInteger(quotient), new SmallInteger(remainder)];
+            }
+
+            return [new BigInteger(quotient, self.sign !== n.sign), new SmallInteger(remainder)];
+          }
+
+          b = smallToArray(abs);
+        }
+
+        var comparison = compareAbs(a, b);
+        if (comparison === -1) return [Integer[0], self];
+        if (comparison === 0) return [Integer[self.sign === n.sign ? 1 : -1], Integer[0]]; // divMod1 is faster on smaller input sizes
+
+        if (a.length + b.length <= 200) value = divMod1(a, b);else value = divMod2(a, b);
+        quotient = value[0];
+        var qSign = self.sign !== n.sign,
+            mod = value[1],
+            mSign = self.sign;
+
+        if (typeof quotient === "number") {
+          if (qSign) quotient = -quotient;
+          quotient = new SmallInteger(quotient);
+        } else quotient = new BigInteger(quotient, qSign);
+
+        if (typeof mod === "number") {
+          if (mSign) mod = -mod;
+          mod = new SmallInteger(mod);
+        } else mod = new BigInteger(mod, mSign);
+
+        return [quotient, mod];
+      }
+
+      BigInteger.prototype.divmod = function (v) {
+        var result = divModAny(this, v);
+        return {
+          quotient: result[0],
+          remainder: result[1]
+        };
+      };
+
+      NativeBigInt.prototype.divmod = SmallInteger.prototype.divmod = BigInteger.prototype.divmod;
+
+      BigInteger.prototype.divide = function (v) {
+        return divModAny(this, v)[0];
+      };
+
+      NativeBigInt.prototype.over = NativeBigInt.prototype.divide = function (v) {
+        return new NativeBigInt(this.value / parseValue(v).value);
+      };
+
+      SmallInteger.prototype.over = SmallInteger.prototype.divide = BigInteger.prototype.over = BigInteger.prototype.divide;
+
+      BigInteger.prototype.mod = function (v) {
+        return divModAny(this, v)[1];
+      };
+
+      NativeBigInt.prototype.mod = NativeBigInt.prototype.remainder = function (v) {
+        return new NativeBigInt(this.value % parseValue(v).value);
+      };
+
+      SmallInteger.prototype.remainder = SmallInteger.prototype.mod = BigInteger.prototype.remainder = BigInteger.prototype.mod;
+
+      BigInteger.prototype.pow = function (v) {
+        var n = parseValue(v),
+            a = this.value,
+            b = n.value,
+            value,
+            x,
+            y;
+        if (b === 0) return Integer[1];
+        if (a === 0) return Integer[0];
+        if (a === 1) return Integer[1];
+        if (a === -1) return n.isEven() ? Integer[1] : Integer[-1];
+
+        if (n.sign) {
+          return Integer[0];
+        }
+
+        if (!n.isSmall) throw new Error("The exponent " + n.toString() + " is too large.");
+
+        if (this.isSmall) {
+          if (isPrecise(value = Math.pow(a, b))) return new SmallInteger(truncate(value));
+        }
+
+        x = this;
+        y = Integer[1];
+
+        while (true) {
+          if (b & 1 === 1) {
+            y = y.times(x);
+            --b;
+          }
+
+          if (b === 0) break;
+          b /= 2;
+          x = x.square();
+        }
+
+        return y;
+      };
+
+      SmallInteger.prototype.pow = BigInteger.prototype.pow;
+
+      NativeBigInt.prototype.pow = function (v) {
+        var n = parseValue(v);
+        var a = this.value,
+            b = n.value;
+
+        var _0 = BigInt(0),
+            _1 = BigInt(1),
+            _2 = BigInt(2);
+
+        if (b === _0) return Integer[1];
+        if (a === _0) return Integer[0];
+        if (a === _1) return Integer[1];
+        if (a === BigInt(-1)) return n.isEven() ? Integer[1] : Integer[-1];
+        if (n.isNegative()) return new NativeBigInt(_0);
+        var x = this;
+        var y = Integer[1];
+
+        while (true) {
+          if ((b & _1) === _1) {
+            y = y.times(x);
+            --b;
+          }
+
+          if (b === _0) break;
+          b /= _2;
+          x = x.square();
+        }
+
+        return y;
+      };
+
+      BigInteger.prototype.modPow = function (exp, mod) {
+        exp = parseValue(exp);
+        mod = parseValue(mod);
+        if (mod.isZero()) throw new Error("Cannot take modPow with modulus 0");
+        var r = Integer[1],
+            base = this.mod(mod);
+
+        if (exp.isNegative()) {
+          exp = exp.multiply(Integer[-1]);
+          base = base.modInv(mod);
+        }
+
+        while (exp.isPositive()) {
+          if (base.isZero()) return Integer[0];
+          if (exp.isOdd()) r = r.multiply(base).mod(mod);
+          exp = exp.divide(2);
+          base = base.square().mod(mod);
+        }
+
+        return r;
+      };
+
+      NativeBigInt.prototype.modPow = SmallInteger.prototype.modPow = BigInteger.prototype.modPow;
+
+      function compareAbs(a, b) {
+        if (a.length !== b.length) {
+          return a.length > b.length ? 1 : -1;
+        }
+
+        for (var i = a.length - 1; i >= 0; i--) {
+          if (a[i] !== b[i]) return a[i] > b[i] ? 1 : -1;
+        }
+
+        return 0;
+      }
+
+      BigInteger.prototype.compareAbs = function (v) {
+        var n = parseValue(v),
+            a = this.value,
+            b = n.value;
+        if (n.isSmall) return 1;
+        return compareAbs(a, b);
+      };
+
+      SmallInteger.prototype.compareAbs = function (v) {
+        var n = parseValue(v),
+            a = Math.abs(this.value),
+            b = n.value;
+
+        if (n.isSmall) {
+          b = Math.abs(b);
+          return a === b ? 0 : a > b ? 1 : -1;
+        }
+
+        return -1;
+      };
+
+      NativeBigInt.prototype.compareAbs = function (v) {
+        var a = this.value;
+        var b = parseValue(v).value;
+        a = a >= 0 ? a : -a;
+        b = b >= 0 ? b : -b;
+        return a === b ? 0 : a > b ? 1 : -1;
+      };
+
+      BigInteger.prototype.compare = function (v) {
+        // See discussion about comparison with Infinity:
+        // https://github.com/peterolson/BigInteger.js/issues/61
+        if (v === Infinity) {
+          return -1;
+        }
+
+        if (v === -Infinity) {
+          return 1;
+        }
+
+        var n = parseValue(v),
+            a = this.value,
+            b = n.value;
+
+        if (this.sign !== n.sign) {
+          return n.sign ? 1 : -1;
+        }
+
+        if (n.isSmall) {
+          return this.sign ? -1 : 1;
+        }
+
+        return compareAbs(a, b) * (this.sign ? -1 : 1);
+      };
+
+      BigInteger.prototype.compareTo = BigInteger.prototype.compare;
+
+      SmallInteger.prototype.compare = function (v) {
+        if (v === Infinity) {
+          return -1;
+        }
+
+        if (v === -Infinity) {
+          return 1;
+        }
+
+        var n = parseValue(v),
+            a = this.value,
+            b = n.value;
+
+        if (n.isSmall) {
+          return a == b ? 0 : a > b ? 1 : -1;
+        }
+
+        if (a < 0 !== n.sign) {
+          return a < 0 ? -1 : 1;
+        }
+
+        return a < 0 ? 1 : -1;
+      };
+
+      SmallInteger.prototype.compareTo = SmallInteger.prototype.compare;
+
+      NativeBigInt.prototype.compare = function (v) {
+        if (v === Infinity) {
+          return -1;
+        }
+
+        if (v === -Infinity) {
+          return 1;
+        }
+
+        var a = this.value;
+        var b = parseValue(v).value;
+        return a === b ? 0 : a > b ? 1 : -1;
+      };
+
+      NativeBigInt.prototype.compareTo = NativeBigInt.prototype.compare;
+
+      BigInteger.prototype.equals = function (v) {
+        return this.compare(v) === 0;
+      };
+
+      NativeBigInt.prototype.eq = NativeBigInt.prototype.equals = SmallInteger.prototype.eq = SmallInteger.prototype.equals = BigInteger.prototype.eq = BigInteger.prototype.equals;
+
+      BigInteger.prototype.notEquals = function (v) {
+        return this.compare(v) !== 0;
+      };
+
+      NativeBigInt.prototype.neq = NativeBigInt.prototype.notEquals = SmallInteger.prototype.neq = SmallInteger.prototype.notEquals = BigInteger.prototype.neq = BigInteger.prototype.notEquals;
+
+      BigInteger.prototype.greater = function (v) {
+        return this.compare(v) > 0;
+      };
+
+      NativeBigInt.prototype.gt = NativeBigInt.prototype.greater = SmallInteger.prototype.gt = SmallInteger.prototype.greater = BigInteger.prototype.gt = BigInteger.prototype.greater;
+
+      BigInteger.prototype.lesser = function (v) {
+        return this.compare(v) < 0;
+      };
+
+      NativeBigInt.prototype.lt = NativeBigInt.prototype.lesser = SmallInteger.prototype.lt = SmallInteger.prototype.lesser = BigInteger.prototype.lt = BigInteger.prototype.lesser;
+
+      BigInteger.prototype.greaterOrEquals = function (v) {
+        return this.compare(v) >= 0;
+      };
+
+      NativeBigInt.prototype.geq = NativeBigInt.prototype.greaterOrEquals = SmallInteger.prototype.geq = SmallInteger.prototype.greaterOrEquals = BigInteger.prototype.geq = BigInteger.prototype.greaterOrEquals;
+
+      BigInteger.prototype.lesserOrEquals = function (v) {
+        return this.compare(v) <= 0;
+      };
+
+      NativeBigInt.prototype.leq = NativeBigInt.prototype.lesserOrEquals = SmallInteger.prototype.leq = SmallInteger.prototype.lesserOrEquals = BigInteger.prototype.leq = BigInteger.prototype.lesserOrEquals;
+
+      BigInteger.prototype.isEven = function () {
+        return (this.value[0] & 1) === 0;
+      };
+
+      SmallInteger.prototype.isEven = function () {
+        return (this.value & 1) === 0;
+      };
+
+      NativeBigInt.prototype.isEven = function () {
+        return (this.value & BigInt(1)) === BigInt(0);
+      };
+
+      BigInteger.prototype.isOdd = function () {
+        return (this.value[0] & 1) === 1;
+      };
+
+      SmallInteger.prototype.isOdd = function () {
+        return (this.value & 1) === 1;
+      };
+
+      NativeBigInt.prototype.isOdd = function () {
+        return (this.value & BigInt(1)) === BigInt(1);
+      };
+
+      BigInteger.prototype.isPositive = function () {
+        return !this.sign;
+      };
+
+      SmallInteger.prototype.isPositive = function () {
+        return this.value > 0;
+      };
+
+      NativeBigInt.prototype.isPositive = SmallInteger.prototype.isPositive;
+
+      BigInteger.prototype.isNegative = function () {
+        return this.sign;
+      };
+
+      SmallInteger.prototype.isNegative = function () {
+        return this.value < 0;
+      };
+
+      NativeBigInt.prototype.isNegative = SmallInteger.prototype.isNegative;
+
+      BigInteger.prototype.isUnit = function () {
+        return false;
+      };
+
+      SmallInteger.prototype.isUnit = function () {
+        return Math.abs(this.value) === 1;
+      };
+
+      NativeBigInt.prototype.isUnit = function () {
+        return this.abs().value === BigInt(1);
+      };
+
+      BigInteger.prototype.isZero = function () {
+        return false;
+      };
+
+      SmallInteger.prototype.isZero = function () {
+        return this.value === 0;
+      };
+
+      NativeBigInt.prototype.isZero = function () {
+        return this.value === BigInt(0);
+      };
+
+      BigInteger.prototype.isDivisibleBy = function (v) {
+        var n = parseValue(v);
+        if (n.isZero()) return false;
+        if (n.isUnit()) return true;
+        if (n.compareAbs(2) === 0) return this.isEven();
+        return this.mod(n).isZero();
+      };
+
+      NativeBigInt.prototype.isDivisibleBy = SmallInteger.prototype.isDivisibleBy = BigInteger.prototype.isDivisibleBy;
+
+      function isBasicPrime(v) {
+        var n = v.abs();
+        if (n.isUnit()) return false;
+        if (n.equals(2) || n.equals(3) || n.equals(5)) return true;
+        if (n.isEven() || n.isDivisibleBy(3) || n.isDivisibleBy(5)) return false;
+        if (n.lesser(49)) return true; // we don't know if it's prime: let the other functions figure it out
+      }
+
+      function millerRabinTest(n, a) {
+        var nPrev = n.prev(),
+            b = nPrev,
+            r = 0,
+            d,
+            i,
+            x;
+
+        while (b.isEven()) {
+          b = b.divide(2), r++;
+        }
+
+        next: for (i = 0; i < a.length; i++) {
+          if (n.lesser(a[i])) continue;
+          x = bigInt(a[i]).modPow(b, n);
+          if (x.isUnit() || x.equals(nPrev)) continue;
+
+          for (d = r - 1; d != 0; d--) {
+            x = x.square().mod(n);
+            if (x.isUnit()) return false;
+            if (x.equals(nPrev)) continue next;
+          }
+
+          return false;
+        }
+
+        return true;
+      } // Set "strict" to true to force GRH-supported lower bound of 2*log(N)^2
+
+
+      BigInteger.prototype.isPrime = function (strict) {
+        var isPrime = isBasicPrime(this);
+        if (isPrime !== undefined$1) return isPrime;
+        var n = this.abs();
+        var bits = n.bitLength();
+        if (bits <= 64) return millerRabinTest(n, [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37]);
+        var logN = Math.log(2) * bits.toJSNumber();
+        var t = Math.ceil(strict === true ? 2 * Math.pow(logN, 2) : logN);
+
+        for (var a = [], i = 0; i < t; i++) {
+          a.push(bigInt(i + 2));
+        }
+
+        return millerRabinTest(n, a);
+      };
+
+      NativeBigInt.prototype.isPrime = SmallInteger.prototype.isPrime = BigInteger.prototype.isPrime;
+
+      BigInteger.prototype.isProbablePrime = function (iterations, rng) {
+        var isPrime = isBasicPrime(this);
+        if (isPrime !== undefined$1) return isPrime;
+        var n = this.abs();
+        var t = iterations === undefined$1 ? 5 : iterations;
+
+        for (var a = [], i = 0; i < t; i++) {
+          a.push(bigInt.randBetween(2, n.minus(2), rng));
+        }
+
+        return millerRabinTest(n, a);
+      };
+
+      NativeBigInt.prototype.isProbablePrime = SmallInteger.prototype.isProbablePrime = BigInteger.prototype.isProbablePrime;
+
+      BigInteger.prototype.modInv = function (n) {
+        var t = bigInt.zero,
+            newT = bigInt.one,
+            r = parseValue(n),
+            newR = this.abs(),
+            q,
+            lastT,
+            lastR;
+
+        while (!newR.isZero()) {
+          q = r.divide(newR);
+          lastT = t;
+          lastR = r;
+          t = newT;
+          r = newR;
+          newT = lastT.subtract(q.multiply(newT));
+          newR = lastR.subtract(q.multiply(newR));
+        }
+
+        if (!r.isUnit()) throw new Error(this.toString() + " and " + n.toString() + " are not co-prime");
+
+        if (t.compare(0) === -1) {
+          t = t.add(n);
+        }
+
+        if (this.isNegative()) {
+          return t.negate();
+        }
+
+        return t;
+      };
+
+      NativeBigInt.prototype.modInv = SmallInteger.prototype.modInv = BigInteger.prototype.modInv;
+
+      BigInteger.prototype.next = function () {
+        var value = this.value;
+
+        if (this.sign) {
+          return subtractSmall(value, 1, this.sign);
+        }
+
+        return new BigInteger(addSmall(value, 1), this.sign);
+      };
+
+      SmallInteger.prototype.next = function () {
+        var value = this.value;
+        if (value + 1 < MAX_INT) return new SmallInteger(value + 1);
+        return new BigInteger(MAX_INT_ARR, false);
+      };
+
+      NativeBigInt.prototype.next = function () {
+        return new NativeBigInt(this.value + BigInt(1));
+      };
+
+      BigInteger.prototype.prev = function () {
+        var value = this.value;
+
+        if (this.sign) {
+          return new BigInteger(addSmall(value, 1), true);
+        }
+
+        return subtractSmall(value, 1, this.sign);
+      };
+
+      SmallInteger.prototype.prev = function () {
+        var value = this.value;
+        if (value - 1 > -MAX_INT) return new SmallInteger(value - 1);
+        return new BigInteger(MAX_INT_ARR, true);
+      };
+
+      NativeBigInt.prototype.prev = function () {
+        return new NativeBigInt(this.value - BigInt(1));
+      };
+
+      var powersOfTwo = [1];
+
+      while (2 * powersOfTwo[powersOfTwo.length - 1] <= BASE) {
+        powersOfTwo.push(2 * powersOfTwo[powersOfTwo.length - 1]);
+      }
+
+      var powers2Length = powersOfTwo.length,
+          highestPower2 = powersOfTwo[powers2Length - 1];
+
+      function shift_isSmall(n) {
+        return Math.abs(n) <= BASE;
+      }
+
+      BigInteger.prototype.shiftLeft = function (v) {
+        var n = parseValue(v).toJSNumber();
+
+        if (!shift_isSmall(n)) {
+          throw new Error(String(n) + " is too large for shifting.");
+        }
+
+        if (n < 0) return this.shiftRight(-n);
+        var result = this;
+        if (result.isZero()) return result;
+
+        while (n >= powers2Length) {
+          result = result.multiply(highestPower2);
+          n -= powers2Length - 1;
+        }
+
+        return result.multiply(powersOfTwo[n]);
+      };
+
+      NativeBigInt.prototype.shiftLeft = SmallInteger.prototype.shiftLeft = BigInteger.prototype.shiftLeft;
+
+      BigInteger.prototype.shiftRight = function (v) {
+        var remQuo;
+        var n = parseValue(v).toJSNumber();
+
+        if (!shift_isSmall(n)) {
+          throw new Error(String(n) + " is too large for shifting.");
+        }
+
+        if (n < 0) return this.shiftLeft(-n);
+        var result = this;
+
+        while (n >= powers2Length) {
+          if (result.isZero() || result.isNegative() && result.isUnit()) return result;
+          remQuo = divModAny(result, highestPower2);
+          result = remQuo[1].isNegative() ? remQuo[0].prev() : remQuo[0];
+          n -= powers2Length - 1;
+        }
+
+        remQuo = divModAny(result, powersOfTwo[n]);
+        return remQuo[1].isNegative() ? remQuo[0].prev() : remQuo[0];
+      };
+
+      NativeBigInt.prototype.shiftRight = SmallInteger.prototype.shiftRight = BigInteger.prototype.shiftRight;
+
+      function bitwise(x, y, fn) {
+        y = parseValue(y);
+        var xSign = x.isNegative(),
+            ySign = y.isNegative();
+        var xRem = xSign ? x.not() : x,
+            yRem = ySign ? y.not() : y;
+        var xDigit = 0,
+            yDigit = 0;
+        var xDivMod = null,
+            yDivMod = null;
+        var result = [];
+
+        while (!xRem.isZero() || !yRem.isZero()) {
+          xDivMod = divModAny(xRem, highestPower2);
+          xDigit = xDivMod[1].toJSNumber();
+
+          if (xSign) {
+            xDigit = highestPower2 - 1 - xDigit; // two's complement for negative numbers
+          }
+
+          yDivMod = divModAny(yRem, highestPower2);
+          yDigit = yDivMod[1].toJSNumber();
+
+          if (ySign) {
+            yDigit = highestPower2 - 1 - yDigit; // two's complement for negative numbers
+          }
+
+          xRem = xDivMod[0];
+          yRem = yDivMod[0];
+          result.push(fn(xDigit, yDigit));
+        }
+
+        var sum = fn(xSign ? 1 : 0, ySign ? 1 : 0) !== 0 ? bigInt(-1) : bigInt(0);
+
+        for (var i = result.length - 1; i >= 0; i -= 1) {
+          sum = sum.multiply(highestPower2).add(bigInt(result[i]));
+        }
+
+        return sum;
+      }
+
+      BigInteger.prototype.not = function () {
+        return this.negate().prev();
+      };
+
+      NativeBigInt.prototype.not = SmallInteger.prototype.not = BigInteger.prototype.not;
+
+      BigInteger.prototype.and = function (n) {
+        return bitwise(this, n, function (a, b) {
+          return a & b;
+        });
+      };
+
+      NativeBigInt.prototype.and = SmallInteger.prototype.and = BigInteger.prototype.and;
+
+      BigInteger.prototype.or = function (n) {
+        return bitwise(this, n, function (a, b) {
+          return a | b;
+        });
+      };
+
+      NativeBigInt.prototype.or = SmallInteger.prototype.or = BigInteger.prototype.or;
+
+      BigInteger.prototype.xor = function (n) {
+        return bitwise(this, n, function (a, b) {
+          return a ^ b;
+        });
+      };
+
+      NativeBigInt.prototype.xor = SmallInteger.prototype.xor = BigInteger.prototype.xor;
+      var LOBMASK_I = 1 << 30,
+          LOBMASK_BI = (BASE & -BASE) * (BASE & -BASE) | LOBMASK_I;
+
+      function roughLOB(n) {
+        // get lowestOneBit (rough)
+        // SmallInteger: return Min(lowestOneBit(n), 1 << 30)
+        // BigInteger: return Min(lowestOneBit(n), 1 << 14) [BASE=1e7]
+        var v = n.value,
+            x = typeof v === "number" ? v | LOBMASK_I : typeof v === "bigint" ? v | BigInt(LOBMASK_I) : v[0] + v[1] * BASE | LOBMASK_BI;
+        return x & -x;
+      }
+
+      function integerLogarithm(value, base) {
+        if (base.compareTo(value) <= 0) {
+          var tmp = integerLogarithm(value, base.square(base));
+          var p = tmp.p;
+          var e = tmp.e;
+          var t = p.multiply(base);
+          return t.compareTo(value) <= 0 ? {
+            p: t,
+            e: e * 2 + 1
+          } : {
+            p: p,
+            e: e * 2
+          };
+        }
+
+        return {
+          p: bigInt(1),
+          e: 0
+        };
+      }
+
+      BigInteger.prototype.bitLength = function () {
+        var n = this;
+
+        if (n.compareTo(bigInt(0)) < 0) {
+          n = n.negate().subtract(bigInt(1));
+        }
+
+        if (n.compareTo(bigInt(0)) === 0) {
+          return bigInt(0);
+        }
+
+        return bigInt(integerLogarithm(n, bigInt(2)).e).add(bigInt(1));
+      };
+
+      NativeBigInt.prototype.bitLength = SmallInteger.prototype.bitLength = BigInteger.prototype.bitLength;
+
+      function max(a, b) {
+        a = parseValue(a);
+        b = parseValue(b);
+        return a.greater(b) ? a : b;
+      }
+
+      function min(a, b) {
+        a = parseValue(a);
+        b = parseValue(b);
+        return a.lesser(b) ? a : b;
+      }
+
+      function gcd(a, b) {
+        a = parseValue(a).abs();
+        b = parseValue(b).abs();
+        if (a.equals(b)) return a;
+        if (a.isZero()) return b;
+        if (b.isZero()) return a;
+        var c = Integer[1],
+            d,
+            t;
+
+        while (a.isEven() && b.isEven()) {
+          d = min(roughLOB(a), roughLOB(b));
+          a = a.divide(d);
+          b = b.divide(d);
+          c = c.multiply(d);
+        }
+
+        while (a.isEven()) {
+          a = a.divide(roughLOB(a));
+        }
+
+        do {
+          while (b.isEven()) {
+            b = b.divide(roughLOB(b));
+          }
+
+          if (a.greater(b)) {
+            t = b;
+            b = a;
+            a = t;
+          }
+
+          b = b.subtract(a);
+        } while (!b.isZero());
+
+        return c.isUnit() ? a : a.multiply(c);
+      }
+
+      function lcm(a, b) {
+        a = parseValue(a).abs();
+        b = parseValue(b).abs();
+        return a.divide(gcd(a, b)).multiply(b);
+      }
+
+      function randBetween(a, b, rng) {
+        a = parseValue(a);
+        b = parseValue(b);
+        var usedRNG = rng || Math.random;
+        var low = min(a, b),
+            high = max(a, b);
+        var range = high.subtract(low).add(1);
+        if (range.isSmall) return low.add(Math.floor(usedRNG() * range));
+        var digits = toBase(range, BASE).value;
+        var result = [],
+            restricted = true;
+
+        for (var i = 0; i < digits.length; i++) {
+          var top = restricted ? digits[i] : BASE;
+          var digit = truncate(usedRNG() * top);
+          result.push(digit);
+          if (digit < top) restricted = false;
+        }
+
+        return low.add(Integer.fromArray(result, BASE, false));
+      }
+
+      var parseBase = function parseBase(text, base, alphabet, caseSensitive) {
+        alphabet = alphabet || DEFAULT_ALPHABET;
+        text = String(text);
+
+        if (!caseSensitive) {
+          text = text.toLowerCase();
+          alphabet = alphabet.toLowerCase();
+        }
+
+        var length = text.length;
+        var i;
+        var absBase = Math.abs(base);
+        var alphabetValues = {};
+
+        for (i = 0; i < alphabet.length; i++) {
+          alphabetValues[alphabet[i]] = i;
+        }
+
+        for (i = 0; i < length; i++) {
+          var c = text[i];
+          if (c === "-") continue;
+
+          if (c in alphabetValues) {
+            if (alphabetValues[c] >= absBase) {
+              if (c === "1" && absBase === 1) continue;
+              throw new Error(c + " is not a valid digit in base " + base + ".");
+            }
+          }
+        }
+
+        base = parseValue(base);
+        var digits = [];
+        var isNegative = text[0] === "-";
+
+        for (i = isNegative ? 1 : 0; i < text.length; i++) {
+          var c = text[i];
+          if (c in alphabetValues) digits.push(parseValue(alphabetValues[c]));else if (c === "<") {
+            var start = i;
+
+            do {
+              i++;
+            } while (text[i] !== ">" && i < text.length);
+
+            digits.push(parseValue(text.slice(start + 1, i)));
+          } else throw new Error(c + " is not a valid character");
+        }
+
+        return parseBaseFromArray(digits, base, isNegative);
+      };
+
+      function parseBaseFromArray(digits, base, isNegative) {
+        var val = Integer[0],
+            pow = Integer[1],
+            i;
+
+        for (i = digits.length - 1; i >= 0; i--) {
+          val = val.add(digits[i].times(pow));
+          pow = pow.times(base);
+        }
+
+        return isNegative ? val.negate() : val;
+      }
+
+      function stringify(digit, alphabet) {
+        alphabet = alphabet || DEFAULT_ALPHABET;
+
+        if (digit < alphabet.length) {
+          return alphabet[digit];
+        }
+
+        return "<" + digit + ">";
+      }
+
+      function toBase(n, base) {
+        base = bigInt(base);
+
+        if (base.isZero()) {
+          if (n.isZero()) return {
+            value: [0],
+            isNegative: false
+          };
+          throw new Error("Cannot convert nonzero numbers to base 0.");
+        }
+
+        if (base.equals(-1)) {
+          if (n.isZero()) return {
+            value: [0],
+            isNegative: false
+          };
+          if (n.isNegative()) return {
+            value: [].concat.apply([], Array.apply(null, Array(-n.toJSNumber())).map(Array.prototype.valueOf, [1, 0])),
+            isNegative: false
+          };
+          var arr = Array.apply(null, Array(n.toJSNumber() - 1)).map(Array.prototype.valueOf, [0, 1]);
+          arr.unshift([1]);
+          return {
+            value: [].concat.apply([], arr),
+            isNegative: false
+          };
+        }
+
+        var neg = false;
+
+        if (n.isNegative() && base.isPositive()) {
+          neg = true;
+          n = n.abs();
+        }
+
+        if (base.isUnit()) {
+          if (n.isZero()) return {
+            value: [0],
+            isNegative: false
+          };
+          return {
+            value: Array.apply(null, Array(n.toJSNumber())).map(Number.prototype.valueOf, 1),
+            isNegative: neg
+          };
+        }
+
+        var out = [];
+        var left = n,
+            divmod;
+
+        while (left.isNegative() || left.compareAbs(base) >= 0) {
+          divmod = left.divmod(base);
+          left = divmod.quotient;
+          var digit = divmod.remainder;
+
+          if (digit.isNegative()) {
+            digit = base.minus(digit).abs();
+            left = left.next();
+          }
+
+          out.push(digit.toJSNumber());
+        }
+
+        out.push(left.toJSNumber());
+        return {
+          value: out.reverse(),
+          isNegative: neg
+        };
+      }
+
+      function toBaseString(n, base, alphabet) {
+        var arr = toBase(n, base);
+        return (arr.isNegative ? "-" : "") + arr.value.map(function (x) {
+          return stringify(x, alphabet);
+        }).join('');
+      }
+
+      BigInteger.prototype.toArray = function (radix) {
+        return toBase(this, radix);
+      };
+
+      SmallInteger.prototype.toArray = function (radix) {
+        return toBase(this, radix);
+      };
+
+      NativeBigInt.prototype.toArray = function (radix) {
+        return toBase(this, radix);
+      };
+
+      BigInteger.prototype.toString = function (radix, alphabet) {
+        if (radix === undefined$1) radix = 10;
+        if (radix !== 10) return toBaseString(this, radix, alphabet);
+        var v = this.value,
+            l = v.length,
+            str = String(v[--l]),
+            zeros = "0000000",
+            digit;
+
+        while (--l >= 0) {
+          digit = String(v[l]);
+          str += zeros.slice(digit.length) + digit;
+        }
+
+        var sign = this.sign ? "-" : "";
+        return sign + str;
+      };
+
+      SmallInteger.prototype.toString = function (radix, alphabet) {
+        if (radix === undefined$1) radix = 10;
+        if (radix != 10) return toBaseString(this, radix, alphabet);
+        return String(this.value);
+      };
+
+      NativeBigInt.prototype.toString = SmallInteger.prototype.toString;
+
+      NativeBigInt.prototype.toJSON = BigInteger.prototype.toJSON = SmallInteger.prototype.toJSON = function () {
+        return this.toString();
+      };
+
+      BigInteger.prototype.valueOf = function () {
+        return parseInt(this.toString(), 10);
+      };
+
+      BigInteger.prototype.toJSNumber = BigInteger.prototype.valueOf;
+
+      SmallInteger.prototype.valueOf = function () {
+        return this.value;
+      };
+
+      SmallInteger.prototype.toJSNumber = SmallInteger.prototype.valueOf;
+
+      NativeBigInt.prototype.valueOf = NativeBigInt.prototype.toJSNumber = function () {
+        return parseInt(this.toString(), 10);
+      };
+
+      function parseStringValue(v) {
+        if (isPrecise(+v)) {
+          var x = +v;
+          if (x === truncate(x)) return supportsNativeBigInt ? new NativeBigInt(BigInt(x)) : new SmallInteger(x);
+          throw new Error("Invalid integer: " + v);
+        }
+
+        var sign = v[0] === "-";
+        if (sign) v = v.slice(1);
+        var split = v.split(/e/i);
+        if (split.length > 2) throw new Error("Invalid integer: " + split.join("e"));
+
+        if (split.length === 2) {
+          var exp = split[1];
+          if (exp[0] === "+") exp = exp.slice(1);
+          exp = +exp;
+          if (exp !== truncate(exp) || !isPrecise(exp)) throw new Error("Invalid integer: " + exp + " is not a valid exponent.");
+          var text = split[0];
+          var decimalPlace = text.indexOf(".");
+
+          if (decimalPlace >= 0) {
+            exp -= text.length - decimalPlace - 1;
+            text = text.slice(0, decimalPlace) + text.slice(decimalPlace + 1);
+          }
+
+          if (exp < 0) throw new Error("Cannot include negative exponent part for integers");
+          text += new Array(exp + 1).join("0");
+          v = text;
+        }
+
+        var isValid = /^([0-9][0-9]*)$/.test(v);
+        if (!isValid) throw new Error("Invalid integer: " + v);
+
+        if (supportsNativeBigInt) {
+          return new NativeBigInt(BigInt(sign ? "-" + v : v));
+        }
+
+        var r = [],
+            max = v.length,
+            l = LOG_BASE,
+            min = max - l;
+
+        while (max > 0) {
+          r.push(+v.slice(min, max));
+          min -= l;
+          if (min < 0) min = 0;
+          max -= l;
+        }
+
+        trim(r);
+        return new BigInteger(r, sign);
+      }
+
+      function parseNumberValue(v) {
+        if (supportsNativeBigInt) {
+          return new NativeBigInt(BigInt(v));
+        }
+
+        if (isPrecise(v)) {
+          if (v !== truncate(v)) throw new Error(v + " is not an integer.");
+          return new SmallInteger(v);
+        }
+
+        return parseStringValue(v.toString());
+      }
+
+      function parseValue(v) {
+        if (typeof v === "number") {
+          return parseNumberValue(v);
+        }
+
+        if (typeof v === "string") {
+          return parseStringValue(v);
+        }
+
+        if (typeof v === "bigint") {
+          return new NativeBigInt(v);
+        }
+
+        return v;
+      } // Pre-define numbers in range [-999,999]
+
+
+      for (var i = 0; i < 1000; i++) {
+        Integer[i] = parseValue(i);
+        if (i > 0) Integer[-i] = parseValue(-i);
+      } // Backwards compatibility
+
+
+      Integer.one = Integer[1];
+      Integer.zero = Integer[0];
+      Integer.minusOne = Integer[-1];
+      Integer.max = max;
+      Integer.min = min;
+      Integer.gcd = gcd;
+      Integer.lcm = lcm;
+
+      Integer.isInstance = function (x) {
+        return x instanceof BigInteger || x instanceof SmallInteger || x instanceof NativeBigInt;
+      };
+
+      Integer.randBetween = randBetween;
+
+      Integer.fromArray = function (digits, base, isNegative) {
+        return parseBaseFromArray(digits.map(parseValue), parseValue(base || 10), isNegative);
+      };
+
+      return Integer;
+    }(); // Node.js check
+
+
+    if ( module.hasOwnProperty("exports")) {
+      module.exports = bigInt;
+    } //amd check
+  });
+
+  var INTRINSICS$1 = {};
+
+  var customUtilInspectFormatters = _defineProperty({}, 'Temporal.Duration', function TemporalDuration(depth, options) {
+    var descr = options.stylize("".concat(this[Symbol.toStringTag], " <").concat(this, ">"), 'special');
+    if (depth < 1) return descr;
+    var entries = [];
+
+    for (var _i = 0, _arr = ['years', 'months', 'weeks', 'days', 'hours', 'minutes', 'seconds', 'milliseconds', 'microseconds', 'nanoseconds']; _i < _arr.length; _i++) {
+      var prop = _arr[_i];
+      if (this[prop] !== 0) entries.push("  ".concat(prop, ": ").concat(options.stylize(this[prop], 'number')));
+    }
+
+    return descr + ' {\n' + entries.join(',\n') + '\n}';
+  });
+
+  function defaultUtilInspectFormatter(depth, options) {
+    return options.stylize("".concat(this[Symbol.toStringTag], " <").concat(this, ">"), 'special');
+  }
+
+  function MakeIntrinsicClass(Class, name) {
+    Object.defineProperty(Class.prototype, Symbol.toStringTag, {
+      value: name,
+      writable: false,
+      enumerable: false,
+      configurable: true
+    });
+
+    {
+      Object.defineProperty(Class.prototype, Symbol.for('nodejs.util.inspect.custom'), {
+        value: customUtilInspectFormatters[name] || defaultUtilInspectFormatter,
+        writable: false,
+        enumerable: false,
+        configurable: true
+      });
+    }
+
+    var species = function species() {
+      return this;
+    };
+
+    Object.defineProperty(species, 'name', {
+      value: 'get [Symbol.species]',
+      writable: false,
+      enumerable: false,
+      configurable: true
+    });
+    Object.defineProperty(Class, Symbol.species, {
+      get: species,
+      enumerable: false,
+      configurable: true
+    });
+
+    var _iterator = _createForOfIteratorHelper(Object.getOwnPropertyNames(Class)),
+        _step;
+
+    try {
+      for (_iterator.s(); !(_step = _iterator.n()).done;) {
+        var prop = _step.value;
+        var desc = Object.getOwnPropertyDescriptor(Class, prop);
+        if (!desc.configurable || !desc.enumerable) continue;
+        desc.enumerable = false;
+        Object.defineProperty(Class, prop, desc);
+      }
+    } catch (err) {
+      _iterator.e(err);
+    } finally {
+      _iterator.f();
+    }
+
+    var _iterator2 = _createForOfIteratorHelper(Object.getOwnPropertyNames(Class.prototype)),
+        _step2;
+
+    try {
+      for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+        var _prop = _step2.value;
+
+        var _desc = Object.getOwnPropertyDescriptor(Class.prototype, _prop);
+
+        if (!_desc.configurable || !_desc.enumerable) continue;
+        _desc.enumerable = false;
+        Object.defineProperty(Class.prototype, _prop, _desc);
+      }
+    } catch (err) {
+      _iterator2.e(err);
+    } finally {
+      _iterator2.f();
+    }
+
+    INTRINSICS$1["%".concat(name, "%")] = Class;
+  }
+  function GetIntrinsic$1(intrinsic) {
+    return intrinsic in INTRINSICS$1 ? INTRINSICS$1[intrinsic] : GetIntrinsic(intrinsic);
+  }
+
+  // Absolute
+  var EPOCHNANOSECONDS = 'slot-epochNanoSeconds'; // TimeZone
+
+  var TIMEZONE_ID = 'slot-timezone-identifier'; // DateTime, Date, Time, YearMonth, MonthDay
+
+  var ISO_YEAR = 'slot-year';
+  var ISO_MONTH = 'slot-month';
+  var ISO_DAY = 'slot-day';
+  var HOUR = 'slot-hour';
+  var MINUTE = 'slot-minute';
+  var SECOND = 'slot-second';
+  var MILLISECOND = 'slot-millisecond';
+  var MICROSECOND = 'slot-microsecond';
+  var NANOSECOND = 'slot-nanosecond';
+  var REF_ISO_YEAR = 'slot-ref-iso-year';
+  var REF_ISO_DAY = 'slot-ref-iso-day';
+  var CALENDAR = 'slot-calendar'; // Duration
+
+  var YEARS = 'slot-years';
+  var MONTHS = 'slot-months';
+  var WEEKS = 'slot-weeks';
+  var DAYS = 'slot-days';
+  var HOURS = 'slot-hours';
+  var MINUTES = 'slot-minutes';
+  var SECONDS = 'slot-seconds';
+  var MILLISECONDS = 'slot-milliseconds';
+  var MICROSECONDS = 'slot-microseconds';
+  var NANOSECONDS = 'slot-nanoseconds'; // Calendar
+
+  var CALENDAR_ID = 'slot-calendar-identifier';
+  var slots = new WeakMap();
+  function CreateSlots(container) {
+    slots.set(container, Object.create(null));
+  }
+
+  function GetSlots(container) {
+    return slots.get(container);
+  }
+
+  function HasSlot(container) {
+    if (!container || 'object' !== _typeof(container)) return false;
+    var myslots = GetSlots(container);
+
+    for (var _len = arguments.length, ids = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+      ids[_key - 1] = arguments[_key];
+    }
+
+    return !!myslots && ids.reduce(function (all, id) {
+      return all && id in myslots;
+    }, true);
+  }
+  function GetSlot(container, id) {
+    return GetSlots(container)[id];
+  }
+  function SetSlot(container, id, value) {
+    GetSlots(container)[id] = value;
+  }
+
+  var yearpart = /(?:[+-]\d{6}|\d{4})/;
+  var datesplit = new RegExp("(".concat(yearpart.source, ")(?:-(\\d{2})-(\\d{2})|(\\d{2})(\\d{2}))"));
+  var timesplit = /(\d{2})(?::(\d{2})(?::(\d{2})(?:[.,](\d{1,9}))?)?|(\d{2})(?:(\d{2})(?:[.,](\d{1,9}))?)?)?/;
+  var zonesplit = /(?:([zZ])|(?:([+-]\d{2})(?::?(\d{2}))?(?:\[([^c\]\s](?:[^=\]\s][^\]\s]*))?\])?))/;
+  var calendar = /\[c=([^\]\s]+)\]/;
+  var absolute = new RegExp("^".concat(datesplit.source, "(?:T|\\s+)").concat(timesplit.source).concat(zonesplit.source, "(?:").concat(calendar.source, ")?$"), 'i');
+  var datetime = new RegExp("^".concat(datesplit.source, "(?:(?:T|\\s+)").concat(timesplit.source, "(?:").concat(zonesplit.source, ")?)?(?:").concat(calendar.source, ")?$"), 'i');
+  var time = new RegExp("^".concat(timesplit.source, "(?:").concat(zonesplit.source, ")?(?:").concat(calendar.source, ")?$"), 'i'); // The short forms of YearMonth and MonthDay are only for the ISO calendar.
+  // Non-ISO calendar YearMonth and MonthDay have to parse as a Temporal.Date,
+  // with the reference fields.
+  // YYYYMM forbidden by ISO 8601, but since it is not ambiguous with anything
+  // else we could parse in a YearMonth context, we allow it
+
+  var yearmonth = new RegExp("^(".concat(yearpart.source, ")-?(\\d{2})$"));
+  var monthday = /^(?:--)?(\d{2})-?(\d{2})$/;
+  var offset = /([+-])([0-2][0-9])(?::?([0-5][0-9]))?/;
+  var duration = /P(?:(\d+)Y)?(?:(\d+)M)?(?:(\d+)W)?(?:(\d+)D)?(?:T(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)(?:[.,](\d{1,9}))?S)?)?/i;
+
+  var IntlDateTimeFormat = Intl.DateTimeFormat;
+  var ObjectAssign = Object.assign;
+  var DAYMILLIS = 86400000;
+  var NS_MIN = BigInteger(-86400).multiply(1e17);
+  var NS_MAX = BigInteger(86400).multiply(1e17);
+  var YEAR_MIN = -271821;
+  var YEAR_MAX = 275760;
+  var BEFORE_FIRST_DST = BigInteger(-388152).multiply(1e13); // 1847-01-01T00:00:00Z
+  var ES = ObjectAssign({}, es2019, {
+    IsTemporalAbsolute: function IsTemporalAbsolute(item) {
+      return HasSlot(item, EPOCHNANOSECONDS);
+    },
+    IsTemporalTimeZone: function IsTemporalTimeZone(item) {
+      return HasSlot(item, TIMEZONE_ID);
+    },
+    IsTemporalCalendar: function IsTemporalCalendar(item) {
+      return HasSlot(item, CALENDAR_ID);
+    },
+    IsTemporalDuration: function IsTemporalDuration(item) {
+      return HasSlot(item, YEARS, MONTHS, DAYS, HOURS, MINUTES, SECONDS, MILLISECONDS, MICROSECONDS, NANOSECONDS);
+    },
+    IsTemporalDate: function IsTemporalDate(item) {
+      return HasSlot(item, ISO_YEAR, ISO_MONTH, ISO_DAY) && !HasSlot(item, HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND);
+    },
+    IsTemporalTime: function IsTemporalTime(item) {
+      return HasSlot(item, HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND) && !HasSlot(item, ISO_YEAR, ISO_MONTH, ISO_DAY);
+    },
+    IsTemporalDateTime: function IsTemporalDateTime(item) {
+      return HasSlot(item, ISO_YEAR, ISO_MONTH, ISO_DAY, HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND);
+    },
+    IsTemporalYearMonth: function IsTemporalYearMonth(item) {
+      return HasSlot(item, ISO_YEAR, ISO_MONTH, REF_ISO_DAY);
+    },
+    IsTemporalMonthDay: function IsTemporalMonthDay(item) {
+      return HasSlot(item, ISO_MONTH, ISO_DAY, REF_ISO_YEAR);
+    },
+    TemporalTimeZoneFromString: function TemporalTimeZoneFromString(stringIdent) {
+      var _ES$ParseTemporalTime = ES.ParseTemporalTimeZoneString(stringIdent),
+          zone = _ES$ParseTemporalTime.zone,
+          ianaName = _ES$ParseTemporalTime.ianaName,
+          offset = _ES$ParseTemporalTime.offset;
+
+      var result = ES.GetCanonicalTimeZoneIdentifier(zone);
+
+      if (offset && ianaName) {
+        var ns = ES.ParseTemporalAbsolute(stringIdent);
+        var offsetNs = ES.GetIANATimeZoneOffsetNanoseconds(ns, result);
+
+        if (ES.FormatTimeZoneOffsetString(offsetNs) !== offset) {
+          throw new RangeError("invalid offset ".concat(offset, "[").concat(ianaName, "]"));
+        }
+      }
+
+      return result;
+    },
+    FormatCalendarAnnotation: function FormatCalendarAnnotation(calendar) {
+      if (calendar.id === 'iso8601') return '';
+      return "[c=".concat(calendar.id, "]");
+    },
+    ParseISODateTime: function ParseISODateTime(isoString, _ref) {
+      var zoneRequired = _ref.zoneRequired;
+      var regex = zoneRequired ? absolute : datetime;
+      var match = regex.exec(isoString);
+      if (!match) throw new RangeError("invalid ISO 8601 string: ".concat(isoString));
+      var year = ES.ToInteger(match[1]);
+      var month = ES.ToInteger(match[2] || match[4]);
+      var day = ES.ToInteger(match[3] || match[5]);
+      var hour = ES.ToInteger(match[6]);
+      var minute = ES.ToInteger(match[7] || match[10]);
+      var second = ES.ToInteger(match[8] || match[11]);
+      if (second === 60) second = 59;
+      var fraction = (match[9] || match[12]) + '000000000';
+      var millisecond = ES.ToInteger(fraction.slice(0, 3));
+      var microsecond = ES.ToInteger(fraction.slice(3, 6));
+      var nanosecond = ES.ToInteger(fraction.slice(6, 9));
+      var offset = "".concat(match[14], ":").concat(match[15] || '00');
+      var ianaName = match[16];
+
+      if (ianaName) {
+        try {
+          // Canonicalize name if it is an IANA link name or is capitalized wrong
+          ianaName = ES.GetCanonicalTimeZoneIdentifier(ianaName).toString();
+        } catch (_unused) {// Not an IANA name, may be a custom ID, pass through unchanged
+        }
+      }
+
+      var zone = match[13] ? 'UTC' : ianaName || offset;
+      var calendar = match[17] || null;
+      return {
+        year: year,
+        month: month,
+        day: day,
+        hour: hour,
+        minute: minute,
+        second: second,
+        millisecond: millisecond,
+        microsecond: microsecond,
+        nanosecond: nanosecond,
+        zone: zone,
+        ianaName: ianaName,
+        offset: offset,
+        calendar: calendar
+      };
+    },
+    ParseTemporalAbsoluteString: function ParseTemporalAbsoluteString(isoString) {
+      return ES.ParseISODateTime(isoString, {
+        zoneRequired: true
+      });
+    },
+    ParseTemporalDateTimeString: function ParseTemporalDateTimeString(isoString) {
+      return ES.ParseISODateTime(isoString, {
+        zoneRequired: false
+      });
+    },
+    ParseTemporalDateString: function ParseTemporalDateString(isoString) {
+      return ES.ParseISODateTime(isoString, {
+        zoneRequired: false
+      });
+    },
+    ParseTemporalTimeString: function ParseTemporalTimeString(isoString) {
+      var match = time.exec(isoString);
+      var hour, minute, second, millisecond, microsecond, nanosecond;
+
+      if (match) {
+        hour = ES.ToInteger(match[1]);
+        minute = ES.ToInteger(match[2] || match[5]);
+        second = ES.ToInteger(match[3] || match[6]);
+        if (second === 60) second = 59;
+        var fraction = (match[4] || match[7]) + '000000000';
+        millisecond = ES.ToInteger(fraction.slice(0, 3));
+        microsecond = ES.ToInteger(fraction.slice(3, 6));
+        nanosecond = ES.ToInteger(fraction.slice(6, 9));
+      } else {
+        var _ES$ParseISODateTime = ES.ParseISODateTime(isoString, {
+          zoneRequired: false
+        });
+
+        hour = _ES$ParseISODateTime.hour;
+        minute = _ES$ParseISODateTime.minute;
+        second = _ES$ParseISODateTime.second;
+        millisecond = _ES$ParseISODateTime.millisecond;
+        microsecond = _ES$ParseISODateTime.microsecond;
+        nanosecond = _ES$ParseISODateTime.nanosecond;
+      }
+
+      return {
+        hour: hour,
+        minute: minute,
+        second: second,
+        millisecond: millisecond,
+        microsecond: microsecond,
+        nanosecond: nanosecond
+      };
+    },
+    ParseTemporalYearMonthString: function ParseTemporalYearMonthString(isoString) {
+      var match = yearmonth.exec(isoString);
+      var year, month, calendar, refISODay;
+
+      if (match) {
+        year = ES.ToInteger(match[1]);
+        month = ES.ToInteger(match[2]);
+        calendar = match[3] || null;
+      } else {
+        var _ES$ParseISODateTime2 = ES.ParseISODateTime(isoString, {
+          zoneRequired: false
+        });
+
+        year = _ES$ParseISODateTime2.year;
+        month = _ES$ParseISODateTime2.month;
+        calendar = _ES$ParseISODateTime2.calendar;
+        refISODay = _ES$ParseISODateTime2.day;
+        if (!calendar) refISODay = undefined;
+      }
+
+      return {
+        year: year,
+        month: month,
+        calendar: calendar,
+        refISODay: refISODay
+      };
+    },
+    ParseTemporalMonthDayString: function ParseTemporalMonthDayString(isoString) {
+      var match = monthday.exec(isoString);
+      var month, day, calendar, refISOYear;
+
+      if (match) {
+        month = ES.ToInteger(match[1]);
+        day = ES.ToInteger(match[2]);
+      } else {
+        var _ES$ParseISODateTime3 = ES.ParseISODateTime(isoString, {
+          zoneRequired: false
+        });
+
+        month = _ES$ParseISODateTime3.month;
+        day = _ES$ParseISODateTime3.day;
+        calendar = _ES$ParseISODateTime3.calendar;
+        refISOYear = _ES$ParseISODateTime3.year;
+        if (!calendar) refISOYear = undefined;
+      }
+
+      return {
+        month: month,
+        day: day,
+        calendar: calendar,
+        refISOYear: refISOYear
+      };
+    },
+    ParseTemporalTimeZoneString: function ParseTemporalTimeZoneString(stringIdent) {
+      try {
+        var canonicalIdent = ES.GetCanonicalTimeZoneIdentifier(stringIdent);
+        if (canonicalIdent) return {
+          zone: canonicalIdent.toString()
+        };
+      } catch (_unused2) {// fall through
+      }
+
+      try {
+        // Try parsing ISO string instead
+        return ES.ParseISODateTime(stringIdent, {
+          zoneRequired: true
+        });
+      } catch (_unused3) {
+        throw new RangeError("Invalid time zone: ".concat(stringIdent));
+      }
+    },
+    ParseTemporalDurationString: function ParseTemporalDurationString(isoString) {
+      var match = duration.exec(isoString);
+      if (!match) throw new RangeError("invalid duration: ".concat(isoString));
+      var years = ES.ToInteger(match[1]);
+      var months = ES.ToInteger(match[2]);
+      var weeks = ES.ToInteger(match[3]);
+      var days = ES.ToInteger(match[4]);
+      var hours = ES.ToInteger(match[5]);
+      var minutes = ES.ToInteger(match[6]);
+      var seconds = ES.ToInteger(match[7]);
+      var fraction = match[8] + '000000000';
+      var milliseconds = ES.ToInteger(fraction.slice(0, 3));
+      var microseconds = ES.ToInteger(fraction.slice(3, 6));
+      var nanoseconds = ES.ToInteger(fraction.slice(6, 9));
+      return {
+        years: years,
+        months: months,
+        weeks: weeks,
+        days: days,
+        hours: hours,
+        minutes: minutes,
+        seconds: seconds,
+        milliseconds: milliseconds,
+        microseconds: microseconds,
+        nanoseconds: nanoseconds
+      };
+    },
+    ParseTemporalAbsolute: function ParseTemporalAbsolute(isoString) {
+      var _ES$ParseTemporalAbso = ES.ParseTemporalAbsoluteString(isoString),
+          year = _ES$ParseTemporalAbso.year,
+          month = _ES$ParseTemporalAbso.month,
+          day = _ES$ParseTemporalAbso.day,
+          hour = _ES$ParseTemporalAbso.hour,
+          minute = _ES$ParseTemporalAbso.minute,
+          second = _ES$ParseTemporalAbso.second,
+          millisecond = _ES$ParseTemporalAbso.millisecond,
+          microsecond = _ES$ParseTemporalAbso.microsecond,
+          nanosecond = _ES$ParseTemporalAbso.nanosecond,
+          offset = _ES$ParseTemporalAbso.offset,
+          zone = _ES$ParseTemporalAbso.zone;
+
+      var DateTime = GetIntrinsic$1('%Temporal.DateTime%');
+      var TimeZone = GetIntrinsic$1('%Temporal.TimeZone%');
+      var dt = new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
+      var tz = TimeZone.from(zone);
+      var possibleAbsolutes = tz.getPossibleAbsolutesFor(dt);
+      if (possibleAbsolutes.length === 1) return GetSlot(possibleAbsolutes[0], EPOCHNANOSECONDS);
+
+      var _iterator = _createForOfIteratorHelper(possibleAbsolutes),
+          _step;
+
+      try {
+        for (_iterator.s(); !(_step = _iterator.n()).done;) {
+          var absolute = _step.value;
+          var possibleOffsetNs = tz.getOffsetNanosecondsFor(absolute);
+          if (ES.FormatTimeZoneOffsetString(possibleOffsetNs) === offset) return GetSlot(absolute, EPOCHNANOSECONDS);
+        }
+      } catch (err) {
+        _iterator.e(err);
+      } finally {
+        _iterator.f();
+      }
+
+      throw new RangeError("'".concat(isoString, "' doesn't uniquely identify a Temporal.Absolute"));
+    },
+    RegulateDateTime: function RegulateDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, disambiguation) {
+      switch (disambiguation) {
+        case 'reject':
+          ES.RejectDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
+          break;
+
+        case 'constrain':
+          var _ES$ConstrainDateTime = ES.ConstrainDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
+
+          year = _ES$ConstrainDateTime.year;
+          month = _ES$ConstrainDateTime.month;
+          day = _ES$ConstrainDateTime.day;
+          hour = _ES$ConstrainDateTime.hour;
+          minute = _ES$ConstrainDateTime.minute;
+          second = _ES$ConstrainDateTime.second;
+          millisecond = _ES$ConstrainDateTime.millisecond;
+          microsecond = _ES$ConstrainDateTime.microsecond;
+          nanosecond = _ES$ConstrainDateTime.nanosecond;
+          break;
+      }
+
+      return {
+        year: year,
+        month: month,
+        day: day,
+        hour: hour,
+        minute: minute,
+        second: second,
+        millisecond: millisecond,
+        microsecond: microsecond,
+        nanosecond: nanosecond
+      };
+    },
+    RegulateDate: function RegulateDate(year, month, day, disambiguation) {
+      switch (disambiguation) {
+        case 'reject':
+          ES.RejectDate(year, month, day);
+          break;
+
+        case 'constrain':
+          var _ES$ConstrainDate = ES.ConstrainDate(year, month, day);
+
+          year = _ES$ConstrainDate.year;
+          month = _ES$ConstrainDate.month;
+          day = _ES$ConstrainDate.day;
+          break;
+      }
+
+      return {
+        year: year,
+        month: month,
+        day: day
+      };
+    },
+    RegulateTime: function RegulateTime(hour, minute, second, millisecond, microsecond, nanosecond, disambiguation) {
+      switch (disambiguation) {
+        case 'reject':
+          ES.RejectTime(hour, minute, second, millisecond, microsecond, nanosecond);
+          break;
+
+        case 'constrain':
+          var _ES$ConstrainTime = ES.ConstrainTime(hour, minute, second, millisecond, microsecond, nanosecond);
+
+          hour = _ES$ConstrainTime.hour;
+          minute = _ES$ConstrainTime.minute;
+          second = _ES$ConstrainTime.second;
+          millisecond = _ES$ConstrainTime.millisecond;
+          microsecond = _ES$ConstrainTime.microsecond;
+          nanosecond = _ES$ConstrainTime.nanosecond;
+          break;
+      }
+
+      return {
+        hour: hour,
+        minute: minute,
+        second: second,
+        millisecond: millisecond,
+        microsecond: microsecond,
+        nanosecond: nanosecond
+      };
+    },
+    RegulateYearMonth: function RegulateYearMonth(year, month, disambiguation) {
+      var refISODay = 1;
+
+      switch (disambiguation) {
+        case 'reject':
+          ES.RejectDate(year, month, refISODay);
+          break;
+
+        case 'constrain':
+          var _ES$ConstrainDate2 = ES.ConstrainDate(year, month);
+
+          year = _ES$ConstrainDate2.year;
+          month = _ES$ConstrainDate2.month;
+          break;
+      }
+
+      return {
+        year: year,
+        month: month
+      };
+    },
+    RegulateMonthDay: function RegulateMonthDay(month, day, disambiguation) {
+      var refISOYear = 1972;
+
+      switch (disambiguation) {
+        case 'reject':
+          ES.RejectDate(refISOYear, month, day);
+          break;
+
+        case 'constrain':
+          var _ES$ConstrainDate3 = ES.ConstrainDate(refISOYear, month, day);
+
+          month = _ES$ConstrainDate3.month;
+          day = _ES$ConstrainDate3.day;
+          break;
+      }
+
+      return {
+        month: month,
+        day: day
+      };
+    },
+    ToTemporalDurationRecord: function ToTemporalDurationRecord(item) {
+      if (ES.IsTemporalDuration(item)) {
+        return {
+          years: GetSlot(item, YEARS),
+          months: GetSlot(item, MONTHS),
+          weeks: GetSlot(item, WEEKS),
+          days: GetSlot(item, DAYS),
+          hours: GetSlot(item, HOURS),
+          minutes: GetSlot(item, MINUTES),
+          seconds: GetSlot(item, SECONDS),
+          milliseconds: GetSlot(item, MILLISECONDS),
+          microseconds: GetSlot(item, MICROSECONDS),
+          nanoseconds: GetSlot(item, NANOSECONDS)
+        };
+      }
+
+      return ES.ToRecord(item, [['days', 0], ['hours', 0], ['microseconds', 0], ['milliseconds', 0], ['minutes', 0], ['months', 0], ['nanoseconds', 0], ['seconds', 0], ['weeks', 0], ['years', 0]]);
+    },
+    RegulateDuration: function RegulateDuration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, disambiguation) {
+      for (var _i = 0, _arr = [years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds]; _i < _arr.length; _i++) {
+        var prop = _arr[_i];
+        if (prop < 0) throw new RangeError('negative values not allowed as duration fields');
+      }
+
+      switch (disambiguation) {
+        case 'reject':
+          for (var _i2 = 0, _arr2 = [years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds]; _i2 < _arr2.length; _i2++) {
+            var _prop = _arr2[_i2];
+            if (!Number.isFinite(_prop)) throw new RangeError('infinite values not allowed as duration fields');
+          }
+
+          break;
+
+        case 'constrain':
+          {
+            var arr = [years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds];
+
+            for (var idx in arr) {
+              if (!Number.isFinite(arr[idx])) arr[idx] = Number.MAX_VALUE;
+            }
+
+            years = arr[0];
+            months = arr[1];
+            weeks = arr[2];
+            days = arr[3];
+            hours = arr[4];
+            minutes = arr[5];
+            seconds = arr[6];
+            milliseconds = arr[7];
+            microseconds = arr[8];
+            nanoseconds = arr[9];
+            break;
+          }
+
+        case 'balance':
+          {
+            var _ES$BalanceDuration = ES.BalanceDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 'days');
+
+            days = _ES$BalanceDuration.days;
+            hours = _ES$BalanceDuration.hours;
+            minutes = _ES$BalanceDuration.minutes;
+            seconds = _ES$BalanceDuration.seconds;
+            milliseconds = _ES$BalanceDuration.milliseconds;
+            microseconds = _ES$BalanceDuration.microseconds;
+            nanoseconds = _ES$BalanceDuration.nanoseconds;
+
+            for (var _i3 = 0, _arr3 = [years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds]; _i3 < _arr3.length; _i3++) {
+              var _prop2 = _arr3[_i3];
+              if (!Number.isFinite(_prop2)) throw new RangeError('infinite values not allowed as duration fields');
+            }
+
+            break;
+          }
+      }
+
+      return {
+        years: years,
+        months: months,
+        weeks: weeks,
+        days: days,
+        hours: hours,
+        minutes: minutes,
+        seconds: seconds,
+        milliseconds: milliseconds,
+        microseconds: microseconds,
+        nanoseconds: nanoseconds
+      };
+    },
+    ToLimitedTemporalDuration: function ToLimitedTemporalDuration(item) {
+      var disallowedProperties = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
+
+      if (_typeof(item) !== 'object' || item === null) {
+        throw new TypeError('Unexpected type for duration');
+      }
+
+      var _ES$ToTemporalDuratio = ES.ToTemporalDurationRecord(item),
+          years = _ES$ToTemporalDuratio.years,
+          months = _ES$ToTemporalDuratio.months,
+          weeks = _ES$ToTemporalDuratio.weeks,
+          days = _ES$ToTemporalDuratio.days,
+          hours = _ES$ToTemporalDuratio.hours,
+          minutes = _ES$ToTemporalDuratio.minutes,
+          seconds = _ES$ToTemporalDuratio.seconds,
+          milliseconds = _ES$ToTemporalDuratio.milliseconds,
+          microseconds = _ES$ToTemporalDuratio.microseconds,
+          nanoseconds = _ES$ToTemporalDuratio.nanoseconds;
+
+      var duration = ES.RegulateDuration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 'reject');
+
+      var _iterator2 = _createForOfIteratorHelper(disallowedProperties),
+          _step2;
+
+      try {
+        for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+          var property = _step2.value;
+
+          if (duration[property] !== 0) {
+            throw new RangeError("invalid duration field ".concat(property));
+          }
+        }
+      } catch (err) {
+        _iterator2.e(err);
+      } finally {
+        _iterator2.f();
+      }
+
+      return duration;
+    },
+    ToDurationTemporalDisambiguation: function ToDurationTemporalDisambiguation(options) {
+      return ES.GetOption(options, 'disambiguation', ['constrain', 'balance', 'reject'], 'constrain');
+    },
+    ToTemporalDisambiguation: function ToTemporalDisambiguation(options) {
+      return ES.GetOption(options, 'disambiguation', ['constrain', 'reject'], 'constrain');
+    },
+    ToTimeZoneTemporalDisambiguation: function ToTimeZoneTemporalDisambiguation(options) {
+      return ES.GetOption(options, 'disambiguation', ['compatible', 'earlier', 'later', 'reject'], 'compatible');
+    },
+    ToDurationSubtractionTemporalDisambiguation: function ToDurationSubtractionTemporalDisambiguation(options) {
+      return ES.GetOption(options, 'disambiguation', ['balanceConstrain', 'balance'], 'balanceConstrain');
+    },
+    ToLargestTemporalUnit: function ToLargestTemporalUnit(options, fallback) {
+      var disallowedStrings = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
+      var largestUnit = ES.GetOption(options, 'largestUnit', ['years', 'months', 'weeks', 'days', 'hours', 'minutes', 'seconds'], fallback);
+
+      if (disallowedStrings.includes(largestUnit)) {
+        throw new RangeError("".concat(largestUnit, " not allowed as the largest unit here"));
+      }
+
+      return largestUnit;
+    },
+    ToPartialRecord: function ToPartialRecord(bag, fields) {
+      if (!bag || 'object' !== _typeof(bag)) return false;
+      var any;
+
+      var _iterator3 = _createForOfIteratorHelper(fields),
+          _step3;
+
+      try {
+        for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
+          var property = _step3.value;
+          var value = bag[property];
+
+          if (value !== undefined) {
+            any = any || {};
+
+            if (property === 'calendar') {
+              // FIXME: this is terrible
+              var TemporalCalendar = GetIntrinsic$1('%Temporal.Calendar%');
+              any.calendar = TemporalCalendar.from(value);
+            } else if (property === 'era') {
+              any.era = value;
+            } else {
+              any[property] = ES.ToInteger(value);
+            }
+          }
+        }
+      } catch (err) {
+        _iterator3.e(err);
+      } finally {
+        _iterator3.f();
+      }
+
+      return any ? any : false;
+    },
+    ToRecord: function ToRecord(bag, fields) {
+      if (!bag || 'object' !== _typeof(bag)) return false;
+      var result = {};
+
+      var _iterator4 = _createForOfIteratorHelper(fields),
+          _step4;
+
+      try {
+        for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
+          var fieldRecord = _step4.value;
+
+          var _fieldRecord = _slicedToArray(fieldRecord, 2),
+              property = _fieldRecord[0],
+              defaultValue = _fieldRecord[1];
+
+          var value = bag[property];
+
+          if (value === undefined) {
+            if (fieldRecord.length === 1) {
+              throw new TypeError("required property '".concat(property, "' missing or undefined"));
+            }
+
+            value = defaultValue;
+          }
+
+          if (property === 'calendar') {
+            // FIXME: this is terrible
+            var TemporalCalendar = GetIntrinsic$1('%Temporal.Calendar%');
+            result.calendar = TemporalCalendar.from(value);
+          } else if (property === 'era') {
+            result.era = value;
+          } else {
+            result[property] = ES.ToInteger(value);
+          }
+        }
+      } catch (err) {
+        _iterator4.e(err);
+      } finally {
+        _iterator4.f();
+      }
+
+      return result;
+    },
+    // field access in the following operations is intentionally alphabetical
+    ToTemporalDateRecord: function ToTemporalDateRecord(bag) {
+      return ES.ToRecord(bag, [['day'], ['era', undefined], ['month'], ['year']]);
+    },
+    ToTemporalDateTimeRecord: function ToTemporalDateTimeRecord(bag) {
+      return ES.ToRecord(bag, [['day'], ['era', undefined], ['hour', 0], ['microsecond', 0], ['millisecond', 0], ['minute', 0], ['month'], ['nanosecond', 0], ['second', 0], ['year']]);
+    },
+    ToTemporalMonthDayRecord: function ToTemporalMonthDayRecord(bag) {
+      return ES.ToRecord(bag, [['day'], ['month']]);
+    },
+    ToTemporalTimeRecord: function ToTemporalTimeRecord(bag) {
+      return ES.ToRecord(bag, [['hour', 0], ['microsecond', 0], ['millisecond', 0], ['minute', 0], ['nanosecond', 0], ['second', 0]]);
+    },
+    ToTemporalYearMonthRecord: function ToTemporalYearMonthRecord(bag) {
+      return ES.ToRecord(bag, [['era', undefined], ['month'], ['year']]);
+    },
+    ISOTimeZoneString: function ISOTimeZoneString(timeZone, absolute) {
+      var offset;
+
+      if (typeof timeZone.getOffsetStringFor === 'function') {
+        offset = timeZone.getOffsetStringFor(absolute);
+      } else {
+        var TemporalTimeZone = GetIntrinsic$1('%Temporal.TimeZone%');
+        offset = TemporalTimeZone.prototype.getOffsetStringFor.call(timeZone, absolute);
+      }
+
+      var timeZoneString;
+
+      switch (true) {
+        case 'UTC' === timeZone.name:
+          timeZoneString = 'Z';
+          break;
+
+        case timeZone.name === offset:
+          timeZoneString = offset;
+          break;
+
+        default:
+          timeZoneString = "".concat(offset, "[").concat(timeZone.toString(), "]");
+          break;
+      }
+
+      return timeZoneString;
+    },
+    ISOYearString: function ISOYearString(year) {
+      var yearString;
+
+      if (year < 1000 || year > 9999) {
+        var sign = year < 0 ? '-' : '+';
+        var yearNumber = Math.abs(year);
+        yearString = sign + "000000".concat(yearNumber).slice(-6);
+      } else {
+        yearString = "".concat(year);
+      }
+
+      return yearString;
+    },
+    ISODateTimePartString: function ISODateTimePartString(part) {
+      return "00".concat(part).slice(-2);
+    },
+    ISOSecondsString: function ISOSecondsString(seconds, millis, micros, nanos) {
+      if (!seconds && !millis && !micros && !nanos) return '';
+      var parts = [];
+      if (nanos) parts.unshift("000".concat(nanos || 0).slice(-3));
+      if (micros || parts.length) parts.unshift("000".concat(micros || 0).slice(-3));
+      if (millis || parts.length) parts.unshift("000".concat(millis || 0).slice(-3));
+      var secs = "00".concat(seconds).slice(-2);
+      var post = parts.length ? ".".concat(parts.join('')) : '';
+      return "".concat(secs).concat(post);
+    },
+    TemporalAbsoluteToString: function TemporalAbsoluteToString(absolute, timeZone) {
+      var dateTime;
+
+      if (typeof timeZone.getDateTimeFor === 'function') {
+        dateTime = timeZone.getDateTimeFor(absolute);
+      } else {
+        var TemporalTimeZone = GetIntrinsic$1('%Temporal.TimeZone%');
+        dateTime = TemporalTimeZone.prototype.getDateTimeFor.call(timeZone, absolute);
+      }
+
+      var year = ES.ISOYearString(dateTime.year);
+      var month = ES.ISODateTimePartString(dateTime.month);
+      var day = ES.ISODateTimePartString(dateTime.day);
+      var hour = ES.ISODateTimePartString(dateTime.hour);
+      var minute = ES.ISODateTimePartString(dateTime.minute);
+      var seconds = ES.ISOSecondsString(dateTime.second, dateTime.millisecond, dateTime.microsecond, dateTime.nanosecond);
+      var timeZoneString = ES.ISOTimeZoneString(timeZone, absolute);
+      return "".concat(year, "-").concat(month, "-").concat(day, "T").concat(hour, ":").concat(minute).concat(seconds ? ":".concat(seconds) : '').concat(timeZoneString);
+    },
+    TemporalDurationToString: function TemporalDurationToString(duration) {
+      function formatNumber(num) {
+        if (num <= Number.MAX_SAFE_INTEGER) return num.toString(10);
+        return BigInteger(num).toString();
+      }
+
+      var dateParts = [];
+      if (GetSlot(duration, YEARS)) dateParts.push("".concat(formatNumber(GetSlot(duration, YEARS)), "Y"));
+      if (GetSlot(duration, MONTHS)) dateParts.push("".concat(formatNumber(GetSlot(duration, MONTHS)), "M"));
+      if (GetSlot(duration, WEEKS)) dateParts.push("".concat(formatNumber(GetSlot(duration, WEEKS)), "W"));
+      if (GetSlot(duration, DAYS)) dateParts.push("".concat(formatNumber(GetSlot(duration, DAYS)), "D"));
+      var timeParts = [];
+      if (GetSlot(duration, HOURS)) timeParts.push("".concat(formatNumber(GetSlot(duration, HOURS)), "H"));
+      if (GetSlot(duration, MINUTES)) timeParts.push("".concat(formatNumber(GetSlot(duration, MINUTES)), "M"));
+      var secondParts = [];
+      var ms = GetSlot(duration, MILLISECONDS);
+      var µs = GetSlot(duration, MICROSECONDS);
+      var ns = GetSlot(duration, NANOSECONDS);
+      var seconds;
+
+      var _ES$BalanceSubSecond = ES.BalanceSubSecond(ms, µs, ns);
+
+      seconds = _ES$BalanceSubSecond.seconds;
+      ms = _ES$BalanceSubSecond.millisecond;
+      µs = _ES$BalanceSubSecond.microsecond;
+      ns = _ES$BalanceSubSecond.nanosecond;
+      var s = GetSlot(duration, SECONDS) + seconds;
+      if (ns) secondParts.unshift("".concat(ns).padStart(3, '0'));
+      if (µs || secondParts.length) secondParts.unshift("".concat(µs).padStart(3, '0'));
+      if (ms || secondParts.length) secondParts.unshift("".concat(ms).padStart(3, '0'));
+      if (secondParts.length) secondParts.unshift('.');
+      if (s || secondParts.length) secondParts.unshift(formatNumber(s));
+      if (secondParts.length) timeParts.push("".concat(secondParts.join(''), "S"));
+      if (timeParts.length) timeParts.unshift('T');
+      if (!dateParts.length && !timeParts.length) return 'PT0S';
+      return "P".concat(dateParts.join('')).concat(timeParts.join(''));
+    },
+    GetCanonicalTimeZoneIdentifier: function GetCanonicalTimeZoneIdentifier(timeZoneIdentifier) {
+      var offsetNs = parseOffsetString(timeZoneIdentifier);
+      if (offsetNs !== null) return ES.FormatTimeZoneOffsetString(offsetNs);
+      var formatter = new IntlDateTimeFormat('en-us', {
+        timeZone: String(timeZoneIdentifier),
+        hour12: false,
+        year: 'numeric',
+        month: 'numeric',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        second: 'numeric'
+      });
+      return formatter.resolvedOptions().timeZone;
+    },
+    GetIANATimeZoneOffsetNanoseconds: function GetIANATimeZoneOffsetNanoseconds(epochNanoseconds, id) {
+      var _ES$GetIANATimeZoneDa = ES.GetIANATimeZoneDateTimeParts(epochNanoseconds, id),
+          year = _ES$GetIANATimeZoneDa.year,
+          month = _ES$GetIANATimeZoneDa.month,
+          day = _ES$GetIANATimeZoneDa.day,
+          hour = _ES$GetIANATimeZoneDa.hour,
+          minute = _ES$GetIANATimeZoneDa.minute,
+          second = _ES$GetIANATimeZoneDa.second,
+          millisecond = _ES$GetIANATimeZoneDa.millisecond,
+          microsecond = _ES$GetIANATimeZoneDa.microsecond,
+          nanosecond = _ES$GetIANATimeZoneDa.nanosecond;
+
+      var utc = ES.GetEpochFromParts(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
+      if (utc === null) throw new RangeError('Date outside of supported range');
+      return +utc.minus(epochNanoseconds);
+    },
+    FormatTimeZoneOffsetString: function FormatTimeZoneOffsetString(offsetNanoseconds) {
+      var sign = offsetNanoseconds < 0 ? '-' : '+';
+      offsetNanoseconds = Math.abs(offsetNanoseconds);
+      var offsetMinutes = Math.floor(offsetNanoseconds / 60e9);
+      var offsetMinuteString = "00".concat(offsetMinutes % 60).slice(-2);
+      var offsetHourString = "00".concat(Math.floor(offsetMinutes / 60)).slice(-2);
+      return "".concat(sign).concat(offsetHourString, ":").concat(offsetMinuteString);
+    },
+    GetEpochFromParts: function GetEpochFromParts(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond) {
+      var ms = Date.UTC(year, month - 1, day, hour, minute, second, millisecond);
+      if (Number.isNaN(ms)) return null; // Date.UTC interprets one and two-digit years as being in the 20th century
+
+      if (year >= 0 && year < 100) ms = new Date(ms).setUTCFullYear(year);
+      var ns = BigInteger(ms).multiply(1e6);
+      ns = ns.plus(BigInteger(microsecond).multiply(1e3));
+      ns = ns.plus(BigInteger(nanosecond));
+      if (ns.lesser(NS_MIN) || ns.greater(NS_MAX)) return null;
+      return ns;
+    },
+    GetPartsFromEpoch: function GetPartsFromEpoch(epochNanoseconds) {
+      var nanos = BigInteger(epochNanoseconds).mod(1e9);
+      var epochMilliseconds = BigInteger(epochNanoseconds).divide(1e9).multiply(1e3).plus(Math.floor(nanos / 1e6));
+      nanos = +((epochNanoseconds < 0 ? 1e9 : 0) + nanos);
+      var millisecond = Math.floor(nanos / 1e6) % 1e3;
+      var microsecond = Math.floor(nanos / 1e3) % 1e3;
+      var nanosecond = Math.floor(nanos / 1) % 1e3;
+      var item = new Date(epochMilliseconds);
+      var year = item.getUTCFullYear();
+      var month = item.getUTCMonth() + 1;
+      var day = item.getUTCDate();
+      var hour = item.getUTCHours();
+      var minute = item.getUTCMinutes();
+      var second = item.getUTCSeconds();
+      return {
+        epochMilliseconds: epochMilliseconds,
+        year: year,
+        month: month,
+        day: day,
+        hour: hour,
+        minute: minute,
+        second: second,
+        millisecond: millisecond,
+        microsecond: microsecond,
+        nanosecond: nanosecond
+      };
+    },
+    GetIANATimeZoneDateTimeParts: function GetIANATimeZoneDateTimeParts(epochNanoseconds, id) {
+      var _ES$GetPartsFromEpoch = ES.GetPartsFromEpoch(epochNanoseconds),
+          epochMilliseconds = _ES$GetPartsFromEpoch.epochMilliseconds,
+          millisecond = _ES$GetPartsFromEpoch.millisecond,
+          microsecond = _ES$GetPartsFromEpoch.microsecond,
+          nanosecond = _ES$GetPartsFromEpoch.nanosecond;
+
+      var _ES$GetFormatterParts = ES.GetFormatterParts(id, epochMilliseconds).reduce(reduceParts, {}),
+          year = _ES$GetFormatterParts.year,
+          month = _ES$GetFormatterParts.month,
+          day = _ES$GetFormatterParts.day,
+          hour = _ES$GetFormatterParts.hour,
+          minute = _ES$GetFormatterParts.minute,
+          second = _ES$GetFormatterParts.second;
+
+      return ES.BalanceDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
+    },
+    GetIANATimeZoneNextTransition: function GetIANATimeZoneNextTransition(epochNanoseconds, id) {
+      var uppercap = ES.SystemUTCEpochNanoSeconds() + 366 * DAYMILLIS * 1e6;
+      var leftNanos = epochNanoseconds;
+      var leftOffsetNs = ES.GetIANATimeZoneOffsetNanoseconds(leftNanos, id);
+      var rightNanos = leftNanos;
+      var rightOffsetNs = leftOffsetNs;
+
+      while (leftOffsetNs === rightOffsetNs && BigInteger(leftNanos).compare(uppercap) === -1) {
+        rightNanos = BigInteger(leftNanos).plus(2 * 7 * DAYMILLIS * 1e6);
+        rightOffsetNs = ES.GetIANATimeZoneOffsetNanoseconds(rightNanos, id);
+
+        if (leftOffsetNs === rightOffsetNs) {
+          leftNanos = rightNanos;
+        }
+      }
+
+      if (leftOffsetNs === rightOffsetNs) return null;
+      var result = bisect(function (epochNs) {
+        return ES.GetIANATimeZoneOffsetNanoseconds(epochNs, id);
+      }, leftNanos, rightNanos, leftOffsetNs, rightOffsetNs);
+      return result;
+    },
+    GetIANATimeZonePreviousTransition: function GetIANATimeZonePreviousTransition(epochNanoseconds, id) {
+      var lowercap = BEFORE_FIRST_DST; // 1847-01-01T00:00:00Z
+
+      var rightNanos = epochNanoseconds;
+      var rightOffsetNs = ES.GetIANATimeZoneOffsetNanoseconds(rightNanos, id);
+      var leftNanos = rightNanos;
+      var leftOffsetNs = rightOffsetNs;
+
+      while (rightOffsetNs === leftOffsetNs && BigInteger(rightNanos).compare(lowercap) === 1) {
+        leftNanos = BigInteger(rightNanos).minus(2 * 7 * DAYMILLIS * 1e6);
+        leftOffsetNs = ES.GetIANATimeZoneOffsetNanoseconds(leftNanos, id);
+
+        if (rightOffsetNs === leftOffsetNs) {
+          rightNanos = leftNanos;
+        }
+      }
+
+      if (rightOffsetNs === leftOffsetNs) return null;
+      var result = bisect(function (epochNs) {
+        return ES.GetIANATimeZoneOffsetNanoseconds(epochNs, id);
+      }, leftNanos, rightNanos, leftOffsetNs, rightOffsetNs);
+      return result;
+    },
+    GetFormatterParts: function GetFormatterParts(timeZone, epochMilliseconds) {
+      var formatter = new IntlDateTimeFormat('en-us', {
+        timeZone: timeZone,
+        hour12: false,
+        era: 'short',
+        year: 'numeric',
+        month: 'numeric',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        second: 'numeric'
+      }); // FIXME: can this use formatToParts instead?
+
+      var datetime = formatter.format(new Date(epochMilliseconds));
+
+      var _datetime$split = datetime.split(/,\s+/),
+          _datetime$split2 = _slicedToArray(_datetime$split, 3),
+          date = _datetime$split2[0],
+          fullYear = _datetime$split2[1],
+          time = _datetime$split2[2];
+
+      var _date$split = date.split(' '),
+          _date$split2 = _slicedToArray(_date$split, 2),
+          month = _date$split2[0],
+          day = _date$split2[1];
+
+      var _fullYear$split = fullYear.split(' '),
+          _fullYear$split2 = _slicedToArray(_fullYear$split, 2),
+          year = _fullYear$split2[0],
+          era = _fullYear$split2[1];
+
+      var _time$split = time.split(':'),
+          _time$split2 = _slicedToArray(_time$split, 3),
+          hour = _time$split2[0],
+          minute = _time$split2[1],
+          second = _time$split2[2];
+
+      return [{
+        type: 'year',
+        value: era === 'BC' ? -year + 1 : +year
+      }, {
+        type: 'month',
+        value: +month
+      }, {
+        type: 'day',
+        value: +day
+      }, {
+        type: 'hour',
+        value: hour === '24' ? 0 : +hour
+      }, // bugs.chromium.org/p/chromium/issues/detail?id=1045791
+      {
+        type: 'minute',
+        value: +minute
+      }, {
+        type: 'second',
+        value: +second
+      }];
+    },
+    GetIANATimeZoneEpochValue: function GetIANATimeZoneEpochValue(id, year, month, day, hour, minute, second, millisecond, microsecond, nanosecond) {
+      var ns = ES.GetEpochFromParts(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
+      if (ns === null) throw new RangeError('DateTime outside of supported range');
+      var dayNanos = BigInteger(DAYMILLIS).multiply(1e6);
+      var nsEarlier = ns.minus(dayNanos);
+      if (nsEarlier.lesser(NS_MIN)) nsEarlier = ns;
+      var nsLater = ns.plus(dayNanos);
+      if (nsLater.greater(NS_MAX)) nsLater = ns;
+      var earliest = ES.GetIANATimeZoneOffsetNanoseconds(nsEarlier, id);
+      var latest = ES.GetIANATimeZoneOffsetNanoseconds(nsLater, id);
+      var found = earliest === latest ? [earliest] : [earliest, latest];
+      return found.map(function (offsetNanoseconds) {
+        var epochNanoseconds = BigInteger(ns).minus(offsetNanoseconds);
+        var parts = ES.GetIANATimeZoneDateTimeParts(epochNanoseconds, id);
+
+        if (year !== parts.year || month !== parts.month || day !== parts.day || hour !== parts.hour || minute !== parts.minute || second !== parts.second || millisecond !== parts.millisecond || microsecond !== parts.microsecond || nanosecond !== parts.nanosecond) {
+          return undefined;
+        }
+
+        return epochNanoseconds;
+      }).filter(function (x) {
+        return x !== undefined;
+      });
+    },
+    LeapYear: function LeapYear(year) {
+      if (undefined === year) return false;
+      var isDiv4 = year % 4 === 0;
+      var isDiv100 = year % 100 === 0;
+      var isDiv400 = year % 400 === 0;
+      return isDiv4 && (!isDiv100 || isDiv400);
+    },
+    DaysInMonth: function DaysInMonth(year, month) {
+      var DoM = {
+        standard: [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31],
+        leapyear: [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+      };
+      return DoM[ES.LeapYear(year) ? 'leapyear' : 'standard'][month - 1];
+    },
+    DayOfWeek: function DayOfWeek(year, month, day) {
+      var m = month + (month < 3 ? 10 : -2);
+      var Y = year - (month < 3 ? 1 : 0);
+      var c = Math.floor(Y / 100);
+      var y = Y - c * 100;
+      var d = day;
+      var pD = d;
+      var pM = Math.floor(2.6 * m - 0.2);
+      var pY = y + Math.floor(y / 4);
+      var pC = Math.floor(c / 4) - 2 * c;
+      var dow = (pD + pM + pY + pC) % 7;
+      return dow + (dow <= 0 ? 7 : 0);
+    },
+    DayOfYear: function DayOfYear(year, month, day) {
+      var days = day;
+
+      for (var m = month - 1; m > 0; m--) {
+        days += ES.DaysInMonth(year, m);
+      }
+
+      return days;
+    },
+    WeekOfYear: function WeekOfYear(year, month, day) {
+      var doy = ES.DayOfYear(year, month, day);
+      var dow = ES.DayOfWeek(year, month, day) || 7;
+      var doj = ES.DayOfWeek(year, 1, 1);
+      var week = Math.floor((doy - dow + 10) / 7);
+
+      if (week < 1) {
+        if (doj === (ES.LeapYear(year) ? 5 : 6)) {
+          return 53;
+        } else {
+          return 52;
+        }
+      }
+
+      if (week === 53) {
+        if ((ES.LeapYear(year) ? 366 : 365) - doy < 4 - dow) {
+          return 1;
+        }
+      }
+
+      return week;
+    },
+    BalanceYearMonth: function BalanceYearMonth(year, month) {
+      if (!Number.isFinite(year) || !Number.isFinite(month)) throw new RangeError('infinity is out of range');
+      month -= 1;
+      year += Math.floor(month / 12);
+      month %= 12;
+      if (month < 0) month += 12;
+      month += 1;
+      return {
+        year: year,
+        month: month
+      };
+    },
+    BalanceDate: function BalanceDate(year, month, day) {
+      if (!Number.isFinite(day)) throw new RangeError('infinity is out of range');
+
+      var _ES$BalanceYearMonth = ES.BalanceYearMonth(year, month);
+
+      year = _ES$BalanceYearMonth.year;
+      month = _ES$BalanceYearMonth.month;
+      var daysInYear = 0;
+      var testYear = month > 2 ? year : year - 1;
+
+      while (daysInYear = ES.LeapYear(testYear) ? 366 : 365, day < -daysInYear) {
+        year -= 1;
+        testYear -= 1;
+        day += daysInYear;
+      }
+
+      testYear += 1;
+
+      while (daysInYear = ES.LeapYear(testYear) ? 366 : 365, day > daysInYear) {
+        year += 1;
+        testYear += 1;
+        day -= daysInYear;
+      }
+
+      while (day < 1) {
+        var _ES$BalanceYearMonth2 = ES.BalanceYearMonth(year, month - 1);
+
+        year = _ES$BalanceYearMonth2.year;
+        month = _ES$BalanceYearMonth2.month;
+        day += ES.DaysInMonth(year, month);
+      }
+
+      while (day > ES.DaysInMonth(year, month)) {
+        day -= ES.DaysInMonth(year, month);
+
+        var _ES$BalanceYearMonth3 = ES.BalanceYearMonth(year, month + 1);
+
+        year = _ES$BalanceYearMonth3.year;
+        month = _ES$BalanceYearMonth3.month;
+      }
+
+      return {
+        year: year,
+        month: month,
+        day: day
+      };
+    },
+    BalanceDateTime: function BalanceDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond) {
+      var deltaDays;
+
+      var _ES$BalanceTime = ES.BalanceTime(hour, minute, second, millisecond, microsecond, nanosecond);
+
+      deltaDays = _ES$BalanceTime.deltaDays;
+      hour = _ES$BalanceTime.hour;
+      minute = _ES$BalanceTime.minute;
+      second = _ES$BalanceTime.second;
+      millisecond = _ES$BalanceTime.millisecond;
+      microsecond = _ES$BalanceTime.microsecond;
+      nanosecond = _ES$BalanceTime.nanosecond;
+
+      var _ES$BalanceDate = ES.BalanceDate(year, month, day + deltaDays);
+
+      year = _ES$BalanceDate.year;
+      month = _ES$BalanceDate.month;
+      day = _ES$BalanceDate.day;
+      return {
+        year: year,
+        month: month,
+        day: day,
+        hour: hour,
+        minute: minute,
+        second: second,
+        millisecond: millisecond,
+        microsecond: microsecond,
+        nanosecond: nanosecond
+      };
+    },
+    BalanceSubSecond: function BalanceSubSecond(millisecond, microsecond, nanosecond) {
+      if (!Number.isFinite(millisecond) || !Number.isFinite(microsecond) || !Number.isFinite(nanosecond)) {
+        throw new RangeError('infinity is out of range');
+      }
+
+      microsecond += Math.floor(nanosecond / 1000);
+      nanosecond = ES.NonNegativeModulo(nanosecond, 1000);
+      millisecond += Math.floor(microsecond / 1000);
+      microsecond = ES.NonNegativeModulo(microsecond, 1000);
+      var seconds = Math.floor(millisecond / 1000);
+      millisecond = ES.NonNegativeModulo(millisecond, 1000);
+      return {
+        seconds: seconds,
+        millisecond: millisecond,
+        microsecond: microsecond,
+        nanosecond: nanosecond
+      };
+    },
+    BalanceTime: function BalanceTime(hour, minute, second, millisecond, microsecond, nanosecond) {
+      if (!Number.isFinite(hour) || !Number.isFinite(minute) || !Number.isFinite(second)) {
+        throw new RangeError('infinity is out of range');
+      }
+
+      var seconds;
+
+      var _ES$BalanceSubSecond2 = ES.BalanceSubSecond(millisecond, microsecond, nanosecond);
+
+      seconds = _ES$BalanceSubSecond2.seconds;
+      millisecond = _ES$BalanceSubSecond2.millisecond;
+      microsecond = _ES$BalanceSubSecond2.microsecond;
+      nanosecond = _ES$BalanceSubSecond2.nanosecond;
+      second += seconds;
+      minute += Math.floor(second / 60);
+      second = ES.NonNegativeModulo(second, 60);
+      hour += Math.floor(minute / 60);
+      minute = ES.NonNegativeModulo(minute, 60);
+      var deltaDays = Math.floor(hour / 24);
+      hour = ES.NonNegativeModulo(hour, 24);
+      return {
+        deltaDays: deltaDays,
+        hour: hour,
+        minute: minute,
+        second: second,
+        millisecond: millisecond,
+        microsecond: microsecond,
+        nanosecond: nanosecond
+      };
+    },
+    BalanceDurationDate: function BalanceDurationDate(years, months, startYear, startMonth, startDay) {
+      if (months < 0) {
+        years -= 1;
+        months += 12;
+      }
+
+      var _ES$BalanceYearMonth4 = ES.BalanceYearMonth(startYear + years, startMonth + months),
+          year = _ES$BalanceYearMonth4.year,
+          month = _ES$BalanceYearMonth4.month;
+
+      while (startDay > ES.DaysInMonth(year, month)) {
+        months -= 1;
+
+        if (months < 0) {
+          years -= 1;
+          months += 12;
+        }
+
+        var _ES$BalanceYearMonth5 = ES.BalanceYearMonth(startYear + years, startMonth + months);
+
+        year = _ES$BalanceYearMonth5.year;
+        month = _ES$BalanceYearMonth5.month;
+      }
+
+      return {
+        year: year,
+        month: month,
+        years: years,
+        months: months
+      };
+    },
+    BalanceDuration: function BalanceDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, largestUnit) {
+      var deltaDays;
+
+      var _ES$BalanceTime2 = ES.BalanceTime(hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+
+      deltaDays = _ES$BalanceTime2.deltaDays;
+      hours = _ES$BalanceTime2.hour;
+      minutes = _ES$BalanceTime2.minute;
+      seconds = _ES$BalanceTime2.second;
+      milliseconds = _ES$BalanceTime2.millisecond;
+      microseconds = _ES$BalanceTime2.microsecond;
+      nanoseconds = _ES$BalanceTime2.nanosecond;
+      days += deltaDays;
+
+      switch (largestUnit) {
+        case 'hours':
+          hours += 24 * days;
+          days = 0;
+          break;
+
+        case 'minutes':
+          minutes += 60 * (hours + 24 * days);
+          hours = days = 0;
+          break;
+
+        case 'seconds':
+          seconds += 60 * (minutes + 60 * (hours + 24 * days));
+          minutes = hours = days = 0;
+          break;
+
+        case 'years':
+        case 'months':
+        case 'weeks':
+        case 'days':
+          break;
+
+        default:
+          throw new Error('assert not reached');
+      }
+
+      return {
+        days: days,
+        hours: hours,
+        minutes: minutes,
+        seconds: seconds,
+        milliseconds: milliseconds,
+        microseconds: microseconds,
+        nanoseconds: nanoseconds
+      };
+    },
+    ConstrainToRange: function ConstrainToRange(value, min, max) {
+      return Math.min(max, Math.max(min, value));
+    },
+    ConstrainDate: function ConstrainDate(year, month, day) {
+      month = ES.ConstrainToRange(month, 1, 12);
+      day = ES.ConstrainToRange(day, 1, ES.DaysInMonth(year, month));
+      return {
+        year: year,
+        month: month,
+        day: day
+      };
+    },
+    ConstrainTime: function ConstrainTime(hour, minute, second, millisecond, microsecond, nanosecond) {
+      hour = ES.ConstrainToRange(hour, 0, 23);
+      minute = ES.ConstrainToRange(minute, 0, 59);
+      second = ES.ConstrainToRange(second, 0, 59);
+      millisecond = ES.ConstrainToRange(millisecond, 0, 999);
+      microsecond = ES.ConstrainToRange(microsecond, 0, 999);
+      nanosecond = ES.ConstrainToRange(nanosecond, 0, 999);
+      return {
+        hour: hour,
+        minute: minute,
+        second: second,
+        millisecond: millisecond,
+        microsecond: microsecond,
+        nanosecond: nanosecond
+      };
+    },
+    ConstrainDateTime: function ConstrainDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond) {
+      var _ES$ConstrainDate4 = ES.ConstrainDate(year, month, day);
+
+      year = _ES$ConstrainDate4.year;
+      month = _ES$ConstrainDate4.month;
+      day = _ES$ConstrainDate4.day;
+
+      var _ES$ConstrainTime2 = ES.ConstrainTime(hour, minute, second, millisecond, microsecond, nanosecond);
+
+      hour = _ES$ConstrainTime2.hour;
+      minute = _ES$ConstrainTime2.minute;
+      second = _ES$ConstrainTime2.second;
+      millisecond = _ES$ConstrainTime2.millisecond;
+      microsecond = _ES$ConstrainTime2.microsecond;
+      nanosecond = _ES$ConstrainTime2.nanosecond;
+      return {
+        year: year,
+        month: month,
+        day: day,
+        hour: hour,
+        minute: minute,
+        second: second,
+        millisecond: millisecond,
+        microsecond: microsecond,
+        nanosecond: nanosecond
+      };
+    },
+    RejectToRange: function RejectToRange(value, min, max) {
+      if (value < min || value > max) throw new RangeError("value out of range: ".concat(min, " <= ").concat(value, " <= ").concat(max));
+    },
+    RejectDate: function RejectDate(year, month, day) {
+      ES.RejectToRange(month, 1, 12);
+      ES.RejectToRange(day, 1, ES.DaysInMonth(year, month));
+    },
+    RejectDateRange: function RejectDateRange(year, month, day) {
+      // Noon avoids trouble at edges of DateTime range (excludes midnight)
+      ES.RejectDateTimeRange(year, month, day, 12, 0, 0, 0, 0, 0);
+    },
+    RejectTime: function RejectTime(hour, minute, second, millisecond, microsecond, nanosecond) {
+      ES.RejectToRange(hour, 0, 23);
+      ES.RejectToRange(minute, 0, 59);
+      ES.RejectToRange(second, 0, 59);
+      ES.RejectToRange(millisecond, 0, 999);
+      ES.RejectToRange(microsecond, 0, 999);
+      ES.RejectToRange(nanosecond, 0, 999);
+    },
+    RejectDateTime: function RejectDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond) {
+      ES.RejectDate(year, month, day);
+      ES.RejectTime(hour, minute, second, millisecond, microsecond, nanosecond);
+    },
+    RejectDateTimeRange: function RejectDateTimeRange(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond) {
+      ES.RejectToRange(year, YEAR_MIN, YEAR_MAX); // Reject any DateTime 24 hours or more outside the Absolute range
+
+      if (year === YEAR_MIN && null == ES.GetEpochFromParts(year, month, day + 1, hour, minute, second, millisecond, microsecond, nanosecond - 1) || year === YEAR_MAX && null == ES.GetEpochFromParts(year, month, day - 1, hour, minute, second, millisecond, microsecond, nanosecond + 1)) {
+        throw new RangeError('DateTime outside of supported range');
+      }
+    },
+    RejectAbsoluteRange: function RejectAbsoluteRange(epochNanoseconds) {
+      if (epochNanoseconds.lesser(NS_MIN) || epochNanoseconds.greater(NS_MAX)) {
+        throw new RangeError('Absolute outside of supported range');
+      }
+    },
+    RejectYearMonthRange: function RejectYearMonthRange(year, month) {
+      ES.RejectToRange(year, YEAR_MIN, YEAR_MAX);
+
+      if (year === YEAR_MIN) {
+        ES.RejectToRange(month, 4, 12);
+      } else if (year === YEAR_MAX) {
+        ES.RejectToRange(month, 1, 9);
+      }
+    },
+    DifferenceDate: function DifferenceDate(smaller, larger) {
+      var largestUnit = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'days';
+      var years = larger.year - smaller.year;
+      var weeks = 0;
+      var months, days;
+
+      switch (largestUnit) {
+        case 'years':
+        case 'months':
+          {
+            months = larger.month - smaller.month;
+            var year, month;
+
+            var _ES$BalanceDurationDa = ES.BalanceDurationDate(years, months, smaller.year, smaller.month, smaller.day);
+
+            year = _ES$BalanceDurationDa.year;
+            month = _ES$BalanceDurationDa.month;
+            years = _ES$BalanceDurationDa.years;
+            months = _ES$BalanceDurationDa.months;
+            days = ES.DayOfYear(larger.year, larger.month, larger.day) - ES.DayOfYear(year, month, smaller.day);
+
+            if (days < 0) {
+              months -= 1;
+
+              var _ES$BalanceDurationDa2 = ES.BalanceDurationDate(years, months, smaller.year, smaller.month, smaller.day);
+
+              year = _ES$BalanceDurationDa2.year;
+              month = _ES$BalanceDurationDa2.month;
+              years = _ES$BalanceDurationDa2.years;
+              months = _ES$BalanceDurationDa2.months;
+              days = ES.DayOfYear(larger.year, larger.month, larger.day) - ES.DayOfYear(year, month, smaller.day);
+              if (larger.year > year) days += ES.LeapYear(year) ? 366 : 365;
+            }
+
+            if (largestUnit === 'months') {
+              months += years * 12;
+              years = 0;
+            }
+
+            break;
+          }
+
+        case 'weeks':
+        case 'days':
+          months = 0;
+          days = ES.DayOfYear(larger.year, larger.month, larger.day) - ES.DayOfYear(smaller.year, smaller.month, smaller.day);
+
+          while (years > 0) {
+            days += ES.LeapYear(smaller.year + years - 1) ? 366 : 365;
+            years -= 1;
+          }
+
+          if (largestUnit === 'weeks') {
+            weeks = Math.floor(days / 7);
+            days %= 7;
+          }
+
+          break;
+
+        default:
+          throw new Error('assert not reached');
+      }
+
+      return {
+        years: years,
+        months: months,
+        weeks: weeks,
+        days: days
+      };
+    },
+    DifferenceTime: function DifferenceTime(earlier, later) {
+      var hours = later.hour - earlier.hour;
+      var minutes = later.minute - earlier.minute;
+      var seconds = later.second - earlier.second;
+      var milliseconds = later.millisecond - earlier.millisecond;
+      var microseconds = later.microsecond - earlier.microsecond;
+      var nanoseconds = later.nanosecond - earlier.nanosecond;
+      var deltaDays = 0;
+
+      var _ES$BalanceTime3 = ES.BalanceTime(hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+
+      deltaDays = _ES$BalanceTime3.deltaDays;
+      hours = _ES$BalanceTime3.hour;
+      minutes = _ES$BalanceTime3.minute;
+      seconds = _ES$BalanceTime3.second;
+      milliseconds = _ES$BalanceTime3.millisecond;
+      microseconds = _ES$BalanceTime3.microsecond;
+      nanoseconds = _ES$BalanceTime3.nanosecond;
+      return {
+        deltaDays: deltaDays,
+        hours: hours,
+        minutes: minutes,
+        seconds: seconds,
+        milliseconds: milliseconds,
+        microseconds: microseconds,
+        nanoseconds: nanoseconds
+      };
+    },
+    AddDate: function AddDate(year, month, day, years, months, weeks, days, disambiguation) {
+      year += years;
+      month += months;
+
+      var _ES$BalanceYearMonth6 = ES.BalanceYearMonth(year, month);
+
+      year = _ES$BalanceYearMonth6.year;
+      month = _ES$BalanceYearMonth6.month;
+
+      var _ES$RegulateDate = ES.RegulateDate(year, month, day, disambiguation);
+
+      year = _ES$RegulateDate.year;
+      month = _ES$RegulateDate.month;
+      day = _ES$RegulateDate.day;
+      days += 7 * weeks;
+      day += days;
+
+      var _ES$BalanceDate2 = ES.BalanceDate(year, month, day);
+
+      year = _ES$BalanceDate2.year;
+      month = _ES$BalanceDate2.month;
+      day = _ES$BalanceDate2.day;
+      return {
+        year: year,
+        month: month,
+        day: day
+      };
+    },
+    AddTime: function AddTime(hour, minute, second, millisecond, microsecond, nanosecond, hours, minutes, seconds, milliseconds, microseconds, nanoseconds) {
+      hour += hours;
+      minute += minutes;
+      second += seconds;
+      millisecond += milliseconds;
+      microsecond += microseconds;
+      nanosecond += nanoseconds;
+      var deltaDays = 0;
+
+      var _ES$BalanceTime4 = ES.BalanceTime(hour, minute, second, millisecond, microsecond, nanosecond);
+
+      deltaDays = _ES$BalanceTime4.deltaDays;
+      hour = _ES$BalanceTime4.hour;
+      minute = _ES$BalanceTime4.minute;
+      second = _ES$BalanceTime4.second;
+      millisecond = _ES$BalanceTime4.millisecond;
+      microsecond = _ES$BalanceTime4.microsecond;
+      nanosecond = _ES$BalanceTime4.nanosecond;
+      return {
+        deltaDays: deltaDays,
+        hour: hour,
+        minute: minute,
+        second: second,
+        millisecond: millisecond,
+        microsecond: microsecond,
+        nanosecond: nanosecond
+      };
+    },
+    SubtractDate: function SubtractDate(year, month, day, years, months, weeks, days, disambiguation) {
+      days += 7 * weeks;
+      day -= days;
+
+      var _ES$BalanceDate3 = ES.BalanceDate(year, month, day);
+
+      year = _ES$BalanceDate3.year;
+      month = _ES$BalanceDate3.month;
+      day = _ES$BalanceDate3.day;
+      month -= months;
+      year -= years;
+
+      var _ES$BalanceYearMonth7 = ES.BalanceYearMonth(year, month);
+
+      year = _ES$BalanceYearMonth7.year;
+      month = _ES$BalanceYearMonth7.month;
+
+      var _ES$RegulateDate2 = ES.RegulateDate(year, month, day, disambiguation);
+
+      year = _ES$RegulateDate2.year;
+      month = _ES$RegulateDate2.month;
+      day = _ES$RegulateDate2.day;
+      return {
+        year: year,
+        month: month,
+        day: day
+      };
+    },
+    SubtractTime: function SubtractTime(hour, minute, second, millisecond, microsecond, nanosecond, hours, minutes, seconds, milliseconds, microseconds, nanoseconds) {
+      hour -= hours;
+      minute -= minutes;
+      second -= seconds;
+      millisecond -= milliseconds;
+      microsecond -= microseconds;
+      nanosecond -= nanoseconds;
+      var deltaDays = 0;
+
+      var _ES$BalanceTime5 = ES.BalanceTime(hour, minute, second, millisecond, microsecond, nanosecond);
+
+      deltaDays = _ES$BalanceTime5.deltaDays;
+      hour = _ES$BalanceTime5.hour;
+      minute = _ES$BalanceTime5.minute;
+      second = _ES$BalanceTime5.second;
+      millisecond = _ES$BalanceTime5.millisecond;
+      microsecond = _ES$BalanceTime5.microsecond;
+      nanosecond = _ES$BalanceTime5.nanosecond;
+      return {
+        deltaDays: deltaDays,
+        hour: hour,
+        minute: minute,
+        second: second,
+        millisecond: millisecond,
+        microsecond: microsecond,
+        nanosecond: nanosecond
+      };
+    },
+    AddDuration: function AddDuration(y1, mon1, w1, d1, h1, min1, s1, ms1, µs1, ns1, y2, mon2, w2, d2, h2, min2, s2, ms2, µs2, ns2, disambiguation) {
+      var years = y1 + y2;
+      var months = mon1 + mon2;
+      var weeks = w1 + w2;
+      var days = d1 + d2;
+      var hours = h1 + h2;
+      var minutes = min1 + min2;
+      var seconds = s1 + s2;
+      var milliseconds = ms1 + ms2;
+      var microseconds = µs1 + µs2;
+      var nanoseconds = ns1 + ns2;
+      return ES.RegulateDuration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, disambiguation);
+    },
+    SubtractDuration: function SubtractDuration(y1, mon1, w1, d1, h1, min1, s1, ms1, µs1, ns1, y2, mon2, w2, d2, h2, min2, s2, ms2, µs2, ns2, disambiguation) {
+      var years = y1 - y2;
+      var months = mon1 - mon2;
+      var weeks = w1 - w2;
+      var days = d1 - d2;
+      var hours = h1 - h2;
+      var minutes = min1 - min2;
+      var seconds = s1 - s2;
+      var milliseconds = ms1 - ms2;
+      var microseconds = µs1 - µs2;
+      var nanoseconds = ns1 - ns2;
+
+      if (nanoseconds < 0) {
+        microseconds += Math.floor(nanoseconds / 1000);
+        nanoseconds = ES.NonNegativeModulo(nanoseconds, 1000);
+      }
+
+      if (microseconds < 0) {
+        milliseconds += Math.floor(microseconds / 1000);
+        microseconds = ES.NonNegativeModulo(microseconds, 1000);
+      }
+
+      if (milliseconds < 0) {
+        seconds += Math.floor(milliseconds / 1000);
+        milliseconds = ES.NonNegativeModulo(milliseconds, 1000);
+      }
+
+      if (seconds < 0) {
+        minutes += Math.floor(seconds / 60);
+        seconds = ES.NonNegativeModulo(seconds, 60);
+      }
+
+      if (minutes < 0) {
+        hours += Math.floor(minutes / 60);
+        minutes = ES.NonNegativeModulo(minutes, 60);
+      }
+
+      if (hours < 0) {
+        days += Math.floor(hours / 24);
+        hours = ES.NonNegativeModulo(hours, 24);
+      }
+
+      for (var _i4 = 0, _arr4 = [years, months, weeks, days]; _i4 < _arr4.length; _i4++) {
+        var prop = _arr4[_i4];
+        if (prop < 0) throw new RangeError('negative values not allowed as duration fields');
+      }
+
+      if (disambiguation === 'balance') {
+        return ES.RegulateDuration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 'balance');
+      }
+
+      return {
+        years: years,
+        months: months,
+        weeks: weeks,
+        days: days,
+        hours: hours,
+        minutes: minutes,
+        seconds: seconds,
+        milliseconds: milliseconds,
+        microseconds: microseconds,
+        nanoseconds: nanoseconds
+      };
+    },
+    AssertPositiveInteger: function AssertPositiveInteger(num) {
+      if (!Number.isFinite(num) || Math.abs(num) !== num) throw new RangeError("invalid positive integer: ".concat(num));
+      return num;
+    },
+    NonNegativeModulo: function NonNegativeModulo(x, y) {
+      var result = x % y;
+      if (Object.is(result, -0)) return 0;
+      if (result < 0) result += y;
+      return result;
+    },
+    ToBigInt: function ToBigInt(arg) {
+      if (BigInteger.isInstance(arg)) return arg;
+      var prim = ES.ToPrimitive(arg, Number);
+      if (typeof prim === 'number') throw new TypeError('Use BigInt() to convert Number to BigInt');
+
+      try {
+        return BigInteger(prim);
+      } catch (e) {
+        if (e instanceof Error && e.message.startsWith('Invalid integer')) throw new SyntaxError(e.message);
+        throw e;
+      }
+    },
+    // Note: This method returns values with bogus nanoseconds based on the previous iteration's
+    // milliseconds. That way there is a guarantee that the full nanoseconds are always going to be
+    // increasing at least and that the microsecond and nanosecond fields are likely to be non-zero.
+    SystemUTCEpochNanoSeconds: function () {
+      var ns = Date.now() % 1e6;
+      return function () {
+        var ms = Date.now();
+        var result = BigInteger(ms).multiply(1e6).plus(ns);
+        ns = ms % 1e6;
+        return result;
+      };
+    }(),
+    SystemTimeZone: function SystemTimeZone() {
+      var fmt = new IntlDateTimeFormat('en-us');
+      var TemporalTimeZone = GetIntrinsic$1('%Temporal.TimeZone%');
+      return new TemporalTimeZone(ES.TemporalTimeZoneFromString(fmt.resolvedOptions().timeZone));
+    },
+    ComparisonResult: function ComparisonResult(value) {
+      return value < 0 ? -1 : value > 0 ? 1 : value;
+    },
+    GetOption: function GetOption(options, property, allowedValues, fallback) {
+      if (options === null || options === undefined) return fallback;
+      options = ES.ToObject(options);
+      var value = options[property];
+
+      if (value !== undefined) {
+        value = ES.ToString(value);
+
+        if (!allowedValues.includes(value)) {
+          throw new RangeError("".concat(property, " must be one of ").concat(allowedValues.join(', '), ", not ").concat(value));
+        }
+
+        return value;
+      }
+
+      return fallback;
+    }
+  });
+  var OFFSET = new RegExp("^".concat(offset.source, "$"));
+
+  function parseOffsetString(string) {
+    var match = OFFSET.exec(String(string));
+    if (!match) return null;
+    var sign = match[1] === '-' ? -1 : +1;
+    var hours = +match[2];
+    var minutes = +(match[3] || 0);
+    return sign * (hours * 60 + minutes) * 60 * 1e9;
+  }
+
+  function reduceParts(res, item) {
+    if (item.type === 'literal') return res;
+    if (item.type === 'timeZoneName') return res;
+    res[item.type] = parseInt(item.value, 10);
+    return res;
+  }
+
+  function bisect(getState, left, right) {
+    var lstate = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : getState(left);
+    var rstate = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : getState(right);
+    left = BigInteger(left);
+    right = BigInteger(right);
+
+    while (right.minus(left).greater(1)) {
+      var middle = left.plus(right).divide(2);
+      var mstate = getState(middle);
+
+      if (mstate === lstate) {
+        left = middle;
+        lstate = mstate;
+      } else if (mstate === rstate) {
+        right = middle;
+        rstate = mstate;
+      } else {
+        throw new Error("invalid state in bisection ".concat(lstate, " - ").concat(mstate, " - ").concat(rstate));
+      }
+    }
+
+    return right;
+  }
+
+  var Absolute = /*#__PURE__*/function () {
+    function Absolute(epochNanoseconds) {
+      _classCallCheck(this, Absolute);
+
+      var ns = ES.ToBigInt(epochNanoseconds);
+      ES.RejectAbsoluteRange(ns);
+      CreateSlots(this);
+      SetSlot(this, EPOCHNANOSECONDS, ns);
+
+      {
+        Object.defineProperty(this, '_repr_', {
+          value: "".concat(this[Symbol.toStringTag], " <").concat(this, ">"),
+          writable: false,
+          enumerable: false,
+          configurable: false
+        });
+      }
+    }
+
+    _createClass(Absolute, [{
+      key: "getEpochSeconds",
+      value: function getEpochSeconds() {
+        if (!ES.IsTemporalAbsolute(this)) throw new TypeError('invalid receiver');
+        var value = GetSlot(this, EPOCHNANOSECONDS);
+        return +value.divide(1e9);
+      }
+    }, {
+      key: "getEpochMilliseconds",
+      value: function getEpochMilliseconds() {
+        if (!ES.IsTemporalAbsolute(this)) throw new TypeError('invalid receiver');
+        var value = BigInteger(GetSlot(this, EPOCHNANOSECONDS));
+        return +value.divide(1e6);
+      }
+    }, {
+      key: "getEpochMicroseconds",
+      value: function getEpochMicroseconds() {
+        if (!ES.IsTemporalAbsolute(this)) throw new TypeError('invalid receiver');
+        var value = GetSlot(this, EPOCHNANOSECONDS);
+        return bigIntIfAvailable(value.divide(1e3));
+      }
+    }, {
+      key: "getEpochNanoseconds",
+      value: function getEpochNanoseconds() {
+        if (!ES.IsTemporalAbsolute(this)) throw new TypeError('invalid receiver');
+        return bigIntIfAvailable(GetSlot(this, EPOCHNANOSECONDS));
+      }
+    }, {
+      key: "plus",
+      value: function plus(temporalDurationLike) {
+        if (!ES.IsTemporalAbsolute(this)) throw new TypeError('invalid receiver');
+
+        var _ES$ToLimitedTemporal = ES.ToLimitedTemporalDuration(temporalDurationLike, ['years', 'months']),
+            days = _ES$ToLimitedTemporal.days,
+            hours = _ES$ToLimitedTemporal.hours,
+            minutes = _ES$ToLimitedTemporal.minutes,
+            seconds = _ES$ToLimitedTemporal.seconds,
+            milliseconds = _ES$ToLimitedTemporal.milliseconds,
+            microseconds = _ES$ToLimitedTemporal.microseconds,
+            nanoseconds = _ES$ToLimitedTemporal.nanoseconds;
+
+        var add = BigInteger(0);
+        add = add.plus(BigInteger(nanoseconds));
+        add = add.plus(BigInteger(microseconds).multiply(1e3));
+        add = add.plus(BigInteger(milliseconds).multiply(1e6));
+        add = add.plus(BigInteger(seconds).multiply(1e9));
+        add = add.plus(BigInteger(minutes).multiply(60 * 1e9));
+        add = add.plus(BigInteger(hours).multiply(60 * 60 * 1e9));
+        add = add.plus(BigInteger(days).multiply(24 * 60 * 60 * 1e9));
+        var ns = BigInteger(GetSlot(this, EPOCHNANOSECONDS)).plus(add);
+        ES.RejectAbsoluteRange(ns);
+        var Construct = ES.SpeciesConstructor(this, Absolute);
+        var result = new Construct(bigIntIfAvailable(ns));
+        if (!ES.IsTemporalAbsolute(result)) throw new TypeError('invalid result');
+        return result;
+      }
+    }, {
+      key: "minus",
+      value: function minus(temporalDurationLike) {
+        if (!ES.IsTemporalAbsolute(this)) throw new TypeError('invalid receiver');
+
+        var _ES$ToLimitedTemporal2 = ES.ToLimitedTemporalDuration(temporalDurationLike, ['years', 'months']),
+            days = _ES$ToLimitedTemporal2.days,
+            hours = _ES$ToLimitedTemporal2.hours,
+            minutes = _ES$ToLimitedTemporal2.minutes,
+            seconds = _ES$ToLimitedTemporal2.seconds,
+            milliseconds = _ES$ToLimitedTemporal2.milliseconds,
+            microseconds = _ES$ToLimitedTemporal2.microseconds,
+            nanoseconds = _ES$ToLimitedTemporal2.nanoseconds;
+
+        var add = BigInteger(0);
+        add = add.plus(BigInteger(nanoseconds));
+        add = add.plus(BigInteger(microseconds).multiply(1e3));
+        add = add.plus(BigInteger(milliseconds).multiply(1e6));
+        add = add.plus(BigInteger(seconds).multiply(1e9));
+        add = add.plus(BigInteger(minutes).multiply(60 * 1e9));
+        add = add.plus(BigInteger(hours).multiply(60 * 60 * 1e9));
+        add = add.plus(BigInteger(days).multiply(24 * 60 * 60 * 1e9));
+        var ns = BigInteger(GetSlot(this, EPOCHNANOSECONDS)).minus(add);
+        ES.RejectAbsoluteRange(ns);
+        var Construct = ES.SpeciesConstructor(this, Absolute);
+        var result = new Construct(bigIntIfAvailable(ns));
+        if (!ES.IsTemporalAbsolute(result)) throw new TypeError('invalid result');
+        return result;
+      }
+    }, {
+      key: "difference",
+      value: function difference(other, options) {
+        if (!ES.IsTemporalAbsolute(this)) throw new TypeError('invalid receiver');
+        if (!ES.IsTemporalAbsolute(other)) throw new TypeError('invalid Absolute object');
+        var largestUnit = ES.ToLargestTemporalUnit(options, 'seconds', ['years', 'months', 'weeks']);
+        var comparison = Absolute.compare(this, other);
+        if (comparison < 0) throw new RangeError('other instance cannot be larger than `this`');
+        var onens = GetSlot(other, EPOCHNANOSECONDS);
+        var twons = GetSlot(this, EPOCHNANOSECONDS);
+        var diff = twons.minus(onens);
+        var ns = +diff.mod(1e3);
+        var us = +diff.divide(1e3).mod(1e3);
+        var ms = +diff.divide(1e6).mod(1e3);
+        var ss = +diff.divide(1e9);
+        var Duration = GetIntrinsic$1('%Temporal.Duration%');
+
+        var _ES$BalanceDuration = ES.BalanceDuration(0, 0, 0, ss, ms, us, ns, largestUnit),
+            days = _ES$BalanceDuration.days,
+            hours = _ES$BalanceDuration.hours,
+            minutes = _ES$BalanceDuration.minutes,
+            seconds = _ES$BalanceDuration.seconds,
+            milliseconds = _ES$BalanceDuration.milliseconds,
+            microseconds = _ES$BalanceDuration.microseconds,
+            nanoseconds = _ES$BalanceDuration.nanoseconds;
+
+        return new Duration(0, 0, 0, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+      }
+    }, {
+      key: "equals",
+      value: function equals(other) {
+        if (!ES.IsTemporalAbsolute(this)) throw new TypeError('invalid receiver');
+        if (!ES.IsTemporalAbsolute(other)) throw new TypeError('invalid Absolute object');
+        var one = GetSlot(this, EPOCHNANOSECONDS);
+        var two = GetSlot(other, EPOCHNANOSECONDS);
+        return BigInteger(one).equals(two);
+      }
+    }, {
+      key: "toString",
+      value: function toString() {
+        var temporalTimeZoneLike = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'UTC';
+        if (!ES.IsTemporalAbsolute(this)) throw new TypeError('invalid receiver');
+        var TemporalTimeZone = GetIntrinsic$1('%Temporal.TimeZone%');
+        var timeZone = TemporalTimeZone.from(temporalTimeZoneLike);
+        return ES.TemporalAbsoluteToString(this, timeZone);
+      }
+    }, {
+      key: "toJSON",
+      value: function toJSON() {
+        if (!ES.IsTemporalAbsolute(this)) throw new TypeError('invalid receiver');
+        var TemporalTimeZone = GetIntrinsic$1('%Temporal.TimeZone%');
+        var timeZone = new TemporalTimeZone('UTC');
+        return ES.TemporalAbsoluteToString(this, timeZone);
+      }
+    }, {
+      key: "toLocaleString",
+      value: function toLocaleString() {
+        if (!ES.IsTemporalAbsolute(this)) throw new TypeError('invalid receiver');
+
+        for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+          args[_key] = arguments[_key];
+        }
+
+        return _construct(Intl.DateTimeFormat, args).format(this);
+      }
+    }, {
+      key: "valueOf",
+      value: function valueOf() {
+        throw new TypeError('use compare() or equals() to compare Temporal.Absolute');
+      }
+    }, {
+      key: "inTimeZone",
+      value: function inTimeZone(temporalTimeZoneLike) {
+        var calendar = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
+        if (!ES.IsTemporalAbsolute(this)) throw new TypeError('invalid receiver');
+        var TemporalTimeZone = GetIntrinsic$1('%Temporal.TimeZone%');
+        var timeZone = TemporalTimeZone.from(temporalTimeZoneLike);
+        if (typeof timeZone.getDateTimeFor === 'function') return timeZone.getDateTimeFor(this, calendar);
+        return TemporalTimeZone.prototype.getDateTimeFor.call(timeZone, this, calendar);
+      }
+    }], [{
+      key: "fromEpochSeconds",
+      value: function fromEpochSeconds(epochSeconds) {
+        epochSeconds = ES.ToNumber(epochSeconds);
+        var epochNanoseconds = BigInteger(epochSeconds).multiply(1e9);
+        ES.RejectAbsoluteRange(epochNanoseconds);
+        var result = new this(bigIntIfAvailable(epochNanoseconds));
+        if (!ES.IsTemporalAbsolute(result)) throw new TypeError('invalid result');
+        return result;
+      }
+    }, {
+      key: "fromEpochMilliseconds",
+      value: function fromEpochMilliseconds(epochMilliseconds) {
+        epochMilliseconds = ES.ToNumber(epochMilliseconds);
+        var epochNanoseconds = BigInteger(epochMilliseconds).multiply(1e6);
+        ES.RejectAbsoluteRange(epochNanoseconds);
+        var result = new this(bigIntIfAvailable(epochNanoseconds));
+        if (!ES.IsTemporalAbsolute(result)) throw new TypeError('invalid result');
+        return result;
+      }
+    }, {
+      key: "fromEpochMicroseconds",
+      value: function fromEpochMicroseconds(epochMicroseconds) {
+        epochMicroseconds = ES.ToBigInt(epochMicroseconds);
+        var epochNanoseconds = epochMicroseconds.multiply(1e3);
+        ES.RejectAbsoluteRange(epochNanoseconds);
+        var result = new this(bigIntIfAvailable(epochNanoseconds));
+        if (!ES.IsTemporalAbsolute(result)) throw new TypeError('invalid result');
+        return result;
+      }
+    }, {
+      key: "fromEpochNanoseconds",
+      value: function fromEpochNanoseconds(epochNanoseconds) {
+        epochNanoseconds = ES.ToBigInt(epochNanoseconds);
+        ES.RejectAbsoluteRange(epochNanoseconds);
+        var result = new this(bigIntIfAvailable(epochNanoseconds));
+        if (!ES.IsTemporalAbsolute(result)) throw new TypeError('invalid result');
+        return result;
+      }
+    }, {
+      key: "from",
+      value: function from(item) {
+        var ns;
+
+        if (ES.IsTemporalAbsolute(item)) {
+          ns = GetSlot(item, EPOCHNANOSECONDS);
+        } else {
+          ns = ES.ParseTemporalAbsolute(ES.ToString(item));
+        }
+
+        var result = new this(bigIntIfAvailable(ns));
+        if (!ES.IsTemporalAbsolute(result)) throw new TypeError('invalid result');
+        return result;
+      }
+    }, {
+      key: "compare",
+      value: function compare(one, two) {
+        if (!ES.IsTemporalAbsolute(one) || !ES.IsTemporalAbsolute(two)) throw new TypeError('invalid Absolute object');
+        one = GetSlot(one, EPOCHNANOSECONDS);
+        two = GetSlot(two, EPOCHNANOSECONDS);
+        if (BigInteger(one).lesser(two)) return -1;
+        if (BigInteger(one).greater(two)) return 1;
+        return 0;
+      }
+    }]);
+
+    return Absolute;
+  }();
+  MakeIntrinsicClass(Absolute, 'Temporal.Absolute');
+
+  function bigIntIfAvailable(wrapper) {
+    return typeof BigInt === 'undefined' ? wrapper : wrapper.value;
+  }
+
+  var Calendar = /*#__PURE__*/function () {
+    function Calendar(id) {
+      _classCallCheck(this, Calendar);
+
+      CreateSlots(this);
+      SetSlot(this, CALENDAR_ID, id);
+
+      {
+        Object.defineProperty(this, '_repr_', {
+          value: "".concat(this[Symbol.toStringTag], " <").concat(this, ">"),
+          writable: false,
+          enumerable: false,
+          configurable: false
+        });
+      }
+    }
+
+    _createClass(Calendar, [{
+      key: "dateFromFields",
+      value: function dateFromFields(fields, options, constructor) {
+        throw new Error('not implemented');
+      }
+    }, {
+      key: "yearMonthFromFields",
+      value: function yearMonthFromFields(fields, options, constructor) {
+        throw new Error('not implemented');
+      }
+    }, {
+      key: "monthDayFromFields",
+      value: function monthDayFromFields(fields, options, constructor) {
+        throw new Error('not implemented');
+      }
+    }, {
+      key: "plus",
+      value: function plus(date, duration, options, constructor) {
+        throw new Error('not implemented');
+      }
+    }, {
+      key: "minus",
+      value: function minus(date, duration, options, constructor) {
+        throw new Error('not implemented');
+      }
+    }, {
+      key: "difference",
+      value: function difference(smaller, larger, options) {
+        throw new Error('not implemented');
+      }
+    }, {
+      key: "year",
+      value: function year(date) {
+        throw new Error('not implemented');
+      }
+    }, {
+      key: "month",
+      value: function month(date) {
+        throw new Error('not implemented');
+      }
+    }, {
+      key: "day",
+      value: function day(date) {
+        throw new Error('not implemented');
+      }
+    }, {
+      key: "era",
+      value: function era(date) {
+        throw new Error('not implemented');
+      }
+    }, {
+      key: "dayOfWeek",
+      value: function dayOfWeek(date) {
+        throw new Error('not implemented');
+      }
+    }, {
+      key: "dayOfYear",
+      value: function dayOfYear(date) {
+        throw new Error('not implemented');
+      }
+    }, {
+      key: "weekOfYear",
+      value: function weekOfYear(date) {
+        throw new Error('not implemented');
+      }
+    }, {
+      key: "daysInMonth",
+      value: function daysInMonth(date) {
+        throw new Error('not implemented');
+      }
+    }, {
+      key: "daysInYear",
+      value: function daysInYear(date) {
+        throw new Error('not implemented');
+      }
+    }, {
+      key: "isLeapYear",
+      value: function isLeapYear(date) {
+        throw new Error('not implemented');
+      }
+    }, {
+      key: "toString",
+      value: function toString() {
+        if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, CALENDAR_ID);
+      }
+    }, {
+      key: "id",
+      get: function get() {
+        if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, CALENDAR_ID);
+      }
+    }], [{
+      key: "from",
+      value: function from(item) {
+        if (ES.IsTemporalCalendar(item) || _typeof(item) === 'object' && item) return item;
+        var stringIdent = ES.ToString(item);
+        return GetBuiltinCalendar(stringIdent);
+      }
+    }]);
+
+    return Calendar;
+  }();
+  MakeIntrinsicClass(Calendar, 'Temporal.Calendar');
+
+  var ISO8601 = /*#__PURE__*/function (_Calendar) {
+    _inherits(ISO8601, _Calendar);
+
+    var _super = _createSuper(ISO8601);
+
+    function ISO8601() {
+      var id = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'iso8601';
+
+      _classCallCheck(this, ISO8601);
+
+      // Needs to be subclassable, that's why the ID is a default argument
+      return _super.call(this, id);
+    }
+
+    _createClass(ISO8601, [{
+      key: "dateFromFields",
+      value: function dateFromFields(fields, options, constructor) {
+        if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
+        var disambiguation = ES.ToTemporalDisambiguation(options); // Intentionally alphabetical
+
+        var _ES$ToTemporalDateRec = ES.ToTemporalDateRecord(fields),
+            year = _ES$ToTemporalDateRec.year,
+            month = _ES$ToTemporalDateRec.month,
+            day = _ES$ToTemporalDateRec.day;
+
+        var _ES$RegulateDate = ES.RegulateDate(year, month, day, disambiguation);
+
+        year = _ES$RegulateDate.year;
+        month = _ES$RegulateDate.month;
+        day = _ES$RegulateDate.day;
+        return new constructor(year, month, day, this);
+      }
+    }, {
+      key: "yearMonthFromFields",
+      value: function yearMonthFromFields(fields, options, constructor) {
+        if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
+        var disambiguation = ES.ToTemporalDisambiguation(options); // Intentionally alphabetical
+
+        var _ES$ToTemporalYearMon = ES.ToTemporalYearMonthRecord(fields),
+            year = _ES$ToTemporalYearMon.year,
+            month = _ES$ToTemporalYearMon.month;
+
+        var _ES$RegulateYearMonth = ES.RegulateYearMonth(year, month, disambiguation);
+
+        year = _ES$RegulateYearMonth.year;
+        month = _ES$RegulateYearMonth.month;
+        return new constructor(year, month, this,
+        /* refIsoDay = */
+        1);
+      }
+    }, {
+      key: "monthDayFromFields",
+      value: function monthDayFromFields(fields, options, constructor) {
+        if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
+        var disambiguation = ES.ToTemporalDisambiguation(options); // Intentionally alphabetical
+
+        var _ES$ToTemporalMonthDa = ES.ToTemporalMonthDayRecord(fields),
+            month = _ES$ToTemporalMonthDa.month,
+            day = _ES$ToTemporalMonthDa.day;
+
+        var _ES$RegulateMonthDay = ES.RegulateMonthDay(month, day, disambiguation);
+
+        month = _ES$RegulateMonthDay.month;
+        day = _ES$RegulateMonthDay.day;
+        return new constructor(month, day, this,
+        /* refIsoYear = */
+        1972);
+      }
+    }, {
+      key: "plus",
+      value: function plus(date, duration, options, constructor) {
+        if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
+        var disambiguation = ES.ToTemporalDisambiguation(options);
+        var years = duration.years,
+            months = duration.months,
+            weeks = duration.weeks,
+            days = duration.days;
+        var year = GetSlot(date, ISO_YEAR);
+        var month = GetSlot(date, ISO_MONTH);
+        var day = GetSlot(date, ISO_DAY);
+
+        var _ES$AddDate = ES.AddDate(year, month, day, years, months, weeks, days, disambiguation);
+
+        year = _ES$AddDate.year;
+        month = _ES$AddDate.month;
+        day = _ES$AddDate.day;
+        return new constructor(year, month, day, this);
+      }
+    }, {
+      key: "minus",
+      value: function minus(date, duration, options, constructor) {
+        if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
+        var disambiguation = ES.ToTemporalDisambiguation(options);
+        var years = duration.years,
+            months = duration.months,
+            weeks = duration.weeks,
+            days = duration.days;
+        var year = GetSlot(date, ISO_YEAR);
+        var month = GetSlot(date, ISO_MONTH);
+        var day = GetSlot(date, ISO_DAY);
+
+        var _ES$SubtractDate = ES.SubtractDate(year, month, day, years, months, weeks, days, disambiguation);
+
+        year = _ES$SubtractDate.year;
+        month = _ES$SubtractDate.month;
+        day = _ES$SubtractDate.day;
+        return new constructor(year, month, day, this);
+      }
+    }, {
+      key: "difference",
+      value: function difference(smaller, larger, options) {
+        if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
+        var largestUnit = ES.ToLargestTemporalUnit(options, 'days', ['hours', 'minutes', 'seconds']);
+
+        var _ES$DifferenceDate = ES.DifferenceDate(smaller, larger, largestUnit),
+            years = _ES$DifferenceDate.years,
+            months = _ES$DifferenceDate.months,
+            weeks = _ES$DifferenceDate.weeks,
+            days = _ES$DifferenceDate.days;
+
+        var Duration = GetIntrinsic$1('%Temporal.Duration%');
+        return new Duration(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
+      }
+    }, {
+      key: "year",
+      value: function year(date) {
+        if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
+        return GetSlot(date, ISO_YEAR);
+      }
+    }, {
+      key: "month",
+      value: function month(date) {
+        if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
+        return GetSlot(date, ISO_MONTH);
+      }
+    }, {
+      key: "day",
+      value: function day(date) {
+        if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
+        return GetSlot(date, ISO_DAY);
+      }
+    }, {
+      key: "era",
+      value: function era(date) {
+        return undefined;
+      }
+    }, {
+      key: "dayOfWeek",
+      value: function dayOfWeek(date) {
+        if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
+        return ES.DayOfWeek(GetSlot(date, ISO_YEAR), GetSlot(date, ISO_MONTH), GetSlot(date, ISO_DAY));
+      }
+    }, {
+      key: "dayOfYear",
+      value: function dayOfYear(date) {
+        if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
+        return ES.DayOfYear(GetSlot(date, ISO_YEAR), GetSlot(date, ISO_MONTH), GetSlot(date, ISO_DAY));
+      }
+    }, {
+      key: "weekOfYear",
+      value: function weekOfYear(date) {
+        if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
+        return ES.WeekOfYear(GetSlot(date, ISO_YEAR), GetSlot(date, ISO_MONTH), GetSlot(date, ISO_DAY));
+      }
+    }, {
+      key: "daysInMonth",
+      value: function daysInMonth(date) {
+        if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
+        return ES.DaysInMonth(GetSlot(date, ISO_YEAR), GetSlot(date, ISO_MONTH));
+      }
+    }, {
+      key: "daysInYear",
+      value: function daysInYear(date) {
+        if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
+        return ES.LeapYear(GetSlot(date, ISO_YEAR)) ? 366 : 365;
+      }
+    }, {
+      key: "isLeapYear",
+      value: function isLeapYear(date) {
+        if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
+        return ES.LeapYear(GetSlot(date, ISO_YEAR));
+      }
+    }]);
+
+    return ISO8601;
+  }(Calendar); // According to documentation for Intl.Locale.prototype.calendar on MDN,
+  // 'iso8601' calendar is equivalent to 'gregory' except for ISO 8601 week
+  // numbering rules, which we do not currently use in Temporal.
+
+
+  var Gregorian = /*#__PURE__*/function (_ISO) {
+    _inherits(Gregorian, _ISO);
+
+    var _super2 = _createSuper(Gregorian);
+
+    function Gregorian() {
+      _classCallCheck(this, Gregorian);
+
+      return _super2.call(this, 'gregory');
+    }
+
+    return Gregorian;
+  }(ISO8601); // Implementation details for Japanese calendar
+  //
+  // NOTE: For convenience, this hacky class only supports the most recent five
+  // eras, those of the modern period. For the full list, see:
+  // https://github.com/unicode-org/cldr/blob/master/common/supplemental/supplementalData.xml#L4310-L4546
+  //
+  // NOTE: Japan started using the Gregorian calendar in 6 Meiji, replacing a
+  // lunisolar calendar. So the day before January 1 of 6 Meiji (1873) was not
+  // December 31, but December 2, of 5 Meiji (1872). The existing Ecma-402
+  // Japanese calendar doesn't seem to take this into account, so neither do we:
+  // > args = ['en-ca-u-ca-japanese', { era: 'short' }]
+  // > new Date('1873-01-01T12:00').toLocaleString(...args)
+  // '1 1, 6 Meiji, 12:00:00 PM'
+  // > new Date('1872-12-31T12:00').toLocaleString(...args)
+  // '12 31, 5 Meiji, 12:00:00 PM'
+
+
+  var jpn = {
+    eraStartDates: ['1868-09-08', '1912-07-30', '1926-12-25', '1989-01-08', '2019-05-01'],
+    eraAddends: [1867, 1911, 1925, 1988, 2018],
+    // This is what API consumers pass in as the value of the 'era' field. We use
+    // string constants consisting of the romanized name
+    // Unfortunately these are not unique throughout history, so this should be
+    // solved: https://github.com/tc39/proposal-temporal/issues/526
+    // Otherwise, we'd have to introduce some era numbering system, which (as far
+    // as I can tell from Wikipedia) the calendar doesn't have, so would be
+    // non-standard and confusing, requiring API consumers to figure out "now what
+    // number is the Reiwa (current) era?" My understanding is also that this
+    // starting point for eras (0645-06-19) is not the only possible one, since
+    // there are unofficial eras before that.
+    // https://en.wikipedia.org/wiki/Japanese_era_name
+    eraNames: ['meiji', 'taisho', 'showa', 'heisei', 'reiwa'],
+    // Note: C locale era names available at
+    // https://github.com/unicode-org/icu/blob/master/icu4c/source/data/locales/root.txt#L1582-L1818
+    compareDate: function compareDate(one, two) {
+      for (var _i = 0, _arr = [ISO_YEAR, ISO_MONTH, ISO_DAY]; _i < _arr.length; _i++) {
+        var slot = _arr[_i];
+        var val1 = GetSlot(one, slot);
+        var val2 = GetSlot(two, slot);
+        if (val1 !== val2) return ES.ComparisonResult(val1 - val2);
+      }
+    },
+    findEra: function findEra(date) {
+      var TemporalDate = GetIntrinsic$1('%Temporal.Date%');
+      var idx = jpn.eraStartDates.findIndex(function (dateStr) {
+        var _ES$ParseTemporalDate = ES.ParseTemporalDateString(dateStr),
+            year = _ES$ParseTemporalDate.year,
+            month = _ES$ParseTemporalDate.month,
+            day = _ES$ParseTemporalDate.day;
+
+        var startDate = new TemporalDate(year, month, day);
+        return jpn.compareDate(date, startDate) < 0;
+      });
+      if (idx === -1) return jpn.eraStartDates.length - 1;
+      if (idx === 0) return 0;
+      return idx - 1;
+    },
+    isoYear: function isoYear(year, era) {
+      var eraIdx = jpn.eraNames.indexOf(era);
+      if (eraIdx === -1) throw new RangeError("invalid era ".concat(era));
+      return year + jpn.eraAddends[eraIdx];
+    }
+  };
+
+  var Japanese = /*#__PURE__*/function (_ISO2) {
+    _inherits(Japanese, _ISO2);
+
+    var _super3 = _createSuper(Japanese);
+
+    function Japanese() {
+      _classCallCheck(this, Japanese);
+
+      return _super3.call(this, 'japanese');
+    }
+
+    _createClass(Japanese, [{
+      key: "era",
+      value: function era(date) {
+        return jpn.eraNames[jpn.findEra(date)];
+      }
+    }, {
+      key: "year",
+      value: function year(date) {
+        var eraIdx = jpn.findEra(date);
+        return GetSlot(date, ISO_YEAR) - jpn.eraAddends[eraIdx];
+      }
+    }, {
+      key: "dateFromFields",
+      value: function dateFromFields(fields, options, constructor) {
+        // Intentionally alphabetical
+        fields = ES.ToRecord(fields, [['day'], ['era'], ['month'], ['year']]);
+        var isoYear = jpn.isoYear(fields.year, fields.era);
+        return _get(_getPrototypeOf(Japanese.prototype), "dateFromFields", this).call(this, _objectSpread2(_objectSpread2({}, fields), {}, {
+          year: isoYear
+        }), options, constructor);
+      }
+    }, {
+      key: "yearMonthFromFields",
+      value: function yearMonthFromFields(fields, options, constructor) {
+        // Intentionally alphabetical
+        fields = ES.ToRecord(fields, [['era'], ['month'], ['year']]);
+        var isoYear = jpn.isoYear(fields.year, fields.era);
+        return _get(_getPrototypeOf(Japanese.prototype), "yearMonthFromFields", this).call(this, _objectSpread2(_objectSpread2({}, fields), {}, {
+          year: isoYear
+        }), options, constructor);
+      }
+    }]);
+
+    return Japanese;
+  }(ISO8601);
+
+  var BUILTIN_CALENDARS = {
+    gregory: Gregorian,
+    iso8601: ISO8601,
+    japanese: Japanese // To be filled in as builtin calendars are implemented
+
+  };
+
+  function GetBuiltinCalendar(id) {
+    if (!(id in BUILTIN_CALENDARS)) throw new RangeError("unknown calendar ".concat(id));
+    return new BUILTIN_CALENDARS[id]();
+  }
+
+  function GetDefaultCalendar() {
+    return GetBuiltinCalendar('iso8601');
+  }
+
+  var ObjectAssign$1 = Object.assign;
+  var Date$1 = /*#__PURE__*/function () {
+    function Date(isoYear, isoMonth, isoDay) {
+      var calendar = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : undefined;
+
+      _classCallCheck(this, Date);
+
+      isoYear = ES.ToInteger(isoYear);
+      isoMonth = ES.ToInteger(isoMonth);
+      isoDay = ES.ToInteger(isoDay);
+      if (calendar === undefined) calendar = GetDefaultCalendar();
+      ES.RejectDate(isoYear, isoMonth, isoDay);
+      ES.RejectDateRange(isoYear, isoMonth, isoDay);
+      if (!calendar || _typeof(calendar) !== 'object') throw new RangeError('invalid calendar');
+      CreateSlots(this);
+      SetSlot(this, ISO_YEAR, isoYear);
+      SetSlot(this, ISO_MONTH, isoMonth);
+      SetSlot(this, ISO_DAY, isoDay);
+      SetSlot(this, CALENDAR, calendar);
+
+      {
+        Object.defineProperty(this, '_repr_', {
+          value: "".concat(this[Symbol.toStringTag], " <").concat(this, ">"),
+          writable: false,
+          enumerable: false,
+          configurable: false
+        });
+      }
+    }
+
+    _createClass(Date, [{
+      key: "with",
+      value: function _with() {
+        var temporalDateLike = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+        var options = arguments.length > 1 ? arguments[1] : undefined;
+        if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
+        var source;
+        var calendar = temporalDateLike.calendar;
+
+        if (calendar) {
+          var TemporalCalendar = GetIntrinsic$1('%Temporal.Calendar%');
+          calendar = TemporalCalendar.from(calendar);
+          source = new Date(GetSlot(this, ISO_YEAR), GetSlot(this, ISO_MONTH), GetSlot(this, ISO_DAY), calendar);
+        } else {
+          calendar = GetSlot(this, CALENDAR);
+          source = this;
+        }
+
+        var props = ES.ToPartialRecord(temporalDateLike, ['day', 'era', 'month', 'year']);
+
+        if (!props) {
+          throw new RangeError('invalid date-like');
+        }
+
+        var fields = ES.ToTemporalDateRecord(source);
+        ObjectAssign$1(fields, props);
+        var Construct = ES.SpeciesConstructor(this, Date);
+        var result = calendar.dateFromFields(fields, options, Construct);
+        if (!ES.IsTemporalDate(result)) throw new TypeError('invalid result');
+        return result;
+      }
+    }, {
+      key: "withCalendar",
+      value: function withCalendar(calendar) {
+        if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
+        var TemporalCalendar = GetIntrinsic$1('%Temporal.Calendar%');
+        calendar = TemporalCalendar.from(calendar);
+        var Construct = ES.SpeciesConstructor(this, Date);
+        var result = new Construct(GetSlot(this, ISO_YEAR), GetSlot(this, ISO_MONTH), GetSlot(this, ISO_DAY), calendar);
+        if (!ES.IsTemporalDate(result)) throw new TypeError('invalid result');
+        return result;
+      }
+    }, {
+      key: "plus",
+      value: function plus(temporalDurationLike, options) {
+        if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
+        var duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
+        var _duration = duration,
+            years = _duration.years,
+            months = _duration.months,
+            weeks = _duration.weeks,
+            hours = _duration.hours,
+            minutes = _duration.minutes,
+            seconds = _duration.seconds,
+            milliseconds = _duration.milliseconds,
+            microseconds = _duration.microseconds,
+            nanoseconds = _duration.nanoseconds;
+
+        var _ES$BalanceDuration = ES.BalanceDuration(duration.days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 'days'),
+            days = _ES$BalanceDuration.days;
+
+        duration = {
+          years: years,
+          months: months,
+          weeks: weeks,
+          days: days
+        };
+        var Construct = ES.SpeciesConstructor(this, Date);
+        var result = GetSlot(this, CALENDAR).plus(this, duration, options, Construct);
+        if (!ES.IsTemporalDate(result)) throw new TypeError('invalid result');
+        return result;
+      }
+    }, {
+      key: "minus",
+      value: function minus(temporalDurationLike, options) {
+        if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
+        var duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
+        var _duration2 = duration,
+            years = _duration2.years,
+            months = _duration2.months,
+            weeks = _duration2.weeks,
+            hours = _duration2.hours,
+            minutes = _duration2.minutes,
+            seconds = _duration2.seconds,
+            milliseconds = _duration2.milliseconds,
+            microseconds = _duration2.microseconds,
+            nanoseconds = _duration2.nanoseconds;
+
+        var _ES$BalanceDuration2 = ES.BalanceDuration(duration.days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 'days'),
+            days = _ES$BalanceDuration2.days;
+
+        duration = {
+          years: years,
+          months: months,
+          weeks: weeks,
+          days: days
+        };
+        var Construct = ES.SpeciesConstructor(this, Date);
+        var result = GetSlot(this, CALENDAR).minus(this, duration, options, Construct);
+        if (!ES.IsTemporalDate(result)) throw new TypeError('invalid result');
+        return result;
+      }
+    }, {
+      key: "difference",
+      value: function difference(other, options) {
+        if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
+        if (!ES.IsTemporalDate(other)) throw new TypeError('invalid Date object');
+        var calendar = GetSlot(this, CALENDAR);
+
+        if (calendar.id !== GetSlot(other, CALENDAR).id) {
+          other = new Date(GetSlot(other, ISO_YEAR), GetSlot(other, ISO_MONTH), GetSlot(other, ISO_DAY), calendar);
+        }
+
+        var comparison = Date.compare(this, other);
+        if (comparison < 0) throw new RangeError('other instance cannot be larger than `this`');
+        return calendar.difference(other, this, options);
+      }
+    }, {
+      key: "equals",
+      value: function equals(other) {
+        if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
+        if (!ES.IsTemporalDate(other)) throw new TypeError('invalid Date object');
+
+        for (var _i = 0, _arr = [ISO_YEAR, ISO_MONTH, ISO_DAY]; _i < _arr.length; _i++) {
+          var slot = _arr[_i];
+          var val1 = GetSlot(this, slot);
+          var val2 = GetSlot(other, slot);
+          if (val1 !== val2) return false;
+        }
+
+        return GetSlot(this, CALENDAR).id === GetSlot(other, CALENDAR).id;
+      }
+    }, {
+      key: "toString",
+      value: function toString() {
+        if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
+        var year = ES.ISOYearString(GetSlot(this, ISO_YEAR));
+        var month = ES.ISODateTimePartString(GetSlot(this, ISO_MONTH));
+        var day = ES.ISODateTimePartString(GetSlot(this, ISO_DAY));
+        var calendar = ES.FormatCalendarAnnotation(GetSlot(this, CALENDAR));
+        var resultString = "".concat(year, "-").concat(month, "-").concat(day).concat(calendar);
+        return resultString;
+      }
+    }, {
+      key: "toLocaleString",
+      value: function toLocaleString() {
+        if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
+
+        for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+          args[_key] = arguments[_key];
+        }
+
+        return _construct(Intl.DateTimeFormat, args).format(this);
+      }
+    }, {
+      key: "valueOf",
+      value: function valueOf() {
+        throw new TypeError('use compare() or equals() to compare Temporal.Date');
+      }
+    }, {
+      key: "withTime",
+      value: function withTime(temporalTime) {
+        if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
+        if (!ES.IsTemporalTime(temporalTime)) throw new TypeError('invalid Temporal.Time object');
+        var year = GetSlot(this, ISO_YEAR);
+        var month = GetSlot(this, ISO_MONTH);
+        var day = GetSlot(this, ISO_DAY);
+        var calendar = GetSlot(this, CALENDAR);
+        var hour = GetSlot(temporalTime, HOUR);
+        var minute = GetSlot(temporalTime, MINUTE);
+        var second = GetSlot(temporalTime, SECOND);
+        var millisecond = GetSlot(temporalTime, MILLISECOND);
+        var microsecond = GetSlot(temporalTime, MICROSECOND);
+        var nanosecond = GetSlot(temporalTime, NANOSECOND);
+        var DateTime = GetIntrinsic$1('%Temporal.DateTime%');
+        return new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
+      }
+    }, {
+      key: "getYearMonth",
+      value: function getYearMonth() {
+        if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
+        var YearMonth = GetIntrinsic$1('%Temporal.YearMonth%');
+        var calendar = GetSlot(this, CALENDAR);
+        var fields = ES.ToTemporalDateRecord(this);
+        return calendar.yearMonthFromFields(fields, {}, YearMonth);
+      }
+    }, {
+      key: "getMonthDay",
+      value: function getMonthDay() {
+        if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
+        var MonthDay = GetIntrinsic$1('%Temporal.MonthDay%');
+        var calendar = GetSlot(this, CALENDAR);
+        var fields = ES.ToTemporalDateRecord(this);
+        return calendar.monthDayFromFields(fields, {}, MonthDay);
+      }
+    }, {
+      key: "getFields",
+      value: function getFields() {
+        var fields = ES.ToTemporalDateRecord(this);
+        if (!fields) throw new TypeError('invalid receiver');
+        fields.calendar = GetSlot(this, CALENDAR);
+        return fields;
+      }
+    }, {
+      key: "getISOCalendarFields",
+      value: function getISOCalendarFields() {
+        if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
+        return {
+          year: GetSlot(this, ISO_YEAR),
+          month: GetSlot(this, ISO_MONTH),
+          day: GetSlot(this, ISO_DAY)
+        };
+      }
+    }, {
+      key: "year",
+      get: function get() {
+        if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, CALENDAR).year(this);
+      }
+    }, {
+      key: "month",
+      get: function get() {
+        if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, CALENDAR).month(this);
+      }
+    }, {
+      key: "day",
+      get: function get() {
+        if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, CALENDAR).day(this);
+      }
+    }, {
+      key: "calendar",
+      get: function get() {
+        if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, CALENDAR);
+      }
+    }, {
+      key: "era",
+      get: function get() {
+        if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, CALENDAR).era(this);
+      }
+    }, {
+      key: "dayOfWeek",
+      get: function get() {
+        if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, CALENDAR).dayOfWeek(this);
+      }
+    }, {
+      key: "dayOfYear",
+      get: function get() {
+        if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, CALENDAR).dayOfYear(this);
+      }
+    }, {
+      key: "weekOfYear",
+      get: function get() {
+        if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, CALENDAR).weekOfYear(this);
+      }
+    }, {
+      key: "daysInYear",
+      get: function get() {
+        if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, CALENDAR).daysInYear(this);
+      }
+    }, {
+      key: "daysInMonth",
+      get: function get() {
+        if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, CALENDAR).daysInMonth(this);
+      }
+    }, {
+      key: "isLeapYear",
+      get: function get() {
+        if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, CALENDAR).isLeapYear(this);
+      }
+    }], [{
+      key: "from",
+      value: function from(item) {
+        var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
+        var disambiguation = ES.ToTemporalDisambiguation(options);
+        var TemporalCalendar = GetIntrinsic$1('%Temporal.Calendar%');
+        var result;
+
+        if (_typeof(item) === 'object' && item) {
+          if (ES.IsTemporalDate(item)) {
+            var year = GetSlot(item, ISO_YEAR);
+            var month = GetSlot(item, ISO_MONTH);
+            var day = GetSlot(item, ISO_DAY);
+            var calendar = GetSlot(item, CALENDAR);
+            result = new this(year, month, day, calendar);
+          } else {
+            var _calendar = item.calendar;
+            if (_calendar === undefined) _calendar = GetDefaultCalendar();
+            _calendar = TemporalCalendar.from(_calendar);
+            result = _calendar.dateFromFields(item, options, this);
+          }
+        } else {
+          var _ES$ParseTemporalDate = ES.ParseTemporalDateString(ES.ToString(item)),
+              _year = _ES$ParseTemporalDate.year,
+              _month = _ES$ParseTemporalDate.month,
+              _day = _ES$ParseTemporalDate.day,
+              _calendar2 = _ES$ParseTemporalDate.calendar;
+
+          var _ES$RegulateDate = ES.RegulateDate(_year, _month, _day, disambiguation);
+
+          _year = _ES$RegulateDate.year;
+          _month = _ES$RegulateDate.month;
+          _day = _ES$RegulateDate.day;
+          if (!_calendar2) _calendar2 = GetDefaultCalendar();
+          _calendar2 = TemporalCalendar.from(_calendar2);
+          result = new this(_year, _month, _day, _calendar2);
+        }
+
+        if (!ES.IsTemporalDate(result)) throw new TypeError('invalid result');
+        return result;
+      }
+    }, {
+      key: "compare",
+      value: function compare(one, two) {
+        if (!ES.IsTemporalDate(one) || !ES.IsTemporalDate(two)) throw new TypeError('invalid Date object');
+
+        for (var _i2 = 0, _arr2 = [ISO_YEAR, ISO_MONTH, ISO_DAY]; _i2 < _arr2.length; _i2++) {
+          var slot = _arr2[_i2];
+          var val1 = GetSlot(one, slot);
+          var val2 = GetSlot(two, slot);
+          if (val1 !== val2) return ES.ComparisonResult(val1 - val2);
+        }
+
+        var cal1 = GetSlot(one, CALENDAR).id;
+        var cal2 = GetSlot(two, CALENDAR).id;
+        return ES.ComparisonResult(cal1 < cal2 ? -1 : cal1 > cal2 ? 1 : 0);
+      }
+    }]);
+
+    return Date;
+  }();
+  Date$1.prototype.toJSON = Date$1.prototype.toString;
+  MakeIntrinsicClass(Date$1, 'Temporal.Date');
+
+  var ObjectAssign$2 = Object.assign;
+  var DateTime = /*#__PURE__*/function () {
+    function DateTime(isoYear, isoMonth, isoDay) {
+      var hour = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 0;
+      var minute = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 0;
+      var second = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : 0;
+      var millisecond = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : 0;
+      var microsecond = arguments.length > 7 && arguments[7] !== undefined ? arguments[7] : 0;
+      var nanosecond = arguments.length > 8 && arguments[8] !== undefined ? arguments[8] : 0;
+      var calendar = arguments.length > 9 && arguments[9] !== undefined ? arguments[9] : undefined;
+
+      _classCallCheck(this, DateTime);
+
+      isoYear = ES.ToInteger(isoYear);
+      isoMonth = ES.ToInteger(isoMonth);
+      isoDay = ES.ToInteger(isoDay);
+      hour = ES.ToInteger(hour);
+      minute = ES.ToInteger(minute);
+      second = ES.ToInteger(second);
+      millisecond = ES.ToInteger(millisecond);
+      microsecond = ES.ToInteger(microsecond);
+      nanosecond = ES.ToInteger(nanosecond);
+      if (calendar === undefined) calendar = GetDefaultCalendar();
+      ES.RejectDateTime(isoYear, isoMonth, isoDay, hour, minute, second, millisecond, microsecond, nanosecond);
+      ES.RejectDateTimeRange(isoYear, isoMonth, isoDay, hour, minute, second, millisecond, microsecond, nanosecond);
+      if (!calendar || _typeof(calendar) !== 'object') throw new RangeError('invalid calendar');
+      CreateSlots(this);
+      SetSlot(this, ISO_YEAR, isoYear);
+      SetSlot(this, ISO_MONTH, isoMonth);
+      SetSlot(this, ISO_DAY, isoDay);
+      SetSlot(this, HOUR, hour);
+      SetSlot(this, MINUTE, minute);
+      SetSlot(this, SECOND, second);
+      SetSlot(this, MILLISECOND, millisecond);
+      SetSlot(this, MICROSECOND, microsecond);
+      SetSlot(this, NANOSECOND, nanosecond);
+      SetSlot(this, CALENDAR, calendar);
+
+      {
+        Object.defineProperty(this, '_repr_', {
+          value: "".concat(this[Symbol.toStringTag], " <").concat(this, ">"),
+          writable: false,
+          enumerable: false,
+          configurable: false
+        });
+      }
+    }
+
+    _createClass(DateTime, [{
+      key: "with",
+      value: function _with(temporalDateTimeLike, options) {
+        if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+        var disambiguation = ES.ToTemporalDisambiguation(options);
+        var source;
+        var calendar = temporalDateTimeLike.calendar;
+
+        if (calendar) {
+          var TemporalCalendar = GetIntrinsic$1('%Temporal.Calendar%');
+          calendar = TemporalCalendar.from(calendar);
+          source = new DateTime(GetSlot(this, ISO_YEAR), GetSlot(this, ISO_MONTH), GetSlot(this, ISO_DAY), GetSlot(this, HOUR), GetSlot(this, MINUTE), GetSlot(this, SECOND), GetSlot(this, MILLISECOND), GetSlot(this, MICROSECOND), GetSlot(this, NANOSECOND), calendar);
+        } else {
+          calendar = GetSlot(this, CALENDAR);
+          source = this;
+        }
+
+        var props = ES.ToPartialRecord(temporalDateTimeLike, ['day', 'era', 'hour', 'microsecond', 'millisecond', 'minute', 'month', 'nanosecond', 'second', 'year']);
+
+        if (!props) {
+          throw new RangeError('invalid date-time-like');
+        }
+
+        var fields = ES.ToTemporalDateTimeRecord(source);
+        ObjectAssign$2(fields, props);
+        var date = calendar.dateFromFields(fields, options, GetIntrinsic$1('%Temporal.Date%'));
+        var year = GetSlot(date, ISO_YEAR);
+        var month = GetSlot(date, ISO_MONTH);
+        var day = GetSlot(date, ISO_DAY);
+        var hour = fields.hour,
+            minute = fields.minute,
+            second = fields.second,
+            millisecond = fields.millisecond,
+            microsecond = fields.microsecond,
+            nanosecond = fields.nanosecond;
+
+        var _ES$RegulateTime = ES.RegulateTime(hour, minute, second, millisecond, microsecond, nanosecond, disambiguation);
+
+        hour = _ES$RegulateTime.hour;
+        minute = _ES$RegulateTime.minute;
+        second = _ES$RegulateTime.second;
+        millisecond = _ES$RegulateTime.millisecond;
+        microsecond = _ES$RegulateTime.microsecond;
+        nanosecond = _ES$RegulateTime.nanosecond;
+        var Construct = ES.SpeciesConstructor(this, DateTime);
+        var result = new Construct(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
+        if (!ES.IsTemporalDateTime(result)) throw new TypeError('invalid result');
+        return result;
+      }
+    }, {
+      key: "withCalendar",
+      value: function withCalendar(calendar) {
+        if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+        var TemporalCalendar = GetIntrinsic$1('%Temporal.Calendar%');
+        calendar = TemporalCalendar.from(calendar);
+        var Construct = ES.SpeciesConstructor(this, DateTime);
+        var result = new Construct(GetSlot(this, ISO_YEAR), GetSlot(this, ISO_MONTH), GetSlot(this, ISO_DAY), GetSlot(this, HOUR), GetSlot(this, MINUTE), GetSlot(this, SECOND), GetSlot(this, MILLISECOND), GetSlot(this, MICROSECOND), GetSlot(this, NANOSECOND), calendar);
+        if (!ES.IsTemporalDateTime(result)) throw new TypeError('invalid result');
+        return result;
+      }
+    }, {
+      key: "plus",
+      value: function plus(temporalDurationLike, options) {
+        if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+        var duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
+        var _duration = duration,
+            years = _duration.years,
+            months = _duration.months,
+            days = _duration.days,
+            weeks = _duration.weeks,
+            hours = _duration.hours,
+            minutes = _duration.minutes,
+            seconds = _duration.seconds,
+            milliseconds = _duration.milliseconds,
+            microseconds = _duration.microseconds,
+            nanoseconds = _duration.nanoseconds;
+
+        var _ES$BalanceDuration = ES.BalanceDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 'days');
+
+        days = _ES$BalanceDuration.days;
+        hours = _ES$BalanceDuration.hours;
+        minutes = _ES$BalanceDuration.minutes;
+        seconds = _ES$BalanceDuration.seconds;
+        milliseconds = _ES$BalanceDuration.milliseconds;
+        microseconds = _ES$BalanceDuration.microseconds;
+        nanoseconds = _ES$BalanceDuration.nanoseconds;
+        duration = {
+          years: years,
+          months: months,
+          weeks: weeks,
+          days: days,
+          hours: hours,
+          minutes: minutes,
+          seconds: seconds,
+          milliseconds: milliseconds,
+          microseconds: microseconds,
+          nanoseconds: nanoseconds
+        }; // Add the time part
+
+        var hour = this.hour,
+            minute = this.minute,
+            second = this.second,
+            millisecond = this.millisecond,
+            microsecond = this.microsecond,
+            nanosecond = this.nanosecond;
+        var deltaDays = 0;
+
+        var _ES$AddTime = ES.AddTime(hour, minute, second, millisecond, microsecond, nanosecond, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+
+        deltaDays = _ES$AddTime.deltaDays;
+        hour = _ES$AddTime.hour;
+        minute = _ES$AddTime.minute;
+        second = _ES$AddTime.second;
+        millisecond = _ES$AddTime.millisecond;
+        microsecond = _ES$AddTime.microsecond;
+        nanosecond = _ES$AddTime.nanosecond;
+        duration.days += deltaDays; // Delegate the date part addition to the calendar
+
+        var calendar = GetSlot(this, CALENDAR);
+        var TemporalDate = GetIntrinsic$1('%Temporal.Date%');
+        var datePart = new TemporalDate(GetSlot(this, ISO_YEAR), GetSlot(this, ISO_MONTH), GetSlot(this, ISO_DAY), calendar);
+        var addedDate = calendar.plus(datePart, duration, options, TemporalDate);
+        var year = GetSlot(addedDate, ISO_YEAR);
+        var month = GetSlot(addedDate, ISO_MONTH);
+        var day = GetSlot(addedDate, ISO_DAY);
+        var Construct = ES.SpeciesConstructor(this, DateTime);
+        var result = new Construct(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
+        if (!ES.IsTemporalDateTime(result)) throw new TypeError('invalid result');
+        return result;
+      }
+    }, {
+      key: "minus",
+      value: function minus(temporalDurationLike, options) {
+        if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+        var duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
+        var _duration2 = duration,
+            years = _duration2.years,
+            months = _duration2.months,
+            days = _duration2.days,
+            weeks = _duration2.weeks,
+            hours = _duration2.hours,
+            minutes = _duration2.minutes,
+            seconds = _duration2.seconds,
+            milliseconds = _duration2.milliseconds,
+            microseconds = _duration2.microseconds,
+            nanoseconds = _duration2.nanoseconds;
+
+        var _ES$BalanceDuration2 = ES.BalanceDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 'days');
+
+        days = _ES$BalanceDuration2.days;
+        hours = _ES$BalanceDuration2.hours;
+        minutes = _ES$BalanceDuration2.minutes;
+        seconds = _ES$BalanceDuration2.seconds;
+        milliseconds = _ES$BalanceDuration2.milliseconds;
+        microseconds = _ES$BalanceDuration2.microseconds;
+        nanoseconds = _ES$BalanceDuration2.nanoseconds;
+        duration = {
+          years: years,
+          months: months,
+          weeks: weeks,
+          days: days,
+          hours: hours,
+          minutes: minutes,
+          seconds: seconds,
+          milliseconds: milliseconds,
+          microseconds: microseconds,
+          nanoseconds: nanoseconds
+        }; // Subtract the time part
+
+        var hour = this.hour,
+            minute = this.minute,
+            second = this.second,
+            millisecond = this.millisecond,
+            microsecond = this.microsecond,
+            nanosecond = this.nanosecond;
+        var deltaDays = 0;
+
+        var _ES$SubtractTime = ES.SubtractTime(hour, minute, second, millisecond, microsecond, nanosecond, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+
+        deltaDays = _ES$SubtractTime.deltaDays;
+        hour = _ES$SubtractTime.hour;
+        minute = _ES$SubtractTime.minute;
+        second = _ES$SubtractTime.second;
+        millisecond = _ES$SubtractTime.millisecond;
+        microsecond = _ES$SubtractTime.microsecond;
+        nanosecond = _ES$SubtractTime.nanosecond;
+        duration.days -= deltaDays; // Delegate the date part subtraction to the calendar
+
+        var calendar = GetSlot(this, CALENDAR);
+        var TemporalDate = GetIntrinsic$1('%Temporal.Date%');
+        var datePart = new TemporalDate(GetSlot(this, ISO_YEAR), GetSlot(this, ISO_MONTH), GetSlot(this, ISO_DAY), calendar);
+        var subtractedDate = calendar.minus(datePart, duration, options, TemporalDate);
+        var year = GetSlot(subtractedDate, ISO_YEAR);
+        var month = GetSlot(subtractedDate, ISO_MONTH);
+        var day = GetSlot(subtractedDate, ISO_DAY);
+        var Construct = ES.SpeciesConstructor(this, DateTime);
+        var result = new Construct(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
+        if (!ES.IsTemporalDateTime(result)) throw new TypeError('invalid result');
+        return result;
+      }
+    }, {
+      key: "difference",
+      value: function difference(other, options) {
+        if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+        if (!ES.IsTemporalDateTime(other)) throw new TypeError('invalid DateTime object');
+        var calendar = GetSlot(this, CALENDAR);
+
+        if (calendar.id !== GetSlot(other, CALENDAR).id) {
+          other = new DateTime(GetSlot(other, ISO_YEAR), GetSlot(other, ISO_MONTH), GetSlot(other, ISO_DAY), GetSlot(other, HOUR), GetSlot(other, MINUTE), GetSlot(other, SECOND), GetSlot(other, MILLISECOND), GetSlot(other, MICROSECOND), GetSlot(other, NANOSECOND), calendar);
+        }
+
+        var largestUnit = ES.ToLargestTemporalUnit(options, 'days');
+        var comparison = DateTime.compare(this, other);
+        if (comparison < 0) throw new RangeError('other instance cannot be larger than `this`');
+
+        var _ES$DifferenceTime = ES.DifferenceTime(other, this),
+            deltaDays = _ES$DifferenceTime.deltaDays,
+            hours = _ES$DifferenceTime.hours,
+            minutes = _ES$DifferenceTime.minutes,
+            seconds = _ES$DifferenceTime.seconds,
+            milliseconds = _ES$DifferenceTime.milliseconds,
+            microseconds = _ES$DifferenceTime.microseconds,
+            nanoseconds = _ES$DifferenceTime.nanoseconds;
+
+        var year = GetSlot(this, ISO_YEAR);
+        var month = GetSlot(this, ISO_MONTH);
+        var day = GetSlot(this, ISO_DAY) + deltaDays;
+
+        var _ES$BalanceDate = ES.BalanceDate(year, month, day);
+
+        year = _ES$BalanceDate.year;
+        month = _ES$BalanceDate.month;
+        day = _ES$BalanceDate.day;
+        var TemporalDate = GetIntrinsic$1('%Temporal.Date%');
+        var adjustedLarger = new TemporalDate(year, month, day, GetSlot(this, CALENDAR));
+        var dateLargestUnit = 'days';
+
+        if (largestUnit === 'years' || largestUnit === 'months' || largestUnit === 'weeks') {
+          dateLargestUnit = largestUnit;
+        }
+
+        var dateOptions = ObjectAssign$2({}, options, {
+          largestUnit: dateLargestUnit
+        });
+        var dateDifference = calendar.difference(other, adjustedLarger, dateOptions);
+        var days;
+
+        var _ES$BalanceDuration3 = ES.BalanceDuration(dateDifference.days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, largestUnit);
+
+        days = _ES$BalanceDuration3.days;
+        hours = _ES$BalanceDuration3.hours;
+        minutes = _ES$BalanceDuration3.minutes;
+        seconds = _ES$BalanceDuration3.seconds;
+        milliseconds = _ES$BalanceDuration3.milliseconds;
+        microseconds = _ES$BalanceDuration3.microseconds;
+        nanoseconds = _ES$BalanceDuration3.nanoseconds;
+        var Duration = GetIntrinsic$1('%Temporal.Duration%');
+        return new Duration(dateDifference.years, dateDifference.months, dateDifference.weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+      }
+    }, {
+      key: "equals",
+      value: function equals(other) {
+        if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+        if (!ES.IsTemporalDateTime(other)) throw new TypeError('invalid Date object');
+
+        for (var _i = 0, _arr = [ISO_YEAR, ISO_MONTH, ISO_DAY, HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND]; _i < _arr.length; _i++) {
+          var slot = _arr[_i];
+          var val1 = GetSlot(this, slot);
+          var val2 = GetSlot(other, slot);
+          if (val1 !== val2) return false;
+        }
+
+        return GetSlot(this, CALENDAR).id === GetSlot(other, CALENDAR).id;
+      }
+    }, {
+      key: "toString",
+      value: function toString() {
+        if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+        var year = ES.ISOYearString(GetSlot(this, ISO_YEAR));
+        var month = ES.ISODateTimePartString(GetSlot(this, ISO_MONTH));
+        var day = ES.ISODateTimePartString(GetSlot(this, ISO_DAY));
+        var hour = ES.ISODateTimePartString(GetSlot(this, HOUR));
+        var minute = ES.ISODateTimePartString(GetSlot(this, MINUTE));
+        var second = ES.ISOSecondsString(GetSlot(this, SECOND), GetSlot(this, MILLISECOND), GetSlot(this, MICROSECOND), GetSlot(this, NANOSECOND));
+        var calendar = ES.FormatCalendarAnnotation(GetSlot(this, CALENDAR));
+        var resultString = "".concat(year, "-").concat(month, "-").concat(day, "T").concat(hour, ":").concat(minute).concat(second ? ":".concat(second) : '').concat(calendar);
+        return resultString;
+      }
+    }, {
+      key: "toLocaleString",
+      value: function toLocaleString() {
+        if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+
+        for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+          args[_key] = arguments[_key];
+        }
+
+        return _construct(Intl.DateTimeFormat, args).format(this);
+      }
+    }, {
+      key: "valueOf",
+      value: function valueOf() {
+        throw new TypeError('use compare() or equals() to compare Temporal.DateTime');
+      }
+    }, {
+      key: "inTimeZone",
+      value: function inTimeZone(temporalTimeZoneLike, options) {
+        if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+        var TemporalTimeZone = GetIntrinsic$1('%Temporal.TimeZone%');
+        var timeZone = TemporalTimeZone.from(temporalTimeZoneLike);
+        var disambiguation = ES.ToTimeZoneTemporalDisambiguation(options);
+        if (typeof timeZone.getAbsoluteFor === 'function') return timeZone.getAbsoluteFor(this, {
+          disambiguation: disambiguation
+        });
+        return TemporalTimeZone.prototype.getAbsoluteFor.call(timeZone, this, {
+          disambiguation: disambiguation
+        });
+      }
+    }, {
+      key: "getDate",
+      value: function getDate() {
+        if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+        var Date = GetIntrinsic$1('%Temporal.Date%');
+        return new Date(GetSlot(this, ISO_YEAR), GetSlot(this, ISO_MONTH), GetSlot(this, ISO_DAY), GetSlot(this, CALENDAR));
+      }
+    }, {
+      key: "getYearMonth",
+      value: function getYearMonth() {
+        if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+        var YearMonth = GetIntrinsic$1('%Temporal.YearMonth%');
+        var calendar = GetSlot(this, CALENDAR);
+        var fields = ES.ToTemporalDateTimeRecord(this);
+        return calendar.yearMonthFromFields(fields, {}, YearMonth);
+      }
+    }, {
+      key: "getMonthDay",
+      value: function getMonthDay() {
+        if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+        var MonthDay = GetIntrinsic$1('%Temporal.MonthDay%');
+        var calendar = GetSlot(this, CALENDAR);
+        var fields = ES.ToTemporalDateTimeRecord(this);
+        return calendar.monthDayFromFields(fields, {}, MonthDay);
+      }
+    }, {
+      key: "getTime",
+      value: function getTime() {
+        if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+        var Time = GetIntrinsic$1('%Temporal.Time%');
+        return new Time(GetSlot(this, HOUR), GetSlot(this, MINUTE), GetSlot(this, SECOND), GetSlot(this, MILLISECOND), GetSlot(this, MICROSECOND), GetSlot(this, NANOSECOND));
+      }
+    }, {
+      key: "getFields",
+      value: function getFields() {
+        var fields = ES.ToTemporalDateTimeRecord(this);
+        if (!fields) throw new TypeError('invalid receiver');
+        fields.calendar = GetSlot(this, CALENDAR);
+        return fields;
+      }
+    }, {
+      key: "getISOCalendarFields",
+      value: function getISOCalendarFields() {
+        if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+        return {
+          year: GetSlot(this, ISO_YEAR),
+          month: GetSlot(this, ISO_MONTH),
+          day: GetSlot(this, ISO_DAY),
+          hour: GetSlot(this, HOUR),
+          minute: GetSlot(this, MINUTE),
+          second: GetSlot(this, SECOND),
+          millisecond: GetSlot(this, MILLISECOND),
+          microsecond: GetSlot(this, MICROSECOND),
+          nanosecond: GetSlot(this, NANOSECOND)
+        };
+      }
+    }, {
+      key: "year",
+      get: function get() {
+        if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, CALENDAR).year(this);
+      }
+    }, {
+      key: "month",
+      get: function get() {
+        if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, CALENDAR).month(this);
+      }
+    }, {
+      key: "day",
+      get: function get() {
+        if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, CALENDAR).day(this);
+      }
+    }, {
+      key: "hour",
+      get: function get() {
+        if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, HOUR);
+      }
+    }, {
+      key: "minute",
+      get: function get() {
+        if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, MINUTE);
+      }
+    }, {
+      key: "second",
+      get: function get() {
+        if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, SECOND);
+      }
+    }, {
+      key: "millisecond",
+      get: function get() {
+        if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, MILLISECOND);
+      }
+    }, {
+      key: "microsecond",
+      get: function get() {
+        if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, MICROSECOND);
+      }
+    }, {
+      key: "nanosecond",
+      get: function get() {
+        if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, NANOSECOND);
+      }
+    }, {
+      key: "calendar",
+      get: function get() {
+        if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, CALENDAR);
+      }
+    }, {
+      key: "era",
+      get: function get() {
+        if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, CALENDAR).era(this);
+      }
+    }, {
+      key: "dayOfWeek",
+      get: function get() {
+        if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, CALENDAR).dayOfWeek(this);
+      }
+    }, {
+      key: "dayOfYear",
+      get: function get() {
+        if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, CALENDAR).dayOfYear(this);
+      }
+    }, {
+      key: "weekOfYear",
+      get: function get() {
+        if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, CALENDAR).weekOfYear(this);
+      }
+    }, {
+      key: "daysInYear",
+      get: function get() {
+        if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, CALENDAR).daysInYear(this);
+      }
+    }, {
+      key: "daysInMonth",
+      get: function get() {
+        if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, CALENDAR).daysInMonth(this);
+      }
+    }, {
+      key: "isLeapYear",
+      get: function get() {
+        if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, CALENDAR).isLeapYear(this);
+      }
+    }], [{
+      key: "from",
+      value: function from(item) {
+        var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
+        var disambiguation = ES.ToTemporalDisambiguation(options);
+        var TemporalCalendar = GetIntrinsic$1('%Temporal.Calendar%');
+        var result;
+
+        if (_typeof(item) === 'object' && item) {
+          if (ES.IsTemporalDateTime(item)) {
+            var year = GetSlot(item, ISO_YEAR);
+            var month = GetSlot(item, ISO_MONTH);
+            var day = GetSlot(item, ISO_DAY);
+            var hour = GetSlot(item, HOUR);
+            var minute = GetSlot(item, MINUTE);
+            var second = GetSlot(item, SECOND);
+            var millisecond = GetSlot(item, MILLISECOND);
+            var microsecond = GetSlot(item, MICROSECOND);
+            var nanosecond = GetSlot(item, NANOSECOND);
+            var calendar = GetSlot(item, CALENDAR);
+            result = new this(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
+          } else {
+            var _calendar = item.calendar;
+            if (_calendar === undefined) _calendar = GetDefaultCalendar();
+            _calendar = TemporalCalendar.from(_calendar);
+            var fields = ES.ToTemporalDateTimeRecord(item);
+            var TemporalDate = GetIntrinsic$1('%Temporal.Date%');
+
+            var date = _calendar.dateFromFields(fields, options, TemporalDate);
+
+            var _year = GetSlot(date, ISO_YEAR);
+
+            var _month = GetSlot(date, ISO_MONTH);
+
+            var _day = GetSlot(date, ISO_DAY);
+
+            if (disambiguation === 'constrain') {
+              // Special case to determine if the date was clipped by dateFromFields
+              // and therefore the time possibly needs to be clipped too
+              try {
+                _calendar.dateFromFields(fields, {
+                  disambiguation: 'reject'
+                }, TemporalDate);
+              } catch (_unused) {
+                // Date was clipped
+                if (_year === 275760 && _month === 9 && _day === 13) {
+                  // Clipped at end of range
+                  _day += 1;
+                } else if (_year === -271821 && _month === 4 && _day === 19) {
+                  // Clipped at beginning of range
+                  _day -= 1;
+                }
+
+                var _ES$BalanceDate2 = ES.BalanceDate(_year, _month, _day);
+
+                _year = _ES$BalanceDate2.year;
+                _month = _ES$BalanceDate2.month;
+                _day = _ES$BalanceDate2.day;
+              }
+            }
+
+            var _hour = fields.hour,
+                _minute = fields.minute,
+                _second = fields.second,
+                _millisecond = fields.millisecond,
+                _microsecond = fields.microsecond,
+                _nanosecond = fields.nanosecond;
+
+            var _ES$RegulateTime2 = ES.RegulateTime(_hour, _minute, _second, _millisecond, _microsecond, _nanosecond, disambiguation);
+
+            _hour = _ES$RegulateTime2.hour;
+            _minute = _ES$RegulateTime2.minute;
+            _second = _ES$RegulateTime2.second;
+            _millisecond = _ES$RegulateTime2.millisecond;
+            _microsecond = _ES$RegulateTime2.microsecond;
+            _nanosecond = _ES$RegulateTime2.nanosecond;
+            result = new this(_year, _month, _day, _hour, _minute, _second, _millisecond, _microsecond, _nanosecond, _calendar);
+          }
+        } else {
+          var _ES$ParseTemporalDate = ES.ParseTemporalDateTimeString(ES.ToString(item)),
+              _year2 = _ES$ParseTemporalDate.year,
+              _month2 = _ES$ParseTemporalDate.month,
+              _day2 = _ES$ParseTemporalDate.day,
+              _hour2 = _ES$ParseTemporalDate.hour,
+              _minute2 = _ES$ParseTemporalDate.minute,
+              _second2 = _ES$ParseTemporalDate.second,
+              _millisecond2 = _ES$ParseTemporalDate.millisecond,
+              _microsecond2 = _ES$ParseTemporalDate.microsecond,
+              _nanosecond2 = _ES$ParseTemporalDate.nanosecond,
+              _calendar2 = _ES$ParseTemporalDate.calendar;
+
+          if (!_calendar2) _calendar2 = GetDefaultCalendar();
+          _calendar2 = TemporalCalendar.from(_calendar2);
+          result = new this(_year2, _month2, _day2, _hour2, _minute2, _second2, _millisecond2, _microsecond2, _nanosecond2, _calendar2);
+        }
+
+        if (!ES.IsTemporalDateTime(result)) throw new TypeError('invalid result');
+        return result;
+      }
+    }, {
+      key: "compare",
+      value: function compare(one, two) {
+        if (!ES.IsTemporalDateTime(one) || !ES.IsTemporalDateTime(two)) throw new TypeError('invalid DateTime object');
+
+        for (var _i2 = 0, _arr2 = [ISO_YEAR, ISO_MONTH, ISO_DAY, HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND]; _i2 < _arr2.length; _i2++) {
+          var slot = _arr2[_i2];
+          var val1 = GetSlot(one, slot);
+          var val2 = GetSlot(two, slot);
+          if (val1 !== val2) return ES.ComparisonResult(val1 - val2);
+        }
+
+        var cal1 = GetSlot(one, CALENDAR).id;
+        var cal2 = GetSlot(two, CALENDAR).id;
+        return ES.ComparisonResult(cal1 < cal2 ? -1 : cal1 > cal2 ? 1 : 0);
+      }
+    }]);
+
+    return DateTime;
+  }();
+  DateTime.prototype.toJSON = DateTime.prototype.toString;
+  MakeIntrinsicClass(DateTime, 'Temporal.DateTime');
+
+  var Duration = /*#__PURE__*/function () {
+    function Duration() {
+      var years = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
+      var months = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+      var weeks = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+      var days = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 0;
+      var hours = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 0;
+      var minutes = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : 0;
+      var seconds = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : 0;
+      var milliseconds = arguments.length > 7 && arguments[7] !== undefined ? arguments[7] : 0;
+      var microseconds = arguments.length > 8 && arguments[8] !== undefined ? arguments[8] : 0;
+      var nanoseconds = arguments.length > 9 && arguments[9] !== undefined ? arguments[9] : 0;
+
+      _classCallCheck(this, Duration);
+
+      years = ES.ToInteger(years);
+      months = ES.ToInteger(months);
+      weeks = ES.ToInteger(weeks);
+      days = ES.ToInteger(days);
+      hours = ES.ToInteger(hours);
+      minutes = ES.ToInteger(minutes);
+      seconds = ES.ToInteger(seconds);
+      milliseconds = ES.ToInteger(milliseconds);
+      microseconds = ES.ToInteger(microseconds);
+      nanoseconds = ES.ToInteger(nanoseconds);
+
+      for (var _i = 0, _arr = [years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds]; _i < _arr.length; _i++) {
+        var prop = _arr[_i];
+        if (prop < 0) throw new RangeError('negative values not allowed as duration fields');
+        if (!Number.isFinite(prop)) throw new RangeError('infinite values not allowed as duration fields');
+      }
+
+      CreateSlots(this);
+      SetSlot(this, YEARS, years);
+      SetSlot(this, MONTHS, months);
+      SetSlot(this, WEEKS, weeks);
+      SetSlot(this, DAYS, days);
+      SetSlot(this, HOURS, hours);
+      SetSlot(this, MINUTES, minutes);
+      SetSlot(this, SECONDS, seconds);
+      SetSlot(this, MILLISECONDS, milliseconds);
+      SetSlot(this, MICROSECONDS, microseconds);
+      SetSlot(this, NANOSECONDS, nanoseconds);
+
+      {
+        Object.defineProperty(this, '_repr_', {
+          value: "".concat(this[Symbol.toStringTag], " <").concat(this, ">"),
+          writable: false,
+          enumerable: false,
+          configurable: false
+        });
+      }
+    }
+
+    _createClass(Duration, [{
+      key: "with",
+      value: function _with(durationLike, options) {
+        if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
+        var disambiguation = ES.ToDurationTemporalDisambiguation(options);
+        var props = ES.ToPartialRecord(durationLike, ['days', 'hours', 'microseconds', 'milliseconds', 'minutes', 'months', 'nanoseconds', 'seconds', 'weeks', 'years']);
+
+        if (!props) {
+          throw new RangeError('invalid duration-like');
+        }
+
+        var _props$years = props.years,
+            years = _props$years === void 0 ? GetSlot(this, YEARS) : _props$years,
+            _props$months = props.months,
+            months = _props$months === void 0 ? GetSlot(this, MONTHS) : _props$months,
+            _props$weeks = props.weeks,
+            weeks = _props$weeks === void 0 ? GetSlot(this, WEEKS) : _props$weeks,
+            _props$days = props.days,
+            days = _props$days === void 0 ? GetSlot(this, DAYS) : _props$days,
+            _props$hours = props.hours,
+            hours = _props$hours === void 0 ? GetSlot(this, HOURS) : _props$hours,
+            _props$minutes = props.minutes,
+            minutes = _props$minutes === void 0 ? GetSlot(this, MINUTES) : _props$minutes,
+            _props$seconds = props.seconds,
+            seconds = _props$seconds === void 0 ? GetSlot(this, SECONDS) : _props$seconds,
+            _props$milliseconds = props.milliseconds,
+            milliseconds = _props$milliseconds === void 0 ? GetSlot(this, MILLISECONDS) : _props$milliseconds,
+            _props$microseconds = props.microseconds,
+            microseconds = _props$microseconds === void 0 ? GetSlot(this, MICROSECONDS) : _props$microseconds,
+            _props$nanoseconds = props.nanoseconds,
+            nanoseconds = _props$nanoseconds === void 0 ? GetSlot(this, NANOSECONDS) : _props$nanoseconds;
+
+        var _ES$RegulateDuration = ES.RegulateDuration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, disambiguation);
+
+        years = _ES$RegulateDuration.years;
+        months = _ES$RegulateDuration.months;
+        weeks = _ES$RegulateDuration.weeks;
+        days = _ES$RegulateDuration.days;
+        hours = _ES$RegulateDuration.hours;
+        minutes = _ES$RegulateDuration.minutes;
+        seconds = _ES$RegulateDuration.seconds;
+        milliseconds = _ES$RegulateDuration.milliseconds;
+        microseconds = _ES$RegulateDuration.microseconds;
+        nanoseconds = _ES$RegulateDuration.nanoseconds;
+        var Construct = ES.SpeciesConstructor(this, Duration);
+        var result = new Construct(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+        if (!ES.IsTemporalDuration(result)) throw new TypeError('invalid result');
+        return result;
+      }
+    }, {
+      key: "plus",
+      value: function plus(other, options) {
+        if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
+
+        var _ES$ToLimitedTemporal = ES.ToLimitedTemporalDuration(other),
+            years = _ES$ToLimitedTemporal.years,
+            months = _ES$ToLimitedTemporal.months,
+            weeks = _ES$ToLimitedTemporal.weeks,
+            days = _ES$ToLimitedTemporal.days,
+            hours = _ES$ToLimitedTemporal.hours,
+            minutes = _ES$ToLimitedTemporal.minutes,
+            seconds = _ES$ToLimitedTemporal.seconds,
+            milliseconds = _ES$ToLimitedTemporal.milliseconds,
+            microseconds = _ES$ToLimitedTemporal.microseconds,
+            nanoseconds = _ES$ToLimitedTemporal.nanoseconds;
+
+        var disambiguation = ES.ToTemporalDisambiguation(options);
+
+        var _ES$AddDuration = ES.AddDuration(GetSlot(this, YEARS), GetSlot(this, MONTHS), GetSlot(this, WEEKS), GetSlot(this, DAYS), GetSlot(this, HOURS), GetSlot(this, MINUTES), GetSlot(this, SECONDS), GetSlot(this, MILLISECONDS), GetSlot(this, MICROSECONDS), GetSlot(this, NANOSECONDS), years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, disambiguation);
+
+        years = _ES$AddDuration.years;
+        months = _ES$AddDuration.months;
+        weeks = _ES$AddDuration.weeks;
+        days = _ES$AddDuration.days;
+        hours = _ES$AddDuration.hours;
+        minutes = _ES$AddDuration.minutes;
+        seconds = _ES$AddDuration.seconds;
+        milliseconds = _ES$AddDuration.milliseconds;
+        microseconds = _ES$AddDuration.microseconds;
+        nanoseconds = _ES$AddDuration.nanoseconds;
+        var Construct = ES.SpeciesConstructor(this, Duration);
+        var result = new Construct(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+        if (!ES.IsTemporalDuration(result)) throw new TypeError('invalid result');
+        return result;
+      }
+    }, {
+      key: "minus",
+      value: function minus(other, options) {
+        if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
+
+        var _ES$ToLimitedTemporal2 = ES.ToLimitedTemporalDuration(other),
+            years = _ES$ToLimitedTemporal2.years,
+            months = _ES$ToLimitedTemporal2.months,
+            weeks = _ES$ToLimitedTemporal2.weeks,
+            days = _ES$ToLimitedTemporal2.days,
+            hours = _ES$ToLimitedTemporal2.hours,
+            minutes = _ES$ToLimitedTemporal2.minutes,
+            seconds = _ES$ToLimitedTemporal2.seconds,
+            milliseconds = _ES$ToLimitedTemporal2.milliseconds,
+            microseconds = _ES$ToLimitedTemporal2.microseconds,
+            nanoseconds = _ES$ToLimitedTemporal2.nanoseconds;
+
+        var disambiguation = ES.ToDurationSubtractionTemporalDisambiguation(options);
+
+        var _ES$SubtractDuration = ES.SubtractDuration(GetSlot(this, YEARS), GetSlot(this, MONTHS), GetSlot(this, WEEKS), GetSlot(this, DAYS), GetSlot(this, HOURS), GetSlot(this, MINUTES), GetSlot(this, SECONDS), GetSlot(this, MILLISECONDS), GetSlot(this, MICROSECONDS), GetSlot(this, NANOSECONDS), years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, disambiguation);
+
+        years = _ES$SubtractDuration.years;
+        months = _ES$SubtractDuration.months;
+        weeks = _ES$SubtractDuration.weeks;
+        days = _ES$SubtractDuration.days;
+        hours = _ES$SubtractDuration.hours;
+        minutes = _ES$SubtractDuration.minutes;
+        seconds = _ES$SubtractDuration.seconds;
+        milliseconds = _ES$SubtractDuration.milliseconds;
+        microseconds = _ES$SubtractDuration.microseconds;
+        nanoseconds = _ES$SubtractDuration.nanoseconds;
+        var Construct = ES.SpeciesConstructor(this, Duration);
+        var result = new Construct(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+        if (!ES.IsTemporalDuration(result)) throw new TypeError('invalid result');
+        return result;
+      }
+    }, {
+      key: "getFields",
+      value: function getFields() {
+        var fields = ES.ToRecord(this, [['days'], ['hours'], ['microseconds'], ['milliseconds'], ['minutes'], ['months'], ['nanoseconds'], ['seconds'], ['weeks'], ['years']]);
+        if (!fields) throw new TypeError('invalid receiver');
+        return fields;
+      }
+    }, {
+      key: "toString",
+      value: function toString() {
+        if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
+        return ES.TemporalDurationToString(this);
+      }
+    }, {
+      key: "toLocaleString",
+      value: function toLocaleString() {
+        if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
+
+        if (typeof Intl !== 'undefined' && typeof Intl.DurationFormat !== 'undefined') {
+          for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+            args[_key] = arguments[_key];
+          }
+
+          return _construct(Intl.DurationFormat, args).format(this);
+        }
+
+        console.warn('Temporal.Duration.prototype.toLocaleString() requires Intl.DurationFormat.');
+        return ES.TemporalDurationToString(this);
+      }
+    }, {
+      key: "valueOf",
+      value: function valueOf() {
+        throw new TypeError('not possible to compare Temporal.Duration');
+      }
+    }, {
+      key: "years",
+      get: function get() {
+        if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, YEARS);
+      }
+    }, {
+      key: "months",
+      get: function get() {
+        if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, MONTHS);
+      }
+    }, {
+      key: "weeks",
+      get: function get() {
+        if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, WEEKS);
+      }
+    }, {
+      key: "days",
+      get: function get() {
+        if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, DAYS);
+      }
+    }, {
+      key: "hours",
+      get: function get() {
+        if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, HOURS);
+      }
+    }, {
+      key: "minutes",
+      get: function get() {
+        if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, MINUTES);
+      }
+    }, {
+      key: "seconds",
+      get: function get() {
+        if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, SECONDS);
+      }
+    }, {
+      key: "milliseconds",
+      get: function get() {
+        if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, MILLISECONDS);
+      }
+    }, {
+      key: "microseconds",
+      get: function get() {
+        if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, MICROSECONDS);
+      }
+    }, {
+      key: "nanoseconds",
+      get: function get() {
+        if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, NANOSECONDS);
+      }
+    }], [{
+      key: "from",
+      value: function from(item) {
+        var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
+        var disambiguation = ES.ToDurationTemporalDisambiguation(options);
+        var years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds;
+
+        if (_typeof(item) === 'object' && item) {
+          var _ES$ToTemporalDuratio = ES.ToTemporalDurationRecord(item);
+
+          years = _ES$ToTemporalDuratio.years;
+          months = _ES$ToTemporalDuratio.months;
+          weeks = _ES$ToTemporalDuratio.weeks;
+          days = _ES$ToTemporalDuratio.days;
+          hours = _ES$ToTemporalDuratio.hours;
+          minutes = _ES$ToTemporalDuratio.minutes;
+          seconds = _ES$ToTemporalDuratio.seconds;
+          milliseconds = _ES$ToTemporalDuratio.milliseconds;
+          microseconds = _ES$ToTemporalDuratio.microseconds;
+          nanoseconds = _ES$ToTemporalDuratio.nanoseconds;
+        } else {
+          var _ES$ParseTemporalDura = ES.ParseTemporalDurationString(ES.ToString(item));
+
+          years = _ES$ParseTemporalDura.years;
+          months = _ES$ParseTemporalDura.months;
+          weeks = _ES$ParseTemporalDura.weeks;
+          days = _ES$ParseTemporalDura.days;
+          hours = _ES$ParseTemporalDura.hours;
+          minutes = _ES$ParseTemporalDura.minutes;
+          seconds = _ES$ParseTemporalDura.seconds;
+          milliseconds = _ES$ParseTemporalDura.milliseconds;
+          microseconds = _ES$ParseTemporalDura.microseconds;
+          nanoseconds = _ES$ParseTemporalDura.nanoseconds;
+        }
+
+        var _ES$RegulateDuration2 = ES.RegulateDuration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, disambiguation);
+
+        years = _ES$RegulateDuration2.years;
+        months = _ES$RegulateDuration2.months;
+        weeks = _ES$RegulateDuration2.weeks;
+        days = _ES$RegulateDuration2.days;
+        hours = _ES$RegulateDuration2.hours;
+        minutes = _ES$RegulateDuration2.minutes;
+        seconds = _ES$RegulateDuration2.seconds;
+        milliseconds = _ES$RegulateDuration2.milliseconds;
+        microseconds = _ES$RegulateDuration2.microseconds;
+        nanoseconds = _ES$RegulateDuration2.nanoseconds;
+        var result = new this(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+        if (!ES.IsTemporalDuration(result)) throw new TypeError('invalid result');
+        return result;
+      }
+    }]);
+
+    return Duration;
+  }();
+  Duration.prototype.toJSON = Duration.prototype.toString;
+  MakeIntrinsicClass(Duration, 'Temporal.Duration');
+
+  var ObjectAssign$3 = Object.assign;
+  var MonthDay = /*#__PURE__*/function () {
+    function MonthDay(isoMonth, isoDay) {
+      var calendar = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : undefined;
+      var refISOYear = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 1972;
+
+      _classCallCheck(this, MonthDay);
+
+      isoMonth = ES.ToInteger(isoMonth);
+      isoDay = ES.ToInteger(isoDay);
+      if (calendar === undefined) calendar = GetDefaultCalendar();
+      refISOYear = ES.ToInteger(refISOYear);
+      ES.RejectDate(refISOYear, isoMonth, isoDay);
+      ES.RejectDateRange(refISOYear, isoMonth, isoDay);
+      if (!calendar || _typeof(calendar) !== 'object') throw new RangeError('invalid calendar');
+      CreateSlots(this);
+      SetSlot(this, ISO_MONTH, isoMonth);
+      SetSlot(this, ISO_DAY, isoDay);
+      SetSlot(this, REF_ISO_YEAR, refISOYear);
+      SetSlot(this, CALENDAR, calendar);
+
+      {
+        Object.defineProperty(this, '_repr_', {
+          value: "".concat(this[Symbol.toStringTag], " <").concat(this, ">"),
+          writable: false,
+          enumerable: false,
+          configurable: false
+        });
+      }
+    }
+
+    _createClass(MonthDay, [{
+      key: "with",
+      value: function _with(temporalMonthDayLike, options) {
+        if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
+
+        if ('calendar' in temporalMonthDayLike) {
+          throw new RangeError('invalid calendar property in month-day-like');
+        }
+
+        var props = ES.ToPartialRecord(temporalMonthDayLike, ['day', 'month']);
+
+        if (!props) {
+          throw new RangeError('invalid month-day-like');
+        }
+
+        var fields = ES.ToTemporalMonthDayRecord(this);
+        ObjectAssign$3(fields, props);
+        var Construct = ES.SpeciesConstructor(this, MonthDay);
+        var result = GetSlot(this, CALENDAR).monthDayFromFields(fields, options, Construct);
+        if (!ES.IsTemporalMonthDay(result)) throw new TypeError('invalid result');
+        return result;
+      }
+    }, {
+      key: "equals",
+      value: function equals(other) {
+        if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
+        if (!ES.IsTemporalMonthDay(other)) throw new TypeError('invalid MonthDay object');
+
+        for (var _i = 0, _arr = [ISO_MONTH, ISO_DAY, REF_ISO_YEAR]; _i < _arr.length; _i++) {
+          var slot = _arr[_i];
+          var val1 = GetSlot(this, slot);
+          var val2 = GetSlot(other, slot);
+          if (val1 !== val2) return false;
+        }
+
+        return GetSlot(this, CALENDAR).id === GetSlot(other, CALENDAR).id;
+      }
+    }, {
+      key: "toString",
+      value: function toString() {
+        if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
+        var month = ES.ISODateTimePartString(GetSlot(this, ISO_MONTH));
+        var day = ES.ISODateTimePartString(GetSlot(this, ISO_DAY));
+        var resultString = "".concat(month, "-").concat(day);
+        var calendar = ES.FormatCalendarAnnotation(GetSlot(this, CALENDAR));
+
+        if (calendar) {
+          var year = ES.ISOYearString(GetSlot(this, REF_ISO_YEAR));
+          resultString = "".concat(year, "-").concat(resultString).concat(calendar);
+        }
+
+        return resultString;
+      }
+    }, {
+      key: "toLocaleString",
+      value: function toLocaleString() {
+        if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
+
+        for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+          args[_key] = arguments[_key];
+        }
+
+        return _construct(Intl.DateTimeFormat, args).format(this);
+      }
+    }, {
+      key: "valueOf",
+      value: function valueOf() {
+        throw new TypeError('use equals() to compare Temporal.MonthDay');
+      }
+    }, {
+      key: "withYear",
+      value: function withYear(item) {
+        if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
+        var era, year;
+
+        if (_typeof(item) === 'object' && item !== null) {
+          var _ES$ToRecord = ES.ToRecord(item, [['era', undefined], ['year']]);
+
+          era = _ES$ToRecord.era;
+          year = _ES$ToRecord.year;
+        } else {
+          year = ES.ToInteger(item);
+        }
+
+        var calendar = GetSlot(this, CALENDAR);
+        var fields = ES.ToTemporalMonthDayRecord(this);
+        var Date = GetIntrinsic$1('%Temporal.Date%');
+        return calendar.dateFromFields(_objectSpread2(_objectSpread2({}, fields), {}, {
+          era: era,
+          year: year
+        }), {
+          disambiguation: 'reject'
+        }, Date);
+      }
+    }, {
+      key: "getFields",
+      value: function getFields() {
+        var fields = ES.ToTemporalMonthDayRecord(this);
+        if (!fields) throw new TypeError('invalid receiver');
+        fields.calendar = GetSlot(this, CALENDAR);
+        return fields;
+      }
+    }, {
+      key: "getISOCalendarFields",
+      value: function getISOCalendarFields() {
+        if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
+        return {
+          year: GetSlot(this, REF_ISO_YEAR),
+          month: GetSlot(this, ISO_MONTH),
+          day: GetSlot(this, ISO_DAY)
+        };
+      }
+    }, {
+      key: "month",
+      get: function get() {
+        if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, CALENDAR).month(this);
+      }
+    }, {
+      key: "day",
+      get: function get() {
+        if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, CALENDAR).day(this);
+      }
+    }, {
+      key: "calendar",
+      get: function get() {
+        if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, CALENDAR);
+      }
+    }], [{
+      key: "from",
+      value: function from(item) {
+        var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
+        var disambiguation = ES.ToTemporalDisambiguation(options);
+        var TemporalCalendar = GetIntrinsic$1('%Temporal.Calendar%');
+        var result;
+
+        if (_typeof(item) === 'object' && item) {
+          if (ES.IsTemporalMonthDay(item)) {
+            var month = GetSlot(item, ISO_MONTH);
+            var day = GetSlot(item, ISO_DAY);
+            var calendar = GetSlot(item, CALENDAR);
+            var refISOYear = GetSlot(item, REF_ISO_YEAR);
+            result = new this(month, day, calendar, refISOYear);
+          } else {
+            var _calendar = item.calendar;
+            if (_calendar === undefined) _calendar = GetDefaultCalendar();
+            _calendar = TemporalCalendar.from(_calendar);
+            result = _calendar.monthDayFromFields(item, options, this);
+          }
+        } else {
+          var _ES$ParseTemporalMont = ES.ParseTemporalMonthDayString(ES.ToString(item)),
+              _month = _ES$ParseTemporalMont.month,
+              _day = _ES$ParseTemporalMont.day,
+              _refISOYear = _ES$ParseTemporalMont.refISOYear,
+              _calendar2 = _ES$ParseTemporalMont.calendar;
+
+          var _ES$RegulateMonthDay = ES.RegulateMonthDay(_month, _day, disambiguation);
+
+          _month = _ES$RegulateMonthDay.month;
+          _day = _ES$RegulateMonthDay.day;
+          if (!_calendar2) _calendar2 = GetDefaultCalendar();
+          _calendar2 = TemporalCalendar.from(_calendar2);
+          if (_refISOYear === undefined) _refISOYear = 1972;
+          result = new this(_month, _day, _calendar2, _refISOYear);
+        }
+
+        if (!ES.IsTemporalMonthDay(result)) throw new TypeError('invalid result');
+        return result;
+      }
+    }]);
+
+    return MonthDay;
+  }();
+  MonthDay.prototype.toJSON = MonthDay.prototype.toString;
+  MakeIntrinsicClass(MonthDay, 'Temporal.MonthDay');
+
+  var now = {
+    absolute: absolute$1,
+    dateTime: dateTime,
+    date: date,
+    time: time$1,
+    timeZone: timeZone
+  };
+
+  function absolute$1() {
+    var Absolute = GetIntrinsic$1('%Temporal.Absolute%');
+    return new Absolute(ES.SystemUTCEpochNanoSeconds());
+  }
+
+  function dateTime() {
+    var temporalTimeZoneLike = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : timeZone();
+    var calendar = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
+    return function () {
+      var TemporalTimeZone = GetIntrinsic$1('%Temporal.TimeZone%');
+      var timeZone = TemporalTimeZone.from(temporalTimeZoneLike);
+      var abs = absolute$1();
+      if (typeof timeZone.getDateTimeFor === 'function') return timeZone.getDateTimeFor(abs, calendar);
+      return TemporalTimeZone.prototype.getDateTimeFor.call(timeZone, abs, calendar);
+    }();
+  }
+
+  function date(temporalTimeZoneLike) {
+    var calendar = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
+    return dateTime(temporalTimeZoneLike, calendar).getDate();
+  }
+
+  function time$1(temporalTimeZoneLike) {
+    return dateTime(temporalTimeZoneLike).getTime();
+  }
+
+  function timeZone() {
+    return ES.SystemTimeZone();
+  }
+
+  var Time = /*#__PURE__*/function () {
+    function Time() {
+      var hour = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
+      var minute = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+      var second = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+      var millisecond = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 0;
+      var microsecond = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 0;
+      var nanosecond = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : 0;
+
+      _classCallCheck(this, Time);
+
+      hour = ES.ToInteger(hour);
+      minute = ES.ToInteger(minute);
+      second = ES.ToInteger(second);
+      millisecond = ES.ToInteger(millisecond);
+      microsecond = ES.ToInteger(microsecond);
+      nanosecond = ES.ToInteger(nanosecond);
+      ES.RejectTime(hour, minute, second, millisecond, microsecond, nanosecond);
+      CreateSlots(this);
+      SetSlot(this, HOUR, hour);
+      SetSlot(this, MINUTE, minute);
+      SetSlot(this, SECOND, second);
+      SetSlot(this, MILLISECOND, millisecond);
+      SetSlot(this, MICROSECOND, microsecond);
+      SetSlot(this, NANOSECOND, nanosecond);
+
+      {
+        Object.defineProperty(this, '_repr_', {
+          value: "".concat(this[Symbol.toStringTag], " <").concat(this, ">"),
+          writable: false,
+          enumerable: false,
+          configurable: false
+        });
+      }
+    }
+
+    _createClass(Time, [{
+      key: "with",
+      value: function _with() {
+        var temporalTimeLike = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+        var options = arguments.length > 1 ? arguments[1] : undefined;
+        if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
+        var disambiguation = ES.ToTemporalDisambiguation(options);
+        var props = ES.ToPartialRecord(temporalTimeLike, ['hour', 'microsecond', 'millisecond', 'minute', 'nanosecond', 'second']);
+
+        if (!props) {
+          throw new RangeError('invalid time-like');
+        }
+
+        var _props$hour = props.hour,
+            hour = _props$hour === void 0 ? GetSlot(this, HOUR) : _props$hour,
+            _props$minute = props.minute,
+            minute = _props$minute === void 0 ? GetSlot(this, MINUTE) : _props$minute,
+            _props$second = props.second,
+            second = _props$second === void 0 ? GetSlot(this, SECOND) : _props$second,
+            _props$millisecond = props.millisecond,
+            millisecond = _props$millisecond === void 0 ? GetSlot(this, MILLISECOND) : _props$millisecond,
+            _props$microsecond = props.microsecond,
+            microsecond = _props$microsecond === void 0 ? GetSlot(this, MICROSECOND) : _props$microsecond,
+            _props$nanosecond = props.nanosecond,
+            nanosecond = _props$nanosecond === void 0 ? GetSlot(this, NANOSECOND) : _props$nanosecond;
+
+        var _ES$RegulateTime = ES.RegulateTime(hour, minute, second, millisecond, microsecond, nanosecond, disambiguation);
+
+        hour = _ES$RegulateTime.hour;
+        minute = _ES$RegulateTime.minute;
+        second = _ES$RegulateTime.second;
+        millisecond = _ES$RegulateTime.millisecond;
+        microsecond = _ES$RegulateTime.microsecond;
+        nanosecond = _ES$RegulateTime.nanosecond;
+        var Construct = ES.SpeciesConstructor(this, Time);
+        var result = new Construct(hour, minute, second, millisecond, microsecond, nanosecond);
+        if (!ES.IsTemporalTime(result)) throw new TypeError('invalid result');
+        return result;
+      }
+    }, {
+      key: "plus",
+      value: function plus(temporalDurationLike, options) {
+        if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
+        var hour = this.hour,
+            minute = this.minute,
+            second = this.second,
+            millisecond = this.millisecond,
+            microsecond = this.microsecond,
+            nanosecond = this.nanosecond;
+        var duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
+        var disambiguation = ES.ToTemporalDisambiguation(options);
+        var hours = duration.hours,
+            minutes = duration.minutes,
+            seconds = duration.seconds,
+            milliseconds = duration.milliseconds,
+            microseconds = duration.microseconds,
+            nanoseconds = duration.nanoseconds;
+
+        var _ES$AddTime = ES.AddTime(hour, minute, second, millisecond, microsecond, nanosecond, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+
+        hour = _ES$AddTime.hour;
+        minute = _ES$AddTime.minute;
+        second = _ES$AddTime.second;
+        millisecond = _ES$AddTime.millisecond;
+        microsecond = _ES$AddTime.microsecond;
+        nanosecond = _ES$AddTime.nanosecond;
+
+        var _ES$RegulateTime2 = ES.RegulateTime(hour, minute, second, millisecond, microsecond, nanosecond, disambiguation);
+
+        hour = _ES$RegulateTime2.hour;
+        minute = _ES$RegulateTime2.minute;
+        second = _ES$RegulateTime2.second;
+        millisecond = _ES$RegulateTime2.millisecond;
+        microsecond = _ES$RegulateTime2.microsecond;
+        nanosecond = _ES$RegulateTime2.nanosecond;
+        var Construct = ES.SpeciesConstructor(this, Time);
+        var result = new Construct(hour, minute, second, millisecond, microsecond, nanosecond);
+        if (!ES.IsTemporalTime(result)) throw new TypeError('invalid result');
+        return result;
+      }
+    }, {
+      key: "minus",
+      value: function minus(temporalDurationLike, options) {
+        if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
+        var hour = this.hour,
+            minute = this.minute,
+            second = this.second,
+            millisecond = this.millisecond,
+            microsecond = this.microsecond,
+            nanosecond = this.nanosecond;
+        var duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
+        var disambiguation = ES.ToTemporalDisambiguation(options);
+        var hours = duration.hours,
+            minutes = duration.minutes,
+            seconds = duration.seconds,
+            milliseconds = duration.milliseconds,
+            microseconds = duration.microseconds,
+            nanoseconds = duration.nanoseconds;
+
+        var _ES$SubtractTime = ES.SubtractTime(hour, minute, second, millisecond, microsecond, nanosecond, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+
+        hour = _ES$SubtractTime.hour;
+        minute = _ES$SubtractTime.minute;
+        second = _ES$SubtractTime.second;
+        millisecond = _ES$SubtractTime.millisecond;
+        microsecond = _ES$SubtractTime.microsecond;
+        nanosecond = _ES$SubtractTime.nanosecond;
+
+        var _ES$RegulateTime3 = ES.RegulateTime(hour, minute, second, millisecond, microsecond, nanosecond, disambiguation);
+
+        hour = _ES$RegulateTime3.hour;
+        minute = _ES$RegulateTime3.minute;
+        second = _ES$RegulateTime3.second;
+        millisecond = _ES$RegulateTime3.millisecond;
+        microsecond = _ES$RegulateTime3.microsecond;
+        nanosecond = _ES$RegulateTime3.nanosecond;
+        var Construct = ES.SpeciesConstructor(this, Time);
+        var result = new Construct(hour, minute, second, millisecond, microsecond, nanosecond);
+        if (!ES.IsTemporalTime(result)) throw new TypeError('invalid result');
+        return result;
+      }
+    }, {
+      key: "difference",
+      value: function difference(other, options) {
+        if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
+        if (!ES.IsTemporalTime(other)) throw new TypeError('invalid Time object');
+        var largestUnit = ES.ToLargestTemporalUnit(options, 'hours');
+        var comparison = Time.compare(this, other);
+        if (comparison < 0) throw new RangeError('other instance cannot be larger than `this`');
+
+        var _ES$DifferenceTime = ES.DifferenceTime(other, this),
+            hours = _ES$DifferenceTime.hours,
+            minutes = _ES$DifferenceTime.minutes,
+            seconds = _ES$DifferenceTime.seconds,
+            milliseconds = _ES$DifferenceTime.milliseconds,
+            microseconds = _ES$DifferenceTime.microseconds,
+            nanoseconds = _ES$DifferenceTime.nanoseconds;
+
+        var _ES$BalanceDuration = ES.BalanceDuration(0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, largestUnit);
+
+        hours = _ES$BalanceDuration.hours;
+        minutes = _ES$BalanceDuration.minutes;
+        seconds = _ES$BalanceDuration.seconds;
+        milliseconds = _ES$BalanceDuration.milliseconds;
+        microseconds = _ES$BalanceDuration.microseconds;
+        nanoseconds = _ES$BalanceDuration.nanoseconds;
+        var Duration = GetIntrinsic$1('%Temporal.Duration%');
+        return new Duration(0, 0, 0, 0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+      }
+    }, {
+      key: "equals",
+      value: function equals(other) {
+        if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
+        if (!ES.IsTemporalTime(other)) throw new TypeError('invalid Time object');
+
+        for (var _i = 0, _arr = [HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND]; _i < _arr.length; _i++) {
+          var slot = _arr[_i];
+          var val1 = GetSlot(this, slot);
+          var val2 = GetSlot(other, slot);
+          if (val1 !== val2) return false;
+        }
+
+        return true;
+      }
+    }, {
+      key: "toString",
+      value: function toString() {
+        if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
+        var hour = ES.ISODateTimePartString(GetSlot(this, HOUR));
+        var minute = ES.ISODateTimePartString(GetSlot(this, MINUTE));
+        var seconds = ES.ISOSecondsString(GetSlot(this, SECOND), GetSlot(this, MILLISECOND), GetSlot(this, MICROSECOND), GetSlot(this, NANOSECOND));
+        var resultString = "".concat(hour, ":").concat(minute).concat(seconds ? ":".concat(seconds) : '');
+        return resultString;
+      }
+    }, {
+      key: "toLocaleString",
+      value: function toLocaleString() {
+        if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
+
+        for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+          args[_key] = arguments[_key];
+        }
+
+        return _construct(Intl.DateTimeFormat, args).format(this);
+      }
+    }, {
+      key: "valueOf",
+      value: function valueOf() {
+        throw new TypeError('use compare() or equals() to compare Temporal.Time');
+      }
+    }, {
+      key: "withDate",
+      value: function withDate(temporalDate) {
+        if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
+        if (!ES.IsTemporalDate(temporalDate)) throw new TypeError('invalid Temporal.Date object');
+        var year = GetSlot(temporalDate, ISO_YEAR);
+        var month = GetSlot(temporalDate, ISO_MONTH);
+        var day = GetSlot(temporalDate, ISO_DAY);
+        var hour = GetSlot(this, HOUR);
+        var minute = GetSlot(this, MINUTE);
+        var second = GetSlot(this, SECOND);
+        var millisecond = GetSlot(this, MILLISECOND);
+        var microsecond = GetSlot(this, MICROSECOND);
+        var nanosecond = GetSlot(this, NANOSECOND);
+        var calendar = GetSlot(temporalDate, CALENDAR);
+        var DateTime = GetIntrinsic$1('%Temporal.DateTime%');
+        return new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
+      }
+    }, {
+      key: "getFields",
+      value: function getFields() {
+        var fields = ES.ToTemporalTimeRecord(this);
+        if (!fields) throw new TypeError('invalid receiver');
+        return fields;
+      }
+    }, {
+      key: "hour",
+      get: function get() {
+        if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, HOUR);
+      }
+    }, {
+      key: "minute",
+      get: function get() {
+        if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, MINUTE);
+      }
+    }, {
+      key: "second",
+      get: function get() {
+        if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, SECOND);
+      }
+    }, {
+      key: "millisecond",
+      get: function get() {
+        if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, MILLISECOND);
+      }
+    }, {
+      key: "microsecond",
+      get: function get() {
+        if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, MICROSECOND);
+      }
+    }, {
+      key: "nanosecond",
+      get: function get() {
+        if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, NANOSECOND);
+      }
+    }], [{
+      key: "from",
+      value: function from(item) {
+        var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
+        var disambiguation = ES.ToTemporalDisambiguation(options);
+        var hour, minute, second, millisecond, microsecond, nanosecond;
+
+        if (_typeof(item) === 'object' && item) {
+          if (ES.IsTemporalTime(item)) {
+            minute = GetSlot(item, MINUTE);
+            second = GetSlot(item, SECOND);
+            millisecond = GetSlot(item, MILLISECOND);
+            microsecond = GetSlot(item, MICROSECOND);
+            nanosecond = GetSlot(item, NANOSECOND);
+          } else {
+            // Intentionally alphabetical
+            var _ES$ToTemporalTimeRec = ES.ToTemporalTimeRecord(item);
+
+            hour = _ES$ToTemporalTimeRec.hour;
+            minute = _ES$ToTemporalTimeRec.minute;
+            second = _ES$ToTemporalTimeRec.second;
+            millisecond = _ES$ToTemporalTimeRec.millisecond;
+            microsecond = _ES$ToTemporalTimeRec.microsecond;
+            nanosecond = _ES$ToTemporalTimeRec.nanosecond;
+          }
+        } else {
+          var _ES$ParseTemporalTime = ES.ParseTemporalTimeString(ES.ToString(item));
+
+          hour = _ES$ParseTemporalTime.hour;
+          minute = _ES$ParseTemporalTime.minute;
+          second = _ES$ParseTemporalTime.second;
+          millisecond = _ES$ParseTemporalTime.millisecond;
+          microsecond = _ES$ParseTemporalTime.microsecond;
+          nanosecond = _ES$ParseTemporalTime.nanosecond;
+        }
+
+        var _ES$RegulateTime4 = ES.RegulateTime(hour, minute, second, millisecond, microsecond, nanosecond, disambiguation);
+
+        hour = _ES$RegulateTime4.hour;
+        minute = _ES$RegulateTime4.minute;
+        second = _ES$RegulateTime4.second;
+        millisecond = _ES$RegulateTime4.millisecond;
+        microsecond = _ES$RegulateTime4.microsecond;
+        nanosecond = _ES$RegulateTime4.nanosecond;
+        var result = new this(hour, minute, second, millisecond, microsecond, nanosecond);
+        if (!ES.IsTemporalTime(result)) throw new TypeError('invalid result');
+        return result;
+      }
+    }, {
+      key: "compare",
+      value: function compare(one, two) {
+        if (!ES.IsTemporalTime(one) || !ES.IsTemporalTime(two)) throw new TypeError('invalid Time object');
+
+        for (var _i2 = 0, _arr2 = [HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND]; _i2 < _arr2.length; _i2++) {
+          var slot = _arr2[_i2];
+          var val1 = GetSlot(one, slot);
+          var val2 = GetSlot(two, slot);
+          if (val1 !== val2) return ES.ComparisonResult(val1 - val2);
+        }
+
+        return ES.ComparisonResult(0);
+      }
+    }]);
+
+    return Time;
+  }();
+  Time.prototype.toJSON = Time.prototype.toString;
+  MakeIntrinsicClass(Time, 'Temporal.Time');
+
+  var OFFSET$1 = new RegExp("^".concat(offset.source, "$"));
+
+  function parseOffsetString$1(string) {
+    var match = OFFSET$1.exec(String(string));
+    if (!match) return null;
+    var sign = match[1] === '-' ? -1 : +1;
+    var hours = +match[2];
+    var minutes = +(match[3] || 0);
+    return sign * (hours * 60 + minutes) * 60 * 1e9;
+  }
+
+  var TimeZone = /*#__PURE__*/function () {
+    function TimeZone(timeZoneIdentifier) {
+      _classCallCheck(this, TimeZone);
+
+      if ((this instanceof TimeZone ? this.constructor : void 0) === TimeZone) {
+        timeZoneIdentifier = ES.GetCanonicalTimeZoneIdentifier(timeZoneIdentifier);
+      }
+
+      CreateSlots(this);
+      SetSlot(this, TIMEZONE_ID, timeZoneIdentifier);
+
+      {
+        Object.defineProperty(this, '_repr_', {
+          value: "".concat(this[Symbol.toStringTag], " <").concat(this, ">"),
+          writable: false,
+          enumerable: false,
+          configurable: false
+        });
+      }
+    }
+
+    _createClass(TimeZone, [{
+      key: "getOffsetNanosecondsFor",
+      value: function getOffsetNanosecondsFor(absolute) {
+        if (!ES.IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');
+        if (!ES.IsTemporalAbsolute(absolute)) throw new TypeError('invalid Absolute object');
+        var id = GetSlot(this, TIMEZONE_ID);
+        var offsetNs = parseOffsetString$1(id);
+        if (offsetNs !== null) return offsetNs;
+        return ES.GetIANATimeZoneOffsetNanoseconds(GetSlot(absolute, EPOCHNANOSECONDS), id);
+      }
+    }, {
+      key: "getOffsetStringFor",
+      value: function getOffsetStringFor(absolute) {
+        var offsetNs = this.getOffsetNanosecondsFor(absolute);
+
+        if (typeof offsetNs !== 'number') {
+          throw new TypeError('bad return from getOffsetNanosecondsFor');
+        }
+
+        if (!Number.isInteger(offsetNs) || Math.abs(offsetNs) > 86400e9) {
+          throw new RangeError('out-of-range return from getOffsetNanosecondsFor');
+        }
+
+        return ES.FormatTimeZoneOffsetString(offsetNs);
+      }
+    }, {
+      key: "getDateTimeFor",
+      value: function getDateTimeFor(absolute) {
+        var calendar = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'iso8601';
+        if (!ES.IsTemporalAbsolute(absolute)) throw new TypeError('invalid Absolute object');
+        var ns = GetSlot(absolute, EPOCHNANOSECONDS);
+        var offsetNs = this.getOffsetNanosecondsFor(absolute);
+
+        if (typeof offsetNs !== 'number') {
+          throw new TypeError('bad return from getOffsetNanosecondsFor');
+        }
+
+        if (!Number.isInteger(offsetNs) || Math.abs(offsetNs) > 86400e9) {
+          throw new RangeError('out-of-range return from getOffsetNanosecondsFor');
+        }
+
+        var _ES$GetPartsFromEpoch = ES.GetPartsFromEpoch(ns),
+            year = _ES$GetPartsFromEpoch.year,
+            month = _ES$GetPartsFromEpoch.month,
+            day = _ES$GetPartsFromEpoch.day,
+            hour = _ES$GetPartsFromEpoch.hour,
+            minute = _ES$GetPartsFromEpoch.minute,
+            second = _ES$GetPartsFromEpoch.second,
+            millisecond = _ES$GetPartsFromEpoch.millisecond,
+            microsecond = _ES$GetPartsFromEpoch.microsecond,
+            nanosecond = _ES$GetPartsFromEpoch.nanosecond;
+
+        var _ES$BalanceDateTime = ES.BalanceDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond + offsetNs);
+
+        year = _ES$BalanceDateTime.year;
+        month = _ES$BalanceDateTime.month;
+        day = _ES$BalanceDateTime.day;
+        hour = _ES$BalanceDateTime.hour;
+        minute = _ES$BalanceDateTime.minute;
+        second = _ES$BalanceDateTime.second;
+        millisecond = _ES$BalanceDateTime.millisecond;
+        microsecond = _ES$BalanceDateTime.microsecond;
+        nanosecond = _ES$BalanceDateTime.nanosecond;
+        var TemporalCalendar = GetIntrinsic$1('%Temporal.Calendar%');
+        calendar = TemporalCalendar.from(calendar);
+        var DateTime = GetIntrinsic$1('%Temporal.DateTime%');
+        return new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
+      }
+    }, {
+      key: "getAbsoluteFor",
+      value: function getAbsoluteFor(dateTime, options) {
+        if (!ES.IsTemporalDateTime(dateTime)) throw new TypeError('invalid DateTime object');
+        var disambiguation = ES.ToTimeZoneTemporalDisambiguation(options);
+        var Absolute = GetIntrinsic$1('%Temporal.Absolute%');
+        var possibleAbsolutes = this.getPossibleAbsolutesFor(dateTime);
+
+        if (!Array.isArray(possibleAbsolutes)) {
+          throw new TypeError('bad return from getPossibleAbsolutesFor');
+        }
+
+        var numAbsolutes = possibleAbsolutes.length;
+
+        function validateAbsolute(absolute) {
+          if (!ES.IsTemporalAbsolute(absolute)) {
+            throw new TypeError('bad return from getPossibleAbsolutesFor');
+          }
+
+          return absolute;
+        }
+
+        if (numAbsolutes === 1) return validateAbsolute(possibleAbsolutes[0]);
+
+        if (numAbsolutes) {
+          switch (disambiguation) {
+            case 'compatible': // fall through because 'compatible' means 'earlier' for "fall back" transitions
+
+            case 'earlier':
+              return validateAbsolute(possibleAbsolutes[0]);
+
+            case 'later':
+              return validateAbsolute(possibleAbsolutes[numAbsolutes - 1]);
+
+            case 'reject':
+              {
+                throw new RangeError('multiple absolute found');
+              }
+          }
+        }
+
+        var utcns = ES.GetEpochFromParts(GetSlot(dateTime, ISO_YEAR), GetSlot(dateTime, ISO_MONTH), GetSlot(dateTime, ISO_DAY), GetSlot(dateTime, HOUR), GetSlot(dateTime, MINUTE), GetSlot(dateTime, SECOND), GetSlot(dateTime, MILLISECOND), GetSlot(dateTime, MICROSECOND), GetSlot(dateTime, NANOSECOND));
+        if (utcns === null) throw new RangeError('DateTime outside of supported range');
+        var dayBefore = new Absolute(utcns.minus(86400e9));
+        var dayAfter = new Absolute(utcns.plus(86400e9));
+        var offsetBefore = this.getOffsetNanosecondsFor(dayBefore);
+        var offsetAfter = this.getOffsetNanosecondsFor(dayAfter);
+        var nanoseconds = offsetAfter - offsetBefore;
+        var diff = ES.ToTemporalDurationRecord({
+          nanoseconds: nanoseconds
+        }, 'reject');
+
+        switch (disambiguation) {
+          case 'earlier':
+            {
+              var earlier = dateTime.minus(diff);
+              return this.getPossibleAbsolutesFor(earlier)[0];
+            }
+
+          case 'compatible': // fall through because 'compatible' means 'later' for "spring forward" transitions
+
+          case 'later':
+            {
+              var later = dateTime.plus(diff);
+              var possible = this.getPossibleAbsolutesFor(later);
+              return possible[possible.length - 1];
+            }
+
+          case 'reject':
+            {
+              throw new RangeError('no such absolute found');
+            }
+        }
+      }
+    }, {
+      key: "getPossibleAbsolutesFor",
+      value: function getPossibleAbsolutesFor(dateTime) {
+        if (!ES.IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');
+        if (!ES.IsTemporalDateTime(dateTime)) throw new TypeError('invalid DateTime object');
+        var Absolute = GetIntrinsic$1('%Temporal.Absolute%');
+        var id = GetSlot(this, TIMEZONE_ID);
+        var offsetNs = parseOffsetString$1(id);
+
+        if (offsetNs !== null) {
+          var epochNs = ES.GetEpochFromParts(GetSlot(dateTime, ISO_YEAR), GetSlot(dateTime, ISO_MONTH), GetSlot(dateTime, ISO_DAY), GetSlot(dateTime, HOUR), GetSlot(dateTime, MINUTE), GetSlot(dateTime, SECOND), GetSlot(dateTime, MILLISECOND), GetSlot(dateTime, MICROSECOND), GetSlot(dateTime, NANOSECOND));
+          return [new Absolute(epochNs.minus(offsetNs))];
+        }
+
+        var possibleEpochNs = ES.GetIANATimeZoneEpochValue(id, GetSlot(dateTime, ISO_YEAR), GetSlot(dateTime, ISO_MONTH), GetSlot(dateTime, ISO_DAY), GetSlot(dateTime, HOUR), GetSlot(dateTime, MINUTE), GetSlot(dateTime, SECOND), GetSlot(dateTime, MILLISECOND), GetSlot(dateTime, MICROSECOND), GetSlot(dateTime, NANOSECOND));
+        return possibleEpochNs.map(function (ns) {
+          return new Absolute(ns);
+        });
+      }
+    }, {
+      key: "getNextTransition",
+      value: function getNextTransition(startingPoint) {
+        if (!ES.IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');
+        if (!ES.IsTemporalAbsolute(startingPoint)) throw new TypeError('invalid Absolute object');
+        var id = GetSlot(this, TIMEZONE_ID); // Offset time zones or UTC have no transitions
+
+        if (parseOffsetString$1(id) !== null || id === 'UTC') {
+          return null;
+        }
+
+        var epochNanoseconds = GetSlot(startingPoint, EPOCHNANOSECONDS);
+        var Absolute = GetIntrinsic$1('%Temporal.Absolute%');
+        epochNanoseconds = ES.GetIANATimeZoneNextTransition(epochNanoseconds, id);
+        return epochNanoseconds === null ? null : new Absolute(epochNanoseconds);
+      }
+    }, {
+      key: "getPreviousTransition",
+      value: function getPreviousTransition(startingPoint) {
+        if (!ES.IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');
+        if (!ES.IsTemporalAbsolute(startingPoint)) throw new TypeError('invalid Absolute object');
+        var id = GetSlot(this, TIMEZONE_ID); // Offset time zones or UTC have no transitions
+
+        if (parseOffsetString$1(id) !== null || id === 'UTC') {
+          return null;
+        }
+
+        var epochNanoseconds = GetSlot(startingPoint, EPOCHNANOSECONDS);
+        var Absolute = GetIntrinsic$1('%Temporal.Absolute%');
+        epochNanoseconds = ES.GetIANATimeZonePreviousTransition(epochNanoseconds, id);
+        return epochNanoseconds === null ? null : new Absolute(epochNanoseconds);
+      }
+    }, {
+      key: "toString",
+      value: function toString() {
+        if (!ES.IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');
+        return this.name;
+      }
+    }, {
+      key: "toJSON",
+      value: function toJSON() {
+        return this.toString();
+      }
+    }, {
+      key: "name",
+      get: function get() {
+        if (!ES.IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');
+        return String(GetSlot(this, TIMEZONE_ID));
+      }
+    }], [{
+      key: "from",
+      value: function from(item) {
+        if (ES.IsTemporalTimeZone(item) || _typeof(item) === 'object' && item) return item;
+        var timeZone = ES.TemporalTimeZoneFromString(ES.ToString(item));
+        var result = new this(timeZone);
+        if (!ES.IsTemporalTimeZone(result)) throw new TypeError('invalid result');
+        return result;
+      }
+    }]);
+
+    return TimeZone;
+  }();
+  MakeIntrinsicClass(TimeZone, 'Temporal.TimeZone');
+
+  var ObjectAssign$4 = Object.assign;
+  var YearMonth = /*#__PURE__*/function () {
+    function YearMonth(isoYear, isoMonth) {
+      var calendar = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : undefined;
+      var refISODay = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 1;
+
+      _classCallCheck(this, YearMonth);
+
+      isoYear = ES.ToInteger(isoYear);
+      isoMonth = ES.ToInteger(isoMonth);
+      if (calendar === undefined) calendar = GetDefaultCalendar();
+      refISODay = ES.ToInteger(refISODay);
+      ES.RejectDate(isoYear, isoMonth, refISODay);
+      ES.RejectYearMonthRange(isoYear, isoMonth);
+      if (!calendar || _typeof(calendar) !== 'object') throw new RangeError('invalid calendar');
+      CreateSlots(this);
+      SetSlot(this, ISO_YEAR, isoYear);
+      SetSlot(this, ISO_MONTH, isoMonth);
+      SetSlot(this, REF_ISO_DAY, refISODay);
+      SetSlot(this, CALENDAR, calendar);
+
+      {
+        Object.defineProperty(this, '_repr_', {
+          value: "".concat(this[Symbol.toStringTag], " <").concat(this, ">"),
+          writable: false,
+          enumerable: false,
+          configurable: false
+        });
+      }
+    }
+
+    _createClass(YearMonth, [{
+      key: "with",
+      value: function _with() {
+        var temporalYearMonthLike = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+        var options = arguments.length > 1 ? arguments[1] : undefined;
+        if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
+
+        if ('calendar' in temporalYearMonthLike) {
+          throw new RangeError('invalid calendar property in year-month-like');
+        }
+
+        var props = ES.ToPartialRecord(temporalYearMonthLike, ['era', 'month', 'year']);
+
+        if (!props) {
+          throw new RangeError('invalid year-month-like');
+        }
+
+        var fields = ES.ToTemporalYearMonthRecord(this);
+        ObjectAssign$4(fields, props);
+        var Construct = ES.SpeciesConstructor(this, YearMonth);
+        var result = GetSlot(this, CALENDAR).yearMonthFromFields(fields, options, Construct);
+        if (!ES.IsTemporalYearMonth(result)) throw new TypeError('invalid result');
+        return result;
+      }
+    }, {
+      key: "plus",
+      value: function plus(temporalDurationLike, options) {
+        if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
+        var duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
+        var hours = duration.hours,
+            minutes = duration.minutes,
+            seconds = duration.seconds,
+            milliseconds = duration.milliseconds,
+            microseconds = duration.microseconds,
+            nanoseconds = duration.nanoseconds;
+
+        var _ES$BalanceDuration = ES.BalanceDuration(duration.days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 'days'),
+            days = _ES$BalanceDuration.days;
+
+        var TemporalDate = GetIntrinsic$1('%Temporal.Date%');
+        var calendar = GetSlot(this, CALENDAR);
+        var fields = ES.ToTemporalYearMonthRecord(this);
+        var firstOfCalendarMonth = calendar.dateFromFields(_objectSpread2(_objectSpread2({}, fields), {}, {
+          day: 1
+        }), {}, TemporalDate);
+        var addedDate = calendar.plus(firstOfCalendarMonth, _objectSpread2(_objectSpread2({}, duration), {}, {
+          days: days
+        }), options, TemporalDate);
+        var Construct = ES.SpeciesConstructor(this, YearMonth);
+        var result = calendar.yearMonthFromFields(addedDate, options, Construct);
+        if (!ES.IsTemporalYearMonth(result)) throw new TypeError('invalid result');
+        return result;
+      }
+    }, {
+      key: "minus",
+      value: function minus(temporalDurationLike, options) {
+        if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
+        var duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
+        var hours = duration.hours,
+            minutes = duration.minutes,
+            seconds = duration.seconds,
+            milliseconds = duration.milliseconds,
+            microseconds = duration.microseconds,
+            nanoseconds = duration.nanoseconds;
+
+        var _ES$BalanceDuration2 = ES.BalanceDuration(duration.days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 'days'),
+            days = _ES$BalanceDuration2.days;
+
+        var TemporalDate = GetIntrinsic$1('%Temporal.Date%');
+        var calendar = GetSlot(this, CALENDAR);
+        var fields = ES.ToTemporalYearMonthRecord(this);
+        var lastDay = calendar.daysInMonth(this);
+        var lastOfCalendarMonth = calendar.dateFromFields(_objectSpread2(_objectSpread2({}, fields), {}, {
+          day: lastDay
+        }), {}, TemporalDate);
+        var subtractedDate = calendar.minus(lastOfCalendarMonth, _objectSpread2(_objectSpread2({}, duration), {}, {
+          days: days
+        }), options, TemporalDate);
+        var Construct = ES.SpeciesConstructor(this, YearMonth);
+        var result = calendar.yearMonthFromFields(subtractedDate, options, Construct);
+        if (!ES.IsTemporalYearMonth(result)) throw new TypeError('invalid result');
+        return result;
+      }
+    }, {
+      key: "difference",
+      value: function difference(other, options) {
+        if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
+        if (!ES.IsTemporalYearMonth(other)) throw new TypeError('invalid YearMonth object');
+        var calendar = GetSlot(this, CALENDAR);
+
+        if (calendar.id !== GetSlot(other, CALENDAR).id) {
+          other = new Date(GetSlot(other, ISO_YEAR), GetSlot(other, ISO_MONTH), calendar, GetSlot(other, REF_ISO_DAY));
+        }
+
+        var largestUnit = ES.ToLargestTemporalUnit(options, 'years', ['weeks', 'days', 'hours', 'minutes', 'seconds']);
+        var comparison = YearMonth.compare(this, other);
+        if (comparison < 0) throw new RangeError('other instance cannot be larger than `this`');
+        var smallerFields = ES.ToTemporalYearMonthRecord(other);
+        var largerFields = ES.ToTemporalYearMonthRecord(this);
+        var TemporalDate = GetIntrinsic$1('%Temporal.Date%');
+        var smaller = calendar.dateFromFields(_objectSpread2(_objectSpread2({}, smallerFields), {}, {
+          day: 1
+        }), {}, TemporalDate);
+        var larger = calendar.dateFromFields(_objectSpread2(_objectSpread2({}, largerFields), {}, {
+          day: 1
+        }), {}, TemporalDate);
+        return calendar.difference(smaller, larger, _objectSpread2(_objectSpread2({}, options), {}, {
+          largestUnit: largestUnit
+        }));
+      }
+    }, {
+      key: "equals",
+      value: function equals(other) {
+        if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
+        if (!ES.IsTemporalYearMonth(other)) throw new TypeError('invalid YearMonth object');
+
+        for (var _i = 0, _arr = [ISO_YEAR, ISO_MONTH, REF_ISO_DAY]; _i < _arr.length; _i++) {
+          var slot = _arr[_i];
+          var val1 = GetSlot(this, slot);
+          var val2 = GetSlot(other, slot);
+          if (val1 !== val2) return false;
+        }
+
+        return GetSlot(this, CALENDAR).id === GetSlot(other, CALENDAR).id;
+      }
+    }, {
+      key: "toString",
+      value: function toString() {
+        if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
+        var year = ES.ISOYearString(GetSlot(this, ISO_YEAR));
+        var month = ES.ISODateTimePartString(GetSlot(this, ISO_MONTH));
+        var resultString = "".concat(year, "-").concat(month);
+        var calendar = ES.FormatCalendarAnnotation(GetSlot(this, CALENDAR));
+
+        if (calendar) {
+          var day = ES.ISODateTimePartString(GetSlot(this, REF_ISO_DAY));
+          resultString = "".concat(resultString, "-").concat(day).concat(calendar);
+        }
+
+        return resultString;
+      }
+    }, {
+      key: "toLocaleString",
+      value: function toLocaleString() {
+        if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
+
+        for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+          args[_key] = arguments[_key];
+        }
+
+        return _construct(Intl.DateTimeFormat, args).format(this);
+      }
+    }, {
+      key: "valueOf",
+      value: function valueOf() {
+        throw new TypeError('use compare() or equals() to compare Temporal.YearMonth');
+      }
+    }, {
+      key: "withDay",
+      value: function withDay(day) {
+        if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
+        var calendar = GetSlot(this, CALENDAR);
+        var fields = ES.ToTemporalYearMonthRecord(this);
+        var Date = GetIntrinsic$1('%Temporal.Date%');
+        return calendar.dateFromFields(_objectSpread2(_objectSpread2({}, fields), {}, {
+          day: day
+        }), {
+          disambiguation: 'reject'
+        }, Date);
+      }
+    }, {
+      key: "getFields",
+      value: function getFields() {
+        var fields = ES.ToTemporalYearMonthRecord(this);
+        if (!fields) throw new TypeError('invalid receiver');
+        fields.calendar = GetSlot(this, CALENDAR);
+        return fields;
+      }
+    }, {
+      key: "getISOCalendarFields",
+      value: function getISOCalendarFields() {
+        if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
+        return {
+          year: GetSlot(this, ISO_YEAR),
+          month: GetSlot(this, ISO_MONTH),
+          day: GetSlot(this, REF_ISO_DAY)
+        };
+      }
+    }, {
+      key: "year",
+      get: function get() {
+        if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, CALENDAR).year(this);
+      }
+    }, {
+      key: "month",
+      get: function get() {
+        if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, CALENDAR).month(this);
+      }
+    }, {
+      key: "calendar",
+      get: function get() {
+        if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, CALENDAR);
+      }
+    }, {
+      key: "era",
+      get: function get() {
+        if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, CALENDAR).era(this);
+      }
+    }, {
+      key: "daysInMonth",
+      get: function get() {
+        if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, CALENDAR).daysInMonth(this);
+      }
+    }, {
+      key: "daysInYear",
+      get: function get() {
+        if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, CALENDAR).daysInYear(this);
+      }
+    }, {
+      key: "isLeapYear",
+      get: function get() {
+        if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, CALENDAR).isLeapYear(this);
+      }
+    }], [{
+      key: "from",
+      value: function from(item) {
+        var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
+        var disambiguation = ES.ToTemporalDisambiguation(options);
+        var TemporalCalendar = GetIntrinsic$1('%Temporal.Calendar%');
+        var result;
+
+        if (_typeof(item) === 'object' && item) {
+          if (ES.IsTemporalYearMonth(item)) {
+            var year = GetSlot(item, ISO_YEAR);
+            var month = GetSlot(item, ISO_MONTH);
+            var calendar = GetSlot(item, CALENDAR);
+            var refISODay = GetSlot(item, REF_ISO_DAY);
+            result = new this(year, month, calendar, refISODay);
+          } else {
+            var _calendar = item.calendar;
+            if (_calendar === undefined) _calendar = GetDefaultCalendar();
+            _calendar = TemporalCalendar.from(_calendar);
+            result = _calendar.yearMonthFromFields(item, options, this);
+          }
+        } else {
+          var _ES$ParseTemporalYear = ES.ParseTemporalYearMonthString(ES.ToString(item)),
+              _year = _ES$ParseTemporalYear.year,
+              _month = _ES$ParseTemporalYear.month,
+              _refISODay = _ES$ParseTemporalYear.refISODay,
+              _calendar2 = _ES$ParseTemporalYear.calendar;
+
+          var _ES$RegulateYearMonth = ES.RegulateYearMonth(_year, _month, disambiguation);
+
+          _year = _ES$RegulateYearMonth.year;
+          _month = _ES$RegulateYearMonth.month;
+          if (!_calendar2) _calendar2 = GetDefaultCalendar();
+          _calendar2 = TemporalCalendar.from(_calendar2);
+          if (_refISODay === undefined) _refISODay = 1;
+          result = new this(_year, _month, _calendar2, _refISODay);
+        }
+
+        if (!ES.IsTemporalYearMonth(result)) throw new TypeError('invalid result');
+        return result;
+      }
+    }, {
+      key: "compare",
+      value: function compare(one, two) {
+        if (!ES.IsTemporalYearMonth(one) || !ES.IsTemporalYearMonth(two)) throw new TypeError('invalid YearMonth object');
+
+        for (var _i2 = 0, _arr2 = [ISO_YEAR, ISO_MONTH, REF_ISO_DAY]; _i2 < _arr2.length; _i2++) {
+          var slot = _arr2[_i2];
+          var val1 = GetSlot(one, slot);
+          var val2 = GetSlot(two, slot);
+          if (val1 !== val2) return ES.ComparisonResult(val1 - val2);
+        }
+
+        var cal1 = GetSlot(one, CALENDAR).id;
+        var cal2 = GetSlot(two, CALENDAR).id;
+        return ES.ComparisonResult(cal1 < cal2 ? -1 : cal1 > cal2 ? 1 : 0);
+      }
+    }]);
+
+    return YearMonth;
+  }();
+  YearMonth.prototype.toJSON = YearMonth.prototype.toString;
+  MakeIntrinsicClass(YearMonth, 'Temporal.YearMonth');
+
+  var Temporal = /*#__PURE__*/Object.freeze({
+    __proto__: null,
+    Absolute: Absolute,
+    Calendar: Calendar,
+    Date: Date$1,
+    DateTime: DateTime,
+    Duration: Duration,
+    MonthDay: MonthDay,
+    now: now,
+    Time: Time,
+    TimeZone: TimeZone,
+    YearMonth: YearMonth
+  });
+
+  var DATE = Symbol('date');
+  var YM = Symbol('ym');
+  var MD = Symbol('md');
+  var TIME = Symbol('time');
+  var DATETIME = Symbol('datetime');
+  var ORIGINAL = Symbol('original');
+  var TIMEZONE = Symbol('timezone');
+
+  var descriptor = function descriptor(value) {
+    return {
+      value: value,
+      enumerable: true,
+      writable: false,
+      configurable: true
+    };
+  };
+
+  var IntlDateTimeFormat$1 = Intl.DateTimeFormat;
+  var ObjectAssign$5 = Object.assign;
+  function DateTimeFormat() {
+    var locale = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : IntlDateTimeFormat$1().resolvedOptions().locale;
+    var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+    if (!(this instanceof DateTimeFormat)) return new DateTimeFormat(locale, options);
+    this[ORIGINAL] = new IntlDateTimeFormat$1(locale, options);
+    this[TIMEZONE] = new TimeZone(this.resolvedOptions().timeZone);
+    this[DATE] = new IntlDateTimeFormat$1(locale, dateAmend(options));
+    this[YM] = new IntlDateTimeFormat$1(locale, yearMonthAmend(options));
+    this[MD] = new IntlDateTimeFormat$1(locale, monthDayAmend(options));
+    this[TIME] = new IntlDateTimeFormat$1(locale, timeAmend(options));
+    this[DATETIME] = new IntlDateTimeFormat$1(locale, datetimeAmend(options));
+  }
+
+  DateTimeFormat.supportedLocalesOf = function () {
+    return IntlDateTimeFormat$1.supportedLocalesOf.apply(IntlDateTimeFormat$1, arguments);
+  };
+
+  var properties = {
+    resolvedOptions: descriptor(resolvedOptions),
+    format: descriptor(format$1),
+    formatRange: descriptor(formatRange)
+  };
+
+  if ('formatToParts' in IntlDateTimeFormat$1.prototype) {
+    properties.formatToParts = descriptor(formatToParts);
+  }
+
+  if ('formatRangeToParts' in IntlDateTimeFormat$1.prototype) {
+    properties.formatRangeToParts = descriptor(formatRangeToParts);
+  }
+
+  DateTimeFormat.prototype = Object.create(IntlDateTimeFormat$1.prototype, properties);
+
+  function resolvedOptions() {
+    return this[ORIGINAL].resolvedOptions();
+  }
+
+  function adjustFormatterCalendar(formatter, calendar) {
+    var options = formatter.resolvedOptions();
+    if (!calendar || calendar === options.calendar || calendar === 'gregory' || calendar === 'iso8601') return formatter;
+    var locale = "".concat(options.locale, "-u-ca-").concat(calendar);
+    return new IntlDateTimeFormat$1(locale, options);
+  }
+
+  function pickRangeCalendar(a, b) {
+    if (!a) return b;
+    if (!b) return a;
+    if (a === b) return a;
+    if (a === 'iso8601' || a === 'gregory') return b;
+    if (b === 'iso8601' || b === 'gregory') return a;
+    throw new RangeError("cannot format range between two dates of ".concat(a, " and ").concat(b, " calendars"));
+  }
+
+  function format$1(datetime) {
+    var _this$ORIGINAL;
+
+    var _extractOverrides = extractOverrides(datetime, this),
+        absolute = _extractOverrides.absolute,
+        formatter = _extractOverrides.formatter,
+        calendar = _extractOverrides.calendar;
+
+    if (absolute && formatter) {
+      return adjustFormatterCalendar(formatter, calendar).format(absolute.getEpochMilliseconds());
+    }
+
+    for (var _len = arguments.length, rest = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+      rest[_key - 1] = arguments[_key];
+    }
+
+    return (_this$ORIGINAL = this[ORIGINAL]).format.apply(_this$ORIGINAL, [datetime].concat(rest));
+  }
+
+  function formatToParts(datetime) {
+    var _this$ORIGINAL2;
+
+    var _extractOverrides2 = extractOverrides(datetime, this),
+        absolute = _extractOverrides2.absolute,
+        formatter = _extractOverrides2.formatter,
+        calendar = _extractOverrides2.calendar;
+
+    if (absolute && formatter) {
+      return adjustFormatterCalendar(formatter, calendar).formatToParts(absolute.getEpochMilliseconds());
+    }
+
+    for (var _len2 = arguments.length, rest = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
+      rest[_key2 - 1] = arguments[_key2];
+    }
+
+    return (_this$ORIGINAL2 = this[ORIGINAL]).formatToParts.apply(_this$ORIGINAL2, [datetime].concat(rest));
+  }
+
+  function formatRange(a, b) {
+    if ('object' === _typeof(a) && 'object' === _typeof(b) && a && b) {
+      if (Object.getPrototypeOf(a) !== Object.getPrototypeOf(b)) {
+        throw new TypeError('Intl.DateTimeFormat accepts two values of the same type');
+      }
+
+      var _extractOverrides3 = extractOverrides(a, this),
+          aa = _extractOverrides3.absolute,
+          aformatter = _extractOverrides3.formatter,
+          acalendar = _extractOverrides3.calendar;
+
+      var _extractOverrides4 = extractOverrides(b, this),
+          bb = _extractOverrides4.absolute,
+          bformatter = _extractOverrides4.formatter,
+          bcalendar = _extractOverrides4.calendar;
+
+      var calendar = pickRangeCalendar(acalendar, bcalendar);
+
+      if (aa && bb && aformatter && bformatter && aformatter === bformatter) {
+        var formatter = adjustFormatterCalendar(aformatter, calendar);
+        return formatter.formatRange(aa.getEpochMilliseconds(), bb.getEpochMilliseconds());
+      }
+    }
+
+    return this[ORIGINAL].formatRange(a, b);
+  }
+
+  function formatRangeToParts(a, b) {
+    if ('object' === _typeof(a) && 'object' === _typeof(b) && a && b) {
+      if (Object.getPrototypeOf(a) !== Object.getPrototypeOf(b)) {
+        throw new TypeError('Intl.DateTimeFormat accepts two values of the same type');
+      }
+
+      var _extractOverrides5 = extractOverrides(a, this),
+          aa = _extractOverrides5.absolute,
+          aformatter = _extractOverrides5.formatter,
+          acalendar = _extractOverrides5.calendar;
+
+      var _extractOverrides6 = extractOverrides(b, this),
+          bb = _extractOverrides6.absolute,
+          bformatter = _extractOverrides6.formatter,
+          bcalendar = _extractOverrides6.calendar;
+
+      var calendar = pickRangeCalendar(acalendar, bcalendar);
+
+      if (aa && bb && aformatter && bformatter && aformatter === bformatter) {
+        var formatter = adjustFormatterCalendar(aformatter, calendar);
+        return formatter.formatRangeToParts(aa.getEpochMilliseconds(), bb.getEpochMilliseconds());
+      }
+    }
+
+    return this[ORIGINAL].formatRangeToParts(a, b);
+  }
+
+  function amend() {
+    var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+    var amended = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+    options = ObjectAssign$5({}, options);
+
+    for (var _i = 0, _arr = ['year', 'month', 'day', 'hour', 'minute', 'second', 'timeZoneName']; _i < _arr.length; _i++) {
+      var opt = _arr[_i];
+      options[opt] = opt in amended ? amended[opt] : options[opt];
+      if (options[opt] === false || options[opt] === undefined) delete options[opt];
+    }
+
+    return options;
+  }
+
+  function timeAmend(options) {
+    options = amend(options, {
+      year: false,
+      month: false,
+      day: false,
+      timeZoneName: false
+    });
+
+    if (!hasTimeOptions(options)) {
+      options = ObjectAssign$5(options, {
+        hour: 'numeric',
+        minute: 'numeric',
+        second: 'numeric'
+      });
+    }
+
+    return options;
+  }
+
+  function yearMonthAmend(options) {
+    options = amend(options, {
+      day: false,
+      hour: false,
+      minute: false,
+      second: false,
+      timeZoneName: false
+    });
+
+    if (!('year' in options || 'month' in options)) {
+      options = ObjectAssign$5(options, {
+        year: 'numeric',
+        month: 'numeric'
+      });
+    }
+
+    return options;
+  }
+
+  function monthDayAmend(options) {
+    options = amend(options, {
+      year: false,
+      hour: false,
+      minute: false,
+      second: false,
+      timeZoneName: false
+    });
+
+    if (!('month' in options || 'day' in options)) {
+      options = ObjectAssign$5(options, {
+        month: 'numeric',
+        day: 'numeric'
+      });
+    }
+
+    return options;
+  }
+
+  function dateAmend(options) {
+    options = amend(options, {
+      hour: false,
+      minute: false,
+      second: false,
+      timeZoneName: false
+    });
+
+    if (!hasDateOptions(options)) {
+      options = ObjectAssign$5(options, {
+        year: 'numeric',
+        month: 'numeric',
+        day: 'numeric'
+      });
+    }
+
+    return options;
+  }
+
+  function datetimeAmend(options) {
+    options = amend(options, {
+      timeZoneName: false
+    });
+
+    if (!hasTimeOptions(options) && !hasDateOptions(options)) {
+      ObjectAssign$5(options, {
+        year: 'numeric',
+        month: 'numeric',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        second: 'numeric'
+      });
+    }
+
+    return options;
+  }
+
+  function hasDateOptions(options) {
+    return 'year' in options || 'month' in options || 'day' in options;
+  }
+
+  function hasTimeOptions(options) {
+    return 'hour' in options || 'minute' in options || 'second' in options;
+  }
+
+  function extractOverrides(datetime, main) {
+    var formatter, calendar;
+    var Absolute = GetIntrinsic$1('%Temporal.Absolute%');
+    var Date = GetIntrinsic$1('%Temporal.Date%');
+    var DateTime = GetIntrinsic$1('%Temporal.DateTime%');
+    var MonthDay = GetIntrinsic$1('%Temporal.MonthDay%');
+    var Time = GetIntrinsic$1('%Temporal.Time%');
+    var YearMonth = GetIntrinsic$1('%Temporal.YearMonth%');
+
+    if (datetime instanceof Time) {
+      datetime = datetime.withDate(new Date(1970, 1, 1));
+      formatter = main[TIME];
+    }
+
+    if (datetime instanceof YearMonth) {
+      calendar = datetime.calendar.id;
+
+      var _datetime$getISOCalen = datetime.getISOCalendarFields(),
+          year = _datetime$getISOCalen.year,
+          month = _datetime$getISOCalen.month,
+          day = _datetime$getISOCalen.day;
+
+      datetime = new Date(year, month, day, datetime.calendar);
+      formatter = main[YM];
+    }
+
+    if (datetime instanceof MonthDay) {
+      calendar = datetime.calendar.id;
+
+      var _datetime$getISOCalen2 = datetime.getISOCalendarFields(),
+          _year = _datetime$getISOCalen2.year,
+          _month = _datetime$getISOCalen2.month,
+          _day = _datetime$getISOCalen2.day;
+
+      datetime = new Date(_year, _month, _day, datetime.calendar);
+      formatter = main[MD];
+    }
+
+    if (datetime instanceof Date) {
+      calendar = calendar || datetime.calendar.id;
+      datetime = datetime.withTime(new Time(12, 0));
+      formatter = formatter || main[DATE];
+    }
+
+    if (datetime instanceof DateTime) {
+      calendar = calendar || datetime.calendar.id;
+      formatter = formatter || main[DATETIME];
+      datetime = main[TIMEZONE].getAbsoluteFor(datetime);
+    }
+
+    if (datetime instanceof Absolute) {
+      formatter = formatter || main[DATETIME];
+      return {
+        absolute: datetime,
+        formatter: formatter,
+        calendar: calendar
+      };
+    } else {
+      return {};
+    }
+  }
+
+  var Intl$1 = /*#__PURE__*/Object.freeze({
+    __proto__: null,
+    DateTimeFormat: DateTimeFormat
+  });
+
+  Object.defineProperty(globalThis, 'Temporal', {
+    value: {},
+    writable: true,
+    enumerable: false,
+    configurable: true
+  });
+  copy(globalThis.Temporal, Temporal);
+  copy(globalThis.Intl, Intl$1);
+
+  function copy(target, source) {
+    var _iterator = _createForOfIteratorHelper(Object.getOwnPropertyNames(source)),
+        _step;
+
+    try {
+      for (_iterator.s(); !(_step = _iterator.n()).done;) {
+        var prop = _step.value;
+        Object.defineProperty(target, prop, {
+          value: source[prop],
+          writable: true,
+          enumerable: false,
+          configurable: true
+        });
+      }
+    } catch (err) {
+      _iterator.e(err);
+    } finally {
+      _iterator.f();
+    }
+  }
+
+  exports.Intl = Intl$1;
+  exports.Temporal = Temporal;
+
+  Object.defineProperty(exports, '__esModule', { value: true });
+
+})));
 //# sourceMappingURL=playground.js.map

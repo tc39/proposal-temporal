@@ -11,6 +11,55 @@
     <script>
       Temporal = { ...temporal.Temporal };
       Object.assign(Intl, temporal.Intl);
+
+      // Customize output of Temporal objects for Chrome DevTools
+      if (!window.devtoolsFormatters)
+        window.devtoolsFormatters = [];
+      window.devtoolsFormatters.push({
+        header(x) {
+          for (const type of [
+            Temporal.Absolute,
+            Temporal.Calendar,
+            Temporal.Date,
+            Temporal.DateTime,
+            Temporal.Duration,
+            Temporal.MonthDay,
+            Temporal.Time,
+            Temporal.TimeZone,
+            Temporal.YearMonth
+          ]) {
+            if (x instanceof type) return ['span', {}, `${x[Symbol.toStringTag]} <${x}>`];
+          }
+          return null;
+        },
+        hasBody(x) {
+          return x instanceof Temporal.Duration;
+        },
+        body(x) {
+          const out = ['ol', { style: 'list-style-type: none;' }];
+          for (const prop of [
+            'years',
+            'months',
+            'weeks',
+            'days',
+            'hours',
+            'minutes',
+            'seconds',
+            'milliseconds',
+            'microseconds',
+            'nanoseconds'
+          ]) {
+            if (x[prop] !== 0) out.push([
+              'li',
+              {},
+              ['span', { style: 'color: purple;' }, prop],
+              `: `,
+              ['span', { style: 'color: blue;' }, x[prop]]
+            ]);
+          }
+          return out;
+        }
+      });
     </script>
     <style>
       /* https://github.com/kognise/water.css/blob/master/src/variables-light.css */
