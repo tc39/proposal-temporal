@@ -10,7 +10,7 @@ A `Temporal.Time` represents a wall-clock time, with a precision in nanoseconds,
 For example, it could be used to represent an event that happens daily at a certain time, no matter what time zone.
 
 `Temporal.Time` refers to a time with no associated calendar date; if you need to refer to a specific time on a specific day, use `Temporal.DateTime`.
-A `Temporal.Time` can be converted into a `Temporal.DateTime` by combining it with a `Temporal.Date` using the `withDate()` method.
+A `Temporal.Time` can be converted into a `Temporal.DateTime` by combining it with a `Temporal.Date` using the `toDateTime()` method.
 
 ## Constructor
 
@@ -363,7 +363,7 @@ This method overrides `Object.prototype.valueOf()` and always throws an exceptio
 This is because it's not possible to compare `Temporal.Time` objects with the relational operators `<`, `<=`, `>`, or `>=`.
 Use `Temporal.Time.compare()` for this, or `time.equals()` for equality.
 
-### time.**withDate**(_date_: Temporal.Date) : Temporal.DateTime
+### time.**toDateTime**(_date_: Temporal.Date) : Temporal.DateTime
 
 **Parameters:**
 - `date` (`Temporal.Date`): A calendar date on which to place `time`.
@@ -379,7 +379,7 @@ Usage example:
 ```javascript
 time = Temporal.Time.from('15:23:30.003');
 date = Temporal.Date.from('2006-08-24');
-time.withDate(date)  // => 2006-08-24T15:23:30.003
+time.toDateTime(date)  // => 2006-08-24T15:23:30.003
 ```
 
 ### time.**getFields**() : { hour: number, minute: number, second: number, millisecond: number, microsecond: number, nanosecond: number }
