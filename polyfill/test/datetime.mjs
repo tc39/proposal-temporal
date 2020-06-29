@@ -589,11 +589,11 @@ describe('DateTime', () => {
       const lastNs = Temporal.Time.from('23:59:59.999999999');
       const min = Temporal.Date.from('-271821-04-19');
       const max = Temporal.Date.from('+275760-09-13');
-      throws(() => min.withTime(midnight), RangeError);
+      throws(() => min.toDateTime(midnight), RangeError);
       throws(() => midnight.toDateTime(min), RangeError);
-      equal(`${min.withTime(firstNs)}`, '-271821-04-19T00:00:00.000000001');
+      equal(`${min.toDateTime(firstNs)}`, '-271821-04-19T00:00:00.000000001');
       equal(`${firstNs.toDateTime(min)}`, '-271821-04-19T00:00:00.000000001');
-      equal(`${max.withTime(lastNs)}`, '+275760-09-13T23:59:59.999999999');
+      equal(`${max.toDateTime(lastNs)}`, '+275760-09-13T23:59:59.999999999');
       equal(`${lastNs.toDateTime(max)}`, '+275760-09-13T23:59:59.999999999');
     });
     it('adding and subtracting beyond limit', () => {

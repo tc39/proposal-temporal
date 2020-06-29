@@ -60,8 +60,8 @@ describe('Date', () => {
       it('Date.prototype.equals is a Function', () => {
         equal(typeof Date.prototype.equals, 'function');
       });
-      it('Date.prototype.withTime is a Function', () => {
-        equal(typeof Date.prototype.withTime, 'function');
+      it('Date.prototype.toDateTime is a Function', () => {
+        equal(typeof Date.prototype.toDateTime, 'function');
       });
       it('Date.prototype.getYearMonth is a Function', () => {
         equal(typeof Date.prototype.getYearMonth, 'function');
@@ -145,14 +145,14 @@ describe('Date', () => {
       );
     });
   });
-  describe('Date.withTime() works', () => {
+  describe('Date.toDateTime() works', () => {
     const date = Date.from('1976-11-18');
-    const dt = date.withTime(Temporal.Time.from('11:30:23'));
+    const dt = date.toDateTime(Temporal.Time.from('11:30:23'));
     it('returns a Temporal.DateTime', () => assert(dt instanceof Temporal.DateTime));
     it('combines the date and time', () => equal(`${dt}`, '1976-11-18T11:30:23'));
     it("doesn't cast argument", () => {
-      throws(() => date.withTime({ hour: 11, minute: 30, second: 23 }), TypeError);
-      throws(() => date.withTime('11:30:23'), TypeError);
+      throws(() => date.toDateTime({ hour: 11, minute: 30, second: 23 }), TypeError);
+      throws(() => date.toDateTime('11:30:23'), TypeError);
     });
   });
   describe('date.difference() works', () => {

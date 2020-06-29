@@ -220,7 +220,7 @@ function extractOverrides(datetime, main) {
   }
   if (datetime instanceof Date) {
     calendar = calendar || datetime.calendar.id;
-    datetime = datetime.withTime(new Time(12, 0));
+    datetime = datetime.toDateTime(new Time(12, 0));
     formatter = formatter || main[DATE];
   }
   if (datetime instanceof DateTime) {
