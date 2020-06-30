@@ -276,6 +276,12 @@ date = Temporal.Date.from('2006-01-24');
 date.with({day: 1});  // => 2006-01-01
 // What's the last day of the next month?
 date.plus({months: 1}).with({day: date.daysInMonth});  // => 2006-02-28
+// Temporal.YearMonth and Temporal.MonthDay also have some of the
+// properties of Temporal.Date:
+yearMonth = Temporal.YearMonth.from('2018-04');
+date.with(yearMonth)  // => 2018-04-24
+monthDay = Temporal.MonthDay.from('02-29')
+date.with(monthDay)  // => 2006-02-28
 ```
 
 ### date.**withCalendar**(_calendar_: object | string) : Temporal.Date

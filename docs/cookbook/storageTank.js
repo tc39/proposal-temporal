@@ -7,8 +7,7 @@ const tankTimeZone = Temporal.TimeZone.from('Europe/Stockholm');
 const tankMidnight = Temporal.now
   .absolute()
   .inTimeZone(tankTimeZone)
-  .getDate()
-  .withTime(Temporal.Time.from('00:00'))
+  .with(Temporal.Time.from('00:00'))
   .inTimeZone(tankTimeZone);
 const atOrAfterMidnight = (x) => Temporal.Absolute.compare(x, tankMidnight) >= 0;
 const dataStartIndex = tankDataX.findIndex(atOrAfterMidnight);

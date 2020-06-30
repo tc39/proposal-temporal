@@ -11,8 +11,7 @@ const timeZones = [
 // Start the table at midnight local time
 const calendarNow = now.inTimeZone(here);
 const startTime = calendarNow
-  .getDate()
-  .withTime(Temporal.Time.from('00:00')) // midnight
+  .with(Temporal.Time.from('00:00')) // midnight
   .inTimeZone(here);
 
 // Build the table
