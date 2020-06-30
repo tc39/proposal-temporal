@@ -31,12 +31,11 @@
     "lint": "eslint . --ext js,mjs,.d.ts --max-warnings 0 --cache && npm run tscheck",
     "tscheck": "tsc polyfill/index.d.ts --noEmit --strict --lib ESNext",
     "build:polyfill": "cd polyfill && npm install && npm run build && cd ..",
-    "build:javascript": "npm run build:polyfill && cd docs && npm install && npm run build:javascript",
-    "build:docs": "cd docs && npm install && npm run build:docs",
+    "build:docs": "cd docs && npm install && npm run build",
     "build:spec": "ecmarkup spec.html out/index.html",
     "prebuild": "mkdirp out && mkdirp out/docs/assets",
     "pretty": "eslint . --ext js,mjs,.d.ts --fix",
-    "build": "npm run build:javascript && npm run build:docs && npm run build:spec"
+    "build": "npm run build:polyfill && npm run build:docs && npm run build:spec"
   },
   "repository": {
     "type": "git",
