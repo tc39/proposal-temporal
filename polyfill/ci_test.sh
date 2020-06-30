@@ -5,7 +5,7 @@ source venv/bin/activate
 pip install ijson
 
 export NODE_PATH=$PWD/node_modules
-npm run build-script
+npm run build
 if [ ! -d "test262" ]; then
   git clone --depth 1 https://github.com/tc39/test262.git
 else

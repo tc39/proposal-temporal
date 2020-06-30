@@ -2,43 +2,78 @@ import commonjs from '@rollup/plugin-commonjs';
 import resolve from '@rollup/plugin-node-resolve';
 import babel from '@rollup/plugin-babel';
 import replace from '@rollup/plugin-replace';
+import builtins from 'rollup-plugin-node-builtins';
 import { terser } from 'rollup-plugin-terser';
 import { env } from 'process';
 
+const isProduction = env.NODE_ENV === 'production';
 const libName = 'temporal';
-
-const config = {
-  input: 'lib/index.mjs',
-  output: [
-    { name: libName, file: './dist/index.js', format: 'cjs', sourcemap: true },
-    { name: libName, file: './dist/index.umd.js', format: 'umd', sourcemap: true }
-  ],
-  plugins: [
-    replace({
-      exclude: 'node_modules/**',
-      __debug__: env.NODE_ENV !== 'production'
-    }),
-    commonjs(),
-    resolve({ preferBuiltins: false }),
-    babel({
-      exclude: 'node_modules/**',
-      babelHelpers: 'bundled',
-      presets: [
-        [
-          '@babel/preset-env',
-          {
-            corejs: 3,
-            useBuiltIns: 'entry',
-            targets: '> 0.25%, not dead'
-          }
-        ]
-      ]
-    })
+const babelConfig = {
+  exclude: 'node_modules/**',
+  babelHelpers: 'bundled',
+  presets: [
+    [
+      '@babel/preset-env',
+      {
+        corejs: 3,
+        useBuiltIns: 'entry',
+        targets: '> 0.25%, not dead'
+      }
+    ]
   ]
 };
+const replaceConfig = { exclude: 'node_modules/**' };
+const resolveConfig = { preferBuiltins: false };
 
-if (env.NODE_ENV === 'production') {
-  config.plugins.push(terser());
-}
-
-export default config;
+export default [
+  {
+    input: 'lib/index.mjs',
+    plugins: [
+      replace({ ...replaceConfig, __debug__: !isProduction }),
+      commonjs(),
+      resolve(resolveConfig),
+      babel(babelConfig),
+      isProduction && terser()
+    ],
+    output: [
+      {
+        name: libName,
+        file: './dist/index.js',
+        format: 'cjs',
+        sourcemap: true
+      },
+      {
+        name: libName,
+        file: './dist/index.umd.js',
+        format: 'umd',
+        sourcemap: true
+      }
+    ]
+  },
+  {
+    input: 'lib/index.mjs',
+    plugins: [replace({ ...replaceConfig, __debug__: false }), commonjs(), resolve(resolveConfig)],
+    output: {
+      name: libName,
+      file: 'script.js',
+      format: 'iife',
+      sourcemap: true
+    }
+  },
+  {
+    input: 'lib/index.mjs',
+    output: {
+      name: libName,
+      file: '../out/docs/playground.js',
+      format: 'umd',
+      sourcemap: true
+    },
+    plugins: [
+      replace({ ...replaceConfig, __debug__: true }),
+      commonjs(),
+      builtins(),
+      resolve(resolveConfig),
+      babel(babelConfig)
+    ]
+  }
+];
