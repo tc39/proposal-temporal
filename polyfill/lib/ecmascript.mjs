@@ -1,9 +1,13 @@
-import ES2019 from 'es-abstract/es2019.js';
-
 const IntlDateTimeFormat = Intl.DateTimeFormat;
 const ObjectAssign = Object.assign;
 
 import bigInt from 'big-integer';
+import SpeciesConstructor from 'es-abstract/2019/SpeciesConstructor.js';
+import ToInteger from 'es-abstract/2019/ToInteger.js';
+import ToNumber from 'es-abstract/2019/ToNumber.js';
+import ToObject from 'es-abstract/2019/ToObject.js';
+import ToPrimitive from 'es-abstract/2019/ToPrimitive.js';
+import ToString from 'es-abstract/2019/ToString.js';
 
 import { GetIntrinsic } from './intrinsicclass.mjs';
 import {
@@ -43,6 +47,15 @@ const YEAR_MAX = 275760;
 const BEFORE_FIRST_DST = bigInt(-388152).multiply(1e13); // 1847-01-01T00:00:00Z
 
 import * as PARSE from './regex.mjs';
+
+const ES2019 = {
+  SpeciesConstructor,
+  ToInteger,
+  ToNumber,
+  ToObject,
+  ToPrimitive,
+  ToString
+};
 
 export const ES = ObjectAssign({}, ES2019, {
   IsTemporalAbsolute: (item) => HasSlot(item, EPOCHNANOSECONDS),
