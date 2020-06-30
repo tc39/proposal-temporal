@@ -7,10 +7,6 @@
     "node": ">=12.16.0"
   },
   "main": "polyfill/lib/index.mjs",
-  "dependencies": {
-    "big-integer": "^1.6.48",
-    "es-abstract": "^1.17.4"
-  },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^3.2.0",
     "@typescript-eslint/parser": "^3.2.0",
