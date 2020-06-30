@@ -131,6 +131,14 @@ describe('Date', () => {
       const date = original.with({ day: 17 });
       equal(`${date}`, '1976-11-17');
     });
+    it('date.with(monthDay) works', () => {
+      const date = original.with(Temporal.MonthDay.from('01-01'));
+      equal(`${date}`, '1976-01-01');
+    });
+    it('date.with(yearMonth) works', () => {
+      const date = original.with(Temporal.YearMonth.from('1977-10'));
+      equal(`${date}`, '1977-10-18');
+    });
     it('invalid disambiguation', () => {
       ['', 'CONSTRAIN', 'balance', 3, null].forEach((disambiguation) =>
         throws(() => original.with({ day: 17 }, { disambiguation }), RangeError)

@@ -333,6 +333,19 @@ Usage example:
 ```javascript
 dt = new Temporal.DateTime(1995, 12, 7, 3, 24, 30, 0, 3, 500);
 dt.with({year: 2015, second: 31})  // => 2015-12-07T03:24:31.000003500
+
+// Temporal.Time, Temporal.Date, Temporal.YearMonth and
+// Temporal.MonthDay also have some of the properties of
+// Temporal.DateTime:
+midnight = Temporal.Time.from({ hour: 0 });
+dt.with(midnight)  // => 1995-12-07T00:00
+// Note: not the same as dt.with({ hour: 0 })!
+date = Temporal.Date.from('2015-03-31');
+dt.with(date)  // => 2015-03-31T03:24:31.000003500
+yearMonth = Temporal.YearMonth.from('2018-04');
+date.with(yearMonth)  // => 2018-04-07T03:24:31.000003500
+monthDay = Temporal.MonthDay.from('02-29')
+date.with(monthDay)  // => 1995-02-28T03:24:30.000003500
 ```
 
 ### datetime.**withCalendar**(_calendar_: object | string) : Temporal.DateTime

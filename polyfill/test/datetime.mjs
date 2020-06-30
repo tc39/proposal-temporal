@@ -256,6 +256,22 @@ describe('DateTime', () => {
     it('datetime.with({ month: 5, second: 15 } works', () => {
       equal(`${datetime.with({ month: 5, second: 15 })}`, '1976-05-18T15:23:15.123456789');
     });
+    it('datetime.with(time) works', () => {
+      const noon = Temporal.Time.from({ hour: 12 });
+      equal(`${datetime.with(noon)}`, '1976-11-18T12:00');
+    });
+    it('datetimw.with(date) works', () => {
+      const date = Temporal.Date.from('1995-04-07');
+      equal(`${datetime.with(date)}`, '1995-04-07T15:23:30.123456789');
+    });
+    it('datetime.with(monthDay) works', () => {
+      const md = Temporal.MonthDay.from('01-01');
+      equal(`${datetime.with(md)}`, '1976-01-01T15:23:30.123456789');
+    });
+    it('datetime.with(yearMonth) works', () => {
+      const ym = Temporal.YearMonth.from('1977-10');
+      equal(`${datetime.with(ym)}`, '1977-10-18T15:23:30.123456789');
+    });
     it('invalid disambiguation', () => {
       ['', 'CONSTRAIN', 'balance', 3, null].forEach((disambiguation) =>
         throws(() => datetime.with({ day: 5 }, { disambiguation }), RangeError)
