@@ -82,7 +82,6 @@
     "full-icu": "^1.3.0",
     "nyc": "^15.1.0",
     "rollup": "^2.17.1",
-    "rollup-plugin-node-builtins": "^2.1.2",
     "rollup-plugin-terser": "^6.1.0",
     "test262-harness": "^7.4.1",
     "timezones.json": "^1.5.2",
