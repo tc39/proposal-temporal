@@ -29,7 +29,7 @@ function getBusinessOpenStateText(now, timeZone, businessHours, soonWindow) {
 
   // Because of times wrapping around at midnight, we may need to consider
   // yesterday's and tomorrow's hours as well
-  const today = dateTime.getDate();
+  const today = dateTime.toDate();
   const yesterday = today.minus({ days: 1 });
   const tomorrow = today.plus({ days: 1 });
 

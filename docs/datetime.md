@@ -604,7 +604,7 @@ For usage examples and a more complete explanation of how this disambiguation wo
 
 If the result is earlier or later than the range that `Temporal.Absolute` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then a `RangeError` will be thrown, no matter the value of `disambiguation`.
 
-### datetime.**getDate**() : Temporal.Date
+### datetime.**toDate**() : Temporal.Date
 
 **Returns:** a `Temporal.Date` object that is the same as the date portion of `datetime`.
 
@@ -621,12 +621,12 @@ If the result is earlier or later than the range that `Temporal.Absolute` can re
 **Returns:** a `Temporal.Time` object that is the same as the wall-clock time portion of `datetime`.
 
 The above four methods can be used to convert `Temporal.DateTime` into a `Temporal.Date`, `Temporal.YearMonth`, `Temporal.MonthDay`, or `Temporal.Time` respectively.
-The converted object carries a copy of all the relevant fields of `datetime` (for example, in `getDate()`, the `year`, `month`, and `day` properties are copied.)
+The converted object carries a copy of all the relevant fields of `datetime` (for example, in `toDate()`, the `year`, `month`, and `day` properties are copied.)
 
 Usage example:
 ```javascript
 dt = new Temporal.DateTime(1995, 12, 7, 3, 24, 30, 0, 3, 500);
-dt.getDate()  // => 1995-12-07
+dt.toDate()  // => 1995-12-07
 dt.getYearMonth()  // => 1995-12
 dt.getMonthDay()  // => 12-07
 dt.getTime()  // => 03:24:30.000003500
