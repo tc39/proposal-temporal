@@ -616,7 +616,7 @@ If the result is earlier or later than the range that `Temporal.Absolute` can re
 
 **Returns:** a `Temporal.MonthDay` object that is the same as the month and day of `datetime`.
 
-### datetime.**getTime**() : Temporal.Time
+### datetime.**toTime**() : Temporal.Time
 
 **Returns:** a `Temporal.Time` object that is the same as the wall-clock time portion of `datetime`.
 
@@ -629,7 +629,7 @@ dt = new Temporal.DateTime(1995, 12, 7, 3, 24, 30, 0, 3, 500);
 dt.toDate()  // => 1995-12-07
 dt.getYearMonth()  // => 1995-12
 dt.getMonthDay()  // => 12-07
-dt.getTime()  // => 03:24:30.000003500
+dt.toTime()  // => 03:24:30.000003500
 ```
 
 ### datetime.**getFields**() : { year: number, month: number, day: number, hour: number, minute: number, second: number, millisecond: number, microsecond: number, nanosecond: number, calendar: object, [propName: string]: unknown }
