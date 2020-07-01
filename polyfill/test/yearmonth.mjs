@@ -334,8 +334,8 @@ describe('YearMonth', () => {
     it('converting from Date', () => {
       const min = Temporal.Date.from('-271821-04-19');
       const max = Temporal.Date.from('+275760-09-13');
-      equal(`${min.getYearMonth()}`, '-271821-04');
-      equal(`${max.getYearMonth()}`, '+275760-09');
+      equal(`${min.toYearMonth()}`, '-271821-04');
+      equal(`${max.toYearMonth()}`, '+275760-09');
     });
     it('adding and subtracting beyond limit', () => {
       const min = YearMonth.from('-271821-04');
