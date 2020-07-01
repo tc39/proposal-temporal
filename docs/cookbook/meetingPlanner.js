@@ -17,7 +17,8 @@ timeZones.forEach(({ name }) => {
   const row = document.createElement('tr');
 
   const title = document.createElement('td');
-  title.textContent = `${name} (UTC${now.getOffsetString})`;
+  const offset = now.with({ timeZone: name }).timeZoneOffsetString;
+  title.textContent = `${name} (UTC${offset})`;
   row.appendChild(title);
 
   for (let hours = 0; hours < 24; hours++) {
