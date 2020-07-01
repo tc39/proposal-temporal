@@ -43,7 +43,7 @@
     "test262": "cd polyfill && npm install && npm run test262",
     "lint": "eslint . --ext js,mjs,.d.ts --max-warnings 0 --cache",
     "postlint": "npm run tscheck",
-    "tscheck": "tsc polyfill/index.d.ts --noEmit --strict --lib ESNext",
+    "tscheck": "tsc polyfill/poc.d.ts --noEmit --strict --lib ESNext",
     "build:polyfill": "cd polyfill && npm install && npm run build",
     "build:docs": "cd docs && npm install && npm run build",
     "build:spec": "ecmarkup --lint-spec --strict spec.html out/index.html",
