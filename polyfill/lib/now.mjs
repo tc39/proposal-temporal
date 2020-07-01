@@ -21,7 +21,7 @@ function dateTime(temporalTimeZoneLike = timeZone(), calendar = undefined) {
   return TemporalTimeZone.prototype.getDateTimeFor.call(timeZone, abs, calendar);
 }
 function date(temporalTimeZoneLike, calendar = undefined) {
-  return dateTime(temporalTimeZoneLike, calendar).getDate();
+  return dateTime(temporalTimeZoneLike, calendar).toDate();
 }
 function time(temporalTimeZoneLike) {
   return dateTime(temporalTimeZoneLike).getTime();

@@ -81,8 +81,8 @@ describe('DateTime', () => {
       it('DateTime.prototype.toAbsolute is a Function', () => {
         equal(typeof DateTime.prototype.toAbsolute, 'function');
       });
-      it('DateTime.prototype.getDate is a Function', () => {
-        equal(typeof DateTime.prototype.getDate, 'function');
+      it('DateTime.prototype.toDate is a Function', () => {
+        equal(typeof DateTime.prototype.toDate, 'function');
       });
       it('DateTime.prototype.getTime is a Function', () => {
         equal(typeof DateTime.prototype.getTime, 'function');

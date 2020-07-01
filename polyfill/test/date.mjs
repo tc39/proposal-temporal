@@ -505,8 +505,8 @@ describe('Date', () => {
     it('converting from DateTime', () => {
       const min = Temporal.DateTime.from('-271821-04-19T00:00:00.000000001');
       const max = Temporal.DateTime.from('+275760-09-13T23:59:59.999999999');
-      equal(`${min.getDate()}`, '-271821-04-19');
-      equal(`${max.getDate()}`, '+275760-09-13');
+      equal(`${min.toDate()}`, '-271821-04-19');
+      equal(`${max.toDate()}`, '+275760-09-13');
     });
     it('converting from YearMonth', () => {
       const min = Temporal.YearMonth.from('-271821-04');

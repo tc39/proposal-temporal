@@ -475,7 +475,7 @@ export namespace Temporal {
       options?: DifferenceOptions<'years' | 'months' | 'weeks' | 'days' | 'hours' | 'minutes' | 'seconds'>
     ): Temporal.Duration;
     toAbsolute(tzLike: TimeZoneProtocol | string, options?: ToAbsoluteOptions): Temporal.Absolute;
-    getDate(): Temporal.Date;
+    toDate(): Temporal.Date;
     getYearMonth(): Temporal.YearMonth;
     getMonthDay(): Temporal.MonthDay;
     getTime(): Temporal.Time;
