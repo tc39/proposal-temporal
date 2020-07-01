@@ -530,7 +530,7 @@ date.toDateTime(time)  // => 2006-08-24T15:23:30.003
 
 **Returns:** a `Temporal.YearMonth` object that is the same as the year and month of `date`.
 
-### date.**getMonthDay**() : Temporal.MonthDay
+### date.**toMonthDay**() : Temporal.MonthDay
 
 **Returns:** a `Temporal.MonthDay` object that is the same as the month and day of `date`.
 
@@ -541,7 +541,7 @@ Usage example:
 ```javascript
 date = Temporal.Date.from('2006-08-24');
 date.getYearMonth()  // => 2006-08
-date.getMonthDay()  // => 08-24
+date.toMonthDay()  // => 08-24
 ```
 
 ### date.**getFields**() : { year: number, month: number, day: number, calendar: object, [propName: string]: unknown }
