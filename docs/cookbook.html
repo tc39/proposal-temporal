@@ -695,8 +695,7 @@ const tankTimeZone = Temporal.TimeZone.from('Europe/Stockholm');
 const tankMidnight = Temporal.now
   .absolute()
   .inTimeZone(tankTimeZone)
-  .getDate()
-  .withTime(Temporal.Time.from('00:00'))
+  .with(Temporal.Time.from('00:00'))
   .inTimeZone(tankTimeZone);
 const atOrAfterMidnight = (x) => Temporal.Absolute.compare(x, tankMidnight) >= 0;
 const dataStartIndex = tankDataX.findIndex(atOrAfterMidnight);
@@ -750,8 +749,7 @@ new Chart(ctx, {
 <span class="token keyword">const</span> tankMidnight <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>now
   <span class="token punctuation">.</span><span class="token function">absolute</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
   <span class="token punctuation">.</span><span class="token function">inTimeZone</span><span class="token punctuation">(</span>tankTimeZone<span class="token punctuation">)</span>
-  <span class="token punctuation">.</span><span class="token function">getDate</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-  <span class="token punctuation">.</span><span class="token function">withTime</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'00:00'</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'00:00'</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
   <span class="token punctuation">.</span><span class="token function">inTimeZone</span><span class="token punctuation">(</span>tankTimeZone<span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token keyword">const</span> <span class="token function-variable function">atOrAfterMidnight</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token parameter">x</span><span class="token punctuation">)</span> <span class="token operator">=></span> Temporal<span class="token punctuation">.</span>Absolute<span class="token punctuation">.</span><span class="token function">compare</span><span class="token punctuation">(</span>x<span class="token punctuation">,</span> tankMidnight<span class="token punctuation">)</span> <span class="token operator">>=</span> <span class="token number">0</span><span class="token punctuation">;</span>
 <span class="token keyword">const</span> dataStartIndex <span class="token operator">=</span> tankDataX<span class="token punctuation">.</span><span class="token function">findIndex</span><span class="token punctuation">(</span>atOrAfterMidnight<span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -860,8 +858,7 @@ const timeZones = [
 // Start the table at midnight local time
 const calendarNow = now.inTimeZone(here);
 const startTime = calendarNow
-  .getDate()
-  .withTime(Temporal.Time.from('00:00')) // midnight
+  .with(Temporal.Time.from('00:00')) // midnight
   .inTimeZone(here);
 
 // Build the table
@@ -911,8 +908,7 @@ timeZones.forEach(({ name, tz }) => {
 <span class="token comment">// Start the table at midnight local time</span>
 <span class="token keyword">const</span> calendarNow <span class="token operator">=</span> now<span class="token punctuation">.</span><span class="token function">inTimeZone</span><span class="token punctuation">(</span>here<span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token keyword">const</span> startTime <span class="token operator">=</span> calendarNow
-  <span class="token punctuation">.</span><span class="token function">getDate</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-  <span class="token punctuation">.</span><span class="token function">withTime</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'00:00'</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token comment">// midnight</span>
+  <span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'00:00'</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token comment">// midnight</span>
   <span class="token punctuation">.</span><span class="token function">inTimeZone</span><span class="token punctuation">(</span>here<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
 <span class="token comment">// Build the table</span>
