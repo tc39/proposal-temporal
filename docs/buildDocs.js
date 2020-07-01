@@ -116,11 +116,10 @@ async function go() {
     // copy or render /docs/* to /out/docs/
     await Promise.all(
       (await fs.readdir('.')).map((file) => {
-        switch (file !== 'buildDocs.js' && path.extname(file)) {
-          // copy files *.css, *.html, *.js, *.svg to /out/docs
+        switch (path.extname(file)) {
+          // copy files *.css, *.html, *.svg to /out/docs
           case '.css':
           case '.html':
-          case '.js':
           case '.svg':
             return fs.copyFile(file, path.resolve('../out/docs/' + file));
           // convert files *.md to /out/docs/*.html
