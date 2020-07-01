@@ -144,7 +144,7 @@ Since `Temporal.MonthDay` objects are immutable, use this method instead of modi
 
 > **NOTE**: Unlike in `Temporal.Date.prototype.with()`, a `calendar` property is not allowed on `monthDayLike`.
 > It is not possible to convert a `Temporal.MonthDay` to another calendar system without knowing the year.
-> If you need to do this, use `monthDay.toDate(year).withCalendar(calendar).getMonthDay()`.
+> If you need to do this, use `monthDay.toDate(year).withCalendar(calendar).toMonthDay()`.
 
 Usage example:
 ```javascript
