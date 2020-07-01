@@ -221,7 +221,7 @@ export class Date {
     const fields = ES.ToTemporalDateRecord(this);
     return calendar.yearMonthFromFields(fields, {}, YearMonth);
   }
-  getMonthDay() {
+  toMonthDay() {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
     const MonthDay = GetIntrinsic('%Temporal.MonthDay%');
     const calendar = GetSlot(this, CALENDAR);

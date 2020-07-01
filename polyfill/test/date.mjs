@@ -66,8 +66,8 @@ describe('Date', () => {
       it('Date.prototype.getYearMonth is a Function', () => {
         equal(typeof Date.prototype.getYearMonth, 'function');
       });
-      it('Date.prototype.getMonthDay is a Function', () => {
-        equal(typeof Date.prototype.getMonthDay, 'function');
+      it('Date.prototype.toMonthDay is a Function', () => {
+        equal(typeof Date.prototype.toMonthDay, 'function');
       });
       it('Date.prototype.getFields is a Function', () => {
         equal(typeof Date.prototype.getFields, 'function');
