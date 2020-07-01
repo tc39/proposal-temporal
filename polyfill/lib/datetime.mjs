@@ -466,7 +466,7 @@ export class DateTime {
     if (typeof timeZone.getAbsoluteFor === 'function') return timeZone.getAbsoluteFor(this, { disambiguation });
     return TemporalTimeZone.prototype.getAbsoluteFor.call(timeZone, this, { disambiguation });
   }
-  getDate() {
+  toDate() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     const Date = GetIntrinsic('%Temporal.Date%');
     return new Date(GetSlot(this, ISO_YEAR), GetSlot(this, ISO_MONTH), GetSlot(this, ISO_DAY), GetSlot(this, CALENDAR));
