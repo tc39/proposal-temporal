@@ -375,7 +375,7 @@ export namespace Temporal {
     ): Temporal.Duration;
     toDateTime(temporalTime: Temporal.Time): Temporal.DateTime;
     getYearMonth(): Temporal.YearMonth;
-    getMonthDay(): Temporal.MonthDay;
+    toMonthDay(): Temporal.MonthDay;
     getFields(): DateFields;
     getISOCalendarFields(): DateISOCalendarFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
@@ -477,7 +477,7 @@ export namespace Temporal {
     toAbsolute(tzLike: TimeZoneProtocol | string, options?: ToAbsoluteOptions): Temporal.Absolute;
     toDate(): Temporal.Date;
     getYearMonth(): Temporal.YearMonth;
-    getMonthDay(): Temporal.MonthDay;
+    toMonthDay(): Temporal.MonthDay;
     toTime(): Temporal.Time;
     getFields(): DateTimeFields;
     getISOCalendarFields(): DateTimeISOCalendarFields;
