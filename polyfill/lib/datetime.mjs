@@ -485,7 +485,7 @@ export class DateTime {
     const fields = ES.ToTemporalDateTimeRecord(this);
     return calendar.monthDayFromFields(fields, {}, MonthDay);
   }
-  getTime() {
+  toTime() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     const Time = GetIntrinsic('%Temporal.Time%');
     return new Time(

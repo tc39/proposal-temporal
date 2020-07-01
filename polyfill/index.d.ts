@@ -478,7 +478,7 @@ export namespace Temporal {
     toDate(): Temporal.Date;
     getYearMonth(): Temporal.YearMonth;
     getMonthDay(): Temporal.MonthDay;
-    getTime(): Temporal.Time;
+    toTime(): Temporal.Time;
     getFields(): DateTimeFields;
     getISOCalendarFields(): DateTimeISOCalendarFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;

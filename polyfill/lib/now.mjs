@@ -24,7 +24,7 @@ function date(temporalTimeZoneLike, calendar = undefined) {
   return dateTime(temporalTimeZoneLike, calendar).toDate();
 }
 function time(temporalTimeZoneLike) {
-  return dateTime(temporalTimeZoneLike).getTime();
+  return dateTime(temporalTimeZoneLike).toTime();
 }
 function timeZone() {
   return ES.SystemTimeZone();
