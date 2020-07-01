@@ -27,8 +27,6 @@ ignorePatterns:
   - /polyfill/coverage/
   # Specific vendored or generated files
   - /docs/mermaid.js
-  - /docs/prism.js
-  - /polyfill/index.js
   - /polyfill/script.js
 rules:
   array-element-newline:
