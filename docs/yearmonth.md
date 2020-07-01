@@ -30,7 +30,7 @@ Otherwise, `Temporal.YearMonth.from()`, which accepts more kinds of input, allow
 All values are given as reckoned in the [ISO 8601 calendar](https://en.wikipedia.org/wiki/ISO_8601#Dates).
 Together, `isoYear`, `isoMonth`, and `refISODay` must represent a valid date in that calendar, even if you are passing a different calendar as the `calendar` parameter.
 
-The range of allowed values for this type is exactly enough that calling [`getYearMonth()`](./date.html#getYearMonth) on any valid `Temporal.Date` will succeed.
+The range of allowed values for this type is exactly enough that calling [`toYearMonth()`](./date.html#toYearMonth) on any valid `Temporal.Date` will succeed.
 If `isoYear` and `isoMonth` are outside of this range, then this function will throw a `RangeError`.
 
 > **NOTE**: The `isoMonth` argument ranges from 1 to 12, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
@@ -220,7 +220,7 @@ If the result is earlier or later than the range of dates that `Temporal.YearMon
 
 > **NOTE**: Unlike in `Temporal.Date.prototype.with()`, a `calendar` property is not allowed on `yearMonthLike`.
 > It is not possible to convert a `Temporal.YearMonth` to another calendar system without knowing the day of the month.
-> If you need to do this, use `yearMonth.toDate(day).withCalendar(calendar).getYearMonth()`.
+> If you need to do this, use `yearMonth.toDate(day).withCalendar(calendar).toYearMonth()`.
 
 Usage example:
 ```javascript

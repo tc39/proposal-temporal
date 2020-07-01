@@ -526,7 +526,7 @@ time = Temporal.Time.from('15:23:30.003');
 date.toDateTime(time)  // => 2006-08-24T15:23:30.003
 ```
 
-### date.**getYearMonth**() : Temporal.YearMonth
+### date.**toYearMonth**() : Temporal.YearMonth
 
 **Returns:** a `Temporal.YearMonth` object that is the same as the year and month of `date`.
 
@@ -535,12 +535,12 @@ date.toDateTime(time)  // => 2006-08-24T15:23:30.003
 **Returns:** a `Temporal.MonthDay` object that is the same as the month and day of `date`.
 
 The above two methods can be used to convert `Temporal.Date` into a `Temporal.YearMonth` or `Temporal.MonthDay` respectively.
-The converted object carries a copy of all the relevant fields of `date` (for example, in `getYearMonth()`, the `year` and `month` properties are copied.)
+The converted object carries a copy of all the relevant fields of `date` (for example, in `toYearMonth()`, the `year` and `month` properties are copied.)
 
 Usage example:
 ```javascript
 date = Temporal.Date.from('2006-08-24');
-date.getYearMonth()  // => 2006-08
+date.toYearMonth()  // => 2006-08
 date.toMonthDay()  // => 08-24
 ```
 

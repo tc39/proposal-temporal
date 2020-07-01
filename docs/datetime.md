@@ -608,7 +608,7 @@ If the result is earlier or later than the range that `Temporal.Absolute` can re
 
 **Returns:** a `Temporal.Date` object that is the same as the date portion of `datetime`.
 
-### datetime.**getYearMonth**() : Temporal.YearMonth
+### datetime.**toYearMonth**() : Temporal.YearMonth
 
 **Returns:** a `Temporal.YearMonth` object that is the same as the year and month of `datetime`.
 
@@ -627,7 +627,7 @@ Usage example:
 ```javascript
 dt = new Temporal.DateTime(1995, 12, 7, 3, 24, 30, 0, 3, 500);
 dt.toDate()  // => 1995-12-07
-dt.getYearMonth()  // => 1995-12
+dt.toYearMonth()  // => 1995-12
 dt.toMonthDay()  // => 12-07
 dt.toTime()  // => 03:24:30.000003500
 ```
