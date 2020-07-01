@@ -2,7 +2,6 @@ import commonjs from '@rollup/plugin-commonjs';
 import resolve from '@rollup/plugin-node-resolve';
 import babel from '@rollup/plugin-babel';
 import replace from '@rollup/plugin-replace';
-import builtins from 'rollup-plugin-node-builtins';
 import { terser } from 'rollup-plugin-terser';
 import { env } from 'process';
 
@@ -15,8 +14,6 @@ const babelConfig = {
     [
       '@babel/preset-env',
       {
-        corejs: 3,
-        useBuiltIns: 'entry',
         targets: '> 0.25%, not dead'
       }
     ]
@@ -68,12 +65,6 @@ export default [
       format: 'umd',
       sourcemap: true
     },
-    plugins: [
-      replace({ ...replaceConfig, __debug__: true }),
-      commonjs(),
-      builtins(),
-      resolve(resolveConfig),
-      babel(babelConfig)
-    ]
+    plugins: [replace({ ...replaceConfig, __debug__: true }), commonjs(), resolve(resolveConfig), babel(babelConfig)]
   }
 ];
