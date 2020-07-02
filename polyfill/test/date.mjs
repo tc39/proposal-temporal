@@ -521,10 +521,10 @@ describe('Date', () => {
       const dec31 = Temporal.MonthDay.from('12-31');
       const minYear = -271821;
       const maxYear = 275760;
-      throws(() => jan1.toDate(minYear), RangeError);
-      throws(() => dec31.toDate(maxYear), RangeError);
-      equal(`${jan1.toDate(minYear + 1)}`, '-271820-01-01');
-      equal(`${dec31.toDate(maxYear - 1)}`, '+275759-12-31');
+      throws(() => jan1.toDateInYear(minYear), RangeError);
+      throws(() => dec31.toDateInYear(maxYear), RangeError);
+      equal(`${jan1.toDateInYear(minYear + 1)}`, '-271820-01-01');
+      equal(`${dec31.toDateInYear(maxYear - 1)}`, '+275759-12-31');
     });
     it('adding and subtracting beyond limit', () => {
       const min = Date.from('-271821-04-19');
