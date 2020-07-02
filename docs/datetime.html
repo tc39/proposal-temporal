@@ -211,15 +211,15 @@
 </li>
 <li><a href="#valueOf">valueOf</a>
 </li>
-<li><a href="#inTimeZone">inTimeZone</a>
+<li><a href="#toAbsolute">toAbsolute</a>
 </li>
-<li><a href="#getDate">getDate</a>
+<li><a href="#toDate">toDate</a>
 </li>
-<li><a href="#getYearMonth">getYearMonth</a>
+<li><a href="#toYearMonth">toYearMonth</a>
 </li>
-<li><a href="#getMonthDay">getMonthDay</a>
+<li><a href="#toMonthDay">toMonthDay</a>
 </li>
-<li><a href="#getTime">getTime</a>
+<li><a href="#toTime">toTime</a>
 </li>
 <li><a href="#getFields">getFields</a>
 </li>
@@ -263,7 +263,7 @@ Together, <code>isoYear</code>, <code>isoMonth</code>, and <code>isoDay</code> m
 <p><strong>NOTE</strong>: Although Temporal does not deal with leap seconds, dates coming from other software may have a <code>second</code> value of 60.
 This value will cause the constructor will throw, so if you have to interoperate with times that may contain leap seconds, use <code>Temporal.DateTime.from()</code> instead.</p>
 </blockquote>
-<p>The range of allowed values for this type is exactly enough that calling <a href="./absolute.html#inTimeZone"><code>inTimeZone()</code></a> on any valid <code>Temporal.Absolute</code> with any valid <code>Temporal.TimeZone</code> will succeed.
+<p>The range of allowed values for this type is exactly enough that calling <a href="./absolute.html#toDateTime"><code>toDateTime()</code></a> on any valid <code>Temporal.Absolute</code> with any valid <code>Temporal.TimeZone</code> will succeed.
 If the parameters passed in to this constructor form a date outside of this range, then this function will throw a <code>RangeError</code>.</p>
 <blockquote>
 <p><strong>NOTE</strong>: The <code>isoMonth</code> argument ranges from 1 to 12, which is different from legacy <code>Date</code> where months are represented by zero-based indices (0 to 11).</p>
@@ -636,7 +636,7 @@ console<span class="token punctuation">.</span><span class="token function">log<
 <span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span>str<span class="token punctuation">,</span> reviver<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre><h3 id="valueOf"><a class="heading-link" href="#valueOf"></a>datetime.<strong>valueOf</strong>()</h3><p>This method overrides <code>Object.prototype.valueOf()</code> and always throws an exception.
 This is because it&#39;s not possible to compare <code>Temporal.DateTime</code> objects with the relational operators <code>&lt;</code>, <code>&lt;=</code>, <code>&gt;</code>, or <code>&gt;=</code>.
 Use <code>Temporal.DateTime.compare()</code> for this, or <code>datetime.equals()</code> for equality.</p>
-<h3 id="inTimeZone"><a class="heading-link" href="#inTimeZone"></a>datetime.<strong>inTimeZone</strong>(<em>timeZone</em> : object | string, <em>options</em>?: object) : Temporal.Absolute</h3><p><strong>Parameters:</strong></p>
+<h3 id="toAbsolute"><a class="heading-link" href="#toAbsolute"></a>datetime.<strong>toAbsolute</strong>(<em>timeZone</em> : object | string, <em>options</em>?: object) : Temporal.Absolute</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>timeZone</code> (optional string or object): The time zone in which to interpret <code>dateTime</code>, as a <code>Temporal.TimeZone</code> object, an object implementing the <a href="./timezone.html#protocol">time zone protocol</a>, or a string.</li>
 <li><code>options</code> (optional object): An object with properties representing options for the operation.
@@ -663,18 +663,18 @@ This mode also matches the behavior of cross-platform standards like <a href="ht
 This behavior avoids exceptions when converting non-existent <code>Temporal.DateTime</code> values to <code>Temporal.Absolute</code>, but it also means that values during these periods will result in a different <code>Temporal.DateTime</code> in &quot;round-trip&quot; conversions to <code>Temporal.Absolute</code> and back again.</p>
 <p>For usage examples and a more complete explanation of how this disambiguation works and why it is necessary, see <a href="./ambiguity.html">Resolving ambiguity</a>.</p>
 <p>If the result is earlier or later than the range that <code>Temporal.Absolute</code> can represent (approximately half a million years centered on the <a href="https://en.wikipedia.org/wiki/Unix_time">Unix epoch</a>), then a <code>RangeError</code> will be thrown, no matter the value of <code>disambiguation</code>.</p>
-<h3 id="getDate"><a class="heading-link" href="#getDate"></a>datetime.<strong>getDate</strong>() : Temporal.Date</h3><p><strong>Returns:</strong> a <code>Temporal.Date</code> object that is the same as the date portion of <code>datetime</code>.</p>
-<h3 id="getYearMonth"><a class="heading-link" href="#getYearMonth"></a>datetime.<strong>getYearMonth</strong>() : Temporal.YearMonth</h3><p><strong>Returns:</strong> a <code>Temporal.YearMonth</code> object that is the same as the year and month of <code>datetime</code>.</p>
-<h3 id="getMonthDay"><a class="heading-link" href="#getMonthDay"></a>datetime.<strong>getMonthDay</strong>() : Temporal.MonthDay</h3><p><strong>Returns:</strong> a <code>Temporal.MonthDay</code> object that is the same as the month and day of <code>datetime</code>.</p>
-<h3 id="getTime"><a class="heading-link" href="#getTime"></a>datetime.<strong>getTime</strong>() : Temporal.Time</h3><p><strong>Returns:</strong> a <code>Temporal.Time</code> object that is the same as the wall-clock time portion of <code>datetime</code>.</p>
+<h3 id="toDate"><a class="heading-link" href="#toDate"></a>datetime.<strong>toDate</strong>() : Temporal.Date</h3><p><strong>Returns:</strong> a <code>Temporal.Date</code> object that is the same as the date portion of <code>datetime</code>.</p>
+<h3 id="toYearMonth"><a class="heading-link" href="#toYearMonth"></a>datetime.<strong>toYearMonth</strong>() : Temporal.YearMonth</h3><p><strong>Returns:</strong> a <code>Temporal.YearMonth</code> object that is the same as the year and month of <code>datetime</code>.</p>
+<h3 id="toMonthDay"><a class="heading-link" href="#toMonthDay"></a>datetime.<strong>toMonthDay</strong>() : Temporal.MonthDay</h3><p><strong>Returns:</strong> a <code>Temporal.MonthDay</code> object that is the same as the month and day of <code>datetime</code>.</p>
+<h3 id="toTime"><a class="heading-link" href="#toTime"></a>datetime.<strong>toTime</strong>() : Temporal.Time</h3><p><strong>Returns:</strong> a <code>Temporal.Time</code> object that is the same as the wall-clock time portion of <code>datetime</code>.</p>
 <p>The above four methods can be used to convert <code>Temporal.DateTime</code> into a <code>Temporal.Date</code>, <code>Temporal.YearMonth</code>, <code>Temporal.MonthDay</code>, or <code>Temporal.Time</code> respectively.
-The converted object carries a copy of all the relevant fields of <code>datetime</code> (for example, in <code>getDate()</code>, the <code>year</code>, <code>month</code>, and <code>day</code> properties are copied.)</p>
+The converted object carries a copy of all the relevant fields of <code>datetime</code> (for example, in <code>toDate()</code>, the <code>year</code>, <code>month</code>, and <code>day</code> properties are copied.)</p>
 <p>Usage example:</p>
 <pre class="language-javascript"><code class="language-javascript">dt <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>DateTime</span><span class="token punctuation">(</span><span class="token number">1995</span><span class="token punctuation">,</span> <span class="token number">12</span><span class="token punctuation">,</span> <span class="token number">7</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">24</span><span class="token punctuation">,</span> <span class="token number">30</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">500</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-dt<span class="token punctuation">.</span><span class="token function">getDate</span><span class="token punctuation">(</span><span class="token punctuation">)</span>  <span class="token comment">// => 1995-12-07</span>
-dt<span class="token punctuation">.</span><span class="token function">getYearMonth</span><span class="token punctuation">(</span><span class="token punctuation">)</span>  <span class="token comment">// => 1995-12</span>
-dt<span class="token punctuation">.</span><span class="token function">getMonthDay</span><span class="token punctuation">(</span><span class="token punctuation">)</span>  <span class="token comment">// => 12-07</span>
-dt<span class="token punctuation">.</span><span class="token function">getTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span>  <span class="token comment">// => 03:24:30.000003500</span></code></pre><h3 id="getFields"><a class="heading-link" href="#getFields"></a>datetime.<strong>getFields</strong>() : { year: number, month: number, day: number, hour: number, minute: number, second: number, millisecond: number, microsecond: number, nanosecond: number, calendar: object, [propName: string]: unknown }</h3><p><strong>Returns:</strong> a plain object with properties equal to the fields of <code>datetime</code>.</p>
+dt<span class="token punctuation">.</span><span class="token function">toDate</span><span class="token punctuation">(</span><span class="token punctuation">)</span>  <span class="token comment">// => 1995-12-07</span>
+dt<span class="token punctuation">.</span><span class="token function">toYearMonth</span><span class="token punctuation">(</span><span class="token punctuation">)</span>  <span class="token comment">// => 1995-12</span>
+dt<span class="token punctuation">.</span><span class="token function">toMonthDay</span><span class="token punctuation">(</span><span class="token punctuation">)</span>  <span class="token comment">// => 12-07</span>
+dt<span class="token punctuation">.</span><span class="token function">toTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span>  <span class="token comment">// => 03:24:30.000003500</span></code></pre><h3 id="getFields"><a class="heading-link" href="#getFields"></a>datetime.<strong>getFields</strong>() : { year: number, month: number, day: number, hour: number, minute: number, second: number, millisecond: number, microsecond: number, nanosecond: number, calendar: object, [propName: string]: unknown }</h3><p><strong>Returns:</strong> a plain object with properties equal to the fields of <code>datetime</code>.</p>
 <p>This method can be used to convert a <code>Temporal.DateTime</code> into a record-like data structure.
 It returns a new plain JavaScript object, with all the fields as enumerable, writable, own data properties.</p>
 <p>Note that if using a different calendar from ISO 8601, these will be the calendar-specific values.</p>

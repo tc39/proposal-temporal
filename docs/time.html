@@ -187,7 +187,7 @@
 </li>
 <li><a href="#valueOf">valueOf</a>
 </li>
-<li><a href="#withDate">withDate</a>
+<li><a href="#toDateTime">toDateTime</a>
 </li>
 <li><a href="#getFields">getFields</a>
 </li>
@@ -200,7 +200,7 @@
 &quot;Wall-clock time&quot; refers to the concept of a time as expressed in everyday usage &mdash; the time that you read off the clock on the wall.
 For example, it could be used to represent an event that happens daily at a certain time, no matter what time zone.</p>
 <p><code>Temporal.Time</code> refers to a time with no associated calendar date; if you need to refer to a specific time on a specific day, use <code>Temporal.DateTime</code>.
-A <code>Temporal.Time</code> can be converted into a <code>Temporal.DateTime</code> by combining it with a <code>Temporal.Date</code> using the <code>withDate()</code> method.</p>
+A <code>Temporal.Time</code> can be converted into a <code>Temporal.DateTime</code> by combining it with a <code>Temporal.Date</code> using the <code>toDateTime()</code> method.</p>
 <h2 id="constructor-1">Constructor</h2>
 <h3 id="new-Temporal-Time"><a class="heading-link" href="#new-Temporal-Time"></a><strong>new Temporal.Time</strong>(<em>hour</em>: number = 0, <em>minute</em>: number = 0, <em>second</em>: number = 0, <em>millisecond</em>: number = 0, <em>microsecond</em>: number = 0, <em>nanosecond</em>: number = 0) : Temporal.Time</h3><p><strong>Parameters:</strong></p>
 <ul>
@@ -452,18 +452,18 @@ console<span class="token punctuation">.</span><span class="token function">log<
 <span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span>str<span class="token punctuation">,</span> reviver<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre><h3 id="valueOf"><a class="heading-link" href="#valueOf"></a>time.<strong>valueOf</strong>()</h3><p>This method overrides <code>Object.prototype.valueOf()</code> and always throws an exception.
 This is because it&#39;s not possible to compare <code>Temporal.Time</code> objects with the relational operators <code>&lt;</code>, <code>&lt;=</code>, <code>&gt;</code>, or <code>&gt;=</code>.
 Use <code>Temporal.Time.compare()</code> for this, or <code>time.equals()</code> for equality.</p>
-<h3 id="withDate"><a class="heading-link" href="#withDate"></a>time.<strong>withDate</strong>(<em>date</em>: Temporal.Date) : Temporal.DateTime</h3><p><strong>Parameters:</strong></p>
+<h3 id="toDateTime"><a class="heading-link" href="#toDateTime"></a>time.<strong>toDateTime</strong>(<em>date</em>: Temporal.Date) : Temporal.DateTime</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>date</code> (<code>Temporal.Date</code>): A calendar date on which to place <code>time</code>.</li>
 </ul>
 <p><strong>Returns:</strong> a <code>Temporal.DateTime</code> object that represents the wall-clock time <code>time</code> on the calendar date <code>date</code>.</p>
 <p>This method can be used to convert <code>Temporal.Time</code> into a <code>Temporal.DateTime</code>, by supplying the calendar date to use.
 The converted object carries a copy of all the relevant fields of <code>date</code> and <code>time</code>.</p>
-<p>This is exactly equivalent to <a href="./date.html#withTime"><code>date.withTime(time)</code></a>.</p>
+<p>This is exactly equivalent to <a href="./date.html#toDateTime"><code>date.toDateTime(time)</code></a>.</p>
 <p>Usage example:</p>
 <pre class="language-javascript"><code class="language-javascript">time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'15:23:30.003'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 date <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2006-08-24'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-time<span class="token punctuation">.</span><span class="token function">withDate</span><span class="token punctuation">(</span>date<span class="token punctuation">)</span>  <span class="token comment">// => 2006-08-24T15:23:30.003</span></code></pre><h3 id="getFields"><a class="heading-link" href="#getFields"></a>time.<strong>getFields</strong>() : { hour: number, minute: number, second: number, millisecond: number, microsecond: number, nanosecond: number }</h3><p><strong>Returns:</strong> a plain object with properties equal to the fields of <code>time</code>.</p>
+time<span class="token punctuation">.</span><span class="token function">toDateTime</span><span class="token punctuation">(</span>date<span class="token punctuation">)</span>  <span class="token comment">// => 2006-08-24T15:23:30.003</span></code></pre><h3 id="getFields"><a class="heading-link" href="#getFields"></a>time.<strong>getFields</strong>() : { hour: number, minute: number, second: number, millisecond: number, microsecond: number, nanosecond: number }</h3><p><strong>Returns:</strong> a plain object with properties equal to the fields of <code>time</code>.</p>
 <p>This method can be used to convert a <code>Temporal.Time</code> into a record-like data structure.
 It returns a new plain JavaScript object, with all the fields as enumerable, writable, own data properties.</p>
 <p>Usage example:</p>

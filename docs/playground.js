@@ -4997,8 +4997,8 @@
         throw new TypeError('use compare() or equals() to compare Temporal.Absolute');
       }
     }, {
-      key: "inTimeZone",
-      value: function inTimeZone(temporalTimeZoneLike) {
+      key: "toDateTime",
+      value: function toDateTime(temporalTimeZoneLike) {
         var calendar = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
         if (!ES.IsTemporalAbsolute(this)) throw new TypeError('invalid receiver');
         var TemporalTimeZone = GetIntrinsic$1('%Temporal.TimeZone%');
@@ -5721,8 +5721,8 @@
         throw new TypeError('use compare() or equals() to compare Temporal.Date');
       }
     }, {
-      key: "withTime",
-      value: function withTime(temporalTime) {
+      key: "toDateTime",
+      value: function toDateTime(temporalTime) {
         if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
         if (!ES.IsTemporalTime(temporalTime)) throw new TypeError('invalid Temporal.Time object');
         var year = GetSlot(this, ISO_YEAR);
@@ -5739,8 +5739,8 @@
         return new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
       }
     }, {
-      key: "getYearMonth",
-      value: function getYearMonth() {
+      key: "toYearMonth",
+      value: function toYearMonth() {
         if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
         var YearMonth = GetIntrinsic$1('%Temporal.YearMonth%');
         var calendar = GetSlot(this, CALENDAR);
@@ -5748,8 +5748,8 @@
         return calendar.yearMonthFromFields(fields, {}, YearMonth);
       }
     }, {
-      key: "getMonthDay",
-      value: function getMonthDay() {
+      key: "toMonthDay",
+      value: function toMonthDay() {
         if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
         var MonthDay = GetIntrinsic$1('%Temporal.MonthDay%');
         var calendar = GetSlot(this, CALENDAR);
@@ -6257,8 +6257,8 @@
         throw new TypeError('use compare() or equals() to compare Temporal.DateTime');
       }
     }, {
-      key: "inTimeZone",
-      value: function inTimeZone(temporalTimeZoneLike, options) {
+      key: "toAbsolute",
+      value: function toAbsolute(temporalTimeZoneLike, options) {
         if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
         var TemporalTimeZone = GetIntrinsic$1('%Temporal.TimeZone%');
         var timeZone = TemporalTimeZone.from(temporalTimeZoneLike);
@@ -6271,15 +6271,15 @@
         });
       }
     }, {
-      key: "getDate",
-      value: function getDate() {
+      key: "toDate",
+      value: function toDate() {
         if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
         var Date = GetIntrinsic$1('%Temporal.Date%');
         return new Date(GetSlot(this, ISO_YEAR), GetSlot(this, ISO_MONTH), GetSlot(this, ISO_DAY), GetSlot(this, CALENDAR));
       }
     }, {
-      key: "getYearMonth",
-      value: function getYearMonth() {
+      key: "toYearMonth",
+      value: function toYearMonth() {
         if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
         var YearMonth = GetIntrinsic$1('%Temporal.YearMonth%');
         var calendar = GetSlot(this, CALENDAR);
@@ -6287,8 +6287,8 @@
         return calendar.yearMonthFromFields(fields, {}, YearMonth);
       }
     }, {
-      key: "getMonthDay",
-      value: function getMonthDay() {
+      key: "toMonthDay",
+      value: function toMonthDay() {
         if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
         var MonthDay = GetIntrinsic$1('%Temporal.MonthDay%');
         var calendar = GetSlot(this, CALENDAR);
@@ -6296,8 +6296,8 @@
         return calendar.monthDayFromFields(fields, {}, MonthDay);
       }
     }, {
-      key: "getTime",
-      value: function getTime() {
+      key: "toTime",
+      value: function toTime() {
         if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
         var Time = GetIntrinsic$1('%Temporal.Time%');
         return new Time(GetSlot(this, HOUR), GetSlot(this, MINUTE), GetSlot(this, SECOND), GetSlot(this, MILLISECOND), GetSlot(this, MICROSECOND), GetSlot(this, NANOSECOND));
@@ -6978,8 +6978,8 @@
         throw new TypeError('use equals() to compare Temporal.MonthDay');
       }
     }, {
-      key: "withYear",
-      value: function withYear(item) {
+      key: "toDate",
+      value: function toDate(item) {
         if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
         var era, year;
 
@@ -7113,11 +7113,11 @@
 
   function date(temporalTimeZoneLike) {
     var calendar = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
-    return dateTime(temporalTimeZoneLike, calendar).getDate();
+    return dateTime(temporalTimeZoneLike, calendar).toDate();
   }
 
   function time$1(temporalTimeZoneLike) {
-    return dateTime(temporalTimeZoneLike).getTime();
+    return dateTime(temporalTimeZoneLike).toTime();
   }
 
   function timeZone() {
@@ -7351,8 +7351,8 @@
         throw new TypeError('use compare() or equals() to compare Temporal.Time');
       }
     }, {
-      key: "withDate",
-      value: function withDate(temporalDate) {
+      key: "toDateTime",
+      value: function toDateTime(temporalDate) {
         if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
         if (!ES.IsTemporalDate(temporalDate)) throw new TypeError('invalid Temporal.Date object');
         var year = GetSlot(temporalDate, ISO_YEAR);
@@ -7926,8 +7926,8 @@
         throw new TypeError('use compare() or equals() to compare Temporal.YearMonth');
       }
     }, {
-      key: "withDay",
-      value: function withDay(day) {
+      key: "toDate",
+      value: function toDate(day) {
         if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
         var calendar = GetSlot(this, CALENDAR);
         var fields = ES.ToTemporalYearMonthRecord(this);
@@ -8367,7 +8367,7 @@
     var YearMonth = GetIntrinsic$1('%Temporal.YearMonth%');
 
     if (datetime instanceof Time) {
-      datetime = datetime.withDate(new Date(1970, 1, 1));
+      datetime = datetime.toDateTime(new Date(1970, 1, 1));
       formatter = main[TIME];
     }
 
@@ -8397,7 +8397,7 @@
 
     if (datetime instanceof Date) {
       calendar = calendar || datetime.calendar.id;
-      datetime = datetime.withTime(new Time(12, 0));
+      datetime = datetime.toDateTime(new Time(12, 0));
       formatter = formatter || main[DATE];
     }
 
