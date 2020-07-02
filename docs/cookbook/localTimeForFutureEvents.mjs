@@ -29,10 +29,9 @@ const tc39meetings = [
 // To follow the meetings remotely from Tokyo, calculate the times you would
 // need to join:
 const localTimes = tc39meetings.map(({ dateTime, timeZone }) => {
-  return Temporal.ZonedDateTime.from({ ...Temporal.DateTime.from(dateTime).getFields(), timeZone }).with(
-    { timeZone: 'Asia/Tokyo' },
-    { disambiguation: 'reject' }
-  );
+  return Temporal.DateTime.from(dateTime)
+    .toLocalDateTime(timeZone, { disambiguation: 'reject' })
+    .with({ timeZone: 'Asia/Tokyo' }, { disambiguation: 'reject' });
 });
 
 assert.deepEqual(
