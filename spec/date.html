@@ -566,12 +566,9 @@
         1. Assert: Type(_temporalDateLike_) is Object.
         1. If _temporalDateLike_ has an [[InitializedTemporalDate]] internal slot, then
           1. Return the Record {
-              [[Hour]]: _temporalDateLike_.[[Hour]],
-              [[Minute]]: _temporalDateLike_.[[Minute]],
-              [[Second]]: _temporalDateLike_.[[Second]],
-              [[Millisecond]]: _temporalDateLike_.[[Millisecond]],
-              [[Microsecond]]: _temporalDateLike_.[[Microsecond]],
-              [[Nanosecond]]: _temporalDateLike_.[[Nanosecond]]
+              [[Year]]: _temporalDateLike_.[[Year]],
+              [[Month]]: _temporalDateLike_.[[Month]],
+              [[Day]]: _temporalDateLike_.[[Day]],
             }.
         1. Let _result_ be a new Record with all the internal slots given in the Internal Slot column in <emu-xref href="#table-temporal-temporaldatelike-properties"></emu-xref>.
         1. For each row of <emu-xref href="#table-temporal-temporaldatelike-properties"></emu-xref>, except the header row, in table order, do
