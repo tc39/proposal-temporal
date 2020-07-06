@@ -325,6 +325,12 @@ function doPlusOrMinus(
   const dateTimeOverflowOption = { disambiguation: overflow };
   const { timeZone, calendar } = localDateTime;
 
+  // Absolute doesn't use disambiguation, while RFC 5455 specifies 'compatible' behavior
+  // for disambiguation. Therefore, only 'dateTime' durations can use this option.
+  if (disambiguation !== 'compatible' && durationKind !== 'dateTime') {
+    throw new RangeError('Disambiguation options are only valid for `dateTime` durations');
+  }
+
   switch (durationKind) {
     case 'absolute': {
       const result = localDateTime.absolute[op](durationLike);
@@ -362,14 +368,14 @@ function doPlusOrMinus(
       if (weeks) newDateTime = newDateTime[op]({ weeks }, dateTimeOverflowOption);
       if (days) newDateTime = newDateTime[op]({ days }, dateTimeOverflowOption);
       if (isZeroDuration(timeDuration)) {
-        const absolute = newDateTime.inTimeZone(timeZone, { disambiguation });
+        const absolute = newDateTime.inTimeZone(timeZone);
         return LocalDateTime.from({ absolute, timeZone, calendar: localDateTime.calendar });
       } else {
         // Now add/subtract the time. Because all time units are always the same
         // length, we can add/subtract all of them together without worrying about
         // order of operations.
         newDateTime = newDateTime[op](timeDuration, dateTimeOverflowOption);
-        let absolute = newDateTime.inTimeZone(timeZone, { disambiguation });
+        let absolute = newDateTime.inTimeZone(timeZone);
         const reverseOp = op === 'plus' ? 'minus' : 'plus';
         const backUpAbs = absolute[reverseOp]({ nanoseconds: totalNanoseconds(timeDuration) });
         const backUpOffset = timeZone.getOffsetNanosecondsFor(backUpAbs);

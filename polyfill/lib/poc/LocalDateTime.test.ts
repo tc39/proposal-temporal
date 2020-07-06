@@ -526,8 +526,8 @@ describe('LocalDateTime', () => {
   const dayBeforeDstStart = LocalDateTime.from({ ...new DateTime(2020, 3, 7, 2, 30).getFields(), timeZone: tz });
 
   describe('math around DST', () => {
-    it('add 1 hour to get to DST start (earlier)', () => {
-      const added = hourBeforeDstStart.plus({ hours: 1 }, { disambiguation: 'earlier' });
+    it('add 1 hour to get to DST start', () => {
+      const added = hourBeforeDstStart.plus({ hours: 1 });
       equal(added.hour, 3);
       const diff = added.difference(hourBeforeDstStart, { largestUnit: 'hours' });
       equal(diff.days, 0);
@@ -535,8 +535,8 @@ describe('LocalDateTime', () => {
       equal(diff.minutes, 0);
     });
 
-    it('add 2 hours to get to DST start +1  (earlier)', () => {
-      const added = hourBeforeDstStart.plus({ hours: 2 }, { disambiguation: 'earlier' });
+    it('add 2 hours to get to DST start +1', () => {
+      const added = hourBeforeDstStart.plus({ hours: 2 });
       equal(added.hour, 4);
       const diff = added.difference(hourBeforeDstStart, { largestUnit: 'hours' });
       equal(diff.days, 0);
@@ -544,8 +544,8 @@ describe('LocalDateTime', () => {
       equal(diff.minutes, 0);
     });
 
-    it('add 1.5 hours to get to 0.5 hours after DST start (earlier)', () => {
-      const added = hourBeforeDstStart.plus({ hours: 1, minutes: 30 }, { disambiguation: 'earlier' });
+    it('add 1.5 hours to get to 0.5 hours after DST start', () => {
+      const added = hourBeforeDstStart.plus({ hours: 1, minutes: 30 });
       equal(added.hour, 3);
       equal(added.minute, 30);
       const diff = added.difference(hourBeforeDstStart, { largestUnit: 'hours' });
@@ -554,10 +554,10 @@ describe('LocalDateTime', () => {
       equal(diff.minutes, 30);
     });
 
-    it('Samoa date line change: 10:00PM 29 Dec 2011 -> 11:00PM 31 Dec 2011 (hybrid)', () => {
+    it('Samoa date line change: 10:00PM 29 Dec 2011 -> 11:00PM 31 Dec 2011', () => {
       const dayBeforeSamoaDateLineChangeAbs = new Temporal.DateTime(2011, 12, 29, 22).inTimeZone('Pacific/Apia');
       const start = LocalDateTime.from({ absolute: dayBeforeSamoaDateLineChangeAbs, timeZone: 'Pacific/Apia' });
-      const added = start.plus({ days: 1, hours: 1 }, { disambiguation: 'later' });
+      const added = start.plus({ days: 1, hours: 1 });
       equal(added.day, 31);
       equal(added.hour, 23);
       equal(added.minute, 0);
@@ -580,7 +580,7 @@ describe('LocalDateTime', () => {
     });
 
     it('2:30 day before DST start -> 3:30 day of DST start', () => {
-      const added = dayBeforeDstStart.plus({ days: 1 }, { disambiguation: 'later' });
+      const added = dayBeforeDstStart.plus({ days: 1 });
       equal(added.day, 8);
       equal(added.hour, 3);
       equal(added.minute, 30);
@@ -604,7 +604,7 @@ describe('LocalDateTime', () => {
 
     it('2:00 day before DST starts -> 3:00 day DST starts', () => {
       const start = hourBeforeDstStart.minus({ days: 1 }).plus({ hours: 1 }); // 2:00AM
-      const added = start.plus({ days: 1 }, { disambiguation: 'later' });
+      const added = start.plus({ days: 1 });
       equal(added.day, 8);
       equal(added.hour, 3);
       equal(added.minute, 0);
@@ -616,7 +616,7 @@ describe('LocalDateTime', () => {
 
     it('2:00 day before DST starts -> 3:00 day DST starts', () => {
       const start = hourBeforeDstStart.minus({ days: 1 }).plus({ hours: 1 }); // 2:00AM
-      const added = start.plus({ days: 1 }, { disambiguation: 'later' });
+      const added = start.plus({ days: 1 });
       equal(added.day, 8);
       equal(added.hour, 3);
       equal(added.minute, 0);
