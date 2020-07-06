@@ -63,6 +63,7 @@ export class TimeZone {
     return ES.GetIANATimeZoneOffsetNanoseconds(GetSlot(absolute, EPOCHNANOSECONDS), id);
   }
   getOffsetStringFor(absolute) {
+    if (!ES.IsTemporalAbsolute(absolute)) throw new TypeError('invalid Absolute object');
     const offsetNs = this.getOffsetNanosecondsFor(absolute);
     if (typeof offsetNs !== 'number') {
       throw new TypeError('bad return from getOffsetNanosecondsFor');
