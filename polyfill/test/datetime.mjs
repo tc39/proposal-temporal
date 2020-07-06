@@ -260,7 +260,7 @@ describe('DateTime', () => {
       const noon = Temporal.Time.from({ hour: 12 });
       equal(`${datetime.with(noon)}`, '1976-11-18T12:00');
     });
-    it('datetimw.with(date) works', () => {
+    it('datetime.with(date) works', () => {
       const date = Temporal.Date.from('1995-04-07');
       equal(`${datetime.with(date)}`, '1995-04-07T15:23:30.123456789');
     });
