@@ -7525,6 +7525,7 @@
     }, {
       key: "getOffsetStringFor",
       value: function getOffsetStringFor(absolute) {
+        if (!ES.IsTemporalAbsolute(absolute)) throw new TypeError('invalid Absolute object');
         var offsetNs = this.getOffsetNanosecondsFor(absolute);
 
         if (typeof offsetNs !== 'number') {
