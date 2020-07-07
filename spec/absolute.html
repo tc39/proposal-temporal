@@ -442,7 +442,11 @@
       <emu-alg>
         1. Assert: Type(_isoString_) is String.
         1. Let _result_ be ? ParseTemporalAbsoluteString(_isoString_).
-        1. <mark>TODO: Let _possibleEpochNs_ be the List of possibilities for the number of nanoseconds since the Unix epoch in the time zone designated by _result_.[[TimeZoneName]] for the date and time designated by _result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[microsecond]], and _result_.[[Nanosecond]].</mark>
+        1. Let _dateTime_ be ? CreateTemporalDateTime(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[microsecond]], _result_.[[Nanosecond]]).
+        1. Let _timeZone_ be ? TimeZoneFrom(_result_.[[TimeZoneName]]).
+        1. Let _possibleAbsolutes_ be ? GetPossibleAbsolutesFor(_timeZone_, _dateTime_).
+        1. If _possibleAbsolutes_'s length is 1, then
+          1. Return _possibleAbsolutes_[0].[[Nanoseconds]].
         1. <mark>TODO: Disambiguate using _result_.[[TimeZoneOffsetHour]] and _result_.[[TimeZoneOffsetMinute]].
         1. Return <mark>TODO</mark>.
       </emu-alg>
