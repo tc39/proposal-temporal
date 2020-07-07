@@ -255,13 +255,14 @@ export class Time {
     let hour, minute, second, millisecond, microsecond, nanosecond;
     if (typeof item === 'object' && item) {
       if (ES.IsTemporalTime(item)) {
+        hour = GetSlot(item, HOUR);
         minute = GetSlot(item, MINUTE);
         second = GetSlot(item, SECOND);
         millisecond = GetSlot(item, MILLISECOND);
         microsecond = GetSlot(item, MICROSECOND);
         nanosecond = GetSlot(item, NANOSECOND);
       } else {
-        // Intentionally alphabetical
+        // Intentionally largest to smallest units
         ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.ToTemporalTimeRecord(item));
       }
     } else {
