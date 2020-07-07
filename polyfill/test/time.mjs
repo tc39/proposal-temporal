@@ -12,10 +12,10 @@ import Pretty from '@pipobscure/demitasse-pretty';
 const { reporter } = Pretty;
 
 import { strict as assert } from 'assert';
-const { equal, notEqual, throws } = assert;
+const { equal, notEqual, throws, deepEqual } = assert;
 
 import * as Temporal from 'proposal-temporal';
-const { Time } = Temporal;
+const { Time, DateTime } = Temporal;
 
 describe('Time', () => {
   describe('Structure', () => {
@@ -367,6 +367,14 @@ describe('Time', () => {
         equal(`${Time.from('23:59:60', { disambiguation: 'reject' })}`, '23:59:59');
       });
       it('Time.from(number) is converted to string', () => equal(`${Time.from(1523)}`, `${Time.from('1523')}`));
+      it('Time.from(time) returns the same properties', () => {
+        const t = Time.from('2020-02-12T11:42+01:00[Europe/Amsterdam]');
+        deepEqual(Time.from(t).getFields(), t.getFields());
+      });
+      it('Time.from(dateTime) returns the same time properties', () => {
+        const dt = DateTime.from('2020-02-12T11:42+01:00[Europe/Amsterdam]');
+        deepEqual(Time.from(dt).getFields(), dt.toTime().getFields());
+      });
       it('Time.from(time) is not the same object', () => {
         const t = Time.from('2020-02-12T11:42+01:00[Europe/Amsterdam]');
         notEqual(Time.from(t), t);
