@@ -327,6 +327,14 @@
       </emu-alg>
     </emu-clause>
 
+    <emu-clause id="sec-temporal-timezonefrom" aoid="TimeZoneFrom">
+      <h1>TimeZoneFrom ( _identifier_ )</h1>
+      <emu-alg>
+        1. Let _from_ be ? Get(%Temporal.TimeZone%, *"from"*).
+        1. Return ? Call(_from_, %Temporal.TimeZone%, « _identifier_ »).
+      </emu-alg>
+    </emu-clause>
+
     <emu-clause id="sec-temporal-getpossibleabsolutesfor" aoid="GetPossibleAbsolutesFor">
       <h1>GetPossibleAbsolutesFor ( _timeZone_, _dateTime_ )</h1>
       <emu-alg>
