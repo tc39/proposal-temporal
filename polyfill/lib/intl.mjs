@@ -123,7 +123,7 @@ function formatRangeToParts(a, b) {
 
 function amend(options = {}, amended = {}) {
   options = ObjectAssign({}, options);
-  for (let opt of ['year', 'month', 'day', 'hour', 'minute', 'second', 'timeZoneName']) {
+  for (let opt of ['year', 'month', 'day', 'hour', 'minute', 'second', 'weekday', 'timeZoneName']) {
     options[opt] = opt in amended ? amended[opt] : options[opt];
     if (options[opt] === false || options[opt] === undefined) delete options[opt];
   }
@@ -131,7 +131,7 @@ function amend(options = {}, amended = {}) {
 }
 
 function timeAmend(options) {
-  options = amend(options, { year: false, month: false, day: false, timeZoneName: false });
+  options = amend(options, { year: false, month: false, day: false, weekday: false, timeZoneName: false });
   if (!hasTimeOptions(options)) {
     options = ObjectAssign(options, {
       hour: 'numeric',
@@ -143,7 +143,14 @@ function timeAmend(options) {
 }
 
 function yearMonthAmend(options) {
-  options = amend(options, { day: false, hour: false, minute: false, second: false, timeZoneName: false });
+  options = amend(options, {
+    day: false,
+    hour: false,
+    minute: false,
+    second: false,
+    weekday: false,
+    timeZoneName: false
+  });
   if (!('year' in options || 'month' in options)) {
     options = ObjectAssign(options, { year: 'numeric', month: 'numeric' });
   }
@@ -151,7 +158,14 @@ function yearMonthAmend(options) {
 }
 
 function monthDayAmend(options) {
-  options = amend(options, { year: false, hour: false, minute: false, second: false, timeZoneName: false });
+  options = amend(options, {
+    year: false,
+    hour: false,
+    minute: false,
+    second: false,
+    weekday: false,
+    timeZoneName: false
+  });
   if (!('month' in options || 'day' in options)) {
     options = ObjectAssign(options, { month: 'numeric', day: 'numeric' });
   }
@@ -186,7 +200,7 @@ function datetimeAmend(options) {
 }
 
 function hasDateOptions(options) {
-  return 'year' in options || 'month' in options || 'day' in options;
+  return 'year' in options || 'month' in options || 'day' in options || 'weekday' in options;
 }
 
 function hasTimeOptions(options) {
