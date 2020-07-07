@@ -14,12 +14,27 @@ import * as Temporal from 'proposal-temporal';
 describe('Intl', () => {
   // TODO: move these to their respective test files.
 
+  function maybeGetWeekdayOnlyFormat() {
+    const fmt = new Intl.DateTimeFormat('en', { weekday: 'long' });
+    if (
+      ['era', 'year', 'month', 'day', 'hour', 'minute', 'second', 'timeZoneName'].some(
+        (prop) => prop in fmt.resolvedOptions()
+      )
+    ) {
+      it.skip('no weekday-only format available', () => {});
+      return null;
+    }
+    return fmt;
+  }
+
   describe('absolute.toLocaleString()', () => {
     const absolute = Temporal.Absolute.from('1976-11-18T14:23:30Z');
     it(`(${absolute.toString()}).toLocaleString('en-US', { timeZone: 'Europe/Vienna' })`, () =>
       equal(`${absolute.toLocaleString('en', { timeZone: 'America/New_York' })}`, '11/18/1976, 9:23:30 AM'));
     it(`(${absolute.toString()}).toLocaleString('de-AT', { timeZone: 'Europe/Vienna' })`, () =>
       equal(`${absolute.toLocaleString('de', { timeZone: 'Europe/Vienna' })}`, '18.11.1976, 15:23:30'));
+    const fmt = maybeGetWeekdayOnlyFormat();
+    if (fmt) it('uses only the options in resolvedOptions', () => equal(fmt.format(absolute), 'Thursday'));
   });
   describe('datetime.toLocaleString()', () => {
     const datetime = Temporal.DateTime.from('1976-11-18T15:23:30');
@@ -27,6 +42,8 @@ describe('Intl', () => {
       equal(`${datetime.toLocaleString('en', { timeZone: 'America/New_York' })}`, '11/18/1976, 3:23:30 PM'));
     it(`(${datetime.toString()}).toLocaleString('de-AT', { timeZone: 'Europe/Vienna' })`, () =>
       equal(`${datetime.toLocaleString('de', { timeZone: 'Europe/Vienna' })}`, '18.11.1976, 15:23:30'));
+    const fmt = maybeGetWeekdayOnlyFormat();
+    if (fmt) it('uses only the options in resolvedOptions', () => equal(fmt.format(datetime), 'Thursday'));
     it('should ignore units not in the data type', () => {
       equal(datetime.toLocaleString('en', { timeZoneName: 'long' }), '11/18/1976, 3:23:30 PM');
     });
@@ -46,6 +63,7 @@ describe('Intl', () => {
       equal(time.toLocaleString('en', { year: 'numeric' }), '3:23:30 PM');
       equal(time.toLocaleString('en', { month: 'numeric' }), '3:23:30 PM');
       equal(time.toLocaleString('en', { day: 'numeric' }), '3:23:30 PM');
+      equal(time.toLocaleString('en', { weekday: 'long' }), '3:23:30 PM');
     });
   });
   describe('date.toLocaleString()', () => {
@@ -54,6 +72,8 @@ describe('Intl', () => {
       equal(`${date.toLocaleString('en', { timeZone: 'America/New_York' })}`, '11/18/1976'));
     it(`(${date.toString()}).toLocaleString('de-AT', { timeZone: 'Europe/Vienna' })`, () =>
       equal(`${date.toLocaleString('de', { timeZone: 'Europe/Vienna' })}`, '18.11.1976'));
+    const fmt = maybeGetWeekdayOnlyFormat();
+    if (fmt) it('uses only the options in resolvedOptions', () => equal(fmt.format(date), 'Thursday'));
     it('should ignore units not in the data type', () => {
       equal(date.toLocaleString('en', { timeZoneName: 'long' }), '11/18/1976');
       equal(date.toLocaleString('en', { hour: 'numeric' }), '11/18/1976');
@@ -73,6 +93,7 @@ describe('Intl', () => {
       equal(yearmonth.toLocaleString('en', { hour: 'numeric' }), '11/1976');
       equal(yearmonth.toLocaleString('en', { minute: 'numeric' }), '11/1976');
       equal(yearmonth.toLocaleString('en', { second: 'numeric' }), '11/1976');
+      equal(yearmonth.toLocaleString('en', { weekday: 'long' }), '11/1976');
     });
   });
   describe('monthday.toLocaleString()', () => {
@@ -87,6 +108,7 @@ describe('Intl', () => {
       equal(monthday.toLocaleString('en', { hour: 'numeric' }), '11/18');
       equal(monthday.toLocaleString('en', { minute: 'numeric' }), '11/18');
       equal(monthday.toLocaleString('en', { second: 'numeric' }), '11/18');
+      equal(monthday.toLocaleString('en', { weekday: 'long' }), '11/18');
     });
   });
 
