@@ -8247,7 +8247,7 @@
     var amended = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     options = ObjectAssign$5({}, options);
 
-    for (var _i = 0, _arr = ['year', 'month', 'day', 'hour', 'minute', 'second', 'timeZoneName']; _i < _arr.length; _i++) {
+    for (var _i = 0, _arr = ['year', 'month', 'day', 'hour', 'minute', 'second', 'weekday', 'timeZoneName']; _i < _arr.length; _i++) {
       var opt = _arr[_i];
       options[opt] = opt in amended ? amended[opt] : options[opt];
       if (options[opt] === false || options[opt] === undefined) delete options[opt];
@@ -8261,6 +8261,7 @@
       year: false,
       month: false,
       day: false,
+      weekday: false,
       timeZoneName: false
     });
 
@@ -8281,6 +8282,7 @@
       hour: false,
       minute: false,
       second: false,
+      weekday: false,
       timeZoneName: false
     });
 
@@ -8300,6 +8302,7 @@
       hour: false,
       minute: false,
       second: false,
+      weekday: false,
       timeZoneName: false
     });
 
@@ -8352,7 +8355,7 @@
   }
 
   function hasDateOptions(options) {
-    return 'year' in options || 'month' in options || 'day' in options;
+    return 'year' in options || 'month' in options || 'day' in options || 'weekday' in options;
   }
 
   function hasTimeOptions(options) {
