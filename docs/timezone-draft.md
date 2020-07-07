@@ -23,9 +23,9 @@ For example, St. Louis's local mean time is GMT-06:00:49.11 ([Byrd, Mary E., 189
 
 ## Usage of a custom time zone
 
-Like built-in time zones, custom time zones have an `[[Identifier]]`.
+Like built-in time zones, custom time zones have an identifier.
 In these examples we assume a custom time zone class `StLouisTime` with the identifier `America/St_Louis`.
-(See the following section for how such a time zone object would be obtained.)
+(See the following section for how such a time zone object would be implemented.)
 
 When parsing an ISO 8601 string, the only places the time zone identifier is taken into account are `Temporal.Absolute.from()` and `Temporal.TimeZone.from()`.
 `Temporal.Absolute.from()` will call `Temporal.TimeZone.from()` to resolve the time zone identifier into a `Temporal.TimeZone` object.
