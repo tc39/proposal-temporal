@@ -190,25 +190,15 @@
         1. Perform ? RequireInternalSlot(_timeZone_, [[InitializedTemporalTimeZone]]).
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
         1. Let _disambiguation_ be ? ToTimeZoneTemporalDisambiguation(_options_).
-        1. Let _getPossibleAbsolutesFor_ be ? Get(_timeZone_, *"getPossibleAbsolutesFor"*).
-        1. Let _possibleAbsolutes_ be ? Call(_getPossibleAbsolutesFor_, _timeZone_, « _dateTime_ »).
-        1. If ? IsArray(_possibleAbsolutes_) is *false*, then
-          1. Throw a *TypeError* exception.
-        1. Let _n_ be ? Get(_possibleAbsolutes_, *"length"*).
+        1. Let _possibleAbsolutes_ be ? GetPossibleAbsolutesFor(_timeZone_, _dateTime_).
+        1. Let _n_ be _possibleAbsolutes_'s length.
         1. If _n_ = 1, then
-          1. Let _absolute_ be ? Get(_possibleAbsolutes_, *"0"*).
-          1. Perform ? RequireInternalSlot(_absolute_, [[InitializedTemporalAbsolute]]).
-          1. Return _absolute_.
+          1. Return _possibleAbsolutes_[0].
         1. If _n_ ≠ 0, then
           1. If _disambiguation_ is *"earlier"* or *"compatible"*, then
-            1. Let _absolute_ be ? Get(_possibleAbsolutes_, *"0"*).
-            1. Perform ? RequireInternalSlot(_absolute_, [[InitializedTemporalAbsolute]]).
-            1. Return _absolute_.
+            1. Return _possibleAbsolutes_[0].
           1. If _disambiguation_ is *"later"*, then
-            1. Let _index_ be ? ToString(_n_ &minus; 1).
-            1. Let _absolute_ be ? Get(_possibleAbsolutes_, _index_).
-            1. Perform ? RequireInternalSlot(_absolute_, [[InitializedTemporalAbsolute]]).
-            1. Return _absolute_.
+            1. Return _possibleAbsolutes_[_n_ &minus; 1].
           1. If _disambiguation_ is *"reject"*, then
             1. Throw a *RangeError* exception.
         1. <mark>TODO - handle n=0 (skipped times like Spring DST)</mark>
@@ -334,6 +324,18 @@
         1. Let _h_ be floor(_offsetMinutes_ / 60), formatted as a two-digit decimal number, padded to the left with a zero if necessary.
         1. Let _m_ be _offsetMinutes_ modulo 60, formatted as a two-digit decimal number, padded to the left with a zero if necessary.
         1. Return the string-concatenation of _sign_, _h_, the code unit 0x003A (COLON), and _m_.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-getpossibleabsolutesfor" aoid="GetPossibleAbsolutesFor">
+      <h1>GetPossibleAbsolutesFor ( _timeZone_, _dateTime_ )</h1>
+      <emu-alg>
+        1. Let _getPossibleAbsolutesFor_ be ? Get(_timeZone_, *"getPossibleAbsolutesFor"*).
+        1. Let _possibleAbsolutes_ be ? Call(_getPossibleAbsolutesFor_, _timeZone_, « _dateTime_ »).
+        1. Let _list_ be ? CreateListFromArrayLike(_possibleAbsolutes_).
+        1. For each _absolute_ in _list_ in List order, do
+          1. Perform ? RequireInternalSlot(_absolute_, [[InitializedTemporalAbsolute]]).
+        1. Return _list_.
       </emu-alg>
     </emu-clause>
   </emu-clause>
