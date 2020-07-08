@@ -1,5 +1,11 @@
 import { Temporal } from '../..';
-import * as ES2019 from 'es-abstract';
+// @ts-ignore
+import ToInteger from 'es-abstract/2019/ToInteger.js';
+// @ts-ignore
+import ToObject from 'es-abstract/2019/ToObject.js';
+// @ts-ignore
+import ToString from 'es-abstract/2019/ToString.js';
+// import { ToInteger, ToObject, ToString } from 'es-abstract';
 
 export type LocalDateTimeLike = Temporal.DateTimeLike & {
   /**`Temporal.TimeZone`, IANA time zone identifier, or offset string */
@@ -155,7 +161,7 @@ function fromObject(item: Record<string, unknown>, options?: LocalDateTimeAssign
   // Simplest case: absolute + time zone + optional calendar
   if (absolute !== undefined) {
     const abs = Temporal.Absolute.from(absolute);
-    const dt = abs.inTimeZone(tz, cal);
+    const dt = abs.toDateTime(tz, cal);
     if (timeZoneOffsetNanoseconds !== undefined) {
       checkCompareProperty('timeZoneOffsetNanoseconds', timeZoneOffsetNanoseconds, tz.getOffsetNanosecondsFor(abs), tz);
     }
@@ -173,15 +179,15 @@ function fromObject(item: Record<string, unknown>, options?: LocalDateTimeAssign
       // Simple case: no time zone offset, so use user-supplied disambiguation options
       // TODO: edit below depending on https://github.com/tc39/proposal-temporal/issues/607
       const dt = Temporal.DateTime.from(item, { disambiguation: overflow });
-      const abs = dt.inTimeZone(tz, { disambiguation });
+      const abs = dt.toAbsolute(tz, { disambiguation });
       return new LocalDateTime(abs, tz, dt.calendar);
     } else {
       // There is a time zone offset, so we'll have to pick the correct `Absolute`
       // matching that offset.
       // TODO: edit below depending on https://github.com/tc39/proposal-temporal/issues/607
       const dt = Temporal.DateTime.from(item, { disambiguation: overflow });
-      const earlier = dt.inTimeZone(tz, { disambiguation: 'earlier' });
-      const later = dt.inTimeZone(tz, { disambiguation: 'later' });
+      const earlier = dt.toAbsolute(tz, { disambiguation: 'earlier' });
+      const later = dt.toAbsolute(tz, { disambiguation: 'later' });
       if (Temporal.Absolute.compare(earlier, later) === 0) {
         // no ambiguity
         return new LocalDateTime(earlier, tz, dt.calendar);
@@ -191,7 +197,7 @@ function fromObject(item: Record<string, unknown>, options?: LocalDateTimeAssign
 
       if (disambiguation === 'reject') {
         // delegate the exception throwing to Temporal.DateTime
-        dt.inTimeZone(tz, { disambiguation });
+        dt.toAbsolute(tz, { disambiguation });
         throw new Error('This code should be unreachable');
       }
 
@@ -252,7 +258,7 @@ function fromIsoString(isoString: string, options?: LocalDateTimeAssignmentOptio
   if (!offset) {
     // Simple case: ISO string without a TZ offset, so just convert the DateTime
     // to Absolute in the given time zone.
-    const absolute = dt.inTimeZone(timeZone, { disambiguation });
+    const absolute = dt.toAbsolute(timeZone, { disambiguation });
     return new LocalDateTime(absolute, timeZone, dt.calendar);
   }
 
@@ -261,8 +267,8 @@ function fromIsoString(isoString: string, options?: LocalDateTimeAssignmentOptio
   // for the hour skipped by Spring DST transitions, and that API won't return
   // any values for those times.
   let possibleAbsolutes = [
-    dt.inTimeZone(timeZone, { disambiguation: 'earlier' }),
-    dt.inTimeZone(timeZone, { disambiguation: 'later' })
+    dt.toAbsolute(timeZone, { disambiguation: 'earlier' }),
+    dt.toAbsolute(timeZone, { disambiguation: 'later' })
   ];
   if (possibleAbsolutes[0].equals(possibleAbsolutes[1])) possibleAbsolutes = [possibleAbsolutes[0]];
 
@@ -296,7 +302,7 @@ function fromIsoString(isoString: string, options?: LocalDateTimeAssignmentOptio
         absolute = possibleAbsolutes[1];
         break;
       case 'compatible':
-        absolute = timeZone.getPossibleAbsolutesFor(dt)[0] || dt.inTimeZone(timeZone, { disambiguation: 'later' });
+        absolute = timeZone.getPossibleAbsolutesFor(dt)[0] || dt.toAbsolute(timeZone, { disambiguation: 'later' });
         break;
       case 'reject':
       default:
@@ -343,7 +349,7 @@ function doPlusOrMinus(
       // avoid disambiguation that might change the absolute.
       if (newDateTime.equals(dateTime)) return LocalDateTime.from(localDateTime);
       // Otherwise, return the result.
-      const abs = newDateTime.inTimeZone(timeZone, { disambiguation });
+      const abs = newDateTime.toAbsolute(timeZone, { disambiguation });
       return new LocalDateTime(abs, timeZone, calendar);
     }
     case 'hybrid': {
@@ -368,14 +374,14 @@ function doPlusOrMinus(
       if (weeks) newDateTime = newDateTime[op]({ weeks }, dateTimeOverflowOption);
       if (days) newDateTime = newDateTime[op]({ days }, dateTimeOverflowOption);
       if (isZeroDuration(timeDuration)) {
-        const absolute = newDateTime.inTimeZone(timeZone);
+        const absolute = newDateTime.toAbsolute(timeZone);
         return LocalDateTime.from({ absolute, timeZone, calendar: localDateTime.calendar });
       } else {
         // Now add/subtract the time. Because all time units are always the same
         // length, we can add/subtract all of them together without worrying about
         // order of operations.
         newDateTime = newDateTime[op](timeDuration, dateTimeOverflowOption);
-        let absolute = newDateTime.inTimeZone(timeZone);
+        let absolute = newDateTime.toAbsolute(timeZone);
         const reverseOp = op === 'plus' ? 'minus' : 'plus';
         const backUpAbs = absolute[reverseOp]({ nanoseconds: totalNanoseconds(timeDuration) });
         const backUpOffset = timeZone.getOffsetNanosecondsFor(backUpAbs);
@@ -432,7 +438,7 @@ export class LocalDateTime {
   constructor(absolute: Temporal.Absolute, timeZone: Temporal.TimeZone, calendar?: Temporal.CalendarProtocol) {
     this._tz = Temporal.TimeZone.from(timeZone);
     this._abs = Temporal.Absolute.from(absolute);
-    this._dt = this._abs.inTimeZone(this._tz, calendar);
+    this._dt = this._abs.toDateTime(this._tz, calendar);
   }
 
   /**
@@ -598,9 +604,6 @@ export class LocalDateTime {
     return this.with({ calendar });
   }
 
-  // `inTimeZone` is replaced by the `absolute` field.
-  // inTimeZone(tzLike: Temporal.TimeZone | string, options?: Temporal.ToAbsoluteOptions): Temporal.Absolute;
-
   /**
    * Returns the absolute timestamp of this `Temporal.LocalDateTime` instance as
    * a `Temporal.Absolute`.
@@ -673,11 +676,11 @@ export class LocalDateTime {
    * midnight and the next day's midnight.
    */
   get hoursInDay(): number {
-    const today = this.toDate().withTime(new Temporal.Time());
+    const today = this.toDate().toDateTime(new Temporal.Time());
     const tomorrow = today.plus({ days: 1 });
     // TODO: add tests for Azores timezone on midnight of a DST transition
-    const todayAbs = today.inTimeZone(this._tz);
-    const tomorrowAbs = tomorrow.inTimeZone(this._tz);
+    const todayAbs = today.toAbsolute(this._tz);
+    const tomorrowAbs = tomorrow.toAbsolute(this._tz);
     const diff = tomorrowAbs.difference(todayAbs, { largestUnit: 'hours' });
     const hours =
       diff.hours +
@@ -962,7 +965,7 @@ export class LocalDateTime {
       // case where both `this` and `other` are both within 25 hours of an
       // offset transition, but in practice this will be exceedingly rare.
       let intermediateDt = this._dt.minus(dateDuration);
-      let intermediateAbs = intermediateDt.inTimeZone(this._tz, { disambiguation });
+      let intermediateAbs = intermediateDt.toAbsolute(this._tz, { disambiguation });
       let adjustedTimeDuration: Temporal.Duration;
       if (this._tz.getOffsetNanosecondsFor(intermediateAbs) === other.timeZoneOffsetNanoseconds) {
         // The transition was in the date portion which is what we want.
@@ -972,7 +975,7 @@ export class LocalDateTime {
         // time portion is on the other side next to `this`, where there's
         // unlikely to be another transition.
         intermediateDt = other._dt.plus(dateDuration);
-        intermediateAbs = intermediateDt.inTimeZone(this._tz, { disambiguation });
+        intermediateAbs = intermediateDt.toAbsolute(this._tz, { disambiguation });
         adjustedTimeDuration = this._abs.difference(intermediateAbs, { largestUnit: 'hours' });
       }
 
@@ -1076,16 +1079,16 @@ export class LocalDateTime {
     return this._dt.isLeapYear;
   }
   toDate(): Temporal.Date {
-    return this._dt.getDate();
+    return this._dt.toDate();
   }
   toYearMonth(): Temporal.YearMonth {
-    return this._dt.getYearMonth();
+    return this._dt.toYearMonth();
   }
   toMonthDay(): Temporal.MonthDay {
-    return this._dt.getMonthDay();
+    return this._dt.toMonthDay();
   }
   toTime(): Temporal.Time {
-    return this._dt.getTime();
+    return this._dt.toTime();
   }
   valueOf(): never {
     throw new TypeError('use compare() or equals() to compare Temporal.LocalDateTime');
@@ -1298,9 +1301,9 @@ function toLargestTemporalUnit<V extends keyof Temporal.DurationLike, F extends 
 }
 
 const ES = {
-  ToInteger: ES2019.ToInteger,
-  ToString: ES2019.ToString,
-  ToObject: ES2019.ToObject,
+  ToInteger: ToInteger as (x: unknown) => number,
+  ToString: ToString as (x: unknown) => string,
+  ToObject: ToObject as (x: unknown) => Record<string, unknown>,
 
   // replace this with public parsing API after it lands
   ParseFullISOString: (isoString: string) => {

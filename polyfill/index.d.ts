@@ -536,14 +536,14 @@ export namespace Temporal {
         | /** @deprecated */ 'day'
       >
     ): Temporal.Duration;
-    toDateTime(temporalTime: Temporal.Time): Temporal.DateTime;
-    toYearMonth(): Temporal.YearMonth;
-    toMonthDay(): Temporal.MonthDay;
     toLocalDateTime(
       tzLike: TimeZoneProtocol | string,
       temporalTime: Temporal.Time,
       options?: ToAbsoluteOptions
     ): Temporal.LocalDateTime;
+    toDateTime(temporalTime: Temporal.Time): Temporal.DateTime;
+    toYearMonth(): Temporal.YearMonth;
+    toMonthDay(): Temporal.MonthDay;
     getFields(): DateFields;
     getISOFields(): DateISOFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;

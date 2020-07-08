@@ -209,8 +209,8 @@ export namespace Temporal {
       other: Temporal.Absolute,
       options?: DifferenceOptions<'days' | 'hours' | 'minutes' | 'seconds'>
     ): Temporal.Duration;
-    inTimeZone(tzLike: TimeZoneProtocol | string, calendar?: CalendarProtocol | string): Temporal.DateTime;
     toLocalDateTime(tzLike: TimeZoneProtocol | string, calendar?: CalendarProtocol | string): Temporal.LocalDateTime;
+    toDateTime(tzLike: TimeZoneProtocol | string, calendar?: CalendarProtocol | string): Temporal.DateTime;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
     toString(tzLike?: TimeZoneProtocol | string): string;
@@ -374,14 +374,14 @@ export namespace Temporal {
       other: Temporal.Date,
       options?: DifferenceOptions<'years' | 'months' | 'weeks' | 'days'>
     ): Temporal.Duration;
-    withTime(temporalTime: Temporal.Time): Temporal.DateTime;
     toLocalDateTime(
       tzLike: TimeZoneProtocol | string,
       temporalTime: Temporal.Time,
       options?: ToAbsoluteOptions
     ): Temporal.LocalDateTime;
-    getYearMonth(): Temporal.YearMonth;
-    getMonthDay(): Temporal.MonthDay;
+    toDateTime(temporalTime: Temporal.Time): Temporal.DateTime;
+    toYearMonth(): Temporal.YearMonth;
+    toMonthDay(): Temporal.MonthDay;
     getFields(): DateFields;
     getISOCalendarFields(): DateISOCalendarFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
@@ -480,12 +480,12 @@ export namespace Temporal {
       other: Temporal.DateTime,
       options?: DifferenceOptions<'years' | 'months' | 'weeks' | 'days' | 'hours' | 'minutes' | 'seconds'>
     ): Temporal.Duration;
-    inTimeZone(tzLike: TimeZoneProtocol | string, options?: ToAbsoluteOptions): Temporal.Absolute;
     toLocalDateTime(tzLike: TimeZoneProtocol | string, options?: ToAbsoluteOptions): Temporal.LocalDateTime;
-    getDate(): Temporal.Date;
-    getYearMonth(): Temporal.YearMonth;
-    getMonthDay(): Temporal.MonthDay;
-    getTime(): Temporal.Time;
+    toAbsolute(tzLike: TimeZoneProtocol | string, options?: ToAbsoluteOptions): Temporal.Absolute;
+    toDate(): Temporal.Date;
+    toYearMonth(): Temporal.YearMonth;
+    toMonthDay(): Temporal.MonthDay;
+    toTime(): Temporal.Time;
     getFields(): DateTimeFields;
     getISOCalendarFields(): DateTimeISOCalendarFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
@@ -519,7 +519,7 @@ export namespace Temporal {
     readonly calendar: CalendarProtocol;
     equals(other: Temporal.MonthDay): boolean;
     with(monthDayLike: MonthDayLike, options?: AssignmentOptions): Temporal.MonthDay;
-    withYear(year: number | { era?: string | undefined; year: number }): Temporal.Date;
+    toDate(year: number | { era?: string | undefined; year: number }): Temporal.Date;
     getFields(): MonthDayFields;
     getISOCalendarFields(): DateISOCalendarFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
@@ -549,7 +549,7 @@ export namespace Temporal {
    * need to refer to a specific time on a specific day, use
    * `Temporal.DateTime`. A `Temporal.Time` can be converted into a
    * `Temporal.DateTime` by combining it with a `Temporal.Date` using the
-   * `withDate()` method.
+   * `toDateTime()` method.
    *
    * See https://tc39.es/proposal-temporal/docs/time.html for more details.
    */
@@ -575,12 +575,12 @@ export namespace Temporal {
     plus(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.Time;
     minus(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.Time;
     difference(other: Temporal.Time, options?: DifferenceOptions<'hours' | 'minutes' | 'seconds'>): Temporal.Duration;
-    withDate(temporalDate: Temporal.Date): Temporal.DateTime;
     toLocalDateTime(
       tzLike: TimeZoneProtocol | string,
       temporalDate: DateLike,
       options?: ToAbsoluteOptions
     ): Temporal.LocalDateTime;
+    toDateTime(temporalDate: Temporal.Date): Temporal.DateTime;
     getFields(): TimeFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
@@ -668,7 +668,7 @@ export namespace Temporal {
     plus(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.YearMonth;
     minus(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.YearMonth;
     difference(other: Temporal.YearMonth, options?: DifferenceOptions<'years' | 'months'>): Temporal.Duration;
-    withDay(day: number): Temporal.Date;
+    toDate(day: number): Temporal.Date;
     getFields(): YearMonthFields;
     getISOCalendarFields(): DateISOCalendarFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;

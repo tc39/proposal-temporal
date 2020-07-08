@@ -20,8 +20,11 @@ function processDts(file, original, final) {
 function processMjs(file) {
   let lines = readAllLines(file);
   const prepend = [
-    "import ES2019 from 'es-abstract/es2019.js';",
+    // "import ES2019 from 'es-abstract/es2019.js';",
     "import { GetIntrinsic, MakeIntrinsicClass } from './intrinsicclass.mjs'",
+    "import ToInteger from 'es-abstract/2019/ToInteger.js';",
+    "import ToObject from 'es-abstract/2019/ToObject.js';",
+    "import ToString from 'es-abstract/2019/ToString.js';",
     '',
     'const Temporal = {',
     "  get DateTime() { return GetIntrinsic('%Temporal.DateTime%'); },",
@@ -32,7 +35,7 @@ function processMjs(file) {
     '};'
   ];
   const append = ['', "MakeIntrinsicClass(LocalDateTime, 'Temporal.LocalDateTime');"];
-  const updated = [...prepend, ...lines.slice(2), ...append];
+  const updated = [...prepend, ...lines.slice(8), ...append];
   writeAllLines(file, updated);
 }
 

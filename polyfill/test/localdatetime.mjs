@@ -447,8 +447,8 @@ describe('Absolute', () => {
     it('converting from DateTime', () => {
       const min = Temporal.DateTime.from('-271821-04-19T00:00:00.000000001');
       const max = Temporal.DateTime.from('+275760-09-13T23:59:59.999999999');
-      throws(() => min.inTimeZone('UTC'), RangeError);
-      throws(() => max.inTimeZone('UTC'), RangeError);
+      throws(() => min.toAbsolute('UTC'), RangeError);
+      throws(() => max.toAbsolute('UTC'), RangeError);
       const utc = Temporal.TimeZone.from('UTC');
       throws(() => utc.getAbsoluteFor(min), RangeError);
       throws(() => utc.getAbsoluteFor(max), RangeError);
@@ -460,26 +460,26 @@ describe('Absolute', () => {
       throws(() => max.plus({ nanoseconds: 1 }), RangeError);
     });
   });
-  describe('Absolute.inTimeZone works', () => {
+  describe('Absolute.toDateTime works', () => {
     const iso = '1976-11-18T14:23:30.123456789Z';
     const abs = Absolute.from(iso);
     /*
                                     it('without optional parameter', () => {
-                                      const dt = abs.inTimeZone();
-                                      equal(abs.getEpochNanoseconds(), dt.inTimeZone().getEpochNanoseconds());
+                                      const dt = abs.toDateTime();
+                                      equal(abs.getEpochNanoseconds(), dt.toAbsolute().getEpochNanoseconds());
                                       equal(`${dt}`, '1976-11-18T14:23:30.123456789');
                                     });
                                     */
     it('optional time zone parameter UTC', () => {
       const tz = Temporal.TimeZone.from('UTC');
-      const dt = abs.inTimeZone(tz);
-      equal(abs.getEpochNanoseconds(), dt.inTimeZone(tz).getEpochNanoseconds());
+      const dt = abs.toDateTime(tz);
+      equal(abs.getEpochNanoseconds(), dt.toAbsolute(tz).getEpochNanoseconds());
       equal(`${dt}`, '1976-11-18T14:23:30.123456789');
     });
     it('optional time zone parameter non-UTC', () => {
       const tz = Temporal.TimeZone.from('America/New_York');
-      const dt = abs.inTimeZone(tz);
-      equal(abs.getEpochNanoseconds(), dt.inTimeZone(tz).getEpochNanoseconds());
+      const dt = abs.toDateTime(tz);
+      equal(abs.getEpochNanoseconds(), dt.toAbsolute(tz).getEpochNanoseconds());
       equal(`${dt}`, '1976-11-18T09:23:30.123456789');
     });
   });
@@ -521,7 +521,7 @@ describe('LocalDateTime', () => {
     });
 
     it('Samoa date line change: 10:00PM 29 Dec 2011 -> 11:00PM 31 Dec 2011', () => {
-      const dayBeforeSamoaDateLineChangeAbs = new Temporal.DateTime(2011, 12, 29, 22).inTimeZone('Pacific/Apia');
+      const dayBeforeSamoaDateLineChangeAbs = new Temporal.DateTime(2011, 12, 29, 22).toAbsolute('Pacific/Apia');
       const start = LocalDateTime.from({ absolute: dayBeforeSamoaDateLineChangeAbs, timeZone: 'Pacific/Apia' });
       const added = start.plus({ days: 1, hours: 1 });
       equal(added.day, 31);
@@ -747,9 +747,6 @@ describe('LocalDateTime', () => {
       it('LocalDateTime.prototype.equals is a Function', () => {
         equal(typeof LocalDateTime.prototype.equals, 'function');
       });
-      // it('LocalDateTime.prototype.inTimeZone is a Function', () => {
-      //  equal(typeof LocalDateTime.prototype.inTimeZone, 'function');
-      // });
       it('LocalDateTime.prototype.getDate is a Function', () => {
         equal(typeof LocalDateTime.prototype.toDate, 'function');
       });
@@ -1090,32 +1087,32 @@ describe('LocalDateTime', () => {
       equal(`${DateTime.from('1976-11-18')}`, '1976-11-18T00:00');
     });
   });
-  describe('DateTime.inTimeZone() works', () => {
+  describe('DateTime.toAbsolute() works', () => {
     it('recent date', () => {
       const dt = DateTime.from('2019-10-29T10:46:38.271986102');
       const tz = Temporal.TimeZone.from('Europe/Amsterdam');
-      equal(`${dt.inTimeZone(tz)}`, '2019-10-29T09:46:38.271986102Z');
-      equal(`${dt.inTimeZone('Europe/Amsterdam')}`, '2019-10-29T09:46:38.271986102Z');
+      equal(`${dt.toAbsolute(tz)}`, '2019-10-29T09:46:38.271986102Z');
+      equal(`${dt.toAbsolute('Europe/Amsterdam')}`, '2019-10-29T09:46:38.271986102Z');
     });
     it('year ≤ 99', () => {
       const dt = DateTime.from('+000098-10-29T10:46:38.271986102');
-      equal(`${dt.inTimeZone('+06:00')}`, '+000098-10-29T04:46:38.271986102Z');
+      equal(`${dt.toAbsolute('+06:00')}`, '+000098-10-29T04:46:38.271986102Z');
     });
     it('year < 1', () => {
       let dt = DateTime.from('+000000-10-29T10:46:38.271986102');
-      equal(`${dt.inTimeZone('+06:00')}`, '+000000-10-29T04:46:38.271986102Z');
+      equal(`${dt.toAbsolute('+06:00')}`, '+000000-10-29T04:46:38.271986102Z');
       dt = DateTime.from('-001000-10-29T10:46:38.271986102');
-      equal(`${dt.inTimeZone('+06:00')}`, '-001000-10-29T04:46:38.271986102Z');
+      equal(`${dt.toAbsolute('+06:00')}`, '-001000-10-29T04:46:38.271986102Z');
     });
     it('datetime with multiple absolute', () => {
       const dt = DateTime.from('2019-02-16T23:45');
-      equal(`${dt.inTimeZone('America/Sao_Paulo', { disambiguation: 'earlier' })}`, '2019-02-17T01:45Z');
-      equal(`${dt.inTimeZone('America/Sao_Paulo', { disambiguation: 'later' })}`, '2019-02-17T02:45Z');
-      throws(() => dt.inTimeZone('America/Sao_Paulo', { disambiguation: 'reject' }), RangeError);
+      equal(`${dt.toAbsolute('America/Sao_Paulo', { disambiguation: 'earlier' })}`, '2019-02-17T01:45Z');
+      equal(`${dt.toAbsolute('America/Sao_Paulo', { disambiguation: 'later' })}`, '2019-02-17T02:45Z');
+      throws(() => dt.toAbsolute('America/Sao_Paulo', { disambiguation: 'reject' }), RangeError);
     });
     it('throws on bad disambiguation', () => {
       ['', 'EARLIER', 'xyz', 3, null].forEach((disambiguation) =>
-        throws(() => DateTime.from('2019-10-29T10:46').inTimeZone('UTC', { disambiguation }), RangeError)
+        throws(() => DateTime.from('2019-10-29T10:46').toAbsolute('UTC', { disambiguation }), RangeError)
       );
     });
   });
@@ -1166,8 +1163,8 @@ describe('LocalDateTime', () => {
     it('converting from Absolute', () => {
       const min = Temporal.Absolute.from('-271821-04-20T00:00Z');
       const max = Temporal.Absolute.from('+275760-09-13T00:00Z');
-      equal(`${min.inTimeZone('-23:59')}`, '-271821-04-19T00:01');
-      equal(`${max.inTimeZone('+23:59')}`, '+275760-09-13T23:59');
+      equal(`${min.toDateTime('-23:59')}`, '-271821-04-19T00:01');
+      equal(`${max.toDateTime('+23:59')}`, '+275760-09-13T23:59');
     });
     it('converting from Date and Time', () => {
       const midnight = Temporal.Time.from('00:00');
@@ -1175,12 +1172,12 @@ describe('LocalDateTime', () => {
       const lastNs = Temporal.Time.from('23:59:59.999999999');
       const min = Temporal.Date.from('-271821-04-19');
       const max = Temporal.Date.from('+275760-09-13');
-      throws(() => min.withTime(midnight), RangeError);
-      throws(() => midnight.withDate(min), RangeError);
-      equal(`${min.withTime(firstNs)}`, '-271821-04-19T00:00:00.000000001');
-      equal(`${firstNs.withDate(min)}`, '-271821-04-19T00:00:00.000000001');
-      equal(`${max.withTime(lastNs)}`, '+275760-09-13T23:59:59.999999999');
-      equal(`${lastNs.withDate(max)}`, '+275760-09-13T23:59:59.999999999');
+      throws(() => min.toDateTime(midnight), RangeError);
+      throws(() => midnight.toDateTime(min), RangeError);
+      equal(`${min.toDateTime(firstNs)}`, '-271821-04-19T00:00:00.000000001');
+      equal(`${firstNs.toDateTime(min)}`, '-271821-04-19T00:00:00.000000001');
+      equal(`${max.toDateTime(lastNs)}`, '+275760-09-13T23:59:59.999999999');
+      equal(`${lastNs.toDateTime(max)}`, '+275760-09-13T23:59:59.999999999');
     });
     it('adding and subtracting beyond limit', () => {
       const min = DateTime.from('-271821-04-19T00:00:00.000000001');
@@ -1191,22 +1188,22 @@ describe('LocalDateTime', () => {
       });
     });
   });
-  describe('DateTime.inTimeZone() works', () => {
+  describe('DateTime.toAbsolute() works', () => {
     const dt = DateTime.from('1976-11-18T15:23:30.123456789');
     /*
                                                                it('without optional parameter', () => {
-                                                                 const abs = dt.inTimeZone();
+                                                                 const abs = dt.toAbsolute();
                                                                  equal(`${abs}`, '1976-11-18T15:23:30.123456789Z');
                                                                });
                                                                */
     it('optional time zone parameter UTC', () => {
       const tz = Temporal.TimeZone.from('UTC');
-      const abs = dt.inTimeZone(tz);
+      const abs = dt.toAbsolute(tz);
       equal(`${abs}`, '1976-11-18T15:23:30.123456789Z');
     });
     it('optional time zone parameter non-UTC', () => {
       const tz = Temporal.TimeZone.from('America/New_York');
-      const abs = dt.inTimeZone(tz);
+      const abs = dt.toAbsolute(tz);
       equal(`${abs}`, '1976-11-18T20:23:30.123456789Z');
     });
   });
