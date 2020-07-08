@@ -708,15 +708,15 @@ export const ES = ObjectAssign({}, ES2019, {
     return ns;
   },
   GetPartsFromEpoch: (epochNanoseconds) => {
-    let nanos = bigInt(epochNanoseconds).mod(1e9);
-    let epochMilliseconds = bigInt(epochNanoseconds)
-      .divide(1e9)
-      .multiply(1e3)
-      .plus(Math.floor(nanos / 1e6));
-    nanos = +((epochNanoseconds < 0 ? 1e9 : 0) + nanos);
-    let millisecond = Math.floor(nanos / 1e6) % 1e3;
-    let microsecond = Math.floor(nanos / 1e3) % 1e3;
-    let nanosecond = Math.floor(nanos / 1) % 1e3;
+    const { quotient, remainder } = bigInt(epochNanoseconds).divmod(1e6);
+    let epochMilliseconds = +quotient;
+    let nanos = +remainder;
+    if (nanos < 0) {
+      nanos += 1e6;
+      epochMilliseconds -= 1;
+    }
+    const microsecond = Math.floor(nanos / 1e3) % 1e3;
+    const nanosecond = Math.floor(nanos / 1) % 1e3;
 
     const item = new Date(epochMilliseconds);
     const year = item.getUTCFullYear();
@@ -725,6 +725,7 @@ export const ES = ObjectAssign({}, ES2019, {
     const hour = item.getUTCHours();
     const minute = item.getUTCMinutes();
     const second = item.getUTCSeconds();
+    const millisecond = item.getUTCMilliseconds();
 
     return { epochMilliseconds, year, month, day, hour, minute, second, millisecond, microsecond, nanosecond };
   },
