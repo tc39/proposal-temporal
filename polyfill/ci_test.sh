@@ -1,5 +1,7 @@
 #!/bin/bash
 
+TESTS=${@:-"./*/**/*.js"}
+
 virtualenv -p python3 venv
 source venv/bin/activate
 pip install ijson
@@ -36,7 +38,7 @@ test262-harness \
   --test262Dir ../test262 \
   --prelude "../$PRELUDE" \
   --transformer ./transform.test262.js \
-  "./*/**/*.js" \
+  $TESTS \
   | ./parseResults.py
 RESULT=$?
 
