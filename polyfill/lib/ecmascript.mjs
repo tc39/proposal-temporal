@@ -716,7 +716,7 @@ export const ES = ObjectAssign({}, ES2019, {
       epochMilliseconds -= 1;
     }
     const microsecond = Math.floor(nanos / 1e3) % 1e3;
-    const nanosecond = Math.floor(nanos / 1) % 1e3;
+    const nanosecond = nanos % 1e3;
 
     const item = new Date(epochMilliseconds);
     const year = item.getUTCFullYear();
