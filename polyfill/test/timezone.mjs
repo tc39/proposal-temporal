@@ -218,6 +218,11 @@ describe('TimeZone', () => {
       dt = Temporal.DateTime.from('-001000-10-29T10:46:38.271986102');
       equal(`${tz.getAbsoluteFor(dt)}`, '-001000-10-29T04:46:38.271986102Z');
     });
+    it('year 0 leap day', () => {
+      const dt = Temporal.DateTime.from('+000000-02-29T00:00');
+      const tz = Temporal.TimeZone.from('Europe/London');
+      equal(`${tz.getAbsoluteFor(dt)}`, '+000000-02-29T00:01:15Z');
+    });
   });
   describe('getAbsoluteFor disambiguation', () => {
     const dtm = new Temporal.DateTime(2019, 2, 16, 23, 45);

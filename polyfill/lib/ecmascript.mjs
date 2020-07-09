@@ -697,10 +697,13 @@ export const ES = ObjectAssign({}, ES2019, {
     return `${sign}${offsetHourString}:${offsetMinuteString}`;
   },
   GetEpochFromParts: (year, month, day, hour, minute, second, millisecond, microsecond, nanosecond) => {
-    let ms = Date.UTC(year, month - 1, day, hour, minute, second, millisecond);
+    // Note: Date.UTC() interprets one and two-digit years as being in the
+    // 20th century, so don't use it
+    const legacyDate = new Date();
+    legacyDate.setUTCHours(hour, minute, second, millisecond);
+    legacyDate.setUTCFullYear(year, month - 1, day);
+    const ms = legacyDate.getTime();
     if (Number.isNaN(ms)) return null;
-    // Date.UTC interprets one and two-digit years as being in the 20th century
-    if (year >= 0 && year < 100) ms = new Date(ms).setUTCFullYear(year);
     let ns = bigInt(ms).multiply(1e6);
     ns = ns.plus(bigInt(microsecond).multiply(1e3));
     ns = ns.plus(bigInt(nanosecond));
