@@ -512,6 +512,11 @@ describe('DateTime', () => {
       dt = DateTime.from('-001000-10-29T10:46:38.271986102');
       equal(`${dt.toAbsolute('+06:00')}`, '-001000-10-29T04:46:38.271986102Z');
     });
+    it('year 0 leap day', () => {
+      const dt = Temporal.DateTime.from('+000000-02-29T00:00');
+      const tz = Temporal.TimeZone.from('Europe/London');
+      equal(`${dt.toAbsolute(tz)}`, '+000000-02-29T00:01:15Z');
+    });
     it('datetime with multiple absolute - Fall DST in Brazil', () => {
       const dt = DateTime.from('2019-02-16T23:45');
       equal(`${dt.toAbsolute('America/Sao_Paulo')}`, '2019-02-17T01:45Z');
