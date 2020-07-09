@@ -3888,12 +3888,20 @@
       return ns;
     },
     GetPartsFromEpoch: function GetPartsFromEpoch(epochNanoseconds) {
-      var nanos = BigInteger(epochNanoseconds).mod(1e9);
-      var epochMilliseconds = BigInteger(epochNanoseconds).divide(1e9).multiply(1e3).plus(Math.floor(nanos / 1e6));
-      nanos = +((epochNanoseconds < 0 ? 1e9 : 0) + nanos);
-      var millisecond = Math.floor(nanos / 1e6) % 1e3;
+      var _bigInt$divmod = BigInteger(epochNanoseconds).divmod(1e6),
+          quotient = _bigInt$divmod.quotient,
+          remainder = _bigInt$divmod.remainder;
+
+      var epochMilliseconds = +quotient;
+      var nanos = +remainder;
+
+      if (nanos < 0) {
+        nanos += 1e6;
+        epochMilliseconds -= 1;
+      }
+
       var microsecond = Math.floor(nanos / 1e3) % 1e3;
-      var nanosecond = Math.floor(nanos / 1) % 1e3;
+      var nanosecond = nanos % 1e3;
       var item = new Date(epochMilliseconds);
       var year = item.getUTCFullYear();
       var month = item.getUTCMonth() + 1;
@@ -3901,6 +3909,7 @@
       var hour = item.getUTCHours();
       var minute = item.getUTCMinutes();
       var second = item.getUTCSeconds();
+      var millisecond = item.getUTCMilliseconds();
       return {
         epochMilliseconds: epochMilliseconds,
         year: year,

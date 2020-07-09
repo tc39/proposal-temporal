@@ -152,9 +152,9 @@ Other cities in what is now the <code>America/Chicago</code> time zone would hav
 If a user wanted to do accurate calculations for times occurring before 1883 in places in the <code>America/Chicago</code> time zone other than Chicago, a custom time zone would be required.
 For example, St. Louis&#39;s local mean time is GMT-06:00:49.11 (<a href="https://books.google.ca/books?id=Xfg3AAAAMAAJ&amp;pg=PA63">Byrd, Mary E., 1899, <em>A Laboratory Manual In Astronomy</em>, p. 63. Athenaeum Press: Boston.</a>)</p>
 <h2 id="usage-of-a-custom-time-zone-1">Usage of a custom time zone</h2>
-<p>Like built-in time zones, custom time zones have an <code>[[Identifier]]</code>.
+<p>Like built-in time zones, custom time zones have an identifier.
 In these examples we assume a custom time zone class <code>StLouisTime</code> with the identifier <code>America/St_Louis</code>.
-(See the following section for how such a time zone object would be obtained.)</p>
+(See the following section for how such a time zone object would be implemented.)</p>
 <p>When parsing an ISO 8601 string, the only places the time zone identifier is taken into account are <code>Temporal.Absolute.from()</code> and <code>Temporal.TimeZone.from()</code>.
 <code>Temporal.Absolute.from()</code> will call <code>Temporal.TimeZone.from()</code> to resolve the time zone identifier into a <code>Temporal.TimeZone</code> object.</p>
 <p><code>Temporal.TimeZone.from()</code> can be monkeypatched by time zone implementors if it is necessary to make new time zones available globally.
