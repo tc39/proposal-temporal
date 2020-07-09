@@ -38,7 +38,7 @@ test262-harness \
   --test262Dir ../test262 \
   --prelude "../$PRELUDE" \
   --transformer ./transform.test262.js \
-  $TESTS \
+  "$TESTS" \
   | ./parseResults.py
 RESULT=$?
 
