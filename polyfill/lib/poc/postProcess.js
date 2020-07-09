@@ -35,7 +35,12 @@ function processMjs(file) {
     '};'
   ];
   const append = ['', "MakeIntrinsicClass(LocalDateTime, 'Temporal.LocalDateTime');"];
-  const updated = [...prepend, ...lines.slice(8), ...append];
+  const filter = (line) => {
+    if (line.includes('// @ts')) return false;
+    if (line.includes('eslint-disable-next-line @typescript-eslint')) return false;
+    return true;
+  };
+  const updated = [...prepend, ...lines.slice(8).filter(filter), ...append];
   writeAllLines(file, updated);
 }
 

@@ -10,12 +10,10 @@ export declare type LocalDateTimeLike = Temporal.DateTimeLike & {
 declare type LocalDateTimeFields = ReturnType<Temporal.DateTime['getFields']> & {
   timeZone: Temporal.TimeZone;
   absolute: Temporal.Absolute;
-  timeZoneOffsetNanoseconds: number;
 };
 declare type LocalDateTimeISOCalendarFields = ReturnType<Temporal.DateTime['getISOCalendarFields']> & {
   timeZone: Temporal.TimeZone;
   absolute: Temporal.Absolute;
-  timeZoneOffsetNanoseconds: number;
 };
 /**
  * The `durationKind` option allows users to customize how calculations behave
@@ -98,22 +96,33 @@ export interface OverflowOptions {
 }
 /**
  * Time zone definitions can change. If an application stores data about events
- * in the future, then stored data about future events may become ambiguous,
- * for example if a country permanently abolishes DST. The `prefer` option
- * controls this unusual case.
+ * in the future, then stored data about future events may become ambiguous, for
+ * example if a country permanently abolishes DST. The `offset` option controls
+ * this unusual case.
  *
- * - The default is `'offset'` which will keep the real-world time constant for
- *   these future events, even if their local times change.
- * - The `'dateTime'` option will instead try to keep the local time constant,
- *   even if that results in a different real-world instant.
- * - The `'reject'` option will throw an exception if the the time zone offset
- *   and the time zone identifier result in different real-world instants.
+ * - `'use'` always uses the offset (if it's provided) to calculate the absolute
+ *   time. This ensures that the result will match the absolute time that was
+ *   originally stored, even if local clock time is different.
+ * - `'prefer'` uses the offset if it's valid for the date/time in this time
+ *   zone, but if it's not valid then the time zone will be used as a fallback
+ *   to calculate the absolute time.
+ * -  `'ignore'` will disregard any provided offset. Instead, the time zone and
+ *    date/time value are used to calculate the absolute time. This will keep
+ *    local clock time unchanged but may result in a different real-world
+ *    instant.
+ * - `'reject'` acts like `'prefer'`, except it will throw a RangeError if the
+ *   offset is not valid for the given time zone identifier and date/time value.
  *
  * If a time zone offset is not present in the input, then this option is
  * ignored.
+ *
+ * If the offset is not used, and if the date/time and time zone don't uniquely
+ * identify a single absolute time, then the `disambiguation` option will be
+ * used to choose the correct absolute time. However, if the offset is used
+ * then the `disambiguation` option will be ignored.
  */
 export interface TimeZoneOffsetDisambiguationOptions {
-  prefer: 'offset' | 'dateTime' | 'reject';
+  offset: 'use' | 'prefer' | 'ignore' | 'reject';
 }
 export declare type LocalDateTimeAssignmentOptions = Partial<
   OverflowOptions & Temporal.ToAbsoluteOptions & TimeZoneOffsetDisambiguationOptions
@@ -169,20 +178,14 @@ export declare class LocalDateTime {
    * cases it's possible for those values to conflict for a particular local
    * date and time. For example, this could happen for future summertime events
    * that were stored before a country permanently abolished DST. If the time
-   * zone and offset are in conflict, then the `prefer` option is used to
-   * resolve the conflict.  Note that the default for ISO strings is `'offset'`
-   * which will ensure that ISO strings that were valid when they were stored
-   * will still parse into a valid LocalDateTime at the same UTC value, even if
-   * local times have changed. For object initializers, the default is `reject`
-   * to help developers learn that `from({...getFields(), timeZone: newTz})`
-   * requires removing the `timeZoneOffsetNanoseconds` field from the
-   * `getFields` result before passing to `from` or `with`.
+   * zone and offset are in conflict, then the `offset` option is used to
+   * resolve the conflict.
    *
    * Available options:
    * ```
    * disambiguation?: 'compatible' (default) |  'earlier' | 'later' | 'reject'
    * overflow?: 'constrain' (default) | 'reject'
-   * prefer?: 'offset' (default for ISO strings) | 'dateTime' | 'reject' (default for objects)
+   * offset?: 'use' (default) | 'prefer' | 'ignore' | 'reject'
    * ```
    */
   static from(
@@ -191,47 +194,58 @@ export declare class LocalDateTime {
   ): LocalDateTime;
   /**
    * Merge fields into an existing `Temporal.LocalDateTime`. The provided `item`
-   * is a "LocalDateTime-like" object. Fields accepted include: all
-   * `Temporal.DateTime` fields, `timeZone`, `absolute` (as an ISO string ending
-   * in "Z", or an `Absolute` instance), and `timezoneOffsetNanoseconds`.
+   * is a "LocalDateTime-like" object. Accepted fields include:
+   * - All `Temporal.DateTime` fields, including `calendar`
+   * - `timeZone` as a time zone identifier string like `Europe/Paris` or a
+   *    `Temporal.TimeZone` instance
+   * - `absolute` as an ISO 8601 string ending in "Z" or an `Temporal.Absolute`
+   *   instance
+   * - `timezoneOffsetNanoseconds`
    *
    * If the `absolute` field is included, all other input fields must be
    * consistent with this value or this method will throw.
    *
-   * If the `timezoneOffsetNanoseconds` field is provided, then it's possible for
-   * it to conflict with the `timeZone` (the input `timeZone` property or, if
-   * omitted, the object's existing time zone).  In that case, the `prefer`
-   * option is used to resolve the conflict.
-   *
-   * If the `timezoneOffsetNanoseconds` field is provided, then that offset will
-   * be used and the `disambiguation` option will be ignored unless: a)
-   * `timezoneOffsetNanoseconds` conflicts with the time zone, as noted above;
-   * AND b) `prefer: 'dateTime'` is used.
-   *
-   * If the `timeZone` field is included, the result will convert all fields to
-   * the new time zone, except that fields included in the input will be set
-   * directly. Therefore, `.with({timeZone})` is an easy way to convert to a new
-   * time zone while updating the local time.
-   *
-   * To keep local time unchanged while changing only the time zone, call
-   * `getFields()`, revise the `timeZone`, remove the
-   * `timeZoneOffsetNanoseconds` field so it won't conflict with the new time
-   * zone, and then pass the resulting object to `with`. For example:
+   * If the `timeZone` field is included, `with` will first convert all existing
+   * fields to the new time zone and then fields in the input will be played on
+   * top of the new time zone. Therefore, `.with({timeZone})` is an easy way to
+   * convert to a new time zone while updating the clock time.  However, to keep
+   * clock time as-is while resetting the time zone, the current fields must be
+   * spread into the new time zone. Examples:
    * ```
-   * const {timeZoneOffsetNanoseconds, timeZone, ...fields} = ldt.getFields();
-   * const newTzSameLocalTime = ldt.with({...fields, timeZone: 'Europe/London'});
+   * const sameInstantInOtherTz = ldt.with({timeZone: 'Europe/London'});
+   * const newTzSameLocalTime = ldt.with({...ldt.getFields(), timeZone: 'Europe/London'});
    * ```
+   *
+   * If the `timezoneOffsetNanoseconds` field is provided, then it's possible
+   * for it to conflict with the input object's `timeZone` property or, if
+   * omitted, the object's existing time zone.  The `offset` option (which
+   * defaults to `'prefer'`) will resolve the conflict. However, if both
+   * `absolute` and `timezoneOffsetNanoseconds` fields are included and they
+   * conflict, then a `RangeError` will be thrown.
+   *
+   * If the `timezoneOffsetNanoseconds` field is not provided, but the
+   * `absolute` nor the `timeZone` fields are not provided either, then the
+   * existing `timezoneOffsetNanoseconds` field will be used by `with` as if it
+   * had been provided by the caller. By default, this will prefer the existing
+   * offset when resolving ambiguous results. For example, if a
+   * `Temporal.LocalDateTime` is set to the "second" 1:30AM on a day where the
+   * 1-2AM clock hour is repeated after a backwards DST transition, then calling
+   * `.with({minute: 45})` will result in an ambiguity which is resolved using
+   * the default `offset: 'prefer'` option. Because the existing offset is valid
+   * for the new time, it will be retained so the result will be the "second"
+   * 1:45AM.  However, if the existing offset is not valid for the new result
+   * (e.g. `.with({hour: 0})`), then the offset will be changed.
    *
    * Available options:
    * ```
    * disambiguation?: 'compatible' (default) |  'earlier' | 'later' | 'reject'
    * overflow?: 'constrain' (default) | 'reject'
-   * prefer?: 'offset' (default) | 'dateTime' | 'reject'
+   * offset?: 'use' | 'prefer' (default) | 'ignore' | 'reject'
    * ```
    */
   with(localDateTimeLike: LocalDateTimeLike, options?: LocalDateTimeAssignmentOptions): LocalDateTime;
   /**
-   * Get a new `LocalDateTime` instance that uses a specific calendar.
+   * Get a new `Temporal.LocalDateTime` instance that uses a specific calendar.
    *
    * Developers using only the default ISO 8601 calendar will probably not need
    * to call this method.
@@ -336,7 +350,7 @@ export declare class LocalDateTime {
    *
    * The resulting object includes all fields returned by
    * `Temporal.DateTime.prototype.getFields()`, as well as `timeZone`,
-   * `timeZoneOffsetNanoseconds`, and `absolute`.
+   * and `absolute`.
    *
    * The result of this method can be used for round-trip serialization via
    * `from()`, `with()`, or `JSON.stringify`.

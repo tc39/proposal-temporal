@@ -7,12 +7,10 @@ export declare type LocalDateTimeLike = Temporal.DateTimeLike & {
 declare type LocalDateTimeFields = ReturnType<Temporal.DateTime['getFields']> & {
   timeZone: Temporal.TimeZone;
   absolute: Temporal.Absolute;
-  timeZoneOffsetNanoseconds: number;
 };
 declare type LocalDateTimeISOCalendarFields = ReturnType<Temporal.DateTime['getISOCalendarFields']> & {
   timeZone: Temporal.TimeZone;
   absolute: Temporal.Absolute;
-  timeZoneOffsetNanoseconds: number;
 };
 export interface DurationKindOptions {
   durationKind: 'absolute' | 'dateTime' | 'hybrid';
@@ -24,7 +22,7 @@ export interface OverflowOptions {
   overflow: 'constrain' | 'reject';
 }
 export interface TimeZoneOffsetDisambiguationOptions {
-  prefer: 'offset' | 'dateTime' | 'reject';
+  offset: 'use' | 'prefer' | 'ignore' | 'reject';
 }
 export declare type LocalDateTimeAssignmentOptions = Partial<
   OverflowOptions & Temporal.ToAbsoluteOptions & TimeZoneOffsetDisambiguationOptions

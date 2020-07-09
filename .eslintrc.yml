@@ -27,6 +27,8 @@ ignorePatterns:
   - /polyfill/coverage/
   # Specific generated files
   - /polyfill/script.js
+  - /docs/playground.js
+  - /polyfill/index.js
 rules:
   array-element-newline:
     - error

@@ -23,16 +23,16 @@ const Temporal = {
 
 /** Build a `Temporal.LocalDateTime` instance from a property bag object */
 function fromObject(item, options) {
-  const { absolute, timeZone, calendar, timeZoneOffsetNanoseconds } = item;
-  const overflow = getOption(options, 'overflow', OVERFLOW_OPTIONS, 'constrain');
+  const overflowOption = getOption(options, 'overflow', OVERFLOW_OPTIONS, 'constrain');
+  const offsetOption = getOption(options, 'offset', OFFSET_OPTIONS, 'use');
   const disambiguation = getOption(options, 'disambiguation', DISAMBIGUATION_OPTIONS, 'compatible');
 
-  if (!timeZone) {
+  const { absolute, timeZone: tzOrig, calendar: calOrig, timeZoneOffsetNanoseconds } = item;
+  if (!tzOrig) {
     throw new TypeError("Required property 'timeZone' is missing");
   }
-
-  const tz = Temporal.TimeZone.from(timeZone);
-  const cal = calendar ? Temporal.Calendar.from(calendar) : undefined;
+  const tz = Temporal.TimeZone.from(tzOrig);
+  const cal = calOrig ? Temporal.Calendar.from(calOrig) : undefined;
 
   // Simplest case: absolute + time zone + optional calendar
   if (absolute !== undefined) {
@@ -44,154 +44,88 @@ function fromObject(item, options) {
     checkDateTimeFieldMatch(item, dt, tz);
     return new LocalDateTime(abs, tz, cal);
   } else {
-    // there's no `absolute` so it's DateTime fields + time zone, with optional
-    // time zone offset for disambiguation
-
+    // No `absolute`, so use DateTime fields + time zone + optional offset
     if (!isDateTimeLike(item)) {
       throw new Error('Either `absolute` or `year`, `month`, and `day` fields are required');
     }
 
-    if (timeZoneOffsetNanoseconds === undefined) {
-      // Simple case: no time zone offset, so use user-supplied disambiguation options
-      // TODO: edit below depending on https://github.com/tc39/proposal-temporal/issues/607
-      const dt = Temporal.DateTime.from(item, { disambiguation: overflow });
-      const abs = dt.toAbsolute(tz, { disambiguation });
-      return new LocalDateTime(abs, tz, dt.calendar);
-    } else {
-      // There is a time zone offset, so we'll have to pick the correct `Absolute`
-      // matching that offset.
-      // TODO: edit below depending on https://github.com/tc39/proposal-temporal/issues/607
-      const dt = Temporal.DateTime.from(item, { disambiguation: overflow });
-      const earlier = dt.toAbsolute(tz, { disambiguation: 'earlier' });
-      const later = dt.toAbsolute(tz, { disambiguation: 'later' });
-      if (Temporal.Absolute.compare(earlier, later) === 0) {
-        // no ambiguity
-        return new LocalDateTime(earlier, tz, dt.calendar);
-      }
-
-      // there are two choices, so figure out which one to return
-
-      if (disambiguation === 'reject') {
-        // delegate the exception throwing to Temporal.DateTime
-        dt.toAbsolute(tz, { disambiguation });
-        throw new Error('This code should be unreachable');
-      }
-
-      const earlierOffset = tz.getOffsetNanosecondsFor(earlier);
-      const laterOffset = tz.getOffsetNanosecondsFor(later);
-
-      if (earlierOffset === timeZoneOffsetNanoseconds) {
-        if (disambiguation !== 'earlier') {
-          throw new Error(
-            `Requested \`timeZoneOffsetNanoseconds: ${timeZoneOffsetNanoseconds}\` conflicts with ` +
-              "`options: {disambiguation: 'earlier'}` because the provided date and time is the later '" +
-              `(not earlier) of two ambiguous times in time zone '${tz.toString()}'`
-          );
-        }
-        return new LocalDateTime(earlier, tz, dt.calendar);
-      } else if (laterOffset === timeZoneOffsetNanoseconds) {
-        if (disambiguation !== 'later') {
-          throw new Error(
-            `Requested \`timeZoneOffsetNanoseconds: ${timeZoneOffsetNanoseconds}\` conflicts with ` +
-              "`options: {disambiguation: 'later'}` because the provided date and time is the earlier " +
-              `(not later) of two ambiguous times in time zone '${tz.toString()}'`
-          );
-        }
-        return new LocalDateTime(later, tz, dt.calendar);
-      } else {
-        throw new Error(
-          `Requested \`timeZoneOffsetNanoseconds: ${timeZoneOffsetNanoseconds}\` does not match either actual ` +
-            `time zone offset ('${earlierOffset}' or '${laterOffset}') in time zone '${tz.toString()}'`
+    let offset = undefined;
+    if (timeZoneOffsetNanoseconds !== undefined) {
+      if (typeof timeZoneOffsetNanoseconds !== 'number' || isNaN(timeZoneOffsetNanoseconds)) {
+        throw RangeError(
+          `The \`timeZoneOffsetNanoseconds\` numeric property has an invalid value: ${timeZoneOffsetNanoseconds}`
         );
       }
+      offset = ES.FormatTimeZoneOffsetString(timeZoneOffsetNanoseconds);
     }
+
+    // TODO: https://github.com/tc39/proposal-temporal/issues/607
+    const dt = Temporal.DateTime.from(item, { disambiguation: overflowOption });
+    return fromCommon(dt, tz, offset, disambiguation, offsetOption);
   }
 }
 
 /** Build a `Temporal.LocalDateTime` instance from an ISO 8601 extended string */
 function fromIsoString(isoString, options) {
+  const disambiguation = getOption(options, 'disambiguation', DISAMBIGUATION_OPTIONS, 'compatible');
+  const offsetOption = getOption(options, 'offset', OFFSET_OPTIONS, 'use');
+  const overflowOption = getOption(options, 'overflow', OVERFLOW_OPTIONS, 'constrain');
+
   // TODO: use public parse API after it lands
   const {
     zone: { ianaName, offset },
-    dateTime
+    dateTime: dateTimeString,
+    calendar: calendarString
   } = ES.parse(isoString);
 
-  // TODO: should the string representation of an "offset time zone" include
-  // the offset in brackets, or have nothing in brackets?  If "nothing", then
-  // should `LocalDateTime.from` also accept bracket-less strings when parsing?
   if (!ianaName) {
     throw new Error(
-      'Missing time zone in ISO 8601 string. Either append a time zone identifier ' +
+      'Missing time zone. Either append a time zone identifier ' +
         "(e.g. '2011-12-03T10:15:30+01:00[Europe/Paris]') or provide an `{absolute, timeZone}` object."
     );
   }
 
-  const disambiguation = getOption(options, 'disambiguation', DISAMBIGUATION_OPTIONS, 'compatible');
-  const prefer = getOption(options, 'prefer', PREFER_OPTIONS, 'offset');
-  const timeZone = Temporal.TimeZone.from(ianaName);
-  const dt = Temporal.DateTime.from(dateTime);
+  const dateTimeWithCalendarString = calendarString == null ? dateTimeString : `${dateTimeString}[c=${calendarString}]`;
+  // TODO: https://github.com/tc39/proposal-temporal/issues/607
+  const dt = Temporal.DateTime.from(dateTimeWithCalendarString, { disambiguation: overflowOption });
+  const tz = Temporal.TimeZone.from(ianaName);
+  return fromCommon(dt, tz, offset, disambiguation, offsetOption);
+}
 
-  if (!offset) {
-    // Simple case: ISO string without a TZ offset, so just convert the DateTime
-    // to Absolute in the given time zone.
-    const absolute = dt.toAbsolute(timeZone, { disambiguation });
-    return new LocalDateTime(absolute, timeZone, dt.calendar);
+/** Shared logic for the object and string forms of `from` */
+function fromCommon(dt, timeZone, offset, disambiguation, offsetOption) {
+  // TODO: switch from using offset strings to using offset nanoseconds, to
+  // support those weird cases of sub-minute offsets that can't be captured in
+  // an ISO string.
+  if (offset == null || offsetOption === 'ignore') {
+    // Simple case: ISO string without a TZ offset (or caller wants to ignore
+    // the offset), so just convert DateTime to Absolute in the given time zone.
+    return new LocalDateTime(dt.toAbsolute(timeZone, { disambiguation }), timeZone, dt.calendar);
   }
 
-  // Find possible absolutes. Note that we can't use
-  // `TimeZone.prototype.getPossibleAbsolutesFor` because we also need results
-  // for the hour skipped by Spring DST transitions, and that API won't return
-  // any values for those times.
-  let possibleAbsolutes = [
-    dt.toAbsolute(timeZone, { disambiguation: 'earlier' }),
-    dt.toAbsolute(timeZone, { disambiguation: 'later' })
-  ];
+  // Calculate the absolute for the input's date/time and offset
+  const isoString = `${dt.withCalendar('iso8601')}${offset}`;
+  const absWithInputOffset = Temporal.Absolute.from(isoString);
 
-  if (possibleAbsolutes[0].equals(possibleAbsolutes[1])) possibleAbsolutes = [possibleAbsolutes[0]];
-
-  // There are three possibilities:
-  // 1) the user-provided offset matches one of the absolutes for the DateTime
-  //    fields, so this is the correct offset
-  // 2) the user-provided offset doesn't match any offset parsed from the
-  //    DateTime fields, so rely on `prefer` to choose
-  // 3) the user gave us an invalid DateTime. Throw.
-
-  // If the user-provided tz offset matches one of the offsets of the DateTime
-  // in this timezone, then this is the correct Absolute.
-  for (const absolute of possibleAbsolutes) {
-    const possibleOffset = timeZone.getOffsetStringFor(absolute);
-    if (possibleOffset === offset) return new LocalDateTime(absolute, timeZone, dt.calendar);
+  if (
+    offsetOption === 'use' ||
+    absWithInputOffset.equals(dt.toAbsolute(timeZone, { disambiguation: 'earlier' })) ||
+    absWithInputOffset.equals(dt.toAbsolute(timeZone, { disambiguation: 'later' }))
+  ) {
+    // The caller wants the offset to always win ('use') OR the caller is OK
+    // with the offset winning ('prefer' or 'reject') as long as it's valid for
+    // this timezone and date/time.
+    return new LocalDateTime(absWithInputOffset, timeZone, dt.calendar);
   }
 
-  // if we get here the offset in the ISO string doesn't match any of the
-  // possible offsets of the DateTime in this timezone.
-  if (prefer === 'reject') {
-    throw new RangeError(`'${isoString}' doesn't uniquely identify a Temporal.LocalDateTime`);
-  } else if (prefer === 'dateTime') {
-    // User wants the IANA time zone identifier to win in case of ambiguity
-    if (possibleAbsolutes.length === 1) return new LocalDateTime(possibleAbsolutes[0], timeZone, dt.calendar);
-    let absolute;
-    switch (disambiguation) {
-      case 'earlier':
-        absolute = possibleAbsolutes[0];
-        break;
-      case 'later':
-        absolute = possibleAbsolutes[1];
-        break;
-      case 'compatible':
-        absolute = timeZone.getPossibleAbsolutesFor(dt)[0] || dt.toAbsolute(timeZone, { disambiguation: 'later' });
-        break;
-      case 'reject':
-      default:
-        throw new RangeError(`'${isoString}' doesn't uniquely identify a Temporal.LocalDateTime`);
-    }
-
-    return new LocalDateTime(absolute, timeZone, dt.calendar);
+  // If we get here, then the user-provided offset doesn't match any absolutes
+  // for this time zone and date/time.
+  if (offsetOption === 'reject') {
+    throw new RangeError(`Offset of '${offset}' is not valid for '${dt}' in '${timeZone}'`);
   } else {
-    // prefer === 'offset' (default)
-    // User wants the offset to win, so build an ISO string with the DateTime
-    // and this offset, and turn it into an Absolute.
-    return new LocalDateTime(Temporal.Absolute.from(`${dt.toString()}${offset}`), timeZone, dt.calendar);
+    // offsetOption === 'prefer', but the offset doesn't match so fall back to
+    // use the time zone instead.
+    return new LocalDateTime(dt.toAbsolute(timeZone, { disambiguation }), timeZone, dt.calendar);
   }
 }
 
@@ -308,6 +242,15 @@ export class LocalDateTime {
     this._tz = Temporal.TimeZone.from(timeZone);
     this._abs = Temporal.Absolute.from(absolute);
     this._dt = this._abs.toDateTime(this._tz, calendar);
+    // eslint-disable-next-line no-undef
+    if (typeof __debug__ !== 'undefined' && __debug__) {
+      Object.defineProperty(this, '_repr_', {
+        value: `${this[Symbol.toStringTag]} <${this}>`,
+        writable: false,
+        enumerable: false,
+        configurable: false
+      });
+    }
   }
 
   /**
@@ -336,20 +279,14 @@ export class LocalDateTime {
    * cases it's possible for those values to conflict for a particular local
    * date and time. For example, this could happen for future summertime events
    * that were stored before a country permanently abolished DST. If the time
-   * zone and offset are in conflict, then the `prefer` option is used to
-   * resolve the conflict.  Note that the default for ISO strings is `'offset'`
-   * which will ensure that ISO strings that were valid when they were stored
-   * will still parse into a valid LocalDateTime at the same UTC value, even if
-   * local times have changed. For object initializers, the default is `reject`
-   * to help developers learn that `from({...getFields(), timeZone: newTz})`
-   * requires removing the `timeZoneOffsetNanoseconds` field from the
-   * `getFields` result before passing to `from` or `with`.
+   * zone and offset are in conflict, then the `offset` option is used to
+   * resolve the conflict.
    *
    * Available options:
    * ```
    * disambiguation?: 'compatible' (default) |  'earlier' | 'later' | 'reject'
    * overflow?: 'constrain' (default) | 'reject'
-   * prefer?: 'offset' (default for ISO strings) | 'dateTime' | 'reject' (default for objects)
+   * offset?: 'use' (default) | 'prefer' | 'ignore' | 'reject'
    * ```
    */
   static from(item, options) {
@@ -364,42 +301,53 @@ export class LocalDateTime {
 
   /**
    * Merge fields into an existing `Temporal.LocalDateTime`. The provided `item`
-   * is a "LocalDateTime-like" object. Fields accepted include: all
-   * `Temporal.DateTime` fields, `timeZone`, `absolute` (as an ISO string ending
-   * in "Z", or an `Absolute` instance), and `timezoneOffsetNanoseconds`.
+   * is a "LocalDateTime-like" object. Accepted fields include:
+   * - All `Temporal.DateTime` fields, including `calendar`
+   * - `timeZone` as a time zone identifier string like `Europe/Paris` or a
+   *    `Temporal.TimeZone` instance
+   * - `absolute` as an ISO 8601 string ending in "Z" or an `Temporal.Absolute`
+   *   instance
+   * - `timezoneOffsetNanoseconds`
    *
    * If the `absolute` field is included, all other input fields must be
    * consistent with this value or this method will throw.
    *
-   * If the `timezoneOffsetNanoseconds` field is provided, then it's possible for
-   * it to conflict with the `timeZone` (the input `timeZone` property or, if
-   * omitted, the object's existing time zone).  In that case, the `prefer`
-   * option is used to resolve the conflict.
-   *
-   * If the `timezoneOffsetNanoseconds` field is provided, then that offset will
-   * be used and the `disambiguation` option will be ignored unless: a)
-   * `timezoneOffsetNanoseconds` conflicts with the time zone, as noted above;
-   * AND b) `prefer: 'dateTime'` is used.
-   *
-   * If the `timeZone` field is included, the result will convert all fields to
-   * the new time zone, except that fields included in the input will be set
-   * directly. Therefore, `.with({timeZone})` is an easy way to convert to a new
-   * time zone while updating the local time.
-   *
-   * To keep local time unchanged while changing only the time zone, call
-   * `getFields()`, revise the `timeZone`, remove the
-   * `timeZoneOffsetNanoseconds` field so it won't conflict with the new time
-   * zone, and then pass the resulting object to `with`. For example:
+   * If the `timeZone` field is included, `with` will first convert all existing
+   * fields to the new time zone and then fields in the input will be played on
+   * top of the new time zone. Therefore, `.with({timeZone})` is an easy way to
+   * convert to a new time zone while updating the clock time.  However, to keep
+   * clock time as-is while resetting the time zone, the current fields must be
+   * spread into the new time zone. Examples:
    * ```
-   * const {timeZoneOffsetNanoseconds, timeZone, ...fields} = ldt.getFields();
-   * const newTzSameLocalTime = ldt.with({...fields, timeZone: 'Europe/London'});
+   * const sameInstantInOtherTz = ldt.with({timeZone: 'Europe/London'});
+   * const newTzSameLocalTime = ldt.with({...ldt.getFields(), timeZone: 'Europe/London'});
    * ```
+   *
+   * If the `timezoneOffsetNanoseconds` field is provided, then it's possible
+   * for it to conflict with the input object's `timeZone` property or, if
+   * omitted, the object's existing time zone.  The `offset` option (which
+   * defaults to `'prefer'`) will resolve the conflict. However, if both
+   * `absolute` and `timezoneOffsetNanoseconds` fields are included and they
+   * conflict, then a `RangeError` will be thrown.
+   *
+   * If the `timezoneOffsetNanoseconds` field is not provided, but the
+   * `absolute` nor the `timeZone` fields are not provided either, then the
+   * existing `timezoneOffsetNanoseconds` field will be used by `with` as if it
+   * had been provided by the caller. By default, this will prefer the existing
+   * offset when resolving ambiguous results. For example, if a
+   * `Temporal.LocalDateTime` is set to the "second" 1:30AM on a day where the
+   * 1-2AM clock hour is repeated after a backwards DST transition, then calling
+   * `.with({minute: 45})` will result in an ambiguity which is resolved using
+   * the default `offset: 'prefer'` option. Because the existing offset is valid
+   * for the new time, it will be retained so the result will be the "second"
+   * 1:45AM.  However, if the existing offset is not valid for the new result
+   * (e.g. `.with({hour: 0})`), then the offset will be changed.
    *
    * Available options:
    * ```
    * disambiguation?: 'compatible' (default) |  'earlier' | 'later' | 'reject'
    * overflow?: 'constrain' (default) | 'reject'
-   * prefer?: 'offset' (default) | 'dateTime' | 'reject'
+   * offset?: 'use' | 'prefer' (default) | 'ignore' | 'reject'
    * ```
    */
   with(localDateTimeLike, options) {
@@ -407,6 +355,12 @@ export class LocalDateTime {
       throw new TypeError("Parameter 'localDateTimeLike' must be an object");
     }
     // TODO: validate and normalize input fields
+
+    // Options are passed through to `from` with one exception: the default
+    // `offset` option is `prefer` to support changing DateTime fields while
+    // retaining the option if possible.
+    const updatedOptions = options ? { ...options } : {};
+    if (updatedOptions.offset === undefined) updatedOptions.offset = 'prefer';
 
     const { timeZone, absolute, calendar, timeZoneOffsetNanoseconds } = localDateTimeLike;
 
@@ -419,7 +373,7 @@ export class LocalDateTime {
     const updateAbsolute = newAbsolute && newAbsolute.equals(this._abs);
     const updateCalendar = newCalendar && newCalendar.id === this.calendar.id;
 
-    if (updateOffset && typeof timeZoneOffsetNanoseconds !== 'number') {
+    if (updateOffset && (typeof timeZoneOffsetNanoseconds !== 'number' || isNaN(timeZoneOffsetNanoseconds))) {
       throw RangeError(
         `The \`timeZoneOffsetNanoseconds\` numeric property has an invalid value: ${timeZoneOffsetNanoseconds}`
       );
@@ -446,19 +400,21 @@ export class LocalDateTime {
         }
       }
     }
+
     // Deal with the rest of the fields. If there's a change in tz offset, it'll
-    // be handled by `from`. Also, unless we're changing the `absolute` then
-    // omit it so that it won't conflict with any other fields that we're adding
-    // here.
-    const { absolute: baseAbsolute, timeZoneOffsetNanoseconds: baseOffset, ...fields } = base.getFields();
+    // be handled by `from`. Also, if we're not changing the `absolute` or
+    // `timeZone`, then pass the existing offset to `from`. (See docs for more info.)
+    const { absolute: baseAbsolute, ...fields } = base.getFields();
     if (updateAbsolute) fields.absolute = baseAbsolute;
-    if (updateOffset) fields.timeZoneOffsetNanoseconds = baseOffset;
+    if (updateOffset || (!updateAbsolute && !updateTimeZone)) {
+      fields.timeZoneOffsetNanoseconds = base.timeZoneOffsetNanoseconds;
+    }
     const merged = { ...fields, ...localDateTimeLike };
-    return LocalDateTime.from(merged, options);
+    return LocalDateTime.from(merged, updatedOptions);
   }
 
   /**
-   * Get a new `LocalDateTime` instance that uses a specific calendar.
+   * Get a new `Temporal.LocalDateTime` instance that uses a specific calendar.
    *
    * Developers using only the default ISO 8601 calendar will probably not need
    * to call this method.
@@ -604,17 +560,16 @@ export class LocalDateTime {
    *
    * The resulting object includes all fields returned by
    * `Temporal.DateTime.prototype.getFields()`, as well as `timeZone`,
-   * `timeZoneOffsetNanoseconds`, and `absolute`.
+   * and `absolute`.
    *
    * The result of this method can be used for round-trip serialization via
    * `from()`, `with()`, or `JSON.stringify`.
    */
   getFields() {
-    const { absolute, timeZone, timeZoneOffsetNanoseconds } = this;
+    const { absolute, timeZone } = this;
     return {
       absolute,
       timeZone,
-      timeZoneOffsetNanoseconds,
       ...this._dt.getFields()
     };
   }
@@ -626,11 +581,10 @@ export class LocalDateTime {
    * method.
    */
   getISOCalendarFields() {
-    const { absolute, timeZone, timeZoneOffsetNanoseconds } = this;
+    const { absolute, timeZone } = this;
     return {
       absolute,
       timeZone,
-      timeZoneOffsetNanoseconds,
       ...this._dt.getISOCalendarFields()
     };
   }
@@ -884,10 +838,8 @@ export class LocalDateTime {
    * appended too. Example: `2011-12-03T10:15:30+09:00[Asia/Tokyo][c=japanese]`
    */
   toString() {
-    // TODO: should the string representation of an "offset time zone" include
-    // the offset in brackets, or have nothing in brackets?  If "nothing", then
-    // should `LocalDateTime.from` also accept bracket-less strings when parsing?
-    return `${this._dt.toString()}${this._tz.getOffsetStringFor(this._abs)}[${this._tz.name}]`;
+    const calendar = this._dt.calendar.id === 'iso8601' ? '' : `[c=${this._dt.calendar.id}]`;
+    return `${this._dt.withCalendar('iso8601')}${this.timeZoneOffsetString}[${this._tz.name}]${calendar}`;
   }
 
   // the fields and methods below are identical to DateTime
@@ -957,11 +909,10 @@ export class LocalDateTime {
   }
 }
 
-const dateTimeFields = [
+const dateTimeComparisonFields = [
   ['day'],
   ['month'],
   ['year'],
-  ['era', undefined],
   ['hour', 0],
   ['microsecond', 0],
   ['millisecond', 0],
@@ -987,7 +938,7 @@ function toPartialRecord(bag, fields) {
  * `Absolute`.
  * */
 function checkDateTimeFieldMatch(fromUser, fromAbsolute, timeZoneLike) {
-  const fromUserDateTimeLike = toPartialRecord(fromUser, dateTimeFields);
+  const fromUserDateTimeLike = toPartialRecord(fromUser, dateTimeComparisonFields);
   for (const key in fromUserDateTimeLike) {
     const fromUserValue = fromUserDateTimeLike[key];
     const fromAbsoluteValue = fromAbsolute[key];
@@ -1082,7 +1033,7 @@ const CALCULATION_OPTIONS = ['absolute', 'dateTime', 'hybrid'];
 const COMPARE_CALCULATION_OPTIONS = ['absolute', 'dateTime'];
 const DISAMBIGUATION_OPTIONS = ['compatible', 'earlier', 'later', 'reject'];
 
-const PREFER_OPTIONS = ['dateTime', 'offset', 'reject'];
+const OFFSET_OPTIONS = ['use', 'prefer', 'ignore', 'reject'];
 const OVERFLOW_OPTIONS = ['constrain', 'reject'];
 
 function getOption(options, property, allowedValues, fallback) {
@@ -1200,6 +1151,15 @@ const ES = {
     const hours = +match[2];
     const minutes = +(match[3] || 0);
     return sign * (hours * 60 + minutes) * 60 * 1000;
+  },
+
+  FormatTimeZoneOffsetString: (offsetNanoseconds) => {
+    const sign = offsetNanoseconds < 0 ? '-' : '+';
+    offsetNanoseconds = Math.abs(offsetNanoseconds);
+    const offsetMinutes = Math.floor(offsetNanoseconds / 60e9);
+    const offsetMinuteString = `00${offsetMinutes % 60}`.slice(-2);
+    const offsetHourString = `00${Math.floor(offsetMinutes / 60)}`.slice(-2);
+    return `${sign}${offsetHourString}:${offsetMinuteString}`;
   }
 };
 
