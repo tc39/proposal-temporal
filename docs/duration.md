@@ -256,7 +256,7 @@ result = oneAndAHalfYear.plus(oneAndAHalfYear)  // => P2Y12M
 result.with(result, { disambiguation: 'balance' })  // => P2Y12M
 // Example of custom conversion using ISO calendar rules:
 function monthsToYears(duration) {
-    const { years, months } = duration;
+    let { years, months } = duration;
     years += Math.floor(months / 12);
     months %= 12;
     return duration.with({ years, months });
@@ -309,7 +309,7 @@ oneAndAHalfYear = Temporal.Duration.from({ years: 1, months: 6 });
 threeYears.minus(oneAndAHalfYear)  // throws; months are negative and cannot be balanced
 // Example of a custom conversion using ISO calendar rules:
 function yearsToMonths(duration) {
-    const { years, months } = duration;
+    let { years, months } = duration;
     months += years * 12;
     return duration.with({ years: 0, months });
 }
