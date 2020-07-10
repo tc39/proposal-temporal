@@ -134,7 +134,7 @@
       The API will change based on feedback that we get.
       <strong>Do</strong> <a href="https://forms.gle/iL9iZg7Y9LvH41Nv8">give feedback</a> and open <a href="https://github.com/tc39/proposal-temporal/issues">issues</a>; <strong>don't</strong> use it in production!
     </div>
-<h1 id="temporalmonthday-1">Temporal.MonthDay</h1>
+<h1 id="temporalmonthday">Temporal.MonthDay</h1>
 <details>
   <summary><strong>Table of Contents</strong></summary>
 <ul>
@@ -189,7 +189,7 @@
 For example, it could be used to represent a yearly recurring event, like &quot;Bastille Day is on the 14th of July.&quot;</p>
 <p>If you need to refer to a certain instance of a calendar event, in a particular year, use <code>Temporal.Date</code> or even <code>Temporal.DateTime</code>.
 A <code>Temporal.MonthDay</code> can be converted into a <code>Temporal.Date</code> by combining it with a year, using the <code>toDateInYear()</code> method.</p>
-<h2 id="constructor-1">Constructor</h2>
+<h2 id="constructor">Constructor</h2>
 <h3 id="new-Temporal-MonthDay"><a class="heading-link" href="#new-Temporal-MonthDay"></a><strong>new Temporal.MonthDay</strong>(<em>isoMonth</em>: number, <em>isoDay</em>: number, <em>calendar</em>?: object, <em>refISOYear</em>?: number) : Temporal.MonthDay</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>isoMonth</code> (number): A month, ranging between 1 and 12 inclusive.</li>
@@ -212,7 +212,7 @@ For example, February 29 (Leap day in the ISO 8601 calendar) is a valid value fo
 <pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Pi day</span>
 md <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>MonthDay</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">14</span><span class="token punctuation">)</span>  <span class="token comment">// => 03-14</span>
 <span class="token comment">// Leap day</span>
-md <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>MonthDay</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">29</span><span class="token punctuation">)</span>  <span class="token comment">// => 02-29</span></code></pre><h2 id="static-methods-1">Static methods</h2>
+md <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>MonthDay</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">29</span><span class="token punctuation">)</span>  <span class="token comment">// => 02-29</span></code></pre><h2 id="static-methods">Static methods</h2>
 <h3 id="from"><a class="heading-link" href="#from"></a>Temporal.MonthDay.<strong>from</strong>(<em>thing</em>: any, <em>options</em>?: object) : Temporal.MonthDay</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>thing</code>: The value representing the desired date.</li>
@@ -260,7 +260,7 @@ md <span class="token operator">=</span> Temporal<span class="token punctuation"
 md <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>MonthDay<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> month<span class="token operator">:</span> <span class="token number">13</span><span class="token punctuation">,</span> day<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> disambiguation<span class="token operator">:</span> <span class="token string">'reject'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>
   <span class="token comment">// throws</span>
 md <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>MonthDay<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> month<span class="token operator">:</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span> day<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> disambiguation<span class="token operator">:</span> <span class="token string">'reject'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>
-  <span class="token comment">// throws</span></code></pre><h2 id="properties-1">Properties</h2>
+  <span class="token comment">// throws</span></code></pre><h2 id="properties">Properties</h2>
 <h3 id="month"><a class="heading-link" href="#month"></a>monthDay.<strong>month</strong> : number</h3><h3 id="day"><a class="heading-link" href="#day"></a>monthDay.<strong>day</strong> : number</h3><p>The above read-only properties allow accessing each component of the date individually.</p>
 <blockquote>
 <p><strong>NOTE</strong>: The possible values for the <code>month</code> property start at 1, which is different from legacy <code>Date</code> where months are represented by zero-based indices (0 to 11).</p>
@@ -269,7 +269,7 @@ md <span class="token operator">=</span> Temporal<span class="token punctuation"
 <pre class="language-javascript"><code class="language-javascript">md <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>MonthDay<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'08-24'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 md<span class="token punctuation">.</span>month  <span class="token comment">// => 8</span>
 md<span class="token punctuation">.</span>day    <span class="token comment">// => 24</span></code></pre><h3 id="calendar"><a class="heading-link" href="#calendar"></a>monthDay.<strong>calendar</strong> : object</h3><p>The <code>calendar</code> read-only property gives the calendar that the <code>month</code> and <code>day</code> properties are interpreted in.</p>
-<h2 id="methods-1">Methods</h2>
+<h2 id="methods">Methods</h2>
 <h3 id="with"><a class="heading-link" href="#with"></a>monthDay.<strong>with</strong>(<em>monthDayLike</em>: object, <em>options</em>?: object) : Temporal.MonthDay</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>monthDayLike</code> (object): an object with some or all of the properties of a <code>Temporal.MonthDay</code>.</li>

@@ -134,7 +134,7 @@
       The API will change based on feedback that we get.
       <strong>Do</strong> <a href="https://forms.gle/iL9iZg7Y9LvH41Nv8">give feedback</a> and open <a href="https://github.com/tc39/proposal-temporal/issues">issues</a>; <strong>don't</strong> use it in production!
     </div>
-<h1 id="temporaltime-1">Temporal.Time</h1>
+<h1 id="temporaltime">Temporal.Time</h1>
 <details>
   <summary><strong>Table of Contents</strong></summary>
 <ul>
@@ -202,7 +202,7 @@
 For example, it could be used to represent an event that happens daily at a certain time, no matter what time zone.</p>
 <p><code>Temporal.Time</code> refers to a time with no associated calendar date; if you need to refer to a specific time on a specific day, use <code>Temporal.DateTime</code>.
 A <code>Temporal.Time</code> can be converted into a <code>Temporal.DateTime</code> by combining it with a <code>Temporal.Date</code> using the <code>toDateTime()</code> method.</p>
-<h2 id="constructor-1">Constructor</h2>
+<h2 id="constructor">Constructor</h2>
 <h3 id="new-Temporal-Time"><a class="heading-link" href="#new-Temporal-Time"></a><strong>new Temporal.Time</strong>(<em>hour</em>: number = 0, <em>minute</em>: number = 0, <em>second</em>: number = 0, <em>millisecond</em>: number = 0, <em>microsecond</em>: number = 0, <em>nanosecond</em>: number = 0) : Temporal.Time</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>hour</code> (optional number): An hour of the day, ranging between 0 and 23 inclusive.</li>
@@ -217,7 +217,7 @@ A <code>Temporal.Time</code> can be converted into a <code>Temporal.DateTime</co
 Otherwise, <code>Temporal.Time.from()</code>, which accepts more kinds of input and allows disambiguation behaviour, is probably more convenient.</p>
 <p>Usage examples:</p>
 <pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Leet hour</span>
-time <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>Time</span><span class="token punctuation">(</span><span class="token number">13</span><span class="token punctuation">,</span> <span class="token number">37</span><span class="token punctuation">)</span>  <span class="token comment">// => 13:37</span></code></pre><h2 id="static-methods-1">Static methods</h2>
+time <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>Time</span><span class="token punctuation">(</span><span class="token number">13</span><span class="token punctuation">,</span> <span class="token number">37</span><span class="token punctuation">)</span>  <span class="token comment">// => 13:37</span></code></pre><h2 id="static-methods">Static methods</h2>
 <h3 id="from"><a class="heading-link" href="#from"></a>Temporal.Time.<strong>from</strong>(<em>thing</em>: any, <em>options</em>?: object) : Temporal.Time</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>thing</code>: The value representing the desired time.</li>
@@ -294,7 +294,7 @@ For example:</p>
 two <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'01:24'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 three <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'01:24:05'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 sorted <span class="token operator">=</span> <span class="token punctuation">[</span>one<span class="token punctuation">,</span> two<span class="token punctuation">,</span> three<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">sort</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span>compare<span class="token punctuation">)</span><span class="token punctuation">;</span>
-sorted<span class="token punctuation">.</span><span class="token function">join</span><span class="token punctuation">(</span><span class="token string">' '</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// => 01:24 01:24:05 03:24</span></code></pre><h2 id="properties-1">Properties</h2>
+sorted<span class="token punctuation">.</span><span class="token function">join</span><span class="token punctuation">(</span><span class="token string">' '</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// => 01:24 01:24:05 03:24</span></code></pre><h2 id="properties">Properties</h2>
 <h3 id="hour"><a class="heading-link" href="#hour"></a>time.<strong>hour</strong>: number</h3><h3 id="minute"><a class="heading-link" href="#minute"></a>time.<strong>minute</strong>: number</h3><h3 id="second"><a class="heading-link" href="#second"></a>time.<strong>second</strong>: number</h3><h3 id="millisecond"><a class="heading-link" href="#millisecond"></a>time.<strong>millisecond</strong>: number</h3><h3 id="microsecond"><a class="heading-link" href="#microsecond"></a>time.<strong>microsecond</strong>: number</h3><h3 id="nanosecond"><a class="heading-link" href="#nanosecond"></a>time.<strong>nanosecond</strong>: number</h3><p>The above read-only properties allow accessing each component of the time individually.</p>
 <p>Usage examples:</p>
 <pre class="language-javascript"><code class="language-javascript">time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'19:39:09.068346205'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -303,7 +303,7 @@ time<span class="token punctuation">.</span>minute       <span class="token comm
 time<span class="token punctuation">.</span>second       <span class="token comment">// => 9</span>
 time<span class="token punctuation">.</span>millisecond  <span class="token comment">// => 68</span>
 time<span class="token punctuation">.</span>microsecond  <span class="token comment">// => 346</span>
-time<span class="token punctuation">.</span>nanosecond   <span class="token comment">// => 205</span></code></pre><h2 id="methods-1">Methods</h2>
+time<span class="token punctuation">.</span>nanosecond   <span class="token comment">// => 205</span></code></pre><h2 id="methods">Methods</h2>
 <h3 id="with"><a class="heading-link" href="#with"></a>time.<strong>with</strong>(<em>timeLike</em>: object, <em>options</em>?: object) : Temporal.Time</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>timeLike</code> (object): an object with some or all of the properties of a <code>Temporal.Time</code>.</li>

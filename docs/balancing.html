@@ -134,12 +134,12 @@
       The API will change based on feedback that we get.
       <strong>Do</strong> <a href="https://forms.gle/iL9iZg7Y9LvH41Nv8">give feedback</a> and open <a href="https://github.com/tc39/proposal-temporal/issues">issues</a>; <strong>don't</strong> use it in production!
     </div>
-<h1 id="duration-balancing-1">Duration balancing</h1>
+<h1 id="duration-balancing">Duration balancing</h1>
 <p>With most types in Temporal, the meaning of <code>{ disambiguation: &#39;balance&#39; }</code> is straightforward.
 For example, there is no such time as 11:87, so when creating a <code>Temporal.Time</code> from 11:87 in &quot;balance&quot; disambiguation mode, this must mean 12:27.
 60 minutes (one hour) is subtracted from the minute part of the time, and one hour is added to the hour part.
 (As for the other disambiguation modes, &quot;constrain&quot; would clip the time to 11:59, and &quot;reject&quot; would throw an exception.)</p>
-<h2 id="constructing-a-duration-1">Constructing a duration</h2>
+<h2 id="constructing-a-duration">Constructing a duration</h2>
 <p>With <a href="./duration.html"><code>Temporal.Duration</code></a>, however, balancing is less clear-cut.
 It&#39;s possible to create a duration of 100 seconds, for example: <code>Temporal.Duration.from({ seconds: 100 })</code>.
 100 seconds is equal to 1 minute and 40 seconds, but unlike with a <code>Temporal.Time</code>, it&#39;s an equally valid use case to want to track the duration of something in seconds, and not balance the duration to 1 minute and 40 seconds.
@@ -156,7 +156,7 @@ If you need such a conversion, you must implement it yourself, since the rules c
 <p>Negative values are never allowed as <code>Temporal.Duration</code> fields, so passing one as an argument to <code>new Temporal.Duration()</code> or as a property in the object passed to <code>Temporal.Duration.from()</code> will always throw an exception, regardless of the disambiguation mode.</p>
 <p>Therefore, the only case where constrain and reject mode have any effect when creating a duration, is integer overflow.
 If one of the values overflows, constrain mode will cap it to <code>Number.MAX_VALUE</code>.</p>
-<h2 id="duration-arithmetic-1">Duration arithmetic</h2>
+<h2 id="duration-arithmetic">Duration arithmetic</h2>
 <p>When adding two <code>Temporal.Duration</code>s, the situation is much the same as for constructing one.
 It&#39;s not possible to end up with a negative value when adding two valid durations, nor is any balancing needed, so the disambiguation mode only determines what to do in the case of integer overflow.</p>
 <p>The situation is very different for subtraction.
@@ -219,7 +219,7 @@ one<span class="token punctuation">.</span><span class="token function">minus</s
 one <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Duration<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> months<span class="token operator">:</span> <span class="token number">3</span><span class="token punctuation">,</span> days<span class="token operator">:</span> <span class="token number">15</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 two <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Duration<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> days<span class="token operator">:</span> <span class="token number">30</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 one<span class="token punctuation">.</span><span class="token function">minus</span><span class="token punctuation">(</span>two<span class="token punctuation">)</span><span class="token punctuation">;</span>                                 <span class="token comment">// throws</span>
-one<span class="token punctuation">.</span><span class="token function">minus</span><span class="token punctuation">(</span>two<span class="token punctuation">,</span> <span class="token punctuation">{</span> disambiguation<span class="token operator">:</span> <span class="token string">'balance'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// throws</span></code></pre><h2 id="serialization-1">Serialization</h2>
+one<span class="token punctuation">.</span><span class="token function">minus</span><span class="token punctuation">(</span>two<span class="token punctuation">,</span> <span class="token punctuation">{</span> disambiguation<span class="token operator">:</span> <span class="token string">'balance'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// throws</span></code></pre><h2 id="serialization">Serialization</h2>
 <p>Normally, any Temporal object can be serialized to a string with its <code>toString()</code> method, and deserialized by calling <code>from()</code> on the string.
 This goes for <code>Temporal.Duration</code> as well.
 However, if any of the <code>milliseconds</code>, <code>microseconds</code>, or <code>nanoseconds</code> properties are greater than 999, then <code>Temporal.Duration.from(duration.toString())</code> will not yield an identical <code>Temporal.Duration</code> object.

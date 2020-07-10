@@ -134,13 +134,13 @@
       The API will change based on feedback that we get.
       <strong>Do</strong> <a href="https://forms.gle/iL9iZg7Y9LvH41Nv8">give feedback</a> and open <a href="https://github.com/tc39/proposal-temporal/issues">issues</a>; <strong>don't</strong> use it in production!
     </div>
-<h1 id="parse-1">parse</h1>
+<h1 id="parse">parse</h1>
 <p>Use cases we identified:</p>
 <ol>
 <li><strong>&quot;Parsing ISO&quot;</strong> — Parse an ISO 8601 string and get the exact information that is mandated by ISO 8601, which means that the whole string is relevant. (24:00 is midnight the following day, :60 seconds are allowed although we follow POSIX in coercing them to :59).</li>
 <li><strong>&quot;Parsing parts&quot;</strong> — Parse something that might look like an ISO 8601 string but might have been generated incorrectly by some other program. In this case it&#39;s important to ignore irrelevant parts of the string.</li>
 </ol>
-<h2 id="pros-and-cons-1">Pros and cons</h2>
+<h2 id="pros-and-cons">Pros and cons</h2>
 <table>
 <thead>
 <tr>
@@ -165,7 +165,7 @@
 <td>👎️ from() is a mix of <strong>parsing ISO</strong> and <strong>parsing parts</strong><br>👎️ Can parse an ISO string and not get the result specified by ISO<br>👎️ Not clear what API to use for each use case</td>
 </tr>
 </tbody></table>
-<h2 id="details-1">Details</h2>
+<h2 id="details">Details</h2>
 <p>Here are some strings of interest, used in the examples below:</p>
 <pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Valid string</span>
 valid <span class="token operator">=</span> <span class="token string">'2001-09-08T18:46:40-07:00[America/Vancouver]'</span><span class="token punctuation">;</span>
@@ -297,7 +297,7 @@ Temporal<span class="token punctuation">.</span><span class="token function">par
 <span class="token comment">//   timeZone: null,</span>
 <span class="token comment">// }</span>
 <span class="token comment">// etc.</span></code></pre><p>Note: The <code>absolute</code> member on the object returned from parse() is a bit redundant here, it&#39;s always either equal to the input, or null.</p>
-<h2 id="proposal-1-always-iso-8601-semantics-in-from-1">Proposal 1. Always ISO 8601 semantics in from()</h2>
+<h2 id="proposal-1-always-iso-8601-semantics-in-from">Proposal 1. Always ISO 8601 semantics in from()</h2>
 <p><strong>Use case 1:</strong> Use from(), which always returns the string according to ISO 8601&#39;s semantics. Any information that is <em>present</em> in the string, is validated. Not all information is <em>required</em> to be present if the type doesn&#39;t use it. If the time is not present, it defaults to midnight.</p>
 <p>The exception to validation is, when parsing a type that&#39;s not Temporal.Absolute, from() does not check that the time zone offset matches the bracketed IANA name.
 The reason for this is that political changes (abolishing DST, for example) may make a string incorrect even though it was correct at the time it was serialized.</p>
@@ -357,7 +357,7 @@ Temporal<span class="token punctuation">.</span>DateTime<span class="token punct
 Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span>invalidDate<span class="token punctuation">)</span><span class="token punctuation">.</span>dateTime<span class="token punctuation">)</span>  <span class="token comment">// throws</span>
 Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span>invalidTime<span class="token punctuation">)</span><span class="token punctuation">.</span>dateTime<span class="token punctuation">)</span>  <span class="token comment">// throws</span>
 Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span>invalidDate<span class="token punctuation">)</span><span class="token punctuation">.</span>time<span class="token punctuation">)</span>  <span class="token comment">// => 18:46:40</span>
-Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span>invalidTime<span class="token punctuation">)</span><span class="token punctuation">.</span>date<span class="token punctuation">)</span>  <span class="token comment">// => 2001-09-08</span></code></pre><h2 id="proposal-2-no-irrelevant-parts-in-from-1">Proposal 2. No irrelevant parts in from()</h2>
+Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span>invalidTime<span class="token punctuation">)</span><span class="token punctuation">.</span>date<span class="token punctuation">)</span>  <span class="token comment">// => 2001-09-08</span></code></pre><h2 id="proposal-2-no-irrelevant-parts-in-from">Proposal 2. No irrelevant parts in from()</h2>
 <p><strong>Use case 1:</strong> If a string contains any parts that are not relevant to the type, from() throws an exception. To process strings as ISO 8601 requires, use Absolute.from(), or Temporal.parse().dateTime with Temporal.parse().timeZone, depending on whether you need the time zone.</p>
 <pre class="language-javascript"><code class="language-javascript">Temporal<span class="token punctuation">.</span>Absolute<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>valid<span class="token punctuation">)</span>  <span class="token comment">// => 2001-09-09T01:46:40Z</span>
 Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>valid<span class="token punctuation">)</span>  <span class="token comment">// throws</span>
@@ -417,7 +417,7 @@ Temporal<span class="token punctuation">.</span>Time<span class="token punctuati
 Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>onlyDate<span class="token punctuation">)</span>  <span class="token comment">// throws</span>
 <span class="token comment">// No longer possible to get a DateTime with time defaulting to midnight, instead use:</span>
 Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>onlyDate<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">withTime</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'00:00'</span><span class="token punctuation">)</span><span class="token punctuation">)</span>  <span class="token comment">// => 2001-09-09T00:00</span></code></pre><p><strong>Use case 2:</strong> As in proposal 1.</p>
-<h2 id="proposal-3-irrelevant-parts-ignored-in-from-1">Proposal 3. Irrelevant parts ignored in from()</h2>
+<h2 id="proposal-3-irrelevant-parts-ignored-in-from">Proposal 3. Irrelevant parts ignored in from()</h2>
 <p><strong>Use case 1:</strong> Only Temporal.Absolute().from() and Temporal.DateTime.from() still have ISO 8601 semantics. To process strings as ISO 8601 requires, use Absolute.from(), or Temporal.DateTime.from() with Temporal.TimeZone.from(), depending on whether you need the time zone.</p>
 <p>Temporal.parse() isn&#39;t necessary in this scenario.</p>
 <pre class="language-javascript"><code class="language-javascript">Temporal<span class="token punctuation">.</span>Absolute<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>valid<span class="token punctuation">)</span>  <span class="token comment">// => 2001-09-09T01:46:40Z</span>
@@ -474,7 +474,7 @@ Temporal<span class="token punctuation">.</span>Date<span class="token punctuati
 Temporal<span class="token punctuation">.</span>YearMonth<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>invalidTime<span class="token punctuation">)</span>  <span class="token comment">// => 2001-09</span>
 Temporal<span class="token punctuation">.</span>MonthDay<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>invalidTime<span class="token punctuation">)</span>   <span class="token comment">// => 09-08</span>
 Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>invalidTime<span class="token punctuation">)</span>   <span class="token comment">// => America/Vancouver</span>
-<span class="token comment">// etc.</span></code></pre><h2 id="what-is-meant-by-iso-string-1">What is meant by &quot;ISO string&quot;</h2>
+<span class="token comment">// etc.</span></code></pre><h2 id="what-is-meant-by-iso-string">What is meant by &quot;ISO string&quot;</h2>
 <p>&quot;ISO 8601 string&quot; actually means Temporal&#39;s subset / interpretation of ISO 8601 which is specified in a grammar in the spec (currently in PR <a href="https://github.com/tc39/proposal-temporal/pull/404">#404</a>).
 The format is intended to be a combination of ISO 8601, RFC 3339, and JavaScript convention.</p>
 <ul>

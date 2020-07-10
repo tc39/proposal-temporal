@@ -134,7 +134,7 @@
       The API will change based on feedback that we get.
       <strong>Do</strong> <a href="https://forms.gle/iL9iZg7Y9LvH41Nv8">give feedback</a> and open <a href="https://github.com/tc39/proposal-temporal/issues">issues</a>; <strong>don't</strong> use it in production!
     </div>
-<h1 id="temporaldate-1">Temporal.Date</h1>
+<h1 id="temporaldate">Temporal.Date</h1>
 <details>
   <summary><strong>Table of Contents</strong></summary>
 <ul>
@@ -221,7 +221,7 @@ For example, it could be used to represent an event on a calendar which happens 
 <p><code>Temporal.Date</code> refers to the whole of a specific day; if you need to refer to a specific time on that day, use <code>Temporal.DateTime</code>.
 A <code>Temporal.Date</code> can be converted into a <code>Temporal.DateTime</code> by combining it with a <code>Temporal.Time</code> using the <code>toDateTime()</code> method.</p>
 <p><code>Temporal.YearMonth</code> and <code>Temporal.MonthDay</code> carry less information than <code>Temporal.Date</code> and should be used when complete information is not required.</p>
-<h2 id="constructor-1">Constructor</h2>
+<h2 id="constructor">Constructor</h2>
 <h3 id="new-Temporal-Date"><a class="heading-link" href="#new-Temporal-Date"></a><strong>new Temporal.Date</strong>(<em>isoYear</em>: number, <em>isoMonth</em>: number, <em>isoDay</em>: number, <em>calendar</em>?: object) : Temporal.Date</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>isoYear</code> (number): A year.</li>
@@ -241,7 +241,7 @@ If <code>isoYear</code>, <code>isoMonth</code>, and <code>isoDay</code> form a d
 </blockquote>
 <p>Usage examples:</p>
 <pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Pi day in 2020</span>
-date <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>Date</span><span class="token punctuation">(</span><span class="token number">2020</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">14</span><span class="token punctuation">)</span>  <span class="token comment">// => 2020-03-14</span></code></pre><h2 id="static-methods-1">Static methods</h2>
+date <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>Date</span><span class="token punctuation">(</span><span class="token number">2020</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">14</span><span class="token punctuation">)</span>  <span class="token comment">// => 2020-03-14</span></code></pre><h2 id="static-methods">Static methods</h2>
 <h3 id="from"><a class="heading-link" href="#from"></a>Temporal.Date.<strong>from</strong>(<em>thing</em>: any, <em>options</em>?: object) : Temporal.Date</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>thing</code>: The value representing the desired date.</li>
@@ -314,7 +314,7 @@ For example:</p>
 two <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2015-07-14'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 three <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'1930-02-18'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 sorted <span class="token operator">=</span> <span class="token punctuation">[</span>one<span class="token punctuation">,</span> two<span class="token punctuation">,</span> three<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">sort</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">.</span>compare<span class="token punctuation">)</span><span class="token punctuation">;</span>
-sorted<span class="token punctuation">.</span><span class="token function">join</span><span class="token punctuation">(</span><span class="token string">' '</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// => 1930-02-18 2006-08-24 2015-07-14</span></code></pre><h2 id="properties-1">Properties</h2>
+sorted<span class="token punctuation">.</span><span class="token function">join</span><span class="token punctuation">(</span><span class="token string">' '</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// => 1930-02-18 2006-08-24 2015-07-14</span></code></pre><h2 id="properties">Properties</h2>
 <h3 id="year"><a class="heading-link" href="#year"></a>date.<strong>year</strong> : number</h3><h3 id="month"><a class="heading-link" href="#month"></a>date.<strong>month</strong> : number</h3><h3 id="day"><a class="heading-link" href="#day"></a>date.<strong>day</strong> : number</h3><p>The above read-only properties allow accessing each component of the date individually.</p>
 <blockquote>
 <p><strong>NOTE</strong>: The possible values for the <code>month</code> property start at 1, which is different from legacy <code>Date</code> where months are represented by zero-based indices (0 to 11).</p>
@@ -372,7 +372,7 @@ Its value is <code>true</code> if the year is a leap year, and <code>false</code
 date <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">date</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 date<span class="token punctuation">.</span>leapYear  <span class="token comment">// example output: true</span>
 <span class="token comment">// Is 2100 a leap year? (no, because it's divisible by 100 and not 400)</span>
-date<span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span><span class="token punctuation">{</span>year<span class="token operator">:</span> <span class="token number">2100</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span>leapYear  <span class="token comment">// => false</span></code></pre><h2 id="methods-1">Methods</h2>
+date<span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span><span class="token punctuation">{</span>year<span class="token operator">:</span> <span class="token number">2100</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span>leapYear  <span class="token comment">// => false</span></code></pre><h2 id="methods">Methods</h2>
 <h3 id="with"><a class="heading-link" href="#with"></a>date.<strong>with</strong>(<em>dateLike</em>: object, <em>options</em>?: object) : Temporal.Date</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>dateLike</code> (object): an object with some or all of the properties of a <code>Temporal.Date</code>.</li>

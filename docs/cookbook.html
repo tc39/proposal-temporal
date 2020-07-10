@@ -134,8 +134,8 @@
       The API will change based on feedback that we get.
       <strong>Do</strong> <a href="https://forms.gle/iL9iZg7Y9LvH41Nv8">give feedback</a> and open <a href="https://github.com/tc39/proposal-temporal/issues">issues</a>; <strong>don't</strong> use it in production!
     </div>
-<h1 id="temporal-cookbook-1">Temporal Cookbook</h1>
-<h2 id="overview-1">Overview</h2>
+<h1 id="temporal-cookbook">Temporal Cookbook</h1>
+<h2 id="overview">Overview</h2>
 <ul>
 <li><a href="#overview">Overview</a>
 </li>
@@ -241,9 +241,9 @@
 </li>
 </ul>
 
-<h2 id="running-the-cookbook-files-1">Running the cookbook files</h2>
+<h2 id="running-the-cookbook-files">Running the cookbook files</h2>
 <p>Running cookbook files: see instructions in <a href="https://github.com/tc39/proposal-temporal/tree/main/polyfill#running-cookbook-files">../polyfill/README.md</a></p>
-<h2 id="frequently-asked-questions-1">Frequently Asked Questions</h2>
+<h2 id="frequently-asked-questions">Frequently Asked Questions</h2>
 <p>These are some of the most common tasks that people ask questions about on StackOverflow with legacy Date.
 Here&#39;s how they would look using Temporal.</p>
 <h3 id="current-date-and-time"><a class="heading-link" href="#current-date-and-time"></a>Current date and time</h3><p>How to get the current date and time in the local time zone?</p>
@@ -270,7 +270,7 @@ dateTime<span class="token punctuation">.</span><span class="token function">toS
 timeStamp<span class="token punctuation">.</span><span class="token function">getEpochMilliseconds</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token comment">// Timestamp in Seconds</span>
 timeStamp<span class="token punctuation">.</span><span class="token function">getEpochSeconds</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-</code></pre><h2 id="converting-between-temporal-types-and-legacy-date-1">Converting between Temporal types and legacy Date</h2>
+</code></pre><h2 id="converting-between-temporal-types-and-legacy-date">Converting between Temporal types and legacy Date</h2>
 <h3 id="absolute-from-legacy-date"><a class="heading-link" href="#absolute-from-legacy-date"></a>Absolute from legacy Date</h3><p>Map a legacy ECMAScript Date instance into a Temporal.Absolute instance corresponding to the same instant in absolute time.</p>
 <pre class="language-javascript"><code class="language-javascript"><span class="token keyword">const</span> legacyDate <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Date</span><span class="token punctuation">(</span><span class="token string">'1970-01-01T00:00:01Z'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
@@ -278,7 +278,7 @@ timeStamp<span class="token punctuation">.</span><span class="token function">ge
 <span class="token keyword">const</span> absolute <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Absolute<span class="token punctuation">.</span><span class="token function">fromEpochMilliseconds</span><span class="token punctuation">(</span>legacyDate<span class="token punctuation">.</span><span class="token function">getTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
 <span class="token function">assert</span><span class="token punctuation">(</span>absolute <span class="token keyword">instanceof</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>Absolute</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-</code></pre><h2 id="construction-1">Construction</h2>
+</code></pre><h2 id="construction">Construction</h2>
 <h3 id="time-zone-object-from-name"><a class="heading-link" href="#time-zone-object-from-name"></a>Time zone object from name</h3><p><code>Temporal.TimeZone.from()</code> can convert an IANA time zone name into a <code>Temporal.TimeZone</code> object.</p>
 <pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Construct a Temporal.TimeZone from an IANA name:</span>
 <span class="token keyword">const</span> tz <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'Europe/London'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -302,7 +302,7 @@ datePicker.value = today;
 <span class="token keyword">const</span> today <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">date</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 datePicker<span class="token punctuation">.</span>max <span class="token operator">=</span> today<span class="token punctuation">;</span>
 datePicker<span class="token punctuation">.</span>value <span class="token operator">=</span> today<span class="token punctuation">;</span>
-</code></pre><h2 id="converting-between-types-1">Converting between types</h2>
+</code></pre><h2 id="converting-between-types">Converting between types</h2>
 <h3 id="noon-on-a-particular-date"><a class="heading-link" href="#noon-on-a-particular-date"></a>Noon on a particular date</h3><p>An example of combining a calendar date (<code>Temporal.Date</code>) and a wall-clock time (<code>Temporal.Time</code>) into a <code>Temporal.DateTime</code>.</p>
 <pre class="language-javascript"><code class="language-javascript"><span class="token keyword">const</span> date <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-05-14'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
@@ -318,7 +318,7 @@ birthdayIn2030<span class="token punctuation">.</span>dayOfWeek<span class="toke
 
 <span class="token function">assert</span><span class="token punctuation">(</span>birthdayIn2030 <span class="token keyword">instanceof</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>Date</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 assert<span class="token punctuation">.</span><span class="token function">equal</span><span class="token punctuation">(</span>birthdayIn2030<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token string">'2030-12-15'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-</code></pre><h2 id="serialization-1">Serialization</h2>
+</code></pre><h2 id="serialization">Serialization</h2>
 <h3 id="zoned-instant-from-instant-and-time-zone"><a class="heading-link" href="#zoned-instant-from-instant-and-time-zone"></a>Zoned instant from instant and time zone</h3><p>Use the optional parameter of <code>Temporal.Absolute.prototype.toString()</code> to map a Temporal.Absolute instance and a time zone name into a string serialization of the local time in that zone corresponding to the instant in absolute time.</p>
 <p>Without the parameter, <code>Temporal.Absolute.prototype.toString()</code> gives a serialization in UTC time.
 Using the parameter is useful if you need your serialized strings to be in a specific time zone.</p>
@@ -341,7 +341,7 @@ assert<span class="token punctuation">.</span><span class="token function">equal
 <span class="token keyword">const</span> result3 <span class="token operator">=</span> absoluteTime<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span>timeZone<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
 assert<span class="token punctuation">.</span><span class="token function">equal</span><span class="token punctuation">(</span>result3<span class="token punctuation">,</span> <span class="token string">'2020-01-03T19:41:51+09:00[Asia/Seoul]'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-</code></pre><h2 id="sorting-1">Sorting</h2>
+</code></pre><h2 id="sorting">Sorting</h2>
 <p>Each Temporal type has a <code>compare()</code> static method, which can be passed to <code>Array.prototype.sort()</code> as the compare function in order to sort an array of Temporal types.</p>
 <h3 id="sort-datetimes"><a class="heading-link" href="#sort-datetimes"></a>Sort DateTimes</h3><p>Sort a list of <code>Temporal.DateTime</code>s, for example in order to get a conference schedule in the correct order.
 Sorting other Temporal types would work exactly the same way as this.</p>
@@ -424,7 +424,7 @@ assert<span class="token punctuation">.</span><span class="token function">deepE
   <span class="token string">'2020-04-01T05:01:00-05:00[America/New_York]'</span><span class="token punctuation">,</span>
   <span class="token string">'2020-04-01T11:02:00+02:00[Europe/Berlin]'</span>
 <span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-</code></pre><h2 id="rounding-1">Rounding</h2>
+</code></pre><h2 id="rounding">Rounding</h2>
 <h3 id="round-a-time-down-to-whole-hours"><a class="heading-link" href="#round-a-time-down-to-whole-hours"></a>Round a time down to whole hours</h3><p>Use the <code>with()</code> method of each Temporal type if you want to round or balance the fields.
 Here&#39;s an example of rounding a time <em>down</em> to the previously occurring whole hour:</p>
 <pre class="language-javascript"><code class="language-javascript"><span class="token keyword">const</span> time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'12:38:28.138818731'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -436,7 +436,7 @@ assert<span class="token punctuation">.</span><span class="token function">equal
 <span class="token comment">// or, taking advantage of 0 being the default for time fields:</span>
 wholeHour <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> hour<span class="token operator">:</span> time<span class="token punctuation">.</span>hour <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 assert<span class="token punctuation">.</span><span class="token function">equal</span><span class="token punctuation">(</span>wholeHour<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token string">'12:00'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-</code></pre><h2 id="time-zone-conversion-1">Time zone conversion</h2>
+</code></pre><h2 id="time-zone-conversion">Time zone conversion</h2>
 <h3 id="preserving-local-time"><a class="heading-link" href="#preserving-local-time"></a>Preserving local time</h3><p>Map a zoneless date and time of day into a <code>Temporal.Absolute</code> instance at which the local date and time of day in a specified time zone matches it.
 This is easily done with <code>dateTime.toAbsolute()</code>, but here is an example of implementing different disambiguation behaviors than the <code>&#39;compatible&#39;</code>, <code>&#39;earlier&#39;</code>, <code>&#39;later&#39;</code>, and <code>&#39;reject&#39;</code> ones built in to Temporal.</p>
 <pre class="language-javascript"><code class="language-javascript"><span class="token comment">/**
@@ -935,7 +935,7 @@ timeZones<span class="token punctuation">.</span><span class="token function">fo
 
   table<span class="token punctuation">.</span><span class="token function">appendChild</span><span class="token punctuation">(</span>row<span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-</code></pre><h2 id="arithmetic-1">Arithmetic</h2>
+</code></pre><h2 id="arithmetic">Arithmetic</h2>
 <h3 id="how-many-days-until-a-future-date"><a class="heading-link" href="#how-many-days-until-a-future-date"></a>How many days until a future date</h3><p>An example HTML form inspired by <a href="https://www.timeanddate.com/date/durationresult.html">Days Calculator</a> on timeanddate.com:</p>
 <form action="#how-many-days-until-a-future-date">
   <label>

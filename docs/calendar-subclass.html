@@ -134,12 +134,12 @@
       The API will change based on feedback that we get.
       <strong>Do</strong> <a href="https://forms.gle/iL9iZg7Y9LvH41Nv8">give feedback</a> and open <a href="https://github.com/tc39/proposal-temporal/issues">issues</a>; <strong>don't</strong> use it in production!
     </div>
-<h1 id="subclass-based-temporal-calendar-api-1">Subclass-based Temporal Calendar API</h1>
+<h1 id="subclass-based-temporal-calendar-api">Subclass-based Temporal Calendar API</h1>
 <p><a href="calendar-draft.html">calendar-draft.md</a> discusses a design for calendar support in Temporal based on a single shared Temporal.Date type with a Temporal.Calendar.  This document discusses an alternative approach based on subclassing of Temporal.Date types, which was eliminated due to the drawbacks discussed in this document.</p>
 <p>In this document, the <em>Temporal.Calendar Approach</em> refers to the solution proposed in <a href="calendar-draft.html">calendar-draft.md</a>, and the <em>Temporal.Date Subclassing Approach</em> refers to the alternative, but eliminated, solution proposed in this document.</p>
-<h2 id="overview-1">Overview</h2>
+<h2 id="overview">Overview</h2>
 <p><code>Temporal.Date</code> would become a base class.  For example, a class like <code>HebrewDate</code> would extend <code>Temporal.Date</code>.</p>
-<h2 id="comparison-1">Comparison</h2>
+<h2 id="comparison">Comparison</h2>
 <h3 id="built-in-calendars"><a class="heading-link" href="#built-in-calendars"></a>Built-In Calendars</h3><p><strong>Temporal.Calendar Approach:</strong> All built-in calendars, including 402 calendars, are all instances of Temporal.Calendar</p>
 <p><strong>Temporal.Date Subclassing Approach:</strong> Every built-in 402 calendar has a corresponding type heirarchy in the Intl namespace</p>
 <h3 id="custom-calendars"><a class="heading-link" href="#custom-calendars"></a>Custom Calendars</h3><p><strong>Temporal.Calendar Approach:</strong> Write an implementation of Temporal.Calendar.</p>

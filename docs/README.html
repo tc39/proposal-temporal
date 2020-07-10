@@ -134,7 +134,7 @@
       The API will change based on feedback that we get.
       <strong>Do</strong> <a href="https://forms.gle/iL9iZg7Y9LvH41Nv8">give feedback</a> and open <a href="https://github.com/tc39/proposal-temporal/issues">issues</a>; <strong>don't</strong> use it in production!
     </div>
-<h1 id="temporal-1">Temporal</h1>
+<h1 id="temporal">Temporal</h1>
 <details>
   <summary><strong>Table of Contents</strong></summary>
 <ul>
@@ -171,7 +171,7 @@
 </ul>
 </details>
 
-<h2 id="introduction-1">Introduction</h2>
+<h2 id="introduction">Introduction</h2>
 <p><code>Date</code> has been a long-standing pain point in ECMAScript.
 This is a proposal for <code>Temporal</code>, a global <code>Object</code> that acts as a top-level namespace (like <code>Math</code>), that brings a modern date/time API to the ECMAScript language.
 For a detailed look at some of the problems with <code>Date</code>, and the motivations for Temporal, see:
@@ -183,9 +183,9 @@ For a detailed look at some of the problems with <code>Date</code>, and the moti
 <li>Parsing a strictly specified string format</li>
 <li>Supporting non-Gregorian calendars, and time zones other than the user&#39;s local time and UTC</li>
 </ul>
-<h2 id="cookbook-1">Cookbook</h2>
+<h2 id="cookbook">Cookbook</h2>
 <p>A cookbook to help you get started and learn the ins and outs of Temporal is available <a href="./cookbook.html">here</a>.</p>
-<h2 id="api-documentation-1">API Documentation</h2>
+<h2 id="api-documentation">API Documentation</h2>
 <h3 id="Temporal-Absolute"><a class="heading-link" href="#Temporal-Absolute"></a><strong>Temporal.Absolute</strong></h3><p>A <code>Temporal.Absolute</code> represents a fixed point in time, without regard to calendar or location.</p>
 <p>See <a href="./absolute.html">Temporal.Absolute Documentation</a> for more detailed documentation.</p>
 <h3 id="Temporal-TimeZone"><a class="heading-link" href="#Temporal-TimeZone"></a><strong>Temporal.TimeZone</strong></h3><p>A <code>Temporal.TimeZone</code> represents an IANA time zone, a specific UTC offset or UTC itself. Because of this <code>Temporal.TimeZone</code> can be used to convert between <code>Temporal.Absolute</code> and <code>Temporal.DateTime</code> as well as finding out the offset at a specific <code>Temporal.Absolute</code>.</p>
@@ -215,7 +215,7 @@ For a detailed look at some of the problems with <code>Date</code>, and the moti
 <h3 id="Temporal-Calendar"><a class="heading-link" href="#Temporal-Calendar"></a><strong>Temporal.Calendar</strong></h3><p>A <code>Temporal.Calendar</code> represents a calendar system.
 Most code will use the ISO 8601 calendar, but other calendar systems are available.</p>
 <p>See <a href="./calendar.html">Temporal.Calendar Documentation</a> for more detailed documentation.</p>
-<h2 id="object-relationship-1">Object Relationship</h2>
+<h2 id="object-relationship">Object Relationship</h2>
 <div class="mermaid">
 graph LR;
   timezone(TimeZone);

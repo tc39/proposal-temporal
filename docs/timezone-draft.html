@@ -134,8 +134,8 @@
       The API will change based on feedback that we get.
       <strong>Do</strong> <a href="https://forms.gle/iL9iZg7Y9LvH41Nv8">give feedback</a> and open <a href="https://github.com/tc39/proposal-temporal/issues">issues</a>; <strong>don't</strong> use it in production!
     </div>
-<h1 id="draft-design-of-custom-time-zone-api-1">Draft design of custom time zone API</h1>
-<h2 id="why-1">Why?</h2>
+<h1 id="draft-design-of-custom-time-zone-api">Draft design of custom time zone API</h1>
+<h2 id="why">Why?</h2>
 <p>Currently, <code>Temporal.TimeZone</code> objects can only be obtained by passing an identifier to the constructor or to <code>Temporal.TimeZone.from()</code>.
 These identifiers can be:</p>
 <ul>
@@ -151,7 +151,7 @@ Before the year 1883, when the US introduced time zones due to the influence of 
 Other cities in what is now the <code>America/Chicago</code> time zone would have observed their own local mean times.
 If a user wanted to do accurate calculations for times occurring before 1883 in places in the <code>America/Chicago</code> time zone other than Chicago, a custom time zone would be required.
 For example, St. Louis&#39;s local mean time is GMT-06:00:49.11 (<a href="https://books.google.ca/books?id=Xfg3AAAAMAAJ&amp;pg=PA63">Byrd, Mary E., 1899, <em>A Laboratory Manual In Astronomy</em>, p. 63. Athenaeum Press: Boston.</a>)</p>
-<h2 id="usage-of-a-custom-time-zone-1">Usage of a custom time zone</h2>
+<h2 id="usage-of-a-custom-time-zone">Usage of a custom time zone</h2>
 <p>Like built-in time zones, custom time zones have an identifier.
 In these examples we assume a custom time zone class <code>StLouisTime</code> with the identifier <code>America/St_Louis</code>.
 (See the following section for how such a time zone object would be implemented.)</p>
@@ -206,7 +206,7 @@ Temporal<span class="token punctuation">.</span>TimeZone<span class="token punct
     <span class="token keyword">return</span> <span class="token function">originalTemporalTimeZoneFrom</span><span class="token punctuation">.</span><span class="token function">call</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">,</span> id<span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">RangeError</span><span class="token punctuation">(</span><span class="token string">'invalid time zone'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span>
-Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function-variable function">timeZone</span> <span class="token operator">=</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span> <span class="token keyword">return</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'UTC'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token punctuation">}</span></code></pre><h2 id="implementation-of-a-custom-time-zone-1">Implementation of a custom time zone</h2>
+Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function-variable function">timeZone</span> <span class="token operator">=</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span> <span class="token keyword">return</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'UTC'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token punctuation">}</span></code></pre><h2 id="implementation-of-a-custom-time-zone">Implementation of a custom time zone</h2>
 <h3 id="timezone-interface"><a class="heading-link" href="#timezone-interface"></a>TimeZone interface</h3><pre class="language-javascript"><code class="language-javascript"><span class="token keyword">class</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>TimeZone</span> <span class="token punctuation">{</span>
   <span class="token comment">/** Sets the [[Identifier]] internal slot to @id, and creates the
    * [[InitializedTemporalTimeZone]] internal slot. A subclassed custom
@@ -249,7 +249,7 @@ Temporal<span class="token punctuation">.</span>now<span class="token punctuatio
 For example, <code>getOffsetStringFor()</code> and <code>getDateTimeFor()</code> call <code>getOffsetNanosecondsFor()</code>, and <code>getAbsoluteFor()</code> calls both.</p>
 <p>Alternatively, a custom time zone doesn&#39;t have to be a subclass of <code>Temporal.TimeZone</code>.
 In this case, it can be a plain object, which must implement <code>getOffsetNanosecondsFor()</code>, <code>getPossibleAbsolutesFor()</code>, and <code>toString()</code>.</p>
-<h2 id="show-me-the-code-1">Show Me The Code</h2>
+<h2 id="show-me-the-code">Show Me The Code</h2>
 <p>Here&#39;s what it could look like to implement the built-in offset-based time zones as custom time zones.
 The <code>MakeDate</code>, <code>MakeDay</code>, and <code>MakeTime</code> functions are as in the <a href="https://tc39.es/ecma262/#sec-overview-of-date-objects-and-definitions-of-abstract-operations">ECMA-262 specification</a>, except that instead of milliseconds, <code>MakeDate</code> and <code>MakeDay</code> return BigInt-typed nanoseconds, and <code>MakeTime</code> returns Number-typed nanoseconds.
 (This example leaves out all the type checking, range checking, and error handling, just to show the bare bones.)</p>

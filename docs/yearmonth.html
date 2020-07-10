@@ -134,7 +134,7 @@
       The API will change based on feedback that we get.
       <strong>Do</strong> <a href="https://forms.gle/iL9iZg7Y9LvH41Nv8">give feedback</a> and open <a href="https://github.com/tc39/proposal-temporal/issues">issues</a>; <strong>don't</strong> use it in production!
     </div>
-<h1 id="temporalyearmonth-1">Temporal.YearMonth</h1>
+<h1 id="temporalyearmonth">Temporal.YearMonth</h1>
 <details>
   <summary><strong>Table of Contents</strong></summary>
 <ul>
@@ -205,7 +205,7 @@
 For example, it could be used to represent a particular instance of a monthly recurring event, like &quot;the June 2019 meeting&quot;.</p>
 <p><code>Temporal.YearMonth</code> refers to the whole of a specific month; if you need to refer to a calendar event on a certain day, use <code>Temporal.Date</code> or even <code>Temporal.DateTime</code>.
 A <code>Temporal.YearMonth</code> can be converted into a <code>Temporal.Date</code> by combining it with a day of the month, using the <code>toDateOnDay()</code> method.</p>
-<h2 id="constructor-1">Constructor</h2>
+<h2 id="constructor">Constructor</h2>
 <h3 id="new-Temporal-YearMonth"><a class="heading-link" href="#new-Temporal-YearMonth"></a><strong>new Temporal.YearMonth</strong>(<em>isoYear</em>: number, <em>isoMonth</em>: number, <em>calendar</em>?: object, <em>refISODay</em>: number = 1) : Temporal.YearMonth</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>isoYear</code> (number): A year.</li>
@@ -226,7 +226,7 @@ If <code>isoYear</code> and <code>isoMonth</code> are outside of this range, the
 </blockquote>
 <p>Usage examples:</p>
 <pre class="language-javascript"><code class="language-javascript"><span class="token comment">// The June 2019 meeting</span>
-ym <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>YearMonth</span><span class="token punctuation">(</span><span class="token number">2019</span><span class="token punctuation">,</span> <span class="token number">6</span><span class="token punctuation">)</span>  <span class="token comment">// => 2019-06</span></code></pre><h2 id="static-methods-1">Static methods</h2>
+ym <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>YearMonth</span><span class="token punctuation">(</span><span class="token number">2019</span><span class="token punctuation">,</span> <span class="token number">6</span><span class="token punctuation">)</span>  <span class="token comment">// => 2019-06</span></code></pre><h2 id="static-methods">Static methods</h2>
 <h3 id="from"><a class="heading-link" href="#from"></a>Temporal.YearMonth.<strong>from</strong>(<em>thing</em>: any, <em>options</em>?: object) : Temporal.YearMonth</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>thing</code>: The value representing the desired month.</li>
@@ -294,7 +294,7 @@ For example:</p>
 two <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>YearMonth<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2015-07'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 three <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>YearMonth<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'1930-02'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 sorted <span class="token operator">=</span> <span class="token punctuation">[</span>one<span class="token punctuation">,</span> two<span class="token punctuation">,</span> three<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">sort</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>YearMonth<span class="token punctuation">.</span>compare<span class="token punctuation">)</span><span class="token punctuation">;</span>
-sorted<span class="token punctuation">.</span><span class="token function">join</span><span class="token punctuation">(</span><span class="token string">' '</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// => 1930-02 2006-08 2015-07</span></code></pre><h2 id="properties-1">Properties</h2>
+sorted<span class="token punctuation">.</span><span class="token function">join</span><span class="token punctuation">(</span><span class="token string">' '</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// => 1930-02 2006-08 2015-07</span></code></pre><h2 id="properties">Properties</h2>
 <h3 id="year"><a class="heading-link" href="#year"></a>yearMonth.<strong>year</strong> : number</h3><h3 id="month"><a class="heading-link" href="#month"></a>yearMonth.<strong>month</strong> : number</h3><p>The above read-only properties allow accessing the year and month individually.</p>
 <blockquote>
 <p><strong>NOTE</strong>: The possible values for the <code>month</code> property start at 1, which is different from legacy <code>Date</code> where months are represented by zero-based indices (0 to 11).</p>
@@ -334,7 +334,7 @@ Its value is <code>true</code> if the year is a leap year, and <code>false</code
 ym <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>YearMonth<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2019-06'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 ym<span class="token punctuation">.</span>isLeapYear  <span class="token comment">// => false</span>
 <span class="token comment">// Is 2100 a leap year? (no, because it's divisible by 100 and not 400)</span>
-ym<span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span><span class="token punctuation">{</span>year<span class="token operator">:</span> <span class="token number">2100</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span>isLeapYear  <span class="token comment">// => false</span></code></pre><h2 id="methods-1">Methods</h2>
+ym<span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span><span class="token punctuation">{</span>year<span class="token operator">:</span> <span class="token number">2100</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span>isLeapYear  <span class="token comment">// => false</span></code></pre><h2 id="methods">Methods</h2>
 <h3 id="with"><a class="heading-link" href="#with"></a>yearMonth.<strong>with</strong>(<em>yearMonthLike</em>: object, <em>options</em>?: object) : Temporal.YearMonth</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>yearMonthLike</code> (object): an object with some or all of the properties of a <code>Temporal.YearMonth</code>.</li>

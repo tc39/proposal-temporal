@@ -134,7 +134,7 @@
       The API will change based on feedback that we get.
       <strong>Do</strong> <a href="https://forms.gle/iL9iZg7Y9LvH41Nv8">give feedback</a> and open <a href="https://github.com/tc39/proposal-temporal/issues">issues</a>; <strong>don't</strong> use it in production!
     </div>
-<h1 id="temporalcalendar-1">Temporal.Calendar</h1>
+<h1 id="temporalcalendar">Temporal.Calendar</h1>
 <details>
   <summary><strong>Table of Contents</strong></summary>
 <ul>
@@ -225,7 +225,7 @@ Any subclass of <code>Temporal.Calendar</code> will be accepted in Temporal APIs
 <h3 id="protocol"><a class="heading-link" href="#protocol"></a>Protocol</h3><p>It&#39;s also possible for a plain object to be a custom calendar, without subclassing.
 The object must implement the <code>Temporal.Calendar</code> methods and have an <code>id</code> property.
 It is possible to pass such an object into any Temporal API that would normally take a built-in <code>Temporal.Calendar</code>.</p>
-<h2 id="constructor-1">Constructor</h2>
+<h2 id="constructor">Constructor</h2>
 <h3 id="new-Temporal-Calendar"><a class="heading-link" href="#new-Temporal-Calendar"></a><strong>new Temporal.Calendar</strong>(<em>calendarIdentifier</em>: string) : Temporal.Calendar</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>calendarIdentifier</code> (string): An identifier for the calendar.</li>
@@ -238,7 +238,7 @@ If you have an ISO 8601 date-time string with a <code>[c=identifier]</code> anno
 <p>Example usage:</p>
 <pre class="language-javascript"><code class="language-javascript">cal <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>Calendar</span><span class="token punctuation">(</span><span class="token string">'iso8601'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 cal <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>Calendar</span><span class="token punctuation">(</span><span class="token string">'gregory'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token comment">/*⚠️*/</span> cal <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>Calendar</span><span class="token punctuation">(</span><span class="token string">'discordian'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// not a built-in calendar, throws</span></code></pre><h2 id="static-methods-1">Static methods</h2>
+<span class="token comment">/*⚠️*/</span> cal <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>Calendar</span><span class="token punctuation">(</span><span class="token string">'discordian'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// not a built-in calendar, throws</span></code></pre><h2 id="static-methods">Static methods</h2>
 <h3 id="from"><a class="heading-link" href="#from"></a>Temporal.Calendar.<strong>from</strong>(<em>thing</em>: any) : Temporal.Calendar</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>thing</code>: A <code>Temporal.Calendar</code> object or a value from which to create a <code>Temporal.Calendar</code>.</li>
@@ -270,10 +270,10 @@ cal2 <span class="token operator">=</span> Temporal<span class="token punctuatio
 cal <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Calendar<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span>id<span class="token operator">:</span> <span class="token string">'mycalendar'</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
 <span class="token comment">/*⚠️*/</span> cal <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Calendar<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'discordian'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// not a built-in calendar, throws</span>
-<span class="token comment">/*⚠️*/</span> cal <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Calendar<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'[c=iso8601]'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// lone annotation not a valid ISO 8601 string</span></code></pre><h2 id="properties-1">Properties</h2>
+<span class="token comment">/*⚠️*/</span> cal <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Calendar<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'[c=iso8601]'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// lone annotation not a valid ISO 8601 string</span></code></pre><h2 id="properties">Properties</h2>
 <h3 id="id"><a class="heading-link" href="#id"></a>calendar.<strong>id</strong> : string</h3><p>The <code>id</code> property gives an unambiguous identifier for the calendar.
 Effectively, this is whatever <code>calendarIdentifier</code> was passed as a parameter to the constructor.</p>
-<h2 id="methods-1">Methods</h2>
+<h2 id="methods">Methods</h2>
 <h3 id="year"><a class="heading-link" href="#year"></a>calendar.<strong>year</strong>(<em>date</em>: Temporal.Date) : number</h3><h3 id="month"><a class="heading-link" href="#month"></a>calendar.<strong>month</strong>(<em>date</em>: Temporal.Date) : number</h3><h3 id="day"><a class="heading-link" href="#day"></a>calendar.<strong>day</strong>(<em>date</em>: Temporal.Date) : number</h3><h3 id="era"><a class="heading-link" href="#era"></a>calendar.<strong>era</strong>(<em>date</em>: Temporal.Date) : unknown</h3><h3 id="dayOfWeek"><a class="heading-link" href="#dayOfWeek"></a>calendar.<strong>dayOfWeek</strong>(<em>date</em>: Temporal.Date): number</h3><h3 id="dayOfYear"><a class="heading-link" href="#dayOfYear"></a>calendar.<strong>dayOfYear</strong>(<em>date</em>: Temporal.Date): number</h3><h3 id="weekOfYear"><a class="heading-link" href="#weekOfYear"></a>calendar.<strong>weekOfYear</strong>(<em>date</em>: Temporal.Date): number</h3><h3 id="daysInMonth"><a class="heading-link" href="#daysInMonth"></a>calendar.<strong>daysInMonth</strong>(<em>date</em>: Temporal.Date): number</h3><h3 id="daysInYear"><a class="heading-link" href="#daysInYear"></a>calendar.<strong>daysInYear</strong>(<em>date</em>: Temporal.Date): number</h3><h3 id="isLeapYear"><a class="heading-link" href="#isLeapYear"></a>calendar.<strong>isLeapYear</strong>(<em>date</em>: Temporal.Date): boolean</h3><p>The above methods are all similar.
 They provide a way to query properties of a particular date in the calendar&#39;s date reckoning.</p>
 <p><strong>Parameters:</strong></p>

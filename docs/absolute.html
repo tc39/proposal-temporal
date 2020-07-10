@@ -134,7 +134,7 @@
       The API will change based on feedback that we get.
       <strong>Do</strong> <a href="https://forms.gle/iL9iZg7Y9LvH41Nv8">give feedback</a> and open <a href="https://github.com/tc39/proposal-temporal/issues">issues</a>; <strong>don't</strong> use it in production!
     </div>
-<h1 id="temporalabsolute-1">Temporal.Absolute</h1>
+<h1 id="temporalabsolute">Temporal.Absolute</h1>
 <details>
   <summary><strong>Table of Contents</strong></summary>
 <ul>
@@ -200,7 +200,7 @@ As such <code>Temporal.Absolute</code> has no concept of days, months or even ho
 However, a <code>Temporal.Absolute</code> can be created from any of several expressions that refer to a single point in time, including an ISO 8601 string with a time zone such as <code>&#39;2020-01-23T17:04:36.491865121-08:00&#39;</code>.</p>
 <p>Since <code>Temporal.Absolute</code> doesn&#39;t contain any information about time zones, a <code>Temporal.TimeZone</code> is needed in order to convert it into a <code>Temporal.DateTime</code> (and from there into any of the other <code>Temporal</code> objects.)</p>
 <p>Like Unix time, <code>Temporal.Absolute</code> ignores leap seconds.</p>
-<h2 id="constructor-1">Constructor</h2>
+<h2 id="constructor">Constructor</h2>
 <h3 id="new-Temporal-Absolute"><a class="heading-link" href="#new-Temporal-Absolute"></a><strong>new Temporal.Absolute</strong>(<em>epochNanoseconds</em> : bigint) : Temporal.Absolute</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>epochNanoseconds</code> (bigint): A number of nanoseconds.</li>
@@ -217,7 +217,7 @@ This range covers approximately half a million years. If <code>epochNanoseconds<
 <span class="token comment">// When was the Unix epoch?</span>
 epoch <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>Absolute</span><span class="token punctuation">(</span><span class="token number">0n</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// => 1970-01-01T00:00Z</span>
 <span class="token comment">// Dates before the Unix epoch are negative</span>
-turnOfTheCentury <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>Absolute</span><span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">2208988800000000000n</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// => 1900-01-01T00:00Z</span></code></pre><h2 id="static-methods-1">Static methods</h2>
+turnOfTheCentury <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>Absolute</span><span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">2208988800000000000n</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// => 1900-01-01T00:00Z</span></code></pre><h2 id="static-methods">Static methods</h2>
 <h3 id="from"><a class="heading-link" href="#from"></a>Temporal.Absolute.<strong>from</strong>(<em>thing</em>: any) : Temporal.Absolute</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>thing</code>: The value representing the desired point in time.</li>
@@ -299,7 +299,7 @@ two <span class="token operator">=</span> Temporal<span class="token punctuation
 three <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Absolute<span class="token punctuation">.</span><span class="token function">fromEpochSeconds</span><span class="token punctuation">(</span><span class="token number">1.2e9</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 sorted <span class="token operator">=</span> <span class="token punctuation">[</span>three<span class="token punctuation">,</span> one<span class="token punctuation">,</span> two<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">sort</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>Absolute<span class="token punctuation">.</span>compare<span class="token punctuation">)</span><span class="token punctuation">;</span>
 sorted<span class="token punctuation">.</span><span class="token function">join</span><span class="token punctuation">(</span><span class="token string">' '</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token comment">// => 2001-09-09T01:46:40Z 2004-11-09T11:33:20Z 2008-01-10T21:20Z</span></code></pre><h2 id="methods-1">Methods</h2>
+<span class="token comment">// => 2001-09-09T01:46:40Z 2004-11-09T11:33:20Z 2008-01-10T21:20Z</span></code></pre><h2 id="methods">Methods</h2>
 <h3 id="getEpochSeconds"><a class="heading-link" href="#getEpochSeconds"></a>absolute.<strong>getEpochSeconds</strong>() : number</h3><p><strong>Returns:</strong> an integer number of seconds.</p>
 <p>Returns the number of seconds between the Unix epoch (midnight UTC on January 1, 1970) and <code>absolute</code>.
 This number will be negative if <code>absolute</code> is before 1970.
