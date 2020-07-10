@@ -512,7 +512,7 @@ export namespace Temporal {
     readonly calendar: CalendarProtocol;
     equals(other: Temporal.MonthDay): boolean;
     with(monthDayLike: MonthDayLike, options?: AssignmentOptions): Temporal.MonthDay;
-    toDateInYear(year: number | { era?: string | undefined; year: number }): Temporal.Date;
+    toDateInYear(year: number | { era?: string | undefined; year: number }, options?: AssignmentOptions): Temporal.Date;
     getFields(): MonthDayFields;
     getISOCalendarFields(): DateISOCalendarFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
