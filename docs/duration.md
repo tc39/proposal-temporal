@@ -256,7 +256,7 @@ result = oneAndAHalfYear.plus(oneAndAHalfYear)  // => P2Y12M
 result.with(result, { disambiguation: 'balance' })  // => P2Y12M
 // Example of custom conversion using ISO calendar rules:
 function monthsToYears(duration) {
-    const { years, months } = duration;
+    let { years, months } = duration;
     years += Math.floor(months / 12);
     months %= 12;
     return duration.with({ years, months });
