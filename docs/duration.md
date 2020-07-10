@@ -309,7 +309,7 @@ oneAndAHalfYear = Temporal.Duration.from({ years: 1, months: 6 });
 threeYears.minus(oneAndAHalfYear)  // throws; months are negative and cannot be balanced
 // Example of a custom conversion using ISO calendar rules:
 function yearsToMonths(duration) {
-    const { years, months } = duration;
+    let { years, months } = duration;
     months += years * 12;
     return duration.with({ years: 0, months });
 }
