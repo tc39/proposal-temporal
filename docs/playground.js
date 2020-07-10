@@ -6990,8 +6990,8 @@
         throw new TypeError('use equals() to compare Temporal.MonthDay');
       }
     }, {
-      key: "toDate",
-      value: function toDate(item) {
+      key: "toDateInYear",
+      value: function toDateInYear(item) {
         if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
         var era, year;
 
@@ -7940,8 +7940,8 @@
         throw new TypeError('use compare() or equals() to compare Temporal.YearMonth');
       }
     }, {
-      key: "toDate",
-      value: function toDate(day) {
+      key: "toDateOnDay",
+      value: function toDateOnDay(day) {
         if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
         var calendar = GetSlot(this, CALENDAR);
         var fields = ES.ToTemporalYearMonthRecord(this);

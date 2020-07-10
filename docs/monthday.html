@@ -174,7 +174,7 @@
 </li>
 <li><a href="#valueOf">valueOf</a>
 </li>
-<li><a href="#toDate">toDate</a>
+<li><a href="#toDateInYear">toDateInYear</a>
 </li>
 <li><a href="#getFields">getFields</a>
 </li>
@@ -188,7 +188,7 @@
 <p>A <code>Temporal.MonthDay</code> represents a particular day on the calendar, but without a year.
 For example, it could be used to represent a yearly recurring event, like &quot;Bastille Day is on the 14th of July.&quot;</p>
 <p>If you need to refer to a certain instance of a calendar event, in a particular year, use <code>Temporal.Date</code> or even <code>Temporal.DateTime</code>.
-A <code>Temporal.MonthDay</code> can be converted into a <code>Temporal.Date</code> by combining it with a year, using the <code>toDate()</code> method.</p>
+A <code>Temporal.MonthDay</code> can be converted into a <code>Temporal.Date</code> by combining it with a year, using the <code>toDateInYear()</code> method.</p>
 <h2 id="constructor-1">Constructor</h2>
 <h3 id="new-Temporal-MonthDay"><a class="heading-link" href="#new-Temporal-MonthDay"></a><strong>new Temporal.MonthDay</strong>(<em>isoMonth</em>: number, <em>isoDay</em>: number, <em>calendar</em>?: object, <em>refISOYear</em>?: number) : Temporal.MonthDay</h3><p><strong>Parameters:</strong></p>
 <ul>
@@ -298,7 +298,7 @@ The default is <code>constrain</code>.</li>
 <blockquote>
 <p><strong>NOTE</strong>: Unlike in <code>Temporal.Date.prototype.with()</code>, a <code>calendar</code> property is not allowed on <code>monthDayLike</code>.
 It is not possible to convert a <code>Temporal.MonthDay</code> to another calendar system without knowing the year.
-If you need to do this, use <code>monthDay.toDate(year).withCalendar(calendar).toMonthDay()</code>.</p>
+If you need to do this, use <code>monthDay.toDateInYear(year).withCalendar(calendar).toMonthDay()</code>.</p>
 </blockquote>
 <p>Usage example:</p>
 <pre class="language-javascript"><code class="language-javascript">md <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>MonthDay<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'11-15'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -362,7 +362,7 @@ console<span class="token punctuation">.</span><span class="token function">log<
 <span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span>str<span class="token punctuation">,</span> reviver<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre><h3 id="valueOf"><a class="heading-link" href="#valueOf"></a>monthDay.<strong>valueOf</strong>()</h3><p>This method overrides <code>Object.prototype.valueOf()</code> and always throws an exception.
 This is because it&#39;s not possible to compare <code>Temporal.MonthDay</code> objects with the relational operators <code>&lt;</code>, <code>&lt;=</code>, <code>&gt;</code>, or <code>&gt;=</code>.
 Instead, use <code>monthDay.equals()</code> to check for equality.</p>
-<h3 id="toDate"><a class="heading-link" href="#toDate"></a>monthDay.<strong>toDate</strong>(<em>year</em>: number | object) : Temporal.Date</h3><p><strong>Parameters:</strong></p>
+<h3 id="toDateInYear"><a class="heading-link" href="#toDateInYear"></a>monthDay.<strong>toDateInYear</strong>(<em>year</em>: number | object) : Temporal.Date</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>year</code> (number | object): A year, which must have a day corresponding to <code>monthDay</code>. Additionally, an object with a <code>&#39;year&#39;</code> property is also accepted.</li>
 </ul>
@@ -371,12 +371,12 @@ Instead, use <code>monthDay.equals()</code> to check for equality.</p>
 The converted object carries a copy of all the relevant fields of <code>monthDay</code>.</p>
 <p>Usage example:</p>
 <pre class="language-javascript"><code class="language-javascript">md <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>MonthDay<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'08-24'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-md<span class="token punctuation">.</span><span class="token function">toDate</span><span class="token punctuation">(</span><span class="token number">2017</span><span class="token punctuation">)</span>  <span class="token comment">// => 2017-08-24</span>
-md<span class="token punctuation">.</span><span class="token function">toDate</span><span class="token punctuation">(</span><span class="token punctuation">{</span> year<span class="token operator">:</span> <span class="token number">2017</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>  <span class="token comment">// equivalent to above</span>
+md<span class="token punctuation">.</span><span class="token function">toDateInYear</span><span class="token punctuation">(</span><span class="token number">2017</span><span class="token punctuation">)</span>  <span class="token comment">// => 2017-08-24</span>
+md<span class="token punctuation">.</span><span class="token function">toDateInYear</span><span class="token punctuation">(</span><span class="token punctuation">{</span> year<span class="token operator">:</span> <span class="token number">2017</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>  <span class="token comment">// equivalent to above</span>
 
 md <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>MonthDay<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'02-29'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-md<span class="token punctuation">.</span><span class="token function">toDate</span><span class="token punctuation">(</span><span class="token number">2017</span><span class="token punctuation">)</span>  <span class="token comment">// throws</span>
-md<span class="token punctuation">.</span><span class="token function">toDate</span><span class="token punctuation">(</span><span class="token number">2020</span><span class="token punctuation">)</span>  <span class="token comment">// => 2020-02-29</span></code></pre><p>In calendars where more information than just the year is needed to convert a <code>Temporal.MonthDay</code> to a <code>Temporal.Date</code>, you can pass an object to <code>toDate()</code> that contains the necessary properties.</p>
+md<span class="token punctuation">.</span><span class="token function">toDateInYear</span><span class="token punctuation">(</span><span class="token number">2017</span><span class="token punctuation">)</span>  <span class="token comment">// throws</span>
+md<span class="token punctuation">.</span><span class="token function">toDateInYear</span><span class="token punctuation">(</span><span class="token number">2020</span><span class="token punctuation">)</span>  <span class="token comment">// => 2020-02-29</span></code></pre><p>In calendars where more information than just the year is needed to convert a <code>Temporal.MonthDay</code> to a <code>Temporal.Date</code>, you can pass an object to <code>toDateInYear()</code> that contains the necessary properties.</p>
 <p>Example:</p>
 <pre class="language-javascript"><code class="language-javascript">md <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>MonthDay<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
   calendar<span class="token operator">:</span> <span class="token string">'japanese'</span><span class="token punctuation">,</span>
@@ -384,7 +384,7 @@ md<span class="token punctuation">.</span><span class="token function">toDate</s
   day<span class="token operator">:</span> <span class="token number">1</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-date <span class="token operator">=</span> md<span class="token punctuation">.</span><span class="token function">toDate</span><span class="token punctuation">(</span><span class="token punctuation">{</span> era<span class="token operator">:</span> <span class="token string">'reiwa'</span><span class="token punctuation">,</span> year<span class="token operator">:</span> <span class="token number">2</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre><h3 id="getFields"><a class="heading-link" href="#getFields"></a>monthDay.<strong>getFields</strong>() : { month: number, day: number, calendar: object, [propName: string]: unknown }</h3><p><strong>Returns:</strong> a plain object with properties equal to the fields of <code>monthDay</code>.</p>
+date <span class="token operator">=</span> md<span class="token punctuation">.</span><span class="token function">toDateInYear</span><span class="token punctuation">(</span><span class="token punctuation">{</span> era<span class="token operator">:</span> <span class="token string">'reiwa'</span><span class="token punctuation">,</span> year<span class="token operator">:</span> <span class="token number">2</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre><h3 id="getFields"><a class="heading-link" href="#getFields"></a>monthDay.<strong>getFields</strong>() : { month: number, day: number, calendar: object, [propName: string]: unknown }</h3><p><strong>Returns:</strong> a plain object with properties equal to the fields of <code>monthDay</code>.</p>
 <p>This method can be used to convert a <code>Temporal.MonthDay</code> into a record-like data structure.
 It returns a new plain JavaScript object, with all the fields as enumerable, writable, own data properties.</p>
 <p>Note that if using a different calendar from ISO 8601, these will be the calendar-specific values.</p>
