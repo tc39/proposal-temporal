@@ -249,10 +249,15 @@ This method overrides `Object.prototype.valueOf()` and always throws an exceptio
 This is because it's not possible to compare `Temporal.MonthDay` objects with the relational operators `<`, `<=`, `>`, or `>=`.
 Instead, use `monthDay.equals()` to check for equality.
 
-### monthDay.**toDateInYear**(_year_: number | object) : Temporal.Date
+### monthDay.**toDateInYear**(_year_: number | object, _options_?: object) : Temporal.Date
 
 **Parameters:**
 - `year` (number | object): A year, which must have a day corresponding to `monthDay`. Additionally, an object with a `'year'` property is also accepted.
+- `options` (optional object): An object with properties representing options for the operation.
+  The following options are recognized:
+  - `disambiguation` (string): How to deal with out-of-range values.
+    Allowed values are `constrain` and `reject`.
+    The default is `constrain`.
 
 **Returns:** a `Temporal.Date` object that represents the calendar date of `monthDay` in `year`.
 
@@ -266,8 +271,9 @@ md.toDateInYear(2017)  // => 2017-08-24
 md.toDateInYear({ year: 2017 })  // equivalent to above
 
 md = Temporal.MonthDay.from('02-29');
-md.toDateInYear(2017)  // throws
 md.toDateInYear(2020)  // => 2020-02-29
+md.toDateInYear(2017)  // => 2017-02-28
+md.toDateInYear(2017, { disambiguation: 'reject' })  // throws
 ```
 
 In calendars where more information than just the year is needed to convert a `Temporal.MonthDay` to a `Temporal.Date`, you can pass an object to `toDateInYear()` that contains the necessary properties.

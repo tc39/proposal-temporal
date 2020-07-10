@@ -91,7 +91,7 @@ export class MonthDay {
   valueOf() {
     throw new TypeError('use equals() to compare Temporal.MonthDay');
   }
-  toDateInYear(item) {
+  toDateInYear(item, options) {
     if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
     let era, year;
     if (typeof item === 'object' && item !== null) {
@@ -102,7 +102,7 @@ export class MonthDay {
     const calendar = GetSlot(this, CALENDAR);
     const fields = ES.ToTemporalMonthDayRecord(this);
     const Date = GetIntrinsic('%Temporal.Date%');
-    return calendar.dateFromFields({ ...fields, era, year }, { disambiguation: 'reject' }, Date);
+    return calendar.dateFromFields({ ...fields, era, year }, options, Date);
   }
   getFields() {
     const fields = ES.ToTemporalMonthDayRecord(this);

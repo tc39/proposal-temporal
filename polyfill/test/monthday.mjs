@@ -169,6 +169,15 @@ describe('MonthDay', () => {
       equal(`${md.toDateInYear('2002')}`, '2002-01-22');
       equal(`${md.toDateInYear(null)}`, '+000000-01-22');
     });
+    it("constrains if the MonthDay doesn't exist in the year", () => {
+      const leapDay = MonthDay.from('02-29');
+      equal(`${leapDay.toDateInYear(2019)}`, '2019-02-28');
+      equal(`${leapDay.toDateInYear(2019, { disambiguation: 'constrain' })}`, '2019-02-28');
+    });
+    it("can also reject if the MonthDay doesn't exist in the year", () => {
+      const leapDay = MonthDay.from('02-29');
+      throws(() => leapDay.toDateInYear(2019, { disambiguation: 'reject' }));
+    });
   });
   describe('monthDay.getFields() works', () => {
     const calendar = Temporal.Calendar.from('iso8601');
