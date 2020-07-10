@@ -3877,10 +3877,13 @@
       return "".concat(sign).concat(offsetHourString, ":").concat(offsetMinuteString);
     },
     GetEpochFromParts: function GetEpochFromParts(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond) {
-      var ms = Date.UTC(year, month - 1, day, hour, minute, second, millisecond);
-      if (Number.isNaN(ms)) return null; // Date.UTC interprets one and two-digit years as being in the 20th century
-
-      if (year >= 0 && year < 100) ms = new Date(ms).setUTCFullYear(year);
+      // Note: Date.UTC() interprets one and two-digit years as being in the
+      // 20th century, so don't use it
+      var legacyDate = new Date();
+      legacyDate.setUTCHours(hour, minute, second, millisecond);
+      legacyDate.setUTCFullYear(year, month - 1, day);
+      var ms = legacyDate.getTime();
+      if (Number.isNaN(ms)) return null;
       var ns = BigInteger(ms).multiply(1e6);
       ns = ns.plus(BigInteger(microsecond).multiply(1e3));
       ns = ns.plus(BigInteger(nanosecond));
