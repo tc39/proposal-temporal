@@ -1,4 +1,4 @@
-const IntlDateTimeFormat = Intl.DateTimeFormat;
+const IntlDateTimeFormat = globalThis.Intl.DateTimeFormat;
 const ObjectAssign = Object.assign;
 
 import bigInt from 'big-integer';

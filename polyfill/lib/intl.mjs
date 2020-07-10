@@ -18,7 +18,7 @@ const descriptor = (value) => {
   };
 };
 
-const IntlDateTimeFormat = Intl.DateTimeFormat;
+const IntlDateTimeFormat = globalThis.Intl.DateTimeFormat;
 const ObjectAssign = Object.assign;
 
 export function DateTimeFormat(locale = IntlDateTimeFormat().resolvedOptions().locale, options = {}) {
