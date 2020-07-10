@@ -45,6 +45,10 @@ class CustomRenderer extends marked.Renderer {
   heading(text, level, raw, slugger) {
     let id = this.options.headerPrefix + slugger.slug(raw); // marked.js default
 
+    // slugger increments it's internal 'seen' accumulator every time we call slug()
+    // we don't want that, we just want the slug output, this reverses the change
+    if (slugger.seen[id] === 0) delete slugger.seen[id];
+
     if (level !== 3) {
       this.toc.push({ id, level, raw });
       return super.heading(text, level, raw, slugger);
