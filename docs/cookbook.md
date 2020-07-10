@@ -21,6 +21,9 @@ How to get the current date and time in the local time zone?
 {{cookbook/getCurrentDate.mjs}}
 ```
 
+Note that if you just want the date and not the time, you should use `Temporal.Date`.
+If you want both, use `Temporal.DateTime`.
+
 ### Unix timestamp
 
 How to get a Unix timestamp?
