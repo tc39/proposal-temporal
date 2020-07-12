@@ -3063,7 +3063,7 @@
   var offset = /([+-])([0-2][0-9])(?::?([0-5][0-9]))?/;
   var duration = /P(?:(\d+)Y)?(?:(\d+)M)?(?:(\d+)W)?(?:(\d+)D)?(?:T(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)(?:[.,](\d{1,9}))?S)?)?/i;
 
-  var IntlDateTimeFormat = Intl.DateTimeFormat;
+  var IntlDateTimeFormat = globalThis.Intl.DateTimeFormat;
   var ObjectAssign = Object.assign;
   var DAYMILLIS = 86400000;
   var NS_MIN = BigInteger(-86400).multiply(1e17);
@@ -8107,7 +8107,7 @@
     };
   };
 
-  var IntlDateTimeFormat$1 = Intl.DateTimeFormat;
+  var IntlDateTimeFormat$1 = globalThis.Intl.DateTimeFormat;
   var ObjectAssign$5 = Object.assign;
   function DateTimeFormat() {
     var locale = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : IntlDateTimeFormat$1().resolvedOptions().locale;
