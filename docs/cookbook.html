@@ -254,9 +254,14 @@ Here&#39;s how they would look using Temporal.</p>
  *
  */</span>
 
-<span class="token keyword">const</span> dateTime <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">dateTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// Gets the current date</span>
-dateTime<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// returns the date in ISO 8601 date format</span>
-</code></pre><h3 id="unix-timestamp"><a class="heading-link" href="#unix-timestamp"></a>Unix timestamp</h3><p>How to get a Unix timestamp?</p>
+<span class="token keyword">const</span> date <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">date</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// Gets the current date</span>
+date<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// returns the date in ISO 8601 date format</span>
+
+<span class="token comment">// If you additionally want the time:</span>
+Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">dateTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// date and time in ISO 8601 format</span>
+</code></pre><p>Note that if you just want the date and not the time, you should use <code>Temporal.Date</code>.
+If you want both, use <code>Temporal.DateTime</code>.</p>
+<h3 id="unix-timestamp"><a class="heading-link" href="#unix-timestamp"></a>Unix timestamp</h3><p>How to get a Unix timestamp?</p>
 <pre class="language-javascript"><code class="language-javascript"><span class="token comment">/**
  * Get a (Unix) timestamp in JavaScript
  * This is the No.1 voted question on Stack Overflow for dates in JS
