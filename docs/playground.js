@@ -6991,7 +6991,7 @@
       }
     }, {
       key: "toDateInYear",
-      value: function toDateInYear(item) {
+      value: function toDateInYear(item, options) {
         if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
         var era, year;
 
@@ -7010,9 +7010,7 @@
         return calendar.dateFromFields(_objectSpread2(_objectSpread2({}, fields), {}, {
           era: era,
           year: year
-        }), {
-          disambiguation: 'reject'
-        }, Date);
+        }), options, Date);
       }
     }, {
       key: "getFields",
