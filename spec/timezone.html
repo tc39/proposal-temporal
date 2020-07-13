@@ -349,6 +349,16 @@
       </emu-alg>
     </emu-clause>
 
+    <emu-clause id="sec-temporal-getoffsetstringfor" aoid="GetOffsetStringFor">
+      <h1>GetOffsetStringFor ( _timeZone_, _absolute_ )</h1>
+      <emu-alg>
+        1. Let _getOffsetStringFor_ be ? Get(_timeZone_, *"getOffsetStringFor"*).
+        1. If _getOffsetStringFor_ is *undefined*, then
+          1. Set _getOffsetStringFor_ to %Temporal.TimeZone.prototype.getOffsetStringFor%.
+        1. Return ? ToString(? Call(_getOffsetStringFor_, _timeZone_, « _absolute_ »)).
+      </emu-alg>
+    </emu-clause>
+
     <emu-clause id="sec-temporal-gettemporaldatetimefor" aoid="GetTemporalDateTimeFor">
       <h1>GetTemporalDateTimeFor ( _timeZone_, _absolute_ )</h1>
       <emu-alg>
@@ -370,6 +380,16 @@
         1. For each _absolute_ in _list_ in List order, do
           1. Perform ? RequireInternalSlot(_absolute_, [[InitializedTemporalAbsolute]]).
         1. Return _list_.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-timezonetostring" aoid="TimeZoneToString">
+      <h1>TimeZoneToString ( _timeZone_ )</h1>
+      <emu-alg>
+        1. Let _toString_ be ? Get(_timeZone_, *"toString"*).
+        1. If _toString_ is *undefined*, then
+          1. Set _toString_ to %Temporal.TimeZone.prototype.toString%.
+        1. Return be ? ToString(? Call(_toString_, _timeZone_, « »)).
       </emu-alg>
     </emu-clause>
   </emu-clause>
