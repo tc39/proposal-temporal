@@ -316,6 +316,16 @@
       </emu-alg>
     </emu-clause>
 
+    <emu-clause id="sec-temporal-totemporaltimezone" aoid="ToTemporalTimeZone">
+      <h1>ToTemporalTimeZone ( _temporalTimeZoneLike_ )</h1>
+      <emu-alg>
+        1. If Type(_temporalTimeZoneLike_) is Object, then
+          1. Return _temporalTimeZoneLike_.
+        1. Let _identifier_ be ? ToString(_temporalTimeZoneLike_).
+        1. Return ? TimeZoneFrom(_identifier_).
+      </emu-alg>
+    </emu-clause>
+
     <emu-clause id="sec-temporal-timezonefrom" aoid="TimeZoneFrom">
       <h1>TimeZoneFrom ( _identifier_ )</h1>
       <emu-alg>
@@ -336,6 +346,18 @@
         1. If _offsetNanoseconds_ is not an integer Number value between &minus;86400 &times; 10<sup>9</sup> and 86400 &times; 10<sup>9</sup> exclusive, then
           1. Throw a *RangeError* exception.
         1. Return _offsetNanoseconds_.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-gettemporaldatetimefor" aoid="GetTemporalDateTimeFor">
+      <h1>GetTemporalDateTimeFor ( _timeZone_, _absolute_ )</h1>
+      <emu-alg>
+        1. Let _getDateTimeFor_ be ? Get(_timeZone_, *"getDateTimeFor"*).
+        1. If _getDateTimeFor_ is *undefined*, then
+          1. Set _getDateTimeFor_ to %Temporal.TimeZone.prototype.getDateTimeFor%.
+        1. Let _dateTime_ be ? Call(_getDateTimeFor_, _timeZone_, « _absolute_ »).
+        1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
+        1. Return _dateTime_.
       </emu-alg>
     </emu-clause>
 

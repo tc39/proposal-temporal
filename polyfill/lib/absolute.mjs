@@ -158,10 +158,8 @@ export class Absolute {
   }
   toDateTime(temporalTimeZoneLike, calendar = undefined) {
     if (!ES.IsTemporalAbsolute(this)) throw new TypeError('invalid receiver');
-    const TemporalTimeZone = GetIntrinsic('%Temporal.TimeZone%');
-    const timeZone = TemporalTimeZone.from(temporalTimeZoneLike);
-    if (typeof timeZone.getDateTimeFor === 'function') return timeZone.getDateTimeFor(this, calendar);
-    return TemporalTimeZone.prototype.getDateTimeFor.call(timeZone, this, calendar);
+    const timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);
+    return ES.GetTemporalDateTimeFor(timeZone, this, calendar);
   }
 
   static fromEpochSeconds(epochSeconds) {
