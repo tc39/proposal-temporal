@@ -76,6 +76,10 @@ export function MakeIntrinsicClass(Class, name) {
   INTRINSICS[`%${name}%`] = Class;
 }
 
+export function DefineIntrinsic(name, value) {
+  INTRINSICS[`%${name}%`] = value;
+}
+
 export function GetIntrinsic(intrinsic) {
   return intrinsic in INTRINSICS ? INTRINSICS[intrinsic] : ESGetIntrinsic(intrinsic);
 }

@@ -320,6 +320,8 @@
       <h1>TimeZoneFrom ( _identifier_ )</h1>
       <emu-alg>
         1. Let _from_ be ? Get(%Temporal.TimeZone%, *"from"*).
+        1. If _from_ is *undefined*, then
+          1. Set _from_ to %Temporal.TimeZone.from%.
         1. Return ? Call(_from_, %Temporal.TimeZone%, « _identifier_ »).
       </emu-alg>
     </emu-clause>
