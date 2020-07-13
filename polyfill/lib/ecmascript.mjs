@@ -1418,14 +1418,35 @@ export const ES = ObjectAssign({}, ES2019, {
     return result;
   },
   ToBigInt: (arg) => {
-    if (bigInt.isInstance(arg)) return arg;
+    if (bigInt.isInstance(arg)) {
+      return arg;
+    }
+
     const prim = ES.ToPrimitive(arg, Number);
-    if (typeof prim === 'number') throw new TypeError('Use BigInt() to convert Number to BigInt');
-    try {
-      return bigInt(prim);
-    } catch (e) {
-      if (e instanceof Error && e.message.startsWith('Invalid integer')) throw new SyntaxError(e.message);
-      throw e;
+    switch (typeof prim) {
+      case 'undefined':
+      case 'object':
+      case 'number':
+      case 'symbol':
+        throw new TypeError(`cannot convert ${typeof arg} to bigint`);
+      case 'string':
+        if (!prim.match(/^\s*(?:[+-]?\d+\s*)?$/)) {
+          throw new SyntaxError('invalid BigInt syntax');
+        }
+      // eslint: no-fallthrough: false
+      case 'bigint':
+        try {
+          return bigInt(prim);
+        } catch (e) {
+          if (e instanceof Error && e.message.startsWith('Invalid integer')) throw new SyntaxError(e.message);
+          throw e;
+        }
+      case 'boolean':
+        if (prim) {
+          return bigInt(1);
+        } else {
+          return bigInt(0);
+        }
     }
   },
 
