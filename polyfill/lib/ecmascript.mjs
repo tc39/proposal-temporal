@@ -561,6 +561,20 @@ export const ES = ObjectAssign({}, ES2019, {
     }
     return ES.Call(from, TemporalTimeZone, [temporalTimeZoneLike]);
   },
+  ToTemporalTimeZone: (temporalTimeZoneLike) => {
+    if (typeof temporalTimeZoneLike === 'object' && temporalTimeZoneLike) {
+      return temporalTimeZoneLike;
+    }
+    const identifier = ES.ToString(temporalTimeZoneLike);
+    return ES.TimeZoneFrom(identifier);
+  },
+  GetTemporalDateTimeFor: (timeZone, absolute, calendar) => {
+    let getDateTimeFor = timeZone.getDateTimeFor;
+    if (getDateTimeFor === undefined) {
+      getDateTimeFor = GetIntrinsic('%Temporal.TimeZone.prototype.getDateTimeFor%');
+    }
+    return ES.Call(getDateTimeFor, timeZone, [absolute, calendar]);
+  },
   ISOTimeZoneString: (timeZone, absolute) => {
     let offset;
     if (typeof timeZone.getOffsetStringFor === 'function') {
