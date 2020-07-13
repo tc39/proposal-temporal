@@ -5,12 +5,12 @@
 
   <emu-clause id="sec-temporal-date-constructor">
     <h1>The Temporal.Date Constructor</h1>
-    <p>The Temporal.Date constructor is the %Temporal.Date% intrinsic object. When called as a constructor, it creates and
-      initializes a new Temporal.Date object.</p>
-    <p>
-      The Temporal.Date constructor is designed to be subclassable.
-      It may be used as the value of an extends clause of a class definition.
-      Subclass constructors that intend to inherit the specified Date behaviour must include a super call to the %Temporal.Date% constructor to create and initialize subclass instances with the necessary internal slots.</p>
+    <p>The Temporal.Date constructor:</p>
+    <ul>
+      <li>is the intrinsic object <dfn>%Temporal.Date%</dfn>.</li>
+      <li>creates and initializes a new Temporal.Date object when called as a constructor.</li>
+      <li>is designed to be subclassable. It may be used as the value of an `extends` clause of a class definition. Subclass constructors that intend to inherit the specified Temporal.Date behaviour must include a super call to the %Temporal.Date% constructor to create and initialize subclass instances with the necessary internal slots.</li>
+    </ul>
 
     <emu-clause id="sec-temporal.date">
       <h1>Temporal.Date ( _isoYear_, _isoMonth_, _isoDay_ )</h1>
@@ -30,9 +30,11 @@
 
   <emu-clause id="sec-properties-of-the-temporal-date-constructor">
     <h1>Properties of the Temporal.Date Constructor</h1>
-    <p>The value of the [[Prototype]] internal slot of the Temporal.Date constructor is the intrinsic object
-      %FunctionPrototype%.</p>
-    <p>The Temporal.Date constructor has the following properties:</p>
+    <p>The Temporal.Date constructor:</p>
+    <ul>
+      <li>has a [[Prototype]] internal slot whose value is %FunctionPrototype%.</li>
+      <li>has the following properties:</li>
+    </ul>
 
     <emu-clause id="sec-temporal-date-prototype">
       <h1>Temporal.Date.prototype</h1>
@@ -40,7 +42,7 @@
       <p>This property has the attributes { [[Writable]]: *false*, [[Enumerable]]: *false*, [[Configurable]]: *false* }.</p>
     </emu-clause>
 
-    <emu-clause id="sec-get-temporal.date-@@species">
+    <emu-clause id="sec-get-temporal-date-@@species">
       <h1>get Temporal.Date [ @@species ]</h1>
       <p>
         `Temporal.Date[@@species]` is an accessor property whose set accessor function is *undefined*.
@@ -468,7 +470,7 @@
   </emu-clause>
 
   <emu-clause id="sec-temporal-date-abstract-ops">
-    <h1>Abstract operations</h1>
+    <h1>Abstract Operations for Temporal.Date Objects</h1>
 
     <emu-clause id="sec-temporal-createtemporaldate" aoid="CreateTemporalDate">
       <h1>CreateTemporalDate ( _isoYear_, _isoMonth_, _isoDay_ [ , _newTarget_ ] )</h1>
@@ -546,7 +548,7 @@
           1. Set _years_ to _balanceResult_.[[Years]].
           1. Set _months_ to _balanceResult_.[[Months]].
           1. Set _days_ to ! ToDayOfYear(_greater_.[[ISOYear]], _greater_.[[ISOMonth]], _greater_.[[ISODay]]) &minus; ! ToDayOfYear(_balanceResult_.[[Year]], _balanceResult_.[[Month]], _smaller_.[[ISODay]]).
-          1. If _greater_.[[ISOYear]] > _balanceResult_.[[Year]], then
+          1. If _greater_.[[ISOYear]] &gt; _balanceResult_.[[Year]], then
             1. Set _days_ to _days_ + ! DaysInYear(_balanceResult_.[[Year]]).
         1. If _largestUnit_ is `"months"`, then
           1. Set _months_ to _years_ &times; 12.
