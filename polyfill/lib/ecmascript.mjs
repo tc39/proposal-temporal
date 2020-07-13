@@ -568,6 +568,13 @@ export const ES = ObjectAssign({}, ES2019, {
     const identifier = ES.ToString(temporalTimeZoneLike);
     return ES.TimeZoneFrom(identifier);
   },
+  GetOffsetStringFor: (timeZone, absolute) => {
+    let getOffsetStringFor = timeZone.getOffsetStringFor;
+    if (getOffsetStringFor === undefined) {
+      getOffsetStringFor = GetIntrinsic('%Temporal.TimeZone.prototype.getOffsetStringFor%');
+    }
+    return ES.ToString(ES.Call(getOffsetStringFor, timeZone, [absolute]));
+  },
   GetTemporalDateTimeFor: (timeZone, absolute, calendar) => {
     let getDateTimeFor = timeZone.getDateTimeFor;
     if (getDateTimeFor === undefined) {
@@ -575,27 +582,26 @@ export const ES = ObjectAssign({}, ES2019, {
     }
     return ES.Call(getDateTimeFor, timeZone, [absolute, calendar]);
   },
+  TimeZoneToString: (timeZone) => {
+    let toString = timeZone.toString;
+    if (toString === undefined) {
+      toString = GetIntrinsic('%Temporal.TimeZone.prototype.toString%');
+    }
+    return ES.ToString(ES.Call(toString, timeZone));
+  },
   ISOTimeZoneString: (timeZone, absolute) => {
-    let offset;
-    if (typeof timeZone.getOffsetStringFor === 'function') {
-      offset = timeZone.getOffsetStringFor(absolute);
-    } else {
-      const TemporalTimeZone = GetIntrinsic('%Temporal.TimeZone%');
-      offset = TemporalTimeZone.prototype.getOffsetStringFor.call(timeZone, absolute);
+    const name = ES.TimeZoneToString(timeZone);
+    const offset = ES.GetOffsetStringFor(timeZone, absolute);
+
+    if (name === 'UTC') {
+      return 'Z';
     }
-    let timeZoneString;
-    switch (true) {
-      case 'UTC' === timeZone.name:
-        timeZoneString = 'Z';
-        break;
-      case timeZone.name === offset:
-        timeZoneString = offset;
-        break;
-      default:
-        timeZoneString = `${offset}[${timeZone.toString()}]`;
-        break;
+
+    if (name === offset) {
+      return offset;
     }
-    return timeZoneString;
+
+    return `${offset}[${name}]`;
   },
   ISOYearString: (year) => {
     let yearString;
@@ -621,13 +627,7 @@ export const ES = ObjectAssign({}, ES2019, {
     return `:${secs}${post}`;
   },
   TemporalAbsoluteToString: (absolute, timeZone) => {
-    let dateTime;
-    if (typeof timeZone.getDateTimeFor === 'function') {
-      dateTime = timeZone.getDateTimeFor(absolute);
-    } else {
-      const TemporalTimeZone = GetIntrinsic('%Temporal.TimeZone%');
-      dateTime = TemporalTimeZone.prototype.getDateTimeFor.call(timeZone, absolute);
-    }
+    const dateTime = ES.GetTemporalDateTimeFor(timeZone, absolute);
     const year = ES.ISOYearString(dateTime.year);
     const month = ES.ISODateTimePartString(dateTime.month);
     const day = ES.ISODateTimePartString(dateTime.day);

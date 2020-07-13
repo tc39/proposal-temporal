@@ -320,7 +320,7 @@
         1. If _temporalTimeZoneLike_ is *undefined*, then
           1. Set _temporalTimeZoneLike_ to *"UTC"*.
         1. Let _timeZone_ be ? ToTemporalTimeZone(_temporalTimeZoneLike_).
-        1. Return ! TemporalAbsoluteToString(_absolute_, _timeZone_).
+        1. Return ? TemporalAbsoluteToString(_absolute_, _timeZone_).
       </emu-alg>
     </emu-clause>
 
@@ -335,7 +335,7 @@
         1. Perform ? RequireInternalSlot(_absolute_, [[InitializedTemporalAbsolute]]).
         1. If the implementation does not include the ECMA-402 Internationalization API, then
           1. Let _timeZone_ be ? CreateTemporalTimeZone(*"UTC"*).
-          1. Return ! TemporalAbsoluteToString(_absolute_, _timeZone_).
+          1. Return ? TemporalAbsoluteToString(_absolute_, _timeZone_).
         1. Let _dateFormat_ be ? Construct(%DateTimeFormat%, « _locales_, _options_ »).
         1. Return ? FormatDateTime(_dateFormat_, _absolute_).
       </emu-alg>
@@ -350,7 +350,7 @@
         1. Let _absolute_ be the *this* value.
         1. Perform ? RequireInternalSlot(_absolute_, [[InitializedTemporalAbsolute]]).
         1. Let _timeZone_ be ? CreateTemporalTimeZone(*"UTC"*).
-        1. Return ! TemporalAbsoluteToString(_absolute_, _timeZone_).
+        1. Return ? TemporalAbsoluteToString(_absolute_, _timeZone_).
       </emu-alg>
     </emu-clause>
 
@@ -470,12 +470,26 @@
       <emu-alg>
         1. Assert: Type(_absolute_) is Object.
         1. Assert: _absolute_ has an [[InitializedTemporalAbsolute]] internal slot.
-        1. Assert: Type(_timeZone_) is Object.
-        1. Assert: _timeZone_ has an [[InitializedTemporalTimeZone]] internal slot.
         1. Let _dateTime_ be ? GetTemporalDateTimeFor(_timeZone_, _absolute_).
         1. Let _dateTimeString_ be ! TemporalDateTimeToString(_dateTime_).
         1. Let _timeZoneString_ be ? ISOTimeZoneString(_timeZone_, _absolute_).
         1. Return the string-concatenation of _dateTimeString_ and _timeZoneString_.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-isotimezonestring" aoid="ISOTimeZoneString">
+      <h1>ISOTimeZoneString ( _absolute_, _timeZone_ )</h1>
+      <emu-alg>
+        1. Assert: Type(_absolute_) is Object.
+        1. Assert: _absolute_ has an [[InitializedTemporalAbsolute]] internal slot.
+        1. Assert?: Type(_timeZone_) is Object.
+        1. Let _name_ be ? TimeZoneToString(_timeZone_).
+        1. Let _offset_ be ? GetOffsetStringFor(_timeZone_, _absolute_).
+        1. If _name_ is *"UTC"*, then
+          1. Return  *"Z"*.
+        1. If _name_ is _offset_, then
+          1. Return _offset_.
+        1. Return the string-concatenation of _offset_, *"["*, _name_, and *"]"*.
       </emu-alg>
     </emu-clause>
   </emu-clause>

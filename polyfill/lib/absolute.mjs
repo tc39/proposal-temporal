@@ -139,8 +139,7 @@ export class Absolute {
   }
   toString(temporalTimeZoneLike = 'UTC') {
     if (!ES.IsTemporalAbsolute(this)) throw new TypeError('invalid receiver');
-    const TemporalTimeZone = GetIntrinsic('%Temporal.TimeZone%');
-    const timeZone = TemporalTimeZone.from(temporalTimeZoneLike);
+    const timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);
     return ES.TemporalAbsoluteToString(this, timeZone);
   }
   toJSON() {
