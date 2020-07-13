@@ -73,11 +73,10 @@
         The following steps are taken:
       </p>
       <emu-alg>
-        1. If Type(_item_) is Object and _item_ has an [[InitializedTemporalTimeZone]] internal slot, then
-          1. Let _result_ be _item_.[[Identifier]].
-        1. Else,
-          1. Let _string_ be ? ToString(_item_).
-          1. Let _result_ be ? ParseTemporalTimeZone(_string_).
+        1. If Type(_item_) is Object, then
+          1. Return _item_.
+        1. Let _string_ be ? ToString(_item_).
+        1. Let _result_ be ? ParseTemporalTimeZone(_string_).
         1. Let _constructor_ be the *this* value.
         1. Return ? CreateTemporalTimeZoneFromStatic(_constructor_, _result_).
       </emu-alg>
