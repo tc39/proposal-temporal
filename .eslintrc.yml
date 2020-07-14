@@ -95,6 +95,7 @@ overrides:
     # test262 code complies to a different coding style
     extends: 'eslint:recommended'
     rules:
+      brace-style: 'off'
       comma-dangle: 'off'
       function-call-argument-newline: 'off'
       max-len: 'off'
