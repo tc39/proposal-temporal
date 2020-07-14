@@ -468,16 +468,11 @@ export const ES = ObjectAssign({}, ES2019, {
     return ES.GetOption(options, 'disambiguation', ['balanceConstrain', 'balance'], 'balanceConstrain');
   },
   ToLargestTemporalUnit: (options, fallback, disallowedStrings = []) => {
-    const largestUnit = ES.GetOption(
-      options,
-      'largestUnit',
-      ['years', 'months', 'weeks', 'days', 'hours', 'minutes', 'seconds'],
-      fallback
-    );
-    if (disallowedStrings.includes(largestUnit)) {
-      throw new RangeError(`${largestUnit} not allowed as the largest unit here`);
+    const allowed = new Set(['years', 'months', 'weeks', 'days', 'hours', 'minutes', 'seconds']);
+    for (const s of disallowedStrings) {
+      allowed.delete(s);
     }
-    return largestUnit;
+    return ES.GetOption(options, 'largestUnit', [...allowed], fallback);
   },
   ToPartialRecord: (bag, fields) => {
     if (!bag || 'object' !== typeof bag) return false;
