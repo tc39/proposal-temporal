@@ -308,9 +308,12 @@ A difference of two hours will become 7200 seconds when `largestUnit` is `"secon
 However, a difference of 30 seconds will still be 30 seconds even if `largestUnit` is `"hours"`.
 
 By default, the largest unit in the result is seconds.
-Unlike other Temporal types, months and years are not allowed.
-This is because in the ISO calendar, months and years can be different lengths depending on which month is meant and whether the year is a leap year.
-`Temporal.Absolute` is intended to be calendar-independent and therefore free of these ambiguities.
+Weeks, months and years are not allowed, unlike the difference methods of the other Temporal types.
+This is because months and years can be different lengths depending on which month is meant, and whether the year is a leap year, which all depends on the start and end date of the difference.
+You cannot determine the start and end date of a difference between `Temporal.Absolute`s, because `Temporal.Absolute` has no time zone or calendar.
+
+If you do need to calculate the difference between two `Temporal.Absolute`s in years, months, or weeks, then you can make an explicit choice on how to eliminate this ambiguity, choosing your starting point by converting to a `Temporal.DateTime`.
+For example, you might decide to base the calculation on your user's current time zone, or on UTC.
 
 Example usage:
 ```js
@@ -330,9 +333,8 @@ billion.difference(epoch);  // => PT1000000000S
 billion.difference(epoch, { largestUnit: 'hours' })  // => PT277777H46M40S
 billion.difference(epoch, { largestUnit: 'days' })  // => P11574DT1H46M40S
 
-// If you really need to calculate the difference between two Absolutes
-// in years, you can eliminate the ambiguity by choosing your starting
-// point explicitly. For example, using the corresponding UTC date:
+// Calculate the difference in years, eliminating the ambiguity by
+// explicitly using the corresponding calendar date in UTC:
 utc = Temporal.TimeZone.from('UTC');
 billion.toDateTime(utc).difference(epoch.toDateTime(utc), { largestUnit: 'years' });
   // => P31Y8M8DT1H46M40S
