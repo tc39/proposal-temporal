@@ -221,8 +221,20 @@
     return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest();
   }
 
+  function _toConsumableArray(arr) {
+    return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();
+  }
+
+  function _arrayWithoutHoles(arr) {
+    if (Array.isArray(arr)) return _arrayLikeToArray(arr);
+  }
+
   function _arrayWithHoles(arr) {
     if (Array.isArray(arr)) return arr;
+  }
+
+  function _iterableToArray(iter) {
+    if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter);
   }
 
   function _iterableToArrayLimit(arr, i) {
@@ -267,6 +279,10 @@
     for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];
 
     return arr2;
+  }
+
+  function _nonIterableSpread() {
+    throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
   }
 
   function _nonIterableRest() {
@@ -3626,24 +3642,34 @@
     },
     ToLargestTemporalUnit: function ToLargestTemporalUnit(options, fallback) {
       var disallowedStrings = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
-      var largestUnit = ES.GetOption(options, 'largestUnit', ['years', 'months', 'weeks', 'days', 'hours', 'minutes', 'seconds'], fallback);
+      var allowed = new Set(['years', 'months', 'weeks', 'days', 'hours', 'minutes', 'seconds']);
 
-      if (disallowedStrings.includes(largestUnit)) {
-        throw new RangeError("".concat(largestUnit, " not allowed as the largest unit here"));
+      var _iterator3 = _createForOfIteratorHelper(disallowedStrings),
+          _step3;
+
+      try {
+        for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
+          var s = _step3.value;
+          allowed.delete(s);
+        }
+      } catch (err) {
+        _iterator3.e(err);
+      } finally {
+        _iterator3.f();
       }
 
-      return largestUnit;
+      return ES.GetOption(options, 'largestUnit', _toConsumableArray(allowed), fallback);
     },
     ToPartialRecord: function ToPartialRecord(bag, fields) {
       if (!bag || 'object' !== _typeof(bag)) return false;
       var any;
 
-      var _iterator3 = _createForOfIteratorHelper(fields),
-          _step3;
+      var _iterator4 = _createForOfIteratorHelper(fields),
+          _step4;
 
       try {
-        for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
-          var property = _step3.value;
+        for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
+          var property = _step4.value;
           var value = bag[property];
 
           if (value !== undefined) {
@@ -3661,9 +3687,9 @@
           }
         }
       } catch (err) {
-        _iterator3.e(err);
+        _iterator4.e(err);
       } finally {
-        _iterator3.f();
+        _iterator4.f();
       }
 
       return any ? any : false;
@@ -3672,12 +3698,12 @@
       if (!bag || 'object' !== _typeof(bag)) return false;
       var result = {};
 
-      var _iterator4 = _createForOfIteratorHelper(fields),
-          _step4;
+      var _iterator5 = _createForOfIteratorHelper(fields),
+          _step5;
 
       try {
-        for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
-          var fieldRecord = _step4.value;
+        for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {
+          var fieldRecord = _step5.value;
 
           var _fieldRecord = _slicedToArray(fieldRecord, 2),
               property = _fieldRecord[0],
@@ -3704,9 +3730,9 @@
           }
         }
       } catch (err) {
-        _iterator4.e(err);
+        _iterator5.e(err);
       } finally {
-        _iterator4.f();
+        _iterator5.f();
       }
 
       return result;
