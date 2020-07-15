@@ -25,17 +25,21 @@ A cookbook to help you get started and learn the ins and outs of Temporal is ava
 
 ## API Documentation
 
+### **Temporal.now**
+
+ * `Temporal.now.absolute()` - get the current system absolute time
+ * `Temporal.now.timeZone()` - get the current system time zone
+ * `Temporal.now.dateTime()` - get the current system date/time
+ * `Temporal.now.time()` - get the current system time
+ * `Temporal.now.date()` - get the current system date
+
+See [Temporal.now Documentation](./now.md) for more detailed documentation.
+
 ### **Temporal.Absolute**
 
 A `Temporal.Absolute` represents a fixed point in time, without regard to calendar or location.
 
 See [Temporal.Absolute Documentation](./absolute.md) for more detailed documentation.
-
-### **Temporal.TimeZone**
-
-A `Temporal.TimeZone` represents an IANA time zone, a specific UTC offset or UTC itself. Because of this `Temporal.TimeZone` can be used to convert between `Temporal.Absolute` and `Temporal.DateTime` as well as finding out the offset at a specific `Temporal.Absolute`.
-
-See [Temporal.TimeZone Documentation](./timezone.md) for more detailed documentation.
 
 ### **Temporal.DateTime**
 
@@ -77,15 +81,11 @@ A `Temporal.Duration` expresses a length of time. This is used for date/time mat
 
 See [Temporal.Duration Documentation](./duration.md) for more detailed documentation.
 
-### **Temporal.now**
+### **Temporal.TimeZone**
 
- * `Temporal.now.absolute()` - get the current system absolute time
- * `Temporal.now.timeZone()` - get the current system time zone
- * `Temporal.now.dateTime()` - get the current system date/time
- * `Temporal.now.time()` - get the current system time
- * `Temporal.now.date()` - get the current system date
+A `Temporal.TimeZone` represents an IANA time zone, a specific UTC offset or UTC itself. Because of this `Temporal.TimeZone` can be used to convert between `Temporal.Absolute` and `Temporal.DateTime` as well as finding out the offset at a specific `Temporal.Absolute`.
 
-See [Temporal.now Documentation](./now.md) for more detailed documentation.
+See [Temporal.TimeZone Documentation](./timezone.md) for more detailed documentation.
 
 ### **Temporal.Calendar**
 
