@@ -3771,7 +3771,7 @@
     ISODateTimePartString: function ISODateTimePartString(part) {
       return "00".concat(part).slice(-2);
     },
-    ISOSecondsString: function ISOSecondsString(seconds, millis, micros, nanos) {
+    FormatSecondsStringPart: function FormatSecondsStringPart(seconds, millis, micros, nanos) {
       if (!seconds && !millis && !micros && !nanos) return '';
       var parts = [];
       if (nanos) parts.unshift("000".concat(nanos || 0).slice(-3));
@@ -3779,7 +3779,7 @@
       if (millis || parts.length) parts.unshift("000".concat(millis || 0).slice(-3));
       var secs = "00".concat(seconds).slice(-2);
       var post = parts.length ? ".".concat(parts.join('')) : '';
-      return "".concat(secs).concat(post);
+      return ":".concat(secs).concat(post);
     },
     TemporalAbsoluteToString: function TemporalAbsoluteToString(absolute, timeZone) {
       var dateTime;
@@ -3796,9 +3796,9 @@
       var day = ES.ISODateTimePartString(dateTime.day);
       var hour = ES.ISODateTimePartString(dateTime.hour);
       var minute = ES.ISODateTimePartString(dateTime.minute);
-      var seconds = ES.ISOSecondsString(dateTime.second, dateTime.millisecond, dateTime.microsecond, dateTime.nanosecond);
+      var seconds = ES.FormatSecondsStringPart(dateTime.second, dateTime.millisecond, dateTime.microsecond, dateTime.nanosecond);
       var timeZoneString = ES.ISOTimeZoneString(timeZone, absolute);
-      return "".concat(year, "-").concat(month, "-").concat(day, "T").concat(hour, ":").concat(minute).concat(seconds ? ":".concat(seconds) : '').concat(timeZoneString);
+      return "".concat(year, "-").concat(month, "-").concat(day, "T").concat(hour, ":").concat(minute).concat(seconds).concat(timeZoneString);
     },
     TemporalDurationToString: function TemporalDurationToString(duration) {
       function formatNumber(num) {
@@ -6247,9 +6247,9 @@
         var day = ES.ISODateTimePartString(GetSlot(this, ISO_DAY));
         var hour = ES.ISODateTimePartString(GetSlot(this, HOUR));
         var minute = ES.ISODateTimePartString(GetSlot(this, MINUTE));
-        var second = ES.ISOSecondsString(GetSlot(this, SECOND), GetSlot(this, MILLISECOND), GetSlot(this, MICROSECOND), GetSlot(this, NANOSECOND));
+        var seconds = ES.FormatSecondsStringPart(GetSlot(this, SECOND), GetSlot(this, MILLISECOND), GetSlot(this, MICROSECOND), GetSlot(this, NANOSECOND));
         var calendar = ES.FormatCalendarAnnotation(GetSlot(this, CALENDAR));
-        var resultString = "".concat(year, "-").concat(month, "-").concat(day, "T").concat(hour, ":").concat(minute).concat(second ? ":".concat(second) : '').concat(calendar);
+        var resultString = "".concat(year, "-").concat(month, "-").concat(day, "T").concat(hour, ":").concat(minute).concat(seconds).concat(calendar);
         return resultString;
       }
     }, {
@@ -7340,8 +7340,8 @@
         if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
         var hour = ES.ISODateTimePartString(GetSlot(this, HOUR));
         var minute = ES.ISODateTimePartString(GetSlot(this, MINUTE));
-        var seconds = ES.ISOSecondsString(GetSlot(this, SECOND), GetSlot(this, MILLISECOND), GetSlot(this, MICROSECOND), GetSlot(this, NANOSECOND));
-        var resultString = "".concat(hour, ":").concat(minute).concat(seconds ? ":".concat(seconds) : '');
+        var seconds = ES.FormatSecondsStringPart(GetSlot(this, SECOND), GetSlot(this, MILLISECOND), GetSlot(this, MICROSECOND), GetSlot(this, NANOSECOND));
+        var resultString = "".concat(hour, ":").concat(minute).concat(seconds);
         return resultString;
       }
     }, {
