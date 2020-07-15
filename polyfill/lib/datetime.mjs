@@ -440,14 +440,14 @@ export class DateTime {
     let day = ES.ISODateTimePartString(GetSlot(this, ISO_DAY));
     let hour = ES.ISODateTimePartString(GetSlot(this, HOUR));
     let minute = ES.ISODateTimePartString(GetSlot(this, MINUTE));
-    let second = ES.ISOSecondsString(
+    let seconds = ES.FormatSecondsStringPart(
       GetSlot(this, SECOND),
       GetSlot(this, MILLISECOND),
       GetSlot(this, MICROSECOND),
       GetSlot(this, NANOSECOND)
     );
     const calendar = ES.FormatCalendarAnnotation(GetSlot(this, CALENDAR));
-    let resultString = `${year}-${month}-${day}T${hour}:${minute}${second ? `:${second}` : ''}${calendar}`;
+    let resultString = `${year}-${month}-${day}T${hour}:${minute}${seconds}${calendar}`;
     return resultString;
   }
   toLocaleString(...args) {

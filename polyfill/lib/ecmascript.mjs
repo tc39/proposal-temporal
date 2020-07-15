@@ -591,7 +591,7 @@ export const ES = ObjectAssign({}, ES2019, {
     return yearString;
   },
   ISODateTimePartString: (part) => `00${part}`.slice(-2),
-  ISOSecondsString: (seconds, millis, micros, nanos) => {
+  FormatSecondsStringPart: (seconds, millis, micros, nanos) => {
     if (!seconds && !millis && !micros && !nanos) return '';
 
     let parts = [];
@@ -600,7 +600,7 @@ export const ES = ObjectAssign({}, ES2019, {
     if (millis || parts.length) parts.unshift(`000${millis || 0}`.slice(-3));
     let secs = `00${seconds}`.slice(-2);
     let post = parts.length ? `.${parts.join('')}` : '';
-    return `${secs}${post}`;
+    return `:${secs}${post}`;
   },
   TemporalAbsoluteToString: (absolute, timeZone) => {
     let dateTime;
@@ -615,14 +615,14 @@ export const ES = ObjectAssign({}, ES2019, {
     const day = ES.ISODateTimePartString(dateTime.day);
     const hour = ES.ISODateTimePartString(dateTime.hour);
     const minute = ES.ISODateTimePartString(dateTime.minute);
-    const seconds = ES.ISOSecondsString(
+    const seconds = ES.FormatSecondsStringPart(
       dateTime.second,
       dateTime.millisecond,
       dateTime.microsecond,
       dateTime.nanosecond
     );
     const timeZoneString = ES.ISOTimeZoneString(timeZone, absolute);
-    return `${year}-${month}-${day}T${hour}:${minute}${seconds ? `:${seconds}` : ''}${timeZoneString}`;
+    return `${year}-${month}-${day}T${hour}:${minute}${seconds}${timeZoneString}`;
   },
   TemporalDurationToString: (duration) => {
     function formatNumber(num) {
