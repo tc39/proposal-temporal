@@ -253,5 +253,6 @@ export class TimeZone {
 MakeIntrinsicClass(TimeZone, 'Temporal.TimeZone');
 DefineIntrinsic('Temporal.TimeZone.from', TimeZone.from);
 DefineIntrinsic('Temporal.TimeZone.prototype.getDateTimeFor', TimeZone.prototype.getDateTimeFor);
+DefineIntrinsic('Temporal.TimeZone.prototype.getAbsoluteFor', TimeZone.prototype.getAbsoluteFor);
 DefineIntrinsic('Temporal.TimeZone.prototype.getOffsetStringFor', TimeZone.prototype.getOffsetStringFor);
 DefineIntrinsic('Temporal.TimeZone.prototype.toString', TimeZone.prototype.toString);

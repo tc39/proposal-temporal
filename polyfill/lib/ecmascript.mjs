@@ -585,6 +585,13 @@ export const ES = ObjectAssign({}, ES2019, {
     }
     return ES.Call(getDateTimeFor, timeZone, [absolute, calendar]);
   },
+  GetTemporalAbsoluteFor: (timeZone, dateTime, disambiguation) => {
+    let getAbsoluteFor = timeZone.getAbsoluteFor;
+    if (getAbsoluteFor === undefined) {
+      getAbsoluteFor = GetIntrinsic('%Temporal.TimeZone.prototype.getAbsoluteFor%');
+    }
+    return ES.Call(getAbsoluteFor, timeZone, [dateTime, { disambiguation }]);
+  },
   TimeZoneToString: (timeZone) => {
     let toString = timeZone.toString;
     if (toString === undefined) {

@@ -371,6 +371,20 @@
       </emu-alg>
     </emu-clause>
 
+    <emu-clause id="sec-temporal-gettemporalabsolutefor" aoid="GetTemporalAbsoluteFor">
+      <h1>GetTemporalAbsoluteFor ( _timeZone_, _dateTime_, _disambiguation_ )</h1>
+      <emu-alg>
+        1. Let _options_ be ! OrdinaryObjectCreate(%Object.prototype%).
+        1. Perform ! CreateDataPropertyOrThrow(_options_, *"disambiguation"*, _disambiguation_).
+        1. Let _getAbsoluteFor_ be ? Get(_timeZone_, *"getAbsoluteFor"*).
+        1. If _getAbsoluteFor_ is *undefined*, then
+          1. Set _getAbsoluteFor_ to %Temporal.TimeZone.prototype.getAbsoluteFor%.
+        1. Let _absolute_ be ? Call(_getAbsoluteFor_, _timeZone_, « _dateTime_ »).
+        1. Perform ? RequireInternalSlot(_absolute_, [[InitializedTemporalAbsolute]]).
+        1. Return _absolute_.
+      </emu-alg>
+    </emu-clause>
+
     <emu-clause id="sec-temporal-getpossibleabsolutesfor" aoid="GetPossibleAbsolutesFor">
       <h1>GetPossibleAbsolutesFor ( _timeZone_, _dateTime_ )</h1>
       <emu-alg>

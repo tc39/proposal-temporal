@@ -460,11 +460,9 @@ export class DateTime {
 
   toAbsolute(temporalTimeZoneLike, options) {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-    const TemporalTimeZone = GetIntrinsic('%Temporal.TimeZone%');
-    const timeZone = TemporalTimeZone.from(temporalTimeZoneLike);
+    const timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);
     const disambiguation = ES.ToTimeZoneTemporalDisambiguation(options);
-    if (typeof timeZone.getAbsoluteFor === 'function') return timeZone.getAbsoluteFor(this, { disambiguation });
-    return TemporalTimeZone.prototype.getAbsoluteFor.call(timeZone, this, { disambiguation });
+    return ES.GetTemporalAbsoluteFor(timeZone, this, disambiguation);
   }
   toDate() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
