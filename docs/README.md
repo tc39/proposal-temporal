@@ -49,6 +49,12 @@ This can also be converted to object containing only partial information such as
 
 See [Temporal.DateTime Documentation](./datetime.md) for more detailed documentation.
 
+#### Ambiguity
+
+Converting between `Temporal.DateTime` and `Temporal.Absolute` is not a one-to-one operation and can be ambiguous, because of time zones and daylight saving time.
+
+Read more about this in [Resolving ambiguity](./ambiguity.md).
+
 ### **Temporal.Time**
 
 A `Temporal.Time` object represents a wall-clock time. Since there is no date component this can not be directly translated to an absolute point in time. However it can be converted to a `Temporal.Absolute` by combining with a `Temporal.Date` using a `Temporal.TimeZone`.
@@ -80,6 +86,12 @@ See [Temporal.MonthDay Documentation](./monthday.md) for more detailed documenta
 A `Temporal.Duration` expresses a length of time. This is used for date/time maths.
 
 See [Temporal.Duration Documentation](./duration.md) for more detailed documentation.
+
+#### Balancing
+
+Unlike the other Temporal types, the units in `Temporal.Duration` don't naturally wrap around to 0: you may want to have a duration of "90 minutes," and you don't want it to unexpectedly turn into "1 hour and 30 minutes."
+
+See [Duration balancing](./balancing.md) for more on this topic.
 
 ### **Temporal.TimeZone**
 
