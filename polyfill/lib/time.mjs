@@ -211,13 +211,13 @@ export class Time {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
     let hour = ES.ISODateTimePartString(GetSlot(this, HOUR));
     let minute = ES.ISODateTimePartString(GetSlot(this, MINUTE));
-    let seconds = ES.ISOSecondsString(
+    let seconds = ES.FormatSecondsStringPart(
       GetSlot(this, SECOND),
       GetSlot(this, MILLISECOND),
       GetSlot(this, MICROSECOND),
       GetSlot(this, NANOSECOND)
     );
-    let resultString = `${hour}:${minute}${seconds ? `:${seconds}` : ''}`;
+    let resultString = `${hour}:${minute}${seconds}`;
     return resultString;
   }
   toLocaleString(...args) {
