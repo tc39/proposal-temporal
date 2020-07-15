@@ -1,16 +1,17 @@
 # Duration balancing
 
-With most types in Temporal, the meaning of `{ disambiguation: 'balance' }` is straightforward.
-For example, there is no such time as 11:87, so when creating a `Temporal.Time` from 11:87 in "balance" disambiguation mode, this must mean 12:27.
-60 minutes (one hour) is subtracted from the minute part of the time, and one hour is added to the hour part.
-(As for the other disambiguation modes, "constrain" would clip the time to 11:59, and "reject" would throw an exception.)
+With most types in Temporal, each unit has a natural maximum.
+For example, there is no such time as 11:87, so when creating a `Temporal.Time` from 11:87 the time is either clipped to 11:59 ("constrain" mode) or an exception is thrown ("reject" mode).
 
 ## Constructing a duration
 
-With [`Temporal.Duration`](./duration.md), however, balancing is less clear-cut.
-It's possible to create a duration of 100 seconds, for example: `Temporal.Duration.from({ seconds: 100 })`.
-100 seconds is equal to 1 minute and 40 seconds, but unlike with a `Temporal.Time`, it's an equally valid use case to want to track the duration of something in seconds, and not balance the duration to 1 minute and 40 seconds.
-So constrain mode doesn't clip the seconds value to 59, and reject mode doesn't throw in this case.
+With [`Temporal.Duration`](./duration.md), however, maximums are less clear-cut.
+Take, for example, a duration of 100 seconds: `Temporal.Duration.from({ seconds: 100 })`.
+100 seconds is equal to 1 minute and 40 seconds. Instead of clipping this to 59 seconds it's more likely that we would want to "balance" it, wrapping 60 seconds around to 0 to make 1 minute and 40 seconds.
+However, it's an equally valid use case to want to track the duration of something in seconds only, and not balance the duration to 1 minute and 40 seconds.
+
+What is done with the duration depends on the `disambiguation` option when creating the `Temporal.Duration` object.
+Unlike with the other Temporal types, constrain mode doesn't clip the seconds value to 59, and reject mode doesn't throw.
 They just leave the value as it is.
 Balance mode lets you opt in to the balancing behaviour:
 
