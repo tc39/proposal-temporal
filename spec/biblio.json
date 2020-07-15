@@ -7,6 +7,11 @@
     },
     {
       "type": "op",
+      "aoid": "OrdinaryObjectCreate",
+      "id": "sec-ordinaryobjectcreate"
+    },
+    {
+      "type": "op",
       "aoid": "RequireInternalSlot",
       "id": "sec-requireinternalslot"
     },
