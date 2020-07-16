@@ -356,7 +356,7 @@ Sorting other Temporal types would work exactly the same way as this.</p>
  *
  *
  * @param {Temporal.DateTime[]} dateTimes - This is a DateTime instance
- * @param {boolean} direction - reverse
+ * @param {boolean} [reverse=false] - Return in reversed order
  * @returns {Temporal.DateTime[]} the array from dateTimes, sorted
  */</span>
 <span class="token keyword">function</span> <span class="token function">getSortedLocalDateTimes</span><span class="token punctuation">(</span><span class="token parameter">dateTimes<span class="token punctuation">,</span> reverse <span class="token operator">=</span> <span class="token boolean">false</span></span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -400,7 +400,7 @@ assert<span class="token punctuation">.</span><span class="token function">deepE
  * sequentially).
  *
  * @param {string[]} parseableAbsoluteStrings - a group of ISO Strings
- * @param {boolean} reverse - ascending or descending order
+ * @param {boolean} [reverse=false] - ascending or descending order
  * @returns {string[]} the array from parseableAbsoluteStrings, sorted
  */</span>
 <span class="token keyword">function</span> <span class="token function">getSortedInstants</span><span class="token punctuation">(</span><span class="token parameter">parseableAbsoluteStrings<span class="token punctuation">,</span> reverse <span class="token operator">=</span> <span class="token boolean">false</span></span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -462,7 +462,7 @@ This is easily done with <code>dateTime.toAbsolute()</code>, but here is an exam
  *   convert
  * @param {Temporal.TimeZone} timeZone - Time zone in which to consider the
  *   wall-clock time
- * @param {string} disambiguation - Disambiguation mode, see description.
+ * @param {string} [disambiguation='earlier'] - Disambiguation mode, see description.
  * @returns {Temporal.Absolute} Absolute time in timeZone at the time of the
  *   calendar date and wall-clock time from dateTime
  */</span>
