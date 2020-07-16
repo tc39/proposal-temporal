@@ -1,5 +1,6 @@
 const fs = require('fs').promises;
 const marked = require('marked');
+const mkdirp = require('mkdirp');
 const path = require('path');
 const Prism = require('prismjs');
 const loadLanguages = require('prismjs/components/');
@@ -92,6 +93,7 @@ class CustomRenderer extends marked.Renderer {
 }
 
 async function render(markdownFile, head, tail) {
+  await mkdirp('../out/docs/assets');
   let markdownText = await fs.readFile(markdownFile, { encoding });
 
   // Resolve transcludes
