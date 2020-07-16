@@ -135,15 +135,15 @@
       <strong>Do</strong> <a href="https://forms.gle/iL9iZg7Y9LvH41Nv8">give feedback</a> and open <a href="https://github.com/tc39/proposal-temporal/issues">issues</a>; <strong>don't</strong> use it in production!
     </div>
 <h1 id="duration-balancing">Duration balancing</h1>
-<p>With most types in Temporal, the meaning of <code>{ disambiguation: &#39;balance&#39; }</code> is straightforward.
-For example, there is no such time as 11:87, so when creating a <code>Temporal.Time</code> from 11:87 in &quot;balance&quot; disambiguation mode, this must mean 12:27.
-60 minutes (one hour) is subtracted from the minute part of the time, and one hour is added to the hour part.
-(As for the other disambiguation modes, &quot;constrain&quot; would clip the time to 11:59, and &quot;reject&quot; would throw an exception.)</p>
+<p>With most types in Temporal, each unit has a natural maximum.
+For example, there is no such time as 11:87, so when creating a <code>Temporal.Time</code> from 11:87 the time is either clipped to 11:59 (&quot;constrain&quot; mode) or an exception is thrown (&quot;reject&quot; mode).</p>
 <h2 id="constructing-a-duration">Constructing a duration</h2>
-<p>With <a href="./duration.html"><code>Temporal.Duration</code></a>, however, balancing is less clear-cut.
-It&#39;s possible to create a duration of 100 seconds, for example: <code>Temporal.Duration.from({ seconds: 100 })</code>.
-100 seconds is equal to 1 minute and 40 seconds, but unlike with a <code>Temporal.Time</code>, it&#39;s an equally valid use case to want to track the duration of something in seconds, and not balance the duration to 1 minute and 40 seconds.
-So constrain mode doesn&#39;t clip the seconds value to 59, and reject mode doesn&#39;t throw in this case.
+<p>With <a href="./duration.html"><code>Temporal.Duration</code></a>, however, maximums are less clear-cut.
+Take, for example, a duration of 100 seconds: <code>Temporal.Duration.from({ seconds: 100 })</code>.
+100 seconds is equal to 1 minute and 40 seconds. Instead of clipping this to 59 seconds it&#39;s more likely that we would want to &quot;balance&quot; it, wrapping 60 seconds around to 0 to make 1 minute and 40 seconds.
+However, it&#39;s an equally valid use case to want to track the duration of something in seconds only, and not balance the duration to 1 minute and 40 seconds.</p>
+<p>What is done with the duration depends on the <code>disambiguation</code> option when creating the <code>Temporal.Duration</code> object.
+Unlike with the other Temporal types, constrain mode doesn&#39;t clip the seconds value to 59, and reject mode doesn&#39;t throw.
 They just leave the value as it is.
 Balance mode lets you opt in to the balancing behaviour:</p>
 <pre class="language-javascript"><code class="language-javascript">d <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Duration<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> seconds<span class="token operator">:</span> <span class="token number">100</span> <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> disambiguation<span class="token operator">:</span> <span class="token string">'balance'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>

@@ -144,11 +144,15 @@
 </li>
 <li><a href="#api-documentation">API Documentation</a>
 <ul>
+<li><a href="#Temporal-now">Temporal.now</a>
+</li>
 <li><a href="#Temporal-Absolute">Temporal.Absolute</a>
 </li>
-<li><a href="#Temporal-TimeZone">Temporal.TimeZone</a>
-</li>
 <li><a href="#Temporal-DateTime">Temporal.DateTime</a>
+<ul>
+<li><a href="#ambiguity">Ambiguity</a>
+</li>
+</ul>
 </li>
 <li><a href="#Temporal-Time">Temporal.Time</a>
 </li>
@@ -159,8 +163,12 @@
 <li><a href="#Temporal-MonthDay">Temporal.MonthDay</a>
 </li>
 <li><a href="#Temporal-Duration">Temporal.Duration</a>
+<ul>
+<li><a href="#balancing">Balancing</a>
 </li>
-<li><a href="#Temporal-now">Temporal.now</a>
+</ul>
+</li>
+<li><a href="#Temporal-TimeZone">Temporal.TimeZone</a>
 </li>
 <li><a href="#Temporal-Calendar">Temporal.Calendar</a>
 </li>
@@ -186,13 +194,22 @@ For a detailed look at some of the problems with <code>Date</code>, and the moti
 <h2 id="cookbook">Cookbook</h2>
 <p>A cookbook to help you get started and learn the ins and outs of Temporal is available <a href="./cookbook.html">here</a>.</p>
 <h2 id="api-documentation">API Documentation</h2>
+<h3 id="Temporal-now"><a class="heading-link" href="#Temporal-now"></a><strong>Temporal.now</strong></h3><ul>
+<li><code>Temporal.now.absolute()</code> - get the current system absolute time</li>
+<li><code>Temporal.now.timeZone()</code> - get the current system time zone</li>
+<li><code>Temporal.now.dateTime()</code> - get the current system date/time</li>
+<li><code>Temporal.now.time()</code> - get the current system time</li>
+<li><code>Temporal.now.date()</code> - get the current system date</li>
+</ul>
+<p>See <a href="./now.html">Temporal.now Documentation</a> for more detailed documentation.</p>
 <h3 id="Temporal-Absolute"><a class="heading-link" href="#Temporal-Absolute"></a><strong>Temporal.Absolute</strong></h3><p>A <code>Temporal.Absolute</code> represents a fixed point in time, without regard to calendar or location.</p>
 <p>See <a href="./absolute.html">Temporal.Absolute Documentation</a> for more detailed documentation.</p>
-<h3 id="Temporal-TimeZone"><a class="heading-link" href="#Temporal-TimeZone"></a><strong>Temporal.TimeZone</strong></h3><p>A <code>Temporal.TimeZone</code> represents an IANA time zone, a specific UTC offset or UTC itself. Because of this <code>Temporal.TimeZone</code> can be used to convert between <code>Temporal.Absolute</code> and <code>Temporal.DateTime</code> as well as finding out the offset at a specific <code>Temporal.Absolute</code>.</p>
-<p>See <a href="./timezone.html">Temporal.TimeZone Documentation</a> for more detailed documentation.</p>
 <h3 id="Temporal-DateTime"><a class="heading-link" href="#Temporal-DateTime"></a><strong>Temporal.DateTime</strong></h3><p>A <code>Temporal.DateTime</code> represents a calendar date and wall-clock time. That means it does not carry time zone information. However it can be converted to a <code>Temporal.Absolute</code> using a <code>Temporal.TimeZone</code>.</p>
 <p>This can also be converted to object containing only partial information such as <code>Temporal.Date</code> and <code>Temporal.Time</code>.</p>
 <p>See <a href="./datetime.html">Temporal.DateTime Documentation</a> for more detailed documentation.</p>
+<h4 id="ambiguity">Ambiguity</h4>
+<p>Converting between <code>Temporal.DateTime</code> and <code>Temporal.Absolute</code> is not a one-to-one operation and can be ambiguous, because of time zones and daylight saving time.</p>
+<p>Read more about this in <a href="./ambiguity.html">Resolving ambiguity</a>.</p>
 <h3 id="Temporal-Time"><a class="heading-link" href="#Temporal-Time"></a><strong>Temporal.Time</strong></h3><p>A <code>Temporal.Time</code> object represents a wall-clock time. Since there is no date component this can not be directly translated to an absolute point in time. However it can be converted to a <code>Temporal.Absolute</code> by combining with a <code>Temporal.Date</code> using a <code>Temporal.TimeZone</code>.</p>
 <p>See <a href="./time.html">Temporal.Time Documentation</a> for more detailed documentation.</p>
 <h3 id="Temporal-Date"><a class="heading-link" href="#Temporal-Date"></a><strong>Temporal.Date</strong></h3><p>A <code>Temporal.Date</code> object represents a calendar date. This means there is no way to convert this to an absolute point in time, however combining with a <code>Temporal.Time</code> a <code>Temporal.DateTime</code> can be obtained which in turn can be pinned to the absolute timeline.</p>
@@ -204,14 +221,11 @@ For a detailed look at some of the problems with <code>Date</code>, and the moti
 <p>See <a href="./monthday.html">Temporal.MonthDay Documentation</a> for more detailed documentation.</p>
 <h3 id="Temporal-Duration"><a class="heading-link" href="#Temporal-Duration"></a><strong>Temporal.Duration</strong></h3><p>A <code>Temporal.Duration</code> expresses a length of time. This is used for date/time maths.</p>
 <p>See <a href="./duration.html">Temporal.Duration Documentation</a> for more detailed documentation.</p>
-<h3 id="Temporal-now"><a class="heading-link" href="#Temporal-now"></a><strong>Temporal.now</strong></h3><ul>
-<li><code>Temporal.now.absolute()</code> - get the current system absolute time</li>
-<li><code>Temporal.now.timeZone()</code> - get the current system time zone</li>
-<li><code>Temporal.now.dateTime()</code> - get the current system date/time</li>
-<li><code>Temporal.now.time()</code> - get the current system time</li>
-<li><code>Temporal.now.date()</code> - get the current system date</li>
-</ul>
-<p>See <a href="./now.html">Temporal.now Documentation</a> for more detailed documentation.</p>
+<h4 id="balancing">Balancing</h4>
+<p>Unlike the other Temporal types, the units in <code>Temporal.Duration</code> don&#39;t naturally wrap around to 0: you may want to have a duration of &quot;90 minutes,&quot; and you don&#39;t want it to unexpectedly turn into &quot;1 hour and 30 minutes.&quot;</p>
+<p>See <a href="./balancing.html">Duration balancing</a> for more on this topic.</p>
+<h3 id="Temporal-TimeZone"><a class="heading-link" href="#Temporal-TimeZone"></a><strong>Temporal.TimeZone</strong></h3><p>A <code>Temporal.TimeZone</code> represents an IANA time zone, a specific UTC offset or UTC itself. Because of this <code>Temporal.TimeZone</code> can be used to convert between <code>Temporal.Absolute</code> and <code>Temporal.DateTime</code> as well as finding out the offset at a specific <code>Temporal.Absolute</code>.</p>
+<p>See <a href="./timezone.html">Temporal.TimeZone Documentation</a> for more detailed documentation.</p>
 <h3 id="Temporal-Calendar"><a class="heading-link" href="#Temporal-Calendar"></a><strong>Temporal.Calendar</strong></h3><p>A <code>Temporal.Calendar</code> represents a calendar system.
 Most code will use the ISO 8601 calendar, but other calendar systems are available.</p>
 <p>See <a href="./calendar.html">Temporal.Calendar Documentation</a> for more detailed documentation.</p>
