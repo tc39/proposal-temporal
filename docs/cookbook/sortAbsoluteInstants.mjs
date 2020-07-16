@@ -5,7 +5,7 @@
  * sequentially).
  *
  * @param {string[]} parseableAbsoluteStrings - a group of ISO Strings
- * @param {boolean} reverse - ascending or descending order
+ * @param {boolean} [reverse=false] - ascending or descending order
  * @returns {string[]} the array from parseableAbsoluteStrings, sorted
  */
 function getSortedInstants(parseableAbsoluteStrings, reverse = false) {

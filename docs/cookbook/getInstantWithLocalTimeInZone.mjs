@@ -16,7 +16,7 @@
  *   convert
  * @param {Temporal.TimeZone} timeZone - Time zone in which to consider the
  *   wall-clock time
- * @param {string} disambiguation - Disambiguation mode, see description.
+ * @param {string} [disambiguation='earlier'] - Disambiguation mode, see description.
  * @returns {Temporal.Absolute} Absolute time in timeZone at the time of the
  *   calendar date and wall-clock time from dateTime
  */

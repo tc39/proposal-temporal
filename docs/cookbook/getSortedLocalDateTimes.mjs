@@ -4,7 +4,7 @@
  *
  *
  * @param {Temporal.DateTime[]} dateTimes - This is a DateTime instance
- * @param {boolean} direction - reverse
+ * @param {boolean} [reverse=false] - Return in reversed order
  * @returns {Temporal.DateTime[]} the array from dateTimes, sorted
  */
 function getSortedLocalDateTimes(dateTimes, reverse = false) {
