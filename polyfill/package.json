@@ -16,7 +16,8 @@
     "codecov:test262": "COVERAGE=yes npm run test262 && codecov -F test262 -f coverage/test262.lcov",
     "build": "rollup -c rollup.config.js",
     "prepublishOnly": "npm run build",
-    "playground": "node --experimental-modules --no-warnings --icu-data-dir node_modules/full-icu -r ./lib/init.js"
+    "playground": "node --experimental-modules --no-warnings --icu-data-dir node_modules/full-icu -r ./lib/init.js",
+    "verify-ids": "test262-harness --test262Dir ./test262 --preprocessor ./verify-ids.js './test/*/**/*.js'"
   },
   "repository": {
     "type": "git",
