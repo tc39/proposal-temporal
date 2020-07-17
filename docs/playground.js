@@ -4769,15 +4769,41 @@
       return result;
     },
     ToBigInt: function ToBigInt(arg) {
-      if (BigInteger.isInstance(arg)) return arg;
-      var prim = ES.ToPrimitive(arg, Number);
-      if (typeof prim === 'number') throw new TypeError('Use BigInt() to convert Number to BigInt');
+      if (BigInteger.isInstance(arg)) {
+        return arg;
+      }
 
-      try {
-        return BigInteger(prim);
-      } catch (e) {
-        if (e instanceof Error && e.message.startsWith('Invalid integer')) throw new SyntaxError(e.message);
-        throw e;
+      var prim = ES.ToPrimitive(arg, Number);
+
+      switch (_typeof(prim)) {
+        case 'undefined':
+        case 'object':
+        case 'number':
+        case 'symbol':
+          throw new TypeError("cannot convert ".concat(_typeof(arg), " to bigint"));
+
+        case 'string':
+          if (!prim.match(/^\s*(?:[+-]?\d+\s*)?$/)) {
+            throw new SyntaxError('invalid BigInt syntax');
+          }
+
+        // eslint: no-fallthrough: false
+
+        case 'bigint':
+          try {
+            return BigInteger(prim);
+          } catch (e) {
+            if (e instanceof Error && e.message.startsWith('Invalid integer')) throw new SyntaxError(e.message);
+            throw e;
+          }
+
+        case 'boolean':
+          if (prim) {
+            return BigInteger(1);
+          } else {
+            return BigInteger(0);
+          }
+
       }
     },
     // Note: This method returns values with bogus nanoseconds based on the previous iteration's
