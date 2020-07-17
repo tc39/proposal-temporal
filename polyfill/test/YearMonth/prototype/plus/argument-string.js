@@ -2,7 +2,7 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
-esid: sec-temporal.yearmonth.plus
+esid: sec-temporal.yearmonth.prototype.plus
 ---*/
 
 const instance = Temporal.YearMonth.from({ year: 2000, month: 5 });

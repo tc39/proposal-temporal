@@ -2,7 +2,7 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
-esid: sec-temporal.absolute.minus
+esid: sec-temporal.absolute.prototype.minus
 ---*/
 
 const instance = Temporal.Absolute.fromEpochSeconds(10);

@@ -3,7 +3,7 @@
 
 /*---
 description: Temporal.Duration.prototype.with handles a property bag if any value is Infinity
-esid: sec-temporal.duraition.prototype.with
+esid: sec-temporal.duration.prototype.with
 ---*/
 
 const instance = new Temporal.Duration(1, 2, 3, 4, 5, 6, 7, 987, 654, 321);
