@@ -2,7 +2,7 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
-esid: sec-temporal.now.timezone
+esid: sec-temporal-now.timezone
 ---*/
 
 const tz = Temporal.now.timeZone;

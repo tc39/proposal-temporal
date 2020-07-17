@@ -2,7 +2,7 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
-esid: sec-get-temporal.duration.from
+esid: sec-temporal.duration.from
 ---*/
 
 assert.throws(RangeError, () => Temporal.Duration.from(undefined), "undefined");
