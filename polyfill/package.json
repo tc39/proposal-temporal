@@ -3,8 +3,8 @@
   "version": "0.3.0",
   "description": "Experimental polyfill for the TC39 Temporal proposal",
   "type": "commonjs",
-  "main": "/dist/index.js",
-  "browser": "/dist/index.umd.js",
+  "main": "dist/index.js",
+  "browser": "dist/index.umd.js",
   "types": "index.d.ts",
   "scripts": {
     "coverage": "c8 report --reporter html",
