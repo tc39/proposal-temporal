@@ -15,7 +15,7 @@ describe('Intl', () => {
   // TODO: move these to their respective test files.
 
   function maybeGetWeekdayOnlyFormat() {
-    const fmt = new Intl.DateTimeFormat('en', { weekday: 'long' });
+    const fmt = new Intl.DateTimeFormat('en', { weekday: 'long', timeZone: 'Europe/Vienna' });
     if (
       ['era', 'year', 'month', 'day', 'hour', 'minute', 'second', 'timeZoneName'].some(
         (prop) => prop in fmt.resolvedOptions()
