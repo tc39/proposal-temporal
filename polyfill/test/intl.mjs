@@ -29,7 +29,7 @@ describe('Intl', () => {
 
   describe('absolute.toLocaleString()', () => {
     const absolute = Temporal.Absolute.from('1976-11-18T14:23:30Z');
-    it(`(${absolute.toString()}).toLocaleString('en-US', { timeZone: 'Europe/Vienna' })`, () =>
+    it(`(${absolute.toString()}).toLocaleString('en-US', { timeZone: 'America/New_York' })`, () =>
       equal(`${absolute.toLocaleString('en', { timeZone: 'America/New_York' })}`, '11/18/1976, 9:23:30 AM'));
     it(`(${absolute.toString()}).toLocaleString('de-AT', { timeZone: 'Europe/Vienna' })`, () =>
       equal(`${absolute.toLocaleString('de', { timeZone: 'Europe/Vienna' })}`, '18.11.1976, 15:23:30'));
@@ -38,7 +38,7 @@ describe('Intl', () => {
   });
   describe('datetime.toLocaleString()', () => {
     const datetime = Temporal.DateTime.from('1976-11-18T15:23:30');
-    it(`(${datetime.toString()}).toLocaleString('en-US', { timeZone: 'Europe/Vienna' })`, () =>
+    it(`(${datetime.toString()}).toLocaleString('en-US', { timeZone: 'America/New_York' })`, () =>
       equal(`${datetime.toLocaleString('en', { timeZone: 'America/New_York' })}`, '11/18/1976, 3:23:30 PM'));
     it(`(${datetime.toString()}).toLocaleString('de-AT', { timeZone: 'Europe/Vienna' })`, () =>
       equal(`${datetime.toLocaleString('de', { timeZone: 'Europe/Vienna' })}`, '18.11.1976, 15:23:30'));
@@ -54,7 +54,7 @@ describe('Intl', () => {
   });
   describe('time.toLocaleString()', () => {
     const time = Temporal.Time.from('1976-11-18T15:23:30');
-    it(`(${time.toString()}).toLocaleString('en-US', { timeZone: 'Europe/Vienna' })`, () =>
+    it(`(${time.toString()}).toLocaleString('en-US', { timeZone: 'America/New_York' })`, () =>
       equal(`${time.toLocaleString('en', { timeZone: 'America/New_York' })}`, '3:23:30 PM'));
     it(`(${time.toString()}).toLocaleString('de-AT', { timeZone: 'Europe/Vienna' })`, () =>
       equal(`${time.toLocaleString('de', { timeZone: 'Europe/Vienna' })}`, '15:23:30'));
@@ -68,7 +68,7 @@ describe('Intl', () => {
   });
   describe('date.toLocaleString()', () => {
     const date = Temporal.Date.from('1976-11-18T15:23:30');
-    it(`(${date.toString()}).toLocaleString('en-US', { timeZone: 'Europe/Vienna' })`, () =>
+    it(`(${date.toString()}).toLocaleString('en-US', { timeZone: 'America/New_York' })`, () =>
       equal(`${date.toLocaleString('en', { timeZone: 'America/New_York' })}`, '11/18/1976'));
     it(`(${date.toString()}).toLocaleString('de-AT', { timeZone: 'Europe/Vienna' })`, () =>
       equal(`${date.toLocaleString('de', { timeZone: 'Europe/Vienna' })}`, '18.11.1976'));
@@ -83,7 +83,7 @@ describe('Intl', () => {
   });
   describe('yearmonth.toLocaleString()', () => {
     const yearmonth = Temporal.YearMonth.from('1976-11-18T15:23:30');
-    it(`(${yearmonth.toString()}).toLocaleString('en-US', { timeZone: 'Europe/Vienna' })`, () =>
+    it(`(${yearmonth.toString()}).toLocaleString('en-US', { timeZone: 'America/New_York' })`, () =>
       equal(`${yearmonth.toLocaleString('en', { timeZone: 'America/New_York' })}`, '11/1976'));
     it(`(${yearmonth.toString()}).toLocaleString('de-AT', { timeZone: 'Europe/Vienna' })`, () =>
       equal(`${yearmonth.toLocaleString('de', { timeZone: 'Europe/Vienna' })}`, '11.1976'));
@@ -98,7 +98,7 @@ describe('Intl', () => {
   });
   describe('monthday.toLocaleString()', () => {
     const monthday = Temporal.MonthDay.from('1976-11-18T15:23:30');
-    it(`(${monthday.toString()}).toLocaleString('en-US', { timeZone: 'Europe/Vienna' })`, () =>
+    it(`(${monthday.toString()}).toLocaleString('en-US', { timeZone: 'America/New_York' })`, () =>
       equal(`${monthday.toLocaleString('en', { timeZone: 'America/New_York' })}`, '11/18'));
     it(`(${monthday.toString()}).toLocaleString('de-AT', { timeZone: 'Europe/Vienna' })`, () =>
       equal(`${monthday.toLocaleString('de', { timeZone: 'Europe/Vienna' })}`, '18.11.'));
