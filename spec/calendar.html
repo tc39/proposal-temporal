@@ -1,0 +1,153 @@
+<emu-clause id="sec-temporal-calendar-objects">
+  <h1>Temporal.Calendar Objects</h1>
+  <p>A Temporal.Calendar object is an immutable Object representing a calendar.</p>
+
+  <emu-clause id="sec-temporal-calendar-abstract-ops">
+    <h1>Abstract Operations for Temporal.Calendar Objects</h1>
+
+    <emu-clause id="sec-temporal-getbuiltincalendar" aoid="GetBuiltinCalendar">
+      <h1>GetBuiltinCalendar ( _id_ )</h1>
+      <p>An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the *GetBuiltinCalendar* abstract operation as specified in the ECMA-402 specification. If an ECMAScript implementation does not include the ECMA-402 API the following specification of the *GetBuiltinCalendar* abstract operation is used.</p>
+      <emu-alg>
+        1. If _id_ is not *"iso8601"*, throw a *RangeError* exception.
+        1. Return ? Construct(%ISO8601Calendar%, « »).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-getdefaultcalendar" aoid="GetDefaultCalendar">
+      <h1>GetDefaultCalendar ( )</h1>
+      <emu-alg>
+        1. Return ? GetBuiltinCalendar(*"iso8601"*).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-calendartostring" aoid="CalendarToString">
+      <h1>CalendarToString ( _calendar_ )</h1>
+      <emu-alg>
+        1. Let _toString_ be ? Get(_calendar_, *"toString"*).
+        1. If _toString_ is *undefined*, then
+          1. Set _toString_ to %Temporal.Calendar.prototype.toString%.
+        1. Return ? ToString(? Call(_toString_ , _calendar, « »)).
+      </emu-alg>
+    </emu-clause>
+  </emu-clause>
+
+  <emu-clause id="sec-temporal-calendar-constructor">
+    <h1>The Temporal.Calendar Constructor</h1>
+    <p>The Temporal.Calendar constructor:</p>
+    <ul>
+      <li>is the intrinsic object <dfn>%Temporal.Calendar%</dfn>.</li>
+      <li>creates and initializes a new Temporal.Calendar object when called as a constructor.</li>
+      <li>is designed to be subclassable. It may be used as the value of an `extends` clause of a class definition. Subclass constructors that intend to inherit the specified Temporal.Calendar behaviour must include a super call to the %Temporal.Calendar% constructor to create and initialize subclass instances with the necessary internal slots.</li>
+      <li>has a *"length"* property whose value is 1.</li>
+    </ul>
+
+    <emu-clause id="sec-temporal.calendar">
+      <h1>Temporal.Calendar ( _id_ )</h1>
+      <p>When the `Temporal.Calendar` function is called, the following steps are taken:</p>
+      <emu-alg>
+        1. If NewTarget is *undefined*, then
+          1. Throw a *TypeError* exception.
+        1. Let _calendar_ be ? OrdinaryCreateFromConstructor(NewTarget, *"%Temporal.Calendar.prototype%"*, « [[InitializedTemporalCalendar]], [[Identifier]] »).
+        1. Set _calendar_.[[Identifier]] to _id_.
+        1. Return _calendar_.
+      </emu-alg>
+    </emu-clause>
+  </emu-clause>
+
+  <emu-clause id="sec-properties-of-the-temporal-calendar-constructor">
+    <h1>Properties of the Temporal.Calendar Constructor</h1>
+    <p>The Temporal.Calendar prototype:</p>
+    <ul>
+      <li>has a [[Prototype]] internal slot whose value is %FunctionPrototype%.</li>
+      <li>has the following properties:</li>
+    </ul>
+
+    <emu-clause id="sec-temporal-calendar-prototype">
+      <h1>Temporal.Calendar.prototype</h1>
+      <p>The initial value of Temporal.Calendar.prototype is %Temporal.Calendar.prototype%.</p>
+      <p>This property has the attributes { [[Writable]]: *false*, [[Enumerable]]: *false*, [[Configurable]]: *false* }.</p>
+    </emu-clause>
+
+    <emu-clause id="sec-get-temporal-calendar-@@species">
+      <h1>get Temporal.Calendar [ @@species ]</h1>
+      <p>
+        `Temporal.Calendar[@@species]` is an accessor property whose set accessor function is *undefined*.
+        Its get accessor function performs the following steps:
+      </p>
+      <emu-alg>
+        1. Return the *this* value.
+      </emu-alg>
+
+      <p>The value of the *"name"* property of this function is *"get [Symbol.species]"*.</p>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal.calendar.from">
+      <h1>Temporal.Calendar.from ( _item_ )</h1>
+      <p>The `from` method takes one argument, _item_. The following steps are taken:</p>
+      <emu-alg>
+        1. If Type(_item_) is Object, then
+          1. Return _item_.
+        1. Let _stringIdent_ be ? ToString(_item_).
+        1. Return ? GetBuiltinCalendar(_stringIdent_).
+      </emu-alg>
+    </emu-clause>
+  </emu-clause>
+
+  <emu-clause id="sec-properties-of-the-temporal-calendar-prototype-object">
+    <h1>Properties of the Temporal.Calendar Prototype Object</h1>
+
+    <p>The Temporal.Calendar prototype object</p>
+    <ul>
+      <li>is the intrinsic object %Temporal.Calendar.prototype%.
+      <li>is itself an ordinary object.
+      <li>is not a Temporal.Calendar instance and does not have a [[InitializedTemporalCalendar]] internal slot.
+      <li>has a [[Prototype]] internal slot whose value is %Object.prototype%.
+    </ul>
+
+    <emu-clause id="sec-temporal.calendar.prototype.constructor">
+      <h1>Temporal.Calendar.prototype.constructor</h1>
+      <p>The initial value of Temporal.Calendar.prototype.constructor is %Temporal.Calendar%.</p>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal.calendar.prototype-@@tostringtag">
+      <h1>Temporal.Calendar.prototype[ @@toStringTag ]</h1>
+      <p>
+        The initial value of the @@toStringTag property is the string value `"Temporal.Calendar"`.
+      </p>
+      <p>
+        This property has the attributes { [[Writable]]: *false*, [[Enumerable]]: *false*, [[Configurable]]: *true* }.
+      </p>
+    </emu-clause>
+
+    <emu-clause id="sec-get-temporal.calendar.prototype.id">
+      <h1>get Temporal.Date.prototype.id</h1>
+      <p>
+        `Temporal.Calendar.prototype.id` is an accessor property whose set accessor function is undefined.
+        Its get accessor function performs the following steps:
+      </p>
+      <emu-alg>
+        1. Let _calendar_ be the *this* value.
+        1. Return ? CalendarToString(_calendar_).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal.calendar.prototype.tostring">
+      <h1>Temporal.Calendar.prototype.toString ( )</h1>
+      <p>
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _calendar_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
+        1. Return _calendar_.[[Identifier]].
+      </emu-alg>
+    </emu-clause>
+  </emu-clause>
+
+  <emu-clause id="sec-properties-of-temporal-calendar-instances">
+    <h1>Properties of Temporal.Calendar Instances</h1>
+
+    <p>Temporal.Calendar instances are ordinary objects that inherit properties from the %Temporal.Calendar.prototype%. Temporal.Calendar instances also have a [[Identifier]] internal slot. The value of this internal slot is a string.</p>
+  </emu-clause>
+</emu-clause>
