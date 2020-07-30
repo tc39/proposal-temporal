@@ -53,7 +53,7 @@ export class Absolute {
       milliseconds,
       microseconds,
       nanoseconds
-    } = ES.ToLimitedTemporalDuration(temporalDurationLike, ['years', 'months']);
+    } = ES.ToLimitedTemporalDuration(temporalDurationLike, ['years', 'months', 'weeks']);
 
     let add = bigInt(0);
     add = add.plus(bigInt(nanoseconds));
@@ -82,7 +82,7 @@ export class Absolute {
       milliseconds,
       microseconds,
       nanoseconds
-    } = ES.ToLimitedTemporalDuration(temporalDurationLike, ['years', 'months']);
+    } = ES.ToLimitedTemporalDuration(temporalDurationLike, ['years', 'months', 'weeks']);
 
     let add = bigInt(0);
     add = add.plus(bigInt(nanoseconds));

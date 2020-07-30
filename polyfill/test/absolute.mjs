@@ -363,9 +363,10 @@ describe('Absolute', () => {
       const later = abs.plus(Temporal.Duration.from('P10DT0.000000800S'));
       equal(`${later}`, '1970-01-04T12:23:45.678902034Z');
     });
-    it('invalid to add years or months', () => {
+    it('invalid to add years, months, or weeks', () => {
       throws(() => abs.plus({ years: 1 }), RangeError);
       throws(() => abs.plus({ months: 1 }), RangeError);
+      throws(() => abs.plus({ weeks: 1 }), RangeError);
     });
   });
   describe('Absolute.minus works', () => {
@@ -374,9 +375,10 @@ describe('Absolute', () => {
       const earlier = abs.minus(Temporal.Duration.from('P10DT0.000000800S'));
       equal(`${earlier}`, '1969-12-15T12:23:45.678900434Z');
     });
-    it('invalid to subtract years or months', () => {
+    it('invalid to subtract years, months, or weeks', () => {
       throws(() => abs.minus({ years: 1 }), RangeError);
       throws(() => abs.minus({ months: 1 }), RangeError);
+      throws(() => abs.minus({ weeks: 1 }), RangeError);
     });
   });
   describe('Absolute.compare works', () => {
