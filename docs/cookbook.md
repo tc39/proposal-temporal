@@ -123,12 +123,15 @@ Sort a list of ISO 8601 date/time strings, for example to place log entries in o
 
 ### Round a time down to whole hours
 
-Use the `with()` method of each Temporal type if you want to round or balance the fields.
+Use the `with()` method of each Temporal type (except `Temporal.Absolute`) if you want to round or balance the fields.
 Here's an example of rounding a time _down_ to the previously occurring whole hour:
 
 ```javascript
 {{cookbook/roundDownToWholeHours.mjs}}
 ```
+
+`Temporal.Absolute` is an absolute timestamp and doesn't have any concept of a calendar or wall clock, so it can't be rounded to a certain field value.
+If you need to round a `Temporal.Absolute` instance, convert it to a type such as `Temporal.DateTime`.
 
 ## Time zone conversion
 
