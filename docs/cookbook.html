@@ -430,7 +430,7 @@ assert<span class="token punctuation">.</span><span class="token function">deepE
   <span class="token string">'2020-04-01T11:02:00+02:00[Europe/Berlin]'</span>
 <span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 </code></pre><h2 id="rounding">Rounding</h2>
-<h3 id="round-a-time-down-to-whole-hours"><a class="heading-link" href="#round-a-time-down-to-whole-hours"></a>Round a time down to whole hours</h3><p>Use the <code>with()</code> method of each Temporal type if you want to round or balance the fields.
+<h3 id="round-a-time-down-to-whole-hours"><a class="heading-link" href="#round-a-time-down-to-whole-hours"></a>Round a time down to whole hours</h3><p>Use the <code>with()</code> method of each Temporal type (except <code>Temporal.Absolute</code>) if you want to round or balance the fields.
 Here&#39;s an example of rounding a time <em>down</em> to the previously occurring whole hour:</p>
 <pre class="language-javascript"><code class="language-javascript"><span class="token keyword">const</span> time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'12:38:28.138818731'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
@@ -441,7 +441,9 @@ assert<span class="token punctuation">.</span><span class="token function">equal
 <span class="token comment">// or, taking advantage of 0 being the default for time fields:</span>
 wholeHour <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> hour<span class="token operator">:</span> time<span class="token punctuation">.</span>hour <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 assert<span class="token punctuation">.</span><span class="token function">equal</span><span class="token punctuation">(</span>wholeHour<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token string">'12:00'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-</code></pre><h2 id="time-zone-conversion">Time zone conversion</h2>
+</code></pre><p><code>Temporal.Absolute</code> is an absolute timestamp and doesn&#39;t have any concept of a calendar or wall clock, so it can&#39;t be rounded to a certain field value.
+If you need to round a <code>Temporal.Absolute</code> instance, convert it to a type such as <code>Temporal.DateTime</code>.</p>
+<h2 id="time-zone-conversion">Time zone conversion</h2>
 <h3 id="preserving-local-time"><a class="heading-link" href="#preserving-local-time"></a>Preserving local time</h3><p>Map a zoneless date and time of day into a <code>Temporal.Absolute</code> instance at which the local date and time of day in a specified time zone matches it.
 This is easily done with <code>dateTime.toAbsolute()</code>, but here is an example of implementing different disambiguation behaviors than the <code>&#39;compatible&#39;</code>, <code>&#39;earlier&#39;</code>, <code>&#39;later&#39;</code>, and <code>&#39;reject&#39;</code> ones built in to Temporal.</p>
 <pre class="language-javascript"><code class="language-javascript"><span class="token comment">/**
