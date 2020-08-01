@@ -9,7 +9,7 @@
 function getTripDurationInHrMinSec(parseableDeparture, parseableArrival) {
   const departure = Temporal.LocalDateTime.from(parseableDeparture);
   const arrival = Temporal.LocalDateTime.from(parseableArrival);
-  return arrival.difference(departure, { largestUnit: 'hours', durationKind: 'absolute' });
+  return arrival.difference(departure, { largestUnit: 'hours' });
 }
 
 const flightTime = getTripDurationInHrMinSec(

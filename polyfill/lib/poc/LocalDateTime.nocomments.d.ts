@@ -12,12 +12,6 @@ declare type LocalDateTimeISOCalendarFields = ReturnType<Temporal.DateTime['getI
   timeZone: Temporal.TimeZone;
   absolute: Temporal.Absolute;
 };
-export interface DurationKindOptions {
-  durationKind: 'absolute' | 'dateTime' | 'hybrid';
-}
-export interface CompareCalculationOptions {
-  calculation: 'absolute' | 'dateTime';
-}
 export interface OverflowOptions {
   overflow: 'constrain' | 'reject';
 }
@@ -27,13 +21,9 @@ export interface TimeZoneOffsetDisambiguationOptions {
 export declare type LocalDateTimeAssignmentOptions = Partial<
   OverflowOptions & Temporal.ToAbsoluteOptions & TimeZoneOffsetDisambiguationOptions
 >;
-export declare type LocalDateTimeMathOptions = Partial<
-  DurationKindOptions & Temporal.ToAbsoluteOptions & OverflowOptions
->;
+export declare type LocalDateTimeMathOptions = OverflowOptions;
 export declare type LocalDateTimeDifferenceOptions = Partial<
-  Temporal.DifferenceOptions<'years' | 'months' | 'weeks' | 'days' | 'hours' | 'minutes' | 'seconds'> &
-    DurationKindOptions &
-    Temporal.ToAbsoluteOptions
+  Temporal.DifferenceOptions<'years' | 'months' | 'weeks' | 'days' | 'hours' | 'minutes' | 'seconds'>
 >;
 export declare class LocalDateTime {
   private _abs;
@@ -56,11 +46,7 @@ export declare class LocalDateTime {
   get timeZoneOffsetString(): string;
   getFields(): LocalDateTimeFields;
   getISOCalendarFields(): LocalDateTimeISOCalendarFields;
-  static compare(
-    one: LocalDateTime,
-    two: LocalDateTime,
-    options?: CompareCalculationOptions
-  ): Temporal.ComparisonResult;
+  static compare(one: LocalDateTime, two: LocalDateTime): Temporal.ComparisonResult;
   equals(other: LocalDateTime): boolean;
   plus(durationLike: Temporal.DurationLike, options?: LocalDateTimeMathOptions): LocalDateTime;
   minus(durationLike: Temporal.DurationLike, options?: LocalDateTimeMathOptions): LocalDateTime;

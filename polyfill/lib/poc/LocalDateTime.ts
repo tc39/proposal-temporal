@@ -28,76 +28,6 @@ type LocalDateTimeISOCalendarFields = ReturnType<Temporal.DateTime['getISOCalend
   absolute: Temporal.Absolute;
 };
 
-/**
- * The `durationKind` option allows users to customize how calculations behave
- * when days aren't exactly 24 hours long. This occurs on days when Daylight
- * Savings Time (DST) starts or ends, or when a country or region legally
- * changes its time zone offset.
- *
- * Choices are:
- * - `'absolute'` - Days are treated as 24 hours long, even if there's a
- *   change in local timezone offset. Math is performed on the underlying
- *   Absolute timestamp and then local time fields are refreshed to match the
- *   updated timestamp.
- * - `'dateTime'` - Day length will vary according to time zone offset changes
- *   like DST transitions. Math is performed on the calendar date and clock
- *   time, and then the Absolute timestamp is refreshed to match the new
- *   calendar date and clock time.
- * - `'hybrid'` - Math is performed by using `'absolute'` math on the time
- *   portion, and `'dateTime'` math on the date portion.
- *
- * Days are almost always 24 hours long, these options produce identical
- * results if the time zone offset of the endpoint matches the time zone offset
- * of the original LocalDateTime. But they may return different results if
- * there's a time zone offset change like a DST transition.
- *
- * For `plus` and `minus` operations the default is `'hybrid'` which matches
- * most users' expectations:
- * - Adding or subtracting whole days should keep clock time unchanged, even
- *   if a DST transition happens. For example: "Postpone my 6:00PM dinner by 7
- *   days, but make sure that the time stays 6:00PM, not 5:00PM or 7:00PM if
- *   DST starts over the weekend."
- * - Adding or removing time should ignore DST changes. For example: "Meet me
- *   at the party in 2 hours, not 1 hour or 3 hours if DST starts tonight".
- *
- * The default is also `'hybrid'` for `difference` operations. In this case,
- * typical users expect that short durations that span a DST boundary
- * are measured using real-world durations, while durations of one day or longer
- * are measured by default using calendar days and clock time. For example:
- * - 1:30AM -> 4:30AM on the day that DST starts is "2 hours", because that's
- *   how much time elapsed in the real word despite a 3-hour difference on the
- *   wall clock.
- * - 1:30AM on the day DST starts -> next day 1:30AM is "1 day" even though only
- *   23 hours have elapsed in the real world.
- *
- * To support these expectations, `'hybrid'` for `difference` works as follows:
- * - If `hours` in clock time is identical at start and end, then an integer
- *   number of days is reported with no `hours` remainder, even if there was a
- *   DST transition in between.
- * - Otherwise, periods of 24 or more real-world hours are reported using clock
- *   time, while periods less than 24 hours are reported using elapsed time.
- */
-export interface DurationKindOptions {
-  durationKind: 'absolute' | 'dateTime' | 'hybrid';
-}
-
-type DurationKinds = DurationKindOptions['durationKind'];
-
-/**
- * For `compare` operations, the default is `'absolute'` because sorting
- * almost always is based on the actual instant that something happened in the
- * real world, even during unusual periods like the hour before and after DST
- * ends where the same clock hour is replayed twice in the real world. During
- * that period, an earlier clock time like "2:30AM Pacific Standard Time" is
- * actually later in the real world than "2:15AM Pacific Daylight Time" which
- * was 45 minutes earlier in the real world but 15 minutes later according to
- * a wall clock. To sort by wall clock times instead, use `'dateTime'`. (`'hybrid'`
- * is not needed nor available for `compare` operations.)
- */
-export interface CompareCalculationOptions {
-  calculation: 'absolute' | 'dateTime';
-}
-
 export interface OverflowOptions {
   /**
    * How to deal with out-of-range values
@@ -125,7 +55,7 @@ export interface OverflowOptions {
  * - `'prefer'` uses the offset if it's valid for the date/time in this time
  *   zone, but if it's not valid then the time zone will be used as a fallback
  *   to calculate the absolute time.
- * -  `'ignore'` will disregard any provided offset. Instead, the time zone and
+ * - `'ignore'` will disregard any provided offset. Instead, the time zone and
  *    date/time value are used to calculate the absolute time. This will keep
  *    local clock time unchanged but may result in a different real-world
  *    instant.
@@ -147,11 +77,9 @@ export interface TimeZoneOffsetDisambiguationOptions {
 export type LocalDateTimeAssignmentOptions = Partial<
   OverflowOptions & Temporal.ToAbsoluteOptions & TimeZoneOffsetDisambiguationOptions
 >;
-export type LocalDateTimeMathOptions = Partial<DurationKindOptions & Temporal.ToAbsoluteOptions & OverflowOptions>;
+export type LocalDateTimeMathOptions = OverflowOptions;
 export type LocalDateTimeDifferenceOptions = Partial<
-  Temporal.DifferenceOptions<'years' | 'months' | 'weeks' | 'days' | 'hours' | 'minutes' | 'seconds'> &
-    DurationKindOptions &
-    Temporal.ToAbsoluteOptions
+  Temporal.DifferenceOptions<'years' | 'months' | 'weeks' | 'days' | 'hours' | 'minutes' | 'seconds'>
 >;
 
 /** Build a `Temporal.LocalDateTime` instance from a property bag object */
@@ -275,88 +203,60 @@ function doPlusOrMinus(
   options: LocalDateTimeMathOptions | undefined,
   localDateTime: LocalDateTime
 ): LocalDateTime {
-  const disambiguation = getOption(options, 'disambiguation', DISAMBIGUATION_OPTIONS, 'compatible');
-  const durationKind = getOption(options, 'durationKind', CALCULATION_OPTIONS, 'hybrid');
   const overflow = getOption(options, 'overflow', OVERFLOW_OPTIONS, 'constrain');
   // TODO: edit below depending on https://github.com/tc39/proposal-temporal/issues/607
   const dateTimeOverflowOption = { disambiguation: overflow };
   const { timeZone, calendar } = localDateTime;
 
-  // Absolute doesn't use disambiguation, while RFC 5455 specifies 'compatible' behavior
-  // for disambiguation. Therefore, only 'dateTime' durations can use this option.
-  if (disambiguation !== 'compatible' && durationKind !== 'dateTime') {
-    throw new RangeError('Disambiguation options are only valid for `dateTime` durations');
+  const { timeDuration, dateDuration } = splitDuration(durationLike);
+  if (isZeroDuration(dateDuration)) {
+    // If there's only a time to add/subtract, then use absolute math
+    // because RFC 5545 specifies using absolute math for time units.
+    const result = localDateTime.absolute[op](durationLike);
+    return new LocalDateTime(result, timeZone, calendar);
   }
 
-  switch (durationKind) {
-    case 'absolute': {
-      const result = localDateTime.absolute[op](durationLike);
-      return new LocalDateTime(result, timeZone, calendar);
-    }
-    case 'dateTime': {
-      const dateTime = localDateTime.toDateTime();
-      const newDateTime = dateTime[op](durationLike, dateTimeOverflowOption);
-      // If empty duration (no local date/time change), then clone `this` to
-      // avoid disambiguation that might change the absolute.
-      if (newDateTime.equals(dateTime)) return LocalDateTime.from(localDateTime);
-      // Otherwise, return the result.
-      const abs = newDateTime.toAbsolute(timeZone, { disambiguation });
-      return new LocalDateTime(abs, timeZone, calendar);
-    }
-    case 'hybrid': {
-      const { timeDuration, dateDuration } = splitDuration(durationLike);
-      if (isZeroDuration(dateDuration)) {
-        // If there's only a time to add/subtract, then use absolute math
-        // because RFC 5545 specifies using absolute math for time units.
-        const result = localDateTime.absolute[op](durationLike);
-        return new LocalDateTime(result, timeZone, calendar);
-      }
-
-      // Add the units according to the largest-to-smallest order of operations
-      // required by RFC 5545. Note that the same breakout is not required for
-      // the time duration because all time units are the same length (because
-      // Temporal ignores leap seconds).
-      let newDateTime: Temporal.DateTime = localDateTime.toDateTime();
-      const { years, months, weeks, days } = dateDuration;
-      // TODO: if https://github.com/tc39/proposal-temporal/issues/653
-      // changes order of operations, then coalesce 4 calls to 1.
-      if (years) newDateTime = newDateTime[op]({ years }, dateTimeOverflowOption);
-      if (months) newDateTime = newDateTime[op]({ months }, dateTimeOverflowOption);
-      if (weeks) newDateTime = newDateTime[op]({ weeks }, dateTimeOverflowOption);
-      if (days) newDateTime = newDateTime[op]({ days }, dateTimeOverflowOption);
-      if (isZeroDuration(timeDuration)) {
-        const absolute = newDateTime.toAbsolute(timeZone);
-        return LocalDateTime.from({ absolute, timeZone, calendar: localDateTime.calendar });
-      } else {
-        // Now add/subtract the time. Because all time units are always the same
-        // length, we can add/subtract all of them together without worrying about
-        // order of operations.
-        newDateTime = newDateTime[op](timeDuration, dateTimeOverflowOption);
-        let absolute = newDateTime.toAbsolute(timeZone);
-        const reverseOp = op === 'plus' ? 'minus' : 'plus';
-        const backUpAbs = absolute[reverseOp]({ nanoseconds: totalNanoseconds(timeDuration) });
-        const backUpOffset = timeZone.getOffsetNanosecondsFor(backUpAbs);
-        const absOffset = timeZone.getOffsetNanosecondsFor(absolute);
-        const backUpNanoseconds = absOffset - backUpOffset;
-        if (backUpNanoseconds) {
-          // RFC 5545 specifies that time units are always "exact time" meaning
-          // they aren't affected by DST. Therefore, if there was a TZ
-          // transition during the time duration that was added, then undo the
-          // impact of that transition. However, don't adjust if applying the
-          // adjustment would cause us to back up onto the other side of the
-          // transition.
-          const backUpOp = backUpNanoseconds < 0 ? 'minus' : 'plus';
-          const adjustedAbs = absolute[backUpOp]({ nanoseconds: backUpNanoseconds });
-          if (timeZone.getOffsetNanosecondsFor(adjustedAbs) === timeZone.getOffsetNanosecondsFor(absolute)) {
-            absolute = adjustedAbs;
-          }
-        }
-
-        return LocalDateTime.from({ absolute, timeZone, calendar });
+  // Add the units according to the largest-to-smallest order of operations
+  // required by RFC 5545. Note that the same breakout is not required for
+  // the time duration because all time units are the same length (because
+  // Temporal ignores leap seconds).
+  let newDateTime: Temporal.DateTime = localDateTime.toDateTime();
+  const { years, months, weeks, days } = dateDuration;
+  // TODO: if https://github.com/tc39/proposal-temporal/issues/653
+  // changes order of operations, then coalesce 4 calls to 1.
+  if (years) newDateTime = newDateTime[op]({ years }, dateTimeOverflowOption);
+  if (months) newDateTime = newDateTime[op]({ months }, dateTimeOverflowOption);
+  if (weeks) newDateTime = newDateTime[op]({ weeks }, dateTimeOverflowOption);
+  if (days) newDateTime = newDateTime[op]({ days }, dateTimeOverflowOption);
+  if (isZeroDuration(timeDuration)) {
+    const absolute = newDateTime.toAbsolute(timeZone);
+    return LocalDateTime.from({ absolute, timeZone, calendar: localDateTime.calendar });
+  } else {
+    // Now add/subtract the time. Because all time units are always the same
+    // length, we can add/subtract all of them together without worrying about
+    // order of operations.
+    newDateTime = newDateTime[op](timeDuration, dateTimeOverflowOption);
+    let absolute = newDateTime.toAbsolute(timeZone);
+    const reverseOp = op === 'plus' ? 'minus' : 'plus';
+    const backUpAbs = absolute[reverseOp]({ nanoseconds: totalNanoseconds(timeDuration) });
+    const backUpOffset = timeZone.getOffsetNanosecondsFor(backUpAbs);
+    const absOffset = timeZone.getOffsetNanosecondsFor(absolute);
+    const backUpNanoseconds = absOffset - backUpOffset;
+    if (backUpNanoseconds) {
+      // RFC 5545 specifies that time units are always "exact time" meaning
+      // they aren't affected by DST. Therefore, if there was a TZ
+      // transition during the time duration that was added, then undo the
+      // impact of that transition. However, don't adjust if applying the
+      // adjustment would cause us to back up onto the other side of the
+      // transition.
+      const backUpOp = backUpNanoseconds < 0 ? 'minus' : 'plus';
+      const adjustedAbs = absolute[backUpOp]({ nanoseconds: backUpNanoseconds });
+      if (timeZone.getOffsetNanosecondsFor(adjustedAbs) === timeZone.getOffsetNanosecondsFor(absolute)) {
+        absolute = adjustedAbs;
       }
     }
-    default:
-      throw new Error(`Invalid \`durationKind\` option value: ${durationKind}`);
+
+    return LocalDateTime.from({ absolute, timeZone, calendar });
   }
 }
 
@@ -745,25 +645,17 @@ export class LocalDateTime {
   /**
    * Compare two `Temporal.LocalDateTime` values.
    *
-   * By default, comparison will use the absolute time because sorting is almost
-   * always based on when events happened in the real world, but during the hour
-   * before and after DST ends in the fall, sorting of clock time will not match
-   * the real-world sort order.
+   * Comparison will use the absolute time because sorting is almost always
+   * based on when events happened in the real world, but during the hour before
+   * and after DST ends in the fall, sorting of clock time will not match the
+   * real-world sort order.
    *
-   * Available options:
-   * ```
-   * calculation?: 'absolute' (default) | 'dateTime'
-   * ```
+   * In the very unusual case of sorting by clock time instead, use
+   * `.toDateTime()` on both instances and use `Temporal.DateTime`'s `compare`
+   * method.
    */
-  static compare(
-    one: LocalDateTime,
-    two: LocalDateTime,
-    options?: CompareCalculationOptions
-  ): Temporal.ComparisonResult {
-    const calculation = getOption(options, 'calculation', COMPARE_CALCULATION_OPTIONS, 'absolute');
-    return calculation === 'dateTime'
-      ? Temporal.DateTime.compare(one._dt, two._dt)
-      : Temporal.Absolute.compare(one._abs, two._abs);
+  static compare(one: LocalDateTime, two: LocalDateTime): Temporal.ComparisonResult {
+    return Temporal.Absolute.compare(one._abs, two._abs);
   }
 
   /**
@@ -779,13 +671,11 @@ export class LocalDateTime {
   /**
    * Add a `Temporal.Duration` and return the result.
    *
-   * By default, the `'hybrid'` calculation method will be used where dates will
-   * be added using calendar dates while times will be added with absolute time.
+   * Dates will be added using calendar dates while times will be added with
+   * absolute time.
    *
    * Available options:
    * ```
-   * durationKind?: 'hybrid' (default) | 'absolute'  | 'dateTime'
-   * disambiguation?: 'compatible' (default) |  'earlier' | 'later' | 'reject'
    * overflow?: 'constrain' (default) | 'reject'
    * ```
    */
@@ -796,14 +686,11 @@ export class LocalDateTime {
   /**
    * Subtract a `Temporal.Duration` and return the result.
    *
-   * By default, the `'hybrid'` calculation method will be used where dates will
-   * be added using calendar dates while times will be subtracted with absolute
-   * time.
+   * Dates will be subtracted using calendar dates while times will be
+   * subtracted with absolute time.
    *
    * Available options:
    * ```
-   * durationKind?: 'hybrid' (default) | 'absolute'  | 'dateTime'
-   * disambiguation?: 'compatible' (default) |  'earlier' | 'later' | 'reject'
    * overflow?: 'constrain' (default) | 'reject'
    * ```
    */
@@ -815,147 +702,115 @@ export class LocalDateTime {
    * Calculate the difference between two `Temporal.LocalDateTime` values and
    * return the `Temporal.Duration` result.
    *
-   * The kind of duration returned depends on the `durationKind` option:
-   * - `absolute` will calculate the difference using real-world elapsed time.
-   * - `dateTime` will calculate the difference in clock time and calendar
-   *   dates.
-   * - By default, `'hybrid'` durations are returned because they usually match
-   *   users' expectations that short durations are measured in real-world
-   *   elapsed time that ignores DST transitions, while differences of calendar
-   *   days are calculated by taking DST transitions into account.
+   * The duration returned is a "hybrid" duration. The date portion represents
+   * full calendar days like `DateTime.prototype.difference` would return. The
+   * time portion represents real-world elapsed time like
+   * `Absolute.prototype.difference` would return. This "hybrid duration"
+   * approach matches widely-adopted industry standards like RFC 5545
+   * (iCalendar). It also matches the behavior of popular JavaScript libraries
+   * like moment.js and date-fns.
    *
-   * If `'hybrid'` is chosen but `largestUnit` is hours or less, then the
-   * calculation will be the same as if `absolute` was chosen.
+   * Examples:
+   * - Difference between 2:30AM on the day before DST starts and 3:30AM on the
+   *   day DST starts = `P1DT1H` (even though it's only 24 hours of real-world
+   *   elapsed time)
+   * - Difference between 1:45AM on the day before DST starts and the "second"
+   *   1:15AM on the day DST ends => `PT24H30M` (because it hasn't been a full
+   *   calendar day even though it's been 24.5 real-world hours).
    *
-   * However, if `'hybrid'` is used with `largestUnit` of `'days'` or larger,
-   * then (as RFC 5545 requires) date differences will be calculated using
-   * `dateTime` math which adjusts for DST, while the time remainder will be
-   * calculated using real-world elapsed time. Examples:
-   * - 2:30AM on the day before DST starts -> 3:30AM on the day DST starts =
-   *   P1DT1H (even though it's only 24 hours of real-world elapsed time)
-   * - 1:45AM on the day before DST starts -> "second" 1:15AM on the day DST
-   *   ends = PT24H30M (because it hasn't been a full calendar day even though
-   *   it's been 24.5 real-world hours).
+   * If `largestUnit` is `'hours'` or smaller, then the result will be the same
+   * as if `Temporal.Absolute.prototype.difference` was used.
    *
-   * The `'disambiguation'` option is ony used if all of the following are true:
-   * - `durationKind: 'hybrid'` is used.
-   * - The difference between `this` and `other` is larger than one full
-   *   calendar day.
-   * - `this` and `other` have different clock times. If clock times are the
-   *   same then an integer number of days will be returned.
-   * - When the date portion of the difference is subtracted from `this`, the
-   *   resulting local time is ambiguous (e.g. the repeated hour after DST ends,
-   *   or the skipped hour after DST starts). If all of the above conditions are
-   *   true, then the `'disambiguation'` option determines the
-   *   `Temporal.Absolute` chosen for the end of the date portion. The time
-   *   portion of the resulting duration will be calculated from that
-   *   `Temporal.Absolute`.
-   *
-   * Calculations using `durationKind: 'absolute'` are limited to `largestUnit:
-   * 'days'` or smaller units.  For larger units, use `'hybrid'` or
-   * `'dateTime'`.
+   * If both values have the same local time, then the result will be the same
+   * as if `Temporal.DateTime.prototype.difference` was used.
    *
    * If the other `Temporal.LocalDateTime` is in a different time zone, then the
    * same days can be different lengths in each time zone, e.g. if only one of
-   * them observes DST. Therefore, a `RangeError` will be thrown if all of the
-   * following conditions are true:
-   * - `durationKind` is  `'hybrid'` or `'dateTime'`
-   * - `largestUnit` is `'days'` or larger
-   * - the two instances' time zones have different `name` fields.
+   * them observes DST. Therefore, a `RangeError` will be thrown if
+   * `largestUnit` is `'days'` or larger and the two instances' time zones have
+   * different `name` fields.  To work around this limitation, transform one of
+   * the instances to the other's time zone using `.with({timeZone:
+   * other.timeZone})` and then calculate the same-timezone difference.
    *
-   * Here are commonly used alternatives for cross-timezone calculations:
-   * - Use `durationKind: 'absolute'`, as long as it's OK if all days are
-   *   assumed to be 24 hours long and DST is ignored.
-   * - If you need weeks, months, or years in the result, or if you need to take
-   *   DST transitions into account, transform one of the instances to the
-   *   other's time zone using `.with({timeZone: other.timeZone})` and then
-   *   calculate the same-timezone difference.
-   * - To calculate with calendar dates only, use
+   * To calculate the difference between calendar dates only, use
    *   `.toDate().difference(other.toDate())`.
-   * - To calculate with clock times only, use
+   *
+   * To calculate the difference between clock times only, use
    *   `.toTime().difference(other.toTime())`.
    *
    * Because of the complexity and ambiguity involved in cross-timezone
-   * calculations, `hours` is the default for `largestUnit`.
+   * calculations involving days or larger units, `hours` is the default for
+   * `largestUnit`.
    *
    * Available options:
    * ```
    * largestUnit: 'years' | 'months' | 'weeks' | 'days' | 'hours' (default) | 'minutes' | 'seconds'
-   * durationKind?: 'hybrid' (default) | 'absolute'  | 'dateTime'
-   * disambiguation?: 'compatible' (default) |  'earlier' | 'later' | 'reject'
    * ```
    */
   difference(other: LocalDateTime, options?: LocalDateTimeDifferenceOptions): Temporal.Duration {
-    const durationKind = getOption(options, 'durationKind', CALCULATION_OPTIONS, 'hybrid');
-    const disambiguation = getOption(options, 'disambiguation', DISAMBIGUATION_OPTIONS, 'compatible');
-
     const largestUnit = toLargestTemporalUnit(options, 'years');
     const dateUnits = ['years', 'months', 'weeks', 'days'] as LargestDifferenceUnit[];
     const wantDate = dateUnits.includes(largestUnit);
 
-    // treat hybrid as absolute if the user is only asking for a time difference
-    if (durationKind === 'absolute' || (durationKind === 'hybrid' && !wantDate)) {
-      if (wantDate) throw new Error("For absolute difference calculations, `largestUnit` must be 'hours' or smaller");
+    // treat as absolute if the user is only asking for a time difference
+    if (!wantDate) {
       const largestUnitOptionBag = { largestUnit: largestUnit as 'hours' | 'minutes' | 'seconds' };
       return this._abs.difference(other._abs, largestUnitOptionBag);
-    } else if (durationKind === 'dateTime') {
-      return this._dt.difference(other._dt, { largestUnit });
-    } else {
-      // durationKind === 'hybrid'
-      const dtDiff = this._dt.difference(other._dt, { largestUnit });
-
-      // If there's no change in timezone offset between this and other, then we
-      // don't have to do any DST-related fixups. Just return the simple
-      // DateTime difference.
-      const diffOffset = this.timeZoneOffsetNanoseconds - other.timeZoneOffsetNanoseconds;
-      if (diffOffset === 0) return dtDiff;
-
-      // It's the hard case: the timezone offset is different so there's a
-      // transition in the middle and we may need to adjust the result for DST.
-      // RFC 5545 expects that date durations are measured in nominal (DateTime)
-      // days, while time durations are measured in exact (Absolute) time.
-      const { dateDuration, timeDuration } = splitDuration(dtDiff);
-      if (isZeroDuration(timeDuration)) return dateDuration; // even number of calendar days
-
-      // If we get here, there's both a time and date part of the duration AND
-      // there's a time zone offset transition during the duration. RFC 5545
-      // says that we should calculate full days using DateTime math and
-      // remainder times using absolute time. To do this, we calculate a
-      // `dateTime` difference, split it into date and time portions, and then
-      // convert the time portion to an `absolute` duration before returning to
-      // the caller.  A challenge: converting the time duration involves a
-      // conversion from `DateTime` to `Absolute` which can be ambiguous. This
-      // can cause unpredictable behavior because the disambiguation is
-      // happening inside of the duration, not at its edges like in `plus` or
-      // `from`. We'll reduce the chance of this unpredictability as follows:
-      // 1. First, calculate the time portion as if it's closest to `other`.
-      // 2. If the time portion in (1) contains a tz offset transition, then
-      //    reverse the calculation and assume that the time portion is closest
-      //    to `this`.
-      //
-      // The approach above ensures that in almost all cases, there will be no
-      // "internal disambiguation" required. It's possible to construct a test
-      // case where both `this` and `other` are both within 25 hours of an
-      // offset transition, but in practice this will be exceedingly rare.
-      let intermediateDt = this._dt.minus(dateDuration);
-      let intermediateAbs = intermediateDt.toAbsolute(this._tz, { disambiguation });
-      let adjustedTimeDuration: Temporal.Duration;
-      if (this._tz.getOffsetNanosecondsFor(intermediateAbs) === other.timeZoneOffsetNanoseconds) {
-        // The transition was in the date portion which is what we want.
-        adjustedTimeDuration = intermediateAbs.difference(other._abs, { largestUnit: 'hours' });
-      } else {
-        // There was a transition in the time portion, so try assuming that the
-        // time portion is on the other side next to `this`, where there's
-        // unlikely to be another transition.
-        intermediateDt = other._dt.plus(dateDuration);
-        intermediateAbs = intermediateDt.toAbsolute(this._tz, { disambiguation });
-        adjustedTimeDuration = this._abs.difference(intermediateAbs, { largestUnit: 'hours' });
-      }
-
-      const hybridDuration = mergeDuration({ dateDuration, timeDuration: adjustedTimeDuration });
-      return hybridDuration;
-      // TODO: tests for cases where intermediate value lands on a discontinuity
     }
+    const dtDiff = this._dt.difference(other._dt, { largestUnit });
+
+    // If there's no change in timezone offset between this and other, then we
+    // don't have to do any DST-related fixups. Just return the simple
+    // DateTime difference.
+    const diffOffset = this.timeZoneOffsetNanoseconds - other.timeZoneOffsetNanoseconds;
+    if (diffOffset === 0) return dtDiff;
+
+    // It's the hard case: the timezone offset is different so there's a
+    // transition in the middle and we may need to adjust the result for DST.
+    // RFC 5545 expects that date durations are measured in nominal (DateTime)
+    // days, while time durations are measured in exact (Absolute) time.
+    const { dateDuration, timeDuration } = splitDuration(dtDiff);
+    if (isZeroDuration(timeDuration)) return dateDuration; // even number of calendar days
+
+    // If we get here, there's both a time and date part of the duration AND
+    // there's a time zone offset transition during the duration. RFC 5545
+    // says that we should calculate full days using DateTime math and
+    // remainder times using absolute time. To do this, we calculate a
+    // `dateTime` difference, split it into date and time portions, and then
+    // convert the time portion to an `absolute` duration before returning to
+    // the caller.  A challenge: converting the time duration involves a
+    // conversion from `DateTime` to `Absolute` which can be ambiguous. This
+    // can cause unpredictable behavior because the disambiguation is
+    // happening inside of the duration, not at its edges like in `plus` or
+    // `from`. We'll reduce the chance of this unpredictability as follows:
+    // 1. First, calculate the time portion as if it's closest to `other`.
+    // 2. If the time portion in (1) contains a tz offset transition, then
+    //    reverse the calculation and assume that the time portion is closest
+    //    to `this`.
+    //
+    // The approach above ensures that in almost all cases, there will be no
+    // "internal disambiguation" required. It's possible to construct a test
+    // case where both `this` and `other` are both within 25 hours of a
+    // different offset transition, but in practice this will be exceedingly
+    // rare.
+    let intermediateDt = this._dt.minus(dateDuration);
+    let intermediateAbs = intermediateDt.toAbsolute(this._tz);
+    let adjustedTimeDuration: Temporal.Duration;
+    if (this._tz.getOffsetNanosecondsFor(intermediateAbs) === other.timeZoneOffsetNanoseconds) {
+      // The transition was in the date portion which is what we want.
+      adjustedTimeDuration = intermediateAbs.difference(other._abs, { largestUnit: 'hours' });
+    } else {
+      // There was a transition in the time portion, so try assuming that the
+      // time portion is on the other side next to `this`, where there's
+      // unlikely to be another transition.
+      intermediateDt = other._dt.plus(dateDuration);
+      intermediateAbs = intermediateDt.toAbsolute(this._tz);
+      adjustedTimeDuration = this._abs.difference(intermediateAbs, { largestUnit: 'hours' });
+    }
+
+    const hybridDuration = mergeDuration({ dateDuration, timeDuration: adjustedTimeDuration });
+    return hybridDuration;
+    // TODO: more tests for cases where intermediate value lands on a discontinuity
   }
 
   /**
@@ -1220,8 +1075,6 @@ const LARGEST_DIFFERENCE_UNITS: LargestDifferenceUnit[] = [
   'minutes',
   'seconds'
 ];
-const CALCULATION_OPTIONS: DurationKinds[] = ['absolute', 'dateTime', 'hybrid'];
-const COMPARE_CALCULATION_OPTIONS: CompareCalculationOptions['calculation'][] = ['absolute', 'dateTime'];
 const DISAMBIGUATION_OPTIONS: Temporal.ToAbsoluteOptions['disambiguation'][] = [
   'compatible',
   'earlier',
