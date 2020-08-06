@@ -4937,7 +4937,7 @@
       value: function plus(temporalDurationLike) {
         if (!ES.IsTemporalAbsolute(this)) throw new TypeError('invalid receiver');
 
-        var _ES$ToLimitedTemporal = ES.ToLimitedTemporalDuration(temporalDurationLike, ['years', 'months']),
+        var _ES$ToLimitedTemporal = ES.ToLimitedTemporalDuration(temporalDurationLike, ['years', 'months', 'weeks']),
             days = _ES$ToLimitedTemporal.days,
             hours = _ES$ToLimitedTemporal.hours,
             minutes = _ES$ToLimitedTemporal.minutes,
@@ -4966,7 +4966,7 @@
       value: function minus(temporalDurationLike) {
         if (!ES.IsTemporalAbsolute(this)) throw new TypeError('invalid receiver');
 
-        var _ES$ToLimitedTemporal2 = ES.ToLimitedTemporalDuration(temporalDurationLike, ['years', 'months']),
+        var _ES$ToLimitedTemporal2 = ES.ToLimitedTemporalDuration(temporalDurationLike, ['years', 'months', 'weeks']),
             days = _ES$ToLimitedTemporal2.days,
             hours = _ES$ToLimitedTemporal2.hours,
             minutes = _ES$ToLimitedTemporal2.minutes,
