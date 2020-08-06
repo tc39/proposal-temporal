@@ -204,6 +204,9 @@ export const ES = ObjectAssign({}, ES2019, {
   ParseTemporalDurationString: (isoString) => {
     const match = PARSE.duration.exec(isoString);
     if (!match) throw new RangeError(`invalid duration: ${isoString}`);
+    if (match.slice(1).every((element) => element === undefined)) {
+      throw new RangeError(`invalid duration: ${isoString}`);
+    }
     const years = ES.ToInteger(match[1]);
     const months = ES.ToInteger(match[2]);
     const weeks = ES.ToInteger(match[3]);

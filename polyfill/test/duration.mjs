@@ -61,6 +61,10 @@ describe('Duration', () => {
     it('variant decimal separator', () => {
       equal(`${Duration.from('P1Y1M1W1DT1H1M1,12S')}`, 'P1Y1M1W1DT1H1M1.120S');
     });
+    it('"P" by itself is not a valid string', () => {
+      throws(() => Duration.from('P'), RangeError);
+      throws(() => Duration.from('PT'), RangeError);
+    });
     describe('Disambiguation', () => {
       it('negative values always throw', () => {
         const negative = {
