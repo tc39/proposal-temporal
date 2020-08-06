@@ -487,12 +487,11 @@ describe('fromString regex', () => {
       ['0.123456789S', { ms: 123, µs: 456, ns: 789 }],
       ['0,123456789S', { ms: 123, µs: 456, ns: 789 }]
     ];
-    const tim = sec.reduce(
-      (arr, [s, add]) => arr.concat(times.map(([p, expect]) => [`${p}${s}`, { ...expect, ...add }])),
-      []
-    );
+    const tim = sec
+      .reduce((arr, [s, add]) => arr.concat(times.map(([p, expect]) => [`${p}${s}`, { ...expect, ...add }])), [])
+      .slice(1);
 
-    day.forEach(([p, expect]) => {
+    day.slice(1).forEach(([p, expect]) => {
       test(`P${p}`, expect);
       test(`p${p}`, expect);
       test(`p${p.toLowerCase()}`, expect);
