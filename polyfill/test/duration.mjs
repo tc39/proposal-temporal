@@ -65,6 +65,7 @@ describe('Duration', () => {
       throws(() => Duration.from('P'), RangeError);
       throws(() => Duration.from('PT'), RangeError);
     });
+    it('no junk at end of string', () => throws(() => Duration.from('P1Y1M1W1DT1H1M1.01Sjunk'), RangeError));
     describe('Disambiguation', () => {
       it('negative values always throw', () => {
         const negative = {

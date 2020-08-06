@@ -81,6 +81,7 @@ describe('MonthDay', () => {
         equal(`${MonthDay.from('--11-18')}`, '11-18');
         equal(`${MonthDay.from('--1118')}`, '11-18');
       });
+      it('no junk at end of string', () => throws(() => MonthDay.from('11-18junk'), RangeError));
       describe('Disambiguation', () => {
         const bad = { month: 1, day: 32 };
         it('reject', () => throws(() => MonthDay.from(bad, { disambiguation: 'reject' }), RangeError));

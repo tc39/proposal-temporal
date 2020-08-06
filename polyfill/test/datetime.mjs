@@ -494,6 +494,7 @@ describe('DateTime', () => {
       equal(`${DateTime.from('1976-11-18T15')}`, '1976-11-18T15:00');
       equal(`${DateTime.from('1976-11-18')}`, '1976-11-18T00:00');
     });
+    it('no junk at end of string', () => throws(() => DateTime.from('1976-11-18T15:23:30.123456789junk'), RangeError));
   });
   describe('DateTime.toAbsolute() works', () => {
     it('recent date', () => {
