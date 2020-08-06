@@ -344,6 +344,7 @@ describe('Absolute', () => {
     });
     it('ignores any specified calendar', () =>
       equal(`${Absolute.from('1976-11-18T15:23:30.123456789Z[c=discordian]')}`, '1976-11-18T15:23:30.123456789Z'));
+    it('no junk at end of string', () => throws(() => Absolute.from('1976-11-18T15:23:30.123456789Zjunk'), RangeError));
   });
   describe('Absolute.plus works', () => {
     const abs = Absolute.from('1969-12-25T12:23:45.678901234Z');

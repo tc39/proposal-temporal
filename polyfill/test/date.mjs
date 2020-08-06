@@ -423,6 +423,7 @@ describe('Date', () => {
       equal(`${Date.from('+0019761118T152330.1+00:00')}`, '1976-11-18');
       equal(`${Date.from('+0019761118T152330.1+0000')}`, '1976-11-18');
     });
+    it('no junk at end of string', () => throws(() => Date.from('1976-11-18junk'), RangeError));
     describe('Disambiguation', () => {
       const bad = { year: 2019, month: 1, day: 32 };
       it('reject', () => throws(() => Date.from(bad, { disambiguation: 'reject' }), RangeError));

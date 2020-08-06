@@ -96,6 +96,7 @@ describe('YearMonth', () => {
         equal(`${YearMonth.from('1976-11-18T15')}`, '1976-11');
         equal(`${YearMonth.from('1976-11-18')}`, '1976-11');
       });
+      it('no junk at end of string', () => throws(() => YearMonth.from('1976-11junk'), RangeError));
       describe('Disambiguation', () => {
         const bad = { year: 2019, month: 13 };
         it('reject', () => throws(() => YearMonth.from(bad, { disambiguation: 'reject' }), RangeError));

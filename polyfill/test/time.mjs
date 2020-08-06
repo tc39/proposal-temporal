@@ -420,6 +420,7 @@ describe('Time', () => {
       it('optional parts', () => {
         equal(`${Time.from('15')}`, '15:00');
       });
+      it('no junk at end of string', () => throws(() => Time.from('15:23:30.100junk'), RangeError));
       describe('Disambiguation', () => {
         const bad = { nanosecond: 1000 };
         it('reject', () => throws(() => Time.from(bad, { disambiguation: 'reject' }), RangeError));
