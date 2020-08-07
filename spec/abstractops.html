@@ -47,13 +47,6 @@
     </emu-alg>
   </emu-clause>
 
-  <emu-clause id="sec-temporal-todurationsubtractiontemporaldisambiguation" aoid="ToDurationSubtractionTemporalDisambiguation">
-    <h1>ToDurationSubtractionTemporalDisambiguation ( _options_ )</h1>
-    <emu-alg>
-      1. Return ? GetOption(_options_, *"disambiguation"*, « *"balanceConstrain"*, *"balance"* », *"balanceConstrain"*).
-    </emu-alg>
-  </emu-clause>
-
   <emu-clause id="sec-temporal-tolargesttemporalunit" aoid="ToLargestTemporalUnit">
     <h1>ToLargestTemporalUnit ( _largestUnit_, _disallowedUnits_, _defaultUnit_ )</h1>
     <emu-alg>
@@ -402,8 +395,8 @@
           DurationDays DurationTime?
 
       Duration :
-          DurationDesignator DurationDate
-          DurationDesignator DurationTime
+          Sign? DurationDesignator DurationDate
+          Sign? DurationDesignator DurationTime
 
       TemporalAbsoluteString :
           Date DateTimeSeparator TimeSpec TimeZone
@@ -567,7 +560,11 @@
       1. Assert: Type(_isoString_) is String.
       1. If _isoString_ does not satisfy the syntax of a |TemporalDurationString| (see <emu-xref href="#sec-temporal-iso8601grammar"></emu-xref>), then
         1. Throw a *RangeError* exception.
-      1. Let _years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, and _fraction_ be the parts of _isoString_ produced respectively by the |DurationYears|, |DurationMonths|, |DurationWeeks|, |DurationDays|, |DurationHours|, |DurationMinutes|, |DurationSeconds|, and |TimeFractionalPart| productions, or *undefined* if not present.
+      1. Let _sign_, _years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, and _fraction_ be the parts of _isoString_ produced respectively by the |Sign|, |DurationYears|, |DurationMonths|, |DurationWeeks|, |DurationDays|, |DurationHours|, |DurationMinutes|, |DurationSeconds|, and |TimeFractionalPart| productions, or *undefined* if not present.
+      1. If _sign_ is *"-"*, then
+        1. Let _factor_ be &minus;1;.
+      1. Else,
+        1. Let _factor_ be 1.
       1. Set _years_ to ? ToInteger(_years_).
       1. Set _months_ to ? ToInteger(_months_).
       1. Set _weeks_ to ? ToInteger(_weeks_).
@@ -589,16 +586,16 @@
         1. Let _microseconds_ be 0.
         1. Let _nanoseconds_ be 0.
       1. Return the new Record {
-        [[Years]]: _years_,
-        [[Months]]: _months_,
-        [[Weeks]]: _weeks_,
-        [[Days]]: _days_,
-        [[Hours]]: _hours_,
-        [[Minutes]]: _minutes_,
-        [[Seconds]]: _seconds_,
-        [[Milliseconds]]: _milliseconds_,
-        [[Microseconds]]: _microseconds_,
-        [[Nanoseconds]]: _nanoseconds_
+        [[Years]]: _years_ &times; _factor_,
+        [[Months]]: _months_ &times; _factor_,
+        [[Weeks]]: _weeks_ &times; _factor_,
+        [[Days]]: _days_ &times; _factor_,
+        [[Hours]]: _hours_ &times; _factor_,
+        [[Minutes]]: _minutes_ &times; _factor_,
+        [[Seconds]]: _seconds_ &times; _factor_,
+        [[Milliseconds]]: _milliseconds_ &times; _factor_,
+        [[Microseconds]]: _microseconds_ &times; _factor_,
+        [[Nanoseconds]]: _nanoseconds_ &times; _factor_
         }.
     </emu-alg>
   </emu-clause>

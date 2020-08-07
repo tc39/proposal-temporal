@@ -210,20 +210,21 @@ export const ES = ObjectAssign({}, ES2019, {
   ParseTemporalDurationString: (isoString) => {
     const match = PARSE.duration.exec(isoString);
     if (!match) throw new RangeError(`invalid duration: ${isoString}`);
-    if (match.slice(1).every((element) => element === undefined)) {
+    if (match.slice(2).every((element) => element === undefined)) {
       throw new RangeError(`invalid duration: ${isoString}`);
     }
-    const years = ES.ToInteger(match[1]);
-    const months = ES.ToInteger(match[2]);
-    const weeks = ES.ToInteger(match[3]);
-    const days = ES.ToInteger(match[4]);
-    const hours = ES.ToInteger(match[5]);
-    const minutes = ES.ToInteger(match[6]);
-    const seconds = ES.ToInteger(match[7]);
-    const fraction = match[8] + '000000000';
-    const milliseconds = ES.ToInteger(fraction.slice(0, 3));
-    const microseconds = ES.ToInteger(fraction.slice(3, 6));
-    const nanoseconds = ES.ToInteger(fraction.slice(6, 9));
+    const sign = match[1] === '-' ? -1 : 1;
+    const years = ES.ToInteger(match[2]) * sign;
+    const months = ES.ToInteger(match[3]) * sign;
+    const weeks = ES.ToInteger(match[4]) * sign;
+    const days = ES.ToInteger(match[5]) * sign;
+    const hours = ES.ToInteger(match[6]) * sign;
+    const minutes = ES.ToInteger(match[7]) * sign;
+    const seconds = ES.ToInteger(match[8]) * sign;
+    const fraction = match[9] + '000000000';
+    const milliseconds = ES.ToInteger(fraction.slice(0, 3)) * sign;
+    const microseconds = ES.ToInteger(fraction.slice(3, 6)) * sign;
+    const nanoseconds = ES.ToInteger(fraction.slice(6, 9)) * sign;
     return { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
   },
   ParseTemporalAbsolute: (isoString) => {
@@ -369,10 +370,7 @@ export const ES = ObjectAssign({}, ES2019, {
     nanoseconds,
     disambiguation
   ) => {
-    for (const prop of [years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds]) {
-      if (prop < 0) throw new RangeError('negative values not allowed as duration fields');
-    }
-
+    ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
     switch (disambiguation) {
       case 'reject':
         for (const prop of [
@@ -393,7 +391,7 @@ export const ES = ObjectAssign({}, ES2019, {
       case 'constrain': {
         const arr = [years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds];
         for (const idx in arr) {
-          if (!Number.isFinite(arr[idx])) arr[idx] = Number.MAX_VALUE;
+          if (!Number.isFinite(arr[idx])) arr[idx] = Math.sign(arr[idx]) * Number.MAX_VALUE;
         }
         [years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds] = arr;
         break;
@@ -473,9 +471,6 @@ export const ES = ObjectAssign({}, ES2019, {
   },
   ToTimeZoneTemporalDisambiguation: (options) => {
     return ES.GetOption(options, 'disambiguation', ['compatible', 'earlier', 'later', 'reject'], 'compatible');
-  },
-  ToDurationSubtractionTemporalDisambiguation: (options) => {
-    return ES.GetOption(options, 'disambiguation', ['balanceConstrain', 'balance'], 'balanceConstrain');
   },
   ToLargestTemporalUnit: (options, fallback, disallowedStrings = []) => {
     const allowed = new Set([
@@ -727,32 +722,42 @@ export const ES = ObjectAssign({}, ES2019, {
       if (num <= Number.MAX_SAFE_INTEGER) return num.toString(10);
       return bigInt(num).toString();
     }
-    const dateParts = [];
-    if (GetSlot(duration, YEARS)) dateParts.push(`${formatNumber(GetSlot(duration, YEARS))}Y`);
-    if (GetSlot(duration, MONTHS)) dateParts.push(`${formatNumber(GetSlot(duration, MONTHS))}M`);
-    if (GetSlot(duration, WEEKS)) dateParts.push(`${formatNumber(GetSlot(duration, WEEKS))}W`);
-    if (GetSlot(duration, DAYS)) dateParts.push(`${formatNumber(GetSlot(duration, DAYS))}D`);
 
-    const timeParts = [];
-    if (GetSlot(duration, HOURS)) timeParts.push(`${formatNumber(GetSlot(duration, HOURS))}H`);
-    if (GetSlot(duration, MINUTES)) timeParts.push(`${formatNumber(GetSlot(duration, MINUTES))}M`);
-
-    const secondParts = [];
+    const years = GetSlot(duration, YEARS);
+    const months = GetSlot(duration, MONTHS);
+    const weeks = GetSlot(duration, WEEKS);
+    const days = GetSlot(duration, DAYS);
+    const hours = GetSlot(duration, HOURS);
+    const minutes = GetSlot(duration, MINUTES);
+    const seconds = GetSlot(duration, SECONDS);
     let ms = GetSlot(duration, MILLISECONDS);
     let µs = GetSlot(duration, MICROSECONDS);
     let ns = GetSlot(duration, NANOSECONDS);
-    let seconds;
-    ({ seconds, millisecond: ms, microsecond: µs, nanosecond: ns } = ES.BalanceSubSecond(ms, µs, ns));
-    const s = GetSlot(duration, SECONDS) + seconds;
-    if (ns) secondParts.unshift(`${ns}`.padStart(3, '0'));
-    if (µs || secondParts.length) secondParts.unshift(`${µs}`.padStart(3, '0'));
-    if (ms || secondParts.length) secondParts.unshift(`${ms}`.padStart(3, '0'));
+    const sign = ES.DurationSign(years, months, weeks, days, hours, minutes, seconds, ms, µs, ns);
+
+    const dateParts = [];
+    if (years) dateParts.push(`${formatNumber(Math.abs(years))}Y`);
+    if (months) dateParts.push(`${formatNumber(Math.abs(months))}M`);
+    if (weeks) dateParts.push(`${formatNumber(Math.abs(weeks))}W`);
+    if (days) dateParts.push(`${formatNumber(Math.abs(days))}D`);
+
+    const timeParts = [];
+    if (hours) timeParts.push(`${formatNumber(Math.abs(hours))}H`);
+    if (minutes) timeParts.push(`${formatNumber(Math.abs(minutes))}M`);
+
+    const secondParts = [];
+    let s;
+    ({ seconds: s, millisecond: ms, microsecond: µs, nanosecond: ns } = ES.BalanceSubSecond(ms, µs, ns));
+    s += seconds;
+    if (ns) secondParts.unshift(`${Math.abs(ns)}`.padStart(3, '0'));
+    if (µs || secondParts.length) secondParts.unshift(`${Math.abs(µs)}`.padStart(3, '0'));
+    if (ms || secondParts.length) secondParts.unshift(`${Math.abs(ms)}`.padStart(3, '0'));
     if (secondParts.length) secondParts.unshift('.');
-    if (s || secondParts.length) secondParts.unshift(formatNumber(s));
+    if (s || secondParts.length) secondParts.unshift(formatNumber(Math.abs(s)));
     if (secondParts.length) timeParts.push(`${secondParts.join('')}S`);
     if (timeParts.length) timeParts.unshift('T');
     if (!dateParts.length && !timeParts.length) return 'PT0S';
-    return `P${dateParts.join('')}${timeParts.join('')}`;
+    return `${sign < 0 ? '-' : ''}P${dateParts.join('')}${timeParts.join('')}`;
   },
 
   GetCanonicalTimeZoneIdentifier: (timeZoneIdentifier) => {
@@ -1000,6 +1005,12 @@ export const ES = ObjectAssign({}, ES2019, {
 
     return week;
   },
+  DurationSign: (y, mon, w, d, h, min, s, ms, µs, ns) => {
+    for (const prop of [y, mon, w, d, h, min, s, ms, µs, ns]) {
+      if (prop !== 0) return prop < 0 ? -1 : 1;
+    }
+    return 0;
+  },
 
   BalanceYearMonth: (year, month) => {
     if (!Number.isFinite(year) || !Number.isFinite(month)) throw new RangeError('infinity is out of range');
@@ -1233,6 +1244,13 @@ export const ES = ObjectAssign({}, ES2019, {
       ES.RejectToRange(month, 1, 9);
     }
   },
+  RejectDurationSign: (y, mon, w, d, h, min, s, ms, µs, ns) => {
+    const sign = ES.DurationSign(y, mon, w, d, h, min, s, ms, µs, ns);
+    for (const prop of [y, mon, w, d, h, min, s, ms, µs, ns]) {
+      const propSign = Math.sign(prop);
+      if (propSign !== 0 && propSign !== sign) throw new RangeError('mixed-sign values not allowed as duration fields');
+    }
+  },
 
   DifferenceDate: (smaller, larger, largestUnit = 'days') => {
     let years = larger.year - smaller.year;
@@ -1390,7 +1408,7 @@ export const ES = ObjectAssign({}, ES2019, {
     ));
     return { deltaDays, hour, minute, second, millisecond, microsecond, nanosecond };
   },
-  AddDuration: (
+  DurationArithmetic: (
     y1,
     mon1,
     w1,
@@ -1424,7 +1442,7 @@ export const ES = ObjectAssign({}, ES2019, {
     let microseconds = µs1 + µs2;
     let nanoseconds = ns1 + ns2;
 
-    return ES.RegulateDuration(
+    const sign = ES.DurationSign(
       years,
       months,
       weeks,
@@ -1434,43 +1452,18 @@ export const ES = ObjectAssign({}, ES2019, {
       seconds,
       milliseconds,
       microseconds,
-      nanoseconds,
-      disambiguation
+      nanoseconds
     );
-  },
-  SubtractDuration: (
-    y1,
-    mon1,
-    w1,
-    d1,
-    h1,
-    min1,
-    s1,
-    ms1,
-    µs1,
-    ns1,
-    y2,
-    mon2,
-    w2,
-    d2,
-    h2,
-    min2,
-    s2,
-    ms2,
-    µs2,
-    ns2,
-    disambiguation
-  ) => {
-    let years = y1 - y2;
-    let months = mon1 - mon2;
-    let weeks = w1 - w2;
-    let days = d1 - d2;
-    let hours = h1 - h2;
-    let minutes = min1 - min2;
-    let seconds = s1 - s2;
-    let milliseconds = ms1 - ms2;
-    let microseconds = µs1 - µs2;
-    let nanoseconds = ns1 - ns2;
+    years *= sign;
+    months *= sign;
+    weeks *= sign;
+    days *= sign;
+    hours *= sign;
+    minutes *= sign;
+    seconds *= sign;
+    milliseconds *= sign;
+    microseconds *= sign;
+    nanoseconds *= sign;
 
     if (nanoseconds < 0) {
       microseconds += Math.floor(nanoseconds / 1000);
@@ -1497,27 +1490,34 @@ export const ES = ObjectAssign({}, ES2019, {
       hours = ES.NonNegativeModulo(hours, 24);
     }
 
-    for (const prop of [years, months, weeks, days]) {
-      if (prop < 0) throw new RangeError('negative values not allowed as duration fields');
+    for (const prop of [months, weeks, days]) {
+      if (prop < 0) throw new RangeError('mixed sign not allowed in duration fields');
     }
 
-    if (disambiguation === 'balance') {
-      return ES.RegulateDuration(
-        years,
-        months,
-        weeks,
-        days,
-        hours,
-        minutes,
-        seconds,
-        milliseconds,
-        microseconds,
-        nanoseconds,
-        'balance'
-      );
-    }
+    years *= sign;
+    months *= sign;
+    weeks *= sign;
+    days *= sign;
+    hours *= sign;
+    minutes *= sign;
+    seconds *= sign;
+    milliseconds *= sign;
+    microseconds *= sign;
+    nanoseconds *= sign;
 
-    return { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
+    return ES.RegulateDuration(
+      years,
+      months,
+      weeks,
+      days,
+      hours,
+      minutes,
+      seconds,
+      milliseconds,
+      microseconds,
+      nanoseconds,
+      disambiguation
+    );
   },
 
   AssertPositiveInteger: (num) => {

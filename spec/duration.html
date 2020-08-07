@@ -254,6 +254,19 @@
       </emu-alg>
     </emu-clause>
 
+    <emu-clause id="sec-get-temporal.duration.prototype.sign">
+      <h1>get Temporal.Duration.prototype.sign</h1>
+      <p>
+        `Temporal.Duration.prototype.sign` is an accessor property whose set accessor function is undefined.
+        Its get accessor function performs the following steps:
+      </p>
+      <emu-alg>
+        1. Let _duration_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_duration_, [[InitializedTemporalDuration]]).
+        1. Return ! DurationSign(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
+      </emu-alg>
+    </emu-clause>
+
     <emu-clause id="sec-temporal.duration.prototype.with">
       <h1>Temporal.Duration.prototype.with ( _temporalDurationLike_ [ , _options_ ] )</h1>
       <p>
@@ -310,6 +323,32 @@
       </emu-alg>
     </emu-clause>
 
+    <emu-clause id="sec-temporal.duration.prototype.negated">
+      <h1>Temporal.Duration.prototype.negated ( )</h1>
+      <p>
+        The `negated` method takes no arguments.
+        It performs the following steps when called:
+      </p>
+      <emu-alg>
+        1. Let _duration_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_duration_, [[InitializedTemporalDuration]]).
+        1. Return ? CreateTemporalDurationFromInstance(_duration_, &minus;_duration_.[[Years]], &minus;_duration_.[[Months]], &minus;_duration_.[[Weeks]], &minus;_duration_.[[Days]], &minus;_duration_.[[Hours]], &minus;_duration_.[[Minutes]], &minus;_duration_.[[Seconds]], &minus;_duration_.[[Milliseconds]], &minus;_duration_.[[Microseconds]], &minus;_duration_.[[Nanoseconds]]).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal.duration.prototype.abs">
+      <h1>Temporal.Duration.prototype.abs ( )</h1>
+      <p>
+        The `abs` method takes no arguments.
+        It performs the following steps when called:
+      </p>
+      <emu-alg>
+        1. Let _duration_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_duration_, [[InitializedTemporalDuration]]).
+        1. Return ? CreateTemporalDurationFromInstance(_duration_, abs(_duration_.[[Years]]), abs(_duration_.[[Months]]), abs(_duration_.[[Weeks]]), abs(_duration_.[[Days]]), abs(_duration_.[[Hours]]), abs(_duration_.[[Minutes]]), abs(_duration_.[[Seconds]]), abs(_duration_.[[Milliseconds]]), abs(_duration_.[[Microseconds]]), abs(_duration_.[[Nanoseconds]])).
+      </emu-alg>
+    </emu-clause>
+
     <emu-clause id="sec-temporal.duration.prototype.plus">
       <h1>Temporal.Duration.prototype.plus ( _other_ [ , _options_ ] )</h1>
       <p>
@@ -320,8 +359,9 @@
         1. Let _duration_ be the *this* value.
         1. Perform ? RequireInternalSlot(_duration_, [[InitializedTemporalDuration]]).
         1. Set _other_ to ? ToLimitedTemporalDuration(_other_, « »).
+        1. Perform ? RejectDurationSign (_other_.[[Years]], _other_.[[Months]], _other_.[[Weeks]], _other_.[[Days]], _other_.[[Hours]], _other_.[[Minutes]], _other_.[[Seconds]], _other_.[[Milliseconds]], _other_.[[Microseconds]], _other_.[[Nanoseconds]]).
         1. Let _disambiguation_ be ? ToTemporalDisambiguation(_options_).
-        1. Let _result_ be ? AddDuration(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]], _other_.[[Years]], _other_.[[Months]], _other_.[[Weeks]], _other_.[[Days]], _other_.[[Hours]], _other_.[[Minutes]], _other_.[[Seconds]], _other_.[[Milliseconds]], _other_.[[Microseconds]], _other_.[[Nanoseconds]], _disambiguation_).
+        1. Let _result_ be ? DurationArithmetic(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]], _other_.[[Years]], _other_.[[Months]], _other_.[[Weeks]], _other_.[[Days]], _other_.[[Hours]], _other_.[[Minutes]], _other_.[[Seconds]], _other_.[[Milliseconds]], _other_.[[Microseconds]], _other_.[[Nanoseconds]], _disambiguation_).
         1. Return ? CreateTemporalDurationFromInstance(_duration_, _result_.[[Years]], _result_.[[Months]], _result_.[[Weeks]], _result_.[[Days]], _result_.[[Hours]], _result_.[[Minutes]], _result_.[[Seconds]], _result_.[[Milliseconds]], _result_.[[Microseconds]], _result_.[[Nanoseconds]]).
       </emu-alg>
     </emu-clause>
@@ -336,8 +376,9 @@
         1. Let _duration_ be the *this* value.
         1. Perform ? RequireInternalSlot(_duration_, [[InitializedTemporalDuration]]).
         1. Set _other_ to ? ToLimitedTemporalDuration(_other_, « »).
-        1. Let _disambiguation_ be ? ToDurationSubtractionTemporalDisambiguation(_options_).
-        1. Let _result_ be ? SubtractDuration(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]], _other_.[[Years]], _other_.[[Months]], _other_.[[Weeks]], _other_.[[Days]], _other_.[[Hours]], _other_.[[Minutes]], _other_.[[Seconds]], _other_.[[Milliseconds]], _other_.[[Microseconds]], _other_.[[Nanoseconds]], _disambiguation_).
+        1. Perform ? RejectDurationSign (_other_.[[Years]], _other_.[[Months]], _other_.[[Weeks]], _other_.[[Days]], _other_.[[Hours]], _other_.[[Minutes]], _other_.[[Seconds]], _other_.[[Milliseconds]], _other_.[[Microseconds]], _other_.[[Nanoseconds]]).
+        1. Let _disambiguation_ be ? ToDurationTemporalDisambiguation(_options_).
+        1. Let _result_ be ? DurationArithmetic(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]], &minus;_other_.[[Years]], &minus;_other_.[[Months]], &minus;_other_.[[Weeks]], &minus;_other_.[[Days]], &minus;_other_.[[Hours]], &minus;_other_.[[Minutes]], &minus;_other_.[[Seconds]], &minus;_other_.[[Milliseconds]], &minus;_other_.[[Microseconds]], &minus;_other_.[[Nanoseconds]], _disambiguation_).
         1. Return ? CreateTemporalDurationFromInstance(_duration_, _result_.[[Years]], _result_.[[Months]], _result_.[[Weeks]], _result_.[[Days]], _result_.[[Hours]], _result_.[[Minutes]], _result_.[[Seconds]], _result_.[[Milliseconds]], _result_.[[Microseconds]], _result_.[[Nanoseconds]]).
       </emu-alg>
     </emu-clause>
@@ -438,10 +479,35 @@
       </emu-alg>
     </emu-clause>
 
+    <emu-clause id="sec-temporal-durationsign" aoid="DurationSign">
+      <h1>DurationSign ( _years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_ )</h1>
+      <emu-alg>
+        1. For each value _v_ of _years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_, do
+          1. If _v_ &lt; 0, return −1.
+          1. If _v_ &gt; 0, return 1.
+        1. Return 0.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-rejectdurationsign" aoid="RejectDurationSign">
+      <h1>RejectDurationSign ( _years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_ )</h1>
+      <emu-alg>
+        1. Let _sign_ be ! DurationSign(_years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_).
+        1. For each value _v_ of _years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_, do
+          1. If _v_ &lt; 0 and _sign_ &gt; 0, throw a *RangeError* exception.
+          1. If _v_ &gt; 0 and _sign_ &lt; 0, throw a *RangeError* exception.
+        1. Return *true*.
+      </emu-alg>
+    </emu-clause>
+
     <emu-clause id="sec-temporal-validatetemporalduration" aoid="ValidateTemporalDuration">
       <h1>ValidateTemporalDuration ( _years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_ )</h1>
       <emu-alg>
-        1. For each of _years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_, if any of the values is negative or infinite, return *false*.
+        1. Let _sign_ be ! DurationSign(_years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_).
+        1. For each value _v_ of _years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_, do
+          1. If _v_ is infinite, return *false*.
+          1. If _v_ &lt; 0 and _sign_ &gt; 0, return *false*.
+          1. If _v_ &gt; 0 and _sign_ &lt; 0, return *false*.
         1. Return *true*.
       </emu-alg>
     </emu-clause>
@@ -568,12 +634,12 @@
       <h1>RegulateDuration ( _years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_, _disambiguation_ )</h1>
       <emu-alg>
         1. Assert: _disambiguation_ is one of *"constrain"*, *"balance"*, or *"reject"*.
+        1. Perform ? RejectDurationSign(_years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_).
         1. If _disambiguation_ is *"reject"*, then
           1. If ! ValidateTemporalDuration(_years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_) is *false*, then
             1. Throw a *RangeError* exception.
         1. Else if _disambiguation_ is *"constrain"*, then
-          1. For each of _years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_, if any of the values is negative, throw a *RangeError* exception.
-          1. For each of _years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_, if any of the values is infinite, let it be the largest possible finite value of the Number type.
+          1. For each of _years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_, if any of the values is infinite, let it be the sign of that value times the largest possible finite value of the Number type.
         1. Else if _disambiguation_ is *"balance"*, then
           1. If ! ValidateTemporalDuration(_years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_) is *false*, then
             1. Throw a *RangeError* exception.
@@ -602,11 +668,11 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-addduration" aoid="AddDuration">
-      <h1>AddDuration ( _y1_, _mon1_, _w1_, _d1_, _h1_, _min1_, _s1_, _ms1_, _mus1_, _ns1_, _y2_, _mon2_, _w2_, _d2_, _h2_, _min2_, _s2_, _ms2_, _mus2_, _ns2_, _disambiguation_ )</h1>
+    <emu-clause id="sec-temporal-durationarithmetic" aoid="DurationArithmetic">
+      <h1>DurationArithmetic ( _y1_, _mon1_, _w1_, _d1_, _h1_, _min1_, _s1_, _ms1_, _mus1_, _ns1_, _y2_, _mon2_, _w2_, _d2_, _h2_, _min2_, _s2_, _ms2_, _mus2_, _ns2_, _disambiguation_ )</h1>
       <emu-alg>
         1. Assert: _y1_, _mon1_, _w1_, _d1_, _h1_, _min1_, _s1_, _ms1_, _mus1_, _ns1_, _y2_, _mon2_, _w2_, _d2_, _h2_, _min2_, _s2_, _ms2_, _mus2_, _ns2_ are integer Number values.
-        1. Assert: _disambiguation_ is either *"reject"* or *"constrain"*.
+        1. Assert: _disambiguation_ is either *"reject"*, *"balance"*, or *"constrain"*.
         1. Let _nanoseconds_ be _ns1_ + _ns2_.
         1. Let _microseconds_ be _mus1_ + _mus2_.
         1. Let _milliseconds_ be _ms1_ + _ms2_.
@@ -617,40 +683,17 @@
         1. Let _weeks_ be _w1_ + _w2_.
         1. Let _months_ be _mon1_ + _mon2_.
         1. Let _years_ be _y1_ + _y2_.
-        1. If _disambiguation_ is *"constrain"*, then
-          1. For each of _years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_, if any of the values is infinite, let it be the largest possible finite value of the Number type.
-        1. If ! ValidateTemporalDuration(_years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_) is *false*, then
-          1. Throw a *RangeError* exception.
-        1. Return the new Record {
-          [[Years]]: _years_,
-          [[Months]]: _months_,
-          [[Weeks]]: _weeks_,
-          [[Days]]: _days_,
-          [[Hours]]: _hours_,
-          [[Minutes]]: _minutes_,
-          [[Seconds]]: _seconds_,
-          [[Milliseconds]]: _milliseconds_,
-          [[Microseconds]]: _microseconds_,
-          [[Nanoseconds]]: _nanoseconds_
-          }.
-      </emu-alg>
-    </emu-clause>
-
-    <emu-clause id="sec-temporal-subtractduration" aoid="SubtractDuration">
-      <h1>SubtractDuration ( _y1_, _mon1_, _w1_, _d1_, _h1_, _min1_, _s1_, _ms1_, _mus1_, _ns1_, _y2_, _mon2_, _w2_, _d2_, _h2_, _min2_, _s2_, _ms2_, _mus2_, _ns2_, _disambiguation_ )</h1>
-      <emu-alg>
-        1. Assert: _y1_, _mon1_, _d1_, _h1_, _min1_, _s1_, _ms1_, _mus1_, _ns1_, _y2_, _mon2_, _d2_, _h2_, _min2_, _s2_, _ms2_, _mus2_, _ns2_ are integer Number values.
-        1. Assert: _disambiguation_ is either *"balanceConstrain"* or *"balance"*.
-        1. Let _nanoseconds_ be _ns1_ − _ns2_.
-        1. Let _microseconds_ be _mus1_ − _mus2_.
-        1. Let _milliseconds_ be _ms1_ − _ms2_.
-        1. Let _seconds_ be _s1_ − _s2_.
-        1. Let _minutes_ be _min1_ − _min2_.
-        1. Let _hours_ be _h1_ − _h2_.
-        1. Let _days_ be _d1_ − _d2_.
-        1. Let _weeks_ be _w1_ − _w2_.
-        1. Let _months_ be _mon1_ − _mon2_.
-        1. Let _years_ be _y1_ − _y2_.
+        1. Let _sign_ be ! DurationSign(_years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_).
+        1. Set _years_ to _years_ &times; _sign_.
+        1. Set _months_ to _months_ &times; _sign_.
+        1. Set _weeks_ to _weeks_ &times; _sign_.
+        1. Set _days_ to _days_ &times; _sign_.
+        1. Set _hours_ to _hours_ &times; _sign_.
+        1. Set _minutes_ to _minutes_ &times; _sign_.
+        1. Set _seconds_ to _seconds_ &times; _sign_.
+        1. Set _milliseconds_ to _milliseconds_ &times; _sign_.
+        1. Set _microseconds_ to _microseconds_ &times; _sign_.
+        1. Set _nanoseconds_ to _nanoseconds_ &times; _sign_.
         1. If _nanoseconds_ &lt; 0, then
           1. Set _microseconds_ to _microseconds_ + floor(_nanoseconds_ / 1000).
           1. Set _nanoseconds_ to ! NonNegativeModulo(_nanoseconds_, 1000).
@@ -669,22 +712,19 @@
         1. If _hours_ &lt; 0, then
           1. Set _days_ to _days_ + floor(_hours_ / 24).
           1. Set _hours_ to ! NonNegativeModulo(_hours_, 24).
-        1. If _disambiguation_ is *"balance"*, then
-          1. Return ? RegulateDuration(_years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_, _disambiguation_).
-        1. If ! ValidateTemporalDuration(_years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_) is *false*, then
-          1. Throw a *RangeError* exception.
-        1. Return the new Record {
-          [[Years]]: _years_,
-          [[Months]]: _months_,
-          [[Weeks]]: _weeks_,
-          [[Days]]: _days_,
-          [[Hours]]: _hours_,
-          [[Minutes]]: _minutes_,
-          [[Seconds]]: _seconds_,
-          [[Milliseconds]]: _milliseconds_,
-          [[Microseconds]]: _microseconds_,
-          [[Nanoseconds]]: _nanoseconds_
-          }.
+        1. If any of _months_, _weeks_, _days_ is negative, then
+          1. Throw a *RangeError*.
+        1. Set _years_ to _years_ &times; _sign_.
+        1. Set _months_ to _months_ &times; _sign_.
+        1. Set _weeks_ to _weeks_ &times; _sign_.
+        1. Set _days_ to _days_ &times; _sign_.
+        1. Set _hours_ to _hours_ &times; _sign_.
+        1. Set _minutes_ to _minutes_ &times; _sign_.
+        1. Set _seconds_ to _seconds_ &times; _sign_.
+        1. Set _milliseconds_ to _milliseconds_ &times; _sign_.
+        1. Set _microseconds_ to _microseconds_ &times; _sign_.
+        1. Set _nanoseconds_ to _nanoseconds_ &times; _sign_.
+        1. Return ? RegulateDuration(_years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_, _disambiguation_).
       </emu-alg>
     </emu-clause>
 
@@ -714,33 +754,38 @@
         1. Let _hours_ be _duration_.[[Hours]].
         1. Let _minutes_ be _duration_.[[Minutes]].
         1. Let _seconds_ be _duration_.[[Seconds]].
-        1. Let _balanceResult_ be ? BalanceSubSecond(_duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
+        1. Let _milliseconds_ be _duration_.[[Milliseconds]].
+        1. Let _microseconds_ be _duration_.[[Microseconds]].
+        1. Let _nanoseconds_ be _duration_.[[Nanoseconds]].
+        1. Let _sign_ be ! DurationSign(_years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_).
+        1. Let _balanceResult_ be ? BalanceSubSecond(_milliseconds_, _microseconds_, _nanoseconds_).
         1. Set _seconds_ to _seconds_ + _balanceResult_.[[Seconds]].
-        1. Let _milliseconds_ be _balanceResult_.[[Millisecond]].
-        1. Let _microseconds_ be _balanceResult_.[[Microsecond]].
-        1. Let _nanoseconds_ be _balanceResult_.[[Nanosecond]].
+        1. Set _milliseconds_ to _balanceResult_.[[Millisecond]].
+        1. Set _microseconds_ to _balanceResult_.[[Microsecond]].
+        1. Set _nanoseconds_ to _balanceResult_.[[Nanosecond]].
         1. If _years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, and _nanoseconds_ are all 0, then
           1. Return the string `"PT0S"`.
         1. Let _datePart_ be `""`.
         1. If _years_ is not 0, then
-          1. Set _datePart_ to the string concatenation of _years_ formatted as a decimal number and the code unit 0x0059 (LATIN CAPITAL LETTER Y).
+          1. Set _datePart_ to the string concatenation of abs(_years_) formatted as a decimal number and the code unit 0x0059 (LATIN CAPITAL LETTER Y).
         1. If _months_ is not 0, then
-          1. Set _datePart_ to the string concatenation of _datePart_, _months_ formatted as a decimal number, and the code unit 0x004D (LATIN CAPITAL LETTER M).
+          1. Set _datePart_ to the string concatenation of _datePart_, abs(_months_) formatted as a decimal number, and the code unit 0x004D (LATIN CAPITAL LETTER M).
         1. If _weeks_ is not 0, then
-          1. Set _datePart_ to the string concatenation of _datePart_, _weeks_ formatted as a decimal number, and the code unit 0x0057 (LATIN CAPITAL LETTER W).
+          1. Set _datePart_ to the string concatenation of _datePart_, abs(_weeks_) formatted as a decimal number, and the code unit 0x0057 (LATIN CAPITAL LETTER W).
         1. If _days_ is not 0, then
-          1. Set _datePart_ to the string concatenation of _datePart_, _days_ formatted as a decimal number, and the code unit 0x0044 (LATIN CAPITAL LETTER D).
+          1. Set _datePart_ to the string concatenation of _datePart_, abs(_days_) formatted as a decimal number, and the code unit 0x0044 (LATIN CAPITAL LETTER D).
         1. Let _timePart_ be `""`.
         1. If _hours_ is not 0, then
-          1. Set _timePart_ to the string concatenation of _hours_ formatted as a decimal number and the code unit 0x0048 (LATIN CAPITAL LETTER H).
+          1. Set _timePart_ to the string concatenation of abs(_hours_) formatted as a decimal number and the code unit 0x0048 (LATIN CAPITAL LETTER H).
         1. If _minutes_ is not 0, then
-          1. Set _timePart_ to the string concatenation of _timePart_, _minutes_ formatted as a decimal number, and the code unit 0x004D (LATIN CAPITAL LETTER M).
-        1. Let _secondsPart_ be ! FormatSecondsStringPart(_seconds_, _milliseconds_, _microseconds_, _nanoseconds_).
+          1. Set _timePart_ to the string concatenation of _timePart_, abs(_minutes_) formatted as a decimal number, and the code unit 0x004D (LATIN CAPITAL LETTER M).
+        1. Let _secondsPart_ be ! FormatSecondsStringPart(abs(_seconds_), abs(_milliseconds_), abs(_microseconds_), abs(_nanoseconds_)).
         1. If the first code unit of _secondsPart_ is 0x003A (COLON), then
           1. Set _secondsPart_ to the string containing all the code units of _secondsPart_ except the first.
         1. If _secondsPart_ is not `""`, then
           1. Set _secondsPart_ to the string concatenation of _secondsPart_ and the code unit 0x0053 (LATIN CAPITAL LETTER S).
-        1. Let _result_ be the string concatenation of the code unit 0x0050 (LATIN CAPITAL LETTER P) and _datePart_.
+        1. Let _signPart_ be the code unit 0x002D (HYPHEN-MINUS) if _sign_ &lt; 0, and otherwise the empty string.
+        1. Let _result_ be the string concatenation of _signPart_, the code unit 0x0050 (LATIN CAPITAL LETTER P) and _datePart_.
         1. If _timePart_ is not `""`, then
           1. Set _result_ to the string concatenation of _result_, the code unit 0x0054 (LATIN CAPITAL LETTER T), _timePart_, and _secondsPart_.
         1. Return _result_.

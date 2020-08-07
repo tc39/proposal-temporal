@@ -282,6 +282,12 @@ describe('Date', () => {
       const jan31 = Date.from('2020-01-31');
       throws(() => jan31.plus({ months: 1 }, { disambiguation: 'reject' }), RangeError);
     });
+    it('symmetrical with regard to negative durations', () => {
+      equal(`${Date.from('2019-11-18').plus({ years: -43 })}`, '1976-11-18');
+      equal(`${Date.from('1977-02-18').plus({ months: -3 })}`, '1976-11-18');
+      equal(`${Date.from('1976-12-08').plus({ days: -20 })}`, '1976-11-18');
+      equal(`${Date.from('2019-02-28').plus({ months: -1 })}`, '2019-01-28');
+    });
     it("ignores lower units that don't balance up to a day", () => {
       equal(`${date.plus({ hours: 1 })}`, '1976-11-18');
       equal(`${date.plus({ minutes: 1 })}`, '1976-11-18');
@@ -303,6 +309,11 @@ describe('Date', () => {
     it('invalid disambiguation', () => {
       ['', 'CONSTRAIN', 'balance', 3, null].forEach((disambiguation) =>
         throws(() => date.plus({ months: 1 }, { disambiguation }), RangeError)
+      );
+    });
+    it('mixed positive and negative values always throw', () => {
+      ['constrain', 'reject'].forEach((disambiguation) =>
+        throws(() => date.plus({ months: 1, days: -30 }, { disambiguation }), RangeError)
       );
     });
   });
@@ -332,6 +343,12 @@ describe('Date', () => {
       const mar31 = Date.from('2020-03-31');
       throws(() => mar31.minus({ months: 1 }, { disambiguation: 'reject' }), RangeError);
     });
+    it('symmetrical with regard to negative durations', () => {
+      equal(`${Date.from('1976-11-18').minus({ years: -43 })}`, '2019-11-18');
+      equal(`${Date.from('2018-12-18').minus({ months: -11 })}`, '2019-11-18');
+      equal(`${Date.from('2019-10-29').minus({ days: -20 })}`, '2019-11-18');
+      equal(`${Date.from('2019-01-28').minus({ months: -1 })}`, '2019-02-28');
+    });
     it("ignores lower units that don't balance up to a day", () => {
       equal(`${date.minus({ hours: 1 })}`, '2019-11-18');
       equal(`${date.minus({ minutes: 1 })}`, '2019-11-18');
@@ -353,6 +370,11 @@ describe('Date', () => {
     it('invalid disambiguation', () => {
       ['', 'CONSTRAIN', 'balance', 3, null].forEach((disambiguation) =>
         throws(() => date.minus({ months: 1 }, { disambiguation }), RangeError)
+      );
+    });
+    it('mixed positive and negative values always throw', () => {
+      ['constrain', 'reject'].forEach((disambiguation) =>
+        throws(() => date.minus({ months: 1, days: -30 }, { disambiguation }), RangeError)
       );
     });
   });

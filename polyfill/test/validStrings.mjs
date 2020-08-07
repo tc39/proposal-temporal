@@ -231,52 +231,54 @@ const date = choice(seq(dateYear, '-', dateMonth, '-', dateDay), seq(dateYear, d
 const time = seq(timeSpec, [timeZone]);
 const dateTime = choice(date, seq(date, dateTimeSeparator, time));
 
-// A repeat of timeFractionalPart and timeFraction because of the different
-// property names between Duration and the other types
 const durationFractionalPart = withCode(between(1, 9, digit()), (data, result) => {
   const fraction = result.padEnd(9, '0');
-  data.milliseconds = +fraction.slice(0, 3);
-  data.microseconds = +fraction.slice(3, 6);
-  data.nanoseconds = +fraction.slice(6, 9);
+  data.milliseconds = +fraction.slice(0, 3) * data.factor;
+  data.microseconds = +fraction.slice(3, 6) * data.factor;
+  data.nanoseconds = +fraction.slice(6, 9) * data.factor;
 });
 const durationFraction = seq(decimalSeparator, durationFractionalPart);
 const durationSeconds = seq(
-  withCode(oneOrMore(digit()), (data, result) => (data.seconds = +result)),
+  withCode(oneOrMore(digit()), (data, result) => (data.seconds = +result * data.factor)),
   [durationFraction],
   secondsDesignator
 );
 const durationMinutes = seq(
-  withCode(oneOrMore(digit()), (data, result) => (data.minutes = +result)),
+  withCode(oneOrMore(digit()), (data, result) => (data.minutes = +result * data.factor)),
   minutesDesignator,
   [durationSeconds]
 );
 const durationHours = seq(
-  withCode(oneOrMore(digit()), (data, result) => (data.hours = +result)),
+  withCode(oneOrMore(digit()), (data, result) => (data.hours = +result * data.factor)),
   hoursDesignator,
   [durationMinutes]
 );
 const durationTime = seq(durationTimeDesignator, choice(durationHours, durationMinutes, durationSeconds));
 const durationDays = seq(
-  withCode(oneOrMore(digit()), (data, result) => (data.days = +result)),
+  withCode(oneOrMore(digit()), (data, result) => (data.days = +result * data.factor)),
   daysDesignator
 );
 const durationWeeks = seq(
-  withCode(oneOrMore(digit()), (data, result) => (data.weeks = +result)),
+  withCode(oneOrMore(digit()), (data, result) => (data.weeks = +result * data.factor)),
   weeksDesignator,
   [durationDays]
 );
 const durationMonths = seq(
-  withCode(oneOrMore(digit()), (data, result) => (data.months = +result)),
+  withCode(oneOrMore(digit()), (data, result) => (data.months = +result * data.factor)),
   monthsDesignator,
   [durationWeeks]
 );
 const durationYears = seq(
-  withCode(oneOrMore(digit()), (data, result) => (data.years = +result)),
+  withCode(oneOrMore(digit()), (data, result) => (data.years = +result * data.factor)),
   yearsDesignator,
   [durationMonths]
 );
 const durationDate = seq(choice(durationYears, durationMonths, durationWeeks, durationDays), [durationTime]);
-const duration = seq(durationDesignator, choice(durationDate, durationTime));
+const duration = seq(
+  withCode([sign], (data, result) => (data.factor = result === '-' ? -1 : 1)),
+  durationDesignator,
+  choice(durationDate, durationTime)
+);
 
 const absolute = seq(date, dateTimeSeparator, timeSpec, timeZone);
 

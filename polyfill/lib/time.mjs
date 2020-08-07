@@ -113,21 +113,51 @@ export class Time {
     let { hour, minute, second, millisecond, microsecond, nanosecond } = this;
     const duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
     const disambiguation = ES.ToTemporalDisambiguation(options);
-    const { hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
-    ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.AddTime(
-      hour,
-      minute,
-      second,
-      millisecond,
-      microsecond,
-      nanosecond,
+    const { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
+    ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+    const sign = ES.DurationSign(
+      years,
+      months,
+      weeks,
+      days,
       hours,
       minutes,
       seconds,
       milliseconds,
       microseconds,
       nanoseconds
-    ));
+    );
+    if (sign < 0) {
+      ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.SubtractTime(
+        hour,
+        minute,
+        second,
+        millisecond,
+        microsecond,
+        nanosecond,
+        -hours,
+        -minutes,
+        -seconds,
+        -milliseconds,
+        -microseconds,
+        -nanoseconds
+      ));
+    } else {
+      ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.AddTime(
+        hour,
+        minute,
+        second,
+        millisecond,
+        microsecond,
+        nanosecond,
+        hours,
+        minutes,
+        seconds,
+        milliseconds,
+        microseconds,
+        nanoseconds
+      ));
+    }
     ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.RegulateTime(
       hour,
       minute,
@@ -147,21 +177,51 @@ export class Time {
     let { hour, minute, second, millisecond, microsecond, nanosecond } = this;
     const duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
     const disambiguation = ES.ToTemporalDisambiguation(options);
-    const { hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
-    ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.SubtractTime(
-      hour,
-      minute,
-      second,
-      millisecond,
-      microsecond,
-      nanosecond,
+    const { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
+    ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+    const sign = ES.DurationSign(
+      years,
+      months,
+      weeks,
+      days,
       hours,
       minutes,
       seconds,
       milliseconds,
       microseconds,
       nanoseconds
-    ));
+    );
+    if (sign < 0) {
+      ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.AddTime(
+        hour,
+        minute,
+        second,
+        millisecond,
+        microsecond,
+        nanosecond,
+        -hours,
+        -minutes,
+        -seconds,
+        -milliseconds,
+        -microseconds,
+        -nanoseconds
+      ));
+    } else {
+      ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.SubtractTime(
+        hour,
+        minute,
+        second,
+        millisecond,
+        microsecond,
+        nanosecond,
+        hours,
+        minutes,
+        seconds,
+        milliseconds,
+        microseconds,
+        nanoseconds
+      ));
+    }
     ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.RegulateTime(
       hour,
       minute,

@@ -200,6 +200,8 @@ The `duration` argument is an object with properties denoting a duration, such a
 The `disambiguation` parameter has no effect in the default ISO calendar, because the units of hours, minutes, and seconds are always the same length and therefore not ambiguous.
 However, it may have an effect in other calendars where those units are not always the same length.
 
+Adding a negative duration is equivalent to subtracting the absolute value of that duration.
+
 Usage example:
 ```javascript
 time = Temporal.Time.from('19:39:09.068346205');
@@ -225,6 +227,8 @@ The `duration` argument is an object with properties denoting a duration, such a
 
 The `disambiguation` parameter has no effect in the default ISO calendar, because the units of hours, minutes, and seconds are always the same length and therefore not ambiguous.
 However, it may have an effect in other calendars where those units are not always the same length.
+
+Subtracting a negative duration is equivalent to adding the absolute value of that duration.
 
 Usage example:
 ```javascript

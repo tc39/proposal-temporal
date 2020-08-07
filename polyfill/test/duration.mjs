@@ -19,6 +19,9 @@ describe('Duration', () => {
       equal(typeof Duration.prototype, 'object');
     });
     describe('Duration.prototype', () => {
+      it('Duration.prototype has sign', () => {
+        assert('sign' in Duration.prototype);
+      });
       it('Duration.prototype.with is a Function', () => {
         equal(typeof Duration.prototype.with, 'function');
       });
@@ -31,10 +34,69 @@ describe('Duration', () => {
       it('Duration.prototype.getFields is a Function', () => {
         equal(typeof Duration.prototype.getFields, 'function');
       });
+      it('Duration.prototype.negated is a Function', () => {
+        equal(typeof Duration.prototype.negated, 'function');
+      });
+      it('Duration.prototype.abs is a Function', () => {
+        equal(typeof Duration.prototype.abs, 'function');
+      });
     });
   });
   describe('Construction', () => {
-    it('negative values throw', () => throws(() => new Duration(-1, -1, -1, -1, -1, -1, -1, -1, -1, -1), RangeError));
+    it('positive duration, sets fields', () => {
+      const d = new Duration(5, 5, 5, 5, 5, 5, 5, 5, 5, 0);
+      equal(d.sign, 1);
+      equal(d.years, 5);
+      equal(d.months, 5);
+      equal(d.weeks, 5);
+      equal(d.days, 5);
+      equal(d.hours, 5);
+      equal(d.minutes, 5);
+      equal(d.seconds, 5);
+      equal(d.milliseconds, 5);
+      equal(d.microseconds, 5);
+      equal(d.nanoseconds, 0);
+    });
+    it('negative duration, sets fields', () => {
+      const d = new Duration(-5, -5, -5, -5, -5, -5, -5, -5, -5, 0);
+      equal(d.sign, -1);
+      equal(d.years, -5);
+      equal(d.months, -5);
+      equal(d.weeks, -5);
+      equal(d.days, -5);
+      equal(d.hours, -5);
+      equal(d.minutes, -5);
+      equal(d.seconds, -5);
+      equal(d.milliseconds, -5);
+      equal(d.microseconds, -5);
+      equal(d.nanoseconds, 0);
+    });
+    it('zero-length, sets fields', () => {
+      const d = new Duration();
+      equal(d.sign, 0);
+      equal(d.years, 0);
+      equal(d.months, 0);
+      equal(d.weeks, 0);
+      equal(d.days, 0);
+      equal(d.hours, 0);
+      equal(d.minutes, 0);
+      equal(d.seconds, 0);
+      equal(d.milliseconds, 0);
+      equal(d.microseconds, 0);
+      equal(d.nanoseconds, 0);
+    });
+    it('mixed positive and negative values throw', () => {
+      throws(() => new Duration(-1, 1, 1, 1, 1, 1, 1, 1, 1, 1), RangeError);
+      throws(() => new Duration(1, -1, 1, 1, 1, 1, 1, 1, 1, 1), RangeError);
+      throws(() => new Duration(1, 1, -1, 1, 1, 1, 1, 1, 1, 1), RangeError);
+      throws(() => new Duration(1, 1, 1, -1, 1, 1, 1, 1, 1, 1), RangeError);
+      throws(() => new Duration(1, 1, 1, 1, -1, 1, 1, 1, 1, 1), RangeError);
+      throws(() => new Duration(1, 1, 1, 1, 1, -1, 1, 1, 1, 1), RangeError);
+      throws(() => new Duration(1, 1, 1, 1, 1, 1, -1, 1, 1, 1), RangeError);
+      throws(() => new Duration(1, 1, 1, 1, 1, 1, 1, -1, 1, 1), RangeError);
+      throws(() => new Duration(1, 1, 1, 1, 1, 1, 1, 1, -1, 1), RangeError);
+      throws(() => new Duration(1, 1, 1, 1, 1, 1, 1, 1, 1, -1), RangeError);
+    });
   });
   describe('from()', () => {
     it('Duration.from(P5Y) is not the same object', () => {
@@ -73,28 +135,36 @@ describe('Duration', () => {
       ].forEach((str) => throws(() => Duration.from(str), RangeError));
     });
     it('"P" by itself is not a valid string', () => {
-      throws(() => Duration.from('P'), RangeError);
-      throws(() => Duration.from('PT'), RangeError);
+      ['P', 'PT', '-P', '-PT', '+P', '+PT'].forEach((s) => throws(() => Duration.from(s), RangeError));
     });
     it('no junk at end of string', () => throws(() => Duration.from('P1Y1M1W1DT1H1M1.01Sjunk'), RangeError));
+    it('with a + sign', () => {
+      const d = Duration.from('+P1D');
+      equal(d.days, 1);
+    });
+    it('with a - sign', () => {
+      const d = Duration.from('-P1D');
+      equal(d.days, -1);
+    });
+    it('all units have the same sign', () => {
+      const d = Duration.from('-P1Y1M1W1DT1H1M1.123456789S');
+      equal(d.years, -1);
+      equal(d.months, -1);
+      equal(d.weeks, -1);
+      equal(d.days, -1);
+      equal(d.hours, -1);
+      equal(d.minutes, -1);
+      equal(d.seconds, -1);
+      equal(d.milliseconds, -123);
+      equal(d.microseconds, -456);
+      equal(d.nanoseconds, -789);
+    });
+    it('does not accept minus signs in individual units', () => {
+      throws(() => Duration.from('P-1Y1M'), RangeError);
+      throws(() => Duration.from('P1Y-1M'), RangeError);
+    });
     describe('Disambiguation', () => {
-      it('negative values always throw', () => {
-        const negative = {
-          years: -1,
-          months: -1,
-          days: -1,
-          hours: -1,
-          minutes: -1,
-          seconds: -1,
-          milliseconds: -1,
-          microseconds: -1,
-          nanoseconds: -1
-        };
-        ['constrain', 'balance', 'reject'].forEach((disambiguation) =>
-          throws(() => Duration.from(negative, { disambiguation }), RangeError)
-        );
-      });
-      it('negative values cannot balance', () => {
+      it('mixed positive and negative values always throw', () => {
         ['constrain', 'balance', 'reject'].forEach((disambiguation) =>
           throws(() => Duration.from({ hours: 1, minutes: -30 }, { disambiguation }), RangeError)
         );
@@ -137,6 +207,9 @@ describe('Duration', () => {
       equal(`${Duration.from({ nanoseconds: 3500 })}`, 'PT0.000003500S');
       equal(`${new Duration(0, 0, 0, 0, 0, 0, 0, 1111, 1111, 1111)}`, 'PT1.112112111S');
       equal(`${Duration.from({ seconds: 120, milliseconds: 3500 })}`, 'PT123.500S');
+    });
+    it('emits a negative sign for a negative duration', () => {
+      equal(`${Duration.from({ weeks: -1, days: -1 })}`, '-P1W1D');
     });
   });
   describe('toLocaleString()', () => {
@@ -279,15 +352,28 @@ describe('Duration', () => {
       equal(result.microseconds, 3);
       equal(result.nanoseconds, 1);
     });
-    it('negative values always throw', () => {
+    it('mixed positive and negative values always throw', () => {
       ['constrain', 'balance', 'reject'].forEach((disambiguation) =>
-        throws(() => duration.with({ minutes: -1 }, { disambiguation }), RangeError)
+        throws(() => duration.with({ hours: 1, minutes: -1 }, { disambiguation }), RangeError)
       );
+    });
+    it('can reverse the sign if all the fields are replaced', () => {
+      const d = Duration.from({ years: 5, days: 1 });
+      const d2 = d.with({ years: -1, days: -1, minutes: 0 });
+      equal(`${d2}`, '-P1Y1D');
+      notEqual(d.sign, d2.sign);
+    });
+    it('throws if new fields have a different sign from the old fields', () => {
+      const d = Duration.from({ years: 5, days: 1 });
+      throws(() => d.with({ months: -5, minutes: 0 }), RangeError);
     });
     it('invalid disambiguation', () => {
       ['', 'CONSTRAIN', 'xyz', 3, null].forEach((disambiguation) =>
         throws(() => duration.with({ days: 5 }, { disambiguation }), RangeError)
       );
+    });
+    it('sign cannot be manipulated independently', () => {
+      throws(() => duration.with({ sign: -1 }), RangeError);
     });
   });
   describe('Duration.plus()', () => {
@@ -297,6 +383,13 @@ describe('Duration', () => {
     });
     it('adds different units', () => {
       equal(`${duration.plus({ hours: 12, seconds: 30 })}`, 'P1DT12H5M30S');
+    });
+    it('symmetric with regard to negative durations', () => {
+      equal(`${Duration.from('P3DT10M').plus({ days: -2, minutes: -5 })}`, 'P1DT5M');
+      equal(
+        `${Duration.from('P1DT12H5M30S').plus({ hours: -12, seconds: -30 }, { disambiguation: 'balance' })}`,
+        'P1DT5M'
+      );
     });
     it('does not balance units', () => {
       const d = Duration.from('P50M50W50DT50H50M50.500500500S');
@@ -342,8 +435,13 @@ describe('Duration', () => {
       throws(() => max.plus(max, { disambiguation: 'reject' }), RangeError);
     });
     it('throws on invalid disambiguation', () => {
-      ['', 'CONSTRAIN', 'balance', 3, null].forEach((disambiguation) =>
+      ['', 'CONSTRAIN', 'balanceConstrain', 3, null].forEach((disambiguation) =>
         throws(() => duration.plus(duration, { disambiguation }), RangeError)
+      );
+    });
+    it('mixed positive and negative values always throw', () => {
+      ['constrain', 'balance', 'reject'].forEach((disambiguation) =>
+        throws(() => duration.plus({ hours: 1, minutes: -30 }, { disambiguation }), RangeError)
       );
     });
   });
@@ -363,7 +461,15 @@ describe('Duration', () => {
     it('balances when subtracting different units', () => {
       equal(`${duration.minus({ seconds: 30 })}`, 'P3DT1H9M30S');
     });
-    it('never balances positive units in balanceConstrain mode', () => {
+    it('symmetric with regard to negative durations', () => {
+      equal(`${Duration.from('P2DT1H5M').minus({ days: -1, minutes: -5 })}`, 'P3DT1H10M');
+      equal(`${new Duration().minus({ days: -3, hours: -1, minutes: -10 })}`, 'P3DT1H10M');
+      equal(`${Duration.from('PT1H10M').minus({ days: -3 })}`, 'P3DT1H10M');
+      equal(`${Duration.from('P3DT1H').minus({ minutes: -10 })}`, 'P3DT1H10M');
+      equal(`${Duration.from('P3DT55M').minus({ minutes: -15 }, { disambiguation: 'balance' })}`, 'P3DT1H10M');
+      equal(`${Duration.from('P3DT1H9M30S').minus({ seconds: -30 }, { disambiguation: 'balance' })}`, 'P3DT1H10M');
+    });
+    it('never balances positive units in constrain mode', () => {
       const d = Duration.from({
         minutes: 100,
         seconds: 100,
@@ -385,7 +491,7 @@ describe('Duration', () => {
       equal(result.microseconds, 1500);
       equal(result.nanoseconds, 1500);
 
-      result = d.minus(less, { disambiguation: 'balanceConstrain' });
+      result = d.minus(less, { disambiguation: 'constrain' });
       equal(result.minutes, 90);
       equal(result.seconds, 90);
       equal(result.milliseconds, 1500);
@@ -423,14 +529,14 @@ describe('Duration', () => {
     });
     const tenYears = Duration.from('P10Y');
     const tenMinutes = Duration.from('PT10M');
-    it('throws if result is negative', () => {
-      ['balanceConstrain', 'balance'].forEach((disambiguation) => {
-        throws(() => tenYears.minus({ years: 15 }, { disambiguation }), RangeError);
-        throws(() => tenMinutes.minus({ minutes: 15 }, { disambiguation }), RangeError);
-      });
+    it('has correct negative result', () => {
+      let result = tenYears.minus({ years: 15 });
+      equal(result.years, -5);
+      result = tenMinutes.minus({ minutes: 15 });
+      equal(result.minutes, -5);
     });
     it('throws if result cannot be determined to be positive or negative', () => {
-      ['balanceConstrain', 'balance'].forEach((disambiguation) => {
+      ['constrain', 'balance'].forEach((disambiguation) => {
         throws(() => tenYears.minus({ months: 5 }, { disambiguation }), RangeError);
         throws(() => tenYears.minus({ weeks: 5 }, { disambiguation }), RangeError);
         throws(() => tenYears.minus({ days: 5 }, { disambiguation }), RangeError);
@@ -440,8 +546,13 @@ describe('Duration', () => {
       });
     });
     it('throws on invalid disambiguation', () => {
-      ['', 'BALANCE', 'constrain', 3, null].forEach((disambiguation) =>
+      ['', 'BALANCE', 'xyz', 3, null].forEach((disambiguation) =>
         throws(() => duration.minus(duration, { disambiguation }), RangeError)
+      );
+    });
+    it('mixed positive and negative values always throw', () => {
+      ['constrain', 'balance', 'reject'].forEach((disambiguation) =>
+        throws(() => duration.minus({ hours: 1, minutes: -30 }, { disambiguation }), RangeError)
       );
     });
   });
@@ -499,6 +610,20 @@ describe('Duration', () => {
       equal(d2.microseconds, 5);
       equal(d2.nanoseconds, 5);
     });
+    it('has correct sign', () => {
+      const fields = Duration.from('-P5Y5M5W5DT5H5M5.005005005S');
+      equal(fields.years, -5);
+      equal(fields.months, -5);
+      equal(fields.weeks, -5);
+      equal(fields.days, -5);
+      equal(fields.hours, -5);
+      equal(fields.minutes, -5);
+      equal(fields.seconds, -5);
+      equal(fields.milliseconds, -5);
+      equal(fields.microseconds, -5);
+      equal(fields.nanoseconds, -5);
+    });
+    it('does not include the sign field', () => assert(!('sign' in fields)));
   });
   describe("Comparison operators don't work", () => {
     const d1 = Duration.from('P3DT1H');
@@ -510,6 +635,49 @@ describe('Duration', () => {
     it('>', () => throws(() => d1 > d2));
     it('<=', () => throws(() => d1 <= d2));
     it('>=', () => throws(() => d1 >= d2));
+  });
+  describe('Duration.negated()', () => {
+    it('makes a positive duration negative', () => {
+      const pos = Duration.from('P3DT1H');
+      const neg = pos.negated();
+      equal(`${neg}`, '-P3DT1H');
+      equal(neg.sign, -1);
+    });
+    it('makes a negative duration positive', () => {
+      const neg = Duration.from('-PT2H20M30S');
+      const pos = neg.negated();
+      equal(`${pos}`, 'PT2H20M30S');
+      equal(pos.sign, 1);
+    });
+    it('makes a copy of a zero duration', () => {
+      const zero = Duration.from('PT0S');
+      const zero2 = zero.negated();
+      equal(`${zero}`, `${zero2}`);
+      notEqual(zero, zero2);
+      equal(zero2.sign, 0);
+    });
+  });
+  describe('Duration.abs()', () => {
+    it('makes a copy of a positive duration', () => {
+      const pos = Duration.from('P3DT1H');
+      const pos2 = pos.abs();
+      equal(`${pos}`, `${pos2}`);
+      notEqual(pos, pos2);
+      equal(pos2.sign, 1);
+    });
+    it('makes a negative duration positive', () => {
+      const neg = Duration.from('-PT2H20M30S');
+      const pos = neg.abs();
+      equal(`${pos}`, 'PT2H20M30S');
+      equal(pos.sign, 1);
+    });
+    it('makes a copy of a zero duration', () => {
+      const zero = Duration.from('PT0S');
+      const zero2 = zero.abs();
+      equal(`${zero}`, `${zero2}`);
+      notEqual(zero, zero2);
+      equal(zero2.sign, 0);
+    });
   });
 });
 

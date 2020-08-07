@@ -30,9 +30,10 @@ For more detailed information, see the ISO 8601 standard or the [Wikipedia page]
 | **PT0S**             | Zero |
 | **P0D**              | Zero |
 
-> **NOTE:** According to the ISO 8601 standard, weeks are not allowed to appear together with any other units.
-> As an extension to the standard, Temporal supports combining weeks with other units.
-> If you intend to use a string such as **P3W1D** for interoperability, note that other programs may not accept it.
+> **NOTE:** According to the ISO 8601 standard, weeks are not allowed to appear together with any other units, and durations can only be positive.
+> As an extension to the standard, ISO 8601-2 allows a sign character at the start of the string.
+> As an additional extension, Temporal supports combining weeks with other units.
+> If you intend to use a string such as **P3W1D**, **+P1M**, or **-P1M** for interoperability, note that other programs may not accept it.
 
 ## Constructor
 
@@ -53,10 +54,11 @@ For more detailed information, see the ISO 8601 standard or the [Wikipedia page]
 **Returns:** a new `Temporal.Duration` object.
 
 All of the arguments are optional.
-Any missing or `undefined` numerical arguments are taken to be zero, and all non-integer numerical arguments are rounded down to the nearest integer.
-Negative numbers are not allowed.
+Any missing or `undefined` numerical arguments are taken to be zero, and all non-integer numerical arguments are rounded to the nearest integer, towards zero.
+Any non-zero arguments must all have the same sign.
 
-Use this constructor directly if you have the correct parameters already as numerical values, but otherwise `Temporal.Duration.from()`, which accepts more kinds of input and allows disambiguation behaviour, is probably more convenient.
+Use this constructor directly if you have the correct parameters already as numerical values.
+Otherwise `Temporal.Duration.from()` is probably more convenient because it accepts more kinds of input and allows disambiguation behaviour.
 
 Usage examples:
 ```javascript
@@ -88,7 +90,7 @@ Any missing ones will be assumed to be 0.
 Any non-object value is converted to a string, which is expected to be in ISO 8601 format.
 
 The `disambiguation` option controls how out-of-range values are interpreted:
-- `constrain` (the default): Infinite values are clamped to `Number.MAX_VALUE`.
+- `constrain` (the default): Infinite values are clamped to `Number.MAX_VALUE` or `-Number.MAX_VALUE`.
   Values higher than the next highest unit (for example, 90 minutes) are left as-is.
 - `balance`: Infinite values will cause the function to throw a `RangeError`.
   Values higher than the next highest unit, are converted to be in-range by incrementing the next highest unit accordingly.
@@ -96,7 +98,8 @@ The `disambiguation` option controls how out-of-range values are interpreted:
 - `reject`: Infinite values will cause the function to throw a `RangeError`.
   Values higher than the next highest unit (for example, 90 minutes) are left as-is.
 
-No matter which disambiguation mode is selected, negative values are never allowed and will cause the function to throw a `RangeError`.
+No matter which disambiguation mode is selected, all non-zero values must have the same sign.
+If they do not, the function will throw a `RangeError`.
 
 > **NOTE:** Years and months can have different lengths.
 In the default ISO calendar, a year can be 365 or 366 days, and a month can be 28, 29, 30, or 31 days.
@@ -106,20 +109,23 @@ No conversion is ever performed between years, months, weeks, and days, even in 
 > **NOTE:** This function understands strings where weeks and other units are combined, which are technically not valid ISO 8601 strings.
 > (For example, `P3W1D` is understood to mean three weeks and one day, although it is not valid according to ISO 8601.)
 
+> **NOTE:** This function understands a single sign character at the start of a string, which is an extension to the ISO 8601 standard described in ISO 8601-2.
+> (For example, `-P1Y1M` is a negative duration of one year and one month, and `+P1Y1M` is one year and one month.)
+> If no sign character is present, then the sign is assumed to be positive.
+
 Usage examples:
 ```javascript
 d = Temporal.Duration.from({ years: 1, days: 1 })  // => P1Y1D
-d = Temporal.Duration.from({ days: 2, hours: 12 })  // => P2DT12H
+d = Temporal.Duration.from({ days: -2, hours: -12 })  // => -P2DT12H
 
 Temporal.Duration.from(d) === d  // => true
 
 d = Temporal.Duration.from('P1Y1D')  // => P1Y1D
-d = Temporal.Duration.from('P2DT12H')  // => P2DT12H
+d = Temporal.Duration.from('-P2DT12H')  // => -P2DT12H
 d = Temporal.Duration.from('P0D')  // => PT0S
 
-// Negative values are never allowed, even if overall positive:
+// Mixed-sign values are never allowed, even if overall positive:
 d = Temporal.Duration.from({ hours: 1, minutes: -30 })  // throws
-// FIXME https://github.com/tc39/proposal-temporal/issues/408
 
 // Disambiguation
 
@@ -167,6 +173,10 @@ d.microseconds  // => 654
 d.nanoseconds   // => 321
 ```
 
+### duration.**sign** : number
+
+The read-only `sign` property has the value –1, 0, or 1, depending on whether the duration is negative, zero, or positive.
+
 ## Methods
 
 ### duration.**with**(_durationLike_: object, _options_?: object) : Temporal.Duration
@@ -186,7 +196,7 @@ This method creates a new `Temporal.Duration` which is a copy of `duration`, but
 Since `Temporal.Duration` objects are immutable, use this method instead of modifying one.
 
 The `disambiguation` option specifies what to do with out-of-range or overly large values.
-Negative numbers are never allowed as properties of `durationLike`.
+All non-zero properties of `durationLike` must have the same sign, and they must additionally have the same sign as the non-zero properties of `duration`, unless they override all of these non-zero properties.
 If a property of `durationLike` is infinity, then constrain mode will clamp it to `Number.MAX_VALUE`.
 Reject and balance modes will throw a `RangeError` in that case.
 Additionally, balance mode will behave like it does in `Duration.from()` and perform a balance operation on the result.
@@ -211,7 +221,7 @@ duration = duration.with({ years, months }, { disambiguation: 'balance' });
 - `options` (optional object): An object with properties representing options for the addition.
   The following options are recognized:
   - `disambiguation` (string): How to deal with additions that result in out-of-range values.
-    Allowed values are `constrain` and `reject`.
+    Allowed values are `constrain`, `balance`, and `reject`.
     The default is `constrain`.
 
 **Returns:** a new `Temporal.Duration` object which represents the sum of the durations of `duration` and `other`.
@@ -220,9 +230,16 @@ This method adds `other` to `duration`, resulting in a longer duration.
 
 The `other` argument is an object with properties denoting a duration, such as `{ hours: 5, minutes: 30 }`, or a `Temporal.Duration` object.
 
-The `disambiguation` argument tells what to do in the case where the addition results in an out-of-range value:
-- In `constrain` mode (the default), additions that result in a value too large to be represented in a Number are capped at `Number.MAX_VALUE`.
+In order to be valid, the resulting duration must not have fields with mixed signs.
+However, before the result is balanced, it's possible that the intermediate result will have one or more negative fields while the overall duration is positive, or vice versa.
+For example, "4 hours and 15 minutes" minus "2 hours and 30 minutes" results in "2 hours and &minus;15 minutes".
+The `disambiguation` argument tells what to do in this case, or in the case where the addition results in an out-of-range value:
+- In `constrain` mode (the default), additions that result in a value too large to be represented in a Number are capped at `Number.MAX_VALUE`, or `-Number.MAX_VALUE` if out of range in the other direction.
+  Additions resulting in mixed-sign fields will balance those fields with the next-highest field so that all the fields of the result have the same sign.
+- In `balance` mode, if any addition results in a value too large to be represented in a Number, a `RangeError` is thrown.
+  As well, all fields are balanced with the next highest field, no matter if they have mixed signs or not.
 - In `reject` mode, if any addition results in a value too large to be represented in a Number, a `RangeError` is thrown.
+  Otherwise this is the same as `constrain`.
 
 The fields of the resulting duration are never converted between each other.
 If you need this behaviour, use `Duration.from()` with balance disambiguation, which will convert overly large units into the next highest unit, up to days.
@@ -231,6 +248,8 @@ For usage examples and a more complete explanation of how balancing works and wh
 
 No conversion is ever performed between years, months, days, and other units, as that could be ambiguous depending on the start date.
 If you need such a conversion, you must implement it yourself, since the rules can depend on the start date and the calendar in use.
+
+Adding a negative duration is equivalent to subtracting the absolute value of that duration.
 
 Usage example:
 ```javascript
@@ -283,15 +302,20 @@ The `other` argument is an object with properties denoting a duration, such as `
 
 If `other` is larger than `duration` and the subtraction would result in a negative duration, the method will throw a `RangeError`.
 
-In order to be valid, the resulting duration must not have any negative fields.
-However, it's possible to have one or more of the fields be negative while the overall duration is still positive.
+In order to be valid, the resulting duration must not have fields with mixed signs.
+However, before the result is balanced, it's possible that the intermediate result will have one or more negative fields while the overall duration is positive, or vice versa.
 For example, "4 hours and 15 minutes" minus "2 hours and 30 minutes" results in "2 hours and &minus;15 minutes".
-The `disambiguation` option tells what to do in this case.
-- In `balanceConstrain` mode (the default), negative fields are balanced with the next highest field so that none of the fields are negative in the result.
-  If this is not possible, a `RangeError` is thrown.
-- In `balance` mode, all fields are balanced with the next highest field, no matter if they are negative or not.
+The `disambiguation` argument tells what to do in this case:
+- In `constrain` mode (the default), subtractions that result in a value too large to be represented in a Number are capped at `Number.MAX_VALUE`, or `-Number.MAX_VALUE` if out of range in the other direction.
+  Subtractions resulting in mixed-sign fields will balance those fields with the next-highest field so that all the fields of the result have the same sign.
+- In `balance` mode, if any subtraction results in a value too large to be represented in a Number, a `RangeError` is thrown.
+  As well, all fields are balanced with the next highest field, no matter if they have mixed signs or not.
+- In `reject` mode, if any subtraction results in a value too large to be represented in a Number, a `RangeError` is thrown.
+  Otherwise this is the same as `constrain`.
 
 For usage examples and a more complete explanation of how balancing works and why it is necessary, especially for subtracting `Temporal.Duration`, see [Duration balancing](./balancing.md#duration-arithmetic).
+
+Subtracting a negative duration is equivalent to adding the absolute value of that duration.
 
 Usage example:
 ```javascript
@@ -306,7 +330,7 @@ one.minus(two, { disambiguation: 'balance' });  // => PT2H59M30S
 // Example of not balancing:
 threeYears = Temporal.Duration.from({ years: 3 });
 oneAndAHalfYear = Temporal.Duration.from({ years: 1, months: 6 });
-threeYears.minus(oneAndAHalfYear)  // throws; months are negative and cannot be balanced
+threeYears.minus(oneAndAHalfYear)  // throws; mixed months and years signs cannot be balanced
 // Example of a custom conversion using ISO calendar rules:
 function yearsToMonths(duration) {
     let { years, months } = duration;
@@ -314,6 +338,36 @@ function yearsToMonths(duration) {
     return duration.with({ years: 0, months });
 }
 yearsToMonths(threeYears).minus(yearsToMonths(oneAndAHalfYear))  // => P18M
+```
+
+### duration.**negated**() : Temporal.Duration
+
+**Returns:** a new `Temporal.Duration` object with the opposite sign.
+
+This method gives the negation of `duration`.
+It returns a newly constructed `Temporal.Duration` with all the fields having the opposite sign (positive if negative, and vice versa.)
+If `duration` is zero, then the returned object is a copy of `duration`.
+
+Usage example:
+```javascript
+d = Temporal.Duration.from('P1Y2M3DT4H5M6.987654321S');
+d.sign  // 1
+d.negated()  // -P1Y2M3DT4H5M6.987654321S
+d.negated().sign  // -1
+```
+
+### duration.**abs**() : Temporal.Duration
+
+**Returns:** a new `Temporal.Duration` object that is always positive.
+
+This method gives the absolute value of `duration`.
+It returns a newly constructed `Temporal.Duration` with all the fields having the same magnitude as those of `duration`, but positive.
+If `duration` is already positive or zero, then the returned object is a copy of `duration`.
+
+Usage example:
+```javascript
+d = Temporal.Duration.from('-PT8H30M');
+d.abs()  // PT8H30M
 ```
 
 ### duration.**getFields**() : { years: number, months: number, weeks: number, days: number, hours: number, minutes: number, seconds: number, milliseconds: number, microseconds: number, nanoseconds: number }
@@ -346,6 +400,8 @@ Usage examples:
 ```javascript
 d = Temporal.Duration.from({ years: 1, days: 1 });
 d.toString();  // => P1Y1D
+d = Temporal.Duration.from({ years: -1, days: -1 });
+d.toString();  // => -P1Y1D
 d = Temporal.Duration.from({ milliseconds: 1000 });
 d.toString();  // => PT1S
 

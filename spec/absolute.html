@@ -239,6 +239,7 @@
         1. Let _absolute_ be the *this* value.
         1. Perform ? RequireInternalSlot(_absolute_, [[InitializedTemporalAbsolute]]).
         1. Let _duration_ be ? ToLimitedTemporalDuration(_temporalDurationLike_, « *"years"*, *"months"* »).
+        1. Perform ? RejectDurationSign(_duration_.[[Years]], _duration.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
         1. Let _ns_ be _absolute_.[[Nanoseconds]] +
             _duration_.[[Nanoseconds]] +
             _duration_.[[Microseconds]] × 1000 +
@@ -262,6 +263,7 @@
         1. Let _absolute_ be the *this* value.
         1. Perform ? RequireInternalSlot(_absolute_, [[InitializedTemporalAbsolute]]).
         1. Let _duration_ be ? ToLimitedTemporalDuration(_temporalDurationLike_, « *"years"*, *"months"* »).
+        1. Perform ? RejectDurationSign(_duration_.[[Years]], _duration.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
         1. Let _ns_ be _absolute_.[[Nanoseconds]] -
             _duration_.[[Nanoseconds]] -
             _duration_.[[Microseconds]] × 1000 -

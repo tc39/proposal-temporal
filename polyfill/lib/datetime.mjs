@@ -233,6 +233,9 @@ export class DateTime {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     let duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
     let { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
+    ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+    // For a negative duration, BalanceDuration() subtracts from days to make
+    // all other units positive, so it's not needed to switch on the sign below
     ({ days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.BalanceDuration(
       days,
       hours,
@@ -298,6 +301,9 @@ export class DateTime {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     let duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
     let { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
+    ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+    // For a negative duration, BalanceDuration() subtracts from days to make
+    // all other units positive, so it's not needed to switch on the sign below
     ({ days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.BalanceDuration(
       days,
       hours,
