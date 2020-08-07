@@ -320,8 +320,8 @@ describe('DateTime', () => {
     ['years', 'months', 'weeks', 'days', 'hours', 'minutes', 'seconds'].forEach((largestUnit) => {
       const diff = later.difference(earlier, { largestUnit });
       it('throws if out of order', () => throws(() => earlier.difference(later), RangeError));
-      it(`(${earlier}).plus(${diff}) == (${later})`, () => earlier.plus(diff).equals(later));
-      it(`(${later}).minus(${diff}) == (${earlier})`, () => later.minus(diff).equals(earlier));
+      it(`(${earlier}).plus(${diff}) == (${later})`, () => assert(earlier.plus(diff).equals(later)));
+      it(`(${later}).minus(${diff}) == (${earlier})`, () => assert(later.minus(diff).equals(earlier)));
     });
   });
   describe('date/time maths: hours overflow', () => {
