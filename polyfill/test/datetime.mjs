@@ -322,6 +322,10 @@ describe('DateTime', () => {
       it('throws if out of order', () => throws(() => earlier.difference(later), RangeError));
       it(`(${earlier}).plus(${diff}) == (${later})`, () => assert(earlier.plus(diff).equals(later)));
       it(`(${later}).minus(${diff}) == (${earlier})`, () => assert(later.minus(diff).equals(earlier)));
+      it('symmetrical with regard to negative durations', () => {
+        assert(earlier.minus(diff.negated()).equals(later));
+        assert(later.plus(diff.negated()).equals(earlier));
+      });
     });
   });
   describe('date/time maths: hours overflow', () => {
@@ -335,15 +339,22 @@ describe('DateTime', () => {
       const later = earlier.plus({ hours: 2 });
       equal(`${later}`, '2020-06-01T01:12:38.271986102');
     });
+    it('symmetrical with regard to negative durations', () => {
+      equal(`${DateTime.from('2019-10-29T10:46:38.271986102').plus({ hours: -12 })}`, '2019-10-28T22:46:38.271986102');
+      equal(`${DateTime.from('2020-05-31T23:12:38.271986102').minus({ hours: -2 })}`, '2020-06-01T01:12:38.271986102');
+    });
   });
   describe('DateTime.plus() works', () => {
+    const jan31 = DateTime.from('2020-01-31T15:00');
     it('constrain when ambiguous result', () => {
-      const jan31 = DateTime.from('2020-01-31T15:00');
       equal(`${jan31.plus({ months: 1 })}`, '2020-02-29T15:00');
       equal(`${jan31.plus({ months: 1 }, { disambiguation: 'constrain' })}`, '2020-02-29T15:00');
     });
+    it('symmetrical with regard to negative durations in the time part', () => {
+      equal(`${jan31.plus({ minutes: -30 })}`, '2020-01-31T14:30');
+      equal(`${jan31.plus({ seconds: -30 })}`, '2020-01-31T14:59:30');
+    });
     it('throw when ambiguous result with reject', () => {
-      const jan31 = DateTime.from('2020-01-31T15:00:00');
       throws(() => jan31.plus({ months: 1 }, { disambiguation: 'reject' }), RangeError);
     });
     it('invalid disambiguation', () => {
@@ -351,20 +362,33 @@ describe('DateTime', () => {
         throws(() => DateTime.from('2019-11-18T15:00').plus({ months: 1 }, { disambiguation }), RangeError)
       );
     });
+    it('mixed positive and negative values always throw', () => {
+      ['constrain', 'reject'].forEach((disambiguation) =>
+        throws(() => jan31.plus({ hours: 1, minutes: -30 }, { disambiguation }), RangeError)
+      );
+    });
   });
   describe('date.minus() works', () => {
+    const mar31 = DateTime.from('2020-03-31T15:00');
     it('constrain when ambiguous result', () => {
-      const mar31 = DateTime.from('2020-03-31T15:00');
       equal(`${mar31.minus({ months: 1 })}`, '2020-02-29T15:00');
       equal(`${mar31.minus({ months: 1 }, { disambiguation: 'constrain' })}`, '2020-02-29T15:00');
     });
+    it('symmetrical with regard to negative durations in the time part', () => {
+      equal(`${mar31.minus({ minutes: -30 })}`, '2020-03-31T15:30');
+      equal(`${mar31.minus({ seconds: -30 })}`, '2020-03-31T15:00:30');
+    });
     it('throw when ambiguous result with reject', () => {
-      const mar31 = DateTime.from('2020-03-31T15:00');
       throws(() => mar31.minus({ months: 1 }, { disambiguation: 'reject' }), RangeError);
     });
     it('invalid disambiguation', () => {
       ['', 'CONSTRAIN', 'balance', 3, null].forEach((disambiguation) =>
         throws(() => DateTime.from('2019-11-18T15:00').minus({ months: 1 }, { disambiguation }), RangeError)
+      );
+    });
+    it('mixed positive and negative values always throw', () => {
+      ['constrain', 'reject'].forEach((disambiguation) =>
+        throws(() => mar31.plus({ hours: 1, minutes: -30 }, { disambiguation }), RangeError)
       );
     });
   });

@@ -304,6 +304,11 @@ describe('Time', () => {
       it(`(${time}).plus({ nanoseconds: 300 })`, () => {
         equal(`${time.plus({ nanoseconds: 300 })}`, '15:23:30.123457089');
       });
+      it('symmetric with regard to negative durations', () => {
+        equal(`${Time.from('07:23:30.123456789').plus({ hours: -16 })}`, '15:23:30.123456789');
+        equal(`${Time.from('16:08:30.123456789').plus({ minutes: -45 })}`, '15:23:30.123456789');
+        equal(`${Time.from('15:23:30.123457089').plus({ nanoseconds: -300 })}`, '15:23:30.123456789');
+      });
       it('time.plus(durationObj)', () => {
         equal(`${time.plus(Temporal.Duration.from('PT16H'))}`, '07:23:30.123456789');
       });
@@ -315,6 +320,11 @@ describe('Time', () => {
       it('invalid disambiguation', () => {
         ['', 'CONSTRAIN', 'balance', 3, null].forEach((disambiguation) =>
           throws(() => time.plus({ hours: 1 }, { disambiguation }), RangeError)
+        );
+      });
+      it('mixed positive and negative values always throw', () => {
+        ['constrain', 'reject'].forEach((disambiguation) =>
+          throws(() => time.plus({ hours: 1, minutes: -30 }, { disambiguation }), RangeError)
         );
       });
     });
@@ -329,6 +339,14 @@ describe('Time', () => {
         equal(`${time.minus({ microseconds: 800 })}`, '15:23:30.122656789'));
       it(`(${time}).minus({ nanoseconds: 800 })`, () =>
         equal(`${time.minus({ nanoseconds: 800 })}`, '15:23:30.123455989'));
+      it('symmetric with regard to negative durations', () => {
+        equal(`${Time.from('23:23:30.123456789').minus({ hours: -16 })}`, '15:23:30.123456789');
+        equal(`${Time.from('14:38:30.123456789').minus({ minutes: -45 })}`, '15:23:30.123456789');
+        equal(`${Time.from('15:22:45.123456789').minus({ seconds: -45 })}`, '15:23:30.123456789');
+        equal(`${Time.from('15:23:29.323456789').minus({ milliseconds: -800 })}`, '15:23:30.123456789');
+        equal(`${Time.from('15:23:30.122656789').minus({ microseconds: -800 })}`, '15:23:30.123456789');
+        equal(`${Time.from('15:23:30.123455989').minus({ nanoseconds: -800 })}`, '15:23:30.123456789');
+      });
       it('time.minus(durationObj)', () => {
         equal(`${time.minus(Temporal.Duration.from('PT16H'))}`, '23:23:30.123456789');
       });
@@ -340,6 +358,11 @@ describe('Time', () => {
       it('invalid disambiguation', () => {
         ['', 'CONSTRAIN', 'balance', 3, null].forEach((disambiguation) =>
           throws(() => time.minus({ hours: 1 }, { disambiguation }), RangeError)
+        );
+      });
+      it('mixed positive and negative values always throw', () => {
+        ['constrain', 'reject'].forEach((disambiguation) =>
+          throws(() => time.minus({ hours: 1, minutes: -30 }, { disambiguation }), RangeError)
         );
       });
     });

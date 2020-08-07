@@ -55,6 +55,7 @@ export class Absolute {
       microseconds,
       nanoseconds
     } = ES.ToLimitedTemporalDuration(temporalDurationLike, ['years', 'months', 'weeks']);
+    ES.RejectDurationSign(0, 0, 0, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
 
     let add = bigInt(0);
     add = add.plus(bigInt(nanoseconds));
@@ -84,6 +85,7 @@ export class Absolute {
       microseconds,
       nanoseconds
     } = ES.ToLimitedTemporalDuration(temporalDurationLike, ['years', 'months', 'weeks']);
+    ES.RejectDurationSign(0, 0, 0, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
 
     let add = bigInt(0);
     add = add.plus(bigInt(nanoseconds));

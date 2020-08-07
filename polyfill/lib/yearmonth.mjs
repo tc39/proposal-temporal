@@ -78,23 +78,17 @@ export class YearMonth {
   plus(temporalDurationLike, options) {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
     const duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
-    const { hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
-    const { days } = ES.BalanceDuration(
-      duration.days,
-      hours,
-      minutes,
-      seconds,
-      milliseconds,
-      microseconds,
-      nanoseconds,
-      'days'
-    );
+    let { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
+    ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+    ({ days } = ES.BalanceDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 'days'));
 
     const TemporalDate = GetIntrinsic('%Temporal.Date%');
     const calendar = GetSlot(this, CALENDAR);
     const fields = ES.ToTemporalYearMonthRecord(this);
-    const firstOfCalendarMonth = calendar.dateFromFields({ ...fields, day: 1 }, {}, TemporalDate);
-    const addedDate = calendar.datePlus(firstOfCalendarMonth, { ...duration, days }, options, TemporalDate);
+    const sign = ES.DurationSign(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
+    const day = sign < 0 ? calendar.daysInMonth(this) : 1;
+    const startDate = calendar.dateFromFields({ ...fields, day }, {}, TemporalDate);
+    const addedDate = calendar.datePlus(startDate, { ...duration, days }, options, TemporalDate);
 
     const Construct = ES.SpeciesConstructor(this, YearMonth);
     const result = calendar.yearMonthFromFields(addedDate, options, Construct);
@@ -104,24 +98,17 @@ export class YearMonth {
   minus(temporalDurationLike, options) {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
     const duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
-    const { hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
-    const { days } = ES.BalanceDuration(
-      duration.days,
-      hours,
-      minutes,
-      seconds,
-      milliseconds,
-      microseconds,
-      nanoseconds,
-      'days'
-    );
+    let { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
+    ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+    ({ days } = ES.BalanceDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 'days'));
 
     const TemporalDate = GetIntrinsic('%Temporal.Date%');
     const calendar = GetSlot(this, CALENDAR);
     const fields = ES.ToTemporalYearMonthRecord(this);
-    const lastDay = calendar.daysInMonth(this);
-    const lastOfCalendarMonth = calendar.dateFromFields({ ...fields, day: lastDay }, {}, TemporalDate);
-    const subtractedDate = calendar.dateMinus(lastOfCalendarMonth, { ...duration, days }, options, TemporalDate);
+    const sign = ES.DurationSign(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
+    const day = sign < 0 ? 1 : calendar.daysInMonth(this);
+    const startDate = calendar.dateFromFields({ ...fields, day }, {}, TemporalDate);
+    const subtractedDate = calendar.dateMinus(startDate, { ...duration, days }, options, TemporalDate);
 
     const Construct = ES.SpeciesConstructor(this, YearMonth);
     const result = calendar.yearMonthFromFields(subtractedDate, options, Construct);

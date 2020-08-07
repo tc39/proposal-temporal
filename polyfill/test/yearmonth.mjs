@@ -224,6 +224,10 @@ describe('YearMonth', () => {
       equal(`${ym.plus({ years: 1 }, { disambiguation: 'constrain' })}`, '2020-11');
       equal(`${ym.plus({ years: 1 }, { disambiguation: 'reject' })}`, '2020-11');
     });
+    it('symmetrical with regard to negative durations', () => {
+      equal(`${YearMonth.from('2020-01').plus({ months: -2 })}`, '2019-11');
+      equal(`${YearMonth.from('2020-11').plus({ years: -1 })}`, '2019-11');
+    });
     it('yearMonth.plus(durationObj)', () => {
       equal(`${ym.plus(Temporal.Duration.from('P2M'))}`, '2020-01');
     });
@@ -264,6 +268,11 @@ describe('YearMonth', () => {
         throws(() => ym.plus({ months: 1 }, { disambiguation }), RangeError)
       );
     });
+    it('mixed positive and negative values always throw', () => {
+      ['constrain', 'reject'].forEach((disambiguation) =>
+        throws(() => ym.plus({ years: 1, months: -6 }, { disambiguation }), RangeError)
+      );
+    });
   });
   describe('YearMonth.minus() works', () => {
     const ym = YearMonth.from('2019-11');
@@ -276,6 +285,10 @@ describe('YearMonth', () => {
       equal(`${ym.minus({ years: 12 })}`, '2007-11');
       equal(`${ym.minus({ years: 12 }, { disambiguation: 'constrain' })}`, '2007-11');
       equal(`${ym.minus({ years: 12 }, { disambiguation: 'reject' })}`, '2007-11');
+    });
+    it('symmetrical with regard to negative durations', () => {
+      equal(`${YearMonth.from('2018-12').minus({ months: -11 })}`, '2019-11');
+      equal(`${YearMonth.from('2007-11').minus({ years: -12 })}`, '2019-11');
     });
     it('yearMonth.minus(durationObj)', () => {
       equal(`${ym.minus(Temporal.Duration.from('P11M'))}`, '2018-12');
@@ -314,6 +327,11 @@ describe('YearMonth', () => {
     it('invalid disambiguation', () => {
       ['', 'CONSTRAIN', 'balance', 3, null].forEach((disambiguation) =>
         throws(() => ym.minus({ months: 1 }, { disambiguation }), RangeError)
+      );
+    });
+    it('mixed positive and negative values always throw', () => {
+      ['constrain', 'reject'].forEach((disambiguation) =>
+        throws(() => ym.minus({ years: 1, months: -6 }, { disambiguation }), RangeError)
       );
     });
   });

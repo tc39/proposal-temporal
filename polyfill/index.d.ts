@@ -22,9 +22,10 @@ export namespace Temporal {
 
   /**
    * Options for assigning fields using `Duration.prototype.with()` or entire
-   * objects with `Duration.prototype.from()`.
+   * objects with `Duration.prototype.from()`, and for arithmetic with
+   * `Duration.prototype.plus()` and `Duration.prototype.minus()`.
    * */
-  export type DurationAssignmentOptions = {
+  export type DurationOptions = {
     /**
      * How to deal with out-of-range values
      *
@@ -85,25 +86,6 @@ export namespace Temporal {
     disambiguation: 'constrain' | 'reject';
   };
 
-  /**
-   * Options to control `Duration.prototype.minus()` behavior
-   * */
-  export type DurationMinusOptions = {
-    /**
-     * Controls how to deal with subtractions that result in negative overflows
-     *
-     * In `'balanceConstrain'` mode, negative fields are balanced with the next
-     * highest field so that none of the fields are negative in the result. If
-     * this is not possible, a `RangeError` is thrown.
-     *
-     * In `'balance'` mode, all fields are balanced with the next highest field,
-     * no matter if they are negative or not.
-     *
-     * The default is `'balanceConstrain'`.
-     */
-    disambiguation: 'balanceConstrain' | 'balance';
-  };
-
   export interface DifferenceOptions<T extends string> {
     /**
      * The largest unit to allow in the resulting `Temporal.Duration` object.
@@ -141,10 +123,7 @@ export namespace Temporal {
    * See https://tc39.es/proposal-temporal/docs/duration.html for more details.
    */
   export class Duration implements DurationFields {
-    static from(
-      item: Temporal.Duration | DurationLike | string,
-      options?: DurationAssignmentOptions
-    ): Temporal.Duration;
+    static from(item: Temporal.Duration | DurationLike | string, options?: DurationOptions): Temporal.Duration;
     constructor(
       years?: number,
       months?: number,
@@ -157,6 +136,7 @@ export namespace Temporal {
       microseconds?: number,
       nanoseconds?: number
     );
+    readonly sign: -1 | 0 | 1;
     readonly years: number;
     readonly months: number;
     readonly weeks: number;
@@ -167,9 +147,11 @@ export namespace Temporal {
     readonly milliseconds: number;
     readonly microseconds: number;
     readonly nanoseconds: number;
-    with(durationLike: DurationLike, options?: DurationAssignmentOptions): Temporal.Duration;
-    plus(other: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.Duration;
-    minus(other: Temporal.Duration | DurationLike, options?: DurationMinusOptions): Temporal.Duration;
+    negated(): Temporal.Duration;
+    abs(): Temporal.Duration;
+    with(durationLike: DurationLike, options?: DurationOptions): Temporal.Duration;
+    plus(other: Temporal.Duration | DurationLike, options?: DurationOptions): Temporal.Duration;
+    minus(other: Temporal.Duration | DurationLike, options?: DurationOptions): Temporal.Duration;
     getFields(): DurationFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;

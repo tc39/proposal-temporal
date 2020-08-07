@@ -373,6 +373,9 @@ describe('Absolute', () => {
       throws(() => abs.plus({ months: 1 }), RangeError);
       throws(() => abs.plus({ weeks: 1 }), RangeError);
     });
+    it('mixed positive and negative values always throw', () => {
+      throws(() => abs.plus({ hours: 1, minutes: -30 }), RangeError);
+    });
   });
   describe('Absolute.minus works', () => {
     const abs = Absolute.from('1969-12-25T12:23:45.678901234Z');
@@ -384,6 +387,9 @@ describe('Absolute', () => {
       throws(() => abs.minus({ years: 1 }), RangeError);
       throws(() => abs.minus({ months: 1 }), RangeError);
       throws(() => abs.minus({ weeks: 1 }), RangeError);
+    });
+    it('mixed positive and negative values always throw', () => {
+      throws(() => abs.minus({ hours: 1, minutes: -30 }), RangeError);
     });
   });
   describe('Absolute.compare works', () => {

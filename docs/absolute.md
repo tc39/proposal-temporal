@@ -254,6 +254,8 @@ If you need to do this, convert the `Temporal.Absolute` to a `Temporal.DateTime`
 
 If the result is earlier or later than the range that `Temporal.Absolute` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), a `RangeError` will be thrown.
 
+Adding a negative duration is equivalent to subtracting the absolute value of that duration.
+
 Example usage:
 ```js
 // Temporal.Absolute representing five hours from now
@@ -278,6 +280,8 @@ The `years` and `months` fields of `duration` must be zero, because subtracting 
 If you need to do this, convert the `Temporal.Absolute` to a `Temporal.DateTime` by specifying the desired time zone, subtract the duration, and then convert it back.
 
 If the result is earlier or later than the range that `Temporal.Absolute` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), a `RangeError` will be thrown.
+
+Subtracting a negative duration is equivalent to adding the absolute value of that duration.
 
 Example usage:
 ```js

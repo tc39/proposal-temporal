@@ -323,6 +323,8 @@ For these cases, the `disambiguation` option tells what to do:
 
 Additionally, if the result is earlier or later than the range of dates that `Temporal.Date` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then this method will throw a `RangeError` regardless of `disambiguation`.
 
+Adding a negative duration is equivalent to subtracting the absolute value of that duration.
+
 Usage example:
 ```javascript
 date = Temporal.Date.from('2006-08-24');
@@ -356,6 +358,8 @@ For these cases, the `disambiguation` option tells what to do:
 - In `reject` mode, an addition that would result in an out-of-range value fails, and a `RangeError` is thrown.
 
 Additionally, if the result is earlier or later than the range of dates that `Temporal.Date` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then this method will throw a `RangeError` regardless of `disambiguation`.
+
+Subtracting a negative duration is equivalent to adding the absolute value of that duration.
 
 Usage example:
 ```javascript

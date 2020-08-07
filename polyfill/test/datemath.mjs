@@ -70,8 +70,11 @@ function buildSub(one, two, largestUnits) {
   largestUnits.forEach((largestUnit) => {
     describe(`< ${one} : ${two} (${largestUnit})>`, () => {
       const dif = two.difference(one, { largestUnit });
-      it(`(${one}).plus(${dif}) => ${two}`, () => assert(one.plus(dif, { disambiguation: 'reject' }).equals(two)));
-      it(`(${two}).minus(${dif}) => ${one}`, () => assert(two.minus(dif, { disambiguation: 'reject' }).equals(one)));
+      const disambiguation = 'reject';
+      it(`(${one}).plus(${dif}) => ${two}`, () => assert(one.plus(dif, { disambiguation }).equals(two)));
+      it(`(${two}).minus(${dif}) => ${one}`, () => assert(two.minus(dif, { disambiguation }).equals(one)));
+      it(`(${one}).minus(-${dif}) => ${two}`, () => assert(one.minus(dif.negated(), { disambiguation }).equals(two)));
+      it(`(${two}).plus(-${dif}) => ${one}`, () => assert(two.plus(dif.negated(), { disambiguation }).equals(one)));
     });
   });
 }

@@ -124,17 +124,9 @@ export class Date {
   plus(temporalDurationLike, options) {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
     let duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
-    const { years, months, weeks, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
-    const { days } = ES.BalanceDuration(
-      duration.days,
-      hours,
-      minutes,
-      seconds,
-      milliseconds,
-      microseconds,
-      nanoseconds,
-      'days'
-    );
+    let { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
+    ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+    ({ days } = ES.BalanceDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 'days'));
     duration = { years, months, weeks, days };
     const Construct = ES.SpeciesConstructor(this, Date);
     const result = GetSlot(this, CALENDAR).datePlus(this, duration, options, Construct);
@@ -144,17 +136,9 @@ export class Date {
   minus(temporalDurationLike, options) {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
     let duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
-    const { years, months, weeks, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
-    const { days } = ES.BalanceDuration(
-      duration.days,
-      hours,
-      minutes,
-      seconds,
-      milliseconds,
-      microseconds,
-      nanoseconds,
-      'days'
-    );
+    let { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
+    ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+    ({ days } = ES.BalanceDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 'days'));
     duration = { years, months, weeks, days };
     const Construct = ES.SpeciesConstructor(this, Date);
     const result = GetSlot(this, CALENDAR).dateMinus(this, duration, options, Construct);

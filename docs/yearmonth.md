@@ -251,6 +251,8 @@ Other than for out-of-range values, the `disambiguation` option has no effect in
 It doesn't matter in this case that years and months can be different numbers of days, as the resolution of `Temporal.YearMonth` does not distinguish days.
 However, disambiguation may have an effect in other calendars where years can be different numbers of months.
 
+Adding a negative duration is equivalent to subtracting the absolute value of that duration.
+
 Usage example:
 ```javascript
 ym = Temporal.YearMonth.from('2019-06');
@@ -278,6 +280,8 @@ If the result is earlier or later than the range of dates that `Temporal.YearMon
 Other than for out-of-range values, the `disambiguation` option has no effect in the default ISO calendar, because a year is always 12 months and therefore not ambiguous.
 It doesn't matter in this case that years and months can be different numbers of days, as the resolution of `Temporal.YearMonth` does not distinguish days.
 However, disambiguation may have an effect in other calendars where years can be different numbers of months.
+
+Subtracting a negative duration is equivalent to adding the absolute value of that duration.
 
 Usage example:
 ```javascript

@@ -147,20 +147,32 @@ class ISO8601 extends Calendar {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
     const disambiguation = ES.ToTemporalDisambiguation(options);
     const { years, months, weeks, days } = duration;
+    ES.RejectDurationSign(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
+    const sign = ES.DurationSign(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
     let year = GetSlot(date, ISO_YEAR);
     let month = GetSlot(date, ISO_MONTH);
     let day = GetSlot(date, ISO_DAY);
-    ({ year, month, day } = ES.AddDate(year, month, day, years, months, weeks, days, disambiguation));
+    if (sign < 0) {
+      ({ year, month, day } = ES.SubtractDate(year, month, day, -years, -months, -weeks, -days, disambiguation));
+    } else {
+      ({ year, month, day } = ES.AddDate(year, month, day, years, months, weeks, days, disambiguation));
+    }
     return new constructor(year, month, day, this);
   }
   dateMinus(date, duration, options, constructor) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
     const disambiguation = ES.ToTemporalDisambiguation(options);
     const { years, months, weeks, days } = duration;
+    ES.RejectDurationSign(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
+    const sign = ES.DurationSign(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
     let year = GetSlot(date, ISO_YEAR);
     let month = GetSlot(date, ISO_MONTH);
     let day = GetSlot(date, ISO_DAY);
-    ({ year, month, day } = ES.SubtractDate(year, month, day, years, months, weeks, days, disambiguation));
+    if (sign < 0) {
+      ({ year, month, day } = ES.AddDate(year, month, day, -years, -months, -weeks, -days, disambiguation));
+    } else {
+      ({ year, month, day } = ES.SubtractDate(year, month, day, years, months, weeks, days, disambiguation));
+    }
     return new constructor(year, month, day, this);
   }
   dateDifference(smaller, larger, options) {
