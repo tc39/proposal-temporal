@@ -3089,7 +3089,7 @@
   var yearmonth = new RegExp("^(".concat(yearpart.source, ")-?(\\d{2})$"));
   var monthday = /^(?:--)?(\d{2})-?(\d{2})$/;
   var offset = /([+-])([0-2][0-9])(?::?([0-5][0-9]))?/;
-  var duration = /P(?:(\d+)Y)?(?:(\d+)M)?(?:(\d+)W)?(?:(\d+)D)?(?:T(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)(?:[.,](\d{1,9}))?S)?)?/i;
+  var duration = /^P(?:(\d+)Y)?(?:(\d+)M)?(?:(\d+)W)?(?:(\d+)D)?(?:T(?!$)(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)(?:[.,](\d{1,9}))?S)?)?$/i;
 
   var IntlDateTimeFormat = globalThis.Intl.DateTimeFormat;
   var ObjectAssign = Object.assign;
@@ -3328,6 +3328,13 @@
     ParseTemporalDurationString: function ParseTemporalDurationString(isoString) {
       var match = duration.exec(isoString);
       if (!match) throw new RangeError("invalid duration: ".concat(isoString));
+
+      if (match.slice(1).every(function (element) {
+        return element === undefined;
+      })) {
+        throw new RangeError("invalid duration: ".concat(isoString));
+      }
+
       var years = ES.ToInteger(match[1]);
       var months = ES.ToInteger(match[2]);
       var weeks = ES.ToInteger(match[3]);
