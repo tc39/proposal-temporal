@@ -39,7 +39,7 @@ describe('Temporal.now', () => {
       const tz = Temporal.now.timeZone();
       const ldt = Temporal.now.localDateTime();
       assert(isSmallDiff(ldt.toDateTime().difference(dt, { largestUnit: 'seconds' })));
-      assert(isSmallDiff(ldt.absolute.difference(abs, { largestUnit: 'seconds' })));
+      assert(isSmallDiff(ldt.toAbsolute().difference(abs, { largestUnit: 'seconds' })));
       assert(ldt.timeZone.name === tz.name);
     });
   });

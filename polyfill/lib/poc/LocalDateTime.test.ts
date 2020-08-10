@@ -556,7 +556,7 @@ describe('LocalDateTime', () => {
 
     it('Samoa date line change: 10:00PM 29 Dec 2011 -> 11:00PM 31 Dec 2011', () => {
       const dayBeforeSamoaDateLineChangeAbs = new Temporal.DateTime(2011, 12, 29, 22).toAbsolute('Pacific/Apia');
-      const start = LocalDateTime.from({ absolute: dayBeforeSamoaDateLineChangeAbs, timeZone: 'Pacific/Apia' });
+      const start = dayBeforeSamoaDateLineChangeAbs.toLocalDateTime('Pacific/Apia');
       const added = start.plus({ days: 1, hours: 1 });
       equal(added.day, 31);
       equal(added.hour, 23);
@@ -800,8 +800,8 @@ describe('LocalDateTime', () => {
       it('LocalDateTime.prototype.toJSON is a Function', () => {
         equal(typeof LocalDateTime.prototype.toJSON, 'function');
       });
-      it('LocalDateTime.prototype has absolute', () => {
-        assert('absolute' in LocalDateTime.prototype);
+      it('LocalDateTime.prototype has toAbsolute', () => {
+        assert('toAbsolute' in LocalDateTime.prototype);
       });
       it('LocalDateTime.prototype has timeZone', () => {
         assert('timeZone' in LocalDateTime.prototype);
@@ -833,11 +833,11 @@ describe('LocalDateTime', () => {
     assert(instant);
     equal(typeof instant, 'object');
     equal(
-      instant.absolute.getEpochSeconds(),
+      instant.toAbsolute().getEpochSeconds(),
       Math.floor(Date.UTC(1976, 10, 18, 15, 23, 30, 123) / 1e3),
       'getEpochSeconds'
     );
-    equal(instant.absolute.getEpochMilliseconds(), Date.UTC(1976, 10, 18, 15, 23, 30, 123), 'getEpochMilliseconds');
+    equal(instant.toAbsolute().getEpochMilliseconds(), Date.UTC(1976, 10, 18, 15, 23, 30, 123), 'getEpochMilliseconds');
 
     describe('LocalDateTime for (1976, 11, 18, 15, 23, 30, 123, 456, 789)', () => {
       it('datetime can be constructed', () => {

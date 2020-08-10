@@ -1,16 +1,15 @@
 import { Temporal } from '../..';
 export declare type LocalDateTimeLike = Temporal.DateTimeLike & {
   timeZone?: Temporal.TimeZone | string;
-  absolute?: Temporal.Absolute | string;
   timeZoneOffsetNanoseconds?: number;
 };
 declare type LocalDateTimeFields = ReturnType<Temporal.DateTime['getFields']> & {
   timeZone: Temporal.TimeZone;
-  absolute: Temporal.Absolute;
+  timeZoneOffsetNanoseconds: number;
 };
 declare type LocalDateTimeISOCalendarFields = ReturnType<Temporal.DateTime['getISOCalendarFields']> & {
   timeZone: Temporal.TimeZone;
-  absolute: Temporal.Absolute;
+  timeZoneOffsetNanoseconds: number;
 };
 export interface OverflowOptions {
   overflow: 'constrain' | 'reject';
@@ -36,7 +35,7 @@ export declare class LocalDateTime {
   ): LocalDateTime;
   with(localDateTimeLike: LocalDateTimeLike, options?: LocalDateTimeAssignmentOptions): LocalDateTime;
   withCalendar(calendar: Temporal.CalendarProtocol): LocalDateTime;
-  get absolute(): Temporal.Absolute;
+  toAbsolute(): Temporal.Absolute;
   get timeZone(): Temporal.TimeZone;
   get calendar(): Temporal.CalendarProtocol;
   toDateTime(): Temporal.DateTime;

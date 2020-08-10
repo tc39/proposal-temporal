@@ -750,18 +750,16 @@ export namespace Temporal {
   export type LocalDateTimeLike = Temporal.DateTimeLike & {
     /**`Temporal.TimeZone`, IANA time zone identifier, or offset string */
     timeZone?: Temporal.TimeZone | string;
-    /**`Temporal.Absolute` or ISO "Z" string */
-    absolute?: Temporal.Absolute | string;
     /** Enables `from` using only local time values */
     timeZoneOffsetNanoseconds?: number;
   };
   type LocalDateTimeFields = ReturnType<Temporal.DateTime['getFields']> & {
     timeZone: Temporal.TimeZone;
-    absolute: Temporal.Absolute;
+    timeZoneOffsetNanoseconds: number;
   };
   type LocalDateTimeISOCalendarFields = ReturnType<Temporal.DateTime['getISOCalendarFields']> & {
     timeZone: Temporal.TimeZone;
-    absolute: Temporal.Absolute;
+    timeZoneOffsetNanoseconds: number;
   };
   export interface OverflowOptions {
     /**
@@ -834,22 +832,18 @@ export namespace Temporal {
      * Build a `Temporal.LocalDateTime` instance from one of the following:
      * - Another LocalDateTime instance, in which case the result will deep-clone
      *   the input.
-     * - A "LocalDateTime-like" object with a `timeZone` field and either an
-     *   `absolute` field OR `year`, `month`, and `day` fields. All non-required
-     *   `Temporal.LocalDateTime` fields are accepted too, with the caveat that
-     *   fields must be consistent. For example, if an object with `absolute` and
-     *   `hours` is provided, then the `hours` value must match the `absolute` in
-     *   the given time zone. Note: if neither `absolute` nor
-     *   `timeZoneOffsetNanoseconds` are provided, then the time can be ambiguous
-     *   around DST transitions.  The `disambiguation` option can resolve this
-     *   ambiguity.
+     * - A "LocalDateTime-like" property bag object with required properties
+     *   `timeZone`, `year`, `month`, and `day`. Other fields (time fields and
+     *   `timeZoneOffsetNanoseconds`) are optional. If `timeZoneOffsetNanoseconds`
+     *   is not provided, then the time can be ambiguous around DST transitions.
+     *   The `disambiguation` option can resolve this ambiguity.
      * - An extended ISO 8601 string that includes a time zone identifier, e.g.
      *   `2007-12-03T10:15:30+01:00[Europe/Paris]`. If a timezone offset is not
      *   present, then the `disambiguation` option will be used to resolve any
      *   ambiguity. Note that an ISO string ending in "Z" (a UTC time) will not be
      *   accepted via a string parameter. Instead, the caller must explicitly
-     *   opt-in to UTC using the object form `{absolute: isoString, timeZone:
-     *   'utc'}`
+     *   opt-in to UTC, e.g.
+     *   Temporal.Absolute.from(isoString).toLocalDateTime('UTC'}`
      * - An object that can be converted to the string format above.
      *
      * If the input contains both a time zone offset and a time zone, in rare
@@ -875,44 +869,38 @@ export namespace Temporal {
      * is a "LocalDateTime-like" object. Accepted fields include:
      * - All `Temporal.DateTime` fields, including `calendar`
      * - `timeZone` as a time zone identifier string like `Europe/Paris` or a
-     *    `Temporal.TimeZone` instance
-     * - `absolute` as an ISO 8601 string ending in "Z" or an `Temporal.Absolute`
-     *   instance
+     *   `Temporal.TimeZone` instance
      * - `timezoneOffsetNanoseconds`
-     *
-     * If the `absolute` field is included, all other input fields must be
-     * consistent with this value or this method will throw.
      *
      * If the `timeZone` field is included, `with` will first convert all existing
      * fields to the new time zone and then fields in the input will be played on
      * top of the new time zone. Therefore, `.with({timeZone})` is an easy way to
      * convert to a new time zone while updating the clock time.  However, to keep
-     * clock time as-is while resetting the time zone, the current fields must be
-     * spread into the new time zone. Examples:
+     * clock time as-is while resetting the time zone, use the `toDateTime()`
+     * method. Examples:
      * ```
      * const sameInstantInOtherTz = ldt.with({timeZone: 'Europe/London'});
-     * const newTzSameLocalTime = ldt.with({...ldt.getFields(), timeZone: 'Europe/London'});
+     * const newTzSameLocalTime = ldt.toDateTime().toLocalDateTime('Europe/London');
      * ```
      *
      * If the `timezoneOffsetNanoseconds` field is provided, then it's possible
      * for it to conflict with the input object's `timeZone` property or, if
      * omitted, the object's existing time zone.  The `offset` option (which
-     * defaults to `'prefer'`) will resolve the conflict. However, if both
-     * `absolute` and `timezoneOffsetNanoseconds` fields are included and they
-     * conflict, then a `RangeError` will be thrown.
+     * defaults to `'prefer'`) will resolve the conflict.
      *
      * If the `timezoneOffsetNanoseconds` field is not provided, but the
-     * `absolute` nor the `timeZone` fields are not provided either, then the
-     * existing `timezoneOffsetNanoseconds` field will be used by `with` as if it
-     * had been provided by the caller. By default, this will prefer the existing
-     * offset when resolving ambiguous results. For example, if a
+     * `timeZone` field is not provided either, then the existing
+     * `timezoneOffsetNanoseconds` field will be used by `with` as if it had been
+     * provided by the caller. By default, this will prefer the existing offset
+     * when resolving ambiguous results. For example, if a
      * `Temporal.LocalDateTime` is set to the "second" 1:30AM on a day where the
      * 1-2AM clock hour is repeated after a backwards DST transition, then calling
      * `.with({minute: 45})` will result in an ambiguity which is resolved using
      * the default `offset: 'prefer'` option. Because the existing offset is valid
      * for the new time, it will be retained so the result will be the "second"
      * 1:45AM.  However, if the existing offset is not valid for the new result
-     * (e.g. `.with({hour: 0})`), then the offset will be changed.
+     * (e.g. `.with({hour: 0})`), then the default behavior will change the
+     * offset.
      *
      * Available options:
      * ```
@@ -943,7 +931,7 @@ export namespace Temporal {
      * will automatically convert it to a JSON-friendly ISO 8601 string (ending in
      * `Z`) when persisting to JSON.
      */
-    get absolute(): Temporal.Absolute;
+    toAbsolute(): Temporal.Absolute;
     /**
      * Returns the `Temporal.TimeZone` representing this object's time zone.
      *
@@ -1028,7 +1016,7 @@ export namespace Temporal {
      *
      * The resulting object includes all fields returned by
      * `Temporal.DateTime.prototype.getFields()`, as well as `timeZone`,
-     * and `absolute`.
+     * and `timeZoneOffsetNanoseconds`.
      *
      * The result of this method can be used for round-trip serialization via
      * `from()`, `with()`, or `JSON.stringify`.
@@ -1058,7 +1046,7 @@ export namespace Temporal {
      * Returns `true` if both the absolute timestamp and time zone are identical
      * to the other `Temporal.LocalDateTime` instance, and `false` otherwise. To
      * compare only the absolute timestamps and ignore time zones, use
-     * `.absolute.compare()`.
+     * `.toAbsolute().compare()`.
      */
     equals(other: LocalDateTime): boolean;
     /**
