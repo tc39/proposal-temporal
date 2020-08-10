@@ -2128,6 +2128,38 @@
   	return value;
   };
 
+  var $apply = GetIntrinsic('%Function.prototype.apply%');
+  var $call = GetIntrinsic('%Function.prototype.call%');
+  var $reflectApply = GetIntrinsic('%Reflect.apply%', true) || functionBind.call($call, $apply);
+
+  var callBind = function callBind() {
+  	return $reflectApply(functionBind, $call, arguments);
+  };
+
+  var apply = function applyBind() {
+  	return $reflectApply(functionBind, $apply, arguments);
+  };
+  callBind.apply = apply;
+
+  var $indexOf = callBind(GetIntrinsic('String.prototype.indexOf'));
+
+  var callBound = function callBoundIntrinsic(name, allowMissing) {
+  	var intrinsic = GetIntrinsic(name, !!allowMissing);
+  	if (typeof intrinsic === 'function' && $indexOf(name, '.prototype.')) {
+  		return callBind(intrinsic);
+  	}
+  	return intrinsic;
+  };
+
+  var $apply$1 = GetIntrinsic('%Reflect.apply%', true) || callBound('%Function.prototype.apply%');
+
+  // https://www.ecma-international.org/ecma-262/6.0/#sec-call
+
+  var Call = function Call(F, V) {
+  	var args = arguments.length > 2 ? arguments[2] : [];
+  	return $apply$1(F, V, args);
+  };
+
   var src = functionBind.call(Function.call, Object.prototype.hasOwnProperty);
 
   var $TypeError$1 = GetIntrinsic('%TypeError%');
@@ -2155,29 +2187,6 @@
   		throw new $TypeError$1('Property Descriptors may not be both accessor and data descriptors');
   	}
   	return true;
-  };
-
-  var $apply = GetIntrinsic('%Function.prototype.apply%');
-  var $call = GetIntrinsic('%Function.prototype.call%');
-  var $reflectApply = GetIntrinsic('%Reflect.apply%', true) || functionBind.call($call, $apply);
-
-  var callBind = function callBind() {
-  	return $reflectApply(functionBind, $call, arguments);
-  };
-
-  var apply = function applyBind() {
-  	return $reflectApply(functionBind, $apply, arguments);
-  };
-  callBind.apply = apply;
-
-  var $indexOf = callBind(GetIntrinsic('String.prototype.indexOf'));
-
-  var callBound = function callBoundIntrinsic(name, allowMissing) {
-  	var intrinsic = GetIntrinsic(name, !!allowMissing);
-  	if (typeof intrinsic === 'function' && $indexOf(name, '.prototype.')) {
-  		return callBind(intrinsic);
-  	}
-  	return intrinsic;
   };
 
   var $defineProperty = GetIntrinsic('%Object.defineProperty%', true);
@@ -2999,6 +3008,9 @@
 
     INTRINSICS$1["%".concat(name, "%")] = Class;
   }
+  function DefineIntrinsic(name, value) {
+    INTRINSICS$1["%".concat(name, "%")] = value;
+  }
   function GetIntrinsic$1(intrinsic) {
     return intrinsic in INTRINSICS$1 ? INTRINSICS$1[intrinsic] : GetIntrinsic(intrinsic);
   }
@@ -3088,6 +3100,7 @@
   var YEAR_MAX = 275760;
   var BEFORE_FIRST_DST = BigInteger(-388152).multiply(1e13); // 1847-01-01T00:00:00Z
   var ES2019 = {
+    Call: Call,
     SpeciesConstructor: SpeciesConstructor,
     ToInteger: ToInteger$1,
     ToNumber: ToNumber$1,
@@ -3354,9 +3367,8 @@
           zone = _ES$ParseTemporalAbso.zone;
 
       var DateTime = GetIntrinsic$1('%Temporal.DateTime%');
-      var TimeZone = GetIntrinsic$1('%Temporal.TimeZone%');
       var dt = new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
-      var tz = TimeZone.from(zone);
+      var tz = ES.TimeZoneFrom(zone);
       var possibleAbsolutes = tz.getPossibleAbsolutesFor(dt);
       if (possibleAbsolutes.length === 1) return GetSlot(possibleAbsolutes[0], EPOCHNANOSECONDS);
 
@@ -3753,33 +3765,64 @@
     ToTemporalYearMonthRecord: function ToTemporalYearMonthRecord(bag) {
       return ES.ToRecord(bag, [['era', undefined], ['month'], ['year']]);
     },
+    TimeZoneFrom: function TimeZoneFrom(temporalTimeZoneLike) {
+      var TemporalTimeZone = GetIntrinsic$1('%Temporal.TimeZone%');
+      var from = TemporalTimeZone.from;
+
+      if (from === undefined) {
+        from = GetIntrinsic$1('%Temporal.TimeZone.from%');
+      }
+
+      return ES.Call(from, TemporalTimeZone, [temporalTimeZoneLike]);
+    },
+    ToTemporalTimeZone: function ToTemporalTimeZone(temporalTimeZoneLike) {
+      if (_typeof(temporalTimeZoneLike) === 'object' && temporalTimeZoneLike) {
+        return temporalTimeZoneLike;
+      }
+
+      var identifier = ES.ToString(temporalTimeZoneLike);
+      return ES.TimeZoneFrom(identifier);
+    },
+    GetOffsetStringFor: function GetOffsetStringFor(timeZone, absolute) {
+      var getOffsetStringFor = timeZone.getOffsetStringFor;
+
+      if (getOffsetStringFor === undefined) {
+        getOffsetStringFor = GetIntrinsic$1('%Temporal.TimeZone.prototype.getOffsetStringFor%');
+      }
+
+      return ES.ToString(ES.Call(getOffsetStringFor, timeZone, [absolute]));
+    },
+    GetTemporalDateTimeFor: function GetTemporalDateTimeFor(timeZone, absolute, calendar) {
+      var getDateTimeFor = timeZone.getDateTimeFor;
+
+      if (getDateTimeFor === undefined) {
+        getDateTimeFor = GetIntrinsic$1('%Temporal.TimeZone.prototype.getDateTimeFor%');
+      }
+
+      return ES.Call(getDateTimeFor, timeZone, [absolute, calendar]);
+    },
+    TimeZoneToString: function TimeZoneToString(timeZone) {
+      var toString = timeZone.toString;
+
+      if (toString === undefined) {
+        toString = GetIntrinsic$1('%Temporal.TimeZone.prototype.toString%');
+      }
+
+      return ES.ToString(ES.Call(toString, timeZone));
+    },
     ISOTimeZoneString: function ISOTimeZoneString(timeZone, absolute) {
-      var offset;
+      var name = ES.TimeZoneToString(timeZone);
+      var offset = ES.GetOffsetStringFor(timeZone, absolute);
 
-      if (typeof timeZone.getOffsetStringFor === 'function') {
-        offset = timeZone.getOffsetStringFor(absolute);
-      } else {
-        var TemporalTimeZone = GetIntrinsic$1('%Temporal.TimeZone%');
-        offset = TemporalTimeZone.prototype.getOffsetStringFor.call(timeZone, absolute);
+      if (name === 'UTC') {
+        return 'Z';
       }
 
-      var timeZoneString;
-
-      switch (true) {
-        case 'UTC' === timeZone.name:
-          timeZoneString = 'Z';
-          break;
-
-        case timeZone.name === offset:
-          timeZoneString = offset;
-          break;
-
-        default:
-          timeZoneString = "".concat(offset, "[").concat(timeZone.toString(), "]");
-          break;
+      if (name === offset) {
+        return offset;
       }
 
-      return timeZoneString;
+      return "".concat(offset, "[").concat(name, "]");
     },
     ISOYearString: function ISOYearString(year) {
       var yearString;
@@ -3808,15 +3851,7 @@
       return ":".concat(secs).concat(post);
     },
     TemporalAbsoluteToString: function TemporalAbsoluteToString(absolute, timeZone) {
-      var dateTime;
-
-      if (typeof timeZone.getDateTimeFor === 'function') {
-        dateTime = timeZone.getDateTimeFor(absolute);
-      } else {
-        var TemporalTimeZone = GetIntrinsic$1('%Temporal.TimeZone%');
-        dateTime = TemporalTimeZone.prototype.getDateTimeFor.call(timeZone, absolute);
-      }
-
+      var dateTime = ES.GetTemporalDateTimeFor(timeZone, absolute);
       var year = ES.ISOYearString(dateTime.year);
       var month = ES.ISODateTimePartString(dateTime.month);
       var day = ES.ISODateTimePartString(dateTime.day);
@@ -5032,8 +5067,7 @@
       value: function toString() {
         var temporalTimeZoneLike = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'UTC';
         if (!ES.IsTemporalAbsolute(this)) throw new TypeError('invalid receiver');
-        var TemporalTimeZone = GetIntrinsic$1('%Temporal.TimeZone%');
-        var timeZone = TemporalTimeZone.from(temporalTimeZoneLike);
+        var timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);
         return ES.TemporalAbsoluteToString(this, timeZone);
       }
     }, {
@@ -5065,10 +5099,8 @@
       value: function toDateTime(temporalTimeZoneLike) {
         var calendar = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
         if (!ES.IsTemporalAbsolute(this)) throw new TypeError('invalid receiver');
-        var TemporalTimeZone = GetIntrinsic$1('%Temporal.TimeZone%');
-        var timeZone = TemporalTimeZone.from(temporalTimeZoneLike);
-        if (typeof timeZone.getDateTimeFor === 'function') return timeZone.getDateTimeFor(this, calendar);
-        return TemporalTimeZone.prototype.getDateTimeFor.call(timeZone, this, calendar);
+        var timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);
+        return ES.GetTemporalDateTimeFor(timeZone, this, calendar);
       }
     }], [{
       key: "fromEpochSeconds",
@@ -7789,7 +7821,7 @@
     }], [{
       key: "from",
       value: function from(item) {
-        if (ES.IsTemporalTimeZone(item) || _typeof(item) === 'object' && item) return item;
+        if (_typeof(item) === 'object' && item) return item;
         var timeZone = ES.TemporalTimeZoneFromString(ES.ToString(item));
         var result = new this(timeZone);
         if (!ES.IsTemporalTimeZone(result)) throw new TypeError('invalid result');
@@ -7800,6 +7832,10 @@
     return TimeZone;
   }();
   MakeIntrinsicClass(TimeZone, 'Temporal.TimeZone');
+  DefineIntrinsic('Temporal.TimeZone.from', TimeZone.from);
+  DefineIntrinsic('Temporal.TimeZone.prototype.getDateTimeFor', TimeZone.prototype.getDateTimeFor);
+  DefineIntrinsic('Temporal.TimeZone.prototype.getOffsetStringFor', TimeZone.prototype.getOffsetStringFor);
+  DefineIntrinsic('Temporal.TimeZone.prototype.toString', TimeZone.prototype.toString);
 
   var ObjectAssign$4 = Object.assign;
   var YearMonth = /*#__PURE__*/function () {
