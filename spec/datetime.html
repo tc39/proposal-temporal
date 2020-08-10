@@ -428,14 +428,10 @@
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
         1. Perform ? RequireInternalSlot(_other_, [[InitializedTemporalDateTime]]).
         1. Let _largestUnit_ be ? ToLargestTemporalUnit(_options_, « », *"days"*).
-        1. If ! CompareTemporalDateTime(_dateTime_, _other_) &lt; 0, then
-          1. Throw a *RangeError* exception.
-        1. Let _greater_ be _dateTime_.
-        1. Let _smaller_ be _other_.
-        1. Let _timeDifference_ be ! DifferenceTime(_smaller_, _greater_).
+        1. Let _timeDifference_ be ! DifferenceTime(_other_, _dateTime_).
         1. Let _balanceResult_ be ? BalanceDate(_greater_.[[ISOYear]], _greater_.[[ISOMonth]], _greater_.[[ISODay]] + _timeDifference_.[[Days]]).
         1. Let _dateDifference_ be ! DifferenceDate(_smaller_, _balanceResult_, _largestUnit_).
-        1. Let _result_ be ! BalanceDuration(_dateDifference_.[[Days]], _timeDifference.[[Hour]], _timeDifference_.[[Minute]], _timeDifference_.[[Second]], _timeDifference.[[Millisecond]], _timeDifference_.[[Microsecond]], _timeDifference_.[[Nanosecond]], _largestUnit_).
+        1. Let _result_ be ! BalanceDuration(_dateDifference_.[[Days]], _timeDifference.[[Hours]], _timeDifference_.[[Minutes]], _timeDifference_.[[Seconds]], _timeDifference.[[Milliseconds]], _timeDifference_.[[Microseconds]], _timeDifference_.[[Nanoseconds]], _largestUnit_).
         1. Return ? CreateTemporalDuration(_dateDifference_.[[Years]], _dateDifference_.[[Months]], _dateDifference_.[[Weeks]], _result_.[[Days]], _result_.[[Hours]], _result_.[[Minutes]], _result_.[[Seconds]], _result_.[[Milliseconds]], _result_.[[Microseconds]], _result_.[[Nanoseconds]]).
       </emu-alg>
     </emu-clause>

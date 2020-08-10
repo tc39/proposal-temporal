@@ -1116,6 +1116,15 @@ export const ES = ObjectAssign({}, ES2019, {
     return { year, month, years, months };
   },
   BalanceDuration: (days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, largestUnit) => {
+    const sign = ES.DurationSign(0, 0, 0, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+    days *= sign;
+    hours *= sign;
+    minutes *= sign;
+    seconds *= sign;
+    milliseconds *= sign;
+    microseconds *= sign;
+    nanoseconds *= sign;
+
     let deltaDays;
     ({
       deltaDays,
@@ -1162,6 +1171,14 @@ export const ES = ObjectAssign({}, ES2019, {
       default:
         throw new Error('assert not reached');
     }
+
+    days *= sign;
+    hours *= sign;
+    minutes *= sign;
+    seconds *= sign;
+    milliseconds *= sign;
+    microseconds *= sign;
+    nanoseconds *= sign;
 
     return { days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
   },
@@ -1252,7 +1269,18 @@ export const ES = ObjectAssign({}, ES2019, {
     }
   },
 
-  DifferenceDate: (smaller, larger, largestUnit = 'days') => {
+  DifferenceDate: (one, two, largestUnit = 'days') => {
+    let larger, smaller, sign;
+    const TemporalDate = GetIntrinsic('%Temporal.Date%');
+    if (TemporalDate.compare(one, two) < 0) {
+      smaller = one;
+      larger = two;
+      sign = 1;
+    } else {
+      smaller = two;
+      larger = one;
+      sign = -1;
+    }
     let years = larger.year - smaller.year;
     let weeks = 0;
     let months, days;
@@ -1305,15 +1333,28 @@ export const ES = ObjectAssign({}, ES2019, {
       default:
         throw new Error('assert not reached');
     }
+    years *= sign;
+    months *= sign;
+    weeks *= sign;
+    days *= sign;
     return { years, months, weeks, days };
   },
-  DifferenceTime(earlier, later) {
-    let hours = later.hour - earlier.hour;
-    let minutes = later.minute - earlier.minute;
-    let seconds = later.second - earlier.second;
-    let milliseconds = later.millisecond - earlier.millisecond;
-    let microseconds = later.microsecond - earlier.microsecond;
-    let nanoseconds = later.nanosecond - earlier.nanosecond;
+  DifferenceTime(one, two) {
+    let hours = two.hour - one.hour;
+    let minutes = two.minute - one.minute;
+    let seconds = two.second - one.second;
+    let milliseconds = two.millisecond - one.millisecond;
+    let microseconds = two.microsecond - one.microsecond;
+    let nanoseconds = two.nanosecond - one.nanosecond;
+
+    const sign = ES.DurationSign(0, 0, 0, 0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+    hours *= sign;
+    minutes *= sign;
+    seconds *= sign;
+    milliseconds *= sign;
+    microseconds *= sign;
+    nanoseconds *= sign;
+
     let deltaDays = 0;
     ({
       deltaDays,
@@ -1324,6 +1365,15 @@ export const ES = ObjectAssign({}, ES2019, {
       microsecond: microseconds,
       nanosecond: nanoseconds
     } = ES.BalanceTime(hours, minutes, seconds, milliseconds, microseconds, nanoseconds));
+
+    deltaDays *= sign;
+    hours *= sign;
+    minutes *= sign;
+    seconds *= sign;
+    milliseconds *= sign;
+    microseconds *= sign;
+    nanoseconds *= sign;
+
     return { deltaDays, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
   },
   AddDate: (year, month, day, years, months, weeks, days, disambiguation) => {

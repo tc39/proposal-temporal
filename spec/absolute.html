@@ -288,11 +288,7 @@
         1. Perform ? RequireInternalSlot(_absolute_, [[InitializedTemporalAbsolute]]).
         1. Perform ? RequireInternalSlot(_other_, [[InitializedTemporalAbsolute]]).
         1. Let _largestUnit_ be ? ToLargestTemporalUnit(_options_, « *"years"*, *"months"*, *"weeks"* », *"seconds"*).
-        1. If ! CompareTemporalAbsolute(_absolute_, _other_) &lt; 0, then
-          1. Throw a *RangeError* exception.
-        1. Let _greater_ be _absolute_.
-        1. Let _smaller_ be _otherAbsolute_.
-        1. Let _ns_ be _greater_.[[Nanoseconds]] - _smaller_.[[Nanoseconds]].
+        1. Let _ns_ be _absolute_.[[Nanoseconds]] - _otherAbsolute_.[[Nanoseconds]].
         1. Let _result_ be ! BalanceDuration(0, 0, 0, 0, 0, 0, _ns_, _largestUnit_).
         1. Return ? CreateTemporalDuration(0, 0, 0, _result_.[[Days]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]).
       </emu-alg>

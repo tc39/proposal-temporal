@@ -303,7 +303,7 @@ ym.minus({years: 20, months: 4})  // => 1999-02
 **Returns:** a `Temporal.Duration` representing the difference between `yearMonth` and `other`.
 
 This method computes the difference between the two months represented by `yearMonth` and `other`, and returns it as a `Temporal.Duration` object.
-A `RangeError` will be thrown if `other` is later than `yearMonth`, because `Temporal.Duration` objects cannot represent negative durations.
+If `other` is later than `yearMonth` then the resulting duration will be negative.
 
 The `largestUnit` option controls how the resulting duration is expressed.
 The returned `Temporal.Duration` object will not have any nonzero fields that are larger than the unit in `largestUnit`.
@@ -320,7 +320,7 @@ ym = Temporal.YearMonth.from('2019-06');
 other = Temporal.YearMonth.from('2006-08');
 ym.difference(other)                             // => P12Y10M
 ym.difference(other, { largestUnit: 'months' })  // => P154M
-other.difference(ym, { largestUnit: 'months' })  // => throws RangeError
+other.difference(ym, { largestUnit: 'months' })  // => -P154M
 
 // If you really need to calculate the difference between two YearMonths
 // in days, you can eliminate the ambiguity by explicitly choosing the

@@ -215,9 +215,7 @@ describe('Time', () => {
         const duration = time.difference(two);
         equal(`${duration}`, 'PT1H53M');
       });
-      it('reverse argument order will throw', () => {
-        throws(() => one.difference(time, { largestUnit: 'minutes' }), RangeError);
-      });
+      it(`(${two}).difference(${time}) => -PT1H53M`, () => equal(`${two.difference(time)}`, '-PT1H53M'));
       it("doesn't cast argument", () => {
         throws(() => time.difference({ hour: 16, minute: 34 }), TypeError);
         throws(() => time.difference('16:34'), TypeError);

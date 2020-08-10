@@ -322,7 +322,7 @@ An example HTML form inspired by [Days Calculator](https://www.timeanddate.com/d
 
 ### Unit-constrained duration between now and a past/future zoned event
 
-Map two Temporal.Absolute instances into an ascending/descending order indicator and a Temporal.Duration instance representing the duration between the two instants without using units coarser than specified (e.g., for presenting a meaningful countdown with vs. without using months or days).
+Take the difference between two Temporal.Absolute instances as a Temporal.Duration instance (positive or negative), representing the duration between the two instants without using units coarser than specified (e.g., for presenting a meaningful countdown with vs. without using months or days).
 
 ```javascript
 {{cookbook/getElapsedDurationSinceInstant.mjs}}
