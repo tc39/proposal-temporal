@@ -1339,7 +1339,7 @@ export const ES = ObjectAssign({}, ES2019, {
     days *= sign;
     return { years, months, weeks, days };
   },
-  DifferenceTime(one, two) {
+  DifferenceTime: (one, two) => {
     let hours = two.hour - one.hour;
     let minutes = two.minute - one.minute;
     let seconds = two.second - one.second;
