@@ -253,7 +253,7 @@ A difference of two hours will become 7200 seconds when `largestUnit` is `'secon
 However, a difference of 30 seconds will still be 30 seconds even if `largestUnit` is `'hours'`.
 
 The default largest unit in the result is technically `'days'`, for consistency with other Temporal types' `difference` methods.
-However, since time differences are always shorter than one day, largest units of `'years'`, `'months'`, or `'days'` are treated as `'hours'`.
+However, since time differences are always shorter than one day, largest units of `'years'`, `'months'`, `'weeks'`, or `'days'` are treated as `'hours'`.
 
 Usage example:
 ```javascript
