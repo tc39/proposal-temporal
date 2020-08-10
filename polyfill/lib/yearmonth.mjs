@@ -135,15 +135,13 @@ export class YearMonth {
       'microseconds',
       'nanoseconds'
     ]);
-    const comparison = YearMonth.compare(this, other);
-    if (comparison < 0) throw new RangeError('other instance cannot be larger than `this`');
 
-    const smallerFields = ES.ToTemporalYearMonthRecord(other);
-    const largerFields = ES.ToTemporalYearMonthRecord(this);
+    const otherFields = ES.ToTemporalYearMonthRecord(other);
+    const thisFields = ES.ToTemporalYearMonthRecord(this);
     const TemporalDate = GetIntrinsic('%Temporal.Date%');
-    const smaller = calendar.dateFromFields({ ...smallerFields, day: 1 }, {}, TemporalDate);
-    const larger = calendar.dateFromFields({ ...largerFields, day: 1 }, {}, TemporalDate);
-    return calendar.dateDifference(smaller, larger, { ...options, largestUnit });
+    const otherDate = calendar.dateFromFields({ ...otherFields, day: 1 }, {}, TemporalDate);
+    const thisDate = calendar.dateFromFields({ ...thisFields, day: 1 }, {}, TemporalDate);
+    return calendar.dateDifference(otherDate, thisDate, { ...options, largestUnit });
   }
   equals(other) {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');

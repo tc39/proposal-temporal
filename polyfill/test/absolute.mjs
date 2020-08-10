@@ -439,7 +439,8 @@ describe('Absolute', () => {
     const earlier = Absolute.from('1976-11-18T15:23:30.123456789Z');
     const later = Absolute.from('2019-10-29T10:46:38.271986102Z');
     const diff = later.difference(earlier);
-    it('throws if out of order', () => throws(() => earlier.difference(later), RangeError));
+    it(`(${earlier}).difference(${later}) == (${later}).difference(${earlier}).negated()`, () =>
+      equal(`${earlier.difference(later)}`, `${diff.negated()}`));
     it(`(${earlier}).plus(${diff}) == (${later})`, () => assert(earlier.plus(diff).equals(later)));
     it(`(${later}).minus(${diff}) == (${earlier})`, () => assert(later.minus(diff).equals(earlier)));
     it("doesn't cast argument", () => {

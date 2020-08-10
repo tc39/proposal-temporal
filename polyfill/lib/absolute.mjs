@@ -109,8 +109,6 @@ export class Absolute {
     if (!ES.IsTemporalAbsolute(other)) throw new TypeError('invalid Absolute object');
     const largestUnit = ES.ToLargestTemporalUnit(options, 'seconds', ['years', 'months', 'weeks']);
 
-    const comparison = Absolute.compare(this, other);
-    if (comparison < 0) throw new RangeError('other instance cannot be larger than `this`');
     const onens = GetSlot(other, EPOCHNANOSECONDS);
     const twons = GetSlot(this, EPOCHNANOSECONDS);
     const diff = twons.minus(onens);

@@ -155,8 +155,6 @@ export class Date {
         `cannot compute difference between dates of ${calendar.id} and ${otherCalendar.id} calendars`
       );
     }
-    const comparison = Date.compare(this, other);
-    if (comparison < 0) throw new RangeError('other instance cannot be larger than `this`');
     return calendar.dateDifference(other, this, options);
   }
   equals(other) {

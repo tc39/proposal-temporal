@@ -293,15 +293,8 @@
         1. Perform ? RequireInternalSlot(_temporalTime_, [[InitializedTemporalTime]]).
         1. Perform ? RequireInternalSlot(_other_, [[InitializedTemporalTime]]).
         1. Let _largestUnit_ be ? ToLargestTemporalUnit(_options_, « », *"hours"*).
-        1. If ! CompareTemporalTime(_temporalTime_, _other_) &lt; 0, then
-          1. Throw a *RangeError* exception.
-        1. Let _greater_ be _temporalTime_.
-        1. Let _smaller_ be _other_.
-        1. Let _result_ be ! DifferenceTime(_smaller_, _greater_).
-        1. If _result_.[[Hour]] ≥ 12, then
-          1. Set _result_ to ! BalanceDuration(0, 24 − _result_.[[Hour]], −_result_.[[Minute]], −_result_.[[Second]], −_result_.[[Millisecond]], −_result_.[[Microsecond]], −_result_.[[Nanosecond]], _largestUnit_).
-        1. Else,
-          1. Set _result_ to ! BalanceDuration(0, _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]], _largestUnit_).
+        1. Let _result_ be ! DifferenceTime(_other_, _temporalTime_).
+        1. Set _result_ to ! BalanceDuration(0, _result_.[[Hours]], _result_.[[Minutes]], _result_.[[Seconds]], _result_.[[Milliseconds]], _result_.[[Microseconds]], _result_.[[Nanoseconds]], _largestUnit_).
         1. Return ? CreateTemporalDuration(0, 0, 0, 0, _result_.[[Hours]], _result_.[[Minutes]], _result_.[[Seconds]], _result_.[[Milliseconds]], _result_.[[Microseconds]], _result_.[[Nanoseconds]]).
       </emu-alg>
     </emu-clause>
@@ -414,15 +407,25 @@
     <h1>Abstract operations</h1>
 
     <emu-clause id="sec-temporal-differencetime" aoid="DifferenceTime">
-      <h1>DifferenceTime ( _smaller_, _greater_ )</h1>
+      <h1>DifferenceTime ( _one_, _two_ )</h1>
       <emu-alg>
-        1. Let _hour_ be _greater_.[[Hour]] - _smaller_.[[Hour]].
-        1. Let _minute_ be _greater_.[[Minute]] - _smaller_.[[Minute]].
-        1. Let _second_ be _greater_.[[Second]] - _smaller_.[[Second]].
-        1. Let _millisecond_ be _greater_.[[Millisecond]] - _smaller_.[[Millisecond]].
-        1. Let _microsecond_ be _greater_.[[Microsecond]] - _smaller_.[[Microsecond]].
-        1. Let _nanosecond_ be _greater_.[[Nanosecond]] - _smaller_.[[Nanosecond]].
-        1. Return ? BalanceTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_).
+        1. Let _hours_ be _two_.[[Hour]] - _one_.[[Hour]].
+        1. Let _minutes_ be _two_.[[Minute]] - _one_.[[Minute]].
+        1. Let _seconds_ be _two_.[[Second]] - _one_.[[Second]].
+        1. Let _milliseconds_ be _two_.[[Millisecond]] - _one_.[[Millisecond]].
+        1. Let _microseconds_ be _two_.[[Microsecond]] - _one_.[[Microsecond]].
+        1. Let _nanoseconds_ be _two_.[[Nanosecond]] - _one_.[[Nanosecond]].
+        1. Let _sign_ be ! DurationSign(0, 0, 0, 0, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_).
+        1. Let _bt_ be ? BalanceTime(_hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_).
+        1. Return the new Record {
+          [[Days]]: _bt_.[[Days]] &times; _sign_,
+          [[Hours]]: _bt_.[[Hour]] &times; _sign_,
+          [[Minutes]]: _bt_.[[Minute]] &times; _sign_,
+          [[Seconds]]: _bt_.[[Second]] &times; _sign_,
+          [[Milliseconds]]: _bt_.[[Millisecond]] &times; _sign_,
+          [[Microseconds]]: _bt_.[[Microsecond]] &times; _sign_,
+          [[Nanoseconds]]: _bt_.[[Nanosecond]] &times; _sign_
+          }.
       </emu-alg>
     </emu-clause>
 

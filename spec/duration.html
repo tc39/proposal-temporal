@@ -592,7 +592,8 @@
       <h1>BalanceDuration ( _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_, _largestUnit_ )</h1>
       <emu-alg>
         1. Assert: _largestUnit_ is one of *"days"*, *"hours"*, *"minutes"*, or *"seconds"*.
-        1. Let _bt_ be ? BalanceTime(_hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_).
+        1. Let _sign_ be ! DurationSign(0, 0, 0, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_).
+        1. Let _bt_ be ? BalanceTime(abs(_hours_), abs(_minutes_), abs(_seconds_), abs(_milliseconds_), abs(_microseconds_), abs(_nanoseconds_)).
         1. Increment _days_ by _bt_.[[Days]].
         1. Set _hours_ to _bt_.[[Hour]].
         1. Set _minutes_ to _bt_.[[Minute]].
@@ -619,13 +620,13 @@
           1. Increment _nanoseconds_ by 1000 × _microseconds_.
           1. Set _microseconds_ to 0.
         1. Return the new Record {
-          [[Days]]: _days_,
-          [[Hours]]: _hours_,
-          [[Minutes]]: _minutes_,
-          [[Seconds]]: _seconds_,
-          [[Milliseconds]]: _milliseconds_,
-          [[Microseconds]]: _microseconds_,
-          [[Nanoseconds]]: _nanoseconds_
+          [[Days]]: _days_ &times; _sign_,
+          [[Hours]]: _hours_ &times; _sign_,
+          [[Minutes]]: _minutes_ &times; _sign_,
+          [[Seconds]]: _seconds_ &times; _sign_,
+          [[Milliseconds]]: _milliseconds_ &times; _sign_,
+          [[Microseconds]]: _microseconds_ &times; _sign_,
+          [[Nanoseconds]]: _nanoseconds_ &times; _sign_
           }.
       </emu-alg>
     </emu-clause>

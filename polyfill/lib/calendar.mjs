@@ -54,9 +54,9 @@ export class Calendar {
     void constructor;
     throw new Error('not implemented');
   }
-  dateDifference(smaller, larger, options) {
-    void smaller;
-    void larger;
+  dateDifference(one, two, options) {
+    void one;
+    void two;
     void options;
     throw new Error('not implemented');
   }
@@ -175,7 +175,7 @@ class ISO8601 extends Calendar {
     }
     return new constructor(year, month, day, this);
   }
-  dateDifference(smaller, larger, options) {
+  dateDifference(one, two, options) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
     const largestUnit = ES.ToLargestTemporalUnit(options, 'days', [
       'hours',
@@ -185,7 +185,7 @@ class ISO8601 extends Calendar {
       'microseconds',
       'nanoseconds'
     ]);
-    const { years, months, weeks, days } = ES.DifferenceDate(smaller, larger, largestUnit);
+    const { years, months, weeks, days } = ES.DifferenceDate(one, two, largestUnit);
     const Duration = GetIntrinsic('%Temporal.Duration%');
     return new Duration(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
   }

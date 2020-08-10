@@ -249,7 +249,7 @@ time.minus({ minutes: 5, nanoseconds: 800 })  // => 19:34:09.068345405
 **Returns:** a `Temporal.Duration` representing the difference between `time` and `other`.
 
 This method computes the difference between the two times represented by `time` and `other`, and returns it as a `Temporal.Duration` object.
-A `RangeError` will be thrown if `other` is later than `time`, because `Temporal.Duration` objects cannot represent negative durations.
+If `other` is later than `time` then the resulting duration will be negative.
 
 The `largestUnit` parameter controls how the resulting duration is expressed.
 The returned `Temporal.Duration` object will not have any nonzero fields that are larger than the unit in `largestUnit`.
@@ -263,7 +263,7 @@ Usage example:
 ```javascript
 time = Temporal.Time.from('20:13:20.971398099');
 time.difference(Temporal.Time.from('19:39:09.068346205'))  // => PT34M11.903051894S
-time.difference(Temporal.Time.from('22:39:09.068346205'))  // => throws RangeError
+time.difference(Temporal.Time.from('22:39:09.068346205'))  // => -PT2H25M49.903051894S
 ```
 
 ### time.**equals**(_other_: Temporal.Time) : boolean
