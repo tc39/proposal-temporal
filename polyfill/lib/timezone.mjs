@@ -74,7 +74,7 @@ export class TimeZone {
   getLocalDateTimeFor(absolute, calendar = GetISO8601Calendar()) {
     if (!ES.IsTemporalAbsolute(absolute)) throw new TypeError('invalid Absolute object');
     const TemporalLocalDateTime = GetIntrinsic('%Temporal.LocalDateTime%');
-    return new TemporalLocalDateTime(absolute, this, calendar);
+    return new TemporalLocalDateTime(absolute.getEpochNanoseconds(), this, calendar);
   }
   getDateTimeFor(instant, calendar = GetISO8601Calendar()) {
     if (!ES.IsTemporalInstant(instant)) throw new TypeError('invalid Instant object');

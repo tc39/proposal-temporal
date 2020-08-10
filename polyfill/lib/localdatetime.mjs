@@ -83,7 +83,7 @@ function fromCommon(dt, timeZone, offset, disambiguation, offsetOption) {
   if (offset == null || offsetOption === 'ignore') {
     // Simple case: ISO string without a TZ offset (or caller wants to ignore
     // the offset), so just convert DateTime to Absolute in the given time zone.
-    return new LocalDateTime(dt.toAbsolute(timeZone, { disambiguation }), timeZone, dt.calendar);
+    return fromDateTime(dt, timeZone, { disambiguation });
   }
 
   // Calculate the absolute for the input's date/time and offset
@@ -98,7 +98,7 @@ function fromCommon(dt, timeZone, offset, disambiguation, offsetOption) {
     // The caller wants the offset to always win ('use') OR the caller is OK
     // with the offset winning ('prefer' or 'reject') as long as it's valid for
     // this timezone and date/time.
-    return new LocalDateTime(absWithInputOffset, timeZone, dt.calendar);
+    return new LocalDateTime(absWithInputOffset.getEpochNanoseconds(), timeZone, dt.calendar);
   }
 
   // If we get here, then the user-provided offset doesn't match any absolutes
@@ -108,8 +108,12 @@ function fromCommon(dt, timeZone, offset, disambiguation, offsetOption) {
   } else {
     // offsetOption === 'prefer', but the offset doesn't match so fall back to
     // use the time zone instead.
-    return new LocalDateTime(dt.toAbsolute(timeZone, { disambiguation }), timeZone, dt.calendar);
+    return fromDateTime(dt, timeZone, { disambiguation });
   }
+}
+
+function fromDateTime(dateTime, timeZone, options) {
+  return new LocalDateTime(dateTime.toAbsolute(timeZone, options).getEpochNanoseconds(), timeZone, dateTime.calendar);
 }
 
 /** Identical logic for `plus` and `minus` */
@@ -124,7 +128,7 @@ function doPlusOrMinus(op, durationLike, options, localDateTime) {
     // If there's only a time to add/subtract, then use absolute math
     // because RFC 5545 specifies using absolute math for time units.
     const result = localDateTime.toAbsolute()[op](durationLike);
-    return new LocalDateTime(result, timeZone, calendar);
+    return new LocalDateTime(result.getEpochNanoseconds(), timeZone, calendar);
   }
 
   // Add the units according to the largest-to-smallest order of operations
@@ -140,8 +144,7 @@ function doPlusOrMinus(op, durationLike, options, localDateTime) {
   if (weeks) newDateTime = newDateTime[op]({ weeks }, dateTimeOverflowOption);
   if (days) newDateTime = newDateTime[op]({ days }, dateTimeOverflowOption);
   if (isZeroDuration(timeDuration)) {
-    const absolute = newDateTime.toAbsolute(timeZone);
-    return new LocalDateTime(absolute, timeZone, localDateTime.calendar);
+    return fromDateTime(newDateTime, timeZone);
   } else {
     // Now add/subtract the time. Because all time units are always the same
     // length, we can add/subtract all of them together without worrying about
@@ -167,7 +170,7 @@ function doPlusOrMinus(op, durationLike, options, localDateTime) {
       }
     }
 
-    return new LocalDateTime(absolute, timeZone, calendar);
+    return new LocalDateTime(absolute.getEpochNanoseconds(), timeZone, calendar);
   }
 }
 
@@ -188,14 +191,16 @@ export class LocalDateTime {
    * To construct a `Temporal.LocalDateTime` from an ISO 8601 string a
    * `DateTime` and time zone, use `.from()`.
    *
-   * @param absolute {Temporal.Absolute} - absolute timestamp for this instance
+   * @param epochNanoseconds {Temporal.Absolute} - absolute timestamp (in
+   * nanoseconds since UNIX epoch) for this instance
    * @param timeZone {Temporal.TimeZone} - time zone for this instance
    * @param [calendar=Temporal.Calendar.from('iso8601')] {Temporal.CalendarProtocol} -
    * calendar for this instance (defaults to ISO calendar)
    */
-  constructor(absolute, timeZone, calendar) {
+  constructor(epochNanoseconds, timeZone, calendar) {
+    // TODO: remove the cast below once https://github.com/tc39/proposal-temporal/issues/810 is resolved
     this._tz = Temporal.TimeZone.from(timeZone);
-    this._abs = Temporal.Absolute.from(absolute);
+    this._abs = new Temporal.Absolute(epochNanoseconds);
     this._dt = this._abs.toDateTime(this._tz, calendar && Temporal.Calendar.from(calendar));
     // eslint-disable-next-line no-undef
     if (typeof __debug__ !== 'undefined' && __debug__) {
@@ -248,7 +253,7 @@ export class LocalDateTime {
       throw new TypeError('Time zone is missing. Try `absolute.toLocalDateTime(timeZone}`.');
     }
     if (item instanceof LocalDateTime) {
-      return new LocalDateTime(item._abs, item._tz, item._dt.calendar);
+      return new LocalDateTime(item._abs.getEpochNanoseconds(), item._tz, item._dt.calendar);
     }
     return typeof item === 'object' ? fromObject(item, options) : fromIsoString(item.toString(), options);
   }
@@ -332,7 +337,7 @@ export class LocalDateTime {
     if (updateTimeZone || updateCalendar) {
       const tz = newTimeZone || base._tz;
       const cal = newCalendar || base.calendar;
-      base = new LocalDateTime(base._abs, tz, cal);
+      base = new LocalDateTime(base._abs.getEpochNanoseconds(), tz, cal);
     }
 
     // Deal with the rest of the fields. If there's a change in tz offset, it'll
@@ -353,7 +358,7 @@ export class LocalDateTime {
    * to call this method.
    *
    * @param [calendar=Temporal.Calendar.from('iso8601')]
-   * {Temporal.CalendarProtocol} -
+   * {Temporal.CalendarProtocol} - new calendar to use
    */
   withCalendar(calendar) {
     return this.with({ calendar });
@@ -362,13 +367,6 @@ export class LocalDateTime {
   /**
    * Returns the absolute timestamp of this `Temporal.LocalDateTime` instance as
    * a `Temporal.Absolute`.
-   *
-   * It's a `get` property (not a `getAbsolute()` method) to support
-   * round-tripping via `getFields` and `with`.
-   *
-   * Although this property is a `Temporal.Absolute` object, `JSON.stringify`
-   * will automatically convert it to a JSON-friendly ISO 8601 string (ending in
-   * `Z`) when persisting to JSON.
    */
   toAbsolute() {
     return Temporal.Absolute.from(this._abs);
@@ -401,13 +399,11 @@ export class LocalDateTime {
   }
 
   /**
-   * Returns the String representation of this `Temporal.LocalDateTime` in ISO
-   * 8601 format extended to include the time zone.
+   * Returns a new `Temporal.DateTime` instance that corresponds to this
+   * `Temporal.LocalDateTime` instance.
    *
-   * Example: `2011-12-03T10:15:30+01:00[Europe/Paris]`
-   *
-   * If the calendar is not the default ISO 8601 calendar, then it will be
-   * appended too. Example: `2011-12-03T10:15:30+09:00[Asia/Tokyo][c=japanese]`
+   * The resulting `Temporal.DateTime` instance will use the same date, time,
+   * and calendar as `this`.
    */
   toDateTime() {
     return Temporal.DateTime.from(this._dt);

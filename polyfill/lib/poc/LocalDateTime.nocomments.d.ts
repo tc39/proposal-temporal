@@ -28,7 +28,7 @@ export declare class LocalDateTime {
   private _abs;
   private _tz;
   private _dt;
-  constructor(absolute: Temporal.Absolute, timeZone: Temporal.TimeZone, calendar?: Temporal.CalendarProtocol);
+  constructor(epochNanoseconds: bigint, timeZone: Temporal.TimeZoneProtocol, calendar?: Temporal.CalendarProtocol);
   static from(
     item: LocalDateTimeLike | string | Record<string, unknown>,
     options?: LocalDateTimeAssignmentOptions

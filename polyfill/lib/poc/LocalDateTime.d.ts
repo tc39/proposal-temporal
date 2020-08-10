@@ -74,12 +74,13 @@ export declare class LocalDateTime {
    * To construct a `Temporal.LocalDateTime` from an ISO 8601 string a
    * `DateTime` and time zone, use `.from()`.
    *
-   * @param absolute {Temporal.Absolute} - absolute timestamp for this instance
+   * @param epochNanoseconds {Temporal.Absolute} - absolute timestamp (in
+   * nanoseconds since UNIX epoch) for this instance
    * @param timeZone {Temporal.TimeZone} - time zone for this instance
    * @param [calendar=Temporal.Calendar.from('iso8601')] {Temporal.CalendarProtocol} -
    * calendar for this instance (defaults to ISO calendar)
    */
-  constructor(absolute: Temporal.Absolute, timeZone: Temporal.TimeZone, calendar?: Temporal.CalendarProtocol);
+  constructor(epochNanoseconds: bigint, timeZone: Temporal.TimeZoneProtocol, calendar?: Temporal.CalendarProtocol);
   /**
    * Build a `Temporal.LocalDateTime` instance from one of the following:
    * - Another LocalDateTime instance, in which case the result will deep-clone
@@ -169,19 +170,12 @@ export declare class LocalDateTime {
    * to call this method.
    *
    * @param [calendar=Temporal.Calendar.from('iso8601')]
-   * {Temporal.CalendarProtocol} -
+   * {Temporal.CalendarProtocol} - new calendar to use
    */
   withCalendar(calendar: Temporal.CalendarProtocol): LocalDateTime;
   /**
    * Returns the absolute timestamp of this `Temporal.LocalDateTime` instance as
    * a `Temporal.Absolute`.
-   *
-   * It's a `get` property (not a `getAbsolute()` method) to support
-   * round-tripping via `getFields` and `with`.
-   *
-   * Although this property is a `Temporal.Absolute` object, `JSON.stringify`
-   * will automatically convert it to a JSON-friendly ISO 8601 string (ending in
-   * `Z`) when persisting to JSON.
    */
   toAbsolute(): Temporal.Absolute;
   /**
@@ -205,13 +199,11 @@ export declare class LocalDateTime {
    */
   get calendar(): Temporal.CalendarProtocol;
   /**
-   * Returns the String representation of this `Temporal.LocalDateTime` in ISO
-   * 8601 format extended to include the time zone.
+   * Returns a new `Temporal.DateTime` instance that corresponds to this
+   * `Temporal.LocalDateTime` instance.
    *
-   * Example: `2011-12-03T10:15:30+01:00[Europe/Paris]`
-   *
-   * If the calendar is not the default ISO 8601 calendar, then it will be
-   * appended too. Example: `2011-12-03T10:15:30+09:00[Asia/Tokyo][c=japanese]`
+   * The resulting `Temporal.DateTime` instance will use the same date, time,
+   * and calendar as `this`.
    */
   toDateTime(): Temporal.DateTime;
   /**

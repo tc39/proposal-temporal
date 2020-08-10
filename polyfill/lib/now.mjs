@@ -34,7 +34,7 @@ function localDateTime(temporalTimeZoneLike = timeZone(), calendar = undefined) 
   const timeZone = TemporalTimeZone.from(temporalTimeZoneLike);
   const abs = instant();
   const TemporalLocalDateTime = GetIntrinsic('%Temporal.LocalDateTime%');
-  return new TemporalLocalDateTime(abs, timeZone, calendar);
+  return new TemporalLocalDateTime(abs.getEpochNanoseconds(), timeZone, calendar);
 }
 function date(calendarLike, temporalTimeZoneLike = timeZone()) {
   return ES.TemporalDateTimeToDate(dateTime(calendarLike, temporalTimeZoneLike));

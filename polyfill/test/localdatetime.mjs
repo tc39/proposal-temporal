@@ -794,7 +794,7 @@ describe('LocalDateTime', () => {
   describe('Construction', () => {
     const epochMillis = Date.UTC(1976, 10, 18, 15, 23, 30, 123);
     const epochNanos = BigInt(epochMillis) * BigInt(1e6) + BigInt(456789);
-    const instant = new LocalDateTime(new Temporal.Absolute(epochNanos), tz);
+    const instant = new LocalDateTime(epochNanos, tz);
     assert(instant);
     equal(typeof instant, 'object');
     equal(
@@ -807,12 +807,11 @@ describe('LocalDateTime', () => {
 
     describe('LocalDateTime for (1976, 11, 18, 15, 23, 30, 123, 456, 789)', () => {
       it('datetime can be constructed', () => {
-        const localDateTime = new LocalDateTime(new Temporal.Absolute(epochNanos), new Temporal.TimeZone('UTC'));
+        const localDateTime = new LocalDateTime(epochNanos, new Temporal.TimeZone('UTC'));
         assert(localDateTime);
         equal(typeof localDateTime, 'object');
       });
-      const localDateTime = new LocalDateTime(new Temporal.Absolute(epochNanos), new Temporal.TimeZone('UTC'));
-
+      const localDateTime = new LocalDateTime(epochNanos, new Temporal.TimeZone('UTC'));
       it('localDateTime.year is 1976', () => equal(localDateTime.year, 1976));
       it('localDateTime.month is 11', () => equal(localDateTime.month, 11));
       it('localDateTime.day is 18', () => equal(localDateTime.day, 18));
