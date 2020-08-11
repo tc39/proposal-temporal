@@ -7817,7 +7817,7 @@
       key: "toString",
       value: function toString() {
         if (!ES.IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');
-        return this.name;
+        return String(GetSlot(this, TIMEZONE_ID));
       }
     }, {
       key: "toJSON",
@@ -7827,8 +7827,7 @@
     }, {
       key: "name",
       get: function get() {
-        if (!ES.IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');
-        return String(GetSlot(this, TIMEZONE_ID));
+        return ES.TimeZoneToString(this);
       }
     }], [{
       key: "from",
