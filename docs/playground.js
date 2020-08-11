@@ -3808,6 +3808,17 @@
 
       return ES.Call(getDateTimeFor, timeZone, [absolute, calendar]);
     },
+    GetTemporalAbsoluteFor: function GetTemporalAbsoluteFor(timeZone, dateTime, disambiguation) {
+      var getAbsoluteFor = timeZone.getAbsoluteFor;
+
+      if (getAbsoluteFor === undefined) {
+        getAbsoluteFor = GetIntrinsic$1('%Temporal.TimeZone.prototype.getAbsoluteFor%');
+      }
+
+      return ES.Call(getAbsoluteFor, timeZone, [dateTime, {
+        disambiguation: disambiguation
+      }]);
+    },
     TimeZoneToString: function TimeZoneToString(timeZone) {
       var toString = timeZone.toString;
 
@@ -6363,15 +6374,9 @@
       key: "toAbsolute",
       value: function toAbsolute(temporalTimeZoneLike, options) {
         if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-        var TemporalTimeZone = GetIntrinsic$1('%Temporal.TimeZone%');
-        var timeZone = TemporalTimeZone.from(temporalTimeZoneLike);
+        var timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);
         var disambiguation = ES.ToTimeZoneTemporalDisambiguation(options);
-        if (typeof timeZone.getAbsoluteFor === 'function') return timeZone.getAbsoluteFor(this, {
-          disambiguation: disambiguation
-        });
-        return TemporalTimeZone.prototype.getAbsoluteFor.call(timeZone, this, {
-          disambiguation: disambiguation
-        });
+        return ES.GetTemporalAbsoluteFor(timeZone, this, disambiguation);
       }
     }, {
       key: "toDate",
@@ -7841,6 +7846,7 @@
   MakeIntrinsicClass(TimeZone, 'Temporal.TimeZone');
   DefineIntrinsic('Temporal.TimeZone.from', TimeZone.from);
   DefineIntrinsic('Temporal.TimeZone.prototype.getDateTimeFor', TimeZone.prototype.getDateTimeFor);
+  DefineIntrinsic('Temporal.TimeZone.prototype.getAbsoluteFor', TimeZone.prototype.getAbsoluteFor);
   DefineIntrinsic('Temporal.TimeZone.prototype.getOffsetStringFor', TimeZone.prototype.getOffsetStringFor);
   DefineIntrinsic('Temporal.TimeZone.prototype.toString', TimeZone.prototype.toString);
 
