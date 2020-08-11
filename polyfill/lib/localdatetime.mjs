@@ -125,53 +125,56 @@ function doPlusOrMinus(op, durationLike, options, localDateTime) {
 
   const { timeDuration, dateDuration } = splitDuration(durationLike);
   if (isZeroDuration(dateDuration)) {
-    // If there's only a time to add/subtract, then use absolute math
-    // because RFC 5545 specifies using absolute math for time units.
+    // If there's only a time to add/subtract, then use absolute math because
+    // RFC 5545 specifies using absolute math for time units.
     const result = localDateTime.toAbsolute()[op](durationLike);
     return new LocalDateTime(result.getEpochNanoseconds(), timeZone, calendar);
-  }
-
-  // Add the units according to the largest-to-smallest order of operations
-  // required by RFC 5545. Note that the same breakout is not required for
-  // the time duration because all time units are the same length (because
-  // Temporal ignores leap seconds).
-  let newDateTime = localDateTime.toDateTime();
-  const { years, months, weeks, days } = dateDuration;
-  // TODO: if https://github.com/tc39/proposal-temporal/issues/653
-  // changes order of operations, then coalesce 4 calls to 1.
-  if (years) newDateTime = newDateTime[op]({ years }, dateTimeOverflowOption);
-  if (months) newDateTime = newDateTime[op]({ months }, dateTimeOverflowOption);
-  if (weeks) newDateTime = newDateTime[op]({ weeks }, dateTimeOverflowOption);
-  if (days) newDateTime = newDateTime[op]({ days }, dateTimeOverflowOption);
-  if (isZeroDuration(timeDuration)) {
+  } else if (isZeroDuration(timeDuration)) {
+    const newDateTime = localDateTime.toDateTime()[op](dateDuration, dateTimeOverflowOption);
     return fromDateTime(newDateTime, timeZone);
-  } else {
-    // Now add/subtract the time. Because all time units are always the same
-    // length, we can add/subtract all of them together without worrying about
-    // order of operations.
-    newDateTime = newDateTime[op](timeDuration, dateTimeOverflowOption);
-    let absolute = newDateTime.toAbsolute(timeZone);
-    const reverseOp = op === 'plus' ? 'minus' : 'plus';
-    const backUpAbs = absolute[reverseOp]({ nanoseconds: totalNanoseconds(timeDuration) });
-    const backUpOffset = timeZone.getOffsetNanosecondsFor(backUpAbs);
-    const absOffset = timeZone.getOffsetNanosecondsFor(absolute);
-    const backUpNanoseconds = absOffset - backUpOffset;
-    if (backUpNanoseconds) {
-      // RFC 5545 specifies that time units are always "exact time" meaning
-      // they aren't affected by DST. Therefore, if there was a TZ
-      // transition during the time duration that was added, then undo the
-      // impact of that transition. However, don't adjust if applying the
-      // adjustment would cause us to back up onto the other side of the
-      // transition.
-      const backUpOp = backUpNanoseconds < 0 ? 'minus' : 'plus';
-      const adjustedAbs = absolute[backUpOp]({ nanoseconds: backUpNanoseconds });
-      if (timeZone.getOffsetNanosecondsFor(adjustedAbs) === timeZone.getOffsetNanosecondsFor(absolute)) {
-        absolute = adjustedAbs;
-      }
-    }
-
-    return new LocalDateTime(absolute.getEpochNanoseconds(), timeZone, calendar);
   }
+
+  // If we get here, there's both a date and time portion of the duration. RFC
+  // 5545 requires the date portion to be added/subtracted in calendar days and
+  // the time portion to be added/subtracted in exact (absolute) time. The
+  // easiest way to do this would be to first add/subtract the date using
+  // DateTime math, then convert the intermediate result to Absolute, and then
+  // add the time portion using Absolute math. The problem with that approach is
+  // that the "convert the intermediate result to Absolute" step will possibly
+  // require a DST disambiguation, which is weird to happen in the middle of the
+  // duration instead of at the end. So instead, we'll achieve the same result
+  // via a more roundabout way that avoids the intermediate disambiguation:
+  // 1) First, add the entire duration using DateTime math
+  // 2) Turn that DateTime into an Absolute, applying 'compatible'
+  //    disambiguation (which is required by RFC 5545) at that endpoint.
+  // 2) Starting from the Absolute endpoint, go backwards by the length of the
+  //    time duration.
+  // 3) At that point, if the offset is different from the endpoint's offset,
+  //    then there was an offset change during the time duration.
+  // 4) Adjust the Absolute endpoint by the difference in offsets from endpoint
+  //    Absolute to intermediate Absolute...
+  // 5) ...except if the adjustment causes moving back across the transition.
+  // 6) Finally, create the result using the adjusted endpoint Absolute.
+  const newDateTime = localDateTime.toDateTime()[op](durationLike, dateTimeOverflowOption);
+  let absolute = newDateTime.toAbsolute(timeZone);
+  const reverseOp = op === 'plus' ? 'minus' : 'plus';
+  const backUpAbs = absolute[reverseOp]({ nanoseconds: totalNanoseconds(timeDuration) });
+  const backUpOffset = timeZone.getOffsetNanosecondsFor(backUpAbs);
+  const absOffset = timeZone.getOffsetNanosecondsFor(absolute);
+  const backUpNanoseconds = absOffset - backUpOffset;
+  if (backUpNanoseconds) {
+    // RFC 5545 specifies that time units are always "exact time" meaning they
+    // aren't affected by DST. Therefore, if there was a TZ transition during
+    // the time duration that was added, then undo the impact of that
+    // transition. However, don't adjust if applying the adjustment would cause
+    // us to back up onto the other side of the transition.
+    const backUpOp = backUpNanoseconds < 0 ? 'minus' : 'plus';
+    const adjustedAbs = absolute[backUpOp]({ nanoseconds: backUpNanoseconds });
+    if (timeZone.getOffsetNanosecondsFor(adjustedAbs) === timeZone.getOffsetNanosecondsFor(absolute)) {
+      absolute = adjustedAbs;
+    }
+  }
+  return new LocalDateTime(absolute.getEpochNanoseconds(), timeZone, calendar);
 }
 
 function totalNanoseconds(d) {
