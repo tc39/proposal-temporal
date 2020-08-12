@@ -20,8 +20,10 @@ const invalidValues = [
 
 for (const dateTime of invalidValues) {
   const timeZone = {
-    getDateTimeFor(absolute) {
+    getDateTimeFor(absolute, calendar) {
       assert.sameValue(absolute instanceof Temporal.Absolute, true, "Absolute");
+      assert.sameValue(calendar instanceof Temporal.Calendar, true, "Calendar");
+      assert.sameValue(calendar.id, "iso8601");
       return dateTime;
     },
   };

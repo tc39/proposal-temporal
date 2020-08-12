@@ -16,9 +16,11 @@ const expected = [
 const dateTime = Temporal.DateTime.from("1963-07-02T12:34:56.987654321");
 
 const timeZone = new Proxy({
-  getDateTimeFor(absolute) {
+  getDateTimeFor(absolute, calendar) {
     actual.push("call timeZone.getDateTimeFor");
     assert.sameValue(absolute instanceof Temporal.Absolute, true, "Absolute");
+    assert.sameValue(calendar instanceof Temporal.Calendar, true, "Calendar");
+    assert.sameValue(calendar.id, "iso8601");
     return dateTime;
   },
 }, {
@@ -40,6 +42,13 @@ Object.defineProperty(Temporal.TimeZone, "from", {
       assert.sameValue(argument, "UTC");
       return timeZone;
     };
+  },
+});
+
+Object.defineProperty(Temporal.Calendar, "from", {
+  get() {
+    actual.push("get Temporal.Calendar.from");
+    return undefined;
   },
 });
 

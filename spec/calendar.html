@@ -33,6 +33,26 @@
         1. Return ? ToString(? Call(_toString_ , _calendar_, « »)).
       </emu-alg>
     </emu-clause>
+
+    <emu-clause id="sec-temporal-totemporalcalendar" aoid="ToTemporalCalendar">
+      <h1>ToTemporalCalendar ( _temporalCalendarLike_ )</h1>
+      <emu-alg>
+        1. If Type(_temporalCalendarLike_) is Object, then
+          1. Return _temporalCalendarLike_.
+        1. Let _identifier_ be ? ToString(_temporalCalendarLike_).
+        1. Return ? CalendarFrom(_identifier_).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-calendarfrom" aoid="CalendarFrom">
+      <h1>CalendarFrom ( _identifier_ )</h1>
+      <emu-alg>
+        1. Let _from_ be ? Get(%Temporal.Calendar%, *"from"*).
+        1. If _from_ is *undefined*, then
+          1. Set _from_ to %Temporal.Calendar.from%.
+        1. Return ? Call(_from_, %Temporal.Calendar%, « _identifier_ »).
+      </emu-alg>
+    </emu-clause>
   </emu-clause>
 
   <emu-clause id="sec-temporal-calendar-constructor">

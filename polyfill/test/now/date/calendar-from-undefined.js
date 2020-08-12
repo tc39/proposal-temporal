@@ -8,6 +8,7 @@ includes: [compareArray.js]
 
 const actual = [];
 const expected = [
+  "get Temporal.Calendar.from",
   "get timeZone.getDateTimeFor",
   "call timeZone.getDateTimeFor",
 ];
@@ -18,7 +19,7 @@ const timeZone = new Proxy({
     actual.push("call timeZone.getDateTimeFor");
     assert.sameValue(absolute instanceof Temporal.Absolute, true, "Absolute");
     assert.sameValue(calendar instanceof Temporal.Calendar, true, "Calendar");
-    assert.sameValue(calendar.id, "iso8601");
+    assert.sameValue(calendar.id, "japanese");
     return dateTime;
   },
 }, {
@@ -32,14 +33,14 @@ const timeZone = new Proxy({
   },
 });
 
-Object.defineProperty(Temporal.TimeZone, "from", {
+Object.defineProperty(Temporal.Calendar, "from", {
   get() {
-    actual.push("get Temporal.TimeZone.from");
+    actual.push("get Temporal.Calendar.from");
     return undefined;
   },
 });
 
-const result = Temporal.now.date(timeZone);
+const result = Temporal.now.date(timeZone, "japanese");
 assert.sameValue(result instanceof Temporal.Date, true);
 for (const property of ["year", "month", "day"]) {
   assert.sameValue(result[property], dateTime[property], property);

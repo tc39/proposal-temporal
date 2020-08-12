@@ -2,23 +2,28 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
-esid: sec-temporal.now.date
+esid: sec-temporal.now.datetime
 includes: [compareArray.js]
 ---*/
 
 const actual = [];
 const expected = [
+  "get Temporal.TimeZone.from",
+  "call Temporal.TimeZone.from",
+  "get Temporal.Calendar.from",
+  "call Temporal.Calendar.from",
   "get timeZone.getDateTimeFor",
   "call timeZone.getDateTimeFor",
 ];
 const dateTime = Temporal.DateTime.from("1963-07-02T12:34:56.987654321");
 
+const calendar = {};
+
 const timeZone = new Proxy({
-  getDateTimeFor(absolute, calendar) {
+  getDateTimeFor(absolute, calendarArg) {
     actual.push("call timeZone.getDateTimeFor");
     assert.sameValue(absolute instanceof Temporal.Absolute, true, "Absolute");
-    assert.sameValue(calendar instanceof Temporal.Calendar, true, "Calendar");
-    assert.sameValue(calendar.id, "iso8601");
+    assert.sameValue(calendarArg, calendar);
     return dateTime;
   },
 }, {
@@ -35,14 +40,26 @@ const timeZone = new Proxy({
 Object.defineProperty(Temporal.TimeZone, "from", {
   get() {
     actual.push("get Temporal.TimeZone.from");
-    return undefined;
+    return function(argument) {
+      actual.push("call Temporal.TimeZone.from");
+      assert.sameValue(argument, "UTC");
+      return timeZone;
+    };
   },
 });
 
-const result = Temporal.now.date(timeZone);
-assert.sameValue(result instanceof Temporal.Date, true);
-for (const property of ["year", "month", "day"]) {
-  assert.sameValue(result[property], dateTime[property], property);
-}
+Object.defineProperty(Temporal.Calendar, "from", {
+  get() {
+    actual.push("get Temporal.Calendar.from");
+    return function(argument) {
+      actual.push("call Temporal.Calendar.from");
+      assert.sameValue(argument, "iso8601");
+      return calendar;
+    };
+  },
+});
+
+const result = Temporal.now.dateTime("UTC", "iso8601");
+assert.sameValue(result, dateTime);
 
 assert.compareArray(actual, expected);

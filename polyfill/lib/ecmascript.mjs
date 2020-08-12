@@ -557,6 +557,21 @@ export const ES = ObjectAssign({}, ES2019, {
   ToTemporalYearMonthRecord: (bag) => {
     return ES.ToRecord(bag, [['era', undefined], ['month'], ['year']]);
   },
+  CalendarFrom: (calendarLike) => {
+    const TemporalCalendar = GetIntrinsic('%Temporal.Calendar%');
+    let from = TemporalCalendar.from;
+    if (from === undefined) {
+      from = GetIntrinsic('%Temporal.Calendar.from%');
+    }
+    return ES.Call(from, TemporalCalendar, [calendarLike]);
+  },
+  ToTemporalCalendar: (calendarLike) => {
+    if (typeof calendarLike === 'object' && calendarLike) {
+      return calendarLike;
+    }
+    const identifier = ES.ToString(calendarLike);
+    return ES.CalendarFrom(identifier);
+  },
   TimeZoneFrom: (temporalTimeZoneLike) => {
     const TemporalTimeZone = GetIntrinsic('%Temporal.TimeZone%');
     let from = TemporalTimeZone.from;
