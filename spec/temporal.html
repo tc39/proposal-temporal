@@ -154,9 +154,9 @@
       <h1>SystemDateTime ( [ _temporalTimeZoneLike_ ] )</h1>
       <emu-alg>
         1. If _temporalTimeZoneLike_ is *undefined*, then
-            1. Let _timeZone_ be SystemTimeZone().
+          1. Let _timeZone_ be SystemTimeZone().
         1. Else,
-            1. Let _timeZone_ be ? ToTemporalTimeZone(_temporalTimeZoneLike_).
+          1. Let _timeZone_ be ? ToTemporalTimeZone(_temporalTimeZoneLike_).
         1. Let _absolute_ be ? SystemAbsolute().
         1. Return ? GetTemporalDateTimeFor(_timeZone_, _absolute_).
       </emu-alg>
