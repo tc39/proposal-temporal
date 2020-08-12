@@ -1,7 +1,7 @@
 /* global __debug__ */
 
 import { ES } from './ecmascript.mjs';
-import { GetIntrinsic, MakeIntrinsicClass } from './intrinsicclass.mjs';
+import { GetIntrinsic, MakeIntrinsicClass, DefineIntrinsic } from './intrinsicclass.mjs';
 import { CALENDAR_ID, ISO_YEAR, ISO_MONTH, ISO_DAY, CreateSlots, GetSlot, SetSlot } from './slots.mjs';
 
 export class Calendar {
@@ -112,6 +112,7 @@ export class Calendar {
 }
 
 MakeIntrinsicClass(Calendar, 'Temporal.Calendar');
+DefineIntrinsic('Temporal.Calendar.from', Calendar.from);
 
 class ISO8601 extends Calendar {
   constructor(id = 'iso8601') {
