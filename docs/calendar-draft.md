@@ -56,6 +56,8 @@ All built-in calendars will be instances of Temporal.Calendar (main issue: [#300
 
 We had also considered using symbols, but settled on strings after discussion with the plenary (main issue: [#310](https://github.com/tc39/proposal-temporal/issues/310)).
 
+If a custom calendar needs to cache per-object information about the localized year, month, and day of a Temporal object, it can use a WeakMap for this purpose, with the Temporal object as the key into the WeakMap.
+
 ### Methods on the Temporal.Calendar interface
 
 All of the following methods return new Temporal objects.
