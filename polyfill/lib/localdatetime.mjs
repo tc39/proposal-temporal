@@ -430,11 +430,11 @@ export class LocalDateTime {
    * midnight and the next day's midnight.
    */
   get hoursInDay() {
-    const today = this.toDate().toDateTime(new Temporal.Time());
-    const tomorrow = today.plus({ days: 1 });
-    // TODO: add tests for Azores timezone on midnight of a DST transition
-    const todayAbs = today.toAbsolute(this._tz);
-    const tomorrowAbs = tomorrow.toAbsolute(this._tz);
+    const todayDate = this.toDate();
+    const today = LocalDateTime.from({ ...todayDate.getFields(), timeZone: this.timeZone });
+    const tomorrow = LocalDateTime.from({ ...todayDate.plus({ days: 1 }).getFields(), timeZone: this.timeZone });
+    const todayAbs = today.toAbsolute();
+    const tomorrowAbs = tomorrow.toAbsolute();
     const diff = tomorrowAbs.difference(todayAbs, { largestUnit: 'hours' });
     const hours =
       diff.hours +
@@ -447,11 +447,33 @@ export class LocalDateTime {
   }
 
   /**
-   * True if this `Temporal.LocalDateTime` instance falls exactly on a DST
+   * Returns a new `Temporal.LocalDateTime` instance representing the first
+   * valid time during the current calendar day and time zone of `this`.
+   *
+   * The local time of the result is almost always `00:00`, but in rare cases it
+   * could be a later time e.g. if DST starts at midnight in a time zone. For
+   * example:
+   * ```
+   * const ldt = Temporal.LocalDateTime.from('2015-10-18T12:00-02:00[America/Sao_Paulo]');
+   * ldt.startOfDay; // => 2015-10-18T01:00-02:00[America/Sao_Paulo]
+   * ```
+   */
+  get startOfDay() {
+    const date = this.toDate();
+    const ldt = LocalDateTime.from({ ...date.getFields(), timeZone: this.timeZone });
+    return ldt;
+  }
+
+  /**
+   * True if this `Temporal.LocalDateTime` instance is immediately after a DST
    * transition or other change in time zone offset, false otherwise.
    *
+   * "Immediately after" means that subtracting one nanosecond would yield a
+   * `Temporal.LocalDateTime` instance that has a different value for
+   * `timeZoneOffsetNanoseconds`.
+   *
    * To calculate if a DST transition happens on the same day (but not
-   * necessarily at the same time), use `.getDayDuration()`.
+   * necessarily at the same time), use `.hoursInDay() !== 24`.
    * */
   get isTimeZoneOffsetTransition() {
     const oneNsBefore = this.minus({ nanoseconds: 1 });

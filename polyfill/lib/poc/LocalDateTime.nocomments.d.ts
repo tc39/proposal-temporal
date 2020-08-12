@@ -40,6 +40,7 @@ export declare class LocalDateTime {
   get calendar(): Temporal.CalendarProtocol;
   toDateTime(): Temporal.DateTime;
   get hoursInDay(): number;
+  get startOfDay(): LocalDateTime;
   get isTimeZoneOffsetTransition(): boolean;
   get timeZoneOffsetNanoseconds(): number;
   get timeZoneOffsetString(): string;

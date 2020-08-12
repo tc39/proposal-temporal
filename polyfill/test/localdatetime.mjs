@@ -491,6 +491,109 @@ describe('LocalDateTime', () => {
   const hourBeforeDstStart = LocalDateTime.from({ ...new DateTime(2020, 3, 8, 1).getFields(), timeZone: tz });
   const dayBeforeDstStart = LocalDateTime.from({ ...new DateTime(2020, 3, 7, 2, 30).getFields(), timeZone: tz });
 
+  describe('toLocalDateTime() on other Temporal objects', () => {
+    it('Date.toLocalDateTime() works', () => {
+      const date = Temporal.Date.from('2020-01-01');
+      const time = Temporal.Time.from('12:00');
+      const ldt = date.toLocalDateTime('America/Los_Angeles', time);
+      equal(ldt.toString(), '2020-01-01T12:00-08:00[America/Los_Angeles]');
+    });
+    it('Date.toLocalDateTime() works with time omitted', () => {
+      const date = Temporal.Date.from('2020-01-01');
+      const ldt = date.toLocalDateTime('America/Los_Angeles');
+      equal(ldt.toString(), '2020-01-01T00:00-08:00[America/Los_Angeles]');
+    });
+    it('Date.toLocalDateTime() works with disambiguation option', () => {
+      const date = Temporal.Date.from('2020-03-08');
+      const time = Temporal.Time.from('02:00');
+      const ldt = date.toLocalDateTime('America/Los_Angeles', time, { disambiguation: 'earlier' });
+      equal(ldt.toString(), '2020-03-08T01:00-08:00[America/Los_Angeles]');
+    });
+    it('Time.toLocalDateTime works', () => {
+      const date = Temporal.Date.from('2020-01-01');
+      const time = Temporal.Time.from('12:00');
+      const ldt = time.toLocalDateTime('America/Los_Angeles', date);
+      equal(ldt.toString(), '2020-01-01T12:00-08:00[America/Los_Angeles]');
+    });
+    it('Time.toLocalDateTime() works with disambiguation option', () => {
+      const date = Temporal.Date.from('2020-03-08');
+      const time = Temporal.Time.from('02:00');
+      const ldt = time.toLocalDateTime('America/Los_Angeles', date, { disambiguation: 'earlier' });
+      equal(ldt.toString(), '2020-03-08T01:00-08:00[America/Los_Angeles]');
+    });
+    it('Absolute.toLocalDateTime works', () => {
+      const abs = Temporal.Absolute.from('2020-01-01T00:00-08:00');
+      const ldt = abs.toLocalDateTime('America/Los_Angeles');
+      equal(ldt.toString(), '2020-01-01T00:00-08:00[America/Los_Angeles]');
+    });
+    it('DateTime.toLocalDateTime works', () => {
+      const dt = Temporal.DateTime.from('2020-01-01T00:00');
+      const ldt = dt.toLocalDateTime('America/Los_Angeles');
+      equal(ldt.toString(), '2020-01-01T00:00-08:00[America/Los_Angeles]');
+    });
+    it('DateTime.toLocalDateTime works with disambiguation option', () => {
+      const dt = Temporal.DateTime.from('2020-03-08T02:00');
+      const ldt = dt.toLocalDateTime('America/Los_Angeles', { disambiguation: 'earlier' });
+      equal(ldt.toString(), '2020-03-08T01:00-08:00[America/Los_Angeles]');
+    });
+  });
+
+  describe('properties around DST', () => {
+    it('hoursInDay works with DST start', () => {
+      equal(hourBeforeDstStart.hoursInDay, 23);
+    });
+    it('hoursInDay works with non-DST days', () => {
+      equal(dayBeforeDstStart.hoursInDay, 24);
+    });
+    it('hoursInDay works with DST end', () => {
+      const dstEnd = LocalDateTime.from('2020-11-01T01:00-08:00[America/Los_Angeles]');
+      equal(dstEnd.hoursInDay, 25);
+    });
+    it('hoursInDay works when day starts at 1:00 due to DST start at midnight', () => {
+      const ldt = Temporal.LocalDateTime.from('2015-10-18T12:00:00-02:00[America/Sao_Paulo]');
+      equal(ldt.hoursInDay, 23);
+    });
+    it('startOfDay works', () => {
+      const start = dayBeforeDstStart.startOfDay;
+      equal(start.toDate().toString(), dayBeforeDstStart.toDate().toString());
+      equal('00:00', start.toTime().toString());
+    });
+    it('startOfDay works when day starts at 1:00 due to DST start at midnight', () => {
+      const ldt = LocalDateTime.from('2015-10-18T12:00:00-02:00[America/Sao_Paulo]');
+      const start = ldt.startOfDay;
+      equal('01:00', start.toTime().toString());
+    });
+
+    const dayAfterSamoaDateLineChange = LocalDateTime.from('2011-12-31T22:00+14:00[Pacific/Apia]');
+    const dayBeforeSamoaDateLineChange = LocalDateTime.from('2011-12-29T22:00-10:00[Pacific/Apia]');
+    it('startOfDay works after Samoa date line change', () => {
+      const start = dayAfterSamoaDateLineChange.startOfDay;
+      equal('00:00', start.toTime().toString());
+    });
+    it('hoursInDay works after Samoa date line change', () => {
+      equal(dayAfterSamoaDateLineChange.hoursInDay, 24);
+    });
+    it('hoursInDay works before Samoa date line change', () => {
+      equal(dayBeforeSamoaDateLineChange.hoursInDay, 24);
+    });
+
+    it('isTimeZoneOffsetTransition normally returns false', () => {
+      equal(hourBeforeDstStart.isTimeZoneOffsetTransition, false);
+    });
+    it('isTimeZoneOffsetTransition returns true at a DST start transition', () => {
+      const dstStart = hourBeforeDstStart.plus({ hours: 1 });
+      equal(dstStart.isTimeZoneOffsetTransition, true);
+    });
+    it('isTimeZoneOffsetTransition returns true at a DST end transition', () => {
+      const dstEnd = LocalDateTime.from('2020-11-01T01:00-08:00[America/Los_Angeles]');
+      equal(dstEnd.isTimeZoneOffsetTransition, true);
+    });
+    it('isTimeZoneOffsetTransition returns true right after Samoa date line change', () => {
+      const rightAfterSamoaDateLineChange = LocalDateTime.from('2011-12-31T00:00+14:00[Pacific/Apia]');
+      equal(rightAfterSamoaDateLineChange.isTimeZoneOffsetTransition, true);
+    });
+  });
+
   describe('math around DST', () => {
     it('add 1 hour to get to DST start', () => {
       const added = hourBeforeDstStart.plus({ hours: 1 });

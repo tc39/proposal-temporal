@@ -225,11 +225,28 @@ export declare class LocalDateTime {
    */
   get hoursInDay(): number;
   /**
-   * True if this `Temporal.LocalDateTime` instance falls exactly on a DST
+   * Returns a new `Temporal.LocalDateTime` instance representing the first
+   * valid time during the current calendar day and time zone of `this`.
+   *
+   * The local time of the result is almost always `00:00`, but in rare cases it
+   * could be a later time e.g. if DST starts at midnight in a time zone. For
+   * example:
+   * ```
+   * const ldt = Temporal.LocalDateTime.from('2015-10-18T12:00-02:00[America/Sao_Paulo]');
+   * ldt.startOfDay; // => 2015-10-18T01:00-02:00[America/Sao_Paulo]
+   * ```
+   */
+  get startOfDay(): LocalDateTime;
+  /**
+   * True if this `Temporal.LocalDateTime` instance is immediately after a DST
    * transition or other change in time zone offset, false otherwise.
    *
+   * "Immediately after" means that subtracting one nanosecond would yield a
+   * `Temporal.LocalDateTime` instance that has a different value for
+   * `timeZoneOffsetNanoseconds`.
+   *
    * To calculate if a DST transition happens on the same day (but not
-   * necessarily at the same time), use `.getDayDuration()`.
+   * necessarily at the same time), use `.hoursInDay() !== 24`.
    * */
   get isTimeZoneOffsetTransition(): boolean;
   /**
