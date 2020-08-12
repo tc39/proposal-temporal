@@ -17,14 +17,11 @@ const values = [
 
 const dateTime = Temporal.DateTime.from("1963-07-02T12:34:56.987654321");
 
-const original = Temporal.Calendar.from;
 const timeZone = {
   getDateTimeFor(absolute, calendarArg) {
     assert.sameValue(absolute instanceof Temporal.Absolute, true, "Absolute");
     assert.sameValue(calendarArg instanceof Temporal.Calendar, true, "Calendar");
     assert.sameValue(calendarArg.toString(), "iso8601");
-    // TODO: Remove.
-    Temporal.Calendar.from = original;
     return dateTime;
   },
 };

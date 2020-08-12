@@ -2,7 +2,7 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
-esid: sec-temporal.now.datetime
+esid: sec-temporal.timezone.prototype.getdatetimefor
 ---*/
 
 const values = [
@@ -13,6 +13,9 @@ const values = [
   [2n, "2"],
 ];
 
+const absolute = Temporal.Absolute.from("1975-02-02T14:25:36.123456789Z");
+const timeZone = Temporal.TimeZone.from("UTC");
+
 const calendar = Temporal.Calendar.from("iso8601");
 for (const [input, output] of values) {
   Temporal.Calendar.from = function(argument) {
@@ -20,11 +23,11 @@ for (const [input, output] of values) {
     return calendar;
   };
 
-  Temporal.now.dateTime("UTC", input);
+  timeZone.getDateTimeFor(absolute, input);
 }
 
 Temporal.Calendar.from = function() {
   throw new Test262Error("Should not call Calendar.from");
 };
 
-assert.throws(TypeError, () => Temporal.now.dateTime("UTC", Symbol()));
+assert.throws(TypeError, () => timeZone.getDateTimeFor(absolute, Symbol()));

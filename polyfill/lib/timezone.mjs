@@ -1,5 +1,6 @@
 /* global __debug__ */
 
+import { GetDefaultCalendar } from './calendar.mjs';
 import { ES } from './ecmascript.mjs';
 import { GetIntrinsic, MakeIntrinsicClass, DefineIntrinsic } from './intrinsicclass.mjs';
 import {
@@ -72,8 +73,10 @@ export class TimeZone {
     }
     return ES.FormatTimeZoneOffsetString(offsetNs);
   }
-  getDateTimeFor(absolute, calendar = 'iso8601') {
+  getDateTimeFor(absolute, calendar = GetDefaultCalendar()) {
     if (!ES.IsTemporalAbsolute(absolute)) throw new TypeError('invalid Absolute object');
+    calendar = ES.ToTemporalCalendar(calendar);
+
     const ns = GetSlot(absolute, EPOCHNANOSECONDS);
     const offsetNs = this.getOffsetNanosecondsFor(absolute);
     if (typeof offsetNs !== 'number') {
@@ -94,8 +97,6 @@ export class TimeZone {
       microsecond,
       nanosecond + offsetNs
     ));
-    const TemporalCalendar = GetIntrinsic('%Temporal.Calendar%');
-    calendar = TemporalCalendar.from(calendar);
     const DateTime = GetIntrinsic('%Temporal.DateTime%');
     return new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
   }

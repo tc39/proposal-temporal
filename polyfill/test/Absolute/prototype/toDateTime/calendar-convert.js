@@ -16,12 +16,9 @@ const values = [
 const absolute = Temporal.Absolute.from("1975-02-02T14:25:36.123456789Z");
 
 const calendar = Temporal.Calendar.from("iso8601");
-const original = Temporal.Calendar.from;
 for (const [input, output] of values) {
   Temporal.Calendar.from = function(argument) {
     assert.sameValue(argument, output);
-    // TODO: Remove.
-    Temporal.Calendar.from = original;
     return calendar;
   };
 

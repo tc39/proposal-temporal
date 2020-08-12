@@ -175,18 +175,23 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal.timezone.prototype.getdatetimefor">
-      <h1>Temporal.TimeZone.prototype.getDateTimeFor ( _absolute_ )</h1>
+      <h1>Temporal.TimeZone.prototype.getDateTimeFor ( _absolute_ [ , _calendarLike_ ] )</h1>
       <p>
-        The `getDateTimeFor` method takes one argument _absolute_.
+        The `getDateTimeFor` method takes two arguments, _absolute_ and _calendarLike_.
         The following steps are taken:
       </p>
       <emu-alg>
         1. Let _timeZone_ be the *this* value.
         1. Perform ? RequireInternalSlot(_timeZone_, [[InitializedTemporalTimeZone]]).
         1. Perform ? RequireInternalSlot(_absolute_, [[InitializedTemporalAbsolute]]).
+        1. If _calendarLike_ is *undefined*, then
+          1. Let _calendar_ be ! GetDefaultCalendar().
+        1. Else,
+          1. Let _calendar_ be ? ToTemporalCalendar(_calendarLike_).
         1. Let _offsetNanoseconds_ be ? GetOffsetNanosecondsFor(_timeZone_, _absolute_).
         1. <mark>TODO:</mark> Let _result_ be the moment _absolute_.[[Nanosecond]] nanoseconds from the epoch, in the UTC time zone.
         1. Set _result_ to ? BalanceDateTime(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]] + _offsetNanoseconds_).
+        1. <mark>TODO:</mark> pass _calendar_ along.
         1. Return ? CreateTemporalDateTime(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]).
       </emu-alg>
       <p>
