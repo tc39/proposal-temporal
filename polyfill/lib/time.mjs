@@ -400,8 +400,7 @@ export class Time {
   }
   toLocalDateTime(temporalTimeZoneLike, temporalDate, options) {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
-    // TODO: switch to `toDateTime()`
-    const dateTime = this.withDate(temporalDate);
+    const dateTime = this.toDateTime(temporalDate);
     const TemporalTimeZone = GetIntrinsic('%Temporal.TimeZone%');
     const timeZone = TemporalTimeZone.from(temporalTimeZoneLike);
     const TemporalLocalDateTime = GetIntrinsic('%Temporal.LocalDateTime%');

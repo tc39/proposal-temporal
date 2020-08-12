@@ -538,7 +538,7 @@ export namespace Temporal {
     ): Temporal.Duration;
     toLocalDateTime(
       tzLike: TimeZoneProtocol | string,
-      temporalTime: Temporal.Time,
+      temporalTime?: Temporal.Time,
       options?: ToAbsoluteOptions
     ): Temporal.LocalDateTime;
     toDateTime(temporalTime: Temporal.Time): Temporal.DateTime;
