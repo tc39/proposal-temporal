@@ -608,7 +608,11 @@ export const ES = ObjectAssign({}, ES2019, {
     );
   },
   GetOffsetNanosecondsFor: (timeZone, absolute) => {
-    const offsetNs = timeZone.getOffsetNanosecondsFor(absolute);
+    let getOffsetNanosecondsFor = timeZone.getOffsetNanosecondsFor;
+    if (getOffsetNanosecondsFor === undefined) {
+      getOffsetNanosecondsFor = GetIntrinsic('%Temporal.TimeZone.prototype.getOffsetNanosecondsFor%');
+    }
+    const offsetNs = ES.Call(getOffsetNanosecondsFor, timeZone, [absolute]);
     if (typeof offsetNs !== 'number') {
       throw new TypeError('bad return from getOffsetNanosecondsFor');
     }
