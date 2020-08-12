@@ -707,7 +707,7 @@
         1. Let _milliseconds_ be _balanceResult_.[[Millisecond]].
         1. Let _microseconds_ be _balanceResult_.[[Microsecond]].
         1. Let _nanoseconds_ be _balanceResult_.[[Nanosecond]].
-        1. If _years_, _months_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, and _nanoseconds_ are all 0, then
+        1. If _years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, and _nanoseconds_ are all 0, then
           1. Return the string `"PT0S"`.
         1. Let _datePart_ be `""`.
         1. If _years_ is not 0, then
@@ -727,7 +727,7 @@
         1. If the first code unit of _secondsPart_ is 0x003A (COLON), then
           1. Set _secondsPart_ to the string containing all the code units of _secondsPart_ except the first.
         1. If _secondsPart_ is not `""`, then
-          1. Set _secondsPart_ to the string concatenatoin of _secondsPart_ and the code unit 0x0053 (LATIN CAPITAL LETTER S).
+          1. Set _secondsPart_ to the string concatenation of _secondsPart_ and the code unit 0x0053 (LATIN CAPITAL LETTER S).
         1. Let _result_ be the string concatenation of the code unit 0x0050 (LATIN CAPITAL LETTER P) and _datePart_.
         1. If _timePart_ is not `""`, then
           1. Set _result_ to the string concatenation of _result_, the code unit 0x0054 (LATIN CAPITAL LETTER T), _timePart_, and _secondsPart_.
