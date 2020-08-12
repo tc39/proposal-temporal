@@ -275,7 +275,7 @@ describe('Duration', () => {
     });
     it('invalid disambiguation', () => {
       ['', 'CONSTRAIN', 'xyz', 3, null].forEach((disambiguation) =>
-        throws(() => duration.with({ day: 5 }, { disambiguation }), RangeError)
+        throws(() => duration.with({ days: 5 }, { disambiguation }), RangeError)
       );
     });
   });
