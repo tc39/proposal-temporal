@@ -33,7 +33,7 @@ export class DateTime {
     millisecond = 0,
     microsecond = 0,
     nanosecond = 0,
-    calendar = undefined
+    calendar = GetDefaultCalendar()
   ) {
     isoYear = ES.ToInteger(isoYear);
     isoMonth = ES.ToInteger(isoMonth);
@@ -44,7 +44,8 @@ export class DateTime {
     millisecond = ES.ToInteger(millisecond);
     microsecond = ES.ToInteger(microsecond);
     nanosecond = ES.ToInteger(nanosecond);
-    if (calendar === undefined) calendar = GetDefaultCalendar();
+    calendar = ES.ToTemporalCalendar(calendar);
+
     ES.RejectDateTime(isoYear, isoMonth, isoDay, hour, minute, second, millisecond, microsecond, nanosecond);
     ES.RejectDateTimeRange(isoYear, isoMonth, isoDay, hour, minute, second, millisecond, microsecond, nanosecond);
     if (!calendar || typeof calendar !== 'object') throw new RangeError('invalid calendar');

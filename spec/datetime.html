@@ -18,7 +18,7 @@
     </p>
 
     <emu-clause id="sec-temporal.datetime">
-      <h1>Temporal.DateTime ( _isoYear_, _isoMonth_, _isoDay_ [ , _hour_ [ , _minute_ [ , _second_ [ , _millisecond_ [ , _microsecond_ [ , _nanosecond_ ] ] ] ] ] ] )</h1>
+      <h1>Temporal.DateTime ( _isoYear_, _isoMonth_, _isoDay_ [ , _hour_ [ , _minute_ [ , _second_ [ , _millisecond_ [ , _microsecond_ [ , _nanosecond_ [ , _calendarLike_ ] ] ] ] ] ] ] )</h1>
       <p>
         When the `Temporal.DateTime` function is called, the following steps are taken:
       </p>
@@ -35,6 +35,11 @@
         1. Let _millisecond_ be ? ToInteger(_millisecond_).
         1. Let _microsecond_ be ? ToInteger(_microsecond_).
         1. Let _nanosecond_ be ? ToInteger(_nanosecond_).
+        1. If _calendarLike_ is *undefined*, then
+          1. Let _calendar_ be ! GetDefaultCalendar().
+        1. Else,
+          1. Let _calendar_ be ? ToTemporalCalendar(_calendarLike_).
+        1. <mark>TODO:</mark> pass _calendar_ along.
         1. Return ? CreateTemporalDateTime(_isoYear_, _isoMonth_, _isoDay_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, NewTarget).
       </emu-alg>
     </emu-clause>
