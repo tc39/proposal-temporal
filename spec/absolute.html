@@ -368,16 +368,16 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal.absolute.prototype.todatetime">
-      <h1>Temporal.Absolute.prototype.toDateTime ( _temporalTimeZoneLike_ )</h1>
+      <h1>Temporal.Absolute.prototype.toDateTime ( _temporalTimeZoneLike_ [ , _calendar_ ] )</h1>
       <p>
-        The `toDateTime` method takes one argument _temporalTimeZoneLike_.
+        The `toDateTime` method takes two arguments, _temporalTimeZoneLike_ and _calendar_.
         The following steps are taken:
       </p>
       <emu-alg>
         1. Let _absolute_ be the *this* value.
         1. Perform ? RequireInternalSlot(_absolute_, [[InitializedTemporalAbsolute]]).
         1. Let _timeZone_ be ? ToTemporalTimeZone(_temporalTimeZoneLike_).
-        1. Return ? GetTemporalDateTimeFor(_timeZone_, _absolute_).
+        1. Return ? GetTemporalDateTimeFor(_timeZone_, _absolute_, _calendar_).
       </emu-alg>
     </emu-clause>
   </emu-clause>
