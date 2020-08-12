@@ -607,6 +607,16 @@ export const ES = ObjectAssign({}, ES2019, {
       GetSlot(dateTime, NANOSECOND)
     );
   },
+  GetOffsetNanosecondsFor: (timeZone, absolute) => {
+    const offsetNs = timeZone.getOffsetNanosecondsFor(absolute);
+    if (typeof offsetNs !== 'number') {
+      throw new TypeError('bad return from getOffsetNanosecondsFor');
+    }
+    if (!Number.isInteger(offsetNs) || Math.abs(offsetNs) > 86400e9) {
+      throw new RangeError('out-of-range return from getOffsetNanosecondsFor');
+    }
+    return offsetNs;
+  },
   GetOffsetStringFor: (timeZone, absolute) => {
     let getOffsetStringFor = timeZone.getOffsetStringFor;
     if (getOffsetStringFor === undefined) {

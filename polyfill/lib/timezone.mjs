@@ -64,13 +64,7 @@ export class TimeZone {
   }
   getOffsetStringFor(absolute) {
     if (!ES.IsTemporalAbsolute(absolute)) throw new TypeError('invalid Absolute object');
-    const offsetNs = this.getOffsetNanosecondsFor(absolute);
-    if (typeof offsetNs !== 'number') {
-      throw new TypeError('bad return from getOffsetNanosecondsFor');
-    }
-    if (!Number.isInteger(offsetNs) || Math.abs(offsetNs) > 86400e9) {
-      throw new RangeError('out-of-range return from getOffsetNanosecondsFor');
-    }
+    const offsetNs = ES.GetOffsetNanosecondsFor(this, absolute);
     return ES.FormatTimeZoneOffsetString(offsetNs);
   }
   getDateTimeFor(absolute, calendar = GetDefaultCalendar()) {
@@ -78,13 +72,7 @@ export class TimeZone {
     calendar = ES.ToTemporalCalendar(calendar);
 
     const ns = GetSlot(absolute, EPOCHNANOSECONDS);
-    const offsetNs = this.getOffsetNanosecondsFor(absolute);
-    if (typeof offsetNs !== 'number') {
-      throw new TypeError('bad return from getOffsetNanosecondsFor');
-    }
-    if (!Number.isInteger(offsetNs) || Math.abs(offsetNs) > 86400e9) {
-      throw new RangeError('out-of-range return from getOffsetNanosecondsFor');
-    }
+    const offsetNs = ES.GetOffsetNanosecondsFor(this, absolute);
     let { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.GetPartsFromEpoch(ns);
     ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.BalanceDateTime(
       year,
