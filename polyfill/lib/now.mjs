@@ -14,8 +14,7 @@ function absolute() {
   return new Absolute(ES.SystemUTCEpochNanoSeconds());
 }
 function dateTime(temporalTimeZoneLike = timeZone(), calendar = undefined) {
-  const TemporalTimeZone = GetIntrinsic('%Temporal.TimeZone%');
-  const timeZone = TemporalTimeZone.from(temporalTimeZoneLike);
+  const timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);
   const abs = absolute();
   return ES.GetTemporalDateTimeFor(timeZone, abs, calendar);
 }
