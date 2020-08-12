@@ -1,3 +1,6 @@
+<!doctype html>
+<meta charset="utf8">
+
 <emu-clause id="sec-temporal-duration-objects">
   <h1>Temporal.Duration Objects</h1>
 
@@ -529,13 +532,13 @@
         1. Set _minutes_ to _bt_.[[Minute]].
         1. Set _seconds_ to _bt_.[[Second]].
         1. If _largestUnit_ is *"hours"*, *"minutes"*, or *"seconds"*, then
-          1. Increment _hours_ by 24 &times; _days_.
+          1. Increment _hours_ by 24 × _days_.
           1. Set _days_ to 0.
         1. If _largestUnit_ is *"minutes"* or *"seconds"*, then
-          1. Increment _minutes_ by 60 &times; _hours_.
+          1. Increment _minutes_ by 60 × _hours_.
           1. Set _hours_ to 0.
         1. If _largestUnit_ is *"seconds"*, then
-          1. Increment _seconds_ by 60 &times; _minutes_.
+          1. Increment _seconds_ by 60 × _minutes_.
           1. Set _minutes_ to 0.
         1. Return the new Record {
           [[Days]]: _days_,
@@ -626,16 +629,16 @@
       <emu-alg>
         1. Assert: _y1_, _mon1_, _d1_, _h1_, _min1_, _s1_, _ms1_, _mus1_, _ns1_, _y2_, _mon2_, _d2_, _h2_, _min2_, _s2_, _ms2_, _mus2_, _ns2_ are integer Number values.
         1. Assert: _disambiguation_ is either *"balanceConstrain"* or *"balance"*.
-        1. Let _nanoseconds_ be _ns1_ &minus; _ns2_.
-        1. Let _microseconds_ be _mus1_ &minus; _mus2_.
-        1. Let _milliseconds_ be _ms1_ &minus; _ms2_.
-        1. Let _seconds_ be _s1_ &minus; _s2_.
-        1. Let _minutes_ be _min1_ &minus; _min2_.
-        1. Let _hours_ be _h1_ &minus; _h2_.
-        1. Let _days_ be _d1_ &minus; _d2_.
-        1. Let _weeks_ be _w1_ &minus; _w2_.
-        1. Let _months_ be _mon1_ &minus; _mon2_.
-        1. Let _years_ be _y1_ &minus; _y2_.
+        1. Let _nanoseconds_ be _ns1_ − _ns2_.
+        1. Let _microseconds_ be _mus1_ − _mus2_.
+        1. Let _milliseconds_ be _ms1_ − _ms2_.
+        1. Let _seconds_ be _s1_ − _s2_.
+        1. Let _minutes_ be _min1_ − _min2_.
+        1. Let _hours_ be _h1_ − _h2_.
+        1. Let _days_ be _d1_ − _d2_.
+        1. Let _weeks_ be _w1_ − _w2_.
+        1. Let _months_ be _mon1_ − _mon2_.
+        1. Let _years_ be _y1_ − _y2_.
         1. If _nanoseconds_ &lt; 0, then
           1. Set _microseconds_ to _microseconds_ + floor(_nanoseconds_ / 1000).
           1. Set _nanoseconds_ to ! NonNegativeModulo(_nanoseconds_, 1000).

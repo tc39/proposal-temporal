@@ -1,3 +1,6 @@
+<!doctype html>
+<meta charset="utf8">
+
 <emu-clause id="sec-temporal-absolute-objects">
   <h1>Temporal.Absolute Objects</h1>
   <p>A Temporal.Absolute object is an immutable Object referencing a point in time with nanoseconds precision.</p>
@@ -303,7 +306,7 @@
         1. Let _absolute_ be the *this* value.
         1. Perform ? RequireInternalSlot(_absolute_, [[InitializedTemporalAbsolute]]).
         1. Perform ? RequireInternalSlot(_other_, [[InitializedTemporalAbsolute]]).
-        1. If _absolute_.[[Nanoseconds]] &ne; _other_.[[Nanoseconds]], return *false*.
+        1. If _absolute_.[[Nanoseconds]] ≠ _other_.[[Nanoseconds]], return *false*.
         1. Return *true*.
       </emu-alg>
     </emu-clause>
@@ -386,7 +389,7 @@
       <h1>ValidateAbsolute ( _ns_ )</h1>
       <emu-alg>
         1. Assert: Type(_ns_) is BigInt.
-        1. If _ns_ &lt; &minus;8.64 &times; 10<sup>21</sup><sub>ℝ</sub> or _ns_ &gt; 8.64 &times; 10<sup>21</sup><sub>ℝ</sub>, then
+        1. If _ns_ &lt; −8.64 × 10<sup>21</sup><sub>ℝ</sub> or _ns_ &gt; 8.64 × 10<sup>21</sup><sub>ℝ</sub>, then
           1. Return *false*.
         1. Return *true*.
       </emu-alg>
