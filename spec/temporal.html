@@ -95,24 +95,24 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal.now.datetime">
-      <h1>Temporal.now.dateTime ( [ _temporalTimeZoneLike_ ] )</h1>
+      <h1>Temporal.now.dateTime ( [ _temporalTimeZoneLike_ [ , _calendar_ ] ] )</h1>
       <p>
-        The `dateTime` method takes one argument _temporalTimeZoneLike_.
+        The `dateTime` method takes two arguments, _temporalTimeZoneLike_ and _calendar_.
         The following steps are taken:
       </p>
       <emu-alg>
-        1. Return ? SystemDateTime(_temporalTimeZoneLike_).
+        1. Return ? SystemDateTime(_temporalTimeZoneLike_, _calendar_).
       </emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal.now.date">
-      <h1>Temporal.now.date ( [ _temporalTimeZoneLike_ ] )</h1>
+      <h1>Temporal.now.date ( [ _temporalTimeZoneLike_ [ , _calendar_ ] ] )</h1>
       <p>
-        The `date` method takes one argument _temporalTimeZoneLike_.
+        The `date` method takes two arguments, _temporalTimeZoneLike_ and _calendar_.
         The following steps are taken:
       </p>
       <emu-alg>
-        1. Let _dateTime_ be ? SystemDateTime(_temporalTimeZoneLike_).
+        1. Let _dateTime_ be ? SystemDateTime(_temporalTimeZoneLike_, _calendar_).
         1. Return ? CreateTemporalDate(_dateTime_.[[Year]], _dateTime_.[[Month]], _dateTime_.[[Day]]).
       </emu-alg>
     </emu-clause>
@@ -151,14 +151,14 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal-systemdatetime" aoid="SystemDateTime">
-      <h1>SystemDateTime ( [ _temporalTimeZoneLike_ ] )</h1>
+      <h1>SystemDateTime ( [ _temporalTimeZoneLike_ [ , _calendar_ ] ] )</h1>
       <emu-alg>
         1. If _temporalTimeZoneLike_ is *undefined*, then
           1. Let _timeZone_ be SystemTimeZone().
         1. Else,
           1. Let _timeZone_ be ? ToTemporalTimeZone(_temporalTimeZoneLike_).
         1. Let _absolute_ be ? SystemAbsolute().
-        1. Return ? GetTemporalDateTimeFor(_timeZone_, _absolute_).
+        1. Return ? GetTemporalDateTimeFor(_timeZone_, _absolute_, _calendar_).
       </emu-alg>
     </emu-clause>
   </emu-clause>

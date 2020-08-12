@@ -374,12 +374,12 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal-gettemporaldatetimefor" aoid="GetTemporalDateTimeFor">
-      <h1>GetTemporalDateTimeFor ( _timeZone_, _absolute_ )</h1>
+      <h1>GetTemporalDateTimeFor ( _timeZone_, _absolute_, _calendar_ )</h1>
       <emu-alg>
         1. Let _getDateTimeFor_ be ? Get(_timeZone_, *"getDateTimeFor"*).
         1. If _getDateTimeFor_ is *undefined*, then
           1. Set _getDateTimeFor_ to %Temporal.TimeZone.prototype.getDateTimeFor%.
-        1. Let _dateTime_ be ? Call(_getDateTimeFor_, _timeZone_, « _absolute_ »).
+        1. Let _dateTime_ be ? Call(_getDateTimeFor_, _timeZone_, « _absolute_, _calendar_ »).
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
         1. Return _dateTime_.
       </emu-alg>
