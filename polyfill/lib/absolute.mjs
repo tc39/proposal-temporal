@@ -1,5 +1,6 @@
 /* global __debug__ */
 
+import { GetDefaultCalendar } from './calendar.mjs';
 import { ES } from './ecmascript.mjs';
 import { GetIntrinsic, MakeIntrinsicClass } from './intrinsicclass.mjs';
 import { EPOCHNANOSECONDS, CreateSlots, GetSlot, SetSlot } from './slots.mjs';
@@ -155,9 +156,10 @@ export class Absolute {
   valueOf() {
     throw new TypeError('use compare() or equals() to compare Temporal.Absolute');
   }
-  toDateTime(temporalTimeZoneLike, calendar = undefined) {
+  toDateTime(temporalTimeZoneLike, calendarLike = GetDefaultCalendar()) {
     if (!ES.IsTemporalAbsolute(this)) throw new TypeError('invalid receiver');
     const timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);
+    const calendar = ES.ToTemporalCalendar(calendarLike);
     return ES.GetTemporalDateTimeFor(timeZone, this, calendar);
   }
 
