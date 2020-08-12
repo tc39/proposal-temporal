@@ -1,3 +1,6 @@
+<!doctype html>
+<meta charset="utf8">
+
 <emu-clause id="sec-temporal-timezone-objects">
   <h1>Temporal.TimeZone Objects</h1>
   <p>A Temporal.TimeZone object is an immutable Object referencing a time zone.</p>
@@ -30,7 +33,7 @@
           1. Assert: _sign_ is not *undefined*.
           1. Set _hour_ to ! ToInteger(_hour_).
           1. If _sign_ = `"-"`, then
-            1. Set _hour_ to &minus;1 &times; _hour_.
+            1. Set _hour_ to −1 × _hour_.
           1. If _minute_ is not *undefined*, then
             1. Set _minute_ to ! ToInteger(_minute_).
           1. <mark>Do something with the offset.</mark>
@@ -186,7 +189,7 @@
           1. If _disambiguation_ is *"earlier"* or *"compatible"*, then
             1. Return _possibleAbsolutes_[0].
           1. If _disambiguation_ is *"later"*, then
-            1. Return _possibleAbsolutes_[_n_ &minus; 1].
+            1. Return _possibleAbsolutes_[_n_ − 1].
           1. If _disambiguation_ is *"reject"*, then
             1. Throw a *RangeError* exception.
         1. <mark>TODO - handle n=0 (skipped times like Spring DST)</mark>
@@ -283,7 +286,7 @@
         1. If any of _result_.[[OffsetSign]], _result_.[[OffsetHour]], or _result_.[[OffsetMinute]] are *undefined*, then
           1. Let _offset_ be *undefined*.
         1. Else,
-          1. Let _offsetNanoseconds_ be _result_.[[OffsetSign]] &times; (_result_.[[OffsetHour]] &times; 60 + _result_.[[OffsetMinute]]) &times; 60 &times; 10<sup>9</sup>.
+          1. Let _offsetNanoseconds_ be _result_.[[OffsetSign]] × (_result_.[[OffsetHour]] × 60 + _result_.[[OffsetMinute]]) × 60 × 10<sup>9</sup>.
           1. Let _offset_ be ! FormatTimeZoneOffsetString(_offsetNanoseconds_).
         1. Let _identifier_ be the first one of _result_.[[TimeZoneName]], _offset_, or *"UTC"* that is not *undefined*.
         1. If ! IsValidTimeZoneName(_identifier_) is *false*, then
@@ -308,7 +311,7 @@
       <emu-alg>
         1. Assert: _offsetNanoseconds_ is an integer Number value.
         1. If _offsetNanoseconds_ ≥ 0, let _sign_ be *"+"*; otherwise, let _sign_ be *"-"*.
-        1. Let _offsetMinutes_ be floor(abs(_offsetNanoseconds_) / (60 &times; 10<sup>9</sup>)).
+        1. Let _offsetMinutes_ be floor(abs(_offsetNanoseconds_) / (60 × 10<sup>9</sup>)).
         1. Let _h_ be floor(_offsetMinutes_ / 60), formatted as a two-digit decimal number, padded to the left with a zero if necessary.
         1. Let _m_ be _offsetMinutes_ modulo 60, formatted as a two-digit decimal number, padded to the left with a zero if necessary.
         1. Return the string-concatenation of _sign_, _h_, the code unit 0x003A (COLON), and _m_.
@@ -342,7 +345,7 @@
         1. Let _offsetNanoseconds_ be ? Call(_getOffsetNanosecondsFor_, _timeZone_, « _absolute_ »).
         1. If Type(_offsetNanoseconds_) is not Number, then
           1. Throw a *TypeError* exception.
-        1. If _offsetNanoseconds_ is not an integer Number value between &minus;86400 &times; 10<sup>9</sup> and 86400 &times; 10<sup>9</sup> exclusive, then
+        1. If _offsetNanoseconds_ is not an integer Number value between −86400 × 10<sup>9</sup> and 86400 × 10<sup>9</sup> exclusive, then
           1. Throw a *RangeError* exception.
         1. Return _offsetNanoseconds_.
       </emu-alg>

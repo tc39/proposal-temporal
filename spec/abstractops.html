@@ -149,7 +149,7 @@
     <h1>NonNegativeModulo ( _x_, _y_ )</h1>
     <emu-alg>
       1. Let _result_ be _x_ modulo _y_.
-      1. If _result_ is *&minus;0*, then
+      1. If _result_ is *−0*, then
         1. Return 0.
       1. If _result_ &lt; 0, then
         1. Set _result_ to _result_ + _y_.
@@ -346,7 +346,7 @@
           TimeZoneUTCOffsetSign TimeZoneUTCOffsetHour `:`? TimeZoneUTCOffsetMinute
 
       TimeZoneIANAName :
-          > any string for which IsValidTimeZoneName returns true
+          &gt; any string for which IsValidTimeZoneName returns true
 
       TimeZone :
           UTCDesignator
@@ -668,7 +668,7 @@
         1. Assert: _sign_ is not *undefined*.
         1. Set _hour_ to ! ToInteger(_hour_).
         1. If _sign_ = `"-"`, then
-          1. Set _sign_ to &minus;1.
+          1. Set _sign_ to −1.
         1. Else,
           1. Set _sign_ to 1.
         1. Set _minute_ to ! ToInteger(_minute_).

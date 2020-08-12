@@ -1,3 +1,6 @@
+<!doctype html>
+<meta charset="utf8">
+
 <emu-clause id="sec-temporal-calendar-objects">
   <h1>Temporal.Calendar Objects</h1>
   <p>A Temporal.Calendar object is an immutable Object representing a calendar.</p>
@@ -44,7 +47,9 @@
 
     <emu-clause id="sec-temporal.calendar">
       <h1>Temporal.Calendar ( _id_ )</h1>
-      <p>When the `Temporal.Calendar` function is called, the following steps are taken:</p>
+      <p>
+        When the `Temporal.Calendar` function is called, the following steps are taken:
+      </p>
       <emu-alg>
         1. If NewTarget is *undefined*, then
           1. Throw a *TypeError* exception.
@@ -69,7 +74,7 @@
       <p>This property has the attributes { [[Writable]]: *false*, [[Enumerable]]: *false*, [[Configurable]]: *false* }.</p>
     </emu-clause>
 
-    <emu-clause id="sec-get-temporal-calendar-@@species">
+    <emu-clause id="sec-get-temporal.calendar-@@species">
       <h1>get Temporal.Calendar [ @@species ]</h1>
       <p>
         `Temporal.Calendar[@@species]` is an accessor property whose set accessor function is *undefined*.
@@ -84,7 +89,10 @@
 
     <emu-clause id="sec-temporal.calendar.from">
       <h1>Temporal.Calendar.from ( _item_ )</h1>
-      <p>The `from` method takes one argument, _item_. The following steps are taken:</p>
+      <p>
+        The `from` method takes one argument _item_.
+        The following steps are taken:
+      </p>
       <emu-alg>
         1. If Type(_item_) is Object, then
           1. Return _item_.
@@ -121,7 +129,7 @@
     </emu-clause>
 
     <emu-clause id="sec-get-temporal.calendar.prototype.id">
-      <h1>get Temporal.Date.prototype.id</h1>
+      <h1>get Temporal.Calendar.prototype.id</h1>
       <p>
         `Temporal.Calendar.prototype.id` is an accessor property whose set accessor function is undefined.
         Its get accessor function performs the following steps:

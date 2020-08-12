@@ -1,3 +1,6 @@
+<!doctype html>
+<meta charset="utf8">
+
 <emu-clause id="sec-temporal-time-objects">
   <h1>Temporal.Time Objects</h1>
   <p>A Temporal.Time object is an immutable Object that contains Number values corresponding to a particular hour, minute,
@@ -292,8 +295,8 @@
         1. Let _greater_ be _temporalTime_.
         1. Let _smaller_ be _other_.
         1. Let _result_ be ! DifferenceTime(_smaller_, _greater_).
-        1. If _result_.[[Hour]] &geq; 12, then
-          1. Set _result_ to ! BalanceDuration(0, 24 &minus; _result_.[[Hour]], &minus;_result_.[[Minute]], &minus;_result_.[[Second]], &minus;_result_.[[Millisecond]], &minus;_result_.[[Microsecond]], &minus;_result_.[[Nanosecond]], _largestUnit_).
+        1. If _result_.[[Hour]] ≥ 12, then
+          1. Set _result_ to ! BalanceDuration(0, 24 − _result_.[[Hour]], −_result_.[[Minute]], −_result_.[[Second]], −_result_.[[Millisecond]], −_result_.[[Microsecond]], −_result_.[[Nanosecond]], _largestUnit_).
         1. Else,
           1. Set _result_ to ! BalanceDuration(0, _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]], _largestUnit_).
         1. Return ? CreateTemporalDuration(0, 0, 0, 0, _result_.[[Hours]], _result_.[[Minutes]], _result_.[[Seconds]], _result_.[[Milliseconds]], _result_.[[Microseconds]], _result_.[[Nanoseconds]]).
@@ -310,12 +313,12 @@
         1. Let _temporalTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_temporalTime_, [[InitializedTemporalTime]]).
         1. Perform ? RequireInternalSlot(_other_, [[InitializedTemporalTime]]).
-        1. If _temporalTime_.[[Hour]] &ne; _other_.[[Hour]], return *false*.
-        1. If _temporalTime_.[[Minute]] &ne; _other_.[[Minute]], return *false*.
-        1. If _temporalTime_.[[Second]] &ne; _other_.[[Second]], return *false*.
-        1. If _temporalTime_.[[Millisecond]] &ne; _other_.[[Millisecond]], return *false*.
-        1. If _temporalTime_.[[Microsecond]] &ne; _other_.[[Microsecond]], return *false*.
-        1. If _temporalTime_.[[Nanosecond]] &ne; _other_.[[Nanosecond]], return *false*.
+        1. If _temporalTime_.[[Hour]] ≠ _other_.[[Hour]], return *false*.
+        1. If _temporalTime_.[[Minute]] ≠ _other_.[[Minute]], return *false*.
+        1. If _temporalTime_.[[Second]] ≠ _other_.[[Second]], return *false*.
+        1. If _temporalTime_.[[Millisecond]] ≠ _other_.[[Millisecond]], return *false*.
+        1. If _temporalTime_.[[Microsecond]] ≠ _other_.[[Microsecond]], return *false*.
+        1. If _temporalTime_.[[Nanosecond]] ≠ _other_.[[Nanosecond]], return *false*.
         1. Return *true*.
       </emu-alg>
     </emu-clause>
@@ -537,7 +540,7 @@
       <h1>BalanceSubSecond ( _millisecond_, _microsecond_, _nanosecond_ )</h1>
       <emu-alg>
         1. Assert: _millisecond_, _microsecond_, and _nanosecond_ are integer Number values.
-        1. If _millisecond_ is *+&infin;* or *&minus;&infin;*, or _microsecond_ is *+&infin;* or *&minus;&infin;*, or _nanosecond_ is *+&infin;* or *&minus;&infin;*, then
+        1. If _millisecond_ is *+∞* or *−∞*, or _microsecond_ is *+∞* or *−∞*, or _nanosecond_ is *+∞* or *−∞*, then
           1. Throw a *RangeError* exception.
         1. Set _microsecond_ to _microsecond_ + floor(_nanosecond_ / 1000).
         1. Set _nanosecond_ to ! NonNegativeModulo(_nanosecond_, 1000).
@@ -558,7 +561,7 @@
       <h1>BalanceTime ( _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_ )</h1>
       <emu-alg>
         1. Assert: _hour_, _minute_, _second_, _millisecond_, _microsecond_, and _nanosecond_ are integer Number values.
-        1. If _hour_ is *+&infin;* or *&minus;&infin;*, or _minute_ is *+&infin;* or *&minus;&infin;*, or _second_ is *+&infin;* or *&minus;&infin;*, then
+        1. If _hour_ is *+∞* or *−∞*, or _minute_ is *+∞* or *−∞*, or _second_ is *+∞* or *−∞*, then
           1. Throw a *RangeError* exception.
         1. Let _balanceResult_ be ? BalanceSubSecond(_millisecond_, _microsecond_, _nanosecond_).
         1. Set _second_ to _second_ + _balanceResult_.[[Seconds]].
