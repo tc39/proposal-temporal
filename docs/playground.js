@@ -4012,7 +4012,7 @@
           microsecond = _ES$GetPartsFromEpoch.microsecond,
           nanosecond = _ES$GetPartsFromEpoch.nanosecond;
 
-      var _ES$GetFormatterParts = ES.GetFormatterParts(id, epochMilliseconds).reduce(reduceParts, {}),
+      var _ES$GetFormatterParts = ES.GetFormatterParts(id, epochMilliseconds),
           year = _ES$GetFormatterParts.year,
           month = _ES$GetFormatterParts.month,
           day = _ES$GetFormatterParts.day,
@@ -4104,26 +4104,15 @@
           minute = _time$split2[1],
           second = _time$split2[2];
 
-      return [{
-        type: 'year',
-        value: era === 'BC' ? -year + 1 : +year
-      }, {
-        type: 'month',
-        value: +month
-      }, {
-        type: 'day',
-        value: +day
-      }, {
-        type: 'hour',
-        value: hour === '24' ? 0 : +hour
-      }, // bugs.chromium.org/p/chromium/issues/detail?id=1045791
-      {
-        type: 'minute',
-        value: +minute
-      }, {
-        type: 'second',
-        value: +second
-      }];
+      return {
+        year: era === 'BC' ? -year + 1 : +year,
+        month: +month,
+        day: +day,
+        hour: hour === '24' ? 0 : +hour,
+        // bugs.chromium.org/p/chromium/issues/detail?id=1045791
+        minute: +minute,
+        second: +second
+      };
     },
     GetIANATimeZoneEpochValue: function GetIANATimeZoneEpochValue(id, year, month, day, hour, minute, second, millisecond, microsecond, nanosecond) {
       var ns = ES.GetEpochFromParts(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
@@ -4906,13 +4895,6 @@
     var hours = +match[2];
     var minutes = +(match[3] || 0);
     return sign * (hours * 60 + minutes) * 60 * 1e9;
-  }
-
-  function reduceParts(res, item) {
-    if (item.type === 'literal') return res;
-    if (item.type === 'timeZoneName') return res;
-    res[item.type] = parseInt(item.value, 10);
-    return res;
   }
 
   function bisect(getState, left, right) {
