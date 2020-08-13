@@ -38,6 +38,11 @@
       "id": "sec-defaulttimezone"
     },
     {
+      "type": "op",
+      "aoid": "ToLocalTime",
+      "id": "sec-tolocaltime"
+    },
+    {
       "type": "clause",
       "number": "Internal slots",
       "id": "sec-intl.datetimeformat-internal-slots"
