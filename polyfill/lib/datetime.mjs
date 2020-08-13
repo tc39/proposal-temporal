@@ -272,7 +272,7 @@ export class DateTime {
       GetSlot(this, ISO_DAY),
       calendar
     );
-    const addedDate = calendar.plus(datePart, duration, options, TemporalDate);
+    const addedDate = calendar.datePlus(datePart, duration, options, TemporalDate);
     let year = GetSlot(addedDate, ISO_YEAR);
     let month = GetSlot(addedDate, ISO_MONTH);
     let day = GetSlot(addedDate, ISO_DAY);
@@ -337,7 +337,7 @@ export class DateTime {
       GetSlot(this, ISO_DAY),
       calendar
     );
-    const subtractedDate = calendar.minus(datePart, duration, options, TemporalDate);
+    const subtractedDate = calendar.dateMinus(datePart, duration, options, TemporalDate);
     let year = GetSlot(subtractedDate, ISO_YEAR);
     let month = GetSlot(subtractedDate, ISO_MONTH);
     let day = GetSlot(subtractedDate, ISO_DAY);
@@ -395,7 +395,7 @@ export class DateTime {
       dateLargestUnit = largestUnit;
     }
     const dateOptions = ObjectAssign({}, options, { largestUnit: dateLargestUnit });
-    const dateDifference = calendar.difference(other, adjustedLarger, dateOptions);
+    const dateDifference = calendar.dateDifference(other, adjustedLarger, dateOptions);
 
     let days;
     ({ days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.BalanceDuration(

@@ -242,19 +242,19 @@ export namespace Temporal {
       options: AssignmentOptions,
       constructor: ConstructorOf<Temporal.MonthDay>
     ): Temporal.MonthDay;
-    plus?(
+    datePlus?(
       date: Temporal.Date,
       duration: Temporal.Duration,
       options: ArithmeticOptions,
       constructor: ConstructorOf<Temporal.Date>
     ): Temporal.Date;
-    minus?(
+    dateMinus?(
       date: Temporal.Date,
       duration: Temporal.Duration,
       options: ArithmeticOptions,
       constructor: ConstructorOf<Temporal.Date>
     ): Temporal.Date;
-    difference?(
+    dateDifference?(
       smaller: Temporal.Date,
       larger: Temporal.Date,
       options: DifferenceOptions<'years' | 'months' | 'weeks' | 'days'>
@@ -298,19 +298,19 @@ export namespace Temporal {
       options: AssignmentOptions,
       constructor: ConstructorOf<Temporal.MonthDay>
     ): Temporal.MonthDay;
-    plus(
+    datePlus(
       date: Temporal.Date,
       duration: Temporal.Duration,
       options: ArithmeticOptions,
       constructor: ConstructorOf<Temporal.Date>
     ): Temporal.Date;
-    minus(
+    dateMinus(
       date: Temporal.Date,
       duration: Temporal.Duration,
       options: ArithmeticOptions,
       constructor: ConstructorOf<Temporal.Date>
     ): Temporal.Date;
-    difference(
+    dateDifference(
       smaller: Temporal.Date,
       larger: Temporal.Date,
       options?: DifferenceOptions<'years' | 'months' | 'weeks' | 'days'>

@@ -20,6 +20,9 @@ The acclaimed researchers Edward M. Reingold and Nachum Dershowitz discuss this 
 
 Some historical calendars, such as the Hawaiian Moon Calendar, define a day as the time it takes for the Earth to complete one rotation relative to the moon (instead of the Sun), which is slightly shorter on average.  For calendars that use a lunar day, a Temporal.DateTime can be used instead of Temporal.Date when the distinction is important.
 
+At this time, Temporal does not support subdividing a solar day into anything other than hours, minutes, and seconds.
+However, we have taken a future-proof approach so that if a use case presents itself, we can add `timePlus()`, `timeMinus()`, and `timeDifference()` methods to Temporal.Calendar.
+
 ### Temporal.DateTime and Temporal.Time internal slots
 
 As with Temporal.Date, all of these types will gain a `[[Calendar]]` slot, and year, month, and day will be renamed `[[IsoYear]]`, `[[IsoMonth]]`, and `[[IsoDay]]`.
@@ -70,18 +73,6 @@ class Temporal.Calendar {
 		constructor: function
 	) : Temporal.Date;
 
-	/** Constructs a Temporal.DateTime from a free-form option bag */
-	dateTimeFromFields(
-		fields: object,
-		constructor: function
-	) : Temporal.DateTime;
-
-	/** Constructs a Temporal.Time from a free-form option bag */
-	timeFromFields(
-		fields: object,
-		constructor: function
-	) : Temporal.Time;
-
 	/** Constructs a Temporal.YearMonth from a free-form option bag */
 	yearMonthFromFields(
 		fields: object,
@@ -102,7 +93,7 @@ class Temporal.Calendar {
 	//////////////////
 
 	/** Returns input plus duration according to the calendar rules. */
-	plus(
+	datePlus(
 		input: Temporal.Date,
 		duration: Temporal.Duration,
 		options: /* options bag */,
@@ -110,7 +101,7 @@ class Temporal.Calendar {
 	) : Temporal.Date;
 
 	/** Returns input minus duration according to the calendar rules. */
-	minus(
+	dateMinus(
 		input: Temporal.Date,
 		duration: Temporal.Duration,
 		options: /* options bag */,
@@ -118,7 +109,7 @@ class Temporal.Calendar {
 	) : Temporal.Date;
 
 	/** Returns larger minus smaller, which are dates in the same calendar. */
-	difference(
+	dateDifference(
 		smaller: Temporal.Date,
 		larger: Temporal.Date,
 		options: /* options bag */
@@ -212,7 +203,7 @@ const PartialIsoCalendar = {
 	// Same for dateTimeFromFields, etc.
 
 	// ALL OTHER METHODS:
-	plus() {
+	datePlus() {
 		throw new TypeError("Unsupported operation: full calendar required");
 	}
 	// Same for minus, etc.
@@ -637,7 +628,7 @@ Temporal.Date.prototype.difference = function(other, options) {
 		// Note: call intrinsic versions of this method
 		other = other.withCalendar(this.calendar);
 	}
-	return this.calendar.difference(this, other, options);
+	return this.calendar.dateDifference(this, other, options);
 }
 
 Temporal.Date.prototype.with = function(overrides) {

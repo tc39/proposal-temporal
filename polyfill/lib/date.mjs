@@ -137,7 +137,7 @@ export class Date {
     );
     duration = { years, months, weeks, days };
     const Construct = ES.SpeciesConstructor(this, Date);
-    const result = GetSlot(this, CALENDAR).plus(this, duration, options, Construct);
+    const result = GetSlot(this, CALENDAR).datePlus(this, duration, options, Construct);
     if (!ES.IsTemporalDate(result)) throw new TypeError('invalid result');
     return result;
   }
@@ -157,7 +157,7 @@ export class Date {
     );
     duration = { years, months, weeks, days };
     const Construct = ES.SpeciesConstructor(this, Date);
-    const result = GetSlot(this, CALENDAR).minus(this, duration, options, Construct);
+    const result = GetSlot(this, CALENDAR).dateMinus(this, duration, options, Construct);
     if (!ES.IsTemporalDate(result)) throw new TypeError('invalid result');
     return result;
   }
@@ -170,7 +170,7 @@ export class Date {
     }
     const comparison = Date.compare(this, other);
     if (comparison < 0) throw new RangeError('other instance cannot be larger than `this`');
-    return calendar.difference(other, this, options);
+    return calendar.dateDifference(other, this, options);
   }
   equals(other) {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');

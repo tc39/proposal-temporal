@@ -94,7 +94,7 @@ export class YearMonth {
     const calendar = GetSlot(this, CALENDAR);
     const fields = ES.ToTemporalYearMonthRecord(this);
     const firstOfCalendarMonth = calendar.dateFromFields({ ...fields, day: 1 }, {}, TemporalDate);
-    const addedDate = calendar.plus(firstOfCalendarMonth, { ...duration, days }, options, TemporalDate);
+    const addedDate = calendar.datePlus(firstOfCalendarMonth, { ...duration, days }, options, TemporalDate);
 
     const Construct = ES.SpeciesConstructor(this, YearMonth);
     const result = calendar.yearMonthFromFields(addedDate, options, Construct);
@@ -121,7 +121,7 @@ export class YearMonth {
     const fields = ES.ToTemporalYearMonthRecord(this);
     const lastDay = calendar.daysInMonth(this);
     const lastOfCalendarMonth = calendar.dateFromFields({ ...fields, day: lastDay }, {}, TemporalDate);
-    const subtractedDate = calendar.minus(lastOfCalendarMonth, { ...duration, days }, options, TemporalDate);
+    const subtractedDate = calendar.dateMinus(lastOfCalendarMonth, { ...duration, days }, options, TemporalDate);
 
     const Construct = ES.SpeciesConstructor(this, YearMonth);
     const result = calendar.yearMonthFromFields(subtractedDate, options, Construct);
@@ -144,7 +144,7 @@ export class YearMonth {
     const TemporalDate = GetIntrinsic('%Temporal.Date%');
     const smaller = calendar.dateFromFields({ ...smallerFields, day: 1 }, {}, TemporalDate);
     const larger = calendar.dateFromFields({ ...largerFields, day: 1 }, {}, TemporalDate);
-    return calendar.difference(smaller, larger, { ...options, largestUnit });
+    return calendar.dateDifference(smaller, larger, { ...options, largestUnit });
   }
   equals(other) {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
