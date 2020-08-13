@@ -134,7 +134,18 @@
         1. Let _timeZone_ be the *this* value.
         1. Perform ? RequireInternalSlot(_timeZone_, [[InitializedTemporalTimeZone]]).
         1. Perform ? RequireInternalSlot(_absolute_, [[InitializedTemporalAbsolute]]).
-        1. Return ? GetTimeZoneOffsetNanoseconds(_absolute_.[[Nanoseconds]], _timeZone_.[[Identifier]]).
+        1. Let _offset_ be ! ParseOffsetNanoseconds(_timeZone_.[[Identifier]]).
+        1. If _offset_ is not *undefined*, then
+          1. Return _offset_.
+        1. Let _epochNs_ be _absolute_.[[Nanoseconds]].
+        <!-- Can this be BalanceDateTime(1970, 1, 1, 0, 0, 0, 0, 0, _epochNs_)? -->
+        1. Let _ms_ be RoundTowardsZero(_epochNs_ / 1,000,000<sub>ℝ</sub>).
+        1. Let _mcs_ be ! NonNegativeModulo(RoundTowardsZero(_epochNs_ / 1000<sub>ℝ</sub>), 1000<sub>ℝ</sub>).
+        1. Let _ns_ be ! NonNegativeModulo(_epochNs_, 1000<sub>ℝ</sub>).
+        1. Let _tm_ be ! ToLocalTime(_ms_, *"gregory"*, _timeZone_.[[Identifier]]).
+        1. Let _result_ be ? BalanceDateTime(_tm_.[[Year]], _tm_.[[Month]], _tm_.[[Day]], _tm_.[[Hour]], _tm_.[[Minute]], _tm_.[[Second]], _ms_, _mcs_, _ns_).
+        1. Let _utc_ be ! GetEpochFromParts(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]).
+        1. Return _utc_ − _epochNs_.
       </emu-alg>
     </emu-clause>
 
@@ -406,6 +417,17 @@
         1. If _toString_ is *undefined*, then
           1. Set _toString_ to %Temporal.TimeZone.prototype.toString%.
         1. Return be ? ToString(? Call(_toString_, _timeZone_, « »)).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-parseoffsetnanoseconds" aoid="ParseOffsetNanoseconds">
+      <h1>ParseOffsetNanoseconds ( _identifier_ )</h1>
+      <emu-alg>
+        1. Assert: Type(_identifier_) is String.
+        1. If _identifier_ is not an offset string, then
+          1. Return *undefined*.
+        1. Let _sign_, _hours_, _minutes_ be <mark>the result of parsing _identifier_</mark>.
+        1. Return _sign_ × (_hours_ × 60 + _minutes_) × 60 × 1,000,000,000.
       </emu-alg>
     </emu-clause>
   </emu-clause>
