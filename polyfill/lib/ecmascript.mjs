@@ -762,10 +762,7 @@ export const ES = ObjectAssign({}, ES2019, {
   },
   GetIANATimeZoneDateTimeParts: (epochNanoseconds, id) => {
     const { epochMilliseconds, millisecond, microsecond, nanosecond } = ES.GetPartsFromEpoch(epochNanoseconds);
-    const { year, month, day, hour, minute, second } = ES.GetFormatterParts(id, epochMilliseconds).reduce(
-      reduceParts,
-      {}
-    );
+    const { year, month, day, hour, minute, second } = ES.GetFormatterParts(id, epochMilliseconds);
     return ES.BalanceDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
   },
   GetIANATimeZoneNextTransition: (epochNanoseconds, id) => {
@@ -832,14 +829,14 @@ export const ES = ObjectAssign({}, ES2019, {
     const [month, day] = date.split(' ');
     const [year, era] = fullYear.split(' ');
     const [hour, minute, second] = time.split(':');
-    return [
-      { type: 'year', value: era === 'BC' ? -year + 1 : +year },
-      { type: 'month', value: +month },
-      { type: 'day', value: +day },
-      { type: 'hour', value: hour === '24' ? 0 : +hour }, // bugs.chromium.org/p/chromium/issues/detail?id=1045791
-      { type: 'minute', value: +minute },
-      { type: 'second', value: +second }
-    ];
+    return {
+      year: era === 'BC' ? -year + 1 : +year,
+      month: +month,
+      day: +day,
+      hour: hour === '24' ? 0 : +hour, // bugs.chromium.org/p/chromium/issues/detail?id=1045791
+      minute: +minute,
+      second: +second
+    };
   },
   GetIANATimeZoneEpochValue: (id, year, month, day, hour, minute, second, millisecond, microsecond, nanosecond) => {
     let ns = ES.GetEpochFromParts(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
@@ -1525,12 +1522,6 @@ function parseOffsetString(string) {
   const hours = +match[2];
   const minutes = +(match[3] || 0);
   return sign * (hours * 60 + minutes) * 60 * 1e9;
-}
-function reduceParts(res, item) {
-  if (item.type === 'literal') return res;
-  if (item.type === 'timeZoneName') return res;
-  res[item.type] = parseInt(item.value, 10);
-  return res;
 }
 function bisect(getState, left, right, lstate = getState(left), rstate = getState(right)) {
   left = bigInt(left);
