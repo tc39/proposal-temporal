@@ -206,9 +206,9 @@ date.day         // => 6
 date.toString()  // => 2020-05-29[c=hebrew]
 ```
 
-### calendar.**plus**(_date_: Temporal.Date, _duration_: Temporal.Duration, _options_: object, _constructor_: function) : Temporal.Date
+### calendar.**datePlus**(_date_: Temporal.Date, _duration_: Temporal.Duration, _options_: object, _constructor_: function) : Temporal.Date
 
-### calendar.**minus**(_date_: Temporal.Date, _duration_: Temporal.Duration, _options_: object, _constructor_: function) : Temporal.Date
+### calendar.**dateMinus**(_date_: Temporal.Date, _duration_: Temporal.Duration, _options_: object, _constructor_: function) : Temporal.Date
 
 The above two methods are similar.
 They provide a way to do date arithmetic in the calendar's date reckoning.
@@ -241,7 +241,7 @@ date.day         // => 7
 date.toString()  // => 2020-06-28[c=islamic]
 
 // same result, but calling the method directly:
-date = Temporal.Calendar.from('islamic').plus(
+date = Temporal.Calendar.from('islamic').datePlus(
     Temporal.Date.from('2020-05-29'),
     Temporal.Duration.from({ months: 1 }),
     { disambiguation: 'reject' },
@@ -253,7 +253,7 @@ date.day         // => 7
 date.toString()  // => 2020-06-28[c=islamic]
 ```
 
-### calendar.**difference**(_smaller_: Temporal.Date, _larger_: Temporal.Date, _options_: object) : Temporal.Duration
+### calendar.**dateDifference**(_smaller_: Temporal.Date, _larger_: Temporal.Date, _options_: object) : Temporal.Duration
 
 **Parameters:**
 - `smaller` (`Temporal.Date`): A date.
@@ -276,7 +276,7 @@ d2 = Temporal.Date.from('2020-08-29').withCalendar('chinese');
 d2.difference(d1, { largestUnit: 'months' })  // => P1M2D
 
 // same result, but calling the method directly:
-Temporal.Calendar.from('chinese').difference(
+Temporal.Calendar.from('chinese').dateDifference(
     Temporal.Date.from('2020-08-29'),
     Temporal.Date.from('2020-07-29'),
     { largestUnit: 'months' }

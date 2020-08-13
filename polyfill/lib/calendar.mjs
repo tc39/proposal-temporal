@@ -40,21 +40,21 @@ export class Calendar {
     void constructor;
     throw new Error('not implemented');
   }
-  plus(date, duration, options, constructor) {
+  datePlus(date, duration, options, constructor) {
     void date;
     void duration;
     void options;
     void constructor;
     throw new Error('not implemented');
   }
-  minus(date, duration, options, constructor) {
+  dateMinus(date, duration, options, constructor) {
     void date;
     void duration;
     void options;
     void constructor;
     throw new Error('not implemented');
   }
-  difference(smaller, larger, options) {
+  dateDifference(smaller, larger, options) {
     void smaller;
     void larger;
     void options;
@@ -142,7 +142,7 @@ class ISO8601 extends Calendar {
     ({ month, day } = ES.RegulateMonthDay(month, day, disambiguation));
     return new constructor(month, day, this, /* refIsoYear = */ 1972);
   }
-  plus(date, duration, options, constructor) {
+  datePlus(date, duration, options, constructor) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
     const disambiguation = ES.ToTemporalDisambiguation(options);
     const { years, months, weeks, days } = duration;
@@ -152,7 +152,7 @@ class ISO8601 extends Calendar {
     ({ year, month, day } = ES.AddDate(year, month, day, years, months, weeks, days, disambiguation));
     return new constructor(year, month, day, this);
   }
-  minus(date, duration, options, constructor) {
+  dateMinus(date, duration, options, constructor) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
     const disambiguation = ES.ToTemporalDisambiguation(options);
     const { years, months, weeks, days } = duration;
@@ -162,7 +162,7 @@ class ISO8601 extends Calendar {
     ({ year, month, day } = ES.SubtractDate(year, month, day, years, months, weeks, days, disambiguation));
     return new constructor(year, month, day, this);
   }
-  difference(smaller, larger, options) {
+  dateDifference(smaller, larger, options) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
     const largestUnit = ES.ToLargestTemporalUnit(options, 'days', ['hours', 'minutes', 'seconds']);
     const { years, months, weeks, days } = ES.DifferenceDate(smaller, larger, largestUnit);
