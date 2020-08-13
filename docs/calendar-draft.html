@@ -146,6 +146,8 @@
 <p>The sun moves from east to west, and night follows day with predictable regularity. This apparent motion of the sun as viewed by an earthbound observer provided the earliest time-keeping standard for humankind. The day is, accordingly, the basic unit of time underlying all calendars, but various calendars use different conventions to structure days into larger units: weeks, months, years, and cycles of years.</p>
 </blockquote>
 <p>Some historical calendars, such as the Hawaiian Moon Calendar, define a day as the time it takes for the Earth to complete one rotation relative to the moon (instead of the Sun), which is slightly shorter on average.  For calendars that use a lunar day, a Temporal.DateTime can be used instead of Temporal.Date when the distinction is important.</p>
+<p>At this time, Temporal does not support subdividing a solar day into anything other than hours, minutes, and seconds.
+However, we have taken a future-proof approach so that if a use case presents itself, we can add <code>timePlus()</code>, <code>timeMinus()</code>, and <code>timeDifference()</code> methods to Temporal.Calendar.</p>
 <h3 id="temporaldatetime-and-temporaltime-internal-slots"><a class="heading-link" href="#temporaldatetime-and-temporaltime-internal-slots"></a>Temporal.DateTime and Temporal.Time internal slots</h3><p>As with Temporal.Date, all of these types will gain a <code>[[Calendar]]</code> slot, and year, month, and day will be renamed <code>[[IsoYear]]</code>, <code>[[IsoMonth]]</code>, and <code>[[IsoDay]]</code>.</p>
 <h3 id="temporalyearmonth-and-temporalmonthday-internal-slots"><a class="heading-link" href="#temporalyearmonth-and-temporalmonthday-internal-slots"></a>Temporal.YearMonth and Temporal.MonthDay internal slots</h3><p>Main issue: <a href="https://github.com/tc39/proposal-temporal/issues/391">https://github.com/tc39/proposal-temporal/issues/391</a></p>
 <p>For reasons explained above, using the ISO calendar as the internal data model has many advantages.  However, there are several challenges for these two &quot;incomplete&quot; types: lunar months don&#39;t line up with solar months, and not every lunar month occurs in every solar year.  After discussing several data model alternatives, we reached the conclusion that the simplest data model for Temporal.YearMonth and Temporal.MonthDay is to make it share the same data model as Temporal.Date, with the following slots:</p>
@@ -178,18 +180,6 @@
         <span class="token function-variable function">constructor</span><span class="token operator">:</span> <span class="token keyword">function</span>
     <span class="token punctuation">)</span> <span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">;</span>
 
-    <span class="token comment">/** Constructs a Temporal.DateTime from a free-form option bag */</span>
-    <span class="token function">dateTimeFromFields</span><span class="token punctuation">(</span>
-        fields<span class="token operator">:</span> object<span class="token punctuation">,</span>
-        <span class="token function-variable function">constructor</span><span class="token operator">:</span> <span class="token keyword">function</span>
-    <span class="token punctuation">)</span> <span class="token operator">:</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">;</span>
-
-    <span class="token comment">/** Constructs a Temporal.Time from a free-form option bag */</span>
-    <span class="token function">timeFromFields</span><span class="token punctuation">(</span>
-        fields<span class="token operator">:</span> object<span class="token punctuation">,</span>
-        <span class="token function-variable function">constructor</span><span class="token operator">:</span> <span class="token keyword">function</span>
-    <span class="token punctuation">)</span> <span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">;</span>
-
     <span class="token comment">/** Constructs a Temporal.YearMonth from a free-form option bag */</span>
     <span class="token function">yearMonthFromFields</span><span class="token punctuation">(</span>
         fields<span class="token operator">:</span> object<span class="token punctuation">,</span>
@@ -210,7 +200,7 @@
     <span class="token comment">//////////////////</span>
 
     <span class="token comment">/** Returns input plus duration according to the calendar rules. */</span>
-    <span class="token function">plus</span><span class="token punctuation">(</span>
+    <span class="token function">datePlus</span><span class="token punctuation">(</span>
         input<span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">,</span>
         duration<span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Duration<span class="token punctuation">,</span>
         options<span class="token operator">:</span> <span class="token comment">/* options bag */</span><span class="token punctuation">,</span>
@@ -218,7 +208,7 @@
     <span class="token punctuation">)</span> <span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">;</span>
 
     <span class="token comment">/** Returns input minus duration according to the calendar rules. */</span>
-    <span class="token function">minus</span><span class="token punctuation">(</span>
+    <span class="token function">dateMinus</span><span class="token punctuation">(</span>
         input<span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">,</span>
         duration<span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Duration<span class="token punctuation">,</span>
         options<span class="token operator">:</span> <span class="token comment">/* options bag */</span><span class="token punctuation">,</span>
@@ -226,7 +216,7 @@
     <span class="token punctuation">)</span> <span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">;</span>
 
     <span class="token comment">/** Returns larger minus smaller, which are dates in the same calendar. */</span>
-    <span class="token function">difference</span><span class="token punctuation">(</span>
+    <span class="token function">dateDifference</span><span class="token punctuation">(</span>
         smaller<span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">,</span>
         larger<span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">,</span>
         options<span class="token operator">:</span> <span class="token comment">/* options bag */</span>
@@ -298,7 +288,7 @@
     <span class="token comment">// Same for dateTimeFromFields, etc.</span>
 
     <span class="token comment">// ALL OTHER METHODS:</span>
-    <span class="token function">plus</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token function">datePlus</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
         <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">TypeError</span><span class="token punctuation">(</span><span class="token string">"Unsupported operation: full calendar required"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
     <span class="token comment">// Same for minus, etc.</span>
@@ -742,7 +732,7 @@ Temporal<span class="token punctuation">.</span><span class="token class-name">D
         <span class="token comment">// Note: call intrinsic versions of this method</span>
         other <span class="token operator">=</span> other<span class="token punctuation">.</span><span class="token function">withCalendar</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>calendar<span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
-    <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token punctuation">.</span>calendar<span class="token punctuation">.</span><span class="token function">difference</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">,</span> other<span class="token punctuation">,</span> options<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token punctuation">.</span>calendar<span class="token punctuation">.</span><span class="token function">dateDifference</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">,</span> other<span class="token punctuation">,</span> options<span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span>
 
 Temporal<span class="token punctuation">.</span><span class="token class-name">Date</span><span class="token punctuation">.</span>prototype<span class="token punctuation">.</span><span class="token function-variable function">with</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">overrides</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>

@@ -5209,18 +5209,18 @@
         throw new Error('not implemented');
       }
     }, {
-      key: "plus",
-      value: function plus(date, duration, options, constructor) {
+      key: "datePlus",
+      value: function datePlus(date, duration, options, constructor) {
         throw new Error('not implemented');
       }
     }, {
-      key: "minus",
-      value: function minus(date, duration, options, constructor) {
+      key: "dateMinus",
+      value: function dateMinus(date, duration, options, constructor) {
         throw new Error('not implemented');
       }
     }, {
-      key: "difference",
-      value: function difference(smaller, larger, options) {
+      key: "dateDifference",
+      value: function dateDifference(smaller, larger, options) {
         throw new Error('not implemented');
       }
     }, {
@@ -5367,8 +5367,8 @@
         1972);
       }
     }, {
-      key: "plus",
-      value: function plus(date, duration, options, constructor) {
+      key: "datePlus",
+      value: function datePlus(date, duration, options, constructor) {
         if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
         var disambiguation = ES.ToTemporalDisambiguation(options);
         var years = duration.years,
@@ -5387,8 +5387,8 @@
         return new constructor(year, month, day, this);
       }
     }, {
-      key: "minus",
-      value: function minus(date, duration, options, constructor) {
+      key: "dateMinus",
+      value: function dateMinus(date, duration, options, constructor) {
         if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
         var disambiguation = ES.ToTemporalDisambiguation(options);
         var years = duration.years,
@@ -5407,8 +5407,8 @@
         return new constructor(year, month, day, this);
       }
     }, {
-      key: "difference",
-      value: function difference(smaller, larger, options) {
+      key: "dateDifference",
+      value: function dateDifference(smaller, larger, options) {
         if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
         var largestUnit = ES.ToLargestTemporalUnit(options, 'days', ['hours', 'minutes', 'seconds']);
 
@@ -5725,7 +5725,7 @@
           days: days
         };
         var Construct = ES.SpeciesConstructor(this, Date);
-        var result = GetSlot(this, CALENDAR).plus(this, duration, options, Construct);
+        var result = GetSlot(this, CALENDAR).datePlus(this, duration, options, Construct);
         if (!ES.IsTemporalDate(result)) throw new TypeError('invalid result');
         return result;
       }
@@ -5755,7 +5755,7 @@
           days: days
         };
         var Construct = ES.SpeciesConstructor(this, Date);
-        var result = GetSlot(this, CALENDAR).minus(this, duration, options, Construct);
+        var result = GetSlot(this, CALENDAR).dateMinus(this, duration, options, Construct);
         if (!ES.IsTemporalDate(result)) throw new TypeError('invalid result');
         return result;
       }
@@ -5772,7 +5772,7 @@
 
         var comparison = Date.compare(this, other);
         if (comparison < 0) throw new RangeError('other instance cannot be larger than `this`');
-        return calendar.difference(other, this, options);
+        return calendar.dateDifference(other, this, options);
       }
     }, {
       key: "equals",
@@ -6169,7 +6169,7 @@
         var calendar = GetSlot(this, CALENDAR);
         var TemporalDate = GetIntrinsic$1('%Temporal.Date%');
         var datePart = new TemporalDate(GetSlot(this, ISO_YEAR), GetSlot(this, ISO_MONTH), GetSlot(this, ISO_DAY), calendar);
-        var addedDate = calendar.plus(datePart, duration, options, TemporalDate);
+        var addedDate = calendar.datePlus(datePart, duration, options, TemporalDate);
         var year = GetSlot(addedDate, ISO_YEAR);
         var month = GetSlot(addedDate, ISO_MONTH);
         var day = GetSlot(addedDate, ISO_DAY);
@@ -6239,7 +6239,7 @@
         var calendar = GetSlot(this, CALENDAR);
         var TemporalDate = GetIntrinsic$1('%Temporal.Date%');
         var datePart = new TemporalDate(GetSlot(this, ISO_YEAR), GetSlot(this, ISO_MONTH), GetSlot(this, ISO_DAY), calendar);
-        var subtractedDate = calendar.minus(datePart, duration, options, TemporalDate);
+        var subtractedDate = calendar.dateMinus(datePart, duration, options, TemporalDate);
         var year = GetSlot(subtractedDate, ISO_YEAR);
         var month = GetSlot(subtractedDate, ISO_MONTH);
         var day = GetSlot(subtractedDate, ISO_DAY);
@@ -6292,7 +6292,7 @@
         var dateOptions = ObjectAssign$2({}, options, {
           largestUnit: dateLargestUnit
         });
-        var dateDifference = calendar.difference(other, adjustedLarger, dateOptions);
+        var dateDifference = calendar.dateDifference(other, adjustedLarger, dateOptions);
         var days;
 
         var _ES$BalanceDuration3 = ES.BalanceDuration(dateDifference.days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, largestUnit);
@@ -7907,7 +7907,7 @@
         var firstOfCalendarMonth = calendar.dateFromFields(_objectSpread2(_objectSpread2({}, fields), {}, {
           day: 1
         }), {}, TemporalDate);
-        var addedDate = calendar.plus(firstOfCalendarMonth, _objectSpread2(_objectSpread2({}, duration), {}, {
+        var addedDate = calendar.datePlus(firstOfCalendarMonth, _objectSpread2(_objectSpread2({}, duration), {}, {
           days: days
         }), options, TemporalDate);
         var Construct = ES.SpeciesConstructor(this, YearMonth);
@@ -7937,7 +7937,7 @@
         var lastOfCalendarMonth = calendar.dateFromFields(_objectSpread2(_objectSpread2({}, fields), {}, {
           day: lastDay
         }), {}, TemporalDate);
-        var subtractedDate = calendar.minus(lastOfCalendarMonth, _objectSpread2(_objectSpread2({}, duration), {}, {
+        var subtractedDate = calendar.dateMinus(lastOfCalendarMonth, _objectSpread2(_objectSpread2({}, duration), {}, {
           days: days
         }), options, TemporalDate);
         var Construct = ES.SpeciesConstructor(this, YearMonth);
@@ -7968,7 +7968,7 @@
         var larger = calendar.dateFromFields(_objectSpread2(_objectSpread2({}, largerFields), {}, {
           day: 1
         }), {}, TemporalDate);
-        return calendar.difference(smaller, larger, _objectSpread2(_objectSpread2({}, options), {}, {
+        return calendar.dateDifference(smaller, larger, _objectSpread2(_objectSpread2({}, options), {}, {
           largestUnit: largestUnit
         }));
       }
