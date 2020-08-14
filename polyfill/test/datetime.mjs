@@ -423,6 +423,11 @@ describe('DateTime', () => {
       equal(monthsDifference.weeks, 0);
       notEqual(monthsDifference.months, 0);
     });
+    it('no two different calendars', () => {
+      const dt1 = new DateTime(2000, 1, 1, 0, 0, 0, 0, 0, 0);
+      const dt2 = new DateTime(2000, 1, 1, 0, 0, 0, 0, 0, 0, Temporal.Calendar.from('japanese'));
+      throws(() => dt1.difference(dt2), RangeError);
+    });
   });
   describe('DateTime.from() works', () => {
     it('DateTime.from("1976-11-18 15:23:30")', () =>

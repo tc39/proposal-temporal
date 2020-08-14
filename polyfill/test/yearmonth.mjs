@@ -206,6 +206,11 @@ describe('YearMonth', () => {
       throws(() => feb21.difference(feb20, { largestUnit: 'microseconds' }), RangeError);
       throws(() => feb21.difference(feb20, { largestUnit: 'nanoseconds' }), RangeError);
     });
+    it('no two different calendars', () => {
+      const ym1 = new YearMonth(2000, 1);
+      const ym2 = new YearMonth(2000, 1, Temporal.Calendar.from('japanese'));
+      throws(() => ym1.difference(ym2), RangeError);
+    });
   });
   describe('YearMonth.plus() works', () => {
     const ym = YearMonth.from('2019-11');

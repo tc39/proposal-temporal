@@ -247,6 +247,11 @@ describe('Date', () => {
       equal(monthsDifference.weeks, 0);
       notEqual(monthsDifference.months, 0);
     });
+    it('no two different calendars', () => {
+      const date1 = new Date(2000, 1, 1);
+      const date2 = new Date(2000, 1, 1, Temporal.Calendar.from('japanese'));
+      throws(() => date1.difference(date2), RangeError);
+    });
   });
   describe('date.plus() works', () => {
     let date = new Date(1976, 11, 18);

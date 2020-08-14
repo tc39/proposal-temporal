@@ -308,6 +308,8 @@ However, a difference of one month will still be one month even if `largestUnit`
 
 Unlike other Temporal types, days and lower units are not allowed, because the data model of `Temporal.YearMonth` doesn't have that accuracy.
 
+Computing the difference between two months in different calendar systems is not supported.
+
 Usage example:
 ```javascript
 ym = Temporal.YearMonth.from('2019-06');

@@ -458,6 +458,9 @@ Take care when using milliseconds, microseconds, or nanoseconds as the largest u
 For some durations, the resulting value may overflow `Number.MAX_SAFE_INTEGER` and lose precision in its least significant digit(s).
 Nanoseconds values will overflow and lose precision after about 104 days. Microseconds can fit about 285 years without losing precision, and milliseconds can handle about 285,000 years without losing precision.
 
+Computing the difference between two dates in different calendar systems is not supported.
+If you need to do this, choose the calendar in which the computation takes place by converting one of the dates with `datetime.withCalendar()`.
+
 Usage example:
 ```javascript
 dt1 = Temporal.DateTime.from('1995-12-07T03:24:30.000003500');
