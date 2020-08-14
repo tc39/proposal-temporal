@@ -28,6 +28,7 @@ import {
   NANOSECOND,
   REF_ISO_YEAR,
   REF_ISO_DAY,
+  CALENDAR,
   YEARS,
   MONTHS,
   WEEKS,
@@ -570,6 +571,26 @@ export const ES = ObjectAssign({}, ES2019, {
     }
     const identifier = ES.ToString(temporalTimeZoneLike);
     return ES.TimeZoneFrom(identifier);
+  },
+  TemporalDateTimeToDate: (dateTime) => {
+    const Date = GetIntrinsic('%Temporal.Date%');
+    return new Date(
+      GetSlot(dateTime, ISO_YEAR),
+      GetSlot(dateTime, ISO_MONTH),
+      GetSlot(dateTime, ISO_DAY),
+      GetSlot(dateTime, CALENDAR)
+    );
+  },
+  TemporalDateTimeToTime: (dateTime) => {
+    const Time = GetIntrinsic('%Temporal.Time%');
+    return new Time(
+      GetSlot(dateTime, HOUR),
+      GetSlot(dateTime, MINUTE),
+      GetSlot(dateTime, SECOND),
+      GetSlot(dateTime, MILLISECOND),
+      GetSlot(dateTime, MICROSECOND),
+      GetSlot(dateTime, NANOSECOND)
+    );
   },
   GetOffsetStringFor: (timeZone, absolute) => {
     let getOffsetStringFor = timeZone.getOffsetStringFor;

@@ -466,8 +466,7 @@ export class DateTime {
   }
   toDate() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-    const Date = GetIntrinsic('%Temporal.Date%');
-    return new Date(GetSlot(this, ISO_YEAR), GetSlot(this, ISO_MONTH), GetSlot(this, ISO_DAY), GetSlot(this, CALENDAR));
+    return ES.TemporalDateTimeToDate(this);
   }
   toYearMonth() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
@@ -485,15 +484,7 @@ export class DateTime {
   }
   toTime() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-    const Time = GetIntrinsic('%Temporal.Time%');
-    return new Time(
-      GetSlot(this, HOUR),
-      GetSlot(this, MINUTE),
-      GetSlot(this, SECOND),
-      GetSlot(this, MILLISECOND),
-      GetSlot(this, MICROSECOND),
-      GetSlot(this, NANOSECOND)
-    );
+    return ES.TemporalDateTimeToTime(this);
   }
   getFields() {
     const fields = ES.ToTemporalDateTimeRecord(this);
