@@ -566,7 +566,7 @@ Temporal.Date.prototype.toString = function() {
 In this scenario, `Temporal.Date.from()` will call `Temporal.Calendar.from()` to resolve the ID into a Calendar object.
 `Temporal.parse()` will have to add a new `calendar` member to the object it returns, whose value is the string ID given in a `[c=ID]` comment, or `null` if not given.
 
-`Temporal.Calendar.from()` can be monkeypatched by calendar implementors if it is necessary to make new time zones available globally.
+`Temporal.Calendar.from()` can be monkeypatched by calendar implementors if it is necessary to make new calendars available globally.
 The expectation is that it would rarely be necessary to do so, because if you have implemented a custom calendar for a particular application, you probably don't need it to be available globally.
 
 Example of monkeypatching for a custom calendar:
@@ -574,17 +574,11 @@ Example of monkeypatching for a custom calendar:
 ```javascript
 const fooCalendar = new FooCalendar();
 const originalTemporalCalendarFrom = Temporal.Calendar.from;
-Temporal.Calendar.from = function (item) {
-	let id;
-	if (item instanceof Temporal.Calendar) {
-		({ id } = item);
-	} else {
-		const string = `${item}`;
-		try {
-			id = Temporal.parse(item).calendar;
-		} catch {
-			id = string;
-		}
+Temporal.Calendar.from = function (string) {
+	try {
+		id = Temporal.parse(string).calendar;
+	} catch {
+		id = `${string}`;
 	}
 	if (id === 'foo')
 		return fooCalendar;

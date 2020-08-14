@@ -67,23 +67,20 @@ tz2.getPreviousTransition(abs);  // => 2020-03-08T10:00Z
 
 ## Static methods
 
-### Temporal.TimeZone.**from**(_thing_: any) : Temporal.TimeZone
+### Temporal.TimeZone.**from**(_str_: string) : Temporal.TimeZone
 
 **Parameters:**
-- `thing`: A `Temporal.TimeZone` object or a value from which to create a `Temporal.TimeZone`.
+- `thing`: A string from which to create a `Temporal.TimeZone`.
 
 **Returns:** a new `Temporal.TimeZone` object.
 
-This static method creates a new time zone from another value.
-If the value is another `Temporal.TimeZone` object, a new object representing the same time zone is returned.
-
-Any other value is converted to a string, which is expected to be either:
+This static method creates a new time zone from a string, which is expected to be either:
 - a string that is accepted by `new Temporal.TimeZone()`; or
 - a string in the ISO 8601 format including a time zone offset part.
 
 Note that the ISO 8601 string can optionally be extended with an IANA time zone name in square brackets appended to it.
 
-This function is often more convenient to use than `new Temporal.TimeZone()` because it handles a wider range of input.
+This function is often more convenient to use than `new Temporal.TimeZone()` because it handles date strings as well.
 
 Usage examples:
 ```javascript
@@ -100,11 +97,7 @@ tz = Temporal.TimeZone.from('2020-01-14T00:31:00.065858086Z');
 tz = Temporal.TimeZone.from('2020-01-13T16:31:00.065858086-08:00');
 tz = Temporal.TimeZone.from('2020-01-13T16:31:00.065858086-08:00[America/Vancouver]');
 
-// Existing TimeZone object
-tz2 = Temporal.TimeZone.from(tz);
-
 /* WRONG */ tz = Temporal.TimeZone.from('local');  // not a time zone, throws
-/* WRONG */ tz = Temporal.TimeZone.from({name: 'UTC'});  // not a TimeZone object, throws
 /* WRONG */ tz = Temporal.TimeZone.from('2020-01-14T00:31:00');  // ISO 8601 string without time zone offset part, throws
 /* WRONG */ tz = Temporal.TimeZone.from('-08:00[America/Vancouver]')  // ISO 8601 string without date-time part, throws
 ```

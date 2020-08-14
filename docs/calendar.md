@@ -71,24 +71,21 @@ cal = new Temporal.Calendar('gregory');
 
 ## Static methods
 
-### Temporal.Calendar.**from**(_thing_: any) : Temporal.Calendar
+### Temporal.Calendar.**from**(_str_: string) : Temporal.Calendar
 
 **Parameters:**
-- `thing`: A `Temporal.Calendar` object or a value from which to create a `Temporal.Calendar`.
+- `str`: A string from which to create a `Temporal.Calendar`.
 
 **Returns:** a new `Temporal.Calendar` object.
 
-This static method creates a new calendar from another value.
-If the value is another `Temporal.Calendar` object, a new object representing the same calendar is returned.
-
-Any other value is converted to a string, which is expected to be either:
+This static method creates a new calendar from a string value, which is expected to be either:
 - a string that is accepted by `new Temporal.Calendar()`; or
 - a string in the ISO 8601 format.
 
 Note that the ISO 8601 string can be extended with a `[c=identifier]` annotation in square brackets appended to it.
 Without such an annotation, the calendar is taken to be `iso8601`.
 
-This function is often more convenient to use than `new Temporal.Calendar()` because it handles a wider range of input.
+This function is often more convenient to use than `new Temporal.Calendar()` because it handles date strings as well.
 
 Usage examples:
 ```javascript
@@ -99,12 +96,6 @@ cal = Temporal.Calendar.from('gregory');
 // ISO 8601 string with or without calendar annotation
 cal = Temporal.Calendar.from('2020-01-13T16:31:00.065858086');
 cal = Temporal.Calendar.from('2020-01-13T16:31:00.065858086-08:00[America/Vancouver][c=iso8601]');
-
-// Existing calendar object
-cal2 = Temporal.Calendar.from(cal);
-
-// Custom calendar that is a plain object (this calendar does not do much)
-cal = Temporal.Calendar.from({id: 'mycalendar'});
 
 /*⚠️*/ cal = Temporal.Calendar.from('discordian');  // not a built-in calendar, throws
 /*⚠️*/ cal = Temporal.Calendar.from('[c=iso8601]');  // lone annotation not a valid ISO 8601 string

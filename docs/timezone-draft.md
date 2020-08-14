@@ -37,18 +37,12 @@ Example of monkeypatching to make St. Louis mean time available globally:
 
 ```javascript
 const originalTemporalTimeZoneFrom = Temporal.TimeZone.from;
-Temporal.TimeZone.from = function (item) {
-  let id;
-  if (item instanceof Temporal.TimeZone) {
-    id = item.name;
-  } else {
-    const string = `${item}`;
-    try {
-      const { zone } = Temporal.parse(string);
-      id = zone.ianaName || zone.offset;
-    } catch {
-      id = string;
-    }
+Temporal.TimeZone.from = function (string) {
+  try {
+    const { zone } = Temporal.parse(string);
+    id = zone.ianaName || zone.offset;
+  } catch {
+    id = `${string}`;
   }
   if (id === 'America/St_Louis')
     return new StLouisTime();
@@ -68,21 +62,15 @@ For example, to allow only offset time zones, and make the current time zone alw
 
 ```javascript
 const originalTemporalTimeZoneFrom = Temporal.TimeZone.from;
-Temporal.TimeZone.from = function (item) {
-  let id;
-  if (item instanceof Temporal.TimeZone) {
-    id = item.name;
-  } else {
-    const string = `${item}`;
-    try {
-      const { zone } = Temporal.parse(string);
-      if (zone.ianaName === 'UTC')
-        id = 'UTC';
-      else
-        id = zone.offset;
-    } catch {
-      id = string;
-    }
+Temporal.TimeZone.from = function (string) {
+  try {
+    const { zone } = Temporal.parse(string);
+    if (zone.ianaName === 'UTC')
+      id = 'UTC';
+    else
+      id = zone.offset;
+  } catch {
+    id = `${string}`;
   }
   if (/^[+-]\d{2}:?\d{2}$/.test(id) || id === 'UTC')
     return originalTemporalTimeZoneFrom.call(this, id);
@@ -133,7 +121,7 @@ class Temporal.TimeZone {
   toString() : string;
   toJSON() : string;
 
-  static from(item : any) : Temporal.TimeZone;
+  static from(string : string) : Temporal.TimeZone;
 }
 ```
 
