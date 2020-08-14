@@ -61,6 +61,17 @@ describe('Duration', () => {
     it('variant decimal separator', () => {
       equal(`${Duration.from('P1Y1M1W1DT1H1M1,12S')}`, 'P1Y1M1W1DT1H1M1.120S');
     });
+    it('decimal places only allowed in seconds', () => {
+      [
+        'P0.5Y',
+        'P1Y0,5M',
+        'P1Y1M0.5W',
+        'P1Y1M1W0,5D',
+        'P1Y1M1W1DT0.5H',
+        'P1Y1M1W1DT1H0,5M',
+        'P1Y1M1W1DT1H0.5M0.5S'
+      ].forEach((str) => throws(() => Duration.from(str), RangeError));
+    });
     it('"P" by itself is not a valid string', () => {
       throws(() => Duration.from('P'), RangeError);
       throws(() => Duration.from('PT'), RangeError);
