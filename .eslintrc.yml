@@ -88,6 +88,7 @@ overrides:
       - polyfill/test/Time/**/*.js
       - polyfill/test/TimeZone/**/*.js
       - polyfill/test/YearMonth/**/*.js
+      - polyfill/test/now/**/*.js
     globals:
       Temporal: readonly
       assert: readonly
