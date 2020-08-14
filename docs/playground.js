@@ -3790,6 +3790,14 @@
       var identifier = ES.ToString(temporalTimeZoneLike);
       return ES.TimeZoneFrom(identifier);
     },
+    TemporalDateTimeToDate: function TemporalDateTimeToDate(dateTime) {
+      var Date = GetIntrinsic$1('%Temporal.Date%');
+      return new Date(GetSlot(dateTime, ISO_YEAR), GetSlot(dateTime, ISO_MONTH), GetSlot(dateTime, ISO_DAY), GetSlot(dateTime, CALENDAR));
+    },
+    TemporalDateTimeToTime: function TemporalDateTimeToTime(dateTime) {
+      var Time = GetIntrinsic$1('%Temporal.Time%');
+      return new Time(GetSlot(dateTime, HOUR), GetSlot(dateTime, MINUTE), GetSlot(dateTime, SECOND), GetSlot(dateTime, MILLISECOND), GetSlot(dateTime, MICROSECOND), GetSlot(dateTime, NANOSECOND));
+    },
     GetOffsetStringFor: function GetOffsetStringFor(timeZone, absolute) {
       var getOffsetStringFor = timeZone.getOffsetStringFor;
 
@@ -3806,7 +3814,13 @@
         getDateTimeFor = GetIntrinsic$1('%Temporal.TimeZone.prototype.getDateTimeFor%');
       }
 
-      return ES.Call(getDateTimeFor, timeZone, [absolute, calendar]);
+      var dateTime = ES.Call(getDateTimeFor, timeZone, [absolute, calendar]);
+
+      if (!ES.IsTemporalDateTime(dateTime)) {
+        throw new TypeError('Unexpected result from getDateTimeFor');
+      }
+
+      return dateTime;
     },
     GetTemporalAbsoluteFor: function GetTemporalAbsoluteFor(timeZone, dateTime, disambiguation) {
       var getAbsoluteFor = timeZone.getAbsoluteFor;
@@ -6364,8 +6378,7 @@
       key: "toDate",
       value: function toDate() {
         if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-        var Date = GetIntrinsic$1('%Temporal.Date%');
-        return new Date(GetSlot(this, ISO_YEAR), GetSlot(this, ISO_MONTH), GetSlot(this, ISO_DAY), GetSlot(this, CALENDAR));
+        return ES.TemporalDateTimeToDate(this);
       }
     }, {
       key: "toYearMonth",
@@ -6389,8 +6402,7 @@
       key: "toTime",
       value: function toTime() {
         if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-        var Time = GetIntrinsic$1('%Temporal.Time%');
-        return new Time(GetSlot(this, HOUR), GetSlot(this, MINUTE), GetSlot(this, SECOND), GetSlot(this, MILLISECOND), GetSlot(this, MICROSECOND), GetSlot(this, NANOSECOND));
+        return ES.TemporalDateTimeToTime(this);
       }
     }, {
       key: "getFields",
@@ -7191,21 +7203,19 @@
     var temporalTimeZoneLike = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : timeZone();
     var calendar = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
     return function () {
-      var TemporalTimeZone = GetIntrinsic$1('%Temporal.TimeZone%');
-      var timeZone = TemporalTimeZone.from(temporalTimeZoneLike);
+      var timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);
       var abs = absolute$1();
-      if (typeof timeZone.getDateTimeFor === 'function') return timeZone.getDateTimeFor(abs, calendar);
-      return TemporalTimeZone.prototype.getDateTimeFor.call(timeZone, abs, calendar);
+      return ES.GetTemporalDateTimeFor(timeZone, abs, calendar);
     }();
   }
 
   function date(temporalTimeZoneLike) {
     var calendar = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
-    return dateTime(temporalTimeZoneLike, calendar).toDate();
+    return ES.TemporalDateTimeToDate(dateTime(temporalTimeZoneLike, calendar));
   }
 
   function time$1(temporalTimeZoneLike) {
-    return dateTime(temporalTimeZoneLike).toTime();
+    return ES.TemporalDateTimeToTime(dateTime(temporalTimeZoneLike));
   }
 
   function timeZone() {
