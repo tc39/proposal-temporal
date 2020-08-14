@@ -132,8 +132,11 @@ export class YearMonth {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
     if (!ES.IsTemporalYearMonth(other)) throw new TypeError('invalid YearMonth object');
     const calendar = GetSlot(this, CALENDAR);
-    if (calendar.id !== GetSlot(other, CALENDAR).id) {
-      other = new Date(GetSlot(other, ISO_YEAR), GetSlot(other, ISO_MONTH), calendar, GetSlot(other, REF_ISO_DAY));
+    const otherCalendar = GetSlot(other, CALENDAR);
+    if (calendar.id !== otherCalendar.id) {
+      throw new RangeError(
+        `cannot compute difference between months of ${calendar.id} and ${otherCalendar.id} calendars`
+      );
     }
     const largestUnit = ES.ToLargestTemporalUnit(options, 'years', [
       'weeks',

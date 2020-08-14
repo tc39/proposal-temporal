@@ -391,6 +391,9 @@ By default, the largest unit in the result is days.
 This is because months and years can be different lengths depending on which month is meant and whether the year is a leap year.
 Unlike other Temporal types, hours and lower are not allowed, because the data model of `Temporal.Date` doesn't have that accuracy.
 
+Computing the difference between two dates in different calendar systems is not supported.
+If you need to do this, choose the calendar in which the computation takes place by converting one of the dates with `date.withCalendar()`.
+
 Usage example:
 ```javascript
 date = Temporal.Date.from('2019-01-31');

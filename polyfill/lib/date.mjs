@@ -165,8 +165,11 @@ export class Date {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
     if (!ES.IsTemporalDate(other)) throw new TypeError('invalid Date object');
     const calendar = GetSlot(this, CALENDAR);
-    if (calendar.id !== GetSlot(other, CALENDAR).id) {
-      other = new Date(GetSlot(other, ISO_YEAR), GetSlot(other, ISO_MONTH), GetSlot(other, ISO_DAY), calendar);
+    const otherCalendar = GetSlot(other, CALENDAR);
+    if (calendar.id !== otherCalendar.id) {
+      throw new RangeError(
+        `cannot compute difference between dates of ${calendar.id} and ${otherCalendar.id} calendars`
+      );
     }
     const comparison = Date.compare(this, other);
     if (comparison < 0) throw new RangeError('other instance cannot be larger than `this`');
