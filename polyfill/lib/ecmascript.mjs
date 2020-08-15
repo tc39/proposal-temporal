@@ -213,7 +213,7 @@ export const ES = ObjectAssign({}, ES2019, {
     if (match.slice(2).every((element) => element === undefined)) {
       throw new RangeError(`invalid duration: ${isoString}`);
     }
-    const sign = match[1] === '-' ? -1 : 1;
+    const sign = match[1] === '-' || match[1] === '\u2212' ? -1 : 1;
     const years = ES.ToInteger(match[2]) * sign;
     const months = ES.ToInteger(match[3]) * sign;
     const weeks = ES.ToInteger(match[4]) * sign;

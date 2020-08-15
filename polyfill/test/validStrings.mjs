@@ -275,7 +275,7 @@ const durationYears = seq(
 );
 const durationDate = seq(choice(durationYears, durationMonths, durationWeeks, durationDays), [durationTime]);
 const duration = seq(
-  withCode([sign], (data, result) => (data.factor = result === '-' ? -1 : 1)),
+  withCode([sign], (data, result) => (data.factor = result === '-' || result === '\u2212' ? -1 : 1)),
   durationDesignator,
   choice(durationDate, durationTime)
 );

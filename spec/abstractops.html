@@ -561,7 +561,7 @@
       1. If _isoString_ does not satisfy the syntax of a |TemporalDurationString| (see <emu-xref href="#sec-temporal-iso8601grammar"></emu-xref>), then
         1. Throw a *RangeError* exception.
       1. Let _sign_, _years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, and _fraction_ be the parts of _isoString_ produced respectively by the |Sign|, |DurationYears|, |DurationMonths|, |DurationWeeks|, |DurationDays|, |DurationHours|, |DurationMinutes|, |DurationSeconds|, and |TimeFractionalPart| productions, or *undefined* if not present.
-      1. If _sign_ is *"-"*, then
+      1. If _sign_ is the code unit 0x002D (HYPHEN-MINUS) or 0x2212 (MINUS SIGN), then
         1. Let _factor_ be &minus;1;.
       1. Else,
         1. Let _factor_ be 1.

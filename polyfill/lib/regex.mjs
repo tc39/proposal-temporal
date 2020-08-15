@@ -24,4 +24,4 @@ export const time = new RegExp(`^${timesplit.source}(?:${zonesplit.source})?(?:$
 export const yearmonth = new RegExp(`^(${yearpart.source})-?(\\d{2})$`);
 export const monthday = /^(?:--)?(\d{2})-?(\d{2})$/;
 
-export const duration = /^([+-])?P(?:(\d+)Y)?(?:(\d+)M)?(?:(\d+)W)?(?:(\d+)D)?(?:T(?!$)(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)(?:[.,](\d{1,9}))?S)?)?$/i;
+export const duration = /^([+-\u2212])?P(?:(\d+)Y)?(?:(\d+)M)?(?:(\d+)W)?(?:(\d+)D)?(?:T(?!$)(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)(?:[.,](\d{1,9}))?S)?)?$/i;
