@@ -146,6 +146,10 @@ describe('Duration', () => {
       const d = Duration.from('-P1D');
       equal(d.days, -1);
     });
+    it('variant minus sign', () => {
+      const d = Duration.from('\u2212P1D');
+      equal(d.days, -1);
+    });
     it('all units have the same sign', () => {
       const d = Duration.from('-P1Y1M1W1DT1H1M1.123456789S');
       equal(d.years, -1);
