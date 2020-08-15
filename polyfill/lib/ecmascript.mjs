@@ -96,7 +96,9 @@ export const ES = ObjectAssign({}, ES2019, {
     const regex = zoneRequired ? PARSE.absolute : PARSE.datetime;
     const match = regex.exec(isoString);
     if (!match) throw new RangeError(`invalid ISO 8601 string: ${isoString}`);
-    const year = ES.ToInteger(match[1]);
+    let yearString = match[1];
+    if (yearString[0] === '\u2212') yearString = `-${yearString.slice(1)}`;
+    const year = ES.ToInteger(yearString);
     const month = ES.ToInteger(match[2] || match[4]);
     const day = ES.ToInteger(match[3] || match[5]);
     const hour = ES.ToInteger(match[6]);
@@ -107,8 +109,9 @@ export const ES = ObjectAssign({}, ES2019, {
     const millisecond = ES.ToInteger(fraction.slice(0, 3));
     const microsecond = ES.ToInteger(fraction.slice(3, 6));
     const nanosecond = ES.ToInteger(fraction.slice(6, 9));
-    const offset = `${match[14]}:${match[15] || '00'}`;
-    let ianaName = match[16];
+    const offsetSign = match[14] === '-' || match[14] === '\u2212' ? '-' : '+';
+    const offset = `${offsetSign}${match[15]}:${match[16] || '00'}`;
+    let ianaName = match[17];
     if (ianaName) {
       try {
         // Canonicalize name if it is an IANA link name or is capitalized wrong
@@ -118,7 +121,7 @@ export const ES = ObjectAssign({}, ES2019, {
       }
     }
     const zone = match[13] ? 'UTC' : ianaName || offset;
-    const calendar = match[17] || null;
+    const calendar = match[18] || null;
     return {
       year,
       month,
@@ -167,7 +170,9 @@ export const ES = ObjectAssign({}, ES2019, {
     const match = PARSE.yearmonth.exec(isoString);
     let year, month, calendar, refISODay;
     if (match) {
-      year = ES.ToInteger(match[1]);
+      let yearString = match[1];
+      if (yearString[0] === '\u2212') yearString = `-${yearString.slice(1)}`;
+      year = ES.ToInteger(yearString);
       month = ES.ToInteger(match[2]);
       calendar = match[3] || null;
     } else {
@@ -1572,7 +1577,7 @@ const OFFSET = new RegExp(`^${PARSE.offset.source}$`);
 function parseOffsetString(string) {
   const match = OFFSET.exec(String(string));
   if (!match) return null;
-  const sign = match[1] === '-' ? -1 : +1;
+  const sign = match[1] === '-' || match[1] === '\u2212' ? -1 : +1;
   const hours = +match[2];
   const minutes = +(match[3] || 0);
   return sign * (hours * 60 + minutes) * 60 * 1e9;

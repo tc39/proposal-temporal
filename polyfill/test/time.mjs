@@ -393,6 +393,9 @@ describe('Time', () => {
       it('variant decimal separator', () => {
         equal(`${Time.from('1976-11-18T15:23:30,12Z')}`, '15:23:30.120');
       });
+      it('variant minus sign', () => {
+        equal(`${Time.from('1976-11-18T15:23:30.12\u221202:00')}`, '15:23:30.120');
+      });
       it('basic format', () => {
         equal(`${Time.from('152330')}`, '15:23:30');
         equal(`${Time.from('152330.1')}`, '15:23:30.100');

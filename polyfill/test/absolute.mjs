@@ -323,6 +323,10 @@ describe('Absolute', () => {
     it('variant decimal separator', () => {
       equal(`${Absolute.from('1976-11-18T15:23:30,12Z')}`, '1976-11-18T15:23:30.120Z');
     });
+    it('variant minus sign', () => {
+      equal(`${Absolute.from('1976-11-18T15:23:30.12\u221202:00')}`, '1976-11-18T17:23:30.120Z');
+      equal(`${Absolute.from('\u2212009999-11-18T15:23:30.12Z')}`, '-009999-11-18T15:23:30.120Z');
+    });
     it('mixture of basic and extended format', () => {
       equal(`${Absolute.from('19761118T15:23:30.1+00:00')}`, '1976-11-18T15:23:30.100Z');
       equal(`${Absolute.from('1976-11-18T152330.1+00:00')}`, '1976-11-18T15:23:30.100Z');
