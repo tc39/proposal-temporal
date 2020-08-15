@@ -57,6 +57,11 @@ describe('fromString regex', () => {
     generateTest('1976-11-18T15:23', 'z', [1976, 11, 18, 15, 23, 30, 123, 456, 789]);
     // Comma decimal separator
     test('1976-11-18T15:23:30,1234Z', [1976, 11, 18, 15, 23, 30, 123, 400]);
+    // Unicode minus sign
+    ['\u221204:00', '\u221204', '\u22120400'].forEach((offset) =>
+      test(`1976-11-18T15:23:30.1234${offset}`, [1976, 11, 18, 19, 23, 30, 123, 400])
+    );
+    test('\u2212009999-11-18T15:23:30.1234Z', [-9999, 11, 18, 15, 23, 30, 123, 400]);
     // Mixture of basic and extended format
     test('1976-11-18T152330Z', [1976, 11, 18, 15, 23, 30]);
     test('1976-11-18T152330.1234Z', [1976, 11, 18, 15, 23, 30, 123, 400]);
@@ -112,6 +117,11 @@ describe('fromString regex', () => {
     test('1976-11-18T15:23:30.12345678', [1976, 11, 18, 15, 23, 30, 123, 456, 780]);
     // Comma decimal separator
     test('1976-11-18T15:23:30,1234', [1976, 11, 18, 15, 23, 30, 123, 400]);
+    // Unicode minus sign
+    ['\u221204:00', '\u221204', '\u22120400'].forEach((offset) =>
+      test(`1976-11-18T15:23:30.1234${offset}`, [1976, 11, 18, 15, 23, 30, 123, 400])
+    );
+    test('\u2212009999-11-18T15:23:30.1234', [-9999, 11, 18, 15, 23, 30, 123, 400]);
     // Mixture of basic and extended format
     test('1976-11-18T152330', [1976, 11, 18, 15, 23, 30]);
     test('1976-11-18T152330.1234', [1976, 11, 18, 15, 23, 30, 123, 400]);
@@ -164,6 +174,8 @@ describe('fromString regex', () => {
       '19761118T152330',
       '19761118T152330.1234'
     ].forEach((str) => test(str, [1976, 11, 18]));
+    // Unicode minus sign
+    test('\u2212009999-11-18', [-9999, 11, 18]);
     // Representations with reduced precision
     test('1976-11-18T15', [1976, 11, 18]);
     // Date-only forms
@@ -277,6 +289,8 @@ describe('fromString regex', () => {
       // Representations with reduced precision
       '1976-11-18T15'
     ].forEach((str) => test(str, [1976, 11]));
+    // Unicode minus sign
+    test('\u2212009999-11-18T15:23:30.1234Z', [-9999, 11]);
     // Date-only forms
     test('1976-11-18', [1976, 11]);
     test('19761118', [1976, 11]);
@@ -331,6 +345,8 @@ describe('fromString regex', () => {
     [
       // Comma decimal separator
       '1976-11-18T15:23:30,1234',
+      // Unicode minus sign
+      '\u2212009999-11-18',
       // Mixture of basic and extended format
       '1976-11-18T152330',
       '1976-11-18T152330.1234',
@@ -396,6 +412,8 @@ describe('fromString regex', () => {
     generateTest('1976-11-18T15:23', 'z', 'UTC');
     // Comma decimal separator
     test('1976-11-18T15:23:30,1234Z', 'UTC');
+    // Unicode minus sign
+    ['\u221204:00', '\u221204', '\u22120400'].forEach((offset) => test(`1976-11-18T15:23${offset}`, '-04:00'));
     [
       // Mixture of basic and extended format
       '1976-11-18T152330',
@@ -425,6 +443,12 @@ describe('fromString regex', () => {
     test('-03:00', '-03:00');
     test('+03', '+03:00');
     test('-03', '-03:00');
+    test('\u22120000', '+00:00');
+    test('\u221200:00', '+00:00');
+    test('\u221200', '+00:00');
+    test('\u22120300', '-03:00');
+    test('\u221203:00', '-03:00');
+    test('\u221203', '-03:00');
     // Representations with calendar
     test('1976-11-18T15:23:30.123456789Z[c=iso8601]', 'UTC');
     test('1976-11-18T15:23:30.123456789-04:00[c=iso8601]', '-04:00');

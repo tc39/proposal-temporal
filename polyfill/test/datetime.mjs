@@ -473,6 +473,10 @@ describe('DateTime', () => {
     it('variant decimal separator', () => {
       equal(`${DateTime.from('1976-11-18T15:23:30,12Z')}`, '1976-11-18T15:23:30.120');
     });
+    it('variant minus sign', () => {
+      equal(`${DateTime.from('1976-11-18T15:23:30.12\u221202:00')}`, '1976-11-18T15:23:30.120');
+      equal(`${DateTime.from('\u2212009999-11-18T15:23:30.12')}`, '-009999-11-18T15:23:30.120');
+    });
     it('mixture of basic and extended format', () => {
       equal(`${DateTime.from('1976-11-18T152330.1+00:00')}`, '1976-11-18T15:23:30.100');
       equal(`${DateTime.from('19761118T15:23:30.1+00:00')}`, '1976-11-18T15:23:30.100');

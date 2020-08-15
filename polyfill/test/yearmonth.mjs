@@ -75,6 +75,10 @@ describe('YearMonth', () => {
         equal(`${YearMonth.from('197611')}`, '1976-11');
         equal(`${YearMonth.from('+00197611')}`, '1976-11');
       });
+      it('variant minus sign', () => {
+        equal(`${YearMonth.from('\u2212009999-11')}`, '-009999-11');
+        equal(`${YearMonth.from('1976-11-18T15:23:30.1\u221202:00')}`, '1976-11');
+      });
       it('mixture of basic and extended format', () => {
         equal(`${YearMonth.from('1976-11-18T152330.1+00:00')}`, '1976-11');
         equal(`${YearMonth.from('19761118T15:23:30.1+00:00')}`, '1976-11');

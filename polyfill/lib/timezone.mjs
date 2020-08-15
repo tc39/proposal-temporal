@@ -26,7 +26,7 @@ const OFFSET = new RegExp(`^${REGEX.offset.source}$`);
 function parseOffsetString(string) {
   const match = OFFSET.exec(String(string));
   if (!match) return null;
-  const sign = match[1] === '-' ? -1 : +1;
+  const sign = match[1] === '-' || match[1] === '\u2212' ? -1 : +1;
   const hours = +match[2];
   const minutes = +(match[3] || 0);
   return sign * (hours * 60 + minutes) * 60 * 1e9;

@@ -214,8 +214,10 @@
       NonzeroDigit : one of
           `1` `2` `3` `4` `5` `6` `7` `8` `9`
 
-      Sign : one of
-          `+` `-`
+      Sign :
+          `+`
+          `-`
+          U+2212
 
       DecimalSeparator : one of
           `.` `,`
@@ -447,6 +449,7 @@
       1. Assert: Type(_isoString_) is String.
       1. Let _year_, _month_, _day_, _hour_, _minute_, _second_, and _fraction_ be the parts of _isoString_ produced respectively by the |DateYear|, |DateMonth|, |DateDay|, |TimeHour|, |TimeMinute|, |TimeSecond|, and |TimeFractionalPart| productions, or *undefined* if not present.
       1. Let _year_ be the part of _isoString_ produced by the |DateYear| production.
+      1. If the first code unit of _year_ is 0x2212 (MINUS SIGN), replace it with the code unit 0x002D (HYPHEN-MINUS).
       1. Set _year_ to ! ToInteger(_year_).
       1. If _month_ is *undefined*, then
         1. Set _month_ to 1.
@@ -667,7 +670,7 @@
       1. If _hour_ is not *undefined*, then
         1. Assert: _sign_ is not *undefined*.
         1. Set _hour_ to ! ToInteger(_hour_).
-        1. If _sign_ = `"-"`, then
+        1. If _sign_ is the code unit 0x002D (HYPHEN-MINUS) or the code unit 0x2212 (MINUS SIGN), then
           1. Set _sign_ to −1.
         1. Else,
           1. Set _sign_ to 1.

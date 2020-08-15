@@ -152,7 +152,7 @@ function seq(...productions) {
 // Grammar productions, based on the grammar in RFC 3339
 
 // characters
-const sign = character('+-');
+const sign = character('+-−');
 const decimalSeparator = character('.,');
 const daysDesignator = character('Dd');
 const hoursDesignator = character('Hh');
@@ -172,7 +172,10 @@ const utcDesignator = withCode(character('Zz'), (data) => {
 
 const dateFourDigitYear = repeat(4, digit());
 const dateExtendedYear = seq(sign, repeat(6, digit()));
-const dateYear = withCode(choice(dateFourDigitYear, dateExtendedYear), (data, result) => (data.year = +result));
+const dateYear = withCode(
+  choice(dateFourDigitYear, dateExtendedYear),
+  (data, result) => (data.year = +result.replace('\u2212', '-'))
+);
 const dateMonth = withCode(zeroPaddedInclusive(1, 12, 2), (data, result) => (data.month = +result));
 const dateDay = withCode(zeroPaddedInclusive(1, 31, 2), (data, result) => (data.day = +result));
 
@@ -189,7 +192,10 @@ const timeFractionalPart = withCode(between(1, 9, digit()), (data, result) => {
   data.nanosecond = +fraction.slice(6, 9);
 });
 const timeFraction = seq(decimalSeparator, timeFractionalPart);
-const timeZoneUTCOffsetSign = withCode(sign, (data, result) => (data.offsetSign = result));
+const timeZoneUTCOffsetSign = withCode(
+  sign,
+  (data, result) => (data.offsetSign = result === '-' || result === '\u2212' ? '-' : '+')
+);
 const timeZoneUTCOffsetHour = withCode(zeroPaddedInclusive(0, 23, 2), (data, result) => (data.offsetHour = +result));
 const timeZoneUTCOffsetMinute = withCode(
   zeroPaddedInclusive(0, 59, 2),

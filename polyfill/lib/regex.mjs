@@ -1,7 +1,8 @@
-const yearpart = /(?:[+-]\d{6}|\d{4})/;
+const yearpart = /(?:[+-\u2212]\d{6}|\d{4})/;
 const datesplit = new RegExp(`(${yearpart.source})(?:-(\\d{2})-(\\d{2})|(\\d{2})(\\d{2}))`);
 const timesplit = /(\d{2})(?::(\d{2})(?::(\d{2})(?:[.,](\d{1,9}))?)?|(\d{2})(?:(\d{2})(?:[.,](\d{1,9}))?)?)?/;
-const zonesplit = /(?:([zZ])|(?:([+-]\d{2})(?::?(\d{2}))?(?:\[(?!c=)([^\]\s]*)?\])?))/;
+export const offset = /([+-\u2212])([0-2][0-9])(?::?([0-5][0-9]))?/;
+const zonesplit = new RegExp(`(?:([zZ])|(?:${offset.source}?(?:\\[(?!c=)([^\\]\\s]*)?\\])?))`);
 const calendar = /\[c=([^\]\s]+)\]/;
 
 export const absolute = new RegExp(
@@ -23,5 +24,4 @@ export const time = new RegExp(`^${timesplit.source}(?:${zonesplit.source})?(?:$
 export const yearmonth = new RegExp(`^(${yearpart.source})-?(\\d{2})$`);
 export const monthday = /^(?:--)?(\d{2})-?(\d{2})$/;
 
-export const offset = /([+-])([0-2][0-9])(?::?([0-5][0-9]))?/;
 export const duration = /^P(?:(\d+)Y)?(?:(\d+)M)?(?:(\d+)W)?(?:(\d+)D)?(?:T(?!$)(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)(?:[.,](\d{1,9}))?S)?)?$/i;

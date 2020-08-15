@@ -47,6 +47,9 @@ describe('TimeZone', () => {
     test('+0330');
     test('-0650');
     test('-08');
+    test('\u221201:00');
+    test('\u22120650');
+    test('\u221208');
     test('Europe/Vienna');
     test('America/New_York');
     test('Africa/CAIRO'); // capitalization
@@ -63,6 +66,9 @@ describe('TimeZone', () => {
     test('+0330', '+03:30');
     test('-0650', '-06:50');
     test('-08', '-08:00');
+    test('\u221201:00', '-01:00');
+    test('\u22120650', '-06:50');
+    test('\u221208', '-08:00');
     test('Europe/Vienna');
     test('America/New_York');
     test('Africa/CAIRO', 'Africa/Cairo');
@@ -79,6 +85,9 @@ describe('TimeZone', () => {
     test('+0330');
     test('-0650');
     test('-08');
+    test('\u221201:00');
+    test('\u22120650');
+    test('\u221208');
     test('Europe/Vienna');
     test('America/New_York');
     test('Africa/CAIRO');
@@ -102,6 +111,9 @@ describe('TimeZone', () => {
     test('1994-11-05T08:15:30-05:00', '-05:00');
     test('1994-11-05T08:15:30-05:00[America/New_York]', 'America/New_York');
     test('1994-11-05T08:15:30-05[America/New_York]', 'America/New_York');
+    test('1994-11-05T08:15:30\u221205:00', '-05:00');
+    test('1994-11-05T08:15:30\u221205:00[America/New_York]', 'America/New_York');
+    test('1994-11-05T08:15:30\u221205[America/New_York]', 'America/New_York');
     test('1994-11-05T13:15:30Z', 'UTC');
     function test(isoString, name) {
       const tz = Temporal.TimeZone.from(isoString);
