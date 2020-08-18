@@ -3772,6 +3772,24 @@
     ToTemporalYearMonthRecord: function ToTemporalYearMonthRecord(bag) {
       return ES.ToRecord(bag, [['era', undefined], ['month'], ['year']]);
     },
+    CalendarFrom: function CalendarFrom(calendarLike) {
+      var TemporalCalendar = GetIntrinsic$1('%Temporal.Calendar%');
+      var from = TemporalCalendar.from;
+
+      if (from === undefined) {
+        from = GetIntrinsic$1('%Temporal.Calendar.from%');
+      }
+
+      return ES.Call(from, TemporalCalendar, [calendarLike]);
+    },
+    ToTemporalCalendar: function ToTemporalCalendar(calendarLike) {
+      if (_typeof(calendarLike) === 'object' && calendarLike) {
+        return calendarLike;
+      }
+
+      var identifier = ES.ToString(calendarLike);
+      return ES.CalendarFrom(identifier);
+    },
     TimeZoneFrom: function TimeZoneFrom(temporalTimeZoneLike) {
       var TemporalTimeZone = GetIntrinsic$1('%Temporal.TimeZone%');
       var from = TemporalTimeZone.from;
@@ -5311,6 +5329,7 @@
     return Calendar;
   }();
   MakeIntrinsicClass(Calendar, 'Temporal.Calendar');
+  DefineIntrinsic('Temporal.Calendar.from', Calendar.from);
 
   var ISO8601 = /*#__PURE__*/function (_Calendar) {
     _inherits(ISO8601, _Calendar);
@@ -7201,17 +7220,18 @@
 
   function dateTime() {
     var temporalTimeZoneLike = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : timeZone();
-    var calendar = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
+    var calendarLike = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : GetDefaultCalendar();
     return function () {
       var timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);
+      var calendar = ES.ToTemporalCalendar(calendarLike);
       var abs = absolute$1();
       return ES.GetTemporalDateTimeFor(timeZone, abs, calendar);
     }();
   }
 
   function date(temporalTimeZoneLike) {
-    var calendar = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
-    return ES.TemporalDateTimeToDate(dateTime(temporalTimeZoneLike, calendar));
+    var calendarLike = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
+    return ES.TemporalDateTimeToDate(dateTime(temporalTimeZoneLike, calendarLike));
   }
 
   function time$1(temporalTimeZoneLike) {
