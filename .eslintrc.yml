@@ -91,6 +91,7 @@ overrides:
       - polyfill/test/now/**/*.js
     globals:
       Temporal: readonly
+      Test262Error: readonly
       assert: readonly
       verifyProperty: readonly
     # test262 code complies to a different coding style
