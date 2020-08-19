@@ -8,7 +8,7 @@
   <emu-clause id="sec-temporal-timezone-constructor">
     <h1>The Temporal.TimeZone Constructor</h1>
     <p>
-      The Temporal.TimeZone constructor is the %Temporal.TimeZone% intrinsic object.
+      The Temporal.TimeZone constructor is the <dfn>%Temporal.TimeZone%</dfn> intrinsic object.
       When called as a constructor, it creates and initializes a new Temporal.TimeZone object.
     </p>
     <p>
@@ -83,6 +83,9 @@
         1. Let _constructor_ be the *this* value.
         1. Return ? CreateTemporalTimeZoneFromStatic(_constructor_, _result_).
       </emu-alg>
+      <p>
+        This function is the <dfn>%Temporal.TimeZone.from</dfn> intrinsic object.
+      </p>
     </emu-clause>
   </emu-clause>
 
@@ -91,7 +94,7 @@
 
     <p>The Temporal.TimeZone prototype object</p>
     <ul>
-      <li>is the intrinsic object %Temporal.TimeZone.prototype%.
+      <li>is the intrinsic object <dfn>%Temporal.TimeZone.prototype%</dfn>.
       <li>is itself an ordinary object.
       <li>is not a Temporal.TimeZone instance and does not have a [[InitializedTemporalTimeZone]] internal slot.
       <li>has a [[Prototype]] internal slot whose value is %Object.prototype%.
@@ -148,6 +151,9 @@
         1. Let _utc_ be ! GetEpochFromParts(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]).
         1. Return _utc_ − _epochNs_.
       </emu-alg>
+      <p>
+        This function is the <dfn>%Temporal.TimeZone.prototype.getOffsetNanosecondsFor%</dfn> intrinsic object.
+      </p>
     </emu-clause>
 
     <emu-clause id="sec-temporal.timezone.prototype.getoffsetstringfor">
@@ -163,6 +169,9 @@
         1. Let _offsetNanoseconds_ be ? GetOffsetNanosecondsFor(_timeZone_, _absolute_).
         1. Return ? FormatTimeZoneOffsetString(_offsetNanoseconds_).
       </emu-alg>
+      <p>
+        This function is the <dfn>%Temporal.TimeZone.prototype.getOffsetStringFor%</dfn> intrinsic object.
+      </p>
     </emu-clause>
 
     <emu-clause id="sec-temporal.timezone.prototype.getdatetimefor">
@@ -180,6 +189,9 @@
         1. Set _result_ to ? BalanceDateTime(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]] + _offsetNanoseconds_).
         1. Return ? CreateTemporalDateTime(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]).
       </emu-alg>
+      <p>
+        This function is the <dfn>%Temporal.TimeZone.prototype.getDateTimeFor%</dfn> intrinsic object.
+      </p>
     </emu-clause>
 
     <emu-clause id="sec-temporal.timezone.prototype.getabsolutefor">
@@ -206,6 +218,9 @@
             1. Throw a *RangeError* exception.
         1. <mark>TODO - handle n=0 (skipped times like Spring DST)</mark>
       </emu-alg>
+      <p>
+        This function is the <dfn>%Temporal.TimeZone.prototype.getAbsoluteFor%</dfn> intrinsic object.
+      </p>
     </emu-clause>
 
     <emu-clause id="sec-temporal.timezone.prototype.getpossibleabsolutesfor">
@@ -220,6 +235,9 @@
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
         1. <mark>TODO.</mark>
       </emu-alg>
+      <p>
+        This function is the <dfn>%Temporal.TimeZone.prototype.getPossibleAbsolutesFor%</dfn> intrinsic object.
+      </p>
     </emu-clause>
 
     <emu-clause id="sec-temporal.timezone.prototype.getnexttransition">
@@ -260,6 +278,9 @@
         1. Perform ? RequireInternalSlot(_timeZone_, [[InitializedTemporalTimeZone]]).
         1. Return _timeZone_.[[Identifier]].
       </emu-alg>
+      <p>
+        This function is the <dfn>%Temporal.TimeZone.prototype.toString%</dfn> intrinsic object.
+      </p>
     </emu-clause>
 
     <emu-clause id="sec-temporal.timezone.prototype.tojson">
@@ -282,8 +303,7 @@
       <h1>CreateTemporalTimeZoneFromStatic ( _constructor_, _identifier_ )</h1>
       <emu-alg>
         1. Assert: ! IsValidTimeZoneName(_identifier_) is *true*.
-        1. If ! IsConstructor(_constructor_) is *false*, then
-          1. Throw a *TypeError* exception.
+        1. If ! IsConstructor(_constructor_) is *false*, throw a *TypeError* exception.
         1. Let _result_ be ? Construct(_constructor_, « _identifier_ »).
         1. Perform ? RequireInternalSlot(_result_, [[InitializedTemporalTimeZone]]).
         1. Return _result_.
@@ -301,8 +321,7 @@
           1. Let _offsetNanoseconds_ be _result_.[[OffsetSign]] × (_result_.[[OffsetHour]] × 60 + _result_.[[OffsetMinute]]) × 60 × 10<sup>9</sup>.
           1. Let _offset_ be ! FormatTimeZoneOffsetString(_offsetNanoseconds_).
         1. Let _identifier_ be the first one of _result_.[[TimeZoneName]], _offset_, or *"UTC"* that is not *undefined*.
-        1. If ! IsValidTimeZoneName(_identifier_) is *false*, then
-          1. Throw a *TypeError* exception.
+        1. If ! IsValidTimeZoneName(_identifier_) is *false*, throw a *TypeError* exception.
         1. Return ! CanonicalizeTimeZoneName(_identifier_).
       </emu-alg>
     </emu-clause>
@@ -333,8 +352,7 @@
     <emu-clause id="sec-temporal-totemporaltimezone" aoid="ToTemporalTimeZone">
       <h1>ToTemporalTimeZone ( _temporalTimeZoneLike_ )</h1>
       <emu-alg>
-        1. If Type(_temporalTimeZoneLike_) is Object, then
-          1. Return _temporalTimeZoneLike_.
+        1. If Type(_temporalTimeZoneLike_) is Object, return _temporalTimeZoneLike_.
         1. Let _identifier_ be ? ToString(_temporalTimeZoneLike_).
         1. Return ? TimeZoneFrom(_identifier_).
       </emu-alg>
@@ -344,8 +362,7 @@
       <h1>TimeZoneFrom ( _identifier_ )</h1>
       <emu-alg>
         1. Let _from_ be ? Get(%Temporal.TimeZone%, *"from"*).
-        1. If _from_ is *undefined*, then
-          1. Set _from_ to %Temporal.TimeZone.from%.
+        1. If _from_ is *undefined*, set _from_ to %Temporal.TimeZone.from%.
         1. Return ? Call(_from_, %Temporal.TimeZone%, « _identifier_ »).
       </emu-alg>
     </emu-clause>
@@ -355,10 +372,8 @@
       <emu-alg>
         1. Let _getOffsetNanosecondsFor_ be ? Get(_timeZone_, *"getOffsetNanosecondsFor"*).
         1. Let _offsetNanoseconds_ be ? Call(_getOffsetNanosecondsFor_, _timeZone_, « _absolute_ »).
-        1. If Type(_offsetNanoseconds_) is not Number, then
-          1. Throw a *TypeError* exception.
-        1. If _offsetNanoseconds_ is not an integer Number value between −86400 × 10<sup>9</sup> and 86400 × 10<sup>9</sup> exclusive, then
-          1. Throw a *RangeError* exception.
+        1. If Type(_offsetNanoseconds_) is not Number, throw a *TypeError* exception.
+        1. If _offsetNanoseconds_ is not an integer Number value between −86400 × 10<sup>9</sup> and 86400 × 10<sup>9</sup> exclusive, throw a *RangeError* exception.
         1. Return _offsetNanoseconds_.
       </emu-alg>
     </emu-clause>
@@ -367,8 +382,7 @@
       <h1>GetOffsetStringFor ( _timeZone_, _absolute_ )</h1>
       <emu-alg>
         1. Let _getOffsetStringFor_ be ? Get(_timeZone_, *"getOffsetStringFor"*).
-        1. If _getOffsetStringFor_ is *undefined*, then
-          1. Set _getOffsetStringFor_ to %Temporal.TimeZone.prototype.getOffsetStringFor%.
+        1. If _getOffsetStringFor_ is *undefined*, set _getOffsetStringFor_ to %Temporal.TimeZone.prototype.getOffsetStringFor%.
         1. Return ? ToString(? Call(_getOffsetStringFor_, _timeZone_, « _absolute_ »)).
       </emu-alg>
     </emu-clause>
@@ -377,8 +391,7 @@
       <h1>GetTemporalDateTimeFor ( _timeZone_, _absolute_, _calendar_ )</h1>
       <emu-alg>
         1. Let _getDateTimeFor_ be ? Get(_timeZone_, *"getDateTimeFor"*).
-        1. If _getDateTimeFor_ is *undefined*, then
-          1. Set _getDateTimeFor_ to %Temporal.TimeZone.prototype.getDateTimeFor%.
+        1. If _getDateTimeFor_ is *undefined*, set _getDateTimeFor_ to %Temporal.TimeZone.prototype.getDateTimeFor%.
         1. Let _dateTime_ be ? Call(_getDateTimeFor_, _timeZone_, « _absolute_, _calendar_ »).
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
         1. Return _dateTime_.
@@ -391,8 +404,7 @@
         1. Let _options_ be ! OrdinaryObjectCreate(%Object.prototype%).
         1. Perform ! CreateDataPropertyOrThrow(_options_, *"disambiguation"*, _disambiguation_).
         1. Let _getAbsoluteFor_ be ? Get(_timeZone_, *"getAbsoluteFor"*).
-        1. If _getAbsoluteFor_ is *undefined*, then
-          1. Set _getAbsoluteFor_ to %Temporal.TimeZone.prototype.getAbsoluteFor%.
+        1. If _getAbsoluteFor_ is *undefined*, set _getAbsoluteFor_ to %Temporal.TimeZone.prototype.getAbsoluteFor%.
         1. Let _absolute_ be ? Call(_getAbsoluteFor_, _timeZone_, « _dateTime_ »).
         1. Perform ? RequireInternalSlot(_absolute_, [[InitializedTemporalAbsolute]]).
         1. Return _absolute_.
@@ -415,8 +427,7 @@
       <h1>TimeZoneToString ( _timeZone_ )</h1>
       <emu-alg>
         1. Let _toString_ be ? Get(_timeZone_, *"toString"*).
-        1. If _toString_ is *undefined*, then
-          1. Set _toString_ to %Temporal.TimeZone.prototype.toString%.
+        1. If _toString_ is *undefined*, set _toString_ to %Temporal.TimeZone.prototype.toString%.
         1. Return be ? ToString(? Call(_toString_, _timeZone_, « »)).
       </emu-alg>
     </emu-clause>
@@ -425,8 +436,7 @@
       <h1>ParseOffsetNanoseconds ( _identifier_ )</h1>
       <emu-alg>
         1. Assert: Type(_identifier_) is String.
-        1. If _identifier_ is not an offset string, then
-          1. Return *undefined*.
+        1. If _identifier_ is not an offset string, return *undefined*.
         1. Let _sign_, _hours_, _minutes_ be <mark>the result of parsing _identifier_</mark>.
         1. Return _sign_ × (_hours_ × 60 + _minutes_) × 60 × 1,000,000,000.
       </emu-alg>
