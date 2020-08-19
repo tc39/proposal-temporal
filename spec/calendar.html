@@ -28,8 +28,7 @@
       <h1>CalendarToString ( _calendar_ )</h1>
       <emu-alg>
         1. Let _toString_ be ? Get(_calendar_, *"toString"*).
-        1. If _toString_ is *undefined*, then
-          1. Set _toString_ to %Temporal.Calendar.prototype.toString%.
+        1. If _toString_ is *undefined*, set _toString_ to %Temporal.Calendar.prototype.toString%.
         1. Return ? ToString(? Call(_toString_ , _calendar_, « »)).
       </emu-alg>
     </emu-clause>
@@ -48,8 +47,7 @@
       <h1>CalendarFrom ( _identifier_ )</h1>
       <emu-alg>
         1. Let _from_ be ? Get(%Temporal.Calendar%, *"from"*).
-        1. If _from_ is *undefined*, then
-          1. Set _from_ to %Temporal.Calendar.from%.
+        1. If _from_ is *undefined*, set _from_ to %Temporal.Calendar.from%.
         1. Return ? Call(_from_, %Temporal.Calendar%, « _identifier_ »).
       </emu-alg>
     </emu-clause>
@@ -119,6 +117,9 @@
         1. Let _stringIdent_ be ? ToString(_item_).
         1. Return ? GetBuiltinCalendar(_stringIdent_).
       </emu-alg>
+      <p>
+        This function is the <dfn>%Temporal.Calendar.from%</dfn> intrinsic object.
+      </p>
     </emu-clause>
   </emu-clause>
 
@@ -170,6 +171,9 @@
         1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
         1. Return _calendar_.[[Identifier]].
       </emu-alg>
+      <p>
+        This function is the <dfn>%Temporal.Calendar.prototype.toString%</dfn> intrinsic object.
+      </p>
     </emu-clause>
   </emu-clause>
 
