@@ -1,6 +1,10 @@
 // Copyright (C) 2020 Igalia, S.L. All rights reserved.
 // This code is governed by the BSD license found in the LICENSE file.
 
+/*---
+esid: sec-temporal.date.prototype.getfields
+---*/
+
 const getFields = Temporal.Date.prototype.getFields;
 
 assert.sameValue(typeof getFields, "function");
@@ -11,3 +15,6 @@ assert.throws(TypeError, () => getFields.call(true), "true");
 assert.throws(TypeError, () => getFields.call(""), "empty string");
 assert.throws(TypeError, () => getFields.call(Symbol()), "symbol");
 assert.throws(TypeError, () => getFields.call(1), "1");
+assert.throws(TypeError, () => getFields.call({}), "plain object");
+assert.throws(TypeError, () => getFields.call(Temporal.Date), "Temporal.Date");
+assert.throws(TypeError, () => getFields.call(Temporal.Date.prototype), "Temporal.Date.prototype");
