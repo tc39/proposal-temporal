@@ -3816,6 +3816,19 @@
       var Time = GetIntrinsic$1('%Temporal.Time%');
       return new Time(GetSlot(dateTime, HOUR), GetSlot(dateTime, MINUTE), GetSlot(dateTime, SECOND), GetSlot(dateTime, MILLISECOND), GetSlot(dateTime, MICROSECOND), GetSlot(dateTime, NANOSECOND));
     },
+    GetOffsetNanosecondsFor: function GetOffsetNanosecondsFor(timeZone, absolute) {
+      var offsetNs = timeZone.getOffsetNanosecondsFor(absolute);
+
+      if (typeof offsetNs !== 'number') {
+        throw new TypeError('bad return from getOffsetNanosecondsFor');
+      }
+
+      if (!Number.isInteger(offsetNs) || Math.abs(offsetNs) > 86400e9) {
+        throw new RangeError('out-of-range return from getOffsetNanosecondsFor');
+      }
+
+      return offsetNs;
+    },
     GetOffsetStringFor: function GetOffsetStringFor(timeZone, absolute) {
       var getOffsetStringFor = timeZone.getOffsetStringFor;
 
@@ -7646,16 +7659,7 @@
       key: "getOffsetStringFor",
       value: function getOffsetStringFor(absolute) {
         if (!ES.IsTemporalAbsolute(absolute)) throw new TypeError('invalid Absolute object');
-        var offsetNs = this.getOffsetNanosecondsFor(absolute);
-
-        if (typeof offsetNs !== 'number') {
-          throw new TypeError('bad return from getOffsetNanosecondsFor');
-        }
-
-        if (!Number.isInteger(offsetNs) || Math.abs(offsetNs) > 86400e9) {
-          throw new RangeError('out-of-range return from getOffsetNanosecondsFor');
-        }
-
+        var offsetNs = ES.GetOffsetNanosecondsFor(this, absolute);
         return ES.FormatTimeZoneOffsetString(offsetNs);
       }
     }, {
@@ -7665,15 +7669,7 @@
         if (!ES.IsTemporalAbsolute(absolute)) throw new TypeError('invalid Absolute object');
         calendar = ES.ToTemporalCalendar(calendar);
         var ns = GetSlot(absolute, EPOCHNANOSECONDS);
-        var offsetNs = this.getOffsetNanosecondsFor(absolute);
-
-        if (typeof offsetNs !== 'number') {
-          throw new TypeError('bad return from getOffsetNanosecondsFor');
-        }
-
-        if (!Number.isInteger(offsetNs) || Math.abs(offsetNs) > 86400e9) {
-          throw new RangeError('out-of-range return from getOffsetNanosecondsFor');
-        }
+        var offsetNs = ES.GetOffsetNanosecondsFor(this, absolute);
 
         var _ES$GetPartsFromEpoch = ES.GetPartsFromEpoch(ns),
             year = _ES$GetPartsFromEpoch.year,
