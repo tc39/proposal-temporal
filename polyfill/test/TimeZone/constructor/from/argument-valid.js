@@ -2,7 +2,7 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
-esid: sec-get-temporal.timezone.from
+esid: sec-temporal.timezone.from
 ---*/
 
 class CustomTimeZone extends Temporal.TimeZone {}

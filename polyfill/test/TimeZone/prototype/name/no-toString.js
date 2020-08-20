@@ -2,7 +2,7 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
-esid: sec-temporal.timezone.prototype.name
+esid: sec-get-temporal.timezone.prototype.name
 includes: [compareArray.js]
 ---*/
 
