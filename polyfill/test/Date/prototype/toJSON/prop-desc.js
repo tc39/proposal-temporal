@@ -2,17 +2,17 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
-esid: sec-temporal.date.prototype.getfields
+esid: sec-temporal.date.prototype.tojson
 includes: [propertyHelper.js]
 ---*/
 
 assert.sameValue(
-  typeof Temporal.Date.prototype.getFields,
+  typeof Temporal.Date.prototype.toJSON,
   "function",
-  "`typeof Date.prototype.getFields` is `function`"
+  "`typeof Date.prototype.toJSON` is `function`"
 );
 
-verifyProperty(Temporal.Date.prototype, "getFields", {
+verifyProperty(Temporal.Date.prototype, "toJSON", {
   writable: true,
   enumerable: false,
   configurable: true,
