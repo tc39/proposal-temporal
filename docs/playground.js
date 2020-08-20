@@ -7661,8 +7661,9 @@
     }, {
       key: "getDateTimeFor",
       value: function getDateTimeFor(absolute) {
-        var calendar = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'iso8601';
+        var calendar = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : GetDefaultCalendar();
         if (!ES.IsTemporalAbsolute(absolute)) throw new TypeError('invalid Absolute object');
+        calendar = ES.ToTemporalCalendar(calendar);
         var ns = GetSlot(absolute, EPOCHNANOSECONDS);
         var offsetNs = this.getOffsetNanosecondsFor(absolute);
 
@@ -7696,8 +7697,6 @@
         millisecond = _ES$BalanceDateTime.millisecond;
         microsecond = _ES$BalanceDateTime.microsecond;
         nanosecond = _ES$BalanceDateTime.nanosecond;
-        var TemporalCalendar = GetIntrinsic$1('%Temporal.Calendar%');
-        calendar = TemporalCalendar.from(calendar);
         var DateTime = GetIntrinsic$1('%Temporal.DateTime%');
         return new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
       }
