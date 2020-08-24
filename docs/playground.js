@@ -3817,7 +3817,13 @@
       return new Time(GetSlot(dateTime, HOUR), GetSlot(dateTime, MINUTE), GetSlot(dateTime, SECOND), GetSlot(dateTime, MILLISECOND), GetSlot(dateTime, MICROSECOND), GetSlot(dateTime, NANOSECOND));
     },
     GetOffsetNanosecondsFor: function GetOffsetNanosecondsFor(timeZone, absolute) {
-      var offsetNs = timeZone.getOffsetNanosecondsFor(absolute);
+      var getOffsetNanosecondsFor = timeZone.getOffsetNanosecondsFor;
+
+      if (getOffsetNanosecondsFor === undefined) {
+        getOffsetNanosecondsFor = GetIntrinsic$1('%Temporal.TimeZone.prototype.getOffsetNanosecondsFor%');
+      }
+
+      var offsetNs = ES.Call(getOffsetNanosecondsFor, timeZone, [absolute]);
 
       if (typeof offsetNs !== 'number') {
         throw new TypeError('bad return from getOffsetNanosecondsFor');
@@ -7854,6 +7860,7 @@
   DefineIntrinsic('Temporal.TimeZone.from', TimeZone.from);
   DefineIntrinsic('Temporal.TimeZone.prototype.getDateTimeFor', TimeZone.prototype.getDateTimeFor);
   DefineIntrinsic('Temporal.TimeZone.prototype.getAbsoluteFor', TimeZone.prototype.getAbsoluteFor);
+  DefineIntrinsic('Temporal.TimeZone.prototype.getOffsetNanosecondsFor', TimeZone.prototype.getOffsetNanosecondsFor);
   DefineIntrinsic('Temporal.TimeZone.prototype.getOffsetStringFor', TimeZone.prototype.getOffsetStringFor);
   DefineIntrinsic('Temporal.TimeZone.prototype.toString', TimeZone.prototype.toString);
 
