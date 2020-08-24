@@ -231,7 +231,7 @@ export class DateTime {
   plus(temporalDurationLike, options) {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     let duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
-    let { years, months, days, weeks, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
+    let { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
     ({ days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.BalanceDuration(
       days,
       hours,
@@ -296,7 +296,7 @@ export class DateTime {
   minus(temporalDurationLike, options) {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     let duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
-    let { years, months, days, weeks, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
+    let { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
     ({ days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.BalanceDuration(
       days,
       hours,
