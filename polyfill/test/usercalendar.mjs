@@ -368,7 +368,6 @@ describe('Userland calendar', () => {
       const originalTemporalCalendarFrom = Temporal.Calendar.from;
       before(() => {
         Temporal.Calendar.from = function (item) {
-          console.log(`Temporal.Calendar.from(${item} [${typeof item}])`);
           let id;
           if (typeof item === 'object' && item) {
             id = item.id;
