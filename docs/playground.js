@@ -3073,10 +3073,11 @@
     GetSlots(container)[id] = value;
   }
 
-  var yearpart = /(?:[+-]\d{6}|\d{4})/;
+  var yearpart = /(?:[+-\u2212]\d{6}|\d{4})/;
   var datesplit = new RegExp("(".concat(yearpart.source, ")(?:-(\\d{2})-(\\d{2})|(\\d{2})(\\d{2}))"));
   var timesplit = /(\d{2})(?::(\d{2})(?::(\d{2})(?:[.,](\d{1,9}))?)?|(\d{2})(?:(\d{2})(?:[.,](\d{1,9}))?)?)?/;
-  var zonesplit = /(?:([zZ])|(?:([+-]\d{2})(?::?(\d{2}))?(?:\[(?!c=)([^\]\s]*)?\])?))/;
+  var offset = /([+-\u2212])([0-2][0-9])(?::?([0-5][0-9]))?/;
+  var zonesplit = new RegExp("(?:([zZ])|(?:".concat(offset.source, "?(?:\\[(?!c=)([^\\]\\s]*)?\\])?))"));
   var calendar = /\[c=([^\]\s]+)\]/;
   var absolute = new RegExp("^".concat(datesplit.source, "(?:T|\\s+)").concat(timesplit.source).concat(zonesplit.source, "(?:").concat(calendar.source, ")?$"), 'i');
   var datetime = new RegExp("^".concat(datesplit.source, "(?:(?:T|\\s+)").concat(timesplit.source, "(?:").concat(zonesplit.source, ")?)?(?:").concat(calendar.source, ")?$"), 'i');
@@ -3088,7 +3089,6 @@
 
   var yearmonth = new RegExp("^(".concat(yearpart.source, ")-?(\\d{2})$"));
   var monthday = /^(?:--)?(\d{2})-?(\d{2})$/;
-  var offset = /([+-])([0-2][0-9])(?::?([0-5][0-9]))?/;
   var duration = /^P(?:(\d+)Y)?(?:(\d+)M)?(?:(\d+)W)?(?:(\d+)D)?(?:T(?!$)(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)(?:[.,](\d{1,9}))?S)?)?$/i;
 
   var IntlDateTimeFormat = globalThis.Intl.DateTimeFormat;
@@ -3164,7 +3164,9 @@
       var regex = zoneRequired ? absolute : datetime;
       var match = regex.exec(isoString);
       if (!match) throw new RangeError("invalid ISO 8601 string: ".concat(isoString));
-      var year = ES.ToInteger(match[1]);
+      var yearString = match[1];
+      if (yearString[0] === "\u2212") yearString = "-".concat(yearString.slice(1));
+      var year = ES.ToInteger(yearString);
       var month = ES.ToInteger(match[2] || match[4]);
       var day = ES.ToInteger(match[3] || match[5]);
       var hour = ES.ToInteger(match[6]);
@@ -3175,8 +3177,9 @@
       var millisecond = ES.ToInteger(fraction.slice(0, 3));
       var microsecond = ES.ToInteger(fraction.slice(3, 6));
       var nanosecond = ES.ToInteger(fraction.slice(6, 9));
-      var offset = "".concat(match[14], ":").concat(match[15] || '00');
-      var ianaName = match[16];
+      var offsetSign = match[14] === '-' || match[14] === "\u2212" ? '-' : '+';
+      var offset = "".concat(offsetSign).concat(match[15], ":").concat(match[16] || '00');
+      var ianaName = match[17];
 
       if (ianaName) {
         try {
@@ -3187,7 +3190,7 @@
       }
 
       var zone = match[13] ? 'UTC' : ianaName || offset;
-      var calendar = match[17] || null;
+      var calendar = match[18] || null;
       return {
         year: year,
         month: month,
@@ -3259,7 +3262,9 @@
       var year, month, calendar, refISODay;
 
       if (match) {
-        year = ES.ToInteger(match[1]);
+        var yearString = match[1];
+        if (yearString[0] === "\u2212") yearString = "-".concat(yearString.slice(1));
+        year = ES.ToInteger(yearString);
         month = ES.ToInteger(match[2]);
         calendar = match[3] || null;
       } else {
@@ -4942,7 +4947,7 @@
   function parseOffsetString(string) {
     var match = OFFSET.exec(String(string));
     if (!match) return null;
-    var sign = match[1] === '-' ? -1 : +1;
+    var sign = match[1] === '-' || match[1] === "\u2212" ? -1 : +1;
     var hours = +match[2];
     var minutes = +(match[3] || 0);
     return sign * (hours * 60 + minutes) * 60 * 1e9;
@@ -7624,7 +7629,7 @@
   function parseOffsetString$1(string) {
     var match = OFFSET$1.exec(String(string));
     if (!match) return null;
-    var sign = match[1] === '-' ? -1 : +1;
+    var sign = match[1] === '-' || match[1] === "\u2212" ? -1 : +1;
     var hours = +match[2];
     var minutes = +(match[3] || 0);
     return sign * (hours * 60 + minutes) * 60 * 1e9;
