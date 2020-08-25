@@ -310,22 +310,14 @@ export const ES = ObjectAssign({}, ES2020, {
       millisecond,
       microsecond,
       nanosecond,
-      offset,
-      ianaName
+      offset
     } = ES.ParseTemporalInstantString(isoString);
 
-    const DateTime = GetIntrinsic('%Temporal.DateTime%');
-
-    const dt = new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
-    const tz = ES.TimeZoneFrom(ianaName || offset);
-
-    const possibleInstants = tz.getPossibleInstantsFor(dt);
-    if (possibleInstants.length === 1) return GetSlot(possibleInstants[0], EPOCHNANOSECONDS);
-    for (const instant of possibleInstants) {
-      const possibleOffsetNs = tz.getOffsetNanosecondsFor(instant);
-      if (ES.FormatTimeZoneOffsetString(possibleOffsetNs) === offset) return GetSlot(instant, EPOCHNANOSECONDS);
-    }
-    throw new RangeError(`'${isoString}' doesn't uniquely identify a Temporal.Instant`);
+    const epochNs = ES.GetEpochFromParts(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
+    if (epochNs === null) throw new RangeError('DateTime outside of supported range');
+    if (!offset) throw new RangeError('Temporal.Instant requires a time zone offset');
+    const offsetNs = ES.ParseOffsetString(offset);
+    return epochNs.subtract(offsetNs);
   },
   RegulateDateTime: (year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, overflow) => {
     switch (overflow) {

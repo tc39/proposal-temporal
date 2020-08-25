@@ -62,8 +62,7 @@ This static method creates a new `Temporal.Instant` object from another value.
 If the value is another `Temporal.Instant` object, a new object representing the same exact time is returned.
 
 Any other value is converted to a string, which is expected to be in ISO 8601 format, including a date, a time, and a time zone.
-If the exact time cannot be uniquely determined from the string, then this function throws an exception.
-This includes the case when `thing` is a validly-formatted ISO 8601 string denoting a time that doesn't exist, for example because it was skipped in a daylight saving time transition.
+The time zone name, if given, is ignored; only the time zone offset is taken into account.
 
 Example usage:
 
@@ -77,8 +76,6 @@ instant === Temporal.Instant.from(instant); // => true
 // Not enough information to denote an exact time:
 /* WRONG */ instant = Temporal.Instant.from('2019-03-30'); // no time; throws
 /* WRONG */ instant = Temporal.Instant.from('2019-03-30T01:45'); // no time zone; throws
-/* WRONG */ instant = Temporal.Instant.from('2019-03031T02:45+01:00[Europe/Berlin]');
-    // time skipped in DST transition; throws
 ```
 <!-- prettier-ignore-end -->
 
