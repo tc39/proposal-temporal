@@ -586,6 +586,11 @@ describe('DateTime', () => {
       equal(`${dt.toAbsolute('America/Los_Angeles', { disambiguation: 'later' })}`, '2020-03-08T10:30Z');
       throws(() => dt.toAbsolute('America/Los_Angeles', { disambiguation: 'reject' }), RangeError);
     });
+    it('outside of Absolute range', () => {
+      const max = Temporal.DateTime.from('+275760-09-13T23:59:59.999999999');
+      throws(() => max.toAbsolute('-01:00'), RangeError);
+      throws(() => max.toAbsolute('America/Godthab'), RangeError);
+    });
     it('throws on bad disambiguation', () => {
       ['', 'EARLIER', 'xyz', 3, null].forEach((disambiguation) =>
         throws(() => DateTime.from('2019-10-29T10:46').toAbsolute('UTC', { disambiguation }), RangeError)
