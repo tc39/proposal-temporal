@@ -175,6 +175,7 @@ export class TimeZone {
         GetSlot(dateTime, MICROSECOND),
         GetSlot(dateTime, NANOSECOND)
       );
+      if (epochNs === null) throw new RangeError('DateTime outside of supported range');
       return [new Absolute(epochNs.minus(offsetNs))];
     }
 

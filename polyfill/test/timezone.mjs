@@ -235,6 +235,15 @@ describe('TimeZone', () => {
       const tz = Temporal.TimeZone.from('Europe/London');
       equal(`${tz.getAbsoluteFor(dt)}`, '+000000-02-29T00:01:15Z');
     });
+    it('outside of Absolute range', () => {
+      const max = Temporal.DateTime.from('+275760-09-13T23:59:59.999999999');
+
+      const offsetTz = Temporal.TimeZone.from('-01:00');
+      throws(() => offsetTz.getAbsoluteFor(max), RangeError);
+
+      const namedTz = Temporal.TimeZone.from('America/Godthab');
+      throws(() => namedTz.getAbsoluteFor(max), RangeError);
+    });
   });
   describe('getAbsoluteFor disambiguation', () => {
     const dtm = new Temporal.DateTime(2019, 2, 16, 23, 45);
@@ -289,6 +298,15 @@ describe('TimeZone', () => {
         zone.getPossibleAbsolutesFor(dt).map((a) => `${a}`),
         ['2019-02-17T01:45Z', '2019-02-17T02:45Z']
       );
+    });
+    it('outside of Absolute range', () => {
+      const max = Temporal.DateTime.from('+275760-09-13T23:59:59.999999999');
+
+      const offsetTz = Temporal.TimeZone.from('-01:00');
+      throws(() => offsetTz.getPossibleAbsolutesFor(max), RangeError);
+
+      const namedTz = Temporal.TimeZone.from('America/Godthab');
+      throws(() => namedTz.getPossibleAbsolutesFor(max), RangeError);
     });
   });
   describe('getNextTransition works as expected', () => {
