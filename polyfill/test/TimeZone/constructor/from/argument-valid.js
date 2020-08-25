@@ -12,6 +12,7 @@ const valids = [
   ["America/Belem"],
   ["UTC"],
   ["etc/gmt", "UTC"],
+  [{ toString() { return "Europe/Madrid"; } }, "Europe/Madrid"],
 ];
 
 const thisValues = [
