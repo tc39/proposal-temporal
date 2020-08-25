@@ -6067,7 +6067,7 @@
       var millisecond = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : 0;
       var microsecond = arguments.length > 7 && arguments[7] !== undefined ? arguments[7] : 0;
       var nanosecond = arguments.length > 8 && arguments[8] !== undefined ? arguments[8] : 0;
-      var calendar = arguments.length > 9 && arguments[9] !== undefined ? arguments[9] : undefined;
+      var calendar = arguments.length > 9 && arguments[9] !== undefined ? arguments[9] : GetDefaultCalendar();
 
       _classCallCheck(this, DateTime);
 
@@ -6080,7 +6080,7 @@
       millisecond = ES.ToInteger(millisecond);
       microsecond = ES.ToInteger(microsecond);
       nanosecond = ES.ToInteger(nanosecond);
-      if (calendar === undefined) calendar = GetDefaultCalendar();
+      calendar = ES.ToTemporalCalendar(calendar);
       ES.RejectDateTime(isoYear, isoMonth, isoDay, hour, minute, second, millisecond, microsecond, nanosecond);
       ES.RejectDateTimeRange(isoYear, isoMonth, isoDay, hour, minute, second, millisecond, microsecond, nanosecond);
       if (!calendar || _typeof(calendar) !== 'object') throw new RangeError('invalid calendar');
