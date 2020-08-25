@@ -659,9 +659,9 @@
       1. Let _z_, _sign_, _hour_, _minute_, and _name_ be the parts of _isoString_ produced respectively by the |UTCDesignator|, |TimeZoneUTCOffsetSign|, |TimeZoneUTCOffsetHour|, |TimeZoneUTCOffsetMinute| and |TimeZoneIANAName| productions, or *undefined* if not present.
       1. If _z_ is not *undefined*, then
         1. Return the new Record: {
-          [[OffsetSign]]: *undefined*,
-          [[OffsetHour]]: *undefined*,
-          [[OffsetMinute]]: *undefined*,
+          [[OffsetSign]]: 1,
+          [[OffsetHour]]: +0,
+          [[OffsetMinute]]: +0,
           [[Name]]: `"UTC"`
           }.
       1. If _hour_ is not *undefined*, then
@@ -672,9 +672,10 @@
         1. Else,
           1. Set _sign_ to 1.
         1. Set _minute_ to ! ToInteger(_minute_).
-      1. If _name_ is not *undefined*, then
-        1. Assert ! IsValidTimeZoneName(_name_).
-        1. Let _name_ be ! CanonicalizeTimeZoneName(_name_).
+        1. Let _offsetNanoseconds_ be _sign_ × (_hour_ × 60 + _minute_) × 60 × 10<sup>9</sup>.
+        1. Let _name_ be ! FormatTimeZoneOffsetString(_offsetNanoseconds_).
+      1. Assert ! IsValidTimeZoneName(_name_).
+      1. Let _name_ be ! CanonicalizeTimeZoneName(_name_).
       1. Return the new Record: {
         [[OffsetSign]]: _sign_,
         [[OffsetHour]]: _hour_,

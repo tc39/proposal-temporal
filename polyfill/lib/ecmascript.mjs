@@ -110,7 +110,7 @@ export const ES = ObjectAssign({}, ES2019, {
     const microsecond = ES.ToInteger(fraction.slice(3, 6));
     const nanosecond = ES.ToInteger(fraction.slice(6, 9));
     const offsetSign = match[14] === '-' || match[14] === '\u2212' ? '-' : '+';
-    const offset = `${offsetSign}${match[15]}:${match[16] || '00'}`;
+    const offset = `${offsetSign}${match[15] || '00'}:${match[16] || '00'}`;
     let ianaName = match[17];
     if (ianaName) {
       try {
