@@ -194,7 +194,7 @@ export namespace Temporal {
     toDateTime(tzLike: TimeZoneProtocol | string, calendar?: CalendarProtocol | string): Temporal.DateTime;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
-    toString(tzLike?: TimeZoneProtocol | string): string;
+    toString(): string;
   }
 
   export interface CalendarProtocol {

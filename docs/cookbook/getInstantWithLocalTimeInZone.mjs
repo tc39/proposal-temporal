@@ -51,6 +51,8 @@ function getInstantWithLocalTimeInZone(dateTime, timeZone, disambiguation = 'ear
 const germany = Temporal.TimeZone.from('Europe/Berlin');
 const nonexistentGermanWallTime = Temporal.DateTime.from('2019-03-31T02:45');
 
+// FIXME: these need to use LocalDateTime
+
 const germanResults = {
   earlier: /*     */ '2019-03-31T01:45+01:00[Europe/Berlin]',
   later: /*       */ '2019-03-31T03:45+02:00[Europe/Berlin]',

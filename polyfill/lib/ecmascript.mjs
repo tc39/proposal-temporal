@@ -692,8 +692,9 @@ export const ES = ObjectAssign({}, ES2019, {
     let post = parts.length ? `.${parts.join('')}` : '';
     return `:${secs}${post}`;
   },
-  TemporalAbsoluteToString: (absolute, timeZone) => {
-    const dateTime = ES.GetTemporalDateTimeFor(timeZone, absolute);
+  TemporalAbsoluteToString: (absolute) => {
+    const ns = GetSlot(absolute, EPOCHNANOSECONDS);
+    const dateTime = ES.GetPartsFromEpoch(ns);
     const year = ES.ISOYearString(dateTime.year);
     const month = ES.ISODateTimePartString(dateTime.month);
     const day = ES.ISODateTimePartString(dateTime.day);
@@ -705,8 +706,7 @@ export const ES = ObjectAssign({}, ES2019, {
       dateTime.microsecond,
       dateTime.nanosecond
     );
-    const timeZoneString = ES.ISOTimeZoneString(timeZone, absolute);
-    return `${year}-${month}-${day}T${hour}:${minute}${seconds}${timeZoneString}`;
+    return `${year}-${month}-${day}T${hour}:${minute}${seconds}Z`;
   },
   TemporalDurationToString: (duration) => {
     function formatNumber(num) {

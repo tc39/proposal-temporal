@@ -373,11 +373,7 @@ one.equals(two)  // => false
 one.equals(one)  // => true
 ```
 
-### absolute.**toString**(_timeZone_?: object | string) : string
-
-**Parameters:**
-- `timeZone` (optional string or object): the time zone to express `absolute` in, as a `Temporal.TimeZone` object, an object implementing the [time zone protocol](./timezone.md#protocol), or a string.
-  The default is to use UTC.
+### absolute.**toString**() : string
 
 **Returns:** a string in the ISO 8601 date format representing `absolute`.
 
@@ -388,8 +384,6 @@ Example usage:
 ```js
 abs = new Temporal.Absolute(1574074321816000000n);
 abs.toString();  // => 2019-11-18T10:52:01.816Z
-abs.toString(Temporal.TimeZone.from('UTC'));  // => 2019-11-18T10:52:01.816Z
-abs.toString('Asia/Seoul');  // => 2019-11-18T19:52:01.816+09:00[Asia/Seoul]
 ```
 
 ### absolute.**toLocaleString**(_locales_?: string | array&lt;string&gt;, _options_?: object) : string

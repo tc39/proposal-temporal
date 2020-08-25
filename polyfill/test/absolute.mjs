@@ -77,17 +77,6 @@ describe('Absolute', () => {
       assert(instant);
       equal(`${instant}`, iso);
     });
-    it('optional time zone parameter UTC', () => {
-      const iso = '1976-11-18T14:23:30.123456789Z';
-      const abs = Absolute.from(iso);
-      const tz = Temporal.TimeZone.from('UTC');
-      equal(abs.toString(tz), iso);
-    });
-    it('optional time zone parameter non-UTC', () => {
-      const abs = Absolute.from('1976-11-18T14:23:30.123456789Z');
-      const tz = Temporal.TimeZone.from('America/New_York');
-      equal(abs.toString(tz), '1976-11-18T09:23:30.123456789-05:00[America/New_York]');
-    });
   });
   describe('Absolute.toJSON() works', () => {
     it('`1976-11-18T15:23:30.123456789+01:00`.toJSON()', () => {
@@ -99,10 +88,6 @@ describe('Absolute', () => {
       const abs = Absolute.from('1963-02-13T10:36:29.123456789+01:00');
       assert(abs);
       equal(abs.toJSON(), '1963-02-13T09:36:29.123456789Z');
-    });
-    it('argument is ignored', () => {
-      const abs = Absolute.from('1976-11-18T15:23:30.123456789+01:00');
-      equal(abs.toJSON('+01:00'), abs.toJSON());
     });
   });
   describe('Absolute.getEpochSeconds() works', () => {

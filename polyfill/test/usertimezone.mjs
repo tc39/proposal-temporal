@@ -14,6 +14,8 @@ const { equal, throws } = assert;
 
 import * as Temporal from 'proposal-temporal';
 
+// FIXME: add tests to make sure these cases work with LocalDateTime
+
 describe('Userland time zone', () => {
   describe('Trivial subclass', () => {
     class CustomUTCSubclass extends Temporal.TimeZone {
@@ -59,8 +61,6 @@ describe('Userland time zone', () => {
       equal(`${dt.toAbsolute(obj)}`, '1976-11-18T15:23:30.123456789Z');
     });
     it('converts to string', () => equal(`${obj}`, obj.name));
-    it('prints in absolute.toString', () =>
-      equal(abs.toString(obj), '1970-01-01T00:00+00:00[Etc/Custom_UTC_Subclass]'));
     it('has no next transitions', () => assert.equal(obj.getNextTransition(), null));
     it('has no previous transitions', () => assert.equal(obj.getPreviousTransition(), null));
     it('works in Temporal.now', () => {
@@ -94,10 +94,6 @@ describe('Userland time zone', () => {
       it('works for Absolute.from', () => {
         const abs = Temporal.Absolute.from('1970-01-01T00:00+00:00[Etc/Custom_UTC_Subclass]');
         equal(`${abs}`, '1970-01-01T00:00Z');
-      });
-      it('works for Absolute.toString', () => {
-        const abs = Temporal.Absolute.fromEpochSeconds(0);
-        equal(abs.toString('Etc/Custom_UTC_Subclass'), '1970-01-01T00:00+00:00[Etc/Custom_UTC_Subclass]');
       });
       it('works for Absolute.toDateTime', () => {
         const abs = Temporal.Absolute.fromEpochSeconds(0);
@@ -147,8 +143,6 @@ describe('Userland time zone', () => {
       equal(`${Temporal.TimeZone.prototype.getAbsoluteFor.call(obj, dt)}`, '1976-11-18T15:23:30.123456789Z');
       equal(`${dt.toAbsolute(obj)}`, '1976-11-18T15:23:30.123456789Z');
     });
-    it('prints in absolute.toString', () =>
-      equal(abs.toString(obj), '1970-01-01T00:00+00:00[Etc/Custom_UTC_Protocol]'));
     it('works in Temporal.now', () => {
       assert(Temporal.now.dateTime(obj) instanceof Temporal.DateTime);
       assert(Temporal.now.date(obj) instanceof Temporal.Date);
@@ -180,10 +174,6 @@ describe('Userland time zone', () => {
       it('works for Absolute.from', () => {
         const abs = Temporal.Absolute.from('1970-01-01T00:00+00:00[Etc/Custom_UTC_Protocol]');
         equal(`${abs}`, '1970-01-01T00:00Z');
-      });
-      it('works for Absolute.toString', () => {
-        const abs = Temporal.Absolute.fromEpochSeconds(0);
-        equal(abs.toString('Etc/Custom_UTC_Protocol'), '1970-01-01T00:00+00:00[Etc/Custom_UTC_Protocol]');
       });
       it('works for Absolute.toDateTime', () => {
         const abs = Temporal.Absolute.fromEpochSeconds(0);

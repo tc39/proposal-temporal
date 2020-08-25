@@ -138,16 +138,9 @@ export class Absolute {
     const two = GetSlot(other, EPOCHNANOSECONDS);
     return bigInt(one).equals(two);
   }
-  toString(temporalTimeZoneLike = 'UTC') {
+  toString() {
     if (!ES.IsTemporalAbsolute(this)) throw new TypeError('invalid receiver');
-    const timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);
-    return ES.TemporalAbsoluteToString(this, timeZone);
-  }
-  toJSON() {
-    if (!ES.IsTemporalAbsolute(this)) throw new TypeError('invalid receiver');
-    const TemporalTimeZone = GetIntrinsic('%Temporal.TimeZone%');
-    const timeZone = new TemporalTimeZone('UTC');
-    return ES.TemporalAbsoluteToString(this, timeZone);
+    return ES.TemporalAbsoluteToString(this);
   }
   toLocaleString(...args) {
     if (!ES.IsTemporalAbsolute(this)) throw new TypeError('invalid receiver');
@@ -214,6 +207,7 @@ export class Absolute {
     return 0;
   }
 }
+Absolute.prototype.toJSON = Absolute.prototype.toString;
 
 MakeIntrinsicClass(Absolute, 'Temporal.Absolute');
 

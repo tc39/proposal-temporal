@@ -310,17 +310,14 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal.absolute.prototype.tostring">
-      <h1>Temporal.Absolute.prototype.toString ( [ _temporalTimeZoneLike_ ] )</h1>
+      <h1>Temporal.Absolute.prototype.toString ( )</h1>
       <p>
-        The `toString` method takes one argument _temporalTimeZoneLike_.
         The following steps are taken:
       </p>
       <emu-alg>
         1. Let _absolute_ be the *this* value.
         1. Perform ? RequireInternalSlot(_absolute_, [[InitializedTemporalAbsolute]]).
-        1. If _temporalTimeZoneLike_ is *undefined*, then
-          1. Set _temporalTimeZoneLike_ to *"UTC"*.
-        1. Let _timeZone_ be ? ToTemporalTimeZone(_temporalTimeZoneLike_).
+        1. Let _timeZone_ be ? ToTemporalTimeZone(*"UTC"*).
         1. Return ? TemporalAbsoluteToString(_absolute_, _timeZone_).
       </emu-alg>
     </emu-clause>
@@ -472,14 +469,14 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal-temporalabsolutetostring" aoid="TemporalAbsoluteToString">
-      <h1>TemporalAbsoluteToString ( _absolute_, _timeZone_ )</h1>
+      <h1>TemporalAbsoluteToString ( _absolute_ )</h1>
       <emu-alg>
         1. Assert: Type(_absolute_) is Object.
         1. Assert: _absolute_ has an [[InitializedTemporalAbsolute]] internal slot.
-        1. Let _dateTime_ be ? GetTemporalDateTimeFor(_timeZone_, _absolute_).
+        1. <mark>TODO:</mark> Let _result_ be the moment _absolute_.[[Nanosecond]] nanoseconds from the epoch, in the UTC time zone.
+        1. Let _dateTime_ be ? CreateTemporalDateTime(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]).
         1. Let _dateTimeString_ be ! TemporalDateTimeToString(_dateTime_).
-        1. Let _timeZoneString_ be ? ISOTimeZoneString(_timeZone_, _absolute_).
-        1. Return the string-concatenation of _dateTimeString_ and _timeZoneString_.
+        1. Return the string-concatenation of _dateTimeString_ and *"Z"*.
       </emu-alg>
     </emu-clause>
 

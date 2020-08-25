@@ -23,6 +23,7 @@ function getParseableZonedStringWithLocalTimeInOtherZone(
   sourceDisambiguationPolicy = 'reject'
 ) {
   let instant = sourceDateTime.toAbsolute(sourceTimeZone, { disambiguation: sourceDisambiguationPolicy });
+  // FIXME: this needs to use LocalDateTime
   return instant.toString(targetTimeZone);
 }
 
