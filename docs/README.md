@@ -106,6 +106,29 @@ Most code will use the ISO 8601 calendar, but other calendar systems are availab
 
 See [Temporal.Calendar Documentation](./calendar.md) for more detailed documentation.
 
+## Other Documentation
+
+### **Key Concepts**
+
+- [Ambiguity](./ambiguity.md) &mdash; Explanation of missing times and double times due to daylight saving and time zone changes.
+- [Balancing](./balancing.md) &mdash; Explanation of when `Temporal.Duration` units wrap around to 0 and when they don't.
+
+### **Design drafts**
+
+- [Calendar Draft](./calendar-draft.md) &mdash; Draft design document for calendar support in Temporal.
+  Mostly superseded by the documentation of [Temporal.Calendar](./calendar.md), but also contains some discussion about whether to have a default calendar.
+- [ISO string extensions](./iso-string-ext.md) &mdash; Discussion of extensions to the ISO 8601 standard which are used by Temporal and intended to be put on a standards track.
+- [Parse Draft](./parse-draft.md) &mdash; Draft design document for a `Temporal.parse` API, which is not currently planned to be implemented.
+- [Zoned Date/Time Type Draft](./localdatetime-draft.md) &mdash; Explanation of `Temporal.LocalDateTime` (not the final name) which is a new type combining an absolute time with a time zone.
+  Currently in progress.
+
+### Obsolete Pages
+
+- [Calendar Subclassing Draft](./calendar-subclass.md) &mdash; Draft design document for alternative approach for calendar support.
+  (**Obsolete;** rejected.)
+- [Custom Time Zone Draft](./timezone-draft.md) &mdash; Draft design document for custom time zone support in Temporal.
+  (**Obsolete;** superseded by the documentation of [Temporal.TimeZone](./timezone.md).)
+
 ## Object Relationship
 
 <div class="mermaid">
