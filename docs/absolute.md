@@ -57,8 +57,7 @@ This static method creates a new `Temporal.Absolute` object from another value.
 If the value is another `Temporal.Absolute` object, a new object representing the same point in time is returned.
 
 Any other value is converted to a string, which is expected to be in ISO 8601 format, including a date, a time, and a time zone.
-If the point in time cannot be uniquely determined from the string, then this function throws an exception.
-This includes the case when `thing` is a validly-formatted ISO 8601 string denoting a time that doesn't exist, for example because it was skipped in a daylight saving time transition.
+The time zone name, if given, is ignored; only the time zone offset is taken into account.
 
 Example usage:
 ```js
@@ -70,8 +69,6 @@ abs === Temporal.Absolute.from(abs);  // => true
 // Not enough information to denote a single point in time:
 /* WRONG */ abs = Temporal.Absolute.from('2019-03-30');  // no time; throws
 /* WRONG */ abs = Temporal.Absolute.from('2019-03-30T01:45');  // no time zone; throws
-/* WRONG */ abs = Temporal.Absolute.from('2019-03031T02:45+01:00[Europe/Berlin]');
-    // time skipped in DST transition; throws
 ```
 
 ### Temporal.Absolute.**fromEpochSeconds**(_epochSeconds_: number) : Temporal.Absolute

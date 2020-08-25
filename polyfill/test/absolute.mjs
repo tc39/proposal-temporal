@@ -279,8 +279,11 @@ describe('Absolute', () => {
         BigInt(Date.UTC(2019, 1, 17, 2, 45)) * BigInt(1e6)
       );
     });
-    it('throws when unable to disambiguate using offset', () => {
-      throws(() => Absolute.from('2019-02-16T23:45-04:00[America/Sao_Paulo]'), RangeError);
+    it('ignores the bracketed IANA time zone when the offset is incorrect', () => {
+      equal(
+        Absolute.from('2019-02-16T23:45-04:00[America/Sao_Paulo]').getEpochNanoseconds(),
+        BigInt(Date.UTC(2019, 1, 17, 3, 45)) * BigInt(1e6)
+      );
     });
     it('Absolute.from(string-convertible) converts to string', () => {
       const obj = {

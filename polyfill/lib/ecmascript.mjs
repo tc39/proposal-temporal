@@ -238,22 +238,13 @@ export const ES = ObjectAssign({}, ES2019, {
       millisecond,
       microsecond,
       nanosecond,
-      offset,
-      zone
+      offset
     } = ES.ParseTemporalAbsoluteString(isoString);
 
-    const DateTime = GetIntrinsic('%Temporal.DateTime%');
-
-    const dt = new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
-    const tz = ES.TimeZoneFrom(zone);
-
-    const possibleAbsolutes = tz.getPossibleAbsolutesFor(dt);
-    if (possibleAbsolutes.length === 1) return GetSlot(possibleAbsolutes[0], EPOCHNANOSECONDS);
-    for (const absolute of possibleAbsolutes) {
-      const possibleOffsetNs = tz.getOffsetNanosecondsFor(absolute);
-      if (ES.FormatTimeZoneOffsetString(possibleOffsetNs) === offset) return GetSlot(absolute, EPOCHNANOSECONDS);
-    }
-    throw new RangeError(`'${isoString}' doesn't uniquely identify a Temporal.Absolute`);
+    const epochNs = ES.GetEpochFromParts(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
+    if (epochNs === null) throw new RangeError('DateTime outside of supported range');
+    const offsetNs = parseOffsetString(offset);
+    return epochNs.minus(offsetNs);
   },
   RegulateDateTime: (year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, disambiguation) => {
     switch (disambiguation) {
