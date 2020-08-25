@@ -120,7 +120,7 @@ describe('Intl', () => {
     const us = new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York' });
     const at = new Intl.DateTimeFormat('de-AT', { timeZone: 'Europe/Vienna' });
     const t1 = '1976-11-18T14:23:30Z';
-    const t2 = '2020-02-20T15:44:56-08:00[America/New_York]';
+    const t2 = '2020-02-20T15:44:56-05:00[America/New_York]';
     const start = new Date('1922-12-30'); // ☭
     const end = new Date('1991-12-26');
 
