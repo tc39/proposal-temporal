@@ -54,6 +54,8 @@ rules:
     - error
     - code: 120
       ignoreRegExpLiterals: true
+  no-alert: error
+  no-console: error
   no-multiple-empty-lines:
     - error
     - max: 1
@@ -103,3 +105,12 @@ overrides:
       max-len: 'off'
       prettier/prettier: 'off'
       quotes: 'off'
+  - files:
+      - docs/buildDocs.js
+      - polyfill/lib/duration.mjs
+      - polyfill/lib/initialise.js
+      - polyfill/test/all.mjs
+      - polyfill/test/exhaust.mjs
+      - polyfill/test/validStrings.mjs
+    rules:
+      no-console: off
