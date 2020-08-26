@@ -48,7 +48,7 @@ export default [
     ]
   },
   {
-    input: 'lib/index.mjs',
+    input: 'lib/shim.mjs',
     plugins: [replace({ ...replaceConfig, __debug__: false }), commonjs(), resolve(resolveConfig)],
     output: {
       name: libName,
@@ -58,7 +58,7 @@ export default [
     }
   },
   {
-    input: 'lib/index.mjs',
+    input: 'lib/shim.mjs',
     output: {
       name: libName,
       file: '../out/docs/playground.js',
