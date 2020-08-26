@@ -531,23 +531,35 @@
         1. Set _hours_ to _bt_.[[Hour]].
         1. Set _minutes_ to _bt_.[[Minute]].
         1. Set _seconds_ to _bt_.[[Second]].
-        1. If _largestUnit_ is *"hours"*, *"minutes"*, or *"seconds"*, then
+        1. Set _milliseconds_ to _bt_.[[Millisecond]].
+        1. Set _microseconds_ to _bt_.[[Microsecond]].
+        1. Set _nanoseconds_ to _bt_.[[Nanosecond]].
+        1. If _largestUnit_ is *"hours"*, *"minutes"*, *"seconds"*, *"milliseconds"*, *"microseconds"*, or *"nanoseconds"*, then
           1. Increment _hours_ by 24 × _days_.
           1. Set _days_ to 0.
-        1. If _largestUnit_ is *"minutes"* or *"seconds"*, then
+        1. If _largestUnit_ is *"minutes"*, *"seconds"*, *"milliseconds"*, *"microseconds"*, or *"nanoseconds"*, then
           1. Increment _minutes_ by 60 × _hours_.
           1. Set _hours_ to 0.
-        1. If _largestUnit_ is *"seconds"*, then
+        1. If _largestUnit_ is *"seconds"*, *"milliseconds"*, *"microseconds"*, or *"nanoseconds"*, then
           1. Increment _seconds_ by 60 × _minutes_.
           1. Set _minutes_ to 0.
+        1. If _largestUnit_ is *"milliseconds"*, *"microseconds"*, or *"nanoseconds"*, then
+          1. Increment _milliseconds_ by 1000 × _seconds_.
+          1. Set _seconds_ to 0.
+        1. If _largestUnit_ is *"microseconds"* or *"nanoseconds"*, then
+          1. Increment _microseconds_ by 1000 × _milliseconds_.
+          1. Set _milliseconds_ to 0.
+        1. If _largestUnit_ is *"nanoseconds"*, then
+          1. Increment _nanoseconds_ by 1000 × _microseconds_.
+          1. Set _microseconds_ to 0.
         1. Return the new Record {
           [[Days]]: _days_,
           [[Hours]]: _hours_,
           [[Minutes]]: _minutes_,
           [[Seconds]]: _seconds_,
-          [[Milliseconds]]: _bt_.[[Millisecond]],
-          [[Microseconds]]: _bt_.[[Microsecond]],
-          [[Nanoseconds]]: _bt_.[[Nanosecond]].
+          [[Milliseconds]]: _milliseconds_,
+          [[Microseconds]]: _microseconds_,
+          [[Nanoseconds]]: _nanoseconds_
           }.
       </emu-alg>
     </emu-clause>

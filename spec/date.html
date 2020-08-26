@@ -366,7 +366,7 @@
         1. Let _temporalDate_ be the *this* value.
         1. Perform ? RequireInternalSlot(_temporalDate_, [[InitializedTemporalDate]]).
         1. Perform ? RequireInternalSlot(_other_, [[InitializedTemporalDate]]).
-        1. Let _largestUnit_ be ? ToLargestTemporalUnit(_options_, « *"hours"*, *"minutes"*, *"seconds"* », *"days"*).
+        1. Let _largestUnit_ be ? ToLargestTemporalUnit(_options_, « *"hours"*, *"minutes"*, *"seconds"*, *"milliseconds"*, *"microseconds"*, *"nanoseconds"* », *"days"*).
         1. If ! CompareTemporalDate(_temporalDate_, _other_) &lt; 0, then
           1. Throw a *RangeError* exception.
         1. Let _greater_ be _temporalDate_.

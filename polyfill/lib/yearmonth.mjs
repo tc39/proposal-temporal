@@ -135,7 +135,16 @@ export class YearMonth {
     if (calendar.id !== GetSlot(other, CALENDAR).id) {
       other = new Date(GetSlot(other, ISO_YEAR), GetSlot(other, ISO_MONTH), calendar, GetSlot(other, REF_ISO_DAY));
     }
-    const largestUnit = ES.ToLargestTemporalUnit(options, 'years', ['weeks', 'days', 'hours', 'minutes', 'seconds']);
+    const largestUnit = ES.ToLargestTemporalUnit(options, 'years', [
+      'weeks',
+      'days',
+      'hours',
+      'minutes',
+      'seconds',
+      'milliseconds',
+      'microseconds',
+      'nanoseconds'
+    ]);
     const comparison = YearMonth.compare(this, other);
     if (comparison < 0) throw new RangeError('other instance cannot be larger than `this`');
 

@@ -202,6 +202,9 @@ describe('YearMonth', () => {
       throws(() => feb21.difference(feb20, { largestUnit: 'hours' }), RangeError);
       throws(() => feb21.difference(feb20, { largestUnit: 'minutes' }), RangeError);
       throws(() => feb21.difference(feb20, { largestUnit: 'seconds' }), RangeError);
+      throws(() => feb21.difference(feb20, { largestUnit: 'milliseconds' }), RangeError);
+      throws(() => feb21.difference(feb20, { largestUnit: 'microseconds' }), RangeError);
+      throws(() => feb21.difference(feb20, { largestUnit: 'nanoseconds' }), RangeError);
     });
   });
   describe('YearMonth.plus() works', () => {

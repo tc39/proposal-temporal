@@ -294,7 +294,7 @@ Temporal.now.absolute().minus(oneDay);
 - `options` (optional object): An object with properties representing options for the operation.
   The following options are recognized:
   - `largestUnit` (string): The largest unit of time to allow in the resulting `Temporal.Duration` object.
-    Valid values are `'days'`, `'hours'`, `'minutes'`, and `'seconds'`.
+    Valid values are `'days'`, `'hours'`, `'minutes'`, `'seconds'`, `'milliseconds'`, `'microseconds'`, and `'nanoseconds'`.
     The default is `"seconds"`.
 
 **Returns:** a `Temporal.Duration` representing the difference between `absolute` and `other`.
@@ -314,6 +314,9 @@ You cannot determine the start and end date of a difference between `Temporal.Ab
 
 If you do need to calculate the difference between two `Temporal.Absolute`s in years, months, or weeks, then you can make an explicit choice on how to eliminate this ambiguity, choosing your starting point by converting to a `Temporal.DateTime`.
 For example, you might decide to base the calculation on your user's current time zone, or on UTC.
+
+Take care when using milliseconds, microseconds, or nanoseconds as the largest unit.
+For some dates, the resulting value may overflow `Number.MAX_SAFE_INTEGER`.
 
 Example usage:
 ```js

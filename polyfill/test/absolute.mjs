@@ -453,6 +453,24 @@ describe('Absolute', () => {
       equal(`${feb21.difference(feb20, { largestUnit: 'minutes' })}`, 'PT527040M');
       equal(`${feb21.difference(feb20, { largestUnit: 'days' })}`, 'P366D');
     });
+    it('can return subseconds', () => {
+      const later = feb20.plus({ days: 1, milliseconds: 250, microseconds: 250, nanoseconds: 250 });
+
+      const msDiff = later.difference(feb20, { largestUnit: 'milliseconds' });
+      equal(msDiff.seconds, 0);
+      equal(msDiff.milliseconds, 86400250);
+      equal(msDiff.microseconds, 250);
+      equal(msDiff.nanoseconds, 250);
+
+      const µsDiff = later.difference(feb20, { largestUnit: 'microseconds' });
+      equal(µsDiff.milliseconds, 0);
+      equal(µsDiff.microseconds, 86400250250);
+      equal(µsDiff.nanoseconds, 250);
+
+      const nsDiff = later.difference(feb20, { largestUnit: 'nanoseconds' });
+      equal(nsDiff.microseconds, 0);
+      equal(nsDiff.nanoseconds, 86400250250250);
+    });
     it('cannot return weeks, months, and years', () => {
       throws(() => feb21.difference(feb20, { largestUnit: 'weeks' }), RangeError);
       throws(() => feb21.difference(feb20, { largestUnit: 'months' }), RangeError);

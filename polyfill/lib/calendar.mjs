@@ -165,7 +165,14 @@ class ISO8601 extends Calendar {
   }
   dateDifference(smaller, larger, options) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
-    const largestUnit = ES.ToLargestTemporalUnit(options, 'days', ['hours', 'minutes', 'seconds']);
+    const largestUnit = ES.ToLargestTemporalUnit(options, 'days', [
+      'hours',
+      'minutes',
+      'seconds',
+      'milliseconds',
+      'microseconds',
+      'nanoseconds'
+    ]);
     const { years, months, weeks, days } = ES.DifferenceDate(smaller, larger, largestUnit);
     const Duration = GetIntrinsic('%Temporal.Duration%');
     return new Duration(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
