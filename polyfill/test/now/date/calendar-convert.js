@@ -15,12 +15,16 @@ const values = [
 
 const calendar = Temporal.Calendar.from("iso8601");
 for (const [input, output] of values) {
+  let called = 0;
   Temporal.Calendar.from = function(argument) {
+    ++called;
     assert.sameValue(argument, output);
     return calendar;
   };
 
-  Temporal.now.date("UTC", input);
+  const date = Temporal.now.date("UTC", input);
+  assert.sameValue(called, 1);
+  assert.sameValue(date.calendar, calendar);
 }
 
 Temporal.Calendar.from = function() {
