@@ -17,12 +17,16 @@ const absolute = Temporal.Absolute.from("1975-02-02T14:25:36.123456789Z");
 
 const calendar = Temporal.Calendar.from("iso8601");
 for (const [input, output] of values) {
+  let called = 0;
   Temporal.Calendar.from = function(argument) {
+    ++called;
     assert.sameValue(argument, output);
     return calendar;
   };
 
-  absolute.toDateTime("UTC", input);
+  const dateTime = absolute.toDateTime("UTC", input);
+  assert.sameValue(called, 1);
+  assert.sameValue(dateTime.calendar, calendar);
 }
 
 Temporal.Calendar.from = function() {

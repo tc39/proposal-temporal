@@ -18,12 +18,16 @@ const timeZone = Temporal.TimeZone.from("UTC");
 
 const calendar = Temporal.Calendar.from("iso8601");
 for (const [input, output] of values) {
+  let called = 0;
   Temporal.Calendar.from = function(argument) {
+    ++called;
     assert.sameValue(argument, output);
     return calendar;
   };
 
-  timeZone.getDateTimeFor(absolute, input);
+  const dateTime = timeZone.getDateTimeFor(absolute, input);
+  assert.sameValue(called, 1);
+  assert.sameValue(dateTime.calendar, calendar);
 }
 
 Temporal.Calendar.from = function() {
