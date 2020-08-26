@@ -238,6 +238,24 @@ describe('Time', () => {
         equal(`${time2.difference(time1, { largestUnit: 'minutes' })}`, 'PT412M42S');
         equal(`${time2.difference(time1, { largestUnit: 'seconds' })}`, 'PT24762S');
       });
+      it('can return subseconds', () => {
+        const time3 = time2.plus({ milliseconds: 250, microseconds: 250, nanoseconds: 250 });
+
+        const msDiff = time3.difference(time1, { largestUnit: 'milliseconds' });
+        equal(msDiff.seconds, 0);
+        equal(msDiff.milliseconds, 24762250);
+        equal(msDiff.microseconds, 250);
+        equal(msDiff.nanoseconds, 250);
+
+        const µsDiff = time3.difference(time1, { largestUnit: 'microseconds' });
+        equal(µsDiff.milliseconds, 0);
+        equal(µsDiff.microseconds, 24762250250);
+        equal(µsDiff.nanoseconds, 250);
+
+        const nsDiff = time3.difference(time1, { largestUnit: 'nanoseconds' });
+        equal(nsDiff.microseconds, 0);
+        equal(nsDiff.nanoseconds, 24762250250250);
+      });
     });
     describe('Time.compare() works', () => {
       const t1 = Time.from('08:44:15.321');

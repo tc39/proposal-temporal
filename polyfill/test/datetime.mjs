@@ -389,6 +389,24 @@ describe('DateTime', () => {
       equal(`${feb21.difference(feb20, { largestUnit: 'minutes' })}`, 'PT527040M');
       equal(`${feb21.difference(feb20, { largestUnit: 'seconds' })}`, 'PT31622400S');
     });
+    it('can return subseconds', () => {
+      const later = feb20.plus({ days: 1, milliseconds: 250, microseconds: 250, nanoseconds: 250 });
+
+      const msDiff = later.difference(feb20, { largestUnit: 'milliseconds' });
+      equal(msDiff.seconds, 0);
+      equal(msDiff.milliseconds, 86400250);
+      equal(msDiff.microseconds, 250);
+      equal(msDiff.nanoseconds, 250);
+
+      const µsDiff = later.difference(feb20, { largestUnit: 'microseconds' });
+      equal(µsDiff.milliseconds, 0);
+      equal(µsDiff.microseconds, 86400250250);
+      equal(µsDiff.nanoseconds, 250);
+
+      const nsDiff = later.difference(feb20, { largestUnit: 'nanoseconds' });
+      equal(nsDiff.microseconds, 0);
+      equal(nsDiff.nanoseconds, 86400250250250);
+    });
     it('does not include higher units than necessary', () => {
       const lastFeb20 = DateTime.from('2020-02-29T00:00');
       const lastFeb21 = DateTime.from('2021-02-28T00:00');

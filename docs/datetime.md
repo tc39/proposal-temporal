@@ -438,7 +438,7 @@ dt.minus({ months: 1 })  // => throws
 - `options` (optional object): An object with properties representing options for the operation.
   The following options are recognized:
   - `largestUnit` (string): The largest unit of time to allow in the resulting `Temporal.Duration` object.
-    Valid values are `'years'`, `'months'`, `'weeks'`, `'days'`, `'hours'`, `'minutes'`, and `'seconds'`.
+    Valid values are `'years'`, `'months'`, `'weeks'`, `'days'`, `'hours'`, `'minutes'`, `'seconds'`, `'milliseconds'`, `'microseconds'`, and `'nanoseconds'`.
     The default is `days`.
 
 **Returns:** a `Temporal.Duration` representing the difference between `datetime` and `other`.
@@ -453,6 +453,9 @@ However, a difference of 30 seconds will still be 30 seconds even if `largestUni
 
 By default, the largest unit in the result is days.
 This is because months and years can be different lengths depending on which month is meant and whether the year is a leap year.
+
+Take care when using milliseconds, microseconds, or nanoseconds as the largest unit.
+For some dates, the resulting value may overflow `Number.MAX_SAFE_INTEGER`.
 
 Usage example:
 ```javascript

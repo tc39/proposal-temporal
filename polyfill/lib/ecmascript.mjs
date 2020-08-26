@@ -478,7 +478,18 @@ export const ES = ObjectAssign({}, ES2019, {
     return ES.GetOption(options, 'disambiguation', ['balanceConstrain', 'balance'], 'balanceConstrain');
   },
   ToLargestTemporalUnit: (options, fallback, disallowedStrings = []) => {
-    const allowed = new Set(['years', 'months', 'weeks', 'days', 'hours', 'minutes', 'seconds']);
+    const allowed = new Set([
+      'years',
+      'months',
+      'weeks',
+      'days',
+      'hours',
+      'minutes',
+      'seconds',
+      'milliseconds',
+      'microseconds',
+      'nanoseconds'
+    ]);
     for (const s of disallowedStrings) {
       allowed.delete(s);
     }
@@ -1118,6 +1129,19 @@ export const ES = ObjectAssign({}, ES2019, {
       case 'seconds':
         seconds += 60 * (minutes + 60 * (hours + 24 * days));
         minutes = hours = days = 0;
+        break;
+      case 'milliseconds':
+        milliseconds += 1000 * (seconds + 60 * (minutes + 60 * (hours + 24 * days)));
+        seconds = minutes = hours = days = 0;
+        break;
+      case 'microseconds':
+        microseconds += 1000 * (milliseconds + 1000 * (seconds + 60 * (minutes + 60 * (hours + 24 * days))));
+        milliseconds = seconds = minutes = hours = days = 0;
+        break;
+      case 'nanoseconds':
+        nanoseconds +=
+          1000 * (microseconds + 1000 * (milliseconds + 1000 * (seconds + 60 * (minutes + 60 * (hours + 24 * days)))));
+        microseconds = milliseconds = seconds = minutes = hours = days = 0;
         break;
       case 'years':
       case 'months':

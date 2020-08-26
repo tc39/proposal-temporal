@@ -255,7 +255,7 @@
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
         1. Perform ? RequireInternalSlot(_other_, [[InitializedTemporalYearMonth]]).
-        1. Let _largestUnit_ be ? ToLargestTemporalUnit(_options_, « *"weeks"*, *"days"*, *"hours"*, *"minutes"*, *"seconds"* », *"years"*).
+        1. Let _largestUnit_ be ? ToLargestTemporalUnit(_options_, « *"weeks"*, *"days"*, *"hours"*, *"minutes"*, *"seconds"*, *"milliseconds"*, *"microseconds"*, *"nanoseconds"* », *"years"*).
         1. If ! CompareTemporalYearMonth(_yearMonth_, _other_) &lt; 0, then
           1. Throw a *RangeError* exception.
         1. Let _greater_ be _yearMonth_.

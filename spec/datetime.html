@@ -433,20 +433,8 @@
         1. Let _timeDifference_ be ! DifferenceTime(_smaller_, _greater_).
         1. Let _balanceResult_ be ? BalanceDate(_greater_.[[ISOYear]], _greater_.[[ISOMonth]], _greater_.[[ISODay]] + _timeDifference_.[[Days]]).
         1. Let _dateDifference_ be ! DifferenceDate(_smaller_, _balanceResult_, _largestUnit_).
-        1. Let _days_ be _dateDifference_.[[Days]].
-        1. Let _hours_ be _timeDifference_.[[Hour]].
-        1. Let _minutes_ be _timeDifference_.[[Minute]].
-        1. Let _seconds_ be _timeDifference_.[[Second]].
-        1. If _largestUnit_ is `"hours"`, `"minutes"`, or `"seconds"`, then
-          1. Set _hours_ to _hours_ + 24 × _days_.
-          1. Set _days_ to 0.
-        1. If _largestUnit_ is `"minutes"` or `"seconds"`, then
-          1. Set _minutes_ to _minutes_ + 60 × _hours_.
-          1. Set _hours_ to 0.
-        1. If _largestUnit_ is `"seconds"`, then
-          1. Set _seconds_ to _seconds_ + 60 × _minutes_.
-          1. Set _minutes_ to 0.
-        1. Return ? CreateTemporalDuration(_dateDifference_.[[Years]], _dateDifference_.[[Months]], _dateDifference_.[[Weeks]], _days_, _hours_, _minutes_, _seconds_, _timeDifference_.[[Millisecond]], _timeDifference_.[[Microsecond]], _timeDifference_.[[Nanosecond]]).
+        1. Let _result_ be ! BalanceDuration(_dateDifference_.[[Days]], _timeDifference.[[Hour]], _timeDifference_.[[Minute]], _timeDifference_.[[Second]], _timeDifference.[[Millisecond]], _timeDifference_.[[Microsecond]], _timeDifference_.[[Nanosecond]], _largestUnit_).
+        1. Return ? CreateTemporalDuration(_dateDifference_.[[Years]], _dateDifference_.[[Months]], _dateDifference_.[[Weeks]], _result_.[[Days]], _result_.[[Hours]], _result_.[[Minutes]], _result_.[[Seconds]], _result_.[[Milliseconds]], _result_.[[Microseconds]], _result_.[[Nanoseconds]]).
       </emu-alg>
     </emu-clause>
 
