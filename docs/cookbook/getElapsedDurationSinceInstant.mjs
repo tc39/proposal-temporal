@@ -37,4 +37,6 @@ const { sign, duration } = getElapsedDurationSinceInstant(
   Temporal.Absolute.from('2020-04-01T13:00-07:00[America/Los_Angeles]'),
   Temporal.now.absolute()
 );
+// Note that this does not work unless you have Intl.DurationFormat, which is
+// still an early-stage proposal.
 `It's ${duration.toLocaleString()} ${sign < 0 ? 'until' : 'since'} the TC39 Temporal presentation`;
