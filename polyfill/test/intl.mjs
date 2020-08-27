@@ -334,6 +334,16 @@ describe('Intl', () => {
       });
       it('should throw a TypeError when called with dissimilar types', () =>
         throws(() => us.formatRange(Temporal.Absolute.from(t1), Temporal.DateTime.from(t2)), TypeError));
+      it('should throw a RangeError when called with different calendars', () => {
+        throws(
+          () => us.formatRange(Temporal.DateTime.from(t1), Temporal.DateTime.from(t2).withCalendar('japanese')),
+          RangeError
+        );
+        throws(
+          () => us.formatRange(Temporal.Date.from(t1), Temporal.Date.from(t2).withCalendar('japanese')),
+          RangeError
+        );
+      });
     });
     describe('formatRangeToParts', () => {
       it('should work for Absolute', () => {
@@ -579,6 +589,16 @@ describe('Intl', () => {
       });
       it('should throw a TypeError when called with dissimilar types', () =>
         throws(() => at.formatRangeToParts(Temporal.Absolute.from(t1), Temporal.DateTime.from(t2)), TypeError));
+      it('should throw a RangeError when called with different calendars', () => {
+        throws(
+          () => at.formatRangeToParts(Temporal.DateTime.from(t1), Temporal.DateTime.from(t2).withCalendar('japanese')),
+          RangeError
+        );
+        throws(
+          () => at.formatRangeToParts(Temporal.Date.from(t1), Temporal.Date.from(t2).withCalendar('japanese')),
+          RangeError
+        );
+      });
     });
   });
 });
