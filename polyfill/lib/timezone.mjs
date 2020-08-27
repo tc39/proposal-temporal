@@ -228,7 +228,7 @@ export class TimeZone {
     return String(GetSlot(this, TIMEZONE_ID));
   }
   toJSON() {
-    return this.toString();
+    return ES.TimeZoneToString(this);
   }
   static from(item) {
     if (typeof item === 'object' && item) return item;
