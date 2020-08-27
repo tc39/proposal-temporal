@@ -74,7 +74,7 @@
           1. Let _result_ be ? ParseTemporalMonthDayString(_string_).
           1. Let _refISOYear_ be the first leap year after the Unix epoch (1972).
         1. Let _constructor_ be the *this* value.
-        1. Set _result_ to ? RegulateTemporalMonthDay(_result_.[[Month]], _result_.[[Day]], _disambiguation_).
+        1. Set _result_ to ? RegulateMonthDay(_result_.[[Month]], _result_.[[Day]], _disambiguation_).
         1. Return ? CreateTemporalMonthDayFromStatic(_constructor_, _result_.[[Month]], _result_.[[Day]], _refISOYear_).
       </emu-alg>
     </emu-clause>
