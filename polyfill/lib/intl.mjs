@@ -59,7 +59,7 @@ function resolvedOptions() {
 
 function adjustFormatterCalendar(formatter, calendar) {
   const options = formatter.resolvedOptions();
-  if (!calendar || calendar === options.calendar || calendar === 'gregory' || calendar === 'iso8601') return formatter;
+  if (!calendar || calendar === options.calendar || calendar === 'iso8601') return formatter;
   const locale = `${options.locale}-u-ca-${calendar}`;
   return new IntlDateTimeFormat(locale, options);
 }
@@ -68,8 +68,6 @@ function pickRangeCalendar(a, b) {
   if (!a) return b;
   if (!b) return a;
   if (a === b) return a;
-  if (a === 'iso8601' || a === 'gregory') return b;
-  if (b === 'iso8601' || b === 'gregory') return a;
   throw new RangeError(`cannot format range between two dates of ${a} and ${b} calendars`);
 }
 
