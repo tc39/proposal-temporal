@@ -316,8 +316,8 @@ If you do need to calculate the difference between two `Temporal.Absolute`s in y
 For example, you might decide to base the calculation on your user's current time zone, or on UTC.
 
 Take care when using milliseconds, microseconds, or nanoseconds as the largest unit.
-For some durations, the resulting value may overflow `Number.MAX_SAFE_INTEGER` and will throw a `RangeError`.
-For example, `Number.MAX_SAFE_INTEGER` in nanoseconds is only 104.25 days.
+For some durations, the resulting value may overflow `Number.MAX_SAFE_INTEGER` and lose precision in its least significant digit(s).
+Nanoseconds values will overflow and lose precision after about 104 days. Microseconds can fit about 285 years without losing precision, and milliseconds can handle about 285,000 years without losing precision.
 
 Example usage:
 ```js
@@ -333,10 +333,16 @@ missionLength.toLocaleString();
 // A billion (10^9) seconds since the epoch in different units
 epoch = new Temporal.Absolute(0n);
 billion = Temporal.Absolute.fromEpochSeconds(1e9);
-billion.difference(epoch);  // => PT1000000000S
-billion.difference(epoch, { largestUnit: 'hours' });        // => PT277777H46M40S
-billion.difference(epoch, { largestUnit: 'days' });         // => P11574DT1H46M40S
-billion.difference(epoch, { largestUnit: 'nanoseconds' });  // => overflow; throws RangeError
+billion.difference(epoch);
+  // =>    PT1000000000S
+billion.difference(epoch, { largestUnit: 'hours' });
+  // =>  PT277777H46M40S
+billion.difference(epoch, { largestUnit: 'days' });
+  // => P11574DT1H46M40S
+ns = billion.difference(epoch, { largestUnit: 'nanoseconds' });
+  // =>    PT1000000000S
+ns.plus({nanoseconds: 1});
+  // =>    PT1000000000S (lost precision)
 
 // Calculate the difference in years, eliminating the ambiguity by
 // explicitly using the corresponding calendar date in UTC:

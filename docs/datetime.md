@@ -455,27 +455,30 @@ By default, the largest unit in the result is days.
 This is because months and years can be different lengths depending on which month is meant and whether the year is a leap year.
 
 Take care when using milliseconds, microseconds, or nanoseconds as the largest unit.
-For some durations, the resulting value may overflow `Number.MAX_SAFE_INTEGER` and will throw a `RangeError`.
-For example, `Number.MAX_SAFE_INTEGER` in nanoseconds is only 104.25 days.
+For some durations, the resulting value may overflow `Number.MAX_SAFE_INTEGER` and lose precision in its least significant digit(s).
+Nanoseconds values will overflow and lose precision after about 104 days. Microseconds can fit about 285 years without losing precision, and milliseconds can handle about 285,000 years without losing precision.
 
 Usage example:
 ```javascript
 dt1 = Temporal.DateTime.from('1995-12-07T03:24:30.000003500');
 dt2 = Temporal.DateTime.from('2019-01-31T15:30');
-dt2.difference(dt1);                                   // =>    P8456DT12H5M29.999996500S
-dt2.difference(dt1), { largestUnit: 'years' });        // => P23Y1M24DT12H5M29.999996500S
-dt2.difference(dt1), { largestUnit: 'nanoseconds' });  // => overflow; throws RangeError
-dt1.difference(dt2), { largestUnit: 'years' });        // => throws RangeError
+dt2.difference(dt1);
+  // =>    P8456DT12H5M29.999996500S
+dt2.difference(dt1, { largestUnit: 'years' });
+  // => P23Y1M24DT12H5M29.999996500S
+dt2.difference(dt1, { largestUnit: 'nanoseconds' });
+  // =>       PT730641929.999996544S (precision lost)
+dt1.difference(dt2, { largestUnit: 'years' });  
+  // => throws RangeError
 
 // Months and years can be different lengths
-[jan1, feb1, mar1, apr1, may1] = 
-  [1, 2, 3, 4, 5].map(month => Temporal.DateTime.from({ year: 2020, month, day: 1 }));
+[jan1, feb1, mar1] = [1, 2, 3].map(month => 
+  Temporal.DateTime.from({ year: 2020, month, day: 1 }));
 feb1.difference(jan1);                                   // => P31D
 feb1.difference(jan1, { largestUnit: 'months' });        // => P1M
 mar1.difference(feb1);                                   // => P29D
 mar1.difference(feb1, { largestUnit: 'months' });        // => P1M
 may1.difference(jan1);                                   // => P121D
-may1.difference(jan1), { largestUnit: 'nanoseconds' });  // => overflow; throws RangeError
 ```
 
 ### datetime.**equals**(_other_: Temporal.DateTime) : boolean
