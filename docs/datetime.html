@@ -545,7 +545,7 @@ dt<span class="token punctuation">.</span><span class="token function">minus</sp
 <li><code>options</code> (optional object): An object with properties representing options for the operation.
 The following options are recognized:<ul>
 <li><code>largestUnit</code> (string): The largest unit of time to allow in the resulting <code>Temporal.Duration</code> object.
-Valid values are <code>&#39;years&#39;</code>, <code>&#39;months&#39;</code>, <code>&#39;weeks&#39;</code>, <code>&#39;days&#39;</code>, <code>&#39;hours&#39;</code>, <code>&#39;minutes&#39;</code>, and <code>&#39;seconds&#39;</code>.
+Valid values are <code>&#39;years&#39;</code>, <code>&#39;months&#39;</code>, <code>&#39;weeks&#39;</code>, <code>&#39;days&#39;</code>, <code>&#39;hours&#39;</code>, <code>&#39;minutes&#39;</code>, <code>&#39;seconds&#39;</code>, <code>&#39;milliseconds&#39;</code>, <code>&#39;microseconds&#39;</code>, and <code>&#39;nanoseconds&#39;</code>.
 The default is <code>days</code>.</li>
 </ul>
 </li>
@@ -559,6 +559,8 @@ A difference of two hours will become 7200 seconds when <code>largestUnit</code>
 However, a difference of 30 seconds will still be 30 seconds even if <code>largestUnit</code> is <code>&quot;hours&quot;</code>.</p>
 <p>By default, the largest unit in the result is days.
 This is because months and years can be different lengths depending on which month is meant and whether the year is a leap year.</p>
+<p>Take care when using milliseconds, microseconds, or nanoseconds as the largest unit.
+For some dates, the resulting value may overflow <code>Number.MAX_SAFE_INTEGER</code>.</p>
 <p>Usage example:</p>
 <pre class="language-javascript"><code class="language-javascript">dt1 <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'1995-12-07T03:24:30.000003500'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 dt2 <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2019-01-31T15:30'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>

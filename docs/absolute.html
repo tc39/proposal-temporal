@@ -374,7 +374,7 @@ Temporal<span class="token punctuation">.</span>now<span class="token punctuatio
 <li><code>options</code> (optional object): An object with properties representing options for the operation.
 The following options are recognized:<ul>
 <li><code>largestUnit</code> (string): The largest unit of time to allow in the resulting <code>Temporal.Duration</code> object.
-Valid values are <code>&#39;days&#39;</code>, <code>&#39;hours&#39;</code>, <code>&#39;minutes&#39;</code>, and <code>&#39;seconds&#39;</code>.
+Valid values are <code>&#39;days&#39;</code>, <code>&#39;hours&#39;</code>, <code>&#39;minutes&#39;</code>, <code>&#39;seconds&#39;</code>, <code>&#39;milliseconds&#39;</code>, <code>&#39;microseconds&#39;</code>, and <code>&#39;nanoseconds&#39;</code>.
 The default is <code>&quot;seconds&quot;</code>.</li>
 </ul>
 </li>
@@ -392,6 +392,8 @@ This is because months and years can be different lengths depending on which mon
 You cannot determine the start and end date of a difference between <code>Temporal.Absolute</code>s, because <code>Temporal.Absolute</code> has no time zone or calendar.</p>
 <p>If you do need to calculate the difference between two <code>Temporal.Absolute</code>s in years, months, or weeks, then you can make an explicit choice on how to eliminate this ambiguity, choosing your starting point by converting to a <code>Temporal.DateTime</code>.
 For example, you might decide to base the calculation on your user&#39;s current time zone, or on UTC.</p>
+<p>Take care when using milliseconds, microseconds, or nanoseconds as the largest unit.
+For some dates, the resulting value may overflow <code>Number.MAX_SAFE_INTEGER</code>.</p>
 <p>Example usage:</p>
 <pre class="language-js"><code class="language-js">startOfMoonMission <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Absolute<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'1969-07-16T13:32:00Z'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 endOfMoonMission <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Absolute<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'1969-07-24T16:50:35Z'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>

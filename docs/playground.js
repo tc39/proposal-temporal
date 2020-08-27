@@ -3666,7 +3666,7 @@
     },
     ToLargestTemporalUnit: function ToLargestTemporalUnit(options, fallback) {
       var disallowedStrings = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
-      var allowed = new Set(['years', 'months', 'weeks', 'days', 'hours', 'minutes', 'seconds']);
+      var allowed = new Set(['years', 'months', 'weeks', 'days', 'hours', 'minutes', 'seconds', 'milliseconds', 'microseconds', 'nanoseconds']);
 
       var _iterator3 = _createForOfIteratorHelper(disallowedStrings),
           _step3;
@@ -4450,6 +4450,21 @@
           minutes = hours = days = 0;
           break;
 
+        case 'milliseconds':
+          milliseconds += 1000 * (seconds + 60 * (minutes + 60 * (hours + 24 * days)));
+          seconds = minutes = hours = days = 0;
+          break;
+
+        case 'microseconds':
+          microseconds += 1000 * (milliseconds + 1000 * (seconds + 60 * (minutes + 60 * (hours + 24 * days))));
+          milliseconds = seconds = minutes = hours = days = 0;
+          break;
+
+        case 'nanoseconds':
+          nanoseconds += 1000 * (microseconds + 1000 * (milliseconds + 1000 * (seconds + 60 * (minutes + 60 * (hours + 24 * days)))));
+          microseconds = milliseconds = seconds = minutes = hours = days = 0;
+          break;
+
         case 'years':
         case 'months':
         case 'weeks':
@@ -5212,7 +5227,7 @@
       key: "dateDifference",
       value: function dateDifference(smaller, larger, options) {
         if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
-        var largestUnit = ES.ToLargestTemporalUnit(options, 'days', ['hours', 'minutes', 'seconds']);
+        var largestUnit = ES.ToLargestTemporalUnit(options, 'days', ['hours', 'minutes', 'seconds', 'milliseconds', 'microseconds', 'nanoseconds']);
 
         var _ES$DifferenceDate = ES.DifferenceDate(smaller, larger, largestUnit),
             years = _ES$DifferenceDate.years,
@@ -7994,7 +8009,7 @@
           other = new Date(GetSlot(other, ISO_YEAR), GetSlot(other, ISO_MONTH), calendar, GetSlot(other, REF_ISO_DAY));
         }
 
-        var largestUnit = ES.ToLargestTemporalUnit(options, 'years', ['weeks', 'days', 'hours', 'minutes', 'seconds']);
+        var largestUnit = ES.ToLargestTemporalUnit(options, 'years', ['weeks', 'days', 'hours', 'minutes', 'seconds', 'milliseconds', 'microseconds', 'nanoseconds']);
         var comparison = YearMonth.compare(this, other);
         if (comparison < 0) throw new RangeError('other instance cannot be larger than `this`');
         var smallerFields = ES.ToTemporalYearMonthRecord(other);
