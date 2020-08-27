@@ -316,7 +316,8 @@ If you do need to calculate the difference between two `Temporal.Absolute`s in y
 For example, you might decide to base the calculation on your user's current time zone, or on UTC.
 
 Take care when using milliseconds, microseconds, or nanoseconds as the largest unit.
-For some dates, the resulting value may overflow `Number.MAX_SAFE_INTEGER`.
+For some durations, the resulting value may overflow `Number.MAX_SAFE_INTEGER` and will throw a `RangeError`.
+For example, `Number.MAX_SAFE_INTEGER` in nanoseconds is only 104.25 days.
 
 Example usage:
 ```js
@@ -333,8 +334,9 @@ missionLength.toLocaleString();
 epoch = new Temporal.Absolute(0n);
 billion = Temporal.Absolute.fromEpochSeconds(1e9);
 billion.difference(epoch);  // => PT1000000000S
-billion.difference(epoch, { largestUnit: 'hours' })  // => PT277777H46M40S
-billion.difference(epoch, { largestUnit: 'days' })  // => P11574DT1H46M40S
+billion.difference(epoch, { largestUnit: 'hours' });        // => PT277777H46M40S
+billion.difference(epoch, { largestUnit: 'days' });         // => P11574DT1H46M40S
+billion.difference(epoch, { largestUnit: 'nanoseconds' });  // => overflow; throws RangeError
 
 // Calculate the difference in years, eliminating the ambiguity by
 // explicitly using the corresponding calendar date in UTC:
