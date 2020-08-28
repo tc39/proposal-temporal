@@ -238,7 +238,7 @@
       <emu-alg>
         1. Let _absolute_ be the *this* value.
         1. Perform ? RequireInternalSlot(_absolute_, [[InitializedTemporalAbsolute]]).
-        1. Let _duration_ be ? ToLimitedTemporalDuration(_temporalDurationLike_, « *"years"*, *"months"* »).
+        1. Let _duration_ be ? ToLimitedTemporalDuration(_temporalDurationLike_, « *"years"*, *"months"*, *"weeks"*, *"days"* »).
         1. Perform ? RejectDurationSign(_duration_.[[Years]], _duration.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
         1. Let _ns_ be _absolute_.[[Nanoseconds]] +
             _duration_.[[Nanoseconds]] +
@@ -246,8 +246,7 @@
             _duration_.[[Milliseconds]] × 1,000,000 +
             _duration_.[[Seconds]] × 1,000,000,000 +
             _duration_.[[Minutes]] × 60,000,000,000 +
-            _duration_.[[Hours]] × 3,600,000,000,000 +
-            _duration_.[[Days]] × 86,400,000,000,000.
+            _duration_.[[Hours]] × 3,600,000,000,000.
         1. Perform ? RejectAbsolute(_ns_).
         1. Return ? CreateTemporalAbsoluteFromInstance(_absolute_, _ns_).
       </emu-alg>
@@ -262,7 +261,7 @@
       <emu-alg>
         1. Let _absolute_ be the *this* value.
         1. Perform ? RequireInternalSlot(_absolute_, [[InitializedTemporalAbsolute]]).
-        1. Let _duration_ be ? ToLimitedTemporalDuration(_temporalDurationLike_, « *"years"*, *"months"* »).
+        1. Let _duration_ be ? ToLimitedTemporalDuration(_temporalDurationLike_, « *"years"*, *"months"*, *"weeks"*, *"days"* »).
         1. Perform ? RejectDurationSign(_duration_.[[Years]], _duration.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
         1. Let _ns_ be _absolute_.[[Nanoseconds]] -
             _duration_.[[Nanoseconds]] -
@@ -270,8 +269,7 @@
             _duration_.[[Milliseconds]] × 1,000,000 -
             _duration_.[[Seconds]] × 1,000,000,000 -
             _duration_.[[Minutes]] × 60,000,000,000 -
-            _duration_.[[Hours]] × 3,600,000,000,000 -
-            _duration_.[[Days]] × 86,400,000,000,000.
+            _duration_.[[Hours]] × 3,600,000,000,000.
         1. Perform ? RejectAbsolute(_ns_).
         1. Return ? CreateTemporalAbsoluteFromInstance(_absolute_, _ns_).
       </emu-alg>
@@ -287,10 +285,10 @@
         1. Let _absolute_ be the *this* value.
         1. Perform ? RequireInternalSlot(_absolute_, [[InitializedTemporalAbsolute]]).
         1. Perform ? RequireInternalSlot(_other_, [[InitializedTemporalAbsolute]]).
-        1. Let _largestUnit_ be ? ToLargestTemporalUnit(_options_, « *"years"*, *"months"*, *"weeks"* », *"seconds"*).
+        1. Let _largestUnit_ be ? ToLargestTemporalUnit(_options_, « *"years"*, *"months"*, *"weeks"*, *"days"* », *"seconds"*).
         1. Let _ns_ be _absolute_.[[Nanoseconds]] - _otherAbsolute_.[[Nanoseconds]].
         1. Let _result_ be ! BalanceDuration(0, 0, 0, 0, 0, 0, _ns_, _largestUnit_).
-        1. Return ? CreateTemporalDuration(0, 0, 0, _result_.[[Days]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]).
+        1. Return ? CreateTemporalDuration(0, 0, 0, 0, _result_.[[Hours]], _result_.[[Minutes]], _result_.[[Seconds]], _result_.[[Milliseconds]], _result_.[[Microseconds]], _result_.[[Nanoseconds]]).
       </emu-alg>
     </emu-clause>
 

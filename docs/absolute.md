@@ -248,9 +248,10 @@ This method adds `duration` to `absolute`, returning a point in time that is in 
 
 The `duration` argument is an object with properties denoting a duration, such as `{ hours: 5, minutes: 30 }`, or a `Temporal.Duration` object.
 
-The `years` and `months` fields of `duration` must be zero, because adding a year or a month to a `Temporal.Absolute` is invalid and will throw a `RangeError`.
-`Temporal.Absolute` is independent of time zones and calendars, and so years and months may be different lengths.
-If you need to do this, convert the `Temporal.Absolute` to a `Temporal.DateTime` by specifying the desired time zone, add the duration, and then convert it back.
+The `years`,  `months`, `weeks`, and `days` fields of `duration` must be zero.
+`Temporal.Absolute` is independent of time zones and calendars, and so years,  months, weeks, and days may be different lengths depending on which calendar or time zone they are reckoned in.
+This makes an addition with those units ambiguous.
+If you need to do this, convert the `Temporal.Absolute` to a `Temporal.DateTime` by specifying the desired calendar and time zone, add the duration, and then convert it back.
 
 If the result is earlier or later than the range that `Temporal.Absolute` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), a `RangeError` will be thrown.
 
@@ -260,7 +261,7 @@ Example usage:
 ```js
 // Temporal.Absolute representing five hours from now
 Temporal.now.absolute().plus({ hours: 5 });
-fiveHours = new Temporal.Duration(0, 0, 0, 5);
+fiveHours = new Temporal.Duration(0, 0, 0, 0, 5);
 Temporal.now.absolute().plus(fiveHours);
 ```
 
@@ -275,9 +276,10 @@ This method subtracts `duration` from `absolute`, returning a point in time that
 
 The `duration` argument is an object with properties denoting a duration, such as `{ hours: 5, minutes: 30 }`, or a `Temporal.Duration` object.
 
-The `years` and `months` fields of `duration` must be zero, because subtracting a year or a month from a `Temporal.Absolute` is invalid and will throw a `RangeError`.
-`Temporal.Absolute` is independent of time zones and calendars, and so years and months may be different lengths.
-If you need to do this, convert the `Temporal.Absolute` to a `Temporal.DateTime` by specifying the desired time zone, subtract the duration, and then convert it back.
+The `years`,  `months`, `weeks`, and `days` fields of `duration` must be zero.
+`Temporal.Absolute` is independent of time zones and calendars, and so years,  months, weeks, and days may be different lengths depending on which calendar or time zone they are reckoned in.
+This makes a subtraction with those units ambiguous.
+If you need to do this, convert the `Temporal.Absolute` to a `Temporal.DateTime` by specifying the desired calendar and time zone, subtract the duration, and then convert it back.
 
 If the result is earlier or later than the range that `Temporal.Absolute` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), a `RangeError` will be thrown.
 
@@ -285,10 +287,10 @@ Subtracting a negative duration is equivalent to adding the absolute value of th
 
 Example usage:
 ```js
-// Temporal.Absolute representing this time yesterday
-Temporal.now.absolute().minus({ days: 1 });
-oneDay = new Temporal.Duration(0, 0, 1);
-Temporal.now.absolute().minus(oneDay);
+// Temporal.Absolute representing this time an hour ago
+Temporal.now.absolute().minus({ hours: 1 });
+oneHour = new Temporal.Duration(0, 0, 0, 0, 1);
+Temporal.now.absolute().minus(oneHour);
 ```
 
 ### absolute.**difference**(_other_: Temporal.Absolute, _options_?: object) : Temporal.Duration
@@ -298,7 +300,7 @@ Temporal.now.absolute().minus(oneDay);
 - `options` (optional object): An object with properties representing options for the operation.
   The following options are recognized:
   - `largestUnit` (string): The largest unit of time to allow in the resulting `Temporal.Duration` object.
-    Valid values are `'days'`, `'hours'`, `'minutes'`, `'seconds'`, `'milliseconds'`, `'microseconds'`, and `'nanoseconds'`.
+    Valid values are `'hours'`, `'minutes'`, `'seconds'`, `'milliseconds'`, `'microseconds'`, and `'nanoseconds'`.
     The default is `"seconds"`.
 
 **Returns:** a `Temporal.Duration` representing the difference between `absolute` and `other`.
@@ -312,12 +314,13 @@ A difference of two hours will become 7200 seconds when `largestUnit` is `"secon
 However, a difference of 30 seconds will still be 30 seconds even if `largestUnit` is `"hours"`.
 
 By default, the largest unit in the result is seconds.
-Weeks, months and years are not allowed, unlike the difference methods of the other Temporal types.
+Weeks, months, years, and days are not allowed, unlike the difference methods of the other Temporal types.
 This is because months and years can be different lengths depending on which month is meant, and whether the year is a leap year, which all depends on the start and end date of the difference.
 You cannot determine the start and end date of a difference between `Temporal.Absolute`s, because `Temporal.Absolute` has no time zone or calendar.
+In addition, weeks can be different lengths in different calendars, and days can be different lengths when the time zone has a daylight saving transition.
 
-If you do need to calculate the difference between two `Temporal.Absolute`s in years, months, or weeks, then you can make an explicit choice on how to eliminate this ambiguity, choosing your starting point by converting to a `Temporal.DateTime`.
-For example, you might decide to base the calculation on your user's current time zone, or on UTC.
+If you do need to calculate the difference between two `Temporal.Absolute`s in years, months, weeks, or days, then you can make an explicit choice on how to eliminate this ambiguity, choosing your starting point by converting to a `Temporal.DateTime`.
+For example, you might decide to base the calculation on your user's current time zone, or on UTC, in the Gregorian calendar.
 
 Take care when using milliseconds, microseconds, or nanoseconds as the largest unit.
 For some durations, the resulting value may overflow `Number.MAX_SAFE_INTEGER` and lose precision in its least significant digit(s).
@@ -328,11 +331,11 @@ Example usage:
 startOfMoonMission = Temporal.Absolute.from('1969-07-16T13:32:00Z');
 endOfMoonMission = Temporal.Absolute.from('1969-07-24T16:50:35Z');
 missionLength = endOfMoonMission.difference(startOfMoonMission, { largestUnit: 'days' });
-  // => P8DT3H18M35S
+  // => PT195H18M35S
 startOfMoonMission.difference(endOfMoonMission, { largestUnit: 'days' });
   // => throws RangeError
 missionLength.toLocaleString();
-  // example output: '8 days 3 hours 18 minutes 35 seconds'
+  // example output: '195 hours 18 minutes 35 seconds'
 
 // A billion (10^9) seconds since the epoch in different units
 epoch = new Temporal.Absolute(0n);
@@ -341,8 +344,6 @@ billion.difference(epoch);
   // =>    PT1000000000S
 billion.difference(epoch, { largestUnit: 'hours' });
   // =>  PT277777H46M40S
-billion.difference(epoch, { largestUnit: 'days' });
-  // => P11574DT1H46M40S
 ns = billion.difference(epoch, { largestUnit: 'nanoseconds' });
   // =>    PT1000000000S
 ns.plus({nanoseconds: 1});

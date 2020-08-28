@@ -9,7 +9,6 @@ includes: [compareArray.js]
 const instance = new Temporal.Absolute(10n);
 const expected = [
   "get days",
-  "valueOf days",
   "get hours",
   "valueOf hours",
   "get microseconds",
@@ -28,7 +27,6 @@ const expected = [
 ];
 const actual = [];
 const fields = {
-  days: 1.7,
   hours: 1.7,
   minutes: 1.7,
   seconds: 1.7,
@@ -56,5 +54,5 @@ const argument = new Proxy(fields, {
   },
 });
 const result = instance.plus(argument);
-assert.sameValue(result.getEpochNanoseconds(), 90061001001011n, "nanoseconds result");
+assert.sameValue(result.getEpochNanoseconds(), 3661001001011n, "nanoseconds result");
 assert.compareArray(actual, expected, "order of operations");
