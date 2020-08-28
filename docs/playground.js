@@ -5838,9 +5838,10 @@
         if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
         if (!ES.IsTemporalDate(other)) throw new TypeError('invalid Date object');
         var calendar = GetSlot(this, CALENDAR);
+        var otherCalendar = GetSlot(other, CALENDAR);
 
-        if (calendar.id !== GetSlot(other, CALENDAR).id) {
-          other = new Date(GetSlot(other, ISO_YEAR), GetSlot(other, ISO_MONTH), GetSlot(other, ISO_DAY), calendar);
+        if (calendar.id !== otherCalendar.id) {
+          throw new RangeError("cannot compute difference between dates of ".concat(calendar.id, " and ").concat(otherCalendar.id, " calendars"));
         }
 
         var comparison = Date.compare(this, other);
@@ -6327,9 +6328,10 @@
         if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
         if (!ES.IsTemporalDateTime(other)) throw new TypeError('invalid DateTime object');
         var calendar = GetSlot(this, CALENDAR);
+        var otherCalendar = GetSlot(other, CALENDAR);
 
-        if (calendar.id !== GetSlot(other, CALENDAR).id) {
-          other = new DateTime(GetSlot(other, ISO_YEAR), GetSlot(other, ISO_MONTH), GetSlot(other, ISO_DAY), GetSlot(other, HOUR), GetSlot(other, MINUTE), GetSlot(other, SECOND), GetSlot(other, MILLISECOND), GetSlot(other, MICROSECOND), GetSlot(other, NANOSECOND), calendar);
+        if (calendar.id !== otherCalendar.id) {
+          throw new RangeError("cannot compute difference between dates of ".concat(calendar.id, " and ").concat(otherCalendar.id, " calendars"));
         }
 
         var largestUnit = ES.ToLargestTemporalUnit(options, 'days');
@@ -6355,7 +6357,7 @@
         month = _ES$BalanceDate.month;
         day = _ES$BalanceDate.day;
         var TemporalDate = GetIntrinsic$1('%Temporal.Date%');
-        var adjustedLarger = new TemporalDate(year, month, day, GetSlot(this, CALENDAR));
+        var adjustedLarger = new TemporalDate(year, month, day, calendar);
         var dateLargestUnit = 'days';
 
         if (largestUnit === 'years' || largestUnit === 'months' || largestUnit === 'weeks') {
@@ -8004,9 +8006,10 @@
         if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
         if (!ES.IsTemporalYearMonth(other)) throw new TypeError('invalid YearMonth object');
         var calendar = GetSlot(this, CALENDAR);
+        var otherCalendar = GetSlot(other, CALENDAR);
 
-        if (calendar.id !== GetSlot(other, CALENDAR).id) {
-          other = new Date(GetSlot(other, ISO_YEAR), GetSlot(other, ISO_MONTH), calendar, GetSlot(other, REF_ISO_DAY));
+        if (calendar.id !== otherCalendar.id) {
+          throw new RangeError("cannot compute difference between months of ".concat(calendar.id, " and ").concat(otherCalendar.id, " calendars"));
         }
 
         var largestUnit = ES.ToLargestTemporalUnit(options, 'years', ['weeks', 'days', 'hours', 'minutes', 'seconds', 'milliseconds', 'microseconds', 'nanoseconds']);
@@ -8281,7 +8284,7 @@
 
   function adjustFormatterCalendar(formatter, calendar) {
     var options = formatter.resolvedOptions();
-    if (!calendar || calendar === options.calendar || calendar === 'gregory' || calendar === 'iso8601') return formatter;
+    if (!calendar || calendar === options.calendar || calendar === 'iso8601') return formatter;
     var locale = "".concat(options.locale, "-u-ca-").concat(calendar);
     return new IntlDateTimeFormat$1(locale, options);
   }
@@ -8290,8 +8293,6 @@
     if (!a) return b;
     if (!b) return a;
     if (a === b) return a;
-    if (a === 'iso8601' || a === 'gregory') return b;
-    if (b === 'iso8601' || b === 'gregory') return a;
     throw new RangeError("cannot format range between two dates of ".concat(a, " and ").concat(b, " calendars"));
   }
 

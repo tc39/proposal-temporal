@@ -420,6 +420,7 @@ The returned <code>Temporal.Duration</code> object will not have any nonzero fie
 A difference of one year and two months will become 14 months when <code>largestUnit</code> is <code>&quot;months&quot;</code>, for example.
 However, a difference of one month will still be one month even if <code>largestUnit</code> is <code>&quot;years&quot;</code>.</p>
 <p>Unlike other Temporal types, days and lower units are not allowed, because the data model of <code>Temporal.YearMonth</code> doesn&#39;t have that accuracy.</p>
+<p>Computing the difference between two months in different calendar systems is not supported.</p>
 <p>Usage example:</p>
 <pre class="language-javascript"><code class="language-javascript">ym <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>YearMonth<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2019-06'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 other <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>YearMonth<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2006-08'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>

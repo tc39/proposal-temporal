@@ -562,6 +562,8 @@ This is because months and years can be different lengths depending on which mon
 <p>Take care when using milliseconds, microseconds, or nanoseconds as the largest unit.
 For some durations, the resulting value may overflow <code>Number.MAX_SAFE_INTEGER</code> and lose precision in its least significant digit(s).
 Nanoseconds values will overflow and lose precision after about 104 days. Microseconds can fit about 285 years without losing precision, and milliseconds can handle about 285,000 years without losing precision.</p>
+<p>Computing the difference between two dates in different calendar systems is not supported.
+If you need to do this, choose the calendar in which the computation takes place by converting one of the dates with <code>datetime.withCalendar()</code>.</p>
 <p>Usage example:</p>
 <pre class="language-javascript"><code class="language-javascript">dt1 <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'1995-12-07T03:24:30.000003500'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 dt2 <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2019-01-31T15:30'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
