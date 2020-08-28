@@ -201,20 +201,23 @@ export class Date {
   valueOf() {
     throw new TypeError('use compare() or equals() to compare Temporal.Date');
   }
-  toDateTime(temporalTime) {
+  toDateTime(temporalTime = undefined) {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
-    if (!ES.IsTemporalTime(temporalTime)) throw new TypeError('invalid Temporal.Time object');
     const year = GetSlot(this, ISO_YEAR);
     const month = GetSlot(this, ISO_MONTH);
     const day = GetSlot(this, ISO_DAY);
     const calendar = GetSlot(this, CALENDAR);
+    const DateTime = GetIntrinsic('%Temporal.DateTime%');
+
+    if (!temporalTime) return new DateTime(year, month, day, 0, 0, 0, 0, 0, 0, calendar);
+
+    if (!ES.IsTemporalTime(temporalTime)) throw new TypeError('invalid Temporal.Time object');
     const hour = GetSlot(temporalTime, HOUR);
     const minute = GetSlot(temporalTime, MINUTE);
     const second = GetSlot(temporalTime, SECOND);
     const millisecond = GetSlot(temporalTime, MILLISECOND);
     const microsecond = GetSlot(temporalTime, MICROSECOND);
     const nanosecond = GetSlot(temporalTime, NANOSECOND);
-    const DateTime = GetIntrinsic('%Temporal.DateTime%');
     return new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
   }
   toYearMonth() {

@@ -154,6 +154,9 @@ describe('Date', () => {
       throws(() => date.toDateTime({ hour: 11, minute: 30, second: 23 }), TypeError);
       throws(() => date.toDateTime('11:30:23'), TypeError);
     });
+    it('optional argument defaults to midnight', () => {
+      equal(`${date.toDateTime()}`, '1976-11-18T00:00');
+    });
   });
   describe('date.difference() works', () => {
     const date = new Date(1976, 11, 18);
