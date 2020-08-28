@@ -353,25 +353,26 @@ describe('Absolute', () => {
   describe('Absolute.plus works', () => {
     const abs = Absolute.from('1969-12-25T12:23:45.678901234Z');
     describe('cross epoch in ms', () => {
-      const one = abs.minus({ days: 10, nanoseconds: 800 });
-      const two = abs.plus({ days: 10, nanoseconds: 800 });
-      const three = two.minus({ days: 20, nanoseconds: 1600 });
-      const four = one.plus({ days: 20, nanoseconds: 1600 });
-      it(`(${abs}).minus({ days: 10, nanoseconds: 800 }) = ${one}`, () =>
+      const one = abs.minus({ hours: 240, nanoseconds: 800 });
+      const two = abs.plus({ hours: 240, nanoseconds: 800 });
+      const three = two.minus({ hours: 480, nanoseconds: 1600 });
+      const four = one.plus({ hours: 480, nanoseconds: 1600 });
+      it(`(${abs}).minus({ hours: 240, nanoseconds: 800 }) = ${one}`, () =>
         equal(`${one}`, '1969-12-15T12:23:45.678900434Z'));
-      it(`(${abs}).plus({ days: 10, nanoseconds: 800 }) = ${two}`, () =>
+      it(`(${abs}).plus({ hours: 240, nanoseconds: 800 }) = ${two}`, () =>
         equal(`${two}`, '1970-01-04T12:23:45.678902034Z'));
-      it(`(${two}).minus({ days: 20, nanoseconds: 1600 }) = ${one}`, () => assert(three.equals(one)));
-      it(`(${one}).plus( days: 20, nanoseconds: 1600 }) = ${two}`, () => assert(four.equals(two)));
+      it(`(${two}).minus({ hours: 480, nanoseconds: 1600 }) = ${one}`, () => assert(three.equals(one)));
+      it(`(${one}).plus({ hours: 480, nanoseconds: 1600 }) = ${two}`, () => assert(four.equals(two)));
     });
     it('abs.plus(durationObj)', () => {
-      const later = abs.plus(Temporal.Duration.from('P10DT0.000000800S'));
+      const later = abs.plus(Temporal.Duration.from('PT240H0.000000800S'));
       equal(`${later}`, '1970-01-04T12:23:45.678902034Z');
     });
-    it('invalid to add years, months, or weeks', () => {
+    it('invalid to add years, months, weeks, or days', () => {
       throws(() => abs.plus({ years: 1 }), RangeError);
       throws(() => abs.plus({ months: 1 }), RangeError);
       throws(() => abs.plus({ weeks: 1 }), RangeError);
+      throws(() => abs.plus({ days: 1 }), RangeError);
     });
     it('mixed positive and negative values always throw', () => {
       throws(() => abs.plus({ hours: 1, minutes: -30 }), RangeError);
@@ -380,13 +381,14 @@ describe('Absolute', () => {
   describe('Absolute.minus works', () => {
     const abs = Absolute.from('1969-12-25T12:23:45.678901234Z');
     it('abs.minus(durationObj)', () => {
-      const earlier = abs.minus(Temporal.Duration.from('P10DT0.000000800S'));
+      const earlier = abs.minus(Temporal.Duration.from('PT240H0.000000800S'));
       equal(`${earlier}`, '1969-12-15T12:23:45.678900434Z');
     });
-    it('invalid to subtract years, months, or weeks', () => {
+    it('invalid to subtract years, months, weeks, or days', () => {
       throws(() => abs.minus({ years: 1 }), RangeError);
       throws(() => abs.minus({ months: 1 }), RangeError);
       throws(() => abs.minus({ weeks: 1 }), RangeError);
+      throws(() => abs.minus({ days: 1 }), RangeError);
     });
     it('mixed positive and negative values always throw', () => {
       throws(() => abs.minus({ hours: 1, minutes: -30 }), RangeError);
@@ -455,13 +457,12 @@ describe('Absolute', () => {
       equal(`${Absolute.from('2021-02-01T00:00:00.000000001Z').difference(feb20)}`, 'PT31622400.000000001S');
       equal(`${feb21.difference(Absolute.from('2020-02-01T00:00:00.000000001Z'))}`, 'PT31622399.999999999S');
     });
-    it('can return minutes, hours, and days', () => {
+    it('can return minutes and hours', () => {
       equal(`${feb21.difference(feb20, { largestUnit: 'hours' })}`, 'PT8784H');
       equal(`${feb21.difference(feb20, { largestUnit: 'minutes' })}`, 'PT527040M');
-      equal(`${feb21.difference(feb20, { largestUnit: 'days' })}`, 'P366D');
     });
     it('can return subseconds', () => {
-      const later = feb20.plus({ days: 1, milliseconds: 250, microseconds: 250, nanoseconds: 250 });
+      const later = feb20.plus({ hours: 24, milliseconds: 250, microseconds: 250, nanoseconds: 250 });
 
       const msDiff = later.difference(feb20, { largestUnit: 'milliseconds' });
       equal(msDiff.seconds, 0);
@@ -478,7 +479,8 @@ describe('Absolute', () => {
       equal(nsDiff.microseconds, 0);
       equal(nsDiff.nanoseconds, 86400250250250);
     });
-    it('cannot return weeks, months, and years', () => {
+    it('cannot return days, weeks, months, and years', () => {
+      throws(() => feb21.difference(feb20, { largestUnit: 'days' }), RangeError);
       throws(() => feb21.difference(feb20, { largestUnit: 'weeks' }), RangeError);
       throws(() => feb21.difference(feb20, { largestUnit: 'months' }), RangeError);
       throws(() => feb21.difference(feb20, { largestUnit: 'years' }), RangeError);
