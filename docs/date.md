@@ -405,9 +405,9 @@ other.difference(date, { largestUnit: 'years' })  // => throws RangeError
 // If you really need to calculate the difference between two Dates in
 // hours, you can eliminate the ambiguity by explicitly choosing the
 // point in time from which you want to reckon the difference. For
-// example, using midnight:
-midnight = Temporal.Time.from('00:00');
-date.toDateTime(midnight).difference(other.toDateTime(midnight), { largestUnit: 'hours' })
+// example, using noon:
+noon = Temporal.Time.from('12:00');
+date.toDateTime(noon).difference(other.toDateTime(noon), { largestUnit: 'hours' })
   // => PT109032H
 ```
 
@@ -510,23 +510,25 @@ This method overrides `Object.prototype.valueOf()` and always throws an exceptio
 This is because it's not possible to compare `Temporal.Date` objects with the relational operators `<`, `<=`, `>`, or `>=`.
 Use `Temporal.Date.compare()` for this, or `date.equals()` for equality.
 
-### date.**toDateTime**(_time_: Temporal.Time) : Temporal.DateTime
+### date.**toDateTime**(_time_?: Temporal.Time) : Temporal.DateTime
 
 **Parameters:**
-- `time` (`Temporal.Time`): A time of day on `date`.
+- `time` (optional `Temporal.Time`): A time of day on `date`.
 
 **Returns:** a `Temporal.DateTime` object that represents the wall-clock time `time` on the calendar date `date`.
 
 This method can be used to convert `Temporal.Date` into a `Temporal.DateTime`, by supplying the time of day to use.
+The default `time`, if it is not given, is midnight (00:00).
 The converted object carries a copy of all the relevant fields of `date` and `time`.
 
-This is exactly equivalent to [`time.toDateTime(date)`](./time.html#toDateTime).
+If `time` is given, this is exactly equivalent to [`time.toDateTime(date)`](./time.html#toDateTime).
 
 Usage example:
 ```javascript
 date = Temporal.Date.from('2006-08-24');
 time = Temporal.Time.from('15:23:30.003');
 date.toDateTime(time)  // => 2006-08-24T15:23:30.003
+date.toDateTime() // => 2006-08-24T00:00
 ```
 
 ### date.**toYearMonth**() : Temporal.YearMonth

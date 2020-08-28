@@ -394,14 +394,16 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal.date.prototype.todatetime">
-      <h1>Temporal.Date.prototype.toDateTime ( _temporalTime_ )</h1>
+      <h1>Temporal.Date.prototype.toDateTime ( [ _temporalTime_ ] )</h1>
       <p>
-        The `toDateTime` method takes one argument _temporalTime_.
+        The `toDateTime` method takes one optional argument _temporalTime_.
         The following steps are taken:
       </p>
       <emu-alg>
         1. Let _temporalDate_ be the *this* value.
         1. Perform ? RequireInternalSlot(_temporalDate_, [[InitializedTemporalDate]]).
+        1. If _temporalTime_ is *undefined*, then
+          1. Return ? CreateTemporalDateTime(_temporalDate_.[[ISOYear]], _temporalDate.[[ISOMonth]], _temporalDate_.[[ISODay]], 0, 0, 0, 0, 0, 0).
         1. Perform ? RequireInternalSlot(_temporalTime_, [[InitializedTemporalTime]]).
         1. Return ? CreateTemporalDateTime(_temporalDate_.[[ISOYear]], _temporalDate_.[[ISOMonth]], _temporalDate_.[[ISODay]],
           _temporalTime_.[[Hour]], _temporalTime_.[[Minute]], _temporalTime_.[[Second]],
