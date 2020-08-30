@@ -572,6 +572,56 @@ describe('LocalDateTime', () => {
     });
   });
 
+  describe('string parsing', () => {
+    it('parses with an IANA zone', () => {
+      const ldt = Temporal.LocalDateTime.from('2020-03-08T01:00-08:00[America/Los_Angeles]');
+      equal(ldt.toString(), '2020-03-08T01:00-08:00[America/Los_Angeles]');
+    });
+    it('parses with an offset in brackets', () => {
+      const ldt = Temporal.LocalDateTime.from('2020-03-08T01:00-08:00[-08:00]');
+      equal(ldt.toString(), '2020-03-08T01:00-08:00[-08:00]');
+    });
+    it('parses with "Z" used as an offset', () => {
+      const iso = '2020-03-08T01:00-08:00[America/Los_Angeles]';
+      const abs = Temporal.LocalDateTime.from(iso).toAbsolute();
+      equal(abs.toString(), '2020-03-08T09:00Z');
+      const ldt = Temporal.LocalDateTime.from(`${abs.toString()}[America/Los_Angeles]`);
+      equal(ldt.toString(), iso);
+    });
+    it('throws if no brackets', () => {
+      // @ts-ignore
+      throws(() => Temporal.LocalDateTime.from('2020-03-08T01:00-08:00'));
+    });
+    it("{ offset: 'reject' } throws if offset does not match offset time zone", () => {
+      // @ts-ignore
+      throws(() => Temporal.LocalDateTime.from('2020-03-08T01:00-04:00[-08:00]', { offset: 'reject' }));
+    });
+    it("{ offset: 'reject' } throws if offset does not match IANA time zone", () => {
+      // @ts-ignore
+      throws(() => Temporal.LocalDateTime.from('2020-03-08T01:00-04:00[America/Chicago]', { offset: 'reject' }));
+    });
+    it("{ offset: 'prefer' } if offset matches time zone (first 1:30 when DST ends)", () => {
+      const ldt = Temporal.LocalDateTime.from('2020-11-01T01:30-07:00[America/Los_Angeles]', { offset: 'prefer' });
+      equal(ldt.toString(), '2020-11-01T01:30-07:00[America/Los_Angeles]');
+    });
+    it("{ offset: 'prefer' } if offset matches time zone (second 1:30 when DST ends)", () => {
+      const ldt = Temporal.LocalDateTime.from('2020-11-01T01:30-08:00[America/Los_Angeles]', { offset: 'prefer' });
+      equal(ldt.toString(), '2020-11-01T01:30-08:00[America/Los_Angeles]');
+    });
+    it("{ offset: 'prefer' } if offset does not match time zone", () => {
+      const ldt = Temporal.LocalDateTime.from('2020-11-01T04:00-07:00[America/Los_Angeles]', { offset: 'prefer' });
+      equal(ldt.toString(), '2020-11-01T04:00-08:00[America/Los_Angeles]');
+    });
+    it("{ offset: 'ignore' } uses time zone only", () => {
+      const ldt = Temporal.LocalDateTime.from('2020-11-01T04:00-12:00[America/Los_Angeles]', { offset: 'ignore' });
+      equal(ldt.toString(), '2020-11-01T04:00-08:00[America/Los_Angeles]');
+    });
+    it("{ offset: 'use' } uses offset only", () => {
+      const ldt = Temporal.LocalDateTime.from('2020-11-01T04:00-07:00[America/Los_Angeles]', { offset: 'use' });
+      equal(ldt.toString(), '2020-11-01T03:00-08:00[America/Los_Angeles]');
+    });
+  });
+
   describe('properties around DST', () => {
     it('hoursInDay works with DST start', () => {
       equal(hourBeforeDstStart.hoursInDay, 23);

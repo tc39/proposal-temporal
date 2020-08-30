@@ -91,68 +91,91 @@ function fromObject(item: Record<string, unknown>, options?: LocalDateTimeAssign
   }
   const tz = Temporal.TimeZone.from(tzOrig);
 
-  let offset: string | undefined = undefined;
   if (timeZoneOffsetNanoseconds !== undefined) {
     if (typeof timeZoneOffsetNanoseconds !== 'number' || isNaN(timeZoneOffsetNanoseconds)) {
       throw RangeError(
         `The \`timeZoneOffsetNanoseconds\` numeric property has an invalid value: ${timeZoneOffsetNanoseconds}`
       );
     }
-    offset = ES.FormatTimeZoneOffsetString(timeZoneOffsetNanoseconds);
   }
 
   // TODO: https://github.com/tc39/proposal-temporal/issues/607
   const dt = Temporal.DateTime.from(item, { disambiguation: overflowOption });
-  return fromCommon(dt, tz, offset, disambiguation, offsetOption);
+  return fromCommon(dt, tz, timeZoneOffsetNanoseconds, disambiguation, offsetOption);
 }
 
 /** Build a `Temporal.LocalDateTime` instance from an ISO 8601 extended string */
 function fromIsoString(isoString: string, options?: LocalDateTimeAssignmentOptions) {
   const disambiguation = getOption(options, 'disambiguation', DISAMBIGUATION_OPTIONS, 'compatible');
   const offsetOption = getOption(options, 'offset', OFFSET_OPTIONS, 'use');
-  const overflowOption = getOption(options, 'overflow', OVERFLOW_OPTIONS, 'constrain');
 
-  // TODO: use public parse API after it lands
-  const {
-    zone: { ianaName, offset },
-    dateTime: dateTimeString,
-    calendar: calendarString
-  } = ES.parse(isoString);
+  // TODO: replace this placeholder parser
+  const formatRegex = /^(.+?)\[([^\]\s]+)\](?:\[c=([^\]\s]+)\])?/;
+  const match = formatRegex.exec(isoString);
+  if (!match) throw new Error('Invalid extended ISO 8601 string');
+  const absString = match[1];
+  const tzString = match[2];
+  const calendarString = match[3] || 'iso8601';
 
-  if (!ianaName) {
+  if (!tzString) {
     throw new Error(
       "Missing time zone. Either append a time zone identifier (e.g. '2011-12-03T10:15:30+01:00[Europe/Paris]')" +
         ' or create differently (e.g. `Temporal.Absolute.from(isoString).toLocalDateTime(timeZone)`).'
     );
   }
 
-  const dateTimeWithCalendarString = calendarString == null ? dateTimeString : `${dateTimeString}[c=${calendarString}]`;
-  // TODO: https://github.com/tc39/proposal-temporal/issues/607
-  const dt = Temporal.DateTime.from(dateTimeWithCalendarString, { disambiguation: overflowOption });
-  const tz = Temporal.TimeZone.from(ianaName);
-  return fromCommon(dt, tz, offset, disambiguation, offsetOption);
+  const dt = Temporal.DateTime.from(absString);
+  const tz = Temporal.TimeZone.from(tzString);
+  const cal = Temporal.Calendar.from(calendarString);
+
+  // Calculate the offset by comparing the DateTime to the Absolute parsed from
+  // the same string. Note that current Temporal parsing regexes fail when "Z"
+  // is used instead of a numeric offset (e.g.
+  // 2020-03-08T09:00Z[America/Los_Angeles]). This is why we can't parse the
+  // whole original string into an Absolute. But the Java.time parser accepts
+  // "Z" as an offset, so for compatibility and ergonomics we do too. Below is a
+  // quote from Jon Skeet (creator of Joda Time which java.time was based on)
+  // that may explain why Java accepts this format. From
+  // https://stackoverflow.com/a/61245186:
+  // > It's really unfortunate that ISO-8601 talks about this as a time zone,
+  // > when it's only a UTC offset - it definitely doesn't specify the actual
+  // > time zone. (So you can't tell what the local time will be one minute
+  // > later, for example.)
+  const abs = Temporal.Absolute.from(absString);
+  // TODO: after negative durations (#811) and sub-second largestUnit (#850)
+  // land, use the commented code instead of all the code below it.
+  // const offsetNs = dt.difference(abs.toDateTime('UTC'), { largestUnit: nanoseconds }).nanoseconds;
+  const dtUtc = abs.toDateTime('UTC');
+  const offsetSign = Temporal.DateTime.compare(dt, dtUtc);
+  const diff =
+    offsetSign < 0
+      ? dtUtc.difference(dt, { largestUnit: 'seconds' })
+      : dt.difference(dtUtc, { largestUnit: 'seconds' });
+  const offsetNs = offsetSign * diff.seconds * 1e9;
+
+  return fromCommon(dt.withCalendar(cal), tz, offsetNs, disambiguation, offsetOption);
 }
 
 /** Shared logic for the object and string forms of `from` */
 function fromCommon(
   dt: Temporal.DateTime,
   timeZone: Temporal.TimeZone,
-  offset: string | undefined,
+  offsetNs: number | undefined,
   disambiguation: Temporal.ToAbsoluteOptions['disambiguation'],
   offsetOption: TimeZoneOffsetDisambiguationOptions['offset']
 ) {
-  // TODO: switch from using offset strings to using offset nanoseconds, to
-  // support those weird cases of sub-minute offsets that can't be captured in
-  // an ISO string.
-  if (offset == null || offsetOption === 'ignore') {
+  if (offsetNs === undefined || offsetOption === 'ignore') {
     // Simple case: ISO string without a TZ offset (or caller wants to ignore
     // the offset), so just convert DateTime to Absolute in the given time zone.
     return fromDateTime(dt, timeZone, { disambiguation });
   }
 
   // Calculate the absolute for the input's date/time and offset
-  const isoString = `${dt.withCalendar('iso8601')}${offset}`;
-  const absWithInputOffset = Temporal.Absolute.from(isoString);
+  // TODO: once negative durations are available, use the commented code instead
+  // const abs = dt.toAbsolute('UTC').plus({ nanoseconds: -offsetNs });
+  const abs = dt.toAbsolute('UTC');
+  const op = offsetNs < 0 ? 'plus' : 'minus';
+  const absWithInputOffset = abs[op]({ nanoseconds: Math.abs(offsetNs) });
 
   if (
     offsetOption === 'use' ||
@@ -168,12 +191,11 @@ function fromCommon(
   // If we get here, then the user-provided offset doesn't match any absolutes
   // for this time zone and date/time.
   if (offsetOption === 'reject') {
-    throw new RangeError(`Offset of '${offset}' is not valid for '${dt}' in '${timeZone}'`);
-  } else {
-    // offsetOption === 'prefer', but the offset doesn't match so fall back to
-    // use the time zone instead.
-    return fromDateTime(dt, timeZone, { disambiguation });
+    throw new RangeError(`Provided offset is not valid for '${dt}' in '${timeZone}'`);
   }
+  // fall through: offsetOption === 'prefer', but the offset doesn't match so
+  // fall back to use the time zone instead.
+  return fromDateTime(dt, timeZone, { disambiguation });
 }
 
 function fromDateTime(
@@ -268,12 +290,13 @@ export class LocalDateTime {
    * Construct a new `Temporal.LocalDateTime` instance from an absolute
    * timestamp, time zone, and optional calendar.
    *
-   * To construct a `Temporal.LocalDateTime` from an ISO 8601 string a
-   * `DateTime` and time zone, use `.from()`.
+   * Use `Temporal.LocalDateTime.from()`To construct a `Temporal.LocalDateTime`
+   * from an ISO 8601 string or from a time zone and `DateTime` fields (like
+   * year or hour).
    *
-   * @param epochNanoseconds {Temporal.Absolute} - absolute timestamp (in
-   * nanoseconds since UNIX epoch) for this instance
-   * @param timeZone {Temporal.TimeZone} - time zone for this instance
+   * @param epochNanoseconds {bigint} - absolute timestamp (in nanoseconds since
+   * UNIX epoch) for this instance
+   * @param timeZone {Temporal.TimeZoneProtocol} - time zone for this instance
    * @param [calendar=Temporal.Calendar.from('iso8601')] {Temporal.CalendarProtocol} -
    * calendar for this instance (defaults to ISO calendar)
    */
@@ -304,13 +327,10 @@ export class LocalDateTime {
    *   `timeZoneOffsetNanoseconds`) are optional. If `timeZoneOffsetNanoseconds`
    *   is not provided, then the time can be ambiguous around DST transitions.
    *   The `disambiguation` option can resolve this ambiguity.
-   * - An extended ISO 8601 string that includes a time zone identifier, e.g.
-   *   `2007-12-03T10:15:30+01:00[Europe/Paris]`. If a timezone offset is not
-   *   present, then the `disambiguation` option will be used to resolve any
-   *   ambiguity. Note that an ISO string ending in "Z" (a UTC time) will not be
-   *   accepted via a string parameter. Instead, the caller must explicitly
-   *   opt-in to UTC, e.g.
-   *   Temporal.Absolute.from(isoString).toLocalDateTime('UTC'}`
+   * - An ISO 8601 date+time+offset string (the same format used by
+   *   `Temporal.Absolute.from`) with a time zone identifier suffix appended in
+   *   square brackets, e.g. `2007-12-03T10:15:30+01:00[Europe/Paris]` or
+   *   `2007-12-03T09:15:30Z[Europe/Paris]`.
    * - An object that can be converted to the string format above.
    *
    * If the input contains both a time zone offset and a time zone, in rare
@@ -943,39 +963,6 @@ function isZeroDuration(duration: Temporal.Duration) {
   return !months && !weeks && !days && !hours && !minutes && !seconds && !milliseconds && !microseconds && !nanoseconds;
 }
 
-const PARSE = (() => {
-  // Copied from regex.mjs. Once parsing lands, we can remove this copypasta and use the public API
-  const yearpart = /(?:[+-]\d{6}|\d{4})/;
-  const datesplit = new RegExp(`(${yearpart.source})(?:-(\\d{2})-(\\d{2})|(\\d{2})(\\d{2}))`);
-  const timesplit = /(\d{2})(?::(\d{2})(?::(\d{2})(?:[.,](\d{1,9}))?)?|(\d{2})(?:(\d{2})(?:[.,](\d{1,9}))?)?)?/;
-  const zonesplit = /(?:([zZ])|(?:([+-]\d{2})(?::?(\d{2}))?(?:\[([^c\]\s](?:[^=\]\s][^\]\s]*))?\])?))/;
-  const calendar = /\[c=([^\]\s]+)\]/;
-
-  const absolute = new RegExp(
-    `^((${datesplit.source})(?:T)(${timesplit.source}))${zonesplit.source}(?:${calendar.source})?$`,
-    'i'
-  );
-  const datetime = new RegExp(
-    `^${datesplit.source}(?:(?:T|\\s+)${timesplit.source}(?:${zonesplit.source})?)?(?:${calendar.source})?$`,
-    'i'
-  );
-
-  const time = new RegExp(`^${timesplit.source}(?:${zonesplit.source})?(?:${calendar.source})?$`, 'i');
-
-  // The short forms of YearMonth and MonthDay are only for the ISO calendar.
-  // Non-ISO calendar YearMonth and MonthDay have to parse as a Temporal.Date,
-  // with the reference fields.
-  // YYYYMM forbidden by ISO 8601, but since it is not ambiguous with anything
-  // else we could parse in a YearMonth context, we allow it
-  const yearmonth = new RegExp(`^(${yearpart.source})-?(\\d{2})$`);
-  const monthday = /^(?:--)?(\d{2})-?(\d{2})$/;
-
-  const offset = /([+-])([0-2][0-9])(?::?([0-5][0-9]))?/;
-  const duration = /P(?:(\d+)Y)?(?:(\d+)M)?(?:(\d+)W)?(?:(\d+)D)?(?:T(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)(?:[.,](\d{1,9}))?S)?)?/i;
-
-  return { absolute, datetime, time, yearmonth, monthday, offset, duration, calendar };
-})();
-
 type LargestDifferenceUnit = Exclude<LocalDateTimeDifferenceOptions['largestUnit'], undefined>;
 const LARGEST_DIFFERENCE_UNITS: LargestDifferenceUnit[] = [
   'years',
@@ -1037,99 +1024,5 @@ function toLargestTemporalUnit<V extends keyof Temporal.DurationLike, F extends 
 const ES = {
   ToInteger: ToInteger as (x: unknown) => number,
   ToString: ToString as (x: unknown) => string,
-  ToObject: ToObject as (x: unknown) => Record<string, unknown>,
-
-  // replace this with public parsing API after it lands
-  ParseFullISOString: (isoString: string) => {
-    const match = PARSE.absolute.exec(isoString);
-    if (!match) throw new RangeError(`invalid ISO 8601 string: ${isoString}`);
-    const absolute = match[0];
-    const dateTime = match[1];
-    const date = match[2];
-    const yearMonth = `${match[3]}-${match[4]}`;
-    const monthDay = `${match[4]}-${match[5]}`;
-    const year = ES.ToInteger(match[3]);
-    const month = ES.ToInteger(match[4]);
-    const day = ES.ToInteger(match[5]);
-    const time = match[8];
-    const hour = ES.ToInteger(match[9]);
-    const minute = ES.ToInteger(match[10]);
-    let second = ES.ToInteger(match[11]);
-    if (second === 60) second = 59;
-    // Instead of figuring out what was wrong with the `absolute` regex, just
-    // hack around the problem for now, because soon we'll have a public parse
-    // method and can remove this code altogether.
-    const fractionalSeconds = match[12] ? ES.ToInteger(`0.${match[12]}`) : 0;
-    const millisecond = ES.ToInteger(fractionalSeconds * 1000);
-    const microsecond = ES.ToInteger(fractionalSeconds * 1e6 - millisecond * 1000);
-    const nanosecond = ES.ToInteger(fractionalSeconds * 1e9 - microsecond * 1000 - millisecond * 1e6);
-    const offset = `${match[17]}:${match[18] || '00'}`;
-    let ianaName = match[19];
-    if (ianaName) {
-      try {
-        // Canonicalize name if it is an IANA link name or is capitalized wrong
-        ianaName = Temporal.TimeZone.from(ianaName).toString();
-      } catch {
-        // Not an IANA name, may be a custom ID, pass through unchanged
-      }
-    }
-    const zone = match[16] ? 'UTC' : ianaName || offset;
-    const calendar = match[20] || null;
-    return {
-      year,
-      month,
-      day,
-      hour,
-      minute,
-      second,
-      millisecond,
-      microsecond,
-      nanosecond,
-      zone,
-      ianaName,
-      offset,
-      absolute,
-      date,
-      dateTime,
-      yearMonth,
-      monthDay,
-      time,
-      calendar
-    };
-  },
-
-  parse: (isoString: string) => {
-    const { absolute, dateTime, date, time, yearMonth, monthDay, ianaName, offset, calendar } = ES.ParseFullISOString(
-      isoString
-    );
-    return {
-      absolute,
-      dateTime,
-      date,
-      time,
-      yearMonth,
-      monthDay,
-      calendar,
-      zone: { ianaName, offset }
-    };
-  },
-
-  parseOffsetString: (string: string) => {
-    const OFFSET = new RegExp(`^${PARSE.offset.source}$`);
-    const match = OFFSET.exec(String(string));
-    if (!match) return null;
-    const sign = match[1] === '-' ? -1 : +1;
-    const hours = +match[2];
-    const minutes = +(match[3] || 0);
-    return sign * (hours * 60 + minutes) * 60 * 1000;
-  },
-
-  FormatTimeZoneOffsetString: (offsetNanoseconds: number) => {
-    const sign = offsetNanoseconds < 0 ? '-' : '+';
-    offsetNanoseconds = Math.abs(offsetNanoseconds);
-    const offsetMinutes = Math.floor(offsetNanoseconds / 60e9);
-    const offsetMinuteString = `00${offsetMinutes % 60}`.slice(-2);
-    const offsetHourString = `00${Math.floor(offsetMinutes / 60)}`.slice(-2);
-    return `${sign}${offsetHourString}:${offsetMinuteString}`;
-  }
+  ToObject: ToObject as (x: unknown) => Record<string, unknown>
 };

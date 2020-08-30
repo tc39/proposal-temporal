@@ -71,12 +71,13 @@ export declare class LocalDateTime {
    * Construct a new `Temporal.LocalDateTime` instance from an absolute
    * timestamp, time zone, and optional calendar.
    *
-   * To construct a `Temporal.LocalDateTime` from an ISO 8601 string a
-   * `DateTime` and time zone, use `.from()`.
+   * Use `Temporal.LocalDateTime.from()`To construct a `Temporal.LocalDateTime`
+   * from an ISO 8601 string or from a time zone and `DateTime` fields (like
+   * year or hour).
    *
-   * @param epochNanoseconds {Temporal.Absolute} - absolute timestamp (in
-   * nanoseconds since UNIX epoch) for this instance
-   * @param timeZone {Temporal.TimeZone} - time zone for this instance
+   * @param epochNanoseconds {bigint} - absolute timestamp (in nanoseconds since
+   * UNIX epoch) for this instance
+   * @param timeZone {Temporal.TimeZoneProtocol} - time zone for this instance
    * @param [calendar=Temporal.Calendar.from('iso8601')] {Temporal.CalendarProtocol} -
    * calendar for this instance (defaults to ISO calendar)
    */
@@ -90,13 +91,10 @@ export declare class LocalDateTime {
    *   `timeZoneOffsetNanoseconds`) are optional. If `timeZoneOffsetNanoseconds`
    *   is not provided, then the time can be ambiguous around DST transitions.
    *   The `disambiguation` option can resolve this ambiguity.
-   * - An extended ISO 8601 string that includes a time zone identifier, e.g.
-   *   `2007-12-03T10:15:30+01:00[Europe/Paris]`. If a timezone offset is not
-   *   present, then the `disambiguation` option will be used to resolve any
-   *   ambiguity. Note that an ISO string ending in "Z" (a UTC time) will not be
-   *   accepted via a string parameter. Instead, the caller must explicitly
-   *   opt-in to UTC, e.g.
-   *   Temporal.Absolute.from(isoString).toLocalDateTime('UTC'}`
+   * - An ISO 8601 date+time+offset string (the same format used by
+   *   `Temporal.Absolute.from`) with a time zone identifier suffix appended in
+   *   square brackets, e.g. `2007-12-03T10:15:30+01:00[Europe/Paris]` or
+   *   `2007-12-03T09:15:30Z[Europe/Paris]`.
    * - An object that can be converted to the string format above.
    *
    * If the input contains both a time zone offset and a time zone, in rare
