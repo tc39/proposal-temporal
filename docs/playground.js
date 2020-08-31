@@ -5892,20 +5892,22 @@
       }
     }, {
       key: "toDateTime",
-      value: function toDateTime(temporalTime) {
+      value: function toDateTime() {
+        var temporalTime = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
         if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
-        if (!ES.IsTemporalTime(temporalTime)) throw new TypeError('invalid Temporal.Time object');
         var year = GetSlot(this, ISO_YEAR);
         var month = GetSlot(this, ISO_MONTH);
         var day = GetSlot(this, ISO_DAY);
         var calendar = GetSlot(this, CALENDAR);
+        var DateTime = GetIntrinsic$1('%Temporal.DateTime%');
+        if (!temporalTime) return new DateTime(year, month, day, 0, 0, 0, 0, 0, 0, calendar);
+        if (!ES.IsTemporalTime(temporalTime)) throw new TypeError('invalid Temporal.Time object');
         var hour = GetSlot(temporalTime, HOUR);
         var minute = GetSlot(temporalTime, MINUTE);
         var second = GetSlot(temporalTime, SECOND);
         var millisecond = GetSlot(temporalTime, MILLISECOND);
         var microsecond = GetSlot(temporalTime, MICROSECOND);
         var nanosecond = GetSlot(temporalTime, NANOSECOND);
-        var DateTime = GetIntrinsic$1('%Temporal.DateTime%');
         return new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
       }
     }, {
