@@ -3006,10 +3006,12 @@
       _iterator2.f();
     }
 
-    INTRINSICS$1["%".concat(name, "%")] = Class;
+    DefineIntrinsic(name, Class);
   }
   function DefineIntrinsic(name, value) {
-    INTRINSICS$1["%".concat(name, "%")] = value;
+    var key = "%".concat(name, "%");
+    if (INTRINSICS$1[key] !== undefined) throw new Error("intrinsic ".concat(name, " already exists"));
+    INTRINSICS$1[key] = value;
   }
   function GetIntrinsic$1(intrinsic) {
     return intrinsic in INTRINSICS$1 ? INTRINSICS$1[intrinsic] : GetIntrinsic(intrinsic);
