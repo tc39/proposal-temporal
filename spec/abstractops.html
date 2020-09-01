@@ -56,6 +56,36 @@
     </emu-alg>
   </emu-clause>
 
+  <!-- Copied from ECMA-402 9.2.12 -->
+  <emu-clause id="sec-defaultnumberoption" aoid="DefaultNumberOption">
+    <h1>DefaultNumberOption ( _value_, _minimum_, _maximum_, _fallback_ )</h1>
+
+    <p>
+      The abstract operation DefaultNumberOption converts _value_ to a Number value, checks whether it is in the allowed range, and fills in a _fallback_ value if necessary.
+    </p>
+
+    <emu-alg>
+      1. If _value_ is *undefined*, return _fallback_.
+      1. Let _value_ be ? ToNumber(_value_).
+      1. If _value_ is *NaN* or less than _minimum_ or greater than _maximum_, throw a *RangeError* exception.
+      1. Return floor(_value_).
+    </emu-alg>
+  </emu-clause>
+
+  <!-- Copied from ECMA-402 9.2.13 -->
+  <emu-clause id="sec-getnumberoption" aoid="GetNumberOption">
+    <h1>GetNumberOption ( _options_, _property_, _minimum_, _maximum_, _fallback_ )</h1>
+
+    <p>
+      The abstract operation GetNumberOption extracts the value of the property named _property_ from the provided _options_ object, converts it to a Number value, checks whether it is in the allowed range, and fills in a _fallback_ value if necessary.
+    </p>
+    <emu-alg>
+      1. Assert: Type(_options_) is Object.
+      1. Let _value_ be ? Get(_options_, _property_).
+      1. Return ? DefaultNumberOption(_value_, _minimum_, _maximum_, _fallback_).
+    </emu-alg>
+  </emu-clause>
+
   <emu-clause id="sec-temporal-totemporaldurationoverflow" aoid="ToTemporalDurationOverflow">
     <h1>ToTemporalDurationOverflow ( _options_ )</h1>
     <emu-alg>
@@ -80,6 +110,33 @@
     </emu-alg>
   </emu-clause>
 
+  <emu-clause id="sec-temporal-totemporalroundingmode" aoid="ToTemporalRoundingMode">
+    <h1>ToTemporalRoundingMode ( _options_ )</h1>
+    <emu-alg>
+      1. Set _options_ to ? NormalizeOptionsObject(_options_).
+      1. Return ? GetOption(_options_, *"roundingMode"*, *"string"*, « *"ceil"*, *"floor"*, *"trunc"*, *"nearest"* », *"nearest"*).
+    </emu-alg>
+  </emu-clause>
+
+  <emu-clause id="sec-temporal-totemporalroundingincrement" aoid="ToTemporalRoundingIncrement">
+    <h1>ToTemporalRoundingIncrement ( _options_, _dividend_, _inclusive_ )</h1>
+    <emu-alg>
+      1. Set _options_ to ? NormalizeOptionsObject(_options_).
+      1. If _dividend_ is *undefined*, then
+        1. Let _maximum_ be *+∞*.
+      1. Else if _inclusive_ is *true*, then
+        1. Let _maximum_ be _dividend_.
+      1. Else if _dividend_ is more than 1, then
+        1. Let _maximum_ be _dividend_ − 1.
+      1. Else,
+        1. Let _maximum_ be 1.
+      1. Let _increment_ be ? GetNumberOption(_options_, *"roundingIncrement"*, 1, _maximum_, 1).
+      1. If _dividend_ is not *undefined* and _dividend_ modulo _increment_ is not zero, then
+        1. Throw a *RangeError* exception.
+      1. Return _increment_.
+    </emu-alg>
+  </emu-clause>
+
   <emu-clause id="sec-temporal-tolargesttemporalunit" aoid="ToLargestTemporalUnit">
     <h1>ToLargestTemporalUnit ( _options_, _disallowedUnits_, _defaultUnit_ )</h1>
     <emu-alg>
@@ -89,6 +146,33 @@
       1. If _disallowedUnits_ contains _largestUnit_, then
         1. Throw a *RangeError* exception.
       1. Return _largestUnit_.
+    </emu-alg>
+  </emu-clause>
+
+  <emu-clause id="sec-temporal-tosmallesttemporalunit" aoid="ToSmallestTemporalUnit">
+    <h1>ToSmallestTemporalUnit ( _options_, _disallowedUnits_ )</h1>
+    <emu-alg>
+      1. Set _options_ to ? NormalizeOptionsObject(_options_).
+      1. Let _smallestUnit_ be ? GetOption(_options_, *"smallestUnit"*, *"string"*, « *"day"*, *"days"*, *"hour"*, *"hours"*, *"minute"*, *"minutes"*, *"second"*, *"seconds"*, *"millisecond"*, *"milliseconds"*, *"microsecond"*, *"microseconds"*, *"nanosecond"*, *"nanoseconds"* », *"not present"*).
+      1. If _smallestUnit_ is *"not present"*, then
+        1. Throw a *RangeError* exception.
+      1. If _smallestUnit_ is *"days"*, then
+        1. Set _smallestUnit_ to *"day"*.
+      1. Else if _smallestUnit_ is *"hours"*, then
+        1. Set _smallestUnit_ to *"hour"*.
+      1. Else if _smallestUnit_ is *"minutes"*, then
+        1. Set _smallestUnit_ to *"minute"*.
+      1. Else if _smallestUnit_ is *"seconds"*, then
+        1. Set _smallestUnit_ to *"second"*.
+      1. Else if _smallestUnit_ is *"milliseconds"*, then
+        1. Set _smallestUnit_ to *"millisecond"*.
+      1. Else if _smallestUnit_ is *"microseconds"*, then
+        1. Set _smallestUnit_ to *"microsecond"*.
+      1. Else if _smallestUnit_ is *"nanoseconds"*, then
+        1. Set _smallestUnit_ to *"nanosecond"*.
+      1. If _disallowedUnits_ contains _smallestUnit_, then
+        1. Throw a *RangeError* exception.
+      1. Return _smallestUnit_.
     </emu-alg>
   </emu-clause>
 
@@ -137,6 +221,32 @@
     <h1>RoundTowardsZero ( _x_ )</h1>
     <emu-alg>
       1. Return the mathematical value that is the same sign as _x_ and whose magnitude is floor(abs(_x_)).
+    </emu-alg>
+  </emu-clause>
+
+  <emu-clause id="sec-temporal-roundhalfawayfromzero" aoid="RoundHalfAwayFromZero">
+    <h1>RoundHalfAwayFromZero ( _x_ )</h1>
+    <emu-alg>
+      1. Return the mathematical value that is closest to _x_ and is an integer.
+         If two integers are equally close to _x_, then the result is the integer that is farther away from 0. If _x_ is already an integer, then the result is _x_.
+    </emu-alg>
+  </emu-clause>
+
+  <emu-clause id="sec-temporal-roundnumbertoincrement" aoid="RoundNumberToIncrement">
+    <h1>RoundNumberToIncrement ( _x_, _increment_, _roundingMode_ )</h1>
+    <emu-alg>
+      1. Assert: _x_ and _increment_ are mathematical values.
+      1. Assert: _roundingMode_ is *"ceil"*, *"floor"*, *"trunc"*, or *"nearest"*.
+      1. Let _quotient_ be _x_ ÷ _increment_.
+      1. If _roundingMode_ is *"ceil"*, then
+        1. Let _rounded_ be &minus;floor(&minus;_quotient_).
+      1. Else if _roundingMode_ is *"floor"*, then
+        1. Let _rounded_ be floor(_quotient_).
+      1. Else if _roundingMode_ is *"trunc"*, then
+        1. Let _rounded_ be the integral part of _quotient_, removing any fractional digits.
+      1. Else,
+        1. Let _rounded_ be ! RoundHalfAwayFromZero(_quotient_).
+      1. Return _rounded_ × _increment_.
     </emu-alg>
   </emu-clause>
 

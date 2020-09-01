@@ -30,6 +30,9 @@ describe('Absolute', () => {
       it('Absolute.prototype.equals is a Function', () => {
         equal(typeof Absolute.prototype.equals, 'function');
       });
+      it('Absolute.prototype.round is a Function', () => {
+        equal(typeof Absolute.prototype.round, 'function');
+      });
     });
     it('Absolute.fromEpochSeconds is a Function', () => {
       equal(typeof Absolute.fromEpochSeconds, 'function');
@@ -490,6 +493,111 @@ describe('Absolute', () => {
         throws(() => feb21.difference(feb20, badOptions), TypeError)
       );
       [{}, () => {}, undefined].forEach((options) => equal(`${feb21.difference(feb20, options)}`, 'PT31622400S'));
+    });
+  });
+  describe('Absolute.round works', () => {
+    const abs = Absolute.from('1976-11-18T14:23:30.123456789Z');
+    it('throws without parameter', () => {
+      throws(() => abs.round(), TypeError);
+    });
+    it('throws without required smallestUnit parameter', () => {
+      throws(() => abs.round({ roundingIncrement: 1, roundingMode: 'ceil' }), RangeError);
+    });
+    it('throws on disallowed or invalid smallestUnit', () => {
+      ['era', 'year', 'month', 'week', 'day', 'hour', 'years', 'months', 'weeks', 'days', 'hours', 'nonsense'].forEach(
+        (smallestUnit) => {
+          throws(() => abs.round({ smallestUnit }), RangeError);
+        }
+      );
+    });
+    it('throws on invalid roundingMode', () => {
+      throws(() => abs.round({ smallestUnit: 'second', roundingMode: 'cile' }), RangeError);
+    });
+    const incrementOneNearest = [
+      ['minute', '1976-11-18T14:24Z'],
+      ['second', '1976-11-18T14:23:30Z'],
+      ['millisecond', '1976-11-18T14:23:30.123Z'],
+      ['microsecond', '1976-11-18T14:23:30.123457Z'],
+      ['nanosecond', '1976-11-18T14:23:30.123456789Z']
+    ];
+    incrementOneNearest.forEach(([smallestUnit, expected]) => {
+      it(`rounds to nearest ${smallestUnit}`, () =>
+        equal(`${abs.round({ smallestUnit, roundingMode: 'nearest' })}`, expected));
+    });
+    const incrementOneCeil = [
+      ['minute', '1976-11-18T14:24Z'],
+      ['second', '1976-11-18T14:23:31Z'],
+      ['millisecond', '1976-11-18T14:23:30.124Z'],
+      ['microsecond', '1976-11-18T14:23:30.123457Z'],
+      ['nanosecond', '1976-11-18T14:23:30.123456789Z']
+    ];
+    incrementOneCeil.forEach(([smallestUnit, expected]) => {
+      it(`rounds up to ${smallestUnit}`, () => equal(`${abs.round({ smallestUnit, roundingMode: 'ceil' })}`, expected));
+    });
+    const incrementOneFloor = [
+      ['minute', '1976-11-18T14:23Z'],
+      ['second', '1976-11-18T14:23:30Z'],
+      ['millisecond', '1976-11-18T14:23:30.123Z'],
+      ['microsecond', '1976-11-18T14:23:30.123456Z'],
+      ['nanosecond', '1976-11-18T14:23:30.123456789Z']
+    ];
+    incrementOneFloor.forEach(([smallestUnit, expected]) => {
+      it(`rounds down to ${smallestUnit}`, () =>
+        equal(`${abs.round({ smallestUnit, roundingMode: 'floor' })}`, expected));
+      it(`truncates to ${smallestUnit}`, () =>
+        equal(`${abs.round({ smallestUnit, roundingMode: 'trunc' })}`, expected));
+    });
+    it('nearest is the default', () => {
+      equal(`${abs.round({ smallestUnit: 'minute' })}`, '1976-11-18T14:24Z');
+      equal(`${abs.round({ smallestUnit: 'second' })}`, '1976-11-18T14:23:30Z');
+    });
+    it('rounding down is towards the Big Bang, not towards the epoch', () => {
+      const abs2 = Absolute.from('1969-12-15T12:00:00.5Z');
+      const smallestUnit = 'second';
+      equal(`${abs2.round({ smallestUnit, roundingMode: 'ceil' })}`, '1969-12-15T12:00:01Z');
+      equal(`${abs2.round({ smallestUnit, roundingMode: 'floor' })}`, '1969-12-15T12:00Z');
+      equal(`${abs2.round({ smallestUnit, roundingMode: 'trunc' })}`, '1969-12-15T12:00Z');
+      equal(`${abs2.round({ smallestUnit, roundingMode: 'nearest' })}`, '1969-12-15T12:00:01Z');
+    });
+    it('rounds to an increment of minutes', () => {
+      equal(`${abs.round({ smallestUnit: 'minute', roundingIncrement: 15 })}`, '1976-11-18T14:30Z');
+    });
+    it('rounds to an increment of seconds', () => {
+      equal(`${abs.round({ smallestUnit: 'second', roundingIncrement: 30 })}`, '1976-11-18T14:23:30Z');
+    });
+    it('rounds to an increment of milliseconds', () => {
+      equal(`${abs.round({ smallestUnit: 'millisecond', roundingIncrement: 10 })}`, '1976-11-18T14:23:30.120Z');
+    });
+    it('rounds to an increment of microseconds', () => {
+      equal(`${abs.round({ smallestUnit: 'microsecond', roundingIncrement: 10 })}`, '1976-11-18T14:23:30.123460Z');
+    });
+    it('rounds to an increment of nanoseconds', () => {
+      equal(`${abs.round({ smallestUnit: 'nanosecond', roundingIncrement: 10 })}`, '1976-11-18T14:23:30.123456790Z');
+    });
+    it('rounds to days by specifying increment of 86400 seconds in various units', () => {
+      const expected = '1976-11-19T00:00Z';
+      equal(`${abs.round({ smallestUnit: 'minute', roundingIncrement: 1440 })}`, expected);
+      equal(`${abs.round({ smallestUnit: 'second', roundingIncrement: 86400 })}`, expected);
+      equal(`${abs.round({ smallestUnit: 'millisecond', roundingIncrement: 86400e3 })}`, expected);
+      equal(`${abs.round({ smallestUnit: 'microsecond', roundingIncrement: 86400e6 })}`, expected);
+      equal(`${abs.round({ smallestUnit: 'nanosecond', roundingIncrement: 86400e9 })}`, expected);
+    });
+    it('allows increments that divide evenly into solar days', () => {
+      assert(abs.round({ smallestUnit: 'second', roundingIncrement: 864 }) instanceof Absolute);
+    });
+    it('throws on increments that do not divide evenly into solar days', () => {
+      throws(() => abs.round({ smallestUnit: 'minute', roundingIncrement: 29 }), RangeError);
+      throws(() => abs.round({ smallestUnit: 'second', roundingIncrement: 29 }), RangeError);
+      throws(() => abs.round({ smallestUnit: 'millisecond', roundingIncrement: 29 }), RangeError);
+      throws(() => abs.round({ smallestUnit: 'microsecond', roundingIncrement: 29 }), RangeError);
+      throws(() => abs.round({ smallestUnit: 'nanosecond', roundingIncrement: 29 }), RangeError);
+    });
+    it('accepts plural units', () => {
+      assert(abs.round({ smallestUnit: 'minutes' }).equals(abs.round({ smallestUnit: 'minute' })));
+      assert(abs.round({ smallestUnit: 'seconds' }).equals(abs.round({ smallestUnit: 'second' })));
+      assert(abs.round({ smallestUnit: 'milliseconds' }).equals(abs.round({ smallestUnit: 'millisecond' })));
+      assert(abs.round({ smallestUnit: 'microseconds' }).equals(abs.round({ smallestUnit: 'microsecond' })));
+      assert(abs.round({ smallestUnit: 'nanoseconds' }).equals(abs.round({ smallestUnit: 'nanosecond' })));
     });
   });
   describe('Min/max range', () => {

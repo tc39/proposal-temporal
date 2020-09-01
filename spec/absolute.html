@@ -292,6 +292,45 @@
       </emu-alg>
     </emu-clause>
 
+    <emu-clause id="sec-temporal.absolute.prototype.round">
+      <h1>Temporal.Absolute.prototype.round ( _options_ )</h1>
+      <p>
+        The `round` method takes one argument, _options_.
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _absolute_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_absolute_, [[InitializedTemporalAbsolute]]).
+        1. Let _smallestUnit_ be ? ToSmallestTemporalUnit(_options_, « *"day"*, *"hour"* »).
+        1. Let _roundingMode_ be ? ToTemporalRoundingMode(_options_).
+        1. If _smallestUnit_ is *"minute"*, then
+          1. Let _maximum_ be 1440.
+        1. Else if _smallestUnit_ is *"second"*, then
+          1. Let _maximum_ be 86400.
+        1. Else if _smallestUnit_ is *"millisecond"*, then
+          1. Let _maximum_ be 8.64 × 10<sup>7</sup>.
+        1. Else if _smallestUnit_ is *"microsecond"*, then
+          1. Let _maximum_ be 8.64 × 10<sup>10</sup>.
+        1. Else,
+          1. Assert: _smallestUnit_ is *"nanosecond"*.
+          1. Let _maximum_ be 8.64 × 10<sup>13</sup>.
+        1. Let _roundingIncrement_ be the mathematical value of ? ToTemporalRoundingIncrement(_options_, _maximum_, *true*).
+        1. If _smallestUnit_ is *"minute"*, then
+          1. Let _incrementNs_ be _roundingIncrement_ × 6 × 10<sup>10</sup>.
+        1. Else if _smallestUnit_ is *"second"*, then
+          1. Let _incrementNs_ be _roundingIncrement_ × 10<sup>9</sup>.
+        1. Else if _smallestUnit_ is *"millisecond"*, then
+          1. Let _incrementNs_ be _roundingIncrement_ × 10<sup>6</sup>.
+        1. Else if _smallestUnit_ is *"microsecond"*, then
+          1. Let _incrementNs_ be _roundingIncrement_ × 10<sup>3</sup>.
+        1. Else,
+          1. Let _incrementNs_ be _roundingIncrement_.
+        1. Let _ns_ be the mathematical value of _absolute_.[[Nanoseconds]].
+        1. Let _roundedNs_ be ? RoundNumberToIncrement(_ns_, _incrementNs_, _roundingMode_).
+        1. Return ? CreateTemporalAbsoluteFromInstance(_absolute_, _roundedNs_).
+      </emu-alg>
+    </emu-clause>
+
     <emu-clause id="sec-temporal.absolute.prototype.equals">
       <h1>Temporal.Absolute.prototype.equals ( _other_ )</h1>
       <p>
