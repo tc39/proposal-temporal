@@ -127,6 +127,47 @@ export class Absolute {
     );
     return new Duration(0, 0, 0, 0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
   }
+  round(options) {
+    if (!ES.IsTemporalAbsolute(this)) throw new TypeError('invalid receiver');
+    if (options === undefined) throw new TypeError('options parameter is required');
+    const smallestUnit = ES.ToSmallestTemporalUnit(options, ['day', 'hour']);
+    const roundingMode = ES.ToTemporalRoundingMode(options);
+    const maximumIncrements = {
+      minute: 1440,
+      second: 86400,
+      millisecond: 86400e3,
+      microsecond: 86400e6,
+      nanosecond: 86400e9
+    };
+    const roundingIncrement = ES.ToTemporalRoundingIncrement(options, maximumIncrements[smallestUnit], true);
+
+    let incrementNs = roundingIncrement;
+    switch (smallestUnit) {
+      case 'minute':
+        incrementNs *= 60;
+      // fall through
+      case 'second':
+        incrementNs *= 1000;
+      // fall through
+      case 'millisecond':
+        incrementNs *= 1000;
+      // fall through
+      case 'microsecond':
+        incrementNs *= 1000;
+    }
+    const ns = GetSlot(this, EPOCHNANOSECONDS);
+    // Note: NonNegativeModulo, but with BigInt
+    let remainder = ns.mod(86400e9);
+    if (remainder.lesser(0)) remainder = remainder.plus(86400e9);
+    const wholeDays = ns.minus(remainder);
+    const roundedRemainder = ES.RoundNumberToIncrement(remainder.toJSNumber(), incrementNs, roundingMode);
+    const roundedNs = wholeDays.plus(roundedRemainder);
+
+    const Construct = ES.SpeciesConstructor(this, Absolute);
+    const result = new Construct(bigIntIfAvailable(roundedNs));
+    if (!ES.IsTemporalAbsolute(result)) throw new TypeError('invalid result');
+    return result;
+  }
   equals(other) {
     if (!ES.IsTemporalAbsolute(this)) throw new TypeError('invalid receiver');
     if (!ES.IsTemporalAbsolute(other)) throw new TypeError('invalid Absolute object');

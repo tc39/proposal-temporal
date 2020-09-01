@@ -1,4 +1,10 @@
 const IntlDateTimeFormat = globalThis.Intl.DateTimeFormat;
+const MathAbs = Math.abs;
+const MathCeil = Math.ceil;
+const MathFloor = Math.floor;
+const MathSign = Math.sign;
+const MathTrunc = Math.trunc;
+const NumberIsNaN = Number.isNaN;
 const ObjectAssign = Object.assign;
 const ObjectCreate = Object.create;
 
@@ -476,6 +482,21 @@ export const ES = ObjectAssign({}, ES2019, {
     options = ES.NormalizeOptionsObject(options);
     return ES.GetOption(options, 'disambiguation', ['compatible', 'earlier', 'later', 'reject'], 'compatible');
   },
+  ToTemporalRoundingMode: (options) => {
+    options = ES.NormalizeOptionsObject(options);
+    return ES.GetOption(options, 'roundingMode', ['ceil', 'floor', 'trunc', 'nearest'], 'nearest');
+  },
+  ToTemporalRoundingIncrement: (options, dividend, inclusive) => {
+    options = ES.NormalizeOptionsObject(options);
+    let maximum = Infinity;
+    if (dividend !== undefined) maximum = dividend;
+    if (!inclusive && dividend !== undefined) maximum = dividend > 1 ? dividend - 1 : 1;
+    const increment = ES.GetNumberOption(options, 'roundingIncrement', 1, maximum, 1);
+    if (dividend !== undefined && dividend % increment !== 0) {
+      throw new RangeError(`Rounding increment must divide evenly into ${dividend}`);
+    }
+    return increment;
+  },
   ToLargestTemporalUnit: (options, fallback, disallowedStrings = []) => {
     const allowed = new Set([
       'years',
@@ -494,6 +515,31 @@ export const ES = ObjectAssign({}, ES2019, {
     }
     options = ES.NormalizeOptionsObject(options);
     return ES.GetOption(options, 'largestUnit', [...allowed], fallback);
+  },
+  ToSmallestTemporalUnit: (options, disallowedStrings = []) => {
+    const singular = new Map([
+      ['days', 'day'],
+      ['hours', 'hour'],
+      ['minutes', 'minute'],
+      ['seconds', 'second'],
+      ['milliseconds', 'millisecond'],
+      ['microseconds', 'microsecond'],
+      ['nanoseconds', 'nanosecond']
+    ]);
+    const allowed = new Set(['day', 'hour', 'minute', 'second', 'millisecond', 'microsecond', 'nanosecond']);
+    for (const s of disallowedStrings) {
+      allowed.delete(s);
+    }
+    const allowedValues = [...allowed];
+    options = ES.NormalizeOptionsObject(options);
+    let value = options.smallestUnit;
+    if (value === undefined) throw new RangeError('smallestUnit option is required');
+    value = ES.ToString(value);
+    if (singular.has(value)) value = singular.get(value);
+    if (!allowedValues.includes(value)) {
+      throw new RangeError(`smallestUnit must be one of ${allowedValues.join(', ')}, not ${value}`);
+    }
+    return value;
   },
   ToPartialRecord: (bag, fields) => {
     if (!bag || 'object' !== typeof bag) return false;
@@ -1583,6 +1629,26 @@ export const ES = ObjectAssign({}, ES2019, {
       overflow
     );
   },
+  RoundNumberToIncrement: (quantity, increment, mode) => {
+    const quotient = quantity / increment;
+    let round;
+    switch (mode) {
+      case 'ceil':
+        round = MathCeil(quotient);
+        break;
+      case 'floor':
+        round = MathFloor(quotient);
+        break;
+      case 'trunc':
+        round = MathTrunc(quotient);
+        break;
+      case 'nearest':
+        // "half away from zero"
+        round = MathSign(quotient) * MathFloor(MathAbs(quotient) + 0.5);
+        break;
+    }
+    return round * increment;
+  },
 
   AssertPositiveInteger: (num) => {
     if (!Number.isFinite(num) || Math.abs(num) !== num) throw new RangeError(`invalid positive integer: ${num}`);
@@ -1662,6 +1728,15 @@ export const ES = ObjectAssign({}, ES2019, {
       return value;
     }
     return fallback;
+  },
+  GetNumberOption: (options, property, minimum, maximum, fallback) => {
+    let value = options[property];
+    if (value === undefined) return fallback;
+    value = ES.ToNumber(value);
+    if (NumberIsNaN(value) || value < minimum || value > maximum) {
+      throw new RangeError(`${property} must be between ${minimum} and ${maximum}, not ${value}`);
+    }
+    return MathFloor(value);
   }
 });
 

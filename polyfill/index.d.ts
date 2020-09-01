@@ -100,6 +100,12 @@ export namespace Temporal {
     largestUnit: T;
   }
 
+  export interface RoundOptions<T extends string> {
+    smallestUnit: T;
+    roundingIncrement?: number;
+    roundingMode?: 'ceil' | 'floor' | 'trunc' | 'nearest';
+  }
+
   export type DurationLike = {
     years?: number;
     months?: number;
@@ -191,6 +197,7 @@ export namespace Temporal {
       other: Temporal.Absolute,
       options?: DifferenceOptions<'hours' | 'minutes' | 'seconds' | 'milliseconds' | 'microseconds' | 'nanoseconds'>
     ): Temporal.Duration;
+    round(options: RoundOptions<'minute' | 'second' | 'millisecond' | 'microsecond' | 'nanosecond'>): Temporal.Absolute;
     toDateTime(tzLike: TimeZoneProtocol | string, calendar?: CalendarProtocol | string): Temporal.DateTime;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;

@@ -356,6 +356,55 @@ billion.toDateTime(utc).difference(epoch.toDateTime(utc), { largestUnit: 'years'
   // => P31Y8M8DT1H46M40S
 ```
 
+### absolute.**round**(_options_: object) : Temporal.Absolute
+
+**Parameters:**
+- `options` (object): An object with properties representing options for the operation.
+  The following options are recognized:
+  - `smallestUnit` (required string): The unit to round to.
+    Valid values are `'minute'`, `'second'`, `'millisecond'`, `'microsecond'`, and `'nanosecond'`.
+  - `roundingIncrement` (number): The granularity to round to, of the unit given by `smallestUnit`.
+    The default is 1.
+  - `roundingMode` (string): How to handle the remainder.
+    Valid values are `'ceil'`, `'floor'`, `'trunc'`, and `'nearest'`.
+    The default is `'nearest'`.
+
+**Returns:** a new `Temporal.Absolute` object which is `absolute` rounded to `roundingIncrement` of `smallestUnit`.
+
+Rounds `absolute` to the given unit and increment, and returns the result as a new `Temporal.Absolute` object.
+
+The `smallestUnit` option determines the unit to round to.
+For example, to round to the nearest minute, use `smallestUnit: 'minute'`.
+This option is required.
+
+The `roundingIncrement` option allows rounding to an integer number of units.
+For example, to round to increments of a half hour, use `smallestUnit: 'minute', roundingIncrement: 30`.
+
+The combination of `roundingIncrement` and `smallestUnit` must make an increment that divides evenly into 86400 seconds (one 24-hour solar day).
+(For example, increments of 15 minutes and 45 seconds are both allowed.
+25 minutes, and 7 seconds are both not allowed.) Hour increments are not allowed either, since `Temporal.Absolute` has no time zone and therefore it is not defined where the starting point of the hour is.
+
+The `roundingMode` option controls how the rounding is performed.
+  - `ceil`: Always round up, towards the end of time.
+  - `floor`, `trunc`: Always round down, towards the beginning of time.
+    (These two modes behave the same, but are both included for consistency with `Temporal.Duration.round()`, where they are not the same.)
+  - `nearest`: Round to the nearest of the values allowed by `roundingIncrement` and `smallestUnit`.
+    When there is a tie, round up, like `ceil`.
+
+Example usage:
+```javascript
+abs = Temporal.Absolute.from('2019-03-30T02:45:59.999999999Z');
+
+// Round to a particular unit
+abs.round({ smallestUnit: 'second' });  // => 2019-03-30T02:46Z
+// Round to an increment of a unit, e.g. an hour:
+abs.round({ roundingIncrement: 60, smallestUnit: 'minute' });
+  // => 2019-03-30T03:00Z
+// Round to the same increment but round down instead:
+abs.round({ roundingIncrement: 60, smallestUnit: 'minute', roundingMode: 'floor' });
+  // => 2019-03-30T02:00Z
+```
+
 ### absolute.**equals**(_other_: Temporal.Absolute) : boolean
 
 **Parameters:**
