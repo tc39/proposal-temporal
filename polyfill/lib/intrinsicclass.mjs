@@ -73,11 +73,13 @@ export function MakeIntrinsicClass(Class, name) {
     Object.defineProperty(Class.prototype, prop, desc);
   }
 
-  INTRINSICS[`%${name}%`] = Class;
+  DefineIntrinsic(name, Class);
 }
 
 export function DefineIntrinsic(name, value) {
-  INTRINSICS[`%${name}%`] = value;
+  const key = `%${name}%`;
+  if (INTRINSICS[key] !== undefined) throw new Error(`intrinsic ${name} already exists`);
+  INTRINSICS[key] = value;
 }
 
 export function GetIntrinsic(intrinsic) {
