@@ -510,6 +510,58 @@ mar1.difference(feb1, { largestUnit: 'months' });        // => P1M
 may1.difference(jan1);                                   // => P121D
 ```
 
+### datetime.**round**(_options_: object) : Temporal.DateTime
+
+**Parameters:**
+- `options` (object): An object with properties representing options for the operation.
+  The following options are recognized:
+  - `smallestUnit` (required string): The unit to round to.
+    Valid values are `'day'`, `'hour'`, `'minute'`, `'second'`, `'millisecond'`, `'microsecond'`, and `'nanosecond'`.
+  - `roundingIncrement` (number): The granularity to round to, of the unit given by `smallestUnit`.
+    The default is 1.
+  - `roundingMode` (string): How to handle the remainder.
+    Valid values are `'ceil'`, `'floor'`, `'trunc'`, and `'nearest'`.
+    The default is `'nearest'`.
+
+**Returns:** a new `Temporal.DateTime` object which is `datetime` rounded to `roundingIncrement` of `smallestUnit`.
+
+Rounds `datetime` to the given unit and increment, and returns the result as a new `Temporal.DateTime` object.
+
+The `smallestUnit` option determines the unit to round to.
+For example, to round to the nearest minute, use `smallestUnit: 'minute'`.
+This option is required.
+
+The `roundingIncrement` option allows rounding to an integer number of units.
+For example, to round to increments of a half hour, use `smallestUnit: 'minute', roundingIncrement: 30`.
+
+The value given as `roundingIncrement` must divide evenly into the next highest unit after `smallestUnit`, and must not be equal to it.
+(For example, if `smallestUnit` is `'minutes'`, then the number of minutes given by `roundingIncrement` must divide evenly into 60 minutes, which is one hour.
+The valid values in this case are 1 (default), 2, 3, 4, 5, 6, 10, 12, 15, 20, and 30.
+Instead of 60 minutes, use 1 hour.)
+
+If `smallestUnit` is `'day'`, then 1 is the only allowed value for `roundingIncrement`.
+
+The `roundingMode` option controls how the rounding is performed.
+  - `ceil`: Always round up, towards the end of time.
+  - `floor`, `trunc`: Always round down, towards the beginning of time.
+    (These two modes behave the same, but are both included for consistency with `Temporal.Duration.round()`, where they are not the same.)
+  - `nearest`: Round to the nearest of the values allowed by `roundingIncrement` and `smallestUnit`.
+    When there is a tie, round up, like `ceil`.
+
+Example usage:
+```javascript
+dt = Temporal.DateTime.from('1995-12-07T03:24:30.000003500');
+
+// Round to a particular unit
+dt.round({ smallestUnit: 'hour' });  // => 1995-12-07T03:00
+// Round to an increment of a unit, e.g. half an hour:
+dt.round({ roundingIncrement: 30, smallestUnit: 'minute' });
+  // => 1995-12-07T03:30
+// Round to the same increment but round down instead:
+dt.round({ roundingIncrement: 30, smallestUnit: 'minute', roundingMode: 'floor' });
+  // => 1995-12-07T03:00
+```
+
 ### datetime.**equals**(_other_: Temporal.DateTime) : boolean
 
 **Parameters:**

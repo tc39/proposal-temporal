@@ -1649,6 +1649,50 @@ export const ES = ObjectAssign({}, ES2019, {
     }
     return round * increment;
   },
+  RoundTime: (hour, minute, second, millisecond, microsecond, nanosecond, increment, unit, roundingMode) => {
+    let quantity = 0;
+    switch (unit) {
+      case 'day':
+        quantity =
+          (((second + millisecond * 1e-3 + microsecond * 1e-6 + nanosecond * 1e-9) / 60 + minute) / 60 + hour) / 24;
+        break;
+      case 'hour':
+        quantity = ((second + millisecond * 1e-3 + microsecond * 1e-6 + nanosecond * 1e-9) / 60 + minute) / 60 + hour;
+        break;
+      case 'minute':
+        quantity = (second + millisecond * 1e-3 + microsecond * 1e-6 + nanosecond * 1e-9) / 60 + minute;
+        break;
+      case 'second':
+        quantity = second + millisecond * 1e-3 + microsecond * 1e-6 + nanosecond * 1e-9;
+        break;
+      case 'millisecond':
+        quantity = millisecond + microsecond * 1e-3 + nanosecond * 1e-9;
+        break;
+      case 'microsecond':
+        quantity = microsecond + nanosecond * 1e-3;
+        break;
+      case 'nanosecond':
+        quantity = nanosecond;
+        break;
+    }
+    const result = ES.RoundNumberToIncrement(quantity, increment, roundingMode);
+    switch (unit) {
+      case 'day':
+        return { deltaDays: result, hour: 0, minute: 0, second: 0, millisecond: 0, microsecond: 0, nanosecond: 0 };
+      case 'hour':
+        return ES.BalanceTime(result, 0, 0, 0, 0, 0);
+      case 'minute':
+        return ES.BalanceTime(hour, result, 0, 0, 0, 0);
+      case 'second':
+        return ES.BalanceTime(hour, minute, result, 0, 0, 0);
+      case 'millisecond':
+        return ES.BalanceTime(hour, minute, second, result, 0, 0);
+      case 'microsecond':
+        return ES.BalanceTime(hour, minute, second, millisecond, result, 0);
+      case 'nanosecond':
+        return ES.BalanceTime(hour, minute, second, millisecond, microsecond, result);
+    }
+  },
 
   AssertPositiveInteger: (num) => {
     if (!Number.isFinite(num) || Math.abs(num) !== num) throw new RangeError(`invalid positive integer: ${num}`);
