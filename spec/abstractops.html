@@ -62,11 +62,11 @@
   </emu-clause>
 
   <emu-clause id="sec-temporal-tolargesttemporalunit" aoid="ToLargestTemporalUnit">
-    <h1>ToLargestTemporalUnit ( _largestUnit_, _disallowedUnits_, _defaultUnit_ )</h1>
+    <h1>ToLargestTemporalUnit ( _options_, _disallowedUnits_, _defaultUnit_ )</h1>
     <emu-alg>
       1. Assert: _disallowedUnits_ does not contain _defaultUnit_.
       1. Set _options_ to ? NormalizeOptionsObject(_options_).
-      1. Let _largestUnit_ be GetOption(_options_, *"largestUnit"*, « *"years"*, *"months"*, *"days"*, *"hours"*, *"minutes"*, *"seconds"*, *"milliseconds"*, *"microseconds"*, *"nanoseconds"* », _defaultUnit_).
+      1. Let _largestUnit_ be ? GetOption(_options_, *"largestUnit"*, « *"years"*, *"months"*, *"days"*, *"hours"*, *"minutes"*, *"seconds"*, *"milliseconds"*, *"microseconds"*, *"nanoseconds"* », _defaultUnit_).
       1. If _disallowedUnits_ contains _largestUnit_, then
         1. Throw a *RangeError* exception.
       1. Return _largestUnit_.
