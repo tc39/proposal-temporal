@@ -484,6 +484,9 @@ export namespace Temporal {
         | 'nanoseconds'
       >
     ): Temporal.Duration;
+    round(
+      options: RoundOptions<'day' | 'hour' | 'minute' | 'second' | 'millisecond' | 'microsecond' | 'nanosecond'>
+    ): Temporal.DateTime;
     toAbsolute(tzLike: TimeZoneProtocol | string, options?: ToAbsoluteOptions): Temporal.Absolute;
     toDate(): Temporal.Date;
     toYearMonth(): Temporal.YearMonth;

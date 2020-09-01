@@ -434,6 +434,61 @@ export class DateTime {
       nanoseconds
     );
   }
+  round(options) {
+    if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+    if (options === undefined) throw new TypeError('options parameter is required');
+    const smallestUnit = ES.ToSmallestTemporalUnit(options);
+    const roundingMode = ES.ToTemporalRoundingMode(options);
+    const maximumIncrements = {
+      day: 1,
+      hour: 24,
+      minute: 60,
+      second: 60,
+      millisecond: 1000,
+      microsecond: 1000,
+      nanosecond: 1000
+    };
+    const roundingIncrement = ES.ToTemporalRoundingIncrement(options, maximumIncrements[smallestUnit], false);
+
+    let year = GetSlot(this, ISO_YEAR);
+    let month = GetSlot(this, ISO_MONTH);
+    let day = GetSlot(this, ISO_DAY);
+    let hour = GetSlot(this, HOUR);
+    let minute = GetSlot(this, MINUTE);
+    let second = GetSlot(this, SECOND);
+    let millisecond = GetSlot(this, MILLISECOND);
+    let microsecond = GetSlot(this, MICROSECOND);
+    let nanosecond = GetSlot(this, NANOSECOND);
+    let deltaDays = 0;
+    ({ deltaDays, hour, minute, second, millisecond, microsecond, nanosecond } = ES.RoundTime(
+      hour,
+      minute,
+      second,
+      millisecond,
+      microsecond,
+      nanosecond,
+      roundingIncrement,
+      smallestUnit,
+      roundingMode
+    ));
+    ({ year, month, day } = ES.BalanceDate(year, month, day + deltaDays));
+
+    const Construct = ES.SpeciesConstructor(this, DateTime);
+    const result = new Construct(
+      year,
+      month,
+      day,
+      hour,
+      minute,
+      second,
+      millisecond,
+      microsecond,
+      nanosecond,
+      GetSlot(this, CALENDAR)
+    );
+    if (!ES.IsTemporalDateTime(result)) throw new TypeError('invalid result');
+    return result;
+  }
   equals(other) {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     if (!ES.IsTemporalDateTime(other)) throw new TypeError('invalid Date object');
