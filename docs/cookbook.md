@@ -123,15 +123,25 @@ Sort a list of ISO 8601 date/time strings, for example to place log entries in o
 
 ### Round a time down to whole hours
 
-Use the `with()` method of each Temporal type (except `Temporal.Absolute`) if you want to round or balance the fields.
+Use the `round()` method of each Temporal type if you want to round the time fields.
 Here's an example of rounding a time _down_ to the previously occurring whole hour:
 
 ```javascript
 {{cookbook/roundDownToWholeHours.mjs}}
 ```
 
-`Temporal.Absolute` is an absolute timestamp and doesn't have any concept of a calendar or wall clock, so it can't be rounded to a certain field value.
-If you need to round a `Temporal.Absolute` instance, convert it to a type such as `Temporal.DateTime`.
+### Round a date to the nearest start of the month
+
+Rounding is only defined for time fields.
+Rounding a date field can be ambiguous, so date-only types such as `Temporal.Date` don't have a `round()` method.
+If you need to round a date to the nearest month, for example, then you must explicitly pick what kind of rounding you want.
+Here is an example of rounding to the nearest start of a month, rounding up in case of a tie:
+
+```javascript
+{{cookbook/roundToNearestMonth.mjs}}
+```
+
+See also [Push back a launch date](#push-back-a-launch-date) for an easier way to round up unconditionally to the _next_ start of a month.
 
 ## Time zone conversion
 
