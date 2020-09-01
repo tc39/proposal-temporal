@@ -174,6 +174,16 @@
 </li>
 </ul>
 </li>
+<li><a href="#other-documentation">Other Documentation</a>
+<ul>
+<li><a href="#Key-Concepts">Key Concepts</a>
+</li>
+<li><a href="#Design-drafts">Design drafts</a>
+</li>
+<li><a href="#obsolete-pages">Obsolete Pages</a>
+</li>
+</ul>
+</li>
 <li><a href="#object-relationship">Object Relationship</a>
 </li>
 </ul>
@@ -229,6 +239,25 @@ For a detailed look at some of the problems with <code>Date</code>, and the moti
 <h3 id="Temporal-Calendar"><a class="heading-link" href="#Temporal-Calendar"></a><strong>Temporal.Calendar</strong></h3><p>A <code>Temporal.Calendar</code> represents a calendar system.
 Most code will use the ISO 8601 calendar, but other calendar systems are available.</p>
 <p>See <a href="./calendar.html">Temporal.Calendar Documentation</a> for more detailed documentation.</p>
+<h2 id="other-documentation">Other Documentation</h2>
+<h3 id="Key-Concepts"><a class="heading-link" href="#Key-Concepts"></a><strong>Key Concepts</strong></h3><ul>
+<li><a href="./ambiguity.html">Ambiguity</a> &mdash; Explanation of missing times and double times due to daylight saving and time zone changes.</li>
+<li><a href="./balancing.html">Balancing</a> &mdash; Explanation of when <code>Temporal.Duration</code> units wrap around to 0 and when they don&#39;t.</li>
+</ul>
+<h3 id="Design-drafts"><a class="heading-link" href="#Design-drafts"></a><strong>Design drafts</strong></h3><ul>
+<li><a href="./calendar-draft.html">Calendar Draft</a> &mdash; Draft design document for calendar support in Temporal.
+Mostly superseded by the documentation of <a href="./calendar.html">Temporal.Calendar</a>, but also contains some discussion about whether to have a default calendar.</li>
+<li><a href="./iso-string-ext.html">ISO string extensions</a> &mdash; Discussion of extensions to the ISO 8601 standard which are used by Temporal and intended to be put on a standards track.</li>
+<li><a href="./parse-draft.html">Parse Draft</a> &mdash; Draft design document for a <code>Temporal.parse</code> API, which is not currently planned to be implemented.</li>
+<li><a href="./localdatetime-draft.html">Zoned Date/Time Type Draft</a> &mdash; Explanation of <code>Temporal.LocalDateTime</code> (not the final name) which is a new type combining an absolute time with a time zone.
+Currently in progress.</li>
+</ul>
+<h3 id="obsolete-pages"><a class="heading-link" href="#obsolete-pages"></a>Obsolete Pages</h3><ul>
+<li><a href="./calendar-subclass.html">Calendar Subclassing Draft</a> &mdash; Draft design document for alternative approach for calendar support.
+(<strong>Obsolete;</strong> rejected.)</li>
+<li><a href="./timezone-draft.html">Custom Time Zone Draft</a> &mdash; Draft design document for custom time zone support in Temporal.
+(<strong>Obsolete;</strong> superseded by the documentation of <a href="./timezone.html">Temporal.TimeZone</a>.)</li>
+</ul>
 <h2 id="object-relationship">Object Relationship</h2>
 <div class="mermaid">
 graph LR;

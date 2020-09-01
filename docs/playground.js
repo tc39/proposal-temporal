@@ -3180,7 +3180,7 @@
       var microsecond = ES.ToInteger(fraction.slice(3, 6));
       var nanosecond = ES.ToInteger(fraction.slice(6, 9));
       var offsetSign = match[14] === '-' || match[14] === "\u2212" ? '-' : '+';
-      var offset = "".concat(offsetSign).concat(match[15], ":").concat(match[16] || '00');
+      var offset = "".concat(offsetSign).concat(match[15] || '00', ":").concat(match[16] || '00');
       var ianaName = match[17];
 
       if (ianaName) {
@@ -7959,6 +7959,7 @@
 
         if (offsetNs !== null) {
           var epochNs = ES.GetEpochFromParts(GetSlot(dateTime, ISO_YEAR), GetSlot(dateTime, ISO_MONTH), GetSlot(dateTime, ISO_DAY), GetSlot(dateTime, HOUR), GetSlot(dateTime, MINUTE), GetSlot(dateTime, SECOND), GetSlot(dateTime, MILLISECOND), GetSlot(dateTime, MICROSECOND), GetSlot(dateTime, NANOSECOND));
+          if (epochNs === null) throw new RangeError('DateTime outside of supported range');
           return [new Absolute(epochNs.minus(offsetNs))];
         }
 
