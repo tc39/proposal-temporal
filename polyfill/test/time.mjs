@@ -57,6 +57,9 @@ describe('Time', () => {
       it('Time.prototype.difference is a Function', () => {
         equal(typeof Time.prototype.difference, 'function');
       });
+      it('Time.prototype.round is a Function', () => {
+        equal(typeof Time.prototype.round, 'function');
+      });
       it('Time.prototype.equals is a Function', () => {
         equal(typeof Time.prototype.equals, 'function');
       });
@@ -267,6 +270,135 @@ describe('Time', () => {
           throws(() => time.difference(one, badOptions), TypeError)
         );
         [{}, () => {}, undefined].forEach((options) => equal(`${time.difference(one, options)}`, 'PT1H'));
+      });
+    });
+    describe('Time.round works', () => {
+      const time = Time.from('13:46:23.123456789');
+      it('throws without parameter', () => {
+        throws(() => time.round(), TypeError);
+      });
+      it('throws without required smallestUnit parameter', () => {
+        throws(() => time.round({ roundingIncrement: 1, roundingMode: 'ceil' }), RangeError);
+      });
+      it('throws on disallowed or invalid smallestUnit', () => {
+        ['era', 'year', 'month', 'week', 'day', 'years', 'months', 'weeks', 'days', 'nonsense'].forEach(
+          (smallestUnit) => {
+            throws(() => time.round({ smallestUnit }), RangeError);
+          }
+        );
+      });
+      it('throws on invalid roundingMode', () => {
+        throws(() => time.round({ smallestUnit: 'second', roundingMode: 'cile' }), RangeError);
+      });
+      const incrementOneNearest = [
+        ['hour', '14:00'],
+        ['minute', '13:46'],
+        ['second', '13:46:23'],
+        ['millisecond', '13:46:23.123'],
+        ['microsecond', '13:46:23.123457'],
+        ['nanosecond', '13:46:23.123456789']
+      ];
+      incrementOneNearest.forEach(([smallestUnit, expected]) => {
+        it(`rounds to nearest ${smallestUnit}`, () =>
+          equal(`${time.round({ smallestUnit, roundingMode: 'nearest' })}`, expected));
+      });
+      const incrementOneCeil = [
+        ['hour', '14:00'],
+        ['minute', '13:47'],
+        ['second', '13:46:24'],
+        ['millisecond', '13:46:23.124'],
+        ['microsecond', '13:46:23.123457'],
+        ['nanosecond', '13:46:23.123456789']
+      ];
+      incrementOneCeil.forEach(([smallestUnit, expected]) => {
+        it(`rounds up to ${smallestUnit}`, () =>
+          equal(`${time.round({ smallestUnit, roundingMode: 'ceil' })}`, expected));
+      });
+      const incrementOneFloor = [
+        ['hour', '13:00'],
+        ['minute', '13:46'],
+        ['second', '13:46:23'],
+        ['millisecond', '13:46:23.123'],
+        ['microsecond', '13:46:23.123456'],
+        ['nanosecond', '13:46:23.123456789']
+      ];
+      incrementOneFloor.forEach(([smallestUnit, expected]) => {
+        it(`rounds down to ${smallestUnit}`, () =>
+          equal(`${time.round({ smallestUnit, roundingMode: 'floor' })}`, expected));
+        it(`truncates to ${smallestUnit}`, () =>
+          equal(`${time.round({ smallestUnit, roundingMode: 'trunc' })}`, expected));
+      });
+      it('nearest is the default', () => {
+        equal(`${time.round({ smallestUnit: 'hour' })}`, '14:00');
+        equal(`${time.round({ smallestUnit: 'minute' })}`, '13:46');
+      });
+      it('rounds to an increment of hours', () => {
+        equal(`${time.round({ smallestUnit: 'hour', roundingIncrement: 3 })}`, '15:00');
+      });
+      it('rounds to an increment of minutes', () => {
+        equal(`${time.round({ smallestUnit: 'minute', roundingIncrement: 15 })}`, '13:45');
+      });
+      it('rounds to an increment of seconds', () => {
+        equal(`${time.round({ smallestUnit: 'second', roundingIncrement: 30 })}`, '13:46:30');
+      });
+      it('rounds to an increment of milliseconds', () => {
+        equal(`${time.round({ smallestUnit: 'millisecond', roundingIncrement: 10 })}`, '13:46:23.120');
+      });
+      it('rounds to an increment of microseconds', () => {
+        equal(`${time.round({ smallestUnit: 'microsecond', roundingIncrement: 10 })}`, '13:46:23.123460');
+      });
+      it('rounds to an increment of nanoseconds', () => {
+        equal(`${time.round({ smallestUnit: 'nanosecond', roundingIncrement: 10 })}`, '13:46:23.123456790');
+      });
+      it('valid hour increments divide into 24', () => {
+        const smallestUnit = 'hour';
+        [1, 2, 3, 4, 6, 8, 12].forEach((roundingIncrement) => {
+          assert(time.round({ smallestUnit, roundingIncrement }) instanceof Time);
+        });
+      });
+      ['minute', 'second'].forEach((smallestUnit) => {
+        it(`valid ${smallestUnit} increments divide into 60`, () => {
+          [1, 2, 3, 4, 5, 6, 10, 12, 15, 20, 30].forEach((roundingIncrement) => {
+            assert(time.round({ smallestUnit, roundingIncrement }) instanceof Time);
+          });
+        });
+      });
+      ['millisecond', 'microsecond', 'nanosecond'].forEach((smallestUnit) => {
+        it(`valid ${smallestUnit} increments divide into 1000`, () => {
+          [1, 2, 4, 5, 8, 10, 20, 25, 40, 50, 100, 125, 200, 250, 500].forEach((roundingIncrement) => {
+            assert(time.round({ smallestUnit, roundingIncrement }) instanceof Time);
+          });
+        });
+      });
+      it('throws on increments that do not divide evenly into the next highest', () => {
+        throws(() => time.round({ smallestUnit: 'hour', roundingIncrement: 29 }), RangeError);
+        throws(() => time.round({ smallestUnit: 'minute', roundingIncrement: 29 }), RangeError);
+        throws(() => time.round({ smallestUnit: 'second', roundingIncrement: 29 }), RangeError);
+        throws(() => time.round({ smallestUnit: 'millisecond', roundingIncrement: 29 }), RangeError);
+        throws(() => time.round({ smallestUnit: 'microsecond', roundingIncrement: 29 }), RangeError);
+        throws(() => time.round({ smallestUnit: 'nanosecond', roundingIncrement: 29 }), RangeError);
+      });
+      it('throws on increments that are equal to the next highest', () => {
+        throws(() => time.round({ smallestUnit: 'hour', roundingIncrement: 24 }), RangeError);
+        throws(() => time.round({ smallestUnit: 'minute', roundingIncrement: 60 }), RangeError);
+        throws(() => time.round({ smallestUnit: 'second', roundingIncrement: 60 }), RangeError);
+        throws(() => time.round({ smallestUnit: 'millisecond', roundingIncrement: 1000 }), RangeError);
+        throws(() => time.round({ smallestUnit: 'microsecond', roundingIncrement: 1000 }), RangeError);
+        throws(() => time.round({ smallestUnit: 'nanosecond', roundingIncrement: 1000 }), RangeError);
+      });
+      const bal = Time.from('23:59:59.999999999');
+      ['hour', 'minute', 'second', 'millisecond', 'microsecond'].forEach((smallestUnit) => {
+        it(`balances to next ${smallestUnit}`, () => {
+          equal(`${bal.round({ smallestUnit })}`, '00:00');
+        });
+      });
+      it('accepts plural units', () => {
+        assert(time.round({ smallestUnit: 'hours' }).equals(time.round({ smallestUnit: 'hour' })));
+        assert(time.round({ smallestUnit: 'minutes' }).equals(time.round({ smallestUnit: 'minute' })));
+        assert(time.round({ smallestUnit: 'seconds' }).equals(time.round({ smallestUnit: 'second' })));
+        assert(time.round({ smallestUnit: 'milliseconds' }).equals(time.round({ smallestUnit: 'millisecond' })));
+        assert(time.round({ smallestUnit: 'microseconds' }).equals(time.round({ smallestUnit: 'microsecond' })));
+        assert(time.round({ smallestUnit: 'nanoseconds' }).equals(time.round({ smallestUnit: 'nanosecond' })));
       });
     });
     describe('Time.compare() works', () => {

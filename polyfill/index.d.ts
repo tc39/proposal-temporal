@@ -591,6 +591,9 @@ export namespace Temporal {
       other: Temporal.Time,
       options?: DifferenceOptions<'hours' | 'minutes' | 'seconds' | 'milliseconds' | 'microseconds' | 'nanoseconds'>
     ): Temporal.Duration;
+    round(
+      options: RoundOptions<'hour' | 'minute' | 'second' | 'millisecond' | 'microsecond' | 'nanosecond'>
+    ): Temporal.Time;
     toDateTime(temporalDate: Temporal.Date): Temporal.DateTime;
     getFields(): TimeFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
