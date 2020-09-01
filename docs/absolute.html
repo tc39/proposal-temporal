@@ -349,6 +349,7 @@ epoch<span class="token punctuation">.</span><span class="token function">toDate
 <code>Temporal.Absolute</code> is independent of time zones and calendars, and so years and months may be different lengths.
 If you need to do this, convert the <code>Temporal.Absolute</code> to a <code>Temporal.DateTime</code> by specifying the desired time zone, add the duration, and then convert it back.</p>
 <p>If the result is earlier or later than the range that <code>Temporal.Absolute</code> can represent (approximately half a million years centered on the <a href="https://en.wikipedia.org/wiki/Unix_time">Unix epoch</a>), a <code>RangeError</code> will be thrown.</p>
+<p>Adding a negative duration is equivalent to subtracting the absolute value of that duration.</p>
 <p>Example usage:</p>
 <pre class="language-js"><code class="language-js"><span class="token comment">// Temporal.Absolute representing five hours from now</span>
 Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">absolute</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">plus</span><span class="token punctuation">(</span><span class="token punctuation">{</span> hours<span class="token operator">:</span> <span class="token number">5</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -364,6 +365,7 @@ Temporal<span class="token punctuation">.</span>now<span class="token punctuatio
 <code>Temporal.Absolute</code> is independent of time zones and calendars, and so years and months may be different lengths.
 If you need to do this, convert the <code>Temporal.Absolute</code> to a <code>Temporal.DateTime</code> by specifying the desired time zone, subtract the duration, and then convert it back.</p>
 <p>If the result is earlier or later than the range that <code>Temporal.Absolute</code> can represent (approximately half a million years centered on the <a href="https://en.wikipedia.org/wiki/Unix_time">Unix epoch</a>), a <code>RangeError</code> will be thrown.</p>
+<p>Subtracting a negative duration is equivalent to adding the absolute value of that duration.</p>
 <p>Example usage:</p>
 <pre class="language-js"><code class="language-js"><span class="token comment">// Temporal.Absolute representing this time yesterday</span>
 Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">absolute</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">minus</span><span class="token punctuation">(</span><span class="token punctuation">{</span> days<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -381,7 +383,7 @@ The default is <code>&quot;seconds&quot;</code>.</li>
 </ul>
 <p><strong>Returns:</strong> a <code>Temporal.Duration</code> representing the difference between <code>absolute</code> and <code>other</code>.</p>
 <p>This method computes the difference between the two times represented by <code>absolute</code> and <code>other</code>, and returns it as a <code>Temporal.Duration</code> object.
-A <code>RangeError</code> will be thrown if <code>other</code> is later than <code>absolute</code>, because <code>Temporal.Duration</code> objects cannot represent negative durations.</p>
+If <code>other</code> is later than <code>absolute</code> then the resulting duration will be negative.</p>
 <p>The <code>largestUnit</code> option controls how the resulting duration is expressed.
 The returned <code>Temporal.Duration</code> object will not have any nonzero fields that are larger than the unit in <code>largestUnit</code>.
 A difference of two hours will become 7200 seconds when <code>largestUnit</code> is <code>&quot;seconds&quot;</code>, for example.

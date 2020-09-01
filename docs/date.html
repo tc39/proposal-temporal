@@ -436,6 +436,7 @@ For these cases, the <code>disambiguation</code> option tells what to do:</p>
 <li>In <code>reject</code> mode, an addition that would result in an out-of-range value fails, and a <code>RangeError</code> is thrown.</li>
 </ul>
 <p>Additionally, if the result is earlier or later than the range of dates that <code>Temporal.Date</code> can represent (approximately half a million years centered on the <a href="https://en.wikipedia.org/wiki/Unix_time">Unix epoch</a>), then this method will throw a <code>RangeError</code> regardless of <code>disambiguation</code>.</p>
+<p>Adding a negative duration is equivalent to subtracting the absolute value of that duration.</p>
 <p>Usage example:</p>
 <pre class="language-javascript"><code class="language-javascript">date <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2006-08-24'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 date<span class="token punctuation">.</span><span class="token function">plus</span><span class="token punctuation">(</span><span class="token punctuation">{</span>years<span class="token operator">:</span> <span class="token number">20</span><span class="token punctuation">,</span> months<span class="token operator">:</span> <span class="token number">4</span><span class="token punctuation">}</span><span class="token punctuation">)</span>  <span class="token comment">// => 2026-12-24</span>
@@ -464,6 +465,7 @@ For these cases, the <code>disambiguation</code> option tells what to do:</p>
 <li>In <code>reject</code> mode, an addition that would result in an out-of-range value fails, and a <code>RangeError</code> is thrown.</li>
 </ul>
 <p>Additionally, if the result is earlier or later than the range of dates that <code>Temporal.Date</code> can represent (approximately half a million years centered on the <a href="https://en.wikipedia.org/wiki/Unix_time">Unix epoch</a>), then this method will throw a <code>RangeError</code> regardless of <code>disambiguation</code>.</p>
+<p>Subtracting a negative duration is equivalent to adding the absolute value of that duration.</p>
 <p>Usage example:</p>
 <pre class="language-javascript"><code class="language-javascript">date <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2006-08-24'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 date<span class="token punctuation">.</span><span class="token function">minus</span><span class="token punctuation">(</span><span class="token punctuation">{</span>years<span class="token operator">:</span> <span class="token number">20</span><span class="token punctuation">,</span> months<span class="token operator">:</span> <span class="token number">4</span><span class="token punctuation">}</span><span class="token punctuation">)</span>  <span class="token comment">// => 1986-04-24</span>
@@ -483,7 +485,7 @@ The default is <code>days</code>.</li>
 </ul>
 <p><strong>Returns:</strong> a <code>Temporal.Duration</code> representing the difference between <code>date</code> and <code>other</code>.</p>
 <p>This method computes the difference between the two dates represented by <code>date</code> and <code>other</code>, and returns it as a <code>Temporal.Duration</code> object.
-A <code>RangeError</code> will be thrown if <code>other</code> is later than <code>date</code>, because <code>Temporal.Duration</code> objects cannot represent negative durations.</p>
+If <code>other</code> is later than <code>date</code> then the resulting duration will be negative.</p>
 <p>The <code>largestUnit</code> option controls how the resulting duration is expressed.
 The returned <code>Temporal.Duration</code> object will not have any nonzero fields that are larger than the unit in <code>largestUnit</code>.
 A difference of two years will become 24 months when <code>largestUnit</code> is <code>&quot;months&quot;</code>, for example.
@@ -498,7 +500,7 @@ If you need to do this, choose the calendar in which the computation takes place
 other <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2006-08-24'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 date<span class="token punctuation">.</span><span class="token function">difference</span><span class="token punctuation">(</span>other<span class="token punctuation">)</span>                            <span class="token comment">// => P4543D</span>
 date<span class="token punctuation">.</span><span class="token function">difference</span><span class="token punctuation">(</span>other<span class="token punctuation">,</span> <span class="token punctuation">{</span> largestUnit<span class="token operator">:</span> <span class="token string">'years'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>  <span class="token comment">// => P12Y5M7D</span>
-other<span class="token punctuation">.</span><span class="token function">difference</span><span class="token punctuation">(</span>date<span class="token punctuation">,</span> <span class="token punctuation">{</span> largestUnit<span class="token operator">:</span> <span class="token string">'years'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>  <span class="token comment">// => throws RangeError</span>
+other<span class="token punctuation">.</span><span class="token function">difference</span><span class="token punctuation">(</span>date<span class="token punctuation">,</span> <span class="token punctuation">{</span> largestUnit<span class="token operator">:</span> <span class="token string">'years'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>  <span class="token comment">// => -P12Y5M7D</span>
 
 <span class="token comment">// If you really need to calculate the difference between two Dates in</span>
 <span class="token comment">// hours, you can eliminate the ambiguity by explicitly choosing the</span>

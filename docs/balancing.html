@@ -153,26 +153,26 @@ In the default ISO calendar, a year can be 365 or 366 days, and a month can be 2
 Therefore, any <code>Duration</code> object with nonzero years or months can refer to a different length of time depending on when the start date is.
 No balancing is ever performed between years, months, and days, because such conversion would be ambiguous.
 If you need such a conversion, you must implement it yourself, since the rules can depend on the start date and the calendar in use.</p>
-<p>Negative values are never allowed as <code>Temporal.Duration</code> fields, so passing one as an argument to <code>new Temporal.Duration()</code> or as a property in the object passed to <code>Temporal.Duration.from()</code> will always throw an exception, regardless of the disambiguation mode.</p>
+<p><code>Temporal.Duration</code> fields are not allowed to have mixed signs.
+For example, passing one positive and one negative argument to <code>new Temporal.Duration()</code> or as properties in the object passed to <code>Temporal.Duration.from()</code> will always throw an exception, regardless of the disambiguation mode.</p>
 <p>Therefore, the only case where constrain and reject mode have any effect when creating a duration, is integer overflow.
-If one of the values overflows, constrain mode will cap it to <code>Number.MAX_VALUE</code>.</p>
+If one of the values overflows, constrain mode will cap it to <code>Number.MAX_VALUE</code> or <code>-Number.MAX_VALUE</code>.</p>
 <h2 id="duration-arithmetic">Duration arithmetic</h2>
-<p>When adding two <code>Temporal.Duration</code>s, the situation is much the same as for constructing one.
-It&#39;s not possible to end up with a negative value when adding two valid durations, nor is any balancing needed, so the disambiguation mode only determines what to do in the case of integer overflow.</p>
-<p>The situation is very different for subtraction.
-Consider a duration of 90 minutes, from which is subtracted 30 seconds.
+<p>When adding two <code>Temporal.Duration</code>s of opposite sign, or subtracting two durations of the same sign, the situation is different.
+As well as the same possibility of integer overflow, the fields may also need to be balanced.</p>
+<p>Consider a duration of 90 minutes, from which is subtracted 30 seconds.
 Subtracting the fields directly would result in 90 minutes and &minus;30 seconds, which is invalid.
 Therefore, it&#39;s necessary to balance the seconds with the minutes, resulting in 89 minutes and 30 seconds.</p>
-<p>By default, the fields of the resulting duration are only converted between each other if one unit is negative but a larger unit is positive, in which case the smaller is balanced with the larger to avoid having negative-valued fields.</p>
+<p>By default, the fields of the resulting duration are only converted between each other if one unit is negative but a larger unit is positive, or vice versa, in which case the smaller is balanced with the larger to avoid having mixed-sign fields.</p>
 <p>That&#39;s not all the balancing that <em>could</em> be done on the resulting value.
 It could further be balanced into 1 hour, 29 minutes, and 30 seconds.
 However, that would likely conflict with the intention of having a duration of 90 minutes in the first place, so this should be behaviour that the Temporal user opts in to.
-With subtraction, we make a distinction between &quot;necessary balancing&quot; and &quot;optional balancing&quot;.</p>
-<p>In order to accommodate this, the <code>disambiguation</code> option when subtracting <code>Temporal.Duration</code>s is different from all the other arithmetic methods&#39; disambiguation options.
-Necessary balancing is called <code>balanceConstrain</code> mode, because values are constrained to be non-negative through balancing.
+Here, we make a distinction between &quot;necessary balancing&quot; and &quot;optional balancing&quot;.</p>
+<p>In order to accommodate this, the <code>disambiguation</code> option when performing arithmetic on <code>Temporal.Duration</code>s is different from all the other arithmetic methods&#39; disambiguation options.
+Necessary balancing is called <code>constrain</code> mode, because values are constrained to be non-negative through balancing.
 Optional balancing is called <code>balance</code> mode.
-The usual <code>constrain</code> and <code>reject</code> modes are not available.</p>
-<p>The default is <code>balanceConstrain</code> mode.
+The usual <code>reject</code> mode is also available, and does the same thing as <code>constrain</code> but throws on integer overflow.</p>
+<p>The default is <code>constrain</code> mode.
 The <code>balance</code> mode is only provided for convenience, since the following code snippets give the same result:</p>
 <pre class="language-javascript"><code class="language-javascript">duration3 <span class="token operator">=</span> duration1<span class="token punctuation">.</span><span class="token function">minus</span><span class="token punctuation">(</span>duration2<span class="token punctuation">,</span> <span class="token punctuation">{</span> disambiguation<span class="token operator">:</span> <span class="token string">'balance'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
@@ -206,8 +206,8 @@ one<span class="token punctuation">.</span><span class="token function">minus</s
 <span class="token comment">// Result is negative</span>
 one <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Duration<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> hours<span class="token operator">:</span> <span class="token number">2</span><span class="token punctuation">,</span> minutes<span class="token operator">:</span> <span class="token number">30</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 two <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Duration<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> hours<span class="token operator">:</span> <span class="token number">3</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-one<span class="token punctuation">.</span><span class="token function">minus</span><span class="token punctuation">(</span>two<span class="token punctuation">)</span><span class="token punctuation">;</span>                                 <span class="token comment">// throws</span>
-one<span class="token punctuation">.</span><span class="token function">minus</span><span class="token punctuation">(</span>two<span class="token punctuation">,</span> <span class="token punctuation">{</span> disambiguation<span class="token operator">:</span> <span class="token string">'balance'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// throws</span>
+one<span class="token punctuation">.</span><span class="token function">minus</span><span class="token punctuation">(</span>two<span class="token punctuation">)</span><span class="token punctuation">;</span>                                 <span class="token comment">// -PT30M</span>
+one<span class="token punctuation">.</span><span class="token function">minus</span><span class="token punctuation">(</span>two<span class="token punctuation">,</span> <span class="token punctuation">{</span> disambiguation<span class="token operator">:</span> <span class="token string">'balance'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// -PT30M</span>
 
 <span class="token comment">// Unbalanceable units, but also no balancing possible</span>
 one <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Duration<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> months<span class="token operator">:</span> <span class="token number">3</span><span class="token punctuation">,</span> days<span class="token operator">:</span> <span class="token number">15</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>

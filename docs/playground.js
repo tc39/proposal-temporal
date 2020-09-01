@@ -3091,7 +3091,7 @@
 
   var yearmonth = new RegExp("^(".concat(yearpart.source, ")-?(\\d{2})$"));
   var monthday = /^(?:--)?(\d{2})-?(\d{2})$/;
-  var duration = /^P(?:(\d+)Y)?(?:(\d+)M)?(?:(\d+)W)?(?:(\d+)D)?(?:T(?!$)(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)(?:[.,](\d{1,9}))?S)?)?$/i;
+  var duration = /^([+-\u2212])?P(?:(\d+)Y)?(?:(\d+)M)?(?:(\d+)W)?(?:(\d+)D)?(?:T(?!$)(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)(?:[.,](\d{1,9}))?S)?)?$/i;
 
   var IntlDateTimeFormat = globalThis.Intl.DateTimeFormat;
   var ObjectAssign = Object.assign;
@@ -3336,23 +3336,24 @@
       var match = duration.exec(isoString);
       if (!match) throw new RangeError("invalid duration: ".concat(isoString));
 
-      if (match.slice(1).every(function (element) {
+      if (match.slice(2).every(function (element) {
         return element === undefined;
       })) {
         throw new RangeError("invalid duration: ".concat(isoString));
       }
 
-      var years = ES.ToInteger(match[1]);
-      var months = ES.ToInteger(match[2]);
-      var weeks = ES.ToInteger(match[3]);
-      var days = ES.ToInteger(match[4]);
-      var hours = ES.ToInteger(match[5]);
-      var minutes = ES.ToInteger(match[6]);
-      var seconds = ES.ToInteger(match[7]);
-      var fraction = match[8] + '000000000';
-      var milliseconds = ES.ToInteger(fraction.slice(0, 3));
-      var microseconds = ES.ToInteger(fraction.slice(3, 6));
-      var nanoseconds = ES.ToInteger(fraction.slice(6, 9));
+      var sign = match[1] === '-' || match[1] === "\u2212" ? -1 : 1;
+      var years = ES.ToInteger(match[2]) * sign;
+      var months = ES.ToInteger(match[3]) * sign;
+      var weeks = ES.ToInteger(match[4]) * sign;
+      var days = ES.ToInteger(match[5]) * sign;
+      var hours = ES.ToInteger(match[6]) * sign;
+      var minutes = ES.ToInteger(match[7]) * sign;
+      var seconds = ES.ToInteger(match[8]) * sign;
+      var fraction = match[9] + '000000000';
+      var milliseconds = ES.ToInteger(fraction.slice(0, 3)) * sign;
+      var microseconds = ES.ToInteger(fraction.slice(3, 6)) * sign;
+      var nanoseconds = ES.ToInteger(fraction.slice(6, 9)) * sign;
       return {
         years: years,
         months: months,
@@ -3545,16 +3546,13 @@
       return ES.ToRecord(item, [['days', 0], ['hours', 0], ['microseconds', 0], ['milliseconds', 0], ['minutes', 0], ['months', 0], ['nanoseconds', 0], ['seconds', 0], ['weeks', 0], ['years', 0]]);
     },
     RegulateDuration: function RegulateDuration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, disambiguation) {
-      for (var _i = 0, _arr = [years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds]; _i < _arr.length; _i++) {
-        var prop = _arr[_i];
-        if (prop < 0) throw new RangeError('negative values not allowed as duration fields');
-      }
+      ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
 
       switch (disambiguation) {
         case 'reject':
-          for (var _i2 = 0, _arr2 = [years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds]; _i2 < _arr2.length; _i2++) {
-            var _prop = _arr2[_i2];
-            if (!Number.isFinite(_prop)) throw new RangeError('infinite values not allowed as duration fields');
+          for (var _i = 0, _arr = [years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds]; _i < _arr.length; _i++) {
+            var prop = _arr[_i];
+            if (!Number.isFinite(prop)) throw new RangeError('infinite values not allowed as duration fields');
           }
 
           break;
@@ -3564,7 +3562,7 @@
             var arr = [years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds];
 
             for (var idx in arr) {
-              if (!Number.isFinite(arr[idx])) arr[idx] = Number.MAX_VALUE;
+              if (!Number.isFinite(arr[idx])) arr[idx] = Math.sign(arr[idx]) * Number.MAX_VALUE;
             }
 
             years = arr[0];
@@ -3592,9 +3590,9 @@
             microseconds = _ES$BalanceDuration.microseconds;
             nanoseconds = _ES$BalanceDuration.nanoseconds;
 
-            for (var _i3 = 0, _arr3 = [years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds]; _i3 < _arr3.length; _i3++) {
-              var _prop2 = _arr3[_i3];
-              if (!Number.isFinite(_prop2)) throw new RangeError('infinite values not allowed as duration fields');
+            for (var _i2 = 0, _arr2 = [years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds]; _i2 < _arr2.length; _i2++) {
+              var _prop = _arr2[_i2];
+              if (!Number.isFinite(_prop)) throw new RangeError('infinite values not allowed as duration fields');
             }
 
             break;
@@ -3662,9 +3660,6 @@
     },
     ToTimeZoneTemporalDisambiguation: function ToTimeZoneTemporalDisambiguation(options) {
       return ES.GetOption(options, 'disambiguation', ['compatible', 'earlier', 'later', 'reject'], 'compatible');
-    },
-    ToDurationSubtractionTemporalDisambiguation: function ToDurationSubtractionTemporalDisambiguation(options) {
-      return ES.GetOption(options, 'disambiguation', ['balanceConstrain', 'balance'], 'balanceConstrain');
     },
     ToLargestTemporalUnit: function ToLargestTemporalUnit(options, fallback) {
       var disallowedStrings = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
@@ -3943,36 +3938,44 @@
         return BigInteger(num).toString();
       }
 
-      var dateParts = [];
-      if (GetSlot(duration, YEARS)) dateParts.push("".concat(formatNumber(GetSlot(duration, YEARS)), "Y"));
-      if (GetSlot(duration, MONTHS)) dateParts.push("".concat(formatNumber(GetSlot(duration, MONTHS)), "M"));
-      if (GetSlot(duration, WEEKS)) dateParts.push("".concat(formatNumber(GetSlot(duration, WEEKS)), "W"));
-      if (GetSlot(duration, DAYS)) dateParts.push("".concat(formatNumber(GetSlot(duration, DAYS)), "D"));
-      var timeParts = [];
-      if (GetSlot(duration, HOURS)) timeParts.push("".concat(formatNumber(GetSlot(duration, HOURS)), "H"));
-      if (GetSlot(duration, MINUTES)) timeParts.push("".concat(formatNumber(GetSlot(duration, MINUTES)), "M"));
-      var secondParts = [];
+      var years = GetSlot(duration, YEARS);
+      var months = GetSlot(duration, MONTHS);
+      var weeks = GetSlot(duration, WEEKS);
+      var days = GetSlot(duration, DAYS);
+      var hours = GetSlot(duration, HOURS);
+      var minutes = GetSlot(duration, MINUTES);
+      var seconds = GetSlot(duration, SECONDS);
       var ms = GetSlot(duration, MILLISECONDS);
       var µs = GetSlot(duration, MICROSECONDS);
       var ns = GetSlot(duration, NANOSECONDS);
-      var seconds;
+      var sign = ES.DurationSign(years, months, weeks, days, hours, minutes, seconds, ms, µs, ns);
+      var dateParts = [];
+      if (years) dateParts.push("".concat(formatNumber(Math.abs(years)), "Y"));
+      if (months) dateParts.push("".concat(formatNumber(Math.abs(months)), "M"));
+      if (weeks) dateParts.push("".concat(formatNumber(Math.abs(weeks)), "W"));
+      if (days) dateParts.push("".concat(formatNumber(Math.abs(days)), "D"));
+      var timeParts = [];
+      if (hours) timeParts.push("".concat(formatNumber(Math.abs(hours)), "H"));
+      if (minutes) timeParts.push("".concat(formatNumber(Math.abs(minutes)), "M"));
+      var secondParts = [];
+      var s;
 
       var _ES$BalanceSubSecond = ES.BalanceSubSecond(ms, µs, ns);
 
-      seconds = _ES$BalanceSubSecond.seconds;
+      s = _ES$BalanceSubSecond.seconds;
       ms = _ES$BalanceSubSecond.millisecond;
       µs = _ES$BalanceSubSecond.microsecond;
       ns = _ES$BalanceSubSecond.nanosecond;
-      var s = GetSlot(duration, SECONDS) + seconds;
-      if (ns) secondParts.unshift("".concat(ns).padStart(3, '0'));
-      if (µs || secondParts.length) secondParts.unshift("".concat(µs).padStart(3, '0'));
-      if (ms || secondParts.length) secondParts.unshift("".concat(ms).padStart(3, '0'));
+      s += seconds;
+      if (ns) secondParts.unshift("".concat(Math.abs(ns)).padStart(3, '0'));
+      if (µs || secondParts.length) secondParts.unshift("".concat(Math.abs(µs)).padStart(3, '0'));
+      if (ms || secondParts.length) secondParts.unshift("".concat(Math.abs(ms)).padStart(3, '0'));
       if (secondParts.length) secondParts.unshift('.');
-      if (s || secondParts.length) secondParts.unshift(formatNumber(s));
+      if (s || secondParts.length) secondParts.unshift(formatNumber(Math.abs(s)));
       if (secondParts.length) timeParts.push("".concat(secondParts.join(''), "S"));
       if (timeParts.length) timeParts.unshift('T');
       if (!dateParts.length && !timeParts.length) return 'PT0S';
-      return "P".concat(dateParts.join('')).concat(timeParts.join(''));
+      return "".concat(sign < 0 ? '-' : '', "P").concat(dateParts.join('')).concat(timeParts.join(''));
     },
     GetCanonicalTimeZoneIdentifier: function GetCanonicalTimeZoneIdentifier(timeZoneIdentifier) {
       var offsetNs = parseOffsetString(timeZoneIdentifier);
@@ -4254,6 +4257,14 @@
 
       return week;
     },
+    DurationSign: function DurationSign(y, mon, w, d, h, min, s, ms, µs, ns) {
+      for (var _i3 = 0, _arr3 = [y, mon, w, d, h, min, s, ms, µs, ns]; _i3 < _arr3.length; _i3++) {
+        var prop = _arr3[_i3];
+        if (prop !== 0) return prop < 0 ? -1 : 1;
+      }
+
+      return 0;
+    },
     BalanceYearMonth: function BalanceYearMonth(year, month) {
       if (!Number.isFinite(year) || !Number.isFinite(month)) throw new RangeError('infinity is out of range');
       month -= 1;
@@ -4423,6 +4434,14 @@
       };
     },
     BalanceDuration: function BalanceDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, largestUnit) {
+      var sign = ES.DurationSign(0, 0, 0, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+      days *= sign;
+      hours *= sign;
+      minutes *= sign;
+      seconds *= sign;
+      milliseconds *= sign;
+      microseconds *= sign;
+      nanoseconds *= sign;
       var deltaDays;
 
       var _ES$BalanceTime2 = ES.BalanceTime(hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
@@ -4477,6 +4496,13 @@
           throw new Error('assert not reached');
       }
 
+      days *= sign;
+      hours *= sign;
+      minutes *= sign;
+      seconds *= sign;
+      milliseconds *= sign;
+      microseconds *= sign;
+      nanoseconds *= sign;
       return {
         days: days,
         hours: hours,
@@ -4586,8 +4612,30 @@
         ES.RejectToRange(month, 1, 9);
       }
     },
-    DifferenceDate: function DifferenceDate(smaller, larger) {
+    RejectDurationSign: function RejectDurationSign(y, mon, w, d, h, min, s, ms, µs, ns) {
+      var sign = ES.DurationSign(y, mon, w, d, h, min, s, ms, µs, ns);
+
+      for (var _i4 = 0, _arr4 = [y, mon, w, d, h, min, s, ms, µs, ns]; _i4 < _arr4.length; _i4++) {
+        var prop = _arr4[_i4];
+        var propSign = Math.sign(prop);
+        if (propSign !== 0 && propSign !== sign) throw new RangeError('mixed-sign values not allowed as duration fields');
+      }
+    },
+    DifferenceDate: function DifferenceDate(one, two) {
       var largestUnit = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'days';
+      var larger, smaller, sign;
+      var TemporalDate = GetIntrinsic$1('%Temporal.Date%');
+
+      if (TemporalDate.compare(one, two) < 0) {
+        smaller = one;
+        larger = two;
+        sign = 1;
+      } else {
+        smaller = two;
+        larger = one;
+        sign = -1;
+      }
+
       var years = larger.year - smaller.year;
       var weeks = 0;
       var months, days;
@@ -4649,6 +4697,10 @@
           throw new Error('assert not reached');
       }
 
+      years *= sign;
+      months *= sign;
+      weeks *= sign;
+      days *= sign;
       return {
         years: years,
         months: months,
@@ -4656,13 +4708,20 @@
         days: days
       };
     },
-    DifferenceTime: function DifferenceTime(earlier, later) {
-      var hours = later.hour - earlier.hour;
-      var minutes = later.minute - earlier.minute;
-      var seconds = later.second - earlier.second;
-      var milliseconds = later.millisecond - earlier.millisecond;
-      var microseconds = later.microsecond - earlier.microsecond;
-      var nanoseconds = later.nanosecond - earlier.nanosecond;
+    DifferenceTime: function DifferenceTime(one, two) {
+      var hours = two.hour - one.hour;
+      var minutes = two.minute - one.minute;
+      var seconds = two.second - one.second;
+      var milliseconds = two.millisecond - one.millisecond;
+      var microseconds = two.microsecond - one.microsecond;
+      var nanoseconds = two.nanosecond - one.nanosecond;
+      var sign = ES.DurationSign(0, 0, 0, 0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+      hours *= sign;
+      minutes *= sign;
+      seconds *= sign;
+      milliseconds *= sign;
+      microseconds *= sign;
+      nanoseconds *= sign;
       var deltaDays = 0;
 
       var _ES$BalanceTime3 = ES.BalanceTime(hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
@@ -4674,6 +4733,13 @@
       milliseconds = _ES$BalanceTime3.millisecond;
       microseconds = _ES$BalanceTime3.microsecond;
       nanoseconds = _ES$BalanceTime3.nanosecond;
+      deltaDays *= sign;
+      hours *= sign;
+      minutes *= sign;
+      seconds *= sign;
+      milliseconds *= sign;
+      microseconds *= sign;
+      nanoseconds *= sign;
       return {
         deltaDays: deltaDays,
         hours: hours,
@@ -4796,7 +4862,7 @@
         nanosecond: nanosecond
       };
     },
-    AddDuration: function AddDuration(y1, mon1, w1, d1, h1, min1, s1, ms1, µs1, ns1, y2, mon2, w2, d2, h2, min2, s2, ms2, µs2, ns2, disambiguation) {
+    DurationArithmetic: function DurationArithmetic(y1, mon1, w1, d1, h1, min1, s1, ms1, µs1, ns1, y2, mon2, w2, d2, h2, min2, s2, ms2, µs2, ns2, disambiguation) {
       var years = y1 + y2;
       var months = mon1 + mon2;
       var weeks = w1 + w2;
@@ -4807,19 +4873,17 @@
       var milliseconds = ms1 + ms2;
       var microseconds = µs1 + µs2;
       var nanoseconds = ns1 + ns2;
-      return ES.RegulateDuration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, disambiguation);
-    },
-    SubtractDuration: function SubtractDuration(y1, mon1, w1, d1, h1, min1, s1, ms1, µs1, ns1, y2, mon2, w2, d2, h2, min2, s2, ms2, µs2, ns2, disambiguation) {
-      var years = y1 - y2;
-      var months = mon1 - mon2;
-      var weeks = w1 - w2;
-      var days = d1 - d2;
-      var hours = h1 - h2;
-      var minutes = min1 - min2;
-      var seconds = s1 - s2;
-      var milliseconds = ms1 - ms2;
-      var microseconds = µs1 - µs2;
-      var nanoseconds = ns1 - ns2;
+      var sign = ES.DurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+      years *= sign;
+      months *= sign;
+      weeks *= sign;
+      days *= sign;
+      hours *= sign;
+      minutes *= sign;
+      seconds *= sign;
+      milliseconds *= sign;
+      microseconds *= sign;
+      nanoseconds *= sign;
 
       if (nanoseconds < 0) {
         microseconds += Math.floor(nanoseconds / 1000);
@@ -4851,27 +4915,22 @@
         hours = ES.NonNegativeModulo(hours, 24);
       }
 
-      for (var _i4 = 0, _arr4 = [years, months, weeks, days]; _i4 < _arr4.length; _i4++) {
-        var prop = _arr4[_i4];
-        if (prop < 0) throw new RangeError('negative values not allowed as duration fields');
+      for (var _i5 = 0, _arr5 = [months, weeks, days]; _i5 < _arr5.length; _i5++) {
+        var prop = _arr5[_i5];
+        if (prop < 0) throw new RangeError('mixed sign not allowed in duration fields');
       }
 
-      if (disambiguation === 'balance') {
-        return ES.RegulateDuration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 'balance');
-      }
-
-      return {
-        years: years,
-        months: months,
-        weeks: weeks,
-        days: days,
-        hours: hours,
-        minutes: minutes,
-        seconds: seconds,
-        milliseconds: milliseconds,
-        microseconds: microseconds,
-        nanoseconds: nanoseconds
-      };
+      years *= sign;
+      months *= sign;
+      weeks *= sign;
+      days *= sign;
+      hours *= sign;
+      minutes *= sign;
+      seconds *= sign;
+      milliseconds *= sign;
+      microseconds *= sign;
+      nanoseconds *= sign;
+      return ES.RegulateDuration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, disambiguation);
     },
     AssertPositiveInteger: function AssertPositiveInteger(num) {
       if (!Number.isFinite(num) || Math.abs(num) !== num) throw new RangeError("invalid positive integer: ".concat(num));
@@ -5038,7 +5097,7 @@
       }
     }, {
       key: "dateDifference",
-      value: function dateDifference(smaller, larger, options) {
+      value: function dateDifference(one, two, options) {
         throw new Error('not implemented');
       }
     }, {
@@ -5194,15 +5253,26 @@
             months = duration.months,
             weeks = duration.weeks,
             days = duration.days;
+        ES.RejectDurationSign(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
+        var sign = ES.DurationSign(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
         var year = GetSlot(date, ISO_YEAR);
         var month = GetSlot(date, ISO_MONTH);
         var day = GetSlot(date, ISO_DAY);
 
-        var _ES$AddDate = ES.AddDate(year, month, day, years, months, weeks, days, disambiguation);
+        if (sign < 0) {
+          var _ES$SubtractDate = ES.SubtractDate(year, month, day, -years, -months, -weeks, -days, disambiguation);
 
-        year = _ES$AddDate.year;
-        month = _ES$AddDate.month;
-        day = _ES$AddDate.day;
+          year = _ES$SubtractDate.year;
+          month = _ES$SubtractDate.month;
+          day = _ES$SubtractDate.day;
+        } else {
+          var _ES$AddDate = ES.AddDate(year, month, day, years, months, weeks, days, disambiguation);
+
+          year = _ES$AddDate.year;
+          month = _ES$AddDate.month;
+          day = _ES$AddDate.day;
+        }
+
         return new constructor(year, month, day, this);
       }
     }, {
@@ -5214,24 +5284,35 @@
             months = duration.months,
             weeks = duration.weeks,
             days = duration.days;
+        ES.RejectDurationSign(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
+        var sign = ES.DurationSign(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
         var year = GetSlot(date, ISO_YEAR);
         var month = GetSlot(date, ISO_MONTH);
         var day = GetSlot(date, ISO_DAY);
 
-        var _ES$SubtractDate = ES.SubtractDate(year, month, day, years, months, weeks, days, disambiguation);
+        if (sign < 0) {
+          var _ES$AddDate2 = ES.AddDate(year, month, day, -years, -months, -weeks, -days, disambiguation);
 
-        year = _ES$SubtractDate.year;
-        month = _ES$SubtractDate.month;
-        day = _ES$SubtractDate.day;
+          year = _ES$AddDate2.year;
+          month = _ES$AddDate2.month;
+          day = _ES$AddDate2.day;
+        } else {
+          var _ES$SubtractDate2 = ES.SubtractDate(year, month, day, years, months, weeks, days, disambiguation);
+
+          year = _ES$SubtractDate2.year;
+          month = _ES$SubtractDate2.month;
+          day = _ES$SubtractDate2.day;
+        }
+
         return new constructor(year, month, day, this);
       }
     }, {
       key: "dateDifference",
-      value: function dateDifference(smaller, larger, options) {
+      value: function dateDifference(one, two, options) {
         if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
         var largestUnit = ES.ToLargestTemporalUnit(options, 'days', ['hours', 'minutes', 'seconds', 'milliseconds', 'microseconds', 'nanoseconds']);
 
-        var _ES$DifferenceDate = ES.DifferenceDate(smaller, larger, largestUnit),
+        var _ES$DifferenceDate = ES.DifferenceDate(one, two, largestUnit),
             years = _ES$DifferenceDate.years,
             months = _ES$DifferenceDate.months,
             weeks = _ES$DifferenceDate.weeks,
@@ -5506,6 +5587,7 @@
             microseconds = _ES$ToLimitedTemporal.microseconds,
             nanoseconds = _ES$ToLimitedTemporal.nanoseconds;
 
+        ES.RejectDurationSign(0, 0, 0, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
         var add = BigInteger(0);
         add = add.plus(BigInteger(nanoseconds));
         add = add.plus(BigInteger(microseconds).multiply(1e3));
@@ -5535,6 +5617,7 @@
             microseconds = _ES$ToLimitedTemporal2.microseconds,
             nanoseconds = _ES$ToLimitedTemporal2.nanoseconds;
 
+        ES.RejectDurationSign(0, 0, 0, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
         var add = BigInteger(0);
         add = add.plus(BigInteger(nanoseconds));
         add = add.plus(BigInteger(microseconds).multiply(1e3));
@@ -5556,8 +5639,6 @@
         if (!ES.IsTemporalAbsolute(this)) throw new TypeError('invalid receiver');
         if (!ES.IsTemporalAbsolute(other)) throw new TypeError('invalid Absolute object');
         var largestUnit = ES.ToLargestTemporalUnit(options, 'seconds', ['years', 'months', 'weeks']);
-        var comparison = Absolute.compare(this, other);
-        if (comparison < 0) throw new RangeError('other instance cannot be larger than `this`');
         var onens = GetSlot(other, EPOCHNANOSECONDS);
         var twons = GetSlot(this, EPOCHNANOSECONDS);
         var diff = twons.minus(onens);
@@ -5783,16 +5864,18 @@
             years = _duration.years,
             months = _duration.months,
             weeks = _duration.weeks,
+            days = _duration.days,
             hours = _duration.hours,
             minutes = _duration.minutes,
             seconds = _duration.seconds,
             milliseconds = _duration.milliseconds,
             microseconds = _duration.microseconds,
             nanoseconds = _duration.nanoseconds;
+        ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
 
-        var _ES$BalanceDuration = ES.BalanceDuration(duration.days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 'days'),
-            days = _ES$BalanceDuration.days;
+        var _ES$BalanceDuration = ES.BalanceDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 'days');
 
+        days = _ES$BalanceDuration.days;
         duration = {
           years: years,
           months: months,
@@ -5813,16 +5896,18 @@
             years = _duration2.years,
             months = _duration2.months,
             weeks = _duration2.weeks,
+            days = _duration2.days,
             hours = _duration2.hours,
             minutes = _duration2.minutes,
             seconds = _duration2.seconds,
             milliseconds = _duration2.milliseconds,
             microseconds = _duration2.microseconds,
             nanoseconds = _duration2.nanoseconds;
+        ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
 
-        var _ES$BalanceDuration2 = ES.BalanceDuration(duration.days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 'days'),
-            days = _ES$BalanceDuration2.days;
+        var _ES$BalanceDuration2 = ES.BalanceDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 'days');
 
+        days = _ES$BalanceDuration2.days;
         duration = {
           years: years,
           months: months,
@@ -5846,8 +5931,6 @@
           throw new RangeError("cannot compute difference between dates of ".concat(calendar.id, " and ").concat(otherCalendar.id, " calendars"));
         }
 
-        var comparison = Date.compare(this, other);
-        if (comparison < 0) throw new RangeError('other instance cannot be larger than `this`');
         return calendar.dateDifference(other, this, options);
       }
     }, {
@@ -6202,6 +6285,8 @@
             milliseconds = _duration.milliseconds,
             microseconds = _duration.microseconds,
             nanoseconds = _duration.nanoseconds;
+        ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds); // For a negative duration, BalanceDuration() subtracts from days to make
+        // all other units positive, so it's not needed to switch on the sign below
 
         var _ES$BalanceDuration = ES.BalanceDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 'days');
 
@@ -6272,6 +6357,8 @@
             milliseconds = _duration2.milliseconds,
             microseconds = _duration2.microseconds,
             nanoseconds = _duration2.nanoseconds;
+        ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds); // For a negative duration, BalanceDuration() subtracts from days to make
+        // all other units positive, so it's not needed to switch on the sign below
 
         var _ES$BalanceDuration2 = ES.BalanceDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 'days');
 
@@ -6339,8 +6426,6 @@
         }
 
         var largestUnit = ES.ToLargestTemporalUnit(options, 'days');
-        var comparison = DateTime.compare(this, other);
-        if (comparison < 0) throw new RangeError('other instance cannot be larger than `this`');
 
         var _ES$DifferenceTime = ES.DifferenceTime(other, this),
             deltaDays = _ES$DifferenceTime.deltaDays,
@@ -6361,7 +6446,8 @@
         month = _ES$BalanceDate.month;
         day = _ES$BalanceDate.day;
         var TemporalDate = GetIntrinsic$1('%Temporal.Date%');
-        var adjustedLarger = new TemporalDate(year, month, day, calendar);
+        var adjustedDate = new TemporalDate(year, month, day, calendar);
+        var otherDate = new TemporalDate(GetSlot(other, ISO_YEAR), GetSlot(other, ISO_MONTH), GetSlot(other, ISO_DAY), calendar);
         var dateLargestUnit = 'days';
 
         if (largestUnit === 'years' || largestUnit === 'months' || largestUnit === 'weeks') {
@@ -6371,7 +6457,7 @@
         var dateOptions = ObjectAssign$2({}, options, {
           largestUnit: dateLargestUnit
         });
-        var dateDifference = calendar.dateDifference(other, adjustedLarger, dateOptions);
+        var dateDifference = calendar.dateDifference(otherDate, adjustedDate, dateOptions);
         var days;
 
         var _ES$BalanceDuration3 = ES.BalanceDuration(dateDifference.days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, largestUnit);
@@ -6742,11 +6828,13 @@
       milliseconds = ES.ToInteger(milliseconds);
       microseconds = ES.ToInteger(microseconds);
       nanoseconds = ES.ToInteger(nanoseconds);
+      var sign = ES.DurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
 
       for (var _i = 0, _arr = [years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds]; _i < _arr.length; _i++) {
         var prop = _arr[_i];
-        if (prop < 0) throw new RangeError('negative values not allowed as duration fields');
         if (!Number.isFinite(prop)) throw new RangeError('infinite values not allowed as duration fields');
+        var propSign = Math.sign(prop);
+        if (propSign !== 0 && propSign !== sign) throw new RangeError('mixed-sign values not allowed as duration fields');
       }
 
       CreateSlots(this);
@@ -6821,6 +6909,24 @@
         return result;
       }
     }, {
+      key: "negated",
+      value: function negated() {
+        if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
+        var Construct = ES.SpeciesConstructor(this, Duration);
+        var result = new Construct(-GetSlot(this, YEARS), -GetSlot(this, MONTHS), -GetSlot(this, WEEKS), -GetSlot(this, DAYS), -GetSlot(this, HOURS), -GetSlot(this, MINUTES), -GetSlot(this, SECONDS), -GetSlot(this, MILLISECONDS), -GetSlot(this, MICROSECONDS), -GetSlot(this, NANOSECONDS));
+        if (!ES.IsTemporalDuration(result)) throw new TypeError('invalid result');
+        return result;
+      }
+    }, {
+      key: "abs",
+      value: function abs() {
+        if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
+        var Construct = ES.SpeciesConstructor(this, Duration);
+        var result = new Construct(Math.abs(GetSlot(this, YEARS)), Math.abs(GetSlot(this, MONTHS)), Math.abs(GetSlot(this, WEEKS)), Math.abs(GetSlot(this, DAYS)), Math.abs(GetSlot(this, HOURS)), Math.abs(GetSlot(this, MINUTES)), Math.abs(GetSlot(this, SECONDS)), Math.abs(GetSlot(this, MILLISECONDS)), Math.abs(GetSlot(this, MICROSECONDS)), Math.abs(GetSlot(this, NANOSECONDS)));
+        if (!ES.IsTemporalDuration(result)) throw new TypeError('invalid result');
+        return result;
+      }
+    }, {
       key: "plus",
       value: function plus(other, options) {
         if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
@@ -6837,20 +6943,21 @@
             microseconds = _ES$ToLimitedTemporal.microseconds,
             nanoseconds = _ES$ToLimitedTemporal.nanoseconds;
 
-        var disambiguation = ES.ToTemporalDisambiguation(options);
+        ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+        var disambiguation = ES.ToDurationTemporalDisambiguation(options);
 
-        var _ES$AddDuration = ES.AddDuration(GetSlot(this, YEARS), GetSlot(this, MONTHS), GetSlot(this, WEEKS), GetSlot(this, DAYS), GetSlot(this, HOURS), GetSlot(this, MINUTES), GetSlot(this, SECONDS), GetSlot(this, MILLISECONDS), GetSlot(this, MICROSECONDS), GetSlot(this, NANOSECONDS), years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, disambiguation);
+        var _ES$DurationArithmeti = ES.DurationArithmetic(GetSlot(this, YEARS), GetSlot(this, MONTHS), GetSlot(this, WEEKS), GetSlot(this, DAYS), GetSlot(this, HOURS), GetSlot(this, MINUTES), GetSlot(this, SECONDS), GetSlot(this, MILLISECONDS), GetSlot(this, MICROSECONDS), GetSlot(this, NANOSECONDS), years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, disambiguation);
 
-        years = _ES$AddDuration.years;
-        months = _ES$AddDuration.months;
-        weeks = _ES$AddDuration.weeks;
-        days = _ES$AddDuration.days;
-        hours = _ES$AddDuration.hours;
-        minutes = _ES$AddDuration.minutes;
-        seconds = _ES$AddDuration.seconds;
-        milliseconds = _ES$AddDuration.milliseconds;
-        microseconds = _ES$AddDuration.microseconds;
-        nanoseconds = _ES$AddDuration.nanoseconds;
+        years = _ES$DurationArithmeti.years;
+        months = _ES$DurationArithmeti.months;
+        weeks = _ES$DurationArithmeti.weeks;
+        days = _ES$DurationArithmeti.days;
+        hours = _ES$DurationArithmeti.hours;
+        minutes = _ES$DurationArithmeti.minutes;
+        seconds = _ES$DurationArithmeti.seconds;
+        milliseconds = _ES$DurationArithmeti.milliseconds;
+        microseconds = _ES$DurationArithmeti.microseconds;
+        nanoseconds = _ES$DurationArithmeti.nanoseconds;
         var Construct = ES.SpeciesConstructor(this, Duration);
         var result = new Construct(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
         if (!ES.IsTemporalDuration(result)) throw new TypeError('invalid result');
@@ -6873,20 +6980,21 @@
             microseconds = _ES$ToLimitedTemporal2.microseconds,
             nanoseconds = _ES$ToLimitedTemporal2.nanoseconds;
 
-        var disambiguation = ES.ToDurationSubtractionTemporalDisambiguation(options);
+        ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+        var disambiguation = ES.ToDurationTemporalDisambiguation(options);
 
-        var _ES$SubtractDuration = ES.SubtractDuration(GetSlot(this, YEARS), GetSlot(this, MONTHS), GetSlot(this, WEEKS), GetSlot(this, DAYS), GetSlot(this, HOURS), GetSlot(this, MINUTES), GetSlot(this, SECONDS), GetSlot(this, MILLISECONDS), GetSlot(this, MICROSECONDS), GetSlot(this, NANOSECONDS), years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, disambiguation);
+        var _ES$DurationArithmeti2 = ES.DurationArithmetic(GetSlot(this, YEARS), GetSlot(this, MONTHS), GetSlot(this, WEEKS), GetSlot(this, DAYS), GetSlot(this, HOURS), GetSlot(this, MINUTES), GetSlot(this, SECONDS), GetSlot(this, MILLISECONDS), GetSlot(this, MICROSECONDS), GetSlot(this, NANOSECONDS), -years, -months, -weeks, -days, -hours, -minutes, -seconds, -milliseconds, -microseconds, -nanoseconds, disambiguation);
 
-        years = _ES$SubtractDuration.years;
-        months = _ES$SubtractDuration.months;
-        weeks = _ES$SubtractDuration.weeks;
-        days = _ES$SubtractDuration.days;
-        hours = _ES$SubtractDuration.hours;
-        minutes = _ES$SubtractDuration.minutes;
-        seconds = _ES$SubtractDuration.seconds;
-        milliseconds = _ES$SubtractDuration.milliseconds;
-        microseconds = _ES$SubtractDuration.microseconds;
-        nanoseconds = _ES$SubtractDuration.nanoseconds;
+        years = _ES$DurationArithmeti2.years;
+        months = _ES$DurationArithmeti2.months;
+        weeks = _ES$DurationArithmeti2.weeks;
+        days = _ES$DurationArithmeti2.days;
+        hours = _ES$DurationArithmeti2.hours;
+        minutes = _ES$DurationArithmeti2.minutes;
+        seconds = _ES$DurationArithmeti2.seconds;
+        milliseconds = _ES$DurationArithmeti2.milliseconds;
+        microseconds = _ES$DurationArithmeti2.microseconds;
+        nanoseconds = _ES$DurationArithmeti2.nanoseconds;
         var Construct = ES.SpeciesConstructor(this, Duration);
         var result = new Construct(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
         if (!ES.IsTemporalDuration(result)) throw new TypeError('invalid result');
@@ -6985,6 +7093,12 @@
       get: function get() {
         if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
         return GetSlot(this, NANOSECONDS);
+      }
+    }, {
+      key: "sign",
+      get: function get() {
+        if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
+        return ES.DurationSign(GetSlot(this, YEARS), GetSlot(this, MONTHS), GetSlot(this, WEEKS), GetSlot(this, DAYS), GetSlot(this, HOURS), GetSlot(this, MINUTES), GetSlot(this, SECONDS), GetSlot(this, MILLISECONDS), GetSlot(this, MICROSECONDS), GetSlot(this, NANOSECONDS));
       }
     }], [{
       key: "from",
@@ -7375,21 +7489,38 @@
             nanosecond = this.nanosecond;
         var duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
         var disambiguation = ES.ToTemporalDisambiguation(options);
-        var hours = duration.hours,
+        var years = duration.years,
+            months = duration.months,
+            weeks = duration.weeks,
+            days = duration.days,
+            hours = duration.hours,
             minutes = duration.minutes,
             seconds = duration.seconds,
             milliseconds = duration.milliseconds,
             microseconds = duration.microseconds,
             nanoseconds = duration.nanoseconds;
+        ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+        var sign = ES.DurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
 
-        var _ES$AddTime = ES.AddTime(hour, minute, second, millisecond, microsecond, nanosecond, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+        if (sign < 0) {
+          var _ES$SubtractTime = ES.SubtractTime(hour, minute, second, millisecond, microsecond, nanosecond, -hours, -minutes, -seconds, -milliseconds, -microseconds, -nanoseconds);
 
-        hour = _ES$AddTime.hour;
-        minute = _ES$AddTime.minute;
-        second = _ES$AddTime.second;
-        millisecond = _ES$AddTime.millisecond;
-        microsecond = _ES$AddTime.microsecond;
-        nanosecond = _ES$AddTime.nanosecond;
+          hour = _ES$SubtractTime.hour;
+          minute = _ES$SubtractTime.minute;
+          second = _ES$SubtractTime.second;
+          millisecond = _ES$SubtractTime.millisecond;
+          microsecond = _ES$SubtractTime.microsecond;
+          nanosecond = _ES$SubtractTime.nanosecond;
+        } else {
+          var _ES$AddTime = ES.AddTime(hour, minute, second, millisecond, microsecond, nanosecond, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+
+          hour = _ES$AddTime.hour;
+          minute = _ES$AddTime.minute;
+          second = _ES$AddTime.second;
+          millisecond = _ES$AddTime.millisecond;
+          microsecond = _ES$AddTime.microsecond;
+          nanosecond = _ES$AddTime.nanosecond;
+        }
 
         var _ES$RegulateTime2 = ES.RegulateTime(hour, minute, second, millisecond, microsecond, nanosecond, disambiguation);
 
@@ -7416,21 +7547,38 @@
             nanosecond = this.nanosecond;
         var duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
         var disambiguation = ES.ToTemporalDisambiguation(options);
-        var hours = duration.hours,
+        var years = duration.years,
+            months = duration.months,
+            weeks = duration.weeks,
+            days = duration.days,
+            hours = duration.hours,
             minutes = duration.minutes,
             seconds = duration.seconds,
             milliseconds = duration.milliseconds,
             microseconds = duration.microseconds,
             nanoseconds = duration.nanoseconds;
+        ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+        var sign = ES.DurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
 
-        var _ES$SubtractTime = ES.SubtractTime(hour, minute, second, millisecond, microsecond, nanosecond, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+        if (sign < 0) {
+          var _ES$AddTime2 = ES.AddTime(hour, minute, second, millisecond, microsecond, nanosecond, -hours, -minutes, -seconds, -milliseconds, -microseconds, -nanoseconds);
 
-        hour = _ES$SubtractTime.hour;
-        minute = _ES$SubtractTime.minute;
-        second = _ES$SubtractTime.second;
-        millisecond = _ES$SubtractTime.millisecond;
-        microsecond = _ES$SubtractTime.microsecond;
-        nanosecond = _ES$SubtractTime.nanosecond;
+          hour = _ES$AddTime2.hour;
+          minute = _ES$AddTime2.minute;
+          second = _ES$AddTime2.second;
+          millisecond = _ES$AddTime2.millisecond;
+          microsecond = _ES$AddTime2.microsecond;
+          nanosecond = _ES$AddTime2.nanosecond;
+        } else {
+          var _ES$SubtractTime2 = ES.SubtractTime(hour, minute, second, millisecond, microsecond, nanosecond, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+
+          hour = _ES$SubtractTime2.hour;
+          minute = _ES$SubtractTime2.minute;
+          second = _ES$SubtractTime2.second;
+          millisecond = _ES$SubtractTime2.millisecond;
+          microsecond = _ES$SubtractTime2.microsecond;
+          nanosecond = _ES$SubtractTime2.nanosecond;
+        }
 
         var _ES$RegulateTime3 = ES.RegulateTime(hour, minute, second, millisecond, microsecond, nanosecond, disambiguation);
 
@@ -7451,8 +7599,6 @@
         if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
         if (!ES.IsTemporalTime(other)) throw new TypeError('invalid Time object');
         var largestUnit = ES.ToLargestTemporalUnit(options, 'hours');
-        var comparison = Time.compare(this, other);
-        if (comparison < 0) throw new RangeError('other instance cannot be larger than `this`');
 
         var _ES$DifferenceTime = ES.DifferenceTime(other, this),
             hours = _ES$DifferenceTime.hours,
@@ -7950,23 +8096,30 @@
       value: function plus(temporalDurationLike, options) {
         if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
         var duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
-        var hours = duration.hours,
+        var years = duration.years,
+            months = duration.months,
+            weeks = duration.weeks,
+            days = duration.days,
+            hours = duration.hours,
             minutes = duration.minutes,
             seconds = duration.seconds,
             milliseconds = duration.milliseconds,
             microseconds = duration.microseconds,
             nanoseconds = duration.nanoseconds;
+        ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
 
-        var _ES$BalanceDuration = ES.BalanceDuration(duration.days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 'days'),
-            days = _ES$BalanceDuration.days;
+        var _ES$BalanceDuration = ES.BalanceDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 'days');
 
+        days = _ES$BalanceDuration.days;
         var TemporalDate = GetIntrinsic$1('%Temporal.Date%');
         var calendar = GetSlot(this, CALENDAR);
         var fields = ES.ToTemporalYearMonthRecord(this);
-        var firstOfCalendarMonth = calendar.dateFromFields(_objectSpread2(_objectSpread2({}, fields), {}, {
-          day: 1
+        var sign = ES.DurationSign(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
+        var day = sign < 0 ? calendar.daysInMonth(this) : 1;
+        var startDate = calendar.dateFromFields(_objectSpread2(_objectSpread2({}, fields), {}, {
+          day: day
         }), {}, TemporalDate);
-        var addedDate = calendar.datePlus(firstOfCalendarMonth, _objectSpread2(_objectSpread2({}, duration), {}, {
+        var addedDate = calendar.datePlus(startDate, _objectSpread2(_objectSpread2({}, duration), {}, {
           days: days
         }), options, TemporalDate);
         var Construct = ES.SpeciesConstructor(this, YearMonth);
@@ -7979,24 +8132,30 @@
       value: function minus(temporalDurationLike, options) {
         if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
         var duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
-        var hours = duration.hours,
+        var years = duration.years,
+            months = duration.months,
+            weeks = duration.weeks,
+            days = duration.days,
+            hours = duration.hours,
             minutes = duration.minutes,
             seconds = duration.seconds,
             milliseconds = duration.milliseconds,
             microseconds = duration.microseconds,
             nanoseconds = duration.nanoseconds;
+        ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
 
-        var _ES$BalanceDuration2 = ES.BalanceDuration(duration.days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 'days'),
-            days = _ES$BalanceDuration2.days;
+        var _ES$BalanceDuration2 = ES.BalanceDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 'days');
 
+        days = _ES$BalanceDuration2.days;
         var TemporalDate = GetIntrinsic$1('%Temporal.Date%');
         var calendar = GetSlot(this, CALENDAR);
         var fields = ES.ToTemporalYearMonthRecord(this);
-        var lastDay = calendar.daysInMonth(this);
-        var lastOfCalendarMonth = calendar.dateFromFields(_objectSpread2(_objectSpread2({}, fields), {}, {
-          day: lastDay
+        var sign = ES.DurationSign(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
+        var day = sign < 0 ? 1 : calendar.daysInMonth(this);
+        var startDate = calendar.dateFromFields(_objectSpread2(_objectSpread2({}, fields), {}, {
+          day: day
         }), {}, TemporalDate);
-        var subtractedDate = calendar.dateMinus(lastOfCalendarMonth, _objectSpread2(_objectSpread2({}, duration), {}, {
+        var subtractedDate = calendar.dateMinus(startDate, _objectSpread2(_objectSpread2({}, duration), {}, {
           days: days
         }), options, TemporalDate);
         var Construct = ES.SpeciesConstructor(this, YearMonth);
@@ -8017,18 +8176,16 @@
         }
 
         var largestUnit = ES.ToLargestTemporalUnit(options, 'years', ['weeks', 'days', 'hours', 'minutes', 'seconds', 'milliseconds', 'microseconds', 'nanoseconds']);
-        var comparison = YearMonth.compare(this, other);
-        if (comparison < 0) throw new RangeError('other instance cannot be larger than `this`');
-        var smallerFields = ES.ToTemporalYearMonthRecord(other);
-        var largerFields = ES.ToTemporalYearMonthRecord(this);
+        var otherFields = ES.ToTemporalYearMonthRecord(other);
+        var thisFields = ES.ToTemporalYearMonthRecord(this);
         var TemporalDate = GetIntrinsic$1('%Temporal.Date%');
-        var smaller = calendar.dateFromFields(_objectSpread2(_objectSpread2({}, smallerFields), {}, {
+        var otherDate = calendar.dateFromFields(_objectSpread2(_objectSpread2({}, otherFields), {}, {
           day: 1
         }), {}, TemporalDate);
-        var larger = calendar.dateFromFields(_objectSpread2(_objectSpread2({}, largerFields), {}, {
+        var thisDate = calendar.dateFromFields(_objectSpread2(_objectSpread2({}, thisFields), {}, {
           day: 1
         }), {}, TemporalDate);
-        return calendar.dateDifference(smaller, larger, _objectSpread2(_objectSpread2({}, options), {}, {
+        return calendar.dateDifference(otherDate, thisDate, _objectSpread2(_objectSpread2({}, options), {}, {
           largestUnit: largestUnit
         }));
       }
