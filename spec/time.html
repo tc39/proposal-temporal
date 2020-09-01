@@ -299,6 +299,31 @@
       </emu-alg>
     </emu-clause>
 
+    <emu-clause id="sec-temporal.time.prototype.round">
+      <h1>Temporal.Time.prototype.round ( _options_ )</h1>
+      <p>
+        The `round` method takes one argument, _options_.
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _temporalTime_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_temporalTime_, [[InitializedTemporalTime]]).
+        1. If _options_ is *undefined*, then
+          1. Throw a *TypeError* exception.
+        1. Let _smallestUnit_ be ? ToSmallestTemporalUnit(_options_, « *"day"* »).
+        1. Let _roundingMode_ be ? ToTemporalRoundingMode(_options_).
+        1. If _smallestUnit_ is *"hour"*, then
+          1. Let _maximum_ be 24.
+        1. Else if _smallestUnit_ is *"minute"* or *"second"*, then
+          1. Let _maximum_ be 60.
+        1. Else,
+          1. Let _maximum_ be 1000.
+        1. Let _roundingIncrement_ be ? ToTemporalRoundingIncrement(_options_, _maximum_, *false*).
+        1. Let _result_ be ? RoundTime(_temporalTime_.[[Hour]], _temporalTime_.[[Minute]], _temporalTime_.[[Second]], _temporalTime_.[[Millisecond]], _temporalTime_.[[Microsecond]], _temporalTime_.[[Nanosecond]], _roundingIncrement_, _smallestUnit_, _roundingMode_).
+        1. Return ? CreateTemporalTimeFromInstance(_temporalTime_, _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]).
+      </emu-alg>
+    </emu-clause>
+
     <emu-clause id="sec-temporal.time.prototype.equals">
       <h1>Temporal.Time.prototype.equals ( _other_ )</h1>
       <p>
