@@ -729,7 +729,7 @@ export const ES = ObjectAssign({}, ES2019, {
     const days = GetSlot(duration, DAYS);
     const hours = GetSlot(duration, HOURS);
     const minutes = GetSlot(duration, MINUTES);
-    const seconds = GetSlot(duration, SECONDS);
+    let seconds = GetSlot(duration, SECONDS);
     let ms = GetSlot(duration, MILLISECONDS);
     let µs = GetSlot(duration, MICROSECONDS);
     let ns = GetSlot(duration, NANOSECONDS);
@@ -746,14 +746,17 @@ export const ES = ObjectAssign({}, ES2019, {
     if (minutes) timeParts.push(`${formatNumber(Math.abs(minutes))}M`);
 
     const secondParts = [];
-    let s;
-    ({ seconds: s, millisecond: ms, microsecond: µs, nanosecond: ns } = ES.BalanceSubSecond(ms, µs, ns));
-    s += seconds;
+    µs += Math.trunc(ns / 1000);
+    ns %= 1000;
+    ms += Math.trunc(µs / 1000);
+    µs %= 1000;
+    seconds += Math.trunc(ms / 1000);
+    ms %= 1000;
     if (ns) secondParts.unshift(`${Math.abs(ns)}`.padStart(3, '0'));
     if (µs || secondParts.length) secondParts.unshift(`${Math.abs(µs)}`.padStart(3, '0'));
     if (ms || secondParts.length) secondParts.unshift(`${Math.abs(ms)}`.padStart(3, '0'));
     if (secondParts.length) secondParts.unshift('.');
-    if (s || secondParts.length) secondParts.unshift(formatNumber(Math.abs(s)));
+    if (seconds || secondParts.length) secondParts.unshift(formatNumber(Math.abs(seconds)));
     if (secondParts.length) timeParts.push(`${secondParts.join('')}S`);
     if (timeParts.length) timeParts.unshift('T');
     if (!dateParts.length && !timeParts.length) return 'PT0S';
@@ -1062,8 +1065,15 @@ export const ES = ObjectAssign({}, ES2019, {
     ({ year, month, day } = ES.BalanceDate(year, month, day + deltaDays));
     return { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond };
   },
-  BalanceSubSecond: (millisecond, microsecond, nanosecond) => {
-    if (!Number.isFinite(millisecond) || !Number.isFinite(microsecond) || !Number.isFinite(nanosecond)) {
+  BalanceTime: (hour, minute, second, millisecond, microsecond, nanosecond) => {
+    if (
+      !Number.isFinite(hour) ||
+      !Number.isFinite(minute) ||
+      !Number.isFinite(second) ||
+      !Number.isFinite(millisecond) ||
+      !Number.isFinite(microsecond) ||
+      !Number.isFinite(nanosecond)
+    ) {
       throw new RangeError('infinity is out of range');
     }
 
@@ -1073,20 +1083,8 @@ export const ES = ObjectAssign({}, ES2019, {
     millisecond += Math.floor(microsecond / 1000);
     microsecond = ES.NonNegativeModulo(microsecond, 1000);
 
-    const seconds = Math.floor(millisecond / 1000);
+    second += Math.floor(millisecond / 1000);
     millisecond = ES.NonNegativeModulo(millisecond, 1000);
-
-    return { seconds, millisecond, microsecond, nanosecond };
-  },
-  BalanceTime: (hour, minute, second, millisecond, microsecond, nanosecond) => {
-    if (!Number.isFinite(hour) || !Number.isFinite(minute) || !Number.isFinite(second)) {
-      throw new RangeError('infinity is out of range');
-    }
-
-    let seconds;
-    ({ seconds, millisecond, microsecond, nanosecond } = ES.BalanceSubSecond(millisecond, microsecond, nanosecond));
-
-    second += seconds;
 
     minute += Math.floor(second / 60);
     second = ES.NonNegativeModulo(second, 60);
