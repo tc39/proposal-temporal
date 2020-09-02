@@ -8009,7 +8009,7 @@
     }, {
       key: "toJSON",
       value: function toJSON() {
-        return this.toString();
+        return ES.TimeZoneToString(this);
       }
     }, {
       key: "name",
