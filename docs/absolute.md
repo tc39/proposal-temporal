@@ -302,10 +302,18 @@ Temporal.now.absolute().minus(oneHour);
   - `largestUnit` (string): The largest unit of time to allow in the resulting `Temporal.Duration` object.
     Valid values are `'hours'`, `'minutes'`, `'seconds'`, `'milliseconds'`, `'microseconds'`, and `'nanoseconds'`.
     The default is `"seconds"`.
+  - `smallestUnit` (string): The smallest unit of time to round to in the resulting `Temporal.Duration` object.
+    Valid values are the same as for `largestUnit`.
+    The default is `'nanoseconds'`, i.e., no rounding.
+  - `roundingIncrement` (number): The granularity to round to, of the unit given by `smallestUnit`.
+    The default is 1.
+  - `roundingMode` (string): How to handle the remainder, if rounding.
+    Valid values are `'ceil'`, `'floor'`, `'trunc'`, and `'nearest'`.
+    The default is `'nearest'`.
 
 **Returns:** a `Temporal.Duration` representing the difference between `absolute` and `other`.
 
-This method computes the difference between the two times represented by `absolute` and `other`, and returns it as a `Temporal.Duration` object.
+This method computes the difference between the two times represented by `absolute` and `other`, optionally rounds it, and returns it as a `Temporal.Duration` object.
 If `other` is later than `absolute` then the resulting duration will be negative.
 
 The `largestUnit` option controls how the resulting duration is expressed.
@@ -318,6 +326,10 @@ Weeks, months, years, and days are not allowed, unlike the difference methods of
 This is because months and years can be different lengths depending on which month is meant, and whether the year is a leap year, which all depends on the start and end date of the difference.
 You cannot determine the start and end date of a difference between `Temporal.Absolute`s, because `Temporal.Absolute` has no time zone or calendar.
 In addition, weeks can be different lengths in different calendars, and days can be different lengths when the time zone has a daylight saving transition.
+
+You can round the result using the `smallestUnit`, `roundingIncrement`, and `roundingMode` options.
+These behave as in the `Temporal.Duration.round()` method.
+The default is to do no rounding.
 
 If you do need to calculate the difference between two `Temporal.Absolute`s in years, months, weeks, or days, then you can make an explicit choice on how to eliminate this ambiguity, choosing your starting point by converting to a `Temporal.DateTime`.
 For example, you might decide to base the calculation on your user's current time zone, or on UTC, in the Gregorian calendar.
@@ -336,6 +348,13 @@ startOfMoonMission.difference(endOfMoonMission, { largestUnit: 'days' });
   // => throws RangeError
 missionLength.toLocaleString();
   // example output: '195 hours 18 minutes 35 seconds'
+
+// Rounding, for example if you don't care about the minutes and seconds
+approxMissionLength = endOfMoonMission.difference(startOfMoonMission, {
+    largestUnit: 'days',
+    smallestUnit: 'hours'
+});
+  // => P8DT3H
 
 // A billion (10^9) seconds since the epoch in different units
 epoch = new Temporal.Absolute(0n);

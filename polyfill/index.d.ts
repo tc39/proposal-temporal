@@ -98,6 +98,9 @@ export namespace Temporal {
      * The default depends on the type being used.
      */
     largestUnit: T;
+    smallestUnit: T;
+    roundingIncrement: number;
+    roundingMode: 'ceil' | 'floor' | 'trunc' | 'nearest';
   }
 
   export interface RoundOptions<T extends string> {

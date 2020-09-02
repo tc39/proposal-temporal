@@ -517,6 +517,62 @@ export const ES = ObjectAssign({}, ES2019, {
     }
     return value;
   },
+  ToSmallestTemporalDurationUnit: (options, fallback, disallowedStrings = []) => {
+    const plural = new Map([
+      ['year', 'years'],
+      ['month', 'months'],
+      ['week', 'weeks'],
+      ['day', 'days'],
+      ['hour', 'hours'],
+      ['minute', 'minutes'],
+      ['second', 'seconds'],
+      ['millisecond', 'milliseconds'],
+      ['microsecond', 'microseconds'],
+      ['nanosecond', 'nanoseconds']
+    ]);
+    const allowed = new Set([
+      'years',
+      'months',
+      'weeks',
+      'days',
+      'hours',
+      'minutes',
+      'seconds',
+      'milliseconds',
+      'microseconds',
+      'nanoseconds'
+    ]);
+    for (const s of disallowedStrings) {
+      allowed.delete(s);
+    }
+    const allowedValues = [...allowed];
+    options = ES.NormalizeOptionsObject(options);
+    let value = options.smallestUnit;
+    if (value === undefined) return fallback;
+    value = ES.ToString(value);
+    if (plural.has(value)) value = plural.get(value);
+    if (!allowedValues.includes(value)) {
+      throw new RangeError(`smallestUnit must be one of ${allowedValues.join(', ')}, not ${value}`);
+    }
+    return value;
+  },
+  ValidateTemporalDifferenceUnits: (largestUnit, smallestUnit) => {
+    const validUnits = [
+      'years',
+      'months',
+      'weeks',
+      'days',
+      'hours',
+      'minutes',
+      'seconds',
+      'milliseconds',
+      'microseconds',
+      'nanoseconds'
+    ];
+    if (validUnits.indexOf(largestUnit) > validUnits.indexOf(smallestUnit)) {
+      throw new RangeError(`largestUnit ${largestUnit} cannot be smaller than smallestUnit ${smallestUnit}`);
+    }
+  },
   ToPartialRecord: (bag, fields) => {
     if (!bag || 'object' !== typeof bag) return false;
     let any;

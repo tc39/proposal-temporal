@@ -176,6 +176,75 @@
     </emu-alg>
   </emu-clause>
 
+  <emu-clause id="sec-temporal-tosmallesttemporaldurationunit" aoid="ToSmallestTemporalDurationUnit">
+    <h1>ToSmallestTemporalDurationUnit ( _options_, _fallback_, _disallowedUnits_ )</h1>
+    <emu-alg>
+      1. Set _options_ to ? NormalizeOptionsObject(_options_).
+      1. Let _smallestUnit_ be ? GetOption(_options_, *"smallestUnit"*, *"string"*, « *"year"*, *"years"*, *"month"*, *"months"*, *"week"*, *"weeks"*, *"day"*, *"days"*, *"hour"*, *"hours"*, *"minute"*, *"minutes"*, *"second"*, *"seconds"*, *"millisecond"*, *"milliseconds"*, *"microsecond"*, *"microseconds"*, *"nanosecond"*, *"nanoseconds"* », _fallback_).
+      1. If _smallestUnit_ is *"year"*, then
+        1. Set _smallestUnit_ to *"years"*.
+      1. Else if _smallestUnit_ is *"month"*, then
+        1. Set _smallestUnit_ to *"months"*.
+      1. Else if _smallestUnit_ is *"week"*, then
+        1. Set _smallestUnit_ to *"weeks"*.
+      1. Else if _smallestUnit_ is *"day"*, then
+        1. Set _smallestUnit_ to *"days"*.
+      1. Else if _smallestUnit_ is *"hour"*, then
+        1. Set _smallestUnit_ to *"hours"*.
+      1. Else if _smallestUnit_ is *"minute"*, then
+        1. Set _smallestUnit_ to *"minutes"*.
+      1. Else if _smallestUnit_ is *"second"*, then
+        1. Set _smallestUnit_ to *"seconds"*.
+      1. Else if _smallestUnit_ is *"millisecond"*, then
+        1. Set _smallestUnit_ to *"milliseconds"*.
+      1. Else if _smallestUnit_ is *"microsecond"*, then
+        1. Set _smallestUnit_ to *"microseconds"*.
+      1. Else if _smallestUnit_ is *"nanosecond"*, then
+        1. Set _smallestUnit_ to *"nanoseconds"*.
+      1. If _disallowedUnits_ contains _smallestUnit_, then
+        1. Throw a *RangeError* exception.
+      1. Return _smallestUnit_.
+    </emu-alg>
+  </emu-clause>
+
+  <emu-clause id="sec-temporal-validatetemporaldifferenceunits" aoid="ValidateTemporalDifferenceUnits">
+    <h1>ValidateTemporalDifferenceUnits ( _largestUnit_, _smallestUnit_ )</h1>
+    <emu-alg>
+      1. If _smallestUnit_ is *"years"* and _largestUnit_ is not *"years"*, then
+        1. Throw a *RangeError* exception.
+      1. If _smallestUnit_ is *"months"* and _largestUnit_ is not *"years"* or *"months"*, then
+        1. Throw a *RangeError* exception.
+      1. If _smallestUnit_ is *"weeks"* and _largestUnit_ is not one of *"years"*, *"months"*, or *"weeks"*, then
+        1. Throw a *RangeError* exception.
+      1. If _smallestUnit_ is *"days"* and _largestUnit_ is not one of *"years"*, *"months"*, *"weeks"*, or *"days"*, then
+        1. Throw a *RangeError* exception.
+      1. If _smallestUnit_ is *"hours"* and _largestUnit_ is not one of *"years"*, *"months"*, *"weeks"*, *"days"*, or *"hours"*, then
+        1. Throw a *RangeError* exception.
+      1. If _smallestUnit_ is *"minutes"* and _largestUnit_ is *"seconds"*, *"milliseconds"*, *"microseconds"*, or *"nanoseconds"*, then
+        1. Throw a *RangeError* exception.
+      1. If _smallestUnit_ is *"seconds"* and _largestUnit_ is *"milliseconds"*, *"microseconds"*, or *"nanoseconds"*, then
+        1. Throw a *RangeError* exception.
+      1. If _smallestUnit_ is *"milliseconds"* and _largestUnit_ is *"microseconds"* or *"nanoseconds"*, then
+        1. Throw a *RangeError* exception.
+      1. If _smallestUnit_ is *"microseconds"* and _largestUnit_ is *"nanoseconds"*, then
+        1. Throw a *RangeError* exception.
+    </emu-alg>
+  </emu-clause>
+
+  <emu-clause id="sec-temporal-maximumtemporaldurationroundingincrement" aoid="MaximumTemporalDurationRoundingIncrement">
+    <h1>MaximumTemporalDurationRoundingIncrement ( _unit_ )</h1>
+    <emu-alg>
+      1. If _unit_ is *"years"*, *"months"*, *"weeks"*, or *"days"*, then
+        1. Return *undefined*.
+      1. If _unit_ is *"hours"*, then
+        1. Return 24.
+      1. Else if _unit_ is *"minutes"* or *"seconds"*, then
+        1. Return 60.
+      1. Assert: _unit_ is one of *"milliseconds"*, *"microseconds"*, or *"nanoseconds"*.
+      1. Return 1000.
+    </emu-alg>
+  </emu-clause>
+
   <emu-clause id="sec-temporal-formatsecondsstringpart" aoid="FormatSecondsStringPart">
     <h1>FormatSecondsStringPart ( _second_, _millisecond_, _microsecond_, _nanosecond_ )</h1>
     <emu-alg>
