@@ -759,11 +759,12 @@
         1. Let _microseconds_ be _duration_.[[Microseconds]].
         1. Let _nanoseconds_ be _duration_.[[Nanoseconds]].
         1. Let _sign_ be ! DurationSign(_years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_).
-        1. Let _balanceResult_ be ? BalanceSubSecond(_milliseconds_, _microseconds_, _nanoseconds_).
-        1. Set _seconds_ to _seconds_ + _balanceResult_.[[Seconds]].
-        1. Set _milliseconds_ to _balanceResult_.[[Millisecond]].
-        1. Set _microseconds_ to _balanceResult_.[[Microsecond]].
-        1. Set _nanoseconds_ to _balanceResult_.[[Nanosecond]].
+        1. Set _microseconds_ to _microseconds_ + the integral part of _nanoseconds_ ÷ 1000.
+        1. Set _nanoseconds_ to _nanoseconds_ modulo 1000.
+        1. Set _milliseconds_ to _milliseconds_ + the integral part of _microseconds_ ÷ 1000.
+        1. Set _microseconds_ to _microseconds_ modulo 1000.
+        1. Set _seconds_ to _seconds_ + the integral part of _milliseconds_ ÷ 1000.
+        1. Set _milliseconds_ to _milliseconds_ modulo 1000.
         1. If _years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, and _nanoseconds_ are all 0, then
           1. Return the string `"PT0S"`.
         1. Let _datePart_ be `""`.

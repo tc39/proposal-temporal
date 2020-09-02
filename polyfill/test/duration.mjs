@@ -212,6 +212,16 @@ describe('Duration', () => {
       equal(`${new Duration(0, 0, 0, 0, 0, 0, 0, 1111, 1111, 1111)}`, 'PT1.112112111S');
       equal(`${Duration.from({ seconds: 120, milliseconds: 3500 })}`, 'PT123.500S');
     });
+    it('negative sub-second units are balanced correctly', () => {
+      equal(`${Duration.from({ milliseconds: -250 })}`, '-PT0.250S');
+      equal(`${Duration.from({ milliseconds: -3500 })}`, '-PT3.500S');
+      equal(`${Duration.from({ microseconds: -250 })}`, '-PT0.000250S');
+      equal(`${Duration.from({ microseconds: -3500 })}`, '-PT0.003500S');
+      equal(`${Duration.from({ nanoseconds: -250 })}`, '-PT0.000000250S');
+      equal(`${Duration.from({ nanoseconds: -3500 })}`, '-PT0.000003500S');
+      equal(`${new Duration(0, 0, 0, 0, 0, 0, 0, -1111, -1111, -1111)}`, '-PT1.112112111S');
+      equal(`${Duration.from({ seconds: -120, milliseconds: -3500 })}`, '-PT123.500S');
+    });
     it('emits a negative sign for a negative duration', () => {
       equal(`${Duration.from({ weeks: -1, days: -1 })}`, '-P1W1D');
     });
