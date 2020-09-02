@@ -243,19 +243,19 @@ export namespace Temporal {
       options: AssignmentOptions,
       constructor: ConstructorOf<Temporal.MonthDay>
     ): Temporal.MonthDay;
-    plus?(
+    datePlus?(
       date: Temporal.Date,
       duration: Temporal.Duration,
       options: ArithmeticOptions,
       constructor: ConstructorOf<Temporal.Date>
     ): Temporal.Date;
-    minus?(
+    dateMinus?(
       date: Temporal.Date,
       duration: Temporal.Duration,
       options: ArithmeticOptions,
       constructor: ConstructorOf<Temporal.Date>
     ): Temporal.Date;
-    difference?(
+    dateDifference?(
       smaller: Temporal.Date,
       larger: Temporal.Date,
       options: DifferenceOptions<'years' | 'months' | 'weeks' | 'days'>
@@ -299,19 +299,19 @@ export namespace Temporal {
       options: AssignmentOptions,
       constructor: ConstructorOf<Temporal.MonthDay>
     ): Temporal.MonthDay;
-    plus(
+    datePlus(
       date: Temporal.Date,
       duration: Temporal.Duration,
       options: ArithmeticOptions,
       constructor: ConstructorOf<Temporal.Date>
     ): Temporal.Date;
-    minus(
+    dateMinus(
       date: Temporal.Date,
       duration: Temporal.Duration,
       options: ArithmeticOptions,
       constructor: ConstructorOf<Temporal.Date>
     ): Temporal.Date;
-    difference(
+    dateDifference(
       smaller: Temporal.Date,
       larger: Temporal.Date,
       options?: DifferenceOptions<'years' | 'months' | 'weeks' | 'days'>
@@ -793,8 +793,11 @@ export namespace Temporal {
    * - `'reject'` acts like `'prefer'`, except it will throw a RangeError if the
    *   offset is not valid for the given time zone identifier and date/time value.
    *
+   * If the ISO string ends in 'Z' then this option is ignored because there is no
+   * possibility of ambiguity.
+   *
    * If a time zone offset is not present in the input, then this option is
-   * ignored.
+   * ignored because the time zone will always be used to calculate the offset.
    *
    * If the offset is not used, and if the date/time and time zone don't uniquely
    * identify a single absolute time, then the `disambiguation` option will be
@@ -856,7 +859,7 @@ export namespace Temporal {
      * ```
      * disambiguation?: 'compatible' (default) |  'earlier' | 'later' | 'reject'
      * overflow?: 'constrain' (default) | 'reject'
-     * offset?: 'use' (default) | 'prefer' | 'ignore' | 'reject'
+     * offset?: 'use' | 'prefer' | 'ignore' | 'reject' (default)
      * ```
      */
     static from(

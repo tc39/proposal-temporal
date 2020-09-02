@@ -62,10 +62,10 @@ const businessHours = [
 
 // This ISO string is intentionally conflicting, because the real TZ offset for
 // that date is +02:00. The default behavior of from() on ISO strings is to
-// assume that the offset is correct and the time zone definition has changed
-// since the time was stored. (The user can get different behavior via the
-// `prefer` option.)
-const now = Temporal.LocalDateTime.from('2019-04-07T00:00+01:00[Europe/Berlin]');
+// throw if the offset isn't valid for the time zone, e.g. if the time zone
+// definition has changed since the time was stored. (The user can force use of
+// the ISO offset in this case via the 'use' option.)
+const now = Temporal.LocalDateTime.from('2019-04-07T00:00+01:00[Europe/Berlin]', { offset: 'use' });
 assert.equal(now.toString(), '2019-04-07T01:00+02:00[Europe/Berlin]');
 const soonWindow = Temporal.Duration.from({ minutes: 30 });
 const saturdayNightState = getBusinessOpenStateText(now, businessHours, soonWindow);

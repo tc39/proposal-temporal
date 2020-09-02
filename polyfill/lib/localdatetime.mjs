@@ -24,7 +24,7 @@ const Temporal = {
 /** Build a `Temporal.LocalDateTime` instance from a property bag object */
 function fromObject(item, options) {
   const overflowOption = getOption(options, 'overflow', OVERFLOW_OPTIONS, 'constrain');
-  const offsetOption = getOption(options, 'offset', OFFSET_OPTIONS, 'use');
+  const offsetOption = getOption(options, 'offset', OFFSET_OPTIONS, 'reject');
   const disambiguation = getOption(options, 'disambiguation', DISAMBIGUATION_OPTIONS, 'compatible');
 
   const { timeZone: tzOrig, timeZoneOffsetNanoseconds } = item;
@@ -49,7 +49,7 @@ function fromObject(item, options) {
 /** Build a `Temporal.LocalDateTime` instance from an ISO 8601 extended string */
 function fromIsoString(isoString, options) {
   const disambiguation = getOption(options, 'disambiguation', DISAMBIGUATION_OPTIONS, 'compatible');
-  const offsetOption = getOption(options, 'offset', OFFSET_OPTIONS, 'use');
+  const offsetOption = getOption(options, 'offset', OFFSET_OPTIONS, 'reject');
 
   // TODO: replace this placeholder parser
   const formatRegex = /^(.+?)\[([^\]\s]+)\](?:\[c=([^\]\s]+)\])?/;
@@ -83,6 +83,7 @@ function fromIsoString(isoString, options) {
   // > when it's only a UTC offset - it definitely doesn't specify the actual
   // > time zone. (So you can't tell what the local time will be one minute
   // > later, for example.)
+  const isZ = absString.trimEnd().toUpperCase().endsWith('Z');
   const abs = Temporal.Absolute.from(absString);
   // TODO: after negative durations (#811) and sub-second largestUnit (#850)
   // land, use the commented code instead of all the code below it.
@@ -95,7 +96,7 @@ function fromIsoString(isoString, options) {
       : dt.difference(dtUtc, { largestUnit: 'seconds' });
   const offsetNs = offsetSign * diff.seconds * 1e9;
 
-  return fromCommon(dt.withCalendar(cal), tz, offsetNs, disambiguation, offsetOption);
+  return fromCommon(dt.withCalendar(cal), tz, offsetNs, disambiguation, isZ ? 'use' : offsetOption);
 }
 
 /** Shared logic for the object and string forms of `from` */
@@ -265,7 +266,7 @@ export class LocalDateTime {
    * ```
    * disambiguation?: 'compatible' (default) |  'earlier' | 'later' | 'reject'
    * overflow?: 'constrain' (default) | 'reject'
-   * offset?: 'use' (default) | 'prefer' | 'ignore' | 'reject'
+   * offset?: 'use' | 'prefer' | 'ignore' | 'reject' (default)
    * ```
    */
   static from(item, options) {

@@ -59,8 +59,11 @@ export interface OverflowOptions {
  * - `'reject'` acts like `'prefer'`, except it will throw a RangeError if the
  *   offset is not valid for the given time zone identifier and date/time value.
  *
+ * If the ISO string ends in 'Z' then this option is ignored because there is no
+ * possibility of ambiguity.
+ *
  * If a time zone offset is not present in the input, then this option is
- * ignored.
+ * ignored because the time zone will always be used to calculate the offset.
  *
  * If the offset is not used, and if the date/time and time zone don't uniquely
  * identify a single absolute time, then the `disambiguation` option will be
@@ -82,7 +85,7 @@ export type LocalDateTimeDifferenceOptions = Partial<
 /** Build a `Temporal.LocalDateTime` instance from a property bag object */
 function fromObject(item: Record<string, unknown>, options?: LocalDateTimeAssignmentOptions) {
   const overflowOption = getOption(options, 'overflow', OVERFLOW_OPTIONS, 'constrain');
-  const offsetOption = getOption(options, 'offset', OFFSET_OPTIONS, 'use');
+  const offsetOption = getOption(options, 'offset', OFFSET_OPTIONS, 'reject');
   const disambiguation = getOption(options, 'disambiguation', DISAMBIGUATION_OPTIONS, 'compatible');
 
   const { timeZone: tzOrig, timeZoneOffsetNanoseconds } = item as LocalDateTimeLike;
@@ -107,7 +110,7 @@ function fromObject(item: Record<string, unknown>, options?: LocalDateTimeAssign
 /** Build a `Temporal.LocalDateTime` instance from an ISO 8601 extended string */
 function fromIsoString(isoString: string, options?: LocalDateTimeAssignmentOptions) {
   const disambiguation = getOption(options, 'disambiguation', DISAMBIGUATION_OPTIONS, 'compatible');
-  const offsetOption = getOption(options, 'offset', OFFSET_OPTIONS, 'use');
+  const offsetOption = getOption(options, 'offset', OFFSET_OPTIONS, 'reject');
 
   // TODO: replace this placeholder parser
   const formatRegex = /^(.+?)\[([^\]\s]+)\](?:\[c=([^\]\s]+)\])?/;
@@ -141,6 +144,7 @@ function fromIsoString(isoString: string, options?: LocalDateTimeAssignmentOptio
   // > when it's only a UTC offset - it definitely doesn't specify the actual
   // > time zone. (So you can't tell what the local time will be one minute
   // > later, for example.)
+  const isZ = absString.trimEnd().toUpperCase().endsWith('Z');
   const abs = Temporal.Absolute.from(absString);
   // TODO: after negative durations (#811) and sub-second largestUnit (#850)
   // land, use the commented code instead of all the code below it.
@@ -153,7 +157,7 @@ function fromIsoString(isoString: string, options?: LocalDateTimeAssignmentOptio
       : dt.difference(dtUtc, { largestUnit: 'seconds' });
   const offsetNs = offsetSign * diff.seconds * 1e9;
 
-  return fromCommon(dt.withCalendar(cal), tz, offsetNs, disambiguation, offsetOption);
+  return fromCommon(dt.withCalendar(cal), tz, offsetNs, disambiguation, isZ ? 'use' : offsetOption);
 }
 
 /** Shared logic for the object and string forms of `from` */
@@ -344,7 +348,7 @@ export class LocalDateTime {
    * ```
    * disambiguation?: 'compatible' (default) |  'earlier' | 'later' | 'reject'
    * overflow?: 'constrain' (default) | 'reject'
-   * offset?: 'use' (default) | 'prefer' | 'ignore' | 'reject'
+   * offset?: 'use' | 'prefer' | 'ignore' | 'reject' (default)
    * ```
    */
   static from(
