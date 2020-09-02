@@ -379,7 +379,7 @@
       <emu-alg>
         1. Let _parts_ be ? PartitionDateTimePattern(_dateTimeFormat_, _x_).
         1. Let _result_ be the empty String.
-        1. For each _part_ in _parts_, do
+        1. For each Record _part_ in _parts_, do
           1. Set _result_ to the string-concatenation of _result_ and _part_.[[Value]].
         1. Return _result_.
       </emu-alg>
@@ -396,7 +396,7 @@
         1. Let _parts_ be ? PartitionDateTimePattern(_dateTimeFormat_, _x_).
         1. Let _result_ be ArrayCreate(0).
         1. Let _n_ be 0.
-        1. For each _part_ in _parts_, do
+        1. For each Record _part_ in _parts_, do
           1. Let _O_ be ObjectCreate(%Object.prototype%).
           1. Perform ! CreateDataPropertyOrThrow(_O_, *"type"*, _part_.[[Type]]).
           1. Perform ! CreateDataPropertyOrThrow(_O_, *"value"*, _part_.[[Value]]).

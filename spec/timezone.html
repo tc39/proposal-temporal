@@ -141,7 +141,7 @@
         1. If _offset_ is not *undefined*, then
           1. Return _offset_.
         1. Let _epochNs_ be _absolute_.[[Nanoseconds]].
-        <!-- Can this be BalanceDateTime(1970, 1, 1, 0, 0, 0, 0, 0, _epochNs_)? -->
+        1. <mark>Check if this can be ? BalanceDateTime(1970, 1, 1, 0, 0, 0, 0, 0, _epochNs_).</mark>
         1. Let _epochMs_ be RoundTowardsZero(_epochNs_ / 1,000,000<sub>ℝ</sub>).
         1. Let _mcs_ be ! NonNegativeModulo(RoundTowardsZero(_epochNs_ / 1000<sub>ℝ</sub>), 1000<sub>ℝ</sub>).
         1. Let _ns_ be ! NonNegativeModulo(_epochNs_, 1000<sub>ℝ</sub>).
@@ -220,7 +220,7 @@
             1. Return _possibleAbsolutes_[_n_ − 1].
           1. If _disambiguation_ is *"reject"*, then
             1. Throw a *RangeError* exception.
-        1. <mark>TODO - handle n=0 (skipped times like Spring DST)</mark>
+        1. <mark>TODO - handle n=0 (skipped times like Spring DST).</mark>
       </emu-alg>
       <p>
         This function is the <dfn>%Temporal.TimeZone.prototype.getAbsoluteFor%</dfn> intrinsic object.
@@ -414,7 +414,7 @@
         1. Let _getPossibleAbsolutesFor_ be ? Get(_timeZone_, *"getPossibleAbsolutesFor"*).
         1. Let _possibleAbsolutes_ be ? Call(_getPossibleAbsolutesFor_, _timeZone_, « _dateTime_ »).
         1. Let _list_ be ? CreateListFromArrayLike(_possibleAbsolutes_).
-        1. For each _absolute_ in _list_ in List order, do
+        1. For each element _absolute_ in _list_ in List order, do
           1. Perform ? RequireInternalSlot(_absolute_, [[InitializedTemporalAbsolute]]).
         1. Return _list_.
       </emu-alg>
