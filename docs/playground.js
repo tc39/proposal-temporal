@@ -5578,8 +5578,7 @@
       value: function plus(temporalDurationLike) {
         if (!ES.IsTemporalAbsolute(this)) throw new TypeError('invalid receiver');
 
-        var _ES$ToLimitedTemporal = ES.ToLimitedTemporalDuration(temporalDurationLike, ['years', 'months', 'weeks']),
-            days = _ES$ToLimitedTemporal.days,
+        var _ES$ToLimitedTemporal = ES.ToLimitedTemporalDuration(temporalDurationLike, ['years', 'months', 'weeks', 'days']),
             hours = _ES$ToLimitedTemporal.hours,
             minutes = _ES$ToLimitedTemporal.minutes,
             seconds = _ES$ToLimitedTemporal.seconds,
@@ -5587,7 +5586,7 @@
             microseconds = _ES$ToLimitedTemporal.microseconds,
             nanoseconds = _ES$ToLimitedTemporal.nanoseconds;
 
-        ES.RejectDurationSign(0, 0, 0, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+        ES.RejectDurationSign(0, 0, 0, 0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
         var add = BigInteger(0);
         add = add.plus(BigInteger(nanoseconds));
         add = add.plus(BigInteger(microseconds).multiply(1e3));
@@ -5595,7 +5594,6 @@
         add = add.plus(BigInteger(seconds).multiply(1e9));
         add = add.plus(BigInteger(minutes).multiply(60 * 1e9));
         add = add.plus(BigInteger(hours).multiply(60 * 60 * 1e9));
-        add = add.plus(BigInteger(days).multiply(24 * 60 * 60 * 1e9));
         var ns = BigInteger(GetSlot(this, EPOCHNANOSECONDS)).plus(add);
         ES.RejectAbsoluteRange(ns);
         var Construct = ES.SpeciesConstructor(this, Absolute);
@@ -5608,8 +5606,7 @@
       value: function minus(temporalDurationLike) {
         if (!ES.IsTemporalAbsolute(this)) throw new TypeError('invalid receiver');
 
-        var _ES$ToLimitedTemporal2 = ES.ToLimitedTemporalDuration(temporalDurationLike, ['years', 'months', 'weeks']),
-            days = _ES$ToLimitedTemporal2.days,
+        var _ES$ToLimitedTemporal2 = ES.ToLimitedTemporalDuration(temporalDurationLike, ['years', 'months', 'weeks', 'days']),
             hours = _ES$ToLimitedTemporal2.hours,
             minutes = _ES$ToLimitedTemporal2.minutes,
             seconds = _ES$ToLimitedTemporal2.seconds,
@@ -5617,7 +5614,7 @@
             microseconds = _ES$ToLimitedTemporal2.microseconds,
             nanoseconds = _ES$ToLimitedTemporal2.nanoseconds;
 
-        ES.RejectDurationSign(0, 0, 0, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+        ES.RejectDurationSign(0, 0, 0, 0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
         var add = BigInteger(0);
         add = add.plus(BigInteger(nanoseconds));
         add = add.plus(BigInteger(microseconds).multiply(1e3));
@@ -5625,7 +5622,6 @@
         add = add.plus(BigInteger(seconds).multiply(1e9));
         add = add.plus(BigInteger(minutes).multiply(60 * 1e9));
         add = add.plus(BigInteger(hours).multiply(60 * 60 * 1e9));
-        add = add.plus(BigInteger(days).multiply(24 * 60 * 60 * 1e9));
         var ns = BigInteger(GetSlot(this, EPOCHNANOSECONDS)).minus(add);
         ES.RejectAbsoluteRange(ns);
         var Construct = ES.SpeciesConstructor(this, Absolute);
@@ -5638,7 +5634,7 @@
       value: function difference(other, options) {
         if (!ES.IsTemporalAbsolute(this)) throw new TypeError('invalid receiver');
         if (!ES.IsTemporalAbsolute(other)) throw new TypeError('invalid Absolute object');
-        var largestUnit = ES.ToLargestTemporalUnit(options, 'seconds', ['years', 'months', 'weeks']);
+        var largestUnit = ES.ToLargestTemporalUnit(options, 'seconds', ['years', 'months', 'weeks', 'days']);
         var onens = GetSlot(other, EPOCHNANOSECONDS);
         var twons = GetSlot(this, EPOCHNANOSECONDS);
         var diff = twons.minus(onens);
@@ -5649,7 +5645,6 @@
         var Duration = GetIntrinsic$1('%Temporal.Duration%');
 
         var _ES$BalanceDuration = ES.BalanceDuration(0, 0, 0, ss, ms, us, ns, largestUnit),
-            days = _ES$BalanceDuration.days,
             hours = _ES$BalanceDuration.hours,
             minutes = _ES$BalanceDuration.minutes,
             seconds = _ES$BalanceDuration.seconds,
@@ -5657,7 +5652,7 @@
             microseconds = _ES$BalanceDuration.microseconds,
             nanoseconds = _ES$BalanceDuration.nanoseconds;
 
-        return new Duration(0, 0, 0, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+        return new Duration(0, 0, 0, 0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
       }
     }, {
       key: "equals",
