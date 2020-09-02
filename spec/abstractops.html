@@ -675,7 +675,7 @@
         1. Set _minute_ to ! ToInteger(_minute_).
         1. Let _offsetNanoseconds_ be _sign_ × (_hour_ × 60 + _minute_) × 60 × 10<sup>9</sup>.
         1. Let _name_ be ! FormatTimeZoneOffsetString(_offsetNanoseconds_).
-      1. Assert ! IsValidTimeZoneName(_name_).
+      1. Assert: ! IsValidTimeZoneName(_name_) is *true*.
       1. Let _name_ be ! CanonicalizeTimeZoneName(_name_).
       1. Return the new Record: {
         [[OffsetSign]]: _sign_,
