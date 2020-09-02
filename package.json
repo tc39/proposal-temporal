@@ -10,7 +10,7 @@
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^3.2.0",
     "@typescript-eslint/parser": "^3.2.0",
-    "ecmarkup": "^3.25.1",
+    "ecmarkup": "^4.1.0",
     "eslint": "^7.3.0",
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-prettier": "^3.1.3",
@@ -29,7 +29,7 @@
     "tscheck": "tsc polyfill/index.d.ts --noEmit --strict --lib ESNext",
     "build:polyfill": "cd polyfill && npm install && npm run build",
     "build:docs": "cd docs && npm install && npm run build",
-    "build:spec": "ecmarkup spec.html out/index.html",
+    "build:spec": "ecmarkup --lint-spec --strict spec.html out/index.html",
     "prebuild": "mkdirp out/docs/assets",
     "pretty": "eslint . --ext js,mjs,.d.ts --fix",
     "build": "npm run build:polyfill && npm run build:docs && npm run build:spec"
