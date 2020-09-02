@@ -83,11 +83,11 @@ Example of a maximal length string containing both an IANA time zone name and a 
 
 ### Calendar-dependent YearMonth and MonthDay
 
-Based on the data model discussion in [#391](https://github.com/tc39/proposal-temporal/issues/391), YearMonth and MonthDay use the Temporal.Date data model when in a non-ISO calendar system.  For example, the Hebrew calendar might express the YearMonth "Iyar 5780" as 2020-03-25, the first day of that month in the ISO calendar.
+Based on the data model discussion in [#391](https://github.com/tc39/proposal-temporal/issues/391), YearMonth and MonthDay use the Temporal.Date data model when in a non-ISO calendar system.  For example, the Hebrew calendar might express the YearMonth "Iyar 5780" as 2020-04-25, the first day of that month in the ISO calendar.
 
 When expressed as an ISO string, we would say:
 
-    2020-03-25{hebrew}
+    2020-04-25{hebrew}
 
 Since it is ambiguous whether that string represents a Date, YearMonth, or MonthDay, the appropriate Temporal constructor must be chosen in order to get the expected data type back out.
 
