@@ -189,7 +189,9 @@ export namespace Temporal {
     minus(durationLike: Temporal.Duration | DurationLike): Temporal.Absolute;
     difference(
       other: Temporal.Absolute,
-      options?: DifferenceOptions<'days' | 'hours' | 'minutes' | 'seconds'>
+      options?: DifferenceOptions<
+        'days' | 'hours' | 'minutes' | 'seconds' | 'milliseconds' | 'microseconds' | 'nanoseconds'
+      >
     ): Temporal.Duration;
     toDateTime(tzLike: TimeZoneProtocol | string, calendar?: CalendarProtocol | string): Temporal.DateTime;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
@@ -454,7 +456,18 @@ export namespace Temporal {
     minus(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.DateTime;
     difference(
       other: Temporal.DateTime,
-      options?: DifferenceOptions<'years' | 'months' | 'weeks' | 'days' | 'hours' | 'minutes' | 'seconds'>
+      options?: DifferenceOptions<
+        | 'years'
+        | 'months'
+        | 'weeks'
+        | 'days'
+        | 'hours'
+        | 'minutes'
+        | 'seconds'
+        | 'milliseconds'
+        | 'microseconds'
+        | 'nanoseconds'
+      >
     ): Temporal.Duration;
     toAbsolute(tzLike: TimeZoneProtocol | string, options?: ToAbsoluteOptions): Temporal.Absolute;
     toDate(): Temporal.Date;
@@ -549,7 +562,10 @@ export namespace Temporal {
     with(timeLike: Temporal.Time | TimeLike, options?: AssignmentOptions): Temporal.Time;
     plus(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.Time;
     minus(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.Time;
-    difference(other: Temporal.Time, options?: DifferenceOptions<'hours' | 'minutes' | 'seconds'>): Temporal.Duration;
+    difference(
+      other: Temporal.Time,
+      options?: DifferenceOptions<'hours' | 'minutes' | 'seconds' | 'milliseconds' | 'microseconds' | 'nanoseconds'>
+    ): Temporal.Duration;
     toDateTime(temporalDate: Temporal.Date): Temporal.DateTime;
     getFields(): TimeFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
