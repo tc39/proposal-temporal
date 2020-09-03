@@ -30,9 +30,8 @@ For more detailed information, see the ISO 8601 standard or the [Wikipedia page]
 | **PT0S**             | Zero |
 | **P0D**              | Zero |
 
-> **NOTE:** According to the ISO 8601 standard, weeks are not allowed to appear together with any other units, and durations can only be positive.
-> As an extension to the standard, ISO 8601-2 allows a sign character at the start of the string.
-> As an additional extension, Temporal supports combining weeks with other units.
+> **NOTE:** According to the ISO 8601-1 standard, weeks are not allowed to appear together with any other units, and durations can only be positive.
+> As extensions to the standard, ISO 8601-2 allows a sign character at the start of the string, and allows combining weeks with other units.
 > If you intend to use a string such as **P3W1D**, **+P1M**, or **-P1M** for interoperability, note that other programs may not accept it.
 
 ## Constructor
@@ -106,11 +105,8 @@ In the default ISO calendar, a year can be 365 or 366 days, and a month can be 2
 Therefore, any `Duration` object with nonzero years or months can refer to a different length of time depending on when the start date is.
 No conversion is ever performed between years, months, weeks, and days, even in `balance` disambiguation mode, because such conversion would be ambiguous.
 
-> **NOTE:** This function understands strings where weeks and other units are combined, which are technically not valid ISO 8601 strings.
-> (For example, `P3W1D` is understood to mean three weeks and one day, although it is not valid according to ISO 8601.)
-
-> **NOTE:** This function understands a single sign character at the start of a string, which is an extension to the ISO 8601 standard described in ISO 8601-2.
-> (For example, `-P1Y1M` is a negative duration of one year and one month, and `+P1Y1M` is one year and one month.)
+> **NOTE:** This function understands strings where weeks and other units are combined, and strings with a single sign character at the start, which are extensions to the ISO 8601 standard described in ISO 8601-2.
+> (For example, `P3W1D` is understood to mean three weeks and one day, `-P1Y1M` is a negative duration of one year and one month, and `+P1Y1M` is one year and one month.)
 > If no sign character is present, then the sign is assumed to be positive.
 
 Usage examples:
@@ -392,9 +388,6 @@ This method overrides `Object.prototype.toString()` and provides the ISO 8601 de
 
 > **NOTE**: If any of `duration.milliseconds`, `duration.microseconds`, or `duration.nanoseconds` are over 999, then deserializing from the result of `duration.toString()` will yield an equal but different object.
 > See [Duration balancing](./balancing.md#serialization) for more information.
-
-> **NOTE**: The output of `duration.toString()` may combine weeks with other units, which is technically invalid according to ISO 8601.
-> (For example, `P3W` for three weeks is valid, but `P3W1D` for three weeks and one day is not.)
 
 Usage examples:
 ```javascript
