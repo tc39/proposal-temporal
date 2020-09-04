@@ -677,7 +677,7 @@
     <emu-clause id="sec-temporal-regulatedate" aoid="RegulateDate">
       <h1>RegulateDate ( _year_, _month_, _day_, _overflow_ )</h1>
       <emu-alg>
-        1. Assert: _overflow_ is one of *"constrain"*, *"balance"*, or *"reject"*.
+        1. Assert: _overflow_ is either *"constrain"* or *"reject"*.
         1. If _overflow_ is *"reject"*, then
           1. Perform ? RejectDate(_year_, _month_, _day_).
           1. Return the Record {
@@ -687,8 +687,6 @@
             }.
         1. If _overflow_ is *"constrain"*, then
           1. Return ! ConstrainDate(_year_, _month_, _day_).
-        1. If _overflow_ is *"balance"*, then
-          1. Return ? BalanceDate(_year_, _month_, _day_).
       </emu-alg>
     </emu-clause>
 
@@ -822,7 +820,7 @@
       <h1>AddDate ( _year_, _month_, _day_, _years_, _months_, _weeks_, _days_, _overflow_ )</h1>
       <emu-alg>
         1. Assert: _year_, _month_, _day_, _years_, _months_, _weeks_, and _days_ are integer Number values.
-        1. Assert: _overflow_ is one of *"constrain"*, *"balance"*, or *"reject"*.
+        1. Assert: _overflow_ is either *"constrain"* or *"reject"*.
         1. Let _y_ be _year_ + _years_.
         1. Let _m_ be _month_ + _months_.
         1. Let _intermediate_ be ? BalanceYearMonth(_y_, _m_).
@@ -838,7 +836,7 @@
       <h1>SubtractDate ( _year_, _month_, _day_, _years_, _months_, _days_, _overflow_ )</h1>
       <emu-alg>
         1. Assert: _year_, _month_, _day_, _years_, _months_, and _days_ are integer Number values.
-        1. Assert: _overflow_ is one of *"constrain"*, *"balance"*, or *"reject"*.
+        1. Assert: _overflow_ is either *"constrain"* or *"reject"*.
         1. Set _days_ to _days_ + 7 × _weeks_.
         1. Let _intermediate_ be ? BalanceDate(_year_, _month_, _day_ - _days_).
         1. Let _d_ be _intermediate_.[[Day]].
