@@ -148,7 +148,7 @@ export class DateTime {
   }
   with(temporalDateTimeLike, options) {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-    const disambiguation = ES.ToTemporalDisambiguation(options);
+    const overflow = ES.ToTemporalOverflow(options);
     let source;
     let calendar = temporalDateTimeLike.calendar;
     if (calendar) {
@@ -199,7 +199,7 @@ export class DateTime {
       millisecond,
       microsecond,
       nanosecond,
-      disambiguation
+      overflow
     ));
     const Construct = ES.SpeciesConstructor(this, DateTime);
     const result = new Construct(
@@ -472,7 +472,7 @@ export class DateTime {
   toAbsolute(temporalTimeZoneLike, options) {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     const timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);
-    const disambiguation = ES.ToTimeZoneTemporalDisambiguation(options);
+    const disambiguation = ES.ToTemporalDisambiguation(options);
     return ES.GetTemporalAbsoluteFor(timeZone, this, disambiguation);
   }
   toDate() {
@@ -520,7 +520,7 @@ export class DateTime {
   }
 
   static from(item, options = undefined) {
-    const disambiguation = ES.ToTemporalDisambiguation(options);
+    const overflow = ES.ToTemporalOverflow(options);
     const TemporalCalendar = GetIntrinsic('%Temporal.Calendar%');
     let result;
     if (typeof item === 'object' && item) {
@@ -547,11 +547,11 @@ export class DateTime {
         let month = GetSlot(date, ISO_MONTH);
         let day = GetSlot(date, ISO_DAY);
 
-        if (disambiguation === 'constrain') {
+        if (overflow === 'constrain') {
           // Special case to determine if the date was clipped by dateFromFields
           // and therefore the time possibly needs to be clipped too
           try {
-            calendar.dateFromFields(fields, { disambiguation: 'reject' }, TemporalDate);
+            calendar.dateFromFields(fields, { overflow: 'reject' }, TemporalDate);
           } catch {
             // Date was clipped
             if (year === 275760 && month === 9 && day === 13) {
@@ -573,7 +573,7 @@ export class DateTime {
           millisecond,
           microsecond,
           nanosecond,
-          disambiguation
+          overflow
         ));
         result = new this(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
       }

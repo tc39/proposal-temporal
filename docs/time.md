@@ -27,7 +27,7 @@ A `Temporal.Time` can be converted into a `Temporal.DateTime` by combining it wi
 **Returns:** a new `Temporal.Time` object.
 
 Use this constructor if you have the correct parameters for the time already as individual number values.
-Otherwise, `Temporal.Time.from()`, which accepts more kinds of input and allows disambiguation behaviour, is probably more convenient.
+Otherwise, `Temporal.Time.from()`, which accepts more kinds of input and allows controlling the overflow behaviour, is probably more convenient.
 
 Usage examples:
 ```javascript
@@ -43,7 +43,7 @@ time = new Temporal.Time(13, 37)  // => 13:37
 - `thing`: The value representing the desired time.
 - `options` (optional object): An object with properties representing options for constructing the time.
   The following options are recognized:
-  - `disambiguation` (optional string): How to deal with out-of-range values of the other parameters.
+  - `overflow` (optional string): How to deal with out-of-range values of the other parameters.
     Allowed values are `constrain` and `reject`.
     The default is `constrain`.
 
@@ -57,12 +57,12 @@ Any missing ones will be assumed to be 0.
 Any non-object value will be converted to a string, which is expected to be in ISO 8601 format.
 If the string designates a date or a time zone, they will be ignored.
 
-The `disambiguation` option works as follows:
+The `overflow` option works as follows:
 - In `constrain` mode (the default), any out-of-range values are clamped to the nearest in-range value.
 - In `reject` mode, the presence of out-of-range values will cause the function to throw a `RangeError`.
 
 > **NOTE**: Although Temporal does not deal with leap seconds, times coming from other software may have a `second` value of 60.
-> In the default `constrain` disambiguation mode, this will be converted to 59.
+> In the default `constrain` mode, this will be converted to 59.
 > In `reject` mode, the constructor will throw, so if you have to interoperate with times that may contain leap seconds, don't use `reject`.
 > However, if parsing an ISO 8601 string with a seconds component of `:60`, then it will always result in a `second` value of 59, in accordance with POSIX.
 
@@ -87,14 +87,14 @@ time = Temporal.Time.from({ hour: 19, minute: 39, second: 9 });  // => 19:39:09
 time = Temporal.Time.from(Temporal.DateTime.from('2020-02-15T19:39:09'));
   // => same as above; Temporal.DateTime has hour, minute, etc. properties
 
-// Different disambiguation modes
-time = Temporal.Time.from({ hour: 15, minute: 60 }, { disambiguation: 'constrain' });
+// Different overflow modes
+time = Temporal.Time.from({ hour: 15, minute: 60 }, { overflow: 'constrain' });
   // => 15:59
-time = Temporal.Time.from({ hour: 15, minute: -1 }, { disambiguation: 'constrain' });
+time = Temporal.Time.from({ hour: 15, minute: -1 }, { overflow: 'constrain' });
   // => 15:00
-time = Temporal.Time.from({ hour: 15, minute: 60 }, { disambiguation: 'reject' });
+time = Temporal.Time.from({ hour: 15, minute: 60 }, { overflow: 'reject' });
   // throws
-time = Temporal.Time.from({ hour: 15, minute: -1 }, { disambiguation: 'reject' });
+time = Temporal.Time.from({ hour: 15, minute: -1 }, { overflow: 'reject' });
   // throws
 ```
 
@@ -157,7 +157,7 @@ time.nanosecond   // => 205
 - `timeLike` (object): an object with some or all of the properties of a `Temporal.Time`.
 - `options` (optional object): An object with properties representing options for the operation.
   The following options are recognized:
-  - `disambiguation` (string): How to deal with out-of-range values.
+  - `overflow` (string): How to deal with out-of-range values.
     Allowed values are `constrain` and `reject`.
     The default is `constrain`.
 
@@ -186,7 +186,7 @@ time.plus({hours: 1}).with({
 - `duration` (object): A `Temporal.Duration` object or a duration-like object.
 - `options` (optional object): An object with properties representing options for the addition.
   The following options are recognized:
-  - `disambiguation` (string): How to deal with additions that result in out-of-range values.
+  - `overflow` (string): How to deal with additions that result in out-of-range values.
     Allowed values are `constrain` and `reject`.
     The default is `constrain`.
 
@@ -197,7 +197,7 @@ Due to times wrapping around when reaching 24 hours, the returned point in time 
 
 The `duration` argument is an object with properties denoting a duration, such as `{ hours: 5, minutes: 30 }`, or a `Temporal.Duration` object.
 
-The `disambiguation` parameter has no effect in the default ISO calendar, because the units of hours, minutes, and seconds are always the same length and therefore not ambiguous.
+The `overflow` parameter has no effect in the default ISO calendar, because the units of hours, minutes, and seconds are always the same length and therefore not ambiguous.
 However, it may have an effect in other calendars where those units are not always the same length.
 
 Adding a negative duration is equivalent to subtracting the absolute value of that duration.
@@ -214,7 +214,7 @@ time.plus({ minutes: 5, nanoseconds: 800 })  // => 19:44:09.068347005
 - `duration` (object): A `Temporal.Duration` object or a duration-like object.
 - `options` (optional object): An object with properties representing options for the subtraction.
   The following options are recognized:
-  - `disambiguation` (string): How to deal with subtractions that result in out-of-range values.
+  - `overflow` (string): How to deal with subtractions that result in out-of-range values.
     Allowed values are `constrain` and `reject`.
     The default is `constrain`.
 
@@ -225,7 +225,7 @@ Due to times wrapping around when reaching 24 hours, the returned point in time 
 
 The `duration` argument is an object with properties denoting a duration, such as `{ hours: 5, minutes: 30 }`, or a `Temporal.Duration` object.
 
-The `disambiguation` parameter has no effect in the default ISO calendar, because the units of hours, minutes, and seconds are always the same length and therefore not ambiguous.
+The `overflow` parameter has no effect in the default ISO calendar, because the units of hours, minutes, and seconds are always the same length and therefore not ambiguous.
 However, it may have an effect in other calendars where those units are not always the same length.
 
 Subtracting a negative duration is equivalent to adding the absolute value of that duration.

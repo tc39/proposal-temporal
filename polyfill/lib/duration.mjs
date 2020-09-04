@@ -138,7 +138,7 @@ export class Duration {
   }
   with(durationLike, options) {
     if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
-    const disambiguation = ES.ToDurationTemporalDisambiguation(options);
+    const overflow = ES.ToTemporalDurationOverflow(options);
     const props = ES.ToPartialRecord(durationLike, [
       'days',
       'hours',
@@ -188,7 +188,7 @@ export class Duration {
       milliseconds,
       microseconds,
       nanoseconds,
-      disambiguation
+      overflow
     ));
     const Construct = ES.SpeciesConstructor(this, Duration);
     const result = new Construct(
@@ -257,7 +257,7 @@ export class Duration {
       nanoseconds
     } = ES.ToLimitedTemporalDuration(other);
     ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
-    const disambiguation = ES.ToDurationTemporalDisambiguation(options);
+    const overflow = ES.ToTemporalDurationOverflow(options);
     ({
       years,
       months,
@@ -290,7 +290,7 @@ export class Duration {
       milliseconds,
       microseconds,
       nanoseconds,
-      disambiguation
+      overflow
     ));
     const Construct = ES.SpeciesConstructor(this, Duration);
     const result = new Construct(
@@ -323,7 +323,7 @@ export class Duration {
       nanoseconds
     } = ES.ToLimitedTemporalDuration(other);
     ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
-    const disambiguation = ES.ToDurationTemporalDisambiguation(options);
+    const overflow = ES.ToTemporalDurationOverflow(options);
     ({
       years,
       months,
@@ -356,7 +356,7 @@ export class Duration {
       -milliseconds,
       -microseconds,
       -nanoseconds,
-      disambiguation
+      overflow
     ));
     const Construct = ES.SpeciesConstructor(this, Duration);
     const result = new Construct(
@@ -406,7 +406,7 @@ export class Duration {
     throw new TypeError('not possible to compare Temporal.Duration');
   }
   static from(item, options = undefined) {
-    const disambiguation = ES.ToDurationTemporalDisambiguation(options);
+    const overflow = ES.ToTemporalDurationOverflow(options);
     let years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds;
     if (typeof item === 'object' && item) {
       ({
@@ -457,7 +457,7 @@ export class Duration {
       milliseconds,
       microseconds,
       nanoseconds,
-      disambiguation
+      overflow
     ));
     const result = new this(
       years,

@@ -88,14 +88,14 @@
         The following steps are taken:
       </p>
       <emu-alg>
-        1. Let _disambiguation_ be ? ToDurationTemporalDisambiguation(_options_).
+        1. Let _overflow_ be ? ToTemporalDurationOverflow(_options_).
         1. If Type(_item_) is Object, then
           1. Let _result_ be ? ToTemporalDurationRecord(_arg_).
         1. Else,
           1. Let _string_ be ? ToString(_item_).
           1. Let _result_ be ? ParseTemporalDurationString(_string_).
         1. Let _constructor_ be the *this* value.
-        1. Set _result_ to ? RegulateDuration(_result_.[[Years]], _result_.[[Months]], _result_.[[Weeks]], _result_.[[Days]], _result_.[[Hours]], _result_.[[Minutes]], _result_.[[Seconds]], _result_.[[Milliseconds]], _result_.[[Microseconds]], _result_.[[Nanoseconds]], _disambiguation_).
+        1. Set _result_ to ? RegulateDuration(_result_.[[Years]], _result_.[[Months]], _result_.[[Weeks]], _result_.[[Days]], _result_.[[Hours]], _result_.[[Minutes]], _result_.[[Seconds]], _result_.[[Milliseconds]], _result_.[[Microseconds]], _result_.[[Nanoseconds]], _overflow_).
         1. Return ? CreateTemporalDurationFromStatic(_constructor_, _result_.[[Years]], _result_.[[Months]], _result_.[[Weeks]], _result_.[[Days]], _result_.[[Hours]], _result_.[[Minutes]], _result_.[[Seconds]], _result_.[[Milliseconds]],
         _result_.[[Microseconds]], _result_.[[Nanoseconds]]).
       </emu-alg>
@@ -277,7 +277,7 @@
         1. Let _duration_ be the *this* value.
         1. Perform ? RequireInternalSlot(_duration_, [[InitializedTemporalDuration]]).
         1. Let _temporalDurationLike_ be ? ToPartialDuration(_temporalDurationLike_).
-        1. Let _disambiguation_ be ? ToDurationTemporalDisambiguation(_options_).
+        1. Let _overflow_ be ? ToTemporalDurationOverflow(_options_).
         1. If _temporalDurationLike_.[[Years]] is not *undefined*, then
           1. Let _years_ be _temporalDurationLike_.[[Years]].
         1. Else,
@@ -318,7 +318,7 @@
           1. Let _nanoseconds_ be _temporalDurationLike_.[[Nanoseconds]].
         1. Else,
           1. Let _nanoseconds_ be _duration_.[[Nanoseconds]].
-        1. Let _result_ be ? RegulateDuration(_years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_, _disambiguation_).
+        1. Let _result_ be ? RegulateDuration(_years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_, _overflow_).
         1. Return ? CreateTemporalDurationFromInstance(_duration_, _result_.[[Years]], _result_.[[Months]], _result_.[[Weeks]], _result_.[[Days]], _result_.[[Hours]], _result_.[[Minutes]], _result_.[[Seconds]], _result_.[[Milliseconds]], _result_.[[Microseconds]], _result_.[[Nanoseconds]]).
       </emu-alg>
     </emu-clause>
@@ -360,8 +360,8 @@
         1. Perform ? RequireInternalSlot(_duration_, [[InitializedTemporalDuration]]).
         1. Set _other_ to ? ToLimitedTemporalDuration(_other_, « »).
         1. Perform ? RejectDurationSign (_other_.[[Years]], _other_.[[Months]], _other_.[[Weeks]], _other_.[[Days]], _other_.[[Hours]], _other_.[[Minutes]], _other_.[[Seconds]], _other_.[[Milliseconds]], _other_.[[Microseconds]], _other_.[[Nanoseconds]]).
-        1. Let _disambiguation_ be ? ToTemporalDisambiguation(_options_).
-        1. Let _result_ be ? DurationArithmetic(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]], _other_.[[Years]], _other_.[[Months]], _other_.[[Weeks]], _other_.[[Days]], _other_.[[Hours]], _other_.[[Minutes]], _other_.[[Seconds]], _other_.[[Milliseconds]], _other_.[[Microseconds]], _other_.[[Nanoseconds]], _disambiguation_).
+        1. Let _overflow_ be ? ToTemporalDurationOverflow(_options_).
+        1. Let _result_ be ? DurationArithmetic(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]], _other_.[[Years]], _other_.[[Months]], _other_.[[Weeks]], _other_.[[Days]], _other_.[[Hours]], _other_.[[Minutes]], _other_.[[Seconds]], _other_.[[Milliseconds]], _other_.[[Microseconds]], _other_.[[Nanoseconds]], _overflow_).
         1. Return ? CreateTemporalDurationFromInstance(_duration_, _result_.[[Years]], _result_.[[Months]], _result_.[[Weeks]], _result_.[[Days]], _result_.[[Hours]], _result_.[[Minutes]], _result_.[[Seconds]], _result_.[[Milliseconds]], _result_.[[Microseconds]], _result_.[[Nanoseconds]]).
       </emu-alg>
     </emu-clause>
@@ -377,8 +377,8 @@
         1. Perform ? RequireInternalSlot(_duration_, [[InitializedTemporalDuration]]).
         1. Set _other_ to ? ToLimitedTemporalDuration(_other_, « »).
         1. Perform ? RejectDurationSign (_other_.[[Years]], _other_.[[Months]], _other_.[[Weeks]], _other_.[[Days]], _other_.[[Hours]], _other_.[[Minutes]], _other_.[[Seconds]], _other_.[[Milliseconds]], _other_.[[Microseconds]], _other_.[[Nanoseconds]]).
-        1. Let _disambiguation_ be ? ToDurationTemporalDisambiguation(_options_).
-        1. Let _result_ be ? DurationArithmetic(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]], &minus;_other_.[[Years]], &minus;_other_.[[Months]], &minus;_other_.[[Weeks]], &minus;_other_.[[Days]], &minus;_other_.[[Hours]], &minus;_other_.[[Minutes]], &minus;_other_.[[Seconds]], &minus;_other_.[[Milliseconds]], &minus;_other_.[[Microseconds]], &minus;_other_.[[Nanoseconds]], _disambiguation_).
+        1. Let _overflow_ be ? ToTemporalDurationOverflow(_options_).
+        1. Let _result_ be ? DurationArithmetic(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]], &minus;_other_.[[Years]], &minus;_other_.[[Months]], &minus;_other_.[[Weeks]], &minus;_other_.[[Days]], &minus;_other_.[[Hours]], &minus;_other_.[[Minutes]], &minus;_other_.[[Seconds]], &minus;_other_.[[Milliseconds]], &minus;_other_.[[Microseconds]], &minus;_other_.[[Nanoseconds]], _overflow_).
         1. Return ? CreateTemporalDurationFromInstance(_duration_, _result_.[[Years]], _result_.[[Months]], _result_.[[Weeks]], _result_.[[Days]], _result_.[[Hours]], _result_.[[Minutes]], _result_.[[Seconds]], _result_.[[Milliseconds]], _result_.[[Microseconds]], _result_.[[Nanoseconds]]).
       </emu-alg>
     </emu-clause>
@@ -632,16 +632,16 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal-regulateduration" aoid="RegulateDuration">
-      <h1>RegulateDuration ( _years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_, _disambiguation_ )</h1>
+      <h1>RegulateDuration ( _years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_, _overflow_ )</h1>
       <emu-alg>
-        1. Assert: _disambiguation_ is one of *"constrain"*, *"balance"*, or *"reject"*.
+        1. Assert: _overflow_ is one of *"constrain"*, *"balance"*, or *"reject"*.
         1. Perform ? RejectDurationSign(_years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_).
-        1. If _disambiguation_ is *"reject"*, then
+        1. If _overflow_ is *"reject"*, then
           1. If ! ValidateTemporalDuration(_years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_) is *false*, then
             1. Throw a *RangeError* exception.
-        1. Else if _disambiguation_ is *"constrain"*, then
+        1. Else if _overflow_ is *"constrain"*, then
           1. For each of _years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_, if any of the values is infinite, let it be the sign of that value times the largest possible finite value of the Number type.
-        1. Else if _disambiguation_ is *"balance"*, then
+        1. Else if _overflow_ is *"balance"*, then
           1. If ! ValidateTemporalDuration(_years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_) is *false*, then
             1. Throw a *RangeError* exception.
           1. Let _bd_ be ! BalanceDuration(_days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_, *"days"*).
@@ -670,10 +670,10 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal-durationarithmetic" aoid="DurationArithmetic">
-      <h1>DurationArithmetic ( _y1_, _mon1_, _w1_, _d1_, _h1_, _min1_, _s1_, _ms1_, _mus1_, _ns1_, _y2_, _mon2_, _w2_, _d2_, _h2_, _min2_, _s2_, _ms2_, _mus2_, _ns2_, _disambiguation_ )</h1>
+      <h1>DurationArithmetic ( _y1_, _mon1_, _w1_, _d1_, _h1_, _min1_, _s1_, _ms1_, _mus1_, _ns1_, _y2_, _mon2_, _w2_, _d2_, _h2_, _min2_, _s2_, _ms2_, _mus2_, _ns2_, _overflow_ )</h1>
       <emu-alg>
         1. Assert: _y1_, _mon1_, _w1_, _d1_, _h1_, _min1_, _s1_, _ms1_, _mus1_, _ns1_, _y2_, _mon2_, _w2_, _d2_, _h2_, _min2_, _s2_, _ms2_, _mus2_, _ns2_ are integer Number values.
-        1. Assert: _disambiguation_ is either *"reject"*, *"balance"*, or *"constrain"*.
+        1. Assert: _overflow_ is either *"reject"*, *"balance"*, or *"constrain"*.
         1. Let _nanoseconds_ be _ns1_ + _ns2_.
         1. Let _microseconds_ be _mus1_ + _mus2_.
         1. Let _milliseconds_ be _ms1_ + _ms2_.
@@ -725,7 +725,7 @@
         1. Set _milliseconds_ to _milliseconds_ &times; _sign_.
         1. Set _microseconds_ to _microseconds_ &times; _sign_.
         1. Set _nanoseconds_ to _nanoseconds_ &times; _sign_.
-        1. Return ? RegulateDuration(_years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_, _disambiguation_).
+        1. Return ? RegulateDuration(_years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_, _overflow_).
       </emu-alg>
     </emu-clause>
 

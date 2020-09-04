@@ -37,6 +37,6 @@ assert.sameValue(result.microseconds, 0, "microseconds result");
 assert.sameValue(result.nanoseconds, 0, "nanoseconds result");
 assert.sameValue(called, 2);
 
-assert.throws(RangeError, () => instance.with({ days: Infinity }, { disambiguation: "balance" }));
-assert.throws(RangeError, () => instance.with({ days: Infinity }, { disambiguation: "reject" }));
+assert.throws(RangeError, () => instance.with({ days: Infinity }, { overflow: "balance" }));
+assert.throws(RangeError, () => instance.with({ days: Infinity }, { overflow: "reject" }));
 assert.sameValue(called, 2);

@@ -14,5 +14,5 @@ class MyDateTime extends Temporal.DateTime {
   }
 }
 
-assert.throws(RangeError, () => MyDateTime.from({ year: 2020, month: 13, day: 1 }, { disambiguation: "reject" }));
+assert.throws(RangeError, () => MyDateTime.from({ year: 2020, month: 13, day: 1 }, { overflow: "reject" }));
 assert.sameValue(called, false);

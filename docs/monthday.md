@@ -26,7 +26,7 @@ A `Temporal.MonthDay` can be converted into a `Temporal.Date` by combining it wi
 **Returns:** a new `Temporal.MonthDay` object.
 
 Use this constructor if you have the correct parameters for the date already as individual number values, or you are implementing a custom calendar.
-Otherwise, `Temporal.MonthDay.from()`, which accepts more kinds of input, allows inputting dates in different calendar reckonings, and allows disambiguation behaviour, is probably more convenient.
+Otherwise, `Temporal.MonthDay.from()`, which accepts more kinds of input, allows inputting dates in different calendar reckonings, and allows controlling the overflow behaviour, is probably more convenient.
 
 All values are given as reckoned in the [ISO 8601 calendar](https://en.wikipedia.org/wiki/ISO_8601#Dates).
 Together, `refISOYear`, `isoMonth` and `isoDay` must represent a valid date in that calendar.
@@ -50,7 +50,7 @@ md = new Temporal.MonthDay(2, 29)  // => 02-29
 - `thing`: The value representing the desired date.
 - `options` (optional object): An object with properties representing options for constructing the date.
   The following options are recognized:
-  - `disambiguation` (string): How to deal with out-of-range values in `thing`.
+  - `overflow` (string): How to deal with out-of-range values in `thing`.
     Allowed values are `constrain` and `reject`.
     The default is `constrain`.
 
@@ -62,9 +62,9 @@ If the value is any other object, it must have `month` and `day` properties, and
 
 Any non-object value will be converted to a string, which is expected to be in ISO 8601 format.
 Any parts of the string other than the month and the day are optional and will be ignored.
-If the string isn't valid according to ISO 8601, then a `RangeError` will be thrown regardless of the value of `disambiguation`.
+If the string isn't valid according to ISO 8601, then a `RangeError` will be thrown regardless of the value of `overflow`.
 
-The `disambiguation` option works as follows:
+The `overflow` option works as follows:
 - In `constrain` mode (the default), any out-of-range values are clamped to the nearest in-range value.
 - In `reject` mode, the presence of out-of-range values will cause the function to throw a `RangeError`.
 
@@ -84,14 +84,14 @@ md = Temporal.MonthDay.from({month: 8, day: 24});  // => 08-24
 md = Temporal.MonthDay.from(Temporal.Date.from('2006-08-24'));
   // => same as above; Temporal.Date has month and day properties
 
-// Different disambiguation modes
-md = Temporal.MonthDay.from({ month: 13, day: 1 }, { disambiguation: 'constrain' })
+// Different overflow modes
+md = Temporal.MonthDay.from({ month: 13, day: 1 }, { overflow: 'constrain' })
   // => 12-01
-md = Temporal.MonthDay.from({ month: -1, day: 1 }, { disambiguation: 'constrain' })
+md = Temporal.MonthDay.from({ month: -1, day: 1 }, { overflow: 'constrain' })
   // => 01-01
-md = Temporal.MonthDay.from({ month: 13, day: 1 }, { disambiguation: 'reject' })
+md = Temporal.MonthDay.from({ month: 13, day: 1 }, { overflow: 'reject' })
   // throws
-md = Temporal.MonthDay.from({ month: -1, day: 1 }, { disambiguation: 'reject' })
+md = Temporal.MonthDay.from({ month: -1, day: 1 }, { overflow: 'reject' })
   // throws
 ```
 
@@ -124,7 +124,7 @@ The `calendar` read-only property gives the calendar that the `month` and `day` 
 - `monthDayLike` (object): an object with some or all of the properties of a `Temporal.MonthDay`.
 - `options` (optional object): An object with properties representing options for the operation.
   The following options are recognized:
-  - `disambiguation` (string): How to deal with out-of-range values.
+  - `overflow` (string): How to deal with out-of-range values.
     Allowed values are `constrain` and `reject`.
     The default is `constrain`.
 
@@ -132,7 +132,7 @@ The `calendar` read-only property gives the calendar that the `month` and `day` 
 
 This method creates a new `Temporal.MonthDay` which is a copy of `monthDay`, but any properties present on `monthDayLike` override the ones already present on `monthDay`.
 
-The disambiguation parameter tells what should happen when out-of-range values are given or when the result would be an invalid month-day combination, such as "June 31":
+The `overflow` option tells what should happen when out-of-range values are given or when the result would be an invalid month-day combination, such as "June 31":
 - In `constrain` mode (the default), any out-of-range values are clamped to the nearest in-range value, so June 31 would become June 30.
 - In `reject` mode, the presence of out-of-range values will cause the constructor to throw a `RangeError`.
 
@@ -255,7 +255,7 @@ Instead, use `monthDay.equals()` to check for equality.
 - `year` (number | object): A year, which must have a day corresponding to `monthDay`. Additionally, an object with a `'year'` property is also accepted.
 - `options` (optional object): An object with properties representing options for the operation.
   The following options are recognized:
-  - `disambiguation` (string): How to deal with out-of-range values.
+  - `overflow` (string): How to deal with out-of-range values.
     Allowed values are `constrain` and `reject`.
     The default is `constrain`.
 
@@ -273,7 +273,7 @@ md.toDateInYear({ year: 2017 })  // equivalent to above
 md = Temporal.MonthDay.from('02-29');
 md.toDateInYear(2020)  // => 2020-02-29
 md.toDateInYear(2017)  // => 2017-02-28
-md.toDateInYear(2017, { disambiguation: 'reject' })  // throws
+md.toDateInYear(2017, { overflow: 'reject' })  // throws
 ```
 
 In calendars where more information than just the year is needed to convert a `Temporal.MonthDay` to a `Temporal.Date`, you can pass an object to `toDateInYear()` that contains the necessary properties.

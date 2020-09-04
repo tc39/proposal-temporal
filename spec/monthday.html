@@ -65,7 +65,7 @@
         The following steps are taken:
       </p>
       <emu-alg>
-        1. Let _disambiguation_ be ? ToTemporalDisambiguation(_options_).
+        1. Let _overflow_ be ? ToTemporalOverflow(_options_).
         1. If Type(_item_) is Object, then
           1. Let _result_ be ? ToTemporalMonthDayRecord(_item_).
           1. Let _refISOYear_ be _result_.[[Year]].
@@ -74,7 +74,7 @@
           1. Let _result_ be ? ParseTemporalMonthDayString(_string_).
           1. Let _refISOYear_ be the first leap year after the Unix epoch (1972).
         1. Let _constructor_ be the *this* value.
-        1. Set _result_ to ? RegulateMonthDay(_result_.[[Month]], _result_.[[Day]], _disambiguation_).
+        1. Set _result_ to ? RegulateMonthDay(_result_.[[Month]], _result_.[[Day]], _overflow_).
         1. Return ? CreateTemporalMonthDayFromStatic(_constructor_, _result_.[[Month]], _result_.[[Day]], _refISOYear_).
       </emu-alg>
     </emu-clause>
@@ -142,7 +142,7 @@
         1. Let _monthDay_ be the *this* value.
         1. Perform ? RequireInternalSlot(_monthDay_, [[InitializedTemporalMonthDay]]).
         1. Let _partialMonthDay_ be ? ToPartialMonthDay(_temporalMonthDayLike_).
-        1. Let _disambiguation_ be ? ToTemporalDisambiguation(_options_).
+        1. Let _overflow_ be ? ToTemporalOverflow(_options_).
         1. If _partialMonthDay_.[[Month]] is not *undefined*, then
           1. Let _m_ be _partialMonthDay_.[[Month]].
         1. Else,
@@ -151,7 +151,7 @@
           1. Let _d_ be _partialMonthDay_.[[Day]].
         1. Else,
           1. Let _d_ be _monthDay_.[[ISODay]].
-        1. Let _result_ be ? RegulateMonthDay(_m_, _d_, _disambiguation_).
+        1. Let _result_ be ? RegulateMonthDay(_m_, _d_, _overflow_).
         1. Return ? CreateTemporalMonthDayFromInstance(_monthDay_, _result_.[[Month]], _result_.[[Day]]).
       </emu-alg>
     </emu-clause>
@@ -232,7 +232,7 @@
       <emu-alg>
         1. Let _monthDay_ be the *this* value.
         1. Perform ? RequireInternalSlot(_monthDay_, [[InitializedTemporalMonthDay]]).
-        1. Let _disambiguation_ be ? ToTemporalDisambiguation(_options_).
+        1. Let _overflow_ be ? ToTemporalOverflow(_options_).
         1. If Type(_item_) is Object, then
           1. Let _y_ be ? Get(_item_, *"year"*).
           1. If _y_ is *undefined*, then
@@ -240,7 +240,7 @@
           1. Let _y_ be ? ToInteger(_y_).
         1. Else,
           1. Let _y_ be ? ToInteger(_item_).
-        1. Let _date_ be ? RegulateDate(_y_, _monthDay_.[[ISOMonth]], _monthDay_.[[ISODay]], _disambiguation_).
+        1. Let _date_ be ? RegulateDate(_y_, _monthDay_.[[ISOMonth]], _monthDay_.[[ISODay]], _overflow_).
         1. Return ? CreateTemporalDate(_date_.[[Year]], _date_.[[Month]], _date_.[[Day]]).
       </emu-alg>
     </emu-clause>
@@ -329,18 +329,18 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal-regulatemonthday" aoid="RegulateMonthDay">
-      <h1>RegulateMonthDay ( _month_, _day_, _disambiguation_ )</h1>
+      <h1>RegulateMonthDay ( _month_, _day_, _overflow_ )</h1>
       <emu-alg>
-        1. Assert: _disambiguation_ is one of `"constrain"`, `"balance"`, or `"reject"`.
-        1. If _disambiguation_ is *"reject"*, then
+        1. Assert: _overflow_ is one of *"constrain"*, *"balance"*, or *"reject"*.
+        1. If _overflow_ is *"reject"*, then
           1. Perform ? RejectMonthDay(_month_, _day_).
           1. Return the Record {
               [[Month]]: _month_,
               [[Day]]: _day_
             }.
-        1. If _disambiguation_ is *"constrain"*, then
+        1. If _overflow_ is *"constrain"*, then
           1. Return ! ConstrainMonthDay(_month_, _day_).
-        1. If _disambiguation_ is *"balance"*, then
+        1. If _overflow_ is *"balance"*, then
           1. Return ! BalanceMonthDay(_month_, _day_).
       </emu-alg>
     </emu-clause>

@@ -187,9 +187,9 @@ describe('Time', () => {
       it('time.with({ minute: 8, nanosecond: 3 } works', () => {
         equal(`${time.with({ minute: 8, nanosecond: 3 })}`, '15:08:30.123456003');
       });
-      it('invalid disambiguation', () => {
-        ['', 'CONSTRAIN', 'balance', 3, null].forEach((disambiguation) =>
-          throws(() => time.with({ hour: 3 }, { disambiguation }), RangeError)
+      it('invalid overflow', () => {
+        ['', 'CONSTRAIN', 'balance', 3, null].forEach((overflow) =>
+          throws(() => time.with({ hour: 3 }, { overflow }), RangeError)
         );
       });
       it('options may only be an object or undefined', () => {
@@ -329,14 +329,14 @@ describe('Time', () => {
         equal(`${time.plus({ months: 1 })}`, '15:23:30.123456789');
         equal(`${time.plus({ years: 1 })}`, '15:23:30.123456789');
       });
-      it('invalid disambiguation', () => {
-        ['', 'CONSTRAIN', 'balance', 3, null].forEach((disambiguation) =>
-          throws(() => time.plus({ hours: 1 }, { disambiguation }), RangeError)
+      it('invalid overflow', () => {
+        ['', 'CONSTRAIN', 'balance', 3, null].forEach((overflow) =>
+          throws(() => time.plus({ hours: 1 }, { overflow }), RangeError)
         );
       });
       it('mixed positive and negative values always throw', () => {
-        ['constrain', 'reject'].forEach((disambiguation) =>
-          throws(() => time.plus({ hours: 1, minutes: -30 }, { disambiguation }), RangeError)
+        ['constrain', 'reject'].forEach((overflow) =>
+          throws(() => time.plus({ hours: 1, minutes: -30 }, { overflow }), RangeError)
         );
       });
       it('options may only be an object or undefined', () => {
@@ -375,14 +375,14 @@ describe('Time', () => {
         equal(`${time.minus({ months: 1 })}`, '15:23:30.123456789');
         equal(`${time.minus({ years: 1 })}`, '15:23:30.123456789');
       });
-      it('invalid disambiguation', () => {
-        ['', 'CONSTRAIN', 'balance', 3, null].forEach((disambiguation) =>
-          throws(() => time.minus({ hours: 1 }, { disambiguation }), RangeError)
+      it('invalid overflow', () => {
+        ['', 'CONSTRAIN', 'balance', 3, null].forEach((overflow) =>
+          throws(() => time.minus({ hours: 1 }, { overflow }), RangeError)
         );
       });
       it('mixed positive and negative values always throw', () => {
-        ['constrain', 'reject'].forEach((disambiguation) =>
-          throws(() => time.minus({ hours: 1, minutes: -30 }, { disambiguation }), RangeError)
+        ['constrain', 'reject'].forEach((overflow) =>
+          throws(() => time.minus({ hours: 1, minutes: -30 }, { overflow }), RangeError)
         );
       });
       it('options may only be an object or undefined', () => {
@@ -433,7 +433,7 @@ describe('Time', () => {
       it('Time.from({})', () => equal(`${Time.from({})}`, `${new Time()}`));
       it('Time.from(ISO string leap second) is constrained', () => {
         equal(`${Time.from('23:59:60')}`, '23:59:59');
-        equal(`${Time.from('23:59:60', { disambiguation: 'reject' })}`, '23:59:59');
+        equal(`${Time.from('23:59:60', { overflow: 'reject' })}`, '23:59:59');
       });
       it('Time.from(number) is converted to string', () => equal(`${Time.from(1523)}`, `${Time.from('1523')}`));
       it('Time.from(time) returns the same properties', () => {
@@ -499,22 +499,22 @@ describe('Time', () => {
         );
         [{}, () => {}, undefined].forEach((options) => equal(`${Time.from({ hour: 12 }, options)}`, '12:00'));
       });
-      describe('Disambiguation', () => {
+      describe('Overflow', () => {
         const bad = { nanosecond: 1000 };
-        it('reject', () => throws(() => Time.from(bad, { disambiguation: 'reject' }), RangeError));
+        it('reject', () => throws(() => Time.from(bad, { overflow: 'reject' }), RangeError));
         it('constrain', () => {
           equal(`${Time.from(bad)}`, '00:00:00.000000999');
-          equal(`${Time.from(bad, { disambiguation: 'constrain' })}`, '00:00:00.000000999');
+          equal(`${Time.from(bad, { overflow: 'constrain' })}`, '00:00:00.000000999');
         });
-        it('throw when bad disambiguation', () => {
+        it('throw on bad overflow', () => {
           [new Time(15), { hour: 15 }, '15:00'].forEach((input) => {
-            ['', 'CONSTRAIN', 'balance', 3, null].forEach((disambiguation) =>
-              throws(() => Time.from(input, { disambiguation }), RangeError)
+            ['', 'CONSTRAIN', 'balance', 3, null].forEach((overflow) =>
+              throws(() => Time.from(input, { overflow }), RangeError)
             );
           });
         });
         const leap = { hour: 23, minute: 59, second: 60 };
-        it('reject leap second', () => throws(() => Time.from(leap, { disambiguation: 'reject' }), RangeError));
+        it('reject leap second', () => throws(() => Time.from(leap, { overflow: 'reject' }), RangeError));
         it('constrain leap second', () => equal(`${Time.from(leap)}`, '23:59:59'));
       });
     });

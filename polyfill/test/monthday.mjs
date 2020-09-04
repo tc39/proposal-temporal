@@ -90,24 +90,24 @@ describe('MonthDay', () => {
           equal(`${MonthDay.from({ month: 11, day: 18 }, options)}`, '11-18')
         );
       });
-      describe('Disambiguation', () => {
+      describe('Overflow', () => {
         const bad = { month: 1, day: 32 };
-        it('reject', () => throws(() => MonthDay.from(bad, { disambiguation: 'reject' }), RangeError));
+        it('reject', () => throws(() => MonthDay.from(bad, { overflow: 'reject' }), RangeError));
         it('constrain', () => {
           equal(`${MonthDay.from(bad)}`, '01-31');
-          equal(`${MonthDay.from(bad, { disambiguation: 'constrain' })}`, '01-31');
+          equal(`${MonthDay.from(bad, { overflow: 'constrain' })}`, '01-31');
         });
-        it('throw when bad disambiguation', () => {
+        it('throw on bad overflow', () => {
           [new MonthDay(11, 18), { month: 1, day: 1 }, '01-31'].forEach((input) => {
-            ['', 'CONSTRAIN', 'balance', 3, null].forEach((disambiguation) =>
-              throws(() => MonthDay.from(input, { disambiguation }), RangeError)
+            ['', 'CONSTRAIN', 'balance', 3, null].forEach((overflow) =>
+              throws(() => MonthDay.from(input, { overflow }), RangeError)
             );
           });
         });
       });
       describe('Leap day', () => {
-        ['reject', 'constrain'].forEach((disambiguation) =>
-          it(disambiguation, () => equal(`${MonthDay.from({ month: 2, day: 29 }, { disambiguation })}`, '02-29'))
+        ['reject', 'constrain'].forEach((overflow) =>
+          it(overflow, () => equal(`${MonthDay.from({ month: 2, day: 29 }, { overflow })}`, '02-29'))
         );
       });
     });
@@ -128,9 +128,9 @@ describe('MonthDay', () => {
   });
   describe('MonthDay.with()', () => {
     const md = MonthDay.from('01-15');
-    it('throws on bad disambiguation', () => {
-      ['', 'CONSTRAIN', 'balance', 3, null].forEach((disambiguation) =>
-        throws(() => md.with({ day: 1 }, { disambiguation }), RangeError)
+    it('throws on bad overflow', () => {
+      ['', 'CONSTRAIN', 'balance', 3, null].forEach((overflow) =>
+        throws(() => md.with({ day: 1 }, { overflow }), RangeError)
       );
     });
     it('throws on trying to change the calendar', () => {
@@ -188,11 +188,11 @@ describe('MonthDay', () => {
     it("constrains if the MonthDay doesn't exist in the year", () => {
       const leapDay = MonthDay.from('02-29');
       equal(`${leapDay.toDateInYear(2019)}`, '2019-02-28');
-      equal(`${leapDay.toDateInYear(2019, { disambiguation: 'constrain' })}`, '2019-02-28');
+      equal(`${leapDay.toDateInYear(2019, { overflow: 'constrain' })}`, '2019-02-28');
     });
     it("can also reject if the MonthDay doesn't exist in the year", () => {
       const leapDay = MonthDay.from('02-29');
-      throws(() => leapDay.toDateInYear(2019, { disambiguation: 'reject' }));
+      throws(() => leapDay.toDateInYear(2019, { overflow: 'reject' }));
     });
   });
   describe('monthDay.getFields() works', () => {

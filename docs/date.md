@@ -27,7 +27,7 @@ A `Temporal.Date` can be converted into a `Temporal.DateTime` by combining it wi
 **Returns:** a new `Temporal.Date` object.
 
 Use this constructor if you have the correct parameters for the date already as individual number values in the ISO 8601 calendar.
-Otherwise, `Temporal.Date.from()`, which accepts more kinds of input, allows inputting dates in different calendar reckonings, and allows disambiguation behaviour, is probably more convenient.
+Otherwise, `Temporal.Date.from()`, which accepts more kinds of input, allows inputting dates in different calendar reckonings, and allows controlling the overflow behaviour, is probably more convenient.
 
 All values are given as reckoned in the [ISO 8601 calendar](https://en.wikipedia.org/wiki/ISO_8601#Dates).
 Together, `isoYear`, `isoMonth`, and `isoDay` must represent a valid date in that calendar, even if you are passing a different calendar as the `calendar` parameter.
@@ -51,7 +51,7 @@ date = new Temporal.Date(2020, 3, 14)  // => 2020-03-14
 - `thing`: The value representing the desired date.
 - `options` (optional object): An object with properties representing options for constructing the date.
   The following options are recognized:
-  - `disambiguation` (string): How to deal with out-of-range values in `thing`.
+  - `overflow` (string): How to deal with out-of-range values in `thing`.
     Allowed values are `constrain` and `reject`.
     The default is `constrain`.
 
@@ -64,13 +64,13 @@ A `Temporal.Date` will be constructed from these properties.
 
 Any non-object value is converted to a string, which is expected to be in ISO 8601 format.
 Any time or time zone part is optional and will be ignored.
-If the string isn't valid according to ISO 8601, then a `RangeError` will be thrown regardless of the value of `disambiguation`.
+If the string isn't valid according to ISO 8601, then a `RangeError` will be thrown regardless of the value of `overflow`.
 
-The `disambiguation` option works as follows:
+The `overflow` option works as follows:
 - In `constrain` mode (the default), any out-of-range values are clamped to the nearest in-range value.
 - In `reject` mode, the presence of out-of-range values will cause the function to throw a `RangeError`.
 
-Additionally, if the result is earlier or later than the range of dates that `Temporal.Date` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then this function will throw a `RangeError` regardless of `disambiguation`.
+Additionally, if the result is earlier or later than the range of dates that `Temporal.Date` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then this function will throw a `RangeError` regardless of `overflow`.
 
 > **NOTE**: The allowed values for the `thing.month` property start at 1, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
 
@@ -92,14 +92,14 @@ date = Temporal.Date.from({ year: 1427, month; 8, day: 1, calendar });  // => 20
 date = Temporal.Date.from({ year: 1427, month: 8, day: 1, calendar: 'islamic' });
   // => same as above
 
-// Different disambiguation modes
-date = Temporal.Date.from({ year: 2001, month: 13, day: 1 }, { disambiguation: 'constrain' })
+// Different overflow modes
+date = Temporal.Date.from({ year: 2001, month: 13, day: 1 }, { overflow: 'constrain' })
   // => 2001-12-01
-date = Temporal.Date.from({ year: 2001, month: -1, day: 1 }, { disambiguation: 'constrain' })
+date = Temporal.Date.from({ year: 2001, month: -1, day: 1 }, { overflow: 'constrain' })
   // => 2001-01-01
-date = Temporal.Date.from({ year: 2001, month: 13, day: 1 }, { disambiguation: 'reject' })
+date = Temporal.Date.from({ year: 2001, month: 13, day: 1 }, { overflow: 'reject' })
   // throws
-date = Temporal.Date.from({ year: 2001, month: -1, day: 1 }, { disambiguation: 'reject' })
+date = Temporal.Date.from({ year: 2001, month: -1, day: 1 }, { overflow: 'reject' })
   // throws
 ```
 
@@ -274,7 +274,7 @@ date.with({year: 2100}).leapYear  // => false
 - `dateLike` (object): an object with some or all of the properties of a `Temporal.Date`.
 - `options` (optional object): An object with properties representing options for the operation.
   The following options are recognized:
-  - `disambiguation` (string): How to deal with out-of-range values.
+  - `overflow` (string): How to deal with out-of-range values.
     Allowed values are `constrain` and `reject`.
     The default is `constrain`.
 
@@ -284,7 +284,7 @@ This method creates a new `Temporal.Date` which is a copy of `date`, but any pro
 
 Since `Temporal.Date` objects are immutable, use this method instead of modifying one.
 
-If the result is earlier or later than the range of dates that `Temporal.Date` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then this method will throw a `RangeError` regardless of `disambiguation`.
+If the result is earlier or later than the range of dates that `Temporal.Date` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then this method will throw a `RangeError` regardless of `overflow`.
 
 > **NOTE**: The allowed values for the `dateLike.month` property start at 1, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
 
@@ -327,7 +327,7 @@ date.withCalendar('iso8601')  // => 2006-08-24
 - `duration` (object): A `Temporal.Duration` object or a duration-like object.
 - `options` (optional object): An object with properties representing options for the addition.
   The following options are recognized:
-  - `disambiguation` (optional string): How to deal with additions that result in out-of-range values.
+  - `overflow` (optional string): How to deal with additions that result in out-of-range values.
     Allowed values are `constrain` and `reject`.
     The default is `constrain`.
 
@@ -339,11 +339,11 @@ The `duration` argument is an object with properties denoting a duration, such a
 
 Some additions may be ambiguous, because months have different lengths.
 For example, adding one month to August 31 would result in September 31, which doesn't exist.
-For these cases, the `disambiguation` option tells what to do:
+For these cases, the `overflow` option tells what to do:
 - In `constrain` mode (the default), out-of-range values are clamped to the nearest in-range value.
 - In `reject` mode, an addition that would result in an out-of-range value fails, and a `RangeError` is thrown.
 
-Additionally, if the result is earlier or later than the range of dates that `Temporal.Date` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then this method will throw a `RangeError` regardless of `disambiguation`.
+Additionally, if the result is earlier or later than the range of dates that `Temporal.Date` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then this method will throw a `RangeError` regardless of `overflow`.
 
 Adding a negative duration is equivalent to subtracting the absolute value of that duration.
 
@@ -354,7 +354,7 @@ date.plus({years: 20, months: 4})  // => 2026-12-24
 
 date = Temporal.Date.from('2019-01-31')
 date.plus({ months: 1 })  // => 2019-02-28
-date.plus({ months: 1 }, { disambiguation: 'reject' })  // => throws
+date.plus({ months: 1 }, { overflow: 'reject' })  // => throws
 ```
 
 ### date.**minus**(_duration_: object, _options_?: object) : Temporal.Date
@@ -363,7 +363,7 @@ date.plus({ months: 1 }, { disambiguation: 'reject' })  // => throws
 - `duration` (object): A `Temporal.Duration` object or a duration-like object.
 - `options` (optional object): An object with properties representing options for the subtraction.
   The following options are recognized:
-  - `disambiguation` (string): How to deal with subtractions that result in out-of-range values.
+  - `overflow` (string): How to deal with subtractions that result in out-of-range values.
     Allowed values are `constrain` and `reject`.
     The default is `constrain`.
 
@@ -375,11 +375,11 @@ The `duration` argument is an object with properties denoting a duration, such a
 
 Some subtractions may be ambiguous, because months have different lengths.
 For example, subtracting one month from July 31 would result in June 31, which doesn't exist.
-For these cases, the `disambiguation` option tells what to do:
+For these cases, the `overflow` option tells what to do:
 - In `constrain` mode (the default), out-of-range values are clamped to the nearest in-range value.
 - In `reject` mode, an addition that would result in an out-of-range value fails, and a `RangeError` is thrown.
 
-Additionally, if the result is earlier or later than the range of dates that `Temporal.Date` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then this method will throw a `RangeError` regardless of `disambiguation`.
+Additionally, if the result is earlier or later than the range of dates that `Temporal.Date` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then this method will throw a `RangeError` regardless of `overflow`.
 
 Subtracting a negative duration is equivalent to adding the absolute value of that duration.
 
@@ -390,7 +390,7 @@ date.minus({years: 20, months: 4})  // => 1986-04-24
 
 date = Temporal.Date.from('2019-03-31')
 date.minus({ months: 1 })  // => 2019-02-28
-date.minus({ months: 1 }, { disambiguation: 'reject' })  // => throws
+date.minus({ months: 1 }, { overflow: 'reject' })  // => throws
 ```
 
 ### date.**difference**(_other_: Temporal.Date, _options_?: object) : Temporal.Duration

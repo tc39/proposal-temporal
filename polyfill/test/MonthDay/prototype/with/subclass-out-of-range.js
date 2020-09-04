@@ -24,5 +24,5 @@ assert.sameValue(result.month, 11, "month result");
 assert.sameValue(result.day, 30, "day result");
 assert.sameValue(called, 2);
 
-assert.throws(RangeError, () => instance.with({ day: 31 }, { disambiguation: "reject" }));
+assert.throws(RangeError, () => instance.with({ day: 31 }, { overflow: "reject" }));
 assert.sameValue(called, 2);

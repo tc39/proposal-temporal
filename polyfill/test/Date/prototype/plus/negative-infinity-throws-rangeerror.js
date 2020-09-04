@@ -10,29 +10,29 @@ const instance = Temporal.Date.from({ year: 2000, month: 5, day: 2 });
 
 // constrain
 
-assert.throws(RangeError, () => instance.plus({ years: -Infinity }, { disambiguation: 'constrain' }));
-assert.throws(RangeError, () => instance.plus({ months: -Infinity }, { disambiguation: 'constrain' }));
-assert.throws(RangeError, () => instance.plus({ weeks: -Infinity }, { disambiguation: 'constrain' }));
-assert.throws(RangeError, () => instance.plus({ days: -Infinity }, { disambiguation: 'constrain' }));
-assert.throws(RangeError, () => instance.plus({ hours: -Infinity }, { disambiguation: 'constrain' }));
-assert.throws(RangeError, () => instance.plus({ minutes: -Infinity }, { disambiguation: 'constrain' }));
-assert.throws(RangeError, () => instance.plus({ seconds: -Infinity }, { disambiguation: 'constrain' }));
-assert.throws(RangeError, () => instance.plus({ milliseconds: -Infinity }, { disambiguation: 'constrain' }));
-assert.throws(RangeError, () => instance.plus({ microseconds: -Infinity }, { disambiguation: 'constrain' }));
-assert.throws(RangeError, () => instance.plus({ nanoseconds: -Infinity }, { disambiguation: 'constrain' }));
+assert.throws(RangeError, () => instance.plus({ years: -Infinity }, { overflow: 'constrain' }));
+assert.throws(RangeError, () => instance.plus({ months: -Infinity }, { overflow: 'constrain' }));
+assert.throws(RangeError, () => instance.plus({ weeks: -Infinity }, { overflow: 'constrain' }));
+assert.throws(RangeError, () => instance.plus({ days: -Infinity }, { overflow: 'constrain' }));
+assert.throws(RangeError, () => instance.plus({ hours: -Infinity }, { overflow: 'constrain' }));
+assert.throws(RangeError, () => instance.plus({ minutes: -Infinity }, { overflow: 'constrain' }));
+assert.throws(RangeError, () => instance.plus({ seconds: -Infinity }, { overflow: 'constrain' }));
+assert.throws(RangeError, () => instance.plus({ milliseconds: -Infinity }, { overflow: 'constrain' }));
+assert.throws(RangeError, () => instance.plus({ microseconds: -Infinity }, { overflow: 'constrain' }));
+assert.throws(RangeError, () => instance.plus({ nanoseconds: -Infinity }, { overflow: 'constrain' }));
 
 // reject
 
-assert.throws(RangeError, () => instance.plus({ years: -Infinity }, { disambiguation: 'reject' }));
-assert.throws(RangeError, () => instance.plus({ months: -Infinity }, { disambiguation: 'reject' }));
-assert.throws(RangeError, () => instance.plus({ weeks: -Infinity }, { disambiguation: 'reject' }));
-assert.throws(RangeError, () => instance.plus({ days: -Infinity }, { disambiguation: 'reject' }));
-assert.throws(RangeError, () => instance.plus({ hours: -Infinity }, { disambiguation: 'reject' }));
-assert.throws(RangeError, () => instance.plus({ minutes: -Infinity }, { disambiguation: 'reject' }));
-assert.throws(RangeError, () => instance.plus({ seconds: -Infinity }, { disambiguation: 'reject' }));
-assert.throws(RangeError, () => instance.plus({ milliseconds: -Infinity }, { disambiguation: 'reject' }));
-assert.throws(RangeError, () => instance.plus({ microseconds: -Infinity }, { disambiguation: 'reject' }));
-assert.throws(RangeError, () => instance.plus({ nanoseconds: -Infinity }, { disambiguation: 'reject' }));
+assert.throws(RangeError, () => instance.plus({ years: -Infinity }, { overflow: 'reject' }));
+assert.throws(RangeError, () => instance.plus({ months: -Infinity }, { overflow: 'reject' }));
+assert.throws(RangeError, () => instance.plus({ weeks: -Infinity }, { overflow: 'reject' }));
+assert.throws(RangeError, () => instance.plus({ days: -Infinity }, { overflow: 'reject' }));
+assert.throws(RangeError, () => instance.plus({ hours: -Infinity }, { overflow: 'reject' }));
+assert.throws(RangeError, () => instance.plus({ minutes: -Infinity }, { overflow: 'reject' }));
+assert.throws(RangeError, () => instance.plus({ seconds: -Infinity }, { overflow: 'reject' }));
+assert.throws(RangeError, () => instance.plus({ milliseconds: -Infinity }, { overflow: 'reject' }));
+assert.throws(RangeError, () => instance.plus({ microseconds: -Infinity }, { overflow: 'reject' }));
+assert.throws(RangeError, () => instance.plus({ nanoseconds: -Infinity }, { overflow: 'reject' }));
 
 let calls = 0;
 const obj = {
@@ -42,44 +42,44 @@ const obj = {
   }
 };
 
-assert.throws(RangeError, () => instance.plus({ years: obj }, { disambiguation: 'constrain' }));
+assert.throws(RangeError, () => instance.plus({ years: obj }, { overflow: 'constrain' }));
 assert.sameValue(calls, 1, "it fails after fetching the primitive value");
-assert.throws(RangeError, () => instance.plus({ months: obj }, { disambiguation: 'constrain' }));
+assert.throws(RangeError, () => instance.plus({ months: obj }, { overflow: 'constrain' }));
 assert.sameValue(calls, 2, "it fails after fetching the primitive value");
-assert.throws(RangeError, () => instance.plus({ weeks: obj }, { disambiguation: 'constrain' }));
+assert.throws(RangeError, () => instance.plus({ weeks: obj }, { overflow: 'constrain' }));
 assert.sameValue(calls, 3, "it fails after fetching the primitive value");
-assert.throws(RangeError, () => instance.plus({ days: obj }, { disambiguation: 'constrain' }));
+assert.throws(RangeError, () => instance.plus({ days: obj }, { overflow: 'constrain' }));
 assert.sameValue(calls, 4, "it fails after fetching the primitive value");
-assert.throws(RangeError, () => instance.plus({ hours: obj }, { disambiguation: 'constrain' }));
+assert.throws(RangeError, () => instance.plus({ hours: obj }, { overflow: 'constrain' }));
 assert.sameValue(calls, 5, "it fails after fetching the primitive value");
-assert.throws(RangeError, () => instance.plus({ minutes: obj }, { disambiguation: 'constrain' }));
+assert.throws(RangeError, () => instance.plus({ minutes: obj }, { overflow: 'constrain' }));
 assert.sameValue(calls, 6, "it fails after fetching the primitive value");
-assert.throws(RangeError, () => instance.plus({ seconds: obj }, { disambiguation: 'constrain' }));
+assert.throws(RangeError, () => instance.plus({ seconds: obj }, { overflow: 'constrain' }));
 assert.sameValue(calls, 7, "it fails after fetching the primitive value");
-assert.throws(RangeError, () => instance.plus({ milliseconds: obj }, { disambiguation: 'constrain' }));
+assert.throws(RangeError, () => instance.plus({ milliseconds: obj }, { overflow: 'constrain' }));
 assert.sameValue(calls, 8, "it fails after fetching the primitive value");
-assert.throws(RangeError, () => instance.plus({ microseconds: obj }, { disambiguation: 'constrain' }));
+assert.throws(RangeError, () => instance.plus({ microseconds: obj }, { overflow: 'constrain' }));
 assert.sameValue(calls, 9, "it fails after fetching the primitive value");
-assert.throws(RangeError, () => instance.plus({ nanoseconds: obj }, { disambiguation: 'constrain' }));
+assert.throws(RangeError, () => instance.plus({ nanoseconds: obj }, { overflow: 'constrain' }));
 assert.sameValue(calls, 10, "it fails after fetching the primitive value");
 
-assert.throws(RangeError, () => instance.plus({ years: obj }, { disambiguation: 'reject' }));
+assert.throws(RangeError, () => instance.plus({ years: obj }, { overflow: 'reject' }));
 assert.sameValue(calls, 11, "it fails after fetching the primitive value");
-assert.throws(RangeError, () => instance.plus({ months: obj }, { disambiguation: 'reject' }));
+assert.throws(RangeError, () => instance.plus({ months: obj }, { overflow: 'reject' }));
 assert.sameValue(calls, 12, "it fails after fetching the primitive value");
-assert.throws(RangeError, () => instance.plus({ weeks: obj }, { disambiguation: 'reject' }));
+assert.throws(RangeError, () => instance.plus({ weeks: obj }, { overflow: 'reject' }));
 assert.sameValue(calls, 13, "it fails after fetching the primitive value");
-assert.throws(RangeError, () => instance.plus({ days: obj }, { disambiguation: 'reject' }));
+assert.throws(RangeError, () => instance.plus({ days: obj }, { overflow: 'reject' }));
 assert.sameValue(calls, 14, "it fails after fetching the primitive value");
-assert.throws(RangeError, () => instance.plus({ hours: obj }, { disambiguation: 'reject' }));
+assert.throws(RangeError, () => instance.plus({ hours: obj }, { overflow: 'reject' }));
 assert.sameValue(calls, 15, "it fails after fetching the primitive value");
-assert.throws(RangeError, () => instance.plus({ minutes: obj }, { disambiguation: 'reject' }));
+assert.throws(RangeError, () => instance.plus({ minutes: obj }, { overflow: 'reject' }));
 assert.sameValue(calls, 16, "it fails after fetching the primitive value");
-assert.throws(RangeError, () => instance.plus({ seconds: obj }, { disambiguation: 'reject' }));
+assert.throws(RangeError, () => instance.plus({ seconds: obj }, { overflow: 'reject' }));
 assert.sameValue(calls, 17, "it fails after fetching the primitive value");
-assert.throws(RangeError, () => instance.plus({ milliseconds: obj }, { disambiguation: 'reject' }));
+assert.throws(RangeError, () => instance.plus({ milliseconds: obj }, { overflow: 'reject' }));
 assert.sameValue(calls, 18, "it fails after fetching the primitive value");
-assert.throws(RangeError, () => instance.plus({ microseconds: obj }, { disambiguation: 'reject' }));
+assert.throws(RangeError, () => instance.plus({ microseconds: obj }, { overflow: 'reject' }));
 assert.sameValue(calls, 19, "it fails after fetching the primitive value");
-assert.throws(RangeError, () => instance.plus({ nanoseconds: obj }, { disambiguation: 'reject' }));
+assert.throws(RangeError, () => instance.plus({ nanoseconds: obj }, { overflow: 'reject' }));
 assert.sameValue(calls, 20, "it fails after fetching the primitive value");

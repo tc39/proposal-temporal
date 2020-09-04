@@ -208,7 +208,7 @@
         1. Let _timeZone_ be the *this* value.
         1. Perform ? RequireInternalSlot(_timeZone_, [[InitializedTemporalTimeZone]]).
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
-        1. Let _disambiguation_ be ? ToTimeZoneTemporalDisambiguation(_options_).
+        1. Let _disambiguation_ be ? ToTemporalDisambiguation(_options_).
         1. Let _possibleAbsolutes_ be ? GetPossibleAbsolutesFor(_timeZone_, _dateTime_).
         1. Let _n_ be _possibleAbsolutes_'s length.
         1. If _n_ = 1, then

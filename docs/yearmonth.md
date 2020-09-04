@@ -25,7 +25,7 @@ A `Temporal.YearMonth` can be converted into a `Temporal.Date` by combining it w
 **Returns:** a new `Temporal.YearMonth` object.
 
 Use this constructor if you have the correct parameters already as individual number values in the ISO 8601 calendar, or you are implementing a custom calendar.
-Otherwise, `Temporal.YearMonth.from()`, which accepts more kinds of input, allows months in other calendar systems, and allows disambiguation behaviour, is probably more convenient.
+Otherwise, `Temporal.YearMonth.from()`, which accepts more kinds of input, allows months in other calendar systems, and allows controlling the overflow behaviour, is probably more convenient.
 
 All values are given as reckoned in the [ISO 8601 calendar](https://en.wikipedia.org/wiki/ISO_8601#Dates).
 Together, `isoYear`, `isoMonth`, and `refISODay` must represent a valid date in that calendar, even if you are passing a different calendar as the `calendar` parameter.
@@ -49,7 +49,7 @@ ym = new Temporal.YearMonth(2019, 6)  // => 2019-06
 - `thing`: The value representing the desired month.
 - `options` (optional object): An object with properties representing options for constructing the date.
   The following options are recognized:
-  - `disambiguation` (string): How to deal with out-of-range values in `thing`.
+  - `overflow` (string): How to deal with out-of-range values in `thing`.
     Allowed values are `constrain` and `reject`.
     The default is `constrain`.
 
@@ -61,13 +61,13 @@ If the value is any other object, it must have `year` and `month` properties, an
 
 Any non-object value is converted to a string, which is expected to be in ISO 8601 format.
 Any parts of the string other than the year and the month are optional and will be ignored.
-If the string isn't valid according to ISO 8601, then a `RangeError` will be thrown regardless of the value of `disambiguation`.
+If the string isn't valid according to ISO 8601, then a `RangeError` will be thrown regardless of the value of `overflow`.
 
-The `disambiguation` option works as follows:
+The `overflow` option works as follows:
 - In `constrain` mode (the default), any out-of-range values are clamped to the nearest in-range value.
 - In `reject` mode, the presence of out-of-range values will cause the function to throw a `RangeError`.
 
-Additionally, if the result is earlier or later than the range of dates that `Temporal.YearMonth` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then this method will throw a `RangeError` regardless of `disambiguation`.
+Additionally, if the result is earlier or later than the range of dates that `Temporal.YearMonth` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then this method will throw a `RangeError` regardless of `overflow`.
 
 > **NOTE**: The allowed values for the `thing.month` property start at 1, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
 
@@ -85,14 +85,14 @@ ym = Temporal.YearMonth.from({year: 2019, month: 6});  // => 2019-06
 ym = Temporal.YearMonth.from(Temporal.Date.from('2019-06-24'));
   // => same as above; Temporal.Date has year and month properties
 
-// Different disambiguation modes
-ym = Temporal.YearMonth.from({ year: 2001, month: 13 }, { disambiguation: 'constrain' })
+// Different overflow modes
+ym = Temporal.YearMonth.from({ year: 2001, month: 13 }, { overflow: 'constrain' })
   // => 2001-12
-ym = Temporal.YearMonth.from({ year: 2001, month: -1 }, { disambiguation: 'constrain' })
+ym = Temporal.YearMonth.from({ year: 2001, month: -1 }, { overflow: 'constrain' })
   // => 2001-01
-ym = Temporal.YearMonth.from({ year: 2001, month: 13 }, { disambiguation: 'reject' })
+ym = Temporal.YearMonth.from({ year: 2001, month: 13 }, { overflow: 'reject' })
   // throws
-ym = Temporal.YearMonth.from({ year: 2001, month: -1 }, { disambiguation: 'reject' })
+ym = Temporal.YearMonth.from({ year: 2001, month: -1 }, { overflow: 'reject' })
   // throws
 ```
 
@@ -215,7 +215,7 @@ ym.with({year: 2100}).isLeapYear  // => false
 - `yearMonthLike` (object): an object with some or all of the properties of a `Temporal.YearMonth`.
 - `options` (optional object): An object with properties representing options for the operation.
   The following options are recognized:
-  - `disambiguation` (string): How to deal with out-of-range values.
+  - `overflow` (string): How to deal with out-of-range values.
     Allowed values are `constrain` and `reject`.
     The default is `constrain`.
 
@@ -225,7 +225,7 @@ This method creates a new `Temporal.YearMonth` which is a copy of `yearMonth`, b
 
 Since `Temporal.YearMonth` objects are immutable, use this method instead of modifying one.
 
-If the result is earlier or later than the range of dates that `Temporal.YearMonth` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then this method will throw a `RangeError` regardless of `disambiguation`.
+If the result is earlier or later than the range of dates that `Temporal.YearMonth` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then this method will throw a `RangeError` regardless of `overflow`.
 
 > **NOTE**: The allowed values for the `yearMonthLike.month` property start at 1, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
 
@@ -246,7 +246,7 @@ ym.with({month: 12})  // => 2019-12
 - `duration` (object): A `Temporal.Duration` object or a duration-like object.
 - `options` (optional object): An object with properties representing options for the addition.
   The following options are recognized:
-  - `disambiguation` (string): How to deal with additions that result in out-of-range values.
+  - `overflow` (string): How to deal with additions that result in out-of-range values.
     Allowed values are `constrain` and `reject`.
     The default is `constrain`.
 
@@ -256,11 +256,11 @@ This method adds `duration` to `yearMonth`, returning a month that is in the fut
 
 The `duration` argument is an object with properties denoting a duration, such as `{ months: 5 }`, or a `Temporal.Duration` object.
 
-If the result is earlier or later than the range of dates that `Temporal.YearMonth` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then this method will throw a `RangeError` regardless of `disambiguation`.
+If the result is earlier or later than the range of dates that `Temporal.YearMonth` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then this method will throw a `RangeError` regardless of `overflow`.
 
-Other than for out-of-range values, the `disambiguation` option has no effect in the default ISO calendar, because a year is always 12 months and therefore not ambiguous.
+The `overflow` option has no effect in the default ISO calendar, because a year is always 12 months and therefore not ambiguous.
 It doesn't matter in this case that years and months can be different numbers of days, as the resolution of `Temporal.YearMonth` does not distinguish days.
-However, disambiguation may have an effect in other calendars where years can be different numbers of months.
+However, `overflow` may have an effect in other calendars where years can be different numbers of months.
 
 Adding a negative duration is equivalent to subtracting the absolute value of that duration.
 
@@ -276,7 +276,7 @@ ym.plus({years: 20, months: 4})  // => 2039-10
 - `duration` (object): A `Temporal.Duration` object or a duration-like object.
 - `options` (optional object): An object with properties representing options for the subtraction.
   The following options are recognized:
-  - `disambiguation` (string): How to deal with additions that result in out-of-range values.
+  - `overflow` (string): How to deal with additions that result in out-of-range values.
     Allowed values are `constrain` and `reject`.
     The default is `constrain`.
 
@@ -286,11 +286,11 @@ This method subtracts `duration` from `yearMonth`, returning a month that is in 
 
 The `duration` argument is an object with properties denoting a duration, such as `{ months: 5 }`, or a `Temporal.Duration` object.
 
-If the result is earlier or later than the range of dates that `Temporal.YearMonth` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then this method will throw a `RangeError` regardless of `disambiguation`.
+If the result is earlier or later than the range of dates that `Temporal.YearMonth` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then this method will throw a `RangeError` regardless of `overflow`.
 
-Other than for out-of-range values, the `disambiguation` option has no effect in the default ISO calendar, because a year is always 12 months and therefore not ambiguous.
+The `overflow` option has no effect in the default ISO calendar, because a year is always 12 months and therefore not ambiguous.
 It doesn't matter in this case that years and months can be different numbers of days, as the resolution of `Temporal.YearMonth` does not distinguish days.
-However, disambiguation may have an effect in other calendars where years can be different numbers of months.
+However, `overflow` may have an effect in other calendars where years can be different numbers of months.
 
 Subtracting a negative duration is equivalent to adding the absolute value of that duration.
 

@@ -57,7 +57,7 @@ Any missing or `undefined` numerical arguments are taken to be zero, and all non
 Any non-zero arguments must all have the same sign.
 
 Use this constructor directly if you have the correct parameters already as numerical values.
-Otherwise `Temporal.Duration.from()` is probably more convenient because it accepts more kinds of input and allows disambiguation behaviour.
+Otherwise `Temporal.Duration.from()` is probably more convenient because it accepts more kinds of input and allows controlling the overflow behaviour.
 
 Usage examples:
 ```javascript
@@ -75,7 +75,7 @@ new Temporal.Duration()  // => PT0S
 - `thing`: A `Duration`-like object or a string from which to create a `Temporal.Duration`.
 - `options` (optional object): An object with properties representing options for constructing the duration.
   The following options are recognized:
-  - `disambiguation` (optional string): How to disambiguate if any of the other arguments are out of range.
+  - `overflow` (optional string): What to do if any of the other arguments are out of range.
     Allowed values are `constrain`, `balance`, and `reject`.
     The default is `constrain`.
 
@@ -88,7 +88,7 @@ Any missing ones will be assumed to be 0.
 
 Any non-object value is converted to a string, which is expected to be in ISO 8601 format.
 
-The `disambiguation` option controls how out-of-range values are interpreted:
+The `overflow` option controls how out-of-range values are interpreted:
 - `constrain` (the default): Infinite values are clamped to `Number.MAX_VALUE` or `-Number.MAX_VALUE`.
   Values higher than the next highest unit (for example, 90 minutes) are left as-is.
 - `balance`: Infinite values will cause the function to throw a `RangeError`.
@@ -97,13 +97,13 @@ The `disambiguation` option controls how out-of-range values are interpreted:
 - `reject`: Infinite values will cause the function to throw a `RangeError`.
   Values higher than the next highest unit (for example, 90 minutes) are left as-is.
 
-No matter which disambiguation mode is selected, all non-zero values must have the same sign.
+No matter which overflow mode is selected, all non-zero values must have the same sign.
 If they do not, the function will throw a `RangeError`.
 
 > **NOTE:** Years and months can have different lengths.
 In the default ISO calendar, a year can be 365 or 366 days, and a month can be 28, 29, 30, or 31 days.
 Therefore, any `Duration` object with nonzero years or months can refer to a different length of time depending on when the start date is.
-No conversion is ever performed between years, months, weeks, and days, even in `balance` disambiguation mode, because such conversion would be ambiguous.
+No conversion is ever performed between years, months, weeks, and days, even in `balance` mode, because such conversion would be ambiguous.
 
 > **NOTE:** This function understands strings where weeks and other units are combined, and strings with a single sign character at the start, which are extensions to the ISO 8601 standard described in ISO 8601-2.
 > (For example, `P3W1D` is understood to mean three weeks and one day, `-P1Y1M` is a negative duration of one year and one month, and `+P1Y1M` is one year and one month.)
@@ -125,9 +125,9 @@ d = Temporal.Duration.from({ hours: 1, minutes: -30 })  // throws
 
 // Disambiguation
 
-d = Temporal.Duration.from({ minutes: 120 }, { disambiguation: 'constrain' })  // => PT120M
-d = Temporal.Duration.from({ minutes: 120 }, { disambiguation: 'balance' })  // => PT2H
-d = Temporal.Duration.from({ minutes: 120 }, { disambiguation: 'reject' })  // => PT120M
+d = Temporal.Duration.from({ minutes: 120 }, { overflow: 'constrain' })  // => PT120M
+d = Temporal.Duration.from({ minutes: 120 }, { overflow: 'balance' })  // => PT2H
+d = Temporal.Duration.from({ minutes: 120 }, { overflow: 'reject' })  // => PT120M
 ```
 
 ## Properties
@@ -181,7 +181,7 @@ The read-only `sign` property has the value –1, 0, or 1, depending on whether 
 - `durationLike` (object): an object with some or all of the properties of a `Temporal.Duration`.
 - `options` (optional object): An object with properties representing options for the copy.
   The following options are recognized:
-  - `disambiguation` (string): How to deal with out-of-range values.
+  - `overflow` (string): How to deal with out-of-range values.
     Allowed values are `constrain`, `balance`, and `reject`.
     The default is `constrain`.
 
@@ -191,7 +191,7 @@ This method creates a new `Temporal.Duration` which is a copy of `duration`, but
 
 Since `Temporal.Duration` objects are immutable, use this method instead of modifying one.
 
-The `disambiguation` option specifies what to do with out-of-range or overly large values.
+The `overflow` option specifies what to do with out-of-range or overly large values.
 All non-zero properties of `durationLike` must have the same sign, and they must additionally have the same sign as the non-zero properties of `duration`, unless they override all of these non-zero properties.
 If a property of `durationLike` is infinity, then constrain mode will clamp it to `Number.MAX_VALUE`.
 Reject and balance modes will throw a `RangeError` in that case.
@@ -206,7 +206,7 @@ duration = Temporal.Duration.from({ months: 50, days: 50, hours: 50, minutes: 10
 let { years, months } = duration;
 years += Math.floor(months / 12);
 months %= 12;
-duration = duration.with({ years, months }, { disambiguation: 'balance' });
+duration = duration.with({ years, months }, { overflow: 'balance' });
   // => P4Y2M52DT3H40M
 ```
 
@@ -216,7 +216,7 @@ duration = duration.with({ years, months }, { disambiguation: 'balance' });
 - `other` (object): A `Temporal.Duration` object or a duration-like object.
 - `options` (optional object): An object with properties representing options for the addition.
   The following options are recognized:
-  - `disambiguation` (string): How to deal with additions that result in out-of-range values.
+  - `overflow` (string): How to deal with additions that result in out-of-range values.
     Allowed values are `constrain`, `balance`, and `reject`.
     The default is `constrain`.
 
@@ -229,16 +229,13 @@ The `other` argument is an object with properties denoting a duration, such as `
 In order to be valid, the resulting duration must not have fields with mixed signs.
 However, before the result is balanced, it's possible that the intermediate result will have one or more negative fields while the overall duration is positive, or vice versa.
 For example, "4 hours and 15 minutes" minus "2 hours and 30 minutes" results in "2 hours and &minus;15 minutes".
-The `disambiguation` argument tells what to do in this case, or in the case where the addition results in an out-of-range value:
+The `overflow` option tells what to do in this case, or in the case where the addition results in an out-of-range value:
 - In `constrain` mode (the default), additions that result in a value too large to be represented in a Number are capped at `Number.MAX_VALUE`, or `-Number.MAX_VALUE` if out of range in the other direction.
   Additions resulting in mixed-sign fields will balance those fields with the next-highest field so that all the fields of the result have the same sign.
 - In `balance` mode, if any addition results in a value too large to be represented in a Number, a `RangeError` is thrown.
   As well, all fields are balanced with the next highest field, no matter if they have mixed signs or not.
 - In `reject` mode, if any addition results in a value too large to be represented in a Number, a `RangeError` is thrown.
   Otherwise this is the same as `constrain`.
-
-The fields of the resulting duration are never converted between each other.
-If you need this behaviour, use `Duration.from()` with balance disambiguation, which will convert overly large units into the next highest unit, up to days.
 
 For usage examples and a more complete explanation of how balancing works and why it is necessary, see [Duration balancing](./balancing.md).
 
@@ -256,19 +253,17 @@ hour.plus({ minutes: 30 })  // => PT1H30M
 one = Temporal.Duration.from({ hours: 1, minutes: 30 });
 two = Temporal.Duration.from({ hours: 2, minutes: 45 });
 result = one.plus(two)  // => PT3H75M
-result.with(result, { disambiguation: 'balance' })  // => PT4H15M
+result.with(result, { overflow: 'balance' })  // => PT4H15M
 
 fifty = Temporal.Duration.from('P50Y50M50DT50H50M50.500500500S');
 result = fifty.plus(fifty)  // => P100Y100M100DT100H100M101.001001S'
-// Temporal.Duration.from(result, { disambiguation: 'balance' }); - FIXME: https://github.com/tc39/proposal-temporal/issues/232
-result.with(result, { disambiguation: 'balance' })
+Temporal.Duration.from(result, { overflow: 'balance' })
   // => P100Y100M104DT5H41M41.001001S
 
 // Example of not balancing:
 oneAndAHalfYear = Temporal.Duration.from({ years: 1, months: 6 });
 result = oneAndAHalfYear.plus(oneAndAHalfYear)  // => P2Y12M
-// Temporal.Duration.from(result, { disambiguation: 'balance' }); - FIXME: https://github.com/tc39/proposal-temporal/issues/232
-result.with(result, { disambiguation: 'balance' })  // => P2Y12M
+Temporal.Duration.from(result, { overflow: 'balance' }) // => P2Y12M
 // Example of custom conversion using ISO calendar rules:
 function monthsToYears(duration) {
     let { years, months } = duration;
@@ -286,9 +281,9 @@ monthsToYears(result)  // => P3Y
 - `other` (object): A `Temporal.Duration` object or a duration-like object.
 - `options` (optional object): An object with properties representing options for the subtraction.
   The following options are recognized:
-  - `disambiguation` (string): How to deal with subtractions that result in out-of-range values.
-    Allowed values are `balanceConstrain` and `balance`.
-    The default is `balanceConstrain`.
+  - `overflow` (string): How to deal with subtractions that result in out-of-range values.
+    Allowed values are `constrain`, `balance`, and `reject`.
+    The default is `constrain`.
 
 **Returns:** a new `Temporal.Duration` object which represents the duration of `duration` less the duration of `other`.
 
@@ -301,7 +296,7 @@ If `other` is larger than `duration` and the subtraction would result in a negat
 In order to be valid, the resulting duration must not have fields with mixed signs.
 However, before the result is balanced, it's possible that the intermediate result will have one or more negative fields while the overall duration is positive, or vice versa.
 For example, "4 hours and 15 minutes" minus "2 hours and 30 minutes" results in "2 hours and &minus;15 minutes".
-The `disambiguation` argument tells what to do in this case:
+The `overflow` argument tells what to do in this case:
 - In `constrain` mode (the default), subtractions that result in a value too large to be represented in a Number are capped at `Number.MAX_VALUE`, or `-Number.MAX_VALUE` if out of range in the other direction.
   Subtractions resulting in mixed-sign fields will balance those fields with the next-highest field so that all the fields of the result have the same sign.
 - In `balance` mode, if any subtraction results in a value too large to be represented in a Number, a `RangeError` is thrown.
@@ -321,7 +316,7 @@ hourAndAHalf.minus({ hours: 1 })  // => PT30M
 one = Temporal.Duration.from({ minutes: 180 });
 two = Temporal.Duration.from({ seconds: 30 });
 one.minus(two);  // => PT179M30S
-one.minus(two, { disambiguation: 'balance' });  // => PT2H59M30S
+one.minus(two, { overflow: 'balance' });  // => PT2H59M30S
 
 // Example of not balancing:
 threeYears = Temporal.Duration.from({ years: 3 });
@@ -402,7 +397,7 @@ d.toString();  // => PT1S
 // underlying Temporal.Duration object doesn't.
 nobal = Temporal.Duration.from({ milliseconds: 3500 });
 console.log(`${nobal}`, nobal.seconds, nobal.milliseconds);  // => PT3.500S 0 3500
-bal = Temporal.Duration.from({ milliseconds: 3500 }, { disambiguation: 'balance'});
+bal = Temporal.Duration.from({ milliseconds: 3500 }, { overflow: 'balance'});
 console.log(`${bal}`, bal.seconds, bal.milliseconds);  // => PT3.500S 3 500
 ```
 

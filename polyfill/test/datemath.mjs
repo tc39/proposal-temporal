@@ -70,11 +70,11 @@ function buildSub(one, two, largestUnits) {
   largestUnits.forEach((largestUnit) => {
     describe(`< ${one} : ${two} (${largestUnit})>`, () => {
       const dif = two.difference(one, { largestUnit });
-      const disambiguation = 'reject';
-      it(`(${one}).plus(${dif}) => ${two}`, () => assert(one.plus(dif, { disambiguation }).equals(two)));
-      it(`(${two}).minus(${dif}) => ${one}`, () => assert(two.minus(dif, { disambiguation }).equals(one)));
-      it(`(${one}).minus(-${dif}) => ${two}`, () => assert(one.minus(dif.negated(), { disambiguation }).equals(two)));
-      it(`(${two}).plus(-${dif}) => ${one}`, () => assert(two.plus(dif.negated(), { disambiguation }).equals(one)));
+      const overflow = 'reject';
+      it(`(${one}).plus(${dif}) => ${two}`, () => assert(one.plus(dif, { overflow }).equals(two)));
+      it(`(${two}).minus(${dif}) => ${one}`, () => assert(two.minus(dif, { overflow }).equals(one)));
+      it(`(${one}).minus(-${dif}) => ${two}`, () => assert(one.minus(dif.negated(), { overflow }).equals(two)));
+      it(`(${two}).plus(-${dif}) => ${one}`, () => assert(two.plus(dif.negated(), { overflow }).equals(one)));
     });
   });
 }

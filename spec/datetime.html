@@ -76,14 +76,14 @@
         The following steps are taken:
       </p>
       <emu-alg>
-        1. Let _disambiguation_ be ? ToTemporalDisambiguation(_options_).
+        1. Let _overflow_ be ? ToTemporalOverflow(_options_).
         1. If Type(_item_) is Object, then
           1. Let _result_ be ? ToTemporalDateTimeRecord(_item_).
         1. Else,
           1. Let _string_ be ? ToString(_item_).
           1. Let _result_ be ? ParseTemporalDateTimeString(_string_).
         1. Let _constructor_ be the *this* value.
-        1. Set _result_ to ? RegulateDateTime(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]], _disambiguation_).
+        1. Set _result_ to ? RegulateDateTime(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]], _overflow_).
         1. Return ? CreateTemporalDateTimeFromStatic(_constructor_, _result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]).
       </emu-alg>
     </emu-clause>
@@ -361,7 +361,7 @@
         1. Let _dateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
         1. Let _partialDateTime_ be ? ToPartialDateTime(_temporalDateTimeLike_).
-        1. Let _disambiguation_ be ? ToTemporalDisambiguation(_options_).
+        1. Let _overflow_ be ? ToTemporalOverflow(_options_).
         1. If _partialDateTime_.[[Year]] is not *undefined*, then
           1. Let _year_ be _partialDateTime_.[[Year]].
         1. Else,
@@ -398,7 +398,7 @@
           1. Let _nanosecond_ be _partialDateTime_.[[Nanosecond]].
         1. Else,
           1. Let _nanosecond_ be _dateTime_.[[Nanosecond]].
-        1. Let _result_ be ? RegulateDateTime(_year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _disambiguation_).
+        1. Let _result_ be ? RegulateDateTime(_year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _overflow_).
         1. Assert: ! ValidateDateTime(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]) is *true*.
         1. Return ? CreateTemporalDateTimeFromInstance(_dateTime_, _result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]).
       </emu-alg>
@@ -415,11 +415,11 @@
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
         1. Let _duration_ be ? ToLimitedTemporalDuration(_temporalDurationLike_, « »).
         1. Perform ? RejectDurationSign(_duration_.[[Years]], _duration.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
-        1. Let _disambiguation_ be ? ToTemporalDisambiguation(_options_).
+        1. Let _overflow_ be ? ToTemporalOverflow(_options_).
         1. Let _timePart_ be ? AddTime(_dateTime_.[[Hour]], _dateTime_.[[Minute]], _dateTime_.[[Second]], _dateTime_.[[Millisecond]], _dateTime_.[[Microsecond]], _dateTime_.[[Nanosecond]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
-        1. Let _datePart_ be ? AddDate(_dateTime_.[[ISOYear]], _dateTime_.[[ISOMonth]], _dateTime_.[[ISODay]], _duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _disambiguation_).
+        1. Let _datePart_ be ? AddDate(_dateTime_.[[ISOYear]], _dateTime_.[[ISOMonth]], _dateTime_.[[ISODay]], _duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _overflow_).
         1. Let _datePart_ be ? BalanceDate(_datePart_.[[Year]], _datePart_.[[Month]], _datePart_.[[Day]] + _timePart_.[[Day]]).
-        1. Let _result_ be ? RegulateDateTime(_datePart_.[[Year]], _datePart_.[[Month]], _datePart_.[[Day]], _timePart_.[[Hour]], _timePart_.[[Minute]], _timePart_.[[Second]], _timePart_.[[Millisecond]], _timePart_.[[Microsecond]], _timePart_.[[Nanosecond]], _disambiguation_).
+        1. Let _result_ be ? RegulateDateTime(_datePart_.[[Year]], _datePart_.[[Month]], _datePart_.[[Day]], _timePart_.[[Hour]], _timePart_.[[Minute]], _timePart_.[[Second]], _timePart_.[[Millisecond]], _timePart_.[[Microsecond]], _timePart_.[[Nanosecond]], _overflow_).
         1. Assert: ! ValidateDateTime(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]) is *true*.
         1. Return ? CreateTemporalDateTimeFromInstance(_dateTime_, _result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]).
       </emu-alg>
@@ -436,10 +436,10 @@
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
         1. Let _duration_ be ? ToLimitedTemporalDuration(_temporalDurationLike_, « »).
         1. Perform ? RejectDurationSign(_duration_.[[Years]], _duration.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
-        1. Let _disambiguation_ be ? ToTemporalDisambiguation(_options_).
+        1. Let _overflow_ be ? ToTemporalOverflow(_options_).
         1. Let _timePart_ be ? SubtractTime(_dateTime_.[[Hour]], _dateTime_.[[Minute]], _dateTime_.[[Second]], _dateTime_.[[Millisecond]], _dateTime_.[[Microsecond]], _dateTime_.[[Nanosecond]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
-        1. Let _datePart_ be ? SubtractDate(_dateTime_.[[ISOYear]], _dateTime_.[[ISOMonth]], _dateTime_.[[ISODay]], _duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]] - _timePart_.[[Day]], _disambiguation_).
-        1. Let _result_ be ? RegulateDateTime(_datePart_.[[Year]], _datePart_.[[Month]], _datePart_.[[Day]], _timePart_.[[Hour]], _timePart_.[[Minute]], _timePart_.[[Second]], _timePart_.[[Millisecond]], _timePart_.[[Microsecond]], _timePart_.[[Nanosecond]], _disambiguation_).
+        1. Let _datePart_ be ? SubtractDate(_dateTime_.[[ISOYear]], _dateTime_.[[ISOMonth]], _dateTime_.[[ISODay]], _duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]] - _timePart_.[[Day]], _overflow_).
+        1. Let _result_ be ? RegulateDateTime(_datePart_.[[Year]], _datePart_.[[Month]], _datePart_.[[Day]], _timePart_.[[Hour]], _timePart_.[[Minute]], _timePart_.[[Second]], _timePart_.[[Millisecond]], _timePart_.[[Microsecond]], _timePart_.[[Nanosecond]], _overflow_).
         1. Assert: ! ValidateDateTime(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]) is *true*.
         1. Return ? CreateTemporalDateTimeFromInstance(_dateTime_, _result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]).
       </emu-alg>
@@ -547,7 +547,7 @@
         1. Let _dateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
         1. Let _timeZone_ be ? ToTemporalTimeZone(_temporalTimeZoneLike_).
-        1. Let _disambiguation_ be ? ToTimeZoneTemporalDisambiguation(_options_).
+        1. Let _disambiguation_ be ? ToTemporalDisambiguation(_options_).
         1. Return ? GetTemporalAbsoluteFor(_timeZone_, _dateTime_, _disambiguation_).
       </emu-alg>
     </emu-clause>
@@ -776,14 +776,14 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal-regulatedatetime" aoid="RegulateDateTime">
-      <h1>RegulateDateTime ( _year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _disambiguation_ )</h1>
+      <h1>RegulateDateTime ( _year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _overflow_ )</h1>
       <emu-alg>
-        1. Assert: _disambiguation_ is one of `"constrain"`, `"balance"`, or `"reject"`.
-        1. If _disambiguation_ is `"constrain"`, then
+        1. Assert: _overflow_ is one of *"constrain"*, *"balance"*, or *"reject"*.
+        1. If _overflow_ is *"constrain"*, then
           1. Return ! ConstrainDateTime(_year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_).
-        1. If _disambiguation_ is `"balance"`, then
+        1. If _overflow_ is *"balance"*, then
           1. Return ? BalanceDateTime(_year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_).
-        1. If _disambiguation_ is `"reject"`, then
+        1. If _overflow_ is *"reject"*, then
           1. If ! ValidateDateTime(_year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_) is *false*, then
             1. Throw a *RangeError* exception.
           1. Return the Record {

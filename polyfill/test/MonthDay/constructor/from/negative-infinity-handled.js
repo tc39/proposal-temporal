@@ -8,17 +8,17 @@ esid: sec-temporal.monthday.from
 
 // constrain
 
-let result = Temporal.MonthDay.from({ month: -Infinity, day: 1 }, { disambiguation: 'constrain' });
+let result = Temporal.MonthDay.from({ month: -Infinity, day: 1 }, { overflow: 'constrain' });
 assert.sameValue(result.month, 1);
 assert.sameValue(result.day, 1);
-result = Temporal.MonthDay.from({ month: 1, day: -Infinity }, { disambiguation: 'constrain' });
+result = Temporal.MonthDay.from({ month: 1, day: -Infinity }, { overflow: 'constrain' });
 assert.sameValue(result.month, 1);
 assert.sameValue(result.day, 1);
 
 // reject
 
-assert.throws(RangeError, () => Temporal.MonthDay.from({ month: -Infinity, day: 1 }, { disambiguation: 'reject' }));
-assert.throws(RangeError, () => Temporal.MonthDay.from({ month: 1, day: -Infinity }, { disambiguation: 'reject' }));
+assert.throws(RangeError, () => Temporal.MonthDay.from({ month: -Infinity, day: 1 }, { overflow: 'reject' }));
+assert.throws(RangeError, () => Temporal.MonthDay.from({ month: 1, day: -Infinity }, { overflow: 'reject' }));
 
 let calls = 0;
 const obj = {
@@ -28,12 +28,12 @@ const obj = {
   }
 };
 
-result = Temporal.MonthDay.from({ month: obj, day: 1 }, { disambiguation: 'constrain' });
+result = Temporal.MonthDay.from({ month: obj, day: 1 }, { overflow: 'constrain' });
 assert.sameValue(calls, 1, "it fetches the primitive value");
-result = Temporal.MonthDay.from({ month: 1, day: obj }, { disambiguation: 'constrain' });
+result = Temporal.MonthDay.from({ month: 1, day: obj }, { overflow: 'constrain' });
 assert.sameValue(calls, 2, "it fetches the primitive value");
 
-assert.throws(RangeError, () => Temporal.MonthDay.from({ month: obj, day: 1 }, { disambiguation: 'reject' }));
+assert.throws(RangeError, () => Temporal.MonthDay.from({ month: obj, day: 1 }, { overflow: 'reject' }));
 assert.sameValue(calls, 3, "it fails after fetching the primitive value");
-assert.throws(RangeError, () => Temporal.MonthDay.from({ month: 1, day: obj }, { disambiguation: 'reject' }));
+assert.throws(RangeError, () => Temporal.MonthDay.from({ month: 1, day: obj }, { overflow: 'reject' }));
 assert.sameValue(calls, 4, "it fails after fetching the primitive value");

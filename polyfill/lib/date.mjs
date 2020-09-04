@@ -240,7 +240,7 @@ export class Date {
     };
   }
   static from(item, options = undefined) {
-    const disambiguation = ES.ToTemporalDisambiguation(options);
+    const overflow = ES.ToTemporalOverflow(options);
     const TemporalCalendar = GetIntrinsic('%Temporal.Calendar%');
     let result;
     if (typeof item === 'object' && item) {
@@ -258,7 +258,7 @@ export class Date {
       }
     } else {
       let { year, month, day, calendar } = ES.ParseTemporalDateString(ES.ToString(item));
-      ({ year, month, day } = ES.RegulateDate(year, month, day, disambiguation));
+      ({ year, month, day } = ES.RegulateDate(year, month, day, overflow));
       if (!calendar) calendar = GetDefaultCalendar();
       calendar = TemporalCalendar.from(calendar);
       result = new this(year, month, day, calendar);

@@ -176,7 +176,7 @@ They provide a way to construct other Temporal objects from values in the calend
 - `fields` (object): An object with properties similar to what is passed to `Temporal.Date.from()`, `Temporal.YearMonth.from()`, or `Temporal.MonthDay.from()`, respectively.
 - `options`: (object): An object with properties representing options for constructing the Temporal object.
   The following options are recognized:
-  - `disambiguation` (string): How to deal with out-of-range values in `fields`.
+  - `overflow` (string): How to deal with out-of-range values in `fields`.
     Allowed values are `constrain`, `balance`, and `reject`.
     The default is `constrain`.
 - `constructor` (function): The constructor function of the Temporal type to construct.
@@ -191,7 +191,7 @@ For example:
 ```javascript
 date = Temporal.Date.from(
     { year: 5780, month: 9, day: 6, calendar: 'hebrew' },
-    { disambiguation: 'reject' }
+    { overflow: 'reject' }
 );
 date.year        // => 5780
 date.month       // => 9
@@ -201,7 +201,7 @@ date.toString()  // => 2020-05-29[c=hebrew]
 // same result, but calling the method directly:
 date = Temporal.Calendar.from('hebrew').dateFromFields(
     { year: 5780, month: 9, day: 6 },
-    { disambiguation: 'reject' },
+    { overflow: 'reject' },
     Temporal.Date
 );
 date.year        // => 5780
@@ -222,7 +222,7 @@ They provide a way to do date arithmetic in the calendar's date reckoning.
 - `duration` (`Temporal.Duration`): A duration to add or subtract from `date`.
 - `options` (object): An object with properties representing options for performing the addition or subtraction.
   The following options are recognized:
-  - `disambiguation` (string): How to deal with out-of-range values in the result of the addition or subtraction.
+  - `overflow` (string): How to deal with out-of-range values in the result of the addition or subtraction.
     Allowed values are `constrain` and `reject`.
     The default is `constrain`.
 - `constructor` (function): The constructor function of the Temporal type to construct.
@@ -237,7 +237,7 @@ For example:
 ```javascript
 date = Temporal.Date.from('2020-05-29').withCalendar('islamic').plus(
     Temporal.Duration.from({ months: 1 }),
-    { disambiguation: 'reject' }
+    { overflow: 'reject' }
 );
 date.year        // => 1441
 date.month       // => 11
@@ -248,7 +248,7 @@ date.toString()  // => 2020-06-28[c=islamic]
 date = Temporal.Calendar.from('islamic').datePlus(
     Temporal.Date.from('2020-05-29'),
     Temporal.Duration.from({ months: 1 }),
-    { disambiguation: 'reject' },
+    { overflow: 'reject' },
     Temporal.Date
 );
 date.year        // => 1441

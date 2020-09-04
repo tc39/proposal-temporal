@@ -225,13 +225,13 @@ describe('Userland calendar', () => {
   describe('Trivial protocol implementation', () => {
     // For the purposes of testing, a nonsensical calendar that has 10-month
     // years and 10-day months, and the year zero is at the Unix epoch
-    function decimalToISO(year, month, day, disambiguation) {
-      if (disambiguation === 'constrain') {
+    function decimalToISO(year, month, day, overflow) {
+      if (overflow === 'constrain') {
         if (month < 1) month = 1;
         if (month > 10) month = 10;
         if (day < 1) day = 1;
         if (day > 10) day = 10;
-      } else if (disambiguation === 'reject') {
+      } else if (overflow === 'reject') {
         if (month < 1 || month > 10 || day < 1 || day > 10) {
           throw new RangeError('invalid value');
         }
@@ -251,18 +251,18 @@ describe('Userland calendar', () => {
     const obj = {
       id: 'decimal',
       dateFromFields(fields, options, constructor) {
-        const { disambiguation = 'constrain' } = options ? options : {};
-        const isoDate = decimalToISO(fields.year, fields.month, fields.day, disambiguation);
+        const { overflow = 'constrain' } = options ? options : {};
+        const isoDate = decimalToISO(fields.year, fields.month, fields.day, overflow);
         return new constructor(isoDate.year, isoDate.month, isoDate.day, this);
       },
       yearMonthFromFields(fields, options, constructor) {
-        const { disambiguation = 'constrain' } = options ? options : {};
-        const isoDate = decimalToISO(fields.year, fields.month, 1, disambiguation);
+        const { overflow = 'constrain' } = options ? options : {};
+        const isoDate = decimalToISO(fields.year, fields.month, 1, overflow);
         return new constructor(isoDate.year, isoDate.month, this, isoDate.day);
       },
       monthDayFromFields(fields, options, constructor) {
-        const { disambiguation = 'constrain' } = options ? options : {};
-        const isoDate = decimalToISO(0, fields.month, fields.day, disambiguation);
+        const { overflow = 'constrain' } = options ? options : {};
+        const isoDate = decimalToISO(0, fields.month, fields.day, overflow);
         return new constructor(isoDate.month, isoDate.day, this, isoDate.year);
       },
       year(date) {
