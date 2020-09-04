@@ -778,11 +778,9 @@
     <emu-clause id="sec-temporal-regulatedatetime" aoid="RegulateDateTime">
       <h1>RegulateDateTime ( _year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _overflow_ )</h1>
       <emu-alg>
-        1. Assert: _overflow_ is one of *"constrain"*, *"balance"*, or *"reject"*.
+        1. Assert: _overflow_ is one of *"constrain"* or *"reject"*.
         1. If _overflow_ is *"constrain"*, then
           1. Return ! ConstrainDateTime(_year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_).
-        1. If _overflow_ is *"balance"*, then
-          1. Return ? BalanceDateTime(_year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_).
         1. If _overflow_ is *"reject"*, then
           1. If ! ValidateDateTime(_year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_) is *false*, then
             1. Throw a *RangeError* exception.
