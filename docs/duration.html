@@ -260,9 +260,8 @@ For more detailed information, see the ISO 8601 standard or the <a href="https:/
 </tr>
 </tbody></table>
 <blockquote>
-<p><strong>NOTE:</strong> According to the ISO 8601 standard, weeks are not allowed to appear together with any other units, and durations can only be positive.
-As an extension to the standard, ISO 8601-2 allows a sign character at the start of the string.
-As an additional extension, Temporal supports combining weeks with other units.
+<p><strong>NOTE:</strong> According to the ISO 8601-1 standard, weeks are not allowed to appear together with any other units, and durations can only be positive.
+As extensions to the standard, ISO 8601-2 allows a sign character at the start of the string, and allows combining weeks with other units.
 If you intend to use a string such as <strong>P3W1D</strong>, <strong>+P1M</strong>, or <strong>-P1M</strong> for interoperability, note that other programs may not accept it.</p>
 </blockquote>
 <h2 id="constructor">Constructor</h2>
@@ -326,12 +325,8 @@ Therefore, any <code>Duration</code> object with nonzero years or months can ref
 No conversion is ever performed between years, months, weeks, and days, even in <code>balance</code> disambiguation mode, because such conversion would be ambiguous.</p>
 </blockquote>
 <blockquote>
-<p><strong>NOTE:</strong> This function understands strings where weeks and other units are combined, which are technically not valid ISO 8601 strings.
-(For example, <code>P3W1D</code> is understood to mean three weeks and one day, although it is not valid according to ISO 8601.)</p>
-</blockquote>
-<blockquote>
-<p><strong>NOTE:</strong> This function understands a single sign character at the start of a string, which is an extension to the ISO 8601 standard described in ISO 8601-2.
-(For example, <code>-P1Y1M</code> is a negative duration of one year and one month, and <code>+P1Y1M</code> is one year and one month.)
+<p><strong>NOTE:</strong> This function understands strings where weeks and other units are combined, and strings with a single sign character at the start, which are extensions to the ISO 8601 standard described in ISO 8601-2.
+(For example, <code>P3W1D</code> is understood to mean three weeks and one day, <code>-P1Y1M</code> is a negative duration of one year and one month, and <code>+P1Y1M</code> is one year and one month.)
 If no sign character is present, then the sign is assumed to be positive.</p>
 </blockquote>
 <p>Usage examples:</p>
@@ -527,10 +522,6 @@ Object<span class="token punctuation">.</span><span class="token function">assig
 <blockquote>
 <p><strong>NOTE</strong>: If any of <code>duration.milliseconds</code>, <code>duration.microseconds</code>, or <code>duration.nanoseconds</code> are over 999, then deserializing from the result of <code>duration.toString()</code> will yield an equal but different object.
 See <a href="./balancing.html#serialization">Duration balancing</a> for more information.</p>
-</blockquote>
-<blockquote>
-<p><strong>NOTE</strong>: The output of <code>duration.toString()</code> may combine weeks with other units, which is technically invalid according to ISO 8601.
-(For example, <code>P3W</code> for three weeks is valid, but <code>P3W1D</code> for three weeks and one day is not.)</p>
 </blockquote>
 <p>Usage examples:</p>
 <pre class="language-javascript"><code class="language-javascript">d <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Duration<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> years<span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">,</span> days<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
