@@ -85,6 +85,7 @@ overrides:
       - polyfill/test/Date/**/*.js
       - polyfill/test/DateTime/**/*.js
       - polyfill/test/Duration/**/*.js
+      - polyfill/test/ISO8601Calendar/**/*.js
       - polyfill/test/MonthDay/**/*.js
       - polyfill/test/Temporal/**/*.js
       - polyfill/test/Time/**/*.js

@@ -13,7 +13,7 @@
       <p>An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the *GetBuiltinCalendar* abstract operation as specified in the ECMA-402 specification. If an ECMAScript implementation does not include the ECMA-402 API the following specification of the *GetBuiltinCalendar* abstract operation is used.</p>
       <emu-alg>
         1. If _id_ is not *"iso8601"*, throw a *RangeError* exception.
-        1. Return ? Construct(%ISO8601Calendar%, « »).
+        1. Return ? Construct(%Temporal.ISO8601Calendar%, « »).
       </emu-alg>
     </emu-clause>
 

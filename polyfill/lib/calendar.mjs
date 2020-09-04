@@ -114,7 +114,7 @@ export class Calendar {
 MakeIntrinsicClass(Calendar, 'Temporal.Calendar');
 DefineIntrinsic('Temporal.Calendar.from', Calendar.from);
 
-class ISO8601 extends Calendar {
+class ISO8601Calendar extends Calendar {
   constructor(id = 'iso8601') {
     // Needs to be subclassable, that's why the ID is a default argument
     super(id);
@@ -231,10 +231,12 @@ class ISO8601 extends Calendar {
   }
 }
 
+MakeIntrinsicClass(ISO8601Calendar, 'Temporal.ISO8601Calendar');
+
 // According to documentation for Intl.Locale.prototype.calendar on MDN,
 // 'iso8601' calendar is equivalent to 'gregory' except for ISO 8601 week
 // numbering rules, which we do not currently use in Temporal.
-class Gregorian extends ISO8601 {
+class Gregorian extends ISO8601Calendar {
   constructor() {
     super('gregory');
   }
@@ -302,7 +304,7 @@ const jpn = {
   }
 };
 
-class Japanese extends ISO8601 {
+class Japanese extends ISO8601Calendar {
   constructor() {
     super('japanese');
   }
@@ -331,7 +333,7 @@ class Japanese extends ISO8601 {
 
 const BUILTIN_CALENDARS = {
   gregory: Gregorian,
-  iso8601: ISO8601,
+  iso8601: ISO8601Calendar,
   japanese: Japanese
   // To be filled in as builtin calendars are implemented
 };
