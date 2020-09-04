@@ -10,13 +10,13 @@ Take, for example, a duration of 100 seconds: `Temporal.Duration.from({ seconds:
 100 seconds is equal to 1 minute and 40 seconds. Instead of clipping this to 59 seconds it's more likely that we would want to "balance" it, wrapping 60 seconds around to 0 to make 1 minute and 40 seconds.
 However, it's an equally valid use case to want to track the duration of something in seconds only, and not balance the duration to 1 minute and 40 seconds.
 
-What is done with the duration depends on the `disambiguation` option when creating the `Temporal.Duration` object.
+What is done with the duration depends on the `overflow` option when creating the `Temporal.Duration` object.
 Unlike with the other Temporal types, constrain mode doesn't clip the seconds value to 59, and reject mode doesn't throw.
 They just leave the value as it is.
 Balance mode lets you opt in to the balancing behaviour:
 
 ```javascript
-d = Temporal.Duration.from({ seconds: 100 }, { disambiguation: 'balance' });
+d = Temporal.Duration.from({ seconds: 100 }, { overflow: 'balance' });
 d.minutes  // => 1
 d.seconds  // => 40
 ```
@@ -28,7 +28,7 @@ No balancing is ever performed between years, months, and days, because such con
 If you need such a conversion, you must implement it yourself, since the rules can depend on the start date and the calendar in use.
 
 `Temporal.Duration` fields are not allowed to have mixed signs.
-For example, passing one positive and one negative argument to `new Temporal.Duration()` or as properties in the object passed to `Temporal.Duration.from()` will always throw an exception, regardless of the disambiguation mode.
+For example, passing one positive and one negative argument to `new Temporal.Duration()` or as properties in the object passed to `Temporal.Duration.from()` will always throw an exception, regardless of the overflow option.
 
 Therefore, the only case where constrain and reject mode have any effect when creating a duration, is integer overflow.
 If one of the values overflows, constrain mode will cap it to `Number.MAX_VALUE` or `-Number.MAX_VALUE`.
@@ -49,7 +49,7 @@ It could further be balanced into 1 hour, 29 minutes, and 30 seconds.
 However, that would likely conflict with the intention of having a duration of 90 minutes in the first place, so this should be behaviour that the Temporal user opts in to.
 Here, we make a distinction between "necessary balancing" and "optional balancing".
 
-In order to accommodate this, the `disambiguation` option when performing arithmetic on `Temporal.Duration`s is different from all the other arithmetic methods' disambiguation options.
+In order to accommodate this, the `overflow` option when performing arithmetic on `Temporal.Duration`s is different from all the other arithmetic methods' overflow options.
 Necessary balancing is called `constrain` mode, because values are constrained to be non-negative through balancing.
 Optional balancing is called `balance` mode.
 The usual `reject` mode is also available, and does the same thing as `constrain` but throws on integer overflow.
@@ -58,11 +58,11 @@ The default is `constrain` mode.
 The `balance` mode is only provided for convenience, since the following code snippets give the same result:
 
 ```javascript
-duration3 = duration1.minus(duration2, { disambiguation: 'balance' });
+duration3 = duration1.minus(duration2, { overflow: 'balance' });
 
 tmp = duration1.minus(duration2);
-// duration3 = Temporal.Duration.from(tmp, { disambiguation: 'balance' }); - FIXME: https://github.com/tc39/proposal-temporal/issues/232
-duration3 = tmp.with(tmp, { disambiguation: 'balance' });
+duration3 = Temporal.Duration.from(tmp, { overflow: 'balance' });
+duration3 = tmp.with(tmp, { overflow: 'balance' });
 ```
 
 Here are some more examples of what each mode does:
@@ -71,44 +71,44 @@ Here are some more examples of what each mode does:
 // Simple, no balancing possible
 one = Temporal.Duration.from({ hours: 3 });
 two = Temporal.Duration.from({ hours: 1 });
-one.minus(two);                                 // => PT2H
-one.minus(two, { disambiguation: 'balance' });  // => PT2H
+one.minus(two);                           // => PT2H
+one.minus(two, { overflow: 'balance' });  // => PT2H
 
 // Balancing possible but not necessary
 one = Temporal.Duration.from({ minutes: 180 });
 two = Temporal.Duration.from({ minutes: 60 });
-one.minus(two);                                 // => PT120M
-one.minus(two, { disambiguation: 'balance' });  // => PT2H
+one.minus(two);                           // => PT120M
+one.minus(two, { overflow: 'balance' });  // => PT2H
 
 // Some balancing necessary, more balancing possible
 one = Temporal.Duration.from({ minutes: 180 });
 two = Temporal.Duration.from({ seconds: 30 });
-one.minus(two);                                 // => PT179M30S
-one.minus(two, { disambiguation: 'balance' });  // => PT2H59M30S
+one.minus(two);                           // => PT179M30S
+one.minus(two, { overflow: 'balance' });  // => PT2H59M30S
 
 // Balancing necessary, result is positive
 one = Temporal.Duration.from({ hours: 4, minutes: 15 });
 two = Temporal.Duration.from({ hours: 2, minutes: 30 });
-one.minus(two);                                 // => PT1H45M
-one.minus(two, { disambiguation: 'balance' });  // => PT1H45M
+one.minus(two);                           // => PT1H45M
+one.minus(two, { overflow: 'balance' });  // => PT1H45M
 
 // Result is negative
 one = Temporal.Duration.from({ hours: 2, minutes: 30 });
 two = Temporal.Duration.from({ hours: 3 });
-one.minus(two);                                 // -PT30M
-one.minus(two, { disambiguation: 'balance' });  // -PT30M
+one.minus(two);                           // -PT30M
+one.minus(two, { overflow: 'balance' });  // -PT30M
 
 // Unbalanceable units, but also no balancing possible
 one = Temporal.Duration.from({ months: 3, days: 15 });
 two = Temporal.Duration.from({ days: 10 });
-one.minus(two);                                 // => P3M5D
-one.minus(two, { disambiguation: 'balance' });  // => P3M5D
+one.minus(two);                           // => P3M5D
+one.minus(two, { overflow: 'balance' });  // => P3M5D
 
 // Result is in theory positive in the ISO calendar, but unbalanceable units
 one = Temporal.Duration.from({ months: 3, days: 15 });
 two = Temporal.Duration.from({ days: 30 });
-one.minus(two);                                 // throws
-one.minus(two, { disambiguation: 'balance' });  // throws
+one.minus(two);                           // throws
+one.minus(two, { overflow: 'balance' });  // throws
 ```
 
 ## Serialization

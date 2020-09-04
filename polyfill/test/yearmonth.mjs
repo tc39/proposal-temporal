@@ -113,17 +113,17 @@ describe('YearMonth', () => {
           equal(`${YearMonth.from({ year: 1976, month: 11 }, options)}`, '1976-11')
         );
       });
-      describe('Disambiguation', () => {
+      describe('Overflow', () => {
         const bad = { year: 2019, month: 13 };
-        it('reject', () => throws(() => YearMonth.from(bad, { disambiguation: 'reject' }), RangeError));
+        it('reject', () => throws(() => YearMonth.from(bad, { overflow: 'reject' }), RangeError));
         it('constrain', () => {
           equal(`${YearMonth.from(bad)}`, '2019-12');
-          equal(`${YearMonth.from(bad, { disambiguation: 'constrain' })}`, '2019-12');
+          equal(`${YearMonth.from(bad, { overflow: 'constrain' })}`, '2019-12');
         });
-        it('throw when bad disambiguation', () => {
+        it('throw on bad overflow', () => {
           [new YearMonth(2019, 1), { year: 2019, month: 1 }, '2019-01'].forEach((input) => {
-            ['', 'CONSTRAIN', 'balance', 3, null].forEach((disambiguation) =>
-              throws(() => YearMonth.from(input, { disambiguation }), RangeError)
+            ['', 'CONSTRAIN', 'balance', 3, null].forEach((overflow) =>
+              throws(() => YearMonth.from(input, { overflow }), RangeError)
             );
           });
         });
@@ -242,13 +242,13 @@ describe('YearMonth', () => {
     const ym = YearMonth.from('2019-11');
     it('(2019-11) plus 2 months === 2020-01', () => {
       equal(`${ym.plus({ months: 2 })}`, '2020-01');
-      equal(`${ym.plus({ months: 2 }, { disambiguation: 'constrain' })}`, '2020-01');
-      equal(`${ym.plus({ months: 2 }, { disambiguation: 'reject' })}`, '2020-01');
+      equal(`${ym.plus({ months: 2 }, { overflow: 'constrain' })}`, '2020-01');
+      equal(`${ym.plus({ months: 2 }, { overflow: 'reject' })}`, '2020-01');
     });
     it('(2019-11) plus 1 year === 2020-11', () => {
       equal(`${ym.plus({ years: 1 })}`, '2020-11');
-      equal(`${ym.plus({ years: 1 }, { disambiguation: 'constrain' })}`, '2020-11');
-      equal(`${ym.plus({ years: 1 }, { disambiguation: 'reject' })}`, '2020-11');
+      equal(`${ym.plus({ years: 1 }, { overflow: 'constrain' })}`, '2020-11');
+      equal(`${ym.plus({ years: 1 }, { overflow: 'reject' })}`, '2020-11');
     });
     it('symmetrical with regard to negative durations', () => {
       equal(`${YearMonth.from('2020-01').plus({ months: -2 })}`, '2019-11');
@@ -289,14 +289,14 @@ describe('YearMonth', () => {
       equal(`${YearMonth.from('2020-01').plus({ days: 30 })}`, '2020-01');
       equal(`${YearMonth.from('2020-01').plus({ days: 31 })}`, '2020-02');
     });
-    it('invalid disambiguation', () => {
-      ['', 'CONSTRAIN', 'balance', 3, null].forEach((disambiguation) =>
-        throws(() => ym.plus({ months: 1 }, { disambiguation }), RangeError)
+    it('invalid overflow', () => {
+      ['', 'CONSTRAIN', 'balance', 3, null].forEach((overflow) =>
+        throws(() => ym.plus({ months: 1 }, { overflow }), RangeError)
       );
     });
     it('mixed positive and negative values always throw', () => {
-      ['constrain', 'reject'].forEach((disambiguation) =>
-        throws(() => ym.plus({ years: 1, months: -6 }, { disambiguation }), RangeError)
+      ['constrain', 'reject'].forEach((overflow) =>
+        throws(() => ym.plus({ years: 1, months: -6 }, { overflow }), RangeError)
       );
     });
     it('options may only be an object or undefined', () => {
@@ -310,13 +310,13 @@ describe('YearMonth', () => {
     const ym = YearMonth.from('2019-11');
     it('(2019-11) minus 11 months === 2018-12', () => {
       equal(`${ym.minus({ months: 11 })}`, '2018-12');
-      equal(`${ym.minus({ months: 11 }, { disambiguation: 'constrain' })}`, '2018-12');
-      equal(`${ym.minus({ months: 11 }, { disambiguation: 'reject' })}`, '2018-12');
+      equal(`${ym.minus({ months: 11 }, { overflow: 'constrain' })}`, '2018-12');
+      equal(`${ym.minus({ months: 11 }, { overflow: 'reject' })}`, '2018-12');
     });
     it('(2019-11) minus 12 years === 2007-11', () => {
       equal(`${ym.minus({ years: 12 })}`, '2007-11');
-      equal(`${ym.minus({ years: 12 }, { disambiguation: 'constrain' })}`, '2007-11');
-      equal(`${ym.minus({ years: 12 }, { disambiguation: 'reject' })}`, '2007-11');
+      equal(`${ym.minus({ years: 12 }, { overflow: 'constrain' })}`, '2007-11');
+      equal(`${ym.minus({ years: 12 }, { overflow: 'reject' })}`, '2007-11');
     });
     it('symmetrical with regard to negative durations', () => {
       equal(`${YearMonth.from('2018-12').minus({ months: -11 })}`, '2019-11');
@@ -356,14 +356,14 @@ describe('YearMonth', () => {
       equal(`${YearMonth.from('2020-01').minus({ days: 30 })}`, '2020-01');
       equal(`${YearMonth.from('2020-01').minus({ days: 31 })}`, '2019-12');
     });
-    it('invalid disambiguation', () => {
-      ['', 'CONSTRAIN', 'balance', 3, null].forEach((disambiguation) =>
-        throws(() => ym.minus({ months: 1 }, { disambiguation }), RangeError)
+    it('invalid overflow', () => {
+      ['', 'CONSTRAIN', 'balance', 3, null].forEach((overflow) =>
+        throws(() => ym.minus({ months: 1 }, { overflow }), RangeError)
       );
     });
     it('mixed positive and negative values always throw', () => {
-      ['constrain', 'reject'].forEach((disambiguation) =>
-        throws(() => ym.minus({ years: 1, months: -6 }, { disambiguation }), RangeError)
+      ['constrain', 'reject'].forEach((overflow) =>
+        throws(() => ym.minus({ years: 1, months: -6 }, { overflow }), RangeError)
       );
     });
     it('options may only be an object or undefined', () => {
@@ -383,18 +383,18 @@ describe('YearMonth', () => {
     it('constructing from property bag', () => {
       const tooEarly = { year: -271821, month: 3 };
       const tooLate = { year: 275760, month: 10 };
-      ['reject', 'constrain'].forEach((disambiguation) => {
+      ['reject', 'constrain'].forEach((overflow) => {
         [tooEarly, tooLate].forEach((props) => {
-          throws(() => YearMonth.from(props, { disambiguation }), RangeError);
+          throws(() => YearMonth.from(props, { overflow }), RangeError);
         });
       });
       equal(`${YearMonth.from({ year: -271821, month: 4 })}`, '-271821-04');
       equal(`${YearMonth.from({ year: 275760, month: 9 })}`, '+275760-09');
     });
     it('constructing from ISO string', () => {
-      ['reject', 'constrain'].forEach((disambiguation) => {
+      ['reject', 'constrain'].forEach((overflow) => {
         ['-271821-03', '+275760-10'].forEach((str) => {
-          throws(() => YearMonth.from(str, { disambiguation }), RangeError);
+          throws(() => YearMonth.from(str, { overflow }), RangeError);
         });
       });
       equal(`${YearMonth.from('-271821-04')}`, '-271821-04');
@@ -409,16 +409,16 @@ describe('YearMonth', () => {
     it('adding and subtracting beyond limit', () => {
       const min = YearMonth.from('-271821-04');
       const max = YearMonth.from('+275760-09');
-      ['reject', 'constrain'].forEach((disambiguation) => {
-        throws(() => min.minus({ months: 1 }, { disambiguation }), RangeError);
-        throws(() => max.plus({ months: 1 }, { disambiguation }), RangeError);
+      ['reject', 'constrain'].forEach((overflow) => {
+        throws(() => min.minus({ months: 1 }, { overflow }), RangeError);
+        throws(() => max.plus({ months: 1 }, { overflow }), RangeError);
       });
     });
   });
   describe('YearMonth.with()', () => {
-    it('throws on bad disambiguation', () => {
-      ['', 'CONSTRAIN', 'balance', 3, null].forEach((disambiguation) =>
-        throws(() => YearMonth.from({ year: 2019, month: 1 }).with({ month: 2 }, { disambiguation }), RangeError)
+    it('throws on bad overflow', () => {
+      ['', 'CONSTRAIN', 'balance', 3, null].forEach((overflow) =>
+        throws(() => YearMonth.from({ year: 2019, month: 1 }).with({ month: 2 }, { overflow }), RangeError)
       );
     });
   });

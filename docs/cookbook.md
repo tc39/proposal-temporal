@@ -410,7 +410,7 @@ Here are some examples of taking an existing date, and adjusting the day of the 
 
 Likewise, here are some examples of taking an existing date and adjusting the month, but keeping the day and year the same.
 
-Depending on the behaviour you want, you will need to pick the right `disambiguation` option, but the default of `"constrain"` should be correct for most cases.
+Depending on the behaviour you want, you will need to pick the right `overflow` option, but the default of `"constrain"` should be correct for most cases.
 
 ```javascript
 {{cookbook/adjustMonth.mjs}}

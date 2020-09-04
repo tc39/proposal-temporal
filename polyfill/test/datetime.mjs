@@ -288,9 +288,9 @@ describe('DateTime', () => {
       const ym = Temporal.YearMonth.from('1977-10');
       equal(`${datetime.with(ym)}`, '1977-10-18T15:23:30.123456789');
     });
-    it('invalid disambiguation', () => {
-      ['', 'CONSTRAIN', 'balance', 3, null].forEach((disambiguation) =>
-        throws(() => datetime.with({ day: 5 }, { disambiguation }), RangeError)
+    it('invalid overflow', () => {
+      ['', 'CONSTRAIN', 'balance', 3, null].forEach((overflow) =>
+        throws(() => datetime.with({ day: 5 }, { overflow }), RangeError)
       );
     });
     it('options may only be an object or undefined', () => {
@@ -373,23 +373,23 @@ describe('DateTime', () => {
     const jan31 = DateTime.from('2020-01-31T15:00');
     it('constrain when ambiguous result', () => {
       equal(`${jan31.plus({ months: 1 })}`, '2020-02-29T15:00');
-      equal(`${jan31.plus({ months: 1 }, { disambiguation: 'constrain' })}`, '2020-02-29T15:00');
+      equal(`${jan31.plus({ months: 1 }, { overflow: 'constrain' })}`, '2020-02-29T15:00');
     });
     it('symmetrical with regard to negative durations in the time part', () => {
       equal(`${jan31.plus({ minutes: -30 })}`, '2020-01-31T14:30');
       equal(`${jan31.plus({ seconds: -30 })}`, '2020-01-31T14:59:30');
     });
     it('throw when ambiguous result with reject', () => {
-      throws(() => jan31.plus({ months: 1 }, { disambiguation: 'reject' }), RangeError);
+      throws(() => jan31.plus({ months: 1 }, { overflow: 'reject' }), RangeError);
     });
-    it('invalid disambiguation', () => {
-      ['', 'CONSTRAIN', 'balance', 3, null].forEach((disambiguation) =>
-        throws(() => DateTime.from('2019-11-18T15:00').plus({ months: 1 }, { disambiguation }), RangeError)
+    it('invalid overflow', () => {
+      ['', 'CONSTRAIN', 'balance', 3, null].forEach((overflow) =>
+        throws(() => DateTime.from('2019-11-18T15:00').plus({ months: 1 }, { overflow }), RangeError)
       );
     });
     it('mixed positive and negative values always throw', () => {
-      ['constrain', 'reject'].forEach((disambiguation) =>
-        throws(() => jan31.plus({ hours: 1, minutes: -30 }, { disambiguation }), RangeError)
+      ['constrain', 'reject'].forEach((overflow) =>
+        throws(() => jan31.plus({ hours: 1, minutes: -30 }, { overflow }), RangeError)
       );
     });
     it('options may only be an object or undefined', () => {
@@ -403,23 +403,23 @@ describe('DateTime', () => {
     const mar31 = DateTime.from('2020-03-31T15:00');
     it('constrain when ambiguous result', () => {
       equal(`${mar31.minus({ months: 1 })}`, '2020-02-29T15:00');
-      equal(`${mar31.minus({ months: 1 }, { disambiguation: 'constrain' })}`, '2020-02-29T15:00');
+      equal(`${mar31.minus({ months: 1 }, { overflow: 'constrain' })}`, '2020-02-29T15:00');
     });
     it('symmetrical with regard to negative durations in the time part', () => {
       equal(`${mar31.minus({ minutes: -30 })}`, '2020-03-31T15:30');
       equal(`${mar31.minus({ seconds: -30 })}`, '2020-03-31T15:00:30');
     });
     it('throw when ambiguous result with reject', () => {
-      throws(() => mar31.minus({ months: 1 }, { disambiguation: 'reject' }), RangeError);
+      throws(() => mar31.minus({ months: 1 }, { overflow: 'reject' }), RangeError);
     });
-    it('invalid disambiguation', () => {
-      ['', 'CONSTRAIN', 'balance', 3, null].forEach((disambiguation) =>
-        throws(() => DateTime.from('2019-11-18T15:00').minus({ months: 1 }, { disambiguation }), RangeError)
+    it('invalid overflow', () => {
+      ['', 'CONSTRAIN', 'balance', 3, null].forEach((overflow) =>
+        throws(() => DateTime.from('2019-11-18T15:00').minus({ months: 1 }, { overflow }), RangeError)
       );
     });
     it('mixed positive and negative values always throw', () => {
-      ['constrain', 'reject'].forEach((disambiguation) =>
-        throws(() => mar31.plus({ hours: 1, minutes: -30 }, { disambiguation }), RangeError)
+      ['constrain', 'reject'].forEach((overflow) =>
+        throws(() => mar31.plus({ hours: 1, minutes: -30 }, { overflow }), RangeError)
       );
     });
     it('options may only be an object or undefined', () => {
@@ -529,22 +529,22 @@ describe('DateTime', () => {
     });
     it('DateTime.from(number) is converted to string', () =>
       assert(DateTime.from(19761118).equals(DateTime.from('19761118'))));
-    describe('Disambiguation', () => {
+    describe('Overflow', () => {
       const bad = { year: 2019, month: 1, day: 32 };
-      it('reject', () => throws(() => DateTime.from(bad, { disambiguation: 'reject' }), RangeError));
+      it('reject', () => throws(() => DateTime.from(bad, { overflow: 'reject' }), RangeError));
       it('constrain', () => {
         equal(`${DateTime.from(bad)}`, '2019-01-31T00:00');
-        equal(`${DateTime.from(bad, { disambiguation: 'constrain' })}`, '2019-01-31T00:00');
+        equal(`${DateTime.from(bad, { overflow: 'constrain' })}`, '2019-01-31T00:00');
       });
-      it('throw when bad disambiguation', () => {
+      it('throw when bad overflow', () => {
         [new DateTime(1976, 11, 18, 15, 23), { year: 2019, month: 1, day: 1 }, '2019-01-31T00:00'].forEach((input) => {
-          ['', 'CONSTRAIN', 'balance', 3, null].forEach((disambiguation) =>
-            throws(() => DateTime.from(input, { disambiguation }), RangeError)
+          ['', 'CONSTRAIN', 'balance', 3, null].forEach((overflow) =>
+            throws(() => DateTime.from(input, { overflow }), RangeError)
           );
         });
       });
       const leap = { year: 2016, month: 12, day: 31, hour: 23, minute: 59, second: 60 };
-      it('reject leap second', () => throws(() => DateTime.from(leap, { disambiguation: 'reject' }), RangeError));
+      it('reject leap second', () => throws(() => DateTime.from(leap, { overflow: 'reject' }), RangeError));
       it('constrain leap second', () => equal(`${DateTime.from(leap)}`, '2016-12-31T23:59:59'));
     });
     it('variant time separators', () => {
@@ -668,9 +668,9 @@ describe('DateTime', () => {
     it('constructing from property bag', () => {
       const tooEarly = { year: -271821, month: 4, day: 19 };
       const tooLate = { year: 275760, month: 9, day: 14 };
-      ['reject', 'constrain'].forEach((disambiguation) => {
+      ['reject', 'constrain'].forEach((overflow) => {
         [tooEarly, tooLate].forEach((props) => {
-          throws(() => DateTime.from(props, { disambiguation }), RangeError);
+          throws(() => DateTime.from(props, { overflow }), RangeError);
         });
       });
       equal(
@@ -693,9 +693,9 @@ describe('DateTime', () => {
       );
     });
     it('constructing from ISO string', () => {
-      ['reject', 'constrain'].forEach((disambiguation) => {
+      ['reject', 'constrain'].forEach((overflow) => {
         ['-271821-04-19T00:00', '+275760-09-14T00:00'].forEach((str) => {
-          throws(() => DateTime.from(str, { disambiguation }), RangeError);
+          throws(() => DateTime.from(str, { overflow }), RangeError);
         });
       });
       equal(`${DateTime.from('-271821-04-19T00:00:00.000000001')}`, '-271821-04-19T00:00:00.000000001');
@@ -723,9 +723,9 @@ describe('DateTime', () => {
     it('adding and subtracting beyond limit', () => {
       const min = DateTime.from('-271821-04-19T00:00:00.000000001');
       const max = DateTime.from('+275760-09-13T23:59:59.999999999');
-      ['reject', 'constrain'].forEach((disambiguation) => {
-        throws(() => min.minus({ nanoseconds: 1 }, { disambiguation }), RangeError);
-        throws(() => max.plus({ nanoseconds: 1 }, { disambiguation }), RangeError);
+      ['reject', 'constrain'].forEach((overflow) => {
+        throws(() => min.minus({ nanoseconds: 1 }, { overflow }), RangeError);
+        throws(() => max.plus({ nanoseconds: 1 }, { overflow }), RangeError);
       });
     });
   });

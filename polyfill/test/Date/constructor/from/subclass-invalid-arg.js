@@ -14,5 +14,5 @@ class MyDate extends Temporal.Date {
   }
 }
 
-assert.throws(RangeError, () => MyDate.from({ year: 2020, month: 13, day: 1 }, { disambiguation: "reject" }));
+assert.throws(RangeError, () => MyDate.from({ year: 2020, month: 13, day: 1 }, { overflow: "reject" }));
 assert.sameValue(called, false);

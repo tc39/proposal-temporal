@@ -9,7 +9,7 @@ const unbalanced = Temporal.Duration.from({ milliseconds: 1000 });
 assert.sameValue(unbalanced.seconds, 0);
 assert.sameValue(unbalanced.milliseconds, 1000);
 
-const balanced = Temporal.Duration.from(unbalanced, { disambiguation: "balance" });
+const balanced = Temporal.Duration.from(unbalanced, { overflow: "balance" });
 assert.notSameValue(balanced, unbalanced);
 assert.sameValue(unbalanced.seconds, 0);
 assert.sameValue(unbalanced.milliseconds, 1000);

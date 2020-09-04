@@ -14,6 +14,6 @@ class MyDuration extends Temporal.Duration {
   }
 }
 
-assert.throws(RangeError, () => MyDuration.from({ years: Infinity }, { disambiguation: "reject" }));
-assert.throws(RangeError, () => MyDuration.from({ days: -Infinity }, { disambiguation: "reject" }));
+assert.throws(RangeError, () => MyDuration.from({ years: Infinity }, { overflow: "reject" }));
+assert.throws(RangeError, () => MyDuration.from({ days: -Infinity }, { overflow: "reject" }));
 assert.sameValue(called, false);

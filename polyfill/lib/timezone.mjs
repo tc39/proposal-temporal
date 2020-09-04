@@ -90,7 +90,7 @@ export class TimeZone {
   }
   getAbsoluteFor(dateTime, options) {
     if (!ES.IsTemporalDateTime(dateTime)) throw new TypeError('invalid DateTime object');
-    const disambiguation = ES.ToTimeZoneTemporalDisambiguation(options);
+    const disambiguation = ES.ToTemporalDisambiguation(options);
 
     const Absolute = GetIntrinsic('%Temporal.Absolute%');
     const possibleAbsolutes = this.getPossibleAbsolutesFor(dateTime);

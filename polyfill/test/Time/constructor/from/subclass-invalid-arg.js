@@ -14,6 +14,6 @@ class MyTime extends Temporal.Time {
   }
 }
 
-assert.throws(RangeError, () => MyTime.from("23:61", { disambiguation: "reject" }));
-assert.throws(RangeError, () => MyTime.from("24:01", { disambiguation: "reject" }));
+assert.throws(RangeError, () => MyTime.from("23:61", { overflow: "reject" }));
+assert.throws(RangeError, () => MyTime.from("24:01", { overflow: "reject" }));
 assert.sameValue(called, false);

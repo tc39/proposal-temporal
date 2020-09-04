@@ -17,7 +17,7 @@ export namespace Temporal {
      *
      * The default is `'constrain'`.
      */
-    disambiguation: 'constrain' | 'reject';
+    overflow: 'constrain' | 'reject';
   };
 
   /**
@@ -38,7 +38,7 @@ export namespace Temporal {
      *
      * The default is `'constrain'`.
      */
-    disambiguation: 'constrain' | 'balance' | 'reject';
+    overflow: 'constrain' | 'balance' | 'reject';
   };
 
   /**
@@ -83,7 +83,7 @@ export namespace Temporal {
      *
      * The default is `'constrain'`.
      */
-    disambiguation: 'constrain' | 'reject';
+    overflow: 'constrain' | 'reject';
   };
 
   export interface DifferenceOptions<T extends string> {

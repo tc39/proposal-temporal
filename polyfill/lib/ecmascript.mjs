@@ -256,8 +256,8 @@ export const ES = ObjectAssign({}, ES2019, {
     }
     throw new RangeError(`'${isoString}' doesn't uniquely identify a Temporal.Absolute`);
   },
-  RegulateDateTime: (year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, disambiguation) => {
-    switch (disambiguation) {
+  RegulateDateTime: (year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, overflow) => {
+    switch (overflow) {
       case 'reject':
         ES.RejectDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
         break;
@@ -277,8 +277,8 @@ export const ES = ObjectAssign({}, ES2019, {
     }
     return { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond };
   },
-  RegulateDate: (year, month, day, disambiguation) => {
-    switch (disambiguation) {
+  RegulateDate: (year, month, day, overflow) => {
+    switch (overflow) {
       case 'reject':
         ES.RejectDate(year, month, day);
         break;
@@ -288,8 +288,8 @@ export const ES = ObjectAssign({}, ES2019, {
     }
     return { year, month, day };
   },
-  RegulateTime: (hour, minute, second, millisecond, microsecond, nanosecond, disambiguation) => {
-    switch (disambiguation) {
+  RegulateTime: (hour, minute, second, millisecond, microsecond, nanosecond, overflow) => {
+    switch (overflow) {
       case 'reject':
         ES.RejectTime(hour, minute, second, millisecond, microsecond, nanosecond);
         break;
@@ -306,9 +306,9 @@ export const ES = ObjectAssign({}, ES2019, {
     }
     return { hour, minute, second, millisecond, microsecond, nanosecond };
   },
-  RegulateYearMonth: (year, month, disambiguation) => {
+  RegulateYearMonth: (year, month, overflow) => {
     const refISODay = 1;
-    switch (disambiguation) {
+    switch (overflow) {
       case 'reject':
         ES.RejectDate(year, month, refISODay);
         break;
@@ -318,9 +318,9 @@ export const ES = ObjectAssign({}, ES2019, {
     }
     return { year, month };
   },
-  RegulateMonthDay: (month, day, disambiguation) => {
+  RegulateMonthDay: (month, day, overflow) => {
     const refISOYear = 1972;
-    switch (disambiguation) {
+    switch (overflow) {
       case 'reject':
         ES.RejectDate(refISOYear, month, day);
         break;
@@ -369,10 +369,10 @@ export const ES = ObjectAssign({}, ES2019, {
     milliseconds,
     microseconds,
     nanoseconds,
-    disambiguation
+    overflow
   ) => {
     ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
-    switch (disambiguation) {
+    switch (overflow) {
       case 'reject':
         for (const prop of [
           years,
@@ -464,15 +464,15 @@ export const ES = ObjectAssign({}, ES2019, {
     }
     return duration;
   },
-  ToDurationTemporalDisambiguation: (options) => {
+  ToTemporalDurationOverflow: (options) => {
     options = ES.NormalizeOptionsObject(options);
-    return ES.GetOption(options, 'disambiguation', ['constrain', 'balance', 'reject'], 'constrain');
+    return ES.GetOption(options, 'overflow', ['constrain', 'balance', 'reject'], 'constrain');
+  },
+  ToTemporalOverflow: (options) => {
+    options = ES.NormalizeOptionsObject(options);
+    return ES.GetOption(options, 'overflow', ['constrain', 'reject'], 'constrain');
   },
   ToTemporalDisambiguation: (options) => {
-    options = ES.NormalizeOptionsObject(options);
-    return ES.GetOption(options, 'disambiguation', ['constrain', 'reject'], 'constrain');
-  },
-  ToTimeZoneTemporalDisambiguation: (options) => {
     options = ES.NormalizeOptionsObject(options);
     return ES.GetOption(options, 'disambiguation', ['compatible', 'earlier', 'later', 'reject'], 'compatible');
   },
@@ -1383,11 +1383,11 @@ export const ES = ObjectAssign({}, ES2019, {
 
     return { deltaDays, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
   },
-  AddDate: (year, month, day, years, months, weeks, days, disambiguation) => {
+  AddDate: (year, month, day, years, months, weeks, days, overflow) => {
     year += years;
     month += months;
     ({ year, month } = ES.BalanceYearMonth(year, month));
-    ({ year, month, day } = ES.RegulateDate(year, month, day, disambiguation));
+    ({ year, month, day } = ES.RegulateDate(year, month, day, overflow));
     days += 7 * weeks;
     day += days;
     ({ year, month, day } = ES.BalanceDate(year, month, day));
@@ -1424,14 +1424,14 @@ export const ES = ObjectAssign({}, ES2019, {
     ));
     return { deltaDays, hour, minute, second, millisecond, microsecond, nanosecond };
   },
-  SubtractDate: (year, month, day, years, months, weeks, days, disambiguation) => {
+  SubtractDate: (year, month, day, years, months, weeks, days, overflow) => {
     days += 7 * weeks;
     day -= days;
     ({ year, month, day } = ES.BalanceDate(year, month, day));
     month -= months;
     year -= years;
     ({ year, month } = ES.BalanceYearMonth(year, month));
-    ({ year, month, day } = ES.RegulateDate(year, month, day, disambiguation));
+    ({ year, month, day } = ES.RegulateDate(year, month, day, overflow));
     return { year, month, day };
   },
   SubtractTime: (
@@ -1486,7 +1486,7 @@ export const ES = ObjectAssign({}, ES2019, {
     ms2,
     µs2,
     ns2,
-    disambiguation
+    overflow
   ) => {
     let years = y1 + y2;
     let months = mon1 + mon2;
@@ -1573,7 +1573,7 @@ export const ES = ObjectAssign({}, ES2019, {
       milliseconds,
       microseconds,
       nanoseconds,
-      disambiguation
+      overflow
     );
   },
 

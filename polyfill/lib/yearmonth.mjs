@@ -181,7 +181,7 @@ export class YearMonth {
     const calendar = GetSlot(this, CALENDAR);
     const fields = ES.ToTemporalYearMonthRecord(this);
     const Date = GetIntrinsic('%Temporal.Date%');
-    return calendar.dateFromFields({ ...fields, day }, { disambiguation: 'reject' }, Date);
+    return calendar.dateFromFields({ ...fields, day }, { overflow: 'reject' }, Date);
   }
   getFields() {
     const fields = ES.ToTemporalYearMonthRecord(this);
@@ -199,7 +199,7 @@ export class YearMonth {
     };
   }
   static from(item, options = undefined) {
-    const disambiguation = ES.ToTemporalDisambiguation(options);
+    const overflow = ES.ToTemporalOverflow(options);
     const TemporalCalendar = GetIntrinsic('%Temporal.Calendar%');
     let result;
     if (typeof item === 'object' && item) {
@@ -217,7 +217,7 @@ export class YearMonth {
       }
     } else {
       let { year, month, refISODay, calendar } = ES.ParseTemporalYearMonthString(ES.ToString(item));
-      ({ year, month } = ES.RegulateYearMonth(year, month, disambiguation));
+      ({ year, month } = ES.RegulateYearMonth(year, month, overflow));
       if (!calendar) calendar = GetDefaultCalendar();
       calendar = TemporalCalendar.from(calendar);
       if (refISODay === undefined) refISODay = 1;

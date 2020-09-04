@@ -14,7 +14,7 @@ class MyMonthDay extends Temporal.MonthDay {
   }
 }
 
-assert.throws(RangeError, () => MyMonthDay.from("00-01", { disambiguation: "reject" }));
-assert.throws(RangeError, () => MyMonthDay.from("02-30", { disambiguation: "reject" }));
-assert.throws(RangeError, () => MyMonthDay.from("13-24", { disambiguation: "reject" }));
+assert.throws(RangeError, () => MyMonthDay.from("00-01", { overflow: "reject" }));
+assert.throws(RangeError, () => MyMonthDay.from("02-30", { overflow: "reject" }));
+assert.throws(RangeError, () => MyMonthDay.from("13-24", { overflow: "reject" }));
 assert.sameValue(called, false);

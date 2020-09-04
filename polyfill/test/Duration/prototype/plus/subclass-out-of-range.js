@@ -32,5 +32,5 @@ assert.sameValue(result.microseconds, 0, "microseconds result");
 assert.sameValue(result.nanoseconds, Number.MAX_VALUE, "nanoseconds result");
 assert.sameValue(called, 2);
 
-assert.throws(RangeError, () => instance.plus({ nanoseconds: Number.MAX_VALUE }, { disambiguation: "reject" }));
+assert.throws(RangeError, () => instance.plus({ nanoseconds: Number.MAX_VALUE }, { overflow: "reject" }));
 assert.sameValue(called, 2);

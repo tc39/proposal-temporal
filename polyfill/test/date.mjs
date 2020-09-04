@@ -147,9 +147,9 @@ describe('Date', () => {
       const date = original.with(Temporal.YearMonth.from('1977-10'));
       equal(`${date}`, '1977-10-18');
     });
-    it('invalid disambiguation', () => {
-      ['', 'CONSTRAIN', 'balance', 3, null].forEach((disambiguation) =>
-        throws(() => original.with({ day: 17 }, { disambiguation }), RangeError)
+    it('invalid overflow', () => {
+      ['', 'CONSTRAIN', 'balance', 3, null].forEach((overflow) =>
+        throws(() => original.with({ day: 17 }, { overflow }), RangeError)
       );
     });
     it('options may only be an object or undefined', () => {
@@ -293,14 +293,14 @@ describe('Date', () => {
     it('date.plus(durationObj)', () => {
       equal(`${date.plus(Temporal.Duration.from('P43Y'))}`, '2019-11-18');
     });
-    it('constrain when ambiguous result', () => {
+    it('constrain when overflowing result', () => {
       const jan31 = Date.from('2020-01-31');
       equal(`${jan31.plus({ months: 1 })}`, '2020-02-29');
-      equal(`${jan31.plus({ months: 1 }, { disambiguation: 'constrain' })}`, '2020-02-29');
+      equal(`${jan31.plus({ months: 1 }, { overflow: 'constrain' })}`, '2020-02-29');
     });
-    it('throw when ambiguous result with reject', () => {
+    it('throw when overflowing result with reject', () => {
       const jan31 = Date.from('2020-01-31');
-      throws(() => jan31.plus({ months: 1 }, { disambiguation: 'reject' }), RangeError);
+      throws(() => jan31.plus({ months: 1 }, { overflow: 'reject' }), RangeError);
     });
     it('symmetrical with regard to negative durations', () => {
       equal(`${Date.from('2019-11-18').plus({ years: -43 })}`, '1976-11-18');
@@ -326,14 +326,14 @@ describe('Date', () => {
       equal(`${date.plus({ microseconds: 86400_000_000 })}`, '1976-11-19');
       equal(`${date.plus({ nanoseconds: 86400_000_000_000 })}`, '1976-11-19');
     });
-    it('invalid disambiguation', () => {
-      ['', 'CONSTRAIN', 'balance', 3, null].forEach((disambiguation) =>
-        throws(() => date.plus({ months: 1 }, { disambiguation }), RangeError)
+    it('invalid overflow', () => {
+      ['', 'CONSTRAIN', 'balance', 3, null].forEach((overflow) =>
+        throws(() => date.plus({ months: 1 }, { overflow }), RangeError)
       );
     });
     it('mixed positive and negative values always throw', () => {
-      ['constrain', 'reject'].forEach((disambiguation) =>
-        throws(() => date.plus({ months: 1, days: -30 }, { disambiguation }), RangeError)
+      ['constrain', 'reject'].forEach((overflow) =>
+        throws(() => date.plus({ months: 1, days: -30 }, { overflow }), RangeError)
       );
     });
     it('options may only be an object or undefined', () => {
@@ -360,14 +360,14 @@ describe('Date', () => {
     it('Date.minus(durationObj)', () => {
       equal(`${date.minus(Temporal.Duration.from('P43Y'))}`, '1976-11-18');
     });
-    it('constrain when ambiguous result', () => {
+    it('constrain when overflowing result', () => {
       const mar31 = Date.from('2020-03-31');
       equal(`${mar31.minus({ months: 1 })}`, '2020-02-29');
-      equal(`${mar31.minus({ months: 1 }, { disambiguation: 'constrain' })}`, '2020-02-29');
+      equal(`${mar31.minus({ months: 1 }, { overflow: 'constrain' })}`, '2020-02-29');
     });
-    it('throw when ambiguous result with reject', () => {
+    it('throw when overflowing result with reject', () => {
       const mar31 = Date.from('2020-03-31');
-      throws(() => mar31.minus({ months: 1 }, { disambiguation: 'reject' }), RangeError);
+      throws(() => mar31.minus({ months: 1 }, { overflow: 'reject' }), RangeError);
     });
     it('symmetrical with regard to negative durations', () => {
       equal(`${Date.from('1976-11-18').minus({ years: -43 })}`, '2019-11-18');
@@ -393,14 +393,14 @@ describe('Date', () => {
       equal(`${date.minus({ microseconds: 86400_000_000 })}`, '2019-11-17');
       equal(`${date.minus({ nanoseconds: 86400_000_000_000 })}`, '2019-11-17');
     });
-    it('invalid disambiguation', () => {
-      ['', 'CONSTRAIN', 'balance', 3, null].forEach((disambiguation) =>
-        throws(() => date.minus({ months: 1 }, { disambiguation }), RangeError)
+    it('invalid overflow', () => {
+      ['', 'CONSTRAIN', 'balance', 3, null].forEach((overflow) =>
+        throws(() => date.minus({ months: 1 }, { overflow }), RangeError)
       );
     });
     it('mixed positive and negative values always throw', () => {
-      ['constrain', 'reject'].forEach((disambiguation) =>
-        throws(() => date.minus({ months: 1, days: -30 }, { disambiguation }), RangeError)
+      ['constrain', 'reject'].forEach((overflow) =>
+        throws(() => date.minus({ months: 1, days: -30 }, { overflow }), RangeError)
       );
     });
     it('options may only be an object or undefined', () => {
@@ -497,17 +497,17 @@ describe('Date', () => {
         equal(`${Date.from({ year: 1976, month: 11, day: 18 }, options)}`, '1976-11-18')
       );
     });
-    describe('Disambiguation', () => {
+    describe('Overflow', () => {
       const bad = { year: 2019, month: 1, day: 32 };
-      it('reject', () => throws(() => Date.from(bad, { disambiguation: 'reject' }), RangeError));
+      it('reject', () => throws(() => Date.from(bad, { overflow: 'reject' }), RangeError));
       it('constrain', () => {
         equal(`${Date.from(bad)}`, '2019-01-31');
-        equal(`${Date.from(bad, { disambiguation: 'constrain' })}`, '2019-01-31');
+        equal(`${Date.from(bad, { overflow: 'constrain' })}`, '2019-01-31');
       });
-      it('throw when bad disambiguation', () => {
+      it('throw when bad overflow', () => {
         [new Date(1976, 11, 18), { year: 2019, month: 1, day: 1 }, '2019-01-31'].forEach((input) => {
-          ['', 'CONSTRAIN', 'balance', 3, null].forEach((disambiguation) =>
-            throws(() => Date.from(input, { disambiguation }), RangeError)
+          ['', 'CONSTRAIN', 'balance', 3, null].forEach((overflow) =>
+            throws(() => Date.from(input, { overflow }), RangeError)
           );
         });
       });
@@ -559,18 +559,18 @@ describe('Date', () => {
     it('constructing from property bag', () => {
       const tooEarly = { year: -271821, month: 4, day: 18 };
       const tooLate = { year: 275760, month: 9, day: 14 };
-      ['reject', 'constrain'].forEach((disambiguation) => {
+      ['reject', 'constrain'].forEach((overflow) => {
         [tooEarly, tooLate].forEach((props) => {
-          throws(() => Date.from(props, { disambiguation }), RangeError);
+          throws(() => Date.from(props, { overflow }), RangeError);
         });
       });
       equal(`${Date.from({ year: -271821, month: 4, day: 19 })}`, '-271821-04-19');
       equal(`${Date.from({ year: 275760, month: 9, day: 13 })}`, '+275760-09-13');
     });
     it('constructing from ISO string', () => {
-      ['reject', 'constrain'].forEach((disambiguation) => {
+      ['reject', 'constrain'].forEach((overflow) => {
         ['-271821-04-18', '+275760-09-14'].forEach((str) => {
-          throws(() => Date.from(str, { disambiguation }), RangeError);
+          throws(() => Date.from(str, { overflow }), RangeError);
         });
       });
       equal(`${Date.from('-271821-04-19')}`, '-271821-04-19');
@@ -603,9 +603,9 @@ describe('Date', () => {
     it('adding and subtracting beyond limit', () => {
       const min = Date.from('-271821-04-19');
       const max = Date.from('+275760-09-13');
-      ['reject', 'constrain'].forEach((disambiguation) => {
-        throws(() => min.minus({ days: 1 }, { disambiguation }), RangeError);
-        throws(() => max.plus({ days: 1 }, { disambiguation }), RangeError);
+      ['reject', 'constrain'].forEach((overflow) => {
+        throws(() => min.minus({ days: 1 }, { overflow }), RangeError);
+        throws(() => max.plus({ days: 1 }, { overflow }), RangeError);
       });
     });
   });

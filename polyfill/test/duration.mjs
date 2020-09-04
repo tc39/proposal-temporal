@@ -173,38 +173,38 @@ describe('Duration', () => {
       );
       [{}, () => {}, undefined].forEach((options) => equal(Duration.from({ hours: 1 }, options).hours, 1));
     });
-    describe('Disambiguation', () => {
+    describe('Overflow', () => {
       it('mixed positive and negative values always throw', () => {
-        ['constrain', 'balance', 'reject'].forEach((disambiguation) =>
-          throws(() => Duration.from({ hours: 1, minutes: -30 }, { disambiguation }), RangeError)
+        ['constrain', 'balance', 'reject'].forEach((overflow) =>
+          throws(() => Duration.from({ hours: 1, minutes: -30 }, { overflow }), RangeError)
         );
       });
       it('excessive values unchanged when "reject"', () => {
-        equal(`${Duration.from({ minutes: 100 }, { disambiguation: 'reject' })}`, 'PT100M');
+        equal(`${Duration.from({ minutes: 100 }, { overflow: 'reject' })}`, 'PT100M');
       });
       it('excessive values unchanged when "constrain"', () => {
-        equal(`${Duration.from({ minutes: 100 }, { disambiguation: 'constrain' })}`, 'PT100M');
+        equal(`${Duration.from({ minutes: 100 }, { overflow: 'constrain' })}`, 'PT100M');
       });
       it('excessive time units balance when "balance"', () => {
-        equal(`${Duration.from({ nanoseconds: 1000 }, { disambiguation: 'balance' })}`, 'PT0.000001S');
-        equal(`${Duration.from({ microseconds: 1000 }, { disambiguation: 'balance' })}`, 'PT0.001S');
-        equal(`${Duration.from({ milliseconds: 1000 }, { disambiguation: 'balance' })}`, 'PT1S');
-        equal(`${Duration.from({ seconds: 100 }, { disambiguation: 'balance' })}`, 'PT1M40S');
-        equal(`${Duration.from({ minutes: 100 }, { disambiguation: 'balance' })}`, 'PT1H40M');
-        equal(`${Duration.from({ hours: 100 }, { disambiguation: 'balance' })}`, 'P4DT4H');
+        equal(`${Duration.from({ nanoseconds: 1000 }, { overflow: 'balance' })}`, 'PT0.000001S');
+        equal(`${Duration.from({ microseconds: 1000 }, { overflow: 'balance' })}`, 'PT0.001S');
+        equal(`${Duration.from({ milliseconds: 1000 }, { overflow: 'balance' })}`, 'PT1S');
+        equal(`${Duration.from({ seconds: 100 }, { overflow: 'balance' })}`, 'PT1M40S');
+        equal(`${Duration.from({ minutes: 100 }, { overflow: 'balance' })}`, 'PT1H40M');
+        equal(`${Duration.from({ hours: 100 }, { overflow: 'balance' })}`, 'P4DT4H');
       });
       it('excessive date units do not balance when "balance"', () => {
-        equal(`${Duration.from({ months: 12 }, { disambiguation: 'balance' })}`, 'P12M');
-        equal(`${Duration.from({ months: 12, seconds: 3600 }, { disambiguation: 'balance' })}`, 'P12MT1H');
-        equal(`${Duration.from({ weeks: 6 }, { disambiguation: 'balance' })}`, 'P6W');
-        equal(`${Duration.from({ weeks: 6, seconds: 3600 }, { disambiguation: 'balance' })}`, 'P6WT1H');
-        equal(`${Duration.from({ days: 31 }, { disambiguation: 'balance' })}`, 'P31D');
-        equal(`${Duration.from({ days: 31, seconds: 3600 }, { disambiguation: 'balance' })}`, 'P31DT1H');
+        equal(`${Duration.from({ months: 12 }, { overflow: 'balance' })}`, 'P12M');
+        equal(`${Duration.from({ months: 12, seconds: 3600 }, { overflow: 'balance' })}`, 'P12MT1H');
+        equal(`${Duration.from({ weeks: 6 }, { overflow: 'balance' })}`, 'P6W');
+        equal(`${Duration.from({ weeks: 6, seconds: 3600 }, { overflow: 'balance' })}`, 'P6WT1H');
+        equal(`${Duration.from({ days: 31 }, { overflow: 'balance' })}`, 'P31D');
+        equal(`${Duration.from({ days: 31, seconds: 3600 }, { overflow: 'balance' })}`, 'P31DT1H');
       });
-      it('throw when bad disambiguation', () => {
+      it('throw on bad overflow', () => {
         [new Duration(3), { days: 0 }, 'P5Y'].forEach((input) => {
-          ['', 'CONSTRAIN', 'xyz', 3, null].forEach((disambiguation) =>
-            throws(() => Duration.from(input, { disambiguation }), RangeError)
+          ['', 'CONSTRAIN', 'xyz', 3, null].forEach((overflow) =>
+            throws(() => Duration.from(input, { overflow }), RangeError)
           );
         });
       });
@@ -259,7 +259,7 @@ describe('Duration', () => {
     it('unrepresentable number is not allowed', () => {
       units.forEach((unit, ix) => {
         throws(() => new Duration(...Array(ix).fill(0), 1e309), RangeError);
-        throws(() => Duration.from({ [unit]: 1e309 }, { disambiguation: 'reject' }), RangeError);
+        throws(() => Duration.from({ [unit]: 1e309 }, { overflow: 'reject' }), RangeError);
       });
       const manyNines = '9'.repeat(309);
       [
@@ -270,7 +270,7 @@ describe('Duration', () => {
         `PT${manyNines}H`,
         `PT${manyNines}M`,
         `PT${manyNines}S`
-      ].forEach((str) => throws(() => Duration.from(str, { disambiguation: 'reject' }), RangeError));
+      ].forEach((str) => throws(() => Duration.from(str, { overflow: 'reject' }), RangeError));
     });
     it('max safe integer is allowed', () => {
       [
@@ -286,7 +286,7 @@ describe('Duration', () => {
         'PT9007199.254740991S'
       ].forEach((str, ix) => {
         equal(`${new Duration(...Array(ix).fill(0), Number.MAX_SAFE_INTEGER)}`, str);
-        equal(`${Duration.from({ [units[ix]]: Number.MAX_SAFE_INTEGER }, { disambiguation: 'reject' })}`, str);
+        equal(`${Duration.from({ [units[ix]]: Number.MAX_SAFE_INTEGER }, { overflow: 'reject' })}`, str);
         equal(`${Duration.from(str)}`, str);
       });
     });
@@ -360,7 +360,7 @@ describe('Duration', () => {
           microseconds: 3000,
           nanoseconds: 3001
         },
-        { disambiguation: 'balance' }
+        { overflow: 'balance' }
       );
       equal(result.years, 5);
       equal(result.months, 5);
@@ -373,8 +373,8 @@ describe('Duration', () => {
       equal(result.nanoseconds, 1);
     });
     it('mixed positive and negative values always throw', () => {
-      ['constrain', 'balance', 'reject'].forEach((disambiguation) =>
-        throws(() => duration.with({ hours: 1, minutes: -1 }, { disambiguation }), RangeError)
+      ['constrain', 'balance', 'reject'].forEach((overflow) =>
+        throws(() => duration.with({ hours: 1, minutes: -1 }, { overflow }), RangeError)
       );
     });
     it('can reverse the sign if all the fields are replaced', () => {
@@ -387,9 +387,9 @@ describe('Duration', () => {
       const d = Duration.from({ years: 5, days: 1 });
       throws(() => d.with({ months: -5, minutes: 0 }), RangeError);
     });
-    it('invalid disambiguation', () => {
-      ['', 'CONSTRAIN', 'xyz', 3, null].forEach((disambiguation) =>
-        throws(() => duration.with({ days: 5 }, { disambiguation }), RangeError)
+    it('invalid overflow', () => {
+      ['', 'CONSTRAIN', 'xyz', 3, null].forEach((overflow) =>
+        throws(() => duration.with({ days: 5 }, { overflow }), RangeError)
       );
     });
     it('sign cannot be manipulated independently', () => {
@@ -412,10 +412,7 @@ describe('Duration', () => {
     });
     it('symmetric with regard to negative durations', () => {
       equal(`${Duration.from('P3DT10M').plus({ days: -2, minutes: -5 })}`, 'P1DT5M');
-      equal(
-        `${Duration.from('P1DT12H5M30S').plus({ hours: -12, seconds: -30 }, { disambiguation: 'balance' })}`,
-        'P1DT5M'
-      );
+      equal(`${Duration.from('P1DT12H5M30S').plus({ hours: -12, seconds: -30 }, { overflow: 'balance' })}`, 'P1DT5M');
     });
     it('does not balance units', () => {
       const d = Duration.from('P50M50W50DT50H50M50.500500500S');
@@ -445,7 +442,7 @@ describe('Duration', () => {
       equal(result.nanoseconds, Number.MAX_VALUE);
     });
     it('caps values at Number.MAX_VALUE with constrain', () => {
-      const result = max.plus(max, { disambiguation: 'constrain' });
+      const result = max.plus(max, { overflow: 'constrain' });
       equal(result.years, Number.MAX_VALUE);
       equal(result.months, Number.MAX_VALUE);
       equal(result.weeks, Number.MAX_VALUE);
@@ -458,16 +455,16 @@ describe('Duration', () => {
       equal(result.nanoseconds, Number.MAX_VALUE);
     });
     it('throws if values become infinite with reject', () => {
-      throws(() => max.plus(max, { disambiguation: 'reject' }), RangeError);
+      throws(() => max.plus(max, { overflow: 'reject' }), RangeError);
     });
-    it('throws on invalid disambiguation', () => {
-      ['', 'CONSTRAIN', 'balanceConstrain', 3, null].forEach((disambiguation) =>
-        throws(() => duration.plus(duration, { disambiguation }), RangeError)
+    it('throws on invalid overflow', () => {
+      ['', 'CONSTRAIN', 'balanceConstrain', 3, null].forEach((overflow) =>
+        throws(() => duration.plus(duration, { overflow }), RangeError)
       );
     });
     it('mixed positive and negative values always throw', () => {
-      ['constrain', 'balance', 'reject'].forEach((disambiguation) =>
-        throws(() => duration.plus({ hours: 1, minutes: -30 }, { disambiguation }), RangeError)
+      ['constrain', 'balance', 'reject'].forEach((overflow) =>
+        throws(() => duration.plus({ hours: 1, minutes: -30 }, { overflow }), RangeError)
       );
     });
     it('options may only be an object or undefined', () => {
@@ -498,8 +495,8 @@ describe('Duration', () => {
       equal(`${new Duration().minus({ days: -3, hours: -1, minutes: -10 })}`, 'P3DT1H10M');
       equal(`${Duration.from('PT1H10M').minus({ days: -3 })}`, 'P3DT1H10M');
       equal(`${Duration.from('P3DT1H').minus({ minutes: -10 })}`, 'P3DT1H10M');
-      equal(`${Duration.from('P3DT55M').minus({ minutes: -15 }, { disambiguation: 'balance' })}`, 'P3DT1H10M');
-      equal(`${Duration.from('P3DT1H9M30S').minus({ seconds: -30 }, { disambiguation: 'balance' })}`, 'P3DT1H10M');
+      equal(`${Duration.from('P3DT55M').minus({ minutes: -15 }, { overflow: 'balance' })}`, 'P3DT1H10M');
+      equal(`${Duration.from('P3DT1H9M30S').minus({ seconds: -30 }, { overflow: 'balance' })}`, 'P3DT1H10M');
     });
     it('never balances positive units in constrain mode', () => {
       const d = Duration.from({
@@ -523,7 +520,7 @@ describe('Duration', () => {
       equal(result.microseconds, 1500);
       equal(result.nanoseconds, 1500);
 
-      result = d.minus(less, { disambiguation: 'constrain' });
+      result = d.minus(less, { overflow: 'constrain' });
       equal(result.minutes, 90);
       equal(result.seconds, 90);
       equal(result.milliseconds, 1500);
@@ -545,7 +542,7 @@ describe('Duration', () => {
         microseconds: 500,
         nanoseconds: 500
       });
-      const result = d.minus(less, { disambiguation: 'balance' });
+      const result = d.minus(less, { overflow: 'balance' });
       equal(result.hours, 1);
       equal(result.minutes, 31);
       equal(result.seconds, 31);
@@ -568,23 +565,23 @@ describe('Duration', () => {
       equal(result.minutes, -5);
     });
     it('throws if result cannot be determined to be positive or negative', () => {
-      ['constrain', 'balance'].forEach((disambiguation) => {
-        throws(() => tenYears.minus({ months: 5 }, { disambiguation }), RangeError);
-        throws(() => tenYears.minus({ weeks: 5 }, { disambiguation }), RangeError);
-        throws(() => tenYears.minus({ days: 5 }, { disambiguation }), RangeError);
-        throws(() => tenYears.minus({ hours: 5 }, { disambiguation }), RangeError);
-        throws(() => tenYears.minus({ minutes: 5 }, { disambiguation }), RangeError);
-        throws(() => tenYears.minus({ seconds: 5 }, { disambiguation }), RangeError);
+      ['constrain', 'balance'].forEach((overflow) => {
+        throws(() => tenYears.minus({ months: 5 }, { overflow }), RangeError);
+        throws(() => tenYears.minus({ weeks: 5 }, { overflow }), RangeError);
+        throws(() => tenYears.minus({ days: 5 }, { overflow }), RangeError);
+        throws(() => tenYears.minus({ hours: 5 }, { overflow }), RangeError);
+        throws(() => tenYears.minus({ minutes: 5 }, { overflow }), RangeError);
+        throws(() => tenYears.minus({ seconds: 5 }, { overflow }), RangeError);
       });
     });
-    it('throws on invalid disambiguation', () => {
-      ['', 'BALANCE', 'xyz', 3, null].forEach((disambiguation) =>
-        throws(() => duration.minus(duration, { disambiguation }), RangeError)
+    it('throws on invalid overflow', () => {
+      ['', 'BALANCE', 'xyz', 3, null].forEach((overflow) =>
+        throws(() => duration.minus(duration, { overflow }), RangeError)
       );
     });
     it('mixed positive and negative values always throw', () => {
-      ['constrain', 'balance', 'reject'].forEach((disambiguation) =>
-        throws(() => duration.minus({ hours: 1, minutes: -30 }, { disambiguation }), RangeError)
+      ['constrain', 'balance', 'reject'].forEach((overflow) =>
+        throws(() => duration.minus({ hours: 1, minutes: -30 }, { overflow }), RangeError)
       );
     });
     it('options may only be an object or undefined', () => {

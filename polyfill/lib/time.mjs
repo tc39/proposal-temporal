@@ -74,7 +74,7 @@ export class Time {
 
   with(temporalTimeLike = {}, options) {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
-    const disambiguation = ES.ToTemporalDisambiguation(options);
+    const overflow = ES.ToTemporalOverflow(options);
     const props = ES.ToPartialRecord(temporalTimeLike, [
       'hour',
       'microsecond',
@@ -101,7 +101,7 @@ export class Time {
       millisecond,
       microsecond,
       nanosecond,
-      disambiguation
+      overflow
     ));
     const Construct = ES.SpeciesConstructor(this, Time);
     const result = new Construct(hour, minute, second, millisecond, microsecond, nanosecond);
@@ -112,7 +112,7 @@ export class Time {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
     let { hour, minute, second, millisecond, microsecond, nanosecond } = this;
     const duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
-    const disambiguation = ES.ToTemporalDisambiguation(options);
+    const overflow = ES.ToTemporalOverflow(options);
     const { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
     ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
     const sign = ES.DurationSign(
@@ -165,7 +165,7 @@ export class Time {
       millisecond,
       microsecond,
       nanosecond,
-      disambiguation
+      overflow
     ));
     const Construct = ES.SpeciesConstructor(this, Time);
     const result = new Construct(hour, minute, second, millisecond, microsecond, nanosecond);
@@ -176,7 +176,7 @@ export class Time {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
     let { hour, minute, second, millisecond, microsecond, nanosecond } = this;
     const duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
-    const disambiguation = ES.ToTemporalDisambiguation(options);
+    const overflow = ES.ToTemporalOverflow(options);
     const { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
     ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
     const sign = ES.DurationSign(
@@ -229,7 +229,7 @@ export class Time {
       millisecond,
       microsecond,
       nanosecond,
-      disambiguation
+      overflow
     ));
     const Construct = ES.SpeciesConstructor(this, Time);
     const result = new Construct(hour, minute, second, millisecond, microsecond, nanosecond);
@@ -309,7 +309,7 @@ export class Time {
   }
 
   static from(item, options = undefined) {
-    const disambiguation = ES.ToTemporalDisambiguation(options);
+    const overflow = ES.ToTemporalOverflow(options);
     let hour, minute, second, millisecond, microsecond, nanosecond;
     if (typeof item === 'object' && item) {
       if (ES.IsTemporalTime(item)) {
@@ -333,7 +333,7 @@ export class Time {
       millisecond,
       microsecond,
       nanosecond,
-      disambiguation
+      overflow
     ));
     const result = new this(hour, minute, second, millisecond, microsecond, nanosecond);
     if (!ES.IsTemporalTime(result)) throw new TypeError('invalid result');

@@ -11,5 +11,5 @@ assert.equal(feb.toString(), '2020-02-29');
 // (and throw an exception if the date doesn't exist in April):
 
 assert.throws(() => {
-  date.with({ month: 4 }, { disambiguation: 'reject' });
+  date.with({ month: 4 }, { overflow: 'reject' });
 });
