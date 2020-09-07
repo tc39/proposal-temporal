@@ -243,8 +243,8 @@ time.minus({ minutes: 5, nanoseconds: 800 })  // => 19:34:09.068345405
 - `options` (optional object): An object with properties representing options for the operation.
   The following options are recognized:
   - `largestUnit` (string): The largest unit of time to allow in the resulting `Temporal.Duration` object.
-    Valid values are `'years'`, `'months'`, `'weeks'`, `'days'`, `'hours'`, `'minutes'`, `'seconds'`, `'milliseconds'`, `'microseconds'`, and `'nanoseconds'`.
-    The default is effectively `'hours'`.
+    Valid values are `'hours'`, `'minutes'`, `'seconds'`, `'milliseconds'`, `'microseconds'`, and `'nanoseconds'`.
+    The default is `'hours'`.
 
 **Returns:** a `Temporal.Duration` representing the difference between `time` and `other`.
 
@@ -256,8 +256,6 @@ The returned `Temporal.Duration` object will not have any nonzero fields that ar
 A difference of two hours will become 7200 seconds when `largestUnit` is `'seconds'`, for example.
 However, a difference of 30 seconds will still be 30 seconds even if `largestUnit` is `'hours'`.
 
-The default largest unit in the result is technically `'days'`, for consistency with other Temporal types' `difference` methods.
-However, since time differences are always shorter than one day, largest units of `'years'`, `'months'`, `'weeks'`, or `'days'` are treated as `'hours'`.
 
 Usage example:
 ```javascript

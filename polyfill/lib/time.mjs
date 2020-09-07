@@ -239,7 +239,7 @@ export class Time {
   difference(other, options) {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
     if (!ES.IsTemporalTime(other)) throw new TypeError('invalid Time object');
-    const largestUnit = ES.ToLargestTemporalUnit(options, 'hours');
+    const largestUnit = ES.ToLargestTemporalUnit(options, 'hours', ['years', 'months', 'weeks', 'days']);
     let { hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.DifferenceTime(other, this);
     ({ hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.BalanceDuration(
       0,

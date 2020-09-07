@@ -226,11 +226,11 @@ describe('Time', () => {
         equal(`${time2.difference(time1)}`, 'PT6H52M42S');
         equal(`${time2.difference(time1, { largestUnit: 'hours' })}`, 'PT6H52M42S');
       });
-      it('higher units have no effect', () => {
-        equal(`${time2.difference(time1, { largestUnit: 'days' })}`, 'PT6H52M42S');
-        equal(`${time2.difference(time1, { largestUnit: 'weeks' })}`, 'PT6H52M42S');
-        equal(`${time2.difference(time1, { largestUnit: 'months' })}`, 'PT6H52M42S');
-        equal(`${time2.difference(time1, { largestUnit: 'years' })}`, 'PT6H52M42S');
+      it('higher units are not allowed', () => {
+        throws(() => time2.difference(time1, { largestUnit: 'days' }), RangeError);
+        throws(() => time2.difference(time1, { largestUnit: 'weeks' }), RangeError);
+        throws(() => time2.difference(time1, { largestUnit: 'months' }), RangeError);
+        throws(() => time2.difference(time1, { largestUnit: 'years' }), RangeError);
       });
       it('can return lower units', () => {
         equal(`${time2.difference(time1, { largestUnit: 'minutes' })}`, 'PT412M42S');
