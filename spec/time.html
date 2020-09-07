@@ -292,7 +292,7 @@
         1. Let _temporalTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_temporalTime_, [[InitializedTemporalTime]]).
         1. Perform ? RequireInternalSlot(_other_, [[InitializedTemporalTime]]).
-        1. Let _largestUnit_ be ? ToLargestTemporalUnit(_options_, « », *"hours"*).
+        1. Let _largestUnit_ be ? ToLargestTemporalUnit(_options_, « *"years"*, *"months"*, *"weeks"*, *"days"* », *"hours"*).
         1. Let _result_ be ! DifferenceTime(_other_, _temporalTime_).
         1. Set _result_ to ! BalanceDuration(0, _result_.[[Hours]], _result_.[[Minutes]], _result_.[[Seconds]], _result_.[[Milliseconds]], _result_.[[Microseconds]], _result_.[[Nanoseconds]], _largestUnit_).
         1. Return ? CreateTemporalDuration(0, 0, 0, 0, _result_.[[Hours]], _result_.[[Minutes]], _result_.[[Seconds]], _result_.[[Milliseconds]], _result_.[[Microseconds]], _result_.[[Nanoseconds]]).
