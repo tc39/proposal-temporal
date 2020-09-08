@@ -133,6 +133,8 @@ Effectively, this is whatever `calendarIdentifier` was passed as a parameter to 
 
 ### calendar.**weekOfYear**(_date_: Temporal.Date): number
 
+### calendar.**daysInWeek**(_date_: Temporal.Date): number
+
 ### calendar.**daysInMonth**(_date_: Temporal.Date): number
 
 ### calendar.**daysInYear**(_date_: Temporal.Date): number

@@ -88,6 +88,10 @@ export class Calendar {
     void date;
     throw new Error('not implemented');
   }
+  daysInWeek(date) {
+    void date;
+    throw new Error('not implemented');
+  }
   daysInMonth(date) {
     void date;
     throw new Error('not implemented');
@@ -220,6 +224,10 @@ class ISO8601 extends Calendar {
   weekOfYear(date) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
     return ES.WeekOfYear(GetSlot(date, ISO_YEAR), GetSlot(date, ISO_MONTH), GetSlot(date, ISO_DAY));
+  }
+  daysInWeek(date) {
+    void date;
+    return 7;
   }
   daysInMonth(date) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');

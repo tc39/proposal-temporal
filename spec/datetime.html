@@ -284,6 +284,20 @@
       </emu-alg>
     </emu-clause>
 
+    <emu-clause id="sec-get-temporal.datetime.prototype.daysinweek">
+      <h1>get Temporal.DateTime.prototype.daysInWeek</h1>
+      <p>
+        `Temporal.DateTime.prototype.daysInWeek` is an accessor property whose set accessor function is undefined.
+        Its get accessor function performs the following steps:
+      </p>
+      <emu-alg>
+        1. Let _dateTime_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
+        1. Return *7*.
+        1. <mark>TODO: Make calendar-aware along with all the other properties.</mark>
+      </emu-alg>
+    </emu-clause>
+
     <emu-clause id="sec-get-temporal.datetime.prototype.daysinyear">
       <h1>get Temporal.DateTime.prototype.daysInYear</h1>
       <p>

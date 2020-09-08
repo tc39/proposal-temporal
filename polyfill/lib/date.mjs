@@ -77,6 +77,10 @@ export class Date {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
     return GetSlot(this, CALENDAR).weekOfYear(this);
   }
+  get daysInWeek() {
+    if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
+    return GetSlot(this, CALENDAR).daysInWeek(this);
+  }
   get daysInYear() {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
     return GetSlot(this, CALENDAR).daysInYear(this);
