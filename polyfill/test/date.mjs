@@ -45,6 +45,9 @@ describe('Date', () => {
       it('Date.prototype has weekOfYear', () => {
         assert('weekOfYear' in Date.prototype);
       });
+      it('Date.prototype has daysInWeek', () => {
+        assert('daysInWeek' in Date.prototype);
+      });
       it('Date.prototype has monthsInYear', () => {
         assert('monthsInYear' in Date.prototype);
       });
@@ -107,6 +110,7 @@ describe('Date', () => {
     it('date.dayOfWeek is 4', () => equal(date.dayOfWeek, 4));
     it('date.dayOfYear is 323', () => equal(date.dayOfYear, 323));
     it('date.weekOfYear is 47', () => equal(date.weekOfYear, 47));
+    it('date.daysInWeek is 7', () => equal(date.daysInWeek, 7));
     it('date.monthsInYear is 12', () => equal(date.monthsInYear, 12));
     it('`${date}` is 1976-11-18', () => equal(`${date}`, '1976-11-18'));
   });

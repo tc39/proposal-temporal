@@ -208,6 +208,7 @@ export namespace Temporal {
     dayOfWeek?(date: Temporal.Date): number;
     dayOfYear?(date: Temporal.Date): number;
     weekOfYear?(date: Temporal.Date): number;
+    daysInWeek?(date: Temporal.Date): number;
     daysInMonth?(date: Temporal.Date): number;
     daysInYear?(date: Temporal.Date): number;
     monthsInYear?(date: Temporal.Date): number;
@@ -265,6 +266,7 @@ export namespace Temporal {
     dayOfWeek(date: Temporal.Date): number;
     dayOfYear(date: Temporal.Date): number;
     weekOfYear(date: Temporal.Date): number;
+    daysInWeek(date: Temporal.Date): number;
     daysInMonth(date: Temporal.Date): number;
     daysInYear(date: Temporal.Date): number;
     monthsInYear(date: Temporal.Date): number;
@@ -347,6 +349,7 @@ export namespace Temporal {
     readonly dayOfWeek: number;
     readonly dayOfYear: number;
     readonly weekOfYear: number;
+    readonly daysInWeek: number;
     readonly daysInYear: number;
     readonly daysInMonth: number;
     readonly monthsInYear: number;
@@ -449,6 +452,7 @@ export namespace Temporal {
     readonly dayOfWeek: number;
     readonly dayOfYear: number;
     readonly weekOfYear: number;
+    readonly daysInWeek: number;
     readonly daysInYear: number;
     readonly daysInMonth: number;
     readonly monthsInYear: number;

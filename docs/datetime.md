@@ -254,6 +254,17 @@ dt = new Temporal.DateTime(1995, 12, 7, 3, 24, 30, 0, 3, 500);
 console.log(dt.year, dt.weekOfYear, dt.dayOfWeek);  // => 1995 49 4
 ```
 
+### datetime.**daysInWeek** : number
+
+The `daysInWeek` read-only property gives the number of days in the week that the date falls in.
+For the ISO 8601 calendar, this is always 7, but in other calendar systems it may differ from week to week.
+
+Usage example:
+```javascript
+dt = Temporal.DateTime.from('1995-12-07T03:24:30.000003500');
+dt.daysInWeek  // => 7
+```
+
 ### datetime.**daysInMonth** : number
 
 The `daysInMonth` read-only property gives the number of days in the month that the date falls in.

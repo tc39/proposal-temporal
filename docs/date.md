@@ -194,6 +194,17 @@ date = Temporal.Date.from('2006-08-24');
 console.log(date.year, date.weekOfYear, date.dayOfWeek);  // 2006 34 4
 ```
 
+### date.**daysInWeek** : number
+
+The `daysInWeek` read-only property gives the number of days in the week that the date falls in.
+For the ISO 8601 calendar, this is always 7, but in other calendar systems it may differ from week to week.
+
+Usage example:
+```javascript
+date = Temporal.Date.from('2006-08-24');
+date.daysInWeek  // => 7
+```
+
 ### date.**daysInMonth** : number
 
 The `daysInMonth` read-only property gives the number of days in the month that the date falls in.
