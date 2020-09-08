@@ -1725,6 +1725,146 @@ export const ES = ObjectAssign({}, ES2019, {
         return ES.BalanceTime(hour, minute, second, millisecond, microsecond, result);
     }
   },
+  RoundDuration: (
+    years,
+    months,
+    weeks,
+    days,
+    hours,
+    minutes,
+    seconds,
+    milliseconds,
+    microseconds,
+    nanoseconds,
+    increment,
+    unit,
+    roundingMode,
+    relativeTo
+  ) => {
+    const TemporalDate = GetIntrinsic('%Temporal.Date%');
+    const TemporalDuration = GetIntrinsic('%Temporal.Duration%');
+    let calendar;
+    if (relativeTo) {
+      if (!ES.IsTemporalDateTime(relativeTo)) throw new TypeError('starting point must be DateTime');
+      calendar = GetSlot(relativeTo, CALENDAR);
+    }
+    switch (unit) {
+      case 'years': {
+        if (!calendar) throw new RangeError('A starting point is required for years rounding');
+
+        // convert months and weeks to days by calculating difference(
+        // relativeTo + years, relativeTo - { years, months, weeks })
+        const yearsBefore = calendar.dateMinus(relativeTo, new TemporalDuration(years), {}, TemporalDate);
+        const yearsMonthsWeeks = new TemporalDuration(years, months, weeks);
+        const yearsMonthsWeeksBefore = calendar.dateMinus(relativeTo, yearsMonthsWeeks, {}, TemporalDate);
+        const monthsWeeksInDays = ES.DifferenceDate(
+          GetSlot(yearsMonthsWeeksBefore, ISO_YEAR),
+          GetSlot(yearsMonthsWeeksBefore, ISO_MONTH),
+          GetSlot(yearsMonthsWeeksBefore, ISO_DAY),
+          GetSlot(yearsBefore, ISO_YEAR),
+          GetSlot(yearsBefore, ISO_MONTH),
+          GetSlot(yearsBefore, ISO_DAY),
+          'days'
+        );
+
+        seconds += milliseconds * 1e-3 + microseconds * 1e-6 + nanoseconds * 1e-9;
+        days += monthsWeeksInDays.days;
+        days += ((seconds / 60 + minutes) / 60 + hours) / 24;
+
+        const oneYear = new TemporalDuration(1);
+        relativeTo = calendar.dateMinus(relativeTo, oneYear, {}, TemporalDate);
+        const oneYearDays = calendar.daysInYear(relativeTo);
+        years += days / oneYearDays;
+
+        years = ES.RoundNumberToIncrement(years, increment, roundingMode);
+        months = weeks = days = hours = minutes = seconds = milliseconds = microseconds = nanoseconds = 0;
+        break;
+      }
+      case 'months': {
+        if (!calendar) throw new RangeError('A starting point is required for months rounding');
+
+        // convert weeks to days by calculating difference(relativeTo +
+        //   { years, months }, relativeTo - { years, months, weeks })
+        const yearsMonths = new TemporalDuration(years, months);
+        const yearsMonthsBefore = calendar.dateMinus(relativeTo, yearsMonths, {}, TemporalDate);
+        const yearsMonthsWeeks = new TemporalDuration(years, months, weeks);
+        const yearsMonthsWeeksBefore = calendar.dateMinus(relativeTo, yearsMonthsWeeks, {}, TemporalDate);
+        const weeksInDays = ES.DifferenceDate(
+          GetSlot(yearsMonthsWeeksBefore, ISO_YEAR),
+          GetSlot(yearsMonthsWeeksBefore, ISO_MONTH),
+          GetSlot(yearsMonthsWeeksBefore, ISO_DAY),
+          GetSlot(yearsMonthsBefore, ISO_YEAR),
+          GetSlot(yearsMonthsBefore, ISO_MONTH),
+          GetSlot(yearsMonthsBefore, ISO_DAY),
+          'days'
+        );
+
+        seconds += milliseconds * 1e-3 + microseconds * 1e-6 + nanoseconds * 1e-9;
+        days += weeksInDays.days;
+        days += ((seconds / 60 + minutes) / 60 + hours) / 24;
+
+        const oneMonth = new TemporalDuration(0, 1);
+        relativeTo = calendar.dateMinus(relativeTo, oneMonth, {}, TemporalDate);
+        const oneMonthDays = calendar.daysInMonth(relativeTo);
+        months += days / oneMonthDays;
+
+        months = ES.RoundNumberToIncrement(months, increment, roundingMode);
+        weeks = days = hours = minutes = seconds = milliseconds = microseconds = nanoseconds = 0;
+        break;
+      }
+      case 'weeks': {
+        if (!calendar) throw new RangeError('A starting point is required for weeks rounding');
+        seconds += milliseconds * 1e-3 + microseconds * 1e-6 + nanoseconds * 1e-9;
+        days += ((seconds / 60 + minutes) / 60 + hours) / 24;
+
+        const oneWeek = new TemporalDuration(0, 0, 1);
+        relativeTo = calendar.dateMinus(relativeTo, oneWeek, {}, TemporalDate);
+        const oneWeekDays = calendar.daysInWeek(relativeTo);
+        weeks += days / oneWeekDays;
+
+        weeks = ES.RoundNumberToIncrement(weeks, increment, roundingMode);
+        days = hours = minutes = seconds = milliseconds = microseconds = nanoseconds = 0;
+        break;
+      }
+      case 'days':
+        seconds += milliseconds * 1e-3 + microseconds * 1e-6 + nanoseconds * 1e-9;
+        days += ((seconds / 60 + minutes) / 60 + hours) / 24;
+        days = ES.RoundNumberToIncrement(days, increment, roundingMode);
+        hours = minutes = seconds = milliseconds = microseconds = nanoseconds = 0;
+        break;
+      case 'hours':
+        seconds += milliseconds * 1e-3 + microseconds * 1e-6 + nanoseconds * 1e-9;
+        hours += (minutes + seconds / 60) / 60;
+        hours = ES.RoundNumberToIncrement(hours, increment, roundingMode);
+        minutes = seconds = milliseconds = microseconds = nanoseconds = 0;
+        break;
+      case 'minutes':
+        seconds += milliseconds * 1e-3 + microseconds * 1e-6 + nanoseconds * 1e-9;
+        minutes += seconds / 60;
+        minutes = ES.RoundNumberToIncrement(minutes, increment, roundingMode);
+        seconds = milliseconds = microseconds = nanoseconds = 0;
+        break;
+      case 'seconds':
+        seconds += milliseconds * 1e-3 + microseconds * 1e-6 + nanoseconds * 1e-9;
+        seconds = ES.RoundNumberToIncrement(seconds, increment, roundingMode);
+        milliseconds = microseconds = nanoseconds = 0;
+        break;
+      case 'milliseconds':
+        milliseconds += microseconds * 1e-3 + nanoseconds * 1e-6;
+        milliseconds = ES.RoundNumberToIncrement(milliseconds, increment, roundingMode);
+        microseconds = nanoseconds = 0;
+        break;
+      case 'microseconds':
+        microseconds += nanoseconds * 1e-3;
+        microseconds = ES.RoundNumberToIncrement(microseconds, increment, roundingMode);
+        nanoseconds = 0;
+        break;
+      case 'nanoseconds':
+        nanoseconds = ES.RoundNumberToIncrement(nanoseconds, increment, roundingMode);
+        break;
+    }
+    return { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
+  },
 
   AssertPositiveInteger: (num) => {
     if (!Number.isFinite(num) || Math.abs(num) !== num) throw new RangeError(`invalid positive integer: ${num}`);

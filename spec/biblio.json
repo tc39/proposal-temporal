@@ -19,6 +19,11 @@
       "type": "op",
       "aoid": "ToBigInt",
       "id": "sec-tobigint"
+    },
+    {
+      "type": "term",
+      "term": "%Object.prototype%",
+      "id": "sec-properties-of-the-object-prototype-object"
     }
   ],
   "https://tc39.es/ecma402/": [
