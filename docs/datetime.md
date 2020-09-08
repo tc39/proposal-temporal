@@ -466,10 +466,18 @@ dt.minus({ months: 1 })  // => throws
   - `largestUnit` (string): The largest unit of time to allow in the resulting `Temporal.Duration` object.
     Valid values are `'years'`, `'months'`, `'weeks'`, `'days'`, `'hours'`, `'minutes'`, `'seconds'`, `'milliseconds'`, `'microseconds'`, and `'nanoseconds'`.
     The default is `days`.
+  - `smallestUnit` (string): The smallest unit of time to round to in the resulting `Temporal.Duration` object.
+    Valid values are the same as for `largestUnit`.
+    The default is `'nanoseconds'`, i.e., no rounding.
+  - `roundingIncrement` (number): The granularity to round to, of the unit given by `smallestUnit`.
+    The default is 1.
+  - `roundingMode` (string): How to handle the remainder, if rounding.
+    Valid values are `'ceil'`, `'floor'`, `'trunc'`, and `'nearest'`.
+    The default is `'nearest'`.
 
 **Returns:** a `Temporal.Duration` representing the difference between `datetime` and `other`.
 
-This method computes the difference between the two times represented by `datetime` and `other`, and returns it as a `Temporal.Duration` object.
+This method computes the difference between the two times represented by `datetime` and `other`, optionally rounds it, and returns it as a `Temporal.Duration` object.
 If `other` is later than `datetime` then the resulting duration will be negative.
 
 The `largestUnit` option controls how the resulting duration is expressed.
@@ -479,6 +487,11 @@ However, a difference of 30 seconds will still be 30 seconds even if `largestUni
 
 By default, the largest unit in the result is days.
 This is because months and years can be different lengths depending on which month is meant and whether the year is a leap year.
+
+You can round the result using the `smallestUnit`, `roundingIncrement`, and `roundingMode` options.
+These behave as in the `Temporal.Duration.round()` method, but increments of days and larger are allowed.
+Since rounding to an increment expressed in days or larger units requires a reference point, `datetime` is used as the reference point in that case.
+The default is to do no rounding.
 
 Take care when using milliseconds, microseconds, or nanoseconds as the largest unit.
 For some durations, the resulting value may overflow `Number.MAX_SAFE_INTEGER` and lose precision in its least significant digit(s).
@@ -499,6 +512,10 @@ dt1.difference(dt2, { largestUnit: 'years' });
   // => -P23Y1M24DT12H5M29.999996500S
 dt2.difference(dt1, { largestUnit: 'nanoseconds' });
   // =>       PT730641929.999996544S (precision lost)
+
+// Rounding, for example if you don't care about sub-seconds
+dt2.difference(dt1, { smallestUnit: 'seconds' });
+  // => P8456DT12H5M30S
 
 // Months and years can be different lengths
 [jan1, feb1, mar1] = [1, 2, 3].map(month => 

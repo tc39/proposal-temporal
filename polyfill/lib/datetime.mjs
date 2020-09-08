@@ -383,7 +383,28 @@ export class DateTime {
         `cannot compute difference between dates of ${calendar.id} and ${otherCalendar.id} calendars`
       );
     }
-    const largestUnit = ES.ToLargestTemporalUnit(options, 'days');
+    const smallestUnit = ES.ToSmallestTemporalDurationUnit(options, 'nanoseconds');
+    let defaultLargestUnit = 'days';
+    if (smallestUnit === 'years' || smallestUnit === 'months' || smallestUnit === 'weeks') {
+      defaultLargestUnit = smallestUnit;
+    }
+    const largestUnit = ES.ToLargestTemporalUnit(options, defaultLargestUnit);
+    ES.ValidateTemporalDifferenceUnits(largestUnit, smallestUnit);
+    const roundingMode = ES.ToTemporalRoundingMode(options);
+    const maximumIncrements = {
+      years: undefined,
+      months: undefined,
+      weeks: undefined,
+      days: undefined,
+      hours: 24,
+      minutes: 60,
+      seconds: 60,
+      milliseconds: 1000,
+      microseconds: 1000,
+      nanoseconds: 1000
+    };
+    const roundingIncrement = ES.ToTemporalRoundingIncrement(options, maximumIncrements[smallestUnit], false);
+
     let { deltaDays, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.DifferenceTime(
       GetSlot(other, HOUR),
       GetSlot(other, MINUTE),
@@ -418,9 +439,36 @@ export class DateTime {
     const dateOptions = ObjectAssign({}, options, { largestUnit: dateLargestUnit });
     const dateDifference = calendar.dateDifference(otherDate, adjustedDate, dateOptions);
 
-    let days;
+    let { years, months, weeks, days } = dateDifference;
+    ({
+      years,
+      months,
+      weeks,
+      days,
+      hours,
+      minutes,
+      seconds,
+      milliseconds,
+      microseconds,
+      nanoseconds
+    } = ES.RoundDuration(
+      years,
+      months,
+      weeks,
+      days,
+      hours,
+      minutes,
+      seconds,
+      milliseconds,
+      microseconds,
+      nanoseconds,
+      roundingIncrement,
+      smallestUnit,
+      roundingMode,
+      this
+    ));
     ({ days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.BalanceDuration(
-      dateDifference.days,
+      days,
       hours,
       minutes,
       seconds,
@@ -431,18 +479,7 @@ export class DateTime {
     ));
 
     const Duration = GetIntrinsic('%Temporal.Duration%');
-    return new Duration(
-      dateDifference.years,
-      dateDifference.months,
-      dateDifference.weeks,
-      days,
-      hours,
-      minutes,
-      seconds,
-      milliseconds,
-      microseconds,
-      nanoseconds
-    );
+    return new Duration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
   }
   round(options) {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
