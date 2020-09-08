@@ -245,10 +245,18 @@ time.minus({ minutes: 5, nanoseconds: 800 })  // => 19:34:09.068345405
   - `largestUnit` (string): The largest unit of time to allow in the resulting `Temporal.Duration` object.
     Valid values are `'hours'`, `'minutes'`, `'seconds'`, `'milliseconds'`, `'microseconds'`, and `'nanoseconds'`.
     The default is `'hours'`.
+  - `smallestUnit` (string): The smallest unit of time to round to in the resulting `Temporal.Duration` object.
+    Valid values are the same as for `largestUnit`.
+    The default is `'nanoseconds'`, i.e., no rounding.
+  - `roundingIncrement` (number): The granularity to round to, of the unit given by `smallestUnit`.
+    The default is 1.
+  - `roundingMode` (string): How to handle the remainder, if rounding.
+    Valid values are `'ceil'`, `'floor'`, `'trunc'`, and `'nearest'`.
+    The default is `'nearest'`.
 
 **Returns:** a `Temporal.Duration` representing the difference between `time` and `other`.
 
-This method computes the difference between the two times represented by `time` and `other`, and returns it as a `Temporal.Duration` object.
+This method computes the difference between the two times represented by `time` and `other`, optionally rounds it, and returns it as a `Temporal.Duration` object.
 If `other` is later than `time` then the resulting duration will be negative.
 
 The `largestUnit` parameter controls how the resulting duration is expressed.
@@ -256,12 +264,19 @@ The returned `Temporal.Duration` object will not have any nonzero fields that ar
 A difference of two hours will become 7200 seconds when `largestUnit` is `'seconds'`, for example.
 However, a difference of 30 seconds will still be 30 seconds even if `largestUnit` is `'hours'`.
 
+You can round the result using the `smallestUnit`, `roundingIncrement`, and `roundingMode` options.
+These behave as in the `Temporal.Duration.round()` method.
+The default is to do no rounding.
 
 Usage example:
 ```javascript
 time = Temporal.Time.from('20:13:20.971398099');
 time.difference(Temporal.Time.from('19:39:09.068346205'))  // => PT34M11.903051894S
 time.difference(Temporal.Time.from('22:39:09.068346205'))  // => -PT2H25M49.903051894S
+
+// Rounding, for example if you don't care about sub-seconds
+time.difference(Temporal.Time.from('19:39:09.068346205'), { smallestUnit: 'seconds' })
+  // => PT34M12S
 ```
 
 ### time.**round**(_options_: object) : Temporal.Time

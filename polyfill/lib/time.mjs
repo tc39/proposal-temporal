@@ -240,6 +240,19 @@ export class Time {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
     if (!ES.IsTemporalTime(other)) throw new TypeError('invalid Time object');
     const largestUnit = ES.ToLargestTemporalUnit(options, 'hours', ['years', 'months', 'weeks', 'days']);
+    const smallestUnit = ES.ToSmallestTemporalDurationUnit(options, 'nanoseconds');
+    ES.ValidateTemporalDifferenceUnits(largestUnit, smallestUnit);
+    const roundingMode = ES.ToTemporalRoundingMode(options);
+    const maximumIncrements = {
+      hours: 24,
+      minutes: 60,
+      seconds: 60,
+      milliseconds: 1000,
+      microseconds: 1000,
+      nanoseconds: 1000
+    };
+    const roundingIncrement = ES.ToTemporalRoundingIncrement(options, maximumIncrements[smallestUnit], false);
+
     let { hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.DifferenceTime(
       GetSlot(other, HOUR),
       GetSlot(other, MINUTE),
@@ -254,6 +267,21 @@ export class Time {
       GetSlot(this, MICROSECOND),
       GetSlot(this, NANOSECOND)
     );
+    ({ hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.RoundDuration(
+      0,
+      0,
+      0,
+      0,
+      hours,
+      minutes,
+      seconds,
+      milliseconds,
+      microseconds,
+      nanoseconds,
+      roundingIncrement,
+      smallestUnit,
+      roundingMode
+    ));
     ({ hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.BalanceDuration(
       0,
       hours,
