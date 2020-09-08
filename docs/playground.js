@@ -3958,20 +3958,17 @@
       if (hours) timeParts.push("".concat(formatNumber(Math.abs(hours)), "H"));
       if (minutes) timeParts.push("".concat(formatNumber(Math.abs(minutes)), "M"));
       var secondParts = [];
-      var s;
-
-      var _ES$BalanceSubSecond = ES.BalanceSubSecond(ms, µs, ns);
-
-      s = _ES$BalanceSubSecond.seconds;
-      ms = _ES$BalanceSubSecond.millisecond;
-      µs = _ES$BalanceSubSecond.microsecond;
-      ns = _ES$BalanceSubSecond.nanosecond;
-      s += seconds;
+      µs += Math.trunc(ns / 1000);
+      ns %= 1000;
+      ms += Math.trunc(µs / 1000);
+      µs %= 1000;
+      seconds += Math.trunc(ms / 1000);
+      ms %= 1000;
       if (ns) secondParts.unshift("".concat(Math.abs(ns)).padStart(3, '0'));
       if (µs || secondParts.length) secondParts.unshift("".concat(Math.abs(µs)).padStart(3, '0'));
       if (ms || secondParts.length) secondParts.unshift("".concat(Math.abs(ms)).padStart(3, '0'));
       if (secondParts.length) secondParts.unshift('.');
-      if (s || secondParts.length) secondParts.unshift(formatNumber(Math.abs(s)));
+      if (seconds || secondParts.length) secondParts.unshift(formatNumber(Math.abs(seconds)));
       if (secondParts.length) timeParts.push("".concat(secondParts.join(''), "S"));
       if (timeParts.length) timeParts.unshift('T');
       if (!dateParts.length && !timeParts.length) return 'PT0S';
@@ -4354,8 +4351,8 @@
         nanosecond: nanosecond
       };
     },
-    BalanceSubSecond: function BalanceSubSecond(millisecond, microsecond, nanosecond) {
-      if (!Number.isFinite(millisecond) || !Number.isFinite(microsecond) || !Number.isFinite(nanosecond)) {
+    BalanceTime: function BalanceTime(hour, minute, second, millisecond, microsecond, nanosecond) {
+      if (!Number.isFinite(hour) || !Number.isFinite(minute) || !Number.isFinite(second) || !Number.isFinite(millisecond) || !Number.isFinite(microsecond) || !Number.isFinite(nanosecond)) {
         throw new RangeError('infinity is out of range');
       }
 
@@ -4363,29 +4360,8 @@
       nanosecond = ES.NonNegativeModulo(nanosecond, 1000);
       millisecond += Math.floor(microsecond / 1000);
       microsecond = ES.NonNegativeModulo(microsecond, 1000);
-      var seconds = Math.floor(millisecond / 1000);
+      second += Math.floor(millisecond / 1000);
       millisecond = ES.NonNegativeModulo(millisecond, 1000);
-      return {
-        seconds: seconds,
-        millisecond: millisecond,
-        microsecond: microsecond,
-        nanosecond: nanosecond
-      };
-    },
-    BalanceTime: function BalanceTime(hour, minute, second, millisecond, microsecond, nanosecond) {
-      if (!Number.isFinite(hour) || !Number.isFinite(minute) || !Number.isFinite(second)) {
-        throw new RangeError('infinity is out of range');
-      }
-
-      var seconds;
-
-      var _ES$BalanceSubSecond2 = ES.BalanceSubSecond(millisecond, microsecond, nanosecond);
-
-      seconds = _ES$BalanceSubSecond2.seconds;
-      millisecond = _ES$BalanceSubSecond2.millisecond;
-      microsecond = _ES$BalanceSubSecond2.microsecond;
-      nanosecond = _ES$BalanceSubSecond2.nanosecond;
-      second += seconds;
       minute += Math.floor(second / 60);
       second = ES.NonNegativeModulo(second, 60);
       hour += Math.floor(minute / 60);
@@ -7593,7 +7569,7 @@
       value: function difference(other, options) {
         if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
         if (!ES.IsTemporalTime(other)) throw new TypeError('invalid Time object');
-        var largestUnit = ES.ToLargestTemporalUnit(options, 'hours');
+        var largestUnit = ES.ToLargestTemporalUnit(options, 'hours', ['years', 'months', 'weeks', 'days']);
 
         var _ES$DifferenceTime = ES.DifferenceTime(other, this),
             hours = _ES$DifferenceTime.hours,
