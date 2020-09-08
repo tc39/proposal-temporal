@@ -5112,6 +5112,11 @@
         throw new Error('not implemented');
       }
     }, {
+      key: "daysInWeek",
+      value: function daysInWeek(date) {
+        throw new Error('not implemented');
+      }
+    }, {
       key: "daysInMonth",
       value: function daysInMonth(date) {
         throw new Error('not implemented');
@@ -5119,6 +5124,11 @@
     }, {
       key: "daysInYear",
       value: function daysInYear(date) {
+        throw new Error('not implemented');
+      }
+    }, {
+      key: "monthsInYear",
+      value: function monthsInYear(date) {
         throw new Error('not implemented');
       }
     }, {
@@ -5339,6 +5349,11 @@
         return ES.WeekOfYear(GetSlot(date, ISO_YEAR), GetSlot(date, ISO_MONTH), GetSlot(date, ISO_DAY));
       }
     }, {
+      key: "daysInWeek",
+      value: function daysInWeek(date) {
+        return 7;
+      }
+    }, {
       key: "daysInMonth",
       value: function daysInMonth(date) {
         if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
@@ -5349,6 +5364,11 @@
       value: function daysInYear(date) {
         if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
         return ES.LeapYear(GetSlot(date, ISO_YEAR)) ? 366 : 365;
+      }
+    }, {
+      key: "monthsInYear",
+      value: function monthsInYear(date) {
+        return 12;
       }
     }, {
       key: "isLeapYear",
@@ -6051,6 +6071,12 @@
         return GetSlot(this, CALENDAR).weekOfYear(this);
       }
     }, {
+      key: "daysInWeek",
+      get: function get() {
+        if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, CALENDAR).daysInWeek(this);
+      }
+    }, {
       key: "daysInYear",
       get: function get() {
         if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
@@ -6061,6 +6087,12 @@
       get: function get() {
         if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
         return GetSlot(this, CALENDAR).daysInMonth(this);
+      }
+    }, {
+      key: "monthsInYear",
+      get: function get() {
+        if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, CALENDAR).monthsInYear(this);
       }
     }, {
       key: "isLeapYear",
@@ -6635,6 +6667,12 @@
         return GetSlot(this, CALENDAR).weekOfYear(this);
       }
     }, {
+      key: "daysInWeek",
+      get: function get() {
+        if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, CALENDAR).daysInWeek(this);
+      }
+    }, {
       key: "daysInYear",
       get: function get() {
         if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
@@ -6645,6 +6683,12 @@
       get: function get() {
         if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
         return GetSlot(this, CALENDAR).daysInMonth(this);
+      }
+    }, {
+      key: "monthsInYear",
+      get: function get() {
+        if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, CALENDAR).monthsInYear(this);
       }
     }, {
       key: "isLeapYear",
@@ -8274,6 +8318,12 @@
       get: function get() {
         if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
         return GetSlot(this, CALENDAR).daysInYear(this);
+      }
+    }, {
+      key: "monthsInYear",
+      get: function get() {
+        if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, CALENDAR).monthsInYear(this);
       }
     }, {
       key: "isLeapYear",

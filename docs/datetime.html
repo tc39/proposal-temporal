@@ -182,9 +182,13 @@
 </li>
 <li><a href="#weekOfYear">weekOfYear</a>
 </li>
+<li><a href="#daysInWeek">daysInWeek</a>
+</li>
 <li><a href="#daysInMonth">daysInMonth</a>
 </li>
 <li><a href="#daysInYear">daysInYear</a>
+</li>
+<li><a href="#monthsInYear">monthsInYear</a>
 </li>
 <li><a href="#isLeapYear">isLeapYear</a>
 </li>
@@ -408,7 +412,11 @@ For more information on ISO week numbers, see for example the Wikipedia article 
 <p>Usage example:</p>
 <pre class="language-javascript"><code class="language-javascript">dt <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>DateTime</span><span class="token punctuation">(</span><span class="token number">1995</span><span class="token punctuation">,</span> <span class="token number">12</span><span class="token punctuation">,</span> <span class="token number">7</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">24</span><span class="token punctuation">,</span> <span class="token number">30</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">500</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token comment">// ISO week date</span>
-console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>dt<span class="token punctuation">.</span>year<span class="token punctuation">,</span> dt<span class="token punctuation">.</span>weekOfYear<span class="token punctuation">,</span> dt<span class="token punctuation">.</span>dayOfWeek<span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// => 1995 49 4</span></code></pre><h3 id="daysInMonth"><a class="heading-link" href="#daysInMonth"></a>datetime.<strong>daysInMonth</strong> : number</h3><p>The <code>daysInMonth</code> read-only property gives the number of days in the month that the date falls in.
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>dt<span class="token punctuation">.</span>year<span class="token punctuation">,</span> dt<span class="token punctuation">.</span>weekOfYear<span class="token punctuation">,</span> dt<span class="token punctuation">.</span>dayOfWeek<span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// => 1995 49 4</span></code></pre><h3 id="daysInWeek"><a class="heading-link" href="#daysInWeek"></a>datetime.<strong>daysInWeek</strong> : number</h3><p>The <code>daysInWeek</code> read-only property gives the number of days in the week that the date falls in.
+For the ISO 8601 calendar, this is always 7, but in other calendar systems it may differ from week to week.</p>
+<p>Usage example:</p>
+<pre class="language-javascript"><code class="language-javascript">dt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'1995-12-07T03:24:30.000003500'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+dt<span class="token punctuation">.</span>daysInWeek  <span class="token comment">// => 7</span></code></pre><h3 id="daysInMonth"><a class="heading-link" href="#daysInMonth"></a>datetime.<strong>daysInMonth</strong> : number</h3><p>The <code>daysInMonth</code> read-only property gives the number of days in the month that the date falls in.
 For the ISO 8601 calendar, this is 28, 29, 30, or 31, depending on the month and whether the year is a leap year.</p>
 <p>Usage example:</p>
 <pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Attempt to write some mnemonic poetry</span>
@@ -430,7 +438,11 @@ For the ISO 8601 calendar, this is 365 or 366, depending on whether the year is 
 <pre class="language-javascript"><code class="language-javascript">dt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">dateTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 percent <span class="token operator">=</span> dt<span class="token punctuation">.</span>dayOfYear <span class="token operator">/</span> dt<span class="token punctuation">.</span>daysInYear<span class="token punctuation">;</span>
 <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">The year is </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>percent<span class="token punctuation">.</span><span class="token function">toLocaleString</span><span class="token punctuation">(</span><span class="token string">'en'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>style<span class="token operator">:</span> <span class="token string">'percent'</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token string"> over!</span><span class="token template-punctuation string">`</span></span>
-<span class="token comment">// example output: "The year is 10% over!"</span></code></pre><h3 id="isLeapYear"><a class="heading-link" href="#isLeapYear"></a>datetime.<strong>isLeapYear</strong> : boolean</h3><p>The <code>isLeapYear</code> read-only property tells whether the year that the date falls in is a leap year or not.
+<span class="token comment">// example output: "The year is 10% over!"</span></code></pre><h3 id="monthsInYear"><a class="heading-link" href="#monthsInYear"></a>datetime.<strong>monthsInYear</strong>: number</h3><p>The <code>monthsInYear</code> read-only property gives the number of months in the year that the date falls in.
+For the ISO 8601 calendar, this is always 12, but in other calendar systems it may differ from year to year.</p>
+<p>Usage example:</p>
+<pre class="language-javascript"><code class="language-javascript">dt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'1900-01-01T12:00'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+dt<span class="token punctuation">.</span>monthsInYear  <span class="token comment">// => 12</span></code></pre><h3 id="isLeapYear"><a class="heading-link" href="#isLeapYear"></a>datetime.<strong>isLeapYear</strong> : boolean</h3><p>The <code>isLeapYear</code> read-only property tells whether the year that the date falls in is a leap year or not.
 Its value is <code>true</code> if the year is a leap year, and <code>false</code> if not.</p>
 <p>Usage example:</p>
 <pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Is this year a leap year?</span>

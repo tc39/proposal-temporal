@@ -166,6 +166,8 @@
 </li>
 <li><a href="#daysInYear">daysInYear</a>
 </li>
+<li><a href="#monthsInYear">monthsInYear</a>
+</li>
 <li><a href="#isLeapYear">isLeapYear</a>
 </li>
 </ul>
@@ -327,7 +329,11 @@ This is 365 or 366, depending on whether the year is a leap year.</p>
 <pre class="language-javascript"><code class="language-javascript">ym <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>YearMonth<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2019-06'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 percent <span class="token operator">=</span> ym<span class="token punctuation">.</span>daysInMonth <span class="token operator">/</span> ym<span class="token punctuation">.</span>daysInYear<span class="token punctuation">;</span>
 <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>ym<span class="token punctuation">.</span><span class="token function">toLocaleString</span><span class="token punctuation">(</span><span class="token string">'en'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>month<span class="token operator">:</span> <span class="token string">'long'</span><span class="token punctuation">,</span> year<span class="token operator">:</span> <span class="token string">'numeric'</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token string"> was </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>percent<span class="token punctuation">.</span><span class="token function">toLocaleString</span><span class="token punctuation">(</span><span class="token string">'en'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>style<span class="token operator">:</span> <span class="token string">'percent'</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token string"> of the year!</span><span class="token template-punctuation string">`</span></span>
-  <span class="token comment">// => example output: "June 2019 was 8% of the year!"</span></code></pre><h3 id="isLeapYear"><a class="heading-link" href="#isLeapYear"></a>yearMonth.<strong>isLeapYear</strong> : boolean</h3><p>The <code>isLeapYear</code> read-only property tells whether the year that the date falls in is a leap year or not.
+  <span class="token comment">// => example output: "June 2019 was 8% of the year!"</span></code></pre><h3 id="monthsInYear"><a class="heading-link" href="#monthsInYear"></a>yearMonth.<strong>monthsInYear</strong>: number</h3><p>The <code>monthsInYear</code> read-only property gives the number of months in the year that the month falls in.
+For the ISO 8601 calendar, this is always 12, but in other calendar systems it may differ from year to year.</p>
+<p>Usage example:</p>
+<pre class="language-javascript"><code class="language-javascript">ym <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'1900-01'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+ym<span class="token punctuation">.</span>monthsInYear  <span class="token comment">// => 12</span></code></pre><h3 id="isLeapYear"><a class="heading-link" href="#isLeapYear"></a>yearMonth.<strong>isLeapYear</strong> : boolean</h3><p>The <code>isLeapYear</code> read-only property tells whether the year that the date falls in is a leap year or not.
 Its value is <code>true</code> if the year is a leap year, and <code>false</code> if not.</p>
 <p>Usage example:</p>
 <pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Was June 2019 in a leap year?</span>
