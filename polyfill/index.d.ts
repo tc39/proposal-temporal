@@ -210,6 +210,7 @@ export namespace Temporal {
     weekOfYear?(date: Temporal.Date): number;
     daysInMonth?(date: Temporal.Date): number;
     daysInYear?(date: Temporal.Date): number;
+    monthsInYear?(date: Temporal.Date): number;
     isLeapYear?(date: Temporal.Date): boolean;
     dateFromFields(
       fields: DateLike,
@@ -266,6 +267,7 @@ export namespace Temporal {
     weekOfYear(date: Temporal.Date): number;
     daysInMonth(date: Temporal.Date): number;
     daysInYear(date: Temporal.Date): number;
+    monthsInYear(date: Temporal.Date): number;
     isLeapYear(date: Temporal.Date): boolean;
     dateFromFields(
       fields: DateLike,
@@ -347,6 +349,7 @@ export namespace Temporal {
     readonly weekOfYear: number;
     readonly daysInYear: number;
     readonly daysInMonth: number;
+    readonly monthsInYear: number;
     readonly isLeapYear: boolean;
     equals(other: Temporal.Date): boolean;
     with(dateLike: DateLike, options?: AssignmentOptions): Temporal.Date;
@@ -448,6 +451,7 @@ export namespace Temporal {
     readonly weekOfYear: number;
     readonly daysInYear: number;
     readonly daysInMonth: number;
+    readonly monthsInYear: number;
     readonly isLeapYear: boolean;
     equals(other: Temporal.DateTime): boolean;
     with(dateTimeLike: DateTimeLike, options?: AssignmentOptions): Temporal.DateTime;
@@ -647,6 +651,7 @@ export namespace Temporal {
     readonly era: string | undefined;
     readonly daysInMonth: number;
     readonly daysInYear: number;
+    readonly monthsInYear: number;
     readonly isLeapYear: boolean;
     equals(other: Temporal.YearMonth): boolean;
     with(yearMonthLike: YearMonthLike, options?: AssignmentOptions): Temporal.YearMonth;

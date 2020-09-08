@@ -182,6 +182,17 @@ percent = ym.daysInMonth / ym.daysInYear;
   // => example output: "June 2019 was 8% of the year!"
 ```
 
+### yearMonth.**monthsInYear**: number
+
+The `monthsInYear` read-only property gives the number of months in the year that the month falls in.
+For the ISO 8601 calendar, this is always 12, but in other calendar systems it may differ from year to year.
+
+Usage example:
+```javascript
+ym = Temporal.Date.from('1900-01');
+ym.monthsInYear  // => 12
+```
+
 ### yearMonth.**isLeapYear** : boolean
 
 The `isLeapYear` read-only property tells whether the year that the date falls in is a leap year or not.

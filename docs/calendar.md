@@ -137,6 +137,8 @@ Effectively, this is whatever `calendarIdentifier` was passed as a parameter to 
 
 ### calendar.**daysInYear**(_date_: Temporal.Date): number
 
+### calendar.**monthsInYear**(_date_: Temporal.Date): number
+
 ### calendar.**isLeapYear**(_date_: Temporal.Date): boolean
 
 The above methods are all similar.
