@@ -63,6 +63,9 @@ describe('DateTime', () => {
       it('DateTime.prototype has weekOfYear', () => {
         assert('weekOfYear' in DateTime.prototype);
       });
+      it('DateTime.prototype has monthsInYear', () => {
+        assert('monthsInYear' in DateTime.prototype);
+      });
       it('DateTime.prototype.with is a Function', () => {
         equal(typeof DateTime.prototype.with, 'function');
       });
@@ -129,6 +132,7 @@ describe('DateTime', () => {
       it('datetime.dayOfWeek is 4', () => equal(datetime.dayOfWeek, 4));
       it('datetime.dayOfYear is 323', () => equal(datetime.dayOfYear, 323));
       it('datetime.weekOfYear is 47', () => equal(datetime.weekOfYear, 47));
+      it('datetime.monthsInYear is 12', () => equal(datetime.monthsInYear, 12));
       it('`${datetime}` is 1976-11-18T15:23:30.123456789', () => equal(`${datetime}`, '1976-11-18T15:23:30.123456789'));
     });
     describe('new DateTime(1976, 11, 18, 15, 23, 30, 123, 456)', () => {
@@ -150,6 +154,7 @@ describe('DateTime', () => {
       it('datetime.dayOfWeek is 4', () => equal(datetime.dayOfWeek, 4));
       it('datetime.dayOfYear is 323', () => equal(datetime.dayOfYear, 323));
       it('datetime.weekOfYear is 47', () => equal(datetime.weekOfYear, 47));
+      it('datetime.monthsInYear is 12', () => equal(datetime.monthsInYear, 12));
       it('`${datetime}` is 1976-11-18T15:23:30.123456', () => equal(`${datetime}`, '1976-11-18T15:23:30.123456'));
     });
     describe('new DateTime(1976, 11, 18, 15, 23, 30, 123)', () => {
@@ -171,6 +176,7 @@ describe('DateTime', () => {
       it('datetime.dayOfWeek is 4', () => equal(datetime.dayOfWeek, 4));
       it('datetime.dayOfYear is 323', () => equal(datetime.dayOfYear, 323));
       it('datetime.weekOfYear is 47', () => equal(datetime.weekOfYear, 47));
+      it('datetime.monthsInYear is 12', () => equal(datetime.monthsInYear, 12));
       it('`${datetime}` is 1976-11-18T15:23:30.123', () => equal(`${datetime}`, '1976-11-18T15:23:30.123'));
     });
     describe('new DateTime(1976, 11, 18, 15, 23, 30)', () => {
@@ -192,6 +198,7 @@ describe('DateTime', () => {
       it('datetime.dayOfWeek is 4', () => equal(datetime.dayOfWeek, 4));
       it('datetime.dayOfYear is 323', () => equal(datetime.dayOfYear, 323));
       it('datetime.weekOfYear is 47', () => equal(datetime.weekOfYear, 47));
+      it('datetime.monthsInYear is 12', () => equal(datetime.monthsInYear, 12));
       it('`${datetime}` is 1976-11-18T15:23:30', () => equal(`${datetime}`, '1976-11-18T15:23:30'));
     });
     describe('new DateTime(1976, 11, 18, 15, 23)', () => {
@@ -213,6 +220,7 @@ describe('DateTime', () => {
       it('datetime.dayOfWeek is 4', () => equal(datetime.dayOfWeek, 4));
       it('datetime.dayOfYear is 323', () => equal(datetime.dayOfYear, 323));
       it('datetime.weekOfYear is 47', () => equal(datetime.weekOfYear, 47));
+      it('datetime.monthsInYear is 12', () => equal(datetime.monthsInYear, 12));
       it('`${datetime}` is 1976-11-18T15:23', () => equal(`${datetime}`, '1976-11-18T15:23'));
     });
     describe('new DateTime(1976, 11, 18, 15)', () => {

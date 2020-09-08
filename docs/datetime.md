@@ -290,6 +290,17 @@ percent = dt.dayOfYear / dt.daysInYear;
 // example output: "The year is 10% over!"
 ```
 
+### datetime.**monthsInYear**: number
+
+The `monthsInYear` read-only property gives the number of months in the year that the date falls in.
+For the ISO 8601 calendar, this is always 12, but in other calendar systems it may differ from year to year.
+
+Usage example:
+```javascript
+dt = Temporal.Date.from('1900-01-01T12:00');
+dt.monthsInYear  // => 12
+```
+
 ### datetime.**isLeapYear** : boolean
 
 The `isLeapYear` read-only property tells whether the year that the date falls in is a leap year or not.

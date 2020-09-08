@@ -96,6 +96,10 @@ export class Calendar {
     void date;
     throw new Error('not implemented');
   }
+  monthsInYear(date) {
+    void date;
+    throw new Error('not implemented');
+  }
   isLeapYear(date) {
     void date;
     throw new Error('not implemented');
@@ -224,6 +228,10 @@ class ISO8601 extends Calendar {
   daysInYear(date) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
     return ES.LeapYear(GetSlot(date, ISO_YEAR)) ? 366 : 365;
+  }
+  monthsInYear(date) {
+    void date;
+    return 12;
   }
   isLeapYear(date) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');

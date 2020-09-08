@@ -134,6 +134,10 @@ export class DateTime {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     return GetSlot(this, CALENDAR).daysInMonth(this);
   }
+  get monthsInYear() {
+    if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+    return GetSlot(this, CALENDAR).monthsInYear(this);
+  }
   get isLeapYear() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     return GetSlot(this, CALENDAR).isLeapYear(this);

@@ -221,6 +221,20 @@
       </emu-alg>
     </emu-clause>
 
+    <emu-clause id="sec-get-temporal.date.prototype.monthsinyear">
+      <h1>get Temporal.Date.prototype.monthsInYear</h1>
+      <p>
+        `Temporal.Date.prototype.monthsInYear` is an accessor property whose set accessor function is undefined.
+        Its get accessor function performs the following steps:
+      </p>
+      <emu-alg>
+        1. Let _temporalDate_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_temporalDate_, [[InitializedTemporalDate]]).
+        1. Return *12*.
+        1. <mark>TODO: Make calendar-aware along with all the other properties.</mark>
+      </emu-alg>
+    </emu-clause>
+
     <emu-clause id="sec-get-temporal.date.prototype.isleapyear">
       <h1>get Temporal.Date.prototype.isLeapYear</h1>
       <p>

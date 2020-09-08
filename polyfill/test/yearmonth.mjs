@@ -35,6 +35,9 @@ describe('YearMonth', () => {
       it('YearMonth.prototype has daysInYear', () => {
         assert('daysInYear' in YearMonth.prototype);
       });
+      it('YearMonth.prototype has monthsInYear', () => {
+        assert('monthsInYear' in YearMonth.prototype);
+      });
     });
     it('YearMonth.compare is a Function', () => {
       equal(typeof YearMonth.compare, 'function');
@@ -51,6 +54,7 @@ describe('YearMonth', () => {
     it('ym.month is 11', () => equal(ym.month, 11));
     it('ym.daysInMonth is 30', () => equal(ym.daysInMonth, 30));
     it('ym.daysInYear is 366', () => equal(ym.daysInYear, 366));
+    it('ym.monthsInYear is 12', () => equal(ym.monthsInYear, 12));
     describe('.from()', () => {
       it('YearMonth.from(2019-10) == 2019-10', () => equal(`${YearMonth.from('2019-10')}`, '2019-10'));
       it('YearMonth.from(2019-10-01T09:00:00Z) == 2019-10', () =>

@@ -55,6 +55,10 @@ export class YearMonth {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
     return GetSlot(this, CALENDAR).daysInYear(this);
   }
+  get monthsInYear() {
+    if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
+    return GetSlot(this, CALENDAR).monthsInYear(this);
+  }
   get isLeapYear() {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
     return GetSlot(this, CALENDAR).isLeapYear(this);
