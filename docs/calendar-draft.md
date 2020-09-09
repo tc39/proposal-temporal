@@ -8,7 +8,7 @@ This doc describes a design for first-class support for non-Gregorian [calendars
 
 Main issue: https://github.com/tc39/proposal-temporal/issues/290
 
-Temporal.Date currently has three internal slots: year, month, and day. (An "internal slot" refers to actual data, as opposed to "properties", which could be computed.)  In this proposal, those slots are renamed to `[[IsoYear]]`, `[[IsoMonth]]`, and `[[IsoDay]]`, and an additional `[[Calendar]]` slot is added.  The calendar slot contains an object implementing the Temporal.Calendar interface, described below.
+Temporal.Date currently has three internal slots: year, month, and day. (An "internal slot" refers to actual data, as opposed to "properties", which could be computed.)  In this proposal, those slots are renamed to `[[ISOYear]]`, `[[ISOMonth]]`, and `[[ISODay]]`, and an additional `[[Calendar]]` slot is added.  The calendar slot contains an object implementing the Temporal.Calendar interface, described below.
 
 No matter which calendar system is being represented, the *data model* in Temporal.Date remains indexed in the ISO calendar.  So, for instance, if you wanted to represent the Hebrew date 5 Nisan 5780, the data model would be 2020-03-30, and the calendar would be responsible for mapping that into the corresponding Hebrew fields, as described further down in this document.
 
@@ -25,7 +25,7 @@ However, we have taken a future-proof approach so that if a use case presents it
 
 ### Temporal.DateTime and Temporal.Time internal slots
 
-As with Temporal.Date, all of these types will gain a `[[Calendar]]` slot, and year, month, and day will be renamed `[[IsoYear]]`, `[[IsoMonth]]`, and `[[IsoDay]]`.
+As with Temporal.Date, all of these types will gain a `[[Calendar]]` slot, and year, month, and day will be renamed `[[ISOYear]]`, `[[ISOMonth]]`, and `[[ISODay]]`.
 
 ### Temporal.YearMonth and Temporal.MonthDay internal slots
 
@@ -35,17 +35,17 @@ For reasons explained above, using the ISO calendar as the internal data model h
 
 Temporal.YearMonth:
 
-- `[[IsoYear]]`
-- `[[IsoMonth]]`
+- `[[ISOYear]]`
+- `[[ISOMonth]]`
 - `[[Calendar]]`
-- `[[RefIsoDay]]`
+- `[[RefISODay]]`
 
 Temporal.MonthDay:
 
-- `[[IsoMonth]]`
-- `[[IsoDay]]`
+- `[[ISOMonth]]`
+- `[[ISODay]]`
 - `[[Calendar]]`
-- `[[RefIsoYear]]`
+- `[[RefISOYear]]`
 
 For calendars that use ISO-style months, such as Gregorian, Solar Buddhist, and Japanese, "RefIsoDay" and "RefIsoYear" can be ignored.  However, for lunar and lunisolar calendars, such as Hebrew, Saudi Arabian Islamic, and Chinese, these additional fields allow those calendars to disambiguate which YearMonth and MonthDay are being represented.  The fields are called "Ref", or "reference", because they are only used in calendars that need them.
 
