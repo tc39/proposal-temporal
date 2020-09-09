@@ -96,8 +96,8 @@ describe('DateTime', () => {
       it('DateTime.prototype.getFields is a Function', () => {
         equal(typeof DateTime.prototype.getFields, 'function');
       });
-      it('DateTime.prototype.getISOCalendarFields is a Function', () => {
-        equal(typeof DateTime.prototype.getISOCalendarFields, 'function');
+      it('DateTime.prototype.getISOFields is a Function', () => {
+        equal(typeof DateTime.prototype.getISOFields, 'function');
       });
       it('DateTime.prototype.toString is a Function', () => {
         equal(typeof DateTime.prototype.toString, 'function');
@@ -794,39 +794,48 @@ describe('DateTime', () => {
       equal(DateTime.compare(dt1, dt2), 0);
     });
   });
-  describe('dateTime.getISOCalendarFields() works', () => {
+  describe('dateTime.getISOFields() works', () => {
     const dt1 = DateTime.from('1976-11-18T15:23:30.123456789');
-    const fields = dt1.getISOCalendarFields();
+    const fields = dt1.getISOFields();
     it('fields', () => {
-      equal(fields.year, 1976);
-      equal(fields.month, 11);
-      equal(fields.day, 18);
+      equal(fields.isoYear, 1976);
+      equal(fields.isoMonth, 11);
+      equal(fields.isoDay, 18);
       equal(fields.hour, 15);
       equal(fields.minute, 23);
       equal(fields.second, 30);
       equal(fields.millisecond, 123);
       equal(fields.microsecond, 456);
       equal(fields.nanosecond, 789);
+      equal(fields.calendar.id, 'iso8601');
     });
     it('enumerable', () => {
       const fields2 = { ...fields };
-      equal(fields2.year, 1976);
-      equal(fields2.month, 11);
-      equal(fields2.day, 18);
+      equal(fields2.isoYear, 1976);
+      equal(fields2.isoMonth, 11);
+      equal(fields2.isoDay, 18);
       equal(fields2.hour, 15);
       equal(fields2.minute, 23);
       equal(fields2.second, 30);
       equal(fields2.millisecond, 123);
       equal(fields2.microsecond, 456);
       equal(fields2.nanosecond, 789);
+      equal(fields2.calendar, fields.calendar);
     });
-    it('as input to from()', () => {
-      const dt2 = DateTime.from(fields);
-      equal(DateTime.compare(dt1, dt2), 0);
-    });
-    it('as input to with()', () => {
-      const dt2 = DateTime.from('2019-06-30').with(fields);
-      equal(DateTime.compare(dt1, dt2), 0);
+    it('as input to constructor', () => {
+      const dt2 = new DateTime(
+        fields.isoYear,
+        fields.isoMonth,
+        fields.isoDay,
+        fields.hour,
+        fields.minute,
+        fields.second,
+        fields.millisecond,
+        fields.microsecond,
+        fields.nanosecond,
+        fields.calendar
+      );
+      assert(dt2.equals(dt1));
     });
   });
   describe('dateTime.withCalendar()', () => {

@@ -189,12 +189,13 @@ export class YearMonth {
     fields.calendar = GetSlot(this, CALENDAR);
     return fields;
   }
-  getISOCalendarFields() {
+  getISOFields() {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
     return {
-      year: GetSlot(this, ISO_YEAR),
-      month: GetSlot(this, ISO_MONTH),
-      day: GetSlot(this, REF_ISO_DAY)
+      isoYear: GetSlot(this, ISO_YEAR),
+      isoMonth: GetSlot(this, ISO_MONTH),
+      refISODay: GetSlot(this, REF_ISO_DAY),
+      calendar: GetSlot(this, CALENDAR)
     };
   }
   static from(item, options = undefined) {

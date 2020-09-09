@@ -262,8 +262,8 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal.monthday.prototype.getisocalendarfields">
-      <h1>Temporal.MonthDay.prototype.getISOCalendarFields ( )</h1>
+    <emu-clause id="sec-temporal.monthday.prototype.getisofields">
+      <h1>Temporal.MonthDay.prototype.getISOFields ( )</h1>
       <p>
         The following steps are taken:
       </p>
@@ -271,8 +271,10 @@
         1. Let _monthDay_ be the *this* value.
         1. Perform ? RequireInternalSlot(_monthDay_, [[InitializedTemporalMonthDay]]).
         1. Let _fields_ be ? ObjectCreate(%ObjectPrototype%).
-        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"month"*, _monthDay_.[[ISOMonth]]).
-        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"day"*, _monthDay_.[[ISODay]]).
+        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"refISOYear"*, _monthDay_.[[RefISOYear]]).
+        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoMonth"*, _monthDay_.[[ISOMonth]]).
+        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoDay"*, _monthDay_.[[ISODay]]).
+        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"calendar"*, _monthDay_.[[Calendar]]).
         1. Return _fields_.
       </emu-alg>
     </emu-clause>

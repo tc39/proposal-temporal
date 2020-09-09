@@ -29,8 +29,8 @@ describe('YearMonth', () => {
       it('YearMonth.prototype.getFields is a Function', () => {
         equal(typeof YearMonth.prototype.getFields, 'function');
       });
-      it('YearMonth.prototype.getISOCalendarFields is a Function', () => {
-        equal(typeof YearMonth.prototype.getISOCalendarFields, 'function');
+      it('YearMonth.prototype.getISOFields is a Function', () => {
+        equal(typeof YearMonth.prototype.getISOFields, 'function');
       });
       it('YearMonth.prototype has daysInYear', () => {
         assert('daysInYear' in YearMonth.prototype);
@@ -442,19 +442,25 @@ describe('YearMonth', () => {
       equal(YearMonth.compare(ym1, ym2), 0);
     });
   });
-  describe('yearMonth.getISOCalendarFields() works', () => {
+  describe('yearMonth.getISOFields() works', () => {
     const ym1 = YearMonth.from('1976-11');
-    const fields = ym1.getISOCalendarFields();
+    const fields = ym1.getISOFields();
     it('fields', () => {
-      equal(fields.year, 1976);
-      equal(fields.month, 11);
-      equal(typeof fields.day, 'number');
+      equal(fields.isoYear, 1976);
+      equal(fields.isoMonth, 11);
+      equal(fields.calendar.id, 'iso8601');
+      equal(typeof fields.refISODay, 'number');
     });
     it('enumerable', () => {
       const fields2 = { ...fields };
-      equal(fields2.year, 1976);
-      equal(fields2.month, 11);
-      equal(typeof fields2.day, 'number');
+      equal(fields2.isoYear, 1976);
+      equal(fields2.isoMonth, 11);
+      equal(fields2.calendar, fields.calendar);
+      equal(typeof fields2.refISODay, 'number');
+    });
+    it('as input to constructor', () => {
+      const ym2 = new YearMonth(fields.isoYear, fields.isoMonth, fields.calendar, fields.refISODay);
+      assert(ym2.equals(ym1));
     });
   });
 });

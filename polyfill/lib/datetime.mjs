@@ -503,18 +503,19 @@ export class DateTime {
     fields.calendar = GetSlot(this, CALENDAR);
     return fields;
   }
-  getISOCalendarFields() {
+  getISOFields() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     return {
-      year: GetSlot(this, ISO_YEAR),
-      month: GetSlot(this, ISO_MONTH),
-      day: GetSlot(this, ISO_DAY),
+      isoYear: GetSlot(this, ISO_YEAR),
+      isoMonth: GetSlot(this, ISO_MONTH),
+      isoDay: GetSlot(this, ISO_DAY),
       hour: GetSlot(this, HOUR),
       minute: GetSlot(this, MINUTE),
       second: GetSlot(this, SECOND),
       millisecond: GetSlot(this, MILLISECOND),
       microsecond: GetSlot(this, MICROSECOND),
-      nanosecond: GetSlot(this, NANOSECOND)
+      nanosecond: GetSlot(this, NANOSECOND),
+      calendar: GetSlot(this, CALENDAR)
     };
   }
 

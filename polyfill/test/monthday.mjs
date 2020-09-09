@@ -26,8 +26,8 @@ describe('MonthDay', () => {
       it('MonthDay.prototype.getFields is a Function', () => {
         equal(typeof MonthDay.prototype.getFields, 'function');
       });
-      it('MonthDay.prototype.getISOCalendarFields is a Function', () => {
-        equal(typeof MonthDay.prototype.getISOCalendarFields, 'function');
+      it('MonthDay.prototype.getISOFields is a Function', () => {
+        equal(typeof MonthDay.prototype.getISOFields, 'function');
       });
     });
   });
@@ -215,19 +215,25 @@ describe('MonthDay', () => {
       assert(md1.equals(md2));
     });
   });
-  describe('monthDay.getISOCalendarFields() works', () => {
+  describe('monthDay.getISOFields() works', () => {
     const md1 = MonthDay.from('11-18');
-    const fields = md1.getISOCalendarFields();
+    const fields = md1.getISOFields();
     it('fields', () => {
-      equal(fields.month, 11);
-      equal(fields.day, 18);
-      equal(typeof fields.year, 'number');
+      equal(fields.isoMonth, 11);
+      equal(fields.isoDay, 18);
+      equal(fields.calendar.id, 'iso8601');
+      equal(typeof fields.refISOYear, 'number');
     });
     it('enumerable', () => {
       const fields2 = { ...fields };
-      equal(fields2.month, 11);
-      equal(fields2.day, 18);
-      equal(typeof fields2.year, 'number');
+      equal(fields2.isoMonth, 11);
+      equal(fields2.isoDay, 18);
+      equal(fields2.calendar, fields.calendar);
+      equal(typeof fields2.refISOYear, 'number');
+    });
+    it('as input to constructor', () => {
+      const md2 = new MonthDay(fields.isoMonth, fields.isoDay, fields.calendar, fields.refISOYear);
+      assert(md2.equals(md1));
     });
   });
 });

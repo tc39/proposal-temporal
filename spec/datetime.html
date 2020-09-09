@@ -617,8 +617,8 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal.datetime.prototype.getisocalendarfields">
-      <h1>Temporal.DateTime.prototype.getISOCalendarFields ( )</h1>
+    <emu-clause id="sec-temporal.datetime.prototype.getisofields">
+      <h1>Temporal.DateTime.prototype.getISOFields ( )</h1>
       <p>
         The following steps are taken:
       </p>
@@ -626,15 +626,16 @@
         1. Let _dateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
         1. Let _fields_ be ? ObjectCreate(%ObjectPrototype%).
-        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"year"*, _dateTime_.[[ISOYear]]).
-        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"month"*, _dateTime_.[[ISOMonth]]).
-        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"day"*, _dateTime_.[[ISODay]]).
+        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoYear"*, _dateTime_.[[ISOYear]]).
+        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoMonth"*, _dateTime_.[[ISOMonth]]).
+        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoDay"*, _dateTime_.[[ISODay]]).
         1. Perform ! CreateDataPropertyOrThrow(_fields_, *"hour"*, _dateTime_.[[Hour]]).
         1. Perform ! CreateDataPropertyOrThrow(_fields_, *"minute"*, _dateTime_.[[Minute]]).
         1. Perform ! CreateDataPropertyOrThrow(_fields_, *"second"*, _dateTime_.[[Second]]).
         1. Perform ! CreateDataPropertyOrThrow(_fields_, *"millisecond"*, _dateTime_.[[Millisecond]]).
         1. Perform ! CreateDataPropertyOrThrow(_fields_, *"microsecond"*, _dateTime_.[[Microsecond]]).
         1. Perform ! CreateDataPropertyOrThrow(_fields_, *"nanosecond"*, _dateTime_.[[Nanosecond]]).
+        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"calendar"*, _dateTime_.[[Calendar]]).
         1. Return _fields_.
       </emu-alg>
     </emu-clause>

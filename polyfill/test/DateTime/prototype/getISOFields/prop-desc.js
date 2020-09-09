@@ -6,12 +6,12 @@ includes: [propertyHelper.js]
 ---*/
 
 assert.sameValue(
-  typeof Temporal.MonthDay.prototype.getISOCalendarFields,
+  typeof Temporal.DateTime.prototype.getISOFields,
   "function",
-  "`typeof MonthDay.prototype.getISOCalendarFields` is `function`"
+  "`typeof DateTime.prototype.getISOFields` is `function`"
 );
 
-verifyProperty(Temporal.MonthDay.prototype, "getISOCalendarFields", {
+verifyProperty(Temporal.DateTime.prototype, "getISOFields", {
   writable: true,
   enumerable: false,
   configurable: true,

@@ -78,8 +78,8 @@ describe('Date', () => {
       it('Date.prototype.getFields is a Function', () => {
         equal(typeof Date.prototype.getFields, 'function');
       });
-      it('Date.prototype.getISOCalendarFields is a Function', () => {
-        equal(typeof Date.prototype.getISOCalendarFields, 'function');
+      it('Date.prototype.getISOFields is a Function', () => {
+        equal(typeof Date.prototype.getISOFields, 'function');
       });
       it('Date.prototype.toString is a Function', () => {
         equal(typeof Date.prototype.toString, 'function');
@@ -635,27 +635,25 @@ describe('Date', () => {
       equal(Date.compare(d1, d2), 0);
     });
   });
-  describe('date.getISOCalendarFields() works', () => {
+  describe('date.getISOFields() works', () => {
     const d1 = Date.from('1976-11-18');
-    const fields = d1.getISOCalendarFields();
+    const fields = d1.getISOFields();
     it('fields', () => {
-      equal(fields.year, 1976);
-      equal(fields.month, 11);
-      equal(fields.day, 18);
+      equal(fields.isoYear, 1976);
+      equal(fields.isoMonth, 11);
+      equal(fields.isoDay, 18);
+      equal(fields.calendar.id, 'iso8601');
     });
     it('enumerable', () => {
       const fields2 = { ...fields };
-      equal(fields2.year, 1976);
-      equal(fields2.month, 11);
-      equal(fields2.day, 18);
+      equal(fields2.isoYear, 1976);
+      equal(fields2.isoMonth, 11);
+      equal(fields2.isoDay, 18);
+      equal(fields2.calendar, fields.calendar);
     });
-    it('as input to from()', () => {
-      const d2 = Date.from(fields);
-      equal(Date.compare(d1, d2), 0);
-    });
-    it('as input to with()', () => {
-      const d2 = Date.from('2019-06-30').with(fields);
-      equal(Date.compare(d1, d2), 0);
+    it('as input to constructor', () => {
+      const d2 = new Date(fields.isoYear, fields.isoMonth, fields.isoDay, fields.calendar);
+      assert(d2.equals(d1));
     });
   });
   describe('date.withCalendar()', () => {
