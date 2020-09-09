@@ -9,6 +9,7 @@ import ToNumber from 'es-abstract/2019/ToNumber.js';
 import ToObject from 'es-abstract/2019/ToObject.js';
 import ToPrimitive from 'es-abstract/2019/ToPrimitive.js';
 import ToString from 'es-abstract/2019/ToString.js';
+import Type from 'es-abstract/2019/Type.js';
 
 import { GetIntrinsic } from './intrinsicclass.mjs';
 import {
@@ -57,7 +58,8 @@ const ES2019 = {
   ToNumber,
   ToObject,
   ToPrimitive,
-  ToString
+  ToString,
+  Type
 };
 
 export const ES = ObjectAssign({}, ES2019, {
