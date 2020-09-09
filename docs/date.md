@@ -593,9 +593,9 @@ Object.assign({}, date).day  // => undefined
 Object.assign({}, date.getFields()).day  // => 24
 ```
 
-### date.**getISOCalendarFields**(): { year: number, month: number, day: number }
+### date.**getISOFields**(): { isoYear: number, isoMonth: number, isoDay: number, calendar: object }
 
-**Returns:** a plain object with properties expressing `date` in the ISO 8601 calendar.
+**Returns:** a plain object with properties expressing `date` in the ISO 8601 calendar, as well as the value of `date.calendar`.
 
 This method is mainly useful if you are implementing a custom calendar.
 Most code will not need to use it.
@@ -604,12 +604,15 @@ Use `date.getFields()` instead, or `date.withCalendar('iso8601').getFields()`.
 Usage example:
 ```javascript
 date = Temporal.Date.from('2006-08-24');
-date.getISOCalendarFields().day  // => 24
+f = date.getISOFields();
+f.isoDay  // => 24
+date2 = new Temporal.Date(f.isoYear, f.isoMonth, f.isoDay, f.calendar);
+date.equals(date2)  // => true
 
 // Date in other calendar
 date = date.withCalendar('hebrew');
 date.getFields().day  // => 30
-date.getISOCalendarFields().day  // => 24
+date.getISOFields().isoDay  // => 24
 
 // Most likely what you need is this:
 date.withCalendar('iso8601').day  // => 24

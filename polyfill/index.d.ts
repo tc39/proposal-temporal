@@ -322,10 +322,11 @@ export namespace Temporal {
     calendar: CalendarProtocol;
   };
 
-  type DateISOCalendarFields = {
-    year: number;
-    month: number;
-    day: number;
+  type DateISOFields = {
+    isoYear: number;
+    isoMonth: number;
+    isoDay: number;
+    calendar: CalendarProtocol;
   };
 
   /**
@@ -367,7 +368,7 @@ export namespace Temporal {
     toYearMonth(): Temporal.YearMonth;
     toMonthDay(): Temporal.MonthDay;
     getFields(): DateFields;
-    getISOCalendarFields(): DateISOCalendarFields;
+    getISOFields(): DateISOFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
     toString(): string;
@@ -401,16 +402,17 @@ export namespace Temporal {
     calendar: CalendarProtocol;
   };
 
-  type DateTimeISOCalendarFields = {
-    year: number;
-    month: number;
-    day: number;
+  type DateTimeISOFields = {
+    isoYear: number;
+    isoMonth: number;
+    isoDay: number;
     hour: number;
     minute: number;
     second: number;
     millisecond: number;
     microsecond: number;
     nanosecond: number;
+    calendar: CalendarProtocol;
   };
 
   /**
@@ -483,7 +485,7 @@ export namespace Temporal {
     toMonthDay(): Temporal.MonthDay;
     toTime(): Temporal.Time;
     getFields(): DateTimeFields;
-    getISOCalendarFields(): DateTimeISOCalendarFields;
+    getISOFields(): DateTimeISOFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
     toString(): string;
@@ -497,6 +499,13 @@ export namespace Temporal {
   type MonthDayFields = {
     month: number;
     day: number;
+    calendar: CalendarProtocol;
+  };
+
+  type MonthDayISOFields = {
+    refISOYear: number;
+    isoMonth: number;
+    isoDay: number;
     calendar: CalendarProtocol;
   };
 
@@ -517,7 +526,7 @@ export namespace Temporal {
     with(monthDayLike: MonthDayLike, options?: AssignmentOptions): Temporal.MonthDay;
     toDateInYear(year: number | { era?: string | undefined; year: number }, options?: AssignmentOptions): Temporal.Date;
     getFields(): MonthDayFields;
-    getISOCalendarFields(): DateISOCalendarFields;
+    getISOFields(): MonthDayISOFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
     toString(): string;
@@ -638,6 +647,13 @@ export namespace Temporal {
     calendar: CalendarProtocol;
   };
 
+  type YearMonthISOFields = {
+    isoYear: number;
+    isoMonth: number;
+    refISODay: number;
+    calendar: CalendarProtocol;
+  };
+
   /**
    * A `Temporal.YearMonth` represents a particular month on the calendar. For
    * example, it could be used to represent a particular instance of a monthly
@@ -664,7 +680,7 @@ export namespace Temporal {
     difference(other: Temporal.YearMonth, options?: DifferenceOptions<'years' | 'months'>): Temporal.Duration;
     toDateOnDay(day: number): Temporal.Date;
     getFields(): YearMonthFields;
-    getISOCalendarFields(): DateISOCalendarFields;
+    getISOFields(): YearMonthISOFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
     toString(): string;

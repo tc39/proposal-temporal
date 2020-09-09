@@ -52,7 +52,7 @@ class Temporal.LocalDateTime {
   get isLeapYear(): boolean;
   get isTimeZoneOffsetTransition(): boolean;
   getFields(): object;
-  getISOCalendarFields(): object;
+  getISOFields(): object;
 
   // type conversion
   toAbsolute(): Temporal.Absolute;

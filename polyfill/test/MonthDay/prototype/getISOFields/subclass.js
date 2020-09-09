@@ -2,7 +2,7 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
-esid: sec-temporal.monthday.prototype.getisocalendarfields
+esid: sec-temporal.monthday.prototype.getisofields
 includes: [compareArray.js]
 ---*/
 
@@ -23,8 +23,10 @@ class MyMonthDay extends Temporal.MonthDay {
 const instance = MyMonthDay.from("05-02");
 assert.sameValue(called, 1);
 
-const result = instance.getISOCalendarFields();
-assert.sameValue(result.month, 5, "month result");
-assert.sameValue(result.day, 2, "day result");
+const result = instance.getISOFields();
+assert.sameValue(result.isoMonth, 5, "month result");
+assert.sameValue(result.isoDay, 2, "day result");
+assert.sameValue(result.calendar.id, "iso8601", "calendar result");
+assert.sameValue(result.refISOYear, 1972, "ref year result");
 assert.sameValue(called, 1);
 assert.sameValue(Object.getPrototypeOf(result), Object.prototype);

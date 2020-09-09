@@ -220,14 +220,14 @@ function extractOverrides(datetime, main) {
   }
   if (datetime instanceof YearMonth) {
     calendar = datetime.calendar.id;
-    const { year, month, day } = datetime.getISOCalendarFields();
-    datetime = new Date(year, month, day, datetime.calendar);
+    const { isoYear, isoMonth, refISODay } = datetime.getISOFields();
+    datetime = new Date(isoYear, isoMonth, refISODay, datetime.calendar);
     formatter = main[YM];
   }
   if (datetime instanceof MonthDay) {
     calendar = datetime.calendar.id;
-    const { year, month, day } = datetime.getISOCalendarFields();
-    datetime = new Date(year, month, day, datetime.calendar);
+    const { refISOYear, isoMonth, isoDay } = datetime.getISOFields();
+    datetime = new Date(refISOYear, isoMonth, isoDay, datetime.calendar);
     formatter = main[MD];
   }
   if (datetime instanceof Date) {

@@ -2,17 +2,16 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
-esid: sec-temporal.date.prototype.getisocalendarfields
 includes: [propertyHelper.js]
 ---*/
 
 assert.sameValue(
-  typeof Temporal.Date.prototype.getISOCalendarFields,
+  typeof Temporal.YearMonth.prototype.getISOFields,
   "function",
-  "`typeof Date.prototype.getISOCalendarFields` is `function`"
+  "`typeof YearMonth.prototype.getISOFields` is `function`"
 );
 
-verifyProperty(Temporal.Date.prototype, "getISOCalendarFields", {
+verifyProperty(Temporal.YearMonth.prototype, "getISOFields", {
   writable: true,
   enumerable: false,
   configurable: true,

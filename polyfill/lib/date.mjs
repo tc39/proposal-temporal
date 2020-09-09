@@ -230,12 +230,13 @@ export class Date {
     fields.calendar = GetSlot(this, CALENDAR);
     return fields;
   }
-  getISOCalendarFields() {
+  getISOFields() {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
     return {
-      year: GetSlot(this, ISO_YEAR),
-      month: GetSlot(this, ISO_MONTH),
-      day: GetSlot(this, ISO_DAY)
+      isoYear: GetSlot(this, ISO_YEAR),
+      isoMonth: GetSlot(this, ISO_MONTH),
+      isoDay: GetSlot(this, ISO_DAY),
+      calendar: GetSlot(this, CALENDAR)
     };
   }
   static from(item, options = undefined) {

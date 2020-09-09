@@ -43,9 +43,9 @@ const dateTimeArgs = [2020, 12, 24, 12, 34, 56, 123, 456, 789].map(function (val
 });
 
 const calendar = {
-  year(d) { return d.getISOCalendarFields().year; },
-  month(d) { return d.getISOCalendarFields().month; },
-  day(d) { return d.getISOCalendarFields().day; },
+  year(d) { return d.getISOFields().isoYear; },
+  month(d) { return d.getISOFields().isoMonth; },
+  day(d) { return d.getISOFields().isoDay; },
 };
 
 Object.defineProperty(Temporal.Calendar, "from", {

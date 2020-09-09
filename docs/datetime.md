@@ -690,9 +690,9 @@ Object.assign({}, dt).day  // => undefined
 Object.assign({}, dt.getFields()).day  // => 7
 ```
 
-### datetime.**getISOCalendarFields**(): { year: number, month: number, day: number, hour: number, minute: number, second: number, millisecond: number, microsecond: number, nanosecond: number }
+### datetime.**getISOFields**(): { isoYear: number, isoMonth: number, isoDay: number, hour: number, minute: number, second: number, millisecond: number, microsecond: number, nanosecond: number, calendar: object }
 
-**Returns:** a plain object with properties expressing `datetime` in the ISO 8601 calendar.
+**Returns:** a plain object with properties expressing `datetime` in the ISO 8601 calendar, as well as the value of `datetime.calendar`.
 
 This method is mainly useful if you are implementing a custom calendar.
 Most code will not need to use it.
@@ -700,13 +700,17 @@ Use `datetime.getFields()` instead, or `datetime.withCalendar('iso8601').getFiel
 
 Usage example:
 ```javascript
-dt = Temporal.Date.from('1995-12-07T03:24:30.000003500');
-date.getISOCalendarFields().day  // => 7
+dt = Temporal.DateTime.from('1995-12-07T03:24:30.000003500');
+f = dt.getISOFields();
+f.isoDay  // => 7
+dt2 = new Temporal.DateTime(f.isoYear, f.isoMonth, f.isoDay, f.hour, f.minute,
+  f.second, f.millisecond, f.microsecond, f.nanosecond, f.calendar);
+dt.equals(dt2);  // => true
 
 // Date in other calendar
 dt = dt.withCalendar('hebrew');
 dt.getFields().day  // => 14
-dt.getISOCalendarFields().day  // => 7
+dt.getISOFields().isoDay  // => 7
 
 // Most likely what you need is this:
 dt.withCalendar('iso8601').day  // => 7
