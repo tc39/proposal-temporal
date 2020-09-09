@@ -576,7 +576,11 @@ export const ES = ObjectAssign({}, ES2019, {
     if (from === undefined) {
       from = GetIntrinsic('%Temporal.Calendar.from%');
     }
-    return ES.Call(from, TemporalCalendar, [calendarLike]);
+    const calendar = ES.Call(from, TemporalCalendar, [calendarLike]);
+    if (ES.Type(calendar) !== 'Object') {
+      throw new TypeError('Temporal.Calendar.from should return an object');
+    }
+    return calendar;
   },
   ToTemporalCalendar: (calendarLike) => {
     if (ES.Type(calendarLike) === 'Object') {

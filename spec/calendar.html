@@ -48,7 +48,10 @@
       <emu-alg>
         1. Let _from_ be ? Get(%Temporal.Calendar%, *"from"*).
         1. If _from_ is *undefined*, set _from_ to %Temporal.Calendar.from%.
-        1. Return ? Call(_from_, %Temporal.Calendar%, « _identifier_ »).
+        1. Let _calendar_ be ? Call(_from_, %Temporal.Calendar%, « _identifier_ »).
+        1. If Type(_calendar_) is not Object, then
+          1. Throw a *TypeError* exception.
+        1. Return _calendar_.
       </emu-alg>
     </emu-clause>
   </emu-clause>
