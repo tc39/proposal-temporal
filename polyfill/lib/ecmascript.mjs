@@ -579,7 +579,7 @@ export const ES = ObjectAssign({}, ES2019, {
     return ES.Call(from, TemporalCalendar, [calendarLike]);
   },
   ToTemporalCalendar: (calendarLike) => {
-    if (typeof calendarLike === 'object' && calendarLike) {
+    if (ES.Type(calendarLike) === 'Object') {
       return calendarLike;
     }
     const identifier = ES.ToString(calendarLike);
