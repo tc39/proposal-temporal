@@ -5162,21 +5162,21 @@
   MakeIntrinsicClass(Calendar, 'Temporal.Calendar');
   DefineIntrinsic('Temporal.Calendar.from', Calendar.from);
 
-  var ISO8601 = /*#__PURE__*/function (_Calendar) {
-    _inherits(ISO8601, _Calendar);
+  var ISO8601Calendar = /*#__PURE__*/function (_Calendar) {
+    _inherits(ISO8601Calendar, _Calendar);
 
-    var _super = _createSuper(ISO8601);
+    var _super = _createSuper(ISO8601Calendar);
 
-    function ISO8601() {
+    function ISO8601Calendar() {
       var id = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'iso8601';
 
-      _classCallCheck(this, ISO8601);
+      _classCallCheck(this, ISO8601Calendar);
 
       // Needs to be subclassable, that's why the ID is a default argument
       return _super.call(this, id);
     }
 
-    _createClass(ISO8601, [{
+    _createClass(ISO8601Calendar, [{
       key: "dateFromFields",
       value: function dateFromFields(fields, options, constructor) {
         if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
@@ -5378,14 +5378,15 @@
       }
     }]);
 
-    return ISO8601;
-  }(Calendar); // According to documentation for Intl.Locale.prototype.calendar on MDN,
+    return ISO8601Calendar;
+  }(Calendar);
+
+  MakeIntrinsicClass(ISO8601Calendar, 'Temporal.ISO8601Calendar'); // According to documentation for Intl.Locale.prototype.calendar on MDN,
   // 'iso8601' calendar is equivalent to 'gregory' except for ISO 8601 week
   // numbering rules, which we do not currently use in Temporal.
 
-
-  var Gregorian = /*#__PURE__*/function (_ISO) {
-    _inherits(Gregorian, _ISO);
+  var Gregorian = /*#__PURE__*/function (_ISO8601Calendar) {
+    _inherits(Gregorian, _ISO8601Calendar);
 
     var _super2 = _createSuper(Gregorian);
 
@@ -5396,7 +5397,7 @@
     }
 
     return Gregorian;
-  }(ISO8601); // Implementation details for Japanese calendar
+  }(ISO8601Calendar); // Implementation details for Japanese calendar
   //
   // NOTE: For convenience, this hacky class only supports the most recent five
   // eras, those of the modern period. For the full list, see:
@@ -5460,8 +5461,8 @@
     }
   };
 
-  var Japanese = /*#__PURE__*/function (_ISO2) {
-    _inherits(Japanese, _ISO2);
+  var Japanese = /*#__PURE__*/function (_ISO8601Calendar2) {
+    _inherits(Japanese, _ISO8601Calendar2);
 
     var _super3 = _createSuper(Japanese);
 
@@ -5505,11 +5506,11 @@
     }]);
 
     return Japanese;
-  }(ISO8601);
+  }(ISO8601Calendar);
 
   var BUILTIN_CALENDARS = {
     gregory: Gregorian,
-    iso8601: ISO8601,
+    iso8601: ISO8601Calendar,
     japanese: Japanese // To be filled in as builtin calendars are implemented
 
   };
