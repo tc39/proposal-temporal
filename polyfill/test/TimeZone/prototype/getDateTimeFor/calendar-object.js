@@ -8,19 +8,17 @@ includes: [compareArray.js]
 
 const actual = [];
 const expected = [
-  "get timeZone.getDateTimeFor",
-  "call timeZone.getDateTimeFor",
+  "get timeZone.getOffsetNanosecondsFor",
+  "call timeZone.getOffsetNanosecondsFor",
 ];
 
 const absolute = Temporal.Absolute.from("1975-02-02T14:25:36.123456789Z");
-const dateTime = Temporal.DateTime.from("1963-07-02T12:34:56.987654321");
 const calendar = {};
 const timeZone = new Proxy({
-  getDateTimeFor(absolute, calendarArg) {
-    actual.push("call timeZone.getDateTimeFor");
-    assert.sameValue(absolute instanceof Temporal.Absolute, true, "Absolute");
-    assert.sameValue(calendarArg, calendar);
-    return dateTime;
+  getOffsetNanosecondsFor(absoluteArg) {
+    actual.push("call timeZone.getOffsetNanosecondsFor");
+    assert.sameValue(absoluteArg, absolute);
+    return 72e11;
   },
 }, {
   has(target, property) {
@@ -40,7 +38,7 @@ Object.defineProperty(Temporal.Calendar, "from", {
   },
 });
 
-const result = timeZone.getDateTimeFor(absolute, calendar);
-assert.sameValue(result, dateTime);
+const result = Temporal.TimeZone.prototype.getDateTimeFor.call(timeZone, absolute, calendar);
+assert.sameValue(result.calendar, calendar);
 
 assert.compareArray(actual, expected);
