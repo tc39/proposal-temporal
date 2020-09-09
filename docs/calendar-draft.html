@@ -138,7 +138,7 @@
 <p>This doc describes a design for first-class support for non-Gregorian <a href="https://en.wikipedia.org/wiki/Calendar">calendars</a> in Temporal.  Although most of this document is based on Temporal.Date, most of this applies to Temporal.DateTime, Temporal.YearMonth, Temporal.MonthDay, and Temporal.Time as well.</p>
 <h2 id="data-model">Data Model</h2>
 <h3 id="temporaldate-internal-slots"><a class="heading-link" href="#temporaldate-internal-slots"></a>Temporal.Date internal slots</h3><p>Main issue: <a href="https://github.com/tc39/proposal-temporal/issues/290">https://github.com/tc39/proposal-temporal/issues/290</a></p>
-<p>Temporal.Date currently has three internal slots: year, month, and day. (An &quot;internal slot&quot; refers to actual data, as opposed to &quot;properties&quot;, which could be computed.)  In this proposal, those slots are renamed to <code>[[IsoYear]]</code>, <code>[[IsoMonth]]</code>, and <code>[[IsoDay]]</code>, and an additional <code>[[Calendar]]</code> slot is added.  The calendar slot contains an object implementing the Temporal.Calendar interface, described below.</p>
+<p>Temporal.Date currently has three internal slots: year, month, and day. (An &quot;internal slot&quot; refers to actual data, as opposed to &quot;properties&quot;, which could be computed.)  In this proposal, those slots are renamed to <code>[[ISOYear]]</code>, <code>[[ISOMonth]]</code>, and <code>[[ISODay]]</code>, and an additional <code>[[Calendar]]</code> slot is added.  The calendar slot contains an object implementing the Temporal.Calendar interface, described below.</p>
 <p>No matter which calendar system is being represented, the <em>data model</em> in Temporal.Date remains indexed in the ISO calendar.  So, for instance, if you wanted to represent the Hebrew date 5 Nisan 5780, the data model would be 2020-03-30, and the calendar would be responsible for mapping that into the corresponding Hebrew fields, as described further down in this document.</p>
 <p>This data model makes the simple assumption that the concept of a &quot;day&quot; is a solar day (main issues: <a href="https://github.com/tc39/proposal-temporal/issues/390">#390</a>, <a href="https://github.com/tc39/proposal-temporal/issues/389">#389</a>).  Most or all modern-use calendars, even those with lunar month cycles, use a solar day, which is based on the time it takes for the Earth to complete one rotation relative to the Sun.</p>
 <p>The acclaimed researchers Edward M. Reingold and Nachum Dershowitz discuss this subject in <a href="https://www.cambridge.org/fr/academic/subjects/computer-science/computing-general-interest/calendrical-calculations-ultimate-edition-4th-edition"><em>Calendrical Calculations</em></a>:</p>
@@ -148,22 +148,22 @@
 <p>Some historical calendars, such as the Hawaiian Moon Calendar, define a day as the time it takes for the Earth to complete one rotation relative to the moon (instead of the Sun), which is slightly shorter on average.  For calendars that use a lunar day, a Temporal.DateTime can be used instead of Temporal.Date when the distinction is important.</p>
 <p>At this time, Temporal does not support subdividing a solar day into anything other than hours, minutes, and seconds.
 However, we have taken a future-proof approach so that if a use case presents itself, we can add <code>timePlus()</code>, <code>timeMinus()</code>, and <code>timeDifference()</code> methods to Temporal.Calendar.</p>
-<h3 id="temporaldatetime-and-temporaltime-internal-slots"><a class="heading-link" href="#temporaldatetime-and-temporaltime-internal-slots"></a>Temporal.DateTime and Temporal.Time internal slots</h3><p>As with Temporal.Date, all of these types will gain a <code>[[Calendar]]</code> slot, and year, month, and day will be renamed <code>[[IsoYear]]</code>, <code>[[IsoMonth]]</code>, and <code>[[IsoDay]]</code>.</p>
+<h3 id="temporaldatetime-and-temporaltime-internal-slots"><a class="heading-link" href="#temporaldatetime-and-temporaltime-internal-slots"></a>Temporal.DateTime and Temporal.Time internal slots</h3><p>As with Temporal.Date, all of these types will gain a <code>[[Calendar]]</code> slot, and year, month, and day will be renamed <code>[[ISOYear]]</code>, <code>[[ISOMonth]]</code>, and <code>[[ISODay]]</code>.</p>
 <h3 id="temporalyearmonth-and-temporalmonthday-internal-slots"><a class="heading-link" href="#temporalyearmonth-and-temporalmonthday-internal-slots"></a>Temporal.YearMonth and Temporal.MonthDay internal slots</h3><p>Main issue: <a href="https://github.com/tc39/proposal-temporal/issues/391">https://github.com/tc39/proposal-temporal/issues/391</a></p>
 <p>For reasons explained above, using the ISO calendar as the internal data model has many advantages.  However, there are several challenges for these two &quot;incomplete&quot; types: lunar months don&#39;t line up with solar months, and not every lunar month occurs in every solar year.  After discussing several data model alternatives, we reached the conclusion that the simplest data model for Temporal.YearMonth and Temporal.MonthDay is to make it share the same data model as Temporal.Date, with the following slots:</p>
 <p>Temporal.YearMonth:</p>
 <ul>
-<li><code>[[IsoYear]]</code></li>
-<li><code>[[IsoMonth]]</code></li>
+<li><code>[[ISOYear]]</code></li>
+<li><code>[[ISOMonth]]</code></li>
 <li><code>[[Calendar]]</code></li>
-<li><code>[[RefIsoDay]]</code></li>
+<li><code>[[RefISODay]]</code></li>
 </ul>
 <p>Temporal.MonthDay:</p>
 <ul>
-<li><code>[[IsoMonth]]</code></li>
-<li><code>[[IsoDay]]</code></li>
+<li><code>[[ISOMonth]]</code></li>
+<li><code>[[ISODay]]</code></li>
 <li><code>[[Calendar]]</code></li>
-<li><code>[[RefIsoYear]]</code></li>
+<li><code>[[RefISOYear]]</code></li>
 </ul>
 <p>For calendars that use ISO-style months, such as Gregorian, Solar Buddhist, and Japanese, &quot;RefIsoDay&quot; and &quot;RefIsoYear&quot; can be ignored.  However, for lunar and lunisolar calendars, such as Hebrew, Saudi Arabian Islamic, and Chinese, these additional fields allow those calendars to disambiguate which YearMonth and MonthDay are being represented.  The fields are called &quot;Ref&quot;, or &quot;reference&quot;, because they are only used in calendars that need them.</p>
 <h2 id="temporalcalendar-interface">Temporal.Calendar interface</h2>
