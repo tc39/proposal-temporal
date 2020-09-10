@@ -137,7 +137,9 @@
       <emu-alg>
         1. Let _dateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
-        1. Return _dateTime_.[[ISOYear]].
+        1. Let _calendar_ be _dateTime_.[[Calendar]].
+        1. Let _method_ be ? Get(_calendar_, *"year"*).
+        1. Return ? Call(_method_, _calendar_, « _dateTime_ »).
       </emu-alg>
     </emu-clause>
 
@@ -150,7 +152,9 @@
       <emu-alg>
         1. Let _dateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
-        1. Return _dateTime_.[[ISOMonth]].
+        1. Let _calendar_ be _dateTime_.[[Calendar]].
+        1. Let _method_ be ? Get(_calendar_, *"month"*).
+        1. Return ? Call(_method_, _calendar_, « _dateTime_ »).
       </emu-alg>
     </emu-clause>
 
@@ -163,7 +167,9 @@
       <emu-alg>
         1. Let _dateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
-        1. Return _dateTime_.[[ISODay]].
+        1. Let _calendar_ be _dateTime_.[[Calendar]].
+        1. Let _method_ be ? Get(_calendar_, *"day"*).
+        1. Return ? Call(_method_, _calendar_, « _dateTime_ »).
       </emu-alg>
     </emu-clause>
 
@@ -254,7 +260,9 @@
       <emu-alg>
         1. Let _dateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
-        1. Return ! ToDayOfWeek(_dateTime_.[[ISOYear]], _dateTime_.[[ISOMonth]], _dateTime_.[[ISODay]]).
+        1. Let _calendar_ be _dateTime_.[[Calendar]].
+        1. Let _method_ be ? Get(_calendar_, *"dayOfWeek"*).
+        1. Return ? Call(_method_, _calendar_, « _dateTime_ »).
       </emu-alg>
     </emu-clause>
 
@@ -267,7 +275,9 @@
       <emu-alg>
         1. Let _dateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
-        1. Return ! ToDayOfYear(_dateTime_.[[ISOYear]], _dateTime_.[[ISOMonth]], _dateTime_.[[ISODay]]).
+        1. Let _calendar_ be _dateTime_.[[Calendar]].
+        1. Let _method_ be ? Get(_calendar_, *"dayOfYear"*).
+        1. Return ? Call(_method_, _calendar_, « _dateTime_ »).
       </emu-alg>
     </emu-clause>
 
@@ -280,7 +290,9 @@
       <emu-alg>
         1. Let _dateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
-        1. Return ! ToWeekOfYear(_dateTime_.[[ISOYear]], _dateTime_.[[ISOMonth]], _dateTime_.[[ISODay]]).
+        1. Let _calendar_ be _dateTime_.[[Calendar]].
+        1. Let _method_ be ? Get(_calendar_, *"weekOfYear"*).
+        1. Return ? Call(_method_, _calendar_, « _dateTime_ »).
       </emu-alg>
     </emu-clause>
 
@@ -293,8 +305,9 @@
       <emu-alg>
         1. Let _dateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
-        1. Return *7*.
-        1. <mark>TODO: Make calendar-aware along with all the other properties.</mark>
+        1. Let _calendar_ be _dateTime_.[[Calendar]].
+        1. Let _method_ be ? Get(_calendar_, *"daysInWeek"*).
+        1. Return ? Call(_method_, _calendar_, « _dateTime_ »).
       </emu-alg>
     </emu-clause>
 
@@ -307,7 +320,9 @@
       <emu-alg>
         1. Let _dateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
-        1. Return ! DaysInYear(_dateTime_.[[ISOYear]]).
+        1. Let _calendar_ be _dateTime_.[[Calendar]].
+        1. Let _method_ be ? Get(_calendar_, *"daysInYear"*).
+        1. Return ? Call(_method_, _calendar_, « _dateTime_ »).
       </emu-alg>
     </emu-clause>
 
@@ -320,7 +335,9 @@
       <emu-alg>
         1. Let _dateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
-        1. Return ! DaysInMonth(_dateTime_.[[ISOYear]], _dateTime_.[[ISOMonth]]).
+        1. Let _calendar_ be _dateTime_.[[Calendar]].
+        1. Let _method_ be ? Get(_calendar_, *"daysInMonth"*).
+        1. Return ? Call(_method_, _calendar_, « _dateTime_ »).
       </emu-alg>
     </emu-clause>
 
@@ -333,8 +350,9 @@
       <emu-alg>
         1. Let _dateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
-        1. Return *12*.
-        1. <mark>TODO: Make calendar-aware along with all the other properties.</mark>
+        1. Let _calendar_ be _dateTime_.[[Calendar]].
+        1. Let _method_ be ? Get(_calendar_, *"monthsInYear"*).
+        1. Return ? Call(_method_, _calendar_, « _dateTime_ »).
       </emu-alg>
     </emu-clause>
 
@@ -347,7 +365,9 @@
       <emu-alg>
         1. Let _dateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
-        1. Return ! IsLeapYear(_dateTime_.[[ISOYear]]).
+        1. Let _calendar_ be _dateTime_.[[Calendar]].
+        1. Let _method_ be ? Get(_calendar_, *"isLeapYear"*).
+        1. Return ? Call(_method_, _calendar_, « _dateTime_ »).
       </emu-alg>
     </emu-clause>
 

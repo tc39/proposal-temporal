@@ -151,112 +151,146 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal.iso8601calendar.prototype.year">
-      <h1>Temporal.ISO8601Calendar.prototype.year ( _date_ )</h1>
+      <h1>Temporal.ISO8601Calendar.prototype.year ( _dateOrDateTime_ )</h1>
       <p>
-        The `year` method takes one argument _date_.
+        The `year` method takes one argument _dateOrDateTime_.
         The following steps are taken:
       </p>
       <emu-alg>
-        1. <mark>TODO.</mark>
+        1. Perform ? RequireOneOfInternalSlots(_dateOrDateTime_, « [[InitializedTemporalDate]], [[InitializedTemporalDateTime]] »).
+        1. Return _dateOrDateTime_.[[ISOYear]].
       </emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal.iso8601calendar.prototype.month">
-      <h1>Temporal.ISO8601Calendar.prototype.month ( _date_ )</h1>
+      <h1>Temporal.ISO8601Calendar.prototype.month ( _dateOrDateTime_ )</h1>
       <p>
-        The `month` method takes one argument _date_.
+        The `month` method takes one argument _dateOrDateTime_.
         The following steps are taken:
       </p>
       <emu-alg>
-        1. <mark>TODO.</mark>
+        1. Perform ? RequireOneOfInternalSlots(_dateOrDateTime_, « [[InitializedTemporalDate]], [[InitializedTemporalDateTime]] »).
+        1. Return _dateOrDateTime_.[[ISOMonth]].
       </emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal.iso8601calendar.prototype.day">
-      <h1>Temporal.ISO8601Calendar.prototype.day ( _date_ )</h1>
+      <h1>Temporal.ISO8601Calendar.prototype.day ( _dateOrDateTime_ )</h1>
       <p>
-        The `day` method takes one argument _date_.
+        The `day` method takes one argument _dateOrDateTime_.
         The following steps are taken:
       </p>
       <emu-alg>
-        1. <mark>TODO.</mark>
+        1. Perform ? RequireOneOfInternalSlots(_dateOrDateTime_, « [[InitializedTemporalDate]], [[InitializedTemporalDateTime]] »).
+        1. Return _dateOrDateTime_.[[ISODay]].
       </emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal.iso8601calendar.prototype.era">
-      <h1>Temporal.ISO8601Calendar.prototype.era ( _date_ )</h1>
+      <h1>Temporal.ISO8601Calendar.prototype.era ( _dateOrDateTime_ )</h1>
       <p>
-        The `era` method takes one argument _date_.
+        The `era` method takes one argument _dateOrDateTime_.
         The following steps are taken:
       </p>
       <emu-alg>
-        1. <mark>TODO.</mark>
+        1. Perform ? RequireOneOfInternalSlots(_dateOrDateTime_, « [[InitializedTemporalDate]], [[InitializedTemporalDateTime]] »).
+        1. Return *undefined*.
       </emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal.iso8601calendar.prototype.dayofweek">
-      <h1>Temporal.ISO8601Calendar.prototype.dayOfWeek ( _date_ )</h1>
+      <h1>Temporal.ISO8601Calendar.prototype.dayOfWeek ( _dateOrDateTime_ )</h1>
       <p>
-        The `dayOfWeek` method takes one argument _date_.
+        The `dayOfWeek` method takes one argument _dateOrDateTime_.
         The following steps are taken:
       </p>
       <emu-alg>
-        1. <mark>TODO.</mark>
+        1. Perform ? RequireOneOfInternalSlots(_dateOrDateTime_, « [[InitializedTemporalDate]], [[InitializedTemporalDateTime]] »).
+        1. Return ! ToDayOfWeek(_dateOrDateTime_.[[ISOYear]], _dateOrDateTime_.[[ISOMonth]], _dateOrDateTime_.[[ISODay]]).
       </emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal.iso8601calendar.prototype.dayofyear">
-      <h1>Temporal.ISO8601Calendar.prototype.dayOfYear ( _date_ )</h1>
+      <h1>Temporal.ISO8601Calendar.prototype.dayOfYear ( _dateOrDateTime_ )</h1>
       <p>
-        The `dayOfYear` method takes one argument _date_.
+        The `dayOfYear` method takes one argument _dateOrDateTime_.
         The following steps are taken:
       </p>
       <emu-alg>
-        1. <mark>TODO.</mark>
+        1. Perform ? RequireOneOfInternalSlots(_dateOrDateTime_, « [[InitializedTemporalDate]], [[InitializedTemporalDateTime]] »).
+        1. Return ! ToDayOfYear(_dateOrDateTime_.[[ISOYear]], _dateOrDateTime_.[[ISOMonth]], _dateOrDateTime_.[[ISODay]]).
       </emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal.iso8601calendar.prototype.weekofyear">
-      <h1>Temporal.ISO8601Calendar.prototype.weekOfYear ( _date_ )</h1>
+      <h1>Temporal.ISO8601Calendar.prototype.weekOfYear ( _dateOrDateTime_ )</h1>
       <p>
-        The `weekOfYear` method takes one argument _date_.
+        The `weekOfYear` method takes one argument _dateOrDateTime_.
         The following steps are taken:
       </p>
       <emu-alg>
-        1. <mark>TODO.</mark>
+        1. Perform ? RequireOneOfInternalSlots(_dateOrDateTime_, « [[InitializedTemporalDate]], [[InitializedTemporalDateTime]] »).
+        1. Return ! ToWeekOfYear(_dateOrDateTime_.[[ISOYear]], _dateOrDateTime_.[[ISOMonth]], _dateOrDateTime_.[[ISODay]]).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal.iso8601calendar.prototype.daysinweek">
+      <h1>Temporal.ISO8601Calendar.prototype.daysInWeek ( _dateOrDateTime_ )</h1>
+      <p>
+        The `daysInWeek` method takes one argument _dateOrDateTime_.
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Perform ? RequireOneOfInternalSlots(_dateOrDateTime_, « [[InitializedTemporalDate]], [[InitializedTemporalDateTime]] »).
+        1. Return *7*.
       </emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal.iso8601calendar.prototype.daysinmonth">
-      <h1>Temporal.ISO8601Calendar.prototype.daysInMonth ( _date_ )</h1>
+      <h1>Temporal.ISO8601Calendar.prototype.daysInMonth ( _dateOrDateTime_ )</h1>
       <p>
-        The `daysInMonth` method takes one argument _date_.
+        The `daysInMonth` method takes one argument _dateOrDateTime_.
         The following steps are taken:
       </p>
       <emu-alg>
-        1. <mark>TODO.</mark>
+        1. Perform ? RequireOneOfInternalSlots(_dateOrDateTime_, « [[InitializedTemporalDate]], [[InitializedTemporalDateTime]] »).
+        1. Return ! DaysInMonth(_dateOrDateTime_.[[ISOYear]], _dateOrDateTime_.[[ISOMonth]]).
       </emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal.iso8601calendar.prototype.daysinyear">
-      <h1>Temporal.ISO8601Calendar.prototype.daysInYear ( _date_ )</h1>
+      <h1>Temporal.ISO8601Calendar.prototype.daysInYear ( _dateOrDateTime_ )</h1>
       <p>
-        The `daysInYear` method takes one argument _date_.
+        The `daysInYear` method takes one argument _dateOrDateTime_.
         The following steps are taken:
       </p>
       <emu-alg>
-        1. <mark>TODO.</mark>
+        1. Perform ? RequireOneOfInternalSlots(_dateOrDateTime_, « [[InitializedTemporalDate]], [[InitializedTemporalDateTime]] »).
+        1. Return ! DaysInYear(_dateOrDateTime_.[[ISOYear]]).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal.iso8601calendar.prototype.monthsinyear">
+      <h1>Temporal.ISO8601Calendar.prototype.monthsInYear ( _dateOrDateTime_ )</h1>
+      <p>
+        The `monthsInYear` method takes one argument _dateOrDateTime_.
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Perform ? RequireOneOfInternalSlots(_dateOrDateTime_, « [[InitializedTemporalDate]], [[InitializedTemporalDateTime]] »).
+        1. Return *12*.
       </emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal.iso8601calendar.prototype.isleapyear">
-      <h1>Temporal.ISO8601Calendar.prototype.isLeapYear ( _date_ )</h1>
+      <h1>Temporal.ISO8601Calendar.prototype.isLeapYear ( _dateOrDateTime_ )</h1>
       <p>
-        The `isLeapYear` method takes one argument _date_.
+        The `isLeapYear` method takes one argument _dateOrDateTime_.
         The following steps are taken:
       </p>
       <emu-alg>
-        1. <mark>TODO.</mark>
+        1. Perform ? RequireOneOfInternalSlots(_dateOrDateTime_, « [[InitializedTemporalDate]], [[InitializedTemporalDateTime]] »).
+        1. Return ! IsLeapYear(_dateOrDateTime_.[[ISOYear]]).
       </emu-alg>
     </emu-clause>
   </emu-clause>
@@ -265,5 +299,67 @@
     <h1>Properties of Temporal.ISO8601Calendar Instances</h1>
 
     <p>Temporal.ISO8601Calendar instances are ordinary objects that inherit properties from the %Temporal.ISO8601Calendar.prototype%. Temporal.ISO8601Calendar instances also have a [[Identifier]] internal slot. The value of this internal slot is a string.</p>
+  </emu-clause>
+
+  <emu-clause id="sec-temporal-iso8601calendar-abstract-ops">
+    <h1>Abstract Operations for Temporal.Date Objects</h1>
+
+    <emu-clause id="sec-temporal-isleapyear" aoid="IsLeapYear">
+      <h1>IsLeapYear ( _year_ )</h1>
+      <emu-alg>
+        1. Assert: _year_ is an integer.
+        1. If _year_ modulo 4 ≠ 0, return *false*.
+        1. If _year_ modulo 400 = 0, return *true*.
+        1. If _year_ modulo 100 = 0, return *false*.
+        1. Return *true*.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-daysinyear" aoid="DaysInYear">
+      <h1>DaysInYear ( _year_ )</h1>
+      <emu-alg>
+        1. Assert: _year_ is an integer.
+        1. If ! IsLeapYear(_year_) is *true*, then
+          1. Return 366.
+        1. Return 365.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-daysinmonth" aoid="DaysInMonth">
+      <h1>DaysInMonth ( _year_, _month_ )</h1>
+      <emu-alg>
+        1. Assert: _month_ is an integer, _month_ ≥ 1, and _month_ ≤ 12.
+        1. If _month_ is 1, 3, 5, 7, 8, 10, or 12, return 31.
+        1. If _month_ is 4, 6, 9, or 11, return 30.
+        1. If ! IsLeapYear(_year_) is *true*, return 29.
+        1. Return 28.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-todayofweek" aoid="ToDayOfWeek">
+      <h1>ToDayOfWeek ( _year_, _month_, _day_ )</h1>
+      <emu-alg>
+        1. Let _date_ be the date given by _year_, _month_, and _day_.
+        1. Return _date_'s day of the week according to ISO-8601.
+      </emu-alg>
+      <emu-note>Monday is 1 and Sunday is 7.</emu-note>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-todayofyear" aoid="ToDayOfYear">
+      <h1>ToDayOfYear ( _year_, _month_, _day_ )</h1>
+      <emu-alg>
+        1. Let _date_ be the date given by _year_, _month_, and _day_.
+        1. Return _date_'s ordinal date in the year according to ISO-8601.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-toweekofyear" aoid="ToWeekOfYear">
+      <h1>ToWeekOfYear ( _year_, _month_, _day_ )</h1>
+      <emu-alg>
+        1. Let _date_ be the date given by _year_, _month_, and _day_.
+        1. Return _date_'s week number according to ISO-8601.
+      </emu-alg>
+      <emu-note>Beware that dates at the beginning of a year may be part of a week from the preceding year, and dates at the end of a year may be part of a week at the beginning of the next year, as the first week of any year is defined as the week that contains the first Thursday of the year.</emu-note>
+    </emu-clause>
   </emu-clause>
 </emu-clause>
