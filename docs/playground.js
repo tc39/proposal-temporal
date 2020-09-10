@@ -6004,13 +6004,14 @@
         return fields;
       }
     }, {
-      key: "getISOCalendarFields",
-      value: function getISOCalendarFields() {
+      key: "getISOFields",
+      value: function getISOFields() {
         if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
         return {
-          year: GetSlot(this, ISO_YEAR),
-          month: GetSlot(this, ISO_MONTH),
-          day: GetSlot(this, ISO_DAY)
+          isoYear: GetSlot(this, ISO_YEAR),
+          isoMonth: GetSlot(this, ISO_MONTH),
+          isoDay: GetSlot(this, ISO_DAY),
+          calendar: GetSlot(this, CALENDAR)
         };
       }
     }, {
@@ -6557,19 +6558,20 @@
         return fields;
       }
     }, {
-      key: "getISOCalendarFields",
-      value: function getISOCalendarFields() {
+      key: "getISOFields",
+      value: function getISOFields() {
         if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
         return {
-          year: GetSlot(this, ISO_YEAR),
-          month: GetSlot(this, ISO_MONTH),
-          day: GetSlot(this, ISO_DAY),
+          isoYear: GetSlot(this, ISO_YEAR),
+          isoMonth: GetSlot(this, ISO_MONTH),
+          isoDay: GetSlot(this, ISO_DAY),
           hour: GetSlot(this, HOUR),
           minute: GetSlot(this, MINUTE),
           second: GetSlot(this, SECOND),
           millisecond: GetSlot(this, MILLISECOND),
           microsecond: GetSlot(this, MICROSECOND),
-          nanosecond: GetSlot(this, NANOSECOND)
+          nanosecond: GetSlot(this, NANOSECOND),
+          calendar: GetSlot(this, CALENDAR)
         };
       }
     }, {
@@ -7295,13 +7297,14 @@
         return fields;
       }
     }, {
-      key: "getISOCalendarFields",
-      value: function getISOCalendarFields() {
+      key: "getISOFields",
+      value: function getISOFields() {
         if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
         return {
-          year: GetSlot(this, REF_ISO_YEAR),
-          month: GetSlot(this, ISO_MONTH),
-          day: GetSlot(this, ISO_DAY)
+          refISOYear: GetSlot(this, REF_ISO_YEAR),
+          isoMonth: GetSlot(this, ISO_MONTH),
+          isoDay: GetSlot(this, ISO_DAY),
+          calendar: GetSlot(this, CALENDAR)
         };
       }
     }, {
@@ -8264,13 +8267,14 @@
         return fields;
       }
     }, {
-      key: "getISOCalendarFields",
-      value: function getISOCalendarFields() {
+      key: "getISOFields",
+      value: function getISOFields() {
         if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
         return {
-          year: GetSlot(this, ISO_YEAR),
-          month: GetSlot(this, ISO_MONTH),
-          day: GetSlot(this, REF_ISO_DAY)
+          isoYear: GetSlot(this, ISO_YEAR),
+          isoMonth: GetSlot(this, ISO_MONTH),
+          refISODay: GetSlot(this, REF_ISO_DAY),
+          calendar: GetSlot(this, CALENDAR)
         };
       }
     }, {
@@ -8698,24 +8702,24 @@
     if (datetime instanceof YearMonth) {
       calendar = datetime.calendar.id;
 
-      var _datetime$getISOCalen = datetime.getISOCalendarFields(),
-          year = _datetime$getISOCalen.year,
-          month = _datetime$getISOCalen.month,
-          day = _datetime$getISOCalen.day;
+      var _datetime$getISOField = datetime.getISOFields(),
+          isoYear = _datetime$getISOField.isoYear,
+          isoMonth = _datetime$getISOField.isoMonth,
+          refISODay = _datetime$getISOField.refISODay;
 
-      datetime = new Date(year, month, day, datetime.calendar);
+      datetime = new Date(isoYear, isoMonth, refISODay, datetime.calendar);
       formatter = main[YM];
     }
 
     if (datetime instanceof MonthDay) {
       calendar = datetime.calendar.id;
 
-      var _datetime$getISOCalen2 = datetime.getISOCalendarFields(),
-          _year = _datetime$getISOCalen2.year,
-          _month = _datetime$getISOCalen2.month,
-          _day = _datetime$getISOCalen2.day;
+      var _datetime$getISOField2 = datetime.getISOFields(),
+          refISOYear = _datetime$getISOField2.refISOYear,
+          _isoMonth = _datetime$getISOField2.isoMonth,
+          isoDay = _datetime$getISOField2.isoDay;
 
-      datetime = new Date(_year, _month, _day, datetime.calendar);
+      datetime = new Date(refISOYear, _isoMonth, isoDay, datetime.calendar);
       formatter = main[MD];
     }
 

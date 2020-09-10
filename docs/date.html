@@ -212,7 +212,7 @@
 </li>
 <li><a href="#getFields">getFields</a>
 </li>
-<li><a href="#getISOCalendarFields">getISOCalendarFields</a>
+<li><a href="#getISOFields">getISOFields</a>
 </li>
 </ul>
 </li>
@@ -611,18 +611,21 @@ It returns a new plain JavaScript object, with all the fields as enumerable, wri
 <p>Usage example:</p>
 <pre class="language-javascript"><code class="language-javascript">date <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2006-08-24'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 Object<span class="token punctuation">.</span><span class="token function">assign</span><span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span> date<span class="token punctuation">)</span><span class="token punctuation">.</span>day  <span class="token comment">// => undefined</span>
-Object<span class="token punctuation">.</span><span class="token function">assign</span><span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span> date<span class="token punctuation">.</span><span class="token function">getFields</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span>day  <span class="token comment">// => 24</span></code></pre><h3 id="getISOCalendarFields"><a class="heading-link" href="#getISOCalendarFields"></a>date.<strong>getISOCalendarFields</strong>(): { year: number, month: number, day: number }</h3><p><strong>Returns:</strong> a plain object with properties expressing <code>date</code> in the ISO 8601 calendar.</p>
+Object<span class="token punctuation">.</span><span class="token function">assign</span><span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span> date<span class="token punctuation">.</span><span class="token function">getFields</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span>day  <span class="token comment">// => 24</span></code></pre><h3 id="getISOFields"><a class="heading-link" href="#getISOFields"></a>date.<strong>getISOFields</strong>(): { isoYear: number, isoMonth: number, isoDay: number, calendar: object }</h3><p><strong>Returns:</strong> a plain object with properties expressing <code>date</code> in the ISO 8601 calendar, as well as the value of <code>date.calendar</code>.</p>
 <p>This method is mainly useful if you are implementing a custom calendar.
 Most code will not need to use it.
 Use <code>date.getFields()</code> instead, or <code>date.withCalendar(&#39;iso8601&#39;).getFields()</code>.</p>
 <p>Usage example:</p>
 <pre class="language-javascript"><code class="language-javascript">date <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2006-08-24'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-date<span class="token punctuation">.</span><span class="token function">getISOCalendarFields</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>day  <span class="token comment">// => 24</span>
+f <span class="token operator">=</span> date<span class="token punctuation">.</span><span class="token function">getISOFields</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+f<span class="token punctuation">.</span>isoDay  <span class="token comment">// => 24</span>
+date2 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>Date</span><span class="token punctuation">(</span>f<span class="token punctuation">.</span>isoYear<span class="token punctuation">,</span> f<span class="token punctuation">.</span>isoMonth<span class="token punctuation">,</span> f<span class="token punctuation">.</span>isoDay<span class="token punctuation">,</span> f<span class="token punctuation">.</span>calendar<span class="token punctuation">)</span><span class="token punctuation">;</span>
+date<span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span>date2<span class="token punctuation">)</span>  <span class="token comment">// => true</span>
 
 <span class="token comment">// Date in other calendar</span>
 date <span class="token operator">=</span> date<span class="token punctuation">.</span><span class="token function">withCalendar</span><span class="token punctuation">(</span><span class="token string">'hebrew'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 date<span class="token punctuation">.</span><span class="token function">getFields</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>day  <span class="token comment">// => 30</span>
-date<span class="token punctuation">.</span><span class="token function">getISOCalendarFields</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>day  <span class="token comment">// => 24</span>
+date<span class="token punctuation">.</span><span class="token function">getISOFields</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>isoDay  <span class="token comment">// => 24</span>
 
 <span class="token comment">// Most likely what you need is this:</span>
 date<span class="token punctuation">.</span><span class="token function">withCalendar</span><span class="token punctuation">(</span><span class="token string">'iso8601'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>day  <span class="token comment">// => 24</span></code></pre>    <footer>
