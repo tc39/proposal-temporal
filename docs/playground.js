@@ -3108,7 +3108,8 @@
     ToNumber: ToNumber$1,
     ToObject: ToObject,
     ToPrimitive: ToPrimitive,
-    ToString: ToString
+    ToString: ToString,
+    Type: Type$1
   };
   var ES = ObjectAssign({}, ES2019, {
     IsTemporalAbsolute: function IsTemporalAbsolute(item) {
@@ -3782,10 +3783,16 @@
         from = GetIntrinsic$1('%Temporal.Calendar.from%');
       }
 
-      return ES.Call(from, TemporalCalendar, [calendarLike]);
+      var calendar = ES.Call(from, TemporalCalendar, [calendarLike]);
+
+      if (ES.Type(calendar) !== 'Object') {
+        throw new TypeError('Temporal.Calendar.from should return an object');
+      }
+
+      return calendar;
     },
     ToTemporalCalendar: function ToTemporalCalendar(calendarLike) {
-      if (_typeof(calendarLike) === 'object' && calendarLike) {
+      if (ES.Type(calendarLike) === 'Object') {
         return calendarLike;
       }
 
@@ -6190,7 +6197,6 @@
       calendar = ES.ToTemporalCalendar(calendar);
       ES.RejectDateTime(isoYear, isoMonth, isoDay, hour, minute, second, millisecond, microsecond, nanosecond);
       ES.RejectDateTimeRange(isoYear, isoMonth, isoDay, hour, minute, second, millisecond, microsecond, nanosecond);
-      if (!calendar || _typeof(calendar) !== 'object') throw new RangeError('invalid calendar');
       CreateSlots(this);
       SetSlot(this, ISO_YEAR, isoYear);
       SetSlot(this, ISO_MONTH, isoMonth);
