@@ -2882,38 +2882,14 @@
   	return ToInteger(number);
   };
 
-  var $TypeError$7 = GetIntrinsic('%TypeError%');
-
-  // http://www.ecma-international.org/ecma-262/5.1/#sec-9.10
-
-  var CheckObjectCoercible = function CheckObjectCoercible(value, optMessage) {
-  	if (value == null) {
-  		throw new $TypeError$7(optMessage || ('Cannot call method on ' + value));
-  	}
-  	return value;
-  };
-
-  var RequireObjectCoercible = CheckObjectCoercible;
-
-  var $Object = GetIntrinsic('%Object%');
-
-
-
-  // https://www.ecma-international.org/ecma-262/6.0/#sec-toobject
-
-  var ToObject = function ToObject(value) {
-  	RequireObjectCoercible(value);
-  	return $Object(value);
-  };
-
   var $String = GetIntrinsic('%String%');
-  var $TypeError$8 = GetIntrinsic('%TypeError%');
+  var $TypeError$7 = GetIntrinsic('%TypeError%');
 
   // https://www.ecma-international.org/ecma-262/6.0/#sec-tostring
 
   var ToString = function ToString(argument) {
   	if (typeof argument === 'symbol') {
-  		throw new $TypeError$8('Cannot convert a Symbol value to a string');
+  		throw new $TypeError$7('Cannot convert a Symbol value to a string');
   	}
   	return $String(argument);
   };
@@ -3095,6 +3071,7 @@
 
   var IntlDateTimeFormat = globalThis.Intl.DateTimeFormat;
   var ObjectAssign = Object.assign;
+  var ObjectCreate = Object.create;
   var DAYMILLIS = 86400000;
   var NS_MIN = BigInteger(-86400).multiply(1e17);
   var NS_MAX = BigInteger(86400).multiply(1e17);
@@ -3106,7 +3083,6 @@
     SpeciesConstructor: SpeciesConstructor,
     ToInteger: ToInteger$1,
     ToNumber: ToNumber$1,
-    ToObject: ToObject,
     ToPrimitive: ToPrimitive,
     ToString: ToString,
     Type: Type$1
@@ -3654,12 +3630,15 @@
       return duration;
     },
     ToDurationTemporalDisambiguation: function ToDurationTemporalDisambiguation(options) {
+      options = ES.NormalizeOptionsObject(options);
       return ES.GetOption(options, 'disambiguation', ['constrain', 'balance', 'reject'], 'constrain');
     },
     ToTemporalDisambiguation: function ToTemporalDisambiguation(options) {
+      options = ES.NormalizeOptionsObject(options);
       return ES.GetOption(options, 'disambiguation', ['constrain', 'reject'], 'constrain');
     },
     ToTimeZoneTemporalDisambiguation: function ToTimeZoneTemporalDisambiguation(options) {
+      options = ES.NormalizeOptionsObject(options);
       return ES.GetOption(options, 'disambiguation', ['compatible', 'earlier', 'later', 'reject'], 'compatible');
     },
     ToLargestTemporalUnit: function ToLargestTemporalUnit(options, fallback) {
@@ -3680,6 +3659,7 @@
         _iterator3.f();
       }
 
+      options = ES.NormalizeOptionsObject(options);
       return ES.GetOption(options, 'largestUnit', _toConsumableArray(allowed), fallback);
     },
     ToPartialRecord: function ToPartialRecord(bag, fields) {
@@ -4983,9 +4963,12 @@
     ComparisonResult: function ComparisonResult(value) {
       return value < 0 ? -1 : value > 0 ? 1 : value;
     },
+    NormalizeOptionsObject: function NormalizeOptionsObject(options) {
+      if (options === undefined) return ObjectCreate(null);
+      if (ES.Type(options) === 'Object') return options;
+      throw new TypeError("Options parameter must be an object, not ".concat(options === null ? 'null' : "a ".concat(_typeof(options))));
+    },
     GetOption: function GetOption(options, property, allowedValues, fallback) {
-      if (options === null || options === undefined) return fallback;
-      options = ES.ToObject(options);
       var value = options[property];
 
       if (value !== undefined) {
