@@ -3381,8 +3381,8 @@
 
       throw new RangeError("'".concat(isoString, "' doesn't uniquely identify a Temporal.Absolute"));
     },
-    RegulateDateTime: function RegulateDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, disambiguation) {
-      switch (disambiguation) {
+    RegulateDateTime: function RegulateDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, overflow) {
+      switch (overflow) {
         case 'reject':
           ES.RejectDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
           break;
@@ -3414,8 +3414,8 @@
         nanosecond: nanosecond
       };
     },
-    RegulateDate: function RegulateDate(year, month, day, disambiguation) {
-      switch (disambiguation) {
+    RegulateDate: function RegulateDate(year, month, day, overflow) {
+      switch (overflow) {
         case 'reject':
           ES.RejectDate(year, month, day);
           break;
@@ -3435,8 +3435,8 @@
         day: day
       };
     },
-    RegulateTime: function RegulateTime(hour, minute, second, millisecond, microsecond, nanosecond, disambiguation) {
-      switch (disambiguation) {
+    RegulateTime: function RegulateTime(hour, minute, second, millisecond, microsecond, nanosecond, overflow) {
+      switch (overflow) {
         case 'reject':
           ES.RejectTime(hour, minute, second, millisecond, microsecond, nanosecond);
           break;
@@ -3462,10 +3462,10 @@
         nanosecond: nanosecond
       };
     },
-    RegulateYearMonth: function RegulateYearMonth(year, month, disambiguation) {
+    RegulateYearMonth: function RegulateYearMonth(year, month, overflow) {
       var refISODay = 1;
 
-      switch (disambiguation) {
+      switch (overflow) {
         case 'reject':
           ES.RejectDate(year, month, refISODay);
           break;
@@ -3483,10 +3483,10 @@
         month: month
       };
     },
-    RegulateMonthDay: function RegulateMonthDay(month, day, disambiguation) {
+    RegulateMonthDay: function RegulateMonthDay(month, day, overflow) {
       var refISOYear = 1972;
 
-      switch (disambiguation) {
+      switch (overflow) {
         case 'reject':
           ES.RejectDate(refISOYear, month, day);
           break;
@@ -3522,10 +3522,10 @@
 
       return ES.ToRecord(item, [['days', 0], ['hours', 0], ['microseconds', 0], ['milliseconds', 0], ['minutes', 0], ['months', 0], ['nanoseconds', 0], ['seconds', 0], ['weeks', 0], ['years', 0]]);
     },
-    RegulateDuration: function RegulateDuration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, disambiguation) {
+    RegulateDuration: function RegulateDuration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, overflow) {
       ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
 
-      switch (disambiguation) {
+      switch (overflow) {
         case 'reject':
           for (var _i = 0, _arr = [years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds]; _i < _arr.length; _i++) {
             var prop = _arr[_i];
@@ -3629,15 +3629,15 @@
 
       return duration;
     },
-    ToDurationTemporalDisambiguation: function ToDurationTemporalDisambiguation(options) {
+    ToTemporalDurationOverflow: function ToTemporalDurationOverflow(options) {
       options = ES.NormalizeOptionsObject(options);
-      return ES.GetOption(options, 'disambiguation', ['constrain', 'balance', 'reject'], 'constrain');
+      return ES.GetOption(options, 'overflow', ['constrain', 'balance', 'reject'], 'constrain');
+    },
+    ToTemporalOverflow: function ToTemporalOverflow(options) {
+      options = ES.NormalizeOptionsObject(options);
+      return ES.GetOption(options, 'overflow', ['constrain', 'reject'], 'constrain');
     },
     ToTemporalDisambiguation: function ToTemporalDisambiguation(options) {
-      options = ES.NormalizeOptionsObject(options);
-      return ES.GetOption(options, 'disambiguation', ['constrain', 'reject'], 'constrain');
-    },
-    ToTimeZoneTemporalDisambiguation: function ToTimeZoneTemporalDisambiguation(options) {
       options = ES.NormalizeOptionsObject(options);
       return ES.GetOption(options, 'disambiguation', ['compatible', 'earlier', 'later', 'reject'], 'compatible');
     },
@@ -4713,7 +4713,7 @@
         nanoseconds: nanoseconds
       };
     },
-    AddDate: function AddDate(year, month, day, years, months, weeks, days, disambiguation) {
+    AddDate: function AddDate(year, month, day, years, months, weeks, days, overflow) {
       year += years;
       month += months;
 
@@ -4722,7 +4722,7 @@
       year = _ES$BalanceYearMonth6.year;
       month = _ES$BalanceYearMonth6.month;
 
-      var _ES$RegulateDate = ES.RegulateDate(year, month, day, disambiguation);
+      var _ES$RegulateDate = ES.RegulateDate(year, month, day, overflow);
 
       year = _ES$RegulateDate.year;
       month = _ES$RegulateDate.month;
@@ -4769,7 +4769,7 @@
         nanosecond: nanosecond
       };
     },
-    SubtractDate: function SubtractDate(year, month, day, years, months, weeks, days, disambiguation) {
+    SubtractDate: function SubtractDate(year, month, day, years, months, weeks, days, overflow) {
       days += 7 * weeks;
       day -= days;
 
@@ -4786,7 +4786,7 @@
       year = _ES$BalanceYearMonth7.year;
       month = _ES$BalanceYearMonth7.month;
 
-      var _ES$RegulateDate2 = ES.RegulateDate(year, month, day, disambiguation);
+      var _ES$RegulateDate2 = ES.RegulateDate(year, month, day, overflow);
 
       year = _ES$RegulateDate2.year;
       month = _ES$RegulateDate2.month;
@@ -4825,7 +4825,7 @@
         nanosecond: nanosecond
       };
     },
-    DurationArithmetic: function DurationArithmetic(y1, mon1, w1, d1, h1, min1, s1, ms1, µs1, ns1, y2, mon2, w2, d2, h2, min2, s2, ms2, µs2, ns2, disambiguation) {
+    DurationArithmetic: function DurationArithmetic(y1, mon1, w1, d1, h1, min1, s1, ms1, µs1, ns1, y2, mon2, w2, d2, h2, min2, s2, ms2, µs2, ns2, overflow) {
       var years = y1 + y2;
       var months = mon1 + mon2;
       var weeks = w1 + w2;
@@ -4893,7 +4893,7 @@
       milliseconds *= sign;
       microseconds *= sign;
       nanoseconds *= sign;
-      return ES.RegulateDuration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, disambiguation);
+      return ES.RegulateDuration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, overflow);
     },
     AssertPositiveInteger: function AssertPositiveInteger(num) {
       if (!Number.isFinite(num) || Math.abs(num) !== num) throw new RangeError("invalid positive integer: ".concat(num));
@@ -5170,14 +5170,14 @@
       key: "dateFromFields",
       value: function dateFromFields(fields, options, constructor) {
         if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
-        var disambiguation = ES.ToTemporalDisambiguation(options); // Intentionally alphabetical
+        var overflow = ES.ToTemporalOverflow(options); // Intentionally alphabetical
 
         var _ES$ToTemporalDateRec = ES.ToTemporalDateRecord(fields),
             year = _ES$ToTemporalDateRec.year,
             month = _ES$ToTemporalDateRec.month,
             day = _ES$ToTemporalDateRec.day;
 
-        var _ES$RegulateDate = ES.RegulateDate(year, month, day, disambiguation);
+        var _ES$RegulateDate = ES.RegulateDate(year, month, day, overflow);
 
         year = _ES$RegulateDate.year;
         month = _ES$RegulateDate.month;
@@ -5188,13 +5188,13 @@
       key: "yearMonthFromFields",
       value: function yearMonthFromFields(fields, options, constructor) {
         if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
-        var disambiguation = ES.ToTemporalDisambiguation(options); // Intentionally alphabetical
+        var overflow = ES.ToTemporalOverflow(options); // Intentionally alphabetical
 
         var _ES$ToTemporalYearMon = ES.ToTemporalYearMonthRecord(fields),
             year = _ES$ToTemporalYearMon.year,
             month = _ES$ToTemporalYearMon.month;
 
-        var _ES$RegulateYearMonth = ES.RegulateYearMonth(year, month, disambiguation);
+        var _ES$RegulateYearMonth = ES.RegulateYearMonth(year, month, overflow);
 
         year = _ES$RegulateYearMonth.year;
         month = _ES$RegulateYearMonth.month;
@@ -5206,13 +5206,13 @@
       key: "monthDayFromFields",
       value: function monthDayFromFields(fields, options, constructor) {
         if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
-        var disambiguation = ES.ToTemporalDisambiguation(options); // Intentionally alphabetical
+        var overflow = ES.ToTemporalOverflow(options); // Intentionally alphabetical
 
         var _ES$ToTemporalMonthDa = ES.ToTemporalMonthDayRecord(fields),
             month = _ES$ToTemporalMonthDa.month,
             day = _ES$ToTemporalMonthDa.day;
 
-        var _ES$RegulateMonthDay = ES.RegulateMonthDay(month, day, disambiguation);
+        var _ES$RegulateMonthDay = ES.RegulateMonthDay(month, day, overflow);
 
         month = _ES$RegulateMonthDay.month;
         day = _ES$RegulateMonthDay.day;
@@ -5224,7 +5224,7 @@
       key: "datePlus",
       value: function datePlus(date, duration, options, constructor) {
         if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
-        var disambiguation = ES.ToTemporalDisambiguation(options);
+        var overflow = ES.ToTemporalOverflow(options);
         var years = duration.years,
             months = duration.months,
             weeks = duration.weeks,
@@ -5236,13 +5236,13 @@
         var day = GetSlot(date, ISO_DAY);
 
         if (sign < 0) {
-          var _ES$SubtractDate = ES.SubtractDate(year, month, day, -years, -months, -weeks, -days, disambiguation);
+          var _ES$SubtractDate = ES.SubtractDate(year, month, day, -years, -months, -weeks, -days, overflow);
 
           year = _ES$SubtractDate.year;
           month = _ES$SubtractDate.month;
           day = _ES$SubtractDate.day;
         } else {
-          var _ES$AddDate = ES.AddDate(year, month, day, years, months, weeks, days, disambiguation);
+          var _ES$AddDate = ES.AddDate(year, month, day, years, months, weeks, days, overflow);
 
           year = _ES$AddDate.year;
           month = _ES$AddDate.month;
@@ -5255,7 +5255,7 @@
       key: "dateMinus",
       value: function dateMinus(date, duration, options, constructor) {
         if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
-        var disambiguation = ES.ToTemporalDisambiguation(options);
+        var overflow = ES.ToTemporalOverflow(options);
         var years = duration.years,
             months = duration.months,
             weeks = duration.weeks,
@@ -5267,13 +5267,13 @@
         var day = GetSlot(date, ISO_DAY);
 
         if (sign < 0) {
-          var _ES$AddDate2 = ES.AddDate(year, month, day, -years, -months, -weeks, -days, disambiguation);
+          var _ES$AddDate2 = ES.AddDate(year, month, day, -years, -months, -weeks, -days, overflow);
 
           year = _ES$AddDate2.year;
           month = _ES$AddDate2.month;
           day = _ES$AddDate2.day;
         } else {
-          var _ES$SubtractDate2 = ES.SubtractDate(year, month, day, years, months, weeks, days, disambiguation);
+          var _ES$SubtractDate2 = ES.SubtractDate(year, month, day, years, months, weeks, days, overflow);
 
           year = _ES$SubtractDate2.year;
           month = _ES$SubtractDate2.month;
@@ -6096,7 +6096,7 @@
       key: "from",
       value: function from(item) {
         var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
-        var disambiguation = ES.ToTemporalDisambiguation(options);
+        var overflow = ES.ToTemporalOverflow(options);
         var TemporalCalendar = GetIntrinsic$1('%Temporal.Calendar%');
         var result;
 
@@ -6120,7 +6120,7 @@
               _day = _ES$ParseTemporalDate.day,
               _calendar2 = _ES$ParseTemporalDate.calendar;
 
-          var _ES$RegulateDate = ES.RegulateDate(_year, _month, _day, disambiguation);
+          var _ES$RegulateDate = ES.RegulateDate(_year, _month, _day, overflow);
 
           _year = _ES$RegulateDate.year;
           _month = _ES$RegulateDate.month;
@@ -6207,7 +6207,7 @@
       key: "with",
       value: function _with(temporalDateTimeLike, options) {
         if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-        var disambiguation = ES.ToTemporalDisambiguation(options);
+        var overflow = ES.ToTemporalOverflow(options);
         var source;
         var calendar = temporalDateTimeLike.calendar;
 
@@ -6239,7 +6239,7 @@
             microsecond = fields.microsecond,
             nanosecond = fields.nanosecond;
 
-        var _ES$RegulateTime = ES.RegulateTime(hour, minute, second, millisecond, microsecond, nanosecond, disambiguation);
+        var _ES$RegulateTime = ES.RegulateTime(hour, minute, second, millisecond, microsecond, nanosecond, overflow);
 
         hour = _ES$RegulateTime.hour;
         minute = _ES$RegulateTime.minute;
@@ -6516,7 +6516,7 @@
       value: function toAbsolute(temporalTimeZoneLike, options) {
         if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
         var timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);
-        var disambiguation = ES.ToTimeZoneTemporalDisambiguation(options);
+        var disambiguation = ES.ToTemporalDisambiguation(options);
         return ES.GetTemporalAbsoluteFor(timeZone, this, disambiguation);
       }
     }, {
@@ -6692,7 +6692,7 @@
       key: "from",
       value: function from(item) {
         var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
-        var disambiguation = ES.ToTemporalDisambiguation(options);
+        var overflow = ES.ToTemporalOverflow(options);
         var TemporalCalendar = GetIntrinsic$1('%Temporal.Calendar%');
         var result;
 
@@ -6724,12 +6724,12 @@
 
             var _day = GetSlot(date, ISO_DAY);
 
-            if (disambiguation === 'constrain') {
+            if (overflow === 'constrain') {
               // Special case to determine if the date was clipped by dateFromFields
               // and therefore the time possibly needs to be clipped too
               try {
                 _calendar.dateFromFields(fields, {
-                  disambiguation: 'reject'
+                  overflow: 'reject'
                 }, TemporalDate);
               } catch (_unused) {
                 // Date was clipped
@@ -6756,7 +6756,7 @@
                 _microsecond = fields.microsecond,
                 _nanosecond = fields.nanosecond;
 
-            var _ES$RegulateTime2 = ES.RegulateTime(_hour, _minute, _second, _millisecond, _microsecond, _nanosecond, disambiguation);
+            var _ES$RegulateTime2 = ES.RegulateTime(_hour, _minute, _second, _millisecond, _microsecond, _nanosecond, overflow);
 
             _hour = _ES$RegulateTime2.hour;
             _minute = _ES$RegulateTime2.minute;
@@ -6870,7 +6870,7 @@
       key: "with",
       value: function _with(durationLike, options) {
         if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
-        var disambiguation = ES.ToDurationTemporalDisambiguation(options);
+        var overflow = ES.ToTemporalDurationOverflow(options);
         var props = ES.ToPartialRecord(durationLike, ['days', 'hours', 'microseconds', 'milliseconds', 'minutes', 'months', 'nanoseconds', 'seconds', 'weeks', 'years']);
 
         if (!props) {
@@ -6898,7 +6898,7 @@
             _props$nanoseconds = props.nanoseconds,
             nanoseconds = _props$nanoseconds === void 0 ? GetSlot(this, NANOSECONDS) : _props$nanoseconds;
 
-        var _ES$RegulateDuration = ES.RegulateDuration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, disambiguation);
+        var _ES$RegulateDuration = ES.RegulateDuration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, overflow);
 
         years = _ES$RegulateDuration.years;
         months = _ES$RegulateDuration.months;
@@ -6951,9 +6951,9 @@
             nanoseconds = _ES$ToLimitedTemporal.nanoseconds;
 
         ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
-        var disambiguation = ES.ToDurationTemporalDisambiguation(options);
+        var overflow = ES.ToTemporalDurationOverflow(options);
 
-        var _ES$DurationArithmeti = ES.DurationArithmetic(GetSlot(this, YEARS), GetSlot(this, MONTHS), GetSlot(this, WEEKS), GetSlot(this, DAYS), GetSlot(this, HOURS), GetSlot(this, MINUTES), GetSlot(this, SECONDS), GetSlot(this, MILLISECONDS), GetSlot(this, MICROSECONDS), GetSlot(this, NANOSECONDS), years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, disambiguation);
+        var _ES$DurationArithmeti = ES.DurationArithmetic(GetSlot(this, YEARS), GetSlot(this, MONTHS), GetSlot(this, WEEKS), GetSlot(this, DAYS), GetSlot(this, HOURS), GetSlot(this, MINUTES), GetSlot(this, SECONDS), GetSlot(this, MILLISECONDS), GetSlot(this, MICROSECONDS), GetSlot(this, NANOSECONDS), years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, overflow);
 
         years = _ES$DurationArithmeti.years;
         months = _ES$DurationArithmeti.months;
@@ -6988,9 +6988,9 @@
             nanoseconds = _ES$ToLimitedTemporal2.nanoseconds;
 
         ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
-        var disambiguation = ES.ToDurationTemporalDisambiguation(options);
+        var overflow = ES.ToTemporalDurationOverflow(options);
 
-        var _ES$DurationArithmeti2 = ES.DurationArithmetic(GetSlot(this, YEARS), GetSlot(this, MONTHS), GetSlot(this, WEEKS), GetSlot(this, DAYS), GetSlot(this, HOURS), GetSlot(this, MINUTES), GetSlot(this, SECONDS), GetSlot(this, MILLISECONDS), GetSlot(this, MICROSECONDS), GetSlot(this, NANOSECONDS), -years, -months, -weeks, -days, -hours, -minutes, -seconds, -milliseconds, -microseconds, -nanoseconds, disambiguation);
+        var _ES$DurationArithmeti2 = ES.DurationArithmetic(GetSlot(this, YEARS), GetSlot(this, MONTHS), GetSlot(this, WEEKS), GetSlot(this, DAYS), GetSlot(this, HOURS), GetSlot(this, MINUTES), GetSlot(this, SECONDS), GetSlot(this, MILLISECONDS), GetSlot(this, MICROSECONDS), GetSlot(this, NANOSECONDS), -years, -months, -weeks, -days, -hours, -minutes, -seconds, -milliseconds, -microseconds, -nanoseconds, overflow);
 
         years = _ES$DurationArithmeti2.years;
         months = _ES$DurationArithmeti2.months;
@@ -7111,7 +7111,7 @@
       key: "from",
       value: function from(item) {
         var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
-        var disambiguation = ES.ToDurationTemporalDisambiguation(options);
+        var overflow = ES.ToTemporalDurationOverflow(options);
         var years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds;
 
         if (_typeof(item) === 'object' && item) {
@@ -7142,7 +7142,7 @@
           nanoseconds = _ES$ParseTemporalDura.nanoseconds;
         }
 
-        var _ES$RegulateDuration2 = ES.RegulateDuration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, disambiguation);
+        var _ES$RegulateDuration2 = ES.RegulateDuration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, overflow);
 
         years = _ES$RegulateDuration2.years;
         months = _ES$RegulateDuration2.months;
@@ -7329,7 +7329,7 @@
       key: "from",
       value: function from(item) {
         var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
-        var disambiguation = ES.ToTemporalDisambiguation(options);
+        var overflow = ES.ToTemporalOverflow(options);
         var TemporalCalendar = GetIntrinsic$1('%Temporal.Calendar%');
         var result;
 
@@ -7353,7 +7353,7 @@
               _refISOYear = _ES$ParseTemporalMont.refISOYear,
               _calendar2 = _ES$ParseTemporalMont.calendar;
 
-          var _ES$RegulateMonthDay = ES.RegulateMonthDay(_month, _day, disambiguation);
+          var _ES$RegulateMonthDay = ES.RegulateMonthDay(_month, _day, overflow);
 
           _month = _ES$RegulateMonthDay.month;
           _day = _ES$RegulateMonthDay.day;
@@ -7452,7 +7452,7 @@
         var temporalTimeLike = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
         var options = arguments.length > 1 ? arguments[1] : undefined;
         if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
-        var disambiguation = ES.ToTemporalDisambiguation(options);
+        var overflow = ES.ToTemporalOverflow(options);
         var props = ES.ToPartialRecord(temporalTimeLike, ['hour', 'microsecond', 'millisecond', 'minute', 'nanosecond', 'second']);
 
         if (!props) {
@@ -7472,7 +7472,7 @@
             _props$nanosecond = props.nanosecond,
             nanosecond = _props$nanosecond === void 0 ? GetSlot(this, NANOSECOND) : _props$nanosecond;
 
-        var _ES$RegulateTime = ES.RegulateTime(hour, minute, second, millisecond, microsecond, nanosecond, disambiguation);
+        var _ES$RegulateTime = ES.RegulateTime(hour, minute, second, millisecond, microsecond, nanosecond, overflow);
 
         hour = _ES$RegulateTime.hour;
         minute = _ES$RegulateTime.minute;
@@ -7496,7 +7496,7 @@
             microsecond = this.microsecond,
             nanosecond = this.nanosecond;
         var duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
-        var disambiguation = ES.ToTemporalDisambiguation(options);
+        var overflow = ES.ToTemporalOverflow(options);
         var years = duration.years,
             months = duration.months,
             weeks = duration.weeks,
@@ -7530,7 +7530,7 @@
           nanosecond = _ES$AddTime.nanosecond;
         }
 
-        var _ES$RegulateTime2 = ES.RegulateTime(hour, minute, second, millisecond, microsecond, nanosecond, disambiguation);
+        var _ES$RegulateTime2 = ES.RegulateTime(hour, minute, second, millisecond, microsecond, nanosecond, overflow);
 
         hour = _ES$RegulateTime2.hour;
         minute = _ES$RegulateTime2.minute;
@@ -7554,7 +7554,7 @@
             microsecond = this.microsecond,
             nanosecond = this.nanosecond;
         var duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
-        var disambiguation = ES.ToTemporalDisambiguation(options);
+        var overflow = ES.ToTemporalOverflow(options);
         var years = duration.years,
             months = duration.months,
             weeks = duration.weeks,
@@ -7588,7 +7588,7 @@
           nanosecond = _ES$SubtractTime2.nanosecond;
         }
 
-        var _ES$RegulateTime3 = ES.RegulateTime(hour, minute, second, millisecond, microsecond, nanosecond, disambiguation);
+        var _ES$RegulateTime3 = ES.RegulateTime(hour, minute, second, millisecond, microsecond, nanosecond, overflow);
 
         hour = _ES$RegulateTime3.hour;
         minute = _ES$RegulateTime3.minute;
@@ -7733,7 +7733,7 @@
       key: "from",
       value: function from(item) {
         var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
-        var disambiguation = ES.ToTemporalDisambiguation(options);
+        var overflow = ES.ToTemporalOverflow(options);
         var hour, minute, second, millisecond, microsecond, nanosecond;
 
         if (_typeof(item) === 'object' && item) {
@@ -7766,7 +7766,7 @@
           nanosecond = _ES$ParseTemporalTime.nanosecond;
         }
 
-        var _ES$RegulateTime4 = ES.RegulateTime(hour, minute, second, millisecond, microsecond, nanosecond, disambiguation);
+        var _ES$RegulateTime4 = ES.RegulateTime(hour, minute, second, millisecond, microsecond, nanosecond, overflow);
 
         hour = _ES$RegulateTime4.hour;
         minute = _ES$RegulateTime4.minute;
@@ -7886,7 +7886,7 @@
       key: "getAbsoluteFor",
       value: function getAbsoluteFor(dateTime, options) {
         if (!ES.IsTemporalDateTime(dateTime)) throw new TypeError('invalid DateTime object');
-        var disambiguation = ES.ToTimeZoneTemporalDisambiguation(options);
+        var disambiguation = ES.ToTemporalDisambiguation(options);
         var Absolute = GetIntrinsic$1('%Temporal.Absolute%');
         var possibleAbsolutes = this.getPossibleAbsolutesFor(dateTime);
 
@@ -8255,7 +8255,7 @@
         return calendar.dateFromFields(_objectSpread2(_objectSpread2({}, fields), {}, {
           day: day
         }), {
-          disambiguation: 'reject'
+          overflow: 'reject'
         }, Date);
       }
     }, {
@@ -8329,7 +8329,7 @@
       key: "from",
       value: function from(item) {
         var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
-        var disambiguation = ES.ToTemporalDisambiguation(options);
+        var overflow = ES.ToTemporalOverflow(options);
         var TemporalCalendar = GetIntrinsic$1('%Temporal.Calendar%');
         var result;
 
@@ -8353,7 +8353,7 @@
               _refISODay = _ES$ParseTemporalYear.refISODay,
               _calendar2 = _ES$ParseTemporalYear.calendar;
 
-          var _ES$RegulateYearMonth = ES.RegulateYearMonth(_year, _month, disambiguation);
+          var _ES$RegulateYearMonth = ES.RegulateYearMonth(_year, _month, overflow);
 
           _year = _ES$RegulateYearMonth.year;
           _month = _ES$RegulateYearMonth.month;

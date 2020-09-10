@@ -201,7 +201,7 @@ You can omit this parameter unless using a non-ISO-8601 calendar.</li>
 </ul>
 <p><strong>Returns:</strong> a new <code>Temporal.MonthDay</code> object.</p>
 <p>Use this constructor if you have the correct parameters for the date already as individual number values, or you are implementing a custom calendar.
-Otherwise, <code>Temporal.MonthDay.from()</code>, which accepts more kinds of input, allows inputting dates in different calendar reckonings, and allows disambiguation behaviour, is probably more convenient.</p>
+Otherwise, <code>Temporal.MonthDay.from()</code>, which accepts more kinds of input, allows inputting dates in different calendar reckonings, and allows controlling the overflow behaviour, is probably more convenient.</p>
 <p>All values are given as reckoned in the <a href="https://en.wikipedia.org/wiki/ISO_8601#Dates">ISO 8601 calendar</a>.
 Together, <code>refISOYear</code>, <code>isoMonth</code> and <code>isoDay</code> must represent a valid date in that calendar.
 For example, February 29 (Leap day in the ISO 8601 calendar) is a valid value for <code>Temporal.MonthDay</code>, even though that date does not occur every year, because the default value of <code>refISOYear</code> is a leap year.</p>
@@ -218,7 +218,7 @@ md <span class="token operator">=</span> <span class="token keyword">new</span> 
 <li><code>thing</code>: The value representing the desired date.</li>
 <li><code>options</code> (optional object): An object with properties representing options for constructing the date.
 The following options are recognized:<ul>
-<li><code>disambiguation</code> (string): How to deal with out-of-range values in <code>thing</code>.
+<li><code>overflow</code> (string): How to deal with out-of-range values in <code>thing</code>.
 Allowed values are <code>constrain</code> and <code>reject</code>.
 The default is <code>constrain</code>.</li>
 </ul>
@@ -230,8 +230,8 @@ If the value is another <code>Temporal.MonthDay</code> object, a new object repr
 If the value is any other object, it must have <code>month</code> and <code>day</code> properties, and optionally a <code>calendar</code> property, and a <code>Temporal.MonthDay</code> will be constructed from these properties.</p>
 <p>Any non-object value will be converted to a string, which is expected to be in ISO 8601 format.
 Any parts of the string other than the month and the day are optional and will be ignored.
-If the string isn&#39;t valid according to ISO 8601, then a <code>RangeError</code> will be thrown regardless of the value of <code>disambiguation</code>.</p>
-<p>The <code>disambiguation</code> option works as follows:</p>
+If the string isn&#39;t valid according to ISO 8601, then a <code>RangeError</code> will be thrown regardless of the value of <code>overflow</code>.</p>
+<p>The <code>overflow</code> option works as follows:</p>
 <ul>
 <li>In <code>constrain</code> mode (the default), any out-of-range values are clamped to the nearest in-range value.</li>
 <li>In <code>reject</code> mode, the presence of out-of-range values will cause the function to throw a <code>RangeError</code>.</li>
@@ -252,14 +252,14 @@ md <span class="token operator">=</span> Temporal<span class="token punctuation"
 md <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>MonthDay<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2006-08-24'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token comment">// => same as above; Temporal.Date has month and day properties</span>
 
-<span class="token comment">// Different disambiguation modes</span>
-md <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>MonthDay<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> month<span class="token operator">:</span> <span class="token number">13</span><span class="token punctuation">,</span> day<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> disambiguation<span class="token operator">:</span> <span class="token string">'constrain'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token comment">// Different overflow modes</span>
+md <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>MonthDay<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> month<span class="token operator">:</span> <span class="token number">13</span><span class="token punctuation">,</span> day<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> overflow<span class="token operator">:</span> <span class="token string">'constrain'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>
   <span class="token comment">// => 12-01</span>
-md <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>MonthDay<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> month<span class="token operator">:</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span> day<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> disambiguation<span class="token operator">:</span> <span class="token string">'constrain'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>
+md <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>MonthDay<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> month<span class="token operator">:</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span> day<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> overflow<span class="token operator">:</span> <span class="token string">'constrain'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>
   <span class="token comment">// => 01-01</span>
-md <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>MonthDay<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> month<span class="token operator">:</span> <span class="token number">13</span><span class="token punctuation">,</span> day<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> disambiguation<span class="token operator">:</span> <span class="token string">'reject'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>
+md <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>MonthDay<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> month<span class="token operator">:</span> <span class="token number">13</span><span class="token punctuation">,</span> day<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> overflow<span class="token operator">:</span> <span class="token string">'reject'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>
   <span class="token comment">// throws</span>
-md <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>MonthDay<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> month<span class="token operator">:</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span> day<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> disambiguation<span class="token operator">:</span> <span class="token string">'reject'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>
+md <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>MonthDay<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> month<span class="token operator">:</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span> day<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> overflow<span class="token operator">:</span> <span class="token string">'reject'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>
   <span class="token comment">// throws</span></code></pre><h2 id="properties">Properties</h2>
 <h3 id="month"><a class="heading-link" href="#month"></a>monthDay.<strong>month</strong> : number</h3><h3 id="day"><a class="heading-link" href="#day"></a>monthDay.<strong>day</strong> : number</h3><p>The above read-only properties allow accessing each component of the date individually.</p>
 <blockquote>
@@ -275,7 +275,7 @@ md<span class="token punctuation">.</span>day    <span class="token comment">// 
 <li><code>monthDayLike</code> (object): an object with some or all of the properties of a <code>Temporal.MonthDay</code>.</li>
 <li><code>options</code> (optional object): An object with properties representing options for the operation.
 The following options are recognized:<ul>
-<li><code>disambiguation</code> (string): How to deal with out-of-range values.
+<li><code>overflow</code> (string): How to deal with out-of-range values.
 Allowed values are <code>constrain</code> and <code>reject</code>.
 The default is <code>constrain</code>.</li>
 </ul>
@@ -283,7 +283,7 @@ The default is <code>constrain</code>.</li>
 </ul>
 <p><strong>Returns:</strong> a new <code>Temporal.MonthDay</code> object.</p>
 <p>This method creates a new <code>Temporal.MonthDay</code> which is a copy of <code>monthDay</code>, but any properties present on <code>monthDayLike</code> override the ones already present on <code>monthDay</code>.</p>
-<p>The disambiguation parameter tells what should happen when out-of-range values are given or when the result would be an invalid month-day combination, such as &quot;June 31&quot;:</p>
+<p>The <code>overflow</code> option tells what should happen when out-of-range values are given or when the result would be an invalid month-day combination, such as &quot;June 31&quot;:</p>
 <ul>
 <li>In <code>constrain</code> mode (the default), any out-of-range values are clamped to the nearest in-range value, so June 31 would become June 30.</li>
 <li>In <code>reject</code> mode, the presence of out-of-range values will cause the constructor to throw a <code>RangeError</code>.</li>
@@ -367,7 +367,7 @@ Instead, use <code>monthDay.equals()</code> to check for equality.</p>
 <li><code>year</code> (number | object): A year, which must have a day corresponding to <code>monthDay</code>. Additionally, an object with a <code>&#39;year&#39;</code> property is also accepted.</li>
 <li><code>options</code> (optional object): An object with properties representing options for the operation.
 The following options are recognized:<ul>
-<li><code>disambiguation</code> (string): How to deal with out-of-range values.
+<li><code>overflow</code> (string): How to deal with out-of-range values.
 Allowed values are <code>constrain</code> and <code>reject</code>.
 The default is <code>constrain</code>.</li>
 </ul>
@@ -384,7 +384,7 @@ md<span class="token punctuation">.</span><span class="token function">toDateInY
 md <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>MonthDay<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'02-29'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 md<span class="token punctuation">.</span><span class="token function">toDateInYear</span><span class="token punctuation">(</span><span class="token number">2020</span><span class="token punctuation">)</span>  <span class="token comment">// => 2020-02-29</span>
 md<span class="token punctuation">.</span><span class="token function">toDateInYear</span><span class="token punctuation">(</span><span class="token number">2017</span><span class="token punctuation">)</span>  <span class="token comment">// => 2017-02-28</span>
-md<span class="token punctuation">.</span><span class="token function">toDateInYear</span><span class="token punctuation">(</span><span class="token number">2017</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> disambiguation<span class="token operator">:</span> <span class="token string">'reject'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>  <span class="token comment">// throws</span></code></pre><p>In calendars where more information than just the year is needed to convert a <code>Temporal.MonthDay</code> to a <code>Temporal.Date</code>, you can pass an object to <code>toDateInYear()</code> that contains the necessary properties.</p>
+md<span class="token punctuation">.</span><span class="token function">toDateInYear</span><span class="token punctuation">(</span><span class="token number">2017</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> overflow<span class="token operator">:</span> <span class="token string">'reject'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>  <span class="token comment">// throws</span></code></pre><p>In calendars where more information than just the year is needed to convert a <code>Temporal.MonthDay</code> to a <code>Temporal.Date</code>, you can pass an object to <code>toDateInYear()</code> that contains the necessary properties.</p>
 <p>Example:</p>
 <pre class="language-javascript"><code class="language-javascript">md <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>MonthDay<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
   calendar<span class="token operator">:</span> <span class="token string">'japanese'</span><span class="token punctuation">,</span>

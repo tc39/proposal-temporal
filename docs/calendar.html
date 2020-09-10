@@ -299,7 +299,7 @@ They provide a way to construct other Temporal objects from values in the calend
 <li><code>fields</code> (object): An object with properties similar to what is passed to <code>Temporal.Date.from()</code>, <code>Temporal.YearMonth.from()</code>, or <code>Temporal.MonthDay.from()</code>, respectively.</li>
 <li><code>options</code>: (object): An object with properties representing options for constructing the Temporal object.
 The following options are recognized:<ul>
-<li><code>disambiguation</code> (string): How to deal with out-of-range values in <code>fields</code>.
+<li><code>overflow</code> (string): How to deal with out-of-range values in <code>fields</code>.
 Allowed values are <code>constrain</code>, <code>balance</code>, and <code>reject</code>.
 The default is <code>constrain</code>.</li>
 </ul>
@@ -313,7 +313,7 @@ They are called indirectly when using <code>Temporal.Date.from()</code>, <code>T
 <p>For example:</p>
 <pre class="language-javascript"><code class="language-javascript">date <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>
     <span class="token punctuation">{</span> year<span class="token operator">:</span> <span class="token number">5780</span><span class="token punctuation">,</span> month<span class="token operator">:</span> <span class="token number">9</span><span class="token punctuation">,</span> day<span class="token operator">:</span> <span class="token number">6</span><span class="token punctuation">,</span> calendar<span class="token operator">:</span> <span class="token string">'hebrew'</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
-    <span class="token punctuation">{</span> disambiguation<span class="token operator">:</span> <span class="token string">'reject'</span> <span class="token punctuation">}</span>
+    <span class="token punctuation">{</span> overflow<span class="token operator">:</span> <span class="token string">'reject'</span> <span class="token punctuation">}</span>
 <span class="token punctuation">)</span><span class="token punctuation">;</span>
 date<span class="token punctuation">.</span>year        <span class="token comment">// => 5780</span>
 date<span class="token punctuation">.</span>month       <span class="token comment">// => 9</span>
@@ -323,7 +323,7 @@ date<span class="token punctuation">.</span><span class="token function">toStrin
 <span class="token comment">// same result, but calling the method directly:</span>
 date <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Calendar<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'hebrew'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">dateFromFields</span><span class="token punctuation">(</span>
     <span class="token punctuation">{</span> year<span class="token operator">:</span> <span class="token number">5780</span><span class="token punctuation">,</span> month<span class="token operator">:</span> <span class="token number">9</span><span class="token punctuation">,</span> day<span class="token operator">:</span> <span class="token number">6</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
-    <span class="token punctuation">{</span> disambiguation<span class="token operator">:</span> <span class="token string">'reject'</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span> overflow<span class="token operator">:</span> <span class="token string">'reject'</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
     Temporal<span class="token punctuation">.</span>Date
 <span class="token punctuation">)</span><span class="token punctuation">;</span>
 date<span class="token punctuation">.</span>year        <span class="token comment">// => 5780</span>
@@ -337,7 +337,7 @@ They provide a way to do date arithmetic in the calendar&#39;s date reckoning.</
 <li><code>duration</code> (<code>Temporal.Duration</code>): A duration to add or subtract from <code>date</code>.</li>
 <li><code>options</code> (object): An object with properties representing options for performing the addition or subtraction.
 The following options are recognized:<ul>
-<li><code>disambiguation</code> (string): How to deal with out-of-range values in the result of the addition or subtraction.
+<li><code>overflow</code> (string): How to deal with out-of-range values in the result of the addition or subtraction.
 Allowed values are <code>constrain</code> and <code>reject</code>.
 The default is <code>constrain</code>.</li>
 </ul>
@@ -351,7 +351,7 @@ They are called indirectly when using the <code>plus()</code> and <code>minus()<
 <p>For example:</p>
 <pre class="language-javascript"><code class="language-javascript">date <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-05-29'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">withCalendar</span><span class="token punctuation">(</span><span class="token string">'islamic'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">plus</span><span class="token punctuation">(</span>
     Temporal<span class="token punctuation">.</span>Duration<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> months<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
-    <span class="token punctuation">{</span> disambiguation<span class="token operator">:</span> <span class="token string">'reject'</span> <span class="token punctuation">}</span>
+    <span class="token punctuation">{</span> overflow<span class="token operator">:</span> <span class="token string">'reject'</span> <span class="token punctuation">}</span>
 <span class="token punctuation">)</span><span class="token punctuation">;</span>
 date<span class="token punctuation">.</span>year        <span class="token comment">// => 1441</span>
 date<span class="token punctuation">.</span>month       <span class="token comment">// => 11</span>
@@ -362,7 +362,7 @@ date<span class="token punctuation">.</span><span class="token function">toStrin
 date <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Calendar<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'islamic'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">datePlus</span><span class="token punctuation">(</span>
     Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-05-29'</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
     Temporal<span class="token punctuation">.</span>Duration<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> months<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
-    <span class="token punctuation">{</span> disambiguation<span class="token operator">:</span> <span class="token string">'reject'</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span> overflow<span class="token operator">:</span> <span class="token string">'reject'</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
     Temporal<span class="token punctuation">.</span>Date
 <span class="token punctuation">)</span><span class="token punctuation">;</span>
 date<span class="token punctuation">.</span>year        <span class="token comment">// => 1441</span>

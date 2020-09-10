@@ -214,7 +214,7 @@ A <code>Temporal.Time</code> can be converted into a <code>Temporal.DateTime</co
 </ul>
 <p><strong>Returns:</strong> a new <code>Temporal.Time</code> object.</p>
 <p>Use this constructor if you have the correct parameters for the time already as individual number values.
-Otherwise, <code>Temporal.Time.from()</code>, which accepts more kinds of input and allows disambiguation behaviour, is probably more convenient.</p>
+Otherwise, <code>Temporal.Time.from()</code>, which accepts more kinds of input and allows controlling the overflow behaviour, is probably more convenient.</p>
 <p>Usage examples:</p>
 <pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Leet hour</span>
 time <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>Time</span><span class="token punctuation">(</span><span class="token number">13</span><span class="token punctuation">,</span> <span class="token number">37</span><span class="token punctuation">)</span>  <span class="token comment">// => 13:37</span></code></pre><h2 id="static-methods">Static methods</h2>
@@ -223,7 +223,7 @@ time <span class="token operator">=</span> <span class="token keyword">new</span
 <li><code>thing</code>: The value representing the desired time.</li>
 <li><code>options</code> (optional object): An object with properties representing options for constructing the time.
 The following options are recognized:<ul>
-<li><code>disambiguation</code> (optional string): How to deal with out-of-range values of the other parameters.
+<li><code>overflow</code> (optional string): How to deal with out-of-range values of the other parameters.
 Allowed values are <code>constrain</code> and <code>reject</code>.
 The default is <code>constrain</code>.</li>
 </ul>
@@ -236,14 +236,14 @@ If the value is any other object, a <code>Temporal.Time</code> will be construct
 Any missing ones will be assumed to be 0.</p>
 <p>Any non-object value will be converted to a string, which is expected to be in ISO 8601 format.
 If the string designates a date or a time zone, they will be ignored.</p>
-<p>The <code>disambiguation</code> option works as follows:</p>
+<p>The <code>overflow</code> option works as follows:</p>
 <ul>
 <li>In <code>constrain</code> mode (the default), any out-of-range values are clamped to the nearest in-range value.</li>
 <li>In <code>reject</code> mode, the presence of out-of-range values will cause the function to throw a <code>RangeError</code>.</li>
 </ul>
 <blockquote>
 <p><strong>NOTE</strong>: Although Temporal does not deal with leap seconds, times coming from other software may have a <code>second</code> value of 60.
-In the default <code>constrain</code> disambiguation mode, this will be converted to 59.
+In the default <code>constrain</code> mode, this will be converted to 59.
 In <code>reject</code> mode, the constructor will throw, so if you have to interoperate with times that may contain leap seconds, don&#39;t use <code>reject</code>.
 However, if parsing an ISO 8601 string with a seconds component of <code>:60</code>, then it will always result in a <code>second</code> value of 59, in accordance with POSIX.</p>
 </blockquote>
@@ -267,14 +267,14 @@ time <span class="token operator">=</span> Temporal<span class="token punctuatio
 time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-02-15T19:39:09'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token comment">// => same as above; Temporal.DateTime has hour, minute, etc. properties</span>
 
-<span class="token comment">// Different disambiguation modes</span>
-time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> hour<span class="token operator">:</span> <span class="token number">15</span><span class="token punctuation">,</span> minute<span class="token operator">:</span> <span class="token number">60</span> <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> disambiguation<span class="token operator">:</span> <span class="token string">'constrain'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// Different overflow modes</span>
+time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> hour<span class="token operator">:</span> <span class="token number">15</span><span class="token punctuation">,</span> minute<span class="token operator">:</span> <span class="token number">60</span> <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> overflow<span class="token operator">:</span> <span class="token string">'constrain'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token comment">// => 15:59</span>
-time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> hour<span class="token operator">:</span> <span class="token number">15</span><span class="token punctuation">,</span> minute<span class="token operator">:</span> <span class="token operator">-</span><span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> disambiguation<span class="token operator">:</span> <span class="token string">'constrain'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> hour<span class="token operator">:</span> <span class="token number">15</span><span class="token punctuation">,</span> minute<span class="token operator">:</span> <span class="token operator">-</span><span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> overflow<span class="token operator">:</span> <span class="token string">'constrain'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token comment">// => 15:00</span>
-time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> hour<span class="token operator">:</span> <span class="token number">15</span><span class="token punctuation">,</span> minute<span class="token operator">:</span> <span class="token number">60</span> <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> disambiguation<span class="token operator">:</span> <span class="token string">'reject'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> hour<span class="token operator">:</span> <span class="token number">15</span><span class="token punctuation">,</span> minute<span class="token operator">:</span> <span class="token number">60</span> <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> overflow<span class="token operator">:</span> <span class="token string">'reject'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token comment">// throws</span>
-time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> hour<span class="token operator">:</span> <span class="token number">15</span><span class="token punctuation">,</span> minute<span class="token operator">:</span> <span class="token operator">-</span><span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> disambiguation<span class="token operator">:</span> <span class="token string">'reject'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> hour<span class="token operator">:</span> <span class="token number">15</span><span class="token punctuation">,</span> minute<span class="token operator">:</span> <span class="token operator">-</span><span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> overflow<span class="token operator">:</span> <span class="token string">'reject'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token comment">// throws</span></code></pre><h3 id="compare"><a class="heading-link" href="#compare"></a>Temporal.Time.<strong>compare</strong>(<em>one</em>: Temporal.Time, <em>two</em>: Temporal.Time) : number</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>one</code> (<code>Temporal.Time</code>): First time to compare.</li>
@@ -309,7 +309,7 @@ time<span class="token punctuation">.</span>nanosecond   <span class="token comm
 <li><code>timeLike</code> (object): an object with some or all of the properties of a <code>Temporal.Time</code>.</li>
 <li><code>options</code> (optional object): An object with properties representing options for the operation.
 The following options are recognized:<ul>
-<li><code>disambiguation</code> (string): How to deal with out-of-range values.
+<li><code>overflow</code> (string): How to deal with out-of-range values.
 Allowed values are <code>constrain</code> and <code>reject</code>.
 The default is <code>constrain</code>.</li>
 </ul>
@@ -332,7 +332,7 @@ time<span class="token punctuation">.</span><span class="token function">plus</s
 <li><code>duration</code> (object): A <code>Temporal.Duration</code> object or a duration-like object.</li>
 <li><code>options</code> (optional object): An object with properties representing options for the addition.
 The following options are recognized:<ul>
-<li><code>disambiguation</code> (string): How to deal with additions that result in out-of-range values.
+<li><code>overflow</code> (string): How to deal with additions that result in out-of-range values.
 Allowed values are <code>constrain</code> and <code>reject</code>.
 The default is <code>constrain</code>.</li>
 </ul>
@@ -342,7 +342,7 @@ The default is <code>constrain</code>.</li>
 <p>This method adds <code>duration</code> to <code>time</code>.
 Due to times wrapping around when reaching 24 hours, the returned point in time may be either in the future or in the past relative to <code>time</code>, or even the same time.</p>
 <p>The <code>duration</code> argument is an object with properties denoting a duration, such as <code>{ hours: 5, minutes: 30 }</code>, or a <code>Temporal.Duration</code> object.</p>
-<p>The <code>disambiguation</code> parameter has no effect in the default ISO calendar, because the units of hours, minutes, and seconds are always the same length and therefore not ambiguous.
+<p>The <code>overflow</code> parameter has no effect in the default ISO calendar, because the units of hours, minutes, and seconds are always the same length and therefore not ambiguous.
 However, it may have an effect in other calendars where those units are not always the same length.</p>
 <p>Adding a negative duration is equivalent to subtracting the absolute value of that duration.</p>
 <p>Usage example:</p>
@@ -352,7 +352,7 @@ time<span class="token punctuation">.</span><span class="token function">plus</s
 <li><code>duration</code> (object): A <code>Temporal.Duration</code> object or a duration-like object.</li>
 <li><code>options</code> (optional object): An object with properties representing options for the subtraction.
 The following options are recognized:<ul>
-<li><code>disambiguation</code> (string): How to deal with subtractions that result in out-of-range values.
+<li><code>overflow</code> (string): How to deal with subtractions that result in out-of-range values.
 Allowed values are <code>constrain</code> and <code>reject</code>.
 The default is <code>constrain</code>.</li>
 </ul>
@@ -362,7 +362,7 @@ The default is <code>constrain</code>.</li>
 <p>This method subtracts <code>duration</code> from <code>time</code>.
 Due to times wrapping around when reaching 24 hours, the returned point in time may be either in the future or in the past relative to <code>time</code>, or even the same time.</p>
 <p>The <code>duration</code> argument is an object with properties denoting a duration, such as <code>{ hours: 5, minutes: 30 }</code>, or a <code>Temporal.Duration</code> object.</p>
-<p>The <code>disambiguation</code> parameter has no effect in the default ISO calendar, because the units of hours, minutes, and seconds are always the same length and therefore not ambiguous.
+<p>The <code>overflow</code> parameter has no effect in the default ISO calendar, because the units of hours, minutes, and seconds are always the same length and therefore not ambiguous.
 However, it may have an effect in other calendars where those units are not always the same length.</p>
 <p>Subtracting a negative duration is equivalent to adding the absolute value of that duration.</p>
 <p>Usage example:</p>
