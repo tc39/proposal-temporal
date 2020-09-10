@@ -450,7 +450,7 @@
         1. Let _temporalDate_ be the *this* value.
         1. Perform ? RequireInternalSlot(_temporalDate_, [[InitializedTemporalDate]]).
         1. If _temporalTime_ is *undefined*, then
-          1. Return ? CreateTemporalDateTime(_temporalDate_.[[ISOYear]], _temporalDate.[[ISOMonth]], _temporalDate_.[[ISODay]], 0, 0, 0, 0, 0, 0).
+          1. Return ? CreateTemporalDateTime(_temporalDate_.[[ISOYear]], _temporalDate_.[[ISOMonth]], _temporalDate_.[[ISODay]], 0, 0, 0, 0, 0, 0).
         1. Perform ? RequireInternalSlot(_temporalTime_, [[InitializedTemporalTime]]).
         1. Return ? CreateTemporalDateTime(_temporalDate_.[[ISOYear]], _temporalDate_.[[ISOMonth]], _temporalDate_.[[ISODay]],
           _temporalTime_.[[Hour]], _temporalTime_.[[Minute]], _temporalTime_.[[Second]],
