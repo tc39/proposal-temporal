@@ -14,6 +14,7 @@ Provides standard objects and functions for working with dates and times.
 -   Ujjwal Sharma ([@ryzokuken](https://github.com/ryzokuken))
 -   Philip Chimento ([@ptomato](https://github.com/ptomato))
 -   Jason Williams ([@jasonwilliams](https://github.com/jasonwilliams))
+-   Justin Grant ([@justingrant](https://github.com/justingrant))
 
 ## Status
 
