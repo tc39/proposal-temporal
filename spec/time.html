@@ -3,13 +3,13 @@
 
 <emu-clause id="sec-temporal-time-objects">
   <h1>Temporal.Time Objects</h1>
-  <p>A Temporal.Time object is an immutable Object that contains Number values corresponding to a particular hour, minute,
+  <p>A Temporal.Time object is an immutable Object that contains integers corresponding to a particular hour, minute,
     second, millisecond, microsecond, and nanosecond.</p>
 
   <emu-clause id="sec-temporal-time-constructor">
     <h1>The Temporal.Time Constructor</h1>
     <p>
-      The Temporal.Time constructor is the %Temporal.Time% intrinsic object.
+      The Temporal.Time constructor is the <dfn>%Temporal.Time%</dfn> intrinsic object.
       When called as a constructor, it creates and initializes a new Temporal.Time object.
     </p>
     <p>
@@ -41,7 +41,7 @@
   <emu-clause id="sec-properties-of-the-temporal-time-constructor">
     <h1>Properties of the Temporal.Time Constructor</h1>
     <p>The value of the [[Prototype]] internal slot of the Temporal.Time constructor is the intrinsic object
-      %FunctionPrototype%.</p>
+      %Function.prototype%.</p>
     <p>The Temporal.Time constructor has the following properties:</p>
 
     <emu-clause id="sec-temporal-time-prototype">
@@ -470,7 +470,7 @@
               [[Hour]]
             </td>
             <td>
-              An integer Number value between 0 and 23, inclusive, representing the hour of the day.
+              An integer between 0 and 23, inclusive, representing the hour of the day.
             </td>
           </tr>
           <tr>
@@ -478,7 +478,7 @@
               [[Minute]]
             </td>
             <td>
-              An integer Number value between 0 and 59, inclusive, representing the minute of the hour.
+              An integer between 0 and 59, inclusive, representing the minute of the hour.
             </td>
           </tr>
           <tr>
@@ -486,7 +486,7 @@
               [[Second]]
             </td>
             <td>
-              An integer Number value between 0 and 59, inclusive, representing the second within the minute.
+              An integer between 0 and 59, inclusive, representing the second within the minute.
             </td>
           </tr>
           <tr>
@@ -494,7 +494,7 @@
               [[Millisecond]]
             </td>
             <td>
-              An integer Number value between 0 and 999, inclusive, representing the millisecond within the second.
+              An integer between 0 and 999, inclusive, representing the millisecond within the second.
             </td>
           </tr>
           <tr>
@@ -502,7 +502,7 @@
               [[Microsecond]]
             </td>
             <td>
-              An integer Number value between 0 and 999, inclusive, representing the microsecond within the millisecond.
+              An integer between 0 and 999, inclusive, representing the microsecond within the millisecond.
             </td>
           </tr>
           <tr>
@@ -510,7 +510,7 @@
               [[Nanosecond]]
             </td>
             <td>
-              An integer Number value between 0 and 999, inclusive, representing the nanosecond within the microsecond.
+              An integer between 0 and 999, inclusive, representing the nanosecond within the microsecond.
             </td>
           </tr>
         </tbody>
@@ -638,7 +638,7 @@
     <emu-clause id="sec-temporal-validatetime" aoid="ValidateTime">
       <h1>ValidateTime ( _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_ )</h1>
       <emu-alg>
-        1. Assert: _hour_, _minute_, _second_, _millisecond_, _microsecond_, and _nanosecond_ are integer Number values.
+        1. Assert: _hour_, _minute_, _second_, _millisecond_, _microsecond_, and _nanosecond_ are integers.
         1. If _hour_ &lt; 0 or _hour_ &gt; 23, then
           1. Return *false*.
         1. If _minute_ &lt; 0 or _minute_ &gt; 59, then
@@ -658,7 +658,7 @@
     <emu-clause id="sec-temporal-balancetime" aoid="BalanceTime">
       <h1>BalanceTime ( _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_ )</h1>
       <emu-alg>
-        1. Assert: _hour_, _minute_, _second_, _millisecond_, _microsecond_, and _nanosecond_ are integer Number values.
+        1. Assert: _hour_, _minute_, _second_, _millisecond_, _microsecond_, and _nanosecond_ are integers.
         1. If _hour_ is *+∞* or *−∞*, or _minute_ is *+∞* or *−∞*, or _second_ is *+∞* or *−∞*, or _millisecond_ is *+∞* or *−∞*, or _microsecond_ is *+∞* or *−∞*, or _nanosecond_ is *+∞* or *−∞*, then
           1. Throw a *RangeError* exception.
         1. Set _microsecond_ to _microsecond_ + floor(_nanosecond_ / 1000).
@@ -688,7 +688,7 @@
     <emu-clause id="sec-temporal-constraintime" aoid="ConstrainTime">
       <h1>ConstrainTime ( _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_ )</h1>
       <emu-alg>
-        1. Assert: _hour_, _minute_, _second_, _millisecond_, _microsecond_, and _nanosecond_ are integer Number values.
+        1. Assert: _hour_, _minute_, _second_, _millisecond_, _microsecond_, and _nanosecond_ are integers.
         1. Set _hour_ to ! ConstrainToRange(_hour_, 0, 23).
         1. Set _minute_ to ! ConstrainToRange(_minute_, 0, 59).
         1. Set _second_ to ! ConstrainToRange(_second_, 0, 59).
@@ -810,7 +810,7 @@
     <emu-clause id="sec-temporal-addtime" aoid="AddTime">
       <h1>AddTime ( _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_ )</h1>
       <emu-alg>
-        1. Assert: _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, and _nanoseconds_ are integer Number values.
+        1. Assert: _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, and _nanoseconds_ are integers.
         1. Let _hour_ be _hour_ + _hours_.
         1. Let _minute_ be _minute_ + _minutes_.
         1. Let _second_ be _second_ + _seconds_.
@@ -824,7 +824,7 @@
     <emu-clause id="sec-temporal-subtracttime" aoid="SubtractTime">
       <h1>SubtractTime ( _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_ )</h1>
       <emu-alg>
-        1. Assert: _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, and _nanoseconds_ are integer Number values.
+        1. Assert: _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, and _nanoseconds_ are integers.
         1. Set _hour_ to _hour_ − _hours_.
         1. Set _minute_ to _minute_ − _minutes_.
         1. Set _second_ to _second_ − _seconds_.
@@ -838,7 +838,7 @@
     <emu-clause id="sec-temporal-roundtime" aoid="RoundTime">
       <h1>RoundTime ( _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _increment_, _unit_, _roundingMode_ )</h1>
       <emu-alg>
-        1. Let _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, and _increment_ each be the mathematical values of themselves.
+        1. Assert: _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, and _increment_ are integers.
         1. Let _fractionalSecond_ be _nanosecond_ × 10<sup>−9</sup> + _microsecond_ × 10<sup>−6</sup> + _millisecond_ × 10<sup>−3</sup> + _second_.
         1. If _unit_ is *"day"*, then
           1. Let _quantity_ be ((_fractionalSecond_ / 60 + _minute_) / 60 + _hour_) / 24.
