@@ -2,6 +2,7 @@
 
 import { GetISO8601Calendar } from './calendar.mjs';
 import { ES } from './ecmascript.mjs';
+import { DateTimeFormat } from './intl.mjs';
 import { GetIntrinsic, MakeIntrinsicClass } from './intrinsicclass.mjs';
 import { EPOCHNANOSECONDS, CreateSlots, GetSlot, SetSlot } from './slots.mjs';
 
@@ -228,9 +229,9 @@ export class Instant {
     const timeZone = new TemporalTimeZone('UTC');
     return ES.TemporalInstantToString(this, timeZone);
   }
-  toLocaleString(...args) {
+  toLocaleString(locales = undefined, options = undefined) {
     if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
-    return new Intl.DateTimeFormat(...args).format(this);
+    return new DateTimeFormat(locales, options).format(this);
   }
   valueOf() {
     throw new TypeError('use compare() or equals() to compare Temporal.Instant');

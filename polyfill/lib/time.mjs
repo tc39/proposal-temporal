@@ -1,6 +1,7 @@
 /* global __debug__ */
 
 import { ES } from './ecmascript.mjs';
+import { DateTimeFormat } from './intl.mjs';
 import { GetIntrinsic, MakeIntrinsicClass } from './intrinsicclass.mjs';
 
 import {
@@ -369,9 +370,9 @@ export class Time {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
     return TemporalTimeToString(this);
   }
-  toLocaleString(...args) {
+  toLocaleString(locales = undefined, options = undefined) {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
-    return new Intl.DateTimeFormat(...args).format(this);
+    return new DateTimeFormat(locales, options).format(this);
   }
   valueOf() {
     throw new TypeError('use compare() or equals() to compare Temporal.Time');

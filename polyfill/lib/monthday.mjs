@@ -2,6 +2,7 @@
 
 import { GetISO8601Calendar } from './calendar.mjs';
 import { ES } from './ecmascript.mjs';
+import { DateTimeFormat } from './intl.mjs';
 import { GetIntrinsic, MakeIntrinsicClass } from './intrinsicclass.mjs';
 import { ISO_MONTH, ISO_DAY, ISO_YEAR, CALENDAR, MONTH_DAY_BRAND, CreateSlots, GetSlot, SetSlot } from './slots.mjs';
 
@@ -93,9 +94,9 @@ export class MonthDay {
     if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
     return MonthDayToString(this);
   }
-  toLocaleString(...args) {
+  toLocaleString(locales = undefined, options = undefined) {
     if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
-    return new Intl.DateTimeFormat(...args).format(this);
+    return new DateTimeFormat(locales, options).format(this);
   }
   valueOf() {
     throw new TypeError('use equals() to compare Temporal.MonthDay');
