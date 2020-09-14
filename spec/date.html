@@ -475,6 +475,7 @@
         1. If _temporalDate_.[[ISOYear]] ≠ _other_.[[ISOYear]], return *false*.
         1. If _temporalDate_.[[ISOMonth]] ≠ _other_.[[ISOMonth]], return *false*.
         1. If _temporalDate_.[[ISODay]] ≠ _other_.[[ISODay]], return *false*.
+        1. If ? CalendarToString(_temporalDate_.[[Calendar]]) ≠ ? CalendarToString(_other_.[[Calendar]]), return *false*.
         1. Return *true*.
       </emu-alg>
     </emu-clause>
