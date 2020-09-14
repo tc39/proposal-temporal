@@ -62,6 +62,19 @@
         1. Return _calendar_.
       </emu-alg>
     </emu-clause>
+
+    <emu-clause id="sec-temporal-comparecalendar" aoid="CompareCalendar">
+      <h1>CompareCalendar ( _one_, _two_ )</h1>
+      <emu-alg>
+        1. Let _calendarOne_ be ? CalendarToString(_one_).
+        1. Let _calendarTwo_ be ? CalendarToString(_two_).
+        1. Let _r_ be the result of performing Abstract Relational Comparison _calendarOne_ &lt; _calendarTwo_.
+        1. If _r_ is *true*, return −1.
+        1. Let _r_ be the result of performing Abstract Relational Comparison _calendarTwo_ &lt; _calendarOne_.
+        1. If _r_ is *true*, return 1.
+        1. Return 0.
+      </emu-alg>
+    </emu-clause>
   </emu-clause>
 
   <emu-clause id="sec-temporal-calendar-constructor">
@@ -99,7 +112,7 @@
 
     <emu-clause id="sec-temporal-calendar-prototype">
       <h1>Temporal.Calendar.prototype</h1>
-      <p>The initial value of Temporal.Calendar.prototype is %Temporal.Calendar.prototype%.</p>
+      <p>The initial value of `Temporal.Calendar.prototype` is %Temporal.Calendar.prototype%.</p>
       <p>This property has the attributes { [[Writable]]: *false*, [[Enumerable]]: *false*, [[Configurable]]: *false* }.</p>
     </emu-clause>
 
@@ -139,7 +152,7 @@
 
     <p>The Temporal.Calendar prototype object</p>
     <ul>
-      <li>is the intrinsic object %Temporal.Calendar.prototype%.
+      <li>is the intrinsic object <dfn>%Temporal.Calendar.prototype%</dfn>.
       <li>is itself an ordinary object.
       <li>is not a Temporal.Calendar instance and does not have a [[InitializedTemporalCalendar]] internal slot.
       <li>has a [[Prototype]] internal slot whose value is %Object.prototype%.
@@ -147,7 +160,7 @@
 
     <emu-clause id="sec-temporal.calendar.prototype.constructor">
       <h1>Temporal.Calendar.prototype.constructor</h1>
-      <p>The initial value of Temporal.Calendar.prototype.constructor is %Temporal.Calendar%.</p>
+      <p>The initial value of `Temporal.Calendar.prototype.constructor` is %Temporal.Calendar%.</p>
     </emu-clause>
 
     <emu-clause id="sec-temporal.calendar.prototype-@@tostringtag">
@@ -163,7 +176,7 @@
     <emu-clause id="sec-get-temporal.calendar.prototype.id">
       <h1>get Temporal.Calendar.prototype.id</h1>
       <p>
-        `Temporal.Calendar.prototype.id` is an accessor property whose set accessor function is undefined.
+        `Temporal.Calendar.prototype.id` is an accessor property whose set accessor function is *undefined*.
         Its get accessor function performs the following steps:
       </p>
       <emu-alg>

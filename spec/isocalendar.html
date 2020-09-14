@@ -63,7 +63,7 @@
 
     <p>The Temporal.ISO8601Calendar prototype object</p>
     <ul>
-      <li>is the intrinsic object %Temporal.ISO8601Calendar.prototype%.
+      <li>is the intrinsic object <dfn>%Temporal.ISO8601Calendar.prototype%</dfn>.
       <li>is itself an ordinary object.
       <li>is not a Temporal.ISO8601Calendar instance and does not have a [[InitializedTemporalCalendar]] internal slot.
       <li>has a [[Prototype]] internal slot whose value is %Temporal.Calendar.prototype%.
@@ -158,7 +158,7 @@
       </p>
       <emu-alg>
         1. Perform ? RequireOneOfInternalSlots(_dateOrDateTime_, « [[InitializedTemporalDate]], [[InitializedTemporalDateTime]] »).
-        1. Return _dateOrDateTime_.[[ISOYear]].
+        1. Return 𝔽(_dateOrDateTime_.[[ISOYear]]).
       </emu-alg>
     </emu-clause>
 
@@ -170,7 +170,7 @@
       </p>
       <emu-alg>
         1. Perform ? RequireOneOfInternalSlots(_dateOrDateTime_, « [[InitializedTemporalDate]], [[InitializedTemporalDateTime]] »).
-        1. Return _dateOrDateTime_.[[ISOMonth]].
+        1. Return 𝔽(_dateOrDateTime_.[[ISOMonth]]).
       </emu-alg>
     </emu-clause>
 
@@ -182,7 +182,7 @@
       </p>
       <emu-alg>
         1. Perform ? RequireOneOfInternalSlots(_dateOrDateTime_, « [[InitializedTemporalDate]], [[InitializedTemporalDateTime]] »).
-        1. Return _dateOrDateTime_.[[ISODay]].
+        1. Return 𝔽(_dateOrDateTime_.[[ISODay]]).
       </emu-alg>
     </emu-clause>
 
@@ -206,7 +206,7 @@
       </p>
       <emu-alg>
         1. Perform ? RequireOneOfInternalSlots(_dateOrDateTime_, « [[InitializedTemporalDate]], [[InitializedTemporalDateTime]] »).
-        1. Return ! ToDayOfWeek(_dateOrDateTime_.[[ISOYear]], _dateOrDateTime_.[[ISOMonth]], _dateOrDateTime_.[[ISODay]]).
+        1. Return 𝔽(! ToDayOfWeek(_dateOrDateTime_.[[ISOYear]], _dateOrDateTime_.[[ISOMonth]], _dateOrDateTime_.[[ISODay]])).
       </emu-alg>
     </emu-clause>
 
@@ -218,7 +218,7 @@
       </p>
       <emu-alg>
         1. Perform ? RequireOneOfInternalSlots(_dateOrDateTime_, « [[InitializedTemporalDate]], [[InitializedTemporalDateTime]] »).
-        1. Return ! ToDayOfYear(_dateOrDateTime_.[[ISOYear]], _dateOrDateTime_.[[ISOMonth]], _dateOrDateTime_.[[ISODay]]).
+        1. Return 𝔽(! ToDayOfYear(_dateOrDateTime_.[[ISOYear]], _dateOrDateTime_.[[ISOMonth]], _dateOrDateTime_.[[ISODay]])).
       </emu-alg>
     </emu-clause>
 
@@ -230,7 +230,7 @@
       </p>
       <emu-alg>
         1. Perform ? RequireOneOfInternalSlots(_dateOrDateTime_, « [[InitializedTemporalDate]], [[InitializedTemporalDateTime]] »).
-        1. Return ! ToWeekOfYear(_dateOrDateTime_.[[ISOYear]], _dateOrDateTime_.[[ISOMonth]], _dateOrDateTime_.[[ISODay]]).
+        1. Return 𝔽(! ToWeekOfYear(_dateOrDateTime_.[[ISOYear]], _dateOrDateTime_.[[ISOMonth]], _dateOrDateTime_.[[ISODay]])).
       </emu-alg>
     </emu-clause>
 
@@ -254,7 +254,7 @@
       </p>
       <emu-alg>
         1. Perform ? RequireOneOfInternalSlots(_dateOrDateTime_, « [[InitializedTemporalDate]], [[InitializedTemporalDateTime]] »).
-        1. Return ! DaysInMonth(_dateOrDateTime_.[[ISOYear]], _dateOrDateTime_.[[ISOMonth]]).
+        1. Return 𝔽(! DaysInMonth(_dateOrDateTime_.[[ISOYear]], _dateOrDateTime_.[[ISOMonth]])).
       </emu-alg>
     </emu-clause>
 
@@ -266,7 +266,7 @@
       </p>
       <emu-alg>
         1. Perform ? RequireOneOfInternalSlots(_dateOrDateTime_, « [[InitializedTemporalDate]], [[InitializedTemporalDateTime]] »).
-        1. Return ! DaysInYear(_dateOrDateTime_.[[ISOYear]]).
+        1. Return 𝔽(! DaysInYear(_dateOrDateTime_.[[ISOYear]])).
       </emu-alg>
     </emu-clause>
 
@@ -302,7 +302,7 @@
   </emu-clause>
 
   <emu-clause id="sec-temporal-iso8601calendar-abstract-ops">
-    <h1>Abstract Operations for Temporal.Date Objects</h1>
+    <h1>Abstract Operations for Temporal.ISO8601Calendar Objects</h1>
 
     <emu-clause id="sec-temporal-isleapyear" aoid="IsLeapYear">
       <h1>IsLeapYear ( _year_ )</h1>
@@ -328,6 +328,7 @@
     <emu-clause id="sec-temporal-daysinmonth" aoid="DaysInMonth">
       <h1>DaysInMonth ( _year_, _month_ )</h1>
       <emu-alg>
+        1. Assert: _year_ is an integer.
         1. Assert: _month_ is an integer, _month_ ≥ 1, and _month_ ≤ 12.
         1. If _month_ is 1, 3, 5, 7, 8, 10, or 12, return 31.
         1. If _month_ is 4, 6, 9, or 11, return 30.
@@ -339,6 +340,9 @@
     <emu-clause id="sec-temporal-todayofweek" aoid="ToDayOfWeek">
       <h1>ToDayOfWeek ( _year_, _month_, _day_ )</h1>
       <emu-alg>
+        1. Assert: _year_ is an integer.
+        1. Assert: _month_ is an integer.
+        1. Assert: _day_ is an integer.
         1. Let _date_ be the date given by _year_, _month_, and _day_.
         1. Return _date_'s day of the week according to ISO-8601.
       </emu-alg>
@@ -348,6 +352,9 @@
     <emu-clause id="sec-temporal-todayofyear" aoid="ToDayOfYear">
       <h1>ToDayOfYear ( _year_, _month_, _day_ )</h1>
       <emu-alg>
+        1. Assert: _year_ is an integer.
+        1. Assert: _month_ is an integer.
+        1. Assert: _day_ is an integer.
         1. Let _date_ be the date given by _year_, _month_, and _day_.
         1. Return _date_'s ordinal date in the year according to ISO-8601.
       </emu-alg>
@@ -356,6 +363,9 @@
     <emu-clause id="sec-temporal-toweekofyear" aoid="ToWeekOfYear">
       <h1>ToWeekOfYear ( _year_, _month_, _day_ )</h1>
       <emu-alg>
+        1. Assert: _year_ is an integer.
+        1. Assert: _month_ is an integer.
+        1. Assert: _day_ is an integer.
         1. Let _date_ be the date given by _year_, _month_, and _day_.
         1. Return _date_'s week number according to ISO-8601.
       </emu-alg>

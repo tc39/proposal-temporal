@@ -47,6 +47,14 @@ export class Date {
       });
     }
   }
+  get calendar() {
+    if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
+    return GetSlot(this, CALENDAR);
+  }
+  get era() {
+    if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
+    return GetSlot(this, CALENDAR).era(this);
+  }
   get year() {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
     return GetSlot(this, CALENDAR).year(this);
@@ -58,14 +66,6 @@ export class Date {
   get day() {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
     return GetSlot(this, CALENDAR).day(this);
-  }
-  get calendar() {
-    if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
-    return GetSlot(this, CALENDAR);
-  }
-  get era() {
-    if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
-    return GetSlot(this, CALENDAR).era(this);
   }
   get dayOfWeek() {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
@@ -83,13 +83,13 @@ export class Date {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
     return GetSlot(this, CALENDAR).daysInWeek(this);
   }
-  get daysInYear() {
-    if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
-    return GetSlot(this, CALENDAR).daysInYear(this);
-  }
   get daysInMonth() {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
     return GetSlot(this, CALENDAR).daysInMonth(this);
+  }
+  get daysInYear() {
+    if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
+    return GetSlot(this, CALENDAR).daysInYear(this);
   }
   get monthsInYear() {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');

@@ -132,7 +132,6 @@ class ISO8601Calendar extends Calendar {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
     options = ES.NormalizeOptionsObject(options);
     const overflow = ES.ToTemporalOverflow(options);
-    // Intentionally alphabetical
     let { year, month, day } = ES.ToTemporalDateRecord(fields);
     ({ year, month, day } = ES.RegulateDate(year, month, day, overflow));
     return new constructor(year, month, day, this);
@@ -141,7 +140,6 @@ class ISO8601Calendar extends Calendar {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
     options = ES.NormalizeOptionsObject(options);
     const overflow = ES.ToTemporalOverflow(options);
-    // Intentionally alphabetical
     let { year, month } = ES.ToTemporalYearMonthRecord(fields);
     ({ year, month } = ES.RegulateYearMonth(year, month, overflow));
     return new constructor(year, month, this, /* referenceISODay = */ 1);
@@ -150,7 +148,6 @@ class ISO8601Calendar extends Calendar {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
     options = ES.NormalizeOptionsObject(options);
     const overflow = ES.ToTemporalOverflow(options);
-    // Intentionally alphabetical
     let { month, day } = ES.ToTemporalMonthDayRecord(fields);
     ({ month, day } = ES.RegulateMonthDay(month, day, overflow));
     return new constructor(month, day, this, /* referenceISOYear = */ 1972);

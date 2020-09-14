@@ -405,7 +405,6 @@ export class Time {
         microsecond = GetSlot(item, MICROSECOND);
         nanosecond = GetSlot(item, NANOSECOND);
       } else {
-        // Intentionally largest to smallest units
         ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.ToTemporalTimeRecord(item));
       }
     } else {
