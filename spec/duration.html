@@ -471,7 +471,12 @@
       <emu-alg>
         1. Let _duration_ be the *this* value.
         1. Perform ? RequireInternalSlot(_duration_, [[InitializedTemporalDuration]]).
-        1. <mark>TODO.</mark>
+        1. If the implementation does not include the ECMA-402 Internationalization API, then
+          1. Return ! TemporalDurationToString(_duration_).
+        1. If the implementation does not include the `Intl.DurationFormat` API, then
+          1. Return ! TemporalDurationToString(_duration_).
+        1. Let _durationFormat_ be ? Construct(%Intl.DurationFormat%, « _locales_, _options_ »).
+        1. Return ? FormatDuration(_durationFormat_, _duration_).
       </emu-alg>
     </emu-clause>
 
@@ -1233,6 +1238,18 @@
         1. Let _result_ be the string concatenation of _signPart_, the code unit 0x0050 (LATIN CAPITAL LETTER P) and _datePart_.
         1. If _timePart_ is not `""`, then
           1. Set _result_ to the string concatenation of _result_, the code unit 0x0054 (LATIN CAPITAL LETTER T), _timePart_, and _secondsPart_.
+        1. Return _result_.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-formatduration" aoid="FormatDuration">
+      <h1>FormatDuration ( _durationFormat_, _duration_ )</h1>
+      <emu-alg>
+        1. Let _record_ be ? ToPartialDuration(_duration_).
+        1. Let _formatted_ be ? PartitionDurationFormatPattern(_df_, _record_).
+        1. Let _result_ be the empty String.
+        1. For each Record _part_ in _formatted_, do
+          1. Set _result_ to the string-concatenation of _result_ and _part_.[[Value]].
         1. Return _result_.
       </emu-alg>
     </emu-clause>

@@ -62,5 +62,12 @@
       "number": "6.1",
       "id": "sec-case-sensitivity-and-case-mapping"
     }
+  ],
+  "https://tc39.es/proposal-intl-duration-format/": [
+    {
+      "type": "op",
+      "aoid": "PartitionDurationFormatPattern",
+      "id": "sec-partitiondurationformatpattern"
+    }
   ]
 }
