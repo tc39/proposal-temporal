@@ -59,7 +59,7 @@
     <emu-clause id="sec-temporal-duration-prototype">
       <h1>Temporal.Duration.prototype</h1>
       <p>
-        The initial value of Temporal.Duration.prototype is
+        The initial value of `Temporal.Duration.prototype` is
         %Temporal.Duration.prototype%.
       </p>
       <p>
@@ -105,7 +105,7 @@
 
     <p>The Temporal.Duration prototype object</p>
     <ul>
-      <li>is the intrinsic object %Temporal.Duration.prototype%.</li>
+      <li>is the intrinsic object <dfn>%Temporal.Duration.prototype%</dfn>.</li>
       <li>is itself an ordinary object.</li>
       <li>is not a Temporal.Duration instance and doesn't have an [[InitializedTemporalDuration]] internal slot.</li>
       <li>has a [[Prototype]] internal slot whose value is %Object.prototype%.</li>
@@ -113,7 +113,7 @@
 
     <emu-clause id="sec-temporal-duration-prototype-constructor">
       <h1>Temporal.Duration.prototype.constructor</h1>
-      <p>The initial value of Temporal.Duration.prototype.constructor is %Temporal.Duration%.</p>
+      <p>The initial value of `Temporal.Duration.prototype.constructor` is %Temporal.Duration%.</p>
     </emu-clause>
 
     <emu-clause id="sec-intl-segmenter-prototype-@@tostringtag">
@@ -125,7 +125,7 @@
     <emu-clause id="sec-get-temporal.duration.prototype.years">
       <h1>get Temporal.Duration.prototype.years</h1>
       <p>
-        `Temporal.Duration.prototype.years` is an accessor property whose set accessor function is undefined.
+        `Temporal.Duration.prototype.years` is an accessor property whose set accessor function is *undefined*.
         Its get accessor function performs the following steps:
       </p>
       <emu-alg>
@@ -138,7 +138,7 @@
     <emu-clause id="sec-get-temporal.duration.prototype.months">
       <h1>get Temporal.Duration.prototype.months</h1>
       <p>
-        `Temporal.Duration.prototype.months` is an accessor property whose set accessor function is undefined.
+        `Temporal.Duration.prototype.months` is an accessor property whose set accessor function is *undefined*.
         Its get accessor function performs the following steps:
       </p>
       <emu-alg>
@@ -151,7 +151,7 @@
     <emu-clause id="sec-get-temporal.duration.prototype.weeks">
       <h1>get Temporal.Duration.prototype.weeks</h1>
       <p>
-        `Temporal.Duration.prototype.weeks` is an accessor property whose set accessor function is undefined.
+        `Temporal.Duration.prototype.weeks` is an accessor property whose set accessor function is *undefined*.
         Its get accessor function performs the following steps:
       </p>
       <emu-alg>
@@ -164,7 +164,7 @@
     <emu-clause id="sec-get-temporal.duration.prototype.days">
       <h1>get Temporal.Duration.prototype.days</h1>
       <p>
-        `Temporal.Duration.prototype.days` is an accessor property whose set accessor function is undefined.
+        `Temporal.Duration.prototype.days` is an accessor property whose set accessor function is *undefined*.
         Its get accessor function performs the following steps:
       </p>
       <emu-alg>
@@ -177,7 +177,7 @@
     <emu-clause id="sec-get-temporal.duration.prototype.hours">
       <h1>get Temporal.Duration.prototype.hours</h1>
       <p>
-        `Temporal.Duration.prototype.hours` is an accessor property whose set accessor function is undefined.
+        `Temporal.Duration.prototype.hours` is an accessor property whose set accessor function is *undefined*.
         Its get accessor function performs the following steps:
       </p>
       <emu-alg>
@@ -190,7 +190,7 @@
     <emu-clause id="sec-get-temporal.duration.prototype.minutes">
       <h1>get Temporal.Duration.prototype.minutes</h1>
       <p>
-        `Temporal.Duration.prototype.minutes` is an accessor property whose set accessor function is undefined.
+        `Temporal.Duration.prototype.minutes` is an accessor property whose set accessor function is *undefined*.
         Its get accessor function performs the following steps:
       </p>
       <emu-alg>
@@ -203,7 +203,7 @@
     <emu-clause id="sec-get-temporal.duration.prototype.seconds">
       <h1>get Temporal.Duration.prototype.seconds</h1>
       <p>
-        `Temporal.Duration.prototype.seconds` is an accessor property whose set accessor function is undefined.
+        `Temporal.Duration.prototype.seconds` is an accessor property whose set accessor function is *undefined*.
         Its get accessor function performs the following steps:
       </p>
       <emu-alg>
@@ -216,7 +216,7 @@
     <emu-clause id="sec-get-temporal.duration.prototype.milliseconds">
       <h1>get Temporal.Duration.prototype.milliseconds</h1>
       <p>
-        `Temporal.Duration.prototype.milliseconds` is an accessor property whose set accessor function is undefined.
+        `Temporal.Duration.prototype.milliseconds` is an accessor property whose set accessor function is *undefined*.
         Its get accessor function performs the following steps:
       </p>
       <emu-alg>
@@ -229,7 +229,7 @@
     <emu-clause id="sec-get-temporal.duration.prototype.microseconds">
       <h1>get Temporal.Duration.prototype.microseconds</h1>
       <p>
-        `Temporal.Duration.prototype.microseconds` is an accessor property whose set accessor function is undefined.
+        `Temporal.Duration.prototype.microseconds` is an accessor property whose set accessor function is *undefined*.
         Its get accessor function performs the following steps:
       </p>
       <emu-alg>
@@ -242,7 +242,7 @@
     <emu-clause id="sec-get-temporal.duration.prototype.nanoseconds">
       <h1>get Temporal.Duration.prototype.nanoseconds</h1>
       <p>
-        `Temporal.Duration.prototype.nanoseconds` is an accessor property whose set accessor function is undefined.
+        `Temporal.Duration.prototype.nanoseconds` is an accessor property whose set accessor function is *undefined*.
         Its get accessor function performs the following steps:
       </p>
       <emu-alg>
@@ -255,7 +255,7 @@
     <emu-clause id="sec-get-temporal.duration.prototype.sign">
       <h1>get Temporal.Duration.prototype.sign</h1>
       <p>
-        `Temporal.Duration.prototype.sign` is an accessor property whose set accessor function is undefined.
+        `Temporal.Duration.prototype.sign` is an accessor property whose set accessor function is *undefined*.
         Its get accessor function performs the following steps:
       </p>
       <emu-alg>
@@ -322,21 +322,19 @@
     <emu-clause id="sec-temporal.duration.prototype.negated">
       <h1>Temporal.Duration.prototype.negated ( )</h1>
       <p>
-        The `negated` method takes no arguments.
-        It performs the following steps when called:
+        The following steps are taken:
       </p>
       <emu-alg>
         1. Let _duration_ be the *this* value.
         1. Perform ? RequireInternalSlot(_duration_, [[InitializedTemporalDuration]]).
-        1. Return ? CreateTemporalDurationFromInstance(_duration_, &minus;_duration_.[[Years]], &minus;_duration_.[[Months]], &minus;_duration_.[[Weeks]], &minus;_duration_.[[Days]], &minus;_duration_.[[Hours]], &minus;_duration_.[[Minutes]], &minus;_duration_.[[Seconds]], &minus;_duration_.[[Milliseconds]], &minus;_duration_.[[Microseconds]], &minus;_duration_.[[Nanoseconds]]).
+        1. Return ? CreateTemporalDurationFromInstance(_duration_, −_duration_.[[Years]], −_duration_.[[Months]], −_duration_.[[Weeks]], −_duration_.[[Days]], −_duration_.[[Hours]], −_duration_.[[Minutes]], −_duration_.[[Seconds]], −_duration_.[[Milliseconds]], −_duration_.[[Microseconds]], −_duration_.[[Nanoseconds]]).
       </emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal.duration.prototype.abs">
       <h1>Temporal.Duration.prototype.abs ( )</h1>
       <p>
-        The `abs` method takes no arguments.
-        It performs the following steps when called:
+        The following steps are taken:
       </p>
       <emu-alg>
         1. Let _duration_ be the *this* value.
@@ -370,7 +368,7 @@
         1. Let _duration_ be the *this* value.
         1. Perform ? RequireInternalSlot(_duration_, [[InitializedTemporalDuration]]).
         1. Set _other_ to ? ToLimitedTemporalDuration(_other_, « »).
-        1. Perform ? RejectDurationSign (_other_.[[Years]], _other_.[[Months]], _other_.[[Weeks]], _other_.[[Days]], _other_.[[Hours]], _other_.[[Minutes]], _other_.[[Seconds]], _other_.[[Milliseconds]], _other_.[[Microseconds]], _other_.[[Nanoseconds]]).
+        1. Perform ? RejectDurationSign(_other_.[[Years]], _other_.[[Months]], _other_.[[Weeks]], _other_.[[Days]], _other_.[[Hours]], _other_.[[Minutes]], _other_.[[Seconds]], _other_.[[Milliseconds]], _other_.[[Microseconds]], _other_.[[Nanoseconds]]).
         1. Set _options_ to ? NormalizeOptionsObject(_options_).
         1. Let _overflow_ be ? ToTemporalDurationOverflow(_options_).
         1. Let _result_ be ? DurationArithmetic(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]], _other_.[[Years]], _other_.[[Months]], _other_.[[Weeks]], _other_.[[Days]], _other_.[[Hours]], _other_.[[Minutes]], _other_.[[Seconds]], _other_.[[Milliseconds]], _other_.[[Microseconds]], _other_.[[Nanoseconds]], _overflow_).
@@ -388,10 +386,10 @@
         1. Let _duration_ be the *this* value.
         1. Perform ? RequireInternalSlot(_duration_, [[InitializedTemporalDuration]]).
         1. Set _other_ to ? ToLimitedTemporalDuration(_other_, « »).
-        1. Perform ? RejectDurationSign (_other_.[[Years]], _other_.[[Months]], _other_.[[Weeks]], _other_.[[Days]], _other_.[[Hours]], _other_.[[Minutes]], _other_.[[Seconds]], _other_.[[Milliseconds]], _other_.[[Microseconds]], _other_.[[Nanoseconds]]).
+        1. Perform ? RejectDurationSign(_other_.[[Years]], _other_.[[Months]], _other_.[[Weeks]], _other_.[[Days]], _other_.[[Hours]], _other_.[[Minutes]], _other_.[[Seconds]], _other_.[[Milliseconds]], _other_.[[Microseconds]], _other_.[[Nanoseconds]]).
         1. Set _options_ to ? NormalizeOptionsObject(_options_).
         1. Let _overflow_ be ? ToTemporalDurationOverflow(_options_).
-        1. Let _result_ be ? DurationArithmetic(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]], &minus;_other_.[[Years]], &minus;_other_.[[Months]], &minus;_other_.[[Weeks]], &minus;_other_.[[Days]], &minus;_other_.[[Hours]], &minus;_other_.[[Minutes]], &minus;_other_.[[Seconds]], &minus;_other_.[[Milliseconds]], &minus;_other_.[[Microseconds]], &minus;_other_.[[Nanoseconds]], _overflow_).
+        1. Let _result_ be ? DurationArithmetic(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]], −_other_.[[Years]], −_other_.[[Months]], −_other_.[[Weeks]], −_other_.[[Days]], −_other_.[[Hours]], −_other_.[[Minutes]], −_other_.[[Seconds]], −_other_.[[Milliseconds]], −_other_.[[Microseconds]], −_other_.[[Nanoseconds]], _overflow_).
         1. Return ? CreateTemporalDurationFromInstance(_duration_, _result_.[[Years]], _result_.[[Months]], _result_.[[Weeks]], _result_.[[Days]], _result_.[[Hours]], _result_.[[Minutes]], _result_.[[Seconds]], _result_.[[Milliseconds]], _result_.[[Microseconds]], _result_.[[Nanoseconds]]).
       </emu-alg>
     </emu-clause>
@@ -448,7 +446,7 @@
       <emu-alg>
         1. Let _duration_ be the *this* value.
         1. Perform ? RequireInternalSlot(_duration_, [[InitializedTemporalDuration]]).
-        1. Return ? TemporalDurationToString(_duration_).
+        1. Return ! TemporalDurationToString(_duration_).
       </emu-alg>
     </emu-clause>
 
@@ -460,7 +458,7 @@
       <emu-alg>
         1. Let _duration_ be the *this* value.
         1. Perform ? RequireInternalSlot(_duration_, [[InitializedTemporalDuration]]).
-        1. Return ? TemporalDurationToString(_duration_).
+        1. Return ! TemporalDurationToString(_duration_).
       </emu-alg>
     </emu-clause>
 
@@ -789,13 +787,13 @@
           1. Increment _nanoseconds_ by 1000 × _microseconds_.
           1. Set _microseconds_ to 0.
         1. Return the new Record {
-          [[Days]]: _days_ &times; _sign_,
-          [[Hours]]: _hours_ &times; _sign_,
-          [[Minutes]]: _minutes_ &times; _sign_,
-          [[Seconds]]: _seconds_ &times; _sign_,
-          [[Milliseconds]]: _milliseconds_ &times; _sign_,
-          [[Microseconds]]: _microseconds_ &times; _sign_,
-          [[Nanoseconds]]: _nanoseconds_ &times; _sign_
+          [[Days]]: _days_ × _sign_,
+          [[Hours]]: _hours_ × _sign_,
+          [[Minutes]]: _minutes_ × _sign_,
+          [[Seconds]]: _seconds_ × _sign_,
+          [[Milliseconds]]: _milliseconds_ × _sign_,
+          [[Microseconds]]: _microseconds_ × _sign_,
+          [[Nanoseconds]]: _nanoseconds_ × _sign_
           }.
       </emu-alg>
     </emu-clause>
@@ -1006,16 +1004,16 @@
         1. Let _months_ be _mon1_ + _mon2_.
         1. Let _years_ be _y1_ + _y2_.
         1. Let _sign_ be ! DurationSign(_years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_).
-        1. Set _years_ to _years_ &times; _sign_.
-        1. Set _months_ to _months_ &times; _sign_.
-        1. Set _weeks_ to _weeks_ &times; _sign_.
-        1. Set _days_ to _days_ &times; _sign_.
-        1. Set _hours_ to _hours_ &times; _sign_.
-        1. Set _minutes_ to _minutes_ &times; _sign_.
-        1. Set _seconds_ to _seconds_ &times; _sign_.
-        1. Set _milliseconds_ to _milliseconds_ &times; _sign_.
-        1. Set _microseconds_ to _microseconds_ &times; _sign_.
-        1. Set _nanoseconds_ to _nanoseconds_ &times; _sign_.
+        1. Set _years_ to _years_ × _sign_.
+        1. Set _months_ to _months_ × _sign_.
+        1. Set _weeks_ to _weeks_ × _sign_.
+        1. Set _days_ to _days_ × _sign_.
+        1. Set _hours_ to _hours_ × _sign_.
+        1. Set _minutes_ to _minutes_ × _sign_.
+        1. Set _seconds_ to _seconds_ × _sign_.
+        1. Set _milliseconds_ to _milliseconds_ × _sign_.
+        1. Set _microseconds_ to _microseconds_ × _sign_.
+        1. Set _nanoseconds_ to _nanoseconds_ × _sign_.
         1. If _nanoseconds_ &lt; 0, then
           1. Set _microseconds_ to _microseconds_ + floor(_nanoseconds_ / 1000).
           1. Set _nanoseconds_ to ! NonNegativeModulo(_nanoseconds_, 1000).
@@ -1036,16 +1034,16 @@
           1. Set _hours_ to ! NonNegativeModulo(_hours_, 24).
         1. If any of _months_, _weeks_, _days_ is negative, then
           1. Throw a *RangeError*.
-        1. Set _years_ to _years_ &times; _sign_.
-        1. Set _months_ to _months_ &times; _sign_.
-        1. Set _weeks_ to _weeks_ &times; _sign_.
-        1. Set _days_ to _days_ &times; _sign_.
-        1. Set _hours_ to _hours_ &times; _sign_.
-        1. Set _minutes_ to _minutes_ &times; _sign_.
-        1. Set _seconds_ to _seconds_ &times; _sign_.
-        1. Set _milliseconds_ to _milliseconds_ &times; _sign_.
-        1. Set _microseconds_ to _microseconds_ &times; _sign_.
-        1. Set _nanoseconds_ to _nanoseconds_ &times; _sign_.
+        1. Set _years_ to _years_ × _sign_.
+        1. Set _months_ to _months_ × _sign_.
+        1. Set _weeks_ to _weeks_ × _sign_.
+        1. Set _days_ to _days_ × _sign_.
+        1. Set _hours_ to _hours_ × _sign_.
+        1. Set _minutes_ to _minutes_ × _sign_.
+        1. Set _seconds_ to _seconds_ × _sign_.
+        1. Set _milliseconds_ to _milliseconds_ × _sign_.
+        1. Set _microseconds_ to _microseconds_ × _sign_.
+        1. Set _nanoseconds_ to _nanoseconds_ × _sign_.
         1. Return ? RegulateDuration(_years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_, _overflow_).
       </emu-alg>
     </emu-clause>

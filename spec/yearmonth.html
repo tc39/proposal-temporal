@@ -8,7 +8,7 @@
   <emu-clause id="sec-temporal-yearmonth-constructor">
     <h1>The Temporal.YearMonth Constructor</h1>
     <p>
-      The Temporal.YearMonth constructor is the %Temporal.YearMonth% intrinsic object.
+      The Temporal.YearMonth constructor is the <dfn>%Temporal.YearMonth%</dfn> intrinsic object.
       When called as a constructor, it creates and initializes a new Temporal.YearMonth object.
     </p>
     <p>
@@ -25,7 +25,8 @@
       <emu-alg>
         1. If NewTarget is *undefined*, then
           1. Throw a *TypeError* exception.
-        1. If _referenceISODay_ is not given, set it to 1.
+        1. If _referenceISODay_ is *undefined*, then
+          1. Set _referenceISODay_ to *1*<sub>𝔽</sub>.
         1. Let _y_ be ? ToInteger(_isoYear_).
         1. Let _m_ be ? ToInteger(_isoMonth_).
         1. Let _ref_ be ? ToInteger(_referenceISODay_).
@@ -34,14 +35,14 @@
     </emu-clause>
   </emu-clause>
 
-  <emu-clause id="sec-properties-of-the-temporal-YearMonth-constructor">
+  <emu-clause id="sec-properties-of-the-temporal-yearmonth-constructor">
     <h1>Properties of the Temporal.YearMonth Constructor</h1>
     <p>The value of the [[Prototype]] internal slot of the Temporal.YearMonth constructor is the intrinsic object %FunctionPrototype%.</p>
     <p>The Temporal.YearMonth constructor has the following properties:</p>
 
-    <emu-clause id="sec-temporal-YearMonth-prototype">
+    <emu-clause id="sec-temporal-yearmonth-prototype">
       <h1>Temporal.YearMonth.prototype</h1>
-      <p>The initial value of Temporal.YearMonth.prototype is %Temporal.YearMonth.prototype%.</p>
+      <p>The initial value of `Temporal.YearMonth.prototype` is %Temporal.YearMonth.prototype%.</p>
       <p>This property has the attributes { [[Writable]]: *false*, [[Enumerable]]: *false*, [[Configurable]]: *false* }.</p>
     </emu-clause>
 
@@ -94,23 +95,23 @@
     </emu-clause>
   </emu-clause>
 
-  <emu-clause id="sec-properties-of-the-temporal-YearMonth-prototype-object">
+  <emu-clause id="sec-properties-of-the-temporal-yearmonth-prototype-object">
     <h1>Properties of the Temporal.YearMonth Prototype Object</h1>
 
     <p>The Temporal.YearMonth prototype object</p>
     <ul>
-      <li>is the intrinsic object %Temporal.YearMonth.prototype%.
+      <li>is the intrinsic object <dfn>%Temporal.YearMonth.prototype%</dfn>.
       <li>is itself an ordinary object.
       <li>is not a Temporal.YearMonth instance and does not have a [[InitializedTemporalYearMonth]] internal slot.
       <li>has a [[Prototype]] internal slot whose value is %Object.prototype%.
     </ul>
 
-    <emu-clause id="sec-temporal.YearMonth.prototype.constructor">
+    <emu-clause id="sec-temporal.yearmonth.prototype.constructor">
       <h1>Temporal.YearMonth.prototype.constructor</h1>
-      <p>The initial value of Temporal.YearMonth.prototype.constructor is %Temporal.YearMonth%.</p>
+      <p>The initial value of `Temporal.YearMonth.prototype.constructor` is %Temporal.YearMonth%.</p>
     </emu-clause>
 
-    <emu-clause id="sec-temporal.YearMonth.prototype-@@tostringtag">
+    <emu-clause id="sec-temporal.yearmonth.prototype-@@tostringtag">
       <h1>Temporal.YearMonth.prototype[ @@toStringTag ]</h1>
       <p>
         The initial value of the @@toStringTag property is the string value `"Temporal.YearMonth"`.
@@ -123,7 +124,7 @@
     <emu-clause id="sec-get-temporal.yearmonth.prototype.year">
       <h1>get Temporal.YearMonth.prototype.year</h1>
       <p>
-        `Temporal.YearMonth.prototype.year` is an accessor property whose set accessor function is undefined.
+        `Temporal.YearMonth.prototype.year` is an accessor property whose set accessor function is *undefined*.
         Its get accessor function performs the following steps:
       </p>
       <emu-alg>
@@ -136,7 +137,7 @@
     <emu-clause id="sec-get-temporal.yearmonth.prototype.month">
       <h1>get Temporal.YearMonth.prototype.month</h1>
       <p>
-        `Temporal.YearMonth.prototype.month` is an accessor property whose set accessor function is undefined.
+        `Temporal.YearMonth.prototype.month` is an accessor property whose set accessor function is *undefined*.
         Its get accessor function performs the following steps:
       </p>
       <emu-alg>
@@ -149,7 +150,7 @@
     <emu-clause id="sec-get-temporal.yearmonth.prototype.daysinyear">
       <h1>get Temporal.YearMonth.prototype.daysInYear</h1>
       <p>
-        `Temporal.YearMonth.prototype.daysInYear` is an accessor property whose set accessor function is undefined.
+        `Temporal.YearMonth.prototype.daysInYear` is an accessor property whose set accessor function is *undefined*.
         Its get accessor function performs the following steps:
       </p>
       <emu-alg>
@@ -162,7 +163,7 @@
     <emu-clause id="sec-get-temporal.yearmonth.prototype.daysinmonth">
       <h1>get Temporal.YearMonth.prototype.daysInMonth</h1>
       <p>
-        `Temporal.YearMonth.prototype.daysInMonth` is an accessor property whose set accessor function is undefined.
+        `Temporal.YearMonth.prototype.daysInMonth` is an accessor property whose set accessor function is *undefined*.
         Its get accessor function performs the following steps:
       </p>
       <emu-alg>
@@ -175,7 +176,7 @@
     <emu-clause id="sec-get-temporal.yearmonth.prototype.monthsinyear">
       <h1>get Temporal.YearMonth.prototype.monthsInYear</h1>
       <p>
-        `Temporal.YearMonth.prototype.monthsInYear` is an accessor property whose set accessor function is undefined.
+        `Temporal.YearMonth.prototype.monthsInYear` is an accessor property whose set accessor function is *undefined*.
         Its get accessor function performs the following steps:
       </p>
       <emu-alg>
@@ -189,7 +190,7 @@
     <emu-clause id="sec-get-temporal.yearmonth.prototype.isleapyear">
       <h1>get Temporal.YearMonth.prototype.isLeapYear</h1>
       <p>
-        `Temporal.YearMonth.prototype.isLeapYear` is an accessor property whose set accessor function is undefined.
+        `Temporal.YearMonth.prototype.isLeapYear` is an accessor property whose set accessor function is *undefined*.
         Its get accessor function performs the following steps:
       </p>
       <emu-alg>

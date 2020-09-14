@@ -380,7 +380,7 @@
       1. Assert: _roundingMode_ is *"ceil"*, *"floor"*, *"trunc"*, or *"nearest"*.
       1. Let _quotient_ be _x_ / _increment_.
       1. If _roundingMode_ is *"ceil"*, then
-        1. Let _rounded_ be &minus;floor(&minus;_quotient_).
+        1. Let _rounded_ be −floor(−_quotient_).
       1. Else if _roundingMode_ is *"floor"*, then
         1. Let _rounded_ be floor(_quotient_).
       1. Else if _roundingMode_ is *"trunc"*, then
@@ -705,10 +705,7 @@
         1. Let _millisecond_ be 0.
         1. Let _microsecond_ be 0.
         1. Let _nanosecond_ be 0.
-      1. If _month_ &lt; 1 or _month_ &gt; 12, then
-        1. Throw a *RangeError* exception.
-      1. Let _maxDay_ be ! DaysInMonth(_year_, _month_).
-      1. If _day_ &lt; 1 or _day_ &gt; _maxDay_, then
+      1. If ! ValidateDate(_year_, _month_, _day_) is *false*, then
         1. Throw a *RangeError* exception.
       1. If ! ValidateTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_) is *false*, then
         1. Throw a *RangeError* exception.
@@ -765,7 +762,7 @@
       1. Assert: Type(_isoString_) is String.
       1. If _isoString_ does not satisfy the syntax of a |TemporalDateString| (see <emu-xref href="#sec-temporal-iso8601grammar"></emu-xref>), then
         1. Throw a *RangeError* exception.
-      1. Let _result_ be ! ParseISODateTime(_isoString_).
+      1. Let _result_ be ? ParseISODateTime(_isoString_).
       1. Return the new Record {
         [[Year]]: _result_.[[Year]],
         [[Month]]: _result_.[[Month]],
@@ -784,7 +781,7 @@
       1. Assert: Type(_isoString_) is String.
       1. If _isoString_ does not satisfy the syntax of a |TemporalDateTimeString| (see <emu-xref href="#sec-temporal-iso8601grammar"></emu-xref>), then
         1. Throw a *RangeError* exception.
-      1. Let _result_ be ! ParseISODateTime(_isoString_).
+      1. Let _result_ be ? ParseISODateTime(_isoString_).
       1. Return _result_.
     </emu-alg>
   </emu-clause>
@@ -801,7 +798,7 @@
         1. Throw a *RangeError* exception.
       1. Let _sign_, _years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, and _fraction_ be the parts of _isoString_ produced respectively by the |Sign|, |DurationYears|, |DurationMonths|, |DurationWeeks|, |DurationDays|, |DurationHours|, |DurationMinutes|, |DurationSeconds|, and |TimeFractionalPart| productions, or *undefined* if not present.
       1. If _sign_ is the code unit 0x002D (HYPHEN-MINUS) or 0x2212 (MINUS SIGN), then
-        1. Let _factor_ be &minus;1;.
+        1. Let _factor_ be −1.
       1. Else,
         1. Let _factor_ be 1.
       1. Set _years_ to ? ToInteger(_years_).
@@ -825,16 +822,16 @@
         1. Let _microseconds_ be 0.
         1. Let _nanoseconds_ be 0.
       1. Return the new Record {
-        [[Years]]: _years_ &times; _factor_,
-        [[Months]]: _months_ &times; _factor_,
-        [[Weeks]]: _weeks_ &times; _factor_,
-        [[Days]]: _days_ &times; _factor_,
-        [[Hours]]: _hours_ &times; _factor_,
-        [[Minutes]]: _minutes_ &times; _factor_,
-        [[Seconds]]: _seconds_ &times; _factor_,
-        [[Milliseconds]]: _milliseconds_ &times; _factor_,
-        [[Microseconds]]: _microseconds_ &times; _factor_,
-        [[Nanoseconds]]: _nanoseconds_ &times; _factor_
+        [[Years]]: _years_ × _factor_,
+        [[Months]]: _months_ × _factor_,
+        [[Weeks]]: _weeks_ × _factor_,
+        [[Days]]: _days_ × _factor_,
+        [[Hours]]: _hours_ × _factor_,
+        [[Minutes]]: _minutes_ × _factor_,
+        [[Seconds]]: _seconds_ × _factor_,
+        [[Milliseconds]]: _milliseconds_ × _factor_,
+        [[Microseconds]]: _microseconds_ × _factor_,
+        [[Nanoseconds]]: _nanoseconds_ × _factor_
         }.
     </emu-alg>
   </emu-clause>
@@ -874,7 +871,7 @@
       1. Assert: Type(_isoString_) is String.
       1. If _isoString_ does not satisfy the syntax of a |TemporalTimeString| (see <emu-xref href="#sec-temporal-iso8601grammar"></emu-xref>), then
         1. Throw a *RangeError* exception.
-      1. Let _result_ be ! ParseISODateTime(_isoString_).
+      1. Let _result_ be ? ParseISODateTime(_isoString_).
       1. Return the new Record {
         [[Hour]]: _result_.[[Hour]],
         [[Minute]]: _result_.[[Minute]],
@@ -933,7 +930,7 @@
       1. Assert: Type(_isoString_) is String.
       1. If _isoString_ does not satisfy the syntax of a |TemporalYearMonthString| (see <emu-xref href="#sec-temporal-iso8601grammar"></emu-xref>), then
         1. Throw a *RangeError* exception.
-      1. Let _result_ be ! ParseISODateTime(_isoString_).
+      1. Let _result_ be ? ParseISODateTime(_isoString_).
       1. Return the new Record {
         [[Year]]: _result_.[[Year]],
         [[Month]]: _result_.[[Month]]
