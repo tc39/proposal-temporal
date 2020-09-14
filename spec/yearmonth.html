@@ -418,10 +418,10 @@
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
         1. Let _fields_ be ? ObjectCreate(%ObjectPrototype%).
-        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoYear"*, _yearMonth_.[[ISOYear]]).
-        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoMonth"*, _yearMonth_.[[ISOMonth]]).
-        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoDay"*, _yearMonth_.[[ISODay]]).
         1. Perform ! CreateDataPropertyOrThrow(_fields_, *"calendar"*, _yearMonth_.[[Calendar]]).
+        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoDay"*, _yearMonth_.[[ISODay]]).
+        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoMonth"*, _yearMonth_.[[ISOMonth]]).
+        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoYear"*, _yearMonth_.[[ISOYear]]).
         1. Return _fields_.
       </emu-alg>
     </emu-clause>
