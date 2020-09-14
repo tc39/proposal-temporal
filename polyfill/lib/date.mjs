@@ -229,7 +229,7 @@ export class Date {
       const val2 = GetSlot(other, slot);
       if (val1 !== val2) return false;
     }
-    return GetSlot(this, CALENDAR).id === GetSlot(other, CALENDAR).id;
+    return ES.CalendarToString(GetSlot(this, CALENDAR)) === ES.CalendarToString(GetSlot(other, CALENDAR));
   }
   toString() {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
