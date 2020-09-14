@@ -614,16 +614,16 @@ export class DateTime {
   getISOFields() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     return {
-      isoYear: GetSlot(this, ISO_YEAR),
-      isoMonth: GetSlot(this, ISO_MONTH),
-      isoDay: GetSlot(this, ISO_DAY),
+      calendar: GetSlot(this, CALENDAR),
       hour: GetSlot(this, HOUR),
-      minute: GetSlot(this, MINUTE),
-      second: GetSlot(this, SECOND),
-      millisecond: GetSlot(this, MILLISECOND),
+      isoDay: GetSlot(this, ISO_DAY),
+      isoMonth: GetSlot(this, ISO_MONTH),
+      isoYear: GetSlot(this, ISO_YEAR),
       microsecond: GetSlot(this, MICROSECOND),
+      millisecond: GetSlot(this, MILLISECOND),
+      minute: GetSlot(this, MINUTE),
       nanosecond: GetSlot(this, NANOSECOND),
-      calendar: GetSlot(this, CALENDAR)
+      second: GetSlot(this, SECOND)
     };
   }
 
