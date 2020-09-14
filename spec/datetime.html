@@ -94,7 +94,10 @@
       <emu-alg>
         1. Perform ? RequireInternalSlot(_one_, [[InitializedTemporalDateTime]]).
         1. Perform ? RequireInternalSlot(_two_, [[InitializedTemporalDateTime]]).
-        1. Return 𝔽(! CompareTemporalDateTime(_one_.[[ISOYear]], _one_.[[ISOMonth]], _one_.[[ISODay]], _one_.[[Hour]], _one_.[[Minute]], _one_.[[Second]], _one_.[[Millisecond]], _one_.[[Microsecond]], _one_.[[Nanosecond]], _two_.[[ISOYear]], _two_.[[ISOMonth]], _two_.[[ISODay]], _two_.[[Hour]], _two_.[[Minute]], _two_.[[Second]], _two_.[[Millisecond]], _two_.[[Microsecond]], _two_.[[Nanosecond]])).
+        1. Let _result_ be ! CompareTemporalDateTime(_one_.[[ISOYear]], _one_.[[ISOMonth]], _one_.[[ISODay]], _one_.[[Hour]], _one_.[[Minute]], _one_.[[Second]], _one_.[[Millisecond]], _one_.[[Microsecond]], _one_.[[Nanosecond]], _two_.[[ISOYear]], _two_.[[ISOMonth]], _two_.[[ISODay]], _two_.[[Hour]], _two_.[[Minute]], _two_.[[Second]], _two_.[[Millisecond]], _two_.[[Microsecond]], _two_.[[Nanosecond]]).
+        1. If _result_ ≠ 0, then
+          1. Return 𝔽(_result_).
+        1. Return 𝔽(? CompareCalendar(_one_.[[Calendar]], _two_.[[Calendar]])).
       </emu-alg>
     </emu-clause>
   </emu-clause>
