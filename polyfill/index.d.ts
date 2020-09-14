@@ -190,7 +190,7 @@ export namespace Temporal {
     difference(
       other: Temporal.Absolute,
       options?: DifferenceOptions<
-        'days' | 'hours' | 'minutes' | 'seconds' | 'milliseconds' | 'microseconds' | 'nanoseconds'
+        'hours' | 'minutes' | 'seconds' | 'milliseconds' | 'microseconds' | 'nanoseconds'
       >
     ): Temporal.Duration;
     toDateTime(tzLike: TimeZoneProtocol | string, calendar?: CalendarProtocol | string): Temporal.DateTime;
