@@ -426,7 +426,7 @@ export const ES = ObjectAssign({}, ES2019, {
     return { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
   },
   ToLimitedTemporalDuration: (item, disallowedProperties = []) => {
-    if (typeof item !== 'object' || item === null) {
+    if (ES.Type(item) !== 'Object') {
       throw new TypeError('Unexpected type for duration');
     }
     const {
@@ -641,7 +641,7 @@ export const ES = ObjectAssign({}, ES2019, {
     return unit1;
   },
   ToPartialRecord: (bag, fields) => {
-    if (!bag || 'object' !== typeof bag) return false;
+    if (ES.Type(bag) !== 'Object') return false;
     let any;
     for (const property of fields) {
       const value = bag[property];
@@ -658,7 +658,7 @@ export const ES = ObjectAssign({}, ES2019, {
     return any ? any : false;
   },
   ToRecord: (bag, fields) => {
-    if (!bag || 'object' !== typeof bag) return false;
+    if (ES.Type(bag) !== 'Object') return false;
     const result = {};
     for (const fieldRecord of fields) {
       const [property, defaultValue] = fieldRecord;
@@ -748,7 +748,7 @@ export const ES = ObjectAssign({}, ES2019, {
     return ES.Call(from, TemporalTimeZone, [temporalTimeZoneLike]);
   },
   ToTemporalTimeZone: (temporalTimeZoneLike) => {
-    if (typeof temporalTimeZoneLike === 'object' && temporalTimeZoneLike) {
+    if (ES.Type(temporalTimeZoneLike) === 'Object') {
       return temporalTimeZoneLike;
     }
     const identifier = ES.ToString(temporalTimeZoneLike);

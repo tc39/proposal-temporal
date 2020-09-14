@@ -236,7 +236,7 @@ export class TimeZone {
     return ES.TimeZoneToString(this);
   }
   static from(item) {
-    if (typeof item === 'object' && item) return item;
+    if (ES.Type(item) === 'Object') return item;
     const timeZone = ES.TemporalTimeZoneFromString(ES.ToString(item));
     const result = new this(timeZone);
     if (!ES.IsTemporalTimeZone(result)) throw new TypeError('invalid result');

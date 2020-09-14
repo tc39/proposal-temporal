@@ -103,7 +103,7 @@ export class MonthDay {
   toDateInYear(item, options = undefined) {
     if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
     let era, year;
-    if (typeof item === 'object' && item !== null) {
+    if (ES.Type(item) === 'Object') {
       ({ era, year } = ES.ToRecord(item, [['era', undefined], ['year']]));
     } else {
       year = ES.ToInteger(item);
@@ -133,7 +133,7 @@ export class MonthDay {
     const overflow = ES.ToTemporalOverflow(options);
     const TemporalCalendar = GetIntrinsic('%Temporal.Calendar%');
     let result;
-    if (typeof item === 'object' && item) {
+    if (ES.Type(item) === 'Object') {
       if (ES.IsTemporalMonthDay(item)) {
         const month = GetSlot(item, ISO_MONTH);
         const day = GetSlot(item, ISO_DAY);
