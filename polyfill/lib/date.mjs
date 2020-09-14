@@ -326,11 +326,7 @@ export class Date {
       GetSlot(two, ISO_DAY)
     );
     if (result !== 0) return result;
-    const calendarOne = ES.CalendarToString(GetSlot(one, CALENDAR));
-    const calendarTwo = ES.CalendarToString(GetSlot(two, CALENDAR));
-    if (calendarOne < calendarTwo) return -1;
-    if (calendarOne > calendarTwo) return 1;
-    return 0;
+    return ES.CalendarCompare(GetSlot(one, CALENDAR), GetSlot(two, CALENDAR));
   }
 }
 Date.prototype.toJSON = Date.prototype.toString;

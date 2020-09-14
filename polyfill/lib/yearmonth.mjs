@@ -278,9 +278,7 @@ export class YearMonth {
       const val2 = GetSlot(two, slot);
       if (val1 !== val2) return ES.ComparisonResult(val1 - val2);
     }
-    const cal1 = GetSlot(one, CALENDAR).id;
-    const cal2 = GetSlot(two, CALENDAR).id;
-    return ES.ComparisonResult(cal1 < cal2 ? -1 : cal1 > cal2 ? 1 : 0);
+    return ES.CalendarCompare(GetSlot(one, CALENDAR), GetSlot(two, CALENDAR));
   }
 }
 YearMonth.prototype.toJSON = YearMonth.prototype.toString;

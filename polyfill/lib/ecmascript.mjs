@@ -733,6 +733,11 @@ export const ES = ObjectAssign({}, ES2019, {
     const identifier = ES.ToString(calendarLike);
     return ES.CalendarFrom(identifier);
   },
+  CalendarCompare: (one, two) => {
+    const cal1 = ES.CalendarToString(one);
+    const cal2 = ES.CalendarToString(two);
+    return cal1 < cal2 ? -1 : cal1 > cal2 ? 1 : 0;
+  },
   TimeZoneFrom: (temporalTimeZoneLike) => {
     const TemporalTimeZone = GetIntrinsic('%Temporal.TimeZone%');
     let from = TemporalTimeZone.from;
