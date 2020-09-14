@@ -503,6 +503,10 @@ export class Duration {
     if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
     return ES.TemporalDurationToString(this);
   }
+  toJSON() {
+    if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
+    return ES.TemporalDurationToString(this);
+  }
   toLocaleString(...args) {
     if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
     if (typeof Intl !== 'undefined' && typeof Intl.DurationFormat !== 'undefined') {
@@ -559,6 +563,5 @@ export class Duration {
     return result;
   }
 }
-Duration.prototype.toJSON = Duration.prototype.toString;
 
 MakeIntrinsicClass(Duration, 'Temporal.Duration');

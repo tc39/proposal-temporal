@@ -22,6 +22,14 @@ import {
 
 const ObjectAssign = Object.assign;
 
+function TemporalDateToString(date) {
+  const year = ES.ISOYearString(GetSlot(date, ISO_YEAR));
+  const month = ES.ISODateTimePartString(GetSlot(date, ISO_MONTH));
+  const day = ES.ISODateTimePartString(GetSlot(date, ISO_DAY));
+  const calendar = ES.FormatCalendarAnnotation(GetSlot(date, CALENDAR));
+  return `${year}-${month}-${day}${calendar}`;
+}
+
 export class Date {
   constructor(isoYear, isoMonth, isoDay, calendar = GetISO8601Calendar()) {
     isoYear = ES.ToInteger(isoYear);
@@ -224,12 +232,11 @@ export class Date {
   }
   toString() {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
-    let year = ES.ISOYearString(GetSlot(this, ISO_YEAR));
-    let month = ES.ISODateTimePartString(GetSlot(this, ISO_MONTH));
-    let day = ES.ISODateTimePartString(GetSlot(this, ISO_DAY));
-    const calendar = ES.FormatCalendarAnnotation(GetSlot(this, CALENDAR));
-    let resultString = `${year}-${month}-${day}${calendar}`;
-    return resultString;
+    return TemporalDateToString(this);
+  }
+  toJSON() {
+    if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
+    return TemporalDateToString(this);
   }
   toLocaleString(...args) {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
@@ -329,6 +336,5 @@ export class Date {
     return ES.CalendarCompare(GetSlot(one, CALENDAR), GetSlot(two, CALENDAR));
   }
 }
-Date.prototype.toJSON = Date.prototype.toString;
 
 MakeIntrinsicClass(Date, 'Temporal.Date');

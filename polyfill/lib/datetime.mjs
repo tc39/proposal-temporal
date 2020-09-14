@@ -22,6 +22,22 @@ import {
 
 const ObjectAssign = Object.assign;
 
+function DateTimeToString(dateTime) {
+  const year = ES.ISOYearString(GetSlot(dateTime, ISO_YEAR));
+  const month = ES.ISODateTimePartString(GetSlot(dateTime, ISO_MONTH));
+  const day = ES.ISODateTimePartString(GetSlot(dateTime, ISO_DAY));
+  const hour = ES.ISODateTimePartString(GetSlot(dateTime, HOUR));
+  const minute = ES.ISODateTimePartString(GetSlot(dateTime, MINUTE));
+  const seconds = ES.FormatSecondsStringPart(
+    GetSlot(dateTime, SECOND),
+    GetSlot(dateTime, MILLISECOND),
+    GetSlot(dateTime, MICROSECOND),
+    GetSlot(dateTime, NANOSECOND)
+  );
+  const calendar = ES.FormatCalendarAnnotation(GetSlot(dateTime, CALENDAR));
+  return `${year}-${month}-${day}T${hour}:${minute}${seconds}${calendar}`;
+}
+
 export class DateTime {
   constructor(
     isoYear,
@@ -545,20 +561,11 @@ export class DateTime {
   }
   toString() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-    let year = ES.ISOYearString(GetSlot(this, ISO_YEAR));
-    let month = ES.ISODateTimePartString(GetSlot(this, ISO_MONTH));
-    let day = ES.ISODateTimePartString(GetSlot(this, ISO_DAY));
-    let hour = ES.ISODateTimePartString(GetSlot(this, HOUR));
-    let minute = ES.ISODateTimePartString(GetSlot(this, MINUTE));
-    let seconds = ES.FormatSecondsStringPart(
-      GetSlot(this, SECOND),
-      GetSlot(this, MILLISECOND),
-      GetSlot(this, MICROSECOND),
-      GetSlot(this, NANOSECOND)
-    );
-    const calendar = ES.FormatCalendarAnnotation(GetSlot(this, CALENDAR));
-    let resultString = `${year}-${month}-${day}T${hour}:${minute}${seconds}${calendar}`;
-    return resultString;
+    return DateTimeToString(this);
+  }
+  toJSON() {
+    if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+    return DateTimeToString(this);
   }
   toLocaleString(...args) {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
@@ -690,6 +697,5 @@ export class DateTime {
     return ES.CalendarCompare(GetSlot(one, CALENDAR), GetSlot(two, CALENDAR));
   }
 }
-DateTime.prototype.toJSON = DateTime.prototype.toString;
 
 MakeIntrinsicClass(DateTime, 'Temporal.DateTime');
