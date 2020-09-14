@@ -3,7 +3,7 @@
 
 <emu-clause id="sec-temporal-datetime-objects">
   <h1>Temporal.DateTime Objects</h1>
-  <p>A Temporal.DateTime object is an immutable Object that contains Number values corresponding to a particular year, month, day, hour, minute, second, millisecond, microsecond, and nanosecond.</p>
+  <p>A Temporal.DateTime object is an immutable Object that contains integers corresponding to a particular year, month, day, hour, minute, second, millisecond, microsecond, and nanosecond.</p>
 
   <emu-clause id="sec-temporal-datetime-constructor">
     <h1>The Temporal.DateTime Constructor</h1>
@@ -35,19 +35,15 @@
         1. Let _millisecond_ be ? ToInteger(_millisecond_).
         1. Let _microsecond_ be ? ToInteger(_microsecond_).
         1. Let _nanosecond_ be ? ToInteger(_nanosecond_).
-        1. If _calendarLike_ is *undefined*, then
-          1. Let _calendar_ be ! GetISO8601Calendar().
-        1. Else,
-          1. Let _calendar_ be ? ToTemporalCalendar(_calendarLike_).
-        1. <mark>TODO:</mark> pass _calendar_ along.
-        1. Return ? CreateTemporalDateTime(_isoYear_, _isoMonth_, _isoDay_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, NewTarget).
+        1. Let _calendar_ be ? ToTemporalCalendar(_calendarLike_).
+        1. Return ? CreateTemporalDateTime(_isoYear_, _isoMonth_, _isoDay_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _calendar_, NewTarget).
       </emu-alg>
     </emu-clause>
   </emu-clause>
 
   <emu-clause id="sec-properties-of-the-temporal-datetime-constructor">
     <h1>Properties of the Temporal.DateTime Constructor</h1>
-    <p>The value of the [[Prototype]] internal slot of the Temporal.DateTime constructor is the intrinsic object %FunctionPrototype%.</p>
+    <p>The value of the [[Prototype]] internal slot of the Temporal.DateTime constructor is the intrinsic object %Function.prototype%.</p>
     <p>The Temporal.DateTime constructor has the following properties:</p>
 
     <emu-clause id="sec-temporal-datetime-prototype">

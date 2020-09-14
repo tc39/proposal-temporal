@@ -87,6 +87,10 @@ export class DateTime {
       });
     }
   }
+  get calendar() {
+    if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+    return GetSlot(this, CALENDAR);
+  }
   get year() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     return GetSlot(this, CALENDAR).year(this);
@@ -122,10 +126,6 @@ export class DateTime {
   get nanosecond() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     return GetSlot(this, NANOSECOND);
-  }
-  get calendar() {
-    if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-    return GetSlot(this, CALENDAR);
   }
   get era() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
