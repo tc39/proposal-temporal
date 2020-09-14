@@ -7,7 +7,7 @@ declare type LocalDateTimeFields = ReturnType<Temporal.DateTime['getFields']> & 
   timeZone: Temporal.TimeZone;
   timeZoneOffsetNanoseconds: number;
 };
-declare type LocalDateTimeISOCalendarFields = ReturnType<Temporal.DateTime['getISOFields']> & {
+declare type LocalDateTimeISOFields = ReturnType<Temporal.DateTime['getISOFields']> & {
   timeZone: Temporal.TimeZone;
   timeZoneOffsetNanoseconds: number;
 };
@@ -53,7 +53,7 @@ export declare class LocalDateTime {
   get timeZoneOffsetNanoseconds(): number;
   get timeZoneOffsetString(): string;
   getFields(): LocalDateTimeFields;
-  getISOFields(): LocalDateTimeISOCalendarFields;
+  getISOFields(): LocalDateTimeISOFields;
   static compare(one: LocalDateTime, two: LocalDateTime): Temporal.ComparisonResult;
   equals(other: LocalDateTime): boolean;
   plus(durationLike: Temporal.DurationLike, options?: LocalDateTimeMathOptions): LocalDateTime;

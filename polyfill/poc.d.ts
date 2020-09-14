@@ -189,9 +189,7 @@ export namespace Temporal {
     minus(durationLike: Temporal.Duration | DurationLike): Temporal.Absolute;
     difference(
       other: Temporal.Absolute,
-      options?: DifferenceOptions<
-        'days' | 'hours' | 'minutes' | 'seconds' | 'milliseconds' | 'microseconds' | 'nanoseconds'
-      >
+      options?: DifferenceOptions<'hours' | 'minutes' | 'seconds' | 'milliseconds' | 'microseconds' | 'nanoseconds'>
     ): Temporal.Duration;
     toLocalDateTime(tzLike: TimeZoneProtocol | string, calendar?: CalendarProtocol | string): Temporal.LocalDateTime;
     toDateTime(tzLike: TimeZoneProtocol | string, calendar?: CalendarProtocol | string): Temporal.DateTime;
@@ -780,7 +778,7 @@ export namespace Temporal {
     timeZone: Temporal.TimeZone;
     timeZoneOffsetNanoseconds: number;
   };
-  type LocalDateTimeISOCalendarFields = ReturnType<Temporal.DateTime['getISOFields']> & {
+  type LocalDateTimeISOFields = ReturnType<Temporal.DateTime['getISOFields']> & {
     timeZone: Temporal.TimeZone;
     timeZoneOffsetNanoseconds: number;
   };
@@ -1056,7 +1054,7 @@ export namespace Temporal {
     /**
      * Method for internal use by non-ISO calendars. Normally not used.
      */
-    getISOFields(): LocalDateTimeISOCalendarFields;
+    getISOFields(): LocalDateTimeISOFields;
     /**
      * Compare two `Temporal.LocalDateTime` values.
      *
