@@ -18,7 +18,7 @@
     </p>
 
     <emu-clause id="sec-temporal.monthday">
-      <h1>Temporal.MonthDay ( _isoMonth_, _isoDay_ [ , _referenceISOYear_ ] )</h1>
+      <h1>Temporal.MonthDay ( _isoMonth_, _isoDay_ [ , _calendarLike_ [ , _referenceISOYear_ ] ] )</h1>
       <p>
         When the `Temporal.MonthDay` function is called, the following steps are taken:
       </p>
@@ -29,8 +29,12 @@
           1. Set _referenceISOYear_ to *1972*<sub>𝔽</sub>.
         1. Let _m_ be ? ToInteger(_isoMonth_).
         1. Let _d_ be ? ToInteger(_isoDay_).
+        1. If _calendarLike_ is *undefined*, then
+          1. Set _calendar_ to ? GetISO8601Calendar().
+        1. Else,
+          1. Set _calendar_ to ? ToTemporalCalendar(_calendarLike_).
         1. Let _ref_ be ? ToInteger(_referenceISOYear_).
-        1. Return ? CreateTemporalMonthDay(_m_, _d_, _ref_, NewTarget).
+        1. Return ? CreateTemporalMonthDay(_m_, _d_, _calendar_, _ref_, NewTarget).
       </emu-alg>
       <emu-note>1972 is the first leap year after the Unix epoch.</emu-note>
     </emu-clause>
@@ -448,7 +452,7 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal-createtemporalmonthday" aoid="CreateTemporalMonthDay">
-      <h1>CreateTemporalMonthDay ( _isoMonth_, _isoDay_, _referenceISOYear_ [ , _newTarget_ ] )</h1>
+      <h1>CreateTemporalMonthDay ( _isoMonth_, _isoDay_, _calendar_, _referenceISOYear_ [ , _newTarget_ ] )</h1>
       <emu-alg>
         1. If ! ValidateDate(_referenceISOYear_, _month_, _day_) is *false*, then
           1. Throw a *RangeError* exception.
@@ -456,6 +460,7 @@
         1. Let _object_ be ? OrdinaryCreateFromConstructor(_newTarget_, `"%Temporal.MonthDay.prototype%"`, « [[InitializedTemporalMonthDay]], [[ISOMonth]], [[ISODay]], [[ISOYear]] »).
         1. Set _object_.[[ISOMonth]] to _month_.
         1. Set _object_.[[ISODay]] to _day_.
+        1. Set _object_.[[Calendar]] to _calendar_.
         1. Set _object_.[[ISOYear]] to _referenceISOYear_.
         1. Return _object_.
       </emu-alg>

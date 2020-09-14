@@ -21,14 +21,13 @@ function MonthDayToString(monthDay) {
 }
 
 export class MonthDay {
-  constructor(isoMonth, isoDay, calendar = undefined, referenceISOYear = 1972) {
+  constructor(isoMonth, isoDay, calendar = GetISO8601Calendar(), referenceISOYear = 1972) {
     isoMonth = ES.ToInteger(isoMonth);
     isoDay = ES.ToInteger(isoDay);
-    if (calendar === undefined) calendar = GetISO8601Calendar();
+    calendar = ES.ToTemporalCalendar(calendar);
     referenceISOYear = ES.ToInteger(referenceISOYear);
     ES.RejectDate(referenceISOYear, isoMonth, isoDay);
     ES.RejectDateRange(referenceISOYear, isoMonth, isoDay);
-    if (!calendar || typeof calendar !== 'object') throw new RangeError('invalid calendar');
 
     CreateSlots(this);
     SetSlot(this, ISO_MONTH, isoMonth);
