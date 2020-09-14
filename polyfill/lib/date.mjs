@@ -169,10 +169,10 @@ export class Date {
     if (!ES.IsTemporalDate(other)) throw new TypeError('invalid Date object');
     const calendar = GetSlot(this, CALENDAR);
     const otherCalendar = GetSlot(other, CALENDAR);
-    if (calendar.id !== otherCalendar.id) {
-      throw new RangeError(
-        `cannot compute difference between dates of ${calendar.id} and ${otherCalendar.id} calendars`
-      );
+    const calendarId = ES.CalendarToString(calendar);
+    const otherCalendarId = ES.CalendarToString(otherCalendar);
+    if (calendarId !== otherCalendarId) {
+      throw new RangeError(`cannot compute difference between dates of ${calendarId} and ${otherCalendarId} calendars`);
     }
 
     options = ES.NormalizeOptionsObject(options);
