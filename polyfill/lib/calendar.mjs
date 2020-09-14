@@ -23,8 +23,7 @@ export class Calendar {
     }
   }
   get id() {
-    if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
-    return GetSlot(this, CALENDAR_ID);
+    return ES.CalendarToString(this);
   }
   dateFromFields(fields, options, constructor) {
     void fields;
