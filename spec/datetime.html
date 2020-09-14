@@ -597,7 +597,7 @@
       <emu-alg>
         1. Let _dateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
-        1. Return ! TemporalDateTimeToString(_dateTime_).
+        1. Return ? TemporalDateTimeToString(_dateTime_).
       </emu-alg>
     </emu-clause>
 
@@ -1125,7 +1125,8 @@
         1. Let _hour_ be _dateTime_.[[Hour]] formatted as a two-digit decimal number, padded to the left with a zero if necessary.
         1. Let _minute_ be _dateTime_.[[Minute]] formatted as a two-digit decimal number, padded to the left with a zero if necessary.
         1. Let _seconds_ be ! FormatSecondsStringPart(_dateTime_.[[Second]], _dateTime_.[[Millisecond]], _dateTime_.[[Microsecond]], _dateTime_.[[Nanosecond]]).
-        1. Return the string-concatenation of _year_, the code unit 0x002D (HYPHEN-MINUS), _month_, the code unit 0x002D (HYPHEN-MINUS), _day_, 0x0054 (LATIN CAPITAL LETTER T), _hour_, the code unit 0x003A (COLON), _minute_, and _seconds_.
+        1. Let _calendar_ be ? FormatCalendarAnnotation(_dateTime_.[[Calendar]]).
+        1. Return the string-concatenation of _year_, the code unit 0x002D (HYPHEN-MINUS), _month_, the code unit 0x002D (HYPHEN-MINUS), _day_, 0x0054 (LATIN CAPITAL LETTER T), _hour_, the code unit 0x003A (COLON), _minute_, _seconds_, and _calendar_.
       </emu-alg>
     </emu-clause>
 

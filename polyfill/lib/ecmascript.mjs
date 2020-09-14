@@ -96,8 +96,9 @@ export const ES = ObjectAssign({}, ES2019, {
     return result;
   },
   FormatCalendarAnnotation: (calendar) => {
-    if (calendar.id === 'iso8601') return '';
-    return `[c=${calendar.id}]`;
+    const id = ES.CalendarToString(calendar);
+    if (id === 'iso8601') return '';
+    return `[c=${id}]`;
   },
   ParseISODateTime: (isoString, { zoneRequired }) => {
     const regex = zoneRequired ? PARSE.instant : PARSE.datetime;
