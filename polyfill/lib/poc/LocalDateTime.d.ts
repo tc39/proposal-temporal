@@ -9,23 +9,10 @@ declare type LocalDateTimeFields = ReturnType<Temporal.DateTime['getFields']> & 
   timeZone: Temporal.TimeZone;
   timeZoneOffsetNanoseconds: number;
 };
-declare type LocalDateTimeISOCalendarFields = ReturnType<Temporal.DateTime['getISOCalendarFields']> & {
+declare type LocalDateTimeISOCalendarFields = ReturnType<Temporal.DateTime['getISOFields']> & {
   timeZone: Temporal.TimeZone;
   timeZoneOffsetNanoseconds: number;
 };
-export interface OverflowOptions {
-  /**
-   * How to deal with out-of-range values
-   *
-   * - In `'constrain'` mode, out-of-range values are clamped to the nearest
-   *   in-range value.
-   * - In `'reject mode'`, out-of-range values will cause the function to throw
-   *   a RangeError.
-   *
-   * The default is `'constrain'`.
-   */
-  overflow: 'constrain' | 'reject';
-}
 /**
  * Time zone definitions can change. If an application stores data about events
  * in the future, then stored data about future events may become ambiguous, for
@@ -60,11 +47,22 @@ export interface TimeZoneOffsetDisambiguationOptions {
   offset: 'use' | 'prefer' | 'ignore' | 'reject';
 }
 export declare type LocalDateTimeAssignmentOptions = Partial<
-  OverflowOptions & Temporal.ToAbsoluteOptions & TimeZoneOffsetDisambiguationOptions
+  Temporal.AssignmentOptions & Temporal.ToAbsoluteOptions & TimeZoneOffsetDisambiguationOptions
 >;
-export declare type LocalDateTimeMathOptions = OverflowOptions;
+export declare type LocalDateTimeMathOptions = Temporal.AssignmentOptions;
 export declare type LocalDateTimeDifferenceOptions = Partial<
-  Temporal.DifferenceOptions<'years' | 'months' | 'weeks' | 'days' | 'hours' | 'minutes' | 'seconds'>
+  Temporal.DifferenceOptions<
+    | 'years'
+    | 'months'
+    | 'weeks'
+    | 'days'
+    | 'hours'
+    | 'minutes'
+    | 'seconds'
+    | 'milliseconds'
+    | 'microseconds'
+    | 'nanoseconds'
+  >
 >;
 export declare class LocalDateTime {
   private _abs;
@@ -286,11 +284,8 @@ export declare class LocalDateTime {
   getFields(): LocalDateTimeFields;
   /**
    * Method for internal use by non-ISO calendars. Normally not used.
-   *
-   * TODO: are calendars aware of `Temporal.LocalDateTime`?  If not, remove this
-   * method.
    */
-  getISOCalendarFields(): LocalDateTimeISOCalendarFields;
+  getISOFields(): LocalDateTimeISOCalendarFields;
   /**
    * Compare two `Temporal.LocalDateTime` values.
    *
@@ -381,7 +376,8 @@ export declare class LocalDateTime {
    *
    * Available options:
    * ```
-   * largestUnit: 'years' | 'months' | 'weeks' | 'days' | 'hours' (default) | 'minutes' | 'seconds'
+   * largestUnit: 'years' | 'months' | 'weeks' | 'days' | 'hours' (default)
+   *   | 'minutes' | 'seconds' | 'milliseconds' | 'microseconds' | 'nanoseconds'
    * ```
    */
   difference(other: LocalDateTime, options?: LocalDateTimeDifferenceOptions): Temporal.Duration;

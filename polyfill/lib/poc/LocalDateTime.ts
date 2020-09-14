@@ -20,25 +20,10 @@ type LocalDateTimeFields = ReturnType<Temporal.DateTime['getFields']> & {
   timeZoneOffsetNanoseconds: number;
 };
 
-type LocalDateTimeISOCalendarFields = ReturnType<Temporal.DateTime['getISOCalendarFields']> & {
+type LocalDateTimeISOFields = ReturnType<Temporal.DateTime['getISOFields']> & {
   timeZone: Temporal.TimeZone;
   timeZoneOffsetNanoseconds: number;
 };
-
-export interface OverflowOptions {
-  /**
-   * How to deal with out-of-range values
-   *
-   * - In `'constrain'` mode, out-of-range values are clamped to the nearest
-   *   in-range value.
-   * - In `'reject mode'`, out-of-range values will cause the function to throw
-   *   a RangeError.
-   *
-   * The default is `'constrain'`.
-   */
-  overflow: 'constrain' | 'reject';
-  // Assuming name change from `disambiguation` to `overflow`. See #607.
-}
 
 /**
  * Time zone definitions can change. If an application stores data about events
@@ -75,18 +60,29 @@ export interface TimeZoneOffsetDisambiguationOptions {
 }
 
 export type LocalDateTimeAssignmentOptions = Partial<
-  OverflowOptions & Temporal.ToAbsoluteOptions & TimeZoneOffsetDisambiguationOptions
+  Temporal.AssignmentOptions & Temporal.ToAbsoluteOptions & TimeZoneOffsetDisambiguationOptions
 >;
-export type LocalDateTimeMathOptions = OverflowOptions;
+export type LocalDateTimeMathOptions = Temporal.AssignmentOptions;
 export type LocalDateTimeDifferenceOptions = Partial<
-  Temporal.DifferenceOptions<'years' | 'months' | 'weeks' | 'days' | 'hours' | 'minutes' | 'seconds'>
+  Temporal.DifferenceOptions<
+    | 'years'
+    | 'months'
+    | 'weeks'
+    | 'days'
+    | 'hours'
+    | 'minutes'
+    | 'seconds'
+    | 'milliseconds'
+    | 'microseconds'
+    | 'nanoseconds'
+  >
 >;
 
 /** Build a `Temporal.LocalDateTime` instance from a property bag object */
 function fromObject(item: Record<string, unknown>, options?: LocalDateTimeAssignmentOptions) {
-  const overflowOption = getOption(options, 'overflow', OVERFLOW_OPTIONS, 'constrain');
-  const offsetOption = getOption(options, 'offset', OFFSET_OPTIONS, 'reject');
+  const overflow = getOption(options, 'overflow', OVERFLOW_OPTIONS, 'constrain');
   const disambiguation = getOption(options, 'disambiguation', DISAMBIGUATION_OPTIONS, 'compatible');
+  const offsetOption = getOption(options, 'offset', OFFSET_OPTIONS, 'reject');
 
   const { timeZone: tzOrig, timeZoneOffsetNanoseconds } = item as LocalDateTimeLike;
   if (tzOrig === undefined) {
@@ -102,8 +98,7 @@ function fromObject(item: Record<string, unknown>, options?: LocalDateTimeAssign
     }
   }
 
-  // TODO: https://github.com/tc39/proposal-temporal/issues/607
-  const dt = Temporal.DateTime.from(item, { disambiguation: overflowOption });
+  const dt = Temporal.DateTime.from(item, { overflow });
   return fromCommon(dt, tz, timeZoneOffsetNanoseconds, disambiguation, offsetOption);
 }
 
@@ -146,17 +141,7 @@ function fromIsoString(isoString: string, options?: LocalDateTimeAssignmentOptio
   // > later, for example.)
   const isZ = absString.trimEnd().toUpperCase().endsWith('Z');
   const abs = Temporal.Absolute.from(absString);
-  // TODO: after negative durations (#811) and sub-second largestUnit (#850)
-  // land, use the commented code instead of all the code below it.
-  // const offsetNs = dt.difference(abs.toDateTime('UTC'), { largestUnit: nanoseconds }).nanoseconds;
-  const dtUtc = abs.toDateTime('UTC');
-  const offsetSign = Temporal.DateTime.compare(dt, dtUtc);
-  const diff =
-    offsetSign < 0
-      ? dtUtc.difference(dt, { largestUnit: 'seconds' })
-      : dt.difference(dtUtc, { largestUnit: 'seconds' });
-  const offsetNs = offsetSign * diff.seconds * 1e9;
-
+  const offsetNs = dt.difference(abs.toDateTime('UTC'), { largestUnit: 'nanoseconds' }).nanoseconds;
   return fromCommon(dt.withCalendar(cal), tz, offsetNs, disambiguation, isZ ? 'use' : offsetOption);
 }
 
@@ -175,11 +160,7 @@ function fromCommon(
   }
 
   // Calculate the absolute for the input's date/time and offset
-  // TODO: once negative durations are available, use the commented code instead
-  // const abs = dt.toAbsolute('UTC').plus({ nanoseconds: -offsetNs });
-  const abs = dt.toAbsolute('UTC');
-  const op = offsetNs < 0 ? 'plus' : 'minus';
-  const absWithInputOffset = abs[op]({ nanoseconds: Math.abs(offsetNs) });
+  const absWithInputOffset = dt.toAbsolute('UTC').plus({ nanoseconds: -offsetNs });
 
   if (
     offsetOption === 'use' ||
@@ -218,8 +199,6 @@ function doPlusOrMinus(
   localDateTime: LocalDateTime
 ): LocalDateTime {
   const overflow = getOption(options, 'overflow', OVERFLOW_OPTIONS, 'constrain');
-  // TODO: edit below depending on https://github.com/tc39/proposal-temporal/issues/607
-  const dateTimeOverflowOption = { disambiguation: overflow };
   const { timeZone, calendar } = localDateTime;
 
   const { timeDuration, dateDuration } = splitDuration(durationLike);
@@ -229,7 +208,7 @@ function doPlusOrMinus(
     const result = localDateTime.toAbsolute()[op](durationLike);
     return new LocalDateTime(result.getEpochNanoseconds(), timeZone, calendar);
   } else if (isZeroDuration(timeDuration)) {
-    const newDateTime = localDateTime.toDateTime()[op](dateDuration, dateTimeOverflowOption);
+    const newDateTime = localDateTime.toDateTime()[op](dateDuration, { overflow });
     return fromDateTime(newDateTime, timeZone);
   }
 
@@ -254,10 +233,18 @@ function doPlusOrMinus(
   //    Absolute to intermediate Absolute...
   // 5) ...except if the adjustment causes moving back across the transition.
   // 6) Finally, create the result using the adjusted endpoint Absolute.
-  const newDateTime = localDateTime.toDateTime()[op](durationLike, dateTimeOverflowOption);
+  const newDateTime = localDateTime.toDateTime()[op](durationLike, { overflow });
   let absolute = newDateTime.toAbsolute(timeZone);
-  const reverseOp = op === 'plus' ? 'minus' : 'plus';
-  const backUpAbs = absolute[reverseOp]({ nanoseconds: totalNanoseconds(timeDuration) });
+  // TODO: after duration rounding lands, replace below with:
+  // const totalTimeDurationNanoseconds = timeDuration.round({largestUnit: 'nanoseconds'});
+  const totalTimeDurationNanoseconds =
+    timeDuration.hours * 3.6e12 +
+    timeDuration.minutes * 6e10 +
+    timeDuration.seconds * 1e9 +
+    timeDuration.milliseconds * 1e6 +
+    timeDuration.microseconds * 1000 +
+    timeDuration.nanoseconds;
+  const backUpAbs = absolute[op]({ nanoseconds: -totalTimeDurationNanoseconds });
   const backUpOffset = timeZone.getOffsetNanosecondsFor(backUpAbs);
   const absOffset = timeZone.getOffsetNanosecondsFor(absolute);
   const backUpNanoseconds = absOffset - backUpOffset;
@@ -267,22 +254,12 @@ function doPlusOrMinus(
     // the time duration that was added, then undo the impact of that
     // transition. However, don't adjust if applying the adjustment would cause
     // us to back up onto the other side of the transition.
-    const backUpOp = backUpNanoseconds < 0 ? 'minus' : 'plus';
-    const adjustedAbs = absolute[backUpOp]({ nanoseconds: backUpNanoseconds });
+    const adjustedAbs = absolute.plus({ nanoseconds: backUpNanoseconds });
     if (timeZone.getOffsetNanosecondsFor(adjustedAbs) === timeZone.getOffsetNanosecondsFor(absolute)) {
       absolute = adjustedAbs;
     }
   }
   return new LocalDateTime(absolute.getEpochNanoseconds(), timeZone, calendar);
-}
-
-function totalNanoseconds(d: Temporal.Duration) {
-  if (!isZeroDuration(splitDuration(d).dateDuration)) {
-    throw new RangeError('Duration must be limited to hours or smaller units');
-  }
-  return (
-    d.hours * 3.6e12 + d.minutes * 6e10 + d.seconds * 1e9 + d.milliseconds * 1e6 + d.microseconds * 1000 + d.nanoseconds
-  );
 }
 
 export class LocalDateTime {
@@ -636,16 +613,13 @@ export class LocalDateTime {
 
   /**
    * Method for internal use by non-ISO calendars. Normally not used.
-   *
-   * TODO: are calendars aware of `Temporal.LocalDateTime`?  If not, remove this
-   * method.
    */
-  getISOCalendarFields(): LocalDateTimeISOCalendarFields {
+  getISOFields(): LocalDateTimeISOFields {
     const { timeZone, timeZoneOffsetNanoseconds } = this;
     return {
       timeZone,
       timeZoneOffsetNanoseconds,
-      ...this._dt.getISOCalendarFields()
+      ...this._dt.getISOFields()
     };
   }
 
@@ -751,7 +725,8 @@ export class LocalDateTime {
    *
    * Available options:
    * ```
-   * largestUnit: 'years' | 'months' | 'weeks' | 'days' | 'hours' (default) | 'minutes' | 'seconds'
+   * largestUnit: 'years' | 'months' | 'weeks' | 'days' | 'hours' (default)
+   *   | 'minutes' | 'seconds' | 'milliseconds' | 'microseconds' | 'nanoseconds'
    * ```
    */
   difference(other: LocalDateTime, options?: LocalDateTimeDifferenceOptions): Temporal.Duration {
@@ -761,7 +736,9 @@ export class LocalDateTime {
 
     // treat as absolute if the user is only asking for a time difference
     if (!wantDate) {
-      const largestUnitOptionBag = { largestUnit: largestUnit as 'hours' | 'minutes' | 'seconds' };
+      const largestUnitOptionBag = {
+        largestUnit: largestUnit as 'hours' | 'minutes' | 'seconds' | 'milliseconds' | 'microseconds' | 'nanoseconds'
+      };
       return this._abs.difference(other._abs, largestUnitOptionBag);
     }
     const dtDiff = this._dt.difference(other._dt, { largestUnit });
@@ -975,7 +952,10 @@ const LARGEST_DIFFERENCE_UNITS: LargestDifferenceUnit[] = [
   'days',
   'hours',
   'minutes',
-  'seconds'
+  'seconds',
+  'milliseconds',
+  'microseconds',
+  'nanoseconds'
 ];
 const DISAMBIGUATION_OPTIONS: Temporal.ToAbsoluteOptions['disambiguation'][] = [
   'compatible',
@@ -984,7 +964,7 @@ const DISAMBIGUATION_OPTIONS: Temporal.ToAbsoluteOptions['disambiguation'][] = [
   'reject'
 ];
 const OFFSET_OPTIONS: TimeZoneOffsetDisambiguationOptions['offset'][] = ['use', 'prefer', 'ignore', 'reject'];
-const OVERFLOW_OPTIONS: OverflowOptions['overflow'][] = ['constrain', 'reject'];
+const OVERFLOW_OPTIONS: Temporal.AssignmentOptions['overflow'][] = ['constrain', 'reject'];
 
 function getOption<K extends string, U extends string>(
   options: { [k in K]?: string } | undefined,

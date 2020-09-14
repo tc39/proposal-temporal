@@ -7,22 +7,30 @@ declare type LocalDateTimeFields = ReturnType<Temporal.DateTime['getFields']> & 
   timeZone: Temporal.TimeZone;
   timeZoneOffsetNanoseconds: number;
 };
-declare type LocalDateTimeISOCalendarFields = ReturnType<Temporal.DateTime['getISOCalendarFields']> & {
+declare type LocalDateTimeISOCalendarFields = ReturnType<Temporal.DateTime['getISOFields']> & {
   timeZone: Temporal.TimeZone;
   timeZoneOffsetNanoseconds: number;
 };
-export interface OverflowOptions {
-  overflow: 'constrain' | 'reject';
-}
 export interface TimeZoneOffsetDisambiguationOptions {
   offset: 'use' | 'prefer' | 'ignore' | 'reject';
 }
 export declare type LocalDateTimeAssignmentOptions = Partial<
-  OverflowOptions & Temporal.ToAbsoluteOptions & TimeZoneOffsetDisambiguationOptions
+  Temporal.AssignmentOptions & Temporal.ToAbsoluteOptions & TimeZoneOffsetDisambiguationOptions
 >;
-export declare type LocalDateTimeMathOptions = OverflowOptions;
+export declare type LocalDateTimeMathOptions = Temporal.AssignmentOptions;
 export declare type LocalDateTimeDifferenceOptions = Partial<
-  Temporal.DifferenceOptions<'years' | 'months' | 'weeks' | 'days' | 'hours' | 'minutes' | 'seconds'>
+  Temporal.DifferenceOptions<
+    | 'years'
+    | 'months'
+    | 'weeks'
+    | 'days'
+    | 'hours'
+    | 'minutes'
+    | 'seconds'
+    | 'milliseconds'
+    | 'microseconds'
+    | 'nanoseconds'
+  >
 >;
 export declare class LocalDateTime {
   private _abs;
@@ -45,7 +53,7 @@ export declare class LocalDateTime {
   get timeZoneOffsetNanoseconds(): number;
   get timeZoneOffsetString(): string;
   getFields(): LocalDateTimeFields;
-  getISOCalendarFields(): LocalDateTimeISOCalendarFields;
+  getISOFields(): LocalDateTimeISOCalendarFields;
   static compare(one: LocalDateTime, two: LocalDateTime): Temporal.ComparisonResult;
   equals(other: LocalDateTime): boolean;
   plus(durationLike: Temporal.DurationLike, options?: LocalDateTimeMathOptions): LocalDateTime;

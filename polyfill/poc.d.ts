@@ -17,14 +17,15 @@ export namespace Temporal {
      *
      * The default is `'constrain'`.
      */
-    disambiguation: 'constrain' | 'reject';
+    overflow: 'constrain' | 'reject';
   };
 
   /**
    * Options for assigning fields using `Duration.prototype.with()` or entire
-   * objects with `Duration.prototype.from()`.
+   * objects with `Duration.prototype.from()`, and for arithmetic with
+   * `Duration.prototype.plus()` and `Duration.prototype.minus()`.
    * */
-  export type DurationAssignmentOptions = {
+  export type DurationOptions = {
     /**
      * How to deal with out-of-range values
      *
@@ -37,7 +38,7 @@ export namespace Temporal {
      *
      * The default is `'constrain'`.
      */
-    disambiguation: 'constrain' | 'balance' | 'reject';
+    overflow: 'constrain' | 'balance' | 'reject';
   };
 
   /**
@@ -82,26 +83,7 @@ export namespace Temporal {
      *
      * The default is `'constrain'`.
      */
-    disambiguation: 'constrain' | 'reject';
-  };
-
-  /**
-   * Options to control `Duration.prototype.minus()` behavior
-   * */
-  export type DurationMinusOptions = {
-    /**
-     * Controls how to deal with subtractions that result in negative overflows
-     *
-     * In `'balanceConstrain'` mode, negative fields are balanced with the next
-     * highest field so that none of the fields are negative in the result. If
-     * this is not possible, a `RangeError` is thrown.
-     *
-     * In `'balance'` mode, all fields are balanced with the next highest field,
-     * no matter if they are negative or not.
-     *
-     * The default is `'balanceConstrain'`.
-     */
-    disambiguation: 'balanceConstrain' | 'balance';
+    overflow: 'constrain' | 'reject';
   };
 
   export interface DifferenceOptions<T extends string> {
@@ -141,10 +123,7 @@ export namespace Temporal {
    * See https://tc39.es/proposal-temporal/docs/duration.html for more details.
    */
   export class Duration implements DurationFields {
-    static from(
-      item: Temporal.Duration | DurationLike | string,
-      options?: DurationAssignmentOptions
-    ): Temporal.Duration;
+    static from(item: Temporal.Duration | DurationLike | string, options?: DurationOptions): Temporal.Duration;
     constructor(
       years?: number,
       months?: number,
@@ -157,6 +136,7 @@ export namespace Temporal {
       microseconds?: number,
       nanoseconds?: number
     );
+    readonly sign: -1 | 0 | 1;
     readonly years: number;
     readonly months: number;
     readonly weeks: number;
@@ -167,9 +147,11 @@ export namespace Temporal {
     readonly milliseconds: number;
     readonly microseconds: number;
     readonly nanoseconds: number;
-    with(durationLike: DurationLike, options?: DurationAssignmentOptions): Temporal.Duration;
-    plus(other: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.Duration;
-    minus(other: Temporal.Duration | DurationLike, options?: DurationMinusOptions): Temporal.Duration;
+    negated(): Temporal.Duration;
+    abs(): Temporal.Duration;
+    with(durationLike: DurationLike, options?: DurationOptions): Temporal.Duration;
+    plus(other: Temporal.Duration | DurationLike, options?: DurationOptions): Temporal.Duration;
+    minus(other: Temporal.Duration | DurationLike, options?: DurationOptions): Temporal.Duration;
     getFields(): DurationFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
@@ -207,7 +189,9 @@ export namespace Temporal {
     minus(durationLike: Temporal.Duration | DurationLike): Temporal.Absolute;
     difference(
       other: Temporal.Absolute,
-      options?: DifferenceOptions<'days' | 'hours' | 'minutes' | 'seconds'>
+      options?: DifferenceOptions<
+        'days' | 'hours' | 'minutes' | 'seconds' | 'milliseconds' | 'microseconds' | 'nanoseconds'
+      >
     ): Temporal.Duration;
     toLocalDateTime(tzLike: TimeZoneProtocol | string, calendar?: CalendarProtocol | string): Temporal.LocalDateTime;
     toDateTime(tzLike: TimeZoneProtocol | string, calendar?: CalendarProtocol | string): Temporal.DateTime;
@@ -225,8 +209,10 @@ export namespace Temporal {
     dayOfWeek?(date: Temporal.Date): number;
     dayOfYear?(date: Temporal.Date): number;
     weekOfYear?(date: Temporal.Date): number;
+    daysInWeek?(date: Temporal.Date): number;
     daysInMonth?(date: Temporal.Date): number;
     daysInYear?(date: Temporal.Date): number;
+    monthsInYear?(date: Temporal.Date): number;
     isLeapYear?(date: Temporal.Date): boolean;
     dateFromFields(
       fields: DateLike,
@@ -281,8 +267,10 @@ export namespace Temporal {
     dayOfWeek(date: Temporal.Date): number;
     dayOfYear(date: Temporal.Date): number;
     weekOfYear(date: Temporal.Date): number;
+    daysInWeek(date: Temporal.Date): number;
     daysInMonth(date: Temporal.Date): number;
     daysInYear(date: Temporal.Date): number;
+    monthsInYear(date: Temporal.Date): number;
     isLeapYear(date: Temporal.Date): boolean;
     dateFromFields(
       fields: DateLike,
@@ -335,10 +323,11 @@ export namespace Temporal {
     calendar: CalendarProtocol;
   };
 
-  type DateISOCalendarFields = {
-    year: number;
-    month: number;
-    day: number;
+  type DateISOFields = {
+    isoYear: number;
+    isoMonth: number;
+    isoDay: number;
+    calendar: CalendarProtocol;
   };
 
   /**
@@ -362,8 +351,10 @@ export namespace Temporal {
     readonly dayOfWeek: number;
     readonly dayOfYear: number;
     readonly weekOfYear: number;
+    readonly daysInWeek: number;
     readonly daysInYear: number;
     readonly daysInMonth: number;
+    readonly monthsInYear: number;
     readonly isLeapYear: boolean;
     equals(other: Temporal.Date): boolean;
     with(dateLike: DateLike, options?: AssignmentOptions): Temporal.Date;
@@ -383,7 +374,7 @@ export namespace Temporal {
     toYearMonth(): Temporal.YearMonth;
     toMonthDay(): Temporal.MonthDay;
     getFields(): DateFields;
-    getISOCalendarFields(): DateISOCalendarFields;
+    getISOFields(): DateISOFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
     toString(): string;
@@ -417,16 +408,17 @@ export namespace Temporal {
     calendar: CalendarProtocol;
   };
 
-  type DateTimeISOCalendarFields = {
-    year: number;
-    month: number;
-    day: number;
+  type DateTimeISOFields = {
+    isoYear: number;
+    isoMonth: number;
+    isoDay: number;
     hour: number;
     minute: number;
     second: number;
     millisecond: number;
     microsecond: number;
     nanosecond: number;
+    calendar: CalendarProtocol;
   };
 
   /**
@@ -468,8 +460,10 @@ export namespace Temporal {
     readonly dayOfWeek: number;
     readonly dayOfYear: number;
     readonly weekOfYear: number;
+    readonly daysInWeek: number;
     readonly daysInYear: number;
     readonly daysInMonth: number;
+    readonly monthsInYear: number;
     readonly isLeapYear: boolean;
     equals(other: Temporal.DateTime): boolean;
     with(dateTimeLike: DateTimeLike, options?: AssignmentOptions): Temporal.DateTime;
@@ -478,7 +472,18 @@ export namespace Temporal {
     minus(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.DateTime;
     difference(
       other: Temporal.DateTime,
-      options?: DifferenceOptions<'years' | 'months' | 'weeks' | 'days' | 'hours' | 'minutes' | 'seconds'>
+      options?: DifferenceOptions<
+        | 'years'
+        | 'months'
+        | 'weeks'
+        | 'days'
+        | 'hours'
+        | 'minutes'
+        | 'seconds'
+        | 'milliseconds'
+        | 'microseconds'
+        | 'nanoseconds'
+      >
     ): Temporal.Duration;
     toLocalDateTime(tzLike: TimeZoneProtocol | string, options?: ToAbsoluteOptions): Temporal.LocalDateTime;
     toAbsolute(tzLike: TimeZoneProtocol | string, options?: ToAbsoluteOptions): Temporal.Absolute;
@@ -487,7 +492,7 @@ export namespace Temporal {
     toMonthDay(): Temporal.MonthDay;
     toTime(): Temporal.Time;
     getFields(): DateTimeFields;
-    getISOCalendarFields(): DateTimeISOCalendarFields;
+    getISOFields(): DateTimeISOFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
     toString(): string;
@@ -501,6 +506,13 @@ export namespace Temporal {
   type MonthDayFields = {
     month: number;
     day: number;
+    calendar: CalendarProtocol;
+  };
+
+  type MonthDayISOFields = {
+    refISOYear: number;
+    isoMonth: number;
+    isoDay: number;
     calendar: CalendarProtocol;
   };
 
@@ -521,7 +533,7 @@ export namespace Temporal {
     with(monthDayLike: MonthDayLike, options?: AssignmentOptions): Temporal.MonthDay;
     toDateInYear(year: number | { era?: string | undefined; year: number }, options?: AssignmentOptions): Temporal.Date;
     getFields(): MonthDayFields;
-    getISOCalendarFields(): DateISOCalendarFields;
+    getISOFields(): MonthDayISOFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
     toString(): string;
@@ -574,7 +586,10 @@ export namespace Temporal {
     with(timeLike: Temporal.Time | TimeLike, options?: AssignmentOptions): Temporal.Time;
     plus(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.Time;
     minus(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.Time;
-    difference(other: Temporal.Time, options?: DifferenceOptions<'hours' | 'minutes' | 'seconds'>): Temporal.Duration;
+    difference(
+      other: Temporal.Time,
+      options?: DifferenceOptions<'hours' | 'minutes' | 'seconds' | 'milliseconds' | 'microseconds' | 'nanoseconds'>
+    ): Temporal.Duration;
     toLocalDateTime(
       tzLike: TimeZoneProtocol | string,
       temporalDate: DateLike,
@@ -645,6 +660,13 @@ export namespace Temporal {
     calendar: CalendarProtocol;
   };
 
+  type YearMonthISOFields = {
+    isoYear: number;
+    isoMonth: number;
+    refISODay: number;
+    calendar: CalendarProtocol;
+  };
+
   /**
    * A `Temporal.YearMonth` represents a particular month on the calendar. For
    * example, it could be used to represent a particular instance of a monthly
@@ -662,6 +684,7 @@ export namespace Temporal {
     readonly era: string | undefined;
     readonly daysInMonth: number;
     readonly daysInYear: number;
+    readonly monthsInYear: number;
     readonly isLeapYear: boolean;
     equals(other: Temporal.YearMonth): boolean;
     with(yearMonthLike: YearMonthLike, options?: AssignmentOptions): Temporal.YearMonth;
@@ -670,7 +693,7 @@ export namespace Temporal {
     difference(other: Temporal.YearMonth, options?: DifferenceOptions<'years' | 'months'>): Temporal.Duration;
     toDateOnDay(day: number): Temporal.Date;
     getFields(): YearMonthFields;
-    getISOCalendarFields(): DateISOCalendarFields;
+    getISOFields(): YearMonthISOFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
     toString(): string;
@@ -757,23 +780,10 @@ export namespace Temporal {
     timeZone: Temporal.TimeZone;
     timeZoneOffsetNanoseconds: number;
   };
-  type LocalDateTimeISOCalendarFields = ReturnType<Temporal.DateTime['getISOCalendarFields']> & {
+  type LocalDateTimeISOCalendarFields = ReturnType<Temporal.DateTime['getISOFields']> & {
     timeZone: Temporal.TimeZone;
     timeZoneOffsetNanoseconds: number;
   };
-  export interface OverflowOptions {
-    /**
-     * How to deal with out-of-range values
-     *
-     * - In `'constrain'` mode, out-of-range values are clamped to the nearest
-     *   in-range value.
-     * - In `'reject mode'`, out-of-range values will cause the function to throw
-     *   a RangeError.
-     *
-     * The default is `'constrain'`.
-     */
-    overflow: 'constrain' | 'reject';
-  }
   /**
    * Time zone definitions can change. If an application stores data about events
    * in the future, then stored data about future events may become ambiguous, for
@@ -808,11 +818,22 @@ export namespace Temporal {
     offset: 'use' | 'prefer' | 'ignore' | 'reject';
   }
   export type LocalDateTimeAssignmentOptions = Partial<
-    OverflowOptions & Temporal.ToAbsoluteOptions & TimeZoneOffsetDisambiguationOptions
+    Temporal.AssignmentOptions & Temporal.ToAbsoluteOptions & TimeZoneOffsetDisambiguationOptions
   >;
-  export type LocalDateTimeMathOptions = OverflowOptions;
+  export type LocalDateTimeMathOptions = Temporal.AssignmentOptions;
   export type LocalDateTimeDifferenceOptions = Partial<
-    Temporal.DifferenceOptions<'years' | 'months' | 'weeks' | 'days' | 'hours' | 'minutes' | 'seconds'>
+    Temporal.DifferenceOptions<
+      | 'years'
+      | 'months'
+      | 'weeks'
+      | 'days'
+      | 'hours'
+      | 'minutes'
+      | 'seconds'
+      | 'milliseconds'
+      | 'microseconds'
+      | 'nanoseconds'
+    >
   >;
   export class LocalDateTime {
     private _abs;
@@ -1034,11 +1055,8 @@ export namespace Temporal {
     getFields(): LocalDateTimeFields;
     /**
      * Method for internal use by non-ISO calendars. Normally not used.
-     *
-     * TODO: are calendars aware of `Temporal.LocalDateTime`?  If not, remove this
-     * method.
      */
-    getISOCalendarFields(): LocalDateTimeISOCalendarFields;
+    getISOFields(): LocalDateTimeISOCalendarFields;
     /**
      * Compare two `Temporal.LocalDateTime` values.
      *
@@ -1129,7 +1147,8 @@ export namespace Temporal {
      *
      * Available options:
      * ```
-     * largestUnit: 'years' | 'months' | 'weeks' | 'days' | 'hours' (default) | 'minutes' | 'seconds'
+     * largestUnit: 'years' | 'months' | 'weeks' | 'days' | 'hours' (default)
+     *   | 'minutes' | 'seconds' | 'milliseconds' | 'microseconds' | 'nanoseconds'
      * ```
      */
     difference(other: LocalDateTime, options?: LocalDateTimeDifferenceOptions): Temporal.Duration;

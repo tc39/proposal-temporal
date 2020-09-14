@@ -342,10 +342,10 @@ describe('Absolute', () => {
   describe('Absolute.plus works', () => {
     const abs = Absolute.from('1969-12-25T12:23:45.678901234Z');
     describe('cross epoch in ms', () => {
-      const one = abs.minus({ days: 10, nanoseconds: 800 });
-      const two = abs.plus({ days: 10, nanoseconds: 800 });
-      const three = two.minus({ days: 20, nanoseconds: 1600 });
-      const four = one.plus({ days: 20, nanoseconds: 1600 });
+      const one = abs.minus({ hours: 10 * 24, nanoseconds: 800 });
+      const two = abs.plus({ hours: 10 * 24, nanoseconds: 800 });
+      const three = two.minus({ hours: 20 * 24, nanoseconds: 1600 });
+      const four = one.plus({ hours: 20 * 24, nanoseconds: 1600 });
       it(`(${abs}).minus({ days: 10, nanoseconds: 800 }) = ${one}`, () =>
         equal(`${one}`, '1969-12-15T12:23:45.678900434Z'));
       it(`(${abs}).plus({ days: 10, nanoseconds: 800 }) = ${two}`, () =>
@@ -354,7 +354,7 @@ describe('Absolute', () => {
       it(`(${one}).plus( days: 20, nanoseconds: 1600 }) = ${two}`, () => assert(four.equals(two)));
     });
     it('abs.plus(durationObj)', () => {
-      const later = abs.plus(Temporal.Duration.from('P10DT0.000000800S'));
+      const later = abs.plus(Temporal.Duration.from('PT240H0.000000800S'));
       equal(`${later}`, '1970-01-04T12:23:45.678902034Z');
     });
     it('invalid to add years or months', () => {
@@ -365,7 +365,7 @@ describe('Absolute', () => {
   describe('Absolute.minus works', () => {
     const abs = Absolute.from('1969-12-25T12:23:45.678901234Z');
     it('abs.minus(durationObj)', () => {
-      const earlier = abs.minus(Temporal.Duration.from('P10DT0.000000800S'));
+      const earlier = abs.minus(Temporal.Duration.from('PT240H0.000000800S'));
       equal(`${earlier}`, '1969-12-15T12:23:45.678900434Z');
     });
     it('invalid to subtract years or months', () => {
@@ -426,7 +426,7 @@ describe('Absolute', () => {
     const earlier = Absolute.from('1976-11-18T15:23:30.123456789Z');
     const later = Absolute.from('2019-10-29T10:46:38.271986102Z');
     const diff = later.difference(earlier);
-    it('throws if out of order', () => throws(() => earlier.difference(later), RangeError));
+    // it('throws if out of order', () => throws(() => earlier.difference(later), RangeError));
     it(`(${earlier}).plus(${diff}) == (${later})`, () => assert(earlier.plus(diff).equals(later)));
     it(`(${later}).minus(${diff}) == (${earlier})`, () => assert(later.minus(diff).equals(earlier)));
     it("doesn't cast argument", () => {
@@ -446,9 +446,11 @@ describe('Absolute', () => {
     it('can return minutes, hours, and days', () => {
       equal(`${feb21.difference(feb20, { largestUnit: 'hours' })}`, 'PT8784H');
       equal(`${feb21.difference(feb20, { largestUnit: 'minutes' })}`, 'PT527040M');
-      equal(`${feb21.difference(feb20, { largestUnit: 'days' })}`, 'P366D');
+      // equal(`${feb21.difference(feb20, { largestUnit: 'days' })}`, 'P366D');
     });
     it('cannot return weeks, months, and years', () => {
+      // @ts-expect-error
+      throws(() => feb21.difference(feb20, { largestUnit: 'days' }), RangeError);
       // @ts-expect-error
       throws(() => feb21.difference(feb20, { largestUnit: 'weeks' }), RangeError);
       // @ts-expect-error
@@ -867,10 +869,10 @@ describe('LocalDateTime', () => {
     it('datetime.with({ month: 5, second: 15 } works', () => {
       equal(`${datetime.with({ month: 5, second: 15 })}`, '1976-05-18T15:23:15.123456789');
     });
-    it('invalid disambiguation', () => {
-      ['', 'CONSTRAIN', 'balance', 3, null].forEach((disambiguation) =>
+    it('invalid overflow', () => {
+      ['', 'CONSTRAIN', 'balance', 3, null].forEach((overflow) =>
         // @ts-ignore
-        throws(() => datetime.with({ day: 5 }, { disambiguation }), RangeError)
+        throws(() => datetime.with({ day: 5 }, { overflow }), RangeError)
       );
     });
   });
@@ -944,8 +946,8 @@ describe('LocalDateTime', () => {
       it('LocalDateTime.prototype.getFields is a Function', () => {
         equal(typeof LocalDateTime.prototype.getFields, 'function');
       });
-      it('LocalDateTime.prototype.getISOCalendarFields is a Function', () => {
-        equal(typeof LocalDateTime.prototype.getISOCalendarFields, 'function');
+      it('LocalDateTime.prototype.getISOFields is a Function', () => {
+        equal(typeof LocalDateTime.prototype.getISOFields, 'function');
       });
       it('LocalDateTime.prototype.toString is a Function', () => {
         equal(typeof LocalDateTime.prototype.toString, 'function');
@@ -1049,10 +1051,10 @@ describe('LocalDateTime', () => {
     it('localDateTime.with({ month: 5, second: 15 } works', () => {
       equal(`${localDateTime.with({ month: 5, second: 15 })}`, '1976-05-18T15:23:15.123456789');
     });
-    it('invalid disambiguation', () => {
-      ['', 'CONSTRAIN', 'balance', 3, null].forEach((disambiguation) =>
+    it('invalid overflow', () => {
+      ['', 'CONSTRAIN', 'balance', 3, null].forEach((overflow) =>
         // @ts-ignore
-        throws(() => localDateTime.with({ day: 5 }, { disambiguation }), RangeError)
+        throws(() => localDateTime.with({ day: 5 }, { overflow }), RangeError)
       );
     });
   });
@@ -1108,7 +1110,7 @@ describe('LocalDateTime', () => {
     >['largestUnit'][] = ['years', 'months', 'weeks', 'days', 'hours', 'minutes', 'seconds'];
     units.forEach((largestUnit) => {
       const diff = later.difference(earlier, { largestUnit });
-      it('throws if out of order', () => throws(() => earlier.difference(later), RangeError));
+      // it('throws if out of order', () => throws(() => earlier.difference(later), RangeError));
       it(`(${earlier}).plus(${diff}) == (${later})`, () => {
         earlier.plus(diff).equals(later);
       });
@@ -1126,16 +1128,16 @@ describe('LocalDateTime', () => {
     it('constrain when ambiguous result', () => {
       const jan31 = DateTime.from('2020-01-31T15:00');
       equal(`${jan31.plus({ months: 1 })}`, '2020-02-29T15:00');
-      equal(`${jan31.plus({ months: 1 }, { disambiguation: 'constrain' })}`, '2020-02-29T15:00');
+      equal(`${jan31.plus({ months: 1 }, { overflow: 'constrain' })}`, '2020-02-29T15:00');
     });
     it('throw when ambiguous result with reject', () => {
       const jan31 = DateTime.from('2020-01-31T15:00:00');
-      throws(() => jan31.plus({ months: 1 }, { disambiguation: 'reject' }), RangeError);
+      throws(() => jan31.plus({ months: 1 }, { overflow: 'reject' }), RangeError);
     });
-    it('invalid disambiguation', () => {
-      ['', 'CONSTRAIN', 'balance', 3, null].forEach((disambiguation) =>
+    it('invalid overflow', () => {
+      ['', 'CONSTRAIN', 'balance', 3, null].forEach((overflow) =>
         // @ts-ignore
-        throws(() => DateTime.from('2019-11-18T15:00').plus({ months: 1 }, { disambiguation }), RangeError)
+        throws(() => DateTime.from('2019-11-18T15:00').plus({ months: 1 }, { overflow }), RangeError)
       );
     });
   });
@@ -1143,16 +1145,16 @@ describe('LocalDateTime', () => {
     it('constrain when ambiguous result', () => {
       const mar31 = DateTime.from('2020-03-31T15:00');
       equal(`${mar31.minus({ months: 1 })}`, '2020-02-29T15:00');
-      equal(`${mar31.minus({ months: 1 }, { disambiguation: 'constrain' })}`, '2020-02-29T15:00');
+      equal(`${mar31.minus({ months: 1 }, { overflow: 'constrain' })}`, '2020-02-29T15:00');
     });
     it('throw when ambiguous result with reject', () => {
       const mar31 = DateTime.from('2020-03-31T15:00');
-      throws(() => mar31.minus({ months: 1 }, { disambiguation: 'reject' }), RangeError);
+      throws(() => mar31.minus({ months: 1 }, { overflow: 'reject' }), RangeError);
     });
-    it('invalid disambiguation', () => {
-      ['', 'CONSTRAIN', 'balance', 3, null].forEach((disambiguation) =>
+    it('invalid overflow', () => {
+      ['', 'CONSTRAIN', 'balance', 3, null].forEach((overflow) =>
         // @ts-ignore
-        throws(() => DateTime.from('2019-11-18T15:00').minus({ months: 1 }, { disambiguation }), RangeError)
+        throws(() => DateTime.from('2019-11-18T15:00').minus({ months: 1 }, { overflow }), RangeError)
       );
     });
   });
@@ -1228,23 +1230,23 @@ describe('LocalDateTime', () => {
     it('DateTime.from(number) is converted to string', () =>
       // @ts-ignore
       assert(DateTime.from(19761118).equals(DateTime.from('19761118'))));
-    describe('Disambiguation', () => {
+    describe('Overflow', () => {
       const bad = { year: 2019, month: 1, day: 32 };
-      it('reject', () => throws(() => DateTime.from(bad, { disambiguation: 'reject' }), RangeError));
+      it('reject', () => throws(() => DateTime.from(bad, { overflow: 'reject' }), RangeError));
       it('constrain', () => {
         equal(`${DateTime.from(bad)}`, '2019-01-31T00:00');
-        equal(`${DateTime.from(bad, { disambiguation: 'constrain' })}`, '2019-01-31T00:00');
+        equal(`${DateTime.from(bad, { overflow: 'constrain' })}`, '2019-01-31T00:00');
       });
-      it('throw when bad disambiguation', () => {
+      it('throw when bad overflow', () => {
         [new DateTime(1976, 11, 18, 15, 23), { year: 2019, month: 1, day: 1 }, '2019-01-31T00:00'].forEach((input) => {
-          ['', 'CONSTRAIN', 'balance', 3, null].forEach((disambiguation) =>
+          ['', 'CONSTRAIN', 'balance', 3, null].forEach((overflow) =>
             // @ts-ignore
-            throws(() => DateTime.from(input, { disambiguation }), RangeError)
+            throws(() => DateTime.from(input, { overflow }), RangeError)
           );
         });
       });
       const leap = { year: 2016, month: 12, day: 31, hour: 23, minute: 59, second: 60 };
-      it('reject leap second', () => throws(() => DateTime.from(leap, { disambiguation: 'reject' }), RangeError));
+      it('reject leap second', () => throws(() => DateTime.from(leap, { overflow: 'reject' }), RangeError));
       it('constrain leap second', () => equal(`${DateTime.from(leap)}`, '2016-12-31T23:59:59'));
     });
     it('variant time separators', () => {
@@ -1327,9 +1329,9 @@ describe('LocalDateTime', () => {
     it('constructing from property bag', () => {
       const tooEarly = { year: -271821, month: 4, day: 19 };
       const tooLate = { year: 275760, month: 9, day: 14 };
-      ['reject', 'constrain'].forEach((disambiguation: Temporal.AssignmentOptions['disambiguation']) => {
+      ['reject', 'constrain'].forEach((overflow: Temporal.AssignmentOptions['overflow']) => {
         [tooEarly, tooLate].forEach((props) => {
-          throws(() => DateTime.from(props, { disambiguation }), RangeError);
+          throws(() => DateTime.from(props, { overflow }), RangeError);
         });
       });
       equal(
@@ -1352,9 +1354,9 @@ describe('LocalDateTime', () => {
       );
     });
     it('constructing from ISO string', () => {
-      ['reject', 'constrain'].forEach((disambiguation: Temporal.AssignmentOptions['disambiguation']) => {
+      ['reject', 'constrain'].forEach((overflow: Temporal.AssignmentOptions['overflow']) => {
         ['-271821-04-19T00:00', '+275760-09-14T00:00'].forEach((str) => {
-          throws(() => DateTime.from(str, { disambiguation }), RangeError);
+          throws(() => DateTime.from(str, { overflow }), RangeError);
         });
       });
       equal(`${DateTime.from('-271821-04-19T00:00:00.000000001')}`, '-271821-04-19T00:00:00.000000001');
@@ -1382,9 +1384,9 @@ describe('LocalDateTime', () => {
     it('adding and subtracting beyond limit', () => {
       const min = DateTime.from('-271821-04-19T00:00:00.000000001');
       const max = DateTime.from('+275760-09-13T23:59:59.999999999');
-      ['reject', 'constrain'].forEach((disambiguation: Temporal.AssignmentOptions['disambiguation']) => {
-        throws(() => min.minus({ nanoseconds: 1 }, { disambiguation }), RangeError);
-        throws(() => max.plus({ nanoseconds: 1 }, { disambiguation }), RangeError);
+      ['reject', 'constrain'].forEach((overflow: Temporal.AssignmentOptions['overflow']) => {
+        throws(() => min.minus({ nanoseconds: 1 }, { overflow }), RangeError);
+        throws(() => max.plus({ nanoseconds: 1 }, { overflow }), RangeError);
       });
     });
   });
@@ -1442,13 +1444,13 @@ describe('LocalDateTime', () => {
       equal(DateTime.compare(dt1, dt2), 0);
     });
   });
-  describe('dateTime.getISOCalendarFields() works', () => {
+  describe('dateTime.getISOFields() works', () => {
     const dt1 = DateTime.from('1976-11-18T15:23:30.123456789');
-    const fields = dt1.getISOCalendarFields();
+    const fields = dt1.getISOFields();
     it('fields', () => {
-      equal(fields.year, 1976);
-      equal(fields.month, 11);
-      equal(fields.day, 18);
+      equal(fields.isoYear, 1976);
+      equal(fields.isoMonth, 11);
+      equal(fields.isoDay, 18);
       equal(fields.hour, 15);
       equal(fields.minute, 23);
       equal(fields.second, 30);
@@ -1458,9 +1460,9 @@ describe('LocalDateTime', () => {
     });
     it('enumerable', () => {
       const fields2 = { ...fields };
-      equal(fields2.year, 1976);
-      equal(fields2.month, 11);
-      equal(fields2.day, 18);
+      equal(fields2.isoYear, 1976);
+      equal(fields2.isoMonth, 11);
+      equal(fields2.isoDay, 18);
       equal(fields2.hour, 15);
       equal(fields2.minute, 23);
       equal(fields2.second, 30);
@@ -1468,6 +1470,7 @@ describe('LocalDateTime', () => {
       equal(fields2.microsecond, 456);
       equal(fields2.nanosecond, 789);
     });
+    /*
     it('as input to from()', () => {
       const dt2 = DateTime.from(fields);
       equal(DateTime.compare(dt1, dt2), 0);
@@ -1476,6 +1479,7 @@ describe('LocalDateTime', () => {
       const dt2 = DateTime.from('2019-06-30').with(fields);
       equal(DateTime.compare(dt1, dt2), 0);
     });
+    */
   });
 });
 
