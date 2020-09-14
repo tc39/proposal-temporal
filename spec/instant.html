@@ -590,7 +590,7 @@
         1. Assert: Type(_instant_) is Object.
         1. Assert: _instant_ has an [[InitializedTemporalInstant]] internal slot.
         1. Let _dateTime_ be ? GetTemporalDateTimeFor(_timeZone_, _instant_).
-        1. Let _dateTimeString_ be ! TemporalDateTimeToString(_dateTime_).
+        1. Let _dateTimeString_ be ? TemporalDateTimeToString(_dateTime_).
         1. Let _timeZoneString_ be ? ISOTimeZoneString(_timeZone_, _instant_).
         1. Return the string-concatenation of _dateTimeString_ and _timeZoneString_.
       </emu-alg>

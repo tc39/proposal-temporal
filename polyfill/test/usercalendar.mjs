@@ -249,7 +249,12 @@ describe('Userland calendar', () => {
       return { year, days };
     }
     const obj = {
-      id: 'decimal',
+      get id() {
+        return this.toString();
+      },
+      toString() {
+        return 'decimal';
+      },
       dateFromFields(fields, options, constructor) {
         const { overflow = 'constrain' } = options ? options : {};
         const isoDate = decimalToISO(fields.year, fields.month, fields.day, overflow);

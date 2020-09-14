@@ -924,7 +924,8 @@
         1. Let _year_ be ! PadYear(_temporalDate_.[[ISOYear]]).
         1. Let _month_ be _temporalDate_.[[ISOMonth]] formatted as a two-digit decimal number, padded to the left with a zero if necessary.
         1. Let _day_ be _temporalDate_.[[ISODay]] formatted as a two-digit decimal number, padded to the left with a zero if necessary.
-        1. Return the string-concatenation of _year_, the code unit 0x002D (HYPHEN-MINUS), _month_, the code unit 0x002D (HYPHEN-MINUS), and _day_.
+        1. Let _calendar_ be ? FormatCalendarAnnotation(_temporalDate_.[[Calendar]]).
+        1. Return the string-concatenation of _year_, the code unit 0x002D (HYPHEN-MINUS), _month_, the code unit 0x002D (HYPHEN-MINUS), _day_, and _calendar_.
       </emu-alg>
     </emu-clause>
 
