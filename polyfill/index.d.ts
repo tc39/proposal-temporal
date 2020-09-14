@@ -189,9 +189,7 @@ export namespace Temporal {
     minus(durationLike: Temporal.Duration | DurationLike): Temporal.Absolute;
     difference(
       other: Temporal.Absolute,
-      options?: DifferenceOptions<
-        'days' | 'hours' | 'minutes' | 'seconds' | 'milliseconds' | 'microseconds' | 'nanoseconds'
-      >
+      options?: DifferenceOptions<'hours' | 'minutes' | 'seconds' | 'milliseconds' | 'microseconds' | 'nanoseconds'>
     ): Temporal.Duration;
     toDateTime(tzLike: TimeZoneProtocol | string, calendar?: CalendarProtocol | string): Temporal.DateTime;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
