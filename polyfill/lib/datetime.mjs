@@ -687,8 +687,8 @@ export class DateTime {
       const val2 = GetSlot(two, slot);
       if (val1 !== val2) return ES.ComparisonResult(val1 - val2);
     }
-    const cal1 = GetSlot(one, CALENDAR).id;
-    const cal2 = GetSlot(two, CALENDAR).id;
+    const cal1 = ES.CalendarToString(GetSlot(one, CALENDAR));
+    const cal2 = ES.CalendarToString(GetSlot(two, CALENDAR));
     return ES.ComparisonResult(cal1 < cal2 ? -1 : cal1 > cal2 ? 1 : 0);
   }
 }
