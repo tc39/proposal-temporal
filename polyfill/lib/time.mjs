@@ -19,6 +19,18 @@ import {
   SetSlot
 } from './slots.mjs';
 
+function TemporalTimeToString(time) {
+  const hour = ES.ISODateTimePartString(GetSlot(time, HOUR));
+  const minute = ES.ISODateTimePartString(GetSlot(time, MINUTE));
+  const seconds = ES.FormatSecondsStringPart(
+    GetSlot(time, SECOND),
+    GetSlot(time, MILLISECOND),
+    GetSlot(time, MICROSECOND),
+    GetSlot(time, NANOSECOND)
+  );
+  return `${hour}:${minute}${seconds}`;
+}
+
 export class Time {
   constructor(hour = 0, minute = 0, second = 0, millisecond = 0, microsecond = 0, nanosecond = 0) {
     hour = ES.ToInteger(hour);
@@ -351,16 +363,11 @@ export class Time {
 
   toString() {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
-    let hour = ES.ISODateTimePartString(GetSlot(this, HOUR));
-    let minute = ES.ISODateTimePartString(GetSlot(this, MINUTE));
-    let seconds = ES.FormatSecondsStringPart(
-      GetSlot(this, SECOND),
-      GetSlot(this, MILLISECOND),
-      GetSlot(this, MICROSECOND),
-      GetSlot(this, NANOSECOND)
-    );
-    let resultString = `${hour}:${minute}${seconds}`;
-    return resultString;
+    return TemporalTimeToString(this);
+  }
+  toJSON() {
+    if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
+    return TemporalTimeToString(this);
   }
   toLocaleString(...args) {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
@@ -433,6 +440,5 @@ export class Time {
     return ES.ComparisonResult(0);
   }
 }
-Time.prototype.toJSON = Time.prototype.toString;
 
 MakeIntrinsicClass(Time, 'Temporal.Time');

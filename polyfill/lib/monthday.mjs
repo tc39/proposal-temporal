@@ -7,6 +7,18 @@ import { ISO_MONTH, ISO_DAY, ISO_YEAR, CALENDAR, MONTH_DAY_BRAND, CreateSlots, G
 
 const ObjectAssign = Object.assign;
 
+function MonthDayToString(monthDay) {
+  const month = ES.ISODateTimePartString(GetSlot(monthDay, ISO_MONTH));
+  const day = ES.ISODateTimePartString(GetSlot(monthDay, ISO_DAY));
+  let resultString = `${month}-${day}`;
+  const calendar = ES.FormatCalendarAnnotation(GetSlot(monthDay, CALENDAR));
+  if (calendar) {
+    const year = ES.ISOYearString(GetSlot(monthDay, ISO_YEAR));
+    resultString = `${year}-${resultString}${calendar}`;
+  }
+  return resultString;
+}
+
 export class MonthDay {
   constructor(isoMonth, isoDay, calendar = undefined, referenceISOYear = 1972) {
     isoMonth = ES.ToInteger(isoMonth);
@@ -75,15 +87,11 @@ export class MonthDay {
   }
   toString() {
     if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
-    let month = ES.ISODateTimePartString(GetSlot(this, ISO_MONTH));
-    let day = ES.ISODateTimePartString(GetSlot(this, ISO_DAY));
-    let resultString = `${month}-${day}`;
-    const calendar = ES.FormatCalendarAnnotation(GetSlot(this, CALENDAR));
-    if (calendar) {
-      const year = ES.ISOYearString(GetSlot(this, ISO_YEAR));
-      resultString = `${year}-${resultString}${calendar}`;
-    }
-    return resultString;
+    return MonthDayToString(this);
+  }
+  toJSON() {
+    if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
+    return MonthDayToString(this);
   }
   toLocaleString(...args) {
     if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
@@ -151,6 +159,5 @@ export class MonthDay {
     return result;
   }
 }
-MonthDay.prototype.toJSON = MonthDay.prototype.toString;
 
 MakeIntrinsicClass(MonthDay, 'Temporal.MonthDay');
