@@ -11,6 +11,7 @@ export class Calendar {
   constructor(id) {
     if (!ID_REGEX.exec(id)) throw new RangeError(`invalid calendar identifier ${id}`);
     CreateSlots(this);
+    id = ES.ToString(id);
     SetSlot(this, CALENDAR_ID, id);
 
     if (typeof __debug__ !== 'undefined' && __debug__) {
@@ -129,6 +130,7 @@ DefineIntrinsic('Temporal.Calendar.prototype.toString', Calendar.prototype.toStr
 class ISO8601Calendar extends Calendar {
   constructor(id = 'iso8601') {
     // Needs to be subclassable, that's why the ID is a default argument
+    id = ES.ToString(id);
     super(id);
   }
   dateFromFields(fields, options, constructor) {

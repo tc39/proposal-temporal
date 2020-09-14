@@ -104,6 +104,7 @@
       <emu-alg>
         1. If NewTarget is *undefined*, then
           1. Throw a *TypeError* exception.
+        1. Set _id_ to ? ToString(_id_).
         1. If ! IsValidCalendarID(_id_) is *false*, then
           1. Throw a *RangeError* exception.
         1. Let _calendar_ be ? OrdinaryCreateFromConstructor(NewTarget, *"%Temporal.Calendar.prototype%"*, « [[InitializedTemporalCalendar]], [[Identifier]] »).
