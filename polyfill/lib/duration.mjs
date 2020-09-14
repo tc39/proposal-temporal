@@ -507,10 +507,10 @@ export class Duration {
     if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
     return ES.TemporalDurationToString(this);
   }
-  toLocaleString(...args) {
+  toLocaleString(locales = undefined, options = undefined) {
     if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
     if (typeof Intl !== 'undefined' && typeof Intl.DurationFormat !== 'undefined') {
-      return new Intl.DurationFormat(...args).format(this);
+      return new Intl.DurationFormat(locales, options).format(this);
     }
     console.warn('Temporal.Duration.prototype.toLocaleString() requires Intl.DurationFormat.');
     return ES.TemporalDurationToString(this);
