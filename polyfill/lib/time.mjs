@@ -404,7 +404,7 @@ export class Time {
     options = ES.NormalizeOptionsObject(options);
     const overflow = ES.ToTemporalOverflow(options);
     let hour, minute, second, millisecond, microsecond, nanosecond;
-    if (typeof item === 'object' && item) {
+    if (ES.Type(item) === 'Object') {
       if (ES.IsTemporalTime(item)) {
         hour = GetSlot(item, HOUR);
         minute = GetSlot(item, MINUTE);

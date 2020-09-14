@@ -90,7 +90,7 @@ function formatToParts(datetime, ...rest) {
 }
 
 function formatRange(a, b) {
-  if ('object' === typeof a && 'object' === typeof b && a && b) {
+  if (ES.Type(a) === 'Object' && ES.Type(b) === 'Object') {
     if (Object.getPrototypeOf(a) !== Object.getPrototypeOf(b)) {
       throw new TypeError('Intl.DateTimeFormat accepts two values of the same type');
     }
@@ -104,7 +104,7 @@ function formatRange(a, b) {
 }
 
 function formatRangeToParts(a, b) {
-  if ('object' === typeof a && 'object' === typeof b && a && b) {
+  if (ES.Type(a) === 'Object' && ES.Type(b) === 'Object') {
     if (Object.getPrototypeOf(a) !== Object.getPrototypeOf(b)) {
       throw new TypeError('Intl.DateTimeFormat accepts two values of the same type');
     }
