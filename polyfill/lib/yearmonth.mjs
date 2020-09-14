@@ -21,14 +21,13 @@ function YearMonthToString(yearMonth) {
 }
 
 export class YearMonth {
-  constructor(isoYear, isoMonth, calendar = undefined, referenceISODay = 1) {
+  constructor(isoYear, isoMonth, calendar = GetISO8601Calendar(), referenceISODay = 1) {
     isoYear = ES.ToInteger(isoYear);
     isoMonth = ES.ToInteger(isoMonth);
-    if (calendar === undefined) calendar = GetISO8601Calendar();
+    calendar = ES.ToTemporalCalendar(calendar);
     referenceISODay = ES.ToInteger(referenceISODay);
     ES.RejectDate(isoYear, isoMonth, referenceISODay);
     ES.RejectYearMonthRange(isoYear, isoMonth);
-    if (!calendar || typeof calendar !== 'object') throw new RangeError('invalid calendar');
     CreateSlots(this);
     SetSlot(this, ISO_YEAR, isoYear);
     SetSlot(this, ISO_MONTH, isoMonth);
