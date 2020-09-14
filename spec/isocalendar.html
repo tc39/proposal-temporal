@@ -23,6 +23,7 @@
       <emu-alg>
         1. If NewTarget is *undefined*, then
           1. Throw a *TypeError* exception.
+        1. Set _id_ to ? ToString(_id_).
         1. Let _calendar_ be ? OrdinaryCreateFromConstructor(NewTarget, *"%Temporal.ISO8601Calendar.prototype%"*, « [[InitializedTemporalISO8601Calendar]], [[InitializedTemporalCalendar]], [[Identifier]] »).
         1. Set _calendar_.[[Identifier]] to _id_.
         1. Return _calendar_.
