@@ -1192,6 +1192,8 @@ export namespace Temporal {
     get weekOfYear(): number;
     get daysInYear(): number;
     get daysInMonth(): number;
+    get daysInWeek(): number;
+    get monthsInYear(): number;
     get isLeapYear(): boolean;
     toDate(): Temporal.Date;
     toYearMonth(): Temporal.YearMonth;

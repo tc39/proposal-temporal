@@ -805,6 +805,12 @@ export class LocalDateTime {
   get daysInMonth() {
     return this._dt.daysInMonth;
   }
+  get daysInWeek() {
+    return this._dt.daysInWeek;
+  }
+  get monthsInYear() {
+    return this._dt.monthsInYear;
+  }
   get isLeapYear() {
     return this._dt.isLeapYear;
   }
