@@ -88,7 +88,7 @@
       <emu-alg>
         1. Perform ? RequireInternalSlot(_one_, [[InitializedTemporalYearMonth]]).
         1. Perform ? RequireInternalSlot(_two_, [[InitializedTemporalYearMonth]]).
-        1. Return ! CompareTemporalYearMonth(_one_, _two_).
+        1. Return ! CompareTemporalDate(_one_.[[ISOYear]], _one_.[[ISOMonth]], _one_.[[RefISODay]], _two_.[[ISOYear]], _two_.[[ISOMonth]], _two_.[[RefISODay]]).
       </emu-alg>
     </emu-clause>
   </emu-clause>
@@ -596,23 +596,6 @@
         1. Let _year_ be ! PadYear(_yearMonth_.[[ISOYear]]).
         1. Let _month_ be _yearMonth_.[[ISOMonth]] formatted as a two-digit decimal number, padded to the left with a zero if necessary.
         1. Return the string-concatenation of _year_, the code unit 0x002D (HYPHEN-MINUS), and _month_.
-      </emu-alg>
-    </emu-clause>
-
-    <emu-clause id="sec-temporal-comparetemporalyearmonth" aoid="CompareTemporalYearMonth">
-      <h1>CompareTemporalYearMonth ( _one_, _two_ )</h1>
-      <emu-alg>
-        1. Assert: Type(_one_) is Object.
-        1. Assert: _one_ has an [[InitializedTemporalYearMonth]] internal slot.
-        1. Assert: Type(_two_) is Object.
-        1. Assert: _two_ has an [[InitializedTemporalYearMonth]] internal slot.
-        1. If _one_.[[ISOYear]] &gt; _two_.[[ISOYear]], return 1.
-        1. If _one_.[[ISOYear]] &lt; _two_.[[ISOYear]], return -1.
-        1. If _one_.[[ISOMonth]] &gt; _two_.[[ISOMonth]], return 1.
-        1. If _one_.[[ISOMonth]] &lt; _two_.[[ISOMonth]], return -1.
-        1. If _one_.[[RefISODay]] &gt; _two_.[[RefISODay]], return 1.
-        1. If _one_.[[RefISODay]] &lt; _two_.[[RefISODay]], return -1.
-        1. Return +0.
       </emu-alg>
     </emu-clause>
   </emu-clause>
