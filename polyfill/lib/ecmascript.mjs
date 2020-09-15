@@ -1276,16 +1276,23 @@ export const ES = ObjectAssign({}, ES2019, {
     }
   },
 
-  DifferenceDate: (one, two, largestUnit = 'days') => {
+  DifferenceDate: (y1, m1, d1, y2, m2, d2, largestUnit = 'days') => {
     let larger, smaller, sign;
-    const TemporalDate = GetIntrinsic('%Temporal.Date%');
-    if (TemporalDate.compare(one, two) < 0) {
-      smaller = one;
-      larger = two;
+    let comparison = 0;
+    if (y1 !== y2) {
+      comparison = y1 - y2;
+    } else if (m1 !== m2) {
+      comparison = m1 - m2;
+    } else {
+      comparison = d1 - d2;
+    }
+    if (comparison < 0) {
+      smaller = { year: y1, month: m1, day: d1 };
+      larger = { year: y2, month: m2, day: d2 };
       sign = 1;
     } else {
-      smaller = two;
-      larger = one;
+      smaller = { year: y2, month: m2, day: d2 };
+      larger = { year: y1, month: m1, day: d1 };
       sign = -1;
     }
     let years = larger.year - smaller.year;
@@ -1346,13 +1353,13 @@ export const ES = ObjectAssign({}, ES2019, {
     days *= sign;
     return { years, months, weeks, days };
   },
-  DifferenceTime: (one, two) => {
-    let hours = two.hour - one.hour;
-    let minutes = two.minute - one.minute;
-    let seconds = two.second - one.second;
-    let milliseconds = two.millisecond - one.millisecond;
-    let microseconds = two.microsecond - one.microsecond;
-    let nanoseconds = two.nanosecond - one.nanosecond;
+  DifferenceTime: (h1, min1, s1, ms1, µs1, ns1, h2, min2, s2, ms2, µs2, ns2) => {
+    let hours = h2 - h1;
+    let minutes = min2 - min1;
+    let seconds = s2 - s1;
+    let milliseconds = ms2 - ms1;
+    let microseconds = µs2 - µs1;
+    let nanoseconds = ns2 - ns1;
 
     const sign = ES.DurationSign(0, 0, 0, 0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
     hours *= sign;

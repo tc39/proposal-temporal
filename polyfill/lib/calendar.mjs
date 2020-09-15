@@ -193,7 +193,15 @@ class ISO8601Calendar extends Calendar {
       'microseconds',
       'nanoseconds'
     ]);
-    const { years, months, weeks, days } = ES.DifferenceDate(one, two, largestUnit);
+    const { years, months, weeks, days } = ES.DifferenceDate(
+      GetSlot(one, ISO_YEAR),
+      GetSlot(one, ISO_MONTH),
+      GetSlot(one, ISO_DAY),
+      GetSlot(two, ISO_YEAR),
+      GetSlot(two, ISO_MONTH),
+      GetSlot(two, ISO_DAY),
+      largestUnit
+    );
     const Duration = GetIntrinsic('%Temporal.Duration%');
     return new Duration(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
   }

@@ -385,8 +385,18 @@ export class DateTime {
     }
     const largestUnit = ES.ToLargestTemporalUnit(options, 'days');
     let { deltaDays, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.DifferenceTime(
-      other,
-      this
+      GetSlot(other, HOUR),
+      GetSlot(other, MINUTE),
+      GetSlot(other, SECOND),
+      GetSlot(other, MILLISECOND),
+      GetSlot(other, MICROSECOND),
+      GetSlot(other, NANOSECOND),
+      GetSlot(this, HOUR),
+      GetSlot(this, MINUTE),
+      GetSlot(this, SECOND),
+      GetSlot(this, MILLISECOND),
+      GetSlot(this, MICROSECOND),
+      GetSlot(this, NANOSECOND)
     );
     let year = GetSlot(this, ISO_YEAR);
     let month = GetSlot(this, ISO_MONTH);
