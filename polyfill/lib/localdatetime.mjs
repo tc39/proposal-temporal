@@ -854,8 +854,19 @@ function mergeDuration({ dateDuration, timeDuration }) {
 
 /** Returns true if every unit is zero, false otherwise. */
 function isZeroDuration(duration) {
-  const { months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
-  return !months && !weeks && !days && !hours && !minutes && !seconds && !milliseconds && !microseconds && !nanoseconds;
+  const { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
+  return (
+    !years &&
+    !months &&
+    !weeks &&
+    !days &&
+    !hours &&
+    !minutes &&
+    !seconds &&
+    !milliseconds &&
+    !microseconds &&
+    !nanoseconds
+  );
 }
 
 const LARGEST_DIFFERENCE_UNITS = [

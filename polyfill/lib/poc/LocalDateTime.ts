@@ -940,8 +940,19 @@ function mergeDuration({
 
 /** Returns true if every unit is zero, false otherwise. */
 function isZeroDuration(duration: Temporal.Duration) {
-  const { months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
-  return !months && !weeks && !days && !hours && !minutes && !seconds && !milliseconds && !microseconds && !nanoseconds;
+  const { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
+  return (
+    !years &&
+    !months &&
+    !weeks &&
+    !days &&
+    !hours &&
+    !minutes &&
+    !seconds &&
+    !milliseconds &&
+    !microseconds &&
+    !nanoseconds
+  );
 }
 
 type LargestDifferenceUnit = Exclude<LocalDateTimeDifferenceOptions['largestUnit'], undefined>;
