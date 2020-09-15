@@ -4584,18 +4584,42 @@
         if (propSign !== 0 && propSign !== sign) throw new RangeError('mixed-sign values not allowed as duration fields');
       }
     },
-    DifferenceDate: function DifferenceDate(one, two) {
-      var largestUnit = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'days';
+    DifferenceDate: function DifferenceDate(y1, m1, d1, y2, m2, d2) {
+      var largestUnit = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : 'days';
       var larger, smaller, sign;
-      var TemporalDate = GetIntrinsic$1('%Temporal.Date%');
+      var comparison = 0;
 
-      if (TemporalDate.compare(one, two) < 0) {
-        smaller = one;
-        larger = two;
+      if (y1 !== y2) {
+        comparison = y1 - y2;
+      } else if (m1 !== m2) {
+        comparison = m1 - m2;
+      } else {
+        comparison = d1 - d2;
+      }
+
+      if (comparison < 0) {
+        smaller = {
+          year: y1,
+          month: m1,
+          day: d1
+        };
+        larger = {
+          year: y2,
+          month: m2,
+          day: d2
+        };
         sign = 1;
       } else {
-        smaller = two;
-        larger = one;
+        smaller = {
+          year: y2,
+          month: m2,
+          day: d2
+        };
+        larger = {
+          year: y1,
+          month: m1,
+          day: d1
+        };
         sign = -1;
       }
 
@@ -4671,13 +4695,13 @@
         days: days
       };
     },
-    DifferenceTime: function DifferenceTime(one, two) {
-      var hours = two.hour - one.hour;
-      var minutes = two.minute - one.minute;
-      var seconds = two.second - one.second;
-      var milliseconds = two.millisecond - one.millisecond;
-      var microseconds = two.microsecond - one.microsecond;
-      var nanoseconds = two.nanosecond - one.nanosecond;
+    DifferenceTime: function DifferenceTime(h1, min1, s1, ms1, µs1, ns1, h2, min2, s2, ms2, µs2, ns2) {
+      var hours = h2 - h1;
+      var minutes = min2 - min1;
+      var seconds = s2 - s1;
+      var milliseconds = ms2 - ms1;
+      var microseconds = µs2 - µs1;
+      var nanoseconds = ns2 - ns1;
       var sign = ES.DurationSign(0, 0, 0, 0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
       hours *= sign;
       minutes *= sign;
@@ -5288,7 +5312,7 @@
         if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
         var largestUnit = ES.ToLargestTemporalUnit(options, 'days', ['hours', 'minutes', 'seconds', 'milliseconds', 'microseconds', 'nanoseconds']);
 
-        var _ES$DifferenceDate = ES.DifferenceDate(one, two, largestUnit),
+        var _ES$DifferenceDate = ES.DifferenceDate(GetSlot(one, ISO_YEAR), GetSlot(one, ISO_MONTH), GetSlot(one, ISO_DAY), GetSlot(two, ISO_YEAR), GetSlot(two, ISO_MONTH), GetSlot(two, ISO_DAY), largestUnit),
             years = _ES$DifferenceDate.years,
             months = _ES$DifferenceDate.months,
             weeks = _ES$DifferenceDate.weeks,
@@ -6421,7 +6445,7 @@
 
         var largestUnit = ES.ToLargestTemporalUnit(options, 'days');
 
-        var _ES$DifferenceTime = ES.DifferenceTime(other, this),
+        var _ES$DifferenceTime = ES.DifferenceTime(GetSlot(other, HOUR), GetSlot(other, MINUTE), GetSlot(other, SECOND), GetSlot(other, MILLISECOND), GetSlot(other, MICROSECOND), GetSlot(other, NANOSECOND), GetSlot(this, HOUR), GetSlot(this, MINUTE), GetSlot(this, SECOND), GetSlot(this, MILLISECOND), GetSlot(this, MICROSECOND), GetSlot(this, NANOSECOND)),
             deltaDays = _ES$DifferenceTime.deltaDays,
             hours = _ES$DifferenceTime.hours,
             minutes = _ES$DifferenceTime.minutes,
@@ -7608,7 +7632,7 @@
         if (!ES.IsTemporalTime(other)) throw new TypeError('invalid Time object');
         var largestUnit = ES.ToLargestTemporalUnit(options, 'hours', ['years', 'months', 'weeks', 'days']);
 
-        var _ES$DifferenceTime = ES.DifferenceTime(other, this),
+        var _ES$DifferenceTime = ES.DifferenceTime(GetSlot(other, HOUR), GetSlot(other, MINUTE), GetSlot(other, SECOND), GetSlot(other, MILLISECOND), GetSlot(other, MICROSECOND), GetSlot(other, NANOSECOND), GetSlot(this, HOUR), GetSlot(this, MINUTE), GetSlot(this, SECOND), GetSlot(this, MILLISECOND), GetSlot(this, MICROSECOND), GetSlot(this, NANOSECOND)),
             hours = _ES$DifferenceTime.hours,
             minutes = _ES$DifferenceTime.minutes,
             seconds = _ES$DifferenceTime.seconds,
