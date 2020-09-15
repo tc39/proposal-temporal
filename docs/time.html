@@ -178,6 +178,8 @@
 </li>
 <li><a href="#difference">difference</a>
 </li>
+<li><a href="#round">round</a>
+</li>
 <li><a href="#equals">equals</a>
 </li>
 <li><a href="#toString">toString</a>
@@ -388,7 +390,50 @@ However, a difference of 30 seconds will still be 30 seconds even if <code>large
 <p>Usage example:</p>
 <pre class="language-javascript"><code class="language-javascript">time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'20:13:20.971398099'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 time<span class="token punctuation">.</span><span class="token function">difference</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'19:39:09.068346205'</span><span class="token punctuation">)</span><span class="token punctuation">)</span>  <span class="token comment">// => PT34M11.903051894S</span>
-time<span class="token punctuation">.</span><span class="token function">difference</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'22:39:09.068346205'</span><span class="token punctuation">)</span><span class="token punctuation">)</span>  <span class="token comment">// => -PT2H25M49.903051894S</span></code></pre><h3 id="equals"><a class="heading-link" href="#equals"></a>time.<strong>equals</strong>(<em>other</em>: Temporal.Time) : boolean</h3><p><strong>Parameters:</strong></p>
+time<span class="token punctuation">.</span><span class="token function">difference</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'22:39:09.068346205'</span><span class="token punctuation">)</span><span class="token punctuation">)</span>  <span class="token comment">// => -PT2H25M49.903051894S</span></code></pre><h3 id="round"><a class="heading-link" href="#round"></a>time.<strong>round</strong>(<em>options</em>: object) : Temporal.Time</h3><p><strong>Parameters:</strong></p>
+<ul>
+<li><code>options</code> (object): An object with properties representing options for the operation.
+The following options are recognized:<ul>
+<li><code>smallestUnit</code> (required string): The unit to round to.
+Valid values are <code>&#39;hour&#39;</code>, <code>&#39;minute&#39;</code>, <code>&#39;second&#39;</code>, <code>&#39;millisecond&#39;</code>, <code>&#39;microsecond&#39;</code>, and <code>&#39;nanosecond&#39;</code>.</li>
+<li><code>roundingIncrement</code> (number): The granularity to round to, of the unit given by <code>smallestUnit</code>.
+The default is 1.</li>
+<li><code>roundingMode</code> (string): How to handle the remainder.
+Valid values are <code>&#39;ceil&#39;</code>, <code>&#39;floor&#39;</code>, <code>&#39;trunc&#39;</code>, and <code>&#39;nearest&#39;</code>.
+The default is <code>&#39;nearest&#39;</code>.</li>
+</ul>
+</li>
+</ul>
+<p><strong>Returns:</strong> a new <code>Temporal.Time</code> object which is <code>time</code> rounded to <code>roundingIncrement</code> of <code>smallestUnit</code>.</p>
+<p>Rounds <code>time</code> to the given unit and increment, and returns the result as a new <code>Temporal.Time</code> object.</p>
+<p>The <code>smallestUnit</code> option determines the unit to round to.
+For example, to round to the nearest minute, use <code>smallestUnit: &#39;minute&#39;</code>.
+This option is required.</p>
+<p>The <code>roundingIncrement</code> option allows rounding to an integer number of units.
+For example, to round to increments of a half hour, use <code>smallestUnit: &#39;minute&#39;, roundingIncrement: 30</code>.</p>
+<p>The value given as <code>roundingIncrement</code> must divide evenly into the next highest unit after <code>smallestUnit</code>, and must not be equal to it.
+(For example, if <code>smallestUnit</code> is <code>&#39;minutes&#39;</code>, then the number of minutes given by <code>roundingIncrement</code> must divide evenly into 60 minutes, which is one hour.
+The valid values in this case are 1 (default), 2, 3, 4, 5, 6, 10, 12, 15, 20, and 30.
+Instead of 60 minutes, use 1 hour.)</p>
+<p>The <code>roundingMode</code> option controls how the rounding is performed.</p>
+<ul>
+<li><code>ceil</code>: Always round up, towards 23:59:59.999999999.</li>
+<li><code>floor</code>, <code>trunc</code>: Always round down, 00:00.
+(These two modes behave the same, but are both included for consistency with <code>Temporal.Duration.round()</code>, where they are not the same.)</li>
+<li><code>nearest</code>: Round to the nearest of the values allowed by <code>roundingIncrement</code> and <code>smallestUnit</code>.
+When there is a tie, round up, like <code>ceil</code>.</li>
+</ul>
+<p>Example usage:</p>
+<pre class="language-javascript"><code class="language-javascript">time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'19:39:09.068346205'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// Round to a particular unit</span>
+time<span class="token punctuation">.</span><span class="token function">round</span><span class="token punctuation">(</span><span class="token punctuation">{</span> smallestUnit<span class="token operator">:</span> <span class="token string">'hour'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// => 20:00</span>
+<span class="token comment">// Round to an increment of a unit, e.g. half an hour:</span>
+time<span class="token punctuation">.</span><span class="token function">round</span><span class="token punctuation">(</span><span class="token punctuation">{</span> roundingIncrement<span class="token operator">:</span> <span class="token number">30</span><span class="token punctuation">,</span> smallestUnit<span class="token operator">:</span> <span class="token string">'minute'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// => 19:30</span>
+<span class="token comment">// Round to the same increment but round up instead:</span>
+time<span class="token punctuation">.</span><span class="token function">round</span><span class="token punctuation">(</span><span class="token punctuation">{</span> roundingIncrement<span class="token operator">:</span> <span class="token number">30</span><span class="token punctuation">,</span> smallestUnit<span class="token operator">:</span> <span class="token string">'minute'</span><span class="token punctuation">,</span> roundingMode<span class="token operator">:</span> <span class="token string">'ceil'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// => 20:00</span></code></pre><h3 id="equals"><a class="heading-link" href="#equals"></a>time.<strong>equals</strong>(<em>other</em>: Temporal.Time) : boolean</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>other</code> (<code>Temporal.Time</code>): Another time to compare.</li>
 </ul>

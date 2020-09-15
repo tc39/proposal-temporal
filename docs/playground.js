@@ -3070,6 +3070,12 @@
   var duration = /^([+-\u2212])?P(?:(\d+)Y)?(?:(\d+)M)?(?:(\d+)W)?(?:(\d+)D)?(?:T(?!$)(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)(?:[.,](\d{1,9}))?S)?)?$/i;
 
   var IntlDateTimeFormat = globalThis.Intl.DateTimeFormat;
+  var MathAbs = Math.abs;
+  var MathCeil = Math.ceil;
+  var MathFloor = Math.floor;
+  var MathSign = Math.sign;
+  var MathTrunc = Math.trunc;
+  var NumberIsNaN = Number.isNaN;
   var ObjectAssign = Object.assign;
   var ObjectCreate = Object.create;
   var DAYMILLIS = 86400000;
@@ -3641,6 +3647,23 @@
       options = ES.NormalizeOptionsObject(options);
       return ES.GetOption(options, 'disambiguation', ['compatible', 'earlier', 'later', 'reject'], 'compatible');
     },
+    ToTemporalRoundingMode: function ToTemporalRoundingMode(options) {
+      options = ES.NormalizeOptionsObject(options);
+      return ES.GetOption(options, 'roundingMode', ['ceil', 'floor', 'trunc', 'nearest'], 'nearest');
+    },
+    ToTemporalRoundingIncrement: function ToTemporalRoundingIncrement(options, dividend, inclusive) {
+      options = ES.NormalizeOptionsObject(options);
+      var maximum = Infinity;
+      if (dividend !== undefined) maximum = dividend;
+      if (!inclusive && dividend !== undefined) maximum = dividend > 1 ? dividend - 1 : 1;
+      var increment = ES.GetNumberOption(options, 'roundingIncrement', 1, maximum, 1);
+
+      if (dividend !== undefined && dividend % increment !== 0) {
+        throw new RangeError("Rounding increment must divide evenly into ".concat(dividend));
+      }
+
+      return increment;
+    },
     ToLargestTemporalUnit: function ToLargestTemporalUnit(options, fallback) {
       var disallowedStrings = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
       var allowed = new Set(['years', 'months', 'weeks', 'days', 'hours', 'minutes', 'seconds', 'milliseconds', 'microseconds', 'nanoseconds']);
@@ -3662,16 +3685,49 @@
       options = ES.NormalizeOptionsObject(options);
       return ES.GetOption(options, 'largestUnit', _toConsumableArray(allowed), fallback);
     },
-    ToPartialRecord: function ToPartialRecord(bag, fields) {
-      if (!bag || 'object' !== _typeof(bag)) return false;
-      var any;
+    ToSmallestTemporalUnit: function ToSmallestTemporalUnit(options) {
+      var disallowedStrings = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
+      var singular = new Map([['days', 'day'], ['hours', 'hour'], ['minutes', 'minute'], ['seconds', 'second'], ['milliseconds', 'millisecond'], ['microseconds', 'microsecond'], ['nanoseconds', 'nanosecond']]);
+      var allowed = new Set(['day', 'hour', 'minute', 'second', 'millisecond', 'microsecond', 'nanosecond']);
 
-      var _iterator4 = _createForOfIteratorHelper(fields),
+      var _iterator4 = _createForOfIteratorHelper(disallowedStrings),
           _step4;
 
       try {
         for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
-          var property = _step4.value;
+          var s = _step4.value;
+          allowed.delete(s);
+        }
+      } catch (err) {
+        _iterator4.e(err);
+      } finally {
+        _iterator4.f();
+      }
+
+      var allowedValues = _toConsumableArray(allowed);
+
+      options = ES.NormalizeOptionsObject(options);
+      var value = options.smallestUnit;
+      if (value === undefined) throw new RangeError('smallestUnit option is required');
+      value = ES.ToString(value);
+      if (singular.has(value)) value = singular.get(value);
+
+      if (!allowedValues.includes(value)) {
+        throw new RangeError("smallestUnit must be one of ".concat(allowedValues.join(', '), ", not ").concat(value));
+      }
+
+      return value;
+    },
+    ToPartialRecord: function ToPartialRecord(bag, fields) {
+      if (!bag || 'object' !== _typeof(bag)) return false;
+      var any;
+
+      var _iterator5 = _createForOfIteratorHelper(fields),
+          _step5;
+
+      try {
+        for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {
+          var property = _step5.value;
           var value = bag[property];
 
           if (value !== undefined) {
@@ -3689,9 +3745,9 @@
           }
         }
       } catch (err) {
-        _iterator4.e(err);
+        _iterator5.e(err);
       } finally {
-        _iterator4.f();
+        _iterator5.f();
       }
 
       return any ? any : false;
@@ -3700,12 +3756,12 @@
       if (!bag || 'object' !== _typeof(bag)) return false;
       var result = {};
 
-      var _iterator5 = _createForOfIteratorHelper(fields),
-          _step5;
+      var _iterator6 = _createForOfIteratorHelper(fields),
+          _step6;
 
       try {
-        for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {
-          var fieldRecord = _step5.value;
+        for (_iterator6.s(); !(_step6 = _iterator6.n()).done;) {
+          var fieldRecord = _step6.value;
 
           var _fieldRecord = _slicedToArray(fieldRecord, 2),
               property = _fieldRecord[0],
@@ -3732,9 +3788,9 @@
           }
         }
       } catch (err) {
-        _iterator5.e(err);
+        _iterator6.e(err);
       } finally {
-        _iterator5.f();
+        _iterator6.f();
       }
 
       return result;
@@ -4919,6 +4975,97 @@
       nanoseconds *= sign;
       return ES.RegulateDuration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, overflow);
     },
+    RoundNumberToIncrement: function RoundNumberToIncrement(quantity, increment, mode) {
+      var quotient = quantity / increment;
+      var round;
+
+      switch (mode) {
+        case 'ceil':
+          round = MathCeil(quotient);
+          break;
+
+        case 'floor':
+          round = MathFloor(quotient);
+          break;
+
+        case 'trunc':
+          round = MathTrunc(quotient);
+          break;
+
+        case 'nearest':
+          // "half away from zero"
+          round = MathSign(quotient) * MathFloor(MathAbs(quotient) + 0.5);
+          break;
+      }
+
+      return round * increment;
+    },
+    RoundTime: function RoundTime(hour, minute, second, millisecond, microsecond, nanosecond, increment, unit, roundingMode) {
+      var quantity = 0;
+
+      switch (unit) {
+        case 'day':
+          quantity = (((second + millisecond * 1e-3 + microsecond * 1e-6 + nanosecond * 1e-9) / 60 + minute) / 60 + hour) / 24;
+          break;
+
+        case 'hour':
+          quantity = ((second + millisecond * 1e-3 + microsecond * 1e-6 + nanosecond * 1e-9) / 60 + minute) / 60 + hour;
+          break;
+
+        case 'minute':
+          quantity = (second + millisecond * 1e-3 + microsecond * 1e-6 + nanosecond * 1e-9) / 60 + minute;
+          break;
+
+        case 'second':
+          quantity = second + millisecond * 1e-3 + microsecond * 1e-6 + nanosecond * 1e-9;
+          break;
+
+        case 'millisecond':
+          quantity = millisecond + microsecond * 1e-3 + nanosecond * 1e-9;
+          break;
+
+        case 'microsecond':
+          quantity = microsecond + nanosecond * 1e-3;
+          break;
+
+        case 'nanosecond':
+          quantity = nanosecond;
+          break;
+      }
+
+      var result = ES.RoundNumberToIncrement(quantity, increment, roundingMode);
+
+      switch (unit) {
+        case 'day':
+          return {
+            deltaDays: result,
+            hour: 0,
+            minute: 0,
+            second: 0,
+            millisecond: 0,
+            microsecond: 0,
+            nanosecond: 0
+          };
+
+        case 'hour':
+          return ES.BalanceTime(result, 0, 0, 0, 0, 0);
+
+        case 'minute':
+          return ES.BalanceTime(hour, result, 0, 0, 0, 0);
+
+        case 'second':
+          return ES.BalanceTime(hour, minute, result, 0, 0, 0);
+
+        case 'millisecond':
+          return ES.BalanceTime(hour, minute, second, result, 0, 0);
+
+        case 'microsecond':
+          return ES.BalanceTime(hour, minute, second, millisecond, result, 0);
+
+        case 'nanosecond':
+          return ES.BalanceTime(hour, minute, second, millisecond, microsecond, result);
+      }
+    },
     AssertPositiveInteger: function AssertPositiveInteger(num) {
       if (!Number.isFinite(num) || Math.abs(num) !== num) throw new RangeError("invalid positive integer: ".concat(num));
       return num;
@@ -5006,6 +5153,17 @@
       }
 
       return fallback;
+    },
+    GetNumberOption: function GetNumberOption(options, property, minimum, maximum, fallback) {
+      var value = options[property];
+      if (value === undefined) return fallback;
+      value = ES.ToNumber(value);
+
+      if (NumberIsNaN(value) || value < minimum || value > maximum) {
+        throw new RangeError("".concat(property, " must be between ").concat(minimum, " and ").concat(maximum, ", not ").concat(value));
+      }
+
+      return MathFloor(value);
     }
   });
   var OFFSET = new RegExp("^".concat(offset.source, "$"));
@@ -5664,6 +5822,52 @@
             nanoseconds = _ES$BalanceDuration.nanoseconds;
 
         return new Duration(0, 0, 0, 0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+      }
+    }, {
+      key: "round",
+      value: function round(options) {
+        if (!ES.IsTemporalAbsolute(this)) throw new TypeError('invalid receiver');
+        if (options === undefined) throw new TypeError('options parameter is required');
+        var smallestUnit = ES.ToSmallestTemporalUnit(options, ['day', 'hour']);
+        var roundingMode = ES.ToTemporalRoundingMode(options);
+        var maximumIncrements = {
+          minute: 1440,
+          second: 86400,
+          millisecond: 86400e3,
+          microsecond: 86400e6,
+          nanosecond: 86400e9
+        };
+        var roundingIncrement = ES.ToTemporalRoundingIncrement(options, maximumIncrements[smallestUnit], true);
+        var incrementNs = roundingIncrement;
+
+        switch (smallestUnit) {
+          case 'minute':
+            incrementNs *= 60;
+          // fall through
+
+          case 'second':
+            incrementNs *= 1000;
+          // fall through
+
+          case 'millisecond':
+            incrementNs *= 1000;
+          // fall through
+
+          case 'microsecond':
+            incrementNs *= 1000;
+        }
+
+        var ns = GetSlot(this, EPOCHNANOSECONDS); // Note: NonNegativeModulo, but with BigInt
+
+        var remainder = ns.mod(86400e9);
+        if (remainder.lesser(0)) remainder = remainder.plus(86400e9);
+        var wholeDays = ns.minus(remainder);
+        var roundedRemainder = ES.RoundNumberToIncrement(remainder.toJSNumber(), incrementNs, roundingMode);
+        var roundedNs = wholeDays.plus(roundedRemainder);
+        var Construct = ES.SpeciesConstructor(this, Absolute);
+        var result = new Construct(bigIntIfAvailable(roundedNs));
+        if (!ES.IsTemporalAbsolute(result)) throw new TypeError('invalid result');
+        return result;
       }
     }, {
       key: "equals",
@@ -6491,6 +6695,54 @@
         return new Duration(dateDifference.years, dateDifference.months, dateDifference.weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
       }
     }, {
+      key: "round",
+      value: function round(options) {
+        if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+        if (options === undefined) throw new TypeError('options parameter is required');
+        var smallestUnit = ES.ToSmallestTemporalUnit(options);
+        var roundingMode = ES.ToTemporalRoundingMode(options);
+        var maximumIncrements = {
+          day: 1,
+          hour: 24,
+          minute: 60,
+          second: 60,
+          millisecond: 1000,
+          microsecond: 1000,
+          nanosecond: 1000
+        };
+        var roundingIncrement = ES.ToTemporalRoundingIncrement(options, maximumIncrements[smallestUnit], false);
+        var year = GetSlot(this, ISO_YEAR);
+        var month = GetSlot(this, ISO_MONTH);
+        var day = GetSlot(this, ISO_DAY);
+        var hour = GetSlot(this, HOUR);
+        var minute = GetSlot(this, MINUTE);
+        var second = GetSlot(this, SECOND);
+        var millisecond = GetSlot(this, MILLISECOND);
+        var microsecond = GetSlot(this, MICROSECOND);
+        var nanosecond = GetSlot(this, NANOSECOND);
+        var deltaDays = 0;
+
+        var _ES$RoundTime = ES.RoundTime(hour, minute, second, millisecond, microsecond, nanosecond, roundingIncrement, smallestUnit, roundingMode);
+
+        deltaDays = _ES$RoundTime.deltaDays;
+        hour = _ES$RoundTime.hour;
+        minute = _ES$RoundTime.minute;
+        second = _ES$RoundTime.second;
+        millisecond = _ES$RoundTime.millisecond;
+        microsecond = _ES$RoundTime.microsecond;
+        nanosecond = _ES$RoundTime.nanosecond;
+
+        var _ES$BalanceDate2 = ES.BalanceDate(year, month, day + deltaDays);
+
+        year = _ES$BalanceDate2.year;
+        month = _ES$BalanceDate2.month;
+        day = _ES$BalanceDate2.day;
+        var Construct = ES.SpeciesConstructor(this, DateTime);
+        var result = new Construct(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, GetSlot(this, CALENDAR));
+        if (!ES.IsTemporalDateTime(result)) throw new TypeError('invalid result');
+        return result;
+      }
+    }, {
       key: "equals",
       value: function equals(other) {
         if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
@@ -6765,11 +7017,11 @@
                   _day -= 1;
                 }
 
-                var _ES$BalanceDate2 = ES.BalanceDate(_year, _month, _day);
+                var _ES$BalanceDate3 = ES.BalanceDate(_year, _month, _day);
 
-                _year = _ES$BalanceDate2.year;
-                _month = _ES$BalanceDate2.month;
-                _day = _ES$BalanceDate2.day;
+                _year = _ES$BalanceDate3.year;
+                _month = _ES$BalanceDate3.month;
+                _day = _ES$BalanceDate3.day;
               }
             }
 
@@ -7650,6 +7902,42 @@
         nanoseconds = _ES$BalanceDuration.nanoseconds;
         var Duration = GetIntrinsic$1('%Temporal.Duration%');
         return new Duration(0, 0, 0, 0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+      }
+    }, {
+      key: "round",
+      value: function round(options) {
+        if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
+        if (options === undefined) throw new TypeError('options parameter is required');
+        var smallestUnit = ES.ToSmallestTemporalUnit(options, ['day']);
+        var roundingMode = ES.ToTemporalRoundingMode(options);
+        var maximumIncrements = {
+          hour: 24,
+          minute: 60,
+          second: 60,
+          millisecond: 1000,
+          microsecond: 1000,
+          nanosecond: 1000
+        };
+        var roundingIncrement = ES.ToTemporalRoundingIncrement(options, maximumIncrements[smallestUnit], false);
+        var hour = GetSlot(this, HOUR);
+        var minute = GetSlot(this, MINUTE);
+        var second = GetSlot(this, SECOND);
+        var millisecond = GetSlot(this, MILLISECOND);
+        var microsecond = GetSlot(this, MICROSECOND);
+        var nanosecond = GetSlot(this, NANOSECOND);
+
+        var _ES$RoundTime = ES.RoundTime(hour, minute, second, millisecond, microsecond, nanosecond, roundingIncrement, smallestUnit, roundingMode);
+
+        hour = _ES$RoundTime.hour;
+        minute = _ES$RoundTime.minute;
+        second = _ES$RoundTime.second;
+        millisecond = _ES$RoundTime.millisecond;
+        microsecond = _ES$RoundTime.microsecond;
+        nanosecond = _ES$RoundTime.nanosecond;
+        var Construct = ES.SpeciesConstructor(this, Time);
+        var result = new Construct(hour, minute, second, millisecond, microsecond, nanosecond);
+        if (!ES.IsTemporalTime(result)) throw new TypeError('invalid result');
+        return result;
       }
     }, {
       key: "equals",
