@@ -312,6 +312,12 @@ export class LocalDateTime {
     if (typeof localDateTimeLike !== 'object') {
       throw new TypeError("Parameter 'localDateTimeLike' must be an object");
     }
+    if (typeof localDateTimeLike.getFields === 'function') {
+      // If the input object is a Temporal instance, then fetch its fields so that
+      // we can spread those fields below.  Ideally, we could remove this test
+      // if Temporal objects could have own properties so could be spread!
+      localDateTimeLike = localDateTimeLike.getFields();
+    }
     // TODO: validate and normalize input fields
 
     // Options are passed through to `from` with one exception: the default
