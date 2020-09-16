@@ -52,7 +52,6 @@ Here, we make a distinction between "necessary balancing" and "optional balancin
 In order to accommodate this, the `overflow` option when performing arithmetic on `Temporal.Duration`s is different from all the other arithmetic methods' overflow options.
 Necessary balancing is called `constrain` mode, because values are constrained to be non-negative through balancing.
 Optional balancing is called `balance` mode.
-The usual `reject` mode is also available, and does the same thing as `constrain` but throws on integer overflow.
 
 The default is `constrain` mode.
 The `balance` mode is only provided for convenience, since the following code snippets give the same result:

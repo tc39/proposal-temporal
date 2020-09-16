@@ -634,16 +634,10 @@
     <emu-clause id="sec-temporal-regulateduration" aoid="RegulateDuration">
       <h1>RegulateDuration ( _years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_, _overflow_ )</h1>
       <emu-alg>
-        1. Assert: _overflow_ is one of *"constrain"*, *"balance"*, or *"reject"*.
-        1. Perform ? RejectDurationSign(_years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_).
-        1. If _overflow_ is *"reject"*, then
-          1. If ! ValidateTemporalDuration(_years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_) is *false*, then
-            1. Throw a *RangeError* exception.
-        1. Else if _overflow_ is *"constrain"*, then
-          1. For each of _years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_, if any of the values is infinite, let it be the sign of that value times the largest possible finite value of the Number type.
-        1. Else if _overflow_ is *"balance"*, then
-          1. If ! ValidateTemporalDuration(_years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_) is *false*, then
-            1. Throw a *RangeError* exception.
+        1. Assert: _overflow_ is either *"constrain"* or *"balance"*.
+        1. If ! ValidateTemporalDuration(_years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_) is *false*, then
+          1. Throw a *RangeError* exception.
+        1. If _overflow_ is *"balance"*, then
           1. Let _bd_ be ! BalanceDuration(_days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_, *"days"*).
           1. Set _days_ to _bd_.[[Days]].
           1. Set _hours_ to _bd_.[[Hours]].
@@ -673,7 +667,7 @@
       <h1>DurationArithmetic ( _y1_, _mon1_, _w1_, _d1_, _h1_, _min1_, _s1_, _ms1_, _mus1_, _ns1_, _y2_, _mon2_, _w2_, _d2_, _h2_, _min2_, _s2_, _ms2_, _mus2_, _ns2_, _overflow_ )</h1>
       <emu-alg>
         1. Assert: _y1_, _mon1_, _w1_, _d1_, _h1_, _min1_, _s1_, _ms1_, _mus1_, _ns1_, _y2_, _mon2_, _w2_, _d2_, _h2_, _min2_, _s2_, _ms2_, _mus2_, _ns2_ are integer Number values.
-        1. Assert: _overflow_ is either *"reject"*, *"balance"*, or *"constrain"*.
+        1. Assert: _overflow_ is either *"balance"* or *"constrain"*.
         1. Let _nanoseconds_ be _ns1_ + _ns2_.
         1. Let _microseconds_ be _mus1_ + _mus2_.
         1. Let _milliseconds_ be _ms1_ + _ms2_.
@@ -735,7 +729,8 @@
         1. If Type(_temporalDurationLike_) is not Object, then
           1. Throw a *TypeError* exception.
         1. Let _duration_ be ? ToTemporalDurationRecord(_temporalDurationLike_).
-        1. Set _duration_ to ? RegulateDuration(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]], *"reject"*).
+        1. If ! ValidateTemporalDuration(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]) is *false*, then
+          1. Throw a *RangeError* exception.
         1. For each row of <emu-xref href="#table-temporal-temporaldurationlike-properties"></emu-xref>, except the header row, in table order, do
           1. Let _prop_ be the Property value of the current row.
           1. Let _value_ be _duration_'s internal slot whose name is the Internal Slot value of the current row.

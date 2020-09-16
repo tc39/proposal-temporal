@@ -2,18 +2,16 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
-description: Temporal.Duration.prototype.with throws a RangeError if any value in a property bag is -Infinity
-esid: sec-temporal.duration.prototype.with
+description: Temporal.Duration.from handles a property bag if any value is -Infinity
+esid: sec-temporal.duration.from
 ---*/
 
 const overflows = ['constrain', 'balance'];
 const fields = ['years', 'months', 'weeks', 'days', 'hours', 'minutes', 'seconds', 'milliseconds', 'microseconds', 'nanoseconds'];
 
-const instance = new Temporal.Duration(1, 2, 3, 4, 5, 6, 7, 987, 654, 321);
-
 overflows.forEach((overflow) => {
   fields.forEach((field) => {
-    assert.throws(RangeError, () => instance.with({ [field]: -Infinity }, { overflow }));
+    assert.throws(RangeError, () => Temporal.Duration.from({ [field]: -Infinity }, { overflow }));
   });
 });
 
@@ -28,7 +26,7 @@ const obj = {
 overflows.forEach((overflow) => {
   fields.forEach((field) => {
     calls = 0;
-    assert.throws(RangeError, () => instance.with({ [field]: obj }, { overflow }));
+    assert.throws(RangeError, () => Temporal.Duration.from({ [field]: obj }, { overflow }));
     assert.sameValue(calls, 1, "it fails after fetching the primitive value");
   });
 });

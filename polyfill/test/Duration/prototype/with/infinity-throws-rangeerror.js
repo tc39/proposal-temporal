@@ -2,7 +2,7 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
-description: Temporal.Duration.prototype.with throws a RangeError if any value in a property bag is -Infinity
+description: Temporal.Duration.prototype.with handles a property bag if any value is Infinity
 esid: sec-temporal.duration.prototype.with
 ---*/
 
@@ -13,7 +13,7 @@ const instance = new Temporal.Duration(1, 2, 3, 4, 5, 6, 7, 987, 654, 321);
 
 overflows.forEach((overflow) => {
   fields.forEach((field) => {
-    assert.throws(RangeError, () => instance.with({ [field]: -Infinity }, { overflow }));
+    assert.throws(RangeError, () => instance.with({ [field]: Infinity }, { overflow }));
   });
 });
 
@@ -21,7 +21,7 @@ let calls = 0;
 const obj = {
   valueOf() {
     calls++;
-    return -Infinity;
+    return Infinity;
   }
 };
 
