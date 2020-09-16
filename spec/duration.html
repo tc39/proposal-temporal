@@ -954,12 +954,12 @@
         1. Let _months_ be _duration_.[[Months]].
         1. Let _weeks_ be _duration_.[[Weeks]].
         1. Let _days_ be _duration_.[[Days]].
-        1. Let _hours_ be _duration_.[[Hours]].
-        1. Let _minutes_ be _duration_.[[Minutes]].
-        1. Let _seconds_ be _duration_.[[Seconds]].
-        1. Let _milliseconds_ be _duration_.[[Milliseconds]].
-        1. Let _microseconds_ be _duration_.[[Microseconds]].
-        1. Let _nanoseconds_ be _duration_.[[Nanoseconds]].
+        1. Let _hours_ _duration_.[[Hours]].
+        1. Let _minutes_ _duration_.[[Minutes]].
+        1. Let _seconds_ be the mathematical value of _duration_.[[Seconds]].
+        1. Let _milliseconds_ be the mathematical value of _duration_.[[Milliseconds]].
+        1. Let _microseconds_ be the mathematical value of _duration_.[[Microseconds]].
+        1. Let _nanoseconds_ be the mathematical value of _duration_.[[Nanoseconds]].
         1. Let _sign_ be ! DurationSign(_years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_).
         1. Set _microseconds_ to _microseconds_ + the integral part of _nanoseconds_ / 1000.
         1. Set _nanoseconds_ to _nanoseconds_ modulo 1000.

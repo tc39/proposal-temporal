@@ -242,6 +242,17 @@ describe('Duration', () => {
     it('emits a negative sign for a negative duration', () => {
       equal(`${Duration.from({ weeks: -1, days: -1 })}`, '-P1W1D');
     });
+    it("serializing balance doesn't trip out-of-range", () => {
+      const d = Duration.from({ seconds: Number.MAX_VALUE, milliseconds: Number.MAX_VALUE });
+      const str = d.toString();
+      assert(str.startsWith('PT'));
+      assert(str.endsWith('S'));
+      // actual string representation may vary, since MAX_VALUE is not precise
+    });
+    it("serializing balance doesn't lose precision when values are precise", () => {
+      const d = Duration.from({ milliseconds: Number.MAX_SAFE_INTEGER, microseconds: Number.MAX_SAFE_INTEGER });
+      equal(`${d}`, 'PT9016206453995.731991S');
+    });
   });
   describe('toLocaleString()', () => {
     it('produces an implementation-defined string', () => {
