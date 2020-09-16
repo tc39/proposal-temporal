@@ -229,7 +229,7 @@ Example usage:
 timestamp = new Temporal.Absolute(1553993100000000000n);
 timestamp.toDateTime('Europe/Berlin');  // => 2019-03-31T01:45
 timestamp.toDateTime('UTC');  // => 2019-03-31T00:45
-timestamp.toDateTime('-08:00');  // => 2019-02-01T16:45
+timestamp.toDateTime('-08:00');  // => 2019-03-30T16:45
 
 // What time was the Unix epoch (timestamp 0) in Bell Labs (Murray Hill, New Jersey, USA)?
 epoch = new Temporal.Absolute(0n);
