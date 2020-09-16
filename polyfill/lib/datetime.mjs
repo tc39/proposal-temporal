@@ -650,27 +650,9 @@ export class DateTime {
         const fields = ES.ToTemporalDateTimeRecord(item);
         const TemporalDate = GetIntrinsic('%Temporal.Date%');
         const date = calendar.dateFromFields(fields, options, TemporalDate);
-        let year = GetSlot(date, ISO_YEAR);
-        let month = GetSlot(date, ISO_MONTH);
-        let day = GetSlot(date, ISO_DAY);
-
-        if (overflow === 'constrain') {
-          // Special case to determine if the date was clipped by dateFromFields
-          // and therefore the time possibly needs to be clipped too
-          try {
-            calendar.dateFromFields(fields, { overflow: 'reject' }, TemporalDate);
-          } catch {
-            // Date was clipped
-            if (year === 275760 && month === 9 && day === 13) {
-              // Clipped at end of range
-              day += 1;
-            } else if (year === -271821 && month === 4 && day === 19) {
-              // Clipped at beginning of range
-              day -= 1;
-            }
-            ({ year, month, day } = ES.BalanceDate(year, month, day));
-          }
-        }
+        const year = GetSlot(date, ISO_YEAR);
+        const month = GetSlot(date, ISO_MONTH);
+        const day = GetSlot(date, ISO_DAY);
 
         let { hour, minute, second, millisecond, microsecond, nanosecond } = fields;
         ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.RegulateTime(
