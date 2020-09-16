@@ -170,8 +170,7 @@ However, that would likely conflict with the intention of having a duration of 9
 Here, we make a distinction between &quot;necessary balancing&quot; and &quot;optional balancing&quot;.</p>
 <p>In order to accommodate this, the <code>overflow</code> option when performing arithmetic on <code>Temporal.Duration</code>s is different from all the other arithmetic methods&#39; overflow options.
 Necessary balancing is called <code>constrain</code> mode, because values are constrained to be non-negative through balancing.
-Optional balancing is called <code>balance</code> mode.
-The usual <code>reject</code> mode is also available, and does the same thing as <code>constrain</code> but throws on integer overflow.</p>
+Optional balancing is called <code>balance</code> mode.</p>
 <p>The default is <code>constrain</code> mode.
 The <code>balance</code> mode is only provided for convenience, since the following code snippets give the same result:</p>
 <pre class="language-javascript"><code class="language-javascript">duration3 <span class="token operator">=</span> duration1<span class="token punctuation">.</span><span class="token function">minus</span><span class="token punctuation">(</span>duration2<span class="token punctuation">,</span> <span class="token punctuation">{</span> overflow<span class="token operator">:</span> <span class="token string">'balance'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>

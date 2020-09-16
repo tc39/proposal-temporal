@@ -294,8 +294,8 @@ Otherwise <code>Temporal.Duration.from()</code> is probably more convenient beca
 <li><code>thing</code>: A <code>Duration</code>-like object or a string from which to create a <code>Temporal.Duration</code>.</li>
 <li><code>options</code> (optional object): An object with properties representing options for constructing the duration.
 The following options are recognized:<ul>
-<li><code>overflow</code> (optional string): What to do if any of the other arguments are out of range.
-Allowed values are <code>constrain</code>, <code>balance</code>, and <code>reject</code>.
+<li><code>overflow</code> (optional string): What to do if any of the values are larger than the next highest unit.
+Allowed values are <code>constrain</code> and <code>balance</code>.
 The default is <code>constrain</code>.</li>
 </ul>
 </li>
@@ -308,16 +308,12 @@ Any missing ones will be assumed to be 0.</p>
 <p>Any non-object value is converted to a string, which is expected to be in ISO 8601 format.</p>
 <p>The <code>overflow</code> option controls how out-of-range values are interpreted:</p>
 <ul>
-<li><code>constrain</code> (the default): Infinite values are clamped to <code>Number.MAX_VALUE</code> or <code>-Number.MAX_VALUE</code>.
-Values higher than the next highest unit (for example, 90 minutes) are left as-is.</li>
-<li><code>balance</code>: Infinite values will cause the function to throw a <code>RangeError</code>.
-Values higher than the next highest unit, are converted to be in-range by incrementing the next highest unit accordingly.
+<li><code>constrain</code> (the default): Values higher than the next highest unit (for example, 90 minutes) are left as-is.</li>
+<li><code>balance</code>: Values higher than the next highest unit, are converted to be in-range by incrementing the next highest unit accordingly.
 For example, 90 minutes becomes one hour and 30 minutes.</li>
-<li><code>reject</code>: Infinite values will cause the function to throw a <code>RangeError</code>.
-Values higher than the next highest unit (for example, 90 minutes) are left as-is.</li>
 </ul>
-<p>No matter which overflow mode is selected, all non-zero values must have the same sign.
-If they do not, the function will throw a <code>RangeError</code>.</p>
+<p>No matter which overflow mode is selected, all non-zero values must have the same sign, and must not be infinite.
+Otherwise, the function will throw a <code>RangeError</code>.</p>
 <blockquote>
 <p><strong>NOTE:</strong> Years and months can have different lengths.
 In the default ISO calendar, a year can be 365 or 366 days, and a month can be 28, 29, 30, or 31 days.
@@ -345,8 +341,7 @@ d <span class="token operator">=</span> Temporal<span class="token punctuation">
 <span class="token comment">// Disambiguation</span>
 
 d <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Duration<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> minutes<span class="token operator">:</span> <span class="token number">120</span> <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> overflow<span class="token operator">:</span> <span class="token string">'constrain'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>  <span class="token comment">// => PT120M</span>
-d <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Duration<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> minutes<span class="token operator">:</span> <span class="token number">120</span> <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> overflow<span class="token operator">:</span> <span class="token string">'balance'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>  <span class="token comment">// => PT2H</span>
-d <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Duration<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> minutes<span class="token operator">:</span> <span class="token number">120</span> <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> overflow<span class="token operator">:</span> <span class="token string">'reject'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>  <span class="token comment">// => PT120M</span></code></pre><h2 id="properties">Properties</h2>
+d <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Duration<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> minutes<span class="token operator">:</span> <span class="token number">120</span> <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> overflow<span class="token operator">:</span> <span class="token string">'balance'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>  <span class="token comment">// => PT2H</span></code></pre><h2 id="properties">Properties</h2>
 <h3 id="years"><a class="heading-link" href="#years"></a>duration.<strong>years</strong> : number</h3><h3 id="months"><a class="heading-link" href="#months"></a>duration.<strong>months</strong> : number</h3><h3 id="weeks"><a class="heading-link" href="#weeks"></a>duration.<strong>weeks</strong> : number</h3><h3 id="days"><a class="heading-link" href="#days"></a>duration.<strong>days</strong> : number</h3><h3 id="hours"><a class="heading-link" href="#hours"></a>duration.<strong>hours</strong> : number</h3><h3 id="minutes"><a class="heading-link" href="#minutes"></a>duration.<strong>minutes</strong> : number</h3><h3 id="seconds"><a class="heading-link" href="#seconds"></a>duration.<strong>seconds</strong> : number</h3><h3 id="milliseconds"><a class="heading-link" href="#milliseconds"></a>duration.<strong>milliseconds</strong> : number</h3><h3 id="microseconds"><a class="heading-link" href="#microseconds"></a>duration.<strong>microseconds</strong> : number</h3><h3 id="nanoseconds"><a class="heading-link" href="#nanoseconds"></a>duration.<strong>nanoseconds</strong> : number</h3><p>The above read-only properties allow accessing each component of the duration individually.</p>
 <p>Usage examples:</p>
 <pre class="language-javascript"><code class="language-javascript">d <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>Duration</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">6</span><span class="token punctuation">,</span> <span class="token number">7</span><span class="token punctuation">,</span> <span class="token number">987</span><span class="token punctuation">,</span> <span class="token number">654</span><span class="token punctuation">,</span> <span class="token number">321</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -366,8 +361,8 @@ d<span class="token punctuation">.</span>nanoseconds   <span class="token commen
 <li><code>durationLike</code> (object): an object with some or all of the properties of a <code>Temporal.Duration</code>.</li>
 <li><code>options</code> (optional object): An object with properties representing options for the copy.
 The following options are recognized:<ul>
-<li><code>overflow</code> (string): How to deal with out-of-range values.
-Allowed values are <code>constrain</code>, <code>balance</code>, and <code>reject</code>.
+<li><code>overflow</code> (string): How to deal with values that are larger than the next highest unit.
+Allowed values are <code>constrain</code> and <code>balance</code>.
 The default is <code>constrain</code>.</li>
 </ul>
 </li>
@@ -375,11 +370,12 @@ The default is <code>constrain</code>.</li>
 <p><strong>Returns:</strong> a new <code>Temporal.Duration</code> object.</p>
 <p>This method creates a new <code>Temporal.Duration</code> which is a copy of <code>duration</code>, but any properties present on <code>durationLike</code> override the ones already present on <code>duration</code>.</p>
 <p>Since <code>Temporal.Duration</code> objects are immutable, use this method instead of modifying one.</p>
-<p>The <code>overflow</code> option specifies what to do with out-of-range or overly large values.
-All non-zero properties of <code>durationLike</code> must have the same sign, and they must additionally have the same sign as the non-zero properties of <code>duration</code>, unless they override all of these non-zero properties.
-If a property of <code>durationLike</code> is infinity, then constrain mode will clamp it to <code>Number.MAX_VALUE</code>.
-Reject and balance modes will throw a <code>RangeError</code> in that case.
-Additionally, balance mode will behave like it does in <code>Duration.from()</code> and perform a balance operation on the result.</p>
+<p>All non-zero properties of <code>durationLike</code> must have the same sign, and they must additionally have the same sign as the non-zero properties of <code>duration</code>, unless they override all of these non-zero properties.
+If a property of <code>durationLike</code> is infinity, then this function will throw a <code>RangeError</code>.</p>
+<p>The <code>overflow</code> option specifies what to do with overly large values, that are larger than the next unit.
+(For example, 90 minutes is larger than 1 hour.)
+Constrain mode will leave these values as they are.
+Balance mode will behave like it does in <code>Duration.from()</code> and perform a balance operation on the result, changing 90 minutes to 1 hour and 30 minutes.</p>
 <p>For usage examples and a more complete explanation of how balancing works and why it is necessary, see <a href="./balancing.html">Duration balancing</a>.</p>
 <p>Usage example:</p>
 <pre class="language-javascript"><code class="language-javascript">duration <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Duration<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> months<span class="token operator">:</span> <span class="token number">50</span><span class="token punctuation">,</span> days<span class="token operator">:</span> <span class="token number">50</span><span class="token punctuation">,</span> hours<span class="token operator">:</span> <span class="token number">50</span><span class="token punctuation">,</span> minutes<span class="token operator">:</span> <span class="token number">100</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -393,8 +389,8 @@ duration <span class="token operator">=</span> duration<span class="token punctu
 <li><code>other</code> (object): A <code>Temporal.Duration</code> object or a duration-like object.</li>
 <li><code>options</code> (optional object): An object with properties representing options for the addition.
 The following options are recognized:<ul>
-<li><code>overflow</code> (string): How to deal with additions that result in out-of-range values.
-Allowed values are <code>constrain</code>, <code>balance</code>, and <code>reject</code>.
+<li><code>overflow</code> (string): How to deal with additions that result in mixed-sign values or values that are larger than the next highest unit.
+Allowed values are <code>constrain</code> and <code>balance</code>.
 The default is <code>constrain</code>.</li>
 </ul>
 </li>
@@ -405,14 +401,10 @@ The default is <code>constrain</code>.</li>
 <p>In order to be valid, the resulting duration must not have fields with mixed signs.
 However, before the result is balanced, it&#39;s possible that the intermediate result will have one or more negative fields while the overall duration is positive, or vice versa.
 For example, &quot;4 hours and 15 minutes&quot; minus &quot;2 hours and 30 minutes&quot; results in &quot;2 hours and &minus;15 minutes&quot;.
-The <code>overflow</code> option tells what to do in this case, or in the case where the addition results in an out-of-range value:</p>
+The <code>overflow</code> option tells what to do in this case:</p>
 <ul>
-<li>In <code>constrain</code> mode (the default), additions that result in a value too large to be represented in a Number are capped at <code>Number.MAX_VALUE</code>, or <code>-Number.MAX_VALUE</code> if out of range in the other direction.
-Additions resulting in mixed-sign fields will balance those fields with the next-highest field so that all the fields of the result have the same sign.</li>
-<li>In <code>balance</code> mode, if any addition results in a value too large to be represented in a Number, a <code>RangeError</code> is thrown.
-As well, all fields are balanced with the next highest field, no matter if they have mixed signs or not.</li>
-<li>In <code>reject</code> mode, if any addition results in a value too large to be represented in a Number, a <code>RangeError</code> is thrown.
-Otherwise this is the same as <code>constrain</code>.</li>
+<li>In <code>constrain</code> mode (the default), additions that result in mixed-sign fields will balance those fields with the next-highest field so that all the fields of the result are constrained to have the same sign.</li>
+<li>In <code>balance</code> mode, all fields are balanced with the next highest field, no matter if they have mixed signs or not.</li>
 </ul>
 <p>For usage examples and a more complete explanation of how balancing works and why it is necessary, see <a href="./balancing.html">Duration balancing</a>.</p>
 <p>No conversion is ever performed between years, months, days, and other units, as that could be ambiguous depending on the start date.
@@ -450,8 +442,8 @@ Temporal<span class="token punctuation">.</span>Duration<span class="token punct
 <li><code>other</code> (object): A <code>Temporal.Duration</code> object or a duration-like object.</li>
 <li><code>options</code> (optional object): An object with properties representing options for the subtraction.
 The following options are recognized:<ul>
-<li><code>overflow</code> (string): How to deal with subtractions that result in out-of-range values.
-Allowed values are <code>constrain</code>, <code>balance</code>, and <code>reject</code>.
+<li><code>overflow</code> (string): How to deal with subtractions that result in values with mixed signs or values that are larger than the next highest unit.
+Allowed values are <code>constrain</code> and <code>balance</code>.
 The default is <code>constrain</code>.</li>
 </ul>
 </li>
@@ -465,12 +457,8 @@ However, before the result is balanced, it&#39;s possible that the intermediate 
 For example, &quot;4 hours and 15 minutes&quot; minus &quot;2 hours and 30 minutes&quot; results in &quot;2 hours and &minus;15 minutes&quot;.
 The <code>overflow</code> argument tells what to do in this case:</p>
 <ul>
-<li>In <code>constrain</code> mode (the default), subtractions that result in a value too large to be represented in a Number are capped at <code>Number.MAX_VALUE</code>, or <code>-Number.MAX_VALUE</code> if out of range in the other direction.
-Subtractions resulting in mixed-sign fields will balance those fields with the next-highest field so that all the fields of the result have the same sign.</li>
-<li>In <code>balance</code> mode, if any subtraction results in a value too large to be represented in a Number, a <code>RangeError</code> is thrown.
-As well, all fields are balanced with the next highest field, no matter if they have mixed signs or not.</li>
-<li>In <code>reject</code> mode, if any subtraction results in a value too large to be represented in a Number, a <code>RangeError</code> is thrown.
-Otherwise this is the same as <code>constrain</code>.</li>
+<li>In <code>constrain</code> mode (the default), subtractions that result in mixed-sign fields will balance those fields with the next-highest field so that all the fields of the result are constrained to have the same sign.</li>
+<li>In <code>balance</code> mode, all fields are balanced with the next highest field, no matter if they have mixed signs or not.</li>
 </ul>
 <p>For usage examples and a more complete explanation of how balancing works and why it is necessary, especially for subtracting <code>Temporal.Duration</code>, see <a href="./balancing.html#duration-arithmetic">Duration balancing</a>.</p>
 <p>Subtracting a negative duration is equivalent to adding the absolute value of that duration.</p>

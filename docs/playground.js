@@ -3529,57 +3529,28 @@
       return ES.ToRecord(item, [['days', 0], ['hours', 0], ['microseconds', 0], ['milliseconds', 0], ['minutes', 0], ['months', 0], ['nanoseconds', 0], ['seconds', 0], ['weeks', 0], ['years', 0]]);
     },
     RegulateDuration: function RegulateDuration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, overflow) {
+      for (var _i = 0, _arr = [years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds]; _i < _arr.length; _i++) {
+        var prop = _arr[_i];
+        if (!Number.isFinite(prop)) throw new RangeError('infinite values not allowed as duration fields');
+      }
+
       ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
 
-      switch (overflow) {
-        case 'reject':
-          for (var _i = 0, _arr = [years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds]; _i < _arr.length; _i++) {
-            var prop = _arr[_i];
-            if (!Number.isFinite(prop)) throw new RangeError('infinite values not allowed as duration fields');
-          }
+      if (overflow === 'balance') {
+        var _ES$BalanceDuration = ES.BalanceDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 'days');
 
-          break;
+        days = _ES$BalanceDuration.days;
+        hours = _ES$BalanceDuration.hours;
+        minutes = _ES$BalanceDuration.minutes;
+        seconds = _ES$BalanceDuration.seconds;
+        milliseconds = _ES$BalanceDuration.milliseconds;
+        microseconds = _ES$BalanceDuration.microseconds;
+        nanoseconds = _ES$BalanceDuration.nanoseconds;
 
-        case 'constrain':
-          {
-            var arr = [years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds];
-
-            for (var idx in arr) {
-              if (!Number.isFinite(arr[idx])) arr[idx] = Math.sign(arr[idx]) * Number.MAX_VALUE;
-            }
-
-            years = arr[0];
-            months = arr[1];
-            weeks = arr[2];
-            days = arr[3];
-            hours = arr[4];
-            minutes = arr[5];
-            seconds = arr[6];
-            milliseconds = arr[7];
-            microseconds = arr[8];
-            nanoseconds = arr[9];
-            break;
-          }
-
-        case 'balance':
-          {
-            var _ES$BalanceDuration = ES.BalanceDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 'days');
-
-            days = _ES$BalanceDuration.days;
-            hours = _ES$BalanceDuration.hours;
-            minutes = _ES$BalanceDuration.minutes;
-            seconds = _ES$BalanceDuration.seconds;
-            milliseconds = _ES$BalanceDuration.milliseconds;
-            microseconds = _ES$BalanceDuration.microseconds;
-            nanoseconds = _ES$BalanceDuration.nanoseconds;
-
-            for (var _i2 = 0, _arr2 = [years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds]; _i2 < _arr2.length; _i2++) {
-              var _prop = _arr2[_i2];
-              if (!Number.isFinite(_prop)) throw new RangeError('infinite values not allowed as duration fields');
-            }
-
-            break;
-          }
+        for (var _i2 = 0, _arr2 = [years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds]; _i2 < _arr2.length; _i2++) {
+          var _prop = _arr2[_i2];
+          if (!Number.isFinite(_prop)) throw new RangeError('infinite values not allowed as duration fields');
+        }
       }
 
       return {
@@ -3637,7 +3608,7 @@
     },
     ToTemporalDurationOverflow: function ToTemporalDurationOverflow(options) {
       options = ES.NormalizeOptionsObject(options);
-      return ES.GetOption(options, 'overflow', ['constrain', 'balance', 'reject'], 'constrain');
+      return ES.GetOption(options, 'overflow', ['constrain', 'balance'], 'constrain');
     },
     ToTemporalOverflow: function ToTemporalOverflow(options) {
       options = ES.NormalizeOptionsObject(options);
