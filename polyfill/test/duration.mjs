@@ -175,12 +175,9 @@ describe('Duration', () => {
     });
     describe('Overflow', () => {
       it('mixed positive and negative values always throw', () => {
-        ['constrain', 'balance', 'reject'].forEach((overflow) =>
+        ['constrain', 'balance'].forEach((overflow) =>
           throws(() => Duration.from({ hours: 1, minutes: -30 }, { overflow }), RangeError)
         );
-      });
-      it('excessive values unchanged when "reject"', () => {
-        equal(`${Duration.from({ minutes: 100 }, { overflow: 'reject' })}`, 'PT100M');
       });
       it('excessive values unchanged when "constrain"', () => {
         equal(`${Duration.from({ minutes: 100 }, { overflow: 'constrain' })}`, 'PT100M');
@@ -203,7 +200,7 @@ describe('Duration', () => {
       });
       it('throw on bad overflow', () => {
         [new Duration(3), { days: 0 }, 'P5Y'].forEach((input) => {
-          ['', 'CONSTRAIN', 'xyz', 3, null].forEach((overflow) =>
+          ['', 'CONSTRAIN', 'reject', 'xyz', 3, null].forEach((overflow) =>
             throws(() => Duration.from(input, { overflow }), RangeError)
           );
         });
@@ -259,7 +256,7 @@ describe('Duration', () => {
     it('unrepresentable number is not allowed', () => {
       units.forEach((unit, ix) => {
         throws(() => new Duration(...Array(ix).fill(0), 1e309), RangeError);
-        throws(() => Duration.from({ [unit]: 1e309 }, { overflow: 'reject' }), RangeError);
+        throws(() => Duration.from({ [unit]: 1e309 }), RangeError);
       });
       const manyNines = '9'.repeat(309);
       [
@@ -270,7 +267,7 @@ describe('Duration', () => {
         `PT${manyNines}H`,
         `PT${manyNines}M`,
         `PT${manyNines}S`
-      ].forEach((str) => throws(() => Duration.from(str, { overflow: 'reject' }), RangeError));
+      ].forEach((str) => throws(() => Duration.from(str), RangeError));
     });
     it('max safe integer is allowed', () => {
       [
@@ -286,7 +283,6 @@ describe('Duration', () => {
         'PT9007199.254740991S'
       ].forEach((str, ix) => {
         equal(`${new Duration(...Array(ix).fill(0), Number.MAX_SAFE_INTEGER)}`, str);
-        equal(`${Duration.from({ [units[ix]]: Number.MAX_SAFE_INTEGER }, { overflow: 'reject' })}`, str);
         equal(`${Duration.from(str)}`, str);
       });
     });
@@ -299,7 +295,7 @@ describe('Duration', () => {
           equal(str.slice(-1), suffix);
           equal(str.length, prefix.length + suffix.length + infix.length + 27);
         }
-        doAsserts(new Duration(...Array(ix).fill(0), 1e26, ...Array(9 - ix).fill(0), 'reject'));
+        doAsserts(new Duration(...Array(ix).fill(0), 1e26, ...Array(9 - ix).fill(0)));
         doAsserts(Duration.from({ [units[ix]]: 1e26 }));
         if (!infix) doAsserts(Duration.from(`${prefix}100000000000000000000000000${suffix}`));
       }
@@ -373,7 +369,7 @@ describe('Duration', () => {
       equal(result.nanoseconds, 1);
     });
     it('mixed positive and negative values always throw', () => {
-      ['constrain', 'balance', 'reject'].forEach((overflow) =>
+      ['constrain', 'balance'].forEach((overflow) =>
         throws(() => duration.with({ hours: 1, minutes: -1 }, { overflow }), RangeError)
       );
     });
@@ -388,7 +384,7 @@ describe('Duration', () => {
       throws(() => d.with({ months: -5, minutes: 0 }), RangeError);
     });
     it('invalid overflow', () => {
-      ['', 'CONSTRAIN', 'xyz', 3, null].forEach((overflow) =>
+      ['', 'CONSTRAIN', 'reject', 'xyz', 3, null].forEach((overflow) =>
         throws(() => duration.with({ days: 5 }, { overflow }), RangeError)
       );
     });
@@ -428,42 +424,18 @@ describe('Duration', () => {
       equal(result.nanoseconds, 1000);
     });
     const max = new Duration(...Array(10).fill(Number.MAX_VALUE));
-    it('caps values at Number.MAX_VALUE by default', () => {
-      const result = max.plus(max);
-      equal(result.years, Number.MAX_VALUE);
-      equal(result.months, Number.MAX_VALUE);
-      equal(result.weeks, Number.MAX_VALUE);
-      equal(result.days, Number.MAX_VALUE);
-      equal(result.hours, Number.MAX_VALUE);
-      equal(result.minutes, Number.MAX_VALUE);
-      equal(result.seconds, Number.MAX_VALUE);
-      equal(result.milliseconds, Number.MAX_VALUE);
-      equal(result.microseconds, Number.MAX_VALUE);
-      equal(result.nanoseconds, Number.MAX_VALUE);
-    });
-    it('caps values at Number.MAX_VALUE with constrain', () => {
-      const result = max.plus(max, { overflow: 'constrain' });
-      equal(result.years, Number.MAX_VALUE);
-      equal(result.months, Number.MAX_VALUE);
-      equal(result.weeks, Number.MAX_VALUE);
-      equal(result.days, Number.MAX_VALUE);
-      equal(result.hours, Number.MAX_VALUE);
-      equal(result.minutes, Number.MAX_VALUE);
-      equal(result.seconds, Number.MAX_VALUE);
-      equal(result.milliseconds, Number.MAX_VALUE);
-      equal(result.microseconds, Number.MAX_VALUE);
-      equal(result.nanoseconds, Number.MAX_VALUE);
-    });
-    it('throws if values become infinite with reject', () => {
-      throws(() => max.plus(max, { overflow: 'reject' }), RangeError);
+    it('always throws when addition overflows', () => {
+      ['constrain', 'balance'].forEach((overflow) => {
+        throws(() => max.plus(max, { overflow }), RangeError);
+      });
     });
     it('throws on invalid overflow', () => {
-      ['', 'CONSTRAIN', 'balanceConstrain', 3, null].forEach((overflow) =>
+      ['', 'CONSTRAIN', 'reject', 3, null].forEach((overflow) =>
         throws(() => duration.plus(duration, { overflow }), RangeError)
       );
     });
     it('mixed positive and negative values always throw', () => {
-      ['constrain', 'balance', 'reject'].forEach((overflow) =>
+      ['constrain', 'balance'].forEach((overflow) =>
         throws(() => duration.plus({ hours: 1, minutes: -30 }, { overflow }), RangeError)
       );
     });
@@ -575,12 +547,12 @@ describe('Duration', () => {
       });
     });
     it('throws on invalid overflow', () => {
-      ['', 'BALANCE', 'xyz', 3, null].forEach((overflow) =>
+      ['', 'BALANCE', 'reject', 'xyz', 3, null].forEach((overflow) =>
         throws(() => duration.minus(duration, { overflow }), RangeError)
       );
     });
     it('mixed positive and negative values always throw', () => {
-      ['constrain', 'balance', 'reject'].forEach((overflow) =>
+      ['constrain', 'balance'].forEach((overflow) =>
         throws(() => duration.minus({ hours: 1, minutes: -30 }, { overflow }), RangeError)
       );
     });

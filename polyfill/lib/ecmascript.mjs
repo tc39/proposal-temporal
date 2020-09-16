@@ -377,58 +377,34 @@ export const ES = ObjectAssign({}, ES2019, {
     nanoseconds,
     overflow
   ) => {
+    for (const prop of [years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds]) {
+      if (!Number.isFinite(prop)) throw new RangeError('infinite values not allowed as duration fields');
+    }
     ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
-    switch (overflow) {
-      case 'reject':
-        for (const prop of [
-          years,
-          months,
-          weeks,
-          days,
-          hours,
-          minutes,
-          seconds,
-          milliseconds,
-          microseconds,
-          nanoseconds
-        ]) {
-          if (!Number.isFinite(prop)) throw new RangeError('infinite values not allowed as duration fields');
-        }
-        break;
-      case 'constrain': {
-        const arr = [years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds];
-        for (const idx in arr) {
-          if (!Number.isFinite(arr[idx])) arr[idx] = Math.sign(arr[idx]) * Number.MAX_VALUE;
-        }
-        [years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds] = arr;
-        break;
-      }
-      case 'balance': {
-        ({ days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.BalanceDuration(
-          days,
-          hours,
-          minutes,
-          seconds,
-          milliseconds,
-          microseconds,
-          nanoseconds,
-          'days'
-        ));
-        for (const prop of [
-          years,
-          months,
-          weeks,
-          days,
-          hours,
-          minutes,
-          seconds,
-          milliseconds,
-          microseconds,
-          nanoseconds
-        ]) {
-          if (!Number.isFinite(prop)) throw new RangeError('infinite values not allowed as duration fields');
-        }
-        break;
+    if (overflow === 'balance') {
+      ({ days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.BalanceDuration(
+        days,
+        hours,
+        minutes,
+        seconds,
+        milliseconds,
+        microseconds,
+        nanoseconds,
+        'days'
+      ));
+      for (const prop of [
+        years,
+        months,
+        weeks,
+        days,
+        hours,
+        minutes,
+        seconds,
+        milliseconds,
+        microseconds,
+        nanoseconds
+      ]) {
+        if (!Number.isFinite(prop)) throw new RangeError('infinite values not allowed as duration fields');
       }
     }
 
@@ -472,7 +448,7 @@ export const ES = ObjectAssign({}, ES2019, {
   },
   ToTemporalDurationOverflow: (options) => {
     options = ES.NormalizeOptionsObject(options);
-    return ES.GetOption(options, 'overflow', ['constrain', 'balance', 'reject'], 'constrain');
+    return ES.GetOption(options, 'overflow', ['constrain', 'balance'], 'constrain');
   },
   ToTemporalOverflow: (options) => {
     options = ES.NormalizeOptionsObject(options);

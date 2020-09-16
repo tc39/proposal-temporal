@@ -75,8 +75,8 @@ new Temporal.Duration()  // => PT0S
 - `thing`: A `Duration`-like object or a string from which to create a `Temporal.Duration`.
 - `options` (optional object): An object with properties representing options for constructing the duration.
   The following options are recognized:
-  - `overflow` (optional string): What to do if any of the other arguments are out of range.
-    Allowed values are `constrain`, `balance`, and `reject`.
+  - `overflow` (optional string): What to do if any of the values are larger than the next highest unit.
+    Allowed values are `constrain` and `balance`.
     The default is `constrain`.
 
 **Returns:** a new `Temporal.Duration` object.
@@ -89,16 +89,12 @@ Any missing ones will be assumed to be 0.
 Any non-object value is converted to a string, which is expected to be in ISO 8601 format.
 
 The `overflow` option controls how out-of-range values are interpreted:
-- `constrain` (the default): Infinite values are clamped to `Number.MAX_VALUE` or `-Number.MAX_VALUE`.
-  Values higher than the next highest unit (for example, 90 minutes) are left as-is.
-- `balance`: Infinite values will cause the function to throw a `RangeError`.
-  Values higher than the next highest unit, are converted to be in-range by incrementing the next highest unit accordingly.
+- `constrain` (the default): Values higher than the next highest unit (for example, 90 minutes) are left as-is.
+- `balance`: Values higher than the next highest unit, are converted to be in-range by incrementing the next highest unit accordingly.
   For example, 90 minutes becomes one hour and 30 minutes.
-- `reject`: Infinite values will cause the function to throw a `RangeError`.
-  Values higher than the next highest unit (for example, 90 minutes) are left as-is.
 
-No matter which overflow mode is selected, all non-zero values must have the same sign.
-If they do not, the function will throw a `RangeError`.
+No matter which overflow mode is selected, all non-zero values must have the same sign, and must not be infinite.
+Otherwise, the function will throw a `RangeError`.
 
 > **NOTE:** Years and months can have different lengths.
 In the default ISO calendar, a year can be 365 or 366 days, and a month can be 28, 29, 30, or 31 days.
@@ -127,7 +123,6 @@ d = Temporal.Duration.from({ hours: 1, minutes: -30 })  // throws
 
 d = Temporal.Duration.from({ minutes: 120 }, { overflow: 'constrain' })  // => PT120M
 d = Temporal.Duration.from({ minutes: 120 }, { overflow: 'balance' })  // => PT2H
-d = Temporal.Duration.from({ minutes: 120 }, { overflow: 'reject' })  // => PT120M
 ```
 
 ## Properties
@@ -181,8 +176,8 @@ The read-only `sign` property has the value –1, 0, or 1, depending on whether 
 - `durationLike` (object): an object with some or all of the properties of a `Temporal.Duration`.
 - `options` (optional object): An object with properties representing options for the copy.
   The following options are recognized:
-  - `overflow` (string): How to deal with out-of-range values.
-    Allowed values are `constrain`, `balance`, and `reject`.
+  - `overflow` (string): How to deal with values that are larger than the next highest unit.
+    Allowed values are `constrain` and `balance`.
     The default is `constrain`.
 
 **Returns:** a new `Temporal.Duration` object.
@@ -191,11 +186,13 @@ This method creates a new `Temporal.Duration` which is a copy of `duration`, but
 
 Since `Temporal.Duration` objects are immutable, use this method instead of modifying one.
 
-The `overflow` option specifies what to do with out-of-range or overly large values.
 All non-zero properties of `durationLike` must have the same sign, and they must additionally have the same sign as the non-zero properties of `duration`, unless they override all of these non-zero properties.
-If a property of `durationLike` is infinity, then constrain mode will clamp it to `Number.MAX_VALUE`.
-Reject and balance modes will throw a `RangeError` in that case.
-Additionally, balance mode will behave like it does in `Duration.from()` and perform a balance operation on the result.
+If a property of `durationLike` is infinity, then this function will throw a `RangeError`.
+
+The `overflow` option specifies what to do with overly large values, that are larger than the next unit.
+(For example, 90 minutes is larger than 1 hour.)
+Constrain mode will leave these values as they are.
+Balance mode will behave like it does in `Duration.from()` and perform a balance operation on the result, changing 90 minutes to 1 hour and 30 minutes.
 
 For usage examples and a more complete explanation of how balancing works and why it is necessary, see [Duration balancing](./balancing.md).
 
@@ -216,8 +213,8 @@ duration = duration.with({ years, months }, { overflow: 'balance' });
 - `other` (object): A `Temporal.Duration` object or a duration-like object.
 - `options` (optional object): An object with properties representing options for the addition.
   The following options are recognized:
-  - `overflow` (string): How to deal with additions that result in out-of-range values.
-    Allowed values are `constrain`, `balance`, and `reject`.
+  - `overflow` (string): How to deal with additions that result in mixed-sign values or values that are larger than the next highest unit.
+    Allowed values are `constrain` and `balance`.
     The default is `constrain`.
 
 **Returns:** a new `Temporal.Duration` object which represents the sum of the durations of `duration` and `other`.
@@ -229,13 +226,9 @@ The `other` argument is an object with properties denoting a duration, such as `
 In order to be valid, the resulting duration must not have fields with mixed signs.
 However, before the result is balanced, it's possible that the intermediate result will have one or more negative fields while the overall duration is positive, or vice versa.
 For example, "4 hours and 15 minutes" minus "2 hours and 30 minutes" results in "2 hours and &minus;15 minutes".
-The `overflow` option tells what to do in this case, or in the case where the addition results in an out-of-range value:
-- In `constrain` mode (the default), additions that result in a value too large to be represented in a Number are capped at `Number.MAX_VALUE`, or `-Number.MAX_VALUE` if out of range in the other direction.
-  Additions resulting in mixed-sign fields will balance those fields with the next-highest field so that all the fields of the result have the same sign.
-- In `balance` mode, if any addition results in a value too large to be represented in a Number, a `RangeError` is thrown.
-  As well, all fields are balanced with the next highest field, no matter if they have mixed signs or not.
-- In `reject` mode, if any addition results in a value too large to be represented in a Number, a `RangeError` is thrown.
-  Otherwise this is the same as `constrain`.
+The `overflow` option tells what to do in this case:
+- In `constrain` mode (the default), additions that result in mixed-sign fields will balance those fields with the next-highest field so that all the fields of the result are constrained to have the same sign.
+- In `balance` mode, all fields are balanced with the next highest field, no matter if they have mixed signs or not.
 
 For usage examples and a more complete explanation of how balancing works and why it is necessary, see [Duration balancing](./balancing.md).
 
@@ -281,8 +274,8 @@ monthsToYears(result)  // => P3Y
 - `other` (object): A `Temporal.Duration` object or a duration-like object.
 - `options` (optional object): An object with properties representing options for the subtraction.
   The following options are recognized:
-  - `overflow` (string): How to deal with subtractions that result in out-of-range values.
-    Allowed values are `constrain`, `balance`, and `reject`.
+  - `overflow` (string): How to deal with subtractions that result in values with mixed signs or values that are larger than the next highest unit.
+    Allowed values are `constrain` and `balance`.
     The default is `constrain`.
 
 **Returns:** a new `Temporal.Duration` object which represents the duration of `duration` less the duration of `other`.
@@ -297,12 +290,8 @@ In order to be valid, the resulting duration must not have fields with mixed sig
 However, before the result is balanced, it's possible that the intermediate result will have one or more negative fields while the overall duration is positive, or vice versa.
 For example, "4 hours and 15 minutes" minus "2 hours and 30 minutes" results in "2 hours and &minus;15 minutes".
 The `overflow` argument tells what to do in this case:
-- In `constrain` mode (the default), subtractions that result in a value too large to be represented in a Number are capped at `Number.MAX_VALUE`, or `-Number.MAX_VALUE` if out of range in the other direction.
-  Subtractions resulting in mixed-sign fields will balance those fields with the next-highest field so that all the fields of the result have the same sign.
-- In `balance` mode, if any subtraction results in a value too large to be represented in a Number, a `RangeError` is thrown.
-  As well, all fields are balanced with the next highest field, no matter if they have mixed signs or not.
-- In `reject` mode, if any subtraction results in a value too large to be represented in a Number, a `RangeError` is thrown.
-  Otherwise this is the same as `constrain`.
+- In `constrain` mode (the default), subtractions that result in mixed-sign fields will balance those fields with the next-highest field so that all the fields of the result are constrained to have the same sign.
+- In `balance` mode, all fields are balanced with the next highest field, no matter if they have mixed signs or not.
 
 For usage examples and a more complete explanation of how balancing works and why it is necessary, especially for subtracting `Temporal.Duration`, see [Duration balancing](./balancing.md#duration-arithmetic).
 

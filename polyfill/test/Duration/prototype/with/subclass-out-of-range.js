@@ -24,19 +24,8 @@ class MyDuration extends Temporal.Duration {
 const instance = MyDuration.from("PT0S");
 assert.sameValue(called, 1);
 
-const result = instance.with({ days: Infinity });
-assert.sameValue(result.years, 0, "years result");
-assert.sameValue(result.months, 0, "months result");
-assert.sameValue(result.weeks, 0, "weeks result");
-assert.sameValue(result.days, Number.MAX_VALUE, "days result");
-assert.sameValue(result.hours, 0, "hours result");
-assert.sameValue(result.minutes, 0, "minutes result");
-assert.sameValue(result.seconds, 0, "seconds result");
-assert.sameValue(result.milliseconds, 0, "milliseconds result");
-assert.sameValue(result.microseconds, 0, "microseconds result");
-assert.sameValue(result.nanoseconds, 0, "nanoseconds result");
-assert.sameValue(called, 2);
+assert.throws(RangeError, () => instance.with({ days: Infinity }));
+assert.sameValue(called, 1);
 
 assert.throws(RangeError, () => instance.with({ days: Infinity }, { overflow: "balance" }));
-assert.throws(RangeError, () => instance.with({ days: Infinity }, { overflow: "reject" }));
-assert.sameValue(called, 2);
+assert.sameValue(called, 1);
