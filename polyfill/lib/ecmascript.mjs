@@ -818,17 +818,18 @@ export const ES = ObjectAssign({}, ES2019, {
     if (minutes) timeParts.push(`${formatNumber(Math.abs(minutes))}M`);
 
     const secondParts = [];
-    µs += Math.trunc(ns / 1000);
-    ns %= 1000;
-    ms += Math.trunc(µs / 1000);
-    µs %= 1000;
-    seconds += Math.trunc(ms / 1000);
-    ms %= 1000;
+    let total = bigInt(seconds).times(1000).plus(ms).times(1000).plus(µs).times(1000).plus(ns);
+    ({ quotient: total, remainder: ns } = total.divmod(1000));
+    ({ quotient: total, remainder: µs } = total.divmod(1000));
+    ({ quotient: seconds, remainder: ms } = total.divmod(1000));
+    ms = ms.toJSNumber();
+    µs = µs.toJSNumber();
+    ns = ns.toJSNumber();
     if (ns) secondParts.unshift(`${Math.abs(ns)}`.padStart(3, '0'));
     if (µs || secondParts.length) secondParts.unshift(`${Math.abs(µs)}`.padStart(3, '0'));
     if (ms || secondParts.length) secondParts.unshift(`${Math.abs(ms)}`.padStart(3, '0'));
     if (secondParts.length) secondParts.unshift('.');
-    if (seconds || secondParts.length) secondParts.unshift(formatNumber(Math.abs(seconds)));
+    if (!seconds.isZero() || secondParts.length) secondParts.unshift(seconds.abs().toString());
     if (secondParts.length) timeParts.push(`${secondParts.join('')}S`);
     if (timeParts.length) timeParts.unshift('T');
     if (!dateParts.length && !timeParts.length) return 'PT0S';
