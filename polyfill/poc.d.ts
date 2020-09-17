@@ -1058,10 +1058,21 @@ export namespace Temporal {
     /**
      * Compare two `Temporal.LocalDateTime` values.
      *
-     * Comparison will use the absolute time because sorting is almost always
-     * based on when events happened in the real world, but during the hour before
-     * and after DST ends in the fall, sorting of clock time will not match the
-     * real-world sort order.
+     * Returns:
+     * * Zero if all fields are equivalent, including the calendar ID and the time
+     *   zone name.
+     * * -1 if `one` is less than `two`
+     * * 1 if `one` is greater than `two`.
+     *
+     * Comparison will use the absolute time, not clock time, because sorting is
+     * almost always based on when events happened in the real world, but during
+     * the hour before and after DST ends in the fall, sorting of clock time will
+     * not match the real-world sort order.
+     *
+     * If absolute times are equal, then `.calendar.id` will be compared
+     * alphabetically. If those are equal too, then `.timeZone.name` will be
+     * compared alphabetically. Even though alphabetic sort carries no meaning,
+     * it's used to ensure that unequal instances have a deterministic sort order.
      *
      * In the very unusual case of sorting by clock time instead, use
      * `.toDateTime()` on both instances and use `Temporal.DateTime`'s `compare`
@@ -1069,10 +1080,24 @@ export namespace Temporal {
      */
     static compare(one: LocalDateTime, two: LocalDateTime): Temporal.ComparisonResult;
     /**
-     * Returns `true` if both the absolute timestamp and time zone are identical
-     * to the other `Temporal.LocalDateTime` instance, and `false` otherwise. To
-     * compare only the absolute timestamps and ignore time zones, use
-     * `.toAbsolute().compare()`.
+     * Returns `true` if the absolute timestamp, time zone, and calendar are
+     * identical to `other`, and `false` otherwise.
+     *
+     * To compare only the absolute timestamps and ignore time zones and
+     * calendars, use `.toAbsolute().compare(other.toAbsolute())`.
+     *
+     * To ignore calendars but not time zones when comparing, convert both
+     * instances to the ISO 8601 calendar:
+     * ```
+     * Temporal.LocalDateTime.compare(
+     *   one.with({ calendar: 'iso8601' }),
+     *   two.with({ calendar: 'iso8601' })
+     * );
+     * ```
+     *
+     * In the very unusual case of sorting by clock time instead, use
+     * `.toDateTime()` on both instances and use `Temporal.DateTime`'s `compare`
+     * method.
      */
     equals(other: LocalDateTime): boolean;
     /**

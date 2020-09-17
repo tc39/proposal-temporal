@@ -113,7 +113,14 @@ function fromCommon(dt, timeZone, offsetNs, disambiguation, offsetOption) {
   // If we get here, then the user-provided offset doesn't match any absolutes
   // for this time zone and date/time.
   if (offsetOption === 'reject') {
-    throw new RangeError(`Provided offset is not valid for '${dt}' in '${timeZone}'`);
+    const earlierOffset = timeZone.getOffsetStringFor(dt.toAbsolute(timeZone, { disambiguation: 'earlier' }));
+    const laterOffset = timeZone.getOffsetStringFor(dt.toAbsolute(timeZone, { disambiguation: 'later' }));
+    const validOffsets = earlierOffset === laterOffset ? [earlierOffset] : [earlierOffset, laterOffset];
+    const joined = validOffsets.join(' or ');
+    const offsetString = formatTimeZoneOffsetString(offsetNs);
+    throw new RangeError(
+      `Offset is invalid for '${dt}' in '${timeZone}'. Provided: ${offsetString}, expected: ${joined}.`
+    );
   }
   // fall through: offsetOption === 'prefer', but the offset doesn't match so
   // fall back to use the time zone instead.
@@ -551,24 +558,53 @@ export class LocalDateTime {
   /**
    * Compare two `Temporal.LocalDateTime` values.
    *
-   * Comparison will use the absolute time because sorting is almost always
-   * based on when events happened in the real world, but during the hour before
-   * and after DST ends in the fall, sorting of clock time will not match the
-   * real-world sort order.
+   * Returns:
+   * * Zero if all fields are equivalent, including the calendar ID and the time
+   *   zone name.
+   * * -1 if `one` is less than `two`
+   * * 1 if `one` is greater than `two`.
+   *
+   * Comparison will use the absolute time, not clock time, because sorting is
+   * almost always based on when events happened in the real world, but during
+   * the hour before and after DST ends in the fall, sorting of clock time will
+   * not match the real-world sort order.
+   *
+   * If absolute times are equal, then `.calendar.id` will be compared
+   * alphabetically. If those are equal too, then `.timeZone.name` will be
+   * compared alphabetically. Even though alphabetic sort carries no meaning,
+   * it's used to ensure that unequal instances have a deterministic sort order.
    *
    * In the very unusual case of sorting by clock time instead, use
    * `.toDateTime()` on both instances and use `Temporal.DateTime`'s `compare`
    * method.
    */
   static compare(one, two) {
-    return Temporal.Absolute.compare(one._abs, two._abs);
+    return (
+      Temporal.Absolute.compare(one._abs, two._abs) ||
+      compareStrings(one.calendar.id, two.calendar.id) ||
+      compareStrings(one.timeZone.name, two.timeZone.name)
+    );
   }
 
   /**
-   * Returns `true` if both the absolute timestamp and time zone are identical
-   * to the other `Temporal.LocalDateTime` instance, and `false` otherwise. To
-   * compare only the absolute timestamps and ignore time zones, use
-   * `.toAbsolute().compare()`.
+   * Returns `true` if the absolute timestamp, time zone, and calendar are
+   * identical to `other`, and `false` otherwise.
+   *
+   * To compare only the absolute timestamps and ignore time zones and
+   * calendars, use `.toAbsolute().compare(other.toAbsolute())`.
+   *
+   * To ignore calendars but not time zones when comparing, convert both
+   * instances to the ISO 8601 calendar:
+   * ```
+   * Temporal.LocalDateTime.compare(
+   *   one.with({ calendar: 'iso8601' }),
+   *   two.with({ calendar: 'iso8601' })
+   * );
+   * ```
+   *
+   * In the very unusual case of sorting by clock time instead, use
+   * `.toDateTime()` on both instances and use `Temporal.DateTime`'s `compare`
+   * method.
    */
   equals(other) {
     return LocalDateTime.compare(this, other) === 0;
@@ -930,5 +966,21 @@ const ES = {
   ToString: ToString,
   ToObject: ToObject
 };
+
+// copied from ecmascript.mjs
+function formatTimeZoneOffsetString(offsetNanoseconds) {
+  const sign = offsetNanoseconds < 0 ? '-' : '+';
+  offsetNanoseconds = Math.abs(offsetNanoseconds);
+  const offsetMinutes = Math.floor(offsetNanoseconds / 60e9);
+  const offsetMinuteString = `00${offsetMinutes % 60}`.slice(-2);
+  const offsetHourString = `00${Math.floor(offsetMinutes / 60)}`.slice(-2);
+  return `${sign}${offsetHourString}:${offsetMinuteString}`;
+}
+
+function compareStrings(s1, s2) {
+  if (s1 === s2) return 0;
+  if (s1 < s2) return -1;
+  return 1;
+}
 
 MakeIntrinsicClass(LocalDateTime, 'Temporal.LocalDateTime');
