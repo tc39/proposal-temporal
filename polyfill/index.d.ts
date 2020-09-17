@@ -86,6 +86,10 @@ export namespace Temporal {
     overflow: 'constrain' | 'reject';
   };
 
+  /**
+   * Options to control the result of `difference()` methods in `Temporal`
+   * types.
+   * */
   export interface DifferenceOptions<T extends string> {
     /**
      * The largest unit to allow in the resulting `Temporal.Duration` object.
@@ -97,16 +101,72 @@ export namespace Temporal {
      *
      * The default depends on the type being used.
      */
-    largestUnit: T;
-    smallestUnit: T;
-    roundingIncrement: number;
-    roundingMode: 'ceil' | 'floor' | 'trunc' | 'nearest';
+    largestUnit?: T;
+
+    /**
+     * The unit to round to. For example, to round to the nearest minute, use
+     * `smallestUnit: 'minute'`. This option is required for `round()` and
+     * optional for `difference()`.
+     */
+    smallestUnit?: T;
+
+    /**
+     * Allows rounding to an integer number of units. For example, to round to
+     * increments of a half hour, use `{ smallestUnit: 'minute',
+     * roundingIncrement: 30 }`.
+     */
+    roundingIncrement?: number;
+
+    /**
+     * Controls how rounding is performed:
+     * - `nearest`: Round to the nearest of the values allowed by
+     *   `roundingIncrement` and `smallestUnit`. When there is a tie, round up.
+     *   This mode is the default.
+     * - `ceil`: Always round up, towards the end of time.
+     * - `trunc`: Always round down, towards the beginning of time.
+     * - `floor`: Also round down, towards the beginning of time. This mode acts
+     *   the same as `trunc`, but it's included for consistency with
+     *   `Temporal.Duration.round()` where negative values are allowed and
+     *   `trunc` rounds towards zero, unlike `floor` which rounds towards
+     *   negative infinity which is usually unexpected. For this reason, `trunc`
+     *   is recommended for most use cases.
+     */
+    roundingMode?: 'ceil' | 'floor' | 'trunc' | 'nearest';
   }
 
+  /**
+   * Options to control rounding behavior
+   */
   export interface RoundOptions<T extends string> {
+    /**
+     * The unit to round to. For example, to round to the nearest minute, use
+     * `smallestUnit: 'minute'`. This option is required for `round()` and
+     * optional for `difference()`.
+     */
     smallestUnit: T;
+
+    /**
+     * Allows rounding to an integer number of units. For example, to round to
+     * increments of a half hour, use `{ smallestUnit: 'minute',
+     * roundingIncrement: 30 }`.
+     */
     roundingIncrement?: number;
-    roundingMode?: 'ceil' | 'floor' | 'trunc' | 'nearest';
+
+    /**
+     * Controls how rounding is performed:
+     * - `nearest`: Round to the nearest of the values allowed by
+     *   `roundingIncrement` and `smallestUnit`. When there is a tie, round up.
+     *   This mode is the default.
+     * - `ceil`: Always round up, towards the end of time.
+     * - `trunc`: Always round down, towards the beginning of time.
+     * - `floor`: Also round down, towards the beginning of time. This mode acts
+     *   the same as `trunc`, but it's included for consistency with
+     *   `Temporal.Duration.round()` where negative values are allowed and
+     *   `trunc` rounds towards zero, unlike `floor` which rounds towards
+     *   negative infinity which is usually unexpected. For this reason, `trunc`
+     *   is recommended for most use cases.
+     */
+    roundingMode?: 'nearest' | 'ceil' | 'floor' | 'trunc';
   }
 
   export type DurationLike = {
