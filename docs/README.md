@@ -29,9 +29,9 @@ A cookbook to help you get started and learn the ins and outs of Temporal is ava
 
  * `Temporal.now.absolute()` - get the current system absolute time
  * `Temporal.now.timeZone()` - get the current system time zone
- * `Temporal.now.dateTime()` - get the current system date/time
- * `Temporal.now.time()` - get the current system time
  * `Temporal.now.date()` - get the current system date
+ * `Temporal.now.time()` - get the current system time
+ * `Temporal.now.dateTime()` - get the current system date/time
 
 See [Temporal.now Documentation](./now.md) for more detailed documentation.
 
@@ -40,6 +40,20 @@ See [Temporal.now Documentation](./now.md) for more detailed documentation.
 A `Temporal.Absolute` represents a fixed point in time, without regard to calendar or location.
 
 See [Temporal.Absolute Documentation](./absolute.md) for more detailed documentation.
+
+### **Temporal.Date**
+
+A `Temporal.Date` object represents a calendar date. This means there is no way to convert this to an absolute point in time, however combining with a `Temporal.Time` a `Temporal.DateTime` can be obtained which in turn can be pinned to the absolute timeline.
+
+This can also be converted to partial dates such as `Temporal.YearMonth` and `Temporal.MonthDay`.
+
+See [Temporal.Date Documentation](./date.md) for more detailed documentation.
+
+### **Temporal.Time**
+
+A `Temporal.Time` object represents a wall-clock time. Since there is no date component this can not be directly translated to an absolute point in time. However it can be converted to a `Temporal.Absolute` by combining with a `Temporal.Date` using a `Temporal.TimeZone`.
+
+See [Temporal.Time Documentation](./time.md) for more detailed documentation.
 
 ### **Temporal.DateTime**
 
@@ -54,20 +68,6 @@ See [Temporal.DateTime Documentation](./datetime.md) for more detailed documenta
 Converting between `Temporal.DateTime` and `Temporal.Absolute` is not a one-to-one operation and can be ambiguous, because of time zones and daylight saving time.
 
 Read more about this in [Resolving ambiguity](./ambiguity.md).
-
-### **Temporal.Time**
-
-A `Temporal.Time` object represents a wall-clock time. Since there is no date component this can not be directly translated to an absolute point in time. However it can be converted to a `Temporal.Absolute` by combining with a `Temporal.Date` using a `Temporal.TimeZone`.
-
-See [Temporal.Time Documentation](./time.md) for more detailed documentation.
-
-### **Temporal.Date**
-
-A `Temporal.Date` object represents a calendar date. This means there is no way to convert this to an absolute point in time, however combining with a `Temporal.Time` a `Temporal.DateTime` can be obtained which in turn can be pinned to the absolute timeline.
-
-This can also be converted to partial dates such as `Temporal.YearMonth` and `Temporal.MonthDay`.
-
-See [Temporal.Date Documentation](./date.md) for more detailed documentation.
 
 ### **Temporal.YearMonth**
 
