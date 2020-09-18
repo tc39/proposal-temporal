@@ -17,6 +17,7 @@ A `Temporal.Time` can be converted into a `Temporal.DateTime` by combining it wi
 ### **new Temporal.Time**(_hour_: number = 0, _minute_: number = 0, _second_: number = 0, _millisecond_: number = 0, _microsecond_: number = 0, _nanosecond_: number = 0) : Temporal.Time
 
 **Parameters:**
+
 - `hour` (optional number): An hour of the day, ranging between 0 and 23 inclusive.
 - `minute` (optional number): A minute, ranging between 0 and 59 inclusive.
 - `second` (optional number): A second, ranging between 0 and 59 inclusive.
@@ -30,9 +31,10 @@ Use this constructor if you have the correct parameters for the time already as 
 Otherwise, `Temporal.Time.from()`, which accepts more kinds of input and allows controlling the overflow behaviour, is probably more convenient.
 
 Usage examples:
+
 ```javascript
 // Leet hour
-time = new Temporal.Time(13, 37)  // => 13:37
+time = new Temporal.Time(13, 37); // => 13:37
 ```
 
 ## Static methods
@@ -40,6 +42,7 @@ time = new Temporal.Time(13, 37)  // => 13:37
 ### Temporal.Time.**from**(_thing_: any, _options_?: object) : Temporal.Time
 
 **Parameters:**
+
 - `thing`: The value representing the desired time.
 - `options` (optional object): An object with properties representing options for constructing the time.
   The following options are recognized:
@@ -58,6 +61,7 @@ Any non-object value will be converted to a string, which is expected to be in I
 If the string designates a date or a time zone, they will be ignored.
 
 The `overflow` option works as follows:
+
 - In `constrain` mode (the default), any out-of-range values are clamped to the nearest in-range value.
 - In `reject` mode, the presence of out-of-range values will cause the function to throw a `RangeError`.
 
@@ -67,23 +71,24 @@ The `overflow` option works as follows:
 > However, if parsing an ISO 8601 string with a seconds component of `:60`, then it will always result in a `second` value of 59, in accordance with POSIX.
 
 Example usage:
+
 ```javascript
-time = Temporal.Time.from('03:24:30');  // => 03:24:30
-time = Temporal.Time.from('1995-12-07T03:24:30');  // => 03:24:30
-time = Temporal.Time.from('1995-12-07T03:24:30Z');  // => 03:24:30
+time = Temporal.Time.from('03:24:30'); // => 03:24:30
+time = Temporal.Time.from('1995-12-07T03:24:30'); // => 03:24:30
+time = Temporal.Time.from('1995-12-07T03:24:30Z'); // => 03:24:30
 time = Temporal.Time.from('1995-12-07T03:24:30+01:00[Europe/Brussels]');
   // => same as above; time zone is ignored
-time === Temporal.Time.from(time)  // => true
+time === Temporal.Time.from(time); // => true
 
 time = Temporal.Time.from({
-    hour: 19,
-    minute: 39,
-    second: 9,
-    millisecond: 68,
-    microsecond: 346,
-    nanosecond: 205
-});  // => 19:39:09.068346205
-time = Temporal.Time.from({ hour: 19, minute: 39, second: 9 });  // => 19:39:09
+  hour: 19,
+  minute: 39,
+  second: 9,
+  millisecond: 68,
+  microsecond: 346,
+  nanosecond: 205
+}); // => 19:39:09.068346205
+time = Temporal.Time.from({ hour: 19, minute: 39, second: 9 }); // => 19:39:09
 time = Temporal.Time.from(Temporal.DateTime.from('2020-02-15T19:39:09'));
   // => same as above; Temporal.DateTime has hour, minute, etc. properties
 
@@ -101,6 +106,7 @@ time = Temporal.Time.from({ hour: 15, minute: -1 }, { overflow: 'reject' });
 ### Temporal.Time.**compare**(_one_: Temporal.Time, _two_: Temporal.Time) : number
 
 **Parameters:**
+
 - `one` (`Temporal.Time`): First time to compare.
 - `two` (`Temporal.Time`): Second time to compare.
 
@@ -108,18 +114,20 @@ time = Temporal.Time.from({ hour: 15, minute: -1 }, { overflow: 'reject' });
 
 Compares two `Temporal.Time` objects.
 Returns an integer indicating whether `one` comes before or after or is equal to `two`.
+
 - &minus;1 if `one` comes before `two`;
 - 0 if `one` and `two` are the same;
 - 1 if `one` comes after `two`.
 
 This function can be used to sort arrays of `Temporal.Time` objects.
 For example:
+
 ```javascript
 one = Temporal.Time.from('03:24');
 two = Temporal.Time.from('01:24');
 three = Temporal.Time.from('01:24:05');
 sorted = [one, two, three].sort(Temporal.Time.compare);
-sorted.join(' ');  // => 01:24 01:24:05 03:24
+sorted.join(' '); // => 01:24 01:24:05 03:24
 ```
 
 ## Properties
@@ -139,14 +147,15 @@ sorted.join(' ');  // => 01:24 01:24:05 03:24
 The above read-only properties allow accessing each component of the time individually.
 
 Usage examples:
+
 ```javascript
 time = Temporal.Time.from('19:39:09.068346205');
-time.hour         // => 19
-time.minute       // => 39
-time.second       // => 9
-time.millisecond  // => 68
-time.microsecond  // => 346
-time.nanosecond   // => 205
+time.hour;        // => 19
+time.minute;      // => 39
+time.second;      // => 9
+time.millisecond; // => 68
+time.microsecond; // => 346
+time.nanosecond;  // => 205
 ```
 
 ## Methods
@@ -154,6 +163,7 @@ time.nanosecond   // => 205
 ### time.**with**(_timeLike_: object, _options_?: object) : Temporal.Time
 
 **Parameters:**
+
 - `timeLike` (object): an object with some or all of the properties of a `Temporal.Time`.
 - `options` (optional object): An object with properties representing options for the operation.
   The following options are recognized:
@@ -168,21 +178,23 @@ This method creates a new `Temporal.Time` which is a copy of `time`, but any pro
 Since `Temporal.Time` objects are immutable, use this method instead of modifying one.
 
 Usage example:
+
 ```javascript
 time = Temporal.Time.from('19:39:09.068346205');
 // What's the top of the next hour?
-time.plus({hours: 1}).with({
-    minute: 0,
-    second: 0,
-    millisecond: 0,
-    microsecond: 0,
-    nanosecond: 0
-})  // => 20:00
+time.plus({ hours: 1 }).with({
+  minute: 0,
+  second: 0,
+  millisecond: 0,
+  microsecond: 0,
+  nanosecond: 0
+}); // => 20:00
 ```
 
 ### time.**plus**(_duration_: object, _options_?: object) : Temporal.Time
 
 **Parameters:**
+
 - `duration` (object): A `Temporal.Duration` object or a duration-like object.
 - `options` (optional object): An object with properties representing options for the addition.
   The following options are recognized:
@@ -203,14 +215,16 @@ However, it may have an effect in other calendars where those units are not alwa
 Adding a negative duration is equivalent to subtracting the absolute value of that duration.
 
 Usage example:
+
 ```javascript
 time = Temporal.Time.from('19:39:09.068346205');
-time.plus({ minutes: 5, nanoseconds: 800 })  // => 19:44:09.068347005
+time.plus({ minutes: 5, nanoseconds: 800 }); // => 19:44:09.068347005
 ```
 
 ### time.**minus**(_duration_: object, _options_?: object) : Temporal.Time
 
 **Parameters:**
+
 - `duration` (object): A `Temporal.Duration` object or a duration-like object.
 - `options` (optional object): An object with properties representing options for the subtraction.
   The following options are recognized:
@@ -231,14 +245,16 @@ However, it may have an effect in other calendars where those units are not alwa
 Subtracting a negative duration is equivalent to adding the absolute value of that duration.
 
 Usage example:
+
 ```javascript
 time = Temporal.Time.from('19:39:09.068346205');
-time.minus({ minutes: 5, nanoseconds: 800 })  // => 19:34:09.068345405
+time.minus({ minutes: 5, nanoseconds: 800 }); // => 19:34:09.068345405
 ```
 
 ### time.**difference**(_other_: Temporal.Time, _options_?: object) : Temporal.Duration
 
 **Parameters:**
+
 - `other` (`Temporal.Time`): Another time with which to compute the difference.
 - `options` (optional object): An object with properties representing options for the operation.
   The following options are recognized:
@@ -269,19 +285,21 @@ These behave as in the `Temporal.Duration.round()` method.
 The default is to do no rounding.
 
 Usage example:
+
 ```javascript
 time = Temporal.Time.from('20:13:20.971398099');
-time.difference(Temporal.Time.from('19:39:09.068346205'))  // => PT34M11.903051894S
-time.difference(Temporal.Time.from('22:39:09.068346205'))  // => -PT2H25M49.903051894S
+time.difference(Temporal.Time.from('19:39:09.068346205')); // => PT34M11.903051894S
+time.difference(Temporal.Time.from('22:39:09.068346205')); // => -PT2H25M49.903051894S
 
 // Rounding, for example if you don't care about sub-seconds
-time.difference(Temporal.Time.from('19:39:09.068346205'), { smallestUnit: 'seconds' })
+time.difference(Temporal.Time.from('19:39:09.068346205'), { smallestUnit: 'seconds' });
   // => PT34M12S
 ```
 
 ### time.**round**(_options_: object) : Temporal.Time
 
 **Parameters:**
+
 - `options` (object): An object with properties representing options for the operation.
   The following options are recognized:
   - `smallestUnit` (required string): The unit to round to.
@@ -309,18 +327,20 @@ The valid values in this case are 1 (default), 2, 3, 4, 5, 6, 10, 12, 15, 20, an
 Instead of 60 minutes, use 1 hour.)
 
 The `roundingMode` option controls how the rounding is performed.
-  - `ceil`: Always round up, towards 23:59:59.999999999.
-  - `floor`, `trunc`: Always round down, 00:00.
-    (These two modes behave the same, but are both included for consistency with `Temporal.Duration.round()`, where they are not the same.)
-  - `nearest`: Round to the nearest of the values allowed by `roundingIncrement` and `smallestUnit`.
-    When there is a tie, round up, like `ceil`.
+
+- `ceil`: Always round up, towards 23:59:59.999999999.
+- `floor`, `trunc`: Always round down, 00:00.
+  (These two modes behave the same, but are both included for consistency with `Temporal.Duration.round()`, where they are not the same.)
+- `nearest`: Round to the nearest of the values allowed by `roundingIncrement` and `smallestUnit`.
+  When there is a tie, round up, like `ceil`.
 
 Example usage:
+
 ```javascript
 time = Temporal.Time.from('19:39:09.068346205');
 
 // Round to a particular unit
-time.round({ smallestUnit: 'hour' });  // => 20:00
+time.round({ smallestUnit: 'hour' }); // => 20:00
 // Round to an increment of a unit, e.g. half an hour:
 time.round({ roundingIncrement: 30, smallestUnit: 'minute' });
   // => 19:30
@@ -332,6 +352,7 @@ time.round({ roundingIncrement: 30, smallestUnit: 'minute', roundingMode: 'ceil'
 ### time.**equals**(_other_: Temporal.Time) : boolean
 
 **Parameters:**
+
 - `other` (`Temporal.Time`): Another time to compare.
 
 **Returns:** `true` if `time` and `other` are equal, or `false` if not.
@@ -343,11 +364,12 @@ This function exists because it's not possible to compare using `time == other` 
 If you don't need to know the order in which the two dates occur, then this function may be less typing and more efficient than `Temporal.Time.compare`.
 
 Example usage:
+
 ```javascript
 time = Temporal.Time.from('19:39:09.068346205');
 other = Temporal.Time.from('20:13:20.971398099');
-time.equals(other)  // => false
-time.equals(time)  // => true
+time.equals(other); // => false
+time.equals(time); // => true
 ```
 
 ### time.**toString**() : string
@@ -358,14 +380,16 @@ This method overrides the `Object.prototype.toString()` method and provides a co
 The string can be passed to `Temporal.Time.from()` to create a new `Temporal.Time` object.
 
 Example usage:
+
 ```js
 time = Temporal.Time.from('19:39:09.068346205');
-time.toString();  // => 19:39:09.068346205
+time.toString(); // => 19:39:09.068346205
 ```
 
 ### time.**toLocaleString**(_locales_?: string | array&lt;string&gt;, _options_?: object) : string
 
 **Parameters:**
+
 - `locales` (optional string or array of strings): A string with a BCP 47 language tag with an optional Unicode extension key, or an array of such strings.
 - `options` (optional object): An object with properties influencing the formatting.
 
@@ -378,12 +402,13 @@ The `locales` and `options` arguments are the same as in the constructor to [`In
 > **NOTE**: Unlike in [`Temporal.Absolute.prototype.toLocaleString()`](./absolute.html#toLocaleString), `locales.timeZone` will have no effect, because `Temporal.Time` carries no time zone information and is just a wall-clock time.
 
 Example usage:
+
 ```js
 time = Temporal.Time.from('19:39:09.068346205');
-time.toLocaleString();  // => example output: 7:39:09 p.m.
-time.toLocaleString('de-DE');  // => example output: 19:39:09
-time.toLocaleString('de-DE', { timeZone: 'Europe/Berlin' });  // => 19:39:09
-time.toLocaleString('en-US-u-nu-fullwide-hc-h24');  // => １９:３９:０９
+time.toLocaleString(); // => example output: 7:39:09 p.m.
+time.toLocaleString('de-DE'); // => example output: 19:39:09
+time.toLocaleString('de-DE', { timeZone: 'Europe/Berlin' }); // => 19:39:09
+time.toLocaleString('en-US-u-nu-fullwide-hc-h24'); // => １９:３９:０９
 ```
 
 ### time.**toJSON**() : string
@@ -398,12 +423,13 @@ If you need to rebuild a `Temporal.Time` object from a JSON string, then you nee
 In that case you can build a custom "reviver" function for your use case.
 
 Example usage:
+
 ```js
 const workBreak = {
   type: 'mandatory',
   name: 'Lunch',
   startTime: Temporal.Time.from({ hour: 12 }),
-  endTime: Temporal.Time.from({ hour: 13 }),
+  endTime: Temporal.Time.from({ hour: 13 })
 };
 const str = JSON.stringify(workBreak, null, 2);
 console.log(str);
@@ -417,8 +443,7 @@ console.log(str);
 
 // To rebuild from the string:
 function reviver(key, value) {
-  if (key.endsWith('Time'))
-    return Temporal.Time.from(value);
+  if (key.endsWith('Time')) return Temporal.Time.from(value);
   return value;
 }
 JSON.parse(str, reviver);
@@ -433,6 +458,7 @@ Use `Temporal.Time.compare()` for this, or `time.equals()` for equality.
 ### time.**toDateTime**(_date_: Temporal.Date) : Temporal.DateTime
 
 **Parameters:**
+
 - `date` (`Temporal.Date`): A calendar date on which to place `time`.
 
 **Returns:** a `Temporal.DateTime` object that represents the wall-clock time `time` on the calendar date `date`.
@@ -443,10 +469,11 @@ The converted object carries a copy of all the relevant fields of `date` and `ti
 This is exactly equivalent to [`date.toDateTime(time)`](./date.html#toDateTime).
 
 Usage example:
+
 ```javascript
 time = Temporal.Time.from('15:23:30.003');
 date = Temporal.Date.from('2006-08-24');
-time.toDateTime(date)  // => 2006-08-24T15:23:30.003
+time.toDateTime(date); // => 2006-08-24T15:23:30.003
 ```
 
 ### time.**getFields**() : { hour: number, minute: number, second: number, millisecond: number, microsecond: number, nanosecond: number }
@@ -457,8 +484,9 @@ This method can be used to convert a `Temporal.Time` into a record-like data str
 It returns a new plain JavaScript object, with all the fields as enumerable, writable, own data properties.
 
 Usage example:
+
 ```javascript
 time = Temporal.Time.from('15:23:30.003');
-Object.assign({}, time).minute  // => undefined
-Object.assign({}, time.getFields()).minute  // => 23
+Object.assign({}, time).minute; // => undefined
+Object.assign({}, time.getFields()).minute; // => 23
 ```

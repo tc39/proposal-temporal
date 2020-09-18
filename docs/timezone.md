@@ -26,6 +26,7 @@ It is possible to pass such an object into any Temporal API that would normally 
 ### **new Temporal.TimeZone**(_timeZoneIdentifier_: string) : Temporal.TimeZone
 
 **Parameters:**
+
 - `timeZoneIdentifier` (string): A description of the time zone; either its IANA name, or a UTC offset.
 
 **Returns:** a new `Temporal.TimeZone` object.
@@ -41,14 +42,15 @@ Use this constructor directly if you have a string that is known to be a correct
 If you have an ISO 8601 date-time string, `Temporal.TimeZone.from()` is probably more convenient.
 
 Example usage:
+
 ```javascript
 tz = new Temporal.TimeZone('UTC');
 tz = new Temporal.TimeZone('Africa/Cairo');
 tz = new Temporal.TimeZone('america/VANCOUVER');
-tz = new Temporal.TimeZone('Asia/Katmandu');  // alias of Asia/Kathmandu
+tz = new Temporal.TimeZone('Asia/Katmandu'); // alias of Asia/Kathmandu
 tz = new Temporal.TimeZone('-04:00');
 tz = new Temporal.TimeZone('+0645');
-/* WRONG */ tz = new Temporal.TimeZone('local');  // not a time zone, throws
+/* WRONG */ tz = new Temporal.TimeZone('local'); // not a time zone, throws
 ```
 
 #### Difference between IANA time zones and UTC offsets
@@ -60,9 +62,9 @@ For example:
 ```javascript
 tz1 = new Temporal.TimeZone('-08:00');
 tz2 = new Temporal.TimeZone('America/Vancouver');
-abs = Temporal.DateTime.from({year: 2020, month: 1, day: 1}).toAbsolute(tz2);
-tz1.getNextTransition(abs);  // => null
-tz2.getPreviousTransition(abs);  // => 2020-03-08T10:00Z
+abs = Temporal.DateTime.from({ year: 2020, month: 1, day: 1 }).toAbsolute(tz2);
+tz1.getNextTransition(abs); // => null
+tz2.getPreviousTransition(abs); // => 2020-03-08T10:00Z
 ```
 
 ## Static methods
@@ -70,6 +72,7 @@ tz2.getPreviousTransition(abs);  // => 2020-03-08T10:00Z
 ### Temporal.TimeZone.**from**(_thing_: any) : Temporal.TimeZone
 
 **Parameters:**
+
 - `thing`: A `Temporal.TimeZone` object or a value from which to create a `Temporal.TimeZone`.
 
 **Returns:** a new `Temporal.TimeZone` object.
@@ -78,6 +81,7 @@ This static method creates a new time zone from another value.
 If the value is another `Temporal.TimeZone` object, a new object representing the same time zone is returned.
 
 Any other value is converted to a string, which is expected to be either:
+
 - a string that is accepted by `new Temporal.TimeZone()`; or
 - a string in the ISO 8601 format including a time zone offset part.
 
@@ -86,12 +90,13 @@ Note that the ISO 8601 string can optionally be extended with an IANA time zone 
 This function is often more convenient to use than `new Temporal.TimeZone()` because it handles a wider range of input.
 
 Usage examples:
+
 ```javascript
 // IANA time zone names and UTC offsets
 tz = Temporal.TimeZone.from('UTC');
 tz = Temporal.TimeZone.from('Africa/Cairo');
 tz = Temporal.TimeZone.from('america/VANCOUVER');
-tz = Temporal.TimeZone.from('Asia/Katmandu');  // alias of Asia/Kathmandu
+tz = Temporal.TimeZone.from('Asia/Katmandu'); // alias of Asia/Kathmandu
 tz = Temporal.TimeZone.from('-04:00');
 tz = Temporal.TimeZone.from('+0645');
 
@@ -103,10 +108,10 @@ tz = Temporal.TimeZone.from('2020-01-13T16:31:00.065858086-08:00[America/Vancouv
 // Existing TimeZone object
 tz2 = Temporal.TimeZone.from(tz);
 
-/* WRONG */ tz = Temporal.TimeZone.from('local');  // not a time zone, throws
-/* WRONG */ tz = Temporal.TimeZone.from({name: 'UTC'});  // not a TimeZone object, throws
-/* WRONG */ tz = Temporal.TimeZone.from('2020-01-14T00:31:00');  // ISO 8601 string without time zone offset part, throws
-/* WRONG */ tz = Temporal.TimeZone.from('-08:00[America/Vancouver]')  // ISO 8601 string without date-time part, throws
+/* WRONG */ tz = Temporal.TimeZone.from('local'); // not a time zone, throws
+/* WRONG */ tz = Temporal.TimeZone.from({ name: 'UTC' }); // not a TimeZone object, throws
+/* WRONG */ tz = Temporal.TimeZone.from('2020-01-14T00:31:00'); // ISO 8601 string without time zone offset part, throws
+/* WRONG */ tz = Temporal.TimeZone.from('-08:00[America/Vancouver]'); // ISO 8601 string without date-time part, throws
 ```
 
 ## Properties
@@ -121,6 +126,7 @@ Effectively, this is the canonicalized version of whatever `timeZoneIdentifier` 
 ### timeZone.**getOffsetNanosecondsFor**(_absolute_: Temporal.Absolute) : number
 
 **Parameters:**
+
 - `absolute` (`Temporal.Absolute`): The time for which to compute the time zone's UTC offset.
 
 **Returns:** The UTC offset at the given time, in nanoseconds.
@@ -131,28 +137,30 @@ Note that only `Temporal.TimeZone` objects constructed from an IANA time zone na
 If `timeZone` is a UTC offset time zone, the return value of this method is always the same regardless of `absolute`.
 
 Example usage:
+
 ```javascript
 // Getting the UTC offset for a time zone at a particular time
 timestamp = Temporal.Absolute.fromEpochSeconds(1553993100);
 tz = Temporal.TimeZone.from('Europe/Berlin');
-tz.getOffsetNanosecondsFor(timestamp);  // => 3600000000000
+tz.getOffsetNanosecondsFor(timestamp); // => 3600000000000
 
 // TimeZone with a fixed UTC offset
 tz = Temporal.TimeZone.from('-08:00');
-tz.getOffsetNanosecondsFor(timestamp);  // => -28800000000000
+tz.getOffsetNanosecondsFor(timestamp); // => -28800000000000
 // UTC is always 0 offset
 tz = Temporal.TimeZone.from('UTC');
-tz.getOffsetNanosecondsFor(timestamp);  // => 0
+tz.getOffsetNanosecondsFor(timestamp); // => 0
 
 // Differences between DST and non-DST
 tz = Temporal.TimeZone.from('Europe/London');
-tz.getOffsetNanosecondsFor(Temporal.Absolute.from('2020-08-06T15:00Z'));  // => 3600000000000
-tz.getOffsetNanosecondsFor(Temporal.Absolute.from('2020-11-06T01:00Z'));  // => 0
+tz.getOffsetNanosecondsFor(Temporal.Absolute.from('2020-08-06T15:00Z')); // => 3600000000000
+tz.getOffsetNanosecondsFor(Temporal.Absolute.from('2020-11-06T01:00Z')); // => 0
 ```
 
 ### timeZone.**getOffsetStringFor**(_absolute_: Temporal.Absolute) : string
 
 **Parameters:**
+
 - `absolute` (`Temporal.Absolute`): The time for which to compute the time zone's UTC offset.
 
 **Returns**: a string indicating the UTC offset at the given time.
@@ -162,20 +170,22 @@ This method is similar to `timeZone.getOffsetNanosecondsFor()`, but returns the 
 If `timeZone` is a UTC offset time zone, the return value of this method is effectively the same as `timeZone.name`.
 
 Example usage:
+
 ```javascript
 // Getting the UTC offset for a time zone at a particular time
 timestamp = new Temporal.Absolute(1553993100000000000n);
 tz = new Temporal.TimeZone('Europe/Berlin');
-tz.getOffsetStringFor(timestamp);  // => +01:00
+tz.getOffsetStringFor(timestamp); // => +01:00
 
 // TimeZone with a fixed UTC offset
 tz = new Temporal.TimeZone('-08:00');
-tz.getOffsetStringFor(timestamp);  // => -08:00
+tz.getOffsetStringFor(timestamp); // => -08:00
 ```
 
 ### timeZone.**getDateTimeFor**(_absolute_: Temporal.Absolute, _calendar_?: object | string) : Temporal.DateTime
 
 **Parameters:**
+
 - `absolute` (`Temporal.Absolute`): An absolute time to convert.
 - `calendar` (optional object or string): A `Temporal.Calendar` object, or a plain object, or a calendar identifier.
   The default is to use the ISO 8601 calendar.
@@ -190,17 +200,18 @@ Example usage:
 // Converting a specific absolute time to a calendar date / wall-clock time
 timestamp = new Temporal.Absolute(1553993100000000000n);
 tz = new Temporal.TimeZone('Europe/Berlin');
-tz.getDateTimeFor(timestamp);  // => 2019-03-31T01:45
+tz.getDateTimeFor(timestamp); // => 2019-03-31T01:45
 
 // What time was the Unix Epoch (timestamp 0) in Bell Labs (Murray Hill, New Jersey, USA)?
 epoch = new Temporal.Absolute(0n);
 tz = new Temporal.TimeZone('America/New_York');
-tz.getDateTimeFor(epoch);  // => 1969-12-31T19:00
+tz.getDateTimeFor(epoch); // => 1969-12-31T19:00
 ```
 
 ### timeZone.**getAbsoluteFor**(_dateTime_: Temporal.DateTime, _options_?: object) : Temporal.Absolute
 
 **Parameters:**
+
 - `dateTime` (`Temporal.DateTime`): A calendar date and wall-clock time to convert.
 - `options` (optional object): An object with properties representing options for the operation.
   The following options are recognized:
@@ -214,6 +225,7 @@ This method is one way to convert a `Temporal.DateTime` to a `Temporal.Absolute`
 It is identical to [`dateTime.toAbsolute(timeZone, disambiguation)`](./datetime.html#toAbsolute).
 
 In the case of ambiguity, the `disambiguation` option controls what absolute time to return:
+
 - `'compatible'` (the default): Acts like `'earlier'` for backward transitions and `'later'` for forward transitions.
 - `'earlier'`: The earlier of two possible times.
 - `'later'`: The later of two possible times.
@@ -232,6 +244,7 @@ If the result is earlier or later than the range that `Temporal.Absolute` can re
 ### timeZone.**getPossibleAbsolutesFor**(_dateTime_: Temporal.DateTime) : array&lt;Temporal.Absolute&gt;
 
 **Parameters:**
+
 - `dateTime` (`Temporal.DateTime`): A calendar date and wall-clock time to convert.
 
 **Returns:** An array of `Temporal.Absolute` objects, which may be empty.
@@ -247,12 +260,12 @@ During "skipped" clock time like the hour after DST starts in the Spring, `Tempo
 ### timeZone.**getNextTransition**(_startingPoint_: Temporal.Absolute) : Temporal.Absolute
 
 **Parameters:**
+
 - `startingPoint` (`Temporal.Absolute`): Time after which to find the next DST transition.
 
 **Returns:** A `Temporal.Absolute` object representing the next DST transition in this time zone, or `null` if no transitions later than `startingPoint` could be found.
 
 This method is used to calculate future DST transitions after `startingPoint` for this time zone.
-
 
 Note that if the time zone was constructed from a UTC offset, there will be no DST transitions.
 In that case, this method will return `null`.
@@ -265,12 +278,13 @@ tz = Temporal.now.timeZone();
 now = Temporal.now.absolute();
 nextTransition = tz.getNextTransition(now);
 duration = nextTransition.difference(now);
-duration.toLocaleString();  // output will vary
+duration.toLocaleString(); // output will vary
 ```
 
 ### timeZone.**getPreviousTransition**(_startingPoint_: Temporal.Absolute) : Temporal.Absolute
 
 **Parameters:**
+
 - `startingPoint` (`Temporal.Absolute`): Time before which to find the previous DST transition.
 
 **Returns:** A `Temporal.Absolute` object representing the previous DST transition in this time zone, or `null` if no transitions earlier than `startingPoint` could be found.
@@ -288,7 +302,7 @@ tz = Temporal.now.timeZone();
 now = Temporal.now.absolute();
 previousTransition = tz.getPreviousTransition(now);
 duration = now.difference(previousTransition);
-duration.toLocaleString();  // output will vary
+duration.toLocaleString(); // output will vary
 ```
 
 ### timeZone.**toString**() : string
@@ -309,12 +323,13 @@ If you need to rebuild a `Temporal.TimeZone` object from a JSON string, then you
 In that case you can build a custom "reviver" function for your use case.
 
 Example usage:
+
 ```js
 const user = {
   id: 775,
   username: 'robotcat',
-  password: 'hunter2',  // Note: Don't really store passwords like that
-  userTimeZone: Temporal.TimeZone.from('Europe/Madrid'),
+  password: 'hunter2', // Note: Don't really store passwords like that
+  userTimeZone: Temporal.TimeZone.from('Europe/Madrid')
 };
 const str = JSON.stringify(user, null, 2);
 console.log(str);
@@ -328,8 +343,7 @@ console.log(str);
 
 // To rebuild from the string:
 function reviver(key, value) {
-  if (key.endsWith('TimeZone'))
-    return Temporal.TimeZone.from(value);
+  if (key.endsWith('TimeZone')) return Temporal.TimeZone.from(value);
   return value;
 }
 JSON.parse(str, reviver);

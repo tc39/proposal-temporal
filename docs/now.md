@@ -18,15 +18,16 @@ This is a good way to get a timestamp for an event, for example.
 It works like the old-style JavaScript `Date.now()`, but with nanosecond accuracy instead of milliseconds.
 
 Example usage:
+
 ```js
 function timeit(func) {
-    start = Temporal.now.absolute();
-    try {
-        return func();
-    } finally {
-        end = Temporal.now.absolute();
-        console.log(`The function took ${end.difference(start)}`);
-    }
+  start = Temporal.now.absolute();
+  try {
+    return func();
+  } finally {
+    end = Temporal.now.absolute();
+    console.log(`The function took ${end.difference(start)}`);
+  }
 }
 timeit(() => JSON.parse(someData));
 // example output:
@@ -41,13 +42,14 @@ This method gets the current system time zone.
 This will usually be a named [IANA time zone](https://www.iana.org/time-zones), as that is how most people configure their computers.
 
 Example usage:
+
 ```js
 // When is the next daylight saving change from now, in the current location?
 tz = Temporal.now.timeZone();
 now = Temporal.now.absolute();
 nextTransition = tz.getNextTransition(now);
-before = tz.getOffsetStringFor(nextTransition.minus({nanoseconds: 1}));
-after = tz.getOffsetStringFor(nextTransition.plus({nanoseconds: 1}));
+before = tz.getOffsetStringFor(nextTransition.minus({ nanoseconds: 1 }));
+after = tz.getOffsetStringFor(nextTransition.plus({ nanoseconds: 1 }));
 console.log(`On ${nextTransition.toDateTime(tz)} the clock will change from UTC ${before} to ${after}`);
 nextTransition.toDateTime(tz);
 // example output:
@@ -57,6 +59,7 @@ nextTransition.toDateTime(tz);
 ### Temporal.now.**dateTime**(_timeZone_: object | string = Temporal.now.timeZone(), _calendar_: object | string = 'iso8601') : Temporal.DateTime
 
 **Parameters:**
+
 - `timeZone` (optional object or string): The time zone to get the current date and time in, as a `Temporal.TimeZone` object, an object implementing the [time zone protocol](./timezone.md#protocol), or a string.
   If not given, the current system time zone will be used.
 - `calendar` (optional `Temporal.Calendar`, plain object, or string): The calendar system to get the current date and time in.
@@ -68,15 +71,16 @@ This method gets the current calendar date and wall-clock time according to the 
 Optionally a time zone can be given in which the time is computed, and a calendar system in which the date is reckoned.
 
 Example usage:
+
 ```js
 financialCentres = {
-    'New York': 'America/New_York',
-    'London': 'Europe/London',
-    'Tokyo': 'Asia/Tokyo',
+  'New York': 'America/New_York',
+  'London': 'Europe/London',
+  'Tokyo': 'Asia/Tokyo',
 };
 console.log(`Here: ${Temporal.now.dateTime()}`);
 Object.entries(financialCentres).forEach(([name, timeZone]) => {
-    console.log(`${name}: ${Temporal.now.dateTime(timeZone)}`);
+  console.log(`${name}: ${Temporal.now.dateTime(timeZone)}`);
 });
 // example output:
 // Here: 2020-01-24T21:51:02.142905166
@@ -88,6 +92,7 @@ Object.entries(financialCentres).forEach(([name, timeZone]) => {
 ### Temporal.now.**date**(_timeZone_: object | string = Temporal.now.timeZone(), _calendar_: object | string = 'iso8601') : Temporal.Date
 
 **Parameters:**
+
 - `timeZone` (optional object or string): The time zone to get the current date and time in, as a `Temporal.TimeZone` object, an object implementing the [time zone protocol](./timezone.md#protocol), or a string.
   If not given, the current system time zone will be used.
 - `calendar` (optional `Temporal.Calendar`, plain object, or string): The calendar system to get the current date and time in.
@@ -96,6 +101,7 @@ Object.entries(financialCentres).forEach(([name, timeZone]) => {
 **Returns:** a `Temporal.Date` object representing the current system date.
 
 Example usage:
+
 ```js
 // Is it Leap Day?
 date = Temporal.now.date();
@@ -105,6 +111,7 @@ if (date.month === 2 && date.day === 29) console.log('Leap Day!');
 ### Temporal.now.**time**(_timeZone_: object | string = Temporal.now.timeZone()) : Temporal.Time
 
 **Parameters:**
+
 - `timeZone` (optional object or string): The time zone to get the current date and time in, as a `Temporal.TimeZone` object, an object implementing the [time zone protocol](./timezone.md#protocol), or a string.
   If not given, the current system time zone will be used.
 
@@ -114,6 +121,7 @@ This method gets the current wall-clock time according to the system settings.
 Optionally a time zone can be given in which the time is computed.
 
 Example usage:
+
 ```js
 // Is it lunchtime?
 time = Temporal.now.time();
