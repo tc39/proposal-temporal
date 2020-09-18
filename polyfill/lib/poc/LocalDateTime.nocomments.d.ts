@@ -17,21 +17,6 @@ export interface TimeZoneOffsetDisambiguationOptions {
 export declare type LocalDateTimeAssignmentOptions = Partial<
   Temporal.AssignmentOptions & Temporal.ToAbsoluteOptions & TimeZoneOffsetDisambiguationOptions
 >;
-export declare type LocalDateTimeMathOptions = Temporal.AssignmentOptions;
-export declare type LocalDateTimeDifferenceOptions = Partial<
-  Temporal.DifferenceOptions<
-    | 'years'
-    | 'months'
-    | 'weeks'
-    | 'days'
-    | 'hours'
-    | 'minutes'
-    | 'seconds'
-    | 'milliseconds'
-    | 'microseconds'
-    | 'nanoseconds'
-  >
->;
 export declare class LocalDateTime {
   private _abs;
   private _tz;
@@ -56,9 +41,26 @@ export declare class LocalDateTime {
   getISOFields(): LocalDateTimeISOFields;
   static compare(one: LocalDateTime, two: LocalDateTime): Temporal.ComparisonResult;
   equals(other: LocalDateTime): boolean;
-  plus(durationLike: Temporal.DurationLike, options?: LocalDateTimeMathOptions): LocalDateTime;
-  minus(durationLike: Temporal.DurationLike, options?: LocalDateTimeMathOptions): LocalDateTime;
-  difference(other: LocalDateTime, options?: LocalDateTimeDifferenceOptions): Temporal.Duration;
+  plus(durationLike: Temporal.DurationLike, options?: Temporal.ArithmeticOptions): LocalDateTime;
+  minus(durationLike: Temporal.DurationLike, options?: Temporal.ArithmeticOptions): LocalDateTime;
+  difference(
+    other: LocalDateTime,
+    options?: Temporal.DifferenceOptions<
+      | 'years'
+      | 'months'
+      | 'weeks'
+      | 'days'
+      | 'hours'
+      | 'minutes'
+      | 'seconds'
+      | 'milliseconds'
+      | 'microseconds'
+      | 'nanoseconds'
+    >
+  ): Temporal.Duration;
+  round(
+    options: Temporal.RoundOptions<'day' | 'hour' | 'minute' | 'second' | 'millisecond' | 'microsecond' | 'nanosecond'>
+  ): LocalDateTime;
   toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
   toJSON(): string;
   toString(): string;

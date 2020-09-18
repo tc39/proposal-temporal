@@ -49,21 +49,6 @@ export interface TimeZoneOffsetDisambiguationOptions {
 export declare type LocalDateTimeAssignmentOptions = Partial<
   Temporal.AssignmentOptions & Temporal.ToAbsoluteOptions & TimeZoneOffsetDisambiguationOptions
 >;
-export declare type LocalDateTimeMathOptions = Temporal.AssignmentOptions;
-export declare type LocalDateTimeDifferenceOptions = Partial<
-  Temporal.DifferenceOptions<
-    | 'years'
-    | 'months'
-    | 'weeks'
-    | 'days'
-    | 'hours'
-    | 'minutes'
-    | 'seconds'
-    | 'milliseconds'
-    | 'microseconds'
-    | 'nanoseconds'
-  >
->;
 export declare class LocalDateTime {
   private _abs;
   private _tz;
@@ -342,7 +327,7 @@ export declare class LocalDateTime {
    * overflow?: 'constrain' (default) | 'reject'
    * ```
    */
-  plus(durationLike: Temporal.DurationLike, options?: LocalDateTimeMathOptions): LocalDateTime;
+  plus(durationLike: Temporal.DurationLike, options?: Temporal.ArithmeticOptions): LocalDateTime;
   /**
    * Subtract a `Temporal.Duration` and return the result.
    *
@@ -354,7 +339,7 @@ export declare class LocalDateTime {
    * overflow?: 'constrain' (default) | 'reject'
    * ```
    */
-  minus(durationLike: Temporal.DurationLike, options?: LocalDateTimeMathOptions): LocalDateTime;
+  minus(durationLike: Temporal.DurationLike, options?: Temporal.ArithmeticOptions): LocalDateTime;
   /**
    * Calculate the difference between two `Temporal.LocalDateTime` values and
    * return the `Temporal.Duration` result.
@@ -403,9 +388,42 @@ export declare class LocalDateTime {
    * ```
    * largestUnit: 'years' | 'months' | 'weeks' | 'days' | 'hours' (default)
    *   | 'minutes' | 'seconds' | 'milliseconds' | 'microseconds' | 'nanoseconds'
+   * smallestUnit: 'years' | 'months' | 'weeks' | 'days' | 'hours'
+   *   | 'minutes' | 'seconds' | 'milliseconds' | 'microseconds' | 'nanoseconds' (default)
+   * roundingIncrement: number (default = 1)
+   * roundingMode: 'nearest' (default) | 'ceil'  | 'trunc' | 'floor'`
    * ```
    */
-  difference(other: LocalDateTime, options?: LocalDateTimeDifferenceOptions): Temporal.Duration;
+  difference(
+    other: LocalDateTime,
+    options?: Temporal.DifferenceOptions<
+      | 'years'
+      | 'months'
+      | 'weeks'
+      | 'days'
+      | 'hours'
+      | 'minutes'
+      | 'seconds'
+      | 'milliseconds'
+      | 'microseconds'
+      | 'nanoseconds'
+    >
+  ): Temporal.Duration;
+  /**
+   * Rounds a `Temporal.LocalDateTime` to a particular unit
+   *
+   * Available options:
+   * - `smallestUnit` (required string) - The unit to round to. Valid values are
+   *   'day', 'hour', 'minute', 'second', 'millisecond', 'microsecond', and
+   *   'nanosecond'.
+   * - `roundingIncrement` (number) - The granularity to round to, of the unit
+   *   given by smallestUnit. The default is 1.
+   * - `roundingMode` (string) - How to handle the remainder. Valid values are
+   *   'ceil', 'floor', 'trunc', and 'nearest'. The default is 'nearest'.
+   */
+  round(
+    options: Temporal.RoundOptions<'day' | 'hour' | 'minute' | 'second' | 'millisecond' | 'microsecond' | 'nanosecond'>
+  ): LocalDateTime;
   /**
    * Convert to a localized string.
    *

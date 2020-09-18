@@ -131,7 +131,7 @@ export namespace Temporal {
      *   negative infinity which is usually unexpected. For this reason, `trunc`
      *   is recommended for most use cases.
      */
-    roundingMode?: 'ceil' | 'floor' | 'trunc' | 'nearest';
+    roundingMode?: 'nearest' | 'ceil' | 'trunc' | 'floor';
   }
 
   /**
@@ -166,7 +166,7 @@ export namespace Temporal {
      *   negative infinity which is usually unexpected. For this reason, `trunc`
      *   is recommended for most use cases.
      */
-    roundingMode?: 'nearest' | 'ceil' | 'floor' | 'trunc';
+    roundingMode?: 'nearest' | 'ceil' | 'trunc' | 'floor';
   }
 
   export interface DurationRoundOptions {

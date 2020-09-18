@@ -22,7 +22,6 @@ function processMjs(file) {
   const prepend = [
     // "import ES2019 from 'es-abstract/es2019.js';",
     "import { GetIntrinsic, MakeIntrinsicClass } from './intrinsicclass.mjs'",
-    "import ToInteger from 'es-abstract/2019/ToInteger.js';",
     "import ToObject from 'es-abstract/2019/ToObject.js';",
     "import ToString from 'es-abstract/2019/ToString.js';",
     '',
@@ -40,7 +39,7 @@ function processMjs(file) {
     if (line.includes('eslint-disable-next-line @typescript-eslint')) return false;
     return true;
   };
-  const updated = [...prepend, ...lines.slice(8).filter(filter), ...append];
+  const updated = [...prepend, ...lines.slice(6).filter(filter), ...append];
   writeAllLines(file, updated);
 }
 

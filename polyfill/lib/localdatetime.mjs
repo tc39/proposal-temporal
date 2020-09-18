@@ -1,5 +1,4 @@
 import { GetIntrinsic, MakeIntrinsicClass } from './intrinsicclass.mjs';
-import ToInteger from 'es-abstract/2019/ToInteger.js';
 import ToObject from 'es-abstract/2019/ToObject.js';
 import ToString from 'es-abstract/2019/ToString.js';
 
@@ -688,22 +687,42 @@ export class LocalDateTime {
    * ```
    * largestUnit: 'years' | 'months' | 'weeks' | 'days' | 'hours' (default)
    *   | 'minutes' | 'seconds' | 'milliseconds' | 'microseconds' | 'nanoseconds'
+   * smallestUnit: 'years' | 'months' | 'weeks' | 'days' | 'hours'
+   *   | 'minutes' | 'seconds' | 'milliseconds' | 'microseconds' | 'nanoseconds' (default)
+   * roundingIncrement: number (default = 1)
+   * roundingMode: 'nearest' (default) | 'ceil'  | 'trunc' | 'floor'`
    * ```
    */
   difference(other, options) {
-    const largestUnit = toLargestTemporalUnit(options, 'hours');
+    // The default of 'hours' is different from DateTime and Absolute, which is
+    // why we can't simply passthrough the options to those types.
+    const largestUnit = getOption(options, 'largestUnit', DIFFERENCE_UNITS, 'hours');
+    const smallestUnit = getOption(options, 'smallestUnit', DIFFERENCE_UNITS, 'nanoseconds');
+    const roundingIncrement = options && options.roundingIncrement;
+    const roundingMode = getOption(options, 'roundingMode', ROUNDING_MODES, 'nearest');
     const dateUnits = ['years', 'months', 'weeks', 'days'];
     const wantDate = dateUnits.includes(largestUnit);
 
-    // treat as absolute if the user is only asking for a time difference
+    if (wantDate && this._tz.name != other._tz.name) {
+      throw new RangeError(
+        "When calculating difference between time zones, largestUnit` must be `'hours'` " +
+          'or smaller because day lengths can vary between time zones due to DST or time zone offset changes.'
+      );
+    }
+
     if (!wantDate) {
-      const largestUnitOptionBag = {
-        largestUnit: largestUnit
+      // The user is only asking for a time difference, so just use Absolute.prototype.difference
+      const revisedOptions = {
+        largestUnit: largestUnit,
+        smallestUnit: smallestUnit,
+        roundingIncrement,
+        roundingMode
       };
 
-      return this._abs.difference(other._abs, largestUnitOptionBag);
+      return this._abs.difference(other._abs, revisedOptions);
     }
-    const dtDiff = this._dt.difference(other._dt, { largestUnit });
+
+    const dtDiff = this._dt.difference(other._dt, { largestUnit, smallestUnit, roundingIncrement, roundingMode });
 
     // If there's no change in timezone offset between this and other, then we
     // don't have to do any DST-related fixups. Just return the simple DateTime
@@ -742,6 +761,13 @@ export class LocalDateTime {
     let intermediateDt = this._dt.minus(dateDuration);
     let intermediateAbs = intermediateDt.toAbsolute(this._tz);
     let adjustedTimeDuration;
+
+    // TODO: the logic below doesn't work with rounding and smallestUnit. Given
+    // that we're going to review all the logic in this method, it doesn't make
+    // sense to fix rounding until we decide on the final logic, which should
+    // happen in the next few days. In the meantime, difference() will be broken
+    // in those cases.
+
     if (this._tz.getOffsetNanosecondsFor(intermediateAbs) === other.timeZoneOffsetNanoseconds) {
       // The transition was in the date portion which is what we want.
       adjustedTimeDuration = intermediateAbs.difference(other._abs, { largestUnit: 'hours' });
@@ -757,6 +783,32 @@ export class LocalDateTime {
     const hybridDuration = mergeDuration({ dateDuration, timeDuration: adjustedTimeDuration });
     return hybridDuration;
     // TODO: more tests for cases where intermediate value lands on a discontinuity
+  }
+
+  /**
+   * Rounds a `Temporal.LocalDateTime` to a particular unit
+   *
+   * Available options:
+   * - `smallestUnit` (required string) - The unit to round to. Valid values are
+   *   'day', 'hour', 'minute', 'second', 'millisecond', 'microsecond', and
+   *   'nanosecond'.
+   * - `roundingIncrement` (number) - The granularity to round to, of the unit
+   *   given by smallestUnit. The default is 1.
+   * - `roundingMode` (string) - How to handle the remainder. Valid values are
+   *   'ceil', 'floor', 'trunc', and 'nearest'. The default is 'nearest'.
+   */
+  round(options) {
+    // first, round the underlying DateTime fields
+    const rounded = this._dt.round(options);
+
+    // Now reset all DateTime fields but leave the TimeZone. The offset will
+    // also be retained (using the default `offset: 'prefer'` option of `with`)
+    // if the new date/time values are still OK with the old offset. Otherwise
+    // the offset will be changed to be compatible with the new date/time
+    // values. If DST disambiguation is required, the `compatible`
+    // disambiguation algorithm will be used.
+    const result = this.with(rounded.getFields());
+    return result;
   }
 
   /**
@@ -917,7 +969,7 @@ function isZeroDuration(duration) {
   );
 }
 
-const LARGEST_DIFFERENCE_UNITS = [
+const DIFFERENCE_UNITS = [
   'years',
   'months',
   'weeks',
@@ -934,6 +986,7 @@ const DISAMBIGUATION_OPTIONS = ['compatible', 'earlier', 'later', 'reject'];
 
 const OFFSET_OPTIONS = ['use', 'prefer', 'ignore', 'reject'];
 const OVERFLOW_OPTIONS = ['constrain', 'reject'];
+const ROUNDING_MODES = ['nearest', 'ceil', 'trunc', 'floor'];
 
 function getOption(options, property, allowedValues, fallback) {
   if (options === null || options === undefined) return fallback;
@@ -949,20 +1002,7 @@ function getOption(options, property, allowedValues, fallback) {
   return fallback;
 }
 
-function toLargestTemporalUnit(options, fallback, disallowedStrings = []) {
-  if (disallowedStrings.includes(fallback)) {
-    throw new RangeError(`Fallback ${fallback} cannot be disallowed`);
-  }
-  const largestUnit = getOption(options, 'largestUnit', LARGEST_DIFFERENCE_UNITS, fallback);
-
-  if (disallowedStrings.includes(largestUnit)) {
-    throw new RangeError(`${largestUnit} not allowed as the largest unit here`);
-  }
-  return largestUnit;
-}
-
 const ES = {
-  ToInteger: ToInteger,
   ToString: ToString,
   ToObject: ToObject
 };

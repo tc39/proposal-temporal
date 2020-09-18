@@ -86,6 +86,10 @@ export namespace Temporal {
     overflow: 'constrain' | 'reject';
   };
 
+  /**
+   * Options to control the result of `difference()` methods in `Temporal`
+   * types.
+   * */
   export interface DifferenceOptions<T extends string> {
     /**
      * The largest unit to allow in the resulting `Temporal.Duration` object.
@@ -97,7 +101,72 @@ export namespace Temporal {
      *
      * The default depends on the type being used.
      */
-    largestUnit: T;
+    largestUnit?: T;
+
+    /**
+     * The unit to round to. For example, to round to the nearest minute, use
+     * `smallestUnit: 'minute'`. This option is required for `round()` and
+     * optional for `difference()`.
+     */
+    smallestUnit?: T;
+
+    /**
+     * Allows rounding to an integer number of units. For example, to round to
+     * increments of a half hour, use `{ smallestUnit: 'minute',
+     * roundingIncrement: 30 }`.
+     */
+    roundingIncrement?: number;
+
+    /**
+     * Controls how rounding is performed:
+     * - `nearest`: Round to the nearest of the values allowed by
+     *   `roundingIncrement` and `smallestUnit`. When there is a tie, round up.
+     *   This mode is the default.
+     * - `ceil`: Always round up, towards the end of time.
+     * - `trunc`: Always round down, towards the beginning of time.
+     * - `floor`: Also round down, towards the beginning of time. This mode acts
+     *   the same as `trunc`, but it's included for consistency with
+     *   `Temporal.Duration.round()` where negative values are allowed and
+     *   `trunc` rounds towards zero, unlike `floor` which rounds towards
+     *   negative infinity which is usually unexpected. For this reason, `trunc`
+     *   is recommended for most use cases.
+     */
+    roundingMode?: 'nearest' | 'ceil' | 'trunc' | 'floor';
+  }
+
+  /**
+   * Options to control rounding behavior
+   */
+  export interface RoundOptions<T extends string> {
+    /**
+     * The unit to round to. For example, to round to the nearest minute, use
+     * `smallestUnit: 'minute'`. This option is required for `round()` and
+     * optional for `difference()`.
+     */
+    smallestUnit: T;
+
+    /**
+     * Allows rounding to an integer number of units. For example, to round to
+     * increments of a half hour, use `{ smallestUnit: 'minute',
+     * roundingIncrement: 30 }`.
+     */
+    roundingIncrement?: number;
+
+    /**
+     * Controls how rounding is performed:
+     * - `nearest`: Round to the nearest of the values allowed by
+     *   `roundingIncrement` and `smallestUnit`. When there is a tie, round up.
+     *   This mode is the default.
+     * - `ceil`: Always round up, towards the end of time.
+     * - `trunc`: Always round down, towards the beginning of time.
+     * - `floor`: Also round down, towards the beginning of time. This mode acts
+     *   the same as `trunc`, but it's included for consistency with
+     *   `Temporal.Duration.round()` where negative values are allowed and
+     *   `trunc` rounds towards zero, unlike `floor` which rounds towards
+     *   negative infinity which is usually unexpected. For this reason, `trunc`
+     *   is recommended for most use cases.
+     */
+    roundingMode?: 'nearest' | 'ceil' | 'trunc' | 'floor';
   }
 
   export type DurationLike = {
@@ -191,8 +260,9 @@ export namespace Temporal {
       other: Temporal.Absolute,
       options?: DifferenceOptions<'hours' | 'minutes' | 'seconds' | 'milliseconds' | 'microseconds' | 'nanoseconds'>
     ): Temporal.Duration;
-    toLocalDateTime(tzLike: TimeZoneProtocol | string, calendar?: CalendarProtocol | string): Temporal.LocalDateTime;
+    round(options: RoundOptions<'minute' | 'second' | 'millisecond' | 'microsecond' | 'nanosecond'>): Temporal.Absolute;
     toDateTime(tzLike: TimeZoneProtocol | string, calendar?: CalendarProtocol | string): Temporal.DateTime;
+    toLocalDateTime(tzLike: TimeZoneProtocol | string, calendar?: CalendarProtocol | string): Temporal.LocalDateTime;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
     toString(tzLike?: TimeZoneProtocol | string): string;
@@ -483,6 +553,9 @@ export namespace Temporal {
         | 'nanoseconds'
       >
     ): Temporal.Duration;
+    round(
+      options: RoundOptions<'day' | 'hour' | 'minute' | 'second' | 'millisecond' | 'microsecond' | 'nanosecond'>
+    ): Temporal.DateTime;
     toLocalDateTime(tzLike: TimeZoneProtocol | string, options?: ToAbsoluteOptions): Temporal.LocalDateTime;
     toAbsolute(tzLike: TimeZoneProtocol | string, options?: ToAbsoluteOptions): Temporal.Absolute;
     toDate(): Temporal.Date;
@@ -588,6 +661,9 @@ export namespace Temporal {
       other: Temporal.Time,
       options?: DifferenceOptions<'hours' | 'minutes' | 'seconds' | 'milliseconds' | 'microseconds' | 'nanoseconds'>
     ): Temporal.Duration;
+    round(
+      options: RoundOptions<'hour' | 'minute' | 'second' | 'millisecond' | 'microsecond' | 'nanosecond'>
+    ): Temporal.Time;
     toLocalDateTime(
       tzLike: TimeZoneProtocol | string,
       temporalDate: DateLike,
@@ -817,21 +893,6 @@ export namespace Temporal {
   }
   export type LocalDateTimeAssignmentOptions = Partial<
     Temporal.AssignmentOptions & Temporal.ToAbsoluteOptions & TimeZoneOffsetDisambiguationOptions
-  >;
-  export type LocalDateTimeMathOptions = Temporal.AssignmentOptions;
-  export type LocalDateTimeDifferenceOptions = Partial<
-    Temporal.DifferenceOptions<
-      | 'years'
-      | 'months'
-      | 'weeks'
-      | 'days'
-      | 'hours'
-      | 'minutes'
-      | 'seconds'
-      | 'milliseconds'
-      | 'microseconds'
-      | 'nanoseconds'
-    >
   >;
   export class LocalDateTime {
     private _abs;
@@ -1111,7 +1172,7 @@ export namespace Temporal {
      * overflow?: 'constrain' (default) | 'reject'
      * ```
      */
-    plus(durationLike: Temporal.DurationLike, options?: LocalDateTimeMathOptions): LocalDateTime;
+    plus(durationLike: Temporal.DurationLike, options?: Temporal.ArithmeticOptions): LocalDateTime;
     /**
      * Subtract a `Temporal.Duration` and return the result.
      *
@@ -1123,7 +1184,7 @@ export namespace Temporal {
      * overflow?: 'constrain' (default) | 'reject'
      * ```
      */
-    minus(durationLike: Temporal.DurationLike, options?: LocalDateTimeMathOptions): LocalDateTime;
+    minus(durationLike: Temporal.DurationLike, options?: Temporal.ArithmeticOptions): LocalDateTime;
     /**
      * Calculate the difference between two `Temporal.LocalDateTime` values and
      * return the `Temporal.Duration` result.
@@ -1172,9 +1233,44 @@ export namespace Temporal {
      * ```
      * largestUnit: 'years' | 'months' | 'weeks' | 'days' | 'hours' (default)
      *   | 'minutes' | 'seconds' | 'milliseconds' | 'microseconds' | 'nanoseconds'
+     * smallestUnit: 'years' | 'months' | 'weeks' | 'days' | 'hours'
+     *   | 'minutes' | 'seconds' | 'milliseconds' | 'microseconds' | 'nanoseconds' (default)
+     * roundingIncrement: number (default = 1)
+     * roundingMode: 'nearest' (default) | 'ceil'  | 'trunc' | 'floor'`
      * ```
      */
-    difference(other: LocalDateTime, options?: LocalDateTimeDifferenceOptions): Temporal.Duration;
+    difference(
+      other: LocalDateTime,
+      options?: Temporal.DifferenceOptions<
+        | 'years'
+        | 'months'
+        | 'weeks'
+        | 'days'
+        | 'hours'
+        | 'minutes'
+        | 'seconds'
+        | 'milliseconds'
+        | 'microseconds'
+        | 'nanoseconds'
+      >
+    ): Temporal.Duration;
+    /**
+     * Rounds a `Temporal.LocalDateTime` to a particular unit
+     *
+     * Available options:
+     * - `smallestUnit` (required string) - The unit to round to. Valid values are
+     *   'day', 'hour', 'minute', 'second', 'millisecond', 'microsecond', and
+     *   'nanosecond'.
+     * - `roundingIncrement` (number) - The granularity to round to, of the unit
+     *   given by smallestUnit. The default is 1.
+     * - `roundingMode` (string) - How to handle the remainder. Valid values are
+     *   'ceil', 'floor', 'trunc', and 'nearest'. The default is 'nearest'.
+     */
+    round(
+      options: Temporal.RoundOptions<
+        'day' | 'hour' | 'minute' | 'second' | 'millisecond' | 'microsecond' | 'nanosecond'
+      >
+    ): LocalDateTime;
     /**
      * Convert to a localized string.
      *
