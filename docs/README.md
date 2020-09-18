@@ -115,12 +115,7 @@ See [Temporal.Calendar Documentation](./calendar.md) for more detailed documenta
 
 ### **Design drafts**
 
-- [Calendar Draft](./calendar-draft.md) &mdash; Draft design document for calendar support in Temporal.
-  Mostly superseded by the documentation of [Temporal.Calendar](./calendar.md), but also contains some discussion about whether to have a default calendar.
 - [ISO string extensions](./iso-string-ext.md) &mdash; Discussion of extensions to the ISO 8601 standard which are used by Temporal and intended to be put on a standards track.
-- [Parse Draft](./parse-draft.md) &mdash; Draft design document for a `Temporal.parse` API, which is not currently planned to be implemented.
-- [Zoned Date/Time Type Draft](./localdatetime-draft.md) &mdash; Explanation of `Temporal.LocalDateTime` (not the final name) which is a new type combining an absolute time with a time zone.
-  Currently in progress.
 
 ### Obsolete Pages
 
@@ -128,6 +123,11 @@ See [Temporal.Calendar Documentation](./calendar.md) for more detailed documenta
   (**Obsolete;** rejected.)
 - [Custom Time Zone Draft](./timezone-draft.md) &mdash; Draft design document for custom time zone support in Temporal.
   (**Obsolete;** superseded by the documentation of [Temporal.TimeZone](./timezone.md).)
+- [Parse Draft](./parse-draft.md) &mdash; Draft design document for a `Temporal.parse` API, which is not currently planned to be implemented.
+- [Calendar Draft](./calendar-draft.md) &mdash; Draft design document for calendar support in Temporal.
+  Mostly superseded by the documentation of [Temporal.Calendar](./calendar.md), but also contains some discussion about whether to have a default calendar.
+- [Zoned Date/Time Type Draft](./localdatetime-draft.md) &mdash; Explanation of `Temporal.LocalDateTime` (not the final name) which is a new type combining an absolute time with a time zone and calendar, and exposing a superset of the `Temporal.DateTime` API.
+  Superseded by the [documentation](./localdatetime.md), but contains background info about the reasons and goals behind this type.
 
 ## Object Relationship
 
