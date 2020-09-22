@@ -33,35 +33,33 @@ A cookbook to help you get started and learn the ins and outs of Temporal is ava
  * `Temporal.now.time()` - get the current system time
  * `Temporal.now.dateTime()` - get the current system date/time
 
-See [Temporal.now Documentation](./now.md) for more detailed documentation.
+See [Temporal.now Documentation](./now.md) for detailed documentation.
 
 ### **Temporal.Absolute**
 
 A `Temporal.Absolute` represents a fixed point in time, without regard to calendar or location.
 
-See [Temporal.Absolute Documentation](./absolute.md) for more detailed documentation.
+See [Temporal.Absolute Documentation](./absolute.md) for detailed documentation.
 
 ### **Temporal.Date**
 
-A `Temporal.Date` object represents a calendar date. This means there is no way to convert this to an absolute point in time, however combining with a `Temporal.Time` a `Temporal.DateTime` can be obtained which in turn can be pinned to the absolute timeline.
+A `Temporal.Date` object represents a calendar date that is not associated with a particular time or time zone.
 
 This can also be converted to partial dates such as `Temporal.YearMonth` and `Temporal.MonthDay`.
 
-See [Temporal.Date Documentation](./date.md) for more detailed documentation.
+See [Temporal.Date Documentation](./date.md) for detailed documentation.
 
 ### **Temporal.Time**
 
-A `Temporal.Time` object represents a wall-clock time. Since there is no date component this can not be directly translated to an absolute point in time. However it can be converted to a `Temporal.Absolute` by combining with a `Temporal.Date` using a `Temporal.TimeZone`.
+A `Temporal.Time` object represents a wall-clock time that is not associated with a particular date or time zone.
 
-See [Temporal.Time Documentation](./time.md) for more detailed documentation.
+See [Temporal.Time Documentation](./time.md) for detailed documentation.
 
 ### **Temporal.DateTime**
 
 A `Temporal.DateTime` represents a calendar date and wall-clock time. That means it does not carry time zone information. However it can be converted to a `Temporal.Absolute` using a `Temporal.TimeZone`.
 
-This can also be converted to object containing only partial information such as `Temporal.Date` and `Temporal.Time`.
-
-See [Temporal.DateTime Documentation](./datetime.md) for more detailed documentation.
+See [Temporal.DateTime Documentation](./datetime.md) for detailed documentation.
 
 #### Ambiguity
 
@@ -71,21 +69,24 @@ Read more about this in [Resolving ambiguity](./ambiguity.md).
 
 ### **Temporal.YearMonth**
 
-A date without a day component. This is useful to express things like "the November 2010 meeting".
+A date without a day component.
+This is useful to express things like "the November 2010 meeting".
 
-See [Temporal.YearMonth Documentation](./yearmonth.md) for more detailed documentation.
+See [Temporal.YearMonth Documentation](./yearmonth.md) for detailed documentation.
 
 ### **Temporal.MonthDay**
 
-A date without a year component. This is useful to express things like "Bastille-Day is on the 14th of July".
+A date without a year component.
+This is useful to express things like "Bastille Day is on the 14th of July".
 
-See [Temporal.MonthDay Documentation](./monthday.md) for more detailed documentation.
+See [Temporal.MonthDay Documentation](./monthday.md) for detailed documentation.
 
 ### **Temporal.Duration**
 
-A `Temporal.Duration` expresses a length of time. This is used for date/time maths.
+A `Temporal.Duration` expresses a length of time.
+This is used for date/time arithmetic and for measuring differences between `Temporal` objects.
 
-See [Temporal.Duration Documentation](./duration.md) for more detailed documentation.
+See [Temporal.Duration Documentation](./duration.md) for detailed documentation.
 
 #### Balancing
 
@@ -95,16 +96,18 @@ See [Duration balancing](./balancing.md) for more on this topic.
 
 ### **Temporal.TimeZone**
 
-A `Temporal.TimeZone` represents an IANA time zone, a specific UTC offset or UTC itself. Because of this `Temporal.TimeZone` can be used to convert between `Temporal.Absolute` and `Temporal.DateTime` as well as finding out the offset at a specific `Temporal.Absolute`.
+A `Temporal.TimeZone` represents an IANA time zone, a specific UTC offset, or UTC itself.
+Because of this `Temporal.TimeZone` can be used to convert between `Temporal.Absolute` and `Temporal.DateTime` as well as finding out the offset at a specific `Temporal.Absolute`.
 
-See [Temporal.TimeZone Documentation](./timezone.md) for more detailed documentation.
+See [Temporal.TimeZone Documentation](./timezone.md) for detailed documentation.
+A conceptual explanation of handling [time zones, DST, and ambiguity in Temporal](./ambiguity.md) is also available.
 
 ### **Temporal.Calendar**
 
 A `Temporal.Calendar` represents a calendar system.
 Most code will use the ISO 8601 calendar, but other calendar systems are available.
 
-See [Temporal.Calendar Documentation](./calendar.md) for more detailed documentation.
+See [Temporal.Calendar Documentation](./calendar.md) for detailed documentation.
 
 ## Other Documentation
 
