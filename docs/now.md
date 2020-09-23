@@ -9,9 +9,9 @@ The `Temporal.now` object has several methods which give information about the c
 
 ## Methods
 
-### Temporal.now.**absolute**() : Temporal.Absolute
+### Temporal.now.**instant**() : Temporal.Instant
 
-**Returns:** a `Temporal.Absolute` object representing the current system time.
+**Returns:** a `Temporal.Instant` object representing the current system time.
 
 This method gets the current absolute system time, without regard to calendar or time zone.
 This is a good way to get a timestamp for an event, for example.
@@ -21,11 +21,11 @@ Example usage:
 
 ```js
 function timeit(func) {
-  start = Temporal.now.absolute();
+  start = Temporal.now.instant();
   try {
     return func();
   } finally {
-    end = Temporal.now.absolute();
+    end = Temporal.now.instant();
     console.log(`The function took ${end.difference(start)}`);
   }
 }
@@ -46,7 +46,7 @@ Example usage:
 ```js
 // When is the next daylight saving change from now, in the current location?
 tz = Temporal.now.timeZone();
-now = Temporal.now.absolute();
+now = Temporal.now.instant();
 nextTransition = tz.getNextTransition(now);
 before = tz.getOffsetStringFor(nextTransition.minus({ nanoseconds: 1 }));
 after = tz.getOffsetStringFor(nextTransition.plus({ nanoseconds: 1 }));

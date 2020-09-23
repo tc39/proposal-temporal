@@ -55,7 +55,7 @@ So, for example, on the above strings:
 ```javascript
 Temporal.parse(valid)
 // {
-//   absolute: '2001-09-08T18:46:40-07:00[America/Vancouver]',
+//   instant: '2001-09-08T18:46:40-07:00[America/Vancouver]',
 //   dateTime: '2001-09-08T18:46:40',
 //   date: '2001-09-08',
 //   yearMonth: '2001-09',
@@ -66,7 +66,7 @@ Temporal.parse(valid)
 // }
 Temporal.parse(time24)
 // {
-//   absolute: '2020-04-07T24:00:00-07:00[America/Vancouver]',
+//   instant: '2020-04-07T24:00:00-07:00[America/Vancouver]',
 //   dateTime: '2020-04-07T24:00:00',
 //   date: '2020-04-07',
 //   yearMonth: '2020-04',
@@ -77,7 +77,7 @@ Temporal.parse(time24)
 // }
 Temporal.parse(invalidZone)
 // {
-//   absolute: '2001-09-08T18:46:40+01:00[America/Vancouver]',
+//   instant: '2001-09-08T18:46:40+01:00[America/Vancouver]',
 //   dateTime: '2001-09-08T18:46:40',
 //   date: '2001-09-08',
 //   yearMonth: '2001-09',
@@ -88,7 +88,7 @@ Temporal.parse(invalidZone)
 // }
 Temporal.parse(invalidDate)
 // {
-//   absolute: '2020-99-99T18:46:40-07:00[America/Vancouver]',
+//   instant: '2020-99-99T18:46:40-07:00[America/Vancouver]',
 //   dateTime: '2020-99-99T18:46:40',
 //   date: '2020-99-99',
 //   yearMonth: '2020-99',
@@ -99,7 +99,7 @@ Temporal.parse(invalidDate)
 // }
 Temporal.parse(invalidTime)
 // {
-//   absolute: '2001-09-08T99:99:99-07:00[America/Vancouver]',
+//   instant: '2001-09-08T99:99:99-07:00[America/Vancouver]',
 //   dateTime: '2001-09-08T99:99:99',
 //   date: '2001-09-08',
 //   yearMonth: '2001-09',
@@ -110,7 +110,7 @@ Temporal.parse(invalidTime)
 // }
 Temporal.parse(onlyOffset)
 // {
-//   absolute: '2001-09-08T18:46:40-07:00[America/Vancouver]',
+//   instant: '2001-09-08T18:46:40-07:00[America/Vancouver]',
 //   dateTime: '2001-09-08T18:46:40',
 //   date: '2001-09-08',
 //   yearMonth: '2001-09',
@@ -121,7 +121,7 @@ Temporal.parse(onlyOffset)
 // }
 Temporal.parse(onlyDateTime)
 // {
-//   absolute: null,
+//   instant: null,
 //   dateTime: '2001-09-09T01:46:40',
 //   date: '2001-09-09',
 //   yearMonth: '2001-09',
@@ -132,7 +132,7 @@ Temporal.parse(onlyDateTime)
 // }
 Temporal.parse(onlyDate)
 // {
-//   absolute: null,
+//   instant: null,
 //   dateTime: null,  // time doesn't default to midnight in parse()
 //   date: '2001-09-09',
 //   yearMonth: '2001-09',
@@ -143,7 +143,7 @@ Temporal.parse(onlyDate)
 // }
 Temporal.parse(onlyTime)
 // {
-//   absolute: null,
+//   instant: null,
 //   dateTime: null,
 //   date: null,
 //   yearMonth: null,
@@ -155,17 +155,17 @@ Temporal.parse(onlyTime)
 // etc.
 ```
 
-Note: The `absolute` member on the object returned from parse() is a bit redundant here, it's always either equal to the input, or null.
+Note: The `instant` member on the object returned from parse() is a bit redundant here, it's always either equal to the input, or null.
 
 ## Proposal 1. Always ISO 8601 semantics in from()
 
 **Use case 1:** Use from(), which always returns the string according to ISO 8601's semantics. Any information that is _present_ in the string, is validated. Not all information is _required_ to be present if the type doesn't use it. If the time is not present, it defaults to midnight.
 
-The exception to validation is, when parsing a type that's not Temporal.Absolute, from() does not check that the time zone offset matches the bracketed IANA name.
+The exception to validation is, when parsing a type that's not Temporal.Instant, from() does not check that the time zone offset matches the bracketed IANA name.
 The reason for this is that political changes (abolishing DST, for example) may make a string incorrect even though it was correct at the time it was serialized.
 
 ```javascript
-Temporal.Absolute.from(valid)  // => 2001-09-09T01:46:40Z
+Temporal.Instant.from(valid)  // => 2001-09-09T01:46:40Z
 Temporal.DateTime.from(valid)  // => 2001-09-08T18:46:40
 Temporal.Date.from(valid)      // => 2001-09-08
 Temporal.YearMonth.from(valid) // => 2001-09
@@ -173,7 +173,7 @@ Temporal.MonthDay.from(valid)  // => 09-08
 Temporal.Time.from(valid)      // => 18:46:40
 Temporal.TimeZone.from(valid)  // => America/Vancouver
 
-Temporal.Absolute.from(time24)  // => 2020-04-08T07:00Z
+Temporal.Instant.from(time24)  // => 2020-04-08T07:00Z
 Temporal.DateTime.from(time24)  // => 2020-04-08T00:00
 Temporal.Date.from(time24)      // => 2020-04-08
 Temporal.YearMonth.from(time24) // => 2020-04
@@ -181,12 +181,12 @@ Temporal.MonthDay.from(time24)  // => 04-08
 Temporal.Time.from(time24)      // => 00:00
 Temporal.TimeZone.from(time24)  // => America/Vancouver
 
-Temporal.Absolute.from(invalidZone)  // throws
+Temporal.Instant.from(invalidZone)  // throws
 Temporal.{everything else}.from(invalidZone)  // => doesn't throw
 Temporal.*.from(invalidDate)  // throws
 Temporal.*.from(invalidTime)  // throws
 
-Temporal.Absolute.from(onlyDateTime)  // throws
+Temporal.Instant.from(onlyDateTime)  // throws
 Temporal.DateTime.from(onlyDateTime)  // 2001-09-09T01:46:40
 Temporal.Date.from(onlyDateTime)      // => 2001-09-09
 Temporal.YearMonth.from(onlyDateTime) // => 2001-09
@@ -194,7 +194,7 @@ Temporal.MonthDay.from(onlyDateTime)  // => 09-09
 Temporal.Time.from(onlyDateTime)      // => 01:46:40
 Temporal.TimeZone.from(onlyDateTime)  // throws
 
-Temporal.Absolute.from(onlyDate)  // throws
+Temporal.Instant.from(onlyDate)  // throws
 Temporal.DateTime.from(onlyDate)  // => 2001-09-09T00:00
 Temporal.Date.from(onlyDate)      // => 2001-09-09
 Temporal.YearMonth.from(onlyDate) // => 2001-09
@@ -219,7 +219,7 @@ Temporal.MonthDay.from(parsed.monthDay)  // => 04-07
 Temporal.time.from(parsed.time)          // throws? it's still valid ISO 8601 though
 
 parsed = Temporal.parse(invalidZone);
-Temporal.Absolute.from(parsed.absolute)  // throws
+Temporal.Instant.from(parsed.absolute)  // throws
 Temporal.DateTime.from(parsed.dateTime)  // => 2001-09-08T18:46:40
 // etc.
 
@@ -235,7 +235,7 @@ Temporal.Date.from(Temporal.parse(invalidTime).date)  // => 2001-09-08
 **Use case 1:** If a string contains any parts that are not relevant to the type, from() throws an exception. To process strings as ISO 8601 requires, use Absolute.from(), or Temporal.parse().dateTime with Temporal.parse().timeZone, depending on whether you need the time zone.
 
 ```javascript
-Temporal.Absolute.from(valid)  // => 2001-09-09T01:46:40Z
+Temporal.Instant.from(valid)  // => 2001-09-09T01:46:40Z
 Temporal.DateTime.from(valid)  // throws
 Temporal.Date.from(valid)      // throws
 Temporal.YearMonth.from(valid) // throws
@@ -251,7 +251,7 @@ dateTime.getDate().getMonthDay()                    // => 09-08
 dateTime.getTime()                                  // => 18:46:40
 Temporal.TimeZone.from(parsed.timeZone)             // => America/Vancouver
 
-Temporal.Absolute.from(time24)  // => 2020-04-08T07:00Z
+Temporal.Instant.from(time24)  // => 2020-04-08T07:00Z
 Temporal.DateTime.from(time24)  // throws
 Temporal.Date.from(time24)      // throws
 Temporal.YearMonth.from(time24) // throws
@@ -271,7 +271,7 @@ Temporal.*.from(invalidZone)  // throws
 Temporal.*.from(invalidDate)  // throws
 Temporal.*.from(invalidTime)  // throws
 
-Temporal.Absolute.from(onlyDateTime)  // throws
+Temporal.Instant.from(onlyDateTime)  // throws
 dateTime = Temporal.DateTime.from(onlyDateTime)  // 2001-09-09T01:46:40
 Temporal.Date.from(onlyDateTime)      // throws
 Temporal.YearMonth.from(onlyDateTime) // throws
@@ -284,7 +284,7 @@ dateTime.getDate().getYearMonth()  // 2001-09
 dateTime.getDate().getMonthDay()   // 09-09
 dateTime.getTime()                 // 01:46:40
 
-Temporal.Absolute.from(onlyDate)  // throws
+Temporal.Instant.from(onlyDate)  // throws
 Temporal.DateTime.from(onlyDate)  // throws
 Temporal.Date.from(onlyDate)      // => 2001-09-09
 Temporal.YearMonth.from(onlyDate) // throws
@@ -299,12 +299,12 @@ Temporal.Date.from(onlyDate).withTime(Temporal.Time.from('00:00'))  // => 2001-0
 
 ## Proposal 3. Irrelevant parts ignored in from()
 
-**Use case 1:** Only Temporal.Absolute().from() and Temporal.DateTime.from() still have ISO 8601 semantics. To process strings as ISO 8601 requires, use Absolute.from(), or Temporal.DateTime.from() with Temporal.TimeZone.from(), depending on whether you need the time zone.
+**Use case 1:** Only Temporal.Instant().from() and Temporal.DateTime.from() still have ISO 8601 semantics. To process strings as ISO 8601 requires, use Absolute.from(), or Temporal.DateTime.from() with Temporal.TimeZone.from(), depending on whether you need the time zone.
 
 Temporal.parse() isn't necessary in this scenario.
 
 ```javascript
-Temporal.Absolute.from(valid)  // => 2001-09-09T01:46:40Z
+Temporal.Instant.from(valid)  // => 2001-09-09T01:46:40Z
 Temporal.DateTime.from(valid)  // => 2001-09-08T18:46:40
 Temporal.Date.from(valid)      // => 2001-09-08
 Temporal.YearMonth.from(valid) // => 2001-09
@@ -312,7 +312,7 @@ Temporal.MonthDay.from(valid)  // => 09-08
 Temporal.Time.from(valid)      // => 18:46:40
 Temporal.TimeZone.from(valid)  // => America/Vancouver
 
-Temporal.Absolute.from(time24)              // => 2020-04-08T07:00Z
+Temporal.Instant.from(time24)              // => 2020-04-08T07:00Z
 dateTime = Temporal.DateTime.from(time24);  // => 2020-04-08T00:00
 dateTime.getDate()                          // => 2020-04-08
 dateTime.getDate().getYearMonth()           // => 2020-04
@@ -322,12 +322,12 @@ Temporal.TimeZone.from(time24)              // => America/Vancouver
 
 // Depending on which type you pass them to, it may be difficult to
 // reject strings with mismatching time zones or invalid ISO 8601:
-Temporal.Absolute.from(invalidZone)  // throws
+Temporal.Instant.from(invalidZone)  // throws
 Temporal.{everything else}.from(invalidZone)   // doesn't throw
 Temporal.{Absolute,Time,DateTime}.from(invalidTime)  // throws
 Temporal.{Date,YearMonth,MonthDay,TimeZone}.from(invalidTime)  // doesn't throw
 
-Temporal.Absolute.from(onlyDateTime)  // throws
+Temporal.Instant.from(onlyDateTime)  // throws
 Temporal.DateTime.from(onlyDateTime)  // => 2001-09-09T01:46:40
 Temporal.Date.from(onlyDateTime)      // => 2001-09-09
 Temporal.YearMonth.from(onlyDateTime) // => 2001-09
@@ -335,7 +335,7 @@ Temporal.MonthDay.from(onlyDateTime)  // => 09-09
 Temporal.Time.from(onlyDateTime)      // => 01:46:40
 Temporal.TimeZone.from(onlyDateTime)  // throws
 
-Temporal.Absolute.from(onlyDate)  // throws
+Temporal.Instant.from(onlyDate)  // throws
 Temporal.DateTime.from(onlyDate)  // => 2001-09-09T00:00
 Temporal.Date.from(onlyDate)      // => 2001-09-09
 Temporal.YearMonth.from(onlyDate) // => 2001-09

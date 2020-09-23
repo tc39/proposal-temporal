@@ -27,7 +27,7 @@ A cookbook to help you get started and learn the ins and outs of Temporal is ava
 
 ### **Temporal.now**
 
- * `Temporal.now.absolute()` - get the current system absolute time
+ * `Temporal.now.instant()` - get the current system instant time
  * `Temporal.now.timeZone()` - get the current system time zone
  * `Temporal.now.date()` - get the current system date
  * `Temporal.now.time()` - get the current system time
@@ -35,11 +35,11 @@ A cookbook to help you get started and learn the ins and outs of Temporal is ava
 
 See [Temporal.now Documentation](./now.md) for detailed documentation.
 
-### **Temporal.Absolute**
+### **Temporal.Instant**
 
-A `Temporal.Absolute` represents a fixed point in time, without regard to calendar or location.
+A `Temporal.Instant` represents a fixed point in time, without regard to calendar or location.
 
-See [Temporal.Absolute Documentation](./absolute.md) for detailed documentation.
+See [Temporal.Instant Documentation](./instant.md) for detailed documentation.
 
 ### **Temporal.Date**
 
@@ -57,13 +57,13 @@ See [Temporal.Time Documentation](./time.md) for detailed documentation.
 
 ### **Temporal.DateTime**
 
-A `Temporal.DateTime` represents a calendar date and wall-clock time. That means it does not carry time zone information. However it can be converted to a `Temporal.Absolute` using a `Temporal.TimeZone`.
+A `Temporal.DateTime` represents a calendar date and wall-clock time. That means it does not carry time zone information. However it can be converted to a `Temporal.Instant` using a `Temporal.TimeZone`.
 
 See [Temporal.DateTime Documentation](./datetime.md) for detailed documentation.
 
 #### Ambiguity
 
-Converting between `Temporal.DateTime` and `Temporal.Absolute` is not a one-to-one operation and can be ambiguous, because of time zones and daylight saving time.
+Converting between `Temporal.DateTime` and `Temporal.Instant` is not a one-to-one operation and can be ambiguous, because of time zones and daylight saving time.
 
 Read more about this in [Resolving ambiguity](./ambiguity.md).
 
@@ -97,7 +97,7 @@ See [Duration balancing](./balancing.md) for more on this topic.
 ### **Temporal.TimeZone**
 
 A `Temporal.TimeZone` represents an IANA time zone, a specific UTC offset, or UTC itself.
-Because of this `Temporal.TimeZone` can be used to convert between `Temporal.Absolute` and `Temporal.DateTime` as well as finding out the offset at a specific `Temporal.Absolute`.
+Because of this `Temporal.TimeZone` can be used to convert between `Temporal.Instant` and `Temporal.DateTime` as well as finding out the offset at a specific `Temporal.Instant`.
 
 See [Temporal.TimeZone Documentation](./timezone.md) for detailed documentation.
 A conceptual explanation of handling [time zones, DST, and ambiguity in Temporal](./ambiguity.md) is also available.
@@ -129,7 +129,7 @@ See [Temporal.Calendar Documentation](./calendar.md) for detailed documentation.
 - [Parse Draft](./parse-draft.md) &mdash; Draft design document for a `Temporal.parse` API, which is not currently planned to be implemented.
 - [Calendar Draft](./calendar-draft.md) &mdash; Draft design document for calendar support in Temporal.
   Mostly superseded by the documentation of [Temporal.Calendar](./calendar.md), but also contains some discussion about whether to have a default calendar.
-- [Zoned Date/Time Type Draft](./localdatetime-draft.md) &mdash; Explanation of `Temporal.LocalDateTime` (not the final name) which is a new type combining an absolute time with a time zone and calendar, and exposing a superset of the `Temporal.DateTime` API.
+- [Zoned Date/Time Type Draft](./localdatetime-draft.md) &mdash; Explanation of `Temporal.LocalDateTime` (not the final name) which is a new type combining an instant time with a time zone and calendar, and exposing a superset of the `Temporal.DateTime` API.
   Superseded by the [documentation](./localdatetime.md), but contains background info about the reasons and goals behind this type.
 
 ## Object Relationship
@@ -138,7 +138,7 @@ See [Temporal.Calendar Documentation](./calendar.md) for detailed documentation.
 graph LR;
   timezone(TimeZone);
   subgraph " ";
-    absolute(Absolute);
+    instant(Instant);
   end;
   subgraph " ";
     datetime(DateTime);
@@ -151,6 +151,6 @@ graph LR;
     date --- yearmonth;
     date --- monthday;
   end;
-  absolute === timezone;
+  instant === timezone;
   timezone === datetime;
 </div>

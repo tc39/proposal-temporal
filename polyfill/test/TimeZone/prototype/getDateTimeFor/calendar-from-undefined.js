@@ -11,7 +11,7 @@ const expected = [
   "get Temporal.Calendar.from",
 ];
 
-const absolute = Temporal.Absolute.from("1975-02-02T14:25:36.123456789Z");
+const instant = Temporal.Instant.from("1975-02-02T14:25:36.123456789Z");
 const timeZone = Temporal.TimeZone.from("UTC");
 
 Object.defineProperty(Temporal.Calendar, "from", {
@@ -21,7 +21,7 @@ Object.defineProperty(Temporal.Calendar, "from", {
   },
 });
 
-const result = timeZone.getDateTimeFor(absolute, "japanese");
+const result = timeZone.getDateTimeFor(instant, "japanese");
 assert.sameValue(result.calendar.toString(), "japanese");
 
 assert.compareArray(actual, expected);

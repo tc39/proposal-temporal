@@ -14,16 +14,16 @@ const values = [
   86400000000001,
   -86400000000001,
 ];
-const absolute = Temporal.Absolute.from("1975-02-02T14:25:36.123456789Z");
+const instant = Temporal.Instant.from("1975-02-02T14:25:36.123456789Z");
 
 for (const value of values) {
   const timeZone = Temporal.TimeZone.from("UTC");
   let called = false;
   timeZone.getOffsetNanosecondsFor = function(argument) {
-    assert.sameValue(argument, absolute);
+    assert.sameValue(argument, instant);
     called = true;
     return value;
   };
-  assert.throws(RangeError, () => timeZone.getDateTimeFor(absolute));
+  assert.throws(RangeError, () => timeZone.getDateTimeFor(instant));
   assert.sameValue(called, true);
 }

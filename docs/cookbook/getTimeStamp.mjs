@@ -5,7 +5,7 @@
  *
  */
 
-const timeStamp = Temporal.now.absolute();
+const timeStamp = Temporal.now.instant();
 
 // Timestamp in Milliseconds
 timeStamp.getEpochMilliseconds();

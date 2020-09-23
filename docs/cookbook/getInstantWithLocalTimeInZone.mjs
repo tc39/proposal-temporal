@@ -1,7 +1,7 @@
 /**
- * Get an absolute time corresponding with a calendar date / wall-clock time in
- * a particular time zone, the same as Temporal.TimeZone.getAbsoluteFor() or
- * Temporal.DateTime.toAbsolute(), but with more disambiguation options.
+ * Get an instant time corresponding with a calendar date / wall-clock time in
+ * a particular time zone, the same as Temporal.TimeZone.getInstantFor() or
+ * Temporal.DateTime.toInstant(), but with more disambiguation options.
  *
  * As well as the default Temporal disambiguation options 'compatible',
  * 'earlier', 'later', and 'reject', there are additional options possible:
@@ -17,16 +17,16 @@
  * @param {Temporal.TimeZone} timeZone - Time zone in which to consider the
  *   wall-clock time
  * @param {string} [disambiguation='earlier'] - Disambiguation mode, see description.
- * @returns {Temporal.Absolute} Absolute time in timeZone at the time of the
+ * @returns {Temporal.Instant} Absolute time in timeZone at the time of the
  *   calendar date and wall-clock time from dateTime
  */
 function getInstantWithLocalTimeInZone(dateTime, timeZone, disambiguation = 'earlier') {
   // Handle the built-in modes first
   if (['compatible', 'earlier', 'later', 'reject'].includes(disambiguation)) {
-    return timeZone.getAbsoluteFor(dateTime, { disambiguation });
+    return timeZone.getInstantFor(dateTime, { disambiguation });
   }
 
-  const possible = timeZone.getPossibleAbsolutesFor(dateTime);
+  const possible = timeZone.getPossibleInstantsFor(dateTime);
 
   // Return only possibility if no disambiguation needed
   if (possible.length === 1) return possible[0];
@@ -34,13 +34,13 @@ function getInstantWithLocalTimeInZone(dateTime, timeZone, disambiguation = 'ear
   switch (disambiguation) {
     case 'clipEarlier':
       if (possible.length === 0) {
-        const before = dateTime.toAbsolute(timeZone, { disambiguation: 'earlier' });
+        const before = dateTime.toInstant(timeZone, { disambiguation: 'earlier' });
         return timeZone.getNextTransition(before).minus({ nanoseconds: 1 });
       }
       return possible[0];
     case 'clipLater':
       if (possible.length === 0) {
-        const before = dateTime.toAbsolute(timeZone, { disambiguation: 'earlier' });
+        const before = dateTime.toInstant(timeZone, { disambiguation: 'earlier' });
         return timeZone.getNextTransition(before);
       }
       return possible[possible.length - 1];

@@ -15,7 +15,7 @@ const values = [
   [2n, "2n"],
 ];
 
-const absolute = Temporal.Absolute.from("1975-02-02T14:25:36.123456789Z");
+const instant = Temporal.Instant.from("1975-02-02T14:25:36.123456789Z");
 const timeZone = Temporal.TimeZone.from("UTC");
 
 for (const [value, description] of values) {
@@ -26,6 +26,6 @@ for (const [value, description] of values) {
     return value;
   };
 
-  assert.throws(TypeError, () => timeZone.getDateTimeFor(absolute, "test"), description);
+  assert.throws(TypeError, () => timeZone.getDateTimeFor(instant, "test"), description);
   assert.sameValue(called, 1);
 }

@@ -5,10 +5,10 @@
 esid: sec-temporal.timezone.prototype.getdatetimefor
 ---*/
 
-const absolute = Temporal.Absolute.from("1975-02-02T14:25:36.123456789Z");
+const instant = Temporal.Instant.from("1975-02-02T14:25:36.123456789Z");
 const timeZone = Temporal.TimeZone.from("Europe/Madrid");
 timeZone.getOffsetNanosecondsFor = undefined;
-const result = timeZone.getDateTimeFor(absolute);
+const result = timeZone.getDateTimeFor(instant);
 assert.sameValue(result.year, 1975);
 assert.sameValue(result.month, 2);
 assert.sameValue(result.day, 2);

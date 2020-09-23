@@ -207,7 +207,7 @@ function hasTimeOptions(options) {
 
 function extractOverrides(datetime, main) {
   let formatter, calendar;
-  const Absolute = GetIntrinsic('%Temporal.Absolute%');
+  const Instant = GetIntrinsic('%Temporal.Instant%');
   const Date = GetIntrinsic('%Temporal.Date%');
   const DateTime = GetIntrinsic('%Temporal.DateTime%');
   const MonthDay = GetIntrinsic('%Temporal.MonthDay%');
@@ -238,9 +238,9 @@ function extractOverrides(datetime, main) {
   if (datetime instanceof DateTime) {
     calendar = calendar || datetime.calendar.id;
     formatter = formatter || main[DATETIME];
-    datetime = main[TIMEZONE].getAbsoluteFor(datetime);
+    datetime = main[TIMEZONE].getInstantFor(datetime);
   }
-  if (datetime instanceof Absolute) {
+  if (datetime instanceof Instant) {
     formatter = formatter || main[DATETIME];
     return { absolute: datetime, formatter, calendar };
   } else {

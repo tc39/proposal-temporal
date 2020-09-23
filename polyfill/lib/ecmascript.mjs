@@ -68,7 +68,7 @@ const ES2019 = {
 };
 
 export const ES = ObjectAssign({}, ES2019, {
-  IsTemporalAbsolute: (item) => HasSlot(item, EPOCHNANOSECONDS),
+  IsTemporalInstant: (item) => HasSlot(item, EPOCHNANOSECONDS),
   IsTemporalTimeZone: (item) => HasSlot(item, TIMEZONE_ID),
   IsTemporalCalendar: (item) => HasSlot(item, CALENDAR_ID),
   IsTemporalDuration: (item) =>
@@ -87,7 +87,7 @@ export const ES = ObjectAssign({}, ES2019, {
     const { zone, ianaName, offset } = ES.ParseTemporalTimeZoneString(stringIdent);
     const result = ES.GetCanonicalTimeZoneIdentifier(zone);
     if (offset && ianaName) {
-      const ns = ES.ParseTemporalAbsolute(stringIdent);
+      const ns = ES.ParseTemporalInstant(stringIdent);
       const offsetNs = ES.GetIANATimeZoneOffsetNanoseconds(ns, result);
       if (ES.FormatTimeZoneOffsetString(offsetNs) !== offset) {
         throw new RangeError(`invalid offset ${offset}[${ianaName}]`);
@@ -145,7 +145,7 @@ export const ES = ObjectAssign({}, ES2019, {
       calendar
     };
   },
-  ParseTemporalAbsoluteString: (isoString) => {
+  ParseTemporalInstantString: (isoString) => {
     return ES.ParseISODateTime(isoString, { zoneRequired: true });
   },
   ParseTemporalDateTimeString: (isoString) => {
@@ -234,7 +234,7 @@ export const ES = ObjectAssign({}, ES2019, {
     const nanoseconds = ES.ToInteger(fraction.slice(6, 9)) * sign;
     return { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
   },
-  ParseTemporalAbsolute: (isoString) => {
+  ParseTemporalInstant: (isoString) => {
     const {
       year,
       month,
@@ -247,20 +247,20 @@ export const ES = ObjectAssign({}, ES2019, {
       nanosecond,
       offset,
       zone
-    } = ES.ParseTemporalAbsoluteString(isoString);
+    } = ES.ParseTemporalInstantString(isoString);
 
     const DateTime = GetIntrinsic('%Temporal.DateTime%');
 
     const dt = new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
     const tz = ES.TimeZoneFrom(zone);
 
-    const possibleAbsolutes = tz.getPossibleAbsolutesFor(dt);
-    if (possibleAbsolutes.length === 1) return GetSlot(possibleAbsolutes[0], EPOCHNANOSECONDS);
-    for (const absolute of possibleAbsolutes) {
+    const possibleInstants = tz.getPossibleInstantsFor(dt);
+    if (possibleInstants.length === 1) return GetSlot(possibleInstants[0], EPOCHNANOSECONDS);
+    for (const absolute of possibleInstants) {
       const possibleOffsetNs = tz.getOffsetNanosecondsFor(absolute);
       if (ES.FormatTimeZoneOffsetString(possibleOffsetNs) === offset) return GetSlot(absolute, EPOCHNANOSECONDS);
     }
-    throw new RangeError(`'${isoString}' doesn't uniquely identify a Temporal.Absolute`);
+    throw new RangeError(`'${isoString}' doesn't uniquely identify a Temporal.Instant`);
   },
   RegulateDateTime: (year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, overflow) => {
     switch (overflow) {
@@ -737,12 +737,12 @@ export const ES = ObjectAssign({}, ES2019, {
     }
     return dateTime;
   },
-  GetTemporalAbsoluteFor: (timeZone, dateTime, disambiguation) => {
-    let getAbsoluteFor = timeZone.getAbsoluteFor;
-    if (getAbsoluteFor === undefined) {
-      getAbsoluteFor = GetIntrinsic('%Temporal.TimeZone.prototype.getAbsoluteFor%');
+  GetTemporalInstantFor: (timeZone, dateTime, disambiguation) => {
+    let getInstantFor = timeZone.getInstantFor;
+    if (getInstantFor === undefined) {
+      getInstantFor = GetIntrinsic('%Temporal.TimeZone.prototype.getInstantFor%');
     }
-    return ES.Call(getAbsoluteFor, timeZone, [dateTime, { disambiguation }]);
+    return ES.Call(getInstantFor, timeZone, [dateTime, { disambiguation }]);
   },
   TimeZoneToString: (timeZone) => {
     let toString = timeZone.toString;
@@ -788,7 +788,7 @@ export const ES = ObjectAssign({}, ES2019, {
     let post = parts.length ? `.${parts.join('')}` : '';
     return `:${secs}${post}`;
   },
-  TemporalAbsoluteToString: (absolute, timeZone) => {
+  TemporalInstantToString: (absolute, timeZone) => {
     const dateTime = ES.GetTemporalDateTimeFor(timeZone, absolute);
     const year = ES.ISOYearString(dateTime.year);
     const month = ES.ISODateTimePartString(dateTime.month);
@@ -1321,7 +1321,7 @@ export const ES = ObjectAssign({}, ES2019, {
   },
   RejectDateTimeRange: (year, month, day, hour, minute, second, millisecond, microsecond, nanosecond) => {
     ES.RejectToRange(year, YEAR_MIN, YEAR_MAX);
-    // Reject any DateTime 24 hours or more outside the Absolute range
+    // Reject any DateTime 24 hours or more outside the Instant range
     if (
       (year === YEAR_MIN &&
         null ==
@@ -1333,9 +1333,9 @@ export const ES = ObjectAssign({}, ES2019, {
       throw new RangeError('DateTime outside of supported range');
     }
   },
-  RejectAbsoluteRange: (epochNanoseconds) => {
+  RejectInstantRange: (epochNanoseconds) => {
     if (epochNanoseconds.lesser(NS_MIN) || epochNanoseconds.greater(NS_MAX)) {
-      throw new RangeError('Absolute outside of supported range');
+      throw new RangeError('Instant outside of supported range');
     }
   },
   RejectYearMonthRange: (year, month) => {

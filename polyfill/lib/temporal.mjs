@@ -1,4 +1,4 @@
-export { Absolute } from './absolute.mjs';
+export { Instant } from './instant.mjs';
 export { Calendar } from './calendar.mjs';
 export { Date } from './date.mjs';
 export { DateTime } from './datetime.mjs';

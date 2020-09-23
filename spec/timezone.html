@@ -199,9 +199,9 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal.timezone.prototype.getabsolutefor">
-      <h1>Temporal.TimeZone.prototype.getAbsoluteFor ( _dateTime_ [ , _options_ ] )</h1>
+      <h1>Temporal.TimeZone.prototype.getInstantFor ( _dateTime_ [ , _options_ ] )</h1>
       <p>
-        The `getAbsoluteFor` method takes two arguments, _dateTime_ and _options_.
+        The `getInstantFor` method takes two arguments, _dateTime_ and _options_.
         The following steps are taken:
       </p>
       <emu-alg>
@@ -223,14 +223,14 @@
         1. <mark>TODO - handle n=0 (skipped times like Spring DST).</mark>
       </emu-alg>
       <p>
-        This function is the <dfn>%Temporal.TimeZone.prototype.getAbsoluteFor%</dfn> intrinsic object.
+        This function is the <dfn>%Temporal.TimeZone.prototype.getInstantFor%</dfn> intrinsic object.
       </p>
     </emu-clause>
 
     <emu-clause id="sec-temporal.timezone.prototype.getpossibleabsolutesfor">
-      <h1>Temporal.TimeZone.prototype.getPossibleAbsolutesFor ( _dateTime_ )</h1>
+      <h1>Temporal.TimeZone.prototype.getPossibleInstantsFor ( _dateTime_ )</h1>
       <p>
-        The `getPossibleAbsolutesFor` method takes one argument _dateTime_.
+        The `getPossibleInstantsFor` method takes one argument _dateTime_.
         The following steps are taken:
       </p>
       <emu-alg>
@@ -240,7 +240,7 @@
         1. <mark>TODO.</mark>
       </emu-alg>
       <p>
-        This function is the <dfn>%Temporal.TimeZone.prototype.getPossibleAbsolutesFor%</dfn> intrinsic object.
+        This function is the <dfn>%Temporal.TimeZone.prototype.getPossibleInstantsFor%</dfn> intrinsic object.
       </p>
     </emu-clause>
 
@@ -400,9 +400,9 @@
       <emu-alg>
         1. Let _options_ be ! OrdinaryObjectCreate(%Object.prototype%).
         1. Perform ! CreateDataPropertyOrThrow(_options_, *"disambiguation"*, _disambiguation_).
-        1. Let _getAbsoluteFor_ be ? Get(_timeZone_, *"getAbsoluteFor"*).
-        1. If _getAbsoluteFor_ is *undefined*, set _getAbsoluteFor_ to %Temporal.TimeZone.prototype.getAbsoluteFor%.
-        1. Let _absolute_ be ? Call(_getAbsoluteFor_, _timeZone_, « _dateTime_ »).
+        1. Let _getInstantFor_ be ? Get(_timeZone_, *"getInstantFor"*).
+        1. If _getInstantFor_ is *undefined*, set _getInstantFor_ to %Temporal.TimeZone.prototype.getInstantFor%.
+        1. Let _absolute_ be ? Call(_getInstantFor_, _timeZone_, « _dateTime_ »).
         1. Perform ? RequireInternalSlot(_absolute_, [[InitializedTemporalAbsolute]]).
         1. Return _absolute_.
       </emu-alg>
@@ -411,8 +411,8 @@
     <emu-clause id="sec-temporal-getpossibleabsolutesfor" aoid="GetPossibleAbsolutesFor">
       <h1>GetPossibleAbsolutesFor ( _timeZone_, _dateTime_ )</h1>
       <emu-alg>
-        1. Let _getPossibleAbsolutesFor_ be ? Get(_timeZone_, *"getPossibleAbsolutesFor"*).
-        1. Let _possibleAbsolutes_ be ? Call(_getPossibleAbsolutesFor_, _timeZone_, « _dateTime_ »).
+        1. Let _getPossibleInstantsFor_ be ? Get(_timeZone_, *"getPossibleInstantsFor"*).
+        1. Let _possibleAbsolutes_ be ? Call(_getPossibleInstantsFor_, _timeZone_, « _dateTime_ »).
         1. Let _list_ be ? CreateListFromArrayLike(_possibleAbsolutes_).
         1. For each element _absolute_ in _list_ in List order, do
           1. Perform ? RequireInternalSlot(_absolute_, [[InitializedTemporalAbsolute]]).

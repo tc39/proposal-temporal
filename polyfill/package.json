@@ -24,11 +24,11 @@
     "directory": "polyfill"
   },
   "keywords": [
-    "Absolute",
     "Calendar",
     "Date",
     "DateTime",
     "Duration",
+    "Instant",
     "MonthDay",
     "Polyfill",
     "TC39",

@@ -7,18 +7,18 @@
 
 A `Temporal.TimeZone` is a representation of a time zone: either an [IANA time zone](https://www.iana.org/time-zones), including information about the time zone such as the offset between the local time and UTC at a particular time, and daylight saving time (DST) changes; or simply a particular UTC offset with no DST.
 
-Since `Temporal.Absolute` and `Temporal.DateTime` do not contain any time zone information, a `Temporal.TimeZone` object is required to convert between the two.
+Since `Temporal.Instant` and `Temporal.DateTime` do not contain any time zone information, a `Temporal.TimeZone` object is required to convert between the two.
 
 ## Custom time zones
 
 For specialized applications where you need to do calculations in a time zone that is not supported by `Intl`, you can also implement your own `Temporal.TimeZone` object.
-To do this, create a class inheriting from `Temporal.TimeZone`, call `super()` in the constructor with a time zone identifier, and implement the methods `getOffsetNanosecondsFor()`, `getPossibleAbsolutesFor()`, `getNextTransition()`, and `getPreviousTransition()`.
+To do this, create a class inheriting from `Temporal.TimeZone`, call `super()` in the constructor with a time zone identifier, and implement the methods `getOffsetNanosecondsFor()`, `getPossibleInstantsFor()`, `getNextTransition()`, and `getPreviousTransition()`.
 Any subclass of `Temporal.TimeZone` will be accepted in Temporal APIs where a built-in `Temporal.TimeZone` would work.
 
 ### Protocol
 
 It's also possible for a plain object to be a custom time zone, without subclassing.
-The object must have `getOffsetNanosecondsFor()`, `getPossibleAbsolutesFor()`, and `toString()` methods.
+The object must have `getOffsetNanosecondsFor()`, `getPossibleInstantsFor()`, and `toString()` methods.
 It is possible to pass such an object into any Temporal API that would normally take a built-in `Temporal.TimeZone`.
 
 ## Constructor
@@ -62,7 +62,7 @@ For example:
 ```javascript
 tz1 = new Temporal.TimeZone('-08:00');
 tz2 = new Temporal.TimeZone('America/Vancouver');
-abs = Temporal.DateTime.from({ year: 2020, month: 1, day: 1 }).toAbsolute(tz2);
+abs = Temporal.DateTime.from({ year: 2020, month: 1, day: 1 }).toInstant(tz2);
 tz1.getNextTransition(abs); // => null
 tz2.getPreviousTransition(abs); // => 2020-03-08T10:00Z
 ```
@@ -123,24 +123,24 @@ Effectively, this is the canonicalized version of whatever `timeZoneIdentifier` 
 
 ## Methods
 
-### timeZone.**getOffsetNanosecondsFor**(_absolute_: Temporal.Absolute) : number
+### timeZone.**getOffsetNanosecondsFor**(_instant_: Temporal.Instant) : number
 
 **Parameters:**
 
-- `absolute` (`Temporal.Absolute`): The time for which to compute the time zone's UTC offset.
+- `instant` (`Temporal.Instant`): The time for which to compute the time zone's UTC offset.
 
 **Returns:** The UTC offset at the given time, in nanoseconds.
 
 Since the UTC offset can change throughout the year in time zones that employ DST, this method queries the UTC offset at a particular time.
 
 Note that only `Temporal.TimeZone` objects constructed from an IANA time zone name may have DST transitions; those constructed from a UTC offset do not.
-If `timeZone` is a UTC offset time zone, the return value of this method is always the same regardless of `absolute`.
+If `timeZone` is a UTC offset time zone, the return value of this method is always the same regardless of `instant`.
 
 Example usage:
 
 ```javascript
 // Getting the UTC offset for a time zone at a particular time
-timestamp = Temporal.Absolute.fromEpochSeconds(1553993100);
+timestamp = Temporal.Instant.fromEpochSeconds(1553993100);
 tz = Temporal.TimeZone.from('Europe/Berlin');
 tz.getOffsetNanosecondsFor(timestamp); // => 3600000000000
 
@@ -153,15 +153,15 @@ tz.getOffsetNanosecondsFor(timestamp); // => 0
 
 // Differences between DST and non-DST
 tz = Temporal.TimeZone.from('Europe/London');
-tz.getOffsetNanosecondsFor(Temporal.Absolute.from('2020-08-06T15:00Z')); // => 3600000000000
-tz.getOffsetNanosecondsFor(Temporal.Absolute.from('2020-11-06T01:00Z')); // => 0
+tz.getOffsetNanosecondsFor(Temporal.Instant.from('2020-08-06T15:00Z')); // => 3600000000000
+tz.getOffsetNanosecondsFor(Temporal.Instant.from('2020-11-06T01:00Z')); // => 0
 ```
 
-### timeZone.**getOffsetStringFor**(_absolute_: Temporal.Absolute) : string
+### timeZone.**getOffsetStringFor**(_instant_: Temporal.Instant) : string
 
 **Parameters:**
 
-- `absolute` (`Temporal.Absolute`): The time for which to compute the time zone's UTC offset.
+- `instant` (`Temporal.Instant`): The time for which to compute the time zone's UTC offset.
 
 **Returns**: a string indicating the UTC offset at the given time.
 
@@ -173,7 +173,7 @@ Example usage:
 
 ```javascript
 // Getting the UTC offset for a time zone at a particular time
-timestamp = new Temporal.Absolute(1553993100000000000n);
+timestamp = new Temporal.Instant(1553993100000000000n);
 tz = new Temporal.TimeZone('Europe/Berlin');
 tz.getOffsetStringFor(timestamp); // => +01:00
 
@@ -182,33 +182,33 @@ tz = new Temporal.TimeZone('-08:00');
 tz.getOffsetStringFor(timestamp); // => -08:00
 ```
 
-### timeZone.**getDateTimeFor**(_absolute_: Temporal.Absolute, _calendar_?: object | string) : Temporal.DateTime
+### timeZone.**getDateTimeFor**(_instant_: Temporal.Instant, _calendar_?: object | string) : Temporal.DateTime
 
 **Parameters:**
 
-- `absolute` (`Temporal.Absolute`): An absolute time to convert.
+- `instant` (`Temporal.Instant`): An instant time to convert.
 - `calendar` (optional object or string): A `Temporal.Calendar` object, or a plain object, or a calendar identifier.
   The default is to use the ISO 8601 calendar.
 
-**Returns:** A `Temporal.DateTime` object indicating the calendar date and wall-clock time in `timeZone`, according to the reckoning of `calendar`, at the absolute time indicated by `absolute`.
+**Returns:** A `Temporal.DateTime` object indicating the calendar date and wall-clock time in `timeZone`, according to the reckoning of `calendar`, at the instant time indicated by `instant`.
 
-This method is one way to convert a `Temporal.Absolute` to a `Temporal.DateTime`.
+This method is one way to convert a `Temporal.Instant` to a `Temporal.DateTime`.
 
 Example usage:
 
 ```javascript
-// Converting a specific absolute time to a calendar date / wall-clock time
-timestamp = new Temporal.Absolute(1553993100000000000n);
+// Converting a specific instant time to a calendar date / wall-clock time
+timestamp = new Temporal.Instant(1553993100000000000n);
 tz = new Temporal.TimeZone('Europe/Berlin');
 tz.getDateTimeFor(timestamp); // => 2019-03-31T01:45
 
 // What time was the Unix Epoch (timestamp 0) in Bell Labs (Murray Hill, New Jersey, USA)?
-epoch = new Temporal.Absolute(0n);
+epoch = new Temporal.Instant(0n);
 tz = new Temporal.TimeZone('America/New_York');
 tz.getDateTimeFor(epoch); // => 1969-12-31T19:00
 ```
 
-### timeZone.**getAbsoluteFor**(_dateTime_: Temporal.DateTime, _options_?: object) : Temporal.Absolute
+### timeZone.**getInstantFor**(_dateTime_: Temporal.DateTime, _options_?: object) : Temporal.Instant
 
 **Parameters:**
 
@@ -219,12 +219,12 @@ tz.getDateTimeFor(epoch); // => 1969-12-31T19:00
     Allowed values are `'compatible'`, `'earlier'`, `'later'`, and `'reject'`.
     The default is `'compatible'`.
 
-**Returns:** A `Temporal.Absolute` object indicating the absolute time in `timeZone` at the time of the calendar date and wall-clock time from `dateTime`.
+**Returns:** A `Temporal.Instant` object indicating the instant time in `timeZone` at the time of the calendar date and wall-clock time from `dateTime`.
 
-This method is one way to convert a `Temporal.DateTime` to a `Temporal.Absolute`.
-It is identical to [`dateTime.toAbsolute(timeZone, disambiguation)`](./datetime.html#toAbsolute).
+This method is one way to convert a `Temporal.DateTime` to a `Temporal.Instant`.
+It is identical to [`dateTime.toInstant(timeZone, disambiguation)`](./datetime.html#toInstant).
 
-In the case of ambiguity, the `disambiguation` option controls what absolute time to return:
+In the case of ambiguity, the `disambiguation` option controls what instant time to return:
 
 - `'compatible'` (the default): Acts like `'earlier'` for backward transitions and `'later'` for forward transitions.
 - `'earlier'`: The earlier of two possible times.
@@ -235,35 +235,35 @@ When interoperating with existing code or services, `'compatible'` mode matches 
 This mode also matches the behavior of cross-platform standards like [RFC 5545 (iCalendar)](https://tools.ietf.org/html/rfc5545).
 
 During "skipped" clock time like the hour after DST starts in the Spring, this method interprets invalid times using the pre-transition time zone offset if `'compatible'` or `'later'` is used or the post-transition time zone offset if `'earlier'` is used.
-This behavior avoids exceptions when converting non-existent `Temporal.DateTime` values to `Temporal.Absolute`, but it also means that values during these periods will result in a different `Temporal.DateTime` in "round-trip" conversions to `Temporal.Absolute` and back again.
+This behavior avoids exceptions when converting non-existent `Temporal.DateTime` values to `Temporal.Instant`, but it also means that values during these periods will result in a different `Temporal.DateTime` in "round-trip" conversions to `Temporal.Instant` and back again.
 
 For usage examples and a more complete explanation of how this disambiguation works and why it is necessary, see [Resolving ambiguity](./ambiguity.md).
 
-If the result is earlier or later than the range that `Temporal.Absolute` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then a `RangeError` will be thrown, no matter the value of `disambiguation`.
+If the result is earlier or later than the range that `Temporal.Instant` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then a `RangeError` will be thrown, no matter the value of `disambiguation`.
 
-### timeZone.**getPossibleAbsolutesFor**(_dateTime_: Temporal.DateTime) : array&lt;Temporal.Absolute&gt;
+### timeZone.**getPossibleInstantsFor**(_dateTime_: Temporal.DateTime) : array&lt;Temporal.Instant&gt;
 
 **Parameters:**
 
 - `dateTime` (`Temporal.DateTime`): A calendar date and wall-clock time to convert.
 
-**Returns:** An array of `Temporal.Absolute` objects, which may be empty.
+**Returns:** An array of `Temporal.Instant` objects, which may be empty.
 
-This method returns an array of all the possible absolute times that could correspond to the calendar date and wall-clock time indicated by `dateTime`.
+This method returns an array of all the possible instant times that could correspond to the calendar date and wall-clock time indicated by `dateTime`.
 
-Normally there is only one possible absolute time corresponding to a wall-clock time, but around a daylight saving change, a wall-clock time may not exist, or the same wall-clock time may exist twice in a row.
+Normally there is only one possible instant time corresponding to a wall-clock time, but around a daylight saving change, a wall-clock time may not exist, or the same wall-clock time may exist twice in a row.
 See [Resolving ambiguity](./ambiguity.md) for usage examples and a more complete explanation.
 
-Although this method is useful for implementing a custom time zone or custom disambiguation behaviour, usually you won't have to use this method; `Temporal.TimeZone.prototype.getAbsoluteFor()` will be more convenient for most use cases.
-During "skipped" clock time like the hour after DST starts in the Spring, `Temporal.TimeZone.prototype.getAbsoluteFor()` returns a `Temporal.Absolute` (by default interpreting the `Temporal.DateTime` using the pre-transition time zone offset), while this method returns zero results during those skipped periods.
+Although this method is useful for implementing a custom time zone or custom disambiguation behaviour, usually you won't have to use this method; `Temporal.TimeZone.prototype.getInstantFor()` will be more convenient for most use cases.
+During "skipped" clock time like the hour after DST starts in the Spring, `Temporal.TimeZone.prototype.getInstantFor()` returns a `Temporal.Instant` (by default interpreting the `Temporal.DateTime` using the pre-transition time zone offset), while this method returns zero results during those skipped periods.
 
-### timeZone.**getNextTransition**(_startingPoint_: Temporal.Absolute) : Temporal.Absolute
+### timeZone.**getNextTransition**(_startingPoint_: Temporal.Instant) : Temporal.Instant
 
 **Parameters:**
 
-- `startingPoint` (`Temporal.Absolute`): Time after which to find the next DST transition.
+- `startingPoint` (`Temporal.Instant`): Time after which to find the next DST transition.
 
-**Returns:** A `Temporal.Absolute` object representing the next DST transition in this time zone, or `null` if no transitions later than `startingPoint` could be found.
+**Returns:** A `Temporal.Instant` object representing the next DST transition in this time zone, or `null` if no transitions later than `startingPoint` could be found.
 
 This method is used to calculate future DST transitions after `startingPoint` for this time zone.
 
@@ -275,19 +275,19 @@ Example usage:
 ```javascript
 // How long until the next DST change from now, in the current location?
 tz = Temporal.now.timeZone();
-now = Temporal.now.absolute();
+now = Temporal.now.instant();
 nextTransition = tz.getNextTransition(now);
 duration = nextTransition.difference(now);
 duration.toLocaleString(); // output will vary
 ```
 
-### timeZone.**getPreviousTransition**(_startingPoint_: Temporal.Absolute) : Temporal.Absolute
+### timeZone.**getPreviousTransition**(_startingPoint_: Temporal.Instant) : Temporal.Instant
 
 **Parameters:**
 
-- `startingPoint` (`Temporal.Absolute`): Time before which to find the previous DST transition.
+- `startingPoint` (`Temporal.Instant`): Time before which to find the previous DST transition.
 
-**Returns:** A `Temporal.Absolute` object representing the previous DST transition in this time zone, or `null` if no transitions earlier than `startingPoint` could be found.
+**Returns:** A `Temporal.Instant` object representing the previous DST transition in this time zone, or `null` if no transitions earlier than `startingPoint` could be found.
 
 This method is used to calculate past DST transitions before `startingPoint` for this time zone.
 
@@ -299,7 +299,7 @@ Example usage:
 ```javascript
 // How long until the previous DST change from now, in the current location?
 tz = Temporal.now.timeZone();
-now = Temporal.now.absolute();
+now = Temporal.now.instant();
 previousTransition = tz.getPreviousTransition(now);
 duration = now.difference(previousTransition);
 duration.toLocaleString(); // output will vary

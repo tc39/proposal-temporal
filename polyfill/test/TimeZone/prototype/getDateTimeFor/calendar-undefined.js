@@ -5,7 +5,7 @@
 esid: sec-temporal.timezone.prototype.getdatetimefor
 ---*/
 
-const absolute = Temporal.Absolute.from("1975-02-02T14:25:36.123456789Z");
+const instant = Temporal.Instant.from("1975-02-02T14:25:36.123456789Z");
 const timeZone = Temporal.TimeZone.from("UTC");
 
 Object.defineProperty(Temporal.Calendar, "from", {
@@ -14,8 +14,8 @@ Object.defineProperty(Temporal.Calendar, "from", {
   },
 });
 
-const result1 = timeZone.getDateTimeFor(absolute);
+const result1 = timeZone.getDateTimeFor(instant);
 assert.sameValue(result1.calendar.toString(), "iso8601");
 
-const result2 = timeZone.getDateTimeFor(absolute, undefined);
+const result2 = timeZone.getDateTimeFor(instant, undefined);
 assert.sameValue(result2.calendar.toString(), "iso8601");

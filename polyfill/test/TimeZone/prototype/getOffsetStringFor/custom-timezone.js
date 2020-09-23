@@ -12,11 +12,11 @@ const expected = [
   "call timeZone.getOffsetNanosecondsFor",
 ];
 
-const absolute = Temporal.Absolute.from("1975-02-02T14:25:36.123456789Z");
+const instant = Temporal.Instant.from("1975-02-02T14:25:36.123456789Z");
 const timeZone = new Proxy({
-  getOffsetNanosecondsFor(absoluteArg) {
+  getOffsetNanosecondsFor(instantArg) {
     actual.push("call timeZone.getOffsetNanosecondsFor");
-    assert.sameValue(absoluteArg, absolute);
+    assert.sameValue(instantArg, instant);
     return 9876543210123;
   },
 }, {
@@ -30,6 +30,6 @@ const timeZone = new Proxy({
   },
 });
 
-const result = Temporal.TimeZone.prototype.getOffsetStringFor.call(timeZone, absolute);
+const result = Temporal.TimeZone.prototype.getOffsetStringFor.call(timeZone, instant);
 assert.sameValue(result, "+02:44");
 assert.compareArray(actual, expected);

@@ -42,9 +42,9 @@ export namespace Temporal {
   };
 
   /**
-   * Options for conversions of `Temporal.DateTime` to `Temporal.Absolute`
+   * Options for conversions of `Temporal.DateTime` to `Temporal.Instant`
    * */
-  export type ToAbsoluteOptions = {
+  export type ToInstantOptions = {
     /**
      * Controls handling of invalid or ambiguous times caused by time zone
      * offset changes like Daylight Saving time (DST) transitions.
@@ -228,39 +228,39 @@ export namespace Temporal {
   }
 
   /**
-   * A `Temporal.Absolute` is an absolute point in time, with a precision in
+   * A `Temporal.Instant` is an absolute point in time, with a precision in
    * nanoseconds. No time zone or calendar information is present. Therefore,
-   * `Temporal.Absolute` has no concept of days, months, or even hours.
+   * `Temporal.Instant` has no concept of days, months, or even hours.
    *
    * For convenience of interoperability, it internally uses nanoseconds since
    * the {@link https://en.wikipedia.org/wiki/Unix_time|Unix epoch} (midnight
-   * UTC on January 1, 1970). However, a `Temporal.Absolute` can be created from
+   * UTC on January 1, 1970). However, a `Temporal.Instant` can be created from
    * any of several expressions that refer to a single point in time, including
    * an {@link https://en.wikipedia.org/wiki/ISO_8601|ISO 8601 string} with a
    * time zone offset such as '2020-01-23T17:04:36.491865121-08:00'.
    *
    * See https://tc39.es/proposal-temporal/docs/absolute.html for more details.
    */
-  export class Absolute {
-    static fromEpochSeconds(epochSeconds: number): Temporal.Absolute;
-    static fromEpochMilliseconds(epochMilliseconds: number): Temporal.Absolute;
-    static fromEpochMicroseconds(epochMicroseconds: bigint): Temporal.Absolute;
-    static fromEpochNanoseconds(epochNanoseconds: bigint): Temporal.Absolute;
-    static from(item: Temporal.Absolute | string): Temporal.Absolute;
-    static compare(one: Temporal.Absolute, two: Temporal.Absolute): ComparisonResult;
+  export class Instant {
+    static fromEpochSeconds(epochSeconds: number): Temporal.Instant;
+    static fromEpochMilliseconds(epochMilliseconds: number): Temporal.Instant;
+    static fromEpochMicroseconds(epochMicroseconds: bigint): Temporal.Instant;
+    static fromEpochNanoseconds(epochNanoseconds: bigint): Temporal.Instant;
+    static from(item: Temporal.Instant | string): Temporal.Instant;
+    static compare(one: Temporal.Instant, two: Temporal.Instant): ComparisonResult;
     constructor(epochNanoseconds: bigint);
     getEpochSeconds(): number;
     getEpochMilliseconds(): number;
     getEpochMicroseconds(): bigint;
     getEpochNanoseconds(): bigint;
-    equals(other: Temporal.Absolute): boolean;
-    plus(durationLike: Temporal.Duration | DurationLike): Temporal.Absolute;
-    minus(durationLike: Temporal.Duration | DurationLike): Temporal.Absolute;
+    equals(other: Temporal.Instant): boolean;
+    plus(durationLike: Temporal.Duration | DurationLike): Temporal.Instant;
+    minus(durationLike: Temporal.Duration | DurationLike): Temporal.Instant;
     difference(
-      other: Temporal.Absolute,
+      other: Temporal.Instant,
       options?: DifferenceOptions<'hours' | 'minutes' | 'seconds' | 'milliseconds' | 'microseconds' | 'nanoseconds'>
     ): Temporal.Duration;
-    round(options: RoundOptions<'minute' | 'second' | 'millisecond' | 'microsecond' | 'nanosecond'>): Temporal.Absolute;
+    round(options: RoundOptions<'minute' | 'second' | 'millisecond' | 'microsecond' | 'nanosecond'>): Temporal.Instant;
     toDateTime(tzLike: TimeZoneProtocol | string, calendar?: CalendarProtocol | string): Temporal.DateTime;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
@@ -550,7 +550,7 @@ export namespace Temporal {
     round(
       options: RoundOptions<'day' | 'hour' | 'minute' | 'second' | 'millisecond' | 'microsecond' | 'nanosecond'>
     ): Temporal.DateTime;
-    toAbsolute(tzLike: TimeZoneProtocol | string, options?: ToAbsoluteOptions): Temporal.Absolute;
+    toInstant(tzLike: TimeZoneProtocol | string, options?: ToInstantOptions): Temporal.Instant;
     toDate(): Temporal.Date;
     toYearMonth(): Temporal.YearMonth;
     toMonthDay(): Temporal.MonthDay;
@@ -669,13 +669,13 @@ export namespace Temporal {
    */
   export interface TimeZoneProtocol {
     name?: string;
-    getOffsetNanosecondsFor(absolute: Temporal.Absolute): number;
-    getOffsetStringFor?(absolute: Temporal.Absolute): string;
-    getDateTimeFor(absolute: Temporal.Absolute, calendar?: CalendarProtocol | string): Temporal.DateTime;
-    getAbsoluteFor?(dateTime: Temporal.DateTime, options?: ToAbsoluteOptions): Temporal.Absolute;
-    getNextTransition?(startingPoint: Temporal.Absolute): Temporal.Absolute | null;
-    getPreviousTransition?(startingPoint: Temporal.Absolute): Temporal.Absolute | null;
-    getPossibleAbsolutesFor(dateTime: Temporal.DateTime): Temporal.Absolute[];
+    getOffsetNanosecondsFor(absolute: Temporal.Instant): number;
+    getOffsetStringFor?(absolute: Temporal.Instant): string;
+    getDateTimeFor(absolute: Temporal.Instant, calendar?: CalendarProtocol | string): Temporal.DateTime;
+    getInstantFor?(dateTime: Temporal.DateTime, options?: ToInstantOptions): Temporal.Instant;
+    getNextTransition?(startingPoint: Temporal.Instant): Temporal.Instant | null;
+    getPreviousTransition?(startingPoint: Temporal.Instant): Temporal.Instant | null;
+    getPossibleInstantsFor(dateTime: Temporal.DateTime): Temporal.Instant[];
     toString(): string;
     toJSON?(): string;
   }
@@ -687,7 +687,7 @@ export namespace Temporal {
    * and UTC at a particular time, and daylight saving time (DST) changes; or
    * simply a particular UTC offset with no DST.
    *
-   * Since `Temporal.Absolute` and `Temporal.DateTime` do not contain any time
+   * Since `Temporal.Instant` and `Temporal.DateTime` do not contain any time
    * zone information, a `Temporal.TimeZone` object is required to convert
    * between the two.
    *
@@ -697,13 +697,13 @@ export namespace Temporal {
     static from(timeZone: Temporal.TimeZone | string): Temporal.TimeZone;
     constructor(timeZoneIdentifier: string);
     readonly name: string;
-    getOffsetNanosecondsFor(absolute: Temporal.Absolute): number;
-    getOffsetStringFor(absolute: Temporal.Absolute): string;
-    getDateTimeFor(absolute: Temporal.Absolute, calendar?: CalendarProtocol | string): Temporal.DateTime;
-    getAbsoluteFor(dateTime: Temporal.DateTime, options?: ToAbsoluteOptions): Temporal.Absolute;
-    getNextTransition(startingPoint: Temporal.Absolute): Temporal.Absolute | null;
-    getPreviousTransition(startingPoint: Temporal.Absolute): Temporal.Absolute | null;
-    getPossibleAbsolutesFor(dateTime: Temporal.DateTime): Temporal.Absolute[];
+    getOffsetNanosecondsFor(absolute: Temporal.Instant): number;
+    getOffsetStringFor(absolute: Temporal.Instant): string;
+    getDateTimeFor(absolute: Temporal.Instant, calendar?: CalendarProtocol | string): Temporal.DateTime;
+    getInstantFor(dateTime: Temporal.DateTime, options?: ToInstantOptions): Temporal.Instant;
+    getNextTransition(startingPoint: Temporal.Instant): Temporal.Instant | null;
+    getPreviousTransition(startingPoint: Temporal.Instant): Temporal.Instant | null;
+    getPossibleInstantsFor(dateTime: Temporal.DateTime): Temporal.Instant[];
     toString(): string;
     toJSON(): string;
   }
@@ -768,14 +768,14 @@ export namespace Temporal {
    */
   export namespace now {
     /**
-     * Get the system date and time as a `Temporal.Absolute`.
+     * Get the system date and time as a `Temporal.Instant`.
      *
      * This method gets the current absolute system time, without regard to
      * calendar or time zone. This is a good way to get a timestamp for an
      * event, for example. It works like the old-style JavaScript `Date.now()`,
      * but with nanosecond precision instead of milliseconds.
      * */
-    export function absolute(): Temporal.Absolute;
+    export function instant(): Temporal.Instant;
 
     /**
      * Get the current calendar date and clock time in a specific time zone.

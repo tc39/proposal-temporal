@@ -20,15 +20,14 @@ describe('Temporal.now', () => {
   describe('Structure', () => {
     it('Temporal.now is an object', () => equal(typeof Temporal.now, 'object'));
     it('Temporal.now has 5 properties', () => equal(Object.keys(Temporal.now).length, 5));
-    it('Temporal.now.absolute is a function', () => equal(typeof Temporal.now.absolute, 'function'));
+    it('Temporal.now.instant is a function', () => equal(typeof Temporal.now.instant, 'function'));
     it('Temporal.now.dateTime is a function', () => equal(typeof Temporal.now.dateTime, 'function'));
     it('Temporal.now.date is a function', () => equal(typeof Temporal.now.date, 'function'));
     it('Temporal.now.time is a function', () => equal(typeof Temporal.now.time, 'function'));
     it('Temporal.now.timeZone is a function', () => equal(typeof Temporal.now.timeZone, 'function'));
   });
   describe('Temporal.now.absolute()', () => {
-    it('Temporal.now.absolute() returns an Absolute', () =>
-      assert(Temporal.now.absolute() instanceof Temporal.Absolute));
+    it('Temporal.now.instant() returns an Instant', () => assert(Temporal.now.instant() instanceof Temporal.Instant));
   });
   describe('Temporal.now.dateTime()', () => {
     it('Temporal.now.dateTime() returns a DateTime', () =>

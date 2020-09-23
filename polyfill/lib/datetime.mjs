@@ -571,11 +571,11 @@ export class DateTime {
     throw new TypeError('use compare() or equals() to compare Temporal.DateTime');
   }
 
-  toAbsolute(temporalTimeZoneLike, options) {
+  toInstant(temporalTimeZoneLike, options) {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     const timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);
     const disambiguation = ES.ToTemporalDisambiguation(options);
-    return ES.GetTemporalAbsoluteFor(timeZone, this, disambiguation);
+    return ES.GetTemporalInstantFor(timeZone, this, disambiguation);
   }
   toDate() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
