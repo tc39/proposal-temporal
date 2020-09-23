@@ -27,8 +27,8 @@ Like built-in time zones, custom time zones have an identifier.
 In these examples we assume a custom time zone class `StLouisTime` with the identifier `America/St_Louis`.
 (See the following section for how such a time zone object would be implemented.)
 
-When parsing an ISO 8601 string, the only places the time zone identifier is taken into account are `Temporal.Absolute.from()` and `Temporal.TimeZone.from()`.
-`Temporal.Absolute.from()` will call `Temporal.TimeZone.from()` to resolve the time zone identifier into a `Temporal.TimeZone` object.
+When parsing an ISO 8601 string, the only places the time zone identifier is taken into account are `Temporal.Instant.from()` and `Temporal.TimeZone.from()`.
+`Temporal.Instant.from()` will call `Temporal.TimeZone.from()` to resolve the time zone identifier into a `Temporal.TimeZone` object.
 
 `Temporal.TimeZone.from()` can be monkeypatched by time zone implementors if it is necessary to make new time zones available globally.
 The expectation is that it would rarely be necessary to do so, because if you have implemented a custom time zone for a particular calculation, you probably don't need it to be available globally.
@@ -55,7 +55,7 @@ Temporal.TimeZone.from = function (item) {
   return originalTemporalTimeZoneFrom.call(this, id);
 }
 
-Temporal.Absolute.from('1820-04-01T18:16:25-06:00[America/St_Louis]')
+Temporal.Instant.from('1820-04-01T18:16:25-06:00[America/St_Louis]')
   // returns the Absolute corresponding to 1820-04-02T00:17:14.110Z
 
 Temporal.TimeZone.from('1820-04-01T18:16:25-06:00[America/St_Louis]')
@@ -106,30 +106,30 @@ class Temporal.TimeZone {
 
   /** Given an absolute instant returns this time zone's corresponding
    * UTC offset, in nanoseconds (signed). */
-  getOffsetNanosecondsFor(absolute : Temporal.Absolute) : number;
+  getOffsetNanosecondsFor(instant : Temporal.Instant) : number;
 
   /** Given the calendar/wall-clock time, returns an array of 0, 1, or
    * 2 (or theoretically more, but not in any currently known time zone)
-   * absolute times, that are possible points on the timeline
-   * corresponding to it. In getAbsoluteFor(), one of these will be
+   * instant times, that are possible points on the timeline
+   * corresponding to it. In getInstantFor(), one of these will be
    * selected, depending on the disambiguation option. */
-  getPossibleAbsolutesFor(dateTime : Temporal.DateTime) : array<Temporal.Absolute>;
+  getPossibleInstantsFor(dateTime : Temporal.DateTime) : array<Temporal.Instant>;
 
   /** Return the next time zone transition after `startingPoint`. */
-  getNextTransition(startingPoint : Temporal.Absolute) : Temporal.Absolute | null;
+  getNextTransition(startingPoint : Temporal.Instant) : Temporal.Instant | null;
 
   /** Return the previous time zone transition before `startingPoint`. */
-  getPreviousTransition(startingPoint : Temporal.Absolute) : Temporal.Absolute | null;
+  getPreviousTransition(startingPoint : Temporal.Instant) : Temporal.Instant | null;
 
   // API methods that a subclassed custom time zone doesn't need to touch
 
   get name() : string;
-  getDateTimeFor(absolute : Temporal.Absolute) : Temporal.DateTime;
-  getAbsoluteFor(
+  getDateTimeFor(instant : Temporal.Instant) : Temporal.DateTime;
+  getInstantFor(
       dateTime : Temporal.DateTime,
       options?: object
-  ) : Temporal.Absolute;
-  getOffsetStringFor(absolute : Temporal.Absolute) : string;
+  ) : Temporal.Instant;
+  getOffsetStringFor(instant : Temporal.Instant) : string;
   toString() : string;
   toJSON() : string;
 
@@ -137,11 +137,11 @@ class Temporal.TimeZone {
 }
 ```
 
-All the methods that custom time zones inherit from `Temporal.TimeZone` are implemented in terms of `getOffsetNanosecondsFor()`, `getPossibleAbsolutesFor()`, and the value of the _[[Identifier]]_ internal slot.
-For example, `getOffsetStringFor()` and `getDateTimeFor()` call `getOffsetNanosecondsFor()`, and `getAbsoluteFor()` calls both.
+All the methods that custom time zones inherit from `Temporal.TimeZone` are implemented in terms of `getOffsetNanosecondsFor()`, `getPossibleInstantsFor()`, and the value of the _[[Identifier]]_ internal slot.
+For example, `getOffsetStringFor()` and `getDateTimeFor()` call `getOffsetNanosecondsFor()`, and `getInstantFor()` calls both.
 
 Alternatively, a custom time zone doesn't have to be a subclass of `Temporal.TimeZone`.
-In this case, it can be a plain object, which must implement `getOffsetNanosecondsFor()`, `getPossibleAbsolutesFor()`, and `toString()`.
+In this case, it can be a plain object, which must implement `getOffsetNanosecondsFor()`, `getPossibleInstantsFor()`, and `toString()`.
 
 ## Show Me The Code
 
@@ -166,13 +166,13 @@ class OffsetTimeZone extends Temporal.TimeZone {
     return this.#offsetNs; // offset is always the same
   }
 
-  getPossibleAbsolutesFor(dateTime) {
+  getPossibleInstantsFor(dateTime) {
     const iso = dateTime.getISOFields();
     const epochNs = MakeDate(
       MakeDay(iso.year, iso.month, iso.day),
       MakeTime(iso.hour, iso.minute, iso.second, iso.millisecond, iso.microsecond, iso.nanosecond)
     );
-    return [new Temporal.Absolute(epochNs + BigInt(this.#offsetNs))];
+    return [new Temporal.Instant(epochNs + BigInt(this.#offsetNs))];
   }
 
   getNextTransition(/* startingPoint */) {

@@ -34,12 +34,12 @@ How to get a Unix timestamp?
 
 ## Converting between Temporal types and legacy Date
 
-### Absolute from legacy Date
+### Instant from legacy Date
 
-Map a legacy ECMAScript Date instance into a Temporal.Absolute instance corresponding to the same instant in absolute time.
+Map a legacy ECMAScript Date instance into a Temporal.Instant instance corresponding to the same instant in instant time.
 
 ```javascript
-{{cookbook/absoluteFromLegacyDate.mjs}}
+{{cookbook/instantFromLegacyDate.mjs}}
 ```
 
 ## Construction
@@ -89,9 +89,9 @@ An example of combining a day on the calendar (`Temporal.MonthDay`) and a year i
 
 ### Zoned instant from instant and time zone
 
-Use the optional parameter of `Temporal.Absolute.prototype.toString()` to map a Temporal.Absolute instance and a time zone name into a string serialization of the local time in that zone corresponding to the instant in absolute time.
+Use the optional parameter of `Temporal.Instant.prototype.toString()` to map a Temporal.Instant instance and a time zone name into a string serialization of the local time in that zone corresponding to the instant in instant time.
 
-Without the parameter, `Temporal.Absolute.prototype.toString()` gives a serialization in UTC time.
+Without the parameter, `Temporal.Instant.prototype.toString()` gives a serialization in UTC time.
 Using the parameter is useful if you need your serialized strings to be in a specific time zone.
 
 ```javascript
@@ -147,8 +147,8 @@ See also [Push back a launch date](#push-back-a-launch-date) for an easier way t
 
 ### Preserving local time
 
-Map a zoneless date and time of day into a `Temporal.Absolute` instance at which the local date and time of day in a specified time zone matches it.
-This is easily done with `dateTime.toAbsolute()`, but here is an example of implementing different disambiguation behaviors than the `'compatible'`, `'earlier'`, `'later'`, and `'reject'` ones built in to Temporal.
+Map a zoneless date and time of day into a `Temporal.Instant` instance at which the local date and time of day in a specified time zone matches it.
+This is easily done with `dateTime.toInstant()`, but here is an example of implementing different disambiguation behaviors than the `'compatible'`, `'earlier'`, `'later'`, and `'reject'` ones built in to Temporal.
 
 ```javascript
 {{cookbook/getInstantWithLocalTimeInZone.mjs}}
@@ -156,7 +156,7 @@ This is easily done with `dateTime.toAbsolute()`, but here is an example of impl
 
 ### Preserving absolute instant
 
-Map a zoned date and time of day into a string serialization of the local time in a target zone at the corresponding instant in absolute time.
+Map a zoned date and time of day into a string serialization of the local time in a target zone at the corresponding instant in instant time.
 This could be used when converting user-input date-time values between time zones.
 
 ```javascript
@@ -176,7 +176,7 @@ This example calculates the starting times of all the Ecma TC39 meetings in 2019
 
 ### Daily occurrence in local time
 
-Similar to the previous recipe, calculate the absolute times of a daily occurrence that happens at a particular local time in a particular time zone.
+Similar to the previous recipe, calculate the instant times of a daily occurrence that happens at a particular local time in a particular time zone.
 
 ```javascript
 {{cookbook/calculateDailyOccurrence.mjs}}
@@ -184,7 +184,7 @@ Similar to the previous recipe, calculate the absolute times of a daily occurren
 
 ### UTC offset for a zoned event, as a string
 
-Use `Temporal.TimeZone.getOffsetStringFor()` to map a `Temporal.Absolute` instance and a time zone into the UTC offset at that instant in that time zone, as a string.
+Use `Temporal.TimeZone.getOffsetStringFor()` to map a `Temporal.Instant` instance and a time zone into the UTC offset at that instant in that time zone, as a string.
 
 ```javascript
 {{cookbook/getUtcOffsetStringAtInstant.mjs}}
@@ -201,7 +201,7 @@ Similarly, use `Temporal.TimeZone.getOffsetNanosecondsFor()` to do the same thin
 
 ### Offset between two time zones at an instant
 
-Also using `Temporal.TimeZone.getOffsetNanosecondsFor()`, we can map a `Temporal.Absolute` instance and two time zones into the signed difference of UTC offsets between those time zones at that instant, as a number of seconds.
+Also using `Temporal.TimeZone.getOffsetNanosecondsFor()`, we can map a `Temporal.Instant` instance and two time zones into the signed difference of UTC offsets between those time zones at that instant, as a number of seconds.
 
 ```javascript
 {{cookbook/getUtcOffsetDifferenceSecondsAtInstant.mjs}}
@@ -218,7 +218,7 @@ The graph always starts at midnight in the tank's location, but the graph labels
 
 <script type="text/javascript">
 // Generate fictitious "data"
-const start = Temporal.now.absolute().minus({ hours: 24 });
+const start = Temporal.now.instant().minus({ hours: 24 });
 const blank = Array(24 * 12);
 const tankDataX = Array.from(blank, (_, ix) => start.plus({ minutes: ix * 5 }));
 const tankDataY = Array.from(blank);
@@ -332,7 +332,7 @@ An example HTML form inspired by [Days Calculator](https://www.timeanddate.com/d
 
 ### Unit-constrained duration between now and a past/future zoned event
 
-Take the difference between two Temporal.Absolute instances as a Temporal.Duration instance (positive or negative), representing the duration between the two instants without using units coarser than specified (e.g., for presenting a meaningful countdown with vs. without using months or days).
+Take the difference between two Temporal.Instant instances as a Temporal.Duration instance (positive or negative), representing the duration between the two instants without using units coarser than specified (e.g., for presenting a meaningful countdown with vs. without using months or days).
 
 ```javascript
 {{cookbook/getElapsedDurationSinceInstant.mjs}}
@@ -340,7 +340,7 @@ Take the difference between two Temporal.Absolute instances as a Temporal.Durati
 
 ### Nearest offset transition in a time zone
 
-Map a Temporal.Absolute instance and a Temporal.TimeZone object into a Temporal.Absolute instance representing the nearest following instant at which there is an offset transition in the time zone (e.g., for setting reminders).
+Map a Temporal.Instant instance and a Temporal.TimeZone object into a Temporal.Instant instance representing the nearest following instant at which there is an offset transition in the time zone (e.g., for setting reminders).
 
 ```javascript
 {{cookbook/getInstantOfNearestOffsetTransitionToInstant.mjs}}
@@ -379,7 +379,7 @@ Add the number of days it took to get an approval, and advance to the start of t
 ### Schedule a reminder ahead of matching a record-setting duration
 
 When considering a record (for example, a personal-best time in a sport), you might want to receive an alert just before the record is about to be broken.
-This example takes a record as a `Temporal.Duration`, the starting instant of the current attempt as a `Temporal.Absolute`, and another `Temporal.Duration` indicating how long before the potentially record-setting instant you would like to receive an alert.
+This example takes a record as a `Temporal.Duration`, the starting instant of the current attempt as a `Temporal.Instant`, and another `Temporal.Duration` indicating how long before the potentially record-setting instant you would like to receive an alert.
 It returns the instant at which a notification could be sent, for example "Keep going! 5 more minutes and it will be your personal best!"
 
 This could be used for workout tracking, racing (including _long_ and potentially time-zone-crossing races like the Bullrun Rally, Iditarod, Self-Transcendence 3100, and Clipper Round The World), or even open-ended analogs like event-every-day "streaks".
@@ -428,7 +428,7 @@ Depending on the behaviour you want, you will need to pick the right `overflow` 
 
 ### Next weekly occurrence
 
-From a `Temporal.Absolute` instance and a local `Temporal.TimeZone`, get a `Temporal.DateTime` representing the next occurrence of a weekly event that is scheduled on a particular weekday and time in a particular time zone. (For example, "weekly on Thursdays at 08:45 California time").
+From a `Temporal.Instant` instance and a local `Temporal.TimeZone`, get a `Temporal.DateTime` representing the next occurrence of a weekly event that is scheduled on a particular weekday and time in a particular time zone. (For example, "weekly on Thursdays at 08:45 California time").
 
 ```javascript
 {{cookbook/nextWeeklyOccurrence.mjs}}

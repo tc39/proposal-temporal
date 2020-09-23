@@ -14,9 +14,9 @@ const expected = [
 const dateTime = Temporal.DateTime.from("1963-07-02T12:34:56.987654321");
 
 const timeZone = new Proxy({
-  getDateTimeFor(absolute, calendar) {
+  getDateTimeFor(instant, calendar) {
     actual.push("call timeZone.getDateTimeFor");
-    assert.sameValue(absolute instanceof Temporal.Absolute, true, "Absolute");
+    assert.sameValue(instant instanceof Temporal.Instant, true, "Instant");
     assert.sameValue(calendar instanceof Temporal.Calendar, true, "Calendar");
     assert.sameValue(calendar.id, "iso8601");
     return dateTime;

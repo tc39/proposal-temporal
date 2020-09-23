@@ -1,11 +1,11 @@
 // tankDataX and tankDataY are X and Y-axis data for the last 24 hours,
 // obtained from elsewhere, e.g. const [tankDataX, tankDataY] = fetchData();
-// tankDataX is an array of Temporal.Absolute, and tankDataY is an array of numbers.
+// tankDataX is an array of Temporal.Instant, and tankDataY is an array of numbers.
 
 // Show data starting from the most recent midnight in the tank's location (Stockholm)
 const tankTimeZone = Temporal.TimeZone.from('Europe/Stockholm');
-const tankMidnight = Temporal.now.date(tankTimeZone).toDateTime().toAbsolute(tankTimeZone);
-const atOrAfterMidnight = (x) => Temporal.Absolute.compare(x, tankMidnight) >= 0;
+const tankMidnight = Temporal.now.date(tankTimeZone).toDateTime().toInstant(tankTimeZone);
+const atOrAfterMidnight = (x) => Temporal.Instant.compare(x, tankMidnight) >= 0;
 const dataStartIndex = tankDataX.findIndex(atOrAfterMidnight);
 const labelFormatter = new Intl.DateTimeFormat(undefined, {
   weekday: 'short',

@@ -1,20 +1,20 @@
 /**
  * getSortedInstants will sort an array of strings (each of which is parseable
- * as a Temporal.Absolute and may or may not include an IANA time zone name)
- * by the corresponding absolute time (e.g., for presenting global log events
+ * as a Temporal.Instant and may or may not include an IANA time zone name)
+ * by the corresponding instant time (e.g., for presenting global log events
  * sequentially).
  *
- * @param {string[]} parseableAbsoluteStrings - a group of ISO Strings
+ * @param {string[]} parseableInstantStrings - a group of ISO Strings
  * @param {boolean} [reverse=false] - ascending or descending order
- * @returns {string[]} the array from parseableAbsoluteStrings, sorted
+ * @returns {string[]} the array from parseableInstantStrings, sorted
  */
-function getSortedInstants(parseableAbsoluteStrings, reverse = false) {
-  const sortedAbsoluteTimes = parseableAbsoluteStrings
-    .map((v) => [v, Temporal.Absolute.from(v)])
-    .sort(([, abs1], [, abs2]) => Temporal.Absolute.compare(abs1, abs2))
+function getSortedInstants(parseableInstantStrings, reverse = false) {
+  const sortedInstantTimes = parseableInstantStrings
+    .map((v) => [v, Temporal.Instant.from(v)])
+    .sort(([, abs1], [, abs2]) => Temporal.Instant.compare(abs1, abs2))
     .map(([str]) => str);
 
-  return reverse ? sortedAbsoluteTimes.reverse() : sortedAbsoluteTimes;
+  return reverse ? sortedInstantTimes.reverse() : sortedInstantTimes;
 }
 
 // simple string comparison order would not be correct here:

@@ -1,4 +1,4 @@
-import './absoluteFromLegacyDate.mjs';
+import './instantFromLegacyDate.mjs';
 import './adjustDayOfMonth.mjs';
 import './adjustMonth.mjs';
 import './birthdayIn2030.mjs';

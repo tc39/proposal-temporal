@@ -1,6 +1,6 @@
 // Display local time zone and three others
 const here = Temporal.now.timeZone();
-const now = Temporal.now.absolute();
+const now = Temporal.now.instant();
 const timeZones = [
   { name: 'Here', tz: here },
   { name: 'New York', tz: Temporal.TimeZone.from('America/New_York') },
@@ -12,7 +12,7 @@ const timeZones = [
 const calendarNow = now.toDateTime(here);
 const startTime = calendarNow
   .with(Temporal.Time.from('00:00')) // midnight
-  .toAbsolute(here);
+  .toInstant(here);
 
 // Build the table
 const table = document.getElementById('meeting-planner');

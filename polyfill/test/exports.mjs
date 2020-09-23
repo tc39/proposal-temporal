@@ -21,8 +21,8 @@ describe('Exports', () => {
   it('should be 10 things', () => {
     equal(named.length, 10);
   });
-  it('should contain `Absolute`', () => {
-    assert(named.includes('Absolute'));
+  it('should contain `Instant`', () => {
+    assert(named.includes('Instant'));
   });
   it('should contain `TimeZone`', () => {
     assert(named.includes('TimeZone'));
@@ -56,8 +56,8 @@ describe('Exports', () => {
     it('should have 5 things', () => {
       equal(names.length, 5);
     });
-    it('should contain absolute', () => {
-      assert(names.includes('absolute'));
+    it('should contain instant', () => {
+      assert(names.includes('instant'));
     });
     it('should contain dateTime', () => {
       assert(names.includes('dateTime'));
@@ -72,7 +72,7 @@ describe('Exports', () => {
       assert(names.includes('timeZone'));
     });
     it('should contain absolute', () => {
-      equal(typeof Temporal.now.absolute, 'function');
+      equal(typeof Temporal.now.instant, 'function');
     });
     it('should contain dateTime', () => {
       equal(typeof Temporal.now.dateTime, 'function');

@@ -1,4 +1,4 @@
-// Absolute
+// Instant
 export const EPOCHNANOSECONDS = 'slot-epochNanoSeconds';
 
 // TimeZone

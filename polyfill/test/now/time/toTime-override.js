@@ -25,9 +25,9 @@ Object.defineProperty(Temporal.DateTime.prototype, "toTime", {
 });
 
 const timeZone = new Proxy({
-  getDateTimeFor(absolute) {
+  getDateTimeFor(instant) {
     actual.push("call timeZone.getDateTimeFor");
-    assert.sameValue(absolute instanceof Temporal.Absolute, true, "Absolute");
+    assert.sameValue(instant instanceof Temporal.Instant, true, "Instant");
     return dateTime;
   },
 }, {

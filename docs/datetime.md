@@ -10,13 +10,13 @@ Of the `Temporal` classes carrying human-readable time information, it is the mo
 `Temporal.Date`, `Temporal.Time`, `Temporal.YearMonth`, and `Temporal.MonthDay` all carry less information and should be used when complete information is not required.
 
 "Calendar date" and "wall-clock time" refer to the concept of time as expressed in everyday usage.
-`Temporal.DateTime` does not represent an absolute, unique point in time; that is what `Temporal.Absolute` is for.
+`Temporal.DateTime` does not represent an absolute, unique point in time; that is what `Temporal.Instant` is for.
 
-One example of when it would be appropriate to use `Temporal.DateTime` and not `Temporal.Absolute` is when integrating with wearable devices.
+One example of when it would be appropriate to use `Temporal.DateTime` and not `Temporal.Instant` is when integrating with wearable devices.
 FitBit, for example, always records sleep data in the user's wall-clock time, wherever they are in the world.
 Otherwise they would be recorded as sleeping at strange hours when travelling, even if their sleep rhythm was on a healthy schedule for the time zone they were in.
 
-A `Temporal.DateTime` can be converted to a `Temporal.Absolute` using a `Temporal.TimeZone`.
+A `Temporal.DateTime` can be converted to a `Temporal.Instant` using a `Temporal.TimeZone`.
 A `Temporal.DateTime` can also be converted into any of the other `Temporal` objects that carry less information, such as `Temporal.Date` for the date or `Temporal.Time` for the time.
 
 ## Constructor
@@ -47,7 +47,7 @@ Together, `isoYear`, `isoMonth`, and `isoDay` must represent a valid date in tha
 > **NOTE**: Although Temporal does not deal with leap seconds, dates coming from other software may have a `second` value of 60.
 > This value will cause the constructor will throw, so if you have to interoperate with times that may contain leap seconds, use `Temporal.DateTime.from()` instead.
 
-The range of allowed values for this type is exactly enough that calling [`toDateTime()`](./absolute.html#toDateTime) on any valid `Temporal.Absolute` with any valid `Temporal.TimeZone` will succeed.
+The range of allowed values for this type is exactly enough that calling [`toDateTime()`](./instant.html#toDateTime) on any valid `Temporal.Instant` with any valid `Temporal.TimeZone` will succeed.
 If the parameters passed in to this constructor form a date outside of this range, then this function will throw a `RangeError`.
 
 > **NOTE**: The `isoMonth` argument ranges from 1 to 12, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
@@ -663,7 +663,7 @@ This method overrides `Object.prototype.toLocaleString()` to provide a human-rea
 
 The `locales` and `options` arguments are the same as in the constructor to [`Intl.DateTimeFormat`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DateTimeFormat).
 
-> **NOTE**: Unlike in [`Temporal.Absolute.prototype.toLocaleString()`](./absolute.html#toLocaleString), `options.timeZone` will have no effect, because `Temporal.DateTime` carries no time zone information and is just a wall-clock time.
+> **NOTE**: Unlike in [`Temporal.Instant.prototype.toLocaleString()`](./instant.html#toLocaleString), `options.timeZone` will have no effect, because `Temporal.DateTime` carries no time zone information and is just a wall-clock time.
 
 Example usage:
 
@@ -719,7 +719,7 @@ This method overrides `Object.prototype.valueOf()` and always throws an exceptio
 This is because it's not possible to compare `Temporal.DateTime` objects with the relational operators `<`, `<=`, `>`, or `>=`.
 Use `Temporal.DateTime.compare()` for this, or `datetime.equals()` for equality.
 
-### datetime.**toAbsolute**(_timeZone_ : object | string, _options_?: object) : Temporal.Absolute
+### datetime.**toInstant**(_timeZone_ : object | string, _options_?: object) : Temporal.Instant
 
 **Parameters:**
 
@@ -730,12 +730,12 @@ Use `Temporal.DateTime.compare()` for this, or `datetime.equals()` for equality.
     Allowed values are `'compatible'`, `'earlier'`, `'later'`, and `'reject'`.
     The default is `'compatible'`.
 
-**Returns:** A `Temporal.Absolute` object indicating the absolute time in `timeZone` at the time of the calendar date and wall-clock time from `dateTime`.
+**Returns:** A `Temporal.Instant` object indicating the instant time in `timeZone` at the time of the calendar date and wall-clock time from `dateTime`.
 
-This method is one way to convert a `Temporal.DateTime` to a `Temporal.Absolute`.
-It is identical to [`(Temporal.TimeZone.from(timeZone || 'UTC')).getAbsoluteFor(dateTime, disambiguation)`](./timezone.html#getAbsoluteFor).
+This method is one way to convert a `Temporal.DateTime` to a `Temporal.Instant`.
+It is identical to [`(Temporal.TimeZone.from(timeZone || 'UTC')).getInstantFor(dateTime, disambiguation)`](./timezone.html#getInstantFor).
 
-In the case of ambiguity, the `disambiguation` option controls what absolute time to return:
+In the case of ambiguity, the `disambiguation` option controls what instant time to return:
 
 - `'compatible'` (the default): Acts like `'earlier'` for backward transitions and `'later'` for forward transitions.
 - `'earlier'`: The earlier of two possible times.
@@ -746,11 +746,11 @@ When interoperating with existing code or services, `'compatible'` mode matches 
 This mode also matches the behavior of cross-platform standards like [RFC 5545 (iCalendar)](https://tools.ietf.org/html/rfc5545).
 
 During "skipped" clock time like the hour after DST starts in the Spring, this method interprets invalid times using the pre-transition time zone offset if `'compatible'` or `'later'` is used or the post-transition time zone offset if `'earlier'` is used.
-This behavior avoids exceptions when converting non-existent `Temporal.DateTime` values to `Temporal.Absolute`, but it also means that values during these periods will result in a different `Temporal.DateTime` in "round-trip" conversions to `Temporal.Absolute` and back again.
+This behavior avoids exceptions when converting non-existent `Temporal.DateTime` values to `Temporal.Instant`, but it also means that values during these periods will result in a different `Temporal.DateTime` in "round-trip" conversions to `Temporal.Instant` and back again.
 
 For usage examples and a more complete explanation of how this disambiguation works and why it is necessary, see [Resolving ambiguity](./ambiguity.md).
 
-If the result is earlier or later than the range that `Temporal.Absolute` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then a `RangeError` will be thrown, no matter the value of `disambiguation`.
+If the result is earlier or later than the range that `Temporal.Instant` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then a `RangeError` will be thrown, no matter the value of `disambiguation`.
 
 ### datetime.**toDate**() : Temporal.Date
 

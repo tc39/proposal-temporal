@@ -28,10 +28,10 @@ describe('TimeZone', () => {
         equal(typeof Temporal.TimeZone.prototype.getOffsetStringFor, 'function'));
       it('Temporal.TimeZone.prototype has getDateTimeFor', () =>
         equal(typeof Temporal.TimeZone.prototype.getDateTimeFor, 'function'));
-      it('Temporal.TimeZone.prototype has getAbsoluteFor', () =>
-        equal(typeof Temporal.TimeZone.prototype.getAbsoluteFor, 'function'));
-      it('Temporal.TimeZone.prototype has getPossibleAbsolutesFor', () =>
-        equal(typeof Temporal.TimeZone.prototype.getPossibleAbsolutesFor, 'function'));
+      it('Temporal.TimeZone.prototype has getInstantFor', () =>
+        equal(typeof Temporal.TimeZone.prototype.getInstantFor, 'function'));
+      it('Temporal.TimeZone.prototype has getPossibleInstantsFor', () =>
+        equal(typeof Temporal.TimeZone.prototype.getPossibleInstantsFor, 'function'));
       it('Temporal.TimeZone.prototype has getNextTransition', () =>
         equal(typeof Temporal.TimeZone.prototype.getNextTransition, 'function'));
       it('Temporal.TimeZone.prototype has getPreviousTransition', () =>
@@ -128,39 +128,39 @@ describe('TimeZone', () => {
   });
   describe('+01:00', () => {
     const zone = new Temporal.TimeZone('+01:00');
-    const abs = Temporal.Absolute.fromEpochSeconds(Math.floor(Math.random() * 1e9));
+    const abs = Temporal.Instant.fromEpochSeconds(Math.floor(Math.random() * 1e9));
     const dtm = new Temporal.DateTime(1976, 11, 18, 15, 23, 30, 123, 456, 789);
     it(`${zone} has name ${zone}`, () => equal(zone.name, `${zone}`));
     it(`${zone} has offset +01:00 in ns`, () => equal(zone.getOffsetNanosecondsFor(abs), 3600e9));
     it(`${zone} has offset +01:00`, () => equal(zone.getOffsetStringFor(abs), '+01:00'));
     it(`(${zone}).getDateTimeFor(${abs})`, () => assert(zone.getDateTimeFor(abs) instanceof Temporal.DateTime));
-    it(`(${zone}).getAbsoluteFor(${dtm})`, () => assert(zone.getAbsoluteFor(dtm) instanceof Temporal.Absolute));
+    it(`(${zone}).getInstantFor(${dtm})`, () => assert(zone.getInstantFor(dtm) instanceof Temporal.Instant));
     it(`(${zone}).getNextTransition(${abs})`, () => zone.getNextTransition(abs), null);
     it(`(${zone}).getPreviousTransition(${abs})`, () => zone.getPreviousTransition(abs), null);
     it('wraps around to the next day', () =>
-      equal(`${zone.getDateTimeFor(Temporal.Absolute.from('2020-02-06T23:59Z'))}`, '2020-02-07T00:59'));
+      equal(`${zone.getDateTimeFor(Temporal.Instant.from('2020-02-06T23:59Z'))}`, '2020-02-07T00:59'));
   });
   describe('UTC', () => {
     const zone = new Temporal.TimeZone('UTC');
-    const abs = Temporal.Absolute.fromEpochSeconds(Math.floor(Math.random() * 1e9));
+    const abs = Temporal.Instant.fromEpochSeconds(Math.floor(Math.random() * 1e9));
     const dtm = new Temporal.DateTime(1976, 11, 18, 15, 23, 30, 123, 456, 789);
     it(`${zone} has name ${zone}`, () => equal(zone.name, `${zone}`));
     it(`${zone} has offset +00:00 in ns`, () => equal(zone.getOffsetNanosecondsFor(abs), 0));
     it(`${zone} has offset +00:00`, () => equal(zone.getOffsetStringFor(abs), '+00:00'));
     it(`(${zone}).getDateTimeFor(${abs})`, () => assert(zone.getDateTimeFor(abs) instanceof Temporal.DateTime));
-    it(`(${zone}).getAbsoluteFor(${dtm})`, () => assert(zone.getAbsoluteFor(dtm) instanceof Temporal.Absolute));
+    it(`(${zone}).getInstantFor(${dtm})`, () => assert(zone.getInstantFor(dtm) instanceof Temporal.Instant));
     it(`(${zone}).getNextTransition(${abs})`, () => zone.getNextTransition(abs), null);
     it(`(${zone}).getPreviousTransition(${abs})`, () => zone.getPreviousTransition(abs), null);
   });
   describe('America/Los_Angeles', () => {
     const zone = new Temporal.TimeZone('America/Los_Angeles');
-    const abs = Temporal.Absolute.fromEpochSeconds(0n);
+    const abs = Temporal.Instant.fromEpochSeconds(0n);
     const dtm = new Temporal.DateTime(1976, 11, 18, 15, 23, 30, 123, 456, 789);
     it(`${zone} has name ${zone}`, () => equal(zone.name, `${zone}`));
     it(`${zone} has offset -08:00 in ns`, () => equal(zone.getOffsetNanosecondsFor(abs), -8 * 3600e9));
     it(`${zone} has offset -08:00`, () => equal(zone.getOffsetStringFor(abs), '-08:00'));
     it(`(${zone}).getDateTimeFor(${abs})`, () => assert(zone.getDateTimeFor(abs) instanceof Temporal.DateTime));
-    it(`(${zone}).getAbsoluteFor(${dtm})`, () => assert(zone.getAbsoluteFor(dtm) instanceof Temporal.Absolute));
+    it(`(${zone}).getInstantFor(${dtm})`, () => assert(zone.getInstantFor(dtm) instanceof Temporal.Instant));
     it(`(${zone}).getNextTransition() x 4 transitions`, () => {
       for (let i = 0, txn = abs; i < 4; i++) {
         const transition = zone.getNextTransition(txn);
@@ -178,20 +178,20 @@ describe('TimeZone', () => {
     it('clock moving forward', () => {
       const zone = new Temporal.TimeZone('Europe/Berlin');
       const dtm = new Temporal.DateTime(2019, 3, 31, 2, 45);
-      equal(`${zone.getAbsoluteFor(dtm)}`, '2019-03-31T01:45Z');
-      equal(`${zone.getAbsoluteFor(dtm, { disambiguation: 'earlier' })}`, '2019-03-31T00:45Z');
-      equal(`${zone.getAbsoluteFor(dtm, { disambiguation: 'later' })}`, '2019-03-31T01:45Z');
-      equal(`${zone.getAbsoluteFor(dtm, { disambiguation: 'compatible' })}`, '2019-03-31T01:45Z');
-      throws(() => zone.getAbsoluteFor(dtm, { disambiguation: 'reject' }), RangeError);
+      equal(`${zone.getInstantFor(dtm)}`, '2019-03-31T01:45Z');
+      equal(`${zone.getInstantFor(dtm, { disambiguation: 'earlier' })}`, '2019-03-31T00:45Z');
+      equal(`${zone.getInstantFor(dtm, { disambiguation: 'later' })}`, '2019-03-31T01:45Z');
+      equal(`${zone.getInstantFor(dtm, { disambiguation: 'compatible' })}`, '2019-03-31T01:45Z');
+      throws(() => zone.getInstantFor(dtm, { disambiguation: 'reject' }), RangeError);
     });
     it('clock moving backward', () => {
       const zone = new Temporal.TimeZone('America/Sao_Paulo');
       const dtm = new Temporal.DateTime(2019, 2, 16, 23, 45);
-      equal(`${zone.getAbsoluteFor(dtm)}`, '2019-02-17T01:45Z');
-      equal(`${zone.getAbsoluteFor(dtm, { disambiguation: 'earlier' })}`, '2019-02-17T01:45Z');
-      equal(`${zone.getAbsoluteFor(dtm, { disambiguation: 'later' })}`, '2019-02-17T02:45Z');
-      equal(`${zone.getAbsoluteFor(dtm, { disambiguation: 'compatible' })}`, '2019-02-17T01:45Z');
-      throws(() => zone.getAbsoluteFor(dtm, { disambiguation: 'reject' }), RangeError);
+      equal(`${zone.getInstantFor(dtm)}`, '2019-02-17T01:45Z');
+      equal(`${zone.getInstantFor(dtm, { disambiguation: 'earlier' })}`, '2019-02-17T01:45Z');
+      equal(`${zone.getInstantFor(dtm, { disambiguation: 'later' })}`, '2019-02-17T02:45Z');
+      equal(`${zone.getInstantFor(dtm, { disambiguation: 'compatible' })}`, '2019-02-17T01:45Z');
+      throws(() => zone.getInstantFor(dtm, { disambiguation: 'reject' }), RangeError);
     });
   });
   describe('Casting', () => {
@@ -212,119 +212,119 @@ describe('TimeZone', () => {
       throws(() => zone.getDateTimeFor({}), TypeError);
     });
   });
-  describe('TimeZone.getAbsoluteFor() works', () => {
+  describe('TimeZone.getInstantFor() works', () => {
     it('recent date', () => {
       const dt = Temporal.DateTime.from('2019-10-29T10:46:38.271986102');
       const tz = Temporal.TimeZone.from('Europe/Amsterdam');
-      equal(`${tz.getAbsoluteFor(dt)}`, '2019-10-29T09:46:38.271986102Z');
+      equal(`${tz.getInstantFor(dt)}`, '2019-10-29T09:46:38.271986102Z');
     });
     it('year ≤ 99', () => {
       const dt = Temporal.DateTime.from('+000098-10-29T10:46:38.271986102');
       const tz = Temporal.TimeZone.from('+06:00');
-      equal(`${tz.getAbsoluteFor(dt)}`, '+000098-10-29T04:46:38.271986102Z');
+      equal(`${tz.getInstantFor(dt)}`, '+000098-10-29T04:46:38.271986102Z');
     });
     it('year < 1', () => {
       let dt = Temporal.DateTime.from('+000000-10-29T10:46:38.271986102');
       const tz = Temporal.TimeZone.from('+06:00');
-      equal(`${tz.getAbsoluteFor(dt)}`, '+000000-10-29T04:46:38.271986102Z');
+      equal(`${tz.getInstantFor(dt)}`, '+000000-10-29T04:46:38.271986102Z');
       dt = Temporal.DateTime.from('-001000-10-29T10:46:38.271986102');
-      equal(`${tz.getAbsoluteFor(dt)}`, '-001000-10-29T04:46:38.271986102Z');
+      equal(`${tz.getInstantFor(dt)}`, '-001000-10-29T04:46:38.271986102Z');
     });
     it('year 0 leap day', () => {
       const dt = Temporal.DateTime.from('+000000-02-29T00:00');
       const tz = Temporal.TimeZone.from('Europe/London');
-      equal(`${tz.getAbsoluteFor(dt)}`, '+000000-02-29T00:01:15Z');
+      equal(`${tz.getInstantFor(dt)}`, '+000000-02-29T00:01:15Z');
     });
-    it('outside of Absolute range', () => {
+    it('outside of Instant range', () => {
       const max = Temporal.DateTime.from('+275760-09-13T23:59:59.999999999');
 
       const offsetTz = Temporal.TimeZone.from('-01:00');
-      throws(() => offsetTz.getAbsoluteFor(max), RangeError);
+      throws(() => offsetTz.getInstantFor(max), RangeError);
 
       const namedTz = Temporal.TimeZone.from('America/Godthab');
-      throws(() => namedTz.getAbsoluteFor(max), RangeError);
+      throws(() => namedTz.getInstantFor(max), RangeError);
     });
     it('options may only be an object or undefined', () => {
       const dt = Temporal.DateTime.from('2019-10-29T10:46:38.271986102');
       const tz = Temporal.TimeZone.from('America/Sao_Paulo');
       [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
-        throws(() => tz.getAbsoluteFor(dt, badOptions), TypeError)
+        throws(() => tz.getInstantFor(dt, badOptions), TypeError)
       );
       [{}, () => {}, undefined].forEach((options) =>
-        equal(`${tz.getAbsoluteFor(dt, options)}`, '2019-10-29T13:46:38.271986102Z')
+        equal(`${tz.getInstantFor(dt, options)}`, '2019-10-29T13:46:38.271986102Z')
       );
     });
   });
-  describe('getAbsoluteFor disambiguation', () => {
+  describe('getInstantFor disambiguation', () => {
     const dtm = new Temporal.DateTime(2019, 2, 16, 23, 45);
     it('with constant offset', () => {
       const zone = Temporal.TimeZone.from('+03:30');
       for (const disambiguation of [undefined, 'compatible', 'earlier', 'later', 'reject']) {
-        assert(zone.getAbsoluteFor(dtm, { disambiguation }) instanceof Temporal.Absolute);
+        assert(zone.getInstantFor(dtm, { disambiguation }) instanceof Temporal.Instant);
       }
     });
     it('with daylight saving change - Fall', () => {
       const zone = Temporal.TimeZone.from('America/Sao_Paulo');
-      equal(`${zone.getAbsoluteFor(dtm)}`, '2019-02-17T01:45Z');
-      equal(`${zone.getAbsoluteFor(dtm, { disambiguation: 'earlier' })}`, '2019-02-17T01:45Z');
-      equal(`${zone.getAbsoluteFor(dtm, { disambiguation: 'later' })}`, '2019-02-17T02:45Z');
-      equal(`${zone.getAbsoluteFor(dtm, { disambiguation: 'compatible' })}`, '2019-02-17T01:45Z');
-      throws(() => zone.getAbsoluteFor(dtm, { disambiguation: 'reject' }), RangeError);
+      equal(`${zone.getInstantFor(dtm)}`, '2019-02-17T01:45Z');
+      equal(`${zone.getInstantFor(dtm, { disambiguation: 'earlier' })}`, '2019-02-17T01:45Z');
+      equal(`${zone.getInstantFor(dtm, { disambiguation: 'later' })}`, '2019-02-17T02:45Z');
+      equal(`${zone.getInstantFor(dtm, { disambiguation: 'compatible' })}`, '2019-02-17T01:45Z');
+      throws(() => zone.getInstantFor(dtm, { disambiguation: 'reject' }), RangeError);
     });
     it('with daylight saving change - Spring', () => {
       const dtmLA = new Temporal.DateTime(2020, 3, 8, 2, 30);
       const zone = Temporal.TimeZone.from('America/Los_Angeles');
-      equal(`${zone.getAbsoluteFor(dtmLA)}`, '2020-03-08T10:30Z');
-      equal(`${zone.getAbsoluteFor(dtmLA, { disambiguation: 'earlier' })}`, '2020-03-08T09:30Z');
-      equal(`${zone.getAbsoluteFor(dtmLA, { disambiguation: 'later' })}`, '2020-03-08T10:30Z');
-      equal(`${zone.getAbsoluteFor(dtmLA, { disambiguation: 'compatible' })}`, '2020-03-08T10:30Z');
-      throws(() => zone.getAbsoluteFor(dtmLA, { disambiguation: 'reject' }), RangeError);
+      equal(`${zone.getInstantFor(dtmLA)}`, '2020-03-08T10:30Z');
+      equal(`${zone.getInstantFor(dtmLA, { disambiguation: 'earlier' })}`, '2020-03-08T09:30Z');
+      equal(`${zone.getInstantFor(dtmLA, { disambiguation: 'later' })}`, '2020-03-08T10:30Z');
+      equal(`${zone.getInstantFor(dtmLA, { disambiguation: 'compatible' })}`, '2020-03-08T10:30Z');
+      throws(() => zone.getInstantFor(dtmLA, { disambiguation: 'reject' }), RangeError);
     });
     it('throws on bad disambiguation', () => {
       const zone = Temporal.TimeZone.from('+03:30');
       ['', 'EARLIER', 'test', 3, null].forEach((disambiguation) =>
-        throws(() => zone.getAbsoluteFor(dtm, { disambiguation }), RangeError)
+        throws(() => zone.getInstantFor(dtm, { disambiguation }), RangeError)
       );
     });
   });
-  describe('getPossibleAbsolutesFor', () => {
+  describe('getPossibleInstantsFor', () => {
     it('with constant offset', () => {
       const zone = Temporal.TimeZone.from('+03:30');
       const dt = Temporal.DateTime.from('2019-02-16T23:45');
       deepEqual(
-        zone.getPossibleAbsolutesFor(dt).map((a) => `${a}`),
+        zone.getPossibleInstantsFor(dt).map((a) => `${a}`),
         ['2019-02-16T20:15Z']
       );
     });
     it('with clock moving forward', () => {
       const zone = Temporal.TimeZone.from('Europe/Berlin');
       const dt = Temporal.DateTime.from('2019-03-31T02:45');
-      deepEqual(zone.getPossibleAbsolutesFor(dt), []);
+      deepEqual(zone.getPossibleInstantsFor(dt), []);
     });
     it('with clock moving backward', () => {
       const zone = Temporal.TimeZone.from('America/Sao_Paulo');
       const dt = Temporal.DateTime.from('2019-02-16T23:45');
       deepEqual(
-        zone.getPossibleAbsolutesFor(dt).map((a) => `${a}`),
+        zone.getPossibleInstantsFor(dt).map((a) => `${a}`),
         ['2019-02-17T01:45Z', '2019-02-17T02:45Z']
       );
     });
-    it('outside of Absolute range', () => {
+    it('outside of Instant range', () => {
       const max = Temporal.DateTime.from('+275760-09-13T23:59:59.999999999');
 
       const offsetTz = Temporal.TimeZone.from('-01:00');
-      throws(() => offsetTz.getPossibleAbsolutesFor(max), RangeError);
+      throws(() => offsetTz.getPossibleInstantsFor(max), RangeError);
 
       const namedTz = Temporal.TimeZone.from('America/Godthab');
-      throws(() => namedTz.getPossibleAbsolutesFor(max), RangeError);
+      throws(() => namedTz.getPossibleInstantsFor(max), RangeError);
     });
   });
   describe('getNextTransition works as expected', () => {
     it('should not have bug #510', () => {
       // See https://github.com/tc39/proposal-temporal/issues/510 for more.
       const nyc = Temporal.TimeZone.from('America/New_York');
-      const a1 = Temporal.Absolute.from('2019-04-16T21:01Z');
-      const a2 = Temporal.Absolute.from('1800-01-01T00:00Z');
+      const a1 = Temporal.Instant.from('2019-04-16T21:01Z');
+      const a2 = Temporal.Instant.from('1800-01-01T00:00Z');
 
       equal(nyc.getNextTransition(a1).toString(), '2019-11-03T06:00Z');
       equal(nyc.getNextTransition(a2).toString(), '1883-11-18T17:00Z');
@@ -334,8 +334,8 @@ describe('TimeZone', () => {
   describe('getPreviousTransition works as expected', () => {
     it('should return first and last transition', () => {
       const london = Temporal.TimeZone.from('Europe/London');
-      const a1 = Temporal.Absolute.from('2020-06-11T21:01Z');
-      const a2 = Temporal.Absolute.from('1848-01-01T00:00Z');
+      const a1 = Temporal.Instant.from('2020-06-11T21:01Z');
+      const a2 = Temporal.Instant.from('1848-01-01T00:00Z');
 
       equal(london.getPreviousTransition(a1).toString(), '2020-03-29T01:00Z');
       equal(london.getPreviousTransition(a2).toString(), '1847-12-01T00:01:15Z');

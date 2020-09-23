@@ -1,5 +1,5 @@
 /**
- * Returns an iterator of the absolute times corresponding to a daily occurrence
+ * Returns an iterator of the instant times corresponding to a daily occurrence
  * starting on a particular date, and happening at a particular local time in a
  * particular time zone.
  *
@@ -9,7 +9,7 @@
  */
 function* calculateDailyOccurrence(startDate, time, timeZone) {
   for (let date = startDate; ; date = date.plus({ days: 1 })) {
-    yield date.toDateTime(time).toAbsolute(timeZone);
+    yield date.toDateTime(time).toInstant(timeZone);
   }
 }
 

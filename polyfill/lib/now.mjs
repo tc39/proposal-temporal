@@ -3,21 +3,21 @@ import { ES } from './ecmascript.mjs';
 import { GetIntrinsic } from './intrinsicclass.mjs';
 
 export const now = {
-  absolute,
+  instant,
   dateTime,
   date,
   time,
   timeZone
 };
 
-function absolute() {
-  const Absolute = GetIntrinsic('%Temporal.Absolute%');
-  return new Absolute(ES.SystemUTCEpochNanoSeconds());
+function instant() {
+  const Instant = GetIntrinsic('%Temporal.Instant%');
+  return new Instant(ES.SystemUTCEpochNanoSeconds());
 }
 function dateTime(temporalTimeZoneLike = timeZone(), calendarLike = GetDefaultCalendar()) {
   const timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);
   const calendar = ES.ToTemporalCalendar(calendarLike);
-  const abs = absolute();
+  const abs = instant();
   return ES.GetTemporalDateTimeFor(timeZone, abs, calendar);
 }
 function date(temporalTimeZoneLike, calendarLike = undefined) {

@@ -280,24 +280,24 @@ const duration = seq(
   choice(durationDate, durationTime)
 );
 
-const absolute = seq(date, dateTimeSeparator, timeSpec, timeZone);
+const instant = seq(date, dateTimeSeparator, timeSpec, timeZone);
 
 // goal elements
 const goals = {
-  Absolute: absolute,
+  Instant: instant,
   Date: dateTime,
   DateTime: dateTime,
   Duration: duration,
   MonthDay: choice(dateSpecMonthDay, dateTime),
   Time: choice(time, dateTime),
-  TimeZone: choice(temporalTimeZoneIdentifier, absolute),
+  TimeZone: choice(temporalTimeZoneIdentifier, instant),
   YearMonth: choice(dateSpecYearMonth, dateTime)
 };
 
 const dateItems = ['year', 'month', 'day'];
 const timeItems = ['hour', 'minute', 'second', 'millisecond', 'microsecond', 'nanosecond'];
 const comparisonItems = {
-  Absolute: [...dateItems, ...timeItems, 'zone'],
+  Instant: [...dateItems, ...timeItems, 'zone'],
   Date: dateItems,
   DateTime: [...dateItems, ...timeItems],
   Duration: ['years', 'months', 'days', 'hours', 'minutes', 'seconds', 'milliseconds', 'microseconds', 'nanoseconds'],
@@ -307,7 +307,7 @@ const comparisonItems = {
   YearMonth: ['year', 'month']
 };
 
-const mode = 'Absolute';
+const mode = 'Instant';
 
 for (let count = 0; count < 1000; count++) {
   const generatedData = {};

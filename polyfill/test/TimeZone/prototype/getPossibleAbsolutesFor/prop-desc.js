@@ -7,12 +7,12 @@ includes: [propertyHelper.js]
 
 const { TimeZone } = Temporal;
 assert.sameValue(
-  typeof TimeZone.prototype.getPossibleAbsolutesFor,
+  typeof TimeZone.prototype.getPossibleInstantsFor,
   "function",
-  "`typeof TimeZone.prototype.getPossibleAbsolutesFor` is `function`"
+  "`typeof TimeZone.prototype.getPossibleInstantsFor` is `function`"
 );
 
-verifyProperty(TimeZone.prototype, "getPossibleAbsolutesFor", {
+verifyProperty(TimeZone.prototype, "getPossibleInstantsFor", {
   writable: true,
   enumerable: false,
   configurable: true,

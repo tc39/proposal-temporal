@@ -227,7 +227,7 @@ It would in effect render default Temporal.Date (and Temporal.DateTime) with few
 - .getMonthDay()
 - .with()
 
-\* *We could allow the arithmetic methods to work in Partial ISO if the duration units are days or smaller, with the same semantics as Temporal.Absolute.*
+\* *We could allow the arithmetic methods to work in Partial ISO if the duration units are days or smaller, with the same semantics as Temporal.Instant.*
 
 The following methods/getters would still work:
 
@@ -256,9 +256,9 @@ The calendar IDs are less clear.  If the partial ISO calendar used ID `"iso"`, t
 
 In this option, objects without a calendar would have their own type, and calendar-specific types would be used only when calendar-dependent functionality is required.  This is similar in spirit to Partial ISO (Option 3), except that new types are used, rather than simply a null calendar on the existing type.
 
-For example, name bikeshedding aside, `Temporal.ZonedAbsolute` (main issue: [#569](https://github.com/tc39/proposal-temporal/issues/569)) could become an intermediate type between `Temporal.Absolute` and `Temporal.DateTime` that does not include arithmetic or calendar-dependent functionality.  A calendar would be necessary when converting from `Temporal.ZonedAbsolute` into `Temporal.DateTime`.
+For example, name bikeshedding aside, `Temporal.ZonedAbsolute` (main issue: [#569](https://github.com/tc39/proposal-temporal/issues/569)) could become an intermediate type between `Temporal.Instant` and `Temporal.DateTime` that does not include arithmetic or calendar-dependent functionality.  A calendar would be necessary when converting from `Temporal.ZonedAbsolute` into `Temporal.DateTime`.
 
-- `Temporal.Absolute` = a point in time, not specific to a certain place.
+- `Temporal.Instant` = a point in time, not specific to a certain place.
 	- Data Model: [[EpochNanoseconds]]
 - `Temporal.ZonedAbsolute` = a point in time at a place on Earth.
 	- Data Model: [[EpochNanoseconds]] + [[TimeZone]]
@@ -269,8 +269,8 @@ Conversion methods between these three types could be:
 
 ```javascript
 // Absolute <=> ZonedAbsolute
-Temporal.Absolute.prototype.withZone(tz) : Temporal.ZonedAbsolute;
-Temporal.ZonedAbsolute.prototype.toAbsolute() : Temporal.Absolute;
+Temporal.Instant.prototype.withZone(tz) : Temporal.ZonedAbsolute;
+Temporal.ZonedAbsolute.prototype.toInstant() : Temporal.Instant;
 
 // ZonedAbsolute <=> DateTime
 Temporal.ZonedAbsolute.prototype.withCalendar(cal) : Temporal.DateTime;
@@ -300,7 +300,7 @@ Temporal.DateTime.prototype.getDate() : Temporal.Date;
 Temporal.Date.prototype.withTime() : Temporal.DateTime;
 ```
 
-An additional type, `Temporal.EpochDays`, could be added as an analog of `Temporal.Absolute` but with days instead of nanoseconds since epoch.
+An additional type, `Temporal.EpochDays`, could be added as an analog of `Temporal.Instant` but with days instead of nanoseconds since epoch.
 
 Here is an illustrated version of this option:
 
@@ -325,8 +325,8 @@ The following table describes these semantics.  Option 5 is not shown because th
 | new T.Date() | Full ISO | Full ISO | Full ISO | Full ISO | Full ISO |
 | T.now.date() | Full ISO | Explicit | Partial ISO | Environ. | Explicit |
 | T.now.isoDate() | N/A | N/A | N/A | N/A | Full ISO |
-| absolute.inTimeZone() | Full ISO | Explicit | Partial ISO | Environ. | Explicit |
-| absolute.inZoneISO() | N/A | N/A | N/A | N/A | Full ISO |
+| instant.inTimeZone() | Full ISO | Explicit | Partial ISO | Environ. | Explicit |
+| instant.inZoneISO() | N/A | N/A | N/A | N/A | Full ISO |
 | date.getMonthDay()\*\*\*\* | Inherit | Inherit | Explicit | Inherit | Inherit |
 | HTML input\*\*\* | Full ISO | Full ISO | Full ISO | Full ISO | Full ISO |
 
@@ -645,15 +645,15 @@ Note that the arguments to methods like `with`, `withDate`, etc., are interprete
 
 ## Other Temporal.Date constructors
 
-### Temporal.Absolute.prototype.inTimeZone
+### Temporal.Instant.prototype.inTimeZone
 
-The third way to get a Temporal.Date (besides from a string and an object) is to convert it from a Temporal.Absolute.
+The third way to get a Temporal.Date (besides from a string and an object) is to convert it from a Temporal.Instant.
 
 The API here would depend on the decision for whether to require an explicit default calendar.  If we decide to use a default calendar (options 1, 3, and 4), no API change would be required for this method.  If we decide to require an explicit calendar, then the API would likely be changed as follows:
 
 ```javascript
 // Default calendar option 2 only
-Temporal.Absolute.prototype.inTimeZone = function(timeZone, calendar) {
+Temporal.Instant.prototype.inTimeZone = function(timeZone, calendar) {
 	const isoDate = // compute the ISO date from the time zone
 	return isoDate.withCalendar(calendar);
 }
@@ -667,9 +667,9 @@ As above, this API depends on whether we decide to use a default calendar.  If w
 
 ```javascript
 Temporal.now.date = function(calendar) {
-	const absolute = Temporal.now.absolute();  // use intrinsic
+	const instant = Temporal.now.instant();  // use intrinsic
 	const timeZone = Temporal.now.timeZone();  // use intrinsic
-	return absolute.inTimeZone(timeZone, calendar);  // use intrinsic
+	return instant.inTimeZone(timeZone, calendar);  // use intrinsic
 }
 ```
 

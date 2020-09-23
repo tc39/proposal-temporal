@@ -107,12 +107,12 @@ describe('Userland calendar', () => {
     });
     it('timezone.getDateTimeFor()', () => {
       const tz = Temporal.TimeZone.from('UTC');
-      const abs = Temporal.Absolute.fromEpochSeconds(0);
-      const dt = tz.getDateTimeFor(abs, obj);
+      const instant = Temporal.Instant.fromEpochSeconds(0);
+      const dt = tz.getDateTimeFor(instant, obj);
       equal(dt.calendar.id, obj.id);
     });
     it('absolute.toDateTime()', () => {
-      const abs = Temporal.Absolute.fromEpochSeconds(0);
+      const abs = Temporal.Instant.fromEpochSeconds(0);
       const dt = abs.toDateTime('UTC', obj);
       equal(dt.calendar.id, obj.id);
     });
@@ -200,12 +200,12 @@ describe('Userland calendar', () => {
       });
       it('works for TimeZone.getDateTimeFor', () => {
         const tz = Temporal.TimeZone.from('UTC');
-        const abs = Temporal.Absolute.fromEpochSeconds(0);
+        const abs = Temporal.Instant.fromEpochSeconds(0);
         const dt = tz.getDateTimeFor(abs, 'zerobased');
         equal(dt.calendar.id, 'zerobased');
       });
-      it('works for Absolute.toDateTime', () => {
-        const abs = Temporal.Absolute.fromEpochSeconds(0);
+      it('works for Instant.toDateTime', () => {
+        const abs = Temporal.Instant.fromEpochSeconds(0);
         const dt = abs.toDateTime('UTC', 'zerobased');
         equal(dt.calendar.id, 'zerobased');
       });
@@ -347,12 +347,12 @@ describe('Userland calendar', () => {
     });
     it('timezone.getDateTimeFor()', () => {
       const tz = Temporal.TimeZone.from('UTC');
-      const abs = Temporal.Absolute.fromEpochSeconds(0);
+      const abs = Temporal.Instant.fromEpochSeconds(0);
       const dt = tz.getDateTimeFor(abs, obj);
       equal(dt.calendar.id, obj.id);
     });
     it('absolute.toDateTime()', () => {
-      const abs = Temporal.Absolute.fromEpochSeconds(0);
+      const abs = Temporal.Instant.fromEpochSeconds(0);
       const dt = abs.toDateTime('UTC', obj);
       equal(dt.calendar.id, obj.id);
     });
@@ -440,12 +440,12 @@ describe('Userland calendar', () => {
       });
       it('works for TimeZone.getDateTimeFor', () => {
         const tz = Temporal.TimeZone.from('UTC');
-        const abs = Temporal.Absolute.fromEpochSeconds(0);
+        const abs = Temporal.Instant.fromEpochSeconds(0);
         const dt = tz.getDateTimeFor(abs, 'decimal');
         equal(dt.calendar.id, 'decimal');
       });
-      it('works for Absolute.toDateTime', () => {
-        const abs = Temporal.Absolute.fromEpochSeconds(0);
+      it('works for Instant.toDateTime', () => {
+        const abs = Temporal.Instant.fromEpochSeconds(0);
         const dt = abs.toDateTime('UTC', 'decimal');
         equal(dt.calendar.id, 'decimal');
       });

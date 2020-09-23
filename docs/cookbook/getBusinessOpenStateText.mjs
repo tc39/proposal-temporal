@@ -4,7 +4,7 @@
  * open, closed, opening soon, or closing soon. The length of "soon" can be
  * controlled using the `soonWindow` parameter.
  *
- * @param {Temporal.Absolute} now - Time at which to consider whether the
+ * @param {Temporal.Instant} now - Time at which to consider whether the
  *  business is open
  * @param {Temporal.TimeZone} timeZone - Time zone in which the business is
  *  located
@@ -21,7 +21,7 @@
  */
 function getBusinessOpenStateText(now, timeZone, businessHours, soonWindow) {
   function inRange(abs, start, end) {
-    return Temporal.Absolute.compare(abs, start) >= 0 && Temporal.Absolute.compare(abs, end) < 0;
+    return Temporal.Instant.compare(abs, start) >= 0 && Temporal.Instant.compare(abs, end) < 0;
   }
 
   const dateTime = now.toDateTime(timeZone);
@@ -42,8 +42,8 @@ function getBusinessOpenStateText(now, timeZone, businessHours, soonWindow) {
     const { open, close } = yesterdayHours;
     if (Temporal.Time.compare(close, open) < 0) {
       businessHoursOverlappingToday.push({
-        open: yesterday.toDateTime(open).toAbsolute(timeZone),
-        close: today.toDateTime(close).toAbsolute(timeZone)
+        open: yesterday.toDateTime(open).toInstant(timeZone),
+        close: today.toDateTime(close).toInstant(timeZone)
       });
     }
   }
@@ -52,8 +52,8 @@ function getBusinessOpenStateText(now, timeZone, businessHours, soonWindow) {
     const { open, close } = todayHours;
     const todayOrTomorrow = Temporal.Time.compare(close, open) >= 0 ? today : tomorrow;
     businessHoursOverlappingToday.push({
-      open: today.toDateTime(open).toAbsolute(timeZone),
-      close: todayOrTomorrow.toDateTime(close).toAbsolute(timeZone)
+      open: today.toDateTime(open).toInstant(timeZone),
+      close: todayOrTomorrow.toDateTime(close).toInstant(timeZone)
     });
   }
 
@@ -86,7 +86,7 @@ const businessHours = [
   /* Sat */ { open: Temporal.Time.from('11:00'), close: Temporal.Time.from('02:00') }
 ];
 
-const now = Temporal.Absolute.from('2019-04-07T00:00+01:00[Europe/Berlin]');
+const now = Temporal.Instant.from('2019-04-07T00:00+01:00[Europe/Berlin]');
 const tz = Temporal.TimeZone.from('Europe/Berlin');
 const soonWindow = Temporal.Duration.from({ minutes: 30 });
 const saturdayNightState = getBusinessOpenStateText(now, tz, businessHours, soonWindow);

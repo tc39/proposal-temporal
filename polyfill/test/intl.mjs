@@ -28,13 +28,13 @@ describe('Intl', () => {
   }
 
   describe('absolute.toLocaleString()', () => {
-    const absolute = Temporal.Absolute.from('1976-11-18T14:23:30Z');
-    it(`(${absolute.toString()}).toLocaleString('en-US', { timeZone: 'America/New_York' })`, () =>
-      equal(`${absolute.toLocaleString('en', { timeZone: 'America/New_York' })}`, '11/18/1976, 9:23:30 AM'));
-    it(`(${absolute.toString()}).toLocaleString('de-AT', { timeZone: 'Europe/Vienna' })`, () =>
-      equal(`${absolute.toLocaleString('de', { timeZone: 'Europe/Vienna' })}`, '18.11.1976, 15:23:30'));
+    const instant = Temporal.Instant.from('1976-11-18T14:23:30Z');
+    it(`(${instant.toString()}).toLocaleString('en-US', { timeZone: 'America/New_York' })`, () =>
+      equal(`${instant.toLocaleString('en', { timeZone: 'America/New_York' })}`, '11/18/1976, 9:23:30 AM'));
+    it(`(${instant.toString()}).toLocaleString('de-AT', { timeZone: 'Europe/Vienna' })`, () =>
+      equal(`${instant.toLocaleString('de', { timeZone: 'Europe/Vienna' })}`, '18.11.1976, 15:23:30'));
     const fmt = maybeGetWeekdayOnlyFormat();
-    if (fmt) it('uses only the options in resolvedOptions', () => equal(fmt.format(absolute), 'Thursday'));
+    if (fmt) it('uses only the options in resolvedOptions', () => equal(fmt.format(instant), 'Thursday'));
   });
   describe('datetime.toLocaleString()', () => {
     const datetime = Temporal.DateTime.from('1976-11-18T15:23:30');
@@ -125,9 +125,9 @@ describe('Intl', () => {
     const end = new Date('1991-12-26');
 
     describe('format', () => {
-      it('should work for Absolute', () => {
-        equal(us.format(Temporal.Absolute.from(t1)), '11/18/1976, 9:23:30 AM');
-        equal(at.format(Temporal.Absolute.from(t1)), '18.11.1976, 15:23:30');
+      it('should work for Instant', () => {
+        equal(us.format(Temporal.Instant.from(t1)), '11/18/1976, 9:23:30 AM');
+        equal(at.format(Temporal.Instant.from(t1)), '18.11.1976, 15:23:30');
       });
       it('should work for DateTime', () => {
         equal(us.format(Temporal.DateTime.from(t1)), '11/18/1976, 2:23:30 PM');
@@ -155,8 +155,8 @@ describe('Intl', () => {
       });
     });
     describe('formatToParts', () => {
-      it('should work for Absolute', () => {
-        deepEqual(us.formatToParts(Temporal.Absolute.from(t2)), [
+      it('should work for Instant', () => {
+        deepEqual(us.formatToParts(Temporal.Instant.from(t2)), [
           { type: 'month', value: '2' },
           { type: 'literal', value: '/' },
           { type: 'day', value: '20' },
@@ -171,7 +171,7 @@ describe('Intl', () => {
           { type: 'literal', value: ' ' },
           { type: 'dayPeriod', value: 'PM' }
         ]);
-        deepEqual(at.formatToParts(Temporal.Absolute.from(t2)), [
+        deepEqual(at.formatToParts(Temporal.Instant.from(t2)), [
           { type: 'day', value: '20' },
           { type: 'literal', value: '.' },
           { type: 'month', value: '2' },
@@ -292,13 +292,13 @@ describe('Intl', () => {
       });
     });
     describe('formatRange', () => {
-      it('should work for Absolute', () => {
+      it('should work for Instant', () => {
         equal(
-          us.formatRange(Temporal.Absolute.from(t1), Temporal.Absolute.from(t2)),
+          us.formatRange(Temporal.Instant.from(t1), Temporal.Instant.from(t2)),
           '11/18/1976, 9:23:30 AM – 2/20/2020, 3:44:56 PM'
         );
         equal(
-          at.formatRange(Temporal.Absolute.from(t1), Temporal.Absolute.from(t2)),
+          at.formatRange(Temporal.Instant.from(t1), Temporal.Instant.from(t2)),
           '18.11.1976, 15:23:30 – 20.2.2020, 21:44:56'
         );
       });
@@ -333,7 +333,7 @@ describe('Intl', () => {
         equal(at.formatRange(start, end), '30.12.1922 – 26.12.1991');
       });
       it('should throw a TypeError when called with dissimilar types', () =>
-        throws(() => us.formatRange(Temporal.Absolute.from(t1), Temporal.DateTime.from(t2)), TypeError));
+        throws(() => us.formatRange(Temporal.Instant.from(t1), Temporal.DateTime.from(t2)), TypeError));
       it('should throw a RangeError when called with different calendars', () => {
         throws(
           () => us.formatRange(Temporal.DateTime.from(t1), Temporal.DateTime.from(t2).withCalendar('japanese')),
@@ -346,8 +346,8 @@ describe('Intl', () => {
       });
     });
     describe('formatRangeToParts', () => {
-      it('should work for Absolute', () => {
-        deepEqual(us.formatRangeToParts(Temporal.Absolute.from(t1), Temporal.Absolute.from(t2)), [
+      it('should work for Instant', () => {
+        deepEqual(us.formatRangeToParts(Temporal.Instant.from(t1), Temporal.Instant.from(t2)), [
           { type: 'month', value: '11', source: 'startRange' },
           { type: 'literal', value: '/', source: 'startRange' },
           { type: 'day', value: '18', source: 'startRange' },
@@ -376,7 +376,7 @@ describe('Intl', () => {
           { type: 'literal', value: ' ', source: 'endRange' },
           { type: 'dayPeriod', value: 'PM', source: 'endRange' }
         ]);
-        deepEqual(at.formatRangeToParts(Temporal.Absolute.from(t1), Temporal.Absolute.from(t2)), [
+        deepEqual(at.formatRangeToParts(Temporal.Instant.from(t1), Temporal.Instant.from(t2)), [
           { type: 'day', value: '18', source: 'startRange' },
           { type: 'literal', value: '.', source: 'startRange' },
           { type: 'month', value: '11', source: 'startRange' },
@@ -588,7 +588,7 @@ describe('Intl', () => {
         ]);
       });
       it('should throw a TypeError when called with dissimilar types', () =>
-        throws(() => at.formatRangeToParts(Temporal.Absolute.from(t1), Temporal.DateTime.from(t2)), TypeError));
+        throws(() => at.formatRangeToParts(Temporal.Instant.from(t1), Temporal.DateTime.from(t2)), TypeError));
       it('should throw a RangeError when called with different calendars', () => {
         throws(
           () => at.formatRangeToParts(Temporal.DateTime.from(t1), Temporal.DateTime.from(t2).withCalendar('japanese')),

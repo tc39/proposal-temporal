@@ -54,7 +54,7 @@ export class TimeZone {
   }
   getOffsetNanosecondsFor(absolute) {
     if (!ES.IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');
-    if (!ES.IsTemporalAbsolute(absolute)) throw new TypeError('invalid Absolute object');
+    if (!ES.IsTemporalInstant(absolute)) throw new TypeError('invalid Instant object');
     const id = GetSlot(this, TIMEZONE_ID);
 
     const offsetNs = parseOffsetString(id);
@@ -63,12 +63,12 @@ export class TimeZone {
     return ES.GetIANATimeZoneOffsetNanoseconds(GetSlot(absolute, EPOCHNANOSECONDS), id);
   }
   getOffsetStringFor(absolute) {
-    if (!ES.IsTemporalAbsolute(absolute)) throw new TypeError('invalid Absolute object');
+    if (!ES.IsTemporalInstant(absolute)) throw new TypeError('invalid Instant object');
     const offsetNs = ES.GetOffsetNanosecondsFor(this, absolute);
     return ES.FormatTimeZoneOffsetString(offsetNs);
   }
   getDateTimeFor(absolute, calendar = GetDefaultCalendar()) {
-    if (!ES.IsTemporalAbsolute(absolute)) throw new TypeError('invalid Absolute object');
+    if (!ES.IsTemporalInstant(absolute)) throw new TypeError('invalid Instant object');
     calendar = ES.ToTemporalCalendar(calendar);
 
     const ns = GetSlot(absolute, EPOCHNANOSECONDS);
@@ -88,33 +88,33 @@ export class TimeZone {
     const DateTime = GetIntrinsic('%Temporal.DateTime%');
     return new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
   }
-  getAbsoluteFor(dateTime, options) {
+  getInstantFor(dateTime, options) {
     if (!ES.IsTemporalDateTime(dateTime)) throw new TypeError('invalid DateTime object');
     const disambiguation = ES.ToTemporalDisambiguation(options);
 
-    const Absolute = GetIntrinsic('%Temporal.Absolute%');
-    const possibleAbsolutes = this.getPossibleAbsolutesFor(dateTime);
-    if (!Array.isArray(possibleAbsolutes)) {
-      throw new TypeError('bad return from getPossibleAbsolutesFor');
+    const Instant = GetIntrinsic('%Temporal.Instant%');
+    const possibleInstants = this.getPossibleInstantsFor(dateTime);
+    if (!Array.isArray(possibleInstants)) {
+      throw new TypeError('bad return from getPossibleInstantsFor');
     }
-    const numAbsolutes = possibleAbsolutes.length;
+    const numInstants = possibleInstants.length;
 
-    function validateAbsolute(absolute) {
-      if (!ES.IsTemporalAbsolute(absolute)) {
-        throw new TypeError('bad return from getPossibleAbsolutesFor');
+    function validateInstant(absolute) {
+      if (!ES.IsTemporalInstant(absolute)) {
+        throw new TypeError('bad return from getPossibleInstantsFor');
       }
       return absolute;
     }
 
-    if (numAbsolutes === 1) return validateAbsolute(possibleAbsolutes[0]);
-    if (numAbsolutes) {
+    if (numInstants === 1) return validateInstant(possibleInstants[0]);
+    if (numInstants) {
       switch (disambiguation) {
         case 'compatible':
         // fall through because 'compatible' means 'earlier' for "fall back" transitions
         case 'earlier':
-          return validateAbsolute(possibleAbsolutes[0]);
+          return validateInstant(possibleInstants[0]);
         case 'later':
-          return validateAbsolute(possibleAbsolutes[numAbsolutes - 1]);
+          return validateInstant(possibleInstants[numInstants - 1]);
         case 'reject': {
           throw new RangeError('multiple absolute found');
         }
@@ -133,8 +133,8 @@ export class TimeZone {
       GetSlot(dateTime, NANOSECOND)
     );
     if (utcns === null) throw new RangeError('DateTime outside of supported range');
-    const dayBefore = new Absolute(utcns.minus(86400e9));
-    const dayAfter = new Absolute(utcns.plus(86400e9));
+    const dayBefore = new Instant(utcns.minus(86400e9));
+    const dayAfter = new Instant(utcns.plus(86400e9));
     const offsetBefore = this.getOffsetNanosecondsFor(dayBefore);
     const offsetAfter = this.getOffsetNanosecondsFor(dayAfter);
     const nanoseconds = offsetAfter - offsetBefore;
@@ -142,13 +142,13 @@ export class TimeZone {
     switch (disambiguation) {
       case 'earlier': {
         const earlier = dateTime.minus(diff);
-        return this.getPossibleAbsolutesFor(earlier)[0];
+        return this.getPossibleInstantsFor(earlier)[0];
       }
       case 'compatible':
       // fall through because 'compatible' means 'later' for "spring forward" transitions
       case 'later': {
         const later = dateTime.plus(diff);
-        const possible = this.getPossibleAbsolutesFor(later);
+        const possible = this.getPossibleInstantsFor(later);
         return possible[possible.length - 1];
       }
       case 'reject': {
@@ -156,10 +156,10 @@ export class TimeZone {
       }
     }
   }
-  getPossibleAbsolutesFor(dateTime) {
+  getPossibleInstantsFor(dateTime) {
     if (!ES.IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');
     if (!ES.IsTemporalDateTime(dateTime)) throw new TypeError('invalid DateTime object');
-    const Absolute = GetIntrinsic('%Temporal.Absolute%');
+    const Instant = GetIntrinsic('%Temporal.Instant%');
     const id = GetSlot(this, TIMEZONE_ID);
 
     const offsetNs = parseOffsetString(id);
@@ -176,7 +176,7 @@ export class TimeZone {
         GetSlot(dateTime, NANOSECOND)
       );
       if (epochNs === null) throw new RangeError('DateTime outside of supported range');
-      return [new Absolute(epochNs.minus(offsetNs))];
+      return [new Instant(epochNs.minus(offsetNs))];
     }
 
     const possibleEpochNs = ES.GetIANATimeZoneEpochValue(
@@ -191,11 +191,11 @@ export class TimeZone {
       GetSlot(dateTime, MICROSECOND),
       GetSlot(dateTime, NANOSECOND)
     );
-    return possibleEpochNs.map((ns) => new Absolute(ns));
+    return possibleEpochNs.map((ns) => new Instant(ns));
   }
   getNextTransition(startingPoint) {
     if (!ES.IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');
-    if (!ES.IsTemporalAbsolute(startingPoint)) throw new TypeError('invalid Absolute object');
+    if (!ES.IsTemporalInstant(startingPoint)) throw new TypeError('invalid Instant object');
     const id = GetSlot(this, TIMEZONE_ID);
 
     // Offset time zones or UTC have no transitions
@@ -204,13 +204,13 @@ export class TimeZone {
     }
 
     let epochNanoseconds = GetSlot(startingPoint, EPOCHNANOSECONDS);
-    const Absolute = GetIntrinsic('%Temporal.Absolute%');
+    const Instant = GetIntrinsic('%Temporal.Instant%');
     epochNanoseconds = ES.GetIANATimeZoneNextTransition(epochNanoseconds, id);
-    return epochNanoseconds === null ? null : new Absolute(epochNanoseconds);
+    return epochNanoseconds === null ? null : new Instant(epochNanoseconds);
   }
   getPreviousTransition(startingPoint) {
     if (!ES.IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');
-    if (!ES.IsTemporalAbsolute(startingPoint)) throw new TypeError('invalid Absolute object');
+    if (!ES.IsTemporalInstant(startingPoint)) throw new TypeError('invalid Instant object');
     const id = GetSlot(this, TIMEZONE_ID);
 
     // Offset time zones or UTC have no transitions
@@ -219,9 +219,9 @@ export class TimeZone {
     }
 
     let epochNanoseconds = GetSlot(startingPoint, EPOCHNANOSECONDS);
-    const Absolute = GetIntrinsic('%Temporal.Absolute%');
+    const Instant = GetIntrinsic('%Temporal.Instant%');
     epochNanoseconds = ES.GetIANATimeZonePreviousTransition(epochNanoseconds, id);
-    return epochNanoseconds === null ? null : new Absolute(epochNanoseconds);
+    return epochNanoseconds === null ? null : new Instant(epochNanoseconds);
   }
   toString() {
     if (!ES.IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');
@@ -242,7 +242,7 @@ export class TimeZone {
 MakeIntrinsicClass(TimeZone, 'Temporal.TimeZone');
 DefineIntrinsic('Temporal.TimeZone.from', TimeZone.from);
 DefineIntrinsic('Temporal.TimeZone.prototype.getDateTimeFor', TimeZone.prototype.getDateTimeFor);
-DefineIntrinsic('Temporal.TimeZone.prototype.getAbsoluteFor', TimeZone.prototype.getAbsoluteFor);
+DefineIntrinsic('Temporal.TimeZone.prototype.getInstantFor', TimeZone.prototype.getInstantFor);
 DefineIntrinsic('Temporal.TimeZone.prototype.getOffsetNanosecondsFor', TimeZone.prototype.getOffsetNanosecondsFor);
 DefineIntrinsic('Temporal.TimeZone.prototype.getOffsetStringFor', TimeZone.prototype.getOffsetStringFor);
 DefineIntrinsic('Temporal.TimeZone.prototype.toString', TimeZone.prototype.toString);

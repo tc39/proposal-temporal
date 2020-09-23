@@ -13,14 +13,14 @@ This name is not intended to stick.
 - The cases where Absolute and DateTime do the wrong thing will only produce the wrong result when used across a DST transition, so in many places the bugs will only pop up twice per year, if at all.
 - When writing the cookbook, to deal with this use case, we found that it was actually necessary a lot of the time to pass around a record consisting of `{ absolute, timeZone }`.
   If that is so common, then we may as well have a type for it.
-- Even worse, there is a temptation to pass around a serialized string instead of such a record, which is wrong because the time zone offset may have changed when you read in the string again with `Temporal.Absolute.from()`.
+- Even worse, there is a temptation to pass around a serialized string instead of such a record, which is wrong because the time zone offset may have changed when you read in the string again with `Temporal.Instant.from()`.
 
 **API**: The API looks something like this:
 
 ```typescript
 class Temporal.LocalDateTime {
   // creation
-  constructor(absolute: Temporal.Absolute, timeZone: Temporal.TimeZone, calendar: Temporal.Calendar);
+  constructor(instant: Temporal.Instant, timeZone: Temporal.TimeZone, calendar: Temporal.Calendar);
   static from(item: string | object, options?: object) : Temporal.LocalDateTime;
 
   // immutable 'mutation'
@@ -55,7 +55,7 @@ class Temporal.LocalDateTime {
   getISOFields(): object;
 
   // type conversion
-  toAbsolute(): Temporal.Absolute;
+  toInstant(): Temporal.Instant;
   toDateTime(): Temporal.DateTime;
   toDate(): Temporal.Date;
   toYearMonth(): Temporal.YearMonth;
@@ -87,15 +87,15 @@ But since it represents an unambiguous moment in time (like Absolute, and unlike
 To create one, you use `Temporal.LocalDateTime.from`, or the `toLocalDateTime()` method of another Temporal type.
 - From a string: `from(string)`
 - From raw DateTime fields: `from({ year, month, day, etc., timeZone, timeZoneOffsetNanoseconds })`
-- From an Absolute: `absolute.toLocalDateTime(timeZone)`
+- From an Absolute: `instant.toLocalDateTime(timeZone)`
 - From a DateTime, which potentially needs disambiguation: `dateTime.toLocalDateTime(timeZone, { disambiguation })`
 
 As in the other Temporal types, the constructor is more low-level and takes an Absolute, a TimeZone, and a Calendar.
 
 "New" API that is not on DateTime:
 - `hoursInDay` - this is not possible with Absolute (no concept of days and no time zone) nor with DateTime (no time zone), but it makes sense for this type.
-- `timeZoneOffsetNanoseconds` - without this, you'd need to do `ldt.timeZone.getOffsetNanoseconds(ldt.toAbsolute())`.
-- `timeZoneOffsetString` - ditto, you'd need `ldt.timeZone.getOffsetString(ldt.toAbsolute())`.
+- `timeZoneOffsetNanoseconds` - without this, you'd need to do `ldt.timeZone.getOffsetNanoseconds(ldt.toInstant())`.
+- `timeZoneOffsetString` - ditto, you'd need `ldt.timeZone.getOffsetString(ldt.toInstant())`.
 - `startOfDay` - this is a convenient way to get the start of the day, especially if the day does not start at 00:00 due to DST.
   Also not needed with Absolute (no concept of days) nor with DateTime (day always starts at 00:00), but it makes sense for this type.
 - `isTimeZoneOffsetTransition` - convenience property getter.

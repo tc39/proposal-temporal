@@ -13,7 +13,7 @@ const values = [
   [2n, "2"],
 ];
 
-const absolute = Temporal.Absolute.from("1975-02-02T14:25:36.123456789Z");
+const instant = Temporal.Instant.from("1975-02-02T14:25:36.123456789Z");
 const timeZone = Temporal.TimeZone.from("UTC");
 
 const calendar = Temporal.Calendar.from("iso8601");
@@ -25,7 +25,7 @@ for (const [input, output] of values) {
     return calendar;
   };
 
-  const dateTime = timeZone.getDateTimeFor(absolute, input);
+  const dateTime = timeZone.getDateTimeFor(instant, input);
   assert.sameValue(called, 1);
   assert.sameValue(dateTime.calendar, calendar);
 }
@@ -34,4 +34,4 @@ Temporal.Calendar.from = function() {
   throw new Test262Error("Should not call Calendar.from");
 };
 
-assert.throws(TypeError, () => timeZone.getDateTimeFor(absolute, Symbol()));
+assert.throws(TypeError, () => timeZone.getDateTimeFor(instant, Symbol()));
