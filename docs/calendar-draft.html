@@ -76,10 +76,18 @@
         font-size: 18px;
         max-width: var(--text-width);
         padding-top: 40px;  /* extra padding for banner */
+        line-height: 1.5;
       }
       pre { border-left: 4px solid var(--variable); }
+      code {
+        padding: 1px 5px 2px 5px;
+        line-height: 1.1;
+        display: inline-block;
+      }
+      pre code { line-height: 1.4; }
       pre code[class*="language-"] { font-size: 0.85em; }
       pre[class*="language-"] { padding: 0.5em; }
+      h1 { margin-top: 13px; }
       h2 { border-bottom: 2px solid var(--text-muted); margin-top: 2em; }
       h3 {
         border-bottom: 1px solid var(--text-muted);
