@@ -553,7 +553,7 @@ feb1.difference(jan1);                            // => P31D
 feb1.difference(jan1, { largestUnit: 'months' }); // => P1M
 mar1.difference(feb1);                            // => P29D
 mar1.difference(feb1, { largestUnit: 'months' }); // => P1M
-may1.difference(jan1);                            // => P121D
+mar1.difference(jan1);                            // => P121D
 ```
 
 ### datetime.**round**(_options_: object) : Temporal.DateTime
