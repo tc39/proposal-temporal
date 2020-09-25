@@ -2,7 +2,7 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
-esid: sec-temporal.timezone.prototype.getabsolutefor
+esid: sec-temporal.timezone.prototype.getinstantfor
 ---*/
 
 const timeZone = Temporal.TimeZone.from("UTC");

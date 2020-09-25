@@ -2,7 +2,7 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
-esid: sec-temporal.absolute.prototype.todatetime
+esid: sec-temporal.instant.prototype.todatetime
 ---*/
 
 const instant = Temporal.Instant.from("1975-02-02T14:25:36.123456789Z");

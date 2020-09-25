@@ -2,7 +2,7 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
-esid: sec-temporal.absolute.from
+esid: sec-temporal.instant.from
 ---*/
 
 let called = false;
