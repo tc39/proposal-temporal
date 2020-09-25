@@ -19,7 +19,7 @@
       window.devtoolsFormatters.push({
         header(x) {
           for (const type of [
-            Temporal.Absolute,
+            Temporal.Instant,
             Temporal.Calendar,
             Temporal.Date,
             Temporal.DateTime,
@@ -482,7 +482,7 @@ time<span class="token punctuation">.</span><span class="token function">toStrin
 <p>This method overrides <code>Object.prototype.toLocaleString()</code> to provide a human-readable, language-sensitive representation of <code>time</code>.</p>
 <p>The <code>locales</code> and <code>options</code> arguments are the same as in the constructor to <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DateTimeFormat"><code>Intl.DateTimeFormat</code></a>.</p>
 <blockquote>
-<p><strong>NOTE</strong>: Unlike in <a href="./absolute.html#toLocaleString"><code>Temporal.Absolute.prototype.toLocaleString()</code></a>, <code>locales.timeZone</code> will have no effect, because <code>Temporal.Time</code> carries no time zone information and is just a wall-clock time.</p>
+<p><strong>NOTE</strong>: Unlike in <a href="./instant.html#toLocaleString"><code>Temporal.Instant.prototype.toLocaleString()</code></a>, <code>locales.timeZone</code> will have no effect, because <code>Temporal.Time</code> carries no time zone information and is just a wall-clock time.</p>
 </blockquote>
 <p>Example usage:</p>
 <pre class="language-js"><code class="language-js">time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'19:39:09.068346205'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>

@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Temporal documentation</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/kognise/water.css@latest/dist/light.min.css">
+    <script type="application/javascript" src="./playground.js"></script>
+    <script src="https://unpkg.com/mermaid@8.5.2/dist/mermaid.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="./prism.css">
+    <script>mermaid.initialize({startOnLoad:true,flowchart:{useMaxWidth:false}});</script>
+    <script>
+      Temporal = { ...temporal.Temporal };
+      Object.assign(Intl, temporal.Intl);
+
+      // Customize output of Temporal objects for Chrome DevTools
+      if (!window.devtoolsFormatters)
+        window.devtoolsFormatters = [];
+      window.devtoolsFormatters.push({
+        header(x) {
+          for (const type of [
+            Temporal.Instant,
+            Temporal.Calendar,
+            Temporal.Date,
+            Temporal.DateTime,
+            Temporal.Duration,
+            Temporal.MonthDay,
+            Temporal.Time,
+            Temporal.TimeZone,
+            Temporal.YearMonth
+          ]) {
+            if (x instanceof type) return ['span', {}, `${x[Symbol.toStringTag]} <${x}>`];
+          }
+          return null;
+        },
+        hasBody(x) {
+          return x instanceof Temporal.Duration;
+        },
+        body(x) {
+          const out = ['ol', { style: 'list-style-type: none;' }];
+          for (const prop of [
+            'years',
+            'months',
+            'weeks',
+            'days',
+            'hours',
+            'minutes',
+            'seconds',
+            'milliseconds',
+            'microseconds',
+            'nanoseconds'
+          ]) {
+            if (x[prop] !== 0) out.push([
+              'li',
+              {},
+              ['span', { style: 'color: purple;' }, prop],
+              `: `,
+              ['span', { style: 'color: blue;' }, x[prop]]
+            ]);
+          }
+          return out;
+        }
+      });
+    </script>
+    <style>
+      /* https://github.com/kognise/water.css/blob/master/src/variables-light.css */
+      :root {
+        --background: #efefef;
+        --text-muted: #999999;
+        --text-bright: #000000;
+        --text-width: 900px;
+        --variable: #39a33c;
+      }
+      .mermaid svg { height: 13em; }
+      body {
+        font-size: 18px;
+        max-width: var(--text-width);
+        padding-top: 40px;  /* extra padding for banner */
+        line-height: 1.5;
+      }
+      pre { border-left: 4px solid var(--variable); }
+      code {
+        padding: 1px 5px 2px 5px;
+        line-height: 1.1;
+        display: inline-block;
+      }
+      pre code { line-height: 1.4; }
+      pre code[class*="language-"] { font-size: 0.85em; }
+      pre[class*="language-"] { padding: 0.5em; }
+      h1 { margin-top: 13px; }
+      h2 { border-bottom: 2px solid var(--text-muted); margin-top: 2em; }
+      h3 {
+        border-bottom: 1px solid var(--text-muted);
+        color: var(--text-muted);
+        font-weight: normal;
+      }
+      h3 em { font-weight: bold; }
+      h3 strong { color: var(--text-bright); }
+      :not(h2) + h3 { margin-top: 2em; }
+      footer {
+        border-top: 1px solid var(--background);
+        color: var(--text-muted);
+        font-size: 0.8em;
+        margin-top: 2em;
+        padding-top: 10px;
+      }
+      .heading-link {
+        left: calc((100vw - var(--text-width)) / 2 - 1.5em);
+        opacity: 0;
+        position: absolute;
+        transition: opacity 150ms;
+      }
+      .heading-link:hover { text-decoration: none; }
+      .heading-link::before { content: '¶'; }
+      h3:hover .heading-link { opacity: 1; }
+      .banner {
+        /* Gradient from https://joshnh.com/weblog/how-to-make-an-alert-bar/ */
+        background-color: #fce94f;
+        background-image: linear-gradient(135deg,
+                                          transparent,
+                                          transparent 25%,
+                                          rgba(0, 0, 0, .05) 25%,
+                                          rgba(0, 0, 0, .05) 50%,
+                                          transparent 50%,
+                                          transparent 75%,
+                                          rgba(0, 0, 0, .05) 75%,
+                                          rgba(0, 0, 0, .05));
+        background-size: 20px 20px;
+        box-shadow: 0 5px 0 rgba(0, 0, 0, .1);
+        left: 0;
+        padding: 0.4em 0;
+        position: absolute;
+        text-align: center;
+        top: 0;
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="banner">
+      This proposal is <strong><a href="https://blogs.igalia.com/compilers/2020/06/23/dates-and-times-in-javascript/">experimental.</a></strong>
+      The API will change based on feedback that we get.
+      <strong>Do</strong> <a href="https://forms.gle/iL9iZg7Y9LvH41Nv8">give feedback</a> and open <a href="https://github.com/tc39/proposal-temporal/issues">issues</a>; <strong>don't</strong> use it in production!
+    </div>
+<h1 id="temporalinstant">Temporal.Instant</h1>
+<details>
+  <summary><strong>Table of Contents</strong></summary>
+<ul>
+<li><a href="#constructor">Constructor</a>
+<ul>
+<li><a href="#new-Temporal-Instant">new Temporal.Instant</a>
+</li>
+</ul>
+</li>
+<li><a href="#static-methods">Static methods</a>
+<ul>
+<li><a href="#from">from</a>
+</li>
+<li><a href="#fromEpochSeconds">fromEpochSeconds</a>
+</li>
+<li><a href="#fromEpochMilliseconds">fromEpochMilliseconds</a>
+</li>
+<li><a href="#fromEpochMicroseconds">fromEpochMicroseconds</a>
+</li>
+<li><a href="#fromEpochNanoseconds">fromEpochNanoseconds</a>
+</li>
+<li><a href="#compare">compare</a>
+</li>
+</ul>
+</li>
+<li><a href="#methods">Methods</a>
+<ul>
+<li><a href="#getEpochSeconds">getEpochSeconds</a>
+</li>
+<li><a href="#getEpochMilliseconds">getEpochMilliseconds</a>
+</li>
+<li><a href="#getEpochMicroseconds">getEpochMicroseconds</a>
+</li>
+<li><a href="#getEpochNanoseconds">getEpochNanoseconds</a>
+</li>
+<li><a href="#toDateTime">toDateTime</a>
+</li>
+<li><a href="#plus">plus</a>
+</li>
+<li><a href="#minus">minus</a>
+</li>
+<li><a href="#difference">difference</a>
+</li>
+<li><a href="#round">round</a>
+</li>
+<li><a href="#equals">equals</a>
+</li>
+<li><a href="#toString">toString</a>
+</li>
+<li><a href="#toLocaleString">toLocaleString</a>
+</li>
+<li><a href="#toJSON">toJSON</a>
+</li>
+<li><a href="#valueOf">valueOf</a>
+</li>
+</ul>
+</li>
+</ul>
+</details>
+
+<p>A <code>Temporal.Instant</code> is an instant point in time, with a precision in nanoseconds.
+No time zone or calendar information is present.
+As such <code>Temporal.Instant</code> has no concept of days, months or even hours.</p>
+<p>For convenience of interoperability, it internally uses nanoseconds since the <a href="https://en.wikipedia.org/wiki/Unix_time">Unix epoch</a> (midnight UTC on January 1, 1970).
+However, a <code>Temporal.Instant</code> can be created from any of several expressions that refer to a single point in time, including an ISO 8601 string with a time zone such as <code>&#39;2020-01-23T17:04:36.491865121-08:00&#39;</code>.</p>
+<p>Since <code>Temporal.Instant</code> doesn&#39;t contain any information about time zones, a <code>Temporal.TimeZone</code> is needed in order to convert it into a <code>Temporal.DateTime</code> (and from there into any of the other <code>Temporal</code> objects.)</p>
+<p>Like Unix time, <code>Temporal.Instant</code> ignores leap seconds.</p>
+<h2 id="constructor">Constructor</h2>
+<h3 id="new-Temporal-Instant"><a class="heading-link" href="#new-Temporal-Instant"></a><strong>new Temporal.Instant</strong>(<em>epochNanoseconds</em> : bigint) : Temporal.Instant</h3><p><strong>Parameters:</strong></p>
+<ul>
+<li><code>epochNanoseconds</code> (bigint): A number of nanoseconds.</li>
+</ul>
+<p><strong>Returns:</strong> a new <code>Temporal.Instant</code> object.</p>
+<p>Creates a new <code>Temporal.Instant</code> object that represents a single point in time.</p>
+<p><code>epochNanoseconds</code> is the number of nanoseconds (10<sup>&minus;9</sup> seconds) between the Unix epoch (midnight UTC on January 1, 1970) and the desired point in time.</p>
+<p>Use this constructor directly if you know the precise number of nanoseconds already and have it in bigint form, for example from a database.
+Otherwise, <code>Temporal.Instant.from()</code>, which accepts more kinds of input, is probably more convenient.</p>
+<p>The range of allowed values for this type is the same as the old-style JavaScript <code>Date</code>, 100 million (10<sup>8</sup>) days before or after the Unix epoch.
+This range covers approximately half a million years. If <code>epochNanoseconds</code> is outside of this range, a <code>RangeError</code> will be thrown.</p>
+<p>Example usage:</p>
+<pre class="language-js"><code class="language-js">instant <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>Instant</span><span class="token punctuation">(</span><span class="token number">1553906700000000000n</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// When was the Unix epoch?</span>
+epoch <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>Instant</span><span class="token punctuation">(</span><span class="token number">0n</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 1970-01-01T00:00Z</span>
+<span class="token comment">// Dates before the Unix epoch are negative</span>
+turnOfTheCentury <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>Instant</span><span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">2208988800000000000n</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 1900-01-01T00:00Z</span></code></pre><h2 id="static-methods">Static methods</h2>
+<h3 id="from"><a class="heading-link" href="#from"></a>Temporal.Instant.<strong>from</strong>(<em>thing</em>: any) : Temporal.Instant</h3><p><strong>Parameters:</strong></p>
+<ul>
+<li><code>thing</code>: The value representing the desired point in time.</li>
+</ul>
+<p><strong>Returns:</strong> a new <code>Temporal.Instant</code> object.</p>
+<p>This static method creates a new <code>Temporal.Instant</code> object from another value.
+If the value is another <code>Temporal.Instant</code> object, a new object representing the same point in time is returned.</p>
+<p>Any other value is converted to a string, which is expected to be in ISO 8601 format, including a date, a time, and a time zone.
+If the point in time cannot be uniquely determined from the string, then this function throws an exception.
+This includes the case when <code>thing</code> is a validly-formatted ISO 8601 string denoting a time that doesn&#39;t exist, for example because it was skipped in a daylight saving time transition.</p>
+<p>Example usage:</p>
+<pre class="language-js"><code class="language-js">instant <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2019-03-30T01:45:00+01:00[Europe/Berlin]'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+instant <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2019-03-30T01:45+01:00'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+instant <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2019-03-30T00:45Z'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+instant <span class="token operator">===</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>instant<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => true</span>
+
+<span class="token comment">// Not enough information to denote a single point in time:</span>
+<span class="token comment">/* WRONG */</span> instant <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2019-03-30'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// no time; throws</span>
+<span class="token comment">/* WRONG */</span> instant <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2019-03-30T01:45'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// no time zone; throws</span>
+<span class="token comment">/* WRONG */</span> instant <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2019-03031T02:45+01:00[Europe/Berlin]'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">// time skipped in DST transition; throws</span></code></pre><h3 id="fromEpochSeconds"><a class="heading-link" href="#fromEpochSeconds"></a>Temporal.Instant.<strong>fromEpochSeconds</strong>(<em>epochSeconds</em>: number) : Temporal.Instant</h3><p><strong>Parameters:</strong></p>
+<ul>
+<li><code>epochSeconds</code> (number): A number of seconds.</li>
+</ul>
+<p><strong>Returns:</strong> a new <code>Temporal.Instant</code> object.</p>
+<p>This static method creates a new <code>Temporal.Instant</code> object with seconds precision.
+<code>epochSeconds</code> is the number of seconds between the Unix epoch (midnight UTC on January 1, 1970) and the desired point in time.</p>
+<p>The number of seconds since the Unix epoch is a common measure of time in many computer systems.
+Use this method if you need to interface with such a system.</p>
+<p>Example usage:</p>
+<pre class="language-js"><code class="language-js"><span class="token comment">// Same examples as in new Temporal.Instant(), but with seconds precision</span>
+instant <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">fromEpochSeconds</span><span class="token punctuation">(</span><span class="token number">1553906700</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+epoch <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">fromEpochSeconds</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 1970-01-01T00:00Z</span>
+turnOfTheCentury <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">fromEpochSeconds</span><span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">2208988800</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 1900-01-01T00:00Z</span></code></pre><h3 id="fromEpochMilliseconds"><a class="heading-link" href="#fromEpochMilliseconds"></a>Temporal.Instant.<strong>fromEpochMilliseconds</strong>(<em>epochMilliseconds</em>: number) : Temporal.Instant</h3><p><strong>Parameters:</strong></p>
+<ul>
+<li><code>epochMilliseconds</code> (number): A number of milliseconds.</li>
+</ul>
+<p><strong>Returns:</strong> a new <code>Temporal.Instant</code> object.</p>
+<p>Same as <code>Temporal.Instant.fromEpochSeconds()</code>, but with millisecond (10<sup>&minus;3</sup> second) precision.</p>
+<p>The number of milliseconds since the Unix epoch is also returned from the <code>getTime()</code> and <code>valueOf()</code> methods of old-style JavaScript <code>Date</code> objects, as well as <code>Date.now()</code>.
+Use this method to create a <code>Temporal.Instant</code> object from a <code>Date</code> object, for example:</p>
+<pre class="language-js"><code class="language-js">jsdate <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Date</span><span class="token punctuation">(</span><span class="token string">'December 17, 1995 03:24:00 GMT'</span><span class="token punctuation">)</span>
+instant <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">fromEpochMilliseconds</span><span class="token punctuation">(</span>jsdate<span class="token punctuation">.</span><span class="token function">getTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 1995-12-17T03:24Z</span>
+instant <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">fromEpochMilliseconds</span><span class="token punctuation">(</span><span class="token operator">+</span>jsdate<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// valueOf() called implicitly</span>
+
+<span class="token comment">// This is a way to get the current time, but Temporal.now.instant()</span>
+<span class="token comment">// would give the same with higher accuracy</span>
+todayMs <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">fromEpochMilliseconds</span><span class="token punctuation">(</span>Date<span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+todayNs <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">instant</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre><h3 id="fromEpochMicroseconds"><a class="heading-link" href="#fromEpochMicroseconds"></a>Temporal.Instant.<strong>fromEpochMicroseconds</strong>(<em>epochMilliseconds</em> : bigint) : Temporal.Instant</h3><p><strong>Parameters:</strong></p>
+<ul>
+<li><code>epochMicroseconds</code> (bigint): A number of microseconds.</li>
+</ul>
+<p><strong>Returns:</strong> a new <code>Temporal.Instant</code> object.</p>
+<p>Same as <code>Temporal.Instant.fromEpochSeconds()</code>, but with microsecond (10<sup>&minus;6</sup> second) precision.</p>
+<h3 id="fromEpochNanoseconds"><a class="heading-link" href="#fromEpochNanoseconds"></a>Temporal.Instant.<strong>fromEpochNanoseconds</strong>(<em>epochNanoseconds</em> : bigint) : Temporal.Instant</h3><p><strong>Parameters:</strong></p>
+<ul>
+<li><code>epochNanoseconds</code> (bigint): A number of nanoseconds.</li>
+</ul>
+<p><strong>Returns:</strong> a new <code>Temporal.Instant</code> object.</p>
+<p>Same as <code>Temporal.Instant.fromEpochSeconds()</code>, but with nanosecond (10<sup>&minus;9</sup> second) precision.
+Also the same as <code>new Temporal.Instant(epochNanoseconds)</code>.</p>
+<h3 id="compare"><a class="heading-link" href="#compare"></a>Temporal.Instant.<strong>compare</strong>(<em>one</em>: Temporal.Instant, <em>two</em>: Temporal.Instant) : number</h3><p><strong>Parameters:</strong></p>
+<ul>
+<li><code>one</code> (<code>Temporal.Instant</code>): First time to compare.</li>
+<li><code>two</code> (<code>Temporal.Instant</code>): Second time to compare.</li>
+</ul>
+<p><strong>Returns:</strong> &minus;1, 0, or 1.</p>
+<p>Compares two <code>Temporal.Instant</code> objects.
+Returns an integer indicating whether <code>one</code> comes before or after or is equal to <code>two</code>.</p>
+<ul>
+<li>&minus;1 if <code>one</code> comes before <code>two</code>;</li>
+<li>0 if <code>one</code> and <code>two</code> represent the same time;</li>
+<li>1 if <code>one</code> comes after <code>two</code>.</li>
+</ul>
+<p>This function can be used to sort arrays of <code>Temporal.Instant</code> objects.
+For example:</p>
+<pre class="language-javascript"><code class="language-javascript">one <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">fromEpochSeconds</span><span class="token punctuation">(</span><span class="token number">1.0e9</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+two <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">fromEpochSeconds</span><span class="token punctuation">(</span><span class="token number">1.1e9</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+three <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">fromEpochSeconds</span><span class="token punctuation">(</span><span class="token number">1.2e9</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+sorted <span class="token operator">=</span> <span class="token punctuation">[</span>three<span class="token punctuation">,</span> one<span class="token punctuation">,</span> two<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">sort</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span>compare<span class="token punctuation">)</span><span class="token punctuation">;</span>
+sorted<span class="token punctuation">.</span><span class="token function">join</span><span class="token punctuation">(</span><span class="token string">' '</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// => 2001-09-09T01:46:40Z 2004-11-09T11:33:20Z 2008-01-10T21:20Z</span></code></pre><h2 id="methods">Methods</h2>
+<h3 id="getEpochSeconds"><a class="heading-link" href="#getEpochSeconds"></a>instant.<strong>getEpochSeconds</strong>() : number</h3><p><strong>Returns:</strong> an integer number of seconds.</p>
+<p>Returns the number of seconds between the Unix epoch (midnight UTC on January 1, 1970) and <code>instant</code>.
+This number will be negative if <code>instant</code> is before 1970.
+The number of seconds is rounded towards zero.</p>
+<p>Use this method if you need to interface with some other system that reckons time in seconds since the Unix epoch.</p>
+<p>Example usage:</p>
+<pre class="language-js"><code class="language-js">instant <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2019-03-30T01:45+01:00'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+instant<span class="token punctuation">.</span><span class="token function">getEpochSeconds</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 1554000300</span></code></pre><h3 id="getEpochMilliseconds"><a class="heading-link" href="#getEpochMilliseconds"></a>instant.<strong>getEpochMilliseconds</strong>() : number</h3><p><strong>Returns:</strong> an integer number of milliseconds.</p>
+<p>Same as <code>getEpochSeconds()</code>, but with millisecond (10<sup>&minus;3</sup> second) precision.</p>
+<p>This method can be useful in particular to create an old-style JavaScript <code>Date</code> object, if one is needed.
+An example:</p>
+<pre class="language-js"><code class="language-js">instant <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2019-03-30T00:45Z'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">new</span> <span class="token class-name">Date</span><span class="token punctuation">(</span>instant<span class="token punctuation">.</span><span class="token function">getEpochMilliseconds</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2019-03-30T00:45:00.000Z</span></code></pre><h3 id="getEpochMicroseconds"><a class="heading-link" href="#getEpochMicroseconds"></a>instant.<strong>getEpochMicroseconds</strong>() : bigint</h3><p><strong>Returns:</strong> a number of microseconds, as a bigint.</p>
+<p>Same as <code>getEpochSeconds()</code>, but with microsecond (10<sup>&minus;6</sup> second) precision.</p>
+<h3 id="getEpochNanoseconds"><a class="heading-link" href="#getEpochNanoseconds"></a>instant.<strong>getEpochNanoseconds</strong>() : bigint</h3><p><strong>Returns:</strong> a number of nanoseconds, as a bigint.</p>
+<p>Same as <code>getEpochSeconds()</code>, but with nanosecond (10<sup>&minus;9</sup> second) precision.</p>
+<p>The value returned from this method is suitable to be passed to <code>new Temporal.Instant()</code>.</p>
+<h3 id="toDateTime"><a class="heading-link" href="#toDateTime"></a>instant.<strong>toDateTime</strong>(<em>timeZone</em>: object | string, <em>calendar</em>?: object | string) : Temporal.DateTime</h3><p><strong>Parameters:</strong></p>
+<ul>
+<li><code>timeZone</code> (object or string): A <code>Temporal.TimeZone</code> object, or an object implementing the <a href="./timezone.html#protocol">time zone protocol</a>, or a string description of the time zone; either its IANA name or UTC offset.</li>
+<li><code>calendar</code> (optional object or string): A <code>Temporal.Calendar</code> object, or a plain object, or a calendar identifier.
+The default is to use the ISO 8601 calendar.</li>
+</ul>
+<p><strong>Returns:</strong> a <code>Temporal.DateTime</code> object indicating the calendar date and wall-clock time in <code>timeZone</code>, according to the reckoning of <code>calendar</code>, at the instant time indicated by <code>instant</code>.</p>
+<p>For a list of IANA time zone names, see the current version of the <a href="https://www.iana.org/time-zones">IANA time zone database</a>.
+A convenient list is also available <a href="https://en.wikipedia.org/wiki/List_of_tz_database_time_zones">on Wikipedia</a>, although it might not reflect the latest official status.</p>
+<p>For a list of calendar identifiers, see the documentation for <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/DateTimeFormat#Parameters">Intl.DateTimeFormat</a>.</p>
+<p>This method is one way to convert a <code>Temporal.Instant</code> to a <code>Temporal.DateTime</code>.</p>
+<p>Example usage:</p>
+<pre class="language-js"><code class="language-js"><span class="token comment">// Converting a specific instant time to a calendar date / wall-clock time</span>
+timestamp <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>Instant</span><span class="token punctuation">(</span><span class="token number">1553993100000000000n</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+timestamp<span class="token punctuation">.</span><span class="token function">toDateTime</span><span class="token punctuation">(</span><span class="token string">'Europe/Berlin'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2019-03-31T01:45</span>
+timestamp<span class="token punctuation">.</span><span class="token function">toDateTime</span><span class="token punctuation">(</span><span class="token string">'UTC'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2019-03-31T00:45</span>
+timestamp<span class="token punctuation">.</span><span class="token function">toDateTime</span><span class="token punctuation">(</span><span class="token string">'-08:00'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2019-03-30T16:45</span>
+
+<span class="token comment">// What time was the Unix epoch (timestamp 0) in Bell Labs (Murray Hill, New Jersey, USA)?</span>
+epoch <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>Instant</span><span class="token punctuation">(</span><span class="token number">0n</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+tz <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>TimeZone</span><span class="token punctuation">(</span><span class="token string">'America/New_York'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+epoch<span class="token punctuation">.</span><span class="token function">toDateTime</span><span class="token punctuation">(</span>tz<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 1969-12-31T19:00</span></code></pre><h3 id="plus"><a class="heading-link" href="#plus"></a>instant.<strong>plus</strong>(<em>duration</em>: object) : Temporal.Instant</h3><p><strong>Parameters:</strong></p>
+<ul>
+<li><code>duration</code> (object): A <code>Temporal.Duration</code> object or a duration-like object.</li>
+</ul>
+<p><strong>Returns:</strong> a new <code>Temporal.Instant</code> object which is the time indicated by <code>instant</code> plus <code>duration</code>.</p>
+<p>This method adds <code>duration</code> to <code>instant</code>, returning a point in time that is in the future relative to <code>instant</code>.</p>
+<p>The <code>duration</code> argument is an object with properties denoting a duration, such as <code>{ hours: 5, minutes: 30 }</code>, or a <code>Temporal.Duration</code> object.</p>
+<p>The <code>years</code>, <code>months</code>, <code>weeks</code>, and <code>days</code> fields of <code>duration</code> must be zero.
+<code>Temporal.Instant</code> is independent of time zones and calendars, and so years, months, weeks, and days may be different lengths depending on which calendar or time zone they are reckoned in.
+This makes an addition with those units ambiguous.
+If you need to do this, convert the <code>Temporal.Instant</code> to a <code>Temporal.DateTime</code> by specifying the desired calendar and time zone, add the duration, and then convert it back.</p>
+<p>If the result is earlier or later than the range that <code>Temporal.Instant</code> can represent (approximately half a million years centered on the <a href="https://en.wikipedia.org/wiki/Unix_time">Unix epoch</a>), a <code>RangeError</code> will be thrown.</p>
+<p>Adding a negative duration is equivalent to subtracting the instant value of that duration.</p>
+<p>Example usage:</p>
+<pre class="language-js"><code class="language-js"><span class="token comment">// Temporal.Instant representing five hours from now</span>
+Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">instant</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">plus</span><span class="token punctuation">(</span><span class="token punctuation">{</span> hours<span class="token operator">:</span> <span class="token number">5</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+fiveHours <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>Duration</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">instant</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">plus</span><span class="token punctuation">(</span>fiveHours<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre><h3 id="minus"><a class="heading-link" href="#minus"></a>instant.<strong>minus</strong>(<em>duration</em>: object) : Temporal.Instant</h3><p><strong>Parameters:</strong></p>
+<ul>
+<li><code>duration</code> (object): A <code>Temporal.Duration</code> object or a duration-like object.</li>
+</ul>
+<p><strong>Returns:</strong> a new <code>Temporal.Instant</code> object which is the time indicated by <code>instant</code> minus <code>duration</code>.</p>
+<p>This method subtracts <code>duration</code> from <code>instant</code>, returning a point in time that is in the past relative to <code>instant</code>.</p>
+<p>The <code>duration</code> argument is an object with properties denoting a duration, such as <code>{ hours: 5, minutes: 30 }</code>, or a <code>Temporal.Duration</code> object.</p>
+<p>The <code>years</code>, <code>months</code>, <code>weeks</code>, and <code>days</code> fields of <code>duration</code> must be zero.
+<code>Temporal.Instant</code> is independent of time zones and calendars, and so years, months, weeks, and days may be different lengths depending on which calendar or time zone they are reckoned in.
+This makes a subtraction with those units ambiguous.
+If you need to do this, convert the <code>Temporal.Instant</code> to a <code>Temporal.DateTime</code> by specifying the desired calendar and time zone, subtract the duration, and then convert it back.</p>
+<p>If the result is earlier or later than the range that <code>Temporal.Instant</code> can represent (approximately half a million years centered on the <a href="https://en.wikipedia.org/wiki/Unix_time">Unix epoch</a>), a <code>RangeError</code> will be thrown.</p>
+<p>Subtracting a negative duration is equivalent to adding the instant value of that duration.</p>
+<p>Example usage:</p>
+<pre class="language-js"><code class="language-js"><span class="token comment">// Temporal.Instant representing this time an hour ago</span>
+Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">instant</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">minus</span><span class="token punctuation">(</span><span class="token punctuation">{</span> hours<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+oneHour <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>Duration</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">instant</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">minus</span><span class="token punctuation">(</span>oneHour<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre><h3 id="difference"><a class="heading-link" href="#difference"></a>instant.<strong>difference</strong>(<em>other</em>: Temporal.Instant, <em>options</em>?: object) : Temporal.Duration</h3><p><strong>Parameters:</strong></p>
+<ul>
+<li><code>other</code> (<code>Temporal.Instant</code>): Another time with which to compute the difference.</li>
+<li><code>options</code> (optional object): An object with properties representing options for the operation.
+The following options are recognized:<ul>
+<li><code>largestUnit</code> (string): The largest unit of time to allow in the resulting <code>Temporal.Duration</code> object.
+Valid values are <code>&#39;hours&#39;</code>, <code>&#39;minutes&#39;</code>, <code>&#39;seconds&#39;</code>, <code>&#39;milliseconds&#39;</code>, <code>&#39;microseconds&#39;</code>, and <code>&#39;nanoseconds&#39;</code>.
+The default is <code>&quot;seconds&quot;</code>.</li>
+<li><code>smallestUnit</code> (string): The smallest unit of time to round to in the resulting <code>Temporal.Duration</code> object.
+Valid values are the same as for <code>largestUnit</code>.
+The default is <code>&#39;nanoseconds&#39;</code>, i.e., no rounding.</li>
+<li><code>roundingIncrement</code> (number): The granularity to round to, of the unit given by <code>smallestUnit</code>.
+The default is 1.</li>
+<li><code>roundingMode</code> (string): How to handle the remainder, if rounding.
+Valid values are <code>&#39;ceil&#39;</code>, <code>&#39;floor&#39;</code>, <code>&#39;trunc&#39;</code>, and <code>&#39;nearest&#39;</code>.
+The default is <code>&#39;nearest&#39;</code>.</li>
+</ul>
+</li>
+</ul>
+<p><strong>Returns:</strong> a <code>Temporal.Duration</code> representing the difference between <code>instant</code> and <code>other</code>.</p>
+<p>This method computes the difference between the two times represented by <code>instant</code> and <code>other</code>, optionally rounds it, and returns it as a <code>Temporal.Duration</code> object.
+If <code>other</code> is later than <code>instant</code> then the resulting duration will be negative.</p>
+<p>The <code>largestUnit</code> option controls how the resulting duration is expressed.
+The returned <code>Temporal.Duration</code> object will not have any nonzero fields that are larger than the unit in <code>largestUnit</code>.
+A difference of two hours will become 7200 seconds when <code>largestUnit</code> is <code>&quot;seconds&quot;</code>, for example.
+However, a difference of 30 seconds will still be 30 seconds even if <code>largestUnit</code> is <code>&quot;hours&quot;</code>.</p>
+<p>By default, the largest unit in the result is seconds.
+Weeks, months, years, and days are not allowed, unlike the difference methods of the other Temporal types.
+This is because months and years can be different lengths depending on which month is meant, and whether the year is a leap year, which all depends on the start and end date of the difference.
+You cannot determine the start and end date of a difference between <code>Temporal.Instant</code>s, because <code>Temporal.Instant</code> has no time zone or calendar.
+In addition, weeks can be different lengths in different calendars, and days can be different lengths when the time zone has a daylight saving transition.</p>
+<p>You can round the result using the <code>smallestUnit</code>, <code>roundingIncrement</code>, and <code>roundingMode</code> options.
+These behave as in the <code>Temporal.Duration.round()</code> method.
+The default is to do no rounding.</p>
+<p>If you do need to calculate the difference between two <code>Temporal.Instant</code>s in years, months, weeks, or days, then you can make an explicit choice on how to eliminate this ambiguity, choosing your starting point by converting to a <code>Temporal.DateTime</code>.
+For example, you might decide to base the calculation on your user&#39;s current time zone, or on UTC, in the Gregorian calendar.</p>
+<p>Take care when using milliseconds, microseconds, or nanoseconds as the largest unit.
+For some durations, the resulting value may overflow <code>Number.MAX_SAFE_INTEGER</code> and lose precision in its least significant digit(s).
+Nanoseconds values will overflow and lose precision after about 104 days. Microseconds can fit about 285 years without losing precision, and milliseconds can handle about 285,000 years without losing precision.</p>
+<p>Example usage:</p>
+<pre class="language-js"><code class="language-js">startOfMoonMission <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'1969-07-16T13:32:00Z'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+endOfMoonMission <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'1969-07-24T16:50:35Z'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+missionLength <span class="token operator">=</span> endOfMoonMission<span class="token punctuation">.</span><span class="token function">difference</span><span class="token punctuation">(</span>startOfMoonMission<span class="token punctuation">,</span> <span class="token punctuation">{</span> largestUnit<span class="token operator">:</span> <span class="token string">'days'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// => PT195H18M35S</span>
+startOfMoonMission<span class="token punctuation">.</span><span class="token function">difference</span><span class="token punctuation">(</span>endOfMoonMission<span class="token punctuation">,</span> <span class="token punctuation">{</span> largestUnit<span class="token operator">:</span> <span class="token string">'days'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// => throws RangeError</span>
+missionLength<span class="token punctuation">.</span><span class="token function">toLocaleString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// example output: '195 hours 18 minutes 35 seconds'</span>
+
+<span class="token comment">// Rounding, for example if you don't care about the minutes and seconds</span>
+approxMissionLength <span class="token operator">=</span> endOfMoonMission<span class="token punctuation">.</span><span class="token function">difference</span><span class="token punctuation">(</span>startOfMoonMission<span class="token punctuation">,</span> <span class="token punctuation">{</span>
+  largestUnit<span class="token operator">:</span> <span class="token string">'days'</span><span class="token punctuation">,</span>
+  smallestUnit<span class="token operator">:</span> <span class="token string">'hours'</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// => P8DT3H</span>
+
+<span class="token comment">// A billion (10^9) seconds since the epoch in different units</span>
+epoch <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>Instant</span><span class="token punctuation">(</span><span class="token number">0n</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+billion <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">fromEpochSeconds</span><span class="token punctuation">(</span><span class="token number">1e9</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+billion<span class="token punctuation">.</span><span class="token function">difference</span><span class="token punctuation">(</span>epoch<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// =>    PT1000000000S</span>
+billion<span class="token punctuation">.</span><span class="token function">difference</span><span class="token punctuation">(</span>epoch<span class="token punctuation">,</span> <span class="token punctuation">{</span> largestUnit<span class="token operator">:</span> <span class="token string">'hours'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// =>  PT277777H46M40S</span>
+ns <span class="token operator">=</span> billion<span class="token punctuation">.</span><span class="token function">difference</span><span class="token punctuation">(</span>epoch<span class="token punctuation">,</span> <span class="token punctuation">{</span> largestUnit<span class="token operator">:</span> <span class="token string">'nanoseconds'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// =>    PT1000000000S</span>
+ns<span class="token punctuation">.</span><span class="token function">plus</span><span class="token punctuation">(</span><span class="token punctuation">{</span> nanoseconds<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// =>    PT1000000000S (lost precision)</span>
+
+<span class="token comment">// Calculate the difference in years, eliminating the ambiguity by</span>
+<span class="token comment">// explicitly using the corresponding calendar date in UTC:</span>
+utc <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'UTC'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+billion<span class="token punctuation">.</span><span class="token function">toDateTime</span><span class="token punctuation">(</span>utc<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">difference</span><span class="token punctuation">(</span>epoch<span class="token punctuation">.</span><span class="token function">toDateTime</span><span class="token punctuation">(</span>utc<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> largestUnit<span class="token operator">:</span> <span class="token string">'years'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// => P31Y8M8DT1H46M40S</span></code></pre><h3 id="round"><a class="heading-link" href="#round"></a>instant.<strong>round</strong>(<em>options</em>: object) : Temporal.Instant</h3><p><strong>Parameters:</strong></p>
+<ul>
+<li><code>options</code> (object): An object with properties representing options for the operation.
+The following options are recognized:<ul>
+<li><code>smallestUnit</code> (required string): The unit to round to.
+Valid values are <code>&#39;minute&#39;</code>, <code>&#39;second&#39;</code>, <code>&#39;millisecond&#39;</code>, <code>&#39;microsecond&#39;</code>, and <code>&#39;nanosecond&#39;</code>.</li>
+<li><code>roundingIncrement</code> (number): The granularity to round to, of the unit given by <code>smallestUnit</code>.
+The default is 1.</li>
+<li><code>roundingMode</code> (string): How to handle the remainder.
+Valid values are <code>&#39;ceil&#39;</code>, <code>&#39;floor&#39;</code>, <code>&#39;trunc&#39;</code>, and <code>&#39;nearest&#39;</code>.
+The default is <code>&#39;nearest&#39;</code>.</li>
+</ul>
+</li>
+</ul>
+<p><strong>Returns:</strong> a new <code>Temporal.Instant</code> object which is <code>instant</code> rounded to <code>roundingIncrement</code> of <code>smallestUnit</code>.</p>
+<p>Rounds <code>instant</code> to the given unit and increment, and returns the result as a new <code>Temporal.Instant</code> object.</p>
+<p>The <code>smallestUnit</code> option determines the unit to round to.
+For example, to round to the nearest minute, use <code>smallestUnit: &#39;minute&#39;</code>.
+This option is required.</p>
+<p>The <code>roundingIncrement</code> option allows rounding to an integer number of units.
+For example, to round to increments of a half hour, use <code>smallestUnit: &#39;minute&#39;, roundingIncrement: 30</code>.</p>
+<p>The combination of <code>roundingIncrement</code> and <code>smallestUnit</code> must make an increment that divides evenly into 86400 seconds (one 24-hour solar day).
+(For example, increments of 15 minutes and 45 seconds are both allowed.
+25 minutes, and 7 seconds are both not allowed.) Hour increments are not allowed either, since <code>Temporal.Instant</code> has no time zone and therefore it is not defined where the starting point of the hour is.</p>
+<p>The <code>roundingMode</code> option controls how the rounding is performed.</p>
+<ul>
+<li><code>ceil</code>: Always round up, towards the end of time.</li>
+<li><code>floor</code>, <code>trunc</code>: Always round down, towards the beginning of time.
+(These two modes behave the same, but are both included for consistency with <code>Temporal.Duration.round()</code>, where they are not the same.)</li>
+<li><code>nearest</code>: Round to the nearest of the values allowed by <code>roundingIncrement</code> and <code>smallestUnit</code>.
+When there is a tie, round up, like <code>ceil</code>.</li>
+</ul>
+<p>Example usage:</p>
+<pre class="language-javascript"><code class="language-javascript">instant <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2019-03-30T02:45:59.999999999Z'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// Round to a particular unit</span>
+instant<span class="token punctuation">.</span><span class="token function">round</span><span class="token punctuation">(</span><span class="token punctuation">{</span> smallestUnit<span class="token operator">:</span> <span class="token string">'second'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2019-03-30T02:46Z</span>
+<span class="token comment">// Round to an increment of a unit, e.g. an hour:</span>
+instant<span class="token punctuation">.</span><span class="token function">round</span><span class="token punctuation">(</span><span class="token punctuation">{</span> roundingIncrement<span class="token operator">:</span> <span class="token number">60</span><span class="token punctuation">,</span> smallestUnit<span class="token operator">:</span> <span class="token string">'minute'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// => 2019-03-30T03:00Z</span>
+<span class="token comment">// Round to the same increment but round down instead:</span>
+instant<span class="token punctuation">.</span><span class="token function">round</span><span class="token punctuation">(</span><span class="token punctuation">{</span> roundingIncrement<span class="token operator">:</span> <span class="token number">60</span><span class="token punctuation">,</span> smallestUnit<span class="token operator">:</span> <span class="token string">'minute'</span><span class="token punctuation">,</span> roundingMode<span class="token operator">:</span> <span class="token string">'floor'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// => 2019-03-30T02:00Z</span></code></pre><h3 id="equals"><a class="heading-link" href="#equals"></a>instant.<strong>equals</strong>(<em>other</em>: Temporal.Instant) : boolean</h3><p><strong>Parameters:</strong></p>
+<ul>
+<li><code>other</code> (<code>Temporal.Instant</code>): Another time to compare.</li>
+</ul>
+<p><strong>Returns:</strong> <code>true</code> if <code>instant</code> and <code>other</code> are equal, or <code>false</code> if not.</p>
+<p>Compares two <code>Temporal.Instant</code> objects for equality.</p>
+<p>This function exists because it&#39;s not possible to compare using <code>instant == other</code> or <code>instant === other</code>, due to ambiguity in the primitive representation and between Temporal types.</p>
+<p>If you don&#39;t need to know the order in which the two times occur, then this function may be less typing and more efficient than <code>Temporal.Instant.compare</code>.</p>
+<p>Example usage:</p>
+<pre class="language-javascript"><code class="language-javascript">one <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">fromEpochSeconds</span><span class="token punctuation">(</span><span class="token number">1.0e9</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+two <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">fromEpochSeconds</span><span class="token punctuation">(</span><span class="token number">1.1e9</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+one<span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span>two<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => false</span>
+one<span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span>one<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => true</span></code></pre><h3 id="toString"><a class="heading-link" href="#toString"></a>instant.<strong>toString</strong>(<em>timeZone</em>?: object | string) : string</h3><p><strong>Parameters:</strong></p>
+<ul>
+<li><code>timeZone</code> (optional string or object): the time zone to express <code>instant</code> in, as a <code>Temporal.TimeZone</code> object, an object implementing the <a href="./timezone.html#protocol">time zone protocol</a>, or a string.
+The default is to use UTC.</li>
+</ul>
+<p><strong>Returns:</strong> a string in the ISO 8601 date format representing <code>instant</code>.</p>
+<p>This method overrides the <code>Object.prototype.toString()</code> method and provides a convenient, unambiguous string representation of <code>instant</code>.
+The string can be passed to <code>Temporal.Instant.from()</code> to create a new <code>Temporal.Instant</code> object.</p>
+<p>Example usage:</p>
+<pre class="language-js"><code class="language-js">instant <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>Instant</span><span class="token punctuation">(</span><span class="token number">1574074321816000000n</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+instant<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2019-11-18T10:52:01.816Z</span>
+instant<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'UTC'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2019-11-18T10:52:01.816Z</span>
+instant<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token string">'Asia/Seoul'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2019-11-18T19:52:01.816+09:00[Asia/Seoul]</span></code></pre><h3 id="toLocaleString"><a class="heading-link" href="#toLocaleString"></a>instant.<strong>toLocaleString</strong>(<em>locales</em>?: string | array&lt;string&gt;, <em>options</em>?: object) : string</h3><p><strong>Parameters:</strong></p>
+<ul>
+<li><code>locales</code> (optional string or array of strings): A string with a BCP 47 language tag with an optional Unicode extension key, or an array of such strings.</li>
+<li><code>options</code> (optional object): An object with properties influencing the formatting.</li>
+</ul>
+<p><strong>Returns:</strong> a language-sensitive representation of <code>instant</code>.</p>
+<p>This method overrides <code>Object.prototype.toLocaleString()</code> to provide a human-readable, language-sensitive representation of <code>instant</code>.</p>
+<p>The <code>locales</code> and <code>options</code> arguments are the same as in the constructor to <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DateTimeFormat"><code>Intl.DateTimeFormat</code></a>.</p>
+<p>Example usage:</p>
+<pre class="language-js"><code class="language-js">instant <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">"2019-11-18T11:00:00.000Z"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+instant<span class="token punctuation">.</span><span class="token function">toLocaleString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// => example output: 2019-11-18, 3:00:00 a.m.</span>
+instant<span class="token punctuation">.</span><span class="token function">toLocaleString</span><span class="token punctuation">(</span><span class="token string">'de-DE'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// => example output: 18.11.2019, 03:00:00</span>
+instant<span class="token punctuation">.</span><span class="token function">toLocaleString</span><span class="token punctuation">(</span><span class="token string">'de-DE'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+    timeZone<span class="token operator">:</span> <span class="token string">'Europe/Berlin'</span><span class="token punctuation">,</span>
+    weekday<span class="token operator">:</span> <span class="token string">'long'</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => Montag, 18.11.2019, 12:00:00</span>
+instant<span class="token punctuation">.</span><span class="token function">toLocaleString</span><span class="token punctuation">(</span><span class="token string">'en-US-u-nu-fullwide-hc-h12'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+    timeZone<span class="token operator">:</span> <span class="token string">'Asia/Kolkata'</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => １１/１８/２０１９, ４:３０:００ PM</span></code></pre><h3 id="toJSON"><a class="heading-link" href="#toJSON"></a>instant.<strong>toJSON</strong>() : string</h3><p><strong>Returns:</strong> a string in the ISO 8601 date format representing <code>instant</code>, in the UTC time zone.</p>
+<p>This method is like <code>instant.toString()</code> but always produces a string in UTC time.
+It is usually not called directly, but it can be called automatically by <code>JSON.stringify()</code>.</p>
+<p>The reverse operation, recovering a <code>Temporal.Instant</code> object from a string, is <code>Temporal.Instant.from()</code>, but it cannot be called automatically by <code>JSON.parse()</code>.
+If you need to rebuild a <code>Temporal.Instant</code> object from a JSON string, then you need to know the names of the keys that should be interpreted as <code>Temporal.Instant</code>s.
+In that case you can build a custom &quot;reviver&quot; function for your use case.</p>
+<p>Example usage:</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">const</span> meeting <span class="token operator">=</span> <span class="token punctuation">{</span>
+  id<span class="token operator">:</span> <span class="token number">355</span><span class="token punctuation">,</span>
+  name<span class="token operator">:</span> <span class="token string">'Budget review'</span><span class="token punctuation">,</span>
+  location<span class="token operator">:</span> <span class="token string">'https://meet.jit.si/ObjectiveTomatoesJokeSurely'</span><span class="token punctuation">,</span>
+  startInstant<span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-03-30T15:00-04:00[America/New_York]'</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  endInstant<span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-03-30T16:00-04:00[America/New_York]'</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> str <span class="token operator">=</span> <span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">stringify</span><span class="token punctuation">(</span>meeting<span class="token punctuation">,</span> <span class="token keyword">null</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>str<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// =></span>
+<span class="token comment">// {</span>
+<span class="token comment">//   "id": 355,</span>
+<span class="token comment">//   "name": "Budget review",</span>
+<span class="token comment">//   "location": "https://meet.jit.si/ObjectiveTomatoesJokeSurely",</span>
+<span class="token comment">//   "startInstant": "2020-03-30T19:00Z",</span>
+<span class="token comment">//   "endInstant": "2020-03-30T20:00Z"</span>
+<span class="token comment">// }</span>
+
+<span class="token comment">// To rebuild from the string:</span>
+<span class="token keyword">function</span> <span class="token function">reviver</span><span class="token punctuation">(</span><span class="token parameter">key<span class="token punctuation">,</span> value</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>key<span class="token punctuation">.</span><span class="token function">endsWith</span><span class="token punctuation">(</span><span class="token string">'Instant'</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token keyword">return</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">return</span> value<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span>str<span class="token punctuation">,</span> reviver<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre><h3 id="valueOf"><a class="heading-link" href="#valueOf"></a>instant.<strong>valueOf</strong>()</h3><p>This method overrides <code>Object.prototype.valueOf()</code> and always throws an exception.
+This is because it&#39;s not possible to compare <code>Temporal.Instant</code> objects with the relational operators <code>&lt;</code>, <code>&lt;=</code>, <code>&gt;</code>, or <code>&gt;=</code>.
+Use <code>Temporal.Instant.compare()</code> for this, or <code>instant.equals()</code> for equality.</p>
+    <footer>
+      <p>
+        This page includes a script which loads an implementation of Temporal in your browser.
+        You can open a console in your browser's developer tools and try it out directly!
+      </p>
+      <p>View this or help contribute on <a href="https://github.com/tc39/proposal-temporal">GitHub</a>.</p>
+    </footer>
+  </body>
+</html>

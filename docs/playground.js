@@ -2997,7 +2997,7 @@
     return intrinsic in INTRINSICS$1 ? INTRINSICS$1[intrinsic] : GetIntrinsic(intrinsic);
   }
 
-  // Absolute
+  // Instant
   var EPOCHNANOSECONDS = 'slot-epochNanoSeconds'; // TimeZone
 
   var TIMEZONE_ID = 'slot-timezone-identifier'; // DateTime, Date, Time, YearMonth, MonthDay
@@ -3098,7 +3098,7 @@
     Type: Type$1
   };
   var ES = ObjectAssign({}, ES2019, {
-    IsTemporalAbsolute: function IsTemporalAbsolute(item) {
+    IsTemporalInstant: function IsTemporalInstant(item) {
       return HasSlot(item, EPOCHNANOSECONDS);
     },
     IsTemporalTimeZone: function IsTemporalTimeZone(item) {
@@ -3134,7 +3134,7 @@
       var result = ES.GetCanonicalTimeZoneIdentifier(zone);
 
       if (offset && ianaName) {
-        var ns = ES.ParseTemporalAbsolute(stringIdent);
+        var ns = ES.ParseTemporalInstant(stringIdent);
         var offsetNs = ES.GetIANATimeZoneOffsetNanoseconds(ns, result);
 
         if (ES.FormatTimeZoneOffsetString(offsetNs) !== offset) {
@@ -3196,7 +3196,7 @@
         calendar: calendar
       };
     },
-    ParseTemporalAbsoluteString: function ParseTemporalAbsoluteString(isoString) {
+    ParseTemporalInstantString: function ParseTemporalInstantString(isoString) {
       return ES.ParseISODateTime(isoString, {
         zoneRequired: true
       });
@@ -3354,27 +3354,27 @@
         nanoseconds: nanoseconds
       };
     },
-    ParseTemporalAbsolute: function ParseTemporalAbsolute(isoString) {
-      var _ES$ParseTemporalAbso = ES.ParseTemporalAbsoluteString(isoString),
-          year = _ES$ParseTemporalAbso.year,
-          month = _ES$ParseTemporalAbso.month,
-          day = _ES$ParseTemporalAbso.day,
-          hour = _ES$ParseTemporalAbso.hour,
-          minute = _ES$ParseTemporalAbso.minute,
-          second = _ES$ParseTemporalAbso.second,
-          millisecond = _ES$ParseTemporalAbso.millisecond,
-          microsecond = _ES$ParseTemporalAbso.microsecond,
-          nanosecond = _ES$ParseTemporalAbso.nanosecond,
-          offset = _ES$ParseTemporalAbso.offset,
-          zone = _ES$ParseTemporalAbso.zone;
+    ParseTemporalInstant: function ParseTemporalInstant(isoString) {
+      var _ES$ParseTemporalInst = ES.ParseTemporalInstantString(isoString),
+          year = _ES$ParseTemporalInst.year,
+          month = _ES$ParseTemporalInst.month,
+          day = _ES$ParseTemporalInst.day,
+          hour = _ES$ParseTemporalInst.hour,
+          minute = _ES$ParseTemporalInst.minute,
+          second = _ES$ParseTemporalInst.second,
+          millisecond = _ES$ParseTemporalInst.millisecond,
+          microsecond = _ES$ParseTemporalInst.microsecond,
+          nanosecond = _ES$ParseTemporalInst.nanosecond,
+          offset = _ES$ParseTemporalInst.offset,
+          zone = _ES$ParseTemporalInst.zone;
 
       var DateTime = GetIntrinsic$1('%Temporal.DateTime%');
       var dt = new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
       var tz = ES.TimeZoneFrom(zone);
-      var possibleAbsolutes = tz.getPossibleAbsolutesFor(dt);
-      if (possibleAbsolutes.length === 1) return GetSlot(possibleAbsolutes[0], EPOCHNANOSECONDS);
+      var possibleInstants = tz.getPossibleInstantsFor(dt);
+      if (possibleInstants.length === 1) return GetSlot(possibleInstants[0], EPOCHNANOSECONDS);
 
-      var _iterator = _createForOfIteratorHelper(possibleAbsolutes),
+      var _iterator = _createForOfIteratorHelper(possibleInstants),
           _step;
 
       try {
@@ -3389,7 +3389,7 @@
         _iterator.f();
       }
 
-      throw new RangeError("'".concat(isoString, "' doesn't uniquely identify a Temporal.Absolute"));
+      throw new RangeError("'".concat(isoString, "' doesn't uniquely identify a Temporal.Instant"));
     },
     RegulateDateTime: function RegulateDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, overflow) {
       switch (overflow) {
@@ -3919,14 +3919,14 @@
 
       return dateTime;
     },
-    GetTemporalAbsoluteFor: function GetTemporalAbsoluteFor(timeZone, dateTime, disambiguation) {
-      var getAbsoluteFor = timeZone.getAbsoluteFor;
+    GetTemporalInstantFor: function GetTemporalInstantFor(timeZone, dateTime, disambiguation) {
+      var getInstantFor = timeZone.getInstantFor;
 
-      if (getAbsoluteFor === undefined) {
-        getAbsoluteFor = GetIntrinsic$1('%Temporal.TimeZone.prototype.getAbsoluteFor%');
+      if (getInstantFor === undefined) {
+        getInstantFor = GetIntrinsic$1('%Temporal.TimeZone.prototype.getInstantFor%');
       }
 
-      return ES.Call(getAbsoluteFor, timeZone, [dateTime, {
+      return ES.Call(getInstantFor, timeZone, [dateTime, {
         disambiguation: disambiguation
       }]);
     },
@@ -3979,7 +3979,7 @@
       var post = parts.length ? ".".concat(parts.join('')) : '';
       return ":".concat(secs).concat(post);
     },
-    TemporalAbsoluteToString: function TemporalAbsoluteToString(absolute, timeZone) {
+    TemporalInstantToString: function TemporalInstantToString(absolute, timeZone) {
       var dateTime = ES.GetTemporalDateTimeFor(timeZone, absolute);
       var year = ES.ISOYearString(dateTime.year);
       var month = ES.ISODateTimePartString(dateTime.month);
@@ -4626,15 +4626,15 @@
       ES.RejectTime(hour, minute, second, millisecond, microsecond, nanosecond);
     },
     RejectDateTimeRange: function RejectDateTimeRange(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond) {
-      ES.RejectToRange(year, YEAR_MIN, YEAR_MAX); // Reject any DateTime 24 hours or more outside the Absolute range
+      ES.RejectToRange(year, YEAR_MIN, YEAR_MAX); // Reject any DateTime 24 hours or more outside the Instant range
 
       if (year === YEAR_MIN && null == ES.GetEpochFromParts(year, month, day + 1, hour, minute, second, millisecond, microsecond, nanosecond - 1) || year === YEAR_MAX && null == ES.GetEpochFromParts(year, month, day - 1, hour, minute, second, millisecond, microsecond, nanosecond + 1)) {
         throw new RangeError('DateTime outside of supported range');
       }
     },
-    RejectAbsoluteRange: function RejectAbsoluteRange(epochNanoseconds) {
+    RejectInstantRange: function RejectInstantRange(epochNanoseconds) {
       if (epochNanoseconds.lesser(NS_MIN) || epochNanoseconds.greater(NS_MAX)) {
-        throw new RangeError('Absolute outside of supported range');
+        throw new RangeError('Instant outside of supported range');
       }
     },
     RejectYearMonthRange: function RejectYearMonthRange(year, month) {
@@ -5839,12 +5839,12 @@
     return GetBuiltinCalendar('iso8601');
   }
 
-  var Absolute = /*#__PURE__*/function () {
-    function Absolute(epochNanoseconds) {
-      _classCallCheck(this, Absolute);
+  var Instant = /*#__PURE__*/function () {
+    function Instant(epochNanoseconds) {
+      _classCallCheck(this, Instant);
 
       var ns = ES.ToBigInt(epochNanoseconds);
-      ES.RejectAbsoluteRange(ns);
+      ES.RejectInstantRange(ns);
       CreateSlots(this);
       SetSlot(this, EPOCHNANOSECONDS, ns);
 
@@ -5858,37 +5858,37 @@
       }
     }
 
-    _createClass(Absolute, [{
+    _createClass(Instant, [{
       key: "getEpochSeconds",
       value: function getEpochSeconds() {
-        if (!ES.IsTemporalAbsolute(this)) throw new TypeError('invalid receiver');
+        if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
         var value = GetSlot(this, EPOCHNANOSECONDS);
         return +value.divide(1e9);
       }
     }, {
       key: "getEpochMilliseconds",
       value: function getEpochMilliseconds() {
-        if (!ES.IsTemporalAbsolute(this)) throw new TypeError('invalid receiver');
+        if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
         var value = BigInteger(GetSlot(this, EPOCHNANOSECONDS));
         return +value.divide(1e6);
       }
     }, {
       key: "getEpochMicroseconds",
       value: function getEpochMicroseconds() {
-        if (!ES.IsTemporalAbsolute(this)) throw new TypeError('invalid receiver');
+        if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
         var value = GetSlot(this, EPOCHNANOSECONDS);
         return bigIntIfAvailable(value.divide(1e3));
       }
     }, {
       key: "getEpochNanoseconds",
       value: function getEpochNanoseconds() {
-        if (!ES.IsTemporalAbsolute(this)) throw new TypeError('invalid receiver');
+        if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
         return bigIntIfAvailable(GetSlot(this, EPOCHNANOSECONDS));
       }
     }, {
       key: "plus",
       value: function plus(temporalDurationLike) {
-        if (!ES.IsTemporalAbsolute(this)) throw new TypeError('invalid receiver');
+        if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
 
         var _ES$ToLimitedTemporal = ES.ToLimitedTemporalDuration(temporalDurationLike, ['years', 'months', 'weeks', 'days']),
             hours = _ES$ToLimitedTemporal.hours,
@@ -5907,16 +5907,16 @@
         add = add.plus(BigInteger(minutes).multiply(60 * 1e9));
         add = add.plus(BigInteger(hours).multiply(60 * 60 * 1e9));
         var ns = BigInteger(GetSlot(this, EPOCHNANOSECONDS)).plus(add);
-        ES.RejectAbsoluteRange(ns);
-        var Construct = ES.SpeciesConstructor(this, Absolute);
+        ES.RejectInstantRange(ns);
+        var Construct = ES.SpeciesConstructor(this, Instant);
         var result = new Construct(bigIntIfAvailable(ns));
-        if (!ES.IsTemporalAbsolute(result)) throw new TypeError('invalid result');
+        if (!ES.IsTemporalInstant(result)) throw new TypeError('invalid result');
         return result;
       }
     }, {
       key: "minus",
       value: function minus(temporalDurationLike) {
-        if (!ES.IsTemporalAbsolute(this)) throw new TypeError('invalid receiver');
+        if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
 
         var _ES$ToLimitedTemporal2 = ES.ToLimitedTemporalDuration(temporalDurationLike, ['years', 'months', 'weeks', 'days']),
             hours = _ES$ToLimitedTemporal2.hours,
@@ -5935,17 +5935,17 @@
         add = add.plus(BigInteger(minutes).multiply(60 * 1e9));
         add = add.plus(BigInteger(hours).multiply(60 * 60 * 1e9));
         var ns = BigInteger(GetSlot(this, EPOCHNANOSECONDS)).minus(add);
-        ES.RejectAbsoluteRange(ns);
-        var Construct = ES.SpeciesConstructor(this, Absolute);
+        ES.RejectInstantRange(ns);
+        var Construct = ES.SpeciesConstructor(this, Instant);
         var result = new Construct(bigIntIfAvailable(ns));
-        if (!ES.IsTemporalAbsolute(result)) throw new TypeError('invalid result');
+        if (!ES.IsTemporalInstant(result)) throw new TypeError('invalid result');
         return result;
       }
     }, {
       key: "difference",
       value: function difference(other, options) {
-        if (!ES.IsTemporalAbsolute(this)) throw new TypeError('invalid receiver');
-        if (!ES.IsTemporalAbsolute(other)) throw new TypeError('invalid Absolute object');
+        if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
+        if (!ES.IsTemporalInstant(other)) throw new TypeError('invalid Instant object');
         var disallowedUnits = ['years', 'months', 'weeks', 'days'];
         var smallestUnit = ES.ToSmallestTemporalDurationUnit(options, 'nanoseconds', disallowedUnits);
         var defaultLargestUnit = 'seconds';
@@ -6011,7 +6011,7 @@
     }, {
       key: "round",
       value: function round(options) {
-        if (!ES.IsTemporalAbsolute(this)) throw new TypeError('invalid receiver');
+        if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
         if (options === undefined) throw new TypeError('options parameter is required');
         var smallestUnit = ES.ToSmallestTemporalUnit(options, ['day', 'hour']);
         var roundingMode = ES.ToTemporalRoundingMode(options);
@@ -6049,16 +6049,16 @@
         var wholeDays = ns.minus(remainder);
         var roundedRemainder = ES.RoundNumberToIncrement(remainder.toJSNumber(), incrementNs, roundingMode);
         var roundedNs = wholeDays.plus(roundedRemainder);
-        var Construct = ES.SpeciesConstructor(this, Absolute);
+        var Construct = ES.SpeciesConstructor(this, Instant);
         var result = new Construct(bigIntIfAvailable(roundedNs));
-        if (!ES.IsTemporalAbsolute(result)) throw new TypeError('invalid result');
+        if (!ES.IsTemporalInstant(result)) throw new TypeError('invalid result');
         return result;
       }
     }, {
       key: "equals",
       value: function equals(other) {
-        if (!ES.IsTemporalAbsolute(this)) throw new TypeError('invalid receiver');
-        if (!ES.IsTemporalAbsolute(other)) throw new TypeError('invalid Absolute object');
+        if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
+        if (!ES.IsTemporalInstant(other)) throw new TypeError('invalid Instant object');
         var one = GetSlot(this, EPOCHNANOSECONDS);
         var two = GetSlot(other, EPOCHNANOSECONDS);
         return BigInteger(one).equals(two);
@@ -6067,22 +6067,22 @@
       key: "toString",
       value: function toString() {
         var temporalTimeZoneLike = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'UTC';
-        if (!ES.IsTemporalAbsolute(this)) throw new TypeError('invalid receiver');
+        if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
         var timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);
-        return ES.TemporalAbsoluteToString(this, timeZone);
+        return ES.TemporalInstantToString(this, timeZone);
       }
     }, {
       key: "toJSON",
       value: function toJSON() {
-        if (!ES.IsTemporalAbsolute(this)) throw new TypeError('invalid receiver');
+        if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
         var TemporalTimeZone = GetIntrinsic$1('%Temporal.TimeZone%');
         var timeZone = new TemporalTimeZone('UTC');
-        return ES.TemporalAbsoluteToString(this, timeZone);
+        return ES.TemporalInstantToString(this, timeZone);
       }
     }, {
       key: "toLocaleString",
       value: function toLocaleString() {
-        if (!ES.IsTemporalAbsolute(this)) throw new TypeError('invalid receiver');
+        if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
 
         for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
           args[_key] = arguments[_key];
@@ -6093,13 +6093,13 @@
     }, {
       key: "valueOf",
       value: function valueOf() {
-        throw new TypeError('use compare() or equals() to compare Temporal.Absolute');
+        throw new TypeError('use compare() or equals() to compare Temporal.Instant');
       }
     }, {
       key: "toDateTime",
       value: function toDateTime(temporalTimeZoneLike) {
         var calendarLike = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : GetDefaultCalendar();
-        if (!ES.IsTemporalAbsolute(this)) throw new TypeError('invalid receiver');
+        if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
         var timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);
         var calendar = ES.ToTemporalCalendar(calendarLike);
         return ES.GetTemporalDateTimeFor(timeZone, this, calendar);
@@ -6109,9 +6109,9 @@
       value: function fromEpochSeconds(epochSeconds) {
         epochSeconds = ES.ToNumber(epochSeconds);
         var epochNanoseconds = BigInteger(epochSeconds).multiply(1e9);
-        ES.RejectAbsoluteRange(epochNanoseconds);
+        ES.RejectInstantRange(epochNanoseconds);
         var result = new this(bigIntIfAvailable(epochNanoseconds));
-        if (!ES.IsTemporalAbsolute(result)) throw new TypeError('invalid result');
+        if (!ES.IsTemporalInstant(result)) throw new TypeError('invalid result');
         return result;
       }
     }, {
@@ -6119,9 +6119,9 @@
       value: function fromEpochMilliseconds(epochMilliseconds) {
         epochMilliseconds = ES.ToNumber(epochMilliseconds);
         var epochNanoseconds = BigInteger(epochMilliseconds).multiply(1e6);
-        ES.RejectAbsoluteRange(epochNanoseconds);
+        ES.RejectInstantRange(epochNanoseconds);
         var result = new this(bigIntIfAvailable(epochNanoseconds));
-        if (!ES.IsTemporalAbsolute(result)) throw new TypeError('invalid result');
+        if (!ES.IsTemporalInstant(result)) throw new TypeError('invalid result');
         return result;
       }
     }, {
@@ -6129,18 +6129,18 @@
       value: function fromEpochMicroseconds(epochMicroseconds) {
         epochMicroseconds = ES.ToBigInt(epochMicroseconds);
         var epochNanoseconds = epochMicroseconds.multiply(1e3);
-        ES.RejectAbsoluteRange(epochNanoseconds);
+        ES.RejectInstantRange(epochNanoseconds);
         var result = new this(bigIntIfAvailable(epochNanoseconds));
-        if (!ES.IsTemporalAbsolute(result)) throw new TypeError('invalid result');
+        if (!ES.IsTemporalInstant(result)) throw new TypeError('invalid result');
         return result;
       }
     }, {
       key: "fromEpochNanoseconds",
       value: function fromEpochNanoseconds(epochNanoseconds) {
         epochNanoseconds = ES.ToBigInt(epochNanoseconds);
-        ES.RejectAbsoluteRange(epochNanoseconds);
+        ES.RejectInstantRange(epochNanoseconds);
         var result = new this(bigIntIfAvailable(epochNanoseconds));
-        if (!ES.IsTemporalAbsolute(result)) throw new TypeError('invalid result');
+        if (!ES.IsTemporalInstant(result)) throw new TypeError('invalid result');
         return result;
       }
     }, {
@@ -6148,20 +6148,20 @@
       value: function from(item) {
         var ns;
 
-        if (ES.IsTemporalAbsolute(item)) {
+        if (ES.IsTemporalInstant(item)) {
           ns = GetSlot(item, EPOCHNANOSECONDS);
         } else {
-          ns = ES.ParseTemporalAbsolute(ES.ToString(item));
+          ns = ES.ParseTemporalInstant(ES.ToString(item));
         }
 
         var result = new this(bigIntIfAvailable(ns));
-        if (!ES.IsTemporalAbsolute(result)) throw new TypeError('invalid result');
+        if (!ES.IsTemporalInstant(result)) throw new TypeError('invalid result');
         return result;
       }
     }, {
       key: "compare",
       value: function compare(one, two) {
-        if (!ES.IsTemporalAbsolute(one) || !ES.IsTemporalAbsolute(two)) throw new TypeError('invalid Absolute object');
+        if (!ES.IsTemporalInstant(one) || !ES.IsTemporalInstant(two)) throw new TypeError('invalid Instant object');
         one = GetSlot(one, EPOCHNANOSECONDS);
         two = GetSlot(two, EPOCHNANOSECONDS);
         if (BigInteger(one).lesser(two)) return -1;
@@ -6170,9 +6170,9 @@
       }
     }]);
 
-    return Absolute;
+    return Instant;
   }();
-  MakeIntrinsicClass(Absolute, 'Temporal.Absolute');
+  MakeIntrinsicClass(Instant, 'Temporal.Instant');
 
   function bigIntIfAvailable(wrapper) {
     return typeof BigInt === 'undefined' ? wrapper : wrapper.value;
@@ -7011,12 +7011,12 @@
         throw new TypeError('use compare() or equals() to compare Temporal.DateTime');
       }
     }, {
-      key: "toAbsolute",
-      value: function toAbsolute(temporalTimeZoneLike, options) {
+      key: "toInstant",
+      value: function toInstant(temporalTimeZoneLike, options) {
         if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
         var timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);
         var disambiguation = ES.ToTemporalDisambiguation(options);
-        return ES.GetTemporalAbsoluteFor(timeZone, this, disambiguation);
+        return ES.GetTemporalInstantFor(timeZone, this, disambiguation);
       }
     }, {
       key: "toDate",
@@ -7873,16 +7873,16 @@
   MakeIntrinsicClass(MonthDay, 'Temporal.MonthDay');
 
   var now = {
-    absolute: absolute$1,
+    instant: instant,
     dateTime: dateTime,
     date: date,
     time: time$1,
     timeZone: timeZone
   };
 
-  function absolute$1() {
-    var Absolute = GetIntrinsic$1('%Temporal.Absolute%');
-    return new Absolute(ES.SystemUTCEpochNanoSeconds());
+  function instant() {
+    var Instant = GetIntrinsic$1('%Temporal.Instant%');
+    return new Instant(ES.SystemUTCEpochNanoSeconds());
   }
 
   function dateTime() {
@@ -7891,7 +7891,7 @@
     return function () {
       var timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);
       var calendar = ES.ToTemporalCalendar(calendarLike);
-      var abs = absolute$1();
+      var abs = instant();
       return ES.GetTemporalDateTimeFor(timeZone, abs, calendar);
     }();
   }
@@ -8391,7 +8391,7 @@
       key: "getOffsetNanosecondsFor",
       value: function getOffsetNanosecondsFor(absolute) {
         if (!ES.IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');
-        if (!ES.IsTemporalAbsolute(absolute)) throw new TypeError('invalid Absolute object');
+        if (!ES.IsTemporalInstant(absolute)) throw new TypeError('invalid Instant object');
         var id = GetSlot(this, TIMEZONE_ID);
         var offsetNs = parseOffsetString$1(id);
         if (offsetNs !== null) return offsetNs;
@@ -8400,7 +8400,7 @@
     }, {
       key: "getOffsetStringFor",
       value: function getOffsetStringFor(absolute) {
-        if (!ES.IsTemporalAbsolute(absolute)) throw new TypeError('invalid Absolute object');
+        if (!ES.IsTemporalInstant(absolute)) throw new TypeError('invalid Instant object');
         var offsetNs = ES.GetOffsetNanosecondsFor(this, absolute);
         return ES.FormatTimeZoneOffsetString(offsetNs);
       }
@@ -8408,7 +8408,7 @@
       key: "getDateTimeFor",
       value: function getDateTimeFor(absolute) {
         var calendar = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : GetDefaultCalendar();
-        if (!ES.IsTemporalAbsolute(absolute)) throw new TypeError('invalid Absolute object');
+        if (!ES.IsTemporalInstant(absolute)) throw new TypeError('invalid Instant object');
         calendar = ES.ToTemporalCalendar(calendar);
         var ns = GetSlot(absolute, EPOCHNANOSECONDS);
         var offsetNs = ES.GetOffsetNanosecondsFor(this, absolute);
@@ -8439,38 +8439,38 @@
         return new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
       }
     }, {
-      key: "getAbsoluteFor",
-      value: function getAbsoluteFor(dateTime, options) {
+      key: "getInstantFor",
+      value: function getInstantFor(dateTime, options) {
         if (!ES.IsTemporalDateTime(dateTime)) throw new TypeError('invalid DateTime object');
         var disambiguation = ES.ToTemporalDisambiguation(options);
-        var Absolute = GetIntrinsic$1('%Temporal.Absolute%');
-        var possibleAbsolutes = this.getPossibleAbsolutesFor(dateTime);
+        var Instant = GetIntrinsic$1('%Temporal.Instant%');
+        var possibleInstants = this.getPossibleInstantsFor(dateTime);
 
-        if (!Array.isArray(possibleAbsolutes)) {
-          throw new TypeError('bad return from getPossibleAbsolutesFor');
+        if (!Array.isArray(possibleInstants)) {
+          throw new TypeError('bad return from getPossibleInstantsFor');
         }
 
-        var numAbsolutes = possibleAbsolutes.length;
+        var numInstants = possibleInstants.length;
 
-        function validateAbsolute(absolute) {
-          if (!ES.IsTemporalAbsolute(absolute)) {
-            throw new TypeError('bad return from getPossibleAbsolutesFor');
+        function validateInstant(absolute) {
+          if (!ES.IsTemporalInstant(absolute)) {
+            throw new TypeError('bad return from getPossibleInstantsFor');
           }
 
           return absolute;
         }
 
-        if (numAbsolutes === 1) return validateAbsolute(possibleAbsolutes[0]);
+        if (numInstants === 1) return validateInstant(possibleInstants[0]);
 
-        if (numAbsolutes) {
+        if (numInstants) {
           switch (disambiguation) {
             case 'compatible': // fall through because 'compatible' means 'earlier' for "fall back" transitions
 
             case 'earlier':
-              return validateAbsolute(possibleAbsolutes[0]);
+              return validateInstant(possibleInstants[0]);
 
             case 'later':
-              return validateAbsolute(possibleAbsolutes[numAbsolutes - 1]);
+              return validateInstant(possibleInstants[numInstants - 1]);
 
             case 'reject':
               {
@@ -8481,8 +8481,8 @@
 
         var utcns = ES.GetEpochFromParts(GetSlot(dateTime, ISO_YEAR), GetSlot(dateTime, ISO_MONTH), GetSlot(dateTime, ISO_DAY), GetSlot(dateTime, HOUR), GetSlot(dateTime, MINUTE), GetSlot(dateTime, SECOND), GetSlot(dateTime, MILLISECOND), GetSlot(dateTime, MICROSECOND), GetSlot(dateTime, NANOSECOND));
         if (utcns === null) throw new RangeError('DateTime outside of supported range');
-        var dayBefore = new Absolute(utcns.minus(86400e9));
-        var dayAfter = new Absolute(utcns.plus(86400e9));
+        var dayBefore = new Instant(utcns.minus(86400e9));
+        var dayAfter = new Instant(utcns.plus(86400e9));
         var offsetBefore = this.getOffsetNanosecondsFor(dayBefore);
         var offsetAfter = this.getOffsetNanosecondsFor(dayAfter);
         var nanoseconds = offsetAfter - offsetBefore;
@@ -8494,7 +8494,7 @@
           case 'earlier':
             {
               var earlier = dateTime.minus(diff);
-              return this.getPossibleAbsolutesFor(earlier)[0];
+              return this.getPossibleInstantsFor(earlier)[0];
             }
 
           case 'compatible': // fall through because 'compatible' means 'later' for "spring forward" transitions
@@ -8502,7 +8502,7 @@
           case 'later':
             {
               var later = dateTime.plus(diff);
-              var possible = this.getPossibleAbsolutesFor(later);
+              var possible = this.getPossibleInstantsFor(later);
               return possible[possible.length - 1];
             }
 
@@ -8513,30 +8513,30 @@
         }
       }
     }, {
-      key: "getPossibleAbsolutesFor",
-      value: function getPossibleAbsolutesFor(dateTime) {
+      key: "getPossibleInstantsFor",
+      value: function getPossibleInstantsFor(dateTime) {
         if (!ES.IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');
         if (!ES.IsTemporalDateTime(dateTime)) throw new TypeError('invalid DateTime object');
-        var Absolute = GetIntrinsic$1('%Temporal.Absolute%');
+        var Instant = GetIntrinsic$1('%Temporal.Instant%');
         var id = GetSlot(this, TIMEZONE_ID);
         var offsetNs = parseOffsetString$1(id);
 
         if (offsetNs !== null) {
           var epochNs = ES.GetEpochFromParts(GetSlot(dateTime, ISO_YEAR), GetSlot(dateTime, ISO_MONTH), GetSlot(dateTime, ISO_DAY), GetSlot(dateTime, HOUR), GetSlot(dateTime, MINUTE), GetSlot(dateTime, SECOND), GetSlot(dateTime, MILLISECOND), GetSlot(dateTime, MICROSECOND), GetSlot(dateTime, NANOSECOND));
           if (epochNs === null) throw new RangeError('DateTime outside of supported range');
-          return [new Absolute(epochNs.minus(offsetNs))];
+          return [new Instant(epochNs.minus(offsetNs))];
         }
 
         var possibleEpochNs = ES.GetIANATimeZoneEpochValue(id, GetSlot(dateTime, ISO_YEAR), GetSlot(dateTime, ISO_MONTH), GetSlot(dateTime, ISO_DAY), GetSlot(dateTime, HOUR), GetSlot(dateTime, MINUTE), GetSlot(dateTime, SECOND), GetSlot(dateTime, MILLISECOND), GetSlot(dateTime, MICROSECOND), GetSlot(dateTime, NANOSECOND));
         return possibleEpochNs.map(function (ns) {
-          return new Absolute(ns);
+          return new Instant(ns);
         });
       }
     }, {
       key: "getNextTransition",
       value: function getNextTransition(startingPoint) {
         if (!ES.IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');
-        if (!ES.IsTemporalAbsolute(startingPoint)) throw new TypeError('invalid Absolute object');
+        if (!ES.IsTemporalInstant(startingPoint)) throw new TypeError('invalid Instant object');
         var id = GetSlot(this, TIMEZONE_ID); // Offset time zones or UTC have no transitions
 
         if (parseOffsetString$1(id) !== null || id === 'UTC') {
@@ -8544,15 +8544,15 @@
         }
 
         var epochNanoseconds = GetSlot(startingPoint, EPOCHNANOSECONDS);
-        var Absolute = GetIntrinsic$1('%Temporal.Absolute%');
+        var Instant = GetIntrinsic$1('%Temporal.Instant%');
         epochNanoseconds = ES.GetIANATimeZoneNextTransition(epochNanoseconds, id);
-        return epochNanoseconds === null ? null : new Absolute(epochNanoseconds);
+        return epochNanoseconds === null ? null : new Instant(epochNanoseconds);
       }
     }, {
       key: "getPreviousTransition",
       value: function getPreviousTransition(startingPoint) {
         if (!ES.IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');
-        if (!ES.IsTemporalAbsolute(startingPoint)) throw new TypeError('invalid Absolute object');
+        if (!ES.IsTemporalInstant(startingPoint)) throw new TypeError('invalid Instant object');
         var id = GetSlot(this, TIMEZONE_ID); // Offset time zones or UTC have no transitions
 
         if (parseOffsetString$1(id) !== null || id === 'UTC') {
@@ -8560,9 +8560,9 @@
         }
 
         var epochNanoseconds = GetSlot(startingPoint, EPOCHNANOSECONDS);
-        var Absolute = GetIntrinsic$1('%Temporal.Absolute%');
+        var Instant = GetIntrinsic$1('%Temporal.Instant%');
         epochNanoseconds = ES.GetIANATimeZonePreviousTransition(epochNanoseconds, id);
-        return epochNanoseconds === null ? null : new Absolute(epochNanoseconds);
+        return epochNanoseconds === null ? null : new Instant(epochNanoseconds);
       }
     }, {
       key: "toString",
@@ -8596,7 +8596,7 @@
   MakeIntrinsicClass(TimeZone, 'Temporal.TimeZone');
   DefineIntrinsic('Temporal.TimeZone.from', TimeZone.from);
   DefineIntrinsic('Temporal.TimeZone.prototype.getDateTimeFor', TimeZone.prototype.getDateTimeFor);
-  DefineIntrinsic('Temporal.TimeZone.prototype.getAbsoluteFor', TimeZone.prototype.getAbsoluteFor);
+  DefineIntrinsic('Temporal.TimeZone.prototype.getInstantFor', TimeZone.prototype.getInstantFor);
   DefineIntrinsic('Temporal.TimeZone.prototype.getOffsetNanosecondsFor', TimeZone.prototype.getOffsetNanosecondsFor);
   DefineIntrinsic('Temporal.TimeZone.prototype.getOffsetStringFor', TimeZone.prototype.getOffsetStringFor);
   DefineIntrinsic('Temporal.TimeZone.prototype.toString', TimeZone.prototype.toString);
@@ -8947,7 +8947,7 @@
 
   var Temporal = /*#__PURE__*/Object.freeze({
     __proto__: null,
-    Absolute: Absolute,
+    Instant: Instant,
     Calendar: Calendar,
     Date: Date$1,
     DateTime: DateTime,
@@ -9243,7 +9243,7 @@
 
   function extractOverrides(datetime, main) {
     var formatter, calendar;
-    var Absolute = GetIntrinsic$1('%Temporal.Absolute%');
+    var Instant = GetIntrinsic$1('%Temporal.Instant%');
     var Date = GetIntrinsic$1('%Temporal.Date%');
     var DateTime = GetIntrinsic$1('%Temporal.DateTime%');
     var MonthDay = GetIntrinsic$1('%Temporal.MonthDay%');
@@ -9288,10 +9288,10 @@
     if (datetime instanceof DateTime) {
       calendar = calendar || datetime.calendar.id;
       formatter = formatter || main[DATETIME];
-      datetime = main[TIMEZONE].getAbsoluteFor(datetime);
+      datetime = main[TIMEZONE].getInstantFor(datetime);
     }
 
-    if (datetime instanceof Absolute) {
+    if (datetime instanceof Instant) {
       formatter = formatter || main[DATETIME];
       return {
         absolute: datetime,

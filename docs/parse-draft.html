@@ -19,7 +19,7 @@
       window.devtoolsFormatters.push({
         header(x) {
           for (const type of [
-            Temporal.Absolute,
+            Temporal.Instant,
             Temporal.Calendar,
             Temporal.Date,
             Temporal.DateTime,
@@ -207,7 +207,7 @@ onlyTime <span class="token operator">=</span> <span class="token string">'01:46
 <p>So, for example, on the above strings:</p>
 <pre class="language-javascript"><code class="language-javascript">Temporal<span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span>valid<span class="token punctuation">)</span>
 <span class="token comment">// {</span>
-<span class="token comment">//   absolute: '2001-09-08T18:46:40-07:00[America/Vancouver]',</span>
+<span class="token comment">//   instant: '2001-09-08T18:46:40-07:00[America/Vancouver]',</span>
 <span class="token comment">//   dateTime: '2001-09-08T18:46:40',</span>
 <span class="token comment">//   date: '2001-09-08',</span>
 <span class="token comment">//   yearMonth: '2001-09',</span>
@@ -218,7 +218,7 @@ onlyTime <span class="token operator">=</span> <span class="token string">'01:46
 <span class="token comment">// }</span>
 Temporal<span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span>time24<span class="token punctuation">)</span>
 <span class="token comment">// {</span>
-<span class="token comment">//   absolute: '2020-04-07T24:00:00-07:00[America/Vancouver]',</span>
+<span class="token comment">//   instant: '2020-04-07T24:00:00-07:00[America/Vancouver]',</span>
 <span class="token comment">//   dateTime: '2020-04-07T24:00:00',</span>
 <span class="token comment">//   date: '2020-04-07',</span>
 <span class="token comment">//   yearMonth: '2020-04',</span>
@@ -229,7 +229,7 @@ Temporal<span class="token punctuation">.</span><span class="token function">par
 <span class="token comment">// }</span>
 Temporal<span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span>invalidZone<span class="token punctuation">)</span>
 <span class="token comment">// {</span>
-<span class="token comment">//   absolute: '2001-09-08T18:46:40+01:00[America/Vancouver]',</span>
+<span class="token comment">//   instant: '2001-09-08T18:46:40+01:00[America/Vancouver]',</span>
 <span class="token comment">//   dateTime: '2001-09-08T18:46:40',</span>
 <span class="token comment">//   date: '2001-09-08',</span>
 <span class="token comment">//   yearMonth: '2001-09',</span>
@@ -240,7 +240,7 @@ Temporal<span class="token punctuation">.</span><span class="token function">par
 <span class="token comment">// }</span>
 Temporal<span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span>invalidDate<span class="token punctuation">)</span>
 <span class="token comment">// {</span>
-<span class="token comment">//   absolute: '2020-99-99T18:46:40-07:00[America/Vancouver]',</span>
+<span class="token comment">//   instant: '2020-99-99T18:46:40-07:00[America/Vancouver]',</span>
 <span class="token comment">//   dateTime: '2020-99-99T18:46:40',</span>
 <span class="token comment">//   date: '2020-99-99',</span>
 <span class="token comment">//   yearMonth: '2020-99',</span>
@@ -251,7 +251,7 @@ Temporal<span class="token punctuation">.</span><span class="token function">par
 <span class="token comment">// }</span>
 Temporal<span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span>invalidTime<span class="token punctuation">)</span>
 <span class="token comment">// {</span>
-<span class="token comment">//   absolute: '2001-09-08T99:99:99-07:00[America/Vancouver]',</span>
+<span class="token comment">//   instant: '2001-09-08T99:99:99-07:00[America/Vancouver]',</span>
 <span class="token comment">//   dateTime: '2001-09-08T99:99:99',</span>
 <span class="token comment">//   date: '2001-09-08',</span>
 <span class="token comment">//   yearMonth: '2001-09',</span>
@@ -262,7 +262,7 @@ Temporal<span class="token punctuation">.</span><span class="token function">par
 <span class="token comment">// }</span>
 Temporal<span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span>onlyOffset<span class="token punctuation">)</span>
 <span class="token comment">// {</span>
-<span class="token comment">//   absolute: '2001-09-08T18:46:40-07:00[America/Vancouver]',</span>
+<span class="token comment">//   instant: '2001-09-08T18:46:40-07:00[America/Vancouver]',</span>
 <span class="token comment">//   dateTime: '2001-09-08T18:46:40',</span>
 <span class="token comment">//   date: '2001-09-08',</span>
 <span class="token comment">//   yearMonth: '2001-09',</span>
@@ -273,7 +273,7 @@ Temporal<span class="token punctuation">.</span><span class="token function">par
 <span class="token comment">// }</span>
 Temporal<span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span>onlyDateTime<span class="token punctuation">)</span>
 <span class="token comment">// {</span>
-<span class="token comment">//   absolute: null,</span>
+<span class="token comment">//   instant: null,</span>
 <span class="token comment">//   dateTime: '2001-09-09T01:46:40',</span>
 <span class="token comment">//   date: '2001-09-09',</span>
 <span class="token comment">//   yearMonth: '2001-09',</span>
@@ -284,7 +284,7 @@ Temporal<span class="token punctuation">.</span><span class="token function">par
 <span class="token comment">// }</span>
 Temporal<span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span>onlyDate<span class="token punctuation">)</span>
 <span class="token comment">// {</span>
-<span class="token comment">//   absolute: null,</span>
+<span class="token comment">//   instant: null,</span>
 <span class="token comment">//   dateTime: null,  // time doesn't default to midnight in parse()</span>
 <span class="token comment">//   date: '2001-09-09',</span>
 <span class="token comment">//   yearMonth: '2001-09',</span>
@@ -295,7 +295,7 @@ Temporal<span class="token punctuation">.</span><span class="token function">par
 <span class="token comment">// }</span>
 Temporal<span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span>onlyTime<span class="token punctuation">)</span>
 <span class="token comment">// {</span>
-<span class="token comment">//   absolute: null,</span>
+<span class="token comment">//   instant: null,</span>
 <span class="token comment">//   dateTime: null,</span>
 <span class="token comment">//   date: null,</span>
 <span class="token comment">//   yearMonth: null,</span>
@@ -304,12 +304,12 @@ Temporal<span class="token punctuation">.</span><span class="token function">par
 <span class="token comment">//   offset: null,</span>
 <span class="token comment">//   timeZone: null,</span>
 <span class="token comment">// }</span>
-<span class="token comment">// etc.</span></code></pre><p>Note: The <code>absolute</code> member on the object returned from parse() is a bit redundant here, it&#39;s always either equal to the input, or null.</p>
+<span class="token comment">// etc.</span></code></pre><p>Note: The <code>instant</code> member on the object returned from parse() is a bit redundant here, it&#39;s always either equal to the input, or null.</p>
 <h2 id="proposal-1-always-iso-8601-semantics-in-from">Proposal 1. Always ISO 8601 semantics in from()</h2>
 <p><strong>Use case 1:</strong> Use from(), which always returns the string according to ISO 8601&#39;s semantics. Any information that is <em>present</em> in the string, is validated. Not all information is <em>required</em> to be present if the type doesn&#39;t use it. If the time is not present, it defaults to midnight.</p>
-<p>The exception to validation is, when parsing a type that&#39;s not Temporal.Absolute, from() does not check that the time zone offset matches the bracketed IANA name.
+<p>The exception to validation is, when parsing a type that&#39;s not Temporal.Instant, from() does not check that the time zone offset matches the bracketed IANA name.
 The reason for this is that political changes (abolishing DST, for example) may make a string incorrect even though it was correct at the time it was serialized.</p>
-<pre class="language-javascript"><code class="language-javascript">Temporal<span class="token punctuation">.</span>Absolute<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>valid<span class="token punctuation">)</span>  <span class="token comment">// => 2001-09-09T01:46:40Z</span>
+<pre class="language-javascript"><code class="language-javascript">Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>valid<span class="token punctuation">)</span>  <span class="token comment">// => 2001-09-09T01:46:40Z</span>
 Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>valid<span class="token punctuation">)</span>  <span class="token comment">// => 2001-09-08T18:46:40</span>
 Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>valid<span class="token punctuation">)</span>      <span class="token comment">// => 2001-09-08</span>
 Temporal<span class="token punctuation">.</span>YearMonth<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>valid<span class="token punctuation">)</span> <span class="token comment">// => 2001-09</span>
@@ -317,7 +317,7 @@ Temporal<span class="token punctuation">.</span>MonthDay<span class="token punct
 Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>valid<span class="token punctuation">)</span>      <span class="token comment">// => 18:46:40</span>
 Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>valid<span class="token punctuation">)</span>  <span class="token comment">// => America/Vancouver</span>
 
-Temporal<span class="token punctuation">.</span>Absolute<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>time24<span class="token punctuation">)</span>  <span class="token comment">// => 2020-04-08T07:00Z</span>
+Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>time24<span class="token punctuation">)</span>  <span class="token comment">// => 2020-04-08T07:00Z</span>
 Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>time24<span class="token punctuation">)</span>  <span class="token comment">// => 2020-04-08T00:00</span>
 Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>time24<span class="token punctuation">)</span>      <span class="token comment">// => 2020-04-08</span>
 Temporal<span class="token punctuation">.</span>YearMonth<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>time24<span class="token punctuation">)</span> <span class="token comment">// => 2020-04</span>
@@ -325,12 +325,12 @@ Temporal<span class="token punctuation">.</span>MonthDay<span class="token punct
 Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>time24<span class="token punctuation">)</span>      <span class="token comment">// => 00:00</span>
 Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>time24<span class="token punctuation">)</span>  <span class="token comment">// => America/Vancouver</span>
 
-Temporal<span class="token punctuation">.</span>Absolute<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>invalidZone<span class="token punctuation">)</span>  <span class="token comment">// throws</span>
+Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>invalidZone<span class="token punctuation">)</span>  <span class="token comment">// throws</span>
 Temporal<span class="token punctuation">.</span><span class="token punctuation">{</span>everything <span class="token keyword">else</span><span class="token punctuation">}</span><span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>invalidZone<span class="token punctuation">)</span>  <span class="token comment">// => doesn't throw</span>
 Temporal<span class="token punctuation">.</span><span class="token operator">*</span><span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>invalidDate<span class="token punctuation">)</span>  <span class="token comment">// throws</span>
 Temporal<span class="token punctuation">.</span><span class="token operator">*</span><span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>invalidTime<span class="token punctuation">)</span>  <span class="token comment">// throws</span>
 
-Temporal<span class="token punctuation">.</span>Absolute<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>onlyDateTime<span class="token punctuation">)</span>  <span class="token comment">// throws</span>
+Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>onlyDateTime<span class="token punctuation">)</span>  <span class="token comment">// throws</span>
 Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>onlyDateTime<span class="token punctuation">)</span>  <span class="token comment">// 2001-09-09T01:46:40</span>
 Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>onlyDateTime<span class="token punctuation">)</span>      <span class="token comment">// => 2001-09-09</span>
 Temporal<span class="token punctuation">.</span>YearMonth<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>onlyDateTime<span class="token punctuation">)</span> <span class="token comment">// => 2001-09</span>
@@ -338,7 +338,7 @@ Temporal<span class="token punctuation">.</span>MonthDay<span class="token punct
 Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>onlyDateTime<span class="token punctuation">)</span>      <span class="token comment">// => 01:46:40</span>
 Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>onlyDateTime<span class="token punctuation">)</span>  <span class="token comment">// throws</span>
 
-Temporal<span class="token punctuation">.</span>Absolute<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>onlyDate<span class="token punctuation">)</span>  <span class="token comment">// throws</span>
+Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>onlyDate<span class="token punctuation">)</span>  <span class="token comment">// throws</span>
 Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>onlyDate<span class="token punctuation">)</span>  <span class="token comment">// => 2001-09-09T00:00</span>
 Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>onlyDate<span class="token punctuation">)</span>      <span class="token comment">// => 2001-09-09</span>
 Temporal<span class="token punctuation">.</span>YearMonth<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>onlyDate<span class="token punctuation">)</span> <span class="token comment">// => 2001-09</span>
@@ -357,7 +357,7 @@ Temporal<span class="token punctuation">.</span>MonthDay<span class="token punct
 Temporal<span class="token punctuation">.</span>time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>parsed<span class="token punctuation">.</span>time<span class="token punctuation">)</span>          <span class="token comment">// throws? it's still valid ISO 8601 though</span>
 
 parsed <span class="token operator">=</span> Temporal<span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span>invalidZone<span class="token punctuation">)</span><span class="token punctuation">;</span>
-Temporal<span class="token punctuation">.</span>Absolute<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>parsed<span class="token punctuation">.</span>absolute<span class="token punctuation">)</span>  <span class="token comment">// throws</span>
+Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>parsed<span class="token punctuation">.</span>absolute<span class="token punctuation">)</span>  <span class="token comment">// throws</span>
 Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>parsed<span class="token punctuation">.</span>dateTime<span class="token punctuation">)</span>  <span class="token comment">// => 2001-09-08T18:46:40</span>
 <span class="token comment">// etc.</span>
 
@@ -367,7 +367,7 @@ Temporal<span class="token punctuation">.</span>DateTime<span class="token punct
 Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span>invalidDate<span class="token punctuation">)</span><span class="token punctuation">.</span>time<span class="token punctuation">)</span>  <span class="token comment">// => 18:46:40</span>
 Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span>invalidTime<span class="token punctuation">)</span><span class="token punctuation">.</span>date<span class="token punctuation">)</span>  <span class="token comment">// => 2001-09-08</span></code></pre><h2 id="proposal-2-no-irrelevant-parts-in-from">Proposal 2. No irrelevant parts in from()</h2>
 <p><strong>Use case 1:</strong> If a string contains any parts that are not relevant to the type, from() throws an exception. To process strings as ISO 8601 requires, use Absolute.from(), or Temporal.parse().dateTime with Temporal.parse().timeZone, depending on whether you need the time zone.</p>
-<pre class="language-javascript"><code class="language-javascript">Temporal<span class="token punctuation">.</span>Absolute<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>valid<span class="token punctuation">)</span>  <span class="token comment">// => 2001-09-09T01:46:40Z</span>
+<pre class="language-javascript"><code class="language-javascript">Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>valid<span class="token punctuation">)</span>  <span class="token comment">// => 2001-09-09T01:46:40Z</span>
 Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>valid<span class="token punctuation">)</span>  <span class="token comment">// throws</span>
 Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>valid<span class="token punctuation">)</span>      <span class="token comment">// throws</span>
 Temporal<span class="token punctuation">.</span>YearMonth<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>valid<span class="token punctuation">)</span> <span class="token comment">// throws</span>
@@ -383,7 +383,7 @@ dateTime<span class="token punctuation">.</span><span class="token function">get
 dateTime<span class="token punctuation">.</span><span class="token function">getTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span>                                  <span class="token comment">// => 18:46:40</span>
 Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>parsed<span class="token punctuation">.</span>timeZone<span class="token punctuation">)</span>             <span class="token comment">// => America/Vancouver</span>
 
-Temporal<span class="token punctuation">.</span>Absolute<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>time24<span class="token punctuation">)</span>  <span class="token comment">// => 2020-04-08T07:00Z</span>
+Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>time24<span class="token punctuation">)</span>  <span class="token comment">// => 2020-04-08T07:00Z</span>
 Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>time24<span class="token punctuation">)</span>  <span class="token comment">// throws</span>
 Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>time24<span class="token punctuation">)</span>      <span class="token comment">// throws</span>
 Temporal<span class="token punctuation">.</span>YearMonth<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>time24<span class="token punctuation">)</span> <span class="token comment">// throws</span>
@@ -403,7 +403,7 @@ Temporal<span class="token punctuation">.</span><span class="token operator">*</
 Temporal<span class="token punctuation">.</span><span class="token operator">*</span><span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>invalidDate<span class="token punctuation">)</span>  <span class="token comment">// throws</span>
 Temporal<span class="token punctuation">.</span><span class="token operator">*</span><span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>invalidTime<span class="token punctuation">)</span>  <span class="token comment">// throws</span>
 
-Temporal<span class="token punctuation">.</span>Absolute<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>onlyDateTime<span class="token punctuation">)</span>  <span class="token comment">// throws</span>
+Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>onlyDateTime<span class="token punctuation">)</span>  <span class="token comment">// throws</span>
 dateTime <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>onlyDateTime<span class="token punctuation">)</span>  <span class="token comment">// 2001-09-09T01:46:40</span>
 Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>onlyDateTime<span class="token punctuation">)</span>      <span class="token comment">// throws</span>
 Temporal<span class="token punctuation">.</span>YearMonth<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>onlyDateTime<span class="token punctuation">)</span> <span class="token comment">// throws</span>
@@ -416,7 +416,7 @@ dateTime<span class="token punctuation">.</span><span class="token function">get
 dateTime<span class="token punctuation">.</span><span class="token function">getDate</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getMonthDay</span><span class="token punctuation">(</span><span class="token punctuation">)</span>   <span class="token comment">// 09-09</span>
 dateTime<span class="token punctuation">.</span><span class="token function">getTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span>                 <span class="token comment">// 01:46:40</span>
 
-Temporal<span class="token punctuation">.</span>Absolute<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>onlyDate<span class="token punctuation">)</span>  <span class="token comment">// throws</span>
+Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>onlyDate<span class="token punctuation">)</span>  <span class="token comment">// throws</span>
 Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>onlyDate<span class="token punctuation">)</span>  <span class="token comment">// throws</span>
 Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>onlyDate<span class="token punctuation">)</span>      <span class="token comment">// => 2001-09-09</span>
 Temporal<span class="token punctuation">.</span>YearMonth<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>onlyDate<span class="token punctuation">)</span> <span class="token comment">// throws</span>
@@ -426,9 +426,9 @@ Temporal<span class="token punctuation">.</span>TimeZone<span class="token punct
 <span class="token comment">// No longer possible to get a DateTime with time defaulting to midnight, instead use:</span>
 Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>onlyDate<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">withTime</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'00:00'</span><span class="token punctuation">)</span><span class="token punctuation">)</span>  <span class="token comment">// => 2001-09-09T00:00</span></code></pre><p><strong>Use case 2:</strong> As in proposal 1.</p>
 <h2 id="proposal-3-irrelevant-parts-ignored-in-from">Proposal 3. Irrelevant parts ignored in from()</h2>
-<p><strong>Use case 1:</strong> Only Temporal.Absolute().from() and Temporal.DateTime.from() still have ISO 8601 semantics. To process strings as ISO 8601 requires, use Absolute.from(), or Temporal.DateTime.from() with Temporal.TimeZone.from(), depending on whether you need the time zone.</p>
+<p><strong>Use case 1:</strong> Only Temporal.Instant().from() and Temporal.DateTime.from() still have ISO 8601 semantics. To process strings as ISO 8601 requires, use Absolute.from(), or Temporal.DateTime.from() with Temporal.TimeZone.from(), depending on whether you need the time zone.</p>
 <p>Temporal.parse() isn&#39;t necessary in this scenario.</p>
-<pre class="language-javascript"><code class="language-javascript">Temporal<span class="token punctuation">.</span>Absolute<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>valid<span class="token punctuation">)</span>  <span class="token comment">// => 2001-09-09T01:46:40Z</span>
+<pre class="language-javascript"><code class="language-javascript">Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>valid<span class="token punctuation">)</span>  <span class="token comment">// => 2001-09-09T01:46:40Z</span>
 Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>valid<span class="token punctuation">)</span>  <span class="token comment">// => 2001-09-08T18:46:40</span>
 Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>valid<span class="token punctuation">)</span>      <span class="token comment">// => 2001-09-08</span>
 Temporal<span class="token punctuation">.</span>YearMonth<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>valid<span class="token punctuation">)</span> <span class="token comment">// => 2001-09</span>
@@ -436,7 +436,7 @@ Temporal<span class="token punctuation">.</span>MonthDay<span class="token punct
 Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>valid<span class="token punctuation">)</span>      <span class="token comment">// => 18:46:40</span>
 Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>valid<span class="token punctuation">)</span>  <span class="token comment">// => America/Vancouver</span>
 
-Temporal<span class="token punctuation">.</span>Absolute<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>time24<span class="token punctuation">)</span>              <span class="token comment">// => 2020-04-08T07:00Z</span>
+Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>time24<span class="token punctuation">)</span>              <span class="token comment">// => 2020-04-08T07:00Z</span>
 dateTime <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>time24<span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// => 2020-04-08T00:00</span>
 dateTime<span class="token punctuation">.</span><span class="token function">getDate</span><span class="token punctuation">(</span><span class="token punctuation">)</span>                          <span class="token comment">// => 2020-04-08</span>
 dateTime<span class="token punctuation">.</span><span class="token function">getDate</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getYearMonth</span><span class="token punctuation">(</span><span class="token punctuation">)</span>           <span class="token comment">// => 2020-04</span>
@@ -446,12 +446,12 @@ Temporal<span class="token punctuation">.</span>TimeZone<span class="token punct
 
 <span class="token comment">// Depending on which type you pass them to, it may be difficult to</span>
 <span class="token comment">// reject strings with mismatching time zones or invalid ISO 8601:</span>
-Temporal<span class="token punctuation">.</span>Absolute<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>invalidZone<span class="token punctuation">)</span>  <span class="token comment">// throws</span>
+Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>invalidZone<span class="token punctuation">)</span>  <span class="token comment">// throws</span>
 Temporal<span class="token punctuation">.</span><span class="token punctuation">{</span>everything <span class="token keyword">else</span><span class="token punctuation">}</span><span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>invalidZone<span class="token punctuation">)</span>   <span class="token comment">// doesn't throw</span>
 Temporal<span class="token punctuation">.</span><span class="token punctuation">{</span>Absolute<span class="token punctuation">,</span>Time<span class="token punctuation">,</span>DateTime<span class="token punctuation">}</span><span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>invalidTime<span class="token punctuation">)</span>  <span class="token comment">// throws</span>
 Temporal<span class="token punctuation">.</span><span class="token punctuation">{</span>Date<span class="token punctuation">,</span>YearMonth<span class="token punctuation">,</span>MonthDay<span class="token punctuation">,</span>TimeZone<span class="token punctuation">}</span><span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>invalidTime<span class="token punctuation">)</span>  <span class="token comment">// doesn't throw</span>
 
-Temporal<span class="token punctuation">.</span>Absolute<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>onlyDateTime<span class="token punctuation">)</span>  <span class="token comment">// throws</span>
+Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>onlyDateTime<span class="token punctuation">)</span>  <span class="token comment">// throws</span>
 Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>onlyDateTime<span class="token punctuation">)</span>  <span class="token comment">// => 2001-09-09T01:46:40</span>
 Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>onlyDateTime<span class="token punctuation">)</span>      <span class="token comment">// => 2001-09-09</span>
 Temporal<span class="token punctuation">.</span>YearMonth<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>onlyDateTime<span class="token punctuation">)</span> <span class="token comment">// => 2001-09</span>
@@ -459,7 +459,7 @@ Temporal<span class="token punctuation">.</span>MonthDay<span class="token punct
 Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>onlyDateTime<span class="token punctuation">)</span>      <span class="token comment">// => 01:46:40</span>
 Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>onlyDateTime<span class="token punctuation">)</span>  <span class="token comment">// throws</span>
 
-Temporal<span class="token punctuation">.</span>Absolute<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>onlyDate<span class="token punctuation">)</span>  <span class="token comment">// throws</span>
+Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>onlyDate<span class="token punctuation">)</span>  <span class="token comment">// throws</span>
 Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>onlyDate<span class="token punctuation">)</span>  <span class="token comment">// => 2001-09-09T00:00</span>
 Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>onlyDate<span class="token punctuation">)</span>      <span class="token comment">// => 2001-09-09</span>
 Temporal<span class="token punctuation">.</span>YearMonth<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>onlyDate<span class="token punctuation">)</span> <span class="token comment">// => 2001-09</span>

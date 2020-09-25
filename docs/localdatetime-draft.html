@@ -19,7 +19,7 @@
       window.devtoolsFormatters.push({
         header(x) {
           for (const type of [
-            Temporal.Absolute,
+            Temporal.Instant,
             Temporal.Calendar,
             Temporal.Date,
             Temporal.DateTime,
@@ -155,12 +155,12 @@ So we want a type that does the right thing for that use case.</li>
 <li>The cases where Absolute and DateTime do the wrong thing will only produce the wrong result when used across a DST transition, so in many places the bugs will only pop up twice per year, if at all.</li>
 <li>When writing the cookbook, to deal with this use case, we found that it was actually necessary a lot of the time to pass around a record consisting of <code>{ absolute, timeZone }</code>.
 If that is so common, then we may as well have a type for it.</li>
-<li>Even worse, there is a temptation to pass around a serialized string instead of such a record, which is wrong because the time zone offset may have changed when you read in the string again with <code>Temporal.Absolute.from()</code>.</li>
+<li>Even worse, there is a temptation to pass around a serialized string instead of such a record, which is wrong because the time zone offset may have changed when you read in the string again with <code>Temporal.Instant.from()</code>.</li>
 </ul>
 <p><strong>API</strong>: The API looks something like this:</p>
 <pre class="language-typescript"><code class="language-typescript"><span class="token keyword">class</span> <span class="token class-name">Temporal</span><span class="token punctuation">.</span>LocalDateTime <span class="token punctuation">{</span>
   <span class="token comment">// creation</span>
-  <span class="token keyword">constructor</span><span class="token punctuation">(</span>absolute<span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Absolute<span class="token punctuation">,</span> timeZone<span class="token operator">:</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">,</span> calendar<span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Calendar<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">constructor</span><span class="token punctuation">(</span>instant<span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">,</span> timeZone<span class="token operator">:</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">,</span> calendar<span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Calendar<span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token keyword">static</span> <span class="token keyword">from</span><span class="token punctuation">(</span>item<span class="token operator">:</span> <span class="token builtin">string</span> <span class="token operator">|</span> object<span class="token punctuation">,</span> options<span class="token operator">?</span><span class="token operator">:</span> object<span class="token punctuation">)</span> <span class="token operator">:</span> Temporal<span class="token punctuation">.</span>LocalDateTime<span class="token punctuation">;</span>
 
   <span class="token comment">// immutable 'mutation'</span>
@@ -195,7 +195,7 @@ If that is so common, then we may as well have a type for it.</li>
   <span class="token function">getISOFields</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">:</span> object<span class="token punctuation">;</span>
 
   <span class="token comment">// type conversion</span>
-  <span class="token function">toAbsolute</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Absolute<span class="token punctuation">;</span>
+  <span class="token function">toInstant</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">;</span>
   <span class="token function">toDateTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">:</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">;</span>
   <span class="token function">toDate</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">;</span>
   <span class="token function">toYearMonth</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">:</span> Temporal<span class="token punctuation">.</span>YearMonth<span class="token punctuation">;</span>
@@ -223,15 +223,15 @@ But since it represents an unambiguous moment in time (like Absolute, and unlike
 <ul>
 <li>From a string: <code>from(string)</code></li>
 <li>From raw DateTime fields: <code>from({ year, month, day, etc., timeZone, timeZoneOffsetNanoseconds })</code></li>
-<li>From an Absolute: <code>absolute.toLocalDateTime(timeZone)</code></li>
+<li>From an Absolute: <code>instant.toLocalDateTime(timeZone)</code></li>
 <li>From a DateTime, which potentially needs disambiguation: <code>dateTime.toLocalDateTime(timeZone, { disambiguation })</code></li>
 </ul>
 <p>As in the other Temporal types, the constructor is more low-level and takes an Absolute, a TimeZone, and a Calendar.</p>
 <p>&quot;New&quot; API that is not on DateTime:</p>
 <ul>
 <li><code>hoursInDay</code> - this is not possible with Absolute (no concept of days and no time zone) nor with DateTime (no time zone), but it makes sense for this type.</li>
-<li><code>timeZoneOffsetNanoseconds</code> - without this, you&#39;d need to do <code>ldt.timeZone.getOffsetNanoseconds(ldt.toAbsolute())</code>.</li>
-<li><code>timeZoneOffsetString</code> - ditto, you&#39;d need <code>ldt.timeZone.getOffsetString(ldt.toAbsolute())</code>.</li>
+<li><code>timeZoneOffsetNanoseconds</code> - without this, you&#39;d need to do <code>ldt.timeZone.getOffsetNanoseconds(ldt.toInstant())</code>.</li>
+<li><code>timeZoneOffsetString</code> - ditto, you&#39;d need <code>ldt.timeZone.getOffsetString(ldt.toInstant())</code>.</li>
 <li><code>startOfDay</code> - this is a convenient way to get the start of the day, especially if the day does not start at 00:00 due to DST.
 Also not needed with Absolute (no concept of days) nor with DateTime (day always starts at 00:00), but it makes sense for this type.</li>
 <li><code>isTimeZoneOffsetTransition</code> - convenience property getter.</li>

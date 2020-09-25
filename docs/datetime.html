@@ -19,7 +19,7 @@
       window.devtoolsFormatters.push({
         header(x) {
           for (const type of [
-            Temporal.Absolute,
+            Temporal.Instant,
             Temporal.Calendar,
             Temporal.Date,
             Temporal.DateTime,
@@ -226,7 +226,7 @@
 </li>
 <li><a href="#valueOf">valueOf</a>
 </li>
-<li><a href="#toAbsolute">toAbsolute</a>
+<li><a href="#toInstant">toInstant</a>
 </li>
 <li><a href="#toDate">toDate</a>
 </li>
@@ -249,11 +249,11 @@
 Of the <code>Temporal</code> classes carrying human-readable time information, it is the most general and complete one.
 <code>Temporal.Date</code>, <code>Temporal.Time</code>, <code>Temporal.YearMonth</code>, and <code>Temporal.MonthDay</code> all carry less information and should be used when complete information is not required.</p>
 <p>&quot;Calendar date&quot; and &quot;wall-clock time&quot; refer to the concept of time as expressed in everyday usage.
-<code>Temporal.DateTime</code> does not represent an absolute, unique point in time; that is what <code>Temporal.Absolute</code> is for.</p>
-<p>One example of when it would be appropriate to use <code>Temporal.DateTime</code> and not <code>Temporal.Absolute</code> is when integrating with wearable devices.
+<code>Temporal.DateTime</code> does not represent an absolute, unique point in time; that is what <code>Temporal.Instant</code> is for.</p>
+<p>One example of when it would be appropriate to use <code>Temporal.DateTime</code> and not <code>Temporal.Instant</code> is when integrating with wearable devices.
 FitBit, for example, always records sleep data in the user&#39;s wall-clock time, wherever they are in the world.
 Otherwise they would be recorded as sleeping at strange hours when travelling, even if their sleep rhythm was on a healthy schedule for the time zone they were in.</p>
-<p>A <code>Temporal.DateTime</code> can be converted to a <code>Temporal.Absolute</code> using a <code>Temporal.TimeZone</code>.
+<p>A <code>Temporal.DateTime</code> can be converted to a <code>Temporal.Instant</code> using a <code>Temporal.TimeZone</code>.
 A <code>Temporal.DateTime</code> can also be converted into any of the other <code>Temporal</code> objects that carry less information, such as <code>Temporal.Date</code> for the date or <code>Temporal.Time</code> for the time.</p>
 <h2 id="constructor">Constructor</h2>
 <h3 id="new-Temporal-DateTime"><a class="heading-link" href="#new-Temporal-DateTime"></a><strong>new Temporal.DateTime</strong>(<em>isoYear</em>: number, <em>isoMonth</em>: number, <em>isoDay</em>: number, <em>hour</em>: number = 0, <em>minute</em>: number = 0, <em>second</em>: number = 0, <em>millisecond</em>: number = 0, <em>microsecond</em>: number = 0, <em>nanosecond</em>: number = 0, <em>calendar</em>?: object) : Temporal.DateTime</h3><p><strong>Parameters:</strong></p>
@@ -278,7 +278,7 @@ Together, <code>isoYear</code>, <code>isoMonth</code>, and <code>isoDay</code> m
 <p><strong>NOTE</strong>: Although Temporal does not deal with leap seconds, dates coming from other software may have a <code>second</code> value of 60.
 This value will cause the constructor will throw, so if you have to interoperate with times that may contain leap seconds, use <code>Temporal.DateTime.from()</code> instead.</p>
 </blockquote>
-<p>The range of allowed values for this type is exactly enough that calling <a href="./absolute.html#toDateTime"><code>toDateTime()</code></a> on any valid <code>Temporal.Absolute</code> with any valid <code>Temporal.TimeZone</code> will succeed.
+<p>The range of allowed values for this type is exactly enough that calling <a href="./instant.html#toDateTime"><code>toDateTime()</code></a> on any valid <code>Temporal.Instant</code> with any valid <code>Temporal.TimeZone</code> will succeed.
 If the parameters passed in to this constructor form a date outside of this range, then this function will throw a <code>RangeError</code>.</p>
 <blockquote>
 <p><strong>NOTE</strong>: The <code>isoMonth</code> argument ranges from 1 to 12, which is different from legacy <code>Date</code> where months are represented by zero-based indices (0 to 11).</p>
@@ -694,7 +694,7 @@ dt<span class="token punctuation">.</span><span class="token function">toString<
 <p>This method overrides <code>Object.prototype.toLocaleString()</code> to provide a human-readable, language-sensitive representation of <code>datetime</code>.</p>
 <p>The <code>locales</code> and <code>options</code> arguments are the same as in the constructor to <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DateTimeFormat"><code>Intl.DateTimeFormat</code></a>.</p>
 <blockquote>
-<p><strong>NOTE</strong>: Unlike in <a href="./absolute.html#toLocaleString"><code>Temporal.Absolute.prototype.toLocaleString()</code></a>, <code>options.timeZone</code> will have no effect, because <code>Temporal.DateTime</code> carries no time zone information and is just a wall-clock time.</p>
+<p><strong>NOTE</strong>: Unlike in <a href="./instant.html#toLocaleString"><code>Temporal.Instant.prototype.toLocaleString()</code></a>, <code>options.timeZone</code> will have no effect, because <code>Temporal.DateTime</code> carries no time zone information and is just a wall-clock time.</p>
 </blockquote>
 <p>Example usage:</p>
 <pre class="language-js"><code class="language-js">dt <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>DateTime</span><span class="token punctuation">(</span><span class="token number">1995</span><span class="token punctuation">,</span> <span class="token number">12</span><span class="token punctuation">,</span> <span class="token number">7</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">24</span><span class="token punctuation">,</span> <span class="token number">30</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">500</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -732,7 +732,7 @@ console<span class="token punctuation">.</span><span class="token function">log<
 <span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span>str<span class="token punctuation">,</span> reviver<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre><h3 id="valueOf"><a class="heading-link" href="#valueOf"></a>datetime.<strong>valueOf</strong>()</h3><p>This method overrides <code>Object.prototype.valueOf()</code> and always throws an exception.
 This is because it&#39;s not possible to compare <code>Temporal.DateTime</code> objects with the relational operators <code>&lt;</code>, <code>&lt;=</code>, <code>&gt;</code>, or <code>&gt;=</code>.
 Use <code>Temporal.DateTime.compare()</code> for this, or <code>datetime.equals()</code> for equality.</p>
-<h3 id="toAbsolute"><a class="heading-link" href="#toAbsolute"></a>datetime.<strong>toAbsolute</strong>(<em>timeZone</em> : object | string, <em>options</em>?: object) : Temporal.Absolute</h3><p><strong>Parameters:</strong></p>
+<h3 id="toInstant"><a class="heading-link" href="#toInstant"></a>datetime.<strong>toInstant</strong>(<em>timeZone</em> : object | string, <em>options</em>?: object) : Temporal.Instant</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>timeZone</code> (optional string or object): The time zone in which to interpret <code>dateTime</code>, as a <code>Temporal.TimeZone</code> object, an object implementing the <a href="./timezone.html#protocol">time zone protocol</a>, or a string.</li>
 <li><code>options</code> (optional object): An object with properties representing options for the operation.
@@ -743,10 +743,10 @@ The default is <code>&#39;compatible&#39;</code>.</li>
 </ul>
 </li>
 </ul>
-<p><strong>Returns:</strong> A <code>Temporal.Absolute</code> object indicating the absolute time in <code>timeZone</code> at the time of the calendar date and wall-clock time from <code>dateTime</code>.</p>
-<p>This method is one way to convert a <code>Temporal.DateTime</code> to a <code>Temporal.Absolute</code>.
-It is identical to <a href="./timezone.html#getAbsoluteFor"><code>(Temporal.TimeZone.from(timeZone || &#39;UTC&#39;)).getAbsoluteFor(dateTime, disambiguation)</code></a>.</p>
-<p>In the case of ambiguity, the <code>disambiguation</code> option controls what absolute time to return:</p>
+<p><strong>Returns:</strong> A <code>Temporal.Instant</code> object indicating the instant time in <code>timeZone</code> at the time of the calendar date and wall-clock time from <code>dateTime</code>.</p>
+<p>This method is one way to convert a <code>Temporal.DateTime</code> to a <code>Temporal.Instant</code>.
+It is identical to <a href="./timezone.html#getInstantFor"><code>(Temporal.TimeZone.from(timeZone || &#39;UTC&#39;)).getInstantFor(dateTime, disambiguation)</code></a>.</p>
+<p>In the case of ambiguity, the <code>disambiguation</code> option controls what instant time to return:</p>
 <ul>
 <li><code>&#39;compatible&#39;</code> (the default): Acts like <code>&#39;earlier&#39;</code> for backward transitions and <code>&#39;later&#39;</code> for forward transitions.</li>
 <li><code>&#39;earlier&#39;</code>: The earlier of two possible times.</li>
@@ -756,9 +756,9 @@ It is identical to <a href="./timezone.html#getAbsoluteFor"><code>(Temporal.Time
 <p>When interoperating with existing code or services, <code>&#39;compatible&#39;</code> mode matches the behavior of legacy <code>Date</code> as well as libraries like moment.js, Luxon, and date-fns.
 This mode also matches the behavior of cross-platform standards like <a href="https://tools.ietf.org/html/rfc5545">RFC 5545 (iCalendar)</a>.</p>
 <p>During &quot;skipped&quot; clock time like the hour after DST starts in the Spring, this method interprets invalid times using the pre-transition time zone offset if <code>&#39;compatible&#39;</code> or <code>&#39;later&#39;</code> is used or the post-transition time zone offset if <code>&#39;earlier&#39;</code> is used.
-This behavior avoids exceptions when converting non-existent <code>Temporal.DateTime</code> values to <code>Temporal.Absolute</code>, but it also means that values during these periods will result in a different <code>Temporal.DateTime</code> in &quot;round-trip&quot; conversions to <code>Temporal.Absolute</code> and back again.</p>
+This behavior avoids exceptions when converting non-existent <code>Temporal.DateTime</code> values to <code>Temporal.Instant</code>, but it also means that values during these periods will result in a different <code>Temporal.DateTime</code> in &quot;round-trip&quot; conversions to <code>Temporal.Instant</code> and back again.</p>
 <p>For usage examples and a more complete explanation of how this disambiguation works and why it is necessary, see <a href="./ambiguity.html">Resolving ambiguity</a>.</p>
-<p>If the result is earlier or later than the range that <code>Temporal.Absolute</code> can represent (approximately half a million years centered on the <a href="https://en.wikipedia.org/wiki/Unix_time">Unix epoch</a>), then a <code>RangeError</code> will be thrown, no matter the value of <code>disambiguation</code>.</p>
+<p>If the result is earlier or later than the range that <code>Temporal.Instant</code> can represent (approximately half a million years centered on the <a href="https://en.wikipedia.org/wiki/Unix_time">Unix epoch</a>), then a <code>RangeError</code> will be thrown, no matter the value of <code>disambiguation</code>.</p>
 <h3 id="toDate"><a class="heading-link" href="#toDate"></a>datetime.<strong>toDate</strong>() : Temporal.Date</h3><p><strong>Returns:</strong> a <code>Temporal.Date</code> object that is the same as the date portion of <code>datetime</code>.</p>
 <h3 id="toYearMonth"><a class="heading-link" href="#toYearMonth"></a>datetime.<strong>toYearMonth</strong>() : Temporal.YearMonth</h3><p><strong>Returns:</strong> a <code>Temporal.YearMonth</code> object that is the same as the year and month of <code>datetime</code>.</p>
 <h3 id="toMonthDay"><a class="heading-link" href="#toMonthDay"></a>datetime.<strong>toMonthDay</strong>() : Temporal.MonthDay</h3><p><strong>Returns:</strong> a <code>Temporal.MonthDay</code> object that is the same as the month and day of <code>datetime</code>.</p>

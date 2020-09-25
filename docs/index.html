@@ -19,7 +19,7 @@
       window.devtoolsFormatters.push({
         header(x) {
           for (const type of [
-            Temporal.Absolute,
+            Temporal.Instant,
             Temporal.Calendar,
             Temporal.Date,
             Temporal.DateTime,
@@ -154,7 +154,7 @@
 <ul>
 <li><a href="#Temporal-now">Temporal.now</a>
 </li>
-<li><a href="#Temporal-Absolute">Temporal.Absolute</a>
+<li><a href="#Temporal-Instant">Temporal.Instant</a>
 </li>
 <li><a href="#Temporal-Date">Temporal.Date</a>
 </li>
@@ -213,24 +213,24 @@ For a detailed look at some of the problems with <code>Date</code>, and the moti
 <p>A cookbook to help you get started and learn the ins and outs of Temporal is available <a href="./cookbook.html">here</a>.</p>
 <h2 id="api-documentation">API Documentation</h2>
 <h3 id="Temporal-now"><a class="heading-link" href="#Temporal-now"></a><strong>Temporal.now</strong></h3><ul>
-<li><code>Temporal.now.absolute()</code> - get the current system absolute time</li>
+<li><code>Temporal.now.instant()</code> - get the current system instant time</li>
 <li><code>Temporal.now.timeZone()</code> - get the current system time zone</li>
 <li><code>Temporal.now.date()</code> - get the current system date</li>
 <li><code>Temporal.now.time()</code> - get the current system time</li>
 <li><code>Temporal.now.dateTime()</code> - get the current system date/time</li>
 </ul>
 <p>See <a href="./now.html">Temporal.now Documentation</a> for detailed documentation.</p>
-<h3 id="Temporal-Absolute"><a class="heading-link" href="#Temporal-Absolute"></a><strong>Temporal.Absolute</strong></h3><p>A <code>Temporal.Absolute</code> represents a fixed point in time, without regard to calendar or location.</p>
-<p>See <a href="./absolute.html">Temporal.Absolute Documentation</a> for detailed documentation.</p>
+<h3 id="Temporal-Instant"><a class="heading-link" href="#Temporal-Instant"></a><strong>Temporal.Instant</strong></h3><p>A <code>Temporal.Instant</code> represents a fixed point in time, without regard to calendar or location.</p>
+<p>See <a href="./instant.html">Temporal.Instant Documentation</a> for detailed documentation.</p>
 <h3 id="Temporal-Date"><a class="heading-link" href="#Temporal-Date"></a><strong>Temporal.Date</strong></h3><p>A <code>Temporal.Date</code> object represents a calendar date that is not associated with a particular time or time zone.</p>
 <p>This can also be converted to partial dates such as <code>Temporal.YearMonth</code> and <code>Temporal.MonthDay</code>.</p>
 <p>See <a href="./date.html">Temporal.Date Documentation</a> for detailed documentation.</p>
 <h3 id="Temporal-Time"><a class="heading-link" href="#Temporal-Time"></a><strong>Temporal.Time</strong></h3><p>A <code>Temporal.Time</code> object represents a wall-clock time that is not associated with a particular date or time zone.</p>
 <p>See <a href="./time.html">Temporal.Time Documentation</a> for detailed documentation.</p>
-<h3 id="Temporal-DateTime"><a class="heading-link" href="#Temporal-DateTime"></a><strong>Temporal.DateTime</strong></h3><p>A <code>Temporal.DateTime</code> represents a calendar date and wall-clock time. That means it does not carry time zone information. However it can be converted to a <code>Temporal.Absolute</code> using a <code>Temporal.TimeZone</code>.</p>
+<h3 id="Temporal-DateTime"><a class="heading-link" href="#Temporal-DateTime"></a><strong>Temporal.DateTime</strong></h3><p>A <code>Temporal.DateTime</code> represents a calendar date and wall-clock time. That means it does not carry time zone information. However it can be converted to a <code>Temporal.Instant</code> using a <code>Temporal.TimeZone</code>.</p>
 <p>See <a href="./datetime.html">Temporal.DateTime Documentation</a> for detailed documentation.</p>
 <h4 id="ambiguity">Ambiguity</h4>
-<p>Converting between <code>Temporal.DateTime</code> and <code>Temporal.Absolute</code> is not a one-to-one operation and can be ambiguous, because of time zones and daylight saving time.</p>
+<p>Converting between <code>Temporal.DateTime</code> and <code>Temporal.Instant</code> is not a one-to-one operation and can be ambiguous, because of time zones and daylight saving time.</p>
 <p>Read more about this in <a href="./ambiguity.html">Resolving ambiguity</a>.</p>
 <h3 id="Temporal-YearMonth"><a class="heading-link" href="#Temporal-YearMonth"></a><strong>Temporal.YearMonth</strong></h3><p>A date without a day component.
 This is useful to express things like &quot;the November 2010 meeting&quot;.</p>
@@ -245,7 +245,7 @@ This is used for date/time arithmetic and for measuring differences between <cod
 <p>Unlike the other Temporal types, the units in <code>Temporal.Duration</code> don&#39;t naturally wrap around to 0: you may want to have a duration of &quot;90 minutes,&quot; and you don&#39;t want it to unexpectedly turn into &quot;1 hour and 30 minutes.&quot;</p>
 <p>See <a href="./balancing.html">Duration balancing</a> for more on this topic.</p>
 <h3 id="Temporal-TimeZone"><a class="heading-link" href="#Temporal-TimeZone"></a><strong>Temporal.TimeZone</strong></h3><p>A <code>Temporal.TimeZone</code> represents an IANA time zone, a specific UTC offset, or UTC itself.
-Because of this <code>Temporal.TimeZone</code> can be used to convert between <code>Temporal.Absolute</code> and <code>Temporal.DateTime</code> as well as finding out the offset at a specific <code>Temporal.Absolute</code>.</p>
+Because of this <code>Temporal.TimeZone</code> can be used to convert between <code>Temporal.Instant</code> and <code>Temporal.DateTime</code> as well as finding out the offset at a specific <code>Temporal.Instant</code>.</p>
 <p>See <a href="./timezone.html">Temporal.TimeZone Documentation</a> for detailed documentation.
 A conceptual explanation of handling <a href="./ambiguity.html">time zones, DST, and ambiguity in Temporal</a> is also available.</p>
 <h3 id="Temporal-Calendar"><a class="heading-link" href="#Temporal-Calendar"></a><strong>Temporal.Calendar</strong></h3><p>A <code>Temporal.Calendar</code> represents a calendar system.
@@ -267,7 +267,7 @@ Most code will use the ISO 8601 calendar, but other calendar systems are availab
 <li><a href="./parse-draft.html">Parse Draft</a> &mdash; Draft design document for a <code>Temporal.parse</code> API, which is not currently planned to be implemented.</li>
 <li><a href="./calendar-draft.html">Calendar Draft</a> &mdash; Draft design document for calendar support in Temporal.
 Mostly superseded by the documentation of <a href="./calendar.html">Temporal.Calendar</a>, but also contains some discussion about whether to have a default calendar.</li>
-<li><a href="./localdatetime-draft.html">Zoned Date/Time Type Draft</a> &mdash; Explanation of <code>Temporal.LocalDateTime</code> (not the final name) which is a new type combining an absolute time with a time zone and calendar, and exposing a superset of the <code>Temporal.DateTime</code> API.
+<li><a href="./localdatetime-draft.html">Zoned Date/Time Type Draft</a> &mdash; Explanation of <code>Temporal.LocalDateTime</code> (not the final name) which is a new type combining an instant time with a time zone and calendar, and exposing a superset of the <code>Temporal.DateTime</code> API.
 Superseded by the <a href="./localdatetime.html">documentation</a>, but contains background info about the reasons and goals behind this type.</li>
 </ul>
 <h2 id="object-relationship">Object Relationship</h2>
@@ -275,7 +275,7 @@ Superseded by the <a href="./localdatetime.html">documentation</a>, but contains
 graph LR;
   timezone(TimeZone);
   subgraph " ";
-    absolute(Absolute);
+    instant(Instant);
   end;
   subgraph " ";
     datetime(DateTime);
@@ -288,7 +288,7 @@ graph LR;
     date --- yearmonth;
     date --- monthday;
   end;
-  absolute === timezone;
+  instant === timezone;
   timezone === datetime;
 </div>
     <footer>

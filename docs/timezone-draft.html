@@ -19,7 +19,7 @@
       window.devtoolsFormatters.push({
         header(x) {
           for (const type of [
-            Temporal.Absolute,
+            Temporal.Instant,
             Temporal.Calendar,
             Temporal.Date,
             Temporal.DateTime,
@@ -163,8 +163,8 @@ For example, St. Louis&#39;s local mean time is GMT-06:00:49.11 (<a href="https:
 <p>Like built-in time zones, custom time zones have an identifier.
 In these examples we assume a custom time zone class <code>StLouisTime</code> with the identifier <code>America/St_Louis</code>.
 (See the following section for how such a time zone object would be implemented.)</p>
-<p>When parsing an ISO 8601 string, the only places the time zone identifier is taken into account are <code>Temporal.Absolute.from()</code> and <code>Temporal.TimeZone.from()</code>.
-<code>Temporal.Absolute.from()</code> will call <code>Temporal.TimeZone.from()</code> to resolve the time zone identifier into a <code>Temporal.TimeZone</code> object.</p>
+<p>When parsing an ISO 8601 string, the only places the time zone identifier is taken into account are <code>Temporal.Instant.from()</code> and <code>Temporal.TimeZone.from()</code>.
+<code>Temporal.Instant.from()</code> will call <code>Temporal.TimeZone.from()</code> to resolve the time zone identifier into a <code>Temporal.TimeZone</code> object.</p>
 <p><code>Temporal.TimeZone.from()</code> can be monkeypatched by time zone implementors if it is necessary to make new time zones available globally.
 The expectation is that it would rarely be necessary to do so, because if you have implemented a custom time zone for a particular calculation, you probably don&#39;t need it to be available globally.</p>
 <p>Example of monkeypatching to make St. Louis mean time available globally:</p>
@@ -187,7 +187,7 @@ Temporal<span class="token punctuation">.</span>TimeZone<span class="token punct
   <span class="token keyword">return</span> <span class="token function">originalTemporalTimeZoneFrom</span><span class="token punctuation">.</span><span class="token function">call</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">,</span> id<span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span>
 
-Temporal<span class="token punctuation">.</span>Absolute<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'1820-04-01T18:16:25-06:00[America/St_Louis]'</span><span class="token punctuation">)</span>
+Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'1820-04-01T18:16:25-06:00[America/St_Louis]'</span><span class="token punctuation">)</span>
   <span class="token comment">// returns the Absolute corresponding to 1820-04-02T00:17:14.110Z</span>
 
 Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'1820-04-01T18:16:25-06:00[America/St_Louis]'</span><span class="token punctuation">)</span>
@@ -225,38 +225,38 @@ Temporal<span class="token punctuation">.</span>now<span class="token punctuatio
 
   <span class="token comment">/** Given an absolute instant returns this time zone's corresponding
    * UTC offset, in nanoseconds (signed). */</span>
-  <span class="token function">getOffsetNanosecondsFor</span><span class="token punctuation">(</span>absolute <span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Absolute<span class="token punctuation">)</span> <span class="token operator">:</span> number<span class="token punctuation">;</span>
+  <span class="token function">getOffsetNanosecondsFor</span><span class="token punctuation">(</span>instant <span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">)</span> <span class="token operator">:</span> number<span class="token punctuation">;</span>
 
   <span class="token comment">/** Given the calendar/wall-clock time, returns an array of 0, 1, or
    * 2 (or theoretically more, but not in any currently known time zone)
-   * absolute times, that are possible points on the timeline
-   * corresponding to it. In getAbsoluteFor(), one of these will be
+   * instant times, that are possible points on the timeline
+   * corresponding to it. In getInstantFor(), one of these will be
    * selected, depending on the disambiguation option. */</span>
-  <span class="token function">getPossibleAbsolutesFor</span><span class="token punctuation">(</span>dateTime <span class="token operator">:</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">)</span> <span class="token operator">:</span> array<span class="token operator">&lt;</span>Temporal<span class="token punctuation">.</span>Absolute<span class="token operator">></span><span class="token punctuation">;</span>
+  <span class="token function">getPossibleInstantsFor</span><span class="token punctuation">(</span>dateTime <span class="token operator">:</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">)</span> <span class="token operator">:</span> array<span class="token operator">&lt;</span>Temporal<span class="token punctuation">.</span>Instant<span class="token operator">></span><span class="token punctuation">;</span>
 
   <span class="token comment">/** Return the next time zone transition after `startingPoint`. */</span>
-  <span class="token function">getNextTransition</span><span class="token punctuation">(</span>startingPoint <span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Absolute<span class="token punctuation">)</span> <span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Absolute <span class="token operator">|</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+  <span class="token function">getNextTransition</span><span class="token punctuation">(</span>startingPoint <span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">)</span> <span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Instant <span class="token operator">|</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
 
   <span class="token comment">/** Return the previous time zone transition before `startingPoint`. */</span>
-  <span class="token function">getPreviousTransition</span><span class="token punctuation">(</span>startingPoint <span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Absolute<span class="token punctuation">)</span> <span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Absolute <span class="token operator">|</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+  <span class="token function">getPreviousTransition</span><span class="token punctuation">(</span>startingPoint <span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">)</span> <span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Instant <span class="token operator">|</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
 
   <span class="token comment">// API methods that a subclassed custom time zone doesn't need to touch</span>
 
   <span class="token keyword">get</span> <span class="token function">name</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">:</span> string<span class="token punctuation">;</span>
-  <span class="token function">getDateTimeFor</span><span class="token punctuation">(</span>absolute <span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Absolute<span class="token punctuation">)</span> <span class="token operator">:</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">;</span>
-  <span class="token function">getAbsoluteFor</span><span class="token punctuation">(</span>
+  <span class="token function">getDateTimeFor</span><span class="token punctuation">(</span>instant <span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">)</span> <span class="token operator">:</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">;</span>
+  <span class="token function">getInstantFor</span><span class="token punctuation">(</span>
       dateTime <span class="token operator">:</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">,</span>
       options<span class="token operator">?</span><span class="token operator">:</span> object
-  <span class="token punctuation">)</span> <span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Absolute<span class="token punctuation">;</span>
-  <span class="token function">getOffsetStringFor</span><span class="token punctuation">(</span>absolute <span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Absolute<span class="token punctuation">)</span> <span class="token operator">:</span> string<span class="token punctuation">;</span>
+  <span class="token punctuation">)</span> <span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">;</span>
+  <span class="token function">getOffsetStringFor</span><span class="token punctuation">(</span>instant <span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">)</span> <span class="token operator">:</span> string<span class="token punctuation">;</span>
   <span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">:</span> string<span class="token punctuation">;</span>
   <span class="token function">toJSON</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">:</span> string<span class="token punctuation">;</span>
 
   <span class="token keyword">static</span> <span class="token keyword">from</span><span class="token punctuation">(</span>item <span class="token operator">:</span> any<span class="token punctuation">)</span> <span class="token operator">:</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre><p>All the methods that custom time zones inherit from <code>Temporal.TimeZone</code> are implemented in terms of <code>getOffsetNanosecondsFor()</code>, <code>getPossibleAbsolutesFor()</code>, and the value of the <em>[[Identifier]]</em> internal slot.
-For example, <code>getOffsetStringFor()</code> and <code>getDateTimeFor()</code> call <code>getOffsetNanosecondsFor()</code>, and <code>getAbsoluteFor()</code> calls both.</p>
+<span class="token punctuation">}</span></code></pre><p>All the methods that custom time zones inherit from <code>Temporal.TimeZone</code> are implemented in terms of <code>getOffsetNanosecondsFor()</code>, <code>getPossibleInstantsFor()</code>, and the value of the <em>[[Identifier]]</em> internal slot.
+For example, <code>getOffsetStringFor()</code> and <code>getDateTimeFor()</code> call <code>getOffsetNanosecondsFor()</code>, and <code>getInstantFor()</code> calls both.</p>
 <p>Alternatively, a custom time zone doesn&#39;t have to be a subclass of <code>Temporal.TimeZone</code>.
-In this case, it can be a plain object, which must implement <code>getOffsetNanosecondsFor()</code>, <code>getPossibleAbsolutesFor()</code>, and <code>toString()</code>.</p>
+In this case, it can be a plain object, which must implement <code>getOffsetNanosecondsFor()</code>, <code>getPossibleInstantsFor()</code>, and <code>toString()</code>.</p>
 <h2 id="show-me-the-code">Show Me The Code</h2>
 <p>Here&#39;s what it could look like to implement the built-in offset-based time zones as custom time zones.
 The <code>MakeDate</code>, <code>MakeDay</code>, and <code>MakeTime</code> functions are as in the <a href="https://tc39.es/ecma262/#sec-overview-of-date-objects-and-definitions-of-abstract-operations">ECMA-262 specification</a>, except that instead of milliseconds, <code>MakeDate</code> and <code>MakeDay</code> return BigInt-typed nanoseconds, and <code>MakeTime</code> returns Number-typed nanoseconds.
@@ -277,13 +277,13 @@ The <code>MakeDate</code>, <code>MakeDay</code>, and <code>MakeTime</code> funct
     <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token punctuation">.</span>#offsetNs<span class="token punctuation">;</span> <span class="token comment">// offset is always the same</span>
   <span class="token punctuation">}</span>
 
-  <span class="token function">getPossibleAbsolutesFor</span><span class="token punctuation">(</span><span class="token parameter">dateTime</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token function">getPossibleInstantsFor</span><span class="token punctuation">(</span><span class="token parameter">dateTime</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
     <span class="token keyword">const</span> iso <span class="token operator">=</span> dateTime<span class="token punctuation">.</span><span class="token function">getISOFields</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token keyword">const</span> epochNs <span class="token operator">=</span> <span class="token function">MakeDate</span><span class="token punctuation">(</span>
       <span class="token function">MakeDay</span><span class="token punctuation">(</span>iso<span class="token punctuation">.</span>year<span class="token punctuation">,</span> iso<span class="token punctuation">.</span>month<span class="token punctuation">,</span> iso<span class="token punctuation">.</span>day<span class="token punctuation">)</span><span class="token punctuation">,</span>
       <span class="token function">MakeTime</span><span class="token punctuation">(</span>iso<span class="token punctuation">.</span>hour<span class="token punctuation">,</span> iso<span class="token punctuation">.</span>minute<span class="token punctuation">,</span> iso<span class="token punctuation">.</span>second<span class="token punctuation">,</span> iso<span class="token punctuation">.</span>millisecond<span class="token punctuation">,</span> iso<span class="token punctuation">.</span>microsecond<span class="token punctuation">,</span> iso<span class="token punctuation">.</span>nanosecond<span class="token punctuation">)</span>
     <span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">return</span> <span class="token punctuation">[</span><span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>Absolute</span><span class="token punctuation">(</span>epochNs <span class="token operator">+</span> <span class="token function">BigInt</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>#offsetNs<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token punctuation">[</span><span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>Instant</span><span class="token punctuation">(</span>epochNs <span class="token operator">+</span> <span class="token function">BigInt</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>#offsetNs<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
   <span class="token punctuation">}</span>
 
   <span class="token function">getNextTransition</span><span class="token punctuation">(</span><span class="token comment">/* startingPoint */</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>

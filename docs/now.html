@@ -19,7 +19,7 @@
       window.devtoolsFormatters.push({
         header(x) {
           for (const type of [
-            Temporal.Absolute,
+            Temporal.Instant,
             Temporal.Calendar,
             Temporal.Date,
             Temporal.DateTime,
@@ -148,7 +148,7 @@
 <ul>
 <li><a href="#methods">Methods</a>
 <ul>
-<li><a href="#absolute">absolute</a>
+<li><a href="#instant">instant</a>
 </li>
 <li><a href="#timeZone">timeZone</a>
 </li>
@@ -165,17 +165,17 @@
 
 <p>The <code>Temporal.now</code> object has several methods which give information about the current time and date.</p>
 <h2 id="methods">Methods</h2>
-<h3 id="absolute"><a class="heading-link" href="#absolute"></a>Temporal.now.<strong>absolute</strong>() : Temporal.Absolute</h3><p><strong>Returns:</strong> a <code>Temporal.Absolute</code> object representing the current system time.</p>
+<h3 id="instant"><a class="heading-link" href="#instant"></a>Temporal.now.<strong>instant</strong>() : Temporal.Instant</h3><p><strong>Returns:</strong> a <code>Temporal.Instant</code> object representing the current system time.</p>
 <p>This method gets the current absolute system time, without regard to calendar or time zone.
 This is a good way to get a timestamp for an event, for example.
 It works like the old-style JavaScript <code>Date.now()</code>, but with nanosecond accuracy instead of milliseconds.</p>
 <p>Example usage:</p>
 <pre class="language-js"><code class="language-js"><span class="token keyword">function</span> <span class="token function">timeit</span><span class="token punctuation">(</span><span class="token parameter">func</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  start <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">absolute</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  start <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">instant</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token keyword">try</span> <span class="token punctuation">{</span>
     <span class="token keyword">return</span> <span class="token function">func</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token punctuation">}</span> <span class="token keyword">finally</span> <span class="token punctuation">{</span>
-    end <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">absolute</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    end <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">instant</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">The function took </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>end<span class="token punctuation">.</span><span class="token function">difference</span><span class="token punctuation">(</span>start<span class="token punctuation">)</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token punctuation">}</span>
 <span class="token punctuation">}</span>
@@ -187,7 +187,7 @@ This will usually be a named <a href="https://www.iana.org/time-zones">IANA time
 <p>Example usage:</p>
 <pre class="language-js"><code class="language-js"><span class="token comment">// When is the next daylight saving change from now, in the current location?</span>
 tz <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">timeZone</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-now <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">absolute</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+now <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">instant</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 nextTransition <span class="token operator">=</span> tz<span class="token punctuation">.</span><span class="token function">getNextTransition</span><span class="token punctuation">(</span>now<span class="token punctuation">)</span><span class="token punctuation">;</span>
 before <span class="token operator">=</span> tz<span class="token punctuation">.</span><span class="token function">getOffsetStringFor</span><span class="token punctuation">(</span>nextTransition<span class="token punctuation">.</span><span class="token function">minus</span><span class="token punctuation">(</span><span class="token punctuation">{</span> nanoseconds<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 after <span class="token operator">=</span> tz<span class="token punctuation">.</span><span class="token function">getOffsetStringFor</span><span class="token punctuation">(</span>nextTransition<span class="token punctuation">.</span><span class="token function">plus</span><span class="token punctuation">(</span><span class="token punctuation">{</span> nanoseconds<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
