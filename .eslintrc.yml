@@ -81,6 +81,7 @@ rules:
   '@typescript-eslint/ban-ts-comment': off
 overrides:
   - files:
+      - polyfill/test/Calendar/**/*.js
       - polyfill/test/Date/**/*.js
       - polyfill/test/DateTime/**/*.js
       - polyfill/test/Duration/**/*.js
