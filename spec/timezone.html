@@ -128,19 +128,19 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal.timezone.prototype.getoffsetnanosecondsfor">
-      <h1>Temporal.TimeZone.prototype.getOffsetNanosecondsFor ( _absolute_ )</h1>
+      <h1>Temporal.TimeZone.prototype.getOffsetNanosecondsFor ( _instant_ )</h1>
       <p>
-        The `getOffsetNanosecondsFor` method takes one argument _absolute_.
+        The `getOffsetNanosecondsFor` method takes one argument _instant_.
         The following steps are taken:
       </p>
       <emu-alg>
         1. Let _timeZone_ be the *this* value.
         1. Perform ? RequireInternalSlot(_timeZone_, [[InitializedTemporalTimeZone]]).
-        1. Perform ? RequireInternalSlot(_absolute_, [[InitializedTemporalAbsolute]]).
+        1. Perform ? RequireInternalSlot(_instant_, [[InitializedTemporalInstant]]).
         1. Let _offset_ be ! ParseOffsetNanoseconds(_timeZone_.[[Identifier]]).
         1. If _offset_ is not *undefined*, then
           1. Return _offset_.
-        1. Let _epochNs_ be _absolute_.[[Nanoseconds]].
+        1. Let _epochNs_ be _instant_.[[Nanoseconds]].
         1. <mark>Check if this can be ? BalanceDateTime(1970, 1, 1, 0, 0, 0, 0, 0, _epochNs_).</mark>
         1. Let _epochMs_ be RoundTowardsZero(_epochNs_ / 1,000,000<sub>ℝ</sub>).
         1. Let _mcs_ be ! NonNegativeModulo(RoundTowardsZero(_epochNs_ / 1000<sub>ℝ</sub>), 1000<sub>ℝ</sub>).
@@ -157,16 +157,16 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal.timezone.prototype.getoffsetstringfor">
-      <h1>Temporal.TimeZone.prototype.getOffsetStringFor ( _absolute_ )</h1>
+      <h1>Temporal.TimeZone.prototype.getOffsetStringFor ( _instant_ )</h1>
       <p>
-        The `getOffsetStringFor` method takes one argument _absolute_.
+        The `getOffsetStringFor` method takes one argument _instant_.
         The following steps are taken:
       </p>
       <emu-alg>
         1. Let _timeZone_ be the *this* value.
         1. Perform ? RequireInternalSlot(_timeZone_, [[InitializedTemporalTimeZone]]).
-        1. Perform ? RequireInternalSlot(_absolute_, [[InitializedTemporalAbsolute]]).
-        1. Let _offsetNanoseconds_ be ? GetOffsetNanosecondsFor(_timeZone_, _absolute_).
+        1. Perform ? RequireInternalSlot(_instant_, [[InitializedTemporalInstant]]).
+        1. Let _offsetNanoseconds_ be ? GetOffsetNanosecondsFor(_timeZone_, _instant_).
         1. Return ? FormatTimeZoneOffsetString(_offsetNanoseconds_).
       </emu-alg>
       <p>
@@ -175,20 +175,20 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal.timezone.prototype.getdatetimefor">
-      <h1>Temporal.TimeZone.prototype.getDateTimeFor ( _absolute_ [ , _calendarLike_ ] )</h1>
+      <h1>Temporal.TimeZone.prototype.getDateTimeFor ( _instant_ [ , _calendarLike_ ] )</h1>
       <p>
-        The `getDateTimeFor` method takes two arguments, _absolute_ and _calendarLike_.
+        The `getDateTimeFor` method takes two arguments, _instant_ and _calendarLike_.
         The following steps are taken:
       </p>
       <emu-alg>
         1. Let _timeZone_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_absolute_, [[InitializedTemporalAbsolute]]).
+        1. Perform ? RequireInternalSlot(_instant_, [[InitializedTemporalInstant]]).
         1. If _calendarLike_ is *undefined*, then
           1. Let _calendar_ be ! GetDefaultCalendar().
         1. Else,
           1. Let _calendar_ be ? ToTemporalCalendar(_calendarLike_).
-        1. Let _offsetNanoseconds_ be ? GetOffsetNanosecondsFor(_timeZone_, _absolute_).
-        1. <mark>TODO:</mark> Let _result_ be the moment _absolute_.[[Nanosecond]] nanoseconds from the epoch, in the UTC time zone.
+        1. Let _offsetNanoseconds_ be ? GetOffsetNanosecondsFor(_timeZone_, _instant_).
+        1. <mark>TODO:</mark> Let _result_ be the moment _instant_.[[Nanosecond]] nanoseconds from the epoch, in the UTC time zone.
         1. Set _result_ to ? BalanceDateTime(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]] + _offsetNanoseconds_).
         1. <mark>TODO:</mark> pass _calendar_ along.
         1. Return ? CreateTemporalDateTime(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]).
@@ -198,7 +198,7 @@
       </p>
     </emu-clause>
 
-    <emu-clause id="sec-temporal.timezone.prototype.getabsolutefor">
+    <emu-clause id="sec-temporal.timezone.prototype.getinstantfor">
       <h1>Temporal.TimeZone.prototype.getInstantFor ( _dateTime_ [ , _options_ ] )</h1>
       <p>
         The `getInstantFor` method takes two arguments, _dateTime_ and _options_.
@@ -209,15 +209,15 @@
         1. Perform ? RequireInternalSlot(_timeZone_, [[InitializedTemporalTimeZone]]).
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
         1. Let _disambiguation_ be ? ToTemporalDisambiguation(_options_).
-        1. Let _possibleAbsolutes_ be ? GetPossibleAbsolutesFor(_timeZone_, _dateTime_).
-        1. Let _n_ be _possibleAbsolutes_'s length.
+        1. Let _possibleInstants_ be ? GetPossibleInstantsFor(_timeZone_, _dateTime_).
+        1. Let _n_ be _possibleInstants_'s length.
         1. If _n_ = 1, then
-          1. Return _possibleAbsolutes_[0].
+          1. Return _possibleInstants_[0].
         1. If _n_ ≠ 0, then
           1. If _disambiguation_ is *"earlier"* or *"compatible"*, then
-            1. Return _possibleAbsolutes_[0].
+            1. Return _possibleInstants_[0].
           1. If _disambiguation_ is *"later"*, then
-            1. Return _possibleAbsolutes_[_n_ − 1].
+            1. Return _possibleInstants_[_n_ − 1].
           1. If _disambiguation_ is *"reject"*, then
             1. Throw a *RangeError* exception.
         1. <mark>TODO - handle n=0 (skipped times like Spring DST).</mark>
@@ -227,7 +227,7 @@
       </p>
     </emu-clause>
 
-    <emu-clause id="sec-temporal.timezone.prototype.getpossibleabsolutesfor">
+    <emu-clause id="sec-temporal.timezone.prototype.getpossibleinstantsfor">
       <h1>Temporal.TimeZone.prototype.getPossibleInstantsFor ( _dateTime_ )</h1>
       <p>
         The `getPossibleInstantsFor` method takes one argument _dateTime_.
@@ -253,7 +253,7 @@
       <emu-alg>
         1. Let _timeZone_ be the *this* value.
         1. Perform ? RequireInternalSlot(_timeZone_, [[InitializedTemporalTimeZone]]).
-        1. Perform ? RequireInternalSlot(_startingPoint_, [[InitializedTemporalAbsolute]]).
+        1. Perform ? RequireInternalSlot(_startingPoint_, [[InitializedTemporalInstant]]).
         1. <mark>TODO.</mark>
       </emu-alg>
     </emu-clause>
@@ -267,7 +267,7 @@
       <emu-alg>
         1. Let _timeZone_ be the *this* value.
         1. Perform ? RequireInternalSlot(_timeZone_, [[InitializedTemporalTimeZone]]).
-        1. Perform ? RequireInternalSlot(_startingPoint_, [[InitializedTemporalAbsolute]]).
+        1. Perform ? RequireInternalSlot(_startingPoint_, [[InitializedTemporalInstant]]).
         1. <mark>TODO.</mark>
       </emu-alg>
     </emu-clause>
@@ -364,11 +364,11 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal-getoffsetnanosecondsfor" aoid="GetOffsetNanosecondsFor">
-      <h1>GetOffsetNanosecondsFor ( _timeZone_, _absolute_ )</h1>
+      <h1>GetOffsetNanosecondsFor ( _timeZone_, _instant_ )</h1>
       <emu-alg>
         1. Let _getOffsetNanosecondsFor_ be ? Get(_timeZone_, *"getOffsetNanosecondsFor"*).
         1. If _getOffsetNanosecondsFor_ is *undefined*, set _getOffsetNanosecondsFor_ to %Temporal.TimeZone.prototype.getOffsetNanosecondsFor%.
-        1. Let _offsetNanoseconds_ be ? Call(_getOffsetNanosecondsFor_, _timeZone_, « _absolute_ »).
+        1. Let _offsetNanoseconds_ be ? Call(_getOffsetNanosecondsFor_, _timeZone_, « _instant_ »).
         1. If Type(_offsetNanoseconds_) is not Number, throw a *TypeError* exception.
         1. If ! IsInteger(_offsetNanoseconds_) is *false* or abs(_offsetNanoseconds_) &gt; 86400 × 10<sup>9</sup>, throw a *RangeError* exception.
         1. Return _offsetNanoseconds_.
@@ -376,46 +376,46 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal-getoffsetstringfor" aoid="GetOffsetStringFor">
-      <h1>GetOffsetStringFor ( _timeZone_, _absolute_ )</h1>
+      <h1>GetOffsetStringFor ( _timeZone_, _instant_ )</h1>
       <emu-alg>
         1. Let _getOffsetStringFor_ be ? Get(_timeZone_, *"getOffsetStringFor"*).
         1. If _getOffsetStringFor_ is *undefined*, set _getOffsetStringFor_ to %Temporal.TimeZone.prototype.getOffsetStringFor%.
-        1. Return ? ToString(? Call(_getOffsetStringFor_, _timeZone_, « _absolute_ »)).
+        1. Return ? ToString(? Call(_getOffsetStringFor_, _timeZone_, « _instant_ »)).
       </emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal-gettemporaldatetimefor" aoid="GetTemporalDateTimeFor">
-      <h1>GetTemporalDateTimeFor ( _timeZone_, _absolute_, _calendar_ )</h1>
+      <h1>GetTemporalDateTimeFor ( _timeZone_, _instant_, _calendar_ )</h1>
       <emu-alg>
         1. Let _getDateTimeFor_ be ? Get(_timeZone_, *"getDateTimeFor"*).
         1. If _getDateTimeFor_ is *undefined*, set _getDateTimeFor_ to %Temporal.TimeZone.prototype.getDateTimeFor%.
-        1. Let _dateTime_ be ? Call(_getDateTimeFor_, _timeZone_, « _absolute_, _calendar_ »).
+        1. Let _dateTime_ be ? Call(_getDateTimeFor_, _timeZone_, « _instant_, _calendar_ »).
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
         1. Return _dateTime_.
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-gettemporalabsolutefor" aoid="GetTemporalAbsoluteFor">
-      <h1>GetTemporalAbsoluteFor ( _timeZone_, _dateTime_, _disambiguation_ )</h1>
+    <emu-clause id="sec-temporal-gettemporalinstantfor" aoid="GetTemporalInstantFor">
+      <h1>GetTemporalInstantFor ( _timeZone_, _dateTime_, _disambiguation_ )</h1>
       <emu-alg>
         1. Let _options_ be ! OrdinaryObjectCreate(%Object.prototype%).
         1. Perform ! CreateDataPropertyOrThrow(_options_, *"disambiguation"*, _disambiguation_).
         1. Let _getInstantFor_ be ? Get(_timeZone_, *"getInstantFor"*).
         1. If _getInstantFor_ is *undefined*, set _getInstantFor_ to %Temporal.TimeZone.prototype.getInstantFor%.
-        1. Let _absolute_ be ? Call(_getInstantFor_, _timeZone_, « _dateTime_ »).
-        1. Perform ? RequireInternalSlot(_absolute_, [[InitializedTemporalAbsolute]]).
-        1. Return _absolute_.
+        1. Let _instant_ be ? Call(_getInstantFor_, _timeZone_, « _dateTime_ »).
+        1. Perform ? RequireInternalSlot(_instant_, [[InitializedTemporalInstant]]).
+        1. Return _instant_.
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-getpossibleabsolutesfor" aoid="GetPossibleAbsolutesFor">
-      <h1>GetPossibleAbsolutesFor ( _timeZone_, _dateTime_ )</h1>
+    <emu-clause id="sec-temporal-getpossibleinstantsfor" aoid="GetPossibleInstantsFor">
+      <h1>GetPossibleInstantsFor ( _timeZone_, _dateTime_ )</h1>
       <emu-alg>
         1. Let _getPossibleInstantsFor_ be ? Get(_timeZone_, *"getPossibleInstantsFor"*).
-        1. Let _possibleAbsolutes_ be ? Call(_getPossibleInstantsFor_, _timeZone_, « _dateTime_ »).
-        1. Let _list_ be ? CreateListFromArrayLike(_possibleAbsolutes_).
-        1. For each element _absolute_ in _list_ in List order, do
-          1. Perform ? RequireInternalSlot(_absolute_, [[InitializedTemporalAbsolute]]).
+        1. Let _possibleInstants_ be ? Call(_getPossibleInstantsFor_, _timeZone_, « _dateTime_ »).
+        1. Let _list_ be ? CreateListFromArrayLike(_possibleInstants_).
+        1. For each element _instant_ in _list_ in List order, do
+          1. Perform ? RequireInternalSlot(_instant_, [[InitializedTemporalInstant]]).
         1. Return _list_.
       </emu-alg>
     </emu-clause>

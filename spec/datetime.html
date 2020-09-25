@@ -608,10 +608,10 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal.datetime.prototype.toabsolute">
-      <h1>Temporal.DateTime.prototype.toAbsolute ( _temporalTimeZoneLike_ [ , _options_ ] )</h1>
+    <emu-clause id="sec-temporal.datetime.prototype.toinstant">
+      <h1>Temporal.DateTime.prototype.toInstant ( _temporalTimeZoneLike_ [ , _options_ ] )</h1>
       <p>
-        The `toAbsolute` method takes two arguments, _temporalTimeZoneLike_ and _options_.
+        The `toInstant` method takes two arguments, _temporalTimeZoneLike_ and _options_.
         The following steps are taken:
       </p>
       <emu-alg>
@@ -619,7 +619,7 @@
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
         1. Let _timeZone_ be ? ToTemporalTimeZone(_temporalTimeZoneLike_).
         1. Let _disambiguation_ be ? ToTemporalDisambiguation(_options_).
-        1. Return ? GetTemporalAbsoluteFor(_timeZone_, _dateTime_, _disambiguation_).
+        1. Return ? GetTemporalInstantFor(_timeZone_, _dateTime_, _disambiguation_).
       </emu-alg>
     </emu-clause>
 
@@ -734,8 +734,8 @@
       <h1>DateTimeWithinLimits ( _year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_ )</h1>
       <emu-note>
         <p>
-          Temporal.DateTime objects can represent points in time within 24 hours (8.64 × 10<sup>16</sup> nanoseconds) of the Temporal.Absolute boundaries
-          This ensures that a Temporal.Absolute object can be converted into a Temporal.DateTime object using any time zone.
+          Temporal.DateTime objects can represent points in time within 24 hours (8.64 × 10<sup>16</sup> nanoseconds) of the Temporal.Instant boundaries
+          This ensures that a Temporal.Instant object can be converted into a Temporal.DateTime object using any time zone.
         </p>
       </emu-note>
       <emu-alg>

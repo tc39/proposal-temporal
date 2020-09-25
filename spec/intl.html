@@ -241,7 +241,7 @@
               <td>[[year]], [[month]], [[day]], [[hour]], [[minute]], [[second]]</td>
             </tr>
             <tr>
-              <th>[[TemporalAbsolutePattern]]</th>
+              <th>[[TemporalInstantPattern]]</th>
               <td>[[weekday]], [[era]], [[year]], [[month]], [[day]], [[hour]], [[minute]], [[second]], [[dayPeriod]], [[fractionalSecondDigits]]</td>
               <td>[[year]], [[month]], [[day]], [[hour]], [[minute]], [[second]]</td>
             </tr>
@@ -295,7 +295,7 @@
           1. <ins>If _date_ has an [[InitializedTemporalTime]] internal slot, then</ins>
             1. <ins>Let _pattern_ be _dateTimeFormat_.[[TemporalTimePattern]].</ins>
             1. <ins>Let _tm_ be { [[hour]]: _date_.[[Hour]], [[minute]]: _date_.[[Minute]], [[second]]: _date_.[[Second]] }.</ins>
-          1. <ins>If _date_ has an [[InitializedTemporalDateTime]] or an [[InitializedTemporalAbsolute]] internal slot, then</ins>
+          1. <ins>If _date_ has an [[InitializedTemporalDateTime]] or an [[InitializedTemporalInstant]] internal slot, then</ins>
             1. <ins>Let _pattern_ be _dateTimeFormat_.[[TemporalDateTimePattern]].</ins>
             1. <ins>Let _tm_ be { [[weekday]]: ToDayOfWeek(_date_.[[Year]], _date_.[[Month]], _date_.[[Day]]), [[year]]: _date_.[[Year]], [[month]]: _date_.[[Month]], [[day]]: _date_.[[Day]], [[hour]]: _date_.[[Hour]], [[minute]]: _date_.[[Minute]], [[second]]: _date_.[[Second]] }.</ins>
           1. <ins>If _pattern_ is *null*, throw a *TypeError* exception.</ins>
@@ -417,7 +417,7 @@
       <emu-alg>
         1. If Type(_value_) is not Object, then
           1. Return *false*.
-        1. If _value_ does not have an [[InitializedTemporalDate]], [[InitializedTemporalTime]], [[InitializedTemporalDateTime]], [[InitializedTemporalYearMonth]], [[InitializedTemporalMonthDay]], or [[InitializedTemporalAbsolute]] internal slot, then
+        1. If _value_ does not have an [[InitializedTemporalDate]], [[InitializedTemporalTime]], [[InitializedTemporalDateTime]], [[InitializedTemporalYearMonth]], [[InitializedTemporalMonthDay]], or [[InitializedTemporalInstant]] internal slot, then
           1. Return *false*.
         1. Return *true*.
       </emu-alg>
