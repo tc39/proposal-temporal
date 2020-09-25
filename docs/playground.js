@@ -5943,7 +5943,8 @@
       }
     }, {
       key: "difference",
-      value: function difference(other, options) {
+      value: function difference(other) {
+        var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
         if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
         if (!ES.IsTemporalInstant(other)) throw new TypeError('invalid Instant object');
         var disallowedUnits = ['years', 'months', 'weeks', 'days'];
@@ -6210,9 +6211,8 @@
 
     _createClass(Date, [{
       key: "with",
-      value: function _with() {
-        var temporalDateLike = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-        var options = arguments.length > 1 ? arguments[1] : undefined;
+      value: function _with(temporalDateLike) {
+        var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
         if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
         var source;
         var calendar = temporalDateLike.calendar;
@@ -6252,7 +6252,8 @@
       }
     }, {
       key: "plus",
-      value: function plus(temporalDurationLike, options) {
+      value: function plus(temporalDurationLike) {
+        var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
         if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
         var duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
         var _duration = duration,
@@ -6284,7 +6285,8 @@
       }
     }, {
       key: "minus",
-      value: function minus(temporalDurationLike, options) {
+      value: function minus(temporalDurationLike) {
+        var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
         if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
         var duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
         var _duration2 = duration,
@@ -6316,7 +6318,8 @@
       }
     }, {
       key: "difference",
-      value: function difference(other, options) {
+      value: function difference(other) {
+        var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
         if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
         if (!ES.IsTemporalDate(other)) throw new TypeError('invalid Date object');
         var calendar = GetSlot(this, CALENDAR);
@@ -6618,7 +6621,8 @@
 
     _createClass(DateTime, [{
       key: "with",
-      value: function _with(temporalDateTimeLike, options) {
+      value: function _with(temporalDateTimeLike) {
+        var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
         if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
         var overflow = ES.ToTemporalOverflow(options);
         var source;
@@ -6678,7 +6682,8 @@
       }
     }, {
       key: "plus",
-      value: function plus(temporalDurationLike, options) {
+      value: function plus(temporalDurationLike) {
+        var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
         if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
         var duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
         var _duration = duration,
@@ -6750,7 +6755,8 @@
       }
     }, {
       key: "minus",
-      value: function minus(temporalDurationLike, options) {
+      value: function minus(temporalDurationLike) {
+        var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
         if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
         var duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
         var _duration2 = duration,
@@ -6822,7 +6828,8 @@
       }
     }, {
       key: "difference",
-      value: function difference(other, options) {
+      value: function difference(other) {
+        var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
         if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
         if (!ES.IsTemporalDateTime(other)) throw new TypeError('invalid DateTime object');
         var calendar = GetSlot(this, CALENDAR);
@@ -7012,7 +7019,8 @@
       }
     }, {
       key: "toInstant",
-      value: function toInstant(temporalTimeZoneLike, options) {
+      value: function toInstant(temporalTimeZoneLike) {
+        var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
         if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
         var timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);
         var disambiguation = ES.ToTemporalDisambiguation(options);
@@ -7367,7 +7375,8 @@
 
     _createClass(Duration, [{
       key: "with",
-      value: function _with(durationLike, options) {
+      value: function _with(durationLike) {
+        var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
         if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
         var overflow = ES.ToTemporalDurationOverflow(options);
         var props = ES.ToPartialRecord(durationLike, ['days', 'hours', 'microseconds', 'milliseconds', 'minutes', 'months', 'nanoseconds', 'seconds', 'weeks', 'years']);
@@ -7434,7 +7443,8 @@
       }
     }, {
       key: "plus",
-      value: function plus(other, options) {
+      value: function plus(other) {
+        var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
         if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
 
         var _ES$ToLimitedTemporal = ES.ToLimitedTemporalDuration(other),
@@ -7471,7 +7481,8 @@
       }
     }, {
       key: "minus",
-      value: function minus(other, options) {
+      value: function minus(other) {
+        var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
         if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
 
         var _ES$ToLimitedTemporal2 = ES.ToLimitedTemporalDuration(other),
@@ -7697,7 +7708,8 @@
 
     _createClass(MonthDay, [{
       key: "with",
-      value: function _with(temporalMonthDayLike, options) {
+      value: function _with(temporalMonthDayLike) {
+        var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
         if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
 
         if ('calendar' in temporalMonthDayLike) {
@@ -7766,7 +7778,8 @@
       }
     }, {
       key: "toDateInYear",
-      value: function toDateInYear(item, options) {
+      value: function toDateInYear(item) {
+        var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
         if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
         var era, year;
 
@@ -7896,12 +7909,14 @@
     }();
   }
 
-  function date(temporalTimeZoneLike) {
+  function date() {
+    var temporalTimeZoneLike = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : timeZone();
     var calendarLike = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
     return ES.TemporalDateTimeToDate(dateTime(temporalTimeZoneLike, calendarLike));
   }
 
-  function time$1(temporalTimeZoneLike) {
+  function time$1() {
+    var temporalTimeZoneLike = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : timeZone();
     return ES.TemporalDateTimeToTime(dateTime(temporalTimeZoneLike));
   }
 
@@ -7947,9 +7962,8 @@
 
     _createClass(Time, [{
       key: "with",
-      value: function _with() {
-        var temporalTimeLike = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-        var options = arguments.length > 1 ? arguments[1] : undefined;
+      value: function _with(temporalTimeLike) {
+        var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
         if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
         var overflow = ES.ToTemporalOverflow(options);
         var props = ES.ToPartialRecord(temporalTimeLike, ['hour', 'microsecond', 'millisecond', 'minute', 'nanosecond', 'second']);
@@ -7986,7 +8000,8 @@
       }
     }, {
       key: "plus",
-      value: function plus(temporalDurationLike, options) {
+      value: function plus(temporalDurationLike) {
+        var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
         if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
         var hour = this.hour,
             minute = this.minute,
@@ -8044,7 +8059,8 @@
       }
     }, {
       key: "minus",
-      value: function minus(temporalDurationLike, options) {
+      value: function minus(temporalDurationLike) {
+        var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
         if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
         var hour = this.hour,
             minute = this.minute,
@@ -8102,7 +8118,8 @@
       }
     }, {
       key: "difference",
-      value: function difference(other, options) {
+      value: function difference(other) {
+        var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
         if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
         if (!ES.IsTemporalTime(other)) throw new TypeError('invalid Time object');
         var largestUnit = ES.ToLargestTemporalUnit(options, 'hours', ['years', 'months', 'weeks', 'days']);
@@ -8440,7 +8457,8 @@
       }
     }, {
       key: "getInstantFor",
-      value: function getInstantFor(dateTime, options) {
+      value: function getInstantFor(dateTime) {
+        var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
         if (!ES.IsTemporalDateTime(dateTime)) throw new TypeError('invalid DateTime object');
         var disambiguation = ES.ToTemporalDisambiguation(options);
         var Instant = GetIntrinsic$1('%Temporal.Instant%');
@@ -8634,9 +8652,8 @@
 
     _createClass(YearMonth, [{
       key: "with",
-      value: function _with() {
-        var temporalYearMonthLike = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-        var options = arguments.length > 1 ? arguments[1] : undefined;
+      value: function _with(temporalYearMonthLike) {
+        var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
         if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
 
         if ('calendar' in temporalYearMonthLike) {
@@ -8658,7 +8675,8 @@
       }
     }, {
       key: "plus",
-      value: function plus(temporalDurationLike, options) {
+      value: function plus(temporalDurationLike) {
+        var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
         if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
         var duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
         var years = duration.years,
@@ -8694,7 +8712,8 @@
       }
     }, {
       key: "minus",
-      value: function minus(temporalDurationLike, options) {
+      value: function minus(temporalDurationLike) {
+        var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
         if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
         var duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
         var years = duration.years,
@@ -8730,7 +8749,8 @@
       }
     }, {
       key: "difference",
-      value: function difference(other, options) {
+      value: function difference(other) {
+        var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
         if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
         if (!ES.IsTemporalYearMonth(other)) throw new TypeError('invalid YearMonth object');
         var calendar = GetSlot(this, CALENDAR);
