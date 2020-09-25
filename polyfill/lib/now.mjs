@@ -20,10 +20,10 @@ function dateTime(temporalTimeZoneLike = timeZone(), calendarLike = GetDefaultCa
   const abs = instant();
   return ES.GetTemporalDateTimeFor(timeZone, abs, calendar);
 }
-function date(temporalTimeZoneLike, calendarLike = undefined) {
+function date(temporalTimeZoneLike = timeZone(), calendarLike = undefined) {
   return ES.TemporalDateTimeToDate(dateTime(temporalTimeZoneLike, calendarLike));
 }
-function time(temporalTimeZoneLike) {
+function time(temporalTimeZoneLike = timeZone()) {
   return ES.TemporalDateTimeToTime(dateTime(temporalTimeZoneLike));
 }
 function timeZone() {

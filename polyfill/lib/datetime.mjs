@@ -146,7 +146,7 @@ export class DateTime {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     return GetSlot(this, CALENDAR).isLeapYear(this);
   }
-  with(temporalDateTimeLike, options) {
+  with(temporalDateTimeLike, options = undefined) {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     const overflow = ES.ToTemporalOverflow(options);
     let source;
@@ -237,7 +237,7 @@ export class DateTime {
     if (!ES.IsTemporalDateTime(result)) throw new TypeError('invalid result');
     return result;
   }
-  plus(temporalDurationLike, options) {
+  plus(temporalDurationLike, options = undefined) {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     let duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
     let { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
@@ -305,7 +305,7 @@ export class DateTime {
     if (!ES.IsTemporalDateTime(result)) throw new TypeError('invalid result');
     return result;
   }
-  minus(temporalDurationLike, options) {
+  minus(temporalDurationLike, options = undefined) {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     let duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
     let { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
@@ -373,7 +373,7 @@ export class DateTime {
     if (!ES.IsTemporalDateTime(result)) throw new TypeError('invalid result');
     return result;
   }
-  difference(other, options) {
+  difference(other, options = undefined) {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     if (!ES.IsTemporalDateTime(other)) throw new TypeError('invalid DateTime object');
     const calendar = GetSlot(this, CALENDAR);
@@ -571,7 +571,7 @@ export class DateTime {
     throw new TypeError('use compare() or equals() to compare Temporal.DateTime');
   }
 
-  toInstant(temporalTimeZoneLike, options) {
+  toInstant(temporalTimeZoneLike, options = undefined) {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     const timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);
     const disambiguation = ES.ToTemporalDisambiguation(options);

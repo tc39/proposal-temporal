@@ -136,7 +136,7 @@ export class Duration {
       GetSlot(this, NANOSECONDS)
     );
   }
-  with(durationLike, options) {
+  with(durationLike, options = undefined) {
     if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
     const overflow = ES.ToTemporalDurationOverflow(options);
     const props = ES.ToPartialRecord(durationLike, [
@@ -242,7 +242,7 @@ export class Duration {
     if (!ES.IsTemporalDuration(result)) throw new TypeError('invalid result');
     return result;
   }
-  plus(other, options) {
+  plus(other, options = undefined) {
     if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
     let {
       years,
@@ -308,7 +308,7 @@ export class Duration {
     if (!ES.IsTemporalDuration(result)) throw new TypeError('invalid result');
     return result;
   }
-  minus(other, options) {
+  minus(other, options = undefined) {
     if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
     let {
       years,

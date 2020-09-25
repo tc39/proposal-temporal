@@ -46,7 +46,7 @@ export class MonthDay {
     return GetSlot(this, CALENDAR);
   }
 
-  with(temporalMonthDayLike, options) {
+  with(temporalMonthDayLike, options = undefined) {
     if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
     if ('calendar' in temporalMonthDayLike) {
       throw new RangeError('invalid calendar property in month-day-like');
@@ -91,7 +91,7 @@ export class MonthDay {
   valueOf() {
     throw new TypeError('use equals() to compare Temporal.MonthDay');
   }
-  toDateInYear(item, options) {
+  toDateInYear(item, options = undefined) {
     if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
     let era, year;
     if (typeof item === 'object' && item !== null) {
