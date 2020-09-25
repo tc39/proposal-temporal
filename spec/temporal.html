@@ -16,9 +16,9 @@
 
   <emu-clause id="sec-constructor-properties-of-the-temporal-object">
     <h1>Constructor Properties of the Temporal Object</h1>
-    <emu-clause id="sec-temporal-absolute">
-      <h1>Temporal.Absolute ( . . . )</h1>
-      <p>See <emu-xref href="#sec-temporal-absolute-objects"></emu-xref>.</p>
+    <emu-clause id="sec-temporal-instant">
+      <h1>Temporal.Instant ( . . . )</h1>
+      <p>See <emu-xref href="#sec-temporal-instant-objects"></emu-xref>.</p>
     </emu-clause>
     <emu-clause id="sec-temporal-datetime">
       <h1>Temporal.DateTime ( . . . )</h1>
@@ -84,13 +84,13 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal.now.absolute">
-      <h1>Temporal.now.absolute ( )</h1>
+    <emu-clause id="sec-temporal.now.instant">
+      <h1>Temporal.now.instant ( )</h1>
       <p>
         The following steps are taken:
       </p>
       <emu-alg>
-        1. Return ? SystemAbsolute().
+        1. Return ? SystemInstant().
       </emu-alg>
     </emu-clause>
 
@@ -141,12 +141,12 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-systemabsolute" aoid="SystemAbsolute">
-      <h1>SystemAbsolute ( )</h1>
+    <emu-clause id="sec-temporal-systeminstant" aoid="SystemInstant">
+      <h1>SystemInstant ( )</h1>
       <emu-alg>
         1. Let _ns_ be the current UTC date and time, in nanoseconds since the epoch.
-        1. Assert: ! ValidateAbsolute(_ns_) is *true*.
-        1. Return ? CreateTemporalAbsolute(_ns_).
+        1. Assert: ! ValidateInstant(_ns_) is *true*.
+        1. Return ? CreateTemporalInstant(_ns_).
       </emu-alg>
     </emu-clause>
 
@@ -161,8 +161,8 @@
           1. Let _calendar_ be ! GetDefaultCalendar().
         1. Else,
           1. Let _calendar_ be ? ToTemporalCalendar(_calendarLike_).
-        1. Let _absolute_ be ? SystemAbsolute().
-        1. Return ? GetTemporalDateTimeFor(_timeZone_, _absolute_, _calendar_).
+        1. Let _instant_ be ? SystemInstant().
+        1. Return ? GetTemporalDateTimeFor(_timeZone_, _instant_, _calendar_).
       </emu-alg>
     </emu-clause>
   </emu-clause>
