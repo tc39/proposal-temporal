@@ -72,7 +72,7 @@ export class Time {
     return GetSlot(this, NANOSECOND);
   }
 
-  with(temporalTimeLike = {}, options) {
+  with(temporalTimeLike, options = undefined) {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
     const overflow = ES.ToTemporalOverflow(options);
     const props = ES.ToPartialRecord(temporalTimeLike, [
@@ -108,7 +108,7 @@ export class Time {
     if (!ES.IsTemporalTime(result)) throw new TypeError('invalid result');
     return result;
   }
-  plus(temporalDurationLike, options) {
+  plus(temporalDurationLike, options = undefined) {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
     let { hour, minute, second, millisecond, microsecond, nanosecond } = this;
     const duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
@@ -172,7 +172,7 @@ export class Time {
     if (!ES.IsTemporalTime(result)) throw new TypeError('invalid result');
     return result;
   }
-  minus(temporalDurationLike, options) {
+  minus(temporalDurationLike, options = undefined) {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
     let { hour, minute, second, millisecond, microsecond, nanosecond } = this;
     const duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
@@ -236,7 +236,7 @@ export class Time {
     if (!ES.IsTemporalTime(result)) throw new TypeError('invalid result');
     return result;
   }
-  difference(other, options) {
+  difference(other, options = undefined) {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
     if (!ES.IsTemporalTime(other)) throw new TypeError('invalid Time object');
     const largestUnit = ES.ToLargestTemporalUnit(options, 'hours', ['years', 'months', 'weeks', 'days']);

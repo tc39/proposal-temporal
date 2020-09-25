@@ -100,7 +100,7 @@ export class Instant {
     if (!ES.IsTemporalInstant(result)) throw new TypeError('invalid result');
     return result;
   }
-  difference(other, options) {
+  difference(other, options = undefined) {
     if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
     if (!ES.IsTemporalInstant(other)) throw new TypeError('invalid Instant object');
     const disallowedUnits = ['years', 'months', 'weeks', 'days'];

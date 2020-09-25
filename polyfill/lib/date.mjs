@@ -97,7 +97,7 @@ export class Date {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
     return GetSlot(this, CALENDAR).isLeapYear(this);
   }
-  with(temporalDateLike = {}, options) {
+  with(temporalDateLike, options = undefined) {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
     let source;
     let calendar = temporalDateLike.calendar;
@@ -129,7 +129,7 @@ export class Date {
     if (!ES.IsTemporalDate(result)) throw new TypeError('invalid result');
     return result;
   }
-  plus(temporalDurationLike, options) {
+  plus(temporalDurationLike, options = undefined) {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
     let duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
     let { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
@@ -141,7 +141,7 @@ export class Date {
     if (!ES.IsTemporalDate(result)) throw new TypeError('invalid result');
     return result;
   }
-  minus(temporalDurationLike, options) {
+  minus(temporalDurationLike, options = undefined) {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
     let duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
     let { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
@@ -153,7 +153,7 @@ export class Date {
     if (!ES.IsTemporalDate(result)) throw new TypeError('invalid result');
     return result;
   }
-  difference(other, options) {
+  difference(other, options = undefined) {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
     if (!ES.IsTemporalDate(other)) throw new TypeError('invalid Date object');
     const calendar = GetSlot(this, CALENDAR);

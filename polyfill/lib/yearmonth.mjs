@@ -63,7 +63,7 @@ export class YearMonth {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
     return GetSlot(this, CALENDAR).isLeapYear(this);
   }
-  with(temporalYearMonthLike = {}, options) {
+  with(temporalYearMonthLike, options = undefined) {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
     if ('calendar' in temporalYearMonthLike) {
       throw new RangeError('invalid calendar property in year-month-like');
@@ -79,7 +79,7 @@ export class YearMonth {
     if (!ES.IsTemporalYearMonth(result)) throw new TypeError('invalid result');
     return result;
   }
-  plus(temporalDurationLike, options) {
+  plus(temporalDurationLike, options = undefined) {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
     const duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
     let { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
@@ -99,7 +99,7 @@ export class YearMonth {
     if (!ES.IsTemporalYearMonth(result)) throw new TypeError('invalid result');
     return result;
   }
-  minus(temporalDurationLike, options) {
+  minus(temporalDurationLike, options = undefined) {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
     const duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
     let { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
@@ -119,7 +119,7 @@ export class YearMonth {
     if (!ES.IsTemporalYearMonth(result)) throw new TypeError('invalid result');
     return result;
   }
-  difference(other, options) {
+  difference(other, options = undefined) {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
     if (!ES.IsTemporalYearMonth(other)) throw new TypeError('invalid YearMonth object');
     const calendar = GetSlot(this, CALENDAR);
