@@ -2,7 +2,7 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
-esid: sec-temporal.absolute.prototype.minus
+esid: sec-temporal.instant.prototype.minus
 ---*/
 
 let called = 0;

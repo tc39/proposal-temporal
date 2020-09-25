@@ -2,7 +2,7 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
-esid: sec-temporal.absolute.from
+esid: sec-temporal.instant.from
 ---*/
 
 assert.throws(TypeError, () => Temporal.Instant.from.call(undefined, "1976-11-18T14:23:30.123456789Z"), "undefined");

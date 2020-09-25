@@ -3,7 +3,7 @@
 
 /*---
 description: Temporal.Instant.prototype.minus throws a RangeError if any value in a property bag is -Infinity
-esid: sec-temporal.absolute.prototype.minus
+esid: sec-temporal.instant.prototype.minus
 ---*/
 
 const instance = Temporal.Instant.fromEpochSeconds(10);

@@ -2,7 +2,7 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
-esid: sec-temporal.absolute.fromepochmilliseconds
+esid: sec-temporal.instant.fromepochmilliseconds
 ---*/
 
 assert.throws(TypeError, () => Temporal.Instant.fromEpochMilliseconds.call(undefined, 10), "undefined");

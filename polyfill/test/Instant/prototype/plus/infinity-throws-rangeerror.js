@@ -3,7 +3,7 @@
 
 /*---
 description: Temporal.Instant.prototype.plus throws a RangeError if any value in a property bag is Infinity
-esid: sec-temporal.absolute.prototype.plus
+esid: sec-temporal.instant.prototype.plus
 ---*/
 
 const instance = Temporal.Instant.fromEpochSeconds(10);
