@@ -1,6 +1,6 @@
 /**
- * Get an exact time corresponding with a calendar date / wall-clock time in a
- * particular time zone, the same as Temporal.TimeZone.getInstantFor() or
+ * Get an instant corresponding with a calendar date / wall-clock time in
+ * a particular time zone, the same as Temporal.TimeZone.getInstantFor() or
  * Temporal.DateTime.toInstant(), but with more disambiguation options.
  *
  * As well as the default Temporal disambiguation options 'compatible',
@@ -17,7 +17,7 @@
  * @param {Temporal.TimeZone} timeZone - Time zone in which to consider the
  *   wall-clock time
  * @param {string} [disambiguation='earlier'] - Disambiguation mode, see description.
- * @returns {Temporal.Instant} Absolute time in timeZone at the time of the
+ * @returns {Temporal.Instant} Instant time in timeZone at the time of the
  *   calendar date and wall-clock time from dateTime
  */
 function getInstantWithLocalTimeInZone(dateTime, timeZone, disambiguation = 'earlier') {
