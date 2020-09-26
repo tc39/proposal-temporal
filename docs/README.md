@@ -15,9 +15,10 @@ For a detailed look at some of the problems with `Date`, and the motivations for
 Temporal fixes these problems by:
 
 - Providing easy-to-use APIs for date and time computations
+- First-class support for all time zones, including DST-safe arithmetic
 - Dealing only with immutable objects
 - Parsing a strictly specified string format
-- Supporting non-Gregorian calendars, and time zones other than the user's local time and UTC
+- Supporting non-Gregorian calendars
 
 ## Cookbook
 
@@ -27,19 +28,31 @@ A cookbook to help you get started and learn the ins and outs of Temporal is ava
 
 ### **Temporal.now**
 
- * `Temporal.now.instant()` - get the current system instant time
- * `Temporal.now.timeZone()` - get the current system time zone
- * `Temporal.now.date()` - get the current system date
- * `Temporal.now.time()` - get the current system time
- * `Temporal.now.dateTime()` - get the current system date/time
+- `Temporal.now.instant()` - get the exact time since [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)
+- `Temporal.now.timeZone()` - get the current system time zone
+- `Temporal.now.localDateTime()` - get the current calendar date and wall-clock time in the system time zone
+- `Temporal.now.date()` - get the current calendar date in the system time zone
+- `Temporal.now.time()` - get the current wall-clock time in the system time zone
+- `Temporal.now.dateTime()` - get the current system date/time in the system time zone, but return an object that doesn't remember its time zone so should NOT be used to derive other values (e.g. 12 hours later) in time zones that use Daylight Saving Time (DST).
 
 See [Temporal.now Documentation](./now.md) for detailed documentation.
 
 ### **Temporal.Instant**
 
 A `Temporal.Instant` represents a fixed point in time, without regard to calendar or location.
+For a human-readable local calendar date or clock time, use a `Temporal.TimeZone` and `Temporal.Calendar` to obtain a `Temporal.LocalDateTime` or `Temporal.DateTime`.
 
 See [Temporal.Instant Documentation](./instant.md) for detailed documentation.
+
+### **Temporal.LocalDateTime**
+
+_NOTE: this type is not checked into the polyfill yet, but is planned to land in early October 2020._
+
+A `Temporal.LocalDateTime` is a time-zone-aware, calendar-aware date/time type that represents a real event that has happened (or will happen) at a particular instant in a real place on Earth. This type is optimized for use cases that require a time zone, including DST-safe arithmetic and interoperability with RFC 5545 (iCalendar).
+
+As the broadest `Temporal` type, `Temporal.LocalDateTime` can be considered a combination of `Temporal.TimeZone`, `Temporal.Instant`, and `Temporal.DateTime` (which includes `Temporal.Calendar`).
+
+See [Temporal.LocalDateTime Documentation](./localdatetime.md) for detailed documentation.
 
 ### **Temporal.Date**
 
@@ -49,6 +62,12 @@ This can also be converted to partial dates such as `Temporal.YearMonth` and `Te
 
 See [Temporal.Date Documentation](./date.md) for detailed documentation.
 
+#### Time Zones and Resolving Ambiguity
+
+Converting between wall-clock/calendar-date types (like `Temporal.Date`, `Temporal.Time`, and `Temporal.DateTime`) and exact time types (`Temporal.Instant` and `Temporal.LocalDateTime`) can be ambiguous because of time zones and daylight saving time.
+
+Read more about [handling time zones, DST, and ambiguity in `Temporal`](./ambiguity.md).
+
 ### **Temporal.Time**
 
 A `Temporal.Time` object represents a wall-clock time that is not associated with a particular date or time zone.
@@ -57,15 +76,10 @@ See [Temporal.Time Documentation](./time.md) for detailed documentation.
 
 ### **Temporal.DateTime**
 
-A `Temporal.DateTime` represents a calendar date and wall-clock time. That means it does not carry time zone information. However it can be converted to a `Temporal.Instant` using a `Temporal.TimeZone`.
+A `Temporal.DateTime` represents a calendar date and wall-clock time that does not carry time zone information. It can be converted to a `Temporal.LocalDateTime` or a `Temporal.Instant` using a `Temporal.TimeZone`.
+For use cases that require a time zone, especially using arithmetic or other derived values, consider using `Temporal.LocalDateTime` instead because that type automatically adjusts for Daylight Saving Time.
 
 See [Temporal.DateTime Documentation](./datetime.md) for detailed documentation.
-
-#### Ambiguity
-
-Converting between `Temporal.DateTime` and `Temporal.Instant` is not a one-to-one operation and can be ambiguous, because of time zones and daylight saving time.
-
-Read more about this in [Resolving ambiguity](./ambiguity.md).
 
 ### **Temporal.YearMonth**
 
@@ -134,23 +148,4 @@ See [Temporal.Calendar Documentation](./calendar.md) for detailed documentation.
 
 ## Object Relationship
 
-<div class="mermaid">
-graph LR;
-  timezone(TimeZone);
-  subgraph " ";
-    instant(Instant);
-  end;
-  subgraph " ";
-    datetime(DateTime);
-      date(Date);
-        yearmonth(YearMonth);
-        monthday(MonthDay);
-      time(Time);
-    datetime --- date;
-    datetime --- time;
-    date --- yearmonth;
-    date --- monthday;
-  end;
-  instant === timezone;
-  timezone === datetime;
-</div>
+<img src="object-model.svg">

@@ -65,6 +65,7 @@ This includes the case when `thing` is a validly-formatted ISO 8601 string denot
 
 Example usage:
 
+<!-- prettier-ignore-start -->
 ```js
 instant = Temporal.Instant.from('2019-03-30T01:45:00+01:00[Europe/Berlin]');
 instant = Temporal.Instant.from('2019-03-30T01:45+01:00');
@@ -77,6 +78,7 @@ instant === Temporal.Instant.from(instant); // => true
 /* WRONG */ instant = Temporal.Instant.from('2019-03031T02:45+01:00[Europe/Berlin]');
     // time skipped in DST transition; throws
 ```
+<!-- prettier-ignore-end -->
 
 ### Temporal.Instant.**fromEpochSeconds**(_epochSeconds_: number) : Temporal.Instant
 
@@ -113,8 +115,9 @@ Same as `Temporal.Instant.fromEpochSeconds()`, but with millisecond (10<sup>&min
 
 The number of milliseconds since the Unix epoch is also returned from the `getTime()` and `valueOf()` methods of old-style JavaScript `Date` objects, as well as `Date.now()`.
 Use this method to create a `Temporal.Instant` object from a `Date` object, for example:
+
 ```js
-jsdate = new Date('December 17, 1995 03:24:00 GMT')
+jsdate = new Date('December 17, 1995 03:24:00 GMT');
 instant = Temporal.Instant.fromEpochMilliseconds(jsdate.getTime()); // => 1995-12-17T03:24Z
 instant = Temporal.Instant.fromEpochMilliseconds(+jsdate); // valueOf() called implicitly
 
@@ -219,6 +222,36 @@ Same as `getEpochSeconds()`, but with microsecond (10<sup>&minus;6</sup> second)
 Same as `getEpochSeconds()`, but with nanosecond (10<sup>&minus;9</sup> second) precision.
 
 The value returned from this method is suitable to be passed to `new Temporal.Instant()`.
+
+### instant.**toLocalDateTime**(_timeZone_: object | string, _calendar_?: object | string) : Temporal.LocalDateTime
+
+**Parameters:**
+
+- `timeZone` (object or string): A `Temporal.TimeZone` object, or an object implementing the [time zone protocol](./timezone.md#protocol), or a string description of the time zone; either its IANA name or UTC offset.
+- `calendar` (optional object or string): A `Temporal.Calendar` object, or a plain object, or a calendar identifier.
+  The default is to use the ISO 8601 calendar.
+
+**Returns:** a `Temporal.LocalDateTime` object representing the calendar date, wall-clock time, time zone offset, and `timeZone`, according to the reckoning of `calendar`, at the exact time indicated by `instant`.
+
+For a list of IANA time zone names, see the current version of the [IANA time zone database](https://www.iana.org/time-zones).
+A convenient list is also available [on Wikipedia](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones), although it might not reflect the latest official status.
+
+For a list of calendar identifiers, see the documentation for [Intl.DateTimeFormat](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/DateTimeFormat#Parameters).
+
+Example usage:
+
+```js
+// Converting a specific exact time to a calendar date / wall-clock time
+timestamp = new Temporal.Instant(1553993100000000000n);
+timestamp.toDateTime('Europe/Berlin'); // => 2019-03-31T01:45+02:00[Europe/Berlin]
+timestamp.toDateTime('UTC'); // => 2019-03-31T00:45+00:00[UTC]
+timestamp.toDateTime('-08:00'); // => 2019-03-30T16:45-08:00[-08:00]
+
+// What time was the Unix epoch (timestamp 0) in Bell Labs (Murray Hill, New Jersey, USA)?
+epoch = new Temporal.Instant(0n);
+tz = new Temporal.TimeZone('America/New_York');
+epoch.toLocalDateTime(tz); // => 1969-12-31T19:00-05:00[America/New_York]
+```
 
 ### instant.**toDateTime**(_timeZone_: object | string, _calendar_?: object | string) : Temporal.DateTime
 
@@ -360,6 +393,7 @@ Nanoseconds values will overflow and lose precision after about 104 days. Micros
 
 Example usage:
 
+<!-- prettier-ignore-start -->
 ```js
 startOfMoonMission = Temporal.Instant.from('1969-07-16T13:32:00Z');
 endOfMoonMission = Temporal.Instant.from('1969-07-24T16:50:35Z');
@@ -395,6 +429,7 @@ utc = Temporal.TimeZone.from('UTC');
 billion.toDateTime(utc).difference(epoch.toDateTime(utc), { largestUnit: 'years' });
   // => P31Y8M8DT1H46M40S
 ```
+<!-- prettier-ignore-end -->
 
 ### instant.**round**(_options_: object) : Temporal.Instant
 
@@ -435,6 +470,7 @@ The `roundingMode` option controls how the rounding is performed.
 
 Example usage:
 
+<!-- prettier-ignore-start -->
 ```javascript
 instant = Temporal.Instant.from('2019-03-30T02:45:59.999999999Z');
 
@@ -447,6 +483,7 @@ instant.round({ roundingIncrement: 60, smallestUnit: 'minute' });
 instant.round({ roundingIncrement: 60, smallestUnit: 'minute', roundingMode: 'floor' });
   // => 2019-03-30T02:00Z
 ```
+<!-- prettier-ignore-end -->
 
 ### instant.**equals**(_other_: Temporal.Instant) : boolean
 
@@ -508,15 +545,15 @@ The `locales` and `options` arguments are the same as in the constructor to [`In
 Example usage:
 
 ```js
-instant = Temporal.Instant.from("2019-11-18T11:00:00.000Z");
-instant.toLocaleString();  // => example output: 2019-11-18, 3:00:00 a.m.
-instant.toLocaleString('de-DE');  // => example output: 18.11.2019, 03:00:00
+instant = Temporal.Instant.from('2019-11-18T11:00:00.000Z');
+instant.toLocaleString(); // => example output: 2019-11-18, 3:00:00 a.m.
+instant.toLocaleString('de-DE'); // => example output: 18.11.2019, 03:00:00
 instant.toLocaleString('de-DE', {
-    timeZone: 'Europe/Berlin',
-    weekday: 'long',
+  timeZone: 'Europe/Berlin',
+  weekday: 'long'
 }); // => Montag, 18.11.2019, 12:00:00
 instant.toLocaleString('en-US-u-nu-fullwide-hc-h12', {
-    timeZone: 'Asia/Kolkata',
+  timeZone: 'Asia/Kolkata'
 }); // => １１/１８/２０１９, ４:３０:００ PM
 ```
 

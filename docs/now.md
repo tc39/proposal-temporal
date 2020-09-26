@@ -9,6 +9,40 @@ The `Temporal.now` object has several methods which give information about the c
 
 ## Methods
 
+### Temporal.now.**localDateTime**(_timeZone_: object | string = Temporal.now.timeZone(), _calendar_: object | string = 'iso8601') : Temporal.DateTime
+
+**Parameters:**
+
+- `timeZone` (optional object or string): The time zone to get the current date and time in, as a `Temporal.TimeZone` object, an object implementing the [time zone protocol](./timezone.md#protocol), or a string.
+  If not given, the current system time zone will be used.
+- `calendar` (optional `Temporal.Calendar`, plain object, or string): The calendar system to get the current date and time in.
+  If not given, the ISO 8601 calendar will be used.
+
+**Returns:** a `Temporal.LocalDateTime` object representing the current system date, time, time zone, and time zone offset.
+
+This method gets the current date, time, time zone, and time zone offset according to the system settings.
+Optionally a time zone can be given in which the time is computed, and a calendar system in which the date is reckoned.
+Subsequent calculations using this object (e.g. adding days or changing the time) will retain the same time zone and calendar.
+
+Example usage:
+
+```js
+financialCentres = {
+  'New York': 'America/New_York',
+  London: 'Europe/London',
+  Tokyo: 'Asia/Tokyo'
+};
+console.log(`Here: ${Temporal.now.localDateTime()}`);
+Object.entries(financialCentres).forEach(([name, timeZone]) => {
+  console.log(`${name}: ${Temporal.now.localDateTime(timeZone)}`);
+});
+// example output:
+// Here: 2020-09-18T01:17:48.431957915-07:00[America/Los_Angeles]
+// New York: 2020-09-18T04:17:48.435068431-04:00[America/New_York]
+// London: 2020-09-18T09:17:48.438068435+01:00[Europe/London]
+// Tokyo: 2020-09-18T17:17:48.441068438+09:00[Asia/Tokyo]
+```
+
 ### Temporal.now.**instant**() : Temporal.Instant
 
 **Returns:** a `Temporal.Instant` object representing the current system time.
@@ -72,6 +106,7 @@ Optionally a time zone can be given in which the time is computed, and a calenda
 
 Example usage:
 
+<!-- prettier-ignore-start -->
 ```js
 financialCentres = {
   'New York': 'America/New_York',
@@ -88,6 +123,7 @@ Object.entries(financialCentres).forEach(([name, timeZone]) => {
 // London: 2020-01-25T05:52:14.758534756
 // Tokyo: 2020-01-25T14:52:14.759534758
 ```
+<!-- prettier-ignore-end -->
 
 ### Temporal.now.**date**(_timeZone_: object | string = Temporal.now.timeZone(), _calendar_: object | string = 'iso8601') : Temporal.Date
 
