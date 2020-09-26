@@ -15,7 +15,7 @@ export interface TimeZoneOffsetDisambiguationOptions {
   offset: 'use' | 'prefer' | 'ignore' | 'reject';
 }
 export declare type LocalDateTimeAssignmentOptions = Partial<
-  Temporal.AssignmentOptions & Temporal.ToAbsoluteOptions & TimeZoneOffsetDisambiguationOptions
+  Temporal.AssignmentOptions & Temporal.ToInstantOptions & TimeZoneOffsetDisambiguationOptions
 >;
 export declare class LocalDateTime {
   private _abs;
@@ -28,7 +28,7 @@ export declare class LocalDateTime {
   ): LocalDateTime;
   with(localDateTimeLike: LocalDateTimeLike, options?: LocalDateTimeAssignmentOptions): LocalDateTime;
   withCalendar(calendar: Temporal.CalendarProtocol): LocalDateTime;
-  toAbsolute(): Temporal.Absolute;
+  toInstant(): Temporal.Instant;
   get timeZone(): Temporal.TimeZone;
   get calendar(): Temporal.CalendarProtocol;
   toDateTime(): Temporal.DateTime;

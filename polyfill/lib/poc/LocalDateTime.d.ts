@@ -19,16 +19,15 @@ declare type LocalDateTimeISOFields = ReturnType<Temporal.DateTime['getISOFields
  * example if a country permanently abolishes DST. The `offset` option controls
  * this unusual case.
  *
- * - `'use'` always uses the offset (if it's provided) to calculate the absolute
- *   time. This ensures that the result will match the absolute time that was
- *   originally stored, even if local clock time is different.
+ * - `'use'` always uses the offset (if it's provided) to calculate the instant.
+ *   This ensures that the result will match the instant that was originally
+ *   stored, even if local clock time is different.
  * - `'prefer'` uses the offset if it's valid for the date/time in this time
  *   zone, but if it's not valid then the time zone will be used as a fallback
- *   to calculate the absolute time.
+ *   to calculate the instant.
  * - `'ignore'` will disregard any provided offset. Instead, the time zone and
- *    date/time value are used to calculate the absolute time. This will keep
- *    local clock time unchanged but may result in a different real-world
- *    instant.
+ *    date/time value are used to calculate the instant. This will keep local
+ *    clock time unchanged but may result in a different real-world instant.
  * - `'reject'` acts like `'prefer'`, except it will throw a RangeError if the
  *   offset is not valid for the given time zone identifier and date/time value.
  *
@@ -39,30 +38,30 @@ declare type LocalDateTimeISOFields = ReturnType<Temporal.DateTime['getISOFields
  * ignored because the time zone will always be used to calculate the offset.
  *
  * If the offset is not used, and if the date/time and time zone don't uniquely
- * identify a single absolute time, then the `disambiguation` option will be
- * used to choose the correct absolute time. However, if the offset is used
- * then the `disambiguation` option will be ignored.
+ * identify a single instant, then the `disambiguation` option will be used to
+ * choose the correct instant. However, if the offset is used then the
+ * `disambiguation` option will be ignored.
  */
 export interface TimeZoneOffsetDisambiguationOptions {
   offset: 'use' | 'prefer' | 'ignore' | 'reject';
 }
 export declare type LocalDateTimeAssignmentOptions = Partial<
-  Temporal.AssignmentOptions & Temporal.ToAbsoluteOptions & TimeZoneOffsetDisambiguationOptions
+  Temporal.AssignmentOptions & Temporal.ToInstantOptions & TimeZoneOffsetDisambiguationOptions
 >;
 export declare class LocalDateTime {
   private _abs;
   private _tz;
   private _dt;
   /**
-   * Construct a new `Temporal.LocalDateTime` instance from an absolute
-   * timestamp, time zone, and optional calendar.
+   * Construct a new `Temporal.LocalDateTime` instance from an exact timestamp,
+   * time zone, and optional calendar.
    *
    * Use `Temporal.LocalDateTime.from()`To construct a `Temporal.LocalDateTime`
    * from an ISO 8601 string or from a time zone and `DateTime` fields (like
    * year or hour).
    *
-   * @param epochNanoseconds {bigint} - absolute timestamp (in nanoseconds since
-   * UNIX epoch) for this instance
+   * @param epochNanoseconds {bigint} - instant (in nanoseconds since UNIX
+   * epoch) for this instance
    * @param timeZone {Temporal.TimeZoneProtocol} - time zone for this instance
    * @param [calendar=Temporal.Calendar.from('iso8601')] {Temporal.CalendarProtocol} -
    * calendar for this instance (defaults to ISO calendar)
@@ -78,7 +77,7 @@ export declare class LocalDateTime {
    *   is not provided, then the time can be ambiguous around DST transitions.
    *   The `disambiguation` option can resolve this ambiguity.
    * - An ISO 8601 date+time+offset string (the same format used by
-   *   `Temporal.Absolute.from`) with a time zone identifier suffix appended in
+   *   `Temporal.Instant.from`) with a time zone identifier suffix appended in
    *   square brackets, e.g. `2007-12-03T10:15:30+01:00[Europe/Paris]` or
    *   `2007-12-03T09:15:30Z[Europe/Paris]`.
    * - An object that can be converted to the string format above.
@@ -158,10 +157,10 @@ export declare class LocalDateTime {
    */
   withCalendar(calendar: Temporal.CalendarProtocol): LocalDateTime;
   /**
-   * Returns the absolute timestamp of this `Temporal.LocalDateTime` instance as
-   * a `Temporal.Absolute`.
+   * Returns the exact time of this `Temporal.LocalDateTime` instance as a
+   * `Temporal.Instant`.
    */
-  toAbsolute(): Temporal.Absolute;
+  toInstant(): Temporal.Instant;
   /**
    * Returns the `Temporal.TimeZone` representing this object's time zone.
    *
@@ -235,19 +234,19 @@ export declare class LocalDateTime {
   get isTimeZoneOffsetTransition(): boolean;
   /**
    * Offset (in nanoseconds) relative to UTC of the current time zone and
-   * absolute instant.
+   * instant of this `Temporal.LocalDateTime` instance.
    *
    * The value of this field will change after DST transitions or after legal
    * changes to a time zone, e.g. a country switching to a new time zone.
    *
    * Because this field is able to uniquely map a `Temporal.DateTime` to an
-   * absolute date/time, this field is returned by `getFields()` and is accepted
-   * by `from` and `with`.
+   * instant, this field is returned by `getFields()` and is accepted by `from`
+   * and `with`.
    * */
   get timeZoneOffsetNanoseconds(): number;
   /**
    * Offset (as a string like `'+05:00'` or `'-07:00'`) relative to UTC of the
-   * current time zone and absolute instant.
+   * current time zone and instant of this `Temporal.LocalDateTime` instance.
    *
    * This property is useful for custom formatting of LocalDateTime instances.
    *
@@ -280,12 +279,12 @@ export declare class LocalDateTime {
    * * -1 if `one` is less than `two`
    * * 1 if `one` is greater than `two`.
    *
-   * Comparison will use the absolute time, not clock time, because sorting is
+   * Comparison will use the instant, not clock time, because sorting is
    * almost always based on when events happened in the real world, but during
    * the hour before and after DST ends in the fall, sorting of clock time will
    * not match the real-world sort order.
    *
-   * If absolute times are equal, then `.calendar.id` will be compared
+   * If instants are equal, then `.calendar.id` will be compared
    * alphabetically. If those are equal too, then `.timeZone.name` will be
    * compared alphabetically. Even though alphabetic sort carries no meaning,
    * it's used to ensure that unequal instances have a deterministic sort order.
@@ -296,11 +295,11 @@ export declare class LocalDateTime {
    */
   static compare(one: LocalDateTime, two: LocalDateTime): Temporal.ComparisonResult;
   /**
-   * Returns `true` if the absolute timestamp, time zone, and calendar are
+   * Returns `true` if the exact time, time zone, and calendar are
    * identical to `other`, and `false` otherwise.
    *
-   * To compare only the absolute timestamps and ignore time zones and
-   * calendars, use `.toAbsolute().compare(other.toAbsolute())`.
+   * To compare only the exact times and ignore time zones and
+   * calendars, use `.toInstant().compare(other.toInstant())`.
    *
    * To ignore calendars but not time zones when comparing, convert both
    * instances to the ISO 8601 calendar:
@@ -320,7 +319,7 @@ export declare class LocalDateTime {
    * Add a `Temporal.Duration` and return the result.
    *
    * Dates will be added using calendar dates while times will be added with
-   * absolute time.
+   * instant.
    *
    * Available options:
    * ```
@@ -332,7 +331,7 @@ export declare class LocalDateTime {
    * Subtract a `Temporal.Duration` and return the result.
    *
    * Dates will be subtracted using calendar dates while times will be
-   * subtracted with absolute time.
+   * subtracted with instant.
    *
    * Available options:
    * ```
@@ -347,7 +346,7 @@ export declare class LocalDateTime {
    * The duration returned is a "hybrid" duration. The date portion represents
    * full calendar days like `DateTime.prototype.difference` would return. The
    * time portion represents real-world elapsed time like
-   * `Absolute.prototype.difference` would return. This "hybrid duration"
+   * `Instant.prototype.difference` would return. This "hybrid duration"
    * approach matches widely-adopted industry standards like RFC 5545
    * (iCalendar). It also matches the behavior of popular JavaScript libraries
    * like moment.js and date-fns.
@@ -361,7 +360,7 @@ export declare class LocalDateTime {
    *   calendar day even though it's been 24.5 real-world hours).
    *
    * If `largestUnit` is `'hours'` or smaller, then the result will be the same
-   * as if `Temporal.Absolute.prototype.difference` was used.
+   * as if `Temporal.Instant.prototype.difference` was used.
    *
    * If both values have the same local time, then the result will be the same
    * as if `Temporal.DateTime.prototype.difference` was used.

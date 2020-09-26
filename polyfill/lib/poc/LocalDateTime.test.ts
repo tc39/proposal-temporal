@@ -25,18 +25,18 @@ type SafeIt = {
 const it = itOriginal as SafeIt;
 
 import { Temporal } from '../..';
-const { Absolute, DateTime } = Temporal;
+const { Instant, DateTime } = Temporal;
 type DateTime = Temporal.DateTime;
-type Absolute = Temporal.Absolute;
+type Instant = Temporal.Instant;
 import { LocalDateTime } from './LocalDateTime';
 
-// The Absolute tests here will be adapted to LocalDateTime soon.
-describe('Absolute', () => {
+// The Instant tests here will be adapted to LocalDateTime soon.
+describe('Instant', () => {
   describe('Construction', () => {
     it('can construct', () => {
       const epochMillis = Date.UTC(1976, 10, 18, 14, 23, 30, 123);
       const epochNanos = BigInt(epochMillis) * BigInt(1e6) + BigInt(456789);
-      const instant = new Temporal.Absolute(epochNanos);
+      const instant = new Temporal.Instant(epochNanos);
       assert(instant);
       equal(typeof instant, 'object');
       equal(instant.getEpochSeconds(), Math.floor(Date.UTC(1976, 10, 18, 14, 23, 30, 123) / 1e3), 'getEpochSeconds');
@@ -44,387 +44,387 @@ describe('Absolute', () => {
     });
     it('constructs from string', () => {
       // @ts-expect-error
-      equal(`${new Absolute('0')}`, '1970-01-01T00:00Z');
+      equal(`${new Instant('0')}`, '1970-01-01T00:00Z');
     });
     // @ts-expect-error
-    it('throws on number', () => throws(() => new Absolute(1234), TypeError));
+    it('throws on number', () => throws(() => new Instant(1234), TypeError));
     // @ts-expect-error
-    it('throws on string that does not convert to BigInt', () => throws(() => new Absolute('abc123'), SyntaxError));
+    it('throws on string that does not convert to BigInt', () => throws(() => new Instant('abc123'), SyntaxError));
   });
-  describe('absolute.toString() works', () => {
+  describe('instant.toString() works', () => {
     it('`1976-11-18T14:23:30.123456789Z`.toString()', () => {
       const iso = '1976-11-18T14:23:30.123456789Z';
-      const instant = Absolute.from(iso);
+      const instant = Instant.from(iso);
       assert(instant);
       equal(`${instant}`, iso);
     });
     it('`1963-02-13T09:36:29.123456789Z`.toString()', () => {
       const iso = '1963-02-13T09:36:29.123456789Z';
-      const instant = Absolute.from(iso);
+      const instant = Instant.from(iso);
       assert(instant);
       equal(`${instant}`, iso);
     });
     it('optional time zone parameter UTC', () => {
       const iso = '1976-11-18T14:23:30.123456789Z';
-      const abs = Absolute.from(iso);
+      const instant = Instant.from(iso);
       const tz = Temporal.TimeZone.from('UTC');
-      equal(abs.toString(tz), iso);
+      equal(instant.toString(tz), iso);
     });
     it('optional time zone parameter non-UTC', () => {
-      const abs = Absolute.from('1976-11-18T14:23:30.123456789Z');
+      const instant = Instant.from('1976-11-18T14:23:30.123456789Z');
       const tz = Temporal.TimeZone.from('America/New_York');
-      equal(abs.toString(tz), '1976-11-18T09:23:30.123456789-05:00[America/New_York]');
+      equal(instant.toString(tz), '1976-11-18T09:23:30.123456789-05:00[America/New_York]');
     });
   });
-  describe('Absolute.toJSON() works', () => {
+  describe('Instant.toJSON() works', () => {
     it('`1976-11-18T15:23:30.123456789+01:00`.toJSON()', () => {
-      const abs = Absolute.from('1976-11-18T15:23:30.123456789+01:00');
-      assert(abs);
-      equal(abs.toJSON(), '1976-11-18T14:23:30.123456789Z');
+      const instant = Instant.from('1976-11-18T15:23:30.123456789+01:00');
+      assert(instant);
+      equal(instant.toJSON(), '1976-11-18T14:23:30.123456789Z');
     });
     it('`1963-02-13T10:36:29.123456789+01:00`.toJSON()', () => {
-      const abs = Absolute.from('1963-02-13T10:36:29.123456789+01:00');
-      assert(abs);
-      equal(abs.toJSON(), '1963-02-13T09:36:29.123456789Z');
+      const instant = Instant.from('1963-02-13T10:36:29.123456789+01:00');
+      assert(instant);
+      equal(instant.toJSON(), '1963-02-13T09:36:29.123456789Z');
     });
     it('argument is ignored', () => {
-      const abs = Absolute.from('1976-11-18T15:23:30.123456789+01:00');
+      const instant = Instant.from('1976-11-18T15:23:30.123456789+01:00');
       // @ts-ignore
-      equal(abs.toJSON('+01:00'), abs.toJSON());
+      equal(instant.toJSON('+01:00'), instant.toJSON());
     });
   });
-  describe('Absolute.getEpochSeconds() works', () => {
+  describe('Instant.getEpochSeconds() works', () => {
     it('post-epoch', () => {
       const epochMs = Date.UTC(1976, 10, 18, 15, 23, 30, 123);
       const epochNs = BigInt(epochMs) * BigInt(1e6);
-      const abs = new Absolute(epochNs);
-      equal(abs.getEpochSeconds(), Math.trunc(epochMs / 1e3));
-      equal(typeof abs.getEpochSeconds(), 'number');
+      const instant = new Instant(epochNs);
+      equal(instant.getEpochSeconds(), Math.trunc(epochMs / 1e3));
+      equal(typeof instant.getEpochSeconds(), 'number');
     });
     it('pre-epoch', () => {
       const epochMs = Date.UTC(1963, 1, 13, 9, 36, 29, 123);
       const epochNs = BigInt(epochMs) * BigInt(1e6);
-      const abs = new Absolute(epochNs);
-      equal(abs.getEpochSeconds(), Math.trunc(epochMs / 1e3));
-      equal(typeof abs.getEpochSeconds(), 'number');
+      const instant = new Instant(epochNs);
+      equal(instant.getEpochSeconds(), Math.trunc(epochMs / 1e3));
+      equal(typeof instant.getEpochSeconds(), 'number');
     });
   });
-  describe('Absolute.fromEpochSeconds() works', () => {
+  describe('Instant.fromEpochSeconds() works', () => {
     it('1976-11-18T15:23:30', () => {
       const epochSeconds = Math.floor(Date.UTC(1976, 10, 18, 15, 23, 30, 123) / 1e3);
-      const instant = Absolute.fromEpochSeconds(epochSeconds);
+      const instant = Instant.fromEpochSeconds(epochSeconds);
       equal(instant.getEpochSeconds(), epochSeconds);
     });
     it('1963-02-13T09:36:29', () => {
       const epochSeconds = Math.floor(Date.UTC(1963, 1, 13, 9, 36, 29, 123) / 1e3);
-      const instant = Absolute.fromEpochSeconds(epochSeconds);
+      const instant = Instant.fromEpochSeconds(epochSeconds);
       equal(instant.getEpochSeconds(), epochSeconds);
     });
   });
-  describe('Absolute.getEpochMilliseconds() works', () => {
+  describe('Instant.getEpochMilliseconds() works', () => {
     it('post-epoch', () => {
       const epochMs = Date.UTC(1976, 10, 18, 15, 23, 30, 123);
       const epochNs = BigInt(epochMs) * BigInt(1e6);
-      const abs = new Absolute(epochNs);
-      equal(abs.getEpochMilliseconds(), epochMs);
-      equal(typeof abs.getEpochMilliseconds(), 'number');
+      const instant = new Instant(epochNs);
+      equal(instant.getEpochMilliseconds(), epochMs);
+      equal(typeof instant.getEpochMilliseconds(), 'number');
     });
     it('pre-epoch', () => {
       const epochMs = Date.UTC(1963, 1, 13, 9, 36, 29, 123);
       const epochNs = BigInt(epochMs) * BigInt(1e6);
-      const abs = new Absolute(epochNs);
-      equal(abs.getEpochMilliseconds(), epochMs);
-      equal(typeof abs.getEpochMilliseconds(), 'number');
+      const instant = new Instant(epochNs);
+      equal(instant.getEpochMilliseconds(), epochMs);
+      equal(typeof instant.getEpochMilliseconds(), 'number');
     });
   });
-  describe('Absolute.fromEpochMilliseconds() works', () => {
+  describe('Instant.fromEpochMilliseconds() works', () => {
     it('1976-11-18T15:23:30.123', () => {
       const epochMilliseconds = Date.UTC(1976, 10, 18, 15, 23, 30, 123);
-      const instant = Absolute.fromEpochMilliseconds(epochMilliseconds);
+      const instant = Instant.fromEpochMilliseconds(epochMilliseconds);
       equal(instant.getEpochMilliseconds(), epochMilliseconds);
     });
     it('1963-02-13T09:36:29.123', () => {
       const epochMilliseconds = Date.UTC(1963, 1, 13, 9, 36, 29, 123);
-      const instant = Absolute.fromEpochMilliseconds(epochMilliseconds);
+      const instant = Instant.fromEpochMilliseconds(epochMilliseconds);
       equal(instant.getEpochMilliseconds(), epochMilliseconds);
     });
   });
-  describe('Absolute.getEpochMicroseconds() works', () => {
+  describe('Instant.getEpochMicroseconds() works', () => {
     it('post-epoch', () => {
       const epochMs = Date.UTC(1976, 10, 18, 15, 23, 30, 123);
       const epochNs = BigInt(epochMs) * BigInt(1e6);
-      const abs = new Absolute(epochNs);
-      equal(abs.getEpochMicroseconds(), BigInt(epochMs) * BigInt(1e3));
-      equal(typeof abs.getEpochMicroseconds(), 'bigint');
+      const instant = new Instant(epochNs);
+      equal(instant.getEpochMicroseconds(), BigInt(epochMs) * BigInt(1e3));
+      equal(typeof instant.getEpochMicroseconds(), 'bigint');
     });
     it('pre-epoch', () => {
       const epochMs = Date.UTC(1963, 1, 13, 9, 36, 29, 123);
       const epochNs = BigInt(epochMs) * BigInt(1e6);
-      const abs = new Absolute(epochNs);
-      equal(abs.getEpochMicroseconds(), BigInt(epochMs) * BigInt(1e3));
-      equal(typeof abs.getEpochMicroseconds(), 'bigint');
+      const instant = new Instant(epochNs);
+      equal(instant.getEpochMicroseconds(), BigInt(epochMs) * BigInt(1e3));
+      equal(typeof instant.getEpochMicroseconds(), 'bigint');
     });
   });
-  describe('Absolute.fromEpochMicroseconds() works', () => {
+  describe('Instant.fromEpochMicroseconds() works', () => {
     it('1976-11-18T15:23:30.123456', () => {
       const epochMicroseconds = BigInt(Date.UTC(1976, 10, 18, 15, 23, 30, 123)) * BigInt(1e3) + BigInt(456);
-      const instant = Absolute.fromEpochMicroseconds(epochMicroseconds);
+      const instant = Instant.fromEpochMicroseconds(epochMicroseconds);
       equal(instant.getEpochMicroseconds(), epochMicroseconds);
     });
     it('1963-02-13T09:36:29.123456', () => {
       const epochMicroseconds = BigInt(Date.UTC(1963, 1, 13, 9, 36, 29, 123)) * BigInt(1e3) + BigInt(456);
-      const instant = Absolute.fromEpochMicroseconds(epochMicroseconds);
+      const instant = Instant.fromEpochMicroseconds(epochMicroseconds);
       equal(instant.getEpochMicroseconds(), epochMicroseconds);
     });
   });
-  describe('Absolute.getEpochNanoseconds() works', () => {
+  describe('Instant.getEpochNanoseconds() works', () => {
     it('post-epoch', () => {
       const epochMs = Date.UTC(1976, 10, 18, 15, 23, 30, 123);
       const epochNs = BigInt(epochMs) * BigInt(1e6);
-      const abs = new Absolute(epochNs);
-      equal(abs.getEpochNanoseconds(), epochNs);
-      equal(typeof abs.getEpochNanoseconds(), 'bigint');
+      const instant = new Instant(epochNs);
+      equal(instant.getEpochNanoseconds(), epochNs);
+      equal(typeof instant.getEpochNanoseconds(), 'bigint');
     });
     it('pre-epoch', () => {
       const epochMs = Date.UTC(1963, 1, 13, 9, 36, 29, 123);
       const epochNs = BigInt(epochMs) * BigInt(1e6);
-      const abs = new Absolute(epochNs);
-      equal(abs.getEpochNanoseconds(), epochNs);
-      equal(typeof abs.getEpochNanoseconds(), 'bigint');
+      const instant = new Instant(epochNs);
+      equal(instant.getEpochNanoseconds(), epochNs);
+      equal(typeof instant.getEpochNanoseconds(), 'bigint');
     });
   });
-  describe('Absolute.fromEpochNanoseconds() works', () => {
+  describe('Instant.fromEpochNanoseconds() works', () => {
     it('1976-11-18T15:23:30.123456789', () => {
       const epochNanoseconds = BigInt(Date.UTC(1976, 10, 18, 15, 23, 30, 123)) * BigInt(1e6) + BigInt(456789);
-      const instant = Absolute.fromEpochNanoseconds(epochNanoseconds);
+      const instant = Instant.fromEpochNanoseconds(epochNanoseconds);
       equal(instant.getEpochNanoseconds(), epochNanoseconds);
     });
     it('1963-02-13T09:36:29.123456789', () => {
       const epochNanoseconds = BigInt(Date.UTC(1963, 1, 13, 9, 36, 29, 123)) * BigInt(1e6) + BigInt(456789);
-      const instant = Absolute.fromEpochNanoseconds(epochNanoseconds);
+      const instant = Instant.fromEpochNanoseconds(epochNanoseconds);
       equal(instant.getEpochNanoseconds(), epochNanoseconds);
     });
     it('-1n', () => {
       // @ts-ignore
-      const instant = Absolute.fromEpochNanoseconds(-1n);
+      const instant = Instant.fromEpochNanoseconds(-1n);
       equal(`${instant}`, '1969-12-31T23:59:59.999999999Z');
     });
   });
-  describe('Absolute.from() works', () => {
+  describe('Instant.from() works', () => {
     it('1976-11-18T15:23Z', () => {
-      equal(Absolute.from('1976-11-18T15:23Z').getEpochMilliseconds(), Date.UTC(1976, 10, 18, 15, 23));
+      equal(Instant.from('1976-11-18T15:23Z').getEpochMilliseconds(), Date.UTC(1976, 10, 18, 15, 23));
     });
     it('1976-11-18T15:23:30Z', () => {
-      equal(Absolute.from('1976-11-18T15:23:30Z').getEpochMilliseconds(), Date.UTC(1976, 10, 18, 15, 23, 30));
+      equal(Instant.from('1976-11-18T15:23:30Z').getEpochMilliseconds(), Date.UTC(1976, 10, 18, 15, 23, 30));
     });
     it('1976-11-18T15:23:30.123Z', () => {
-      equal(Absolute.from('1976-11-18T15:23:30.123Z').getEpochMilliseconds(), Date.UTC(1976, 10, 18, 15, 23, 30, 123));
+      equal(Instant.from('1976-11-18T15:23:30.123Z').getEpochMilliseconds(), Date.UTC(1976, 10, 18, 15, 23, 30, 123));
     });
     it('1976-11-18T15:23:30.123456Z', () => {
       equal(
-        Absolute.from('1976-11-18T15:23:30.123456Z').getEpochMicroseconds(),
+        Instant.from('1976-11-18T15:23:30.123456Z').getEpochMicroseconds(),
         BigInt(Date.UTC(1976, 10, 18, 15, 23, 30, 123)) * BigInt(1e3) + BigInt(456)
       );
     });
     it('1976-11-18T15:23:30.123456789Z', () => {
       equal(
-        Absolute.from('1976-11-18T15:23:30.123456789Z').getEpochNanoseconds(),
+        Instant.from('1976-11-18T15:23:30.123456789Z').getEpochNanoseconds(),
         BigInt(Date.UTC(1976, 10, 18, 15, 23, 30, 123)) * BigInt(1e6) + BigInt(456789)
       );
     });
     it('2020-02-12T11:42-08:00', () => {
       equal(
-        Absolute.from('2020-02-12T11:42-08:00').getEpochNanoseconds(),
+        Instant.from('2020-02-12T11:42-08:00').getEpochNanoseconds(),
         BigInt(Date.UTC(2020, 1, 12, 19, 42)) * BigInt(1e6)
       );
     });
     it('2020-02-12T11:42-08:00[America/Vancouver]', () => {
       equal(
-        Absolute.from('2020-02-12T11:42-08:00[America/Vancouver]').getEpochNanoseconds(),
+        Instant.from('2020-02-12T11:42-08:00[America/Vancouver]').getEpochNanoseconds(),
         BigInt(Date.UTC(2020, 1, 12, 19, 42)) * BigInt(1e6)
       );
     });
     it('2020-02-12T11:42+01:00', () => {
       equal(
-        Absolute.from('2020-02-12T11:42+01:00').getEpochNanoseconds(),
+        Instant.from('2020-02-12T11:42+01:00').getEpochNanoseconds(),
         BigInt(Date.UTC(2020, 1, 12, 10, 42)) * BigInt(1e6)
       );
     });
     it('2020-02-12T11:42+01:00[Europe/Amsterdam]', () => {
       equal(
-        Absolute.from('2020-02-12T11:42+01:00[Europe/Amsterdam]').getEpochNanoseconds(),
+        Instant.from('2020-02-12T11:42+01:00[Europe/Amsterdam]').getEpochNanoseconds(),
         BigInt(Date.UTC(2020, 1, 12, 10, 42)) * BigInt(1e6)
       );
     });
     it('2019-02-16T23:45-02:00[America/Sao_Paulo]', () => {
       equal(
-        Absolute.from('2019-02-16T23:45-02:00[America/Sao_Paulo]').getEpochNanoseconds(),
+        Instant.from('2019-02-16T23:45-02:00[America/Sao_Paulo]').getEpochNanoseconds(),
         BigInt(Date.UTC(2019, 1, 17, 1, 45)) * BigInt(1e6)
       );
     });
     it('2019-02-16T23:45-03:00[America/Sao_Paulo]', () => {
       equal(
-        Absolute.from('2019-02-16T23:45-03:00[America/Sao_Paulo]').getEpochNanoseconds(),
+        Instant.from('2019-02-16T23:45-03:00[America/Sao_Paulo]').getEpochNanoseconds(),
         BigInt(Date.UTC(2019, 1, 17, 2, 45)) * BigInt(1e6)
       );
     });
     it('throws when unable to disambiguate using offset', () => {
-      throws(() => Absolute.from('2019-02-16T23:45-04:00[America/Sao_Paulo]'), RangeError);
+      throws(() => Instant.from('2019-02-16T23:45-04:00[America/Sao_Paulo]'), RangeError);
     });
-    it('Absolute.from(string-convertible) converts to string', () => {
+    it('Instant.from(string-convertible) converts to string', () => {
       const obj = {
         toString() {
           return '2020-02-12T11:42+01:00[Europe/Amsterdam]';
         }
       };
       // @ts-ignore
-      equal(`${Absolute.from(obj)}`, '2020-02-12T10:42Z');
+      equal(`${Instant.from(obj)}`, '2020-02-12T10:42Z');
     });
     // @ts-ignore
 
-    it('Absolute.from(1) throws', () => throws(() => Absolute.from(1), RangeError));
+    it('Instant.from(1) throws', () => throws(() => Instant.from(1), RangeError));
     // @ts-ignore
-    it('Absolute.from(-1) throws', () => throws(() => Absolute.from(-1), RangeError));
+    it('Instant.from(-1) throws', () => throws(() => Instant.from(-1), RangeError));
     // @ts-ignore
-    it('Absolute.from(1n) throws', () => throws(() => Absolute.from(1n), RangeError));
+    it('Instant.from(1n) throws', () => throws(() => Instant.from(1n), RangeError));
     // @ts-ignore
-    it('Absolute.from(-1n) throws', () => throws(() => Absolute.from(-1n), RangeError));
+    it('Instant.from(-1n) throws', () => throws(() => Instant.from(-1n), RangeError));
     // @ts-ignore
-    it('Absolute.from({}) throws', () => throws(() => Absolute.from({}), RangeError));
-    it('Absolute.from(absolute) is not the same object', () => {
-      const abs = Absolute.from('2020-02-12T11:42+01:00[Europe/Amsterdam]');
-      notEqual(Absolute.from(abs), abs);
+    it('Instant.from({}) throws', () => throws(() => Instant.from({}), RangeError));
+    it('Instant.from(instant) is not the same object', () => {
+      const instant = Instant.from('2020-02-12T11:42+01:00[Europe/Amsterdam]');
+      notEqual(Instant.from(instant), instant);
     });
-    it('Absolute.from(ISO string leap second) is constrained', () => {
-      equal(`${Absolute.from('2016-12-31T23:59:60Z')}`, '2016-12-31T23:59:59Z');
+    it('Instant.from(ISO string leap second) is constrained', () => {
+      equal(`${Instant.from('2016-12-31T23:59:60Z')}`, '2016-12-31T23:59:59Z');
     });
     it('variant time separators', () => {
-      equal(`${Absolute.from('1976-11-18t15:23Z')}`, '1976-11-18T15:23Z');
-      equal(`${Absolute.from('1976-11-18 15:23Z')}`, '1976-11-18T15:23Z');
+      equal(`${Instant.from('1976-11-18t15:23Z')}`, '1976-11-18T15:23Z');
+      equal(`${Instant.from('1976-11-18 15:23Z')}`, '1976-11-18T15:23Z');
     });
     it('variant UTC designator', () => {
-      equal(`${Absolute.from('1976-11-18T15:23z')}`, '1976-11-18T15:23Z');
+      equal(`${Instant.from('1976-11-18T15:23z')}`, '1976-11-18T15:23Z');
     });
     it('any number of decimal places', () => {
-      equal(`${Absolute.from('1976-11-18T15:23:30.1Z')}`, '1976-11-18T15:23:30.100Z');
-      equal(`${Absolute.from('1976-11-18T15:23:30.12Z')}`, '1976-11-18T15:23:30.120Z');
-      equal(`${Absolute.from('1976-11-18T15:23:30.123Z')}`, '1976-11-18T15:23:30.123Z');
-      equal(`${Absolute.from('1976-11-18T15:23:30.1234Z')}`, '1976-11-18T15:23:30.123400Z');
-      equal(`${Absolute.from('1976-11-18T15:23:30.12345Z')}`, '1976-11-18T15:23:30.123450Z');
-      equal(`${Absolute.from('1976-11-18T15:23:30.123456Z')}`, '1976-11-18T15:23:30.123456Z');
-      equal(`${Absolute.from('1976-11-18T15:23:30.1234567Z')}`, '1976-11-18T15:23:30.123456700Z');
-      equal(`${Absolute.from('1976-11-18T15:23:30.12345678Z')}`, '1976-11-18T15:23:30.123456780Z');
-      equal(`${Absolute.from('1976-11-18T15:23:30.123456789Z')}`, '1976-11-18T15:23:30.123456789Z');
+      equal(`${Instant.from('1976-11-18T15:23:30.1Z')}`, '1976-11-18T15:23:30.100Z');
+      equal(`${Instant.from('1976-11-18T15:23:30.12Z')}`, '1976-11-18T15:23:30.120Z');
+      equal(`${Instant.from('1976-11-18T15:23:30.123Z')}`, '1976-11-18T15:23:30.123Z');
+      equal(`${Instant.from('1976-11-18T15:23:30.1234Z')}`, '1976-11-18T15:23:30.123400Z');
+      equal(`${Instant.from('1976-11-18T15:23:30.12345Z')}`, '1976-11-18T15:23:30.123450Z');
+      equal(`${Instant.from('1976-11-18T15:23:30.123456Z')}`, '1976-11-18T15:23:30.123456Z');
+      equal(`${Instant.from('1976-11-18T15:23:30.1234567Z')}`, '1976-11-18T15:23:30.123456700Z');
+      equal(`${Instant.from('1976-11-18T15:23:30.12345678Z')}`, '1976-11-18T15:23:30.123456780Z');
+      equal(`${Instant.from('1976-11-18T15:23:30.123456789Z')}`, '1976-11-18T15:23:30.123456789Z');
     });
     it('variant decimal separator', () => {
-      equal(`${Absolute.from('1976-11-18T15:23:30,12Z')}`, '1976-11-18T15:23:30.120Z');
+      equal(`${Instant.from('1976-11-18T15:23:30,12Z')}`, '1976-11-18T15:23:30.120Z');
     });
     it('mixture of basic and extended format', () => {
-      equal(`${Absolute.from('19761118T15:23:30.1+00:00')}`, '1976-11-18T15:23:30.100Z');
-      equal(`${Absolute.from('1976-11-18T152330.1+00:00')}`, '1976-11-18T15:23:30.100Z');
-      equal(`${Absolute.from('1976-11-18T15:23:30.1+0000')}`, '1976-11-18T15:23:30.100Z');
-      equal(`${Absolute.from('1976-11-18T152330.1+0000')}`, '1976-11-18T15:23:30.100Z');
-      equal(`${Absolute.from('19761118T15:23:30.1+0000')}`, '1976-11-18T15:23:30.100Z');
-      equal(`${Absolute.from('19761118T152330.1+00:00')}`, '1976-11-18T15:23:30.100Z');
-      equal(`${Absolute.from('+0019761118T15:23:30.1+00:00')}`, '1976-11-18T15:23:30.100Z');
-      equal(`${Absolute.from('+001976-11-18T152330.1+00:00')}`, '1976-11-18T15:23:30.100Z');
-      equal(`${Absolute.from('+001976-11-18T15:23:30.1+0000')}`, '1976-11-18T15:23:30.100Z');
-      equal(`${Absolute.from('+001976-11-18T152330.1+0000')}`, '1976-11-18T15:23:30.100Z');
-      equal(`${Absolute.from('+0019761118T15:23:30.1+0000')}`, '1976-11-18T15:23:30.100Z');
-      equal(`${Absolute.from('+0019761118T152330.1+00:00')}`, '1976-11-18T15:23:30.100Z');
-      equal(`${Absolute.from('+0019761118T152330.1+0000')}`, '1976-11-18T15:23:30.100Z');
+      equal(`${Instant.from('19761118T15:23:30.1+00:00')}`, '1976-11-18T15:23:30.100Z');
+      equal(`${Instant.from('1976-11-18T152330.1+00:00')}`, '1976-11-18T15:23:30.100Z');
+      equal(`${Instant.from('1976-11-18T15:23:30.1+0000')}`, '1976-11-18T15:23:30.100Z');
+      equal(`${Instant.from('1976-11-18T152330.1+0000')}`, '1976-11-18T15:23:30.100Z');
+      equal(`${Instant.from('19761118T15:23:30.1+0000')}`, '1976-11-18T15:23:30.100Z');
+      equal(`${Instant.from('19761118T152330.1+00:00')}`, '1976-11-18T15:23:30.100Z');
+      equal(`${Instant.from('+0019761118T15:23:30.1+00:00')}`, '1976-11-18T15:23:30.100Z');
+      equal(`${Instant.from('+001976-11-18T152330.1+00:00')}`, '1976-11-18T15:23:30.100Z');
+      equal(`${Instant.from('+001976-11-18T15:23:30.1+0000')}`, '1976-11-18T15:23:30.100Z');
+      equal(`${Instant.from('+001976-11-18T152330.1+0000')}`, '1976-11-18T15:23:30.100Z');
+      equal(`${Instant.from('+0019761118T15:23:30.1+0000')}`, '1976-11-18T15:23:30.100Z');
+      equal(`${Instant.from('+0019761118T152330.1+00:00')}`, '1976-11-18T15:23:30.100Z');
+      equal(`${Instant.from('+0019761118T152330.1+0000')}`, '1976-11-18T15:23:30.100Z');
     });
     it('optional parts', () => {
-      equal(`${Absolute.from('1976-11-18T15:23:30+00')}`, '1976-11-18T15:23:30Z');
-      equal(`${Absolute.from('1976-11-18T15Z')}`, '1976-11-18T15:00Z');
+      equal(`${Instant.from('1976-11-18T15:23:30+00')}`, '1976-11-18T15:23:30Z');
+      equal(`${Instant.from('1976-11-18T15Z')}`, '1976-11-18T15:00Z');
     });
   });
-  describe('Absolute.plus works', () => {
-    const abs = Absolute.from('1969-12-25T12:23:45.678901234Z');
+  describe('Instant.plus works', () => {
+    const instant = Instant.from('1969-12-25T12:23:45.678901234Z');
     describe('cross epoch in ms', () => {
-      const one = abs.minus({ hours: 10 * 24, nanoseconds: 800 });
-      const two = abs.plus({ hours: 10 * 24, nanoseconds: 800 });
+      const one = instant.minus({ hours: 10 * 24, nanoseconds: 800 });
+      const two = instant.plus({ hours: 10 * 24, nanoseconds: 800 });
       const three = two.minus({ hours: 20 * 24, nanoseconds: 1600 });
       const four = one.plus({ hours: 20 * 24, nanoseconds: 1600 });
-      it(`(${abs}).minus({ days: 10, nanoseconds: 800 }) = ${one}`, () =>
+      it(`(${instant}).minus({ days: 10, nanoseconds: 800 }) = ${one}`, () =>
         equal(`${one}`, '1969-12-15T12:23:45.678900434Z'));
-      it(`(${abs}).plus({ days: 10, nanoseconds: 800 }) = ${two}`, () =>
+      it(`(${instant}).plus({ days: 10, nanoseconds: 800 }) = ${two}`, () =>
         equal(`${two}`, '1970-01-04T12:23:45.678902034Z'));
       it(`(${two}).minus({ days: 20, nanoseconds: 1600 }) = ${one}`, () => assert(three.equals(one)));
       it(`(${one}).plus( days: 20, nanoseconds: 1600 }) = ${two}`, () => assert(four.equals(two)));
     });
-    it('abs.plus(durationObj)', () => {
-      const later = abs.plus(Temporal.Duration.from('PT240H0.000000800S'));
+    it('instant.plus(durationObj)', () => {
+      const later = instant.plus(Temporal.Duration.from('PT240H0.000000800S'));
       equal(`${later}`, '1970-01-04T12:23:45.678902034Z');
     });
     it('invalid to add years or months', () => {
-      throws(() => abs.plus({ years: 1 }), RangeError);
-      throws(() => abs.plus({ months: 1 }), RangeError);
+      throws(() => instant.plus({ years: 1 }), RangeError);
+      throws(() => instant.plus({ months: 1 }), RangeError);
     });
   });
-  describe('Absolute.minus works', () => {
-    const abs = Absolute.from('1969-12-25T12:23:45.678901234Z');
-    it('abs.minus(durationObj)', () => {
-      const earlier = abs.minus(Temporal.Duration.from('PT240H0.000000800S'));
+  describe('Instant.minus works', () => {
+    const instant = Instant.from('1969-12-25T12:23:45.678901234Z');
+    it('instant.minus(durationObj)', () => {
+      const earlier = instant.minus(Temporal.Duration.from('PT240H0.000000800S'));
       equal(`${earlier}`, '1969-12-15T12:23:45.678900434Z');
     });
     it('invalid to subtract years or months', () => {
-      throws(() => abs.minus({ years: 1 }), RangeError);
-      throws(() => abs.minus({ months: 1 }), RangeError);
+      throws(() => instant.minus({ years: 1 }), RangeError);
+      throws(() => instant.minus({ months: 1 }), RangeError);
     });
   });
-  describe('Absolute.compare works', () => {
-    const abs1 = Absolute.from('1963-02-13T09:36:29.123456789Z');
-    const abs2 = Absolute.from('1976-11-18T15:23:30.123456789Z');
-    const abs3 = Absolute.from('1981-12-15T14:34:31.987654321Z');
-    it('pre epoch equal', () => equal(Absolute.compare(abs1, Absolute.from(abs1)), 0));
-    it('epoch equal', () => equal(Absolute.compare(abs2, Absolute.from(abs2)), 0));
-    it('cross epoch smaller/larger', () => equal(Absolute.compare(abs1, abs2), -1));
-    it('cross epoch larger/smaller', () => equal(Absolute.compare(abs2, abs1), 1));
-    it('epoch smaller/larger', () => equal(Absolute.compare(abs2, abs3), -1));
-    it('epoch larger/smaller', () => equal(Absolute.compare(abs3, abs2), 1));
+  describe('Instant.compare works', () => {
+    const instant1 = Instant.from('1963-02-13T09:36:29.123456789Z');
+    const instant2 = Instant.from('1976-11-18T15:23:30.123456789Z');
+    const instant3 = Instant.from('1981-12-15T14:34:31.987654321Z');
+    it('pre epoch equal', () => equal(Instant.compare(instant1, Instant.from(instant1)), 0));
+    it('epoch equal', () => equal(Instant.compare(instant2, Instant.from(instant2)), 0));
+    it('cross epoch smaller/larger', () => equal(Instant.compare(instant1, instant2), -1));
+    it('cross epoch larger/smaller', () => equal(Instant.compare(instant2, instant1), 1));
+    it('epoch smaller/larger', () => equal(Instant.compare(instant2, instant3), -1));
+    it('epoch larger/smaller', () => equal(Instant.compare(instant3, instant2), 1));
     it("doesn't cast first argument", () => {
       // @ts-ignore
-      throws(() => Absolute.compare(abs1, abs1.toString()), TypeError);
+      throws(() => Instant.compare(instant1, instant1.toString()), TypeError);
       // @ts-ignore
-      throws(() => Absolute.compare(abs1, {}), TypeError);
+      throws(() => Instant.compare(instant1, {}), TypeError);
     });
     it("doesn't cast second argument", () => {
       // @ts-ignore
-      throws(() => Absolute.compare(abs2.getEpochNanoseconds(), abs2), TypeError);
+      throws(() => Instant.compare(instant2.getEpochNanoseconds(), instant2), TypeError);
       // @ts-ignore
-      throws(() => Absolute.compare({}, abs2), TypeError);
+      throws(() => Instant.compare({}, instant2), TypeError);
     });
   });
-  describe('Absolute.equals works', () => {
-    const abs1 = Absolute.from('1963-02-13T09:36:29.123456789Z');
-    const abs2 = Absolute.from('1976-11-18T15:23:30.123456789Z');
-    const abs3 = Absolute.from('1981-12-15T14:34:31.987654321Z');
-    it('pre epoch equal', () => assert(abs1.equals(abs1)));
-    it('epoch equal', () => assert(abs2.equals(abs2)));
-    it('cross epoch unequal', () => assert(!abs1.equals(abs2)));
-    it('epoch unequal', () => assert(!abs2.equals(abs3)));
+  describe('Instant.equals works', () => {
+    const instant1 = Instant.from('1963-02-13T09:36:29.123456789Z');
+    const instant2 = Instant.from('1976-11-18T15:23:30.123456789Z');
+    const instant3 = Instant.from('1981-12-15T14:34:31.987654321Z');
+    it('pre epoch equal', () => assert(instant1.equals(instant1)));
+    it('epoch equal', () => assert(instant2.equals(instant2)));
+    it('cross epoch unequal', () => assert(!instant1.equals(instant2)));
+    it('epoch unequal', () => assert(!instant2.equals(instant3)));
     it("doesn't cast argument", () => {
       // @ts-ignore
-      throws(() => abs1.equals(abs1.getEpochNanoseconds()), TypeError);
+      throws(() => instant1.equals(instant1.getEpochNanoseconds()), TypeError);
       // @ts-ignore
-      throws(() => abs1.equals({}), TypeError);
+      throws(() => instant1.equals({}), TypeError);
     });
   });
   describe("Comparison operators don't work", () => {
-    const abs1 = Absolute.from('1963-02-13T09:36:29.123456789Z');
-    const abs1again = Absolute.from('1963-02-13T09:36:29.123456789Z');
-    const abs2 = Absolute.from('1976-11-18T15:23:30.123456789Z');
-    it('=== is object equality', () => equal(abs1, abs1));
-    it('!== is object equality', () => notEqual(abs1, abs1again));
-    it('<', () => throws(() => abs1 < abs2));
-    it('>', () => throws(() => abs1 > abs2));
-    it('<=', () => throws(() => abs1 <= abs2));
-    it('>=', () => throws(() => abs1 >= abs2));
+    const instant1 = Instant.from('1963-02-13T09:36:29.123456789Z');
+    const instant1again = Instant.from('1963-02-13T09:36:29.123456789Z');
+    const instant2 = Instant.from('1976-11-18T15:23:30.123456789Z');
+    it('=== is object equality', () => equal(instant1, instant1));
+    it('!== is object equality', () => notEqual(instant1, instant1again));
+    it('<', () => throws(() => instant1 < instant2));
+    it('>', () => throws(() => instant1 > instant2));
+    it('<=', () => throws(() => instant1 <= instant2));
+    it('>=', () => throws(() => instant1 >= instant2));
   });
-  describe('Absolute.difference works', () => {
-    const earlier = Absolute.from('1976-11-18T15:23:30.123456789Z');
-    const later = Absolute.from('2019-10-29T10:46:38.271986102Z');
+  describe('Instant.difference works', () => {
+    const earlier = Instant.from('1976-11-18T15:23:30.123456789Z');
+    const later = Instant.from('2019-10-29T10:46:38.271986102Z');
     const diff = later.difference(earlier);
     // it('throws if out of order', () => throws(() => earlier.difference(later), RangeError));
     it(`(${earlier}).plus(${diff}) == (${later})`, () => assert(earlier.plus(diff).equals(later)));
@@ -435,13 +435,13 @@ describe('Absolute', () => {
       // @ts-expect-error
       throws(() => earlier.difference({}), TypeError);
     });
-    const feb20 = Absolute.from('2020-02-01T00:00Z');
-    const feb21 = Absolute.from('2021-02-01T00:00Z');
+    const feb20 = Instant.from('2020-02-01T00:00Z');
+    const feb21 = Instant.from('2021-02-01T00:00Z');
     it('defaults to returning seconds', () => {
       equal(`${feb21.difference(feb20)}`, 'PT31622400S');
       equal(`${feb21.difference(feb20, { largestUnit: 'seconds' })}`, 'PT31622400S');
-      equal(`${Absolute.from('2021-02-01T00:00:00.000000001Z').difference(feb20)}`, 'PT31622400.000000001S');
-      equal(`${feb21.difference(Absolute.from('2020-02-01T00:00:00.000000001Z'))}`, 'PT31622399.999999999S');
+      equal(`${Instant.from('2021-02-01T00:00:00.000000001Z').difference(feb20)}`, 'PT31622400.000000001S');
+      equal(`${feb21.difference(Instant.from('2020-02-01T00:00:00.000000001Z'))}`, 'PT31622399.999999999S');
     });
     it('can return minutes, hours, and days', () => {
       equal(`${feb21.difference(feb20, { largestUnit: 'hours' })}`, 'PT8784H');
@@ -462,60 +462,60 @@ describe('Absolute', () => {
   describe('Min/max range', () => {
     it('constructing from ns', () => {
       const limit = 8_640_000_000_000_000_000_000n;
-      throws(() => new Absolute(-limit - 1n), RangeError);
-      throws(() => new Absolute(limit + 1n), RangeError);
-      equal(`${new Absolute(-limit)}`, '-271821-04-20T00:00Z');
-      equal(`${new Absolute(limit)}`, '+275760-09-13T00:00Z');
+      throws(() => new Instant(-limit - 1n), RangeError);
+      throws(() => new Instant(limit + 1n), RangeError);
+      equal(`${new Instant(-limit)}`, '-271821-04-20T00:00Z');
+      equal(`${new Instant(limit)}`, '+275760-09-13T00:00Z');
     });
     it('constructing from ms', () => {
       const limit = 86400e11;
-      throws(() => Absolute.fromEpochMilliseconds(-limit - 1), RangeError);
-      throws(() => Absolute.fromEpochMilliseconds(limit + 1), RangeError);
-      equal(`${Absolute.fromEpochMilliseconds(-limit)}`, '-271821-04-20T00:00Z');
-      equal(`${Absolute.fromEpochMilliseconds(limit)}`, '+275760-09-13T00:00Z');
+      throws(() => Instant.fromEpochMilliseconds(-limit - 1), RangeError);
+      throws(() => Instant.fromEpochMilliseconds(limit + 1), RangeError);
+      equal(`${Instant.fromEpochMilliseconds(-limit)}`, '-271821-04-20T00:00Z');
+      equal(`${Instant.fromEpochMilliseconds(limit)}`, '+275760-09-13T00:00Z');
     });
     it('constructing from ISO string', () => {
-      throws(() => Absolute.from('-271821-04-19T23:59:59.999999999Z'), RangeError);
-      throws(() => Absolute.from('+275760-09-13T00:00:00.000000001Z'), RangeError);
-      equal(`${Absolute.from('-271821-04-20T00:00Z')}`, '-271821-04-20T00:00Z');
-      equal(`${Absolute.from('+275760-09-13T00:00Z')}`, '+275760-09-13T00:00Z');
+      throws(() => Instant.from('-271821-04-19T23:59:59.999999999Z'), RangeError);
+      throws(() => Instant.from('+275760-09-13T00:00:00.000000001Z'), RangeError);
+      equal(`${Instant.from('-271821-04-20T00:00Z')}`, '-271821-04-20T00:00Z');
+      equal(`${Instant.from('+275760-09-13T00:00Z')}`, '+275760-09-13T00:00Z');
     });
     it('converting from DateTime', () => {
       const min = Temporal.DateTime.from('-271821-04-19T00:00:00.000000001');
       const max = Temporal.DateTime.from('+275760-09-13T23:59:59.999999999');
-      throws(() => min.toAbsolute('UTC'), RangeError);
-      throws(() => max.toAbsolute('UTC'), RangeError);
+      throws(() => min.toInstant('UTC'), RangeError);
+      throws(() => max.toInstant('UTC'), RangeError);
       const utc = Temporal.TimeZone.from('UTC');
-      throws(() => utc.getAbsoluteFor(min), RangeError);
-      throws(() => utc.getAbsoluteFor(max), RangeError);
+      throws(() => utc.getInstantFor(min), RangeError);
+      throws(() => utc.getInstantFor(max), RangeError);
     });
     it('adding and subtracting beyond limit', () => {
-      const min = Absolute.from('-271821-04-20T00:00Z');
-      const max = Absolute.from('+275760-09-13T00:00Z');
+      const min = Instant.from('-271821-04-20T00:00Z');
+      const max = Instant.from('+275760-09-13T00:00Z');
       throws(() => min.minus({ nanoseconds: 1 }), RangeError);
       throws(() => max.plus({ nanoseconds: 1 }), RangeError);
     });
   });
-  describe('Absolute.toDateTime works', () => {
+  describe('Instant.toDateTime works', () => {
     const iso = '1976-11-18T14:23:30.123456789Z';
-    const abs = Absolute.from(iso);
+    const instant = Instant.from(iso);
     /*
     it('without optional parameter', () => {
-      const dt = abs.toDateTime();
-      equal(abs.getEpochNanoseconds(), dt.toAbsolute().getEpochNanoseconds());
+      const dt = instant.toDateTime();
+      equal(instant.getEpochNanoseconds(), dt.toInstant().getEpochNanoseconds());
       equal(`${dt}`, '1976-11-18T14:23:30.123456789');
     });
     */
     it('optional time zone parameter UTC', () => {
       const tz = Temporal.TimeZone.from('UTC');
-      const dt = abs.toDateTime(tz);
-      equal(abs.getEpochNanoseconds(), dt.toAbsolute(tz).getEpochNanoseconds());
+      const dt = instant.toDateTime(tz);
+      equal(instant.getEpochNanoseconds(), dt.toInstant(tz).getEpochNanoseconds());
       equal(`${dt}`, '1976-11-18T14:23:30.123456789');
     });
     it('optional time zone parameter non-UTC', () => {
       const tz = Temporal.TimeZone.from('America/New_York');
-      const dt = abs.toDateTime(tz);
-      equal(abs.getEpochNanoseconds(), dt.toAbsolute(tz).getEpochNanoseconds());
+      const dt = instant.toDateTime(tz);
+      equal(instant.getEpochNanoseconds(), dt.toInstant(tz).getEpochNanoseconds());
       equal(`${dt}`, '1976-11-18T09:23:30.123456789');
     });
   });
@@ -557,9 +557,9 @@ describe('LocalDateTime', () => {
       const ldt = time.toLocalDateTime('America/Los_Angeles', date, { disambiguation: 'earlier' });
       equal(ldt.toString(), '2020-03-08T01:00-08:00[America/Los_Angeles]');
     });
-    it('Absolute.toLocalDateTime works', () => {
-      const abs = Temporal.Absolute.from('2020-01-01T00:00-08:00');
-      const ldt = abs.toLocalDateTime('America/Los_Angeles');
+    it('Instant.toLocalDateTime works', () => {
+      const instant = Temporal.Instant.from('2020-01-01T00:00-08:00');
+      const ldt = instant.toLocalDateTime('America/Los_Angeles');
       equal(ldt.toString(), '2020-01-01T00:00-08:00[America/Los_Angeles]');
     });
     it('DateTime.toLocalDateTime works', () => {
@@ -585,9 +585,9 @@ describe('LocalDateTime', () => {
     });
     it('parses with "Z" used as an offset', () => {
       const iso = '2020-03-08T01:00-08:00[America/Los_Angeles]';
-      const abs = Temporal.LocalDateTime.from(iso).toAbsolute();
-      equal(abs.toString(), '2020-03-08T09:00Z');
-      const ldt = Temporal.LocalDateTime.from(`${abs.toString()}[America/Los_Angeles]`);
+      const instant = Temporal.LocalDateTime.from(iso).toInstant();
+      equal(instant.toString(), '2020-03-08T09:00Z');
+      const ldt = Temporal.LocalDateTime.from(`${instant.toString()}[America/Los_Angeles]`);
       equal(ldt.toString(), iso);
     });
     it('throws if no brackets', () => {
@@ -710,7 +710,7 @@ describe('LocalDateTime', () => {
     });
 
     it('Samoa date line change: 10:00PM 29 Dec 2011 -> 11:00PM 31 Dec 2011', () => {
-      const dayBeforeSamoaDateLineChangeAbs = new Temporal.DateTime(2011, 12, 29, 22).toAbsolute('Pacific/Apia');
+      const dayBeforeSamoaDateLineChangeAbs = new Temporal.DateTime(2011, 12, 29, 22).toInstant('Pacific/Apia');
       const start = dayBeforeSamoaDateLineChangeAbs.toLocalDateTime('Pacific/Apia');
       const added = start.plus({ days: 1, hours: 1 });
       equal(added.day, 31);
@@ -955,8 +955,8 @@ describe('LocalDateTime', () => {
       it('LocalDateTime.prototype.toJSON is a Function', () => {
         equal(typeof LocalDateTime.prototype.toJSON, 'function');
       });
-      it('LocalDateTime.prototype has toAbsolute', () => {
-        assert('toAbsolute' in LocalDateTime.prototype);
+      it('LocalDateTime.prototype has toInstant', () => {
+        assert('toInstant' in LocalDateTime.prototype);
       });
       it('LocalDateTime.prototype has timeZone', () => {
         assert('timeZone' in LocalDateTime.prototype);
@@ -988,11 +988,11 @@ describe('LocalDateTime', () => {
     assert(instant);
     equal(typeof instant, 'object');
     equal(
-      instant.toAbsolute().getEpochSeconds(),
+      instant.toInstant().getEpochSeconds(),
       Math.floor(Date.UTC(1976, 10, 18, 15, 23, 30, 123) / 1e3),
       'getEpochSeconds'
     );
-    equal(instant.toAbsolute().getEpochMilliseconds(), Date.UTC(1976, 10, 18, 15, 23, 30, 123), 'getEpochMilliseconds');
+    equal(instant.toInstant().getEpochMilliseconds(), Date.UTC(1976, 10, 18, 15, 23, 30, 123), 'getEpochMilliseconds');
 
     describe('LocalDateTime for (1976, 11, 18, 15, 23, 30, 123, 456, 789)', () => {
       it('datetime can be constructed', () => {
@@ -1289,33 +1289,33 @@ describe('LocalDateTime', () => {
       equal(`${DateTime.from('1976-11-18')}`, '1976-11-18T00:00');
     });
   });
-  describe('DateTime.toAbsolute() works', () => {
+  describe('DateTime.toInstant() works', () => {
     it('recent date', () => {
       const dt = DateTime.from('2019-10-29T10:46:38.271986102');
       const tz = Temporal.TimeZone.from('Europe/Amsterdam');
-      equal(`${dt.toAbsolute(tz)}`, '2019-10-29T09:46:38.271986102Z');
-      equal(`${dt.toAbsolute('Europe/Amsterdam')}`, '2019-10-29T09:46:38.271986102Z');
+      equal(`${dt.toInstant(tz)}`, '2019-10-29T09:46:38.271986102Z');
+      equal(`${dt.toInstant('Europe/Amsterdam')}`, '2019-10-29T09:46:38.271986102Z');
     });
     it('year ≤ 99', () => {
       const dt = DateTime.from('+000098-10-29T10:46:38.271986102');
-      equal(`${dt.toAbsolute('+06:00')}`, '+000098-10-29T04:46:38.271986102Z');
+      equal(`${dt.toInstant('+06:00')}`, '+000098-10-29T04:46:38.271986102Z');
     });
     it('year < 1', () => {
       let dt = DateTime.from('+000000-10-29T10:46:38.271986102');
-      equal(`${dt.toAbsolute('+06:00')}`, '+000000-10-29T04:46:38.271986102Z');
+      equal(`${dt.toInstant('+06:00')}`, '+000000-10-29T04:46:38.271986102Z');
       dt = DateTime.from('-001000-10-29T10:46:38.271986102');
-      equal(`${dt.toAbsolute('+06:00')}`, '-001000-10-29T04:46:38.271986102Z');
+      equal(`${dt.toInstant('+06:00')}`, '-001000-10-29T04:46:38.271986102Z');
     });
-    it('datetime with multiple absolute', () => {
+    it('datetime with multiple instant', () => {
       const dt = DateTime.from('2019-02-16T23:45');
-      equal(`${dt.toAbsolute('America/Sao_Paulo', { disambiguation: 'earlier' })}`, '2019-02-17T01:45Z');
-      equal(`${dt.toAbsolute('America/Sao_Paulo', { disambiguation: 'later' })}`, '2019-02-17T02:45Z');
-      throws(() => dt.toAbsolute('America/Sao_Paulo', { disambiguation: 'reject' }), RangeError);
+      equal(`${dt.toInstant('America/Sao_Paulo', { disambiguation: 'earlier' })}`, '2019-02-17T01:45Z');
+      equal(`${dt.toInstant('America/Sao_Paulo', { disambiguation: 'later' })}`, '2019-02-17T02:45Z');
+      throws(() => dt.toInstant('America/Sao_Paulo', { disambiguation: 'reject' }), RangeError);
     });
     it('throws on bad disambiguation', () => {
       ['', 'EARLIER', 'xyz', 3, null].forEach((disambiguation) =>
         // @ts-ignore
-        throws(() => DateTime.from('2019-10-29T10:46').toAbsolute('UTC', { disambiguation }), RangeError)
+        throws(() => DateTime.from('2019-10-29T10:46').toInstant('UTC', { disambiguation }), RangeError)
       );
     });
   });
@@ -1362,9 +1362,9 @@ describe('LocalDateTime', () => {
       equal(`${DateTime.from('-271821-04-19T00:00:00.000000001')}`, '-271821-04-19T00:00:00.000000001');
       equal(`${DateTime.from('+275760-09-13T23:59:59.999999999')}`, '+275760-09-13T23:59:59.999999999');
     });
-    it('converting from Absolute', () => {
-      const min = Temporal.Absolute.from('-271821-04-20T00:00Z');
-      const max = Temporal.Absolute.from('+275760-09-13T00:00Z');
+    it('converting from Instant', () => {
+      const min = Temporal.Instant.from('-271821-04-20T00:00Z');
+      const max = Temporal.Instant.from('+275760-09-13T00:00Z');
       equal(`${min.toDateTime('-23:59')}`, '-271821-04-19T00:01');
       equal(`${max.toDateTime('+23:59')}`, '+275760-09-13T23:59');
     });
@@ -1390,23 +1390,23 @@ describe('LocalDateTime', () => {
       });
     });
   });
-  describe('DateTime.toAbsolute() works', () => {
+  describe('DateTime.toInstant() works', () => {
     const dt = DateTime.from('1976-11-18T15:23:30.123456789');
     /*
     it('without optional parameter', () => {
-      const abs = dt.toAbsolute();
-      equal(`${abs}`, '1976-11-18T15:23:30.123456789Z');
+      const instant = dt.toInstant();
+      equal(`${instant}`, '1976-11-18T15:23:30.123456789Z');
     });
     */
     it('optional time zone parameter UTC', () => {
       const tz = Temporal.TimeZone.from('UTC');
-      const abs = dt.toAbsolute(tz);
-      equal(`${abs}`, '1976-11-18T15:23:30.123456789Z');
+      const instant = dt.toInstant(tz);
+      equal(`${instant}`, '1976-11-18T15:23:30.123456789Z');
     });
     it('optional time zone parameter non-UTC', () => {
       const tz = Temporal.TimeZone.from('America/New_York');
-      const abs = dt.toAbsolute(tz);
-      equal(`${abs}`, '1976-11-18T20:23:30.123456789Z');
+      const instant = dt.toInstant(tz);
+      equal(`${instant}`, '1976-11-18T20:23:30.123456789Z');
     });
   });
   describe('dateTime.getFields() works', () => {

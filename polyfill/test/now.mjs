@@ -35,11 +35,11 @@ describe('Temporal.now', () => {
     it('Temporal.now.localDateTime() matches other now methods', () => {
       const isSmallDiff = (d) => d.seconds * 1e9 + d.milliseconds * 1e6 + d.microseconds * 1e3 + d.nanoseconds < 1e8;
       const dt = Temporal.now.dateTime();
-      const abs = Temporal.now.absolute();
+      const abs = Temporal.now.instant();
       const tz = Temporal.now.timeZone();
       const ldt = Temporal.now.localDateTime();
       assert(isSmallDiff(ldt.toDateTime().difference(dt, { largestUnit: 'seconds' })));
-      assert(isSmallDiff(ldt.toAbsolute().difference(abs, { largestUnit: 'seconds' })));
+      assert(isSmallDiff(ldt.toInstant().difference(abs, { largestUnit: 'seconds' })));
       assert(ldt.timeZone.name === tz.name);
     });
   });

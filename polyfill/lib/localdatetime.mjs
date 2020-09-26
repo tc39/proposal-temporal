@@ -6,8 +6,8 @@ const Temporal = {
   get DateTime() {
     return GetIntrinsic('%Temporal.DateTime%');
   },
-  get Absolute() {
-    return GetIntrinsic('%Temporal.Absolute%');
+  get Instant() {
+    return GetIntrinsic('%Temporal.Instant%');
   },
   get TimeZone() {
     return GetIntrinsic('%Temporal.TimeZone%');
@@ -60,7 +60,7 @@ function fromIsoString(isoString, options) {
   if (!tzString) {
     throw new Error(
       "Missing time zone. Either append a time zone identifier (e.g. '2011-12-03T10:15:30+01:00[Europe/Paris]')" +
-        ' or create differently (e.g. `Temporal.Absolute.from(isoString).toLocalDateTime(timeZone)`).'
+        ' or create differently (e.g. `Temporal.Instant.from(isoString).toLocalDateTime(timeZone)`).'
     );
   }
 
@@ -68,11 +68,11 @@ function fromIsoString(isoString, options) {
   const tz = Temporal.TimeZone.from(tzString);
   const cal = Temporal.Calendar.from(calendarString);
 
-  // Calculate the offset by comparing the DateTime to the Absolute parsed from
+  // Calculate the offset by comparing the DateTime to the Instant parsed from
   // the same string. Note that current Temporal parsing regexes fail when "Z"
   // is used instead of a numeric offset (e.g.
   // 2020-03-08T09:00Z[America/Los_Angeles]). This is why we can't parse the
-  // whole original string into an Absolute. But the Java.time parser accepts
+  // whole original string into an Instant. But the Java.time parser accepts
   // "Z" as an offset, so for compatibility and ergonomics we do too. Below is a
   // quote from Jon Skeet (creator of Joda Time which java.time was based on)
   // that may explain why Java accepts this format. From
@@ -82,7 +82,7 @@ function fromIsoString(isoString, options) {
   // > time zone. (So you can't tell what the local time will be one minute
   // > later, for example.)
   const isZ = absString.trimEnd().toUpperCase().endsWith('Z');
-  const abs = Temporal.Absolute.from(absString);
+  const abs = Temporal.Instant.from(absString);
   const offsetNs = dt.difference(abs.toDateTime('UTC'), { largestUnit: 'nanoseconds' }).nanoseconds;
   return fromCommon(dt.withCalendar(cal), tz, offsetNs, disambiguation, isZ ? 'use' : offsetOption);
 }
@@ -91,17 +91,17 @@ function fromIsoString(isoString, options) {
 function fromCommon(dt, timeZone, offsetNs, disambiguation, offsetOption) {
   if (offsetNs === undefined || offsetOption === 'ignore') {
     // Simple case: ISO string without a TZ offset (or caller wants to ignore
-    // the offset), so just convert DateTime to Absolute in the given time zone.
+    // the offset), so just convert DateTime to Instant in the given time zone.
     return fromDateTime(dt, timeZone, { disambiguation });
   }
 
-  // Calculate the absolute for the input's date/time and offset
-  const absWithInputOffset = dt.toAbsolute('UTC').plus({ nanoseconds: -offsetNs });
+  // Calculate the instant for the input's date/time and offset
+  const absWithInputOffset = dt.toInstant('UTC').plus({ nanoseconds: -offsetNs });
 
   if (
     offsetOption === 'use' ||
-    absWithInputOffset.equals(dt.toAbsolute(timeZone, { disambiguation: 'earlier' })) ||
-    absWithInputOffset.equals(dt.toAbsolute(timeZone, { disambiguation: 'later' }))
+    absWithInputOffset.equals(dt.toInstant(timeZone, { disambiguation: 'earlier' })) ||
+    absWithInputOffset.equals(dt.toInstant(timeZone, { disambiguation: 'later' }))
   ) {
     // The caller wants the offset to always win ('use') OR the caller is OK
     // with the offset winning ('prefer' or 'reject') as long as it's valid for
@@ -109,11 +109,11 @@ function fromCommon(dt, timeZone, offsetNs, disambiguation, offsetOption) {
     return new LocalDateTime(absWithInputOffset.getEpochNanoseconds(), timeZone, dt.calendar);
   }
 
-  // If we get here, then the user-provided offset doesn't match any absolutes
+  // If we get here, then the user-provided offset doesn't match any instants
   // for this time zone and date/time.
   if (offsetOption === 'reject') {
-    const earlierOffset = timeZone.getOffsetStringFor(dt.toAbsolute(timeZone, { disambiguation: 'earlier' }));
-    const laterOffset = timeZone.getOffsetStringFor(dt.toAbsolute(timeZone, { disambiguation: 'later' }));
+    const earlierOffset = timeZone.getOffsetStringFor(dt.toInstant(timeZone, { disambiguation: 'earlier' }));
+    const laterOffset = timeZone.getOffsetStringFor(dt.toInstant(timeZone, { disambiguation: 'later' }));
     const validOffsets = earlierOffset === laterOffset ? [earlierOffset] : [earlierOffset, laterOffset];
     const joined = validOffsets.join(' or ');
     const offsetString = formatTimeZoneOffsetString(offsetNs);
@@ -127,7 +127,7 @@ function fromCommon(dt, timeZone, offsetNs, disambiguation, offsetOption) {
 }
 
 function fromDateTime(dateTime, timeZone, options) {
-  return new LocalDateTime(dateTime.toAbsolute(timeZone, options).getEpochNanoseconds(), timeZone, dateTime.calendar);
+  return new LocalDateTime(dateTime.toInstant(timeZone, options).getEpochNanoseconds(), timeZone, dateTime.calendar);
 }
 
 /** Identical logic for `plus` and `minus` */
@@ -137,9 +137,9 @@ function doPlusOrMinus(op, durationLike, options, localDateTime) {
 
   const { timeDuration, dateDuration } = splitDuration(durationLike);
   if (isZeroDuration(dateDuration)) {
-    // If there's only a time to add/subtract, then use absolute math because
-    // RFC 5545 specifies using absolute math for time units.
-    const result = localDateTime.toAbsolute()[op](durationLike);
+    // If there's only a time to add/subtract, then use exact math because
+    // RFC 5545 specifies using exact math for time units.
+    const result = localDateTime.toInstant()[op](durationLike);
     return new LocalDateTime(result.getEpochNanoseconds(), timeZone, calendar);
   } else if (isZeroDuration(timeDuration)) {
     const newDateTime = localDateTime.toDateTime()[op](dateDuration, { overflow });
@@ -148,27 +148,27 @@ function doPlusOrMinus(op, durationLike, options, localDateTime) {
 
   // If we get here, there's both a date and time portion of the duration. RFC
   // 5545 requires the date portion to be added/subtracted in calendar days and
-  // the time portion to be added/subtracted in exact (absolute) time. The
-  // easiest way to do this would be to first add/subtract the date using
-  // DateTime math, then convert the intermediate result to Absolute, and then
-  // add the time portion using Absolute math. The problem with that approach is
-  // that the "convert the intermediate result to Absolute" step will possibly
-  // require a DST disambiguation, which is weird to happen in the middle of the
-  // duration instead of at the end. So instead, we'll achieve the same result
-  // via a more roundabout way that avoids the intermediate disambiguation:
+  // the time portion to be added/subtracted in exact time. The easiest way to
+  // do this would be to first add/subtract the date using DateTime math, then
+  // convert the intermediate result to Instant, and then add the time portion
+  // using Instant math. The problem with that approach is that the "convert the
+  // intermediate result to Instant" step will possibly require a DST
+  // disambiguation, which is weird to happen in the middle of the duration
+  // instead of at the end. So instead, we'll achieve the same result via a more
+  // roundabout way that avoids the intermediate disambiguation:
   // 1) First, add the entire duration using DateTime math
-  // 2) Turn that DateTime into an Absolute, applying 'compatible'
-  //    disambiguation (which is required by RFC 5545) at that endpoint.
-  // 2) Starting from the Absolute endpoint, go backwards by the length of the
+  // 2) Turn that DateTime into an Instant, applying 'compatible' disambiguation
+  //    (which is required by RFC 5545) at that endpoint.
+  // 2) Starting from the Instant endpoint, go backwards by the length of the
   //    time duration.
   // 3) At that point, if the offset is different from the endpoint's offset,
   //    then there was an offset change during the time duration.
-  // 4) Adjust the Absolute endpoint by the difference in offsets from endpoint
-  //    Absolute to intermediate Absolute...
+  // 4) Adjust the Instant endpoint by the difference in offsets from endpoint
+  //    Instant to intermediate Instant...
   // 5) ...except if the adjustment causes moving back across the transition.
-  // 6) Finally, create the result using the adjusted endpoint Absolute.
+  // 6) Finally, create the result using the adjusted endpoint Instant.
   const newDateTime = localDateTime.toDateTime()[op](durationLike, { overflow });
-  let absolute = newDateTime.toAbsolute(timeZone);
+  let instant = newDateTime.toInstant(timeZone);
   // TODO: after duration rounding lands, replace below with:
   // const totalTimeDurationNanoseconds = timeDuration.round({largestUnit: 'nanoseconds'});
   const totalTimeDurationNanoseconds =
@@ -178,9 +178,9 @@ function doPlusOrMinus(op, durationLike, options, localDateTime) {
     timeDuration.milliseconds * 1e6 +
     timeDuration.microseconds * 1000 +
     timeDuration.nanoseconds;
-  const backUpAbs = absolute[op]({ nanoseconds: -totalTimeDurationNanoseconds });
+  const backUpAbs = instant[op]({ nanoseconds: -totalTimeDurationNanoseconds });
   const backUpOffset = timeZone.getOffsetNanosecondsFor(backUpAbs);
-  const absOffset = timeZone.getOffsetNanosecondsFor(absolute);
+  const absOffset = timeZone.getOffsetNanosecondsFor(instant);
   const backUpNanoseconds = absOffset - backUpOffset;
   if (backUpNanoseconds) {
     // RFC 5545 specifies that time units are always "exact time" meaning they
@@ -188,25 +188,25 @@ function doPlusOrMinus(op, durationLike, options, localDateTime) {
     // the time duration that was added, then undo the impact of that
     // transition. However, don't adjust if applying the adjustment would cause
     // us to back up onto the other side of the transition.
-    const adjustedAbs = absolute.plus({ nanoseconds: backUpNanoseconds });
-    if (timeZone.getOffsetNanosecondsFor(adjustedAbs) === timeZone.getOffsetNanosecondsFor(absolute)) {
-      absolute = adjustedAbs;
+    const adjustedAbs = instant.plus({ nanoseconds: backUpNanoseconds });
+    if (timeZone.getOffsetNanosecondsFor(adjustedAbs) === timeZone.getOffsetNanosecondsFor(instant)) {
+      instant = adjustedAbs;
     }
   }
-  return new LocalDateTime(absolute.getEpochNanoseconds(), timeZone, calendar);
+  return new LocalDateTime(instant.getEpochNanoseconds(), timeZone, calendar);
 }
 
 export class LocalDateTime {
   /**
-   * Construct a new `Temporal.LocalDateTime` instance from an absolute
-   * timestamp, time zone, and optional calendar.
+   * Construct a new `Temporal.LocalDateTime` instance from an exact timestamp,
+   * time zone, and optional calendar.
    *
    * Use `Temporal.LocalDateTime.from()`To construct a `Temporal.LocalDateTime`
    * from an ISO 8601 string or from a time zone and `DateTime` fields (like
    * year or hour).
    *
-   * @param epochNanoseconds {bigint} - absolute timestamp (in nanoseconds since
-   * UNIX epoch) for this instance
+   * @param epochNanoseconds {bigint} - instant (in nanoseconds since UNIX
+   * epoch) for this instance
    * @param timeZone {Temporal.TimeZoneProtocol} - time zone for this instance
    * @param [calendar=Temporal.Calendar.from('iso8601')] {Temporal.CalendarProtocol} -
    * calendar for this instance (defaults to ISO calendar)
@@ -214,7 +214,7 @@ export class LocalDateTime {
   constructor(epochNanoseconds, timeZone, calendar) {
     // TODO: remove the cast below once https://github.com/tc39/proposal-temporal/issues/810 is resolved
     this._tz = Temporal.TimeZone.from(timeZone);
-    this._abs = new Temporal.Absolute(epochNanoseconds);
+    this._abs = new Temporal.Instant(epochNanoseconds);
     this._dt = this._abs.toDateTime(this._tz, calendar && Temporal.Calendar.from(calendar));
     // eslint-disable-next-line no-undef
     if (typeof __debug__ !== 'undefined' && __debug__) {
@@ -237,7 +237,7 @@ export class LocalDateTime {
    *   is not provided, then the time can be ambiguous around DST transitions.
    *   The `disambiguation` option can resolve this ambiguity.
    * - An ISO 8601 date+time+offset string (the same format used by
-   *   `Temporal.Absolute.from`) with a time zone identifier suffix appended in
+   *   `Temporal.Instant.from`) with a time zone identifier suffix appended in
    *   square brackets, e.g. `2007-12-03T10:15:30+01:00[Europe/Paris]` or
    *   `2007-12-03T09:15:30Z[Europe/Paris]`.
    * - An object that can be converted to the string format above.
@@ -260,8 +260,8 @@ export class LocalDateTime {
     if (item instanceof Temporal.DateTime) {
       throw new TypeError('Time zone is missing. Try `dateTime.toLocalDateTime(timeZone)`.');
     }
-    if (item instanceof Temporal.Absolute) {
-      throw new TypeError('Time zone is missing. Try `absolute.toLocalDateTime(timeZone}`.');
+    if (item instanceof Temporal.Instant) {
+      throw new TypeError('Time zone is missing. Try `instant.toLocalDateTime(timeZone}`.');
     }
     if (item instanceof LocalDateTime) {
       return new LocalDateTime(item._abs.getEpochNanoseconds(), item._tz, item._dt.calendar);
@@ -382,11 +382,11 @@ export class LocalDateTime {
   }
 
   /**
-   * Returns the absolute timestamp of this `Temporal.LocalDateTime` instance as
-   * a `Temporal.Absolute`.
+   * Returns the exact time of this `Temporal.LocalDateTime` instance as a
+   * `Temporal.Instant`.
    */
-  toAbsolute() {
-    return Temporal.Absolute.from(this._abs);
+  toInstant() {
+    return Temporal.Instant.from(this._abs);
   }
 
   /**
@@ -447,8 +447,8 @@ export class LocalDateTime {
     const todayDate = this.toDate();
     const today = LocalDateTime.from({ ...todayDate.getFields(), timeZone: this.timeZone });
     const tomorrow = LocalDateTime.from({ ...todayDate.plus({ days: 1 }).getFields(), timeZone: this.timeZone });
-    const todayAbs = today.toAbsolute();
-    const tomorrowAbs = tomorrow.toAbsolute();
+    const todayAbs = today.toInstant();
+    const tomorrowAbs = tomorrow.toInstant();
     const diff = tomorrowAbs.difference(todayAbs, { largestUnit: 'hours' });
     const hours =
       diff.hours +
@@ -496,14 +496,14 @@ export class LocalDateTime {
 
   /**
    * Offset (in nanoseconds) relative to UTC of the current time zone and
-   * absolute instant.
+   * instant of this `Temporal.LocalDateTime` instance.
    *
    * The value of this field will change after DST transitions or after legal
    * changes to a time zone, e.g. a country switching to a new time zone.
    *
    * Because this field is able to uniquely map a `Temporal.DateTime` to an
-   * absolute date/time, this field is returned by `getFields()` and is accepted
-   * by `from` and `with`.
+   * instant, this field is returned by `getFields()` and is accepted by `from`
+   * and `with`.
    * */
   get timeZoneOffsetNanoseconds() {
     return this._tz.getOffsetNanosecondsFor(this._abs);
@@ -511,7 +511,7 @@ export class LocalDateTime {
 
   /**
    * Offset (as a string like `'+05:00'` or `'-07:00'`) relative to UTC of the
-   * current time zone and absolute instant.
+   * current time zone and instant of this `Temporal.LocalDateTime` instance.
    *
    * This property is useful for custom formatting of LocalDateTime instances.
    *
@@ -563,12 +563,12 @@ export class LocalDateTime {
    * * -1 if `one` is less than `two`
    * * 1 if `one` is greater than `two`.
    *
-   * Comparison will use the absolute time, not clock time, because sorting is
+   * Comparison will use the instant, not clock time, because sorting is
    * almost always based on when events happened in the real world, but during
    * the hour before and after DST ends in the fall, sorting of clock time will
    * not match the real-world sort order.
    *
-   * If absolute times are equal, then `.calendar.id` will be compared
+   * If instants are equal, then `.calendar.id` will be compared
    * alphabetically. If those are equal too, then `.timeZone.name` will be
    * compared alphabetically. Even though alphabetic sort carries no meaning,
    * it's used to ensure that unequal instances have a deterministic sort order.
@@ -579,18 +579,18 @@ export class LocalDateTime {
    */
   static compare(one, two) {
     return (
-      Temporal.Absolute.compare(one._abs, two._abs) ||
+      Temporal.Instant.compare(one._abs, two._abs) ||
       compareStrings(one.calendar.id, two.calendar.id) ||
       compareStrings(one.timeZone.name, two.timeZone.name)
     );
   }
 
   /**
-   * Returns `true` if the absolute timestamp, time zone, and calendar are
+   * Returns `true` if the exact time, time zone, and calendar are
    * identical to `other`, and `false` otherwise.
    *
-   * To compare only the absolute timestamps and ignore time zones and
-   * calendars, use `.toAbsolute().compare(other.toAbsolute())`.
+   * To compare only the exact times and ignore time zones and
+   * calendars, use `.toInstant().compare(other.toInstant())`.
    *
    * To ignore calendars but not time zones when comparing, convert both
    * instances to the ISO 8601 calendar:
@@ -613,7 +613,7 @@ export class LocalDateTime {
    * Add a `Temporal.Duration` and return the result.
    *
    * Dates will be added using calendar dates while times will be added with
-   * absolute time.
+   * instant.
    *
    * Available options:
    * ```
@@ -628,7 +628,7 @@ export class LocalDateTime {
    * Subtract a `Temporal.Duration` and return the result.
    *
    * Dates will be subtracted using calendar dates while times will be
-   * subtracted with absolute time.
+   * subtracted with instant.
    *
    * Available options:
    * ```
@@ -646,7 +646,7 @@ export class LocalDateTime {
    * The duration returned is a "hybrid" duration. The date portion represents
    * full calendar days like `DateTime.prototype.difference` would return. The
    * time portion represents real-world elapsed time like
-   * `Absolute.prototype.difference` would return. This "hybrid duration"
+   * `Instant.prototype.difference` would return. This "hybrid duration"
    * approach matches widely-adopted industry standards like RFC 5545
    * (iCalendar). It also matches the behavior of popular JavaScript libraries
    * like moment.js and date-fns.
@@ -660,7 +660,7 @@ export class LocalDateTime {
    *   calendar day even though it's been 24.5 real-world hours).
    *
    * If `largestUnit` is `'hours'` or smaller, then the result will be the same
-   * as if `Temporal.Absolute.prototype.difference` was used.
+   * as if `Temporal.Instant.prototype.difference` was used.
    *
    * If both values have the same local time, then the result will be the same
    * as if `Temporal.DateTime.prototype.difference` was used.
@@ -694,7 +694,7 @@ export class LocalDateTime {
    * ```
    */
   difference(other, options) {
-    // The default of 'hours' is different from DateTime and Absolute, which is
+    // The default of 'hours' is different from DateTime and Instant, which is
     // why we can't simply passthrough the options to those types.
     const largestUnit = getOption(options, 'largestUnit', DIFFERENCE_UNITS, 'hours');
     const smallestUnit = getOption(options, 'smallestUnit', DIFFERENCE_UNITS, 'nanoseconds');
@@ -711,7 +711,7 @@ export class LocalDateTime {
     }
 
     if (!wantDate) {
-      // The user is only asking for a time difference, so just use Absolute.prototype.difference
+      // The user is only asking for a time difference, so just use Instant.prototype.difference
       const revisedOptions = {
         largestUnit: largestUnit,
         smallestUnit: smallestUnit,
@@ -733,18 +733,18 @@ export class LocalDateTime {
     // It's the hard case: the timezone offset is different so there's a
     // transition in the middle and we may need to adjust the result for DST.
     // RFC 5545 expects that date durations are measured in nominal (DateTime)
-    // days, while time durations are measured in exact (Absolute) time.
+    // days, while time durations are measured in exact (Instant) time.
     const { dateDuration, timeDuration } = splitDuration(dtDiff);
     if (isZeroDuration(timeDuration)) return dateDuration; // even number of calendar days
 
     // If we get here, there's both a time and date part of the duration AND
     // there's a time zone offset transition during the duration. RFC 5545 says
     // that we should calculate full days using DateTime math and remainder
-    // times using absolute time. To do this, we calculate a `dateTime`
-    // difference, split it into date and time portions, and then convert the
-    // time portion to an `absolute` duration before returning to the caller.  A
+    // times using instant. To do this, we calculate a `dateTime` difference,
+    // split it into date and time portions, and then convert the time portion
+    // to an exact (Instant) duration before returning to the caller.  A
     // challenge: converting the time duration involves a conversion from
-    // `DateTime` to `Absolute` which can be ambiguous. This can cause
+    // `DateTime` to `Instant` which can be ambiguous. This can cause
     // unpredictable behavior because the disambiguation is happening inside of
     // the duration, not at its edges like in `plus` or `from`. We'll reduce the
     // chance of this unpredictability as follows:
@@ -759,7 +759,7 @@ export class LocalDateTime {
     // different offset transition, but in practice this will be exceedingly
     // rare.
     let intermediateDt = this._dt.minus(dateDuration);
-    let intermediateAbs = intermediateDt.toAbsolute(this._tz);
+    let intermediateAbs = intermediateDt.toInstant(this._tz);
     let adjustedTimeDuration;
 
     // TODO: the logic below doesn't work with rounding and smallestUnit. Given
@@ -776,7 +776,7 @@ export class LocalDateTime {
       // time portion is on the other side next to `this`, where there's
       // unlikely to be another transition.
       intermediateDt = other._dt.plus(dateDuration);
-      intermediateAbs = intermediateDt.toAbsolute(this._tz);
+      intermediateAbs = intermediateDt.toInstant(this._tz);
       adjustedTimeDuration = this._abs.difference(intermediateAbs, { largestUnit: 'hours' });
     }
 

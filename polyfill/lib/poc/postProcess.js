@@ -27,7 +27,7 @@ function processMjs(file) {
     '',
     'const Temporal = {',
     "  get DateTime() { return GetIntrinsic('%Temporal.DateTime%'); },",
-    "  get Absolute() { return GetIntrinsic('%Temporal.Absolute%'); },",
+    "  get Instant() { return GetIntrinsic('%Temporal.Instant%'); },",
     "  get TimeZone() { return GetIntrinsic('%Temporal.TimeZone%'); },",
     "  get Calendar() { return GetIntrinsic('%Temporal.Calendar%'); },",
     "  get Duration() { return GetIntrinsic('%Temporal.Duration%'); },",
@@ -56,8 +56,8 @@ function processTests(file) {
     .map((line) => {
       if (line.includes('import { Temporal }')) return "import * as Temporal from 'proposal-temporal';";
       if (line.includes(': itOriginal')) return line.replace(': itOriginal', '');
-      if (line.includes('const { Absolute, DateTime')) {
-        return line.replace('const { Absolute, DateTime', 'const { Absolute, DateTime, LocalDateTime');
+      if (line.includes('const { Instant, DateTime')) {
+        return line.replace('const { Instant, DateTime', 'const { Instant, DateTime, LocalDateTime');
       }
       return line;
     });

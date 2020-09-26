@@ -52,7 +52,7 @@ export namespace Temporal {
      * exists more than once (e.g. near "Fall Back" DST transitions).
      *
      * In case of ambiguous or non-existent times, this option controls what
-     * exact time to return:
+     * instant to return:
      * - `'compatible'`: Equivalent to `'earlier'` for backward transitions like
      *   the start of DST in the Spring, and `'later'` for forward transitions
      *   like the end of DST in the Fall. This matches the behavior of legacy
@@ -539,7 +539,7 @@ export namespace Temporal {
     toLocalDateTime(
       tzLike: TimeZoneProtocol | string,
       temporalTime?: Temporal.Time,
-      options?: ToAbsoluteOptions
+      options?: ToInstantOptions
     ): Temporal.LocalDateTime;
     toDateTime(temporalTime: Temporal.Time): Temporal.DateTime;
     toYearMonth(): Temporal.YearMonth;
@@ -821,7 +821,7 @@ export namespace Temporal {
     toLocalDateTime(
       tzLike: TimeZoneProtocol | string,
       temporalDate: DateLike,
-      options?: ToAbsoluteOptions
+      options?: ToInstantOptions
     ): Temporal.LocalDateTime;
     toDateTime(temporalDate: Temporal.Date): Temporal.DateTime;
     getFields(): TimeFields;
