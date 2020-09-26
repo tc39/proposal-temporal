@@ -182,6 +182,32 @@ tz = new Temporal.TimeZone('-08:00');
 tz.getOffsetStringFor(timestamp); // => -08:00
 ```
 
+### timeZone.**getLocalDateTimeFor**(_instant_: Temporal.Instant, _calendar_?: object | string) : Temporal.LocalDateTime
+
+**Parameters:**
+
+- `instant` (`Temporal.Instant`): An exact time to convert.
+- `calendar` (optional object or string): A `Temporal.Calendar` object, or a plain object, or a calendar identifier.
+  The default is to use the ISO 8601 calendar.
+
+**Returns:** A `Temporal.LocalDateTime` object indicating the calendar date and wall-clock time in `timeZone`, according to the reckoning of `calendar`, at the exact time indicated by `instant`.
+
+This method is one way to convert a `Temporal.Instant` to a `Temporal.LocalDateTime`.
+
+Example usage:
+
+```javascript
+// Converting a specific exact time to a calendar date / wall-clock time
+timestamp = new Temporal.Instant(1553993100000000000n);
+tz = new Temporal.TimeZone('Europe/Berlin');
+tz.getLocalDateTimeFor(timestamp); // => 2019-03-31T01:45+02:00[Europe/Berlin]
+
+// What time was the Unix Epoch (timestamp 0) in Bell Labs (Murray Hill, New Jersey, USA)?
+epoch = new Temporal.Instant(0n);
+tz = new Temporal.TimeZone('America/New_York');
+tz.getLocalDateTimeFor(epoch); // => 1969-12-31T19:00-05:00[America/New_York]
+```
+
 ### timeZone.**getDateTimeFor**(_instant_: Temporal.Instant, _calendar_?: object | string) : Temporal.DateTime
 
 **Parameters:**
@@ -224,7 +250,7 @@ tz.getDateTimeFor(epoch); // => 1969-12-31T19:00
 This method is one way to convert a `Temporal.DateTime` to a `Temporal.Instant`.
 It is identical to [`dateTime.toInstant(timeZone, disambiguation)`](./datetime.html#toInstant).
 
-In the case of ambiguity, the `disambiguation` option controls what instant time to return:
+In the case of ambiguity, the `disambiguation` option controls what instant to return:
 
 - `'compatible'` (the default): Acts like `'earlier'` for backward transitions and `'later'` for forward transitions.
 - `'earlier'`: The earlier of two possible times.

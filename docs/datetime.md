@@ -100,6 +100,7 @@ Additionally, if the result is earlier or later than the range of dates that `Te
 
 Example usage:
 
+<!-- prettier-ignore-start -->
 ```javascript
 dt = Temporal.DateTime.from('1995-12-07T03:24:30');
 dt = Temporal.DateTime.from('1995-12-07T03:24:30Z'); // => 1995-12-07T03:24:30
@@ -148,6 +149,7 @@ dt = Temporal.DateTime.from({ year: 2001, month: 1, day: 1, hour: 25 }, { overfl
 dt = Temporal.DateTime.from({ year: 2001, month: 1, day: 1, minute: 60 }, { overflow: 'reject' });
   // => throws
 ```
+<!-- prettier-ignore-end -->
 
 ### Temporal.DateTime.**compare**(_one_: Temporal.DateTime, _two_: Temporal.DateTime) : number
 
@@ -203,6 +205,7 @@ The above read-only properties allow accessing each component of the date or tim
 
 Usage examples:
 
+<!-- prettier-ignore-start -->
 ```javascript
 dt = new Temporal.DateTime(1995, 12, 7, 3, 24, 30, 0, 3, 500);
 dt.year;        // => 1995
@@ -215,6 +218,7 @@ dt.millisecond; // => 0
 dt.microsecond; // => 3
 dt.nanosecond;  // => 500
 ```
+<!-- prettier-ignore-end -->
 
 ### datetime.**calendar** : object
 
@@ -530,6 +534,7 @@ If you need to do this, choose the calendar in which the computation takes place
 
 Usage example:
 
+<!-- prettier-ignore-start -->
 ```javascript
 dt1 = Temporal.DateTime.from('1995-12-07T03:24:30.000003500');
 dt2 = Temporal.DateTime.from('2019-01-31T15:30');
@@ -555,6 +560,7 @@ mar1.difference(feb1);                            // => P29D
 mar1.difference(feb1, { largestUnit: 'months' }); // => P1M
 mar1.difference(jan1);                            // => P121D
 ```
+<!-- prettier-ignore-end -->
 
 ### datetime.**round**(_options_: object) : Temporal.DateTime
 
@@ -598,6 +604,7 @@ The `roundingMode` option controls how the rounding is performed.
 
 Example usage:
 
+<!-- prettier-ignore-start -->
 ```javascript
 dt = Temporal.DateTime.from('1995-12-07T03:24:30.000003500');
 
@@ -610,6 +617,7 @@ dt.round({ roundingIncrement: 30, smallestUnit: 'minute' });
 dt.round({ roundingIncrement: 30, smallestUnit: 'minute', roundingMode: 'floor' });
   // => 1995-12-07T03:00
 ```
+<!-- prettier-ignore-end -->
 
 ### datetime.**equals**(_other_: Temporal.DateTime) : boolean
 
@@ -719,6 +727,42 @@ This method overrides `Object.prototype.valueOf()` and always throws an exceptio
 This is because it's not possible to compare `Temporal.DateTime` objects with the relational operators `<`, `<=`, `>`, or `>=`.
 Use `Temporal.DateTime.compare()` for this, or `datetime.equals()` for equality.
 
+### datetime.**toLocalDateTime**(_timeZone_ : object | string, _options_?: object) : Temporal.LocalDateTime
+
+**Parameters:**
+
+- `timeZone` (optional string or object): The time zone in which to interpret `dateTime`, as a `Temporal.TimeZone` object, an object implementing the [time zone protocol](./timezone.md#protocol), or a string.
+- `options` (optional object): An object with properties representing options for the operation.
+  The following options are recognized:
+  - `disambiguation` (string): How to disambiguate if the date and time given by `dateTime` does not exist in the time zone, or exists more than once.
+    Allowed values are `'compatible'`, `'earlier'`, `'later'`, and `'reject'`.
+    The default is `'compatible'`.
+
+**Returns:** A `Temporal.LocalDateTime` object representing the calendar date and wall-clock time from `dateTime` projected into `timeZone`.
+
+This method is one way to convert a `Temporal.DateTime` to a `Temporal.LocalDateTime`.
+It is identical to [`(Temporal.TimeZone.from(timeZone)).getLocalDateTimeFor(dateTime, disambiguation)`](./timezone.html#getLocalDateTimeFor).
+
+For a list of IANA time zone names, see the current version of the [IANA time zone database](https://www.iana.org/time-zones).
+A convenient list is also available [on Wikipedia](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones), although it might not reflect the latest official status.
+
+In the case of ambiguity caused by DST or other time zone changes, the `disambiguation` option controls how to resolve the ambiguity:
+
+- `'compatible'` (the default): Acts like `'earlier'` for backward transitions and `'later'` for forward transitions.
+- `'earlier'`: The earlier of two possible times.
+- `'later'`: The later of two possible times.
+- `'reject'`: Throw a `RangeError` instead.
+
+When interoperating with existing code or services, `'compatible'` mode matches the behavior of legacy `Date` as well as libraries like moment.js, Luxon, and date-fns.
+This mode also matches the behavior of cross-platform standards like [RFC 5545 (iCalendar)](https://tools.ietf.org/html/rfc5545).
+
+During "skipped" clock time like the hour after DST starts in the Spring, this method interprets invalid times using the pre-transition time zone offset if `'compatible'` or `'later'` is used or the post-transition time zone offset if `'earlier'` is used.
+This behavior avoids exceptions when converting non-existent `Temporal.DateTime` values to `Temporal.LocalDateTime`, but it also means that values during these periods will result in a different `Temporal.DateTime` in "round-trip" conversions to `Temporal.LocalDateTime` and back again.
+
+For usage examples and a more complete explanation of how this disambiguation works and why it is necessary, see [Resolving ambiguity](./ambiguity.md).
+
+If the result is earlier or later than the range that `Temporal.LocalDateTime` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then a `RangeError` will be thrown, no matter the value of `disambiguation`.
+
 ### datetime.**toInstant**(_timeZone_ : object | string, _options_?: object) : Temporal.Instant
 
 **Parameters:**
@@ -810,6 +854,7 @@ Use `datetime.getFields()` instead, or `datetime.withCalendar('iso8601').getFiel
 
 Usage example:
 
+<!-- prettier-ignore-start -->
 ```javascript
 dt = Temporal.DateTime.from('1995-12-07T03:24:30.000003500');
 f = dt.getISOFields();
@@ -826,3 +871,4 @@ dt.getISOFields().isoDay; // => 7
 // Most likely what you need is this:
 dt.withCalendar('iso8601').day; // => 7
 ```
+<!-- prettier-ignore-end -->

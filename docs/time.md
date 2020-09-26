@@ -72,6 +72,7 @@ The `overflow` option works as follows:
 
 Example usage:
 
+<!-- prettier-ignore-start -->
 ```javascript
 time = Temporal.Time.from('03:24:30'); // => 03:24:30
 time = Temporal.Time.from('1995-12-07T03:24:30'); // => 03:24:30
@@ -102,6 +103,7 @@ time = Temporal.Time.from({ hour: 15, minute: 60 }, { overflow: 'reject' });
 time = Temporal.Time.from({ hour: 15, minute: -1 }, { overflow: 'reject' });
   // throws
 ```
+<!-- prettier-ignore-end -->
 
 ### Temporal.Time.**compare**(_one_: Temporal.Time, _two_: Temporal.Time) : number
 
@@ -148,6 +150,7 @@ The above read-only properties allow accessing each component of the time indivi
 
 Usage examples:
 
+<!-- prettier-ignore-start -->
 ```javascript
 time = Temporal.Time.from('19:39:09.068346205');
 time.hour;        // => 19
@@ -157,6 +160,7 @@ time.millisecond; // => 68
 time.microsecond; // => 346
 time.nanosecond;  // => 205
 ```
+<!-- prettier-ignore-end -->
 
 ## Methods
 
@@ -286,6 +290,7 @@ The default is to do no rounding.
 
 Usage example:
 
+<!-- prettier-ignore-start -->
 ```javascript
 time = Temporal.Time.from('20:13:20.971398099');
 time.difference(Temporal.Time.from('19:39:09.068346205')); // => PT34M11.903051894S
@@ -295,6 +300,7 @@ time.difference(Temporal.Time.from('22:39:09.068346205')); // => -PT2H25M49.9030
 time.difference(Temporal.Time.from('19:39:09.068346205'), { smallestUnit: 'seconds' });
   // => PT34M12S
 ```
+<!-- prettier-ignore-end -->
 
 ### time.**round**(_options_: object) : Temporal.Time
 
@@ -336,6 +342,7 @@ The `roundingMode` option controls how the rounding is performed.
 
 Example usage:
 
+<!-- prettier-ignore-start -->
 ```javascript
 time = Temporal.Time.from('19:39:09.068346205');
 
@@ -348,6 +355,7 @@ time.round({ roundingIncrement: 30, smallestUnit: 'minute' });
 time.round({ roundingIncrement: 30, smallestUnit: 'minute', roundingMode: 'ceil' });
   // => 20:00
 ```
+<!-- prettier-ignore-end -->
 
 ### time.**equals**(_other_: Temporal.Time) : boolean
 
@@ -454,6 +462,53 @@ JSON.parse(str, reviver);
 This method overrides `Object.prototype.valueOf()` and always throws an exception.
 This is because it's not possible to compare `Temporal.Time` objects with the relational operators `<`, `<=`, `>`, or `>=`.
 Use `Temporal.Time.compare()` for this, or `time.equals()` for equality.
+
+### time.**toLocalDateTime**(_timeZone_: _timeZone_ : object | string, date?: Temporal.Date) : Temporal.LocalDateTime
+
+**Parameters:**
+
+- `timeZone` (optional string or object): The time zone in which to interpret `time` and `date`, as a `Temporal.TimeZone` object, an object implementing the [time zone protocol](./timezone.md#protocol), or a string.
+- `date` (optional `Temporal.Date`): A date used to merge into a `Temporal.LocalDateTime` along with `time`.
+- `options` (optional object): An object with properties representing options for the operation.
+  The following options are recognized:
+  - `disambiguation` (string): How to disambiguate if the date and time given by `time` and `date` does not exist in the time zone, or exists more than once.
+    Allowed values are `'compatible'`, `'earlier'`, `'later'`, and `'reject'`.
+    The default is `'compatible'`.
+
+**Returns:** a `Temporal.LocalDateTime` object that represents the clock `time` on the calendar `date` projected into `timeZone`.
+
+This method can be used to convert `Temporal.Time` into a `Temporal.LocalDateTime`, by supplying the time zone and date.
+
+For a list of IANA time zone names, see the current version of the [IANA time zone database](https://www.iana.org/time-zones).
+A convenient list is also available [on Wikipedia](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones), although it might not reflect the latest official status.
+
+In addition to the `timeZone`, the converted object carries a copy of all the relevant fields of `time` and `date`.
+This method produces identical results to [`date.toLocalDateTime(time)`](./date.html#toLocalDateTime).
+
+In the case of ambiguity caused by DST or other time zone changes, the `disambiguation` option controls how to resolve the ambiguity:
+
+- `'compatible'` (the default): Acts like `'earlier'` for backward transitions and `'later'` for forward transitions.
+- `'earlier'`: The earlier of two possible times.
+- `'later'`: The later of two possible times.
+- `'reject'`: Throw a `RangeError` instead.
+
+When interoperating with existing code or services, `'compatible'` mode matches the behavior of legacy `Date` as well as libraries like moment.js, Luxon, and date-fns.
+This mode also matches the behavior of cross-platform standards like [RFC 5545 (iCalendar)](https://tools.ietf.org/html/rfc5545).
+
+During "skipped" clock time like the hour after DST starts in the Spring, this method interprets invalid times using the pre-transition time zone offset if `'compatible'` or `'later'` is used or the post-transition time zone offset if `'earlier'` is used.
+This behavior avoids exceptions when converting non-existent date/time values to `Temporal.LocalDateTime`, but it also means that values during these periods will result in a different `Temporal.Time` value in "round-trip" conversions to `Temporal.LocalDateTime` and back again.
+
+For usage examples and a more complete explanation of how this disambiguation works and why it is necessary, see [Resolving ambiguity](./ambiguity.md).
+
+If the result is earlier or later than the range that `Temporal.LocalDateTime` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then a `RangeError` will be thrown, no matter the value of `disambiguation`.
+
+Usage example:
+
+```javascript
+time = Temporal.Time.from('15:23:30.003');
+date = Temporal.Date.from('2006-08-24');
+time.toLocalDateTime('America/Los_Angeles', date); // => 2006-08-24T15:23:30.003-07:00[America/Los_Angeles]
+```
 
 ### time.**toDateTime**(_date_: Temporal.Date) : Temporal.DateTime
 
