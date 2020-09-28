@@ -6,9 +6,7 @@
     <title>Temporal documentation</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/kognise/water.css@latest/dist/light.min.css">
     <script type="application/javascript" src="./playground.js"></script>
-    <script src="https://unpkg.com/mermaid@8.5.2/dist/mermaid.min.js"></script>
     <link rel="stylesheet" type="text/css" href="./prism.css">
-    <script>mermaid.initialize({startOnLoad:true,flowchart:{useMaxWidth:false}});</script>
     <script>
       Temporal = { ...temporal.Temporal };
       Object.assign(Intl, temporal.Intl);
@@ -71,7 +69,6 @@
         --text-width: 900px;
         --variable: #39a33c;
       }
-      .mermaid svg { height: 13em; }
       body {
         font-size: 18px;
         max-width: var(--text-width);

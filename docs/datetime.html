@@ -6,9 +6,7 @@
     <title>Temporal documentation</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/kognise/water.css@latest/dist/light.min.css">
     <script type="application/javascript" src="./playground.js"></script>
-    <script src="https://unpkg.com/mermaid@8.5.2/dist/mermaid.min.js"></script>
     <link rel="stylesheet" type="text/css" href="./prism.css">
-    <script>mermaid.initialize({startOnLoad:true,flowchart:{useMaxWidth:false}});</script>
     <script>
       Temporal = { ...temporal.Temporal };
       Object.assign(Intl, temporal.Intl);
@@ -71,7 +69,6 @@
         --text-width: 900px;
         --variable: #39a33c;
       }
-      .mermaid svg { height: 13em; }
       body {
         font-size: 18px;
         max-width: var(--text-width);
@@ -226,6 +223,8 @@
 </li>
 <li><a href="#valueOf">valueOf</a>
 </li>
+<li><a href="#toLocalDateTime">toLocalDateTime</a>
+</li>
 <li><a href="#toInstant">toInstant</a>
 </li>
 <li><a href="#toDate">toDate</a>
@@ -322,6 +321,7 @@ In <code>reject</code> mode, this function will throw, so if you have to interop
 <p><strong>NOTE</strong>: The allowed values for the <code>thing.month</code> property start at 1, which is different from legacy <code>Date</code> where months are represented by zero-based indices (0 to 11).</p>
 </blockquote>
 <p>Example usage:</p>
+<!-- prettier-ignore-start -->
 <pre class="language-javascript"><code class="language-javascript">dt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'1995-12-07T03:24:30'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 dt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'1995-12-07T03:24:30Z'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 1995-12-07T03:24:30</span>
 dt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'1995-12-07T03:24:30+01:00[Europe/Brussels]'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -367,7 +367,9 @@ dt <span class="token operator">=</span> Temporal<span class="token punctuation"
 dt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> year<span class="token operator">:</span> <span class="token number">2001</span><span class="token punctuation">,</span> month<span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">,</span> day<span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">,</span> hour<span class="token operator">:</span> <span class="token number">25</span> <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> overflow<span class="token operator">:</span> <span class="token string">'reject'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token comment">// throws</span>
 dt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> year<span class="token operator">:</span> <span class="token number">2001</span><span class="token punctuation">,</span> month<span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">,</span> day<span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">,</span> minute<span class="token operator">:</span> <span class="token number">60</span> <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> overflow<span class="token operator">:</span> <span class="token string">'reject'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token comment">// => throws</span></code></pre><h3 id="compare"><a class="heading-link" href="#compare"></a>Temporal.DateTime.<strong>compare</strong>(<em>one</em>: Temporal.DateTime, <em>two</em>: Temporal.DateTime) : number</h3><p><strong>Parameters:</strong></p>
+  <span class="token comment">// => throws</span></code></pre><!-- prettier-ignore-end -->
+
+<h3 id="compare"><a class="heading-link" href="#compare"></a>Temporal.DateTime.<strong>compare</strong>(<em>one</em>: Temporal.DateTime, <em>two</em>: Temporal.DateTime) : number</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>one</code> (<code>Temporal.DateTime</code>): First date/time to compare.</li>
 <li><code>two</code> (<code>Temporal.DateTime</code>): Second date/time to compare.</li>
@@ -393,6 +395,7 @@ sorted<span class="token punctuation">.</span><span class="token function">join<
 <p><strong>NOTE</strong>: The possible values for the <code>month</code> property start at 1, which is different from legacy <code>Date</code> where months are represented by zero-based indices (0 to 11).</p>
 </blockquote>
 <p>Usage examples:</p>
+<!-- prettier-ignore-start -->
 <pre class="language-javascript"><code class="language-javascript">dt <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>DateTime</span><span class="token punctuation">(</span><span class="token number">1995</span><span class="token punctuation">,</span> <span class="token number">12</span><span class="token punctuation">,</span> <span class="token number">7</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">24</span><span class="token punctuation">,</span> <span class="token number">30</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">500</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 dt<span class="token punctuation">.</span>year<span class="token punctuation">;</span>        <span class="token comment">// => 1995</span>
 dt<span class="token punctuation">.</span>month<span class="token punctuation">;</span>       <span class="token comment">// => 12</span>
@@ -402,7 +405,9 @@ dt<span class="token punctuation">.</span>minute<span class="token punctuation">
 dt<span class="token punctuation">.</span>second<span class="token punctuation">;</span>      <span class="token comment">// => 30</span>
 dt<span class="token punctuation">.</span>millisecond<span class="token punctuation">;</span> <span class="token comment">// => 0</span>
 dt<span class="token punctuation">.</span>microsecond<span class="token punctuation">;</span> <span class="token comment">// => 3</span>
-dt<span class="token punctuation">.</span>nanosecond<span class="token punctuation">;</span>  <span class="token comment">// => 500</span></code></pre><h3 id="calendar"><a class="heading-link" href="#calendar"></a>datetime.<strong>calendar</strong> : object</h3><p>The <code>calendar</code> read-only property gives the calendar that the <code>year</code>, <code>month</code>, and <code>day</code> properties are interpreted in.</p>
+dt<span class="token punctuation">.</span>nanosecond<span class="token punctuation">;</span>  <span class="token comment">// => 500</span></code></pre><!-- prettier-ignore-end -->
+
+<h3 id="calendar"><a class="heading-link" href="#calendar"></a>datetime.<strong>calendar</strong> : object</h3><p>The <code>calendar</code> read-only property gives the calendar that the <code>year</code>, <code>month</code>, and <code>day</code> properties are interpreted in.</p>
 <h3 id="era"><a class="heading-link" href="#era"></a>datetime.<strong>era</strong> : unknown</h3><p>The <code>era</code> read-only property is <code>undefined</code> when using the ISO 8601 calendar.
 It&#39;s used for calendar systems that specify an era in addition to the year.</p>
 <h3 id="dayOfWeek"><a class="heading-link" href="#dayOfWeek"></a>datetime.<strong>dayOfWeek</strong> : number</h3><p>The <code>dayOfWeek</code> read-only property gives the weekday number that the date falls on.
@@ -601,6 +606,7 @@ Nanoseconds values will overflow and lose precision after about 104 days. Micros
 <p>Computing the difference between two dates in different calendar systems is not supported.
 If you need to do this, choose the calendar in which the computation takes place by converting one of the dates with <code>datetime.withCalendar()</code>.</p>
 <p>Usage example:</p>
+<!-- prettier-ignore-start -->
 <pre class="language-javascript"><code class="language-javascript">dt1 <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'1995-12-07T03:24:30.000003500'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 dt2 <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2019-01-31T15:30'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 dt2<span class="token punctuation">.</span><span class="token function">difference</span><span class="token punctuation">(</span>dt1<span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -623,7 +629,9 @@ feb1<span class="token punctuation">.</span><span class="token function">differe
 feb1<span class="token punctuation">.</span><span class="token function">difference</span><span class="token punctuation">(</span>jan1<span class="token punctuation">,</span> <span class="token punctuation">{</span> largestUnit<span class="token operator">:</span> <span class="token string">'months'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => P1M</span>
 mar1<span class="token punctuation">.</span><span class="token function">difference</span><span class="token punctuation">(</span>feb1<span class="token punctuation">)</span><span class="token punctuation">;</span>                            <span class="token comment">// => P29D</span>
 mar1<span class="token punctuation">.</span><span class="token function">difference</span><span class="token punctuation">(</span>feb1<span class="token punctuation">,</span> <span class="token punctuation">{</span> largestUnit<span class="token operator">:</span> <span class="token string">'months'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => P1M</span>
-mar1<span class="token punctuation">.</span><span class="token function">difference</span><span class="token punctuation">(</span>jan1<span class="token punctuation">)</span><span class="token punctuation">;</span>                            <span class="token comment">// => P121D</span></code></pre><h3 id="round"><a class="heading-link" href="#round"></a>datetime.<strong>round</strong>(<em>options</em>: object) : Temporal.DateTime</h3><p><strong>Parameters:</strong></p>
+mar1<span class="token punctuation">.</span><span class="token function">difference</span><span class="token punctuation">(</span>jan1<span class="token punctuation">)</span><span class="token punctuation">;</span>                            <span class="token comment">// => P121D</span></code></pre><!-- prettier-ignore-end -->
+
+<h3 id="round"><a class="heading-link" href="#round"></a>datetime.<strong>round</strong>(<em>options</em>: object) : Temporal.DateTime</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>options</code> (object): An object with properties representing options for the operation.
 The following options are recognized:<ul>
@@ -658,6 +666,7 @@ Instead of 60 minutes, use 1 hour.)</p>
 When there is a tie, round up, like <code>ceil</code>.</li>
 </ul>
 <p>Example usage:</p>
+<!-- prettier-ignore-start -->
 <pre class="language-javascript"><code class="language-javascript">dt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'1995-12-07T03:24:30.000003500'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
 <span class="token comment">// Round to a particular unit</span>
@@ -667,7 +676,9 @@ dt<span class="token punctuation">.</span><span class="token function">round</sp
   <span class="token comment">// => 1995-12-07T03:30</span>
 <span class="token comment">// Round to the same increment but round down instead:</span>
 dt<span class="token punctuation">.</span><span class="token function">round</span><span class="token punctuation">(</span><span class="token punctuation">{</span> roundingIncrement<span class="token operator">:</span> <span class="token number">30</span><span class="token punctuation">,</span> smallestUnit<span class="token operator">:</span> <span class="token string">'minute'</span><span class="token punctuation">,</span> roundingMode<span class="token operator">:</span> <span class="token string">'floor'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token comment">// => 1995-12-07T03:00</span></code></pre><h3 id="equals"><a class="heading-link" href="#equals"></a>datetime.<strong>equals</strong>(<em>other</em>: Temporal.DateTime) : boolean</h3><p><strong>Parameters:</strong></p>
+  <span class="token comment">// => 1995-12-07T03:00</span></code></pre><!-- prettier-ignore-end -->
+
+<h3 id="equals"><a class="heading-link" href="#equals"></a>datetime.<strong>equals</strong>(<em>other</em>: Temporal.DateTime) : boolean</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>other</code> (<code>Temporal.DateTime</code>): Another date/time to compare.</li>
 </ul>
@@ -732,6 +743,35 @@ console<span class="token punctuation">.</span><span class="token function">log<
 <span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span>str<span class="token punctuation">,</span> reviver<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre><h3 id="valueOf"><a class="heading-link" href="#valueOf"></a>datetime.<strong>valueOf</strong>()</h3><p>This method overrides <code>Object.prototype.valueOf()</code> and always throws an exception.
 This is because it&#39;s not possible to compare <code>Temporal.DateTime</code> objects with the relational operators <code>&lt;</code>, <code>&lt;=</code>, <code>&gt;</code>, or <code>&gt;=</code>.
 Use <code>Temporal.DateTime.compare()</code> for this, or <code>datetime.equals()</code> for equality.</p>
+<h3 id="toLocalDateTime"><a class="heading-link" href="#toLocalDateTime"></a>datetime.<strong>toLocalDateTime</strong>(<em>timeZone</em> : object | string, <em>options</em>?: object) : Temporal.LocalDateTime</h3><p><strong>Parameters:</strong></p>
+<ul>
+<li><code>timeZone</code> (optional string or object): The time zone in which to interpret <code>dateTime</code>, as a <code>Temporal.TimeZone</code> object, an object implementing the <a href="./timezone.html#protocol">time zone protocol</a>, or a string.</li>
+<li><code>options</code> (optional object): An object with properties representing options for the operation.
+The following options are recognized:<ul>
+<li><code>disambiguation</code> (string): How to disambiguate if the date and time given by <code>dateTime</code> does not exist in the time zone, or exists more than once.
+Allowed values are <code>&#39;compatible&#39;</code>, <code>&#39;earlier&#39;</code>, <code>&#39;later&#39;</code>, and <code>&#39;reject&#39;</code>.
+The default is <code>&#39;compatible&#39;</code>.</li>
+</ul>
+</li>
+</ul>
+<p><strong>Returns:</strong> A <code>Temporal.LocalDateTime</code> object representing the calendar date and wall-clock time from <code>dateTime</code> projected into <code>timeZone</code>.</p>
+<p>This method is one way to convert a <code>Temporal.DateTime</code> to a <code>Temporal.LocalDateTime</code>.
+It is identical to <a href="./timezone.html#getLocalDateTimeFor"><code>(Temporal.TimeZone.from(timeZone)).getLocalDateTimeFor(dateTime, disambiguation)</code></a>.</p>
+<p>For a list of IANA time zone names, see the current version of the <a href="https://www.iana.org/time-zones">IANA time zone database</a>.
+A convenient list is also available <a href="https://en.wikipedia.org/wiki/List_of_tz_database_time_zones">on Wikipedia</a>, although it might not reflect the latest official status.</p>
+<p>In the case of ambiguity caused by DST or other time zone changes, the <code>disambiguation</code> option controls how to resolve the ambiguity:</p>
+<ul>
+<li><code>&#39;compatible&#39;</code> (the default): Acts like <code>&#39;earlier&#39;</code> for backward transitions and <code>&#39;later&#39;</code> for forward transitions.</li>
+<li><code>&#39;earlier&#39;</code>: The earlier of two possible times.</li>
+<li><code>&#39;later&#39;</code>: The later of two possible times.</li>
+<li><code>&#39;reject&#39;</code>: Throw a <code>RangeError</code> instead.</li>
+</ul>
+<p>When interoperating with existing code or services, <code>&#39;compatible&#39;</code> mode matches the behavior of legacy <code>Date</code> as well as libraries like moment.js, Luxon, and date-fns.
+This mode also matches the behavior of cross-platform standards like <a href="https://tools.ietf.org/html/rfc5545">RFC 5545 (iCalendar)</a>.</p>
+<p>During &quot;skipped&quot; clock time like the hour after DST starts in the Spring, this method interprets invalid times using the pre-transition time zone offset if <code>&#39;compatible&#39;</code> or <code>&#39;later&#39;</code> is used or the post-transition time zone offset if <code>&#39;earlier&#39;</code> is used.
+This behavior avoids exceptions when converting non-existent <code>Temporal.DateTime</code> values to <code>Temporal.LocalDateTime</code>, but it also means that values during these periods will result in a different <code>Temporal.DateTime</code> in &quot;round-trip&quot; conversions to <code>Temporal.LocalDateTime</code> and back again.</p>
+<p>For usage examples and a more complete explanation of how this disambiguation works and why it is necessary, see <a href="./ambiguity.html">Resolving ambiguity</a>.</p>
+<p>If the result is earlier or later than the range that <code>Temporal.LocalDateTime</code> can represent (approximately half a million years centered on the <a href="https://en.wikipedia.org/wiki/Unix_time">Unix epoch</a>), then a <code>RangeError</code> will be thrown, no matter the value of <code>disambiguation</code>.</p>
 <h3 id="toInstant"><a class="heading-link" href="#toInstant"></a>datetime.<strong>toInstant</strong>(<em>timeZone</em> : object | string, <em>options</em>?: object) : Temporal.Instant</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>timeZone</code> (optional string or object): The time zone in which to interpret <code>dateTime</code>, as a <code>Temporal.TimeZone</code> object, an object implementing the <a href="./timezone.html#protocol">time zone protocol</a>, or a string.</li>
@@ -785,6 +825,7 @@ Object<span class="token punctuation">.</span><span class="token function">assig
 Most code will not need to use it.
 Use <code>datetime.getFields()</code> instead, or <code>datetime.withCalendar(&#39;iso8601&#39;).getFields()</code>.</p>
 <p>Usage example:</p>
+<!-- prettier-ignore-start -->
 <pre class="language-javascript"><code class="language-javascript">dt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'1995-12-07T03:24:30.000003500'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 f <span class="token operator">=</span> dt<span class="token punctuation">.</span><span class="token function">getISOFields</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 f<span class="token punctuation">.</span>isoDay<span class="token punctuation">;</span> <span class="token comment">// => 7</span>
@@ -798,7 +839,8 @@ dt<span class="token punctuation">.</span><span class="token function">getFields
 dt<span class="token punctuation">.</span><span class="token function">getISOFields</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>isoDay<span class="token punctuation">;</span> <span class="token comment">// => 7</span>
 
 <span class="token comment">// Most likely what you need is this:</span>
-dt<span class="token punctuation">.</span><span class="token function">withCalendar</span><span class="token punctuation">(</span><span class="token string">'iso8601'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>day<span class="token punctuation">;</span> <span class="token comment">// => 7</span></code></pre>    <footer>
+dt<span class="token punctuation">.</span><span class="token function">withCalendar</span><span class="token punctuation">(</span><span class="token string">'iso8601'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>day<span class="token punctuation">;</span> <span class="token comment">// => 7</span></code></pre><!-- prettier-ignore-end -->
+    <footer>
       <p>
         This page includes a script which loads an implementation of Temporal in your browser.
         You can open a console in your browser's developer tools and try it out directly!

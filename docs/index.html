@@ -6,9 +6,7 @@
     <title>Temporal documentation</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/kognise/water.css@latest/dist/light.min.css">
     <script type="application/javascript" src="./playground.js"></script>
-    <script src="https://unpkg.com/mermaid@8.5.2/dist/mermaid.min.js"></script>
     <link rel="stylesheet" type="text/css" href="./prism.css">
-    <script>mermaid.initialize({startOnLoad:true,flowchart:{useMaxWidth:false}});</script>
     <script>
       Temporal = { ...temporal.Temporal };
       Object.assign(Intl, temporal.Intl);
@@ -71,7 +69,6 @@
         --text-width: 900px;
         --variable: #39a33c;
       }
-      .mermaid svg { height: 13em; }
       body {
         font-size: 18px;
         max-width: var(--text-width);
@@ -156,15 +153,17 @@
 </li>
 <li><a href="#Temporal-Instant">Temporal.Instant</a>
 </li>
+<li><a href="#Temporal-LocalDateTime">Temporal.LocalDateTime</a>
+</li>
 <li><a href="#Temporal-Date">Temporal.Date</a>
+<ul>
+<li><a href="#time-zones-and-resolving-ambiguity">Time Zones and Resolving Ambiguity</a>
+</li>
+</ul>
 </li>
 <li><a href="#Temporal-Time">Temporal.Time</a>
 </li>
 <li><a href="#Temporal-DateTime">Temporal.DateTime</a>
-<ul>
-<li><a href="#ambiguity">Ambiguity</a>
-</li>
-</ul>
 </li>
 <li><a href="#Temporal-YearMonth">Temporal.YearMonth</a>
 </li>
@@ -205,33 +204,41 @@ For a detailed look at some of the problems with <code>Date</code>, and the moti
 <p>Temporal fixes these problems by:</p>
 <ul>
 <li>Providing easy-to-use APIs for date and time computations</li>
+<li>First-class support for all time zones, including DST-safe arithmetic</li>
 <li>Dealing only with immutable objects</li>
 <li>Parsing a strictly specified string format</li>
-<li>Supporting non-Gregorian calendars, and time zones other than the user&#39;s local time and UTC</li>
+<li>Supporting non-Gregorian calendars</li>
 </ul>
 <h2 id="cookbook">Cookbook</h2>
 <p>A cookbook to help you get started and learn the ins and outs of Temporal is available <a href="./cookbook.html">here</a>.</p>
 <h2 id="api-documentation">API Documentation</h2>
 <h3 id="Temporal-now"><a class="heading-link" href="#Temporal-now"></a><strong>Temporal.now</strong></h3><ul>
-<li><code>Temporal.now.instant()</code> - get the current system instant time</li>
+<li><code>Temporal.now.instant()</code> - get the exact time since <a href="https://en.wikipedia.org/wiki/Unix_time">Unix epoch</a></li>
 <li><code>Temporal.now.timeZone()</code> - get the current system time zone</li>
-<li><code>Temporal.now.date()</code> - get the current system date</li>
-<li><code>Temporal.now.time()</code> - get the current system time</li>
-<li><code>Temporal.now.dateTime()</code> - get the current system date/time</li>
+<li><code>Temporal.now.localDateTime()</code> - get the current calendar date and wall-clock time in the system time zone</li>
+<li><code>Temporal.now.date()</code> - get the current calendar date in the system time zone</li>
+<li><code>Temporal.now.time()</code> - get the current wall-clock time in the system time zone</li>
+<li><code>Temporal.now.dateTime()</code> - get the current system date/time in the system time zone, but return an object that doesn&#39;t remember its time zone so should NOT be used to derive other values (e.g. 12 hours later) in time zones that use Daylight Saving Time (DST).</li>
 </ul>
 <p>See <a href="./now.html">Temporal.now Documentation</a> for detailed documentation.</p>
-<h3 id="Temporal-Instant"><a class="heading-link" href="#Temporal-Instant"></a><strong>Temporal.Instant</strong></h3><p>A <code>Temporal.Instant</code> represents a fixed point in time, without regard to calendar or location.</p>
+<h3 id="Temporal-Instant"><a class="heading-link" href="#Temporal-Instant"></a><strong>Temporal.Instant</strong></h3><p>A <code>Temporal.Instant</code> represents a fixed point in time, without regard to calendar or location.
+For a human-readable local calendar date or clock time, use a <code>Temporal.TimeZone</code> and <code>Temporal.Calendar</code> to obtain a <code>Temporal.LocalDateTime</code> or <code>Temporal.DateTime</code>.</p>
 <p>See <a href="./instant.html">Temporal.Instant Documentation</a> for detailed documentation.</p>
+<h3 id="Temporal-LocalDateTime"><a class="heading-link" href="#Temporal-LocalDateTime"></a><strong>Temporal.LocalDateTime</strong></h3><p><em>NOTE: this type is not checked into the polyfill yet, but is planned to land in early October 2020.</em></p>
+<p>A <code>Temporal.LocalDateTime</code> is a time-zone-aware, calendar-aware date/time type that represents a real event that has happened (or will happen) at a particular instant in a real place on Earth. This type is optimized for use cases that require a time zone, including DST-safe arithmetic and interoperability with RFC 5545 (iCalendar).</p>
+<p>As the broadest <code>Temporal</code> type, <code>Temporal.LocalDateTime</code> can be considered a combination of <code>Temporal.TimeZone</code>, <code>Temporal.Instant</code>, and <code>Temporal.DateTime</code> (which includes <code>Temporal.Calendar</code>).</p>
+<p>See <a href="./localdatetime.html">Temporal.LocalDateTime Documentation</a> for detailed documentation.</p>
 <h3 id="Temporal-Date"><a class="heading-link" href="#Temporal-Date"></a><strong>Temporal.Date</strong></h3><p>A <code>Temporal.Date</code> object represents a calendar date that is not associated with a particular time or time zone.</p>
 <p>This can also be converted to partial dates such as <code>Temporal.YearMonth</code> and <code>Temporal.MonthDay</code>.</p>
 <p>See <a href="./date.html">Temporal.Date Documentation</a> for detailed documentation.</p>
+<h4 id="time-zones-and-resolving-ambiguity">Time Zones and Resolving Ambiguity</h4>
+<p>Converting between wall-clock/calendar-date types (like <code>Temporal.Date</code>, <code>Temporal.Time</code>, and <code>Temporal.DateTime</code>) and exact time types (<code>Temporal.Instant</code> and <code>Temporal.LocalDateTime</code>) can be ambiguous because of time zones and daylight saving time.</p>
+<p>Read more about <a href="./ambiguity.html">handling time zones, DST, and ambiguity in <code>Temporal</code></a>.</p>
 <h3 id="Temporal-Time"><a class="heading-link" href="#Temporal-Time"></a><strong>Temporal.Time</strong></h3><p>A <code>Temporal.Time</code> object represents a wall-clock time that is not associated with a particular date or time zone.</p>
 <p>See <a href="./time.html">Temporal.Time Documentation</a> for detailed documentation.</p>
-<h3 id="Temporal-DateTime"><a class="heading-link" href="#Temporal-DateTime"></a><strong>Temporal.DateTime</strong></h3><p>A <code>Temporal.DateTime</code> represents a calendar date and wall-clock time. That means it does not carry time zone information. However it can be converted to a <code>Temporal.Instant</code> using a <code>Temporal.TimeZone</code>.</p>
+<h3 id="Temporal-DateTime"><a class="heading-link" href="#Temporal-DateTime"></a><strong>Temporal.DateTime</strong></h3><p>A <code>Temporal.DateTime</code> represents a calendar date and wall-clock time that does not carry time zone information. It can be converted to a <code>Temporal.LocalDateTime</code> or a <code>Temporal.Instant</code> using a <code>Temporal.TimeZone</code>.
+For use cases that require a time zone, especially using arithmetic or other derived values, consider using <code>Temporal.LocalDateTime</code> instead because that type automatically adjusts for Daylight Saving Time.</p>
 <p>See <a href="./datetime.html">Temporal.DateTime Documentation</a> for detailed documentation.</p>
-<h4 id="ambiguity">Ambiguity</h4>
-<p>Converting between <code>Temporal.DateTime</code> and <code>Temporal.Instant</code> is not a one-to-one operation and can be ambiguous, because of time zones and daylight saving time.</p>
-<p>Read more about this in <a href="./ambiguity.html">Resolving ambiguity</a>.</p>
 <h3 id="Temporal-YearMonth"><a class="heading-link" href="#Temporal-YearMonth"></a><strong>Temporal.YearMonth</strong></h3><p>A date without a day component.
 This is useful to express things like &quot;the November 2010 meeting&quot;.</p>
 <p>See <a href="./yearmonth.html">Temporal.YearMonth Documentation</a> for detailed documentation.</p>
@@ -271,26 +278,7 @@ Mostly superseded by the documentation of <a href="./calendar.html">Temporal.Cal
 Superseded by the <a href="./localdatetime.html">documentation</a>, but contains background info about the reasons and goals behind this type.</li>
 </ul>
 <h2 id="object-relationship">Object Relationship</h2>
-<div class="mermaid">
-graph LR;
-  timezone(TimeZone);
-  subgraph " ";
-    instant(Instant);
-  end;
-  subgraph " ";
-    datetime(DateTime);
-      date(Date);
-        yearmonth(YearMonth);
-        monthday(MonthDay);
-      time(Time);
-    datetime --- date;
-    datetime --- time;
-    date --- yearmonth;
-    date --- monthday;
-  end;
-  instant === timezone;
-  timezone === datetime;
-</div>
+<img src="object-model.svg">
     <footer>
       <p>
         This page includes a script which loads an implementation of Temporal in your browser.
