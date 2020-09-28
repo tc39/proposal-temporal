@@ -11,7 +11,7 @@ The core concept in Temporal is the distinction between **wall-clock time** (als
 
 Wall-clock time is controlled by local governmental authorities, so it can abruptly change.
 When Daylight Saving Time (DST) starts or if a country moves to another time zone, then local clocks will instantly change.
-Exact time however has a consistent global definition and is represented by a special time zone called [UTC](https://en.wikipedia.org/wiki/Coordinated_Universal_Time): (from Wikipedia)
+Exact time however has a consistent global definition and is represented by a special time zone called [UTC](https://en.wikipedia.org/wiki/Coordinated_Universal_Time) (from Wikipedia):
 
 > **Coordinated Universal Time (or UTC)** is the primary time standard by which the world regulates clocks and time.
 > It is within about 1 second of mean solar time at 0° longitude, and is not adjusted for daylight saving time.
@@ -34,29 +34,30 @@ A **Time Zone** defines the legal rules that control how local wall-clock time s
 
 Temporal uses the [**IANA Time Zone Database**](https://en.wikipedia.org/wiki/Tz_database) (or "TZ database"), which you can think of as a global repository of time zone functions. Each IANA time zone has:
 
-- A **time zone name** that usually refers to a geographic area anchored by a city (e.g. `Europe/Paris` or `Africa/Kampala`) but names also can denote single-offset time zones like `UTC` (a consistent `+00:00` offset) or `GMT+5` (which for confusing historical reasons is a negative offset `-05:00`).
-- A **time zone definition** defines the offset for any UTC value since January 1, 1970. You can think of these definitions a as a table that maps UTC date/time ranges (including future ranges) to specific offsets.
+- A **time zone ID** that usually refers to a geographic area anchored by a city (e.g. `Europe/Paris` or `Africa/Kampala`) but can also denote single-offset time zones like `UTC` (a consistent `+00:00` offset) or `GMT+5` (which for confusing historical reasons is a negative offset `-05:00`).
+- A **time zone definition** defines the offset for any UTC value since January 1, 1970. You can think of these definitions as a table that maps UTC date/time ranges (including future ranges) to specific offsets.
   In some time zones, temporary offset changes happen twice each year due to **Daylight Saving Time (DST)** starting in the Spring and ending each Fall.
   Offsets can also change permanently due to legal changes, e.g. a country switching time zones.
 
 The TZ database is updated several times per year in response to legal and political changes around the world.
-Each update contains changes to time zone definitions, usually affecting only future date/time values but occasionally making fixes to past ranges.
+Each update contains changes to time zone definitions.
+These changes usually affect only future date/time values, but occasionally fixes are made to past ranges too, for example when new historical sources are discovered about early-20th century timekeeping.
 
 ## Wall-Clock Time, Exact Time, and Time Zones in Temporal
 
 In Temporal:
 
-- The [`Temporal.Instant`](./instant.md)) type represents exact time only.
-- The [`Temporal.DateTime`](./datetime.md)) type represents calendar date and wall-clock time, as do other narrower types: [`Temporal.Date`](./date.md)), [`Temporal.Time`](./time.md)), [`Temporal.YearMonth`](./yearmonth.md)), and [`Temporal.MonthDay`](./monthday.md)).
-  These types all carry a calendar system, which by default is the ISO 8601 calendar but can be overridden for other [calendars](./calendar.md) like `'islamic'` or `'japanese'`.
-- The [`Temporal.TimeZone`](./timezone.md)) represents a time zone function that converts between exact time and wall-clock time and vice-versa.
+- The [`Temporal.Instant`](./instant.md) type represents exact time only.
+- The [`Temporal.DateTime`](./datetime.md) type represents calendar date and wall-clock time, as do other narrower types: [`Temporal.Date`](./date.md), [`Temporal.Time`](./time.md), [`Temporal.YearMonth`](./yearmonth.md), and [`Temporal.MonthDay`](./monthday.md).
+  These types all carry a calendar system, which by default is `'iso8601'` (the ISO 8601 calendar) but can be overridden for other [calendars](./calendar.md) like `'islamic'` or `'japanese'`.
+- The [`Temporal.TimeZone`](./timezone.md) represents a time zone function that converts between exact time and wall-clock time and vice-versa.
   It also includes helper functions, e.g. to fetch the current time zone offset for a particular exact time.
-- The [`Temporal.LocalDateTime`](./localdatetime.md)) type encapsulates all of the types above: an exact time (like [`Temporal.Instant`](./instant.md))), its wall-clock equivalent (like [`Temporal.DateTime`](./datetime.md))), and the time zone that links the two (like a [`Temporal.TimeZone`](./timezone.md))).
+- The [`Temporal.LocalDateTime`](./localdatetime.md) type encapsulates all of the types above: an exact time (like [`Temporal.Instant`](./instant.md)), its wall-clock equivalent (like [`Temporal.DateTime`](./datetime.md)), and the time zone that links the two (like a [`Temporal.TimeZone`](./timezone.md)).
 
 There are two ways to get a human-readable calendar date and clock time from a `Temporal` type that stores exact time.
 
-- If the exact time is already represented by a [`Temporal.LocalDateTime`](./localdatetime.md)) instance then the wall-clock time values are trivially available using the properties and methods of that type, e.g. `.year`, `.hour`, `.getFields()`, or `.toLocaleString()`.
-- However, if the exact time is represented by a `Temporal.Instant`, use a time zone and optional calendar to create a `Temporal.LocalDateTime`. Example:
+- If the exact time is already represented by a [`Temporal.LocalDateTime`](./localdatetime.md) instance then the wall-clock time values are trivially available using the properties and methods of that type, e.g. [`.year`](./localdatetime.md#year), [`.hour`](./localdatetime.md#hour), [`.getFields()`](./localdatetime.md#getFields), or [`.toLocaleString()`](./localdatetime.md#toLocaleString).
+- However, if the exact time is represented by a [`Temporal.Instant`](./instant.md), use a time zone and optional calendar to create a [`Temporal.LocalDateTime`](./localdatetime.md). Example:
 
 <!-- prettier-ignore-start -->
 ```javascript
@@ -123,17 +124,17 @@ epochSecs = abs.getEpochSeconds();
 Usually, a time zone definition provides a bidirectional 1:1 mapping between any particular local date and clock time and its corresponding UTC date and time. However, near a time zone offset transition there can be **time ambiguity** where it's not clear what offset should be used to convert a wall-clock time into an exact time. This ambiguity leads to two possible clock times for one UTC time.
 
 - When offsets change in a backward direction, the same clock time will be repeated.
-  For example, 1:30AM happened twice on Sunday, November 4 2018 in California.
+  For example, 1:30AM happened twice on Sunday, 4 November 2018 in California.
   The "first" 1:30AM on that date was in Pacific Daylight Time (offset `-07:00`).
   30 exact minutes later, DST ended and Pacific Standard Time (offset `-08:00`) became active.
   After 30 more exact minutes, the "second" 1:30AM happened.
-  This means that "1:30AM on Sunday, November 4 2018" is not sufficient to know _which_ 1:30AM it is.
+  This means that "1:30AM on Sunday, 4 November 2018" is not sufficient to know _which_ 1:30AM it is.
   The clock time is ambiguous.
 - When offsets change in a forward direction, local clock times are skipped.
-  For example, DST started on Sunday, March 11 2018 in California.
+  For example, DST started on Sunday, 11 March 2018 in California.
   When the clock advanced from 1:59AM to 2:00AM, local time immediately skipped to 3:00AM.
   2:30AM didn't happen!
-  To avoid errors in this one-hour-per year case, most computing environments (including JavaScript) will convert skipped clock times to exact times using either the offset before the transition or the offset after the transition.
+  To avoid errors in this one-hour-per year case, most computing environments (including ECMAScript) will convert skipped clock times to exact times using either the offset before the transition or the offset after the transition.
 
 In both cases, resolving the ambiguity when converting the local time into exact time requires choosing which of two possible offsets to use, or deciding to throw an exception.
 
@@ -197,14 +198,14 @@ This mode also matches the behavior of cross-platform standards like [RFC 5545 (
 
 Methods where this option is present include:
 
-- [`Temporal.Date.prototype.toLocalDateTime`](./date.html#toLocalDateTime)
-- [`Temporal.Time.prototype.toLocalDateTime`](./time.html#toLocalDateTime)
-- [`Temporal.DateTime.prototype.toLocalDateTime`](./datetime.html#toLocalDateTime)
-- [`Temporal.DateTime.prototype.toInstant`](./datetime.html#toInstant)
-- [`Temporal.YearMonth.prototype.toLocalDateTime`](./yearmonth.html#toLocalDateTime)
-- [`Temporal.MonthDay.prototype.toLocalDateTime`](./monthday.html#toLocalDateTime)
-- [`Temporal.TimeZone.prototype.getLocalDateTimeFor`](./timezone.html#getLocalDateTimeFor).
-- [`Temporal.TimeZone.prototype.getInstantFor`](./timezone.html#getInstantFor).
+- [`Temporal.Date.prototype.toLocalDateTime`](./date.md#toLocalDateTime)
+- [`Temporal.Time.prototype.toLocalDateTime`](./time.md#toLocalDateTime)
+- [`Temporal.DateTime.prototype.toLocalDateTime`](./datetime.md#toLocalDateTime)
+- [`Temporal.DateTime.prototype.toInstant`](./datetime.md#toInstant)
+- [`Temporal.YearMonth.prototype.toLocalDateTime`](./yearmonth.md#toLocalDateTime)
+- [`Temporal.MonthDay.prototype.toLocalDateTime`](./monthday.md#toLocalDateTime)
+- [`Temporal.TimeZone.prototype.getLocalDateTimeFor`](./timezone.md#getLocalDateTimeFor).
+- [`Temporal.TimeZone.prototype.getInstantFor`](./timezone.md#getInstantFor).
 
 ## Examples: DST Disambiguation
 
@@ -262,15 +263,21 @@ props = { timeZone: 'America/Los_Angeles', year: 2020, month: 11, day: 1, hour: 
 ldt = Temporal.LocalDateTime.from(props, { disambiguation: 'compatible' });
   // => 2020-11-01T01:30-07:00[America/Los_Angeles]
 ldt = Temporal.LocalDateTime.from(props);
-  // => 2020-11-01T01:30-07:00[America/Los_Angeles] ('compatible' is the default)
+  // => 2020-11-01T01:30-07:00[America/Los_Angeles]
+  // 'compatible' is the default.
 earlier = Temporal.LocalDateTime.from(props, { disambiguation: 'earlier' });
-  // => 2020-11-01T01:30-07:00[America/Los_Angeles] ('earlier' is same as 'compatible' for backwards transitions)
+  // => 2020-11-01T01:30-07:00[America/Los_Angeles] 
+  // 'earlier' is same as 'compatible' for backwards transitions.
 later = Temporal.LocalDateTime.from(props, { disambiguation: 'later' });
-  // => 2020-11-01T01:30-08:00[America/Los_Angeles] (same clock time, but one hour later -08:00 offset indicating Standard Time)
+  // => 2020-11-01T01:30-08:00[America/Los_Angeles] 
+  // Same clock time, but one hour later.
+  // -08:00 offset indicates Standard Time.
 later.toDateTime().difference(earlier.toDateTime());
-  // => PT0S  (same clock time...
+  // => PT0S  
+  // (same clock time...
 later.difference(earlier);
-  // => PT1H   ... but 1 hour later in real-world time)
+  // => PT1H   
+  // ... but 1 hour later in real-world time)
 ```
 <!-- prettier-ignore-end -->
 
@@ -282,7 +289,7 @@ But computers sometimes store data about the future!
 For example, a calendar app might record that a user wants to be reminded of a friend's birthday next year.
 
 When date/time data for future times is stored with both the offset and the time zone, and if the time zone definition changes, then it's possible that the new time zone definition may conflict with previously-stored data.
-In this case, then the `offset` option to [`Temporal.LocalDateTime.from`](./localdatetime.html#from) is used to resolve the conflict:
+In this case, then the `offset` option to [`Temporal.LocalDateTime.from`](./localdatetime.md#from) is used to resolve the conflict:
 
 - `'use'`: Evaluate date/time values using the time zone offset if it's provided in the input.
   This will keep the exact time unchanged even if local time will be different than what was originally stored.
@@ -294,17 +301,17 @@ In this case, then the `offset` option to [`Temporal.LocalDateTime.from`](./loca
   See the documentation of `with()` for more details about why this option is used.
 - `'reject'`: Throw a `RangeError` if the offset is not valid for the provided date and time in the provided time zone.
 
-The default is `reject` for [`Temporal.LocalDateTime.from`](./localdatetime.html#from) because there is no obvious default solution.
+The default is `reject` for [`Temporal.LocalDateTime.from`](./localdatetime.md#from) because there is no obvious default solution.
 Instead, the developer needs to decide how to fix the now-invalid data.
 
-For [`Temporal.LocalDateTime.with`](./localdatetime.html#with) the default is `'prefer'`.
+For [`Temporal.LocalDateTime.with`](./localdatetime.md#with) the default is `'prefer'`.
 This default is helpful to prevent DST disambiguation from causing unexpected one-hour changes in exact time after making small changes to clock time fields.
-For example, if a `Temporal.LocalDateTime` is set to the "second" 1:30AM on a day where the 1-2AM clock hour is repeated after a backwards DST transition, then calling `.with({minute: 45})` will result in an ambiguity which is resolved using the default `offset: 'prefer'` option.
+For example, if a [`Temporal.LocalDateTime`](./localdatetime.md) is set to the "second" 1:30AM on a day where the 1-2AM clock hour is repeated after a backwards DST transition, then calling `.with({minute: 45})` will result in an ambiguity which is resolved using the default `offset: 'prefer'` option.
 Because the existing offset is valid for the new time, it will be retained so the result will be the "second" 1:45AM.
 However, if the existing offset is not valid for the new result (e.g. `.with({hour: 0})`), then the default behavior will change the offset to match the new local time in that time zone.
 
-Note that offset vs. timezone conflicts only matter for `Temporal.LocalDateTime` because no other Temporal type accepts both an IANA time zone and a time zone offset as an input to any method.
-For example, `Temporal.Instant.from` will never run into conflicts because the `Temporal.Instant` type ignores the time sone in the input and only uses the offset.
+Note that offset vs. timezone conflicts only matter for [`Temporal.LocalDateTime`](./localdatetime.md) because no other Temporal type accepts both an IANA time zone and a time zone offset as an input to any method.
+For example, (`Temporal.Instant.from`)(./instant.md#from) will never run into conflicts because the [`Temporal.Instant`](./instant.md) type ignores the time sone in the input and only uses the offset.
 
 ## Examples: `offset` option
 
@@ -312,7 +319,7 @@ The primary reason to use the `offset` option is for parsing values which were s
 For example, Brazil stopped observing Daylight Saving Time in 2019, with the final transition out of DST on February 16, 2019.
 The change to stop DST permanently was announced in April 2019.
 Now imagine that an app running in 2018 (before these changes were announced) had saved a far-future time in a string format that contained both offset and IANA time zone.
-Such a format is used by`Temporal.LocalDateTime.prototype.toString` as well as other platforms and libraries that use the same format like [`Java.time.ZonedDateTime`](https://docs.oracle.com/javase/8/docs/api/java/time/ZonedDateTime.html).
+Such a format is used by [`Temporal.LocalDateTime.prototype.toString`](./localdatetime.md#toString) as well as other platforms and libraries that use the same format like [`Java.time.ZonedDateTime`](https://docs.oracle.com/javase/8/docs/api/java/time/ZonedDateTime.md).
 Let's assume the stored future time was noon on January 15, 2020 in São Paulo:
 
 <!-- prettier-ignore-start -->
