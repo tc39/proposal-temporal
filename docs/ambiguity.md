@@ -52,7 +52,7 @@ In Temporal:
   These types all carry a calendar system, which by default is `'iso8601'` (the ISO 8601 calendar) but can be overridden for other [calendars](./calendar.md) like `'islamic'` or `'japanese'`.
 - The [`Temporal.TimeZone`](./timezone.md) represents a time zone function that converts between exact time and wall-clock time and vice-versa.
   It also includes helper functions, e.g. to fetch the current time zone offset for a particular exact time.
-- The [`Temporal.LocalDateTime`](./localdatetime.md) type encapsulates all of the types above: an exact time (like [`Temporal.Instant`](./instant.md)), its wall-clock equivalent (like [`Temporal.DateTime`](./datetime.md)), and the time zone that links the two (like a [`Temporal.TimeZone`](./timezone.md)).
+- The [`Temporal.LocalDateTime`](./localdatetime.md) type encapsulates all of the types above: an exact time (like a [`Temporal.Instant`](./instant.md)), its wall-clock equivalent (like a [`Temporal.DateTime`](./datetime.md)), and the time zone that links the two (like a [`Temporal.TimeZone`](./timezone.md)).
 
 There are two ways to get a human-readable calendar date and clock time from a `Temporal` type that stores exact time.
 
