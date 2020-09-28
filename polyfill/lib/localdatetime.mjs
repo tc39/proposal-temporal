@@ -132,68 +132,39 @@ function fromDateTime(dateTime, timeZone, options) {
 
 /** Identical logic for `plus` and `minus` */
 function doPlusOrMinus(op, durationLike, options, localDateTime) {
+  // If it's a negative duration for plus, change to a positive duration minus.
+  // If it's a negative duration for minus, change to a positive duration plus.
+  // By doing this, none of the code below must worry about negative durations.
+  let duration = Temporal.Duration.from(durationLike);
+  if (duration.sign < 0) {
+    duration = duration.negated();
+    op = op === 'plus' ? 'minus' : 'plus';
+  }
+
   const overflow = getOption(options, 'overflow', OVERFLOW_OPTIONS, 'constrain');
   const { timeZone, calendar } = localDateTime;
-
   const { timeDuration, dateDuration } = splitDuration(durationLike);
-  if (isZeroDuration(dateDuration)) {
-    // If there's only a time to add/subtract, then use exact math because
-    // RFC 5545 specifies using exact math for time units.
-    const result = localDateTime.toInstant()[op](durationLike);
-    return new LocalDateTime(result.getEpochNanoseconds(), timeZone, calendar);
-  } else if (isZeroDuration(timeDuration)) {
-    const newDateTime = localDateTime.toDateTime()[op](dateDuration, { overflow });
-    return fromDateTime(newDateTime, timeZone);
-  }
 
-  // If we get here, there's both a date and time portion of the duration. RFC
-  // 5545 requires the date portion to be added/subtracted in calendar days and
-  // the time portion to be added/subtracted in exact time. The easiest way to
-  // do this would be to first add/subtract the date using DateTime math, then
-  // convert the intermediate result to Instant, and then add the time portion
-  // using Instant math. The problem with that approach is that the "convert the
-  // intermediate result to Instant" step will possibly require a DST
-  // disambiguation, which is weird to happen in the middle of the duration
-  // instead of at the end. So instead, we'll achieve the same result via a more
-  // roundabout way that avoids the intermediate disambiguation:
-  // 1) First, add the entire duration using DateTime math
-  // 2) Turn that DateTime into an Instant, applying 'compatible' disambiguation
-  //    (which is required by RFC 5545) at that endpoint.
-  // 2) Starting from the Instant endpoint, go backwards by the length of the
-  //    time duration.
-  // 3) At that point, if the offset is different from the endpoint's offset,
-  //    then there was an offset change during the time duration.
-  // 4) Adjust the Instant endpoint by the difference in offsets from endpoint
-  //    Instant to intermediate Instant...
-  // 5) ...except if the adjustment causes moving back across the transition.
-  // 6) Finally, create the result using the adjusted endpoint Instant.
-  const newDateTime = localDateTime.toDateTime()[op](durationLike, { overflow });
-  let instant = newDateTime.toInstant(timeZone);
-  // TODO: after duration rounding lands, replace below with:
-  // const totalTimeDurationNanoseconds = timeDuration.round({largestUnit: 'nanoseconds'});
-  const totalTimeDurationNanoseconds =
-    timeDuration.hours * 3.6e12 +
-    timeDuration.minutes * 6e10 +
-    timeDuration.seconds * 1e9 +
-    timeDuration.milliseconds * 1e6 +
-    timeDuration.microseconds * 1000 +
-    timeDuration.nanoseconds;
-  const backUpAbs = instant[op]({ nanoseconds: -totalTimeDurationNanoseconds });
-  const backUpOffset = timeZone.getOffsetNanosecondsFor(backUpAbs);
-  const absOffset = timeZone.getOffsetNanosecondsFor(instant);
-  const backUpNanoseconds = absOffset - backUpOffset;
-  if (backUpNanoseconds) {
-    // RFC 5545 specifies that time units are always "exact time" meaning they
-    // aren't affected by DST. Therefore, if there was a TZ transition during
-    // the time duration that was added, then undo the impact of that
-    // transition. However, don't adjust if applying the adjustment would cause
-    // us to back up onto the other side of the transition.
-    const adjustedAbs = instant.plus({ nanoseconds: backUpNanoseconds });
-    if (timeZone.getOffsetNanosecondsFor(adjustedAbs) === timeZone.getOffsetNanosecondsFor(instant)) {
-      instant = adjustedAbs;
-    }
+  // RFC 5545 requires the date portion to be added in calendar days and the
+  // time portion to be added/subtracted in exact time. Subtraction works the
+  // same except that the order of operations is reversed: first the time units
+  // are subtracted using exact time, then date units are subtracted with
+  // calendar days.
+  // Note that `{ disambiguation: 'compatible' }` is implicitly used below
+  // because this disambiguation behavior is required by RFC 5545.
+  if (op === 'plus') {
+    // if plus, then order of operations is largest (date) units first
+    const dtIntermediate = localDateTime.toDateTime().plus(dateDuration, { overflow });
+    const absIntermediate = dtIntermediate.toInstant(timeZone);
+    const absResult = absIntermediate.plus(timeDuration);
+    return new LocalDateTime(absResult.getEpochNanoseconds(), timeZone, calendar);
+  } else {
+    // if plus, then order of operations is smallest (time) units first
+    const absIntermediate = localDateTime.toInstant().minus(timeDuration);
+    const dtIntermediate = absIntermediate.toDateTime(timeZone, calendar);
+    const dtResult = dtIntermediate.minus(dateDuration, { overflow });
+    return fromDateTime(dtResult, timeZone);
   }
-  return new LocalDateTime(instant.getEpochNanoseconds(), timeZone, calendar);
 }
 
 export class LocalDateTime {
