@@ -35,15 +35,15 @@ export class DateTime {
     nanosecond = 0,
     calendar = GetDefaultCalendar()
   ) {
-    isoYear = ES.ToInteger(isoYear);
-    isoMonth = ES.ToInteger(isoMonth);
-    isoDay = ES.ToInteger(isoDay);
-    hour = ES.ToInteger(hour);
-    minute = ES.ToInteger(minute);
-    second = ES.ToInteger(second);
-    millisecond = ES.ToInteger(millisecond);
-    microsecond = ES.ToInteger(microsecond);
-    nanosecond = ES.ToInteger(nanosecond);
+    isoYear = ES.ToIntegerNoNegativeZero(isoYear);
+    isoMonth = ES.ToIntegerNoNegativeZero(isoMonth);
+    isoDay = ES.ToIntegerNoNegativeZero(isoDay);
+    hour = ES.ToIntegerNoNegativeZero(hour);
+    minute = ES.ToIntegerNoNegativeZero(minute);
+    second = ES.ToIntegerNoNegativeZero(second);
+    millisecond = ES.ToIntegerNoNegativeZero(millisecond);
+    microsecond = ES.ToIntegerNoNegativeZero(microsecond);
+    nanosecond = ES.ToIntegerNoNegativeZero(nanosecond);
     calendar = ES.ToTemporalCalendar(calendar);
 
     ES.RejectDateTime(isoYear, isoMonth, isoDay, hour, minute, second, millisecond, microsecond, nanosecond);

@@ -21,12 +21,12 @@ import {
 
 export class Time {
   constructor(hour = 0, minute = 0, second = 0, millisecond = 0, microsecond = 0, nanosecond = 0) {
-    hour = ES.ToInteger(hour);
-    minute = ES.ToInteger(minute);
-    second = ES.ToInteger(second);
-    millisecond = ES.ToInteger(millisecond);
-    microsecond = ES.ToInteger(microsecond);
-    nanosecond = ES.ToInteger(nanosecond);
+    hour = ES.ToIntegerNoNegativeZero(hour);
+    minute = ES.ToIntegerNoNegativeZero(minute);
+    second = ES.ToIntegerNoNegativeZero(second);
+    millisecond = ES.ToIntegerNoNegativeZero(millisecond);
+    microsecond = ES.ToIntegerNoNegativeZero(microsecond);
+    nanosecond = ES.ToIntegerNoNegativeZero(nanosecond);
     ES.RejectTime(hour, minute, second, millisecond, microsecond, nanosecond);
 
     CreateSlots(this);

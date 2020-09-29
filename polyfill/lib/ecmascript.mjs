@@ -60,7 +60,6 @@ import * as PARSE from './regex.mjs';
 const ES2019 = {
   Call,
   SpeciesConstructor,
-  ToInteger,
   ToNumber,
   ToPrimitive,
   ToString,
@@ -105,17 +104,17 @@ export const ES = ObjectAssign({}, ES2019, {
     if (!match) throw new RangeError(`invalid ISO 8601 string: ${isoString}`);
     let yearString = match[1];
     if (yearString[0] === '\u2212') yearString = `-${yearString.slice(1)}`;
-    const year = ES.ToInteger(yearString);
-    const month = ES.ToInteger(match[2] || match[4]);
-    const day = ES.ToInteger(match[3] || match[5]);
-    const hour = ES.ToInteger(match[6]);
-    const minute = ES.ToInteger(match[7] || match[10]);
-    let second = ES.ToInteger(match[8] || match[11]);
+    const year = ES.ToIntegerNoNegativeZero(yearString);
+    const month = ES.ToIntegerNoNegativeZero(match[2] || match[4]);
+    const day = ES.ToIntegerNoNegativeZero(match[3] || match[5]);
+    const hour = ES.ToIntegerNoNegativeZero(match[6]);
+    const minute = ES.ToIntegerNoNegativeZero(match[7] || match[10]);
+    let second = ES.ToIntegerNoNegativeZero(match[8] || match[11]);
     if (second === 60) second = 59;
     const fraction = (match[9] || match[12]) + '000000000';
-    const millisecond = ES.ToInteger(fraction.slice(0, 3));
-    const microsecond = ES.ToInteger(fraction.slice(3, 6));
-    const nanosecond = ES.ToInteger(fraction.slice(6, 9));
+    const millisecond = ES.ToIntegerNoNegativeZero(fraction.slice(0, 3));
+    const microsecond = ES.ToIntegerNoNegativeZero(fraction.slice(3, 6));
+    const nanosecond = ES.ToIntegerNoNegativeZero(fraction.slice(6, 9));
     const offsetSign = match[14] === '-' || match[14] === '\u2212' ? '-' : '+';
     const offset = `${offsetSign}${match[15] || '00'}:${match[16] || '00'}`;
     let ianaName = match[17];
@@ -158,14 +157,14 @@ export const ES = ObjectAssign({}, ES2019, {
     const match = PARSE.time.exec(isoString);
     let hour, minute, second, millisecond, microsecond, nanosecond;
     if (match) {
-      hour = ES.ToInteger(match[1]);
-      minute = ES.ToInteger(match[2] || match[5]);
-      second = ES.ToInteger(match[3] || match[6]);
+      hour = ES.ToIntegerNoNegativeZero(match[1]);
+      minute = ES.ToIntegerNoNegativeZero(match[2] || match[5]);
+      second = ES.ToIntegerNoNegativeZero(match[3] || match[6]);
       if (second === 60) second = 59;
       const fraction = (match[4] || match[7]) + '000000000';
-      millisecond = ES.ToInteger(fraction.slice(0, 3));
-      microsecond = ES.ToInteger(fraction.slice(3, 6));
-      nanosecond = ES.ToInteger(fraction.slice(6, 9));
+      millisecond = ES.ToIntegerNoNegativeZero(fraction.slice(0, 3));
+      microsecond = ES.ToIntegerNoNegativeZero(fraction.slice(3, 6));
+      nanosecond = ES.ToIntegerNoNegativeZero(fraction.slice(6, 9));
     } else {
       ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.ParseISODateTime(isoString, {
         zoneRequired: false
@@ -179,8 +178,8 @@ export const ES = ObjectAssign({}, ES2019, {
     if (match) {
       let yearString = match[1];
       if (yearString[0] === '\u2212') yearString = `-${yearString.slice(1)}`;
-      year = ES.ToInteger(yearString);
-      month = ES.ToInteger(match[2]);
+      year = ES.ToIntegerNoNegativeZero(yearString);
+      month = ES.ToIntegerNoNegativeZero(match[2]);
       calendar = match[3] || null;
     } else {
       ({ year, month, calendar, day: refISODay } = ES.ParseISODateTime(isoString, { zoneRequired: false }));
@@ -192,8 +191,8 @@ export const ES = ObjectAssign({}, ES2019, {
     const match = PARSE.monthday.exec(isoString);
     let month, day, calendar, refISOYear;
     if (match) {
-      month = ES.ToInteger(match[1]);
-      day = ES.ToInteger(match[2]);
+      month = ES.ToIntegerNoNegativeZero(match[1]);
+      day = ES.ToIntegerNoNegativeZero(match[2]);
     } else {
       ({ month, day, calendar, year: refISOYear } = ES.ParseISODateTime(isoString, { zoneRequired: false }));
       if (!calendar) refISOYear = undefined;
@@ -221,17 +220,17 @@ export const ES = ObjectAssign({}, ES2019, {
       throw new RangeError(`invalid duration: ${isoString}`);
     }
     const sign = match[1] === '-' || match[1] === '\u2212' ? -1 : 1;
-    const years = ES.ToInteger(match[2]) * sign;
-    const months = ES.ToInteger(match[3]) * sign;
-    const weeks = ES.ToInteger(match[4]) * sign;
-    const days = ES.ToInteger(match[5]) * sign;
-    const hours = ES.ToInteger(match[6]) * sign;
-    const minutes = ES.ToInteger(match[7]) * sign;
-    const seconds = ES.ToInteger(match[8]) * sign;
+    const years = ES.ToIntegerNoNegativeZero(match[2]) * sign;
+    const months = ES.ToIntegerNoNegativeZero(match[3]) * sign;
+    const weeks = ES.ToIntegerNoNegativeZero(match[4]) * sign;
+    const days = ES.ToIntegerNoNegativeZero(match[5]) * sign;
+    const hours = ES.ToIntegerNoNegativeZero(match[6]) * sign;
+    const minutes = ES.ToIntegerNoNegativeZero(match[7]) * sign;
+    const seconds = ES.ToIntegerNoNegativeZero(match[8]) * sign;
     const fraction = match[9] + '000000000';
-    const milliseconds = ES.ToInteger(fraction.slice(0, 3)) * sign;
-    const microseconds = ES.ToInteger(fraction.slice(3, 6)) * sign;
-    const nanoseconds = ES.ToInteger(fraction.slice(6, 9)) * sign;
+    const milliseconds = ES.ToIntegerNoNegativeZero(fraction.slice(0, 3)) * sign;
+    const microseconds = ES.ToIntegerNoNegativeZero(fraction.slice(3, 6)) * sign;
+    const nanoseconds = ES.ToIntegerNoNegativeZero(fraction.slice(6, 9)) * sign;
     return { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
   },
   ParseTemporalInstant: (isoString) => {
@@ -587,7 +586,7 @@ export const ES = ObjectAssign({}, ES2019, {
         } else if (property === 'era') {
           any.era = value;
         } else {
-          any[property] = ES.ToInteger(value);
+          any[property] = ES.ToIntegerNoNegativeZero(value);
         }
       }
     }
@@ -612,7 +611,7 @@ export const ES = ObjectAssign({}, ES2019, {
       } else if (property === 'era') {
         result.era = value;
       } else {
-        result[property] = ES.ToInteger(value);
+        result[property] = ES.ToIntegerNoNegativeZero(value);
       }
     }
     return result;
@@ -1953,6 +1952,10 @@ export const ES = ObjectAssign({}, ES2019, {
       throw new RangeError(`${property} must be between ${minimum} and ${maximum}, not ${value}`);
     }
     return MathFloor(value);
+  },
+  ToIntegerNoNegativeZero: (value) => {
+    const result = ToInteger(value);
+    return result === 0 ? 0 : result; // avoid -0
   }
 });
 

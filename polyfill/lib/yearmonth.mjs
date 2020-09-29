@@ -9,10 +9,10 @@ const ObjectAssign = Object.assign;
 
 export class YearMonth {
   constructor(isoYear, isoMonth, calendar = undefined, refISODay = 1) {
-    isoYear = ES.ToInteger(isoYear);
-    isoMonth = ES.ToInteger(isoMonth);
+    isoYear = ES.ToIntegerNoNegativeZero(isoYear);
+    isoMonth = ES.ToIntegerNoNegativeZero(isoMonth);
     if (calendar === undefined) calendar = GetDefaultCalendar();
-    refISODay = ES.ToInteger(refISODay);
+    refISODay = ES.ToIntegerNoNegativeZero(refISODay);
     ES.RejectDate(isoYear, isoMonth, refISODay);
     ES.RejectYearMonthRange(isoYear, isoMonth);
     if (!calendar || typeof calendar !== 'object') throw new RangeError('invalid calendar');

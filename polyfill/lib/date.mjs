@@ -23,9 +23,9 @@ const ObjectAssign = Object.assign;
 
 export class Date {
   constructor(isoYear, isoMonth, isoDay, calendar = undefined) {
-    isoYear = ES.ToInteger(isoYear);
-    isoMonth = ES.ToInteger(isoMonth);
-    isoDay = ES.ToInteger(isoDay);
+    isoYear = ES.ToIntegerNoNegativeZero(isoYear);
+    isoMonth = ES.ToIntegerNoNegativeZero(isoMonth);
+    isoDay = ES.ToIntegerNoNegativeZero(isoDay);
     if (calendar === undefined) calendar = GetDefaultCalendar();
     ES.RejectDate(isoYear, isoMonth, isoDay);
     ES.RejectDateRange(isoYear, isoMonth, isoDay);
