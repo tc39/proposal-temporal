@@ -85,6 +85,20 @@ describe('Duration', () => {
       equal(d.microseconds, 0);
       equal(d.nanoseconds, 0);
     });
+    it('constructor treats -0 as 0', () => {
+      const d = new Duration(-0, -0, -0, -0, -0, -0, -0, -0, -0, -0);
+      equal(d.sign, 0);
+      equal(d.years, 0);
+      equal(d.months, 0);
+      equal(d.weeks, 0);
+      equal(d.days, 0);
+      equal(d.hours, 0);
+      equal(d.minutes, 0);
+      equal(d.seconds, 0);
+      equal(d.milliseconds, 0);
+      equal(d.microseconds, 0);
+      equal(d.nanoseconds, 0);
+    });
     it('mixed positive and negative values throw', () => {
       throws(() => new Duration(-1, 1, 1, 1, 1, 1, 1, 1, 1, 1), RangeError);
       throws(() => new Duration(1, -1, 1, 1, 1, 1, 1, 1, 1, 1), RangeError);
@@ -662,6 +676,16 @@ describe('Duration', () => {
       equal(`${zero}`, `${zero2}`);
       notEqual(zero, zero2);
       equal(zero2.sign, 0);
+      equal(zero2.years, 0);
+      equal(zero2.months, 0);
+      equal(zero2.weeks, 0);
+      equal(zero2.days, 0);
+      equal(zero2.hours, 0);
+      equal(zero2.minutes, 0);
+      equal(zero2.seconds, 0);
+      equal(zero2.milliseconds, 0);
+      equal(zero2.microseconds, 0);
+      equal(zero2.nanoseconds, 0);
     });
   });
   describe('Duration.abs()', () => {

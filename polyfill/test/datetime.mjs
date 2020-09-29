@@ -242,6 +242,17 @@ describe('DateTime', () => {
       const datetime = new DateTime(1976, 11, 18);
       it('`${datetime}` is 1976-11-18T00:00', () => equal(`${datetime}`, '1976-11-18T00:00'));
     });
+    describe('constructor treats -0 as 0', () => {
+      it('ignores the sign of -0', () => {
+        const datetime = new DateTime(1976, 11, 18, -0, -0, -0, -0, -0);
+        equal(datetime.hour, 0);
+        equal(datetime.minute, 0);
+        equal(datetime.second, 0);
+        equal(datetime.millisecond, 0);
+        equal(datetime.microsecond, 0);
+        equal(datetime.nanosecond, 0);
+      });
+    });
   });
   describe('.with manipulation', () => {
     const datetime = new DateTime(1976, 11, 18, 15, 23, 30, 123, 456, 789);
