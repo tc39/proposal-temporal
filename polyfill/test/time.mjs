@@ -824,6 +824,17 @@ describe('Time', () => {
         it('constrain leap second', () => equal(`${Time.from(leap)}`, '23:59:59'));
       });
     });
+    describe('constructor treats -0 as 0', () => {
+      it('ignores the sign of -0', () => {
+        const datetime = new Time(-0, -0, -0, -0, -0);
+        equal(datetime.hour, 0);
+        equal(datetime.minute, 0);
+        equal(datetime.second, 0);
+        equal(datetime.millisecond, 0);
+        equal(datetime.microsecond, 0);
+        equal(datetime.nanosecond, 0);
+      });
+    });
   });
   describe('time operations', () => {
     const datetime = { year: 2019, month: 10, day: 1, hour: 14, minute: 20, second: 36 };
