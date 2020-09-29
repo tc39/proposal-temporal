@@ -9,13 +9,13 @@ const ObjectAssign = Object.assign;
 const ObjectCreate = Object.create;
 
 import bigInt from 'big-integer';
-import Call from 'es-abstract/2019/Call.js';
-import SpeciesConstructor from 'es-abstract/2019/SpeciesConstructor.js';
-import ToInteger from 'es-abstract/2019/ToInteger.js';
-import ToNumber from 'es-abstract/2019/ToNumber.js';
-import ToPrimitive from 'es-abstract/2019/ToPrimitive.js';
-import ToString from 'es-abstract/2019/ToString.js';
-import Type from 'es-abstract/2019/Type.js';
+import Call from 'es-abstract/2020/Call.js';
+import SpeciesConstructor from 'es-abstract/2020/SpeciesConstructor.js';
+import ToInteger from 'es-abstract/2020/ToInteger.js';
+import ToNumber from 'es-abstract/2020/ToNumber.js';
+import ToPrimitive from 'es-abstract/2020/ToPrimitive.js';
+import ToString from 'es-abstract/2020/ToString.js';
+import Type from 'es-abstract/2020/Type.js';
 
 import { GetIntrinsic } from './intrinsicclass.mjs';
 import {
