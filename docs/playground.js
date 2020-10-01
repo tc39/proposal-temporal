@@ -2119,7 +2119,14 @@
   				if (!allowMissing && !(parts[i] in value)) {
   					throw new $TypeError('base intrinsic for ' + name + ' exists, but the property is not available.');
   				}
-  				value = desc ? (desc.get || desc.value) : value[parts[i]];
+  				// By convention, when a data property is converted to an accessor
+  				// property to emulate a data property that does not suffer from
+  				// the override mistake, that accessor's getter is marked with
+  				// an `originalValue` property. Here, when we detect this, we
+  				// uphold the illusion by pretending to see that original data
+  				// property, i.e., returning the value rather than the getter
+  				// itself.
+  				value = desc && 'get' in desc && !('originalValue' in desc.get) ? desc.get : value[parts[i]];
   			} else {
   				value = value[parts[i]];
   			}
@@ -2128,18 +2135,41 @@
   	return value;
   };
 
+  var callBind = createCommonjsModule(function (module) {
+
+
+
+
+
   var $apply = GetIntrinsic('%Function.prototype.apply%');
   var $call = GetIntrinsic('%Function.prototype.call%');
   var $reflectApply = GetIntrinsic('%Reflect.apply%', true) || functionBind.call($call, $apply);
 
-  var callBind = function callBind() {
+  var $defineProperty = GetIntrinsic('%Object.defineProperty%', true);
+
+  if ($defineProperty) {
+  	try {
+  		$defineProperty({}, 'a', { value: 1 });
+  	} catch (e) {
+  		// IE 8 has a broken defineProperty
+  		$defineProperty = null;
+  	}
+  }
+
+  module.exports = function callBind() {
   	return $reflectApply(functionBind, $call, arguments);
   };
 
-  var apply = function applyBind() {
+  var applyBind = function applyBind() {
   	return $reflectApply(functionBind, $apply, arguments);
   };
-  callBind.apply = apply;
+
+  if ($defineProperty) {
+  	$defineProperty(module.exports, 'apply', { value: applyBind });
+  } else {
+  	module.exports.apply = applyBind;
+  }
+  });
 
   var $indexOf = callBind(GetIntrinsic('String.prototype.indexOf'));
 
@@ -2151,13 +2181,13 @@
   	return intrinsic;
   };
 
-  var $apply$1 = GetIntrinsic('%Reflect.apply%', true) || callBound('%Function.prototype.apply%');
+  var $apply = GetIntrinsic('%Reflect.apply%', true) || callBound('%Function.prototype.apply%');
 
   // https://www.ecma-international.org/ecma-262/6.0/#sec-call
 
   var Call = function Call(F, V) {
   	var args = arguments.length > 2 ? arguments[2] : [];
-  	return $apply$1(F, V, args);
+  	return $apply(F, V, args);
   };
 
   var src = functionBind.call(Function.call, Object.prototype.hasOwnProperty);
@@ -2497,7 +2527,7 @@
   	if (src(Obj, 'get')) {
   		var getter = Obj.get;
   		if (typeof getter !== 'undefined' && !IsCallable(getter)) {
-  			throw new TypeError('getter must be a function');
+  			throw new $TypeError$3('getter must be a function');
   		}
   		desc['[[Get]]'] = getter;
   	}
