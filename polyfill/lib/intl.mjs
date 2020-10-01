@@ -1,4 +1,20 @@
+import { ES } from './ecmascript.mjs';
 import { GetIntrinsic } from './intrinsicclass.mjs';
+import {
+  GetSlot,
+  ISO_YEAR,
+  ISO_MONTH,
+  ISO_DAY,
+  HOUR,
+  MINUTE,
+  SECOND,
+  MILLISECOND,
+  MICROSECOND,
+  NANOSECOND,
+  REF_ISO_YEAR,
+  REF_ISO_DAY,
+  CALENDAR
+} from './slots.mjs';
 import { TimeZone } from './timezone.mjs';
 
 const DATE = Symbol('date');
@@ -8,6 +24,7 @@ const TIME = Symbol('time');
 const DATETIME = Symbol('datetime');
 const ORIGINAL = Symbol('original');
 const TIMEZONE = Symbol('timezone');
+const CAL_ID = Symbol('calendar-id');
 
 const descriptor = (value) => {
   return {
@@ -26,6 +43,7 @@ export function DateTimeFormat(locale = IntlDateTimeFormat().resolvedOptions().l
 
   this[ORIGINAL] = new IntlDateTimeFormat(locale, options);
   this[TIMEZONE] = new TimeZone(this.resolvedOptions().timeZone);
+  this[CAL_ID] = this.resolvedOptions().calendar;
   this[DATE] = new IntlDateTimeFormat(locale, dateAmend(options));
   this[YM] = new IntlDateTimeFormat(locale, yearMonthAmend(options));
   this[MD] = new IntlDateTimeFormat(locale, monthDayAmend(options));
@@ -57,32 +75,18 @@ function resolvedOptions() {
   return this[ORIGINAL].resolvedOptions();
 }
 
-function adjustFormatterCalendar(formatter, calendar) {
-  const options = formatter.resolvedOptions();
-  if (!calendar || calendar === options.calendar || calendar === 'iso8601') return formatter;
-  const locale = `${options.locale}-u-ca-${calendar}`;
-  return new IntlDateTimeFormat(locale, options);
-}
-
-function pickRangeCalendar(a, b) {
-  if (!a) return b;
-  if (!b) return a;
-  if (a === b) return a;
-  throw new RangeError(`cannot format range between two dates of ${a} and ${b} calendars`);
-}
-
 function format(datetime, ...rest) {
-  const { absolute, formatter, calendar } = extractOverrides(datetime, this);
-  if (absolute && formatter) {
-    return adjustFormatterCalendar(formatter, calendar).format(absolute.getEpochMilliseconds());
+  const { instant, formatter } = extractOverrides(datetime, this);
+  if (instant && formatter) {
+    return formatter.format(instant.getEpochMilliseconds());
   }
   return this[ORIGINAL].format(datetime, ...rest);
 }
 
 function formatToParts(datetime, ...rest) {
-  const { absolute, formatter, calendar } = extractOverrides(datetime, this);
-  if (absolute && formatter) {
-    return adjustFormatterCalendar(formatter, calendar).formatToParts(absolute.getEpochMilliseconds());
+  const { instant, formatter } = extractOverrides(datetime, this);
+  if (instant && formatter) {
+    return formatter.formatToParts(instant.getEpochMilliseconds());
   }
   return this[ORIGINAL].formatToParts(datetime, ...rest);
 }
@@ -92,12 +96,10 @@ function formatRange(a, b) {
     if (Object.getPrototypeOf(a) !== Object.getPrototypeOf(b)) {
       throw new TypeError('Intl.DateTimeFormat accepts two values of the same type');
     }
-    const { absolute: aa, formatter: aformatter, calendar: acalendar } = extractOverrides(a, this);
-    const { absolute: bb, formatter: bformatter, calendar: bcalendar } = extractOverrides(b, this);
-    const calendar = pickRangeCalendar(acalendar, bcalendar);
+    const { instant: aa, formatter: aformatter } = extractOverrides(a, this);
+    const { instant: bb, formatter: bformatter } = extractOverrides(b, this);
     if (aa && bb && aformatter && bformatter && aformatter === bformatter) {
-      const formatter = adjustFormatterCalendar(aformatter, calendar);
-      return formatter.formatRange(aa.getEpochMilliseconds(), bb.getEpochMilliseconds());
+      return aformatter.formatRange(aa.getEpochMilliseconds(), bb.getEpochMilliseconds());
     }
   }
   return this[ORIGINAL].formatRange(a, b);
@@ -108,12 +110,10 @@ function formatRangeToParts(a, b) {
     if (Object.getPrototypeOf(a) !== Object.getPrototypeOf(b)) {
       throw new TypeError('Intl.DateTimeFormat accepts two values of the same type');
     }
-    const { absolute: aa, formatter: aformatter, calendar: acalendar } = extractOverrides(a, this);
-    const { absolute: bb, formatter: bformatter, calendar: bcalendar } = extractOverrides(b, this);
-    const calendar = pickRangeCalendar(acalendar, bcalendar);
+    const { instant: aa, formatter: aformatter } = extractOverrides(a, this);
+    const { instant: bb, formatter: bformatter } = extractOverrides(b, this);
     if (aa && bb && aformatter && bformatter && aformatter === bformatter) {
-      const formatter = adjustFormatterCalendar(aformatter, calendar);
-      return formatter.formatRangeToParts(aa.getEpochMilliseconds(), bb.getEpochMilliseconds());
+      return aformatter.formatRangeToParts(aa.getEpochMilliseconds(), bb.getEpochMilliseconds());
     }
   }
   return this[ORIGINAL].formatRangeToParts(a, b);
@@ -205,45 +205,113 @@ function hasTimeOptions(options) {
   return 'hour' in options || 'minute' in options || 'second' in options;
 }
 
-function extractOverrides(datetime, main) {
-  let formatter, calendar;
-  const Instant = GetIntrinsic('%Temporal.Instant%');
-  const Date = GetIntrinsic('%Temporal.Date%');
+function extractOverrides(temporalObj, main) {
   const DateTime = GetIntrinsic('%Temporal.DateTime%');
-  const MonthDay = GetIntrinsic('%Temporal.MonthDay%');
-  const Time = GetIntrinsic('%Temporal.Time%');
-  const YearMonth = GetIntrinsic('%Temporal.YearMonth%');
 
-  if (datetime instanceof Time) {
-    datetime = datetime.toDateTime(new Date(1970, 1, 1));
-    formatter = main[TIME];
+  if (ES.IsTemporalTime(temporalObj)) {
+    const hour = GetSlot(temporalObj, HOUR);
+    const minute = GetSlot(temporalObj, MINUTE);
+    const second = GetSlot(temporalObj, SECOND);
+    const millisecond = GetSlot(temporalObj, MILLISECOND);
+    const microsecond = GetSlot(temporalObj, MICROSECOND);
+    const nanosecond = GetSlot(temporalObj, NANOSECOND);
+    const datetime = new DateTime(1970, 1, 1, hour, minute, second, millisecond, microsecond, nanosecond, main[CAL_ID]);
+    return {
+      instant: main[TIMEZONE].getInstantFor(datetime),
+      formatter: main[TIME]
+    };
   }
-  if (datetime instanceof YearMonth) {
-    calendar = datetime.calendar.id;
-    const { isoYear, isoMonth, refISODay } = datetime.getISOFields();
-    datetime = new Date(isoYear, isoMonth, refISODay, datetime.calendar);
-    formatter = main[YM];
+
+  if (ES.IsTemporalYearMonth(temporalObj)) {
+    const isoYear = GetSlot(temporalObj, ISO_YEAR);
+    const isoMonth = GetSlot(temporalObj, ISO_MONTH);
+    const refISODay = GetSlot(temporalObj, REF_ISO_DAY);
+    const calendar = GetSlot(temporalObj, CALENDAR);
+    if (calendar.id !== main[CAL_ID]) {
+      throw new RangeError(
+        `cannot format YearMonth with calendar ${calendar.id} in locale with calendar ${main[CAL_ID]}`
+      );
+    }
+    const datetime = new DateTime(isoYear, isoMonth, refISODay, 12, 0, 0, 0, 0, 0, calendar);
+    return {
+      instant: main[TIMEZONE].getInstantFor(datetime),
+      formatter: main[YM]
+    };
   }
-  if (datetime instanceof MonthDay) {
-    calendar = datetime.calendar.id;
-    const { refISOYear, isoMonth, isoDay } = datetime.getISOFields();
-    datetime = new Date(refISOYear, isoMonth, isoDay, datetime.calendar);
-    formatter = main[MD];
+
+  if (ES.IsTemporalMonthDay(temporalObj)) {
+    const refISOYear = GetSlot(temporalObj, REF_ISO_YEAR);
+    const isoMonth = GetSlot(temporalObj, ISO_MONTH);
+    const isoDay = GetSlot(temporalObj, ISO_DAY);
+    const calendar = GetSlot(temporalObj, CALENDAR);
+    if (calendar.id !== main[CAL_ID]) {
+      throw new RangeError(
+        `cannot format MonthDay with calendar ${calendar.id} in locale with calendar ${main[CAL_ID]}`
+      );
+    }
+    const datetime = new DateTime(refISOYear, isoMonth, isoDay, 12, 0, 0, 0, 0, 0, calendar);
+    return {
+      instant: main[TIMEZONE].getInstantFor(datetime),
+      formatter: main[MD]
+    };
   }
-  if (datetime instanceof Date) {
-    calendar = calendar || datetime.calendar.id;
-    datetime = datetime.toDateTime(new Time(12, 0));
-    formatter = formatter || main[DATE];
+
+  if (ES.IsTemporalDate(temporalObj)) {
+    const isoYear = GetSlot(temporalObj, ISO_YEAR);
+    const isoMonth = GetSlot(temporalObj, ISO_MONTH);
+    const isoDay = GetSlot(temporalObj, ISO_DAY);
+    const calendar = GetSlot(temporalObj, CALENDAR);
+    if (calendar.id !== 'iso8601' && calendar.id !== main[CAL_ID]) {
+      throw new RangeError(`cannot format Date with calendar ${calendar.id} in locale with calendar ${main[CAL_ID]}`);
+    }
+    const datetime = new DateTime(isoYear, isoMonth, isoDay, 12, 0, 0, 0, 0, 0, main[CAL_ID]);
+    return {
+      instant: main[TIMEZONE].getInstantFor(datetime),
+      formatter: main[DATE]
+    };
   }
-  if (datetime instanceof DateTime) {
-    calendar = calendar || datetime.calendar.id;
-    formatter = formatter || main[DATETIME];
-    datetime = main[TIMEZONE].getInstantFor(datetime);
+
+  if (ES.IsTemporalDateTime(temporalObj)) {
+    const isoYear = GetSlot(temporalObj, ISO_YEAR);
+    const isoMonth = GetSlot(temporalObj, ISO_MONTH);
+    const isoDay = GetSlot(temporalObj, ISO_DAY);
+    const hour = GetSlot(temporalObj, HOUR);
+    const minute = GetSlot(temporalObj, MINUTE);
+    const second = GetSlot(temporalObj, SECOND);
+    const millisecond = GetSlot(temporalObj, MILLISECOND);
+    const microsecond = GetSlot(temporalObj, MICROSECOND);
+    const nanosecond = GetSlot(temporalObj, NANOSECOND);
+    const calendar = GetSlot(temporalObj, CALENDAR);
+    if (calendar.id !== 'iso8601' && calendar.id !== main[CAL_ID]) {
+      throw new RangeError(`cannot format Date with calendar ${calendar.id} in locale with calendar ${main[CAL_ID]}`);
+    }
+    let datetime = temporalObj;
+    if (calendar.id === 'iso8601') {
+      datetime = new DateTime(
+        isoYear,
+        isoMonth,
+        isoDay,
+        hour,
+        minute,
+        second,
+        millisecond,
+        microsecond,
+        nanosecond,
+        main[CAL_ID]
+      );
+    }
+    return {
+      instant: main[TIMEZONE].getInstantFor(datetime),
+      formatter: main[DATETIME]
+    };
   }
-  if (datetime instanceof Instant) {
-    formatter = formatter || main[DATETIME];
-    return { absolute: datetime, formatter, calendar };
-  } else {
-    return {};
+
+  if (ES.IsTemporalInstant(temporalObj)) {
+    return {
+      instant: temporalObj,
+      formatter: main[DATETIME]
+    };
   }
+
+  return {};
 }

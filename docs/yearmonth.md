@@ -389,13 +389,30 @@ This method overrides `Object.prototype.toLocaleString()` to provide a human-rea
 
 The `locales` and `options` arguments are the same as in the constructor to [`Intl.DateTimeFormat`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DateTimeFormat).
 
+The calendar in the output locale (given by `new Intl.DateTimeFormat(locales, options).resolvedOptions().calendar`) must match `monthDay.calendar`, or this method will throw an exception.
+This is because it's not possible to convert a Temporal.MonthDay from one calendar to another without more information.
+In order to ensure that the output always matches `monthDay`'s internal calendar, you must either explicitly construct `monthDay` with the locale's calendar, or explicitly specify the calendar in the `options` parameter:
+
+```js
+yearMonth.toLocaleString(locales, { calendar: yearMonth.calendar });
+
+// OR
+
+yearMonth = Temporal.YearMonth.from({ /* ... */, calendar: localeCalendar });
+yearMonth.toLocaleString();
+```
+
 Example usage:
 ```js
-ym = Temporal.YearMonth.from('2019-06');
+({ calendar } = new Intl.DateTimeFormat().resolvedOptions());
+ym = Temporal.YearMonth.from({ year: 2019, month: 6, calendar });
 ym.toLocaleString();  // => example output: 2019-06
-ym.toLocaleString('de-DE');  // => example output: 6.2019
-ym.toLocaleString('de-DE', {month: 'long', year: 'numeric'});  // => Juni 2019
-ym.toLocaleString('en-US-u-nu-fullwide');  // => ６/２０１９
+// Same as above, but explicitly specifying the calendar:
+ym.toLocaleString(undefined, { calendar });
+
+ym.toLocaleString('de-DE', { calendar });  // => example output: 6.2019
+ym.toLocaleString('de-DE', { month: 'long', year: 'numeric', calendar });  // => Juni 2019
+ym.toLocaleString(`en-US-u-nu-fullwide-u-ca-${calendar}`);  // => ６/２０１９
 ```
 
 ### yearMonth.**toJSON**() : string
