@@ -1916,14 +1916,29 @@
 
   var functionBind = Function.prototype.bind || implementation;
 
+  var src = functionBind.call(Function.call, Object.prototype.hasOwnProperty);
+
   /* globals
+  	AggregateError,
   	Atomics,
+  	FinalizationRegistry,
   	SharedArrayBuffer,
+  	WeakRef,
   */
 
   var undefined$1;
 
+  var $SyntaxError = SyntaxError;
+  var $Function = Function;
   var $TypeError = TypeError;
+
+  // eslint-disable-next-line consistent-return
+  var getEvalledConstructor = function (expressionSyntax) {
+  	try {
+  		// eslint-disable-next-line no-new-func
+  		return Function('"use strict"; return (' + expressionSyntax + ').constructor;')();
+  	} catch (e) {}
+  };
 
   var $gOPD = Object.getOwnPropertyDescriptor;
   if ($gOPD) {
@@ -1955,125 +1970,138 @@
   var hasSymbols$1 = hasSymbols();
 
   var getProto = Object.getPrototypeOf || function (x) { return x.__proto__; }; // eslint-disable-line no-proto
-  var generatorFunction =  undefined$1;
-  var asyncFunction =  undefined$1;
-  var asyncGenFunction =  undefined$1;
+
+  var asyncGenFunction = getEvalledConstructor('async function* () {}');
+  var asyncGenFunctionPrototype = asyncGenFunction ? asyncGenFunction.prototype : undefined$1;
+  var asyncGenPrototype = asyncGenFunctionPrototype ? asyncGenFunctionPrototype.prototype : undefined$1;
 
   var TypedArray = typeof Uint8Array === 'undefined' ? undefined$1 : getProto(Uint8Array);
 
   var INTRINSICS = {
+  	'%AggregateError%': typeof AggregateError === 'undefined' ? undefined$1 : AggregateError,
   	'%Array%': Array,
   	'%ArrayBuffer%': typeof ArrayBuffer === 'undefined' ? undefined$1 : ArrayBuffer,
-  	'%ArrayBufferPrototype%': typeof ArrayBuffer === 'undefined' ? undefined$1 : ArrayBuffer.prototype,
   	'%ArrayIteratorPrototype%': hasSymbols$1 ? getProto([][Symbol.iterator]()) : undefined$1,
-  	'%ArrayPrototype%': Array.prototype,
-  	'%ArrayProto_entries%': Array.prototype.entries,
-  	'%ArrayProto_forEach%': Array.prototype.forEach,
-  	'%ArrayProto_keys%': Array.prototype.keys,
-  	'%ArrayProto_values%': Array.prototype.values,
   	'%AsyncFromSyncIteratorPrototype%': undefined$1,
-  	'%AsyncFunction%': asyncFunction,
-  	'%AsyncFunctionPrototype%':  undefined$1,
-  	'%AsyncGenerator%':  undefined$1,
+  	'%AsyncFunction%': getEvalledConstructor('async function () {}'),
+  	'%AsyncGenerator%': asyncGenFunctionPrototype,
   	'%AsyncGeneratorFunction%': asyncGenFunction,
-  	'%AsyncGeneratorPrototype%':  undefined$1,
-  	'%AsyncIteratorPrototype%':  undefined$1,
+  	'%AsyncIteratorPrototype%': asyncGenPrototype ? getProto(asyncGenPrototype) : undefined$1,
   	'%Atomics%': typeof Atomics === 'undefined' ? undefined$1 : Atomics,
+  	'%BigInt%': typeof BigInt === 'undefined' ? undefined$1 : BigInt,
   	'%Boolean%': Boolean,
-  	'%BooleanPrototype%': Boolean.prototype,
   	'%DataView%': typeof DataView === 'undefined' ? undefined$1 : DataView,
-  	'%DataViewPrototype%': typeof DataView === 'undefined' ? undefined$1 : DataView.prototype,
   	'%Date%': Date,
-  	'%DatePrototype%': Date.prototype,
   	'%decodeURI%': decodeURI,
   	'%decodeURIComponent%': decodeURIComponent,
   	'%encodeURI%': encodeURI,
   	'%encodeURIComponent%': encodeURIComponent,
   	'%Error%': Error,
-  	'%ErrorPrototype%': Error.prototype,
   	'%eval%': eval, // eslint-disable-line no-eval
   	'%EvalError%': EvalError,
-  	'%EvalErrorPrototype%': EvalError.prototype,
   	'%Float32Array%': typeof Float32Array === 'undefined' ? undefined$1 : Float32Array,
-  	'%Float32ArrayPrototype%': typeof Float32Array === 'undefined' ? undefined$1 : Float32Array.prototype,
   	'%Float64Array%': typeof Float64Array === 'undefined' ? undefined$1 : Float64Array,
-  	'%Float64ArrayPrototype%': typeof Float64Array === 'undefined' ? undefined$1 : Float64Array.prototype,
-  	'%Function%': Function,
-  	'%FunctionPrototype%': Function.prototype,
-  	'%Generator%':  undefined$1,
-  	'%GeneratorFunction%': generatorFunction,
-  	'%GeneratorPrototype%':  undefined$1,
+  	'%FinalizationRegistry%': typeof FinalizationRegistry === 'undefined' ? undefined$1 : FinalizationRegistry,
+  	'%Function%': $Function,
+  	'%GeneratorFunction%': getEvalledConstructor('function* () {}'),
   	'%Int8Array%': typeof Int8Array === 'undefined' ? undefined$1 : Int8Array,
-  	'%Int8ArrayPrototype%': typeof Int8Array === 'undefined' ? undefined$1 : Int8Array.prototype,
   	'%Int16Array%': typeof Int16Array === 'undefined' ? undefined$1 : Int16Array,
-  	'%Int16ArrayPrototype%': typeof Int16Array === 'undefined' ? undefined$1 : Int8Array.prototype,
   	'%Int32Array%': typeof Int32Array === 'undefined' ? undefined$1 : Int32Array,
-  	'%Int32ArrayPrototype%': typeof Int32Array === 'undefined' ? undefined$1 : Int32Array.prototype,
   	'%isFinite%': isFinite,
   	'%isNaN%': isNaN,
   	'%IteratorPrototype%': hasSymbols$1 ? getProto(getProto([][Symbol.iterator]())) : undefined$1,
   	'%JSON%': typeof JSON === 'object' ? JSON : undefined$1,
-  	'%JSONParse%': typeof JSON === 'object' ? JSON.parse : undefined$1,
   	'%Map%': typeof Map === 'undefined' ? undefined$1 : Map,
   	'%MapIteratorPrototype%': typeof Map === 'undefined' || !hasSymbols$1 ? undefined$1 : getProto(new Map()[Symbol.iterator]()),
-  	'%MapPrototype%': typeof Map === 'undefined' ? undefined$1 : Map.prototype,
   	'%Math%': Math,
   	'%Number%': Number,
-  	'%NumberPrototype%': Number.prototype,
   	'%Object%': Object,
-  	'%ObjectPrototype%': Object.prototype,
-  	'%ObjProto_toString%': Object.prototype.toString,
-  	'%ObjProto_valueOf%': Object.prototype.valueOf,
   	'%parseFloat%': parseFloat,
   	'%parseInt%': parseInt,
   	'%Promise%': typeof Promise === 'undefined' ? undefined$1 : Promise,
-  	'%PromisePrototype%': typeof Promise === 'undefined' ? undefined$1 : Promise.prototype,
-  	'%PromiseProto_then%': typeof Promise === 'undefined' ? undefined$1 : Promise.prototype.then,
-  	'%Promise_all%': typeof Promise === 'undefined' ? undefined$1 : Promise.all,
-  	'%Promise_reject%': typeof Promise === 'undefined' ? undefined$1 : Promise.reject,
-  	'%Promise_resolve%': typeof Promise === 'undefined' ? undefined$1 : Promise.resolve,
   	'%Proxy%': typeof Proxy === 'undefined' ? undefined$1 : Proxy,
   	'%RangeError%': RangeError,
-  	'%RangeErrorPrototype%': RangeError.prototype,
   	'%ReferenceError%': ReferenceError,
-  	'%ReferenceErrorPrototype%': ReferenceError.prototype,
   	'%Reflect%': typeof Reflect === 'undefined' ? undefined$1 : Reflect,
   	'%RegExp%': RegExp,
-  	'%RegExpPrototype%': RegExp.prototype,
   	'%Set%': typeof Set === 'undefined' ? undefined$1 : Set,
   	'%SetIteratorPrototype%': typeof Set === 'undefined' || !hasSymbols$1 ? undefined$1 : getProto(new Set()[Symbol.iterator]()),
-  	'%SetPrototype%': typeof Set === 'undefined' ? undefined$1 : Set.prototype,
   	'%SharedArrayBuffer%': typeof SharedArrayBuffer === 'undefined' ? undefined$1 : SharedArrayBuffer,
-  	'%SharedArrayBufferPrototype%': typeof SharedArrayBuffer === 'undefined' ? undefined$1 : SharedArrayBuffer.prototype,
   	'%String%': String,
   	'%StringIteratorPrototype%': hasSymbols$1 ? getProto(''[Symbol.iterator]()) : undefined$1,
-  	'%StringPrototype%': String.prototype,
   	'%Symbol%': hasSymbols$1 ? Symbol : undefined$1,
-  	'%SymbolPrototype%': hasSymbols$1 ? Symbol.prototype : undefined$1,
-  	'%SyntaxError%': SyntaxError,
-  	'%SyntaxErrorPrototype%': SyntaxError.prototype,
+  	'%SyntaxError%': $SyntaxError,
   	'%ThrowTypeError%': ThrowTypeError,
   	'%TypedArray%': TypedArray,
-  	'%TypedArrayPrototype%': TypedArray ? TypedArray.prototype : undefined$1,
   	'%TypeError%': $TypeError,
-  	'%TypeErrorPrototype%': $TypeError.prototype,
   	'%Uint8Array%': typeof Uint8Array === 'undefined' ? undefined$1 : Uint8Array,
-  	'%Uint8ArrayPrototype%': typeof Uint8Array === 'undefined' ? undefined$1 : Uint8Array.prototype,
   	'%Uint8ClampedArray%': typeof Uint8ClampedArray === 'undefined' ? undefined$1 : Uint8ClampedArray,
-  	'%Uint8ClampedArrayPrototype%': typeof Uint8ClampedArray === 'undefined' ? undefined$1 : Uint8ClampedArray.prototype,
   	'%Uint16Array%': typeof Uint16Array === 'undefined' ? undefined$1 : Uint16Array,
-  	'%Uint16ArrayPrototype%': typeof Uint16Array === 'undefined' ? undefined$1 : Uint16Array.prototype,
   	'%Uint32Array%': typeof Uint32Array === 'undefined' ? undefined$1 : Uint32Array,
-  	'%Uint32ArrayPrototype%': typeof Uint32Array === 'undefined' ? undefined$1 : Uint32Array.prototype,
   	'%URIError%': URIError,
-  	'%URIErrorPrototype%': URIError.prototype,
   	'%WeakMap%': typeof WeakMap === 'undefined' ? undefined$1 : WeakMap,
-  	'%WeakMapPrototype%': typeof WeakMap === 'undefined' ? undefined$1 : WeakMap.prototype,
-  	'%WeakSet%': typeof WeakSet === 'undefined' ? undefined$1 : WeakSet,
-  	'%WeakSetPrototype%': typeof WeakSet === 'undefined' ? undefined$1 : WeakSet.prototype
+  	'%WeakRef%': typeof WeakRef === 'undefined' ? undefined$1 : WeakRef,
+  	'%WeakSet%': typeof WeakSet === 'undefined' ? undefined$1 : WeakSet
+  };
+
+  var LEGACY_ALIASES = {
+  	'%ArrayBufferPrototype%': ['ArrayBuffer', 'prototype'],
+  	'%ArrayPrototype%': ['Array', 'prototype'],
+  	'%ArrayProto_entries%': ['Array', 'prototype', 'entries'],
+  	'%ArrayProto_forEach%': ['Array', 'prototype', 'forEach'],
+  	'%ArrayProto_keys%': ['Array', 'prototype', 'keys'],
+  	'%ArrayProto_values%': ['Array', 'prototype', 'values'],
+  	'%AsyncFunctionPrototype%': ['AsyncFunction', 'prototype'],
+  	'%AsyncGenerator%': ['AsyncGeneratorFunction', 'prototype'],
+  	'%AsyncGeneratorPrototype%': ['AsyncGeneratorFunction', 'prototype', 'prototype'],
+  	'%BooleanPrototype%': ['Boolean', 'prototype'],
+  	'%DataViewPrototype%': ['DataView', 'prototype'],
+  	'%DatePrototype%': ['Date', 'prototype'],
+  	'%ErrorPrototype%': ['Error', 'prototype'],
+  	'%EvalErrorPrototype%': ['EvalError', 'prototype'],
+  	'%Float32ArrayPrototype%': ['Float32Array', 'prototype'],
+  	'%Float64ArrayPrototype%': ['Float64Array', 'prototype'],
+  	'%FunctionPrototype%': ['Function', 'prototype'],
+  	'%Generator%': ['GeneratorFunction', 'prototype'],
+  	'%GeneratorPrototype%': ['GeneratorFunction', 'prototype', 'prototype'],
+  	'%Int8ArrayPrototype%': ['Int8Array', 'prototype'],
+  	'%Int16ArrayPrototype%': ['Int16Array', 'prototype'],
+  	'%Int32ArrayPrototype%': ['Int32Array', 'prototype'],
+  	'%JSONParse%': ['JSON', 'parse'],
+  	'%JSONStringify%': ['JSON', 'stringify'],
+  	'%MapPrototype%': ['Map', 'prototype'],
+  	'%NumberPrototype%': ['Number', 'prototype'],
+  	'%ObjectPrototype%': ['Object', 'prototype'],
+  	'%ObjProto_toString%': ['Object', 'prototype', 'toString'],
+  	'%ObjProto_valueOf%': ['Object', 'prototype', 'valueOf'],
+  	'%PromisePrototype%': ['Promise', 'prototype'],
+  	'%PromiseProto_then%': ['Promise', 'prototype', 'then'],
+  	'%Promise_all%': ['Promise', 'all'],
+  	'%Promise_reject%': ['Promise', 'reject'],
+  	'%Promise_resolve%': ['Promise', 'resolve'],
+  	'%RangeErrorPrototype%': ['RangeError', 'prototype'],
+  	'%ReferenceErrorPrototype%': ['ReferenceError', 'prototype'],
+  	'%RegExpPrototype%': ['RegExp', 'prototype'],
+  	'%SetPrototype%': ['Set', 'prototype'],
+  	'%SharedArrayBufferPrototype%': ['SharedArrayBuffer', 'prototype'],
+  	'%StringPrototype%': ['String', 'prototype'],
+  	'%SymbolPrototype%': ['Symbol', 'prototype'],
+  	'%SyntaxErrorPrototype%': ['SyntaxError', 'prototype'],
+  	'%TypedArrayPrototype%': ['TypedArray', 'prototype'],
+  	'%TypeErrorPrototype%': ['TypeError', 'prototype'],
+  	'%Uint8ArrayPrototype%': ['Uint8Array', 'prototype'],
+  	'%Uint8ClampedArrayPrototype%': ['Uint8ClampedArray', 'prototype'],
+  	'%Uint16ArrayPrototype%': ['Uint16Array', 'prototype'],
+  	'%Uint32ArrayPrototype%': ['Uint32Array', 'prototype'],
+  	'%URIErrorPrototype%': ['URIError', 'prototype'],
+  	'%WeakMapPrototype%': ['WeakMap', 'prototype'],
+  	'%WeakSetPrototype%': ['WeakSet', 'prototype']
   };
 
 
+
+  var $concat = functionBind.call(Function.call, Array.prototype.concat);
+  var $spliceApply = functionBind.call(Function.apply, Array.prototype.splice);
   var $replace = functionBind.call(Function.call, String.prototype.replace);
 
   /* adapted from https://github.com/lodash/lodash/blob/4.17.15/dist/lodash.js#L6735-L6744 */
@@ -2082,41 +2110,75 @@
   var stringToPath = function stringToPath(string) {
   	var result = [];
   	$replace(string, rePropName, function (match, number, quote, subString) {
-  		result[result.length] = quote ? $replace(subString, reEscapeChar, '$1') : (number || match);
+  		result[result.length] = quote ? $replace(subString, reEscapeChar, '$1') : number || match;
   	});
   	return result;
   };
   /* end adaptation */
 
   var getBaseIntrinsic = function getBaseIntrinsic(name, allowMissing) {
-  	if (!(name in INTRINSICS)) {
-  		throw new SyntaxError('intrinsic ' + name + ' does not exist!');
+  	var intrinsicName = name;
+  	var alias;
+  	if (src(LEGACY_ALIASES, intrinsicName)) {
+  		alias = LEGACY_ALIASES[intrinsicName];
+  		intrinsicName = '%' + alias[0] + '%';
   	}
 
-  	// istanbul ignore if // hopefully this is impossible to test :-)
-  	if (typeof INTRINSICS[name] === 'undefined' && !allowMissing) {
-  		throw new $TypeError('intrinsic ' + name + ' exists, but is not available. Please file an issue!');
+  	if (src(INTRINSICS, intrinsicName)) {
+  		var value = INTRINSICS[intrinsicName];
+  		if (typeof value === 'undefined' && !allowMissing) {
+  			throw new $TypeError('intrinsic ' + name + ' exists, but is not available. Please file an issue!');
+  		}
+
+  		return {
+  			alias: alias,
+  			name: intrinsicName,
+  			value: value
+  		};
   	}
 
-  	return INTRINSICS[name];
+  	throw new $SyntaxError('intrinsic ' + name + ' does not exist!');
   };
 
   var GetIntrinsic = function GetIntrinsic(name, allowMissing) {
   	if (typeof name !== 'string' || name.length === 0) {
-  		throw new TypeError('intrinsic name must be a non-empty string');
+  		throw new $TypeError('intrinsic name must be a non-empty string');
   	}
   	if (arguments.length > 1 && typeof allowMissing !== 'boolean') {
-  		throw new TypeError('"allowMissing" argument must be a boolean');
+  		throw new $TypeError('"allowMissing" argument must be a boolean');
   	}
 
   	var parts = stringToPath(name);
+  	var intrinsicBaseName = parts.length > 0 ? parts[0] : '';
 
-  	var value = getBaseIntrinsic('%' + (parts.length > 0 ? parts[0] : '') + '%', allowMissing);
-  	for (var i = 1; i < parts.length; i += 1) {
-  		if (value != null) {
+  	var intrinsic = getBaseIntrinsic('%' + intrinsicBaseName + '%', allowMissing);
+  	var intrinsicRealName = intrinsic.name;
+  	var value = intrinsic.value;
+  	var skipFurtherCaching = false;
+
+  	var alias = intrinsic.alias;
+  	if (alias) {
+  		intrinsicBaseName = alias[0];
+  		$spliceApply(parts, $concat([0, 1], alias));
+  	}
+
+  	for (var i = 1, isOwn = true; i < parts.length; i += 1) {
+  		var part = parts[i];
+  		if (part === 'constructor' || !isOwn) {
+  			skipFurtherCaching = true;
+  		}
+
+  		intrinsicBaseName += '.' + part;
+  		intrinsicRealName = '%' + intrinsicBaseName + '%';
+
+  		if (src(INTRINSICS, intrinsicRealName)) {
+  			value = INTRINSICS[intrinsicRealName];
+  		} else if (value != null) {
   			if ($gOPD && (i + 1) >= parts.length) {
-  				var desc = $gOPD(value, parts[i]);
-  				if (!allowMissing && !(parts[i] in value)) {
+  				var desc = $gOPD(value, part);
+  				isOwn = !!desc;
+
+  				if (!allowMissing && !(part in value)) {
   					throw new $TypeError('base intrinsic for ' + name + ' exists, but the property is not available.');
   				}
   				// By convention, when a data property is converted to an accessor
@@ -2126,9 +2188,18 @@
   				// uphold the illusion by pretending to see that original data
   				// property, i.e., returning the value rather than the getter
   				// itself.
-  				value = desc && 'get' in desc && !('originalValue' in desc.get) ? desc.get : value[parts[i]];
+  				if (isOwn && 'get' in desc && !('originalValue' in desc.get)) {
+  					value = desc.get;
+  				} else {
+  					value = value[part];
+  				}
   			} else {
-  				value = value[parts[i]];
+  				isOwn = src(value, part);
+  				value = value[part];
+  			}
+
+  			if (isOwn && !skipFurtherCaching) {
+  				INTRINSICS[intrinsicRealName] = value;
   			}
   		}
   	}
@@ -2189,8 +2260,6 @@
   	var args = arguments.length > 2 ? arguments[2] : [];
   	return $apply(F, V, args);
   };
-
-  var src = functionBind.call(Function.call, Object.prototype.hasOwnProperty);
 
   var $TypeError$1 = GetIntrinsic('%TypeError%');
 
@@ -2262,7 +2331,7 @@
   };
 
   var $TypeError$2 = GetIntrinsic('%TypeError%');
-  var $SyntaxError = GetIntrinsic('%SyntaxError%');
+  var $SyntaxError$1 = GetIntrinsic('%SyntaxError%');
 
 
 
@@ -2299,7 +2368,7 @@
   var assertRecord = function assertRecord(Type, recordType, argumentName, value) {
   	var predicate = predicates[recordType];
   	if (typeof predicate !== 'function') {
-  		throw new $SyntaxError('unknown record type: ' + recordType);
+  		throw new $SyntaxError$1('unknown record type: ' + recordType);
   	}
   	if (!predicate(Type, value)) {
   		throw new $TypeError$2(argumentName + ' must be a ' + recordType);
@@ -2329,11 +2398,14 @@
   	}
   };
 
-  // https://ecma-international.org/ecma-262/6.0/#sec-ecmascript-data-types-and-values
+  // https://tc39.es/ecma262/2020/#sec-ecmascript-data-types-and-values
 
   var Type$1 = function Type$1(x) {
   	if (typeof x === 'symbol') {
   		return 'Symbol';
+  	}
+  	if (typeof x === 'bigint') {
+  		return 'BigInt';
   	}
   	return Type(x);
   };
@@ -2663,6 +2735,24 @@
   	throw new $TypeError$5('no constructor found');
   };
 
+  var $abs = GetIntrinsic('%Math.abs%');
+
+  // http://www.ecma-international.org/ecma-262/5.1/#sec-5.2
+
+  var abs = function abs(x) {
+  	return $abs(x);
+  };
+
+  // var modulo = require('./modulo');
+  var $floor = Math.floor;
+
+  // http://www.ecma-international.org/ecma-262/5.1/#sec-5.2
+
+  var floor = function floor(x) {
+  	// return x - modulo(x, 1);
+  	return $floor(x);
+  };
+
   // http://www.ecma-international.org/ecma-262/5.1/#sec-9.3
 
   var ToNumber = function ToNumber(value) {
@@ -2677,23 +2767,13 @@
   	return number >= 0 ? 1 : -1;
   };
 
-  var $Math = GetIntrinsic('%Math%');
-
-
-
-
-
-
-  var $floor = $Math.floor;
-  var $abs = $Math.abs;
-
   // http://www.ecma-international.org/ecma-262/5.1/#sec-9.4
 
   var ToInteger = function ToInteger(value) {
   	var number = ToNumber(value);
   	if (_isNaN(number)) { return 0; }
   	if (number === 0 || !_isFinite(number)) { return number; }
-  	return sign(number) * $floor($abs(number));
+  	return sign(number) * floor(abs(number));
   };
 
   var $test = GetIntrinsic('RegExp.prototype.test');
@@ -2909,11 +2989,14 @@
   	return $Number(value);
   };
 
-  // https://www.ecma-international.org/ecma-262/6.0/#sec-tointeger
+  // https://www.ecma-international.org/ecma-262/11.0/#sec-tointeger
 
   var ToInteger$1 = function ToInteger$1(value) {
   	var number = ToNumber$1(value);
-  	return ToInteger(number);
+  	if (number !== 0) {
+  		number = ToInteger(number);
+  	}
+  	return number === 0 ? 0 : number;
   };
 
   var $String = GetIntrinsic('%String%');
