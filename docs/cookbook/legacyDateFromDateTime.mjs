@@ -6,6 +6,7 @@
  * @returns {Date} legacy Date instance
  */
 function getLegacyDateInUTCFromDateTime(dateTime) {
+  dateTime = dateTime.round({ smallestUnit: 'millisecond' });
   return new Date(
     Date.UTC(
       dateTime.year,
@@ -19,9 +20,9 @@ function getLegacyDateInUTCFromDateTime(dateTime) {
   );
 }
 
-const dateTime = Temporal.DateTime.from('2020-01-01T00:00:01Z');
+const dateTime = Temporal.DateTime.from('2020-01-01T00:00:01.000999Z');
 const result = getLegacyDateInUTCFromDateTime(dateTime);
 assert.equal(result.getUTCDate(), 1); // Day of the month
 assert.equal(result.getUTCFullYear(), 2020);
 assert.equal(result.getUTCMonth(), 0); // the month (zero-indexed)
-assert.equal(result.toISOString(), '2020-01-01T00:00:01.000Z');
+assert.equal(result.toISOString(), '2020-01-01T00:00:01.001Z');
