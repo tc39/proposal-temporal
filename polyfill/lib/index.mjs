@@ -7,4 +7,5 @@
 
 import * as Temporal from './temporal.mjs';
 import * as Intl from './intl.mjs';
-export { Temporal, Intl };
+import { toTemporalInstant } from './legacydate.mjs';
+export { Temporal, Intl, toTemporalInstant };

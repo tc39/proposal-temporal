@@ -1,0 +1,20 @@
+<!doctype html>
+<meta charset="utf8">
+
+<emu-clause id="sec-temporal-legacy-date-objects">
+  <h1>Integration with the Date Object</h1>
+
+  <emu-clause id="sec-temporal-properties-of-the-legacy-date-prototype-object">
+    <h1>Properties of the Date Prototype Object</h1>
+
+    <emu-clause id="sec-date.prototype.totemporalinstant">
+      <h1>Date.prototype.toTemporalInstant ( )</h1>
+      <p>The following steps are performed:</p>
+      <emu-alg>
+        1. Let _t_ be ? thisTimeValue(*this* value).
+        1. Let _ns_ be ? NumberToBigInt(_t_) × 10<sup>6</sup>.
+        1. Return ? CreateTemporalInstant(_ns_).
+      </emu-alg>
+    </emu-clause>
+  </emu-clause>
+</emu-clause>
