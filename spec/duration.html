@@ -736,7 +736,7 @@
             1. Let _dateMinus_ be ? Get(_calendar_, *"dateMinus"*).
             1. Let _options_ be ? ObjectCreate(%Object.prototype%).
         1. Let _fractionalSeconds_ be _nanoseconds_ × 10<sup>−9</sup> + _microseconds_ × 10<sup>−6</sup> + _milliseconds_ × 10<sup>−3</sup> + _seconds_.
-        1. Let _fractionalDays_ be ((_fractionalSeconds_/ 60 + _minutes_)/ 60 + _hours_)/ 24 + _days_.
+        1. Let _fractionalDays_ be ((_fractionalSeconds_ / 60 + _minutes_) / 60 + _hours_) / 24 + _days_.
         1. If _unit_ is *"years"*, then
           1. Let _yearsDuration_ be ? CreateTemporalDuration(_years_, 0, 0, 0, 0, 0, 0, 0, 0, 0).
           1. Let _yearsBefore_ be ? Call(_dateMinus_, _calendar_, « _relativeTo_, _yearsDuration_, _options_, %Temporal.Date%).
@@ -749,7 +749,7 @@
           1. Let _daysInYear_ be ? Get(_calendar_, *"daysInYear"*).
           1. Let _oneYearDays_ be ? Call(_daysInYear_, _calendar_, « _relativeTo_ »).
           1. Assert: _days_ ≤ _oneYearDays_. <mark>Note this will not be true in Temporal.Duration.prototype.round, this will become a loop</mark>.
-          1. Let _fractionalYears_ be _years_ + _days_/ _oneYearDays_.
+          1. Let _fractionalYears_ be _years_ + _days_ / _oneYearDays_.
           1. Set _years_ to ? RoundNumberToIncrement(_fractionalYears_, _increment_, _roundingMode_).
           1. Set _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, and _nanoseconds_ to 0.
         1. Else if _unit_ is *"months"*, then
@@ -764,7 +764,7 @@
           1. Let _daysInMonth_ be ? Get(_calendar_, *"daysInMonth"*).
           1. Let _oneMonthDays_ be ? Call(_daysInMonth_, _calendar_, « _relativeTo_ »).
           1. Assert: _days_ ≤ _oneMonthDays_. <mark>Note this will not be true in Temporal.Duration.prototype.round, this will become a loop</mark>.
-          1. Let _fractionalMonths_ be _months_ + _days_/ _oneMonthDays_.
+          1. Let _fractionalMonths_ be _months_ + _days_ / _oneMonthDays_.
           1. Set _months_ to ? RoundNumberToIncrement(_fractionalMonths_, _increment_, _roundingMode_).
           1. Set _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, and _nanoseconds_ to 0.
         1. Else if _unit_ is *"weeks"*, then
@@ -773,18 +773,18 @@
           1. Let _daysInWeek_ be ? Get(_calendar_, *"daysInWeek"*).
           1. Let _oneWeekDays_ be ? Call(_daysInWeek_, _calendar_, « _relativeTo_ »).
           1. Assert: _days_ ≤ _oneWeekDays_. <mark>Note this will not be true in Temporal.Duration.prototype.round, this will become a loop</mark>.
-          1. Let _fractionalWeeks_ be _weeks_ + _fractionalDays_/ _oneWeekDays_.
+          1. Let _fractionalWeeks_ be _weeks_ + _fractionalDays_ / _oneWeekDays_.
           1. Set _weeks_ to ? RoundNumberToIncrement(_fractionalWeeks_, _increment_, _roundingMode_).
           1. Set _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, and _nanoseconds_ to 0.
         1. Else if _unit_ is *"days"*, then
           1. Set _days_ to ? RoundNumberToIncrement(_fractionalDays_, _increment_, _roundingMode_).
           1. Set _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, and _nanoseconds_ to 0.
         1. Else if _unit_ is *"hours"*, then
-          1. Let _fractionalHours_ be (_fractionalSeconds_/ 60 + _minutes_)/ 60 + _hours_.
+          1. Let _fractionalHours_ be (_fractionalSeconds_ / 60 + _minutes_) / 60 + _hours_.
           1. Set _hours_ to ? RoundNumberToIncrement(_fractionalHours_, _increment_, _roundingMode_).
           1. Set _minutes_, _seconds_, _milliseconds_, _microseconds_, and _nanoseconds_ to 0.
         1. Else if _unit_ is *"minutes"*, then
-          1. Let _fractionalMinutes_ be _fractionalSeconds_/ 60 + _minutes_.
+          1. Let _fractionalMinutes_ be _fractionalSeconds_ / 60 + _minutes_.
           1. Set _minutes_ to ? RoundNumberToIncrement(_fractionalMinutes_, _increment_, _roundingMode_).
           1. Set _seconds_, _milliseconds_, _microseconds_, and _nanoseconds_ to 0.
         1. Else if _unit_ is *"seconds"*, then
@@ -847,11 +847,11 @@
         1. Let _microseconds_ be _duration_.[[Microseconds]].
         1. Let _nanoseconds_ be _duration_.[[Nanoseconds]].
         1. Let _sign_ be ! DurationSign(_years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_).
-        1. Set _microseconds_ to _microseconds_ + the integral part of _nanoseconds_/ 1000.
+        1. Set _microseconds_ to _microseconds_ + the integral part of _nanoseconds_ / 1000.
         1. Set _nanoseconds_ to _nanoseconds_ modulo 1000.
-        1. Set _milliseconds_ to _milliseconds_ + the integral part of _microseconds_/ 1000.
+        1. Set _milliseconds_ to _milliseconds_ + the integral part of _microseconds_ / 1000.
         1. Set _microseconds_ to _microseconds_ modulo 1000.
-        1. Set _seconds_ to _seconds_ + the integral part of _milliseconds_/ 1000.
+        1. Set _seconds_ to _seconds_ + the integral part of _milliseconds_ / 1000.
         1. Set _milliseconds_ to _milliseconds_ modulo 1000.
         1. If _years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, and _nanoseconds_ are all 0, then
           1. Return the string `"PT0S"`.
