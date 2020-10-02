@@ -9099,6 +9099,7 @@
   var DATETIME = Symbol('datetime');
   var ORIGINAL = Symbol('original');
   var TIMEZONE = Symbol('timezone');
+  var CAL_ID = Symbol('calendar-id');
 
   var descriptor = function descriptor(value) {
     return {
@@ -9117,6 +9118,7 @@
     if (!(this instanceof DateTimeFormat)) return new DateTimeFormat(locale, options);
     this[ORIGINAL] = new IntlDateTimeFormat$1(locale, options);
     this[TIMEZONE] = new TimeZone(this.resolvedOptions().timeZone);
+    this[CAL_ID] = this.resolvedOptions().calendar;
     this[DATE] = new IntlDateTimeFormat$1(locale, dateAmend(options));
     this[YM] = new IntlDateTimeFormat$1(locale, yearMonthAmend(options));
     this[MD] = new IntlDateTimeFormat$1(locale, monthDayAmend(options));
@@ -9148,30 +9150,15 @@
     return this[ORIGINAL].resolvedOptions();
   }
 
-  function adjustFormatterCalendar(formatter, calendar) {
-    var options = formatter.resolvedOptions();
-    if (!calendar || calendar === options.calendar || calendar === 'iso8601') return formatter;
-    var locale = "".concat(options.locale, "-u-ca-").concat(calendar);
-    return new IntlDateTimeFormat$1(locale, options);
-  }
-
-  function pickRangeCalendar(a, b) {
-    if (!a) return b;
-    if (!b) return a;
-    if (a === b) return a;
-    throw new RangeError("cannot format range between two dates of ".concat(a, " and ").concat(b, " calendars"));
-  }
-
   function format(datetime) {
     var _this$ORIGINAL;
 
     var _extractOverrides = extractOverrides(datetime, this),
-        absolute = _extractOverrides.absolute,
-        formatter = _extractOverrides.formatter,
-        calendar = _extractOverrides.calendar;
+        instant = _extractOverrides.instant,
+        formatter = _extractOverrides.formatter;
 
-    if (absolute && formatter) {
-      return adjustFormatterCalendar(formatter, calendar).format(absolute.getEpochMilliseconds());
+    if (instant && formatter) {
+      return formatter.format(instant.getEpochMilliseconds());
     }
 
     for (var _len = arguments.length, rest = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
@@ -9185,12 +9172,11 @@
     var _this$ORIGINAL2;
 
     var _extractOverrides2 = extractOverrides(datetime, this),
-        absolute = _extractOverrides2.absolute,
-        formatter = _extractOverrides2.formatter,
-        calendar = _extractOverrides2.calendar;
+        instant = _extractOverrides2.instant,
+        formatter = _extractOverrides2.formatter;
 
-    if (absolute && formatter) {
-      return adjustFormatterCalendar(formatter, calendar).formatToParts(absolute.getEpochMilliseconds());
+    if (instant && formatter) {
+      return formatter.formatToParts(instant.getEpochMilliseconds());
     }
 
     for (var _len2 = arguments.length, rest = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
@@ -9207,20 +9193,15 @@
       }
 
       var _extractOverrides3 = extractOverrides(a, this),
-          aa = _extractOverrides3.absolute,
-          aformatter = _extractOverrides3.formatter,
-          acalendar = _extractOverrides3.calendar;
+          aa = _extractOverrides3.instant,
+          aformatter = _extractOverrides3.formatter;
 
       var _extractOverrides4 = extractOverrides(b, this),
-          bb = _extractOverrides4.absolute,
-          bformatter = _extractOverrides4.formatter,
-          bcalendar = _extractOverrides4.calendar;
-
-      var calendar = pickRangeCalendar(acalendar, bcalendar);
+          bb = _extractOverrides4.instant,
+          bformatter = _extractOverrides4.formatter;
 
       if (aa && bb && aformatter && bformatter && aformatter === bformatter) {
-        var formatter = adjustFormatterCalendar(aformatter, calendar);
-        return formatter.formatRange(aa.getEpochMilliseconds(), bb.getEpochMilliseconds());
+        return aformatter.formatRange(aa.getEpochMilliseconds(), bb.getEpochMilliseconds());
       }
     }
 
@@ -9234,20 +9215,15 @@
       }
 
       var _extractOverrides5 = extractOverrides(a, this),
-          aa = _extractOverrides5.absolute,
-          aformatter = _extractOverrides5.formatter,
-          acalendar = _extractOverrides5.calendar;
+          aa = _extractOverrides5.instant,
+          aformatter = _extractOverrides5.formatter;
 
       var _extractOverrides6 = extractOverrides(b, this),
-          bb = _extractOverrides6.absolute,
-          bformatter = _extractOverrides6.formatter,
-          bcalendar = _extractOverrides6.calendar;
-
-      var calendar = pickRangeCalendar(acalendar, bcalendar);
+          bb = _extractOverrides6.instant,
+          bformatter = _extractOverrides6.formatter;
 
       if (aa && bb && aformatter && bformatter && aformatter === bformatter) {
-        var formatter = adjustFormatterCalendar(aformatter, calendar);
-        return formatter.formatRangeToParts(aa.getEpochMilliseconds(), bb.getEpochMilliseconds());
+        return aformatter.formatRangeToParts(aa.getEpochMilliseconds(), bb.getEpochMilliseconds());
       }
     }
 
@@ -9374,66 +9350,128 @@
     return 'hour' in options || 'minute' in options || 'second' in options;
   }
 
-  function extractOverrides(datetime, main) {
-    var formatter, calendar;
-    var Instant = GetIntrinsic$1('%Temporal.Instant%');
-    var Date = GetIntrinsic$1('%Temporal.Date%');
+  function extractOverrides(temporalObj, main) {
     var DateTime = GetIntrinsic$1('%Temporal.DateTime%');
-    var MonthDay = GetIntrinsic$1('%Temporal.MonthDay%');
-    var Time = GetIntrinsic$1('%Temporal.Time%');
-    var YearMonth = GetIntrinsic$1('%Temporal.YearMonth%');
 
-    if (datetime instanceof Time) {
-      datetime = datetime.toDateTime(new Date(1970, 1, 1));
-      formatter = main[TIME];
-    }
-
-    if (datetime instanceof YearMonth) {
-      calendar = datetime.calendar.id;
-
-      var _datetime$getISOField = datetime.getISOFields(),
-          isoYear = _datetime$getISOField.isoYear,
-          isoMonth = _datetime$getISOField.isoMonth,
-          refISODay = _datetime$getISOField.refISODay;
-
-      datetime = new Date(isoYear, isoMonth, refISODay, datetime.calendar);
-      formatter = main[YM];
-    }
-
-    if (datetime instanceof MonthDay) {
-      calendar = datetime.calendar.id;
-
-      var _datetime$getISOField2 = datetime.getISOFields(),
-          refISOYear = _datetime$getISOField2.refISOYear,
-          _isoMonth = _datetime$getISOField2.isoMonth,
-          isoDay = _datetime$getISOField2.isoDay;
-
-      datetime = new Date(refISOYear, _isoMonth, isoDay, datetime.calendar);
-      formatter = main[MD];
-    }
-
-    if (datetime instanceof Date) {
-      calendar = calendar || datetime.calendar.id;
-      datetime = datetime.toDateTime(new Time(12, 0));
-      formatter = formatter || main[DATE];
-    }
-
-    if (datetime instanceof DateTime) {
-      calendar = calendar || datetime.calendar.id;
-      formatter = formatter || main[DATETIME];
-      datetime = main[TIMEZONE].getInstantFor(datetime);
-    }
-
-    if (datetime instanceof Instant) {
-      formatter = formatter || main[DATETIME];
+    if (ES.IsTemporalTime(temporalObj)) {
+      var hour = GetSlot(temporalObj, HOUR);
+      var minute = GetSlot(temporalObj, MINUTE);
+      var second = GetSlot(temporalObj, SECOND);
+      var millisecond = GetSlot(temporalObj, MILLISECOND);
+      var microsecond = GetSlot(temporalObj, MICROSECOND);
+      var nanosecond = GetSlot(temporalObj, NANOSECOND);
+      var datetime = new DateTime(1970, 1, 1, hour, minute, second, millisecond, microsecond, nanosecond, main[CAL_ID]);
       return {
-        absolute: datetime,
-        formatter: formatter,
-        calendar: calendar
+        instant: main[TIMEZONE].getInstantFor(datetime),
+        formatter: main[TIME]
       };
-    } else {
-      return {};
     }
+
+    if (ES.IsTemporalYearMonth(temporalObj)) {
+      var isoYear = GetSlot(temporalObj, ISO_YEAR);
+      var isoMonth = GetSlot(temporalObj, ISO_MONTH);
+      var refISODay = GetSlot(temporalObj, REF_ISO_DAY);
+      var calendar = GetSlot(temporalObj, CALENDAR);
+
+      if (calendar.id !== main[CAL_ID]) {
+        throw new RangeError("cannot format YearMonth with calendar ".concat(calendar.id, " in locale with calendar ").concat(main[CAL_ID]));
+      }
+
+      var _datetime = new DateTime(isoYear, isoMonth, refISODay, 12, 0, 0, 0, 0, 0, calendar);
+
+      return {
+        instant: main[TIMEZONE].getInstantFor(_datetime),
+        formatter: main[YM]
+      };
+    }
+
+    if (ES.IsTemporalMonthDay(temporalObj)) {
+      var refISOYear = GetSlot(temporalObj, REF_ISO_YEAR);
+
+      var _isoMonth = GetSlot(temporalObj, ISO_MONTH);
+
+      var isoDay = GetSlot(temporalObj, ISO_DAY);
+
+      var _calendar = GetSlot(temporalObj, CALENDAR);
+
+      if (_calendar.id !== main[CAL_ID]) {
+        throw new RangeError("cannot format MonthDay with calendar ".concat(_calendar.id, " in locale with calendar ").concat(main[CAL_ID]));
+      }
+
+      var _datetime2 = new DateTime(refISOYear, _isoMonth, isoDay, 12, 0, 0, 0, 0, 0, _calendar);
+
+      return {
+        instant: main[TIMEZONE].getInstantFor(_datetime2),
+        formatter: main[MD]
+      };
+    }
+
+    if (ES.IsTemporalDate(temporalObj)) {
+      var _isoYear = GetSlot(temporalObj, ISO_YEAR);
+
+      var _isoMonth2 = GetSlot(temporalObj, ISO_MONTH);
+
+      var _isoDay = GetSlot(temporalObj, ISO_DAY);
+
+      var _calendar2 = GetSlot(temporalObj, CALENDAR);
+
+      if (_calendar2.id !== 'iso8601' && _calendar2.id !== main[CAL_ID]) {
+        throw new RangeError("cannot format Date with calendar ".concat(_calendar2.id, " in locale with calendar ").concat(main[CAL_ID]));
+      }
+
+      var _datetime3 = new DateTime(_isoYear, _isoMonth2, _isoDay, 12, 0, 0, 0, 0, 0, main[CAL_ID]);
+
+      return {
+        instant: main[TIMEZONE].getInstantFor(_datetime3),
+        formatter: main[DATE]
+      };
+    }
+
+    if (ES.IsTemporalDateTime(temporalObj)) {
+      var _isoYear2 = GetSlot(temporalObj, ISO_YEAR);
+
+      var _isoMonth3 = GetSlot(temporalObj, ISO_MONTH);
+
+      var _isoDay2 = GetSlot(temporalObj, ISO_DAY);
+
+      var _hour = GetSlot(temporalObj, HOUR);
+
+      var _minute = GetSlot(temporalObj, MINUTE);
+
+      var _second = GetSlot(temporalObj, SECOND);
+
+      var _millisecond = GetSlot(temporalObj, MILLISECOND);
+
+      var _microsecond = GetSlot(temporalObj, MICROSECOND);
+
+      var _nanosecond = GetSlot(temporalObj, NANOSECOND);
+
+      var _calendar3 = GetSlot(temporalObj, CALENDAR);
+
+      if (_calendar3.id !== 'iso8601' && _calendar3.id !== main[CAL_ID]) {
+        throw new RangeError("cannot format Date with calendar ".concat(_calendar3.id, " in locale with calendar ").concat(main[CAL_ID]));
+      }
+
+      var _datetime4 = temporalObj;
+
+      if (_calendar3.id === 'iso8601') {
+        _datetime4 = new DateTime(_isoYear2, _isoMonth3, _isoDay2, _hour, _minute, _second, _millisecond, _microsecond, _nanosecond, main[CAL_ID]);
+      }
+
+      return {
+        instant: main[TIMEZONE].getInstantFor(_datetime4),
+        formatter: main[DATETIME]
+      };
+    }
+
+    if (ES.IsTemporalInstant(temporalObj)) {
+      return {
+        instant: temporalObj,
+        formatter: main[DATETIME]
+      };
+    }
+
+    return {};
   }
 
   var Intl$1 = /*#__PURE__*/Object.freeze({
