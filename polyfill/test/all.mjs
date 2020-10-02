@@ -19,7 +19,7 @@ import './ecmascript.mjs';
 import './exports.mjs';
 import './now.mjs';
 import './timezone.mjs';
-import './absolute.mjs';
+import './instant.mjs';
 import './date.mjs';
 import './time.mjs';
 import './datetime.mjs';
