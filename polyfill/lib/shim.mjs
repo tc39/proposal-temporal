@@ -4,6 +4,7 @@
 
 import * as Temporal from './temporal.mjs';
 import * as Intl from './intl.mjs';
+import { toTemporalInstant } from './legacydate.mjs';
 
 Object.defineProperty(globalThis, 'Temporal', {
   value: {},
@@ -13,6 +14,12 @@ Object.defineProperty(globalThis, 'Temporal', {
 });
 copy(globalThis.Temporal, Temporal);
 copy(globalThis.Intl, Intl);
+Object.defineProperty(globalThis.Date.prototype, 'toTemporalInstant', {
+  value: toTemporalInstant,
+  writable: true,
+  enumerable: false,
+  configurable: true
+});
 
 function copy(target, source) {
   for (const prop of Object.getOwnPropertyNames(source)) {
@@ -25,4 +32,4 @@ function copy(target, source) {
   }
 }
 
-export { Temporal, Intl };
+export { Temporal, Intl, toTemporalInstant };

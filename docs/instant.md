@@ -12,6 +12,8 @@ As such `Temporal.Instant` has no concept of days, months or even hours.
 For convenience of interoperability, it internally uses nanoseconds since the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time) (midnight UTC on January 1, 1970).
 However, a `Temporal.Instant` can be created from any of several expressions that refer to a single point in time, including an ISO 8601 string with a time zone such as `'2020-01-23T17:04:36.491865121-08:00'`.
 
+If you have a legacy `Date` instance, you can use its `toTemporalInstant()` method to convert to a `Temporal.Instant`.
+
 Since `Temporal.Instant` doesn't contain any information about time zones, a `Temporal.TimeZone` is needed in order to convert it into a `Temporal.DateTime` (and from there into any of the other `Temporal` objects.)
 
 Like Unix time, `Temporal.Instant` ignores leap seconds.
@@ -113,18 +115,18 @@ turnOfTheCentury = Temporal.Instant.fromEpochSeconds(-2208988800); // => 1900-01
 
 Same as `Temporal.Instant.fromEpochSeconds()`, but with millisecond (10<sup>&minus;3</sup> second) precision.
 
-The number of milliseconds since the Unix epoch is also returned from the `getTime()` and `valueOf()` methods of old-style JavaScript `Date` objects, as well as `Date.now()`.
-Use this method to create a `Temporal.Instant` object from a `Date` object, for example:
+The number of milliseconds since the Unix epoch is also returned from the `getTime()` and `valueOf()` methods of legacy JavaScript `Date` objects, as well as `Date.now()`.
+However, for conversion from legacy `Date` to `Temporal.Instant`, use `Date.prototype.toTemporalInstant`:
 
 ```js
-jsdate = new Date('December 17, 1995 03:24:00 GMT');
-instant = Temporal.Instant.fromEpochMilliseconds(jsdate.getTime()); // => 1995-12-17T03:24Z
-instant = Temporal.Instant.fromEpochMilliseconds(+jsdate); // valueOf() called implicitly
+legacyDate = new Date('December 17, 1995 03:24:00 GMT');
+instant = Temporal.Instant.fromEpochMilliseconds(legacyDate.getTime()); // => 1995-12-17T03:24Z
+instant = Temporal.Instant.fromEpochMilliseconds(+legacyDate); // valueOf() called implicitly
+instant = legacyDate.toTemporalInstant(); // recommended
 
-// This is a way to get the current time, but Temporal.now.instant()
-// would give the same with higher accuracy
-todayMs = Temporal.Instant.fromEpochMilliseconds(Date.now());
-todayNs = Temporal.now.instant();
+// Use fromEpochMilliseconds, for example, if you have epoch millisecond
+// data stored in a file:
+todayMs = Temporal.Instant.fromEpochMilliseconds(msReadFromFile);
 ```
 
 ### Temporal.Instant.**fromEpochMicroseconds**(_epochMilliseconds_ : bigint) : Temporal.Instant
