@@ -1739,7 +1739,7 @@ export const ES = ObjectAssign({}, ES2019, {
         if (!calendar) throw new RangeError('A starting point is required for years rounding');
 
         // convert months and weeks to days by calculating difference(
-        // relativeTo + years, relativeTo - { years, months, weeks })
+        // relativeTo - years, relativeTo - { years, months, weeks })
         const yearsBefore = calendar.dateSubtract(relativeTo, new TemporalDuration(years), {}, TemporalDate);
         const yearsMonthsWeeks = new TemporalDuration(years, months, weeks);
         const yearsMonthsWeeksBefore = calendar.dateSubtract(relativeTo, yearsMonthsWeeks, {}, TemporalDate);
@@ -1769,7 +1769,7 @@ export const ES = ObjectAssign({}, ES2019, {
       case 'months': {
         if (!calendar) throw new RangeError('A starting point is required for months rounding');
 
-        // convert weeks to days by calculating difference(relativeTo +
+        // convert weeks to days by calculating difference(relativeTo -
         //   { years, months }, relativeTo - { years, months, weeks })
         const yearsMonths = new TemporalDuration(years, months);
         const yearsMonthsBefore = calendar.dateSubtract(relativeTo, yearsMonths, {}, TemporalDate);
