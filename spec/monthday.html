@@ -18,17 +18,17 @@
     </p>
 
     <emu-clause id="sec-temporal.monthday">
-      <h1>Temporal.MonthDay ( _isoMonth_, _isoDay_ [ , _refISOYear_ ] )</h1>
+      <h1>Temporal.MonthDay ( _isoMonth_, _isoDay_ [ , _referenceISOYear_ ] )</h1>
       <p>
         When the `Temporal.MonthDay` function is called, the following steps are taken:
       </p>
       <emu-alg>
         1. If NewTarget is *undefined*, then
           1. Throw a *TypeError* exception.
-        1. If _refISOYear_ is not given, set it to the first leap year after the Unix epoch (1972).
+        1. If _referenceISOYear_ is not given, set it to the first leap year after the Unix epoch (1972).
         1. Let _m_ be ? ToInteger(_isoMonth_).
         1. Let _d_ be ? ToInteger(_isoDay_).
-        1. Let _ref_ be ? ToInteger(_refISOYear_).
+        1. Let _ref_ be ? ToInteger(_referenceISOYear_).
         1. Return ? CreateTemporalMonthDay(_m_, _d_, _ref_, NewTarget).
       </emu-alg>
     </emu-clause>
@@ -68,14 +68,14 @@
         1. Let _overflow_ be ? ToTemporalOverflow(_options_).
         1. If Type(_item_) is Object, then
           1. Let _result_ be ? ToTemporalMonthDayRecord(_item_).
-          1. Let _refISOYear_ be _result_.[[Year]].
+          1. Let _referenceISOYear_ be _result_.[[Year]].
         1. Else,
           1. Let _string_ be ? ToString(_item_).
           1. Let _result_ be ? ParseTemporalMonthDayString(_string_).
-          1. Let _refISOYear_ be the first leap year after the Unix epoch (1972).
+          1. Let _referenceISOYear_ be the first leap year after the Unix epoch (1972).
         1. Let _constructor_ be the *this* value.
         1. Set _result_ to ? RegulateMonthDay(_result_.[[Month]], _result_.[[Day]], _overflow_).
-        1. Return ? CreateTemporalMonthDayFromStatic(_constructor_, _result_.[[Month]], _result_.[[Day]], _refISOYear_).
+        1. Return ? CreateTemporalMonthDayFromStatic(_constructor_, _result_.[[Month]], _result_.[[Day]], _referenceISOYear_).
       </emu-alg>
     </emu-clause>
   </emu-clause>
@@ -380,15 +380,15 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal-createtemporalmonthday" aoid="CreateTemporalMonthDay">
-      <h1>CreateTemporalMonthDay ( _isoMonth_, _isoDay_, _refISOYear_ [ , _newTarget_ ] )</h1>
+      <h1>CreateTemporalMonthDay ( _isoMonth_, _isoDay_, _referenceISOYear_ [ , _newTarget_ ] )</h1>
       <emu-alg>
-        1. If ! ValidateDate(_refISOYear_, _month_, _day_) is *false*, then
+        1. If ! ValidateDate(_referenceISOYear_, _month_, _day_) is *false*, then
           1. Throw a *RangeError* exception.
         1. If _newTarget_ is not given, set it to %Temporal.MonthDay%.
         1. Let _object_ be ? OrdinaryCreateFromConstructor(_newTarget_, `"%Temporal.MonthDay.prototype%"`, « [[InitializedTemporalMonthDay]], [[ISOMonth]], [[ISODay]], [[ISOYear]] »).
         1. Set _object_.[[ISOMonth]] to _month_.
         1. Set _object_.[[ISODay]] to _day_.
-        1. Set _object_.[[ISOYear]] to _refISOYear_.
+        1. Set _object_.[[ISOYear]] to _referenceISOYear_.
         1. Return _object_.
       </emu-alg>
     </emu-clause>
@@ -406,12 +406,12 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal-createtemporalmonthdayfromstatic" aoid="CreateTemporalMonthDayFromStatic">
-      <h1>CreateTemporalMonthDayFromStatic ( _constructor_, _month_, _day_, _refISOYear_ )</h1>
+      <h1>CreateTemporalMonthDayFromStatic ( _constructor_, _month_, _day_, _referenceISOYear_ )</h1>
       <emu-alg>
-        1. Assert: ! ValidateDate(_refISOYear_, _month_, _day_) is *true*.
+        1. Assert: ! ValidateDate(_referenceISOYear_, _month_, _day_) is *true*.
         1. If ! IsConstructor(_constructor_) is *false*, then
           1. Throw a *TypeError* exception.
-        1. Let _result_ be ? Construct(_constructor_, « _month_, _day_, _refISOYear_ »).
+        1. Let _result_ be ? Construct(_constructor_, « _month_, _day_, _referenceISOYear_ »).
         1. Perform ? RequireInternalSlot(_result_, [[InitializedTemporalMonthDay]]).
         1. Return _result_.
       </emu-alg>

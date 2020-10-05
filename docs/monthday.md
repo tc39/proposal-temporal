@@ -13,13 +13,13 @@ A `Temporal.MonthDay` can be converted into a `Temporal.Date` by combining it wi
 
 ## Constructor
 
-### **new Temporal.MonthDay**(_isoMonth_: number, _isoDay_: number, _calendar_?: object, _refISOYear_?: number) : Temporal.MonthDay
+### **new Temporal.MonthDay**(_isoMonth_: number, _isoDay_: number, _calendar_?: object, _referenceISOYear_?: number) : Temporal.MonthDay
 
 **Parameters:**
 - `isoMonth` (number): A month, ranging between 1 and 12 inclusive.
 - `isoDay` (number): A day of the month, ranging between 1 and 31 inclusive.
 - `calendar` (optional `Temporal.Calendar` or plain object): A calendar to project the date into.
-- `refISOYear` (optional number): A reference year, used for disambiguation when implementing other calendar systems.
+- `referenceISOYear` (optional number): A reference year, used for disambiguation when implementing other calendar systems.
   The default is the first leap year after the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time).
   You can omit this parameter unless using a non-ISO-8601 calendar.
 
@@ -29,8 +29,8 @@ Use this constructor if you have the correct parameters for the date already as 
 Otherwise, `Temporal.MonthDay.from()`, which accepts more kinds of input, allows inputting dates in different calendar reckonings, and allows controlling the overflow behaviour, is probably more convenient.
 
 All values are given as reckoned in the [ISO 8601 calendar](https://en.wikipedia.org/wiki/ISO_8601#Dates).
-Together, `refISOYear`, `isoMonth` and `isoDay` must represent a valid date in that calendar.
-For example, February 29 (Leap day in the ISO 8601 calendar) is a valid value for `Temporal.MonthDay`, even though that date does not occur every year, because the default value of `refISOYear` is a leap year.
+Together, `referenceISOYear`, `isoMonth` and `isoDay` must represent a valid date in that calendar.
+For example, February 29 (Leap day in the ISO 8601 calendar) is a valid value for `Temporal.MonthDay`, even though that date does not occur every year, because the default value of `referenceISOYear` is a leap year.
 
 > **NOTE**: The `isoMonth` argument ranges from 1 to 12, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
 
@@ -333,7 +333,7 @@ This method is mainly useful if you are implementing a custom calendar.
 Most code will not need to use it.
 Use `monthDay.getFields()` instead.
 
-The value of the `isoYear` property will be equal to the `refISOYear` constructor argument passed when `monthDay` was constructed.
+The value of the `isoYear` property will be equal to the `referenceISOYear` constructor argument passed when `monthDay` was constructed.
 
 Usage example:
 ```javascript

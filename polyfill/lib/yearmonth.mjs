@@ -8,18 +8,18 @@ import { ISO_YEAR, ISO_MONTH, ISO_DAY, YEAR_MONTH_BRAND, CALENDAR, CreateSlots, 
 const ObjectAssign = Object.assign;
 
 export class YearMonth {
-  constructor(isoYear, isoMonth, calendar = undefined, refISODay = 1) {
+  constructor(isoYear, isoMonth, calendar = undefined, referenceISODay = 1) {
     isoYear = ES.ToInteger(isoYear);
     isoMonth = ES.ToInteger(isoMonth);
     if (calendar === undefined) calendar = GetDefaultCalendar();
-    refISODay = ES.ToInteger(refISODay);
-    ES.RejectDate(isoYear, isoMonth, refISODay);
+    referenceISODay = ES.ToInteger(referenceISODay);
+    ES.RejectDate(isoYear, isoMonth, referenceISODay);
     ES.RejectYearMonthRange(isoYear, isoMonth);
     if (!calendar || typeof calendar !== 'object') throw new RangeError('invalid calendar');
     CreateSlots(this);
     SetSlot(this, ISO_YEAR, isoYear);
     SetSlot(this, ISO_MONTH, isoMonth);
-    SetSlot(this, ISO_DAY, refISODay);
+    SetSlot(this, ISO_DAY, referenceISODay);
     SetSlot(this, CALENDAR, calendar);
     SetSlot(this, YEAR_MONTH_BRAND, true);
 
@@ -208,8 +208,8 @@ export class YearMonth {
         const year = GetSlot(item, ISO_YEAR);
         const month = GetSlot(item, ISO_MONTH);
         const calendar = GetSlot(item, CALENDAR);
-        const refISODay = GetSlot(item, ISO_DAY);
-        result = new this(year, month, calendar, refISODay);
+        const referenceISODay = GetSlot(item, ISO_DAY);
+        result = new this(year, month, calendar, referenceISODay);
       } else {
         let calendar = item.calendar;
         if (calendar === undefined) calendar = GetDefaultCalendar();
@@ -217,12 +217,12 @@ export class YearMonth {
         result = calendar.yearMonthFromFields(item, options, this);
       }
     } else {
-      let { year, month, refISODay, calendar } = ES.ParseTemporalYearMonthString(ES.ToString(item));
+      let { year, month, referenceISODay, calendar } = ES.ParseTemporalYearMonthString(ES.ToString(item));
       ({ year, month } = ES.RegulateYearMonth(year, month, overflow));
       if (!calendar) calendar = GetDefaultCalendar();
       calendar = TemporalCalendar.from(calendar);
-      if (refISODay === undefined) refISODay = 1;
-      result = new this(year, month, calendar, refISODay);
+      if (referenceISODay === undefined) referenceISODay = 1;
+      result = new this(year, month, calendar, referenceISODay);
     }
     if (!ES.IsTemporalYearMonth(result)) throw new TypeError('invalid result');
     return result;

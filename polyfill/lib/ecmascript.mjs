@@ -174,7 +174,7 @@ export const ES = ObjectAssign({}, ES2019, {
   },
   ParseTemporalYearMonthString: (isoString) => {
     const match = PARSE.yearmonth.exec(isoString);
-    let year, month, calendar, refISODay;
+    let year, month, calendar, referenceISODay;
     if (match) {
       let yearString = match[1];
       if (yearString[0] === '\u2212') yearString = `-${yearString.slice(1)}`;
@@ -182,22 +182,22 @@ export const ES = ObjectAssign({}, ES2019, {
       month = ES.ToInteger(match[2]);
       calendar = match[3] || null;
     } else {
-      ({ year, month, calendar, day: refISODay } = ES.ParseISODateTime(isoString, { zoneRequired: false }));
-      if (!calendar) refISODay = undefined;
+      ({ year, month, calendar, day: referenceISODay } = ES.ParseISODateTime(isoString, { zoneRequired: false }));
+      if (!calendar) referenceISODay = undefined;
     }
-    return { year, month, calendar, refISODay };
+    return { year, month, calendar, referenceISODay };
   },
   ParseTemporalMonthDayString: (isoString) => {
     const match = PARSE.monthday.exec(isoString);
-    let month, day, calendar, refISOYear;
+    let month, day, calendar, referenceISOYear;
     if (match) {
       month = ES.ToInteger(match[1]);
       day = ES.ToInteger(match[2]);
     } else {
-      ({ month, day, calendar, year: refISOYear } = ES.ParseISODateTime(isoString, { zoneRequired: false }));
-      if (!calendar) refISOYear = undefined;
+      ({ month, day, calendar, year: referenceISOYear } = ES.ParseISODateTime(isoString, { zoneRequired: false }));
+      if (!calendar) referenceISOYear = undefined;
     }
-    return { month, day, calendar, refISOYear };
+    return { month, day, calendar, referenceISOYear };
   },
   ParseTemporalTimeZoneString: (stringIdent) => {
     try {
@@ -312,10 +312,10 @@ export const ES = ObjectAssign({}, ES2019, {
     return { hour, minute, second, millisecond, microsecond, nanosecond };
   },
   RegulateYearMonth: (year, month, overflow) => {
-    const refISODay = 1;
+    const referenceISODay = 1;
     switch (overflow) {
       case 'reject':
-        ES.RejectDate(year, month, refISODay);
+        ES.RejectDate(year, month, referenceISODay);
         break;
       case 'constrain':
         ({ year, month } = ES.ConstrainDate(year, month));
@@ -324,13 +324,13 @@ export const ES = ObjectAssign({}, ES2019, {
     return { year, month };
   },
   RegulateMonthDay: (month, day, overflow) => {
-    const refISOYear = 1972;
+    const referenceISOYear = 1972;
     switch (overflow) {
       case 'reject':
-        ES.RejectDate(refISOYear, month, day);
+        ES.RejectDate(referenceISOYear, month, day);
         break;
       case 'constrain':
-        ({ month, day } = ES.ConstrainDate(refISOYear, month, day));
+        ({ month, day } = ES.ConstrainDate(referenceISOYear, month, day));
         break;
     }
     return { month, day };

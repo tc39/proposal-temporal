@@ -13,13 +13,13 @@ A `Temporal.YearMonth` can be converted into a `Temporal.Date` by combining it w
 
 ## Constructor
 
-### **new Temporal.YearMonth**(_isoYear_: number, _isoMonth_: number, _calendar_?: object, _refISODay_: number = 1) : Temporal.YearMonth
+### **new Temporal.YearMonth**(_isoYear_: number, _isoMonth_: number, _calendar_?: object, _referenceISODay_: number = 1) : Temporal.YearMonth
 
 **Parameters:**
 - `isoYear` (number): A year.
 - `isoMonth` (number): A month, ranging between 1 and 12 inclusive.
 - `calendar` (optional `Temporal.Calendar` or plain object): A calendar to project the month into.
-- `refISODay` (optional number): A reference day, used for disambiguation when implementing other calendar systems.
+- `referenceISODay` (optional number): A reference day, used for disambiguation when implementing other calendar systems.
   You can omit this parameter unless using a non-ISO-8601 calendar.
 
 **Returns:** a new `Temporal.YearMonth` object.
@@ -28,7 +28,7 @@ Use this constructor if you have the correct parameters already as individual nu
 Otherwise, `Temporal.YearMonth.from()`, which accepts more kinds of input, allows months in other calendar systems, and allows controlling the overflow behaviour, is probably more convenient.
 
 All values are given as reckoned in the [ISO 8601 calendar](https://en.wikipedia.org/wiki/ISO_8601#Dates).
-Together, `isoYear`, `isoMonth`, and `refISODay` must represent a valid date in that calendar, even if you are passing a different calendar as the `calendar` parameter.
+Together, `isoYear`, `isoMonth`, and `referenceISODay` must represent a valid date in that calendar, even if you are passing a different calendar as the `calendar` parameter.
 
 The range of allowed values for this type is exactly enough that calling [`toYearMonth()`](./date.html#toYearMonth) on any valid `Temporal.Date` will succeed.
 If `isoYear` and `isoMonth` are outside of this range, then this function will throw a `RangeError`.
@@ -505,7 +505,7 @@ This method is mainly useful if you are implementing a custom calendar.
 Most code will not need to use it.
 Use `yearMonth.getFields()` instead.
 
-The value of the `isoDay` property will be equal to the `refISODay` constructor argument passed when `yearMonth` was constructed.
+The value of the `isoDay` property will be equal to the `referenceISODay` constructor argument passed when `yearMonth` was constructed.
 
 Usage example:
 ```javascript
