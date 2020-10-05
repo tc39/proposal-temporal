@@ -22,7 +22,7 @@ export namespace Temporal {
 
   /**
    * Options for assigning fields using `Duration.prototype.with()` or entire
-   * objects with `Duration.prototype.from()`, and for arithmetic with
+   * objects with `Duration.from()`, and for arithmetic with
    * `Duration.prototype.plus()` and `Duration.prototype.minus()`.
    * */
   export type DurationOptions = {
@@ -33,12 +33,10 @@ export namespace Temporal {
      *   in-range value.
      * - In `'balance'` mode, out-of-range values are resolved by balancing them
      *   with the next highest unit.
-     * - In `'reject'` mode, out-of-range values will cause the function to
-     *   throw a RangeError.
      *
      * The default is `'constrain'`.
      */
-    overflow: 'constrain' | 'balance' | 'reject';
+    overflow: 'constrain' | 'balance';
   };
 
   /**
