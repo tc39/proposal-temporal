@@ -27,6 +27,6 @@ const result = instance.getISOFields();
 assert.sameValue(result.isoMonth, 5, "month result");
 assert.sameValue(result.isoDay, 2, "day result");
 assert.sameValue(result.calendar.id, "iso8601", "calendar result");
-assert.sameValue(result.refISOYear, 1972, "ref year result");
+assert.sameValue(result.isoYear, 1972, "ref year result");
 assert.sameValue(called, 1);
 assert.sameValue(Object.getPrototypeOf(result), Object.prototype);

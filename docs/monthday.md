@@ -325,7 +325,7 @@ Object.assign({}, md).day  // => undefined
 Object.assign({}, md.getFields()).day  // => 24
 ```
 
-### monthDay.**getISOFields**(): { refISOYear: number, isoMonth: number, isoDay: number }
+### monthDay.**getISOFields**(): { isoYear: number, isoMonth: number, isoDay: number, calendar: object }
 
 **Returns:** a plain object with properties expressing `monthDay` in the ISO 8601 calendar, as well as the value of `monthDay.calendar`.
 
@@ -333,7 +333,7 @@ This method is mainly useful if you are implementing a custom calendar.
 Most code will not need to use it.
 Use `monthDay.getFields()` instead.
 
-The value of the `refISOYear` property will be equal to the `refISOYear` constructor argument passed when `monthDay` was constructed.
+The value of the `isoYear` property will be equal to the `refISOYear` constructor argument passed when `monthDay` was constructed.
 
 Usage example:
 ```javascript

@@ -13,6 +13,7 @@ import {
   MILLISECOND,
   MICROSECOND,
   NANOSECOND,
+  DATE_BRAND,
   CALENDAR,
   CreateSlots,
   GetSlot,
@@ -35,6 +36,7 @@ export class Date {
     SetSlot(this, ISO_MONTH, isoMonth);
     SetSlot(this, ISO_DAY, isoDay);
     SetSlot(this, CALENDAR, calendar);
+    SetSlot(this, DATE_BRAND, true);
 
     if (typeof __debug__ !== 'undefined' && __debug__) {
       Object.defineProperty(this, '_repr_', {

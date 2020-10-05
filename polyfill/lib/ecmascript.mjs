@@ -33,8 +33,9 @@ import {
   MILLISECOND,
   MICROSECOND,
   NANOSECOND,
-  REF_ISO_YEAR,
-  REF_ISO_DAY,
+  DATE_BRAND,
+  YEAR_MONTH_BRAND,
+  MONTH_DAY_BRAND,
   CALENDAR,
   YEARS,
   MONTHS,
@@ -73,16 +74,14 @@ export const ES = ObjectAssign({}, ES2019, {
   IsTemporalCalendar: (item) => HasSlot(item, CALENDAR_ID),
   IsTemporalDuration: (item) =>
     HasSlot(item, YEARS, MONTHS, DAYS, HOURS, MINUTES, SECONDS, MILLISECONDS, MICROSECONDS, NANOSECONDS),
-  IsTemporalDate: (item) =>
-    HasSlot(item, ISO_YEAR, ISO_MONTH, ISO_DAY) &&
-    !HasSlot(item, HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND),
+  IsTemporalDate: (item) => HasSlot(item, DATE_BRAND),
   IsTemporalTime: (item) =>
     HasSlot(item, HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND) &&
     !HasSlot(item, ISO_YEAR, ISO_MONTH, ISO_DAY),
   IsTemporalDateTime: (item) =>
     HasSlot(item, ISO_YEAR, ISO_MONTH, ISO_DAY, HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND),
-  IsTemporalYearMonth: (item) => HasSlot(item, ISO_YEAR, ISO_MONTH, REF_ISO_DAY),
-  IsTemporalMonthDay: (item) => HasSlot(item, ISO_MONTH, ISO_DAY, REF_ISO_YEAR),
+  IsTemporalYearMonth: (item) => HasSlot(item, YEAR_MONTH_BRAND),
+  IsTemporalMonthDay: (item) => HasSlot(item, MONTH_DAY_BRAND),
   TemporalTimeZoneFromString: (stringIdent) => {
     const { zone, ianaName, offset } = ES.ParseTemporalTimeZoneString(stringIdent);
     const result = ES.GetCanonicalTimeZoneIdentifier(zone);

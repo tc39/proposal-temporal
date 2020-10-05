@@ -3,7 +3,7 @@
 import { GetDefaultCalendar } from './calendar.mjs';
 import { ES } from './ecmascript.mjs';
 import { GetIntrinsic, MakeIntrinsicClass } from './intrinsicclass.mjs';
-import { ISO_MONTH, ISO_DAY, REF_ISO_YEAR, CALENDAR, CreateSlots, GetSlot, SetSlot } from './slots.mjs';
+import { ISO_MONTH, ISO_DAY, ISO_YEAR, CALENDAR, MONTH_DAY_BRAND, CreateSlots, GetSlot, SetSlot } from './slots.mjs';
 
 const ObjectAssign = Object.assign;
 
@@ -20,8 +20,9 @@ export class MonthDay {
     CreateSlots(this);
     SetSlot(this, ISO_MONTH, isoMonth);
     SetSlot(this, ISO_DAY, isoDay);
-    SetSlot(this, REF_ISO_YEAR, refISOYear);
+    SetSlot(this, ISO_YEAR, refISOYear);
     SetSlot(this, CALENDAR, calendar);
+    SetSlot(this, MONTH_DAY_BRAND, true);
 
     if (typeof __debug__ !== 'undefined' && __debug__) {
       Object.defineProperty(this, '_repr_', {
@@ -65,7 +66,7 @@ export class MonthDay {
   equals(other) {
     if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
     if (!ES.IsTemporalMonthDay(other)) throw new TypeError('invalid MonthDay object');
-    for (const slot of [ISO_MONTH, ISO_DAY, REF_ISO_YEAR]) {
+    for (const slot of [ISO_MONTH, ISO_DAY, ISO_YEAR]) {
       const val1 = GetSlot(this, slot);
       const val2 = GetSlot(other, slot);
       if (val1 !== val2) return false;
@@ -79,7 +80,7 @@ export class MonthDay {
     let resultString = `${month}-${day}`;
     const calendar = ES.FormatCalendarAnnotation(GetSlot(this, CALENDAR));
     if (calendar) {
-      const year = ES.ISOYearString(GetSlot(this, REF_ISO_YEAR));
+      const year = ES.ISOYearString(GetSlot(this, ISO_YEAR));
       resultString = `${year}-${resultString}${calendar}`;
     }
     return resultString;
@@ -113,7 +114,7 @@ export class MonthDay {
   getISOFields() {
     if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
     return {
-      refISOYear: GetSlot(this, REF_ISO_YEAR),
+      isoYear: GetSlot(this, ISO_YEAR),
       isoMonth: GetSlot(this, ISO_MONTH),
       isoDay: GetSlot(this, ISO_DAY),
       calendar: GetSlot(this, CALENDAR)
@@ -128,7 +129,7 @@ export class MonthDay {
         const month = GetSlot(item, ISO_MONTH);
         const day = GetSlot(item, ISO_DAY);
         const calendar = GetSlot(item, CALENDAR);
-        const refISOYear = GetSlot(item, REF_ISO_YEAR);
+        const refISOYear = GetSlot(item, ISO_YEAR);
         result = new this(month, day, calendar, refISOYear);
       } else {
         let calendar = item.calendar;

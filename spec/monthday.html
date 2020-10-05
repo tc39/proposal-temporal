@@ -168,7 +168,7 @@
         1. Perform ? RequireInternalSlot(_other_, [[InitializedTemporalMonthDay]]).
         1. If _monthDay_.[[ISOMonth]] ≠ _other_.[[ISOMonth]], return *false*.
         1. If _monthDay_.[[ISODay]] ≠ _other_.[[ISODay]], return *false*.
-        1. If _monthDay_.[[RefISOYear]] ≠ _other_.[[RefISOYear]], return *false*.
+        1. If _monthDay_.[[ISOYear]] ≠ _other_.[[ISOYear]], return *false*.
         1. Return *true*.
       </emu-alg>
     </emu-clause>
@@ -271,7 +271,7 @@
         1. Let _monthDay_ be the *this* value.
         1. Perform ? RequireInternalSlot(_monthDay_, [[InitializedTemporalMonthDay]]).
         1. Let _fields_ be ? ObjectCreate(%ObjectPrototype%).
-        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"refISOYear"*, _monthDay_.[[RefISOYear]]).
+        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoYear"*, _monthDay_.[[ISOYear]]).
         1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoMonth"*, _monthDay_.[[ISOMonth]]).
         1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoDay"*, _monthDay_.[[ISODay]]).
         1. Perform ! CreateDataPropertyOrThrow(_fields_, *"calendar"*, _monthDay_.[[Calendar]]).
@@ -385,10 +385,10 @@
         1. If ! ValidateDate(_refISOYear_, _month_, _day_) is *false*, then
           1. Throw a *RangeError* exception.
         1. If _newTarget_ is not given, set it to %Temporal.MonthDay%.
-        1. Let _object_ be ? OrdinaryCreateFromConstructor(_newTarget_, `"%Temporal.MonthDay.prototype%"`, « [[InitializedTemporalMonthDay]], [[ISOMonth]], [[ISODay]], [[RefISOYear]] »).
+        1. Let _object_ be ? OrdinaryCreateFromConstructor(_newTarget_, `"%Temporal.MonthDay.prototype%"`, « [[InitializedTemporalMonthDay]], [[ISOMonth]], [[ISODay]], [[ISOYear]] »).
         1. Set _object_.[[ISOMonth]] to _month_.
         1. Set _object_.[[ISODay]] to _day_.
-        1. Set _object_.[[RefISOYear]] to _refISOYear_.
+        1. Set _object_.[[ISOYear]] to _refISOYear_.
         1. Return _object_.
       </emu-alg>
     </emu-clause>
@@ -425,7 +425,7 @@
           1. Return the Record {
               [[Month]]: _temporalMonthDayLike_.[[ISOMonth]],
               [[Day]]: _temporalMonthDayLike_.[[ISODay]],
-              [[Year]]: _temporalMonthDayLike_.[[RefISOYear]]
+              [[Year]]: _temporalMonthDayLike_.[[ISOYear]]
             }.
         1. Let _result_ be a new Record with all the internal slots given in the Internal Slot column in <emu-xref href="#table-temporal-temporalmonthdaylike-properties"></emu-xref>, as well as a [[Year]] slot.
         1. For each row of <emu-xref href="#table-temporal-temporalmonthdaylike-properties"></emu-xref>, except the header row, in table order, do
