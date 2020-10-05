@@ -161,7 +161,7 @@ describe('YearMonth', () => {
       throws(() => YearMonth.compare(nov94, { year: 2013, month: 6 }), TypeError);
       throws(() => YearMonth.compare(nov94, '2013-06'), TypeError);
     });
-    it('takes [[RefISODay]] into account', () => {
+    it('takes [[ISODay]] into account', () => {
       const iso = Temporal.Calendar.from('iso8601');
       const ym1 = new YearMonth(2000, 1, iso, 1);
       const ym2 = new YearMonth(2000, 1, iso, 2);
@@ -177,7 +177,7 @@ describe('YearMonth', () => {
       throws(() => nov94.equals({ year: 1994, month: 11 }), TypeError);
       throws(() => nov94.equals('1994-11'), TypeError);
     });
-    it('takes [[RefISODay]] into account', () => {
+    it('takes [[ISODay]] into account', () => {
       const iso = Temporal.Calendar.from('iso8601');
       const ym1 = new YearMonth(2000, 1, iso, 1);
       const ym2 = new YearMonth(2000, 1, iso, 2);
@@ -449,17 +449,17 @@ describe('YearMonth', () => {
       equal(fields.isoYear, 1976);
       equal(fields.isoMonth, 11);
       equal(fields.calendar.id, 'iso8601');
-      equal(typeof fields.refISODay, 'number');
+      equal(typeof fields.isoDay, 'number');
     });
     it('enumerable', () => {
       const fields2 = { ...fields };
       equal(fields2.isoYear, 1976);
       equal(fields2.isoMonth, 11);
       equal(fields2.calendar, fields.calendar);
-      equal(typeof fields2.refISODay, 'number');
+      equal(typeof fields2.isoDay, 'number');
     });
     it('as input to constructor', () => {
-      const ym2 = new YearMonth(fields.isoYear, fields.isoMonth, fields.calendar, fields.refISODay);
+      const ym2 = new YearMonth(fields.isoYear, fields.isoMonth, fields.calendar, fields.isoDay);
       assert(ym2.equals(ym1));
     });
   });

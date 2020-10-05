@@ -11,8 +11,6 @@ import {
   MILLISECOND,
   MICROSECOND,
   NANOSECOND,
-  REF_ISO_YEAR,
-  REF_ISO_DAY,
   CALENDAR
 } from './slots.mjs';
 import { TimeZone } from './timezone.mjs';
@@ -225,7 +223,7 @@ function extractOverrides(temporalObj, main) {
   if (ES.IsTemporalYearMonth(temporalObj)) {
     const isoYear = GetSlot(temporalObj, ISO_YEAR);
     const isoMonth = GetSlot(temporalObj, ISO_MONTH);
-    const refISODay = GetSlot(temporalObj, REF_ISO_DAY);
+    const refISODay = GetSlot(temporalObj, ISO_DAY);
     const calendar = GetSlot(temporalObj, CALENDAR);
     if (calendar.id !== main[CAL_ID]) {
       throw new RangeError(
@@ -240,7 +238,7 @@ function extractOverrides(temporalObj, main) {
   }
 
   if (ES.IsTemporalMonthDay(temporalObj)) {
-    const refISOYear = GetSlot(temporalObj, REF_ISO_YEAR);
+    const refISOYear = GetSlot(temporalObj, ISO_YEAR);
     const isoMonth = GetSlot(temporalObj, ISO_MONTH);
     const isoDay = GetSlot(temporalObj, ISO_DAY);
     const calendar = GetSlot(temporalObj, CALENDAR);

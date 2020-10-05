@@ -31,23 +31,9 @@ As with Temporal.Date, all of these types will gain a `[[Calendar]]` slot, and y
 
 Main issue: https://github.com/tc39/proposal-temporal/issues/391
 
-For reasons explained above, using the ISO calendar as the internal data model has many advantages.  However, there are several challenges for these two "incomplete" types: lunar months don't line up with solar months, and not every lunar month occurs in every solar year.  After discussing several data model alternatives, we reached the conclusion that the simplest data model for Temporal.YearMonth and Temporal.MonthDay is to make it share the same data model as Temporal.Date, with the following slots:
+For reasons explained above, using the ISO calendar as the internal data model has many advantages.  However, there are several challenges for these two "incomplete" types: lunar months don't line up with solar months, and not every lunar month occurs in every solar year.  After discussing several data model alternatives, we reached the conclusion that the simplest data model for Temporal.YearMonth and Temporal.MonthDay is to make it share the same data model as Temporal.Date, with the same slots.
 
-Temporal.YearMonth:
-
-- `[[ISOYear]]`
-- `[[ISOMonth]]`
-- `[[Calendar]]`
-- `[[RefISODay]]`
-
-Temporal.MonthDay:
-
-- `[[ISOMonth]]`
-- `[[ISODay]]`
-- `[[Calendar]]`
-- `[[RefISOYear]]`
-
-For calendars that use ISO-style months, such as Gregorian, Solar Buddhist, and Japanese, "RefIsoDay" and "RefIsoYear" can be ignored.  However, for lunar and lunisolar calendars, such as Hebrew, Saudi Arabian Islamic, and Chinese, these additional fields allow those calendars to disambiguate which YearMonth and MonthDay are being represented.  The fields are called "Ref", or "reference", because they are only used in calendars that need them.
+For calendars that use ISO-style months, such as Gregorian, Solar Buddhist, and Japanese, "ISODay" and "ISOYear" can be ignored for YearMonth and MonthDay respectively.  However, for lunar and lunisolar calendars, such as Hebrew, Saudi Arabian Islamic, and Chinese, these fields allow those calendars to disambiguate which YearMonth and MonthDay are being represented.
 
 ## Temporal.Calendar interface
 

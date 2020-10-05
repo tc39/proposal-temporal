@@ -14,9 +14,11 @@ export const SECOND = 'slot-second';
 export const MILLISECOND = 'slot-millisecond';
 export const MICROSECOND = 'slot-microsecond';
 export const NANOSECOND = 'slot-nanosecond';
-export const REF_ISO_YEAR = 'slot-ref-iso-year';
-export const REF_ISO_DAY = 'slot-ref-iso-day';
 export const CALENDAR = 'slot-calendar';
+// Date, YearMonth, and MonthDay all have the same slots, disambiguation needed:
+export const DATE_BRAND = 'slot-date-brand';
+export const YEAR_MONTH_BRAND = 'slot-year-month-brand';
+export const MONTH_DAY_BRAND = 'slot-month-day-brand';
 
 // Duration
 export const YEARS = 'slot-years';

@@ -88,7 +88,7 @@
       <emu-alg>
         1. Perform ? RequireInternalSlot(_one_, [[InitializedTemporalYearMonth]]).
         1. Perform ? RequireInternalSlot(_two_, [[InitializedTemporalYearMonth]]).
-        1. Return ! CompareTemporalDate(_one_.[[ISOYear]], _one_.[[ISOMonth]], _one_.[[RefISODay]], _two_.[[ISOYear]], _two_.[[ISOMonth]], _two_.[[RefISODay]]).
+        1. Return ! CompareTemporalDate(_one_.[[ISOYear]], _one_.[[ISOMonth]], _one_.[[ISODay]], _two_.[[ISOYear]], _two_.[[ISOMonth]], _two_.[[ISODay]]).
       </emu-alg>
     </emu-clause>
   </emu-clause>
@@ -306,7 +306,7 @@
         1. Perform ? RequireInternalSlot(_other_, [[InitializedTemporalYearMonth]]).
         1. If _yearMonth_.[[ISOYear]] ≠ _other_.[[ISOYear]], return *false*.
         1. If _yearMonth_.[[ISOMonth]] ≠ _other_.[[ISOMonth]], return *false*.
-        1. If _yearMonth_.[[RefISODay]] ≠ _other_.[[RefISODay]], return *false*.
+        1. If _yearMonth_.[[ISODay]] ≠ _other_.[[ISODay]], return *false*.
         1. Return *true*.
       </emu-alg>
     </emu-clause>
@@ -403,7 +403,7 @@
         1. Let _fields_ be ? ObjectCreate(%ObjectPrototype%).
         1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoYear"*, _yearMonth_.[[ISOYear]]).
         1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoMonth"*, _yearMonth_.[[ISOMonth]]).
-        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"refISODay"*, _yearMonth_.[[RefISODay]]).
+        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoDay"*, _yearMonth_.[[ISODay]]).
         1. Perform ! CreateDataPropertyOrThrow(_fields_, *"calendar"*, _yearMonth_.[[Calendar]]).
         1. Return _fields_.
       </emu-alg>
@@ -533,10 +533,10 @@
         1. If ! ValidateYearMonthRange(_isoYear_, _isoMonth_) is *false*, then
           1. Throw a *RangeError* exception.
         1. If _newTarget_ is not given, set it to %Temporal.YearMonth%.
-        1. Let _object_ be ? OrdinaryCreateFromConstructor(_newTarget_, `"%Temporal.YearMonth.prototype%"`, « [[InitializedTemporalYearMonth]], [[ISOYear]], [[ISOMonth]], [[RefISODay]] »).
+        1. Let _object_ be ? OrdinaryCreateFromConstructor(_newTarget_, `"%Temporal.YearMonth.prototype%"`, « [[InitializedTemporalYearMonth]], [[ISOYear]], [[ISOMonth]], [[ISODay]] »).
         1. Set _object_.[[ISOYear]] to _isoYear_.
         1. Set _object_.[[ISOMonth]] to _isoMonth_.
-        1. Set _object_.[[RefISODay]] to _refISODay_.
+        1. Set _object_.[[ISODay]] to _refISODay_.
         1. Return _object_.
       </emu-alg>
     </emu-clause>
@@ -571,9 +571,9 @@
         1. Assert: Type(_temporalYearMonthLike_) is Object.
         1. If _temporalYearMonthLike_ has an [[InitializedTemporalYearMonth]] internal slot, then
           1. Return the Record {
-              [[Year]]: _temporalYearMonthLike_.[[Year]],
-              [[Month]]: _temporalYearMonthLike_.[[Month]],
-              [[Day]]: _temporalYearMonthLike_.[[RefISODay]]
+              [[Year]]: _temporalYearMonthLike_.[[ISOYear]],
+              [[Month]]: _temporalYearMonthLike_.[[ISOMonth]],
+              [[Day]]: _temporalYearMonthLike_.[[ISODay]]
             }.
         1. Let _result_ be a new Record with all the internal slots given in the Internal Slot column in <emu-xref href="#table-temporal-temporalyearmonthlike-properties"></emu-xref>, as well as a [[Day]] slot.
         1. For each row of <emu-xref href="#table-temporal-temporalyearmonthlike-properties"></emu-xref>, except the header row, in table order, do

@@ -3,7 +3,7 @@
 import { GetDefaultCalendar } from './calendar.mjs';
 import { ES } from './ecmascript.mjs';
 import { GetIntrinsic, MakeIntrinsicClass } from './intrinsicclass.mjs';
-import { ISO_YEAR, ISO_MONTH, REF_ISO_DAY, CALENDAR, CreateSlots, GetSlot, SetSlot } from './slots.mjs';
+import { ISO_YEAR, ISO_MONTH, ISO_DAY, YEAR_MONTH_BRAND, CALENDAR, CreateSlots, GetSlot, SetSlot } from './slots.mjs';
 
 const ObjectAssign = Object.assign;
 
@@ -19,8 +19,9 @@ export class YearMonth {
     CreateSlots(this);
     SetSlot(this, ISO_YEAR, isoYear);
     SetSlot(this, ISO_MONTH, isoMonth);
-    SetSlot(this, REF_ISO_DAY, refISODay);
+    SetSlot(this, ISO_DAY, refISODay);
     SetSlot(this, CALENDAR, calendar);
+    SetSlot(this, YEAR_MONTH_BRAND, true);
 
     if (typeof __debug__ !== 'undefined' && __debug__) {
       Object.defineProperty(this, '_repr_', {
@@ -150,7 +151,7 @@ export class YearMonth {
   equals(other) {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
     if (!ES.IsTemporalYearMonth(other)) throw new TypeError('invalid YearMonth object');
-    for (const slot of [ISO_YEAR, ISO_MONTH, REF_ISO_DAY]) {
+    for (const slot of [ISO_YEAR, ISO_MONTH, ISO_DAY]) {
       const val1 = GetSlot(this, slot);
       const val2 = GetSlot(other, slot);
       if (val1 !== val2) return false;
@@ -164,7 +165,7 @@ export class YearMonth {
     let resultString = `${year}-${month}`;
     const calendar = ES.FormatCalendarAnnotation(GetSlot(this, CALENDAR));
     if (calendar) {
-      const day = ES.ISODateTimePartString(GetSlot(this, REF_ISO_DAY));
+      const day = ES.ISODateTimePartString(GetSlot(this, ISO_DAY));
       resultString = `${resultString}-${day}${calendar}`;
     }
     return resultString;
@@ -194,7 +195,7 @@ export class YearMonth {
     return {
       isoYear: GetSlot(this, ISO_YEAR),
       isoMonth: GetSlot(this, ISO_MONTH),
-      refISODay: GetSlot(this, REF_ISO_DAY),
+      isoDay: GetSlot(this, ISO_DAY),
       calendar: GetSlot(this, CALENDAR)
     };
   }
@@ -207,7 +208,7 @@ export class YearMonth {
         const year = GetSlot(item, ISO_YEAR);
         const month = GetSlot(item, ISO_MONTH);
         const calendar = GetSlot(item, CALENDAR);
-        const refISODay = GetSlot(item, REF_ISO_DAY);
+        const refISODay = GetSlot(item, ISO_DAY);
         result = new this(year, month, calendar, refISODay);
       } else {
         let calendar = item.calendar;
@@ -228,7 +229,7 @@ export class YearMonth {
   }
   static compare(one, two) {
     if (!ES.IsTemporalYearMonth(one) || !ES.IsTemporalYearMonth(two)) throw new TypeError('invalid YearMonth object');
-    for (const slot of [ISO_YEAR, ISO_MONTH, REF_ISO_DAY]) {
+    for (const slot of [ISO_YEAR, ISO_MONTH, ISO_DAY]) {
       const val1 = GetSlot(one, slot);
       const val2 = GetSlot(two, slot);
       if (val1 !== val2) return ES.ComparisonResult(val1 - val2);

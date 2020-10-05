@@ -152,7 +152,7 @@ describe('MonthDay', () => {
       throws(() => md1.equals('01-22'), TypeError);
       throws(() => md1.equals({ month: 1, day: 22 }), TypeError);
     });
-    it('takes [[RefISOYear]] into account', () => {
+    it('takes [[ISOYear]] into account', () => {
       const iso = Temporal.Calendar.from('iso8601');
       const md1 = new MonthDay(1, 1, iso, 1972);
       const md2 = new MonthDay(1, 1, iso, 2000);
@@ -222,17 +222,17 @@ describe('MonthDay', () => {
       equal(fields.isoMonth, 11);
       equal(fields.isoDay, 18);
       equal(fields.calendar.id, 'iso8601');
-      equal(typeof fields.refISOYear, 'number');
+      equal(typeof fields.isoYear, 'number');
     });
     it('enumerable', () => {
       const fields2 = { ...fields };
       equal(fields2.isoMonth, 11);
       equal(fields2.isoDay, 18);
       equal(fields2.calendar, fields.calendar);
-      equal(typeof fields2.refISOYear, 'number');
+      equal(typeof fields2.isoYear, 'number');
     });
     it('as input to constructor', () => {
-      const md2 = new MonthDay(fields.isoMonth, fields.isoDay, fields.calendar, fields.refISOYear);
+      const md2 = new MonthDay(fields.isoMonth, fields.isoDay, fields.calendar, fields.isoYear);
       assert(md2.equals(md1));
     });
   });
