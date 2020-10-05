@@ -8,19 +8,19 @@ import { ISO_MONTH, ISO_DAY, ISO_YEAR, CALENDAR, MONTH_DAY_BRAND, CreateSlots, G
 const ObjectAssign = Object.assign;
 
 export class MonthDay {
-  constructor(isoMonth, isoDay, calendar = undefined, refISOYear = 1972) {
+  constructor(isoMonth, isoDay, calendar = undefined, referenceISOYear = 1972) {
     isoMonth = ES.ToInteger(isoMonth);
     isoDay = ES.ToInteger(isoDay);
     if (calendar === undefined) calendar = GetDefaultCalendar();
-    refISOYear = ES.ToInteger(refISOYear);
-    ES.RejectDate(refISOYear, isoMonth, isoDay);
-    ES.RejectDateRange(refISOYear, isoMonth, isoDay);
+    referenceISOYear = ES.ToInteger(referenceISOYear);
+    ES.RejectDate(referenceISOYear, isoMonth, isoDay);
+    ES.RejectDateRange(referenceISOYear, isoMonth, isoDay);
     if (!calendar || typeof calendar !== 'object') throw new RangeError('invalid calendar');
 
     CreateSlots(this);
     SetSlot(this, ISO_MONTH, isoMonth);
     SetSlot(this, ISO_DAY, isoDay);
-    SetSlot(this, ISO_YEAR, refISOYear);
+    SetSlot(this, ISO_YEAR, referenceISOYear);
     SetSlot(this, CALENDAR, calendar);
     SetSlot(this, MONTH_DAY_BRAND, true);
 
@@ -129,8 +129,8 @@ export class MonthDay {
         const month = GetSlot(item, ISO_MONTH);
         const day = GetSlot(item, ISO_DAY);
         const calendar = GetSlot(item, CALENDAR);
-        const refISOYear = GetSlot(item, ISO_YEAR);
-        result = new this(month, day, calendar, refISOYear);
+        const referenceISOYear = GetSlot(item, ISO_YEAR);
+        result = new this(month, day, calendar, referenceISOYear);
       } else {
         let calendar = item.calendar;
         if (calendar === undefined) calendar = GetDefaultCalendar();
@@ -138,12 +138,12 @@ export class MonthDay {
         result = calendar.monthDayFromFields(item, options, this);
       }
     } else {
-      let { month, day, refISOYear, calendar } = ES.ParseTemporalMonthDayString(ES.ToString(item));
+      let { month, day, referenceISOYear, calendar } = ES.ParseTemporalMonthDayString(ES.ToString(item));
       ({ month, day } = ES.RegulateMonthDay(month, day, overflow));
       if (!calendar) calendar = GetDefaultCalendar();
       calendar = TemporalCalendar.from(calendar);
-      if (refISOYear === undefined) refISOYear = 1972;
-      result = new this(month, day, calendar, refISOYear);
+      if (referenceISOYear === undefined) referenceISOYear = 1972;
+      result = new this(month, day, calendar, referenceISOYear);
     }
     if (!ES.IsTemporalMonthDay(result)) throw new TypeError('invalid result');
     return result;

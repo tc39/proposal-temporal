@@ -580,7 +580,7 @@ export namespace Temporal {
    */
   export class MonthDay implements MonthDayFields {
     static from(item: Temporal.MonthDay | MonthDayLike | string, options?: AssignmentOptions): Temporal.MonthDay;
-    constructor(isoMonth: number, isoDay: number, calendar?: CalendarProtocol, refISOYear?: number);
+    constructor(isoMonth: number, isoDay: number, calendar?: CalendarProtocol, referenceISOYear?: number);
     readonly month: number;
     readonly day: number;
     readonly calendar: CalendarProtocol;
@@ -722,7 +722,7 @@ export namespace Temporal {
   export class YearMonth implements YearMonthFields {
     static from(item: Temporal.YearMonth | YearMonthLike | string, options?: AssignmentOptions): Temporal.YearMonth;
     static compare(one: Temporal.YearMonth, two: Temporal.YearMonth): ComparisonResult;
-    constructor(isoYear: number, isoMonth: number, calendar?: CalendarProtocol, refISODay?: number);
+    constructor(isoYear: number, isoMonth: number, calendar?: CalendarProtocol, referenceISODay?: number);
     readonly year: number;
     readonly month: number;
     readonly calendar: CalendarProtocol;

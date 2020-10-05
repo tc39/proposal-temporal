@@ -223,14 +223,14 @@ function extractOverrides(temporalObj, main) {
   if (ES.IsTemporalYearMonth(temporalObj)) {
     const isoYear = GetSlot(temporalObj, ISO_YEAR);
     const isoMonth = GetSlot(temporalObj, ISO_MONTH);
-    const refISODay = GetSlot(temporalObj, ISO_DAY);
+    const referenceISODay = GetSlot(temporalObj, ISO_DAY);
     const calendar = GetSlot(temporalObj, CALENDAR);
     if (calendar.id !== main[CAL_ID]) {
       throw new RangeError(
         `cannot format YearMonth with calendar ${calendar.id} in locale with calendar ${main[CAL_ID]}`
       );
     }
-    const datetime = new DateTime(isoYear, isoMonth, refISODay, 12, 0, 0, 0, 0, 0, calendar);
+    const datetime = new DateTime(isoYear, isoMonth, referenceISODay, 12, 0, 0, 0, 0, 0, calendar);
     return {
       instant: main[TIMEZONE].getInstantFor(datetime),
       formatter: main[YM]
@@ -238,7 +238,7 @@ function extractOverrides(temporalObj, main) {
   }
 
   if (ES.IsTemporalMonthDay(temporalObj)) {
-    const refISOYear = GetSlot(temporalObj, ISO_YEAR);
+    const referenceISOYear = GetSlot(temporalObj, ISO_YEAR);
     const isoMonth = GetSlot(temporalObj, ISO_MONTH);
     const isoDay = GetSlot(temporalObj, ISO_DAY);
     const calendar = GetSlot(temporalObj, CALENDAR);
@@ -247,7 +247,7 @@ function extractOverrides(temporalObj, main) {
         `cannot format MonthDay with calendar ${calendar.id} in locale with calendar ${main[CAL_ID]}`
       );
     }
-    const datetime = new DateTime(refISOYear, isoMonth, isoDay, 12, 0, 0, 0, 0, 0, calendar);
+    const datetime = new DateTime(referenceISOYear, isoMonth, isoDay, 12, 0, 0, 0, 0, 0, calendar);
     return {
       instant: main[TIMEZONE].getInstantFor(datetime),
       formatter: main[MD]
