@@ -110,7 +110,7 @@ overrides:
   - files:
       - docs/buildDocs.js
       - polyfill/lib/duration.mjs
-      - polyfill/lib/initialise.js
+      - polyfill/lib/init.js
       - polyfill/test/all.mjs
       - polyfill/test/exhaust.mjs
       - polyfill/test/validStrings.mjs
