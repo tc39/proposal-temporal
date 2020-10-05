@@ -9479,6 +9479,16 @@
     DateTimeFormat: DateTimeFormat
   });
 
+  function toTemporalInstant() {
+    // Observable access to valueOf is not correct here, but unavoidable
+    var epochNanoseconds = BigInteger(+this).multiply(1e6);
+    return new Instant(bigIntIfAvailable$1(epochNanoseconds));
+  }
+
+  function bigIntIfAvailable$1(wrapper) {
+    return typeof BigInt === 'undefined' ? wrapper : wrapper.value;
+  }
+
   Object.defineProperty(globalThis, 'Temporal', {
     value: {},
     writable: true,
@@ -9487,6 +9497,12 @@
   });
   copy(globalThis.Temporal, Temporal);
   copy(globalThis.Intl, Intl$1);
+  Object.defineProperty(globalThis.Date.prototype, 'toTemporalInstant', {
+    value: toTemporalInstant,
+    writable: true,
+    enumerable: false,
+    configurable: true
+  });
 
   function copy(target, source) {
     var _iterator = _createForOfIteratorHelper(Object.getOwnPropertyNames(source)),
@@ -9511,6 +9527,7 @@
 
   exports.Intl = Intl$1;
   exports.Temporal = Temporal;
+  exports.toTemporalInstant = toTemporalInstant;
 
   Object.defineProperty(exports, '__esModule', { value: true });
 
