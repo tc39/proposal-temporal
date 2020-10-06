@@ -3124,9 +3124,11 @@
   var MILLISECOND = 'slot-millisecond';
   var MICROSECOND = 'slot-microsecond';
   var NANOSECOND = 'slot-nanosecond';
-  var REF_ISO_YEAR = 'slot-ref-iso-year';
-  var REF_ISO_DAY = 'slot-ref-iso-day';
-  var CALENDAR = 'slot-calendar'; // Duration
+  var CALENDAR = 'slot-calendar'; // Date, YearMonth, and MonthDay all have the same slots, disambiguation needed:
+
+  var DATE_BRAND = 'slot-date-brand';
+  var YEAR_MONTH_BRAND = 'slot-year-month-brand';
+  var MONTH_DAY_BRAND = 'slot-month-day-brand'; // Duration
 
   var YEARS = 'slot-years';
   var MONTHS = 'slot-months';
@@ -3224,7 +3226,7 @@
       return HasSlot(item, YEARS, MONTHS, DAYS, HOURS, MINUTES, SECONDS, MILLISECONDS, MICROSECONDS, NANOSECONDS);
     },
     IsTemporalDate: function IsTemporalDate(item) {
-      return HasSlot(item, ISO_YEAR, ISO_MONTH, ISO_DAY) && !HasSlot(item, HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND);
+      return HasSlot(item, DATE_BRAND);
     },
     IsTemporalTime: function IsTemporalTime(item) {
       return HasSlot(item, HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND) && !HasSlot(item, ISO_YEAR, ISO_MONTH, ISO_DAY);
@@ -3233,10 +3235,10 @@
       return HasSlot(item, ISO_YEAR, ISO_MONTH, ISO_DAY, HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND);
     },
     IsTemporalYearMonth: function IsTemporalYearMonth(item) {
-      return HasSlot(item, ISO_YEAR, ISO_MONTH, REF_ISO_DAY);
+      return HasSlot(item, YEAR_MONTH_BRAND);
     },
     IsTemporalMonthDay: function IsTemporalMonthDay(item) {
-      return HasSlot(item, ISO_MONTH, ISO_DAY, REF_ISO_YEAR);
+      return HasSlot(item, MONTH_DAY_BRAND);
     },
     TemporalTimeZoneFromString: function TemporalTimeZoneFromString(stringIdent) {
       var _ES$ParseTemporalTime = ES.ParseTemporalTimeZoneString(stringIdent),
@@ -3361,7 +3363,7 @@
     },
     ParseTemporalYearMonthString: function ParseTemporalYearMonthString(isoString) {
       var match = yearmonth.exec(isoString);
-      var year, month, calendar, refISODay;
+      var year, month, calendar, referenceISODay;
 
       if (match) {
         var yearString = match[1];
@@ -3377,20 +3379,20 @@
         year = _ES$ParseISODateTime2.year;
         month = _ES$ParseISODateTime2.month;
         calendar = _ES$ParseISODateTime2.calendar;
-        refISODay = _ES$ParseISODateTime2.day;
-        if (!calendar) refISODay = undefined;
+        referenceISODay = _ES$ParseISODateTime2.day;
+        if (!calendar) referenceISODay = undefined;
       }
 
       return {
         year: year,
         month: month,
         calendar: calendar,
-        refISODay: refISODay
+        referenceISODay: referenceISODay
       };
     },
     ParseTemporalMonthDayString: function ParseTemporalMonthDayString(isoString) {
       var match = monthday.exec(isoString);
-      var month, day, calendar, refISOYear;
+      var month, day, calendar, referenceISOYear;
 
       if (match) {
         month = ES.ToInteger(match[1]);
@@ -3403,15 +3405,15 @@
         month = _ES$ParseISODateTime3.month;
         day = _ES$ParseISODateTime3.day;
         calendar = _ES$ParseISODateTime3.calendar;
-        refISOYear = _ES$ParseISODateTime3.year;
-        if (!calendar) refISOYear = undefined;
+        referenceISOYear = _ES$ParseISODateTime3.year;
+        if (!calendar) referenceISOYear = undefined;
       }
 
       return {
         month: month,
         day: day,
         calendar: calendar,
-        refISOYear: refISOYear
+        referenceISOYear: referenceISOYear
       };
     },
     ParseTemporalTimeZoneString: function ParseTemporalTimeZoneString(stringIdent) {
@@ -3586,11 +3588,11 @@
       };
     },
     RegulateYearMonth: function RegulateYearMonth(year, month, overflow) {
-      var refISODay = 1;
+      var referenceISODay = 1;
 
       switch (overflow) {
         case 'reject':
-          ES.RejectDate(year, month, refISODay);
+          ES.RejectDate(year, month, referenceISODay);
           break;
 
         case 'constrain':
@@ -3607,15 +3609,15 @@
       };
     },
     RegulateMonthDay: function RegulateMonthDay(month, day, overflow) {
-      var refISOYear = 1972;
+      var referenceISOYear = 1972;
 
       switch (overflow) {
         case 'reject':
-          ES.RejectDate(refISOYear, month, day);
+          ES.RejectDate(referenceISOYear, month, day);
           break;
 
         case 'constrain':
-          var _ES$ConstrainDate3 = ES.ConstrainDate(refISOYear, month, day);
+          var _ES$ConstrainDate3 = ES.ConstrainDate(referenceISOYear, month, day);
 
           month = _ES$ConstrainDate3.month;
           day = _ES$ConstrainDate3.day;
@@ -5637,7 +5639,7 @@
         year = _ES$RegulateYearMonth.year;
         month = _ES$RegulateYearMonth.month;
         return new constructor(year, month, this,
-        /* refIsoDay = */
+        /* referenceISODay = */
         1);
       }
     }, {
@@ -5655,7 +5657,7 @@
         month = _ES$RegulateMonthDay.month;
         day = _ES$RegulateMonthDay.day;
         return new constructor(month, day, this,
-        /* refIsoYear = */
+        /* referenceISOYear = */
         1972);
       }
     }, {
@@ -6311,6 +6313,7 @@
       SetSlot(this, ISO_MONTH, isoMonth);
       SetSlot(this, ISO_DAY, isoDay);
       SetSlot(this, CALENDAR, calendar);
+      SetSlot(this, DATE_BRAND, true);
 
       {
         Object.defineProperty(this, '_repr_', {
@@ -7792,22 +7795,23 @@
   var MonthDay = /*#__PURE__*/function () {
     function MonthDay(isoMonth, isoDay) {
       var calendar = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : undefined;
-      var refISOYear = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 1972;
+      var referenceISOYear = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 1972;
 
       _classCallCheck(this, MonthDay);
 
       isoMonth = ES.ToInteger(isoMonth);
       isoDay = ES.ToInteger(isoDay);
       if (calendar === undefined) calendar = GetDefaultCalendar();
-      refISOYear = ES.ToInteger(refISOYear);
-      ES.RejectDate(refISOYear, isoMonth, isoDay);
-      ES.RejectDateRange(refISOYear, isoMonth, isoDay);
+      referenceISOYear = ES.ToInteger(referenceISOYear);
+      ES.RejectDate(referenceISOYear, isoMonth, isoDay);
+      ES.RejectDateRange(referenceISOYear, isoMonth, isoDay);
       if (!calendar || _typeof(calendar) !== 'object') throw new RangeError('invalid calendar');
       CreateSlots(this);
       SetSlot(this, ISO_MONTH, isoMonth);
       SetSlot(this, ISO_DAY, isoDay);
-      SetSlot(this, REF_ISO_YEAR, refISOYear);
+      SetSlot(this, ISO_YEAR, referenceISOYear);
       SetSlot(this, CALENDAR, calendar);
+      SetSlot(this, MONTH_DAY_BRAND, true);
 
       {
         Object.defineProperty(this, '_repr_', {
@@ -7848,7 +7852,7 @@
         if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
         if (!ES.IsTemporalMonthDay(other)) throw new TypeError('invalid MonthDay object');
 
-        for (var _i = 0, _arr = [ISO_MONTH, ISO_DAY, REF_ISO_YEAR]; _i < _arr.length; _i++) {
+        for (var _i = 0, _arr = [ISO_MONTH, ISO_DAY, ISO_YEAR]; _i < _arr.length; _i++) {
           var slot = _arr[_i];
           var val1 = GetSlot(this, slot);
           var val2 = GetSlot(other, slot);
@@ -7867,7 +7871,7 @@
         var calendar = ES.FormatCalendarAnnotation(GetSlot(this, CALENDAR));
 
         if (calendar) {
-          var year = ES.ISOYearString(GetSlot(this, REF_ISO_YEAR));
+          var year = ES.ISOYearString(GetSlot(this, ISO_YEAR));
           resultString = "".concat(year, "-").concat(resultString).concat(calendar);
         }
 
@@ -7926,7 +7930,7 @@
       value: function getISOFields() {
         if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
         return {
-          refISOYear: GetSlot(this, REF_ISO_YEAR),
+          isoYear: GetSlot(this, ISO_YEAR),
           isoMonth: GetSlot(this, ISO_MONTH),
           isoDay: GetSlot(this, ISO_DAY),
           calendar: GetSlot(this, CALENDAR)
@@ -7963,8 +7967,8 @@
             var month = GetSlot(item, ISO_MONTH);
             var day = GetSlot(item, ISO_DAY);
             var calendar = GetSlot(item, CALENDAR);
-            var refISOYear = GetSlot(item, REF_ISO_YEAR);
-            result = new this(month, day, calendar, refISOYear);
+            var referenceISOYear = GetSlot(item, ISO_YEAR);
+            result = new this(month, day, calendar, referenceISOYear);
           } else {
             var _calendar = item.calendar;
             if (_calendar === undefined) _calendar = GetDefaultCalendar();
@@ -7975,7 +7979,7 @@
           var _ES$ParseTemporalMont = ES.ParseTemporalMonthDayString(ES.ToString(item)),
               _month = _ES$ParseTemporalMont.month,
               _day = _ES$ParseTemporalMont.day,
-              _refISOYear = _ES$ParseTemporalMont.refISOYear,
+              _referenceISOYear = _ES$ParseTemporalMont.referenceISOYear,
               _calendar2 = _ES$ParseTemporalMont.calendar;
 
           var _ES$RegulateMonthDay = ES.RegulateMonthDay(_month, _day, overflow);
@@ -7984,8 +7988,8 @@
           _day = _ES$RegulateMonthDay.day;
           if (!_calendar2) _calendar2 = GetDefaultCalendar();
           _calendar2 = TemporalCalendar.from(_calendar2);
-          if (_refISOYear === undefined) _refISOYear = 1972;
-          result = new this(_month, _day, _calendar2, _refISOYear);
+          if (_referenceISOYear === undefined) _referenceISOYear = 1972;
+          result = new this(_month, _day, _calendar2, _referenceISOYear);
         }
 
         if (!ES.IsTemporalMonthDay(result)) throw new TypeError('invalid result');
@@ -8736,22 +8740,23 @@
   var YearMonth = /*#__PURE__*/function () {
     function YearMonth(isoYear, isoMonth) {
       var calendar = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : undefined;
-      var refISODay = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 1;
+      var referenceISODay = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 1;
 
       _classCallCheck(this, YearMonth);
 
       isoYear = ES.ToInteger(isoYear);
       isoMonth = ES.ToInteger(isoMonth);
       if (calendar === undefined) calendar = GetDefaultCalendar();
-      refISODay = ES.ToInteger(refISODay);
-      ES.RejectDate(isoYear, isoMonth, refISODay);
+      referenceISODay = ES.ToInteger(referenceISODay);
+      ES.RejectDate(isoYear, isoMonth, referenceISODay);
       ES.RejectYearMonthRange(isoYear, isoMonth);
       if (!calendar || _typeof(calendar) !== 'object') throw new RangeError('invalid calendar');
       CreateSlots(this);
       SetSlot(this, ISO_YEAR, isoYear);
       SetSlot(this, ISO_MONTH, isoMonth);
-      SetSlot(this, REF_ISO_DAY, refISODay);
+      SetSlot(this, ISO_DAY, referenceISODay);
       SetSlot(this, CALENDAR, calendar);
+      SetSlot(this, YEAR_MONTH_BRAND, true);
 
       {
         Object.defineProperty(this, '_repr_', {
@@ -8893,7 +8898,7 @@
         if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
         if (!ES.IsTemporalYearMonth(other)) throw new TypeError('invalid YearMonth object');
 
-        for (var _i = 0, _arr = [ISO_YEAR, ISO_MONTH, REF_ISO_DAY]; _i < _arr.length; _i++) {
+        for (var _i = 0, _arr = [ISO_YEAR, ISO_MONTH, ISO_DAY]; _i < _arr.length; _i++) {
           var slot = _arr[_i];
           var val1 = GetSlot(this, slot);
           var val2 = GetSlot(other, slot);
@@ -8912,7 +8917,7 @@
         var calendar = ES.FormatCalendarAnnotation(GetSlot(this, CALENDAR));
 
         if (calendar) {
-          var day = ES.ISODateTimePartString(GetSlot(this, REF_ISO_DAY));
+          var day = ES.ISODateTimePartString(GetSlot(this, ISO_DAY));
           resultString = "".concat(resultString, "-").concat(day).concat(calendar);
         }
 
@@ -8962,7 +8967,7 @@
         return {
           isoYear: GetSlot(this, ISO_YEAR),
           isoMonth: GetSlot(this, ISO_MONTH),
-          refISODay: GetSlot(this, REF_ISO_DAY),
+          isoDay: GetSlot(this, ISO_DAY),
           calendar: GetSlot(this, CALENDAR)
         };
       }
@@ -9027,8 +9032,8 @@
             var year = GetSlot(item, ISO_YEAR);
             var month = GetSlot(item, ISO_MONTH);
             var calendar = GetSlot(item, CALENDAR);
-            var refISODay = GetSlot(item, REF_ISO_DAY);
-            result = new this(year, month, calendar, refISODay);
+            var referenceISODay = GetSlot(item, ISO_DAY);
+            result = new this(year, month, calendar, referenceISODay);
           } else {
             var _calendar = item.calendar;
             if (_calendar === undefined) _calendar = GetDefaultCalendar();
@@ -9039,7 +9044,7 @@
           var _ES$ParseTemporalYear = ES.ParseTemporalYearMonthString(ES.ToString(item)),
               _year = _ES$ParseTemporalYear.year,
               _month = _ES$ParseTemporalYear.month,
-              _refISODay = _ES$ParseTemporalYear.refISODay,
+              _referenceISODay = _ES$ParseTemporalYear.referenceISODay,
               _calendar2 = _ES$ParseTemporalYear.calendar;
 
           var _ES$RegulateYearMonth = ES.RegulateYearMonth(_year, _month, overflow);
@@ -9048,8 +9053,8 @@
           _month = _ES$RegulateYearMonth.month;
           if (!_calendar2) _calendar2 = GetDefaultCalendar();
           _calendar2 = TemporalCalendar.from(_calendar2);
-          if (_refISODay === undefined) _refISODay = 1;
-          result = new this(_year, _month, _calendar2, _refISODay);
+          if (_referenceISODay === undefined) _referenceISODay = 1;
+          result = new this(_year, _month, _calendar2, _referenceISODay);
         }
 
         if (!ES.IsTemporalYearMonth(result)) throw new TypeError('invalid result');
@@ -9060,7 +9065,7 @@
       value: function compare(one, two) {
         if (!ES.IsTemporalYearMonth(one) || !ES.IsTemporalYearMonth(two)) throw new TypeError('invalid YearMonth object');
 
-        for (var _i2 = 0, _arr2 = [ISO_YEAR, ISO_MONTH, REF_ISO_DAY]; _i2 < _arr2.length; _i2++) {
+        for (var _i2 = 0, _arr2 = [ISO_YEAR, ISO_MONTH, ISO_DAY]; _i2 < _arr2.length; _i2++) {
           var slot = _arr2[_i2];
           var val1 = GetSlot(one, slot);
           var val2 = GetSlot(two, slot);
@@ -9370,14 +9375,14 @@
     if (ES.IsTemporalYearMonth(temporalObj)) {
       var isoYear = GetSlot(temporalObj, ISO_YEAR);
       var isoMonth = GetSlot(temporalObj, ISO_MONTH);
-      var refISODay = GetSlot(temporalObj, REF_ISO_DAY);
+      var referenceISODay = GetSlot(temporalObj, ISO_DAY);
       var calendar = GetSlot(temporalObj, CALENDAR);
 
       if (calendar.id !== main[CAL_ID]) {
         throw new RangeError("cannot format YearMonth with calendar ".concat(calendar.id, " in locale with calendar ").concat(main[CAL_ID]));
       }
 
-      var _datetime = new DateTime(isoYear, isoMonth, refISODay, 12, 0, 0, 0, 0, 0, calendar);
+      var _datetime = new DateTime(isoYear, isoMonth, referenceISODay, 12, 0, 0, 0, 0, 0, calendar);
 
       return {
         instant: main[TIMEZONE].getInstantFor(_datetime),
@@ -9386,7 +9391,7 @@
     }
 
     if (ES.IsTemporalMonthDay(temporalObj)) {
-      var refISOYear = GetSlot(temporalObj, REF_ISO_YEAR);
+      var referenceISOYear = GetSlot(temporalObj, ISO_YEAR);
 
       var _isoMonth = GetSlot(temporalObj, ISO_MONTH);
 
@@ -9398,7 +9403,7 @@
         throw new RangeError("cannot format MonthDay with calendar ".concat(_calendar.id, " in locale with calendar ").concat(main[CAL_ID]));
       }
 
-      var _datetime2 = new DateTime(refISOYear, _isoMonth, isoDay, 12, 0, 0, 0, 0, 0, _calendar);
+      var _datetime2 = new DateTime(referenceISOYear, _isoMonth, isoDay, 12, 0, 0, 0, 0, 0, _calendar);
 
       return {
         instant: main[TIMEZONE].getInstantFor(_datetime2),

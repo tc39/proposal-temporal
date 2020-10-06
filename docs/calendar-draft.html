@@ -155,22 +155,8 @@
 However, we have taken a future-proof approach so that if a use case presents itself, we can add <code>timePlus()</code>, <code>timeMinus()</code>, and <code>timeDifference()</code> methods to Temporal.Calendar.</p>
 <h3 id="temporaldatetime-and-temporaltime-internal-slots"><a class="heading-link" href="#temporaldatetime-and-temporaltime-internal-slots"></a>Temporal.DateTime and Temporal.Time internal slots</h3><p>As with Temporal.Date, all of these types will gain a <code>[[Calendar]]</code> slot, and year, month, and day will be renamed <code>[[ISOYear]]</code>, <code>[[ISOMonth]]</code>, and <code>[[ISODay]]</code>.</p>
 <h3 id="temporalyearmonth-and-temporalmonthday-internal-slots"><a class="heading-link" href="#temporalyearmonth-and-temporalmonthday-internal-slots"></a>Temporal.YearMonth and Temporal.MonthDay internal slots</h3><p>Main issue: <a href="https://github.com/tc39/proposal-temporal/issues/391">https://github.com/tc39/proposal-temporal/issues/391</a></p>
-<p>For reasons explained above, using the ISO calendar as the internal data model has many advantages.  However, there are several challenges for these two &quot;incomplete&quot; types: lunar months don&#39;t line up with solar months, and not every lunar month occurs in every solar year.  After discussing several data model alternatives, we reached the conclusion that the simplest data model for Temporal.YearMonth and Temporal.MonthDay is to make it share the same data model as Temporal.Date, with the following slots:</p>
-<p>Temporal.YearMonth:</p>
-<ul>
-<li><code>[[ISOYear]]</code></li>
-<li><code>[[ISOMonth]]</code></li>
-<li><code>[[Calendar]]</code></li>
-<li><code>[[RefISODay]]</code></li>
-</ul>
-<p>Temporal.MonthDay:</p>
-<ul>
-<li><code>[[ISOMonth]]</code></li>
-<li><code>[[ISODay]]</code></li>
-<li><code>[[Calendar]]</code></li>
-<li><code>[[RefISOYear]]</code></li>
-</ul>
-<p>For calendars that use ISO-style months, such as Gregorian, Solar Buddhist, and Japanese, &quot;RefIsoDay&quot; and &quot;RefIsoYear&quot; can be ignored.  However, for lunar and lunisolar calendars, such as Hebrew, Saudi Arabian Islamic, and Chinese, these additional fields allow those calendars to disambiguate which YearMonth and MonthDay are being represented.  The fields are called &quot;Ref&quot;, or &quot;reference&quot;, because they are only used in calendars that need them.</p>
+<p>For reasons explained above, using the ISO calendar as the internal data model has many advantages.  However, there are several challenges for these two &quot;incomplete&quot; types: lunar months don&#39;t line up with solar months, and not every lunar month occurs in every solar year.  After discussing several data model alternatives, we reached the conclusion that the simplest data model for Temporal.YearMonth and Temporal.MonthDay is to make it share the same data model as Temporal.Date, with the same slots.</p>
+<p>For calendars that use ISO-style months, such as Gregorian, Solar Buddhist, and Japanese, &quot;ISODay&quot; and &quot;ISOYear&quot; can be ignored for YearMonth and MonthDay respectively.  However, for lunar and lunisolar calendars, such as Hebrew, Saudi Arabian Islamic, and Chinese, these fields allow those calendars to disambiguate which YearMonth and MonthDay are being represented.</p>
 <h2 id="temporalcalendar-interface">Temporal.Calendar interface</h2>
 <p>Main issue: <a href="https://github.com/tc39/proposal-temporal/issues/289">https://github.com/tc39/proposal-temporal/issues/289</a></p>
 <p>The new Temporal.Calendar interface is a mechanism to allow arbitrary calendar systems to be implemented on top of Temporal.  <strong><em>Most users will not encounter the Temporal.Calendar interface directly</em></strong>, unless they are building or using a non-built-in calendar system.</p>

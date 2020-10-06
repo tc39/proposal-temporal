@@ -213,19 +213,19 @@ For example, it could be used to represent a particular instance of a monthly re
 <p><code>Temporal.YearMonth</code> refers to the whole of a specific month; if you need to refer to a calendar event on a certain day, use <code>Temporal.Date</code> or even <code>Temporal.DateTime</code>.
 A <code>Temporal.YearMonth</code> can be converted into a <code>Temporal.Date</code> by combining it with a day of the month, using the <code>toDateOnDay()</code> method.</p>
 <h2 id="constructor">Constructor</h2>
-<h3 id="new-Temporal-YearMonth"><a class="heading-link" href="#new-Temporal-YearMonth"></a><strong>new Temporal.YearMonth</strong>(<em>isoYear</em>: number, <em>isoMonth</em>: number, <em>calendar</em>?: object, <em>refISODay</em>: number = 1) : Temporal.YearMonth</h3><p><strong>Parameters:</strong></p>
+<h3 id="new-Temporal-YearMonth"><a class="heading-link" href="#new-Temporal-YearMonth"></a><strong>new Temporal.YearMonth</strong>(<em>isoYear</em>: number, <em>isoMonth</em>: number, <em>calendar</em>?: object, <em>referenceISODay</em>: number = 1) : Temporal.YearMonth</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>isoYear</code> (number): A year.</li>
 <li><code>isoMonth</code> (number): A month, ranging between 1 and 12 inclusive.</li>
 <li><code>calendar</code> (optional <code>Temporal.Calendar</code> or plain object): A calendar to project the month into.</li>
-<li><code>refISODay</code> (optional number): A reference day, used for disambiguation when implementing other calendar systems.
+<li><code>referenceISODay</code> (optional number): A reference day, used for disambiguation when implementing other calendar systems.
 You can omit this parameter unless using a non-ISO-8601 calendar.</li>
 </ul>
 <p><strong>Returns:</strong> a new <code>Temporal.YearMonth</code> object.</p>
 <p>Use this constructor if you have the correct parameters already as individual number values in the ISO 8601 calendar, or you are implementing a custom calendar.
 Otherwise, <code>Temporal.YearMonth.from()</code>, which accepts more kinds of input, allows months in other calendar systems, and allows controlling the overflow behaviour, is probably more convenient.</p>
 <p>All values are given as reckoned in the <a href="https://en.wikipedia.org/wiki/ISO_8601#Dates">ISO 8601 calendar</a>.
-Together, <code>isoYear</code>, <code>isoMonth</code>, and <code>refISODay</code> must represent a valid date in that calendar, even if you are passing a different calendar as the <code>calendar</code> parameter.</p>
+Together, <code>isoYear</code>, <code>isoMonth</code>, and <code>referenceISODay</code> must represent a valid date in that calendar, even if you are passing a different calendar as the <code>calendar</code> parameter.</p>
 <p>The range of allowed values for this type is exactly enough that calling <a href="./date.html#toYearMonth"><code>toYearMonth()</code></a> on any valid <code>Temporal.Date</code> will succeed.
 If <code>isoYear</code> and <code>isoMonth</code> are outside of this range, then this function will throw a <code>RangeError</code>.</p>
 <blockquote>
@@ -544,11 +544,11 @@ It returns a new plain JavaScript object, with all the fields as enumerable, wri
 <p>Usage example:</p>
 <pre class="language-javascript"><code class="language-javascript">ym <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2019-06'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 Object<span class="token punctuation">.</span><span class="token function">assign</span><span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span> ym<span class="token punctuation">)</span><span class="token punctuation">.</span>year  <span class="token comment">// => undefined</span>
-Object<span class="token punctuation">.</span><span class="token function">assign</span><span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span> ym<span class="token punctuation">.</span><span class="token function">getFields</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span>year  <span class="token comment">// => 2019</span></code></pre><h3 id="getISOFields"><a class="heading-link" href="#getISOFields"></a>yearMonth.<strong>getISOFields</strong>(): { isoYear: number, isoMonth: number, refISODay: number }</h3><p><strong>Returns:</strong> a plain object with properties expressing <code>yearMonth</code> in the ISO 8601 calendar, as well as the value of <code>yearMonth.calendar</code>.</p>
+Object<span class="token punctuation">.</span><span class="token function">assign</span><span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span> ym<span class="token punctuation">.</span><span class="token function">getFields</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span>year  <span class="token comment">// => 2019</span></code></pre><h3 id="getISOFields"><a class="heading-link" href="#getISOFields"></a>yearMonth.<strong>getISOFields</strong>(): { isoYear: number, isoMonth: number, isoDay: number, calendar: object }</h3><p><strong>Returns:</strong> a plain object with properties expressing <code>yearMonth</code> in the ISO 8601 calendar, as well as the value of <code>yearMonth.calendar</code>.</p>
 <p>This method is mainly useful if you are implementing a custom calendar.
 Most code will not need to use it.
 Use <code>yearMonth.getFields()</code> instead.</p>
-<p>The value of the <code>refISODay</code> property will be equal to the <code>refISODay</code> constructor argument passed when <code>yearMonth</code> was constructed.</p>
+<p>The value of the <code>isoDay</code> property will be equal to the <code>referenceISODay</code> constructor argument passed when <code>yearMonth</code> was constructed.</p>
 <p>Usage example:</p>
 <pre class="language-javascript"><code class="language-javascript">ym <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>YearMonth<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2019-06'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 ym<span class="token punctuation">.</span><span class="token function">getISOFields</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>isoYear  <span class="token comment">// => 2019</span></code></pre>    <footer>
