@@ -712,6 +712,116 @@
     </emu-clause>
   </emu-clause>
 
+  <emu-clause id="sec-properties-of-temporal-datetime-instances">
+    <h1>Properties of Temporal.DateTime Instances</h1>
+    <p>
+      Temporal.DateTime instances are ordinary objects that inherit properties from the %Temporal.DateTime.prototype% intrinsic object.
+      Temporal.DateTime instances are initially created with the internal slots described in <emu-xref href="#table-internal-slots-of-temporaldatetime-instances"></emu-xref>.
+    </p>
+    <emu-table id="table-internal-slots-of-temporaldatetime-instances" caption="Internal Slots of Temporal.DateTime Instances">
+      <table>
+        <tbody>
+          <tr>
+            <th>
+              Internal Slot
+            </th>
+            <th>
+              Description
+            </th>
+          </tr>
+          <tr>
+            <td>
+              [[InitializedTemporalDateTime]]
+            </td>
+            <td>
+              The only specified use of this slot is for distinguishing Temporal.DateTime instances from other objects.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              [[ISOYear]]
+            </td>
+            <td>
+              An integer Number value representing the year in the ISO 8601 calendar.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              [[ISOMonth]]
+            </td>
+            <td>
+              An integer Number value between 1 and 12, inclusive, representing the month of the year in the ISO 8601 calendar.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              [[ISODay]]
+            </td>
+            <td>
+              An integer Number value between 1 and DaysInMonth([[ISOYear]], [[ISOMonth]]), inclusive, representing the day of the month in the ISO 8601 calendar.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              [[Hour]]
+            </td>
+            <td>
+              An integer Number value between 0 and 23, inclusive, representing the hour of the day.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              [[Minute]]
+            </td>
+            <td>
+              An integer Number value between 0 and 59, inclusive, representing the minute of the hour.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              [[Second]]
+            </td>
+            <td>
+              An integer Number value between 0 and 59, inclusive, representing the second within the minute.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              [[Millisecond]]
+            </td>
+            <td>
+              An integer Number value between 0 and 999, inclusive, representing the millisecond within the second.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              [[Microsecond]]
+            </td>
+            <td>
+              An integer Number value between 0 and 999, inclusive, representing the microsecond within the millisecond.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              [[Nanosecond]]
+            </td>
+            <td>
+              An integer Number value between 0 and 999, inclusive, representing the nanosecond within the microsecond.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              [[Calendar]]
+            </td>
+            <td>
+              An Object representing the calendar.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </emu-table>
+  </emu-clause>
+
   <emu-clause id="sec-temporal-datetime-abstract-ops">
     <h1>Abstract operations</h1>
 
