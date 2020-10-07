@@ -216,7 +216,8 @@ export class YearMonth {
         let calendar = item.calendar;
         if (calendar === undefined) calendar = GetDefaultCalendar();
         calendar = TemporalCalendar.from(calendar);
-        result = calendar.yearMonthFromFields(item, options, this);
+        const fields = ES.ToTemporalYearMonthRecord(item);
+        result = calendar.yearMonthFromFields(fields, options, this);
       }
     } else {
       let { year, month, referenceISODay, calendar } = ES.ParseTemporalYearMonthString(ES.ToString(item));

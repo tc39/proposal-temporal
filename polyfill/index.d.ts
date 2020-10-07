@@ -280,17 +280,17 @@ export namespace Temporal {
     monthsInYear?(date: Temporal.Date): number;
     isLeapYear?(date: Temporal.Date): boolean;
     dateFromFields(
-      fields: DateLike,
+      fields: { era?: string | undefined; year: number; month: number; day: number },
       options: AssignmentOptions,
       constructor: ConstructorOf<Temporal.Date>
     ): Temporal.Date;
     yearMonthFromFields(
-      fields: YearMonthLike,
+      fields: { era?: string | undefined; year: number; month: number },
       options: AssignmentOptions,
       constructor: ConstructorOf<Temporal.YearMonth>
     ): Temporal.YearMonth;
     monthDayFromFields(
-      fields: MonthDayLike,
+      fields: { month: number; day: number },
       options: AssignmentOptions,
       constructor: ConstructorOf<Temporal.MonthDay>
     ): Temporal.MonthDay;
@@ -338,17 +338,17 @@ export namespace Temporal {
     monthsInYear(date: Temporal.Date): number;
     isLeapYear(date: Temporal.Date): boolean;
     dateFromFields(
-      fields: DateLike,
+      fields: { era?: string | undefined; year: number; month: number; day: number },
       options: AssignmentOptions,
       constructor: ConstructorOf<Temporal.Date>
     ): Temporal.Date;
     yearMonthFromFields(
-      fields: YearMonthLike,
+      fields: { era?: string | undefined; year: number; month: number },
       options: AssignmentOptions,
       constructor: ConstructorOf<Temporal.YearMonth>
     ): Temporal.YearMonth;
     monthDayFromFields(
-      fields: MonthDayLike,
+      fields: { month: number; day: number },
       options: AssignmentOptions,
       constructor: ConstructorOf<Temporal.MonthDay>
     ): Temporal.MonthDay;
