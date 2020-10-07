@@ -34,7 +34,7 @@ A **Time Zone** defines the legal rules that control how local wall-clock time r
 
 Temporal uses the [**IANA Time Zone Database**](https://en.wikipedia.org/wiki/Tz_database) (or "TZ database"), which you can think of as a global repository of time zone functions. Each IANA time zone has:
 
-- A **time zone ID** that usually refers to a geographic area anchored by a city (e.g. `Europe/Paris` or `Africa/Kampala`) but can also denote single-offset time zones like `UTC` (a consistent `+00:00` offset) or `GMT+5` (which for historical reasons is a negative offset `-05:00`).
+- A **time zone ID** that usually refers to a geographic area anchored by a city (e.g. `Europe/Paris` or `Africa/Kampala`) but can also denote single-offset time zones like `UTC` (a consistent `+00:00` offset) or `Etc/GMT+5` (which for historical reasons is a negative offset `-05:00`).
 - A **time zone definition** defines the offset for any UTC value since January 1, 1970. You can think of these definitions as a table that maps UTC date/time ranges (including future ranges) to specific offsets.
   In some time zones, temporary offset changes happen twice each year due to **Daylight Saving Time (DST)** starting in the Spring and ending each Fall.
   Offsets can also change permanently due to legal changes, e.g. a country switching time zones.
@@ -112,8 +112,8 @@ ldt = dateTime.toLocalDateTime('Asia/Tokyo');
 abs = ldt.toInstant();
 epochNano = abs.getEpochNanoseconds();
   // => 1576536480000000000n
-epochMicro = abs.getEpochMicroseconds();
-  // => 1576536480000000n
+epochMicro = abs.getEpochMilliseconds();
+  // => 1576536480000
 epochSecs = abs.getEpochSeconds();
   // => 1576536480
 ```
