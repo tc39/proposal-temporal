@@ -26,15 +26,15 @@ However the same calendar date and wall-clock time India would have an offset of
 Temporal has two types that store exact time: `Temporal.Instant` (which only stores exact time and no other information) and `Temporal.LocalDateTime` which stores exact time, a time zone, and a calendar system
 
 Another way to represent exact time is using a single number representing the amount of time after or before [Unix epoch](https://en.wikipedia.org/wiki/Unix_time) (midnight UTC on January 1, 1970).
-For example, `Temporal.Instant` (an exact-time type) can be constructed using only a `bigint` value of nanoseconds since epoch.
+For example, `Temporal.Instant` (an exact-time type) can be constructed using only a `BigInt` value of nanoseconds since epoch.
 
 ## Understanding Time Zones, Offset Changes, and DST
 
-A **Time Zone** defines the legal rules that control how local wall-clock time should relate to UTC. You can think of a time zone as a function that accepts an exact time and returns a UTC offset, and a corresponding function for conversions in the opposite direction. (See [below](#ambiguity-due-to-dst-or-other-time-zone-offset-changes) for why exact=>local conversions are 1:1, but local=>exact conversions can be ambiguous.)
+A **Time Zone** defines the legal rules that control how local wall-clock time relates to UTC. You can think of a time zone as a function that accepts an exact time and returns a UTC offset, and a corresponding function for conversions in the opposite direction. (See [below](#ambiguity-due-to-dst-or-other-time-zone-offset-changes) for why exact → local conversions are 1:1, but local → exact conversions can be ambiguous.)
 
 Temporal uses the [**IANA Time Zone Database**](https://en.wikipedia.org/wiki/Tz_database) (or "TZ database"), which you can think of as a global repository of time zone functions. Each IANA time zone has:
 
-- A **time zone ID** that usually refers to a geographic area anchored by a city (e.g. `Europe/Paris` or `Africa/Kampala`) but can also denote single-offset time zones like `UTC` (a consistent `+00:00` offset) or `GMT+5` (which for confusing historical reasons is a negative offset `-05:00`).
+- A **time zone ID** that usually refers to a geographic area anchored by a city (e.g. `Europe/Paris` or `Africa/Kampala`) but can also denote single-offset time zones like `UTC` (a consistent `+00:00` offset) or `GMT+5` (which for historical reasons is a negative offset `-05:00`).
 - A **time zone definition** defines the offset for any UTC value since January 1, 1970. You can think of these definitions as a table that maps UTC date/time ranges (including future ranges) to specific offsets.
   In some time zones, temporary offset changes happen twice each year due to **Daylight Saving Time (DST)** starting in the Spring and ending each Fall.
   Offsets can also change permanently due to legal changes, e.g. a country switching time zones.
@@ -72,17 +72,17 @@ formatOptions = {
   second: 'numeric'
 };
 
-ldt = instant.toLocalDateTime(`Asia/Tokyo`);
+ldt = instant.toLocalDateTime('Asia/Tokyo');
   // => 2019-09-03T17:34:05+09:00[Asia/Tokyo]
 ldt.toLocaleString('en-us', { ...formatOptions, calendar: ldt.calendar });
   // => "Sep 3, 2019 AD, 5:34:05 PM"
 ldt.year;
   // => 2019
-ldt = instant.toLocalDateTime(`Asia/Tokyo`, 'iso8601').toLocaleString('ja-jp', formatOptions);
+ldt = instant.toLocalDateTime('Asia/Tokyo', 'iso8601').toLocaleString('ja-jp', formatOptions);
   // => 2019-09-03T17:34:05+09:00[Asia/Tokyo]
   // this is identical to the result of toLocalDateTime() above
 
-ldt = instant.toLocalDateTime(`Asia/Tokyo`, 'japanese');
+ldt = instant.toLocalDateTime('Asia/Tokyo', 'japanese');
   // => 2019-09-03T17:34:05+09:00[Asia/Tokyo][c=japanese]
 ldt.toLocaleString('en-us', { ...formatOptions, calendar: ldt.calendar });
   // => "Sep 3, 1 Reiwa, 5:34:05 PM"
@@ -97,18 +97,18 @@ Conversions from calendar date and/or wall clock time to exact time are also sup
 ```javascript
 // Convert various local time types to an exact time type by providing a time zone
 date = Temporal.Date.from('2019-12-17');
-ldt = date.toLocalDateTime(`Asia/Tokyo`);
+ldt = date.toLocalDateTime('Asia/Tokyo');
   // => 2019-12-17T00:00+09:00[Asia/Tokyo]
-ldt = date.toLocalDateTime(`Asia/Tokyo`, Temporal.Time.from('10:00'));
+ldt = date.toLocalDateTime('Asia/Tokyo', Temporal.Time.from('10:00'));
   // => 2019-12-17T10:00+09:00[Asia/Tokyo]
 time = Temporal.Time.from('14:35');
-ldt = time.toLocalDateTime(`Asia/Tokyo`, Temporal.Date.from('2020-08-27'));
+ldt = time.toLocalDateTime('Asia/Tokyo', Temporal.Date.from('2020-08-27'));
   // => 020-08-27T14:35+09:00[Asia/Tokyo]
 dateTime = Temporal.DateTime.from('2019-12-17T07:48');
-ldt = dateTime.toLocalDateTime(`Asia/Tokyo`);
+ldt = dateTime.toLocalDateTime('Asia/Tokyo');
   // => 2019-12-17T07:48+09:00[Asia/Tokyo]
 
-// Get the exact time in seconds, milliseconds, or nanoseconds
+// Get the exact time in seconds, milliseconds, or nanoseconds since the UNIX epoch.
 abs = ldt.toInstant();
 epochNano = abs.getEpochNanoseconds();
   // => 1576536480000000000n
@@ -311,7 +311,7 @@ Because the existing offset is valid for the new time, it will be retained so th
 However, if the existing offset is not valid for the new result (e.g. `.with({hour: 0})`), then the default behavior will change the offset to match the new local time in that time zone.
 
 Note that offset vs. timezone conflicts only matter for [`Temporal.LocalDateTime`](./localdatetime.md) because no other Temporal type accepts both an IANA time zone and a time zone offset as an input to any method.
-For example, (`Temporal.Instant.from`)(./instant.md#from) will never run into conflicts because the [`Temporal.Instant`](./instant.md) type ignores the time sone in the input and only uses the offset.
+For example, [`Temporal.Instant.from`](./instant.md#from) will never run into conflicts because the [`Temporal.Instant`](./instant.md) type ignores the time sone in the input and only uses the offset.
 
 ## Examples: `offset` option
 
@@ -328,10 +328,10 @@ ldt = Temporal.LocalDateTime.from({ year: 2020, month: 1, day: 15, hour: 12, tim
 ldt.toString();
   // => "2020-01-15T12:00-02:00[America/Sao_Paulo]"
   // Assume this string is saved in an external database.
-  // Note that the offset is `-02:00` which is Daylight Time
+  // Note that the offset is `-02:00` which is Daylight Saving Time
 
 // Also note that if you run the code above today, it will return an offset
-// of `-03:00` because that reflects the current time zone definition is after
+// of `-03:00` because that reflects the current time zone definition after
 // DST was abolished.  But this code running in 2018 would have returned `-02:00`
 // which corresponds to the then-current Daylight Saving Time in Brazil.
 ```
