@@ -211,6 +211,7 @@ describe('YearMonth', () => {
     const feb21 = YearMonth.from('2021-02');
     it('defaults to returning years', () => {
       equal(`${feb21.difference(feb20)}`, 'P1Y');
+      equal(`${feb21.difference(feb20, { largestUnit: 'auto' })}`, 'P1Y');
       equal(`${feb21.difference(feb20, { largestUnit: 'years' })}`, 'P1Y');
     });
     it('can return months', () => {

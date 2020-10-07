@@ -312,8 +312,8 @@ ym.subtract({years: 20, months: 4})  // => 1999-02
 - `options` (optional object): An object with properties representing options for the operation.
   The following options are recognized:
   - `largestUnit` (string): The largest unit of time to allow in the resulting `Temporal.Duration` object.
-    Valid values are `'years'` and `'months'`.
-    The default is `years`.
+    Valid values are `'auto'`, `'years'` and `'months'`.
+    The default is `'auto'`.
 
 
 **Returns:** a `Temporal.Duration` representing the difference between `yearMonth` and `other`.
@@ -325,6 +325,7 @@ The `largestUnit` option controls how the resulting duration is expressed.
 The returned `Temporal.Duration` object will not have any nonzero fields that are larger than the unit in `largestUnit`.
 A difference of one year and two months will become 14 months when `largestUnit` is `"months"`, for example.
 However, a difference of one month will still be one month even if `largestUnit` is `"years"`.
+A value of `'auto'` means `'years'`.
 
 Unlike other Temporal types, days and lower units are not allowed, because the data model of `Temporal.YearMonth` doesn't have that accuracy.
 

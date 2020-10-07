@@ -263,10 +263,10 @@ time.subtract({ minutes: 5, nanoseconds: 800 }); // => 19:34:09.068345405
 - `options` (optional object): An object with properties representing options for the operation.
   The following options are recognized:
   - `largestUnit` (string): The largest unit of time to allow in the resulting `Temporal.Duration` object.
-    Valid values are `'hours'`, `'minutes'`, `'seconds'`, `'milliseconds'`, `'microseconds'`, and `'nanoseconds'`.
-    The default is `'hours'`.
+    Valid values are `'auto'`, `'hours'`, `'minutes'`, `'seconds'`, `'milliseconds'`, `'microseconds'`, and `'nanoseconds'`.
+    The default is `'auto'`.
   - `smallestUnit` (string): The smallest unit of time to round to in the resulting `Temporal.Duration` object.
-    Valid values are the same as for `largestUnit`.
+    Valid values are `'hours'`, `'minutes'`, `'seconds'`, `'milliseconds'`, `'microseconds'`, and `'nanoseconds'`.
     The default is `'nanoseconds'`, i.e., no rounding.
   - `roundingIncrement` (number): The granularity to round to, of the unit given by `smallestUnit`.
     The default is 1.
@@ -283,6 +283,7 @@ The `largestUnit` parameter controls how the resulting duration is expressed.
 The returned `Temporal.Duration` object will not have any nonzero fields that are larger than the unit in `largestUnit`.
 A difference of two hours will become 7200 seconds when `largestUnit` is `'seconds'`, for example.
 However, a difference of 30 seconds will still be 30 seconds even if `largestUnit` is `'hours'`.
+A value of `'auto'` means `'hours'`.
 
 You can round the result using the `smallestUnit`, `roundingIncrement`, and `roundingMode` options.
 These behave as in the `Temporal.Duration.round()` method.

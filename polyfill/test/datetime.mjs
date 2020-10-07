@@ -458,6 +458,7 @@ describe('DateTime', () => {
     const feb21 = DateTime.from('2021-02-01T00:00');
     it('defaults to returning days', () => {
       equal(`${feb21.difference(feb20)}`, 'P366D');
+      equal(`${feb21.difference(feb20, { largestUnit: 'auto' })}`, 'P366D');
       equal(`${feb21.difference(feb20, { largestUnit: 'days' })}`, 'P366D');
       equal(`${DateTime.from('2021-02-01T00:00:00.000000001').difference(feb20)}`, 'P366DT0.000000001S');
       equal(`${feb21.difference(DateTime.from('2020-02-01T00:00:00.000000001'))}`, 'P365DT23H59M59.999999999S');
