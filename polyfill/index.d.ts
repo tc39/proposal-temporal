@@ -93,13 +93,15 @@ export namespace Temporal {
      * The largest unit to allow in the resulting `Temporal.Duration` object.
      *
      * Valid values may include `'years'`, `'months'`, `'days'`, `'hours'`,
-     * `'minutes'`, and `'seconds'`, although some types may throw an exception
+     * `'minutes'`, `'seconds'`, `'milliseconds'`, `'microseconds'`,
+     * `'nanoseconds'` and `'auto'`, although some types may throw an exception
      * if a value is used that would produce an invalid result. For example,
      * `hours` is not accepted by `Date.prototype.difference()`.
      *
-     * The default depends on the type being used.
+     * The default is always `'auto'`, though the meaning of this depends on the
+     * type being used.
      */
-    largestUnit?: T;
+    largestUnit?: 'auto' | T;
 
     /**
      * The unit to round to. For example, to round to the nearest minute, use

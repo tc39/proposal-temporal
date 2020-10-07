@@ -265,13 +265,15 @@ date.toString()  // => 2020-06-28[c=islamic]
 - `options` (object): An object with properties representing options for the operation.
   The following options are recognized:
   - `largestUnit` (optional string): The largest unit of time to allow in the resulting `Temporal.Duration` object.
-    Valid values are `'years'`, `'months'`, and `'days'`.
-    The default is `days`.
+    Valid values are `'auto'`, `'years'`, `'months'`, and `'days'`.
+    The default is `'auto'`.
 
 **Returns:** a `Temporal.Duration` representing the difference between `larger` and `smaller`.
 
 This method does not need to be called directly except in specialized code.
 It is called indirectly when using the `difference()` methods of `Temporal.DateTime`, `Temporal.Date`, and `Temporal.YearMonth`.
+
+The default `largestUnit` value of `'auto'` is the same as `'days'`.
 
 For example:
 ```javascript

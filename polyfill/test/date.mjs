@@ -233,6 +233,7 @@ describe('Date', () => {
     const feb21 = Date.from('2021-02-01');
     it('defaults to returning days', () => {
       equal(`${feb21.difference(feb20)}`, 'P366D');
+      equal(`${feb21.difference(feb20, { largestUnit: 'auto' })}`, 'P366D');
       equal(`${feb21.difference(feb20, { largestUnit: 'days' })}`, 'P366D');
     });
     it('can return higher units', () => {

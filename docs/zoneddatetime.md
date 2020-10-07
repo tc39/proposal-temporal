@@ -870,10 +870,10 @@ earlierHours.difference(zdt, { largestUnit: 'hours' }).hours; // => -24
 - `other` (`Temporal.LocalZonedDateTime`): Another date/time with which to compute the difference.
 - `options` (optional object): An object which may have some or all of the following properties:
   - `largestUnit` (string): The largest unit of time to allow in the resulting `Temporal.Duration` object.
-    Valid values are `'years'`, `'months'`, `'weeks'`, `'days'`, `'hours'`, `'minutes'`, `'seconds'`, `'milliseconds'`, `'microseconds'`, and `'nanoseconds'`.
-    The default is `days`.
+    Valid values are `'auto'`, `'years'`, `'months'`, `'weeks'`, `'days'`, `'hours'`, `'minutes'`, `'seconds'`, `'milliseconds'`, `'microseconds'`, and `'nanoseconds'`.
+    The default is `'auto'`.
   - `smallestUnit` (string): The smallest unit of time to round to in the resulting `Temporal.Duration` object.
-    Valid values are the same as for `largestUnit`.
+    Valid values are `'years'`, `'months'`, `'weeks'`, `'days'`, `'hours'`, `'minutes'`, `'seconds'`, `'milliseconds'`, `'microseconds'`, and `'nanoseconds'`.
     The default is `'nanoseconds'`, i.e., no rounding.
   - `roundingIncrement` (number): The granularity to round to, of the unit given by `smallestUnit`.
     The default is 1.
@@ -890,6 +890,7 @@ The `largestUnit` option controls how the resulting duration is expressed.
 The returned `Temporal.Duration` object will not have any nonzero fields that are larger than the unit in `largestUnit`.
 For example, a difference of two hours will become 7200 seconds when `largestUnit` is `"seconds"`.
 However, a difference of 30 seconds will still be 30 seconds if `largestUnit` is `"hours"`.
+A value of `'auto'` means `'hours'`, unless `smallestUnit` is `'years'`, `'months'`, `'weeks'`, or `'days'`, in which case `largestUnit` is equal to `smallestUnit`.
 
 You can round the result using the `smallestUnit`, `roundingIncrement`, and `roundingMode` options.
 These behave as in the `Temporal.Duration.round()` method, but increments of days and larger are allowed.

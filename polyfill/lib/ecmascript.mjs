@@ -483,7 +483,9 @@ export const ES = ObjectAssign({}, ES2019, {
     for (const s of disallowedStrings) {
       allowed.delete(s);
     }
-    return ES.GetOption(options, 'largestUnit', [...allowed], fallback);
+    const retval = ES.GetOption(options, 'largestUnit', ['auto', ...allowed], 'auto');
+    if (retval === 'auto') return fallback;
+    return retval;
   },
   ToSmallestTemporalUnit: (options, disallowedStrings = []) => {
     const singular = new Map([

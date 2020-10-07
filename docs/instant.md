@@ -355,8 +355,8 @@ Temporal.now.instant().subtract(oneHour);
 - `options` (optional object): An object with properties representing options for the operation.
   The following options are recognized:
   - `largestUnit` (string): The largest unit of time to allow in the resulting `Temporal.Duration` object.
-    Valid values are `'hours'`, `'minutes'`, `'seconds'`, `'milliseconds'`, `'microseconds'`, and `'nanoseconds'`.
-    The default is `"seconds"`.
+    Valid values are `'auto'`, `'hours'`, `'minutes'`, `'seconds'`, `'milliseconds'`, `'microseconds'`, and `'nanoseconds'`.
+    The default is `'auto'`.
   - `smallestUnit` (string): The smallest unit of time to round to in the resulting `Temporal.Duration` object.
     Valid values are the same as for `largestUnit`.
     The default is `'nanoseconds'`, i.e., no rounding.
@@ -375,6 +375,7 @@ The `largestUnit` option controls how the resulting duration is expressed.
 The returned `Temporal.Duration` object will not have any nonzero fields that are larger than the unit in `largestUnit`.
 A difference of two hours will become 7200 seconds when `largestUnit` is `"seconds"`, for example.
 However, a difference of 30 seconds will still be 30 seconds even if `largestUnit` is `"hours"`.
+A value of `'auto'` means `'seconds'`, unless `smallestUnit` is `'hours'` or `'minutes'`, in which case `largestUnit` is equal to `smallestUnit`.
 
 By default, the largest unit in the result is seconds.
 Weeks, months, years, and days are not allowed, unlike the difference methods of the other Temporal types.

@@ -456,6 +456,7 @@ describe('Instant', () => {
     const feb21 = Instant.from('2021-02-01T00:00Z');
     it('defaults to returning seconds', () => {
       equal(`${feb21.difference(feb20)}`, 'PT31622400S');
+      equal(`${feb21.difference(feb20, { largestUnit: 'auto' })}`, 'PT31622400S');
       equal(`${feb21.difference(feb20, { largestUnit: 'seconds' })}`, 'PT31622400S');
       equal(`${Instant.from('2021-02-01T00:00:00.000000001Z').difference(feb20)}`, 'PT31622400.000000001S');
       equal(`${feb21.difference(Instant.from('2020-02-01T00:00:00.000000001Z'))}`, 'PT31622399.999999999S');

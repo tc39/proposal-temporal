@@ -235,6 +235,7 @@ describe('Time', () => {
       const time2 = Time.from('17:15:57');
       it('the default largest unit is at least hours', () => {
         equal(`${time2.difference(time1)}`, 'PT6H52M42S');
+        equal(`${time2.difference(time1, { largestUnit: 'auto' })}`, 'PT6H52M42S');
         equal(`${time2.difference(time1, { largestUnit: 'hours' })}`, 'PT6H52M42S');
       });
       it('higher units are not allowed', () => {

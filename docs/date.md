@@ -434,8 +434,8 @@ date.subtract({ months: 1 }, { overflow: 'reject' }); // => throws
 - `options` (optional object): An object with properties representing options for the operation.
   The following options are recognized:
   - `largestUnit` (optional string): The largest unit of time to allow in the resulting `Temporal.Duration` object.
-    Valid values are `'years'`, `'months'`, `'weeks'`, and `'days'`.
-    The default is `days`.
+    Valid values are `'auto'`, `'years'`, `'months'`, `'weeks'`, and `'days'`.
+    The default is `'auto'`.
 
 **Returns:** a `Temporal.Duration` representing the difference between `date` and `other`.
 
@@ -446,6 +446,7 @@ The `largestUnit` option controls how the resulting duration is expressed.
 The returned `Temporal.Duration` object will not have any nonzero fields that are larger than the unit in `largestUnit`.
 A difference of two years will become 24 months when `largestUnit` is `"months"`, for example.
 However, a difference of two months will still be two months even if `largestUnit` is `"years"`.
+A value of `'auto'` means `'days'`, unless `smallestUnit` is `'years'`, `'months'`, or `'weeks'`, in which case `largestUnit` is equal to `smallestUnit`.
 
 By default, the largest unit in the result is days.
 This is because months and years can be different lengths depending on which month is meant and whether the year is a leap year.
