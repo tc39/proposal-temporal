@@ -273,6 +273,21 @@
     </emu-alg>
   </emu-clause>
 
+  <emu-clause id="sec-temporal-sign" aoid="Sign">
+    <h1>Sign ( _n_ )</h1>
+    <p>
+      The abstract operation Sign takes argument _n_ and returns the mathematical sign of _n_.
+    </p>
+    <emu-note type="editor">
+      This operation is the same as Math.sign and should be used there as well when merged into ECMA-262.
+    </emu-note>
+    <emu-alg>
+      1. If _n_ is *NaN*, n is *+0*, or n is *−0*, return _n_.
+      1. If _n_ < 0, return *−1*.
+      1. Return *+1*.
+    </emu-alg>
+  </emu-clause>
+
   <emu-clause id="sec-temporal-constraintorange" aoid="ConstrainToRange">
     <h1>ConstrainToRange ( _x_, _minimum_, _maximum_ )</h1>
     <emu-alg>

@@ -1759,9 +1759,21 @@ export const ES = ObjectAssign({}, ES2019, {
         days += monthsWeeksInDays.days;
         days += ((seconds / 60 + minutes) / 60 + hours) / 24;
 
+        // Years may be different lengths of days depending on the calendar, so
+        // we need to convert days to years in a loop. We get the number of days
+        // in the one-year period preceding the relativeTo date, and convert
+        // that number of days to one year, repeating until the number of days
+        // is less than a year.
         const oneYear = new TemporalDuration(1);
+        const sign = Math.sign(days);
         relativeTo = calendar.dateSubtract(relativeTo, oneYear, {}, TemporalDate);
-        const oneYearDays = calendar.daysInYear(relativeTo);
+        let oneYearDays = calendar.daysInYear(relativeTo);
+        while (Math.abs(days) > oneYearDays) {
+          years += sign;
+          days -= oneYearDays * sign;
+          relativeTo = calendar.dateSubtract(relativeTo, oneYear, {}, TemporalDate);
+          oneYearDays = calendar.daysInYear(relativeTo);
+        }
         years += days / oneYearDays;
 
         years = ES.RoundNumberToIncrement(years, increment, roundingMode);
@@ -1791,9 +1803,18 @@ export const ES = ObjectAssign({}, ES2019, {
         days += weeksInDays.days;
         days += ((seconds / 60 + minutes) / 60 + hours) / 24;
 
+        // Months may be different lengths of days depending on the calendar,
+        // convert days to months in a loop as described above under 'years'.
         const oneMonth = new TemporalDuration(0, 1);
+        const sign = Math.sign(days);
         relativeTo = calendar.dateSubtract(relativeTo, oneMonth, {}, TemporalDate);
-        const oneMonthDays = calendar.daysInMonth(relativeTo);
+        let oneMonthDays = calendar.daysInMonth(relativeTo);
+        while (Math.abs(days) > oneMonthDays) {
+          months += sign;
+          days -= oneMonthDays * sign;
+          relativeTo = calendar.dateSubtract(relativeTo, oneMonth, {}, TemporalDate);
+          oneMonthDays = calendar.daysInMonth(relativeTo);
+        }
         months += days / oneMonthDays;
 
         months = ES.RoundNumberToIncrement(months, increment, roundingMode);
@@ -1805,9 +1826,18 @@ export const ES = ObjectAssign({}, ES2019, {
         seconds += milliseconds * 1e-3 + microseconds * 1e-6 + nanoseconds * 1e-9;
         days += ((seconds / 60 + minutes) / 60 + hours) / 24;
 
+        // Weeks may be different lengths of days depending on the calendar,
+        // convert days to weeks in a loop as described above under 'years'.
         const oneWeek = new TemporalDuration(0, 0, 1);
+        const sign = Math.sign(days);
         relativeTo = calendar.dateSubtract(relativeTo, oneWeek, {}, TemporalDate);
-        const oneWeekDays = calendar.daysInWeek(relativeTo);
+        let oneWeekDays = calendar.daysInWeek(relativeTo);
+        while (Math.abs(days) > oneWeekDays) {
+          weeks += sign;
+          days -= oneWeekDays * sign;
+          relativeTo = calendar.dateSubtract(relativeTo, oneWeek, {}, TemporalDate);
+          oneWeekDays = calendar.daysInWeek(relativeTo);
+        }
         weeks += days / oneWeekDays;
 
         weeks = ES.RoundNumberToIncrement(weeks, increment, roundingMode);
