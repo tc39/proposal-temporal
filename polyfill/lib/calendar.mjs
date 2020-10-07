@@ -129,6 +129,7 @@ class ISO8601Calendar extends Calendar {
   }
   dateFromFields(fields, options, constructor) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
+    options = ES.NormalizeOptionsObject(options);
     const overflow = ES.ToTemporalOverflow(options);
     // Intentionally alphabetical
     let { year, month, day } = ES.ToTemporalDateRecord(fields);
@@ -137,6 +138,7 @@ class ISO8601Calendar extends Calendar {
   }
   yearMonthFromFields(fields, options, constructor) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
+    options = ES.NormalizeOptionsObject(options);
     const overflow = ES.ToTemporalOverflow(options);
     // Intentionally alphabetical
     let { year, month } = ES.ToTemporalYearMonthRecord(fields);
@@ -145,6 +147,7 @@ class ISO8601Calendar extends Calendar {
   }
   monthDayFromFields(fields, options, constructor) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
+    options = ES.NormalizeOptionsObject(options);
     const overflow = ES.ToTemporalOverflow(options);
     // Intentionally alphabetical
     let { month, day } = ES.ToTemporalMonthDayRecord(fields);
@@ -153,6 +156,7 @@ class ISO8601Calendar extends Calendar {
   }
   datePlus(date, duration, options, constructor) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
+    options = ES.NormalizeOptionsObject(options);
     const overflow = ES.ToTemporalOverflow(options);
     const { years, months, weeks, days } = duration;
     ES.RejectDurationSign(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
@@ -169,6 +173,7 @@ class ISO8601Calendar extends Calendar {
   }
   dateMinus(date, duration, options, constructor) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
+    options = ES.NormalizeOptionsObject(options);
     const overflow = ES.ToTemporalOverflow(options);
     const { years, months, weeks, days } = duration;
     ES.RejectDurationSign(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
@@ -185,6 +190,7 @@ class ISO8601Calendar extends Calendar {
   }
   dateDifference(one, two, options) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
+    options = ES.NormalizeOptionsObject(options);
     const largestUnit = ES.ToLargestTemporalUnit(options, 'days', [
       'hours',
       'minutes',

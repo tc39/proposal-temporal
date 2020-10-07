@@ -242,6 +242,7 @@ export class Date {
     };
   }
   static from(item, options = undefined) {
+    options = ES.NormalizeOptionsObject(options);
     const overflow = ES.ToTemporalOverflow(options);
     const TemporalCalendar = GetIntrinsic('%Temporal.Calendar%');
     let result;

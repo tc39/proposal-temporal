@@ -148,6 +148,7 @@ export class DateTime {
   }
   with(temporalDateTimeLike, options = undefined) {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+    options = ES.NormalizeOptionsObject(options);
     const overflow = ES.ToTemporalOverflow(options);
     let source;
     let calendar = temporalDateTimeLike.calendar;
@@ -383,6 +384,7 @@ export class DateTime {
         `cannot compute difference between dates of ${calendar.id} and ${otherCalendar.id} calendars`
       );
     }
+    options = ES.NormalizeOptionsObject(options);
     const smallestUnit = ES.ToSmallestTemporalDurationUnit(options, 'nanoseconds');
     let defaultLargestUnit = 'days';
     if (smallestUnit === 'years' || smallestUnit === 'months' || smallestUnit === 'weeks') {
@@ -484,6 +486,7 @@ export class DateTime {
   round(options) {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     if (options === undefined) throw new TypeError('options parameter is required');
+    options = ES.NormalizeOptionsObject(options);
     const smallestUnit = ES.ToSmallestTemporalUnit(options);
     const roundingMode = ES.ToTemporalRoundingMode(options);
     const maximumIncrements = {
@@ -574,6 +577,7 @@ export class DateTime {
   toInstant(temporalTimeZoneLike, options = undefined) {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     const timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);
+    options = ES.NormalizeOptionsObject(options);
     const disambiguation = ES.ToTemporalDisambiguation(options);
     return ES.GetTemporalInstantFor(timeZone, this, disambiguation);
   }
@@ -622,6 +626,7 @@ export class DateTime {
   }
 
   static from(item, options = undefined) {
+    options = ES.NormalizeOptionsObject(options);
     const overflow = ES.ToTemporalOverflow(options);
     const TemporalCalendar = GetIntrinsic('%Temporal.Calendar%');
     let result;

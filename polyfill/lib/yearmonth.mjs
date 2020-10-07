@@ -130,6 +130,7 @@ export class YearMonth {
         `cannot compute difference between months of ${calendar.id} and ${otherCalendar.id} calendars`
       );
     }
+    options = ES.NormalizeOptionsObject(options);
     const largestUnit = ES.ToLargestTemporalUnit(options, 'years', [
       'weeks',
       'days',
@@ -200,6 +201,7 @@ export class YearMonth {
     };
   }
   static from(item, options = undefined) {
+    options = ES.NormalizeOptionsObject(options);
     const overflow = ES.ToTemporalOverflow(options);
     const TemporalCalendar = GetIntrinsic('%Temporal.Calendar%');
     let result;
