@@ -859,10 +859,15 @@
           1. Let _monthsWeeksInDays_ be ? DifferenceDate(_yearsMonthsWeeksBefore_.[[ISOYear]], _yearsMonthsWeeksBefore_.[[ISOMonth]], _yearsMonthsWeeksBefore_.[[ISODay]], _yearsBefore_.[[ISOYear]], _yearsBefore_.[[ISOMonth]], _yearsBefore_.[[ISODay]], *"days"*).
           1. Let _days_ be _days_ + _monthsWeeksInDays_.[[Days]].
           1. Let _oneYear_ be ? CreateTemporalDuration(1, 0, 0, 0, 0, 0, 0, 0, 0, 0).
+          1. Let _sign_ be ! Sign(_days_).
           1. Set _relativeTo_ to ? Call(_dateSubtract_, _calendar_, « _relativeTo_, _oneYear_, _options_, %Temporal.Date% »).
           1. Let _daysInYear_ be ? Get(_calendar_, *"daysInYear"*).
           1. Let _oneYearDays_ be ? Call(_daysInYear_, _calendar_, « _relativeTo_ »).
-          1. Assert: _days_ ≤ _oneYearDays_. <mark>Note this will not be true in Temporal.Duration.prototype.round, this will become a loop</mark>.
+          1. Repeat, while _days_ ≥ _oneYearDays_,
+            1. Set _years_ to _years_ + _sign_.
+            1. Set _days_ to _days_ − _oneYearDays_ × _sign_.
+            1. Set _relativeTo_ to ? Call(_dateMinus_, _calendar_, « _relativeTo_, _oneYear_, _options_, %Temporal.Date% »).
+            1. Set _oneYearDays_ to ? Call(_daysInYear_, _calendar_, « _relativeTo_ »).
           1. Let _fractionalYears_ be _years_ + _days_ / _oneYearDays_.
           1. Set _years_ to ? RoundNumberToIncrement(_fractionalYears_, _increment_, _roundingMode_).
           1. Set _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, and _nanoseconds_ to 0.
@@ -874,19 +879,29 @@
           1. Let _weeksInDays_ be ? DifferenceDate(_yearsMonthsWeeksBefore_.[[ISOYear]], _yearsMonthsWeeksBefore_.[[ISOMonth]], _yearsMonthsWeeksBefore_.[[ISODay]], _yearsMonthsBefore_.[[ISOYear]], _yearsMonthsBefore_.[[ISOMonth]], _yearsMonthsBefore_.[[ISODay]], *"days"*).
           1. Let _days_ be _days_ + _weeksInDays_.[[Days]].
           1. Let _oneMonth_ be ? CreateTemporalDuration(0, 1, 0, 0, 0, 0, 0, 0, 0, 0).
+          1. Let _sign_ be ! Sign(_days_).
           1. Set _relativeTo_ to ? Call(_dateSubtract_, _calendar_, « _relativeTo_, _oneMonth_, _options_, %Temporal.Date% »).
           1. Let _daysInMonth_ be ? Get(_calendar_, *"daysInMonth"*).
           1. Let _oneMonthDays_ be ? Call(_daysInMonth_, _calendar_, « _relativeTo_ »).
-          1. Assert: _days_ ≤ _oneMonthDays_. <mark>Note this will not be true in Temporal.Duration.prototype.round, this will become a loop</mark>.
+          1. Repeat, while _days_ ≥ _oneMonthDays_,
+            1. Set _months_ to _months_ + _sign_.
+            1. Set _days_ to _days_ − _oneMonthDays_ × _sign_.
+            1. Set _relativeTo_ to ? Call(_dateMinus_, _calendar_, « _relativeTo_, _oneMonth_, _options_, %Temporal.Date% »).
+            1. Set _oneMonthDays_ to ? Call(_daysInMonth_, _calendar_, « _relativeTo_ »).
           1. Let _fractionalMonths_ be _months_ + _days_ / _oneMonthDays_.
           1. Set _months_ to ? RoundNumberToIncrement(_fractionalMonths_, _increment_, _roundingMode_).
           1. Set _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, and _nanoseconds_ to 0.
         1. Else if _unit_ is *"weeks"*, then
           1. Let _oneWeek_ be ? CreateTemporalDuration(0, 0, 1, 0, 0, 0, 0, 0, 0, 0).
+          1. Let _sign_ be ! Sign(_days_).
           1. Set _relativeTo_ to ? Call(_dateSubtract_, _calendar_, « _relativeTo_, _oneWeek_, _options_, %Temporal.Date% »).
           1. Let _daysInWeek_ be ? Get(_calendar_, *"daysInWeek"*).
           1. Let _oneWeekDays_ be ? Call(_daysInWeek_, _calendar_, « _relativeTo_ »).
-          1. Assert: _days_ ≤ _oneWeekDays_. <mark>Note this will not be true in Temporal.Duration.prototype.round, this will become a loop</mark>.
+          1. Repeat, while _days_ ≥ _oneWeekDays_,
+            1. Set _weeks_ to _weeks_ + _sign_.
+            1. Set _days_ to _days_ − _oneWeekDays_ × _sign_.
+            1. Set _relativeTo_ to ? Call(_dateMinus_, _calendar_, « _relativeTo_, _oneWeek_, _options_, %Temporal.Date% »).
+            1. Set _oneWeekDays_ to ? Call(_daysInWeek_, _calendar_, « _relativeTo_ »).
           1. Let _fractionalWeeks_ be _weeks_ + _fractionalDays_ / _oneWeekDays_.
           1. Set _weeks_ to ? RoundNumberToIncrement(_fractionalWeeks_, _increment_, _roundingMode_).
           1. Set _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, and _nanoseconds_ to 0.
