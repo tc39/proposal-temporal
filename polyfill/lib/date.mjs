@@ -257,7 +257,8 @@ export class Date {
         let calendar = item.calendar;
         if (calendar === undefined) calendar = GetDefaultCalendar();
         calendar = TemporalCalendar.from(calendar);
-        result = calendar.dateFromFields(item, options, this);
+        const fields = ES.ToTemporalDateRecord(item);
+        result = calendar.dateFromFields(fields, options, this);
       }
     } else {
       let { year, month, day, calendar } = ES.ParseTemporalDateString(ES.ToString(item));

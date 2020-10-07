@@ -136,7 +136,8 @@ export class MonthDay {
         let calendar = item.calendar;
         if (calendar === undefined) calendar = GetDefaultCalendar();
         calendar = TemporalCalendar.from(calendar);
-        result = calendar.monthDayFromFields(item, options, this);
+        const fields = ES.ToTemporalMonthDayRecord(item);
+        result = calendar.monthDayFromFields(fields, options, this);
       }
     } else {
       let { month, day, referenceISOYear, calendar } = ES.ParseTemporalMonthDayString(ES.ToString(item));
