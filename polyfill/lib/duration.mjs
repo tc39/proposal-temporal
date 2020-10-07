@@ -138,6 +138,7 @@ export class Duration {
   }
   with(durationLike, options = undefined) {
     if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
+    options = ES.NormalizeOptionsObject(options);
     const overflow = ES.ToTemporalDurationOverflow(options);
     const props = ES.ToPartialRecord(durationLike, [
       'days',
@@ -257,6 +258,7 @@ export class Duration {
       nanoseconds
     } = ES.ToLimitedTemporalDuration(other);
     ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+    options = ES.NormalizeOptionsObject(options);
     const overflow = ES.ToTemporalDurationOverflow(options);
     ({
       years,
@@ -323,6 +325,7 @@ export class Duration {
       nanoseconds
     } = ES.ToLimitedTemporalDuration(other);
     ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+    options = ES.NormalizeOptionsObject(options);
     const overflow = ES.ToTemporalDurationOverflow(options);
     ({
       years,
@@ -406,6 +409,7 @@ export class Duration {
     throw new TypeError('not possible to compare Temporal.Duration');
   }
   static from(item, options = undefined) {
+    options = ES.NormalizeOptionsObject(options);
     const overflow = ES.ToTemporalDurationOverflow(options);
     let years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds;
     if (typeof item === 'object' && item) {

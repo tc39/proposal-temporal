@@ -104,6 +104,7 @@ export class Instant {
     if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
     if (!ES.IsTemporalInstant(other)) throw new TypeError('invalid Instant object');
     const disallowedUnits = ['years', 'months', 'weeks', 'days'];
+    options = ES.NormalizeOptionsObject(options);
     const smallestUnit = ES.ToSmallestTemporalDurationUnit(options, 'nanoseconds', disallowedUnits);
     let defaultLargestUnit = 'seconds';
     if (smallestUnit === 'hours' || smallestUnit === 'minutes') defaultLargestUnit = smallestUnit;
@@ -167,6 +168,7 @@ export class Instant {
   round(options) {
     if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
     if (options === undefined) throw new TypeError('options parameter is required');
+    options = ES.NormalizeOptionsObject(options);
     const smallestUnit = ES.ToSmallestTemporalUnit(options, ['day', 'hour']);
     const roundingMode = ES.ToTemporalRoundingMode(options);
     const maximumIncrements = {

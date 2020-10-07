@@ -87,41 +87,36 @@
   </emu-clause>
 
   <emu-clause id="sec-temporal-totemporaldurationoverflow" aoid="ToTemporalDurationOverflow">
-    <h1>ToTemporalDurationOverflow ( _options_ )</h1>
+    <h1>ToTemporalDurationOverflow ( _normalizedOptions_ )</h1>
     <emu-alg>
-      1. Set _options_ to ? NormalizeOptionsObject(_options_).
-      1. Return ? GetOption(_options_, *"overflow"*, « *"constrain"*, *"balance"* », *"constrain"*).
+      1. Return ? GetOption(_normalizedOptions_, *"overflow"*, « *"constrain"*, *"balance"* », *"constrain"*).
     </emu-alg>
   </emu-clause>
 
   <emu-clause id="sec-temporal-totemporaloverflow" aoid="ToTemporalOverflow">
-    <h1>ToTemporalOverflow ( _options_ )</h1>
+    <h1>ToTemporalOverflow ( _normalizedOptions_ )</h1>
     <emu-alg>
-      1. Set _options_ to ? NormalizeOptionsObject(_options_).
-      1. Return ? GetOption(_options_, *"overflow"*, « *"constrain"*, *"reject"* », *"constrain"*).
+      1. Return ? GetOption(_normalizedOptions_, *"overflow"*, « *"constrain"*, *"reject"* », *"constrain"*).
     </emu-alg>
   </emu-clause>
 
   <emu-clause id="sec-temporal-totemporaldisambiguation" aoid="ToTemporalDisambiguation">
-    <h1>ToTemporalDisambiguation ( _options_ )</h1>
+    <h1>ToTemporalDisambiguation ( _normalizedOptions_ )</h1>
     <emu-alg>
-      1. Set _options_ to ? NormalizeOptionsObject(_options_).
-      1. Return ? GetOption(_options_, *"disambiguation"*, *"string"*, « *"compatible"*, *"earlier"*, *"later"*, *"reject"* », *"compatible"*).
+      1. Return ? GetOption(_normalizedOptions_, *"disambiguation"*, *"string"*, « *"compatible"*, *"earlier"*, *"later"*, *"reject"* », *"compatible"*).
     </emu-alg>
   </emu-clause>
 
   <emu-clause id="sec-temporal-totemporalroundingmode" aoid="ToTemporalRoundingMode">
-    <h1>ToTemporalRoundingMode ( _options_ )</h1>
+    <h1>ToTemporalRoundingMode ( _normalizedOptions_ )</h1>
     <emu-alg>
-      1. Set _options_ to ? NormalizeOptionsObject(_options_).
-      1. Return ? GetOption(_options_, *"roundingMode"*, *"string"*, « *"ceil"*, *"floor"*, *"trunc"*, *"nearest"* », *"nearest"*).
+      1. Return ? GetOption(_normalizedOptions_, *"roundingMode"*, *"string"*, « *"ceil"*, *"floor"*, *"trunc"*, *"nearest"* », *"nearest"*).
     </emu-alg>
   </emu-clause>
 
   <emu-clause id="sec-temporal-totemporalroundingincrement" aoid="ToTemporalRoundingIncrement">
-    <h1>ToTemporalRoundingIncrement ( _options_, _dividend_, _inclusive_ )</h1>
+    <h1>ToTemporalRoundingIncrement ( _normalizedOptions_, _dividend_, _inclusive_ )</h1>
     <emu-alg>
-      1. Set _options_ to ? NormalizeOptionsObject(_options_).
       1. If _dividend_ is *undefined*, then
         1. Let _maximum_ be *+∞*.
       1. Else if _inclusive_ is *true*, then
@@ -130,7 +125,7 @@
         1. Let _maximum_ be _dividend_ − 1.
       1. Else,
         1. Let _maximum_ be 1.
-      1. Let _increment_ be ? GetNumberOption(_options_, *"roundingIncrement"*, 1, _maximum_, 1).
+      1. Let _increment_ be ? GetNumberOption(_normalizedOptions_, *"roundingIncrement"*, 1, _maximum_, 1).
       1. If _dividend_ is not *undefined* and _dividend_ modulo _increment_ is not zero, then
         1. Throw a *RangeError* exception.
       1. Return _increment_.
@@ -138,11 +133,10 @@
   </emu-clause>
 
   <emu-clause id="sec-temporal-tolargesttemporalunit" aoid="ToLargestTemporalUnit">
-    <h1>ToLargestTemporalUnit ( _options_, _disallowedUnits_, _defaultUnit_ )</h1>
+    <h1>ToLargestTemporalUnit ( _normalizedOptions_, _disallowedUnits_, _defaultUnit_ )</h1>
     <emu-alg>
       1. Assert: _disallowedUnits_ does not contain _defaultUnit_.
-      1. Set _options_ to ? NormalizeOptionsObject(_options_).
-      1. Let _largestUnit_ be ? GetOption(_options_, *"largestUnit"*, *"string"*, « *"years"*, *"months"*, *"days"*, *"hours"*, *"minutes"*, *"seconds"*, *"milliseconds"*, *"microseconds"*, *"nanoseconds"* », _defaultUnit_).
+      1. Let _largestUnit_ be ? GetOption(_normalizedOptions_, *"largestUnit"*, *"string"*, « *"years"*, *"months"*, *"days"*, *"hours"*, *"minutes"*, *"seconds"*, *"milliseconds"*, *"microseconds"*, *"nanoseconds"* », _defaultUnit_).
       1. If _disallowedUnits_ contains _largestUnit_, then
         1. Throw a *RangeError* exception.
       1. Return _largestUnit_.
@@ -150,10 +144,9 @@
   </emu-clause>
 
   <emu-clause id="sec-temporal-tosmallesttemporalunit" aoid="ToSmallestTemporalUnit">
-    <h1>ToSmallestTemporalUnit ( _options_, _disallowedUnits_ )</h1>
+    <h1>ToSmallestTemporalUnit ( _normalizedOptions_, _disallowedUnits_ )</h1>
     <emu-alg>
-      1. Set _options_ to ? NormalizeOptionsObject(_options_).
-      1. Let _smallestUnit_ be ? GetOption(_options_, *"smallestUnit"*, *"string"*, « *"day"*, *"days"*, *"hour"*, *"hours"*, *"minute"*, *"minutes"*, *"second"*, *"seconds"*, *"millisecond"*, *"milliseconds"*, *"microsecond"*, *"microseconds"*, *"nanosecond"*, *"nanoseconds"* », *"not present"*).
+      1. Let _smallestUnit_ be ? GetOption(_normalizedOptions_, *"smallestUnit"*, *"string"*, « *"day"*, *"days"*, *"hour"*, *"hours"*, *"minute"*, *"minutes"*, *"second"*, *"seconds"*, *"millisecond"*, *"milliseconds"*, *"microsecond"*, *"microseconds"*, *"nanosecond"*, *"nanoseconds"* », *"not present"*).
       1. If _smallestUnit_ is *"not present"*, then
         1. Throw a *RangeError* exception.
       1. If _smallestUnit_ is *"days"*, then
@@ -177,10 +170,9 @@
   </emu-clause>
 
   <emu-clause id="sec-temporal-tosmallesttemporaldurationunit" aoid="ToSmallestTemporalDurationUnit">
-    <h1>ToSmallestTemporalDurationUnit ( _options_, _fallback_, _disallowedUnits_ )</h1>
+    <h1>ToSmallestTemporalDurationUnit ( _normalizedOptions_, _fallback_, _disallowedUnits_ )</h1>
     <emu-alg>
-      1. Set _options_ to ? NormalizeOptionsObject(_options_).
-      1. Let _smallestUnit_ be ? GetOption(_options_, *"smallestUnit"*, *"string"*, « *"year"*, *"years"*, *"month"*, *"months"*, *"week"*, *"weeks"*, *"day"*, *"days"*, *"hour"*, *"hours"*, *"minute"*, *"minutes"*, *"second"*, *"seconds"*, *"millisecond"*, *"milliseconds"*, *"microsecond"*, *"microseconds"*, *"nanosecond"*, *"nanoseconds"* », _fallback_).
+      1. Let _smallestUnit_ be ? GetOption(_normalizedOptions_, *"smallestUnit"*, *"string"*, « *"year"*, *"years"*, *"month"*, *"months"*, *"week"*, *"weeks"*, *"day"*, *"days"*, *"hour"*, *"hours"*, *"minute"*, *"minutes"*, *"second"*, *"seconds"*, *"millisecond"*, *"milliseconds"*, *"microsecond"*, *"microseconds"*, *"nanosecond"*, *"nanoseconds"* », _fallback_).
       1. If _smallestUnit_ is *"year"*, then
         1. Set _smallestUnit_ to *"years"*.
       1. Else if _smallestUnit_ is *"month"*, then

@@ -74,6 +74,7 @@ export class Time {
 
   with(temporalTimeLike, options = undefined) {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
+    options = ES.NormalizeOptionsObject(options);
     const overflow = ES.ToTemporalOverflow(options);
     const props = ES.ToPartialRecord(temporalTimeLike, [
       'hour',
@@ -112,6 +113,7 @@ export class Time {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
     let { hour, minute, second, millisecond, microsecond, nanosecond } = this;
     const duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
+    options = ES.NormalizeOptionsObject(options);
     const overflow = ES.ToTemporalOverflow(options);
     const { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
     ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
@@ -176,6 +178,7 @@ export class Time {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
     let { hour, minute, second, millisecond, microsecond, nanosecond } = this;
     const duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
+    options = ES.NormalizeOptionsObject(options);
     const overflow = ES.ToTemporalOverflow(options);
     const { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
     ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
@@ -239,6 +242,7 @@ export class Time {
   difference(other, options = undefined) {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
     if (!ES.IsTemporalTime(other)) throw new TypeError('invalid Time object');
+    options = ES.NormalizeOptionsObject(options);
     const largestUnit = ES.ToLargestTemporalUnit(options, 'hours', ['years', 'months', 'weeks', 'days']);
     const smallestUnit = ES.ToSmallestTemporalDurationUnit(options, 'nanoseconds');
     ES.ValidateTemporalDifferenceUnits(largestUnit, smallestUnit);
@@ -298,6 +302,7 @@ export class Time {
   round(options) {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
     if (options === undefined) throw new TypeError('options parameter is required');
+    options = ES.NormalizeOptionsObject(options);
     const smallestUnit = ES.ToSmallestTemporalUnit(options, ['day']);
     const roundingMode = ES.ToTemporalRoundingMode(options);
     const maximumIncrements = {
@@ -388,6 +393,7 @@ export class Time {
   }
 
   static from(item, options = undefined) {
+    options = ES.NormalizeOptionsObject(options);
     const overflow = ES.ToTemporalOverflow(options);
     let hour, minute, second, millisecond, microsecond, nanosecond;
     if (typeof item === 'object' && item) {

@@ -90,6 +90,7 @@ export class TimeZone {
   }
   getInstantFor(dateTime, options = undefined) {
     if (!ES.IsTemporalDateTime(dateTime)) throw new TypeError('invalid DateTime object');
+    options = ES.NormalizeOptionsObject(options);
     const disambiguation = ES.ToTemporalDisambiguation(options);
 
     const Instant = GetIntrinsic('%Temporal.Instant%');

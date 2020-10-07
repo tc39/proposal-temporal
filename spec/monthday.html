@@ -65,6 +65,7 @@
         The following steps are taken:
       </p>
       <emu-alg>
+        1. Set _options_ to ? NormalizeOptionsObject(_options_).
         1. Let _overflow_ be ? ToTemporalOverflow(_options_).
         1. If Type(_item_) is Object, then
           1. Let _result_ be ? ToTemporalMonthDayRecord(_item_).
@@ -142,6 +143,7 @@
         1. Let _monthDay_ be the *this* value.
         1. Perform ? RequireInternalSlot(_monthDay_, [[InitializedTemporalMonthDay]]).
         1. Let _partialMonthDay_ be ? ToPartialMonthDay(_temporalMonthDayLike_).
+        1. Set _options_ to ? NormalizeOptionsObject(_options_).
         1. Let _overflow_ be ? ToTemporalOverflow(_options_).
         1. If _partialMonthDay_.[[Month]] is not *undefined*, then
           1. Let _m_ be _partialMonthDay_.[[Month]].
@@ -232,6 +234,7 @@
       <emu-alg>
         1. Let _monthDay_ be the *this* value.
         1. Perform ? RequireInternalSlot(_monthDay_, [[InitializedTemporalMonthDay]]).
+        1. Set _options_ to ? NormalizeOptionsObject(_options_).
         1. Let _overflow_ be ? ToTemporalOverflow(_options_).
         1. If Type(_item_) is Object, then
           1. Let _y_ be ? Get(_item_, *"year"*).

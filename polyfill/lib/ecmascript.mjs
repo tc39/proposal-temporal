@@ -446,23 +446,18 @@ export const ES = ObjectAssign({}, ES2019, {
     return duration;
   },
   ToTemporalDurationOverflow: (options) => {
-    options = ES.NormalizeOptionsObject(options);
     return ES.GetOption(options, 'overflow', ['constrain', 'balance'], 'constrain');
   },
   ToTemporalOverflow: (options) => {
-    options = ES.NormalizeOptionsObject(options);
     return ES.GetOption(options, 'overflow', ['constrain', 'reject'], 'constrain');
   },
   ToTemporalDisambiguation: (options) => {
-    options = ES.NormalizeOptionsObject(options);
     return ES.GetOption(options, 'disambiguation', ['compatible', 'earlier', 'later', 'reject'], 'compatible');
   },
   ToTemporalRoundingMode: (options) => {
-    options = ES.NormalizeOptionsObject(options);
     return ES.GetOption(options, 'roundingMode', ['ceil', 'floor', 'trunc', 'nearest'], 'nearest');
   },
   ToTemporalRoundingIncrement: (options, dividend, inclusive) => {
-    options = ES.NormalizeOptionsObject(options);
     let maximum = Infinity;
     if (dividend !== undefined) maximum = dividend;
     if (!inclusive && dividend !== undefined) maximum = dividend > 1 ? dividend - 1 : 1;
@@ -488,7 +483,6 @@ export const ES = ObjectAssign({}, ES2019, {
     for (const s of disallowedStrings) {
       allowed.delete(s);
     }
-    options = ES.NormalizeOptionsObject(options);
     return ES.GetOption(options, 'largestUnit', [...allowed], fallback);
   },
   ToSmallestTemporalUnit: (options, disallowedStrings = []) => {
@@ -506,7 +500,6 @@ export const ES = ObjectAssign({}, ES2019, {
       allowed.delete(s);
     }
     const allowedValues = [...allowed];
-    options = ES.NormalizeOptionsObject(options);
     let value = options.smallestUnit;
     if (value === undefined) throw new RangeError('smallestUnit option is required');
     value = ES.ToString(value);
@@ -545,7 +538,6 @@ export const ES = ObjectAssign({}, ES2019, {
       allowed.delete(s);
     }
     const allowedValues = [...allowed];
-    options = ES.NormalizeOptionsObject(options);
     let value = options.smallestUnit;
     if (value === undefined) return fallback;
     value = ES.ToString(value);
