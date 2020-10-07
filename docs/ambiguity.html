@@ -139,55 +139,330 @@
       The API will change based on feedback that we get.
       <strong>Do</strong> <a href="https://forms.gle/iL9iZg7Y9LvH41Nv8">give feedback</a> and open <a href="https://github.com/tc39/proposal-temporal/issues">issues</a>; <strong>don't</strong> use it in production!
     </div>
-<h1 id="resolving-ambiguity">Resolving ambiguity</h1>
+<h1 id="time-zones-and-resolving-ambiguity">Time Zones and Resolving Ambiguity</h1>
+<details>
+  <summary><strong>Table of Contents</strong></summary>
+<ul>
+<li><a href="#understanding-clock-time-vs-exact-time">Understanding Clock Time vs. Exact Time</a>
+</li>
+<li><a href="#understanding-time-zones-offset-changes-and-dst">Understanding Time Zones, Offset Changes, and DST</a>
+</li>
+<li><a href="#wall-clock-time-exact-time-and-time-zones-in-temporal">Wall-Clock Time, Exact Time, and Time Zones in Temporal</a>
+</li>
+<li><a href="#ambiguity-due-to-dst-or-other-time-zone-offset-changes">Ambiguity Due to DST or Other Time Zone Offset Changes</a>
+</li>
+<li><a href="#resolving-time-ambiguity-in-temporal">Resolving Time Ambiguity in Temporal</a>
+</li>
+<li><a href="#examples-dst-disambiguation">Examples: DST Disambiguation</a>
+</li>
+<li><a href="#ambiguity-caused-by-permanent-changes-to-a-time-zone-definition">Ambiguity Caused by Permanent Changes to a Time Zone Definition</a>
+</li>
+<li><a href="#examples-offset-option">Examples: offset option</a>
+</li>
+</ul>
+</details>
+
+<h2 id="understanding-clock-time-vs-exact-time">Understanding Clock Time vs. Exact Time</h2>
+<p>The core concept in Temporal is the distinction between <strong>wall-clock time</strong> (also called &quot;local time&quot; or &quot;clock time&quot;) which depends on the time zone of the clock and <strong>exact time</strong> (also called &quot;UTC time&quot;) which is the same everywhere.</p>
+<p>Wall-clock time is controlled by local governmental authorities, so it can abruptly change.
+When Daylight Saving Time (DST) starts or if a country moves to another time zone, then local clocks will instantly change.
+Exact time however has a consistent global definition and is represented by a special time zone called <a href="https://en.wikipedia.org/wiki/Coordinated_Universal_Time">UTC</a> (from Wikipedia):</p>
 <blockquote>
-<p>This explanation was adapted from the <a href="https://github.com/moment/momentjs.com/blob/master/docs/moment-timezone/01-using-timezones/02-parsing-ambiguous-inputs.html">moment-timezone documentation</a>.</p>
+<p><strong>Coordinated Universal Time (or UTC)</strong> is the primary time standard by which the world regulates clocks and time.
+It is within about 1 second of mean solar time at 0° longitude, and is not adjusted for daylight saving time.
+It is effectively a successor to Greenwich Mean Time (GMT).</p>
 </blockquote>
-<p>Converting a <a href="./datetime.html"><code>Temporal.DateTime</code></a> wall-clock time to a <a href="./instant.html"><code>Temporal.Instant</code></a> is not necessarily a one-to-one conversion.
-Due to DST time changes, there is a possibility that a wall-clock time either does not exist, or has existed twice.</p>
-<p>There are two mostly equivalent methods that accomplish this conversion: <a href="./datetime.html#toInstant"><code>Temporal.DateTime.prototype.toInstant</code></a> and <a href="./timezone.html#getInstantFor"><code>Temporal.TimeZone.prototype.getInstantFor</code></a>.
-The <code>disambiguation</code> option to these methods controls what instant time to return in the case of ambiguity:</p>
+<p>Every wall-clock time is defined using a <strong>UTC Offset</strong>: the amount of exact time that a particular clock is set ahead or behind UTC.
+For example, on January 19, 2020 in California, the UTC Offset (or &quot;offset&quot; for short) was <code>-08:00</code> which means that wall-clock time in San Francisco was 8 hours behind UTC, so 10:00AM locally on that day was 18:00 UTC.
+However the same calendar date and wall-clock time India would have an offset of <code>+05:30</code>: 5½ hours later than UTC.</p>
+<p><a href="https://en.wikipedia.org/wiki/ISO_8601">ISO 8601</a> and <a href="https://tools.ietf.org/html/rfc3339">RFC 3339</a> define standard representations for exact times as a date and time value, e.g. <code>2020-09-06T17:35:24.485Z</code>. The <code>Z</code> suffix indicates that this is an exact UTC time.</p>
+<p>Temporal has two types that store exact time: <code>Temporal.Instant</code> (which only stores exact time and no other information) and <code>Temporal.LocalDateTime</code> which stores exact time, a time zone, and a calendar system</p>
+<p>Another way to represent exact time is using a single number representing the amount of time after or before <a href="https://en.wikipedia.org/wiki/Unix_time">Unix epoch</a> (midnight UTC on January 1, 1970).
+For example, <code>Temporal.Instant</code> (an exact-time type) can be constructed using only a <code>BigInt</code> value of nanoseconds since epoch.</p>
+<h2 id="understanding-time-zones-offset-changes-and-dst">Understanding Time Zones, Offset Changes, and DST</h2>
+<p>A <strong>Time Zone</strong> defines the legal rules that control how local wall-clock time relates to UTC. You can think of a time zone as a function that accepts an exact time and returns a UTC offset, and a corresponding function for conversions in the opposite direction. (See <a href="#ambiguity-due-to-dst-or-other-time-zone-offset-changes">below</a> for why exact → local conversions are 1:1, but local → exact conversions can be ambiguous.)</p>
+<p>Temporal uses the <a href="https://en.wikipedia.org/wiki/Tz_database"><strong>IANA Time Zone Database</strong></a> (or &quot;TZ database&quot;), which you can think of as a global repository of time zone functions. Each IANA time zone has:</p>
+<ul>
+<li>A <strong>time zone ID</strong> that usually refers to a geographic area anchored by a city (e.g. <code>Europe/Paris</code> or <code>Africa/Kampala</code>) but can also denote single-offset time zones like <code>UTC</code> (a consistent <code>+00:00</code> offset) or <code>Etc/GMT+5</code> (which for historical reasons is a negative offset <code>-05:00</code>).</li>
+<li>A <strong>time zone definition</strong> defines the offset for any UTC value since January 1, 1970. You can think of these definitions as a table that maps UTC date/time ranges (including future ranges) to specific offsets.
+In some time zones, temporary offset changes happen twice each year due to <strong>Daylight Saving Time (DST)</strong> starting in the Spring and ending each Fall.
+Offsets can also change permanently due to legal changes, e.g. a country switching time zones.</li>
+</ul>
+<p>The TZ database is updated several times per year in response to legal and political changes around the world.
+Each update contains changes to time zone definitions.
+These changes usually affect only future date/time values, but occasionally fixes are made to past ranges too, for example when new historical sources are discovered about early-20th century timekeeping.</p>
+<h2 id="wall-clock-time-exact-time-and-time-zones-in-temporal">Wall-Clock Time, Exact Time, and Time Zones in Temporal</h2>
+<p>In Temporal:</p>
+<ul>
+<li>The <a href="./instant.html"><code>Temporal.Instant</code></a> type represents exact time only.</li>
+<li>The <a href="./datetime.html"><code>Temporal.DateTime</code></a> type represents calendar date and wall-clock time, as do other narrower types: <a href="./date.html"><code>Temporal.Date</code></a>, <a href="./time.html"><code>Temporal.Time</code></a>, <a href="./yearmonth.html"><code>Temporal.YearMonth</code></a>, and <a href="./monthday.html"><code>Temporal.MonthDay</code></a>.
+These types all carry a calendar system, which by default is <code>&#39;iso8601&#39;</code> (the ISO 8601 calendar) but can be overridden for other <a href="./calendar.html">calendars</a> like <code>&#39;islamic&#39;</code> or <code>&#39;japanese&#39;</code>.</li>
+<li>The <a href="./timezone.html"><code>Temporal.TimeZone</code></a> represents a time zone function that converts between exact time and wall-clock time and vice-versa.
+It also includes helper functions, e.g. to fetch the current time zone offset for a particular exact time.</li>
+<li>The <a href="./localdatetime.html"><code>Temporal.LocalDateTime</code></a> type encapsulates all of the types above: an exact time (like a <a href="./instant.html"><code>Temporal.Instant</code></a>), its wall-clock equivalent (like a <a href="./datetime.html"><code>Temporal.DateTime</code></a>), and the time zone that links the two (like a <a href="./timezone.html"><code>Temporal.TimeZone</code></a>).</li>
+</ul>
+<p>There are two ways to get a human-readable calendar date and clock time from a <code>Temporal</code> type that stores exact time.</p>
+<ul>
+<li>If the exact time is already represented by a <a href="./localdatetime.html"><code>Temporal.LocalDateTime</code></a> instance then the wall-clock time values are trivially available using the properties and methods of that type, e.g. <a href="./localdatetime.html#year"><code>.year</code></a>, <a href="./localdatetime.html#hour"><code>.hour</code></a>, <a href="./localdatetime.html#getFields"><code>.getFields()</code></a>, or <a href="./localdatetime.html#toLocaleString"><code>.toLocaleString()</code></a>.</li>
+<li>However, if the exact time is represented by a <a href="./instant.html"><code>Temporal.Instant</code></a>, use a time zone and optional calendar to create a <a href="./localdatetime.html"><code>Temporal.LocalDateTime</code></a>. Example:</li>
+</ul>
+<!-- prettier-ignore-start -->
+<pre class="language-javascript"><code class="language-javascript">instant <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2019-09-03T08:34:05Z'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+formatOptions <span class="token operator">=</span> <span class="token punctuation">{</span>
+  era<span class="token operator">:</span> <span class="token string">'short'</span><span class="token punctuation">,</span>
+  year<span class="token operator">:</span> <span class="token string">'numeric'</span><span class="token punctuation">,</span>
+  month<span class="token operator">:</span> <span class="token string">'short'</span><span class="token punctuation">,</span>
+  day<span class="token operator">:</span> <span class="token string">'numeric'</span><span class="token punctuation">,</span>
+  hour<span class="token operator">:</span> <span class="token string">'numeric'</span><span class="token punctuation">,</span>
+  minute<span class="token operator">:</span> <span class="token string">'numeric'</span><span class="token punctuation">,</span>
+  second<span class="token operator">:</span> <span class="token string">'numeric'</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+ldt <span class="token operator">=</span> instant<span class="token punctuation">.</span><span class="token function">toLocalDateTime</span><span class="token punctuation">(</span><span class="token string">'Asia/Tokyo'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// => 2019-09-03T17:34:05+09:00[Asia/Tokyo]</span>
+ldt<span class="token punctuation">.</span><span class="token function">toLocaleString</span><span class="token punctuation">(</span><span class="token string">'en-us'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> <span class="token operator">...</span>formatOptions<span class="token punctuation">,</span> calendar<span class="token operator">:</span> ldt<span class="token punctuation">.</span>calendar <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// => "Sep 3, 2019 AD, 5:34:05 PM"</span>
+ldt<span class="token punctuation">.</span>year<span class="token punctuation">;</span>
+  <span class="token comment">// => 2019</span>
+ldt <span class="token operator">=</span> instant<span class="token punctuation">.</span><span class="token function">toLocalDateTime</span><span class="token punctuation">(</span><span class="token string">'Asia/Tokyo'</span><span class="token punctuation">,</span> <span class="token string">'iso8601'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toLocaleString</span><span class="token punctuation">(</span><span class="token string">'ja-jp'</span><span class="token punctuation">,</span> formatOptions<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// => 2019-09-03T17:34:05+09:00[Asia/Tokyo]</span>
+  <span class="token comment">// this is identical to the result of toLocalDateTime() above</span>
+
+ldt <span class="token operator">=</span> instant<span class="token punctuation">.</span><span class="token function">toLocalDateTime</span><span class="token punctuation">(</span><span class="token string">'Asia/Tokyo'</span><span class="token punctuation">,</span> <span class="token string">'japanese'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// => 2019-09-03T17:34:05+09:00[Asia/Tokyo][c=japanese]</span>
+ldt<span class="token punctuation">.</span><span class="token function">toLocaleString</span><span class="token punctuation">(</span><span class="token string">'en-us'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> <span class="token operator">...</span>formatOptions<span class="token punctuation">,</span> calendar<span class="token operator">:</span> ldt<span class="token punctuation">.</span>calendar <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// => "Sep 3, 1 Reiwa, 5:34:05 PM"</span>
+ldt<span class="token punctuation">.</span>year<span class="token punctuation">;</span>
+  <span class="token comment">// => 1</span></code></pre><!-- prettier-ignore-end -->
+
+<p>Conversions from calendar date and/or wall clock time to exact time are also supported:</p>
+<!-- prettier-ignore-start -->
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Convert various local time types to an exact time type by providing a time zone</span>
+date <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2019-12-17'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+ldt <span class="token operator">=</span> date<span class="token punctuation">.</span><span class="token function">toLocalDateTime</span><span class="token punctuation">(</span><span class="token string">'Asia/Tokyo'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// => 2019-12-17T00:00+09:00[Asia/Tokyo]</span>
+ldt <span class="token operator">=</span> date<span class="token punctuation">.</span><span class="token function">toLocalDateTime</span><span class="token punctuation">(</span><span class="token string">'Asia/Tokyo'</span><span class="token punctuation">,</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'10:00'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// => 2019-12-17T10:00+09:00[Asia/Tokyo]</span>
+time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'14:35'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+ldt <span class="token operator">=</span> time<span class="token punctuation">.</span><span class="token function">toLocalDateTime</span><span class="token punctuation">(</span><span class="token string">'Asia/Tokyo'</span><span class="token punctuation">,</span> Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-08-27'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// => 020-08-27T14:35+09:00[Asia/Tokyo]</span>
+dateTime <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2019-12-17T07:48'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+ldt <span class="token operator">=</span> dateTime<span class="token punctuation">.</span><span class="token function">toLocalDateTime</span><span class="token punctuation">(</span><span class="token string">'Asia/Tokyo'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// => 2019-12-17T07:48+09:00[Asia/Tokyo]</span>
+
+<span class="token comment">// Get the exact time in seconds, milliseconds, or nanoseconds since the UNIX epoch.</span>
+abs <span class="token operator">=</span> ldt<span class="token punctuation">.</span><span class="token function">toInstant</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+epochNano <span class="token operator">=</span> abs<span class="token punctuation">.</span><span class="token function">getEpochNanoseconds</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// => 1576536480000000000n</span>
+epochMicro <span class="token operator">=</span> abs<span class="token punctuation">.</span><span class="token function">getEpochMilliseconds</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// => 1576536480000</span>
+epochSecs <span class="token operator">=</span> abs<span class="token punctuation">.</span><span class="token function">getEpochSeconds</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// => 1576536480</span></code></pre><!-- prettier-ignore-end -->
+
+<h2 id="ambiguity-due-to-dst-or-other-time-zone-offset-changes">Ambiguity Due to DST or Other Time Zone Offset Changes</h2>
+<p>Usually, a time zone definition provides a bidirectional 1:1 mapping between any particular local date and clock time and its corresponding UTC date and time. However, near a time zone offset transition there can be <strong>time ambiguity</strong> where it&#39;s not clear what offset should be used to convert a wall-clock time into an exact time. This ambiguity leads to two possible clock times for one UTC time.</p>
+<ul>
+<li>When offsets change in a backward direction, the same clock time will be repeated.
+For example, 1:30AM happened twice on Sunday, 4 November 2018 in California.
+The &quot;first&quot; 1:30AM on that date was in Pacific Daylight Time (offset <code>-07:00</code>).
+30 exact minutes later, DST ended and Pacific Standard Time (offset <code>-08:00</code>) became active.
+After 30 more exact minutes, the &quot;second&quot; 1:30AM happened.
+This means that &quot;1:30AM on Sunday, 4 November 2018&quot; is not sufficient to know <em>which</em> 1:30AM it is.
+The clock time is ambiguous.</li>
+<li>When offsets change in a forward direction, local clock times are skipped.
+For example, DST started on Sunday, 11 March 2018 in California.
+When the clock advanced from 1:59AM to 2:00AM, local time immediately skipped to 3:00AM.
+2:30AM didn&#39;t happen!
+To avoid errors in this one-hour-per year case, most computing environments (including ECMAScript) will convert skipped clock times to exact times using either the offset before the transition or the offset after the transition.</li>
+</ul>
+<p>In both cases, resolving the ambiguity when converting the local time into exact time requires choosing which of two possible offsets to use, or deciding to throw an exception.</p>
+<h2 id="resolving-time-ambiguity-in-temporal">Resolving Time Ambiguity in Temporal</h2>
+<p>In <code>Temporal</code>, if the exact time or time zone offset is known, then there is no ambiguity possible. For example:</p>
+<!-- prettier-ignore-start -->
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">// No ambiguity possible because source is exact time in UTC</span>
+abs <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-09-06T17:35:24.485Z'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// => 2020-09-06T17:35:24.485Z</span>
+<span class="token comment">// An offset can make a local time "exact" with no ambiguity possible.</span>
+abs <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-09-06T10:35:24.485-07:00'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// => 2020-09-06T17:35:24.485Z</span>
+ldt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>LocalDateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-09-06T10:35:24.485-07:00[America/Los_Angeles]'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// => 2020-09-06T10:35:24.485-07:00[America/Los_Angeles]</span>
+<span class="token comment">// if the source is an exact Temporal object, then no ambiguity is possible.</span>
+ldt <span class="token operator">=</span> abs<span class="token punctuation">.</span><span class="token function">toLocalDateTime</span><span class="token punctuation">(</span><span class="token string">'America/Los_Angeles'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// => 2020-09-06T10:35:24.485-07:00[America/Los_Angeles]</span>
+abs2 <span class="token operator">=</span> ldt<span class="token punctuation">.</span><span class="token function">toInstant</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// => 2020-09-06T17:35:24.485Z</span></code></pre><!-- prettier-ignore-end -->
+
+<p>However, opportunities for ambiguity are present when creating an exact-time type (<code>Temporal.LocalDateTime</code> or <code>Temporal.Instant</code>) from a non-exact source. For example:</p>
+<!-- prettier-ignore-start -->
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Offset is not known. Ambiguity is possible!</span>
+ldt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span><span class="token function">Date</span><span class="token punctuation">(</span><span class="token string">'2019-02-19'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toLocalDateTime</span><span class="token punctuation">(</span><span class="token string">'America/Sao_Paulo'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// can be ambiguous</span>
+ldt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span><span class="token function">DateTime</span><span class="token punctuation">(</span><span class="token string">'2019-02-19T00:00'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toLocalDateTime</span><span class="token punctuation">(</span><span class="token string">'America/Sao_Paulo'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// can be ambiguous</span>
+
+<span class="token comment">// Even if the offset is present in the source string, if the type (like DateTime)</span>
+<span class="token comment">// isn't an exact type then the offset is ignored when parsing so ambiguity is possible.</span>
+dt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2019-02-19T00:00-03:00'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+ldt <span class="token operator">=</span> dt<span class="token punctuation">.</span><span class="token function">toLocalDateTimeISO</span><span class="token punctuation">(</span><span class="token string">'America/Sao_Paulo'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// can be ambiguous</span>
+abs <span class="token operator">=</span> dt<span class="token punctuation">.</span><span class="token function">toInstantISO</span><span class="token punctuation">(</span><span class="token string">'America/Sao_Paulo'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// can be ambiguous</span>
+
+<span class="token comment">// the offset is lost when converting from an exact type to a non-exact type</span>
+ldt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>LocalDateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-11-01T01:30-08:00[America/Los_Angeles]'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// => 2020-11-01T01:30-08:00[America/Los_Angeles]</span>
+dt <span class="token operator">=</span> ldt<span class="token punctuation">.</span><span class="token function">toDateTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// offset is lost!</span>
+  <span class="token comment">// => 2020-11-01T01:30</span>
+ldtAmbiguous <span class="token operator">=</span> dt<span class="token punctuation">.</span><span class="token function">toLocalDateTime</span><span class="token punctuation">(</span><span class="token string">'America/Los_Angeles'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// can be ambiguous</span>
+  <span class="token comment">// => 2020-11-01T01:30-07:00[America/Los_Angeles]</span>
+  <span class="token comment">// note that the offset is now -07:00 (Pacific Daylight Time) which is the "first" 1:30AM</span>
+  <span class="token comment">// not -08:00 (Pacific Standard Time) like the original time which was the "second" 1:30AM</span></code></pre><!-- prettier-ignore-end -->
+
+<p>To resolve this possible ambiguity, <code>Temporal</code> methods that create exact types from inexact sources accept a <code>disambiguation</code> option, which controls what exact time to return in the case of ambiguity:</p>
 <ul>
 <li><code>&#39;compatible&#39;</code> (the default): Acts like <code>&#39;earlier&#39;</code> for backward transitions and <code>&#39;later&#39;</code> for forward transitions.</li>
-<li><code>&#39;earlier&#39;</code>: The earlier of two possible instant times will be returned.</li>
-<li><code>&#39;later&#39;</code>: The later of two possible instant times will be returned.</li>
+<li><code>&#39;earlier&#39;</code>: The earlier of two possible exact times will be returned.</li>
+<li><code>&#39;later&#39;</code>: The later of two possible exact times will be returned.</li>
 <li><code>&#39;reject&#39;</code>: A <code>RangeError</code> will be thrown.</li>
 </ul>
 <p>When interoperating with existing code or services, <code>&#39;compatible&#39;</code> mode matches the behavior of legacy <code>Date</code> as well as libraries like moment.js, Luxon, and date-fns.
 This mode also matches the behavior of cross-platform standards like <a href="https://tools.ietf.org/html/rfc5545">RFC 5545 (iCalendar)</a>.</p>
+<p>Methods where this option is present include:</p>
+<ul>
+<li><a href="./date.html#toLocalDateTime"><code>Temporal.Date.prototype.toLocalDateTime</code></a></li>
+<li><a href="./time.html#toLocalDateTime"><code>Temporal.Time.prototype.toLocalDateTime</code></a></li>
+<li><a href="./datetime.html#toLocalDateTime"><code>Temporal.DateTime.prototype.toLocalDateTime</code></a></li>
+<li><a href="./datetime.html#toInstant"><code>Temporal.DateTime.prototype.toInstant</code></a></li>
+<li><a href="./yearmonth.html#toLocalDateTime"><code>Temporal.YearMonth.prototype.toLocalDateTime</code></a></li>
+<li><a href="./monthday.html#toLocalDateTime"><code>Temporal.MonthDay.prototype.toLocalDateTime</code></a></li>
+<li><a href="./timezone.html#getLocalDateTimeFor"><code>Temporal.TimeZone.prototype.getLocalDateTimeFor</code></a>.</li>
+<li><a href="./timezone.html#getInstantFor"><code>Temporal.TimeZone.prototype.getInstantFor</code></a>.</li>
+</ul>
+<h2 id="examples-dst-disambiguation">Examples: DST Disambiguation</h2>
+<blockquote>
+<p>This explanation was adapted from the <a href="https://github.com/moment/momentjs.com/blob/master/docs/moment-timezone/01-using-timezones/02-parsing-ambiguous-inputs.html">moment-timezone documentation</a>.</p>
+</blockquote>
 <p>When entering DST, clocks move forward an hour.
 In reality, it is not time that is moving, it is the offset moving.
 Moving the offset forward gives the illusion that an hour has disappeared.
-As the clock ticks, you can see it move from 1:58 to 1:59 to 3:00.
+If you watch your computer&#39;s digital clock, you can see it move from 1:58 to 1:59 to 3:00.
 It is easier to see what is actually happening when you include the offset.</p>
-<pre><code>1:58 +1
-1:59 +1
-3:00 +2
-3:01 +2</code></pre><p>The result is that any time between 1:59:59 and 3:00:00 never actually happened.
-In <code>&#39;earlier&#39;</code> mode, the instant time that is returned will be as if the post-change UTC offset had continued before the change, effectively skipping backwards by the amount of the DST gap (usually 1 hour).
-In <code>&#39;later&#39;</code> mode, the instant time that is returned will be as if the pre-change UTC offset had continued after the change, effectively skipping forwards by the amount of the DST gap.
+<pre><code>1:58 -08:00
+1:59 -08:00
+3:00 -07:00
+3:01 -07:00</code></pre><p>The result is that any time between 1:59:59 and 3:00:00 never actually happened.
+In <code>&#39;earlier&#39;</code> mode, the exact time that is returned will be as if the post-change UTC offset had continued before the change, effectively skipping backwards by the amount of the DST gap (usually 1 hour).
+In <code>&#39;later&#39;</code> mode, the exact time that is returned will be as if the pre-change UTC offset had continued after the change, effectively skipping forwards by the amount of the DST gap.
 In <code>&#39;compatible&#39;</code> mode, the same time is returned as <code>&#39;later&#39;</code> mode, which matches the behavior of existing JavaScript code that uses legacy <code>Date</code>.</p>
-<pre class="language-javascript"><code class="language-javascript">tz <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>TimeZone</span><span class="token punctuation">(</span><span class="token string">'Europe/Berlin'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-dt <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>DateTime</span><span class="token punctuation">(</span><span class="token number">2019</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">31</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">45</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-tz<span class="token punctuation">.</span><span class="token function">getInstantFor</span><span class="token punctuation">(</span>dt<span class="token punctuation">,</span> <span class="token punctuation">{</span> disambiguation<span class="token operator">:</span> <span class="token string">'earlier'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2019-03-31T00:45Z</span>
-tz<span class="token punctuation">.</span><span class="token function">getInstantFor</span><span class="token punctuation">(</span>dt<span class="token punctuation">,</span> <span class="token punctuation">{</span> disambiguation<span class="token operator">:</span> <span class="token string">'later'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2019-03-31T01:45Z</span>
-tz<span class="token punctuation">.</span><span class="token function">getInstantFor</span><span class="token punctuation">(</span>dt<span class="token punctuation">,</span> <span class="token punctuation">{</span> disambiguation<span class="token operator">:</span> <span class="token string">'compatible'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2019-03-31T01:45Z</span>
-tz<span class="token punctuation">.</span><span class="token function">getInstantFor</span><span class="token punctuation">(</span>dt<span class="token punctuation">,</span> <span class="token punctuation">{</span> disambiguation<span class="token operator">:</span> <span class="token string">'reject'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// throws</span></code></pre><p>In this example, the wall-clock time 2:45 doesn&#39;t exist, so it is treated as either 1:45 +01:00 or 3:45 +02:00, which can be seen by converting the absolute back to a wall-clock time in the time zone:</p>
-<pre class="language-javascript"><code class="language-javascript">tz<span class="token punctuation">.</span><span class="token function">getInstantFor</span><span class="token punctuation">(</span>dt<span class="token punctuation">,</span> <span class="token punctuation">{</span> disambiguation<span class="token operator">:</span> <span class="token string">'earlier'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toDateTime</span><span class="token punctuation">(</span>tz<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2019-03-31T01:45</span>
-tz<span class="token punctuation">.</span><span class="token function">getInstantFor</span><span class="token punctuation">(</span>dt<span class="token punctuation">,</span> <span class="token punctuation">{</span> disambiguation<span class="token operator">:</span> <span class="token string">'later'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toDateTime</span><span class="token punctuation">(</span>tz<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2019-03-31T03:45</span>
-tz<span class="token punctuation">.</span><span class="token function">getInstantFor</span><span class="token punctuation">(</span>dt<span class="token punctuation">,</span> <span class="token punctuation">{</span> disambiguation<span class="token operator">:</span> <span class="token string">'compatible'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toDateTime</span><span class="token punctuation">(</span>tz<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2019-03-31T03:45</span></code></pre><p>Using <a href="./timezone.html#getPossibleInstantsFor"><code>Temporal.TimeZone.prototype.getPossibleInstantsFor</code></a> we can show that the wall-clock time doesn&#39;t exist:</p>
-<pre class="language-javascript"><code class="language-javascript">tz<span class="token punctuation">.</span><span class="token function">getPossibleInstantsFor</span><span class="token punctuation">(</span>dt<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => []</span></code></pre><p>Likewise, at the end of DST, clocks move backward an hour.
+<!-- prettier-ignore-start -->
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Different disambiguation modes for times in the skipped clock hour after DST starts in the Spring</span>
+<span class="token comment">// Offset of -07:00 is Daylight Saving Time, while offset of -08:00 indicates Standard Time.</span>
+props <span class="token operator">=</span> <span class="token punctuation">{</span> timeZone<span class="token operator">:</span> <span class="token string">'America/Los_Angeles'</span><span class="token punctuation">,</span> year<span class="token operator">:</span> <span class="token number">2020</span><span class="token punctuation">,</span> month<span class="token operator">:</span> <span class="token number">3</span><span class="token punctuation">,</span> day<span class="token operator">:</span> <span class="token number">8</span><span class="token punctuation">,</span> hour<span class="token operator">:</span> <span class="token number">2</span><span class="token punctuation">,</span> minute<span class="token operator">:</span> <span class="token number">30</span> <span class="token punctuation">}</span><span class="token punctuation">;</span>
+ldt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>LocalDateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>props<span class="token punctuation">,</span> <span class="token punctuation">{</span> disambiguation<span class="token operator">:</span> <span class="token string">'compatible'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// => 2020-03-08T03:30-07:00[America/Los_Angeles]</span>
+ldt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>LocalDateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>props<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// => 2020-03-08T03:30-07:00[America/Los_Angeles] ('compatible' is the default)</span>
+earlier <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>LocalDateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>props<span class="token punctuation">,</span> <span class="token punctuation">{</span> disambiguation<span class="token operator">:</span> <span class="token string">'earlier'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// => 2020-03-08T01:30-08:00[America/Los_Angeles] (1:30 clock time; still in Standard Time)</span>
+later <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>LocalDateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>props<span class="token punctuation">,</span> <span class="token punctuation">{</span> disambiguation<span class="token operator">:</span> <span class="token string">'later'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// => 2020-03-08T03:30-07:00[America/Los_Angeles] ('later' is same as 'compatible' for backwards transitions)</span>
+later<span class="token punctuation">.</span><span class="token function">toDateTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">difference</span><span class="token punctuation">(</span>earlier<span class="token punctuation">.</span><span class="token function">toDateTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// => PT2H  (2 hour difference in clock time...</span>
+later<span class="token punctuation">.</span><span class="token function">difference</span><span class="token punctuation">(</span>earlier<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// => PT1H   ... but 1 hour later in real-world time)</span></code></pre><!-- prettier-ignore-end -->
+
+<p>Likewise, at the end of DST, clocks move backward an hour.
 In this case, the illusion is that an hour repeats itself.
-In <code>&#39;earlier&#39;</code> mode, the instant time will be the earlier instance of the duplicated wall-clock time.
-In <code>&#39;later&#39;</code> mode, the instant time will be the later instance of the duplicated time.
+In <code>&#39;earlier&#39;</code> mode, the exact time will be the earlier instance of the duplicated wall-clock time.
+In <code>&#39;later&#39;</code> mode, the exact time will be the later instance of the duplicated time.
 In <code>&#39;compatible&#39;</code> mode, the same time is returned as <code>&#39;earlier&#39;</code> mode, which matches the behavior of existing JavaScript code that uses legacy <code>Date</code>.</p>
-<pre class="language-javascript"><code class="language-javascript">tz <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>TimeZone</span><span class="token punctuation">(</span><span class="token string">'America/Sao_Paulo'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-dt <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>DateTime</span><span class="token punctuation">(</span><span class="token number">2019</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">16</span><span class="token punctuation">,</span> <span class="token number">23</span><span class="token punctuation">,</span> <span class="token number">45</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-dt<span class="token punctuation">.</span><span class="token function">toInstant</span><span class="token punctuation">(</span>tz<span class="token punctuation">,</span> <span class="token punctuation">{</span> disambiguation<span class="token operator">:</span> <span class="token string">'earlier'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2019-02-17T01:45Z</span>
-dt<span class="token punctuation">.</span><span class="token function">toInstant</span><span class="token punctuation">(</span>tz<span class="token punctuation">,</span> <span class="token punctuation">{</span> disambiguation<span class="token operator">:</span> <span class="token string">'later'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2019-02-17T02:45Z</span>
-dt<span class="token punctuation">.</span><span class="token function">toInstant</span><span class="token punctuation">(</span>tz<span class="token punctuation">,</span> <span class="token punctuation">{</span> disambiguation<span class="token operator">:</span> <span class="token string">'compatible'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2019-02-17T01:45Z</span>
-dt<span class="token punctuation">.</span><span class="token function">toInstant</span><span class="token punctuation">(</span>tz<span class="token punctuation">,</span> <span class="token punctuation">{</span> disambiguation<span class="token operator">:</span> <span class="token string">'reject'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// throws</span></code></pre><p>In this example, the wall-clock time 23:45 exists twice, which can also be verified with <code>getPossibleInstantsFor</code>:</p>
-<pre class="language-javascript"><code class="language-javascript">tz<span class="token punctuation">.</span><span class="token function">getPossibleInstantsFor</span><span class="token punctuation">(</span>dt<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => [2019-02-17T01:45Z, 2019-02-17T02:45Z]</span></code></pre>    <footer>
+<!-- prettier-ignore-start -->
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Different disambiguation modes for times in the repeated clock hour after DST ends in the Fall</span>
+<span class="token comment">// Offset of -07:00 is Daylight Saving Time, while offset of -08:00 indicates Standard Time.</span>
+props <span class="token operator">=</span> <span class="token punctuation">{</span> timeZone<span class="token operator">:</span> <span class="token string">'America/Los_Angeles'</span><span class="token punctuation">,</span> year<span class="token operator">:</span> <span class="token number">2020</span><span class="token punctuation">,</span> month<span class="token operator">:</span> <span class="token number">11</span><span class="token punctuation">,</span> day<span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">,</span> hour<span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">,</span> minute<span class="token operator">:</span> <span class="token number">30</span> <span class="token punctuation">}</span><span class="token punctuation">;</span>
+ldt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>LocalDateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>props<span class="token punctuation">,</span> <span class="token punctuation">{</span> disambiguation<span class="token operator">:</span> <span class="token string">'compatible'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// => 2020-11-01T01:30-07:00[America/Los_Angeles]</span>
+ldt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>LocalDateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>props<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// => 2020-11-01T01:30-07:00[America/Los_Angeles]</span>
+  <span class="token comment">// 'compatible' is the default.</span>
+earlier <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>LocalDateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>props<span class="token punctuation">,</span> <span class="token punctuation">{</span> disambiguation<span class="token operator">:</span> <span class="token string">'earlier'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// => 2020-11-01T01:30-07:00[America/Los_Angeles] </span>
+  <span class="token comment">// 'earlier' is same as 'compatible' for backwards transitions.</span>
+later <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>LocalDateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>props<span class="token punctuation">,</span> <span class="token punctuation">{</span> disambiguation<span class="token operator">:</span> <span class="token string">'later'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// => 2020-11-01T01:30-08:00[America/Los_Angeles] </span>
+  <span class="token comment">// Same clock time, but one hour later.</span>
+  <span class="token comment">// -08:00 offset indicates Standard Time.</span>
+later<span class="token punctuation">.</span><span class="token function">toDateTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">difference</span><span class="token punctuation">(</span>earlier<span class="token punctuation">.</span><span class="token function">toDateTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// => PT0S  </span>
+  <span class="token comment">// (same clock time...</span>
+later<span class="token punctuation">.</span><span class="token function">difference</span><span class="token punctuation">(</span>earlier<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// => PT1H   </span>
+  <span class="token comment">// ... but 1 hour later in real-world time)</span></code></pre><!-- prettier-ignore-end -->
+
+<h2 id="ambiguity-caused-by-permanent-changes-to-a-time-zone-definition">Ambiguity Caused by Permanent Changes to a Time Zone Definition</h2>
+<p>Time zone definitions can change.
+Almost always these changes are forward-looking so don&#39;t affect historical data.
+But computers sometimes store data about the future!
+For example, a calendar app might record that a user wants to be reminded of a friend&#39;s birthday next year.</p>
+<p>When date/time data for future times is stored with both the offset and the time zone, and if the time zone definition changes, then it&#39;s possible that the new time zone definition may conflict with previously-stored data.
+In this case, then the <code>offset</code> option to <a href="./localdatetime.html#from"><code>Temporal.LocalDateTime.from</code></a> is used to resolve the conflict:</p>
+<ul>
+<li><code>&#39;use&#39;</code>: Evaluate date/time values using the time zone offset if it&#39;s provided in the input.
+This will keep the exact time unchanged even if local time will be different than what was originally stored.</li>
+<li><code>&#39;ignore&#39;</code>: Never use the time zone offset provided in the input. Instead, calculate the offset from the time zone.
+This will keep local time unchanged but may result in a different exact time than was originally stored.</li>
+<li><code>&#39;prefer&#39;</code>: Evaluate date/time values using the offset if it&#39;s valid for this time zone.
+If the offset is invalid, then calculate the offset from the time zone.
+This option is rarely used when calling <code>from()</code>.
+See the documentation of <code>with()</code> for more details about why this option is used.</li>
+<li><code>&#39;reject&#39;</code>: Throw a <code>RangeError</code> if the offset is not valid for the provided date and time in the provided time zone.</li>
+</ul>
+<p>The default is <code>reject</code> for <a href="./localdatetime.html#from"><code>Temporal.LocalDateTime.from</code></a> because there is no obvious default solution.
+Instead, the developer needs to decide how to fix the now-invalid data.</p>
+<p>For <a href="./localdatetime.html#with"><code>Temporal.LocalDateTime.with</code></a> the default is <code>&#39;prefer&#39;</code>.
+This default is helpful to prevent DST disambiguation from causing unexpected one-hour changes in exact time after making small changes to clock time fields.
+For example, if a <a href="./localdatetime.html"><code>Temporal.LocalDateTime</code></a> is set to the &quot;second&quot; 1:30AM on a day where the 1-2AM clock hour is repeated after a backwards DST transition, then calling <code>.with({minute: 45})</code> will result in an ambiguity which is resolved using the default <code>offset: &#39;prefer&#39;</code> option.
+Because the existing offset is valid for the new time, it will be retained so the result will be the &quot;second&quot; 1:45AM.
+However, if the existing offset is not valid for the new result (e.g. <code>.with({hour: 0})</code>), then the default behavior will change the offset to match the new local time in that time zone.</p>
+<p>Note that offset vs. timezone conflicts only matter for <a href="./localdatetime.html"><code>Temporal.LocalDateTime</code></a> because no other Temporal type accepts both an IANA time zone and a time zone offset as an input to any method.
+For example, <a href="./instant.html#from"><code>Temporal.Instant.from</code></a> will never run into conflicts because the <a href="./instant.html"><code>Temporal.Instant</code></a> type ignores the time sone in the input and only uses the offset.</p>
+<h2 id="examples-offset-option">Examples: <code>offset</code> option</h2>
+<p>The primary reason to use the <code>offset</code> option is for parsing values which were saved before a change to that time zone&#39;s time zone definition.
+For example, Brazil stopped observing Daylight Saving Time in 2019, with the final transition out of DST on February 16, 2019.
+The change to stop DST permanently was announced in April 2019.
+Now imagine that an app running in 2018 (before these changes were announced) had saved a far-future time in a string format that contained both offset and IANA time zone.
+Such a format is used by <a href="./localdatetime.html#toString"><code>Temporal.LocalDateTime.prototype.toString</code></a> as well as other platforms and libraries that use the same format like <a href="https://docs.oracle.com/javase/8/docs/api/java/time/ZonedDateTime.html"><code>Java.time.ZonedDateTime</code></a>.
+Let&#39;s assume the stored future time was noon on January 15, 2020 in São Paulo:</p>
+<!-- prettier-ignore-start -->
+<pre class="language-javascript"><code class="language-javascript">ldt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>LocalDateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> year<span class="token operator">:</span> <span class="token number">2020</span><span class="token punctuation">,</span> month<span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">,</span> day<span class="token operator">:</span> <span class="token number">15</span><span class="token punctuation">,</span> hour<span class="token operator">:</span> <span class="token number">12</span><span class="token punctuation">,</span> timeZone<span class="token operator">:</span> <span class="token string">'America/Sao_Paulo'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+ldt<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// => "2020-01-15T12:00-02:00[America/Sao_Paulo]"</span>
+  <span class="token comment">// Assume this string is saved in an external database.</span>
+  <span class="token comment">// Note that the offset is `-02:00` which is Daylight Saving Time</span>
+
+<span class="token comment">// Also note that if you run the code above today, it will return an offset</span>
+<span class="token comment">// of `-03:00` because that reflects the current time zone definition after</span>
+<span class="token comment">// DST was abolished.  But this code running in 2018 would have returned `-02:00`</span>
+<span class="token comment">// which corresponds to the then-current Daylight Saving Time in Brazil.</span></code></pre><!-- prettier-ignore-end -->
+
+<p>This string was valid at the time is was created and saved in 2018.
+But after the time zone rules were changed in April 2019, <code>2020-01-15T12:00-02:00[America/Sao_Paulo]</code> is no longer valid because the correct offset for this time is now <code>-03:00</code>.
+When parsing this string using current time zone rules, <code>Temporal</code> needs to know how to interpret it.
+The <code>offset</code> option helps deal with this case.</p>
+<!-- prettier-ignore-start -->
+<pre class="language-javascript"><code class="language-javascript">savedUsingOldTzDefinition <span class="token operator">=</span> <span class="token string">'2020-01-01T12:00-02:00[America/Sao_Paulo]'</span><span class="token punctuation">;</span> <span class="token comment">// string that was saved earlier</span>
+ldt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>LocalDateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>savedUsingOldTzDefinition<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// => RangeError: Offset is invalid for '2020-01-01T12:00' in 'America/Sao_Paulo'. Provided: -02:00, expected: -03:00.</span>
+  <span class="token comment">// Default is to throw when the offset and time zone conflict.</span>
+ldt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>LocalDateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>savedUsingOldTzDefinition<span class="token punctuation">,</span> <span class="token punctuation">{</span> offset<span class="token operator">:</span> <span class="token string">'reject'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// => RangeError: Offset is invalid for '2020-01-01T12:00' in 'America/Sao_Paulo'. Provided: -02:00, expected: -03:00.</span>
+ldt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>LocalDateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>savedUsingOldTzDefinition<span class="token punctuation">,</span> <span class="token punctuation">{</span> offset<span class="token operator">:</span> <span class="token string">'use'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// => 2020-01-15T11:00-03:00[America/Sao_Paulo]</span>
+  <span class="token comment">// Evaluate DateTime value using old offset, which keeps UTC time constant as local time changes to 11:00</span>
+ldt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>LocalDateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>savedUsingOldTzDefinition<span class="token punctuation">,</span> <span class="token punctuation">{</span> offset<span class="token operator">:</span> <span class="token string">'ignore'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// => 2020-01-15T12:00-03:00[America/Sao_Paulo]</span>
+  <span class="token comment">// Use current time zone rules to calculate offset, ignoring any saved offset</span>
+ldt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>LocalDateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>savedUsingOldTzDefinition<span class="token punctuation">,</span> <span class="token punctuation">{</span> offset<span class="token operator">:</span> <span class="token string">'prefer'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// => 2020-01-15T12:00-03:00[America/Sao_Paulo]</span>
+  <span class="token comment">// Saved offset is invalid for current time zone rules, so use time zone to to calculate offset.</span></code></pre><!-- prettier-ignore-end -->
+    <footer>
       <p>
         This page includes a script which loads an implementation of Temporal in your browser.
         You can open a console in your browser's developer tools and try it out directly!
