@@ -410,6 +410,69 @@
     </emu-clause>
   </emu-clause>
 
+  <emu-clause id="sec-properties-of-temporal-yearmonth-instances">
+    <h1>Properties of Temporal.YearMonth Instances</h1>
+    <p>
+      Temporal.YearMonth instances are ordinary objects that inherit properties from the %Temporal.YearMonth.prototype% intrinsic object.
+      Temporal.YearMonth instances are initially created with the internal slots described in <emu-xref href="#table-internal-slots-of-temporalyearmonth-instances"></emu-xref>.
+    </p>
+    <emu-table id="table-internal-slots-of-temporalyearmonth-instances" caption="Internal Slots of Temporal.YearMonth Instances">
+      <table>
+        <tbody>
+          <tr>
+            <th>
+              Internal Slot
+            </th>
+            <th>
+              Description
+            </th>
+          </tr>
+          <tr>
+            <td>
+              [[InitializedTemporalYearMonth]]
+            </td>
+            <td>
+              The only specified use of this slot is for distinguishing Temporal.YearMonth instances from other objects.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              [[ISOYear]]
+            </td>
+            <td>
+              An integer Number value representing the year in the ISO 8601 calendar.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              [[ISOMonth]]
+            </td>
+            <td>
+              An integer Number value between 1 and 12, inclusive, representing the month of the year in the ISO 8601 calendar.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              [[ISODay]]
+            </td>
+            <td>
+              An integer Number value between 1 and DaysInMonth([[ISOYear]], [[ISOMonth]]), inclusive, representing a reference day of the month in the ISO 8601 calendar.
+              This slot is used by the calendar object in the [[Calendar]] slot to disambiguate if the [[ISOYear]] and [[ISOMonth]] slots are not enough to uniquely identify a year and month in that calendar.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              [[Calendar]]
+            </td>
+            <td>
+              An Object representing the calendar.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </emu-table>
+  </emu-clause>
+
   <emu-clause id="sec-temporal-yearmonth-abstract-ops">
     <h1>Abstract operations</h1>
 

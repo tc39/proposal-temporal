@@ -524,14 +524,64 @@
 
   <emu-clause id="sec-properties-of-temporal-date-instances">
     <h1>Properties of Temporal.Date Instances</h1>
-    <p>Temporal.Date instances are ordinary objects that inherit properties from the %Temporal.Date.prototype%.</p>
-    <p>Temporal.Date instances have the following internal slots:
-    <ul>
-      <li>[[ISOYear]], representing the year. The value is an integer Number.</li>
-      <li>[[ISOMonth]], representing the month within the year. The value is an integer Number between 1 and 12, inclusive.</li>
-      <li>[[ISODay]], representing the day within the month. The value is an integer Number between 1 and DaysInMonth([[ISOYear]], [[ISOMonth]]), inclusive.</li>
-      <li>[[Calendar]], representing the calendar. The value is an Object.</li>
-    </ul>
+    <p>
+      Temporal.Date instances are ordinary objects that inherit properties from the %Temporal.Date.prototype% intrinsic object.
+      Temporal.Date instances are initially created with the internal slots described in <emu-xref href="#table-internal-slots-of-temporaldate-instances"></emu-xref>.
+    </p>
+    <emu-table id="table-internal-slots-of-temporaldate-instances" caption="Internal Slots of Temporal.Date Instances">
+      <table>
+        <tbody>
+          <tr>
+            <th>
+              Internal Slot
+            </th>
+            <th>
+              Description
+            </th>
+          </tr>
+          <tr>
+            <td>
+              [[InitializedTemporalDate]]
+            </td>
+            <td>
+              The only specified use of this slot is for distinguishing Temporal.Date instances from other objects.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              [[ISOYear]]
+            </td>
+            <td>
+              An integer Number value representing the year in the ISO 8601 calendar.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              [[ISOMonth]]
+            </td>
+            <td>
+              An integer Number value between 1 and 12, inclusive, representing the month of the year in the ISO 8601 calendar.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              [[ISODay]]
+            </td>
+            <td>
+              An integer Number value between 1 and DaysInMonth([[ISOYear]], [[ISOMonth]]), inclusive, representing the day of the month in the ISO 8601 calendar.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              [[Calendar]]
+            </td>
+            <td>
+              An Object representing the calendar.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </emu-table>
   </emu-clause>
 
   <emu-clause id="sec-temporal-date-abstract-ops">

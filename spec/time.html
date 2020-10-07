@@ -434,6 +434,84 @@
     </emu-clause>
   </emu-clause>
 
+  <emu-clause id="sec-properties-of-temporal-time-instances">
+    <h1>Properties of Temporal.Time Instances</h1>
+    <p>
+      Temporal.Time instances are ordinary objects that inherit properties from the %Temporal.Time.prototype% intrinsic object.
+      Temporal.Time instances are initially created with the internal slots described in <emu-xref href="#table-internal-slots-of-temporaltime-instances"></emu-xref>.
+    </p>
+    <emu-table id="table-internal-slots-of-temporaltime-instances" caption="Internal Slots of Temporal.Time Instances">
+      <table>
+        <tbody>
+          <tr>
+            <th>
+              Internal Slot
+            </th>
+            <th>
+              Description
+            </th>
+          </tr>
+          <tr>
+            <td>
+              [[InitializedTemporalTime]]
+            </td>
+            <td>
+              The only specified use of this slot is for distinguishing Temporal.Time instances from other objects.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              [[Hour]]
+            </td>
+            <td>
+              An integer Number value between 0 and 23, inclusive, representing the hour of the day.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              [[Minute]]
+            </td>
+            <td>
+              An integer Number value between 0 and 59, inclusive, representing the minute of the hour.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              [[Second]]
+            </td>
+            <td>
+              An integer Number value between 0 and 59, inclusive, representing the second within the minute.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              [[Millisecond]]
+            </td>
+            <td>
+              An integer Number value between 0 and 999, inclusive, representing the millisecond within the second.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              [[Microsecond]]
+            </td>
+            <td>
+              An integer Number value between 0 and 999, inclusive, representing the microsecond within the millisecond.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              [[Nanosecond]]
+            </td>
+            <td>
+              An integer Number value between 0 and 999, inclusive, representing the nanosecond within the microsecond.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </emu-table>
+  </emu-clause>
+
   <emu-clause id="sec-temporal-time-abstract-ops">
     <h1>Abstract operations</h1>
 

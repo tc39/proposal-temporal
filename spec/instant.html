@@ -444,6 +444,45 @@
     </emu-clause>
   </emu-clause>
 
+  <emu-clause id="sec-properties-of-temporal-instant-instances">
+    <h1>Properties of Temporal.Instant Instances</h1>
+
+    <p>
+      Temporal.Instant instances are ordinary objects that inherit properties from the %Temporal.Instant.prototype% intrinsic object.
+      Temporal.Instant instances are initially created with the internal slots described in <emu-xref href="#table-internal-slots-of-temporalinstant-instances"></emu-xref>.
+    </p>
+    <emu-table id="table-internal-slots-of-temporalinstant-instances" caption="Internal Slots of Temporal.Instant Instances">
+      <table>
+        <tbody>
+          <tr>
+            <th>
+              Internal Slot
+            </th>
+            <th>
+              Description
+            </th>
+          </tr>
+          <tr>
+            <td>
+              [[InitializedTemporalInstant]]
+            </td>
+            <td>
+              The only specified use of this slot is for distinguishing Temporal.Instant instances from other objects.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              [[Nanoseconds]]
+            </td>
+            <td>
+              A BigInt value representing the number of nanoseconds since the Unix epoch.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </emu-table>
+  </emu-clause>
+
   <emu-clause id="sec-temporal-instant-abstract-ops">
     <h1>Abstract operations</h1>
 

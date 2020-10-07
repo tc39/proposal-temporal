@@ -280,6 +280,69 @@
     </emu-clause>
   </emu-clause>
 
+  <emu-clause id="sec-properties-of-temporal-monthday-instances">
+    <h1>Properties of Temporal.MonthDay Instances</h1>
+    <p>
+      Temporal.MonthDay instances are ordinary objects that inherit properties from the %Temporal.MonthDay.prototype% intrinsic object.
+      Temporal.MonthDay instances are initially created with the internal slots described in <emu-xref href="#table-internal-slots-of-temporalmonthday-instances"></emu-xref>.
+    </p>
+    <emu-table id="table-internal-slots-of-temporalmonthday-instances" caption="Internal Slots of Temporal.MonthDay Instances">
+      <table>
+        <tbody>
+          <tr>
+            <th>
+              Internal Slot
+            </th>
+            <th>
+              Description
+            </th>
+          </tr>
+          <tr>
+            <td>
+              [[InitializedTemporalMonthDay]]
+            </td>
+            <td>
+              The only specified use of this slot is for distinguishing Temporal.MonthDay instances from other objects.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              [[ISOYear]]
+            </td>
+            <td>
+              An integer Number value representing the year in the ISO 8601 calendar.
+              This slot is used by the calendar object in the [[Calendar]] slot to disambiguate if the [[ISOMonth]] and [[ISODay]] slots are not enough to uniquely identify a month and day in that calendar.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              [[ISOMonth]]
+            </td>
+            <td>
+              An integer Number value between 1 and 12, inclusive, representing the month of the year in the ISO 8601 calendar.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              [[ISODay]]
+            </td>
+            <td>
+              An integer Number value between 1 and DaysInMonth([[ISOYear]], [[ISOMonth]]), inclusive, representing the day of the month in the ISO 8601 calendar.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              [[Calendar]]
+            </td>
+            <td>
+              An Object representing the calendar.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </emu-table>
+  </emu-clause>
+
   <emu-clause id="sec-temporal-monthday-abstract-ops">
     <h1>Abstract operations</h1>
 
