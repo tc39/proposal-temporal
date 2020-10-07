@@ -571,11 +571,8 @@ export const ES = ObjectAssign({}, ES2019, {
       const value = bag[property];
       if (value !== undefined) {
         any = any || {};
-        if (property === 'calendar') {
+        if (property === 'era') {
           // FIXME: this is terrible
-          const TemporalCalendar = GetIntrinsic('%Temporal.Calendar%');
-          any.calendar = TemporalCalendar.from(value);
-        } else if (property === 'era') {
           any.era = value;
         } else {
           any[property] = ES.ToInteger(value);
@@ -596,11 +593,8 @@ export const ES = ObjectAssign({}, ES2019, {
         }
         value = defaultValue;
       }
-      if (property === 'calendar') {
+      if (property === 'era') {
         // FIXME: this is terrible
-        const TemporalCalendar = GetIntrinsic('%Temporal.Calendar%');
-        result.calendar = TemporalCalendar.from(value);
-      } else if (property === 'era') {
         result.era = value;
       } else {
         result[property] = ES.ToInteger(value);
