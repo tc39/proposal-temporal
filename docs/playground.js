@@ -3855,11 +3855,8 @@
           if (value !== undefined) {
             any = any || {};
 
-            if (property === 'calendar') {
+            if (property === 'era') {
               // FIXME: this is terrible
-              var TemporalCalendar = GetIntrinsic$1('%Temporal.Calendar%');
-              any.calendar = TemporalCalendar.from(value);
-            } else if (property === 'era') {
               any.era = value;
             } else {
               any[property] = ES.ToInteger(value);
@@ -3899,11 +3896,8 @@
             value = defaultValue;
           }
 
-          if (property === 'calendar') {
+          if (property === 'era') {
             // FIXME: this is terrible
-            var TemporalCalendar = GetIntrinsic$1('%Temporal.Calendar%');
-            result.calendar = TemporalCalendar.from(value);
-          } else if (property === 'era') {
             result.era = value;
           } else {
             result[property] = ES.ToInteger(value);
@@ -6644,7 +6638,8 @@
             var _calendar = item.calendar;
             if (_calendar === undefined) _calendar = GetDefaultCalendar();
             _calendar = TemporalCalendar.from(_calendar);
-            result = _calendar.dateFromFields(item, options, this);
+            var fields = ES.ToTemporalDateRecord(item);
+            result = _calendar.dateFromFields(fields, options, this);
           }
         } else {
           var _ES$ParseTemporalDate = ES.ParseTemporalDateString(ES.ToString(item)),
@@ -7984,7 +7979,8 @@
             var _calendar = item.calendar;
             if (_calendar === undefined) _calendar = GetDefaultCalendar();
             _calendar = TemporalCalendar.from(_calendar);
-            result = _calendar.monthDayFromFields(item, options, this);
+            var fields = ES.ToTemporalMonthDayRecord(item);
+            result = _calendar.monthDayFromFields(fields, options, this);
           }
         } else {
           var _ES$ParseTemporalMont = ES.ParseTemporalMonthDayString(ES.ToString(item)),
@@ -9058,7 +9054,8 @@
             var _calendar = item.calendar;
             if (_calendar === undefined) _calendar = GetDefaultCalendar();
             _calendar = TemporalCalendar.from(_calendar);
-            result = _calendar.yearMonthFromFields(item, options, this);
+            var fields = ES.ToTemporalYearMonthRecord(item);
+            result = _calendar.yearMonthFromFields(fields, options, this);
           }
         } else {
           var _ES$ParseTemporalYear = ES.ParseTemporalYearMonthString(ES.ToString(item)),
