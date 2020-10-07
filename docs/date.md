@@ -62,8 +62,12 @@ date = new Temporal.Date(2020, 3, 14); // => 2020-03-14
 
 This static method creates a new `Temporal.Date` object from another value.
 If the value is another `Temporal.Date` object, a new object representing the same date is returned.
-If the value is any other object, it must have `year`, `month`, and `day` properties, and optionally a `calendar` property.
+If the value is any other object, it must have `year`, `month`, and `day` properties, and optionally `era` and `calendar` properties.
+If `calendar` is a calendar that requires `era` (such as the Japanese calendar), then the `era` property must also be present.
 A `Temporal.Date` will be constructed from these properties.
+
+If the `calendar` property is not present, it will be assumed to be `Temporal.Calendar.from('iso8601')`, the [ISO 8601 calendar](https://en.wikipedia.org/wiki/ISO_8601#Dates).
+In this calendar, `era` is ignored.
 
 Any non-object value is converted to a string, which is expected to be in ISO 8601 format.
 Any time or time zone part is optional and will be ignored.

@@ -60,6 +60,8 @@ This static method creates a new `Temporal.MonthDay` object from another value.
 If the value is another `Temporal.MonthDay` object, a new object representing the same month and day is returned.
 If the value is any other object, it must have `month` and `day` properties, and optionally a `calendar` property, and a `Temporal.MonthDay` will be constructed from these properties.
 
+If the `calendar` property is not present, it will be assumed to be `Temporal.Calendar.from('iso8601')`, the [ISO 8601 calendar](https://en.wikipedia.org/wiki/ISO_8601#Dates).
+
 Any non-object value will be converted to a string, which is expected to be in ISO 8601 format.
 Any parts of the string other than the month and the day are optional and will be ignored.
 If the string isn't valid according to ISO 8601, then a `RangeError` will be thrown regardless of the value of `overflow`.

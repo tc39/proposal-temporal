@@ -76,10 +76,14 @@ datetime = new Temporal.DateTime(2020, 3, 14, 13, 37); // => 2020-03-14T13:37
 
 This static method creates a new `Temporal.DateTime` object from another value.
 If the value is another `Temporal.DateTime` object, a new object representing the same date and time is returned.
-If the value is any other object, a `Temporal.DateTime` will be constructed from the values of any `year`, `month`, `day`, `hour`, `minute`, `second`, `millisecond`, `microsecond`, `nanosecond`, and `calendar` properties that are present.
+If the value is any other object, a `Temporal.DateTime` will be constructed from the values of any `era`, `year`, `month`, `day`, `hour`, `minute`, `second`, `millisecond`, `microsecond`, `nanosecond`, and `calendar` properties that are present.
+
 At least the `year`, `month`, and `day` properties must be present.
-If `calendar` is missing, it will be assumed to be `Temporal.Calendar.from('iso8601')`.
-Any other missing ones will be assumed to be 0.
+If `calendar` is a calendar that requires `era` (such as the Japanese calendar), then the `era` property must also be present.
+Default values for other missing fields are determined by the calendar.
+
+If the `calendar` property is not present, it will be assumed to be `Temporal.Calendar.from('iso8601')`, the [ISO 8601 calendar](https://en.wikipedia.org/wiki/ISO_8601#Dates).
+In this calendar, `era` is ignored, and the default values for other missing fields are all 0.
 
 Any non-object value is converted to a string, which is expected to be in ISO 8601 format.
 Any time zone part is optional and will be ignored.

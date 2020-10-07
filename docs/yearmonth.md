@@ -57,7 +57,12 @@ ym = new Temporal.YearMonth(2019, 6)  // => 2019-06
 
 This static method creates a new `Temporal.YearMonth` object from another value.
 If the value is another `Temporal.YearMonth` object, a new object representing the same month is returned.
-If the value is any other object, it must have `year` and `month` properties, and a `Temporal.YearMonth` will be constructed from them.
+If the value is any other object, it must have `year` and `month` properties, and optionally `era` and `calendar` properties.
+If `calendar` is a calendar that requires `era` (such as the Japanese calendar), then the `era` property must also be present.
+A `Temporal.YearMonth` will be constructed from these properies.
+
+If the `calendar` property is not present, it will be assumed to be `Temporal.Calendar.from('iso8601')`, the [ISO 8601 calendar](https://en.wikipedia.org/wiki/ISO_8601#Dates).
+In this calendar, `era` is ignored.
 
 Any non-object value is converted to a string, which is expected to be in ISO 8601 format.
 Any parts of the string other than the year and the month are optional and will be ignored.
