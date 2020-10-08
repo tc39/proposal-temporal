@@ -671,7 +671,7 @@ Please see the documentation of `from` for more details on options behavior.
 Usage example:
 
 ```javascript
-ldt = new Temporal.LocalDateTime('1995-12-07T03:24-06:00[America/Chicago]');
+ldt = Temporal.LocalDateTime.from('1995-12-07T03:24-06:00[America/Chicago]');
 ldt.with({ year: 2015, minute: 31 }); // => 2015-12-07T03:31-06:00[America/Chicago]
 
 midnight = Temporal.Time.from({ hour: 0 });

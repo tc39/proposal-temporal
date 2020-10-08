@@ -703,6 +703,7 @@ Usage example:
 date = Temporal.Date.from('2006-08-24');
 f = date.getISOFields();
 f.isoDay; // => 24
+// Fields correspond exactly to constructor arguments:
 date2 = new Temporal.Date(f.isoYear, f.isoMonth, f.isoDay, f.calendar);
 date.equals(date2); // => true
 

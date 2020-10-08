@@ -151,7 +151,7 @@ The above read-only properties allow accessing each component of the duration in
 
 Usage examples:
 ```javascript
-d = new Temporal.Duration(1, 2, 3, 4, 5, 6, 7, 987, 654, 321);
+d = Temporal.Duration.from('P1Y2M3W4DT5H6M7.987654321S');
 d.years         // => 1
 d.months        // => 2
 d.weeks         // => 3

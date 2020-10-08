@@ -173,12 +173,12 @@ Example usage:
 
 ```javascript
 // Getting the UTC offset for a time zone at a particular time
-timestamp = new Temporal.Instant(1553993100000000000n);
-tz = new Temporal.TimeZone('Europe/Berlin');
+timestamp = Temporal.Instant.fromEpochSeconds(1553993100);
+tz = Temporal.TimeZone.from('Europe/Berlin');
 tz.getOffsetStringFor(timestamp); // => +01:00
 
 // TimeZone with a fixed UTC offset
-tz = new Temporal.TimeZone('-08:00');
+tz = Temporal.TimeZone.from('-08:00');
 tz.getOffsetStringFor(timestamp); // => -08:00
 ```
 
@@ -198,13 +198,13 @@ Example usage:
 
 ```javascript
 // Converting a specific exact time to a calendar date / wall-clock time
-timestamp = new Temporal.Instant(1553993100000000000n);
-tz = new Temporal.TimeZone('Europe/Berlin');
+timestamp = Temporal.Instant.fromEpochSeconds(1553993100);
+tz = Temporal.TimeZone.from('Europe/Berlin');
 tz.getLocalDateTimeFor(timestamp); // => 2019-03-31T01:45+02:00[Europe/Berlin]
 
 // What time was the Unix Epoch (timestamp 0) in Bell Labs (Murray Hill, New Jersey, USA)?
-epoch = new Temporal.Instant(0n);
-tz = new Temporal.TimeZone('America/New_York');
+epoch = Temporal.Instant.fromEpochSeconds(0);
+tz = Temporal.TimeZone.from('America/New_York');
 tz.getLocalDateTimeFor(epoch); // => 1969-12-31T19:00-05:00[America/New_York]
 ```
 
@@ -224,13 +224,13 @@ Example usage:
 
 ```javascript
 // Converting a specific instant time to a calendar date / wall-clock time
-timestamp = new Temporal.Instant(1553993100000000000n);
-tz = new Temporal.TimeZone('Europe/Berlin');
+timestamp = Temporal.Instant.fromEpochSeconds(1553993100);
+tz = Temporal.TimeZone.from('Europe/Berlin');
 tz.getDateTimeFor(timestamp); // => 2019-03-31T01:45
 
 // What time was the Unix Epoch (timestamp 0) in Bell Labs (Murray Hill, New Jersey, USA)?
-epoch = new Temporal.Instant(0n);
-tz = new Temporal.TimeZone('America/New_York');
+epoch = Temporal.Instant.fromEpochSeconds(0);
+tz = Temporal.TimeZone.from('America/New_York');
 tz.getDateTimeFor(epoch); // => 1969-12-31T19:00
 ```
 
