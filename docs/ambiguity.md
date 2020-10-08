@@ -30,16 +30,16 @@ For example, `Temporal.Instant` (an exact-time type) can be constructed using on
 
 ## Understanding Time Zones, Offset Changes, and DST
 
-A **Time Zone** defines the legal rules that control how local wall-clock time relates to UTC. You can think of a time zone as a function that accepts an exact time and returns a UTC offset, and a corresponding function for conversions in the opposite direction. (See [below](#ambiguity-due-to-dst-or-other-time-zone-offset-changes) for why exact → local conversions are 1:1, but local → exact conversions can be ambiguous.)
+A **Time Zone** defines the rules that control how local wall-clock time relates to UTC. You can think of a time zone as a function that accepts an exact time and returns a UTC offset, and a corresponding function for conversions in the opposite direction. (See [below](#ambiguity-due-to-dst-or-other-time-zone-offset-changes) for why exact → local conversions are 1:1, but local → exact conversions can be ambiguous.)
 
 Temporal uses the [**IANA Time Zone Database**](https://en.wikipedia.org/wiki/Tz_database) (or "TZ database"), which you can think of as a global repository of time zone functions. Each IANA time zone has:
 
 - A **time zone ID** that usually refers to a geographic area anchored by a city (e.g. `Europe/Paris` or `Africa/Kampala`) but can also denote single-offset time zones like `UTC` (a consistent `+00:00` offset) or `Etc/GMT+5` (which for historical reasons is a negative offset `-05:00`).
 - A **time zone definition** defines the offset for any UTC value since January 1, 1970. You can think of these definitions as a table that maps UTC date/time ranges (including future ranges) to specific offsets.
   In some time zones, temporary offset changes happen twice each year due to **Daylight Saving Time (DST)** starting in the Spring and ending each Fall.
-  Offsets can also change permanently due to legal changes, e.g. a country switching time zones.
+  Offsets can also change permanently due to political changes, e.g. a country switching time zones.
 
-The TZ database is updated several times per year in response to legal and political changes around the world.
+The TZ database is updated several times per year in response to political changes around the world.
 Each update contains changes to time zone definitions.
 These changes usually affect only future date/time values, but occasionally fixes are made to past ranges too, for example when new historical sources are discovered about early-20th century timekeeping.
 

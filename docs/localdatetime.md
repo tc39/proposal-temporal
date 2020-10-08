@@ -16,7 +16,7 @@ As the only `Temporal` type that persists a time zone, `Temporal.LocalDateTime` 
 
 - Arithmetic automatically adjusts for Daylight Saving Time, using the rules defined in [RFC 5545 (iCalendar)](https://tools.ietf.org/html/rfc5545) and adopted in other libraries like moment.js.
 - Creating derived values (e.g. change time to 2:30AM) can avoid worrying that the result will be invalid due to the time zone's DST rules.
-- Properties are available to easily measure attributes like "length of day" or "starting time of day" which may not be the same on all days in all time zones due to DST transitions or legal changes to the definitions of time zones.
+- Properties are available to easily measure attributes like "length of day" or "starting time of day" which may not be the same on all days in all time zones due to DST transitions or political changes to the definitions of time zones.
 - It's easy to flip back and forth between a human-readable representation (like `Temporal.DateTime`) and the UTC timeline (like `Temporal.Instant`) without having to do any work to keep the two in sync.
 - A date/time, an offset, a time zone, and an optional calendar can be persisted in a single string that can be sorted alphabetically by when instants happened in the real world.
   This behavior is also be helpful for developers who are not sure which of those components will be needed by later readers of this data.
@@ -562,7 +562,7 @@ ldt = Temporal.LocalDateTime.from('2020-11-01T01:00-07:00[America/Phoenix]').isT
 
 The `timeZoneOffsetNanoseconds` read-only property is the offset (in nanoseconds) relative to UTC of `localDateTime`.
 
-The value of this field will change after DST transitions or after legal changes to a time zone, e.g. a country switching to a new time zone.
+The value of this field will change after DST transitions or after political changes to a time zone, e.g. a country switching to a new time zone.
 
 This field is used to uniquely map date/time fields to an exact date/time in cases where the calendar date and clock time are ambiguous due to time zone offset transitions.
 Therefore, this field is returned by `getFields()` and is accepted by `from` and `with`.
@@ -593,7 +593,7 @@ The `timeZoneOffsetString` read-only property is the offset (formatted as a stri
 
 The format used is defined in the [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601#Time_offsets_from_UTC) standard.
 
-The value of this field will change after DST transitions or after legal changes to a time zone, e.g. a country switching to a new time zone.
+The value of this field will change after DST transitions or after political changes to a time zone, e.g. a country switching to a new time zone.
 
 Note that when setting the offset using `with` (or `from` using an property bag object instead of a string), the only way to set the time zone offset is via the `timeZoneOffsetNanoseconds` field.
 String values are not accepted for offsets in these cases, nor is this property emitted by `.getFields()`.
