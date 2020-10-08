@@ -211,7 +211,7 @@ Usage examples:
 
 <!-- prettier-ignore-start -->
 ```javascript
-dt = new Temporal.DateTime(1995, 12, 7, 3, 24, 30, 0, 3, 500);
+dt = Temporal.DateTime.from('1995-12-07T03:24:30.000003500');
 dt.year;        // => 1995
 dt.month;       // => 12
 dt.day;         // => 7
@@ -242,7 +242,7 @@ For an overview, see [ISO 8601 on Wikipedia](https://en.wikipedia.org/wiki/ISO_8
 Usage example:
 
 ```javascript
-dt = new Temporal.DateTime(1995, 12, 7, 3, 24, 30, 0, 3, 500);
+dt = Temporal.DateTime.from('1995-12-07T03:24:30.000003500');
 ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'][dt.dayOfWeek - 1]; // => THU
 ```
 
@@ -254,7 +254,7 @@ For the ISO 8601 calendar, this is a value between 1 and 365, or 366 in a leap y
 Usage example:
 
 ```javascript
-dt = new Temporal.DateTime(1995, 12, 7, 3, 24, 30, 0, 3, 500);
+dt = Temporal.DateTime.from('1995-12-07T03:24:30.000003500');
 // ISO ordinal date
 console.log(dt.year, dt.dayOfYear); // => 1995 341
 ```
@@ -269,7 +269,7 @@ For more information on ISO week numbers, see for example the Wikipedia article 
 Usage example:
 
 ```javascript
-dt = new Temporal.DateTime(1995, 12, 7, 3, 24, 30, 0, 3, 500);
+dt = Temporal.DateTime.from('1995-12-07T03:24:30.000003500');
 // ISO week date
 console.log(dt.year, dt.weekOfYear, dt.dayOfWeek); // => 1995 49 4
 ```
@@ -380,7 +380,7 @@ If the result is earlier or later than the range of dates that `Temporal.DateTim
 Usage example:
 
 ```javascript
-dt = new Temporal.DateTime(1995, 12, 7, 3, 24, 30, 0, 3, 500);
+dt = Temporal.DateTime.from('1995-12-07T03:24:30.000003500');
 dt.with({ year: 2015, second: 31 }); // => 2015-12-07T03:24:31.000003500
 
 // Temporal.Time, Temporal.Date, Temporal.YearMonth and
@@ -445,7 +445,7 @@ Adding a negative duration is equivalent to subtracting the absolute value of th
 Usage example:
 
 ```javascript
-dt = new Temporal.DateTime(1995, 12, 7, 3, 24, 30, 0, 3, 500);
+dt = Temporal.DateTime.from('1995-12-07T03:24:30.000003500');
 dt.plus({ years: 20, months: 4, nanoseconds: 500 }); // => 2016-04-07T03:24:30.000004
 
 dt = Temporal.DateTime.from('2019-01-31T15:30');
@@ -484,7 +484,7 @@ Subtracting a negative duration is equivalent to adding the absolute value of th
 Usage example:
 
 ```javascript
-dt = new Temporal.DateTime(1995, 12, 7, 3, 24, 30, 0, 3, 500);
+dt = Temporal.DateTime.from('1995-12-07T03:24:30.000003500');
 dt.minus({ years: 20, months: 4, nanoseconds: 500 }); // => 1975-08-07T03:24:30.000003
 
 dt = Temporal.DateTime.from('2019-03-31T15:30');
@@ -658,8 +658,8 @@ The string can be passed to `Temporal.DateTime.from()` to create a new `Temporal
 Example usage:
 
 ```js
-dt = new Temporal.DateTime(1995, 12, 7, 3, 24, 30, 0, 3, 500);
-dt.toString(); // => 1995-12-07T03:24:30.000003500
+dt = Temporal.DateTime.from({ year: 1999, month: 12, day: 31 });
+dt.toString(); // => 1999-12-31T00:00
 ```
 
 ### datetime.**toLocaleString**(_locales_?: string | array&lt;string&gt;, _options_?: object) : string
@@ -682,7 +682,7 @@ The `locales` and `options` arguments are the same as in the constructor to [`In
 Example usage:
 
 ```js
-dt = new Temporal.DateTime(1995, 12, 7, 3, 24, 30, 0, 3, 500);
+dt = Temporal.DateTime.from('1995-12-07T03:24:30.000003500');
 dt.toLocaleString(); // => example output: 1995-12-07, 3:24:30 a.m.
 dt.toLocaleString('de-DE'); // => example output: 7.12.1995, 03:24:30
 dt.toLocaleString('de-DE', { timeZone: 'Europe/Berlin', weekday: 'long' }); // => Donnerstag, 7.12.1995, 03:24:30
@@ -824,7 +824,7 @@ The converted object carries a copy of all the relevant fields of `datetime` (fo
 Usage example:
 
 ```javascript
-dt = new Temporal.DateTime(1995, 12, 7, 3, 24, 30, 0, 3, 500);
+dt = Temporal.DateTime.from('1995-12-07T03:24:30.000003500');
 dt.toDate(); // => 1995-12-07
 dt.toYearMonth(); // => 1995-12
 dt.toMonthDay(); // => 12-07
@@ -865,6 +865,7 @@ Usage example:
 dt = Temporal.DateTime.from('1995-12-07T03:24:30.000003500');
 f = dt.getISOFields();
 f.isoDay; // => 7
+// Fields correspond exactly to constructor arguments:
 dt2 = new Temporal.DateTime(f.isoYear, f.isoMonth, f.isoDay, f.hour, f.minute,
   f.second, f.millisecond, f.microsecond, f.nanosecond, f.calendar);
 dt.equals(dt2); // => true

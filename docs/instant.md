@@ -244,14 +244,14 @@ Example usage:
 
 ```js
 // Converting a specific exact time to a calendar date / wall-clock time
-timestamp = new Temporal.Instant(1553993100000000000n);
+timestamp = Temporal.Instant.fromEpochSeconds(1553993100);
 timestamp.toDateTime('Europe/Berlin'); // => 2019-03-31T01:45+02:00[Europe/Berlin]
 timestamp.toDateTime('UTC'); // => 2019-03-31T00:45+00:00[UTC]
 timestamp.toDateTime('-08:00'); // => 2019-03-30T16:45-08:00[-08:00]
 
 // What time was the Unix epoch (timestamp 0) in Bell Labs (Murray Hill, New Jersey, USA)?
-epoch = new Temporal.Instant(0n);
-tz = new Temporal.TimeZone('America/New_York');
+epoch = Temporal.Instant.fromEpochSeconds(0);
+tz = Temporal.TimeZone.from('America/New_York');
 epoch.toLocalDateTime(tz); // => 1969-12-31T19:00-05:00[America/New_York]
 ```
 
@@ -276,14 +276,14 @@ Example usage:
 
 ```js
 // Converting a specific instant time to a calendar date / wall-clock time
-timestamp = new Temporal.Instant(1553993100000000000n);
+timestamp = Temporal.Instant.fromEpochSeconds(1553993100);
 timestamp.toDateTime('Europe/Berlin'); // => 2019-03-31T01:45
 timestamp.toDateTime('UTC'); // => 2019-03-31T00:45
 timestamp.toDateTime('-08:00'); // => 2019-03-30T16:45
 
 // What time was the Unix epoch (timestamp 0) in Bell Labs (Murray Hill, New Jersey, USA)?
-epoch = new Temporal.Instant(0n);
-tz = new Temporal.TimeZone('America/New_York');
+epoch = Temporal.Instant.fromEpochSeconds(0);
+tz = Temporal.TimeZone.from('America/New_York');
 epoch.toDateTime(tz); // => 1969-12-31T19:00
 ```
 
@@ -313,7 +313,7 @@ Example usage:
 ```js
 // Temporal.Instant representing five hours from now
 Temporal.now.instant().plus({ hours: 5 });
-fiveHours = new Temporal.Duration(0, 0, 0, 0, 5);
+fiveHours = Temporal.Duration.from({ hours: 5 });
 Temporal.now.instant().plus(fiveHours);
 ```
 
@@ -343,7 +343,7 @@ Example usage:
 ```js
 // Temporal.Instant representing this time an hour ago
 Temporal.now.instant().minus({ hours: 1 });
-oneHour = new Temporal.Duration(0, 0, 0, 0, 1);
+oneHour = Temporal.Duration.from({ hours: 1 });
 Temporal.now.instant().minus(oneHour);
 ```
 
@@ -414,7 +414,7 @@ approxMissionLength = endOfMoonMission.difference(startOfMoonMission, {
   // => P8DT3H
 
 // A billion (10^9) seconds since the epoch in different units
-epoch = new Temporal.Instant(0n);
+epoch = Temporal.Instant.fromEpochSeconds(0);
 billion = Temporal.Instant.fromEpochSeconds(1e9);
 billion.difference(epoch);
   // =>    PT1000000000S
@@ -525,7 +525,7 @@ The string can be passed to `Temporal.Instant.from()` to create a new `Temporal.
 Example usage:
 
 ```js
-instant = new Temporal.Instant(1574074321816000000n);
+instant = Temporal.Instant.fromEpochMilliseconds(1574074321816);
 instant.toString(); // => 2019-11-18T10:52:01.816Z
 instant.toString(Temporal.TimeZone.from('UTC')); // => 2019-11-18T10:52:01.816Z
 instant.toString('Asia/Seoul'); // => 2019-11-18T19:52:01.816+09:00[Asia/Seoul]
