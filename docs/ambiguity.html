@@ -180,15 +180,15 @@ However the same calendar date and wall-clock time India would have an offset of
 <p>Another way to represent exact time is using a single number representing the amount of time after or before <a href="https://en.wikipedia.org/wiki/Unix_time">Unix epoch</a> (midnight UTC on January 1, 1970).
 For example, <code>Temporal.Instant</code> (an exact-time type) can be constructed using only a <code>BigInt</code> value of nanoseconds since epoch.</p>
 <h2 id="understanding-time-zones-offset-changes-and-dst">Understanding Time Zones, Offset Changes, and DST</h2>
-<p>A <strong>Time Zone</strong> defines the legal rules that control how local wall-clock time relates to UTC. You can think of a time zone as a function that accepts an exact time and returns a UTC offset, and a corresponding function for conversions in the opposite direction. (See <a href="#ambiguity-due-to-dst-or-other-time-zone-offset-changes">below</a> for why exact → local conversions are 1:1, but local → exact conversions can be ambiguous.)</p>
+<p>A <strong>Time Zone</strong> defines the rules that control how local wall-clock time relates to UTC. You can think of a time zone as a function that accepts an exact time and returns a UTC offset, and a corresponding function for conversions in the opposite direction. (See <a href="#ambiguity-due-to-dst-or-other-time-zone-offset-changes">below</a> for why exact → local conversions are 1:1, but local → exact conversions can be ambiguous.)</p>
 <p>Temporal uses the <a href="https://en.wikipedia.org/wiki/Tz_database"><strong>IANA Time Zone Database</strong></a> (or &quot;TZ database&quot;), which you can think of as a global repository of time zone functions. Each IANA time zone has:</p>
 <ul>
 <li>A <strong>time zone ID</strong> that usually refers to a geographic area anchored by a city (e.g. <code>Europe/Paris</code> or <code>Africa/Kampala</code>) but can also denote single-offset time zones like <code>UTC</code> (a consistent <code>+00:00</code> offset) or <code>Etc/GMT+5</code> (which for historical reasons is a negative offset <code>-05:00</code>).</li>
 <li>A <strong>time zone definition</strong> defines the offset for any UTC value since January 1, 1970. You can think of these definitions as a table that maps UTC date/time ranges (including future ranges) to specific offsets.
 In some time zones, temporary offset changes happen twice each year due to <strong>Daylight Saving Time (DST)</strong> starting in the Spring and ending each Fall.
-Offsets can also change permanently due to legal changes, e.g. a country switching time zones.</li>
+Offsets can also change permanently due to political changes, e.g. a country switching time zones.</li>
 </ul>
-<p>The TZ database is updated several times per year in response to legal and political changes around the world.
+<p>The TZ database is updated several times per year in response to political changes around the world.
 Each update contains changes to time zone definitions.
 These changes usually affect only future date/time values, but occasionally fixes are made to past ranges too, for example when new historical sources are discovered about early-20th century timekeeping.</p>
 <h2 id="wall-clock-time-exact-time-and-time-zones-in-temporal">Wall-Clock Time, Exact Time, and Time Zones in Temporal</h2>
