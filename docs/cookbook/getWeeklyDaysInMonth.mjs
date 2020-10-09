@@ -8,11 +8,11 @@
  */
 function getWeeklyDaysInMonth(yearMonth, dayNumberOfTheWeek) {
   const firstOfMonth = yearMonth.toDateOnDay(1);
-  let nextWeekday = firstOfMonth.plus({ days: (7 + dayNumberOfTheWeek - firstOfMonth.dayOfWeek) % 7 });
+  let nextWeekday = firstOfMonth.add({ days: (7 + dayNumberOfTheWeek - firstOfMonth.dayOfWeek) % 7 });
   const result = [];
   while (nextWeekday.month === yearMonth.month) {
     result.push(nextWeekday);
-    nextWeekday = nextWeekday.plus({ days: 7 });
+    nextWeekday = nextWeekday.add({ days: 7 });
   }
   return result;
 }

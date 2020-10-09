@@ -322,7 +322,7 @@ date = Temporal.Date.from('2006-01-24');
 // What's the first day of this month?
 date.with({ day: 1 }); // => 2006-01-01
 // What's the last day of the next month?
-date.plus({ months: 1 }).with({ day: date.daysInMonth }); // => 2006-02-28
+date.add({ months: 1 }).with({ day: date.daysInMonth }); // => 2006-02-28
 // Temporal.YearMonth and Temporal.MonthDay also have some of the
 // properties of Temporal.Date:
 yearMonth = Temporal.YearMonth.from('2018-04');
@@ -348,7 +348,7 @@ date = Temporal.Date.from('2006-08-24[c=japanese]');
 date.withCalendar('iso8601'); // => 2006-08-24
 ```
 
-### date.**plus**(_duration_: object, _options_?: object) : Temporal.Date
+### date.**add**(_duration_: object, _options_?: object) : Temporal.Date
 
 **Parameters:**
 
@@ -380,14 +380,14 @@ Usage example:
 
 ```javascript
 date = Temporal.Date.from('2006-08-24');
-date.plus({ years: 20, months: 4 }); // => 2026-12-24
+date.add({ years: 20, months: 4 }); // => 2026-12-24
 
 date = Temporal.Date.from('2019-01-31');
-date.plus({ months: 1 }); // => 2019-02-28
-date.plus({ months: 1 }, { overflow: 'reject' }); // => throws
+date.add({ months: 1 }); // => 2019-02-28
+date.add({ months: 1 }, { overflow: 'reject' }); // => throws
 ```
 
-### date.**minus**(_duration_: object, _options_?: object) : Temporal.Date
+### date.**subtract**(_duration_: object, _options_?: object) : Temporal.Date
 
 **Parameters:**
 
@@ -419,11 +419,11 @@ Usage example:
 
 ```javascript
 date = Temporal.Date.from('2006-08-24');
-date.minus({ years: 20, months: 4 }); // => 1986-04-24
+date.subtract({ years: 20, months: 4 }); // => 1986-04-24
 
 date = Temporal.Date.from('2019-03-31');
-date.minus({ months: 1 }); // => 2019-02-28
-date.minus({ months: 1 }, { overflow: 'reject' }); // => throws
+date.subtract({ months: 1 }); // => 2019-02-28
+date.subtract({ months: 1 }, { overflow: 'reject' }); // => throws
 ```
 
 ### date.**difference**(_other_: Temporal.Date, _options_?: object) : Temporal.Duration

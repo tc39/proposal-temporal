@@ -24,7 +24,7 @@ It is best practice to specify a calendar system when performing calendar-sensit
 
 For example, to add a month to a date in the Hebrew calendar:
 ```javascript
-date.withCalendar('hebrew').plus({ months: 1 })
+date.withCalendar('hebrew').add({ months: 1 })
 ```
 
 Temporal types' `toLocaleString()` methods use the user's preferred calendar, without needing to call `withCalendar()`.
@@ -32,7 +32,7 @@ To perform arithmetic consistently with the `toLocaleString()` calendar system:
 
 ```javascript
 const calendar = new Intl.DateTimeFormat().resolvedOptions().calendar;
-date.withCalendar(calendar).plus({ months: 1 })
+date.withCalendar(calendar).add({ months: 1 })
 ```
 
 ### Custom calendars
@@ -231,11 +231,11 @@ They provide a way to do date arithmetic in the calendar's date reckoning.
 **Returns:** a new object of the type of `constructor`.
 
 Neither of the above methods need to be called directly except in specialized code.
-They are called indirectly when using the `plus()` and `minus()` methods, respectively, of `Temporal.DateTime`, `Temporal.Date`, and `Temporal.YearMonth`.
+They are called indirectly when using the `add()` and `subtract()` methods, respectively, of `Temporal.DateTime`, `Temporal.Date`, and `Temporal.YearMonth`.
 
 For example:
 ```javascript
-date = Temporal.Date.from('2020-05-29').withCalendar('islamic').plus(
+date = Temporal.Date.from('2020-05-29').withCalendar('islamic').add(
     Temporal.Duration.from({ months: 1 }),
     { overflow: 'reject' }
 );

@@ -245,7 +245,7 @@ ym = Temporal.YearMonth.from('2019-06');
 ym.with({month: 12})  // => 2019-12
 ```
 
-### yearMonth.**plus**(_duration_: object, _options_?: object) : Temporal.YearMonth
+### yearMonth.**add**(_duration_: object, _options_?: object) : Temporal.YearMonth
 
 **Parameters:**
 - `duration` (object): A `Temporal.Duration` object or a duration-like object.
@@ -272,10 +272,10 @@ Adding a negative duration is equivalent to subtracting the absolute value of th
 Usage example:
 ```javascript
 ym = Temporal.YearMonth.from('2019-06');
-ym.plus({years: 20, months: 4})  // => 2039-10
+ym.add({years: 20, months: 4})  // => 2039-10
 ```
 
-### yearMonth.**minus**(_duration_: object, _options_?: object) : Temporal.YearMonth
+### yearMonth.**subtract**(_duration_: object, _options_?: object) : Temporal.YearMonth
 
 **Parameters:**
 - `duration` (object): A `Temporal.Duration` object or a duration-like object.
@@ -302,7 +302,7 @@ Subtracting a negative duration is equivalent to adding the absolute value of th
 Usage example:
 ```javascript
 ym = Temporal.YearMonth.from('2019-06');
-ym.minus({years: 20, months: 4})  // => 1999-02
+ym.subtract({years: 20, months: 4})  // => 1999-02
 ```
 
 ### yearMonth.**difference**(_other_: Temporal.YearMonth, _options_?: object) : Temporal.Duration

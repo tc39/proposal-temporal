@@ -44,7 +44,7 @@ export class Instant {
     return bigIntIfAvailable(GetSlot(this, EPOCHNANOSECONDS));
   }
 
-  plus(temporalDurationLike) {
+  add(temporalDurationLike) {
     if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
     const {
       hours,
@@ -56,15 +56,15 @@ export class Instant {
     } = ES.ToLimitedTemporalDuration(temporalDurationLike, ['years', 'months', 'weeks', 'days']);
     ES.RejectDurationSign(0, 0, 0, 0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
 
-    let add = bigInt(0);
-    add = add.plus(bigInt(nanoseconds));
-    add = add.plus(bigInt(microseconds).multiply(1e3));
-    add = add.plus(bigInt(milliseconds).multiply(1e6));
-    add = add.plus(bigInt(seconds).multiply(1e9));
-    add = add.plus(bigInt(minutes).multiply(60 * 1e9));
-    add = add.plus(bigInt(hours).multiply(60 * 60 * 1e9));
+    let sum = bigInt(0);
+    sum = sum.plus(bigInt(nanoseconds));
+    sum = sum.plus(bigInt(microseconds).multiply(1e3));
+    sum = sum.plus(bigInt(milliseconds).multiply(1e6));
+    sum = sum.plus(bigInt(seconds).multiply(1e9));
+    sum = sum.plus(bigInt(minutes).multiply(60 * 1e9));
+    sum = sum.plus(bigInt(hours).multiply(60 * 60 * 1e9));
 
-    const ns = bigInt(GetSlot(this, EPOCHNANOSECONDS)).plus(add);
+    const ns = bigInt(GetSlot(this, EPOCHNANOSECONDS)).plus(sum);
     ES.RejectInstantRange(ns);
 
     const Construct = ES.SpeciesConstructor(this, Instant);
@@ -72,7 +72,7 @@ export class Instant {
     if (!ES.IsTemporalInstant(result)) throw new TypeError('invalid result');
     return result;
   }
-  minus(temporalDurationLike) {
+  subtract(temporalDurationLike) {
     if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
     const {
       hours,
@@ -84,15 +84,15 @@ export class Instant {
     } = ES.ToLimitedTemporalDuration(temporalDurationLike, ['years', 'months', 'weeks', 'days']);
     ES.RejectDurationSign(0, 0, 0, 0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
 
-    let add = bigInt(0);
-    add = add.plus(bigInt(nanoseconds));
-    add = add.plus(bigInt(microseconds).multiply(1e3));
-    add = add.plus(bigInt(milliseconds).multiply(1e6));
-    add = add.plus(bigInt(seconds).multiply(1e9));
-    add = add.plus(bigInt(minutes).multiply(60 * 1e9));
-    add = add.plus(bigInt(hours).multiply(60 * 60 * 1e9));
+    let sum = bigInt(0);
+    sum = sum.plus(bigInt(nanoseconds));
+    sum = sum.plus(bigInt(microseconds).multiply(1e3));
+    sum = sum.plus(bigInt(milliseconds).multiply(1e6));
+    sum = sum.plus(bigInt(seconds).multiply(1e9));
+    sum = sum.plus(bigInt(minutes).multiply(60 * 1e9));
+    sum = sum.plus(bigInt(hours).multiply(60 * 60 * 1e9));
 
-    const ns = bigInt(GetSlot(this, EPOCHNANOSECONDS)).minus(add);
+    const ns = bigInt(GetSlot(this, EPOCHNANOSECONDS)).minus(sum);
     ES.RejectInstantRange(ns);
 
     const Construct = ES.SpeciesConstructor(this, Instant);

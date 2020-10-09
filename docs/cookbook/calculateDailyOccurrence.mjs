@@ -8,7 +8,7 @@
  * @param {Temporal.TimeZone} timeZone - Time zone in which event is defined
  */
 function* calculateDailyOccurrence(startDate, time, timeZone) {
-  for (let date = startDate; ; date = date.plus({ days: 1 })) {
+  for (let date = startDate; ; date = date.add({ days: 1 })) {
     yield date.toDateTime(time).toInstant(timeZone);
   }
 }

@@ -142,13 +142,13 @@ export class TimeZone {
     const diff = ES.ToTemporalDurationRecord({ nanoseconds }, 'reject');
     switch (disambiguation) {
       case 'earlier': {
-        const earlier = dateTime.minus(diff);
+        const earlier = dateTime.subtract(diff);
         return this.getPossibleInstantsFor(earlier)[0];
       }
       case 'compatible':
       // fall through because 'compatible' means 'later' for "spring forward" transitions
       case 'later': {
-        const later = dateTime.plus(diff);
+        const later = dateTime.add(diff);
         const possible = this.getPossibleInstantsFor(later);
         return possible[possible.length - 1];
       }

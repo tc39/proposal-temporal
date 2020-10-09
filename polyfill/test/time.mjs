@@ -48,11 +48,11 @@ describe('Time', () => {
       it('Time.prototype.with is a Function', () => {
         equal(typeof Time.prototype.with, 'function');
       });
-      it('Time.prototype.plus is a Function', () => {
-        equal(typeof Time.prototype.plus, 'function');
+      it('Time.prototype.add is a Function', () => {
+        equal(typeof Time.prototype.add, 'function');
       });
-      it('Time.prototype.minus is a Function', () => {
-        equal(typeof Time.prototype.minus, 'function');
+      it('Time.prototype.subtract is a Function', () => {
+        equal(typeof Time.prototype.subtract, 'function');
       });
       it('Time.prototype.difference is a Function', () => {
         equal(typeof Time.prototype.difference, 'function');
@@ -248,7 +248,7 @@ describe('Time', () => {
         equal(`${time2.difference(time1, { largestUnit: 'seconds' })}`, 'PT24762S');
       });
       it('can return subseconds', () => {
-        const time3 = time2.plus({ milliseconds: 250, microseconds: 250, nanoseconds: 250 });
+        const time3 = time2.add({ milliseconds: 250, microseconds: 250, nanoseconds: 250 });
 
         const msDiff = time3.difference(time1, { largestUnit: 'milliseconds' });
         equal(msDiff.seconds, 0);
@@ -611,92 +611,92 @@ describe('Time', () => {
       it('<=', () => throws(() => t1 <= t2));
       it('>=', () => throws(() => t1 >= t2));
     });
-    describe('time.plus() works', () => {
+    describe('time.add() works', () => {
       const time = new Time(15, 23, 30, 123, 456, 789);
-      it(`(${time}).plus({ hours: 16 })`, () => {
-        equal(`${time.plus({ hours: 16 })}`, '07:23:30.123456789');
+      it(`(${time}).add({ hours: 16 })`, () => {
+        equal(`${time.add({ hours: 16 })}`, '07:23:30.123456789');
       });
-      it(`(${time}).plus({ minutes: 45 })`, () => {
-        equal(`${time.plus({ minutes: 45 })}`, '16:08:30.123456789');
+      it(`(${time}).add({ minutes: 45 })`, () => {
+        equal(`${time.add({ minutes: 45 })}`, '16:08:30.123456789');
       });
-      it(`(${time}).plus({ nanoseconds: 300 })`, () => {
-        equal(`${time.plus({ nanoseconds: 300 })}`, '15:23:30.123457089');
+      it(`(${time}).add({ nanoseconds: 300 })`, () => {
+        equal(`${time.add({ nanoseconds: 300 })}`, '15:23:30.123457089');
       });
       it('symmetric with regard to negative durations', () => {
-        equal(`${Time.from('07:23:30.123456789').plus({ hours: -16 })}`, '15:23:30.123456789');
-        equal(`${Time.from('16:08:30.123456789').plus({ minutes: -45 })}`, '15:23:30.123456789');
-        equal(`${Time.from('15:23:30.123457089').plus({ nanoseconds: -300 })}`, '15:23:30.123456789');
+        equal(`${Time.from('07:23:30.123456789').add({ hours: -16 })}`, '15:23:30.123456789');
+        equal(`${Time.from('16:08:30.123456789').add({ minutes: -45 })}`, '15:23:30.123456789');
+        equal(`${Time.from('15:23:30.123457089').add({ nanoseconds: -300 })}`, '15:23:30.123456789');
       });
-      it('time.plus(durationObj)', () => {
-        equal(`${time.plus(Temporal.Duration.from('PT16H'))}`, '07:23:30.123456789');
+      it('time.add(durationObj)', () => {
+        equal(`${time.add(Temporal.Duration.from('PT16H'))}`, '07:23:30.123456789');
       });
       it('ignores higher units', () => {
-        equal(`${time.plus({ days: 1 })}`, '15:23:30.123456789');
-        equal(`${time.plus({ months: 1 })}`, '15:23:30.123456789');
-        equal(`${time.plus({ years: 1 })}`, '15:23:30.123456789');
+        equal(`${time.add({ days: 1 })}`, '15:23:30.123456789');
+        equal(`${time.add({ months: 1 })}`, '15:23:30.123456789');
+        equal(`${time.add({ years: 1 })}`, '15:23:30.123456789');
       });
       it('invalid overflow', () => {
         ['', 'CONSTRAIN', 'balance', 3, null].forEach((overflow) =>
-          throws(() => time.plus({ hours: 1 }, { overflow }), RangeError)
+          throws(() => time.add({ hours: 1 }, { overflow }), RangeError)
         );
       });
       it('mixed positive and negative values always throw', () => {
         ['constrain', 'reject'].forEach((overflow) =>
-          throws(() => time.plus({ hours: 1, minutes: -30 }, { overflow }), RangeError)
+          throws(() => time.add({ hours: 1, minutes: -30 }, { overflow }), RangeError)
         );
       });
       it('options may only be an object or undefined', () => {
         [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
-          throws(() => time.plus({ hours: 1 }, badOptions), TypeError)
+          throws(() => time.add({ hours: 1 }, badOptions), TypeError)
         );
         [{}, () => {}, undefined].forEach((options) =>
-          equal(`${time.plus({ hours: 1 }, options)}`, '16:23:30.123456789')
+          equal(`${time.add({ hours: 1 }, options)}`, '16:23:30.123456789')
         );
       });
     });
-    describe('time.minus() works', () => {
+    describe('time.subtract() works', () => {
       const time = Time.from('15:23:30.123456789');
-      it(`(${time}).minus({ hours: 16 })`, () => equal(`${time.minus({ hours: 16 })}`, '23:23:30.123456789'));
-      it(`(${time}).minus({ minutes: 45 })`, () => equal(`${time.minus({ minutes: 45 })}`, '14:38:30.123456789'));
-      it(`(${time}).minus({ seconds: 45 })`, () => equal(`${time.minus({ seconds: 45 })}`, '15:22:45.123456789'));
-      it(`(${time}).minus({ milliseconds: 800 })`, () =>
-        equal(`${time.minus({ milliseconds: 800 })}`, '15:23:29.323456789'));
-      it(`(${time}).minus({ microseconds: 800 })`, () =>
-        equal(`${time.minus({ microseconds: 800 })}`, '15:23:30.122656789'));
-      it(`(${time}).minus({ nanoseconds: 800 })`, () =>
-        equal(`${time.minus({ nanoseconds: 800 })}`, '15:23:30.123455989'));
+      it(`(${time}).subtract({ hours: 16 })`, () => equal(`${time.subtract({ hours: 16 })}`, '23:23:30.123456789'));
+      it(`(${time}).subtract({ minutes: 45 })`, () => equal(`${time.subtract({ minutes: 45 })}`, '14:38:30.123456789'));
+      it(`(${time}).subtract({ seconds: 45 })`, () => equal(`${time.subtract({ seconds: 45 })}`, '15:22:45.123456789'));
+      it(`(${time}).subtract({ milliseconds: 800 })`, () =>
+        equal(`${time.subtract({ milliseconds: 800 })}`, '15:23:29.323456789'));
+      it(`(${time}).subtract({ microseconds: 800 })`, () =>
+        equal(`${time.subtract({ microseconds: 800 })}`, '15:23:30.122656789'));
+      it(`(${time}).subtract({ nanoseconds: 800 })`, () =>
+        equal(`${time.subtract({ nanoseconds: 800 })}`, '15:23:30.123455989'));
       it('symmetric with regard to negative durations', () => {
-        equal(`${Time.from('23:23:30.123456789').minus({ hours: -16 })}`, '15:23:30.123456789');
-        equal(`${Time.from('14:38:30.123456789').minus({ minutes: -45 })}`, '15:23:30.123456789');
-        equal(`${Time.from('15:22:45.123456789').minus({ seconds: -45 })}`, '15:23:30.123456789');
-        equal(`${Time.from('15:23:29.323456789').minus({ milliseconds: -800 })}`, '15:23:30.123456789');
-        equal(`${Time.from('15:23:30.122656789').minus({ microseconds: -800 })}`, '15:23:30.123456789');
-        equal(`${Time.from('15:23:30.123455989').minus({ nanoseconds: -800 })}`, '15:23:30.123456789');
+        equal(`${Time.from('23:23:30.123456789').subtract({ hours: -16 })}`, '15:23:30.123456789');
+        equal(`${Time.from('14:38:30.123456789').subtract({ minutes: -45 })}`, '15:23:30.123456789');
+        equal(`${Time.from('15:22:45.123456789').subtract({ seconds: -45 })}`, '15:23:30.123456789');
+        equal(`${Time.from('15:23:29.323456789').subtract({ milliseconds: -800 })}`, '15:23:30.123456789');
+        equal(`${Time.from('15:23:30.122656789').subtract({ microseconds: -800 })}`, '15:23:30.123456789');
+        equal(`${Time.from('15:23:30.123455989').subtract({ nanoseconds: -800 })}`, '15:23:30.123456789');
       });
-      it('time.minus(durationObj)', () => {
-        equal(`${time.minus(Temporal.Duration.from('PT16H'))}`, '23:23:30.123456789');
+      it('time.subtract(durationObj)', () => {
+        equal(`${time.subtract(Temporal.Duration.from('PT16H'))}`, '23:23:30.123456789');
       });
       it('ignores higher units', () => {
-        equal(`${time.minus({ days: 1 })}`, '15:23:30.123456789');
-        equal(`${time.minus({ months: 1 })}`, '15:23:30.123456789');
-        equal(`${time.minus({ years: 1 })}`, '15:23:30.123456789');
+        equal(`${time.subtract({ days: 1 })}`, '15:23:30.123456789');
+        equal(`${time.subtract({ months: 1 })}`, '15:23:30.123456789');
+        equal(`${time.subtract({ years: 1 })}`, '15:23:30.123456789');
       });
       it('invalid overflow', () => {
         ['', 'CONSTRAIN', 'balance', 3, null].forEach((overflow) =>
-          throws(() => time.minus({ hours: 1 }, { overflow }), RangeError)
+          throws(() => time.subtract({ hours: 1 }, { overflow }), RangeError)
         );
       });
       it('mixed positive and negative values always throw', () => {
         ['constrain', 'reject'].forEach((overflow) =>
-          throws(() => time.minus({ hours: 1, minutes: -30 }, { overflow }), RangeError)
+          throws(() => time.subtract({ hours: 1, minutes: -30 }, { overflow }), RangeError)
         );
       });
       it('options may only be an object or undefined', () => {
         [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
-          throws(() => time.minus({ hours: 1 }, badOptions), TypeError)
+          throws(() => time.subtract({ hours: 1 }, badOptions), TypeError)
         );
         [{}, () => {}, undefined].forEach((options) =>
-          equal(`${time.minus({ hours: 1 }, options)}`, '14:23:30.123456789')
+          equal(`${time.subtract({ hours: 1 }, options)}`, '14:23:30.123456789')
         );
       });
     });

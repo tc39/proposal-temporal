@@ -67,8 +67,8 @@ class Temporal.LocalDateTime {
   equals(other: Temporal.LocalDateTime): boolean;
 
   // arithmetic
-  plus(duration: Temporal.Duration | object, options?: object) : Temporal.LocalDateTime;
-  minus(duration: Temporal.Duration | object, options?: object) : Temporal.LocalDateTime;
+  add(duration: Temporal.Duration | object, options?: object) : Temporal.LocalDateTime;
+  subtract(duration: Temporal.Duration | object, options?: object) : Temporal.LocalDateTime;
   difference(other: Temporal.LocalDateTime, options?: object) : Temporal.Duration;
 
   // serialization / presentation

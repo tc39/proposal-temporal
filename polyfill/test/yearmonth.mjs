@@ -201,8 +201,8 @@ describe('YearMonth', () => {
     const diff = jun13.difference(nov94);
     it(`${nov94}.difference(${jun13}) == ${jun13}.difference(${nov94}).negated()`, () =>
       equal(`${nov94.difference(jun13)}`, `${diff.negated()}`));
-    it(`${nov94}.plus(${diff}) == ${jun13}`, () => nov94.plus(diff).equals(jun13));
-    it(`${jun13}.minus(${diff}) == ${nov94}`, () => jun13.minus(diff).equals(nov94));
+    it(`${nov94}.add(${diff}) == ${jun13}`, () => nov94.add(diff).equals(jun13));
+    it(`${jun13}.subtract(${diff}) == ${nov94}`, () => jun13.subtract(diff).equals(nov94));
     it("doesn't cast argument", () => {
       throws(() => nov94.difference({ year: 2013, month: 6 }), TypeError);
       throws(() => nov94.difference('2013-06'), TypeError);
@@ -238,139 +238,139 @@ describe('YearMonth', () => {
       [{}, () => {}, undefined].forEach((options) => equal(`${feb21.difference(feb20, options)}`, 'P1Y'));
     });
   });
-  describe('YearMonth.plus() works', () => {
+  describe('YearMonth.add() works', () => {
     const ym = YearMonth.from('2019-11');
     it('(2019-11) plus 2 months === 2020-01', () => {
-      equal(`${ym.plus({ months: 2 })}`, '2020-01');
-      equal(`${ym.plus({ months: 2 }, { overflow: 'constrain' })}`, '2020-01');
-      equal(`${ym.plus({ months: 2 }, { overflow: 'reject' })}`, '2020-01');
+      equal(`${ym.add({ months: 2 })}`, '2020-01');
+      equal(`${ym.add({ months: 2 }, { overflow: 'constrain' })}`, '2020-01');
+      equal(`${ym.add({ months: 2 }, { overflow: 'reject' })}`, '2020-01');
     });
     it('(2019-11) plus 1 year === 2020-11', () => {
-      equal(`${ym.plus({ years: 1 })}`, '2020-11');
-      equal(`${ym.plus({ years: 1 }, { overflow: 'constrain' })}`, '2020-11');
-      equal(`${ym.plus({ years: 1 }, { overflow: 'reject' })}`, '2020-11');
+      equal(`${ym.add({ years: 1 })}`, '2020-11');
+      equal(`${ym.add({ years: 1 }, { overflow: 'constrain' })}`, '2020-11');
+      equal(`${ym.add({ years: 1 }, { overflow: 'reject' })}`, '2020-11');
     });
     it('symmetrical with regard to negative durations', () => {
-      equal(`${YearMonth.from('2020-01').plus({ months: -2 })}`, '2019-11');
-      equal(`${YearMonth.from('2020-11').plus({ years: -1 })}`, '2019-11');
+      equal(`${YearMonth.from('2020-01').add({ months: -2 })}`, '2019-11');
+      equal(`${YearMonth.from('2020-11').add({ years: -1 })}`, '2019-11');
     });
-    it('yearMonth.plus(durationObj)', () => {
-      equal(`${ym.plus(Temporal.Duration.from('P2M'))}`, '2020-01');
+    it('yearMonth.add(durationObj)', () => {
+      equal(`${ym.add(Temporal.Duration.from('P2M'))}`, '2020-01');
     });
     it("ignores lower units that don't balance up to the length of the month", () => {
-      equal(`${ym.plus({ days: 1 })}`, '2019-11');
-      equal(`${ym.plus({ days: 29 })}`, '2019-11');
-      equal(`${ym.plus({ hours: 1 })}`, '2019-11');
-      equal(`${ym.plus({ minutes: 1 })}`, '2019-11');
-      equal(`${ym.plus({ seconds: 1 })}`, '2019-11');
-      equal(`${ym.plus({ milliseconds: 1 })}`, '2019-11');
-      equal(`${ym.plus({ microseconds: 1 })}`, '2019-11');
-      equal(`${ym.plus({ nanoseconds: 1 })}`, '2019-11');
+      equal(`${ym.add({ days: 1 })}`, '2019-11');
+      equal(`${ym.add({ days: 29 })}`, '2019-11');
+      equal(`${ym.add({ hours: 1 })}`, '2019-11');
+      equal(`${ym.add({ minutes: 1 })}`, '2019-11');
+      equal(`${ym.add({ seconds: 1 })}`, '2019-11');
+      equal(`${ym.add({ milliseconds: 1 })}`, '2019-11');
+      equal(`${ym.add({ microseconds: 1 })}`, '2019-11');
+      equal(`${ym.add({ nanoseconds: 1 })}`, '2019-11');
     });
     it('adds lower units that balance up to a month or more', () => {
-      equal(`${ym.plus({ days: 30 })}`, '2019-12');
-      equal(`${ym.plus({ days: 31 })}`, '2019-12');
-      equal(`${ym.plus({ days: 60 })}`, '2019-12');
-      equal(`${ym.plus({ days: 61 })}`, '2020-01');
-      equal(`${ym.plus({ hours: 720 })}`, '2019-12');
-      equal(`${ym.plus({ minutes: 43200 })}`, '2019-12');
-      equal(`${ym.plus({ seconds: 2592000 })}`, '2019-12');
-      equal(`${ym.plus({ milliseconds: 2592000_000 })}`, '2019-12');
-      equal(`${ym.plus({ microseconds: 2592000_000_000 })}`, '2019-12');
-      equal(`${ym.plus({ nanoseconds: 2592000_000_000_000 })}`, '2019-12');
+      equal(`${ym.add({ days: 30 })}`, '2019-12');
+      equal(`${ym.add({ days: 31 })}`, '2019-12');
+      equal(`${ym.add({ days: 60 })}`, '2019-12');
+      equal(`${ym.add({ days: 61 })}`, '2020-01');
+      equal(`${ym.add({ hours: 720 })}`, '2019-12');
+      equal(`${ym.add({ minutes: 43200 })}`, '2019-12');
+      equal(`${ym.add({ seconds: 2592000 })}`, '2019-12');
+      equal(`${ym.add({ milliseconds: 2592000_000 })}`, '2019-12');
+      equal(`${ym.add({ microseconds: 2592000_000_000 })}`, '2019-12');
+      equal(`${ym.add({ nanoseconds: 2592000_000_000_000 })}`, '2019-12');
     });
     it('balances days to months based on the number of days in the ISO month', () => {
-      equal(`${YearMonth.from('2019-02').plus({ days: 27 })}`, '2019-02');
-      equal(`${YearMonth.from('2019-02').plus({ days: 28 })}`, '2019-03');
-      equal(`${YearMonth.from('2020-02').plus({ days: 28 })}`, '2020-02');
-      equal(`${YearMonth.from('2020-02').plus({ days: 29 })}`, '2020-03');
-      equal(`${YearMonth.from('2019-11').plus({ days: 29 })}`, '2019-11');
-      equal(`${YearMonth.from('2019-11').plus({ days: 30 })}`, '2019-12');
-      equal(`${YearMonth.from('2020-01').plus({ days: 30 })}`, '2020-01');
-      equal(`${YearMonth.from('2020-01').plus({ days: 31 })}`, '2020-02');
+      equal(`${YearMonth.from('2019-02').add({ days: 27 })}`, '2019-02');
+      equal(`${YearMonth.from('2019-02').add({ days: 28 })}`, '2019-03');
+      equal(`${YearMonth.from('2020-02').add({ days: 28 })}`, '2020-02');
+      equal(`${YearMonth.from('2020-02').add({ days: 29 })}`, '2020-03');
+      equal(`${YearMonth.from('2019-11').add({ days: 29 })}`, '2019-11');
+      equal(`${YearMonth.from('2019-11').add({ days: 30 })}`, '2019-12');
+      equal(`${YearMonth.from('2020-01').add({ days: 30 })}`, '2020-01');
+      equal(`${YearMonth.from('2020-01').add({ days: 31 })}`, '2020-02');
     });
     it('invalid overflow', () => {
       ['', 'CONSTRAIN', 'balance', 3, null].forEach((overflow) =>
-        throws(() => ym.plus({ months: 1 }, { overflow }), RangeError)
+        throws(() => ym.add({ months: 1 }, { overflow }), RangeError)
       );
     });
     it('mixed positive and negative values always throw', () => {
       ['constrain', 'reject'].forEach((overflow) =>
-        throws(() => ym.plus({ years: 1, months: -6 }, { overflow }), RangeError)
+        throws(() => ym.add({ years: 1, months: -6 }, { overflow }), RangeError)
       );
     });
     it('options may only be an object or undefined', () => {
       [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
-        throws(() => ym.plus({ months: 1 }, badOptions), TypeError)
+        throws(() => ym.add({ months: 1 }, badOptions), TypeError)
       );
-      [{}, () => {}, undefined].forEach((options) => equal(`${ym.plus({ months: 1 }, options)}`, '2019-12'));
+      [{}, () => {}, undefined].forEach((options) => equal(`${ym.add({ months: 1 }, options)}`, '2019-12'));
     });
   });
-  describe('YearMonth.minus() works', () => {
+  describe('YearMonth.subtract() works', () => {
     const ym = YearMonth.from('2019-11');
     it('(2019-11) minus 11 months === 2018-12', () => {
-      equal(`${ym.minus({ months: 11 })}`, '2018-12');
-      equal(`${ym.minus({ months: 11 }, { overflow: 'constrain' })}`, '2018-12');
-      equal(`${ym.minus({ months: 11 }, { overflow: 'reject' })}`, '2018-12');
+      equal(`${ym.subtract({ months: 11 })}`, '2018-12');
+      equal(`${ym.subtract({ months: 11 }, { overflow: 'constrain' })}`, '2018-12');
+      equal(`${ym.subtract({ months: 11 }, { overflow: 'reject' })}`, '2018-12');
     });
     it('(2019-11) minus 12 years === 2007-11', () => {
-      equal(`${ym.minus({ years: 12 })}`, '2007-11');
-      equal(`${ym.minus({ years: 12 }, { overflow: 'constrain' })}`, '2007-11');
-      equal(`${ym.minus({ years: 12 }, { overflow: 'reject' })}`, '2007-11');
+      equal(`${ym.subtract({ years: 12 })}`, '2007-11');
+      equal(`${ym.subtract({ years: 12 }, { overflow: 'constrain' })}`, '2007-11');
+      equal(`${ym.subtract({ years: 12 }, { overflow: 'reject' })}`, '2007-11');
     });
     it('symmetrical with regard to negative durations', () => {
-      equal(`${YearMonth.from('2018-12').minus({ months: -11 })}`, '2019-11');
-      equal(`${YearMonth.from('2007-11').minus({ years: -12 })}`, '2019-11');
+      equal(`${YearMonth.from('2018-12').subtract({ months: -11 })}`, '2019-11');
+      equal(`${YearMonth.from('2007-11').subtract({ years: -12 })}`, '2019-11');
     });
-    it('yearMonth.minus(durationObj)', () => {
-      equal(`${ym.minus(Temporal.Duration.from('P11M'))}`, '2018-12');
+    it('yearMonth.subtract(durationObj)', () => {
+      equal(`${ym.subtract(Temporal.Duration.from('P11M'))}`, '2018-12');
     });
     it("ignores lower units that don't balance up to the length of the month", () => {
-      equal(`${ym.minus({ days: 1 })}`, '2019-11');
-      equal(`${ym.minus({ hours: 1 })}`, '2019-11');
-      equal(`${ym.minus({ minutes: 1 })}`, '2019-11');
-      equal(`${ym.minus({ seconds: 1 })}`, '2019-11');
-      equal(`${ym.minus({ milliseconds: 1 })}`, '2019-11');
-      equal(`${ym.minus({ microseconds: 1 })}`, '2019-11');
-      equal(`${ym.minus({ nanoseconds: 1 })}`, '2019-11');
+      equal(`${ym.subtract({ days: 1 })}`, '2019-11');
+      equal(`${ym.subtract({ hours: 1 })}`, '2019-11');
+      equal(`${ym.subtract({ minutes: 1 })}`, '2019-11');
+      equal(`${ym.subtract({ seconds: 1 })}`, '2019-11');
+      equal(`${ym.subtract({ milliseconds: 1 })}`, '2019-11');
+      equal(`${ym.subtract({ microseconds: 1 })}`, '2019-11');
+      equal(`${ym.subtract({ nanoseconds: 1 })}`, '2019-11');
     });
     it('subtracts lower units that balance up to a day or more', () => {
-      equal(`${ym.minus({ days: 29 })}`, '2019-11');
-      equal(`${ym.minus({ days: 30 })}`, '2019-10');
-      equal(`${ym.minus({ days: 60 })}`, '2019-10');
-      equal(`${ym.minus({ days: 61 })}`, '2019-09');
-      equal(`${ym.minus({ hours: 720 })}`, '2019-10');
-      equal(`${ym.minus({ minutes: 43200 })}`, '2019-10');
-      equal(`${ym.minus({ seconds: 2592000 })}`, '2019-10');
-      equal(`${ym.minus({ milliseconds: 2592000_000 })}`, '2019-10');
-      equal(`${ym.minus({ microseconds: 2592000_000_000 })}`, '2019-10');
-      equal(`${ym.minus({ nanoseconds: 2592000_000_000_000 })}`, '2019-10');
+      equal(`${ym.subtract({ days: 29 })}`, '2019-11');
+      equal(`${ym.subtract({ days: 30 })}`, '2019-10');
+      equal(`${ym.subtract({ days: 60 })}`, '2019-10');
+      equal(`${ym.subtract({ days: 61 })}`, '2019-09');
+      equal(`${ym.subtract({ hours: 720 })}`, '2019-10');
+      equal(`${ym.subtract({ minutes: 43200 })}`, '2019-10');
+      equal(`${ym.subtract({ seconds: 2592000 })}`, '2019-10');
+      equal(`${ym.subtract({ milliseconds: 2592000_000 })}`, '2019-10');
+      equal(`${ym.subtract({ microseconds: 2592000_000_000 })}`, '2019-10');
+      equal(`${ym.subtract({ nanoseconds: 2592000_000_000_000 })}`, '2019-10');
     });
     it('balances days to months based on the number of days in the ISO month', () => {
-      equal(`${YearMonth.from('2019-02').minus({ days: 27 })}`, '2019-02');
-      equal(`${YearMonth.from('2019-02').minus({ days: 28 })}`, '2019-01');
-      equal(`${YearMonth.from('2020-02').minus({ days: 28 })}`, '2020-02');
-      equal(`${YearMonth.from('2020-02').minus({ days: 29 })}`, '2020-01');
-      equal(`${YearMonth.from('2019-11').minus({ days: 29 })}`, '2019-11');
-      equal(`${YearMonth.from('2019-11').minus({ days: 30 })}`, '2019-10');
-      equal(`${YearMonth.from('2020-01').minus({ days: 30 })}`, '2020-01');
-      equal(`${YearMonth.from('2020-01').minus({ days: 31 })}`, '2019-12');
+      equal(`${YearMonth.from('2019-02').subtract({ days: 27 })}`, '2019-02');
+      equal(`${YearMonth.from('2019-02').subtract({ days: 28 })}`, '2019-01');
+      equal(`${YearMonth.from('2020-02').subtract({ days: 28 })}`, '2020-02');
+      equal(`${YearMonth.from('2020-02').subtract({ days: 29 })}`, '2020-01');
+      equal(`${YearMonth.from('2019-11').subtract({ days: 29 })}`, '2019-11');
+      equal(`${YearMonth.from('2019-11').subtract({ days: 30 })}`, '2019-10');
+      equal(`${YearMonth.from('2020-01').subtract({ days: 30 })}`, '2020-01');
+      equal(`${YearMonth.from('2020-01').subtract({ days: 31 })}`, '2019-12');
     });
     it('invalid overflow', () => {
       ['', 'CONSTRAIN', 'balance', 3, null].forEach((overflow) =>
-        throws(() => ym.minus({ months: 1 }, { overflow }), RangeError)
+        throws(() => ym.subtract({ months: 1 }, { overflow }), RangeError)
       );
     });
     it('mixed positive and negative values always throw', () => {
       ['constrain', 'reject'].forEach((overflow) =>
-        throws(() => ym.minus({ years: 1, months: -6 }, { overflow }), RangeError)
+        throws(() => ym.subtract({ years: 1, months: -6 }, { overflow }), RangeError)
       );
     });
     it('options may only be an object or undefined', () => {
       [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
-        throws(() => ym.minus({ months: 1 }, badOptions), TypeError)
+        throws(() => ym.subtract({ months: 1 }, badOptions), TypeError)
       );
-      [{}, () => {}, undefined].forEach((options) => equal(`${ym.minus({ months: 1 }, options)}`, '2019-10'));
+      [{}, () => {}, undefined].forEach((options) => equal(`${ym.subtract({ months: 1 }, options)}`, '2019-10'));
     });
   });
   describe('Min/max range', () => {
@@ -410,8 +410,8 @@ describe('YearMonth', () => {
       const min = YearMonth.from('-271821-04');
       const max = YearMonth.from('+275760-09');
       ['reject', 'constrain'].forEach((overflow) => {
-        throws(() => min.minus({ months: 1 }, { overflow }), RangeError);
-        throws(() => max.plus({ months: 1 }, { overflow }), RangeError);
+        throws(() => min.subtract({ months: 1 }, { overflow }), RangeError);
+        throws(() => max.add({ months: 1 }, { overflow }), RangeError);
       });
     });
   });

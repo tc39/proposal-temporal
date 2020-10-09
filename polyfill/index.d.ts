@@ -23,7 +23,7 @@ export namespace Temporal {
   /**
    * Options for assigning fields using `Duration.prototype.with()` or entire
    * objects with `Duration.from()`, and for arithmetic with
-   * `Duration.prototype.plus()` and `Duration.prototype.minus()`.
+   * `Duration.prototype.add()` and `Duration.prototype.subtract()`.
    * */
   export type DurationOptions = {
     /**
@@ -70,7 +70,7 @@ export namespace Temporal {
   };
 
   /**
-   * Options for arithmetic operations like `plus()` and `minus()`
+   * Options for arithmetic operations like `add()` and `subtract()`
    * */
   export type ArithmeticOptions = {
     /**
@@ -217,8 +217,8 @@ export namespace Temporal {
     negated(): Temporal.Duration;
     abs(): Temporal.Duration;
     with(durationLike: DurationLike, options?: DurationOptions): Temporal.Duration;
-    plus(other: Temporal.Duration | DurationLike, options?: DurationOptions): Temporal.Duration;
-    minus(other: Temporal.Duration | DurationLike, options?: DurationOptions): Temporal.Duration;
+    add(other: Temporal.Duration | DurationLike, options?: DurationOptions): Temporal.Duration;
+    subtract(other: Temporal.Duration | DurationLike, options?: DurationOptions): Temporal.Duration;
     getFields(): DurationFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
@@ -252,8 +252,8 @@ export namespace Temporal {
     getEpochMicroseconds(): bigint;
     getEpochNanoseconds(): bigint;
     equals(other: Temporal.Instant): boolean;
-    plus(durationLike: Temporal.Duration | DurationLike): Temporal.Instant;
-    minus(durationLike: Temporal.Duration | DurationLike): Temporal.Instant;
+    add(durationLike: Temporal.Duration | DurationLike): Temporal.Instant;
+    subtract(durationLike: Temporal.Duration | DurationLike): Temporal.Instant;
     difference(
       other: Temporal.Instant,
       options?: DifferenceOptions<'hours' | 'minutes' | 'seconds' | 'milliseconds' | 'microseconds' | 'nanoseconds'>
@@ -424,8 +424,8 @@ export namespace Temporal {
     equals(other: Temporal.Date): boolean;
     with(dateLike: DateLike, options?: AssignmentOptions): Temporal.Date;
     withCalendar(calendar: CalendarProtocol | string): Temporal.Date;
-    plus(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.Date;
-    minus(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.Date;
+    add(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.Date;
+    subtract(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.Date;
     difference(
       other: Temporal.Date,
       options?: DifferenceOptions<'years' | 'months' | 'weeks' | 'days'>
@@ -528,8 +528,8 @@ export namespace Temporal {
     equals(other: Temporal.DateTime): boolean;
     with(dateTimeLike: DateTimeLike, options?: AssignmentOptions): Temporal.DateTime;
     withCalendar(calendar: CalendarProtocol | string): Temporal.DateTime;
-    plus(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.DateTime;
-    minus(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.DateTime;
+    add(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.DateTime;
+    subtract(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.DateTime;
     difference(
       other: Temporal.DateTime,
       options?: DifferenceOptions<
@@ -639,8 +639,8 @@ export namespace Temporal {
     readonly nanosecond: number;
     equals(other: Temporal.Time): boolean;
     with(timeLike: Temporal.Time | TimeLike, options?: AssignmentOptions): Temporal.Time;
-    plus(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.Time;
-    minus(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.Time;
+    add(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.Time;
+    subtract(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.Time;
     difference(
       other: Temporal.Time,
       options?: DifferenceOptions<'hours' | 'minutes' | 'seconds' | 'milliseconds' | 'microseconds' | 'nanoseconds'>
@@ -733,8 +733,8 @@ export namespace Temporal {
     readonly isLeapYear: boolean;
     equals(other: Temporal.YearMonth): boolean;
     with(yearMonthLike: YearMonthLike, options?: AssignmentOptions): Temporal.YearMonth;
-    plus(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.YearMonth;
-    minus(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.YearMonth;
+    add(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.YearMonth;
+    subtract(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.YearMonth;
     difference(other: Temporal.YearMonth, options?: DifferenceOptions<'years' | 'months'>): Temporal.Duration;
     toDateOnDay(day: number): Temporal.Date;
     getFields(): YearMonthFields;
