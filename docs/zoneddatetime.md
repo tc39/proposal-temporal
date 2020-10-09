@@ -225,7 +225,7 @@ Comparison will use exact time, not clock time, because sorting is almost always
 Note that during the hour before and after DST ends, sorting of clock time may not match the order the events actually occurred.
 
 If exact timestamps are equal, then `.calendar.id` will be compared lexicographically, in order to ensure a deterministic sort order.
-If those are equal too, then `.timeZone.name` will be compared lexicographically.
+If those are equal too, then `.timeZone.id` will be compared lexicographically.
 
 For example:
 

@@ -24,7 +24,7 @@ for (const [thisValue, constructor = thisValue] of thisValues) {
   for (const [valid, canonical = valid] of valids) {
     const result = Temporal.TimeZone.from.call(thisValue, valid);
     assert.sameValue(result.constructor, constructor);
-    assert.sameValue(result.name, canonical);
+    assert.sameValue(result.id, canonical);
     assert.sameValue(result.toString(), canonical);
   }
 }

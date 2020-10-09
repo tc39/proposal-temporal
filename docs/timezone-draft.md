@@ -40,7 +40,7 @@ const originalTemporalTimeZoneFrom = Temporal.TimeZone.from;
 Temporal.TimeZone.from = function (item) {
   let id;
   if (item instanceof Temporal.TimeZone) {
-    id = item.name;
+    id = item.id;
   } else {
     const string = `${item}`;
     try {
@@ -71,7 +71,7 @@ const originalTemporalTimeZoneFrom = Temporal.TimeZone.from;
 Temporal.TimeZone.from = function (item) {
   let id;
   if (item instanceof Temporal.TimeZone) {
-    id = item.name;
+    id = item.id;
   } else {
     const string = `${item}`;
     try {
@@ -123,7 +123,7 @@ class Temporal.TimeZone {
 
   // API methods that a subclassed custom time zone doesn't need to touch
 
-  get name() : string;
+  get id() : string;
   getDateTimeFor(instant : Temporal.Instant) : Temporal.DateTime;
   getInstantFor(
       dateTime : Temporal.DateTime,
@@ -157,8 +157,8 @@ class OffsetTimeZone extends Temporal.TimeZone {
     if (sign === -1 && offsetNs === 0) sign = 1;  // "-00:00" is "+00:00"
     const hourString = `${h}`.padStart(2, '0');
     const minuteString = `${min}`.padStart(2, '0');
-    const name = `${sign < 0 ? '-' : '+'}${hourString}:${minuteString}`;
-    super(name);
+    const id = `${sign < 0 ? '-' : '+'}${hourString}:${minuteString}`;
+    super(id);
     this.#offsetNs = sign * offsetNs;
   }
 

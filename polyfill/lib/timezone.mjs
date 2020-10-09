@@ -49,7 +49,7 @@ export class TimeZone {
       });
     }
   }
-  get name() {
+  get id() {
     return ES.TimeZoneToString(this);
   }
   getOffsetNanosecondsFor(absolute) {

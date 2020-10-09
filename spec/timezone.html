@@ -28,7 +28,7 @@
         1. Let _identifier_ be ? ToString(_identifier_).
         1. If _identifier_ does not satisfy the syntax of a |TemporalTimeZoneIdentifier| (see <emu-xref href="#sec-temporal-iso8601grammar"></emu-xref>), then
           1. Throw a *TypeError* exception.
-        1. Let _sign_, _hour_, _minute_, and _name_ be the parts of _identifier_ produced respectively by the |TimeZoneUTCOffsetSign|, |TimeZoneUTCOffsetHour|, |TimeZoneUTCOffsetMinute| and |TimeZoneIANAName| productions, or *undefined* if not present.
+        1. Let _sign_, _hour_, _minute_, and _id_ be the parts of _identifier_ produced respectively by the |TimeZoneUTCOffsetSign|, |TimeZoneUTCOffsetHour|, |TimeZoneUTCOffsetMinute| and |TimeZoneIANAName| productions, or *undefined* if not present.
         1. If _hour_ is not *undefined*, then
           1. Assert: _sign_ is not *undefined*.
           1. Set _hour_ to ! ToInteger(_hour_).
@@ -37,7 +37,7 @@
           1. If _minute_ is not *undefined*, then
             1. Set _minute_ to ! ToInteger(_minute_).
           1. <mark>Do something with the offset.</mark>
-        1. If ! IsValidTimeZoneName(_name_) is *false*, then
+        1. If ! IsValidTimeZoneName(_id_) is *false*, then
           1. Throw a *TypeError* exception.
         1. Let _canonical_ be ! CanonicalizeTimeZoneName(_identifier_).
         1. Return ? CreateTemporalTimeZone(_canonical_, NewTarget).
@@ -115,10 +115,10 @@
       </p>
     </emu-clause>
 
-    <emu-clause id="sec-get-temporal.timezone.prototype.name">
-      <h1>get Temporal.TimeZone.prototype.name</h1>
+    <emu-clause id="sec-get-temporal.timezone.prototype.id">
+      <h1>get Temporal.TimeZone.prototype.id</h1>
       <p>
-        `Temporal.TimeZone.prototype.name` is an accessor property whose set accessor function is undefined.
+        `Temporal.TimeZone.prototype.id` is an accessor property whose set accessor function is undefined.
         Its get accessor function performs the following steps:
       </p>
       <emu-alg>

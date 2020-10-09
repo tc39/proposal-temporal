@@ -43,9 +43,9 @@ describe('Userland time zone', () => {
     const dt = new Temporal.DateTime(1976, 11, 18, 15, 23, 30, 123, 456, 789);
 
     it('is a time zone', () => equal(typeof obj, 'object'));
-    it('.name property', () => equal(obj.name, 'Etc/Custom_UTC_Subclass'));
+    it('.id property', () => equal(obj.id, 'Etc/Custom_UTC_Subclass'));
     // FIXME: what should happen in Temporal.TimeZone.from(obj)?
-    it('.name is not available in from()', () => {
+    it('.id is not available in from()', () => {
       throws(() => Temporal.TimeZone.from('Etc/Custom_UTC_Subclass'), RangeError);
       throws(() => Temporal.TimeZone.from('2020-05-26T16:02:46.251163036+00:00[Etc/Custom_UTC_Subclass]'), RangeError);
     });
@@ -58,7 +58,7 @@ describe('Userland time zone', () => {
       equal(`${obj.getInstantFor(dt)}`, '1976-11-18T15:23:30.123456789Z');
       equal(`${dt.toInstant(obj)}`, '1976-11-18T15:23:30.123456789Z');
     });
-    it('converts to string', () => equal(`${obj}`, obj.name));
+    it('converts to string', () => equal(`${obj}`, obj.id));
     it('prints in absolute.toString', () =>
       equal(abs.toString(obj), '1970-01-01T00:00+00:00[Etc/Custom_UTC_Subclass]'));
     it('has no next transitions', () => assert.equal(obj.getNextTransition(), null));
@@ -74,7 +74,7 @@ describe('Userland time zone', () => {
         Temporal.TimeZone.from = function (item) {
           let id;
           if (item instanceof Temporal.TimeZone) {
-            id = item.name;
+            id = item.id;
           } else {
             id = `${item}`;
             // TODO: Use Temporal.parse here to extract the ID from an ISO string
@@ -160,7 +160,7 @@ describe('Userland time zone', () => {
         Temporal.TimeZone.from = function (item) {
           let id;
           if (item instanceof Temporal.TimeZone) {
-            id = item.name;
+            id = item.id;
           } else {
             id = `${item}`;
             // TODO: Use Temporal.parse here to extract the ID from an ISO string

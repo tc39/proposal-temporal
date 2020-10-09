@@ -109,16 +109,15 @@ tz = Temporal.TimeZone.from('2020-01-13T16:31:00.065858086-08:00[America/Vancouv
 tz2 = Temporal.TimeZone.from(tz);
 
 /* WRONG */ tz = Temporal.TimeZone.from('local'); // not a time zone, throws
-/* WRONG */ tz = Temporal.TimeZone.from({ name: 'UTC' }); // not a TimeZone object, throws
 /* WRONG */ tz = Temporal.TimeZone.from('2020-01-14T00:31:00'); // ISO 8601 string without time zone offset part, throws
 /* WRONG */ tz = Temporal.TimeZone.from('-08:00[America/Vancouver]'); // ISO 8601 string without date-time part, throws
 ```
 
 ## Properties
 
-### timeZone.**name** : string
+### timeZone.**id** : string
 
-The `name` property gives an unambiguous identifier for the time zone.
+The `id` property gives an unambiguous identifier for the time zone.
 Effectively, this is the canonicalized version of whatever `timeZoneIdentifier` was passed as a parameter to the constructor.
 
 ## Methods
@@ -167,7 +166,7 @@ tz.getOffsetNanosecondsFor(Temporal.Instant.from('2020-11-06T01:00Z')); // => 0
 
 This method is similar to `timeZone.getOffsetNanosecondsFor()`, but returns the offset formatted as a string, with sign, hours, and minutes.
 
-If `timeZone` is a UTC offset time zone, the return value of this method is effectively the same as `timeZone.name`.
+If `timeZone` is a UTC offset time zone, the return value of this method is effectively the same as `timeZone.id`.
 
 Example usage:
 
@@ -333,13 +332,13 @@ duration.toLocaleString(); // output will vary
 
 ### timeZone.**toString**() : string
 
-**Returns:** The string given by `timeZone.name`.
+**Returns:** The string given by `timeZone.id`.
 
-This method overrides `Object.prototype.toString()` and provides the time zone's `name` property as a human-readable description.
+This method overrides `Object.prototype.toString()` and provides the time zone's `id` property as a human-readable description.
 
 ### timeZone.**toJSON**() : string
 
-**Returns:** the string given by `timeZone.name`.
+**Returns:** the string given by `timeZone.id`.
 
 This method is the same as `timeZone.toString()`.
 It is usually not called directly, but it can be called automatically by `JSON.stringify()`.
