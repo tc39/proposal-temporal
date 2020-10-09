@@ -139,7 +139,7 @@ export class Date {
     ({ days } = ES.BalanceDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 'days'));
     duration = { years, months, weeks, days };
     const Construct = ES.SpeciesConstructor(this, Date);
-    const result = GetSlot(this, CALENDAR).datePlus(this, duration, options, Construct);
+    const result = GetSlot(this, CALENDAR).dateAdd(this, duration, options, Construct);
     if (!ES.IsTemporalDate(result)) throw new TypeError('invalid result');
     return result;
   }
@@ -151,7 +151,7 @@ export class Date {
     ({ days } = ES.BalanceDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 'days'));
     duration = { years, months, weeks, days };
     const Construct = ES.SpeciesConstructor(this, Date);
-    const result = GetSlot(this, CALENDAR).dateMinus(this, duration, options, Construct);
+    const result = GetSlot(this, CALENDAR).dateSubtract(this, duration, options, Construct);
     if (!ES.IsTemporalDate(result)) throw new TypeError('invalid result');
     return result;
   }

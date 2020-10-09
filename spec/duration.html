@@ -847,19 +847,19 @@
           1. Else,
             1. Perform ? RequireInternalSlot(_relativeTo_, [[InitializedTemporalDateTime]]).
             1. Let _calendar_ be _relativeTo_.[[Calendar]].
-            1. Let _dateMinus_ be ? Get(_calendar_, *"dateMinus"*).
+            1. Let _dateSubtract_ be ? Get(_calendar_, *"dateSubtract"*).
             1. Let _options_ be ? ObjectCreate(%Object.prototype%).
         1. Let _fractionalSeconds_ be _nanoseconds_ × 10<sup>−9</sup> + _microseconds_ × 10<sup>−6</sup> + _milliseconds_ × 10<sup>−3</sup> + _seconds_.
         1. Let _fractionalDays_ be ((_fractionalSeconds_ / 60 + _minutes_) / 60 + _hours_) / 24 + _days_.
         1. If _unit_ is *"years"*, then
           1. Let _yearsDuration_ be ? CreateTemporalDuration(_years_, 0, 0, 0, 0, 0, 0, 0, 0, 0).
-          1. Let _yearsBefore_ be ? Call(_dateMinus_, _calendar_, « _relativeTo_, _yearsDuration_, _options_, %Temporal.Date%).
+          1. Let _yearsBefore_ be ? Call(_dateSubtract_, _calendar_, « _relativeTo_, _yearsDuration_, _options_, %Temporal.Date%).
           1. Let _yearsMonthsWeeks_ be ? CreateTemporalDuration(_years_, _months_, _weeks_, 0, 0, 0, 0, 0, 0, 0).
-          1. Let _yearsMonthsWeeksBefore_ be ? Call(_dateMinus_, _calendar_, « _relativeTo_, _yearsMonthsWeeks_, _options_, %Temporal.Date%).
+          1. Let _yearsMonthsWeeksBefore_ be ? Call(_dateSubtract_, _calendar_, « _relativeTo_, _yearsMonthsWeeks_, _options_, %Temporal.Date%).
           1. Let _monthsWeeksInDays_ be ? DifferenceDate(_yearsMonthsWeeksBefore_.[[ISOYear]], _yearsMonthsWeeksBefore_.[[ISOMonth]], _yearsMonthsWeeksBefore_.[[ISODay]], _yearsBefore_.[[ISOYear]], _yearsBefore_.[[ISOMonth]], _yearsBefore_.[[ISODay]], *"days"*).
           1. Let _days_ be _days_ + _monthsWeeksInDays_.[[Days]].
           1. Let _oneYear_ be ? CreateTemporalDuration(1, 0, 0, 0, 0, 0, 0, 0, 0, 0).
-          1. Set _relativeTo_ to ? Call(_dateMinus_, _calendar_, « _relativeTo_, _oneYear_, _options_, %Temporal.Date% »).
+          1. Set _relativeTo_ to ? Call(_dateSubtract_, _calendar_, « _relativeTo_, _oneYear_, _options_, %Temporal.Date% »).
           1. Let _daysInYear_ be ? Get(_calendar_, *"daysInYear"*).
           1. Let _oneYearDays_ be ? Call(_daysInYear_, _calendar_, « _relativeTo_ »).
           1. Assert: _days_ ≤ _oneYearDays_. <mark>Note this will not be true in Temporal.Duration.prototype.round, this will become a loop</mark>.
@@ -868,13 +868,13 @@
           1. Set _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, and _nanoseconds_ to 0.
         1. Else if _unit_ is *"months"*, then
           1. Let _yearsMonths_ be ? CreateTemporalDuration(_years_, _months_, 0, 0, 0, 0, 0, 0, 0, 0).
-          1. Let _yearsMonthsBefore_ be ? Call(_dateMinus_, _calendar_, « _relativeTo_, _yearsMonths_, _options_, %Temporal.Date%).
+          1. Let _yearsMonthsBefore_ be ? Call(_dateSubtract_, _calendar_, « _relativeTo_, _yearsMonths_, _options_, %Temporal.Date%).
           1. Let _yearsMonthsWeeks_ be ? CreateTemporalDuration(_years_, _months_, _weeks_, 0, 0, 0, 0, 0, 0, 0).
-          1. Let _yearsMonthsWeeksBefore_ be ? Call(_dateMinus_, _calendar_, « _relativeTo_, _yearsMonthsWeeks_, _options_, %Temporal.Date%).
+          1. Let _yearsMonthsWeeksBefore_ be ? Call(_dateSubtract_, _calendar_, « _relativeTo_, _yearsMonthsWeeks_, _options_, %Temporal.Date%).
           1. Let _weeksInDays_ be ? DifferenceDate(_yearsMonthsWeeksBefore_.[[ISOYear]], _yearsMonthsWeeksBefore_.[[ISOMonth]], _yearsMonthsWeeksBefore_.[[ISODay]], _yearsMonthsBefore_.[[ISOYear]], _yearsMonthsBefore_.[[ISOMonth]], _yearsMonthsBefore_.[[ISODay]], *"days"*).
           1. Let _days_ be _days_ + _weeksInDays_.[[Days]].
           1. Let _oneMonth_ be ? CreateTemporalDuration(0, 1, 0, 0, 0, 0, 0, 0, 0, 0).
-          1. Set _relativeTo_ to ? Call(_dateMinus_, _calendar_, « _relativeTo_, _oneMonth_, _options_, %Temporal.Date% »).
+          1. Set _relativeTo_ to ? Call(_dateSubtract_, _calendar_, « _relativeTo_, _oneMonth_, _options_, %Temporal.Date% »).
           1. Let _daysInMonth_ be ? Get(_calendar_, *"daysInMonth"*).
           1. Let _oneMonthDays_ be ? Call(_daysInMonth_, _calendar_, « _relativeTo_ »).
           1. Assert: _days_ ≤ _oneMonthDays_. <mark>Note this will not be true in Temporal.Duration.prototype.round, this will become a loop</mark>.
@@ -883,7 +883,7 @@
           1. Set _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, and _nanoseconds_ to 0.
         1. Else if _unit_ is *"weeks"*, then
           1. Let _oneWeek_ be ? CreateTemporalDuration(0, 0, 1, 0, 0, 0, 0, 0, 0, 0).
-          1. Set _relativeTo_ to ? Call(_dateMinus_, _calendar_, « _relativeTo_, _oneWeek_, _options_, %Temporal.Date% »).
+          1. Set _relativeTo_ to ? Call(_dateSubtract_, _calendar_, « _relativeTo_, _oneWeek_, _options_, %Temporal.Date% »).
           1. Let _daysInWeek_ be ? Get(_calendar_, *"daysInWeek"*).
           1. Let _oneWeekDays_ be ? Call(_daysInWeek_, _calendar_, « _relativeTo_ »).
           1. Assert: _days_ ≤ _oneWeekDays_. <mark>Note this will not be true in Temporal.Duration.prototype.round, this will become a loop</mark>.

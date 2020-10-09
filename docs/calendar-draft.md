@@ -79,7 +79,7 @@ class Temporal.Calendar {
 	//////////////////
 
 	/** Returns input plus duration according to the calendar rules. */
-	datePlus(
+	dateAdd(
 		input: Temporal.Date,
 		duration: Temporal.Duration,
 		options: /* options bag */,
@@ -87,7 +87,7 @@ class Temporal.Calendar {
 	) : Temporal.Date;
 
 	/** Returns input minus duration according to the calendar rules. */
-	dateMinus(
+	dateSubtract(
 		input: Temporal.Date,
 		duration: Temporal.Duration,
 		options: /* options bag */,
@@ -189,7 +189,7 @@ const PartialIsoCalendar = {
 	// Same for dateTimeFromFields, etc.
 
 	// ALL OTHER METHODS:
-	datePlus() {
+	dateAdd() {
 		throw new TypeError("Unsupported operation: full calendar required");
 	}
 	// Same for subtract, etc.
@@ -606,7 +606,7 @@ As discussed earlier, Temporal.Date will defer to Temporal.Calendar methods wher
 ```javascript
 Temporal.Date.prototype.add = function(duration, options) {
 	const constructor = ES.SpeciesConstructor(this, Temporal.Date);
-	return this.calendar.plus(this, duration, options, constructor);
+	return this.calendar.dateAdd(this, duration, options, constructor);
 }
 
 Temporal.Date.prototype.difference = function(other, options) {

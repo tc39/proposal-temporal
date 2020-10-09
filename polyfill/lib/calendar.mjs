@@ -40,14 +40,14 @@ export class Calendar {
     void constructor;
     throw new Error('not implemented');
   }
-  datePlus(date, duration, options, constructor) {
+  dateAdd(date, duration, options, constructor) {
     void date;
     void duration;
     void options;
     void constructor;
     throw new Error('not implemented');
   }
-  dateMinus(date, duration, options, constructor) {
+  dateSubtract(date, duration, options, constructor) {
     void date;
     void duration;
     void options;
@@ -154,7 +154,7 @@ class ISO8601Calendar extends Calendar {
     ({ month, day } = ES.RegulateMonthDay(month, day, overflow));
     return new constructor(month, day, this, /* referenceISOYear = */ 1972);
   }
-  datePlus(date, duration, options, constructor) {
+  dateAdd(date, duration, options, constructor) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
     options = ES.NormalizeOptionsObject(options);
     const overflow = ES.ToTemporalOverflow(options);
@@ -171,7 +171,7 @@ class ISO8601Calendar extends Calendar {
     }
     return new constructor(year, month, day, this);
   }
-  dateMinus(date, duration, options, constructor) {
+  dateSubtract(date, duration, options, constructor) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
     options = ES.NormalizeOptionsObject(options);
     const overflow = ES.ToTemporalOverflow(options);

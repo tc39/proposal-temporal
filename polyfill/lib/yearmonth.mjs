@@ -93,7 +93,7 @@ export class YearMonth {
     const sign = ES.DurationSign(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
     const day = sign < 0 ? calendar.daysInMonth(this) : 1;
     const startDate = calendar.dateFromFields({ ...fields, day }, {}, TemporalDate);
-    const addedDate = calendar.datePlus(startDate, { ...duration, days }, options, TemporalDate);
+    const addedDate = calendar.dateAdd(startDate, { ...duration, days }, options, TemporalDate);
 
     const Construct = ES.SpeciesConstructor(this, YearMonth);
     const result = calendar.yearMonthFromFields(addedDate, options, Construct);
@@ -113,7 +113,7 @@ export class YearMonth {
     const sign = ES.DurationSign(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
     const day = sign < 0 ? 1 : calendar.daysInMonth(this);
     const startDate = calendar.dateFromFields({ ...fields, day }, {}, TemporalDate);
-    const subtractedDate = calendar.dateMinus(startDate, { ...duration, days }, options, TemporalDate);
+    const subtractedDate = calendar.dateSubtract(startDate, { ...duration, days }, options, TemporalDate);
 
     const Construct = ES.SpeciesConstructor(this, YearMonth);
     const result = calendar.yearMonthFromFields(subtractedDate, options, Construct);

@@ -210,9 +210,9 @@ date.day         // => 6
 date.toString()  // => 2020-05-29[c=hebrew]
 ```
 
-### calendar.**datePlus**(_date_: Temporal.Date, _duration_: Temporal.Duration, _options_: object, _constructor_: function) : Temporal.Date
+### calendar.**dateAdd**(_date_: Temporal.Date, _duration_: Temporal.Duration, _options_: object, _constructor_: function) : Temporal.Date
 
-### calendar.**dateMinus**(_date_: Temporal.Date, _duration_: Temporal.Duration, _options_: object, _constructor_: function) : Temporal.Date
+### calendar.**dateSubtract**(_date_: Temporal.Date, _duration_: Temporal.Duration, _options_: object, _constructor_: function) : Temporal.Date
 
 The above two methods are similar.
 They provide a way to do date arithmetic in the calendar's date reckoning.
@@ -245,7 +245,7 @@ date.day         // => 7
 date.toString()  // => 2020-06-28[c=islamic]
 
 // same result, but calling the method directly:
-date = Temporal.Calendar.from('islamic').datePlus(
+date = Temporal.Calendar.from('islamic').dateAdd(
     Temporal.Date.from('2020-05-29'),
     Temporal.Duration.from({ months: 1 }),
     { overflow: 'reject' },

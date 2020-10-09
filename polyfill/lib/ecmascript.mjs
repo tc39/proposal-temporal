@@ -1740,9 +1740,9 @@ export const ES = ObjectAssign({}, ES2019, {
 
         // convert months and weeks to days by calculating difference(
         // relativeTo + years, relativeTo - { years, months, weeks })
-        const yearsBefore = calendar.dateMinus(relativeTo, new TemporalDuration(years), {}, TemporalDate);
+        const yearsBefore = calendar.dateSubtract(relativeTo, new TemporalDuration(years), {}, TemporalDate);
         const yearsMonthsWeeks = new TemporalDuration(years, months, weeks);
-        const yearsMonthsWeeksBefore = calendar.dateMinus(relativeTo, yearsMonthsWeeks, {}, TemporalDate);
+        const yearsMonthsWeeksBefore = calendar.dateSubtract(relativeTo, yearsMonthsWeeks, {}, TemporalDate);
         const monthsWeeksInDays = ES.DifferenceDate(
           GetSlot(yearsMonthsWeeksBefore, ISO_YEAR),
           GetSlot(yearsMonthsWeeksBefore, ISO_MONTH),
@@ -1758,7 +1758,7 @@ export const ES = ObjectAssign({}, ES2019, {
         days += ((seconds / 60 + minutes) / 60 + hours) / 24;
 
         const oneYear = new TemporalDuration(1);
-        relativeTo = calendar.dateMinus(relativeTo, oneYear, {}, TemporalDate);
+        relativeTo = calendar.dateSubtract(relativeTo, oneYear, {}, TemporalDate);
         const oneYearDays = calendar.daysInYear(relativeTo);
         years += days / oneYearDays;
 
@@ -1772,9 +1772,9 @@ export const ES = ObjectAssign({}, ES2019, {
         // convert weeks to days by calculating difference(relativeTo +
         //   { years, months }, relativeTo - { years, months, weeks })
         const yearsMonths = new TemporalDuration(years, months);
-        const yearsMonthsBefore = calendar.dateMinus(relativeTo, yearsMonths, {}, TemporalDate);
+        const yearsMonthsBefore = calendar.dateSubtract(relativeTo, yearsMonths, {}, TemporalDate);
         const yearsMonthsWeeks = new TemporalDuration(years, months, weeks);
-        const yearsMonthsWeeksBefore = calendar.dateMinus(relativeTo, yearsMonthsWeeks, {}, TemporalDate);
+        const yearsMonthsWeeksBefore = calendar.dateSubtract(relativeTo, yearsMonthsWeeks, {}, TemporalDate);
         const weeksInDays = ES.DifferenceDate(
           GetSlot(yearsMonthsWeeksBefore, ISO_YEAR),
           GetSlot(yearsMonthsWeeksBefore, ISO_MONTH),
@@ -1790,7 +1790,7 @@ export const ES = ObjectAssign({}, ES2019, {
         days += ((seconds / 60 + minutes) / 60 + hours) / 24;
 
         const oneMonth = new TemporalDuration(0, 1);
-        relativeTo = calendar.dateMinus(relativeTo, oneMonth, {}, TemporalDate);
+        relativeTo = calendar.dateSubtract(relativeTo, oneMonth, {}, TemporalDate);
         const oneMonthDays = calendar.daysInMonth(relativeTo);
         months += days / oneMonthDays;
 
@@ -1804,7 +1804,7 @@ export const ES = ObjectAssign({}, ES2019, {
         days += ((seconds / 60 + minutes) / 60 + hours) / 24;
 
         const oneWeek = new TemporalDuration(0, 0, 1);
-        relativeTo = calendar.dateMinus(relativeTo, oneWeek, {}, TemporalDate);
+        relativeTo = calendar.dateSubtract(relativeTo, oneWeek, {}, TemporalDate);
         const oneWeekDays = calendar.daysInWeek(relativeTo);
         weeks += days / oneWeekDays;
 
