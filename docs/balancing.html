@@ -159,7 +159,7 @@ Therefore, any <code>Duration</code> object with nonzero years or months can ref
 No balancing is ever performed between years, months, and days, because such conversion would be ambiguous.
 If you need such a conversion, you must implement it yourself, since the rules can depend on the start date and the calendar in use.</p>
 <p><code>Temporal.Duration</code> fields are not allowed to have mixed signs.
-For example, passing one positive and one negative argument to <code>new Temporal.Duration()</code> or as properties in the object passed to <code>Temporal.Duration.from()</code> will always throw an exception, regardless of the overflow option.</p>
+For example, <code>Temporal.Duration.from({ hours: 1, minutes: -30 })</code> will always throw an exception, regardless of the overflow option.</p>
 <p>Therefore, the only case where constrain and reject mode have any effect when creating a duration, is integer overflow.
 If one of the values overflows, constrain mode will cap it to <code>Number.MAX_VALUE</code> or <code>-Number.MAX_VALUE</code>.</p>
 <h2 id="duration-arithmetic">Duration arithmetic</h2>
