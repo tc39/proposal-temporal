@@ -237,7 +237,7 @@ describe('Userland calendar', () => {
         }
       }
       const days = year * 100 + (month - 1) * 10 + (day - 1);
-      return new Temporal.Date(1970, 1, 1).plus({ days });
+      return new Temporal.Date(1970, 1, 1).add({ days });
     }
     function isoToDecimal(date) {
       const { isoYear, isoMonth, isoDay } = date.getISOFields();

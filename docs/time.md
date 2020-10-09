@@ -186,7 +186,7 @@ Usage example:
 ```javascript
 time = Temporal.Time.from('19:39:09.068346205');
 // What's the top of the next hour?
-time.plus({ hours: 1 }).with({
+time.add({ hours: 1 }).with({
   minute: 0,
   second: 0,
   millisecond: 0,
@@ -195,7 +195,7 @@ time.plus({ hours: 1 }).with({
 }); // => 20:00
 ```
 
-### time.**plus**(_duration_: object, _options_?: object) : Temporal.Time
+### time.**add**(_duration_: object, _options_?: object) : Temporal.Time
 
 **Parameters:**
 
@@ -222,10 +222,10 @@ Usage example:
 
 ```javascript
 time = Temporal.Time.from('19:39:09.068346205');
-time.plus({ minutes: 5, nanoseconds: 800 }); // => 19:44:09.068347005
+time.add({ minutes: 5, nanoseconds: 800 }); // => 19:44:09.068347005
 ```
 
-### time.**minus**(_duration_: object, _options_?: object) : Temporal.Time
+### time.**subtract**(_duration_: object, _options_?: object) : Temporal.Time
 
 **Parameters:**
 
@@ -252,7 +252,7 @@ Usage example:
 
 ```javascript
 time = Temporal.Time.from('19:39:09.068346205');
-time.minus({ minutes: 5, nanoseconds: 800 }); // => 19:34:09.068345405
+time.subtract({ minutes: 5, nanoseconds: 800 }); // => 19:34:09.068345405
 ```
 
 ### time.**difference**(_other_: Temporal.Time, _options_?: object) : Temporal.Duration

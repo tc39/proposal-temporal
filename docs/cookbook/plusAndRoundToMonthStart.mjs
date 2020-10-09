@@ -8,8 +8,8 @@
  */
 function plusAndRoundToMonthStart(date, delayDays) {
   return date
-    .plus({ days: delayDays })
-    .plus({ months: 1 }) // constrains to end of month if needed, e.g. Jan 31 -> Feb 28
+    .add({ days: delayDays })
+    .add({ months: 1 }) // constrains to end of month if needed, e.g. Jan 31 -> Feb 28
     .with({ day: 1 });
 }
 

@@ -109,7 +109,7 @@ export class Time {
     if (!ES.IsTemporalTime(result)) throw new TypeError('invalid result');
     return result;
   }
-  plus(temporalDurationLike, options = undefined) {
+  add(temporalDurationLike, options = undefined) {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
     let { hour, minute, second, millisecond, microsecond, nanosecond } = this;
     const duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
@@ -174,7 +174,7 @@ export class Time {
     if (!ES.IsTemporalTime(result)) throw new TypeError('invalid result');
     return result;
   }
-  minus(temporalDurationLike, options = undefined) {
+  subtract(temporalDurationLike, options = undefined) {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
     let { hour, minute, second, millisecond, microsecond, nanosecond } = this;
     const duration = ES.ToLimitedTemporalDuration(temporalDurationLike);

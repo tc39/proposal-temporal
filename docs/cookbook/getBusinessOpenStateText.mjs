@@ -30,8 +30,8 @@ function getBusinessOpenStateText(now, timeZone, businessHours, soonWindow) {
   // Because of times wrapping around at midnight, we may need to consider
   // yesterday's and tomorrow's hours as well
   const today = dateTime.toDate();
-  const yesterday = today.minus({ days: 1 });
-  const tomorrow = today.plus({ days: 1 });
+  const yesterday = today.subtract({ days: 1 });
+  const tomorrow = today.add({ days: 1 });
 
   // Push any of the businessHours that overlap today's date into an array,
   // that we will subsequently check. Convert the businessHours Times into
@@ -58,7 +58,7 @@ function getBusinessOpenStateText(now, timeZone, businessHours, soonWindow) {
   }
 
   // Check if any of the candidate business hours include the given time
-  const soon = now.plus(soonWindow);
+  const soon = now.add(soonWindow);
   let openNow = false;
   let openSoon = false;
   for (const { open, close } of businessHoursOverlappingToday) {

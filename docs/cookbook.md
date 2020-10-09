@@ -218,9 +218,9 @@ The graph always starts at midnight in the tank's location, but the graph labels
 
 <script type="text/javascript">
 // Generate fictitious "data"
-const start = Temporal.now.instant().minus({ hours: 24 });
+const start = Temporal.now.instant().subtract({ hours: 24 });
 const blank = Array(24 * 12);
-const tankDataX = Array.from(blank, (_, ix) => start.plus({ minutes: ix * 5 }));
+const tankDataX = Array.from(blank, (_, ix) => start.add({ minutes: ix * 5 }));
 const tankDataY = Array.from(blank);
 tankDataY[0] = 25;
 for (let ix = 1; ix < tankDataY.length; ix++) {
@@ -321,7 +321,7 @@ An example HTML form inspired by [Days Calculator](https://www.timeanddate.com/d
   const futureDatePicker = document.querySelector('input[name="futuredate"]');
   const today = Temporal.now.date();
   futureDatePicker.min = today;
-  futureDatePicker.value = today.plus({ months: 1 });
+  futureDatePicker.value = today.add({ months: 1 });
 }
 {{cookbook/futureDateForm.js}}
 </script>

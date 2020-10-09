@@ -8,7 +8,7 @@
 A `Temporal.Duration` represents an immutable duration of time which can be used in date/time arithmetic.
 
 `Temporal.Duration` can be constructed directly or returned from `Temporal.Duration.from()`.
-It can also be obtained from the `difference()` method of any other `Temporal` type that supports arithmetic, and is used in those types' `plus()` and `minus()` methods.
+It can also be obtained from the `difference()` method of any other `Temporal` type that supports arithmetic, and is used in those types' `add()` and `subtract()` methods.
 
 When printed, a `Temporal.Duration` produces a string according to the ISO 8601 notation for durations.
 The examples in this page use this notation extensively.
@@ -207,7 +207,7 @@ duration = duration.with({ years, months }, { overflow: 'balance' });
   // => P4Y2M52DT3H40M
 ```
 
-### duration.**plus**(_other_: object, _options_?: object) : Temporal.Duration
+### duration.**add**(_other_: object, _options_?: object) : Temporal.Duration
 
 **Parameters:**
 - `other` (object): A `Temporal.Duration` object or a duration-like object.
@@ -240,22 +240,22 @@ Adding a negative duration is equivalent to subtracting the absolute value of th
 Usage example:
 ```javascript
 hour = Temporal.Duration.from('PT1H');
-hour.plus({ minutes: 30 })  // => PT1H30M
+hour.add({ minutes: 30 })  // => PT1H30M
 
 // Examples of balancing:
 one = Temporal.Duration.from({ hours: 1, minutes: 30 });
 two = Temporal.Duration.from({ hours: 2, minutes: 45 });
-result = one.plus(two)  // => PT3H75M
+result = one.add(two)  // => PT3H75M
 result.with(result, { overflow: 'balance' })  // => PT4H15M
 
 fifty = Temporal.Duration.from('P50Y50M50DT50H50M50.500500500S');
-result = fifty.plus(fifty)  // => P100Y100M100DT100H100M101.001001S'
+result = fifty.add(fifty)  // => P100Y100M100DT100H100M101.001001S'
 Temporal.Duration.from(result, { overflow: 'balance' })
   // => P100Y100M104DT5H41M41.001001S
 
 // Example of not balancing:
 oneAndAHalfYear = Temporal.Duration.from({ years: 1, months: 6 });
-result = oneAndAHalfYear.plus(oneAndAHalfYear)  // => P2Y12M
+result = oneAndAHalfYear.add(oneAndAHalfYear)  // => P2Y12M
 Temporal.Duration.from(result, { overflow: 'balance' }) // => P2Y12M
 // Example of custom conversion using ISO calendar rules:
 function monthsToYears(duration) {
@@ -268,7 +268,7 @@ monthsToYears(result)  // => P3Y
 
 ```
 
-### duration.**minus**(_other_: object, _options_?: object) : Temporal.Duration
+### duration.**subtract**(_other_: object, _options_?: object) : Temporal.Duration
 
 **Parameters:**
 - `other` (object): A `Temporal.Duration` object or a duration-like object.
@@ -300,24 +300,24 @@ Subtracting a negative duration is equivalent to adding the absolute value of th
 Usage example:
 ```javascript
 hourAndAHalf = Temporal.Duration.from('PT1H30M');
-hourAndAHalf.minus({ hours: 1 })  // => PT30M
+hourAndAHalf.subtract({ hours: 1 })  // => PT30M
 
 one = Temporal.Duration.from({ minutes: 180 });
 two = Temporal.Duration.from({ seconds: 30 });
-one.minus(two);  // => PT179M30S
-one.minus(two, { overflow: 'balance' });  // => PT2H59M30S
+one.subtract(two);  // => PT179M30S
+one.subtract(two, { overflow: 'balance' });  // => PT2H59M30S
 
 // Example of not balancing:
 threeYears = Temporal.Duration.from({ years: 3 });
 oneAndAHalfYear = Temporal.Duration.from({ years: 1, months: 6 });
-threeYears.minus(oneAndAHalfYear)  // throws; mixed months and years signs cannot be balanced
+threeYears.subtract(oneAndAHalfYear)  // throws; mixed months and years signs cannot be balanced
 // Example of a custom conversion using ISO calendar rules:
 function yearsToMonths(duration) {
     let { years, months } = duration;
     months += years * 12;
     return duration.with({ years: 0, months });
 }
-yearsToMonths(threeYears).minus(yearsToMonths(oneAndAHalfYear))  // => P18M
+yearsToMonths(threeYears).subtract(yearsToMonths(oneAndAHalfYear))  // => P18M
 ```
 
 ### duration.**negated**() : Temporal.Duration

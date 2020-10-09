@@ -345,7 +345,7 @@ Calendar-sensitive values are used in most places, including:
 - Accessing properties like `.year` or `.month`
 - Setting properties using `.from()` or `.with()`.
 - Creating `Temporal.Duration` instances with `.difference()`
-- Interpreting `Temporal.Duration` instances with `.plus()` or `.minus()`
+- Interpreting `Temporal.Duration` instances with `.add()` or `.subtract()`
 - Localized formatting with `toLocaleString()`, although if the calendar is ISO then the calendar can be overridden via an option
 - All other places where date/time values are read or written, except as noted below
 
@@ -735,7 +735,7 @@ zdt = Temporal.ZonedDateTime.from('1995-12-07T03:24:30.000003500+09:00[Asia/Toky
 zdt.withCalendar('iso8601').year; // => 1995
 ```
 
-### zonedDateTime.**plus**(_duration_: object, _options_?: object) : Temporal.ZonedDateTime
+### zonedDateTime.**add**(_duration_: object, _options_?: object) : Temporal.ZonedDateTime
 
 **Parameters:**
 
@@ -785,13 +785,13 @@ Usage example:
 ```javascript
 zdt = Temporal.ZonedDateTime.from('2020-03-08T00:00-08:00[America/Los_Angeles]');
 // Add a day to get midnight on the day after DST starts
-laterDay = zdt.plus({ days: 1 });
+laterDay = zdt.add({ days: 1 });
   // => 2020-03-09T00:00-07:00[America/Los_Angeles];
   // Note that the new offset is different, indicating the result is adjusted for DST.
 laterDay.difference(zdt, { largestUnit: 'hours' }).hours;
   // => 23, because one clock hour lost to DST
 
-laterHours = zdt.plus({ hours: 24 });
+laterHours = zdt.add({ hours: 24 });
   // => 2020-03-09T01:00-07:00[America/Los_Angeles]
   // Adding time units doesn't adjust for DST. Result is 1:00AM: 24 real-world
   // hours later because a clock hour was skipped by DST.
@@ -799,7 +799,7 @@ laterHours.difference(zdt, { largestUnit: 'hours' }).hours; // => 24
 ```
 <!-- prettier-ignore-end -->
 
-### zonedDateTime.**minus**(_duration_: object, _options_?: object) : Temporal.ZonedDateTime
+### zonedDateTime.**subtract**(_duration_: object, _options_?: object) : Temporal.ZonedDateTime
 
 **Parameters:**
 
@@ -849,13 +849,13 @@ Usage example:
 ```javascript
 zdt = Temporal.ZonedDateTime.from('2020-03-09T00:00-07:00[America/Los_Angeles]');
 // Add a day to get midnight on the day after DST starts
-earlierDay = zdt.minus({ days: 1 });
+earlierDay = zdt.subtract({ days: 1 });
   // => 2020-03-08T00:00-08:00[America/Los_Angeles]
   // Note that the new offset is different, indicating the result is adjusted for DST.
 earlierDay.difference(zdt, { largestUnit: 'hours' }).hours;
   // => -23, because one clock hour lost to DST
 
-earlierHours = zdt.minus({ hours: 24 });
+earlierHours = zdt.subtract({ hours: 24 });
   // => 2020-03-07T23:00-08:00[America/Los_Angeles]
   // Subtracting time units doesn't adjust for DST. Result is 11:00PM: 24 real-world
   // hours earlier because a clock hour was skipped by DST.

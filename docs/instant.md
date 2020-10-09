@@ -287,7 +287,7 @@ tz = Temporal.TimeZone.from('America/New_York');
 epoch.toDateTime(tz); // => 1969-12-31T19:00
 ```
 
-### instant.**plus**(_duration_: object) : Temporal.Instant
+### instant.**add**(_duration_: object) : Temporal.Instant
 
 **Parameters:**
 
@@ -312,12 +312,12 @@ Example usage:
 
 ```js
 // Temporal.Instant representing five hours from now
-Temporal.now.instant().plus({ hours: 5 });
+Temporal.now.instant().add({ hours: 5 });
 fiveHours = Temporal.Duration.from({ hours: 5 });
-Temporal.now.instant().plus(fiveHours);
+Temporal.now.instant().add(fiveHours);
 ```
 
-### instant.**minus**(_duration_: object) : Temporal.Instant
+### instant.**subtract**(_duration_: object) : Temporal.Instant
 
 **Parameters:**
 
@@ -342,9 +342,9 @@ Example usage:
 
 ```js
 // Temporal.Instant representing this time an hour ago
-Temporal.now.instant().minus({ hours: 1 });
+Temporal.now.instant().subtract({ hours: 1 });
 oneHour = Temporal.Duration.from({ hours: 1 });
-Temporal.now.instant().minus(oneHour);
+Temporal.now.instant().subtract(oneHour);
 ```
 
 ### instant.**difference**(_other_: Temporal.Instant, _options_?: object) : Temporal.Duration
@@ -422,7 +422,7 @@ billion.difference(epoch, { largestUnit: 'hours' });
   // =>  PT277777H46M40S
 ns = billion.difference(epoch, { largestUnit: 'nanoseconds' });
   // =>    PT1000000000S
-ns.plus({ nanoseconds: 1 });
+ns.add({ nanoseconds: 1 });
   // =>    PT1000000000S (lost precision)
 
 // Calculate the difference in years, eliminating the ambiguity by

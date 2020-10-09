@@ -238,7 +238,7 @@ export class DateTime {
     if (!ES.IsTemporalDateTime(result)) throw new TypeError('invalid result');
     return result;
   }
-  plus(temporalDurationLike, options = undefined) {
+  add(temporalDurationLike, options = undefined) {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     let duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
     let { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
@@ -306,7 +306,7 @@ export class DateTime {
     if (!ES.IsTemporalDateTime(result)) throw new TypeError('invalid result');
     return result;
   }
-  minus(temporalDurationLike, options = undefined) {
+  subtract(temporalDurationLike, options = undefined) {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     let duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
     let { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;

@@ -26,7 +26,7 @@ timeZones.forEach(({ name, tz }) => {
   for (let hours = 0; hours < 24; hours++) {
     const cell = document.createElement('td');
 
-    const dt = startTime.plus({ hours }).toDateTime(tz);
+    const dt = startTime.add({ hours }).toDateTime(tz);
     cell.className = `time-${dt.hour}`;
 
     // Highlight the current hour in each row

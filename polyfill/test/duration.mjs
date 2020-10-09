@@ -25,11 +25,11 @@ describe('Duration', () => {
       it('Duration.prototype.with is a Function', () => {
         equal(typeof Duration.prototype.with, 'function');
       });
-      it('Duration.prototype.plus is a Function', () => {
-        equal(typeof Duration.prototype.plus, 'function');
+      it('Duration.prototype.add is a Function', () => {
+        equal(typeof Duration.prototype.add, 'function');
       });
-      it('Duration.prototype.minus is a Function', () => {
-        equal(typeof Duration.prototype.minus, 'function');
+      it('Duration.prototype.subtract is a Function', () => {
+        equal(typeof Duration.prototype.subtract, 'function');
       });
       it('Duration.prototype.getFields is a Function', () => {
         equal(typeof Duration.prototype.getFields, 'function');
@@ -423,21 +423,21 @@ describe('Duration', () => {
       [{}, () => {}, undefined].forEach((options) => equal(duration.with({ days: 5 }, options).days, 5));
     });
   });
-  describe('Duration.plus()', () => {
+  describe('Duration.add()', () => {
     const duration = Duration.from({ days: 1, minutes: 5 });
     it('adds same units', () => {
-      equal(`${duration.plus({ days: 2, minutes: 5 })}`, 'P3DT10M');
+      equal(`${duration.add({ days: 2, minutes: 5 })}`, 'P3DT10M');
     });
     it('adds different units', () => {
-      equal(`${duration.plus({ hours: 12, seconds: 30 })}`, 'P1DT12H5M30S');
+      equal(`${duration.add({ hours: 12, seconds: 30 })}`, 'P1DT12H5M30S');
     });
     it('symmetric with regard to negative durations', () => {
-      equal(`${Duration.from('P3DT10M').plus({ days: -2, minutes: -5 })}`, 'P1DT5M');
-      equal(`${Duration.from('P1DT12H5M30S').plus({ hours: -12, seconds: -30 }, { overflow: 'balance' })}`, 'P1DT5M');
+      equal(`${Duration.from('P3DT10M').add({ days: -2, minutes: -5 })}`, 'P1DT5M');
+      equal(`${Duration.from('P1DT12H5M30S').add({ hours: -12, seconds: -30 }, { overflow: 'balance' })}`, 'P1DT5M');
     });
     it('does not balance units', () => {
       const d = Duration.from('P50M50W50DT50H50M50.500500500S');
-      const result = d.plus(d);
+      const result = d.add(d);
       equal(result.months, 100);
       equal(result.weeks, 100);
       equal(result.days, 100);
@@ -451,49 +451,49 @@ describe('Duration', () => {
     const max = new Duration(...Array(10).fill(Number.MAX_VALUE));
     it('always throws when addition overflows', () => {
       ['constrain', 'balance'].forEach((overflow) => {
-        throws(() => max.plus(max, { overflow }), RangeError);
+        throws(() => max.add(max, { overflow }), RangeError);
       });
     });
     it('throws on invalid overflow', () => {
       ['', 'CONSTRAIN', 'reject', 3, null].forEach((overflow) =>
-        throws(() => duration.plus(duration, { overflow }), RangeError)
+        throws(() => duration.add(duration, { overflow }), RangeError)
       );
     });
     it('mixed positive and negative values always throw', () => {
       ['constrain', 'balance'].forEach((overflow) =>
-        throws(() => duration.plus({ hours: 1, minutes: -30 }, { overflow }), RangeError)
+        throws(() => duration.add({ hours: 1, minutes: -30 }, { overflow }), RangeError)
       );
     });
     it('options may only be an object or undefined', () => {
       [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
-        throws(() => duration.plus({ hours: 1 }, badOptions), TypeError)
+        throws(() => duration.add({ hours: 1 }, badOptions), TypeError)
       );
-      [{}, () => {}, undefined].forEach((options) => equal(duration.plus({ hours: 1 }, options).hours, 1));
+      [{}, () => {}, undefined].forEach((options) => equal(duration.add({ hours: 1 }, options).hours, 1));
     });
   });
-  describe('Duration.minus()', () => {
+  describe('Duration.subtract()', () => {
     const duration = Duration.from({ days: 3, hours: 1, minutes: 10 });
     it('subtracts same units with positive result', () => {
-      equal(`${duration.minus({ days: 1, minutes: 5 })}`, 'P2DT1H5M');
+      equal(`${duration.subtract({ days: 1, minutes: 5 })}`, 'P2DT1H5M');
     });
     it('subtracts same units with zero result', () => {
-      equal(`${duration.minus(duration)}`, 'PT0S');
-      equal(`${duration.minus({ days: 3 })}`, 'PT1H10M');
-      equal(`${duration.minus({ minutes: 10 })}`, 'P3DT1H');
+      equal(`${duration.subtract(duration)}`, 'PT0S');
+      equal(`${duration.subtract({ days: 3 })}`, 'PT1H10M');
+      equal(`${duration.subtract({ minutes: 10 })}`, 'P3DT1H');
     });
     it('balances when subtracting same units with negative result', () => {
-      equal(`${duration.minus({ minutes: 15 })}`, 'P3DT55M');
+      equal(`${duration.subtract({ minutes: 15 })}`, 'P3DT55M');
     });
     it('balances when subtracting different units', () => {
-      equal(`${duration.minus({ seconds: 30 })}`, 'P3DT1H9M30S');
+      equal(`${duration.subtract({ seconds: 30 })}`, 'P3DT1H9M30S');
     });
     it('symmetric with regard to negative durations', () => {
-      equal(`${Duration.from('P2DT1H5M').minus({ days: -1, minutes: -5 })}`, 'P3DT1H10M');
-      equal(`${new Duration().minus({ days: -3, hours: -1, minutes: -10 })}`, 'P3DT1H10M');
-      equal(`${Duration.from('PT1H10M').minus({ days: -3 })}`, 'P3DT1H10M');
-      equal(`${Duration.from('P3DT1H').minus({ minutes: -10 })}`, 'P3DT1H10M');
-      equal(`${Duration.from('P3DT55M').minus({ minutes: -15 }, { overflow: 'balance' })}`, 'P3DT1H10M');
-      equal(`${Duration.from('P3DT1H9M30S').minus({ seconds: -30 }, { overflow: 'balance' })}`, 'P3DT1H10M');
+      equal(`${Duration.from('P2DT1H5M').subtract({ days: -1, minutes: -5 })}`, 'P3DT1H10M');
+      equal(`${new Duration().subtract({ days: -3, hours: -1, minutes: -10 })}`, 'P3DT1H10M');
+      equal(`${Duration.from('PT1H10M').subtract({ days: -3 })}`, 'P3DT1H10M');
+      equal(`${Duration.from('P3DT1H').subtract({ minutes: -10 })}`, 'P3DT1H10M');
+      equal(`${Duration.from('P3DT55M').subtract({ minutes: -15 }, { overflow: 'balance' })}`, 'P3DT1H10M');
+      equal(`${Duration.from('P3DT1H9M30S').subtract({ seconds: -30 }, { overflow: 'balance' })}`, 'P3DT1H10M');
     });
     it('never balances positive units in constrain mode', () => {
       const d = Duration.from({
@@ -510,14 +510,14 @@ describe('Duration', () => {
         microseconds: 500,
         nanoseconds: 500
       });
-      let result = d.minus(less);
+      let result = d.subtract(less);
       equal(result.minutes, 90);
       equal(result.seconds, 90);
       equal(result.milliseconds, 1500);
       equal(result.microseconds, 1500);
       equal(result.nanoseconds, 1500);
 
-      result = d.minus(less, { overflow: 'constrain' });
+      result = d.subtract(less, { overflow: 'constrain' });
       equal(result.minutes, 90);
       equal(result.seconds, 90);
       equal(result.milliseconds, 1500);
@@ -539,7 +539,7 @@ describe('Duration', () => {
         microseconds: 500,
         nanoseconds: 500
       });
-      const result = d.minus(less, { overflow: 'balance' });
+      const result = d.subtract(less, { overflow: 'balance' });
       equal(result.hours, 1);
       equal(result.minutes, 31);
       equal(result.seconds, 31);
@@ -549,43 +549,43 @@ describe('Duration', () => {
     });
     it('does not balance with units higher than days', () => {
       let d = Duration.from('P1M15D');
-      throws(() => d.minus({ days: 20 }), RangeError);
+      throws(() => d.subtract({ days: 20 }), RangeError);
       d = Duration.from('P1W5D');
-      throws(() => d.minus({ days: 10 }), RangeError);
+      throws(() => d.subtract({ days: 10 }), RangeError);
     });
     const tenYears = Duration.from('P10Y');
     const tenMinutes = Duration.from('PT10M');
     it('has correct negative result', () => {
-      let result = tenYears.minus({ years: 15 });
+      let result = tenYears.subtract({ years: 15 });
       equal(result.years, -5);
-      result = tenMinutes.minus({ minutes: 15 });
+      result = tenMinutes.subtract({ minutes: 15 });
       equal(result.minutes, -5);
     });
     it('throws if result cannot be determined to be positive or negative', () => {
       ['constrain', 'balance'].forEach((overflow) => {
-        throws(() => tenYears.minus({ months: 5 }, { overflow }), RangeError);
-        throws(() => tenYears.minus({ weeks: 5 }, { overflow }), RangeError);
-        throws(() => tenYears.minus({ days: 5 }, { overflow }), RangeError);
-        throws(() => tenYears.minus({ hours: 5 }, { overflow }), RangeError);
-        throws(() => tenYears.minus({ minutes: 5 }, { overflow }), RangeError);
-        throws(() => tenYears.minus({ seconds: 5 }, { overflow }), RangeError);
+        throws(() => tenYears.subtract({ months: 5 }, { overflow }), RangeError);
+        throws(() => tenYears.subtract({ weeks: 5 }, { overflow }), RangeError);
+        throws(() => tenYears.subtract({ days: 5 }, { overflow }), RangeError);
+        throws(() => tenYears.subtract({ hours: 5 }, { overflow }), RangeError);
+        throws(() => tenYears.subtract({ minutes: 5 }, { overflow }), RangeError);
+        throws(() => tenYears.subtract({ seconds: 5 }, { overflow }), RangeError);
       });
     });
     it('throws on invalid overflow', () => {
       ['', 'BALANCE', 'reject', 'xyz', 3, null].forEach((overflow) =>
-        throws(() => duration.minus(duration, { overflow }), RangeError)
+        throws(() => duration.subtract(duration, { overflow }), RangeError)
       );
     });
     it('mixed positive and negative values always throw', () => {
       ['constrain', 'balance'].forEach((overflow) =>
-        throws(() => duration.minus({ hours: 1, minutes: -30 }, { overflow }), RangeError)
+        throws(() => duration.subtract({ hours: 1, minutes: -30 }, { overflow }), RangeError)
       );
     });
     it('options may only be an object or undefined', () => {
       [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
-        throws(() => duration.minus({ hours: 1 }, badOptions), TypeError)
+        throws(() => duration.subtract({ hours: 1 }, badOptions), TypeError)
       );
-      [{}, () => {}, undefined].forEach((options) => equal(duration.minus({ hours: 1 }, options).hours, 0));
+      [{}, () => {}, undefined].forEach((options) => equal(duration.subtract({ hours: 1 }, options).hours, 0));
     });
   });
   describe('duration.getFields() works', () => {

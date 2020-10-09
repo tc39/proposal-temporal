@@ -71,10 +71,10 @@ function buildSub(one, two, largestUnits) {
     describe(`< ${one} : ${two} (${largestUnit})>`, () => {
       const dif = two.difference(one, { largestUnit });
       const overflow = 'reject';
-      it(`(${one}).plus(${dif}) => ${two}`, () => assert(one.plus(dif, { overflow }).equals(two)));
-      it(`(${two}).minus(${dif}) => ${one}`, () => assert(two.minus(dif, { overflow }).equals(one)));
-      it(`(${one}).minus(-${dif}) => ${two}`, () => assert(one.minus(dif.negated(), { overflow }).equals(two)));
-      it(`(${two}).plus(-${dif}) => ${one}`, () => assert(two.plus(dif.negated(), { overflow }).equals(one)));
+      it(`(${one}).add(${dif}) => ${two}`, () => assert(one.add(dif, { overflow }).equals(two)));
+      it(`(${two}).subtract(${dif}) => ${one}`, () => assert(two.subtract(dif, { overflow }).equals(one)));
+      it(`(${one}).subtract(-${dif}) => ${two}`, () => assert(one.subtract(dif.negated(), { overflow }).equals(two)));
+      it(`(${two}).add(-${dif}) => ${one}`, () => assert(two.add(dif.negated(), { overflow }).equals(one)));
     });
   });
 }

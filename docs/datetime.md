@@ -414,7 +414,7 @@ dt = Temporal.DateTime.from('1995-12-07T03:24:30.000003500[c=japanese]');
 dt.withCalendar('iso8601'); // => 1995-12-07T03:24:30.000003500
 ```
 
-### datetime.**plus**(_duration_: object, _options_?: object) : Temporal.DateTime
+### datetime.**add**(_duration_: object, _options_?: object) : Temporal.DateTime
 
 **Parameters:**
 
@@ -446,14 +446,14 @@ Usage example:
 
 ```javascript
 dt = Temporal.DateTime.from('1995-12-07T03:24:30.000003500');
-dt.plus({ years: 20, months: 4, nanoseconds: 500 }); // => 2016-04-07T03:24:30.000004
+dt.add({ years: 20, months: 4, nanoseconds: 500 }); // => 2016-04-07T03:24:30.000004
 
 dt = Temporal.DateTime.from('2019-01-31T15:30');
-dt.plus({ months: 1 }); // => 2019-02-28T15:30
-dt.plus({ months: 1 }, { overflow: 'reject' }); // => throws
+dt.add({ months: 1 }); // => 2019-02-28T15:30
+dt.add({ months: 1 }, { overflow: 'reject' }); // => throws
 ```
 
-### datetime.**minus**(_duration_: object, _options_?: object) : Temporal.DateTime
+### datetime.**subtract**(_duration_: object, _options_?: object) : Temporal.DateTime
 
 **Parameters:**
 
@@ -485,11 +485,11 @@ Usage example:
 
 ```javascript
 dt = Temporal.DateTime.from('1995-12-07T03:24:30.000003500');
-dt.minus({ years: 20, months: 4, nanoseconds: 500 }); // => 1975-08-07T03:24:30.000003
+dt.subtract({ years: 20, months: 4, nanoseconds: 500 }); // => 1975-08-07T03:24:30.000003
 
 dt = Temporal.DateTime.from('2019-03-31T15:30');
-dt.minus({ months: 1 }, { overflow: 'constrain' }); // => 2019-02-28T15:30
-dt.minus({ months: 1 }); // => throws
+dt.subtract({ months: 1 }, { overflow: 'constrain' }); // => 2019-02-28T15:30
+dt.subtract({ months: 1 }); // => throws
 ```
 
 ### datetime.**difference**(_other_: Temporal.DateTime, _options_?: object) : Temporal.Duration

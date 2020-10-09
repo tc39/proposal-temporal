@@ -2,7 +2,7 @@ const date = Temporal.Date.from('2020-04-14');
 
 // Third day of next month:
 
-const thirdOfNextMonth = date.plus({ months: 1 }).with({ day: 3 });
+const thirdOfNextMonth = date.add({ months: 1 }).with({ day: 3 });
 
 assert.equal(thirdOfNextMonth.toString(), '2020-05-03');
 

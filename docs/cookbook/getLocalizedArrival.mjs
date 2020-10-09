@@ -10,7 +10,7 @@
  */
 function getLocalizedArrival(parseableDeparture, flightTime, destinationTimeZone) {
   const departure = Temporal.Instant.from(parseableDeparture);
-  const arrival = departure.plus(flightTime);
+  const arrival = departure.add(flightTime);
   return arrival.toDateTime(destinationTimeZone);
 }
 

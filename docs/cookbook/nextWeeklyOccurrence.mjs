@@ -11,12 +11,12 @@
  */
 function nextWeeklyOccurrence(now, localTimeZone, weekday, eventTime, eventTimeZone) {
   const dateTime = now.toDateTime(eventTimeZone);
-  const nextDate = dateTime.toDate().plus({ days: (weekday + 7 - dateTime.dayOfWeek) % 7 });
+  const nextDate = dateTime.toDate().add({ days: (weekday + 7 - dateTime.dayOfWeek) % 7 });
   let nextOccurrence = nextDate.toDateTime(eventTime);
 
   // Handle the case where the event is today but already happened
   if (Temporal.DateTime.compare(dateTime, nextOccurrence) > 0) {
-    nextOccurrence = nextOccurrence.plus({ days: 7 });
+    nextOccurrence = nextOccurrence.add({ days: 7 });
   }
 
   return nextOccurrence.toInstant(eventTimeZone).toDateTime(localTimeZone);

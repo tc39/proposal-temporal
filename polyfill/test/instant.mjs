@@ -353,48 +353,48 @@ describe('Instant', () => {
       equal(`${Instant.from('1976-11-18T15:23:30.123456789Z[c=discordian]')}`, '1976-11-18T15:23:30.123456789Z'));
     it('no junk at end of string', () => throws(() => Instant.from('1976-11-18T15:23:30.123456789Zjunk'), RangeError));
   });
-  describe('Instant.plus works', () => {
+  describe('Instant.add works', () => {
     const abs = Instant.from('1969-12-25T12:23:45.678901234Z');
     describe('cross epoch in ms', () => {
-      const one = abs.minus({ hours: 240, nanoseconds: 800 });
-      const two = abs.plus({ hours: 240, nanoseconds: 800 });
-      const three = two.minus({ hours: 480, nanoseconds: 1600 });
-      const four = one.plus({ hours: 480, nanoseconds: 1600 });
-      it(`(${abs}).minus({ hours: 240, nanoseconds: 800 }) = ${one}`, () =>
+      const one = abs.subtract({ hours: 240, nanoseconds: 800 });
+      const two = abs.add({ hours: 240, nanoseconds: 800 });
+      const three = two.subtract({ hours: 480, nanoseconds: 1600 });
+      const four = one.add({ hours: 480, nanoseconds: 1600 });
+      it(`(${abs}).subtract({ hours: 240, nanoseconds: 800 }) = ${one}`, () =>
         equal(`${one}`, '1969-12-15T12:23:45.678900434Z'));
-      it(`(${abs}).plus({ hours: 240, nanoseconds: 800 }) = ${two}`, () =>
+      it(`(${abs}).add({ hours: 240, nanoseconds: 800 }) = ${two}`, () =>
         equal(`${two}`, '1970-01-04T12:23:45.678902034Z'));
-      it(`(${two}).minus({ hours: 480, nanoseconds: 1600 }) = ${one}`, () => assert(three.equals(one)));
-      it(`(${one}).plus({ hours: 480, nanoseconds: 1600 }) = ${two}`, () => assert(four.equals(two)));
+      it(`(${two}).subtract({ hours: 480, nanoseconds: 1600 }) = ${one}`, () => assert(three.equals(one)));
+      it(`(${one}).add({ hours: 480, nanoseconds: 1600 }) = ${two}`, () => assert(four.equals(two)));
     });
-    it('abs.plus(durationObj)', () => {
-      const later = abs.plus(Temporal.Duration.from('PT240H0.000000800S'));
+    it('abs.add(durationObj)', () => {
+      const later = abs.add(Temporal.Duration.from('PT240H0.000000800S'));
       equal(`${later}`, '1970-01-04T12:23:45.678902034Z');
     });
     it('invalid to add years, months, weeks, or days', () => {
-      throws(() => abs.plus({ years: 1 }), RangeError);
-      throws(() => abs.plus({ months: 1 }), RangeError);
-      throws(() => abs.plus({ weeks: 1 }), RangeError);
-      throws(() => abs.plus({ days: 1 }), RangeError);
+      throws(() => abs.add({ years: 1 }), RangeError);
+      throws(() => abs.add({ months: 1 }), RangeError);
+      throws(() => abs.add({ weeks: 1 }), RangeError);
+      throws(() => abs.add({ days: 1 }), RangeError);
     });
     it('mixed positive and negative values always throw', () => {
-      throws(() => abs.plus({ hours: 1, minutes: -30 }), RangeError);
+      throws(() => abs.add({ hours: 1, minutes: -30 }), RangeError);
     });
   });
-  describe('Instant.minus works', () => {
+  describe('Instant.subtract works', () => {
     const abs = Instant.from('1969-12-25T12:23:45.678901234Z');
-    it('abs.minus(durationObj)', () => {
-      const earlier = abs.minus(Temporal.Duration.from('PT240H0.000000800S'));
+    it('abs.subtract(durationObj)', () => {
+      const earlier = abs.subtract(Temporal.Duration.from('PT240H0.000000800S'));
       equal(`${earlier}`, '1969-12-15T12:23:45.678900434Z');
     });
     it('invalid to subtract years, months, weeks, or days', () => {
-      throws(() => abs.minus({ years: 1 }), RangeError);
-      throws(() => abs.minus({ months: 1 }), RangeError);
-      throws(() => abs.minus({ weeks: 1 }), RangeError);
-      throws(() => abs.minus({ days: 1 }), RangeError);
+      throws(() => abs.subtract({ years: 1 }), RangeError);
+      throws(() => abs.subtract({ months: 1 }), RangeError);
+      throws(() => abs.subtract({ weeks: 1 }), RangeError);
+      throws(() => abs.subtract({ days: 1 }), RangeError);
     });
     it('mixed positive and negative values always throw', () => {
-      throws(() => abs.minus({ hours: 1, minutes: -30 }), RangeError);
+      throws(() => abs.subtract({ hours: 1, minutes: -30 }), RangeError);
     });
   });
   describe('Instant.compare works', () => {
@@ -446,8 +446,8 @@ describe('Instant', () => {
     const diff = later.difference(earlier);
     it(`(${earlier}).difference(${later}) == (${later}).difference(${earlier}).negated()`, () =>
       equal(`${earlier.difference(later)}`, `${diff.negated()}`));
-    it(`(${earlier}).plus(${diff}) == (${later})`, () => assert(earlier.plus(diff).equals(later)));
-    it(`(${later}).minus(${diff}) == (${earlier})`, () => assert(later.minus(diff).equals(earlier)));
+    it(`(${earlier}).add(${diff}) == (${later})`, () => assert(earlier.add(diff).equals(later)));
+    it(`(${later}).subtract(${diff}) == (${earlier})`, () => assert(later.subtract(diff).equals(earlier)));
     it("doesn't cast argument", () => {
       throws(() => earlier.difference(later.toString()), TypeError);
       throws(() => earlier.difference({}), TypeError);
@@ -465,7 +465,7 @@ describe('Instant', () => {
       equal(`${feb21.difference(feb20, { largestUnit: 'minutes' })}`, 'PT527040M');
     });
     it('can return subseconds', () => {
-      const later = feb20.plus({ hours: 24, milliseconds: 250, microseconds: 250, nanoseconds: 250 });
+      const later = feb20.add({ hours: 24, milliseconds: 250, microseconds: 250, nanoseconds: 250 });
 
       const msDiff = later.difference(feb20, { largestUnit: 'milliseconds' });
       equal(msDiff.seconds, 0);
@@ -855,8 +855,8 @@ describe('Instant', () => {
     it('adding and subtracting beyond limit', () => {
       const min = Instant.from('-271821-04-20T00:00Z');
       const max = Instant.from('+275760-09-13T00:00Z');
-      throws(() => min.minus({ nanoseconds: 1 }), RangeError);
-      throws(() => max.plus({ nanoseconds: 1 }), RangeError);
+      throws(() => min.subtract({ nanoseconds: 1 }), RangeError);
+      throws(() => max.add({ nanoseconds: 1 }), RangeError);
     });
   });
   describe('Instant.toDateTime works', () => {

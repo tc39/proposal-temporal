@@ -54,11 +54,11 @@ describe('Date', () => {
       it('Date.prototype.with is a Function', () => {
         equal(typeof Date.prototype.with, 'function');
       });
-      it('Date.prototype.plus is a Function', () => {
-        equal(typeof Date.prototype.plus, 'function');
+      it('Date.prototype.add is a Function', () => {
+        equal(typeof Date.prototype.add, 'function');
       });
-      it('Date.prototype.minus is a Function', () => {
-        equal(typeof Date.prototype.minus, 'function');
+      it('Date.prototype.subtract is a Function', () => {
+        equal(typeof Date.prototype.subtract, 'function');
       });
       it('Date.prototype.difference is a Function', () => {
         equal(typeof Date.prototype.difference, 'function');
@@ -256,7 +256,7 @@ describe('Date', () => {
       equal(`${lastFeb21.difference(lastFeb20, { largestUnit: 'years' })}`, 'P11M30D');
     });
     it('weeks and months are mutually exclusive', () => {
-      const laterDate = date.plus({ days: 42 });
+      const laterDate = date.add({ days: 42 });
       const weeksDifference = laterDate.difference(date, { largestUnit: 'weeks' });
       notEqual(weeksDifference.weeks, 0);
       equal(weeksDifference.months, 0);
@@ -276,138 +276,138 @@ describe('Date', () => {
       [{}, () => {}, undefined].forEach((options) => equal(`${feb21.difference(feb20, options)}`, 'P366D'));
     });
   });
-  describe('date.plus() works', () => {
+  describe('date.add() works', () => {
     let date = new Date(1976, 11, 18);
-    it('date.plus({ years: 43 })', () => {
-      equal(`${date.plus({ years: 43 })}`, '2019-11-18');
+    it('date.add({ years: 43 })', () => {
+      equal(`${date.add({ years: 43 })}`, '2019-11-18');
     });
-    it('date.plus({ months: 3 })', () => {
-      equal(`${date.plus({ months: 3 })}`, '1977-02-18');
+    it('date.add({ months: 3 })', () => {
+      equal(`${date.add({ months: 3 })}`, '1977-02-18');
     });
-    it('date.plus({ days: 20 })', () => {
-      equal(`${date.plus({ days: 20 })}`, '1976-12-08');
+    it('date.add({ days: 20 })', () => {
+      equal(`${date.add({ days: 20 })}`, '1976-12-08');
     });
-    it('new Date(2019, 1, 31).plus({ months: 1 })', () => {
-      equal(`${new Date(2019, 1, 31).plus({ months: 1 })}`, '2019-02-28');
+    it('new Date(2019, 1, 31).add({ months: 1 })', () => {
+      equal(`${new Date(2019, 1, 31).add({ months: 1 })}`, '2019-02-28');
     });
-    it('date.plus(durationObj)', () => {
-      equal(`${date.plus(Temporal.Duration.from('P43Y'))}`, '2019-11-18');
+    it('date.add(durationObj)', () => {
+      equal(`${date.add(Temporal.Duration.from('P43Y'))}`, '2019-11-18');
     });
     it('constrain when overflowing result', () => {
       const jan31 = Date.from('2020-01-31');
-      equal(`${jan31.plus({ months: 1 })}`, '2020-02-29');
-      equal(`${jan31.plus({ months: 1 }, { overflow: 'constrain' })}`, '2020-02-29');
+      equal(`${jan31.add({ months: 1 })}`, '2020-02-29');
+      equal(`${jan31.add({ months: 1 }, { overflow: 'constrain' })}`, '2020-02-29');
     });
     it('throw when overflowing result with reject', () => {
       const jan31 = Date.from('2020-01-31');
-      throws(() => jan31.plus({ months: 1 }, { overflow: 'reject' }), RangeError);
+      throws(() => jan31.add({ months: 1 }, { overflow: 'reject' }), RangeError);
     });
     it('symmetrical with regard to negative durations', () => {
-      equal(`${Date.from('2019-11-18').plus({ years: -43 })}`, '1976-11-18');
-      equal(`${Date.from('1977-02-18').plus({ months: -3 })}`, '1976-11-18');
-      equal(`${Date.from('1976-12-08').plus({ days: -20 })}`, '1976-11-18');
-      equal(`${Date.from('2019-02-28').plus({ months: -1 })}`, '2019-01-28');
+      equal(`${Date.from('2019-11-18').add({ years: -43 })}`, '1976-11-18');
+      equal(`${Date.from('1977-02-18').add({ months: -3 })}`, '1976-11-18');
+      equal(`${Date.from('1976-12-08').add({ days: -20 })}`, '1976-11-18');
+      equal(`${Date.from('2019-02-28').add({ months: -1 })}`, '2019-01-28');
     });
     it("ignores lower units that don't balance up to a day", () => {
-      equal(`${date.plus({ hours: 1 })}`, '1976-11-18');
-      equal(`${date.plus({ minutes: 1 })}`, '1976-11-18');
-      equal(`${date.plus({ seconds: 1 })}`, '1976-11-18');
-      equal(`${date.plus({ milliseconds: 1 })}`, '1976-11-18');
-      equal(`${date.plus({ microseconds: 1 })}`, '1976-11-18');
-      equal(`${date.plus({ nanoseconds: 1 })}`, '1976-11-18');
+      equal(`${date.add({ hours: 1 })}`, '1976-11-18');
+      equal(`${date.add({ minutes: 1 })}`, '1976-11-18');
+      equal(`${date.add({ seconds: 1 })}`, '1976-11-18');
+      equal(`${date.add({ milliseconds: 1 })}`, '1976-11-18');
+      equal(`${date.add({ microseconds: 1 })}`, '1976-11-18');
+      equal(`${date.add({ nanoseconds: 1 })}`, '1976-11-18');
     });
     it('adds lower units that balance up to a day or more', () => {
-      equal(`${date.plus({ hours: 24 })}`, '1976-11-19');
-      equal(`${date.plus({ hours: 36 })}`, '1976-11-19');
-      equal(`${date.plus({ hours: 48 })}`, '1976-11-20');
-      equal(`${date.plus({ minutes: 1440 })}`, '1976-11-19');
-      equal(`${date.plus({ seconds: 86400 })}`, '1976-11-19');
-      equal(`${date.plus({ milliseconds: 86400_000 })}`, '1976-11-19');
-      equal(`${date.plus({ microseconds: 86400_000_000 })}`, '1976-11-19');
-      equal(`${date.plus({ nanoseconds: 86400_000_000_000 })}`, '1976-11-19');
+      equal(`${date.add({ hours: 24 })}`, '1976-11-19');
+      equal(`${date.add({ hours: 36 })}`, '1976-11-19');
+      equal(`${date.add({ hours: 48 })}`, '1976-11-20');
+      equal(`${date.add({ minutes: 1440 })}`, '1976-11-19');
+      equal(`${date.add({ seconds: 86400 })}`, '1976-11-19');
+      equal(`${date.add({ milliseconds: 86400_000 })}`, '1976-11-19');
+      equal(`${date.add({ microseconds: 86400_000_000 })}`, '1976-11-19');
+      equal(`${date.add({ nanoseconds: 86400_000_000_000 })}`, '1976-11-19');
     });
     it('invalid overflow', () => {
       ['', 'CONSTRAIN', 'balance', 3, null].forEach((overflow) =>
-        throws(() => date.plus({ months: 1 }, { overflow }), RangeError)
+        throws(() => date.add({ months: 1 }, { overflow }), RangeError)
       );
     });
     it('mixed positive and negative values always throw', () => {
       ['constrain', 'reject'].forEach((overflow) =>
-        throws(() => date.plus({ months: 1, days: -30 }, { overflow }), RangeError)
+        throws(() => date.add({ months: 1, days: -30 }, { overflow }), RangeError)
       );
     });
     it('options may only be an object or undefined', () => {
       [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
-        throws(() => date.plus({ months: 1 }, badOptions), TypeError)
+        throws(() => date.add({ months: 1 }, badOptions), TypeError)
       );
-      [{}, () => {}, undefined].forEach((options) => equal(`${date.plus({ months: 1 }, options)}`, '1976-12-18'));
+      [{}, () => {}, undefined].forEach((options) => equal(`${date.add({ months: 1 }, options)}`, '1976-12-18'));
     });
   });
-  describe('date.minus() works', () => {
+  describe('date.subtract() works', () => {
     const date = Date.from('2019-11-18');
-    it('date.minus({ years: 43 })', () => {
-      equal(`${date.minus({ years: 43 })}`, '1976-11-18');
+    it('date.subtract({ years: 43 })', () => {
+      equal(`${date.subtract({ years: 43 })}`, '1976-11-18');
     });
-    it('date.minus({ months: 11 })', () => {
-      equal(`${date.minus({ months: 11 })}`, '2018-12-18');
+    it('date.subtract({ months: 11 })', () => {
+      equal(`${date.subtract({ months: 11 })}`, '2018-12-18');
     });
-    it('date.minus({ days: 20 })', () => {
-      equal(`${date.minus({ days: 20 })}`, '2019-10-29');
+    it('date.subtract({ days: 20 })', () => {
+      equal(`${date.subtract({ days: 20 })}`, '2019-10-29');
     });
-    it('Date.from("2019-02-28").minus({ months: 1 })', () => {
-      equal(`${Date.from('2019-02-28').minus({ months: 1 })}`, '2019-01-28');
+    it('Date.from("2019-02-28").subtract({ months: 1 })', () => {
+      equal(`${Date.from('2019-02-28').subtract({ months: 1 })}`, '2019-01-28');
     });
-    it('Date.minus(durationObj)', () => {
-      equal(`${date.minus(Temporal.Duration.from('P43Y'))}`, '1976-11-18');
+    it('Date.subtract(durationObj)', () => {
+      equal(`${date.subtract(Temporal.Duration.from('P43Y'))}`, '1976-11-18');
     });
     it('constrain when overflowing result', () => {
       const mar31 = Date.from('2020-03-31');
-      equal(`${mar31.minus({ months: 1 })}`, '2020-02-29');
-      equal(`${mar31.minus({ months: 1 }, { overflow: 'constrain' })}`, '2020-02-29');
+      equal(`${mar31.subtract({ months: 1 })}`, '2020-02-29');
+      equal(`${mar31.subtract({ months: 1 }, { overflow: 'constrain' })}`, '2020-02-29');
     });
     it('throw when overflowing result with reject', () => {
       const mar31 = Date.from('2020-03-31');
-      throws(() => mar31.minus({ months: 1 }, { overflow: 'reject' }), RangeError);
+      throws(() => mar31.subtract({ months: 1 }, { overflow: 'reject' }), RangeError);
     });
     it('symmetrical with regard to negative durations', () => {
-      equal(`${Date.from('1976-11-18').minus({ years: -43 })}`, '2019-11-18');
-      equal(`${Date.from('2018-12-18').minus({ months: -11 })}`, '2019-11-18');
-      equal(`${Date.from('2019-10-29').minus({ days: -20 })}`, '2019-11-18');
-      equal(`${Date.from('2019-01-28').minus({ months: -1 })}`, '2019-02-28');
+      equal(`${Date.from('1976-11-18').subtract({ years: -43 })}`, '2019-11-18');
+      equal(`${Date.from('2018-12-18').subtract({ months: -11 })}`, '2019-11-18');
+      equal(`${Date.from('2019-10-29').subtract({ days: -20 })}`, '2019-11-18');
+      equal(`${Date.from('2019-01-28').subtract({ months: -1 })}`, '2019-02-28');
     });
     it("ignores lower units that don't balance up to a day", () => {
-      equal(`${date.minus({ hours: 1 })}`, '2019-11-18');
-      equal(`${date.minus({ minutes: 1 })}`, '2019-11-18');
-      equal(`${date.minus({ seconds: 1 })}`, '2019-11-18');
-      equal(`${date.minus({ milliseconds: 1 })}`, '2019-11-18');
-      equal(`${date.minus({ microseconds: 1 })}`, '2019-11-18');
-      equal(`${date.minus({ nanoseconds: 1 })}`, '2019-11-18');
+      equal(`${date.subtract({ hours: 1 })}`, '2019-11-18');
+      equal(`${date.subtract({ minutes: 1 })}`, '2019-11-18');
+      equal(`${date.subtract({ seconds: 1 })}`, '2019-11-18');
+      equal(`${date.subtract({ milliseconds: 1 })}`, '2019-11-18');
+      equal(`${date.subtract({ microseconds: 1 })}`, '2019-11-18');
+      equal(`${date.subtract({ nanoseconds: 1 })}`, '2019-11-18');
     });
     it('subtracts lower units that balance up to a day or more', () => {
-      equal(`${date.minus({ hours: 24 })}`, '2019-11-17');
-      equal(`${date.minus({ hours: 36 })}`, '2019-11-17');
-      equal(`${date.minus({ hours: 48 })}`, '2019-11-16');
-      equal(`${date.minus({ minutes: 1440 })}`, '2019-11-17');
-      equal(`${date.minus({ seconds: 86400 })}`, '2019-11-17');
-      equal(`${date.minus({ milliseconds: 86400_000 })}`, '2019-11-17');
-      equal(`${date.minus({ microseconds: 86400_000_000 })}`, '2019-11-17');
-      equal(`${date.minus({ nanoseconds: 86400_000_000_000 })}`, '2019-11-17');
+      equal(`${date.subtract({ hours: 24 })}`, '2019-11-17');
+      equal(`${date.subtract({ hours: 36 })}`, '2019-11-17');
+      equal(`${date.subtract({ hours: 48 })}`, '2019-11-16');
+      equal(`${date.subtract({ minutes: 1440 })}`, '2019-11-17');
+      equal(`${date.subtract({ seconds: 86400 })}`, '2019-11-17');
+      equal(`${date.subtract({ milliseconds: 86400_000 })}`, '2019-11-17');
+      equal(`${date.subtract({ microseconds: 86400_000_000 })}`, '2019-11-17');
+      equal(`${date.subtract({ nanoseconds: 86400_000_000_000 })}`, '2019-11-17');
     });
     it('invalid overflow', () => {
       ['', 'CONSTRAIN', 'balance', 3, null].forEach((overflow) =>
-        throws(() => date.minus({ months: 1 }, { overflow }), RangeError)
+        throws(() => date.subtract({ months: 1 }, { overflow }), RangeError)
       );
     });
     it('mixed positive and negative values always throw', () => {
       ['constrain', 'reject'].forEach((overflow) =>
-        throws(() => date.minus({ months: 1, days: -30 }, { overflow }), RangeError)
+        throws(() => date.subtract({ months: 1, days: -30 }, { overflow }), RangeError)
       );
     });
     it('options may only be an object or undefined', () => {
       [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
-        throws(() => date.minus({ months: 1 }, badOptions), TypeError)
+        throws(() => date.subtract({ months: 1 }, badOptions), TypeError)
       );
-      [{}, () => {}, undefined].forEach((options) => equal(`${date.minus({ months: 1 }, options)}`, '2019-10-18'));
+      [{}, () => {}, undefined].forEach((options) => equal(`${date.subtract({ months: 1 }, options)}`, '2019-10-18'));
     });
   });
   describe('date.toString() works', () => {
@@ -604,8 +604,8 @@ describe('Date', () => {
       const min = Date.from('-271821-04-19');
       const max = Date.from('+275760-09-13');
       ['reject', 'constrain'].forEach((overflow) => {
-        throws(() => min.minus({ days: 1 }, { overflow }), RangeError);
-        throws(() => max.plus({ days: 1 }, { overflow }), RangeError);
+        throws(() => min.subtract({ days: 1 }, { overflow }), RangeError);
+        throws(() => max.add({ days: 1 }, { overflow }), RangeError);
       });
     });
   });

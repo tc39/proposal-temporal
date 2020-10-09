@@ -192,7 +192,7 @@ const PartialIsoCalendar = {
 	datePlus() {
 		throw new TypeError("Unsupported operation: full calendar required");
 	}
-	// Same for minus, etc.
+	// Same for subtract, etc.
 }
 ```
 
@@ -206,8 +206,8 @@ It would in effect render default Temporal.Date (and Temporal.DateTime) with few
 - .year
 - .month
 - .day
-- .plus()\*
-- .minus()\*
+- .add()\*
+- .subtract()\*
 - .difference()\*
 - .getYearMonth()
 - .getMonthDay()
@@ -399,21 +399,21 @@ const today = Temporal.now.date();
 console.log("Today is:", today.toLocaleString());
 // OPTION 1 BUG:
 // Arithmetic in months must take place in the user calendar
-const nextMonth = today.plus({ months: 1 });
+const nextMonth = today.add({ months: 1 });
 console.log("Next month is: ", nextMonth.toLocaleString());
 
 /// Options 2 and 6: calendar in factory method
 const calendar = navigator.locales[0].getLikelyCalendar();
 const today = Temporal.now.date(calendar);
 console.log("Today is:", today.toLocaleString());
-const nextMonth = today.plus({ months: 1 });
+const nextMonth = today.add({ months: 1 });
 console.log("Next month is: ", nextMonth.toLocaleString());
 
 /// Options 3 and 5: calendar only when needed
 const today = Temporal.now.date();
 console.log("Today is:", today.toLocaleString());
 const calendar = navigator.locales[0].getLikelyCalendar();
-const nextMonth = today.withCalendar(calendar).plus({ months: 1 });
+const nextMonth = today.withCalendar(calendar).add({ months: 1 });
 console.log("Next month is: ", nextMonth.toLocaleString());
 ```
 
@@ -604,7 +604,7 @@ Temporal.Date.from = function(thing: string | object, options: object) {
 As discussed earlier, Temporal.Date will defer to Temporal.Calendar methods wherever necessary.  Example implementation of selected Temporal.Date methods:
 
 ```javascript
-Temporal.Date.prototype.plus = function(duration, options) {
+Temporal.Date.prototype.add = function(duration, options) {
 	const constructor = ES.SpeciesConstructor(this, Temporal.Date);
 	return this.calendar.plus(this, duration, options, constructor);
 }

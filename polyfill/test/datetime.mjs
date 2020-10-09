@@ -72,11 +72,11 @@ describe('DateTime', () => {
       it('DateTime.prototype.with is a Function', () => {
         equal(typeof DateTime.prototype.with, 'function');
       });
-      it('DateTime.prototype.plus is a Function', () => {
-        equal(typeof DateTime.prototype.plus, 'function');
+      it('DateTime.prototype.add is a Function', () => {
+        equal(typeof DateTime.prototype.add, 'function');
       });
-      it('DateTime.prototype.minus is a Function', () => {
-        equal(typeof DateTime.prototype.minus, 'function');
+      it('DateTime.prototype.subtract is a Function', () => {
+        equal(typeof DateTime.prototype.subtract, 'function');
       });
       it('DateTime.prototype.difference is a Function', () => {
         equal(typeof DateTime.prototype.difference, 'function');
@@ -359,89 +359,92 @@ describe('DateTime', () => {
       const diff = later.difference(earlier, { largestUnit });
       it(`(${earlier}).difference(${later}) == (${later}).difference(${earlier}).negated()`, () =>
         equal(`${earlier.difference(later, { largestUnit })}`, `${diff.negated()}`));
-      it(`(${earlier}).plus(${diff}) == (${later})`, () => assert(earlier.plus(diff).equals(later)));
-      it(`(${later}).minus(${diff}) == (${earlier})`, () => assert(later.minus(diff).equals(earlier)));
+      it(`(${earlier}).add(${diff}) == (${later})`, () => assert(earlier.add(diff).equals(later)));
+      it(`(${later}).subtract(${diff}) == (${earlier})`, () => assert(later.subtract(diff).equals(earlier)));
       it('symmetrical with regard to negative durations', () => {
-        assert(earlier.minus(diff.negated()).equals(later));
-        assert(later.plus(diff.negated()).equals(earlier));
+        assert(earlier.subtract(diff.negated()).equals(later));
+        assert(later.add(diff.negated()).equals(earlier));
       });
     });
   });
   describe('date/time maths: hours overflow', () => {
-    it('minus result', () => {
+    it('subtract result', () => {
       const later = DateTime.from('2019-10-29T10:46:38.271986102');
-      const earlier = later.minus({ hours: 12 });
+      const earlier = later.subtract({ hours: 12 });
       equal(`${earlier}`, '2019-10-28T22:46:38.271986102');
     });
-    it('plus result', () => {
+    it('add result', () => {
       const earlier = DateTime.from('2020-05-31T23:12:38.271986102');
-      const later = earlier.plus({ hours: 2 });
+      const later = earlier.add({ hours: 2 });
       equal(`${later}`, '2020-06-01T01:12:38.271986102');
     });
     it('symmetrical with regard to negative durations', () => {
-      equal(`${DateTime.from('2019-10-29T10:46:38.271986102').plus({ hours: -12 })}`, '2019-10-28T22:46:38.271986102');
-      equal(`${DateTime.from('2020-05-31T23:12:38.271986102').minus({ hours: -2 })}`, '2020-06-01T01:12:38.271986102');
+      equal(`${DateTime.from('2019-10-29T10:46:38.271986102').add({ hours: -12 })}`, '2019-10-28T22:46:38.271986102');
+      equal(
+        `${DateTime.from('2020-05-31T23:12:38.271986102').subtract({ hours: -2 })}`,
+        '2020-06-01T01:12:38.271986102'
+      );
     });
   });
-  describe('DateTime.plus() works', () => {
+  describe('DateTime.add() works', () => {
     const jan31 = DateTime.from('2020-01-31T15:00');
     it('constrain when ambiguous result', () => {
-      equal(`${jan31.plus({ months: 1 })}`, '2020-02-29T15:00');
-      equal(`${jan31.plus({ months: 1 }, { overflow: 'constrain' })}`, '2020-02-29T15:00');
+      equal(`${jan31.add({ months: 1 })}`, '2020-02-29T15:00');
+      equal(`${jan31.add({ months: 1 }, { overflow: 'constrain' })}`, '2020-02-29T15:00');
     });
     it('symmetrical with regard to negative durations in the time part', () => {
-      equal(`${jan31.plus({ minutes: -30 })}`, '2020-01-31T14:30');
-      equal(`${jan31.plus({ seconds: -30 })}`, '2020-01-31T14:59:30');
+      equal(`${jan31.add({ minutes: -30 })}`, '2020-01-31T14:30');
+      equal(`${jan31.add({ seconds: -30 })}`, '2020-01-31T14:59:30');
     });
     it('throw when ambiguous result with reject', () => {
-      throws(() => jan31.plus({ months: 1 }, { overflow: 'reject' }), RangeError);
+      throws(() => jan31.add({ months: 1 }, { overflow: 'reject' }), RangeError);
     });
     it('invalid overflow', () => {
       ['', 'CONSTRAIN', 'balance', 3, null].forEach((overflow) =>
-        throws(() => DateTime.from('2019-11-18T15:00').plus({ months: 1 }, { overflow }), RangeError)
+        throws(() => DateTime.from('2019-11-18T15:00').add({ months: 1 }, { overflow }), RangeError)
       );
     });
     it('mixed positive and negative values always throw', () => {
       ['constrain', 'reject'].forEach((overflow) =>
-        throws(() => jan31.plus({ hours: 1, minutes: -30 }, { overflow }), RangeError)
+        throws(() => jan31.add({ hours: 1, minutes: -30 }, { overflow }), RangeError)
       );
     });
     it('options may only be an object or undefined', () => {
       [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
-        throws(() => jan31.plus({ years: 1 }, badOptions), TypeError)
+        throws(() => jan31.add({ years: 1 }, badOptions), TypeError)
       );
-      [{}, () => {}, undefined].forEach((options) => equal(`${jan31.plus({ years: 1 }, options)}`, '2021-01-31T15:00'));
+      [{}, () => {}, undefined].forEach((options) => equal(`${jan31.add({ years: 1 }, options)}`, '2021-01-31T15:00'));
     });
   });
-  describe('date.minus() works', () => {
+  describe('date.subtract() works', () => {
     const mar31 = DateTime.from('2020-03-31T15:00');
     it('constrain when ambiguous result', () => {
-      equal(`${mar31.minus({ months: 1 })}`, '2020-02-29T15:00');
-      equal(`${mar31.minus({ months: 1 }, { overflow: 'constrain' })}`, '2020-02-29T15:00');
+      equal(`${mar31.subtract({ months: 1 })}`, '2020-02-29T15:00');
+      equal(`${mar31.subtract({ months: 1 }, { overflow: 'constrain' })}`, '2020-02-29T15:00');
     });
     it('symmetrical with regard to negative durations in the time part', () => {
-      equal(`${mar31.minus({ minutes: -30 })}`, '2020-03-31T15:30');
-      equal(`${mar31.minus({ seconds: -30 })}`, '2020-03-31T15:00:30');
+      equal(`${mar31.subtract({ minutes: -30 })}`, '2020-03-31T15:30');
+      equal(`${mar31.subtract({ seconds: -30 })}`, '2020-03-31T15:00:30');
     });
     it('throw when ambiguous result with reject', () => {
-      throws(() => mar31.minus({ months: 1 }, { overflow: 'reject' }), RangeError);
+      throws(() => mar31.subtract({ months: 1 }, { overflow: 'reject' }), RangeError);
     });
     it('invalid overflow', () => {
       ['', 'CONSTRAIN', 'balance', 3, null].forEach((overflow) =>
-        throws(() => DateTime.from('2019-11-18T15:00').minus({ months: 1 }, { overflow }), RangeError)
+        throws(() => DateTime.from('2019-11-18T15:00').subtract({ months: 1 }, { overflow }), RangeError)
       );
     });
     it('mixed positive and negative values always throw', () => {
       ['constrain', 'reject'].forEach((overflow) =>
-        throws(() => mar31.plus({ hours: 1, minutes: -30 }, { overflow }), RangeError)
+        throws(() => mar31.add({ hours: 1, minutes: -30 }, { overflow }), RangeError)
       );
     });
     it('options may only be an object or undefined', () => {
       [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
-        throws(() => mar31.minus({ years: 1 }, badOptions), TypeError)
+        throws(() => mar31.subtract({ years: 1 }, badOptions), TypeError)
       );
       [{}, () => {}, undefined].forEach((options) =>
-        equal(`${mar31.minus({ years: 1 }, options)}`, '2019-03-31T15:00')
+        equal(`${mar31.subtract({ years: 1 }, options)}`, '2019-03-31T15:00')
       );
     });
   });
@@ -467,7 +470,7 @@ describe('DateTime', () => {
       equal(`${feb21.difference(feb20, { largestUnit: 'seconds' })}`, 'PT31622400S');
     });
     it('can return subseconds', () => {
-      const later = feb20.plus({ days: 1, milliseconds: 250, microseconds: 250, nanoseconds: 250 });
+      const later = feb20.add({ days: 1, milliseconds: 250, microseconds: 250, nanoseconds: 250 });
 
       const msDiff = later.difference(feb20, { largestUnit: 'milliseconds' });
       equal(msDiff.seconds, 0);
@@ -492,7 +495,7 @@ describe('DateTime', () => {
       equal(`${lastFeb21.difference(lastFeb20, { largestUnit: 'years' })}`, 'P11M30D');
     });
     it('weeks and months are mutually exclusive', () => {
-      const laterDateTime = dt.plus({ days: 42, hours: 3 });
+      const laterDateTime = dt.add({ days: 42, hours: 3 });
       const weeksDifference = laterDateTime.difference(dt, { largestUnit: 'weeks' });
       notEqual(weeksDifference.weeks, 0);
       equal(weeksDifference.months, 0);
@@ -1102,8 +1105,8 @@ describe('DateTime', () => {
       const min = DateTime.from('-271821-04-19T00:00:00.000000001');
       const max = DateTime.from('+275760-09-13T23:59:59.999999999');
       ['reject', 'constrain'].forEach((overflow) => {
-        throws(() => min.minus({ nanoseconds: 1 }, { overflow }), RangeError);
-        throws(() => max.plus({ nanoseconds: 1 }, { overflow }), RangeError);
+        throws(() => min.subtract({ nanoseconds: 1 }, { overflow }), RangeError);
+        throws(() => max.add({ nanoseconds: 1 }, { overflow }), RangeError);
       });
     });
     it('rounding beyond limit', () => {

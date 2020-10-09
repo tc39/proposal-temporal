@@ -82,8 +82,8 @@ Example usage:
 tz = Temporal.now.timeZone();
 now = Temporal.now.instant();
 nextTransition = tz.getNextTransition(now);
-before = tz.getOffsetStringFor(nextTransition.minus({ nanoseconds: 1 }));
-after = tz.getOffsetStringFor(nextTransition.plus({ nanoseconds: 1 }));
+before = tz.getOffsetStringFor(nextTransition.subtract({ nanoseconds: 1 }));
+after = tz.getOffsetStringFor(nextTransition.add({ nanoseconds: 1 }));
 console.log(`On ${nextTransition.toDateTime(tz)} the clock will change from UTC ${before} to ${after}`);
 nextTransition.toDateTime(tz);
 // example output:
