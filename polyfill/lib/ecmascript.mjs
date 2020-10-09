@@ -17,6 +17,7 @@ import ToPrimitive from 'es-abstract/2020/ToPrimitive.js';
 import ToString from 'es-abstract/2020/ToString.js';
 import Type from 'es-abstract/2020/Type.js';
 
+import { GetDefaultCalendar } from './calendar.mjs';
 import { GetIntrinsic } from './intrinsicclass.mjs';
 import {
   GetSlot,
@@ -548,6 +549,42 @@ export const ES = ObjectAssign({}, ES2019, {
       throw new RangeError(`smallestUnit must be one of ${allowedValues.join(', ')}, not ${value}`);
     }
     return value;
+  },
+  ToRelativeTemporalObject: (options) => {
+    const relativeTo = options.relativeTo;
+    if (relativeTo === undefined) return relativeTo;
+
+    let year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar;
+    if (ES.Type(relativeTo) === 'Object') {
+      if (ES.IsTemporalDateTime(relativeTo)) return relativeTo;
+      calendar = relativeTo.calendar;
+      if (calendar === undefined) calendar = GetDefaultCalendar();
+      calendar = ES.ToTemporalCalendar(calendar);
+      const fields = ES.ToTemporalDateTimeRecord(relativeTo);
+      const TemporalDate = GetIntrinsic('%Temporal.Date%');
+      const date = calendar.dateFromFields(fields, {}, TemporalDate);
+      year = GetSlot(date, ISO_YEAR);
+      month = GetSlot(date, ISO_MONTH);
+      day = GetSlot(date, ISO_DAY);
+      ({ hour, minute, second, millisecond, microsecond, nanosecond } = fields);
+    } else {
+      ({
+        year,
+        month,
+        day,
+        hour,
+        minute,
+        second,
+        millisecond,
+        microsecond,
+        nanosecond,
+        calendar
+      } = ES.ParseTemporalDateTimeString(ES.ToString(relativeTo)));
+      if (!calendar) calendar = GetDefaultCalendar();
+      calendar = ES.ToTemporalCalendar(calendar);
+    }
+    const TemporalDateTime = GetIntrinsic('%Temporal.DateTime%');
+    return new TemporalDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
   },
   ValidateTemporalUnitRange: (largestUnit, smallestUnit) => {
     const validUnits = [
@@ -1270,6 +1307,182 @@ export const ES = ObjectAssign({}, ES2019, {
     nanoseconds *= sign;
 
     return { days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
+  },
+  UnbalanceDurationRelative: (years, months, weeks, days, largestUnit, relativeTo) => {
+    const TemporalDate = GetIntrinsic('%Temporal.Date%');
+    const TemporalDuration = GetIntrinsic('%Temporal.Duration%');
+    const sign = ES.DurationSign(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
+
+    years *= sign;
+    months *= sign;
+    weeks *= sign;
+    days *= sign;
+
+    let calendar;
+    if (relativeTo) {
+      if (!ES.IsTemporalDateTime(relativeTo)) throw new TypeError('starting point must be DateTime');
+      calendar = GetSlot(relativeTo, CALENDAR);
+    }
+
+    const oneYear = new TemporalDuration(1);
+    const oneMonth = new TemporalDuration(0, 1);
+    const oneWeek = new TemporalDuration(0, 0, 1);
+
+    switch (largestUnit) {
+      case 'years':
+        // no-op
+        break;
+      case 'months':
+        if (!calendar) throw new RangeError('a starting point is required for months balancing');
+        // balance years down to months
+        while (years > 0) {
+          const oneYearMonths = calendar.monthsInYear(relativeTo);
+          months += oneYearMonths;
+          years--;
+          relativeTo = calendar.dateAdd(relativeTo, oneYear, {}, TemporalDate);
+        }
+        break;
+      case 'weeks':
+        if (!calendar) throw new RangeError('a starting point is required for weeks balancing');
+        // balance years down to days
+        while (years > 0) {
+          const oneYearDays = calendar.daysInYear(relativeTo);
+          days += oneYearDays;
+          years--;
+          relativeTo = calendar.dateAdd(relativeTo, oneYear, {}, TemporalDate);
+        }
+
+        // balance months down to days
+        while (months > 0) {
+          const oneMonthDays = calendar.daysInMonth(relativeTo);
+          days += oneMonthDays;
+          months--;
+          relativeTo = calendar.dateAdd(relativeTo, oneMonth, {}, TemporalDate);
+        }
+        break;
+      default:
+        // balance years down to days
+        while (years > 0) {
+          if (!calendar) throw new RangeError('a starting point is required for balancing calendar units');
+          const oneYearDays = calendar.daysInYear(relativeTo);
+          days += oneYearDays;
+          years--;
+          relativeTo = calendar.dateAdd(relativeTo, oneYear, {}, TemporalDate);
+        }
+
+        // balance months down to days
+        while (months > 0) {
+          if (!calendar) throw new RangeError('a starting point is required for balancing calendar units');
+          const oneMonthDays = calendar.daysInMonth(relativeTo);
+          days += oneMonthDays;
+          months--;
+          relativeTo = calendar.dateAdd(relativeTo, oneMonth, {}, TemporalDate);
+        }
+
+        // balance weeks down to days
+        while (weeks > 0) {
+          if (!calendar) throw new RangeError('a starting point is required for balancing calendar units');
+          const oneWeekDays = calendar.daysInWeek(relativeTo);
+          days += oneWeekDays;
+          weeks--;
+          relativeTo = calendar.dateAdd(relativeTo, oneWeek, {}, TemporalDate);
+        }
+        break;
+    }
+
+    years *= sign;
+    months *= sign;
+    weeks *= sign;
+    days *= sign;
+
+    return { years, months, weeks, days };
+  },
+  BalanceDurationRelative: (years, months, weeks, days, largestUnit, relativeTo) => {
+    const TemporalDate = GetIntrinsic('%Temporal.Date%');
+    const TemporalDuration = GetIntrinsic('%Temporal.Duration%');
+    const sign = ES.DurationSign(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
+
+    years *= sign;
+    months *= sign;
+    weeks *= sign;
+    days *= sign;
+
+    let calendar;
+    if (relativeTo) {
+      if (!ES.IsTemporalDateTime(relativeTo)) throw new TypeError('starting point must be DateTime');
+      calendar = GetSlot(relativeTo, CALENDAR);
+    }
+
+    const oneYear = new TemporalDuration(1);
+    const oneMonth = new TemporalDuration(0, 1);
+    const oneWeek = new TemporalDuration(0, 0, 1);
+
+    switch (largestUnit) {
+      case 'years': {
+        if (!calendar) throw new RangeError('a starting point is required for years balancing');
+        // balance days up to years
+        let oneYearDays = calendar.daysInYear(relativeTo);
+        while (days >= oneYearDays) {
+          days -= oneYearDays;
+          years++;
+          relativeTo = calendar.dateSubtract(relativeTo, oneYear, {}, TemporalDate);
+          oneYearDays = calendar.daysInYear(relativeTo);
+        }
+
+        // balance days up to months
+        let oneMonthDays = calendar.daysInMonth(relativeTo);
+        while (days >= oneMonthDays) {
+          days -= oneMonthDays;
+          months++;
+          relativeTo = calendar.dateSubtract(relativeTo, oneMonth, {}, TemporalDate);
+          oneMonthDays = calendar.daysInMonth(relativeTo);
+        }
+
+        // balance months up to years
+        let oneYearMonths = calendar.monthsInYear(relativeTo);
+        while (months >= oneYearMonths) {
+          months -= oneYearMonths;
+          years++;
+          relativeTo = calendar.dateSubtract(relativeTo, oneYear, {}, TemporalDate);
+          oneYearMonths = calendar.monthsInYear(relativeTo);
+        }
+        break;
+      }
+      case 'months': {
+        if (!calendar) throw new RangeError('a starting point is required for months balancing');
+        // balance days up to months
+        let oneMonthDays = calendar.daysInMonth(relativeTo);
+        while (days >= oneMonthDays) {
+          days -= oneMonthDays;
+          months++;
+          relativeTo = calendar.dateSubtract(relativeTo, oneMonth, {}, TemporalDate);
+          oneMonthDays = calendar.daysInMonth(relativeTo);
+        }
+        break;
+      }
+      case 'weeks': {
+        if (!calendar) throw new RangeError('a starting point is required for weeks balancing');
+        // balance days up to weeks
+        let oneWeekDays = calendar.daysInWeek(relativeTo);
+        while (days >= oneWeekDays) {
+          days -= oneWeekDays;
+          weeks++;
+          relativeTo = calendar.dateSubtract(relativeTo, oneWeek, {}, TemporalDate);
+          oneWeekDays = calendar.daysInWeek(relativeTo);
+        }
+        break;
+      }
+      default:
+        // no-op
+        break;
+    }
+
+    years *= sign;
+    months *= sign;
+    weeks *= sign;
+    days *= sign;
+
+    return { years, months, weeks, days };
   },
 
   ConstrainToRange: (value, min, max) => Math.min(max, Math.max(min, value)),

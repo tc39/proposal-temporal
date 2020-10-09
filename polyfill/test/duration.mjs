@@ -7,7 +7,8 @@ const { reporter } = Pretty;
 import { strict as assert } from 'assert';
 const { throws, equal, notEqual } = assert;
 
-import { Duration } from 'proposal-temporal';
+import * as Temporal from 'proposal-temporal';
+const { Duration } = Temporal;
 
 describe('Duration', () => {
   describe('Structure', () => {
@@ -39,6 +40,9 @@ describe('Duration', () => {
       });
       it('Duration.prototype.abs is a Function', () => {
         equal(typeof Duration.prototype.abs, 'function');
+      });
+      it('Duration.prototype.round is a Function', () => {
+        equal(typeof Duration.prototype.round, 'function');
       });
     });
   });
@@ -719,6 +723,323 @@ describe('Duration', () => {
       equal(`${zero}`, `${zero2}`);
       notEqual(zero, zero2);
       equal(zero2.sign, 0);
+    });
+  });
+  describe('Duration.round()', () => {
+    const d = new Duration(5, 5, 5, 5, 5, 5, 5, 5, 5, 5);
+    const d2 = new Duration(0, 0, 0, 5, 5, 5, 5, 5, 5, 5);
+    const relativeTo = Temporal.DateTime.from('2020-01-01T00:00');
+    it('options may only be an object', () => {
+      [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) => throws(() => d.round(badOptions), TypeError));
+    });
+    it('throws on disallowed or invalid smallestUnit', () => {
+      ['era', 'nonsense'].forEach((smallestUnit) => {
+        throws(() => d.round({ smallestUnit }), RangeError);
+      });
+    });
+    it('throws if smallestUnit is larger than largestUnit', () => {
+      const units = [
+        'years',
+        'months',
+        'weeks',
+        'days',
+        'hours',
+        'minutes',
+        'seconds',
+        'milliseconds',
+        'microseconds',
+        'nanoseconds'
+      ];
+      for (let largestIdx = 1; largestIdx < units.length; largestIdx++) {
+        for (let smallestIdx = 0; smallestIdx < largestIdx; smallestIdx++) {
+          const largestUnit = units[largestIdx];
+          const smallestUnit = units[smallestIdx];
+          throws(() => d.round({ largestUnit, smallestUnit, relativeTo }), RangeError);
+        }
+      }
+    });
+    it('assumes a different default for largestUnit if smallestUnit is larger than the default', () => {
+      const almostYear = Duration.from({ days: 364 });
+      equal(`${almostYear.round({ smallestUnit: 'years', relativeTo })}`, 'P1Y');
+      const almostMonth = Duration.from({ days: 27 });
+      equal(`${almostMonth.round({ smallestUnit: 'months', relativeTo })}`, 'P1M');
+      const almostWeek = Duration.from({ days: 6 });
+      equal(`${almostWeek.round({ smallestUnit: 'weeks', relativeTo })}`, 'P1W');
+      const almostDay = Duration.from({ seconds: 86399 });
+      equal(`${almostDay.round({ smallestUnit: 'days' })}`, 'P1D');
+      const almostHour = Duration.from({ seconds: 3599 });
+      equal(`${almostHour.round({ smallestUnit: 'hours' })}`, 'PT1H');
+      const almostMinute = Duration.from({ seconds: 59 });
+      equal(`${almostMinute.round({ smallestUnit: 'minutes' })}`, 'PT1M');
+      const almostSecond = Duration.from({ nanoseconds: 999999999 });
+      equal(`${almostSecond.round({ smallestUnit: 'seconds' })}`, 'PT1S');
+      const almostMillisecond = Duration.from({ nanoseconds: 999999 });
+      equal(`${almostMillisecond.round({ smallestUnit: 'milliseconds' })}`, 'PT0.001S');
+      const almostMicrosecond = Duration.from({ nanoseconds: 999 });
+      equal(`${almostMicrosecond.round({ smallestUnit: 'microseconds' })}`, 'PT0.000001S');
+    });
+    it('accepts datetime string equivalents or fields for relativeTo', () => {
+      ['2020-01-01', '2020-01-01T00:00:00.000000000', 20200101, 20200101n, { year: 2020, month: 1, day: 1 }].forEach(
+        (relativeTo) => {
+          equal(`${d.round({ relativeTo })}`, 'P5Y5M5W5DT5H5M5.005005005S');
+        }
+      );
+    });
+    it("throws on relativeTo that can't be converted to datetime string", () => {
+      [3.14, true, null, 'hello', Symbol('foo'), 1n].forEach((relativeTo) => {
+        throws(() => d.round({ relativeTo }));
+      });
+    });
+    it('throws on invalid roundingMode', () => {
+      throws(() => d2.round({ smallestUnit: 'nanoseconds', roundingMode: 'cile' }), RangeError);
+    });
+    it('throws if neither one of largestUnit or smallestUnit is given', () => {
+      [undefined, {}, () => {}, { roundingMode: 'ceil' }].forEach((options) =>
+        throws(() => d.round(options), RangeError)
+      );
+    });
+    it('relativeTo is not required for rounding non-calendar units in durations without calendar units', () => {
+      equal(`${d2.round({ smallestUnit: 'days' })}`, 'P5D');
+      equal(`${d2.round({ smallestUnit: 'hours' })}`, 'P5DT5H');
+      equal(`${d2.round({ smallestUnit: 'minutes' })}`, 'P5DT5H5M');
+      equal(`${d2.round({ smallestUnit: 'seconds' })}`, 'P5DT5H5M5S');
+      equal(`${d2.round({ smallestUnit: 'milliseconds' })}`, 'P5DT5H5M5.005S');
+      equal(`${d2.round({ smallestUnit: 'microseconds' })}`, 'P5DT5H5M5.005005S');
+      equal(`${d2.round({ smallestUnit: 'nanoseconds' })}`, 'P5DT5H5M5.005005005S');
+    });
+    it('relativeTo is required for rounding calendar units even in durations without calendar units', () => {
+      throws(() => d2.round({ smallestUnit: 'years' }), RangeError);
+      throws(() => d2.round({ smallestUnit: 'months' }), RangeError);
+      throws(() => d2.round({ smallestUnit: 'weeks' }), RangeError);
+    });
+    it('relativeTo is required for rounding durations with calendar units', () => {
+      throws(() => d.round({ largestUnit: 'years' }), RangeError);
+      throws(() => d.round({ largestUnit: 'months' }), RangeError);
+      throws(() => d.round({ largestUnit: 'weeks' }), RangeError);
+      throws(() => d.round({ largestUnit: 'days' }), RangeError);
+      throws(() => d.round({ largestUnit: 'hours' }), RangeError);
+      throws(() => d.round({ largestUnit: 'minutes' }), RangeError);
+      throws(() => d.round({ largestUnit: 'seconds' }), RangeError);
+      throws(() => d.round({ largestUnit: 'milliseconds' }), RangeError);
+      throws(() => d.round({ largestUnit: 'microseconds' }), RangeError);
+      throws(() => d.round({ largestUnit: 'nanoseconds' }), RangeError);
+    });
+    it('durations do not balance beyond their current largest unit by default', () => {
+      const fortyDays = Duration.from({ days: 40 });
+      equal(`${fortyDays.round({ smallestUnit: 'seconds' })}`, 'P40D');
+    });
+    const roundAndBalanceResults = {
+      // largestUnit
+      years: {
+        // smallestUnit
+        years: 'P6Y',
+        months: 'P5Y6M',
+        weeks: 'P5Y5M6W',
+        days: 'P5Y5M5W5D',
+        hours: 'P5Y5M5W5DT5H',
+        minutes: 'P5Y5M5W5DT5H5M',
+        seconds: 'P5Y5M5W5DT5H5M5S',
+        milliseconds: 'P5Y5M5W5DT5H5M5.005S',
+        microseconds: 'P5Y5M5W5DT5H5M5.005005S',
+        nanoseconds: 'P5Y5M5W5DT5H5M5.005005005S'
+      },
+      months: {
+        months: 'P66M',
+        weeks: 'P65M6W',
+        days: 'P65M5W5D',
+        hours: 'P65M5W5DT5H',
+        minutes: 'P65M5W5DT5H5M',
+        seconds: 'P65M5W5DT5H5M5S',
+        milliseconds: 'P65M5W5DT5H5M5.005S',
+        microseconds: 'P65M5W5DT5H5M5.005005S',
+        nanoseconds: 'P65M5W5DT5H5M5.005005005S'
+      },
+      weeks: {
+        weeks: 'P288W',
+        days: 'P288W2D',
+        hours: 'P288W2DT5H',
+        minutes: 'P288W2DT5H5M',
+        seconds: 'P288W2DT5H5M5S',
+        milliseconds: 'P288W2DT5H5M5.005S',
+        microseconds: 'P288W2DT5H5M5.005005S',
+        nanoseconds: 'P288W2DT5H5M5.005005005S'
+      },
+      days: {
+        days: 'P2018D',
+        hours: 'P2018DT5H',
+        minutes: 'P2018DT5H5M',
+        seconds: 'P2018DT5H5M5S',
+        milliseconds: 'P2018DT5H5M5.005S',
+        microseconds: 'P2018DT5H5M5.005005S',
+        nanoseconds: 'P2018DT5H5M5.005005005S'
+      },
+      hours: {
+        hours: 'PT48437H',
+        minutes: 'PT48437H5M',
+        seconds: 'PT48437H5M5S',
+        milliseconds: 'PT48437H5M5.005S',
+        microseconds: 'PT48437H5M5.005005S',
+        nanoseconds: 'PT48437H5M5.005005005S'
+      },
+      minutes: {
+        minutes: 'PT2906225M',
+        seconds: 'PT2906225M5S',
+        milliseconds: 'PT2906225M5.005S',
+        microseconds: 'PT2906225M5.005005S',
+        nanoseconds: 'PT2906225M5.005005005S'
+      },
+      seconds: {
+        seconds: 'PT174373505S',
+        milliseconds: 'PT174373505.005S',
+        microseconds: 'PT174373505.005005S',
+        nanoseconds: 'PT174373505.005005005S'
+      },
+      milliseconds: {
+        milliseconds: 'PT174373505.005S',
+        microseconds: 'PT174373505.005005S',
+        nanoseconds: 'PT174373505.005005005S'
+      }
+    };
+    for (const [largestUnit, entry] of Object.entries(roundAndBalanceResults)) {
+      for (const [smallestUnit, expected] of Object.entries(entry)) {
+        it(`round(${largestUnit}, ${smallestUnit}) = ${expected}`, () => {
+          equal(`${d.round({ largestUnit, smallestUnit, relativeTo })}`, expected);
+        });
+      }
+    }
+    const balanceLosePrecisionResults = {
+      // largestUnit: smallestUnits
+      microseconds: ['microseconds', 'nanoseconds'],
+      nanoseconds: ['nanoseconds']
+    };
+    for (const [largestUnit, entry] of Object.entries(balanceLosePrecisionResults)) {
+      for (const smallestUnit of entry) {
+        it(`round(${largestUnit}, ${smallestUnit}) may lose precision below ms`, () => {
+          assert(`${d.round({ largestUnit, smallestUnit, relativeTo })}`.startsWith('PT174373505.005'));
+        });
+      }
+    }
+    const roundingModeResults = {
+      nearest: ['P6Y', '-P6Y'],
+      ceil: ['P6Y', '-P5Y'],
+      floor: ['P5Y', '-P6Y'],
+      trunc: ['P5Y', '-P5Y']
+    };
+    for (const [roundingMode, [posResult, negResult]] of Object.entries(roundingModeResults)) {
+      it(`rounds correctly in ${roundingMode} mode`, () => {
+        equal(`${d.round({ smallestUnit: 'years', relativeTo, roundingMode })}`, posResult);
+        equal(`${d.negated().round({ smallestUnit: 'years', relativeTo, roundingMode })}`, negResult);
+      });
+    }
+    it('nearest is the default', () => {
+      equal(`${d.round({ smallestUnit: 'years', relativeTo })}`, 'P6Y');
+      equal(`${d.negated().round({ smallestUnit: 'years', relativeTo })}`, '-P6Y');
+    });
+    it('balances differently depending on relativeTo', () => {
+      const fortyDays = Duration.from({ days: 40 });
+      equal(`${fortyDays.round({ largestUnit: 'years', relativeTo: '2020-01-01' })}`, 'P1M9D');
+      equal(`${fortyDays.round({ largestUnit: 'years', relativeTo: '2020-02-01' })}`, 'P1M11D');
+    });
+    it('balances up to the next unit after rounding', () => {
+      const almostWeek = Duration.from({ days: 6, hours: 20 });
+      equal(`${almostWeek.round({ largestUnit: 'weeks', smallestUnit: 'days', relativeTo: '2020-01-01' })}`, 'P1W');
+    });
+    it('balances days up to both years and months', () => {
+      const twoYears = Duration.from({ months: 11, days: 396 });
+      equal(`${twoYears.round({ largestUnit: 'years', relativeTo: '2017-01-01' })}`, 'P2Y');
+    });
+    it('does not balance up to weeks if largestUnit is larger than weeks', () => {
+      const monthAlmostWeek = Duration.from({ months: 1, days: 6, hours: 20 });
+      equal(`${monthAlmostWeek.round({ smallestUnit: 'days', relativeTo: '2020-01-01' })}`, 'P1M7D');
+    });
+    it('rounds to an increment of hours', () => {
+      equal(`${d.round({ smallestUnit: 'hours', roundingIncrement: 3, relativeTo })}`, 'P5Y5M5W5DT6H');
+    });
+    it('rounds to an increment of minutes', () => {
+      equal(`${d.round({ smallestUnit: 'minutes', roundingIncrement: 30, relativeTo })}`, 'P5Y5M5W5DT5H');
+    });
+    it('rounds to an increment of seconds', () => {
+      equal(`${d.round({ smallestUnit: 'seconds', roundingIncrement: 15, relativeTo })}`, 'P5Y5M5W5DT5H5M');
+    });
+    it('rounds to an increment of milliseconds', () => {
+      equal(`${d.round({ smallestUnit: 'milliseconds', roundingIncrement: 10, relativeTo })}`, 'P5Y5M5W5DT5H5M5.010S');
+    });
+    it('rounds to an increment of microseconds', () => {
+      equal(
+        `${d.round({ smallestUnit: 'microseconds', roundingIncrement: 10, relativeTo })}`,
+        'P5Y5M5W5DT5H5M5.005010S'
+      );
+    });
+    it('rounds to an increment of nanoseconds', () => {
+      equal(
+        `${d.round({ smallestUnit: 'nanoseconds', roundingIncrement: 10, relativeTo })}`,
+        'P5Y5M5W5DT5H5M5.005005010S'
+      );
+    });
+    it('valid hour increments divide into 24', () => {
+      [1, 2, 3, 4, 6, 8, 12].forEach((roundingIncrement) => {
+        const options = { smallestUnit: 'hours', roundingIncrement, relativeTo };
+        assert(d.round(options) instanceof Temporal.Duration);
+      });
+    });
+    ['minutes', 'seconds'].forEach((smallestUnit) => {
+      it(`valid ${smallestUnit} increments divide into 60`, () => {
+        [1, 2, 3, 4, 5, 6, 10, 12, 15, 20, 30].forEach((roundingIncrement) => {
+          const options = { smallestUnit, roundingIncrement, relativeTo };
+          assert(d.round(options) instanceof Temporal.Duration);
+        });
+      });
+    });
+    ['milliseconds', 'microseconds', 'nanoseconds'].forEach((smallestUnit) => {
+      it(`valid ${smallestUnit} increments divide into 1000`, () => {
+        [1, 2, 4, 5, 8, 10, 20, 25, 40, 50, 100, 125, 200, 250, 500].forEach((roundingIncrement) => {
+          const options = { smallestUnit, roundingIncrement, relativeTo };
+          assert(d.round(options) instanceof Temporal.Duration);
+        });
+      });
+    });
+    it('throws on increments that do not divide evenly into the next highest', () => {
+      throws(() => d.round({ relativeTo, smallestUnit: 'hours', roundingIncrement: 11 }), RangeError);
+      throws(() => d.round({ relativeTo, smallestUnit: 'minutes', roundingIncrement: 29 }), RangeError);
+      throws(() => d.round({ relativeTo, smallestUnit: 'seconds', roundingIncrement: 29 }), RangeError);
+      throws(() => d.round({ relativeTo, smallestUnit: 'milliseconds', roundingIncrement: 29 }), RangeError);
+      throws(() => d.round({ relativeTo, smallestUnit: 'microseconds', roundingIncrement: 29 }), RangeError);
+      throws(() => d.round({ relativeTo, smallestUnit: 'nanoseconds', roundingIncrement: 29 }), RangeError);
+    });
+    it('throws on increments that are equal to the next highest', () => {
+      throws(() => d.round({ relativeTo, smallestUnit: 'hours', roundingIncrement: 24 }), RangeError);
+      throws(() => d.round({ relativeTo, smallestUnit: 'minutes', roundingIncrement: 60 }), RangeError);
+      throws(() => d.round({ relativeTo, smallestUnit: 'seconds', roundingIncrement: 60 }), RangeError);
+      throws(() => d.round({ relativeTo, smallestUnit: 'milliseconds', roundingIncrement: 1000 }), RangeError);
+      throws(() => d.round({ relativeTo, smallestUnit: 'microseconds', roundingIncrement: 1000 }), RangeError);
+      throws(() => d.round({ relativeTo, smallestUnit: 'nanoseconds', roundingIncrement: 1000 }), RangeError);
+    });
+    it('accepts singular units', () => {
+      equal(`${d.round({ smallestUnit: 'year', relativeTo })}`, `${d.round({ smallestUnit: 'years', relativeTo })}`);
+      equal(`${d.round({ smallestUnit: 'month', relativeTo })}`, `${d.round({ smallestUnit: 'months', relativeTo })}`);
+      equal(`${d.round({ smallestUnit: 'week', relativeTo })}`, `${d.round({ smallestUnit: 'weeks', relativeTo })}`);
+      equal(`${d.round({ smallestUnit: 'day', relativeTo })}`, `${d.round({ smallestUnit: 'days', relativeTo })}`);
+      equal(`${d.round({ smallestUnit: 'hour', relativeTo })}`, `${d.round({ smallestUnit: 'hours', relativeTo })}`);
+      equal(
+        `${d.round({ smallestUnit: 'minute', relativeTo })}`,
+        `${d.round({ smallestUnit: 'minutes', relativeTo })}`
+      );
+      equal(
+        `${d.round({ smallestUnit: 'second', relativeTo })}`,
+        `${d.round({ smallestUnit: 'seconds', relativeTo })}`
+      );
+      equal(
+        `${d.round({ smallestUnit: 'millisecond', relativeTo })}`,
+        `${d.round({ smallestUnit: 'milliseconds', relativeTo })}`
+      );
+      equal(
+        `${d.round({ smallestUnit: 'microsecond', relativeTo })}`,
+        `${d.round({ smallestUnit: 'microseconds', relativeTo })}`
+      );
+      equal(
+        `${d.round({ smallestUnit: 'nanosecond', relativeTo })}`,
+        `${d.round({ smallestUnit: 'nanoseconds', relativeTo })}`
+      );
     });
   });
 });

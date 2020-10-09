@@ -100,6 +100,7 @@ Otherwise, the function will throw a `RangeError`.
 In the default ISO calendar, a year can be 365 or 366 days, and a month can be 28, 29, 30, or 31 days.
 Therefore, any `Duration` object with nonzero years or months can refer to a different length of time depending on when the start date is.
 No conversion is ever performed between years, months, weeks, and days, even in `balance` mode, because such conversion would be ambiguous.
+If you need to do this, use the `round()` method, and provide the start date using the `relativeTo` option.
 
 > **NOTE:** This function understands strings where weeks and other units are combined, and strings with a single sign character at the start, which are extensions to the ISO 8601 standard described in ISO 8601-2.
 > (For example, `P3W1D` is understood to mean three weeks and one day, `-P1Y1M` is a negative duration of one year and one month, and `+P1Y1M` is one year and one month.)
@@ -233,7 +234,7 @@ The `overflow` option tells what to do in this case:
 For usage examples and a more complete explanation of how balancing works and why it is necessary, see [Duration balancing](./balancing.md).
 
 No conversion is ever performed between years, months, days, and other units, as that could be ambiguous depending on the start date.
-If you need such a conversion, you must implement it yourself, since the rules can depend on the start date and the calendar in use.
+If you need such a conversion, use the `round()` method, and provide the start date using the `relativeTo` option.
 
 Adding a negative duration is equivalent to subtracting the absolute value of that duration.
 
@@ -348,6 +349,124 @@ Usage example:
 ```javascript
 d = Temporal.Duration.from('-PT8H30M');
 d.abs()  // PT8H30M
+```
+
+### duration.**round**(_options_: object) : Temporal.Duration
+
+**Parameters:**
+- `options` (object): An object with properties representing options for the operation.
+  The following options are recognized:
+  - `largestUnit` (string): The largest unit of time to allow in the resulting `Temporal.Duration` object.
+    Valid values are `'auto'`, `'years'`, `'months'`, `'weeks'`, `'days'`, `'hours'`, `'minutes'`, `'seconds'`, `'milliseconds'`, `'microseconds'`, and `'nanoseconds'`.
+    The default is `'auto'`.
+  - `smallestUnit` (string): The smallest unit of time to round to in the resulting `Temporal.Duration` object.
+    Valid values are `'years'`, `'months'`, `'weeks'`, `'days'`, `'hours'`, `'minutes'`, `'seconds'`, `'milliseconds'`, `'microseconds'`, and `'nanoseconds'`.
+    The default is `'nanoseconds'`, i.e. no rounding.
+  - `roundingIncrement` (number): The granularity to round to, of the unit given by `smallestUnit`.
+    The default is 1.
+  - `roundingMode` (string): How to handle the remainder, if rounding.
+    Valid values are `'ceil'`, `'floor'`, `'trunc'`, and `'nearest'`.
+    The default is `'nearest'`.
+  - `relativeTo` (`Temporal.DateTime`): The starting point to use when converting between years, months, weeks, and days.
+    It must be a `Temporal.DateTime`, or a value that can be passed to `Temporal.DateTime.from()`.
+
+**Returns:** a new `Temporal.Duration` object which is `duration`, rounded and/or balanced.
+
+Rounds and/or balances `duration` to the given largest and smallest units and rounding increment, and returns the result as a new `Temporal.DateTime` object.
+
+The `largestUnit` determines the largest unit allowed in the result.
+It will cause units larger than `largestUnit` to be converted into smaller units, and units smaller than `largestUnit` to be converted into larger units as much as possible.
+For example, with `largestUnit: 'minutes'`, a duration of 1 hour and 125 seconds will be converted into a duration of 62 minutes and 5 seconds.
+These durations are equally long, so no rounding takes place, but they are expressed differently.
+
+A `largestUnit` value of `'auto'`, which is the default if only `smallestUnit` is given, means that `largestUnit` should be the largest nonzero unit in the duration that is larger than `smallestUnit`.
+(For example, in a duration of 3 days and 12 hours, `largestUnit: 'auto'` would mean the same as `largestUnit: 'days'`.)
+This means that the default is for the balancing behaviour of this method to not 'grow' the duration beyond its current largest unit unless needed for rounding.
+
+The `smallestUnit` option determines the unit to round to.
+For example, to round to the nearest minute, use `smallestUnit: 'minutes'`.
+The default, if only `largestUnit` is given, is to do no rounding.
+
+At least one of `largestUnit` or `smallestUnit` is required.
+
+Converting between years, months, weeks, and other units requires a reference point.
+If `largestUnit` or `smallestUnit` is years, months, or weeks, or the duration has nonzero years, months, or weeks, then the `relativeTo` option is required.
+
+The `roundingIncrement` option allows rounding to an integer number of units.
+For example, to round to increments of a half hour, use `smallestUnit: 'minutes', roundingIncrement: 30`.
+
+Unless `smallestUnit` is years, months, weeks, or days, the value given as `roundingIncrement` must divide evenly into the next highest unit after `smallestUnit`, and must not be equal to it.
+(For example, if `smallestUnit` is `'minutes'`, then the number of minutes given by `roundingIncrement` must divide evenly into 60 minutes, which is one hour.
+The valid values in this case are 1 (default), 2, 3, 4, 5, 6, 10, 12, 15, 20, and 30.
+Instead of 60 minutes, use 1 hour.)
+
+The `roundingMode` option controls how the rounding is performed.
+  - `ceil`: Always round up, towards positive infinity.
+  - `floor`: Always round down, towards negative infinity.
+  - `trunc`: Always round towards zero, chopping off the part after the decimal point.
+  - `nearest`: Round to the nearest of the values allowed by `roundingIncrement` and `smallestUnit`.
+    When there is a tie, round up, like `ceil`.
+
+The `relativeTo` option gives the starting point used when converting between or rounding to years, months, weeks, or days.
+It is a `Temporal.DateTime` instance.
+If any other type of value is given, then it will be converted to a `Temporal.DateTime` as if it were passed to `Temporal.DateTime.from(.., { overflow: 'reject' })`.
+
+Example usage:
+```javascript
+// Balance a duration as far as possible without knowing a starting point
+d = Temporal.Duration.from({ minutes: 130 });
+d.round({ largestUnit: 'days' }); // => PT2H10M
+
+// Round to the nearest unit
+d = Temporal.Duration.from({ minutes: 10, seconds: 52 });
+d.round({ smallestUnit: 'minutes' }); // => PT11M
+d.round({ smallestUnit: 'minutes', roundingMode: 'trunc' }); // => PT10M
+
+// How many seconds in a multi-unit duration?
+d = Temporal.Duration.from('PT2H34M18S');
+d.round({ largestUnit: 'seconds' }).seconds; // => 9258
+
+// Normalize, with and without taking DST into account
+d = Temporal.Duration.from({ hours: 1756 });
+// FIXME: write this example after ZonedDateTime is added
+// d.round({
+//   relativeTo: '2020-01-01T00:00+01:00[Europe/Rome]',
+//   largestUnit: 'years'
+// }); // => ???
+d.round({
+  relativeTo: '2020-01-01',
+  largestUnit: 'years'
+}); // => P73DT4H
+
+// Normalize days into months or years
+d = Temporal.Duration.from({ days: 190 });
+refDate = Temporal.Date.from('2020-01-01');
+d.round({ relativeTo: refDate, largestUnit: 'years' });  // => P6M6D
+
+// Same, but in a different calendar system
+d.round({
+  relativeTo: refDate.withCalendar('hebrew'),
+  largestUnit: 'years'
+}); // => ???
+
+// Round a duration up to the next 5-minute billing period
+d = Temporal.Duration.from({ minutes: 6 });
+d.round({
+  smallestUnit: 'minutes',
+  roundingIncrement: 5,
+  roundingMode: 'ceil'
+}); // ==> P10M
+
+// How many full 3-month quarters of this year, are in this duration?
+d = Temporal.Duration.from({ months: 10, days: 15 });
+d = d.round({
+  smallestUnit: 'months',
+  roundingIncrement: 3,
+  roundingMode: 'trunc',
+  relativeTo: Temporal.now.date()
+});
+quarters = d.months / 3;
+quarters; // => 3
 ```
 
 ### duration.**getFields**() : { years: number, months: number, weeks: number, days: number, hours: number, minutes: number, seconds: number, milliseconds: number, microseconds: number, nanoseconds: number }
