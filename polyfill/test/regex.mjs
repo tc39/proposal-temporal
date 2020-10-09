@@ -388,7 +388,7 @@ describe('fromString regex', () => {
     function test(offsetString, expectedName) {
       it(offsetString, () => {
         const timeZone = Temporal.TimeZone.from(offsetString);
-        equal(timeZone.name, expectedName);
+        equal(timeZone.id, expectedName);
       });
     }
     function generateTest(dateTimeString, zoneString, expectedName) {

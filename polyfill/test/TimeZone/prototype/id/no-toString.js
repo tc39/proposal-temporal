@@ -2,7 +2,7 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
-esid: sec-get-temporal.timezone.prototype.name
+esid: sec-get-temporal.timezone.prototype.id
 includes: [compareArray.js]
 ---*/
 
@@ -19,7 +19,7 @@ Object.defineProperty(timeZone, "toString", {
   },
 });
 
-const descriptor = Object.getOwnPropertyDescriptor(Temporal.TimeZone.prototype, "name");
+const descriptor = Object.getOwnPropertyDescriptor(Temporal.TimeZone.prototype, "id");
 const result = descriptor.get.call(timeZone);
 assert.sameValue(result, "UTC");
 

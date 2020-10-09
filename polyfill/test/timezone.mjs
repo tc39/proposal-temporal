@@ -21,7 +21,7 @@ describe('TimeZone', () => {
     it('Temporal.TimeZone is a function', () => equal(typeof Temporal.TimeZone, 'function'));
     it('Temporal.TimeZone has prototype', () => equal(typeof Temporal.TimeZone.prototype, 'object'));
     describe('Temporal.TimeZone.prototype', () => {
-      it('Temporal.TimeZone.prototype has name', () => assert('name' in Temporal.TimeZone.prototype));
+      it('Temporal.TimeZone.prototype has id', () => assert('id' in Temporal.TimeZone.prototype));
       it('Temporal.TimeZone.prototype has getOffsetNanosecondsFor', () =>
         equal(typeof Temporal.TimeZone.prototype.getOffsetNanosecondsFor, 'function'));
       it('Temporal.TimeZone.prototype has getOffsetStringFor', () =>
@@ -60,7 +60,7 @@ describe('TimeZone', () => {
       it(`${zone} is a zone`, () => equal(typeof new Temporal.TimeZone(zone), 'object'));
     }
   });
-  describe('.name property', () => {
+  describe('.id property', () => {
     test('+01:00');
     test('-01:00');
     test('+0330', '+03:30');
@@ -75,8 +75,8 @@ describe('TimeZone', () => {
     test('Asia/Ulan_Bator', 'Asia/Ulaanbaatar');
     test('UTC');
     test('GMT', 'UTC');
-    function test(zone, name = zone) {
-      it(`${zone} has name ${name}`, () => equal(new Temporal.TimeZone(zone).name, name));
+    function test(zone, id = zone) {
+      it(`${zone} has ID ${id}`, () => equal(new Temporal.TimeZone(zone).id, id));
     }
   });
   describe('TimeZone.from(identifier)', () => {
@@ -99,7 +99,7 @@ describe('TimeZone', () => {
       const timezoneObj = new Temporal.TimeZone(zone);
       it(`TimeZone.from(${zone}) is a time zone`, () => equal(typeof timezoneFrom, 'object'));
       it(`TimeZone.from(${zone}) does the same thing as new TimeZone(${zone})`, () =>
-        equal(timezoneFrom.name, timezoneObj.name));
+        equal(timezoneFrom.id, timezoneObj.id));
     }
     it('TimeZone.from throws with bad identifier', () => {
       throws(() => Temporal.TimeZone.from('local'));
@@ -115,10 +115,10 @@ describe('TimeZone', () => {
     test('1994-11-05T08:15:30\u221205:00[America/New_York]', 'America/New_York');
     test('1994-11-05T08:15:30\u221205[America/New_York]', 'America/New_York');
     test('1994-11-05T13:15:30Z', 'UTC');
-    function test(isoString, name) {
+    function test(isoString, id) {
       const tz = Temporal.TimeZone.from(isoString);
       it(`TimeZone.from(${isoString}) is a time zone`, () => equal(typeof tz, 'object'));
-      it(`TimeZone.from(${isoString}) has name ${name}`, () => equal(tz.name, name));
+      it(`TimeZone.from(${isoString}) has ID ${id}`, () => equal(tz.id, id));
     }
     it('offset disagreeing with IANA name throws', () => {
       throws(() => Temporal.TimeZone.from('1994-11-05T08:15:30-05:00[UTC]'), RangeError);
@@ -130,7 +130,7 @@ describe('TimeZone', () => {
     const zone = new Temporal.TimeZone('+01:00');
     const abs = Temporal.Instant.fromEpochSeconds(Math.floor(Math.random() * 1e9));
     const dtm = new Temporal.DateTime(1976, 11, 18, 15, 23, 30, 123, 456, 789);
-    it(`${zone} has name ${zone}`, () => equal(zone.name, `${zone}`));
+    it(`${zone} has ID ${zone}`, () => equal(zone.id, `${zone}`));
     it(`${zone} has offset +01:00 in ns`, () => equal(zone.getOffsetNanosecondsFor(abs), 3600e9));
     it(`${zone} has offset +01:00`, () => equal(zone.getOffsetStringFor(abs), '+01:00'));
     it(`(${zone}).getDateTimeFor(${abs})`, () => assert(zone.getDateTimeFor(abs) instanceof Temporal.DateTime));
@@ -144,7 +144,7 @@ describe('TimeZone', () => {
     const zone = new Temporal.TimeZone('UTC');
     const abs = Temporal.Instant.fromEpochSeconds(Math.floor(Math.random() * 1e9));
     const dtm = new Temporal.DateTime(1976, 11, 18, 15, 23, 30, 123, 456, 789);
-    it(`${zone} has name ${zone}`, () => equal(zone.name, `${zone}`));
+    it(`${zone} has ID ${zone}`, () => equal(zone.id, `${zone}`));
     it(`${zone} has offset +00:00 in ns`, () => equal(zone.getOffsetNanosecondsFor(abs), 0));
     it(`${zone} has offset +00:00`, () => equal(zone.getOffsetStringFor(abs), '+00:00'));
     it(`(${zone}).getDateTimeFor(${abs})`, () => assert(zone.getDateTimeFor(abs) instanceof Temporal.DateTime));
@@ -156,7 +156,7 @@ describe('TimeZone', () => {
     const zone = new Temporal.TimeZone('America/Los_Angeles');
     const abs = Temporal.Instant.fromEpochSeconds(0n);
     const dtm = new Temporal.DateTime(1976, 11, 18, 15, 23, 30, 123, 456, 789);
-    it(`${zone} has name ${zone}`, () => equal(zone.name, `${zone}`));
+    it(`${zone} has ID ${zone}`, () => equal(zone.id, `${zone}`));
     it(`${zone} has offset -08:00 in ns`, () => equal(zone.getOffsetNanosecondsFor(abs), -8 * 3600e9));
     it(`${zone} has offset -08:00`, () => equal(zone.getOffsetStringFor(abs), '-08:00'));
     it(`(${zone}).getDateTimeFor(${abs})`, () => assert(zone.getDateTimeFor(abs) instanceof Temporal.DateTime));
