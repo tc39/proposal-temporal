@@ -4117,17 +4117,30 @@
       if (hours) timeParts.push("".concat(formatNumber(Math.abs(hours)), "H"));
       if (minutes) timeParts.push("".concat(formatNumber(Math.abs(minutes)), "M"));
       var secondParts = [];
-      µs += Math.trunc(ns / 1000);
-      ns %= 1000;
-      ms += Math.trunc(µs / 1000);
-      µs %= 1000;
-      seconds += Math.trunc(ms / 1000);
-      ms %= 1000;
+      var total = BigInteger(seconds).times(1000).plus(ms).times(1000).plus(µs).times(1000).plus(ns);
+
+      var _total$divmod = total.divmod(1000);
+
+      total = _total$divmod.quotient;
+      ns = _total$divmod.remainder;
+
+      var _total$divmod2 = total.divmod(1000);
+
+      total = _total$divmod2.quotient;
+      µs = _total$divmod2.remainder;
+
+      var _total$divmod3 = total.divmod(1000);
+
+      seconds = _total$divmod3.quotient;
+      ms = _total$divmod3.remainder;
+      ms = ms.toJSNumber();
+      µs = µs.toJSNumber();
+      ns = ns.toJSNumber();
       if (ns) secondParts.unshift("".concat(Math.abs(ns)).padStart(3, '0'));
       if (µs || secondParts.length) secondParts.unshift("".concat(Math.abs(µs)).padStart(3, '0'));
       if (ms || secondParts.length) secondParts.unshift("".concat(Math.abs(ms)).padStart(3, '0'));
       if (secondParts.length) secondParts.unshift('.');
-      if (seconds || secondParts.length) secondParts.unshift(formatNumber(Math.abs(seconds)));
+      if (!seconds.isZero() || secondParts.length) secondParts.unshift(seconds.abs().toString());
       if (secondParts.length) timeParts.push("".concat(secondParts.join(''), "S"));
       if (timeParts.length) timeParts.unshift('T');
       if (!dateParts.length && !timeParts.length) return 'PT0S';
