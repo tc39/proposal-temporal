@@ -705,7 +705,6 @@
     <emu-clause id="sec-temporal-balanceduration" aoid="BalanceDuration">
       <h1>BalanceDuration ( _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_, _largestUnit_ )</h1>
       <emu-alg>
-        1. Assert: _largestUnit_ is one of *"days"*, *"hours"*, *"minutes"*, or *"seconds"*.
         1. Let _sign_ be ! DurationSign(0, 0, 0, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_).
         1. Let _bt_ be ? BalanceTime(abs(_hours_), abs(_minutes_), abs(_seconds_), abs(_milliseconds_), abs(_microseconds_), abs(_nanoseconds_)).
         1. Increment _days_ by _bt_.[[Days]].
