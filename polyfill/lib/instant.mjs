@@ -109,7 +109,7 @@ export class Instant {
     let defaultLargestUnit = 'seconds';
     if (smallestUnit === 'hours' || smallestUnit === 'minutes') defaultLargestUnit = smallestUnit;
     const largestUnit = ES.ToLargestTemporalUnit(options, defaultLargestUnit, disallowedUnits);
-    ES.ValidateTemporalDifferenceUnits(largestUnit, smallestUnit);
+    ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
     const roundingMode = ES.ToTemporalRoundingMode(options);
     const maximumIncrements = {
       hours: 24,

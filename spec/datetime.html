@@ -499,7 +499,7 @@
         1. Else,
           1. Let _defaultLargestUnit_ be *"days"*.
         1. Let _largestUnit_ be ? ToLargestTemporalUnit(_options_, « », _defaultLargestUnit_).
-        1. Perform ? ValidateTemporalDifferenceUnits(_largestUnit_, _smallestUnit_).
+        1. Perform ? ValidateTemporalUnitRange(_largestUnit_, _smallestUnit_).
         1. Let _roundingMode_ be ? ToTemporalRoundingMode(_options_).
         1. Let _maximum_ be ! MaximumTemporalDurationRoundingIncrement(_smallestUnit_).
         1. Let _roundingIncrement_ be ? ToTemporalRoundingIncrement(_options_, _maximum_, *false*).

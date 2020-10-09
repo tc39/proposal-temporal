@@ -549,7 +549,7 @@ export const ES = ObjectAssign({}, ES2019, {
     }
     return value;
   },
-  ValidateTemporalDifferenceUnits: (largestUnit, smallestUnit) => {
+  ValidateTemporalUnitRange: (largestUnit, smallestUnit) => {
     const validUnits = [
       'years',
       'months',

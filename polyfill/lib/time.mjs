@@ -245,7 +245,7 @@ export class Time {
     options = ES.NormalizeOptionsObject(options);
     const largestUnit = ES.ToLargestTemporalUnit(options, 'hours', ['years', 'months', 'weeks', 'days']);
     const smallestUnit = ES.ToSmallestTemporalDurationUnit(options, 'nanoseconds');
-    ES.ValidateTemporalDifferenceUnits(largestUnit, smallestUnit);
+    ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
     const roundingMode = ES.ToTemporalRoundingMode(options);
     const maximumIncrements = {
       hours: 24,
