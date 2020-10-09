@@ -983,11 +983,21 @@
           1. Set _timePart_ to the string concatenation of abs(_hours_) formatted as a decimal number and the code unit 0x0048 (LATIN CAPITAL LETTER H).
         1. If _minutes_ is not 0, then
           1. Set _timePart_ to the string concatenation of _timePart_, abs(_minutes_) formatted as a decimal number, and the code unit 0x004D (LATIN CAPITAL LETTER M).
-        1. Let _secondsPart_ be ! FormatSecondsStringPart(abs(_seconds_), abs(_milliseconds_), abs(_microseconds_), abs(_nanoseconds_)).
-        1. If the first code unit of _secondsPart_ is 0x003A (COLON), then
-          1. Set _secondsPart_ to the string containing all the code units of _secondsPart_ except the first.
-        1. If _secondsPart_ is not `""`, then
-          1. Set _secondsPart_ to the string concatenation of _secondsPart_ and the code unit 0x0053 (LATIN CAPITAL LETTER S).
+        1. If any of _seconds_, _milliseconds_, _microseconds_, and _nanoseconds_ are not 0, then
+          1. Let _nanosecondsPart_, _microsecondsPart_, and _millisecondsPart_ be *""*.
+          1. If _nanoseconds_ is not 0, then
+            1. Set _nanosecondsPart_ to _nanoseconds_ formatted as a three-digit decimal number, padded to the left with zeroes if necessary.
+            1. Set _microsecondsPart_ and _millisecondsPart_ to *"000"*.
+          1. If _microseconds_ is not 0, then
+            1. Set _microsecondsPart_ be _microseconds_ formatted as a three-digit decimal number, padded to the left with zeroes if necessary.
+            1. Set _millisecondsPart_ to *"000"*.
+          1. If _milliseconds_ is not 0, then
+            1. Set _millisecondsPart_ to _milliseconds_ formatted as a three-digit decimal number, padded to the left with zeroes if necessary.
+          1. Let _decimalPart_ be the string-concatenation of _millisecondsPart_, _microsecondsPart_, and _nanosecondsPart_.
+          1. Let _secondsPart_ be _seconds_ formatted as a decimal number.
+          1. If _decimalPart_ is not *""*, then
+            1. Set _secondsPart_ to the string-concatenation of _secondsPart_, the code unit 0x002E (FULL STOP), and _decimalPart_.
+          1. Set _timePart_ to the string concatenation of _timePart_, _secondsPart_, and the code unit 0x0053 (LATIN CAPITAL LETTER S).
         1. Let _signPart_ be the code unit 0x002D (HYPHEN-MINUS) if _sign_ &lt; 0, and otherwise the empty String.
         1. Let _result_ be the string concatenation of _signPart_, the code unit 0x0050 (LATIN CAPITAL LETTER P) and _datePart_.
         1. If _timePart_ is not `""`, then
