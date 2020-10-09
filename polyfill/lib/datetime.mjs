@@ -391,7 +391,7 @@ export class DateTime {
       defaultLargestUnit = smallestUnit;
     }
     const largestUnit = ES.ToLargestTemporalUnit(options, defaultLargestUnit);
-    ES.ValidateTemporalDifferenceUnits(largestUnit, smallestUnit);
+    ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
     const roundingMode = ES.ToTemporalRoundingMode(options);
     const maximumIncrements = {
       years: undefined,
