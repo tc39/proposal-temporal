@@ -169,6 +169,33 @@ export namespace Temporal {
     roundingMode?: 'nearest' | 'ceil' | 'floor' | 'trunc';
   }
 
+  export interface DurationRoundOptions {
+    largestUnit:
+      | 'auto'
+      | 'years'
+      | 'months'
+      | 'days'
+      | 'hours'
+      | 'minutes'
+      | 'seconds'
+      | 'milliseconds'
+      | 'microseconds'
+      | 'nanoseconds';
+    smallestUnit:
+      | 'years'
+      | 'months'
+      | 'days'
+      | 'hours'
+      | 'minutes'
+      | 'seconds'
+      | 'milliseconds'
+      | 'microseconds'
+      | 'nanoseconds';
+    roundingIncrement?: number;
+    roundingMode?: 'nearest' | 'ceil' | 'floor' | 'trunc';
+    relativeTo?: Temporal.DateTime | DateTimeLike | string;
+  }
+
   export type DurationLike = {
     years?: number;
     months?: number;
@@ -221,6 +248,7 @@ export namespace Temporal {
     with(durationLike: DurationLike, options?: DurationOptions): Temporal.Duration;
     add(other: Temporal.Duration | DurationLike, options?: DurationOptions): Temporal.Duration;
     subtract(other: Temporal.Duration | DurationLike, options?: DurationOptions): Temporal.Duration;
+    round(options: DurationRoundOptions): Temporal.Duration;
     getFields(): DurationFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
