@@ -1,116 +1,122 @@
-# Duration balancing
+# Duration Balancing
 
 With most types in Temporal, each unit has a natural maximum.
 For example, there is no such time as 11:87, so when creating a `Temporal.Time` from 11:87 the time is either clipped to 11:59 ("constrain" mode) or an exception is thrown ("reject" mode).
 
-## Constructing a duration
-
 With [`Temporal.Duration`](./duration.md), however, maximums are less clear-cut.
 Take, for example, a duration of 100 seconds: `Temporal.Duration.from({ seconds: 100 })`.
-100 seconds is equal to 1 minute and 40 seconds. Instead of clipping this to 59 seconds it's more likely that we would want to "balance" it, wrapping 60 seconds around to 0 to make 1 minute and 40 seconds.
-However, it's an equally valid use case to want to track the duration of something in seconds only, and not balance the duration to 1 minute and 40 seconds.
+100 seconds is equal to 1 minute and 40 seconds.
+In some cases you may want to "balance" it, yielding 1 minute and 40 seconds.
+In other cases you may want to keep it as an "unbalanced" duration of 100 seconds.
 
-What is done with the duration depends on the `overflow` option when creating the `Temporal.Duration` object.
-Unlike with the other Temporal types, constrain mode doesn't clip the seconds value to 59, and reject mode doesn't throw.
-They just leave the value as it is.
-Balance mode lets you opt in to the balancing behaviour:
+When a `Temporal.Duration` object is constructed from a string or a property bag object, no balancing is performed.
 
 ```javascript
-d = Temporal.Duration.from({ seconds: 100 }, { overflow: 'balance' });
-d.minutes  // => 1
-d.seconds  // => 40
+d = Temporal.Duration.from({ seconds: 100 });
+d.minutes; // => 0
+d.seconds; // => 100
+d = Temporal.Duration.from('PT100S');
+d.minutes; // => 0
+d.seconds; // => 100
 ```
 
-Balancing between the different units of durations excludes years and months, because years and months can have different lengths.
+The most common kind of unbalanced duration is a "top-heavy" duration where only the largest nonzero unit is unbalanced, e.g. `{ days: 45, hours: 10 }`.
+Unbalanced durations that are not top-heavy, like `{ days: 4, hours: 60 }`, are rarely used.
+
+## Balancing Durations with `round()`
+
+`Temporal.Duration.prototype.round()`, in addition to rounding duration units at the low end, can also balance durations too.
+
+By default, `round()` will not enlarge a top-heavy unbalanced duration.
+By default, the largest unit in the input will be largest unit in the output.
+
+```javascript
+d = Temporal.Duration.from({ minutes: 80, seconds: 30 }); // => PT80M30S
+d.round(); // => PT80M30S (unchanged)
+```
+
+However, `round()` will balance units smaller than the largest one.
+This only matters in the rare case that an unbalanced duration isn't top-heavy.
+
+```javascript
+d = Temporal.Duration.from({ minutes: 80, seconds: 90 }); // => PT80M90S
+d.round(); // => PT81M30S (seconds balance to minutes, but not minutes=>hours)
+```
+
+To fully balance a duration, use the `largestUnit` option:
+
+```javascript
+d = Temporal.Duration.from({ minutes: 80, seconds: 90 }); // => PT80M90S
+d.round({ largestUnit: 'hours' }); // => PT1H21M30S (fully balanced)
+```
+
+## Balancing Relative to a Reference Point
+
+Balancing that includes days, weeks, months, and years is more complicated because those units can be different lengths.
 In the default ISO calendar, a year can be 365 or 366 days, and a month can be 28, 29, 30, or 31 days.
-Therefore, any `Duration` object with nonzero years or months can refer to a different length of time depending on when the start date is.
-No balancing is ever performed between years, months, and days, because such conversion would be ambiguous.
-If you need such a conversion, you must implement it yourself, since the rules can depend on the start date and the calendar in use.
+In other calendars, years aren't always 12 months long and weeks aren't always 7 days.
+Finally, in time zones that use Daylight Saving Time (DST) days are not always 24 hours long.
 
-`Temporal.Duration` fields are not allowed to have mixed signs.
-For example, `Temporal.Duration.from({ hours: 1, minutes: -30 })` will always throw an exception, regardless of the overflow option.
-
-Therefore, the only case where constrain and reject mode have any effect when creating a duration, is integer overflow.
-If one of the values overflows, constrain mode will cap it to `Number.MAX_VALUE` or `-Number.MAX_VALUE`.
-
-## Duration arithmetic
-
-When adding two `Temporal.Duration`s of opposite sign, or subtracting two durations of the same sign, the situation is different.
-As well as the same possibility of integer overflow, the fields may also need to be balanced.
-
-Consider a duration of 90 minutes, from which is subtracted 30 seconds.
-Subtracting the fields directly would result in 90 minutes and &minus;30 seconds, which is invalid.
-Therefore, it's necessary to balance the seconds with the minutes, resulting in 89 minutes and 30 seconds.
-
-By default, the fields of the resulting duration are only converted between each other if one unit is negative but a larger unit is positive, or vice versa, in which case the smaller is balanced with the larger to avoid having mixed-sign fields.
-
-That's not all the balancing that _could_ be done on the resulting value.
-It could further be balanced into 1 hour, 29 minutes, and 30 seconds.
-However, that would likely conflict with the intention of having a duration of 90 minutes in the first place, so this should be behaviour that the Temporal user opts in to.
-Here, we make a distinction between "necessary balancing" and "optional balancing".
-
-In order to accommodate this, the `overflow` option when performing arithmetic on `Temporal.Duration`s is different from all the other arithmetic methods' overflow options.
-Necessary balancing is called `constrain` mode, because values are constrained to be non-negative through balancing.
-Optional balancing is called `balance` mode.
-
-The default is `constrain` mode.
-The `balance` mode is only provided for convenience, since the following code snippets give the same result:
+Therefore, any `Duration` object with nonzero days, weeks, months, or years can refer to a different length of time depending on the specific date and time that it starts from.
+To handle this potential ambiguity, the `relativeTo` option is used to provide a starting point.
+`relativeTo` must be (or be parseable into) a `Temporal.ZonedDateTime` for timezone-specific durations or `Temporal.DateTime` for timezone-neutral data.
+`relativeTo` is required when balancing to or from weeks, months, or years.
 
 ```javascript
-duration3 = duration1.minus(duration2, { overflow: 'balance' });
-
-tmp = duration1.minus(duration2);
-duration3 = Temporal.Duration.from(tmp, { overflow: 'balance' });
-duration3 = tmp.with(tmp, { overflow: 'balance' });
+d = Temporal.Duration.from({ days: 370 }); // => P370D
+d.round({ largestUnit: 'months' }); // => RangeError (`relativeTo` is required)
+d.round({ largestUnit: 'months', relativeTo: '2019-01-01' }); // => P1Y5D
+d.round({ largestUnit: 'months', relativeTo: '2020-01-01' }); // => P1Y4D (2020 is a leap year)
 ```
 
-Here are some more examples of what each mode does:
+`relativeTo` is optional when balancing to or from `days`, and if `relativeTo` is omitted then days are assumed to be 24 hours long.
+However, if the duration is timezone-specific, then it's recommended to use a `Temporal.ZonedDateTime` reference point to ensure that DST transitions are accounted for.
+
+<!-- prettier-ignore-start -->
+```javascript
+d = Temporal.Duration.from({ hours: 48 }); // => PT48H
+d.round({ largestUnit: 'days' });
+  // => P2D
+d.round({ largestUnit: 'days', relativeTo: '2020-03-08T00:00-08:00[America/Los_Angeles]' });
+  // => P2D1H (because one clock hour was skipped by DST starting)
+```
+<!-- prettier-ignore-end -->
+
+## Balancing in Duration Arithmetic
+
+In addition to `round()` as described above, `add()` and `subtract()` also balance their output into either a fully-balanced or a top-heavy duration depending on the `largestUnit` option.
+
+By default, `add()` and `subtract()` on `Temporal.Duration` instances will only balance up to the largest unit in either input duration.
 
 ```javascript
-// Simple, no balancing possible
-one = Temporal.Duration.from({ hours: 3 });
-two = Temporal.Duration.from({ hours: 1 });
-one.minus(two);                           // => PT2H
-one.minus(two, { overflow: 'balance' });  // => PT2H
-
-// Balancing possible but not necessary
-one = Temporal.Duration.from({ minutes: 180 });
-two = Temporal.Duration.from({ minutes: 60 });
-one.minus(two);                           // => PT120M
-one.minus(two, { overflow: 'balance' });  // => PT2H
-
-// Some balancing necessary, more balancing possible
-one = Temporal.Duration.from({ minutes: 180 });
-two = Temporal.Duration.from({ seconds: 30 });
-one.minus(two);                           // => PT179M30S
-one.minus(two, { overflow: 'balance' });  // => PT2H59M30S
-
-// Balancing necessary, result is positive
-one = Temporal.Duration.from({ hours: 4, minutes: 15 });
-two = Temporal.Duration.from({ hours: 2, minutes: 30 });
-one.minus(two);                           // => PT1H45M
-one.minus(two, { overflow: 'balance' });  // => PT1H45M
-
-// Result is negative
-one = Temporal.Duration.from({ hours: 2, minutes: 30 });
-two = Temporal.Duration.from({ hours: 3 });
-one.minus(two);                           // -PT30M
-one.minus(two, { overflow: 'balance' });  // -PT30M
-
-// Unbalanceable units, but also no balancing possible
-one = Temporal.Duration.from({ months: 3, days: 15 });
-two = Temporal.Duration.from({ days: 10 });
-one.minus(two);                           // => P3M5D
-one.minus(two, { overflow: 'balance' });  // => P3M5D
-
-// Result is in theory positive in the ISO calendar, but unbalanceable units
-one = Temporal.Duration.from({ months: 3, days: 15 });
-two = Temporal.Duration.from({ days: 30 });
-one.minus(two);                           // throws
-one.minus(two, { overflow: 'balance' });  // throws
+d1 = Temporal.Duration.from({ hours: 26, minutes: 45 }); // => PT26H45M
+d2 = Temporal.Duration.from({ minutes: 30 }); // => PT30M
+d1.add(d2); // => PT27H15M
 ```
 
-## Serialization
+The `largestUnit` option can be used to balance to larger units than the inputs.
+
+```javascript
+d1 = Temporal.Duration.from({ minutes: 80, seconds: 90 }); // => PT80M90S
+d2 = Temporal.Duration.from({ minutes: 100, seconds: 15 }); // => PT100M15S
+d1.add(d2, { largestUnit: 'hours' }); // => PT3H1M45S (fully balanced)
+```
+
+The `relativeTo` option can be used to balance to, or from, weeks, months or years (or days for timezone-aware durations).
+`relativeTo` is interpreted relative to `this`, not to `other`, which allows the same `relativeTo` value to be used for a chain of arithmetic operations.
+
+<!-- prettier-ignore-start -->
+```javascript
+d1 = Temporal.Duration.from({ hours: 48 }); // => PT48H
+d2 = Temporal.Duration.from({ hours: 24 }); // => PT24H
+d1.add(d2, { largestUnit: 'days' });
+  // => P3D
+d1.add(d2, { largestUnit: 'days', relativeTo: '2020-03-08T00:00-08:00[America/Los_Angeles]' });
+  // => P3D1H (because one clock hour was skipped by DST starting)
+```
+<!-- prettier-ignore-end -->
+
+## Serialization of Fractional Seconds
 
 Normally, any Temporal object can be serialized to a string with its `toString()` method, and deserialized by calling `from()` on the string.
 This goes for `Temporal.Duration` as well.
@@ -119,4 +125,4 @@ The deserialized object will represent an equally long duration, but the sub-sec
 For example, 1000 nanoseconds will become 1 microsecond.
 
 This is because the ISO 8601 string format for durations, which is used for serialization for reasons of interoperability, does not allow for specifying sub-second units separately, only as a decimal fraction of seconds.
-If you need to serialize a `Temporal.Duration` in a way that will preserve unbalanced sub-second fields, you will need to use a custom serialization format.
+If you need to serialize a `Temporal.Duration` into a string that preserves unbalanced sub-second fields, you will need to use a custom serialization format or serialize it into an object or JSON instead.
