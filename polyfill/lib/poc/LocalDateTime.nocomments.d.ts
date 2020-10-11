@@ -1,21 +1,21 @@
 import { Temporal } from '../..';
 export declare type LocalDateTimeLike = Temporal.DateTimeLike & {
   timeZone?: Temporal.TimeZone | string;
-  timeZoneOffsetNanoseconds?: number;
+  offsetNanoseconds?: number;
 };
 declare type LocalDateTimeFields = ReturnType<Temporal.DateTime['getFields']> & {
   timeZone: Temporal.TimeZone;
-  timeZoneOffsetNanoseconds: number;
+  offsetNanoseconds: number;
 };
 declare type LocalDateTimeISOFields = ReturnType<Temporal.DateTime['getISOFields']> & {
   timeZone: Temporal.TimeZone;
-  timeZoneOffsetNanoseconds: number;
+  offsetNanoseconds: number;
 };
-export interface TimeZoneOffsetDisambiguationOptions {
+export interface offsetDisambiguationOptions {
   offset: 'use' | 'prefer' | 'ignore' | 'reject';
 }
 export declare type LocalDateTimeAssignmentOptions = Partial<
-  Temporal.AssignmentOptions & Temporal.ToInstantOptions & TimeZoneOffsetDisambiguationOptions
+  Temporal.AssignmentOptions & Temporal.ToInstantOptions & offsetDisambiguationOptions
 >;
 export declare class LocalDateTime {
   private _abs;
@@ -34,9 +34,9 @@ export declare class LocalDateTime {
   toDateTime(): Temporal.DateTime;
   get hoursInDay(): number;
   get startOfDay(): LocalDateTime;
-  get isTimeZoneOffsetTransition(): boolean;
-  get timeZoneOffsetNanoseconds(): number;
-  get timeZoneOffsetString(): string;
+  get isOffsetTransition(): boolean;
+  get offsetNanoseconds(): number;
+  get offsetString(): string;
   getFields(): LocalDateTimeFields;
   getISOFields(): LocalDateTimeISOFields;
   static compare(one: LocalDateTime, two: LocalDateTime): Temporal.ComparisonResult;

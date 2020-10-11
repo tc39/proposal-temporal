@@ -832,15 +832,15 @@ export namespace Temporal {
     /**`Temporal.TimeZone`, IANA time zone identifier, or offset string */
     timeZone?: Temporal.TimeZone | string;
     /** Enables `from` using only local time values */
-    timeZoneOffsetNanoseconds?: number;
+    offsetNanoseconds?: number;
   };
   type LocalDateTimeFields = ReturnType<Temporal.DateTime['getFields']> & {
     timeZone: Temporal.TimeZone;
-    timeZoneOffsetNanoseconds: number;
+    offsetNanoseconds: number;
   };
   type LocalDateTimeISOFields = ReturnType<Temporal.DateTime['getISOFields']> & {
     timeZone: Temporal.TimeZone;
-    timeZoneOffsetNanoseconds: number;
+    offsetNanoseconds: number;
   };
   /**
    * Time zone definitions can change. If an application stores data about events
@@ -871,11 +871,11 @@ export namespace Temporal {
    * choose the correct instant. However, if the offset is used then the
    * `disambiguation` option will be ignored.
    */
-  export interface TimeZoneOffsetDisambiguationOptions {
+  export interface offsetDisambiguationOptions {
     offset: 'use' | 'prefer' | 'ignore' | 'reject';
   }
   export type LocalDateTimeAssignmentOptions = Partial<
-    Temporal.AssignmentOptions & Temporal.ToInstantOptions & TimeZoneOffsetDisambiguationOptions
+    Temporal.AssignmentOptions & Temporal.ToInstantOptions & offsetDisambiguationOptions
   >;
   export class LocalDateTime {
     private _abs;
@@ -902,9 +902,9 @@ export namespace Temporal {
      *   the input.
      * - A "LocalDateTime-like" property bag object with required properties
      *   `timeZone`, `year`, `month`, and `day`. Other fields (time fields and
-     *   `timeZoneOffsetNanoseconds`) are optional. If `timeZoneOffsetNanoseconds`
-     *   is not provided, then the time can be ambiguous around DST transitions.
-     *   The `disambiguation` option can resolve this ambiguity.
+     *   `offsetNanoseconds`) are optional. If `offsetNanoseconds` is not
+     *   provided, then the time can be ambiguous around DST transitions. The
+     *   `disambiguation` option can resolve this ambiguity.
      * - An ISO 8601 date+time+offset string (the same format used by
      *   `Temporal.Instant.from`) with a time zone identifier suffix appended in
      *   square brackets, e.g. `2007-12-03T10:15:30+01:00[Europe/Paris]` or
@@ -935,7 +935,7 @@ export namespace Temporal {
      * - All `Temporal.DateTime` fields, including `calendar`
      * - `timeZone` as a time zone identifier string like `Europe/Paris` or a
      *   `Temporal.TimeZone` instance
-     * - `timezoneOffsetNanoseconds`
+     * - `offsetNanoseconds`
      *
      * If the `timeZone` field is included, `with` will first convert all existing
      * fields to the new time zone and then fields in the input will be played on
@@ -948,24 +948,23 @@ export namespace Temporal {
      * const newTzSameLocalTime = ldt.toDateTime().toLocalDateTime('Europe/London');
      * ```
      *
-     * If the `timezoneOffsetNanoseconds` field is provided, then it's possible
-     * for it to conflict with the input object's `timeZone` property or, if
-     * omitted, the object's existing time zone.  The `offset` option (which
-     * defaults to `'prefer'`) will resolve the conflict.
+     * If the `offsetNanoseconds` field is provided, then it's possible for it to
+     * conflict with the input object's `timeZone` property or, if omitted, the
+     * object's existing time zone.  The `offset` option (which defaults to
+     * `'prefer'`) will resolve the conflict.
      *
-     * If the `timezoneOffsetNanoseconds` field is not provided, but the
-     * `timeZone` field is not provided either, then the existing
-     * `timezoneOffsetNanoseconds` field will be used by `with` as if it had been
-     * provided by the caller. By default, this will prefer the existing offset
-     * when resolving ambiguous results. For example, if a
-     * `Temporal.LocalDateTime` is set to the "second" 1:30AM on a day where the
-     * 1-2AM clock hour is repeated after a backwards DST transition, then calling
-     * `.with({minute: 45})` will result in an ambiguity which is resolved using
-     * the default `offset: 'prefer'` option. Because the existing offset is valid
-     * for the new time, it will be retained so the result will be the "second"
-     * 1:45AM.  However, if the existing offset is not valid for the new result
-     * (e.g. `.with({hour: 0})`), then the default behavior will change the
-     * offset.
+     * If the `offsetNanoseconds` field is not provided, but the `timeZone` field
+     * is not provided either, then the existing `offsetNanoseconds` field will be
+     * used by `with` as if it had been provided by the caller. By default, this
+     * will prefer the existing offset when resolving ambiguous results. For
+     * example, if a `Temporal.LocalDateTime` is set to the "second" 1:30AM on a
+     * day where the 1-2AM clock hour is repeated after a backwards DST
+     * transition, then calling `.with({minute: 45})` will result in an ambiguity
+     * which is resolved using the default `offset: 'prefer'` option. Because the
+     * existing offset is valid for the new time, it will be retained so the
+     * result will be the "second" 1:45AM.  However, if the existing offset is not
+     * valid for the new result (e.g. `.with({hour: 0})`), then the default
+     * behavior will change the offset.
      *
      * Available options:
      * ```
@@ -1055,12 +1054,12 @@ export namespace Temporal {
      *
      * "Immediately after" means that subtracting one nanosecond would yield a
      * `Temporal.LocalDateTime` instance that has a different value for
-     * `timeZoneOffsetNanoseconds`.
+     * `offsetNanoseconds`.
      *
      * To calculate if a DST transition happens on the same day (but not
      * necessarily at the same time), use `.hoursInDay() !== 24`.
      * */
-    get isTimeZoneOffsetTransition(): boolean;
+    get isOffsetTransition(): boolean;
     /**
      * Offset (in nanoseconds) relative to UTC of the current time zone and
      * instant of this `Temporal.LocalDateTime` instance.
@@ -1072,7 +1071,7 @@ export namespace Temporal {
      * instant, this field is returned by `getFields()` and is accepted by `from`
      * and `with`.
      * */
-    get timeZoneOffsetNanoseconds(): number;
+    get offsetNanoseconds(): number;
     /**
      * Offset (as a string like `'+05:00'` or `'-07:00'`) relative to UTC of the
      * current time zone and instant of this `Temporal.LocalDateTime` instance.
@@ -1080,16 +1079,16 @@ export namespace Temporal {
      * This property is useful for custom formatting of LocalDateTime instances.
      *
      * This field cannot be passed to `from` and `with`.  Instead, use
-     * `timeZoneOffsetNanoseconds`.
+     * `offsetNanoseconds`.
      * */
-    get timeZoneOffsetString(): string;
+    get offsetString(): string;
     /**
      * Returns a plain object containing enough data to uniquely identify
      * this object.
      *
      * The resulting object includes all fields returned by
      * `Temporal.DateTime.prototype.getFields()`, as well as `timeZone`,
-     * and `timeZoneOffsetNanoseconds`.
+     * and `offsetNanoseconds`.
      *
      * The result of this method can be used for round-trip serialization via
      * `from()`, `with()`, or `JSON.stringify`.
@@ -1305,7 +1304,7 @@ export namespace Temporal {
     toTime(): Temporal.Time;
     valueOf(): never;
     /**
-     * Returns the number of full milliseconds between `this` and 00:00 UTC on
+     * Returns the number of full seconds between `this` and 00:00 UTC on
      * 1970-01-01, otherwise known as the [UNIX
      * Epoch](https://en.wikipedia.org/wiki/Unix_time).
      *

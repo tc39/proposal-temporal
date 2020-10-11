@@ -9,7 +9,7 @@
  */
 function getUtcOffsetDifferenceSecondsAtInstant(source, targetTimeZone) {
   const target = source.with({ timeZone: targetTimeZone });
-  return (target.timeZoneOffsetNanoseconds - source.timeZoneOffsetNanoseconds) / 1e9;
+  return (target.offsetNanoseconds - source.offsetNanoseconds) / 1e9;
 }
 
 const instant = Temporal.Instant.from('2020-01-09T00:00Z');

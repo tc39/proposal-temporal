@@ -10,17 +10,17 @@ export type LocalDateTimeLike = Temporal.DateTimeLike & {
   timeZone?: Temporal.TimeZone | string;
 
   /** Enables `from` using only local time values */
-  timeZoneOffsetNanoseconds?: number;
+  offsetNanoseconds?: number;
 };
 
 type LocalDateTimeFields = ReturnType<Temporal.DateTime['getFields']> & {
   timeZone: Temporal.TimeZone;
-  timeZoneOffsetNanoseconds: number;
+  offsetNanoseconds: number;
 };
 
 type LocalDateTimeISOFields = ReturnType<Temporal.DateTime['getISOFields']> & {
   timeZone: Temporal.TimeZone;
-  timeZoneOffsetNanoseconds: number;
+  offsetNanoseconds: number;
 };
 
 /**
@@ -52,12 +52,12 @@ type LocalDateTimeISOFields = ReturnType<Temporal.DateTime['getISOFields']> & {
  * choose the correct instant. However, if the offset is used then the
  * `disambiguation` option will be ignored.
  */
-export interface TimeZoneOffsetDisambiguationOptions {
+export interface offsetDisambiguationOptions {
   offset: 'use' | 'prefer' | 'ignore' | 'reject';
 }
 
 export type LocalDateTimeAssignmentOptions = Partial<
-  Temporal.AssignmentOptions & Temporal.ToInstantOptions & TimeZoneOffsetDisambiguationOptions
+  Temporal.AssignmentOptions & Temporal.ToInstantOptions & offsetDisambiguationOptions
 >;
 
 /** Build a `Temporal.LocalDateTime` instance from a property bag object */
@@ -66,22 +66,20 @@ function fromObject(item: Record<string, unknown>, options?: LocalDateTimeAssign
   const disambiguation = getOption(options, 'disambiguation', DISAMBIGUATION_OPTIONS, 'compatible');
   const offsetOption = getOption(options, 'offset', OFFSET_OPTIONS, 'reject');
 
-  const { timeZone: tzOrig, timeZoneOffsetNanoseconds } = item as LocalDateTimeLike;
+  const { timeZone: tzOrig, offsetNanoseconds } = item as LocalDateTimeLike;
   if (tzOrig === undefined) {
     throw new TypeError('Required property `timeZone` is missing');
   }
   const tz = Temporal.TimeZone.from(tzOrig);
 
-  if (timeZoneOffsetNanoseconds !== undefined) {
-    if (typeof timeZoneOffsetNanoseconds !== 'number' || isNaN(timeZoneOffsetNanoseconds)) {
-      throw RangeError(
-        `The \`timeZoneOffsetNanoseconds\` numeric property has an invalid value: ${timeZoneOffsetNanoseconds}`
-      );
+  if (offsetNanoseconds !== undefined) {
+    if (typeof offsetNanoseconds !== 'number' || isNaN(offsetNanoseconds)) {
+      throw RangeError(`The \`offsetNanoseconds\` numeric property has an invalid value: ${offsetNanoseconds}`);
     }
   }
 
   const dt = Temporal.DateTime.from(item, { overflow });
-  return fromCommon(dt, tz, timeZoneOffsetNanoseconds, disambiguation, offsetOption);
+  return fromCommon(dt, tz, offsetNanoseconds, disambiguation, offsetOption);
 }
 
 /** Build a `Temporal.LocalDateTime` instance from an ISO 8601 extended string */
@@ -133,7 +131,7 @@ function fromCommon(
   timeZone: Temporal.TimeZone,
   offsetNs: number | undefined,
   disambiguation: Temporal.ToInstantOptions['disambiguation'],
-  offsetOption: TimeZoneOffsetDisambiguationOptions['offset']
+  offsetOption: offsetDisambiguationOptions['offset']
 ) {
   if (offsetNs === undefined || offsetOption === 'ignore') {
     // Simple case: ISO string without a TZ offset (or caller wants to ignore
@@ -162,7 +160,7 @@ function fromCommon(
     const laterOffset = timeZone.getOffsetStringFor(dt.toInstant(timeZone, { disambiguation: 'later' }));
     const validOffsets = earlierOffset === laterOffset ? [earlierOffset] : [earlierOffset, laterOffset];
     const joined = validOffsets.join(' or ');
-    const offsetString = formatTimeZoneOffsetString(offsetNs);
+    const offsetString = formatOffsetString(offsetNs);
     throw new RangeError(
       `Offset is invalid for '${dt}' in '${timeZone}'. Provided: ${offsetString}, expected: ${joined}.`
     );
@@ -265,9 +263,9 @@ export class LocalDateTime {
    *   the input.
    * - A "LocalDateTime-like" property bag object with required properties
    *   `timeZone`, `year`, `month`, and `day`. Other fields (time fields and
-   *   `timeZoneOffsetNanoseconds`) are optional. If `timeZoneOffsetNanoseconds`
-   *   is not provided, then the time can be ambiguous around DST transitions.
-   *   The `disambiguation` option can resolve this ambiguity.
+   *   `offsetNanoseconds`) are optional. If `offsetNanoseconds` is not
+   *   provided, then the time can be ambiguous around DST transitions. The
+   *   `disambiguation` option can resolve this ambiguity.
    * - An ISO 8601 date+time+offset string (the same format used by
    *   `Temporal.Instant.from`) with a time zone identifier suffix appended in
    *   square brackets, e.g. `2007-12-03T10:15:30+01:00[Europe/Paris]` or
@@ -310,7 +308,7 @@ export class LocalDateTime {
    * - All `Temporal.DateTime` fields, including `calendar`
    * - `timeZone` as a time zone identifier string like `Europe/Paris` or a
    *   `Temporal.TimeZone` instance
-   * - `timezoneOffsetNanoseconds`
+   * - `offsetNanoseconds`
    *
    * If the `timeZone` field is included, `with` will first convert all existing
    * fields to the new time zone and then fields in the input will be played on
@@ -323,24 +321,23 @@ export class LocalDateTime {
    * const newTzSameLocalTime = ldt.toDateTime().toLocalDateTime('Europe/London');
    * ```
    *
-   * If the `timezoneOffsetNanoseconds` field is provided, then it's possible
-   * for it to conflict with the input object's `timeZone` property or, if
-   * omitted, the object's existing time zone.  The `offset` option (which
-   * defaults to `'prefer'`) will resolve the conflict.
+   * If the `offsetNanoseconds` field is provided, then it's possible for it to
+   * conflict with the input object's `timeZone` property or, if omitted, the
+   * object's existing time zone.  The `offset` option (which defaults to
+   * `'prefer'`) will resolve the conflict.
    *
-   * If the `timezoneOffsetNanoseconds` field is not provided, but the
-   * `timeZone` field is not provided either, then the existing
-   * `timezoneOffsetNanoseconds` field will be used by `with` as if it had been
-   * provided by the caller. By default, this will prefer the existing offset
-   * when resolving ambiguous results. For example, if a
-   * `Temporal.LocalDateTime` is set to the "second" 1:30AM on a day where the
-   * 1-2AM clock hour is repeated after a backwards DST transition, then calling
-   * `.with({minute: 45})` will result in an ambiguity which is resolved using
-   * the default `offset: 'prefer'` option. Because the existing offset is valid
-   * for the new time, it will be retained so the result will be the "second"
-   * 1:45AM.  However, if the existing offset is not valid for the new result
-   * (e.g. `.with({hour: 0})`), then the default behavior will change the
-   * offset.
+   * If the `offsetNanoseconds` field is not provided, but the `timeZone` field
+   * is not provided either, then the existing `offsetNanoseconds` field will be
+   * used by `with` as if it had been provided by the caller. By default, this
+   * will prefer the existing offset when resolving ambiguous results. For
+   * example, if a `Temporal.LocalDateTime` is set to the "second" 1:30AM on a
+   * day where the 1-2AM clock hour is repeated after a backwards DST
+   * transition, then calling `.with({minute: 45})` will result in an ambiguity
+   * which is resolved using the default `offset: 'prefer'` option. Because the
+   * existing offset is valid for the new time, it will be retained so the
+   * result will be the "second" 1:45AM.  However, if the existing offset is not
+   * valid for the new result (e.g. `.with({hour: 0})`), then the default
+   * behavior will change the offset.
    *
    * Available options:
    * ```
@@ -367,19 +364,17 @@ export class LocalDateTime {
     const updatedOptions = options ? { ...options } : {};
     if (updatedOptions.offset === undefined) updatedOptions.offset = 'prefer';
 
-    const { timeZone, calendar, timeZoneOffsetNanoseconds } = localDateTimeLike;
+    const { timeZone, calendar, offsetNanoseconds } = localDateTimeLike;
 
     const newTimeZone = timeZone && Temporal.TimeZone.from(timeZone);
     const newCalendar = calendar && Temporal.Calendar.from(calendar);
 
-    const updateOffset = timeZoneOffsetNanoseconds !== undefined;
+    const updateOffset = offsetNanoseconds !== undefined;
     const updateTimeZone = newTimeZone && newTimeZone.name !== this._tz.name;
     const updateCalendar = newCalendar && newCalendar.id !== this.calendar.id;
 
-    if (updateOffset && (typeof timeZoneOffsetNanoseconds !== 'number' || isNaN(timeZoneOffsetNanoseconds))) {
-      throw RangeError(
-        `The \`timeZoneOffsetNanoseconds\` numeric property has an invalid value: ${timeZoneOffsetNanoseconds}`
-      );
+    if (updateOffset && (typeof offsetNanoseconds !== 'number' || isNaN(offsetNanoseconds))) {
+      throw RangeError(`The \`offsetNanoseconds\` numeric property has an invalid value: ${offsetNanoseconds}`);
     }
 
     // Changing `timeZone` or `calendar` will create a new instance, and then
@@ -395,9 +390,9 @@ export class LocalDateTime {
     // Deal with the rest of the fields. If there's a change in tz offset, it'll
     // be handled by `from`. Also, if we're not changing the time zone or offset,
     // then pass the existing offset to `from`. (See docs for more info.)
-    const { timeZoneOffsetNanoseconds: originalOffset, ...fields } = base.getFields();
+    const { offsetNanoseconds: originalOffset, ...fields } = base.getFields();
     if (!updateOffset && !updateTimeZone) {
-      (fields as LocalDateTimeLike).timeZoneOffsetNanoseconds = originalOffset;
+      (fields as LocalDateTimeLike).offsetNanoseconds = originalOffset;
     }
     const merged = { ...fields, ...localDateTimeLike };
     return LocalDateTime.from(merged, updatedOptions);
@@ -519,14 +514,14 @@ export class LocalDateTime {
    *
    * "Immediately after" means that subtracting one nanosecond would yield a
    * `Temporal.LocalDateTime` instance that has a different value for
-   * `timeZoneOffsetNanoseconds`.
+   * `offsetNanoseconds`.
    *
    * To calculate if a DST transition happens on the same day (but not
    * necessarily at the same time), use `.hoursInDay() !== 24`.
    * */
-  get isTimeZoneOffsetTransition(): boolean {
+  get isOffsetTransition(): boolean {
     const oneNsBefore = this.minus({ nanoseconds: 1 });
-    return oneNsBefore.timeZoneOffsetNanoseconds !== this.timeZoneOffsetNanoseconds;
+    return oneNsBefore.offsetNanoseconds !== this.offsetNanoseconds;
   }
 
   /**
@@ -540,7 +535,7 @@ export class LocalDateTime {
    * instant, this field is returned by `getFields()` and is accepted by `from`
    * and `with`.
    * */
-  get timeZoneOffsetNanoseconds(): number {
+  get offsetNanoseconds(): number {
     return this._tz.getOffsetNanosecondsFor(this._abs);
   }
 
@@ -551,9 +546,9 @@ export class LocalDateTime {
    * This property is useful for custom formatting of LocalDateTime instances.
    *
    * This field cannot be passed to `from` and `with`.  Instead, use
-   * `timeZoneOffsetNanoseconds`.
+   * `offsetNanoseconds`.
    * */
-  get timeZoneOffsetString(): string {
+  get offsetString(): string {
     return this._tz.getOffsetStringFor(this._abs);
   }
 
@@ -563,16 +558,16 @@ export class LocalDateTime {
    *
    * The resulting object includes all fields returned by
    * `Temporal.DateTime.prototype.getFields()`, as well as `timeZone`,
-   * and `timeZoneOffsetNanoseconds`.
+   * and `offsetNanoseconds`.
    *
    * The result of this method can be used for round-trip serialization via
    * `from()`, `with()`, or `JSON.stringify`.
    */
   getFields(): LocalDateTimeFields {
-    const { timeZone, timeZoneOffsetNanoseconds } = this;
+    const { timeZone, offsetNanoseconds } = this;
     return {
       timeZone,
-      timeZoneOffsetNanoseconds,
+      offsetNanoseconds,
       ...this._dt.getFields()
     };
   }
@@ -581,10 +576,10 @@ export class LocalDateTime {
    * Method for internal use by non-ISO calendars. Normally not used.
    */
   getISOFields(): LocalDateTimeISOFields {
-    const { timeZone, timeZoneOffsetNanoseconds } = this;
+    const { timeZone, offsetNanoseconds } = this;
     return {
       timeZone,
-      timeZoneOffsetNanoseconds,
+      offsetNanoseconds,
       ...this._dt.getISOFields()
     };
   }
@@ -788,7 +783,7 @@ export class LocalDateTime {
     // Also, if there's no change in timezone offset between `this` and `other`,
     // then we don't have to do any DST-related fixups. Just return the simple
     // DateTime difference.
-    // const diffOffset = this.timeZoneOffsetNanoseconds - other.timeZoneOffsetNanoseconds;
+    // const diffOffset = this.offsetNanoseconds - other.offsetNanoseconds;
     // if (diffOffset === 0) return dtDiff;
 
     // const { dateDuration, timeDuration } = splitDuration(dtDiff);
@@ -878,7 +873,7 @@ export class LocalDateTime {
     // happen in the next few days. In the meantime, difference() will be broken
     // in those cases.
 
-    if (this._tz.getOffsetNanosecondsFor(intermediateAbs) === other.timeZoneOffsetNanoseconds) {
+    if (this._tz.getOffsetNanosecondsFor(intermediateAbs) === other.offsetNanoseconds) {
       // The transition was in the date portion which is what we want.
       adjustedTimeDuration = intermediateAbs.difference(other._abs, { largestUnit: 'hours' });
     } else {
@@ -963,7 +958,7 @@ export class LocalDateTime {
    */
   toString(): string {
     const calendar = this._dt.calendar.id === 'iso8601' ? '' : `[c=${this._dt.calendar.id}]`;
-    return `${this._dt.withCalendar('iso8601')}${this.timeZoneOffsetString}[${this._tz.name}]${calendar}`;
+    return `${this._dt.withCalendar('iso8601')}${this.offsetString}[${this._tz.name}]${calendar}`;
   }
 
   // the fields and methods below are identical to DateTime
@@ -1166,7 +1161,7 @@ const DISAMBIGUATION_OPTIONS: Temporal.ToInstantOptions['disambiguation'][] = [
   'later',
   'reject'
 ];
-const OFFSET_OPTIONS: TimeZoneOffsetDisambiguationOptions['offset'][] = ['use', 'prefer', 'ignore', 'reject'];
+const OFFSET_OPTIONS: offsetDisambiguationOptions['offset'][] = ['use', 'prefer', 'ignore', 'reject'];
 const OVERFLOW_OPTIONS: Temporal.AssignmentOptions['overflow'][] = ['constrain', 'reject'];
 const ROUNDING_MODES: NonNullable<Temporal.DifferenceOptions<'years'>['roundingMode']>[] = [
   'nearest',
@@ -1200,7 +1195,7 @@ const ES = {
 };
 
 // copied from ecmascript.mjs
-function formatTimeZoneOffsetString(offsetNanoseconds: number) {
+function formatOffsetString(offsetNanoseconds: number) {
   const sign = offsetNanoseconds < 0 ? '-' : '+';
   offsetNanoseconds = Math.abs(offsetNanoseconds);
   const offsetMinutes = Math.floor(offsetNanoseconds / 60e9);

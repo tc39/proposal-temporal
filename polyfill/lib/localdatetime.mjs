@@ -26,22 +26,20 @@ function fromObject(item, options) {
   const disambiguation = getOption(options, 'disambiguation', DISAMBIGUATION_OPTIONS, 'compatible');
   const offsetOption = getOption(options, 'offset', OFFSET_OPTIONS, 'reject');
 
-  const { timeZone: tzOrig, timeZoneOffsetNanoseconds } = item;
+  const { timeZone: tzOrig, offsetNanoseconds } = item;
   if (tzOrig === undefined) {
     throw new TypeError('Required property `timeZone` is missing');
   }
   const tz = Temporal.TimeZone.from(tzOrig);
 
-  if (timeZoneOffsetNanoseconds !== undefined) {
-    if (typeof timeZoneOffsetNanoseconds !== 'number' || isNaN(timeZoneOffsetNanoseconds)) {
-      throw RangeError(
-        `The \`timeZoneOffsetNanoseconds\` numeric property has an invalid value: ${timeZoneOffsetNanoseconds}`
-      );
+  if (offsetNanoseconds !== undefined) {
+    if (typeof offsetNanoseconds !== 'number' || isNaN(offsetNanoseconds)) {
+      throw RangeError(`The \`offsetNanoseconds\` numeric property has an invalid value: ${offsetNanoseconds}`);
     }
   }
 
   const dt = Temporal.DateTime.from(item, { overflow });
-  return fromCommon(dt, tz, timeZoneOffsetNanoseconds, disambiguation, offsetOption);
+  return fromCommon(dt, tz, offsetNanoseconds, disambiguation, offsetOption);
 }
 
 /** Build a `Temporal.LocalDateTime` instance from an ISO 8601 extended string */
@@ -116,7 +114,7 @@ function fromCommon(dt, timeZone, offsetNs, disambiguation, offsetOption) {
     const laterOffset = timeZone.getOffsetStringFor(dt.toInstant(timeZone, { disambiguation: 'later' }));
     const validOffsets = earlierOffset === laterOffset ? [earlierOffset] : [earlierOffset, laterOffset];
     const joined = validOffsets.join(' or ');
-    const offsetString = formatTimeZoneOffsetString(offsetNs);
+    const offsetString = formatOffsetString(offsetNs);
     throw new RangeError(
       `Offset is invalid for '${dt}' in '${timeZone}'. Provided: ${offsetString}, expected: ${joined}.`
     );
@@ -130,24 +128,6 @@ function fromDateTime(dateTime, timeZone, options) {
   return new LocalDateTime(dateTime.toInstant(timeZone, options).getEpochNanoseconds(), timeZone, dateTime.calendar);
 }
 
-// TODO: remove this workaround after a fix to #949 lands
-function negatedWorkaround(duration) {
-  const negated = {
-    years: -duration.years || 0,
-    months: -duration.months || 0,
-    weeks: -duration.weeks || 0,
-    days: -duration.days || 0,
-    hours: -duration.hours || 0,
-    minutes: -duration.minutes || 0,
-    seconds: -duration.seconds || 0,
-    milliseconds: -duration.milliseconds || 0,
-    microseconds: -duration.microseconds || 0,
-    nanoseconds: -duration.years || 0
-  };
-
-  return Temporal.Duration.from(negated);
-}
-
 /** Identical logic for `plus` and `minus` */
 function doPlusOrMinus(op, durationLike, options, localDateTime) {
   // If it's a negative duration for plus, change to a positive duration minus.
@@ -155,8 +135,7 @@ function doPlusOrMinus(op, durationLike, options, localDateTime) {
   // By doing this, none of the code below must worry about negative durations.
   let duration = Temporal.Duration.from(durationLike);
   if (duration.sign < 0) {
-    duration = negatedWorkaround(duration);
-    // duration = duration.negated();
+    duration = duration.negated();
     op = op === 'plus' ? 'minus' : 'plus';
   }
 
@@ -223,9 +202,9 @@ export class LocalDateTime {
    *   the input.
    * - A "LocalDateTime-like" property bag object with required properties
    *   `timeZone`, `year`, `month`, and `day`. Other fields (time fields and
-   *   `timeZoneOffsetNanoseconds`) are optional. If `timeZoneOffsetNanoseconds`
-   *   is not provided, then the time can be ambiguous around DST transitions.
-   *   The `disambiguation` option can resolve this ambiguity.
+   *   `offsetNanoseconds`) are optional. If `offsetNanoseconds` is not
+   *   provided, then the time can be ambiguous around DST transitions. The
+   *   `disambiguation` option can resolve this ambiguity.
    * - An ISO 8601 date+time+offset string (the same format used by
    *   `Temporal.Instant.from`) with a time zone identifier suffix appended in
    *   square brackets, e.g. `2007-12-03T10:15:30+01:00[Europe/Paris]` or
@@ -265,7 +244,7 @@ export class LocalDateTime {
    * - All `Temporal.DateTime` fields, including `calendar`
    * - `timeZone` as a time zone identifier string like `Europe/Paris` or a
    *   `Temporal.TimeZone` instance
-   * - `timezoneOffsetNanoseconds`
+   * - `offsetNanoseconds`
    *
    * If the `timeZone` field is included, `with` will first convert all existing
    * fields to the new time zone and then fields in the input will be played on
@@ -278,24 +257,23 @@ export class LocalDateTime {
    * const newTzSameLocalTime = ldt.toDateTime().toLocalDateTime('Europe/London');
    * ```
    *
-   * If the `timezoneOffsetNanoseconds` field is provided, then it's possible
-   * for it to conflict with the input object's `timeZone` property or, if
-   * omitted, the object's existing time zone.  The `offset` option (which
-   * defaults to `'prefer'`) will resolve the conflict.
+   * If the `offsetNanoseconds` field is provided, then it's possible for it to
+   * conflict with the input object's `timeZone` property or, if omitted, the
+   * object's existing time zone.  The `offset` option (which defaults to
+   * `'prefer'`) will resolve the conflict.
    *
-   * If the `timezoneOffsetNanoseconds` field is not provided, but the
-   * `timeZone` field is not provided either, then the existing
-   * `timezoneOffsetNanoseconds` field will be used by `with` as if it had been
-   * provided by the caller. By default, this will prefer the existing offset
-   * when resolving ambiguous results. For example, if a
-   * `Temporal.LocalDateTime` is set to the "second" 1:30AM on a day where the
-   * 1-2AM clock hour is repeated after a backwards DST transition, then calling
-   * `.with({minute: 45})` will result in an ambiguity which is resolved using
-   * the default `offset: 'prefer'` option. Because the existing offset is valid
-   * for the new time, it will be retained so the result will be the "second"
-   * 1:45AM.  However, if the existing offset is not valid for the new result
-   * (e.g. `.with({hour: 0})`), then the default behavior will change the
-   * offset.
+   * If the `offsetNanoseconds` field is not provided, but the `timeZone` field
+   * is not provided either, then the existing `offsetNanoseconds` field will be
+   * used by `with` as if it had been provided by the caller. By default, this
+   * will prefer the existing offset when resolving ambiguous results. For
+   * example, if a `Temporal.LocalDateTime` is set to the "second" 1:30AM on a
+   * day where the 1-2AM clock hour is repeated after a backwards DST
+   * transition, then calling `.with({minute: 45})` will result in an ambiguity
+   * which is resolved using the default `offset: 'prefer'` option. Because the
+   * existing offset is valid for the new time, it will be retained so the
+   * result will be the "second" 1:45AM.  However, if the existing offset is not
+   * valid for the new result (e.g. `.with({hour: 0})`), then the default
+   * behavior will change the offset.
    *
    * Available options:
    * ```
@@ -322,19 +300,17 @@ export class LocalDateTime {
     const updatedOptions = options ? { ...options } : {};
     if (updatedOptions.offset === undefined) updatedOptions.offset = 'prefer';
 
-    const { timeZone, calendar, timeZoneOffsetNanoseconds } = localDateTimeLike;
+    const { timeZone, calendar, offsetNanoseconds } = localDateTimeLike;
 
     const newTimeZone = timeZone && Temporal.TimeZone.from(timeZone);
     const newCalendar = calendar && Temporal.Calendar.from(calendar);
 
-    const updateOffset = timeZoneOffsetNanoseconds !== undefined;
+    const updateOffset = offsetNanoseconds !== undefined;
     const updateTimeZone = newTimeZone && newTimeZone.name !== this._tz.name;
     const updateCalendar = newCalendar && newCalendar.id !== this.calendar.id;
 
-    if (updateOffset && (typeof timeZoneOffsetNanoseconds !== 'number' || isNaN(timeZoneOffsetNanoseconds))) {
-      throw RangeError(
-        `The \`timeZoneOffsetNanoseconds\` numeric property has an invalid value: ${timeZoneOffsetNanoseconds}`
-      );
+    if (updateOffset && (typeof offsetNanoseconds !== 'number' || isNaN(offsetNanoseconds))) {
+      throw RangeError(`The \`offsetNanoseconds\` numeric property has an invalid value: ${offsetNanoseconds}`);
     }
 
     // Changing `timeZone` or `calendar` will create a new instance, and then
@@ -350,9 +326,9 @@ export class LocalDateTime {
     // Deal with the rest of the fields. If there's a change in tz offset, it'll
     // be handled by `from`. Also, if we're not changing the time zone or offset,
     // then pass the existing offset to `from`. (See docs for more info.)
-    const { timeZoneOffsetNanoseconds: originalOffset, ...fields } = base.getFields();
+    const { offsetNanoseconds: originalOffset, ...fields } = base.getFields();
     if (!updateOffset && !updateTimeZone) {
-      fields.timeZoneOffsetNanoseconds = originalOffset;
+      fields.offsetNanoseconds = originalOffset;
     }
     const merged = { ...fields, ...localDateTimeLike };
     return LocalDateTime.from(merged, updatedOptions);
@@ -474,14 +450,14 @@ export class LocalDateTime {
    *
    * "Immediately after" means that subtracting one nanosecond would yield a
    * `Temporal.LocalDateTime` instance that has a different value for
-   * `timeZoneOffsetNanoseconds`.
+   * `offsetNanoseconds`.
    *
    * To calculate if a DST transition happens on the same day (but not
    * necessarily at the same time), use `.hoursInDay() !== 24`.
    * */
-  get isTimeZoneOffsetTransition() {
+  get isOffsetTransition() {
     const oneNsBefore = this.minus({ nanoseconds: 1 });
-    return oneNsBefore.timeZoneOffsetNanoseconds !== this.timeZoneOffsetNanoseconds;
+    return oneNsBefore.offsetNanoseconds !== this.offsetNanoseconds;
   }
 
   /**
@@ -495,7 +471,7 @@ export class LocalDateTime {
    * instant, this field is returned by `getFields()` and is accepted by `from`
    * and `with`.
    * */
-  get timeZoneOffsetNanoseconds() {
+  get offsetNanoseconds() {
     return this._tz.getOffsetNanosecondsFor(this._abs);
   }
 
@@ -506,9 +482,9 @@ export class LocalDateTime {
    * This property is useful for custom formatting of LocalDateTime instances.
    *
    * This field cannot be passed to `from` and `with`.  Instead, use
-   * `timeZoneOffsetNanoseconds`.
+   * `offsetNanoseconds`.
    * */
-  get timeZoneOffsetString() {
+  get offsetString() {
     return this._tz.getOffsetStringFor(this._abs);
   }
 
@@ -518,16 +494,16 @@ export class LocalDateTime {
    *
    * The resulting object includes all fields returned by
    * `Temporal.DateTime.prototype.getFields()`, as well as `timeZone`,
-   * and `timeZoneOffsetNanoseconds`.
+   * and `offsetNanoseconds`.
    *
    * The result of this method can be used for round-trip serialization via
    * `from()`, `with()`, or `JSON.stringify`.
    */
   getFields() {
-    const { timeZone, timeZoneOffsetNanoseconds } = this;
+    const { timeZone, offsetNanoseconds } = this;
     return {
       timeZone,
-      timeZoneOffsetNanoseconds,
+      offsetNanoseconds,
       ...this._dt.getFields()
     };
   }
@@ -536,10 +512,10 @@ export class LocalDateTime {
    * Method for internal use by non-ISO calendars. Normally not used.
    */
   getISOFields() {
-    const { timeZone, timeZoneOffsetNanoseconds } = this;
+    const { timeZone, offsetNanoseconds } = this;
     return {
       timeZone,
-      timeZoneOffsetNanoseconds,
+      offsetNanoseconds,
       ...this._dt.getISOFields()
     };
   }
@@ -728,7 +704,7 @@ export class LocalDateTime {
     // Also, if there's no change in timezone offset between `this` and `other`,
     // then we don't have to do any DST-related fixups. Just return the simple
     // DateTime difference.
-    // const diffOffset = this.timeZoneOffsetNanoseconds - other.timeZoneOffsetNanoseconds;
+    // const diffOffset = this.offsetNanoseconds - other.offsetNanoseconds;
     // if (diffOffset === 0) return dtDiff;
 
     // const { dateDuration, timeDuration } = splitDuration(dtDiff);
@@ -779,58 +755,56 @@ export class LocalDateTime {
     // Note that this may be OK for cases where DST happened!
 
     const hybridDuration = mergeDuration({ dateDuration, timeDuration });
-    return mustNegateResult ? negatedWorkaround(hybridDuration) : hybridDuration;
-    //    return mustNegateResult ? hybridDuration.negated() : hybridDuration;
+    return mustNegateResult ? hybridDuration.negated() : hybridDuration;
 
-    /*
-     // First, if there's
-    //
-    // RFC 5545 expects that date durations are measured in nominal (DateTime)
-    // days, while time durations are measured in exact (Instant) time.
-    if (isZeroDuration(timeDuration)) return dateDuration; // even number of calendar days
-     // If we get here, there's both a time and date part of the duration AND
-    // there's a time zone offset transition during the duration. RFC 5545 says
-    // that we should calculate full days using DateTime math and remainder
-    // times using Instant. To do this, we calculate a `DateTime` difference,
-    // split it into date and time portions, and then convert the time portion
-    // to an exact (Instant) duration before returning to the caller.  A
-    // challenge: converting the time duration involves a conversion from
-    // `DateTime` to `Instant` which can be ambiguous. This can cause
-    // unpredictable behavior because the disambiguation is happening inside of
-    // the duration, not at its edges like in `plus` or `from`. We'll reduce the
-    // chance of this unpredictability as follows:
-    // 1. First, calculate the time portion as if it's closest to `other`.
-    // 2. If the time portion in (1) contains a tz offset transition, then
-    //    reverse the calculation and assume that the time portion is closest to
-    //    `this`.
-    //
-    // The approach above ensures that in almost all cases, there will be no
-    // "internal disambiguation" required. It's possible to construct a test
-    // case where both `this` and `other` are both within 25 hours of a
-    // different offset transition, but in practice this will be exceedingly
-    // rare.
-    let intermediateDt = this._dt.minus(dateDuration);
-    let intermediateAbs = intermediateDt.toInstant(this._tz);
-    let adjustedTimeDuration: Temporal.Duration;
-     // TODO: the logic below doesn't work with rounding and smallestUnit. Given
-    // that we're going to review all the logic in this method, it doesn't make
-    // sense to fix rounding until we decide on the final logic, which should
-    // happen in the next few days. In the meantime, difference() will be broken
-    // in those cases.
-     if (this._tz.getOffsetNanosecondsFor(intermediateAbs) === other.timeZoneOffsetNanoseconds) {
-      // The transition was in the date portion which is what we want.
-      adjustedTimeDuration = intermediateAbs.difference(other._abs, { largestUnit: 'hours' });
-    } else {
-      // There was a transition in the time portion, so try assuming that the
-      // time portion is on the other side next to `this`, where there's
-      // unlikely to be another transition.
-      intermediateDt = other._dt.plus(dateDuration);
-      intermediateAbs = intermediateDt.toInstant(this._tz);
-      adjustedTimeDuration = this._abs.difference(intermediateAbs, { largestUnit: 'hours' });
-    }
-     const hybridDuration = mergeDuration({ dateDuration, timeDuration: adjustedTimeDuration });
-    return hybridDuration;
-    */
+    /* Code below will be removed once we finalize difference()
+                                                                          //
+                                                                         // RFC 5545 expects that date durations are measured in nominal (DateTime)
+                                                                         // days, while time durations are measured in exact (Instant) time.
+                                                                         if (isZeroDuration(timeDuration)) return dateDuration; // even number of calendar days
+                                                                          // If we get here, there's both a time and date part of the duration AND
+                                                                         // there's a time zone offset transition during the duration. RFC 5545 says
+                                                                         // that we should calculate full days using DateTime math and remainder
+                                                                         // times using Instant. To do this, we calculate a `DateTime` difference,
+                                                                         // split it into date and time portions, and then convert the time portion
+                                                                         // to an exact (Instant) duration before returning to the caller.  A
+                                                                         // challenge: converting the time duration involves a conversion from
+                                                                         // `DateTime` to `Instant` which can be ambiguous. This can cause
+                                                                         // unpredictable behavior because the disambiguation is happening inside of
+                                                                         // the duration, not at its edges like in `plus` or `from`. We'll reduce the
+                                                                         // chance of this unpredictability as follows:
+                                                                         // 1. First, calculate the time portion as if it's closest to `other`.
+                                                                         // 2. If the time portion in (1) contains a tz offset transition, then
+                                                                         //    reverse the calculation and assume that the time portion is closest to
+                                                                         //    `this`.
+                                                                         //
+                                                                         // The approach above ensures that in almost all cases, there will be no
+                                                                         // "internal disambiguation" required. It's possible to construct a test
+                                                                         // case where both `this` and `other` are both within 25 hours of a
+                                                                         // different offset transition, but in practice this will be exceedingly
+                                                                         // rare.
+                                                                         let intermediateDt = this._dt.minus(dateDuration);
+                                                                         let intermediateAbs = intermediateDt.toInstant(this._tz);
+                                                                         let adjustedTimeDuration: Temporal.Duration;
+                                                                          // TODO: the logic below doesn't work with rounding and smallestUnit. Given
+                                                                         // that we're going to review all the logic in this method, it doesn't make
+                                                                         // sense to fix rounding until we decide on the final logic, which should
+                                                                         // happen in the next few days. In the meantime, difference() will be broken
+                                                                         // in those cases.
+                                                                          if (this._tz.getOffsetNanosecondsFor(intermediateAbs) === other.offsetNanoseconds) {
+                                                                           // The transition was in the date portion which is what we want.
+                                                                           adjustedTimeDuration = intermediateAbs.difference(other._abs, { largestUnit: 'hours' });
+                                                                         } else {
+                                                                           // There was a transition in the time portion, so try assuming that the
+                                                                           // time portion is on the other side next to `this`, where there's
+                                                                           // unlikely to be another transition.
+                                                                           intermediateDt = other._dt.plus(dateDuration);
+                                                                           intermediateAbs = intermediateDt.toInstant(this._tz);
+                                                                           adjustedTimeDuration = this._abs.difference(intermediateAbs, { largestUnit: 'hours' });
+                                                                         }
+                                                                          const hybridDuration = mergeDuration({ dateDuration, timeDuration: adjustedTimeDuration });
+                                                                         return hybridDuration;
+                                                                         */
 
     // TODO: more tests for cases where intermediate value lands on a discontinuity
   }
@@ -899,7 +873,7 @@ export class LocalDateTime {
    */
   toString() {
     const calendar = this._dt.calendar.id === 'iso8601' ? '' : `[c=${this._dt.calendar.id}]`;
-    return `${this._dt.withCalendar('iso8601')}${this.timeZoneOffsetString}[${this._tz.name}]${calendar}`;
+    return `${this._dt.withCalendar('iso8601')}${this.offsetString}[${this._tz.name}]${calendar}`;
   }
 
   // the fields and methods below are identical to DateTime
@@ -974,7 +948,7 @@ export class LocalDateTime {
     throw new TypeError('use compare() or equals() to compare Temporal.LocalDateTime');
   }
   /**
-   * Returns the number of full milliseconds between `this` and 00:00 UTC on
+   * Returns the number of full seconds between `this` and 00:00 UTC on
    * 1970-01-01, otherwise known as the [UNIX
    * Epoch](https://en.wikipedia.org/wiki/Unix_time).
    *
@@ -1117,7 +1091,7 @@ const ES = {
 };
 
 // copied from ecmascript.mjs
-function formatTimeZoneOffsetString(offsetNanoseconds) {
+function formatOffsetString(offsetNanoseconds) {
   const sign = offsetNanoseconds < 0 ? '-' : '+';
   offsetNanoseconds = Math.abs(offsetNanoseconds);
   const offsetMinutes = Math.floor(offsetNanoseconds / 60e9);
