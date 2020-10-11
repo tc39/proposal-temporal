@@ -1154,7 +1154,7 @@ export namespace Temporal {
      * overflow?: 'constrain' (default) | 'reject'
      * ```
      */
-    plus(durationLike: Temporal.DurationLike, options?: Temporal.ArithmeticOptions): LocalDateTime;
+    add(durationLike: Temporal.DurationLike, options?: Temporal.ArithmeticOptions): LocalDateTime;
     /**
      * Subtract a `Temporal.Duration` and return the result.
      *
@@ -1166,7 +1166,7 @@ export namespace Temporal {
      * overflow?: 'constrain' (default) | 'reject'
      * ```
      */
-    minus(durationLike: Temporal.DurationLike, options?: Temporal.ArithmeticOptions): LocalDateTime;
+    subtract(durationLike: Temporal.DurationLike, options?: Temporal.ArithmeticOptions): LocalDateTime;
     /**
      * Calculate the difference between two `Temporal.LocalDateTime` values and
      * return the `Temporal.Duration` result.

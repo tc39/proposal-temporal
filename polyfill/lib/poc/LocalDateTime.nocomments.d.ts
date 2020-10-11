@@ -41,8 +41,8 @@ export declare class LocalDateTime {
   getISOFields(): LocalDateTimeISOFields;
   static compare(one: LocalDateTime, two: LocalDateTime): Temporal.ComparisonResult;
   equals(other: LocalDateTime): boolean;
-  plus(durationLike: Temporal.DurationLike, options?: Temporal.ArithmeticOptions): LocalDateTime;
-  minus(durationLike: Temporal.DurationLike, options?: Temporal.ArithmeticOptions): LocalDateTime;
+  add(durationLike: Temporal.DurationLike, options?: Temporal.ArithmeticOptions): LocalDateTime;
+  subtract(durationLike: Temporal.DurationLike, options?: Temporal.ArithmeticOptions): LocalDateTime;
   difference(
     other: LocalDateTime,
     options?: Temporal.DifferenceOptions<

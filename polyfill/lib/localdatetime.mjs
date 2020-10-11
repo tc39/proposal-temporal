@@ -128,15 +128,15 @@ function fromDateTime(dateTime, timeZone, options) {
   return new LocalDateTime(dateTime.toInstant(timeZone, options).getEpochNanoseconds(), timeZone, dateTime.calendar);
 }
 
-/** Identical logic for `plus` and `minus` */
-function doPlusOrMinus(op, durationLike, options, localDateTime) {
-  // If it's a negative duration for plus, change to a positive duration minus.
-  // If it's a negative duration for minus, change to a positive duration plus.
+/** Identical logic for `add` and `subtract` */
+function doAddOrSubtract(op, durationLike, options, localDateTime) {
+  // If negative duration for add, change to a positive duration subtract.
+  // If negative duration for subtract, change to a positive duration add.
   // By doing this, none of the code below must worry about negative durations.
   let duration = Temporal.Duration.from(durationLike);
   if (duration.sign < 0) {
     duration = duration.negated();
-    op = op === 'plus' ? 'minus' : 'plus';
+    op = op === 'add' ? 'subtract' : 'add';
   }
 
   const overflow = getOption(options, 'overflow', OVERFLOW_OPTIONS, 'constrain');
@@ -150,14 +150,14 @@ function doPlusOrMinus(op, durationLike, options, localDateTime) {
   // calendar days.
   // Note that `{ disambiguation: 'compatible' }` is implicitly used below
   // because this disambiguation behavior is required by RFC 5545.
-  if (op === 'plus') {
-    // if plus, then order of operations is largest (date) units first
+  if (op === 'add') {
+    // if addition, then order of operations is largest (date) units first
     const dtIntermediate = localDateTime.toDateTime().plus(dateDuration, { overflow });
     const absIntermediate = dtIntermediate.toInstant(timeZone);
     const absResult = absIntermediate.plus(timeDuration);
     return new LocalDateTime(absResult.getEpochNanoseconds(), timeZone, calendar);
   } else {
-    // if plus, then order of operations is smallest (time) units first
+    // if subtraction, then order of operations is smallest (time) units first
     const absIntermediate = localDateTime.toInstant().minus(timeDuration);
     const dtIntermediate = absIntermediate.toDateTime(timeZone, calendar);
     const dtResult = dtIntermediate.minus(dateDuration, { overflow });
@@ -456,7 +456,7 @@ export class LocalDateTime {
    * necessarily at the same time), use `.hoursInDay() !== 24`.
    * */
   get isOffsetTransition() {
-    const oneNsBefore = this.minus({ nanoseconds: 1 });
+    const oneNsBefore = this.subtract({ nanoseconds: 1 });
     return oneNsBefore.offsetNanoseconds !== this.offsetNanoseconds;
   }
 
@@ -586,8 +586,8 @@ export class LocalDateTime {
    * overflow?: 'constrain' (default) | 'reject'
    * ```
    */
-  plus(durationLike, options) {
-    return doPlusOrMinus('plus', durationLike, options, this);
+  add(durationLike, options) {
+    return doAddOrSubtract('add', durationLike, options, this);
   }
 
   /**
@@ -601,8 +601,8 @@ export class LocalDateTime {
    * overflow?: 'constrain' (default) | 'reject'
    * ```
    */
-  minus(durationLike, options) {
-    return doPlusOrMinus('minus', durationLike, options, this);
+  subtract(durationLike, options) {
+    return doAddOrSubtract('subtract', durationLike, options, this);
   }
 
   /**
@@ -717,10 +717,10 @@ export class LocalDateTime {
     // A goal of difference() is to be reversible. The following comparisons should all
     // evaluate to `true`:
     // ```js
-    // Temporal.LocalDateTime.compare(ldt, other.plus(ldt.difference(other))) === 0;
-    // Temporal.LocalDateTime.compare(ldt, other.minus(other.difference(ldt))) === 0;
-    // Temporal.LocalDateTime.compare(other, ldt.minus(ldt.difference(other))) === 0;
-    // Temporal.LocalDateTime.compare(other, ldt.plus(other.difference(ldt))) === 0;
+    // Temporal.LocalDateTime.compare(ldt, other.add(ldt.difference(other))) === 0;
+    // Temporal.LocalDateTime.compare(ldt, other.subtract(other.difference(ldt))) === 0;
+    // Temporal.LocalDateTime.compare(other, ldt.subtract(ldt.difference(other))) === 0;
+    // Temporal.LocalDateTime.compare(other, ldt.add(other.difference(ldt))) === 0;
     // ```
     // first, normalize the inputs so that there's a deterministic order
     const [earlier, later] = [this, other].sort(LocalDateTime.compare);
@@ -735,9 +735,9 @@ export class LocalDateTime {
 
     // It's possible that DST disambiguation may cause the addded days to be later
     // than the earlier time. If this happens, back off one day and try again.
-    let intermediate = earlier.plus({ days: diffDays });
+    let intermediate = earlier.add({ days: diffDays });
     if (LocalDateTime.compare(intermediate, later) > 0) {
-      intermediate = earlier.plus({ days: diffDays - 1 });
+      intermediate = earlier.add({ days: diffDays - 1 });
     }
     const timeDuration = later.toInstant().difference(intermediate.toInstant(), {
       largestUnit: 'hours',
@@ -771,7 +771,7 @@ export class LocalDateTime {
                                                                          // challenge: converting the time duration involves a conversion from
                                                                          // `DateTime` to `Instant` which can be ambiguous. This can cause
                                                                          // unpredictable behavior because the disambiguation is happening inside of
-                                                                         // the duration, not at its edges like in `plus` or `from`. We'll reduce the
+                                                                         // the duration, not at its edges like in `add` or `from`. We'll reduce the
                                                                          // chance of this unpredictability as follows:
                                                                          // 1. First, calculate the time portion as if it's closest to `other`.
                                                                          // 2. If the time portion in (1) contains a tz offset transition, then

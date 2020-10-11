@@ -175,7 +175,7 @@ describe('LocalDateTime', () => {
       equal(hourBeforeDstStart.isOffsetTransition, false);
     });
     it('isOffsetTransition returns true at a DST start transition', () => {
-      const dstStart = hourBeforeDstStart.plus({ hours: 1 });
+      const dstStart = hourBeforeDstStart.add({ hours: 1 });
       equal(dstStart.isOffsetTransition, true);
     });
     it('isOffsetTransition returns true at a DST end transition', () => {
@@ -190,43 +190,43 @@ describe('LocalDateTime', () => {
 
   describe('math around DST', () => {
     it('add 1 hour to get to DST start', () => {
-      const added = hourBeforeDstStart.plus({ hours: 1 });
+      const added = hourBeforeDstStart.add({ hours: 1 });
       equal(added.hour, 3);
       const diff = added.difference(hourBeforeDstStart, { largestUnit: 'hours' });
       equal(diff.days, 0);
       equal(diff.hours, 1);
       equal(diff.minutes, 0);
-      const undo = added.minus(diff);
+      const undo = added.subtract(diff);
       equal(`${undo}`, `${hourBeforeDstStart}`);
     });
 
     it('add 2 hours to get to DST start +1', () => {
-      const added = hourBeforeDstStart.plus({ hours: 2 });
+      const added = hourBeforeDstStart.add({ hours: 2 });
       equal(added.hour, 4);
       const diff = added.difference(hourBeforeDstStart, { largestUnit: 'hours' });
       equal(diff.days, 0);
       equal(diff.hours, 2);
       equal(diff.minutes, 0);
-      const undo = added.minus(diff);
+      const undo = added.subtract(diff);
       equal(`${undo}`, `${hourBeforeDstStart}`);
     });
 
     it('add 1.5 hours to get to 0.5 hours after DST start', () => {
-      const added = hourBeforeDstStart.plus({ hours: 1, minutes: 30 });
+      const added = hourBeforeDstStart.add({ hours: 1, minutes: 30 });
       equal(added.hour, 3);
       equal(added.minute, 30);
       const diff = added.difference(hourBeforeDstStart, { largestUnit: 'hours' });
       equal(diff.days, 0);
       equal(diff.hours, 1);
       equal(diff.minutes, 30);
-      const undo = added.minus(diff);
+      const undo = added.subtract(diff);
       equal(`${undo}`, `${hourBeforeDstStart}`);
     });
 
-    it('Samoa date line change (plus): 10:00PM 29 Dec 2011 -> 11:00PM 31 Dec 2011', () => {
+    it('Samoa date line change (add): 10:00PM 29 Dec 2011 -> 11:00PM 31 Dec 2011', () => {
       const dayBeforeSamoaDateLineChangeAbs = new Temporal.DateTime(2011, 12, 29, 22).toInstant('Pacific/Apia');
       const start = dayBeforeSamoaDateLineChangeAbs.toLocalDateTime('Pacific/Apia');
-      const added = start.plus({ days: 1, hours: 1 });
+      const added = start.add({ days: 1, hours: 1 });
       equal(added.day, 31);
       equal(added.hour, 23);
       equal(added.minute, 0);
@@ -234,15 +234,15 @@ describe('LocalDateTime', () => {
       equal(diff.minutes, 0);
       equal(diff.hours, 1);
       equal(diff.days, 2);
-      const undo = added.minus(diff);
+      const undo = added.subtract(diff);
       equal(`${undo}`, `${start}`);
     });
 
     /* skipping this test until we fix difference()
-    it('Samoa date line change (minus): 11:00PM 31 Dec 2011 -> 10:00PM 29 Dec 2011', () => {
+    it('Samoa date line change (subtract): 11:00PM 31 Dec 2011 -> 10:00PM 29 Dec 2011', () => {
       const dayAfterSamoaDateLineChangeAbs = new Temporal.DateTime(2011, 12, 31, 23).toInstant('Pacific/Apia');
       const start = dayAfterSamoaDateLineChangeAbs.toLocalDateTime('Pacific/Apia');
-      const added = start.minus({ days: 1, hours: 1 });
+      const added = start.subtract({ days: 1, hours: 1 });
       equal(added.day, 29);
       equal(added.hour, 22);
       equal(added.minute, 0);
@@ -250,14 +250,14 @@ describe('LocalDateTime', () => {
       equal(diff.minutes, 0);
       equal(diff.hours, -1);
       equal(diff.days, -2);
-      const undo = added.minus(diff);
+      const undo = added.subtract(diff);
       equal(`${undo}`, `${start}`);
     });
     */
 
     it('3:30 day before DST start -> 3:30 day of DST start', () => {
-      const start = dayBeforeDstStart.plus({ hours: 1 }); // 3:30AM
-      const added = start.plus({ days: 1 });
+      const start = dayBeforeDstStart.add({ hours: 1 }); // 3:30AM
+      const added = start.add({ days: 1 });
       equal(added.day, 8);
       equal(added.hour, 3);
       equal(added.minute, 30);
@@ -265,12 +265,12 @@ describe('LocalDateTime', () => {
       equal(diff.minutes, 0);
       equal(diff.hours, 0);
       equal(diff.days, 1);
-      const undo = added.minus(diff);
+      const undo = added.subtract(diff);
       equal(`${undo}`, `${start}`);
     });
 
     it('2:30 day before DST start -> 3:30 day of DST start', () => {
-      const added = dayBeforeDstStart.plus({ days: 1 });
+      const added = dayBeforeDstStart.add({ days: 1 });
       equal(added.day, 8);
       equal(added.hour, 3);
       equal(added.minute, 30);
@@ -281,13 +281,13 @@ describe('LocalDateTime', () => {
       // TODO: uncomment and revise these tests after
       // difference algorithm round-trip issue is resolved.
       // See https://mailarchive.ietf.org/arch/msg/calsify/9rPGjL2YRM6SUmW1uDY_wmZ4kPk/
-      // const undo = added.minus(diff);
+      // const undo = added.subtract(diff);
       // equal(`${undo}`, `${dayBeforeDstStart}`);
     });
 
     it('1:30 day DST starts -> 4:30 day DST starts', () => {
-      const start = dayBeforeDstStart.plus({ hours: 23 }); // 1:30AM
-      const added = start.plus({ hours: 2 });
+      const start = dayBeforeDstStart.add({ hours: 23 }); // 1:30AM
+      const added = start.add({ hours: 2 });
       equal(added.day, 8);
       equal(added.hour, 4);
       equal(added.minute, 30);
@@ -295,13 +295,13 @@ describe('LocalDateTime', () => {
       equal(diff.minutes, 0);
       equal(diff.hours, 2);
       equal(diff.days, 0);
-      const undo = added.minus(diff);
+      const undo = added.subtract(diff);
       equal(`${undo}`, `${start}`);
     });
 
     it('2:00 day before DST starts -> 3:00 day DST starts', () => {
-      const start = hourBeforeDstStart.minus({ days: 1 }).plus({ hours: 1 }); // 2:00AM
-      const added = start.plus({ days: 1 });
+      const start = hourBeforeDstStart.subtract({ days: 1 }).add({ hours: 1 }); // 2:00AM
+      const added = start.add({ days: 1 });
       equal(added.day, 8);
       equal(added.hour, 3);
       equal(added.minute, 0);
@@ -312,13 +312,13 @@ describe('LocalDateTime', () => {
       // TODO: uncomment and revise these tests after
       // difference algorithm round-trip issue is resolved.
       // See https://mailarchive.ietf.org/arch/msg/calsify/9rPGjL2YRM6SUmW1uDY_wmZ4kPk/
-      // const undo = added.minus(diff);
+      // const undo = added.subtract(diff);
       // equal(`${undo}`, `${start}`);
     });
 
     it('1:00AM day DST starts -> (add 24 hours) -> 2:00AM day after DST starts', () => {
       const start = hourBeforeDstStart; // 1:00AM
-      const added = start.plus({ hours: 24 });
+      const added = start.add({ hours: 24 });
       equal(added.day, 9);
       equal(added.hour, 2);
       equal(added.minute, 0);
@@ -326,13 +326,13 @@ describe('LocalDateTime', () => {
       equal(diff.minutes, 0);
       equal(diff.hours, 1);
       equal(diff.days, 1);
-      const undo = added.minus(diff);
+      const undo = added.subtract(diff);
       equal(`${undo}`, `${start}`);
     });
 
     it('12:00AM day DST starts -> (add 24 hours) -> 1:00AM day after DST starts', () => {
-      const start = hourBeforeDstStart.minus({ hours: 1 }); // 1:00AM
-      const added = start.plus({ hours: 24 });
+      const start = hourBeforeDstStart.subtract({ hours: 1 }); // 1:00AM
+      const added = start.add({ hours: 24 });
       equal(added.day, 9);
       equal(added.hour, 1);
       equal(added.minute, 0);
@@ -340,7 +340,7 @@ describe('LocalDateTime', () => {
       equal(diff.minutes, 0);
       equal(diff.hours, 1);
       equal(diff.days, 1);
-      const undo = added.minus(diff);
+      const undo = added.subtract(diff);
       equal(`${undo}`, `${start}`);
     });
 
@@ -351,9 +351,9 @@ describe('LocalDateTime', () => {
       const hoursUntilEnd = 26;
       const startHourRange = 3;
       for (let i = 0; i < startHourRange * stepsPerHour; i++) {
-        const start = hourBeforeDstStart.plus({ minutes: minutesPerStep * i });
+        const start = hourBeforeDstStart.add({ minutes: minutesPerStep * i });
         for (let j = 0; j < hoursUntilEnd * stepsPerHour; j++) {
-          const end = start.plus({ minutes: j * minutesPerStep });
+          const end = start.add({ minutes: j * minutesPerStep });
           const diff = end.difference(start, { largestUnit: 'days' });
           const expectedMinutes = minutesPerStep * (j % stepsPerHour);
           equal(diff.minutes, expectedMinutes);
@@ -424,11 +424,11 @@ describe('LocalDateTime', () => {
       it('LocalDateTime.prototype.with is a Function', () => {
         equal(typeof LocalDateTime.prototype.with, 'function');
       });
-      it('LocalDateTime.prototype.plus is a Function', () => {
-        equal(typeof LocalDateTime.prototype.plus, 'function');
+      it('LocalDateTime.prototype.add is a Function', () => {
+        equal(typeof LocalDateTime.prototype.add, 'function');
       });
-      it('LocalDateTime.prototype.minus is a Function', () => {
-        equal(typeof LocalDateTime.prototype.minus, 'function');
+      it('LocalDateTime.prototype.subtract is a Function', () => {
+        equal(typeof LocalDateTime.prototype.subtract, 'function');
       });
       it('LocalDateTime.prototype.difference is a Function', () => {
         equal(typeof LocalDateTime.prototype.difference, 'function');

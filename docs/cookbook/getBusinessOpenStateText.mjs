@@ -43,7 +43,7 @@ function getBusinessOpenStateText(now, businessHours, soonWindow) {
     if (inRange(now, open, close)) {
       return Temporal.LocalDateTime.compare(now, close.subtract(soonWindow)) >= 0 ? 'closing soon' : 'open';
     }
-    if (inRange(now.plus(soonWindow), open, close)) return 'opening soon';
+    if (inRange(now.add(soonWindow), open, close)) return 'opening soon';
   }
   return 'closed';
 }
@@ -71,11 +71,11 @@ const soonWindow = Temporal.Duration.from({ minutes: 30 });
 const saturdayNightState = getBusinessOpenStateText(now, businessHours, soonWindow);
 assert.equal(saturdayNightState, 'open');
 
-const lastCall = now.plus({ minutes: 50 });
+const lastCall = now.add({ minutes: 50 });
 assert.equal(lastCall.toString(), '2019-04-07T01:50+02:00[Europe/Berlin]');
 const lastCallState = getBusinessOpenStateText(lastCall, businessHours, soonWindow);
 assert.equal(lastCallState, 'closing soon');
 
-const tuesdayEarly = now.plus({ days: 2, hours: 6 });
+const tuesdayEarly = now.add({ days: 2, hours: 6 });
 const tuesdayEarlyState = getBusinessOpenStateText(tuesdayEarly, businessHours, soonWindow);
 assert.equal(tuesdayEarlyState, 'closed');
