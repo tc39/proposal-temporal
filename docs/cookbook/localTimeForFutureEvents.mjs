@@ -30,7 +30,7 @@ const tc39meetings = [
 // need to join:
 const localTimes = tc39meetings.map(({ dateTime, timeZone }) => {
   return Temporal.DateTime.from(dateTime)
-    .toLocalDateTime(timeZone, { disambiguation: 'reject' })
+    .toZonedDateTime(timeZone, { disambiguation: 'reject' })
     .with({ timeZone: 'Asia/Tokyo' }, { disambiguation: 'reject' });
 });
 

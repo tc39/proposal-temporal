@@ -14,7 +14,7 @@ function getUtcOffsetDifferenceSecondsAtInstant(source, targetTimeZone) {
 
 const instant = Temporal.Instant.from('2020-01-09T00:00Z');
 const nyc = Temporal.TimeZone.from('America/New_York');
-const zdtNyc = instant.toLocalDateTime(nyc, 'iso8601');
+const zdtNyc = instant.toZonedDateTime(nyc, 'iso8601');
 const chicago = Temporal.TimeZone.from('America/Chicago');
 
 // At this instant, Chicago's local time is 3600 seconds earlier than New York

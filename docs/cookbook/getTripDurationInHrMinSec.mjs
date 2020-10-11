@@ -7,8 +7,8 @@
  * @returns {Temporal.Duration} A duration with units no larger than hours
  */
 function getTripDurationInHrMinSec(parseableDeparture, parseableArrival) {
-  const departure = Temporal.LocalDateTime.from(parseableDeparture);
-  const arrival = Temporal.LocalDateTime.from(parseableArrival);
+  const departure = Temporal.ZonedDateTime.from(parseableDeparture);
+  const arrival = Temporal.ZonedDateTime.from(parseableArrival);
   return arrival.difference(departure, { largestUnit: 'hours' });
 }
 

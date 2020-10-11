@@ -5,7 +5,7 @@
 // Show data starting from the most recent midnight in the tank's location (Stockholm)
 const browserCalendar = labelFormatter.resolvedOptions().calendar;
 const tankTimeZone = Temporal.TimeZone.from('Europe/Stockholm');
-const tankMidnight = Temporal.now.date(browserCalendar, tankTimeZone).toLocalDateTime(tankTimeZone);
+const tankMidnight = Temporal.now.date(browserCalendar, tankTimeZone).toZonedDateTime(tankTimeZone);
 const atOrAfterMidnight = (x) => Temporal.Instant.compare(x, tankMidnight.toInstant()) >= 0;
 const dataStartIndex = tankDataX.findIndex(atOrAfterMidnight);
 const labelFormatter = new Intl.DateTimeFormat(undefined, {

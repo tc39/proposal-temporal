@@ -340,7 +340,7 @@ export namespace Temporal {
     ): Temporal.Instant;
     toDateTime(tzLike: TimeZoneProtocol | string, calendar: CalendarProtocol | string): Temporal.DateTime;
     toDateTimeISO(tzLike: TimeZoneProtocol | string): Temporal.DateTime;
-    toLocalDateTime(tzLike: TimeZoneProtocol | string, calendar?: CalendarProtocol | string): Temporal.LocalDateTime;
+    toZonedDateTime(tzLike: TimeZoneProtocol | string, calendar?: CalendarProtocol | string): Temporal.ZonedDateTime;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
     toString(tzLike?: TimeZoneProtocol | string): string;
@@ -536,11 +536,11 @@ export namespace Temporal {
         | /** @deprecated */ 'day'
       >
     ): Temporal.Duration;
-    toLocalDateTime(
+    toZonedDateTime(
       tzLike: TimeZoneProtocol | string,
       temporalTime?: Temporal.Time,
       options?: ToInstantOptions
-    ): Temporal.LocalDateTime;
+    ): Temporal.ZonedDateTime;
     toDateTime(temporalTime: Temporal.Time): Temporal.DateTime;
     toYearMonth(): Temporal.YearMonth;
     toMonthDay(): Temporal.MonthDay;
@@ -683,7 +683,7 @@ export namespace Temporal {
         | /** @deprecated */ 'nanoseconds'
       >
     ): Temporal.DateTime;
-    toLocalDateTime(tzLike: TimeZoneProtocol | string, options?: ToInstantOptions): Temporal.LocalDateTime;
+    toZonedDateTime(tzLike: TimeZoneProtocol | string, options?: ToInstantOptions): Temporal.ZonedDateTime;
     toInstant(tzLike: TimeZoneProtocol | string, options?: ToInstantOptions): Temporal.Instant;
     toDate(): Temporal.Date;
     toYearMonth(): Temporal.YearMonth;
@@ -818,11 +818,11 @@ export namespace Temporal {
         | /** @deprecated */ 'nanoseconds'
       >
     ): Temporal.Time;
-    toLocalDateTime(
+    toZonedDateTime(
       tzLike: TimeZoneProtocol | string,
       temporalDate: DateLike,
       options?: ToInstantOptions
-    ): Temporal.LocalDateTime;
+    ): Temporal.ZonedDateTime;
     toDateTime(temporalDate: Temporal.Date): Temporal.DateTime;
     getFields(): TimeFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
@@ -867,7 +867,7 @@ export namespace Temporal {
     getOffsetNanosecondsFor(instant: Temporal.Instant): number;
     getOffsetStringFor(instant: Temporal.Instant): string;
     getDateTimeFor(instant: Temporal.Instant, calendar?: CalendarProtocol | string): Temporal.DateTime;
-    getLocalDateTimeFor(instant: Temporal.Instant, calendar?: CalendarProtocol | string): Temporal.LocalDateTime;
+    getZonedDateTimeFor(instant: Temporal.Instant, calendar?: CalendarProtocol | string): Temporal.ZonedDateTime;
     getInstantFor(dateTime: Temporal.DateTime, options?: ToInstantOptions): Temporal.Instant;
     getNextTransition(startingPoint: Temporal.Instant): Temporal.Instant | null;
     getPreviousTransition(startingPoint: Temporal.Instant): Temporal.Instant | null;

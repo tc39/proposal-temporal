@@ -15,105 +15,105 @@ import { strict as assert } from 'assert';
 const { equal, throws } = assert;
 
 import * as Temporal from 'proposal-temporal';
-const { DateTime, LocalDateTime } = Temporal;
+const { DateTime, ZonedDateTime } = Temporal;
 
-describe('LocalDateTime', () => {
+describe('ZonedDateTime', () => {
   const tz = new Temporal.TimeZone('America/Los_Angeles');
-  // const dstEnd = LocalDateTime.from({ ...new DateTime(2020, 11, 1, 2).getFields(), timeZone: tz });
-  const hourBeforeDstStart = LocalDateTime.from({ ...new DateTime(2020, 3, 8, 1).getFields(), timeZone: tz });
-  const dayBeforeDstStart = LocalDateTime.from({ ...new DateTime(2020, 3, 7, 2, 30).getFields(), timeZone: tz });
+  // const dstEnd = ZonedDateTime.from({ ...new DateTime(2020, 11, 1, 2).getFields(), timeZone: tz });
+  const hourBeforeDstStart = ZonedDateTime.from({ ...new DateTime(2020, 3, 8, 1).getFields(), timeZone: tz });
+  const dayBeforeDstStart = ZonedDateTime.from({ ...new DateTime(2020, 3, 7, 2, 30).getFields(), timeZone: tz });
 
-  describe('toLocalDateTime() on other Temporal objects', () => {
-    it('Date.toLocalDateTime() works', () => {
+  describe('toZonedDateTime() on other Temporal objects', () => {
+    it('Date.toZonedDateTime() works', () => {
       const date = Temporal.Date.from('2020-01-01');
       const time = Temporal.Time.from('12:00');
-      const ldt = date.toLocalDateTime('America/Los_Angeles', time);
-      equal(ldt.toString(), '2020-01-01T12:00-08:00[America/Los_Angeles]');
+      const zdt = date.toZonedDateTime('America/Los_Angeles', time);
+      equal(zdt.toString(), '2020-01-01T12:00-08:00[America/Los_Angeles]');
     });
-    it('Date.toLocalDateTime() works with time omitted', () => {
+    it('Date.toZonedDateTime() works with time omitted', () => {
       const date = Temporal.Date.from('2020-01-01');
-      const ldt = date.toLocalDateTime('America/Los_Angeles');
-      equal(ldt.toString(), '2020-01-01T00:00-08:00[America/Los_Angeles]');
+      const zdt = date.toZonedDateTime('America/Los_Angeles');
+      equal(zdt.toString(), '2020-01-01T00:00-08:00[America/Los_Angeles]');
     });
-    it('Date.toLocalDateTime() works with disambiguation option', () => {
+    it('Date.toZonedDateTime() works with disambiguation option', () => {
       const date = Temporal.Date.from('2020-03-08');
       const time = Temporal.Time.from('02:00');
-      const ldt = date.toLocalDateTime('America/Los_Angeles', time, { disambiguation: 'earlier' });
-      equal(ldt.toString(), '2020-03-08T01:00-08:00[America/Los_Angeles]');
+      const zdt = date.toZonedDateTime('America/Los_Angeles', time, { disambiguation: 'earlier' });
+      equal(zdt.toString(), '2020-03-08T01:00-08:00[America/Los_Angeles]');
     });
-    it('Time.toLocalDateTime works', () => {
+    it('Time.toZonedDateTime works', () => {
       const date = Temporal.Date.from('2020-01-01');
       const time = Temporal.Time.from('12:00');
-      const ldt = time.toLocalDateTime('America/Los_Angeles', date);
-      equal(ldt.toString(), '2020-01-01T12:00-08:00[America/Los_Angeles]');
+      const zdt = time.toZonedDateTime('America/Los_Angeles', date);
+      equal(zdt.toString(), '2020-01-01T12:00-08:00[America/Los_Angeles]');
     });
-    it('Time.toLocalDateTime() works with disambiguation option', () => {
+    it('Time.toZonedDateTime() works with disambiguation option', () => {
       const date = Temporal.Date.from('2020-03-08');
       const time = Temporal.Time.from('02:00');
-      const ldt = time.toLocalDateTime('America/Los_Angeles', date, { disambiguation: 'earlier' });
-      equal(ldt.toString(), '2020-03-08T01:00-08:00[America/Los_Angeles]');
+      const zdt = time.toZonedDateTime('America/Los_Angeles', date, { disambiguation: 'earlier' });
+      equal(zdt.toString(), '2020-03-08T01:00-08:00[America/Los_Angeles]');
     });
-    it('Instant.toLocalDateTime works', () => {
+    it('Instant.toZonedDateTime works', () => {
       const instant = Temporal.Instant.from('2020-01-01T00:00-08:00');
-      const ldt = instant.toLocalDateTime('America/Los_Angeles');
-      equal(ldt.toString(), '2020-01-01T00:00-08:00[America/Los_Angeles]');
+      const zdt = instant.toZonedDateTime('America/Los_Angeles');
+      equal(zdt.toString(), '2020-01-01T00:00-08:00[America/Los_Angeles]');
     });
-    it('DateTime.toLocalDateTime works', () => {
+    it('DateTime.toZonedDateTime works', () => {
       const dt = Temporal.DateTime.from('2020-01-01T00:00');
-      const ldt = dt.toLocalDateTime('America/Los_Angeles');
-      equal(ldt.toString(), '2020-01-01T00:00-08:00[America/Los_Angeles]');
+      const zdt = dt.toZonedDateTime('America/Los_Angeles');
+      equal(zdt.toString(), '2020-01-01T00:00-08:00[America/Los_Angeles]');
     });
-    it('DateTime.toLocalDateTime works with disambiguation option', () => {
+    it('DateTime.toZonedDateTime works with disambiguation option', () => {
       const dt = Temporal.DateTime.from('2020-03-08T02:00');
-      const ldt = dt.toLocalDateTime('America/Los_Angeles', { disambiguation: 'earlier' });
-      equal(ldt.toString(), '2020-03-08T01:00-08:00[America/Los_Angeles]');
+      const zdt = dt.toZonedDateTime('America/Los_Angeles', { disambiguation: 'earlier' });
+      equal(zdt.toString(), '2020-03-08T01:00-08:00[America/Los_Angeles]');
     });
   });
 
   describe('string parsing', () => {
     it('parses with an IANA zone', () => {
-      const ldt = Temporal.LocalDateTime.from('2020-03-08T01:00-08:00[America/Los_Angeles]');
-      equal(ldt.toString(), '2020-03-08T01:00-08:00[America/Los_Angeles]');
+      const zdt = Temporal.ZonedDateTime.from('2020-03-08T01:00-08:00[America/Los_Angeles]');
+      equal(zdt.toString(), '2020-03-08T01:00-08:00[America/Los_Angeles]');
     });
     it('parses with an offset in brackets', () => {
-      const ldt = Temporal.LocalDateTime.from('2020-03-08T01:00-08:00[-08:00]');
-      equal(ldt.toString(), '2020-03-08T01:00-08:00[-08:00]');
+      const zdt = Temporal.ZonedDateTime.from('2020-03-08T01:00-08:00[-08:00]');
+      equal(zdt.toString(), '2020-03-08T01:00-08:00[-08:00]');
     });
     it('parses with "Z" used as an offset', () => {
       const iso = '2020-03-08T01:00-08:00[America/Los_Angeles]';
-      const instant = Temporal.LocalDateTime.from(iso).toInstant();
+      const instant = Temporal.ZonedDateTime.from(iso).toInstant();
       equal(instant.toString(), '2020-03-08T09:00Z');
-      const ldt = Temporal.LocalDateTime.from(`${instant.toString()}[America/Los_Angeles]`);
-      equal(ldt.toString(), iso);
+      const zdt = Temporal.ZonedDateTime.from(`${instant.toString()}[America/Los_Angeles]`);
+      equal(zdt.toString(), iso);
     });
     it('throws if no brackets', () => {
-      throws(() => Temporal.LocalDateTime.from('2020-03-08T01:00-08:00'));
+      throws(() => Temporal.ZonedDateTime.from('2020-03-08T01:00-08:00'));
     });
     it("{ offset: 'reject' } throws if offset does not match offset time zone", () => {
-      throws(() => Temporal.LocalDateTime.from('2020-03-08T01:00-04:00[-08:00]', { offset: 'reject' }));
+      throws(() => Temporal.ZonedDateTime.from('2020-03-08T01:00-04:00[-08:00]', { offset: 'reject' }));
     });
     it("{ offset: 'reject' } throws if offset does not match IANA time zone", () => {
-      throws(() => Temporal.LocalDateTime.from('2020-03-08T01:00-04:00[America/Chicago]', { offset: 'reject' }));
+      throws(() => Temporal.ZonedDateTime.from('2020-03-08T01:00-04:00[America/Chicago]', { offset: 'reject' }));
     });
     it("{ offset: 'prefer' } if offset matches time zone (first 1:30 when DST ends)", () => {
-      const ldt = Temporal.LocalDateTime.from('2020-11-01T01:30-07:00[America/Los_Angeles]', { offset: 'prefer' });
-      equal(ldt.toString(), '2020-11-01T01:30-07:00[America/Los_Angeles]');
+      const zdt = Temporal.ZonedDateTime.from('2020-11-01T01:30-07:00[America/Los_Angeles]', { offset: 'prefer' });
+      equal(zdt.toString(), '2020-11-01T01:30-07:00[America/Los_Angeles]');
     });
     it("{ offset: 'prefer' } if offset matches time zone (second 1:30 when DST ends)", () => {
-      const ldt = Temporal.LocalDateTime.from('2020-11-01T01:30-08:00[America/Los_Angeles]', { offset: 'prefer' });
-      equal(ldt.toString(), '2020-11-01T01:30-08:00[America/Los_Angeles]');
+      const zdt = Temporal.ZonedDateTime.from('2020-11-01T01:30-08:00[America/Los_Angeles]', { offset: 'prefer' });
+      equal(zdt.toString(), '2020-11-01T01:30-08:00[America/Los_Angeles]');
     });
     it("{ offset: 'prefer' } if offset does not match time zone", () => {
-      const ldt = Temporal.LocalDateTime.from('2020-11-01T04:00-07:00[America/Los_Angeles]', { offset: 'prefer' });
-      equal(ldt.toString(), '2020-11-01T04:00-08:00[America/Los_Angeles]');
+      const zdt = Temporal.ZonedDateTime.from('2020-11-01T04:00-07:00[America/Los_Angeles]', { offset: 'prefer' });
+      equal(zdt.toString(), '2020-11-01T04:00-08:00[America/Los_Angeles]');
     });
     it("{ offset: 'ignore' } uses time zone only", () => {
-      const ldt = Temporal.LocalDateTime.from('2020-11-01T04:00-12:00[America/Los_Angeles]', { offset: 'ignore' });
-      equal(ldt.toString(), '2020-11-01T04:00-08:00[America/Los_Angeles]');
+      const zdt = Temporal.ZonedDateTime.from('2020-11-01T04:00-12:00[America/Los_Angeles]', { offset: 'ignore' });
+      equal(zdt.toString(), '2020-11-01T04:00-08:00[America/Los_Angeles]');
     });
     it("{ offset: 'use' } uses offset only", () => {
-      const ldt = Temporal.LocalDateTime.from('2020-11-01T04:00-07:00[America/Los_Angeles]', { offset: 'use' });
-      equal(ldt.toString(), '2020-11-01T03:00-08:00[America/Los_Angeles]');
+      const zdt = Temporal.ZonedDateTime.from('2020-11-01T04:00-07:00[America/Los_Angeles]', { offset: 'use' });
+      equal(zdt.toString(), '2020-11-01T03:00-08:00[America/Los_Angeles]');
     });
   });
 
@@ -125,12 +125,12 @@ describe('LocalDateTime', () => {
       equal(dayBeforeDstStart.hoursInDay, 24);
     });
     it('hoursInDay works with DST end', () => {
-      const dstEnd = LocalDateTime.from('2020-11-01T01:00-08:00[America/Los_Angeles]');
+      const dstEnd = ZonedDateTime.from('2020-11-01T01:00-08:00[America/Los_Angeles]');
       equal(dstEnd.hoursInDay, 25);
     });
     it('hoursInDay works when day starts at 1:00 due to DST start at midnight', () => {
-      const ldt = Temporal.LocalDateTime.from('2015-10-18T12:00:00-02:00[America/Sao_Paulo]');
-      equal(ldt.hoursInDay, 23);
+      const zdt = Temporal.ZonedDateTime.from('2015-10-18T12:00:00-02:00[America/Sao_Paulo]');
+      equal(zdt.hoursInDay, 23);
     });
     it('startOfDay works', () => {
       const start = dayBeforeDstStart.startOfDay;
@@ -138,13 +138,13 @@ describe('LocalDateTime', () => {
       equal('00:00', start.toTime().toString());
     });
     it('startOfDay works when day starts at 1:00 due to DST start at midnight', () => {
-      const ldt = LocalDateTime.from('2015-10-18T12:00:00-02:00[America/Sao_Paulo]');
-      const start = ldt.startOfDay;
+      const zdt = ZonedDateTime.from('2015-10-18T12:00:00-02:00[America/Sao_Paulo]');
+      const start = zdt.startOfDay;
       equal('01:00', start.toTime().toString());
     });
 
-    const dayAfterSamoaDateLineChange = LocalDateTime.from('2011-12-31T22:00+14:00[Pacific/Apia]');
-    const dayBeforeSamoaDateLineChange = LocalDateTime.from('2011-12-29T22:00-10:00[Pacific/Apia]');
+    const dayAfterSamoaDateLineChange = ZonedDateTime.from('2011-12-31T22:00+14:00[Pacific/Apia]');
+    const dayBeforeSamoaDateLineChange = ZonedDateTime.from('2011-12-29T22:00-10:00[Pacific/Apia]');
     it('startOfDay works after Samoa date line change', () => {
       const start = dayAfterSamoaDateLineChange.startOfDay;
       equal('00:00', start.toTime().toString());
@@ -164,11 +164,11 @@ describe('LocalDateTime', () => {
       equal(dstStart.isOffsetTransition, true);
     });
     it('isOffsetTransition returns true at a DST end transition', () => {
-      const dstEnd = LocalDateTime.from('2020-11-01T01:00-08:00[America/Los_Angeles]');
+      const dstEnd = ZonedDateTime.from('2020-11-01T01:00-08:00[America/Los_Angeles]');
       equal(dstEnd.isOffsetTransition, true);
     });
     it('isOffsetTransition returns true right after Samoa date line change', () => {
-      const rightAfterSamoaDateLineChange = LocalDateTime.from('2011-12-31T00:00+14:00[Pacific/Apia]');
+      const rightAfterSamoaDateLineChange = ZonedDateTime.from('2011-12-31T00:00+14:00[Pacific/Apia]');
       equal(rightAfterSamoaDateLineChange.isOffsetTransition, true);
     });
   });
@@ -210,7 +210,7 @@ describe('LocalDateTime', () => {
 
     it('Samoa date line change (add): 10:00PM 29 Dec 2011 -> 11:00PM 31 Dec 2011', () => {
       const dayBeforeSamoaDateLineChangeAbs = new Temporal.DateTime(2011, 12, 29, 22).toInstant('Pacific/Apia');
-      const start = dayBeforeSamoaDateLineChangeAbs.toLocalDateTime('Pacific/Apia');
+      const start = dayBeforeSamoaDateLineChangeAbs.toZonedDateTime('Pacific/Apia');
       const added = start.add({ days: 1, hours: 1 });
       equal(added.day, 31);
       equal(added.hour, 23);
@@ -226,7 +226,7 @@ describe('LocalDateTime', () => {
     /* skipping this test until we fix difference()
         it('Samoa date line change (subtract): 11:00PM 31 Dec 2011 -> 10:00PM 29 Dec 2011', () => {
           const dayAfterSamoaDateLineChangeAbs = new Temporal.DateTime(2011, 12, 31, 23).toInstant('Pacific/Apia');
-          const start = dayAfterSamoaDateLineChangeAbs.toLocalDateTime('Pacific/Apia');
+          const start = dayAfterSamoaDateLineChangeAbs.toZonedDateTime('Pacific/Apia');
           const added = start.subtract({ days: 1, hours: 1 });
           equal(added.day, 29);
           equal(added.hour, 22);
@@ -362,192 +362,192 @@ describe('LocalDateTime', () => {
   });
 
   describe('Structure', () => {
-    it('LocalDateTime is a Function', () => {
-      equal(typeof LocalDateTime, 'function');
+    it('ZonedDateTime is a Function', () => {
+      equal(typeof ZonedDateTime, 'function');
     });
-    it('LocalDateTime has a prototype', () => {
-      assert(LocalDateTime.prototype);
-      equal(typeof LocalDateTime.prototype, 'object');
+    it('ZonedDateTime has a prototype', () => {
+      assert(ZonedDateTime.prototype);
+      equal(typeof ZonedDateTime.prototype, 'object');
     });
-    describe('LocalDateTime.prototype', () => {
-      it('LocalDateTime.prototype has year', () => {
-        assert('year' in LocalDateTime.prototype);
+    describe('ZonedDateTime.prototype', () => {
+      it('ZonedDateTime.prototype has year', () => {
+        assert('year' in ZonedDateTime.prototype);
       });
-      it('LocalDateTime.prototype has month', () => {
-        assert('month' in LocalDateTime.prototype);
+      it('ZonedDateTime.prototype has month', () => {
+        assert('month' in ZonedDateTime.prototype);
       });
-      it('LocalDateTime.prototype has day', () => {
-        assert('day' in LocalDateTime.prototype);
+      it('ZonedDateTime.prototype has day', () => {
+        assert('day' in ZonedDateTime.prototype);
       });
-      it('LocalDateTime.prototype has hour', () => {
-        assert('hour' in LocalDateTime.prototype);
+      it('ZonedDateTime.prototype has hour', () => {
+        assert('hour' in ZonedDateTime.prototype);
       });
-      it('LocalDateTime.prototype has minute', () => {
-        assert('minute' in LocalDateTime.prototype);
+      it('ZonedDateTime.prototype has minute', () => {
+        assert('minute' in ZonedDateTime.prototype);
       });
-      it('LocalDateTime.prototype has second', () => {
-        assert('second' in LocalDateTime.prototype);
+      it('ZonedDateTime.prototype has second', () => {
+        assert('second' in ZonedDateTime.prototype);
       });
-      it('LocalDateTime.prototype has millisecond', () => {
-        assert('millisecond' in LocalDateTime.prototype);
+      it('ZonedDateTime.prototype has millisecond', () => {
+        assert('millisecond' in ZonedDateTime.prototype);
       });
-      it('LocalDateTime.prototype has microsecond', () => {
-        assert('microsecond' in LocalDateTime.prototype);
+      it('ZonedDateTime.prototype has microsecond', () => {
+        assert('microsecond' in ZonedDateTime.prototype);
       });
-      it('LocalDateTime.prototype has nanosecond', () => {
-        assert('nanosecond' in LocalDateTime.prototype);
+      it('ZonedDateTime.prototype has nanosecond', () => {
+        assert('nanosecond' in ZonedDateTime.prototype);
       });
-      it('LocalDateTime.prototype has dayOfWeek', () => {
-        assert('dayOfWeek' in LocalDateTime.prototype);
+      it('ZonedDateTime.prototype has dayOfWeek', () => {
+        assert('dayOfWeek' in ZonedDateTime.prototype);
       });
-      it('LocalDateTime.prototype has dayOfYear', () => {
-        assert('dayOfYear' in LocalDateTime.prototype);
+      it('ZonedDateTime.prototype has dayOfYear', () => {
+        assert('dayOfYear' in ZonedDateTime.prototype);
       });
-      it('LocalDateTime.prototype has weekOfYear', () => {
-        assert('weekOfYear' in LocalDateTime.prototype);
+      it('ZonedDateTime.prototype has weekOfYear', () => {
+        assert('weekOfYear' in ZonedDateTime.prototype);
       });
-      it('LocalDateTime.prototype.with is a Function', () => {
-        equal(typeof LocalDateTime.prototype.with, 'function');
+      it('ZonedDateTime.prototype.with is a Function', () => {
+        equal(typeof ZonedDateTime.prototype.with, 'function');
       });
-      it('LocalDateTime.prototype.add is a Function', () => {
-        equal(typeof LocalDateTime.prototype.add, 'function');
+      it('ZonedDateTime.prototype.add is a Function', () => {
+        equal(typeof ZonedDateTime.prototype.add, 'function');
       });
-      it('LocalDateTime.prototype.subtract is a Function', () => {
-        equal(typeof LocalDateTime.prototype.subtract, 'function');
+      it('ZonedDateTime.prototype.subtract is a Function', () => {
+        equal(typeof ZonedDateTime.prototype.subtract, 'function');
       });
-      it('LocalDateTime.prototype.difference is a Function', () => {
-        equal(typeof LocalDateTime.prototype.difference, 'function');
+      it('ZonedDateTime.prototype.difference is a Function', () => {
+        equal(typeof ZonedDateTime.prototype.difference, 'function');
       });
-      it('LocalDateTime.prototype.equals is a Function', () => {
-        equal(typeof LocalDateTime.prototype.equals, 'function');
+      it('ZonedDateTime.prototype.equals is a Function', () => {
+        equal(typeof ZonedDateTime.prototype.equals, 'function');
       });
-      it('LocalDateTime.prototype.getDate is a Function', () => {
-        equal(typeof LocalDateTime.prototype.toDate, 'function');
+      it('ZonedDateTime.prototype.getDate is a Function', () => {
+        equal(typeof ZonedDateTime.prototype.toDate, 'function');
       });
-      it('LocalDateTime.prototype.getTime is a Function', () => {
-        equal(typeof LocalDateTime.prototype.toTime, 'function');
+      it('ZonedDateTime.prototype.getTime is a Function', () => {
+        equal(typeof ZonedDateTime.prototype.toTime, 'function');
       });
-      it('LocalDateTime.prototype.getFields is a Function', () => {
-        equal(typeof LocalDateTime.prototype.getFields, 'function');
+      it('ZonedDateTime.prototype.getFields is a Function', () => {
+        equal(typeof ZonedDateTime.prototype.getFields, 'function');
       });
-      it('LocalDateTime.prototype.getISOFields is a Function', () => {
-        equal(typeof LocalDateTime.prototype.getISOFields, 'function');
+      it('ZonedDateTime.prototype.getISOFields is a Function', () => {
+        equal(typeof ZonedDateTime.prototype.getISOFields, 'function');
       });
-      it('LocalDateTime.prototype.toString is a Function', () => {
-        equal(typeof LocalDateTime.prototype.toString, 'function');
+      it('ZonedDateTime.prototype.toString is a Function', () => {
+        equal(typeof ZonedDateTime.prototype.toString, 'function');
       });
-      it('LocalDateTime.prototype.toJSON is a Function', () => {
-        equal(typeof LocalDateTime.prototype.toJSON, 'function');
+      it('ZonedDateTime.prototype.toJSON is a Function', () => {
+        equal(typeof ZonedDateTime.prototype.toJSON, 'function');
       });
-      it('LocalDateTime.prototype has toInstant', () => {
-        assert('toInstant' in LocalDateTime.prototype);
+      it('ZonedDateTime.prototype has toInstant', () => {
+        assert('toInstant' in ZonedDateTime.prototype);
       });
-      it('LocalDateTime.prototype has timeZone', () => {
-        assert('timeZone' in LocalDateTime.prototype);
+      it('ZonedDateTime.prototype has timeZone', () => {
+        assert('timeZone' in ZonedDateTime.prototype);
       });
-      it('LocalDateTime.prototype has hoursInDay', () => {
-        assert('hoursInDay' in LocalDateTime.prototype);
+      it('ZonedDateTime.prototype has hoursInDay', () => {
+        assert('hoursInDay' in ZonedDateTime.prototype);
       });
-      it('LocalDateTime.prototype has offsetNanoseconds', () => {
-        assert('offsetNanoseconds' in LocalDateTime.prototype);
+      it('ZonedDateTime.prototype has offsetNanoseconds', () => {
+        assert('offsetNanoseconds' in ZonedDateTime.prototype);
       });
-      it('LocalDateTime.prototype has offsetString', () => {
-        assert('offsetString' in LocalDateTime.prototype);
+      it('ZonedDateTime.prototype has offsetString', () => {
+        assert('offsetString' in ZonedDateTime.prototype);
       });
-      it('LocalDateTime.prototype.getDateTime is a Function', () => {
-        equal(typeof LocalDateTime.prototype.toDateTime, 'function');
+      it('ZonedDateTime.prototype.getDateTime is a Function', () => {
+        equal(typeof ZonedDateTime.prototype.toDateTime, 'function');
       });
     });
-    it('LocalDateTime.from is a Function', () => {
-      equal(typeof LocalDateTime.from, 'function');
+    it('ZonedDateTime.from is a Function', () => {
+      equal(typeof ZonedDateTime.from, 'function');
     });
-    it('LocalDateTime.compare is a Function', () => {
-      equal(typeof LocalDateTime.compare, 'function');
+    it('ZonedDateTime.compare is a Function', () => {
+      equal(typeof ZonedDateTime.compare, 'function');
     });
   });
 
   describe('Construction', () => {
     const epochMillis = Date.UTC(1976, 10, 18, 15, 23, 30, 123);
     const epochNanos = BigInt(epochMillis) * BigInt(1e6) + BigInt(456789);
-    const ldt = new LocalDateTime(epochNanos, tz);
-    assert(ldt);
-    equal(typeof ldt, 'object');
+    const zdt = new ZonedDateTime(epochNanos, tz);
+    assert(zdt);
+    equal(typeof zdt, 'object');
     equal(
-      ldt.toInstant().getEpochSeconds(),
+      zdt.toInstant().getEpochSeconds(),
       Math.floor(Date.UTC(1976, 10, 18, 15, 23, 30, 123) / 1e3),
       'getEpochSeconds'
     );
 
-    equal(ldt.toInstant().getEpochMilliseconds(), Date.UTC(1976, 10, 18, 15, 23, 30, 123), 'getEpochMilliseconds');
+    equal(zdt.toInstant().getEpochMilliseconds(), Date.UTC(1976, 10, 18, 15, 23, 30, 123), 'getEpochMilliseconds');
 
-    describe('LocalDateTime for (1976, 11, 18, 15, 23, 30, 123, 456, 789)', () => {
+    describe('ZonedDateTime for (1976, 11, 18, 15, 23, 30, 123, 456, 789)', () => {
       it('datetime can be constructed', () => {
-        const localDateTime = new LocalDateTime(epochNanos, new Temporal.TimeZone('UTC'));
-        assert(localDateTime);
-        equal(typeof localDateTime, 'object');
+        const zonedDateTime = new ZonedDateTime(epochNanos, new Temporal.TimeZone('UTC'));
+        assert(zonedDateTime);
+        equal(typeof zonedDateTime, 'object');
       });
-      const localDateTime = new LocalDateTime(epochNanos, new Temporal.TimeZone('UTC'));
-      it('localDateTime.year is 1976', () => equal(localDateTime.year, 1976));
-      it('localDateTime.month is 11', () => equal(localDateTime.month, 11));
-      it('localDateTime.day is 18', () => equal(localDateTime.day, 18));
-      it('localDateTime.hour is 15', () => equal(localDateTime.hour, 15));
-      it('localDateTime.minute is 23', () => equal(localDateTime.minute, 23));
-      it('localDateTime.second is 30', () => equal(localDateTime.second, 30));
-      it('localDateTime.millisecond is 123', () => equal(localDateTime.millisecond, 123));
-      it('localDateTime.microsecond is 456', () => equal(localDateTime.microsecond, 456));
-      it('localDateTime.nanosecond is 789', () => equal(localDateTime.nanosecond, 789));
-      it('localDateTime.dayOfWeek is 4', () => equal(localDateTime.dayOfWeek, 4));
-      it('localDateTime.dayOfYear is 323', () => equal(localDateTime.dayOfYear, 323));
-      it('localDateTime.weekOfYear is 47', () => equal(localDateTime.weekOfYear, 47));
-      it('`${localDateTime}` is 1976-11-18T15:23:30.123456789+00:00[UTC]', () =>
-        equal(`${localDateTime}`, '1976-11-18T15:23:30.123456789+00:00[UTC]'));
+      const zonedDateTime = new ZonedDateTime(epochNanos, new Temporal.TimeZone('UTC'));
+      it('zonedDateTime.year is 1976', () => equal(zonedDateTime.year, 1976));
+      it('zonedDateTime.month is 11', () => equal(zonedDateTime.month, 11));
+      it('zonedDateTime.day is 18', () => equal(zonedDateTime.day, 18));
+      it('zonedDateTime.hour is 15', () => equal(zonedDateTime.hour, 15));
+      it('zonedDateTime.minute is 23', () => equal(zonedDateTime.minute, 23));
+      it('zonedDateTime.second is 30', () => equal(zonedDateTime.second, 30));
+      it('zonedDateTime.millisecond is 123', () => equal(zonedDateTime.millisecond, 123));
+      it('zonedDateTime.microsecond is 456', () => equal(zonedDateTime.microsecond, 456));
+      it('zonedDateTime.nanosecond is 789', () => equal(zonedDateTime.nanosecond, 789));
+      it('zonedDateTime.dayOfWeek is 4', () => equal(zonedDateTime.dayOfWeek, 4));
+      it('zonedDateTime.dayOfYear is 323', () => equal(zonedDateTime.dayOfYear, 323));
+      it('zonedDateTime.weekOfYear is 47', () => equal(zonedDateTime.weekOfYear, 47));
+      it('`${zonedDateTime}` is 1976-11-18T15:23:30.123456789+00:00[UTC]', () =>
+        equal(`${zonedDateTime}`, '1976-11-18T15:23:30.123456789+00:00[UTC]'));
     });
 
     describe('epochXXX properties', () => {
       const ins = Temporal.Instant.from('1976-11-18T15:23:30.123456789Z');
-      const ldt = ins.toLocalDateTime('America/Los_Angeles');
-      it('localDateTime.epochNanoseconds is 217178610123456789n', () => equal(ldt.epochMicroseconds, 217178610123456n));
-      it('localDateTime.epochMicroseconds is 217178610123456n', () => equal(ldt.epochMicroseconds, 217178610123456n));
-      it('localDateTime.epochMilliseconds is 217178610123', () => equal(ldt.epochMilliseconds, 217178610123));
-      it('localDateTime.epochSeconds is 217178610', () => equal(ldt.epochSeconds, 217178610));
+      const zdt = ins.toZonedDateTime('America/Los_Angeles');
+      it('zonedDateTime.epochNanoseconds is 217178610123456789n', () => equal(zdt.epochMicroseconds, 217178610123456n));
+      it('zonedDateTime.epochMicroseconds is 217178610123456n', () => equal(zdt.epochMicroseconds, 217178610123456n));
+      it('zonedDateTime.epochMilliseconds is 217178610123', () => equal(zdt.epochMilliseconds, 217178610123));
+      it('zonedDateTime.epochSeconds is 217178610', () => equal(zdt.epochSeconds, 217178610));
     });
   });
   describe('.with manipulation', () => {
     const dt = new Temporal.DateTime(1976, 11, 18, 15, 23, 30, 123, 456, 789);
-    const localDateTime = LocalDateTime.from({ ...dt.getFields(), timeZone: 'UTC' });
-    it('localDateTime.with({ year: 2019 } works', () => {
-      equal(`${localDateTime.with({ year: 2019 })}`, '2019-11-18T15:23:30.123456789+00:00[UTC]');
+    const zonedDateTime = ZonedDateTime.from({ ...dt.getFields(), timeZone: 'UTC' });
+    it('zonedDateTime.with({ year: 2019 } works', () => {
+      equal(`${zonedDateTime.with({ year: 2019 })}`, '2019-11-18T15:23:30.123456789+00:00[UTC]');
     });
-    it('localDateTime.with({ month: 5 } works', () => {
-      equal(`${localDateTime.with({ month: 5 })}`, '1976-05-18T15:23:30.123456789+00:00[UTC]');
+    it('zonedDateTime.with({ month: 5 } works', () => {
+      equal(`${zonedDateTime.with({ month: 5 })}`, '1976-05-18T15:23:30.123456789+00:00[UTC]');
     });
-    it('localDateTime.with({ day: 5 } works', () => {
-      equal(`${localDateTime.with({ day: 5 })}`, '1976-11-05T15:23:30.123456789+00:00[UTC]');
+    it('zonedDateTime.with({ day: 5 } works', () => {
+      equal(`${zonedDateTime.with({ day: 5 })}`, '1976-11-05T15:23:30.123456789+00:00[UTC]');
     });
-    it('localDateTime.with({ hour: 5 } works', () => {
-      equal(`${localDateTime.with({ hour: 5 })}`, '1976-11-18T05:23:30.123456789+00:00[UTC]');
+    it('zonedDateTime.with({ hour: 5 } works', () => {
+      equal(`${zonedDateTime.with({ hour: 5 })}`, '1976-11-18T05:23:30.123456789+00:00[UTC]');
     });
-    it('localDateTime.with({ minute: 5 } works', () => {
-      equal(`${localDateTime.with({ minute: 5 })}`, '1976-11-18T15:05:30.123456789+00:00[UTC]');
+    it('zonedDateTime.with({ minute: 5 } works', () => {
+      equal(`${zonedDateTime.with({ minute: 5 })}`, '1976-11-18T15:05:30.123456789+00:00[UTC]');
     });
-    it('localDateTime.with({ second: 5 } works', () => {
-      equal(`${localDateTime.with({ second: 5 })}`, '1976-11-18T15:23:05.123456789+00:00[UTC]');
+    it('zonedDateTime.with({ second: 5 } works', () => {
+      equal(`${zonedDateTime.with({ second: 5 })}`, '1976-11-18T15:23:05.123456789+00:00[UTC]');
     });
-    it('localDateTime.with({ millisecond: 5 } works', () => {
-      equal(`${localDateTime.with({ millisecond: 5 })}`, '1976-11-18T15:23:30.005456789+00:00[UTC]');
+    it('zonedDateTime.with({ millisecond: 5 } works', () => {
+      equal(`${zonedDateTime.with({ millisecond: 5 })}`, '1976-11-18T15:23:30.005456789+00:00[UTC]');
     });
-    it('localDateTime.with({ microsecond: 5 } works', () => {
-      equal(`${localDateTime.with({ microsecond: 5 })}`, '1976-11-18T15:23:30.123005789+00:00[UTC]');
+    it('zonedDateTime.with({ microsecond: 5 } works', () => {
+      equal(`${zonedDateTime.with({ microsecond: 5 })}`, '1976-11-18T15:23:30.123005789+00:00[UTC]');
     });
-    it('localDateTime.with({ nanosecond: 5 } works', () => {
-      equal(`${localDateTime.with({ nanosecond: 5 })}`, '1976-11-18T15:23:30.123456005+00:00[UTC]');
+    it('zonedDateTime.with({ nanosecond: 5 } works', () => {
+      equal(`${zonedDateTime.with({ nanosecond: 5 })}`, '1976-11-18T15:23:30.123456005+00:00[UTC]');
     });
-    it('localDateTime.with({ month: 5, second: 15 } works', () => {
-      equal(`${localDateTime.with({ month: 5, second: 15 })}`, '1976-05-18T15:23:15.123456789+00:00[UTC]');
+    it('zonedDateTime.with({ month: 5, second: 15 } works', () => {
+      equal(`${zonedDateTime.with({ month: 5, second: 15 })}`, '1976-05-18T15:23:15.123456789+00:00[UTC]');
     });
     it('invalid overflow', () => {
       ['', 'CONSTRAIN', 'balance', 3, null].forEach((overflow) =>
-        throws(() => localDateTime.with({ day: 5 }, { overflow }), RangeError)
+        throws(() => zonedDateTime.with({ day: 5 }, { overflow }), RangeError)
       );
     });
   });
@@ -560,7 +560,7 @@ if (normalize(import.meta.url.slice(8)) === normalize(process.argv[1])) {
 
 /*
     // The tests below here were copied from DateTime.
-    // Consider adapting them to LocalDateTime.
+    // Consider adapting them to ZonedDateTime.
     describe('DateTime.compare() works', () => {
       const dt1 = DateTime.from('1976-11-18T15:23:30.123456789');
       const dt2 = DateTime.from('2019-10-29T10:46:38.271986102');
@@ -913,7 +913,7 @@ if (normalize(import.meta.url.slice(8)) === normalize(process.argv[1])) {
     });
   
       const dt = new Temporal.DateTime(1976, 11, 18, 15, 23, 30, 123, 456, 789);
-      const localDatetime = LocalDateTime.from({ ...dt.getFields(), timeZone: 'UTC' });
+      const localDatetime = ZonedDateTime.from({ ...dt.getFields(), timeZone: 'UTC' });
       const datetime = localDatetime.toDateTime();
       it('datetime.with({ year: 2019 } works', () => {
         equal(`${datetime.with({ year: 2019 })}`, '2019-11-18T15:23:30.123456789');
@@ -954,7 +954,7 @@ if (normalize(import.meta.url.slice(8)) === normalize(process.argv[1])) {
 
 /*
        // The tests below were copied from Instant tests.
-       // TODO: consider adapting the to LocalDateTime.
+       // TODO: consider adapting the to ZonedDateTime.
        describe('Instant', () => {
          describe('Construction', () => {
            it('can construct', () => {

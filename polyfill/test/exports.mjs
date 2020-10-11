@@ -21,8 +21,8 @@ describe('Exports', () => {
   it('should be 11 things', () => {
     equal(named.length, 11);
   });
-  it('should contain `LocalDateTime`', () => {
-    assert(named.includes('LocalDateTime'));
+  it('should contain `ZonedDateTime`', () => {
+    assert(named.includes('ZonedDateTime'));
   });
   it('should contain `Instant`', () => {
     assert(named.includes('Instant'));

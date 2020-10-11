@@ -609,12 +609,12 @@ export class DateTime {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     return ES.TemporalDateTimeToTime(this);
   }
-  toLocalDateTime(temporalTimeZoneLike, options) {
+  toZonedDateTime(temporalTimeZoneLike, options) {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     const TemporalTimeZone = GetIntrinsic('%Temporal.TimeZone%');
     const timeZone = TemporalTimeZone.from(temporalTimeZoneLike);
-    const TemporalLocalDateTime = GetIntrinsic('%Temporal.LocalDateTime%');
-    return TemporalLocalDateTime.from({ ...this.getFields(), timeZone }, options);
+    const TemporalZonedDateTime = GetIntrinsic('%Temporal.ZonedDateTime%');
+    return TemporalZonedDateTime.from({ ...this.getFields(), timeZone }, options);
   }
   getFields() {
     const fields = ES.ToTemporalDateTimeRecord(this);

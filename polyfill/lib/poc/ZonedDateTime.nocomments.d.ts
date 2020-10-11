@@ -1,50 +1,50 @@
-import { Temporal } from '../..';
-export declare type LocalDateTimeLike = Temporal.DateTimeLike & {
+import { Temporal } from '../../poc';
+export declare type ZonedDateTimeLike = Temporal.DateTimeLike & {
   timeZone?: Temporal.TimeZone | string;
   offsetNanoseconds?: number;
 };
-declare type LocalDateTimeFields = ReturnType<Temporal.DateTime['getFields']> & {
+declare type ZonedDateTimeFields = ReturnType<Temporal.DateTime['getFields']> & {
   timeZone: Temporal.TimeZone;
   offsetNanoseconds: number;
 };
-declare type LocalDateTimeISOFields = ReturnType<Temporal.DateTime['getISOFields']> & {
+declare type ZonedDateTimeISOFields = ReturnType<Temporal.DateTime['getISOFields']> & {
   timeZone: Temporal.TimeZone;
   offsetNanoseconds: number;
 };
 export interface offsetDisambiguationOptions {
   offset: 'use' | 'prefer' | 'ignore' | 'reject';
 }
-export declare type LocalDateTimeAssignmentOptions = Partial<
+export declare type ZonedDateTimeAssignmentOptions = Partial<
   Temporal.AssignmentOptions & Temporal.ToInstantOptions & offsetDisambiguationOptions
 >;
-export declare class LocalDateTime {
+export declare class ZonedDateTime {
   private _abs;
   private _tz;
   private _dt;
   constructor(epochNanoseconds: bigint, timeZone: Temporal.TimeZoneProtocol, calendar?: Temporal.CalendarProtocol);
   static from(
-    item: LocalDateTimeLike | string | Record<string, unknown>,
-    options?: LocalDateTimeAssignmentOptions
-  ): LocalDateTime;
-  with(localDateTimeLike: LocalDateTimeLike, options?: LocalDateTimeAssignmentOptions): LocalDateTime;
-  withCalendar(calendar: Temporal.CalendarProtocol): LocalDateTime;
+    item: ZonedDateTimeLike | string | Record<string, unknown>,
+    options?: ZonedDateTimeAssignmentOptions
+  ): ZonedDateTime;
+  with(zonedDateTimeLike: ZonedDateTimeLike, options?: ZonedDateTimeAssignmentOptions): ZonedDateTime;
+  withCalendar(calendar: Temporal.CalendarProtocol): ZonedDateTime;
   toInstant(): Temporal.Instant;
   get timeZone(): Temporal.TimeZone;
   get calendar(): Temporal.CalendarProtocol;
   toDateTime(): Temporal.DateTime;
   get hoursInDay(): number;
-  get startOfDay(): LocalDateTime;
+  get startOfDay(): ZonedDateTime;
   get isOffsetTransition(): boolean;
   get offsetNanoseconds(): number;
   get offsetString(): string;
-  getFields(): LocalDateTimeFields;
-  getISOFields(): LocalDateTimeISOFields;
-  static compare(one: LocalDateTime, two: LocalDateTime): Temporal.ComparisonResult;
-  equals(other: LocalDateTime): boolean;
-  add(durationLike: Temporal.DurationLike, options?: Temporal.ArithmeticOptions): LocalDateTime;
-  subtract(durationLike: Temporal.DurationLike, options?: Temporal.ArithmeticOptions): LocalDateTime;
+  getFields(): ZonedDateTimeFields;
+  getISOFields(): ZonedDateTimeISOFields;
+  static compare(one: ZonedDateTime, two: ZonedDateTime): Temporal.ComparisonResult;
+  equals(other: ZonedDateTime): boolean;
+  add(durationLike: Temporal.DurationLike, options?: Temporal.ArithmeticOptions): ZonedDateTime;
+  subtract(durationLike: Temporal.DurationLike, options?: Temporal.ArithmeticOptions): ZonedDateTime;
   difference(
-    other: LocalDateTime,
+    other: ZonedDateTime,
     options?: Temporal.DifferenceOptions<
       | 'years'
       | 'months'
@@ -60,7 +60,7 @@ export declare class LocalDateTime {
   ): Temporal.Duration;
   round(
     options: Temporal.RoundOptions<'day' | 'hour' | 'minute' | 'second' | 'millisecond' | 'microsecond' | 'nanosecond'>
-  ): LocalDateTime;
+  ): ZonedDateTime;
   toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
   toJSON(): string;
   toString(): string;

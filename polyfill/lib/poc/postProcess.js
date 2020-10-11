@@ -33,7 +33,7 @@ function processMjs(file) {
     "  get Duration() { return GetIntrinsic('%Temporal.Duration%'); },",
     '};'
   ];
-  const append = ['', "MakeIntrinsicClass(LocalDateTime, 'Temporal.LocalDateTime');"];
+  const append = ['', "MakeIntrinsicClass(ZonedDateTime, 'Temporal.ZonedDateTime');"];
   const filter = (line) => {
     if (line.includes('// @ts')) return false;
     if (line.includes('eslint-disable-next-line @typescript-eslint')) return false;
@@ -50,20 +50,20 @@ function processTests(file) {
       if (line.includes('// @ts')) return false;
       if (line.includes('eslint-disable-next-line @typescript-eslint')) return false;
       if (line.includes('const it = itOriginal')) return false;
-      if (line.includes('import { LocalDateTime }')) return false;
+      if (line.includes('import { ZonedDateTime }')) return false;
       return true;
     })
     .map((line) => {
       if (line.includes('import { Temporal }')) return "import * as Temporal from 'proposal-temporal';";
       if (line.includes(': itOriginal')) return line.replace(': itOriginal', '');
       if (line.includes('const { DateTime')) {
-        return line.replace('const { DateTime', 'const { DateTime, LocalDateTime');
+        return line.replace('const { DateTime', 'const { DateTime, ZonedDateTime');
       }
       return line;
     });
   writeAllLines(file, updated);
 }
 
-processDts('./polyfill/lib/poc/LocalDateTime.d.ts', './polyfill/index.d.ts', './polyfill/poc.d.ts');
+processDts('./polyfill/lib/poc/ZonedDateTime.d.ts', './polyfill/index.d.ts', './polyfill/poc.d.ts');
 processMjs('./polyfill/lib/localdatetime.mjs');
 processTests('./polyfill/test/localdatetime.mjs');

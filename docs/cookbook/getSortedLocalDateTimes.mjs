@@ -1,5 +1,5 @@
 /**
- * getSortedLocalDateTimes will sort an array of zoneless Temporal.DateTime instances by the
+ * getSortedZonedDateTimes will sort an array of zoneless Temporal.DateTime instances by the
  * corresponding local date and time of day (e.g., for building a conference schedule).
  *
  *
@@ -7,7 +7,7 @@
  * @param {boolean} [reverse=false] - Return in reversed order
  * @returns {Temporal.DateTime[]} the array from dateTimes, sorted
  */
-function getSortedLocalDateTimes(dateTimes, reverse = false) {
+function getSortedZonedDateTimes(dateTimes, reverse = false) {
   let newDateTimes = Array.from(dateTimes).sort(Temporal.DateTime.compare);
 
   return reverse ? newDateTimes.reverse() : newDateTimes;
@@ -35,7 +35,7 @@ let c = Temporal.DateTime.from({
   hour: 15,
   minute: 30
 }); // Coffee Break
-const results = getSortedLocalDateTimes([a, b, c]);
+const results = getSortedZonedDateTimes([a, b, c]);
 assert.deepEqual(
   results.map((x) => x.toString()),
   ['2020-02-20T08:45', '2020-02-20T15:30', '2020-02-21T13:10']

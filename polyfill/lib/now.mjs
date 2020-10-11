@@ -6,7 +6,7 @@ export const now = {
   instant,
   dateTime,
   dateTimeISO,
-  localDateTime,
+  zonedDateTime,
   date,
   dateISO,
   timeISO,
@@ -29,12 +29,12 @@ function dateTimeISO(temporalTimeZoneLike = timeZone()) {
   const inst = instant();
   return ES.GetTemporalDateTimeFor(timeZone, inst, calendar);
 }
-function localDateTime(temporalTimeZoneLike = timeZone(), calendar = undefined) {
+function zonedDateTime(temporalTimeZoneLike = timeZone(), calendar = undefined) {
   const TemporalTimeZone = GetIntrinsic('%Temporal.TimeZone%');
   const timeZone = TemporalTimeZone.from(temporalTimeZoneLike);
   const abs = instant();
-  const TemporalLocalDateTime = GetIntrinsic('%Temporal.LocalDateTime%');
-  return new TemporalLocalDateTime(abs.getEpochNanoseconds(), timeZone, calendar);
+  const TemporalZonedDateTime = GetIntrinsic('%Temporal.ZonedDateTime%');
+  return new TemporalZonedDateTime(abs.getEpochNanoseconds(), timeZone, calendar);
 }
 function date(calendarLike, temporalTimeZoneLike = timeZone()) {
   return ES.TemporalDateTimeToDate(dateTime(calendarLike, temporalTimeZoneLike));

@@ -1,15 +1,15 @@
-import { Temporal } from '../..';
-export declare type LocalDateTimeLike = Temporal.DateTimeLike & {
+import { Temporal } from '../../poc';
+export declare type ZonedDateTimeLike = Temporal.DateTimeLike & {
   /**`Temporal.TimeZone`, IANA time zone identifier, or offset string */
   timeZone?: Temporal.TimeZone | string;
   /** Enables `from` using only local time values */
   offsetNanoseconds?: number;
 };
-declare type LocalDateTimeFields = ReturnType<Temporal.DateTime['getFields']> & {
+declare type ZonedDateTimeFields = ReturnType<Temporal.DateTime['getFields']> & {
   timeZone: Temporal.TimeZone;
   offsetNanoseconds: number;
 };
-declare type LocalDateTimeISOFields = ReturnType<Temporal.DateTime['getISOFields']> & {
+declare type ZonedDateTimeISOFields = ReturnType<Temporal.DateTime['getISOFields']> & {
   timeZone: Temporal.TimeZone;
   offsetNanoseconds: number;
 };
@@ -45,18 +45,18 @@ declare type LocalDateTimeISOFields = ReturnType<Temporal.DateTime['getISOFields
 export interface offsetDisambiguationOptions {
   offset: 'use' | 'prefer' | 'ignore' | 'reject';
 }
-export declare type LocalDateTimeAssignmentOptions = Partial<
+export declare type ZonedDateTimeAssignmentOptions = Partial<
   Temporal.AssignmentOptions & Temporal.ToInstantOptions & offsetDisambiguationOptions
 >;
-export declare class LocalDateTime {
+export declare class ZonedDateTime {
   private _abs;
   private _tz;
   private _dt;
   /**
-   * Construct a new `Temporal.LocalDateTime` instance from an exact timestamp,
+   * Construct a new `Temporal.ZonedDateTime` instance from an exact timestamp,
    * time zone, and optional calendar.
    *
-   * Use `Temporal.LocalDateTime.from()`To construct a `Temporal.LocalDateTime`
+   * Use `Temporal.ZonedDateTime.from()`To construct a `Temporal.ZonedDateTime`
    * from an ISO 8601 string or from a time zone and `DateTime` fields (like
    * year or hour).
    *
@@ -68,10 +68,10 @@ export declare class LocalDateTime {
    */
   constructor(epochNanoseconds: bigint, timeZone: Temporal.TimeZoneProtocol, calendar?: Temporal.CalendarProtocol);
   /**
-   * Build a `Temporal.LocalDateTime` instance from one of the following:
-   * - Another LocalDateTime instance, in which case the result will deep-clone
+   * Build a `Temporal.ZonedDateTime` instance from one of the following:
+   * - Another ZonedDateTime instance, in which case the result will deep-clone
    *   the input.
-   * - A "LocalDateTime-like" property bag object with required properties
+   * - A "ZonedDateTime-like" property bag object with required properties
    *   `timeZone`, `year`, `month`, and `day`. Other fields (time fields and
    *   `offsetNanoseconds`) are optional. If `offsetNanoseconds` is not
    *   provided, then the time can be ambiguous around DST transitions. The
@@ -97,12 +97,12 @@ export declare class LocalDateTime {
    * ```
    */
   static from(
-    item: LocalDateTimeLike | string | Record<string, unknown>,
-    options?: LocalDateTimeAssignmentOptions
-  ): LocalDateTime;
+    item: ZonedDateTimeLike | string | Record<string, unknown>,
+    options?: ZonedDateTimeAssignmentOptions
+  ): ZonedDateTime;
   /**
-   * Merge fields into an existing `Temporal.LocalDateTime`. The provided `item`
-   * is a "LocalDateTime-like" object. Accepted fields include:
+   * Merge fields into an existing `Temporal.ZonedDateTime`. The provided `item`
+   * is a "ZonedDateTime-like" object. Accepted fields include:
    * - All `Temporal.DateTime` fields, including `calendar`
    * - `timeZone` as a time zone identifier string like `Europe/Paris` or a
    *   `Temporal.TimeZone` instance
@@ -115,8 +115,8 @@ export declare class LocalDateTime {
    * clock time as-is while resetting the time zone, use the `toDateTime()`
    * method. Examples:
    * ```
-   * const sameInstantInOtherTz = ldt.with({timeZone: 'Europe/London'});
-   * const newTzSameLocalTime = ldt.toDateTime().toLocalDateTime('Europe/London');
+   * const sameInstantInOtherTz = zdt.with({timeZone: 'Europe/London'});
+   * const newTzSameLocalTime = zdt.toDateTime().toZonedDateTime('Europe/London');
    * ```
    *
    * If the `offsetNanoseconds` field is provided, then it's possible for it to
@@ -128,7 +128,7 @@ export declare class LocalDateTime {
    * is not provided either, then the existing `offsetNanoseconds` field will be
    * used by `with` as if it had been provided by the caller. By default, this
    * will prefer the existing offset when resolving ambiguous results. For
-   * example, if a `Temporal.LocalDateTime` is set to the "second" 1:30AM on a
+   * example, if a `Temporal.ZonedDateTime` is set to the "second" 1:30AM on a
    * day where the 1-2AM clock hour is repeated after a backwards DST
    * transition, then calling `.with({minute: 45})` will result in an ambiguity
    * which is resolved using the default `offset: 'prefer'` option. Because the
@@ -144,9 +144,9 @@ export declare class LocalDateTime {
    * offset?: 'use' | 'prefer' (default) | 'ignore' | 'reject'
    * ```
    */
-  with(localDateTimeLike: LocalDateTimeLike, options?: LocalDateTimeAssignmentOptions): LocalDateTime;
+  with(zonedDateTimeLike: ZonedDateTimeLike, options?: ZonedDateTimeAssignmentOptions): ZonedDateTime;
   /**
-   * Get a new `Temporal.LocalDateTime` instance that uses a specific calendar.
+   * Get a new `Temporal.ZonedDateTime` instance that uses a specific calendar.
    *
    * Developers using only the default ISO 8601 calendar will probably not need
    * to call this method.
@@ -154,9 +154,9 @@ export declare class LocalDateTime {
    * @param [calendar=Temporal.Calendar.from('iso8601')]
    * {Temporal.CalendarProtocol} - new calendar to use
    */
-  withCalendar(calendar: Temporal.CalendarProtocol): LocalDateTime;
+  withCalendar(calendar: Temporal.CalendarProtocol): ZonedDateTime;
   /**
-   * Returns the exact time of this `Temporal.LocalDateTime` instance as a
+   * Returns the exact time of this `Temporal.ZonedDateTime` instance as a
    * `Temporal.Instant`.
    */
   toInstant(): Temporal.Instant;
@@ -169,7 +169,7 @@ export declare class LocalDateTime {
    */
   get timeZone(): Temporal.TimeZone;
   /**
-   * Returns the `Temporal.Calendar` for this `Temporal.LocalDateTime` instance.
+   * Returns the `Temporal.Calendar` for this `Temporal.ZonedDateTime` instance.
    *
    * ISO 8601 (the Gregorian calendar with a specific week numbering scheme
    * defined) is the default calendar.
@@ -182,7 +182,7 @@ export declare class LocalDateTime {
   get calendar(): Temporal.CalendarProtocol;
   /**
    * Returns a new `Temporal.DateTime` instance that corresponds to this
-   * `Temporal.LocalDateTime` instance.
+   * `Temporal.ZonedDateTime` instance.
    *
    * The resulting `Temporal.DateTime` instance will use the same date, time,
    * and calendar as `this`.
@@ -207,24 +207,24 @@ export declare class LocalDateTime {
    */
   get hoursInDay(): number;
   /**
-   * Returns a new `Temporal.LocalDateTime` instance representing the first
+   * Returns a new `Temporal.ZonedDateTime` instance representing the first
    * valid time during the current calendar day and time zone of `this`.
    *
    * The local time of the result is almost always `00:00`, but in rare cases it
    * could be a later time e.g. if DST starts at midnight in a time zone. For
    * example:
    * ```
-   * const ldt = Temporal.LocalDateTime.from('2015-10-18T12:00-02:00[America/Sao_Paulo]');
-   * ldt.startOfDay; // => 2015-10-18T01:00-02:00[America/Sao_Paulo]
+   * const zdt = Temporal.ZonedDateTime.from('2015-10-18T12:00-02:00[America/Sao_Paulo]');
+   * zdt.startOfDay; // => 2015-10-18T01:00-02:00[America/Sao_Paulo]
    * ```
    */
-  get startOfDay(): LocalDateTime;
+  get startOfDay(): ZonedDateTime;
   /**
-   * True if this `Temporal.LocalDateTime` instance is immediately after a DST
+   * True if this `Temporal.ZonedDateTime` instance is immediately after a DST
    * transition or other change in time zone offset, false otherwise.
    *
    * "Immediately after" means that subtracting one nanosecond would yield a
-   * `Temporal.LocalDateTime` instance that has a different value for
+   * `Temporal.ZonedDateTime` instance that has a different value for
    * `offsetNanoseconds`.
    *
    * To calculate if a DST transition happens on the same day (but not
@@ -233,7 +233,7 @@ export declare class LocalDateTime {
   get isOffsetTransition(): boolean;
   /**
    * Offset (in nanoseconds) relative to UTC of the current time zone and
-   * instant of this `Temporal.LocalDateTime` instance.
+   * instant of this `Temporal.ZonedDateTime` instance.
    *
    * The value of this field will change after DST transitions or after legal
    * changes to a time zone, e.g. a country switching to a new time zone.
@@ -245,9 +245,9 @@ export declare class LocalDateTime {
   get offsetNanoseconds(): number;
   /**
    * Offset (as a string like `'+05:00'` or `'-07:00'`) relative to UTC of the
-   * current time zone and instant of this `Temporal.LocalDateTime` instance.
+   * current time zone and instant of this `Temporal.ZonedDateTime` instance.
    *
-   * This property is useful for custom formatting of LocalDateTime instances.
+   * This property is useful for custom formatting of ZonedDateTime instances.
    *
    * This field cannot be passed to `from` and `with`.  Instead, use
    * `offsetNanoseconds`.
@@ -264,13 +264,13 @@ export declare class LocalDateTime {
    * The result of this method can be used for round-trip serialization via
    * `from()`, `with()`, or `JSON.stringify`.
    */
-  getFields(): LocalDateTimeFields;
+  getFields(): ZonedDateTimeFields;
   /**
    * Method for internal use by non-ISO calendars. Normally not used.
    */
-  getISOFields(): LocalDateTimeISOFields;
+  getISOFields(): ZonedDateTimeISOFields;
   /**
-   * Compare two `Temporal.LocalDateTime` values.
+   * Compare two `Temporal.ZonedDateTime` values.
    *
    * Returns:
    * * Zero if all fields are equivalent, including the calendar ID and the time
@@ -292,7 +292,7 @@ export declare class LocalDateTime {
    * `.toDateTime()` on both instances and use `Temporal.DateTime`'s `compare`
    * method.
    */
-  static compare(one: LocalDateTime, two: LocalDateTime): Temporal.ComparisonResult;
+  static compare(one: ZonedDateTime, two: ZonedDateTime): Temporal.ComparisonResult;
   /**
    * Returns `true` if the exact time, time zone, and calendar are
    * identical to `other`, and `false` otherwise.
@@ -303,7 +303,7 @@ export declare class LocalDateTime {
    * To ignore calendars but not time zones when comparing, convert both
    * instances to the ISO 8601 calendar:
    * ```
-   * Temporal.LocalDateTime.compare(
+   * Temporal.ZonedDateTime.compare(
    *   one.with({ calendar: 'iso8601' }),
    *   two.with({ calendar: 'iso8601' })
    * );
@@ -313,7 +313,7 @@ export declare class LocalDateTime {
    * `.toDateTime()` on both instances and use `Temporal.DateTime`'s `compare`
    * method.
    */
-  equals(other: LocalDateTime): boolean;
+  equals(other: ZonedDateTime): boolean;
   /**
    * Add a `Temporal.Duration` and return the result.
    *
@@ -325,7 +325,7 @@ export declare class LocalDateTime {
    * overflow?: 'constrain' (default) | 'reject'
    * ```
    */
-  add(durationLike: Temporal.DurationLike, options?: Temporal.ArithmeticOptions): LocalDateTime;
+  add(durationLike: Temporal.DurationLike, options?: Temporal.ArithmeticOptions): ZonedDateTime;
   /**
    * Subtract a `Temporal.Duration` and return the result.
    *
@@ -337,9 +337,9 @@ export declare class LocalDateTime {
    * overflow?: 'constrain' (default) | 'reject'
    * ```
    */
-  subtract(durationLike: Temporal.DurationLike, options?: Temporal.ArithmeticOptions): LocalDateTime;
+  subtract(durationLike: Temporal.DurationLike, options?: Temporal.ArithmeticOptions): ZonedDateTime;
   /**
-   * Calculate the difference between two `Temporal.LocalDateTime` values and
+   * Calculate the difference between two `Temporal.ZonedDateTime` values and
    * return the `Temporal.Duration` result.
    *
    * The duration returned is a "hybrid" duration. The date portion represents
@@ -364,7 +364,7 @@ export declare class LocalDateTime {
    * If both values have the same local time, then the result will be the same
    * as if `Temporal.DateTime.prototype.difference` was used.
    *
-   * If the other `Temporal.LocalDateTime` is in a different time zone, then the
+   * If the other `Temporal.ZonedDateTime` is in a different time zone, then the
    * same days can be different lengths in each time zone, e.g. if only one of
    * them observes DST. Therefore, a `RangeError` will be thrown if
    * `largestUnit` is `'days'` or larger and the two instances' time zones have
@@ -393,7 +393,7 @@ export declare class LocalDateTime {
    * ```
    */
   difference(
-    other: LocalDateTime,
+    other: ZonedDateTime,
     options?: Temporal.DifferenceOptions<
       | 'years'
       | 'months'
@@ -408,7 +408,7 @@ export declare class LocalDateTime {
     >
   ): Temporal.Duration;
   /**
-   * Rounds a `Temporal.LocalDateTime` to a particular unit
+   * Rounds a `Temporal.ZonedDateTime` to a particular unit
    *
    * Available options:
    * - `smallestUnit` (required string) - The unit to round to. Valid values are
@@ -421,7 +421,7 @@ export declare class LocalDateTime {
    */
   round(
     options: Temporal.RoundOptions<'day' | 'hour' | 'minute' | 'second' | 'millisecond' | 'microsecond' | 'nanosecond'>
-  ): LocalDateTime;
+  ): ZonedDateTime;
   /**
    * Convert to a localized string.
    *
@@ -430,7 +430,7 @@ export declare class LocalDateTime {
    */
   toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
   /**
-   * String representation of this `Temporal.LocalDateTime` in ISO 8601 format
+   * String representation of this `Temporal.ZonedDateTime` in ISO 8601 format
    * extended to include the time zone.
    *
    * Example: `2011-12-03T10:15:30+01:00[Europe/Paris]`
@@ -440,7 +440,7 @@ export declare class LocalDateTime {
    */
   toJSON(): string;
   /**
-   * String representation of this `Temporal.LocalDateTime` in ISO 8601 format
+   * String representation of this `Temporal.ZonedDateTime` in ISO 8601 format
    * extended to include the time zone.
    *
    * Example: `2011-12-03T10:15:30+01:00[Europe/Paris]`
@@ -493,10 +493,10 @@ export declare class LocalDateTime {
    * zone is irrelevant to this property because time because there is only one
    * epoch, not one per time zone.
    *
-   * Use this property to convert a Temporal.LocalDateTime to a legacy `Date`
+   * Use this property to convert a Temporal.ZonedDateTime to a legacy `Date`
    * object:
    * ```
-   * legacyDate = new Date(ldt.epochMilliseconds);
+   * legacyDate = new Date(zdt.epochMilliseconds);
    * ```
    */
   get epochMilliseconds(): number;

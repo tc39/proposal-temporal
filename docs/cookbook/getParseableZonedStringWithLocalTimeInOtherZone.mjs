@@ -3,7 +3,7 @@
  * expressing the local date and time in another time zone at the same exact
  * time.
  *
- * @param {Temporal.LocalDateTime} source - The local date and time
+ * @param {Temporal.ZonedDateTime} source - The local date and time
  * @param {Temporal.TimeZone} targetTimeZone - The time zone for the
  *  return value
  * @returns {string} String indicating the time with time zone designation
@@ -13,7 +13,7 @@ function getParseableZonedStringWithLocalTimeInOtherZone(source, targetTimeZone)
 }
 
 const result = getParseableZonedStringWithLocalTimeInOtherZone(
-  Temporal.LocalDateTime.from('2020-01-09T00:00-06:00[America/Chicago]'),
+  Temporal.ZonedDateTime.from('2020-01-09T00:00-06:00[America/Chicago]'),
   Temporal.TimeZone.from('America/Los_Angeles')
 );
 // On this date, when it's midnight in Chicago, it's 10 PM the previous night in LA

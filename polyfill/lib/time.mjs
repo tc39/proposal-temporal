@@ -398,13 +398,13 @@ export class Time {
     const DateTime = GetIntrinsic('%Temporal.DateTime%');
     return new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
   }
-  toLocalDateTime(temporalTimeZoneLike, temporalDate, options) {
+  toZonedDateTime(temporalTimeZoneLike, temporalDate, options) {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
     const dateTime = this.toDateTime(temporalDate);
     const TemporalTimeZone = GetIntrinsic('%Temporal.TimeZone%');
     const timeZone = TemporalTimeZone.from(temporalTimeZoneLike);
-    const TemporalLocalDateTime = GetIntrinsic('%Temporal.LocalDateTime%');
-    return TemporalLocalDateTime.from({ ...dateTime.getFields(), timeZone }, options);
+    const TemporalZonedDateTime = GetIntrinsic('%Temporal.ZonedDateTime%');
+    return TemporalZonedDateTime.from({ ...dateTime.getFields(), timeZone }, options);
   }
   getFields() {
     const fields = ES.ToTemporalTimeRecord(this);

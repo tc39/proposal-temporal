@@ -20,7 +20,7 @@ const Temporal = {
   }
 };
 
-/** Build a `Temporal.LocalDateTime` instance from a property bag object */
+/** Build a `Temporal.ZonedDateTime` instance from a property bag object */
 function fromObject(item, options) {
   const overflow = getOption(options, 'overflow', OVERFLOW_OPTIONS, 'constrain');
   const disambiguation = getOption(options, 'disambiguation', DISAMBIGUATION_OPTIONS, 'compatible');
@@ -42,7 +42,7 @@ function fromObject(item, options) {
   return fromCommon(dt, tz, offsetNanoseconds, disambiguation, offsetOption);
 }
 
-/** Build a `Temporal.LocalDateTime` instance from an ISO 8601 extended string */
+/** Build a `Temporal.ZonedDateTime` instance from an ISO 8601 extended string */
 function fromIsoString(isoString, options) {
   const disambiguation = getOption(options, 'disambiguation', DISAMBIGUATION_OPTIONS, 'compatible');
   const offsetOption = getOption(options, 'offset', OFFSET_OPTIONS, 'reject');
@@ -58,7 +58,7 @@ function fromIsoString(isoString, options) {
   if (!tzString) {
     throw new Error(
       "Missing time zone. Either append a time zone identifier (e.g. '2011-12-03T10:15:30+01:00[Europe/Paris]')" +
-        ' or create differently (e.g. `Temporal.Instant.from(isoString).toLocalDateTime(timeZone)`).'
+        ' or create differently (e.g. `Temporal.Instant.from(isoString).toZonedDateTime(timeZone)`).'
     );
   }
 
@@ -104,7 +104,7 @@ function fromCommon(dt, timeZone, offsetNs, disambiguation, offsetOption) {
     // The caller wants the offset to always win ('use') OR the caller is OK
     // with the offset winning ('prefer' or 'reject') as long as it's valid for
     // this timezone and date/time.
-    return new LocalDateTime(absWithInputOffset.getEpochNanoseconds(), timeZone, dt.calendar);
+    return new ZonedDateTime(absWithInputOffset.getEpochNanoseconds(), timeZone, dt.calendar);
   }
 
   // If we get here, then the user-provided offset doesn't match any instants
@@ -125,11 +125,11 @@ function fromCommon(dt, timeZone, offsetNs, disambiguation, offsetOption) {
 }
 
 function fromDateTime(dateTime, timeZone, options) {
-  return new LocalDateTime(dateTime.toInstant(timeZone, options).getEpochNanoseconds(), timeZone, dateTime.calendar);
+  return new ZonedDateTime(dateTime.toInstant(timeZone, options).getEpochNanoseconds(), timeZone, dateTime.calendar);
 }
 
 /** Identical logic for `add` and `subtract` */
-function doAddOrSubtract(op, durationLike, options, localDateTime) {
+function doAddOrSubtract(op, durationLike, options, zonedDateTime) {
   // If negative duration for add, change to a positive duration subtract.
   // If negative duration for subtract, change to a positive duration add.
   // By doing this, none of the code below must worry about negative durations.
@@ -140,7 +140,7 @@ function doAddOrSubtract(op, durationLike, options, localDateTime) {
   }
 
   const overflow = getOption(options, 'overflow', OVERFLOW_OPTIONS, 'constrain');
-  const { timeZone, calendar } = localDateTime;
+  const { timeZone, calendar } = zonedDateTime;
   const { timeDuration, dateDuration } = splitDuration(durationLike);
 
   // RFC 5545 requires the date portion to be added in calendar days and the
@@ -152,25 +152,25 @@ function doAddOrSubtract(op, durationLike, options, localDateTime) {
   // because this disambiguation behavior is required by RFC 5545.
   if (op === 'add') {
     // if addition, then order of operations is largest (date) units first
-    const dtIntermediate = localDateTime.toDateTime().plus(dateDuration, { overflow });
+    const dtIntermediate = zonedDateTime.toDateTime().plus(dateDuration, { overflow });
     const absIntermediate = dtIntermediate.toInstant(timeZone);
     const absResult = absIntermediate.plus(timeDuration);
-    return new LocalDateTime(absResult.getEpochNanoseconds(), timeZone, calendar);
+    return new ZonedDateTime(absResult.getEpochNanoseconds(), timeZone, calendar);
   } else {
     // if subtraction, then order of operations is smallest (time) units first
-    const absIntermediate = localDateTime.toInstant().minus(timeDuration);
+    const absIntermediate = zonedDateTime.toInstant().minus(timeDuration);
     const dtIntermediate = absIntermediate.toDateTime(timeZone, calendar);
     const dtResult = dtIntermediate.minus(dateDuration, { overflow });
     return fromDateTime(dtResult, timeZone);
   }
 }
 
-export class LocalDateTime {
+export class ZonedDateTime {
   /**
-   * Construct a new `Temporal.LocalDateTime` instance from an exact timestamp,
+   * Construct a new `Temporal.ZonedDateTime` instance from an exact timestamp,
    * time zone, and optional calendar.
    *
-   * Use `Temporal.LocalDateTime.from()`To construct a `Temporal.LocalDateTime`
+   * Use `Temporal.ZonedDateTime.from()`To construct a `Temporal.ZonedDateTime`
    * from an ISO 8601 string or from a time zone and `DateTime` fields (like
    * year or hour).
    *
@@ -197,10 +197,10 @@ export class LocalDateTime {
   }
 
   /**
-   * Build a `Temporal.LocalDateTime` instance from one of the following:
-   * - Another LocalDateTime instance, in which case the result will deep-clone
+   * Build a `Temporal.ZonedDateTime` instance from one of the following:
+   * - Another ZonedDateTime instance, in which case the result will deep-clone
    *   the input.
-   * - A "LocalDateTime-like" property bag object with required properties
+   * - A "ZonedDateTime-like" property bag object with required properties
    *   `timeZone`, `year`, `month`, and `day`. Other fields (time fields and
    *   `offsetNanoseconds`) are optional. If `offsetNanoseconds` is not
    *   provided, then the time can be ambiguous around DST transitions. The
@@ -227,20 +227,20 @@ export class LocalDateTime {
    */
   static from(item, options) {
     if (item instanceof Temporal.DateTime) {
-      throw new TypeError('Time zone is missing. Try `dateTime.toLocalDateTime(timeZone)`.');
+      throw new TypeError('Time zone is missing. Try `dateTime.toZonedDateTime(timeZone)`.');
     }
     if (item instanceof Temporal.Instant) {
-      throw new TypeError('Time zone is missing. Try `instant.toLocalDateTime(timeZone}`.');
+      throw new TypeError('Time zone is missing. Try `instant.toZonedDateTime(timeZone}`.');
     }
-    if (item instanceof LocalDateTime) {
-      return new LocalDateTime(item._abs.getEpochNanoseconds(), item._tz, item._dt.calendar);
+    if (item instanceof ZonedDateTime) {
+      return new ZonedDateTime(item._abs.getEpochNanoseconds(), item._tz, item._dt.calendar);
     }
     return typeof item === 'object' ? fromObject(item, options) : fromIsoString(item.toString(), options);
   }
 
   /**
-   * Merge fields into an existing `Temporal.LocalDateTime`. The provided `item`
-   * is a "LocalDateTime-like" object. Accepted fields include:
+   * Merge fields into an existing `Temporal.ZonedDateTime`. The provided `item`
+   * is a "ZonedDateTime-like" object. Accepted fields include:
    * - All `Temporal.DateTime` fields, including `calendar`
    * - `timeZone` as a time zone identifier string like `Europe/Paris` or a
    *   `Temporal.TimeZone` instance
@@ -253,8 +253,8 @@ export class LocalDateTime {
    * clock time as-is while resetting the time zone, use the `toDateTime()`
    * method. Examples:
    * ```
-   * const sameInstantInOtherTz = ldt.with({timeZone: 'Europe/London'});
-   * const newTzSameLocalTime = ldt.toDateTime().toLocalDateTime('Europe/London');
+   * const sameInstantInOtherTz = zdt.with({timeZone: 'Europe/London'});
+   * const newTzSameLocalTime = zdt.toDateTime().toZonedDateTime('Europe/London');
    * ```
    *
    * If the `offsetNanoseconds` field is provided, then it's possible for it to
@@ -266,7 +266,7 @@ export class LocalDateTime {
    * is not provided either, then the existing `offsetNanoseconds` field will be
    * used by `with` as if it had been provided by the caller. By default, this
    * will prefer the existing offset when resolving ambiguous results. For
-   * example, if a `Temporal.LocalDateTime` is set to the "second" 1:30AM on a
+   * example, if a `Temporal.ZonedDateTime` is set to the "second" 1:30AM on a
    * day where the 1-2AM clock hour is repeated after a backwards DST
    * transition, then calling `.with({minute: 45})` will result in an ambiguity
    * which is resolved using the default `offset: 'prefer'` option. Because the
@@ -282,15 +282,15 @@ export class LocalDateTime {
    * offset?: 'use' | 'prefer' (default) | 'ignore' | 'reject'
    * ```
    */
-  with(localDateTimeLike, options) {
-    if (typeof localDateTimeLike !== 'object') {
-      throw new TypeError("Parameter 'localDateTimeLike' must be an object");
+  with(zonedDateTimeLike, options) {
+    if (typeof zonedDateTimeLike !== 'object') {
+      throw new TypeError("Parameter 'zonedDateTimeLike' must be an object");
     }
-    if (typeof localDateTimeLike.getFields === 'function') {
+    if (typeof zonedDateTimeLike.getFields === 'function') {
       // If the input object is a Temporal instance, then fetch its fields so that
       // we can spread those fields below.  Ideally, we could remove this test
       // if Temporal objects could have own properties so could be spread!
-      localDateTimeLike = localDateTimeLike.getFields();
+      zonedDateTimeLike = zonedDateTimeLike.getFields();
     }
     // TODO: validate and normalize input fields
 
@@ -300,7 +300,7 @@ export class LocalDateTime {
     const updatedOptions = options ? { ...options } : {};
     if (updatedOptions.offset === undefined) updatedOptions.offset = 'prefer';
 
-    const { timeZone, calendar, offsetNanoseconds } = localDateTimeLike;
+    const { timeZone, calendar, offsetNanoseconds } = zonedDateTimeLike;
 
     const newTimeZone = timeZone && Temporal.TimeZone.from(timeZone);
     const newCalendar = calendar && Temporal.Calendar.from(calendar);
@@ -320,7 +320,7 @@ export class LocalDateTime {
     if (updateTimeZone || updateCalendar) {
       const tz = newTimeZone || base._tz;
       const cal = newCalendar || base.calendar;
-      base = new LocalDateTime(base._abs.getEpochNanoseconds(), tz, cal);
+      base = new ZonedDateTime(base._abs.getEpochNanoseconds(), tz, cal);
     }
 
     // Deal with the rest of the fields. If there's a change in tz offset, it'll
@@ -330,12 +330,12 @@ export class LocalDateTime {
     if (!updateOffset && !updateTimeZone) {
       fields.offsetNanoseconds = originalOffset;
     }
-    const merged = { ...fields, ...localDateTimeLike };
-    return LocalDateTime.from(merged, updatedOptions);
+    const merged = { ...fields, ...zonedDateTimeLike };
+    return ZonedDateTime.from(merged, updatedOptions);
   }
 
   /**
-   * Get a new `Temporal.LocalDateTime` instance that uses a specific calendar.
+   * Get a new `Temporal.ZonedDateTime` instance that uses a specific calendar.
    *
    * Developers using only the default ISO 8601 calendar will probably not need
    * to call this method.
@@ -348,7 +348,7 @@ export class LocalDateTime {
   }
 
   /**
-   * Returns the exact time of this `Temporal.LocalDateTime` instance as a
+   * Returns the exact time of this `Temporal.ZonedDateTime` instance as a
    * `Temporal.Instant`.
    */
   toInstant() {
@@ -367,7 +367,7 @@ export class LocalDateTime {
   }
 
   /**
-   * Returns the `Temporal.Calendar` for this `Temporal.LocalDateTime` instance.
+   * Returns the `Temporal.Calendar` for this `Temporal.ZonedDateTime` instance.
    *
    * ISO 8601 (the Gregorian calendar with a specific week numbering scheme
    * defined) is the default calendar.
@@ -383,7 +383,7 @@ export class LocalDateTime {
 
   /**
    * Returns a new `Temporal.DateTime` instance that corresponds to this
-   * `Temporal.LocalDateTime` instance.
+   * `Temporal.ZonedDateTime` instance.
    *
    * The resulting `Temporal.DateTime` instance will use the same date, time,
    * and calendar as `this`.
@@ -411,8 +411,8 @@ export class LocalDateTime {
    */
   get hoursInDay() {
     const todayDate = this.toDate();
-    const today = LocalDateTime.from({ ...todayDate.getFields(), timeZone: this.timeZone });
-    const tomorrow = LocalDateTime.from({ ...todayDate.plus({ days: 1 }).getFields(), timeZone: this.timeZone });
+    const today = ZonedDateTime.from({ ...todayDate.getFields(), timeZone: this.timeZone });
+    const tomorrow = ZonedDateTime.from({ ...todayDate.plus({ days: 1 }).getFields(), timeZone: this.timeZone });
     const todayAbs = today.toInstant();
     const tomorrowAbs = tomorrow.toInstant();
     const diff = tomorrowAbs.difference(todayAbs, { largestUnit: 'hours' });
@@ -427,29 +427,29 @@ export class LocalDateTime {
   }
 
   /**
-   * Returns a new `Temporal.LocalDateTime` instance representing the first
+   * Returns a new `Temporal.ZonedDateTime` instance representing the first
    * valid time during the current calendar day and time zone of `this`.
    *
    * The local time of the result is almost always `00:00`, but in rare cases it
    * could be a later time e.g. if DST starts at midnight in a time zone. For
    * example:
    * ```
-   * const ldt = Temporal.LocalDateTime.from('2015-10-18T12:00-02:00[America/Sao_Paulo]');
-   * ldt.startOfDay; // => 2015-10-18T01:00-02:00[America/Sao_Paulo]
+   * const zdt = Temporal.ZonedDateTime.from('2015-10-18T12:00-02:00[America/Sao_Paulo]');
+   * zdt.startOfDay; // => 2015-10-18T01:00-02:00[America/Sao_Paulo]
    * ```
    */
   get startOfDay() {
     const date = this.toDate();
-    const ldt = LocalDateTime.from({ ...date.getFields(), timeZone: this.timeZone });
-    return ldt;
+    const zdt = ZonedDateTime.from({ ...date.getFields(), timeZone: this.timeZone });
+    return zdt;
   }
 
   /**
-   * True if this `Temporal.LocalDateTime` instance is immediately after a DST
+   * True if this `Temporal.ZonedDateTime` instance is immediately after a DST
    * transition or other change in time zone offset, false otherwise.
    *
    * "Immediately after" means that subtracting one nanosecond would yield a
-   * `Temporal.LocalDateTime` instance that has a different value for
+   * `Temporal.ZonedDateTime` instance that has a different value for
    * `offsetNanoseconds`.
    *
    * To calculate if a DST transition happens on the same day (but not
@@ -462,7 +462,7 @@ export class LocalDateTime {
 
   /**
    * Offset (in nanoseconds) relative to UTC of the current time zone and
-   * instant of this `Temporal.LocalDateTime` instance.
+   * instant of this `Temporal.ZonedDateTime` instance.
    *
    * The value of this field will change after DST transitions or after legal
    * changes to a time zone, e.g. a country switching to a new time zone.
@@ -477,9 +477,9 @@ export class LocalDateTime {
 
   /**
    * Offset (as a string like `'+05:00'` or `'-07:00'`) relative to UTC of the
-   * current time zone and instant of this `Temporal.LocalDateTime` instance.
+   * current time zone and instant of this `Temporal.ZonedDateTime` instance.
    *
-   * This property is useful for custom formatting of LocalDateTime instances.
+   * This property is useful for custom formatting of ZonedDateTime instances.
    *
    * This field cannot be passed to `from` and `with`.  Instead, use
    * `offsetNanoseconds`.
@@ -521,7 +521,7 @@ export class LocalDateTime {
   }
 
   /**
-   * Compare two `Temporal.LocalDateTime` values.
+   * Compare two `Temporal.ZonedDateTime` values.
    *
    * Returns:
    * * Zero if all fields are equivalent, including the calendar ID and the time
@@ -561,7 +561,7 @@ export class LocalDateTime {
    * To ignore calendars but not time zones when comparing, convert both
    * instances to the ISO 8601 calendar:
    * ```
-   * Temporal.LocalDateTime.compare(
+   * Temporal.ZonedDateTime.compare(
    *   one.with({ calendar: 'iso8601' }),
    *   two.with({ calendar: 'iso8601' })
    * );
@@ -572,7 +572,7 @@ export class LocalDateTime {
    * method.
    */
   equals(other) {
-    return LocalDateTime.compare(this, other) === 0;
+    return ZonedDateTime.compare(this, other) === 0;
   }
 
   /**
@@ -606,7 +606,7 @@ export class LocalDateTime {
   }
 
   /**
-   * Calculate the difference between two `Temporal.LocalDateTime` values and
+   * Calculate the difference between two `Temporal.ZonedDateTime` values and
    * return the `Temporal.Duration` result.
    *
    * The duration returned is a "hybrid" duration. The date portion represents
@@ -631,7 +631,7 @@ export class LocalDateTime {
    * If both values have the same local time, then the result will be the same
    * as if `Temporal.DateTime.prototype.difference` was used.
    *
-   * If the other `Temporal.LocalDateTime` is in a different time zone, then the
+   * If the other `Temporal.ZonedDateTime` is in a different time zone, then the
    * same days can be different lengths in each time zone, e.g. if only one of
    * them observes DST. Therefore, a `RangeError` will be thrown if
    * `largestUnit` is `'days'` or larger and the two instances' time zones have
@@ -717,13 +717,13 @@ export class LocalDateTime {
     // A goal of difference() is to be reversible. The following comparisons should all
     // evaluate to `true`:
     // ```js
-    // Temporal.LocalDateTime.compare(ldt, other.add(ldt.difference(other))) === 0;
-    // Temporal.LocalDateTime.compare(ldt, other.subtract(other.difference(ldt))) === 0;
-    // Temporal.LocalDateTime.compare(other, ldt.subtract(ldt.difference(other))) === 0;
-    // Temporal.LocalDateTime.compare(other, ldt.add(other.difference(ldt))) === 0;
+    // Temporal.ZonedDateTime.compare(zdt, other.add(zdt.difference(other))) === 0;
+    // Temporal.ZonedDateTime.compare(zdt, other.subtract(other.difference(zdt))) === 0;
+    // Temporal.ZonedDateTime.compare(other, zdt.subtract(zdt.difference(other))) === 0;
+    // Temporal.ZonedDateTime.compare(other, zdt.add(other.difference(zdt))) === 0;
     // ```
     // first, normalize the inputs so that there's a deterministic order
-    const [earlier, later] = [this, other].sort(LocalDateTime.compare);
+    const [earlier, later] = [this, other].sort(ZonedDateTime.compare);
     const [earlierDt, laterDt] = [earlier.toDateTime(), later.toDateTime()];
     const mustNegateResult = later !== this;
     const dateDuration = laterDt.difference(earlierDt, { largestUnit, smallestUnit: 'days', roundingMode: 'trunc' });
@@ -736,7 +736,7 @@ export class LocalDateTime {
     // It's possible that DST disambiguation may cause the addded days to be later
     // than the earlier time. If this happens, back off one day and try again.
     let intermediate = earlier.add({ days: diffDays });
-    if (LocalDateTime.compare(intermediate, later) > 0) {
+    if (ZonedDateTime.compare(intermediate, later) > 0) {
       intermediate = earlier.add({ days: diffDays - 1 });
     }
     const timeDuration = later.toInstant().difference(intermediate.toInstant(), {
@@ -810,7 +810,7 @@ export class LocalDateTime {
   }
 
   /**
-   * Rounds a `Temporal.LocalDateTime` to a particular unit
+   * Rounds a `Temporal.ZonedDateTime` to a particular unit
    *
    * Available options:
    * - `smallestUnit` (required string) - The unit to round to. Valid values are
@@ -851,7 +851,7 @@ export class LocalDateTime {
   }
 
   /**
-   * String representation of this `Temporal.LocalDateTime` in ISO 8601 format
+   * String representation of this `Temporal.ZonedDateTime` in ISO 8601 format
    * extended to include the time zone.
    *
    * Example: `2011-12-03T10:15:30+01:00[Europe/Paris]`
@@ -863,7 +863,7 @@ export class LocalDateTime {
     return this.toString();
   }
   /**
-   * String representation of this `Temporal.LocalDateTime` in ISO 8601 format
+   * String representation of this `Temporal.ZonedDateTime` in ISO 8601 format
    * extended to include the time zone.
    *
    * Example: `2011-12-03T10:15:30+01:00[Europe/Paris]`
@@ -945,7 +945,7 @@ export class LocalDateTime {
     return this._dt.toTime();
   }
   valueOf() {
-    throw new TypeError('use compare() or equals() to compare Temporal.LocalDateTime');
+    throw new TypeError('use compare() or equals() to compare Temporal.ZonedDateTime');
   }
   /**
    * Returns the number of full seconds between `this` and 00:00 UTC on
@@ -970,10 +970,10 @@ export class LocalDateTime {
    * zone is irrelevant to this property because time because there is only one
    * epoch, not one per time zone.
    *
-   * Use this property to convert a Temporal.LocalDateTime to a legacy `Date`
+   * Use this property to convert a Temporal.ZonedDateTime to a legacy `Date`
    * object:
    * ```
-   * legacyDate = new Date(ldt.epochMilliseconds);
+   * legacyDate = new Date(zdt.epochMilliseconds);
    * ```
    */
   get epochMilliseconds() {
@@ -1106,4 +1106,4 @@ function compareStrings(s1, s2) {
   return 1;
 }
 
-MakeIntrinsicClass(LocalDateTime, 'Temporal.LocalDateTime');
+MakeIntrinsicClass(ZonedDateTime, 'Temporal.ZonedDateTime');

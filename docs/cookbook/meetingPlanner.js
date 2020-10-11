@@ -1,5 +1,5 @@
 // Display local time zone and three others
-const now = Temporal.now.localDateTime();
+const now = Temporal.now.zonedDateTime();
 const timeZones = [
   { name: 'Here', tz: Temporal.now.timeZone() },
   { name: 'New York', tz: Temporal.TimeZone.from('America/New_York') },

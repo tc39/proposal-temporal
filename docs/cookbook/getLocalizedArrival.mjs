@@ -1,4 +1,4 @@
-// LocalDateTime POC notes
+// ZonedDateTime POC notes
 // - Existing code is fine-- no DST issues.
 // - This function will break around DST transitions if the caller passes a
 //   date/time duration instead of the expected instant duration.
@@ -14,10 +14,10 @@
  * @param {Temporal.TimeZone} destinationTimeZone - Time zone in which the
  *  flight's destination is located
  * @param {Temporal.Calendar|string} calendar - Calendar system used for output
- * @returns {Temporal.LocalDateTime} Local arrival time
+ * @returns {Temporal.ZonedDateTime} Local arrival time
  */
 function getLocalizedArrival(parseableDeparture, flightTime, destinationTimeZone, calendar) {
-  const departure = Temporal.LocalDateTime.from(parseableDeparture);
+  const departure = Temporal.ZonedDateTime.from(parseableDeparture);
   return departure.toInstant().add(flightTime).toZonedDateTime(destinationTimeZone, calendar);
 }
 

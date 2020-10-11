@@ -1,6 +1,6 @@
-// LocalDateTime POC notes
+// ZonedDateTime POC notes
 // - This sample's original implementation had a DST bug #698 that would have
-//   been easier to prevent using `LocalDateTime`.
+//   been easier to prevent using `ZonedDateTime`.
 // - The result will be easier to work with because it has its time zone already
 //   baked in.
 
@@ -10,7 +10,7 @@
  * is open, closed, opening soon, or closing soon. The length of "soon" can be
  * controlled using the `soonWindow` parameter.
  *
- * @param {Temporal.LocalDateTime} now - Date and Time at which to consider
+ * @param {Temporal.ZonedDateTime} now - Date and Time at which to consider
  *  whether the business is open
  * @param {(Object|null)[]} businessHours - Array of length 7 indicating
  *  business hours during the week
@@ -26,8 +26,8 @@
  * @returns {string} "open", "closed", "opening soon", or "closing soon"
  */
 function getBusinessOpenStateText(now, businessHours, soonWindow) {
-  const inRange = (localDateTime, start, end) =>
-    Temporal.LocalDateTime.compare(localDateTime, start) >= 0 && Temporal.LocalDateTime.compare(localDateTime, end) < 0;
+  const inRange = (zonedDateTime, start, end) =>
+    Temporal.ZonedDateTime.compare(zonedDateTime, start) >= 0 && Temporal.ZonedDateTime.compare(zonedDateTime, end) < 0;
 
   // Because of times wrapping around at midnight, we may need to consider
   // yesterday's and tomorrow's hours as well
@@ -41,7 +41,7 @@ function getBusinessOpenStateText(now, businessHours, soonWindow) {
     const closeDate = isWrap ? openDate.add({ days: 1 }) : openDate;
     const close = now.with({ ...closeDate.getFields(), ...closeTime.getFields() });
     if (inRange(now, open, close)) {
-      return Temporal.LocalDateTime.compare(now, close.subtract(soonWindow)) >= 0 ? 'closing soon' : 'open';
+      return Temporal.ZonedDateTime.compare(now, close.subtract(soonWindow)) >= 0 ? 'closing soon' : 'open';
     }
     if (inRange(now.add(soonWindow), open, close)) return 'opening soon';
   }
@@ -65,7 +65,7 @@ const businessHours = [
 // throw if the offset isn't valid for the time zone, e.g. if the time zone
 // definition has changed since the time was stored. (The user can force use of
 // the ISO offset in this case via the 'use' option.)
-const now = Temporal.LocalDateTime.from('2019-04-07T00:00+01:00[Europe/Berlin]', { offset: 'use' });
+const now = Temporal.ZonedDateTime.from('2019-04-07T00:00+01:00[Europe/Berlin]', { offset: 'use' });
 assert.equal(now.toString(), '2019-04-07T01:00+02:00[Europe/Berlin]');
 const soonWindow = Temporal.Duration.from({ minutes: 30 });
 const saturdayNightState = getBusinessOpenStateText(now, businessHours, soonWindow);

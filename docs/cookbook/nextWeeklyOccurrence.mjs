@@ -2,11 +2,11 @@
  * Returns the local date and time for the next occurrence of a weekly occurring
  * event.
  *
- * @param {Temporal.LocalDateTime} now - Starting point
+ * @param {Temporal.ZonedDateTime} now - Starting point
  * @param {number} weekday - Weekday event occurs on (Monday=1, Sunday=7)
  * @param {Temporal.Time} eventTime - Time event occurs at
  * @param {Temporal.TimeZone} eventTimeZone - Time zone where event is planned
- * @returns {Temporal.LocalDateTime} Local date and time of next occurrence
+ * @returns {Temporal.ZonedDateTime} Local date and time of next occurrence
  */
 function nextWeeklyOccurrence(now, weekday, eventTime, eventTimeZone) {
   const inEventTimeZone = now.with({ timeZone: eventTimeZone });
@@ -14,7 +14,7 @@ function nextWeeklyOccurrence(now, weekday, eventTime, eventTimeZone) {
   let nextOccurrence = inEventTimeZone.with({ ...nextDate.getFields(), ...eventTime.getFields() });
 
   // Handle the case where the event is today but already happened
-  if (Temporal.LocalDateTime.compare(now, nextOccurrence) > 0) {
+  if (Temporal.ZonedDateTime.compare(now, nextOccurrence) > 0) {
     nextOccurrence = nextOccurrence.add({ days: 7 });
   }
 
@@ -26,12 +26,12 @@ const weekday = 4;
 const eventTime = Temporal.Time.from('08:45');
 const eventTimeZone = Temporal.TimeZone.from('America/Los_Angeles');
 
-const rightBefore = Temporal.LocalDateTime.from('2020-03-26T08:30-07:00[America/Los_Angeles]').with({
+const rightBefore = Temporal.ZonedDateTime.from('2020-03-26T08:30-07:00[America/Los_Angeles]').with({
   timeZone: 'Europe/London'
 });
 let next = nextWeeklyOccurrence(rightBefore, weekday, eventTime, eventTimeZone);
 assert.equal(next.toString(), '2020-03-26T15:45+00:00[Europe/London]');
 
-const rightAfter = Temporal.LocalDateTime.from('2020-03-26T09:00-07:00[America/Los_Angeles]');
+const rightAfter = Temporal.ZonedDateTime.from('2020-03-26T09:00-07:00[America/Los_Angeles]');
 next = nextWeeklyOccurrence(rightAfter, weekday, eventTime, eventTimeZone);
 assert.equal(next.toString(), '2020-04-02T08:45-07:00[America/Los_Angeles]');

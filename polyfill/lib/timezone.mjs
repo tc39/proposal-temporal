@@ -71,10 +71,10 @@ export class TimeZone {
     const offsetNs = ES.GetOffsetNanosecondsFor(this, instant);
     return ES.FormatTimeZoneOffsetString(offsetNs);
   }
-  getLocalDateTimeFor(instant, calendar = GetISO8601Calendar()) {
+  getZonedDateTimeFor(instant, calendar = GetISO8601Calendar()) {
     if (!ES.IsTemporalInstant(instant)) throw new TypeError('invalid Instant object');
-    const TemporalLocalDateTime = GetIntrinsic('%Temporal.LocalDateTime%');
-    return new TemporalLocalDateTime(instant.getEpochNanoseconds(), this, calendar);
+    const TemporalZonedDateTime = GetIntrinsic('%Temporal.ZonedDateTime%');
+    return new TemporalZonedDateTime(instant.getEpochNanoseconds(), this, calendar);
   }
   getDateTimeFor(instant, calendar = GetISO8601Calendar()) {
     if (!ES.IsTemporalInstant(instant)) throw new TypeError('invalid Instant object');
