@@ -30,7 +30,7 @@ A cookbook to help you get started and learn the ins and outs of Temporal is ava
 
 - `Temporal.now.instant()` - get the exact time since [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)
 - `Temporal.now.timeZone()` - get the current system time zone
-- `Temporal.now.localDateTime()` - get the current calendar date and wall-clock time in the system time zone
+- `Temporal.now.zonedDateTime()` - get the current calendar date and wall-clock time in the system time zone
 - `Temporal.now.date()` - get the current calendar date in the system time zone
 - `Temporal.now.time()` - get the current wall-clock time in the system time zone
 - `Temporal.now.dateTime()` - get the current system date/time in the system time zone, but return an object that doesn't remember its time zone so should NOT be used to derive other values (e.g. 12 hours later) in time zones that use Daylight Saving Time (DST).
@@ -40,19 +40,20 @@ See [Temporal.now Documentation](./now.md) for detailed documentation.
 ### **Temporal.Instant**
 
 A `Temporal.Instant` represents a fixed point in time, without regard to calendar or location.
-For a human-readable local calendar date or clock time, use a `Temporal.TimeZone` and `Temporal.Calendar` to obtain a `Temporal.LocalDateTime` or `Temporal.DateTime`.
+For a human-readable local calendar date or clock time, use a `Temporal.TimeZone` and `Temporal.Calendar` to obtain a `Temporal.ZonedDateTime` or `Temporal.DateTime`.
 
 See [Temporal.Instant Documentation](./instant.md) for detailed documentation.
 
-### **Temporal.LocalDateTime**
+### **Temporal.ZonedDateTime**
 
-_NOTE: this type is not checked into the polyfill yet, but is planned to land in early October 2020._
+_NOTE: this type is not checked into the polyfill yet, but is planned to land in late October 2020._
 
-A `Temporal.LocalDateTime` is a time-zone-aware, calendar-aware date/time type that represents a real event that has happened (or will happen) at a particular instant in a real place on Earth. This type is optimized for use cases that require a time zone, including DST-safe arithmetic and interoperability with RFC 5545 (iCalendar).
+A `Temporal.ZonedDateTime` is a timezone-aware, calendar-aware date/time type that represents a real event that has happened (or will happen) at a particular instant from the perspective of a particular region on Earth.
+This type is optimized for use cases that require a time zone, including DST-safe arithmetic and interoperability with RFC 5545 (iCalendar).
 
-As the broadest `Temporal` type, `Temporal.LocalDateTime` can be considered a combination of `Temporal.TimeZone`, `Temporal.Instant`, and `Temporal.DateTime` (which includes `Temporal.Calendar`).
+As the broadest `Temporal` type, `Temporal.ZonedDateTime` can be considered a combination of `Temporal.TimeZone`, `Temporal.Instant`, and `Temporal.DateTime` (which includes `Temporal.Calendar`).
 
-See [Temporal.LocalDateTime Documentation](./localdatetime.md) for detailed documentation.
+See [Temporal.ZonedDateTime Documentation](./zoneddatetime.md) for detailed documentation.
 
 ### **Temporal.Date**
 
@@ -64,7 +65,7 @@ See [Temporal.Date Documentation](./date.md) for detailed documentation.
 
 #### Time Zones and Resolving Ambiguity
 
-Converting between wall-clock/calendar-date types (like `Temporal.Date`, `Temporal.Time`, and `Temporal.DateTime`) and exact time types (`Temporal.Instant` and `Temporal.LocalDateTime`) can be ambiguous because of time zones and daylight saving time.
+Converting between wall-clock/calendar-date types (like `Temporal.Date`, `Temporal.Time`, and `Temporal.DateTime`) and exact time types (`Temporal.Instant` and `Temporal.ZonedDateTime`) can be ambiguous because of time zones and daylight saving time.
 
 Read more about [handling time zones, DST, and ambiguity in `Temporal`](./ambiguity.md).
 
@@ -76,8 +77,8 @@ See [Temporal.Time Documentation](./time.md) for detailed documentation.
 
 ### **Temporal.DateTime**
 
-A `Temporal.DateTime` represents a calendar date and wall-clock time that does not carry time zone information. It can be converted to a `Temporal.LocalDateTime` or a `Temporal.Instant` using a `Temporal.TimeZone`.
-For use cases that require a time zone, especially using arithmetic or other derived values, consider using `Temporal.LocalDateTime` instead because that type automatically adjusts for Daylight Saving Time.
+A `Temporal.DateTime` represents a calendar date and wall-clock time that does not carry time zone information. It can be converted to a `Temporal.ZonedDateTime` or a `Temporal.Instant` using a `Temporal.TimeZone`.
+For use cases that require a time zone, especially using arithmetic or other derived values, consider using `Temporal.ZonedDateTime` instead because that type automatically adjusts for Daylight Saving Time.
 
 See [Temporal.DateTime Documentation](./datetime.md) for detailed documentation.
 
@@ -143,8 +144,8 @@ See [Temporal.Calendar Documentation](./calendar.md) for detailed documentation.
 - [Parse Draft](./parse-draft.md) &mdash; Draft design document for a `Temporal.parse` API, which is not currently planned to be implemented.
 - [Calendar Draft](./calendar-draft.md) &mdash; Draft design document for calendar support in Temporal.
   Mostly superseded by the documentation of [Temporal.Calendar](./calendar.md), but also contains some discussion about whether to have a default calendar.
-- [Zoned Date/Time Type Draft](./localdatetime-draft.md) &mdash; Explanation of `Temporal.LocalDateTime` (not the final name) which is a new type combining an instant time with a time zone and calendar, and exposing a superset of the `Temporal.DateTime` API.
-  Superseded by the [documentation](./localdatetime.md), but contains background info about the reasons and goals behind this type.
+- [Zoned Date/Time Type Draft](./zoneddatetime-draft.md) &mdash; Explanation of `Temporal.ZonedDateTime` which is a new type combining an instant time with a time zone and calendar, and exposing a superset of the `Temporal.DateTime` API.
+  Superseded by the [documentation](./zoneddatetime.md), but contains background info about the reasons and goals behind this type.
 
 ## Object Relationship
 

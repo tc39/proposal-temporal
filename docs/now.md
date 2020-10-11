@@ -9,7 +9,7 @@ The `Temporal.now` object has several methods which give information about the c
 
 ## Methods
 
-### Temporal.now.**localDateTime**(_timeZone_: object | string = Temporal.now.timeZone(), _calendar_: object | string = 'iso8601') : Temporal.DateTime
+### Temporal.now.**zonedDateTime**(_timeZone_: object | string = Temporal.now.timeZone(), _calendar_: object | string = 'iso8601') : Temporal.DateTime
 
 **Parameters:**
 
@@ -18,7 +18,7 @@ The `Temporal.now` object has several methods which give information about the c
 - `calendar` (optional `Temporal.Calendar`, plain object, or string): The calendar system to get the current date and time in.
   If not given, the ISO 8601 calendar will be used.
 
-**Returns:** a `Temporal.LocalDateTime` object representing the current system date, time, time zone, and time zone offset.
+**Returns:** a `Temporal.ZonedDateTime` object representing the current system date, time, time zone, and time zone offset.
 
 This method gets the current date, time, time zone, and time zone offset according to the system settings.
 Optionally a time zone can be given in which the time is computed, and a calendar system in which the date is reckoned.
@@ -32,9 +32,9 @@ financialCentres = {
   London: 'Europe/London',
   Tokyo: 'Asia/Tokyo'
 };
-console.log(`Here: ${Temporal.now.localDateTime()}`);
+console.log(`Here: ${Temporal.now.zonedDateTime()}`);
 Object.entries(financialCentres).forEach(([name, timeZone]) => {
-  console.log(`${name}: ${Temporal.now.localDateTime(timeZone)}`);
+  console.log(`${name}: ${Temporal.now.zonedDateTime(timeZone)}`);
 });
 // example output:
 // Here: 2020-09-18T01:17:48.431957915-07:00[America/Los_Angeles]

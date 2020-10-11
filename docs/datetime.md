@@ -677,7 +677,7 @@ The `locales` and `options` arguments are the same as in the constructor to [`In
 
 > **NOTE**: Unlike in [`Temporal.Instant.prototype.toLocaleString()`](./instant.html#toLocaleString), `options.timeZone` will have no effect, because `Temporal.DateTime` carries no time zone information.
 > It's not always possible to uniquely determine the localized time zone name using the `Temporal.DateTime` instance and the `options.timeZone`.
-> Therefore, to display a localized date and time including its time zone, convert the `Temporal.DateTime` to a `Temporal.LocalDateTime` or `Temporal.Instant` and then call the `toLocaleString()` method.
+> Therefore, to display a localized date and time including its time zone, convert the `Temporal.DateTime` to a `Temporal.ZonedDateTime` or `Temporal.Instant` and then call the `toLocaleString()` method.
 
 Example usage:
 
@@ -733,7 +733,7 @@ This method overrides `Object.prototype.valueOf()` and always throws an exceptio
 This is because it's not possible to compare `Temporal.DateTime` objects with the relational operators `<`, `<=`, `>`, or `>=`.
 Use `Temporal.DateTime.compare()` for this, or `datetime.equals()` for equality.
 
-### datetime.**toLocalDateTime**(_timeZone_ : object | string, _options_?: object) : Temporal.LocalDateTime
+### datetime.**toZonedDateTime**(_timeZone_ : object | string, _options_?: object) : Temporal.ZonedDateTime
 
 **Parameters:**
 
@@ -744,10 +744,10 @@ Use `Temporal.DateTime.compare()` for this, or `datetime.equals()` for equality.
     Allowed values are `'compatible'`, `'earlier'`, `'later'`, and `'reject'`.
     The default is `'compatible'`.
 
-**Returns:** A `Temporal.LocalDateTime` object representing the calendar date and wall-clock time from `dateTime` projected into `timeZone`.
+**Returns:** A `Temporal.ZonedDateTime` object representing the calendar date and wall-clock time from `dateTime` projected into `timeZone`.
 
-This method is one way to convert a `Temporal.DateTime` to a `Temporal.LocalDateTime`.
-It is identical to [`(Temporal.TimeZone.from(timeZone)).getLocalDateTimeFor(dateTime, disambiguation)`](./timezone.html#getLocalDateTimeFor).
+This method is one way to convert a `Temporal.DateTime` to a `Temporal.ZonedDateTime`.
+It is identical to [`(Temporal.TimeZone.from(timeZone)).getZonedDateTimeFor(dateTime, disambiguation)`](./timezone.html#getZonedDateTimeFor).
 
 For a list of IANA time zone names, see the current version of the [IANA time zone database](https://www.iana.org/time-zones).
 A convenient list is also available [on Wikipedia](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones), although it might not reflect the latest official status.
@@ -763,11 +763,11 @@ When interoperating with existing code or services, `'compatible'` mode matches 
 This mode also matches the behavior of cross-platform standards like [RFC 5545 (iCalendar)](https://tools.ietf.org/html/rfc5545).
 
 During "skipped" clock time like the hour after DST starts in the Spring, this method interprets invalid times using the pre-transition time zone offset if `'compatible'` or `'later'` is used or the post-transition time zone offset if `'earlier'` is used.
-This behavior avoids exceptions when converting non-existent `Temporal.DateTime` values to `Temporal.LocalDateTime`, but it also means that values during these periods will result in a different `Temporal.DateTime` in "round-trip" conversions to `Temporal.LocalDateTime` and back again.
+This behavior avoids exceptions when converting non-existent `Temporal.DateTime` values to `Temporal.ZonedDateTime`, but it also means that values during these periods will result in a different `Temporal.DateTime` in "round-trip" conversions to `Temporal.ZonedDateTime` and back again.
 
 For usage examples and a more complete explanation of how this disambiguation works and why it is necessary, see [Resolving ambiguity](./ambiguity.md).
 
-If the result is earlier or later than the range that `Temporal.LocalDateTime` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then a `RangeError` will be thrown, no matter the value of `disambiguation`.
+If the result is earlier or later than the range that `Temporal.ZonedDateTime` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then a `RangeError` will be thrown, no matter the value of `disambiguation`.
 
 ### datetime.**toInstant**(_timeZone_ : object | string, _options_?: object) : Temporal.Instant
 
