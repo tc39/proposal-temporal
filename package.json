@@ -25,14 +25,14 @@
     "typescript": "^4.0.3"
   },
   "scripts": {
-    "poc-tsc": "tsc ./polyfill/lib/poc/ZonedDateTime.ts --lib ESNext --target ESNext --module ESNext --strict --isolatedModules --declaration --allowSyntheticDefaultImports --moduleResolution node --useDefineForClassFields true && mv ./polyfill/lib/poc/ZonedDateTime.js ./polyfill/lib/localdatetime.mjs && mv ./polyfill/lib/poc/ZonedDateTime.test.ts ./polyfill/test/localdatetime.mjs",
+    "poc-tsc": "tsc ./polyfill/lib/poc/ZonedDateTime.ts --lib ESNext --target ESNext --module ESNext --strict --isolatedModules --declaration --allowSyntheticDefaultImports --moduleResolution node --useDefineForClassFields true && mv ./polyfill/lib/poc/ZonedDateTime.js ./polyfill/lib/zoneddatetime.mjs && mv ./polyfill/lib/poc/ZonedDateTime.test.ts ./polyfill/test/zoneddatetime.mjs",
     "poc-dts": "tsc ./polyfill/lib/poc/ZonedDateTime.ts --emitDeclarationOnly --lib ESNext --target ESNext --module ESNext --strict --isolatedModules --declaration --allowSyntheticDefaultImports --moduleResolution node --useDefineForClassFields true",
     "poc-tsc-noemit": "tsc ./polyfill/lib/poc/ZonedDateTime.ts --noEmit --lib ESNext --target ESNext --module ESNext --strict --isolatedModules --declaration --allowSyntheticDefaultImports --moduleResolution node --useDefineForClassFields true",
     "poc-dts-nocomments": "tsc ./polyfill/lib/poc/ZonedDateTime.ts --lib ESNext --target ESNext --module ESNext --strict --isolatedModules --declaration --allowSyntheticDefaultImports --moduleResolution node --useDefineForClassFields true --removeComments --emitDeclarationOnly && mv ./polyfill/lib/poc/ZonedDateTime.d.ts ./polyfill/lib/poc/ZonedDateTime.nocomments.d.ts",
-    "poc-babel": "babel ./polyfill/lib/poc/ZonedDateTime.ts --presets=@babel/preset-typescript --retain-lines -o ./polyfill/lib/localdatetime.mjs",
-    "poc-babel-tests": "babel ./polyfill/lib/poc/ZonedDateTime.test.ts --presets=@babel/preset-typescript --plugins=@babel/plugin-syntax-numeric-separator --retain-lines -o ./polyfill/test/localdatetime.mjs",
+    "poc-babel": "babel ./polyfill/lib/poc/ZonedDateTime.ts --presets=@babel/preset-typescript --retain-lines -o ./polyfill/lib/zoneddatetime.mjs",
+    "poc-babel-tests": "babel ./polyfill/lib/poc/ZonedDateTime.test.ts --presets=@babel/preset-typescript --plugins=@babel/plugin-syntax-numeric-separator --retain-lines -o ./polyfill/test/zoneddatetime.mjs",
     "poc-eslint": "eslint ./polyfill/lib/poc/ZonedDateTime.ts ./polyfill/lib/poc/ZonedDateTime.test.ts --fix",
-    "poc-pretty": "prettier ./polyfill/lib/localdatetime.mjs ./polyfill/test/localdatetime.mjs ./polyfill/poc.d.ts ./polyfill/lib/poc/ZonedDateTime.nocomments.d.ts ./polyfill/lib/poc/ZonedDateTime.d.ts --write",
+    "poc-pretty": "prettier ./polyfill/lib/zoneddatetime.mjs ./polyfill/test/zoneddatetime.mjs ./polyfill/poc.d.ts ./polyfill/lib/poc/ZonedDateTime.nocomments.d.ts ./polyfill/lib/poc/ZonedDateTime.d.ts --write",
     "poc-postprocess": "node ./polyfill/lib/poc/postProcess.js",
     "poc-rebuild": "cd polyfill && npm run build && rm -f *.tgz && npm pack",
     "poc-compile": "npm run poc-tsc-noemit && npm run poc-dts-nocomments && npm run poc-dts && npm run poc-babel && npm run poc-babel-tests && npm run poc-postprocess && npm run poc-pretty && npm run poc-rebuild",

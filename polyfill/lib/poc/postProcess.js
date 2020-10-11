@@ -65,5 +65,5 @@ function processTests(file) {
 }
 
 processDts('./polyfill/lib/poc/ZonedDateTime.d.ts', './polyfill/index.d.ts', './polyfill/poc.d.ts');
-processMjs('./polyfill/lib/localdatetime.mjs');
-processTests('./polyfill/test/localdatetime.mjs');
+processMjs('./polyfill/lib/zoneddatetime.mjs');
+processTests('./polyfill/test/zoneddatetime.mjs');
