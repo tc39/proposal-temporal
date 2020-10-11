@@ -300,6 +300,43 @@ inIsoCalendar.withCalendar('japanese').year;
 
 > **NOTE**: The possible values for the `month` property start at 1, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
 
+### zonedDateTime.**epochSeconds**: number
+
+### zonedDateTime.**epochMilliseconds**: number
+
+### zonedDateTime.**epochMicroseconds**: bigint
+
+### zonedDateTime.**epochNanoseconds**: bigint
+
+The above read-only properties return the integer number of full seconds, milliseconds, microseconds, or nanoseconds between `zonedDateTime` and 00:00 UTC on 1970-01-01, otherwise known as the [UNIX Epoch](https://en.wikipedia.org/wiki/Unix_time).
+
+These properties are equivalent to `zonedDateTime.toInstant().epochSeconds`, `zonedDateTime.toInstant().epochMilliseconds`, `zonedDateTime.toInstant().epochMicroseconds`, `zonedDateTime.toInstant().epochNanoseconds`, respectively.
+Any fractional remainders are truncated towards zero.
+The time zone is irrelevant to these properties because time because there is only one epoch, not one per time zone.
+
+Note that the `epochSeconds` and `epochMilliseconds` properties are of type `number` (although only integers are returned) while the `epochMicroseconds` and `epochNanoseconds` are of type `bigint`.
+
+The `epochMilliseconds` property is the easiest way to construct a legacy `Date` object from a `Temporal.ZonedDateTime` instance.
+
+<!-- prettier-ignore-start -->
+```javascript
+zdt = Temporal.ZonedDateTime.from('2020-02-01T12:30+09:00[Asia/Tokyo]');
+epochSecs = zdt.epochSeconds;
+  // => 1580527800
+epochMs = zdt.epochMilliseconds;
+  // => 1580527800000
+zdt.toInstant().epochMilliseconds;
+  // => 1580527800000
+legacyDate = new Date(epochMs);
+  // => Fri Jan 31 2020 19:30:00 GMT-0800 (Pacific Standard Time)
+  // (if the system time zone is America/Los_Angeles)
+epochMicros = zdt.epochMicroseconds;
+  // => 1580527800000000
+epochNanos = sdt.epochNanoseconds;
+  // => 1580527800000000000
+```
+<!-- prettier-ignore-end -->
+
 ### zonedDateTime.**calendar** : object
 
 The `calendar` read-only property gives the calendar used to calculate date/time field values.
