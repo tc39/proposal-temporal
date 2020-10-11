@@ -225,7 +225,7 @@ Same as `getEpochSeconds()`, but with nanosecond (10<sup>&minus;9</sup> second) 
 
 The value returned from this method is suitable to be passed to `new Temporal.Instant()`.
 
-### instant.**toLocalDateTime**(_timeZone_: object | string, _calendar_?: object | string) : Temporal.LocalDateTime
+### instant.**toZonedDateTime**(_timeZone_: object | string, _calendar_?: object | string) : Temporal.ZonedDateTime
 
 **Parameters:**
 
@@ -233,7 +233,7 @@ The value returned from this method is suitable to be passed to `new Temporal.In
 - `calendar` (optional object or string): A `Temporal.Calendar` object, or a plain object, or a calendar identifier.
   The default is to use the ISO 8601 calendar.
 
-**Returns:** a `Temporal.LocalDateTime` object representing the calendar date, wall-clock time, time zone offset, and `timeZone`, according to the reckoning of `calendar`, at the exact time indicated by `instant`.
+**Returns:** a `Temporal.ZonedDateTime` object representing the calendar date, wall-clock time, time zone offset, and `timeZone`, according to the reckoning of `calendar`, at the exact time indicated by `instant`.
 
 For a list of IANA time zone names, see the current version of the [IANA time zone database](https://www.iana.org/time-zones).
 A convenient list is also available [on Wikipedia](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones), although it might not reflect the latest official status.
@@ -252,7 +252,7 @@ timestamp.toDateTime('-08:00'); // => 2019-03-30T16:45-08:00[-08:00]
 // What time was the Unix epoch (timestamp 0) in Bell Labs (Murray Hill, New Jersey, USA)?
 epoch = Temporal.Instant.fromEpochSeconds(0);
 tz = Temporal.TimeZone.from('America/New_York');
-epoch.toLocalDateTime(tz); // => 1969-12-31T19:00-05:00[America/New_York]
+epoch.toZonedDateTime(tz); // => 1969-12-31T19:00-05:00[America/New_York]
 ```
 
 ### instant.**toDateTime**(_timeZone_: object | string, _calendar_?: object | string) : Temporal.DateTime

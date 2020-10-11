@@ -578,7 +578,7 @@ This method overrides `Object.prototype.valueOf()` and always throws an exceptio
 This is because it's not possible to compare `Temporal.Date` objects with the relational operators `<`, `<=`, `>`, or `>=`.
 Use `Temporal.Date.compare()` for this, or `date.equals()` for equality.
 
-### date.**toLocalDateTime**(_timeZone_: _timeZone_ : object | string, _time_?: Temporal.Time, _options_?: object) : Temporal.LocalDateTime
+### date.**toZonedDateTime**(_timeZone_: _timeZone_ : object | string, _time_?: Temporal.Time, _options_?: object) : Temporal.ZonedDateTime
 
 **Parameters:**
 
@@ -590,9 +590,9 @@ Use `Temporal.Date.compare()` for this, or `date.equals()` for equality.
     Allowed values are `'compatible'`, `'earlier'`, `'later'`, and `'reject'`.
     The default is `'compatible'`.
 
-**Returns:** a `Temporal.LocalDateTime` object that represents the wall-clock time `time` on the calendar date `date` projected into `timeZone`.
+**Returns:** a `Temporal.ZonedDateTime` object that represents the wall-clock time `time` on the calendar date `date` projected into `timeZone`.
 
-This method can be used to convert `Temporal.Date` into a `Temporal.LocalDateTime`, by supplying the time zone and time of day.
+This method can be used to convert `Temporal.Date` into a `Temporal.ZonedDateTime`, by supplying the time zone and time of day.
 The default `time`, if it's not provided, is the first valid local time in `timeZone` on the calendar date `date`.
 Usually this is midnight (`00:00`), but may be a different time in rare circumstances like DST starting at midnight or calendars like `ethiopic` where each day doesn't start at midnight.
 
@@ -600,7 +600,7 @@ For a list of IANA time zone names, see the current version of the [IANA time zo
 A convenient list is also available [on Wikipedia](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones), although it might not reflect the latest official status.
 
 In addition to the `timeZone`, the converted object carries a copy of all the relevant fields of `date` and `time`.
-If `time` is given, this method is exactly equivalent to [`time.toLocalDateTime(date)`](./time.html#toLocalDateTime).
+If `time` is given, this method is exactly equivalent to [`time.toZonedDateTime(date)`](./time.html#toZonedDateTime).
 
 In the case of ambiguity caused by DST or other time zone changes, the `disambiguation` option controls how to resolve the ambiguity:
 
@@ -613,19 +613,19 @@ When interoperating with existing code or services, `'compatible'` mode matches 
 This mode also matches the behavior of cross-platform standards like [RFC 5545 (iCalendar)](https://tools.ietf.org/html/rfc5545).
 
 During "skipped" clock time like the hour after DST starts in the Spring, this method interprets invalid times using the pre-transition time zone offset if `'compatible'` or `'later'` is used or the post-transition time zone offset if `'earlier'` is used.
-This behavior avoids exceptions when converting non-existent date/time values to `Temporal.LocalDateTime`, but it also means that values during these periods will result in a different `Temporal.Date` value in "round-trip" conversions to `Temporal.LocalDateTime` and back again.
+This behavior avoids exceptions when converting non-existent date/time values to `Temporal.ZonedDateTime`, but it also means that values during these periods will result in a different `Temporal.Date` value in "round-trip" conversions to `Temporal.ZonedDateTime` and back again.
 
 For usage examples and a more complete explanation of how this disambiguation works and why it is necessary, see [Resolving ambiguity](./ambiguity.md).
 
-If the result is earlier or later than the range that `Temporal.LocalDateTime` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then a `RangeError` will be thrown, no matter the value of `disambiguation`.
+If the result is earlier or later than the range that `Temporal.ZonedDateTime` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then a `RangeError` will be thrown, no matter the value of `disambiguation`.
 
 Usage example:
 
 ```javascript
 date = Temporal.Date.from('2006-08-24');
 time = Temporal.Time.from('15:23:30.003');
-date.toLocalDateTime('America/Los_Angeles', time); // => 2006-08-24T15:23:30.003-07:00[America/Los_Angeles]
-date.toLocalDateTime('America/Los_Angeles'); // => 2006-08-24T00:00-07:00[America/Los_Angeles]
+date.toZonedDateTime('America/Los_Angeles', time); // => 2006-08-24T15:23:30.003-07:00[America/Los_Angeles]
+date.toZonedDateTime('America/Los_Angeles'); // => 2006-08-24T00:00-07:00[America/Los_Angeles]
 ```
 
 ### date.**toDateTime**(_time_?: Temporal.Time) : Temporal.DateTime

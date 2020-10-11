@@ -182,7 +182,7 @@ tz = Temporal.TimeZone.from('-08:00');
 tz.getOffsetStringFor(timestamp); // => -08:00
 ```
 
-### timeZone.**getLocalDateTimeFor**(_instant_: Temporal.Instant, _calendar_?: object | string) : Temporal.LocalDateTime
+### timeZone.**getZonedDateTimeFor**(_instant_: Temporal.Instant, _calendar_?: object | string) : Temporal.ZonedDateTime
 
 **Parameters:**
 
@@ -190,9 +190,9 @@ tz.getOffsetStringFor(timestamp); // => -08:00
 - `calendar` (optional object or string): A `Temporal.Calendar` object, or a plain object, or a calendar identifier.
   The default is to use the ISO 8601 calendar.
 
-**Returns:** A `Temporal.LocalDateTime` object indicating the calendar date and wall-clock time in `timeZone`, according to the reckoning of `calendar`, at the exact time indicated by `instant`.
+**Returns:** A `Temporal.ZonedDateTime` object indicating the calendar date and wall-clock time in `timeZone`, according to the reckoning of `calendar`, at the exact time indicated by `instant`.
 
-This method is one way to convert a `Temporal.Instant` to a `Temporal.LocalDateTime`.
+This method is one way to convert a `Temporal.Instant` to a `Temporal.ZonedDateTime`.
 
 Example usage:
 
@@ -200,12 +200,12 @@ Example usage:
 // Converting a specific exact time to a calendar date / wall-clock time
 timestamp = Temporal.Instant.fromEpochSeconds(1553993100);
 tz = Temporal.TimeZone.from('Europe/Berlin');
-tz.getLocalDateTimeFor(timestamp); // => 2019-03-31T01:45+02:00[Europe/Berlin]
+tz.getZonedDateTimeFor(timestamp); // => 2019-03-31T01:45+02:00[Europe/Berlin]
 
 // What time was the Unix Epoch (timestamp 0) in Bell Labs (Murray Hill, New Jersey, USA)?
 epoch = Temporal.Instant.fromEpochSeconds(0);
 tz = Temporal.TimeZone.from('America/New_York');
-tz.getLocalDateTimeFor(epoch); // => 1969-12-31T19:00-05:00[America/New_York]
+tz.getZonedDateTimeFor(epoch); // => 1969-12-31T19:00-05:00[America/New_York]
 ```
 
 ### timeZone.**getDateTimeFor**(_instant_: Temporal.Instant, _calendar_?: object | string) : Temporal.DateTime
