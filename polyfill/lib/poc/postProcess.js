@@ -56,8 +56,8 @@ function processTests(file) {
     .map((line) => {
       if (line.includes('import { Temporal }')) return "import * as Temporal from 'proposal-temporal';";
       if (line.includes(': itOriginal')) return line.replace(': itOriginal', '');
-      if (line.includes('const { Instant, DateTime')) {
-        return line.replace('const { Instant, DateTime', 'const { Instant, DateTime, LocalDateTime');
+      if (line.includes('const { DateTime')) {
+        return line.replace('const { DateTime', 'const { DateTime, LocalDateTime');
       }
       return line;
     });

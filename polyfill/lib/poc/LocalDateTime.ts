@@ -750,45 +750,107 @@ export class LocalDateTime {
     const roundingIncrement = options && options.roundingIncrement;
     const roundingMode = getOption(options, 'roundingMode', ROUNDING_MODES, 'nearest');
     const dateUnits = ['years', 'months', 'weeks', 'days'] as DifferenceUnit[];
-    const wantDate = dateUnits.includes(largestUnit);
+    const wantDateUnits = dateUnits.includes(largestUnit);
+    const wantDateUnitsOnly = dateUnits.includes(smallestUnit);
 
-    if (wantDate && this._tz.name != other._tz.name) {
+    if (wantDateUnits && this._tz.name != other._tz.name) {
       throw new RangeError(
-        "When calculating difference between time zones, largestUnit` must be `'hours'` " +
+        "When calculating difference between time zones, `largestUnit` must be `'hours'` " +
           'or smaller because day lengths can vary between time zones due to DST or time zone offset changes.'
       );
     }
 
-    if (!wantDate) {
+    type InstantSmallestUnit = 'hours' | 'minutes' | 'seconds' | 'milliseconds' | 'microseconds' | 'nanoseconds';
+
+    if (!wantDateUnits) {
       // The user is only asking for a time difference, so just use Instant.prototype.difference
       const revisedOptions = {
-        largestUnit: largestUnit as 'hours' | 'minutes' | 'seconds' | 'milliseconds' | 'microseconds' | 'nanoseconds',
-        smallestUnit: smallestUnit as 'hours' | 'minutes' | 'seconds' | 'milliseconds' | 'microseconds' | 'nanoseconds',
+        largestUnit: largestUnit as InstantSmallestUnit,
+        smallestUnit: smallestUnit as InstantSmallestUnit,
         roundingIncrement,
         roundingMode
       };
       return this._abs.difference(other._abs, revisedOptions);
     }
 
-    const dtDiff = this._dt.difference(other._dt, { largestUnit, smallestUnit, roundingIncrement, roundingMode });
+    // If the user is only asking for days or larger units, then per RFC 5545 we
+    // can just diff the dates using DateTime math only.
+    // TODO: this assumption needs to be vetted. In particular:
+    // * What about rounding to nearest if there's a DST transition?  Should the
+    //   extra or missing hour be a tiebreaker?
+    // * If the full-day difference ends on a skipped DST hour, then the actual
+    //   local time will be one hour later. Will lack of rounding up in that
+    //   case cause any problems?
+    if (wantDateUnitsOnly) {
+      return this._dt.difference(other._dt, { largestUnit, smallestUnit, roundingIncrement, roundingMode });
+    }
 
-    // If there's no change in timezone offset between this and other, then we
-    // don't have to do any DST-related fixups. Just return the simple DateTime
-    // difference.
-    const diffOffset = this.timeZoneOffsetNanoseconds - other.timeZoneOffsetNanoseconds;
-    if (diffOffset === 0) return dtDiff;
+    // Also, if there's no change in timezone offset between `this` and `other`,
+    // then we don't have to do any DST-related fixups. Just return the simple
+    // DateTime difference.
+    // const diffOffset = this.timeZoneOffsetNanoseconds - other.timeZoneOffsetNanoseconds;
+    // if (diffOffset === 0) return dtDiff;
 
-    // It's the hard case: the timezone offset is different so there's a
-    // transition in the middle and we may need to adjust the result for DST.
+    // const { dateDuration, timeDuration } = splitDuration(dtDiff);
+
+    // If we get here, it's the hard case:
+    // 1) The timezone offset is different between`this` and `other, so there's
+    //    a DST transition in the middle.
+    // 2) The user caller both date units and time units in the result
+
+    // A goal of difference() is to be reversible. The following comparisons should all
+    // evaluate to `true`:
+    // ```js
+    // Temporal.LocalDateTime.compare(ldt, other.plus(ldt.difference(other))) === 0;
+    // Temporal.LocalDateTime.compare(ldt, other.minus(other.difference(ldt))) === 0;
+    // Temporal.LocalDateTime.compare(other, ldt.minus(ldt.difference(other))) === 0;
+    // Temporal.LocalDateTime.compare(other, ldt.plus(other.difference(ldt))) === 0;
+    // ```
+    // first, normalize the inputs so that there's a deterministic order
+    const [earlier, later] = [this, other].sort(LocalDateTime.compare);
+    const [earlierDt, laterDt] = [earlier.toDateTime(), later.toDateTime()];
+    const mustNegateResult = later !== this;
+    const dateDuration = laterDt.difference(earlierDt, { largestUnit, smallestUnit: 'days', roundingMode: 'trunc' });
+    const diffDays = laterDt.difference(earlierDt, {
+      largestUnit: 'days',
+      smallestUnit: 'days',
+      roundingMode: 'trunc'
+    }).days;
+
+    // It's possible that DST disambiguation may cause the addded days to be later
+    // than the earlier time. If this happens, back off one day and try again.
+    let intermediate = earlier.plus({ days: diffDays });
+    if (LocalDateTime.compare(intermediate, later) > 0) {
+      intermediate = earlier.plus({ days: diffDays - 1 });
+    }
+    const timeDuration = later.toInstant().difference(intermediate.toInstant(), {
+      largestUnit: 'hours',
+      smallestUnit: smallestUnit as InstantSmallestUnit,
+      roundingIncrement,
+      roundingMode
+    });
+    if (timeDuration.sign < 0) {
+      throw new RangeError('Internal error: time duration should never be negative');
+    }
+
+    // TODO: it's possible that rounding may cause the time duration to be over 24 hours.
+    // How should we handle this case?  Leave as unbalanced 24 hours?  Add 1 day?
+    // Note that this may be OK for cases where DST happened!
+
+    const hybridDuration = mergeDuration({ dateDuration, timeDuration });
+    return mustNegateResult ? hybridDuration.negated() : hybridDuration;
+
+    /* Code below will be removed once we finalize difference()
+
+    //
     // RFC 5545 expects that date durations are measured in nominal (DateTime)
     // days, while time durations are measured in exact (Instant) time.
-    const { dateDuration, timeDuration } = splitDuration(dtDiff);
     if (isZeroDuration(timeDuration)) return dateDuration; // even number of calendar days
 
     // If we get here, there's both a time and date part of the duration AND
     // there's a time zone offset transition during the duration. RFC 5545 says
     // that we should calculate full days using DateTime math and remainder
-    // times using instant. To do this, we calculate a `dateTime` difference,
+    // times using Instant. To do this, we calculate a `DateTime` difference,
     // split it into date and time portions, and then convert the time portion
     // to an exact (Instant) duration before returning to the caller.  A
     // challenge: converting the time duration involves a conversion from
@@ -830,6 +892,8 @@ export class LocalDateTime {
 
     const hybridDuration = mergeDuration({ dateDuration, timeDuration: adjustedTimeDuration });
     return hybridDuration;
+    */
+
     // TODO: more tests for cases where intermediate value lands on a discontinuity
   }
 
@@ -1065,7 +1129,8 @@ function mergeDuration({
   });
 }
 
-/** Returns true if every unit is zero, false otherwise. */
+/*
+// Returns true if every unit is zero, false otherwise.
 function isZeroDuration(duration: Temporal.Duration) {
   const { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
   return (
@@ -1081,7 +1146,7 @@ function isZeroDuration(duration: Temporal.Duration) {
     !nanoseconds
   );
 }
-
+*/
 type DifferenceUnit = NonNullable<NonNullable<Parameters<LocalDateTime['difference']>[1]>['largestUnit']>;
 const DIFFERENCE_UNITS: DifferenceUnit[] = [
   'years',
