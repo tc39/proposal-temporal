@@ -1038,7 +1038,7 @@ export class LocalDateTime {
     throw new TypeError('use compare() or equals() to compare Temporal.LocalDateTime');
   }
   /**
-   * Returns the number of full milliseconds between `this` and 00:00 UTC on
+   * Returns the number of full seconds between `this` and 00:00 UTC on
    * 1970-01-01, otherwise known as the [UNIX
    * Epoch](https://en.wikipedia.org/wiki/Unix_time).
    *
