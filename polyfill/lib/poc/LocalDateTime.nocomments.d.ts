@@ -87,5 +87,9 @@ export declare class LocalDateTime {
   toMonthDay(): Temporal.MonthDay;
   toTime(): Temporal.Time;
   valueOf(): never;
+  get epochSeconds(): number;
+  get epochMilliseconds(): number;
+  get epochMicroseconds(): bigint;
+  get epochNanoseconds(): bigint;
 }
 export {};

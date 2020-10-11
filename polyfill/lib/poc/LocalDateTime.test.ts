@@ -1016,6 +1016,15 @@ describe('LocalDateTime', () => {
       it('`${localDateTime}` is 1976-11-18T15:23:30.123456789+00:00[UTC]', () =>
         equal(`${localDateTime}`, '1976-11-18T15:23:30.123456789+00:00[UTC]'));
     });
+
+    describe('epochXXX properties', () => {
+      const ins = Temporal.Instant.from('1976-11-18T15:23:30.123456789Z');
+      const ldt = ins.toLocalDateTime('America/Los_Angeles');
+      it('localDateTime.epochNanoseconds is 217178610123456789n', () => equal(ldt.epochMicroseconds, 217178610123456n));
+      it('localDateTime.epochMicroseconds is 217178610123456n', () => equal(ldt.epochMicroseconds, 217178610123456n));
+      it('localDateTime.epochMilliseconds is 217178610123', () => equal(ldt.epochMilliseconds, 217178610123));
+      it('localDateTime.epochSeconds is 217178610', () => equal(ldt.epochSeconds, 217178610));
+    });
   });
   describe('.with manipulation', () => {
     const dt = new Temporal.DateTime(1976, 11, 18, 15, 23, 30, 123, 456, 789);

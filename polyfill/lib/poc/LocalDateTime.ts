@@ -973,6 +973,63 @@ export class LocalDateTime {
   valueOf(): never {
     throw new TypeError('use compare() or equals() to compare Temporal.LocalDateTime');
   }
+  /**
+   * Returns the number of full milliseconds between `this` and 00:00 UTC on
+   * 1970-01-01, otherwise known as the [UNIX
+   * Epoch](https://en.wikipedia.org/wiki/Unix_time).
+   *
+   * This property has the same value as `this.toInstant().epochSeconds`. Any
+   * fractional seconds are truncated towards zero. Note that the time zone is
+   * irrelevant to this property because time because there is only one epoch,
+   * not one per time zone.
+   */
+  get epochSeconds(): number {
+    return this._abs.getEpochSeconds();
+  }
+  /**
+   * Returns the integer number of full milliseconds between `this` and 00:00
+   * UTC on 1970-01-01, otherwise known as the [UNIX
+   * Epoch](https://en.wikipedia.org/wiki/Unix_time).
+   *
+   * This property has the same value as `this.toInstant().epochMilliseconds`.
+   * Any fractional milliseconds are truncated towards zero. Note that the time
+   * zone is irrelevant to this property because time because there is only one
+   * epoch, not one per time zone.
+   *
+   * Use this property to convert a Temporal.LocalDateTime to a legacy `Date`
+   * object:
+   * ```
+   * legacyDate = new Date(ldt.epochMilliseconds);
+   * ```
+   */
+  get epochMilliseconds(): number {
+    return this._abs.getEpochMilliseconds();
+  }
+  /**
+   * Returns the `bigint` number of full microseconds (one millionth of a
+   * second) between `this` and 00:00 UTC on 1970-01-01, otherwise known as the
+   * [UNIX Epoch](https://en.wikipedia.org/wiki/Unix_time).
+   *
+   * This property has the same value as `this.toInstant().epochMicroseconds`.
+   * Any fractional microseconds are truncated towards zero. Note that the time
+   * zone is irrelevant to this property because time because there is only one
+   * epoch, not one per time zone.
+   */
+  get epochMicroseconds(): bigint {
+    return this._abs.getEpochMicroseconds();
+  }
+  /**
+   * Returns the `bigint` number of nanoseconds (one billionth of a second)
+   * between `this` and 00:00 UTC on 1970-01-01, otherwise known as the [UNIX
+   * Epoch](https://en.wikipedia.org/wiki/Unix_time).
+   *
+   * This property has the same value as `this.toInstant().epochNanoseconds`.
+   * Note that the time zone is irrelevant to this property because time because
+   * there is only one epoch, not one per time zone.
+   */
+  get epochNanoseconds(): bigint {
+    return this._abs.getEpochNanoseconds();
+  }
 }
 
 /** Split a duration into a {dateDuration, timeDuration} */

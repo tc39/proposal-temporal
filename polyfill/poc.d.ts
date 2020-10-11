@@ -22,7 +22,7 @@ export namespace Temporal {
 
   /**
    * Options for assigning fields using `Duration.prototype.with()` or entire
-   * objects with `Duration.prototype.from()`, and for arithmetic with
+   * objects with `Duration.from()`, and for arithmetic with
    * `Duration.prototype.plus()` and `Duration.prototype.minus()`.
    * */
   export type DurationOptions = {
@@ -33,12 +33,10 @@ export namespace Temporal {
      *   in-range value.
      * - In `'balance'` mode, out-of-range values are resolved by balancing them
      *   with the next highest unit.
-     * - In `'reject'` mode, out-of-range values will cause the function to
-     *   throw a RangeError.
      *
      * The default is `'constrain'`.
      */
-    overflow: 'constrain' | 'balance' | 'reject';
+    overflow: 'constrain' | 'balance';
   };
 
   /**
@@ -283,17 +281,17 @@ export namespace Temporal {
     monthsInYear?(date: Temporal.Date): number;
     isLeapYear?(date: Temporal.Date): boolean;
     dateFromFields(
-      fields: DateLike,
+      fields: { era?: string | undefined; year: number; month: number; day: number },
       options: AssignmentOptions,
       constructor: ConstructorOf<Temporal.Date>
     ): Temporal.Date;
     yearMonthFromFields(
-      fields: YearMonthLike,
+      fields: { era?: string | undefined; year: number; month: number },
       options: AssignmentOptions,
       constructor: ConstructorOf<Temporal.YearMonth>
     ): Temporal.YearMonth;
     monthDayFromFields(
-      fields: MonthDayLike,
+      fields: { month: number; day: number },
       options: AssignmentOptions,
       constructor: ConstructorOf<Temporal.MonthDay>
     ): Temporal.MonthDay;
@@ -341,17 +339,17 @@ export namespace Temporal {
     monthsInYear(date: Temporal.Date): number;
     isLeapYear(date: Temporal.Date): boolean;
     dateFromFields(
-      fields: DateLike,
+      fields: { era?: string | undefined; year: number; month: number; day: number },
       options: AssignmentOptions,
       constructor: ConstructorOf<Temporal.Date>
     ): Temporal.Date;
     yearMonthFromFields(
-      fields: YearMonthLike,
+      fields: { era?: string | undefined; year: number; month: number },
       options: AssignmentOptions,
       constructor: ConstructorOf<Temporal.YearMonth>
     ): Temporal.YearMonth;
     monthDayFromFields(
-      fields: MonthDayLike,
+      fields: { month: number; day: number },
       options: AssignmentOptions,
       constructor: ConstructorOf<Temporal.MonthDay>
     ): Temporal.MonthDay;
@@ -580,13 +578,6 @@ export namespace Temporal {
     calendar: CalendarProtocol;
   };
 
-  type MonthDayISOFields = {
-    refISOYear: number;
-    isoMonth: number;
-    isoDay: number;
-    calendar: CalendarProtocol;
-  };
-
   /**
    * A `Temporal.MonthDay` represents a particular day on the calendar, but
    * without a year. For example, it could be used to represent a yearly
@@ -596,7 +587,7 @@ export namespace Temporal {
    */
   export class MonthDay implements MonthDayFields {
     static from(item: Temporal.MonthDay | MonthDayLike | string, options?: AssignmentOptions): Temporal.MonthDay;
-    constructor(isoMonth: number, isoDay: number, calendar?: CalendarProtocol, refISOYear?: number);
+    constructor(isoMonth: number, isoDay: number, calendar?: CalendarProtocol, referenceISOYear?: number);
     readonly month: number;
     readonly day: number;
     readonly calendar: CalendarProtocol;
@@ -604,7 +595,7 @@ export namespace Temporal {
     with(monthDayLike: MonthDayLike, options?: AssignmentOptions): Temporal.MonthDay;
     toDateInYear(year: number | { era?: string | undefined; year: number }, options?: AssignmentOptions): Temporal.Date;
     getFields(): MonthDayFields;
-    getISOFields(): MonthDayISOFields;
+    getISOFields(): DateISOFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
     toString(): string;
@@ -734,13 +725,6 @@ export namespace Temporal {
     calendar: CalendarProtocol;
   };
 
-  type YearMonthISOFields = {
-    isoYear: number;
-    isoMonth: number;
-    refISODay: number;
-    calendar: CalendarProtocol;
-  };
-
   /**
    * A `Temporal.YearMonth` represents a particular month on the calendar. For
    * example, it could be used to represent a particular instance of a monthly
@@ -751,7 +735,7 @@ export namespace Temporal {
   export class YearMonth implements YearMonthFields {
     static from(item: Temporal.YearMonth | YearMonthLike | string, options?: AssignmentOptions): Temporal.YearMonth;
     static compare(one: Temporal.YearMonth, two: Temporal.YearMonth): ComparisonResult;
-    constructor(isoYear: number, isoMonth: number, calendar?: CalendarProtocol, refISODay?: number);
+    constructor(isoYear: number, isoMonth: number, calendar?: CalendarProtocol, referenceISODay?: number);
     readonly year: number;
     readonly month: number;
     readonly calendar: CalendarProtocol;
@@ -767,7 +751,7 @@ export namespace Temporal {
     difference(other: Temporal.YearMonth, options?: DifferenceOptions<'years' | 'months'>): Temporal.Duration;
     toDateOnDay(day: number): Temporal.Date;
     getFields(): YearMonthFields;
-    getISOFields(): YearMonthISOFields;
+    getISOFields(): DateISOFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
     toString(): string;
@@ -1320,6 +1304,55 @@ export namespace Temporal {
     toMonthDay(): Temporal.MonthDay;
     toTime(): Temporal.Time;
     valueOf(): never;
+    /**
+     * Returns the number of full milliseconds between `this` and 00:00 UTC on
+     * 1970-01-01, otherwise known as the [UNIX
+     * Epoch](https://en.wikipedia.org/wiki/Unix_time).
+     *
+     * This property has the same value as `this.toInstant().epochSeconds`. Any
+     * fractional seconds are truncated towards zero. Note that the time zone is
+     * irrelevant to this property because time because there is only one epoch,
+     * not one per time zone.
+     */
+    get epochSeconds(): number;
+    /**
+     * Returns the integer number of full milliseconds between `this` and 00:00
+     * UTC on 1970-01-01, otherwise known as the [UNIX
+     * Epoch](https://en.wikipedia.org/wiki/Unix_time).
+     *
+     * This property has the same value as `this.toInstant().epochMilliseconds`.
+     * Any fractional milliseconds are truncated towards zero. Note that the time
+     * zone is irrelevant to this property because time because there is only one
+     * epoch, not one per time zone.
+     *
+     * Use this property to convert a Temporal.LocalDateTime to a legacy `Date`
+     * object:
+     * ```
+     * legacyDate = new Date(ldt.epochMilliseconds);
+     * ```
+     */
+    get epochMilliseconds(): number;
+    /**
+     * Returns the `bigint` number of full microseconds (one millionth of a
+     * second) between `this` and 00:00 UTC on 1970-01-01, otherwise known as the
+     * [UNIX Epoch](https://en.wikipedia.org/wiki/Unix_time).
+     *
+     * This property has the same value as `this.toInstant().epochMicroseconds`.
+     * Any fractional microseconds are truncated towards zero. Note that the time
+     * zone is irrelevant to this property because time because there is only one
+     * epoch, not one per time zone.
+     */
+    get epochMicroseconds(): bigint;
+    /**
+     * Returns the `bigint` number of nanoseconds (one billionth of a second)
+     * between `this` and 00:00 UTC on 1970-01-01, otherwise known as the [UNIX
+     * Epoch](https://en.wikipedia.org/wiki/Unix_time).
+     *
+     * This property has the same value as `this.toInstant().epochNanoseconds`.
+     * Note that the time zone is irrelevant to this property because time because
+     * there is only one epoch, not one per time zone.
+     */
+    get epochNanoseconds(): bigint;
   }
   export {};
 }
