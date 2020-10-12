@@ -175,7 +175,7 @@
 </li>
 <li><a href="#getEpochNanoseconds">getEpochNanoseconds</a>
 </li>
-<li><a href="#toLocalDateTime">toLocalDateTime</a>
+<li><a href="#toZonedDateTime">toZonedDateTime</a>
 </li>
 <li><a href="#toDateTime">toDateTime</a>
 </li>
@@ -330,13 +330,13 @@ An example:</p>
 <h3 id="getEpochNanoseconds"><a class="heading-link" href="#getEpochNanoseconds"></a>instant.<strong>getEpochNanoseconds</strong>() : bigint</h3><p><strong>Returns:</strong> a number of nanoseconds, as a bigint.</p>
 <p>Same as <code>getEpochSeconds()</code>, but with nanosecond (10<sup>&minus;9</sup> second) precision.</p>
 <p>The value returned from this method is suitable to be passed to <code>new Temporal.Instant()</code>.</p>
-<h3 id="toLocalDateTime"><a class="heading-link" href="#toLocalDateTime"></a>instant.<strong>toLocalDateTime</strong>(<em>timeZone</em>: object | string, <em>calendar</em>?: object | string) : Temporal.LocalDateTime</h3><p><strong>Parameters:</strong></p>
+<h3 id="toZonedDateTime"><a class="heading-link" href="#toZonedDateTime"></a>instant.<strong>toZonedDateTime</strong>(<em>timeZone</em>: object | string, <em>calendar</em>?: object | string) : Temporal.ZonedDateTime</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>timeZone</code> (object or string): A <code>Temporal.TimeZone</code> object, or an object implementing the <a href="./timezone.html#protocol">time zone protocol</a>, or a string description of the time zone; either its IANA name or UTC offset.</li>
 <li><code>calendar</code> (optional object or string): A <code>Temporal.Calendar</code> object, or a plain object, or a calendar identifier.
 The default is to use the ISO 8601 calendar.</li>
 </ul>
-<p><strong>Returns:</strong> a <code>Temporal.LocalDateTime</code> object representing the calendar date, wall-clock time, time zone offset, and <code>timeZone</code>, according to the reckoning of <code>calendar</code>, at the exact time indicated by <code>instant</code>.</p>
+<p><strong>Returns:</strong> a <code>Temporal.ZonedDateTime</code> object representing the calendar date, wall-clock time, time zone offset, and <code>timeZone</code>, according to the reckoning of <code>calendar</code>, at the exact time indicated by <code>instant</code>.</p>
 <p>For a list of IANA time zone names, see the current version of the <a href="https://www.iana.org/time-zones">IANA time zone database</a>.
 A convenient list is also available <a href="https://en.wikipedia.org/wiki/List_of_tz_database_time_zones">on Wikipedia</a>, although it might not reflect the latest official status.</p>
 <p>For a list of calendar identifiers, see the documentation for <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/DateTimeFormat#Parameters">Intl.DateTimeFormat</a>.</p>
@@ -350,7 +350,7 @@ timestamp<span class="token punctuation">.</span><span class="token function">to
 <span class="token comment">// What time was the Unix epoch (timestamp 0) in Bell Labs (Murray Hill, New Jersey, USA)?</span>
 epoch <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">fromEpochSeconds</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 tz <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'America/New_York'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-epoch<span class="token punctuation">.</span><span class="token function">toLocalDateTime</span><span class="token punctuation">(</span>tz<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 1969-12-31T19:00-05:00[America/New_York]</span></code></pre><h3 id="toDateTime"><a class="heading-link" href="#toDateTime"></a>instant.<strong>toDateTime</strong>(<em>timeZone</em>: object | string, <em>calendar</em>?: object | string) : Temporal.DateTime</h3><p><strong>Parameters:</strong></p>
+epoch<span class="token punctuation">.</span><span class="token function">toZonedDateTime</span><span class="token punctuation">(</span>tz<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 1969-12-31T19:00-05:00[America/New_York]</span></code></pre><h3 id="toDateTime"><a class="heading-link" href="#toDateTime"></a>instant.<strong>toDateTime</strong>(<em>timeZone</em>: object | string, <em>calendar</em>?: object | string) : Temporal.DateTime</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>timeZone</code> (object or string): A <code>Temporal.TimeZone</code> object, or an object implementing the <a href="./timezone.html#protocol">time zone protocol</a>, or a string description of the time zone; either its IANA name or UTC offset.</li>
 <li><code>calendar</code> (optional object or string): A <code>Temporal.Calendar</code> object, or a plain object, or a calendar identifier.

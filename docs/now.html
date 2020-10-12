@@ -145,7 +145,7 @@
 <ul>
 <li><a href="#methods">Methods</a>
 <ul>
-<li><a href="#localDateTime">localDateTime</a>
+<li><a href="#zonedDateTime">zonedDateTime</a>
 </li>
 <li><a href="#instant">instant</a>
 </li>
@@ -164,14 +164,14 @@
 
 <p>The <code>Temporal.now</code> object has several methods which give information about the current time and date.</p>
 <h2 id="methods">Methods</h2>
-<h3 id="localDateTime"><a class="heading-link" href="#localDateTime"></a>Temporal.now.<strong>localDateTime</strong>(<em>timeZone</em>: object | string = Temporal.now.timeZone(), <em>calendar</em>: object | string = &#39;iso8601&#39;) : Temporal.DateTime</h3><p><strong>Parameters:</strong></p>
+<h3 id="zonedDateTime"><a class="heading-link" href="#zonedDateTime"></a>Temporal.now.<strong>zonedDateTime</strong>(<em>timeZone</em>: object | string = Temporal.now.timeZone(), <em>calendar</em>: object | string = &#39;iso8601&#39;) : Temporal.DateTime</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>timeZone</code> (optional object or string): The time zone to get the current date and time in, as a <code>Temporal.TimeZone</code> object, an object implementing the <a href="./timezone.html#protocol">time zone protocol</a>, or a string.
 If not given, the current system time zone will be used.</li>
 <li><code>calendar</code> (optional <code>Temporal.Calendar</code>, plain object, or string): The calendar system to get the current date and time in.
 If not given, the ISO 8601 calendar will be used.</li>
 </ul>
-<p><strong>Returns:</strong> a <code>Temporal.LocalDateTime</code> object representing the current system date, time, time zone, and time zone offset.</p>
+<p><strong>Returns:</strong> a <code>Temporal.ZonedDateTime</code> object representing the current system date, time, time zone, and time zone offset.</p>
 <p>This method gets the current date, time, time zone, and time zone offset according to the system settings.
 Optionally a time zone can be given in which the time is computed, and a calendar system in which the date is reckoned.
 Subsequent calculations using this object (e.g. adding days or changing the time) will retain the same time zone and calendar.</p>
@@ -181,9 +181,9 @@ Subsequent calculations using this object (e.g. adding days or changing the time
   London<span class="token operator">:</span> <span class="token string">'Europe/London'</span><span class="token punctuation">,</span>
   Tokyo<span class="token operator">:</span> <span class="token string">'Asia/Tokyo'</span>
 <span class="token punctuation">}</span><span class="token punctuation">;</span>
-console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">Here: </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">localDateTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">Here: </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">zonedDateTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 Object<span class="token punctuation">.</span><span class="token function">entries</span><span class="token punctuation">(</span>financialCentres<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">[</span>name<span class="token punctuation">,</span> timeZone<span class="token punctuation">]</span></span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
-  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>name<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">: </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">localDateTime</span><span class="token punctuation">(</span>timeZone<span class="token punctuation">)</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>name<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">: </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">zonedDateTime</span><span class="token punctuation">(</span>timeZone<span class="token punctuation">)</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token comment">// example output:</span>
 <span class="token comment">// Here: 2020-09-18T01:17:48.431957915-07:00[America/Los_Angeles]</span>

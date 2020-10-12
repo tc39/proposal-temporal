@@ -177,7 +177,7 @@
 </li>
 <li><a href="#getOffsetStringFor">getOffsetStringFor</a>
 </li>
-<li><a href="#getLocalDateTimeFor">getLocalDateTimeFor</a>
+<li><a href="#getZonedDateTimeFor">getZonedDateTimeFor</a>
 </li>
 <li><a href="#getDateTimeFor">getDateTimeFor</a>
 </li>
@@ -313,24 +313,24 @@ tz<span class="token punctuation">.</span><span class="token function">getOffset
 
 <span class="token comment">// TimeZone with a fixed UTC offset</span>
 tz <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'-08:00'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-tz<span class="token punctuation">.</span><span class="token function">getOffsetStringFor</span><span class="token punctuation">(</span>timestamp<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => -08:00</span></code></pre><h3 id="getLocalDateTimeFor"><a class="heading-link" href="#getLocalDateTimeFor"></a>timeZone.<strong>getLocalDateTimeFor</strong>(<em>instant</em>: Temporal.Instant, <em>calendar</em>?: object | string) : Temporal.LocalDateTime</h3><p><strong>Parameters:</strong></p>
+tz<span class="token punctuation">.</span><span class="token function">getOffsetStringFor</span><span class="token punctuation">(</span>timestamp<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => -08:00</span></code></pre><h3 id="getZonedDateTimeFor"><a class="heading-link" href="#getZonedDateTimeFor"></a>timeZone.<strong>getZonedDateTimeFor</strong>(<em>instant</em>: Temporal.Instant, <em>calendar</em>?: object | string) : Temporal.ZonedDateTime</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>instant</code> (<code>Temporal.Instant</code>): An exact time to convert.</li>
 <li><code>calendar</code> (optional object or string): A <code>Temporal.Calendar</code> object, or a plain object, or a calendar identifier.
 The default is to use the ISO 8601 calendar.</li>
 </ul>
-<p><strong>Returns:</strong> A <code>Temporal.LocalDateTime</code> object indicating the calendar date and wall-clock time in <code>timeZone</code>, according to the reckoning of <code>calendar</code>, at the exact time indicated by <code>instant</code>.</p>
-<p>This method is one way to convert a <code>Temporal.Instant</code> to a <code>Temporal.LocalDateTime</code>.</p>
+<p><strong>Returns:</strong> A <code>Temporal.ZonedDateTime</code> object indicating the calendar date and wall-clock time in <code>timeZone</code>, according to the reckoning of <code>calendar</code>, at the exact time indicated by <code>instant</code>.</p>
+<p>This method is one way to convert a <code>Temporal.Instant</code> to a <code>Temporal.ZonedDateTime</code>.</p>
 <p>Example usage:</p>
 <pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Converting a specific exact time to a calendar date / wall-clock time</span>
 timestamp <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">fromEpochSeconds</span><span class="token punctuation">(</span><span class="token number">1553993100</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 tz <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'Europe/Berlin'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-tz<span class="token punctuation">.</span><span class="token function">getLocalDateTimeFor</span><span class="token punctuation">(</span>timestamp<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2019-03-31T01:45+02:00[Europe/Berlin]</span>
+tz<span class="token punctuation">.</span><span class="token function">getZonedDateTimeFor</span><span class="token punctuation">(</span>timestamp<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2019-03-31T01:45+02:00[Europe/Berlin]</span>
 
 <span class="token comment">// What time was the Unix Epoch (timestamp 0) in Bell Labs (Murray Hill, New Jersey, USA)?</span>
 epoch <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">fromEpochSeconds</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 tz <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'America/New_York'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-tz<span class="token punctuation">.</span><span class="token function">getLocalDateTimeFor</span><span class="token punctuation">(</span>epoch<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 1969-12-31T19:00-05:00[America/New_York]</span></code></pre><h3 id="getDateTimeFor"><a class="heading-link" href="#getDateTimeFor"></a>timeZone.<strong>getDateTimeFor</strong>(<em>instant</em>: Temporal.Instant, <em>calendar</em>?: object | string) : Temporal.DateTime</h3><p><strong>Parameters:</strong></p>
+tz<span class="token punctuation">.</span><span class="token function">getZonedDateTimeFor</span><span class="token punctuation">(</span>epoch<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 1969-12-31T19:00-05:00[America/New_York]</span></code></pre><h3 id="getDateTimeFor"><a class="heading-link" href="#getDateTimeFor"></a>timeZone.<strong>getDateTimeFor</strong>(<em>instant</em>: Temporal.Instant, <em>calendar</em>?: object | string) : Temporal.DateTime</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>instant</code> (<code>Temporal.Instant</code>): An instant time to convert.</li>
 <li><code>calendar</code> (optional object or string): A <code>Temporal.Calendar</code> object, or a plain object, or a calendar identifier.

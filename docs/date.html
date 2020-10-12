@@ -209,7 +209,7 @@
 </li>
 <li><a href="#valueOf">valueOf</a>
 </li>
-<li><a href="#toLocalDateTime">toLocalDateTime</a>
+<li><a href="#toZonedDateTime">toZonedDateTime</a>
 </li>
 <li><a href="#toDateTime">toDateTime</a>
 </li>
@@ -596,7 +596,7 @@ console<span class="token punctuation">.</span><span class="token function">log<
 <span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span>str<span class="token punctuation">,</span> reviver<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre><h3 id="valueOf"><a class="heading-link" href="#valueOf"></a>date.<strong>valueOf</strong>()</h3><p>This method overrides <code>Object.prototype.valueOf()</code> and always throws an exception.
 This is because it&#39;s not possible to compare <code>Temporal.Date</code> objects with the relational operators <code>&lt;</code>, <code>&lt;=</code>, <code>&gt;</code>, or <code>&gt;=</code>.
 Use <code>Temporal.Date.compare()</code> for this, or <code>date.equals()</code> for equality.</p>
-<h3 id="toLocalDateTime"><a class="heading-link" href="#toLocalDateTime"></a>date.<strong>toLocalDateTime</strong>(<em>timeZone</em>: <em>timeZone</em> : object | string, <em>time</em>?: Temporal.Time, <em>options</em>?: object) : Temporal.LocalDateTime</h3><p><strong>Parameters:</strong></p>
+<h3 id="toZonedDateTime"><a class="heading-link" href="#toZonedDateTime"></a>date.<strong>toZonedDateTime</strong>(<em>timeZone</em>: <em>timeZone</em> : object | string, <em>time</em>?: Temporal.Time, <em>options</em>?: object) : Temporal.ZonedDateTime</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>timeZone</code> (optional string or object): The time zone in which to interpret <code>date</code> and <code>time</code>, as a <code>Temporal.TimeZone</code> object, an object implementing the <a href="./timezone.html#protocol">time zone protocol</a>, or a string.</li>
 <li><code>time</code> (optional <code>Temporal.Time</code>): A time of day on <code>date</code>.</li>
@@ -608,14 +608,14 @@ The default is <code>&#39;compatible&#39;</code>.</li>
 </ul>
 </li>
 </ul>
-<p><strong>Returns:</strong> a <code>Temporal.LocalDateTime</code> object that represents the wall-clock time <code>time</code> on the calendar date <code>date</code> projected into <code>timeZone</code>.</p>
-<p>This method can be used to convert <code>Temporal.Date</code> into a <code>Temporal.LocalDateTime</code>, by supplying the time zone and time of day.
+<p><strong>Returns:</strong> a <code>Temporal.ZonedDateTime</code> object that represents the wall-clock time <code>time</code> on the calendar date <code>date</code> projected into <code>timeZone</code>.</p>
+<p>This method can be used to convert <code>Temporal.Date</code> into a <code>Temporal.ZonedDateTime</code>, by supplying the time zone and time of day.
 The default <code>time</code>, if it&#39;s not provided, is the first valid local time in <code>timeZone</code> on the calendar date <code>date</code>.
 Usually this is midnight (<code>00:00</code>), but may be a different time in rare circumstances like DST starting at midnight or calendars like <code>ethiopic</code> where each day doesn&#39;t start at midnight.</p>
 <p>For a list of IANA time zone names, see the current version of the <a href="https://www.iana.org/time-zones">IANA time zone database</a>.
 A convenient list is also available <a href="https://en.wikipedia.org/wiki/List_of_tz_database_time_zones">on Wikipedia</a>, although it might not reflect the latest official status.</p>
 <p>In addition to the <code>timeZone</code>, the converted object carries a copy of all the relevant fields of <code>date</code> and <code>time</code>.
-If <code>time</code> is given, this method is exactly equivalent to <a href="./time.html#toLocalDateTime"><code>time.toLocalDateTime(date)</code></a>.</p>
+If <code>time</code> is given, this method is exactly equivalent to <a href="./time.html#toZonedDateTime"><code>time.toZonedDateTime(date)</code></a>.</p>
 <p>In the case of ambiguity caused by DST or other time zone changes, the <code>disambiguation</code> option controls how to resolve the ambiguity:</p>
 <ul>
 <li><code>&#39;compatible&#39;</code> (the default): Acts like <code>&#39;earlier&#39;</code> for backward transitions and <code>&#39;later&#39;</code> for forward transitions.</li>
@@ -626,14 +626,14 @@ If <code>time</code> is given, this method is exactly equivalent to <a href="./t
 <p>When interoperating with existing code or services, <code>&#39;compatible&#39;</code> mode matches the behavior of legacy <code>Date</code> as well as libraries like moment.js, Luxon, and date-fns.
 This mode also matches the behavior of cross-platform standards like <a href="https://tools.ietf.org/html/rfc5545">RFC 5545 (iCalendar)</a>.</p>
 <p>During &quot;skipped&quot; clock time like the hour after DST starts in the Spring, this method interprets invalid times using the pre-transition time zone offset if <code>&#39;compatible&#39;</code> or <code>&#39;later&#39;</code> is used or the post-transition time zone offset if <code>&#39;earlier&#39;</code> is used.
-This behavior avoids exceptions when converting non-existent date/time values to <code>Temporal.LocalDateTime</code>, but it also means that values during these periods will result in a different <code>Temporal.Date</code> value in &quot;round-trip&quot; conversions to <code>Temporal.LocalDateTime</code> and back again.</p>
+This behavior avoids exceptions when converting non-existent date/time values to <code>Temporal.ZonedDateTime</code>, but it also means that values during these periods will result in a different <code>Temporal.Date</code> value in &quot;round-trip&quot; conversions to <code>Temporal.ZonedDateTime</code> and back again.</p>
 <p>For usage examples and a more complete explanation of how this disambiguation works and why it is necessary, see <a href="./ambiguity.html">Resolving ambiguity</a>.</p>
-<p>If the result is earlier or later than the range that <code>Temporal.LocalDateTime</code> can represent (approximately half a million years centered on the <a href="https://en.wikipedia.org/wiki/Unix_time">Unix epoch</a>), then a <code>RangeError</code> will be thrown, no matter the value of <code>disambiguation</code>.</p>
+<p>If the result is earlier or later than the range that <code>Temporal.ZonedDateTime</code> can represent (approximately half a million years centered on the <a href="https://en.wikipedia.org/wiki/Unix_time">Unix epoch</a>), then a <code>RangeError</code> will be thrown, no matter the value of <code>disambiguation</code>.</p>
 <p>Usage example:</p>
 <pre class="language-javascript"><code class="language-javascript">date <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2006-08-24'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'15:23:30.003'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-date<span class="token punctuation">.</span><span class="token function">toLocalDateTime</span><span class="token punctuation">(</span><span class="token string">'America/Los_Angeles'</span><span class="token punctuation">,</span> time<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2006-08-24T15:23:30.003-07:00[America/Los_Angeles]</span>
-date<span class="token punctuation">.</span><span class="token function">toLocalDateTime</span><span class="token punctuation">(</span><span class="token string">'America/Los_Angeles'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2006-08-24T00:00-07:00[America/Los_Angeles]</span></code></pre><h3 id="toDateTime"><a class="heading-link" href="#toDateTime"></a>date.<strong>toDateTime</strong>(<em>time</em>?: Temporal.Time) : Temporal.DateTime</h3><p><strong>Parameters:</strong></p>
+date<span class="token punctuation">.</span><span class="token function">toZonedDateTime</span><span class="token punctuation">(</span><span class="token string">'America/Los_Angeles'</span><span class="token punctuation">,</span> time<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2006-08-24T15:23:30.003-07:00[America/Los_Angeles]</span>
+date<span class="token punctuation">.</span><span class="token function">toZonedDateTime</span><span class="token punctuation">(</span><span class="token string">'America/Los_Angeles'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2006-08-24T00:00-07:00[America/Los_Angeles]</span></code></pre><h3 id="toDateTime"><a class="heading-link" href="#toDateTime"></a>date.<strong>toDateTime</strong>(<em>time</em>?: Temporal.Time) : Temporal.DateTime</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>time</code> (optional <code>Temporal.Time</code>): A time of day on <code>date</code>.</li>
 </ul>

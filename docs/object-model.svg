@@ -89,7 +89,7 @@
       d="M 30103 86120 C 30103 84458 31449 83112 33111 83112 L 216430 83112 C 217228 83112 217993 83428 218557 83993 219122 84557 219439 85322 219439 86120 L 219439 98152 C 219439 99813 218092 101160 216430 101160 L 33111 101160 C 31449 101160 30103 99813 30103 98151 Z"
     />
     <g transform="matrix(381,0,0,381,34641,87564)">
-      <text style="fill: #000" x="179" y="19.2">LocalDateTime</text>
+      <text style="fill: #000" x="179" y="19.2">ZonedDateTime</text>
     </g>
     <g transform="matrix(381,0,0,381,165750,175782)">
       <text style="fill: #737373" x="17" y="17.28">These types have a calendar &amp; know wall-clock time</text>
