@@ -727,7 +727,7 @@ describe('Instant', () => {
       throws(() => abs.round({ roundingIncrement: 1, roundingMode: 'ceil' }), RangeError);
     });
     it('throws on disallowed or invalid smallestUnit', () => {
-      ['era', 'year', 'month', 'week', 'day', 'hour', 'years', 'months', 'weeks', 'days', 'hours', 'nonsense'].forEach(
+      ['era', 'year', 'month', 'week', 'day', 'years', 'months', 'weeks', 'days', 'nonsense'].forEach(
         (smallestUnit) => {
           throws(() => abs.round({ smallestUnit }), RangeError);
         }
@@ -737,6 +737,7 @@ describe('Instant', () => {
       throws(() => abs.round({ smallestUnit: 'second', roundingMode: 'cile' }), RangeError);
     });
     const incrementOneNearest = [
+      ['hour', '1976-11-18T14:00Z'],
       ['minute', '1976-11-18T14:24Z'],
       ['second', '1976-11-18T14:23:30Z'],
       ['millisecond', '1976-11-18T14:23:30.123Z'],
@@ -748,6 +749,7 @@ describe('Instant', () => {
         equal(`${abs.round({ smallestUnit, roundingMode: 'nearest' })}`, expected));
     });
     const incrementOneCeil = [
+      ['hour', '1976-11-18T15:00Z'],
       ['minute', '1976-11-18T14:24Z'],
       ['second', '1976-11-18T14:23:31Z'],
       ['millisecond', '1976-11-18T14:23:30.124Z'],
@@ -758,6 +760,7 @@ describe('Instant', () => {
       it(`rounds up to ${smallestUnit}`, () => equal(`${abs.round({ smallestUnit, roundingMode: 'ceil' })}`, expected));
     });
     const incrementOneFloor = [
+      ['hour', '1976-11-18T14:00Z'],
       ['minute', '1976-11-18T14:23Z'],
       ['second', '1976-11-18T14:23:30Z'],
       ['millisecond', '1976-11-18T14:23:30.123Z'],
@@ -782,6 +785,9 @@ describe('Instant', () => {
       equal(`${abs2.round({ smallestUnit, roundingMode: 'trunc' })}`, '1969-12-15T12:00Z');
       equal(`${abs2.round({ smallestUnit, roundingMode: 'nearest' })}`, '1969-12-15T12:00:01Z');
     });
+    it('rounds to an increment of hours', () => {
+      equal(`${abs.round({ smallestUnit: 'hour', roundingIncrement: 4 })}`, '1976-11-18T16:00Z');
+    });
     it('rounds to an increment of minutes', () => {
       equal(`${abs.round({ smallestUnit: 'minute', roundingIncrement: 15 })}`, '1976-11-18T14:30Z');
     });
@@ -799,6 +805,7 @@ describe('Instant', () => {
     });
     it('rounds to days by specifying increment of 86400 seconds in various units', () => {
       const expected = '1976-11-19T00:00Z';
+      equal(`${abs.round({ smallestUnit: 'hour', roundingIncrement: 24 })}`, expected);
       equal(`${abs.round({ smallestUnit: 'minute', roundingIncrement: 1440 })}`, expected);
       equal(`${abs.round({ smallestUnit: 'second', roundingIncrement: 86400 })}`, expected);
       equal(`${abs.round({ smallestUnit: 'millisecond', roundingIncrement: 86400e3 })}`, expected);
@@ -809,6 +816,7 @@ describe('Instant', () => {
       assert(abs.round({ smallestUnit: 'second', roundingIncrement: 864 }) instanceof Instant);
     });
     it('throws on increments that do not divide evenly into solar days', () => {
+      throws(() => abs.round({ smallestUnit: 'hour', roundingIncrement: 7 }), RangeError);
       throws(() => abs.round({ smallestUnit: 'minute', roundingIncrement: 29 }), RangeError);
       throws(() => abs.round({ smallestUnit: 'second', roundingIncrement: 29 }), RangeError);
       throws(() => abs.round({ smallestUnit: 'millisecond', roundingIncrement: 29 }), RangeError);
@@ -816,6 +824,7 @@ describe('Instant', () => {
       throws(() => abs.round({ smallestUnit: 'nanosecond', roundingIncrement: 29 }), RangeError);
     });
     it('accepts plural units', () => {
+      assert(abs.round({ smallestUnit: 'hours' }).equals(abs.round({ smallestUnit: 'hour' })));
       assert(abs.round({ smallestUnit: 'minutes' }).equals(abs.round({ smallestUnit: 'minute' })));
       assert(abs.round({ smallestUnit: 'seconds' }).equals(abs.round({ smallestUnit: 'second' })));
       assert(abs.round({ smallestUnit: 'milliseconds' }).equals(abs.round({ smallestUnit: 'millisecond' })));
