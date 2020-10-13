@@ -431,10 +431,7 @@ export class DateTime {
       GetSlot(other, ISO_DAY),
       calendar
     );
-    let dateLargestUnit = 'days';
-    if (largestUnit === 'years' || largestUnit === 'months' || largestUnit === 'weeks') {
-      dateLargestUnit = largestUnit;
-    }
+    const dateLargestUnit = ES.LargerOfTwoTemporalDurationUnits('days', largestUnit);
     const dateOptions = ObjectAssign({}, options, { largestUnit: dateLargestUnit });
     const dateDifference = calendar.dateDifference(otherDate, adjustedDate, dateOptions);
 
