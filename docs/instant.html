@@ -411,8 +411,8 @@ Temporal<span class="token punctuation">.</span>now<span class="token punctuatio
 <li><code>options</code> (optional object): An object with properties representing options for the operation.
 The following options are recognized:<ul>
 <li><code>largestUnit</code> (string): The largest unit of time to allow in the resulting <code>Temporal.Duration</code> object.
-Valid values are <code>&#39;hours&#39;</code>, <code>&#39;minutes&#39;</code>, <code>&#39;seconds&#39;</code>, <code>&#39;milliseconds&#39;</code>, <code>&#39;microseconds&#39;</code>, and <code>&#39;nanoseconds&#39;</code>.
-The default is <code>&quot;seconds&quot;</code>.</li>
+Valid values are <code>&#39;auto&#39;</code>, <code>&#39;hours&#39;</code>, <code>&#39;minutes&#39;</code>, <code>&#39;seconds&#39;</code>, <code>&#39;milliseconds&#39;</code>, <code>&#39;microseconds&#39;</code>, and <code>&#39;nanoseconds&#39;</code>.
+The default is <code>&#39;auto&#39;</code>.</li>
 <li><code>smallestUnit</code> (string): The smallest unit of time to round to in the resulting <code>Temporal.Duration</code> object.
 Valid values are the same as for <code>largestUnit</code>.
 The default is <code>&#39;nanoseconds&#39;</code>, i.e., no rounding.</li>
@@ -430,7 +430,8 @@ If <code>other</code> is later than <code>instant</code> then the resulting dura
 <p>The <code>largestUnit</code> option controls how the resulting duration is expressed.
 The returned <code>Temporal.Duration</code> object will not have any nonzero fields that are larger than the unit in <code>largestUnit</code>.
 A difference of two hours will become 7200 seconds when <code>largestUnit</code> is <code>&quot;seconds&quot;</code>, for example.
-However, a difference of 30 seconds will still be 30 seconds even if <code>largestUnit</code> is <code>&quot;hours&quot;</code>.</p>
+However, a difference of 30 seconds will still be 30 seconds even if <code>largestUnit</code> is <code>&quot;hours&quot;</code>.
+A value of <code>&#39;auto&#39;</code> means <code>&#39;seconds&#39;</code>, unless <code>smallestUnit</code> is <code>&#39;hours&#39;</code> or <code>&#39;minutes&#39;</code>, in which case <code>largestUnit</code> is equal to <code>smallestUnit</code>.</p>
 <p>By default, the largest unit in the result is seconds.
 Weeks, months, years, and days are not allowed, unlike the difference methods of the other Temporal types.
 This is because months and years can be different lengths depending on which month is meant, and whether the year is a leap year, which all depends on the start and end date of the difference.

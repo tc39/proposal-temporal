@@ -380,14 +380,15 @@ date<span class="token punctuation">.</span><span class="token function">toStrin
 <li><code>options</code> (object): An object with properties representing options for the operation.
 The following options are recognized:<ul>
 <li><code>largestUnit</code> (optional string): The largest unit of time to allow in the resulting <code>Temporal.Duration</code> object.
-Valid values are <code>&#39;years&#39;</code>, <code>&#39;months&#39;</code>, and <code>&#39;days&#39;</code>.
-The default is <code>days</code>.</li>
+Valid values are <code>&#39;auto&#39;</code>, <code>&#39;years&#39;</code>, <code>&#39;months&#39;</code>, and <code>&#39;days&#39;</code>.
+The default is <code>&#39;auto&#39;</code>.</li>
 </ul>
 </li>
 </ul>
 <p><strong>Returns:</strong> a <code>Temporal.Duration</code> representing the difference between <code>larger</code> and <code>smaller</code>.</p>
 <p>This method does not need to be called directly except in specialized code.
 It is called indirectly when using the <code>difference()</code> methods of <code>Temporal.DateTime</code>, <code>Temporal.Date</code>, and <code>Temporal.YearMonth</code>.</p>
+<p>The default <code>largestUnit</code> value of <code>&#39;auto&#39;</code> is the same as <code>&#39;days&#39;</code>.</p>
 <p>For example:</p>
 <pre class="language-javascript"><code class="language-javascript">d1 <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-07-29'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">withCalendar</span><span class="token punctuation">(</span><span class="token string">'chinese'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 d2 <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-08-29'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">withCalendar</span><span class="token punctuation">(</span><span class="token string">'chinese'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>

@@ -3767,7 +3767,9 @@
         _iterator3.f();
       }
 
-      return ES.GetOption(options, 'largestUnit', _toConsumableArray(allowed), fallback);
+      var retval = ES.GetOption(options, 'largestUnit', ['auto'].concat(_toConsumableArray(allowed)), 'auto');
+      if (retval === 'auto') return fallback;
+      return retval;
     },
     ToSmallestTemporalUnit: function ToSmallestTemporalUnit(options) {
       var disallowedStrings = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
@@ -3833,12 +3835,59 @@
 
       return value;
     },
-    ValidateTemporalDifferenceUnits: function ValidateTemporalDifferenceUnits(largestUnit, smallestUnit) {
+    ToRelativeTemporalObject: function ToRelativeTemporalObject(options) {
+      var relativeTo = options.relativeTo;
+      if (relativeTo === undefined) return relativeTo;
+      var year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar;
+
+      if (ES.Type(relativeTo) === 'Object') {
+        if (ES.IsTemporalDateTime(relativeTo)) return relativeTo;
+        calendar = relativeTo.calendar;
+        if (calendar === undefined) calendar = GetDefaultCalendar();
+        calendar = ES.ToTemporalCalendar(calendar);
+        var fields = ES.ToTemporalDateTimeRecord(relativeTo);
+        var TemporalDate = GetIntrinsic$1('%Temporal.Date%');
+        var date = calendar.dateFromFields(fields, {}, TemporalDate);
+        year = GetSlot(date, ISO_YEAR);
+        month = GetSlot(date, ISO_MONTH);
+        day = GetSlot(date, ISO_DAY);
+        hour = fields.hour;
+        minute = fields.minute;
+        second = fields.second;
+        millisecond = fields.millisecond;
+        microsecond = fields.microsecond;
+        nanosecond = fields.nanosecond;
+      } else {
+        var _ES$ParseTemporalDate = ES.ParseTemporalDateTimeString(ES.ToString(relativeTo));
+
+        year = _ES$ParseTemporalDate.year;
+        month = _ES$ParseTemporalDate.month;
+        day = _ES$ParseTemporalDate.day;
+        hour = _ES$ParseTemporalDate.hour;
+        minute = _ES$ParseTemporalDate.minute;
+        second = _ES$ParseTemporalDate.second;
+        millisecond = _ES$ParseTemporalDate.millisecond;
+        microsecond = _ES$ParseTemporalDate.microsecond;
+        nanosecond = _ES$ParseTemporalDate.nanosecond;
+        calendar = _ES$ParseTemporalDate.calendar;
+        if (!calendar) calendar = GetDefaultCalendar();
+        calendar = ES.ToTemporalCalendar(calendar);
+      }
+
+      var TemporalDateTime = GetIntrinsic$1('%Temporal.DateTime%');
+      return new TemporalDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
+    },
+    ValidateTemporalUnitRange: function ValidateTemporalUnitRange(largestUnit, smallestUnit) {
       var validUnits = ['years', 'months', 'weeks', 'days', 'hours', 'minutes', 'seconds', 'milliseconds', 'microseconds', 'nanoseconds'];
 
       if (validUnits.indexOf(largestUnit) > validUnits.indexOf(smallestUnit)) {
         throw new RangeError("largestUnit ".concat(largestUnit, " cannot be smaller than smallestUnit ").concat(smallestUnit));
       }
+    },
+    LargerOfTwoTemporalDurationUnits: function LargerOfTwoTemporalDurationUnits(unit1, unit2) {
+      var validUnits = ['years', 'months', 'weeks', 'days', 'hours', 'minutes', 'seconds', 'milliseconds', 'microseconds', 'nanoseconds'];
+      if (validUnits.indexOf(unit1) > validUnits.indexOf(unit2)) return unit2;
+      return unit1;
     },
     ToPartialRecord: function ToPartialRecord(bag, fields) {
       if (!bag || 'object' !== _typeof(bag)) return false;
@@ -4661,6 +4710,208 @@
         nanoseconds: nanoseconds
       };
     },
+    UnbalanceDurationRelative: function UnbalanceDurationRelative(years, months, weeks, days, largestUnit, relativeTo) {
+      var TemporalDate = GetIntrinsic$1('%Temporal.Date%');
+      var TemporalDuration = GetIntrinsic$1('%Temporal.Duration%');
+      var sign = ES.DurationSign(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
+      years *= sign;
+      months *= sign;
+      weeks *= sign;
+      days *= sign;
+      var calendar;
+
+      if (relativeTo) {
+        if (!ES.IsTemporalDateTime(relativeTo)) throw new TypeError('starting point must be DateTime');
+        calendar = GetSlot(relativeTo, CALENDAR);
+      }
+
+      var oneYear = new TemporalDuration(1);
+      var oneMonth = new TemporalDuration(0, 1);
+      var oneWeek = new TemporalDuration(0, 0, 1);
+
+      switch (largestUnit) {
+        case 'years':
+          // no-op
+          break;
+
+        case 'months':
+          if (!calendar) throw new RangeError('a starting point is required for months balancing'); // balance years down to months
+
+          while (years > 0) {
+            var oneYearMonths = calendar.monthsInYear(relativeTo);
+            months += oneYearMonths;
+            years--;
+            relativeTo = calendar.dateAdd(relativeTo, oneYear, {}, TemporalDate);
+          }
+
+          break;
+
+        case 'weeks':
+          if (!calendar) throw new RangeError('a starting point is required for weeks balancing'); // balance years down to days
+
+          while (years > 0) {
+            var oneYearDays = calendar.daysInYear(relativeTo);
+            days += oneYearDays;
+            years--;
+            relativeTo = calendar.dateAdd(relativeTo, oneYear, {}, TemporalDate);
+          } // balance months down to days
+
+
+          while (months > 0) {
+            var oneMonthDays = calendar.daysInMonth(relativeTo);
+            days += oneMonthDays;
+            months--;
+            relativeTo = calendar.dateAdd(relativeTo, oneMonth, {}, TemporalDate);
+          }
+
+          break;
+
+        default:
+          // balance years down to days
+          while (years > 0) {
+            if (!calendar) throw new RangeError('a starting point is required for balancing calendar units');
+
+            var _oneYearDays = calendar.daysInYear(relativeTo);
+
+            days += _oneYearDays;
+            years--;
+            relativeTo = calendar.dateAdd(relativeTo, oneYear, {}, TemporalDate);
+          } // balance months down to days
+
+
+          while (months > 0) {
+            if (!calendar) throw new RangeError('a starting point is required for balancing calendar units');
+
+            var _oneMonthDays = calendar.daysInMonth(relativeTo);
+
+            days += _oneMonthDays;
+            months--;
+            relativeTo = calendar.dateAdd(relativeTo, oneMonth, {}, TemporalDate);
+          } // balance weeks down to days
+
+
+          while (weeks > 0) {
+            if (!calendar) throw new RangeError('a starting point is required for balancing calendar units');
+            var oneWeekDays = calendar.daysInWeek(relativeTo);
+            days += oneWeekDays;
+            weeks--;
+            relativeTo = calendar.dateAdd(relativeTo, oneWeek, {}, TemporalDate);
+          }
+
+          break;
+      }
+
+      years *= sign;
+      months *= sign;
+      weeks *= sign;
+      days *= sign;
+      return {
+        years: years,
+        months: months,
+        weeks: weeks,
+        days: days
+      };
+    },
+    BalanceDurationRelative: function BalanceDurationRelative(years, months, weeks, days, largestUnit, relativeTo) {
+      var TemporalDate = GetIntrinsic$1('%Temporal.Date%');
+      var TemporalDuration = GetIntrinsic$1('%Temporal.Duration%');
+      var sign = ES.DurationSign(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
+      years *= sign;
+      months *= sign;
+      weeks *= sign;
+      days *= sign;
+      var calendar;
+
+      if (relativeTo) {
+        if (!ES.IsTemporalDateTime(relativeTo)) throw new TypeError('starting point must be DateTime');
+        calendar = GetSlot(relativeTo, CALENDAR);
+      }
+
+      var oneYear = new TemporalDuration(1);
+      var oneMonth = new TemporalDuration(0, 1);
+      var oneWeek = new TemporalDuration(0, 0, 1);
+
+      switch (largestUnit) {
+        case 'years':
+          {
+            if (!calendar) throw new RangeError('a starting point is required for years balancing'); // balance days up to years
+
+            var oneYearDays = calendar.daysInYear(relativeTo);
+
+            while (days >= oneYearDays) {
+              days -= oneYearDays;
+              years++;
+              relativeTo = calendar.dateSubtract(relativeTo, oneYear, {}, TemporalDate);
+              oneYearDays = calendar.daysInYear(relativeTo);
+            } // balance days up to months
+
+
+            var oneMonthDays = calendar.daysInMonth(relativeTo);
+
+            while (days >= oneMonthDays) {
+              days -= oneMonthDays;
+              months++;
+              relativeTo = calendar.dateSubtract(relativeTo, oneMonth, {}, TemporalDate);
+              oneMonthDays = calendar.daysInMonth(relativeTo);
+            } // balance months up to years
+
+
+            var oneYearMonths = calendar.monthsInYear(relativeTo);
+
+            while (months >= oneYearMonths) {
+              months -= oneYearMonths;
+              years++;
+              relativeTo = calendar.dateSubtract(relativeTo, oneYear, {}, TemporalDate);
+              oneYearMonths = calendar.monthsInYear(relativeTo);
+            }
+
+            break;
+          }
+
+        case 'months':
+          {
+            if (!calendar) throw new RangeError('a starting point is required for months balancing'); // balance days up to months
+
+            var _oneMonthDays2 = calendar.daysInMonth(relativeTo);
+
+            while (days >= _oneMonthDays2) {
+              days -= _oneMonthDays2;
+              months++;
+              relativeTo = calendar.dateSubtract(relativeTo, oneMonth, {}, TemporalDate);
+              _oneMonthDays2 = calendar.daysInMonth(relativeTo);
+            }
+
+            break;
+          }
+
+        case 'weeks':
+          {
+            if (!calendar) throw new RangeError('a starting point is required for weeks balancing'); // balance days up to weeks
+
+            var oneWeekDays = calendar.daysInWeek(relativeTo);
+
+            while (days >= oneWeekDays) {
+              days -= oneWeekDays;
+              weeks++;
+              relativeTo = calendar.dateSubtract(relativeTo, oneWeek, {}, TemporalDate);
+              oneWeekDays = calendar.daysInWeek(relativeTo);
+            }
+
+            break;
+          }
+      }
+
+      years *= sign;
+      months *= sign;
+      weeks *= sign;
+      days *= sign;
+      return {
+        years: years,
+        months: months,
+        weeks: weeks,
+        days: days
+      };
+    },
     ConstrainToRange: function ConstrainToRange(value, min, max) {
       return Math.min(max, Math.max(min, value));
     },
@@ -5209,7 +5460,7 @@
         case 'years':
           {
             if (!calendar) throw new RangeError('A starting point is required for years rounding'); // convert months and weeks to days by calculating difference(
-            // relativeTo + years, relativeTo - { years, months, weeks })
+            // relativeTo - years, relativeTo - { years, months, weeks })
 
             var yearsBefore = calendar.dateSubtract(relativeTo, new TemporalDuration(years), {}, TemporalDate);
             var yearsMonthsWeeks = new TemporalDuration(years, months, weeks);
@@ -5217,10 +5468,24 @@
             var monthsWeeksInDays = ES.DifferenceDate(GetSlot(yearsMonthsWeeksBefore, ISO_YEAR), GetSlot(yearsMonthsWeeksBefore, ISO_MONTH), GetSlot(yearsMonthsWeeksBefore, ISO_DAY), GetSlot(yearsBefore, ISO_YEAR), GetSlot(yearsBefore, ISO_MONTH), GetSlot(yearsBefore, ISO_DAY), 'days');
             seconds += milliseconds * 1e-3 + microseconds * 1e-6 + nanoseconds * 1e-9;
             days += monthsWeeksInDays.days;
-            days += ((seconds / 60 + minutes) / 60 + hours) / 24;
+            days += ((seconds / 60 + minutes) / 60 + hours) / 24; // Years may be different lengths of days depending on the calendar, so
+            // we need to convert days to years in a loop. We get the number of days
+            // in the one-year period preceding the relativeTo date, and convert
+            // that number of days to one year, repeating until the number of days
+            // is less than a year.
+
             var oneYear = new TemporalDuration(1);
+            var sign = Math.sign(days);
             relativeTo = calendar.dateSubtract(relativeTo, oneYear, {}, TemporalDate);
             var oneYearDays = calendar.daysInYear(relativeTo);
+
+            while (Math.abs(days) > oneYearDays) {
+              years += sign;
+              days -= oneYearDays * sign;
+              relativeTo = calendar.dateSubtract(relativeTo, oneYear, {}, TemporalDate);
+              oneYearDays = calendar.daysInYear(relativeTo);
+            }
+
             years += days / oneYearDays;
             years = ES.RoundNumberToIncrement(years, increment, roundingMode);
             months = weeks = days = hours = minutes = seconds = milliseconds = microseconds = nanoseconds = 0;
@@ -5229,7 +5494,7 @@
 
         case 'months':
           {
-            if (!calendar) throw new RangeError('A starting point is required for months rounding'); // convert weeks to days by calculating difference(relativeTo +
+            if (!calendar) throw new RangeError('A starting point is required for months rounding'); // convert weeks to days by calculating difference(relativeTo -
             //   { years, months }, relativeTo - { years, months, weeks })
 
             var yearsMonths = new TemporalDuration(years, months);
@@ -5242,10 +5507,23 @@
             var weeksInDays = ES.DifferenceDate(GetSlot(_yearsMonthsWeeksBefore, ISO_YEAR), GetSlot(_yearsMonthsWeeksBefore, ISO_MONTH), GetSlot(_yearsMonthsWeeksBefore, ISO_DAY), GetSlot(yearsMonthsBefore, ISO_YEAR), GetSlot(yearsMonthsBefore, ISO_MONTH), GetSlot(yearsMonthsBefore, ISO_DAY), 'days');
             seconds += milliseconds * 1e-3 + microseconds * 1e-6 + nanoseconds * 1e-9;
             days += weeksInDays.days;
-            days += ((seconds / 60 + minutes) / 60 + hours) / 24;
+            days += ((seconds / 60 + minutes) / 60 + hours) / 24; // Months may be different lengths of days depending on the calendar,
+            // convert days to months in a loop as described above under 'years'.
+
             var oneMonth = new TemporalDuration(0, 1);
+
+            var _sign = Math.sign(days);
+
             relativeTo = calendar.dateSubtract(relativeTo, oneMonth, {}, TemporalDate);
             var oneMonthDays = calendar.daysInMonth(relativeTo);
+
+            while (Math.abs(days) > oneMonthDays) {
+              months += _sign;
+              days -= oneMonthDays * _sign;
+              relativeTo = calendar.dateSubtract(relativeTo, oneMonth, {}, TemporalDate);
+              oneMonthDays = calendar.daysInMonth(relativeTo);
+            }
+
             months += days / oneMonthDays;
             months = ES.RoundNumberToIncrement(months, increment, roundingMode);
             weeks = days = hours = minutes = seconds = milliseconds = microseconds = nanoseconds = 0;
@@ -5256,10 +5534,23 @@
           {
             if (!calendar) throw new RangeError('A starting point is required for weeks rounding');
             seconds += milliseconds * 1e-3 + microseconds * 1e-6 + nanoseconds * 1e-9;
-            days += ((seconds / 60 + minutes) / 60 + hours) / 24;
+            days += ((seconds / 60 + minutes) / 60 + hours) / 24; // Weeks may be different lengths of days depending on the calendar,
+            // convert days to weeks in a loop as described above under 'years'.
+
             var oneWeek = new TemporalDuration(0, 0, 1);
+
+            var _sign2 = Math.sign(days);
+
             relativeTo = calendar.dateSubtract(relativeTo, oneWeek, {}, TemporalDate);
             var oneWeekDays = calendar.daysInWeek(relativeTo);
+
+            while (Math.abs(days) > oneWeekDays) {
+              weeks += _sign2;
+              days -= oneWeekDays * _sign2;
+              relativeTo = calendar.dateSubtract(relativeTo, oneWeek, {}, TemporalDate);
+              oneWeekDays = calendar.daysInWeek(relativeTo);
+            }
+
             weeks += days / oneWeekDays;
             weeks = ES.RoundNumberToIncrement(weeks, increment, roundingMode);
             days = hours = minutes = seconds = milliseconds = microseconds = nanoseconds = 0;
@@ -6070,10 +6361,9 @@
         var disallowedUnits = ['years', 'months', 'weeks', 'days'];
         options = ES.NormalizeOptionsObject(options);
         var smallestUnit = ES.ToSmallestTemporalDurationUnit(options, 'nanoseconds', disallowedUnits);
-        var defaultLargestUnit = 'seconds';
-        if (smallestUnit === 'hours' || smallestUnit === 'minutes') defaultLargestUnit = smallestUnit;
+        var defaultLargestUnit = ES.LargerOfTwoTemporalDurationUnits('seconds', smallestUnit);
         var largestUnit = ES.ToLargestTemporalUnit(options, defaultLargestUnit, disallowedUnits);
-        ES.ValidateTemporalDifferenceUnits(largestUnit, smallestUnit);
+        ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
         var roundingMode = ES.ToTemporalRoundingMode(options);
         var maximumIncrements = {
           hours: 24,
@@ -6967,14 +7257,9 @@
 
         options = ES.NormalizeOptionsObject(options);
         var smallestUnit = ES.ToSmallestTemporalDurationUnit(options, 'nanoseconds');
-        var defaultLargestUnit = 'days';
-
-        if (smallestUnit === 'years' || smallestUnit === 'months' || smallestUnit === 'weeks') {
-          defaultLargestUnit = smallestUnit;
-        }
-
+        var defaultLargestUnit = ES.LargerOfTwoTemporalDurationUnits('days', smallestUnit);
         var largestUnit = ES.ToLargestTemporalUnit(options, defaultLargestUnit);
-        ES.ValidateTemporalDifferenceUnits(largestUnit, smallestUnit);
+        ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
         var roundingMode = ES.ToTemporalRoundingMode(options);
         var maximumIncrements = {
           years: undefined,
@@ -7361,31 +7646,6 @@
 
             var _day = GetSlot(date, ISO_DAY);
 
-            if (overflow === 'constrain') {
-              // Special case to determine if the date was clipped by dateFromFields
-              // and therefore the time possibly needs to be clipped too
-              try {
-                _calendar.dateFromFields(fields, {
-                  overflow: 'reject'
-                }, TemporalDate);
-              } catch (_unused) {
-                // Date was clipped
-                if (_year === 275760 && _month === 9 && _day === 13) {
-                  // Clipped at end of range
-                  _day += 1;
-                } else if (_year === -271821 && _month === 4 && _day === 19) {
-                  // Clipped at beginning of range
-                  _day -= 1;
-                }
-
-                var _ES$BalanceDate3 = ES.BalanceDate(_year, _month, _day);
-
-                _year = _ES$BalanceDate3.year;
-                _month = _ES$BalanceDate3.month;
-                _day = _ES$BalanceDate3.day;
-              }
-            }
-
             var _hour = fields.hour,
                 _minute = fields.minute,
                 _second = fields.second,
@@ -7645,6 +7905,105 @@
         milliseconds = _ES$DurationArithmeti2.milliseconds;
         microseconds = _ES$DurationArithmeti2.microseconds;
         nanoseconds = _ES$DurationArithmeti2.nanoseconds;
+        var Construct = ES.SpeciesConstructor(this, Duration);
+        var result = new Construct(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+        if (!ES.IsTemporalDuration(result)) throw new TypeError('invalid result');
+        return result;
+      }
+    }, {
+      key: "round",
+      value: function round(options) {
+        if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
+        var years = GetSlot(this, YEARS);
+        var months = GetSlot(this, MONTHS);
+        var weeks = GetSlot(this, WEEKS);
+        var days = GetSlot(this, DAYS);
+        var hours = GetSlot(this, HOURS);
+        var minutes = GetSlot(this, MINUTES);
+        var seconds = GetSlot(this, SECONDS);
+        var milliseconds = GetSlot(this, MILLISECONDS);
+        var microseconds = GetSlot(this, MICROSECONDS);
+        var nanoseconds = GetSlot(this, NANOSECONDS);
+        var defaultLargestUnit = 'nanoseconds';
+
+        for (var _i2 = 0, _Object$entries = Object.entries({
+          years: years,
+          months: months,
+          weeks: weeks,
+          days: days,
+          hours: hours,
+          minutes: minutes,
+          seconds: seconds,
+          milliseconds: milliseconds,
+          microseconds: microseconds
+        }); _i2 < _Object$entries.length; _i2++) {
+          var _Object$entries$_i = _slicedToArray(_Object$entries[_i2], 2),
+              prop = _Object$entries$_i[0],
+              v = _Object$entries$_i[1];
+
+          if (v !== 0) {
+            defaultLargestUnit = prop;
+            break;
+          }
+        }
+
+        options = ES.NormalizeOptionsObject(options);
+        var smallestUnit = ES.ToSmallestTemporalDurationUnit(options, 'nanoseconds');
+        defaultLargestUnit = ES.LargerOfTwoTemporalDurationUnits(defaultLargestUnit, smallestUnit);
+        var relativeTo = ES.ToRelativeTemporalObject(options);
+        var largestUnit = ES.ToLargestTemporalUnit(options, defaultLargestUnit);
+        ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
+        var roundingMode = ES.ToTemporalRoundingMode(options);
+        var maximumIncrements = {
+          years: undefined,
+          months: undefined,
+          weeks: undefined,
+          days: undefined,
+          hours: 24,
+          minutes: 60,
+          seconds: 60,
+          milliseconds: 1000,
+          microseconds: 1000,
+          nanoseconds: 1000
+        };
+        var roundingIncrement = ES.ToTemporalRoundingIncrement(options, maximumIncrements[smallestUnit], false);
+
+        var _ES$UnbalanceDuration = ES.UnbalanceDurationRelative(years, months, weeks, days, largestUnit, relativeTo);
+
+        years = _ES$UnbalanceDuration.years;
+        months = _ES$UnbalanceDuration.months;
+        weeks = _ES$UnbalanceDuration.weeks;
+        days = _ES$UnbalanceDuration.days;
+
+        var _ES$RoundDuration = ES.RoundDuration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, roundingIncrement, smallestUnit, roundingMode, relativeTo);
+
+        years = _ES$RoundDuration.years;
+        months = _ES$RoundDuration.months;
+        weeks = _ES$RoundDuration.weeks;
+        days = _ES$RoundDuration.days;
+        hours = _ES$RoundDuration.hours;
+        minutes = _ES$RoundDuration.minutes;
+        seconds = _ES$RoundDuration.seconds;
+        milliseconds = _ES$RoundDuration.milliseconds;
+        microseconds = _ES$RoundDuration.microseconds;
+        nanoseconds = _ES$RoundDuration.nanoseconds;
+
+        var _ES$BalanceDurationRe = ES.BalanceDurationRelative(years, months, weeks, days, largestUnit, relativeTo);
+
+        years = _ES$BalanceDurationRe.years;
+        months = _ES$BalanceDurationRe.months;
+        weeks = _ES$BalanceDurationRe.weeks;
+        days = _ES$BalanceDurationRe.days;
+
+        var _ES$BalanceDuration = ES.BalanceDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, largestUnit);
+
+        days = _ES$BalanceDuration.days;
+        hours = _ES$BalanceDuration.hours;
+        minutes = _ES$BalanceDuration.minutes;
+        seconds = _ES$BalanceDuration.seconds;
+        milliseconds = _ES$BalanceDuration.milliseconds;
+        microseconds = _ES$BalanceDuration.microseconds;
+        nanoseconds = _ES$BalanceDuration.nanoseconds;
         var Construct = ES.SpeciesConstructor(this, Duration);
         var result = new Construct(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
         if (!ES.IsTemporalDuration(result)) throw new TypeError('invalid result');
@@ -8265,7 +8624,7 @@
         options = ES.NormalizeOptionsObject(options);
         var largestUnit = ES.ToLargestTemporalUnit(options, 'hours', ['years', 'months', 'weeks', 'days']);
         var smallestUnit = ES.ToSmallestTemporalDurationUnit(options, 'nanoseconds');
-        ES.ValidateTemporalDifferenceUnits(largestUnit, smallestUnit);
+        ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
         var roundingMode = ES.ToTemporalRoundingMode(options);
         var maximumIncrements = {
           hours: 24,
