@@ -131,7 +131,7 @@ export class YearMonth {
       );
     }
     options = ES.NormalizeOptionsObject(options);
-    const largestUnit = ES.ToLargestTemporalUnit(options, 'years', [
+    const disallowedUnits = [
       'weeks',
       'days',
       'hours',
@@ -140,14 +140,55 @@ export class YearMonth {
       'milliseconds',
       'microseconds',
       'nanoseconds'
-    ]);
+    ];
+    const smallestUnit = ES.ToSmallestTemporalDurationUnit(options, 'months', disallowedUnits);
+    const largestUnit = ES.ToLargestTemporalUnit(options, 'years', disallowedUnits);
+    ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
+    const roundingMode = ES.ToTemporalRoundingMode(options);
+    const roundingIncrement = ES.ToTemporalRoundingIncrement(options, undefined, false);
 
     const otherFields = ES.ToTemporalYearMonthRecord(other);
     const thisFields = ES.ToTemporalYearMonthRecord(this);
     const TemporalDate = GetIntrinsic('%Temporal.Date%');
     const otherDate = calendar.dateFromFields({ ...otherFields, day: 1 }, {}, TemporalDate);
     const thisDate = calendar.dateFromFields({ ...thisFields, day: 1 }, {}, TemporalDate);
-    return calendar.dateDifference(otherDate, thisDate, { ...options, largestUnit });
+
+    const result = calendar.dateDifference(otherDate, thisDate, { largestUnit });
+    if (smallestUnit === 'months' && roundingIncrement === 1) return result;
+
+    let { years, months } = result;
+    const TemporalDateTime = GetIntrinsic('%Temporal.DateTime%');
+    const relativeTo = new TemporalDateTime(
+      GetSlot(thisDate, ISO_YEAR),
+      GetSlot(thisDate, ISO_MONTH),
+      GetSlot(thisDate, ISO_DAY),
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      calendar
+    );
+    ({ years, months } = ES.RoundDuration(
+      years,
+      months,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      roundingIncrement,
+      smallestUnit,
+      roundingMode,
+      relativeTo
+    ));
+
+    const Duration = GetIntrinsic('%Temporal.Duration%');
+    return new Duration(years, months, 0, 0, 0, 0, 0, 0, 0, 0);
   }
   equals(other) {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
