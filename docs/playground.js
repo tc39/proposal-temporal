@@ -8738,7 +8738,7 @@
         return ES.TimeZoneToString(this);
       }
     }, {
-      key: "name",
+      key: "id",
       get: function get() {
         return ES.TimeZoneToString(this);
       }
