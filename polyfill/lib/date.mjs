@@ -165,7 +165,52 @@ export class Date {
         `cannot compute difference between dates of ${calendar.id} and ${otherCalendar.id} calendars`
       );
     }
-    return calendar.dateDifference(other, this, options);
+
+    options = ES.NormalizeOptionsObject(options);
+    const disallowedUnits = ['hours', 'minutes', 'seconds', 'milliseconds', 'microseconds', 'nanoseconds'];
+    const smallestUnit = ES.ToSmallestTemporalDurationUnit(options, 'days', disallowedUnits);
+    const defaultLargestUnit = ES.LargerOfTwoTemporalDurationUnits('days', smallestUnit);
+    const largestUnit = ES.ToLargestTemporalUnit(options, defaultLargestUnit, disallowedUnits);
+    ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
+    const roundingMode = ES.ToTemporalRoundingMode(options);
+    const roundingIncrement = ES.ToTemporalRoundingIncrement(options, undefined, false);
+
+    const result = calendar.dateDifference(other, this, { largestUnit });
+    if (smallestUnit === 'days' && roundingIncrement === 1) return result;
+
+    let { years, months, weeks, days } = result;
+    const TemporalDateTime = GetIntrinsic('%Temporal.DateTime%');
+    const relativeTo = new TemporalDateTime(
+      GetSlot(this, ISO_YEAR),
+      GetSlot(this, ISO_MONTH),
+      GetSlot(this, ISO_DAY),
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      GetSlot(this, CALENDAR)
+    );
+    ({ years, months, weeks, days } = ES.RoundDuration(
+      years,
+      months,
+      weeks,
+      days,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      roundingIncrement,
+      smallestUnit,
+      roundingMode,
+      relativeTo
+    ));
+
+    const Duration = GetIntrinsic('%Temporal.Duration%');
+    return new Duration(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
   }
   equals(other) {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');

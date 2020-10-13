@@ -436,10 +436,18 @@ date.subtract({ months: 1 }, { overflow: 'reject' }); // => throws
   - `largestUnit` (optional string): The largest unit of time to allow in the resulting `Temporal.Duration` object.
     Valid values are `'auto'`, `'years'`, `'months'`, `'weeks'`, and `'days'`.
     The default is `'auto'`.
+  - `smallestUnit` (string): The smallest unit of time to round to in the resulting `Temporal.Duration` object.
+    Valid values are `'years'`, `'months'`, `'weeks'`, `'days'`.
+    The default is `'days'`, i.e., no rounding.
+  - `roundingIncrement` (number): The granularity to round to, of the unit given by `smallestUnit`.
+    The default is 1.
+  - `roundingMode` (string): How to handle the remainder, if rounding.
+    Valid values are `'ceil'`, `'floor'`, `'trunc'`, and `'nearest'`.
+    The default is `'nearest'`.
 
 **Returns:** a `Temporal.Duration` representing the difference between `date` and `other`.
 
-This method computes the difference between the two dates represented by `date` and `other`, and returns it as a `Temporal.Duration` object.
+This method computes the difference between the two dates represented by `date` and `other`, optionally rounds it, and returns it as a `Temporal.Duration` object.
 If `other` is later than `date` then the resulting duration will be negative.
 
 The `largestUnit` option controls how the resulting duration is expressed.
@@ -450,7 +458,13 @@ A value of `'auto'` means `'days'`, unless `smallestUnit` is `'years'`, `'months
 
 By default, the largest unit in the result is days.
 This is because months and years can be different lengths depending on which month is meant and whether the year is a leap year.
-Unlike other Temporal types, hours and lower are not allowed, because the data model of `Temporal.Date` doesn't have that accuracy.
+
+You can round the result using the `smallestUnit`, `roundingIncrement`, and `roundingMode` options.
+These behave as in the `Temporal.Duration.round()` method, but increments of days and larger are allowed.
+Since rounding to calendar units requires a reference point, `date` is used as the reference point.
+The default is to do no rounding.
+
+Unlike other Temporal types, hours and lower are not allowed for either `largestUnit` or `smallestUnit`, because the data model of `Temporal.Date` doesn't have that accuracy.
 
 Computing the difference between two dates in different calendar systems is not supported.
 If you need to do this, choose the calendar in which the computation takes place by converting one of the dates with `date.withCalendar()`.
