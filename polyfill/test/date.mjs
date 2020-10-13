@@ -276,6 +276,119 @@ describe('Date', () => {
       );
       [{}, () => {}, undefined].forEach((options) => equal(`${feb21.difference(feb20, options)}`, 'P366D'));
     });
+    const earlier = Date.from('2019-01-08');
+    const later = Date.from('2021-09-07');
+    it('throws on disallowed or invalid smallestUnit', () => {
+      ['era', 'hours', 'minutes', 'seconds', 'milliseconds', 'microseconds', 'nanoseconds', 'nonsense'].forEach(
+        (smallestUnit) => {
+          throws(() => later.difference(earlier, { smallestUnit }), RangeError);
+        }
+      );
+    });
+    it('throws if smallestUnit is larger than largestUnit', () => {
+      const units = ['years', 'months', 'weeks', 'days'];
+      for (let largestIdx = 1; largestIdx < units.length; largestIdx++) {
+        for (let smallestIdx = 0; smallestIdx < largestIdx; smallestIdx++) {
+          const largestUnit = units[largestIdx];
+          const smallestUnit = units[smallestIdx];
+          throws(() => later.difference(earlier, { largestUnit, smallestUnit }), RangeError);
+        }
+      }
+    });
+    it('assumes a different default for largestUnit if smallestUnit is larger than days', () => {
+      equal(`${later.difference(earlier, { smallestUnit: 'years' })}`, 'P3Y');
+      equal(`${later.difference(earlier, { smallestUnit: 'months' })}`, 'P32M');
+      equal(`${later.difference(earlier, { smallestUnit: 'weeks' })}`, 'P139W');
+    });
+    it('throws on invalid roundingMode', () => {
+      throws(() => later.difference(earlier, { roundingMode: 'cile' }), RangeError);
+    });
+    const incrementOneNearest = [
+      ['years', 'P3Y'],
+      ['months', 'P32M'],
+      ['weeks', 'P139W'],
+      ['days', 'P973D']
+    ];
+    incrementOneNearest.forEach(([smallestUnit, expected]) => {
+      const roundingMode = 'nearest';
+      it(`rounds to nearest ${smallestUnit}`, () => {
+        equal(`${later.difference(earlier, { smallestUnit, roundingMode })}`, expected);
+        equal(`${earlier.difference(later, { smallestUnit, roundingMode })}`, `-${expected}`);
+      });
+    });
+    const incrementOneCeil = [
+      ['years', 'P3Y', '-P2Y'],
+      ['months', 'P32M', '-P31M'],
+      ['weeks', 'P139W', '-P139W'],
+      ['days', 'P973D', '-P973D']
+    ];
+    incrementOneCeil.forEach(([smallestUnit, expectedPositive, expectedNegative]) => {
+      const roundingMode = 'ceil';
+      it(`rounds up to ${smallestUnit}`, () => {
+        equal(`${later.difference(earlier, { smallestUnit, roundingMode })}`, expectedPositive);
+        equal(`${earlier.difference(later, { smallestUnit, roundingMode })}`, expectedNegative);
+      });
+    });
+    const incrementOneFloor = [
+      ['years', 'P2Y', '-P3Y'],
+      ['months', 'P31M', '-P32M'],
+      ['weeks', 'P139W', '-P139W'],
+      ['days', 'P973D', '-P973D']
+    ];
+    incrementOneFloor.forEach(([smallestUnit, expectedPositive, expectedNegative]) => {
+      const roundingMode = 'floor';
+      it(`rounds down to ${smallestUnit}`, () => {
+        equal(`${later.difference(earlier, { smallestUnit, roundingMode })}`, expectedPositive);
+        equal(`${earlier.difference(later, { smallestUnit, roundingMode })}`, expectedNegative);
+      });
+    });
+    const incrementOneTrunc = [
+      ['years', 'P2Y'],
+      ['months', 'P31M'],
+      ['weeks', 'P139W'],
+      ['days', 'P973D']
+    ];
+    incrementOneTrunc.forEach(([smallestUnit, expected]) => {
+      const roundingMode = 'trunc';
+      it(`truncates to ${smallestUnit}`, () => {
+        equal(`${later.difference(earlier, { smallestUnit, roundingMode })}`, expected);
+        equal(`${earlier.difference(later, { smallestUnit, roundingMode })}`, `-${expected}`);
+      });
+    });
+    it('nearest is the default', () => {
+      equal(`${later.difference(earlier, { smallestUnit: 'years' })}`, 'P3Y');
+      equal(`${earlier.difference(later, { smallestUnit: 'years' })}`, '-P3Y');
+    });
+    it('rounds to an increment of years', () => {
+      equal(`${later.difference(earlier, { smallestUnit: 'years', roundingIncrement: 4 })}`, 'P4Y');
+    });
+    it('rounds to an increment of months', () => {
+      equal(`${later.difference(earlier, { smallestUnit: 'months', roundingIncrement: 10 })}`, 'P30M');
+    });
+    it('rounds to an increment of weeks', () => {
+      equal(`${later.difference(earlier, { smallestUnit: 'weeks', roundingIncrement: 12 })}`, 'P144W');
+    });
+    it('rounds to an increment of days', () => {
+      equal(`${later.difference(earlier, { smallestUnit: 'days', roundingIncrement: 100 })}`, 'P1000D');
+    });
+    it('accepts singular units', () => {
+      equal(
+        `${later.difference(earlier, { smallestUnit: 'year' })}`,
+        `${later.difference(earlier, { smallestUnit: 'years' })}`
+      );
+      equal(
+        `${later.difference(earlier, { smallestUnit: 'month' })}`,
+        `${later.difference(earlier, { smallestUnit: 'months' })}`
+      );
+      equal(
+        `${later.difference(earlier, { smallestUnit: 'week' })}`,
+        `${later.difference(earlier, { smallestUnit: 'weeks' })}`
+      );
+      equal(
+        `${later.difference(earlier, { smallestUnit: 'day' })}`,
+        `${later.difference(earlier, { smallestUnit: 'days' })}`
+      );
+    });
   });
   describe('date.add() works', () => {
     let date = new Date(1976, 11, 18);
