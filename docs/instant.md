@@ -441,7 +441,7 @@ billion.toDateTime(utc).difference(epoch.toDateTime(utc), { largestUnit: 'years'
 - `options` (object): An object with properties representing options for the operation.
   The following options are recognized:
   - `smallestUnit` (required string): The unit to round to.
-    Valid values are `'minute'`, `'second'`, `'millisecond'`, `'microsecond'`, and `'nanosecond'`.
+    Valid values are `'hour'`, `'minute'`, `'second'`, `'millisecond'`, `'microsecond'`, and `'nanosecond'`.
   - `roundingIncrement` (number): The granularity to round to, of the unit given by `smallestUnit`.
     The default is 1.
   - `roundingMode` (string): How to handle the remainder.
@@ -461,7 +461,7 @@ For example, to round to increments of a half hour, use `smallestUnit: 'minute',
 
 The combination of `roundingIncrement` and `smallestUnit` must make an increment that divides evenly into 86400 seconds (one 24-hour solar day).
 (For example, increments of 15 minutes and 45 seconds are both allowed.
-25 minutes, and 7 seconds are both not allowed.) Hour increments are not allowed either, since `Temporal.Instant` has no time zone and therefore it is not defined where the starting point of the hour is.
+25 minutes, and 7 seconds are both not allowed.)
 
 The `roundingMode` option controls how the rounding is performed.
 

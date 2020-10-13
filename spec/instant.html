@@ -323,9 +323,11 @@
         1. Let _instant_ be the *this* value.
         1. Perform ? RequireInternalSlot(_instant_, [[InitializedTemporalInstant]]).
         1. Set _options_ to ? NormalizeOptionsObject(_options_).
-        1. Let _smallestUnit_ be ? ToSmallestTemporalUnit(_options_, « *"day"*, *"hour"* »).
+        1. Let _smallestUnit_ be ? ToSmallestTemporalUnit(_options_, « *"day"* »).
         1. Let _roundingMode_ be ? ToTemporalRoundingMode(_options_).
-        1. If _smallestUnit_ is *"minute"*, then
+        1. If _smallestUnit_ is *"hour"*, then
+          1. Let _maximum_ be 24.
+        1. Else if _smallestUnit_ is *"minute"*, then
           1. Let _maximum_ be 1440.
         1. Else if _smallestUnit_ is *"second"*, then
           1. Let _maximum_ be 86400.
@@ -337,7 +339,9 @@
           1. Assert: _smallestUnit_ is *"nanosecond"*.
           1. Let _maximum_ be 8.64 × 10<sup>13</sup>.
         1. Let _roundingIncrement_ be the mathematical value of ? ToTemporalRoundingIncrement(_options_, _maximum_, *true*).
-        1. If _smallestUnit_ is *"minute"*, then
+        1. If _smallestUnit_ is *"hour"*, then
+          1. Let _incrementNs_ be _roundingIncrement_ × 3.6 × 10<sup>12</sup>.
+        1. Else if _smallestUnit_ is *"minute"*, then
           1. Let _incrementNs_ be _roundingIncrement_ × 6 × 10<sup>10</sup>.
         1. Else if _smallestUnit_ is *"second"*, then
           1. Let _incrementNs_ be _roundingIncrement_ × 10<sup>9</sup>.
