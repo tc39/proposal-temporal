@@ -386,10 +386,7 @@ export class DateTime {
     }
     options = ES.NormalizeOptionsObject(options);
     const smallestUnit = ES.ToSmallestTemporalDurationUnit(options, 'nanoseconds');
-    let defaultLargestUnit = 'days';
-    if (smallestUnit === 'years' || smallestUnit === 'months' || smallestUnit === 'weeks') {
-      defaultLargestUnit = smallestUnit;
-    }
+    const defaultLargestUnit = ES.LargerOfTwoTemporalDurationUnits('days', smallestUnit);
     const largestUnit = ES.ToLargestTemporalUnit(options, defaultLargestUnit);
     ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
     const roundingMode = ES.ToTemporalRoundingMode(options);
