@@ -566,6 +566,22 @@ export const ES = ObjectAssign({}, ES2019, {
       throw new RangeError(`largestUnit ${largestUnit} cannot be smaller than smallestUnit ${smallestUnit}`);
     }
   },
+  LargerOfTwoTemporalDurationUnits: (unit1, unit2) => {
+    const validUnits = [
+      'years',
+      'months',
+      'weeks',
+      'days',
+      'hours',
+      'minutes',
+      'seconds',
+      'milliseconds',
+      'microseconds',
+      'nanoseconds'
+    ];
+    if (validUnits.indexOf(unit1) > validUnits.indexOf(unit2)) return unit2;
+    return unit1;
+  },
   ToPartialRecord: (bag, fields) => {
     if (!bag || 'object' !== typeof bag) return false;
     let any;

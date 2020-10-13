@@ -494,10 +494,7 @@
         1. Perform ? RequireInternalSlot(_other_, [[InitializedTemporalDateTime]]).
         1. Set _options_ to ? NormalizeOptionsObject(_options_).
         1. Let _smallestUnit_ be ? ToSmallestTemporalDurationUnit(_options_, « », *"nanoseconds"*).
-        1. If _smallestUnit_ is *"years"*, *"months"*, or *"weeks"*, then
-          1. Let _defaultLargestUnit_ be _smallestUnit_.
-        1. Else,
-          1. Let _defaultLargestUnit_ be *"days"*.
+        1. Let _defaultLargestUnit_ be ! LargerOfTwoTemporalDurationUnits(*"days"*, _smallestUnit_).
         1. Let _largestUnit_ be ? ToLargestTemporalUnit(_options_, « », _defaultLargestUnit_).
         1. Perform ? ValidateTemporalUnitRange(_largestUnit_, _smallestUnit_).
         1. Let _roundingMode_ be ? ToTemporalRoundingMode(_options_).

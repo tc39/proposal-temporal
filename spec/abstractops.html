@@ -225,6 +225,25 @@
     </emu-alg>
   </emu-clause>
 
+  <emu-clause id="sec-temporal-largeroftwotemporaldurationunits" aoid="LargerOfTwoTemporalDurationUnits">
+    <h1>LargerOfTwoTemporalDurationUnits ( _u1_, _u2_ )</h1>
+    <p>
+      The abstract operation LargerOfTwoTemporalDurationUnits, given two strings representing the units of a Temporal.Duration, returns the string representing the larger of the two units.
+    </p>
+    <emu-alg>
+      1. If either _u1_ or _u2_ is *"years"*, then return *"years"*.
+      1. If either _u1_ or _u2_ is *"months"*, then return *"months"*.
+      1. If either _u1_ or _u2_ is *"weeks"*, then return *"weeks"*.
+      1. If either _u1_ or _u2_ is *"days"*, then return *"days"*.
+      1. If either _u1_ or _u2_ is *"hours"*, then return *"hours"*.
+      1. If either _u1_ or _u2_ is *"minutes"*, then return *"minutes"*.
+      1. If either _u1_ or _u2_ is *"seconds"*, then return *"seconds"*.
+      1. If either _u1_ or _u2_ is *"milliseconds"*, then return *"milliseconds"*.
+      1. If either _u1_ or _u2_ is *"microseconds"*, then return *"microseconds"*.
+      1. Return *"nanoseconds"*.
+    </emu-alg>
+  </emu-clause>
+
   <emu-clause id="sec-temporal-maximumtemporaldurationroundingincrement" aoid="MaximumTemporalDurationRoundingIncrement">
     <h1>MaximumTemporalDurationRoundingIncrement ( _unit_ )</h1>
     <emu-alg>

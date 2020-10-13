@@ -106,8 +106,7 @@ export class Instant {
     const disallowedUnits = ['years', 'months', 'weeks', 'days'];
     options = ES.NormalizeOptionsObject(options);
     const smallestUnit = ES.ToSmallestTemporalDurationUnit(options, 'nanoseconds', disallowedUnits);
-    let defaultLargestUnit = 'seconds';
-    if (smallestUnit === 'hours' || smallestUnit === 'minutes') defaultLargestUnit = smallestUnit;
+    const defaultLargestUnit = ES.LargerOfTwoTemporalDurationUnits('seconds', smallestUnit);
     const largestUnit = ES.ToLargestTemporalUnit(options, defaultLargestUnit, disallowedUnits);
     ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
     const roundingMode = ES.ToTemporalRoundingMode(options);
