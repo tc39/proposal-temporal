@@ -177,9 +177,9 @@
 <ul>
 <li><a href="#with">with</a>
 </li>
-<li><a href="#plus">plus</a>
+<li><a href="#add">add</a>
 </li>
-<li><a href="#minus">minus</a>
+<li><a href="#subtract">subtract</a>
 </li>
 <li><a href="#difference">difference</a>
 </li>
@@ -336,13 +336,13 @@ The default is <code>constrain</code>.</li>
 <p>Usage example:</p>
 <pre class="language-javascript"><code class="language-javascript">time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'19:39:09.068346205'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token comment">// What's the top of the next hour?</span>
-time<span class="token punctuation">.</span><span class="token function">plus</span><span class="token punctuation">(</span><span class="token punctuation">{</span> hours<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+time<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token punctuation">{</span> hours<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
   minute<span class="token operator">:</span> <span class="token number">0</span><span class="token punctuation">,</span>
   second<span class="token operator">:</span> <span class="token number">0</span><span class="token punctuation">,</span>
   millisecond<span class="token operator">:</span> <span class="token number">0</span><span class="token punctuation">,</span>
   microsecond<span class="token operator">:</span> <span class="token number">0</span><span class="token punctuation">,</span>
   nanosecond<span class="token operator">:</span> <span class="token number">0</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 20:00</span></code></pre><h3 id="plus"><a class="heading-link" href="#plus"></a>time.<strong>plus</strong>(<em>duration</em>: object, <em>options</em>?: object) : Temporal.Time</h3><p><strong>Parameters:</strong></p>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 20:00</span></code></pre><h3 id="add"><a class="heading-link" href="#add"></a>time.<strong>add</strong>(<em>duration</em>: object, <em>options</em>?: object) : Temporal.Time</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>duration</code> (object): A <code>Temporal.Duration</code> object or a duration-like object.</li>
 <li><code>options</code> (optional object): An object with properties representing options for the addition.
@@ -362,7 +362,7 @@ However, it may have an effect in other calendars where those units are not alwa
 <p>Adding a negative duration is equivalent to subtracting the absolute value of that duration.</p>
 <p>Usage example:</p>
 <pre class="language-javascript"><code class="language-javascript">time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'19:39:09.068346205'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-time<span class="token punctuation">.</span><span class="token function">plus</span><span class="token punctuation">(</span><span class="token punctuation">{</span> minutes<span class="token operator">:</span> <span class="token number">5</span><span class="token punctuation">,</span> nanoseconds<span class="token operator">:</span> <span class="token number">800</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 19:44:09.068347005</span></code></pre><h3 id="minus"><a class="heading-link" href="#minus"></a>time.<strong>minus</strong>(<em>duration</em>: object, <em>options</em>?: object) : Temporal.Time</h3><p><strong>Parameters:</strong></p>
+time<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token punctuation">{</span> minutes<span class="token operator">:</span> <span class="token number">5</span><span class="token punctuation">,</span> nanoseconds<span class="token operator">:</span> <span class="token number">800</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 19:44:09.068347005</span></code></pre><h3 id="subtract"><a class="heading-link" href="#subtract"></a>time.<strong>subtract</strong>(<em>duration</em>: object, <em>options</em>?: object) : Temporal.Time</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>duration</code> (object): A <code>Temporal.Duration</code> object or a duration-like object.</li>
 <li><code>options</code> (optional object): An object with properties representing options for the subtraction.
@@ -382,7 +382,7 @@ However, it may have an effect in other calendars where those units are not alwa
 <p>Subtracting a negative duration is equivalent to adding the absolute value of that duration.</p>
 <p>Usage example:</p>
 <pre class="language-javascript"><code class="language-javascript">time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'19:39:09.068346205'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-time<span class="token punctuation">.</span><span class="token function">minus</span><span class="token punctuation">(</span><span class="token punctuation">{</span> minutes<span class="token operator">:</span> <span class="token number">5</span><span class="token punctuation">,</span> nanoseconds<span class="token operator">:</span> <span class="token number">800</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 19:34:09.068345405</span></code></pre><h3 id="difference"><a class="heading-link" href="#difference"></a>time.<strong>difference</strong>(<em>other</em>: Temporal.Time, <em>options</em>?: object) : Temporal.Duration</h3><p><strong>Parameters:</strong></p>
+time<span class="token punctuation">.</span><span class="token function">subtract</span><span class="token punctuation">(</span><span class="token punctuation">{</span> minutes<span class="token operator">:</span> <span class="token number">5</span><span class="token punctuation">,</span> nanoseconds<span class="token operator">:</span> <span class="token number">800</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 19:34:09.068345405</span></code></pre><h3 id="difference"><a class="heading-link" href="#difference"></a>time.<strong>difference</strong>(<em>other</em>: Temporal.Time, <em>options</em>?: object) : Temporal.Duration</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>other</code> (<code>Temporal.Time</code>): Another time with which to compute the difference.</li>
 <li><code>options</code> (optional object): An object with properties representing options for the operation.

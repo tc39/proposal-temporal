@@ -5211,15 +5211,15 @@
             if (!calendar) throw new RangeError('A starting point is required for years rounding'); // convert months and weeks to days by calculating difference(
             // relativeTo + years, relativeTo - { years, months, weeks })
 
-            var yearsBefore = calendar.dateMinus(relativeTo, new TemporalDuration(years), {}, TemporalDate);
+            var yearsBefore = calendar.dateSubtract(relativeTo, new TemporalDuration(years), {}, TemporalDate);
             var yearsMonthsWeeks = new TemporalDuration(years, months, weeks);
-            var yearsMonthsWeeksBefore = calendar.dateMinus(relativeTo, yearsMonthsWeeks, {}, TemporalDate);
+            var yearsMonthsWeeksBefore = calendar.dateSubtract(relativeTo, yearsMonthsWeeks, {}, TemporalDate);
             var monthsWeeksInDays = ES.DifferenceDate(GetSlot(yearsMonthsWeeksBefore, ISO_YEAR), GetSlot(yearsMonthsWeeksBefore, ISO_MONTH), GetSlot(yearsMonthsWeeksBefore, ISO_DAY), GetSlot(yearsBefore, ISO_YEAR), GetSlot(yearsBefore, ISO_MONTH), GetSlot(yearsBefore, ISO_DAY), 'days');
             seconds += milliseconds * 1e-3 + microseconds * 1e-6 + nanoseconds * 1e-9;
             days += monthsWeeksInDays.days;
             days += ((seconds / 60 + minutes) / 60 + hours) / 24;
             var oneYear = new TemporalDuration(1);
-            relativeTo = calendar.dateMinus(relativeTo, oneYear, {}, TemporalDate);
+            relativeTo = calendar.dateSubtract(relativeTo, oneYear, {}, TemporalDate);
             var oneYearDays = calendar.daysInYear(relativeTo);
             years += days / oneYearDays;
             years = ES.RoundNumberToIncrement(years, increment, roundingMode);
@@ -5233,18 +5233,18 @@
             //   { years, months }, relativeTo - { years, months, weeks })
 
             var yearsMonths = new TemporalDuration(years, months);
-            var yearsMonthsBefore = calendar.dateMinus(relativeTo, yearsMonths, {}, TemporalDate);
+            var yearsMonthsBefore = calendar.dateSubtract(relativeTo, yearsMonths, {}, TemporalDate);
 
             var _yearsMonthsWeeks = new TemporalDuration(years, months, weeks);
 
-            var _yearsMonthsWeeksBefore = calendar.dateMinus(relativeTo, _yearsMonthsWeeks, {}, TemporalDate);
+            var _yearsMonthsWeeksBefore = calendar.dateSubtract(relativeTo, _yearsMonthsWeeks, {}, TemporalDate);
 
             var weeksInDays = ES.DifferenceDate(GetSlot(_yearsMonthsWeeksBefore, ISO_YEAR), GetSlot(_yearsMonthsWeeksBefore, ISO_MONTH), GetSlot(_yearsMonthsWeeksBefore, ISO_DAY), GetSlot(yearsMonthsBefore, ISO_YEAR), GetSlot(yearsMonthsBefore, ISO_MONTH), GetSlot(yearsMonthsBefore, ISO_DAY), 'days');
             seconds += milliseconds * 1e-3 + microseconds * 1e-6 + nanoseconds * 1e-9;
             days += weeksInDays.days;
             days += ((seconds / 60 + minutes) / 60 + hours) / 24;
             var oneMonth = new TemporalDuration(0, 1);
-            relativeTo = calendar.dateMinus(relativeTo, oneMonth, {}, TemporalDate);
+            relativeTo = calendar.dateSubtract(relativeTo, oneMonth, {}, TemporalDate);
             var oneMonthDays = calendar.daysInMonth(relativeTo);
             months += days / oneMonthDays;
             months = ES.RoundNumberToIncrement(months, increment, roundingMode);
@@ -5258,7 +5258,7 @@
             seconds += milliseconds * 1e-3 + microseconds * 1e-6 + nanoseconds * 1e-9;
             days += ((seconds / 60 + minutes) / 60 + hours) / 24;
             var oneWeek = new TemporalDuration(0, 0, 1);
-            relativeTo = calendar.dateMinus(relativeTo, oneWeek, {}, TemporalDate);
+            relativeTo = calendar.dateSubtract(relativeTo, oneWeek, {}, TemporalDate);
             var oneWeekDays = calendar.daysInWeek(relativeTo);
             weeks += days / oneWeekDays;
             weeks = ES.RoundNumberToIncrement(weeks, increment, roundingMode);
@@ -5491,13 +5491,13 @@
         throw new Error('not implemented');
       }
     }, {
-      key: "datePlus",
-      value: function datePlus(date, duration, options, constructor) {
+      key: "dateAdd",
+      value: function dateAdd(date, duration, options, constructor) {
         throw new Error('not implemented');
       }
     }, {
-      key: "dateMinus",
-      value: function dateMinus(date, duration, options, constructor) {
+      key: "dateSubtract",
+      value: function dateSubtract(date, duration, options, constructor) {
         throw new Error('not implemented');
       }
     }, {
@@ -5663,8 +5663,8 @@
         1972);
       }
     }, {
-      key: "datePlus",
-      value: function datePlus(date, duration, options, constructor) {
+      key: "dateAdd",
+      value: function dateAdd(date, duration, options, constructor) {
         if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
         options = ES.NormalizeOptionsObject(options);
         var overflow = ES.ToTemporalOverflow(options);
@@ -5695,8 +5695,8 @@
         return new constructor(year, month, day, this);
       }
     }, {
-      key: "dateMinus",
-      value: function dateMinus(date, duration, options, constructor) {
+      key: "dateSubtract",
+      value: function dateSubtract(date, duration, options, constructor) {
         if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
         options = ES.NormalizeOptionsObject(options);
         var overflow = ES.ToTemporalOverflow(options);
@@ -6006,8 +6006,8 @@
         return bigIntIfAvailable(GetSlot(this, EPOCHNANOSECONDS));
       }
     }, {
-      key: "plus",
-      value: function plus(temporalDurationLike) {
+      key: "add",
+      value: function add(temporalDurationLike) {
         if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
 
         var _ES$ToLimitedTemporal = ES.ToLimitedTemporalDuration(temporalDurationLike, ['years', 'months', 'weeks', 'days']),
@@ -6019,14 +6019,14 @@
             nanoseconds = _ES$ToLimitedTemporal.nanoseconds;
 
         ES.RejectDurationSign(0, 0, 0, 0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
-        var add = BigInteger(0);
-        add = add.plus(BigInteger(nanoseconds));
-        add = add.plus(BigInteger(microseconds).multiply(1e3));
-        add = add.plus(BigInteger(milliseconds).multiply(1e6));
-        add = add.plus(BigInteger(seconds).multiply(1e9));
-        add = add.plus(BigInteger(minutes).multiply(60 * 1e9));
-        add = add.plus(BigInteger(hours).multiply(60 * 60 * 1e9));
-        var ns = BigInteger(GetSlot(this, EPOCHNANOSECONDS)).plus(add);
+        var sum = BigInteger(0);
+        sum = sum.plus(BigInteger(nanoseconds));
+        sum = sum.plus(BigInteger(microseconds).multiply(1e3));
+        sum = sum.plus(BigInteger(milliseconds).multiply(1e6));
+        sum = sum.plus(BigInteger(seconds).multiply(1e9));
+        sum = sum.plus(BigInteger(minutes).multiply(60 * 1e9));
+        sum = sum.plus(BigInteger(hours).multiply(60 * 60 * 1e9));
+        var ns = BigInteger(GetSlot(this, EPOCHNANOSECONDS)).plus(sum);
         ES.RejectInstantRange(ns);
         var Construct = ES.SpeciesConstructor(this, Instant);
         var result = new Construct(bigIntIfAvailable(ns));
@@ -6034,8 +6034,8 @@
         return result;
       }
     }, {
-      key: "minus",
-      value: function minus(temporalDurationLike) {
+      key: "subtract",
+      value: function subtract(temporalDurationLike) {
         if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
 
         var _ES$ToLimitedTemporal2 = ES.ToLimitedTemporalDuration(temporalDurationLike, ['years', 'months', 'weeks', 'days']),
@@ -6047,14 +6047,14 @@
             nanoseconds = _ES$ToLimitedTemporal2.nanoseconds;
 
         ES.RejectDurationSign(0, 0, 0, 0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
-        var add = BigInteger(0);
-        add = add.plus(BigInteger(nanoseconds));
-        add = add.plus(BigInteger(microseconds).multiply(1e3));
-        add = add.plus(BigInteger(milliseconds).multiply(1e6));
-        add = add.plus(BigInteger(seconds).multiply(1e9));
-        add = add.plus(BigInteger(minutes).multiply(60 * 1e9));
-        add = add.plus(BigInteger(hours).multiply(60 * 60 * 1e9));
-        var ns = BigInteger(GetSlot(this, EPOCHNANOSECONDS)).minus(add);
+        var sum = BigInteger(0);
+        sum = sum.plus(BigInteger(nanoseconds));
+        sum = sum.plus(BigInteger(microseconds).multiply(1e3));
+        sum = sum.plus(BigInteger(milliseconds).multiply(1e6));
+        sum = sum.plus(BigInteger(seconds).multiply(1e9));
+        sum = sum.plus(BigInteger(minutes).multiply(60 * 1e9));
+        sum = sum.plus(BigInteger(hours).multiply(60 * 60 * 1e9));
+        var ns = BigInteger(GetSlot(this, EPOCHNANOSECONDS)).minus(sum);
         ES.RejectInstantRange(ns);
         var Construct = ES.SpeciesConstructor(this, Instant);
         var result = new Construct(bigIntIfAvailable(ns));
@@ -6374,8 +6374,8 @@
         return result;
       }
     }, {
-      key: "plus",
-      value: function plus(temporalDurationLike) {
+      key: "add",
+      value: function add(temporalDurationLike) {
         var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
         if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
         var duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
@@ -6402,13 +6402,13 @@
           days: days
         };
         var Construct = ES.SpeciesConstructor(this, Date);
-        var result = GetSlot(this, CALENDAR).datePlus(this, duration, options, Construct);
+        var result = GetSlot(this, CALENDAR).dateAdd(this, duration, options, Construct);
         if (!ES.IsTemporalDate(result)) throw new TypeError('invalid result');
         return result;
       }
     }, {
-      key: "minus",
-      value: function minus(temporalDurationLike) {
+      key: "subtract",
+      value: function subtract(temporalDurationLike) {
         var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
         if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
         var duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
@@ -6435,7 +6435,7 @@
           days: days
         };
         var Construct = ES.SpeciesConstructor(this, Date);
-        var result = GetSlot(this, CALENDAR).dateMinus(this, duration, options, Construct);
+        var result = GetSlot(this, CALENDAR).dateSubtract(this, duration, options, Construct);
         if (!ES.IsTemporalDate(result)) throw new TypeError('invalid result');
         return result;
       }
@@ -6807,8 +6807,8 @@
         return result;
       }
     }, {
-      key: "plus",
-      value: function plus(temporalDurationLike) {
+      key: "add",
+      value: function add(temporalDurationLike) {
         var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
         if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
         var duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
@@ -6870,7 +6870,7 @@
         var calendar = GetSlot(this, CALENDAR);
         var TemporalDate = GetIntrinsic$1('%Temporal.Date%');
         var datePart = new TemporalDate(GetSlot(this, ISO_YEAR), GetSlot(this, ISO_MONTH), GetSlot(this, ISO_DAY), calendar);
-        var addedDate = calendar.datePlus(datePart, duration, options, TemporalDate);
+        var addedDate = calendar.dateAdd(datePart, duration, options, TemporalDate);
         var year = GetSlot(addedDate, ISO_YEAR);
         var month = GetSlot(addedDate, ISO_MONTH);
         var day = GetSlot(addedDate, ISO_DAY);
@@ -6880,8 +6880,8 @@
         return result;
       }
     }, {
-      key: "minus",
-      value: function minus(temporalDurationLike) {
+      key: "subtract",
+      value: function subtract(temporalDurationLike) {
         var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
         if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
         var duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
@@ -6943,7 +6943,7 @@
         var calendar = GetSlot(this, CALENDAR);
         var TemporalDate = GetIntrinsic$1('%Temporal.Date%');
         var datePart = new TemporalDate(GetSlot(this, ISO_YEAR), GetSlot(this, ISO_MONTH), GetSlot(this, ISO_DAY), calendar);
-        var subtractedDate = calendar.dateMinus(datePart, duration, options, TemporalDate);
+        var subtractedDate = calendar.dateSubtract(datePart, duration, options, TemporalDate);
         var year = GetSlot(subtractedDate, ISO_YEAR);
         var month = GetSlot(subtractedDate, ISO_MONTH);
         var day = GetSlot(subtractedDate, ISO_DAY);
@@ -7573,8 +7573,8 @@
         return result;
       }
     }, {
-      key: "plus",
-      value: function plus(other) {
+      key: "add",
+      value: function add(other) {
         var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
         if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
 
@@ -7612,8 +7612,8 @@
         return result;
       }
     }, {
-      key: "minus",
-      value: function minus(other) {
+      key: "subtract",
+      value: function subtract(other) {
         var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
         if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
 
@@ -8137,8 +8137,8 @@
         return result;
       }
     }, {
-      key: "plus",
-      value: function plus(temporalDurationLike) {
+      key: "add",
+      value: function add(temporalDurationLike) {
         var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
         if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
         var hour = this.hour,
@@ -8197,8 +8197,8 @@
         return result;
       }
     }, {
-      key: "minus",
-      value: function minus(temporalDurationLike) {
+      key: "subtract",
+      value: function subtract(temporalDurationLike) {
         var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
         if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
         var hour = this.hour,
@@ -8655,7 +8655,7 @@
         switch (disambiguation) {
           case 'earlier':
             {
-              var earlier = dateTime.minus(diff);
+              var earlier = dateTime.subtract(diff);
               return this.getPossibleInstantsFor(earlier)[0];
             }
 
@@ -8663,7 +8663,7 @@
 
           case 'later':
             {
-              var later = dateTime.plus(diff);
+              var later = dateTime.add(diff);
               var possible = this.getPossibleInstantsFor(later);
               return possible[possible.length - 1];
             }
@@ -8819,8 +8819,8 @@
         return result;
       }
     }, {
-      key: "plus",
-      value: function plus(temporalDurationLike) {
+      key: "add",
+      value: function add(temporalDurationLike) {
         var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
         if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
         var duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
@@ -8847,7 +8847,7 @@
         var startDate = calendar.dateFromFields(_objectSpread2(_objectSpread2({}, fields), {}, {
           day: day
         }), {}, TemporalDate);
-        var addedDate = calendar.datePlus(startDate, _objectSpread2(_objectSpread2({}, duration), {}, {
+        var addedDate = calendar.dateAdd(startDate, _objectSpread2(_objectSpread2({}, duration), {}, {
           days: days
         }), options, TemporalDate);
         var Construct = ES.SpeciesConstructor(this, YearMonth);
@@ -8856,8 +8856,8 @@
         return result;
       }
     }, {
-      key: "minus",
-      value: function minus(temporalDurationLike) {
+      key: "subtract",
+      value: function subtract(temporalDurationLike) {
         var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
         if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
         var duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
@@ -8884,7 +8884,7 @@
         var startDate = calendar.dateFromFields(_objectSpread2(_objectSpread2({}, fields), {}, {
           day: day
         }), {}, TemporalDate);
-        var subtractedDate = calendar.dateMinus(startDate, _objectSpread2(_objectSpread2({}, duration), {}, {
+        var subtractedDate = calendar.dateSubtract(startDate, _objectSpread2(_objectSpread2({}, duration), {}, {
           days: days
         }), options, TemporalDate);
         var Construct = ES.SpeciesConstructor(this, YearMonth);
