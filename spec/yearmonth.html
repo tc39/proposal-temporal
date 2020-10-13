@@ -285,7 +285,13 @@
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
         1. Perform ? RequireInternalSlot(_other_, [[InitializedTemporalYearMonth]]).
         1. Set _options_ to ? NormalizeOptionsObject(_options_).
-        1. Let _largestUnit_ be ? ToLargestTemporalUnit(_options_, « *"weeks"*, *"days"*, *"hours"*, *"minutes"*, *"seconds"*, *"milliesconds"*, *"microseconds"*, *"nanoseconds"* », *"years"*).
+        1. Let _disallowedUnits_ be « *"weeks"*, *"days"*, *"hours"*, *"minutes"*, *"seconds"*, *"milliesconds"*, *"microseconds"*, *"nanoseconds"* ».
+        1. Let _smallestUnit_ be ? ToSmallestTemporalUnit(_options_, *"months"*, _disallowedUnits_).
+        1. Let _largestUnit_ be ? ToLargestTemporalUnit(_options_, _disallowedUnits_, *"years"*).
+        1. Perform ? ValidateTemporalUnitRange(_largestUnit_, _smallestUnit_).
+        1. Let _roundingMode_ be ? ToTemporalRoundingMode(_options_).
+        1. Let _roundingIncrement_ be ? ToTemporalRoundingIncrement(_options_, *undefined*, *false*).
+        1. <mark>TODO: Delegate to calendar.</mark>
         1. Let _years_ be _yearMonth_.[[ISOYear]] - _other_.[[ISOYear]].
         1. Let _months_ be _yearMonth_.[[ISOMonth]] - _other_.[[ISOMonth]].
         1. If _months_ &lt; 0, then
@@ -295,6 +301,11 @@
           1. Set _months_ to _months_ + _years_ × 12.
           1. Set _years_ to 0.
         1. <mark>Assert: _months_ ≥ 0.</mark>
+        1. If _smallestUnit_ is not *"months"* or _roundingIncrement_ ≠ 1, then
+          1. Let _relativeTo_ be ! CreateTemporalDateTime(_yearMonth_.[[ISOYear]], _yearMonth_.[[ISOMonth]], <mark>1</mark>, 0, 0, 0, 0, 0, 0, _yearMonth_.[[Calendar]]).
+          1. Let _roundResult_ be ? RoundDuration(_years_, _months_, 0, 0, 0, 0, 0, 0, 0, 0, _roundingIncrement_, _smallestUnit_, _roundingMode_, _relativeTo_).
+          1. Set _years_ to _roundResult_.[[Years]].
+          1. Set _months_ to _roundResult_.[[Months]].
         1. Return ? CreateTemporalDuration(_years_, _months_, 0, 0, 0, 0, 0, 0, 0).
       </emu-alg>
     </emu-clause>

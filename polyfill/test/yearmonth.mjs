@@ -238,6 +238,98 @@ describe('YearMonth', () => {
       );
       [{}, () => {}, undefined].forEach((options) => equal(`${feb21.difference(feb20, options)}`, 'P1Y'));
     });
+    const earlier = YearMonth.from('2019-01');
+    const later = YearMonth.from('2021-09');
+    it('throws on disallowed or invalid smallestUnit', () => {
+      [
+        'era',
+        'weeks',
+        'days',
+        'hours',
+        'minutes',
+        'seconds',
+        'milliseconds',
+        'microseconds',
+        'nanoseconds',
+        'nonsense'
+      ].forEach((smallestUnit) => {
+        throws(() => later.difference(earlier, { smallestUnit }), RangeError);
+      });
+    });
+    it('throws if smallestUnit is larger than largestUnit', () => {
+      throws(() => later.difference(earlier, { largestUnit: 'months', smallestUnit: 'years' }), RangeError);
+    });
+    it('throws on invalid roundingMode', () => {
+      throws(() => later.difference(earlier, { roundingMode: 'cile' }), RangeError);
+    });
+    const incrementOneNearest = [
+      ['years', 'P3Y'],
+      ['months', 'P2Y8M']
+    ];
+    incrementOneNearest.forEach(([smallestUnit, expected]) => {
+      const roundingMode = 'nearest';
+      it(`rounds to nearest ${smallestUnit}`, () => {
+        equal(`${later.difference(earlier, { smallestUnit, roundingMode })}`, expected);
+        equal(`${earlier.difference(later, { smallestUnit, roundingMode })}`, `-${expected}`);
+      });
+    });
+    const incrementOneCeil = [
+      ['years', 'P3Y', '-P2Y'],
+      ['months', 'P2Y8M', '-P2Y8M']
+    ];
+    incrementOneCeil.forEach(([smallestUnit, expectedPositive, expectedNegative]) => {
+      const roundingMode = 'ceil';
+      it(`rounds up to ${smallestUnit}`, () => {
+        equal(`${later.difference(earlier, { smallestUnit, roundingMode })}`, expectedPositive);
+        equal(`${earlier.difference(later, { smallestUnit, roundingMode })}`, expectedNegative);
+      });
+    });
+    const incrementOneFloor = [
+      ['years', 'P2Y', '-P3Y'],
+      ['months', 'P2Y8M', '-P2Y8M']
+    ];
+    incrementOneFloor.forEach(([smallestUnit, expectedPositive, expectedNegative]) => {
+      const roundingMode = 'floor';
+      it(`rounds down to ${smallestUnit}`, () => {
+        equal(`${later.difference(earlier, { smallestUnit, roundingMode })}`, expectedPositive);
+        equal(`${earlier.difference(later, { smallestUnit, roundingMode })}`, expectedNegative);
+      });
+    });
+    const incrementOneTrunc = [
+      ['years', 'P2Y'],
+      ['months', 'P2Y8M']
+    ];
+    incrementOneTrunc.forEach(([smallestUnit, expected]) => {
+      const roundingMode = 'trunc';
+      it(`truncates to ${smallestUnit}`, () => {
+        equal(`${later.difference(earlier, { smallestUnit, roundingMode })}`, expected);
+        equal(`${earlier.difference(later, { smallestUnit, roundingMode })}`, `-${expected}`);
+      });
+    });
+    it('nearest is the default', () => {
+      equal(`${later.difference(earlier, { smallestUnit: 'years' })}`, 'P3Y');
+      equal(`${earlier.difference(later, { smallestUnit: 'years' })}`, '-P3Y');
+    });
+    it('rounds to an increment of years', () => {
+      equal(`${later.difference(earlier, { smallestUnit: 'years', roundingIncrement: 4 })}`, 'P4Y');
+    });
+    it('rounds to an increment of months', () => {
+      equal(`${later.difference(earlier, { smallestUnit: 'months', roundingIncrement: 10 })}`, 'P2Y10M');
+      equal(
+        `${later.difference(earlier, { largestUnit: 'months', smallestUnit: 'months', roundingIncrement: 10 })}`,
+        'P30M'
+      );
+    });
+    it('accepts singular units', () => {
+      equal(
+        `${later.difference(earlier, { smallestUnit: 'year' })}`,
+        `${later.difference(earlier, { smallestUnit: 'years' })}`
+      );
+      equal(
+        `${later.difference(earlier, { smallestUnit: 'month' })}`,
+        `${later.difference(earlier, { smallestUnit: 'months' })}`
+      );
+    });
   });
   describe('YearMonth.add() works', () => {
     const ym = YearMonth.from('2019-11');

@@ -314,11 +314,18 @@ ym.subtract({years: 20, months: 4})  // => 1999-02
   - `largestUnit` (string): The largest unit of time to allow in the resulting `Temporal.Duration` object.
     Valid values are `'auto'`, `'years'` and `'months'`.
     The default is `'auto'`.
-
+  - `smallestUnit` (string): The smallest unit of time to round to in the resulting `Temporal.Duration` object.
+    Valid values are `'years'` and `'months'`.
+    The default is `'months'`, i.e., no rounding.
+  - `roundingIncrement` (number): The granularity to round to, of the unit given by `smallestUnit`.
+    The default is 1.
+  - `roundingMode` (string): How to handle the remainder, if rounding.
+    Valid values are `'ceil'`, `'floor'`, `'trunc'`, and `'nearest'`.
+    The default is `'nearest'`.
 
 **Returns:** a `Temporal.Duration` representing the difference between `yearMonth` and `other`.
 
-This method computes the difference between the two months represented by `yearMonth` and `other`, and returns it as a `Temporal.Duration` object.
+This method computes the difference between the two months represented by `yearMonth` and `other`, optionally rounds it, and returns it as a `Temporal.Duration` object.
 If `other` is later than `yearMonth` then the resulting duration will be negative.
 
 The `largestUnit` option controls how the resulting duration is expressed.
@@ -327,7 +334,12 @@ A difference of one year and two months will become 14 months when `largestUnit`
 However, a difference of one month will still be one month even if `largestUnit` is `"years"`.
 A value of `'auto'` means `'years'`.
 
-Unlike other Temporal types, days and lower units are not allowed, because the data model of `Temporal.YearMonth` doesn't have that accuracy.
+You can round the result using the `smallestUnit`, `roundingIncrement`, and `roundingMode` options.
+These behave as in the `Temporal.Duration.round()` method, but increments of months and larger are allowed.
+Since rounding to calendar units requires a reference point, the first day of `yearMonth` is used as the reference point.
+The default is to do no rounding.
+
+Unlike other Temporal types, weeks and lower are not allowed for either `largestUnit` or `smallestUnit`, because the data model of `Temporal.YearMonth` doesn't have that accuracy.
 
 Computing the difference between two months in different calendar systems is not supported.
 
