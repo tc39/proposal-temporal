@@ -225,6 +225,30 @@ Same as `getEpochSeconds()`, but with nanosecond (10<sup>&minus;9</sup> second) 
 
 The value returned from this method is suitable to be passed to `new Temporal.Instant()`.
 
+### instant.**toZonedDateTimeISO**(_timeZone_: object | string) : Temporal.ZonedDateTime
+
+**Parameters:**
+
+- `timeZone` (object or string): A `Temporal.TimeZone` object, or an object implementing the [time zone protocol](./timezone.md#protocol), or a string description of the time zone; either its IANA name or UTC offset.
+
+**Returns:** a `Temporal.ZonedDateTime` object representing the calendar date, wall-clock time, time zone offset, and `timeZone`, according to the reckoning of the ISO 8601 calendar, at the exact time indicated by `instant`.
+
+For a list of IANA time zone names, see the current version of the [IANA time zone database](https://www.iana.org/time-zones).
+A convenient list is also available [on Wikipedia](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones), although it might not reflect the latest official status.
+
+This method is one way to convert a `Temporal.Instant` to a `Temporal.ZonedDateTime`.
+It is the same as `toZonedDateTime()`, but always uses the ISO 8601 calendar.
+Use this method if you are not doing computations in other calendars.
+
+Example usage:
+```js
+// Converting a specific exact time to a calendar date / wall-clock time
+timestamp = Temporal.Instant.fromEpochSeconds(1553993100);
+timestamp.toZonedDateTimeISO('Europe/Berlin'); // => 2019-03-31T01:45+02:00[Europe/Berlin]
+timestamp.toZonedDateTimeISO('UTC'); // => 2019-03-31T00:45+00:00[UTC]
+timestamp.toZonedDateTimeISO('-08:00'); // => 2019-03-30T16:45-08:00[-08:00]
+```
+
 ### instant.**toZonedDateTime**(_timeZone_: object | string, _calendar_: object | string) : Temporal.ZonedDateTime
 
 **Parameters:**
@@ -257,6 +281,30 @@ zdt = epoch.toZonedDateTime(tz, cal);
   // => 1970-01-01T09:00+09:00[Asia/Tokyo][c=japanese]
 console.log(zdt.year, zdt.era);
   // => 45 showa
+```
+
+### instant.**toDateTimeISO**(_timeZone_: object | string) : Temporal.DateTime
+
+**Parameters:**
+
+- `timeZone` (object or string): A `Temporal.TimeZone` object, or an object implementing the [time zone protocol](./timezone.md#protocol), or a string description of the time zone; either its IANA name or UTC offset.
+
+**Returns:** a `Temporal.DateTime` object representing the calendar date, wall-clock time in `timeZone`, according to the reckoning of the ISO 8601 calendar, at the exact time indicated by `instant`.
+
+For a list of IANA time zone names, see the current version of the [IANA time zone database](https://www.iana.org/time-zones).
+A convenient list is also available [on Wikipedia](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones), although it might not reflect the latest official status.
+
+This method is one way to convert a `Temporal.Instant` to a `Temporal.DateTime`.
+It is the same as `toDateTime()`, but always uses the ISO 8601 calendar.
+Use this method if you are not doing computations in other calendars.
+
+Example usage:
+```js
+// Converting a specific instant time to a calendar date / wall-clock time
+timestamp = Temporal.Instant.fromEpochSeconds(1553993100);
+timestamp.toDateTime('Europe/Berlin'); // => 2019-03-31T01:45
+timestamp.toDateTime('UTC'); // => 2019-03-31T00:45
+timestamp.toDateTime('-08:00'); // => 2019-03-30T16:45
 ```
 
 ### instant.**toDateTime**(_timeZone_: object | string, _calendar_: object | string) : Temporal.DateTime

@@ -1086,8 +1086,8 @@ describe('DateTime', () => {
     it('converting from Instant', () => {
       const min = Temporal.Instant.from('-271821-04-20T00:00Z');
       const max = Temporal.Instant.from('+275760-09-13T00:00Z');
-      equal(`${min.toDateTime('-23:59')}`, '-271821-04-19T00:01');
-      equal(`${max.toDateTime('+23:59')}`, '+275760-09-13T23:59');
+      equal(`${min.toDateTimeISO('-23:59')}`, '-271821-04-19T00:01');
+      equal(`${max.toDateTimeISO('+23:59')}`, '+275760-09-13T23:59');
     });
     it('converting from Date and Time', () => {
       const midnight = Temporal.Time.from('00:00');

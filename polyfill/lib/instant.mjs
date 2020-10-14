@@ -241,6 +241,12 @@ export class Instant {
     const calendar = ES.ToTemporalCalendar(calendarLike);
     return ES.GetTemporalDateTimeFor(timeZone, this, calendar);
   }
+  toDateTimeISO(temporalTimeZoneLike) {
+    if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
+    const timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);
+    const calendar = GetDefaultCalendar();
+    return ES.GetTemporalDateTimeFor(timeZone, this, calendar);
+  }
 
   static fromEpochSeconds(epochSeconds) {
     epochSeconds = ES.ToNumber(epochSeconds);
