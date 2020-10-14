@@ -105,6 +105,17 @@
       </emu-alg>
     </emu-clause>
 
+    <emu-clause id="sec-temporal.now.datetimeiso">
+      <h1>Temporal.now.dateTimeISO ( [ _temporalTimeZoneLike_ ] )</h1>
+      <p>
+        The `dateTimeISO` method takes one argument _temporalTimeZoneLike_.
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Return ? SystemDateTime(_temporalTimeZoneLike_).
+      </emu-alg>
+    </emu-clause>
+
     <emu-clause id="sec-temporal.now.date">
       <h1>Temporal.now.date ( _calendar_ [ , _temporalTimeZoneLike_ ] )</h1>
       <p>
@@ -113,6 +124,18 @@
       </p>
       <emu-alg>
         1. Let _dateTime_ be ? SystemDateTime(_temporalTimeZoneLike_, _calendar_).
+        1. Return ? CreateTemporalDate(_dateTime_.[[ISOYear]], _dateTime_.[[ISOMonth]], _dateTime_.[[ISODay]]).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal.now.dateiso">
+      <h1>Temporal.now.dateISO ( [ _temporalTimeZoneLike_ ] )</h1>
+      <p>
+        The `dateISO` method takes one argument _temporalTimeZoneLike_.
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _dateTime_ be ? SystemDateTime(_temporalTimeZoneLike_).
         1. Return ? CreateTemporalDate(_dateTime_.[[ISOYear]], _dateTime_.[[ISOMonth]], _dateTime_.[[ISODay]]).
       </emu-alg>
     </emu-clause>
