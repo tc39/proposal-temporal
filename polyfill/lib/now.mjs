@@ -5,7 +5,9 @@ import { GetIntrinsic } from './intrinsicclass.mjs';
 export const now = {
   instant,
   dateTime,
+  dateTimeISO,
   date,
+  dateISO,
   timeISO,
   timeZone
 };
@@ -20,8 +22,17 @@ function dateTime(calendarLike, temporalTimeZoneLike = timeZone()) {
   const abs = instant();
   return ES.GetTemporalDateTimeFor(timeZone, abs, calendar);
 }
+function dateTimeISO(temporalTimeZoneLike = timeZone()) {
+  const timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);
+  const calendar = GetDefaultCalendar();
+  const abs = instant();
+  return ES.GetTemporalDateTimeFor(timeZone, abs, calendar);
+}
 function date(calendarLike, temporalTimeZoneLike = timeZone()) {
   return ES.TemporalDateTimeToDate(dateTime(calendarLike, temporalTimeZoneLike));
+}
+function dateISO(temporalTimeZoneLike = timeZone()) {
+  return ES.TemporalDateTimeToDate(dateTimeISO(temporalTimeZoneLike));
 }
 function timeISO(temporalTimeZoneLike = timeZone()) {
   return ES.TemporalDateTimeToTime(dateTimeISO(temporalTimeZoneLike));

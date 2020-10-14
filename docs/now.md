@@ -9,20 +9,19 @@ The `Temporal.now` object has several methods which give information about the c
 
 ## Methods
 
-### Temporal.now.**zonedDateTime**(_timeZone_: object | string = Temporal.now.timeZone(), _calendar_: object | string = 'iso8601') : Temporal.DateTime
+### Temporal.now.**zonedDateTimeISO**(_timeZone_: object | string = Temporal.now.timeZone()) : Temporal.ZonedDateTime
 
 **Parameters:**
 
 - `timeZone` (optional object or string): The time zone to get the current date and time in, as a `Temporal.TimeZone` object, an object implementing the [time zone protocol](./timezone.md#protocol), or a string.
   If not given, the current system time zone will be used.
-- `calendar` (optional `Temporal.Calendar`, plain object, or string): The calendar system to get the current date and time in.
-  If not given, the ISO 8601 calendar will be used.
 
 **Returns:** a `Temporal.ZonedDateTime` object representing the current system date, time, time zone, and time zone offset.
 
-This method gets the current date, time, time zone, and time zone offset according to the system settings.
-Optionally a time zone can be given in which the time is computed, and a calendar system in which the date is reckoned.
-Subsequent calculations using this object (e.g. adding days or changing the time) will retain the same time zone and calendar.
+This method gets the current date, time, time zone, and time zone offset according to the system settings, in the reckoning of the ISO 8601 calendar system.
+Optionally a time zone can be given in which the time is computed, instead of the current system time zone.
+
+This method is the same as `zonedDateTime()`, but always uses the ISO 8601 calendar.
 
 Example usage:
 
@@ -32,9 +31,9 @@ financialCentres = {
   London: 'Europe/London',
   Tokyo: 'Asia/Tokyo'
 };
-console.log(`Here: ${Temporal.now.zonedDateTime()}`);
+console.log(`Here: ${Temporal.now.zonedDateTimeISO()}`);
 Object.entries(financialCentres).forEach(([name, timeZone]) => {
-  console.log(`${name}: ${Temporal.now.zonedDateTime(timeZone)}`);
+  console.log(`${name}: ${Temporal.now.zonedDateTimeISO(timeZone)}`);
 });
 // example output:
 // Here: 2020-09-18T01:17:48.431957915-07:00[America/Los_Angeles]
@@ -105,6 +104,41 @@ nextTransition.toDateTime(tz);
 // On 2020-03-08T03:00 the clock will change from UTC -08:00 to -07:00
 ```
 
+### Temporal.now.**dateTimeISO**(_timeZone_: object | string = Temporal.now.timeZone()) : Temporal.DateTime
+
+**Parameters:**
+
+- `timeZone` (optional object or string): The time zone to get the current date and time in, as a `Temporal.TimeZone` object, an object implementing the [time zone protocol](./timezone.md#protocol), or a string.
+  If not given, the current system time zone will be used.
+
+**Returns:** a `Temporal.DateTime` object representing the current system date and time in the reckoning of the ISO 8601 calendar.
+
+This method gets the current calendar date and wall-clock time according to the system settings.
+Optionally a time zone can be given in which the time is computed, instead of the current system time zone.
+
+This method is the same as `dateTime()`, but always uses the ISO 8601 calendar.
+
+Example usage:
+
+<!-- prettier-ignore-start -->
+```js
+financialCentres = {
+  'New York': 'America/New_York',
+  'London': 'Europe/London',
+  'Tokyo': 'Asia/Tokyo',
+};
+console.log(`Here: ${Temporal.now.dateTimeISO()}`);
+Object.entries(financialCentres).forEach(([name, timeZone]) => {
+  console.log(`${name}: ${Temporal.now.dateTimeISO(timeZone)}`);
+});
+// example output:
+// Here: 2020-01-24T21:51:02.142905166
+// New York: 2020-01-25T00:52:14.756462142
+// London: 2020-01-25T05:52:14.758534756
+// Tokyo: 2020-01-25T14:52:14.759534758
+```
+<!-- prettier-ignore-end -->
+
 ### Temporal.now.**dateTime**(_calendar_: object | string, _timeZone_: object | string = Temporal.now.timeZone()) : Temporal.DateTime
 
 **Parameters:**
@@ -120,24 +154,27 @@ Optionally a time zone can be given in which the time is computed, instead of th
 
 If you only want to use the ISO 8601 calendar, use `Temporal.now.dateTimeISO()`.
 
-<!-- prettier-ignore-start -->
+### Temporal.now.**dateISO**(_timeZone_: object | string = Temporal.now.timeZone()) : Temporal.Date
+
+**Parameters:**
+
+- `timeZone` (optional object or string): The time zone to get the current date and time in, as a `Temporal.TimeZone` object, an object implementing the [time zone protocol](./timezone.md#protocol), or a string.
+  If not given, the current system time zone will be used.
+
+**Returns:** a `Temporal.Date` object representing the current system date in the reckoning of the ISO 8601 calendar.
+
+This method gets the current calendar date according to the system settings.
+Optionally a time zone can be given in which the time is computed, instead of the current system time zone.
+
+This method is the same as `date()`, but always uses the ISO 8601 calendar.
+
+Example usage:
+
 ```js
-financialCentres = {
-  'New York': 'America/New_York',
-  'London': 'Europe/London',
-  'Tokyo': 'Asia/Tokyo',
-};
-console.log(`Here: ${Temporal.now.dateTime()}`);
-Object.entries(financialCentres).forEach(([name, timeZone]) => {
-  console.log(`${name}: ${Temporal.now.dateTime(timeZone)}`);
-});
-// example output:
-// Here: 2020-01-24T21:51:02.142905166
-// New York: 2020-01-25T00:52:14.756462142
-// London: 2020-01-25T05:52:14.758534756
-// Tokyo: 2020-01-25T14:52:14.759534758
+// Is it New Year in the ISO 8601 calendar?
+date = Temporal.now.dateISO();
+if (date.month === 1 && date.day === 1) console.log('New year!');
 ```
-<!-- prettier-ignore-end -->
 
 ### Temporal.now.**date**(_calendar_: object | string, _timeZone_: object | string = Temporal.now.timeZone()) : Temporal.Date
 

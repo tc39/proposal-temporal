@@ -64,7 +64,9 @@ describe('Userland time zone', () => {
     it('has no next transitions', () => assert.equal(obj.getNextTransition(), null));
     it('has no previous transitions', () => assert.equal(obj.getPreviousTransition(), null));
     it('works in Temporal.now', () => {
+      assert(Temporal.now.dateTimeISO(obj) instanceof Temporal.DateTime);
       assert(Temporal.now.dateTime('gregory', obj) instanceof Temporal.DateTime);
+      assert(Temporal.now.dateISO(obj) instanceof Temporal.Date);
       assert(Temporal.now.date('gregory', obj) instanceof Temporal.Date);
       assert(Temporal.now.timeISO(obj) instanceof Temporal.Time);
     });
@@ -108,7 +110,9 @@ describe('Userland time zone', () => {
         equal(dt.toInstant('Etc/Custom_UTC_Subclass').getEpochSeconds(), 0);
       });
       it('works for Temporal.now', () => {
+        assert(Temporal.now.dateTimeISO('Etc/Custom_UTC_Subclass') instanceof Temporal.DateTime);
         assert(Temporal.now.dateTime('gregory', 'Etc/Custom_UTC_Subclass') instanceof Temporal.DateTime);
+        assert(Temporal.now.dateISO('Etc/Custom_UTC_Subclass') instanceof Temporal.Date);
         assert(Temporal.now.date('gregory', 'Etc/Custom_UTC_Subclass') instanceof Temporal.Date);
         assert(Temporal.now.timeISO('Etc/Custom_UTC_Subclass') instanceof Temporal.Time);
       });
@@ -150,7 +154,9 @@ describe('Userland time zone', () => {
     it('prints in absolute.toString', () =>
       equal(abs.toString(obj), '1970-01-01T00:00+00:00[Etc/Custom_UTC_Protocol]'));
     it('works in Temporal.now', () => {
+      assert(Temporal.now.dateTimeISO(obj) instanceof Temporal.DateTime);
       assert(Temporal.now.dateTime('gregory', obj) instanceof Temporal.DateTime);
+      assert(Temporal.now.dateISO(obj) instanceof Temporal.Date);
       assert(Temporal.now.date('gregory', obj) instanceof Temporal.Date);
       assert(Temporal.now.timeISO(obj) instanceof Temporal.Time);
     });
@@ -194,7 +200,9 @@ describe('Userland time zone', () => {
         equal(dt.toInstant('Etc/Custom_UTC_Protocol').getEpochSeconds(), 0);
       });
       it('works for Temporal.now', () => {
+        assert(Temporal.now.dateTimeISO('Etc/Custom_UTC_Protocol') instanceof Temporal.DateTime);
         assert(Temporal.now.dateTime('gregory', 'Etc/Custom_UTC_Protocol') instanceof Temporal.DateTime);
+        assert(Temporal.now.dateISO('Etc/Custom_UTC_Protocol') instanceof Temporal.Date);
         assert(Temporal.now.date('gregory', 'Etc/Custom_UTC_Protocol') instanceof Temporal.Date);
         assert(Temporal.now.timeISO('Etc/Custom_UTC_Protocol') instanceof Temporal.Time);
       });
