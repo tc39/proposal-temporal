@@ -243,6 +243,23 @@ export class Duration {
     if (!ES.IsTemporalDuration(result)) throw new TypeError('invalid result');
     return result;
   }
+  isZero() {
+    if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
+    return (
+      ES.DurationSign(
+        GetSlot(this, YEARS),
+        GetSlot(this, MONTHS),
+        GetSlot(this, WEEKS),
+        GetSlot(this, DAYS),
+        GetSlot(this, HOURS),
+        GetSlot(this, MINUTES),
+        GetSlot(this, SECONDS),
+        GetSlot(this, MILLISECONDS),
+        GetSlot(this, MICROSECONDS),
+        GetSlot(this, NANOSECONDS)
+      ) === 0
+    );
+  }
   add(other, options = undefined) {
     if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
     let {

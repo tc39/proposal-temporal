@@ -351,6 +351,21 @@ d = Temporal.Duration.from('-PT8H30M');
 d.abs()  // PT8H30M
 ```
 
+### duration.**isZero**() : boolean
+
+**Returns:** `true` if `duration` has zero length, `false` otherwise.
+
+This is a convenience method that tells whether `duration` represents a zero length of time.
+
+Usage example:
+```javascript
+d = Temporal.Duration.from('PT0S');
+d.isZero(); // => true
+
+d = Temporal.Duration.from({ days: 0, hours: 0, minutes: 0 });
+d.isZero(); // => true
+```
+
 ### duration.**round**(_options_: object) : Temporal.Duration
 
 **Parameters:**

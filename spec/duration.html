@@ -351,6 +351,21 @@
       </emu-alg>
     </emu-clause>
 
+    <emu-clause id="sec-temporal.duration.prototype.iszero">
+      <h1>Temporal.Duration.prototype.isZero ( )</h1>
+      <p>
+        The `isZero` method takes no arguments.
+        It performs the following steps when called:
+      </p>
+      <emu-alg>
+        1. Let _duration_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_duration_, [[InitializedTemporalDuration]]).
+        1. Let _sign_ be ! DurationSign(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
+        1. If _sign_ = 0, return *true*.
+        1. Return *false*.
+      </emu-alg>
+    </emu-clause>
+
     <emu-clause id="sec-temporal.duration.prototype.add">
       <h1>Temporal.Duration.prototype.add ( _other_ [ , _options_ ] )</h1>
       <p>
