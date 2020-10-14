@@ -73,11 +73,6 @@ new Temporal.Duration()  // => PT0S
 
 **Parameters:**
 - `thing`: A `Duration`-like object or a string from which to create a `Temporal.Duration`.
-- `options` (optional object): An object with properties representing options for constructing the duration.
-  The following options are recognized:
-  - `overflow` (optional string): What to do if any of the values are larger than the next highest unit.
-    Allowed values are `constrain` and `balance`.
-    The default is `constrain`.
 
 **Returns:** a new `Temporal.Duration` object.
 
@@ -86,21 +81,10 @@ If the value is another `Temporal.Duration` object, a new object representing th
 If the value is any other object, a `Temporal.Duration` will be constructed from the values of any `years`, `months`, `weeks`, `days`, `hours`, `minutes`, `seconds`, `milliseconds`, `microseconds`, and `nanoseconds` properties that are present.
 Any missing ones will be assumed to be 0.
 
-Any non-object value is converted to a string, which is expected to be in ISO 8601 format.
-
-The `overflow` option controls how out-of-range values are interpreted:
-- `constrain` (the default): Values higher than the next highest unit (for example, 90 minutes) are left as-is.
-- `balance`: Values higher than the next highest unit, are converted to be in-range by incrementing the next highest unit accordingly.
-  For example, 90 minutes becomes one hour and 30 minutes.
-
-No matter which overflow mode is selected, all non-zero values must have the same sign, and must not be infinite.
+All non-zero values must have the same sign, and must not be infinite.
 Otherwise, the function will throw a `RangeError`.
 
-> **NOTE:** Years and months can have different lengths.
-In the default ISO calendar, a year can be 365 or 366 days, and a month can be 28, 29, 30, or 31 days.
-Therefore, any `Duration` object with nonzero years or months can refer to a different length of time depending on when the start date is.
-No conversion is ever performed between years, months, weeks, and days, even in `balance` mode, because such conversion would be ambiguous.
-If you need to do this, use the `round()` method, and provide the start date using the `relativeTo` option.
+Any non-object value is converted to a string, which is expected to be in ISO 8601 format.
 
 > **NOTE:** This function understands strings where weeks and other units are combined, and strings with a single sign character at the start, which are extensions to the ISO 8601 standard described in ISO 8601-2.
 > (For example, `P3W1D` is understood to mean three weeks and one day, `-P1Y1M` is a negative duration of one year and one month, and `+P1Y1M` is one year and one month.)
@@ -119,11 +103,6 @@ d = Temporal.Duration.from('P0D')  // => PT0S
 
 // Mixed-sign values are never allowed, even if overall positive:
 d = Temporal.Duration.from({ hours: 1, minutes: -30 })  // throws
-
-// Disambiguation
-
-d = Temporal.Duration.from({ minutes: 120 }, { overflow: 'constrain' })  // => PT120M
-d = Temporal.Duration.from({ minutes: 120 }, { overflow: 'balance' })  // => PT2H
 ```
 
 ## Properties
@@ -175,11 +154,6 @@ The read-only `sign` property has the value –1, 0, or 1, depending on whether 
 
 **Parameters:**
 - `durationLike` (object): an object with some or all of the properties of a `Temporal.Duration`.
-- `options` (optional object): An object with properties representing options for the copy.
-  The following options are recognized:
-  - `overflow` (string): How to deal with values that are larger than the next highest unit.
-    Allowed values are `constrain` and `balance`.
-    The default is `constrain`.
 
 **Returns:** a new `Temporal.Duration` object.
 
@@ -190,13 +164,6 @@ Since `Temporal.Duration` objects are immutable, use this method instead of modi
 All non-zero properties of `durationLike` must have the same sign, and they must additionally have the same sign as the non-zero properties of `duration`, unless they override all of these non-zero properties.
 If a property of `durationLike` is infinity, then this function will throw a `RangeError`.
 
-The `overflow` option specifies what to do with overly large values, that are larger than the next unit.
-(For example, 90 minutes is larger than 1 hour.)
-Constrain mode will leave these values as they are.
-Balance mode will behave like it does in `Duration.from()` and perform a balance operation on the result, changing 90 minutes to 1 hour and 30 minutes.
-
-For usage examples and a more complete explanation of how balancing works and why it is necessary, see [Duration balancing](./balancing.md).
-
 Usage example:
 ```javascript
 duration = Temporal.Duration.from({ months: 50, days: 50, hours: 50, minutes: 100 });
@@ -204,8 +171,8 @@ duration = Temporal.Duration.from({ months: 50, days: 50, hours: 50, minutes: 10
 let { years, months } = duration;
 years += Math.floor(months / 12);
 months %= 12;
-duration = duration.with({ years, months }, { overflow: 'balance' });
-  // => P4Y2M52DT3H40M
+duration = duration.with({ years, months });
+  // => P4Y2M50DT50H100M
 ```
 
 ### duration.**add**(_other_: object, _options_?: object) : Temporal.Duration
@@ -393,6 +360,9 @@ The `largestUnit` determines the largest unit allowed in the result.
 It will cause units larger than `largestUnit` to be converted into smaller units, and units smaller than `largestUnit` to be converted into larger units as much as possible.
 For example, with `largestUnit: 'minutes'`, a duration of 1 hour and 125 seconds will be converted into a duration of 62 minutes and 5 seconds.
 These durations are equally long, so no rounding takes place, but they are expressed differently.
+This operation is called "balancing."
+
+For usage examples and a more complete explanation of how balancing works, see [Duration balancing](./balancing.md).
 
 A `largestUnit` value of `'auto'`, which is the default if only `smallestUnit` is given, means that `largestUnit` should be the largest nonzero unit in the duration that is larger than `smallestUnit`.
 (For example, in a duration of 3 days and 12 hours, `largestUnit: 'auto'` would mean the same as `largestUnit: 'days'`.)

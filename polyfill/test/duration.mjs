@@ -188,44 +188,11 @@ describe('Duration', () => {
       throws(() => Duration.from('P-1Y1M'), RangeError);
       throws(() => Duration.from('P1Y-1M'), RangeError);
     });
-    it('options may only be an object or undefined', () => {
-      [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
-        throws(() => Duration.from({ hours: 1 }, badOptions), TypeError)
-      );
-      [{}, () => {}, undefined].forEach((options) => equal(Duration.from({ hours: 1 }, options).hours, 1));
+    it('mixed positive and negative values throw', () => {
+      throws(() => Duration.from({ hours: 1, minutes: -30 }), RangeError);
     });
-    describe('Overflow', () => {
-      it('mixed positive and negative values always throw', () => {
-        ['constrain', 'balance'].forEach((overflow) =>
-          throws(() => Duration.from({ hours: 1, minutes: -30 }, { overflow }), RangeError)
-        );
-      });
-      it('excessive values unchanged when "constrain"', () => {
-        equal(`${Duration.from({ minutes: 100 }, { overflow: 'constrain' })}`, 'PT100M');
-      });
-      it('excessive time units balance when "balance"', () => {
-        equal(`${Duration.from({ nanoseconds: 1000 }, { overflow: 'balance' })}`, 'PT0.000001S');
-        equal(`${Duration.from({ microseconds: 1000 }, { overflow: 'balance' })}`, 'PT0.001S');
-        equal(`${Duration.from({ milliseconds: 1000 }, { overflow: 'balance' })}`, 'PT1S');
-        equal(`${Duration.from({ seconds: 100 }, { overflow: 'balance' })}`, 'PT1M40S');
-        equal(`${Duration.from({ minutes: 100 }, { overflow: 'balance' })}`, 'PT1H40M');
-        equal(`${Duration.from({ hours: 100 }, { overflow: 'balance' })}`, 'P4DT4H');
-      });
-      it('excessive date units do not balance when "balance"', () => {
-        equal(`${Duration.from({ months: 12 }, { overflow: 'balance' })}`, 'P12M');
-        equal(`${Duration.from({ months: 12, seconds: 3600 }, { overflow: 'balance' })}`, 'P12MT1H');
-        equal(`${Duration.from({ weeks: 6 }, { overflow: 'balance' })}`, 'P6W');
-        equal(`${Duration.from({ weeks: 6, seconds: 3600 }, { overflow: 'balance' })}`, 'P6WT1H');
-        equal(`${Duration.from({ days: 31 }, { overflow: 'balance' })}`, 'P31D');
-        equal(`${Duration.from({ days: 31, seconds: 3600 }, { overflow: 'balance' })}`, 'P31DT1H');
-      });
-      it('throw on bad overflow', () => {
-        [new Duration(3), { days: 0 }, 'P5Y'].forEach((input) => {
-          ['', 'CONSTRAIN', 'reject', 'xyz', 3, null].forEach((overflow) =>
-            throws(() => Duration.from(input, { overflow }), RangeError)
-          );
-        });
-      });
+    it('excessive values unchanged', () => {
+      equal(`${Duration.from({ minutes: 100 })}`, 'PT100M');
     });
   });
   describe('toString()', () => {
@@ -378,32 +345,8 @@ describe('Duration', () => {
     it('duration.with({ months: 1, seconds: 15 } works', () => {
       equal(`${duration.with({ months: 1, seconds: 15 })}`, 'P5Y1M5W5DT5H5M15.005005005S');
     });
-    it('balance balances all values up to days', () => {
-      const result = duration.with(
-        {
-          hours: 100,
-          minutes: 100,
-          seconds: 100,
-          milliseconds: 3000,
-          microseconds: 3000,
-          nanoseconds: 3001
-        },
-        { overflow: 'balance' }
-      );
-      equal(result.years, 5);
-      equal(result.months, 5);
-      equal(result.days, 9);
-      equal(result.hours, 5);
-      equal(result.minutes, 41);
-      equal(result.seconds, 43);
-      equal(result.milliseconds, 3);
-      equal(result.microseconds, 3);
-      equal(result.nanoseconds, 1);
-    });
-    it('mixed positive and negative values always throw', () => {
-      ['constrain', 'balance'].forEach((overflow) =>
-        throws(() => duration.with({ hours: 1, minutes: -1 }, { overflow }), RangeError)
-      );
+    it('mixed positive and negative values throw', () => {
+      throws(() => duration.with({ hours: 1, minutes: -1 }), RangeError);
     });
     it('can reverse the sign if all the fields are replaced', () => {
       const d = Duration.from({ years: 5, days: 1 });
@@ -415,19 +358,8 @@ describe('Duration', () => {
       const d = Duration.from({ years: 5, days: 1 });
       throws(() => d.with({ months: -5, minutes: 0 }), RangeError);
     });
-    it('invalid overflow', () => {
-      ['', 'CONSTRAIN', 'reject', 'xyz', 3, null].forEach((overflow) =>
-        throws(() => duration.with({ days: 5 }, { overflow }), RangeError)
-      );
-    });
     it('sign cannot be manipulated independently', () => {
       throws(() => duration.with({ sign: -1 }), RangeError);
-    });
-    it('options may only be an object or undefined', () => {
-      [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
-        throws(() => duration.with({ days: 5 }, badOptions), TypeError)
-      );
-      [{}, () => {}, undefined].forEach((options) => equal(duration.with({ days: 5 }, options).days, 5));
     });
   });
   describe('Duration.add()', () => {

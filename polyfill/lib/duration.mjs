@@ -136,10 +136,8 @@ export class Duration {
       GetSlot(this, NANOSECONDS)
     );
   }
-  with(durationLike, options = undefined) {
+  with(durationLike) {
     if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
-    options = ES.NormalizeOptionsObject(options);
-    const overflow = ES.ToTemporalDurationOverflow(options);
     const props = ES.ToPartialRecord(durationLike, [
       'days',
       'hours',
@@ -167,30 +165,6 @@ export class Duration {
       microseconds = GetSlot(this, MICROSECONDS),
       nanoseconds = GetSlot(this, NANOSECONDS)
     } = props;
-    ({
-      years,
-      months,
-      weeks,
-      days,
-      hours,
-      minutes,
-      seconds,
-      milliseconds,
-      microseconds,
-      nanoseconds
-    } = ES.RegulateDuration(
-      years,
-      months,
-      weeks,
-      days,
-      hours,
-      minutes,
-      seconds,
-      milliseconds,
-      microseconds,
-      nanoseconds,
-      overflow
-    ));
     const Construct = ES.SpeciesConstructor(this, Duration);
     const result = new Construct(
       years,
@@ -540,9 +514,7 @@ export class Duration {
   valueOf() {
     throw new TypeError('not possible to compare Temporal.Duration');
   }
-  static from(item, options = undefined) {
-    options = ES.NormalizeOptionsObject(options);
-    const overflow = ES.ToTemporalDurationOverflow(options);
+  static from(item) {
     let years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds;
     if (typeof item === 'object' && item) {
       ({
@@ -571,30 +543,6 @@ export class Duration {
         nanoseconds
       } = ES.ParseTemporalDurationString(ES.ToString(item)));
     }
-    ({
-      years,
-      months,
-      weeks,
-      days,
-      hours,
-      minutes,
-      seconds,
-      milliseconds,
-      microseconds,
-      nanoseconds
-    } = ES.RegulateDuration(
-      years,
-      months,
-      weeks,
-      days,
-      hours,
-      minutes,
-      seconds,
-      milliseconds,
-      microseconds,
-      nanoseconds,
-      overflow
-    ));
     const result = new this(
       years,
       months,

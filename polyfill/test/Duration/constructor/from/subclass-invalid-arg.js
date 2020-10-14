@@ -5,15 +5,16 @@
 esid: sec-temporal.duration.from
 ---*/
 
-let called = false;
+let called = 0;
 
 class MyDuration extends Temporal.Duration {
   constructor(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds) {
-    called = true;
+    ++called;
     super(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
   }
 }
 
-assert.throws(RangeError, () => MyDuration.from({ years: Infinity }, { overflow: "reject" }));
-assert.throws(RangeError, () => MyDuration.from({ days: -Infinity }, { overflow: "reject" }));
-assert.sameValue(called, false);
+assert.throws(RangeError, () => MyDuration.from({ years: Infinity }));
+assert.sameValue(called, 1);
+assert.throws(RangeError, () => MyDuration.from({ days: -Infinity }));
+assert.sameValue(called, 2);

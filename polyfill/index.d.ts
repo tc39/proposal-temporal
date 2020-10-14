@@ -219,7 +219,7 @@ export namespace Temporal {
    * See https://tc39.es/proposal-temporal/docs/duration.html for more details.
    */
   export class Duration implements DurationFields {
-    static from(item: Temporal.Duration | DurationLike | string, options?: DurationOptions): Temporal.Duration;
+    static from(item: Temporal.Duration | DurationLike | string): Temporal.Duration;
     constructor(
       years?: number,
       months?: number,
@@ -245,7 +245,7 @@ export namespace Temporal {
     readonly nanoseconds: number;
     negated(): Temporal.Duration;
     abs(): Temporal.Duration;
-    with(durationLike: DurationLike, options?: DurationOptions): Temporal.Duration;
+    with(durationLike: DurationLike): Temporal.Duration;
     add(other: Temporal.Duration | DurationLike, options?: DurationOptions): Temporal.Duration;
     subtract(other: Temporal.Duration | DurationLike, options?: DurationOptions): Temporal.Duration;
     round(options: DurationRoundOptions): Temporal.Duration;
