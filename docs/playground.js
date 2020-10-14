@@ -6747,7 +6747,33 @@
           throw new RangeError("cannot compute difference between dates of ".concat(calendar.id, " and ").concat(otherCalendar.id, " calendars"));
         }
 
-        return calendar.dateDifference(other, this, options);
+        options = ES.NormalizeOptionsObject(options);
+        var disallowedUnits = ['hours', 'minutes', 'seconds', 'milliseconds', 'microseconds', 'nanoseconds'];
+        var smallestUnit = ES.ToSmallestTemporalDurationUnit(options, 'days', disallowedUnits);
+        var defaultLargestUnit = ES.LargerOfTwoTemporalDurationUnits('days', smallestUnit);
+        var largestUnit = ES.ToLargestTemporalUnit(options, defaultLargestUnit, disallowedUnits);
+        ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
+        var roundingMode = ES.ToTemporalRoundingMode(options);
+        var roundingIncrement = ES.ToTemporalRoundingIncrement(options, undefined, false);
+        var result = calendar.dateDifference(other, this, {
+          largestUnit: largestUnit
+        });
+        if (smallestUnit === 'days' && roundingIncrement === 1) return result;
+        var years = result.years,
+            months = result.months,
+            weeks = result.weeks,
+            days = result.days;
+        var TemporalDateTime = GetIntrinsic$1('%Temporal.DateTime%');
+        var relativeTo = new TemporalDateTime(GetSlot(this, ISO_YEAR), GetSlot(this, ISO_MONTH), GetSlot(this, ISO_DAY), 0, 0, 0, 0, 0, 0, GetSlot(this, CALENDAR));
+
+        var _ES$RoundDuration = ES.RoundDuration(years, months, weeks, days, 0, 0, 0, 0, 0, 0, roundingIncrement, smallestUnit, roundingMode, relativeTo);
+
+        years = _ES$RoundDuration.years;
+        months = _ES$RoundDuration.months;
+        weeks = _ES$RoundDuration.weeks;
+        days = _ES$RoundDuration.days;
+        var Duration = GetIntrinsic$1('%Temporal.Duration%');
+        return new Duration(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
       }
     }, {
       key: "equals",
@@ -7301,12 +7327,7 @@
         var TemporalDate = GetIntrinsic$1('%Temporal.Date%');
         var adjustedDate = new TemporalDate(year, month, day, calendar);
         var otherDate = new TemporalDate(GetSlot(other, ISO_YEAR), GetSlot(other, ISO_MONTH), GetSlot(other, ISO_DAY), calendar);
-        var dateLargestUnit = 'days';
-
-        if (largestUnit === 'years' || largestUnit === 'months' || largestUnit === 'weeks') {
-          dateLargestUnit = largestUnit;
-        }
-
+        var dateLargestUnit = ES.LargerOfTwoTemporalDurationUnits('days', largestUnit);
         var dateOptions = ObjectAssign$2({}, options, {
           largestUnit: dateLargestUnit
         });
@@ -9276,7 +9297,12 @@
         }
 
         options = ES.NormalizeOptionsObject(options);
-        var largestUnit = ES.ToLargestTemporalUnit(options, 'years', ['weeks', 'days', 'hours', 'minutes', 'seconds', 'milliseconds', 'microseconds', 'nanoseconds']);
+        var disallowedUnits = ['weeks', 'days', 'hours', 'minutes', 'seconds', 'milliseconds', 'microseconds', 'nanoseconds'];
+        var smallestUnit = ES.ToSmallestTemporalDurationUnit(options, 'months', disallowedUnits);
+        var largestUnit = ES.ToLargestTemporalUnit(options, 'years', disallowedUnits);
+        ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
+        var roundingMode = ES.ToTemporalRoundingMode(options);
+        var roundingIncrement = ES.ToTemporalRoundingIncrement(options, undefined, false);
         var otherFields = ES.ToTemporalYearMonthRecord(other);
         var thisFields = ES.ToTemporalYearMonthRecord(this);
         var TemporalDate = GetIntrinsic$1('%Temporal.Date%');
@@ -9286,9 +9312,21 @@
         var thisDate = calendar.dateFromFields(_objectSpread2(_objectSpread2({}, thisFields), {}, {
           day: 1
         }), {}, TemporalDate);
-        return calendar.dateDifference(otherDate, thisDate, _objectSpread2(_objectSpread2({}, options), {}, {
+        var result = calendar.dateDifference(otherDate, thisDate, {
           largestUnit: largestUnit
-        }));
+        });
+        if (smallestUnit === 'months' && roundingIncrement === 1) return result;
+        var years = result.years,
+            months = result.months;
+        var TemporalDateTime = GetIntrinsic$1('%Temporal.DateTime%');
+        var relativeTo = new TemporalDateTime(GetSlot(thisDate, ISO_YEAR), GetSlot(thisDate, ISO_MONTH), GetSlot(thisDate, ISO_DAY), 0, 0, 0, 0, 0, 0, calendar);
+
+        var _ES$RoundDuration = ES.RoundDuration(years, months, 0, 0, 0, 0, 0, 0, 0, 0, roundingIncrement, smallestUnit, roundingMode, relativeTo);
+
+        years = _ES$RoundDuration.years;
+        months = _ES$RoundDuration.months;
+        var Duration = GetIntrinsic$1('%Temporal.Duration%');
+        return new Duration(years, months, 0, 0, 0, 0, 0, 0, 0, 0);
       }
     }, {
       key: "equals",

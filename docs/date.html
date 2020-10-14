@@ -505,11 +505,19 @@ The following options are recognized:<ul>
 <li><code>largestUnit</code> (optional string): The largest unit of time to allow in the resulting <code>Temporal.Duration</code> object.
 Valid values are <code>&#39;auto&#39;</code>, <code>&#39;years&#39;</code>, <code>&#39;months&#39;</code>, <code>&#39;weeks&#39;</code>, and <code>&#39;days&#39;</code>.
 The default is <code>&#39;auto&#39;</code>.</li>
+<li><code>smallestUnit</code> (string): The smallest unit of time to round to in the resulting <code>Temporal.Duration</code> object.
+Valid values are <code>&#39;years&#39;</code>, <code>&#39;months&#39;</code>, <code>&#39;weeks&#39;</code>, <code>&#39;days&#39;</code>.
+The default is <code>&#39;days&#39;</code>, i.e., no rounding.</li>
+<li><code>roundingIncrement</code> (number): The granularity to round to, of the unit given by <code>smallestUnit</code>.
+The default is 1.</li>
+<li><code>roundingMode</code> (string): How to handle the remainder, if rounding.
+Valid values are <code>&#39;ceil&#39;</code>, <code>&#39;floor&#39;</code>, <code>&#39;trunc&#39;</code>, and <code>&#39;nearest&#39;</code>.
+The default is <code>&#39;nearest&#39;</code>.</li>
 </ul>
 </li>
 </ul>
 <p><strong>Returns:</strong> a <code>Temporal.Duration</code> representing the difference between <code>date</code> and <code>other</code>.</p>
-<p>This method computes the difference between the two dates represented by <code>date</code> and <code>other</code>, and returns it as a <code>Temporal.Duration</code> object.
+<p>This method computes the difference between the two dates represented by <code>date</code> and <code>other</code>, optionally rounds it, and returns it as a <code>Temporal.Duration</code> object.
 If <code>other</code> is later than <code>date</code> then the resulting duration will be negative.</p>
 <p>The <code>largestUnit</code> option controls how the resulting duration is expressed.
 The returned <code>Temporal.Duration</code> object will not have any nonzero fields that are larger than the unit in <code>largestUnit</code>.
@@ -517,8 +525,12 @@ A difference of two years will become 24 months when <code>largestUnit</code> is
 However, a difference of two months will still be two months even if <code>largestUnit</code> is <code>&quot;years&quot;</code>.
 A value of <code>&#39;auto&#39;</code> means <code>&#39;days&#39;</code>, unless <code>smallestUnit</code> is <code>&#39;years&#39;</code>, <code>&#39;months&#39;</code>, or <code>&#39;weeks&#39;</code>, in which case <code>largestUnit</code> is equal to <code>smallestUnit</code>.</p>
 <p>By default, the largest unit in the result is days.
-This is because months and years can be different lengths depending on which month is meant and whether the year is a leap year.
-Unlike other Temporal types, hours and lower are not allowed, because the data model of <code>Temporal.Date</code> doesn&#39;t have that accuracy.</p>
+This is because months and years can be different lengths depending on which month is meant and whether the year is a leap year.</p>
+<p>You can round the result using the <code>smallestUnit</code>, <code>roundingIncrement</code>, and <code>roundingMode</code> options.
+These behave as in the <code>Temporal.Duration.round()</code> method, but increments of days and larger are allowed.
+Since rounding to calendar units requires a reference point, <code>date</code> is used as the reference point.
+The default is to do no rounding.</p>
+<p>Unlike other Temporal types, hours and lower are not allowed for either <code>largestUnit</code> or <code>smallestUnit</code>, because the data model of <code>Temporal.Date</code> doesn&#39;t have that accuracy.</p>
 <p>Computing the difference between two dates in different calendar systems is not supported.
 If you need to do this, choose the calendar in which the computation takes place by converting one of the dates with <code>date.withCalendar()</code>.</p>
 <p>Usage example:</p>
