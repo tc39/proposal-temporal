@@ -41,6 +41,9 @@ describe('Duration', () => {
       it('Duration.prototype.abs is a Function', () => {
         equal(typeof Duration.prototype.abs, 'function');
       });
+      it('Duration.prototype.isZero is a Function', () => {
+        equal(typeof Duration.prototype.isZero, 'function');
+      });
       it('Duration.prototype.round is a Function', () => {
         equal(typeof Duration.prototype.round, 'function');
       });
@@ -723,6 +726,28 @@ describe('Duration', () => {
       equal(`${zero}`, `${zero2}`);
       notEqual(zero, zero2);
       equal(zero2.sign, 0);
+    });
+  });
+  describe('Duration.isZero()', () => {
+    it('works', () => {
+      assert(!Duration.from('P3DT1H').isZero());
+      assert(!Duration.from('-PT2H20M30S').isZero());
+      assert(Duration.from('PT0S').isZero());
+    });
+    it('zero regardless of how many fields are in the duration', () => {
+      const zero = Duration.from({
+        years: 0,
+        months: 0,
+        weeks: 0,
+        days: 0,
+        hours: 0,
+        minutes: 0,
+        seconds: 0,
+        milliseconds: 0,
+        microseconds: 0,
+        nanoseconds: 0
+      });
+      assert(zero.isZero());
     });
   });
   describe('Duration.round()', () => {
