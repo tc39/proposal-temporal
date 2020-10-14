@@ -245,6 +245,7 @@ export namespace Temporal {
     readonly nanoseconds: number;
     negated(): Temporal.Duration;
     abs(): Temporal.Duration;
+    isZero(): boolean;
     with(durationLike: DurationLike, options?: DurationOptions): Temporal.Duration;
     add(other: Temporal.Duration | DurationLike, options?: DurationOptions): Temporal.Duration;
     subtract(other: Temporal.Duration | DurationLike, options?: DurationOptions): Temporal.Duration;
@@ -288,8 +289,11 @@ export namespace Temporal {
       other: Temporal.Instant,
       options?: DifferenceOptions<'hours' | 'minutes' | 'seconds' | 'milliseconds' | 'microseconds' | 'nanoseconds'>
     ): Temporal.Duration;
-    round(options: RoundOptions<'minute' | 'second' | 'millisecond' | 'microsecond' | 'nanosecond'>): Temporal.Instant;
-    toDateTime(tzLike: TimeZoneProtocol | string, calendar?: CalendarProtocol | string): Temporal.DateTime;
+    round(
+      options: RoundOptions<'hour' | 'minute' | 'second' | 'millisecond' | 'microsecond' | 'nanosecond'>
+    ): Temporal.Instant;
+    toDateTime(tzLike: TimeZoneProtocol | string, calendar: CalendarProtocol | string): Temporal.DateTime;
+    toDateTimeISO(tzLike: TimeZoneProtocol | string): Temporal.DateTime;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
     toString(tzLike?: TimeZoneProtocol | string): string;
@@ -794,33 +798,37 @@ export namespace Temporal {
     /**
      * Get the current calendar date and clock time in a specific time zone.
      *
+     * @param {Temporal.Calendar | string} [calendar] - calendar identifier, or
+     * a `Temporal.Calendar` instance, or an object implementing the calendar
+     * protocol.
      * @param {TimeZoneProtocol | string} [tzLike] -
      * {@link https://en.wikipedia.org/wiki/List_of_tz_database_time_zones|IANA time zone identifier}
      * string (e.g. `'Europe/London'`), `Temporal.TimeZone` instance, or an
      * object implementing the time zone protocol. If omitted,
      * the environment's current time zone will be used.
-     * @param {Temporal.Calendar | string} [calendar] - calendar identifier, or
-     * a `Temporal.Calendar` instance, or an object implementing the calendar
-     * protocol. If omitted, the ISO 8601 calendar is used.
      */
     export function dateTime(
-      tzLike?: TimeZoneProtocol | string,
-      calendar?: CalendarProtocol | string
+      calendar: CalendarProtocol | string,
+      tzLike?: TimeZoneProtocol | string
     ): Temporal.DateTime;
+
+    export function dateTimeISO(tzLike?: TimeZoneProtocol | string): Temporal.DateTime;
 
     /**
      * Get the current calendar date in a specific time zone.
      *
+     * @param {Temporal.Calendar | string} [calendar] - calendar identifier, or
+     * a `Temporal.Calendar` instance, or an object implementing the calendar
+     * protocol.
      * @param {TimeZoneProtocol | string} [tzLike] -
      * {@link https://en.wikipedia.org/wiki/List_of_tz_database_time_zones|IANA time zone identifier}
      * string (e.g. `'Europe/London'`), `Temporal.TimeZone` instance, or an
      * object implementing the time zone protocol. If omitted,
      * the environment's current time zone will be used.
-     * @param {Temporal.Calendar | string} [calendar] - calendar identifier, or
-     * a `Temporal.Calendar` instance, or an object implementing the calendar
-     * protocol. If omitted, the ISO 8601 calendar is used.
      */
-    export function date(tzLike?: TimeZoneProtocol | string, calendar?: CalendarProtocol | string): Temporal.Date;
+    export function date(calendar: CalendarProtocol | string, tzLike?: TimeZoneProtocol | string): Temporal.Date;
+
+    export function dateISO(tzLike?: TimeZoneProtocol | string): Temporal.Date;
 
     /**
      * Get the current clock time in a specific time zone.
@@ -831,7 +839,7 @@ export namespace Temporal {
      * object implementing the time zone protocol. If omitted, the environment's
      * current time zone will be used.
      */
-    export function time(tzLike?: TimeZoneProtocol | string): Temporal.Time;
+    export function timeISO(tzLike?: TimeZoneProtocol | string): Temporal.Time;
 
     /**
      * Get the environment's current time zone.
