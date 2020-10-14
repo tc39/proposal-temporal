@@ -1,5 +1,5 @@
 /**
- * Returns an iterator of the instant times corresponding to a daily occurrence
+ * Returns an iterator of the exact times corresponding to a daily occurrence
  * starting on a particular date, and happening at a particular local time in a
  * particular time zone.
  *

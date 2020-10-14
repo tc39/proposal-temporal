@@ -1,6 +1,7 @@
 /**
  * Takes a local date and time in one time zone, and serializes it to a string
- * expressing the local date and time in another time zone.
+ * expressing the local date and time in another time zone at the same exact
+ * time.
  *
  * If `sourceDateTime` doesn't exist in `sourceTimeZone`, or exists twice, then
  * an error will be thrown by default.

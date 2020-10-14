@@ -1,12 +1,12 @@
 /**
- * Retrieve a time at which to give advance notice of a record that is
- * potentially about to be broken.
+ * Retrieve an exact time at which to give advance notice of a record that
+ * is potentially about to be broken.
  *
- * @param {Temporal.Instant} start - Start time of the event
+ * @param {Temporal.Instant} start - Starting exact time of the event
  * @param {Temporal.Duration} previousRecord - Existing record to be broken
  * @param {Temporal.Duration} noticeWindow - Advance notice time
- * @returns {Temporal.Instant} Time at which to give advance notice of breaking
- *  the record
+ * @returns {Temporal.Instant} Exact time at which to give advance notice of
+ *  breaking the record
  */
 function getInstantBeforeOldRecord(start, previousRecord, noticeWindow) {
   return start.add(previousRecord).subtract(noticeWindow);

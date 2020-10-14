@@ -781,16 +781,16 @@ If the result is earlier or later than the range that `Temporal.ZonedDateTime` c
     Allowed values are `'compatible'`, `'earlier'`, `'later'`, and `'reject'`.
     The default is `'compatible'`.
 
-**Returns:** A `Temporal.Instant` object indicating the instant time in `timeZone` at the time of the calendar date and wall-clock time from `dateTime`.
+**Returns:** A `Temporal.Instant` object indicating the exact time in `timeZone` at the time of the calendar date and wall-clock time from `dateTime`.
 
 This method is one way to convert a `Temporal.DateTime` to a `Temporal.Instant`.
 It is identical to [`(Temporal.TimeZone.from(timeZone || 'UTC')).getInstantFor(dateTime, disambiguation)`](./timezone.html#getInstantFor).
 
-In the case of ambiguity, the `disambiguation` option controls what instant time to return:
+In the case of ambiguity, the `disambiguation` option controls what exact time to return:
 
 - `'compatible'` (the default): Acts like `'earlier'` for backward transitions and `'later'` for forward transitions.
-- `'earlier'`: The earlier of two possible times.
-- `'later'`: The later of two possible times.
+- `'earlier'`: The earlier of two possible exact times.
+- `'later'`: The later of two possible exact times.
 - `'reject'`: Throw a `RangeError` instead.
 
 When interoperating with existing code or services, `'compatible'` mode matches the behavior of legacy `Date` as well as libraries like moment.js, Luxon, and date-fns.

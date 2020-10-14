@@ -30,4 +30,4 @@ import './nextWeeklyOccurrence.mjs';
 import './noonOnDate.mjs';
 import './plusAndRoundToMonthStart.mjs';
 import './roundDownToWholeHours.mjs';
-import './sortAbsoluteInstants.mjs';
+import './sortExactTimeStrings.mjs';

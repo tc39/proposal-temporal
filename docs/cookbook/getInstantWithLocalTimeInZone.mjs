@@ -1,6 +1,6 @@
 /**
- * Get an instant time corresponding with a calendar date / wall-clock time in
- * a particular time zone, the same as Temporal.TimeZone.getInstantFor() or
+ * Get an exact time corresponding with a calendar date / wall-clock time in a
+ * particular time zone, the same as Temporal.TimeZone.getInstantFor() or
  * Temporal.DateTime.toInstant(), but with more disambiguation options.
  *
  * As well as the default Temporal disambiguation options 'compatible',

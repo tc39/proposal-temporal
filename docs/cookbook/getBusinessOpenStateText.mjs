@@ -1,10 +1,10 @@
 /**
- * Compare the given time to the business hours of a business located in a
- * particular time zone, and return a string indicating whether the business is
- * open, closed, opening soon, or closing soon. The length of "soon" can be
+ * Compare the given exact time to the business hours of a business located in
+ * a particular time zone, and return a string indicating whether the business
+ * is open, closed, opening soon, or closing soon. The length of "soon" can be
  * controlled using the `soonWindow` parameter.
  *
- * @param {Temporal.Instant} now - Time at which to consider whether the
+ * @param {Temporal.Instant} now - Exact time at which to consider whether the
  *  business is open
  * @param {Temporal.TimeZone} timeZone - Time zone in which the business is
  *  located
@@ -14,14 +14,14 @@
  *  opens
  * @param {Temporal.Time} businessHours[].close - Time at which the business
  *  closes
- * @param {Temporal.Duration} soonWindow - Length of time before the opening or
- *  closing time during which the business should be considered "opening soon"
- *  or "closing soon"
+ * @param {Temporal.Duration} soonWindow - Length of time before the opening
+ *  or closing time during which the business should be considered "opening
+ *  soon" or "closing soon"
  * @returns {string} "open", "closed", "opening soon", or "closing soon"
  */
 function getBusinessOpenStateText(now, timeZone, businessHours, soonWindow) {
-  function inRange(abs, start, end) {
-    return Temporal.Instant.compare(abs, start) >= 0 && Temporal.Instant.compare(abs, end) < 0;
+  function inRange(i, start, end) {
+    return Temporal.Instant.compare(i, start) >= 0 && Temporal.Instant.compare(i, end) < 0;
   }
 
   const dateTime = now.toDateTimeISO(timeZone);
