@@ -144,22 +144,22 @@ date = Temporal.now.date();
 if (date.month === 2 && date.day === 29) console.log('Leap Day!');
 ```
 
-### Temporal.now.**time**(_timeZone_: object | string = Temporal.now.timeZone()) : Temporal.Time
+### Temporal.now.**timeISO**(_timeZone_: object | string = Temporal.now.timeZone()) : Temporal.Time
 
 **Parameters:**
 
 - `timeZone` (optional object or string): The time zone to get the current date and time in, as a `Temporal.TimeZone` object, an object implementing the [time zone protocol](./timezone.md#protocol), or a string.
   If not given, the current system time zone will be used.
 
-**Returns:** a `Temporal.Time` object representing the current system time.
+**Returns:** a `Temporal.Time` object representing the current system time in the reckoning of the ISO 8601 calendar.
 
 This method gets the current wall-clock time according to the system settings.
-Optionally a time zone can be given in which the time is computed.
+Optionally a time zone can be given in which the time is computed, instead of the current system time zone.
 
 Example usage:
 
 ```js
 // Is it lunchtime?
-time = Temporal.now.time();
+time = Temporal.now.timeISO();
 if (time.hour === 12) console.log('Lunchtime!');
 ```

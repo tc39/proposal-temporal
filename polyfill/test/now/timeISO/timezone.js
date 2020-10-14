@@ -2,12 +2,14 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
-esid: sec-temporal.now.time
+esid: sec-temporal.now.timeiso
 includes: [compareArray.js]
 ---*/
 
 const actual = [];
 const expected = [
+  "get Temporal.TimeZone.from",
+  "call Temporal.TimeZone.from",
   "get timeZone.getDateTimeFor",
   "call timeZone.getDateTimeFor",
 ];
@@ -35,11 +37,22 @@ const timeZone = new Proxy({
 Object.defineProperty(Temporal.TimeZone, "from", {
   get() {
     actual.push("get Temporal.TimeZone.from");
+    return function(argument) {
+      actual.push("call Temporal.TimeZone.from");
+      assert.sameValue(argument, "UTC");
+      return timeZone;
+    };
+  },
+});
+
+Object.defineProperty(Temporal.Calendar, "from", {
+  get() {
+    actual.push("get Temporal.Calendar.from");
     return undefined;
   },
 });
 
-const result = Temporal.now.time(timeZone);
+const result = Temporal.now.timeISO("UTC");
 assert.sameValue(result instanceof Temporal.Time, true);
 for (const property of ["hour", "minute", "second", "millisecond", "microsecond", "nanosecond"]) {
   assert.sameValue(result[property], dateTime[property], property);

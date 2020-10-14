@@ -66,7 +66,7 @@ describe('Userland time zone', () => {
     it('works in Temporal.now', () => {
       assert(Temporal.now.dateTime(obj) instanceof Temporal.DateTime);
       assert(Temporal.now.date(obj) instanceof Temporal.Date);
-      assert(Temporal.now.time(obj) instanceof Temporal.Time);
+      assert(Temporal.now.timeISO(obj) instanceof Temporal.Time);
     });
     describe('Making available globally', () => {
       const originalTemporalTimeZoneFrom = Temporal.TimeZone.from;
@@ -110,7 +110,7 @@ describe('Userland time zone', () => {
       it('works for Temporal.now', () => {
         assert(Temporal.now.dateTime('Etc/Custom_UTC_Subclass') instanceof Temporal.DateTime);
         assert(Temporal.now.date('Etc/Custom_UTC_Subclass') instanceof Temporal.Date);
-        assert(Temporal.now.time('Etc/Custom_UTC_Subclass') instanceof Temporal.Time);
+        assert(Temporal.now.timeISO('Etc/Custom_UTC_Subclass') instanceof Temporal.Time);
       });
       after(() => {
         Temporal.TimeZone.from = originalTemporalTimeZoneFrom;
@@ -152,7 +152,7 @@ describe('Userland time zone', () => {
     it('works in Temporal.now', () => {
       assert(Temporal.now.dateTime(obj) instanceof Temporal.DateTime);
       assert(Temporal.now.date(obj) instanceof Temporal.Date);
-      assert(Temporal.now.time(obj) instanceof Temporal.Time);
+      assert(Temporal.now.timeISO(obj) instanceof Temporal.Time);
     });
     describe('Making available globally', () => {
       const originalTemporalTimeZoneFrom = Temporal.TimeZone.from;
@@ -196,7 +196,7 @@ describe('Userland time zone', () => {
       it('works for Temporal.now', () => {
         assert(Temporal.now.dateTime('Etc/Custom_UTC_Protocol') instanceof Temporal.DateTime);
         assert(Temporal.now.date('Etc/Custom_UTC_Protocol') instanceof Temporal.Date);
-        assert(Temporal.now.time('Etc/Custom_UTC_Protocol') instanceof Temporal.Time);
+        assert(Temporal.now.timeISO('Etc/Custom_UTC_Protocol') instanceof Temporal.Time);
       });
       after(() => {
         Temporal.TimeZone.from = originalTemporalTimeZoneFrom;

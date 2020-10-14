@@ -6,7 +6,7 @@ export const now = {
   instant,
   dateTime,
   date,
-  time,
+  timeISO,
   timeZone
 };
 
@@ -23,8 +23,8 @@ function dateTime(temporalTimeZoneLike = timeZone(), calendarLike = GetDefaultCa
 function date(temporalTimeZoneLike = timeZone(), calendarLike = undefined) {
   return ES.TemporalDateTimeToDate(dateTime(temporalTimeZoneLike, calendarLike));
 }
-function time(temporalTimeZoneLike = timeZone()) {
-  return ES.TemporalDateTimeToTime(dateTime(temporalTimeZoneLike));
+function timeISO(temporalTimeZoneLike = timeZone()) {
+  return ES.TemporalDateTimeToTime(dateTimeISO(temporalTimeZoneLike));
 }
 function timeZone() {
   return ES.SystemTimeZone();
