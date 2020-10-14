@@ -16,7 +16,7 @@ includes: [propertyHelper.js]
 ---*/
 
 verifyProperty(Temporal.now.dateTime, "length", {
-  value: 0,
+  value: 1,
   writable: false,
   enumerable: false,
   configurable: true,

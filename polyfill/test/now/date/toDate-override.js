@@ -52,7 +52,7 @@ Object.defineProperty(Temporal.TimeZone, "from", {
   },
 });
 
-const result = Temporal.now.date("UTC");
+const result = Temporal.now.date("iso8601", "UTC");
 assert.notSameValue(result, undefined);
 assert.sameValue(result instanceof Temporal.Date, true);
 for (const property of ["year", "month", "day"]) {

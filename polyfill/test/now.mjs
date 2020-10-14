@@ -12,7 +12,7 @@ import Pretty from '@pipobscure/demitasse-pretty';
 const { reporter } = Pretty;
 
 import { strict as assert } from 'assert';
-const { equal } = assert;
+const { equal, throws } = assert;
 
 import * as Temporal from 'proposal-temporal';
 
@@ -30,11 +30,21 @@ describe('Temporal.now', () => {
     it('Temporal.now.instant() returns an Instant', () => assert(Temporal.now.instant() instanceof Temporal.Instant));
   });
   describe('Temporal.now.dateTime()', () => {
-    it('Temporal.now.dateTime() returns a DateTime', () =>
-      assert(Temporal.now.dateTime() instanceof Temporal.DateTime));
+    it('returns a DateTime in the correct calendar', () => {
+      const dt = Temporal.now.dateTime('gregory');
+      assert(dt instanceof Temporal.DateTime);
+      equal(dt.calendar.id, 'gregory');
+    });
+    it('requires a calendar', () => throws(() => Temporal.now.dateTime(), RangeError));
+  });
   });
   describe('Temporal.now.date()', () => {
-    it('Temporal.now.date() returns a DateTime', () => assert(Temporal.now.date() instanceof Temporal.Date));
+    it('returns a Date in the correct calendar', () => {
+      const d = Temporal.now.date('gregory');
+      assert(d instanceof Temporal.Date);
+      equal(d.calendar.id, 'gregory');
+    });
+    it('requires a calendar', () => throws(() => Temporal.now.date(), RangeError));
   });
   describe('Temporal.now.timeISO()', () => {
     it('Temporal.now.timeISO() returns a Time', () => assert(Temporal.now.timeISO() instanceof Temporal.Time));

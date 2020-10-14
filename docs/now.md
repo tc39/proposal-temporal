@@ -43,6 +43,21 @@ Object.entries(financialCentres).forEach(([name, timeZone]) => {
 // Tokyo: 2020-09-18T17:17:48.441068438+09:00[Asia/Tokyo]
 ```
 
+### Temporal.now.**zonedDateTime**(_calendar_: object | string, _timeZone_: object | string = Temporal.now.timeZone()) : Temporal.ZonedDateTime
+
+**Parameters:**
+
+- `calendar` (`Temporal.Calendar`, plain object, or string): The calendar system to get the current date and time in.
+- `timeZone` (optional object or string): The time zone to get the current date and time in, as a `Temporal.TimeZone` object, an object implementing the [time zone protocol](./timezone.md#protocol), or a string.
+  If not given, the current system time zone will be used.
+
+**Returns:** a `Temporal.ZonedDateTime` object representing the current system date, time, time zone, and time zone offset.
+
+This method gets the current date, time, time zone, and time zone offset according to the system settings, in the reckoning of the given calendar system.
+Optionally a time zone can be given in which the time is computed, instead of the current system time zone.
+
+If you only want to use the ISO 8601 calendar, use `Temporal.now.zonedDateTimeISO()`.
+
 ### Temporal.now.**instant**() : Temporal.Instant
 
 **Returns:** a `Temporal.Instant` object representing the current system time.
@@ -90,21 +105,20 @@ nextTransition.toDateTime(tz);
 // On 2020-03-08T03:00 the clock will change from UTC -08:00 to -07:00
 ```
 
-### Temporal.now.**dateTime**(_timeZone_: object | string = Temporal.now.timeZone(), _calendar_: object | string = 'iso8601') : Temporal.DateTime
+### Temporal.now.**dateTime**(_calendar_: object | string, _timeZone_: object | string = Temporal.now.timeZone()) : Temporal.DateTime
 
 **Parameters:**
 
+- `calendar` (`Temporal.Calendar`, plain object, or string): The calendar system to get the current date and time in.
 - `timeZone` (optional object or string): The time zone to get the current date and time in, as a `Temporal.TimeZone` object, an object implementing the [time zone protocol](./timezone.md#protocol), or a string.
   If not given, the current system time zone will be used.
-- `calendar` (optional `Temporal.Calendar`, plain object, or string): The calendar system to get the current date and time in.
-  If not given, the ISO 8601 calendar will be used.
 
-**Returns:** a `Temporal.DateTime` object representing the current system date and time.
+**Returns:** a `Temporal.DateTime` object representing the current system date and time in the reckoning of the given calendar system.
 
 This method gets the current calendar date and wall-clock time according to the system settings.
-Optionally a time zone can be given in which the time is computed, and a calendar system in which the date is reckoned.
+Optionally a time zone can be given in which the time is computed, instead of the current system time zone.
 
-Example usage:
+If you only want to use the ISO 8601 calendar, use `Temporal.now.dateTimeISO()`.
 
 <!-- prettier-ignore-start -->
 ```js
@@ -125,23 +139,25 @@ Object.entries(financialCentres).forEach(([name, timeZone]) => {
 ```
 <!-- prettier-ignore-end -->
 
-### Temporal.now.**date**(_timeZone_: object | string = Temporal.now.timeZone(), _calendar_: object | string = 'iso8601') : Temporal.Date
+### Temporal.now.**date**(_calendar_: object | string, _timeZone_: object | string = Temporal.now.timeZone()) : Temporal.Date
 
 **Parameters:**
 
+- `calendar` (`Temporal.Calendar`, plain object, or string): The calendar system to get the current date and time in.
 - `timeZone` (optional object or string): The time zone to get the current date and time in, as a `Temporal.TimeZone` object, an object implementing the [time zone protocol](./timezone.md#protocol), or a string.
   If not given, the current system time zone will be used.
-- `calendar` (optional `Temporal.Calendar`, plain object, or string): The calendar system to get the current date and time in.
-  If not given, the ISO 8601 calendar will be used.
 
-**Returns:** a `Temporal.Date` object representing the current system date.
+**Returns:** a `Temporal.Date` object representing the current system date in the reckoning of the given calendar.
 
-Example usage:
+This method gets the current calendar date according to the system settings.
+Optionally a time zone can be given in which the time is computed, instead of the current system time zone.
+
+If you only want to use the ISO 8601 calendar, use `Temporal.now.dateISO()`.
 
 ```js
-// Is it Leap Day?
-date = Temporal.now.date();
-if (date.month === 2 && date.day === 29) console.log('Leap Day!');
+// Is it Nowruz (New Year in the Persian calendar)?
+date = Temporal.now.date('persian');
+if (date.month === 1 && date.day === 1) console.log('New year!');
 ```
 
 ### Temporal.now.**timeISO**(_timeZone_: object | string = Temporal.now.timeZone()) : Temporal.Time

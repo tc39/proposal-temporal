@@ -38,7 +38,7 @@ Object.defineProperty(Temporal.Calendar, "from", {
   },
 });
 
-const result = Temporal.now.dateTime(timeZone, calendar);
+const result = Temporal.now.dateTime(calendar, timeZone);
 assert.sameValue(result, dateTime);
 
 assert.compareArray(actual, expected);

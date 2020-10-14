@@ -59,7 +59,7 @@ Object.defineProperty(Temporal.Calendar, "from", {
   },
 });
 
-const result = Temporal.now.date("UTC", "iso8601");
+const result = Temporal.now.date("iso8601", "UTC");
 assert.sameValue(result instanceof Temporal.Date, true);
 for (const property of ["year", "month", "day"]) {
   assert.sameValue(result[property], dateTime[property], property);

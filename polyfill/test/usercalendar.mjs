@@ -117,11 +117,11 @@ describe('Userland calendar', () => {
       equal(dt.calendar.id, obj.id);
     });
     it('Temporal.now.dateTime()', () => {
-      const nowDateTime = Temporal.now.dateTime('UTC', obj);
+      const nowDateTime = Temporal.now.dateTime(obj, 'UTC');
       equal(nowDateTime.calendar.id, obj.id);
     });
     it('Temporal.now.date()', () => {
-      const nowDate = Temporal.now.date('UTC', obj);
+      const nowDate = Temporal.now.date(obj, 'UTC');
       equal(nowDate.calendar.id, obj.id);
     });
     describe('Making available globally', () => {
@@ -210,11 +210,11 @@ describe('Userland calendar', () => {
         equal(dt.calendar.id, 'zerobased');
       });
       it('works for Temporal.now.dateTime', () => {
-        const nowDateTime = Temporal.now.dateTime('UTC', 'zerobased');
+        const nowDateTime = Temporal.now.dateTime('zerobased', 'UTC');
         equal(nowDateTime.calendar.id, 'zerobased');
       });
       it('works for Temporal.now.date', () => {
-        const nowDate = Temporal.now.date('UTC', 'zerobased');
+        const nowDate = Temporal.now.date('zerobased', 'UTC');
         equal(nowDate.calendar.id, 'zerobased');
       });
       after(() => {
@@ -357,11 +357,11 @@ describe('Userland calendar', () => {
       equal(dt.calendar.id, obj.id);
     });
     it('Temporal.now.dateTime()', () => {
-      const nowDateTime = Temporal.now.dateTime('UTC', obj);
+      const nowDateTime = Temporal.now.dateTime(obj, 'UTC');
       equal(nowDateTime.calendar.id, obj.id);
     });
     it('Temporal.now.date()', () => {
-      const nowDate = Temporal.now.date('UTC', obj);
+      const nowDate = Temporal.now.date(obj, 'UTC');
       equal(nowDate.calendar.id, obj.id);
     });
     describe('Making available globally', () => {
@@ -450,11 +450,11 @@ describe('Userland calendar', () => {
         equal(dt.calendar.id, 'decimal');
       });
       it('works for Temporal.now.dateTime', () => {
-        const nowDateTime = Temporal.now.dateTime('UTC', 'decimal');
+        const nowDateTime = Temporal.now.dateTime('decimal', 'UTC');
         equal(nowDateTime.calendar.id, 'decimal');
       });
       it('works for Temporal.now.date', () => {
-        const nowDate = Temporal.now.date('UTC', 'decimal');
+        const nowDate = Temporal.now.date('decimal', 'UTC');
         equal(nowDate.calendar.id, 'decimal');
       });
       after(() => {

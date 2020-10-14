@@ -25,6 +25,6 @@ for (const [value, description] of values) {
     return value;
   };
 
-  assert.throws(TypeError, () => Temporal.now.dateTime(timeZone, "test"), description);
+  assert.throws(TypeError, () => Temporal.now.dateTime("test", timeZone), description);
   assert.sameValue(called, 1);
 }
