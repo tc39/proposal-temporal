@@ -6426,9 +6426,10 @@
         if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
         if (options === undefined) throw new TypeError('options parameter is required');
         options = ES.NormalizeOptionsObject(options);
-        var smallestUnit = ES.ToSmallestTemporalUnit(options, ['day', 'hour']);
+        var smallestUnit = ES.ToSmallestTemporalUnit(options, ['day']);
         var roundingMode = ES.ToTemporalRoundingMode(options);
         var maximumIncrements = {
+          hour: 24,
           minute: 1440,
           second: 86400,
           millisecond: 86400e3,
@@ -6439,6 +6440,10 @@
         var incrementNs = roundingIncrement;
 
         switch (smallestUnit) {
+          case 'hour':
+            incrementNs *= 60;
+          // fall through
+
           case 'minute':
             incrementNs *= 60;
           // fall through
