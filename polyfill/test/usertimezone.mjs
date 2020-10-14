@@ -52,7 +52,7 @@ describe('Userland time zone', () => {
     it('has offset string +00:00', () => equal(obj.getOffsetStringFor(abs), '+00:00'));
     it('converts to DateTime', () => {
       equal(`${obj.getDateTimeFor(abs)}`, '1970-01-01T00:00');
-      equal(`${abs.toDateTime(obj)}`, '1970-01-01T00:00');
+      equal(`${abs.toDateTime(obj, 'gregory')}`, '1970-01-01T00:00[c=gregory]');
     });
     it('converts to Instant', () => {
       equal(`${obj.getInstantFor(dt)}`, '1976-11-18T15:23:30.123456789Z');
@@ -103,7 +103,7 @@ describe('Userland time zone', () => {
       });
       it('works for Instant.toDateTime', () => {
         const abs = Temporal.Instant.fromEpochSeconds(0);
-        equal(`${abs.toDateTime('Etc/Custom_UTC_Subclass')}`, '1970-01-01T00:00');
+        equal(`${abs.toDateTime('Etc/Custom_UTC_Subclass', 'gregory')}`, '1970-01-01T00:00[c=gregory]');
       });
       it('works for DateTime.toInstant', () => {
         const dt = Temporal.DateTime.from('1970-01-01T00:00');
@@ -145,7 +145,7 @@ describe('Userland time zone', () => {
       equal(Temporal.TimeZone.prototype.getOffsetStringFor.call(obj, abs), '+00:00'));
     it('converts to DateTime', () => {
       equal(`${Temporal.TimeZone.prototype.getDateTimeFor.call(obj, abs)}`, '1970-01-01T00:00');
-      equal(`${abs.toDateTime(obj)}`, '1970-01-01T00:00');
+      equal(`${abs.toDateTime(obj, 'gregory')}`, '1970-01-01T00:00[c=gregory]');
     });
     it('converts to Instant', () => {
       equal(`${Temporal.TimeZone.prototype.getInstantFor.call(obj, dt)}`, '1976-11-18T15:23:30.123456789Z');
@@ -193,7 +193,7 @@ describe('Userland time zone', () => {
       });
       it('works for Instant.toDateTime', () => {
         const abs = Temporal.Instant.fromEpochSeconds(0);
-        equal(`${abs.toDateTime('Etc/Custom_UTC_Protocol')}`, '1970-01-01T00:00');
+        equal(`${abs.toDateTime('Etc/Custom_UTC_Protocol', 'gregory')}`, '1970-01-01T00:00[c=gregory]');
       });
       it('works for DateTime.toInstant', () => {
         const dt = Temporal.DateTime.from('1970-01-01T00:00');

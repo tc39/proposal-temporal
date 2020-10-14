@@ -9,7 +9,8 @@ const timeZones = [
 ];
 
 // Start the table at midnight local time
-const calendarNow = now.toDateTime(here);
+const browserCalendar = new Intl.DateTimeFormat().resolvedOptions().calendar;
+const calendarNow = now.toDateTime(here, browserCalendar);
 const startTime = calendarNow
   .with(Temporal.Time.from('00:00')) // midnight
   .toInstant(here);

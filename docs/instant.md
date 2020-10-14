@@ -225,13 +225,12 @@ Same as `getEpochSeconds()`, but with nanosecond (10<sup>&minus;9</sup> second) 
 
 The value returned from this method is suitable to be passed to `new Temporal.Instant()`.
 
-### instant.**toZonedDateTime**(_timeZone_: object | string, _calendar_?: object | string) : Temporal.ZonedDateTime
+### instant.**toZonedDateTime**(_timeZone_: object | string, _calendar_: object | string) : Temporal.ZonedDateTime
 
 **Parameters:**
 
 - `timeZone` (object or string): A `Temporal.TimeZone` object, or an object implementing the [time zone protocol](./timezone.md#protocol), or a string description of the time zone; either its IANA name or UTC offset.
-- `calendar` (optional object or string): A `Temporal.Calendar` object, or a plain object, or a calendar identifier.
-  The default is to use the ISO 8601 calendar.
+- `calendar` (object or string): A `Temporal.Calendar` object, or a plain object, or a calendar identifier.
 
 **Returns:** a `Temporal.ZonedDateTime` object representing the calendar date, wall-clock time, time zone offset, and `timeZone`, according to the reckoning of `calendar`, at the exact time indicated by `instant`.
 
@@ -240,28 +239,32 @@ A convenient list is also available [on Wikipedia](https://en.wikipedia.org/wiki
 
 For a list of calendar identifiers, see the documentation for [Intl.DateTimeFormat](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/DateTimeFormat#Parameters).
 
+If you only want to use the ISO 8601 calendar, use `toDateTimeISO()`.
+
 Example usage:
 
 ```js
-// Converting a specific exact time to a calendar date / wall-clock time
-timestamp = Temporal.Instant.fromEpochSeconds(1553993100);
-timestamp.toDateTime('Europe/Berlin'); // => 2019-03-31T01:45+02:00[Europe/Berlin]
-timestamp.toDateTime('UTC'); // => 2019-03-31T00:45+00:00[UTC]
-timestamp.toDateTime('-08:00'); // => 2019-03-30T16:45-08:00[-08:00]
-
-// What time was the Unix epoch (timestamp 0) in Bell Labs (Murray Hill, New Jersey, USA)?
+// What time was the Unix epoch (timestamp 0) in Bell Labs (Murray Hill, New Jersey, USA) in the Gregorian calendar?
 epoch = Temporal.Instant.fromEpochSeconds(0);
 tz = Temporal.TimeZone.from('America/New_York');
-epoch.toZonedDateTime(tz); // => 1969-12-31T19:00-05:00[America/New_York]
+epoch.toZonedDateTime(tz, 'gregory');
+  // => 1969-12-31T19:00-05:00[America/New_York][c=gregory]
+
+// What time was the Unix epoch in Tokyo in the Japanese calendar?
+tz = Temporal.TimeZone.from('Asia/Tokyo');
+cal = Temporal.Calendar.from('japanese');
+zdt = epoch.toZonedDateTime(tz, cal);
+  // => 1970-01-01T09:00+09:00[Asia/Tokyo][c=japanese]
+console.log(zdt.year, zdt.era);
+  // => 45 showa
 ```
 
-### instant.**toDateTime**(_timeZone_: object | string, _calendar_?: object | string) : Temporal.DateTime
+### instant.**toDateTime**(_timeZone_: object | string, _calendar_: object | string) : Temporal.DateTime
 
 **Parameters:**
 
 - `timeZone` (object or string): A `Temporal.TimeZone` object, or an object implementing the [time zone protocol](./timezone.md#protocol), or a string description of the time zone; either its IANA name or UTC offset.
-- `calendar` (optional object or string): A `Temporal.Calendar` object, or a plain object, or a calendar identifier.
-  The default is to use the ISO 8601 calendar.
+- `calendar` (object or string): A `Temporal.Calendar` object, or a plain object, or a calendar identifier.
 
 **Returns:** a `Temporal.DateTime` object indicating the calendar date and wall-clock time in `timeZone`, according to the reckoning of `calendar`, at the instant time indicated by `instant`.
 
@@ -272,19 +275,24 @@ For a list of calendar identifiers, see the documentation for [Intl.DateTimeForm
 
 This method is one way to convert a `Temporal.Instant` to a `Temporal.DateTime`.
 
+If you only want to use the ISO 8601 calendar, use `toDateTimeISO()`.
+
 Example usage:
 
 ```js
-// Converting a specific instant time to a calendar date / wall-clock time
-timestamp = Temporal.Instant.fromEpochSeconds(1553993100);
-timestamp.toDateTime('Europe/Berlin'); // => 2019-03-31T01:45
-timestamp.toDateTime('UTC'); // => 2019-03-31T00:45
-timestamp.toDateTime('-08:00'); // => 2019-03-30T16:45
-
-// What time was the Unix epoch (timestamp 0) in Bell Labs (Murray Hill, New Jersey, USA)?
+// What time was the Unix epoch (timestamp 0) in Bell Labs (Murray Hill, New Jersey, USA) in the Gregorian calendar?
 epoch = Temporal.Instant.fromEpochSeconds(0);
 tz = Temporal.TimeZone.from('America/New_York');
-epoch.toDateTime(tz); // => 1969-12-31T19:00
+epoch.toDateTime(tz, 'gregory');
+  // => 1969-12-31T19:00[c=gregory]
+
+// What time was the Unix epoch in Tokyo in the Japanese calendar?
+tz = Temporal.TimeZone.from('Asia/Tokyo');
+cal = Temporal.Calendar.from('japanese');
+dt = epoch.toDateTime(tz, cal);
+  // => 1970-01-01T09:00[c=japanese]
+console.log(dt.year, dt.era);
+  // => 45 showa
 ```
 
 ### instant.**add**(_duration_: object) : Temporal.Instant
