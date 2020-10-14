@@ -20,8 +20,8 @@ Provides standard objects and functions for working with dates and times.
 
 This proposal is currently [Stage 2](https://github.com/tc39/proposals#stage-2).
 
-At the time of writing, all the major design decisions that we are aware of have been made, but some are not yet reflected in the API documentation, polyfill, and specification text.
-These are expected to be ready for TC39 delegates to review in mid-October 2020, in preparation for Stage 3.
+At the time of writing, all the major design decisions that we are aware of have been made, but [some](https://github.com/tc39/proposal-temporal/issues?page=1&q=is%3Aopen+is%3Aissue+milestone%3A%22Stable+proposal%22) are not yet reflected in the API documentation, polyfill, and specification text.
+These are expected to be ready for TC39 delegates to review within the next few weeks, in preparation for Stage 3.
 After that point, the bar for making changes will become higher.
 
 Stage 3 Reviewers:
