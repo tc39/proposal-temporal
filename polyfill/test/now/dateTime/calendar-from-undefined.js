@@ -40,7 +40,7 @@ Object.defineProperty(Temporal.Calendar, "from", {
   },
 });
 
-const result = Temporal.now.dateTime(timeZone, "japanese");
+const result = Temporal.now.dateTime("japanese", timeZone);
 assert.sameValue(result, dateTime);
 
 assert.compareArray(actual, expected);

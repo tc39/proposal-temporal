@@ -45,6 +45,8 @@ Object.defineProperty(Temporal.TimeZone, "from", {
   },
 });
 
+const calendar = Temporal.Calendar.from("iso8601");
+
 Object.defineProperty(Temporal.Calendar, "from", {
   get() {
     actual.push("get Temporal.Calendar.from");
@@ -52,7 +54,7 @@ Object.defineProperty(Temporal.Calendar, "from", {
   },
 });
 
-const result = Temporal.now.dateTime("UTC");
+const result = Temporal.now.dateTime(calendar, "UTC");
 assert.sameValue(result, dateTime);
 
 assert.compareArray(actual, expected);

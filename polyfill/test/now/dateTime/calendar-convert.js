@@ -22,7 +22,7 @@ for (const [input, output] of values) {
     return calendar;
   };
 
-  const dateTime = Temporal.now.dateTime("UTC", input);
+  const dateTime = Temporal.now.dateTime(input, "UTC");
   assert.sameValue(called, 1);
   assert.sameValue(dateTime.calendar, calendar);
 }
@@ -31,4 +31,4 @@ Temporal.Calendar.from = function() {
   throw new Test262Error("Should not call Calendar.from");
 };
 
-assert.throws(TypeError, () => Temporal.now.dateTime("UTC", Symbol()));
+assert.throws(TypeError, () => Temporal.now.dateTime(Symbol(), "UTC"));
