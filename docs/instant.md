@@ -5,12 +5,12 @@
 <!-- toc -->
 </details>
 
-A `Temporal.Instant` is an instant point in time, with a precision in nanoseconds.
+A `Temporal.Instant` is a single point in time (called **"exact time"**), with a precision in nanoseconds.
 No time zone or calendar information is present.
 As such `Temporal.Instant` has no concept of days, months or even hours.
 
 For convenience of interoperability, it internally uses nanoseconds since the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time) (midnight UTC on January 1, 1970).
-However, a `Temporal.Instant` can be created from any of several expressions that refer to a single point in time, including an ISO 8601 string with a time zone such as `'2020-01-23T17:04:36.491865121-08:00'`.
+However, a `Temporal.Instant` can be created from any of several expressions that refer to an exact time, including an ISO 8601 string with a time zone such as `'2020-01-23T17:04:36.491865121-08:00'`.
 
 If you have a legacy `Date` instance, you can use its `toTemporalInstant()` method to convert to a `Temporal.Instant`.
 
@@ -28,9 +28,9 @@ Like Unix time, `Temporal.Instant` ignores leap seconds.
 
 **Returns:** a new `Temporal.Instant` object.
 
-Creates a new `Temporal.Instant` object that represents a single point in time.
+Creates a new `Temporal.Instant` object that represents an exact time.
 
-`epochNanoseconds` is the number of nanoseconds (10<sup>&minus;9</sup> seconds) between the Unix epoch (midnight UTC on January 1, 1970) and the desired point in time.
+`epochNanoseconds` is the number of nanoseconds (10<sup>&minus;9</sup> seconds) between the Unix epoch (midnight UTC on January 1, 1970) and the desired exact time.
 
 Use this constructor directly if you know the precise number of nanoseconds already and have it in bigint form, for example from a database.
 Otherwise, `Temporal.Instant.from()`, which accepts more kinds of input, is probably more convenient.
@@ -54,15 +54,15 @@ turnOfTheCentury = new Temporal.Instant(-2208988800000000000n); // => 1900-01-01
 
 **Parameters:**
 
-- `thing`: The value representing the desired point in time.
+- `thing`: The value representing the desired exact time.
 
 **Returns:** a new `Temporal.Instant` object.
 
 This static method creates a new `Temporal.Instant` object from another value.
-If the value is another `Temporal.Instant` object, a new object representing the same point in time is returned.
+If the value is another `Temporal.Instant` object, a new object representing the same exact time is returned.
 
 Any other value is converted to a string, which is expected to be in ISO 8601 format, including a date, a time, and a time zone.
-If the point in time cannot be uniquely determined from the string, then this function throws an exception.
+If the exact time cannot be uniquely determined from the string, then this function throws an exception.
 This includes the case when `thing` is a validly-formatted ISO 8601 string denoting a time that doesn't exist, for example because it was skipped in a daylight saving time transition.
 
 Example usage:
@@ -74,7 +74,7 @@ instant = Temporal.Instant.from('2019-03-30T01:45+01:00');
 instant = Temporal.Instant.from('2019-03-30T00:45Z');
 instant === Temporal.Instant.from(instant); // => true
 
-// Not enough information to denote a single point in time:
+// Not enough information to denote an exact time:
 /* WRONG */ instant = Temporal.Instant.from('2019-03-30'); // no time; throws
 /* WRONG */ instant = Temporal.Instant.from('2019-03-30T01:45'); // no time zone; throws
 /* WRONG */ instant = Temporal.Instant.from('2019-03031T02:45+01:00[Europe/Berlin]');
@@ -91,9 +91,9 @@ instant === Temporal.Instant.from(instant); // => true
 **Returns:** a new `Temporal.Instant` object.
 
 This static method creates a new `Temporal.Instant` object with seconds precision.
-`epochSeconds` is the number of seconds between the Unix epoch (midnight UTC on January 1, 1970) and the desired point in time.
+`epochSeconds` is the number of seconds between the Unix epoch (midnight UTC on January 1, 1970) and the desired exact time.
 
-The number of seconds since the Unix epoch is a common measure of time in many computer systems.
+The number of seconds since the Unix epoch is a common measure of exact time in many computer systems.
 Use this method if you need to interface with such a system.
 
 Example usage:
@@ -300,7 +300,7 @@ Use this method if you are not doing computations in other calendars.
 
 Example usage:
 ```js
-// Converting a specific instant time to a calendar date / wall-clock time
+// Converting an exact time to a calendar date / wall-clock time
 timestamp = Temporal.Instant.fromEpochSeconds(1553993100);
 timestamp.toDateTime('Europe/Berlin'); // => 2019-03-31T01:45
 timestamp.toDateTime('UTC'); // => 2019-03-31T00:45
@@ -349,9 +349,9 @@ console.log(dt.year, dt.era);
 
 - `duration` (object): A `Temporal.Duration` object or a duration-like object.
 
-**Returns:** a new `Temporal.Instant` object which is the time indicated by `instant` plus `duration`.
+**Returns:** a new `Temporal.Instant` object which is the exact time indicated by `instant` plus `duration`.
 
-This method adds `duration` to `instant`, returning a point in time that is in the future relative to `instant`.
+This method adds `duration` to `instant`.
 
 The `duration` argument is an object with properties denoting a duration, such as `{ hours: 5, minutes: 30 }`, or a `Temporal.Duration` object.
 
@@ -362,7 +362,7 @@ If you need to do this, convert the `Temporal.Instant` to a `Temporal.DateTime` 
 
 If the result is earlier or later than the range that `Temporal.Instant` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), a `RangeError` will be thrown.
 
-Adding a negative duration is equivalent to subtracting the instant value of that duration.
+Adding a negative duration is equivalent to subtracting the absolute value of that duration.
 
 Example usage:
 
@@ -379,9 +379,9 @@ Temporal.now.instant().add(fiveHours);
 
 - `duration` (object): A `Temporal.Duration` object or a duration-like object.
 
-**Returns:** a new `Temporal.Instant` object which is the time indicated by `instant` minus `duration`.
+**Returns:** a new `Temporal.Instant` object which is the exact time indicated by `instant` minus `duration`.
 
-This method subtracts `duration` from `instant`, returning a point in time that is in the past relative to `instant`.
+This method subtracts `duration` from `instant`.
 
 The `duration` argument is an object with properties denoting a duration, such as `{ hours: 5, minutes: 30 }`, or a `Temporal.Duration` object.
 
@@ -392,7 +392,7 @@ If you need to do this, convert the `Temporal.Instant` to a `Temporal.DateTime` 
 
 If the result is earlier or later than the range that `Temporal.Instant` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), a `RangeError` will be thrown.
 
-Subtracting a negative duration is equivalent to adding the instant value of that duration.
+Subtracting a negative duration is equivalent to adding the absolute value of that duration.
 
 Example usage:
 
@@ -407,7 +407,7 @@ Temporal.now.instant().subtract(oneHour);
 
 **Parameters:**
 
-- `other` (`Temporal.Instant`): Another time with which to compute the difference.
+- `other` (`Temporal.Instant`): Another exact time with which to compute the difference.
 - `options` (optional object): An object with properties representing options for the operation.
   The following options are recognized:
   - `largestUnit` (string): The largest unit of time to allow in the resulting `Temporal.Duration` object.
@@ -424,7 +424,7 @@ Temporal.now.instant().subtract(oneHour);
 
 **Returns:** a `Temporal.Duration` representing the difference between `instant` and `other`.
 
-This method computes the difference between the two times represented by `instant` and `other`, optionally rounds it, and returns it as a `Temporal.Duration` object.
+This method computes the difference between the two exact times represented by `instant` and `other`, optionally rounds it, and returns it as a `Temporal.Duration` object.
 If `other` is later than `instant` then the resulting duration will be negative.
 
 The `largestUnit` option controls how the resulting duration is expressed.
@@ -548,7 +548,7 @@ instant.round({ roundingIncrement: 60, smallestUnit: 'minute', roundingMode: 'fl
 
 **Parameters:**
 
-- `other` (`Temporal.Instant`): Another time to compare.
+- `other` (`Temporal.Instant`): Another exact time to compare.
 
 **Returns:** `true` if `instant` and `other` are equal, or `false` if not.
 

@@ -36,7 +36,7 @@ How to get a Unix timestamp?
 
 ### Instant from legacy Date
 
-Map a legacy ECMAScript Date instance into a Temporal.Instant instance corresponding to the same instant in instant time.
+Map a legacy ECMAScript Date instance into a Temporal.Instant instance corresponding to the same instant in exact time.
 
 ```javascript
 {{cookbook/instantFromLegacyDate.mjs}}
@@ -89,7 +89,7 @@ An example of combining a day on the calendar (`Temporal.MonthDay`) and a year i
 
 ### Zoned instant from instant and time zone
 
-Use the optional parameter of `Temporal.Instant.prototype.toString()` to map a Temporal.Instant instance and a time zone name into a string serialization of the local time in that zone corresponding to the instant in instant time.
+Use the optional parameter of `Temporal.Instant.prototype.toString()` to map an exact-time Temporal.Instant instance and a time zone name, into a string serialization of the wall-clock time in that time zone corresponding to the exact time.
 
 Without the parameter, `Temporal.Instant.prototype.toString()` gives a serialization in UTC time.
 Using the parameter is useful if you need your serialized strings to be in a specific time zone.
@@ -116,7 +116,7 @@ Sorting other Temporal types would work exactly the same way as this.
 Sort a list of ISO 8601 date/time strings, for example to place log entries in order.
 
 ```javascript
-{{cookbook/sortAbsoluteInstants.mjs}}
+{{cookbook/sortExactTimeStrings.mjs}}
 ```
 
 ## Rounding
@@ -154,9 +154,9 @@ This is easily done with `dateTime.toInstant()`, but here is an example of imple
 {{cookbook/getInstantWithLocalTimeInZone.mjs}}
 ```
 
-### Preserving absolute instant
+### Preserving exact time
 
-Map a zoned date and time of day into a string serialization of the local time in a target zone at the corresponding instant in instant time.
+Map a zoned date and time of day into a string serialization of the local time in a target time zone at the corresponding exact time.
 This could be used when converting user-input date-time values between time zones.
 
 ```javascript
@@ -165,8 +165,8 @@ This could be used when converting user-input date-time values between time zone
 
 Here is another example similar to the previous one, using the time zone for future events.
 The times and locations of a series of future meetings are stored as a pair of strings: one for the calendar date and wall-clock time, and one for the time zone.
-They cannot be stored as an absolute point in UTC because between now and the time when the event happens, the time zone rules for daylight saving time could change &mdash; for example, Brazil abolished daylight saving time in 2019 &mdash; but the meeting would still be held at the same wall-clock time on that date.
-So if the time zone rules changed, the event's absolute point in time would change.
+They cannot be stored as an exact time because between now and the time when the event happens, the time zone rules for daylight saving time could change &mdash; for example, Brazil abolished daylight saving time in 2019 &mdash; but the meeting would still be held at the same wall-clock time on that date.
+So if the time zone rules changed, the event's exact time would change.
 
 This example calculates the starting times of all the Ecma TC39 meetings in 2019, in local time in Tokyo.
 
@@ -176,7 +176,7 @@ This example calculates the starting times of all the Ecma TC39 meetings in 2019
 
 ### Daily occurrence in local time
 
-Similar to the previous recipe, calculate the instant times of a daily occurrence that happens at a particular local time in a particular time zone.
+Similar to the previous recipe, calculate the exact times of a daily occurrence that happens at a particular local time in a particular time zone.
 
 ```javascript
 {{cookbook/calculateDailyOccurrence.mjs}}
@@ -184,7 +184,7 @@ Similar to the previous recipe, calculate the instant times of a daily occurrenc
 
 ### UTC offset for a zoned event, as a string
 
-Use `Temporal.TimeZone.getOffsetStringFor()` to map a `Temporal.Instant` instance and a time zone into the UTC offset at that instant in that time zone, as a string.
+Use `Temporal.TimeZone.getOffsetStringFor()` to map a `Temporal.Instant` instance and a time zone into the UTC offset at that exact time in that time zone, as a string.
 
 ```javascript
 {{cookbook/getUtcOffsetStringAtInstant.mjs}}
@@ -199,9 +199,9 @@ Similarly, use `Temporal.TimeZone.getOffsetNanosecondsFor()` to do the same thin
 {{cookbook/getUtcOffsetSecondsAtInstant.mjs}}
 ```
 
-### Offset between two time zones at an instant
+### Offset between two time zones at an exact time
 
-Also using `Temporal.TimeZone.getOffsetNanosecondsFor()`, we can map a `Temporal.Instant` instance and two time zones into the signed difference of UTC offsets between those time zones at that instant, as a number of seconds.
+Also using `Temporal.TimeZone.getOffsetNanosecondsFor()`, we can map a `Temporal.Instant` instance and two time zones into the signed difference of UTC offsets between those time zones at that exact time, as a number of seconds.
 
 ```javascript
 {{cookbook/getUtcOffsetDifferenceSecondsAtInstant.mjs}}
@@ -340,15 +340,15 @@ Take the difference between two Temporal.Instant instances as a Temporal.Duratio
 
 ### Nearest offset transition in a time zone
 
-Map a Temporal.Instant instance and a Temporal.TimeZone object into a Temporal.Instant instance representing the nearest following instant at which there is an offset transition in the time zone (e.g., for setting reminders).
+Map a Temporal.Instant instance and a Temporal.TimeZone object into a Temporal.Instant instance representing the nearest following exact time at which there is an offset transition in the time zone (e.g., for setting reminders).
 
 ```javascript
 {{cookbook/getInstantOfNearestOffsetTransitionToInstant.mjs}}
 ```
 
-### Comparison of an instant to business hours
+### Comparison of an exact time to business hours
 
-This example takes a roster of opening and closing times for a business, and maps a localized date and time of day into a time-sensitive state indicator ("opening soon" vs. "open" vs. "closing soon" vs. "closed").
+This example takes a roster of wall-clock opening and closing times for a business, and maps an exact time into a time-sensitive state indicator ("opening soon" vs. "open" vs. "closing soon" vs. "closed").
 
 ```javascript
 {{cookbook/getBusinessOpenStateText.mjs}}
@@ -379,8 +379,8 @@ Add the number of days it took to get an approval, and advance to the start of t
 ### Schedule a reminder ahead of matching a record-setting duration
 
 When considering a record (for example, a personal-best time in a sport), you might want to receive an alert just before the record is about to be broken.
-This example takes a record as a `Temporal.Duration`, the starting instant of the current attempt as a `Temporal.Instant`, and another `Temporal.Duration` indicating how long before the potentially record-setting instant you would like to receive an alert.
-It returns the instant at which a notification could be sent, for example "Keep going! 5 more minutes and it will be your personal best!"
+This example takes a record as a `Temporal.Duration`, the starting exact time of the current attempt as a `Temporal.Instant`, and another `Temporal.Duration` indicating how long before the potentially record-setting exact time you would like to receive an alert.
+It returns the exact time at which a notification could be sent, for example "Keep going! 5 more minutes and it will be your personal best!"
 
 This could be used for workout tracking, racing (including _long_ and potentially time-zone-crossing races like the Bullrun Rally, Iditarod, Self-Transcendence 3100, and Clipper Round The World), or even open-ended analogs like event-every-day "streaks".
 

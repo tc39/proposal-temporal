@@ -211,18 +211,18 @@ tz.getZonedDateTimeFor(epoch); // => 1969-12-31T19:00-05:00[America/New_York]
 
 **Parameters:**
 
-- `instant` (`Temporal.Instant`): An instant time to convert.
+- `instant` (`Temporal.Instant`): An exact time to convert.
 - `calendar` (optional object or string): A `Temporal.Calendar` object, or a plain object, or a calendar identifier.
   The default is to use the ISO 8601 calendar.
 
-**Returns:** A `Temporal.DateTime` object indicating the calendar date and wall-clock time in `timeZone`, according to the reckoning of `calendar`, at the instant time indicated by `instant`.
+**Returns:** A `Temporal.DateTime` object indicating the calendar date and wall-clock time in `timeZone`, according to the reckoning of `calendar`, at the exact time indicated by `instant`.
 
 This method is one way to convert a `Temporal.Instant` to a `Temporal.DateTime`.
 
 Example usage:
 
 ```javascript
-// Converting a specific instant time to a calendar date / wall-clock time
+// Converting an exact time to a calendar date / wall-clock time
 timestamp = Temporal.Instant.fromEpochSeconds(1553993100);
 tz = Temporal.TimeZone.from('Europe/Berlin');
 tz.getDateTimeFor(timestamp); // => 2019-03-31T01:45
@@ -244,7 +244,7 @@ tz.getDateTimeFor(epoch); // => 1969-12-31T19:00
     Allowed values are `'compatible'`, `'earlier'`, `'later'`, and `'reject'`.
     The default is `'compatible'`.
 
-**Returns:** A `Temporal.Instant` object indicating the instant time in `timeZone` at the time of the calendar date and wall-clock time from `dateTime`.
+**Returns:** A `Temporal.Instant` object indicating the exact time in `timeZone` at the time of the calendar date and wall-clock time from `dateTime`.
 
 This method is one way to convert a `Temporal.DateTime` to a `Temporal.Instant`.
 It is identical to [`dateTime.toInstant(timeZone, disambiguation)`](./datetime.html#toInstant).
@@ -274,9 +274,9 @@ If the result is earlier or later than the range that `Temporal.Instant` can rep
 
 **Returns:** An array of `Temporal.Instant` objects, which may be empty.
 
-This method returns an array of all the possible instant times that could correspond to the calendar date and wall-clock time indicated by `dateTime`.
+This method returns an array of all the possible exact times that could correspond to the calendar date and wall-clock time indicated by `dateTime`.
 
-Normally there is only one possible instant time corresponding to a wall-clock time, but around a daylight saving change, a wall-clock time may not exist, or the same wall-clock time may exist twice in a row.
+Normally there is only one possible exact time corresponding to a wall-clock time, but around a daylight saving change, a wall-clock time may not exist, or the same wall-clock time may exist twice in a row.
 See [Resolving ambiguity](./ambiguity.md) for usage examples and a more complete explanation.
 
 Although this method is useful for implementing a custom time zone or custom disambiguation behaviour, usually you won't have to use this method; `Temporal.TimeZone.prototype.getInstantFor()` will be more convenient for most use cases.

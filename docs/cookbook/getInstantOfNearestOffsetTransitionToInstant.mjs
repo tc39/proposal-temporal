@@ -1,8 +1,8 @@
 /**
- * Get the nearest following instant that the given time zone transitions to
- * another UTC offset, inclusive or exclusive.
+ * Get the nearest following exact time that the given time zone transitions
+ * to another UTC offset, inclusive or exclusive.
  *
- * @param {Temporal.Instant} instant - Start time to consider
+ * @param {Temporal.Instant} instant - Starting exact time to consider
  * @param {Temporal.TimeZone} timeZone - Time zone to consider
  * @param {boolean} inclusive - Include the start time, or not
  * @returns {(Temporal.Instant|null)} - Next UTC offset transition, or null if
@@ -11,7 +11,7 @@
 function getInstantOfNearestOffsetTransitionToInstant(instant, timeZone, inclusive) {
   let nearest;
   if (inclusive) {
-    // In case instant itself is the moment of a transition:
+    // In case instant itself is the exact time of a transition:
     nearest = timeZone.getNextTransition(instant.subtract({ nanoseconds: 1 }));
   } else {
     nearest = timeZone.getNextTransition(instant);

@@ -110,9 +110,9 @@ class Temporal.TimeZone {
 
   /** Given the calendar/wall-clock time, returns an array of 0, 1, or
    * 2 (or theoretically more, but not in any currently known time zone)
-   * instant times, that are possible points on the timeline
-   * corresponding to it. In getInstantFor(), one of these will be
-   * selected, depending on the disambiguation option. */
+   * exact times, that are possible points on the timeline corresponding
+   * to it. In getInstantFor(), one of these will be selected, depending
+   * on the disambiguation option. */
   getPossibleInstantsFor(dateTime : Temporal.DateTime) : array<Temporal.Instant>;
 
   /** Return the next time zone transition after `startingPoint`. */

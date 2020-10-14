@@ -61,7 +61,7 @@ If you only want to use the ISO 8601 calendar, use `Temporal.now.zonedDateTimeIS
 
 **Returns:** a `Temporal.Instant` object representing the current system time.
 
-This method gets the current absolute system time, without regard to calendar or time zone.
+This method gets the current exact system time, without regard to calendar or time zone.
 This is a good way to get a timestamp for an event, for example.
 It works like the old-style JavaScript `Date.now()`, but with nanosecond accuracy instead of milliseconds.
 
