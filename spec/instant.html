@@ -143,7 +143,7 @@
       <emu-alg>
         1. Perform ? RequireInternalSlot(_one_, [[InitializedTemporalInstant]]).
         1. Perform ? RequireInternalSlot(_two_, [[InitializedTemporalInstant]]).
-        1. Return ! CompareTemporalInstant(_one_, _two_).
+        1. Return 𝔽(! CompareTemporalInstant(_one_, _two_)).
       </emu-alg>
     </emu-clause>
   </emu-clause>
@@ -568,7 +568,7 @@
         1. Assert: _two_ has an [[InitializedTemporalInstant]] internal slot.
         1. If _one_.[[Nanoseconds]] &gt; _two_.[[Nanoseconds]], return 1.
         1. If _one_.[[Nanoseconds]] &lt; _two_.[[Nanoseconds]], return -1.
-        1. Return +0.
+        1. Return 0.
       </emu-alg>
     </emu-clause>
 

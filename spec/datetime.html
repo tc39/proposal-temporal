@@ -98,7 +98,7 @@
       <emu-alg>
         1. Perform ? RequireInternalSlot(_one_, [[InitializedTemporalDateTime]]).
         1. Perform ? RequireInternalSlot(_two_, [[InitializedTemporalDateTime]]).
-        1. Return ! CompareTemporalDateTime(_one_.[[ISOYear]], _one_.[[ISOMonth]], _one_.[[ISODay]], _one_.[[Hour]], _one_.[[Minute]], _one_.[[Second]], _one_.[[Millisecond]], _one_.[[Microsecond]], _one_.[[Nanosecond]], _two_.[[ISOYear]], _two_.[[ISOMonth]], _two_.[[ISODay]], _two_.[[Hour]], _two_.[[Minute]], _two_.[[Second]], _two_.[[Millisecond]], _two_.[[Microsecond]], _two_.[[Nanosecond]]).
+        1. Return 𝔽(! CompareTemporalDateTime(_one_.[[ISOYear]], _one_.[[ISOMonth]], _one_.[[ISODay]], _one_.[[Hour]], _one_.[[Minute]], _one_.[[Second]], _one_.[[Millisecond]], _one_.[[Microsecond]], _one_.[[Nanosecond]], _two_.[[ISOYear]], _two_.[[ISOMonth]], _two_.[[ISODay]], _two_.[[Hour]], _two_.[[Minute]], _two_.[[Second]], _two_.[[Millisecond]], _two_.[[Microsecond]], _two_.[[Nanosecond]])).
       </emu-alg>
     </emu-clause>
   </emu-clause>
@@ -1150,7 +1150,7 @@
         1. If _mus1_ &lt; _mus2_, return -1.
         1. If _ns1_ &gt; _ns2_, return 1.
         1. If _ns1_ &lt; _ns2_, return -1.
-        1. Return +0.
+        1. Return 0.
       </emu-alg>
     </emu-clause>
   </emu-clause>
