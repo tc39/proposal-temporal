@@ -6515,11 +6515,18 @@
       }
     }, {
       key: "toDateTime",
-      value: function toDateTime(temporalTimeZoneLike) {
-        var calendarLike = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : GetDefaultCalendar();
+      value: function toDateTime(temporalTimeZoneLike, calendarLike) {
         if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
         var timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);
         var calendar = ES.ToTemporalCalendar(calendarLike);
+        return ES.GetTemporalDateTimeFor(timeZone, this, calendar);
+      }
+    }, {
+      key: "toDateTimeISO",
+      value: function toDateTimeISO(temporalTimeZoneLike) {
+        if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
+        var timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);
+        var calendar = GetDefaultCalendar();
         return ES.GetTemporalDateTimeFor(timeZone, this, calendar);
       }
     }], [{
@@ -8416,8 +8423,10 @@
   var now = {
     instant: instant,
     dateTime: dateTime,
+    dateTimeISO: dateTimeISO,
     date: date,
-    time: time$1,
+    dateISO: dateISO,
+    timeISO: timeISO,
     timeZone: timeZone
   };
 
@@ -8426,9 +8435,8 @@
     return new Instant(ES.SystemUTCEpochNanoSeconds());
   }
 
-  function dateTime() {
-    var temporalTimeZoneLike = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : timeZone();
-    var calendarLike = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : GetDefaultCalendar();
+  function dateTime(calendarLike) {
+    var temporalTimeZoneLike = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : timeZone();
     return function () {
       var timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);
       var calendar = ES.ToTemporalCalendar(calendarLike);
@@ -8437,15 +8445,29 @@
     }();
   }
 
-  function date() {
+  function dateTimeISO() {
     var temporalTimeZoneLike = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : timeZone();
-    var calendarLike = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
-    return ES.TemporalDateTimeToDate(dateTime(temporalTimeZoneLike, calendarLike));
+    return function () {
+      var timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);
+      var calendar = GetDefaultCalendar();
+      var abs = instant();
+      return ES.GetTemporalDateTimeFor(timeZone, abs, calendar);
+    }();
   }
 
-  function time$1() {
+  function date(calendarLike) {
+    var temporalTimeZoneLike = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : timeZone();
+    return ES.TemporalDateTimeToDate(dateTime(calendarLike, temporalTimeZoneLike));
+  }
+
+  function dateISO() {
     var temporalTimeZoneLike = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : timeZone();
-    return ES.TemporalDateTimeToTime(dateTime(temporalTimeZoneLike));
+    return ES.TemporalDateTimeToDate(dateTimeISO(temporalTimeZoneLike));
+  }
+
+  function timeISO() {
+    var temporalTimeZoneLike = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : timeZone();
+    return ES.TemporalDateTimeToTime(dateTimeISO(temporalTimeZoneLike));
   }
 
   function timeZone() {
