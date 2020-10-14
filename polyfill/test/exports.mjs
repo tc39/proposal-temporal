@@ -51,42 +51,6 @@ describe('Exports', () => {
   it('should contain `now`', () => {
     assert(named.includes('now'));
   });
-  describe('Temporal.now', () => {
-    const names = Object.keys(Temporal.now);
-    it('should have 5 things', () => {
-      equal(names.length, 5);
-    });
-    it('should contain instant', () => {
-      assert(names.includes('instant'));
-    });
-    it('should contain dateTime', () => {
-      assert(names.includes('dateTime'));
-    });
-    it('should contain date', () => {
-      assert(names.includes('date'));
-    });
-    it('should contain time', () => {
-      assert(names.includes('time'));
-    });
-    it('should contain timeZone', () => {
-      assert(names.includes('timeZone'));
-    });
-    it('should contain absolute', () => {
-      equal(typeof Temporal.now.instant, 'function');
-    });
-    it('should contain dateTime', () => {
-      equal(typeof Temporal.now.dateTime, 'function');
-    });
-    it('should contain date', () => {
-      equal(typeof Temporal.now.date, 'function');
-    });
-    it('should contain time', () => {
-      equal(typeof Temporal.now.time, 'function');
-    });
-    it('should contain timeZone', () => {
-      equal(typeof Temporal.now.timeZone, 'function');
-    });
-  });
 });
 
 import { normalize } from 'path';
