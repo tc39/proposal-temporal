@@ -193,6 +193,8 @@
 </li>
 <li><a href="#abs">abs</a>
 </li>
+<li><a href="#isZero">isZero</a>
+</li>
 <li><a href="#round">round</a>
 </li>
 <li><a href="#getFields">getFields</a>
@@ -503,7 +505,14 @@ It returns a newly constructed <code>Temporal.Duration</code> with all the field
 If <code>duration</code> is already positive or zero, then the returned object is a copy of <code>duration</code>.</p>
 <p>Usage example:</p>
 <pre class="language-javascript"><code class="language-javascript">d <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Duration<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'-PT8H30M'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-d<span class="token punctuation">.</span><span class="token function">abs</span><span class="token punctuation">(</span><span class="token punctuation">)</span>  <span class="token comment">// PT8H30M</span></code></pre><h3 id="round"><a class="heading-link" href="#round"></a>duration.<strong>round</strong>(<em>options</em>: object) : Temporal.Duration</h3><p><strong>Parameters:</strong></p>
+d<span class="token punctuation">.</span><span class="token function">abs</span><span class="token punctuation">(</span><span class="token punctuation">)</span>  <span class="token comment">// PT8H30M</span></code></pre><h3 id="isZero"><a class="heading-link" href="#isZero"></a>duration.<strong>isZero</strong>() : boolean</h3><p><strong>Returns:</strong> <code>true</code> if <code>duration</code> has zero length, <code>false</code> otherwise.</p>
+<p>This is a convenience method that tells whether <code>duration</code> represents a zero length of time.</p>
+<p>Usage example:</p>
+<pre class="language-javascript"><code class="language-javascript">d <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Duration<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'PT0S'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+d<span class="token punctuation">.</span><span class="token function">isZero</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => true</span>
+
+d <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Duration<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> days<span class="token operator">:</span> <span class="token number">0</span><span class="token punctuation">,</span> hours<span class="token operator">:</span> <span class="token number">0</span><span class="token punctuation">,</span> minutes<span class="token operator">:</span> <span class="token number">0</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+d<span class="token punctuation">.</span><span class="token function">isZero</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => true</span></code></pre><h3 id="round"><a class="heading-link" href="#round"></a>duration.<strong>round</strong>(<em>options</em>: object) : Temporal.Duration</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>options</code> (object): An object with properties representing options for the operation.
 The following options are recognized:<ul>

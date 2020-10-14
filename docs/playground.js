@@ -7833,6 +7833,12 @@
         return result;
       }
     }, {
+      key: "isZero",
+      value: function isZero() {
+        if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
+        return ES.DurationSign(GetSlot(this, YEARS), GetSlot(this, MONTHS), GetSlot(this, WEEKS), GetSlot(this, DAYS), GetSlot(this, HOURS), GetSlot(this, MINUTES), GetSlot(this, SECONDS), GetSlot(this, MILLISECONDS), GetSlot(this, MICROSECONDS), GetSlot(this, NANOSECONDS)) === 0;
+      }
+    }, {
       key: "add",
       value: function add(other) {
         var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
