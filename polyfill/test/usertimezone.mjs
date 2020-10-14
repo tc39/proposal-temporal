@@ -52,6 +52,7 @@ describe('Userland time zone', () => {
     it('has offset string +00:00', () => equal(obj.getOffsetStringFor(abs), '+00:00'));
     it('converts to DateTime', () => {
       equal(`${obj.getDateTimeFor(abs)}`, '1970-01-01T00:00');
+      equal(`${abs.toDateTimeISO(obj)}`, '1970-01-01T00:00');
       equal(`${abs.toDateTime(obj, 'gregory')}`, '1970-01-01T00:00[c=gregory]');
     });
     it('converts to Instant', () => {
@@ -101,8 +102,9 @@ describe('Userland time zone', () => {
         const abs = Temporal.Instant.fromEpochSeconds(0);
         equal(abs.toString('Etc/Custom_UTC_Subclass'), '1970-01-01T00:00+00:00[Etc/Custom_UTC_Subclass]');
       });
-      it('works for Instant.toDateTime', () => {
+      it('works for Instant.toDateTime and toDateTimeISO', () => {
         const abs = Temporal.Instant.fromEpochSeconds(0);
+        equal(`${abs.toDateTimeISO('Etc/Custom_UTC_Subclass')}`, '1970-01-01T00:00');
         equal(`${abs.toDateTime('Etc/Custom_UTC_Subclass', 'gregory')}`, '1970-01-01T00:00[c=gregory]');
       });
       it('works for DateTime.toInstant', () => {
@@ -145,6 +147,7 @@ describe('Userland time zone', () => {
       equal(Temporal.TimeZone.prototype.getOffsetStringFor.call(obj, abs), '+00:00'));
     it('converts to DateTime', () => {
       equal(`${Temporal.TimeZone.prototype.getDateTimeFor.call(obj, abs)}`, '1970-01-01T00:00');
+      equal(`${abs.toDateTimeISO(obj)}`, '1970-01-01T00:00');
       equal(`${abs.toDateTime(obj, 'gregory')}`, '1970-01-01T00:00[c=gregory]');
     });
     it('converts to Instant', () => {
@@ -191,8 +194,9 @@ describe('Userland time zone', () => {
         const abs = Temporal.Instant.fromEpochSeconds(0);
         equal(abs.toString('Etc/Custom_UTC_Protocol'), '1970-01-01T00:00+00:00[Etc/Custom_UTC_Protocol]');
       });
-      it('works for Instant.toDateTime', () => {
+      it('works for Instant.toDateTime and toDateTimeISO', () => {
         const abs = Temporal.Instant.fromEpochSeconds(0);
+        equal(`${abs.toDateTimeISO('Etc/Custom_UTC_Protocol')}`, '1970-01-01T00:00');
         equal(`${abs.toDateTime('Etc/Custom_UTC_Protocol', 'gregory')}`, '1970-01-01T00:00[c=gregory]');
       });
       it('works for DateTime.toInstant', () => {

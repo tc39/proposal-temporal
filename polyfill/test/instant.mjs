@@ -33,6 +33,9 @@ describe('Instant', () => {
       it('Instant.prototype.round is a Function', () => {
         equal(typeof Instant.prototype.round, 'function');
       });
+      it('Instant.prototype.toDateTimeISO is a Function', () => {
+        equal(typeof Instant.prototype.toDateTimeISO, 'function');
+      });
       it('Instant.prototype.toDateTime is a Function', () => {
         equal(typeof Instant.prototype.toDateTime, 'function');
       });
@@ -870,6 +873,24 @@ describe('Instant', () => {
       const max = Instant.from('+275760-09-13T00:00Z');
       throws(() => min.subtract({ nanoseconds: 1 }), RangeError);
       throws(() => max.add({ nanoseconds: 1 }), RangeError);
+    });
+  });
+  describe('Instant.toDateTimeISO works', () => {
+    const inst = Instant.from('1976-11-18T14:23:30.123456789Z');
+    it('throws without parameter', () => {
+      throws(() => inst.toDateTimeISO(), RangeError);
+    });
+    it('time zone parameter UTC', () => {
+      const tz = Temporal.TimeZone.from('UTC');
+      const dt = inst.toDateTimeISO(tz);
+      equal(inst.getEpochNanoseconds(), dt.toInstant(tz).getEpochNanoseconds());
+      equal(`${dt}`, '1976-11-18T14:23:30.123456789');
+    });
+    it('time zone parameter non-UTC', () => {
+      const tz = Temporal.TimeZone.from('America/New_York');
+      const dt = inst.toDateTimeISO(tz);
+      equal(inst.getEpochNanoseconds(), dt.toInstant(tz).getEpochNanoseconds());
+      equal(`${dt}`, '1976-11-18T09:23:30.123456789');
     });
   });
   describe('Instant.toDateTime works', () => {

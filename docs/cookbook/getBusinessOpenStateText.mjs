@@ -24,7 +24,7 @@ function getBusinessOpenStateText(now, timeZone, businessHours, soonWindow) {
     return Temporal.Instant.compare(abs, start) >= 0 && Temporal.Instant.compare(abs, end) < 0;
   }
 
-  const dateTime = now.toDateTime(timeZone);
+  const dateTime = now.toDateTimeISO(timeZone);
   const weekday = dateTime.dayOfWeek % 7; // convert to 0-based, for array indexing
 
   // Because of times wrapping around at midnight, we may need to consider
