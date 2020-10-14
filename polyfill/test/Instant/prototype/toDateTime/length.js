@@ -16,7 +16,7 @@ includes: [propertyHelper.js]
 ---*/
 
 verifyProperty(Temporal.Instant.prototype.toDateTime, "length", {
-  value: 1,
+  value: 2,
   writable: false,
   enumerable: false,
   configurable: true,

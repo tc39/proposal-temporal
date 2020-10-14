@@ -235,7 +235,7 @@ export class Instant {
   valueOf() {
     throw new TypeError('use compare() or equals() to compare Temporal.Instant');
   }
-  toDateTime(temporalTimeZoneLike, calendarLike = GetDefaultCalendar()) {
+  toDateTime(temporalTimeZoneLike, calendarLike) {
     if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
     const timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);
     const calendar = ES.ToTemporalCalendar(calendarLike);

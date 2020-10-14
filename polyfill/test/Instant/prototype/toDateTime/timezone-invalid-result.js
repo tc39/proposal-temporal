@@ -6,6 +6,7 @@ esid: sec-temporal.instant.prototype.todatetime
 ---*/
 
 const instant = Temporal.Instant.from("1975-02-02T14:25:36.123456789Z");
+const calendar = Temporal.Calendar.from("iso8601");
 
 const invalidValues = [
   undefined,
@@ -22,14 +23,14 @@ const invalidValues = [
 
 for (const dateTime of invalidValues) {
   const timeZone = {
-    getDateTimeFor(instantArg, calendar) {
+    getDateTimeFor(instantArg, calendarArg) {
       assert.sameValue(instantArg instanceof Temporal.Instant, true, "Instant");
       assert.sameValue(instantArg, instant);
-      assert.sameValue(calendar instanceof Temporal.Calendar, true, "Calendar");
-      assert.sameValue(calendar.id, "iso8601");
+      assert.sameValue(calendarArg instanceof Temporal.Calendar, true, "Calendar");
+      assert.sameValue(calendarArg, calendar);
       return dateTime;
     },
   };
 
-  assert.throws(TypeError, () => instant.toDateTime(timeZone));
+  assert.throws(TypeError, () => instant.toDateTime(timeZone, calendar));
 }

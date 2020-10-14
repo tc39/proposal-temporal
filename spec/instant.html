@@ -429,7 +429,7 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal.instant.prototype.todatetime">
-      <h1>Temporal.Instant.prototype.toDateTime ( _temporalTimeZoneLike_ [ , _calendarLike_ ] )</h1>
+      <h1>Temporal.Instant.prototype.toDateTime ( _temporalTimeZoneLike_, _calendarLike_ )</h1>
       <p>
         The `toDateTime` method takes two arguments, _temporalTimeZoneLike_ and _calendar_.
         The following steps are taken:
@@ -438,10 +438,7 @@
         1. Let _instant_ be the *this* value.
         1. Perform ? RequireInternalSlot(_instant_, [[InitializedTemporalInstant]]).
         1. Let _timeZone_ be ? ToTemporalTimeZone(_temporalTimeZoneLike_).
-        1. If _calendarLike_ is *undefined*, then
-          1. Let _calendar_ be ! GetDefaultCalendar().
-        1. Else,
-          1. Let _calendar_ be ? ToTemporalCalendar(_calendarLike_).
+        1. Let _calendar_ be ? ToTemporalCalendar(_calendarLike_).
         1. Return ? GetTemporalDateTimeFor(_timeZone_, _instant_, _calendar_).
       </emu-alg>
     </emu-clause>
