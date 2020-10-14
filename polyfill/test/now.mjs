@@ -23,7 +23,7 @@ describe('Temporal.now', () => {
     it('Temporal.now.instant is a function', () => equal(typeof Temporal.now.instant, 'function'));
     it('Temporal.now.dateTime is a function', () => equal(typeof Temporal.now.dateTime, 'function'));
     it('Temporal.now.date is a function', () => equal(typeof Temporal.now.date, 'function'));
-    it('Temporal.now.time is a function', () => equal(typeof Temporal.now.time, 'function'));
+    it('Temporal.now.timeISO is a function', () => equal(typeof Temporal.now.timeISO, 'function'));
     it('Temporal.now.timeZone is a function', () => equal(typeof Temporal.now.timeZone, 'function'));
   });
   describe('Temporal.now.absolute()', () => {
@@ -36,8 +36,8 @@ describe('Temporal.now', () => {
   describe('Temporal.now.date()', () => {
     it('Temporal.now.date() returns a DateTime', () => assert(Temporal.now.date() instanceof Temporal.Date));
   });
-  describe('Temporal.now.time()', () => {
-    it('Temporal.now.time() returns a Time', () => assert(Temporal.now.time() instanceof Temporal.Time));
+  describe('Temporal.now.timeISO()', () => {
+    it('Temporal.now.timeISO() returns a Time', () => assert(Temporal.now.timeISO() instanceof Temporal.Time));
   });
 });
 

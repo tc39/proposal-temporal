@@ -2,7 +2,7 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
-esid: sec-temporal.now.time
+esid: sec-temporal.now.timeiso
 info: |
     Every built-in function object, including constructors, has a "length" property whose value is
     an integer. Unless otherwise specified, this value is equal to the largest number of named
@@ -15,7 +15,7 @@ info: |
 includes: [propertyHelper.js]
 ---*/
 
-verifyProperty(Temporal.now.time, "length", {
+verifyProperty(Temporal.now.timeISO, "length", {
   value: 0,
   writable: false,
   enumerable: false,
