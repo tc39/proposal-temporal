@@ -100,6 +100,16 @@
     </emu-alg>
   </emu-clause>
 
+  <emu-clause id="sec-temporal-isvalidcalendarname" aoid="IsValidCalendarName">
+    <h1>IsValidCalendarName ( _calendar_ )</h1>
+    <p>
+      The IsValidCalendarName abstract operation verifies that the _calendar_ argument (which must be a String value) represents a valid Unicode Calendar Identifier value, according to BCP47.
+    </p>
+    <p>
+      The abstract operation returns *true* if _calendar_, converted to upper case as described in <emu-xref href="#sec-case-sensitivity-and-case-mapping"></emu-xref>, is equal to one of the Unicode Calendar Indentifier types, according to BCP47, converted to uppercase as described in <emu-xref href="#sec-case-sensitivity-and-case-mapping"></emu-xref>. It returns *false* otherwise.
+    </p>
+  </emu-clause>
+
   <emu-clause id="sec-temporal-totemporaldisambiguation" aoid="ToTemporalDisambiguation">
     <h1>ToTemporalDisambiguation ( _normalizedOptions_ )</h1>
     <emu-alg>
@@ -565,6 +575,12 @@
           TimeZoneUTCOffset
           TimeZoneUTCOffset `[` TimeZoneIANAName `]`
 
+      CalendarName :
+          &gt; any string for which IsValidCalendarName returns true
+
+      Calendar :
+          `[c=` CalendarName `]`
+
       TimeSpec :
           TimeHour
           TimeHour `:` TimeMinute
@@ -578,6 +594,9 @@
       DateTime :
           Date
           Date DateTimeSeparator Time
+
+      CalendarDateTime:
+          DateTime Calendar?
 
       DurationSeconds :
           Digits TimeFraction? SecondsDesignator
@@ -619,7 +638,7 @@
           Date DateTimeSeparator TimeSpec TimeZone
 
       TemporalDateString :
-          DateTime
+          CalendarDateTime
 
       TemporalDateTimeString :
           DateTime
@@ -652,12 +671,12 @@
   <emu-clause id="sec-temporal-parseisodatetime" aoid="ParseISODateTime">
     <h1>ParseISODateTime ( _isoString_ )</h1>
     <p>
-      The ParseISODateTime abstract operation examines any |Time| or |DateTime| string accepted by the grammar in <emu-xref href="#sec-temporal-iso8601grammar"></emu-xref> and returns a record with all the date and time components found.
+      The ParseISODateTime abstract operation examines any |Time|, |DateTime| or |CalendarDateTime| string accepted by the grammar in <emu-xref href="#sec-temporal-iso8601grammar"></emu-xref> and returns a record with all the date and time components found.
     </p>
     <emu-note>The value of ? ToInteger(*undefined*) is 0.</emu-note>
     <emu-alg>
       1. Assert: Type(_isoString_) is String.
-      1. Let _year_, _month_, _day_, _hour_, _minute_, _second_, and _fraction_ be the parts of _isoString_ produced respectively by the |DateYear|, |DateMonth|, |DateDay|, |TimeHour|, |TimeMinute|, |TimeSecond|, and |TimeFractionalPart| productions, or *undefined* if not present.
+      1. Let _year_, _month_, _day_, _hour_, _minute_, _second_, _fraction_, and _calendar_ be the parts of _isoString_ produced respectively by the |DateYear|, |DateMonth|, |DateDay|, |TimeHour|, |TimeMinute|, |TimeSecond|, |TimeFractionalPart|, and |CalendarName| productions, or *undefined* if not present.
       1. Let _year_ be the part of _isoString_ produced by the |DateYear| production.
       1. If the first code unit of _year_ is 0x2212 (MINUS SIGN), replace it with the code unit 0x002D (HYPHEN-MINUS).
       1. Set _year_ to ! ToInteger(_year_).
@@ -702,7 +721,8 @@
         [[Second]]: _second_,
         [[Millisecond]]: _millisecond_,
         [[Microsecond]]: _microsecond_,
-        [[Nanosecond]]: _nanosecond_
+        [[Nanosecond]]: _nanosecond_,
+        [[Calendar]], _calendar_
         }.
     </emu-alg>
   </emu-clause>
@@ -749,7 +769,8 @@
       1. Return the new Record {
         [[Year]]: _result_.[[Year]],
         [[Month]]: _result_.[[Month]],
-        [[Day]]: _result_.[[Day]]
+        [[Day]]: _result_.[[Day]],
+        [[Calendar]]: _calendar_
         }.
     </emu-alg>
   </emu-clause>
