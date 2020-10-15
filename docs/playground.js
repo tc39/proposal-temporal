@@ -5909,7 +5909,7 @@
       value: function dateFromFields(fields, options, constructor) {
         if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
         options = ES.NormalizeOptionsObject(options);
-        var overflow = ES.ToTemporalOverflow(options); // Intentionally alphabetical
+        var overflow = ES.ToTemporalOverflow(options);
 
         var _ES$ToTemporalDateRec = ES.ToTemporalDateRecord(fields),
             year = _ES$ToTemporalDateRec.year,
@@ -5928,7 +5928,7 @@
       value: function yearMonthFromFields(fields, options, constructor) {
         if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
         options = ES.NormalizeOptionsObject(options);
-        var overflow = ES.ToTemporalOverflow(options); // Intentionally alphabetical
+        var overflow = ES.ToTemporalOverflow(options);
 
         var _ES$ToTemporalYearMon = ES.ToTemporalYearMonthRecord(fields),
             year = _ES$ToTemporalYearMon.year,
@@ -5947,7 +5947,7 @@
       value: function monthDayFromFields(fields, options, constructor) {
         if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
         options = ES.NormalizeOptionsObject(options);
-        var overflow = ES.ToTemporalOverflow(options); // Intentionally alphabetical
+        var overflow = ES.ToTemporalOverflow(options);
 
         var _ES$ToTemporalMonthDa = ES.ToTemporalMonthDayRecord(fields),
             month = _ES$ToTemporalMonthDa.month,
@@ -6889,6 +6889,18 @@
         };
       }
     }, {
+      key: "calendar",
+      get: function get() {
+        if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, CALENDAR);
+      }
+    }, {
+      key: "era",
+      get: function get() {
+        if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, CALENDAR).era(this);
+      }
+    }, {
       key: "year",
       get: function get() {
         if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
@@ -6905,18 +6917,6 @@
       get: function get() {
         if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
         return GetSlot(this, CALENDAR).day(this);
-      }
-    }, {
-      key: "calendar",
-      get: function get() {
-        if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
-        return GetSlot(this, CALENDAR);
-      }
-    }, {
-      key: "era",
-      get: function get() {
-        if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
-        return GetSlot(this, CALENDAR).era(this);
       }
     }, {
       key: "dayOfWeek",
@@ -6943,16 +6943,16 @@
         return GetSlot(this, CALENDAR).daysInWeek(this);
       }
     }, {
-      key: "daysInYear",
-      get: function get() {
-        if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
-        return GetSlot(this, CALENDAR).daysInYear(this);
-      }
-    }, {
       key: "daysInMonth",
       get: function get() {
         if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
         return GetSlot(this, CALENDAR).daysInMonth(this);
+      }
+    }, {
+      key: "daysInYear",
+      get: function get() {
+        if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, CALENDAR).daysInYear(this);
       }
     }, {
       key: "monthsInYear",
@@ -8846,7 +8846,6 @@
             microsecond = GetSlot(item, MICROSECOND);
             nanosecond = GetSlot(item, NANOSECOND);
           } else {
-            // Intentionally largest to smallest units
             var _ES$ToTemporalTimeRec = ES.ToTemporalTimeRecord(item);
 
             hour = _ES$ToTemporalTimeRec.hour;
