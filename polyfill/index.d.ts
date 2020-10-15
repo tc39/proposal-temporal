@@ -693,7 +693,7 @@ export namespace Temporal {
    * A plain object implementing the protocol for a custom time zone.
    */
   export interface TimeZoneProtocol {
-    name?: string;
+    id?: string;
     getOffsetNanosecondsFor(absolute: Temporal.Instant): number;
     getOffsetStringFor?(absolute: Temporal.Instant): string;
     getDateTimeFor(absolute: Temporal.Instant, calendar?: CalendarProtocol | string): Temporal.DateTime;
@@ -721,7 +721,7 @@ export namespace Temporal {
   export class TimeZone implements Required<TimeZoneProtocol> {
     static from(timeZone: Temporal.TimeZone | string): Temporal.TimeZone;
     constructor(timeZoneIdentifier: string);
-    readonly name: string;
+    readonly id: string;
     getOffsetNanosecondsFor(absolute: Temporal.Instant): number;
     getOffsetStringFor(absolute: Temporal.Instant): string;
     getDateTimeFor(absolute: Temporal.Instant, calendar?: CalendarProtocol | string): Temporal.DateTime;
