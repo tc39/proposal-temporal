@@ -151,7 +151,7 @@ export class Duration {
       'years'
     ]);
     if (!props) {
-      throw new RangeError('invalid duration-like');
+      throw new TypeError('invalid duration-like');
     }
     let {
       years = GetSlot(this, YEARS),

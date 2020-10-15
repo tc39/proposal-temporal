@@ -110,6 +110,13 @@ describe('MonthDay', () => {
           it(overflow, () => equal(`${MonthDay.from({ month: 2, day: 29 }, { overflow })}`, '02-29'))
         );
       });
+      it('object must contain at least the required correctly-spelled properties', () => {
+        throws(() => MonthDay.from({}), TypeError);
+        throws(() => MonthDay.from({ months: 12, day: 31 }), TypeError);
+      });
+      it('incorrectly-spelled properties are ignored', () => {
+        equal(`${MonthDay.from({ month: 12, day: 1, days: 31 })}`, '12-01');
+      });
     });
     describe('getters', () => {
       let md = new MonthDay(1, 15);
@@ -141,6 +148,13 @@ describe('MonthDay', () => {
         throws(() => md.with({ day: 1 }, badOptions), TypeError)
       );
       [{}, () => {}, undefined].forEach((options) => equal(`${md.with({ day: 1 }, options)}`, '01-01'));
+    });
+    it('object must contain at least one correctly-spelled property', () => {
+      throws(() => md.with({}), TypeError);
+      throws(() => md.with({ months: 12 }), TypeError);
+    });
+    it('incorrectly-spelled properties are ignored', () => {
+      equal(`${md.with({ month: 12, days: 1 })}`, '12-15');
     });
   });
   describe('MonthDay.equals()', () => {

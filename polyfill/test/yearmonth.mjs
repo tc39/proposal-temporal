@@ -128,6 +128,13 @@ describe('YearMonth', () => {
           });
         });
       });
+      it('object must contain at least the required correctly-spelled properties', () => {
+        throws(() => YearMonth.from({}), TypeError);
+        throws(() => YearMonth.from({ year: 1976, months: 11 }), TypeError);
+      });
+      it('incorrectly-spelled properties are ignored', () => {
+        equal(`${YearMonth.from({ year: 1976, month: 11, months: 12 })}`, '1976-11');
+      });
     });
     describe('.with()', () => {
       const ym = YearMonth.from('2019-10');
@@ -145,6 +152,13 @@ describe('YearMonth', () => {
         throws(() => ym.with({ year: 2020 }, badOptions), TypeError)
       );
       [{}, () => {}, undefined].forEach((options) => equal(`${ym.with({ year: 2020 }, options)}`, '2020-10'));
+    });
+    it('object must contain at least one correctly-spelled property', () => {
+      throws(() => ym.with({}), TypeError);
+      throws(() => ym.with({ months: 12 }), TypeError);
+    });
+    it('incorrectly-spelled properties are ignored', () => {
+      equal(`${ym.with({ month: 1, years: 2020 })}`, '2019-01');
     });
   });
   describe('YearMonth.compare() works', () => {
@@ -406,6 +420,13 @@ describe('YearMonth', () => {
       );
       [{}, () => {}, undefined].forEach((options) => equal(`${ym.add({ months: 1 }, options)}`, '2019-12'));
     });
+    it('object must contain at least one correctly-spelled property', () => {
+      throws(() => ym.add({}), TypeError);
+      throws(() => ym.add({ month: 12 }), TypeError);
+    });
+    it('incorrectly-spelled properties are ignored', () => {
+      equal(`${ym.add({ month: 1, years: 1 })}`, '2020-11');
+    });
   });
   describe('YearMonth.subtract() works', () => {
     const ym = YearMonth.from('2019-11');
@@ -472,6 +493,13 @@ describe('YearMonth', () => {
         throws(() => ym.subtract({ months: 1 }, badOptions), TypeError)
       );
       [{}, () => {}, undefined].forEach((options) => equal(`${ym.subtract({ months: 1 }, options)}`, '2019-10'));
+    });
+    it('object must contain at least one correctly-spelled property', () => {
+      throws(() => ym.subtract({}), TypeError);
+      throws(() => ym.subtract({ month: 12 }), TypeError);
+    });
+    it('incorrectly-spelled properties are ignored', () => {
+      equal(`${ym.subtract({ month: 1, years: 1 })}`, '2018-11');
     });
   });
   describe('Min/max range', () => {

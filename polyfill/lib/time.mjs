@@ -85,7 +85,7 @@ export class Time {
       'second'
     ]);
     if (!props) {
-      throw new RangeError('invalid time-like');
+      throw new TypeError('invalid time-like');
     }
     let {
       hour = GetSlot(this, HOUR),

@@ -351,18 +351,32 @@ export const ES = ObjectAssign({}, ES2019, {
         nanoseconds: GetSlot(item, NANOSECONDS)
       };
     }
-    return ES.ToRecord(item, [
-      ['days', 0],
-      ['hours', 0],
-      ['microseconds', 0],
-      ['milliseconds', 0],
-      ['minutes', 0],
-      ['months', 0],
-      ['nanoseconds', 0],
-      ['seconds', 0],
-      ['weeks', 0],
-      ['years', 0]
+    const props = ES.ToPartialRecord(item, [
+      'days',
+      'hours',
+      'microseconds',
+      'milliseconds',
+      'minutes',
+      'months',
+      'nanoseconds',
+      'seconds',
+      'weeks',
+      'years'
     ]);
+    if (!props) throw new TypeError('invalid duration-like');
+    const {
+      years = 0,
+      months = 0,
+      weeks = 0,
+      days = 0,
+      hours = 0,
+      minutes = 0,
+      seconds = 0,
+      milliseconds = 0,
+      microseconds = 0,
+      nanoseconds = 0
+    } = props;
+    return { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
   },
   RegulateDuration: (
     years,
@@ -685,14 +699,10 @@ export const ES = ObjectAssign({}, ES2019, {
     return ES.ToRecord(bag, [['day'], ['month']]);
   },
   ToTemporalTimeRecord: (bag) => {
-    return ES.ToRecord(bag, [
-      ['hour', 0],
-      ['microsecond', 0],
-      ['millisecond', 0],
-      ['minute', 0],
-      ['nanosecond', 0],
-      ['second', 0]
-    ]);
+    const props = ES.ToPartialRecord(bag, ['hour', 'microsecond', 'millisecond', 'minute', 'nanosecond', 'second']);
+    if (!props) throw new TypeError('invalid time-like');
+    const { hour = 0, minute = 0, second = 0, millisecond = 0, microsecond = 0, nanosecond = 0 } = props;
+    return { hour, minute, second, millisecond, microsecond, nanosecond };
   },
   ToTemporalYearMonthRecord: (bag) => {
     return ES.ToRecord(bag, [['era', undefined], ['month'], ['year']]);
