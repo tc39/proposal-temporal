@@ -30,10 +30,14 @@ A cookbook to help you get started and learn the ins and outs of Temporal is ava
 
 - `Temporal.now.instant()` - get the exact time since [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)
 - `Temporal.now.timeZone()` - get the current system time zone
-- `Temporal.now.zonedDateTime()` - get the current calendar date and wall-clock time in the system time zone
-- `Temporal.now.date()` - get the current calendar date in the system time zone
-- `Temporal.now.time()` - get the current wall-clock time in the system time zone
-- `Temporal.now.dateTime()` - get the current system date/time in the system time zone, but return an object that doesn't remember its time zone so should NOT be used to derive other values (e.g. 12 hours later) in time zones that use Daylight Saving Time (DST).
+- `Temporal.now.zonedDateTime(calendar)` - get the current date and wall-clock time in the system time zone and specified calendar
+- `Temporal.now.zonedDateTimeISO()` - get the current date and wall-clock time in the system time zone and ISO-8601 calendar
+- `Temporal.now.date(calendar)` - get the current date in the system time zone and specified calendar
+- `Temporal.now.dateISO()` - get the current date in the system time zone and ISO-8601 calendar
+- `Temporal.now.time(calendar)` - get the current wall-clock time in the system time zone and specified calendar
+- `Temporal.now.timeISO()` - get the current wall-clock time in the system time zone and ISO-8601 calendar
+- `Temporal.now.dateTime(calendar)` - get the current system date/time in the system time zone, but return an object that doesn't remember its time zone so should NOT be used to derive other values (e.g. 12 hours later) in time zones that use Daylight Saving Time (DST).
+- `Temporal.now.dateTimeISO()` - same as above, but return the DateTime in the ISU-8601 calendar
 
 See [Temporal.now Documentation](./now.md) for detailed documentation.
 
