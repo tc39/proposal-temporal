@@ -174,6 +174,8 @@ An open question is what the behavior should be if the programmer does not speci
 5. Create separate types for when a calendar is not present (explained below).
 6. Add factory methods for ISO and non-ISO (explained below).
 
+**As of October 2020, the Temporal champions chose to adopt Option 6 as the best balance between i18n correctness and ergonomics.**
+
 ### Partial ISO Calendar (Option 3)
 
 A partial ISO calendar would be one implemented as follows:
@@ -294,7 +296,7 @@ Here is an illustrated version of this option:
 
 ### New Factory Methods (Option 6)
 
-With this option, separate methods would indicate whether the Full ISO calendar should be used versus a potentially non-ISO calendar.  For example, `Temporal.fromISO` would be added to supplement `Temporal.from`.  See the full table below.
+With this option, separate methods would indicate whether the Full ISO calendar should be used versus a potentially non-ISO calendar.  For example, `Temporal.now.dateISO` would be added to supplement `Temporal.now.date`.  See the full table below.
 
 ### Methods of Construction
 
@@ -304,13 +306,11 @@ The following table describes these semantics.  Option 5 is not shown because th
 
 | Method | Option 1 | Option 2 | Option 3 | Option 4 | Option 6 |
 |---|---|---|---|---|---|
-| T.Date.from(string)\* | Full ISO | Full ISO | Full ISO | Environ. | N/A |
-| T.Date.fromISO(string) | N/A | N/A | N/A | N/A | Full ISO |
-| T.Date.from(fields)\*\* | Full ISO | Explicit | Explicit | Explicit | Explicit |
-| T.Date.fromISO(fields) | N/A | N/A | N/A | N/A | Full ISO |
+| T.Date.from(string)\* | *From String* | Explicit | Partial ISO | Environ. | *From String* |
+| T.Date.from(fields)\*\* | *From Object* | Explicit | Partial ISO | Environ. | *From Object* |
 | new T.Date() | Full ISO | Full ISO | Full ISO | Full ISO | Full ISO |
 | T.now.date() | Full ISO | Explicit | Partial ISO | Environ. | Explicit |
-| T.now.isoDate() | N/A | N/A | N/A | N/A | Full ISO |
+| T.now.dateISO() | N/A | N/A | N/A | N/A | Full ISO |
 | instant.inTimeZone() | Full ISO | Explicit | Partial ISO | Environ. | Explicit |
 | instant.inZoneISO() | N/A | N/A | N/A | N/A | Full ISO |
 | date.getMonthDay()\*\*\*\* | Inherit | Inherit | Explicit | Inherit | Inherit |
@@ -320,7 +320,7 @@ Footnotes:
 
 \* from(string) may carry the calendar ID in the string (main issue: [#293](https://github.com/tc39/proposal-temporal/issues/293)).
 
-\*\* @ptomato [pointed out](https://github.com/tc39/proposal-temporal/pull/590#discussion_r427527732) that "if you write Temporal.Date.from({ year: 2020, month: 5, day: 19 }) with no calendar specified, then realistically what else do you mean besides the full ISO calendar?"  This row may change to make Full ISO the default for from(fields) pending the results of that discussion.
+\*\* @ptomato [pointed out](https://github.com/tc39/proposal-temporal/pull/590#discussion_r427527732) that "if you write Temporal.Date.from({ year: 2020, month: 5, day: 19 }) with no calendar specified, then realistically what else do you mean besides the full ISO calendar?"  Therefore, a calendar argument is not required in T.Date.from.
 
 \*\*\* The HTML5 spec only supports ISO-8601 ([reference](https://html.spec.whatwg.org/multipage/common-microsyntaxes.html#concept-date)).
 
@@ -512,7 +512,7 @@ Legend:
 | New Types (option 5) | 🙂 Consistent, but the new types may increase mental load | 🙂 Most\* operations work; some require extra boilerplate | 😃 Calendar-sensitive operations require an explicit choice | 😃 I/O operations operate in the ISO calendar space | 😐 Lots of new types and API changes |
 | ISO Factories (option 6) | 😐 Unclear whether to use ISO or non-ISO factories | 🙂 Method names at call sites may change | 🙂 Likely to be correct, but users could call the ISO factories incorrectly | 😃 ISO-specific methods for interop | 🙂 Minimal API changes |
 
-\**See https://github.com/tc39/proposal-temporal/issues/240#issuecomment-557726669 *
+\**See https://github.com/tc39/proposal-temporal/issues/240#issuecomment-557726669*
 
 ## Temporal.Date API changes
 

@@ -56,6 +56,11 @@
       "type": "clause",
       "number": "get Intl.DateTimeFormat.prototype.format",
       "id": "sec-intl.datetimeformat.prototype.format"
+    },
+    {
+      "type": "clause",
+      "number": "6.1",
+      "id": "sec-case-sensitivity-and-case-mapping"
     }
   ]
 }
