@@ -37,7 +37,7 @@ A cookbook to help you get started and learn the ins and outs of Temporal is ava
 - `Temporal.now.time(calendar)` - get the current wall-clock time in the system time zone and specified calendar
 - `Temporal.now.timeISO()` - get the current wall-clock time in the system time zone and ISO-8601 calendar
 - `Temporal.now.dateTime(calendar)` - get the current system date/time in the system time zone, but return an object that doesn't remember its time zone so should NOT be used to derive other values (e.g. 12 hours later) in time zones that use Daylight Saving Time (DST).
-- `Temporal.now.dateTimeISO()` - same as above, but return the DateTime in the ISU-8601 calendar
+- `Temporal.now.dateTimeISO()` - same as above, but return the DateTime in the ISO-8601 calendar
 
 See [Temporal.now Documentation](./now.md) for detailed documentation.
 
