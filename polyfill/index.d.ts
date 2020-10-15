@@ -174,23 +174,43 @@ export namespace Temporal {
       | 'auto'
       | 'years'
       | 'months'
+      | 'weeks'
       | 'days'
       | 'hours'
       | 'minutes'
       | 'seconds'
       | 'milliseconds'
       | 'microseconds'
-      | 'nanoseconds';
+      | 'nanoseconds'
+      | /** @deprecated */ 'year'
+      | /** @deprecated */ 'month'
+      | /** @deprecated */ 'day'
+      | /** @deprecated */ 'hour'
+      | /** @deprecated */ 'minute'
+      | /** @deprecated */ 'second'
+      | /** @deprecated */ 'millisecond'
+      | /** @deprecated */ 'microsecond'
+      | /** @deprecated */ 'nanosecond';
     smallestUnit:
       | 'years'
       | 'months'
+      | 'weeks'
       | 'days'
       | 'hours'
       | 'minutes'
       | 'seconds'
       | 'milliseconds'
       | 'microseconds'
-      | 'nanoseconds';
+      | 'nanoseconds'
+      | /** @deprecated */ 'year'
+      | /** @deprecated */ 'month'
+      | /** @deprecated */ 'day'
+      | /** @deprecated */ 'hour'
+      | /** @deprecated */ 'minute'
+      | /** @deprecated */ 'second'
+      | /** @deprecated */ 'millisecond'
+      | /** @deprecated */ 'microsecond'
+      | /** @deprecated */ 'nanosecond';
     roundingIncrement?: number;
     roundingMode?: 'nearest' | 'ceil' | 'floor' | 'trunc';
     relativeTo?: Temporal.DateTime | DateTimeLike | string;
@@ -287,10 +307,36 @@ export namespace Temporal {
     subtract(durationLike: Temporal.Duration | DurationLike): Temporal.Instant;
     difference(
       other: Temporal.Instant,
-      options?: DifferenceOptions<'hours' | 'minutes' | 'seconds' | 'milliseconds' | 'microseconds' | 'nanoseconds'>
+      options?: DifferenceOptions<
+        | 'hours'
+        | 'minutes'
+        | 'seconds'
+        | 'milliseconds'
+        | 'microseconds'
+        | 'nanoseconds'
+        | /** @deprecated */ 'hour'
+        | /** @deprecated */ 'minute'
+        | /** @deprecated */ 'second'
+        | /** @deprecated */ 'millisecond'
+        | /** @deprecated */ 'microsecond'
+        | /** @deprecated */ 'nanosecond'
+      >
     ): Temporal.Duration;
     round(
-      options: RoundOptions<'hour' | 'minute' | 'second' | 'millisecond' | 'microsecond' | 'nanosecond'>
+      options: RoundOptions<
+        | 'hour'
+        | 'minute'
+        | 'second'
+        | 'millisecond'
+        | 'microsecond'
+        | 'nanosecond'
+        | /** @deprecated */ 'hours'
+        | /** @deprecated */ 'minutes'
+        | /** @deprecated */ 'seconds'
+        | /** @deprecated */ 'milliseconds'
+        | /** @deprecated */ 'microseconds'
+        | /** @deprecated */ 'nanoseconds'
+      >
     ): Temporal.Instant;
     toDateTime(tzLike: TimeZoneProtocol | string, calendar: CalendarProtocol | string): Temporal.DateTime;
     toDateTimeISO(tzLike: TimeZoneProtocol | string): Temporal.DateTime;
@@ -343,7 +389,15 @@ export namespace Temporal {
     dateDifference?(
       smaller: Temporal.Date,
       larger: Temporal.Date,
-      options: DifferenceOptions<'years' | 'months' | 'weeks' | 'days'>
+      options: DifferenceOptions<
+        | 'years'
+        | 'months'
+        | 'weeks'
+        | 'days'
+        | /** @deprecated */ 'year'
+        | /** @deprecated */ 'month'
+        | /** @deprecated */ 'day'
+      >
     ): Temporal.Duration;
   }
 
@@ -401,7 +455,15 @@ export namespace Temporal {
     dateDifference(
       smaller: Temporal.Date,
       larger: Temporal.Date,
-      options?: DifferenceOptions<'years' | 'months' | 'weeks' | 'days'>
+      options?: DifferenceOptions<
+        | 'years'
+        | 'months'
+        | 'weeks'
+        | 'days'
+        | /** @deprecated */ 'year'
+        | /** @deprecated */ 'month'
+        | /** @deprecated */ 'day'
+      >
     ): Temporal.Duration;
     toString(): string;
   }
@@ -462,7 +524,15 @@ export namespace Temporal {
     subtract(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.Date;
     difference(
       other: Temporal.Date,
-      options?: DifferenceOptions<'years' | 'months' | 'weeks' | 'days'>
+      options?: DifferenceOptions<
+        | 'years'
+        | 'months'
+        | 'weeks'
+        | 'days'
+        | /** @deprecated */ 'year'
+        | /** @deprecated */ 'month'
+        | /** @deprecated */ 'day'
+      >
     ): Temporal.Duration;
     toDateTime(temporalTime: Temporal.Time): Temporal.DateTime;
     toYearMonth(): Temporal.YearMonth;
@@ -577,10 +647,34 @@ export namespace Temporal {
         | 'milliseconds'
         | 'microseconds'
         | 'nanoseconds'
+        | /** @deprecated */ 'year'
+        | /** @deprecated */ 'month'
+        | /** @deprecated */ 'day'
+        | /** @deprecated */ 'hour'
+        | /** @deprecated */ 'minute'
+        | /** @deprecated */ 'second'
+        | /** @deprecated */ 'millisecond'
+        | /** @deprecated */ 'microsecond'
+        | /** @deprecated */ 'nanosecond'
       >
     ): Temporal.Duration;
     round(
-      options: RoundOptions<'day' | 'hour' | 'minute' | 'second' | 'millisecond' | 'microsecond' | 'nanosecond'>
+      options: RoundOptions<
+        | 'day'
+        | 'hour'
+        | 'minute'
+        | 'second'
+        | 'millisecond'
+        | 'microsecond'
+        | 'nanosecond'
+        | /** @deprecated */ 'days'
+        | /** @deprecated */ 'hours'
+        | /** @deprecated */ 'minutes'
+        | /** @deprecated */ 'seconds'
+        | /** @deprecated */ 'milliseconds'
+        | /** @deprecated */ 'microseconds'
+        | /** @deprecated */ 'nanoseconds'
+      >
     ): Temporal.DateTime;
     toInstant(tzLike: TimeZoneProtocol | string, options?: ToInstantOptions): Temporal.Instant;
     toDate(): Temporal.Date;
@@ -677,10 +771,36 @@ export namespace Temporal {
     subtract(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.Time;
     difference(
       other: Temporal.Time,
-      options?: DifferenceOptions<'hours' | 'minutes' | 'seconds' | 'milliseconds' | 'microseconds' | 'nanoseconds'>
+      options?: DifferenceOptions<
+        | 'hours'
+        | 'minutes'
+        | 'seconds'
+        | 'milliseconds'
+        | 'microseconds'
+        | 'nanoseconds'
+        | /** @deprecated */ 'hours'
+        | /** @deprecated */ 'minutes'
+        | /** @deprecated */ 'seconds'
+        | /** @deprecated */ 'milliseconds'
+        | /** @deprecated */ 'microseconds'
+        | /** @deprecated */ 'nanoseconds'
+      >
     ): Temporal.Duration;
     round(
-      options: RoundOptions<'hour' | 'minute' | 'second' | 'millisecond' | 'microsecond' | 'nanosecond'>
+      options: RoundOptions<
+        | 'hour'
+        | 'minute'
+        | 'second'
+        | 'millisecond'
+        | 'microsecond'
+        | 'nanosecond'
+        | /** @deprecated */ 'hours'
+        | /** @deprecated */ 'minutes'
+        | /** @deprecated */ 'seconds'
+        | /** @deprecated */ 'milliseconds'
+        | /** @deprecated */ 'microseconds'
+        | /** @deprecated */ 'nanoseconds'
+      >
     ): Temporal.Time;
     toDateTime(temporalDate: Temporal.Date): Temporal.DateTime;
     getFields(): TimeFields;
@@ -769,7 +889,10 @@ export namespace Temporal {
     with(yearMonthLike: YearMonthLike, options?: AssignmentOptions): Temporal.YearMonth;
     add(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.YearMonth;
     subtract(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.YearMonth;
-    difference(other: Temporal.YearMonth, options?: DifferenceOptions<'years' | 'months'>): Temporal.Duration;
+    difference(
+      other: Temporal.YearMonth,
+      options?: DifferenceOptions<'years' | 'months' | /** @deprecated */ 'year' | /** @deprecated */ 'month'>
+    ): Temporal.Duration;
     toDateOnDay(day: number): Temporal.Date;
     getFields(): YearMonthFields;
     getISOFields(): DateISOFields;

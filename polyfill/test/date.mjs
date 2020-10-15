@@ -373,16 +373,24 @@ describe('Date', () => {
     });
     it('accepts singular units', () => {
       equal(
+        `${later.difference(earlier, { largestUnit: 'year' })}`,
+        `${later.difference(earlier, { largestUnit: 'years' })}`
+      );
+      equal(
         `${later.difference(earlier, { smallestUnit: 'year' })}`,
         `${later.difference(earlier, { smallestUnit: 'years' })}`
+      );
+      equal(
+        `${later.difference(earlier, { largestUnit: 'month' })}`,
+        `${later.difference(earlier, { largestUnit: 'months' })}`
       );
       equal(
         `${later.difference(earlier, { smallestUnit: 'month' })}`,
         `${later.difference(earlier, { smallestUnit: 'months' })}`
       );
       equal(
-        `${later.difference(earlier, { smallestUnit: 'week' })}`,
-        `${later.difference(earlier, { smallestUnit: 'weeks' })}`
+        `${later.difference(earlier, { largestUnit: 'day' })}`,
+        `${later.difference(earlier, { largestUnit: 'days' })}`
       );
       equal(
         `${later.difference(earlier, { smallestUnit: 'day' })}`,

@@ -469,6 +469,19 @@ export const ES = ObjectAssign({}, ES2019, {
     return increment;
   },
   ToLargestTemporalUnit: (options, fallback, disallowedStrings = []) => {
+    const plural = new Map(
+      [
+        ['year', 'years'],
+        ['month', 'months'],
+        ['day', 'days'],
+        ['hour', 'hours'],
+        ['minute', 'minutes'],
+        ['second', 'seconds'],
+        ['millisecond', 'milliseconds'],
+        ['microsecond', 'microseconds'],
+        ['nanosecond', 'nanoseconds']
+      ].filter(([, pl]) => !disallowedStrings.includes(pl))
+    );
     const allowed = new Set([
       'years',
       'months',
@@ -484,47 +497,46 @@ export const ES = ObjectAssign({}, ES2019, {
     for (const s of disallowedStrings) {
       allowed.delete(s);
     }
-    const retval = ES.GetOption(options, 'largestUnit', ['auto', ...allowed], 'auto');
+    const retval = ES.GetOption(options, 'largestUnit', ['auto', ...allowed, ...plural.keys()], 'auto');
     if (retval === 'auto') return fallback;
+    if (plural.has(retval)) return plural.get(retval);
     return retval;
   },
   ToSmallestTemporalUnit: (options, disallowedStrings = []) => {
-    const singular = new Map([
-      ['days', 'day'],
-      ['hours', 'hour'],
-      ['minutes', 'minute'],
-      ['seconds', 'second'],
-      ['milliseconds', 'millisecond'],
-      ['microseconds', 'microsecond'],
-      ['nanoseconds', 'nanosecond']
-    ]);
+    const singular = new Map(
+      [
+        ['days', 'day'],
+        ['hours', 'hour'],
+        ['minutes', 'minute'],
+        ['seconds', 'second'],
+        ['milliseconds', 'millisecond'],
+        ['microseconds', 'microsecond'],
+        ['nanoseconds', 'nanosecond']
+      ].filter(([, sing]) => !disallowedStrings.includes(sing))
+    );
     const allowed = new Set(['day', 'hour', 'minute', 'second', 'millisecond', 'microsecond', 'nanosecond']);
     for (const s of disallowedStrings) {
       allowed.delete(s);
     }
-    const allowedValues = [...allowed];
-    let value = options.smallestUnit;
+    const value = ES.GetOption(options, 'smallestUnit', [...allowed, ...singular.keys()], undefined);
     if (value === undefined) throw new RangeError('smallestUnit option is required');
-    value = ES.ToString(value);
-    if (singular.has(value)) value = singular.get(value);
-    if (!allowedValues.includes(value)) {
-      throw new RangeError(`smallestUnit must be one of ${allowedValues.join(', ')}, not ${value}`);
-    }
+    if (singular.has(value)) return singular.get(value);
     return value;
   },
   ToSmallestTemporalDurationUnit: (options, fallback, disallowedStrings = []) => {
-    const plural = new Map([
-      ['year', 'years'],
-      ['month', 'months'],
-      ['week', 'weeks'],
-      ['day', 'days'],
-      ['hour', 'hours'],
-      ['minute', 'minutes'],
-      ['second', 'seconds'],
-      ['millisecond', 'milliseconds'],
-      ['microsecond', 'microseconds'],
-      ['nanosecond', 'nanoseconds']
-    ]);
+    const plural = new Map(
+      [
+        ['year', 'years'],
+        ['month', 'months'],
+        ['day', 'days'],
+        ['hour', 'hours'],
+        ['minute', 'minutes'],
+        ['second', 'seconds'],
+        ['millisecond', 'milliseconds'],
+        ['microsecond', 'microseconds'],
+        ['nanosecond', 'nanoseconds']
+      ].filter(([, pl]) => !disallowedStrings.includes(pl))
+    );
     const allowed = new Set([
       'years',
       'months',
@@ -540,14 +552,8 @@ export const ES = ObjectAssign({}, ES2019, {
     for (const s of disallowedStrings) {
       allowed.delete(s);
     }
-    const allowedValues = [...allowed];
-    let value = options.smallestUnit;
-    if (value === undefined) return fallback;
-    value = ES.ToString(value);
-    if (plural.has(value)) value = plural.get(value);
-    if (!allowedValues.includes(value)) {
-      throw new RangeError(`smallestUnit must be one of ${allowedValues.join(', ')}, not ${value}`);
-    }
+    const value = ES.GetOption(options, 'smallestUnit', [...allowed, ...plural.keys()], fallback);
+    if (plural.has(value)) return plural.get(value);
     return value;
   },
   ToRelativeTemporalObject: (options) => {
