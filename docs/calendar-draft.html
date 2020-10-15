@@ -268,6 +268,7 @@ However, we have taken a future-proof approach so that if a use case presents it
 <li>Create separate types for when a calendar is not present (explained below).</li>
 <li>Add factory methods for ISO and non-ISO (explained below).</li>
 </ol>
+<p><strong>As of October 2020, the Temporal champions chose to adopt Option 6 as the best balance between i18n correctness and ergonomics.</strong></p>
 <h3 id="partial-iso-calendar-option-3"><a class="heading-link" href="#partial-iso-calendar-option-3"></a>Partial ISO Calendar (Option 3)</h3><p>A partial ISO calendar would be one implemented as follows:</p>
 <pre class="language-javascript"><code class="language-javascript"><span class="token keyword">const</span> PartialIsoCalendar <span class="token operator">=</span> <span class="token punctuation">{</span>
     id<span class="token operator">:</span> <span class="token string">"iso"</span><span class="token punctuation">,</span>
@@ -365,7 +366,7 @@ Temporal<span class="token punctuation">.</span><span class="token class-name">D
 Temporal<span class="token punctuation">.</span><span class="token class-name">Date</span><span class="token punctuation">.</span>prototype<span class="token punctuation">.</span><span class="token function">withTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">:</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">;</span></code></pre><p>An additional type, <code>Temporal.EpochDays</code>, could be added as an analog of <code>Temporal.Instant</code> but with days instead of nanoseconds since epoch.</p>
 <p>Here is an illustrated version of this option:</p>
 <p><img src="assets/new-data-types.svg" alt="Potential Temporal Data Types"></p>
-<h3 id="new-factory-methods-option-6"><a class="heading-link" href="#new-factory-methods-option-6"></a>New Factory Methods (Option 6)</h3><p>With this option, separate methods would indicate whether the Full ISO calendar should be used versus a potentially non-ISO calendar.  For example, <code>Temporal.fromISO</code> would be added to supplement <code>Temporal.from</code>.  See the full table below.</p>
+<h3 id="new-factory-methods-option-6"><a class="heading-link" href="#new-factory-methods-option-6"></a>New Factory Methods (Option 6)</h3><p>With this option, separate methods would indicate whether the Full ISO calendar should be used versus a potentially non-ISO calendar.  For example, <code>Temporal.now.dateISO</code> would be added to supplement <code>Temporal.now.date</code>.  See the full table below.</p>
 <h3 id="methods-of-construction"><a class="heading-link" href="#methods-of-construction"></a>Methods of Construction</h3><p>The main way the six options differ is by how and when a calendar is specified when creating calendar-sensitive Temporal objects.</p>
 <p>The following table describes these semantics.  Option 5 is not shown because the constructors will be different than in options 1-4 and 6.</p>
 <table>
@@ -381,35 +382,19 @@ Temporal<span class="token punctuation">.</span><span class="token class-name">D
 </thead>
 <tbody><tr>
 <td>T.Date.from(string)*</td>
-<td>Full ISO</td>
-<td>Full ISO</td>
-<td>Full ISO</td>
+<td><em>From String</em></td>
+<td>Explicit</td>
+<td>Partial ISO</td>
 <td>Environ.</td>
-<td>N/A</td>
-</tr>
-<tr>
-<td>T.Date.fromISO(string)</td>
-<td>N/A</td>
-<td>N/A</td>
-<td>N/A</td>
-<td>N/A</td>
-<td>Full ISO</td>
+<td><em>From String</em></td>
 </tr>
 <tr>
 <td>T.Date.from(fields)**</td>
-<td>Full ISO</td>
+<td><em>From Object</em></td>
 <td>Explicit</td>
-<td>Explicit</td>
-<td>Explicit</td>
-<td>Explicit</td>
-</tr>
-<tr>
-<td>T.Date.fromISO(fields)</td>
-<td>N/A</td>
-<td>N/A</td>
-<td>N/A</td>
-<td>N/A</td>
-<td>Full ISO</td>
+<td>Partial ISO</td>
+<td>Environ.</td>
+<td><em>From Object</em></td>
 </tr>
 <tr>
 <td>new T.Date()</td>
@@ -428,7 +413,7 @@ Temporal<span class="token punctuation">.</span><span class="token class-name">D
 <td>Explicit</td>
 </tr>
 <tr>
-<td>T.now.isoDate()</td>
+<td>T.now.dateISO()</td>
 <td>N/A</td>
 <td>N/A</td>
 <td>N/A</td>
@@ -470,7 +455,7 @@ Temporal<span class="token punctuation">.</span><span class="token class-name">D
 </tbody></table>
 <p>Footnotes:</p>
 <p>* from(string) may carry the calendar ID in the string (main issue: <a href="https://github.com/tc39/proposal-temporal/issues/293">#293</a>).</p>
-<p>** @ptomato <a href="https://github.com/tc39/proposal-temporal/pull/590#discussion_r427527732">pointed out</a> that &quot;if you write Temporal.Date.from({ year: 2020, month: 5, day: 19 }) with no calendar specified, then realistically what else do you mean besides the full ISO calendar?&quot;  This row may change to make Full ISO the default for from(fields) pending the results of that discussion.</p>
+<p>** @ptomato <a href="https://github.com/tc39/proposal-temporal/pull/590#discussion_r427527732">pointed out</a> that &quot;if you write Temporal.Date.from({ year: 2020, month: 5, day: 19 }) with no calendar specified, then realistically what else do you mean besides the full ISO calendar?&quot;  Therefore, a calendar argument is not required in T.Date.from.</p>
 <p>*** The HTML5 spec only supports ISO-8601 (<a href="https://html.spec.whatwg.org/multipage/common-microsyntaxes.html#concept-date">reference</a>).</p>
 <p>**** An argument could be added to <code>getMonthDay()</code> in Options 3 and 5 to reduce boilerplate.</p>
 <h3 id="preventing-i18n-errors"><a class="heading-link" href="#preventing-i18n-errors"></a>Preventing I18n Errors</h3><p>As compared to option 1 (always default to Full ISO), the following are examples of programming errors that Partial ISO would help prevent.</p>
@@ -655,7 +640,7 @@ console<span class="token punctuation">.</span><span class="token function">log<
 <td>🙂 Minimal API changes</td>
 </tr>
 </tbody></table>
-<p>**See <a href="https://github.com/tc39/proposal-temporal/issues/240#issuecomment-557726669">https://github.com/tc39/proposal-temporal/issues/240#issuecomment-557726669</a> *</p>
+<p>*<em>See <a href="https://github.com/tc39/proposal-temporal/issues/240#issuecomment-557726669">https://github.com/tc39/proposal-temporal/issues/240#issuecomment-557726669</a></em></p>
 <h2 id="temporaldate-api-changes">Temporal.Date API changes</h2>
 <h3 id="new-temporaldate-instance-methods"><a class="heading-link" href="#new-temporaldate-instance-methods"></a>New Temporal.Date instance methods</h3><p>Temporal.Date.prototype.with does <em>not</em> modify the calendar. A new method is added for that:</p>
 <pre class="language-javascript"><code class="language-javascript">Temporal<span class="token punctuation">.</span><span class="token class-name">Date</span><span class="token punctuation">.</span>prototype<span class="token punctuation">.</span><span class="token function-variable function">withCalendar</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">newCalendar<span class="token operator">:</span> Calendar</span><span class="token punctuation">)</span><span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Date <span class="token punctuation">{</span>
