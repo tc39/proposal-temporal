@@ -3843,7 +3843,7 @@
       if (ES.Type(relativeTo) === 'Object') {
         if (ES.IsTemporalDateTime(relativeTo)) return relativeTo;
         calendar = relativeTo.calendar;
-        if (calendar === undefined) calendar = GetDefaultCalendar();
+        if (calendar === undefined) calendar = GetISO8601Calendar();
         calendar = ES.ToTemporalCalendar(calendar);
         var fields = ES.ToTemporalDateTimeRecord(relativeTo);
         var TemporalDate = GetIntrinsic$1('%Temporal.Date%');
@@ -3870,7 +3870,7 @@
         microsecond = _ES$ParseTemporalDate.microsecond;
         nanosecond = _ES$ParseTemporalDate.nanosecond;
         calendar = _ES$ParseTemporalDate.calendar;
-        if (!calendar) calendar = GetDefaultCalendar();
+        if (!calendar) calendar = GetISO8601Calendar();
         calendar = ES.ToTemporalCalendar(calendar);
       }
 
@@ -6254,7 +6254,7 @@
     return new BUILTIN_CALENDARS[id]();
   }
 
-  function GetDefaultCalendar() {
+  function GetISO8601Calendar() {
     return GetBuiltinCalendar('iso8601');
   }
 
@@ -6534,7 +6534,7 @@
       value: function toDateTimeISO(temporalTimeZoneLike) {
         if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
         var timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);
-        var calendar = GetDefaultCalendar();
+        var calendar = GetISO8601Calendar();
         return ES.GetTemporalDateTimeFor(timeZone, this, calendar);
       }
     }], [{
@@ -6614,7 +6614,7 @@
   var ObjectAssign$1 = Object.assign;
   var Date$1 = /*#__PURE__*/function () {
     function Date(isoYear, isoMonth, isoDay) {
-      var calendar = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : GetDefaultCalendar();
+      var calendar = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : GetISO8601Calendar();
 
       _classCallCheck(this, Date);
 
@@ -6984,7 +6984,7 @@
             result = new this(year, month, day, calendar);
           } else {
             var _calendar = item.calendar;
-            if (_calendar === undefined) _calendar = GetDefaultCalendar();
+            if (_calendar === undefined) _calendar = GetISO8601Calendar();
             _calendar = TemporalCalendar.from(_calendar);
             var fields = ES.ToTemporalDateRecord(item);
             result = _calendar.dateFromFields(fields, options, this);
@@ -7001,7 +7001,7 @@
           _year = _ES$RegulateDate.year;
           _month = _ES$RegulateDate.month;
           _day = _ES$RegulateDate.day;
-          if (!_calendar2) _calendar2 = GetDefaultCalendar();
+          if (!_calendar2) _calendar2 = GetISO8601Calendar();
           _calendar2 = TemporalCalendar.from(_calendar2);
           result = new this(_year, _month, _day, _calendar2);
         }
@@ -7037,7 +7037,7 @@
       var millisecond = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : 0;
       var microsecond = arguments.length > 7 && arguments[7] !== undefined ? arguments[7] : 0;
       var nanosecond = arguments.length > 8 && arguments[8] !== undefined ? arguments[8] : 0;
-      var calendar = arguments.length > 9 && arguments[9] !== undefined ? arguments[9] : GetDefaultCalendar();
+      var calendar = arguments.length > 9 && arguments[9] !== undefined ? arguments[9] : GetISO8601Calendar();
 
       _classCallCheck(this, DateTime);
 
@@ -7669,7 +7669,7 @@
             result = new this(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
           } else {
             var _calendar = item.calendar;
-            if (_calendar === undefined) _calendar = GetDefaultCalendar();
+            if (_calendar === undefined) _calendar = GetISO8601Calendar();
             _calendar = TemporalCalendar.from(_calendar);
             var fields = ES.ToTemporalDateTimeRecord(item);
             var TemporalDate = GetIntrinsic$1('%Temporal.Date%');
@@ -7712,7 +7712,7 @@
               _nanosecond2 = _ES$ParseTemporalDate.nanosecond,
               _calendar2 = _ES$ParseTemporalDate.calendar;
 
-          if (!_calendar2) _calendar2 = GetDefaultCalendar();
+          if (!_calendar2) _calendar2 = GetISO8601Calendar();
           _calendar2 = TemporalCalendar.from(_calendar2);
           result = new this(_year2, _month2, _day2, _hour2, _minute2, _second2, _millisecond2, _microsecond2, _nanosecond2, _calendar2);
         }
@@ -8189,7 +8189,7 @@
 
       isoMonth = ES.ToInteger(isoMonth);
       isoDay = ES.ToInteger(isoDay);
-      if (calendar === undefined) calendar = GetDefaultCalendar();
+      if (calendar === undefined) calendar = GetISO8601Calendar();
       referenceISOYear = ES.ToInteger(referenceISOYear);
       ES.RejectDate(referenceISOYear, isoMonth, isoDay);
       ES.RejectDateRange(referenceISOYear, isoMonth, isoDay);
@@ -8360,7 +8360,7 @@
             result = new this(month, day, calendar, referenceISOYear);
           } else {
             var _calendar = item.calendar;
-            if (_calendar === undefined) _calendar = GetDefaultCalendar();
+            if (_calendar === undefined) _calendar = GetISO8601Calendar();
             _calendar = TemporalCalendar.from(_calendar);
             var fields = ES.ToTemporalMonthDayRecord(item);
             result = _calendar.monthDayFromFields(fields, options, this);
@@ -8376,7 +8376,7 @@
 
           _month = _ES$RegulateMonthDay.month;
           _day = _ES$RegulateMonthDay.day;
-          if (!_calendar2) _calendar2 = GetDefaultCalendar();
+          if (!_calendar2) _calendar2 = GetISO8601Calendar();
           _calendar2 = TemporalCalendar.from(_calendar2);
           if (_referenceISOYear === undefined) _referenceISOYear = 1972;
           result = new this(_month, _day, _calendar2, _referenceISOYear);
@@ -8421,7 +8421,7 @@
     var temporalTimeZoneLike = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : timeZone();
     return function () {
       var timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);
-      var calendar = GetDefaultCalendar();
+      var calendar = GetISO8601Calendar();
       var abs = instant();
       return ES.GetTemporalDateTimeFor(timeZone, abs, calendar);
     }();
@@ -8952,7 +8952,7 @@
     }, {
       key: "getDateTimeFor",
       value: function getDateTimeFor(absolute) {
-        var calendar = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : GetDefaultCalendar();
+        var calendar = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : GetISO8601Calendar();
         if (!ES.IsTemporalInstant(absolute)) throw new TypeError('invalid Instant object');
         calendar = ES.ToTemporalCalendar(calendar);
         var ns = GetSlot(absolute, EPOCHNANOSECONDS);
@@ -9158,7 +9158,7 @@
 
       isoYear = ES.ToInteger(isoYear);
       isoMonth = ES.ToInteger(isoMonth);
-      if (calendar === undefined) calendar = GetDefaultCalendar();
+      if (calendar === undefined) calendar = GetISO8601Calendar();
       referenceISODay = ES.ToInteger(referenceISODay);
       ES.RejectDate(isoYear, isoMonth, referenceISODay);
       ES.RejectYearMonthRange(isoYear, isoMonth);
@@ -9467,7 +9467,7 @@
             result = new this(year, month, calendar, referenceISODay);
           } else {
             var _calendar = item.calendar;
-            if (_calendar === undefined) _calendar = GetDefaultCalendar();
+            if (_calendar === undefined) _calendar = GetISO8601Calendar();
             _calendar = TemporalCalendar.from(_calendar);
             var fields = ES.ToTemporalYearMonthRecord(item);
             result = _calendar.yearMonthFromFields(fields, options, this);
@@ -9483,7 +9483,7 @@
 
           _year = _ES$RegulateYearMonth.year;
           _month = _ES$RegulateYearMonth.month;
-          if (!_calendar2) _calendar2 = GetDefaultCalendar();
+          if (!_calendar2) _calendar2 = GetISO8601Calendar();
           _calendar2 = TemporalCalendar.from(_calendar2);
           if (_referenceISODay === undefined) _referenceISODay = 1;
           result = new this(_year, _month, _calendar2, _referenceISODay);
