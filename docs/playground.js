@@ -7802,10 +7802,7 @@
     _createClass(Duration, [{
       key: "with",
       value: function _with(durationLike) {
-        var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
         if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
-        options = ES.NormalizeOptionsObject(options);
-        var overflow = ES.ToTemporalDurationOverflow(options);
         var props = ES.ToPartialRecord(durationLike, ['days', 'hours', 'microseconds', 'milliseconds', 'minutes', 'months', 'nanoseconds', 'seconds', 'weeks', 'years']);
 
         if (!props) {
@@ -7832,19 +7829,6 @@
             microseconds = _props$microseconds === void 0 ? GetSlot(this, MICROSECONDS) : _props$microseconds,
             _props$nanoseconds = props.nanoseconds,
             nanoseconds = _props$nanoseconds === void 0 ? GetSlot(this, NANOSECONDS) : _props$nanoseconds;
-
-        var _ES$RegulateDuration = ES.RegulateDuration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, overflow);
-
-        years = _ES$RegulateDuration.years;
-        months = _ES$RegulateDuration.months;
-        weeks = _ES$RegulateDuration.weeks;
-        days = _ES$RegulateDuration.days;
-        hours = _ES$RegulateDuration.hours;
-        minutes = _ES$RegulateDuration.minutes;
-        seconds = _ES$RegulateDuration.seconds;
-        milliseconds = _ES$RegulateDuration.milliseconds;
-        microseconds = _ES$RegulateDuration.microseconds;
-        nanoseconds = _ES$RegulateDuration.nanoseconds;
         var Construct = ES.SpeciesConstructor(this, Duration);
         var result = new Construct(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
         if (!ES.IsTemporalDuration(result)) throw new TypeError('invalid result');
@@ -8154,9 +8138,6 @@
     }], [{
       key: "from",
       value: function from(item) {
-        var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
-        options = ES.NormalizeOptionsObject(options);
-        var overflow = ES.ToTemporalDurationOverflow(options);
         var years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds;
 
         if (_typeof(item) === 'object' && item) {
@@ -8187,18 +8168,6 @@
           nanoseconds = _ES$ParseTemporalDura.nanoseconds;
         }
 
-        var _ES$RegulateDuration2 = ES.RegulateDuration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, overflow);
-
-        years = _ES$RegulateDuration2.years;
-        months = _ES$RegulateDuration2.months;
-        weeks = _ES$RegulateDuration2.weeks;
-        days = _ES$RegulateDuration2.days;
-        hours = _ES$RegulateDuration2.hours;
-        minutes = _ES$RegulateDuration2.minutes;
-        seconds = _ES$RegulateDuration2.seconds;
-        milliseconds = _ES$RegulateDuration2.milliseconds;
-        microseconds = _ES$RegulateDuration2.microseconds;
-        nanoseconds = _ES$RegulateDuration2.nanoseconds;
         var result = new this(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
         if (!ES.IsTemporalDuration(result)) throw new TypeError('invalid result');
         return result;

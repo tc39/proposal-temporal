@@ -301,35 +301,15 @@ Otherwise <code>Temporal.Duration.from()</code> is probably more convenient beca
 <h3 id="from"><a class="heading-link" href="#from"></a>Temporal.Duration.<strong>from</strong>(<em>thing</em>: any, <em>options</em>?: object) : Temporal.Duration</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>thing</code>: A <code>Duration</code>-like object or a string from which to create a <code>Temporal.Duration</code>.</li>
-<li><code>options</code> (optional object): An object with properties representing options for constructing the duration.
-The following options are recognized:<ul>
-<li><code>overflow</code> (optional string): What to do if any of the values are larger than the next highest unit.
-Allowed values are <code>constrain</code> and <code>balance</code>.
-The default is <code>constrain</code>.</li>
-</ul>
-</li>
 </ul>
 <p><strong>Returns:</strong> a new <code>Temporal.Duration</code> object.</p>
 <p>This static method creates a new <code>Temporal.Duration</code> from another value.
 If the value is another <code>Temporal.Duration</code> object, a new object representing the same duration is returned.
 If the value is any other object, a <code>Temporal.Duration</code> will be constructed from the values of any <code>years</code>, <code>months</code>, <code>weeks</code>, <code>days</code>, <code>hours</code>, <code>minutes</code>, <code>seconds</code>, <code>milliseconds</code>, <code>microseconds</code>, and <code>nanoseconds</code> properties that are present.
 Any missing ones will be assumed to be 0.</p>
-<p>Any non-object value is converted to a string, which is expected to be in ISO 8601 format.</p>
-<p>The <code>overflow</code> option controls how out-of-range values are interpreted:</p>
-<ul>
-<li><code>constrain</code> (the default): Values higher than the next highest unit (for example, 90 minutes) are left as-is.</li>
-<li><code>balance</code>: Values higher than the next highest unit, are converted to be in-range by incrementing the next highest unit accordingly.
-For example, 90 minutes becomes one hour and 30 minutes.</li>
-</ul>
-<p>No matter which overflow mode is selected, all non-zero values must have the same sign, and must not be infinite.
+<p>All non-zero values must have the same sign, and must not be infinite.
 Otherwise, the function will throw a <code>RangeError</code>.</p>
-<blockquote>
-<p><strong>NOTE:</strong> Years and months can have different lengths.
-In the default ISO calendar, a year can be 365 or 366 days, and a month can be 28, 29, 30, or 31 days.
-Therefore, any <code>Duration</code> object with nonzero years or months can refer to a different length of time depending on when the start date is.
-No conversion is ever performed between years, months, weeks, and days, even in <code>balance</code> mode, because such conversion would be ambiguous.
-If you need to do this, use the <code>round()</code> method, and provide the start date using the <code>relativeTo</code> option.</p>
-</blockquote>
+<p>Any non-object value is converted to a string, which is expected to be in ISO 8601 format.</p>
 <blockquote>
 <p><strong>NOTE:</strong> This function understands strings where weeks and other units are combined, and strings with a single sign character at the start, which are extensions to the ISO 8601 standard described in ISO 8601-2.
 (For example, <code>P3W1D</code> is understood to mean three weeks and one day, <code>-P1Y1M</code> is a negative duration of one year and one month, and <code>+P1Y1M</code> is one year and one month.)
@@ -346,12 +326,7 @@ d <span class="token operator">=</span> Temporal<span class="token punctuation">
 d <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Duration<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'P0D'</span><span class="token punctuation">)</span>  <span class="token comment">// => PT0S</span>
 
 <span class="token comment">// Mixed-sign values are never allowed, even if overall positive:</span>
-d <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Duration<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> hours<span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">,</span> minutes<span class="token operator">:</span> <span class="token operator">-</span><span class="token number">30</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>  <span class="token comment">// throws</span>
-
-<span class="token comment">// Disambiguation</span>
-
-d <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Duration<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> minutes<span class="token operator">:</span> <span class="token number">120</span> <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> overflow<span class="token operator">:</span> <span class="token string">'constrain'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>  <span class="token comment">// => PT120M</span>
-d <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Duration<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> minutes<span class="token operator">:</span> <span class="token number">120</span> <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> overflow<span class="token operator">:</span> <span class="token string">'balance'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>  <span class="token comment">// => PT2H</span></code></pre><h2 id="properties">Properties</h2>
+d <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Duration<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> hours<span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">,</span> minutes<span class="token operator">:</span> <span class="token operator">-</span><span class="token number">30</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>  <span class="token comment">// throws</span></code></pre><h2 id="properties">Properties</h2>
 <h3 id="years"><a class="heading-link" href="#years"></a>duration.<strong>years</strong> : number</h3><h3 id="months"><a class="heading-link" href="#months"></a>duration.<strong>months</strong> : number</h3><h3 id="weeks"><a class="heading-link" href="#weeks"></a>duration.<strong>weeks</strong> : number</h3><h3 id="days"><a class="heading-link" href="#days"></a>duration.<strong>days</strong> : number</h3><h3 id="hours"><a class="heading-link" href="#hours"></a>duration.<strong>hours</strong> : number</h3><h3 id="minutes"><a class="heading-link" href="#minutes"></a>duration.<strong>minutes</strong> : number</h3><h3 id="seconds"><a class="heading-link" href="#seconds"></a>duration.<strong>seconds</strong> : number</h3><h3 id="milliseconds"><a class="heading-link" href="#milliseconds"></a>duration.<strong>milliseconds</strong> : number</h3><h3 id="microseconds"><a class="heading-link" href="#microseconds"></a>duration.<strong>microseconds</strong> : number</h3><h3 id="nanoseconds"><a class="heading-link" href="#nanoseconds"></a>duration.<strong>nanoseconds</strong> : number</h3><p>The above read-only properties allow accessing each component of the duration individually.</p>
 <p>Usage examples:</p>
 <pre class="language-javascript"><code class="language-javascript">d <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Duration<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'P1Y2M3W4DT5H6M7.987654321S'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -369,32 +344,20 @@ d<span class="token punctuation">.</span>nanoseconds   <span class="token commen
 <h3 id="with"><a class="heading-link" href="#with"></a>duration.<strong>with</strong>(<em>durationLike</em>: object, <em>options</em>?: object) : Temporal.Duration</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>durationLike</code> (object): an object with some or all of the properties of a <code>Temporal.Duration</code>.</li>
-<li><code>options</code> (optional object): An object with properties representing options for the copy.
-The following options are recognized:<ul>
-<li><code>overflow</code> (string): How to deal with values that are larger than the next highest unit.
-Allowed values are <code>constrain</code> and <code>balance</code>.
-The default is <code>constrain</code>.</li>
-</ul>
-</li>
 </ul>
 <p><strong>Returns:</strong> a new <code>Temporal.Duration</code> object.</p>
 <p>This method creates a new <code>Temporal.Duration</code> which is a copy of <code>duration</code>, but any properties present on <code>durationLike</code> override the ones already present on <code>duration</code>.</p>
 <p>Since <code>Temporal.Duration</code> objects are immutable, use this method instead of modifying one.</p>
 <p>All non-zero properties of <code>durationLike</code> must have the same sign, and they must additionally have the same sign as the non-zero properties of <code>duration</code>, unless they override all of these non-zero properties.
 If a property of <code>durationLike</code> is infinity, then this function will throw a <code>RangeError</code>.</p>
-<p>The <code>overflow</code> option specifies what to do with overly large values, that are larger than the next unit.
-(For example, 90 minutes is larger than 1 hour.)
-Constrain mode will leave these values as they are.
-Balance mode will behave like it does in <code>Duration.from()</code> and perform a balance operation on the result, changing 90 minutes to 1 hour and 30 minutes.</p>
-<p>For usage examples and a more complete explanation of how balancing works and why it is necessary, see <a href="./balancing.html">Duration balancing</a>.</p>
 <p>Usage example:</p>
 <pre class="language-javascript"><code class="language-javascript">duration <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Duration<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> months<span class="token operator">:</span> <span class="token number">50</span><span class="token punctuation">,</span> days<span class="token operator">:</span> <span class="token number">50</span><span class="token punctuation">,</span> hours<span class="token operator">:</span> <span class="token number">50</span><span class="token punctuation">,</span> minutes<span class="token operator">:</span> <span class="token number">100</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token comment">// Perform a balance operation using additional ISO calendar rules:</span>
 <span class="token keyword">let</span> <span class="token punctuation">{</span> years<span class="token punctuation">,</span> months <span class="token punctuation">}</span> <span class="token operator">=</span> duration<span class="token punctuation">;</span>
 years <span class="token operator">+=</span> Math<span class="token punctuation">.</span><span class="token function">floor</span><span class="token punctuation">(</span>months <span class="token operator">/</span> <span class="token number">12</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 months <span class="token operator">%=</span> <span class="token number">12</span><span class="token punctuation">;</span>
-duration <span class="token operator">=</span> duration<span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span><span class="token punctuation">{</span> years<span class="token punctuation">,</span> months <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> overflow<span class="token operator">:</span> <span class="token string">'balance'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token comment">// => P4Y2M52DT3H40M</span></code></pre><h3 id="add"><a class="heading-link" href="#add"></a>duration.<strong>add</strong>(<em>other</em>: object, <em>options</em>?: object) : Temporal.Duration</h3><p><strong>Parameters:</strong></p>
+duration <span class="token operator">=</span> duration<span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span><span class="token punctuation">{</span> years<span class="token punctuation">,</span> months <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// => P4Y2M50DT50H100M</span></code></pre><h3 id="add"><a class="heading-link" href="#add"></a>duration.<strong>add</strong>(<em>other</em>: object, <em>options</em>?: object) : Temporal.Duration</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>other</code> (object): A <code>Temporal.Duration</code> object or a duration-like object.</li>
 <li><code>options</code> (optional object): An object with properties representing options for the addition.
@@ -537,7 +500,9 @@ It must be a <code>Temporal.DateTime</code>, or a value that can be passed to <c
 <p>The <code>largestUnit</code> determines the largest unit allowed in the result.
 It will cause units larger than <code>largestUnit</code> to be converted into smaller units, and units smaller than <code>largestUnit</code> to be converted into larger units as much as possible.
 For example, with <code>largestUnit: &#39;minutes&#39;</code>, a duration of 1 hour and 125 seconds will be converted into a duration of 62 minutes and 5 seconds.
-These durations are equally long, so no rounding takes place, but they are expressed differently.</p>
+These durations are equally long, so no rounding takes place, but they are expressed differently.
+This operation is called &quot;balancing.&quot;</p>
+<p>For usage examples and a more complete explanation of how balancing works, see <a href="./balancing.html">Duration balancing</a>.</p>
 <p>A <code>largestUnit</code> value of <code>&#39;auto&#39;</code>, which is the default if only <code>smallestUnit</code> is given, means that <code>largestUnit</code> should be the largest nonzero unit in the duration that is larger than <code>smallestUnit</code>.
 (For example, in a duration of 3 days and 12 hours, <code>largestUnit: &#39;auto&#39;</code> would mean the same as <code>largestUnit: &#39;days&#39;</code>.)
 This means that the default is for the balancing behaviour of this method to not &#39;grow&#39; the duration beyond its current largest unit unless needed for rounding.</p>
