@@ -5,13 +5,13 @@
 esid: sec-temporal.duration.from
 ---*/
 
-const unbalanced = Temporal.Duration.from({ milliseconds: 1000 });
-assert.sameValue(unbalanced.seconds, 0);
-assert.sameValue(unbalanced.milliseconds, 1000);
+const d1 = Temporal.Duration.from({ milliseconds: 1000 });
+assert.sameValue(d1.seconds, 0);
+assert.sameValue(d1.milliseconds, 1000);
 
-const balanced = Temporal.Duration.from(unbalanced, { overflow: "balance" });
-assert.notSameValue(balanced, unbalanced);
-assert.sameValue(unbalanced.seconds, 0);
-assert.sameValue(unbalanced.milliseconds, 1000);
-assert.sameValue(balanced.seconds, 1);
-assert.sameValue(balanced.milliseconds, 0);
+const d2 = Temporal.Duration.from(d1);
+assert.notSameValue(d1, d2);
+assert.sameValue(d1.seconds, 0);
+assert.sameValue(d1.milliseconds, 1000);
+assert.sameValue(d2.seconds, 0);
+assert.sameValue(d2.milliseconds, 1000);

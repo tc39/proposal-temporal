@@ -10,7 +10,7 @@ let called = 0;
 
 const constructorArguments = [
   Array(10).fill(0),
-  [0, 0, 0, Number.MAX_VALUE, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, Infinity, 0, 0, 0, 0, 0, 0],
 ];
 
 class MyDuration extends Temporal.Duration {
@@ -25,7 +25,4 @@ const instance = MyDuration.from("PT0S");
 assert.sameValue(called, 1);
 
 assert.throws(RangeError, () => instance.with({ days: Infinity }));
-assert.sameValue(called, 1);
-
-assert.throws(RangeError, () => instance.with({ days: Infinity }, { overflow: "balance" }));
-assert.sameValue(called, 1);
+assert.sameValue(called, 2);
