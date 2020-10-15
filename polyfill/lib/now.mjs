@@ -19,14 +19,14 @@ function instant() {
 function dateTime(calendarLike, temporalTimeZoneLike = timeZone()) {
   const timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);
   const calendar = ES.ToTemporalCalendar(calendarLike);
-  const abs = instant();
-  return ES.GetTemporalDateTimeFor(timeZone, abs, calendar);
+  const inst = instant();
+  return ES.GetTemporalDateTimeFor(timeZone, inst, calendar);
 }
 function dateTimeISO(temporalTimeZoneLike = timeZone()) {
   const timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);
   const calendar = GetISO8601Calendar();
-  const abs = instant();
-  return ES.GetTemporalDateTimeFor(timeZone, abs, calendar);
+  const inst = instant();
+  return ES.GetTemporalDateTimeFor(timeZone, inst, calendar);
 }
 function date(calendarLike, temporalTimeZoneLike = timeZone()) {
   return ES.TemporalDateTimeToDate(dateTime(calendarLike, temporalTimeZoneLike));

@@ -11,7 +11,7 @@ This name is not intended to stick.
 - Both Absolute and DateTime have cases where they do the right thing for this use case, and cases where they do the wrong thing.
   (ex.: "Move a meeting three days later" is correct with DateTime and wrong with Absolute; "Postpone a reminder by one hour" is correct with Absolute and wrong with DateTime.)
 - The cases where Absolute and DateTime do the wrong thing will only produce the wrong result when used across a DST transition, so in many places the bugs will only pop up twice per year, if at all.
-- When writing the cookbook, to deal with this use case, we found that it was actually necessary a lot of the time to pass around a record consisting of `{ absolute, timeZone }`.
+- When writing the cookbook, to deal with this use case, we found that it was actually necessary a lot of the time to pass around a record consisting of `{ instant, timeZone }`.
   If that is so common, then we may as well have a type for it.
 - Even worse, there is a temptation to pass around a serialized string instead of such a record, which is wrong because the time zone offset may have changed when you read in the string again with `Temporal.Instant.from()`.
 

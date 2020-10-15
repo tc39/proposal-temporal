@@ -62,9 +62,9 @@ For example:
 ```javascript
 tz1 = new Temporal.TimeZone('-08:00');
 tz2 = new Temporal.TimeZone('America/Vancouver');
-abs = Temporal.DateTime.from({ year: 2020, month: 1, day: 1 }).toInstant(tz2);
-tz1.getNextTransition(abs); // => null
-tz2.getPreviousTransition(abs); // => 2020-03-08T10:00Z
+inst = Temporal.DateTime.from({ year: 2020, month: 1, day: 1 }).toInstant(tz2);
+tz1.getNextTransition(inst); // => null
+tz2.getPreviousTransition(inst); // => 2020-03-08T10:00Z
 ```
 
 ## Static methods

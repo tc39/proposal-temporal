@@ -10,7 +10,7 @@ Of the `Temporal` classes carrying human-readable time information, it is the mo
 `Temporal.Date`, `Temporal.Time`, `Temporal.YearMonth`, and `Temporal.MonthDay` all carry less information and should be used when complete information is not required.
 
 "Calendar date" and "wall-clock time" refer to the concept of time as expressed in everyday usage.
-`Temporal.DateTime` does not represent an absolute, unique point in time; that is what `Temporal.Instant` is for.
+`Temporal.DateTime` does not represent an exact point in time; that is what `Temporal.Instant` is for.
 
 One example of when it would be appropriate to use `Temporal.DateTime` and not `Temporal.Instant` is when integrating with wearable devices.
 FitBit, for example, always records sleep data in the user's wall-clock time, wherever they are in the world.

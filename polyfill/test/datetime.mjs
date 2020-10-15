@@ -1004,7 +1004,7 @@ describe('DateTime', () => {
       const tz = Temporal.TimeZone.from('Europe/London');
       equal(`${dt.toInstant(tz)}`, '+000000-02-29T00:01:15Z');
     });
-    it('datetime with multiple absolute - Fall DST in Brazil', () => {
+    it('datetime with multiple instants - Fall DST in Brazil', () => {
       const dt = DateTime.from('2019-02-16T23:45');
       equal(`${dt.toInstant('America/Sao_Paulo')}`, '2019-02-17T01:45Z');
       equal(`${dt.toInstant('America/Sao_Paulo', { disambiguation: 'compatible' })}`, '2019-02-17T01:45Z');
@@ -1012,7 +1012,7 @@ describe('DateTime', () => {
       equal(`${dt.toInstant('America/Sao_Paulo', { disambiguation: 'later' })}`, '2019-02-17T02:45Z');
       throws(() => dt.toInstant('America/Sao_Paulo', { disambiguation: 'reject' }), RangeError);
     });
-    it('datetime with multiple absolute - Spring DST in Los Angeles', () => {
+    it('datetime with multiple instants - Spring DST in Los Angeles', () => {
       const dt = DateTime.from('2020-03-08T02:30');
       equal(`${dt.toInstant('America/Los_Angeles')}`, '2020-03-08T10:30Z');
       equal(`${dt.toInstant('America/Los_Angeles', { disambiguation: 'compatible' })}`, '2020-03-08T10:30Z');
@@ -1126,13 +1126,13 @@ describe('DateTime', () => {
     });
     it('time zone parameter UTC', () => {
       const tz = Temporal.TimeZone.from('UTC');
-      const abs = dt.toInstant(tz);
-      equal(`${abs}`, '1976-11-18T15:23:30.123456789Z');
+      const inst = dt.toInstant(tz);
+      equal(`${inst}`, '1976-11-18T15:23:30.123456789Z');
     });
     it('time zone parameter non-UTC', () => {
       const tz = Temporal.TimeZone.from('America/New_York');
-      const abs = dt.toInstant(tz);
-      equal(`${abs}`, '1976-11-18T20:23:30.123456789Z');
+      const inst = dt.toInstant(tz);
+      equal(`${inst}`, '1976-11-18T20:23:30.123456789Z');
     });
   });
   describe('dateTime.getFields() works', () => {

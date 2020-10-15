@@ -109,12 +109,12 @@ zdt = dateTime.toZonedDateTime('Asia/Tokyo');
   // => 2019-12-17T07:48+09:00[Asia/Tokyo]
 
 // Get the exact time in seconds, milliseconds, or nanoseconds since the UNIX epoch.
-abs = zdt.toInstant();
-epochNano = abs.getEpochNanoseconds();
+inst = zdt.toInstant();
+epochNano = inst.getEpochNanoseconds();
   // => 1576536480000000000n
-epochMicro = abs.getEpochMilliseconds();
+epochMicro = inst.getEpochMilliseconds();
   // => 1576536480000
-epochSecs = abs.getEpochSeconds();
+epochSecs = inst.getEpochSeconds();
   // => 1576536480
 ```
 <!-- prettier-ignore-end -->
@@ -145,17 +145,17 @@ In `Temporal`, if the exact time or time zone offset is known, then there is no 
 <!-- prettier-ignore-start -->
 ```javascript
 // No ambiguity possible because source is exact time in UTC
-abs = Temporal.Instant.from('2020-09-06T17:35:24.485Z');
+inst = Temporal.Instant.from('2020-09-06T17:35:24.485Z');
   // => 2020-09-06T17:35:24.485Z
 // An offset can make a local time "exact" with no ambiguity possible.
-abs = Temporal.Instant.from('2020-09-06T10:35:24.485-07:00');
+inst = Temporal.Instant.from('2020-09-06T10:35:24.485-07:00');
   // => 2020-09-06T17:35:24.485Z
 zdt = Temporal.ZonedDateTime.from('2020-09-06T10:35:24.485-07:00[America/Los_Angeles]');
   // => 2020-09-06T10:35:24.485-07:00[America/Los_Angeles]
 // if the source is an exact Temporal object, then no ambiguity is possible.
-zdt = abs.toZonedDateTime('America/Los_Angeles');
+zdt = inst.toZonedDateTime('America/Los_Angeles');
   // => 2020-09-06T10:35:24.485-07:00[America/Los_Angeles]
-abs2 = zdt.toInstant();
+inst2 = zdt.toInstant();
   // => 2020-09-06T17:35:24.485Z
 ```
 <!-- prettier-ignore-end -->
@@ -172,7 +172,7 @@ zdt = Temporal.DateTime('2019-02-19T00:00').toZonedDateTime('America/Sao_Paulo')
 // isn't an exact type then the offset is ignored when parsing so ambiguity is possible.
 dt = Temporal.DateTime.from('2019-02-19T00:00-03:00');
 zdt = dt.toZonedDateTimeISO('America/Sao_Paulo'); // can be ambiguous
-abs = dt.toInstantISO('America/Sao_Paulo'); // can be ambiguous
+inst = dt.toInstantISO('America/Sao_Paulo'); // can be ambiguous
 
 // the offset is lost when converting from an exact type to a non-exact type
 zdt = Temporal.ZonedDateTime.from('2020-11-01T01:30-08:00[America/Los_Angeles]');

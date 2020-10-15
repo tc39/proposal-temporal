@@ -10,7 +10,7 @@ const { equal } = assert;
 import * as Temporal from 'proposal-temporal';
 
 describe('fromString regex', () => {
-  describe('absolute', () => {
+  describe('instant', () => {
     function test(isoString, components) {
       it(isoString, () => {
         const [y, mon, d, h = 0, min = 0, s = 0, ms = 0, µs = 0, ns = 0] = components;

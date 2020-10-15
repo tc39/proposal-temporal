@@ -104,7 +104,7 @@ class Temporal.TimeZone {
 
   // Methods that a subclassed custom time zone must implement
 
-  /** Given an absolute instant returns this time zone's corresponding
+  /** Given an exact time returns this time zone's corresponding
    * UTC offset, in nanoseconds (signed). */
   getOffsetNanosecondsFor(instant : Temporal.Instant) : number;
 
@@ -162,7 +162,7 @@ class OffsetTimeZone extends Temporal.TimeZone {
     this.#offsetNs = sign * offsetNs;
   }
 
-  getOffsetNanosecondsFor(/* absolute */) {
+  getOffsetNanosecondsFor(/* instant */) {
     return this.#offsetNs; // offset is always the same
   }
 

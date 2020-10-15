@@ -111,9 +111,9 @@ describe('Userland calendar', () => {
       const dt = tz.getDateTimeFor(instant, obj);
       equal(dt.calendar.id, obj.id);
     });
-    it('absolute.toDateTime()', () => {
-      const abs = Temporal.Instant.fromEpochSeconds(0);
-      const dt = abs.toDateTime('UTC', obj);
+    it('instant.toDateTime()', () => {
+      const inst = Temporal.Instant.fromEpochSeconds(0);
+      const dt = inst.toDateTime('UTC', obj);
       equal(dt.calendar.id, obj.id);
     });
     it('Temporal.now.dateTime()', () => {
@@ -200,13 +200,13 @@ describe('Userland calendar', () => {
       });
       it('works for TimeZone.getDateTimeFor', () => {
         const tz = Temporal.TimeZone.from('UTC');
-        const abs = Temporal.Instant.fromEpochSeconds(0);
-        const dt = tz.getDateTimeFor(abs, 'zerobased');
+        const inst = Temporal.Instant.fromEpochSeconds(0);
+        const dt = tz.getDateTimeFor(inst, 'zerobased');
         equal(dt.calendar.id, 'zerobased');
       });
       it('works for Instant.toDateTime', () => {
-        const abs = Temporal.Instant.fromEpochSeconds(0);
-        const dt = abs.toDateTime('UTC', 'zerobased');
+        const inst = Temporal.Instant.fromEpochSeconds(0);
+        const dt = inst.toDateTime('UTC', 'zerobased');
         equal(dt.calendar.id, 'zerobased');
       });
       it('works for Temporal.now.dateTime', () => {
@@ -347,13 +347,13 @@ describe('Userland calendar', () => {
     });
     it('timezone.getDateTimeFor()', () => {
       const tz = Temporal.TimeZone.from('UTC');
-      const abs = Temporal.Instant.fromEpochSeconds(0);
-      const dt = tz.getDateTimeFor(abs, obj);
+      const inst = Temporal.Instant.fromEpochSeconds(0);
+      const dt = tz.getDateTimeFor(inst, obj);
       equal(dt.calendar.id, obj.id);
     });
-    it('absolute.toDateTime()', () => {
-      const abs = Temporal.Instant.fromEpochSeconds(0);
-      const dt = abs.toDateTime('UTC', obj);
+    it('instant.toDateTime()', () => {
+      const inst = Temporal.Instant.fromEpochSeconds(0);
+      const dt = inst.toDateTime('UTC', obj);
       equal(dt.calendar.id, obj.id);
     });
     it('Temporal.now.dateTime()', () => {
@@ -440,13 +440,13 @@ describe('Userland calendar', () => {
       });
       it('works for TimeZone.getDateTimeFor', () => {
         const tz = Temporal.TimeZone.from('UTC');
-        const abs = Temporal.Instant.fromEpochSeconds(0);
-        const dt = tz.getDateTimeFor(abs, 'decimal');
+        const inst = Temporal.Instant.fromEpochSeconds(0);
+        const dt = tz.getDateTimeFor(inst, 'decimal');
         equal(dt.calendar.id, 'decimal');
       });
       it('works for Instant.toDateTime', () => {
-        const abs = Temporal.Instant.fromEpochSeconds(0);
-        const dt = abs.toDateTime('UTC', 'decimal');
+        const inst = Temporal.Instant.fromEpochSeconds(0);
+        const dt = inst.toDateTime('UTC', 'decimal');
         equal(dt.calendar.id, 'decimal');
       });
       it('works for Temporal.now.dateTime', () => {

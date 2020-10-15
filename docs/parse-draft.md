@@ -219,7 +219,7 @@ Temporal.MonthDay.from(parsed.monthDay)  // => 04-07
 Temporal.time.from(parsed.time)          // throws? it's still valid ISO 8601 though
 
 parsed = Temporal.parse(invalidZone);
-Temporal.Instant.from(parsed.absolute)  // throws
+Temporal.Instant.from(parsed.instant)  // throws
 Temporal.DateTime.from(parsed.dateTime)  // => 2001-09-08T18:46:40
 // etc.
 

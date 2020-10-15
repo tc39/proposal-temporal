@@ -52,27 +52,27 @@ export class TimeZone {
   get id() {
     return ES.TimeZoneToString(this);
   }
-  getOffsetNanosecondsFor(absolute) {
+  getOffsetNanosecondsFor(instant) {
     if (!ES.IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');
-    if (!ES.IsTemporalInstant(absolute)) throw new TypeError('invalid Instant object');
+    if (!ES.IsTemporalInstant(instant)) throw new TypeError('invalid Instant object');
     const id = GetSlot(this, TIMEZONE_ID);
 
     const offsetNs = parseOffsetString(id);
     if (offsetNs !== null) return offsetNs;
 
-    return ES.GetIANATimeZoneOffsetNanoseconds(GetSlot(absolute, EPOCHNANOSECONDS), id);
+    return ES.GetIANATimeZoneOffsetNanoseconds(GetSlot(instant, EPOCHNANOSECONDS), id);
   }
-  getOffsetStringFor(absolute) {
-    if (!ES.IsTemporalInstant(absolute)) throw new TypeError('invalid Instant object');
-    const offsetNs = ES.GetOffsetNanosecondsFor(this, absolute);
+  getOffsetStringFor(instant) {
+    if (!ES.IsTemporalInstant(instant)) throw new TypeError('invalid Instant object');
+    const offsetNs = ES.GetOffsetNanosecondsFor(this, instant);
     return ES.FormatTimeZoneOffsetString(offsetNs);
   }
-  getDateTimeFor(absolute, calendar = GetISO8601Calendar()) {
-    if (!ES.IsTemporalInstant(absolute)) throw new TypeError('invalid Instant object');
+  getDateTimeFor(instant, calendar = GetISO8601Calendar()) {
+    if (!ES.IsTemporalInstant(instant)) throw new TypeError('invalid Instant object');
     calendar = ES.ToTemporalCalendar(calendar);
 
-    const ns = GetSlot(absolute, EPOCHNANOSECONDS);
-    const offsetNs = ES.GetOffsetNanosecondsFor(this, absolute);
+    const ns = GetSlot(instant, EPOCHNANOSECONDS);
+    const offsetNs = ES.GetOffsetNanosecondsFor(this, instant);
     let { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.GetPartsFromEpoch(ns);
     ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.BalanceDateTime(
       year,
@@ -100,11 +100,11 @@ export class TimeZone {
     }
     const numInstants = possibleInstants.length;
 
-    function validateInstant(absolute) {
-      if (!ES.IsTemporalInstant(absolute)) {
+    function validateInstant(instant) {
+      if (!ES.IsTemporalInstant(instant)) {
         throw new TypeError('bad return from getPossibleInstantsFor');
       }
-      return absolute;
+      return instant;
     }
 
     if (numInstants === 1) return validateInstant(possibleInstants[0]);
@@ -117,7 +117,7 @@ export class TimeZone {
         case 'later':
           return validateInstant(possibleInstants[numInstants - 1]);
         case 'reject': {
-          throw new RangeError('multiple absolute found');
+          throw new RangeError('multiple instants found');
         }
       }
     }
@@ -153,7 +153,7 @@ export class TimeZone {
         return possible[possible.length - 1];
       }
       case 'reject': {
-        throw new RangeError('no such absolute found');
+        throw new RangeError('no such instant found');
       }
     }
   }

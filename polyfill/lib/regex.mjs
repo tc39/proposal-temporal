@@ -5,7 +5,7 @@ export const offset = /([+-\u2212])([0-2][0-9])(?::?([0-5][0-9]))?/;
 const zonesplit = new RegExp(`(?:([zZ])|(?:${offset.source}?(?:\\[(?!c=)([^\\]\\s]*)?\\])?))`);
 const calendar = /\[c=([^\]\s]+)\]/;
 
-export const absolute = new RegExp(
+export const instant = new RegExp(
   `^${datesplit.source}(?:T|\\s+)${timesplit.source}${zonesplit.source}(?:${calendar.source})?$`,
   'i'
 );
