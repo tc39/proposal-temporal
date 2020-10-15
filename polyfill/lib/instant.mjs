@@ -1,6 +1,6 @@
 /* global __debug__ */
 
-import { GetDefaultCalendar } from './calendar.mjs';
+import { GetISO8601Calendar } from './calendar.mjs';
 import { ES } from './ecmascript.mjs';
 import { GetIntrinsic, MakeIntrinsicClass } from './intrinsicclass.mjs';
 import { EPOCHNANOSECONDS, CreateSlots, GetSlot, SetSlot } from './slots.mjs';
@@ -244,7 +244,7 @@ export class Instant {
   toDateTimeISO(temporalTimeZoneLike) {
     if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
     const timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);
-    const calendar = GetDefaultCalendar();
+    const calendar = GetISO8601Calendar();
     return ES.GetTemporalDateTimeFor(timeZone, this, calendar);
   }
 

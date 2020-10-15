@@ -373,6 +373,6 @@ function GetBuiltinCalendar(id) {
   if (!(id in BUILTIN_CALENDARS)) throw new RangeError(`unknown calendar ${id}`);
   return new BUILTIN_CALENDARS[id]();
 }
-export function GetDefaultCalendar() {
+export function GetISO8601Calendar() {
   return GetBuiltinCalendar('iso8601');
 }

@@ -1,6 +1,6 @@
 /* global __debug__ */
 
-import { GetDefaultCalendar } from './calendar.mjs';
+import { GetISO8601Calendar } from './calendar.mjs';
 import { ES } from './ecmascript.mjs';
 import { GetIntrinsic, MakeIntrinsicClass, DefineIntrinsic } from './intrinsicclass.mjs';
 import {
@@ -67,7 +67,7 @@ export class TimeZone {
     const offsetNs = ES.GetOffsetNanosecondsFor(this, absolute);
     return ES.FormatTimeZoneOffsetString(offsetNs);
   }
-  getDateTimeFor(absolute, calendar = GetDefaultCalendar()) {
+  getDateTimeFor(absolute, calendar = GetISO8601Calendar()) {
     if (!ES.IsTemporalInstant(absolute)) throw new TypeError('invalid Instant object');
     calendar = ES.ToTemporalCalendar(calendar);
 

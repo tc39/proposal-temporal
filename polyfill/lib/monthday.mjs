@@ -1,6 +1,6 @@
 /* global __debug__ */
 
-import { GetDefaultCalendar } from './calendar.mjs';
+import { GetISO8601Calendar } from './calendar.mjs';
 import { ES } from './ecmascript.mjs';
 import { GetIntrinsic, MakeIntrinsicClass } from './intrinsicclass.mjs';
 import { ISO_MONTH, ISO_DAY, ISO_YEAR, CALENDAR, MONTH_DAY_BRAND, CreateSlots, GetSlot, SetSlot } from './slots.mjs';
@@ -11,7 +11,7 @@ export class MonthDay {
   constructor(isoMonth, isoDay, calendar = undefined, referenceISOYear = 1972) {
     isoMonth = ES.ToInteger(isoMonth);
     isoDay = ES.ToInteger(isoDay);
-    if (calendar === undefined) calendar = GetDefaultCalendar();
+    if (calendar === undefined) calendar = GetISO8601Calendar();
     referenceISOYear = ES.ToInteger(referenceISOYear);
     ES.RejectDate(referenceISOYear, isoMonth, isoDay);
     ES.RejectDateRange(referenceISOYear, isoMonth, isoDay);
@@ -134,7 +134,7 @@ export class MonthDay {
         result = new this(month, day, calendar, referenceISOYear);
       } else {
         let calendar = item.calendar;
-        if (calendar === undefined) calendar = GetDefaultCalendar();
+        if (calendar === undefined) calendar = GetISO8601Calendar();
         calendar = TemporalCalendar.from(calendar);
         const fields = ES.ToTemporalMonthDayRecord(item);
         result = calendar.monthDayFromFields(fields, options, this);
@@ -142,7 +142,7 @@ export class MonthDay {
     } else {
       let { month, day, referenceISOYear, calendar } = ES.ParseTemporalMonthDayString(ES.ToString(item));
       ({ month, day } = ES.RegulateMonthDay(month, day, overflow));
-      if (!calendar) calendar = GetDefaultCalendar();
+      if (!calendar) calendar = GetISO8601Calendar();
       calendar = TemporalCalendar.from(calendar);
       if (referenceISOYear === undefined) referenceISOYear = 1972;
       result = new this(month, day, calendar, referenceISOYear);

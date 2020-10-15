@@ -1,6 +1,6 @@
 /* global __debug__ */
 
-import { GetDefaultCalendar } from './calendar.mjs';
+import { GetISO8601Calendar } from './calendar.mjs';
 import { ES } from './ecmascript.mjs';
 import { GetIntrinsic, MakeIntrinsicClass } from './intrinsicclass.mjs';
 
@@ -33,7 +33,7 @@ export class DateTime {
     millisecond = 0,
     microsecond = 0,
     nanosecond = 0,
-    calendar = GetDefaultCalendar()
+    calendar = GetISO8601Calendar()
   ) {
     isoYear = ES.ToInteger(isoYear);
     isoMonth = ES.ToInteger(isoMonth);
@@ -639,7 +639,7 @@ export class DateTime {
         result = new this(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
       } else {
         let calendar = item.calendar;
-        if (calendar === undefined) calendar = GetDefaultCalendar();
+        if (calendar === undefined) calendar = GetISO8601Calendar();
         calendar = TemporalCalendar.from(calendar);
         const fields = ES.ToTemporalDateTimeRecord(item);
         const TemporalDate = GetIntrinsic('%Temporal.Date%');
@@ -673,7 +673,7 @@ export class DateTime {
         nanosecond,
         calendar
       } = ES.ParseTemporalDateTimeString(ES.ToString(item));
-      if (!calendar) calendar = GetDefaultCalendar();
+      if (!calendar) calendar = GetISO8601Calendar();
       calendar = TemporalCalendar.from(calendar);
       result = new this(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
     }

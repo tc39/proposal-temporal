@@ -1,6 +1,6 @@
 /* global __debug__ */
 
-import { GetDefaultCalendar } from './calendar.mjs';
+import { GetISO8601Calendar } from './calendar.mjs';
 import { ES } from './ecmascript.mjs';
 import { GetIntrinsic, MakeIntrinsicClass } from './intrinsicclass.mjs';
 import {
@@ -23,7 +23,7 @@ import {
 const ObjectAssign = Object.assign;
 
 export class Date {
-  constructor(isoYear, isoMonth, isoDay, calendar = GetDefaultCalendar()) {
+  constructor(isoYear, isoMonth, isoDay, calendar = GetISO8601Calendar()) {
     isoYear = ES.ToInteger(isoYear);
     isoMonth = ES.ToInteger(isoMonth);
     isoDay = ES.ToInteger(isoDay);
@@ -300,7 +300,7 @@ export class Date {
         result = new this(year, month, day, calendar);
       } else {
         let calendar = item.calendar;
-        if (calendar === undefined) calendar = GetDefaultCalendar();
+        if (calendar === undefined) calendar = GetISO8601Calendar();
         calendar = TemporalCalendar.from(calendar);
         const fields = ES.ToTemporalDateRecord(item);
         result = calendar.dateFromFields(fields, options, this);
@@ -308,7 +308,7 @@ export class Date {
     } else {
       let { year, month, day, calendar } = ES.ParseTemporalDateString(ES.ToString(item));
       ({ year, month, day } = ES.RegulateDate(year, month, day, overflow));
-      if (!calendar) calendar = GetDefaultCalendar();
+      if (!calendar) calendar = GetISO8601Calendar();
       calendar = TemporalCalendar.from(calendar);
       result = new this(year, month, day, calendar);
     }
