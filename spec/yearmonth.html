@@ -286,8 +286,8 @@
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
         1. Perform ? RequireInternalSlot(_other_, [[InitializedTemporalYearMonth]]).
         1. Set _options_ to ? NormalizeOptionsObject(_options_).
-        1. Let _disallowedUnits_ be « *"weeks"*, *"days"*, *"hours"*, *"minutes"*, *"seconds"*, *"milliesconds"*, *"microseconds"*, *"nanoseconds"* ».
-        1. Let _smallestUnit_ be ? ToSmallestTemporalUnit(_options_, *"months"*, _disallowedUnits_).
+        1. Let _disallowedUnits_ be « *"weeks"*, *"days"*, *"hours"*, *"minutes"*, *"seconds"*, *"milliseconds"*, *"microseconds"*, *"nanoseconds"* ».
+        1. Let _smallestUnit_ be ? ToSmallestTemporalDurationUnit(_options_, *"months"*, _disallowedUnits_).
         1. Let _largestUnit_ be ? ToLargestTemporalUnit(_options_, _disallowedUnits_, *"years"*).
         1. Perform ? ValidateTemporalUnitRange(_largestUnit_, _smallestUnit_).
         1. Let _roundingMode_ be ? ToTemporalRoundingMode(_options_).
