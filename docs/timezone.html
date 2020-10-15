@@ -331,14 +331,14 @@ epoch <span class="token operator">=</span> Temporal<span class="token punctuati
 tz <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'America/New_York'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 tz<span class="token punctuation">.</span><span class="token function">getZonedDateTimeFor</span><span class="token punctuation">(</span>epoch<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 1969-12-31T19:00-05:00[America/New_York]</span></code></pre><h3 id="getDateTimeFor"><a class="heading-link" href="#getDateTimeFor"></a>timeZone.<strong>getDateTimeFor</strong>(<em>instant</em>: Temporal.Instant, <em>calendar</em>?: object | string) : Temporal.DateTime</h3><p><strong>Parameters:</strong></p>
 <ul>
-<li><code>instant</code> (<code>Temporal.Instant</code>): An instant time to convert.</li>
+<li><code>instant</code> (<code>Temporal.Instant</code>): An exact time to convert.</li>
 <li><code>calendar</code> (optional object or string): A <code>Temporal.Calendar</code> object, or a plain object, or a calendar identifier.
 The default is to use the ISO 8601 calendar.</li>
 </ul>
-<p><strong>Returns:</strong> A <code>Temporal.DateTime</code> object indicating the calendar date and wall-clock time in <code>timeZone</code>, according to the reckoning of <code>calendar</code>, at the instant time indicated by <code>instant</code>.</p>
+<p><strong>Returns:</strong> A <code>Temporal.DateTime</code> object indicating the calendar date and wall-clock time in <code>timeZone</code>, according to the reckoning of <code>calendar</code>, at the exact time indicated by <code>instant</code>.</p>
 <p>This method is one way to convert a <code>Temporal.Instant</code> to a <code>Temporal.DateTime</code>.</p>
 <p>Example usage:</p>
-<pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Converting a specific instant time to a calendar date / wall-clock time</span>
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Converting an exact time to a calendar date / wall-clock time</span>
 timestamp <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">fromEpochSeconds</span><span class="token punctuation">(</span><span class="token number">1553993100</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 tz <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'Europe/Berlin'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 tz<span class="token punctuation">.</span><span class="token function">getDateTimeFor</span><span class="token punctuation">(</span>timestamp<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2019-03-31T01:45</span>
@@ -357,7 +357,7 @@ The default is <code>&#39;compatible&#39;</code>.</li>
 </ul>
 </li>
 </ul>
-<p><strong>Returns:</strong> A <code>Temporal.Instant</code> object indicating the instant time in <code>timeZone</code> at the time of the calendar date and wall-clock time from <code>dateTime</code>.</p>
+<p><strong>Returns:</strong> A <code>Temporal.Instant</code> object indicating the exact time in <code>timeZone</code> at the time of the calendar date and wall-clock time from <code>dateTime</code>.</p>
 <p>This method is one way to convert a <code>Temporal.DateTime</code> to a <code>Temporal.Instant</code>.
 It is identical to <a href="./datetime.html#toInstant"><code>dateTime.toInstant(timeZone, disambiguation)</code></a>.</p>
 <p>In the case of ambiguity, the <code>disambiguation</code> option controls what instant to return:</p>
@@ -378,8 +378,8 @@ This behavior avoids exceptions when converting non-existent <code>Temporal.Date
 <li><code>dateTime</code> (<code>Temporal.DateTime</code>): A calendar date and wall-clock time to convert.</li>
 </ul>
 <p><strong>Returns:</strong> An array of <code>Temporal.Instant</code> objects, which may be empty.</p>
-<p>This method returns an array of all the possible instant times that could correspond to the calendar date and wall-clock time indicated by <code>dateTime</code>.</p>
-<p>Normally there is only one possible instant time corresponding to a wall-clock time, but around a daylight saving change, a wall-clock time may not exist, or the same wall-clock time may exist twice in a row.
+<p>This method returns an array of all the possible exact times that could correspond to the calendar date and wall-clock time indicated by <code>dateTime</code>.</p>
+<p>Normally there is only one possible exact time corresponding to a wall-clock time, but around a daylight saving change, a wall-clock time may not exist, or the same wall-clock time may exist twice in a row.
 See <a href="./ambiguity.html">Resolving ambiguity</a> for usage examples and a more complete explanation.</p>
 <p>Although this method is useful for implementing a custom time zone or custom disambiguation behaviour, usually you won&#39;t have to use this method; <code>Temporal.TimeZone.prototype.getInstantFor()</code> will be more convenient for most use cases.
 During &quot;skipped&quot; clock time like the hour after DST starts in the Spring, <code>Temporal.TimeZone.prototype.getInstantFor()</code> returns a <code>Temporal.Instant</code> (by default interpreting the <code>Temporal.DateTime</code> using the pre-transition time zone offset), while this method returns zero results during those skipped periods.</p>

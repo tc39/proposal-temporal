@@ -204,7 +204,7 @@ If not given, the current system time zone will be used.</li>
 Optionally a time zone can be given in which the time is computed, instead of the current system time zone.</p>
 <p>If you only want to use the ISO 8601 calendar, use <code>Temporal.now.zonedDateTimeISO()</code>.</p>
 <h3 id="instant"><a class="heading-link" href="#instant"></a>Temporal.now.<strong>instant</strong>() : Temporal.Instant</h3><p><strong>Returns:</strong> a <code>Temporal.Instant</code> object representing the current system time.</p>
-<p>This method gets the current absolute system time, without regard to calendar or time zone.
+<p>This method gets the current exact system time, without regard to calendar or time zone.
 This is a good way to get a timestamp for an event, for example.
 It works like the old-style JavaScript <code>Date.now()</code>, but with nanosecond accuracy instead of milliseconds.</p>
 <p>Example usage:</p>

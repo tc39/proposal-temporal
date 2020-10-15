@@ -788,14 +788,14 @@ The default is <code>&#39;compatible&#39;</code>.</li>
 </ul>
 </li>
 </ul>
-<p><strong>Returns:</strong> A <code>Temporal.Instant</code> object indicating the instant time in <code>timeZone</code> at the time of the calendar date and wall-clock time from <code>dateTime</code>.</p>
+<p><strong>Returns:</strong> A <code>Temporal.Instant</code> object indicating the exact time in <code>timeZone</code> at the time of the calendar date and wall-clock time from <code>dateTime</code>.</p>
 <p>This method is one way to convert a <code>Temporal.DateTime</code> to a <code>Temporal.Instant</code>.
 It is identical to <a href="./timezone.html#getInstantFor"><code>(Temporal.TimeZone.from(timeZone || &#39;UTC&#39;)).getInstantFor(dateTime, disambiguation)</code></a>.</p>
-<p>In the case of ambiguity, the <code>disambiguation</code> option controls what instant time to return:</p>
+<p>In the case of ambiguity, the <code>disambiguation</code> option controls what exact time to return:</p>
 <ul>
 <li><code>&#39;compatible&#39;</code> (the default): Acts like <code>&#39;earlier&#39;</code> for backward transitions and <code>&#39;later&#39;</code> for forward transitions.</li>
-<li><code>&#39;earlier&#39;</code>: The earlier of two possible times.</li>
-<li><code>&#39;later&#39;</code>: The later of two possible times.</li>
+<li><code>&#39;earlier&#39;</code>: The earlier of two possible exact times.</li>
+<li><code>&#39;later&#39;</code>: The later of two possible exact times.</li>
 <li><code>&#39;reject&#39;</code>: Throw a <code>RangeError</code> instead.</li>
 </ul>
 <p>When interoperating with existing code or services, <code>&#39;compatible&#39;</code> mode matches the behavior of legacy <code>Date</code> as well as libraries like moment.js, Luxon, and date-fns.

@@ -226,9 +226,9 @@ Temporal<span class="token punctuation">.</span>now<span class="token punctuatio
 
   <span class="token comment">/** Given the calendar/wall-clock time, returns an array of 0, 1, or
    * 2 (or theoretically more, but not in any currently known time zone)
-   * instant times, that are possible points on the timeline
-   * corresponding to it. In getInstantFor(), one of these will be
-   * selected, depending on the disambiguation option. */</span>
+   * exact times, that are possible points on the timeline corresponding
+   * to it. In getInstantFor(), one of these will be selected, depending
+   * on the disambiguation option. */</span>
   <span class="token function">getPossibleInstantsFor</span><span class="token punctuation">(</span>dateTime <span class="token operator">:</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">)</span> <span class="token operator">:</span> array<span class="token operator">&lt;</span>Temporal<span class="token punctuation">.</span>Instant<span class="token operator">></span><span class="token punctuation">;</span>
 
   <span class="token comment">/** Return the next time zone transition after `startingPoint`. */</span>
