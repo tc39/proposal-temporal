@@ -310,7 +310,7 @@ The following table describes these semantics.  Option 5 is not shown because th
 | T.Date.from(fields)\*\* | *From Object* | Explicit | Partial ISO | Environ. | *From Object* |
 | new T.Date() | Full ISO | Full ISO | Full ISO | Full ISO | Full ISO |
 | T.now.date() | Full ISO | Explicit | Partial ISO | Environ. | Explicit |
-| T.now.isoDate() | N/A | N/A | N/A | N/A | Full ISO |
+| T.now.dateISO() | N/A | N/A | N/A | N/A | Full ISO |
 | instant.inTimeZone() | Full ISO | Explicit | Partial ISO | Environ. | Explicit |
 | instant.inZoneISO() | N/A | N/A | N/A | N/A | Full ISO |
 | date.getMonthDay()\*\*\*\* | Inherit | Inherit | Explicit | Inherit | Inherit |
