@@ -3992,6 +3992,11 @@
 
       return calendar;
     },
+    CalendarToString: function CalendarToString(calendar) {
+      var toString = calendar.toString;
+      if (toString === undefined) toString = GetIntrinsic$1('%Temporal.Calendar.prototype.toString%');
+      return ES.ToString(ES.Call(toString, calendar));
+    },
     ToTemporalCalendar: function ToTemporalCalendar(calendarLike) {
       if (ES.Type(calendarLike) === 'Object') {
         return calendarLike;
@@ -5023,17 +5028,8 @@
     DifferenceDate: function DifferenceDate(y1, m1, d1, y2, m2, d2) {
       var largestUnit = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : 'days';
       var larger, smaller, sign;
-      var comparison = 0;
 
-      if (y1 !== y2) {
-        comparison = y1 - y2;
-      } else if (m1 !== m2) {
-        comparison = m1 - m2;
-      } else {
-        comparison = d1 - d2;
-      }
-
-      if (comparison < 0) {
+      if (ES.CompareTemporalDate(y1, m1, d1, y2, m2, d2) < 0) {
         smaller = {
           year: y1,
           month: m1,
@@ -5614,6 +5610,17 @@
         nanoseconds: nanoseconds
       };
     },
+    CompareTemporalDate: function CompareTemporalDate(y1, m1, d1, y2, m2, d2) {
+      for (var _i6 = 0, _arr6 = [[y1, y2], [m1, m2], [d1, d2]]; _i6 < _arr6.length; _i6++) {
+        var _arr6$_i = _slicedToArray(_arr6[_i6], 2),
+            x = _arr6$_i[0],
+            y = _arr6$_i[1];
+
+        if (x !== y) return ES.ComparisonResult(x - y);
+      }
+
+      return 0;
+    },
     AssertPositiveInteger: function AssertPositiveInteger(num) {
       if (!Number.isFinite(num) || Math.abs(num) !== num) throw new RangeError("invalid positive integer: ".concat(num));
       return num;
@@ -5881,6 +5888,7 @@
   }();
   MakeIntrinsicClass(Calendar, 'Temporal.Calendar');
   DefineIntrinsic('Temporal.Calendar.from', Calendar.from);
+  DefineIntrinsic('Temporal.Calendar.prototype.toString', Calendar.prototype.toString);
 
   var ISO8601Calendar = /*#__PURE__*/function (_Calendar) {
     _inherits(ISO8601Calendar, _Calendar);
@@ -6606,17 +6614,16 @@
   var ObjectAssign$1 = Object.assign;
   var Date$1 = /*#__PURE__*/function () {
     function Date(isoYear, isoMonth, isoDay) {
-      var calendar = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : undefined;
+      var calendar = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : GetDefaultCalendar();
 
       _classCallCheck(this, Date);
 
       isoYear = ES.ToInteger(isoYear);
       isoMonth = ES.ToInteger(isoMonth);
       isoDay = ES.ToInteger(isoDay);
-      if (calendar === undefined) calendar = GetDefaultCalendar();
+      calendar = ES.ToTemporalCalendar(calendar);
       ES.RejectDate(isoYear, isoMonth, isoDay);
       ES.RejectDateRange(isoYear, isoMonth, isoDay);
-      if (!calendar || _typeof(calendar) !== 'object') throw new RangeError('invalid calendar');
       CreateSlots(this);
       SetSlot(this, ISO_YEAR, isoYear);
       SetSlot(this, ISO_MONTH, isoMonth);
@@ -7006,17 +7013,13 @@
       key: "compare",
       value: function compare(one, two) {
         if (!ES.IsTemporalDate(one) || !ES.IsTemporalDate(two)) throw new TypeError('invalid Date object');
-
-        for (var _i2 = 0, _arr2 = [ISO_YEAR, ISO_MONTH, ISO_DAY]; _i2 < _arr2.length; _i2++) {
-          var slot = _arr2[_i2];
-          var val1 = GetSlot(one, slot);
-          var val2 = GetSlot(two, slot);
-          if (val1 !== val2) return ES.ComparisonResult(val1 - val2);
-        }
-
-        var cal1 = GetSlot(one, CALENDAR).id;
-        var cal2 = GetSlot(two, CALENDAR).id;
-        return ES.ComparisonResult(cal1 < cal2 ? -1 : cal1 > cal2 ? 1 : 0);
+        var result = ES.CompareTemporalDate(GetSlot(one, ISO_YEAR), GetSlot(one, ISO_MONTH), GetSlot(one, ISO_DAY), GetSlot(two, ISO_YEAR), GetSlot(two, ISO_MONTH), GetSlot(two, ISO_DAY));
+        if (result !== 0) return result;
+        var calendarOne = ES.CalendarToString(GetSlot(one, CALENDAR));
+        var calendarTwo = ES.CalendarToString(GetSlot(two, CALENDAR));
+        if (calendarOne < calendarTwo) return -1;
+        if (calendarOne > calendarTwo) return 1;
+        return 0;
       }
     }]);
 
