@@ -972,26 +972,43 @@ describe('Duration', () => {
       throws(() => d.round({ relativeTo, smallestUnit: 'nanoseconds', roundingIncrement: 1000 }), RangeError);
     });
     it('accepts singular units', () => {
+      equal(`${d.round({ largestUnit: 'year', relativeTo })}`, `${d.round({ largestUnit: 'years', relativeTo })}`);
       equal(`${d.round({ smallestUnit: 'year', relativeTo })}`, `${d.round({ smallestUnit: 'years', relativeTo })}`);
+      equal(`${d.round({ largestUnit: 'month', relativeTo })}`, `${d.round({ largestUnit: 'months', relativeTo })}`);
       equal(`${d.round({ smallestUnit: 'month', relativeTo })}`, `${d.round({ smallestUnit: 'months', relativeTo })}`);
-      equal(`${d.round({ smallestUnit: 'week', relativeTo })}`, `${d.round({ smallestUnit: 'weeks', relativeTo })}`);
+      equal(`${d.round({ largestUnit: 'day', relativeTo })}`, `${d.round({ largestUnit: 'days', relativeTo })}`);
       equal(`${d.round({ smallestUnit: 'day', relativeTo })}`, `${d.round({ smallestUnit: 'days', relativeTo })}`);
+      equal(`${d.round({ largestUnit: 'hour', relativeTo })}`, `${d.round({ largestUnit: 'hours', relativeTo })}`);
       equal(`${d.round({ smallestUnit: 'hour', relativeTo })}`, `${d.round({ smallestUnit: 'hours', relativeTo })}`);
+      equal(`${d.round({ largestUnit: 'minute', relativeTo })}`, `${d.round({ largestUnit: 'minutes', relativeTo })}`);
       equal(
         `${d.round({ smallestUnit: 'minute', relativeTo })}`,
         `${d.round({ smallestUnit: 'minutes', relativeTo })}`
       );
+      equal(`${d.round({ largestUnit: 'second', relativeTo })}`, `${d.round({ largestUnit: 'seconds', relativeTo })}`);
       equal(
         `${d.round({ smallestUnit: 'second', relativeTo })}`,
         `${d.round({ smallestUnit: 'seconds', relativeTo })}`
+      );
+      equal(
+        `${d.round({ largestUnit: 'millisecond', relativeTo })}`,
+        `${d.round({ largestUnit: 'milliseconds', relativeTo })}`
       );
       equal(
         `${d.round({ smallestUnit: 'millisecond', relativeTo })}`,
         `${d.round({ smallestUnit: 'milliseconds', relativeTo })}`
       );
       equal(
+        `${d.round({ largestUnit: 'microsecond', relativeTo })}`,
+        `${d.round({ largestUnit: 'microseconds', relativeTo })}`
+      );
+      equal(
         `${d.round({ smallestUnit: 'microsecond', relativeTo })}`,
         `${d.round({ smallestUnit: 'microseconds', relativeTo })}`
+      );
+      equal(
+        `${d.round({ largestUnit: 'nanosecond', relativeTo })}`,
+        `${d.round({ largestUnit: 'nanoseconds', relativeTo })}`
       );
       equal(
         `${d.round({ smallestUnit: 'nanosecond', relativeTo })}`,

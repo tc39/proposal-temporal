@@ -422,24 +422,48 @@ describe('Time', () => {
       });
       it('accepts singular units', () => {
         equal(
+          `${later.difference(earlier, { largestUnit: 'hour' })}`,
+          `${later.difference(earlier, { largestUnit: 'hours' })}`
+        );
+        equal(
           `${later.difference(earlier, { smallestUnit: 'hour' })}`,
           `${later.difference(earlier, { smallestUnit: 'hours' })}`
+        );
+        equal(
+          `${later.difference(earlier, { largestUnit: 'minute' })}`,
+          `${later.difference(earlier, { largestUnit: 'minutes' })}`
         );
         equal(
           `${later.difference(earlier, { smallestUnit: 'minute' })}`,
           `${later.difference(earlier, { smallestUnit: 'minutes' })}`
         );
         equal(
+          `${later.difference(earlier, { largestUnit: 'second' })}`,
+          `${later.difference(earlier, { largestUnit: 'seconds' })}`
+        );
+        equal(
           `${later.difference(earlier, { smallestUnit: 'second' })}`,
           `${later.difference(earlier, { smallestUnit: 'seconds' })}`
+        );
+        equal(
+          `${later.difference(earlier, { largestUnit: 'millisecond' })}`,
+          `${later.difference(earlier, { largestUnit: 'milliseconds' })}`
         );
         equal(
           `${later.difference(earlier, { smallestUnit: 'millisecond' })}`,
           `${later.difference(earlier, { smallestUnit: 'milliseconds' })}`
         );
         equal(
+          `${later.difference(earlier, { largestUnit: 'microsecond' })}`,
+          `${later.difference(earlier, { largestUnit: 'microseconds' })}`
+        );
+        equal(
           `${later.difference(earlier, { smallestUnit: 'microsecond' })}`,
           `${later.difference(earlier, { smallestUnit: 'microseconds' })}`
+        );
+        equal(
+          `${later.difference(earlier, { largestUnit: 'nanosecond' })}`,
+          `${later.difference(earlier, { largestUnit: 'nanoseconds' })}`
         );
         equal(
           `${later.difference(earlier, { smallestUnit: 'nanosecond' })}`,
