@@ -71,7 +71,7 @@ export class YearMonth {
     }
     const props = ES.ToPartialRecord(temporalYearMonthLike, ['era', 'month', 'year']);
     if (!props) {
-      throw new RangeError('invalid year-month-like');
+      throw new TypeError('invalid year-month-like');
     }
     const fields = ES.ToTemporalYearMonthRecord(this);
     ObjectAssign(fields, props);

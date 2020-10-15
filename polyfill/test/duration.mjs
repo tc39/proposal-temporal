@@ -128,7 +128,6 @@ describe('Duration', () => {
     it('Duration.from({ milliseconds: 5 }) == PT0.005S', () =>
       equal(`${Duration.from({ milliseconds: 5 })}`, 'PT0.005S'));
     it('Duration.from("P1D") == P1D', () => equal(`${Duration.from('P1D')}`, 'P1D'));
-    it('Duration.from({})', () => equal(`${Duration.from({})}`, `${new Duration()}`));
     it('lowercase variant', () => equal(`${Duration.from('p1y1m1dt1h1m1s')}`, 'P1Y1M1DT1H1M1S'));
     it('any number of decimal places works', () => {
       equal(`${Duration.from('P1Y1M1W1DT1H1M1.1S')}`, 'P1Y1M1W1DT1H1M1.100S');
@@ -193,6 +192,13 @@ describe('Duration', () => {
     });
     it('excessive values unchanged', () => {
       equal(`${Duration.from({ minutes: 100 })}`, 'PT100M');
+    });
+    it('object must contain at least one correctly-spelled property', () => {
+      throws(() => Duration.from({}), TypeError);
+      throws(() => Duration.from({ month: 12 }), TypeError);
+    });
+    it('incorrectly-spelled properties are ignored', () => {
+      equal(`${Duration.from({ month: 1, days: 1 })}`, 'P1D');
     });
   });
   describe('toString()', () => {
@@ -359,7 +365,14 @@ describe('Duration', () => {
       throws(() => d.with({ months: -5, minutes: 0 }), RangeError);
     });
     it('sign cannot be manipulated independently', () => {
-      throws(() => duration.with({ sign: -1 }), RangeError);
+      throws(() => duration.with({ sign: -1 }), TypeError);
+    });
+    it('object must contain at least one correctly-spelled property', () => {
+      throws(() => duration.with({}), TypeError);
+      throws(() => duration.with({ month: 12 }), TypeError);
+    });
+    it('incorrectly-spelled properties are ignored', () => {
+      equal(`${duration.with({ month: 1, days: 1 })}`, 'P5Y5M5W1DT5H5M5.005005005S');
     });
   });
   describe('Duration.add()', () => {
@@ -408,6 +421,13 @@ describe('Duration', () => {
         throws(() => duration.add({ hours: 1 }, badOptions), TypeError)
       );
       [{}, () => {}, undefined].forEach((options) => equal(duration.add({ hours: 1 }, options).hours, 1));
+    });
+    it('object must contain at least one correctly-spelled property', () => {
+      throws(() => duration.add({}), TypeError);
+      throws(() => duration.add({ month: 12 }), TypeError);
+    });
+    it('incorrectly-spelled properties are ignored', () => {
+      equal(`${duration.add({ month: 1, days: 1 })}`, 'P2DT5M');
     });
   });
   describe('Duration.subtract()', () => {
@@ -525,6 +545,13 @@ describe('Duration', () => {
         throws(() => duration.subtract({ hours: 1 }, badOptions), TypeError)
       );
       [{}, () => {}, undefined].forEach((options) => equal(duration.subtract({ hours: 1 }, options).hours, 0));
+    });
+    it('object must contain at least one correctly-spelled property', () => {
+      throws(() => duration.subtract({}), TypeError);
+      throws(() => duration.subtract({ month: 12 }), TypeError);
+    });
+    it('incorrectly-spelled properties are ignored', () => {
+      equal(`${duration.subtract({ month: 1, days: 1 })}`, 'P2DT1H10M');
     });
   });
   describe('duration.getFields() works', () => {
@@ -743,9 +770,23 @@ describe('Duration', () => {
       );
     });
     it("throws on relativeTo that can't be converted to datetime string", () => {
-      [3.14, true, null, 'hello', Symbol('foo'), 1n].forEach((relativeTo) => {
-        throws(() => d.round({ relativeTo }));
+      throws(() => d.round({ relativeTo: Symbol('foo') }), TypeError);
+    });
+    it('throws on relativeTo that converts to an invalid datetime string', () => {
+      [3.14, true, null, 'hello', 1n].forEach((relativeTo) => {
+        throws(() => d.round({ relativeTo }), RangeError);
       });
+    });
+    it('relativeTo object must contain at least the required correctly-spelled properties', () => {
+      throws(() => d.round({ relativeTo: {} }), TypeError);
+      throws(() => d.round({ relativeTo: { years: 2020, month: 1, day: 1 } }), TypeError);
+    });
+    it('incorrectly-spelled properties are ignored in relativeTo', () => {
+      const oneMonth = Duration.from({ months: 1 });
+      equal(
+        `${oneMonth.round({ largestUnit: 'days', relativeTo: { year: 2020, month: 1, day: 1, months: 2 } })}`,
+        'P31D'
+      );
     });
     it('throws on invalid roundingMode', () => {
       throws(() => d2.round({ smallestUnit: 'nanoseconds', roundingMode: 'cile' }), RangeError);

@@ -158,6 +158,13 @@ describe('Date', () => {
       );
       [{}, () => {}, undefined].forEach((options) => equal(`${original.with({ day: 17 }, options)}`, '1976-11-17'));
     });
+    it('object must contain at least one correctly-spelled property', () => {
+      throws(() => original.with({}), TypeError);
+      throws(() => original.with({ months: 12 }), TypeError);
+    });
+    it('incorrectly-spelled properties are ignored', () => {
+      equal(`${original.with({ months: 12, day: 15 })}`, '1976-11-15');
+    });
   });
   describe('Date.toDateTime() works', () => {
     const date = Date.from('1976-11-18');
@@ -464,6 +471,13 @@ describe('Date', () => {
       );
       [{}, () => {}, undefined].forEach((options) => equal(`${date.add({ months: 1 }, options)}`, '1976-12-18'));
     });
+    it('object must contain at least one correctly-spelled property', () => {
+      throws(() => date.add({}), TypeError);
+      throws(() => date.add({ month: 12 }), TypeError);
+    });
+    it('incorrectly-spelled properties are ignored', () => {
+      equal(`${date.add({ month: 1, days: 1 })}`, '1976-11-19');
+    });
   });
   describe('date.subtract() works', () => {
     const date = Date.from('2019-11-18');
@@ -531,6 +545,13 @@ describe('Date', () => {
       );
       [{}, () => {}, undefined].forEach((options) => equal(`${date.subtract({ months: 1 }, options)}`, '2019-10-18'));
     });
+    it('object must contain at least one correctly-spelled property', () => {
+      throws(() => date.subtract({}), TypeError);
+      throws(() => date.subtract({ month: 12 }), TypeError);
+    });
+    it('incorrectly-spelled properties are ignored', () => {
+      equal(`${date.subtract({ month: 1, days: 1 })}`, '2019-11-17');
+    });
   });
   describe('date.toString() works', () => {
     it('new Date(1976, 11, 18).toString()', () => {
@@ -586,7 +607,13 @@ describe('Date', () => {
       equal(`${Date.from({ year: 1976, month: 11, day: 18 })}`, '1976-11-18'));
     it('Date.from({ year: 2019, day: 15 }) throws', () => throws(() => Date.from({ year: 2019, day: 15 }), TypeError));
     it('Date.from({ month: 12 }) throws', () => throws(() => Date.from({ month: 12 }), TypeError));
-    it('Date.from({}) throws', () => throws(() => Date.from({}), TypeError));
+    it('object must contain at least the required correctly-spelled properties', () => {
+      throws(() => Date.from({}), TypeError);
+      throws(() => Date.from({ year: 1976, months: 11, day: 18 }), TypeError);
+    });
+    it('incorrectly-spelled properties are ignored', () => {
+      equal(`${Date.from({ year: 1976, month: 11, day: 18, days: 15 })}`, '1976-11-18');
+    });
     it('Date.from(required prop undefined) throws', () =>
       throws(() => Date.from({ year: undefined, month: 11, day: 18 }), TypeError));
     it('Date.from(number) is converted to string', () => Date.from(19761118).equals(Date.from('19761118')));

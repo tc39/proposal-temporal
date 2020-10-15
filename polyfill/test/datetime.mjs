@@ -315,6 +315,13 @@ describe('DateTime', () => {
         equal(`${datetime.with({ day: 5 }, options)}`, '1976-11-05T15:23:30.123456789')
       );
     });
+    it('object must contain at least one correctly-spelled property', () => {
+      throws(() => datetime.with({}), TypeError);
+      throws(() => datetime.with({ months: 12 }), TypeError);
+    });
+    it('incorrectly-spelled properties are ignored', () => {
+      equal(`${datetime.with({ month: 12, days: 15 })}`, '1976-12-18T15:23:30.123456789');
+    });
   });
   describe('DateTime.compare() works', () => {
     const dt1 = DateTime.from('1976-11-18T15:23:30.123456789');
@@ -415,6 +422,13 @@ describe('DateTime', () => {
       );
       [{}, () => {}, undefined].forEach((options) => equal(`${jan31.add({ years: 1 }, options)}`, '2021-01-31T15:00'));
     });
+    it('object must contain at least one correctly-spelled property', () => {
+      throws(() => jan31.add({}), TypeError);
+      throws(() => jan31.add({ month: 12 }), TypeError);
+    });
+    it('incorrectly-spelled properties are ignored', () => {
+      equal(`${jan31.add({ month: 1, days: 1 })}`, '2020-02-01T15:00');
+    });
   });
   describe('date.subtract() works', () => {
     const mar31 = DateTime.from('2020-03-31T15:00');
@@ -446,6 +460,13 @@ describe('DateTime', () => {
       [{}, () => {}, undefined].forEach((options) =>
         equal(`${mar31.subtract({ years: 1 }, options)}`, '2019-03-31T15:00')
       );
+    });
+    it('object must contain at least one correctly-spelled property', () => {
+      throws(() => mar31.subtract({}), TypeError);
+      throws(() => mar31.subtract({ month: 12 }), TypeError);
+    });
+    it('incorrectly-spelled properties are ignored', () => {
+      equal(`${mar31.subtract({ month: 1, days: 1 })}`, '2020-03-30T15:00');
     });
   });
   describe('DateTime.difference()', () => {
@@ -1012,6 +1033,13 @@ describe('DateTime', () => {
       [{}, () => {}, undefined].forEach((options) =>
         equal(`${DateTime.from({ year: 1976, month: 11, day: 18 }, options)}`, '1976-11-18T00:00')
       );
+    });
+    it('object must contain at least the required correctly-spelled properties', () => {
+      throws(() => DateTime.from({}), TypeError);
+      throws(() => DateTime.from({ year: 1976, months: 11, day: 18 }), TypeError);
+    });
+    it('incorrectly-spelled properties are ignored', () => {
+      equal(`${DateTime.from({ year: 1976, month: 11, day: 18, hours: 12 })}`, '1976-11-18T00:00');
     });
   });
   describe('DateTime.toInstant() works', () => {

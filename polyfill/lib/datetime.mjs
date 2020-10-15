@@ -184,7 +184,7 @@ export class DateTime {
       'year'
     ]);
     if (!props) {
-      throw new RangeError('invalid date-time-like');
+      throw new TypeError('invalid date-time-like');
     }
     const fields = ES.ToTemporalDateTimeRecord(source);
     ObjectAssign(fields, props);

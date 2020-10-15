@@ -54,7 +54,7 @@ export class MonthDay {
     }
     const props = ES.ToPartialRecord(temporalMonthDayLike, ['day', 'month']);
     if (!props) {
-      throw new RangeError('invalid month-day-like');
+      throw new TypeError('invalid month-day-like');
     }
     const fields = ES.ToTemporalMonthDayRecord(this);
     ObjectAssign(fields, props);

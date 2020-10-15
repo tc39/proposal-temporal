@@ -202,6 +202,13 @@ describe('Time', () => {
       );
       [{}, () => {}, undefined].forEach((options) => equal(`${time.with({ hour: 3 }, options)}`, '03:23:30.123456789'));
     });
+    it('object must contain at least one correctly-spelled property', () => {
+      throws(() => time.with({}), TypeError);
+      throws(() => time.with({ minutes: 12 }), TypeError);
+    });
+    it('incorrectly-spelled properties are ignored', () => {
+      equal(`${time.with({ minutes: 1, hour: 1 })}`, '01:23:30.123456789');
+    });
   });
   describe('time.toDateTime() works', () => {
     const time = Time.from('11:30:23.123456789');
@@ -675,6 +682,13 @@ describe('Time', () => {
       );
       [{}, () => {}, undefined].forEach((options) => equal(`${time.add({ hours: 1 }, options)}`, '16:23:30.123456789'));
     });
+    it('object must contain at least one correctly-spelled property', () => {
+      throws(() => time.add({}), TypeError);
+      throws(() => time.add({ minute: 12 }), TypeError);
+    });
+    it('incorrectly-spelled properties are ignored', () => {
+      equal(`${time.add({ minute: 1, hours: 1 })}`, '16:23:30.123456789');
+    });
   });
   describe('time.subtract() works', () => {
     const time = Time.from('15:23:30.123456789');
@@ -721,6 +735,13 @@ describe('Time', () => {
         equal(`${time.subtract({ hours: 1 }, options)}`, '14:23:30.123456789')
       );
     });
+    it('object must contain at least one correctly-spelled property', () => {
+      throws(() => time.subtract({}), TypeError);
+      throws(() => time.subtract({ minute: 12 }), TypeError);
+    });
+    it('incorrectly-spelled properties are ignored', () => {
+      equal(`${time.subtract({ minute: 1, hours: 1 })}`, '14:23:30.123456789');
+    });
   });
   describe('time.toString() works', () => {
     it('new Time(15, 23).toString()', () => {
@@ -758,7 +779,6 @@ describe('Time', () => {
     it('Time.from({ hour: 15, minute: 23 })', () => equal(`${Time.from({ hour: 15, minute: 23 })}`, '15:23'));
     it('Time.from({ minute: 30, microsecond: 555 })', () =>
       equal(`${Time.from({ minute: 30, microsecond: 555 })}`, '00:30:00.000555'));
-    it('Time.from({})', () => equal(`${Time.from({})}`, `${new Time()}`));
     it('Time.from(ISO string leap second) is constrained', () => {
       equal(`${Time.from('23:59:60')}`, '23:59:59');
       equal(`${Time.from('23:59:60', { overflow: 'reject' })}`, '23:59:59');
@@ -844,6 +864,13 @@ describe('Time', () => {
       const leap = { hour: 23, minute: 59, second: 60 };
       it('reject leap second', () => throws(() => Time.from(leap, { overflow: 'reject' }), RangeError));
       it('constrain leap second', () => equal(`${Time.from(leap)}`, '23:59:59'));
+    });
+    it('object must contain at least one correctly-spelled property', () => {
+      throws(() => Time.from({}), TypeError);
+      throws(() => Time.from({ minutes: 12 }), TypeError);
+    });
+    it('incorrectly-spelled properties are ignored', () => {
+      equal(`${Time.from({ minutes: 1, hour: 1 })}`, '01:00');
     });
   });
   describe('constructor treats -0 as 0', () => {

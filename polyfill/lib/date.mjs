@@ -113,7 +113,7 @@ export class Date {
     }
     const props = ES.ToPartialRecord(temporalDateLike, ['day', 'era', 'month', 'year']);
     if (!props) {
-      throw new RangeError('invalid date-like');
+      throw new TypeError('invalid date-like');
     }
     const fields = ES.ToTemporalDateRecord(source);
     ObjectAssign(fields, props);
