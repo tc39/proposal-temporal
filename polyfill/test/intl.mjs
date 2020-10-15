@@ -27,7 +27,7 @@ describe('Intl', () => {
     return fmt;
   }
 
-  describe('absolute.toLocaleString()', () => {
+  describe('instant.toLocaleString()', () => {
     const instant = Temporal.Instant.from('1976-11-18T14:23:30Z');
     it(`(${instant.toString()}).toLocaleString('en-US', { timeZone: 'America/New_York' })`, () =>
       equal(`${instant.toLocaleString('en', { timeZone: 'America/New_York' })}`, '11/18/1976, 9:23:30 AM'));

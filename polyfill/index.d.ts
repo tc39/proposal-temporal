@@ -52,7 +52,7 @@ export namespace Temporal {
      * exists more than once (e.g. near "Fall Back" DST transitions).
      *
      * In case of ambiguous or non-existent times, this option controls what
-     * absolute time to return:
+     * exact time to return:
      * - `'compatible'`: Equivalent to `'earlier'` for backward transitions like
      *   the start of DST in the Spring, and `'later'` for forward transitions
      *   like the end of DST in the Fall. This matches the behavior of legacy
@@ -257,7 +257,7 @@ export namespace Temporal {
   }
 
   /**
-   * A `Temporal.Instant` is an absolute point in time, with a precision in
+   * A `Temporal.Instant` is an exact point in time, with a precision in
    * nanoseconds. No time zone or calendar information is present. Therefore,
    * `Temporal.Instant` has no concept of days, months, or even hours.
    *
@@ -268,7 +268,7 @@ export namespace Temporal {
    * an {@link https://en.wikipedia.org/wiki/ISO_8601|ISO 8601 string} with a
    * time zone offset such as '2020-01-23T17:04:36.491865121-08:00'.
    *
-   * See https://tc39.es/proposal-temporal/docs/absolute.html for more details.
+   * See https://tc39.es/proposal-temporal/docs/instant.html for more details.
    */
   export class Instant {
     static fromEpochSeconds(epochSeconds: number): Temporal.Instant;
@@ -694,9 +694,9 @@ export namespace Temporal {
    */
   export interface TimeZoneProtocol {
     id?: string;
-    getOffsetNanosecondsFor(absolute: Temporal.Instant): number;
-    getOffsetStringFor?(absolute: Temporal.Instant): string;
-    getDateTimeFor(absolute: Temporal.Instant, calendar?: CalendarProtocol | string): Temporal.DateTime;
+    getOffsetNanosecondsFor(instant: Temporal.Instant): number;
+    getOffsetStringFor?(instant: Temporal.Instant): string;
+    getDateTimeFor(instant: Temporal.Instant, calendar?: CalendarProtocol | string): Temporal.DateTime;
     getInstantFor?(dateTime: Temporal.DateTime, options?: ToInstantOptions): Temporal.Instant;
     getNextTransition?(startingPoint: Temporal.Instant): Temporal.Instant | null;
     getPreviousTransition?(startingPoint: Temporal.Instant): Temporal.Instant | null;
@@ -722,9 +722,9 @@ export namespace Temporal {
     static from(timeZone: Temporal.TimeZone | string): Temporal.TimeZone;
     constructor(timeZoneIdentifier: string);
     readonly id: string;
-    getOffsetNanosecondsFor(absolute: Temporal.Instant): number;
-    getOffsetStringFor(absolute: Temporal.Instant): string;
-    getDateTimeFor(absolute: Temporal.Instant, calendar?: CalendarProtocol | string): Temporal.DateTime;
+    getOffsetNanosecondsFor(instant: Temporal.Instant): number;
+    getOffsetStringFor(instant: Temporal.Instant): string;
+    getDateTimeFor(instant: Temporal.Instant, calendar?: CalendarProtocol | string): Temporal.DateTime;
     getInstantFor(dateTime: Temporal.DateTime, options?: ToInstantOptions): Temporal.Instant;
     getNextTransition(startingPoint: Temporal.Instant): Temporal.Instant | null;
     getPreviousTransition(startingPoint: Temporal.Instant): Temporal.Instant | null;
@@ -788,7 +788,7 @@ export namespace Temporal {
     /**
      * Get the system date and time as a `Temporal.Instant`.
      *
-     * This method gets the current absolute system time, without regard to
+     * This method gets the current exact system time, without regard to
      * calendar or time zone. This is a good way to get a timestamp for an
      * event, for example. It works like the old-style JavaScript `Date.now()`,
      * but with nanosecond precision instead of milliseconds.

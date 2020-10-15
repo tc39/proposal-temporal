@@ -128,47 +128,47 @@ describe('TimeZone', () => {
   });
   describe('+01:00', () => {
     const zone = new Temporal.TimeZone('+01:00');
-    const abs = Temporal.Instant.fromEpochSeconds(Math.floor(Math.random() * 1e9));
+    const inst = Temporal.Instant.fromEpochSeconds(Math.floor(Math.random() * 1e9));
     const dtm = new Temporal.DateTime(1976, 11, 18, 15, 23, 30, 123, 456, 789);
     it(`${zone} has ID ${zone}`, () => equal(zone.id, `${zone}`));
-    it(`${zone} has offset +01:00 in ns`, () => equal(zone.getOffsetNanosecondsFor(abs), 3600e9));
-    it(`${zone} has offset +01:00`, () => equal(zone.getOffsetStringFor(abs), '+01:00'));
-    it(`(${zone}).getDateTimeFor(${abs})`, () => assert(zone.getDateTimeFor(abs) instanceof Temporal.DateTime));
+    it(`${zone} has offset +01:00 in ns`, () => equal(zone.getOffsetNanosecondsFor(inst), 3600e9));
+    it(`${zone} has offset +01:00`, () => equal(zone.getOffsetStringFor(inst), '+01:00'));
+    it(`(${zone}).getDateTimeFor(${inst})`, () => assert(zone.getDateTimeFor(inst) instanceof Temporal.DateTime));
     it(`(${zone}).getInstantFor(${dtm})`, () => assert(zone.getInstantFor(dtm) instanceof Temporal.Instant));
-    it(`(${zone}).getNextTransition(${abs})`, () => zone.getNextTransition(abs), null);
-    it(`(${zone}).getPreviousTransition(${abs})`, () => zone.getPreviousTransition(abs), null);
+    it(`(${zone}).getNextTransition(${inst})`, () => zone.getNextTransition(inst), null);
+    it(`(${zone}).getPreviousTransition(${inst})`, () => zone.getPreviousTransition(inst), null);
     it('wraps around to the next day', () =>
       equal(`${zone.getDateTimeFor(Temporal.Instant.from('2020-02-06T23:59Z'))}`, '2020-02-07T00:59'));
   });
   describe('UTC', () => {
     const zone = new Temporal.TimeZone('UTC');
-    const abs = Temporal.Instant.fromEpochSeconds(Math.floor(Math.random() * 1e9));
+    const inst = Temporal.Instant.fromEpochSeconds(Math.floor(Math.random() * 1e9));
     const dtm = new Temporal.DateTime(1976, 11, 18, 15, 23, 30, 123, 456, 789);
     it(`${zone} has ID ${zone}`, () => equal(zone.id, `${zone}`));
-    it(`${zone} has offset +00:00 in ns`, () => equal(zone.getOffsetNanosecondsFor(abs), 0));
-    it(`${zone} has offset +00:00`, () => equal(zone.getOffsetStringFor(abs), '+00:00'));
-    it(`(${zone}).getDateTimeFor(${abs})`, () => assert(zone.getDateTimeFor(abs) instanceof Temporal.DateTime));
+    it(`${zone} has offset +00:00 in ns`, () => equal(zone.getOffsetNanosecondsFor(inst), 0));
+    it(`${zone} has offset +00:00`, () => equal(zone.getOffsetStringFor(inst), '+00:00'));
+    it(`(${zone}).getDateTimeFor(${inst})`, () => assert(zone.getDateTimeFor(inst) instanceof Temporal.DateTime));
     it(`(${zone}).getInstantFor(${dtm})`, () => assert(zone.getInstantFor(dtm) instanceof Temporal.Instant));
-    it(`(${zone}).getNextTransition(${abs})`, () => zone.getNextTransition(abs), null);
-    it(`(${zone}).getPreviousTransition(${abs})`, () => zone.getPreviousTransition(abs), null);
+    it(`(${zone}).getNextTransition(${inst})`, () => zone.getNextTransition(inst), null);
+    it(`(${zone}).getPreviousTransition(${inst})`, () => zone.getPreviousTransition(inst), null);
   });
   describe('America/Los_Angeles', () => {
     const zone = new Temporal.TimeZone('America/Los_Angeles');
-    const abs = Temporal.Instant.fromEpochSeconds(0n);
+    const inst = Temporal.Instant.fromEpochSeconds(0n);
     const dtm = new Temporal.DateTime(1976, 11, 18, 15, 23, 30, 123, 456, 789);
     it(`${zone} has ID ${zone}`, () => equal(zone.id, `${zone}`));
-    it(`${zone} has offset -08:00 in ns`, () => equal(zone.getOffsetNanosecondsFor(abs), -8 * 3600e9));
-    it(`${zone} has offset -08:00`, () => equal(zone.getOffsetStringFor(abs), '-08:00'));
-    it(`(${zone}).getDateTimeFor(${abs})`, () => assert(zone.getDateTimeFor(abs) instanceof Temporal.DateTime));
+    it(`${zone} has offset -08:00 in ns`, () => equal(zone.getOffsetNanosecondsFor(inst), -8 * 3600e9));
+    it(`${zone} has offset -08:00`, () => equal(zone.getOffsetStringFor(inst), '-08:00'));
+    it(`(${zone}).getDateTimeFor(${inst})`, () => assert(zone.getDateTimeFor(inst) instanceof Temporal.DateTime));
     it(`(${zone}).getInstantFor(${dtm})`, () => assert(zone.getInstantFor(dtm) instanceof Temporal.Instant));
     it(`(${zone}).getNextTransition() x 4 transitions`, () => {
-      for (let i = 0, txn = abs; i < 4; i++) {
+      for (let i = 0, txn = inst; i < 4; i++) {
         const transition = zone.getNextTransition(txn);
         assert(transition);
       }
     });
     it(`(${zone}).getPreviousTransition() x 4 transitions`, () => {
-      for (let i = 0, txn = abs; i < 4; i++) {
+      for (let i = 0, txn = inst; i < 4; i++) {
         const transition = zone.getPreviousTransition(txn);
         assert(transition);
       }

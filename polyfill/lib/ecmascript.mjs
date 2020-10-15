@@ -100,7 +100,7 @@ export const ES = ObjectAssign({}, ES2019, {
     return `[c=${calendar.id}]`;
   },
   ParseISODateTime: (isoString, { zoneRequired }) => {
-    const regex = zoneRequired ? PARSE.absolute : PARSE.datetime;
+    const regex = zoneRequired ? PARSE.instant : PARSE.datetime;
     const match = regex.exec(isoString);
     if (!match) throw new RangeError(`invalid ISO 8601 string: ${isoString}`);
     let yearString = match[1];
@@ -256,9 +256,9 @@ export const ES = ObjectAssign({}, ES2019, {
 
     const possibleInstants = tz.getPossibleInstantsFor(dt);
     if (possibleInstants.length === 1) return GetSlot(possibleInstants[0], EPOCHNANOSECONDS);
-    for (const absolute of possibleInstants) {
-      const possibleOffsetNs = tz.getOffsetNanosecondsFor(absolute);
-      if (ES.FormatTimeZoneOffsetString(possibleOffsetNs) === offset) return GetSlot(absolute, EPOCHNANOSECONDS);
+    for (const instant of possibleInstants) {
+      const possibleOffsetNs = tz.getOffsetNanosecondsFor(instant);
+      if (ES.FormatTimeZoneOffsetString(possibleOffsetNs) === offset) return GetSlot(instant, EPOCHNANOSECONDS);
     }
     throw new RangeError(`'${isoString}' doesn't uniquely identify a Temporal.Instant`);
   },
@@ -752,12 +752,12 @@ export const ES = ObjectAssign({}, ES2019, {
       GetSlot(dateTime, NANOSECOND)
     );
   },
-  GetOffsetNanosecondsFor: (timeZone, absolute) => {
+  GetOffsetNanosecondsFor: (timeZone, instant) => {
     let getOffsetNanosecondsFor = timeZone.getOffsetNanosecondsFor;
     if (getOffsetNanosecondsFor === undefined) {
       getOffsetNanosecondsFor = GetIntrinsic('%Temporal.TimeZone.prototype.getOffsetNanosecondsFor%');
     }
-    const offsetNs = ES.Call(getOffsetNanosecondsFor, timeZone, [absolute]);
+    const offsetNs = ES.Call(getOffsetNanosecondsFor, timeZone, [instant]);
     if (typeof offsetNs !== 'number') {
       throw new TypeError('bad return from getOffsetNanosecondsFor');
     }
@@ -766,19 +766,19 @@ export const ES = ObjectAssign({}, ES2019, {
     }
     return offsetNs;
   },
-  GetOffsetStringFor: (timeZone, absolute) => {
+  GetOffsetStringFor: (timeZone, instant) => {
     let getOffsetStringFor = timeZone.getOffsetStringFor;
     if (getOffsetStringFor === undefined) {
       getOffsetStringFor = GetIntrinsic('%Temporal.TimeZone.prototype.getOffsetStringFor%');
     }
-    return ES.ToString(ES.Call(getOffsetStringFor, timeZone, [absolute]));
+    return ES.ToString(ES.Call(getOffsetStringFor, timeZone, [instant]));
   },
-  GetTemporalDateTimeFor: (timeZone, absolute, calendar) => {
+  GetTemporalDateTimeFor: (timeZone, instant, calendar) => {
     let getDateTimeFor = timeZone.getDateTimeFor;
     if (getDateTimeFor === undefined) {
       getDateTimeFor = GetIntrinsic('%Temporal.TimeZone.prototype.getDateTimeFor%');
     }
-    const dateTime = ES.Call(getDateTimeFor, timeZone, [absolute, calendar]);
+    const dateTime = ES.Call(getDateTimeFor, timeZone, [instant, calendar]);
     if (!ES.IsTemporalDateTime(dateTime)) {
       throw new TypeError('Unexpected result from getDateTimeFor');
     }
@@ -798,9 +798,9 @@ export const ES = ObjectAssign({}, ES2019, {
     }
     return ES.ToString(ES.Call(toString, timeZone));
   },
-  ISOTimeZoneString: (timeZone, absolute) => {
+  ISOTimeZoneString: (timeZone, instant) => {
     const name = ES.TimeZoneToString(timeZone);
-    const offset = ES.GetOffsetStringFor(timeZone, absolute);
+    const offset = ES.GetOffsetStringFor(timeZone, instant);
 
     if (name === 'UTC') {
       return 'Z';
@@ -835,8 +835,8 @@ export const ES = ObjectAssign({}, ES2019, {
     let post = parts.length ? `.${parts.join('')}` : '';
     return `:${secs}${post}`;
   },
-  TemporalInstantToString: (absolute, timeZone) => {
-    const dateTime = ES.GetTemporalDateTimeFor(timeZone, absolute);
+  TemporalInstantToString: (instant, timeZone) => {
+    const dateTime = ES.GetTemporalDateTimeFor(timeZone, instant);
     const year = ES.ISOYearString(dateTime.year);
     const month = ES.ISODateTimePartString(dateTime.month);
     const day = ES.ISODateTimePartString(dateTime.day);
@@ -848,7 +848,7 @@ export const ES = ObjectAssign({}, ES2019, {
       dateTime.microsecond,
       dateTime.nanosecond
     );
-    const timeZoneString = ES.ISOTimeZoneString(timeZone, absolute);
+    const timeZoneString = ES.ISOTimeZoneString(timeZone, instant);
     return `${year}-${month}-${day}T${hour}:${minute}${seconds}${timeZoneString}`;
   },
   TemporalDurationToString: (duration) => {
