@@ -215,10 +215,14 @@ For a detailed look at some of the problems with <code>Date</code>, and the moti
 <h3 id="Temporal-now"><a class="heading-link" href="#Temporal-now"></a><strong>Temporal.now</strong></h3><ul>
 <li><code>Temporal.now.instant()</code> - get the exact time since <a href="https://en.wikipedia.org/wiki/Unix_time">Unix epoch</a></li>
 <li><code>Temporal.now.timeZone()</code> - get the current system time zone</li>
-<li><code>Temporal.now.zonedDateTime()</code> - get the current calendar date and wall-clock time in the system time zone</li>
-<li><code>Temporal.now.date()</code> - get the current calendar date in the system time zone</li>
-<li><code>Temporal.now.time()</code> - get the current wall-clock time in the system time zone</li>
-<li><code>Temporal.now.dateTime()</code> - get the current system date/time in the system time zone, but return an object that doesn&#39;t remember its time zone so should NOT be used to derive other values (e.g. 12 hours later) in time zones that use Daylight Saving Time (DST).</li>
+<li><code>Temporal.now.zonedDateTime(calendar)</code> - get the current date and wall-clock time in the system time zone and specified calendar</li>
+<li><code>Temporal.now.zonedDateTimeISO()</code> - get the current date and wall-clock time in the system time zone and ISO-8601 calendar</li>
+<li><code>Temporal.now.date(calendar)</code> - get the current date in the system time zone and specified calendar</li>
+<li><code>Temporal.now.dateISO()</code> - get the current date in the system time zone and ISO-8601 calendar</li>
+<li><code>Temporal.now.time(calendar)</code> - get the current wall-clock time in the system time zone and specified calendar</li>
+<li><code>Temporal.now.timeISO()</code> - get the current wall-clock time in the system time zone and ISO-8601 calendar</li>
+<li><code>Temporal.now.dateTime(calendar)</code> - get the current system date/time in the system time zone, but return an object that doesn&#39;t remember its time zone so should NOT be used to derive other values (e.g. 12 hours later) in time zones that use Daylight Saving Time (DST).</li>
+<li><code>Temporal.now.dateTimeISO()</code> - same as above, but return the DateTime in the ISU-8601 calendar</li>
 </ul>
 <p>See <a href="./now.html">Temporal.now Documentation</a> for detailed documentation.</p>
 <h3 id="Temporal-Instant"><a class="heading-link" href="#Temporal-Instant"></a><strong>Temporal.Instant</strong></h3><p>A <code>Temporal.Instant</code> represents a fixed point in time (called <strong>&quot;exact time&quot;</strong>), without regard to calendar or location.
