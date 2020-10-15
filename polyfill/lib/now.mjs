@@ -1,4 +1,4 @@
-import { GetDefaultCalendar } from './calendar.mjs';
+import { GetISO8601Calendar } from './calendar.mjs';
 import { ES } from './ecmascript.mjs';
 import { GetIntrinsic } from './intrinsicclass.mjs';
 
@@ -24,7 +24,7 @@ function dateTime(calendarLike, temporalTimeZoneLike = timeZone()) {
 }
 function dateTimeISO(temporalTimeZoneLike = timeZone()) {
   const timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);
-  const calendar = GetDefaultCalendar();
+  const calendar = GetISO8601Calendar();
   const abs = instant();
   return ES.GetTemporalDateTimeFor(timeZone, abs, calendar);
 }

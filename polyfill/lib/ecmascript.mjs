@@ -17,7 +17,7 @@ import ToPrimitive from 'es-abstract/2020/ToPrimitive.js';
 import ToString from 'es-abstract/2020/ToString.js';
 import Type from 'es-abstract/2020/Type.js';
 
-import { GetDefaultCalendar } from './calendar.mjs';
+import { GetISO8601Calendar } from './calendar.mjs';
 import { GetIntrinsic } from './intrinsicclass.mjs';
 import {
   GetSlot,
@@ -558,7 +558,7 @@ export const ES = ObjectAssign({}, ES2019, {
     if (ES.Type(relativeTo) === 'Object') {
       if (ES.IsTemporalDateTime(relativeTo)) return relativeTo;
       calendar = relativeTo.calendar;
-      if (calendar === undefined) calendar = GetDefaultCalendar();
+      if (calendar === undefined) calendar = GetISO8601Calendar();
       calendar = ES.ToTemporalCalendar(calendar);
       const fields = ES.ToTemporalDateTimeRecord(relativeTo);
       const TemporalDate = GetIntrinsic('%Temporal.Date%');
@@ -580,7 +580,7 @@ export const ES = ObjectAssign({}, ES2019, {
         nanosecond,
         calendar
       } = ES.ParseTemporalDateTimeString(ES.ToString(relativeTo)));
-      if (!calendar) calendar = GetDefaultCalendar();
+      if (!calendar) calendar = GetISO8601Calendar();
       calendar = ES.ToTemporalCalendar(calendar);
     }
     const TemporalDateTime = GetIntrinsic('%Temporal.DateTime%');
