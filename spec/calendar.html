@@ -33,6 +33,14 @@
       </emu-alg>
     </emu-clause>
 
+    <emu-clause id="sec-temporal-calendardatedifference" aoid="CalendarDateDifference">
+      <h1>CalendarDateDifference ( _calendar_, _one_, _two_, _options_ )</h1>
+      <emu-alg>
+        1. Let _dateDifference_ be ? Get(_calendar_, *"dateDifference"*).
+        1. Return ? Call(_dateDifference_ , _calendar_, « _one_, _two_, _options_ »).
+      </emu-alg>
+    </emu-clause>
+
     <emu-clause id="sec-temporal-totemporalcalendar" aoid="ToTemporalCalendar">
       <h1>ToTemporalCalendar ( _temporalCalendarLike_ )</h1>
       <emu-alg>

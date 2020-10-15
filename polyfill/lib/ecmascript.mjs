@@ -703,6 +703,13 @@ export const ES = ObjectAssign({}, ES2019, {
     }
     return calendar;
   },
+
+  CalendarToString: (calendar) => {
+    let toString = calendar.toString;
+    if (toString === undefined) toString = GetIntrinsic('%Temporal.Calendar.prototype.toString%');
+    return ES.ToString(ES.Call(toString, calendar));
+  },
+
   ToTemporalCalendar: (calendarLike) => {
     if (ES.Type(calendarLike) === 'Object') {
       return calendarLike;
@@ -1573,15 +1580,7 @@ export const ES = ObjectAssign({}, ES2019, {
 
   DifferenceDate: (y1, m1, d1, y2, m2, d2, largestUnit = 'days') => {
     let larger, smaller, sign;
-    let comparison = 0;
-    if (y1 !== y2) {
-      comparison = y1 - y2;
-    } else if (m1 !== m2) {
-      comparison = m1 - m2;
-    } else {
-      comparison = d1 - d2;
-    }
-    if (comparison < 0) {
+    if (ES.CompareTemporalDate(y1, m1, d1, y2, m2, d2) < 0) {
       smaller = { year: y1, month: m1, day: d1 };
       larger = { year: y2, month: m2, day: d2 };
       sign = 1;
@@ -2111,6 +2110,17 @@ export const ES = ObjectAssign({}, ES2019, {
         break;
     }
     return { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
+  },
+
+  CompareTemporalDate: (y1, m1, d1, y2, m2, d2) => {
+    for (const [x, y] of [
+      [y1, y2],
+      [m1, m2],
+      [d1, d2]
+    ]) {
+      if (x !== y) return ES.ComparisonResult(x - y);
+    }
+    return 0;
   },
 
   AssertPositiveInteger: (num) => {

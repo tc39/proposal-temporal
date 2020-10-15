@@ -23,14 +23,14 @@ import {
 const ObjectAssign = Object.assign;
 
 export class Date {
-  constructor(isoYear, isoMonth, isoDay, calendar = undefined) {
+  constructor(isoYear, isoMonth, isoDay, calendar = GetDefaultCalendar()) {
     isoYear = ES.ToInteger(isoYear);
     isoMonth = ES.ToInteger(isoMonth);
     isoDay = ES.ToInteger(isoDay);
-    if (calendar === undefined) calendar = GetDefaultCalendar();
+    calendar = ES.ToTemporalCalendar(calendar);
+
     ES.RejectDate(isoYear, isoMonth, isoDay);
     ES.RejectDateRange(isoYear, isoMonth, isoDay);
-    if (!calendar || typeof calendar !== 'object') throw new RangeError('invalid calendar');
     CreateSlots(this);
     SetSlot(this, ISO_YEAR, isoYear);
     SetSlot(this, ISO_MONTH, isoMonth);
@@ -317,14 +317,20 @@ export class Date {
   }
   static compare(one, two) {
     if (!ES.IsTemporalDate(one) || !ES.IsTemporalDate(two)) throw new TypeError('invalid Date object');
-    for (const slot of [ISO_YEAR, ISO_MONTH, ISO_DAY]) {
-      const val1 = GetSlot(one, slot);
-      const val2 = GetSlot(two, slot);
-      if (val1 !== val2) return ES.ComparisonResult(val1 - val2);
-    }
-    const cal1 = GetSlot(one, CALENDAR).id;
-    const cal2 = GetSlot(two, CALENDAR).id;
-    return ES.ComparisonResult(cal1 < cal2 ? -1 : cal1 > cal2 ? 1 : 0);
+    const result = ES.CompareTemporalDate(
+      GetSlot(one, ISO_YEAR),
+      GetSlot(one, ISO_MONTH),
+      GetSlot(one, ISO_DAY),
+      GetSlot(two, ISO_YEAR),
+      GetSlot(two, ISO_MONTH),
+      GetSlot(two, ISO_DAY)
+    );
+    if (result !== 0) return result;
+    const calendarOne = ES.CalendarToString(GetSlot(one, CALENDAR));
+    const calendarTwo = ES.CalendarToString(GetSlot(two, CALENDAR));
+    if (calendarOne < calendarTwo) return -1;
+    if (calendarOne > calendarTwo) return 1;
+    return 0;
   }
 }
 Date.prototype.toJSON = Date.prototype.toString;
