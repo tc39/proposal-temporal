@@ -410,7 +410,7 @@ export class DateTime {
     const defaultLargestUnit = ES.LargerOfTwoTemporalDurationUnits('days', smallestUnit);
     const largestUnit = ES.ToLargestTemporalUnit(options, defaultLargestUnit);
     ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
-    const roundingMode = ES.ToTemporalRoundingMode(options);
+    const roundingMode = ES.ToTemporalRoundingMode(options, 'nearest');
     const maximumIncrements = {
       years: undefined,
       months: undefined,
@@ -503,7 +503,7 @@ export class DateTime {
     if (options === undefined) throw new TypeError('options parameter is required');
     options = ES.NormalizeOptionsObject(options);
     const smallestUnit = ES.ToSmallestTemporalUnit(options);
-    const roundingMode = ES.ToTemporalRoundingMode(options);
+    const roundingMode = ES.ToTemporalRoundingMode(options, 'nearest');
     const maximumIncrements = {
       day: 1,
       hour: 24,

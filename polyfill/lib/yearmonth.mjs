@@ -156,7 +156,7 @@ export class YearMonth {
     const smallestUnit = ES.ToSmallestTemporalDurationUnit(options, 'months', disallowedUnits);
     const largestUnit = ES.ToLargestTemporalUnit(options, 'years', disallowedUnits);
     ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
-    const roundingMode = ES.ToTemporalRoundingMode(options);
+    const roundingMode = ES.ToTemporalRoundingMode(options, 'nearest');
     const roundingIncrement = ES.ToTemporalRoundingIncrement(options, undefined, false);
 
     const otherFields = ES.ToTemporalYearMonthRecord(other);

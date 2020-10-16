@@ -291,7 +291,7 @@
         1. Let _defaultLargestUnit_ be ! LargerOfTwoTemporalDurationUnits(*"seconds"*, _smallestUnit_).
         1. Let _largestUnit_ be ? ToLargestTemporalUnit(_options_, « *"years"*, *"months"*, *"weeks"*, *"days"* », _defaultLargestUnit_).
         1. Perform ? ValidateTemporalUnitRange(_largestUnit_, _smallestUnit_).
-        1. Let _roundingMode_ be ? ToTemporalRoundingMode(_options_).
+        1. Let _roundingMode_ be ? ToTemporalRoundingMode(_options_, *"nearest"*).
         1. Let _maximum_ be ! MaximumTemporalDurationRoundingIncrement(_smallestUnit_).
         1. Let _roundingIncrement_ be the mathematical value of ? ToTemporalRoundingIncrement(_options_, _maximum_, *false*).
         1. If _smallestUnit_ is *"hours"*, then
@@ -325,7 +325,7 @@
         1. Perform ? RequireInternalSlot(_instant_, [[InitializedTemporalInstant]]).
         1. Set _options_ to ? NormalizeOptionsObject(_options_).
         1. Let _smallestUnit_ be ? ToSmallestTemporalUnit(_options_, « *"day"* »).
-        1. Let _roundingMode_ be ? ToTemporalRoundingMode(_options_).
+        1. Let _roundingMode_ be ? ToTemporalRoundingMode(_options_, *"nearest"*).
         1. If _smallestUnit_ is *"hour"*, then
           1. Let _maximum_ be 24.
         1. Else if _smallestUnit_ is *"minute"*, then

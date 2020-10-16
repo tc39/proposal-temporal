@@ -479,8 +479,8 @@ export const ES = ObjectAssign({}, ES2020, {
   ToTemporalDisambiguation: (options) => {
     return ES.GetOption(options, 'disambiguation', ['compatible', 'earlier', 'later', 'reject'], 'compatible');
   },
-  ToTemporalRoundingMode: (options) => {
-    return ES.GetOption(options, 'roundingMode', ['ceil', 'floor', 'trunc', 'nearest'], 'nearest');
+  ToTemporalRoundingMode: (options, fallback) => {
+    return ES.GetOption(options, 'roundingMode', ['ceil', 'floor', 'trunc', 'nearest'], fallback);
   },
   ToTemporalRoundingIncrement: (options, dividend, inclusive) => {
     let maximum = Infinity;
