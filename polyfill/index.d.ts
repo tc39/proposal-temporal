@@ -227,29 +227,9 @@ export namespace Temporal {
     milliseconds?: number;
     microseconds?: number;
     nanoseconds?: number;
-    /** @deprecated */ year?: number;
-    /** @deprecated */ month?: number;
-    /** @deprecated */ day?: number;
-    /** @deprecated */ hour?: number;
-    /** @deprecated */ minute?: number;
-    /** @deprecated */ second?: number;
-    /** @deprecated */ millisecond?: number;
-    /** @deprecated */ microsecond?: number;
-    /** @deprecated */ nanosecond?: number;
   };
 
-  type DurationFields = {
-    years: number;
-    months: number;
-    weeks: number;
-    days: number;
-    hours: number;
-    minutes: number;
-    seconds: number;
-    milliseconds: number;
-    microseconds: number;
-    nanoseconds: number;
-  };
+  type DurationFields = Required<DurationLike>;
 
   /**
    *
@@ -493,9 +473,6 @@ export namespace Temporal {
     year?: number;
     month?: number;
     day?: number;
-    /** @deprecated */ years?: number;
-    /** @deprecated */ months?: number;
-    /** @deprecated */ days?: number;
     calendar?: CalendarProtocol | string;
   };
 
@@ -579,15 +556,6 @@ export namespace Temporal {
     microsecond?: number;
     nanosecond?: number;
     calendar?: CalendarProtocol | string;
-    /** @deprecated */ years?: number;
-    /** @deprecated */ months?: number;
-    /** @deprecated */ days?: number;
-    /** @deprecated */ hours?: number;
-    /** @deprecated */ minutes?: number;
-    /** @deprecated */ seconds?: number;
-    /** @deprecated */ milliseconds?: number;
-    /** @deprecated */ microseconds?: number;
-    /** @deprecated */ nanoseconds?: number;
   };
 
   type DateTimeFields = {
@@ -723,8 +691,7 @@ export namespace Temporal {
   export type MonthDayLike = {
     month?: number;
     day?: number;
-    /** @deprecated */ months?: number;
-    /** @deprecated */ days?: number;
+    calendar?: CalendarProtocol | string;
   };
 
   type MonthDayFields = {
@@ -763,12 +730,6 @@ export namespace Temporal {
     millisecond?: number;
     microsecond?: number;
     nanosecond?: number;
-    /** @deprecated */ hours?: number;
-    /** @deprecated */ minutes?: number;
-    /** @deprecated */ seconds?: number;
-    /** @deprecated */ milliseconds?: number;
-    /** @deprecated */ microseconds?: number;
-    /** @deprecated */ nanoseconds?: number;
   };
 
   type TimeFields = {
@@ -904,8 +865,7 @@ export namespace Temporal {
     era?: string | undefined;
     year?: number;
     month?: number;
-    /** @deprecated */ years?: number;
-    /** @deprecated */ months?: number;
+    calendar?: CalendarProtocol | string;
   };
 
   type YearMonthFields = {
