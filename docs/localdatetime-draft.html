@@ -150,7 +150,7 @@ So we want a type that does the right thing for that use case.</li>
 <li>Both Absolute and DateTime have cases where they do the right thing for this use case, and cases where they do the wrong thing.
 (ex.: &quot;Move a meeting three days later&quot; is correct with DateTime and wrong with Absolute; &quot;Postpone a reminder by one hour&quot; is correct with Absolute and wrong with DateTime.)</li>
 <li>The cases where Absolute and DateTime do the wrong thing will only produce the wrong result when used across a DST transition, so in many places the bugs will only pop up twice per year, if at all.</li>
-<li>When writing the cookbook, to deal with this use case, we found that it was actually necessary a lot of the time to pass around a record consisting of <code>{ absolute, timeZone }</code>.
+<li>When writing the cookbook, to deal with this use case, we found that it was actually necessary a lot of the time to pass around a record consisting of <code>{ instant, timeZone }</code>.
 If that is so common, then we may as well have a type for it.</li>
 <li>Even worse, there is a temptation to pass around a serialized string instead of such a record, which is wrong because the time zone offset may have changed when you read in the string again with <code>Temporal.Instant.from()</code>.</li>
 </ul>

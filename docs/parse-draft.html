@@ -354,7 +354,7 @@ Temporal<span class="token punctuation">.</span>MonthDay<span class="token punct
 Temporal<span class="token punctuation">.</span>time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>parsed<span class="token punctuation">.</span>time<span class="token punctuation">)</span>          <span class="token comment">// throws? it's still valid ISO 8601 though</span>
 
 parsed <span class="token operator">=</span> Temporal<span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span>invalidZone<span class="token punctuation">)</span><span class="token punctuation">;</span>
-Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>parsed<span class="token punctuation">.</span>absolute<span class="token punctuation">)</span>  <span class="token comment">// throws</span>
+Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>parsed<span class="token punctuation">.</span>instant<span class="token punctuation">)</span>  <span class="token comment">// throws</span>
 Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>parsed<span class="token punctuation">.</span>dateTime<span class="token punctuation">)</span>  <span class="token comment">// => 2001-09-08T18:46:40</span>
 <span class="token comment">// etc.</span>
 

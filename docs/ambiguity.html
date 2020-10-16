@@ -251,12 +251,12 @@ zdt <span class="token operator">=</span> dateTime<span class="token punctuation
   <span class="token comment">// => 2019-12-17T07:48+09:00[Asia/Tokyo]</span>
 
 <span class="token comment">// Get the exact time in seconds, milliseconds, or nanoseconds since the UNIX epoch.</span>
-abs <span class="token operator">=</span> zdt<span class="token punctuation">.</span><span class="token function">toInstant</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-epochNano <span class="token operator">=</span> abs<span class="token punctuation">.</span><span class="token function">getEpochNanoseconds</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+inst <span class="token operator">=</span> zdt<span class="token punctuation">.</span><span class="token function">toInstant</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+epochNano <span class="token operator">=</span> inst<span class="token punctuation">.</span><span class="token function">getEpochNanoseconds</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token comment">// => 1576536480000000000n</span>
-epochMicro <span class="token operator">=</span> abs<span class="token punctuation">.</span><span class="token function">getEpochMilliseconds</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+epochMicro <span class="token operator">=</span> inst<span class="token punctuation">.</span><span class="token function">getEpochMilliseconds</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token comment">// => 1576536480000</span>
-epochSecs <span class="token operator">=</span> abs<span class="token punctuation">.</span><span class="token function">getEpochSeconds</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+epochSecs <span class="token operator">=</span> inst<span class="token punctuation">.</span><span class="token function">getEpochSeconds</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token comment">// => 1576536480</span></code></pre><!-- prettier-ignore-end -->
 
 <h2 id="ambiguity-due-to-dst-or-other-time-zone-offset-changes">Ambiguity Due to DST or Other Time Zone Offset Changes</h2>
@@ -280,17 +280,17 @@ To avoid errors in this one-hour-per year case, most computing environments (inc
 <p>In <code>Temporal</code>, if the exact time or time zone offset is known, then there is no ambiguity possible. For example:</p>
 <!-- prettier-ignore-start -->
 <pre class="language-javascript"><code class="language-javascript"><span class="token comment">// No ambiguity possible because source is exact time in UTC</span>
-abs <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-09-06T17:35:24.485Z'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+inst <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-09-06T17:35:24.485Z'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token comment">// => 2020-09-06T17:35:24.485Z</span>
 <span class="token comment">// An offset can make a local time "exact" with no ambiguity possible.</span>
-abs <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-09-06T10:35:24.485-07:00'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+inst <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-09-06T10:35:24.485-07:00'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token comment">// => 2020-09-06T17:35:24.485Z</span>
 zdt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>ZonedDateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-09-06T10:35:24.485-07:00[America/Los_Angeles]'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token comment">// => 2020-09-06T10:35:24.485-07:00[America/Los_Angeles]</span>
 <span class="token comment">// if the source is an exact Temporal object, then no ambiguity is possible.</span>
-zdt <span class="token operator">=</span> abs<span class="token punctuation">.</span><span class="token function">toZonedDateTime</span><span class="token punctuation">(</span><span class="token string">'America/Los_Angeles'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+zdt <span class="token operator">=</span> inst<span class="token punctuation">.</span><span class="token function">toZonedDateTime</span><span class="token punctuation">(</span><span class="token string">'America/Los_Angeles'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token comment">// => 2020-09-06T10:35:24.485-07:00[America/Los_Angeles]</span>
-abs2 <span class="token operator">=</span> zdt<span class="token punctuation">.</span><span class="token function">toInstant</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+inst2 <span class="token operator">=</span> zdt<span class="token punctuation">.</span><span class="token function">toInstant</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token comment">// => 2020-09-06T17:35:24.485Z</span></code></pre><!-- prettier-ignore-end -->
 
 <p>However, opportunities for ambiguity are present when creating an exact-time type (<code>Temporal.ZonedDateTime</code> or <code>Temporal.Instant</code>) from a non-exact source. For example:</p>
@@ -303,7 +303,7 @@ zdt <span class="token operator">=</span> Temporal<span class="token punctuation
 <span class="token comment">// isn't an exact type then the offset is ignored when parsing so ambiguity is possible.</span>
 dt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2019-02-19T00:00-03:00'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 zdt <span class="token operator">=</span> dt<span class="token punctuation">.</span><span class="token function">toZonedDateTimeISO</span><span class="token punctuation">(</span><span class="token string">'America/Sao_Paulo'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// can be ambiguous</span>
-abs <span class="token operator">=</span> dt<span class="token punctuation">.</span><span class="token function">toInstantISO</span><span class="token punctuation">(</span><span class="token string">'America/Sao_Paulo'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// can be ambiguous</span>
+inst <span class="token operator">=</span> dt<span class="token punctuation">.</span><span class="token function">toInstantISO</span><span class="token punctuation">(</span><span class="token string">'America/Sao_Paulo'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// can be ambiguous</span>
 
 <span class="token comment">// the offset is lost when converting from an exact type to a non-exact type</span>
 zdt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>ZonedDateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-11-01T01:30-08:00[America/Los_Angeles]'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>

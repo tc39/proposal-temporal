@@ -3176,7 +3176,7 @@
   var offset = /([+-\u2212])([0-2][0-9])(?::?([0-5][0-9]))?/;
   var zonesplit = new RegExp("(?:([zZ])|(?:".concat(offset.source, "?(?:\\[(?!c=)([^\\]\\s]*)?\\])?))"));
   var calendar = /\[c=([^\]\s]+)\]/;
-  var absolute = new RegExp("^".concat(datesplit.source, "(?:T|\\s+)").concat(timesplit.source).concat(zonesplit.source, "(?:").concat(calendar.source, ")?$"), 'i');
+  var instant = new RegExp("^".concat(datesplit.source, "(?:T|\\s+)").concat(timesplit.source).concat(zonesplit.source, "(?:").concat(calendar.source, ")?$"), 'i');
   var datetime = new RegExp("^".concat(datesplit.source, "(?:(?:T|\\s+)").concat(timesplit.source, "(?:").concat(zonesplit.source, ")?)?(?:").concat(calendar.source, ")?$"), 'i');
   var time = new RegExp("^".concat(timesplit.source, "(?:").concat(zonesplit.source, ")?(?:").concat(calendar.source, ")?$"), 'i'); // The short forms of YearMonth and MonthDay are only for the ISO calendar.
   // Non-ISO calendar YearMonth and MonthDay have to parse as a Temporal.Date,
@@ -3265,7 +3265,7 @@
     },
     ParseISODateTime: function ParseISODateTime(isoString, _ref) {
       var zoneRequired = _ref.zoneRequired;
-      var regex = zoneRequired ? absolute : datetime;
+      var regex = zoneRequired ? instant : datetime;
       var match = regex.exec(isoString);
       if (!match) throw new RangeError("invalid ISO 8601 string: ".concat(isoString));
       var yearString = match[1];
@@ -3494,9 +3494,9 @@
 
       try {
         for (_iterator.s(); !(_step = _iterator.n()).done;) {
-          var absolute = _step.value;
-          var possibleOffsetNs = tz.getOffsetNanosecondsFor(absolute);
-          if (ES.FormatTimeZoneOffsetString(possibleOffsetNs) === offset) return GetSlot(absolute, EPOCHNANOSECONDS);
+          var instant = _step.value;
+          var possibleOffsetNs = tz.getOffsetNanosecondsFor(instant);
+          if (ES.FormatTimeZoneOffsetString(possibleOffsetNs) === offset) return GetSlot(instant, EPOCHNANOSECONDS);
         }
       } catch (err) {
         _iterator.e(err);
@@ -4031,14 +4031,14 @@
       var Time = GetIntrinsic$1('%Temporal.Time%');
       return new Time(GetSlot(dateTime, HOUR), GetSlot(dateTime, MINUTE), GetSlot(dateTime, SECOND), GetSlot(dateTime, MILLISECOND), GetSlot(dateTime, MICROSECOND), GetSlot(dateTime, NANOSECOND));
     },
-    GetOffsetNanosecondsFor: function GetOffsetNanosecondsFor(timeZone, absolute) {
+    GetOffsetNanosecondsFor: function GetOffsetNanosecondsFor(timeZone, instant) {
       var getOffsetNanosecondsFor = timeZone.getOffsetNanosecondsFor;
 
       if (getOffsetNanosecondsFor === undefined) {
         getOffsetNanosecondsFor = GetIntrinsic$1('%Temporal.TimeZone.prototype.getOffsetNanosecondsFor%');
       }
 
-      var offsetNs = ES.Call(getOffsetNanosecondsFor, timeZone, [absolute]);
+      var offsetNs = ES.Call(getOffsetNanosecondsFor, timeZone, [instant]);
 
       if (typeof offsetNs !== 'number') {
         throw new TypeError('bad return from getOffsetNanosecondsFor');
@@ -4050,23 +4050,23 @@
 
       return offsetNs;
     },
-    GetOffsetStringFor: function GetOffsetStringFor(timeZone, absolute) {
+    GetOffsetStringFor: function GetOffsetStringFor(timeZone, instant) {
       var getOffsetStringFor = timeZone.getOffsetStringFor;
 
       if (getOffsetStringFor === undefined) {
         getOffsetStringFor = GetIntrinsic$1('%Temporal.TimeZone.prototype.getOffsetStringFor%');
       }
 
-      return ES.ToString(ES.Call(getOffsetStringFor, timeZone, [absolute]));
+      return ES.ToString(ES.Call(getOffsetStringFor, timeZone, [instant]));
     },
-    GetTemporalDateTimeFor: function GetTemporalDateTimeFor(timeZone, absolute, calendar) {
+    GetTemporalDateTimeFor: function GetTemporalDateTimeFor(timeZone, instant, calendar) {
       var getDateTimeFor = timeZone.getDateTimeFor;
 
       if (getDateTimeFor === undefined) {
         getDateTimeFor = GetIntrinsic$1('%Temporal.TimeZone.prototype.getDateTimeFor%');
       }
 
-      var dateTime = ES.Call(getDateTimeFor, timeZone, [absolute, calendar]);
+      var dateTime = ES.Call(getDateTimeFor, timeZone, [instant, calendar]);
 
       if (!ES.IsTemporalDateTime(dateTime)) {
         throw new TypeError('Unexpected result from getDateTimeFor');
@@ -4094,9 +4094,9 @@
 
       return ES.ToString(ES.Call(toString, timeZone));
     },
-    ISOTimeZoneString: function ISOTimeZoneString(timeZone, absolute) {
+    ISOTimeZoneString: function ISOTimeZoneString(timeZone, instant) {
       var name = ES.TimeZoneToString(timeZone);
-      var offset = ES.GetOffsetStringFor(timeZone, absolute);
+      var offset = ES.GetOffsetStringFor(timeZone, instant);
 
       if (name === 'UTC') {
         return 'Z';
@@ -4134,15 +4134,15 @@
       var post = parts.length ? ".".concat(parts.join('')) : '';
       return ":".concat(secs).concat(post);
     },
-    TemporalInstantToString: function TemporalInstantToString(absolute, timeZone) {
-      var dateTime = ES.GetTemporalDateTimeFor(timeZone, absolute);
+    TemporalInstantToString: function TemporalInstantToString(instant, timeZone) {
+      var dateTime = ES.GetTemporalDateTimeFor(timeZone, instant);
       var year = ES.ISOYearString(dateTime.year);
       var month = ES.ISODateTimePartString(dateTime.month);
       var day = ES.ISODateTimePartString(dateTime.day);
       var hour = ES.ISODateTimePartString(dateTime.hour);
       var minute = ES.ISODateTimePartString(dateTime.minute);
       var seconds = ES.FormatSecondsStringPart(dateTime.second, dateTime.millisecond, dateTime.microsecond, dateTime.nanosecond);
-      var timeZoneString = ES.ISOTimeZoneString(timeZone, absolute);
+      var timeZoneString = ES.ISOTimeZoneString(timeZone, instant);
       return "".concat(year, "-").concat(month, "-").concat(day, "T").concat(hour, ":").concat(minute).concat(seconds).concat(timeZoneString);
     },
     TemporalDurationToString: function TemporalDurationToString(duration) {
@@ -8393,7 +8393,7 @@
   MakeIntrinsicClass(MonthDay, 'Temporal.MonthDay');
 
   var now = {
-    instant: instant,
+    instant: instant$1,
     dateTime: dateTime,
     dateTimeISO: dateTimeISO,
     date: date,
@@ -8402,7 +8402,7 @@
     timeZone: timeZone
   };
 
-  function instant() {
+  function instant$1() {
     var Instant = GetIntrinsic$1('%Temporal.Instant%');
     return new Instant(ES.SystemUTCEpochNanoSeconds());
   }
@@ -8412,8 +8412,8 @@
     return function () {
       var timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);
       var calendar = ES.ToTemporalCalendar(calendarLike);
-      var abs = instant();
-      return ES.GetTemporalDateTimeFor(timeZone, abs, calendar);
+      var inst = instant$1();
+      return ES.GetTemporalDateTimeFor(timeZone, inst, calendar);
     }();
   }
 
@@ -8422,8 +8422,8 @@
     return function () {
       var timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);
       var calendar = GetISO8601Calendar();
-      var abs = instant();
-      return ES.GetTemporalDateTimeFor(timeZone, abs, calendar);
+      var inst = instant$1();
+      return ES.GetTemporalDateTimeFor(timeZone, inst, calendar);
     }();
   }
 
@@ -8933,29 +8933,29 @@
 
     _createClass(TimeZone, [{
       key: "getOffsetNanosecondsFor",
-      value: function getOffsetNanosecondsFor(absolute) {
+      value: function getOffsetNanosecondsFor(instant) {
         if (!ES.IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');
-        if (!ES.IsTemporalInstant(absolute)) throw new TypeError('invalid Instant object');
+        if (!ES.IsTemporalInstant(instant)) throw new TypeError('invalid Instant object');
         var id = GetSlot(this, TIMEZONE_ID);
         var offsetNs = parseOffsetString$1(id);
         if (offsetNs !== null) return offsetNs;
-        return ES.GetIANATimeZoneOffsetNanoseconds(GetSlot(absolute, EPOCHNANOSECONDS), id);
+        return ES.GetIANATimeZoneOffsetNanoseconds(GetSlot(instant, EPOCHNANOSECONDS), id);
       }
     }, {
       key: "getOffsetStringFor",
-      value: function getOffsetStringFor(absolute) {
-        if (!ES.IsTemporalInstant(absolute)) throw new TypeError('invalid Instant object');
-        var offsetNs = ES.GetOffsetNanosecondsFor(this, absolute);
+      value: function getOffsetStringFor(instant) {
+        if (!ES.IsTemporalInstant(instant)) throw new TypeError('invalid Instant object');
+        var offsetNs = ES.GetOffsetNanosecondsFor(this, instant);
         return ES.FormatTimeZoneOffsetString(offsetNs);
       }
     }, {
       key: "getDateTimeFor",
-      value: function getDateTimeFor(absolute) {
+      value: function getDateTimeFor(instant) {
         var calendar = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : GetISO8601Calendar();
-        if (!ES.IsTemporalInstant(absolute)) throw new TypeError('invalid Instant object');
+        if (!ES.IsTemporalInstant(instant)) throw new TypeError('invalid Instant object');
         calendar = ES.ToTemporalCalendar(calendar);
-        var ns = GetSlot(absolute, EPOCHNANOSECONDS);
-        var offsetNs = ES.GetOffsetNanosecondsFor(this, absolute);
+        var ns = GetSlot(instant, EPOCHNANOSECONDS);
+        var offsetNs = ES.GetOffsetNanosecondsFor(this, instant);
 
         var _ES$GetPartsFromEpoch = ES.GetPartsFromEpoch(ns),
             year = _ES$GetPartsFromEpoch.year,
@@ -8998,12 +8998,12 @@
 
         var numInstants = possibleInstants.length;
 
-        function validateInstant(absolute) {
-          if (!ES.IsTemporalInstant(absolute)) {
+        function validateInstant(instant) {
+          if (!ES.IsTemporalInstant(instant)) {
             throw new TypeError('bad return from getPossibleInstantsFor');
           }
 
-          return absolute;
+          return instant;
         }
 
         if (numInstants === 1) return validateInstant(possibleInstants[0]);
@@ -9020,7 +9020,7 @@
 
             case 'reject':
               {
-                throw new RangeError('multiple absolute found');
+                throw new RangeError('multiple instants found');
               }
           }
         }
@@ -9054,7 +9054,7 @@
 
           case 'reject':
             {
-              throw new RangeError('no such absolute found');
+              throw new RangeError('no such instant found');
             }
         }
       }

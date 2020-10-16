@@ -220,7 +220,7 @@ Temporal<span class="token punctuation">.</span>now<span class="token punctuatio
 
   <span class="token comment">// Methods that a subclassed custom time zone must implement</span>
 
-  <span class="token comment">/** Given an absolute instant returns this time zone's corresponding
+  <span class="token comment">/** Given an exact time returns this time zone's corresponding
    * UTC offset, in nanoseconds (signed). */</span>
   <span class="token function">getOffsetNanosecondsFor</span><span class="token punctuation">(</span>instant <span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">)</span> <span class="token operator">:</span> number<span class="token punctuation">;</span>
 
@@ -270,7 +270,7 @@ The <code>MakeDate</code>, <code>MakeDay</code>, and <code>MakeTime</code> funct
     <span class="token keyword">this</span><span class="token punctuation">.</span>#offsetNs <span class="token operator">=</span> sign <span class="token operator">*</span> offsetNs<span class="token punctuation">;</span>
   <span class="token punctuation">}</span>
 
-  <span class="token function">getOffsetNanosecondsFor</span><span class="token punctuation">(</span><span class="token comment">/* absolute */</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token function">getOffsetNanosecondsFor</span><span class="token punctuation">(</span><span class="token comment">/* instant */</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
     <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token punctuation">.</span>#offsetNs<span class="token punctuation">;</span> <span class="token comment">// offset is always the same</span>
   <span class="token punctuation">}</span>
 
