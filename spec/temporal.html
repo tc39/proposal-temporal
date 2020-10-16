@@ -124,7 +124,7 @@
       </p>
       <emu-alg>
         1. Let _dateTime_ be ? SystemDateTime(_temporalTimeZoneLike_, _calendar_).
-        1. Return ? CreateTemporalDate(_dateTime_.[[ISOYear]], _dateTime_.[[ISOMonth]], _dateTime_.[[ISODay]]).
+        1. Return ? CreateTemporalDate(_dateTime_.[[ISOYear]], _dateTime_.[[ISOMonth]], _dateTime_.[[ISODay]], _dateTime_.[[Calendar]]).
       </emu-alg>
     </emu-clause>
 
@@ -136,7 +136,7 @@
       </p>
       <emu-alg>
         1. Let _dateTime_ be ? SystemDateTime(_temporalTimeZoneLike_).
-        1. Return ? CreateTemporalDate(_dateTime_.[[ISOYear]], _dateTime_.[[ISOMonth]], _dateTime_.[[ISODay]]).
+        1. Return ? CreateTemporalDate(_dateTime_.[[ISOYear]], _dateTime_.[[ISOMonth]], _dateTime_.[[ISODay]], _dateTime_.[[Calendar]]).
       </emu-alg>
     </emu-clause>
 
