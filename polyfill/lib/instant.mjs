@@ -110,7 +110,7 @@ export class Instant {
     const defaultLargestUnit = ES.LargerOfTwoTemporalDurationUnits('seconds', smallestUnit);
     const largestUnit = ES.ToLargestTemporalUnit(options, defaultLargestUnit, disallowedUnits);
     ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
-    const roundingMode = ES.ToTemporalRoundingMode(options);
+    const roundingMode = ES.ToTemporalRoundingMode(options, 'nearest');
     const maximumIncrements = {
       hours: 24,
       minutes: 60,
@@ -170,7 +170,7 @@ export class Instant {
     if (options === undefined) throw new TypeError('options parameter is required');
     options = ES.NormalizeOptionsObject(options);
     const smallestUnit = ES.ToSmallestTemporalUnit(options, ['day']);
-    const roundingMode = ES.ToTemporalRoundingMode(options);
+    const roundingMode = ES.ToTemporalRoundingMode(options, 'nearest');
     const maximumIncrements = {
       hour: 24,
       minute: 1440,

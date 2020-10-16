@@ -263,7 +263,7 @@ export class Time {
     const largestUnit = ES.ToLargestTemporalUnit(options, 'hours', ['years', 'months', 'weeks', 'days']);
     const smallestUnit = ES.ToSmallestTemporalDurationUnit(options, 'nanoseconds');
     ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
-    const roundingMode = ES.ToTemporalRoundingMode(options);
+    const roundingMode = ES.ToTemporalRoundingMode(options, 'nearest');
     const maximumIncrements = {
       hours: 24,
       minutes: 60,
@@ -321,7 +321,7 @@ export class Time {
     if (options === undefined) throw new TypeError('options parameter is required');
     options = ES.NormalizeOptionsObject(options);
     const smallestUnit = ES.ToSmallestTemporalUnit(options, ['day']);
-    const roundingMode = ES.ToTemporalRoundingMode(options);
+    const roundingMode = ES.ToTemporalRoundingMode(options, 'nearest');
     const maximumIncrements = {
       hour: 24,
       minute: 60,

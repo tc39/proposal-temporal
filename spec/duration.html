@@ -404,7 +404,7 @@
         1. Set _defaultLargestUnit_ to ! LargerOfTwoTemporalDurationUnits(_defaultLargestUnit_, _smallestUnit_).
         1. Let _largestUnit_ be ? ToLargestTemporalUnit(_options_, _defaultLargestUnit_).
         1. Perform ? ValidateTemporalUnitRange(_largestUnit_, _smallestUnit_).
-        1. Let _roundingMode_ be ? ToTemporalRoundingMode(_options_).
+        1. Let _roundingMode_ be ? ToTemporalRoundingMode(_options_, *"nearest"*).
         1. Let _maximum_ be ! MaximumTemporalDurationRoundingIncrement(_smallestUnit_).
         1. Let _roundingIncrement_ be ? ToTemporalRoundingIncrement(_options_, _maximum_, *false*).
         1. Let _relativeTo_ be ? ToRelativeTemporalObject(_options_).

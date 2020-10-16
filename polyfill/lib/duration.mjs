@@ -405,7 +405,7 @@ export class Duration {
     const relativeTo = ES.ToRelativeTemporalObject(options);
     const largestUnit = ES.ToLargestTemporalUnit(options, defaultLargestUnit);
     ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
-    const roundingMode = ES.ToTemporalRoundingMode(options);
+    const roundingMode = ES.ToTemporalRoundingMode(options, 'nearest');
     const maximumIncrements = {
       years: undefined,
       months: undefined,

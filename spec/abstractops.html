@@ -124,9 +124,9 @@
   </emu-clause>
 
   <emu-clause id="sec-temporal-totemporalroundingmode" aoid="ToTemporalRoundingMode">
-    <h1>ToTemporalRoundingMode ( _normalizedOptions_ )</h1>
+    <h1>ToTemporalRoundingMode ( _normalizedOptions_, _fallback_ )</h1>
     <emu-alg>
-      1. Return ? GetOption(_normalizedOptions_, *"roundingMode"*, *"string"*, « *"ceil"*, *"floor"*, *"trunc"*, *"nearest"* », *"nearest"*).
+      1. Return ? GetOption(_normalizedOptions_, *"roundingMode"*, *"string"*, « *"ceil"*, *"floor"*, *"trunc"*, *"nearest"* », _fallback_).
     </emu-alg>
   </emu-clause>
 
