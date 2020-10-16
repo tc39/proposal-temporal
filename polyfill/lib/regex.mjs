@@ -1,3 +1,6 @@
+const tzComponent = /\.[-A-Za-z_]|\.\.[-A-Za-z._]{1,12}|\.[-A-Za-z_][-A-Za-z._]{0,12}|[A-Za-z_][-A-Za-z._]{0,13}/;
+export const timeZoneID = new RegExp(`(?:${tzComponent.source}(?:\\/(?:${tzComponent.source}))*|Etc/GMT[-+]\\d{1,2})`);
+
 const calComponent = /[A-Za-z0-9]{3,8}/;
 export const calendarID = new RegExp(`(?:${calComponent.source}(?:-${calComponent.source})*)`);
 
@@ -5,7 +8,7 @@ const yearpart = /(?:[+-\u2212]\d{6}|\d{4})/;
 const datesplit = new RegExp(`(${yearpart.source})(?:-(\\d{2})-(\\d{2})|(\\d{2})(\\d{2}))`);
 const timesplit = /(\d{2})(?::(\d{2})(?::(\d{2})(?:[.,](\d{1,9}))?)?|(\d{2})(?:(\d{2})(?:[.,](\d{1,9}))?)?)?/;
 export const offset = /([+-\u2212])([0-2][0-9])(?::?([0-5][0-9]))?/;
-const zonesplit = new RegExp(`(?:([zZ])|(?:${offset.source}?(?:\\[(?!c=)([^\\]\\s]*)?\\])?))`);
+const zonesplit = new RegExp(`(?:([zZ])|(?:${offset.source}?(?:\\[(${timeZoneID.source})\\])?))`);
 const calendar = new RegExp(`\\[c=(${calendarID.source})\\]`);
 
 export const instant = new RegExp(

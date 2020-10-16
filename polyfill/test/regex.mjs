@@ -535,6 +535,66 @@ describe('fromString regex', () => {
     }
   });
 
+  describe('time zone ID', () => {
+    function makeCustomTimeZone(id) {
+      return class extends Temporal.TimeZone {
+        constructor() {
+          super(id);
+        }
+      };
+    }
+    describe('valid', () => {
+      [
+        '.a',
+        '..a',
+        '...',
+        '_',
+        'a-a',
+        'Etc/.a',
+        'Etc/..a',
+        'Etc/...',
+        'Etc/_',
+        'Etc/a-a',
+        'Etc/FourteenCharsZ',
+        'Etc/FourteenCharsZ/FourteenCharsZ',
+        'Etc/GMT-8',
+        'Etc/GMT-12',
+        'Etc/GMT+8',
+        'Etc/GMT+12'
+      ].forEach((id) => {
+        it(id, () => {
+          const Custom = makeCustomTimeZone(id);
+          const tz = new Custom();
+          equal(tz.id, id);
+        });
+      });
+    });
+    describe('not valid', () => {
+      [
+        '.',
+        '..',
+        '-',
+        '3',
+        '-Foo',
+        'Etc/.',
+        'Etc/..',
+        'Etc/-',
+        'Etc/3',
+        'Etc/-Foo',
+        'Etc/😺',
+        'Etc/FifteenCharsZZZ',
+        'GMT-8',
+        'GMT+8',
+        'Foo/Etc/GMT-8'
+      ].forEach((id) => {
+        it(id, () => {
+          const Custom = makeCustomTimeZone(id);
+          throws(() => new Custom(), RangeError);
+        });
+      });
+    });
+  });
+
   describe('calendar ID', () => {
     function makeCustomCalendar(id) {
       return class extends Temporal.Calendar {
