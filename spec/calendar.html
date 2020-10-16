@@ -84,6 +84,16 @@
         1. Return 0.
       </emu-alg>
     </emu-clause>
+
+    <emu-clause id="sec-temporal-calendarequals" aoid="CalendarEquals">
+      <h1>CalendarEquals ( _one_, _two_ )</h1>
+      <emu-alg>
+        1. Let _calendarOne_ be ? CalendarToString(_one_).
+        1. Let _calendarTwo_ be ? CalendarToString(_two_).
+        1. If _calendarOne_ is _calendarTwo_, return *true*.
+        1. Return *false*.
+      </emu-alg>
+    </emu-clause>
   </emu-clause>
 
   <emu-clause id="sec-temporal-calendar-constructor">

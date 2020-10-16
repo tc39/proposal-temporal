@@ -566,7 +566,7 @@
         1. If _dateTime_.[[Millisecond]] ≠ _other_.[[Millisecond]], return *false*.
         1. If _dateTime_.[[Microsecond]] ≠ _other_.[[Microsecond]], return *false*.
         1. If _dateTime_.[[Nanosecond]] ≠ _other_.[[Nanosecond]], return *false*.
-        1. Return *true*.
+        1. Return ? CalendarEquals(_dateTime_.[[Calendar]], _other_.[[Calendar]]).
       </emu-alg>
     </emu-clause>
 
