@@ -392,7 +392,8 @@
         1. Set _temporalDate_ to ? ToTemporalDate(_temporalDate_).
         1. Return ? CreateTemporalDateTime(_temporalDate_.[[Year]], _temporalDate_.[[Month]], _temporalDate_.[[Day]],
           _temporalTime_.[[Hour]], _temporalTime_.[[Minute]], _temporalTime_.[[Second]],
-          _temporalTime_.[[Millisecond]], _temporalTime_.[[Microsecond]], _temporalTime_.[[Nanosecond]]).
+          _temporalTime_.[[Millisecond]], _temporalTime_.[[Microsecond]], _temporalTime_.[[Nanosecond]],
+          _temporalDate_.[[Calendar]]).
       </emu-alg>
     </emu-clause>
 
