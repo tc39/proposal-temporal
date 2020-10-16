@@ -215,17 +215,18 @@ export class PlainDateTime {
     }
     const fields = ES.ToTemporalDateTimeFields(this, fieldNames);
     ObjectAssign(fields, props);
-    const date = calendar.dateFromFields(fields, { overflow }, GetIntrinsic('%Temporal.PlainDate%'));
-    let year = GetSlot(date, ISO_YEAR);
-    let month = GetSlot(date, ISO_MONTH);
-    let day = GetSlot(date, ISO_DAY);
-    const time = calendar.timeFromFields(fields, { overflow }, GetIntrinsic('%Temporal.PlainTime%'));
-    let hour = GetSlot(time, ISO_HOUR);
-    let minute = GetSlot(time, ISO_MINUTE);
-    let second = GetSlot(time, ISO_SECOND);
-    let millisecond = GetSlot(time, ISO_MILLISECOND);
-    let microsecond = GetSlot(time, ISO_MICROSECOND);
-    let nanosecond = GetSlot(time, ISO_NANOSECOND);
+    const {
+      year,
+      month,
+      day,
+      hour,
+      minute,
+      second,
+      millisecond,
+      microsecond,
+      nanosecond
+    } = ES.InterpretTemporalDateTimeFields(calendar, fields, overflow);
+
     const Construct = ES.SpeciesConstructor(this, PlainDateTime);
     const result = new Construct(
       year,
@@ -666,17 +667,17 @@ export class PlainDateTime {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     const YearMonth = GetIntrinsic('%Temporal.PlainYearMonth%');
     const calendar = GetSlot(this, CALENDAR);
-    const fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'year']);
-    const fields = ES.ToTemporalDateFields(this, fieldNames);
-    return calendar.yearMonthFromFields(fields, {}, YearMonth);
+    const fieldNames = ES.CalendarFields(calendar, ['month', 'year']);
+    const fields = ES.ToTemporalYearMonthFields(this, fieldNames);
+    return ES.YearMonthFromFields(calendar, fields, YearMonth);
   }
   toPlainMonthDay() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     const MonthDay = GetIntrinsic('%Temporal.PlainMonthDay%');
     const calendar = GetSlot(this, CALENDAR);
-    const fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'year']);
-    const fields = ES.ToTemporalDateFields(this, fieldNames);
-    return calendar.monthDayFromFields(fields, {}, MonthDay);
+    const fieldNames = ES.CalendarFields(calendar, ['day', 'month']);
+    const fields = ES.ToTemporalMonthDayFields(this, fieldNames);
+    return ES.MonthDayFromFields(calendar, fields, MonthDay);
   }
   toPlainTime() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');

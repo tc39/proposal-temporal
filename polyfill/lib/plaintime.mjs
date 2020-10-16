@@ -22,6 +22,8 @@ import {
   SetSlot
 } from './slots.mjs';
 
+const ObjectAssign = Object.assign;
+
 function TemporalTimeToString(time, precision, showCalendar = 'auto', options = undefined) {
   let hour = GetSlot(time, ISO_HOUR);
   let minute = GetSlot(time, ISO_MINUTE);
@@ -134,8 +136,8 @@ export class PlainTime {
     options = ES.NormalizeOptionsObject(options);
     const overflow = ES.ToTemporalOverflow(options);
 
-    // TODO: defer to calendar
-    const props = ES.ToPartialRecord(temporalTimeLike, [
+    const calendar = GetSlot(this, CALENDAR);
+    const fieldNames = ES.CalendarFields(calendar, [
       'hour',
       'microsecond',
       'millisecond',
@@ -143,30 +145,15 @@ export class PlainTime {
       'nanosecond',
       'second'
     ]);
+    const props = ES.ToPartialRecord(temporalTimeLike, fieldNames);
     if (!props) {
       throw new TypeError('invalid time-like');
     }
-    let {
-      hour = GetSlot(this, ISO_HOUR),
-      minute = GetSlot(this, ISO_MINUTE),
-      second = GetSlot(this, ISO_SECOND),
-      millisecond = GetSlot(this, ISO_MILLISECOND),
-      microsecond = GetSlot(this, ISO_MICROSECOND),
-      nanosecond = GetSlot(this, ISO_NANOSECOND)
-    } = props;
-    ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.RegulateTime(
-      hour,
-      minute,
-      second,
-      millisecond,
-      microsecond,
-      nanosecond,
-      overflow
-    ));
+    const fields = ES.ToTemporalTimeFields(this, fieldNames);
+    ObjectAssign(fields, props);
+
     const Construct = ES.SpeciesConstructor(this, PlainTime);
-    const result = new Construct(hour, minute, second, millisecond, microsecond, nanosecond);
-    if (!ES.IsTemporalTime(result)) throw new TypeError('invalid result');
-    return result;
+    return ES.TimeFromFields(calendar, fields, Construct, overflow);
   }
   withCalendar(calendar) {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
@@ -472,8 +459,17 @@ export class PlainTime {
     return new ZonedDateTime(GetSlot(instant, EPOCHNANOSECONDS), timeZone, calendar);
   }
   getFields() {
-    const fields = ES.ToTemporalTimeRecord(this);
-    if (!fields) throw new TypeError('invalid receiver');
+    if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
+    const calendar = GetSlot(this, CALENDAR);
+    const fieldNames = ES.CalendarFields(calendar, [
+      'hour',
+      'microsecond',
+      'millisecond',
+      'minute',
+      'nanosecond',
+      'second'
+    ]);
+    const fields = ES.ToTemporalTimeFields(this, fieldNames);
     fields.calendar = GetSlot(this, CALENDAR);
     return fields;
   }

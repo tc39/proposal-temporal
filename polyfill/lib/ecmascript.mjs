@@ -692,19 +692,17 @@ export const ES = ObjectAssign({}, ES2020, {
         'year'
       ]);
       const fields = ES.ToTemporalDateTimeFields(relativeTo, fieldNames);
-      const TemporalDate = GetIntrinsic('%Temporal.PlainDate%');
-      const date = calendar.dateFromFields(fields, {}, TemporalDate);
-      year = GetSlot(date, ISO_YEAR);
-      month = GetSlot(date, ISO_MONTH);
-      day = GetSlot(date, ISO_DAY);
-      const TemporalPlainTime = GetIntrinsic('%Temporal.PlainTime%');
-      const time = calendar.timeFromFields(fields, {}, TemporalPlainTime);
-      hour = GetSlot(time, ISO_HOUR);
-      minute = GetSlot(time, ISO_MINUTE);
-      second = GetSlot(time, ISO_SECOND);
-      millisecond = GetSlot(time, ISO_MILLISECOND);
-      microsecond = GetSlot(time, ISO_MICROSECOND);
-      nanosecond = GetSlot(time, ISO_NANOSECOND);
+      ({
+        year,
+        month,
+        day,
+        hour,
+        minute,
+        second,
+        millisecond,
+        microsecond,
+        nanosecond
+      } = ES.InterpretTemporalDateTimeFields(calendar, fields, 'constrain'));
       offset = relativeTo.offset;
       timeZone = relativeTo.timeZone;
     } else {
@@ -857,6 +855,7 @@ export const ES = ObjectAssign({}, ES2020, {
   ToRecord: (bag, fields) => {
     if (ES.Type(bag) !== 'Object') return false;
     const result = {};
+    let any = false;
     for (const fieldRecord of fields) {
       const [property, defaultValue] = fieldRecord;
       let value = bag[property];
@@ -865,12 +864,17 @@ export const ES = ObjectAssign({}, ES2020, {
           throw new TypeError(`required property '${property}' missing or undefined`);
         }
         value = defaultValue;
+      } else {
+        any = true;
       }
       if (BUILTIN_FIELDS.has(property)) {
         result[property] = ES.ToInteger(value);
       } else {
         result[property] = value;
       }
+    }
+    if (!any) {
+      throw new TypeError('no supported properties found');
     }
     return result;
   },
@@ -915,11 +919,22 @@ export const ES = ObjectAssign({}, ES2020, {
     });
     return ES.ToRecord(bag, entries);
   },
-  ToTemporalTimeRecord: (bag) => {
-    const props = ES.ToPartialRecord(bag, ['hour', 'microsecond', 'millisecond', 'minute', 'nanosecond', 'second']);
-    if (!props) throw new TypeError('invalid time-like');
-    const { hour = 0, minute = 0, second = 0, millisecond = 0, microsecond = 0, nanosecond = 0 } = props;
-    return { hour, minute, second, millisecond, microsecond, nanosecond };
+  ToTemporalTimeFields: (bag, fieldNames) => {
+    const entries = [
+      ['hour', 0],
+      ['microsecond', 0],
+      ['millisecond', 0],
+      ['minute', 0],
+      ['nanosecond', 0],
+      ['second', 0]
+    ];
+    // Add extra fields from the calendar at the end
+    fieldNames.forEach((fieldName) => {
+      if (!entries.some(([name]) => name === fieldName)) {
+        entries.push([fieldName, undefined]);
+      }
+    });
+    return ES.ToRecord(bag, entries);
   },
   ToTemporalYearMonthFields: (bag, fieldNames) => {
     const entries = [['month'], ['year']];
@@ -955,7 +970,6 @@ export const ES = ObjectAssign({}, ES2020, {
   },
 
   ToTemporalDate: (item, constructor, overflow = 'constrain') => {
-    let result;
     if (ES.Type(item) === 'Object') {
       if (ES.IsTemporalDate(item)) return item;
       let calendar = item.calendar;
@@ -963,26 +977,25 @@ export const ES = ObjectAssign({}, ES2020, {
       calendar = ES.ToTemporalCalendar(calendar);
       const fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'year']);
       const fields = ES.ToTemporalDateFields(item, fieldNames);
-      result = calendar.dateFromFields(fields, { overflow }, constructor);
-    } else {
-      let { year, month, day, calendar } = ES.ParseTemporalDateString(ES.ToString(item));
-      ({ year, month, day } = ES.RegulateDate(year, month, day, overflow));
-      if (calendar === undefined) calendar = new (GetIntrinsic('%Temporal.ISO8601Calendar%'))();
-      calendar = ES.ToTemporalCalendar(calendar);
-      result = new constructor(year, month, day, calendar);
+      return ES.DateFromFields(calendar, fields, constructor, overflow);
     }
+    let { year, month, day, calendar } = ES.ParseTemporalDateString(ES.ToString(item));
+    ({ year, month, day } = ES.RegulateDate(year, month, day, overflow));
+    if (calendar === undefined) calendar = new (GetIntrinsic('%Temporal.ISO8601Calendar%'))();
+    calendar = ES.ToTemporalCalendar(calendar);
+    let result = new constructor(year, month, day, calendar);
     if (!ES.IsTemporalDate(result)) throw new TypeError('invalid result');
     return result;
   },
   InterpretTemporalDateTimeFields: (calendar, fields, overflow) => {
     const TemporalDate = GetIntrinsic('%Temporal.PlainDate%');
-    const date = calendar.dateFromFields(fields, { overflow }, TemporalDate);
+    const date = ES.DateFromFields(calendar, fields, TemporalDate, overflow);
     const year = GetSlot(date, ISO_YEAR);
     const month = GetSlot(date, ISO_MONTH);
     const day = GetSlot(date, ISO_DAY);
 
     const TemporalTime = GetIntrinsic('%Temporal.PlainTime%');
-    const time = calendar.timeFromFields(fields, { overflow }, TemporalTime);
+    const time = ES.TimeFromFields(calendar, fields, TemporalTime, overflow);
     const hour = GetSlot(time, ISO_HOUR);
     const minute = GetSlot(time, ISO_MINUTE);
     const second = GetSlot(time, ISO_SECOND);
@@ -1098,7 +1111,6 @@ export const ES = ObjectAssign({}, ES2020, {
     return result;
   },
   ToTemporalMonthDay: (item, constructor, overflow = 'constrain') => {
-    let result;
     if (ES.Type(item) === 'Object') {
       if (ES.IsTemporalMonthDay(item)) return item;
       let calendar = item.calendar;
@@ -1106,49 +1118,55 @@ export const ES = ObjectAssign({}, ES2020, {
       calendar = ES.ToTemporalCalendar(calendar);
       const fieldNames = ES.CalendarFields(calendar, ['day', 'month']);
       const fields = ES.ToTemporalMonthDayFields(item, fieldNames);
-      result = calendar.monthDayFromFields(fields, { overflow }, constructor);
-    } else {
-      let { month, day, referenceISOYear, calendar } = ES.ParseTemporalMonthDayString(ES.ToString(item));
-      ({ month, day } = ES.RegulateMonthDay(month, day, overflow));
-      if (calendar === undefined) calendar = new (GetIntrinsic('%Temporal.ISO8601Calendar%'))();
-      calendar = ES.ToTemporalCalendar(calendar);
-      if (referenceISOYear === undefined) referenceISOYear = 1972;
-      result = new constructor(month, day, calendar, referenceISOYear);
+      return ES.MonthDayFromFields(calendar, fields, constructor, overflow);
     }
+
+    let { month, day, referenceISOYear, calendar } = ES.ParseTemporalMonthDayString(ES.ToString(item));
+    ({ month, day } = ES.RegulateMonthDay(month, day, overflow));
+    if (calendar === undefined) calendar = new (GetIntrinsic('%Temporal.ISO8601Calendar%'))();
+    calendar = ES.ToTemporalCalendar(calendar);
+    if (referenceISOYear === undefined) referenceISOYear = 1972;
+    let result = new constructor(month, day, calendar, referenceISOYear);
     if (!ES.IsTemporalMonthDay(result)) throw new TypeError('invalid result');
     return result;
   },
   ToTemporalTime: (item, constructor, overflow = 'constrain') => {
-    let result;
     if (ES.Type(item) === 'Object') {
       if (ES.IsTemporalTime(item)) return item;
       let calendar = item.calendar;
       if (calendar === undefined) calendar = new (GetIntrinsic('%Temporal.ISO8601Calendar%'))();
       calendar = ES.ToTemporalCalendar(calendar);
-      const fields = ES.ToTemporalTimeRecord(item);
-      result = calendar.timeFromFields(fields, { overflow }, constructor);
-    } else {
-      let { hour, minute, second, millisecond, microsecond, nanosecond, calendar } = ES.ParseTemporalTimeString(
-        ES.ToString(item)
-      );
-      ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.RegulateTime(
-        hour,
-        minute,
-        second,
-        millisecond,
-        microsecond,
-        nanosecond,
-        overflow
-      ));
-      if (calendar === undefined) calendar = new (GetIntrinsic('%Temporal.ISO8601Calendar%'))();
-      calendar = ES.ToTemporalCalendar(calendar);
-      result = new constructor(hour, minute, second, millisecond, microsecond, nanosecond, calendar);
+      const fieldNames = ES.CalendarFields(calendar, [
+        'hour',
+        'microsecond',
+        'millisecond',
+        'minute',
+        'nanosecond',
+        'second'
+      ]);
+      const fields = ES.ToTemporalTimeFields(item, fieldNames);
+      return ES.TimeFromFields(calendar, fields, constructor, overflow);
     }
+
+    let { hour, minute, second, millisecond, microsecond, nanosecond, calendar } = ES.ParseTemporalTimeString(
+      ES.ToString(item)
+    );
+    ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.RegulateTime(
+      hour,
+      minute,
+      second,
+      millisecond,
+      microsecond,
+      nanosecond,
+      overflow
+    ));
+    if (calendar === undefined) calendar = new (GetIntrinsic('%Temporal.ISO8601Calendar%'))();
+    calendar = ES.ToTemporalCalendar(calendar);
+    let result = new constructor(hour, minute, second, millisecond, microsecond, nanosecond, calendar);
     if (!ES.IsTemporalTime(result)) throw new TypeError('invalid result');
     return result;
   },
   ToTemporalYearMonth: (item, constructor, overflow = 'constrain') => {
-    let result;
     if (ES.Type(item) === 'Object') {
       if (ES.IsTemporalYearMonth(item)) return item;
       let calendar = item.calendar;
@@ -1156,15 +1174,14 @@ export const ES = ObjectAssign({}, ES2020, {
       calendar = ES.ToTemporalCalendar(calendar);
       const fieldNames = ES.CalendarFields(calendar, ['month', 'year']);
       const fields = ES.ToTemporalYearMonthFields(item, fieldNames);
-      result = calendar.yearMonthFromFields(fields, { overflow }, constructor);
-    } else {
-      let { year, month, referenceISODay, calendar } = ES.ParseTemporalYearMonthString(ES.ToString(item));
-      ({ year, month } = ES.RegulateYearMonth(year, month, overflow));
-      if (calendar === undefined) calendar = new (GetIntrinsic('%Temporal.ISO8601Calendar%'))();
-      calendar = ES.ToTemporalCalendar(calendar);
-      if (referenceISODay === undefined) referenceISODay = 1;
-      result = new constructor(year, month, calendar, referenceISODay);
+      return ES.YearMonthFromFields(calendar, fields, constructor, overflow);
     }
+
+    let { year, month, referenceISODay = 1, calendar } = ES.ParseTemporalYearMonthString(ES.ToString(item));
+    ({ year, month } = ES.RegulateYearMonth(year, month, overflow));
+    if (calendar === undefined) calendar = new (GetIntrinsic('%Temporal.ISO8601Calendar%'))();
+    calendar = ES.ToTemporalCalendar(calendar);
+    let result = new constructor(year, month, calendar, referenceISODay);
     if (!ES.IsTemporalYearMonth(result)) throw new TypeError('invalid result');
     return result;
   },
@@ -1354,6 +1371,26 @@ export const ES = ObjectAssign({}, ES2020, {
     } else {
       throw new RangeError('irreconcilable calendars');
     }
+  },
+  TimeFromFields: (calendar, fields, constructor, overflow = 'constrain') => {
+    const result = calendar.timeFromFields(fields, { overflow }, constructor);
+    if (!ES.IsTemporalTime(result)) throw new TypeError('invalid result');
+    return result;
+  },
+  DateFromFields: (calendar, fields, constructor, overflow = 'constrain') => {
+    const result = calendar.dateFromFields(fields, { overflow }, constructor);
+    if (!ES.IsTemporalDate(result)) throw new TypeError('invalid result');
+    return result;
+  },
+  YearMonthFromFields: (calendar, fields, constructor, overflow = 'constrain') => {
+    const result = calendar.yearMonthFromFields(fields, { overflow }, constructor);
+    if (!ES.IsTemporalYearMonth(result)) throw new TypeError('invalid result');
+    return result;
+  },
+  MonthDayFromFields: (calendar, fields, constructor, overflow = 'constrain') => {
+    const result = calendar.monthDayFromFields(fields, { overflow }, constructor);
+    if (!ES.IsTemporalMonthDay(result)) throw new TypeError('invalid result');
+    return result;
   },
   TimeZoneFrom: (temporalTimeZoneLike) => {
     const TemporalTimeZone = GetIntrinsic('%Temporal.TimeZone%');
