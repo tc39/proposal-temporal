@@ -86,6 +86,7 @@ export class PlainDateTime {
     microsecond = ES.ToInteger(microsecond);
     nanosecond = ES.ToInteger(nanosecond);
     calendar = ES.ToTemporalCalendar(calendar);
+    //console.log(`new DateTime(..., ${calendar} (${typeof calendar}))`);
 
     ES.RejectDateTime(isoYear, isoMonth, isoDay, hour, minute, second, millisecond, microsecond, nanosecond);
     ES.RejectDateTimeRange(isoYear, isoMonth, isoDay, hour, minute, second, millisecond, microsecond, nanosecond);
@@ -113,6 +114,7 @@ export class PlainDateTime {
   }
   get calendar() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+    //console.log(`DateTime.calendar → ${GetSlot(this, CALENDAR)}`);
     return GetSlot(this, CALENDAR);
   }
   get year() {
@@ -359,6 +361,7 @@ export class PlainDateTime {
   until(other, options = undefined) {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     other = ES.ToTemporalDateTime(other, PlainDateTime);
+
     const calendar = GetSlot(this, CALENDAR);
     const otherCalendar = GetSlot(other, CALENDAR);
     const calendarId = ES.CalendarToString(calendar);
@@ -366,6 +369,7 @@ export class PlainDateTime {
     if (calendarId !== otherCalendarId) {
       throw new RangeError(`cannot compute difference between dates of ${calendarId} and ${otherCalendarId} calendars`);
     }
+
     options = ES.NormalizeOptionsObject(options);
     const smallestUnit = ES.ToSmallestTemporalDurationUnit(options, 'nanoseconds');
     const defaultLargestUnit = ES.LargerOfTwoTemporalDurationUnits('days', smallestUnit);

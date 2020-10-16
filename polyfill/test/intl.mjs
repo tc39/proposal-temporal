@@ -185,6 +185,7 @@ describe('Intl', () => {
     });
     it('throws when the calendar is not equal to the locale calendar', () => {
       const ymISO = Temporal.PlainYearMonth.from({ year: 1976, month: 11 });
+      //console.log(`test: ymISO=${ymISO}`);
       throws(() => ymISO.toLocaleString('en-US-u-ca-japanese'), RangeError);
     });
   });

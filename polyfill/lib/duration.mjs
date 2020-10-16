@@ -504,7 +504,8 @@ export class Duration {
     return rounded[unit] + rounded.remainder;
   }
   getFields() {
-    const fields = ES.ToRecord(this, [
+    if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
+    return ES.ToRecord(this, [
       ['days'],
       ['hours'],
       ['microseconds'],
@@ -516,8 +517,6 @@ export class Duration {
       ['weeks'],
       ['years']
     ]);
-    if (!fields) throw new TypeError('invalid receiver');
-    return fields;
   }
   toString() {
     if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');

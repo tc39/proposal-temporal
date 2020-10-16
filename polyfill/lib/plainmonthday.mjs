@@ -129,6 +129,7 @@ export class PlainMonthDay {
   }
   toPlainDate(item) {
     if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
+
     const calendar = GetSlot(this, CALENDAR);
 
     const receiverFieldNames = ES.CalendarFields(calendar, ['day', 'month']);

@@ -185,10 +185,7 @@
       <emu-alg>
         1. Let _timeZone_ be the *this* value.
         1. Set _instant_ to ? ToTemporalInstant(_instant_).
-        1. If _calendarLike_ is *undefined*, then
-          1. Let _calendar_ be ? GetISO8601Calendar().
-        1. Else,
-          1. Let _calendar_ be ? ToTemporalCalendar(_calendarLike_).
+        1. Let _calendar_ be ? ToTemporalCalendar(_calendarLike_).
         1. Let _offsetNanoseconds_ be ? GetOffsetNanosecondsFor(_timeZone_, _instant_).
         1. <mark>TODO:</mark> Let _result_ be the moment _instant_.[[Nanosecond]] nanoseconds from the epoch, in the UTC time zone.
         1. Set _result_ to ? BalanceDateTime(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]] + _offsetNanoseconds_).

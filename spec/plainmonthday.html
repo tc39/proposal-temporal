@@ -29,10 +29,7 @@
           1. Set _referenceISOYear_ to *1972*<sub>𝔽</sub>.
         1. Let _m_ be ? ToInteger(_isoMonth_).
         1. Let _d_ be ? ToInteger(_isoDay_).
-        1. If _calendarLike_ is *undefined*, then
-          1. Set _calendar_ to ? GetISO8601Calendar().
-        1. Else,
-          1. Set _calendar_ to ? ToTemporalCalendar(_calendarLike_).
+        1. Set _calendar_ to ? ToTemporalCalendar(_calendarLike_).
         1. Let _ref_ be ? ToInteger(_referenceISOYear_).
         1. Return ? CreateTemporalMonthDay(_m_, _d_, _calendar_, _ref_, NewTarget).
       </emu-alg>

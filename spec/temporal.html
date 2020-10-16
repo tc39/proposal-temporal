@@ -215,10 +215,7 @@
           1. Let _timeZone_ be ? SystemTimeZone().
         1. Else,
           1. Let _timeZone_ be ? ToTemporalTimeZone(_temporalTimeZoneLike_).
-        1. If _calendarLike_ is *undefined*, then
-          1. Let _calendar_ be ? GetISO8601Calendar().
-        1. Else,
-          1. Let _calendar_ be ? ToTemporalCalendar(_calendarLike_).
+        1. Let _calendar_ be ? ToTemporalCalendar(_calendarLike_).
         1. Let _instant_ be ? SystemInstant().
         1. Return ? GetTemporalDateTimeFor(_timeZone_, _instant_, _calendar_).
       </emu-alg>

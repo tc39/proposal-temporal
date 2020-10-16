@@ -240,7 +240,7 @@
         1. Let _instant_ be the *this* value.
         1. Perform ? RequireInternalSlot(_instant_, [[InitializedTemporalInstant]]).
         1. Let _duration_ be ? ToLimitedTemporalDuration(_temporalDurationLike_, « *"years"*, *"months"*, *"weeks"*, *"days"* »).
-        1. Perform ? RejectDurationSign(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
+        1. Perform ? RejectDurationSign(0, 0, 0, 0, _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
         1. Let _ns_ be ! AddInstant(_instant_.[[EpochNanoseconds]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
         1. Return ? CreateTemporalInstantFromInstance(_instant_, _ns_).
       </emu-alg>
@@ -256,7 +256,7 @@
         1. Let _instant_ be the *this* value.
         1. Perform ? RequireInternalSlot(_instant_, [[InitializedTemporalInstant]]).
         1. Let _duration_ be ? ToLimitedTemporalDuration(_temporalDurationLike_, « *"years"*, *"months"*, *"weeks"*, *"days"* »).
-        1. Perform ? RejectDurationSign(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
+        1. Perform ? RejectDurationSign(0, 0, 0, 0, _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
         1. Let _ns_ be ! AddInstant(_instant_.[[EpochNanoseconds]], −_duration_.[[Hours]], −_duration_.[[Minutes]], −_duration_.[[Seconds]], −_duration_.[[Milliseconds]], −_duration_.[[Microseconds]], −_duration_.[[Nanoseconds]]).
         1. Return ? CreateTemporalInstantFromInstance(_instant_, _ns_).
       </emu-alg>

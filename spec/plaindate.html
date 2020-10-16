@@ -26,10 +26,7 @@
         1. Let _y_ be ? ToInteger(_isoYear_).
         1. Let _m_ be ? ToInteger(_isoMonth_).
         1. Let _d_ be ? ToInteger(_isoDay_).
-        1. If _calendarLike_ is *undefined*, then
-          1. Set _calendar_ to ? GetISO8601Calendar().
-        1. Else,
-          1. Set _calendar_ to ? ToTemporalCalendar(_calendarLike_).
+        1. Let _calendar_ be ? ToTemporalCalendar(_calendarLike_).
         1. Return ? CreateTemporalDate(_y_, _m_, _d_, _calendar_, NewTarget).
       </emu-alg>
     </emu-clause>
@@ -144,6 +141,7 @@
         1. Let _calendar_ be _temporalDate_.[[Calendar]].
         1. Let _method_ be ? Get(_calendar_, *"year"*).
         1. Return ? Call(_method_, _calendar_, « _temporalDate_ »).
+        1. <mark>TODO: Should this call ToInteger?.</mark>
       </emu-alg>
     </emu-clause>
 
@@ -159,6 +157,7 @@
         1. Let _calendar_ be _temporalDate_.[[Calendar]].
         1. Let _method_ be ? Get(_calendar_, *"month"*).
         1. Return ? Call(_method_, _calendar_, « _temporalDate_ »).
+        1. <mark>TODO: Should this call ToInteger?.</mark>
       </emu-alg>
     </emu-clause>
 
@@ -174,6 +173,7 @@
         1. Let _calendar_ be _temporalDate_.[[Calendar]].
         1. Let _method_ be ? Get(_calendar_, *"day"*).
         1. Return ? Call(_method_, _calendar_, « _temporalDate_ »).
+        1. <mark>TODO: Should this call ToInteger?.</mark>
       </emu-alg>
     </emu-clause>
 
@@ -189,6 +189,7 @@
         1. Let _calendar_ be _temporalDate_.[[Calendar]].
         1. Let _method_ be ? Get(_calendar_, *"dayOfWeek"*).
         1. Return ? Call(_method_, _calendar_, « _temporalDate_ »).
+        1. <mark>TODO: Should this call ToInteger?.</mark>
       </emu-alg>
     </emu-clause>
 
@@ -204,6 +205,7 @@
         1. Let _calendar_ be _temporalDate_.[[Calendar]].
         1. Let _method_ be ? Get(_calendar_, *"dayOfYear"*).
         1. Return ? Call(_method_, _calendar_, « _temporalDate_ »).
+        1. <mark>TODO: Should this call ToInteger?.</mark>
       </emu-alg>
     </emu-clause>
 
@@ -219,6 +221,7 @@
         1. Let _calendar_ be _temporalDate_.[[Calendar]].
         1. Let _method_ be ? Get(_calendar_, *"weekOfYear"*).
         1. Return ? Call(_method_, _calendar_, « _temporalDate_ »).
+        1. <mark>TODO: Should this call ToInteger?.</mark>
       </emu-alg>
     </emu-clause>
 
@@ -234,6 +237,7 @@
         1. Let _calendar_ be _temporalDate_.[[Calendar]].
         1. Let _method_ be ? Get(_calendar_, *"daysInWeek"*).
         1. Return ? Call(_method_, _calendar_, « _temporalDate_ »).
+        1. <mark>TODO: Should this call ToInteger?.</mark>
       </emu-alg>
     </emu-clause>
 
@@ -249,6 +253,7 @@
         1. Let _calendar_ be _temporalDate_.[[Calendar]].
         1. Let _method_ be ? Get(_calendar_, *"daysInMonth"*).
         1. Return ? Call(_method_, _calendar_, « _temporalDate_ »).
+        1. <mark>TODO: Should this call ToInteger?.</mark>
       </emu-alg>
     </emu-clause>
 
@@ -264,6 +269,7 @@
         1. Let _calendar_ be _temporalDate_.[[Calendar]].
         1. Let _method_ be ? Get(_calendar_, *"daysInYear"*).
         1. Return ? Call(_method_, _calendar_, « _temporalDate_ »).
+        1. <mark>TODO: Should this call ToInteger?.</mark>
       </emu-alg>
     </emu-clause>
 
@@ -279,6 +285,7 @@
         1. Let _calendar_ be _temporalDate_.[[Calendar]].
         1. Let _method_ be ? Get(_calendar_, *"monthsInYear"*).
         1. Return ? Call(_method_, _calendar_, « _temporalDate_ »).
+        1. <mark>TODO: Should this call ToInteger?.</mark>
       </emu-alg>
     </emu-clause>
 
@@ -294,6 +301,7 @@
         1. Let _calendar_ be _temporalDate_.[[Calendar]].
         1. Let _method_ be ? Get(_calendar_, *"inLeapYear"*).
         1. Return ? Call(_method_, _calendar_, « _temporalDate_ »).
+        1. <mark>TODO: Should this call ToBoolean?.</mark>
       </emu-alg>
     </emu-clause>
 
@@ -374,6 +382,7 @@
         1. Let _balanceResult_ be ? BalanceDuration(_duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]], *"days"*).
         1. Set _options_ to ? NormalizeOptionsObject(_options_).
         1. Let _overflow_ be ? ToTemporalOverflow(_options_).
+        1. <mark>TODO: Defer to calendar.</mark>
         1. Let _result_ be ? AddDate(_temporalDate_.[[ISOYear]], _temporalDate_.[[ISOMonth]], _temporalDate_.[[ISODay]], _duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _balanceResult_.[[Days]], _overflow_).
         1. Assert: ! ValidateDate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]]) is *true*.
         1. Return ? CreateTemporalDateFromInstance(_temporalDate_, _result_.[[Year]], _result_.[[Month]], _result_.[[Day]]).
@@ -394,6 +403,7 @@
         1. Let _balanceResult_ be ? BalanceDuration(_duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]], *"days"*).
         1. Set _options_ to ? NormalizeOptionsObject(_options_).
         1. Let _overflow_ be ? ToTemporalOverflow(_options_).
+        1. <mark>TODO: Defer to calendar.</mark>
         1. Let _result_ be ? SubtractDate(_temporalDate_.[[ISOYear]], _temporalDate_.[[ISOMonth]], _temporalDate_.[[ISODay]], _duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _balanceResult_.[[Days]], _overflow_).
         1. Assert: ! ValidateDate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]]) is *true*.
         1. Return ? CreateTemporalDateFromInstance(_temporalDate_, _result_.[[Year]], _result_.[[Month]], _result_.[[Day]]).
@@ -729,6 +739,7 @@
       <h1>CreateTemporalDateFromStatic ( _constructor_, _isoYear_, _isoMonth_, _isoDay_, _calendar_ )</h1>
       <emu-alg>
         1. Assert: ! ValidateDate(_isoYear_, _isoMonth_, _isoDay_) is *true*.
+        1. <mark>TODO: Check DateTimeWithinLimits?.</mark>
         1. If ! IsConstructor(_constructor_) is *false*, then
           1. Throw a *TypeError* exception.
         1. Let _result_ be ? Construct(_constructor_, « _isoYear_, _isoMonth_, _isoDay_, _calendar_ »).
@@ -843,7 +854,7 @@
           1. Let _value_ be ? Get(_temporalDateLike_, _property_).
           1. If _property_ is one of *"day"*, *"month"*, or *"year"*, then
             1. If _value_ is *undefined*, throw a *TypeError* exception.
-            1. Set _value_ to ? ToInteger(_value_).
+            1. Set _value_ to ℝ(? ToInteger(_value_)).
           1. Perform ! CreateDataPropertyOrThrow(_result_, _property_, _value_).
         1. Return _result_.
       </emu-alg>
@@ -861,7 +872,7 @@
           1. If _value_ is not *undefined*, then
             1. Set _any_ to *true*.
             1. If _property_ is one of *"day"*, *"month"*, or *"year"*, then
-              1. Set _value_ to ? ToInteger(_value_).
+              1. Set _value_ to ℝ(? ToInteger(_value_)).
             1. Perform ! CreateDataPropertyOrThrow(_result_, _property_, _value_).
         1. If _any_ is *false*, then
           1. Throw a *TypeError* exception.

@@ -63,13 +63,17 @@
       <h1>CalendarDateUntil ( _calendar_, _one_, _two_, _options_ )</h1>
       <emu-alg>
         1. Let _dateUntil_ be ? Get(_calendar_, *"dateUntil"*).
-        1. Return ? Call(_dateUntil_ , _calendar_, « _one_, _two_, _options_ »).
+        1. Let _result_ be ? Call(_dateUntil_ , _calendar_, « _one_, _two_, _options_ »).
+        1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalDuration]]).
+        1. Return _result_.
       </emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal-totemporalcalendar" aoid="ToTemporalCalendar">
       <h1>ToTemporalCalendar ( _temporalCalendarLike_ )</h1>
       <emu-alg>
+        1. If _temporalCalendarLike_ is *undefined*, then
+          1. Return ? GetISO8601Calendar().
         1. If Type(_temporalCalendarLike_) is Object, then
           1. Return _temporalCalendarLike_.
         1. Let _identifier_ be ? ToString(_temporalCalendarLike_).

@@ -8,6 +8,7 @@ includes: [compareArray.js]
 
 const expected = [
   "get calendar",
+  "Calendar.from(test)",
   "get day",
   "valueOf day",
   "get hour",
@@ -26,6 +27,8 @@ const expected = [
   "valueOf second",
   "get year",
   "valueOf year",
+  "get era",
+  "toString era", // XXX?
 ];
 const actual = [];
 const fields = {
@@ -38,12 +41,16 @@ const fields = {
   millisecond: 1.7,
   microsecond: 1.7,
   nanosecond: 1.7,
+  era: "era",
+  calendar: "test",
 };
 const argument = new Proxy(fields, {
   get(target, key) {
     actual.push(`get ${key}`);
-    if (key === "calendar") return Temporal.Calendar.from('iso8601');
     const result = target[key];
+    if (key === "calendar") {
+      return result;
+    }
     return {
       valueOf() {
         actual.push(`valueOf ${key}`);
@@ -51,7 +58,7 @@ const argument = new Proxy(fields, {
       },
       toString() {
         actual.push(`toString ${key}`);
-        return result.toString();
+        return result;
       }
     };
   },
@@ -60,16 +67,36 @@ const argument = new Proxy(fields, {
     return key in target;
   },
 });
+const isoCalendar = Temporal.Calendar.from("iso8601");
+const calendarValue = {
+  fields(fieldsArgument) {
+    assert.compareArray(fieldsArgument, ["day", "month", "year"]);
+    return ["day", "era", "month", "year"];
+  },
+  dateFromFields(fieldsArgument, options, ctor) {
+    assert.sameValue(fieldsArgument.era.toString(), "era", "era argument"); // XXX verify
+    assert.sameValue(fieldsArgument.year, 1, "year argument");
+    assert.sameValue(fieldsArgument.month, 1, "month argument");
+    assert.sameValue(fieldsArgument.day, 1, "day argument");
+    assert.compareArray(Object.keys(fieldsArgument),
+      ["day", "hour", "microsecond", "millisecond", "minute", "month", "nanosecond", "second", "year", "era"]);
+    return new ctor(2, 2, 2, isoCalendar);
+  }
+};
+Temporal.Calendar.from = function(argument) {
+  actual.push(`Calendar.from(${argument})`);
+  return calendarValue;
+};
 const result = Temporal.PlainDateTime.from(argument);
+assert.sameValue(result.calendar, isoCalendar, "calendar result");
 assert.sameValue(result.era, undefined, "era result");
-assert.sameValue(result.year, 1, "year result");
-assert.sameValue(result.month, 1, "month result");
-assert.sameValue(result.day, 1, "day result");
+assert.sameValue(result.year, 2, "year result");
+assert.sameValue(result.month, 2, "month result");
+assert.sameValue(result.day, 2, "day result");
 assert.sameValue(result.hour, 1, "hour result");
 assert.sameValue(result.minute, 1, "minute result");
 assert.sameValue(result.second, 1, "second result");
 assert.sameValue(result.millisecond, 1, "millisecond result");
 assert.sameValue(result.microsecond, 1, "microsecond result");
 assert.sameValue(result.nanosecond, 1, "nanosecond result");
-assert.sameValue(result.calendar.id, "iso8601", "calendar result");
 assert.compareArray(actual, expected, "order of operations");
