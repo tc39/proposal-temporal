@@ -121,7 +121,7 @@ function fromIsoString(isoString: string, options?: ZonedDateTimeAssignmentOptio
   // > later, for example.)
   const isZ = absString.trimEnd().toUpperCase().endsWith('Z');
   const abs = Temporal.Instant.from(absString);
-  const offsetNs = dt.difference(abs.toDateTime('UTC'), { largestUnit: 'nanoseconds' }).nanoseconds;
+  const offsetNs = dt.difference(abs.toDateTime('UTC', dt.calendar), { largestUnit: 'nanoseconds' }).nanoseconds;
   return fromCommon(dt.withCalendar(cal), tz, offsetNs, disambiguation, isZ ? 'use' : offsetOption);
 }
 
@@ -243,7 +243,7 @@ export class ZonedDateTime {
     // TODO: remove the cast below once https://github.com/tc39/proposal-temporal/issues/810 is resolved
     this._tz = Temporal.TimeZone.from(timeZone as string | Temporal.TimeZone);
     this._abs = new Temporal.Instant(epochNanoseconds);
-    this._dt = this._abs.toDateTime(this._tz, calendar && Temporal.Calendar.from(calendar));
+    this._dt = this._abs.toDateTime(this._tz, calendar ? Temporal.Calendar.from(calendar) : 'iso8601');
     // @ts-ignore
     // eslint-disable-next-line no-undef
     if (typeof __debug__ !== 'undefined' && __debug__) {

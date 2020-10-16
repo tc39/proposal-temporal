@@ -36,7 +36,7 @@
     "poc-postprocess": "node ./polyfill/lib/poc/postProcess.js",
     "poc-rebuild": "cd polyfill && npm run build && rm -f *.tgz && npm pack",
     "poc-compile": "npm run poc-tsc-noemit && npm run poc-dts-nocomments && npm run poc-dts && npm run poc-babel && npm run poc-babel-tests && npm run poc-postprocess && npm run poc-pretty && npm run poc-rebuild",
-    "poc-cnt": "npm run poc-compile && clear && npm run test",
+    "poc-cnt": "npm run poc-compile && clear && npm run test-no262",
     "test-no262": "cd polyfill && npm install && npm test && npm run test-cookbook",
     "test": "cd polyfill && npm install && npm test && npm run test-cookbook && npm run test262",
     "codecov:tests": "cd polyfill && npm install && npm run codecov:tests",

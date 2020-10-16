@@ -19,8 +19,9 @@ import * as Temporal from 'proposal-temporal';
 describe('Temporal.now', () => {
   describe('Structure', () => {
     it('Temporal.now is an object', () => equal(typeof Temporal.now, 'object'));
-    it('Temporal.now has 8 properties', () => equal(Object.keys(Temporal.now).length, 8));
+    it('Temporal.now has 9 properties', () => equal(Object.keys(Temporal.now).length, 9));
     it('Temporal.now.zonedDateTime is a function', () => equal(typeof Temporal.now.zonedDateTime, 'function'));
+    it('Temporal.now.zonedDateTimeISO is a function', () => equal(typeof Temporal.now.zonedDateTimeISO, 'function'));
     it('Temporal.now.instant is a function', () => equal(typeof Temporal.now.instant, 'function'));
     it('Temporal.now.dateTime is a function', () => equal(typeof Temporal.now.dateTime, 'function'));
     it('Temporal.now.dateTimeISO is a function', () => equal(typeof Temporal.now.dateTimeISO, 'function'));
@@ -30,14 +31,28 @@ describe('Temporal.now', () => {
     it('Temporal.now.timeZone is a function', () => equal(typeof Temporal.now.timeZone, 'function'));
   });
   describe('Temporal.now.zonedDateTime()', () => {
-    it('Temporal.now.zonedDateTime() returns a ZonedDateTime', () =>
-      assert(Temporal.now.zonedDateTime() instanceof Temporal.ZonedDateTime));
-    it('Temporal.now.zonedDateTime() matches other now methods', () => {
+    it("Temporal.now.zonedDateTime('iso8601') returns a ZonedDateTime", () =>
+      assert(Temporal.now.zonedDateTime('iso8601') instanceof Temporal.ZonedDateTime));
+    it("Temporal.now.zonedDateTime('iso8601') matches other now methods", () => {
       const isSmallDiff = (d) => d.seconds * 1e9 + d.milliseconds * 1e6 + d.microseconds * 1e3 + d.nanoseconds < 1e8;
-      const dt = Temporal.now.dateTime();
+      const dt = Temporal.now.dateTimeISO();
       const abs = Temporal.now.instant();
       const tz = Temporal.now.timeZone();
-      const zdt = Temporal.now.zonedDateTime();
+      const zdt = Temporal.now.zonedDateTime('iso8601');
+      assert(isSmallDiff(zdt.toDateTime().difference(dt, { largestUnit: 'seconds' })));
+      assert(isSmallDiff(zdt.toInstant().difference(abs, { largestUnit: 'seconds' })));
+      assert(zdt.timeZone.name === tz.name);
+    });
+  });
+  describe('Temporal.now.zonedDateTimeISO()', () => {
+    it('Temporal.now.zonedDateTimeISO() returns a ZonedDateTime', () =>
+      assert(Temporal.now.zonedDateTimeISO() instanceof Temporal.ZonedDateTime));
+    it('Temporal.now.zonedDateTimeISO() matches other now methods', () => {
+      const isSmallDiff = (d) => d.seconds * 1e9 + d.milliseconds * 1e6 + d.microseconds * 1e3 + d.nanoseconds < 1e8;
+      const dt = Temporal.now.dateTimeISO();
+      const abs = Temporal.now.instant();
+      const tz = Temporal.now.timeZone();
+      const zdt = Temporal.now.zonedDateTimeISO();
       assert(isSmallDiff(zdt.toDateTime().difference(dt, { largestUnit: 'seconds' })));
       assert(isSmallDiff(zdt.toInstant().difference(abs, { largestUnit: 'seconds' })));
       assert(zdt.timeZone.name === tz.name);
