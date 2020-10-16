@@ -3645,7 +3645,40 @@
         };
       }
 
-      return ES.ToRecord(item, [['days', 0], ['hours', 0], ['microseconds', 0], ['milliseconds', 0], ['minutes', 0], ['months', 0], ['nanoseconds', 0], ['seconds', 0], ['weeks', 0], ['years', 0]]);
+      var props = ES.ToPartialRecord(item, ['days', 'hours', 'microseconds', 'milliseconds', 'minutes', 'months', 'nanoseconds', 'seconds', 'weeks', 'years']);
+      if (!props) throw new TypeError('invalid duration-like');
+      var _props$years = props.years,
+          years = _props$years === void 0 ? 0 : _props$years,
+          _props$months = props.months,
+          months = _props$months === void 0 ? 0 : _props$months,
+          _props$weeks = props.weeks,
+          weeks = _props$weeks === void 0 ? 0 : _props$weeks,
+          _props$days = props.days,
+          days = _props$days === void 0 ? 0 : _props$days,
+          _props$hours = props.hours,
+          hours = _props$hours === void 0 ? 0 : _props$hours,
+          _props$minutes = props.minutes,
+          minutes = _props$minutes === void 0 ? 0 : _props$minutes,
+          _props$seconds = props.seconds,
+          seconds = _props$seconds === void 0 ? 0 : _props$seconds,
+          _props$milliseconds = props.milliseconds,
+          milliseconds = _props$milliseconds === void 0 ? 0 : _props$milliseconds,
+          _props$microseconds = props.microseconds,
+          microseconds = _props$microseconds === void 0 ? 0 : _props$microseconds,
+          _props$nanoseconds = props.nanoseconds,
+          nanoseconds = _props$nanoseconds === void 0 ? 0 : _props$nanoseconds;
+      return {
+        years: years,
+        months: months,
+        weeks: weeks,
+        days: days,
+        hours: hours,
+        minutes: minutes,
+        seconds: seconds,
+        milliseconds: milliseconds,
+        microseconds: microseconds,
+        nanoseconds: nanoseconds
+      };
     },
     RegulateDuration: function RegulateDuration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, overflow) {
       for (var _i = 0, _arr = [years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds]; _i < _arr.length; _i++) {
@@ -3751,6 +3784,12 @@
     },
     ToLargestTemporalUnit: function ToLargestTemporalUnit(options, fallback) {
       var disallowedStrings = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
+      var plural = new Map([['year', 'years'], ['month', 'months'], ['day', 'days'], ['hour', 'hours'], ['minute', 'minutes'], ['second', 'seconds'], ['millisecond', 'milliseconds'], ['microsecond', 'microseconds'], ['nanosecond', 'nanoseconds']].filter(function (_ref2) {
+        var _ref3 = _slicedToArray(_ref2, 2),
+            pl = _ref3[1];
+
+        return !disallowedStrings.includes(pl);
+      }));
       var allowed = new Set(['years', 'months', 'weeks', 'days', 'hours', 'minutes', 'seconds', 'milliseconds', 'microseconds', 'nanoseconds']);
 
       var _iterator3 = _createForOfIteratorHelper(disallowedStrings),
@@ -3767,13 +3806,19 @@
         _iterator3.f();
       }
 
-      var retval = ES.GetOption(options, 'largestUnit', ['auto'].concat(_toConsumableArray(allowed)), 'auto');
+      var retval = ES.GetOption(options, 'largestUnit', ['auto'].concat(_toConsumableArray(allowed), _toConsumableArray(plural.keys())), 'auto');
       if (retval === 'auto') return fallback;
+      if (plural.has(retval)) return plural.get(retval);
       return retval;
     },
     ToSmallestTemporalUnit: function ToSmallestTemporalUnit(options) {
       var disallowedStrings = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
-      var singular = new Map([['days', 'day'], ['hours', 'hour'], ['minutes', 'minute'], ['seconds', 'second'], ['milliseconds', 'millisecond'], ['microseconds', 'microsecond'], ['nanoseconds', 'nanosecond']]);
+      var singular = new Map([['days', 'day'], ['hours', 'hour'], ['minutes', 'minute'], ['seconds', 'second'], ['milliseconds', 'millisecond'], ['microseconds', 'microsecond'], ['nanoseconds', 'nanosecond']].filter(function (_ref4) {
+        var _ref5 = _slicedToArray(_ref4, 2),
+            sing = _ref5[1];
+
+        return !disallowedStrings.includes(sing);
+      }));
       var allowed = new Set(['day', 'hour', 'minute', 'second', 'millisecond', 'microsecond', 'nanosecond']);
 
       var _iterator4 = _createForOfIteratorHelper(disallowedStrings),
@@ -3790,22 +3835,19 @@
         _iterator4.f();
       }
 
-      var allowedValues = _toConsumableArray(allowed);
-
-      var value = options.smallestUnit;
+      var value = ES.GetOption(options, 'smallestUnit', [].concat(_toConsumableArray(allowed), _toConsumableArray(singular.keys())), undefined);
       if (value === undefined) throw new RangeError('smallestUnit option is required');
-      value = ES.ToString(value);
-      if (singular.has(value)) value = singular.get(value);
-
-      if (!allowedValues.includes(value)) {
-        throw new RangeError("smallestUnit must be one of ".concat(allowedValues.join(', '), ", not ").concat(value));
-      }
-
+      if (singular.has(value)) return singular.get(value);
       return value;
     },
     ToSmallestTemporalDurationUnit: function ToSmallestTemporalDurationUnit(options, fallback) {
       var disallowedStrings = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
-      var plural = new Map([['year', 'years'], ['month', 'months'], ['week', 'weeks'], ['day', 'days'], ['hour', 'hours'], ['minute', 'minutes'], ['second', 'seconds'], ['millisecond', 'milliseconds'], ['microsecond', 'microseconds'], ['nanosecond', 'nanoseconds']]);
+      var plural = new Map([['year', 'years'], ['month', 'months'], ['day', 'days'], ['hour', 'hours'], ['minute', 'minutes'], ['second', 'seconds'], ['millisecond', 'milliseconds'], ['microsecond', 'microseconds'], ['nanosecond', 'nanoseconds']].filter(function (_ref6) {
+        var _ref7 = _slicedToArray(_ref6, 2),
+            pl = _ref7[1];
+
+        return !disallowedStrings.includes(pl);
+      }));
       var allowed = new Set(['years', 'months', 'weeks', 'days', 'hours', 'minutes', 'seconds', 'milliseconds', 'microseconds', 'nanoseconds']);
 
       var _iterator5 = _createForOfIteratorHelper(disallowedStrings),
@@ -3822,17 +3864,8 @@
         _iterator5.f();
       }
 
-      var allowedValues = _toConsumableArray(allowed);
-
-      var value = options.smallestUnit;
-      if (value === undefined) return fallback;
-      value = ES.ToString(value);
-      if (plural.has(value)) value = plural.get(value);
-
-      if (!allowedValues.includes(value)) {
-        throw new RangeError("smallestUnit must be one of ".concat(allowedValues.join(', '), ", not ").concat(value));
-      }
-
+      var value = ES.GetOption(options, 'smallestUnit', [].concat(_toConsumableArray(allowed), _toConsumableArray(plural.keys())), fallback);
+      if (plural.has(value)) return plural.get(value);
       return value;
     },
     ToRelativeTemporalObject: function ToRelativeTemporalObject(options) {
@@ -3971,7 +4004,28 @@
       return ES.ToRecord(bag, [['day'], ['month']]);
     },
     ToTemporalTimeRecord: function ToTemporalTimeRecord(bag) {
-      return ES.ToRecord(bag, [['hour', 0], ['microsecond', 0], ['millisecond', 0], ['minute', 0], ['nanosecond', 0], ['second', 0]]);
+      var props = ES.ToPartialRecord(bag, ['hour', 'microsecond', 'millisecond', 'minute', 'nanosecond', 'second']);
+      if (!props) throw new TypeError('invalid time-like');
+      var _props$hour = props.hour,
+          hour = _props$hour === void 0 ? 0 : _props$hour,
+          _props$minute = props.minute,
+          minute = _props$minute === void 0 ? 0 : _props$minute,
+          _props$second = props.second,
+          second = _props$second === void 0 ? 0 : _props$second,
+          _props$millisecond = props.millisecond,
+          millisecond = _props$millisecond === void 0 ? 0 : _props$millisecond,
+          _props$microsecond = props.microsecond,
+          microsecond = _props$microsecond === void 0 ? 0 : _props$microsecond,
+          _props$nanosecond = props.nanosecond,
+          nanosecond = _props$nanosecond === void 0 ? 0 : _props$nanosecond;
+      return {
+        hour: hour,
+        minute: minute,
+        second: second,
+        millisecond: millisecond,
+        microsecond: microsecond,
+        nanosecond: nanosecond
+      };
     },
     ToTemporalYearMonthRecord: function ToTemporalYearMonthRecord(bag) {
       return ES.ToRecord(bag, [['era', undefined], ['month'], ['year']]);
@@ -6661,7 +6715,7 @@
         var props = ES.ToPartialRecord(temporalDateLike, ['day', 'era', 'month', 'year']);
 
         if (!props) {
-          throw new RangeError('invalid date-like');
+          throw new TypeError('invalid date-like');
         }
 
         var fields = ES.ToTemporalDateRecord(source);
@@ -7097,7 +7151,7 @@
         var props = ES.ToPartialRecord(temporalDateTimeLike, ['day', 'era', 'hour', 'microsecond', 'millisecond', 'minute', 'month', 'nanosecond', 'second', 'year']);
 
         if (!props) {
-          throw new RangeError('invalid date-time-like');
+          throw new TypeError('invalid date-time-like');
         }
 
         var fields = ES.ToTemporalDateTimeRecord(source);
@@ -7806,7 +7860,7 @@
         var props = ES.ToPartialRecord(durationLike, ['days', 'hours', 'microseconds', 'milliseconds', 'minutes', 'months', 'nanoseconds', 'seconds', 'weeks', 'years']);
 
         if (!props) {
-          throw new RangeError('invalid duration-like');
+          throw new TypeError('invalid duration-like');
         }
 
         var _props$years = props.years,
@@ -8224,7 +8278,7 @@
         var props = ES.ToPartialRecord(temporalMonthDayLike, ['day', 'month']);
 
         if (!props) {
-          throw new RangeError('invalid month-day-like');
+          throw new TypeError('invalid month-day-like');
         }
 
         var fields = ES.ToTemporalMonthDayRecord(this);
@@ -8492,7 +8546,7 @@
         var props = ES.ToPartialRecord(temporalTimeLike, ['hour', 'microsecond', 'millisecond', 'minute', 'nanosecond', 'second']);
 
         if (!props) {
-          throw new RangeError('invalid time-like');
+          throw new TypeError('invalid time-like');
         }
 
         var _props$hour = props.hour,
@@ -9192,7 +9246,7 @@
         var props = ES.ToPartialRecord(temporalYearMonthLike, ['era', 'month', 'year']);
 
         if (!props) {
-          throw new RangeError('invalid year-month-like');
+          throw new TypeError('invalid year-month-like');
         }
 
         var fields = ES.ToTemporalYearMonthRecord(this);
