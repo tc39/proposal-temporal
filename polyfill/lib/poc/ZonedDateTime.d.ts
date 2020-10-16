@@ -284,7 +284,7 @@ export declare class ZonedDateTime {
    * not match the real-world sort order.
    *
    * If instants are equal, then `.calendar.id` will be compared
-   * alphabetically. If those are equal too, then `.timeZone.name` will be
+   * alphabetically. If those are equal too, then `.timeZone.id` will be
    * compared alphabetically. Even though alphabetic sort carries no meaning,
    * it's used to ensure that unequal instances have a deterministic sort order.
    *
@@ -384,8 +384,8 @@ export declare class ZonedDateTime {
    *
    * Available options:
    * ```
-   * largestUnit: 'years' | 'months' | 'weeks' | 'days' | 'hours' (default)
-   *   | 'minutes' | 'seconds' | 'milliseconds' | 'microseconds' | 'nanoseconds'
+   * largestUnit: 'years' | 'months' | 'weeks' | 'days' | 'hours' | 'minutes'
+   *   | 'seconds' | 'milliseconds' | 'microseconds' | 'nanoseconds' | 'auto' (default)
    * smallestUnit: 'years' | 'months' | 'weeks' | 'days' | 'hours'
    *   | 'minutes' | 'seconds' | 'milliseconds' | 'microseconds' | 'nanoseconds' (default)
    * roundingIncrement: number (default = 1)

@@ -23,7 +23,7 @@ export namespace Temporal {
   /**
    * Options for assigning fields using `Duration.prototype.with()` or entire
    * objects with `Duration.from()`, and for arithmetic with
-   * `Duration.prototype.plus()` and `Duration.prototype.minus()`.
+   * `Duration.prototype.add()` and `Duration.prototype.subtract()`.
    * */
   export type DurationOptions = {
     /**
@@ -70,7 +70,7 @@ export namespace Temporal {
   };
 
   /**
-   * Options for arithmetic operations like `plus()` and `minus()`
+   * Options for arithmetic operations like `add()` and `subtract()`
    * */
   export type ArithmeticOptions = {
     /**
@@ -93,13 +93,15 @@ export namespace Temporal {
      * The largest unit to allow in the resulting `Temporal.Duration` object.
      *
      * Valid values may include `'years'`, `'months'`, `'days'`, `'hours'`,
-     * `'minutes'`, and `'seconds'`, although some types may throw an exception
+     * `'minutes'`, `'seconds'`, `'milliseconds'`, `'microseconds'`,
+     * `'nanoseconds'` and `'auto'`, although some types may throw an exception
      * if a value is used that would produce an invalid result. For example,
      * `hours` is not accepted by `Date.prototype.difference()`.
      *
-     * The default depends on the type being used.
+     * The default is always `'auto'`, though the meaning of this depends on the
+     * type being used.
      */
-    largestUnit?: T;
+    largestUnit?: 'auto' | T;
 
     /**
      * The unit to round to. For example, to round to the nearest minute, use
@@ -167,6 +169,33 @@ export namespace Temporal {
     roundingMode?: 'nearest' | 'ceil' | 'trunc' | 'floor';
   }
 
+  export interface DurationRoundOptions {
+    largestUnit:
+      | 'auto'
+      | 'years'
+      | 'months'
+      | 'days'
+      | 'hours'
+      | 'minutes'
+      | 'seconds'
+      | 'milliseconds'
+      | 'microseconds'
+      | 'nanoseconds';
+    smallestUnit:
+      | 'years'
+      | 'months'
+      | 'days'
+      | 'hours'
+      | 'minutes'
+      | 'seconds'
+      | 'milliseconds'
+      | 'microseconds'
+      | 'nanoseconds';
+    roundingIncrement?: number;
+    roundingMode?: 'nearest' | 'ceil' | 'floor' | 'trunc';
+    relativeTo?: Temporal.DateTime | DateTimeLike | string;
+  }
+
   export type DurationLike = {
     years?: number;
     months?: number;
@@ -217,8 +246,9 @@ export namespace Temporal {
     negated(): Temporal.Duration;
     abs(): Temporal.Duration;
     with(durationLike: DurationLike, options?: DurationOptions): Temporal.Duration;
-    plus(other: Temporal.Duration | DurationLike, options?: DurationOptions): Temporal.Duration;
-    minus(other: Temporal.Duration | DurationLike, options?: DurationOptions): Temporal.Duration;
+    add(other: Temporal.Duration | DurationLike, options?: DurationOptions): Temporal.Duration;
+    subtract(other: Temporal.Duration | DurationLike, options?: DurationOptions): Temporal.Duration;
+    round(options: DurationRoundOptions): Temporal.Duration;
     getFields(): DurationFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
@@ -252,8 +282,8 @@ export namespace Temporal {
     getEpochMicroseconds(): bigint;
     getEpochNanoseconds(): bigint;
     equals(other: Temporal.Instant): boolean;
-    plus(durationLike: Temporal.Duration | DurationLike): Temporal.Instant;
-    minus(durationLike: Temporal.Duration | DurationLike): Temporal.Instant;
+    add(durationLike: Temporal.Duration | DurationLike): Temporal.Instant;
+    subtract(durationLike: Temporal.Duration | DurationLike): Temporal.Instant;
     difference(
       other: Temporal.Instant,
       options?: DifferenceOptions<'hours' | 'minutes' | 'seconds' | 'milliseconds' | 'microseconds' | 'nanoseconds'>
@@ -295,13 +325,13 @@ export namespace Temporal {
       options: AssignmentOptions,
       constructor: ConstructorOf<Temporal.MonthDay>
     ): Temporal.MonthDay;
-    datePlus?(
+    dateAdd?(
       date: Temporal.Date,
       duration: Temporal.Duration,
       options: ArithmeticOptions,
       constructor: ConstructorOf<Temporal.Date>
     ): Temporal.Date;
-    dateMinus?(
+    dateSubtract?(
       date: Temporal.Date,
       duration: Temporal.Duration,
       options: ArithmeticOptions,
@@ -353,13 +383,13 @@ export namespace Temporal {
       options: AssignmentOptions,
       constructor: ConstructorOf<Temporal.MonthDay>
     ): Temporal.MonthDay;
-    datePlus(
+    dateAdd(
       date: Temporal.Date,
       duration: Temporal.Duration,
       options: ArithmeticOptions,
       constructor: ConstructorOf<Temporal.Date>
     ): Temporal.Date;
-    dateMinus(
+    dateSubtract(
       date: Temporal.Date,
       duration: Temporal.Duration,
       options: ArithmeticOptions,
@@ -425,8 +455,8 @@ export namespace Temporal {
     equals(other: Temporal.Date): boolean;
     with(dateLike: DateLike, options?: AssignmentOptions): Temporal.Date;
     withCalendar(calendar: CalendarProtocol | string): Temporal.Date;
-    plus(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.Date;
-    minus(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.Date;
+    add(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.Date;
+    subtract(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.Date;
     difference(
       other: Temporal.Date,
       options?: DifferenceOptions<'years' | 'months' | 'weeks' | 'days'>
@@ -534,8 +564,8 @@ export namespace Temporal {
     equals(other: Temporal.DateTime): boolean;
     with(dateTimeLike: DateTimeLike, options?: AssignmentOptions): Temporal.DateTime;
     withCalendar(calendar: CalendarProtocol | string): Temporal.DateTime;
-    plus(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.DateTime;
-    minus(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.DateTime;
+    add(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.DateTime;
+    subtract(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.DateTime;
     difference(
       other: Temporal.DateTime,
       options?: DifferenceOptions<
@@ -646,8 +676,8 @@ export namespace Temporal {
     readonly nanosecond: number;
     equals(other: Temporal.Time): boolean;
     with(timeLike: Temporal.Time | TimeLike, options?: AssignmentOptions): Temporal.Time;
-    plus(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.Time;
-    minus(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.Time;
+    add(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.Time;
+    subtract(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.Time;
     difference(
       other: Temporal.Time,
       options?: DifferenceOptions<'hours' | 'minutes' | 'seconds' | 'milliseconds' | 'microseconds' | 'nanoseconds'>
@@ -671,7 +701,7 @@ export namespace Temporal {
    * A plain object implementing the protocol for a custom time zone.
    */
   export interface TimeZoneProtocol {
-    name?: string;
+    id?: string;
     getOffsetNanosecondsFor(instant: Temporal.Instant): number;
     getOffsetStringFor?(instant: Temporal.Instant): string;
     getDateTimeFor(instant: Temporal.Instant, calendar?: CalendarProtocol | string): Temporal.DateTime;
@@ -699,7 +729,7 @@ export namespace Temporal {
   export class TimeZone implements Required<TimeZoneProtocol> {
     static from(timeZone: Temporal.TimeZone | string): Temporal.TimeZone;
     constructor(timeZoneIdentifier: string);
-    readonly name: string;
+    readonly id: string;
     getOffsetNanosecondsFor(instant: Temporal.Instant): number;
     getOffsetStringFor(instant: Temporal.Instant): string;
     getDateTimeFor(instant: Temporal.Instant, calendar?: CalendarProtocol | string): Temporal.DateTime;
@@ -746,8 +776,8 @@ export namespace Temporal {
     readonly isLeapYear: boolean;
     equals(other: Temporal.YearMonth): boolean;
     with(yearMonthLike: YearMonthLike, options?: AssignmentOptions): Temporal.YearMonth;
-    plus(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.YearMonth;
-    minus(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.YearMonth;
+    add(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.YearMonth;
+    subtract(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.YearMonth;
     difference(other: Temporal.YearMonth, options?: DifferenceOptions<'years' | 'months'>): Temporal.Duration;
     toDateOnDay(day: number): Temporal.Date;
     getFields(): YearMonthFields;
@@ -1113,7 +1143,7 @@ export namespace Temporal {
      * not match the real-world sort order.
      *
      * If instants are equal, then `.calendar.id` will be compared
-     * alphabetically. If those are equal too, then `.timeZone.name` will be
+     * alphabetically. If those are equal too, then `.timeZone.id` will be
      * compared alphabetically. Even though alphabetic sort carries no meaning,
      * it's used to ensure that unequal instances have a deterministic sort order.
      *
@@ -1213,8 +1243,8 @@ export namespace Temporal {
      *
      * Available options:
      * ```
-     * largestUnit: 'years' | 'months' | 'weeks' | 'days' | 'hours' (default)
-     *   | 'minutes' | 'seconds' | 'milliseconds' | 'microseconds' | 'nanoseconds'
+     * largestUnit: 'years' | 'months' | 'weeks' | 'days' | 'hours' | 'minutes'
+     *   | 'seconds' | 'milliseconds' | 'microseconds' | 'nanoseconds' | 'auto' (default)
      * smallestUnit: 'years' | 'months' | 'weeks' | 'days' | 'hours'
      *   | 'minutes' | 'seconds' | 'milliseconds' | 'microseconds' | 'nanoseconds' (default)
      * roundingIncrement: number (default = 1)

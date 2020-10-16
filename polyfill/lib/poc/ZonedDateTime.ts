@@ -140,7 +140,7 @@ function fromCommon(
   }
 
   // Calculate the instant for the input's date/time and offset
-  const absWithInputOffset = dt.toInstant('UTC').plus({ nanoseconds: -offsetNs });
+  const absWithInputOffset = dt.toInstant('UTC').add({ nanoseconds: -offsetNs });
 
   if (
     offsetOption === 'use' ||
@@ -207,15 +207,15 @@ function doAddOrSubtract(
   // because this disambiguation behavior is required by RFC 5545.
   if (op === 'add') {
     // if addition, then order of operations is largest (date) units first
-    const dtIntermediate = zonedDateTime.toDateTime().plus(dateDuration, { overflow });
+    const dtIntermediate = zonedDateTime.toDateTime().add(dateDuration, { overflow });
     const absIntermediate = dtIntermediate.toInstant(timeZone);
-    const absResult = absIntermediate.plus(timeDuration);
+    const absResult = absIntermediate.add(timeDuration);
     return new ZonedDateTime(absResult.getEpochNanoseconds(), timeZone, calendar);
   } else {
     // if subtraction, then order of operations is smallest (time) units first
-    const absIntermediate = zonedDateTime.toInstant().minus(timeDuration);
+    const absIntermediate = zonedDateTime.toInstant().subtract(timeDuration);
     const dtIntermediate = absIntermediate.toDateTime(timeZone, calendar);
-    const dtResult = dtIntermediate.minus(dateDuration, { overflow });
+    const dtResult = dtIntermediate.subtract(dateDuration, { overflow });
     return fromDateTime(dtResult, timeZone);
   }
 }
@@ -370,7 +370,7 @@ export class ZonedDateTime {
     const newCalendar = calendar && Temporal.Calendar.from(calendar);
 
     const updateOffset = offsetNanoseconds !== undefined;
-    const updateTimeZone = newTimeZone && newTimeZone.name !== this._tz.name;
+    const updateTimeZone = newTimeZone && newTimeZone.id !== this._tz.id;
     const updateCalendar = newCalendar && newCalendar.id !== this.calendar.id;
 
     if (updateOffset && (typeof offsetNanoseconds !== 'number' || isNaN(offsetNanoseconds))) {
@@ -476,7 +476,7 @@ export class ZonedDateTime {
   get hoursInDay(): number {
     const todayDate = this.toDate();
     const today = ZonedDateTime.from({ ...todayDate.getFields(), timeZone: this.timeZone });
-    const tomorrow = ZonedDateTime.from({ ...todayDate.plus({ days: 1 }).getFields(), timeZone: this.timeZone });
+    const tomorrow = ZonedDateTime.from({ ...todayDate.add({ days: 1 }).getFields(), timeZone: this.timeZone });
     const todayAbs = today.toInstant();
     const tomorrowAbs = tomorrow.toInstant();
     const diff = tomorrowAbs.difference(todayAbs, { largestUnit: 'hours' });
@@ -599,7 +599,7 @@ export class ZonedDateTime {
    * not match the real-world sort order.
    *
    * If instants are equal, then `.calendar.id` will be compared
-   * alphabetically. If those are equal too, then `.timeZone.name` will be
+   * alphabetically. If those are equal too, then `.timeZone.id` will be
    * compared alphabetically. Even though alphabetic sort carries no meaning,
    * it's used to ensure that unequal instances have a deterministic sort order.
    *
@@ -611,7 +611,7 @@ export class ZonedDateTime {
     return (
       Temporal.Instant.compare(one._abs, two._abs) ||
       compareStrings(one.calendar.id, two.calendar.id) ||
-      compareStrings(one.timeZone.name, two.timeZone.name)
+      compareStrings(one.timeZone.id, two.timeZone.id)
     );
   }
 
@@ -715,8 +715,8 @@ export class ZonedDateTime {
    *
    * Available options:
    * ```
-   * largestUnit: 'years' | 'months' | 'weeks' | 'days' | 'hours' (default)
-   *   | 'minutes' | 'seconds' | 'milliseconds' | 'microseconds' | 'nanoseconds'
+   * largestUnit: 'years' | 'months' | 'weeks' | 'days' | 'hours' | 'minutes'
+   *   | 'seconds' | 'milliseconds' | 'microseconds' | 'nanoseconds' | 'auto' (default)
    * smallestUnit: 'years' | 'months' | 'weeks' | 'days' | 'hours'
    *   | 'minutes' | 'seconds' | 'milliseconds' | 'microseconds' | 'nanoseconds' (default)
    * roundingIncrement: number (default = 1)
@@ -748,7 +748,7 @@ export class ZonedDateTime {
     const wantDateUnits = dateUnits.includes(largestUnit);
     const wantDateUnitsOnly = dateUnits.includes(smallestUnit);
 
-    if (wantDateUnits && this._tz.name != other._tz.name) {
+    if (wantDateUnits && this._tz.id != other._tz.id) {
       throw new RangeError(
         "When calculating difference between time zones, `largestUnit` must be `'hours'` " +
           'or smaller because day lengths can vary between time zones due to DST or time zone offset changes.'
@@ -863,7 +863,7 @@ export class ZonedDateTime {
     // case where both `this` and `other` are both within 25 hours of a
     // different offset transition, but in practice this will be exceedingly
     // rare.
-    let intermediateDt = this._dt.minus(dateDuration);
+    let intermediateDt = this._dt.subtract(dateDuration);
     let intermediateAbs = intermediateDt.toInstant(this._tz);
     let adjustedTimeDuration: Temporal.Duration;
 
@@ -880,7 +880,7 @@ export class ZonedDateTime {
       // There was a transition in the time portion, so try assuming that the
       // time portion is on the other side next to `this`, where there's
       // unlikely to be another transition.
-      intermediateDt = other._dt.plus(dateDuration);
+      intermediateDt = other._dt.add(dateDuration);
       intermediateAbs = intermediateDt.toInstant(this._tz);
       adjustedTimeDuration = this._abs.difference(intermediateAbs, { largestUnit: 'hours' });
     }
@@ -928,10 +928,10 @@ export class ZonedDateTime {
    */
   toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string {
     const timeZoneOption = options == null ? undefined : options.timeZone;
-    if (timeZoneOption !== undefined && new Temporal.TimeZone(timeZoneOption).name !== this._tz.name) {
+    if (timeZoneOption !== undefined && new Temporal.TimeZone(timeZoneOption).id !== this._tz.id) {
       throw new RangeError(`Time zone option ${timeZoneOption} does not match actual time zone ${this._tz.toString()}`);
     }
-    const revisedOptions = options ? { ...options, timeZone: this._tz.name } : { timeZone: this._tz.name };
+    const revisedOptions = options ? { ...options, timeZone: this._tz.id } : { timeZone: this._tz.id };
     return this._abs.toLocaleString(locales, revisedOptions);
   }
 
@@ -958,7 +958,7 @@ export class ZonedDateTime {
    */
   toString(): string {
     const calendar = this._dt.calendar.id === 'iso8601' ? '' : `[c=${this._dt.calendar.id}]`;
-    return `${this._dt.withCalendar('iso8601')}${this.offsetString}[${this._tz.name}]${calendar}`;
+    return `${this._dt.withCalendar('iso8601')}${this.offsetString}[${this._tz.id}]${calendar}`;
   }
 
   // the fields and methods below are identical to DateTime
@@ -1142,7 +1142,7 @@ function isZeroDuration(duration: Temporal.Duration) {
   );
 }
 */
-type DifferenceUnit = NonNullable<NonNullable<Parameters<ZonedDateTime['difference']>[1]>['largestUnit']>;
+type DifferenceUnit = NonNullable<NonNullable<Parameters<ZonedDateTime['difference']>[1]>['smallestUnit']>;
 const DIFFERENCE_UNITS: DifferenceUnit[] = [
   'years',
   'months',
