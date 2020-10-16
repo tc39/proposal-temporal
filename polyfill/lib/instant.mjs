@@ -180,32 +180,8 @@ export class Instant {
       nanosecond: 86400e9
     };
     const roundingIncrement = ES.ToTemporalRoundingIncrement(options, maximumIncrements[smallestUnit], true);
-
-    let incrementNs = roundingIncrement;
-    switch (smallestUnit) {
-      case 'hour':
-        incrementNs *= 60;
-      // fall through
-      case 'minute':
-        incrementNs *= 60;
-      // fall through
-      case 'second':
-        incrementNs *= 1000;
-      // fall through
-      case 'millisecond':
-        incrementNs *= 1000;
-      // fall through
-      case 'microsecond':
-        incrementNs *= 1000;
-    }
     const ns = GetSlot(this, EPOCHNANOSECONDS);
-    // Note: NonNegativeModulo, but with BigInt
-    let remainder = ns.mod(86400e9);
-    if (remainder.lesser(0)) remainder = remainder.plus(86400e9);
-    const wholeDays = ns.minus(remainder);
-    const roundedRemainder = ES.RoundNumberToIncrement(remainder.toJSNumber(), incrementNs, roundingMode);
-    const roundedNs = wholeDays.plus(roundedRemainder);
-
+    const roundedNs = ES.RoundInstant(ns, roundingIncrement, smallestUnit, roundingMode);
     const Construct = ES.SpeciesConstructor(this, Instant);
     const result = new Construct(bigIntIfAvailable(roundedNs));
     if (!ES.IsTemporalInstant(result)) throw new TypeError('invalid result');

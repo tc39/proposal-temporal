@@ -340,20 +340,8 @@
           1. Assert: _smallestUnit_ is *"nanosecond"*.
           1. Let _maximum_ be 8.64 × 10<sup>13</sup>.
         1. Let _roundingIncrement_ be the mathematical value of ? ToTemporalRoundingIncrement(_options_, _maximum_, *true*).
-        1. If _smallestUnit_ is *"hour"*, then
-          1. Let _incrementNs_ be _roundingIncrement_ × 3.6 × 10<sup>12</sup>.
-        1. Else if _smallestUnit_ is *"minute"*, then
-          1. Let _incrementNs_ be _roundingIncrement_ × 6 × 10<sup>10</sup>.
-        1. Else if _smallestUnit_ is *"second"*, then
-          1. Let _incrementNs_ be _roundingIncrement_ × 10<sup>9</sup>.
-        1. Else if _smallestUnit_ is *"millisecond"*, then
-          1. Let _incrementNs_ be _roundingIncrement_ × 10<sup>6</sup>.
-        1. Else if _smallestUnit_ is *"microsecond"*, then
-          1. Let _incrementNs_ be _roundingIncrement_ × 10<sup>3</sup>.
-        1. Else,
-          1. Let _incrementNs_ be _roundingIncrement_.
         1. Let _ns_ be the mathematical value of _instant_.[[Nanoseconds]].
-        1. Let _roundedNs_ be ? RoundNumberToIncrement(_ns_, _incrementNs_, _roundingMode_).
+        1. Let _roundedNs_ be ? RoundTemporalInstant(_ns_, _roundingIncrement_, _smallestUnit_, _roundingMode_).
         1. Return ? CreateTemporalInstantFromInstance(_instant_, _roundedNs_).
       </emu-alg>
     </emu-clause>
@@ -597,6 +585,28 @@
         1. If _epochNanosecondsOne_ &gt; _epochNanosecondsTwo_, return 1.
         1. If _epochNanosecondsOne_ &lt; _epochNanosecondsTwo_, return -1.
         1. Return 0.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-roundtemporalinstant" aoid="RoundTemporalInstant">
+      <h1>RoundTemporalInstant ( _ns_, _increment_, _unit_, _roundingMode_ )</h1>
+      <p>
+        The abstract operation RoundTemporalInstant rounds a number of nanoseconds since the Unix epoch to the given rounding increment.
+      </p>
+      <emu-alg>
+        1. If _unit_ is *"hour"*, then
+          1. Let _incrementNs_ be _increment_ × 3.6 × 10<sup>12</sup>.
+        1. Else if _unit_ is *"minute"*, then
+          1. Let _incrementNs_ be _increment_ × 6 × 10<sup>10</sup>.
+        1. Else if _unit_ is *"second"*, then
+          1. Let _incrementNs_ be _increment_ × 10<sup>9</sup>.
+        1. Else if _unit_ is *"millisecond"*, then
+          1. Let _incrementNs_ be _increment_ × 10<sup>6</sup>.
+        1. Else if _unit_ is *"microsecond"*, then
+          1. Let _incrementNs_ be _increment_ × 10<sup>3</sup>.
+        1. Else,
+          1. Let _incrementNs_ be _increment_.
+        1. Return ? RoundNumberToIncrement(_ns_, _incrementNs_, _roundingMode_).
       </emu-alg>
     </emu-clause>
 
