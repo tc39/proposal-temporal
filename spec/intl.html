@@ -460,6 +460,93 @@
       </emu-alg>
     </emu-clause>
     </ins>
+
+    <emu-clause id="sec-temporal-tolocaltime" aoid="ToLocalTime">
+      <h1>ToLocalTime ( _t_, _calendar_, _timeZone_ )</h1>
+
+      <p>
+        When the ToLocalTime abstract operation is called with arguments _t_, _calendar_, and _timeZone_, the following steps are taken:
+      </p>
+
+      <emu-alg>
+        1. Assert: Type(_t_) is Number.
+        1. If _calendar_ is *"gregory"*, then
+          1. Let _timeZoneOffset_ be the value calculated according to <emu-xref href="#sec-local-time-zone-adjustment">LocalTZA(_t_, *true*)</emu-xref> where the local time zone is replaced with timezone _timeZone_.
+          <ins>Given the same values of _t_ and _timeZone_, the result must be the same for the lifetime of the surrounding agent</ins>.
+          1. Let _tz_ be the time value _t_ + _timeZoneOffset_.
+          1. Return a record with fields calculated from _tz_ according to <emu-xref href="#table-temporal-datetimeformat-tolocaltime-record"></emu-xref>.
+        1. Else,
+          1. Return a record with the fields of Column 1 of <emu-xref href="#table-temporal-datetimeformat-tolocaltime-record"></emu-xref> calculated from _t_ for the given _calendar_ and _timeZone_. The calculations should use best available information about the specified _calendar_ and _timeZone_, including current and historical information about time zone offsets from UTC and daylight saving time rules.
+          <ins>Given the same values of _t_, _calendar_, and _timeZone_, the result must be the same for the lifetime of the surrounding agent</ins>.
+      </emu-alg>
+
+      <emu-table id="table-temporal-datetimeformat-tolocaltime-record">
+        <emu-caption>Record returned by ToLocalTime</emu-caption>
+        <table class="real-table">
+          <thead>
+            <tr>
+              <th>Field</th>
+              <th>Value Calculation for Gregorian Calendar</th>
+            </tr>
+          </thead>
+          <tr>
+            <td>[[Weekday]]</td>
+            <td>`WeekDay(tz)` specified in ES2021's <emu-xref href="#sec-week-day">Week Day</emu-xref></td>
+          </tr>
+          <tr>
+            <td>[[Era]]</td>
+            <td>Let `year` be `YearFromTime(tz)` specified in ES2021's <emu-xref href="#sec-year-number">Year Number</emu-xref>. If `year` is less than 0, return 'BC', else, return 'AD'.</td>
+          </tr>
+          <tr>
+            <td>[[Year]]</td>
+            <td>`YearFromTime(tz)` specified in ES2021's <emu-xref href="#sec-year-number">Year Number</emu-xref></td>
+          </tr>
+          <tr>
+            <td>[[RelatedYear]]</td>
+            <td>*undefined*</td>
+          </tr>
+          <tr>
+            <td>[[YearName]]</td>
+            <td>*undefined*</td>
+          </tr>
+          <tr>
+            <td>[[Month]]</td>
+            <td>`MonthFromTime(tz)` specified in ES2021's <emu-xref href="#sec-month-number">Month Number</emu-xref></td>
+          </tr>
+          <tr>
+            <td>[[Day]]</td>
+            <td>`DateFromTime(tz)` specified in ES2021's <emu-xref href="#sec-date-number">Date Number</emu-xref></td>
+          </tr>
+          <tr>
+            <td>[[Hour]]</td>
+            <td>`HourFromTime(tz)` specified in ES2021's <emu-xref href="#sec-hours-minutes-second-and-milliseconds">Hours, Minutes, Second, and Milliseconds</emu-xref></td>
+          </tr>
+          <tr>
+            <td>[[Minute]]</td>
+            <td>`MinFromTime(tz)` specified in ES2021's <emu-xref href="#sec-hours-minutes-second-and-milliseconds">Hours, Minutes, Second, and Milliseconds</emu-xref></td>
+          </tr>
+          <tr>
+            <td>[[Second]]</td>
+            <td>`SecFromTime(tz)` specified in ES2021's <emu-xref href="#sec-hours-minutes-second-and-milliseconds">Hours, Minutes, Second, and Milliseconds</emu-xref></td>
+          </tr>
+          <tr>
+            <td>[[InDST]]</td>
+            <td>Calculate *true* or *false* using the best available information about the specified _calendar_ and _timeZone_, including current and historical information about time zone offsets from UTC and daylight saving time rules.</td>
+          </tr>
+        </table>
+      </emu-table>
+
+      <emu-note>
+        It is recommended that implementations use the time zone information of the IANA Time Zone Database.
+      </emu-note>
+      <emu-note>
+        <ins>
+          Time zone information is subject to change, and host environments may update their time zone information at any time.
+          At a minimum, implementations must ensure that the time zone information for each particular value of _timeZone_ individually remains constant starting from the time it is first accessed, for the lifetime of the surrounding agent.
+          Furthermore, it is recommended that the time zone information for all values of _timeZone_ as a whole remains the same for the lifetime of the surrounding agent.
+        </ins>
+      </emu-note>
+    </emu-clause>
   </emu-clause>
 
   <emu-clause id="sec-properties-of-intl-datetimeformat-prototype-object">
