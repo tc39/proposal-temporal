@@ -21,7 +21,7 @@ describe('Userland calendar', () => {
     const ISO8601Calendar = Temporal.Calendar.from('iso8601').constructor;
     class ZeroBasedCalendar extends ISO8601Calendar {
       constructor() {
-        super('zerobased');
+        super('zero-based');
       }
       dateFromFields(fields, options, constructor) {
         fields.month++;
@@ -47,13 +47,13 @@ describe('Userland calendar', () => {
     const md = Temporal.MonthDay.from({ month: 5, day: 5, calendar: obj });
 
     it('is a calendar', () => equal(typeof obj, 'object'));
-    it('.id property', () => equal(obj.id, 'zerobased'));
+    it('.id property', () => equal(obj.id, 'zero-based'));
     // FIXME: what should happen in Temporal.Calendar.from(obj)?
     it('.id is not available in from()', () => {
-      throws(() => Temporal.Calendar.from('zerobased'), RangeError);
-      throws(() => Temporal.Calendar.from('2020-06-05T09:34-07:00[America/Vancouver][c=zerobased]'), RangeError);
+      throws(() => Temporal.Calendar.from('zero-based'), RangeError);
+      throws(() => Temporal.Calendar.from('2020-06-05T09:34-07:00[America/Vancouver][c=zero-based]'), RangeError);
     });
-    it('Temporal.Date.from()', () => equal(`${date}`, '2020-06-05[c=zerobased]'));
+    it('Temporal.Date.from()', () => equal(`${date}`, '2020-06-05[c=zero-based]'));
     it('Temporal.Date fields', () => {
       equal(date.year, 2020);
       equal(date.month, 5);
@@ -67,7 +67,7 @@ describe('Userland calendar', () => {
       const date2 = Temporal.Date.from('2020-06-05');
       assert(date2.withCalendar(obj).equals(date));
     });
-    it('Temporal.DateTime.from()', () => equal(`${dt}`, '2020-06-05T12:00[c=zerobased]'));
+    it('Temporal.DateTime.from()', () => equal(`${dt}`, '2020-06-05T12:00[c=zero-based]'));
     it('Temporal.DateTime fields', () => {
       equal(dt.year, 2020);
       equal(dt.month, 5);
@@ -87,7 +87,7 @@ describe('Userland calendar', () => {
       const dt2 = Temporal.DateTime.from('2020-06-05T12:00');
       assert(dt2.withCalendar(obj).equals(dt));
     });
-    it('Temporal.YearMonth.from()', () => equal(`${ym}`, '2020-06-01[c=zerobased]'));
+    it('Temporal.YearMonth.from()', () => equal(`${ym}`, '2020-06-01[c=zero-based]'));
     it('Temporal.YearMonth fields', () => {
       equal(dt.year, 2020);
       equal(dt.month, 5);
@@ -96,7 +96,7 @@ describe('Userland calendar', () => {
       const ym2 = ym.with({ month: 0 });
       equal(ym2.month, 0);
     });
-    it('Temporal.MonthDay.from()', () => equal(`${md}`, '1972-06-05[c=zerobased]'));
+    it('Temporal.MonthDay.from()', () => equal(`${md}`, '1972-06-05[c=zero-based]'));
     it('Temporal.MonthDay fields', () => {
       equal(dt.month, 5);
       equal(dt.day, 5);
@@ -135,87 +135,87 @@ describe('Userland calendar', () => {
             id = `${item}`;
             // TODO: Use Temporal.parse here to extract the ID from an ISO string
           }
-          if (id === 'zerobased') return new ZeroBasedCalendar();
+          if (id === 'zero-based') return new ZeroBasedCalendar();
           return originalTemporalCalendarFrom.call(this, id);
         };
       });
       it('works for Calendar.from(id)', () => {
-        const tz = Temporal.Calendar.from('zerobased');
+        const tz = Temporal.Calendar.from('zero-based');
         assert(tz instanceof ZeroBasedCalendar);
       });
-      const iso = '1970-01-01T00:00+00:00[c=zerobased]';
+      const iso = '1970-01-01T00:00+00:00[c=zero-based]';
       it.skip('works for Calendar.from(ISO string)', () => {
         const tz = Temporal.Calendar.from(iso);
         assert(tz instanceof ZeroBasedCalendar);
       });
       it('works for Date.from(iso)', () => {
         const d = Temporal.Date.from(iso);
-        equal(`${d}`, '1970-01-01[c=zerobased]');
+        equal(`${d}`, '1970-01-01[c=zero-based]');
       });
       it('works for Date.from(props)', () => {
-        const d = Temporal.Date.from({ year: 1970, month: 0, day: 1, calendar: 'zerobased' });
-        equal(`${d}`, '1970-01-01[c=zerobased]');
+        const d = Temporal.Date.from({ year: 1970, month: 0, day: 1, calendar: 'zero-based' });
+        equal(`${d}`, '1970-01-01[c=zero-based]');
       });
       it('works for Date.with', () => {
         const d1 = Temporal.Date.from('1970-02-01');
-        const d2 = d1.with({ month: 0, calendar: 'zerobased' });
-        equal(`${d2}`, '1970-01-01[c=zerobased]');
+        const d2 = d1.with({ month: 0, calendar: 'zero-based' });
+        equal(`${d2}`, '1970-01-01[c=zero-based]');
       });
       it('works for Date.withCalendar', () => {
         const d = Temporal.Date.from('1970-01-01');
-        assert(d.withCalendar('zerobased').equals(Temporal.Date.from(iso)));
+        assert(d.withCalendar('zero-based').equals(Temporal.Date.from(iso)));
       });
       it('works for DateTime.from(iso)', () => {
         const dt = Temporal.DateTime.from(iso);
-        equal(`${dt}`, '1970-01-01T00:00[c=zerobased]');
+        equal(`${dt}`, '1970-01-01T00:00[c=zero-based]');
       });
       it('works for DateTime.from(props)', () => {
-        const dt = Temporal.DateTime.from({ year: 1970, month: 0, day: 1, hour: 12, calendar: 'zerobased' });
-        equal(`${dt}`, '1970-01-01T12:00[c=zerobased]');
+        const dt = Temporal.DateTime.from({ year: 1970, month: 0, day: 1, hour: 12, calendar: 'zero-based' });
+        equal(`${dt}`, '1970-01-01T12:00[c=zero-based]');
       });
       it('works for DateTime.with', () => {
         const dt1 = Temporal.DateTime.from('1970-02-01T12:00');
-        const dt2 = dt1.with({ month: 0, calendar: 'zerobased' });
-        equal(`${dt2}`, '1970-01-01T12:00[c=zerobased]');
+        const dt2 = dt1.with({ month: 0, calendar: 'zero-based' });
+        equal(`${dt2}`, '1970-01-01T12:00[c=zero-based]');
       });
       it('works for DateTime.withCalendar', () => {
         const dt = Temporal.DateTime.from('1970-01-01T00:00');
-        assert(dt.withCalendar('zerobased').equals(Temporal.DateTime.from(iso)));
+        assert(dt.withCalendar('zero-based').equals(Temporal.DateTime.from(iso)));
       });
       it('works for YearMonth.from(iso)', () => {
         const ym = Temporal.YearMonth.from(iso);
-        equal(`${ym}`, '1970-01-01[c=zerobased]');
+        equal(`${ym}`, '1970-01-01[c=zero-based]');
       });
       it('works for YearMonth.from(props)', () => {
-        const ym = Temporal.YearMonth.from({ year: 1970, month: 0, calendar: 'zerobased' });
-        equal(`${ym}`, '1970-01-01[c=zerobased]');
+        const ym = Temporal.YearMonth.from({ year: 1970, month: 0, calendar: 'zero-based' });
+        equal(`${ym}`, '1970-01-01[c=zero-based]');
       });
       it('works for MonthDay.from(iso)', () => {
         const md = Temporal.MonthDay.from(iso);
-        equal(`${md}`, '1970-01-01[c=zerobased]');
+        equal(`${md}`, '1970-01-01[c=zero-based]');
       });
       it('works for MonthDay.from(props)', () => {
-        const md = Temporal.MonthDay.from({ month: 0, day: 1, calendar: 'zerobased' });
-        equal(`${md}`, '1972-01-01[c=zerobased]');
+        const md = Temporal.MonthDay.from({ month: 0, day: 1, calendar: 'zero-based' });
+        equal(`${md}`, '1972-01-01[c=zero-based]');
       });
       it('works for TimeZone.getDateTimeFor', () => {
         const tz = Temporal.TimeZone.from('UTC');
         const inst = Temporal.Instant.fromEpochSeconds(0);
-        const dt = tz.getDateTimeFor(inst, 'zerobased');
-        equal(dt.calendar.id, 'zerobased');
+        const dt = tz.getDateTimeFor(inst, 'zero-based');
+        equal(dt.calendar.id, 'zero-based');
       });
       it('works for Instant.toDateTime', () => {
         const inst = Temporal.Instant.fromEpochSeconds(0);
-        const dt = inst.toDateTime('UTC', 'zerobased');
-        equal(dt.calendar.id, 'zerobased');
+        const dt = inst.toDateTime('UTC', 'zero-based');
+        equal(dt.calendar.id, 'zero-based');
       });
       it('works for Temporal.now.dateTime', () => {
-        const nowDateTime = Temporal.now.dateTime('zerobased', 'UTC');
-        equal(nowDateTime.calendar.id, 'zerobased');
+        const nowDateTime = Temporal.now.dateTime('zero-based', 'UTC');
+        equal(nowDateTime.calendar.id, 'zero-based');
       });
       it('works for Temporal.now.date', () => {
-        const nowDate = Temporal.now.date('zerobased', 'UTC');
-        equal(nowDate.calendar.id, 'zerobased');
+        const nowDate = Temporal.now.date('zero-based', 'UTC');
+        equal(nowDate.calendar.id, 'zero-based');
       });
       after(() => {
         Temporal.Calendar.from = originalTemporalCalendarFrom;

@@ -41,6 +41,8 @@ For specialized applications where you need to do calculations in a calendar sys
 To do this, create a class inheriting from `Temporal.Calendar`, call `super()` in the constructor with a calendar identifier, and implement all the methods.
 Any subclass of `Temporal.Calendar` will be accepted in Temporal APIs where a built-in `Temporal.Calendar` would work.
 
+The identifier of a custom calendar must consist of one or more components of between 3 and 8 ASCII alphanumeric characters each, separated by dashes, as described in [Unicode Technical Standard 35](https://unicode.org/reports/tr35/tr35.html#Unicode_locale_identifier).
+
 ### Protocol
 
 It's also possible for a plain object to be a custom calendar, without subclassing.
