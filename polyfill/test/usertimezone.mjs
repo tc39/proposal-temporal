@@ -51,9 +51,9 @@ describe('Userland time zone', () => {
     });
     it('has offset string +00:00', () => equal(obj.getOffsetStringFor(inst), '+00:00'));
     it('converts to DateTime', () => {
-      equal(`${obj.getDateTimeFor(inst)}`, '1970-01-01T00:00');
-      equal(`${inst.toDateTimeISO(obj)}`, '1970-01-01T00:00');
-      equal(`${inst.toDateTime(obj, 'gregory')}`, '1970-01-01T00:00[c=gregory]');
+      equal(`${obj.getDateTimeFor(inst)}`, '1970-01-01T00:00:00');
+      equal(`${inst.toDateTimeISO(obj)}`, '1970-01-01T00:00:00');
+      equal(`${inst.toDateTime(obj, 'gregory')}`, '1970-01-01T00:00:00[c=gregory]');
     });
     it('converts to Instant', () => {
       equal(`${obj.getInstantFor(dt)}`, '1976-11-18T15:23:30.123456789Z');
@@ -61,7 +61,7 @@ describe('Userland time zone', () => {
     });
     it('converts to string', () => equal(`${obj}`, obj.id));
     it('prints in instant.toString', () =>
-      equal(inst.toString(obj), '1970-01-01T00:00+00:00[Etc/Custom/UTC_Subclass]'));
+      equal(inst.toString(obj), '1970-01-01T00:00:00+00:00[Etc/Custom/UTC_Subclass]'));
     it('has no next transitions', () => assert.equal(obj.getNextTransition(), null));
     it('has no previous transitions', () => assert.equal(obj.getPreviousTransition(), null));
     it('works in Temporal.now', () => {
@@ -96,16 +96,16 @@ describe('Userland time zone', () => {
       });
       it('works for Instant.from', () => {
         const instant = Temporal.Instant.from('1970-01-01T00:00+00:00[Etc/Custom/UTC_Subclass]');
-        equal(`${instant}`, '1970-01-01T00:00Z');
+        equal(`${instant}`, '1970-01-01T00:00:00Z');
       });
       it('works for Instant.toString', () => {
         const inst = Temporal.Instant.fromEpochSeconds(0);
-        equal(inst.toString('Etc/Custom/UTC_Subclass'), '1970-01-01T00:00+00:00[Etc/Custom/UTC_Subclass]');
+        equal(inst.toString('Etc/Custom/UTC_Subclass'), '1970-01-01T00:00:00+00:00[Etc/Custom/UTC_Subclass]');
       });
       it('works for Instant.toDateTime and toDateTimeISO', () => {
         const inst = Temporal.Instant.fromEpochSeconds(0);
-        equal(`${inst.toDateTimeISO('Etc/Custom/UTC_Subclass')}`, '1970-01-01T00:00');
-        equal(`${inst.toDateTime('Etc/Custom/UTC_Subclass', 'gregory')}`, '1970-01-01T00:00[c=gregory]');
+        equal(`${inst.toDateTimeISO('Etc/Custom/UTC_Subclass')}`, '1970-01-01T00:00:00');
+        equal(`${inst.toDateTime('Etc/Custom/UTC_Subclass', 'gregory')}`, '1970-01-01T00:00:00[c=gregory]');
       });
       it('works for DateTime.toInstant', () => {
         const dt = Temporal.DateTime.from('1970-01-01T00:00');
@@ -146,16 +146,16 @@ describe('Userland time zone', () => {
     it('has offset string +00:00', () =>
       equal(Temporal.TimeZone.prototype.getOffsetStringFor.call(obj, inst), '+00:00'));
     it('converts to DateTime', () => {
-      equal(`${Temporal.TimeZone.prototype.getDateTimeFor.call(obj, inst)}`, '1970-01-01T00:00');
-      equal(`${inst.toDateTimeISO(obj)}`, '1970-01-01T00:00');
-      equal(`${inst.toDateTime(obj, 'gregory')}`, '1970-01-01T00:00[c=gregory]');
+      equal(`${Temporal.TimeZone.prototype.getDateTimeFor.call(obj, inst)}`, '1970-01-01T00:00:00');
+      equal(`${inst.toDateTimeISO(obj)}`, '1970-01-01T00:00:00');
+      equal(`${inst.toDateTime(obj, 'gregory')}`, '1970-01-01T00:00:00[c=gregory]');
     });
     it('converts to Instant', () => {
       equal(`${Temporal.TimeZone.prototype.getInstantFor.call(obj, dt)}`, '1976-11-18T15:23:30.123456789Z');
       equal(`${dt.toInstant(obj)}`, '1976-11-18T15:23:30.123456789Z');
     });
     it('prints in instant.toString', () =>
-      equal(inst.toString(obj), '1970-01-01T00:00+00:00[Etc/Custom/UTC_Protocol]'));
+      equal(inst.toString(obj), '1970-01-01T00:00:00+00:00[Etc/Custom/UTC_Protocol]'));
     it('works in Temporal.now', () => {
       assert(Temporal.now.dateTimeISO(obj) instanceof Temporal.DateTime);
       assert(Temporal.now.dateTime('gregory', obj) instanceof Temporal.DateTime);
@@ -187,17 +187,17 @@ describe('Userland time zone', () => {
         assert(Object.is(tz, obj));
       });
       it('works for Instant.from', () => {
-        const inst = Temporal.Instant.from('1970-01-01T00:00+00:00[Etc/Custom/UTC_Protocol]');
-        equal(`${inst}`, '1970-01-01T00:00Z');
+        const inst = Temporal.Instant.from('1970-01-01T00:00:00+00:00[Etc/Custom/UTC_Protocol]');
+        equal(`${inst}`, '1970-01-01T00:00:00Z');
       });
       it('works for Instant.toString', () => {
         const inst = Temporal.Instant.fromEpochSeconds(0);
-        equal(inst.toString('Etc/Custom/UTC_Protocol'), '1970-01-01T00:00+00:00[Etc/Custom/UTC_Protocol]');
+        equal(inst.toString('Etc/Custom/UTC_Protocol'), '1970-01-01T00:00:00+00:00[Etc/Custom/UTC_Protocol]');
       });
       it('works for Instant.toDateTime and toDateTimeISO', () => {
         const inst = Temporal.Instant.fromEpochSeconds(0);
-        equal(`${inst.toDateTimeISO('Etc/Custom/UTC_Protocol')}`, '1970-01-01T00:00');
-        equal(`${inst.toDateTime('Etc/Custom/UTC_Protocol', 'gregory')}`, '1970-01-01T00:00[c=gregory]');
+        equal(`${inst.toDateTimeISO('Etc/Custom/UTC_Protocol')}`, '1970-01-01T00:00:00');
+        equal(`${inst.toDateTime('Etc/Custom/UTC_Protocol', 'gregory')}`, '1970-01-01T00:00:00[c=gregory]');
       });
       it('works for DateTime.toInstant', () => {
         const dt = Temporal.DateTime.from('1970-01-01T00:00');
@@ -255,8 +255,8 @@ describe('Userland time zone', () => {
       equal(`${inst.toDateTime(obj, 'gregory')}`, '1969-12-31T23:59:58.888888889[c=gregory]');
     });
     it('converts to Instant', () => {
-      equal(`${obj.getInstantFor(dt)}`, '1976-11-18T15:23:31.234567900Z');
-      equal(`${dt.toInstant(obj)}`, '1976-11-18T15:23:31.234567900Z');
+      equal(`${obj.getInstantFor(dt)}`, '1976-11-18T15:23:31.2345679Z');
+      equal(`${dt.toInstant(obj)}`, '1976-11-18T15:23:31.2345679Z');
     });
     it('converts to string', () => equal(`${obj}`, obj.id));
     it('prints in instant.toString', () =>
@@ -295,7 +295,7 @@ describe('Userland time zone', () => {
       });
       it('works for Instant.from', () => {
         const instant = Temporal.Instant.from('1970-01-01T11:59:58.888888889-00:00:01.111111111[Custom/Subminute]');
-        equal(`${instant}`, '1970-01-01T12:00Z');
+        equal(`${instant}`, '1970-01-01T12:00:00Z');
       });
       it('works for Instant.toString', () => {
         const inst = Temporal.Instant.fromEpochSeconds(0);

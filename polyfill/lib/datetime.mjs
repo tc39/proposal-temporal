@@ -23,18 +23,41 @@ import {
 
 const ObjectAssign = Object.assign;
 
-function DateTimeToString(dateTime) {
-  const year = ES.ISOYearString(GetSlot(dateTime, ISO_YEAR));
-  const month = ES.ISODateTimePartString(GetSlot(dateTime, ISO_MONTH));
-  const day = ES.ISODateTimePartString(GetSlot(dateTime, ISO_DAY));
-  const hour = ES.ISODateTimePartString(GetSlot(dateTime, HOUR));
-  const minute = ES.ISODateTimePartString(GetSlot(dateTime, MINUTE));
-  const seconds = ES.FormatSecondsStringPart(
-    GetSlot(dateTime, SECOND),
-    GetSlot(dateTime, MILLISECOND),
-    GetSlot(dateTime, MICROSECOND),
-    GetSlot(dateTime, NANOSECOND)
-  );
+function DateTimeToString(dateTime, precision, options = undefined) {
+  let year = GetSlot(dateTime, ISO_YEAR);
+  let month = GetSlot(dateTime, ISO_MONTH);
+  let day = GetSlot(dateTime, ISO_DAY);
+  let hour = GetSlot(dateTime, HOUR);
+  let minute = GetSlot(dateTime, MINUTE);
+  let second = GetSlot(dateTime, SECOND);
+  let millisecond = GetSlot(dateTime, MILLISECOND);
+  let microsecond = GetSlot(dateTime, MICROSECOND);
+  let nanosecond = GetSlot(dateTime, NANOSECOND);
+
+  if (options) {
+    const { unit, increment, roundingMode } = options;
+    ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.RoundDateTime(
+      year,
+      month,
+      day,
+      hour,
+      minute,
+      second,
+      millisecond,
+      microsecond,
+      nanosecond,
+      increment,
+      unit,
+      roundingMode
+    ));
+  }
+
+  year = ES.ISOYearString(year);
+  month = ES.ISODateTimePartString(month);
+  day = ES.ISODateTimePartString(day);
+  hour = ES.ISODateTimePartString(hour);
+  minute = ES.ISODateTimePartString(minute);
+  const seconds = ES.FormatSecondsStringPart(second, millisecond, microsecond, nanosecond, precision);
   const calendar = ES.FormatCalendarAnnotation(GetSlot(dateTime, CALENDAR));
   return `${year}-${month}-${day}T${hour}:${minute}${seconds}${calendar}`;
 }
@@ -565,13 +588,16 @@ export class DateTime {
     }
     return ES.CalendarEquals(this, other);
   }
-  toString() {
+  toString(options = undefined) {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-    return DateTimeToString(this);
+    options = ES.NormalizeOptionsObject(options);
+    const { precision, unit, increment } = ES.ToSecondsStringPrecision(options);
+    const roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
+    return DateTimeToString(this, precision, { unit, increment, roundingMode });
   }
   toJSON() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-    return DateTimeToString(this);
+    return DateTimeToString(this, 'auto');
   }
   toLocaleString(locales = undefined, options = undefined) {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');

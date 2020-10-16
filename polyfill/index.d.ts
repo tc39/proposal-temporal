@@ -1,5 +1,6 @@
 export namespace Temporal {
   export type ComparisonResult = -1 | 0 | 1;
+  type RoundingMode = 'nearest' | 'ceil' | 'trunc' | 'floor';
   type ConstructorOf<T> = new (...args: unknown[]) => T;
 
   /**
@@ -85,6 +86,40 @@ export namespace Temporal {
   };
 
   /**
+   * Options for outputting precision in toString() on types with seconds
+   */
+  export type ToStringOptions = {
+    fractionalSecondDigits?: 'auto' | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
+    smallestUnit?:
+      | 'minute'
+      | 'second'
+      | 'millisecond'
+      | 'microsecond'
+      | 'nanosecond'
+      | /** @deprecated */ 'minutes'
+      | /** @deprecated */ 'seconds'
+      | /** @deprecated */ 'milliseconds'
+      | /** @deprecated */ 'microseconds'
+      | /** @deprecated */ 'nanoseconds';
+
+    /**
+     * Controls how rounding is performed:
+     * - `nearest`: Round to the nearest of the values allowed by
+     *   `roundingIncrement` and `smallestUnit`. When there is a tie, round up.
+     *   This mode is the default.
+     * - `ceil`: Always round up, towards the end of time.
+     * - `trunc`: Always round down, towards the beginning of time.
+     * - `floor`: Also round down, towards the beginning of time. This mode acts
+     *   the same as `trunc`, but it's included for consistency with
+     *   `Temporal.Duration.round()` where negative values are allowed and
+     *   `trunc` rounds towards zero, unlike `floor` which rounds towards
+     *   negative infinity which is usually unexpected. For this reason, `trunc`
+     *   is recommended for most use cases.
+     */
+    roundingMode?: RoundingMode;
+  };
+
+  /**
    * Options to control the result of `difference()` methods in `Temporal`
    * types.
    * */
@@ -132,7 +167,7 @@ export namespace Temporal {
      *   negative infinity which is usually unexpected. For this reason, `trunc`
      *   is recommended for most use cases.
      */
-    roundingMode?: 'nearest' | 'ceil' | 'trunc' | 'floor';
+    roundingMode?: RoundingMode;
   }
 
   /**
@@ -391,7 +426,7 @@ export namespace Temporal {
     toDateTimeISO(tzLike: TimeZoneProtocol | string): Temporal.DateTime;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
-    toString(tzLike?: TimeZoneProtocol | string): string;
+    toString(tzLike?: TimeZoneProtocol | string, options?: ToStringOptions): string;
   }
 
   export interface CalendarProtocol {
@@ -738,7 +773,7 @@ export namespace Temporal {
     getISOFields(): DateTimeISOFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
-    toString(): string;
+    toString(options?: ToStringOptions): string;
   }
 
   export type MonthDayLike = {
@@ -873,7 +908,7 @@ export namespace Temporal {
     getFields(): TimeFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
-    toString(): string;
+    toString(options?: ToStringOptions): string;
   }
 
   /**

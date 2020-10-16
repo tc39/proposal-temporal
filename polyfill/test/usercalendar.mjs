@@ -67,7 +67,7 @@ describe('Userland calendar', () => {
       const date2 = Temporal.Date.from('2020-06-05');
       assert(date2.withCalendar(obj).equals(date));
     });
-    it('Temporal.DateTime.from()', () => equal(`${dt}`, '2020-06-05T12:00[c=zero-based]'));
+    it('Temporal.DateTime.from()', () => equal(`${dt}`, '2020-06-05T12:00:00[c=zero-based]'));
     it('Temporal.DateTime fields', () => {
       equal(dt.year, 2020);
       equal(dt.month, 5);
@@ -167,16 +167,16 @@ describe('Userland calendar', () => {
       });
       it('works for DateTime.from(iso)', () => {
         const dt = Temporal.DateTime.from(iso);
-        equal(`${dt}`, '1970-01-01T00:00[c=zero-based]');
+        equal(`${dt}`, '1970-01-01T00:00:00[c=zero-based]');
       });
       it('works for DateTime.from(props)', () => {
         const dt = Temporal.DateTime.from({ year: 1970, month: 0, day: 1, hour: 12, calendar: 'zero-based' });
-        equal(`${dt}`, '1970-01-01T12:00[c=zero-based]');
+        equal(`${dt}`, '1970-01-01T12:00:00[c=zero-based]');
       });
       it('works for DateTime.with', () => {
         const dt1 = Temporal.DateTime.from('1970-02-01T12:00');
         const dt2 = dt1.with({ month: 0, calendar: 'zero-based' });
-        equal(`${dt2}`, '1970-01-01T12:00[c=zero-based]');
+        equal(`${dt2}`, '1970-01-01T12:00:00[c=zero-based]');
       });
       it('works for DateTime.withCalendar', () => {
         const dt = Temporal.DateTime.from('1970-01-01T00:00');
@@ -312,7 +312,7 @@ describe('Userland calendar', () => {
       const date2 = Temporal.Date.from('2020-06-05T12:00');
       assert(date2.withCalendar(obj).equals(date));
     });
-    it('Temporal.DateTime.from()', () => equal(`${dt}`, '2020-06-05T12:00[c=decimal]'));
+    it('Temporal.DateTime.from()', () => equal(`${dt}`, '2020-06-05T12:00:00[c=decimal]'));
     it('Temporal.DateTime fields', () => {
       equal(dt.year, 184);
       equal(dt.month, 2);
@@ -412,16 +412,16 @@ describe('Userland calendar', () => {
       });
       it('works for DateTime.from(iso)', () => {
         const dt = Temporal.DateTime.from(iso);
-        equal(`${dt}`, '1970-01-01T00:00[c=decimal]');
+        equal(`${dt}`, '1970-01-01T00:00:00[c=decimal]');
       });
       it('works for DateTime.from(props)', () => {
         const dt = Temporal.DateTime.from({ year: 0, month: 1, day: 1, hour: 12, calendar: 'decimal' });
-        equal(`${dt}`, '1970-01-01T12:00[c=decimal]');
+        equal(`${dt}`, '1970-01-01T12:00:00[c=decimal]');
       });
       it('works for DateTime.with', () => {
         const dt1 = Temporal.DateTime.from('1970-01-01T12:00');
         const dt2 = dt1.with({ month: 2, calendar: 'decimal' });
-        equal(`${dt2}`, '1970-01-11T12:00[c=decimal]');
+        equal(`${dt2}`, '1970-01-11T12:00:00[c=decimal]');
       });
       it('works for DateTime.withCalendar', () => {
         const dt = Temporal.DateTime.from('1970-01-01T00:00');

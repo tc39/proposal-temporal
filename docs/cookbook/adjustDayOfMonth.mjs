@@ -16,4 +16,4 @@ assert.equal(lastOfThisMonth.toString(), '2020-04-30');
 
 const thisMonth18thAt8PM = date.with({ day: 18 }).toDateTime(Temporal.Time.from('20:00'));
 
-assert.equal(thisMonth18thAt8PM.toString(), '2020-04-18T20:00');
+assert.equal(thisMonth18thAt8PM.toString(), '2020-04-18T20:00:00');

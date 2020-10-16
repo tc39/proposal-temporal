@@ -20,15 +20,32 @@ import {
   SetSlot
 } from './slots.mjs';
 
-function TemporalTimeToString(time) {
-  const hour = ES.ISODateTimePartString(GetSlot(time, HOUR));
-  const minute = ES.ISODateTimePartString(GetSlot(time, MINUTE));
-  const seconds = ES.FormatSecondsStringPart(
-    GetSlot(time, SECOND),
-    GetSlot(time, MILLISECOND),
-    GetSlot(time, MICROSECOND),
-    GetSlot(time, NANOSECOND)
-  );
+function TemporalTimeToString(time, precision, options = undefined) {
+  let hour = GetSlot(time, HOUR);
+  let minute = GetSlot(time, MINUTE);
+  let second = GetSlot(time, SECOND);
+  let millisecond = GetSlot(time, MILLISECOND);
+  let microsecond = GetSlot(time, MICROSECOND);
+  let nanosecond = GetSlot(time, NANOSECOND);
+
+  if (options) {
+    const { unit, increment, roundingMode } = options;
+    ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.RoundTime(
+      hour,
+      minute,
+      second,
+      millisecond,
+      microsecond,
+      nanosecond,
+      increment,
+      unit,
+      roundingMode
+    ));
+  }
+
+  hour = ES.ISODateTimePartString(hour);
+  minute = ES.ISODateTimePartString(minute);
+  const seconds = ES.FormatSecondsStringPart(second, millisecond, microsecond, nanosecond, precision);
   return `${hour}:${minute}${seconds}`;
 }
 
@@ -366,13 +383,16 @@ export class Time {
     return true;
   }
 
-  toString() {
+  toString(options = undefined) {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
-    return TemporalTimeToString(this);
+    options = ES.NormalizeOptionsObject(options);
+    const { precision, unit, increment } = ES.ToSecondsStringPrecision(options);
+    const roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
+    return TemporalTimeToString(this, precision, { unit, increment, roundingMode });
   }
   toJSON() {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
-    return TemporalTimeToString(this);
+    return TemporalTimeToString(this, 'auto');
   }
   toLocaleString(locales = undefined, options = undefined) {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');

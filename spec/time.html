@@ -389,14 +389,19 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal.time.prototype.tostring">
-      <h1>Temporal.Time.prototype.toString ( )</h1>
+      <h1>Temporal.Time.prototype.toString ( [ _options_ ] )</h1>
       <p>
+        The `toString_ method takes one argument _options_.
         The following steps are taken:
       </p>
       <emu-alg>
         1. Let _temporalTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_temporalTime_, [[InitializedTemporalTime]]).
-        1. Return ! TemporalTimeToString(_temporalTime_).
+        1. Set _options_ to ? NormalizeOptionsObject(_options_).
+        1. Let _precision_ be ? ToSecondsStringPrecision(_options_).
+        1. Let _roundingMode_ be ? ToTemporalRoundingMode(_options_, *"trunc"*).
+        1. Let _roundResult_ be ? RoundTime(_temporalTime_.[[Hour]], _temporalTime_.[[Minute]], _temporalTime_.[[Second]], _temporalTime_.[[Millisecond]], _temporalTime_.[[Microsecond]], _temporalTime_.[[Nanosecond]], _precision_.[[Increment]], _precision_.[[Unit]], _roundingMode_).
+        1. Return ! TemporalTimeToString(_roundResult_.[[Hour]], _roundResult_.[[Minute]], _roundResult_.[[Second]], _roundResult_.[[Millisecond]], _roundResult_.[[Microsecond]], _roundResult_.[[Nanosecond]], _precision_.[[Precision]]).
       </emu-alg>
     </emu-clause>
 
@@ -410,7 +415,7 @@
         1. Let _temporalTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_temporalTime_, [[InitializedTemporalTime]]).
         1. If the implementation does not include the ECMA-402 Internationalization API, then
-          1. Return ! TemporalTimeToString(_temporalTime_).
+          1. Return ! TemporalTimeToString(_temporalTime_.[[Hour]], _temporalTime_.[[Minute]], _temporalTime_.[[Second]], _temporalTime_.[[Millisecond]], _temporalTime_.[[Microsecond]], _temporalTime_.[[Nanosecond]], *"auto"*).
         1. Let _dateFormat_ be ? Construct(%DateTimeFormat%, « _locales_, _options_ »).
         1. Return ? FormatDateTime(_dateFormat_, _temporalTime_).
       </emu-alg>
@@ -424,7 +429,7 @@
       <emu-alg>
         1. Let _temporalTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_temporalTime_, [[InitializedTemporalTime]]).
-        1. Return ! TemporalTimeToString(_temporalTime_).
+        1. Return ! TemporalTimeToString(_temporalTime_.[[Hour]], _temporalTime_.[[Minute]], _temporalTime_.[[Second]], _temporalTime_.[[Millisecond]], _temporalTime_.[[Microsecond]], _temporalTime_.[[Nanosecond]], *"auto"*).
       </emu-alg>
     </emu-clause>
 
@@ -797,13 +802,11 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal-temporaltimetostring" aoid="TemporalTimeToString">
-      <h1>TemporalTimeToString ( _temporalTime_ )</h1>
+      <h1>TemporalTimeToString ( _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _precision_ )</h1>
       <emu-alg>
-        1. Assert: Type(_temporalTime_) is Object.
-        1. Assert: _temporalTime_ has an [[InitializedTemporalTime]] internal slot.
-        1. Let _hour_ be _temporalTime_.[[Hour]] formatted as a two-digit decimal number, padded to the left with a zero if necessary.
-        1. Let _minute_ be _temporalTime_.[[Minute]] formatted as a two-digit decimal number, padded to the left with a zero if necessary.
-        1. Let _seconds_ be ! FormatSecondsStringPart(_temporalTime_.[[Second]], _temporalTime_.[[Millisecond]], _temporalTime_.[[Microsecond]], _temporalTime_.[[Nanosecond]]).
+        1. Let _hour_ be _hour_ formatted as a two-digit decimal number, padded to the left with a zero if necessary.
+        1. Let _hour_ be _minute_ formatted as a two-digit decimal number, padded to the left with a zero if necessary.
+        1. Let _seconds_ be ! FormatSecondsStringPart(_second_, _millisecond_, _microsecond_, _nanosecond_, _precision_).
         1. Return the string-concatenation of _hour_, the code unit 0x003A (COLON), _minute_, and _seconds_.
       </emu-alg>
     </emu-clause>

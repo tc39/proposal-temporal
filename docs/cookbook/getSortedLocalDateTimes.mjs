@@ -38,5 +38,5 @@ let c = Temporal.DateTime.from({
 const results = getSortedLocalDateTimes([a, b, c]);
 assert.deepEqual(
   results.map((x) => x.toString()),
-  ['2020-02-20T08:45', '2020-02-20T15:30', '2020-02-21T13:10']
+  ['2020-02-20T08:45:00', '2020-02-20T15:30:00', '2020-02-21T13:10:00']
 );
