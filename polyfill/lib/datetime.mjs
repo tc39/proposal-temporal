@@ -524,8 +524,10 @@ export class DateTime {
     let millisecond = GetSlot(this, MILLISECOND);
     let microsecond = GetSlot(this, MICROSECOND);
     let nanosecond = GetSlot(this, NANOSECOND);
-    let deltaDays = 0;
-    ({ deltaDays, hour, minute, second, millisecond, microsecond, nanosecond } = ES.RoundTime(
+    ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.RoundDateTime(
+      year,
+      month,
+      day,
       hour,
       minute,
       second,
@@ -536,7 +538,6 @@ export class DateTime {
       smallestUnit,
       roundingMode
     ));
-    ({ year, month, day } = ES.BalanceDate(year, month, day + deltaDays));
 
     const Construct = ES.SpeciesConstructor(this, DateTime);
     const result = new Construct(

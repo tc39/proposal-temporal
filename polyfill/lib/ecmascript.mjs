@@ -2170,6 +2170,35 @@ export const ES = ObjectAssign({}, ES2020, {
     }
     return round * increment;
   },
+  RoundDateTime: (
+    year,
+    month,
+    day,
+    hour,
+    minute,
+    second,
+    millisecond,
+    microsecond,
+    nanosecond,
+    increment,
+    unit,
+    roundingMode
+  ) => {
+    let deltaDays = 0;
+    ({ deltaDays, hour, minute, second, millisecond, microsecond, nanosecond } = ES.RoundTime(
+      hour,
+      minute,
+      second,
+      millisecond,
+      microsecond,
+      nanosecond,
+      increment,
+      unit,
+      roundingMode
+    ));
+    ({ year, month, day } = ES.BalanceDate(year, month, day + deltaDays));
+    return { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond };
+  },
   RoundTime: (hour, minute, second, millisecond, microsecond, nanosecond, increment, unit, roundingMode) => {
     let quantity = 0;
     switch (unit) {
