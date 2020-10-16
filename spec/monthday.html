@@ -25,12 +25,14 @@
       <emu-alg>
         1. If NewTarget is *undefined*, then
           1. Throw a *TypeError* exception.
-        1. If _referenceISOYear_ is not given, set it to the first leap year after the Unix epoch (1972).
+        1. If _referenceISOYear_ is not given, then
+          1. Set _referenceISOYear_ to *1972*<sub>𝔽</sub>.
         1. Let _m_ be ? ToInteger(_isoMonth_).
         1. Let _d_ be ? ToInteger(_isoDay_).
         1. Let _ref_ be ? ToInteger(_referenceISOYear_).
         1. Return ? CreateTemporalMonthDay(_m_, _d_, _ref_, NewTarget).
       </emu-alg>
+      <emu-note>1972 is the first leap year after the Unix epoch.</emu-note>
     </emu-clause>
   </emu-clause>
 
