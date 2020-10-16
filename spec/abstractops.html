@@ -483,9 +483,11 @@
       NonzeroDigit : one of
           `1` `2` `3` `4` `5` `6` `7` `8` `9`
 
+      ASCIISign : one of
+          `+` `-`
+
       Sign :
-          `+`
-          `-`
+          ASCIISign
           U+2212
 
       DecimalSeparator : one of
@@ -616,8 +618,24 @@
           TimeZoneUTCOffsetSign TimeZoneUTCOffsetHour
           TimeZoneUTCOffsetSign TimeZoneUTCOffsetHour `:`? TimeZoneUTCOffsetMinute
 
+      TZLeadingChar :
+          Alpha
+          `.`
+          `_`
+
+      TZChar :
+          Alpha
+          `.`
+          `-`
+          `_`
+
+      TimeZoneIANANameComponent :
+          TZLeadingChar TZChar? TZChar? TZChar? TZChar? TZChar? TZChar? TZChar? TZChar? TZChar? TZChar? TZChar? TZChar? TZChar? but not one of `.` or `..`
+
       TimeZoneIANAName :
-          &gt; any string for which IsValidTimeZoneName returns true
+          TimeZoneIANANameComponent
+          TimeZoneIANANameComponent `/` TimeZoneIANAName
+          `Etc/GMT` ASCIISign TimeZoneUTCOffsetHour
 
       TimeZone :
           UTCDesignator

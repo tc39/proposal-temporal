@@ -22,6 +22,7 @@ import {
 
 import * as REGEX from './regex.mjs';
 const OFFSET = new RegExp(`^${REGEX.offset.source}$`);
+const IANA_NAME = new RegExp(`^${REGEX.timeZoneID.source}$`);
 
 function parseOffsetString(string) {
   const match = OFFSET.exec(String(string));
@@ -36,6 +37,9 @@ export class TimeZone {
   constructor(timeZoneIdentifier) {
     if (new.target === TimeZone) {
       timeZoneIdentifier = ES.GetCanonicalTimeZoneIdentifier(timeZoneIdentifier);
+    }
+    if (!OFFSET.exec(timeZoneIdentifier) && !IANA_NAME.exec(timeZoneIdentifier)) {
+      throw new RangeError(`invalid time zone identifier ${timeZoneIdentifier}`);
     }
     CreateSlots(this);
     SetSlot(this, TIMEZONE_ID, timeZoneIdentifier);

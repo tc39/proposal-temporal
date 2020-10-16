@@ -15,6 +15,11 @@ For specialized applications where you need to do calculations in a time zone th
 To do this, create a class inheriting from `Temporal.TimeZone`, call `super()` in the constructor with a time zone identifier, and implement the methods `getOffsetNanosecondsFor()`, `getPossibleInstantsFor()`, `getNextTransition()`, and `getPreviousTransition()`.
 Any subclass of `Temporal.TimeZone` will be accepted in Temporal APIs where a built-in `Temporal.TimeZone` would work.
 
+The identifier of a custom time zone must consist of one or more components separated by slashes (`/`), as described in the [tzdata documentation](https://htmlpreview.github.io/?https://github.com/eggert/tz/blob/master/theory.html#naming).
+Each component must consist of between one and 14 characters.
+Valid characters are ASCII letters, `.`, `-`, and `_`.
+`-` may not appear as the first character of a component, and a component may not be a single dot `.` or two dots `..`.
+
 ### Protocol
 
 It's also possible for a plain object to be a custom time zone, without subclassing.
