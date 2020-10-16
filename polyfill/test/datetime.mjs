@@ -232,15 +232,15 @@ describe('DateTime', () => {
       it('datetime.weekOfYear is 47', () => equal(datetime.weekOfYear, 47));
       it('datetime.daysInWeek is 7', () => equal(datetime.daysInWeek, 7));
       it('datetime.monthsInYear is 12', () => equal(datetime.monthsInYear, 12));
-      it('`${datetime}` is 1976-11-18T15:23', () => equal(`${datetime}`, '1976-11-18T15:23'));
+      it('`${datetime}` is 1976-11-18T15:23:00', () => equal(`${datetime}`, '1976-11-18T15:23:00'));
     });
     describe('new DateTime(1976, 11, 18, 15)', () => {
       const datetime = new DateTime(1976, 11, 18, 15);
-      it('`${datetime}` is 1976-11-18T15:00', () => equal(`${datetime}`, '1976-11-18T15:00'));
+      it('`${datetime}` is 1976-11-18T15:00:00', () => equal(`${datetime}`, '1976-11-18T15:00:00'));
     });
     describe('new DateTime(1976, 11, 18)', () => {
       const datetime = new DateTime(1976, 11, 18);
-      it('`${datetime}` is 1976-11-18T00:00', () => equal(`${datetime}`, '1976-11-18T00:00'));
+      it('`${datetime}` is 1976-11-18T00:00:00', () => equal(`${datetime}`, '1976-11-18T00:00:00'));
     });
     describe('constructor treats -0 as 0', () => {
       it('ignores the sign of -0', () => {
@@ -288,10 +288,10 @@ describe('DateTime', () => {
     });
     it('datetime.with(time) works', () => {
       const noon = Temporal.Time.from({ hour: 12 });
-      equal(`${datetime.with(noon)}`, '1976-11-18T12:00');
+      equal(`${datetime.with(noon)}`, '1976-11-18T12:00:00');
     });
     it('datetime.with(iso time string)', () => {
-      equal(`${datetime.with('12:00')}`, '1976-11-18T12:00');
+      equal(`${datetime.with('12:00')}`, '1976-11-18T12:00:00');
     });
     it('datetime.with(date) works', () => {
       const date = Temporal.Date.from('1995-04-07');
@@ -418,11 +418,11 @@ describe('DateTime', () => {
   describe('DateTime.add() works', () => {
     const jan31 = DateTime.from('2020-01-31T15:00');
     it('constrain when ambiguous result', () => {
-      equal(`${jan31.add({ months: 1 })}`, '2020-02-29T15:00');
-      equal(`${jan31.add({ months: 1 }, { overflow: 'constrain' })}`, '2020-02-29T15:00');
+      equal(`${jan31.add({ months: 1 })}`, '2020-02-29T15:00:00');
+      equal(`${jan31.add({ months: 1 }, { overflow: 'constrain' })}`, '2020-02-29T15:00:00');
     });
     it('symmetrical with regard to negative durations in the time part', () => {
-      equal(`${jan31.add({ minutes: -30 })}`, '2020-01-31T14:30');
+      equal(`${jan31.add({ minutes: -30 })}`, '2020-01-31T14:30:00');
       equal(`${jan31.add({ seconds: -30 })}`, '2020-01-31T14:59:30');
     });
     it('throw when ambiguous result with reject', () => {
@@ -442,14 +442,16 @@ describe('DateTime', () => {
       [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
         throws(() => jan31.add({ years: 1 }, badOptions), TypeError)
       );
-      [{}, () => {}, undefined].forEach((options) => equal(`${jan31.add({ years: 1 }, options)}`, '2021-01-31T15:00'));
+      [{}, () => {}, undefined].forEach((options) =>
+        equal(`${jan31.add({ years: 1 }, options)}`, '2021-01-31T15:00:00')
+      );
     });
     it('object must contain at least one correctly-spelled property', () => {
       throws(() => jan31.add({}), TypeError);
       throws(() => jan31.add({ month: 12 }), TypeError);
     });
     it('incorrectly-spelled properties are ignored', () => {
-      equal(`${jan31.add({ month: 1, days: 1 })}`, '2020-02-01T15:00');
+      equal(`${jan31.add({ month: 1, days: 1 })}`, '2020-02-01T15:00:00');
     });
     it('casts argument', () => {
       equal(`${jan31.add(Temporal.Duration.from('P1MT1S'))}`, '2020-02-29T15:00:01');
@@ -459,11 +461,11 @@ describe('DateTime', () => {
   describe('date.subtract() works', () => {
     const mar31 = DateTime.from('2020-03-31T15:00');
     it('constrain when ambiguous result', () => {
-      equal(`${mar31.subtract({ months: 1 })}`, '2020-02-29T15:00');
-      equal(`${mar31.subtract({ months: 1 }, { overflow: 'constrain' })}`, '2020-02-29T15:00');
+      equal(`${mar31.subtract({ months: 1 })}`, '2020-02-29T15:00:00');
+      equal(`${mar31.subtract({ months: 1 }, { overflow: 'constrain' })}`, '2020-02-29T15:00:00');
     });
     it('symmetrical with regard to negative durations in the time part', () => {
-      equal(`${mar31.subtract({ minutes: -30 })}`, '2020-03-31T15:30');
+      equal(`${mar31.subtract({ minutes: -30 })}`, '2020-03-31T15:30:00');
       equal(`${mar31.subtract({ seconds: -30 })}`, '2020-03-31T15:00:30');
     });
     it('throw when ambiguous result with reject', () => {
@@ -484,7 +486,7 @@ describe('DateTime', () => {
         throws(() => mar31.subtract({ years: 1 }, badOptions), TypeError)
       );
       [{}, () => {}, undefined].forEach((options) =>
-        equal(`${mar31.subtract({ years: 1 }, options)}`, '2019-03-31T15:00')
+        equal(`${mar31.subtract({ years: 1 }, options)}`, '2019-03-31T15:00:00')
       );
     });
     it('object must contain at least one correctly-spelled property', () => {
@@ -492,7 +494,7 @@ describe('DateTime', () => {
       throws(() => mar31.subtract({ month: 12 }), TypeError);
     });
     it('incorrectly-spelled properties are ignored', () => {
-      equal(`${mar31.subtract({ month: 1, days: 1 })}`, '2020-03-30T15:00');
+      equal(`${mar31.subtract({ month: 1, days: 1 })}`, '2020-03-30T15:00:00');
     });
     it('casts argument', () => {
       equal(`${mar31.subtract(Temporal.Duration.from('P1MT1S'))}`, '2020-02-29T14:59:59');
@@ -839,9 +841,9 @@ describe('DateTime', () => {
       throws(() => dt.round({ smallestUnit: 'second', roundingMode: 'cile' }), RangeError);
     });
     const incrementOneNearest = [
-      ['day', '1976-11-19T00:00'],
-      ['hour', '1976-11-18T14:00'],
-      ['minute', '1976-11-18T14:24'],
+      ['day', '1976-11-19T00:00:00'],
+      ['hour', '1976-11-18T14:00:00'],
+      ['minute', '1976-11-18T14:24:00'],
       ['second', '1976-11-18T14:23:30'],
       ['millisecond', '1976-11-18T14:23:30.123'],
       ['microsecond', '1976-11-18T14:23:30.123457'],
@@ -852,9 +854,9 @@ describe('DateTime', () => {
         equal(`${dt.round({ smallestUnit, roundingMode: 'nearest' })}`, expected));
     });
     const incrementOneCeil = [
-      ['day', '1976-11-19T00:00'],
-      ['hour', '1976-11-18T15:00'],
-      ['minute', '1976-11-18T14:24'],
+      ['day', '1976-11-19T00:00:00'],
+      ['hour', '1976-11-18T15:00:00'],
+      ['minute', '1976-11-18T14:24:00'],
       ['second', '1976-11-18T14:23:31'],
       ['millisecond', '1976-11-18T14:23:30.124'],
       ['microsecond', '1976-11-18T14:23:30.123457'],
@@ -864,9 +866,9 @@ describe('DateTime', () => {
       it(`rounds up to ${smallestUnit}`, () => equal(`${dt.round({ smallestUnit, roundingMode: 'ceil' })}`, expected));
     });
     const incrementOneFloor = [
-      ['day', '1976-11-18T00:00'],
-      ['hour', '1976-11-18T14:00'],
-      ['minute', '1976-11-18T14:23'],
+      ['day', '1976-11-18T00:00:00'],
+      ['hour', '1976-11-18T14:00:00'],
+      ['minute', '1976-11-18T14:23:00'],
       ['second', '1976-11-18T14:23:30'],
       ['millisecond', '1976-11-18T14:23:30.123'],
       ['microsecond', '1976-11-18T14:23:30.123456'],
@@ -878,37 +880,37 @@ describe('DateTime', () => {
       it(`truncates to ${smallestUnit}`, () => equal(`${dt.round({ smallestUnit, roundingMode: 'trunc' })}`, expected));
     });
     it('nearest is the default', () => {
-      equal(`${dt.round({ smallestUnit: 'minute' })}`, '1976-11-18T14:24');
+      equal(`${dt.round({ smallestUnit: 'minute' })}`, '1976-11-18T14:24:00');
       equal(`${dt.round({ smallestUnit: 'second' })}`, '1976-11-18T14:23:30');
     });
     it('rounding down is towards the Big Bang, not towards 1 BCE', () => {
       const dt2 = DateTime.from('-000099-12-15T12:00:00.5Z');
       const smallestUnit = 'second';
       equal(`${dt2.round({ smallestUnit, roundingMode: 'ceil' })}`, '-000099-12-15T12:00:01');
-      equal(`${dt2.round({ smallestUnit, roundingMode: 'floor' })}`, '-000099-12-15T12:00');
-      equal(`${dt2.round({ smallestUnit, roundingMode: 'trunc' })}`, '-000099-12-15T12:00');
+      equal(`${dt2.round({ smallestUnit, roundingMode: 'floor' })}`, '-000099-12-15T12:00:00');
+      equal(`${dt2.round({ smallestUnit, roundingMode: 'trunc' })}`, '-000099-12-15T12:00:00');
       equal(`${dt2.round({ smallestUnit, roundingMode: 'nearest' })}`, '-000099-12-15T12:00:01');
     });
     it('rounds to an increment of hours', () => {
-      equal(`${dt.round({ smallestUnit: 'hour', roundingIncrement: 4 })}`, '1976-11-18T16:00');
+      equal(`${dt.round({ smallestUnit: 'hour', roundingIncrement: 4 })}`, '1976-11-18T16:00:00');
     });
     it('rounds to an increment of minutes', () => {
-      equal(`${dt.round({ smallestUnit: 'minute', roundingIncrement: 15 })}`, '1976-11-18T14:30');
+      equal(`${dt.round({ smallestUnit: 'minute', roundingIncrement: 15 })}`, '1976-11-18T14:30:00');
     });
     it('rounds to an increment of seconds', () => {
       equal(`${dt.round({ smallestUnit: 'second', roundingIncrement: 30 })}`, '1976-11-18T14:23:30');
     });
     it('rounds to an increment of milliseconds', () => {
-      equal(`${dt.round({ smallestUnit: 'millisecond', roundingIncrement: 10 })}`, '1976-11-18T14:23:30.120');
+      equal(`${dt.round({ smallestUnit: 'millisecond', roundingIncrement: 10 })}`, '1976-11-18T14:23:30.12');
     });
     it('rounds to an increment of microseconds', () => {
-      equal(`${dt.round({ smallestUnit: 'microsecond', roundingIncrement: 10 })}`, '1976-11-18T14:23:30.123460');
+      equal(`${dt.round({ smallestUnit: 'microsecond', roundingIncrement: 10 })}`, '1976-11-18T14:23:30.12346');
     });
     it('rounds to an increment of nanoseconds', () => {
-      equal(`${dt.round({ smallestUnit: 'nanosecond', roundingIncrement: 10 })}`, '1976-11-18T14:23:30.123456790');
+      equal(`${dt.round({ smallestUnit: 'nanosecond', roundingIncrement: 10 })}`, '1976-11-18T14:23:30.12345679');
     });
     it('1 day is a valid increment', () => {
-      equal(`${dt.round({ smallestUnit: 'day', roundingIncrement: 1 })}`, '1976-11-19T00:00');
+      equal(`${dt.round({ smallestUnit: 'day', roundingIncrement: 1 })}`, '1976-11-19T00:00:00');
     });
     it('valid hour increments divide into 24', () => {
       const smallestUnit = 'hour';
@@ -950,7 +952,7 @@ describe('DateTime', () => {
     const bal = DateTime.from('1976-11-18T23:59:59.999999999');
     ['day', 'hour', 'minute', 'second', 'millisecond', 'microsecond'].forEach((smallestUnit) => {
       it(`balances to next ${smallestUnit}`, () => {
-        equal(`${bal.round({ smallestUnit })}`, '1976-11-19T00:00');
+        equal(`${bal.round({ smallestUnit })}`, '1976-11-19T00:00:00');
       });
     });
     it('accepts plural units', () => {
@@ -977,8 +979,8 @@ describe('DateTime', () => {
       const actual = DateTime.from(orig);
       notEqual(actual, orig);
     });
-    it('DateTime.from({ year: 1976, month: 11, day: 18 }) == 1976-11-18T00:00', () =>
-      equal(`${DateTime.from({ year: 1976, month: 11, day: 18 })}`, '1976-11-18T00:00'));
+    it('DateTime.from({ year: 1976, month: 11, day: 18 }) == 1976-11-18T00:00:00', () =>
+      equal(`${DateTime.from({ year: 1976, month: 11, day: 18 })}`, '1976-11-18T00:00:00'));
     it('DateTime.from({ year: 1976, month: 11, day: 18, millisecond: 123 }) == 1976-11-18T00:00:00.123', () =>
       equal(`${DateTime.from({ year: 1976, month: 11, day: 18, millisecond: 123 })}`, '1976-11-18T00:00:00.123'));
     it('DateTime.from({ month: 11, day: 18, hour: 15, minute: 23, second: 30, millisecond: 123 }) throws', () =>
@@ -998,8 +1000,8 @@ describe('DateTime', () => {
       const bad = { year: 2019, month: 1, day: 32 };
       it('reject', () => throws(() => DateTime.from(bad, { overflow: 'reject' }), RangeError));
       it('constrain', () => {
-        equal(`${DateTime.from(bad)}`, '2019-01-31T00:00');
-        equal(`${DateTime.from(bad, { overflow: 'constrain' })}`, '2019-01-31T00:00');
+        equal(`${DateTime.from(bad)}`, '2019-01-31T00:00:00');
+        equal(`${DateTime.from(bad, { overflow: 'constrain' })}`, '2019-01-31T00:00:00');
       });
       it('throw when bad overflow', () => {
         [new DateTime(1976, 11, 18, 15, 23), { year: 2019, month: 1, day: 1 }, '2019-01-31T00:00'].forEach((input) => {
@@ -1013,47 +1015,47 @@ describe('DateTime', () => {
       it('constrain leap second', () => equal(`${DateTime.from(leap)}`, '2016-12-31T23:59:59'));
     });
     it('variant time separators', () => {
-      equal(`${DateTime.from('1976-11-18t15:23Z')}`, '1976-11-18T15:23');
-      equal(`${DateTime.from('1976-11-18 15:23Z')}`, '1976-11-18T15:23');
+      equal(`${DateTime.from('1976-11-18t15:23Z')}`, '1976-11-18T15:23:00');
+      equal(`${DateTime.from('1976-11-18 15:23Z')}`, '1976-11-18T15:23:00');
     });
     it('any number of decimal places', () => {
-      equal(`${DateTime.from('1976-11-18T15:23:30.1Z')}`, '1976-11-18T15:23:30.100');
-      equal(`${DateTime.from('1976-11-18T15:23:30.12Z')}`, '1976-11-18T15:23:30.120');
+      equal(`${DateTime.from('1976-11-18T15:23:30.1Z')}`, '1976-11-18T15:23:30.1');
+      equal(`${DateTime.from('1976-11-18T15:23:30.12Z')}`, '1976-11-18T15:23:30.12');
       equal(`${DateTime.from('1976-11-18T15:23:30.123Z')}`, '1976-11-18T15:23:30.123');
-      equal(`${DateTime.from('1976-11-18T15:23:30.1234Z')}`, '1976-11-18T15:23:30.123400');
-      equal(`${DateTime.from('1976-11-18T15:23:30.12345Z')}`, '1976-11-18T15:23:30.123450');
+      equal(`${DateTime.from('1976-11-18T15:23:30.1234Z')}`, '1976-11-18T15:23:30.1234');
+      equal(`${DateTime.from('1976-11-18T15:23:30.12345Z')}`, '1976-11-18T15:23:30.12345');
       equal(`${DateTime.from('1976-11-18T15:23:30.123456Z')}`, '1976-11-18T15:23:30.123456');
-      equal(`${DateTime.from('1976-11-18T15:23:30.1234567Z')}`, '1976-11-18T15:23:30.123456700');
-      equal(`${DateTime.from('1976-11-18T15:23:30.12345678Z')}`, '1976-11-18T15:23:30.123456780');
+      equal(`${DateTime.from('1976-11-18T15:23:30.1234567Z')}`, '1976-11-18T15:23:30.1234567');
+      equal(`${DateTime.from('1976-11-18T15:23:30.12345678Z')}`, '1976-11-18T15:23:30.12345678');
       equal(`${DateTime.from('1976-11-18T15:23:30.123456789Z')}`, '1976-11-18T15:23:30.123456789');
     });
     it('variant decimal separator', () => {
-      equal(`${DateTime.from('1976-11-18T15:23:30,12Z')}`, '1976-11-18T15:23:30.120');
+      equal(`${DateTime.from('1976-11-18T15:23:30,12Z')}`, '1976-11-18T15:23:30.12');
     });
     it('variant minus sign', () => {
-      equal(`${DateTime.from('1976-11-18T15:23:30.12\u221202:00')}`, '1976-11-18T15:23:30.120');
-      equal(`${DateTime.from('\u2212009999-11-18T15:23:30.12')}`, '-009999-11-18T15:23:30.120');
+      equal(`${DateTime.from('1976-11-18T15:23:30.12\u221202:00')}`, '1976-11-18T15:23:30.12');
+      equal(`${DateTime.from('\u2212009999-11-18T15:23:30.12')}`, '-009999-11-18T15:23:30.12');
     });
     it('mixture of basic and extended format', () => {
-      equal(`${DateTime.from('1976-11-18T152330.1+00:00')}`, '1976-11-18T15:23:30.100');
-      equal(`${DateTime.from('19761118T15:23:30.1+00:00')}`, '1976-11-18T15:23:30.100');
-      equal(`${DateTime.from('1976-11-18T15:23:30.1+0000')}`, '1976-11-18T15:23:30.100');
-      equal(`${DateTime.from('1976-11-18T152330.1+0000')}`, '1976-11-18T15:23:30.100');
-      equal(`${DateTime.from('19761118T15:23:30.1+0000')}`, '1976-11-18T15:23:30.100');
-      equal(`${DateTime.from('19761118T152330.1+00:00')}`, '1976-11-18T15:23:30.100');
-      equal(`${DateTime.from('19761118T152330.1+0000')}`, '1976-11-18T15:23:30.100');
-      equal(`${DateTime.from('+001976-11-18T152330.1+00:00')}`, '1976-11-18T15:23:30.100');
-      equal(`${DateTime.from('+0019761118T15:23:30.1+00:00')}`, '1976-11-18T15:23:30.100');
-      equal(`${DateTime.from('+001976-11-18T15:23:30.1+0000')}`, '1976-11-18T15:23:30.100');
-      equal(`${DateTime.from('+001976-11-18T152330.1+0000')}`, '1976-11-18T15:23:30.100');
-      equal(`${DateTime.from('+0019761118T15:23:30.1+0000')}`, '1976-11-18T15:23:30.100');
-      equal(`${DateTime.from('+0019761118T152330.1+00:00')}`, '1976-11-18T15:23:30.100');
-      equal(`${DateTime.from('+0019761118T152330.1+0000')}`, '1976-11-18T15:23:30.100');
+      equal(`${DateTime.from('1976-11-18T152330.1+00:00')}`, '1976-11-18T15:23:30.1');
+      equal(`${DateTime.from('19761118T15:23:30.1+00:00')}`, '1976-11-18T15:23:30.1');
+      equal(`${DateTime.from('1976-11-18T15:23:30.1+0000')}`, '1976-11-18T15:23:30.1');
+      equal(`${DateTime.from('1976-11-18T152330.1+0000')}`, '1976-11-18T15:23:30.1');
+      equal(`${DateTime.from('19761118T15:23:30.1+0000')}`, '1976-11-18T15:23:30.1');
+      equal(`${DateTime.from('19761118T152330.1+00:00')}`, '1976-11-18T15:23:30.1');
+      equal(`${DateTime.from('19761118T152330.1+0000')}`, '1976-11-18T15:23:30.1');
+      equal(`${DateTime.from('+001976-11-18T152330.1+00:00')}`, '1976-11-18T15:23:30.1');
+      equal(`${DateTime.from('+0019761118T15:23:30.1+00:00')}`, '1976-11-18T15:23:30.1');
+      equal(`${DateTime.from('+001976-11-18T15:23:30.1+0000')}`, '1976-11-18T15:23:30.1');
+      equal(`${DateTime.from('+001976-11-18T152330.1+0000')}`, '1976-11-18T15:23:30.1');
+      equal(`${DateTime.from('+0019761118T15:23:30.1+0000')}`, '1976-11-18T15:23:30.1');
+      equal(`${DateTime.from('+0019761118T152330.1+00:00')}`, '1976-11-18T15:23:30.1');
+      equal(`${DateTime.from('+0019761118T152330.1+0000')}`, '1976-11-18T15:23:30.1');
     });
     it('optional parts', () => {
       equal(`${DateTime.from('1976-11-18T15:23:30+00')}`, '1976-11-18T15:23:30');
-      equal(`${DateTime.from('1976-11-18T15')}`, '1976-11-18T15:00');
-      equal(`${DateTime.from('1976-11-18')}`, '1976-11-18T00:00');
+      equal(`${DateTime.from('1976-11-18T15')}`, '1976-11-18T15:00:00');
+      equal(`${DateTime.from('1976-11-18')}`, '1976-11-18T00:00:00');
     });
     it('no junk at end of string', () => throws(() => DateTime.from('1976-11-18T15:23:30.123456789junk'), RangeError));
     it('options may only be an object or undefined', () => {
@@ -1061,7 +1063,7 @@ describe('DateTime', () => {
         throws(() => DateTime.from({ year: 1976, month: 11, day: 18 }, badOptions), TypeError)
       );
       [{}, () => {}, undefined].forEach((options) =>
-        equal(`${DateTime.from({ year: 1976, month: 11, day: 18 }, options)}`, '1976-11-18T00:00')
+        equal(`${DateTime.from({ year: 1976, month: 11, day: 18 }, options)}`, '1976-11-18T00:00:00')
       );
     });
     it('object must contain at least the required correctly-spelled properties', () => {
@@ -1069,7 +1071,7 @@ describe('DateTime', () => {
       throws(() => DateTime.from({ year: 1976, months: 11, day: 18 }), TypeError);
     });
     it('incorrectly-spelled properties are ignored', () => {
-      equal(`${DateTime.from({ year: 1976, month: 11, day: 18, hours: 12 })}`, '1976-11-18T00:00');
+      equal(`${DateTime.from({ year: 1976, month: 11, day: 18, hours: 12 })}`, '1976-11-18T00:00:00');
     });
   });
   describe('DateTime.toInstant() works', () => {
@@ -1096,18 +1098,18 @@ describe('DateTime', () => {
     });
     it('datetime with multiple instants - Fall DST in Brazil', () => {
       const dt = DateTime.from('2019-02-16T23:45');
-      equal(`${dt.toInstant('America/Sao_Paulo')}`, '2019-02-17T01:45Z');
-      equal(`${dt.toInstant('America/Sao_Paulo', { disambiguation: 'compatible' })}`, '2019-02-17T01:45Z');
-      equal(`${dt.toInstant('America/Sao_Paulo', { disambiguation: 'earlier' })}`, '2019-02-17T01:45Z');
-      equal(`${dt.toInstant('America/Sao_Paulo', { disambiguation: 'later' })}`, '2019-02-17T02:45Z');
+      equal(`${dt.toInstant('America/Sao_Paulo')}`, '2019-02-17T01:45:00Z');
+      equal(`${dt.toInstant('America/Sao_Paulo', { disambiguation: 'compatible' })}`, '2019-02-17T01:45:00Z');
+      equal(`${dt.toInstant('America/Sao_Paulo', { disambiguation: 'earlier' })}`, '2019-02-17T01:45:00Z');
+      equal(`${dt.toInstant('America/Sao_Paulo', { disambiguation: 'later' })}`, '2019-02-17T02:45:00Z');
       throws(() => dt.toInstant('America/Sao_Paulo', { disambiguation: 'reject' }), RangeError);
     });
     it('datetime with multiple instants - Spring DST in Los Angeles', () => {
       const dt = DateTime.from('2020-03-08T02:30');
-      equal(`${dt.toInstant('America/Los_Angeles')}`, '2020-03-08T10:30Z');
-      equal(`${dt.toInstant('America/Los_Angeles', { disambiguation: 'compatible' })}`, '2020-03-08T10:30Z');
-      equal(`${dt.toInstant('America/Los_Angeles', { disambiguation: 'earlier' })}`, '2020-03-08T09:30Z');
-      equal(`${dt.toInstant('America/Los_Angeles', { disambiguation: 'later' })}`, '2020-03-08T10:30Z');
+      equal(`${dt.toInstant('America/Los_Angeles')}`, '2020-03-08T10:30:00Z');
+      equal(`${dt.toInstant('America/Los_Angeles', { disambiguation: 'compatible' })}`, '2020-03-08T10:30:00Z');
+      equal(`${dt.toInstant('America/Los_Angeles', { disambiguation: 'earlier' })}`, '2020-03-08T09:30:00Z');
+      equal(`${dt.toInstant('America/Los_Angeles', { disambiguation: 'later' })}`, '2020-03-08T10:30:00Z');
       throws(() => dt.toInstant('America/Los_Angeles', { disambiguation: 'reject' }), RangeError);
     });
     it('outside of Instant range', () => {
@@ -1176,8 +1178,8 @@ describe('DateTime', () => {
     it('converting from Instant', () => {
       const min = Temporal.Instant.from('-271821-04-20T00:00Z');
       const max = Temporal.Instant.from('+275760-09-13T00:00Z');
-      equal(`${min.toDateTimeISO('-23:59')}`, '-271821-04-19T00:01');
-      equal(`${max.toDateTimeISO('+23:59')}`, '+275760-09-13T23:59');
+      equal(`${min.toDateTimeISO('-23:59')}`, '-271821-04-19T00:01:00');
+      equal(`${max.toDateTimeISO('+23:59')}`, '+275760-09-13T23:59:00');
     });
     it('converting from Date and Time', () => {
       const midnight = Temporal.Time.from('00:00');
@@ -1326,6 +1328,94 @@ describe('DateTime', () => {
     });
     it('casts its argument', () => {
       equal(`${dt1.withCalendar('iso8601')}`, '1976-11-18T15:23:30.123456789');
+    });
+  });
+  describe('dateTime.toString()', () => {
+    const dt1 = DateTime.from('1976-11-18T15:23');
+    const dt2 = DateTime.from('1976-11-18T15:23:30');
+    const dt3 = DateTime.from('1976-11-18T15:23:30.1234');
+    it('default is to emit seconds and drop trailing zeros after the decimal', () => {
+      equal(dt1.toString(), '1976-11-18T15:23:00');
+      equal(dt2.toString(), '1976-11-18T15:23:30');
+      equal(dt3.toString(), '1976-11-18T15:23:30.1234');
+    });
+    it('truncates to minute', () => {
+      [dt1, dt2, dt3].forEach((dt) => equal(dt.toString({ smallestUnit: 'minute' }), '1976-11-18T15:23'));
+    });
+    it('other smallestUnits are aliases for fractional digits', () => {
+      equal(dt3.toString({ smallestUnit: 'second' }), dt3.toString({ fractionalSecondDigits: 0 }));
+      equal(dt3.toString({ smallestUnit: 'millisecond' }), dt3.toString({ fractionalSecondDigits: 3 }));
+      equal(dt3.toString({ smallestUnit: 'microsecond' }), dt3.toString({ fractionalSecondDigits: 6 }));
+      equal(dt3.toString({ smallestUnit: 'nanosecond' }), dt3.toString({ fractionalSecondDigits: 9 }));
+    });
+    it('throws on invalid or disallowed smallestUnit', () => {
+      ['era', 'year', 'month', 'day', 'hour', 'nonsense'].forEach((smallestUnit) =>
+        throws(() => dt1.toString({ smallestUnit }), RangeError)
+      );
+    });
+    it('accepts plural units', () => {
+      equal(dt3.toString({ smallestUnit: 'minutes' }), dt3.toString({ smallestUnit: 'minute' }));
+      equal(dt3.toString({ smallestUnit: 'seconds' }), dt3.toString({ smallestUnit: 'second' }));
+      equal(dt3.toString({ smallestUnit: 'milliseconds' }), dt3.toString({ smallestUnit: 'millisecond' }));
+      equal(dt3.toString({ smallestUnit: 'microseconds' }), dt3.toString({ smallestUnit: 'microsecond' }));
+      equal(dt3.toString({ smallestUnit: 'nanoseconds' }), dt3.toString({ smallestUnit: 'nanosecond' }));
+    });
+    it('truncates or pads to 2 places', () => {
+      const options = { fractionalSecondDigits: 2 };
+      equal(dt1.toString(options), '1976-11-18T15:23:00.00');
+      equal(dt2.toString(options), '1976-11-18T15:23:30.00');
+      equal(dt3.toString(options), '1976-11-18T15:23:30.12');
+    });
+    it('pads to 7 places', () => {
+      const options = { fractionalSecondDigits: 7 };
+      equal(dt1.toString(options), '1976-11-18T15:23:00.0000000');
+      equal(dt2.toString(options), '1976-11-18T15:23:30.0000000');
+      equal(dt3.toString(options), '1976-11-18T15:23:30.1234000');
+    });
+    it('auto is the default', () => {
+      [dt1, dt2, dt3].forEach((dt) => equal(dt.toString({ fractionalSecondDigits: 'auto' }), dt.toString()));
+    });
+    it('throws on out of range or invalid fractionalSecondDigits', () => {
+      [-1, 10, Infinity, NaN, 'not-auto'].forEach((fractionalSecondDigits) =>
+        throws(() => dt1.toString({ fractionalSecondDigits }), RangeError)
+      );
+    });
+    it('accepts and truncates fractional fractionalSecondDigits', () => {
+      equal(dt3.toString({ fractionalSecondDigits: 5.5 }), '1976-11-18T15:23:30.12340');
+    });
+    it('smallestUnit overrides fractionalSecondDigits', () => {
+      equal(dt3.toString({ smallestUnit: 'minute', fractionalSecondDigits: 9 }), '1976-11-18T15:23');
+    });
+    it('throws on invalid roundingMode', () => {
+      throws(() => dt1.toString({ roundingMode: 'cile' }), RangeError);
+    });
+    it('rounds to nearest', () => {
+      equal(dt2.toString({ smallestUnit: 'minute', roundingMode: 'nearest' }), '1976-11-18T15:24');
+      equal(dt3.toString({ fractionalSecondDigits: 3, roundingMode: 'nearest' }), '1976-11-18T15:23:30.123');
+    });
+    it('rounds up', () => {
+      equal(dt2.toString({ smallestUnit: 'minute', roundingMode: 'ceil' }), '1976-11-18T15:24');
+      equal(dt3.toString({ fractionalSecondDigits: 3, roundingMode: 'ceil' }), '1976-11-18T15:23:30.124');
+    });
+    it('rounds down', () => {
+      ['floor', 'trunc'].forEach((roundingMode) => {
+        equal(dt2.toString({ smallestUnit: 'minute', roundingMode }), '1976-11-18T15:23');
+        equal(dt3.toString({ fractionalSecondDigits: 3, roundingMode }), '1976-11-18T15:23:30.123');
+      });
+    });
+    it('rounding down is towards the Big Bang, not towards 1 BCE', () => {
+      const dt4 = DateTime.from('-000099-12-15T12:00:00.5');
+      equal(dt4.toString({ smallestUnit: 'second', roundingMode: 'floor' }), '-000099-12-15T12:00:00');
+    });
+    it('rounding can affect all units', () => {
+      const dt5 = DateTime.from('1999-12-31T23:59:59.999999999');
+      equal(dt5.toString({ fractionalSecondDigits: 8, roundingMode: 'nearest' }), '2000-01-01T00:00:00.00000000');
+    });
+    it('options may only be an object or undefined', () => {
+      [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
+        throws(() => dt1.toString(badOptions), TypeError)
+      );
+      [{}, () => {}, undefined].forEach((options) => equal(dt1.toString(options), '1976-11-18T15:23:00'));
     });
   });
 });

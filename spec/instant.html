@@ -362,19 +362,25 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal.instant.prototype.tostring">
-      <h1>Temporal.Instant.prototype.toString ( [ _temporalTimeZoneLike_ ] )</h1>
+      <h1>Temporal.Instant.prototype.toString ( [ _temporalTimeZoneLike_ [ , _options_ ] ] )</h1>
       <p>
-        The `toString` method takes one argument _temporalTimeZoneLike_.
+        The `toString` method takes two arguments, _temporalTimeZoneLike_ and _options_.
         The following steps are taken:
       </p>
       <emu-alg>
         1. Let _instant_ be the *this* value.
         1. Perform ? RequireInternalSlot(_instant_, [[InitializedTemporalInstant]]).
+        1. Set _options_ to ? NormalizeOptionsObject(_options_).
+        1. Let _precision_ be ? ToFractionalSecondDigits(_options_).
+        1. Let _roundingMode_ be ? ToTemporalRoundingMode(_options_, *"trunc"*).
+        1. Let _ns_ be the mathematical value of _instant_.[[Nanoseconds]].
+        1. Let _roundedNs_ be ? RoundTemporalInstant(_ns_, _precision_.[[Increment]], _precision_.[[Unit]], _roundingMode_).
+        1. Let _roundedInstant_ be ? CreateTemporalInstant(_roundedNs_).
         1. If _temporalTimeZoneLike_ is *undefined*, then
           1. Set _temporalTimeZoneLike_ to *"UTC"*.
         1. Let _timeZone_ be ? ToTemporalTimeZone(_temporalTimeZoneLike_).
         1. Let _calendar_ be ! GetISO8601Calendar().
-        1. Return ? TemporalInstantToString(_instant_, _timeZone_, _calendar_).
+        1. Return ? TemporalInstantToString(_roundedInstant_, _timeZone_, _calendar_, _precision_.[[Precision]]).
       </emu-alg>
     </emu-clause>
 
@@ -390,7 +396,7 @@
         1. If the implementation does not include the ECMA-402 Internationalization API, then
           1. Let _timeZone_ be ? CreateTemporalTimeZone(*"UTC"*).
           1. Let _calendar_ be ! GetISO8601Calendar().
-          1. Return ? TemporalInstantToString(_instant_, _timeZone_, _calendar_).
+          1. Return ? TemporalInstantToString(_instant_, _timeZone_, _calendar_, *"auto"*).
         1. Let _dateFormat_ be ? Construct(%DateTimeFormat%, « _locales_, _options_ »).
         1. Return ? FormatDateTime(_dateFormat_, _instant_).
       </emu-alg>
@@ -406,7 +412,7 @@
         1. Perform ? RequireInternalSlot(_instant_, [[InitializedTemporalInstant]]).
         1. Let _timeZone_ be ? CreateTemporalTimeZone(*"UTC"*).
         1. Let _calendar_ be ! GetISO8601Calendar().
-        1. Return ? TemporalInstantToString(_instant_, _timeZone_, _calendar_).
+        1. Return ? TemporalInstantToString(_instant_, _timeZone_, _calendar_, *"auto"*).
       </emu-alg>
     </emu-clause>
 
@@ -611,12 +617,12 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal-temporalinstanttostring" aoid="TemporalInstantToString">
-      <h1>TemporalInstantToString ( _instant_, _timeZone_, _calendar_ )</h1>
+      <h1>TemporalInstantToString ( _instant_, _timeZone_, _calendar_, _precision_ )</h1>
       <emu-alg>
         1. Assert: Type(_instant_) is Object.
         1. Assert: _instant_ has an [[InitializedTemporalInstant]] internal slot.
         1. Let _dateTime_ be ? GetTemporalDateTimeFor(_timeZone_, _instant_, _calendar_).
-        1. Let _dateTimeString_ be ? TemporalDateTimeToString(_dateTime_).
+        1. Let _dateTimeString_ be ? TemporalDateTimeToString(_dateTime_.[[ISOYear]], _dateTime_.[[ISOMonth]], _dateTime_.[[ISODay]], _dateTime_.[[Hour]], _dateTime_.[[Minute]], _dateTime_.[[Second]], _dateTime_.[[Millisecond]], _dateTime_.[[Microsecond]], _dateTime_.[[Nanosecond]], _precision_).
         1. Let _timeZoneString_ be ? ISOTimeZoneString(_timeZone_, _instant_).
         1. Return the string-concatenation of _dateTimeString_ and _timeZoneString_.
       </emu-alg>

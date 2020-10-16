@@ -157,15 +157,15 @@ describe('Time', () => {
       it('time.millisecond is 0', () => equal(time.millisecond, 0));
       it('time.microsecond is 0', () => equal(time.microsecond, 0));
       it('time.nanosecond is 0', () => equal(time.nanosecond, 0));
-      it('`${time}` is 15:23', () => equal(`${time}`, '15:23'));
+      it('`${time}` is 15:23:00', () => equal(`${time}`, '15:23:00'));
     });
     describe('missing minute', () => {
       const time = new Time(15);
-      it('`${time}` is 15:00', () => equal(`${time}`, '15:00'));
+      it('`${time}` is 15:00:00', () => equal(`${time}`, '15:00:00'));
     });
     describe('missing all parameters', () => {
       const time = new Time();
-      it('`${time}` is 00:00', () => equal(`${time}`, '00:00'));
+      it('`${time}` is 00:00:00', () => equal(`${time}`, '00:00:00'));
     });
   });
   describe('.with manipulation', () => {
@@ -514,8 +514,8 @@ describe('Time', () => {
       throws(() => time.round({ smallestUnit: 'second', roundingMode: 'cile' }), RangeError);
     });
     const incrementOneNearest = [
-      ['hour', '14:00'],
-      ['minute', '13:46'],
+      ['hour', '14:00:00'],
+      ['minute', '13:46:00'],
       ['second', '13:46:23'],
       ['millisecond', '13:46:23.123'],
       ['microsecond', '13:46:23.123457'],
@@ -526,8 +526,8 @@ describe('Time', () => {
         equal(`${time.round({ smallestUnit, roundingMode: 'nearest' })}`, expected));
     });
     const incrementOneCeil = [
-      ['hour', '14:00'],
-      ['minute', '13:47'],
+      ['hour', '14:00:00'],
+      ['minute', '13:47:00'],
       ['second', '13:46:24'],
       ['millisecond', '13:46:23.124'],
       ['microsecond', '13:46:23.123457'],
@@ -538,8 +538,8 @@ describe('Time', () => {
         equal(`${time.round({ smallestUnit, roundingMode: 'ceil' })}`, expected));
     });
     const incrementOneFloor = [
-      ['hour', '13:00'],
-      ['minute', '13:46'],
+      ['hour', '13:00:00'],
+      ['minute', '13:46:00'],
       ['second', '13:46:23'],
       ['millisecond', '13:46:23.123'],
       ['microsecond', '13:46:23.123456'],
@@ -552,26 +552,26 @@ describe('Time', () => {
         equal(`${time.round({ smallestUnit, roundingMode: 'trunc' })}`, expected));
     });
     it('nearest is the default', () => {
-      equal(`${time.round({ smallestUnit: 'hour' })}`, '14:00');
-      equal(`${time.round({ smallestUnit: 'minute' })}`, '13:46');
+      equal(`${time.round({ smallestUnit: 'hour' })}`, '14:00:00');
+      equal(`${time.round({ smallestUnit: 'minute' })}`, '13:46:00');
     });
     it('rounds to an increment of hours', () => {
-      equal(`${time.round({ smallestUnit: 'hour', roundingIncrement: 3 })}`, '15:00');
+      equal(`${time.round({ smallestUnit: 'hour', roundingIncrement: 3 })}`, '15:00:00');
     });
     it('rounds to an increment of minutes', () => {
-      equal(`${time.round({ smallestUnit: 'minute', roundingIncrement: 15 })}`, '13:45');
+      equal(`${time.round({ smallestUnit: 'minute', roundingIncrement: 15 })}`, '13:45:00');
     });
     it('rounds to an increment of seconds', () => {
       equal(`${time.round({ smallestUnit: 'second', roundingIncrement: 30 })}`, '13:46:30');
     });
     it('rounds to an increment of milliseconds', () => {
-      equal(`${time.round({ smallestUnit: 'millisecond', roundingIncrement: 10 })}`, '13:46:23.120');
+      equal(`${time.round({ smallestUnit: 'millisecond', roundingIncrement: 10 })}`, '13:46:23.12');
     });
     it('rounds to an increment of microseconds', () => {
-      equal(`${time.round({ smallestUnit: 'microsecond', roundingIncrement: 10 })}`, '13:46:23.123460');
+      equal(`${time.round({ smallestUnit: 'microsecond', roundingIncrement: 10 })}`, '13:46:23.12346');
     });
     it('rounds to an increment of nanoseconds', () => {
-      equal(`${time.round({ smallestUnit: 'nanosecond', roundingIncrement: 10 })}`, '13:46:23.123456790');
+      equal(`${time.round({ smallestUnit: 'nanosecond', roundingIncrement: 10 })}`, '13:46:23.12345679');
     });
     it('valid hour increments divide into 24', () => {
       const smallestUnit = 'hour';
@@ -612,7 +612,7 @@ describe('Time', () => {
     const bal = Time.from('23:59:59.999999999');
     ['hour', 'minute', 'second', 'millisecond', 'microsecond'].forEach((smallestUnit) => {
       it(`balances to next ${smallestUnit}`, () => {
-        equal(`${bal.round({ smallestUnit })}`, '00:00');
+        equal(`${bal.round({ smallestUnit })}`, '00:00:00');
       });
     });
     it('accepts plural units', () => {
@@ -772,7 +772,7 @@ describe('Time', () => {
   });
   describe('time.toString() works', () => {
     it('new Time(15, 23).toString()', () => {
-      equal(new Time(15, 23).toString(), '15:23');
+      equal(new Time(15, 23).toString(), '15:23:00');
     });
     it('new Time(15, 23, 30).toString()', () => {
       equal(new Time(15, 23, 30).toString(), '15:23:30');
@@ -786,10 +786,92 @@ describe('Time', () => {
     it('new Time(15, 23, 30, 123, 456, 789).toString()', () => {
       equal(new Time(15, 23, 30, 123, 456, 789).toString(), '15:23:30.123456789');
     });
+    const t1 = Time.from('15:23');
+    const t2 = Time.from('15:23:30');
+    const t3 = Time.from('15:23:30.1234');
+    it('default is to emit seconds and drop trailing zeros after the decimal', () => {
+      equal(t1.toString(), '15:23:00');
+      equal(t2.toString(), '15:23:30');
+      equal(t3.toString(), '15:23:30.1234');
+    });
+    it('truncates to minute', () => {
+      [t1, t2, t3].forEach((t) => equal(t.toString({ smallestUnit: 'minute' }), '15:23'));
+    });
+    it('other smallestUnits are aliases for fractional digits', () => {
+      equal(t3.toString({ smallestUnit: 'second' }), t3.toString({ fractionalSecondDigits: 0 }));
+      equal(t3.toString({ smallestUnit: 'millisecond' }), t3.toString({ fractionalSecondDigits: 3 }));
+      equal(t3.toString({ smallestUnit: 'microsecond' }), t3.toString({ fractionalSecondDigits: 6 }));
+      equal(t3.toString({ smallestUnit: 'nanosecond' }), t3.toString({ fractionalSecondDigits: 9 }));
+    });
+    it('throws on invalid or disallowed smallestUnit', () => {
+      ['era', 'year', 'month', 'day', 'hour', 'nonsense'].forEach((smallestUnit) =>
+        throws(() => t1.toString({ smallestUnit }), RangeError)
+      );
+    });
+    it('accepts plural units', () => {
+      equal(t3.toString({ smallestUnit: 'minutes' }), t3.toString({ smallestUnit: 'minute' }));
+      equal(t3.toString({ smallestUnit: 'seconds' }), t3.toString({ smallestUnit: 'second' }));
+      equal(t3.toString({ smallestUnit: 'milliseconds' }), t3.toString({ smallestUnit: 'millisecond' }));
+      equal(t3.toString({ smallestUnit: 'microseconds' }), t3.toString({ smallestUnit: 'microsecond' }));
+      equal(t3.toString({ smallestUnit: 'nanoseconds' }), t3.toString({ smallestUnit: 'nanosecond' }));
+    });
+    it('truncates or pads to 2 places', () => {
+      const options = { fractionalSecondDigits: 2 };
+      equal(t1.toString(options), '15:23:00.00');
+      equal(t2.toString(options), '15:23:30.00');
+      equal(t3.toString(options), '15:23:30.12');
+    });
+    it('pads to 7 places', () => {
+      const options = { fractionalSecondDigits: 7 };
+      equal(t1.toString(options), '15:23:00.0000000');
+      equal(t2.toString(options), '15:23:30.0000000');
+      equal(t3.toString(options), '15:23:30.1234000');
+    });
+    it('auto is the default', () => {
+      [t1, t2, t3].forEach((dt) => equal(dt.toString({ fractionalSecondDigits: 'auto' }), dt.toString()));
+    });
+    it('throws on out of range or invalid fractionalSecondDigits', () => {
+      [-1, 10, Infinity, NaN, 'not-auto'].forEach((fractionalSecondDigits) =>
+        throws(() => t1.toString({ fractionalSecondDigits }), RangeError)
+      );
+    });
+    it('accepts and truncates fractional fractionalSecondDigits', () => {
+      equal(t3.toString({ fractionalSecondDigits: 5.5 }), '15:23:30.12340');
+    });
+    it('smallestUnit overrides fractionalSecondDigits', () => {
+      equal(t3.toString({ smallestUnit: 'minute', fractionalSecondDigits: 9 }), '15:23');
+    });
+    it('throws on invalid roundingMode', () => {
+      throws(() => t1.toString({ roundingMode: 'cile' }), RangeError);
+    });
+    it('rounds to nearest', () => {
+      equal(t2.toString({ smallestUnit: 'minute', roundingMode: 'nearest' }), '15:24');
+      equal(t3.toString({ fractionalSecondDigits: 3, roundingMode: 'nearest' }), '15:23:30.123');
+    });
+    it('rounds up', () => {
+      equal(t2.toString({ smallestUnit: 'minute', roundingMode: 'ceil' }), '15:24');
+      equal(t3.toString({ fractionalSecondDigits: 3, roundingMode: 'ceil' }), '15:23:30.124');
+    });
+    it('rounds down', () => {
+      ['floor', 'trunc'].forEach((roundingMode) => {
+        equal(t2.toString({ smallestUnit: 'minute', roundingMode }), '15:23');
+        equal(t3.toString({ fractionalSecondDigits: 3, roundingMode }), '15:23:30.123');
+      });
+    });
+    it('rounding can affect all units', () => {
+      const t4 = Time.from('23:59:59.999999999');
+      equal(t4.toString({ fractionalSecondDigits: 8, roundingMode: 'nearest' }), '00:00:00.00000000');
+    });
+    it('options may only be an object or undefined', () => {
+      [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
+        throws(() => t1.toString(badOptions), TypeError)
+      );
+      [{}, () => {}, undefined].forEach((options) => equal(t1.toString(options), '15:23:00'));
+    });
   });
   describe('Time.from() works', () => {
     it('Time.from("15:23")', () => {
-      equal(`${Time.from('15:23')}`, '15:23');
+      equal(`${Time.from('15:23')}`, '15:23:00');
     });
     it('Time.from("15:23:30")', () => {
       equal(`${Time.from('15:23:30')}`, '15:23:30');
@@ -803,7 +885,7 @@ describe('Time', () => {
     it('Time.from("15:23:30.123456789")', () => {
       equal(`${Time.from('15:23:30.123456789')}`, '15:23:30.123456789');
     });
-    it('Time.from({ hour: 15, minute: 23 })', () => equal(`${Time.from({ hour: 15, minute: 23 })}`, '15:23'));
+    it('Time.from({ hour: 15, minute: 23 })', () => equal(`${Time.from({ hour: 15, minute: 23 })}`, '15:23:00'));
     it('Time.from({ minute: 30, microsecond: 555 })', () =>
       equal(`${Time.from({ minute: 30, microsecond: 555 })}`, '00:30:00.000555'));
     it('Time.from(ISO string leap second) is constrained', () => {
@@ -812,67 +894,67 @@ describe('Time', () => {
     });
     it('Time.from(number) is converted to string', () => equal(`${Time.from(1523)}`, `${Time.from('1523')}`));
     it('Time.from(time) returns the same properties', () => {
-      const t = Time.from('2020-02-12T11:42+01:00[Europe/Amsterdam]');
+      const t = Time.from('2020-02-12T11:42:00+01:00[Europe/Amsterdam]');
       deepEqual(Time.from(t).getFields(), t.getFields());
     });
     it('Time.from(dateTime) returns the same time properties', () => {
-      const dt = DateTime.from('2020-02-12T11:42+01:00[Europe/Amsterdam]');
+      const dt = DateTime.from('2020-02-12T11:42:00+01:00[Europe/Amsterdam]');
       deepEqual(Time.from(dt).getFields(), dt.toTime().getFields());
     });
     it('Time.from(time) is not the same object', () => {
-      const t = Time.from('2020-02-12T11:42+01:00[Europe/Amsterdam]');
+      const t = Time.from('2020-02-12T11:42:00+01:00[Europe/Amsterdam]');
       notEqual(Time.from(t), t);
     });
     it('any number of decimal places', () => {
-      equal(`${Time.from('1976-11-18T15:23:30.1Z')}`, '15:23:30.100');
-      equal(`${Time.from('1976-11-18T15:23:30.12Z')}`, '15:23:30.120');
+      equal(`${Time.from('1976-11-18T15:23:30.1Z')}`, '15:23:30.1');
+      equal(`${Time.from('1976-11-18T15:23:30.12Z')}`, '15:23:30.12');
       equal(`${Time.from('1976-11-18T15:23:30.123Z')}`, '15:23:30.123');
-      equal(`${Time.from('1976-11-18T15:23:30.1234Z')}`, '15:23:30.123400');
-      equal(`${Time.from('1976-11-18T15:23:30.12345Z')}`, '15:23:30.123450');
+      equal(`${Time.from('1976-11-18T15:23:30.1234Z')}`, '15:23:30.1234');
+      equal(`${Time.from('1976-11-18T15:23:30.12345Z')}`, '15:23:30.12345');
       equal(`${Time.from('1976-11-18T15:23:30.123456Z')}`, '15:23:30.123456');
-      equal(`${Time.from('1976-11-18T15:23:30.1234567Z')}`, '15:23:30.123456700');
-      equal(`${Time.from('1976-11-18T15:23:30.12345678Z')}`, '15:23:30.123456780');
+      equal(`${Time.from('1976-11-18T15:23:30.1234567Z')}`, '15:23:30.1234567');
+      equal(`${Time.from('1976-11-18T15:23:30.12345678Z')}`, '15:23:30.12345678');
       equal(`${Time.from('1976-11-18T15:23:30.123456789Z')}`, '15:23:30.123456789');
     });
     it('variant decimal separator', () => {
-      equal(`${Time.from('1976-11-18T15:23:30,12Z')}`, '15:23:30.120');
+      equal(`${Time.from('1976-11-18T15:23:30,12Z')}`, '15:23:30.12');
     });
     it('variant minus sign', () => {
-      equal(`${Time.from('1976-11-18T15:23:30.12\u221202:00')}`, '15:23:30.120');
+      equal(`${Time.from('1976-11-18T15:23:30.12\u221202:00')}`, '15:23:30.12');
     });
     it('basic format', () => {
       equal(`${Time.from('152330')}`, '15:23:30');
-      equal(`${Time.from('152330.1')}`, '15:23:30.100');
+      equal(`${Time.from('152330.1')}`, '15:23:30.1');
       equal(`${Time.from('152330-08')}`, '15:23:30');
-      equal(`${Time.from('152330.1-08')}`, '15:23:30.100');
+      equal(`${Time.from('152330.1-08')}`, '15:23:30.1');
       equal(`${Time.from('152330-0800')}`, '15:23:30');
-      equal(`${Time.from('152330.1-0800')}`, '15:23:30.100');
+      equal(`${Time.from('152330.1-0800')}`, '15:23:30.1');
     });
     it('mixture of basic and extended format', () => {
-      equal(`${Time.from('1976-11-18T152330.1+00:00')}`, '15:23:30.100');
-      equal(`${Time.from('19761118T15:23:30.1+00:00')}`, '15:23:30.100');
-      equal(`${Time.from('1976-11-18T15:23:30.1+0000')}`, '15:23:30.100');
-      equal(`${Time.from('1976-11-18T152330.1+0000')}`, '15:23:30.100');
-      equal(`${Time.from('19761118T15:23:30.1+0000')}`, '15:23:30.100');
-      equal(`${Time.from('19761118T152330.1+00:00')}`, '15:23:30.100');
-      equal(`${Time.from('19761118T152330.1+0000')}`, '15:23:30.100');
-      equal(`${Time.from('+001976-11-18T152330.1+00:00')}`, '15:23:30.100');
-      equal(`${Time.from('+0019761118T15:23:30.1+00:00')}`, '15:23:30.100');
-      equal(`${Time.from('+001976-11-18T15:23:30.1+0000')}`, '15:23:30.100');
-      equal(`${Time.from('+001976-11-18T152330.1+0000')}`, '15:23:30.100');
-      equal(`${Time.from('+0019761118T15:23:30.1+0000')}`, '15:23:30.100');
-      equal(`${Time.from('+0019761118T152330.1+00:00')}`, '15:23:30.100');
-      equal(`${Time.from('+0019761118T152330.1+0000')}`, '15:23:30.100');
+      equal(`${Time.from('1976-11-18T152330.1+00:00')}`, '15:23:30.1');
+      equal(`${Time.from('19761118T15:23:30.1+00:00')}`, '15:23:30.1');
+      equal(`${Time.from('1976-11-18T15:23:30.1+0000')}`, '15:23:30.1');
+      equal(`${Time.from('1976-11-18T152330.1+0000')}`, '15:23:30.1');
+      equal(`${Time.from('19761118T15:23:30.1+0000')}`, '15:23:30.1');
+      equal(`${Time.from('19761118T152330.1+00:00')}`, '15:23:30.1');
+      equal(`${Time.from('19761118T152330.1+0000')}`, '15:23:30.1');
+      equal(`${Time.from('+001976-11-18T152330.1+00:00')}`, '15:23:30.1');
+      equal(`${Time.from('+0019761118T15:23:30.1+00:00')}`, '15:23:30.1');
+      equal(`${Time.from('+001976-11-18T15:23:30.1+0000')}`, '15:23:30.1');
+      equal(`${Time.from('+001976-11-18T152330.1+0000')}`, '15:23:30.1');
+      equal(`${Time.from('+0019761118T15:23:30.1+0000')}`, '15:23:30.1');
+      equal(`${Time.from('+0019761118T152330.1+00:00')}`, '15:23:30.1');
+      equal(`${Time.from('+0019761118T152330.1+0000')}`, '15:23:30.1');
     });
     it('optional parts', () => {
-      equal(`${Time.from('15')}`, '15:00');
+      equal(`${Time.from('15')}`, '15:00:00');
     });
     it('no junk at end of string', () => throws(() => Time.from('15:23:30.100junk'), RangeError));
     it('options may only be an object or undefined', () => {
       [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
         throws(() => Time.from({ hour: 12 }, badOptions), TypeError)
       );
-      [{}, () => {}, undefined].forEach((options) => equal(`${Time.from({ hour: 12 }, options)}`, '12:00'));
+      [{}, () => {}, undefined].forEach((options) => equal(`${Time.from({ hour: 12 }, options)}`, '12:00:00'));
     });
     describe('Overflow', () => {
       const bad = { nanosecond: 1000 };
@@ -897,7 +979,7 @@ describe('Time', () => {
       throws(() => Time.from({ minutes: 12 }), TypeError);
     });
     it('incorrectly-spelled properties are ignored', () => {
-      equal(`${Time.from({ minutes: 1, hour: 1 })}`, '01:00');
+      equal(`${Time.from({ minutes: 1, hour: 1 })}`, '01:00:00');
     });
   });
   describe('constructor treats -0 as 0', () => {

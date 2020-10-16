@@ -39,7 +39,7 @@ const timeZone = new Proxy({
 
   getOffsetStringFor(instantArg) {
     actual.push("call timeZone.getOffsetStringFor");
-    assert.sameValue(instantArg, instant);
+    assert.sameValue(instantArg.epochNanoseconds, instant.epochNanoseconds);
     return {
       get toString() {
         actual.push("get offset.toString");
@@ -53,7 +53,7 @@ const timeZone = new Proxy({
 
   getDateTimeFor(instantArg) {
     actual.push("call timeZone.getDateTimeFor");
-    assert.sameValue(instantArg, instant);
+    assert.sameValue(instantArg.epochNanoseconds, instant.epochNanoseconds);
     return Temporal.DateTime.from("1963-07-02T12:00:00.987654321");
   },
 }, {

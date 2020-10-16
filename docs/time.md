@@ -392,18 +392,44 @@ time.equals(other); // => false
 time.equals(time); // => true
 ```
 
-### time.**toString**() : string
+### time.**toString**(_options_?: object) : string
+
+**Parameters:**
+
+- `options` (optional object): An object with properties representing options for the operation.
+  The following options are recognized:
+  - `fractionalSecondDigits` (number or string): How many digits to print after the decimal point in the output string.
+    Valid values are `'auto'`, 0, 1, 2, 3, 4, 5, 6, 7, 8, or 9.
+    The default is `'auto'`.
+  - `smallestUnit` (string): The smallest unit of time to include in the output string.
+    This option overrides `fractionalSecondDigits` if both are given.
+    Valid values are `'minute'`, `'second'`, `'millisecond'`, `'microsecond'`, and `'nanosecond'`.
+  - `roundingMode` (string): How to handle the remainder.
+    Valid values are `'ceil'`, `'floor'`, `'trunc'`, and `'nearest'`.
+    The default is `'trunc'`.
 
 **Returns:** a string in the ISO 8601 time format representing `time`.
 
 This method overrides the `Object.prototype.toString()` method and provides a convenient, unambiguous string representation of `time`.
 The string can be passed to `Temporal.Time.from()` to create a new `Temporal.Time` object.
 
+The output precision can be controlled with the `fractionalSecondDigits` or `smallestUnit` option.
+If no options are given, the default is `fractionalSecondDigits: 'auto'`, which omits trailing zeroes after the decimal point.
+
+The value is truncated to fit the requested precision, unless a different rounding mode is given with the `roundingMode` option, as in `Temporal.DateTime.round()`.
+Note that rounding may change the value of other units as well.
+
 Example usage:
 
 ```js
 time = Temporal.Time.from('19:39:09.068346205');
 time.toString(); // => 19:39:09.068346205
+
+time.toString({ smallestUnit: 'minute' }); // => 19:39
+time.toString({ fractionalSecondDigits: 0 }); // => 19:39:09
+time.toString({ fractionalSecondDigits: 4 }); // => 19:39:09.0683
+time.toString({ fractionalSecondDigits: 5, roundingMode: 'nearest' })
+  // => 19:39:09.06835
 ```
 
 ### time.**toLocaleString**(_locales_?: string | array&lt;string&gt;, _options_?: object) : string

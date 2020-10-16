@@ -86,6 +86,27 @@
     </emu-alg>
   </emu-clause>
 
+  <emu-clause id="sec-getstringornumberoption" aoid="GetStringOrNumberOption">
+    <h1>GetStringOrNumberOption ( _options_, _property_, _stringValues_, _minimum_, _maximum_, _fallback_ )</h1>
+    <p>
+      The abstract operation GetStringOrNumberOption extracts the value of the property named _property_ from the provided _options_ object.
+      If the value is a Number value, the operation checks whether it is in the allowed range.
+      Otherwise, the operation converts it to a string and checks whether it is one of a List of allowed _stringValues_, and fills in a _fallback_ value if necessary.
+      If _stringValues_ is *undefined*, there is no fixed set of values and any is permitted.
+    </p>
+    <emu-alg>
+      1. Assert: Type(_options_) is Object.
+      1. Let _value_ be ? Get(_options_, _property_).
+      1. If _value_ is *undefined*, return _fallback_.
+      1. If Type(_value_) is Number, then
+        1. If _value_ is *NaN*, or _value_ &lt; _minimum_, or _value_ &gt; _maximum_, throw a *RangeError* exception.
+        1. Return floor(ℝ(_value_)).
+      1. Set _value_ to ? ToString(_value_).
+      1. If _stringValues_ is not *undefined* and _stringValues_ does not contain an element equal to _value_, throw a *RangeError* exception.
+      1. Return _value_.
+    </emu-alg>
+  </emu-clause>
+
   <emu-clause id="sec-temporal-totemporaldurationoverflow" aoid="ToTemporalDurationOverflow">
     <h1>ToTemporalDurationOverflow ( _normalizedOptions_ )</h1>
     <emu-alg>
@@ -148,6 +169,81 @@
     </emu-alg>
   </emu-clause>
 
+  <emu-clause id="sec-temporal-tosecondsstringprecision" aoid="ToSecondsStringPrecision">
+    <h1>ToSecondsStringPrecision ( _normalizedOptions_ )</h1>
+    <p>
+      The abstract operation ToSecondsStringPrecision combines the values of the options `smallestUnit` and `fractionalSecondDigits` to yield a precision for printing minutes and seconds to a string, and a rounding unit and increment.
+      The precision may be an integer 0 through 9 signifying a number of digits after the decimal point in the seconds, the string *"minute"* signifying not to print seconds at all, or the string *"auto"* signifying to drop trailing zeroes after the decimal point.
+    </p>
+    <emu-alg>
+      1. Let _smallestUnit_ be ? GetOption(_normalizedOptions_, *"smallestUnit"*, *"string"*, « *"minute"*, *"second"*, *"millisecond"*, *"microsecond"*, *"nanosecond"*, *"minutes"*, *"seconds"*, *"milliseconds"*, *"microseconds"*, *"nanoseconds"* », *undefined*).
+      1. If the value of _smallestUnit_ is in the Plural column of <emu-xref href="#table-temporal-singular-and-plural-units"></emu-xref>, then
+        1. Set _smallestUnit_ to the corresponding Singular value of the same row.
+      1. If _smallestUnit_ is *"minute"*, then
+        1. Return the new Record {
+            [[Precision]]: *"minute"*,
+            [[Unit]]: *"minute"*,
+            [[Increment]]: 1
+          }.
+      1. If _smallestUnit_ is *"second"*, then
+        1. Return the new Record {
+            [[Precision]]: 0,
+            [[Unit]]: *"second"*,
+            [[Increment]]: 1
+          }.
+      1. If _smallestUnit_ is *"millisecond"*, then
+        1. Return the new Record {
+            [[Precision]]: 3,
+            [[Unit]]: *"millisecond"*,
+            [[Increment]]: 1
+          }.
+      1. If _smallestUnit_ is *"microsecond"*, then
+        1. Return the new Record {
+            [[Precision]]: 6,
+            [[Unit]]: *"microsecond"*,
+            [[Increment]]: 1
+          }.
+      1. If _smallestUnit_ is *"nanosecond"*, then
+        1. Return the new Record {
+            [[Precision]]: 9,
+            [[Unit]]: *"nanosecond"*,
+            [[Increment]]: 1
+          }.
+      1. Assert: _smallestUnit_ is *undefined*.
+      1. Let _digits_ be ? GetStringOrNumberOption(_normalizedOptions_, *"fractionalSecondDigits"*, « *"auto"* », 0, 9, *"auto"*).
+      1. If _digits_ is *"auto"*, then
+        1. Return the new Record {
+            [[Precision]]: *"auto"*,
+            [[Unit]]: *"nanosecond"*,
+            [[Increment]]: 1
+          }.
+      1. If _digits_ is 0, then
+        1. Return the new Record {
+            [[Precision]]: 0,
+            [[Unit]]: *"second"*,
+            [[Increment]]: 1
+          }.
+      1. If _digits_ is 1, 2, or 3, then
+        1. Return the new Record {
+            [[Precision]]: _digits_,
+            [[Unit]]: *"millisecond"*,
+            [[Increment]]: 10<sup>3 − _digits_</sup>
+          }.
+      1. If _digits_ is 4, 5, or 6, then
+        1. Return the new Record {
+            [[Precision]]: _digits_,
+            [[Unit]]: *"microsecond"*,
+            [[Increment]]: 10<sup>6 − _digits_</sup>
+          }.
+      1. Assert: _digits_ is 7, 8, or 9.
+      1. Return the new Record {
+          [[Precision]]: _digits_,
+          [[Unit]]: *"nanosecond"*,
+          [[Increment]]: 10<sup>9 − _digits_</sup>
+        }.
+    </emu-alg>
+  </emu-clause>
+
   <emu-clause id="sec-temporal-tolargesttemporalunit" aoid="ToLargestTemporalUnit">
     <h1>ToLargestTemporalUnit ( _normalizedOptions_, _disallowedUnits_, _defaultUnit_ )</h1>
     <emu-alg>
@@ -166,8 +262,8 @@
   <emu-clause id="sec-temporal-tosmallesttemporalunit" aoid="ToSmallestTemporalUnit">
     <h1>ToSmallestTemporalUnit ( _normalizedOptions_, _disallowedUnits_ )</h1>
     <emu-alg>
-      1. Let _smallestUnit_ be ? GetOption(_normalizedOptions_, *"smallestUnit"*, *"string"*, « *"day"*, *"days"*, *"hour"*, *"hours"*, *"minute"*, *"minutes"*, *"second"*, *"seconds"*, *"millisecond"*, *"milliseconds"*, *"microsecond"*, *"microseconds"*, *"nanosecond"*, *"nanoseconds"* », *"not present"*).
-      1. If _smallestUnit_ is *"not present"*, then
+      1. Let _smallestUnit_ be ? GetOption(_normalizedOptions_, *"smallestUnit"*, *"string"*, « *"day"*, *"days"*, *"hour"*, *"hours"*, *"minute"*, *"minutes"*, *"second"*, *"seconds"*, *"millisecond"*, *"milliseconds"*, *"microsecond"*, *"microseconds"*, *"nanosecond"*, *"nanoseconds"* », *undefined*).
+      1. If _smallestUnit_ is *undefined*, then
         1. Throw a *RangeError* exception.
       1. If the value of _smallestUnit_ is in the Plural column of <emu-xref href="#table-temporal-singular-and-plural-units"></emu-xref>, then
         1. Set _smallestUnit_ to the corresponding Singular value of the same row.
@@ -368,24 +464,22 @@
   </emu-clause>
 
   <emu-clause id="sec-temporal-formatsecondsstringpart" aoid="FormatSecondsStringPart">
-    <h1>FormatSecondsStringPart ( _second_, _millisecond_, _microsecond_, _nanosecond_ )</h1>
+    <h1>FormatSecondsStringPart ( _second_, _millisecond_, _microsecond_, _nanosecond_, _precision_ )</h1>
     <emu-alg>
-      1. If _second_, _millisecond_, _microsecond_, and _nanosecond_ are all 0, then
-        1. Return `""`.
-      1. Let _nanos_, _micros_, and _millis_ be `""`.
-      1. If _nanosecond_ is not 0, then
-        1. Set _nanos_ to _nanosecond_ formatted as a three-digit decimal number, padded to the left with zeroes if necessary.
-        1. Set _micros_ and _millis_ to `"000"`.
-      1. If _microsecond_ is not 0, then
-        1. Set _micros_ be _microsecond_ formatted as a three-digit decimal number, padded to the left with zeroes if necessary.
-        1. Set _millis_ to `"000"`.
-      1. If _millisecond_ is not 0, then
-        1. Set _millis_ to _millisecond_ formatted as a three-digit decimal number, padded to the left with zeroes if necessary.
-      1. Let _decimal_ be the string-concatenation of _millis_, _micros_, and _nanos_.
-      1. Let _result_ be _second_ formatted as a two-digit decimal number, padded to the left with a zero if necessary.
-      1. If _decimal_ is not empty, then
-        1. Set _result_ to the string-concatenation of _result_, the code unit 0x002E (FULL STOP), and _decimal_.
-      1. Return the string-concatenation of the code unit 0x003A (COLON) and _result_.
+      1. If _precision_ is *"minute"*, return *""*.
+      1. Let _secondsString_ be the string-concatenation of the code unit 0x003A (COLON) and _second_ formatted as a two-digit decimal number, padded to the left with zeroes if necessary.
+      1. Let _fraction_ be _millisecond_ × 10<sup>6</sup> + _microsecond_ × 10<sup>3</sup> + _nanosecond_.
+      1. If _precision_ is *"auto"*, then
+        1. If _fraction_ is 0, return _secondsString_.
+        1. Set _fraction_ to _fraction_ formatted as a nine-digit decimal number, padded to the left with zeroes if necessary.
+        1. Set _fraction_ to the longest possible substring of _fraction_ starting at position 0 and not ending with the code unit 0x0030 (DIGIT ZERO).
+      1. Else,
+        1. If _precision_ is 0, return _secondsString_.
+        1. Let _len_ be the length of _fraction_.
+        1. If _len_ &gt; _precision_, then
+          1. Set _fraction_ to the substring of _fraction_ from 0 to min(_len_, _precision_).
+        1. Pad _fraction_ to the left with zeroes up to the length _precision_, if necessary.
+      1. Return the string-concatenation of _secondsString_, the code unit 0x002E (FULL STOP), and _fraction_.
     </emu-alg>
   </emu-clause>
 

@@ -663,18 +663,54 @@ dt1.equals(dt2); // => false
 dt1.equals(dt1); // => true
 ```
 
-### datetime.**toString**() : string
+### datetime.**toString**(_options_?: object) : string
+
+**Parameters:**
+
+- `options` (optional object): An object with properties representing options for the operation.
+  The following options are recognized:
+  - `fractionalSecondDigits` (number or string): How many digits to print after the decimal point in the output string.
+    Valid values are `'auto'`, 0, 1, 2, 3, 4, 5, 6, 7, 8, or 9.
+    The default is `'auto'`.
+  - `smallestUnit` (string): The smallest unit of time to include in the output string.
+    This option overrides `fractionalSecondDigits` if both are given.
+    Valid values are `'minute'`, `'second'`, `'millisecond'`, `'microsecond'`, and `'nanosecond'`.
+  - `roundingMode` (string): How to handle the remainder.
+    Valid values are `'ceil'`, `'floor'`, `'trunc'`, and `'nearest'`.
+    The default is `'trunc'`.
 
 **Returns:** a string in the ISO 8601 date format representing `datetime`.
 
 This method overrides the `Object.prototype.toString()` method and provides a convenient, unambiguous string representation of `datetime`.
 The string can be passed to `Temporal.DateTime.from()` to create a new `Temporal.DateTime` object.
 
+The output precision can be controlled with the `fractionalSecondDigits` or `smallestUnit` option.
+If no options are given, the default is `fractionalSecondDigits: 'auto'`, which omits trailing zeroes after the decimal point.
+
+The value is truncated to fit the requested precision, unless a different rounding mode is given with the `roundingMode` option, as in `Temporal.DateTime.round()`.
+Note that rounding may change the value of other units as well.
+
 Example usage:
 
 ```js
-dt = Temporal.DateTime.from({ year: 1999, month: 12, day: 31 });
-dt.toString(); // => 1999-12-31T00:00
+dt = Temporal.DateTime.from({
+  year: 1999,
+  month: 12,
+  day: 31,
+  hour: 23,
+  minute: 59,
+  second: 59,
+  millisecond: 999,
+  microsecond: 999,
+  nanosecond: 999
+});
+dt.toString(); // => 1999-12-31T23:59:59.999999999
+
+dt.toString({ smallestUnit: 'minute' }); // => 1999-12-31T23:59
+dt.toString({ fractionalSecondDigits: 0 }); // => 1999-12-31T23:59:59
+dt.toString({ fractionalSecondDigits: 4 }); // => 1999-12-31T23:59:59.9999
+dt.toString({ fractionalSecondDigits: 8, roundingMode: 'nearest' });
+  // => 2000-01-01T00:00:00.00000000
 ```
 
 ### datetime.**toLocaleString**(_locales_?: string | array&lt;string&gt;, _options_?: object) : string

@@ -172,7 +172,7 @@ describe('TimeZone', () => {
     it(`(${zone}).getNextTransition(${inst})`, () => zone.getNextTransition(inst), null);
     it(`(${zone}).getPreviousTransition(${inst})`, () => zone.getPreviousTransition(inst), null);
     it('wraps around to the next day', () =>
-      equal(`${zone.getDateTimeFor(Temporal.Instant.from('2020-02-06T23:59Z'))}`, '2020-02-07T00:59'));
+      equal(`${zone.getDateTimeFor(Temporal.Instant.from('2020-02-06T23:59Z'))}`, '2020-02-07T00:59:00'));
   });
   describe('UTC', () => {
     const zone = new Temporal.TimeZone('UTC');
@@ -224,19 +224,19 @@ describe('TimeZone', () => {
     it('clock moving forward', () => {
       const zone = new Temporal.TimeZone('Europe/Berlin');
       const dtm = new Temporal.DateTime(2019, 3, 31, 2, 45);
-      equal(`${zone.getInstantFor(dtm)}`, '2019-03-31T01:45Z');
-      equal(`${zone.getInstantFor(dtm, { disambiguation: 'earlier' })}`, '2019-03-31T00:45Z');
-      equal(`${zone.getInstantFor(dtm, { disambiguation: 'later' })}`, '2019-03-31T01:45Z');
-      equal(`${zone.getInstantFor(dtm, { disambiguation: 'compatible' })}`, '2019-03-31T01:45Z');
+      equal(`${zone.getInstantFor(dtm)}`, '2019-03-31T01:45:00Z');
+      equal(`${zone.getInstantFor(dtm, { disambiguation: 'earlier' })}`, '2019-03-31T00:45:00Z');
+      equal(`${zone.getInstantFor(dtm, { disambiguation: 'later' })}`, '2019-03-31T01:45:00Z');
+      equal(`${zone.getInstantFor(dtm, { disambiguation: 'compatible' })}`, '2019-03-31T01:45:00Z');
       throws(() => zone.getInstantFor(dtm, { disambiguation: 'reject' }), RangeError);
     });
     it('clock moving backward', () => {
       const zone = new Temporal.TimeZone('America/Sao_Paulo');
       const dtm = new Temporal.DateTime(2019, 2, 16, 23, 45);
-      equal(`${zone.getInstantFor(dtm)}`, '2019-02-17T01:45Z');
-      equal(`${zone.getInstantFor(dtm, { disambiguation: 'earlier' })}`, '2019-02-17T01:45Z');
-      equal(`${zone.getInstantFor(dtm, { disambiguation: 'later' })}`, '2019-02-17T02:45Z');
-      equal(`${zone.getInstantFor(dtm, { disambiguation: 'compatible' })}`, '2019-02-17T01:45Z');
+      equal(`${zone.getInstantFor(dtm)}`, '2019-02-17T01:45:00Z');
+      equal(`${zone.getInstantFor(dtm, { disambiguation: 'earlier' })}`, '2019-02-17T01:45:00Z');
+      equal(`${zone.getInstantFor(dtm, { disambiguation: 'later' })}`, '2019-02-17T02:45:00Z');
+      equal(`${zone.getInstantFor(dtm, { disambiguation: 'compatible' })}`, '2019-02-17T01:45:00Z');
       throws(() => zone.getInstantFor(dtm, { disambiguation: 'reject' }), RangeError);
     });
   });
@@ -257,7 +257,7 @@ describe('TimeZone', () => {
       throws(() => zone.getOffsetStringFor({}), RangeError);
     });
     it('getDateTimeFor() casts its argument', () => {
-      equal(`${zone.getDateTimeFor('2019-02-17T01:45Z')}`, '2019-02-17T05:15');
+      equal(`${zone.getDateTimeFor('2019-02-17T01:45Z')}`, '2019-02-17T05:15:00');
     });
     it('getDateTimeFor() casts only from string', () => {
       throws(() => zone.getDateTimeFor(0n), RangeError);
@@ -329,19 +329,19 @@ describe('TimeZone', () => {
     });
     it('with daylight saving change - Fall', () => {
       const zone = Temporal.TimeZone.from('America/Sao_Paulo');
-      equal(`${zone.getInstantFor(dtm)}`, '2019-02-17T01:45Z');
-      equal(`${zone.getInstantFor(dtm, { disambiguation: 'earlier' })}`, '2019-02-17T01:45Z');
-      equal(`${zone.getInstantFor(dtm, { disambiguation: 'later' })}`, '2019-02-17T02:45Z');
-      equal(`${zone.getInstantFor(dtm, { disambiguation: 'compatible' })}`, '2019-02-17T01:45Z');
+      equal(`${zone.getInstantFor(dtm)}`, '2019-02-17T01:45:00Z');
+      equal(`${zone.getInstantFor(dtm, { disambiguation: 'earlier' })}`, '2019-02-17T01:45:00Z');
+      equal(`${zone.getInstantFor(dtm, { disambiguation: 'later' })}`, '2019-02-17T02:45:00Z');
+      equal(`${zone.getInstantFor(dtm, { disambiguation: 'compatible' })}`, '2019-02-17T01:45:00Z');
       throws(() => zone.getInstantFor(dtm, { disambiguation: 'reject' }), RangeError);
     });
     it('with daylight saving change - Spring', () => {
       const dtmLA = new Temporal.DateTime(2020, 3, 8, 2, 30);
       const zone = Temporal.TimeZone.from('America/Los_Angeles');
-      equal(`${zone.getInstantFor(dtmLA)}`, '2020-03-08T10:30Z');
-      equal(`${zone.getInstantFor(dtmLA, { disambiguation: 'earlier' })}`, '2020-03-08T09:30Z');
-      equal(`${zone.getInstantFor(dtmLA, { disambiguation: 'later' })}`, '2020-03-08T10:30Z');
-      equal(`${zone.getInstantFor(dtmLA, { disambiguation: 'compatible' })}`, '2020-03-08T10:30Z');
+      equal(`${zone.getInstantFor(dtmLA)}`, '2020-03-08T10:30:00Z');
+      equal(`${zone.getInstantFor(dtmLA, { disambiguation: 'earlier' })}`, '2020-03-08T09:30:00Z');
+      equal(`${zone.getInstantFor(dtmLA, { disambiguation: 'later' })}`, '2020-03-08T10:30:00Z');
+      equal(`${zone.getInstantFor(dtmLA, { disambiguation: 'compatible' })}`, '2020-03-08T10:30:00Z');
       throws(() => zone.getInstantFor(dtmLA, { disambiguation: 'reject' }), RangeError);
     });
     it('throws on bad disambiguation', () => {
@@ -357,7 +357,7 @@ describe('TimeZone', () => {
       const dt = Temporal.DateTime.from('2019-02-16T23:45');
       deepEqual(
         zone.getPossibleInstantsFor(dt).map((a) => `${a}`),
-        ['2019-02-16T20:15Z']
+        ['2019-02-16T20:15:00Z']
       );
     });
     it('with clock moving forward', () => {
@@ -370,7 +370,7 @@ describe('TimeZone', () => {
       const dt = Temporal.DateTime.from('2019-02-16T23:45');
       deepEqual(
         zone.getPossibleInstantsFor(dt).map((a) => `${a}`),
-        ['2019-02-17T01:45Z', '2019-02-17T02:45Z']
+        ['2019-02-17T01:45:00Z', '2019-02-17T02:45:00Z']
       );
     });
     it('outside of Instant range', () => {
@@ -407,11 +407,11 @@ describe('TimeZone', () => {
       const a1 = Temporal.Instant.from('2019-04-16T21:01Z');
       const a2 = Temporal.Instant.from('1800-01-01T00:00Z');
 
-      equal(nyc.getNextTransition(a1).toString(), '2019-11-03T06:00Z');
-      equal(nyc.getNextTransition(a2).toString(), '1883-11-18T17:00Z');
+      equal(nyc.getNextTransition(a1).toString(), '2019-11-03T06:00:00Z');
+      equal(nyc.getNextTransition(a2).toString(), '1883-11-18T17:00:00Z');
     });
     it('casts argument', () => {
-      equal(`${nyc.getNextTransition('2019-04-16T21:01Z')}`, '2019-11-03T06:00Z');
+      equal(`${nyc.getNextTransition('2019-04-16T21:01Z')}`, '2019-11-03T06:00:00Z');
     });
     it('casts only from string', () => {
       throws(() => nyc.getNextTransition(0n), RangeError);
@@ -425,11 +425,11 @@ describe('TimeZone', () => {
       const a1 = Temporal.Instant.from('2020-06-11T21:01Z');
       const a2 = Temporal.Instant.from('1848-01-01T00:00Z');
 
-      equal(london.getPreviousTransition(a1).toString(), '2020-03-29T01:00Z');
+      equal(london.getPreviousTransition(a1).toString(), '2020-03-29T01:00:00Z');
       equal(london.getPreviousTransition(a2).toString(), '1847-12-01T00:01:15Z');
     });
     it('casts argument', () => {
-      equal(`${london.getPreviousTransition('2020-06-11T21:01Z')}`, '2020-03-29T01:00Z');
+      equal(`${london.getPreviousTransition('2020-06-11T21:01Z')}`, '2020-03-29T01:00:00Z');
     });
     it('casts only from string', () => {
       throws(() => london.getPreviousTransition(0n), RangeError);

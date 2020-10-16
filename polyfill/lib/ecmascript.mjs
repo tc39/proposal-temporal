@@ -492,6 +492,54 @@ export const ES = ObjectAssign({}, ES2020, {
     }
     return increment;
   },
+  ToSecondsStringPrecision: (options) => {
+    const singular = new Map([
+      ['minutes', 'minute'],
+      ['seconds', 'second'],
+      ['milliseconds', 'millisecond'],
+      ['microseconds', 'microsecond'],
+      ['nanoseconds', 'nanosecond']
+    ]);
+    const allowed = new Set(['minute', 'second', 'millisecond', 'microsecond', 'nanosecond']);
+    let smallestUnit = ES.GetOption(options, 'smallestUnit', [...allowed, ...singular.keys()], undefined);
+    if (singular.has(smallestUnit)) smallestUnit = singular.get(smallestUnit);
+    switch (smallestUnit) {
+      case 'minute':
+        return { precision: 'minute', unit: 'minute', increment: 1 };
+      case 'second':
+        return { precision: 0, unit: 'second', increment: 1 };
+      case 'millisecond':
+        return { precision: 3, unit: 'millisecond', increment: 1 };
+      case 'microsecond':
+        return { precision: 6, unit: 'microsecond', increment: 1 };
+      case 'nanosecond':
+        return { precision: 9, unit: 'nanosecond', increment: 1 };
+      default: // fall through if option not given
+    }
+    let digits = options.fractionalSecondDigits;
+    if (digits === undefined || digits === 'auto') return { precision: 'auto', unit: 'nanosecond', increment: 1 };
+    digits = ES.ToNumber(digits);
+    if (NumberIsNaN(digits) || digits < 0 || digits > 9) {
+      throw new RangeError(`fractionalSecondDigits must be 'auto' or 0 through 9, not ${digits}`);
+    }
+    const precision = MathFloor(digits);
+    switch (precision) {
+      case 0:
+        return { precision, unit: 'second', increment: 1 };
+      case 1:
+      case 2:
+      case 3:
+        return { precision, unit: 'millisecond', increment: 10 ** (3 - precision) };
+      case 4:
+      case 5:
+      case 6:
+        return { precision, unit: 'microsecond', increment: 10 ** (6 - precision) };
+      case 7:
+      case 8:
+      case 9:
+        return { precision, unit: 'nanosecond', increment: 10 ** (9 - precision) };
+    }
+  },
   ToLargestTemporalUnit: (options, fallback, disallowedStrings = []) => {
     const plural = new Map(
       [
@@ -1074,18 +1122,23 @@ export const ES = ObjectAssign({}, ES2020, {
     return yearString;
   },
   ISODateTimePartString: (part) => `00${part}`.slice(-2),
-  FormatSecondsStringPart: (seconds, millis, micros, nanos) => {
-    if (!seconds && !millis && !micros && !nanos) return '';
+  FormatSecondsStringPart: (second, millisecond, microsecond, nanosecond, precision) => {
+    if (precision === 'minute') return '';
 
-    let parts = [];
-    if (nanos) parts.unshift(`000${nanos || 0}`.slice(-3));
-    if (micros || parts.length) parts.unshift(`000${micros || 0}`.slice(-3));
-    if (millis || parts.length) parts.unshift(`000${millis || 0}`.slice(-3));
-    let secs = `00${seconds}`.slice(-2);
-    let post = parts.length ? `.${parts.join('')}` : '';
-    return `:${secs}${post}`;
+    const secs = `:${ES.ISODateTimePartString(second)}`;
+    let fraction = millisecond * 1e6 + microsecond * 1e3 + nanosecond;
+
+    if (precision === 'auto') {
+      if (fraction === 0) return secs;
+      fraction = `${fraction}`.padStart(9, '0');
+      while (fraction[fraction.length - 1] === '0') fraction = fraction.slice(0, -1);
+    } else {
+      if (precision === 0) return secs;
+      fraction = `${fraction}`.slice(0, precision).padStart(precision, '0');
+    }
+    return `${secs}.${fraction}`;
   },
-  TemporalInstantToString: (instant, timeZone) => {
+  TemporalInstantToString: (instant, timeZone, precision) => {
     const dateTime = ES.GetTemporalDateTimeFor(timeZone, instant);
     const year = ES.ISOYearString(dateTime.year);
     const month = ES.ISODateTimePartString(dateTime.month);
@@ -1096,7 +1149,8 @@ export const ES = ObjectAssign({}, ES2020, {
       dateTime.second,
       dateTime.millisecond,
       dateTime.microsecond,
-      dateTime.nanosecond
+      dateTime.nanosecond,
+      precision
     );
     const timeZoneString = ES.ISOTimeZoneString(timeZone, instant);
     return `${year}-${month}-${day}T${hour}:${minute}${seconds}${timeZoneString}`;

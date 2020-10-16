@@ -21,4 +21,4 @@ const arrival = getLocalizedArrival(
   'America/Los_Angeles',
   'iso8601'
 );
-assert.equal(arrival.toString(), '2020-03-08T09:50');
+assert.equal(arrival.toString(), '2020-03-08T09:50:00');

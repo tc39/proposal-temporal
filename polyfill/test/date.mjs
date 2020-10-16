@@ -194,7 +194,7 @@ describe('Date', () => {
       throws(() => date.toDateTime({ minutes: 30 }), TypeError);
     });
     it('optional argument defaults to midnight', () => {
-      equal(`${date.toDateTime()}`, '1976-11-18T00:00');
+      equal(`${date.toDateTime()}`, '1976-11-18T00:00:00');
     });
   });
   describe('date.difference() works', () => {

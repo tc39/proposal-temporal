@@ -577,17 +577,34 @@ one.equals(two); // => false
 one.equals(one); // => true
 ```
 
-### instant.**toString**(_timeZone_?: object | string) : string
+### instant.**toString**(_timeZone_?: object | string, _options_?: object) : string
 
 **Parameters:**
 
 - `timeZone` (optional string or object): the time zone to express `instant` in, as a `Temporal.TimeZone` object, an object implementing the [time zone protocol](./timezone.md#protocol), or a string.
   The default is to use UTC.
+- `options` (optional object): An object with properties representing options for the operation.
+  The following options are recognized:
+  - `fractionalSecondDigits` (number or string): How many digits to print after the decimal point in the output string.
+    Valid values are `'auto'`, 0, 1, 2, 3, 4, 5, 6, 7, 8, or 9.
+    The default is `'auto'`.
+  - `smallestUnit` (string): The smallest unit of time to include in the output string.
+    This option overrides `fractionalSecondDigits` if both are given.
+    Valid values are `'minute'`, `'second'`, `'millisecond'`, `'microsecond'`, and `'nanosecond'`.
+  - `roundingMode` (string): How to handle the remainder.
+    Valid values are `'ceil'`, `'floor'`, `'trunc'`, and `'nearest'`.
+    The default is `'trunc'`.
 
 **Returns:** a string in the ISO 8601 date format representing `instant`.
 
 This method overrides the `Object.prototype.toString()` method and provides a convenient, unambiguous string representation of `instant`.
 The string can be passed to `Temporal.Instant.from()` to create a new `Temporal.Instant` object.
+
+The output precision can be controlled with the `fractionalSecondDigits` or `smallestUnit` option.
+If no options are given, the default is `fractionalSecondDigits: 'auto'`, which omits trailing zeroes after the decimal point.
+
+The value is truncated to fit the requested precision, unless a different rounding mode is given with the `roundingMode` option, as in `Temporal.DateTime.round()`.
+Note that rounding may change the value of other units as well.
 
 Example usage:
 
@@ -596,6 +613,15 @@ instant = Temporal.Instant.fromEpochMilliseconds(1574074321816);
 instant.toString(); // => 2019-11-18T10:52:01.816Z
 instant.toString(Temporal.TimeZone.from('UTC')); // => 2019-11-18T10:52:01.816Z
 instant.toString('Asia/Seoul'); // => 2019-11-18T19:52:01.816+09:00[Asia/Seoul]
+
+instant.toString(undefined, { smallestUnit: 'minute' });
+  // => 2019-11-18T10:52Z
+instant.toString(undefined, { fractionalSecondDigits: 0 });
+  // => 2019-11-18T10:52:01Z
+instant.toString(undefined, { fractionalSecondDigits: 4 });
+  // => 2019-11-18T10:52:01.8160Z
+instant.toString(undefined, { smallestUnit: 'second', roundingMode: 'nearest' });
+  // => 2019-11-18T10:52:02Z
 ```
 
 ### instant.**toLocaleString**(_locales_?: string | array&lt;string&gt;, _options_?: object) : string
