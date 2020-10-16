@@ -319,7 +319,7 @@ describe('TimeZone', () => {
       throws(() => namedTz.getPossibleInstantsFor(max), RangeError);
     });
   });
-  describe('getNextTransition works as expected', () => {
+  describe('getNextTransition works', () => {
     it('should not have bug #510', () => {
       // See https://github.com/tc39/proposal-temporal/issues/510 for more.
       const nyc = Temporal.TimeZone.from('America/New_York');
@@ -331,7 +331,7 @@ describe('TimeZone', () => {
     });
   });
 
-  describe('getPreviousTransition works as expected', () => {
+  describe('getPreviousTransition works', () => {
     it('should return first and last transition', () => {
       const london = Temporal.TimeZone.from('Europe/London');
       const a1 = Temporal.Instant.from('2020-06-11T21:01Z');
