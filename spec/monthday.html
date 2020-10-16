@@ -182,7 +182,7 @@
         1. If _monthDay_.[[ISOMonth]] ≠ _other_.[[ISOMonth]], return *false*.
         1. If _monthDay_.[[ISODay]] ≠ _other_.[[ISODay]], return *false*.
         1. If _monthDay_.[[ISOYear]] ≠ _other_.[[ISOYear]], return *false*.
-        1. Return *true*.
+        1. Return ? CalendarEquals(_monthDay_.[[Calendar]], _other_.[[Calendar]]).
       </emu-alg>
     </emu-clause>
 

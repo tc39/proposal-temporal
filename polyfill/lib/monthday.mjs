@@ -83,7 +83,7 @@ export class MonthDay {
       const val2 = GetSlot(other, slot);
       if (val1 !== val2) return false;
     }
-    return GetSlot(this, CALENDAR).id === GetSlot(other, CALENDAR).id;
+    return ES.CalendarEquals(this, other);
   }
   toString() {
     if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
