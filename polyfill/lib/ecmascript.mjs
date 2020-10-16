@@ -2170,6 +2170,30 @@ export const ES = ObjectAssign({}, ES2020, {
     }
     return round * increment;
   },
+  RoundInstant: (epochNs, increment, unit, roundingMode) => {
+    switch (unit) {
+      case 'hour':
+        increment *= 60;
+      // fall through
+      case 'minute':
+        increment *= 60;
+      // fall through
+      case 'second':
+        increment *= 1000;
+      // fall through
+      case 'millisecond':
+        increment *= 1000;
+      // fall through
+      case 'microsecond':
+        increment *= 1000;
+    }
+    // Note: NonNegativeModulo, but with BigInt
+    let remainder = epochNs.mod(86400e9);
+    if (remainder.lesser(0)) remainder = remainder.plus(86400e9);
+    const wholeDays = epochNs.minus(remainder);
+    const roundedRemainder = ES.RoundNumberToIncrement(remainder.toJSNumber(), increment, roundingMode);
+    return wholeDays.plus(roundedRemainder);
+  },
   RoundDateTime: (
     year,
     month,
