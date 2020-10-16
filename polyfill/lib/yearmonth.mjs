@@ -137,9 +137,11 @@ export class YearMonth {
     other = ES.ToTemporalYearMonth(other, YearMonth);
     const calendar = GetSlot(this, CALENDAR);
     const otherCalendar = GetSlot(other, CALENDAR);
-    if (calendar.id !== otherCalendar.id) {
+    const calendarID = ES.CalendarToString(calendar);
+    const otherCalendarID = ES.CalendarToString(otherCalendar);
+    if (calendarID !== otherCalendarID) {
       throw new RangeError(
-        `cannot compute difference between months of ${calendar.id} and ${otherCalendar.id} calendars`
+        `cannot compute difference between months of ${calendarID} and ${otherCalendarID} calendars`
       );
     }
     options = ES.NormalizeOptionsObject(options);
@@ -208,9 +210,11 @@ export class YearMonth {
     other = ES.ToTemporalYearMonth(other, YearMonth);
     const calendar = GetSlot(this, CALENDAR);
     const otherCalendar = GetSlot(other, CALENDAR);
-    if (calendar.id !== otherCalendar.id) {
+    const calendarID = ES.CalendarToString(calendar);
+    const otherCalendarID = ES.CalendarToString(otherCalendar);
+    if (calendarID !== otherCalendarID) {
       throw new RangeError(
-        `cannot compute difference between months of ${calendar.id} and ${otherCalendar.id} calendars`
+        `cannot compute difference between months of ${calendarID} and ${otherCalendarID} calendars`
       );
     }
     options = ES.NormalizeOptionsObject(options);
