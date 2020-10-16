@@ -356,7 +356,7 @@ describe('Instant', () => {
       equal(`${Instant.from('1976-11-18T15Z')}`, '1976-11-18T15:00Z');
     });
     it('ignores any specified calendar', () =>
-      equal(`${Instant.from('1976-11-18T15:23:30.123456789Z[c=discordian]')}`, '1976-11-18T15:23:30.123456789Z'));
+      equal(`${Instant.from('1976-11-18T15:23:30.123456789Z[c=discord]')}`, '1976-11-18T15:23:30.123456789Z'));
     it('no junk at end of string', () => throws(() => Instant.from('1976-11-18T15:23:30.123456789Zjunk'), RangeError));
   });
   describe('Instant.add works', () => {

@@ -5,7 +5,7 @@ import Pretty from '@pipobscure/demitasse-pretty';
 const { reporter } = Pretty;
 
 import { strict as assert } from 'assert';
-const { equal } = assert;
+const { equal, throws } = assert;
 
 import * as Temporal from 'proposal-temporal';
 
@@ -533,6 +533,33 @@ describe('fromString regex', () => {
         test(`p${d.toLowerCase()}t${t.toLowerCase()}`, { ...dexpect, ...texpect });
       }
     }
+  });
+
+  describe('calendar ID', () => {
+    function makeCustomCalendar(id) {
+      return class extends Temporal.Calendar {
+        constructor() {
+          super(id);
+        }
+      };
+    }
+    describe('valid', () => {
+      ['aaa', 'aaa-aaa', 'eightZZZ', 'eightZZZ-eightZZZ'].forEach((id) => {
+        it(id, () => {
+          const Custom = makeCustomCalendar(id);
+          const calendar = new Custom();
+          equal(calendar.id, id);
+        });
+      });
+    });
+    describe('not valid', () => {
+      ['a', 'a-a', 'aa', 'aa-aa', 'foo_', 'foo.', 'ninechars', 'ninechars-ninechars'].forEach((id) => {
+        it(id, () => {
+          const Custom = makeCustomCalendar(id);
+          throws(() => new Custom(), RangeError);
+        });
+      });
+    });
   });
 });
 

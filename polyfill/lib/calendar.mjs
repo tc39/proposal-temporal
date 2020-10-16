@@ -2,10 +2,14 @@
 
 import { ES } from './ecmascript.mjs';
 import { GetIntrinsic, MakeIntrinsicClass, DefineIntrinsic } from './intrinsicclass.mjs';
+import * as REGEX from './regex.mjs';
 import { CALENDAR_ID, ISO_YEAR, ISO_MONTH, ISO_DAY, CreateSlots, GetSlot, SetSlot } from './slots.mjs';
+
+const ID_REGEX = new RegExp(`^${REGEX.calendarID.source}$`);
 
 export class Calendar {
   constructor(id) {
+    if (!ID_REGEX.exec(id)) throw new RangeError(`invalid calendar identifier ${id}`);
     CreateSlots(this);
     SetSlot(this, CALENDAR_ID, id);
 
