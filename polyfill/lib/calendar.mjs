@@ -212,7 +212,14 @@ class ISO8601Calendar extends Calendar {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
     options = ES.NormalizeOptionsObject(options);
     const overflow = ES.ToTemporalOverflow(options);
-    let { hour, minute, second, millisecond, microsecond, nanosecond } = ES.ToTemporalTimeRecord(fields);
+    let { hour, minute, second, millisecond, microsecond, nanosecond } = ES.ToRecord(fields, [
+      ['hour', 0],
+      ['microsecond', 0],
+      ['millisecond', 0],
+      ['minute', 0],
+      ['nanosecond', 0],
+      ['second', 0]
+    ]);
     ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.RegulateTime(
       hour,
       minute,

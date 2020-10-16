@@ -221,8 +221,9 @@
         1. Let _partialYearMonth_ be ? ToPartialYearMonth(_temporalYearMonthLike_, _fieldNames_).
         1. Set _options_ to ? NormalizeOptionsObject(_options_).
         1. Let _overflow_ be ? ToTemporalOverflow(_options_).
-        1. <mark>TODO: Create via calendar.dateFromFields.</mark>
-          Return ? CreateTemporalYearMonthFromInstance(_yearMonth_, _result_.[[Year]], _result_.[[Month]]).
+        1. Let _fields_ be <mark>TODO</mark>.
+        1. Let _constructor_ be ? SpeciesConstructor(_yearMonth_, %Temporal.PlainYearMonth%).
+        1. Return ? YearMonthFromFields(_calendar_, _fields_, _constructor_, _overflow_).
       </emu-alg>
     </emu-clause>
 
@@ -240,14 +241,17 @@
         1. Let _balanceResult_ be ? BalanceDuration(_duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]], *"days"*).
         1. Set _options_ to ? NormalizeOptionsObject(_options_).
         1. Let _overflow_ be ? ToTemporalOverflow(_options_).
+        1. Let _calendar_ be _yearMonth_.[[Calendar]].
+        1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"month"*, *"year"* »).
         1. Let _sign_ be ! DurationSign(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _balanceResult_.[[Days]], 0, 0, 0, 0, 0, 0).
         1. If _sign_ &lt; 0, then
           1. Let _day_ be <mark>TODO: get via calendar.daysInMonth</mark> ! DaysInMonth(_yearMonth_.[[ISOYear]], _yearMonth_.[[ISOMonth]]).
         1. Else,
           1. Let _day_ be 1.
-        1. Let _result_ be ? <mark>TODO: get via calendar.dateAdd</mark> AddDate(_yearMonth_.[[ISOYear]], _yearMonth_.[[ISOMonth]], _day_, _duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _balanceResult_.[[Days]], _overflow_).
-        1. <mark>TODO: create via calendar.yearMonthFromFields.</mark>
-          Return ? CreateTemporalYearMonthFromInstance(_yearMonth_, _result_.[[Year]], _result_.[[Month]]).
+        1. Let _addedDate_ be ? <mark>TODO: get via calendar.dateAdd</mark> AddDate(_yearMonth_.[[ISOYear]], _yearMonth_.[[ISOMonth]], _day_, _duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _balanceResult_.[[Days]], _overflow_).
+        1. Let _addedDateFields_ be ToTemporalYearMonthFields(_addedDate_, _fieldNames_).
+        1. Let _constructor_ be ? SpeciesConstructor(_yearMonth_, %Temporal.PlainYearMonth%).
+        1. Return ? YearMonthFromFields(_calendar_, _addedDateFields_, _constructor_, _overflow_).
       </emu-alg>
     </emu-clause>
 
@@ -265,13 +269,17 @@
         1. Let _balanceResult_ be ? BalanceDuration(_duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]], *"days"*).
         1. Set _options_ to ? NormalizeOptionsObject(_options_).
         1. Let _overflow_ be ? ToTemporalOverflow(_options_).
+        1. Let _calendar_ be _yearMonth_.[[Calendar]].
+        1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"month"*, *"year"* »).
         1. Let _sign_ be ! DurationSign(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _balanceResult_.[[Days]], 0, 0, 0, 0, 0, 0).
         1. If _sign_ &lt; 0, then
           1. Let _day_ be <mark>TODO: get via calendar.daysInMonth</mark> ! DaysInMonth(_yearMonth_.[[ISOYear]], _yearMonth_.[[ISOMonth]]).
         1. Else,
           1. Let _day_ be 1.
-        1. Let _result_ be <mark>TODO: get via calendar.dateAdd</mark> ? AddDate(_yearMonth_.[[ISOYear]], _yearMonth_.[[ISOMonth]], _day_, −_duration_.[[Years]], −_duration_.[[Months]], −_duration_.[[Weeks]], −_balanceResult_.[[Days]], _overflow_).
-        1. <mark>TODO: create via calendar.yearMonthFromFields.</mark> Return ? CreateTemporalYearMonthFromInstance(_yearMonth_, _result_.[[Year]], _result_.[[Month]]).
+        1. Let _addedDate_ be <mark>TODO: get via calendar.dateAdd</mark> ? AddDate(_yearMonth_.[[ISOYear]], _yearMonth_.[[ISOMonth]], _day_, −_duration_.[[Years]], −_duration_.[[Months]], −_duration_.[[Weeks]], −_balanceResult_.[[Days]], _overflow_).
+        1. Let _addedDateFields_ be ToTemporalYearMonthFields(_addedDate_, _fieldNames_).
+        1. Let _constructor_ be ? SpeciesConstructor(_yearMonth_, %Temporal.PlainYearMonth%).
+        1. Return ? YearMonthFromFields(_calendar_, _addedDateFields_, _constructor_, _overflow_).
       </emu-alg>
     </emu-clause>
 
@@ -285,6 +293,7 @@
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
         1. Set _other_ to ? ToTemporalYearMonth(_other_).
+        1. <mark>TODO: compare calendars.</mark>
         1. Set _options_ to ? NormalizeOptionsObject(_options_).
         1. Let _disallowedUnits_ be « *"weeks"*, *"days"*, *"hours"*, *"minutes"*, *"seconds"*, *"milliseconds"*, *"microseconds"*, *"nanoseconds"* ».
         1. Let _smallestUnit_ be ? ToSmallestTemporalDurationUnit(_options_, *"months"*, _disallowedUnits_).
@@ -292,20 +301,19 @@
         1. Perform ? ValidateTemporalUnitRange(_largestUnit_, _smallestUnit_).
         1. Let _roundingMode_ be ? ToTemporalRoundingMode(_options_, *"trunc"*).
         1. Let _roundingIncrement_ be ? ToTemporalRoundingIncrement(_options_, *undefined*, *false*).
-        1. <mark>TODO: Delegate to calendar.</mark>
-        1. Let _years_ be _yearMonth_.[[ISOYear]] - _other_.[[ISOYear]].
-        1. Let _months_ be _yearMonth_.[[ISOMonth]] - _other_.[[ISOMonth]].
-        1. If _months_ &lt; 0, then
-          1. Set _years_ to _years_ - 1.
-          1. Set _months_ to _months_ + 12.
-        1. If _largestUnit_ is `"months"`, then
-          1. Set _months_ to _months_ + _years_ × 12.
-          1. Set _years_ to 0.
-        1. <mark>Assert: _months_ ≥ 0.</mark>
+        1. Let _calendar_ be _yearMonth_.[[Calendar]].
+        1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"month"*, *"year"* »).
+        1. Let _otherFields_ be ToTemporalYearMonthFields(_other_, _fieldNames_).
+        1. Perform ! CreateDataPropertyOrThrow(_otherFields_, *"day"*, *1*<sub>𝔽</sub>).
+        1. Let _otherDate_ be ? DateFromFields(_calendar_, _otherFields_, %Temporal.Date%).
+        1. Let _thisFields_ be ToTemporalYearMonthFields(_yearMonth_, _fieldNames_).
+        1. Perform ! CreateDataPropertyOrThrow(_thisFields_, *"day"*, *1*<sub>𝔽</sub>).
+        1. Let _thisDate_ be ? DateFromFields(_calendar_, _thisFields_, %Temporal.Date%).
+        1. <mark>TODO: Let _result_ be `calendar.dateUntil(thisDate, otherDate, { largestUnit })`.</mark>
         1. If _smallestUnit_ is *"months"* and _roundingIncrement_ = 1, then
-          1. Return ? CreateTemporalDuration(_years_, _months_, 0, 0, 0, 0, 0, 0, 0).
-        1. Let _relativeTo_ be ! CreateTemporalDateTime(_yearMonth_.[[ISOYear]], _yearMonth_.[[ISOMonth]], <mark>1</mark>, 0, 0, 0, 0, 0, 0, _yearMonth_.[[Calendar]]).
-        1. Let _result_ be ? RoundDuration(_years_, _months_, 0, 0, 0, 0, 0, 0, 0, 0, _roundingIncrement_, _smallestUnit_, _roundingMode_, _relativeTo_).
+          1. Return ? CreateTemporalDuration(_result_.[[Years]], _result_.[[Months]], 0, 0, 0, 0, 0, 0, 0).
+        1. Let _relativeTo_ be ? CreateTemporalDateTime(_thisDate_.[[ISOYear]], _thisDate_.[[ISOMonth]], _thisDate_.[[ISODay]], 0, 0, 0, 0, 0, 0, _calendar_).
+        1. Let _result_ be ? RoundDuration(_result_.[[Years]], _result_.[[Months]], 0, 0, 0, 0, 0, 0, 0, 0, _roundingIncrement_, _smallestUnit_, _roundingMode_, _relativeTo_).
         1. Return ? CreateTemporalDuration(_result_.[[Years]], _result_.[[Months]], 0, 0, 0, 0, 0, 0, 0).
       </emu-alg>
     </emu-clause>
@@ -320,6 +328,7 @@
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
         1. Set _other_ to ? ToTemporalYearMonth(_other_).
+        1. <mark>TODO: compare calendars.</mark>
         1. Set _options_ to ? NormalizeOptionsObject(_options_).
         1. Let _disallowedUnits_ be « *"weeks"*, *"days"*, *"hours"*, *"minutes"*, *"seconds"*, *"milliseconds"*, *"microseconds"*, *"nanoseconds"* ».
         1. Let _smallestUnit_ be ? ToSmallestTemporalDurationUnit(_options_, *"months"*, _disallowedUnits_).
@@ -328,20 +337,20 @@
         1. Let _roundingMode_ be ? ToTemporalRoundingMode(_options_, *"trunc"*).
         1. Set _roundingMode_ to ! NegateTemporalRoundingMode(_roundingMode_).
         1. Let _roundingIncrement_ be ? ToTemporalRoundingIncrement(_options_, *undefined*, *false*).
-        1. <mark>TODO: Delegate to calendar.</mark>
-        1. Let _years_ be _yearMonth_.[[ISOYear]] - _other_.[[ISOYear]].
-        1. Let _months_ be _yearMonth_.[[ISOMonth]] - _other_.[[ISOMonth]].
-        1. If _months_ &lt; 0, then
-          1. Set _years_ to _years_ - 1.
-          1. Set _months_ to _months_ + 12.
-        1. If _largestUnit_ is `"months"`, then
-          1. Set _months_ to _months_ + _years_ × 12.
-          1. Set _years_ to 0.
-        1. <mark>Assert: _months_ ≥ 0.</mark>
+        1. Let _calendar_ be _yearMonth_.[[Calendar]].
+        1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"month"*, *"year"* »).
+        1. Let _otherFields_ be ToTemporalYearMonthFields(_other_, _fieldNames_).
+        1. Perform ! CreateDataPropertyOrThrow(_otherFields_, *"day"*, *1*<sub>𝔽</sub>).
+        1. Let _otherDate_ be ? DateFromFields(_calendar_, _otherFields_, %Temporal.Date%).
+        1. Let _thisFields_ be ToTemporalYearMonthFields(_yearMonth_, _fieldNames_).
+        1. Perform ! CreateDataPropertyOrThrow(_thisFields_, *"day"*, *1*<sub>𝔽</sub>).
+        1. Let _thisDate_ be ? DateFromFields(_calendar_, _thisFields_, %Temporal.Date%).
+        1. <mark>TODO: Let _result_ be `calendar.dateUntil(thisDate, otherDate, { largestUnit })`.</mark>
         1. If _smallestUnit_ is *"months"* and _roundingIncrement_ = 1, then
-          1. Return ? CreateTemporalDuration(_years_, _months_, 0, 0, 0, 0, 0, 0, 0).
-        1. Let _relativeTo_ be ! CreateTemporalDateTime(_yearMonth_.[[ISOYear]], _yearMonth_.[[ISOMonth]], <mark>1</mark>, 0, 0, 0, 0, 0, 0, _yearMonth_.[[Calendar]]).
-        1. Let _result_ be ? RoundDuration(−_years_, −_months_, 0, 0, 0, 0, 0, 0, 0, 0, _roundingIncrement_, _smallestUnit_, _roundingMode_, _relativeTo_).
+          1. Return ? CreateTemporalDuration(−_result_.[[Years]], −_result_.[[Months]], 0, 0, 0, 0, 0, 0, 0).
+        1. Let _relativeTo_ be ? CreateTemporalDateTime(_thisDate_.[[ISOYear]], _thisDate_.[[ISOMonth]], _thisDate_.[[ISODay]], 0, 0, 0, 0, 0, 0, _calendar_).
+        1. Set _roundingMode_ to ! NegateTemporalRoundingMode(_roundingMode_).
+        1. Let _result_ be ? RoundDuration(_result_.[[Years]], _result_.[[Months]], 0, 0, 0, 0, 0, 0, 0, 0, _roundingIncrement_, _smallestUnit_, _roundingMode_, _relativeTo_).
         1. Return ? CreateTemporalDuration(−_result_.[[Years]], −_result_.[[Months]], 0, 0, 0, 0, 0, 0, 0).
       </emu-alg>
     </emu-clause>
@@ -432,13 +441,12 @@
         1. Let _fields_ be ? ToTemporalYearMonthFields(_yearMonth_, _receiverFieldNames_).
         1. Let _inputFieldNames_ be ? CalendarFields(_calendar_, « *"day"* »).
         1. For each value _property_ of _inputFieldNames_, do
-          1. Let _value_ be ? Get(_temporalMonthDayLike_, _property_).
+          1. Let _value_ be ? Get(_item_, _property_).
           1. If _property_ is *"day"*, and _value_ is *undefined*, then
             1. Throw a *TypeError* exception.
           1. Let _value_ be ? ToInteger(_value_).
           1. Perform ! CreateDataPropertyOrThrow(_fields_, _property_, _value_).
-        1. <mark>TODO: create via calendar.dateFromFields.</mark>
-          Return ? CreateTemporalDate(_yearMonth_.[[ISOYear]], _yearMonth_.[[ISOMonth]], _d_).
+        1. Return ? DateFromFields(_calendar_, _fields_, *"reject"*, %Temporal.Date%).
       </emu-alg>
     </emu-clause>
 
@@ -558,8 +566,8 @@
           1. If _calendar_ is *undefined*, set _calendar_ to ? GetISO8601Calendar().
           1. Set _calendar_ to ? ToTemporalCalendar(_calendar_).
           1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"month"*, *"year"* »).
-          1. Let _result_ be ? ToTemporalYearMonthFields(_item_, _fieldNames_).
-          1. Return <mark>TODO: create via calendar.yearMonthFromFields</mark>.
+          1. Let _fields_ be ? ToTemporalYearMonthFields(_item_, _fieldNames_).
+          1. Return ? YearMonthFromFields(_calendar_, _fields_, _overflow_, _constructor_).
         1. Let _string_ be ? ToString(_item_).
         1. Let _result_ be ? ParseTemporalYearMonthString(_string_).
         1. Let _referenceISODay_ be 1.
