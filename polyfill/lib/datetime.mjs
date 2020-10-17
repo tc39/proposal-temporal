@@ -634,62 +634,22 @@ export class DateTime {
   static from(item, options = undefined) {
     options = ES.NormalizeOptionsObject(options);
     const overflow = ES.ToTemporalOverflow(options);
-    let result;
-    if (ES.Type(item) === 'Object') {
-      if (ES.IsTemporalDateTime(item)) {
-        const year = GetSlot(item, ISO_YEAR);
-        const month = GetSlot(item, ISO_MONTH);
-        const day = GetSlot(item, ISO_DAY);
-        const hour = GetSlot(item, HOUR);
-        const minute = GetSlot(item, MINUTE);
-        const second = GetSlot(item, SECOND);
-        const millisecond = GetSlot(item, MILLISECOND);
-        const microsecond = GetSlot(item, MICROSECOND);
-        const nanosecond = GetSlot(item, NANOSECOND);
-        const calendar = GetSlot(item, CALENDAR);
-        result = new this(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
-      } else {
-        let calendar = item.calendar;
-        if (calendar === undefined) calendar = GetISO8601Calendar();
-        calendar = ES.ToTemporalCalendar(calendar);
-        const fields = ES.ToTemporalDateTimeRecord(item);
-        const TemporalDate = GetIntrinsic('%Temporal.Date%');
-        const date = calendar.dateFromFields(fields, options, TemporalDate);
-        const year = GetSlot(date, ISO_YEAR);
-        const month = GetSlot(date, ISO_MONTH);
-        const day = GetSlot(date, ISO_DAY);
-
-        let { hour, minute, second, millisecond, microsecond, nanosecond } = fields;
-        ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.RegulateTime(
-          hour,
-          minute,
-          second,
-          millisecond,
-          microsecond,
-          nanosecond,
-          overflow
-        ));
-        result = new this(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
-      }
-    } else {
-      let {
-        year,
-        month,
-        day,
-        hour,
-        minute,
-        second,
-        millisecond,
-        microsecond,
-        nanosecond,
-        calendar
-      } = ES.ParseTemporalDateTimeString(ES.ToString(item));
-      if (!calendar) calendar = GetISO8601Calendar();
-      calendar = ES.ToTemporalCalendar(calendar);
-      result = new this(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
+    if (ES.IsTemporalDateTime(item)) {
+      const year = GetSlot(item, ISO_YEAR);
+      const month = GetSlot(item, ISO_MONTH);
+      const day = GetSlot(item, ISO_DAY);
+      const hour = GetSlot(item, HOUR);
+      const minute = GetSlot(item, MINUTE);
+      const second = GetSlot(item, SECOND);
+      const millisecond = GetSlot(item, MILLISECOND);
+      const microsecond = GetSlot(item, MICROSECOND);
+      const nanosecond = GetSlot(item, NANOSECOND);
+      const calendar = GetSlot(item, CALENDAR);
+      const result = new this(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
+      if (!ES.IsTemporalDateTime(result)) throw new TypeError('invalid result');
+      return result;
     }
-    if (!ES.IsTemporalDateTime(result)) throw new TypeError('invalid result');
-    return result;
+    return ES.ToTemporalDateTime(item, this, overflow);
   }
   static compare(one, two) {
     if (!ES.IsTemporalDateTime(one) || !ES.IsTemporalDateTime(two)) throw new TypeError('invalid DateTime object');

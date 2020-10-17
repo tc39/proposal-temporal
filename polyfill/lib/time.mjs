@@ -407,33 +407,18 @@ export class Time {
   static from(item, options = undefined) {
     options = ES.NormalizeOptionsObject(options);
     const overflow = ES.ToTemporalOverflow(options);
-    let hour, minute, second, millisecond, microsecond, nanosecond;
-    if (ES.Type(item) === 'Object') {
-      if (ES.IsTemporalTime(item)) {
-        hour = GetSlot(item, HOUR);
-        minute = GetSlot(item, MINUTE);
-        second = GetSlot(item, SECOND);
-        millisecond = GetSlot(item, MILLISECOND);
-        microsecond = GetSlot(item, MICROSECOND);
-        nanosecond = GetSlot(item, NANOSECOND);
-      } else {
-        ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.ToTemporalTimeRecord(item));
-      }
-    } else {
-      ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.ParseTemporalTimeString(ES.ToString(item)));
+    if (ES.IsTemporalTime(item)) {
+      const hour = GetSlot(item, HOUR);
+      const minute = GetSlot(item, MINUTE);
+      const second = GetSlot(item, SECOND);
+      const millisecond = GetSlot(item, MILLISECOND);
+      const microsecond = GetSlot(item, MICROSECOND);
+      const nanosecond = GetSlot(item, NANOSECOND);
+      const result = new this(hour, minute, second, millisecond, microsecond, nanosecond);
+      if (!ES.IsTemporalTime(result)) throw new TypeError('invalid result');
+      return result;
     }
-    ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.RegulateTime(
-      hour,
-      minute,
-      second,
-      millisecond,
-      microsecond,
-      nanosecond,
-      overflow
-    ));
-    const result = new this(hour, minute, second, millisecond, microsecond, nanosecond);
-    if (!ES.IsTemporalTime(result)) throw new TypeError('invalid result');
-    return result;
+    return ES.ToTemporalTime(item, this, overflow);
   }
   static compare(one, two) {
     if (!ES.IsTemporalTime(one) || !ES.IsTemporalTime(two)) throw new TypeError('invalid Time object');

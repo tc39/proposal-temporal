@@ -72,18 +72,9 @@
         1. Let _constructor_ be the *this* value.
         1. Set _options_ to ? NormalizeOptionsObject(_options_).
         1. Let _overflow_ be ? ToTemporalOverflow(_options_).
-        1. If Type(_item_) is Object, then
-          1. If _item_ has an [[InitializedTemporalDate]] internal slot, then
-            1. Return ? CreateTemporalDateFromStatic(_constructor_, _item_.[[ISOYear]], _item_.[[ISOMonth]], _item_.[[ISODay]], _item_.[[Calendar]]).
-          1. Let _result_ be ? ToTemporalDateRecord(_item_).
-        1. Else,
-          1. Let _string_ be ? ToString(_item_).
-          1. Let _result_ be ? ParseTemporalDateString(_string_).
-        1. Let _calendar_ be _result_.[[Calendar]].
-        1. If _calendar_ is *undefined*, set _calendar_ to ! GetISO8601Calendar().
-        1. Set _calendar_ to ? ToTemporalCalendar(_calendar_).
-        1. Set _result_ to ? RegulateDate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _overflow_).
-        1. Return ? CreateTemporalDateFromStatic(_constructor_, _result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _calendar_).
+        1. If Type(_item_) is Object and _item_ has an [[InitializedTemporalDate]] internal slot, then
+          1. Return ? CreateTemporalDateFromStatic(_constructor_, _item_.[[ISOYear]], _item_.[[ISOMonth]], _item_.[[ISODay]], _item_.[[Calendar]]).
+        1. Return ? ToTemporalDate(_item_, _constructor_, _overflow_).
       </emu-alg>
     </emu-clause>
 
@@ -661,6 +652,30 @@
         1. Let _result_ be ? Construct(_constructor_, « _isoYear_, _isoMonth_, _isoDay_, _calendar_ »).
         1. Perform ? RequireInternalSlot(_result_, [[InitializedTemporalDate]]).
         1. Return _result_.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-totemporaldate" aoid="ToTemporalDate">
+      <h1>ToTemporalDate ( _item_ [ , _constructor_ [ , _overflow_ ] ] )</h1>
+      <p>
+        The abstract operation ToTemporalDate returns its argument _item_ if it is already a Temporal.Date instance, converts _item_ to a new Temporal.Date instance if possible, and throws otherwise.
+      </p>
+      <emu-alg>
+        1. If _constructor_ is not given, set it to %Temporal.Date%.
+        1. If _overflow_ is not given, set it to *"constrain"*.
+        1. Assert: _overflow_ is either *"constrain"* or *"reject"*.
+        1. If Type(_item_) is Object, then
+          1. If _item_ has an [[InitializedTemporalDate]] internal slot, then
+            1. Return _item_.
+          1. Let _result_ be ? ToTemporalDateRecord(_item_).
+        1. Else,
+          1. Let _string_ be ? ToString(_item_).
+          1. Let _result_ be ? ParseTemporalDateString(_string_).
+        1. Let _calendar_ be _result_.[[Calendar]].
+        1. If _calendar_ is *undefined*, set _calendar_ to ! GetISO8601Calendar().
+        1. Set _calendar_ to ? ToTemporalCalendar(_calendar_).
+        1. Set _result_ to ? RegulateDate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _overflow_).
+        1. Return ? CreateTemporalDateFromStatic(_constructor_, _result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _calendar_).
       </emu-alg>
     </emu-clause>
 

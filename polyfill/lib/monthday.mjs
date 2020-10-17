@@ -131,31 +131,16 @@ export class MonthDay {
   static from(item, options = undefined) {
     options = ES.NormalizeOptionsObject(options);
     const overflow = ES.ToTemporalOverflow(options);
-    let result;
-    if (ES.Type(item) === 'Object') {
-      if (ES.IsTemporalMonthDay(item)) {
-        const month = GetSlot(item, ISO_MONTH);
-        const day = GetSlot(item, ISO_DAY);
-        const calendar = GetSlot(item, CALENDAR);
-        const referenceISOYear = GetSlot(item, ISO_YEAR);
-        result = new this(month, day, calendar, referenceISOYear);
-      } else {
-        let calendar = item.calendar;
-        if (calendar === undefined) calendar = GetISO8601Calendar();
-        calendar = ES.ToTemporalCalendar(calendar);
-        const fields = ES.ToTemporalMonthDayRecord(item);
-        result = calendar.monthDayFromFields(fields, options, this);
-      }
-    } else {
-      let { month, day, referenceISOYear, calendar } = ES.ParseTemporalMonthDayString(ES.ToString(item));
-      ({ month, day } = ES.RegulateMonthDay(month, day, overflow));
-      if (!calendar) calendar = GetISO8601Calendar();
-      calendar = ES.ToTemporalCalendar(calendar);
-      if (referenceISOYear === undefined) referenceISOYear = 1972;
-      result = new this(month, day, calendar, referenceISOYear);
+    if (ES.IsTemporalMonthDay(item)) {
+      const month = GetSlot(item, ISO_MONTH);
+      const day = GetSlot(item, ISO_DAY);
+      const calendar = GetSlot(item, CALENDAR);
+      const referenceISOYear = GetSlot(item, ISO_YEAR);
+      const result = new this(month, day, calendar, referenceISOYear);
+      if (!ES.IsTemporalMonthDay(result)) throw new TypeError('invalid result');
+      return result;
     }
-    if (!ES.IsTemporalMonthDay(result)) throw new TypeError('invalid result');
-    return result;
+    return ES.ToTemporalMonthDay(item, this, overflow);
   }
 }
 
