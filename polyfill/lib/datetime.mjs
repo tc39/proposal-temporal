@@ -634,7 +634,6 @@ export class DateTime {
   static from(item, options = undefined) {
     options = ES.NormalizeOptionsObject(options);
     const overflow = ES.ToTemporalOverflow(options);
-    const TemporalCalendar = GetIntrinsic('%Temporal.Calendar%');
     let result;
     if (ES.Type(item) === 'Object') {
       if (ES.IsTemporalDateTime(item)) {
@@ -652,7 +651,7 @@ export class DateTime {
       } else {
         let calendar = item.calendar;
         if (calendar === undefined) calendar = GetISO8601Calendar();
-        calendar = TemporalCalendar.from(calendar);
+        calendar = ES.ToTemporalCalendar(calendar);
         const fields = ES.ToTemporalDateTimeRecord(item);
         const TemporalDate = GetIntrinsic('%Temporal.Date%');
         const date = calendar.dateFromFields(fields, options, TemporalDate);
@@ -686,7 +685,7 @@ export class DateTime {
         calendar
       } = ES.ParseTemporalDateTimeString(ES.ToString(item));
       if (!calendar) calendar = GetISO8601Calendar();
-      calendar = TemporalCalendar.from(calendar);
+      calendar = ES.ToTemporalCalendar(calendar);
       result = new this(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
     }
     if (!ES.IsTemporalDateTime(result)) throw new TypeError('invalid result');
