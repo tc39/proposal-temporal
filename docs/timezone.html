@@ -204,6 +204,10 @@
 <p>For specialized applications where you need to do calculations in a time zone that is not supported by <code>Intl</code>, you can also implement your own <code>Temporal.TimeZone</code> object.
 To do this, create a class inheriting from <code>Temporal.TimeZone</code>, call <code>super()</code> in the constructor with a time zone identifier, and implement the methods <code>getOffsetNanosecondsFor()</code>, <code>getPossibleInstantsFor()</code>, <code>getNextTransition()</code>, and <code>getPreviousTransition()</code>.
 Any subclass of <code>Temporal.TimeZone</code> will be accepted in Temporal APIs where a built-in <code>Temporal.TimeZone</code> would work.</p>
+<p>The identifier of a custom time zone must consist of one or more components separated by slashes (<code>/</code>), as described in the <a href="https://htmlpreview.github.io/?https://github.com/eggert/tz/blob/master/theory.html#naming">tzdata documentation</a>.
+Each component must consist of between one and 14 characters.
+Valid characters are ASCII letters, <code>.</code>, <code>-</code>, and <code>_</code>.
+<code>-</code> may not appear as the first character of a component, and a component may not be a single dot <code>.</code> or two dots <code>..</code>.</p>
 <h3 id="protocol"><a class="heading-link" href="#protocol"></a>Protocol</h3><p>It&#39;s also possible for a plain object to be a custom time zone, without subclassing.
 The object must have <code>getOffsetNanosecondsFor()</code>, <code>getPossibleInstantsFor()</code>, and <code>toString()</code> methods.
 It is possible to pass such an object into any Temporal API that would normally take a built-in <code>Temporal.TimeZone</code>.</p>

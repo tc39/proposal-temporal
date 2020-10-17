@@ -3170,12 +3170,16 @@
     GetSlots(container)[id] = value;
   }
 
+  var tzComponent = /\.[-A-Za-z_]|\.\.[-A-Za-z._]{1,12}|\.[-A-Za-z_][-A-Za-z._]{0,12}|[A-Za-z_][-A-Za-z._]{0,13}/;
+  var timeZoneID = new RegExp("(?:".concat(tzComponent.source, "(?:\\/(?:").concat(tzComponent.source, "))*|Etc/GMT[-+]\\d{1,2})"));
+  var calComponent = /[A-Za-z0-9]{3,8}/;
+  var calendarID = new RegExp("(?:".concat(calComponent.source, "(?:-").concat(calComponent.source, ")*)"));
   var yearpart = /(?:[+-\u2212]\d{6}|\d{4})/;
   var datesplit = new RegExp("(".concat(yearpart.source, ")(?:-(\\d{2})-(\\d{2})|(\\d{2})(\\d{2}))"));
   var timesplit = /(\d{2})(?::(\d{2})(?::(\d{2})(?:[.,](\d{1,9}))?)?|(\d{2})(?:(\d{2})(?:[.,](\d{1,9}))?)?)?/;
   var offset = /([+-\u2212])([0-2][0-9])(?::?([0-5][0-9]))?/;
-  var zonesplit = new RegExp("(?:([zZ])|(?:".concat(offset.source, "?(?:\\[(?!c=)([^\\]\\s]*)?\\])?))"));
-  var calendar = /\[c=([^\]\s]+)\]/;
+  var zonesplit = new RegExp("(?:([zZ])|(?:".concat(offset.source, "?(?:\\[(").concat(timeZoneID.source, ")\\])?))"));
+  var calendar = new RegExp("\\[c=(".concat(calendarID.source, ")\\]"));
   var instant = new RegExp("^".concat(datesplit.source, "(?:T|\\s+)").concat(timesplit.source).concat(zonesplit.source, "(?:").concat(calendar.source, ")?$"), 'i');
   var datetime = new RegExp("^".concat(datesplit.source, "(?:(?:T|\\s+)").concat(timesplit.source, "(?:").concat(zonesplit.source, ")?)?(?:").concat(calendar.source, ")?$"), 'i');
   var time = new RegExp("^".concat(timesplit.source, "(?:").concat(zonesplit.source, ")?(?:").concat(calendar.source, ")?$"), 'i'); // The short forms of YearMonth and MonthDay are only for the ISO calendar.
@@ -5810,10 +5814,12 @@
     return right;
   }
 
+  var ID_REGEX = new RegExp("^".concat(calendarID.source, "$"));
   var Calendar = /*#__PURE__*/function () {
     function Calendar(id) {
       _classCallCheck(this, Calendar);
 
+      if (!ID_REGEX.exec(id)) throw new RangeError("invalid calendar identifier ".concat(id));
       CreateSlots(this);
       SetSlot(this, CALENDAR_ID, id);
 
@@ -8954,6 +8960,7 @@
   MakeIntrinsicClass(Time, 'Temporal.Time');
 
   var OFFSET$1 = new RegExp("^".concat(offset.source, "$"));
+  var IANA_NAME = new RegExp("^".concat(timeZoneID.source, "$"));
 
   function parseOffsetString$1(string) {
     var match = OFFSET$1.exec(String(string));
@@ -8970,6 +8977,10 @@
 
       if ((this instanceof TimeZone ? this.constructor : void 0) === TimeZone) {
         timeZoneIdentifier = ES.GetCanonicalTimeZoneIdentifier(timeZoneIdentifier);
+      }
+
+      if (!OFFSET$1.exec(timeZoneIdentifier) && !IANA_NAME.exec(timeZoneIdentifier)) {
+        throw new RangeError("invalid time zone identifier ".concat(timeZoneIdentifier));
       }
 
       CreateSlots(this);
