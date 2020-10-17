@@ -101,11 +101,11 @@ ym = Temporal.YearMonth.from({ year: 2001, month: -1 }, { overflow: 'reject' })
   // throws
 ```
 
-### Temporal.YearMonth.**compare**(_one_: Temporal.YearMonth, _two_: Temporal.YearMonth) : number
+### Temporal.YearMonth.**compare**(_one_: Temporal.YearMonth | object | string, _two_: Temporal.YearMonth | object | string) : number
 
 **Parameters:**
-- `one` (`Temporal.YearMonth`): First month to compare.
-- `two` (`Temporal.YearMonth`): Second month to compare.
+- `one` (`Temporal.YearMonth` or value convertible to one): First month to compare.
+- `two` (`Temporal.YearMonth` or value convertible to one): Second month to compare.
 
 **Returns:** &minus;1, 0, or 1.
 
@@ -114,6 +114,8 @@ Returns an integer indicating whether `one` comes before or after or is equal to
 - &minus;1 if `one` comes before `two`;
 - 0 if `one` and `two` are the same;
 - 1 if `one` comes after `two`.
+
+If `one` and `two` are not `Temporal.YearMonth` objects, then they will be converted to one as if they were passed to `Temporal.YearMonth.from()`.
 
 This function can be used to sort arrays of `Temporal.YearMonth` objects.
 For example:

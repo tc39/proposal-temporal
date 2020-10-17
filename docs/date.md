@@ -112,12 +112,12 @@ date = Temporal.Date.from({ year: 2001, month: -1, day: 1 }, { overflow: 'reject
   // throws
 ```
 
-### Temporal.Date.**compare**(_one_: Temporal.Date, _two_: Temporal.Date) : number
+### Temporal.Date.**compare**(_one_: Temporal.Date | object | string, _two_: Temporal.Date | object | string) : number
 
 **Parameters:**
 
-- `one` (`Temporal.Date`): First date to compare.
-- `two` (`Temporal.Date`): Second date to compare.
+- `one` (`Temporal.Date` or value convertible to one): First date to compare.
+- `two` (`Temporal.Date` or value convertible to one): Second date to compare.
 
 **Returns:** &minus;1, 0, or 1.
 
@@ -127,6 +127,8 @@ Returns an integer indicating whether `one` comes before or after or is equal to
 - &minus;1 if `one` comes before `two`;
 - 0 if `one` and `two` are the same;
 - 1 if `one` comes after `two`.
+
+If `one` or `two` are not `Temporal.Date` objects, then they will be converted to one as if they were passed to `Temporal.Date.from()`.
 
 This function can be used to sort arrays of `Temporal.Date` objects.
 For example:

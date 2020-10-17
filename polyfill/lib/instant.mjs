@@ -289,7 +289,8 @@ export class Instant {
     return ES.ToTemporalInstant(item, this);
   }
   static compare(one, two) {
-    if (!ES.IsTemporalInstant(one) || !ES.IsTemporalInstant(two)) throw new TypeError('invalid Instant object');
+    one = ES.ToTemporalInstant(one, Instant);
+    two = ES.ToTemporalInstant(two, Instant);
     one = GetSlot(one, EPOCHNANOSECONDS);
     two = GetSlot(two, EPOCHNANOSECONDS);
     if (bigInt(one).lesser(two)) return -1;

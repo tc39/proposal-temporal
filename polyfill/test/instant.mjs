@@ -427,13 +427,11 @@ describe('Instant', () => {
     it('cross epoch larger/smaller', () => equal(Instant.compare(i2, i1), 1));
     it('epoch smaller/larger', () => equal(Instant.compare(i2, i3), -1));
     it('epoch larger/smaller', () => equal(Instant.compare(i3, i2), 1));
-    it("doesn't cast first argument", () => {
-      throws(() => Instant.compare(i1, i1.toString()), TypeError);
-      throws(() => Instant.compare(i1, {}), TypeError);
-    });
-    it("doesn't cast second argument", () => {
-      throws(() => Instant.compare(i2.epochNanoseconds, i2), TypeError);
-      throws(() => Instant.compare({}, i2), TypeError);
+    it('casts first argument', () => equal(Instant.compare(i1, i1.toString()), 0));
+    it('casts second argument', () => equal(Instant.compare(i2.toString(), i2), 0));
+    it('only casts from a string', () => {
+      throws(() => Instant.compare(i2.epochNanoseconds, i2), RangeError);
+      throws(() => Instant.compare({}, i2), RangeError);
     });
   });
   describe('Instant.equals works', () => {

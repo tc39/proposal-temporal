@@ -167,13 +167,17 @@ describe('YearMonth', () => {
     it('equal', () => equal(YearMonth.compare(nov94, nov94), 0));
     it('smaller/larger', () => equal(YearMonth.compare(nov94, jun13), -1));
     it('larger/smaller', () => equal(YearMonth.compare(jun13, nov94), 1));
-    it("doesn't cast first argument", () => {
-      throws(() => YearMonth.compare({ year: 1994, month: 11 }, jun13), TypeError);
-      throws(() => YearMonth.compare('1994-11', jun13), TypeError);
+    it('casts first argument', () => {
+      equal(YearMonth.compare({ year: 1994, month: 11 }, jun13), -1);
+      equal(YearMonth.compare('1994-11', jun13), -1);
     });
-    it("doesn't cast second argument", () => {
-      throws(() => YearMonth.compare(nov94, { year: 2013, month: 6 }), TypeError);
-      throws(() => YearMonth.compare(nov94, '2013-06'), TypeError);
+    it('casts second argument', () => {
+      equal(YearMonth.compare(nov94, { year: 2013, month: 6 }), -1);
+      equal(YearMonth.compare(nov94, '2013-06'), -1);
+    });
+    it('object must contain at least the required properties', () => {
+      throws(() => YearMonth.compare({ year: 1994 }, jun13), TypeError);
+      throws(() => YearMonth.compare(nov94, { year: 2013 }), TypeError);
     });
     it('takes [[ISODay]] into account', () => {
       const iso = Temporal.Calendar.from('iso8601');

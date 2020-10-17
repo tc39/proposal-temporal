@@ -150,12 +150,12 @@ Same as `Temporal.Instant.fromEpochSeconds()`, but with microsecond (10<sup>&min
 Same as `Temporal.Instant.fromEpochSeconds()`, but with nanosecond (10<sup>&minus;9</sup> second) precision.
 Also the same as `new Temporal.Instant(epochNanoseconds)`.
 
-### Temporal.Instant.**compare**(_one_: Temporal.Instant, _two_: Temporal.Instant) : number
+### Temporal.Instant.**compare**(_one_: Temporal.Instant | string, _two_: Temporal.Instant | string) : number
 
 **Parameters:**
 
-- `one` (`Temporal.Instant`): First time to compare.
-- `two` (`Temporal.Instant`): Second time to compare.
+- `one` (`Temporal.Instant` or value convertible to one): First time to compare.
+- `two` (`Temporal.Instant` or value convertible to one): Second time to compare.
 
 **Returns:** &minus;1, 0, or 1.
 
@@ -165,6 +165,8 @@ Returns an integer indicating whether `one` comes before or after or is equal to
 - &minus;1 if `one` comes before `two`;
 - 0 if `one` and `two` represent the same time;
 - 1 if `one` comes after `two`.
+
+If `one` and `two` are not `Temporal.Instant` objects, then they will be converted to one as if they were passed to `Temporal.Instant.from()`.
 
 This function can be used to sort arrays of `Temporal.Instant` objects.
 For example:

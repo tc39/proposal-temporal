@@ -682,13 +682,17 @@ describe('Date', () => {
     it('equal', () => equal(Date.compare(d1, d1), 0));
     it('smaller/larger', () => equal(Date.compare(d1, d2), -1));
     it('larger/smaller', () => equal(Date.compare(d2, d1), 1));
-    it("doesn't cast first argument", () => {
-      throws(() => Date.compare({ year: 1976, month: 11, day: 18 }, d2), TypeError);
-      throws(() => Date.compare('1976-11-18', d2), TypeError);
+    it('casts first argument', () => {
+      equal(Date.compare({ year: 1976, month: 11, day: 18 }, d2), -1);
+      equal(Date.compare('1976-11-18', d2), -1);
     });
-    it("doesn't cast second argument", () => {
-      throws(() => Date.compare(d1, { year: 2019, month: 6, day: 30 }), TypeError);
-      throws(() => Date.compare(d1, '2019-06-30'), TypeError);
+    it('casts second argument', () => {
+      equal(Date.compare(d1, { year: 2019, month: 6, day: 30 }), -1);
+      equal(Date.compare(d1, '2019-06-30'), -1);
+    });
+    it('object must contain at least the required properties', () => {
+      throws(() => Date.compare({ year: 1976 }, d2), TypeError);
+      throws(() => Date.compare(d1, { year: 2019 }), TypeError);
     });
   });
   describe('Date.equal works', () => {

@@ -138,8 +138,8 @@
         The following steps are taken:
       </p>
       <emu-alg>
-        1. Perform ? RequireInternalSlot(_one_, [[InitializedTemporalInstant]]).
-        1. Perform ? RequireInternalSlot(_two_, [[InitializedTemporalInstant]]).
+        1. Set _one_ to ? ToTemporalInstant(_one_).
+        1. Set _two_ to ? ToTemporalInstant(_two_).
         1. Return 𝔽(! CompareEpochNanoseconds(_one_.[[Nanoseconds]], _two_.[[Nanoseconds]])).
       </emu-alg>
     </emu-clause>

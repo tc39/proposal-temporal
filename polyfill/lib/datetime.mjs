@@ -652,7 +652,8 @@ export class DateTime {
     return ES.ToTemporalDateTime(item, this, overflow);
   }
   static compare(one, two) {
-    if (!ES.IsTemporalDateTime(one) || !ES.IsTemporalDateTime(two)) throw new TypeError('invalid DateTime object');
+    one = ES.ToTemporalDateTime(one, DateTime);
+    two = ES.ToTemporalDateTime(two, DateTime);
     for (const slot of [ISO_YEAR, ISO_MONTH, ISO_DAY, HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND]) {
       const val1 = GetSlot(one, slot);
       const val2 = GetSlot(two, slot);

@@ -623,13 +623,17 @@ describe('Time', () => {
     it('equal', () => equal(Time.compare(t1, t1), 0));
     it('smaller/larger', () => equal(Time.compare(t1, t2), -1));
     it('larger/smaller', () => equal(Time.compare(t2, t1), 1));
-    it("doesn't cast first argument", () => {
-      throws(() => Time.compare({ hour: 16, minute: 34 }, t2), TypeError);
-      throws(() => Time.compare('16:34', t2), TypeError);
+    it('casts first argument', () => {
+      equal(Time.compare({ hour: 16, minute: 34 }, t2), 1);
+      equal(Time.compare('16:34', t2), 1);
     });
-    it("doesn't cast second argument", () => {
-      throws(() => Time.compare(t1, { hour: 16, minute: 34 }), TypeError);
-      throws(() => Time.compare(t1, '16:34'), TypeError);
+    it('casts second argument', () => {
+      equal(Time.compare(t1, { hour: 16, minute: 34 }), -1);
+      equal(Time.compare(t1, '16:34'), -1);
+    });
+    it('object must contain at least one correctly-spelled property', () => {
+      throws(() => Time.compare({ hours: 16 }, t2), TypeError);
+      throws(() => Time.compare(t1, { hours: 16 }), TypeError);
     });
   });
   describe('time.equals() works', () => {
