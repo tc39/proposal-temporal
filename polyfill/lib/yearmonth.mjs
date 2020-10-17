@@ -252,7 +252,6 @@ export class YearMonth {
   static from(item, options = undefined) {
     options = ES.NormalizeOptionsObject(options);
     const overflow = ES.ToTemporalOverflow(options);
-    const TemporalCalendar = GetIntrinsic('%Temporal.Calendar%');
     let result;
     if (ES.Type(item) === 'Object') {
       if (ES.IsTemporalYearMonth(item)) {
@@ -264,7 +263,7 @@ export class YearMonth {
       } else {
         let calendar = item.calendar;
         if (calendar === undefined) calendar = GetISO8601Calendar();
-        calendar = TemporalCalendar.from(calendar);
+        calendar = ES.ToTemporalCalendar(calendar);
         const fields = ES.ToTemporalYearMonthRecord(item);
         result = calendar.yearMonthFromFields(fields, options, this);
       }
@@ -272,7 +271,7 @@ export class YearMonth {
       let { year, month, referenceISODay, calendar } = ES.ParseTemporalYearMonthString(ES.ToString(item));
       ({ year, month } = ES.RegulateYearMonth(year, month, overflow));
       if (!calendar) calendar = GetISO8601Calendar();
-      calendar = TemporalCalendar.from(calendar);
+      calendar = ES.ToTemporalCalendar(calendar);
       if (referenceISODay === undefined) referenceISODay = 1;
       result = new this(year, month, calendar, referenceISODay);
     }
