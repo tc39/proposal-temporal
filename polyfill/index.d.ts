@@ -296,7 +296,7 @@ export namespace Temporal {
     static fromEpochMicroseconds(epochMicroseconds: bigint): Temporal.Instant;
     static fromEpochNanoseconds(epochNanoseconds: bigint): Temporal.Instant;
     static from(item: Temporal.Instant | string): Temporal.Instant;
-    static compare(one: Temporal.Instant, two: Temporal.Instant): ComparisonResult;
+    static compare(one: Temporal.Instant | string, two: Temporal.Instant | string): ComparisonResult;
     constructor(epochNanoseconds: bigint);
     readonly epochSeconds: number;
     readonly epochMilliseconds: number;
@@ -503,7 +503,7 @@ export namespace Temporal {
    */
   export class Date implements DateFields {
     static from(item: Temporal.Date | DateLike | string, options?: AssignmentOptions): Temporal.Date;
-    static compare(one: Temporal.Date, two: Temporal.Date): ComparisonResult;
+    static compare(one: Temporal.Date | DateLike | string, two: Temporal.Date | DateLike | string): ComparisonResult;
     constructor(isoYear: number, isoMonth: number, isoDay: number, calendar?: CalendarProtocol);
     readonly year: number;
     readonly month: number;
@@ -598,7 +598,10 @@ export namespace Temporal {
    */
   export class DateTime implements DateTimeFields {
     static from(item: Temporal.DateTime | DateTimeLike | string, options?: AssignmentOptions): Temporal.DateTime;
-    static compare(one: Temporal.DateTime, two: Temporal.DateTime): ComparisonResult;
+    static compare(
+      one: Temporal.DateTime | DateTimeLike | string,
+      two: Temporal.DateTime | DateTimeLike | string
+    ): ComparisonResult;
     constructor(
       isoYear: number,
       isoMonth: number,
@@ -759,7 +762,7 @@ export namespace Temporal {
    */
   export class Time implements TimeFields {
     static from(item: Temporal.Time | TimeLike | string, options?: AssignmentOptions): Temporal.Time;
-    static compare(one: Temporal.Time, two: Temporal.Time): ComparisonResult;
+    static compare(one: Temporal.Time | TimeLike | string, two: Temporal.Time | TimeLike | string): ComparisonResult;
     constructor(
       hour?: number,
       minute?: number,
@@ -886,7 +889,10 @@ export namespace Temporal {
    */
   export class YearMonth implements YearMonthFields {
     static from(item: Temporal.YearMonth | YearMonthLike | string, options?: AssignmentOptions): Temporal.YearMonth;
-    static compare(one: Temporal.YearMonth, two: Temporal.YearMonth): ComparisonResult;
+    static compare(
+      one: Temporal.YearMonth | YearMonthLike | string,
+      two: Temporal.YearMonth | YearMonthLike | string
+    ): ComparisonResult;
     constructor(isoYear: number, isoMonth: number, calendar?: CalendarProtocol, referenceISODay?: number);
     readonly year: number;
     readonly month: number;

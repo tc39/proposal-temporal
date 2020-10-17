@@ -421,7 +421,8 @@ export class Time {
     return ES.ToTemporalTime(item, this, overflow);
   }
   static compare(one, two) {
-    if (!ES.IsTemporalTime(one) || !ES.IsTemporalTime(two)) throw new TypeError('invalid Time object');
+    one = ES.ToTemporalTime(one, Time);
+    two = ES.ToTemporalTime(two, Time);
     for (const slot of [HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND]) {
       const val1 = GetSlot(one, slot);
       const val2 = GetSlot(two, slot);

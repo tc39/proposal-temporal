@@ -344,13 +344,17 @@ describe('DateTime', () => {
     it('equal', () => equal(DateTime.compare(dt1, dt1), 0));
     it('smaller/larger', () => equal(DateTime.compare(dt1, dt2), -1));
     it('larger/smaller', () => equal(DateTime.compare(dt2, dt1), 1));
-    it("doesn't cast first argument", () => {
-      throws(() => DateTime.compare({ year: 1976, month: 11, day: 18, hour: 15 }, dt2), TypeError);
-      throws(() => DateTime.compare('1976-11-18T15:23:30.123456789', dt2), TypeError);
+    it('casts first argument', () => {
+      equal(DateTime.compare({ year: 1976, month: 11, day: 18, hour: 15 }, dt2), -1);
+      equal(DateTime.compare('1976-11-18T15:23:30.123456789', dt2), -1);
     });
-    it("doesn't cast second argument", () => {
-      throws(() => DateTime.compare(dt1, { year: 2019, month: 10, day: 29, hour: 10 }), TypeError);
-      throws(() => DateTime.compare('2019-10-29T10:46:38.271986102', dt2), TypeError);
+    it('casts second argument', () => {
+      equal(DateTime.compare(dt1, { year: 2019, month: 10, day: 29, hour: 10 }), -1);
+      equal(DateTime.compare(dt1, '2019-10-29T10:46:38.271986102'), -1);
+    });
+    it('object must contain at least the required properties', () => {
+      throws(() => DateTime.compare({ year: 1976 }, dt2), TypeError);
+      throws(() => DateTime.compare(dt1, { year: 2019 }), TypeError);
     });
   });
   describe('DateTime.equals() works', () => {

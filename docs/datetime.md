@@ -155,12 +155,12 @@ dt = Temporal.DateTime.from({ year: 2001, month: 1, day: 1, minute: 60 }, { over
 ```
 <!-- prettier-ignore-end -->
 
-### Temporal.DateTime.**compare**(_one_: Temporal.DateTime, _two_: Temporal.DateTime) : number
+### Temporal.DateTime.**compare**(_one_: Temporal.DateTime | object | string, _two_: Temporal.DateTime | object | string) : number
 
 **Parameters:**
 
-- `one` (`Temporal.DateTime`): First date/time to compare.
-- `two` (`Temporal.DateTime`): Second date/time to compare.
+- `one` (`Temporal.DateTime` or value convertible to one): First date/time to compare.
+- `two` (`Temporal.DateTime` or value convertible to one): Second date/time to compare.
 
 **Returns:** &minus;1, 0, or 1.
 
@@ -170,6 +170,8 @@ Returns an integer indicating whether `one` comes before or after or is equal to
 - &minus;1 if `one` comes before `two`;
 - 0 if `one` and `two` are the same;
 - 1 if `one` comes after `two`.
+
+If `one` and `two` are not `Temporal.DateTime` objects, then they will be converted to one as if they were passed to `Temporal.DateTime.from()`.
 
 This function can be used to sort arrays of `Temporal.DateTime` objects.
 For example:

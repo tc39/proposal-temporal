@@ -264,7 +264,8 @@ export class YearMonth {
     return ES.ToTemporalYearMonth(item, this, overflow);
   }
   static compare(one, two) {
-    if (!ES.IsTemporalYearMonth(one) || !ES.IsTemporalYearMonth(two)) throw new TypeError('invalid YearMonth object');
+    one = ES.ToTemporalYearMonth(one, YearMonth);
+    two = ES.ToTemporalYearMonth(two, YearMonth);
     for (const slot of [ISO_YEAR, ISO_MONTH, ISO_DAY]) {
       const val1 = GetSlot(one, slot);
       const val2 = GetSlot(two, slot);

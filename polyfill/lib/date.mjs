@@ -313,7 +313,8 @@ export class Date {
     return ES.ToTemporalDate(item, this, overflow);
   }
   static compare(one, two) {
-    if (!ES.IsTemporalDate(one) || !ES.IsTemporalDate(two)) throw new TypeError('invalid Date object');
+    one = ES.ToTemporalDate(one, Date);
+    two = ES.ToTemporalDate(two, Date);
     const result = ES.CompareTemporalDate(
       GetSlot(one, ISO_YEAR),
       GetSlot(one, ISO_MONTH),

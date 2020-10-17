@@ -105,12 +105,12 @@ time = Temporal.Time.from({ hour: 15, minute: -1 }, { overflow: 'reject' });
 ```
 <!-- prettier-ignore-end -->
 
-### Temporal.Time.**compare**(_one_: Temporal.Time, _two_: Temporal.Time) : number
+### Temporal.Time.**compare**(_one_: Temporal.Time | object | string, _two_: Temporal.Time | object | string) : number
 
 **Parameters:**
 
-- `one` (`Temporal.Time`): First time to compare.
-- `two` (`Temporal.Time`): Second time to compare.
+- `one` (`Temporal.Time` or value convertible to one): First time to compare.
+- `two` (`Temporal.Time` or value convertible to one): Second time to compare.
 
 **Returns:** &minus;1, 0, or 1.
 
@@ -120,6 +120,8 @@ Returns an integer indicating whether `one` comes before or after or is equal to
 - &minus;1 if `one` comes before `two`;
 - 0 if `one` and `two` are the same;
 - 1 if `one` comes after `two`.
+
+If `one` and `two` are not `Temporal.Time` objects, then they will be converted to one as if they were passed to `Temporal.Time.from()`.
 
 This function can be used to sort arrays of `Temporal.Time` objects.
 For example:

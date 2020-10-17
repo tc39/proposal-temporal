@@ -85,8 +85,8 @@
         The following steps are taken:
       </p>
       <emu-alg>
-        1. Perform ? RequireInternalSlot(_one_, [[InitializedTemporalDate]]).
-        1. Perform ? RequireInternalSlot(_two_, [[InitializedTemporalDate]]).
+        1. Set _one_ to ? ToTemporalDate(_one_).
+        1. Set _two_ to ? ToTemporalDate(_two_).
         1. Return 𝔽(? CompareTemporalDateCalendar(_one_.[[ISOYear]], _one_.[[ISOMonth]], _one_.[[ISODay]], _one_.[[Calendar]],
             _two_.[[ISOYear]], _two_.[[ISOMonth]], _two_.[[ISODay]], _two_.[[Calendar]])).
       </emu-alg>
