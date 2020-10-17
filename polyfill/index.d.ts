@@ -298,10 +298,10 @@ export namespace Temporal {
     static from(item: Temporal.Instant | string): Temporal.Instant;
     static compare(one: Temporal.Instant, two: Temporal.Instant): ComparisonResult;
     constructor(epochNanoseconds: bigint);
-    getEpochSeconds(): number;
-    getEpochMilliseconds(): number;
-    getEpochMicroseconds(): bigint;
-    getEpochNanoseconds(): bigint;
+    readonly epochSeconds: number;
+    readonly epochMilliseconds: number;
+    readonly epochMicroseconds: bigint;
+    readonly epochNanoseconds: bigint;
     equals(other: Temporal.Instant): boolean;
     add(durationLike: Temporal.Duration | DurationLike): Temporal.Instant;
     subtract(durationLike: Temporal.Duration | DurationLike): Temporal.Instant;

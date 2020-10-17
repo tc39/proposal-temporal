@@ -178,52 +178,48 @@ sorted.join(' ');
 // => 2001-09-09T01:46:40Z 2004-11-09T11:33:20Z 2008-01-10T21:20Z
 ```
 
-## Methods
+## Properties
 
-### instant.**getEpochSeconds**() : number
+### instant.**epochSeconds** : number
 
-**Returns:** an integer number of seconds.
-
-Returns the number of seconds between the Unix epoch (midnight UTC on January 1, 1970) and `instant`.
+The value of this property is an integer number of seconds between the Unix epoch (midnight UTC on January 1, 1970) and `instant`.
 This number will be negative if `instant` is before 1970.
-The number of seconds is rounded towards zero.
+The number of seconds is truncated towards zero.
 
-Use this method if you need to interface with some other system that reckons time in seconds since the Unix epoch.
+Use this property if you need to interface with some other system that reckons time in seconds since the Unix epoch.
 
 Example usage:
 
 ```js
 instant = Temporal.Instant.from('2019-03-30T01:45+01:00');
-instant.getEpochSeconds(); // => 1554000300
+instant.epochSeconds; // => 1554000300
 ```
 
-### instant.**getEpochMilliseconds**() : number
+### instant.**epochMilliseconds** : number
 
-**Returns:** an integer number of milliseconds.
-
-Same as `getEpochSeconds()`, but with millisecond (10<sup>&minus;3</sup> second) precision.
+Same as `epochSeconds`, but with millisecond (10<sup>&minus;3</sup> second) precision.
+The number of seconds is truncated towards zero.
 
 This method can be useful in particular to create an old-style JavaScript `Date` object, if one is needed.
 An example:
 
 ```js
 instant = Temporal.Instant.from('2019-03-30T00:45Z');
-new Date(instant.getEpochMilliseconds()); // => 2019-03-30T00:45:00.000Z
+new Date(instant.epochMilliseconds); // => 2019-03-30T00:45:00.000Z
 ```
 
-### instant.**getEpochMicroseconds**() : bigint
+### instant.**epochMicroseconds** : bigint
 
-**Returns:** a number of microseconds, as a bigint.
+Same as `epochSeconds`, but the value is a bigint with microsecond (10<sup>&minus;6</sup> second) precision.
+The number of seconds is truncated towards zero.
 
-Same as `getEpochSeconds()`, but with microsecond (10<sup>&minus;6</sup> second) precision.
+### instant.**epochNanoseconds** : bigint
 
-### instant.**getEpochNanoseconds**() : bigint
+Same as `epochSeconds`, but the value is a bigint with nanosecond (10<sup>&minus;9</sup> second) precision.
 
-**Returns:** a number of nanoseconds, as a bigint.
+The value of this property is suitable to be passed to `new Temporal.Instant()`.
 
-Same as `getEpochSeconds()`, but with nanosecond (10<sup>&minus;9</sup> second) precision.
-
-The value returned from this method is suitable to be passed to `new Temporal.Instant()`.
+## Methods
 
 ### instant.**toZonedDateTimeISO**(_timeZone_: object | string) : Temporal.ZonedDateTime
 

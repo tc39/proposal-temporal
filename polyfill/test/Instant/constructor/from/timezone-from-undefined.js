@@ -19,6 +19,6 @@ Object.defineProperty(Temporal.TimeZone, "from", {
 });
 
 const instant = Temporal.Instant.from("1975-02-02T14:25:36.123456789Z");
-assert.sameValue(instant.getEpochNanoseconds(), 160583136123456789n);
+assert.sameValue(instant.epochNanoseconds, 160583136123456789n);
 
 assert.compareArray(actual, expected);

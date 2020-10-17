@@ -76,7 +76,7 @@ function resolvedOptions() {
 function format(datetime, ...rest) {
   const { instant, formatter } = extractOverrides(datetime, this);
   if (instant && formatter) {
-    return formatter.format(instant.getEpochMilliseconds());
+    return formatter.format(instant.epochMilliseconds);
   }
   return this[ORIGINAL].format(datetime, ...rest);
 }
@@ -84,7 +84,7 @@ function format(datetime, ...rest) {
 function formatToParts(datetime, ...rest) {
   const { instant, formatter } = extractOverrides(datetime, this);
   if (instant && formatter) {
-    return formatter.formatToParts(instant.getEpochMilliseconds());
+    return formatter.formatToParts(instant.epochMilliseconds);
   }
   return this[ORIGINAL].formatToParts(datetime, ...rest);
 }
@@ -97,7 +97,7 @@ function formatRange(a, b) {
     const { instant: aa, formatter: aformatter } = extractOverrides(a, this);
     const { instant: bb, formatter: bformatter } = extractOverrides(b, this);
     if (aa && bb && aformatter && bformatter && aformatter === bformatter) {
-      return aformatter.formatRange(aa.getEpochMilliseconds(), bb.getEpochMilliseconds());
+      return aformatter.formatRange(aa.epochMilliseconds, bb.epochMilliseconds);
     }
   }
   return this[ORIGINAL].formatRange(a, b);
@@ -111,7 +111,7 @@ function formatRangeToParts(a, b) {
     const { instant: aa, formatter: aformatter } = extractOverrides(a, this);
     const { instant: bb, formatter: bformatter } = extractOverrides(b, this);
     if (aa && bb && aformatter && bformatter && aformatter === bformatter) {
-      return aformatter.formatRangeToParts(aa.getEpochMilliseconds(), bb.getEpochMilliseconds());
+      return aformatter.formatRangeToParts(aa.epochMilliseconds, bb.epochMilliseconds);
     }
   }
   return this[ORIGINAL].formatRangeToParts(a, b);

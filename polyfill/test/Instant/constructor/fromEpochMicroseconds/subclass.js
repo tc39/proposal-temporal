@@ -16,6 +16,6 @@ class MyInstant extends Temporal.Instant {
 }
 
 const result = MyInstant.fromEpochMicroseconds(10n);
-assert.sameValue(result.getEpochNanoseconds(), 10_000n, "getEpochNanoseconds result");
+assert.sameValue(result.epochNanoseconds, 10_000n, "epochNanoseconds result");
 assert.sameValue(called, true);
 assert.sameValue(Object.getPrototypeOf(result), MyInstant.prototype);

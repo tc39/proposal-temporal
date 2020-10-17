@@ -109,7 +109,7 @@ describe('Userland time zone', () => {
       });
       it('works for DateTime.toInstant', () => {
         const dt = Temporal.DateTime.from('1970-01-01T00:00');
-        equal(dt.toInstant('Etc/Custom/UTC_Subclass').getEpochSeconds(), 0);
+        equal(dt.toInstant('Etc/Custom/UTC_Subclass').epochSeconds, 0);
       });
       it('works for Temporal.now', () => {
         assert(Temporal.now.dateTimeISO('Etc/Custom/UTC_Subclass') instanceof Temporal.DateTime);
@@ -201,7 +201,7 @@ describe('Userland time zone', () => {
       });
       it('works for DateTime.toInstant', () => {
         const dt = Temporal.DateTime.from('1970-01-01T00:00');
-        equal(dt.toInstant('Etc/Custom/UTC_Protocol').getEpochSeconds(), 0);
+        equal(dt.toInstant('Etc/Custom/UTC_Protocol').epochSeconds, 0);
       });
       it('works for Temporal.now', () => {
         assert(Temporal.now.dateTimeISO('Etc/Custom/UTC_Protocol') instanceof Temporal.DateTime);

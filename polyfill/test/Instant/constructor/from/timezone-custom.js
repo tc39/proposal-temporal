@@ -78,6 +78,6 @@ Object.defineProperty(Temporal.TimeZone, "from", {
 });
 
 const instant = Temporal.Instant.from(dateTimeString + "+01:00[Custom/TimeZone]");
-assert.sameValue(instant.getEpochMilliseconds(), -205156799345);
+assert.sameValue(instant.epochMilliseconds, -205156799345);
 
 assert.compareArray(actual, expected);
