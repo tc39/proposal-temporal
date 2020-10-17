@@ -76,14 +76,16 @@
         The following steps are taken:
       </p>
       <emu-alg>
+        1. Let _constructor_ be the *this* value.
         1. Set _options_ to ? NormalizeOptionsObject(_options_).
         1. Let _overflow_ be ? ToTemporalOverflow(_options_).
         1. If Type(_item_) is Object, then
+          1. If _item_ has an [[InitializedTemporalDateTime]] internal slot, then
+            1. Return ? CreateTemporalDateTimeFromStatic(_constructor_, _item_.[[ISOYear]], _item_.[[ISOMonth]], _item_.[[ISODay]], _item_.[[Hour]], _item_.[[Minute]], _item_.[[Second]], _item_.[[Millisecond]], _item_.[[Microsecond]], _item_.[[Nanosecond]], _item_.[[Calendar]]).
           1. Let _result_ be ? ToTemporalDateTimeRecord(_item_).
         1. Else,
           1. Let _string_ be ? ToString(_item_).
           1. Let _result_ be ? ParseTemporalDateTimeString(_string_).
-        1. Let _constructor_ be the *this* value.
         1. Set _result_ to ? RegulateDateTime(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]], _overflow_).
         1. Return ? CreateTemporalDateTimeFromStatic(_constructor_, _result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]).
       </emu-alg>
