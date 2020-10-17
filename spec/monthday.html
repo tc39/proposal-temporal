@@ -145,16 +145,8 @@
         1. Let _partialMonthDay_ be ? ToPartialMonthDay(_temporalMonthDayLike_).
         1. Set _options_ to ? NormalizeOptionsObject(_options_).
         1. Let _overflow_ be ? ToTemporalOverflow(_options_).
-        1. If _partialMonthDay_.[[Month]] is not *undefined*, then
-          1. Let _m_ be _partialMonthDay_.[[Month]].
-        1. Else,
-          1. Let _m_ be _monthDay_.[[ISOMonth]].
-        1. If _partialMonthDay_.[[Day]] is not *undefined*, then
-          1. Let _d_ be _partialMonthDay_.[[Day]].
-        1. Else,
-          1. Let _d_ be _monthDay_.[[ISODay]].
-        1. Let _result_ be ? RegulateMonthDay(_m_, _d_, _overflow_).
-        1. Return ? CreateTemporalMonthDayFromInstance(_monthDay_, _result_.[[Month]], _result_.[[Day]]).
+        1. <mark>TODO: create via calendar.monthDayFromFields.</mark>
+          Return ? CreateTemporalMonthDayFromInstance(_monthDay_, _result_.[[Month]], _result_.[[Day]]).
       </emu-alg>
     </emu-clause>
 
@@ -243,8 +235,8 @@
           1. Let _y_ be ? ToInteger(_y_).
         1. Else,
           1. Let _y_ be ? ToInteger(_item_).
-        1. Let _date_ be ? RegulateDate(_y_, _monthDay_.[[ISOMonth]], _monthDay_.[[ISODay]], _overflow_).
-        1. Return ? CreateTemporalDate(_date_.[[Year]], _date_.[[Month]], _date_.[[Day]]).
+        1. <mark>TODO: create via calendar.dateFromFields.</mark>
+          Return ? CreateTemporalDate(_date_.[[Year]], _date_.[[Month]], _date_.[[Day]]).
       </emu-alg>
     </emu-clause>
 
