@@ -98,7 +98,7 @@ function fromIsoString(isoString: string, options?: ZonedDateTimeAssignmentOptio
   if (!tzString) {
     throw new Error(
       "Missing time zone. Either append a time zone identifier (e.g. '2011-12-03T10:15:30+01:00[Europe/Paris]')" +
-        ' or create differently (e.g. `Temporal.Instant.from(isoString).toZonedDateTime(timeZone)`).'
+        ' or create differently (e.g. `Temporal.Instant.from(isoString).toZonedDateTimeISO(timeZone)`).'
     );
   }
 
@@ -840,7 +840,7 @@ export class ZonedDateTime {
     //
     // RFC 5545 expects that date durations are measured in nominal (DateTime)
     // days, while time durations are measured in exact (Instant) time.
-    if (isZeroDuration(timeDuration)) return dateDuration; // even number of calendar days
+    if (timeDuration.isZero) return dateDuration; // even number of calendar days
 
     // If we get here, there's both a time and date part of the duration AND
     // there's a time zone offset transition during the duration. RFC 5545 says
@@ -1124,24 +1124,6 @@ function mergeDuration({
   });
 }
 
-/*
-// Returns true if every unit is zero, false otherwise.
-function isZeroDuration(duration: Temporal.Duration) {
-  const { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
-  return (
-    !years &&
-    !months &&
-    !weeks &&
-    !days &&
-    !hours &&
-    !minutes &&
-    !seconds &&
-    !milliseconds &&
-    !microseconds &&
-    !nanoseconds
-  );
-}
-*/
 type DifferenceUnit = NonNullable<NonNullable<Parameters<ZonedDateTime['difference']>[1]>['smallestUnit']>;
 const DIFFERENCE_UNITS: DifferenceUnit[] = [
   'years',
