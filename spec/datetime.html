@@ -654,7 +654,9 @@
       <emu-alg>
         1. Let _dateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
-        1. Return ? CreateTemporalYearMonth(_dateTime_.[[ISOYear]], _dateTime_.[[ISOMonth]]).
+        1. Let _calendar_ be _dateTime_.[[Calendar]].
+        1. <mark>Create via calendar.yearMonthFromFields.</mark>
+          Return ? CreateTemporalYearMonth(_dateTime_.[[ISOYear]], _dateTime_.[[ISOMonth]]).
       </emu-alg>
     </emu-clause>
 
@@ -666,7 +668,9 @@
       <emu-alg>
         1. Let _dateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
-        1. Return ? CreateTemporalMonthDay(_dateTime_.[[ISOMonth]], _dateTime_.[[ISODay]]).
+        1. Let _calendar_ be _dateTime_.[[Calendar]].
+        1. <mark>Create via calendar.monthDayFromFields.</mark>
+          Return ? CreateTemporalMonthDay(_dateTime_.[[ISOMonth]], _dateTime_.[[ISODay]]).
       </emu-alg>
     </emu-clause>
 
