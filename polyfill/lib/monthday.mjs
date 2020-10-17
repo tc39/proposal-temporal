@@ -64,14 +64,16 @@ export class MonthDay {
     if ('calendar' in temporalMonthDayLike) {
       throw new RangeError('invalid calendar property in month-day-like');
     }
-    const props = ES.ToPartialRecord(temporalMonthDayLike, ['day', 'month']);
+    const calendar = GetSlot(this, CALENDAR);
+    const fieldNames = ES.CalendarFields(calendar, ['day', 'month']);
+    const props = ES.ToPartialRecord(temporalMonthDayLike, fieldNames);
     if (!props) {
       throw new TypeError('invalid month-day-like');
     }
-    const fields = ES.ToTemporalMonthDayRecord(this);
+    const fields = ES.ToTemporalMonthDayFields(this, fieldNames);
     ObjectAssign(fields, props);
     const Construct = ES.SpeciesConstructor(this, MonthDay);
-    const result = GetSlot(this, CALENDAR).monthDayFromFields(fields, options, Construct);
+    const result = calendar.monthDayFromFields(fields, options, Construct);
     if (!ES.IsTemporalMonthDay(result)) throw new TypeError('invalid result');
     return result;
   }
@@ -109,14 +111,17 @@ export class MonthDay {
       year = ES.ToInteger(item);
     }
     const calendar = GetSlot(this, CALENDAR);
-    const fields = ES.ToTemporalMonthDayRecord(this);
+    const fieldNames = ES.CalendarFields(calendar, ['day', 'month']);
+    const fields = ES.ToTemporalMonthDayFields(this, fieldNames);
     const Date = GetIntrinsic('%Temporal.Date%');
     return calendar.dateFromFields({ ...fields, era, year }, options, Date);
   }
   getFields() {
-    const fields = ES.ToTemporalMonthDayRecord(this);
-    if (!fields) throw new TypeError('invalid receiver');
-    fields.calendar = GetSlot(this, CALENDAR);
+    if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
+    const calendar = GetSlot(this, CALENDAR);
+    const fieldNames = ES.CalendarFields(calendar, ['day', 'month']);
+    const fields = ES.ToTemporalMonthDayFields(this, fieldNames);
+    fields.calendar = calendar;
     return fields;
   }
   getISOFields() {

@@ -45,6 +45,20 @@
       </emu-alg>
     </emu-clause>
 
+    <emu-clause id="sec-temporal-calendarfields" aoid="CalendarFields">
+      <h1>CalendarFields ( _calendar_, _fieldNames_ )</h1>
+      <p>
+        The CalendarFields abstract operation transforms a List of String values _fieldNames_ into another List of String values by calling the `fields` method of the given _calendar_ Object, falling back to the intrinsic operation if not present.
+      </p>
+      <emu-alg>
+        1. Let _fields_ be ? Get(_calendar_, *"fields"*).
+        1. If _fields_ is *undefined*, set _fields_ to %Temporal.Calendar.prototype.fields%.
+        1. Let _fieldsArray_ be ? CreateArrayFromList(_fieldNames_).
+        1. Let _arrayLike_ be ? Call(_method_, _calendar_, « _fieldsArray_ »).
+        1. Return ? CreateListFromArrayLike(_arrayLike_, « String »).
+      </emu-alg>
+    </emu-clause>
+
     <emu-clause id="sec-temporal-calendardatedifference" aoid="CalendarDateDifference">
       <h1>CalendarDateDifference ( _calendar_, _one_, _two_, _options_ )</h1>
       <emu-alg>
@@ -419,6 +433,24 @@
       <emu-alg>
         1. Throw an *Error* exception.
       </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal.calendar.prototype.fields">
+      <h1>Temporal.Calendar.prototype.fields ( _fields_ )</h1>
+      <p>
+        The `fields` method takes one argument _fields_.
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _calendar_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
+        1. Set _fields_ to ? ToObject(_fields_).
+        1. Let _fieldNames_ be ? CreateListFromArrayLike(_fields_, « String »).
+        1. Return ? CreateArrayFromList(_fieldNames_).
+      </emu-alg>
+      <p>
+        This function is the <dfn>%Temporal.Calendar.prototype.fields%</dfn> intrinsic object.
+      </p>
     </emu-clause>
 
     <emu-clause id="sec-temporal.calendar.prototype.tostring">

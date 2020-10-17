@@ -293,6 +293,30 @@ Temporal.Calendar.from('chinese').dateDifference(
 )  // => P1M2D
 ```
 
+### calendar.**fields**(fields: array<string>) : array<string>
+
+**Parameters:**
+
+- `fields` (array of strings): A list of field names.
+
+**Returns:** a new list of field names.
+
+This method does not need to be called directly except in specialized code.
+It is called indirectly when using the `from()` static methods and `with()` methods of `Temporal.DateTime`, `Temporal.Date`, and `Temporal.YearMonth`.
+
+Custom calendars should override this method if they require more fields with which to denote the date than the standard `era`, `year`, `month`, and `day`.
+The input array contains the field names that are necessary for a particular operation (for example, `'month'` and `'day'` for `Temporal.MonthDay.prototype.with()`), and the method should make a copy of the array and add whichever extra fields are necessary.
+
+The default implementation of this method returns a copy of `fields`.
+
+Usage example:
+
+```js
+// In built-in calendars, this method just makes a copy of the input array
+Temporal.Calendar.from('iso8601').fields(['month', 'day']);
+  // => ['month', 'day']
+```
+
 ### calendar.**toString**() : string
 
 **Returns:** The string given by `calendar.id`.
