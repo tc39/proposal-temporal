@@ -70,16 +70,12 @@
         The following steps are taken:
       </p>
       <emu-alg>
+        1. Let _constructor_ be the *this* value.
         1. Set _options_ to ? NormalizeOptionsObject(_options_).
         1. Let _overflow_ be ? ToTemporalOverflow(_options_).
-        1. If Type(_item_) is Object, then
-          1. Let _result_ be ? ToTemporalTimeRecord(_item_).
-        1. Else,
-          1. Let _string_ be ? ToString(_item_).
-          1. Let _result_ be ? ParseTemporalTimeString(_string_).
-        1. Let _constructor_ be the *this* value.
-        1. Set _result_ to ? RegulateTime(_result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]], _overflow_).
-        1. Return ? CreateTemporalTimeFromStatic(_constructor_, _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]).
+        1. If Type(_item_) is Object and _item_ has an [[InitializedTemporalTime]] internal slot, then
+          1. Return ? CreateTemporalTimeFromStatic(_constructor_, _item_.[[Hour]], _item_.[[Minute]], _item_.[[Second]], _item_.[[Millisecond]], _item_.[[Microsecond]], _item_.[[Nanosecond]]).
+        1. Return ? ToTemporalTime(_item_, _constructor_, _overflow_).
       </emu-alg>
     </emu-clause>
 
@@ -544,6 +540,27 @@
           [[Microseconds]]: _bt_.[[Microsecond]] × _sign_,
           [[Nanoseconds]]: _bt_.[[Nanosecond]] × _sign_
           }.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-totemporaltime" aoid="ToTemporalTime">
+      <h1>ToTemporalTime ( _item_ [ , _constructor_ [ , _overflow_ ] ] )</h1>
+      <p>
+        The abstract operation ToTemporalTime returns its argument _item_ if it is already a Temporal.Time instance, converts _item_ to a new Temporal.Time instance if possible, and throws otherwise.
+      </p>
+      <emu-alg>
+        1. If _constructor_ is not given, set it to %Temporal.Time%.
+        1. If _overflow_ is not given, set it to *"constrain"*.
+        1. Assert: _overflow_ is either *"constrain"* or *"reject"*.
+        1. If Type(_item_) is Object, then
+          1. If _item_ has an [[InitializedTemporalTime]] internal slot, then
+            1. Return _item_.
+          1. Let _result_ be ? ToTemporalTimeRecord(_item_).
+        1. Else,
+          1. Let _string_ be ? ToString(_item_).
+          1. Let _result_ be ? ParseTemporalTimeString(_string_).
+        1. Set _result_ to ? RegulateTime(_result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]], _overflow_).
+        1. Return ? CreateTemporalTimeFromStatic(_constructor_, _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]).
       </emu-alg>
     </emu-clause>
 

@@ -301,30 +301,16 @@ export class Date {
   static from(item, options = undefined) {
     options = ES.NormalizeOptionsObject(options);
     const overflow = ES.ToTemporalOverflow(options);
-    let result;
-    if (ES.Type(item) === 'Object') {
-      if (ES.IsTemporalDate(item)) {
-        const year = GetSlot(item, ISO_YEAR);
-        const month = GetSlot(item, ISO_MONTH);
-        const day = GetSlot(item, ISO_DAY);
-        const calendar = GetSlot(item, CALENDAR);
-        result = new this(year, month, day, calendar);
-      } else {
-        let calendar = item.calendar;
-        if (calendar === undefined) calendar = GetISO8601Calendar();
-        calendar = ES.ToTemporalCalendar(calendar);
-        const fields = ES.ToTemporalDateRecord(item);
-        result = calendar.dateFromFields(fields, options, this);
-      }
-    } else {
-      let { year, month, day, calendar } = ES.ParseTemporalDateString(ES.ToString(item));
-      ({ year, month, day } = ES.RegulateDate(year, month, day, overflow));
-      if (!calendar) calendar = GetISO8601Calendar();
-      calendar = ES.ToTemporalCalendar(calendar);
-      result = new this(year, month, day, calendar);
+    if (ES.IsTemporalDate(item)) {
+      const year = GetSlot(item, ISO_YEAR);
+      const month = GetSlot(item, ISO_MONTH);
+      const day = GetSlot(item, ISO_DAY);
+      const calendar = GetSlot(item, CALENDAR);
+      const result = new this(year, month, day, calendar);
+      if (!ES.IsTemporalDate(result)) throw new TypeError('invalid result');
+      return result;
     }
-    if (!ES.IsTemporalDate(result)) throw new TypeError('invalid result');
-    return result;
+    return ES.ToTemporalDate(item, this, overflow);
   }
   static compare(one, two) {
     if (!ES.IsTemporalDate(one) || !ES.IsTemporalDate(two)) throw new TypeError('invalid Date object');

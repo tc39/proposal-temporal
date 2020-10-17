@@ -519,9 +519,18 @@ export class Duration {
     throw new TypeError('not possible to compare Temporal.Duration');
   }
   static from(item) {
-    let years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds;
-    if (ES.Type(item) === 'Object') {
-      ({
+    if (ES.IsTemporalDuration(item)) {
+      const years = GetSlot(item, YEARS);
+      const months = GetSlot(item, MONTHS);
+      const weeks = GetSlot(item, WEEKS);
+      const days = GetSlot(item, DAYS);
+      const hours = GetSlot(item, HOURS);
+      const minutes = GetSlot(item, MINUTES);
+      const seconds = GetSlot(item, SECONDS);
+      const milliseconds = GetSlot(item, MILLISECONDS);
+      const microseconds = GetSlot(item, MICROSECONDS);
+      const nanoseconds = GetSlot(item, NANOSECONDS);
+      const result = new this(
         years,
         months,
         weeks,
@@ -532,35 +541,11 @@ export class Duration {
         milliseconds,
         microseconds,
         nanoseconds
-      } = ES.ToTemporalDurationRecord(item));
-    } else {
-      ({
-        years,
-        months,
-        weeks,
-        days,
-        hours,
-        minutes,
-        seconds,
-        milliseconds,
-        microseconds,
-        nanoseconds
-      } = ES.ParseTemporalDurationString(ES.ToString(item)));
+      );
+      if (!ES.IsTemporalDuration(result)) throw new TypeError('invalid result');
+      return result;
     }
-    const result = new this(
-      years,
-      months,
-      weeks,
-      days,
-      hours,
-      minutes,
-      seconds,
-      milliseconds,
-      microseconds,
-      nanoseconds
-    );
-    if (!ES.IsTemporalDuration(result)) throw new TypeError('invalid result');
-    return result;
+    return ES.ToTemporalDuration(item, this);
   }
 }
 

@@ -252,31 +252,16 @@ export class YearMonth {
   static from(item, options = undefined) {
     options = ES.NormalizeOptionsObject(options);
     const overflow = ES.ToTemporalOverflow(options);
-    let result;
-    if (ES.Type(item) === 'Object') {
-      if (ES.IsTemporalYearMonth(item)) {
-        const year = GetSlot(item, ISO_YEAR);
-        const month = GetSlot(item, ISO_MONTH);
-        const calendar = GetSlot(item, CALENDAR);
-        const referenceISODay = GetSlot(item, ISO_DAY);
-        result = new this(year, month, calendar, referenceISODay);
-      } else {
-        let calendar = item.calendar;
-        if (calendar === undefined) calendar = GetISO8601Calendar();
-        calendar = ES.ToTemporalCalendar(calendar);
-        const fields = ES.ToTemporalYearMonthRecord(item);
-        result = calendar.yearMonthFromFields(fields, options, this);
-      }
-    } else {
-      let { year, month, referenceISODay, calendar } = ES.ParseTemporalYearMonthString(ES.ToString(item));
-      ({ year, month } = ES.RegulateYearMonth(year, month, overflow));
-      if (!calendar) calendar = GetISO8601Calendar();
-      calendar = ES.ToTemporalCalendar(calendar);
-      if (referenceISODay === undefined) referenceISODay = 1;
-      result = new this(year, month, calendar, referenceISODay);
+    if (ES.IsTemporalYearMonth(item)) {
+      const year = GetSlot(item, ISO_YEAR);
+      const month = GetSlot(item, ISO_MONTH);
+      const calendar = GetSlot(item, CALENDAR);
+      const referenceISODay = GetSlot(item, ISO_DAY);
+      const result = new this(year, month, calendar, referenceISODay);
+      if (!ES.IsTemporalYearMonth(result)) throw new TypeError('invalid result');
+      return result;
     }
-    if (!ES.IsTemporalYearMonth(result)) throw new TypeError('invalid result');
-    return result;
+    return ES.ToTemporalYearMonth(item, this, overflow);
   }
   static compare(one, two) {
     if (!ES.IsTemporalYearMonth(one) || !ES.IsTemporalYearMonth(two)) throw new TypeError('invalid YearMonth object');

@@ -281,15 +281,12 @@ export class Instant {
     return result;
   }
   static from(item) {
-    let ns;
     if (ES.IsTemporalInstant(item)) {
-      ns = GetSlot(item, EPOCHNANOSECONDS);
-    } else {
-      ns = ES.ParseTemporalInstant(ES.ToString(item));
+      const result = new this(bigIntIfAvailable(GetSlot(item, EPOCHNANOSECONDS)));
+      if (!ES.IsTemporalInstant(result)) throw new TypeError('invalid result');
+      return result;
     }
-    const result = new this(bigIntIfAvailable(ns));
-    if (!ES.IsTemporalInstant(result)) throw new TypeError('invalid result');
-    return result;
+    return ES.ToTemporalInstant(item, this);
   }
   static compare(one, two) {
     if (!ES.IsTemporalInstant(one) || !ES.IsTemporalInstant(two)) throw new TypeError('invalid Instant object');
