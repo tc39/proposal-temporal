@@ -59,7 +59,7 @@ const BEFORE_FIRST_DST = bigInt(-388152).multiply(1e13); // 1847-01-01T00:00:00Z
 
 import * as PARSE from './regex.mjs';
 
-const ES2019 = {
+const ES2020 = {
   Call,
   SpeciesConstructor,
   ToInteger,
@@ -69,7 +69,7 @@ const ES2019 = {
   Type
 };
 
-export const ES = ObjectAssign({}, ES2019, {
+export const ES = ObjectAssign({}, ES2020, {
   IsTemporalInstant: (item) => HasSlot(item, EPOCHNANOSECONDS),
   IsTemporalTimeZone: (item) => HasSlot(item, TIMEZONE_ID),
   IsTemporalCalendar: (item) => HasSlot(item, CALENDAR_ID),
