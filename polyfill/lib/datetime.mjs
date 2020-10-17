@@ -215,7 +215,7 @@ export class DateTime {
       calendar = GetSlot(this, CALENDAR);
       source = this;
     }
-    const props = ES.ToPartialRecord(temporalDateTimeLike, [
+    const fieldNames = ES.CalendarFields(calendar, [
       'day',
       'era',
       'hour',
@@ -227,10 +227,11 @@ export class DateTime {
       'second',
       'year'
     ]);
+    const props = ES.ToPartialRecord(temporalDateTimeLike, fieldNames);
     if (!props) {
       throw new TypeError('invalid date-time-like');
     }
-    const fields = ES.ToTemporalDateTimeRecord(source);
+    const fields = ES.ToTemporalDateTimeFields(source, fieldNames);
     ObjectAssign(fields, props);
     const date = calendar.dateFromFields(fields, options, GetIntrinsic('%Temporal.Date%'));
     let year = GetSlot(date, ISO_YEAR);
@@ -622,14 +623,16 @@ export class DateTime {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     const YearMonth = GetIntrinsic('%Temporal.YearMonth%');
     const calendar = GetSlot(this, CALENDAR);
-    const fields = ES.ToTemporalDateTimeRecord(this);
+    const fieldNames = ES.CalendarFields(calendar, ['day', 'era', 'month', 'year']);
+    const fields = ES.ToTemporalDateFields(this, fieldNames);
     return calendar.yearMonthFromFields(fields, {}, YearMonth);
   }
   toMonthDay() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     const MonthDay = GetIntrinsic('%Temporal.MonthDay%');
     const calendar = GetSlot(this, CALENDAR);
-    const fields = ES.ToTemporalDateTimeRecord(this);
+    const fieldNames = ES.CalendarFields(calendar, ['day', 'era', 'month', 'year']);
+    const fields = ES.ToTemporalDateFields(this, fieldNames);
     return calendar.monthDayFromFields(fields, {}, MonthDay);
   }
   toTime() {
@@ -637,9 +640,11 @@ export class DateTime {
     return ES.TemporalDateTimeToTime(this);
   }
   getFields() {
-    const fields = ES.ToTemporalDateTimeRecord(this);
-    if (!fields) throw new TypeError('invalid receiver');
-    fields.calendar = GetSlot(this, CALENDAR);
+    if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+    const calendar = GetSlot(this, CALENDAR);
+    const fieldNames = ES.CalendarFields(calendar, ['day', 'era', 'month', 'year']);
+    const fields = ES.ToTemporalDateTimeFields(this, fieldNames);
+    fields.calendar = calendar;
     return fields;
   }
   getISOFields() {

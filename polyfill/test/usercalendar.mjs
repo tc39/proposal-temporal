@@ -283,6 +283,9 @@ describe('Userland calendar', () => {
       },
       era() {
         return undefined;
+      },
+      fields(fields) {
+        return fields.slice();
       }
     };
 
@@ -465,6 +468,108 @@ describe('Userland calendar', () => {
       after(() => {
         Temporal.Calendar.from = originalTemporalCalendarFrom;
       });
+    });
+  });
+  describe('calendar with extra fields', () => {
+    // Contrived example of a calendar identical to the ISO calendar except that
+    // months are numbered 1, 2, 3, and each year has four seasons of 3 months
+    // numbered 1, 2, 3, 4.
+    const ISO8601Calendar = Temporal.Calendar.from('iso8601').constructor;
+    class SeasonCalendar extends ISO8601Calendar {
+      constructor() {
+        super('season');
+        Object.defineProperty(Temporal.DateTime.prototype, 'season', {
+          get() {
+            return this.calendar.season(this);
+          },
+          configurable: true
+        });
+        Object.defineProperty(Temporal.Date.prototype, 'season', {
+          get() {
+            return this.calendar.season(this);
+          },
+          configurable: true
+        });
+        Object.defineProperty(Temporal.YearMonth.prototype, 'season', {
+          get() {
+            return this.calendar.season(this);
+          },
+          configurable: true
+        });
+        Object.defineProperty(Temporal.MonthDay.prototype, 'season', {
+          get() {
+            return this.calendar.season(this);
+          },
+          configurable: true
+        });
+      }
+      month(date) {
+        const { isoMonth } = date.getISOFields();
+        return ((isoMonth - 1) % 3) + 1;
+      }
+      season(date) {
+        const { isoMonth } = date.getISOFields();
+        return Math.floor((isoMonth - 1) / 3) + 1;
+      }
+      dateFromFields(fields, options, constructor) {
+        const isoMonth = (fields.season - 1) * 3 + fields.month;
+        return super.dateFromFields({ ...fields, month: isoMonth }, options, constructor);
+      }
+      yearMonthFromFields(fields, options, constructor) {
+        const isoMonth = (fields.season - 1) * 3 + fields.month;
+        return super.yearMonthFromFields({ ...fields, month: isoMonth }, options, constructor);
+      }
+      monthDayFromFields(fields, options, constructor) {
+        const isoMonth = (fields.season - 1) * 3 + fields.month;
+        return super.monthDayFromFields({ ...fields, month: isoMonth }, options, constructor);
+      }
+      fields(fields) {
+        fields = fields.slice();
+        if (fields.includes('month')) fields.push('season');
+        return fields;
+      }
+    }
+    const calendar = new SeasonCalendar();
+    const datetime = new Temporal.DateTime(2019, 9, 15, 0, 0, 0, 0, 0, 0, calendar);
+    const date = new Temporal.Date(2019, 9, 15, calendar);
+    const yearmonth = new Temporal.YearMonth(2019, 9, calendar);
+    const monthday = new Temporal.MonthDay(9, 15, calendar);
+    it('property getter works', () => {
+      equal(datetime.season, 3);
+      equal(datetime.month, 3);
+      equal(date.season, 3);
+      equal(date.month, 3);
+      equal(yearmonth.season, 3);
+      equal(yearmonth.month, 3);
+      equal(monthday.season, 3);
+      equal(monthday.month, 3);
+    });
+    it('accepts season in from()', () => {
+      equal(
+        `${Temporal.DateTime.from({ year: 2019, season: 3, month: 3, day: 15, calendar })}`,
+        '2019-09-15T00:00:00[c=season]'
+      );
+      equal(`${Temporal.Date.from({ year: 2019, season: 3, month: 3, day: 15, calendar })}`, '2019-09-15[c=season]');
+      equal(`${Temporal.YearMonth.from({ year: 2019, season: 3, month: 3, calendar })}`, '2019-09-01[c=season]');
+      equal(`${Temporal.MonthDay.from({ season: 3, month: 3, day: 15, calendar })}`, '1972-09-15[c=season]');
+    });
+    it('accepts season in with()', () => {
+      equal(`${datetime.with({ season: 2 })}`, '2019-06-15T00:00:00[c=season]');
+      equal(`${date.with({ season: 2 })}`, '2019-06-15[c=season]');
+      equal(`${yearmonth.with({ season: 2 })}`, '2019-06-01[c=season]');
+      equal(`${monthday.with({ season: 2 })}`, '1972-06-15[c=season]');
+    });
+    it('translates month correctly in with()', () => {
+      equal(`${datetime.with({ month: 2 })}`, '2019-08-15T00:00:00[c=season]');
+      equal(`${date.with({ month: 2 })}`, '2019-08-15[c=season]');
+      equal(`${yearmonth.with({ month: 2 })}`, '2019-08-01[c=season]');
+      equal(`${monthday.with({ month: 2 })}`, '1972-08-15[c=season]');
+    });
+    after(() => {
+      delete Temporal.DateTime.prototype.season;
+      delete Temporal.Date.prototype.season;
+      delete Temporal.YearMonth.prototype.season;
+      delete Temporal.MonthDay.prototype.season;
     });
   });
 });

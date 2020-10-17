@@ -1,3 +1,6 @@
+const ArrayIsArray = Array.isArray;
+const ArrayPrototypeIndexOf = Array.prototype.indexOf;
+const ArrayPrototypePush = Array.prototype.push;
 const IntlDateTimeFormat = globalThis.Intl.DateTimeFormat;
 const MathAbs = Math.abs;
 const MathCeil = Math.ceil;
@@ -12,6 +15,7 @@ import bigInt from 'big-integer';
 import Call from 'es-abstract/2020/Call.js';
 import SpeciesConstructor from 'es-abstract/2020/SpeciesConstructor.js';
 import ToInteger from 'es-abstract/2020/ToInteger.js';
+import ToLength from 'es-abstract/2020/ToLength.js';
 import ToNumber from 'es-abstract/2020/ToNumber.js';
 import ToPrimitive from 'es-abstract/2020/ToPrimitive.js';
 import ToString from 'es-abstract/2020/ToString.js';
@@ -63,6 +67,7 @@ const ES2020 = {
   Call,
   SpeciesConstructor,
   ToInteger,
+  ToLength,
   ToNumber,
   ToPrimitive,
   ToString,
@@ -638,7 +643,8 @@ export const ES = ObjectAssign({}, ES2020, {
       calendar = relativeTo.calendar;
       if (calendar === undefined) calendar = GetISO8601Calendar();
       calendar = ES.ToTemporalCalendar(calendar);
-      const fields = ES.ToTemporalDateTimeRecord(relativeTo);
+      const fieldNames = ES.CalendarFields(calendar, ['day', 'era', 'month', 'year']);
+      const fields = ES.ToTemporalDateTimeFields(relativeTo, fieldNames);
       const TemporalDate = GetIntrinsic('%Temporal.Date%');
       const date = calendar.dateFromFields(fields, {}, TemporalDate);
       year = GetSlot(date, ISO_YEAR);
@@ -761,11 +767,18 @@ export const ES = ObjectAssign({}, ES2020, {
     return result;
   },
   // field access in the following operations is intentionally alphabetical
-  ToTemporalDateRecord: (bag) => {
-    return ES.ToRecord(bag, [['day'], ['era', undefined], ['month'], ['year']]);
+  ToTemporalDateFields: (bag, fieldNames) => {
+    const entries = [['day'], ['era', undefined], ['month'], ['year']];
+    // Add extra fields from the calendar at the end
+    fieldNames.forEach((fieldName) => {
+      if (!entries.some(([name]) => name === fieldName)) {
+        entries.push([fieldName, undefined]);
+      }
+    });
+    return ES.ToRecord(bag, entries);
   },
-  ToTemporalDateTimeRecord: (bag) => {
-    return ES.ToRecord(bag, [
+  ToTemporalDateTimeFields: (bag, fieldNames) => {
+    const entries = [
       ['day'],
       ['era', undefined],
       ['hour', 0],
@@ -776,10 +789,24 @@ export const ES = ObjectAssign({}, ES2020, {
       ['nanosecond', 0],
       ['second', 0],
       ['year']
-    ]);
+    ];
+    // Add extra fields from the calendar at the end
+    fieldNames.forEach((fieldName) => {
+      if (!entries.some(([name]) => name === fieldName)) {
+        entries.push([fieldName, undefined]);
+      }
+    });
+    return ES.ToRecord(bag, entries);
   },
-  ToTemporalMonthDayRecord: (bag) => {
-    return ES.ToRecord(bag, [['day'], ['month']]);
+  ToTemporalMonthDayFields: (bag, fieldNames) => {
+    const entries = [['day'], ['month']];
+    // Add extra fields from the calendar at the end
+    fieldNames.forEach((fieldName) => {
+      if (!entries.some(([name]) => name === fieldName)) {
+        entries.push([fieldName, undefined]);
+      }
+    });
+    return ES.ToRecord(bag, entries);
   },
   ToTemporalTimeRecord: (bag) => {
     const props = ES.ToPartialRecord(bag, ['hour', 'microsecond', 'millisecond', 'minute', 'nanosecond', 'second']);
@@ -787,8 +814,15 @@ export const ES = ObjectAssign({}, ES2020, {
     const { hour = 0, minute = 0, second = 0, millisecond = 0, microsecond = 0, nanosecond = 0 } = props;
     return { hour, minute, second, millisecond, microsecond, nanosecond };
   },
-  ToTemporalYearMonthRecord: (bag) => {
-    return ES.ToRecord(bag, [['era', undefined], ['month'], ['year']]);
+  ToTemporalYearMonthFields: (bag, fieldNames) => {
+    const entries = [['era', undefined], ['month'], ['year']];
+    // Add extra fields from the calendar at the end
+    fieldNames.forEach((fieldName) => {
+      if (!entries.some(([name]) => name === fieldName)) {
+        entries.push([fieldName, undefined]);
+      }
+    });
+    return ES.ToRecord(bag, entries);
   },
 
   ToTemporalDate: (item, constructor, overflow = 'constrain') => {
@@ -798,7 +832,8 @@ export const ES = ObjectAssign({}, ES2020, {
       let calendar = item.calendar;
       if (calendar === undefined) calendar = new (GetIntrinsic('%Temporal.ISO8601Calendar%'))();
       calendar = ES.ToTemporalCalendar(calendar);
-      const fields = ES.ToTemporalDateRecord(item);
+      const fieldNames = ES.CalendarFields(calendar, ['day', 'era', 'month', 'year']);
+      const fields = ES.ToTemporalDateFields(item, fieldNames);
       result = calendar.dateFromFields(fields, { overflow }, constructor);
     } else {
       let { year, month, day, calendar } = ES.ParseTemporalDateString(ES.ToString(item));
@@ -817,7 +852,8 @@ export const ES = ObjectAssign({}, ES2020, {
       calendar = item.calendar;
       if (calendar === undefined) calendar = new (GetIntrinsic('%Temporal.ISO8601Calendar%'))();
       calendar = ES.ToTemporalCalendar(calendar);
-      const fields = ES.ToTemporalDateTimeRecord(item);
+      const fieldNames = ES.CalendarFields(calendar, ['day', 'era', 'month', 'year']);
+      const fields = ES.ToTemporalDateTimeFields(item, fieldNames);
       const TemporalDate = GetIntrinsic('%Temporal.Date%');
       const date = calendar.dateFromFields(fields, { overflow }, TemporalDate);
       year = GetSlot(date, ISO_YEAR);
@@ -924,7 +960,8 @@ export const ES = ObjectAssign({}, ES2020, {
       let calendar = item.calendar;
       if (calendar === undefined) calendar = new (GetIntrinsic('%Temporal.ISO8601Calendar%'))();
       calendar = ES.ToTemporalCalendar(calendar);
-      const fields = ES.ToTemporalMonthDayRecord(item);
+      const fieldNames = ES.CalendarFields(calendar, ['day', 'month']);
+      const fields = ES.ToTemporalMonthDayFields(item, fieldNames);
       result = calendar.monthDayFromFields(fields, { overflow }, constructor);
     } else {
       let { month, day, referenceISOYear, calendar } = ES.ParseTemporalMonthDayString(ES.ToString(item));
@@ -965,7 +1002,8 @@ export const ES = ObjectAssign({}, ES2020, {
       let calendar = item.calendar;
       if (calendar === undefined) calendar = new (GetIntrinsic('%Temporal.ISO8601Calendar%'))();
       calendar = ES.ToTemporalCalendar(calendar);
-      const fields = ES.ToTemporalYearMonthRecord(item);
+      const fieldNames = ES.CalendarFields(calendar, ['era', 'month', 'year']);
+      const fields = ES.ToTemporalYearMonthFields(item, fieldNames);
       result = calendar.yearMonthFromFields(fields, { overflow }, constructor);
     } else {
       let { year, month, referenceISODay, calendar } = ES.ParseTemporalYearMonthString(ES.ToString(item));
@@ -991,7 +1029,12 @@ export const ES = ObjectAssign({}, ES2020, {
     }
     return calendar;
   },
-
+  CalendarFields: (calendar, fieldNames) => {
+    let fields = calendar.fields;
+    if (fields === undefined) fields = GetIntrinsic('%Temporal.Calendar.prototype.fields%');
+    const array = ES.Call(fields, calendar, [fieldNames]);
+    return ES.CreateListFromArrayLike(array, ['String']);
+  },
   CalendarToString: (calendar) => {
     let toString = calendar.toString;
     if (toString === undefined) toString = GetIntrinsic('%Temporal.Calendar.prototype.toString%');
@@ -2590,6 +2633,36 @@ export const ES = ObjectAssign({}, ES2020, {
       throw new RangeError(`${property} must be between ${minimum} and ${maximum}, not ${value}`);
     }
     return MathFloor(value);
+  },
+  // Following two operations are overridden because the es-abstract version of
+  // ES.Get() unconditionally uses util.inspect
+  LengthOfArrayLike: (obj) => {
+    if (ES.Type(obj) !== 'Object') {
+      throw new TypeError('Assertion failed: `obj` must be an Object');
+    }
+    return ES.ToLength(obj.length);
+  },
+  CreateListFromArrayLike: (obj, elementTypes) => {
+    if (ES.Type(obj) !== 'Object') {
+      throw new TypeError('Assertion failed: `obj` must be an Object');
+    }
+    if (!ArrayIsArray(elementTypes)) {
+      throw new TypeError('Assertion failed: `elementTypes`, if provided, must be an array');
+    }
+    var len = ES.LengthOfArrayLike(obj);
+    var list = [];
+    var index = 0;
+    while (index < len) {
+      var indexName = ES.ToString(index);
+      var next = obj[indexName];
+      var nextType = ES.Type(next);
+      if (ArrayPrototypeIndexOf.call(elementTypes, nextType) < 0) {
+        throw new TypeError(`item type ${nextType} is not a valid elementType`);
+      }
+      ArrayPrototypePush.call(list, next);
+      index += 1;
+    }
+    return list;
   }
 });
 

@@ -484,6 +484,7 @@ export namespace Temporal {
         | /** @deprecated */ 'day'
       >
     ): Temporal.Duration;
+    fields?(fields: Array<string>): Array<string>;
   }
 
   /**
@@ -550,6 +551,7 @@ export namespace Temporal {
         | /** @deprecated */ 'day'
       >
     ): Temporal.Duration;
+    fields(fields: Array<string>): Array<string>;
     toString(): string;
   }
 
