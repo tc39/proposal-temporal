@@ -185,9 +185,13 @@ describe('Date', () => {
     const dt = date.toDateTime(Temporal.Time.from('11:30:23'));
     it('returns a Temporal.DateTime', () => assert(dt instanceof Temporal.DateTime));
     it('combines the date and time', () => equal(`${dt}`, '1976-11-18T11:30:23'));
-    it("doesn't cast argument", () => {
-      throws(() => date.toDateTime({ hour: 11, minute: 30, second: 23 }), TypeError);
-      throws(() => date.toDateTime('11:30:23'), TypeError);
+    it('casts argument', () => {
+      equal(`${date.toDateTime({ hour: 11, minute: 30, second: 23 })}`, '1976-11-18T11:30:23');
+      equal(`${date.toDateTime('11:30:23')}`, '1976-11-18T11:30:23');
+    });
+    it('object must contain at least one correctly-spelled property', () => {
+      throws(() => date.toDateTime({}), TypeError);
+      throws(() => date.toDateTime({ minutes: 30 }), TypeError);
     });
     it('optional argument defaults to midnight', () => {
       equal(`${date.toDateTime()}`, '1976-11-18T00:00');

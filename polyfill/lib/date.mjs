@@ -258,9 +258,9 @@ export class Date {
     const calendar = GetSlot(this, CALENDAR);
     const DateTime = GetIntrinsic('%Temporal.DateTime%');
 
-    if (!temporalTime) return new DateTime(year, month, day, 0, 0, 0, 0, 0, 0, calendar);
+    if (temporalTime === undefined) return new DateTime(year, month, day, 0, 0, 0, 0, 0, 0, calendar);
 
-    if (!ES.IsTemporalTime(temporalTime)) throw new TypeError('invalid Temporal.Time object');
+    temporalTime = ES.ToTemporalTime(temporalTime, GetIntrinsic('%Temporal.Time%'));
     const hour = GetSlot(temporalTime, HOUR);
     const minute = GetSlot(temporalTime, MINUTE);
     const second = GetSlot(temporalTime, SECOND);

@@ -535,7 +535,7 @@ export namespace Temporal {
         | /** @deprecated */ 'day'
       >
     ): Temporal.Duration;
-    toDateTime(temporalTime: Temporal.Time): Temporal.DateTime;
+    toDateTime(temporalTime: Temporal.Time | TimeLike | string): Temporal.DateTime;
     toYearMonth(): Temporal.YearMonth;
     toMonthDay(): Temporal.MonthDay;
     getFields(): DateFields;
@@ -820,7 +820,7 @@ export namespace Temporal {
         | /** @deprecated */ 'nanoseconds'
       >
     ): Temporal.Time;
-    toDateTime(temporalDate: Temporal.Date): Temporal.DateTime;
+    toDateTime(temporalDate: Temporal.Date | DateLike | string): Temporal.DateTime;
     getFields(): TimeFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
