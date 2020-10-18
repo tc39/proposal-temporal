@@ -175,10 +175,10 @@ duration = duration.with({ years, months });
   // => P4Y2M50DT50H100M
 ```
 
-### duration.**add**(_other_: object, _options_?: object) : Temporal.Duration
+### duration.**add**(_other_: Temporal.Duration | object | string, _options_?: object) : Temporal.Duration
 
 **Parameters:**
-- `other` (object): A `Temporal.Duration` object or a duration-like object.
+- `other` (`Temporal.Duration` or value convertible to one): The duration to add.
 - `options` (optional object): An object with properties representing options for the addition.
   The following options are recognized:
   - `overflow` (string): How to deal with additions that result in mixed-sign values or values that are larger than the next highest unit.
@@ -189,7 +189,8 @@ duration = duration.with({ years, months });
 
 This method adds `other` to `duration`, resulting in a longer duration.
 
-The `other` argument is an object with properties denoting a duration, such as `{ hours: 5, minutes: 30 }`, or a `Temporal.Duration` object.
+The `other` argument is an object with properties denoting a duration, such as `{ hours: 5, minutes: 30 }`, or a string such as `PT5H30M`, or a `Temporal.Duration` object.
+If `other` is not a `Temporal.Duration` object, then it will be converted to one as if it were passed to `Temporal.Duration.from()`.
 
 In order to be valid, the resulting duration must not have fields with mixed signs.
 However, before the result is balanced, it's possible that the intermediate result will have one or more negative fields while the overall duration is positive, or vice versa.
@@ -236,10 +237,10 @@ monthsToYears(result)  // => P3Y
 
 ```
 
-### duration.**subtract**(_other_: object, _options_?: object) : Temporal.Duration
+### duration.**subtract**(_other_: Temporal.Duration | object | string, _options_?: object) : Temporal.Duration
 
 **Parameters:**
-- `other` (object): A `Temporal.Duration` object or a duration-like object.
+- `other` (`Temporal.Duration` or value convertible to one): The duration to subtract.
 - `options` (optional object): An object with properties representing options for the subtraction.
   The following options are recognized:
   - `overflow` (string): How to deal with subtractions that result in values with mixed signs or values that are larger than the next highest unit.
@@ -250,7 +251,8 @@ monthsToYears(result)  // => P3Y
 
 This method subtracts `other` from `duration`, resulting in a shorter duration.
 
-The `other` argument is an object with properties denoting a duration, such as `{ hours: 5, minutes: 30 }`, or a `Temporal.Duration` object.
+The `other` argument is an object with properties denoting a duration, such as `{ hours: 5, minutes: 30 }`, or a string such as `PT5H30M`, or a `Temporal.Duration` object.
+If `duration` is not a `Temporal.Duration` object, then it will be converted to one as if it were passed to `Temporal.Duration.from()`.
 
 If `other` is larger than `duration` and the subtraction would result in a negative duration, the method will throw a `RangeError`.
 

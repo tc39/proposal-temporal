@@ -341,17 +341,18 @@ console.log(dt.year, dt.era);
   // => 45 showa
 ```
 
-### instant.**add**(_duration_: object) : Temporal.Instant
+### instant.**add**(_duration_: Temporal.Duration | object | string) : Temporal.Instant
 
 **Parameters:**
 
-- `duration` (object): A `Temporal.Duration` object or a duration-like object.
+- `duration` (`Temporal.Duration` or value convertible to one): The duration to add.
 
 **Returns:** a new `Temporal.Instant` object which is the exact time indicated by `instant` plus `duration`.
 
 This method adds `duration` to `instant`.
 
-The `duration` argument is an object with properties denoting a duration, such as `{ hours: 5, minutes: 30 }`, or a `Temporal.Duration` object.
+The `duration` argument is an object with properties denoting a duration, such as `{ hours: 5, minutes: 30 }`, or a string such as `PT5H30M`, or a `Temporal.Duration` object.
+If `duration` is not a `Temporal.Duration` object, then it will be converted to one as if it were passed to `Temporal.Duration.from()`.
 
 The `years`, `months`, `weeks`, and `days` fields of `duration` must be zero.
 `Temporal.Instant` is independent of time zones and calendars, and so years, months, weeks, and days may be different lengths depending on which calendar or time zone they are reckoned in.
@@ -371,17 +372,18 @@ fiveHours = Temporal.Duration.from({ hours: 5 });
 Temporal.now.instant().add(fiveHours);
 ```
 
-### instant.**subtract**(_duration_: object) : Temporal.Instant
+### instant.**subtract**(_duration_: Temporal.Duration | object | string) : Temporal.Instant
 
 **Parameters:**
 
-- `duration` (object): A `Temporal.Duration` object or a duration-like object.
+- `duration` (`Temporal.Duration` or value convertible to one): The duration to subtract.
 
 **Returns:** a new `Temporal.Instant` object which is the exact time indicated by `instant` minus `duration`.
 
 This method subtracts `duration` from `instant`.
 
-The `duration` argument is an object with properties denoting a duration, such as `{ hours: 5, minutes: 30 }`, or a `Temporal.Duration` object.
+The `duration` argument is an object with properties denoting a duration, such as `{ hours: 5, minutes: 30 }`, or a string such as `PT5H30M`, or a `Temporal.Duration` object.
+If `duration` is not a `Temporal.Duration` object, then it will be converted to one as if it were passed to `Temporal.Duration.from()`.
 
 The `years`, `months`, `weeks`, and `days` fields of `duration` must be zero.
 `Temporal.Instant` is independent of time zones and calendars, and so years, months, weeks, and days may be different lengths depending on which calendar or time zone they are reckoned in.

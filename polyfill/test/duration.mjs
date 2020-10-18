@@ -429,6 +429,10 @@ describe('Duration', () => {
     it('incorrectly-spelled properties are ignored', () => {
       equal(`${duration.add({ month: 1, days: 1 })}`, 'P2DT5M');
     });
+    it('casts argument', () => {
+      equal(`${duration.add(Temporal.Duration.from('P2DT5M'))}`, 'P3DT10M');
+      equal(`${duration.add('P2DT5M')}`, 'P3DT10M');
+    });
   });
   describe('Duration.subtract()', () => {
     const duration = Duration.from({ days: 3, hours: 1, minutes: 10 });
@@ -552,6 +556,10 @@ describe('Duration', () => {
     });
     it('incorrectly-spelled properties are ignored', () => {
       equal(`${duration.subtract({ month: 1, days: 1 })}`, 'P2DT1H10M');
+    });
+    it('casts argument', () => {
+      equal(`${duration.subtract(Temporal.Duration.from('P1DT5M'))}`, 'P2DT1H5M');
+      equal(`${duration.subtract('P1DT5M')}`, 'P2DT1H5M');
     });
   });
   describe('duration.getFields() works', () => {

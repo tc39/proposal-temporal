@@ -353,11 +353,11 @@ date = Temporal.Date.from('2006-08-24[c=japanese]');
 date.withCalendar('iso8601'); // => 2006-08-24
 ```
 
-### date.**add**(_duration_: object, _options_?: object) : Temporal.Date
+### date.**add**(_duration_: Temporal.Duration | object | string, _options_?: object) : Temporal.Date
 
 **Parameters:**
 
-- `duration` (object): A `Temporal.Duration` object or a duration-like object.
+- `duration` (`Temporal.Duration` or value convertible to one): The duration to add.
 - `options` (optional object): An object with properties representing options for the addition.
   The following options are recognized:
   - `overflow` (optional string): How to deal with additions that result in out-of-range values.
@@ -368,7 +368,8 @@ date.withCalendar('iso8601'); // => 2006-08-24
 
 This method adds `duration` to `date`, returning a date that is in the future relative to `date`.
 
-The `duration` argument is an object with properties denoting a duration, such as `{ days: 5 }`, or a `Temporal.Duration` object.
+The `duration` argument is an object with properties denoting a duration, such as `{ days: 5 }`, or a string such as `P5D`, or a `Temporal.Duration` object.
+If `duration` is not a `Temporal.Duration` object, then it will be converted to one as if it were passed to `Temporal.Duration.from()`.
 
 Some additions may be ambiguous, because months have different lengths.
 For example, adding one month to August 31 would result in September 31, which doesn't exist.
@@ -392,11 +393,11 @@ date.add({ months: 1 }); // => 2019-02-28
 date.add({ months: 1 }, { overflow: 'reject' }); // => throws
 ```
 
-### date.**subtract**(_duration_: object, _options_?: object) : Temporal.Date
+### date.**subtract**(_duration_: Temporal.Duration | object | string, _options_?: object) : Temporal.Date
 
 **Parameters:**
 
-- `duration` (object): A `Temporal.Duration` object or a duration-like object.
+- `duration` (`Temporal.Duration` or value convertible to one): The duration to subtract.
 - `options` (optional object): An object with properties representing options for the subtraction.
   The following options are recognized:
   - `overflow` (string): How to deal with subtractions that result in out-of-range values.
@@ -407,7 +408,8 @@ date.add({ months: 1 }, { overflow: 'reject' }); // => throws
 
 This method subtracts `duration` from `date`, returning a date that is in the past relative to `date`.
 
-The `duration` argument is an object with properties denoting a duration, such as `{ days: 5 }`, or a `Temporal.Duration` object.
+The `duration` argument is an object with properties denoting a duration, such as `{ days: 5 }`, or a string such as `P5D`, or a `Temporal.Duration` object.
+If `duration` is not a `Temporal.Duration` object, then it will be converted to one as if it were passed to `Temporal.Duration.from()`.
 
 Some subtractions may be ambiguous, because months have different lengths.
 For example, subtracting one month from July 31 would result in June 31, which doesn't exist.

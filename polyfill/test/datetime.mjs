@@ -448,6 +448,10 @@ describe('DateTime', () => {
     it('incorrectly-spelled properties are ignored', () => {
       equal(`${jan31.add({ month: 1, days: 1 })}`, '2020-02-01T15:00');
     });
+    it('casts argument', () => {
+      equal(`${jan31.add(Temporal.Duration.from('P1MT1S'))}`, '2020-02-29T15:00:01');
+      equal(`${jan31.add('P1MT1S')}`, '2020-02-29T15:00:01');
+    });
   });
   describe('date.subtract() works', () => {
     const mar31 = DateTime.from('2020-03-31T15:00');
@@ -486,6 +490,10 @@ describe('DateTime', () => {
     });
     it('incorrectly-spelled properties are ignored', () => {
       equal(`${mar31.subtract({ month: 1, days: 1 })}`, '2020-03-30T15:00');
+    });
+    it('casts argument', () => {
+      equal(`${mar31.subtract(Temporal.Duration.from('P1MT1S'))}`, '2020-02-29T14:59:59');
+      equal(`${mar31.subtract('P1MT1S')}`, '2020-02-29T14:59:59');
     });
   });
   describe('DateTime.difference()', () => {

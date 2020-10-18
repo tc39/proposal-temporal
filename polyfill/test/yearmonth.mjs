@@ -376,6 +376,7 @@ describe('YearMonth', () => {
     it('yearMonth.add(durationObj)', () => {
       equal(`${ym.add(Temporal.Duration.from('P2M'))}`, '2020-01');
     });
+    it('casts argument', () => equal(`${ym.add('P2M')}`, '2020-01'));
     it("ignores lower units that don't balance up to the length of the month", () => {
       equal(`${ym.add({ days: 1 })}`, '2019-11');
       equal(`${ym.add({ days: 29 })}`, '2019-11');
@@ -451,6 +452,7 @@ describe('YearMonth', () => {
     it('yearMonth.subtract(durationObj)', () => {
       equal(`${ym.subtract(Temporal.Duration.from('P11M'))}`, '2018-12');
     });
+    it('casts argument', () => equal(`${ym.subtract('P11M')}`, '2018-12'));
     it("ignores lower units that don't balance up to the length of the month", () => {
       equal(`${ym.subtract({ days: 1 })}`, '2019-11');
       equal(`${ym.subtract({ hours: 1 })}`, '2019-11');

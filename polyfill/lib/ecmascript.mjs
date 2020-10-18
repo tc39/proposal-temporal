@@ -432,21 +432,14 @@ export const ES = ObjectAssign({}, ES2020, {
     return { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
   },
   ToLimitedTemporalDuration: (item, disallowedProperties = []) => {
-    if (ES.Type(item) !== 'Object') {
-      throw new TypeError('Unexpected type for duration');
+    let record;
+    if (ES.Type(item) === 'Object') {
+      record = ES.ToTemporalDurationRecord(item);
+    } else {
+      const str = ES.ToString(item);
+      record = ES.ParseTemporalDurationString(str);
     }
-    const {
-      years,
-      months,
-      weeks,
-      days,
-      hours,
-      minutes,
-      seconds,
-      milliseconds,
-      microseconds,
-      nanoseconds
-    } = ES.ToTemporalDurationRecord(item);
+    const { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = record;
     const duration = ES.RegulateDuration(
       years,
       months,
