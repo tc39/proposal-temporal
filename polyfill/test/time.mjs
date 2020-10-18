@@ -244,9 +244,13 @@ describe('Time', () => {
       equal(`${duration}`, 'PT1H53M');
     });
     it(`(${two}).difference(${time}) => -PT1H53M`, () => equal(`${two.difference(time)}`, '-PT1H53M'));
-    it("doesn't cast argument", () => {
-      throws(() => time.difference({ hour: 16, minute: 34 }), TypeError);
-      throws(() => time.difference('16:34'), TypeError);
+    it('casts argument', () => {
+      equal(`${time.difference({ hour: 16, minute: 34 })}`, '-PT1H10M29.876543211S');
+      equal(`${time.difference('16:34')}`, '-PT1H10M29.876543211S');
+    });
+    it('object must contain at least one correctly-spelled property', () => {
+      throws(() => time.difference({}), TypeError);
+      throws(() => time.difference({ minutes: 30 }), TypeError);
     });
     const time1 = Time.from('10:23:15');
     const time2 = Time.from('17:15:57');

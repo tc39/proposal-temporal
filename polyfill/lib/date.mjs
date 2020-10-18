@@ -170,7 +170,7 @@ export class Date {
   }
   difference(other, options = undefined) {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
-    if (!ES.IsTemporalDate(other)) throw new TypeError('invalid Date object');
+    other = ES.ToTemporalDate(other, Date);
     const calendar = GetSlot(this, CALENDAR);
     const otherCalendar = GetSlot(other, CALENDAR);
     const calendarId = ES.CalendarToString(calendar);

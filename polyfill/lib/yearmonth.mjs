@@ -134,7 +134,7 @@ export class YearMonth {
   }
   difference(other, options = undefined) {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
-    if (!ES.IsTemporalYearMonth(other)) throw new TypeError('invalid YearMonth object');
+    other = ES.ToTemporalYearMonth(other, YearMonth);
     const calendar = GetSlot(this, CALENDAR);
     const otherCalendar = GetSlot(other, CALENDAR);
     if (calendar.id !== otherCalendar.id) {

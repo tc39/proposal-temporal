@@ -306,7 +306,7 @@ export namespace Temporal {
     add(durationLike: Temporal.Duration | DurationLike | string): Temporal.Instant;
     subtract(durationLike: Temporal.Duration | DurationLike | string): Temporal.Instant;
     difference(
-      other: Temporal.Instant,
+      other: Temporal.Instant | string,
       options?: DifferenceOptions<
         | 'hours'
         | 'minutes'
@@ -524,7 +524,7 @@ export namespace Temporal {
     add(durationLike: Temporal.Duration | DurationLike | string, options?: ArithmeticOptions): Temporal.Date;
     subtract(durationLike: Temporal.Duration | DurationLike | string, options?: ArithmeticOptions): Temporal.Date;
     difference(
-      other: Temporal.Date,
+      other: Temporal.Date | DateLike | string,
       options?: DifferenceOptions<
         | 'years'
         | 'months'
@@ -639,7 +639,7 @@ export namespace Temporal {
     add(durationLike: Temporal.Duration | DurationLike | string, options?: ArithmeticOptions): Temporal.DateTime;
     subtract(durationLike: Temporal.Duration | DurationLike | string, options?: ArithmeticOptions): Temporal.DateTime;
     difference(
-      other: Temporal.DateTime,
+      other: Temporal.DateTime | DateTimeLike | string,
       options?: DifferenceOptions<
         | 'years'
         | 'months'
@@ -785,7 +785,7 @@ export namespace Temporal {
       options?: ArithmeticOptions
     ): Temporal.Time;
     difference(
-      other: Temporal.Time,
+      other: Temporal.Time | TimeLike | string,
       options?: DifferenceOptions<
         | 'hours'
         | 'minutes'
@@ -910,7 +910,7 @@ export namespace Temporal {
     add(durationLike: Temporal.Duration | DurationLike | string, options?: ArithmeticOptions): Temporal.YearMonth;
     subtract(durationLike: Temporal.Duration | DurationLike | string, options?: ArithmeticOptions): Temporal.YearMonth;
     difference(
-      other: Temporal.YearMonth,
+      other: Temporal.YearMonth | YearMonthLike | string,
       options?: DifferenceOptions<'years' | 'months' | /** @deprecated */ 'year' | /** @deprecated */ 'month'>
     ): Temporal.Duration;
     toDateOnDay(day: number): Temporal.Date;

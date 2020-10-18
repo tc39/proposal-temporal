@@ -221,9 +221,12 @@ describe('YearMonth', () => {
       equal(`${nov94.difference(jun13)}`, `${diff.negated()}`));
     it(`${nov94}.add(${diff}) == ${jun13}`, () => nov94.add(diff).equals(jun13));
     it(`${jun13}.subtract(${diff}) == ${nov94}`, () => jun13.subtract(diff).equals(nov94));
-    it("doesn't cast argument", () => {
-      throws(() => nov94.difference({ year: 2013, month: 6 }), TypeError);
-      throws(() => nov94.difference('2013-06'), TypeError);
+    it('casts argument', () => {
+      equal(`${jun13.difference({ year: 1994, month: 11 })}`, `${diff}`);
+      equal(`${jun13.difference('1994-11')}`, `${diff}`);
+    });
+    it('object must contain at least the required properties', () => {
+      throws(() => jun13.difference({ year: 1994 }), TypeError);
     });
     const feb20 = YearMonth.from('2020-02');
     const feb21 = YearMonth.from('2021-02');

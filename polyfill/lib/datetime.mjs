@@ -397,7 +397,7 @@ export class DateTime {
   }
   difference(other, options = undefined) {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-    if (!ES.IsTemporalDateTime(other)) throw new TypeError('invalid DateTime object');
+    other = ES.ToTemporalDateTime(other, DateTime);
     const calendar = GetSlot(this, CALENDAR);
     const otherCalendar = GetSlot(other, CALENDAR);
     const calendarId = ES.CalendarToString(calendar);

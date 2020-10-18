@@ -403,11 +403,11 @@ oneHour = Temporal.Duration.from({ hours: 1 });
 Temporal.now.instant().subtract(oneHour);
 ```
 
-### instant.**difference**(_other_: Temporal.Instant, _options_?: object) : Temporal.Duration
+### instant.**difference**(_other_: Temporal.Instant | string, _options_?: object) : Temporal.Duration
 
 **Parameters:**
 
-- `other` (`Temporal.Instant`): Another exact time with which to compute the difference.
+- `other` (`Temporal.Instant` or value convertible to one): Another exact time with which to compute the difference.
 - `options` (optional object): An object with properties representing options for the operation.
   The following options are recognized:
   - `largestUnit` (string): The largest unit of time to allow in the resulting `Temporal.Duration` object.
@@ -426,6 +426,8 @@ Temporal.now.instant().subtract(oneHour);
 
 This method computes the difference between the two exact times represented by `instant` and `other`, optionally rounds it, and returns it as a `Temporal.Duration` object.
 If `other` is later than `instant` then the resulting duration will be negative.
+
+If `other` is not a `Temporal.Instant` object, then it will be converted to one as if it were passed to `Temporal.Instant.from()`.
 
 The `largestUnit` option controls how the resulting duration is expressed.
 The returned `Temporal.Duration` object will not have any nonzero fields that are larger than the unit in `largestUnit`.

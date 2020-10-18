@@ -309,10 +309,10 @@ ym = Temporal.YearMonth.from('2019-06');
 ym.subtract({years: 20, months: 4})  // => 1999-02
 ```
 
-### yearMonth.**difference**(_other_: Temporal.YearMonth, _options_?: object) : Temporal.Duration
+### yearMonth.**difference**(_other_: Temporal.YearMonth | object | string, _options_?: object) : Temporal.Duration
 
 **Parameters:**
-- `other` (`Temporal.YearMonth`): Another month with which to compute the difference.
+- `other` (`Temporal.YearMonth` or value convertible to one): Another month with which to compute the difference.
 - `options` (optional object): An object with properties representing options for the operation.
   The following options are recognized:
   - `largestUnit` (string): The largest unit of time to allow in the resulting `Temporal.Duration` object.
@@ -331,6 +331,8 @@ ym.subtract({years: 20, months: 4})  // => 1999-02
 
 This method computes the difference between the two months represented by `yearMonth` and `other`, optionally rounds it, and returns it as a `Temporal.Duration` object.
 If `other` is later than `yearMonth` then the resulting duration will be negative.
+
+If `other` is not a `Temporal.YearMonth` object, then it will be converted to one as if it were passed to `Temporal.YearMonth.from()`.
 
 The `largestUnit` option controls how the resulting duration is expressed.
 The returned `Temporal.Duration` object will not have any nonzero fields that are larger than the unit in `largestUnit`.
