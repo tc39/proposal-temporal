@@ -226,9 +226,12 @@ describe('Time', () => {
     const dt = time.toDateTime(Temporal.Date.from('1976-11-18'));
     it('returns a Temporal.DateTime', () => assert(dt instanceof Temporal.DateTime));
     it('combines the date and time', () => equal(`${dt}`, '1976-11-18T11:30:23.123456789'));
-    it("doesn't cast argument", () => {
-      throws(() => time.toDateTime({ year: 1976, month: 11, day: 18 }), TypeError);
-      throws(() => time.toDateTime('1976-11-18'), TypeError);
+    it('casts argument', () => {
+      equal(`${time.toDateTime({ year: 1976, month: 11, day: 18 })}`, '1976-11-18T11:30:23.123456789');
+      equal(`${time.toDateTime('1976-11-18')}`, '1976-11-18T11:30:23.123456789');
+    });
+    it('object must contain at least the required properties', () => {
+      throws(() => time.toDateTime({ year: 1976 }), TypeError);
     });
   });
   describe('time.difference() works', () => {

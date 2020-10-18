@@ -604,12 +604,12 @@ This method overrides `Object.prototype.valueOf()` and always throws an exceptio
 This is because it's not possible to compare `Temporal.Date` objects with the relational operators `<`, `<=`, `>`, or `>=`.
 Use `Temporal.Date.compare()` for this, or `date.equals()` for equality.
 
-### date.**toZonedDateTime**(_timeZone_: _timeZone_ : object | string, _time_?: Temporal.Time, _options_?: object) : Temporal.ZonedDateTime
+### date.**toZonedDateTime**(_timeZone_: _timeZone_ : object | string, _time_?: Temporal.Time | object | string, _options_?: object) : Temporal.ZonedDateTime
 
 **Parameters:**
 
 - `timeZone` (optional string or object): The time zone in which to interpret `date` and `time`, as a `Temporal.TimeZone` object, an object implementing the [time zone protocol](./timezone.md#protocol), or a string.
-- `time` (optional `Temporal.Time`): A time of day on `date`.
+- `time` (optional `Temporal.Time` or value convertible to one): A time of day on `date`.
 - `options` (optional object): An object with properties representing options for the operation.
   The following options are recognized:
   - `disambiguation` (string): How to disambiguate if the date and time given by `date` and `time` does not exist in the time zone, or exists more than once.
@@ -626,7 +626,9 @@ For a list of IANA time zone names, see the current version of the [IANA time zo
 A convenient list is also available [on Wikipedia](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones), although it might not reflect the latest official status.
 
 In addition to the `timeZone`, the converted object carries a copy of all the relevant fields of `date` and `time`.
-If `time` is given, this method is exactly equivalent to [`time.toZonedDateTime(date)`](./time.html#toZonedDateTime).
+If `time` is given, this method is equivalent to [`Temporal.Time.from(time).toZonedDateTime(date)`](./time.html#toZonedDateTime).
+
+If `time` is given but is not a `Temporal.Time` object, then it will be converted to one as if it were passed to `Temporal.Time.from()`.
 
 In the case of ambiguity caused by DST or other time zone changes, the `disambiguation` option controls how to resolve the ambiguity:
 
@@ -654,11 +656,11 @@ date.toZonedDateTime('America/Los_Angeles', time); // => 2006-08-24T15:23:30.003
 date.toZonedDateTime('America/Los_Angeles'); // => 2006-08-24T00:00-07:00[America/Los_Angeles]
 ```
 
-### date.**toDateTime**(_time_?: Temporal.Time) : Temporal.DateTime
+### date.**toDateTime**(_time_?: Temporal.Time | object | string) : Temporal.DateTime
 
 **Parameters:**
 
-- `time` (optional `Temporal.Time`): A time of day on `date`.
+- `time` (optional `Temporal.Time` or value convertible to one): A time of day on `date`.
 
 **Returns:** a `Temporal.DateTime` object that represents the wall-clock time `time` on the calendar date `date`.
 
@@ -666,7 +668,9 @@ This method can be used to convert `Temporal.Date` into a `Temporal.DateTime`, b
 The default `time`, if it is not given, is midnight (00:00).
 The converted object carries a copy of all the relevant fields of `date` and `time`.
 
-If `time` is given, this is exactly equivalent to [`time.toDateTime(date)`](./time.html#toDateTime).
+If `time` is given, this is equivalent to [`Temporal.Time.from(time).toDateTime(date)`](./time.html#toDateTime).
+
+If `time` is given and is not a `Temporal.Time` object, then it will be converted to one as if it were passed to `Temporal.Time.from()`.
 
 Usage example:
 

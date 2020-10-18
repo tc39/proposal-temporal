@@ -384,7 +384,7 @@ export class Time {
 
   toDateTime(temporalDate) {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
-    if (!ES.IsTemporalDate(temporalDate)) throw new TypeError('invalid Temporal.Date object');
+    temporalDate = ES.ToTemporalDate(temporalDate, GetIntrinsic('%Temporal.Date%'));
     const year = GetSlot(temporalDate, ISO_YEAR);
     const month = GetSlot(temporalDate, ISO_MONTH);
     const day = GetSlot(temporalDate, ISO_DAY);
