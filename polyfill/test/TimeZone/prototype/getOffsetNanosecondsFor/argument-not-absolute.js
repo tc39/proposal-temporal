@@ -6,11 +6,11 @@ esid: sec-temporal.timezone.prototype.getoffsetnanosecondsfor
 ---*/
 
 const timeZone = Temporal.TimeZone.from("UTC");
-assert.throws(TypeError, () => timeZone.getOffsetNanosecondsFor(undefined), "undefined");
-assert.throws(TypeError, () => timeZone.getOffsetNanosecondsFor(null), "null");
-assert.throws(TypeError, () => timeZone.getOffsetNanosecondsFor(true), "boolean");
-assert.throws(TypeError, () => timeZone.getOffsetNanosecondsFor("2020-01-02T12:34:56Z"), "string");
+assert.throws(RangeError, () => timeZone.getOffsetNanosecondsFor(undefined), "undefined");
+assert.throws(RangeError, () => timeZone.getOffsetNanosecondsFor(null), "null");
+assert.throws(RangeError, () => timeZone.getOffsetNanosecondsFor(true), "boolean");
+assert.throws(RangeError, () => timeZone.getOffsetNanosecondsFor(""), "empty string");
 assert.throws(TypeError, () => timeZone.getOffsetNanosecondsFor(Symbol()), "Symbol");
-assert.throws(TypeError, () => timeZone.getOffsetNanosecondsFor(5), "number");
-assert.throws(TypeError, () => timeZone.getOffsetNanosecondsFor(5n), "bigint");
-assert.throws(TypeError, () => timeZone.getOffsetNanosecondsFor({}), "plain object");
+assert.throws(RangeError, () => timeZone.getOffsetNanosecondsFor(5), "number");
+assert.throws(RangeError, () => timeZone.getOffsetNanosecondsFor(5n), "bigint");
+assert.throws(RangeError, () => timeZone.getOffsetNanosecondsFor({}), "plain object");

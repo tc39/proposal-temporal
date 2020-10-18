@@ -833,13 +833,13 @@ export namespace Temporal {
   export interface TimeZoneProtocol {
     id?: string;
     timeZone?: never;
-    getOffsetNanosecondsFor(instant: Temporal.Instant): number;
-    getOffsetStringFor?(instant: Temporal.Instant): string;
-    getDateTimeFor(instant: Temporal.Instant, calendar?: CalendarProtocol | string): Temporal.DateTime;
-    getInstantFor?(dateTime: Temporal.DateTime, options?: ToInstantOptions): Temporal.Instant;
-    getNextTransition?(startingPoint: Temporal.Instant): Temporal.Instant | null;
-    getPreviousTransition?(startingPoint: Temporal.Instant): Temporal.Instant | null;
-    getPossibleInstantsFor(dateTime: Temporal.DateTime): Temporal.Instant[];
+    getOffsetNanosecondsFor(instant: Temporal.Instant | string): number;
+    getOffsetStringFor?(instant: Temporal.Instant | string): string;
+    getDateTimeFor(instant: Temporal.Instant | string, calendar?: CalendarProtocol | string): Temporal.DateTime;
+    getInstantFor?(dateTime: Temporal.DateTime | DateTimeLike | string, options?: ToInstantOptions): Temporal.Instant;
+    getNextTransition?(startingPoint: Temporal.Instant | string): Temporal.Instant | null;
+    getPreviousTransition?(startingPoint: Temporal.Instant | string): Temporal.Instant | null;
+    getPossibleInstantsFor(dateTime: Temporal.DateTime | DateTimeLike | string): Temporal.Instant[];
     toString(): string;
     toJSON?(): string;
   }
@@ -861,13 +861,13 @@ export namespace Temporal {
     static from(timeZone: Temporal.TimeZone | string): Temporal.TimeZone;
     constructor(timeZoneIdentifier: string);
     readonly id: string;
-    getOffsetNanosecondsFor(instant: Temporal.Instant): number;
-    getOffsetStringFor(instant: Temporal.Instant): string;
-    getDateTimeFor(instant: Temporal.Instant, calendar?: CalendarProtocol | string): Temporal.DateTime;
-    getInstantFor(dateTime: Temporal.DateTime, options?: ToInstantOptions): Temporal.Instant;
-    getNextTransition(startingPoint: Temporal.Instant): Temporal.Instant | null;
-    getPreviousTransition(startingPoint: Temporal.Instant): Temporal.Instant | null;
-    getPossibleInstantsFor(dateTime: Temporal.DateTime): Temporal.Instant[];
+    getOffsetNanosecondsFor(instant: Temporal.Instant | string): number;
+    getOffsetStringFor(instant: Temporal.Instant | string): string;
+    getDateTimeFor(instant: Temporal.Instant | string, calendar?: CalendarProtocol | string): Temporal.DateTime;
+    getInstantFor(dateTime: Temporal.DateTime | DateTimeLike | string, options?: ToInstantOptions): Temporal.Instant;
+    getNextTransition(startingPoint: Temporal.Instant | string): Temporal.Instant | null;
+    getPreviousTransition(startingPoint: Temporal.Instant | string): Temporal.Instant | null;
+    getPossibleInstantsFor(dateTime: Temporal.DateTime | DateTimeLike | string): Temporal.Instant[];
     toString(): string;
     toJSON(): string;
   }

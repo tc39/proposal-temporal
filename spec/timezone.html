@@ -138,7 +138,7 @@
       <emu-alg>
         1. Let _timeZone_ be the *this* value.
         1. Perform ? RequireInternalSlot(_timeZone_, [[InitializedTemporalTimeZone]]).
-        1. Perform ? RequireInternalSlot(_instant_, [[InitializedTemporalInstant]]).
+        1. Set _instant_ to ? ToTemporalInstant(_instant_).
         1. Let _offset_ be ! ParseOffsetNanoseconds(_timeZone_.[[Identifier]]).
         1. If _offset_ is not *undefined*, then
           1. Return _offset_.
@@ -167,7 +167,7 @@
       <emu-alg>
         1. Let _timeZone_ be the *this* value.
         1. Perform ? RequireInternalSlot(_timeZone_, [[InitializedTemporalTimeZone]]).
-        1. Perform ? RequireInternalSlot(_instant_, [[InitializedTemporalInstant]]).
+        1. Set _instant_ to ? ToTemporalInstant(_instant_).
         1. Let _offsetNanoseconds_ be ? GetOffsetNanosecondsFor(_timeZone_, _instant_).
         1. Return ? FormatTimeZoneOffsetString(_offsetNanoseconds_).
       </emu-alg>
@@ -184,7 +184,7 @@
       </p>
       <emu-alg>
         1. Let _timeZone_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_instant_, [[InitializedTemporalInstant]]).
+        1. Set _instant_ to ? ToTemporalInstant(_instant_).
         1. If _calendarLike_ is *undefined*, then
           1. Let _calendar_ be ! GetISO8601Calendar().
         1. Else,
@@ -209,7 +209,7 @@
       <emu-alg>
         1. Let _timeZone_ be the *this* value.
         1. Perform ? RequireInternalSlot(_timeZone_, [[InitializedTemporalTimeZone]]).
-        1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
+        1. Set _dateTime_ to ? ToTemporalDateTime(_dateTime_).
         1. Set _options_ to ? NormalizeOptionsObject(_options_).
         1. Let _disambiguation_ be ? ToTemporalDisambiguation(_options_).
         1. Let _possibleInstants_ be ? GetPossibleInstantsFor(_timeZone_, _dateTime_).
@@ -239,7 +239,7 @@
       <emu-alg>
         1. Let _timeZone_ be the *this* value.
         1. Perform ? RequireInternalSlot(_timeZone_, [[InitializedTemporalTimezone]]).
-        1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
+        1. Set _dateTime_ to ? ToTemporalDateTime(_dateTime_).
         1. <mark>TODO.</mark>
       </emu-alg>
       <p>
@@ -256,7 +256,7 @@
       <emu-alg>
         1. Let _timeZone_ be the *this* value.
         1. Perform ? RequireInternalSlot(_timeZone_, [[InitializedTemporalTimeZone]]).
-        1. Perform ? RequireInternalSlot(_startingPoint_, [[InitializedTemporalInstant]]).
+        1. Set _startingPoint_ to ? ToTemporalInstant(_startingPoint_).
         1. <mark>TODO.</mark>
       </emu-alg>
     </emu-clause>
@@ -270,7 +270,7 @@
       <emu-alg>
         1. Let _timeZone_ be the *this* value.
         1. Perform ? RequireInternalSlot(_timeZone_, [[InitializedTemporalTimeZone]]).
-        1. Perform ? RequireInternalSlot(_startingPoint_, [[InitializedTemporalInstant]]).
+        1. Set _startingPoint_ to ? ToTemporalInstant(_startingPoint_).
         1. <mark>TODO.</mark>
       </emu-alg>
     </emu-clause>

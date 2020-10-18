@@ -129,11 +129,11 @@ Effectively, this is the canonicalized version of whatever `timeZoneIdentifier` 
 
 ## Methods
 
-### timeZone.**getOffsetNanosecondsFor**(_instant_: Temporal.Instant) : number
+### timeZone.**getOffsetNanosecondsFor**(_instant_: Temporal.Instant | string) : number
 
 **Parameters:**
 
-- `instant` (`Temporal.Instant`): The time for which to compute the time zone's UTC offset.
+- `instant` (`Temporal.Instant` or value convertible to one): The time for which to compute the time zone's UTC offset.
 
 **Returns:** The UTC offset at the given time, in nanoseconds.
 
@@ -141,6 +141,8 @@ Since the UTC offset can change throughout the year in time zones that employ DS
 
 Note that only `Temporal.TimeZone` objects constructed from an IANA time zone name may have DST transitions; those constructed from a UTC offset do not.
 If `timeZone` is a UTC offset time zone, the return value of this method is always the same regardless of `instant`.
+
+If `instant` is not a `Temporal.Instant` object, then it will be converted to one as if it were passed to `Temporal.Instant.from()`.
 
 Example usage:
 
@@ -159,21 +161,23 @@ tz.getOffsetNanosecondsFor(timestamp); // => 0
 
 // Differences between DST and non-DST
 tz = Temporal.TimeZone.from('Europe/London');
-tz.getOffsetNanosecondsFor(Temporal.Instant.from('2020-08-06T15:00Z')); // => 3600000000000
-tz.getOffsetNanosecondsFor(Temporal.Instant.from('2020-11-06T01:00Z')); // => 0
+tz.getOffsetNanosecondsFor('2020-08-06T15:00Z'); // => 3600000000000
+tz.getOffsetNanosecondsFor('2020-11-06T01:00Z'); // => 0
 ```
 
-### timeZone.**getOffsetStringFor**(_instant_: Temporal.Instant) : string
+### timeZone.**getOffsetStringFor**(_instant_: Temporal.Instant | string) : string
 
 **Parameters:**
 
-- `instant` (`Temporal.Instant`): The time for which to compute the time zone's UTC offset.
+- `instant` (`Temporal.Instant` or value convertible to one): The time for which to compute the time zone's UTC offset.
 
 **Returns**: a string indicating the UTC offset at the given time.
 
 This method is similar to `timeZone.getOffsetNanosecondsFor()`, but returns the offset formatted as a string, with sign, hours, and minutes.
 
 If `timeZone` is a UTC offset time zone, the return value of this method is effectively the same as `timeZone.id`.
+
+If `instant` is not a `Temporal.Instant` object, then it will be converted to one as if it were passed to `Temporal.Instant.from()`.
 
 Example usage:
 
@@ -188,17 +192,19 @@ tz = Temporal.TimeZone.from('-08:00');
 tz.getOffsetStringFor(timestamp); // => -08:00
 ```
 
-### timeZone.**getZonedDateTimeFor**(_instant_: Temporal.Instant, _calendar_?: object | string) : Temporal.ZonedDateTime
+### timeZone.**getZonedDateTimeFor**(_instant_: Temporal.Instant | string, _calendar_?: object | string) : Temporal.ZonedDateTime
 
 **Parameters:**
 
-- `instant` (`Temporal.Instant`): An exact time to convert.
+- `instant` (`Temporal.Instant` or value convertible to one): An exact time to convert.
 - `calendar` (optional object or string): A `Temporal.Calendar` object, or a plain object, or a calendar identifier.
   The default is to use the ISO 8601 calendar.
 
 **Returns:** A `Temporal.ZonedDateTime` object indicating the calendar date and wall-clock time in `timeZone`, according to the reckoning of `calendar`, at the exact time indicated by `instant`.
 
 This method is one way to convert a `Temporal.Instant` to a `Temporal.ZonedDateTime`.
+
+If `instant` is not a `Temporal.Instant` object, then it will be converted to one as if it were passed to `Temporal.Instant.from()`.
 
 Example usage:
 
@@ -214,17 +220,19 @@ tz = Temporal.TimeZone.from('America/New_York');
 tz.getZonedDateTimeFor(epoch); // => 1969-12-31T19:00-05:00[America/New_York]
 ```
 
-### timeZone.**getDateTimeFor**(_instant_: Temporal.Instant, _calendar_?: object | string) : Temporal.DateTime
+### timeZone.**getDateTimeFor**(_instant_: Temporal.Instant | string, _calendar_?: object | string) : Temporal.DateTime
 
 **Parameters:**
 
-- `instant` (`Temporal.Instant`): An exact time to convert.
+- `instant` (`Temporal.Instant` or value convertible to one): An exact time to convert.
 - `calendar` (optional object or string): A `Temporal.Calendar` object, or a plain object, or a calendar identifier.
   The default is to use the ISO 8601 calendar.
 
 **Returns:** A `Temporal.DateTime` object indicating the calendar date and wall-clock time in `timeZone`, according to the reckoning of `calendar`, at the exact time indicated by `instant`.
 
 This method is one way to convert a `Temporal.Instant` to a `Temporal.DateTime`.
+
+If `instant` is not a `Temporal.Instant` object, then it will be converted to one as if it were passed to `Temporal.Instant.from()`.
 
 Example usage:
 
@@ -240,11 +248,11 @@ tz = Temporal.TimeZone.from('America/New_York');
 tz.getDateTimeFor(epoch); // => 1969-12-31T19:00
 ```
 
-### timeZone.**getInstantFor**(_dateTime_: Temporal.DateTime, _options_?: object) : Temporal.Instant
+### timeZone.**getInstantFor**(_dateTime_: Temporal.DateTime | object | string, _options_?: object) : Temporal.Instant
 
 **Parameters:**
 
-- `dateTime` (`Temporal.DateTime`): A calendar date and wall-clock time to convert.
+- `dateTime` (`Temporal.DateTime` or value convertible to one): A calendar date and wall-clock time to convert.
 - `options` (optional object): An object with properties representing options for the operation.
   The following options are recognized:
   - `disambiguation` (string): How to disambiguate if the date and time given by `dateTime` does not exist in the time zone, or exists more than once.
@@ -254,7 +262,9 @@ tz.getDateTimeFor(epoch); // => 1969-12-31T19:00
 **Returns:** A `Temporal.Instant` object indicating the exact time in `timeZone` at the time of the calendar date and wall-clock time from `dateTime`.
 
 This method is one way to convert a `Temporal.DateTime` to a `Temporal.Instant`.
-It is identical to [`dateTime.toInstant(timeZone, disambiguation)`](./datetime.html#toInstant).
+The result is identical to [`Temporal.DateTime.from(dateTime).toInstant(timeZone, disambiguation)`](./datetime.html#toInstant).
+
+If `dateTime` is not a `Temporal.DateTime` object, then it will be converted to one as if it were passed to `Temporal.DateTime.from()`.
 
 In the case of ambiguity, the `disambiguation` option controls what instant to return:
 
@@ -273,15 +283,17 @@ For usage examples and a more complete explanation of how this disambiguation wo
 
 If the result is earlier or later than the range that `Temporal.Instant` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then a `RangeError` will be thrown, no matter the value of `disambiguation`.
 
-### timeZone.**getPossibleInstantsFor**(_dateTime_: Temporal.DateTime) : array&lt;Temporal.Instant&gt;
+### timeZone.**getPossibleInstantsFor**(_dateTime_: Temporal.DateTime | object | string) : array&lt;Temporal.Instant&gt;
 
 **Parameters:**
 
-- `dateTime` (`Temporal.DateTime`): A calendar date and wall-clock time to convert.
+- `dateTime` (`Temporal.DateTime` or value convertible to one): A calendar date and wall-clock time to convert.
 
 **Returns:** An array of `Temporal.Instant` objects, which may be empty.
 
 This method returns an array of all the possible exact times that could correspond to the calendar date and wall-clock time indicated by `dateTime`.
+
+If `dateTime` is not a `Temporal.DateTime` object, then it will be converted to one as if it were passed to `Temporal.DateTime.from()`.
 
 Normally there is only one possible exact time corresponding to a wall-clock time, but around a daylight saving change, a wall-clock time may not exist, or the same wall-clock time may exist twice in a row.
 See [Resolving ambiguity](./ambiguity.md) for usage examples and a more complete explanation.
@@ -289,11 +301,11 @@ See [Resolving ambiguity](./ambiguity.md) for usage examples and a more complete
 Although this method is useful for implementing a custom time zone or custom disambiguation behaviour, usually you won't have to use this method; `Temporal.TimeZone.prototype.getInstantFor()` will be more convenient for most use cases.
 During "skipped" clock time like the hour after DST starts in the Spring, `Temporal.TimeZone.prototype.getInstantFor()` returns a `Temporal.Instant` (by default interpreting the `Temporal.DateTime` using the pre-transition time zone offset), while this method returns zero results during those skipped periods.
 
-### timeZone.**getNextTransition**(_startingPoint_: Temporal.Instant) : Temporal.Instant
+### timeZone.**getNextTransition**(_startingPoint_: Temporal.Instant | string) : Temporal.Instant
 
 **Parameters:**
 
-- `startingPoint` (`Temporal.Instant`): Time after which to find the next DST transition.
+- `startingPoint` (`Temporal.Instant` or value convertible to one): Time after which to find the next DST transition.
 
 **Returns:** A `Temporal.Instant` object representing the next DST transition in this time zone, or `null` if no transitions later than `startingPoint` could be found.
 
@@ -301,6 +313,8 @@ This method is used to calculate future DST transitions after `startingPoint` fo
 
 Note that if the time zone was constructed from a UTC offset, there will be no DST transitions.
 In that case, this method will return `null`.
+
+If `instant` is not a `Temporal.Instant` object, then it will be converted to one as if it were passed to `Temporal.Instant.from()`.
 
 Example usage:
 
@@ -313,11 +327,11 @@ duration = nextTransition.difference(now);
 duration.toLocaleString(); // output will vary
 ```
 
-### timeZone.**getPreviousTransition**(_startingPoint_: Temporal.Instant) : Temporal.Instant
+### timeZone.**getPreviousTransition**(_startingPoint_: Temporal.Instant | string) : Temporal.Instant
 
 **Parameters:**
 
-- `startingPoint` (`Temporal.Instant`): Time before which to find the previous DST transition.
+- `startingPoint` (`Temporal.Instant` or value convertible to one): Time before which to find the previous DST transition.
 
 **Returns:** A `Temporal.Instant` object representing the previous DST transition in this time zone, or `null` if no transitions earlier than `startingPoint` could be found.
 
@@ -325,6 +339,8 @@ This method is used to calculate past DST transitions before `startingPoint` for
 
 Note that if the time zone was constructed from a UTC offset, there will be no DST transitions.
 In that case, this method will return `null`.
+
+If `instant` is not a `Temporal.Instant` object, then it will be converted to one as if it were passed to `Temporal.Instant.from()`.
 
 Example usage:
 
