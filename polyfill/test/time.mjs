@@ -645,9 +645,12 @@ describe('Time', () => {
     const t2 = Time.from('14:23:30.123');
     it('equal', () => assert(t1.equals(t1)));
     it('unequal', () => assert(!t1.equals(t2)));
-    it("doesn't cast argument", () => {
-      throws(() => t1.equals('08:44:15.321'), TypeError);
-      throws(() => t1.equals({ hour: 8, minute: 44, second: 15, millisecond: 321 }), TypeError);
+    it('casts argument', () => {
+      assert(t1.equals('08:44:15.321'));
+      assert(t1.equals({ hour: 8, minute: 44, second: 15, millisecond: 321 }));
+    });
+    it('object must contain at least one correctly-spelled property', () => {
+      throws(() => t1.equals({ hours: 8 }), TypeError);
     });
   });
   describe("Comparison operators don't work", () => {

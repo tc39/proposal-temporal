@@ -556,7 +556,7 @@ export class DateTime {
   }
   equals(other) {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-    if (!ES.IsTemporalDateTime(other)) throw new TypeError('invalid Date object');
+    other = ES.ToTemporalDateTime(other, DateTime);
     for (const slot of [ISO_YEAR, ISO_MONTH, ISO_DAY, HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND]) {
       const val1 = GetSlot(this, slot);
       const val2 = GetSlot(other, slot);

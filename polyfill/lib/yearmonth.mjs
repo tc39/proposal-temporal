@@ -204,7 +204,7 @@ export class YearMonth {
   }
   equals(other) {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
-    if (!ES.IsTemporalYearMonth(other)) throw new TypeError('invalid YearMonth object');
+    other = ES.ToTemporalYearMonth(other, YearMonth);
     for (const slot of [ISO_YEAR, ISO_MONTH, ISO_DAY]) {
       const val1 = GetSlot(this, slot);
       const val2 = GetSlot(other, slot);

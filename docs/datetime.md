@@ -636,7 +636,7 @@ dt.round({ roundingIncrement: 30, smallestUnit: 'minute', roundingMode: 'floor' 
 ```
 <!-- prettier-ignore-end -->
 
-### datetime.**equals**(_other_: Temporal.DateTime) : boolean
+### datetime.**equals**(_other_: Temporal.DateTime | object | string) : boolean
 
 **Parameters:**
 
@@ -651,6 +651,8 @@ This function exists because it's not possible to compare using `datetime == oth
 If you don't need to know the order in which the two dates/times occur, then this function may be less typing and more efficient than `Temporal.DateTime.compare`.
 
 Note that this function will return `true` if the two date/times are equal, even if they are expressed in different calendar systems.
+
+If `other` is not a `Temporal.DateTime` object, then it will be converted to one as if it were passed to `Temporal.DateTime.from()`.
 
 Example usage:
 

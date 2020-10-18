@@ -498,11 +498,11 @@ date.toDateTime(noon).difference(other.toDateTime(noon), { largestUnit: 'hours' 
 ```
 <!-- prettier-ignore-end -->
 
-### date.**equals**(_other_: Temporal.Date) : boolean
+### date.**equals**(_other_: Temporal.Date | object | string) : boolean
 
 **Parameters:**
 
-- `other` (`Temporal.Date`): Another date to compare.
+- `other` (`Temporal.Date` or value convertible to one): Another date to compare.
 
 **Returns:** `true` if `date` and `other` are equal, or `false` if not.
 
@@ -513,6 +513,8 @@ This function exists because it's not possible to compare using `date == other` 
 If you don't need to know the order in which the two dates occur, then this function may be less typing and more efficient than `Temporal.Date.compare`.
 
 Note that this function will return `true` if the two dates are equal, even if they are expressed in different calendar systems.
+
+If `other` is not a `Temporal.Date` object, then it will be converted to one as if it were passed to `Temporal.Date.from()`.
 
 Example usage:
 

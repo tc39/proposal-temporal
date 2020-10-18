@@ -362,9 +362,12 @@ describe('DateTime', () => {
     const dt2 = DateTime.from('2019-10-29T10:46:38.271986102');
     it('equal', () => assert(dt1.equals(dt1)));
     it('unequal', () => assert(!dt1.equals(dt2)));
-    it("doesn't cast argument", () => {
-      throws(() => dt2.equals({ year: 1976, month: 11, day: 18, hour: 15 }), TypeError);
-      throws(() => dt2.equals('1976-11-18T15:23:30.123456789'), TypeError);
+    it('casts argument', () => {
+      assert(!dt2.equals({ year: 1976, month: 11, day: 18, hour: 15 }));
+      assert(!dt2.equals('1976-11-18T15:23:30.123456789'));
+    });
+    it('object must contain at least the required properties', () => {
+      throws(() => dt2.equals({ year: 1976 }), TypeError);
     });
   });
   describe("Comparison operators don't work", () => {

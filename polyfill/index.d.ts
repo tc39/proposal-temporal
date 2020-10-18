@@ -302,7 +302,7 @@ export namespace Temporal {
     readonly epochMilliseconds: number;
     readonly epochMicroseconds: bigint;
     readonly epochNanoseconds: bigint;
-    equals(other: Temporal.Instant): boolean;
+    equals(other: Temporal.Instant | string): boolean;
     add(durationLike: Temporal.Duration | DurationLike | string): Temporal.Instant;
     subtract(durationLike: Temporal.Duration | DurationLike | string): Temporal.Instant;
     difference(
@@ -518,7 +518,7 @@ export namespace Temporal {
     readonly daysInMonth: number;
     readonly monthsInYear: number;
     readonly isLeapYear: boolean;
-    equals(other: Temporal.Date): boolean;
+    equals(other: Temporal.Date | DateLike | string): boolean;
     with(dateLike: DateLike | string, options?: AssignmentOptions): Temporal.Date;
     withCalendar(calendar: CalendarProtocol | string): Temporal.Date;
     add(durationLike: Temporal.Duration | DurationLike | string, options?: ArithmeticOptions): Temporal.Date;
@@ -633,7 +633,7 @@ export namespace Temporal {
     readonly daysInMonth: number;
     readonly monthsInYear: number;
     readonly isLeapYear: boolean;
-    equals(other: Temporal.DateTime): boolean;
+    equals(other: Temporal.DateTime | DateTimeLike | string): boolean;
     with(dateTimeLike: DateTimeLike | string, options?: AssignmentOptions): Temporal.DateTime;
     withCalendar(calendar: CalendarProtocol | string): Temporal.DateTime;
     add(durationLike: Temporal.Duration | DurationLike | string, options?: ArithmeticOptions): Temporal.DateTime;
@@ -717,7 +717,7 @@ export namespace Temporal {
     readonly month: number;
     readonly day: number;
     readonly calendar: CalendarProtocol;
-    equals(other: Temporal.MonthDay): boolean;
+    equals(other: Temporal.MonthDay | MonthDayLike | string): boolean;
     with(monthDayLike: MonthDayLike, options?: AssignmentOptions): Temporal.MonthDay;
     toDateInYear(year: number | { era?: string | undefined; year: number }, options?: AssignmentOptions): Temporal.Date;
     getFields(): MonthDayFields;
@@ -777,11 +777,14 @@ export namespace Temporal {
     readonly millisecond: number;
     readonly microsecond: number;
     readonly nanosecond: number;
-    equals(other: Temporal.Time): boolean;
-    with(timeLike: Temporal.Time | TimeLike | string, options?: AssignmentOptions): Temporal.Time;
-    add(durationLike: Temporal.Time | Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.Time;
+    equals(other: Temporal.Time | TimeLike | string): boolean;
+    with(timeLike: Temporal.Time | TimeLike, options?: AssignmentOptions): Temporal.Time;
+    add(
+      durationLike: Temporal.Time | Temporal.Duration | DurationLike | string,
+      options?: ArithmeticOptions
+    ): Temporal.Time;
     subtract(
-      durationLike: Temporal.Time | Temporal.Duration | DurationLike,
+      durationLike: Temporal.Time | Temporal.Duration | DurationLike | string,
       options?: ArithmeticOptions
     ): Temporal.Time;
     difference(
@@ -905,7 +908,7 @@ export namespace Temporal {
     readonly daysInYear: number;
     readonly monthsInYear: number;
     readonly isLeapYear: boolean;
-    equals(other: Temporal.YearMonth): boolean;
+    equals(other: Temporal.YearMonth | YearMonthLike | string): boolean;
     with(yearMonthLike: YearMonthLike, options?: AssignmentOptions): Temporal.YearMonth;
     add(durationLike: Temporal.Duration | DurationLike | string, options?: ArithmeticOptions): Temporal.YearMonth;
     subtract(durationLike: Temporal.Duration | DurationLike | string, options?: ArithmeticOptions): Temporal.YearMonth;

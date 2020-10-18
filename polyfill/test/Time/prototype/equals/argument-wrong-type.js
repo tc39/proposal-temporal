@@ -8,12 +8,12 @@ features: [Symbol]
 
 const instance = Temporal.Time.from({ minute: 34, second: 56, millisecond: 987, microsecond: 654, nanosecond: 321 });
 
-assert.throws(TypeError, () => instance.equals(undefined), "undefined");
-assert.throws(TypeError, () => instance.equals(null), "null");
-assert.throws(TypeError, () => instance.equals(true), "true");
-assert.throws(TypeError, () => instance.equals(""), "empty string");
+assert.throws(RangeError, () => instance.equals(undefined), "undefined");
+assert.throws(RangeError, () => instance.equals(null), "null");
+assert.throws(RangeError, () => instance.equals(true), "true");
+assert.throws(RangeError, () => instance.equals(""), "empty string");
 assert.throws(TypeError, () => instance.equals(Symbol()), "symbol");
-assert.throws(TypeError, () => instance.equals(1), "1");
+assert.throws(RangeError, () => instance.equals(1), "1");
 assert.throws(TypeError, () => instance.equals({}), "plain object");
 assert.throws(TypeError, () => instance.equals(Temporal.Time), "Temporal.Time");
 assert.throws(TypeError, () => instance.equals(Temporal.Time.prototype), "Temporal.Time.prototype");

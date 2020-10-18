@@ -448,9 +448,10 @@ describe('Instant', () => {
     it('epoch equal', () => assert(i2.equals(i2)));
     it('cross epoch unequal', () => assert(!i1.equals(i2)));
     it('epoch unequal', () => assert(!i2.equals(i3)));
-    it("doesn't cast argument", () => {
-      throws(() => i1.equals(i1.epochNanoseconds), TypeError);
-      throws(() => i1.equals({}), TypeError);
+    it('casts argument', () => assert(i1.equals('1963-02-13T09:36:29.123456789Z')));
+    it('casts only from string', () => {
+      throws(() => i1.equals(i1.epochNanoseconds), RangeError);
+      throws(() => i1.equals({}), RangeError);
     });
   });
   describe("Comparison operators don't work", () => {

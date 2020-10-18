@@ -191,9 +191,12 @@ describe('YearMonth', () => {
     const jun13 = YearMonth.from('2013-06');
     it('equal', () => assert(nov94.equals(nov94)));
     it('unequal', () => assert(!nov94.equals(jun13)));
-    it("doesn't cast argument", () => {
-      throws(() => nov94.equals({ year: 1994, month: 11 }), TypeError);
-      throws(() => nov94.equals('1994-11'), TypeError);
+    it('casts argument', () => {
+      assert(nov94.equals({ year: 1994, month: 11 }));
+      assert(nov94.equals('1994-11'));
+    });
+    it('object must contain at least the required properties', () => {
+      throws(() => nov94.equals({ year: 1994 }), TypeError);
     });
     it('takes [[ISODay]] into account', () => {
       const iso = Temporal.Calendar.from('iso8601');

@@ -467,7 +467,7 @@
       <emu-alg>
         1. Let _temporalDate_ be the *this* value.
         1. Perform ? RequireInternalSlot(_temporalDate_, [[InitializedTemporalDate]]).
-        1. Perform ? RequireInternalSlot(_other_, [[InitializedTemporalDate]]).
+        1. Set _other_ to ? ToTemporalDate(_other_).
         1. If _temporalDate_.[[ISOYear]] ≠ _other_.[[ISOYear]], return *false*.
         1. If _temporalDate_.[[ISOMonth]] ≠ _other_.[[ISOMonth]], return *false*.
         1. If _temporalDate_.[[ISODay]] ≠ _other_.[[ISODay]], return *false*.

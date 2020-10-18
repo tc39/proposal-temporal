@@ -344,7 +344,7 @@
       <emu-alg>
         1. Let _temporalTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_temporalTime_, [[InitializedTemporalTime]]).
-        1. Perform ? RequireInternalSlot(_other_, [[InitializedTemporalTime]]).
+        1. Set _other_ to ? ToTemporalTime(_other_).
         1. If _temporalTime_.[[Hour]] ≠ _other_.[[Hour]], return *false*.
         1. If _temporalTime_.[[Minute]] ≠ _other_.[[Minute]], return *false*.
         1. If _temporalTime_.[[Second]] ≠ _other_.[[Second]], return *false*.

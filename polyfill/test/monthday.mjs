@@ -162,9 +162,12 @@ describe('MonthDay', () => {
     const md2 = MonthDay.from('12-15');
     it('equal', () => assert(md1.equals(md1)));
     it('unequal', () => assert(!md1.equals(md2)));
-    it("doesn't cast argument", () => {
-      throws(() => md1.equals('01-22'), TypeError);
-      throws(() => md1.equals({ month: 1, day: 22 }), TypeError);
+    it('casts argument', () => {
+      assert(md1.equals('01-22'));
+      assert(md1.equals({ month: 1, day: 22 }));
+    });
+    it('object must contain at least the required properties', () => {
+      throws(() => md1.equals({ month: 1 }), TypeError);
     });
     it('takes [[ISOYear]] into account', () => {
       const iso = Temporal.Calendar.from('iso8601');
