@@ -502,11 +502,11 @@ dt.subtract({ months: 1 }, { overflow: 'constrain' }); // => 2019-02-28T15:30
 dt.subtract({ months: 1 }); // => throws
 ```
 
-### datetime.**difference**(_other_: Temporal.DateTime, _options_?: object) : Temporal.Duration
+### datetime.**difference**(_other_: Temporal.DateTime | object | string, _options_?: object) : Temporal.Duration
 
 **Parameters:**
 
-- `other` (`Temporal.DateTime`): Another date/time with which to compute the difference.
+- `other` (`Temporal.DateTime` or value convertible to one): Another date/time with which to compute the difference.
 - `options` (optional object): An object with properties representing options for the operation.
   The following options are recognized:
   - `largestUnit` (string): The largest unit of time to allow in the resulting `Temporal.Duration` object.
@@ -525,6 +525,8 @@ dt.subtract({ months: 1 }); // => throws
 
 This method computes the difference between the two times represented by `datetime` and `other`, optionally rounds it, and returns it as a `Temporal.Duration` object.
 If `other` is later than `datetime` then the resulting duration will be negative.
+
+If `other` is not a `Temporal.DateTime` object, then it will be converted to one as if it were passed to `Temporal.DateTime.from()`.
 
 The `largestUnit` option controls how the resulting duration is expressed.
 The returned `Temporal.Duration` object will not have any nonzero fields that are larger than the unit in `largestUnit`.

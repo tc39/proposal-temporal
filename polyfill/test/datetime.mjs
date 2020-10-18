@@ -498,9 +498,9 @@ describe('DateTime', () => {
   });
   describe('DateTime.difference()', () => {
     const dt = DateTime.from('1976-11-18T15:23:30.123456789');
-    it("doesn't cast argument", () => {
-      throws(() => dt.difference({ year: 2019, month: 10, day: 29, hour: 10 }), TypeError);
-      throws(() => dt.difference('2019-10-29T10:46:38.271986102'), TypeError);
+    it('casts argument', () => {
+      equal(`${dt.difference({ year: 2019, month: 10, day: 29, hour: 10 })}`, '-P15684DT18H36M29.876543211S');
+      equal(`${dt.difference('2019-10-29T10:46:38.271986102')}`, '-P15684DT19H23M8.148529313S');
     });
     const feb20 = DateTime.from('2020-02-01T00:00');
     const feb21 = DateTime.from('2021-02-01T00:00');

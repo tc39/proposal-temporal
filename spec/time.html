@@ -294,7 +294,7 @@
       <emu-alg>
         1. Let _temporalTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_temporalTime_, [[InitializedTemporalTime]]).
-        1. Perform ? RequireInternalSlot(_other_, [[InitializedTemporalTime]]).
+        1. Set _other_ to ? ToTemporalTime(_other_).
         1. Set _options_ to ? NormalizeOptionsObject(_options_).
         1. Let _smallestUnit_ be ? ToSmallestTemporalDurationUnit(_options_, « *"years"*, *"months"*, *"weeks"*, *"days"* », *"nanoseconds"*).
         1. Let _largestUnit_ be ? ToLargestTemporalUnit(_options_, « *"years"*, *"months"*, *"weeks"*, *"days"* », *"hours"*).

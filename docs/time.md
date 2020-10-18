@@ -262,11 +262,11 @@ time = Temporal.Time.from('19:39:09.068346205');
 time.subtract({ minutes: 5, nanoseconds: 800 }); // => 19:34:09.068345405
 ```
 
-### time.**difference**(_other_: Temporal.Time, _options_?: object) : Temporal.Duration
+### time.**difference**(_other_: Temporal.Time | object | string, _options_?: object) : Temporal.Duration
 
 **Parameters:**
 
-- `other` (`Temporal.Time`): Another time with which to compute the difference.
+- `other` (`Temporal.Time` or value convertible to one): Another time with which to compute the difference.
 - `options` (optional object): An object with properties representing options for the operation.
   The following options are recognized:
   - `largestUnit` (string): The largest unit of time to allow in the resulting `Temporal.Duration` object.
@@ -285,6 +285,8 @@ time.subtract({ minutes: 5, nanoseconds: 800 }); // => 19:34:09.068345405
 
 This method computes the difference between the two times represented by `time` and `other`, optionally rounds it, and returns it as a `Temporal.Duration` object.
 If `other` is later than `time` then the resulting duration will be negative.
+
+If `other` is not a `Temporal.Time` object, then it will be converted to one as if it were passed to `Temporal.Time.from()`.
 
 The `largestUnit` parameter controls how the resulting duration is expressed.
 The returned `Temporal.Duration` object will not have any nonzero fields that are larger than the unit in `largestUnit`.

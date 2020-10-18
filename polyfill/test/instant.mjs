@@ -472,9 +472,12 @@ describe('Instant', () => {
       equal(`${earlier.difference(later)}`, `${diff.negated()}`));
     it(`(${earlier}).add(${diff}) == (${later})`, () => assert(earlier.add(diff).equals(later)));
     it(`(${later}).subtract(${diff}) == (${earlier})`, () => assert(later.subtract(diff).equals(earlier)));
-    it("doesn't cast argument", () => {
-      throws(() => earlier.difference(later.toString()), TypeError);
-      throws(() => earlier.difference({}), TypeError);
+    it('casts argument from string', () => {
+      equal(`${later.difference(earlier.toString())}`, `${diff}`);
+    });
+    it('only casts from a string', () => {
+      throws(() => later.difference(earlier.epochNanoseconds), RangeError);
+      throws(() => earlier.difference({}), RangeError);
     });
     const feb20 = Instant.from('2020-02-01T00:00Z');
     const feb21 = Instant.from('2021-02-01T00:00Z');

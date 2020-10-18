@@ -433,11 +433,11 @@ date.subtract({ months: 1 }); // => 2019-02-28
 date.subtract({ months: 1 }, { overflow: 'reject' }); // => throws
 ```
 
-### date.**difference**(_other_: Temporal.Date, _options_?: object) : Temporal.Duration
+### date.**difference**(_other_: Temporal.Date | object | string, _options_?: object) : Temporal.Duration
 
 **Parameters:**
 
-- `other` (`Temporal.Date`): Another date with which to compute the difference.
+- `other` (`Temporal.Date` or value convertible to one): Another date with which to compute the difference.
 - `options` (optional object): An object with properties representing options for the operation.
   The following options are recognized:
   - `largestUnit` (optional string): The largest unit of time to allow in the resulting `Temporal.Duration` object.
@@ -456,6 +456,8 @@ date.subtract({ months: 1 }, { overflow: 'reject' }); // => throws
 
 This method computes the difference between the two dates represented by `date` and `other`, optionally rounds it, and returns it as a `Temporal.Duration` object.
 If `other` is later than `date` then the resulting duration will be negative.
+
+If `other` is not a `Temporal.Date` object, then it will be converted to one as if it were passed to `Temporal.Date.from()`.
 
 The `largestUnit` option controls how the resulting duration is expressed.
 The returned `Temporal.Duration` object will not have any nonzero fields that are larger than the unit in `largestUnit`.

@@ -103,7 +103,7 @@ export class Instant {
   }
   difference(other, options = undefined) {
     if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
-    if (!ES.IsTemporalInstant(other)) throw new TypeError('invalid Instant object');
+    other = ES.ToTemporalInstant(other, Instant);
     const disallowedUnits = ['years', 'months', 'weeks', 'days'];
     options = ES.NormalizeOptionsObject(options);
     const smallestUnit = ES.ToSmallestTemporalDurationUnit(options, 'nanoseconds', disallowedUnits);

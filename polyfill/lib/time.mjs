@@ -258,7 +258,7 @@ export class Time {
   }
   difference(other, options = undefined) {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
-    if (!ES.IsTemporalTime(other)) throw new TypeError('invalid Time object');
+    other = ES.ToTemporalTime(other, Time);
     options = ES.NormalizeOptionsObject(options);
     const largestUnit = ES.ToLargestTemporalUnit(options, 'hours', ['years', 'months', 'weeks', 'days']);
     const smallestUnit = ES.ToSmallestTemporalDurationUnit(options, 'nanoseconds');
