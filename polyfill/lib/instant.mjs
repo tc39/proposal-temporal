@@ -213,7 +213,7 @@ export class Instant {
   }
   equals(other) {
     if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
-    if (!ES.IsTemporalInstant(other)) throw new TypeError('invalid Instant object');
+    other = ES.ToTemporalInstant(other, Instant);
     const one = GetSlot(this, EPOCHNANOSECONDS);
     const two = GetSlot(other, EPOCHNANOSECONDS);
     return bigInt(one).equals(two);

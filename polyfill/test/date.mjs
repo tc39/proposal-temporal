@@ -706,9 +706,12 @@ describe('Date', () => {
     const d2 = Date.from('2019-06-30');
     it('equal', () => assert(d1.equals(d1)));
     it('unequal', () => assert(!d1.equals(d2)));
-    it("doesn't cast argument", () => {
-      throws(() => d2.equals({ year: 1976, month: 11, day: 18 }), TypeError);
-      throws(() => d2.equals('1976-11-18'), TypeError);
+    it('casts argument', () => {
+      assert(!d2.equals({ year: 1976, month: 11, day: 18 }));
+      assert(!d2.equals('1976-11-18'));
+    });
+    it('object must contain at least the required properties', () => {
+      throws(() => d2.equals({ year: 1976 }), TypeError);
     });
   });
   describe("Comparison operators don't work", () => {

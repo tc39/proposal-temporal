@@ -367,11 +367,11 @@ time.round({ roundingIncrement: 30, smallestUnit: 'minute', roundingMode: 'ceil'
 ```
 <!-- prettier-ignore-end -->
 
-### time.**equals**(_other_: Temporal.Time) : boolean
+### time.**equals**(_other_: Temporal.Time | object | string) : boolean
 
 **Parameters:**
 
-- `other` (`Temporal.Time`): Another time to compare.
+- `other` (`Temporal.Time` or value convertible to one): Another time to compare.
 
 **Returns:** `true` if `time` and `other` are equal, or `false` if not.
 
@@ -380,6 +380,8 @@ Compares two `Temporal.Time` objects for equality.
 This function exists because it's not possible to compare using `time == other` or `time === other`, due to ambiguity in the primitive representation and between Temporal types.
 
 If you don't need to know the order in which the two dates occur, then this function may be less typing and more efficient than `Temporal.Time.compare`.
+
+If `other` is not a `Temporal.Time` object, then it will be converted to one as if it were passed to `Temporal.Time.from()`.
 
 Example usage:
 

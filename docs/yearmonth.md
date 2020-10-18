@@ -365,16 +365,18 @@ other.difference(ym, { largestUnit: 'months' })  // => -P154M
 ym.toDateOnDay(1).difference(other.toDateOnDay(1), { largestUnit: 'days' });  // => P4687D
 ```
 
-### yearMonth.**equals**(_other_: Temporal.YearMonth) : boolean
+### yearMonth.**equals**(_other_: Temporal.YearMonth | object | string) : boolean
 
 **Parameters:**
-- `other` (`Temporal.YearMonth`): Another month to compare.
+- `other` (`Temporal.YearMonth` or value convertible to one): Another month to compare.
 
 **Returns:** `true` if `yearMonth` and `other` are equal, or `false` if not.
 
 Compares two `Temporal.YearMonth` objects for equality.
 
 This function exists because it's not possible to compare using `yearMonth == other` or `yearMonth === other`, due to ambiguity in the primitive representation and between Temporal types.
+
+If `other` is not a `Temporal.YearMonth` object, then it will be converted to one as if it were passed to `Temporal.YearMonth.from()`.
 
 Note that equality of two months from different calendar systems only makes sense in a few cases, such as when the two calendar systems both use the Gregorian year.
 

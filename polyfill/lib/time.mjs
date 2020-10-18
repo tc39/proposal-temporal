@@ -357,7 +357,7 @@ export class Time {
   }
   equals(other) {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
-    if (!ES.IsTemporalTime(other)) throw new TypeError('invalid Time object');
+    other = ES.ToTemporalTime(other, Time);
     for (const slot of [HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND]) {
       const val1 = GetSlot(this, slot);
       const val2 = GetSlot(other, slot);

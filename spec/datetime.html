@@ -550,7 +550,7 @@
       <emu-alg>
         1. Let _dateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
-        1. Perform ? RequireInternalSlot(_other_, [[InitializedTemporalDateTime]]).
+        1. Set _other_ to ? ToTemporalDateTime(_other_).
         1. If _dateTime_.[[ISOYear]] ≠ _other_.[[ISOYear]], return *false*.
         1. If _dateTime_.[[ISOMonth]] ≠ _other_.[[ISOMonth]], return *false*.
         1. If _dateTime_.[[ISODay]] ≠ _other_.[[ISODay]], return *false*.

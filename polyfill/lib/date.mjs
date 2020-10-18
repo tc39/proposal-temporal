@@ -227,7 +227,7 @@ export class Date {
   }
   equals(other) {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
-    if (!ES.IsTemporalDate(other)) throw new TypeError('invalid Date object');
+    other = ES.ToTemporalDate(other, Date);
     for (const slot of [ISO_YEAR, ISO_MONTH, ISO_DAY]) {
       const val1 = GetSlot(this, slot);
       const val2 = GetSlot(other, slot);

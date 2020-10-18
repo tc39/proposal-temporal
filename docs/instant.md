@@ -546,11 +546,11 @@ instant.round({ roundingIncrement: 60, smallestUnit: 'minute', roundingMode: 'fl
 ```
 <!-- prettier-ignore-end -->
 
-### instant.**equals**(_other_: Temporal.Instant) : boolean
+### instant.**equals**(_other_: Temporal.Instant | string) : boolean
 
 **Parameters:**
 
-- `other` (`Temporal.Instant`): Another exact time to compare.
+- `other` (`Temporal.Instant` or value convertible to one): Another exact time to compare.
 
 **Returns:** `true` if `instant` and `other` are equal, or `false` if not.
 
@@ -559,6 +559,8 @@ Compares two `Temporal.Instant` objects for equality.
 This function exists because it's not possible to compare using `instant == other` or `instant === other`, due to ambiguity in the primitive representation and between Temporal types.
 
 If you don't need to know the order in which the two times occur, then this function may be less typing and more efficient than `Temporal.Instant.compare`.
+
+If `other` is not a `Temporal.Instant` object, then it will be converted to one as if it were passed to `Temporal.Instant.from()`.
 
 Example usage:
 
