@@ -219,20 +219,26 @@ describe('TimeZone', () => {
   });
   describe('Casting', () => {
     const zone = Temporal.TimeZone.from('+03:30');
-    it("getOffsetNanosecondsFor() doesn't cast its argument", () => {
-      throws(() => zone.getOffsetNanosecondsFor(0n), TypeError);
-      throws(() => zone.getOffsetNanosecondsFor('2019-02-17T01:45Z'), TypeError);
-      throws(() => zone.getOffsetNanosecondsFor({}), TypeError);
+    it('getOffsetNanosecondsFor() casts its argument', () => {
+      equal(zone.getOffsetNanosecondsFor('2019-02-17T01:45Z'), 126e11);
     });
-    it("getOffsetStringFor() doesn't cast its argument", () => {
-      throws(() => zone.getOffsetStringFor(0n), TypeError);
-      throws(() => zone.getOffsetStringFor('2019-02-17T01:45Z'), TypeError);
-      throws(() => zone.getOffsetStringFor({}), TypeError);
+    it('getOffsetNanosecondsFor() casts only from string', () => {
+      throws(() => zone.getOffsetNanosecondsFor(0n), RangeError);
+      throws(() => zone.getOffsetNanosecondsFor({}), RangeError);
     });
-    it("getDateTimeFor() doesn't cast its argument", () => {
-      throws(() => zone.getDateTimeFor(0n), TypeError);
-      throws(() => zone.getDateTimeFor('2019-02-17T01:45Z'), TypeError);
-      throws(() => zone.getDateTimeFor({}), TypeError);
+    it('getOffsetStringFor() casts its argument', () => {
+      equal(zone.getOffsetStringFor('2019-02-17T01:45Z'), '+03:30');
+    });
+    it('getOffsetStringFor() casts only from string', () => {
+      throws(() => zone.getOffsetStringFor(0n), RangeError);
+      throws(() => zone.getOffsetStringFor({}), RangeError);
+    });
+    it('getDateTimeFor() casts its argument', () => {
+      equal(`${zone.getDateTimeFor('2019-02-17T01:45Z')}`, '2019-02-17T05:15');
+    });
+    it('getDateTimeFor() casts only from string', () => {
+      throws(() => zone.getDateTimeFor(0n), RangeError);
+      throws(() => zone.getDateTimeFor({}), RangeError);
     });
   });
   describe('TimeZone.getInstantFor() works', () => {
@@ -276,6 +282,18 @@ describe('TimeZone', () => {
       [{}, () => {}, undefined].forEach((options) =>
         equal(`${tz.getInstantFor(dt, options)}`, '2019-10-29T13:46:38.271986102Z')
       );
+    });
+    it('casts argument', () => {
+      const tz = Temporal.TimeZone.from('Europe/Amsterdam');
+      equal(`${tz.getInstantFor('2019-10-29T10:46:38.271986102')}`, '2019-10-29T09:46:38.271986102Z');
+      equal(
+        `${tz.getInstantFor({ year: 2019, month: 10, day: 29, hour: 10, minute: 46, second: 38 })}`,
+        '2019-10-29T09:46:38Z'
+      );
+    });
+    it('object must contain at least the required properties', () => {
+      const tz = Temporal.TimeZone.from('Europe/Amsterdam');
+      throws(() => tz.getInstantFor({ year: 2019 }), TypeError);
     });
   });
   describe('getInstantFor disambiguation', () => {
@@ -341,27 +359,58 @@ describe('TimeZone', () => {
       const namedTz = Temporal.TimeZone.from('America/Godthab');
       throws(() => namedTz.getPossibleInstantsFor(max), RangeError);
     });
+    it('casts argument', () => {
+      const tz = Temporal.TimeZone.from('+03:30');
+      deepEqual(
+        tz
+          .getPossibleInstantsFor({ year: 2019, month: 2, day: 16, hour: 23, minute: 45, second: 30 })
+          .map((a) => `${a}`),
+        ['2019-02-16T20:15:30Z']
+      );
+      deepEqual(
+        tz.getPossibleInstantsFor('2019-02-16T23:45:30').map((a) => `${a}`),
+        ['2019-02-16T20:15:30Z']
+      );
+    });
+    it('object must contain at least the required properties', () => {
+      const tz = Temporal.TimeZone.from('Europe/Amsterdam');
+      throws(() => tz.getPossibleInstantsFor({ year: 2019 }), TypeError);
+    });
   });
   describe('getNextTransition works', () => {
+    const nyc = Temporal.TimeZone.from('America/New_York');
     it('should not have bug #510', () => {
       // See https://github.com/tc39/proposal-temporal/issues/510 for more.
-      const nyc = Temporal.TimeZone.from('America/New_York');
       const a1 = Temporal.Instant.from('2019-04-16T21:01Z');
       const a2 = Temporal.Instant.from('1800-01-01T00:00Z');
 
       equal(nyc.getNextTransition(a1).toString(), '2019-11-03T06:00Z');
       equal(nyc.getNextTransition(a2).toString(), '1883-11-18T17:00Z');
     });
+    it('casts argument', () => {
+      equal(`${nyc.getNextTransition('2019-04-16T21:01Z')}`, '2019-11-03T06:00Z');
+    });
+    it('casts only from string', () => {
+      throws(() => nyc.getNextTransition(0n), RangeError);
+      throws(() => nyc.getNextTransition({}), RangeError);
+    });
   });
 
   describe('getPreviousTransition works', () => {
+    const london = Temporal.TimeZone.from('Europe/London');
     it('should return first and last transition', () => {
-      const london = Temporal.TimeZone.from('Europe/London');
       const a1 = Temporal.Instant.from('2020-06-11T21:01Z');
       const a2 = Temporal.Instant.from('1848-01-01T00:00Z');
 
       equal(london.getPreviousTransition(a1).toString(), '2020-03-29T01:00Z');
       equal(london.getPreviousTransition(a2).toString(), '1847-12-01T00:01:15Z');
+    });
+    it('casts argument', () => {
+      equal(`${london.getPreviousTransition('2020-06-11T21:01Z')}`, '2020-03-29T01:00Z');
+    });
+    it('casts only from string', () => {
+      throws(() => london.getPreviousTransition(0n), RangeError);
+      throws(() => london.getPreviousTransition({}), RangeError);
     });
   });
 });
