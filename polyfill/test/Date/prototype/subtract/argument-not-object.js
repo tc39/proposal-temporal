@@ -7,11 +7,10 @@ features: [Symbol]
 ---*/
 
 const instance = Temporal.Date.from({ year: 2000, month: 5, day: 2 });
-assert.throws(TypeError, () => instance.subtract(undefined), "undefined");
-assert.throws(TypeError, () => instance.subtract(null), "null");
-assert.throws(TypeError, () => instance.subtract(true), "boolean");
-assert.throws(TypeError, () => instance.subtract("P3D"), "string");
+assert.throws(RangeError, () => instance.subtract(undefined), "undefined");
+assert.throws(RangeError, () => instance.subtract(null), "null");
+assert.throws(RangeError, () => instance.subtract(true), "boolean");
+assert.throws(RangeError, () => instance.add(""), "empty string");
 assert.throws(TypeError, () => instance.subtract(Symbol()), "Symbol");
-assert.throws(TypeError, () => instance.subtract(7), "number");
-assert.throws(TypeError, () => instance.subtract(7n), "bigint");
-
+assert.throws(RangeError, () => instance.subtract(7), "number");
+assert.throws(RangeError, () => instance.subtract(7n), "bigint");

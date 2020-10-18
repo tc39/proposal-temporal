@@ -6,4 +6,6 @@ esid: sec-temporal.yearmonth.prototype.subtract
 ---*/
 
 const instance = Temporal.YearMonth.from({ year: 2000, month: 5 });
-assert.throws(TypeError, () => instance.subtract("P3M"));
+const result = instance.subtract("P3M");
+assert.sameValue(result.year, 2000, "year result");
+assert.sameValue(result.month, 2, "month result");

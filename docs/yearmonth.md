@@ -247,10 +247,10 @@ ym = Temporal.YearMonth.from('2019-06');
 ym.with({month: 12})  // => 2019-12
 ```
 
-### yearMonth.**add**(_duration_: object, _options_?: object) : Temporal.YearMonth
+### yearMonth.**add**(_duration_: Temporal.Duration | object | string, _options_?: object) : Temporal.YearMonth
 
 **Parameters:**
-- `duration` (object): A `Temporal.Duration` object or a duration-like object.
+- `duration` (`Temporal.Duration` or value convertible to one): The duration to add.
 - `options` (optional object): An object with properties representing options for the addition.
   The following options are recognized:
   - `overflow` (string): How to deal with additions that result in out-of-range values.
@@ -261,7 +261,8 @@ ym.with({month: 12})  // => 2019-12
 
 This method adds `duration` to `yearMonth`, returning a month that is in the future relative to `yearMonth`.
 
-The `duration` argument is an object with properties denoting a duration, such as `{ months: 5 }`, or a `Temporal.Duration` object.
+The `duration` argument is an object with properties denoting a duration, such as `{ months: 5 }`, or a string such as `P5M`, or a `Temporal.Duration` object.
+If `duration` is not a `Temporal.Duration` object, then it will be converted to one as if it were passed to `Temporal.Duration.from()`.
 
 If the result is earlier or later than the range of dates that `Temporal.YearMonth` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then this method will throw a `RangeError` regardless of `overflow`.
 
@@ -277,10 +278,10 @@ ym = Temporal.YearMonth.from('2019-06');
 ym.add({years: 20, months: 4})  // => 2039-10
 ```
 
-### yearMonth.**subtract**(_duration_: object, _options_?: object) : Temporal.YearMonth
+### yearMonth.**subtract**(_duration_: Temporal.Duration | object | string, _options_?: object) : Temporal.YearMonth
 
 **Parameters:**
-- `duration` (object): A `Temporal.Duration` object or a duration-like object.
+- `duration` (`Temporal.Duration` or value convertible to one): The duration to subtract.
 - `options` (optional object): An object with properties representing options for the subtraction.
   The following options are recognized:
   - `overflow` (string): How to deal with additions that result in out-of-range values.
@@ -291,7 +292,8 @@ ym.add({years: 20, months: 4})  // => 2039-10
 
 This method subtracts `duration` from `yearMonth`, returning a month that is in the future relative to `yearMonth`.
 
-The `duration` argument is an object with properties denoting a duration, such as `{ months: 5 }`, or a `Temporal.Duration` object.
+The `duration` argument is an object with properties denoting a duration, such as `{ months: 5 }`, or a string such as `P5M`, or a `Temporal.Duration` object.
+If `duration` is not a `Temporal.Duration` object, then it will be converted to one as if it were passed to `Temporal.Duration.from()`.
 
 If the result is earlier or later than the range of dates that `Temporal.YearMonth` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then this method will throw a `RangeError` regardless of `overflow`.
 

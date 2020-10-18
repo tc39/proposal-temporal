@@ -7,11 +7,10 @@ features: [Symbol]
 ---*/
 
 const instance = Temporal.YearMonth.from({ year: 2000, month: 5 });
-assert.throws(TypeError, () => instance.add(undefined), "undefined");
-assert.throws(TypeError, () => instance.add(null), "null");
-assert.throws(TypeError, () => instance.add(true), "boolean");
-assert.throws(TypeError, () => instance.add("P3M"), "string");
+assert.throws(RangeError, () => instance.add(undefined), "undefined");
+assert.throws(RangeError, () => instance.add(null), "null");
+assert.throws(RangeError, () => instance.add(true), "boolean");
+assert.throws(RangeError, () => instance.add(""), "empty string");
 assert.throws(TypeError, () => instance.add(Symbol()), "Symbol");
-assert.throws(TypeError, () => instance.add(7), "number");
-assert.throws(TypeError, () => instance.add(7n), "bigint");
-
+assert.throws(RangeError, () => instance.add(7), "number");
+assert.throws(RangeError, () => instance.add(7n), "bigint");

@@ -377,6 +377,9 @@ describe('Instant', () => {
       const later = inst.add(Temporal.Duration.from('PT240H0.000000800S'));
       equal(`${later}`, '1970-01-04T12:23:45.678902034Z');
     });
+    it('casts argument', () => {
+      equal(`${inst.add('PT240H0.000000800S')}`, '1970-01-04T12:23:45.678902034Z');
+    });
     it('invalid to add years, months, weeks, or days', () => {
       throws(() => inst.add({ years: 1 }), RangeError);
       throws(() => inst.add({ months: 1 }), RangeError);
@@ -399,6 +402,9 @@ describe('Instant', () => {
     it('inst.subtract(durationObj)', () => {
       const earlier = inst.subtract(Temporal.Duration.from('PT240H0.000000800S'));
       equal(`${earlier}`, '1969-12-15T12:23:45.678900434Z');
+    });
+    it('casts argument', () => {
+      equal(`${inst.subtract('PT240H0.000000800S')}`, '1969-12-15T12:23:45.678900434Z');
     });
     it('invalid to subtract years, months, weeks, or days', () => {
       throws(() => inst.subtract({ years: 1 }), RangeError);

@@ -267,8 +267,8 @@ export namespace Temporal {
     abs(): Temporal.Duration;
     isZero(): boolean;
     with(durationLike: DurationLike): Temporal.Duration;
-    add(other: Temporal.Duration | DurationLike, options?: DurationOptions): Temporal.Duration;
-    subtract(other: Temporal.Duration | DurationLike, options?: DurationOptions): Temporal.Duration;
+    add(other: Temporal.Duration | DurationLike | string, options?: DurationOptions): Temporal.Duration;
+    subtract(other: Temporal.Duration | DurationLike | string, options?: DurationOptions): Temporal.Duration;
     round(options: DurationRoundOptions): Temporal.Duration;
     getFields(): DurationFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
@@ -303,8 +303,8 @@ export namespace Temporal {
     readonly epochMicroseconds: bigint;
     readonly epochNanoseconds: bigint;
     equals(other: Temporal.Instant): boolean;
-    add(durationLike: Temporal.Duration | DurationLike): Temporal.Instant;
-    subtract(durationLike: Temporal.Duration | DurationLike): Temporal.Instant;
+    add(durationLike: Temporal.Duration | DurationLike | string): Temporal.Instant;
+    subtract(durationLike: Temporal.Duration | DurationLike | string): Temporal.Instant;
     difference(
       other: Temporal.Instant,
       options?: DifferenceOptions<
@@ -521,8 +521,8 @@ export namespace Temporal {
     equals(other: Temporal.Date): boolean;
     with(dateLike: DateLike | string, options?: AssignmentOptions): Temporal.Date;
     withCalendar(calendar: CalendarProtocol | string): Temporal.Date;
-    add(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.Date;
-    subtract(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.Date;
+    add(durationLike: Temporal.Duration | DurationLike | string, options?: ArithmeticOptions): Temporal.Date;
+    subtract(durationLike: Temporal.Duration | DurationLike | string, options?: ArithmeticOptions): Temporal.Date;
     difference(
       other: Temporal.Date,
       options?: DifferenceOptions<
@@ -636,8 +636,8 @@ export namespace Temporal {
     equals(other: Temporal.DateTime): boolean;
     with(dateTimeLike: DateTimeLike | string, options?: AssignmentOptions): Temporal.DateTime;
     withCalendar(calendar: CalendarProtocol | string): Temporal.DateTime;
-    add(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.DateTime;
-    subtract(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.DateTime;
+    add(durationLike: Temporal.Duration | DurationLike | string, options?: ArithmeticOptions): Temporal.DateTime;
+    subtract(durationLike: Temporal.Duration | DurationLike | string, options?: ArithmeticOptions): Temporal.DateTime;
     difference(
       other: Temporal.DateTime,
       options?: DifferenceOptions<
@@ -778,9 +778,12 @@ export namespace Temporal {
     readonly microsecond: number;
     readonly nanosecond: number;
     equals(other: Temporal.Time): boolean;
-    with(timeLike: TimeLike | string, options?: AssignmentOptions): Temporal.Time;
-    add(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.Time;
-    subtract(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.Time;
+    with(timeLike: Temporal.Time | TimeLike | string, options?: AssignmentOptions): Temporal.Time;
+    add(durationLike: Temporal.Time | Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.Time;
+    subtract(
+      durationLike: Temporal.Time | Temporal.Duration | DurationLike,
+      options?: ArithmeticOptions
+    ): Temporal.Time;
     difference(
       other: Temporal.Time,
       options?: DifferenceOptions<
@@ -904,8 +907,8 @@ export namespace Temporal {
     readonly isLeapYear: boolean;
     equals(other: Temporal.YearMonth): boolean;
     with(yearMonthLike: YearMonthLike, options?: AssignmentOptions): Temporal.YearMonth;
-    add(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.YearMonth;
-    subtract(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.YearMonth;
+    add(durationLike: Temporal.Duration | DurationLike | string, options?: ArithmeticOptions): Temporal.YearMonth;
+    subtract(durationLike: Temporal.Duration | DurationLike | string, options?: ArithmeticOptions): Temporal.YearMonth;
     difference(
       other: Temporal.YearMonth,
       options?: DifferenceOptions<'years' | 'months' | /** @deprecated */ 'year' | /** @deprecated */ 'month'>

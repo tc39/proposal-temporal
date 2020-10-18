@@ -6,4 +6,6 @@ esid: sec-temporal.yearmonth.prototype.add
 ---*/
 
 const instance = Temporal.YearMonth.from({ year: 2000, month: 5 });
-assert.throws(TypeError, () => instance.add("P3M"));
+const result = instance.add("P3M");
+assert.sameValue(result.year, 2000, "year result");
+assert.sameValue(result.month, 8, "month result");

@@ -6,4 +6,5 @@ esid: sec-temporal.instant.prototype.add
 ---*/
 
 const instance = Temporal.Instant.fromEpochSeconds(10);
-assert.throws(TypeError, () => instance.add("P3D"));
+const result = instance.add("PT3H");
+assert.sameValue(result.epochNanoseconds, 10_810_000_000_000n, "epochNanoseconds result");

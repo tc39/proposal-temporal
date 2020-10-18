@@ -676,6 +676,7 @@ describe('Time', () => {
     it('time.add(durationObj)', () => {
       equal(`${time.add(Temporal.Duration.from('PT16H'))}`, '07:23:30.123456789');
     });
+    it('casts argument', () => equal(`${time.add('PT16H')}`, '07:23:30.123456789'));
     it('ignores higher units', () => {
       equal(`${time.add({ days: 1 })}`, '15:23:30.123456789');
       equal(`${time.add({ months: 1 })}`, '15:23:30.123456789');
@@ -727,6 +728,7 @@ describe('Time', () => {
     it('time.subtract(durationObj)', () => {
       equal(`${time.subtract(Temporal.Duration.from('PT16H'))}`, '23:23:30.123456789');
     });
+    it('casts argument', () => equal(`${time.subtract('PT16H')}`, '23:23:30.123456789'));
     it('ignores higher units', () => {
       equal(`${time.subtract({ days: 1 })}`, '15:23:30.123456789');
       equal(`${time.subtract({ months: 1 })}`, '15:23:30.123456789');
