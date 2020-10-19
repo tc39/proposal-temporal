@@ -823,6 +823,7 @@ export namespace Temporal {
    */
   export interface TimeZoneProtocol {
     id?: string;
+    timeZone?: never;
     getOffsetNanosecondsFor(instant: Temporal.Instant): number;
     getOffsetStringFor?(instant: Temporal.Instant): string;
     getDateTimeFor(instant: Temporal.Instant, calendar?: CalendarProtocol | string): Temporal.DateTime;
@@ -847,7 +848,7 @@ export namespace Temporal {
    *
    * See https://tc39.es/proposal-temporal/docs/timezone.html for more details.
    */
-  export class TimeZone implements Required<TimeZoneProtocol> {
+  export class TimeZone implements Omit<Required<TimeZoneProtocol>, 'timeZone'> {
     static from(timeZone: Temporal.TimeZone | string): Temporal.TimeZone;
     constructor(timeZoneIdentifier: string);
     readonly id: string;
