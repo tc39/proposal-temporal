@@ -150,6 +150,32 @@ describe('Calendar', () => {
     });
   });
 });
+describe('Built-in calendars (not standardized yet)', () => {
+  describe('gregory', () => {
+    it('era AD', () => {
+      const date = Temporal.Date.from('1999-12-31[c=gregory]');
+      equal(date.era, 'ad');
+      equal(date.year, 1999);
+    });
+    it('era BC', () => {
+      const date = Temporal.Date.from('-000001-12-31[c=gregory]');
+      equal(date.era, 'bc');
+      equal(date.year, 2);
+    });
+    it('can create from fields with era AD', () => {
+      const date = Temporal.Date.from({ era: 'ad', year: 1999, month: 12, day: 31, calendar: 'gregory' });
+      equal(`${date}`, '1999-12-31[c=gregory]');
+    });
+    it('era AD is the default', () => {
+      const date = Temporal.Date.from({ year: 1999, month: 12, day: 31, calendar: 'gregory' });
+      equal(`${date}`, '1999-12-31[c=gregory]');
+    });
+    it('can create from fields with era BC', () => {
+      const date = Temporal.Date.from({ era: 'bc', year: 2, month: 12, day: 31, calendar: 'gregory' });
+      equal(`${date}`, '-000001-12-31[c=gregory]');
+    });
+  });
+});
 
 import { normalize } from 'path';
 if (normalize(import.meta.url.slice(8)) === normalize(process.argv[1])) {
