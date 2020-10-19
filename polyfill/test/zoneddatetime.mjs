@@ -551,6 +551,16 @@ describe('ZonedDateTime', () => {
       );
     });
   });
+  describe('.withTimeZone manipulation', () => {
+    it("zonedDateTime.withTimeZone('America/Los_Angeles') works", () => {
+      const instant = Temporal.Instant.from('2019-11-18T15:23:30.123456789-08:00[America/Los_Angeles]');
+      const zonedDateTime = instant.toZonedDateTime('UTC');
+      equal(
+        `${zonedDateTime.withTimeZone('America/Los_Angeles')}`,
+        '2019-11-18T15:23:30.123456789-08:00[America/Los_Angeles]'
+      );
+    });
+  });
 });
 
 import { normalize } from 'path';

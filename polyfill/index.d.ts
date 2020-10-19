@@ -834,17 +834,18 @@ export namespace Temporal {
    * A plain object implementing the protocol for a custom time zone.
    */
   export interface TimeZoneProtocol {
-    id?: string;
+    id: string;
     timeZone?: never;
     getOffsetNanosecondsFor(instant: Temporal.Instant): number;
-    getOffsetStringFor?(instant: Temporal.Instant): string;
+    getOffsetStringFor(instant: Temporal.Instant): string;
+    getZonedDateTimeFor(instant: Temporal.Instant, calendar?: CalendarProtocol | string): Temporal.ZonedDateTime;
     getDateTimeFor(instant: Temporal.Instant, calendar?: CalendarProtocol | string): Temporal.DateTime;
-    getInstantFor?(dateTime: Temporal.DateTime, options?: ToInstantOptions): Temporal.Instant;
-    getNextTransition?(startingPoint: Temporal.Instant): Temporal.Instant | null;
-    getPreviousTransition?(startingPoint: Temporal.Instant): Temporal.Instant | null;
+    getInstantFor(dateTime: Temporal.DateTime, options?: ToInstantOptions): Temporal.Instant;
+    getNextTransition(startingPoint: Temporal.Instant): Temporal.Instant | null;
+    getPreviousTransition(startingPoint: Temporal.Instant): Temporal.Instant | null;
     getPossibleInstantsFor(dateTime: Temporal.DateTime): Temporal.Instant[];
     toString(): string;
-    toJSON?(): string;
+    toJSON(): string;
   }
 
   /**
@@ -866,8 +867,8 @@ export namespace Temporal {
     readonly id: string;
     getOffsetNanosecondsFor(instant: Temporal.Instant): number;
     getOffsetStringFor(instant: Temporal.Instant): string;
-    getDateTimeFor(instant: Temporal.Instant, calendar?: CalendarProtocol | string): Temporal.DateTime;
     getZonedDateTimeFor(instant: Temporal.Instant, calendar?: CalendarProtocol | string): Temporal.ZonedDateTime;
+    getDateTimeFor(instant: Temporal.Instant, calendar?: CalendarProtocol | string): Temporal.DateTime;
     getInstantFor(dateTime: Temporal.DateTime, options?: ToInstantOptions): Temporal.Instant;
     getNextTransition(startingPoint: Temporal.Instant): Temporal.Instant | null;
     getPreviousTransition(startingPoint: Temporal.Instant): Temporal.Instant | null;

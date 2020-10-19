@@ -833,16 +833,17 @@ export namespace Temporal {
    * A plain object implementing the protocol for a custom time zone.
    */
   export interface TimeZoneProtocol {
-    id?: string;
+    id: string;
     getOffsetNanosecondsFor(instant: Temporal.Instant): number;
-    getOffsetStringFor?(instant: Temporal.Instant): string;
+    getOffsetStringFor(instant: Temporal.Instant): string;
+    getZonedDateTimeFor(instant: Temporal.Instant, calendar?: CalendarProtocol | string): Temporal.ZonedDateTime;
     getDateTimeFor(instant: Temporal.Instant, calendar?: CalendarProtocol | string): Temporal.DateTime;
-    getInstantFor?(dateTime: Temporal.DateTime, options?: ToInstantOptions): Temporal.Instant;
-    getNextTransition?(startingPoint: Temporal.Instant): Temporal.Instant | null;
-    getPreviousTransition?(startingPoint: Temporal.Instant): Temporal.Instant | null;
+    getInstantFor(dateTime: Temporal.DateTime, options?: ToInstantOptions): Temporal.Instant;
+    getNextTransition(startingPoint: Temporal.Instant): Temporal.Instant | null;
+    getPreviousTransition(startingPoint: Temporal.Instant): Temporal.Instant | null;
     getPossibleInstantsFor(dateTime: Temporal.DateTime): Temporal.Instant[];
     toString(): string;
-    toJSON?(): string;
+    toJSON(): string;
   }
 
   /**
@@ -859,13 +860,13 @@ export namespace Temporal {
    * See https://tc39.es/proposal-temporal/docs/timezone.html for more details.
    */
   export class TimeZone implements Required<TimeZoneProtocol> {
-    static from(timeZone: Temporal.TimeZone | string): Temporal.TimeZone;
+    static from(timeZone: Temporal.TimeZoneProtocol | string): Temporal.TimeZone;
     constructor(timeZoneIdentifier: string);
     readonly id: string;
     getOffsetNanosecondsFor(instant: Temporal.Instant): number;
     getOffsetStringFor(instant: Temporal.Instant): string;
-    getDateTimeFor(instant: Temporal.Instant, calendar?: CalendarProtocol | string): Temporal.DateTime;
     getZonedDateTimeFor(instant: Temporal.Instant, calendar?: CalendarProtocol | string): Temporal.ZonedDateTime;
+    getDateTimeFor(instant: Temporal.Instant, calendar?: CalendarProtocol | string): Temporal.DateTime;
     getInstantFor(dateTime: Temporal.DateTime, options?: ToInstantOptions): Temporal.Instant;
     getNextTransition(startingPoint: Temporal.Instant): Temporal.Instant | null;
     getPreviousTransition(startingPoint: Temporal.Instant): Temporal.Instant | null;
@@ -991,9 +992,10 @@ export namespace Temporal {
      * Get the current calendar date and clock time in a specific calendar and
      * time zone.
      *
-     * The calendar is required. When using the ISO 8601 calendar or if you
-     * don't understand the need for or implications of a calendar, then a more
-     * ergonomic alternative to this method is `Temporal.now.zonedDateTimeISO`.
+     * The `calendar` parameter is required. When using the ISO 8601 calendar or
+     * if you don't understand the need for or implications of a calendar, then
+     * a more ergonomic alternative to this method is
+     * `Temporal.now.dateTimeISO()`.
      *
      * @param {Temporal.Calendar | string} [calendar] - calendar identifier, or
      * a `Temporal.Calendar` instance, or an object implementing the calendar
@@ -1013,9 +1015,10 @@ export namespace Temporal {
      * Get the current calendar date and clock time in a specific time zone,
      * using the ISO 8601 calendar.
      *
-     * The calendar is required. When using the ISO 8601 calendar or if you
-     * don't understand the need for or implications of a calendar, then a more
-     * ergonomic alternative to this method is `Temporal.now.zonedDateTimeISO`.
+     * The `calendar` parameter is required. When using the ISO 8601 calendar or
+     * if you don't understand the need for or implications of a calendar, then
+     * a more ergonomic alternative to this method is
+     * `Temporal.now.zonedDateTimeISO()`.
      *
      * @param {Temporal.Calendar | string} [calendar] - calendar identifier, or
      * a `Temporal.Calendar` instance, or an object implementing the calendar
@@ -1223,6 +1226,14 @@ export namespace Temporal {
      * {Temporal.CalendarProtocol} - new calendar to use
      */
     withCalendar(calendar: Temporal.CalendarProtocol): ZonedDateTime;
+    /**
+     * Get a new `Temporal.ZonedDateTime` instance that represents the same
+     * instant and calendar in a different time zone.
+     *
+     * @param [calendar=Temporal.Calendar.from('iso8601')]
+     * {Temporal.CalendarProtocol} - new calendar to use
+     */
+    withTimeZone(timeZone: Temporal.TimeZoneProtocol | string): ZonedDateTime;
     /**
      * Returns the exact time of this `Temporal.ZonedDateTime` instance as a
      * `Temporal.Instant`.

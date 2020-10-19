@@ -412,6 +412,18 @@ export class ZonedDateTime {
   }
 
   /**
+   * Get a new `Temporal.ZonedDateTime` instance that represents the same
+   * instant and calendar in a different time zone.
+   *
+   * @param [calendar=Temporal.Calendar.from('iso8601')]
+   * {Temporal.CalendarProtocol} - new calendar to use
+   */
+  withTimeZone(timeZone: Temporal.TimeZoneProtocol | string): ZonedDateTime {
+    const tz = Temporal.TimeZone.from(timeZone);
+    return this.with({ timeZone: tz });
+  }
+
+  /**
    * Returns the exact time of this `Temporal.ZonedDateTime` instance as a
    * `Temporal.Instant`.
    */

@@ -156,6 +156,14 @@ export declare class ZonedDateTime {
    */
   withCalendar(calendar: Temporal.CalendarProtocol): ZonedDateTime;
   /**
+   * Get a new `Temporal.ZonedDateTime` instance that represents the same
+   * instant and calendar in a different time zone.
+   *
+   * @param [calendar=Temporal.Calendar.from('iso8601')]
+   * {Temporal.CalendarProtocol} - new calendar to use
+   */
+  withTimeZone(timeZone: Temporal.TimeZoneProtocol | string): ZonedDateTime;
+  /**
    * Returns the exact time of this `Temporal.ZonedDateTime` instance as a
    * `Temporal.Instant`.
    */

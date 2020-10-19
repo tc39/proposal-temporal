@@ -58,7 +58,7 @@ function fromIsoString(isoString, options) {
   if (!tzString) {
     throw new Error(
       "Missing time zone. Either append a time zone identifier (e.g. '2011-12-03T10:15:30+01:00[Europe/Paris]')" +
-        ' or create differently (e.g. `Temporal.Instant.from(isoString).toZonedDateTime(timeZone)`).'
+        ' or create differently (e.g. `Temporal.Instant.from(isoString).toZonedDateTimeISO(timeZone)`).'
     );
   }
 
@@ -345,6 +345,18 @@ export class ZonedDateTime {
    */
   withCalendar(calendar) {
     return this.with({ calendar });
+  }
+
+  /**
+   * Get a new `Temporal.ZonedDateTime` instance that represents the same
+   * instant and calendar in a different time zone.
+   *
+   * @param [calendar=Temporal.Calendar.from('iso8601')]
+   * {Temporal.CalendarProtocol} - new calendar to use
+   */
+  withTimeZone(timeZone) {
+    const tz = Temporal.TimeZone.from(timeZone);
+    return this.with({ timeZone: tz });
   }
 
   /**
@@ -761,7 +773,7 @@ export class ZonedDateTime {
                                                                           //
                                                                          // RFC 5545 expects that date durations are measured in nominal (DateTime)
                                                                          // days, while time durations are measured in exact (Instant) time.
-                                                                         if (isZeroDuration(timeDuration)) return dateDuration; // even number of calendar days
+                                                                         if (timeDuration.isZero) return dateDuration; // even number of calendar days
                                                                           // If we get here, there's both a time and date part of the duration AND
                                                                          // there's a time zone offset transition during the duration. RFC 5545 says
                                                                          // that we should calculate full days using DateTime math and remainder
@@ -1032,25 +1044,6 @@ function mergeDuration({ dateDuration, timeDuration }) {
     nanoseconds
   });
 }
-
-/*
-  // Returns true if every unit is zero, false otherwise.
-  function isZeroDuration(duration: Temporal.Duration) {
-    const { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
-    return (
-      !years &&
-      !months &&
-      !weeks &&
-      !days &&
-      !hours &&
-      !minutes &&
-      !seconds &&
-      !milliseconds &&
-      !microseconds &&
-      !nanoseconds
-    );
-  }
-  */
 
 const DIFFERENCE_UNITS = [
   'years',

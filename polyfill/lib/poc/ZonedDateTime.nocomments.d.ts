@@ -28,6 +28,7 @@ export declare class ZonedDateTime {
   ): ZonedDateTime;
   with(zonedDateTimeLike: ZonedDateTimeLike, options?: ZonedDateTimeAssignmentOptions): ZonedDateTime;
   withCalendar(calendar: Temporal.CalendarProtocol): ZonedDateTime;
+  withTimeZone(timeZone: Temporal.TimeZoneProtocol | string): ZonedDateTime;
   toInstant(): Temporal.Instant;
   get timeZone(): Temporal.TimeZone;
   get calendar(): Temporal.CalendarProtocol;
