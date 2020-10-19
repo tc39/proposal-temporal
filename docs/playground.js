@@ -4052,6 +4052,11 @@
       var cal2 = ES.CalendarToString(two);
       return cal1 < cal2 ? -1 : cal1 > cal2 ? 1 : 0;
     },
+    CalendarEquals: function CalendarEquals(one, two) {
+      var cal1 = ES.CalendarToString(one);
+      var cal2 = ES.CalendarToString(two);
+      return cal1 === cal2;
+    },
     TimeZoneFrom: function TimeZoneFrom(temporalTimeZoneLike) {
       var TemporalTimeZone = GetIntrinsic$1('%Temporal.TimeZone%');
       var from = TemporalTimeZone.from;
@@ -7500,7 +7505,7 @@
           if (val1 !== val2) return false;
         }
 
-        return ES.CalendarToString(GetSlot(this, CALENDAR)) === ES.CalendarToString(GetSlot(other, CALENDAR));
+        return ES.CalendarEquals(this, other);
       }
     }, {
       key: "toString",
@@ -8139,7 +8144,7 @@
           if (val1 !== val2) return false;
         }
 
-        return GetSlot(this, CALENDAR).id === GetSlot(other, CALENDAR).id;
+        return ES.CalendarEquals(this, other);
       }
     }, {
       key: "toString",
@@ -8961,7 +8966,7 @@
           if (val1 !== val2) return false;
         }
 
-        return GetSlot(this, CALENDAR).id === GetSlot(other, CALENDAR).id;
+        return ES.CalendarEquals(this, other);
       }
     }, {
       key: "toString",
@@ -9811,7 +9816,7 @@
           if (val1 !== val2) return false;
         }
 
-        return GetSlot(this, CALENDAR).id === GetSlot(other, CALENDAR).id;
+        return ES.CalendarEquals(this, other);
       }
     }, {
       key: "toString",
