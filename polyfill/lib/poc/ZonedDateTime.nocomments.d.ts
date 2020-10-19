@@ -1,15 +1,15 @@
 import { Temporal } from '../../poc';
 export declare type ZonedDateTimeLike = Temporal.DateTimeLike & {
   timeZone?: Temporal.TimeZone | string;
-  offsetNanoseconds?: number;
+  offset?: string;
 };
 declare type ZonedDateTimeFields = ReturnType<Temporal.DateTime['getFields']> & {
   timeZone: Temporal.TimeZone;
-  offsetNanoseconds: number;
+  offset: string;
 };
 declare type ZonedDateTimeISOFields = ReturnType<Temporal.DateTime['getISOFields']> & {
   timeZone: Temporal.TimeZone;
-  offsetNanoseconds: number;
+  offset: string;
 };
 export interface offsetDisambiguationOptions {
   offset: 'use' | 'prefer' | 'ignore' | 'reject';
@@ -37,7 +37,7 @@ export declare class ZonedDateTime {
   get startOfDay(): ZonedDateTime;
   get isOffsetTransition(): boolean;
   get offsetNanoseconds(): number;
-  get offsetString(): string;
+  get offset(): string;
   getFields(): ZonedDateTimeFields;
   getISOFields(): ZonedDateTimeISOFields;
   static compare(one: ZonedDateTime, two: ZonedDateTime): Temporal.ComparisonResult;

@@ -10,17 +10,17 @@ export type ZonedDateTimeLike = Temporal.DateTimeLike & {
   timeZone?: Temporal.TimeZone | string;
 
   /** Enables `from` using only local time values */
-  offsetNanoseconds?: number;
+  offset?: string;
 };
 
 type ZonedDateTimeFields = ReturnType<Temporal.DateTime['getFields']> & {
   timeZone: Temporal.TimeZone;
-  offsetNanoseconds: number;
+  offset: string;
 };
 
 type ZonedDateTimeISOFields = ReturnType<Temporal.DateTime['getISOFields']> & {
   timeZone: Temporal.TimeZone;
-  offsetNanoseconds: number;
+  offset: string;
 };
 
 /**
@@ -66,16 +66,15 @@ function fromObject(item: Record<string, unknown>, options?: ZonedDateTimeAssign
   const disambiguation = getOption(options, 'disambiguation', DISAMBIGUATION_OPTIONS, 'compatible');
   const offsetOption = getOption(options, 'offset', OFFSET_OPTIONS, 'reject');
 
-  const { timeZone: tzOrig, offsetNanoseconds } = item as ZonedDateTimeLike;
+  const { timeZone: tzOrig, offset } = item as ZonedDateTimeLike;
   if (tzOrig === undefined) {
     throw new TypeError('Required property `timeZone` is missing');
   }
   const tz = Temporal.TimeZone.from(tzOrig);
 
-  if (offsetNanoseconds !== undefined) {
-    if (typeof offsetNanoseconds !== 'number' || isNaN(offsetNanoseconds)) {
-      throw RangeError(`The \`offsetNanoseconds\` numeric property has an invalid value: ${offsetNanoseconds}`);
-    }
+  const offsetNanoseconds = offset !== undefined ? parseOffsetString(offset) : undefined;
+  if (offsetNanoseconds === null) {
+    throw RangeError(`The \`offset\` property has an invalid value: ${offset}`);
   }
 
   const dt = Temporal.DateTime.from(item, { overflow });
@@ -263,9 +262,9 @@ export class ZonedDateTime {
    *   the input.
    * - A "ZonedDateTime-like" property bag object with required properties
    *   `timeZone`, `year`, `month`, and `day`. Other fields (time fields and
-   *   `offsetNanoseconds`) are optional. If `offsetNanoseconds` is not
-   *   provided, then the time can be ambiguous around DST transitions. The
-   *   `disambiguation` option can resolve this ambiguity.
+   *   `offset`) are optional. If `offset` is not provided, then the time can be
+   *   ambiguous around DST transitions. The `disambiguation` option can resolve
+   *   this ambiguity.
    * - An ISO 8601 date+time+offset string (the same format used by
    *   `Temporal.Instant.from`) with a time zone identifier suffix appended in
    *   square brackets, e.g. `2007-12-03T10:15:30+01:00[Europe/Paris]` or
@@ -308,7 +307,7 @@ export class ZonedDateTime {
    * - All `Temporal.DateTime` fields, including `calendar`
    * - `timeZone` as a time zone identifier string like `Europe/Paris` or a
    *   `Temporal.TimeZone` instance
-   * - `offsetNanoseconds`
+   * - `offset`
    *
    * If the `timeZone` field is included, `with` will first convert all existing
    * fields to the new time zone and then fields in the input will be played on
@@ -321,23 +320,23 @@ export class ZonedDateTime {
    * const newTzSameLocalTime = zdt.toDateTime().toZonedDateTime('Europe/London');
    * ```
    *
-   * If the `offsetNanoseconds` field is provided, then it's possible for it to
-   * conflict with the input object's `timeZone` property or, if omitted, the
-   * object's existing time zone.  The `offset` option (which defaults to
-   * `'prefer'`) will resolve the conflict.
+   * If the `offset` field is provided, then it's possible for it to conflict
+   * with the input object's `timeZone` property or, if omitted, the object's
+   * existing time zone.  The `offset` option (which defaults to `'prefer'`)
+   * will resolve the conflict.
    *
-   * If the `offsetNanoseconds` field is not provided, but the `timeZone` field
-   * is not provided either, then the existing `offsetNanoseconds` field will be
-   * used by `with` as if it had been provided by the caller. By default, this
-   * will prefer the existing offset when resolving ambiguous results. For
-   * example, if a `Temporal.ZonedDateTime` is set to the "second" 1:30AM on a
-   * day where the 1-2AM clock hour is repeated after a backwards DST
-   * transition, then calling `.with({minute: 45})` will result in an ambiguity
-   * which is resolved using the default `offset: 'prefer'` option. Because the
-   * existing offset is valid for the new time, it will be retained so the
-   * result will be the "second" 1:45AM.  However, if the existing offset is not
-   * valid for the new result (e.g. `.with({hour: 0})`), then the default
-   * behavior will change the offset.
+   * If the `offset` field is not provided, but the `timeZone` field is not
+   * provided either, then the existing `offset` field will be used by `with` as
+   * if it had been provided by the caller. By default, this will prefer the
+   * existing offset when resolving ambiguous results. For example, if a
+   * `Temporal.ZonedDateTime` is set to the "second" 1:30AM on a day where the
+   * 1-2AM clock hour is repeated after a backwards DST transition, then calling
+   * `.with({minute: 45})` will result in an ambiguity which is resolved using
+   * the default `offset: 'prefer'` option. Because the existing offset is valid
+   * for the new time, it will be retained so the result will be the "second"
+   * 1:45AM.  However, if the existing offset is not valid for the new result
+   * (e.g. `.with({hour: 0})`), then the default behavior will change the
+   * offset.
    *
    * Available options:
    * ```
@@ -364,18 +363,14 @@ export class ZonedDateTime {
     const updatedOptions = options ? { ...options } : {};
     if (updatedOptions.offset === undefined) updatedOptions.offset = 'prefer';
 
-    const { timeZone, calendar, offsetNanoseconds } = zonedDateTimeLike;
+    const { timeZone, calendar, offset } = zonedDateTimeLike;
 
     const newTimeZone = timeZone && Temporal.TimeZone.from(timeZone);
     const newCalendar = calendar && Temporal.Calendar.from(calendar);
 
-    const updateOffset = offsetNanoseconds !== undefined;
+    const updateOffset = offset !== undefined;
     const updateTimeZone = newTimeZone && newTimeZone.id !== this._tz.id;
     const updateCalendar = newCalendar && newCalendar.id !== this.calendar.id;
-
-    if (updateOffset && (typeof offsetNanoseconds !== 'number' || isNaN(offsetNanoseconds))) {
-      throw RangeError(`The \`offsetNanoseconds\` numeric property has an invalid value: ${offsetNanoseconds}`);
-    }
 
     // Changing `timeZone` or `calendar` will create a new instance, and then
     // other input fields will be played on top of it.
@@ -390,9 +385,9 @@ export class ZonedDateTime {
     // Deal with the rest of the fields. If there's a change in tz offset, it'll
     // be handled by `from`. Also, if we're not changing the time zone or offset,
     // then pass the existing offset to `from`. (See docs for more info.)
-    const { offsetNanoseconds: originalOffset, ...fields } = base.getFields();
+    const { offset: originalOffset, ...fields } = base.getFields();
     if (!updateOffset && !updateTimeZone) {
-      (fields as ZonedDateTimeLike).offsetNanoseconds = originalOffset;
+      (fields as ZonedDateTimeLike).offset = originalOffset;
     }
     const merged = { ...fields, ...zonedDateTimeLike };
     return ZonedDateTime.from(merged, updatedOptions);
@@ -540,12 +535,11 @@ export class ZonedDateTime {
    * Offset (in nanoseconds) relative to UTC of the current time zone and
    * instant of this `Temporal.ZonedDateTime` instance.
    *
-   * The value of this field will change after DST transitions or after legal
-   * changes to a time zone, e.g. a country switching to a new time zone.
+   * The value of this field will change after DST transitions or after
+   * political changes to a time zone, e.g. a country switching to a new time
+   * zone.
    *
-   * Because this field is able to uniquely map a `Temporal.DateTime` to an
-   * instant, this field is returned by `getFields()` and is accepted by `from`
-   * and `with`.
+   * This field cannot be passed to `from` and `with`.  Instead, use `offset`.
    * */
   get offsetNanoseconds(): number {
     return this._tz.getOffsetNanosecondsFor(this._abs);
@@ -555,12 +549,18 @@ export class ZonedDateTime {
    * Offset (as a string like `'+05:00'` or `'-07:00'`) relative to UTC of the
    * current time zone and instant of this `Temporal.ZonedDateTime` instance.
    *
-   * This property is useful for custom formatting of ZonedDateTime instances.
+   * The value of this field will change after DST transitions or after
+   * political changes to a time zone, e.g. a country switching to a new time
+   * zone.
    *
-   * This field cannot be passed to `from` and `with`.  Instead, use
-   * `offsetNanoseconds`.
+   * Because this field is able to uniquely map a `Temporal.DateTime` to an
+   * instant, this field is returned by `getFields()` and is accepted by `from`
+   * and `with`.
+   *
+   * This property is also useful for custom formatting of
+   * `Temporal.ZonedDateTime` instances.
    * */
-  get offsetString(): string {
+  get offset(): string {
     return this._tz.getOffsetStringFor(this._abs);
   }
 
@@ -570,16 +570,16 @@ export class ZonedDateTime {
    *
    * The resulting object includes all fields returned by
    * `Temporal.DateTime.prototype.getFields()`, as well as `timeZone`,
-   * and `offsetNanoseconds`.
+   * and `offset`.
    *
    * The result of this method can be used for round-trip serialization via
    * `from()`, `with()`, or `JSON.stringify`.
    */
   getFields(): ZonedDateTimeFields {
-    const { timeZone, offsetNanoseconds } = this;
+    const { timeZone, offset } = this;
     return {
       timeZone,
-      offsetNanoseconds,
+      offset,
       ...this._dt.getFields()
     };
   }
@@ -588,10 +588,10 @@ export class ZonedDateTime {
    * Method for internal use by non-ISO calendars. Normally not used.
    */
   getISOFields(): ZonedDateTimeISOFields {
-    const { timeZone, offsetNanoseconds } = this;
+    const { timeZone, offset } = this;
     return {
       timeZone,
-      offsetNanoseconds,
+      offset,
       ...this._dt.getISOFields()
     };
   }
@@ -970,7 +970,7 @@ export class ZonedDateTime {
    */
   toString(): string {
     const calendar = this._dt.calendar.id === 'iso8601' ? '' : `[c=${this._dt.calendar.id}]`;
-    return `${this._dt.withCalendar('iso8601')}${this.offsetString}[${this._tz.id}]${calendar}`;
+    return `${this._dt.withCalendar('iso8601')}${this.offset}[${this._tz.id}]${calendar}`;
   }
 
   // the fields and methods below are identical to DateTime
@@ -1189,6 +1189,7 @@ const ES = {
 };
 
 // copied from ecmascript.mjs
+// TODO: update to support sub-minute offsets https://github.com/tc39/proposal-temporal/issues/935
 function formatOffsetString(offsetNanoseconds: number) {
   const sign = offsetNanoseconds < 0 ? '-' : '+';
   offsetNanoseconds = Math.abs(offsetNanoseconds);
@@ -1196,6 +1197,18 @@ function formatOffsetString(offsetNanoseconds: number) {
   const offsetMinuteString = `00${offsetMinutes % 60}`.slice(-2);
   const offsetHourString = `00${Math.floor(offsetMinutes / 60)}`.slice(-2);
   return `${sign}${offsetHourString}:${offsetMinuteString}`;
+}
+
+// copied from ecmascript.mjs
+// TODO: update to support sub-minute offsets https://github.com/tc39/proposal-temporal/issues/935
+const OFFSET = /^([+-\u2212])([0-2][0-9])(?::?([0-5][0-9]))?$/;
+function parseOffsetString(s: string | number | Record<string | number | symbol, unknown>) {
+  const match = OFFSET.exec(String(s));
+  if (!match) return null;
+  const sign = match[1] === '-' || match[1] === '\u2212' ? -1 : +1;
+  const hours = +match[2];
+  const minutes = +(match[3] || 0);
+  return sign * (hours * 60 + minutes) * 60 * 1e9;
 }
 
 function compareStrings(s1: string, s2: string) {

@@ -467,7 +467,7 @@ describe('ZonedDateTime', () => {
         assert('offsetNanoseconds' in ZonedDateTime.prototype);
       });
       it('ZonedDateTime.prototype has offsetString', () => {
-        assert('offsetString' in ZonedDateTime.prototype);
+        assert('offset' in ZonedDateTime.prototype);
       });
       it('ZonedDateTime.prototype.getDateTime is a Function', () => {
         equal(typeof ZonedDateTime.prototype.toDateTime, 'function');
