@@ -24,6 +24,6 @@ const instance = MyInstant.fromEpochNanoseconds(10n);
 assert.sameValue(called, 1);
 
 const result = instance.add({ nanoseconds: 5 });
-assert.sameValue(result.getEpochNanoseconds(), 15n, "getEpochNanoseconds result");
+assert.sameValue(result.epochNanoseconds, 15n, "epochNanoseconds result");
 assert.sameValue(called, 2);
 assert.sameValue(Object.getPrototypeOf(result), MyInstant.prototype);

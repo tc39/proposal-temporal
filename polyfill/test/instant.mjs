@@ -66,8 +66,8 @@ describe('Instant', () => {
       const instant = new Instant(epochNanos);
       assert(instant);
       equal(typeof instant, 'object');
-      equal(instant.getEpochSeconds(), Math.floor(Date.UTC(1976, 10, 18, 14, 23, 30, 123) / 1e3), 'getEpochSeconds');
-      equal(instant.getEpochMilliseconds(), Date.UTC(1976, 10, 18, 14, 23, 30, 123), 'getEpochMilliseconds');
+      equal(instant.epochSeconds, Math.floor(Date.UTC(1976, 10, 18, 14, 23, 30, 123) / 1e3), 'epochSeconds');
+      equal(instant.epochMilliseconds, Date.UTC(1976, 10, 18, 14, 23, 30, 123), 'epochMilliseconds');
     });
     it('constructs from string', () => equal(`${new Instant('0')}`, '1970-01-01T00:00Z'));
     it('throws on number', () => throws(() => new Instant(1234), TypeError));
@@ -114,116 +114,116 @@ describe('Instant', () => {
       equal(inst.toJSON('+01:00'), inst.toJSON());
     });
   });
-  describe('Instant.getEpochSeconds() works', () => {
+  describe('Instant.epochSeconds works', () => {
     it('post-epoch', () => {
       const epochMs = Date.UTC(1976, 10, 18, 15, 23, 30, 123);
       const epochNs = BigInt(epochMs) * BigInt(1e6);
       const inst = new Instant(epochNs);
-      equal(inst.getEpochSeconds(), Math.trunc(epochMs / 1e3));
-      equal(typeof inst.getEpochSeconds(), 'number');
+      equal(inst.epochSeconds, Math.trunc(epochMs / 1e3));
+      equal(typeof inst.epochSeconds, 'number');
     });
     it('pre-epoch', () => {
       const epochMs = Date.UTC(1963, 1, 13, 9, 36, 29, 123);
       const epochNs = BigInt(epochMs) * BigInt(1e6);
       const inst = new Instant(epochNs);
-      equal(inst.getEpochSeconds(), Math.trunc(epochMs / 1e3));
-      equal(typeof inst.getEpochSeconds(), 'number');
+      equal(inst.epochSeconds, Math.trunc(epochMs / 1e3));
+      equal(typeof inst.epochSeconds, 'number');
     });
   });
   describe('Instant.fromEpochSeconds() works', () => {
     it('1976-11-18T15:23:30', () => {
       const epochSeconds = Math.floor(Date.UTC(1976, 10, 18, 15, 23, 30, 123) / 1e3);
       const instant = Instant.fromEpochSeconds(epochSeconds);
-      equal(instant.getEpochSeconds(), epochSeconds);
+      equal(instant.epochSeconds, epochSeconds);
     });
     it('1963-02-13T09:36:29', () => {
       const epochSeconds = Math.floor(Date.UTC(1963, 1, 13, 9, 36, 29, 123) / 1e3);
       const instant = Instant.fromEpochSeconds(epochSeconds);
-      equal(instant.getEpochSeconds(), epochSeconds);
+      equal(instant.epochSeconds, epochSeconds);
     });
   });
-  describe('Instant.getEpochMilliseconds() works', () => {
+  describe('Instant.epochMilliseconds() works', () => {
     it('post-epoch', () => {
       const epochMs = Date.UTC(1976, 10, 18, 15, 23, 30, 123);
       const epochNs = BigInt(epochMs) * BigInt(1e6);
       const inst = new Instant(epochNs);
-      equal(inst.getEpochMilliseconds(), epochMs);
-      equal(typeof inst.getEpochMilliseconds(), 'number');
+      equal(inst.epochMilliseconds, epochMs);
+      equal(typeof inst.epochMilliseconds, 'number');
     });
     it('pre-epoch', () => {
       const epochMs = Date.UTC(1963, 1, 13, 9, 36, 29, 123);
       const epochNs = BigInt(epochMs) * BigInt(1e6);
       const inst = new Instant(epochNs);
-      equal(inst.getEpochMilliseconds(), epochMs);
-      equal(typeof inst.getEpochMilliseconds(), 'number');
+      equal(inst.epochMilliseconds, epochMs);
+      equal(typeof inst.epochMilliseconds, 'number');
     });
   });
   describe('Instant.fromEpochMilliseconds() works', () => {
     it('1976-11-18T15:23:30.123', () => {
       const epochMilliseconds = Date.UTC(1976, 10, 18, 15, 23, 30, 123);
       const instant = Instant.fromEpochMilliseconds(epochMilliseconds);
-      equal(instant.getEpochMilliseconds(), epochMilliseconds);
+      equal(instant.epochMilliseconds, epochMilliseconds);
     });
     it('1963-02-13T09:36:29.123', () => {
       const epochMilliseconds = Date.UTC(1963, 1, 13, 9, 36, 29, 123);
       const instant = Instant.fromEpochMilliseconds(epochMilliseconds);
-      equal(instant.getEpochMilliseconds(), epochMilliseconds);
+      equal(instant.epochMilliseconds, epochMilliseconds);
     });
   });
-  describe('Instant.getEpochMicroseconds() works', () => {
+  describe('Instant.epochMicroseconds works', () => {
     it('post-epoch', () => {
       const epochMs = Date.UTC(1976, 10, 18, 15, 23, 30, 123);
       const epochNs = BigInt(epochMs) * BigInt(1e6);
       const inst = new Instant(epochNs);
-      equal(inst.getEpochMicroseconds(), BigInt(epochMs) * BigInt(1e3));
-      equal(typeof inst.getEpochMicroseconds(), 'bigint');
+      equal(inst.epochMicroseconds, BigInt(epochMs) * BigInt(1e3));
+      equal(typeof inst.epochMicroseconds, 'bigint');
     });
     it('pre-epoch', () => {
       const epochMs = Date.UTC(1963, 1, 13, 9, 36, 29, 123);
       const epochNs = BigInt(epochMs) * BigInt(1e6);
       const inst = new Instant(epochNs);
-      equal(inst.getEpochMicroseconds(), BigInt(epochMs) * BigInt(1e3));
-      equal(typeof inst.getEpochMicroseconds(), 'bigint');
+      equal(inst.epochMicroseconds, BigInt(epochMs) * BigInt(1e3));
+      equal(typeof inst.epochMicroseconds, 'bigint');
     });
   });
   describe('Instant.fromEpochMicroseconds() works', () => {
     it('1976-11-18T15:23:30.123456', () => {
       const epochMicroseconds = BigInt(Date.UTC(1976, 10, 18, 15, 23, 30, 123)) * BigInt(1e3) + BigInt(456);
       const instant = Instant.fromEpochMicroseconds(epochMicroseconds);
-      equal(instant.getEpochMicroseconds(), epochMicroseconds);
+      equal(instant.epochMicroseconds, epochMicroseconds);
     });
     it('1963-02-13T09:36:29.123456', () => {
       const epochMicroseconds = BigInt(Date.UTC(1963, 1, 13, 9, 36, 29, 123)) * BigInt(1e3) + BigInt(456);
       const instant = Instant.fromEpochMicroseconds(epochMicroseconds);
-      equal(instant.getEpochMicroseconds(), epochMicroseconds);
+      equal(instant.epochMicroseconds, epochMicroseconds);
     });
   });
-  describe('Instant.getEpochNanoseconds() works', () => {
+  describe('Instant.epochNanoseconds works', () => {
     it('post-epoch', () => {
       const epochMs = Date.UTC(1976, 10, 18, 15, 23, 30, 123);
       const epochNs = BigInt(epochMs) * BigInt(1e6);
       const inst = new Instant(epochNs);
-      equal(inst.getEpochNanoseconds(), epochNs);
-      equal(typeof inst.getEpochNanoseconds(), 'bigint');
+      equal(inst.epochNanoseconds, epochNs);
+      equal(typeof inst.epochNanoseconds, 'bigint');
     });
     it('pre-epoch', () => {
       const epochMs = Date.UTC(1963, 1, 13, 9, 36, 29, 123);
       const epochNs = BigInt(epochMs) * BigInt(1e6);
       const inst = new Instant(epochNs);
-      equal(inst.getEpochNanoseconds(), epochNs);
-      equal(typeof inst.getEpochNanoseconds(), 'bigint');
+      equal(inst.epochNanoseconds, epochNs);
+      equal(typeof inst.epochNanoseconds, 'bigint');
     });
   });
   describe('Instant.fromEpochNanoseconds() works', () => {
     it('1976-11-18T15:23:30.123456789', () => {
       const epochNanoseconds = BigInt(Date.UTC(1976, 10, 18, 15, 23, 30, 123)) * BigInt(1e6) + BigInt(456789);
       const instant = Instant.fromEpochNanoseconds(epochNanoseconds);
-      equal(instant.getEpochNanoseconds(), epochNanoseconds);
+      equal(instant.epochNanoseconds, epochNanoseconds);
     });
     it('1963-02-13T09:36:29.123456789', () => {
       const epochNanoseconds = BigInt(Date.UTC(1963, 1, 13, 9, 36, 29, 123)) * BigInt(1e6) + BigInt(456789);
       const instant = Instant.fromEpochNanoseconds(epochNanoseconds);
-      equal(instant.getEpochNanoseconds(), epochNanoseconds);
+      equal(instant.epochNanoseconds, epochNanoseconds);
     });
     it('-1n', () => {
       const instant = Instant.fromEpochNanoseconds(-1n);
@@ -232,59 +232,59 @@ describe('Instant', () => {
   });
   describe('Instant.from() works', () => {
     it('1976-11-18T15:23Z', () => {
-      equal(Instant.from('1976-11-18T15:23Z').getEpochMilliseconds(), Date.UTC(1976, 10, 18, 15, 23));
+      equal(Instant.from('1976-11-18T15:23Z').epochMilliseconds, Date.UTC(1976, 10, 18, 15, 23));
     });
     it('1976-11-18T15:23:30Z', () => {
-      equal(Instant.from('1976-11-18T15:23:30Z').getEpochMilliseconds(), Date.UTC(1976, 10, 18, 15, 23, 30));
+      equal(Instant.from('1976-11-18T15:23:30Z').epochMilliseconds, Date.UTC(1976, 10, 18, 15, 23, 30));
     });
     it('1976-11-18T15:23:30.123Z', () => {
-      equal(Instant.from('1976-11-18T15:23:30.123Z').getEpochMilliseconds(), Date.UTC(1976, 10, 18, 15, 23, 30, 123));
+      equal(Instant.from('1976-11-18T15:23:30.123Z').epochMilliseconds, Date.UTC(1976, 10, 18, 15, 23, 30, 123));
     });
     it('1976-11-18T15:23:30.123456Z', () => {
       equal(
-        Instant.from('1976-11-18T15:23:30.123456Z').getEpochMicroseconds(),
+        Instant.from('1976-11-18T15:23:30.123456Z').epochMicroseconds,
         BigInt(Date.UTC(1976, 10, 18, 15, 23, 30, 123)) * BigInt(1e3) + BigInt(456)
       );
     });
     it('1976-11-18T15:23:30.123456789Z', () => {
       equal(
-        Instant.from('1976-11-18T15:23:30.123456789Z').getEpochNanoseconds(),
+        Instant.from('1976-11-18T15:23:30.123456789Z').epochNanoseconds,
         BigInt(Date.UTC(1976, 10, 18, 15, 23, 30, 123)) * BigInt(1e6) + BigInt(456789)
       );
     });
     it('2020-02-12T11:42-08:00', () => {
       equal(
-        Instant.from('2020-02-12T11:42-08:00').getEpochNanoseconds(),
+        Instant.from('2020-02-12T11:42-08:00').epochNanoseconds,
         BigInt(Date.UTC(2020, 1, 12, 19, 42)) * BigInt(1e6)
       );
     });
     it('2020-02-12T11:42-08:00[America/Vancouver]', () => {
       equal(
-        Instant.from('2020-02-12T11:42-08:00[America/Vancouver]').getEpochNanoseconds(),
+        Instant.from('2020-02-12T11:42-08:00[America/Vancouver]').epochNanoseconds,
         BigInt(Date.UTC(2020, 1, 12, 19, 42)) * BigInt(1e6)
       );
     });
     it('2020-02-12T11:42+01:00', () => {
       equal(
-        Instant.from('2020-02-12T11:42+01:00').getEpochNanoseconds(),
+        Instant.from('2020-02-12T11:42+01:00').epochNanoseconds,
         BigInt(Date.UTC(2020, 1, 12, 10, 42)) * BigInt(1e6)
       );
     });
     it('2020-02-12T11:42+01:00[Europe/Amsterdam]', () => {
       equal(
-        Instant.from('2020-02-12T11:42+01:00[Europe/Amsterdam]').getEpochNanoseconds(),
+        Instant.from('2020-02-12T11:42+01:00[Europe/Amsterdam]').epochNanoseconds,
         BigInt(Date.UTC(2020, 1, 12, 10, 42)) * BigInt(1e6)
       );
     });
     it('2019-02-16T23:45-02:00[America/Sao_Paulo]', () => {
       equal(
-        Instant.from('2019-02-16T23:45-02:00[America/Sao_Paulo]').getEpochNanoseconds(),
+        Instant.from('2019-02-16T23:45-02:00[America/Sao_Paulo]').epochNanoseconds,
         BigInt(Date.UTC(2019, 1, 17, 1, 45)) * BigInt(1e6)
       );
     });
     it('2019-02-16T23:45-03:00[America/Sao_Paulo]', () => {
       equal(
-        Instant.from('2019-02-16T23:45-03:00[America/Sao_Paulo]').getEpochNanoseconds(),
+        Instant.from('2019-02-16T23:45-03:00[America/Sao_Paulo]').epochNanoseconds,
         BigInt(Date.UTC(2019, 1, 17, 2, 45)) * BigInt(1e6)
       );
     });
@@ -432,7 +432,7 @@ describe('Instant', () => {
       throws(() => Instant.compare(i1, {}), TypeError);
     });
     it("doesn't cast second argument", () => {
-      throws(() => Instant.compare(i2.getEpochNanoseconds(), i2), TypeError);
+      throws(() => Instant.compare(i2.epochNanoseconds, i2), TypeError);
       throws(() => Instant.compare({}, i2), TypeError);
     });
   });
@@ -445,7 +445,7 @@ describe('Instant', () => {
     it('cross epoch unequal', () => assert(!i1.equals(i2)));
     it('epoch unequal', () => assert(!i2.equals(i3)));
     it("doesn't cast argument", () => {
-      throws(() => i1.equals(i1.getEpochNanoseconds()), TypeError);
+      throws(() => i1.equals(i1.epochNanoseconds), TypeError);
       throws(() => i1.equals({}), TypeError);
     });
   });
@@ -922,13 +922,13 @@ describe('Instant', () => {
     it('time zone parameter UTC', () => {
       const tz = Temporal.TimeZone.from('UTC');
       const dt = inst.toDateTimeISO(tz);
-      equal(inst.getEpochNanoseconds(), dt.toInstant(tz).getEpochNanoseconds());
+      equal(inst.epochNanoseconds, dt.toInstant(tz).epochNanoseconds);
       equal(`${dt}`, '1976-11-18T14:23:30.123456789');
     });
     it('time zone parameter non-UTC', () => {
       const tz = Temporal.TimeZone.from('America/New_York');
       const dt = inst.toDateTimeISO(tz);
-      equal(inst.getEpochNanoseconds(), dt.toInstant(tz).getEpochNanoseconds());
+      equal(inst.epochNanoseconds, dt.toInstant(tz).epochNanoseconds);
       equal(`${dt}`, '1976-11-18T09:23:30.123456789');
     });
   });
@@ -943,13 +943,13 @@ describe('Instant', () => {
     it('time zone parameter UTC', () => {
       const tz = Temporal.TimeZone.from('UTC');
       const dt = inst.toDateTime(tz, 'gregory');
-      equal(inst.getEpochNanoseconds(), dt.toInstant(tz).getEpochNanoseconds());
+      equal(inst.epochNanoseconds, dt.toInstant(tz).epochNanoseconds);
       equal(`${dt}`, '1976-11-18T14:23:30.123456789[c=gregory]');
     });
     it('time zone parameter non-UTC', () => {
       const tz = Temporal.TimeZone.from('America/New_York');
       const dt = inst.toDateTime(tz, 'gregory');
-      equal(inst.getEpochNanoseconds(), dt.toInstant(tz).getEpochNanoseconds());
+      equal(inst.epochNanoseconds, dt.toInstant(tz).epochNanoseconds);
       equal(`${dt}`, '1976-11-18T09:23:30.123456789[c=gregory]');
     });
   });

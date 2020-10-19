@@ -25,22 +25,22 @@ export class Instant {
     }
   }
 
-  getEpochSeconds() {
+  get epochSeconds() {
     if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
     const value = GetSlot(this, EPOCHNANOSECONDS);
     return +value.divide(1e9);
   }
-  getEpochMilliseconds() {
+  get epochMilliseconds() {
     if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
     const value = bigInt(GetSlot(this, EPOCHNANOSECONDS));
     return +value.divide(1e6);
   }
-  getEpochMicroseconds() {
+  get epochMicroseconds() {
     if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
     const value = GetSlot(this, EPOCHNANOSECONDS);
     return bigIntIfAvailable(value.divide(1e3));
   }
-  getEpochNanoseconds() {
+  get epochNanoseconds() {
     if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
     return bigIntIfAvailable(GetSlot(this, EPOCHNANOSECONDS));
   }

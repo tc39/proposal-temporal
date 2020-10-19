@@ -8,6 +8,6 @@
 const timeStamp = Temporal.now.instant();
 
 // Timestamp in Milliseconds
-timeStamp.getEpochMilliseconds();
+timeStamp.epochMilliseconds;
 // Timestamp in Seconds
-timeStamp.getEpochSeconds();
+timeStamp.epochSeconds;
