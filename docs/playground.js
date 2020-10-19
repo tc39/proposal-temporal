@@ -3190,7 +3190,7 @@
   var YEAR_MIN = -271821;
   var YEAR_MAX = 275760;
   var BEFORE_FIRST_DST = BigInteger(-388152).multiply(1e13); // 1847-01-01T00:00:00Z
-  var ES2019 = {
+  var ES2020 = {
     Call: Call,
     SpeciesConstructor: SpeciesConstructor,
     ToInteger: ToInteger$1,
@@ -3199,7 +3199,7 @@
     ToString: ToString,
     Type: Type$1
   };
-  var ES = ObjectAssign({}, ES2019, {
+  var ES = ObjectAssign({}, ES2020, {
     IsTemporalInstant: function IsTemporalInstant(item) {
       return HasSlot(item, EPOCHNANOSECONDS);
     },
