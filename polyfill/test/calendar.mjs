@@ -10,7 +10,7 @@ import Pretty from '@pipobscure/demitasse-pretty';
 const { reporter } = Pretty;
 
 import { strict as assert } from 'assert';
-const { equal } = assert;
+const { equal, throws } = assert;
 
 import * as Temporal from 'proposal-temporal';
 const { Calendar } = Temporal;
@@ -88,6 +88,33 @@ describe('Calendar', () => {
     });
     it('Calendar.from is a Function', () => {
       equal(typeof Calendar.from, 'function');
+    });
+  });
+  describe('Calendar.from()', () => {
+    describe('from identifier', () => {
+      test('iso8601');
+      test('gregory');
+      test('japanese');
+      function test(id) {
+        const calendar = Calendar.from(id);
+        it(`Calendar.from(${id}) is a calendar`, () => assert(calendar instanceof Calendar));
+        it(`Calendar.from(${id}) has the correct ID`, () => equal(calendar.id, id));
+      }
+      it('Calendar.from throws with bad identifier', () => {
+        throws(() => Calendar.from('local'));
+        throws(() => Calendar.from('iso-8601'));
+        throws(() => Calendar.from('[c=iso8601]'));
+      });
+    });
+    describe('Calendar.from(ISO string)', () => {
+      test('1994-11-05T08:15:30-05:00', 'iso8601');
+      test('1994-11-05T08:15:30-05:00[c=gregory]', 'gregory');
+      test('1994-11-05T13:15:30Z[c=japanese]', 'japanese');
+      function test(isoString, id) {
+        const calendar = Calendar.from(isoString);
+        it(`Calendar.from(${isoString}) is a calendar`, () => assert(calendar instanceof Calendar));
+        it(`Calendar.from(${isoString}) has ID ${id}`, () => equal(calendar.id, id));
+      }
     });
   });
 });
