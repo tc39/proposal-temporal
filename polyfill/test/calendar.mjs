@@ -100,10 +100,42 @@ describe('Calendar', () => {
         it(`Calendar.from(${id}) is a calendar`, () => assert(calendar instanceof Calendar));
         it(`Calendar.from(${id}) has the correct ID`, () => equal(calendar.id, id));
       }
-      it('Calendar.from throws with bad identifier', () => {
-        throws(() => Calendar.from('local'));
-        throws(() => Calendar.from('iso-8601'));
-        throws(() => Calendar.from('[c=iso8601]'));
+      it('other types with a calendar are accepted', () => {
+        [
+          Temporal.Date.from('1976-11-18[c=gregory]'),
+          Temporal.DateTime.from('1976-11-18[c=gregory]'),
+          Temporal.MonthDay.from('1972-11-18[c=gregory]'),
+          Temporal.YearMonth.from('1976-11-01[c=gregory]')
+        ].forEach((obj) => {
+          const calFrom = Calendar.from(obj);
+          assert(calFrom instanceof Calendar);
+          equal(calFrom.id, 'gregory');
+        });
+      });
+      it('property bag with calendar object is accepted', () => {
+        const cal = new Calendar('iso8601');
+        const calFrom = Calendar.from({ calendar: cal });
+        assert(calFrom instanceof Calendar);
+        equal(calFrom.id, 'iso8601');
+      });
+      it('property bag with string is accepted', () => {
+        const calFrom = Calendar.from({ calendar: 'iso8601' });
+        assert(calFrom instanceof Calendar);
+        equal(calFrom.id, 'iso8601');
+      });
+      it('property bag with custom calendar is accepted', () => {
+        const custom = { id: 'custom-calendar' };
+        const calFrom = Calendar.from({ calendar: custom });
+        equal(calFrom, custom);
+      });
+      it('throws with bad identifier', () => {
+        throws(() => Calendar.from('local'), RangeError);
+        throws(() => Calendar.from('iso-8601'), RangeError);
+        throws(() => Calendar.from('[c=iso8601]'), RangeError);
+      });
+      it('throws with bad value in property bag', () => {
+        throws(() => Calendar.from({ calendar: 'local' }), RangeError);
+        throws(() => Calendar.from({ calendar: { calendar: 'iso8601' } }), RangeError);
       });
     });
     describe('Calendar.from(ISO string)', () => {
