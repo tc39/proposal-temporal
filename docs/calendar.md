@@ -308,7 +308,7 @@ Temporal.Calendar.from('chinese').dateDifference(
 This method does not need to be called directly except in specialized code.
 It is called indirectly when using the `from()` static methods and `with()` methods of `Temporal.DateTime`, `Temporal.Date`, and `Temporal.YearMonth`.
 
-Custom calendars should override this method if they require more fields with which to denote the date than the standard `era`, `year`, `month`, and `day`.
+Custom calendars should override this method if they require more fields with which to denote the date than the standard `year`, `month`, and `day` (for example, `era`).
 The input array contains the field names that are necessary for a particular operation (for example, `'month'` and `'day'` for `Temporal.MonthDay.prototype.with()`), and the method should make a copy of the array and add whichever extra fields are necessary.
 
 When subclassing `Temporal.Calendar`, this method doesn't need to be overridden, unless your calendar requires extra fields, because the default implementation returns a copy of `fields`.

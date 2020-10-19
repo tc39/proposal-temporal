@@ -787,7 +787,7 @@ export const ES = ObjectAssign({}, ES2020, {
   },
   // field access in the following operations is intentionally alphabetical
   ToTemporalDateFields: (bag, fieldNames) => {
-    const entries = [['day'], ['era', undefined], ['month'], ['year']];
+    const entries = [['day'], ['month'], ['year']];
     // Add extra fields from the calendar at the end
     fieldNames.forEach((fieldName) => {
       if (!entries.some(([name]) => name === fieldName)) {
@@ -799,7 +799,6 @@ export const ES = ObjectAssign({}, ES2020, {
   ToTemporalDateTimeFields: (bag, fieldNames) => {
     const entries = [
       ['day'],
-      ['era', undefined],
       ['hour', 0],
       ['microsecond', 0],
       ['millisecond', 0],
@@ -834,7 +833,7 @@ export const ES = ObjectAssign({}, ES2020, {
     return { hour, minute, second, millisecond, microsecond, nanosecond };
   },
   ToTemporalYearMonthFields: (bag, fieldNames) => {
-    const entries = [['era', undefined], ['month'], ['year']];
+    const entries = [['month'], ['year']];
     // Add extra fields from the calendar at the end
     fieldNames.forEach((fieldName) => {
       if (!entries.some(([name]) => name === fieldName)) {
@@ -851,7 +850,7 @@ export const ES = ObjectAssign({}, ES2020, {
       let calendar = item.calendar;
       if (calendar === undefined) calendar = new (GetIntrinsic('%Temporal.ISO8601Calendar%'))();
       calendar = ES.ToTemporalCalendar(calendar);
-      const fieldNames = ES.CalendarFields(calendar, ['day', 'era', 'month', 'year']);
+      const fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'year']);
       const fields = ES.ToTemporalDateFields(item, fieldNames);
       result = calendar.dateFromFields(fields, { overflow }, constructor);
     } else {
@@ -871,7 +870,7 @@ export const ES = ObjectAssign({}, ES2020, {
       calendar = item.calendar;
       if (calendar === undefined) calendar = new (GetIntrinsic('%Temporal.ISO8601Calendar%'))();
       calendar = ES.ToTemporalCalendar(calendar);
-      const fieldNames = ES.CalendarFields(calendar, ['day', 'era', 'month', 'year']);
+      const fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'year']);
       const fields = ES.ToTemporalDateTimeFields(item, fieldNames);
       const TemporalDate = GetIntrinsic('%Temporal.Date%');
       const date = calendar.dateFromFields(fields, { overflow }, TemporalDate);
@@ -1021,7 +1020,7 @@ export const ES = ObjectAssign({}, ES2020, {
       let calendar = item.calendar;
       if (calendar === undefined) calendar = new (GetIntrinsic('%Temporal.ISO8601Calendar%'))();
       calendar = ES.ToTemporalCalendar(calendar);
-      const fieldNames = ES.CalendarFields(calendar, ['era', 'month', 'year']);
+      const fieldNames = ES.CalendarFields(calendar, ['month', 'year']);
       const fields = ES.ToTemporalYearMonthFields(item, fieldNames);
       result = calendar.yearMonthFromFields(fields, { overflow }, constructor);
     } else {

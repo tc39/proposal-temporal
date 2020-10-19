@@ -367,6 +367,12 @@ class Japanese extends ISO8601Calendar {
     return GetSlot(date, ISO_YEAR) - jpn.eraAddends[eraIdx];
   }
 
+  fields(fields) {
+    fields = super.fields(fields);
+    if (fields.includes('year')) fields.push('era');
+    return fields;
+  }
+
   dateFromFields(fields, options, constructor) {
     // Intentionally alphabetical
     fields = ES.ToRecord(fields, [['day'], ['era'], ['month'], ['year']]);

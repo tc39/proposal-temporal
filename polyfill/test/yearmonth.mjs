@@ -573,6 +573,13 @@ describe('YearMonth', () => {
       const ym2 = YearMonth.from(fields);
       equal(YearMonth.compare(ym1, ym2), 0);
     });
+    it('does not include era for ISO calendar', () => {
+      assert(!('era' in fields));
+    });
+    it('includes era for calendars that use it', () => {
+      const ym3 = YearMonth.from('1976-11-01[c=japanese]');
+      equal(ym3.getFields().era, 'showa');
+    });
   });
   describe('yearMonth.getISOFields() works', () => {
     const ym1 = YearMonth.from('1976-11');

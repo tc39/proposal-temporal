@@ -230,19 +230,20 @@
         1. Perform ? RequireInternalSlot(_monthDay_, [[InitializedTemporalMonthDay]]).
         1. Set _options_ to ? NormalizeOptionsObject(_options_).
         1. Let _overflow_ be ? ToTemporalOverflow(_options_).
+        1. Let _calendar_ be _monthDay_.[[Calendar]].
+        1. Let _receiverFieldNames_ be ? CalendarFields(_calendar_, « *"day"*, *"month"* »).
+        1. Let _fields_ be ? ToTemporalMonthDayFields(_monthDay_, _receiverFieldNames_).
         1. If Type(_item_) is Object, then
-          1. Let _y_ be ? Get(_item_, *"year"*).
-          1. If _y_ is *undefined*, then
-            1. Throw a *TypeError* exception.
-          1. Let _y_ be ? ToInteger(_y_).
-          1. Let _era_ be ? Get(_item_, *"era"*).
+          1. Let _inputFieldNames_ be ? CalendarFields(_calendar_, « *"year"* »).
+          1. For each value _property_ of _inputFieldNames_, do
+            1. Let _value_ be ? Get(_temporalMonthDayLike_, _property_).
+            1. If _property_ is *"year"*, and _value_ is *undefined*, then
+              1. Throw a *TypeError* exception.
+            1. Let _value_ be ? ToInteger(_value_).
+            1. Perform ! CreateDataPropertyOrThrow(_fields_, _property_, _value_).
         1. Else,
           1. Let _y_ be ? ToInteger(_item_).
-        1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"day"*, *"month"* »).
-        1. Let _fields_ be ? ToTemporalMonthDayFields(_monthDay_, _fieldNames_).
-        1. Perform ! Set(_fields_, *"year"*, _y_, *false*).
-        1. If _era_ is not *undefined*, then
-          1. Perform ! Set(_fields_, *"era"*, _era_, *false*).
+          1. Perform ! Set(_fields_, *"year"*, _y_, *false*).
         1. <mark>TODO: create via calendar.dateFromFields.</mark>
           Return ? CreateTemporalDate(_date_.[[Year]], _date_.[[Month]], _date_.[[Day]]).
       </emu-alg>

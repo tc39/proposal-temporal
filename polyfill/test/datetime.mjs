@@ -1248,6 +1248,13 @@ describe('DateTime', () => {
       const dt2 = DateTime.from('2019-06-30').with(fields);
       equal(DateTime.compare(dt1, dt2), 0);
     });
+    it('does not include era for ISO calendar', () => {
+      assert(!('era' in fields));
+    });
+    it('includes era for calendars that use it', () => {
+      const dt3 = DateTime.from('1976-11-18T15:23:30.123456789[c=japanese]');
+      equal(dt3.getFields().era, 'showa');
+    });
   });
   describe('dateTime.getISOFields() works', () => {
     const dt1 = DateTime.from('1976-11-18T15:23:30.123456789');

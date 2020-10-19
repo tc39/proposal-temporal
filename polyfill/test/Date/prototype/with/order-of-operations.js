@@ -11,7 +11,6 @@ const expected = [
   "get calendar",
   "get day",
   "valueOf day",
-  "get era",
   "get month",
   "valueOf month",
   "get year",

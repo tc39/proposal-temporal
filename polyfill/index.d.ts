@@ -562,7 +562,7 @@ export namespace Temporal {
   };
 
   type DateFields = {
-    era: string | undefined;
+    era?: string | undefined;
     year: number;
     month: number;
     day: number;
@@ -644,7 +644,7 @@ export namespace Temporal {
   };
 
   type DateTimeFields = {
-    era: string | undefined;
+    era?: string | undefined;
     year: number;
     month: number;
     day: number;
@@ -964,7 +964,7 @@ export namespace Temporal {
   };
 
   type YearMonthFields = {
-    era: string | undefined;
+    era?: string | undefined;
     year: number;
     month: number;
     calendar: CalendarProtocol;

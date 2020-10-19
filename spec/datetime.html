@@ -886,7 +886,7 @@
           1. Let _calendar_ be ? Get(_item_, *"calendar"*).
           1. If _calendar_ is *undefined*, set _calendar_ to ! GetISO8601Calendar().
           1. Set _calendar_ to ? ToTemporalCalendar(_calendar_).
-          1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"day"*, *"era"*, *"hour"*, *"microsecond"*, *"millisecond"*, *"minute"*, *"month"*, *"nanosecond"*, *"second"*, *"year"* »).
+          1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"day"*, *"hour"*, *"microsecond"*, *"millisecond"*, *"minute"*, *"month"*, *"nanosecond"*, *"second"*, *"year"* »).
           1. Let _result_ be ? ToTemporalDateTimeFields(_item_, _fieldNames_).
         1. Else,
           1. Let _string_ be ? ToString(_item_).

@@ -799,6 +799,13 @@ describe('Date', () => {
       const d2 = Date.from('2019-06-30').with(fields);
       equal(Date.compare(d1, d2), 0);
     });
+    it('does not include era for ISO calendar', () => {
+      assert(!('era' in fields));
+    });
+    it('includes era for calendars that use it', () => {
+      const d3 = Date.from('1976-11-18[c=japanese]');
+      equal(d3.getFields().era, 'showa');
+    });
   });
   describe('date.getISOFields() works', () => {
     const d1 = Date.from('1976-11-18');
