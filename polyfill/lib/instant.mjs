@@ -253,7 +253,7 @@ export class Instant {
     const TemporalTimeZone = GetIntrinsic('%Temporal.TimeZone%');
     const timeZone = TemporalTimeZone.from(temporalTimeZoneLike);
     const TemporalZonedDateTime = GetIntrinsic('%Temporal.ZonedDateTime%');
-    return new TemporalZonedDateTime(this.getEpochNanoseconds(), timeZone, calendar);
+    return new TemporalZonedDateTime(this.epochNanoseconds, timeZone, calendar);
   }
 
   static fromEpochSeconds(epochSeconds) {

@@ -487,12 +487,8 @@ describe('ZonedDateTime', () => {
     const zdt = new ZonedDateTime(epochNanos, tz);
     assert(zdt);
     equal(typeof zdt, 'object');
-    equal(
-      zdt.toInstant().getEpochSeconds(),
-      Math.floor(Date.UTC(1976, 10, 18, 15, 23, 30, 123) / 1e3),
-      'getEpochSeconds'
-    );
-    equal(zdt.toInstant().getEpochMilliseconds(), Date.UTC(1976, 10, 18, 15, 23, 30, 123), 'getEpochMilliseconds');
+    equal(zdt.toInstant().epochSeconds, Math.floor(Date.UTC(1976, 10, 18, 15, 23, 30, 123) / 1e3), 'epochSeconds');
+    equal(zdt.toInstant().epochMilliseconds, Date.UTC(1976, 10, 18, 15, 23, 30, 123), 'epochMilliseconds');
 
     describe('ZonedDateTime for (1976, 11, 18, 15, 23, 30, 123, 456, 789)', () => {
       it('datetime can be constructed', () => {

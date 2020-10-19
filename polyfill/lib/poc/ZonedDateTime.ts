@@ -149,7 +149,7 @@ function fromCommon(
     // The caller wants the offset to always win ('use') OR the caller is OK
     // with the offset winning ('prefer' or 'reject') as long as it's valid for
     // this timezone and date/time.
-    return new ZonedDateTime(absWithInputOffset.getEpochNanoseconds(), timeZone, dt.calendar);
+    return new ZonedDateTime(absWithInputOffset.epochNanoseconds, timeZone, dt.calendar);
   }
 
   // If we get here, then the user-provided offset doesn't match any instants
@@ -174,7 +174,7 @@ function fromDateTime(
   timeZone: Temporal.TimeZoneProtocol,
   options?: Temporal.ToInstantOptions
 ) {
-  return new ZonedDateTime(dateTime.toInstant(timeZone, options).getEpochNanoseconds(), timeZone, dateTime.calendar);
+  return new ZonedDateTime(dateTime.toInstant(timeZone, options).epochNanoseconds, timeZone, dateTime.calendar);
 }
 
 /** Identical logic for `add` and `subtract` */
@@ -209,7 +209,7 @@ function doAddOrSubtract(
     const dtIntermediate = zonedDateTime.toDateTime().add(dateDuration, { overflow });
     const absIntermediate = dtIntermediate.toInstant(timeZone);
     const absResult = absIntermediate.add(timeDuration);
-    return new ZonedDateTime(absResult.getEpochNanoseconds(), timeZone, calendar);
+    return new ZonedDateTime(absResult.epochNanoseconds, timeZone, calendar);
   } else {
     // if subtraction, then order of operations is smallest (time) units first
     const absIntermediate = zonedDateTime.toInstant().subtract(timeDuration);
@@ -296,7 +296,7 @@ export class ZonedDateTime {
       throw new TypeError('Time zone is missing. Try `instant.toZonedDateTime(timeZone}`.');
     }
     if (item instanceof ZonedDateTime) {
-      return new ZonedDateTime(item._abs.getEpochNanoseconds(), item._tz, item._dt.calendar);
+      return new ZonedDateTime(item._abs.epochNanoseconds, item._tz, item._dt.calendar);
     }
     return typeof item === 'object' ? fromObject(item, options) : fromIsoString(item.toString(), options);
   }
@@ -379,7 +379,7 @@ export class ZonedDateTime {
     if (updateTimeZone || updateCalendar) {
       const tz = newTimeZone || base._tz;
       const cal = newCalendar || base.calendar;
-      base = new ZonedDateTime(base._abs.getEpochNanoseconds(), tz, cal);
+      base = new ZonedDateTime(base._abs.epochNanoseconds, tz, cal);
     }
 
     // Deal with the rest of the fields. If there's a change in tz offset, it'll
@@ -1055,7 +1055,7 @@ export class ZonedDateTime {
    * not one per time zone.
    */
   get epochSeconds(): number {
-    return this._abs.getEpochSeconds();
+    return this._abs.epochSeconds;
   }
   /**
    * Returns the integer number of full milliseconds between `this` and 00:00
@@ -1074,7 +1074,7 @@ export class ZonedDateTime {
    * ```
    */
   get epochMilliseconds(): number {
-    return this._abs.getEpochMilliseconds();
+    return this._abs.epochMilliseconds;
   }
   /**
    * Returns the `bigint` number of full microseconds (one millionth of a
@@ -1087,7 +1087,7 @@ export class ZonedDateTime {
    * epoch, not one per time zone.
    */
   get epochMicroseconds(): bigint {
-    return this._abs.getEpochMicroseconds();
+    return this._abs.epochMicroseconds;
   }
   /**
    * Returns the `bigint` number of nanoseconds (one billionth of a second)
@@ -1099,7 +1099,7 @@ export class ZonedDateTime {
    * there is only one epoch, not one per time zone.
    */
   get epochNanoseconds(): bigint {
-    return this._abs.getEpochNanoseconds();
+    return this._abs.epochNanoseconds;
   }
 }
 

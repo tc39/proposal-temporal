@@ -35,14 +35,14 @@ function zonedDateTime(calendar, temporalTimeZoneLike = timeZone()) {
   const timeZone = TemporalTimeZone.from(temporalTimeZoneLike);
   const inst = instant();
   const TemporalZonedDateTime = GetIntrinsic('%Temporal.ZonedDateTime%');
-  return new TemporalZonedDateTime(inst.getEpochNanoseconds(), timeZone, calendar);
+  return new TemporalZonedDateTime(inst.epochNanoseconds, timeZone, calendar);
 }
 function zonedDateTimeISO(temporalTimeZoneLike = timeZone()) {
   const TemporalTimeZone = GetIntrinsic('%Temporal.TimeZone%');
   const timeZone = TemporalTimeZone.from(temporalTimeZoneLike);
   const inst = instant();
   const TemporalZonedDateTime = GetIntrinsic('%Temporal.ZonedDateTime%');
-  return new TemporalZonedDateTime(inst.getEpochNanoseconds(), timeZone);
+  return new TemporalZonedDateTime(inst.epochNanoseconds, timeZone);
 }
 function date(calendarLike, temporalTimeZoneLike = timeZone()) {
   return ES.TemporalDateTimeToDate(dateTime(calendarLike, temporalTimeZoneLike));

@@ -74,7 +74,7 @@ export class TimeZone {
   getZonedDateTimeFor(instant, calendar = GetISO8601Calendar()) {
     if (!ES.IsTemporalInstant(instant)) throw new TypeError('invalid Instant object');
     const TemporalZonedDateTime = GetIntrinsic('%Temporal.ZonedDateTime%');
-    return new TemporalZonedDateTime(instant.getEpochNanoseconds(), this, calendar);
+    return new TemporalZonedDateTime(instant.epochNanoseconds, this, calendar);
   }
   getDateTimeFor(instant, calendar = GetISO8601Calendar()) {
     if (!ES.IsTemporalInstant(instant)) throw new TypeError('invalid Instant object');
