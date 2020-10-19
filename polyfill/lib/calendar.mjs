@@ -283,12 +283,50 @@ class ISO8601Calendar extends Calendar {
 
 MakeIntrinsicClass(ISO8601Calendar, 'Temporal.ISO8601Calendar');
 
-// According to documentation for Intl.Locale.prototype.calendar on MDN,
+// Note: other built-in calendars than iso8601 are not part of the Temporal
+// proposal for ECMA-262. These calendars will be standardized as part of
+// ECMA-402.
+
+// Implementation details for Gregorian calendar
+const gre = {
+  isoYear(year, era) {
+    return era === 'bc' ? -(year - 1) : year;
+  }
+};
+
 // 'iso8601' calendar is equivalent to 'gregory' except for ISO 8601 week
-// numbering rules, which we do not currently use in Temporal.
+// numbering rules, which we do not currently use in Temporal, and the addition
+// of BC/AD eras which means no negative years or year 0.
 class Gregorian extends ISO8601Calendar {
   constructor() {
     super('gregory');
+  }
+
+  era(date) {
+    return GetSlot(date, ISO_YEAR) < 1 ? 'bc' : 'ad';
+  }
+  year(date) {
+    const isoYear = GetSlot(date, ISO_YEAR);
+    return isoYear < 1 ? -isoYear + 1 : isoYear;
+  }
+
+  fields(fields) {
+    fields = super.fields(fields);
+    if (fields.includes('year')) fields.push('era');
+    return fields;
+  }
+
+  dateFromFields(fields, options, constructor) {
+    // Intentionally alphabetical
+    fields = ES.ToRecord(fields, [['day'], ['era', 'ad'], ['month'], ['year']]);
+    const isoYear = gre.isoYear(fields.year, fields.era);
+    return super.dateFromFields({ ...fields, year: isoYear }, options, constructor);
+  }
+  yearMonthFromFields(fields, options, constructor) {
+    // Intentionally alphabetical
+    fields = ES.ToRecord(fields, [['era', 'ad'], ['month'], ['year']]);
+    const isoYear = gre.isoYear(fields.year, fields.era);
+    return super.yearMonthFromFields({ ...fields, year: isoYear }, options, constructor);
   }
 }
 
