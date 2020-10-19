@@ -347,6 +347,7 @@ export namespace Temporal {
 
   export interface CalendarProtocol {
     id: string;
+    calendar?: never;
     year(date: Temporal.Date): number;
     month(date: Temporal.Date): number;
     day(date: Temporal.Date): number;
@@ -409,7 +410,7 @@ export namespace Temporal {
    *
    * See https://tc39.es/proposal-temporal/docs/calendar.html for more details.
    */
-  export class Calendar implements Required<CalendarProtocol> {
+  export class Calendar implements Omit<Required<CalendarProtocol>, 'calendar'> {
     static from(item: CalendarProtocol | string): Temporal.Calendar;
     constructor(calendarIdentifier: string);
     readonly id: string;

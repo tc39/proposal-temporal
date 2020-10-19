@@ -47,6 +47,7 @@ The identifier of a custom calendar must consist of one or more components of be
 
 It's also possible for a plain object to be a custom calendar, without subclassing.
 The object must implement the `Temporal.Calendar` methods and have an `id` property.
+It must not have a `calendar` property, so that it can be distinguished in `Temporal.Calendar.from()` from other Temporal objects that have a calendar.
 It is possible to pass such an object into any Temporal API that would normally take a built-in `Temporal.Calendar`.
 
 ## Constructor
@@ -76,12 +77,13 @@ cal = new Temporal.Calendar('gregory');
 ### Temporal.Calendar.**from**(_thing_: any) : Temporal.Calendar
 
 **Parameters:**
-- `thing`: A `Temporal.Calendar` object or a value from which to create a `Temporal.Calendar`.
+- `thing`: A calendar object, a Temporal object that carries a calendar, or a value from which to create a `Temporal.Calendar`.
 
-**Returns:** a new `Temporal.Calendar` object.
+**Returns:** a calendar object.
 
 This static method creates a new calendar from another value.
-If the value is another `Temporal.Calendar` object, a new object representing the same calendar is returned.
+If the value is another `Temporal.Calendar` object, or object implementing the calendar protocol, the same object is returned.
+If the value is another Temporal object that carries a calendar or an object with a `calendar` property, such as a `Temporal.ZonedDateTime`, the object's calendar is returned.
 
 Any other value is converted to a string, which is expected to be either:
 - a string that is accepted by `new Temporal.Calendar()`; or

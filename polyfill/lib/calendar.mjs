@@ -117,7 +117,11 @@ export class Calendar {
     return GetSlot(this, CALENDAR_ID);
   }
   static from(item) {
-    if (ES.Type(item) === 'Object') return item;
+    if (ES.Type(item) === 'Object') {
+      if (!('calendar' in item)) return item;
+      item = item.calendar;
+      if (ES.Type(item) === 'Object' && !('calendar' in item)) return item;
+    }
     const stringIdent = ES.ToString(item);
     if (IsBuiltinCalendar(stringIdent)) return GetBuiltinCalendar(stringIdent);
     let calendar;
