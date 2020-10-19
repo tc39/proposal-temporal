@@ -24,6 +24,7 @@ Valid characters are ASCII letters, `.`, `-`, and `_`.
 
 It's also possible for a plain object to be a custom time zone, without subclassing.
 The object must have `getOffsetNanosecondsFor()`, `getPossibleInstantsFor()`, and `toString()` methods.
+It must not have a `timeZone` property, so that it can be distinguished in `Temporal.TimeZone.from()` from other Temporal objects that have a time zone.
 It is possible to pass such an object into any Temporal API that would normally take a built-in `Temporal.TimeZone`.
 
 ## Constructor
@@ -78,12 +79,13 @@ tz2.getPreviousTransition(inst); // => 2020-03-08T10:00Z
 
 **Parameters:**
 
-- `thing`: A `Temporal.TimeZone` object or a value from which to create a `Temporal.TimeZone`.
+- `thing`: A time zone object, a Temporal object that carries a time zone, or a value from which to create a `Temporal.TimeZone`.
 
-**Returns:** a new `Temporal.TimeZone` object.
+**Returns:** a time zone object.
 
 This static method creates a new time zone from another value.
-If the value is another `Temporal.TimeZone` object, a new object representing the same time zone is returned.
+If the value is another `Temporal.TimeZone` object, or object implementing the time zone protocol, the same object is returned.
+If the value is another Temporal object that carries a time zone or an object with a `timeZone` property, such as `Temporal.ZonedDateTime`, the object's time zone is returned.
 
 Any other value is converted to a string, which is expected to be either:
 
