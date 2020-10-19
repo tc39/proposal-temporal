@@ -5934,7 +5934,21 @@
       value: function from(item) {
         if (ES.Type(item) === 'Object') return item;
         var stringIdent = ES.ToString(item);
-        return GetBuiltinCalendar(stringIdent);
+        if (IsBuiltinCalendar(stringIdent)) return GetBuiltinCalendar(stringIdent);
+        var calendar;
+
+        try {
+          var _ES$ParseISODateTime = ES.ParseISODateTime(stringIdent, {
+            zoneRequired: false
+          });
+
+          calendar = _ES$ParseISODateTime.calendar;
+        } catch (_unused) {
+          throw new RangeError("Invalid calendar: ".concat(stringIdent));
+        }
+
+        if (!calendar) calendar = 'iso8601';
+        return GetBuiltinCalendar(calendar);
       }
     }]);
 
@@ -6303,6 +6317,10 @@
     japanese: Japanese // To be filled in as builtin calendars are implemented
 
   };
+
+  function IsBuiltinCalendar(id) {
+    return id in BUILTIN_CALENDARS;
+  }
 
   function GetBuiltinCalendar(id) {
     if (!(id in BUILTIN_CALENDARS)) throw new RangeError("unknown calendar ".concat(id));
