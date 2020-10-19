@@ -8,6 +8,18 @@
   <emu-clause id="sec-temporal-calendar-abstract-ops">
     <h1>Abstract Operations for Temporal.Calendar Objects</h1>
 
+    <emu-clause id="sec-temporal-isbuiltincalendar" aoid="IsBuiltinCalendar">
+      <h1>IsBuiltinCalendar ( _id_ )</h1>
+      <p>
+        An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the *IsBuiltinCalendar* abstract operation as specified in the ECMA-402 specification.
+        If an ECMAScript implementation does not include the ECMA-402 API the following specification of the *IsBuiltinCalendar* abstract operation is used.
+      </p>
+      <emu-alg>
+        1. If _id_ is not *"iso8601"*, return *false*.
+        1. Return *true*.
+      </emu-alg>
+    </emu-clause>
+
     <emu-clause id="sec-temporal-getbuiltincalendar" aoid="GetBuiltinCalendar">
       <h1>GetBuiltinCalendar ( _id_ )</h1>
       <p>An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the *GetBuiltinCalendar* abstract operation as specified in the ECMA-402 specification. If an ECMAScript implementation does not include the ECMA-402 API the following specification of the *GetBuiltinCalendar* abstract operation is used.</p>
@@ -160,8 +172,10 @@
       <emu-alg>
         1. If Type(_item_) is Object, then
           1. Return _item_.
-        1. Let _stringIdent_ be ? ToString(_item_).
-        1. Return ? GetBuiltinCalendar(_stringIdent_).
+        1. Let _string_ be ? ToString(_item_).
+        1. If ! IsBuiltinCalendar(_string_) is *false*, then
+          1. Let _string_ be ? ParseTemporalCalendarString(_string_).
+        1. Return ? GetBuiltinCalendar(_string_).
       </emu-alg>
       <p>
         This function is the <dfn>%Temporal.Calendar.from%</dfn> intrinsic object.

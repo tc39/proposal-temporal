@@ -119,7 +119,15 @@ export class Calendar {
   static from(item) {
     if (ES.Type(item) === 'Object') return item;
     const stringIdent = ES.ToString(item);
-    return GetBuiltinCalendar(stringIdent);
+    if (IsBuiltinCalendar(stringIdent)) return GetBuiltinCalendar(stringIdent);
+    let calendar;
+    try {
+      ({ calendar } = ES.ParseISODateTime(stringIdent, { zoneRequired: false }));
+    } catch {
+      throw new RangeError(`Invalid calendar: ${stringIdent}`);
+    }
+    if (!calendar) calendar = 'iso8601';
+    return GetBuiltinCalendar(calendar);
   }
 }
 
@@ -371,6 +379,9 @@ const BUILTIN_CALENDARS = {
   // To be filled in as builtin calendars are implemented
 };
 
+function IsBuiltinCalendar(id) {
+  return id in BUILTIN_CALENDARS;
+}
 function GetBuiltinCalendar(id) {
   if (!(id in BUILTIN_CALENDARS)) throw new RangeError(`unknown calendar ${id}`);
   return new BUILTIN_CALENDARS[id]();
