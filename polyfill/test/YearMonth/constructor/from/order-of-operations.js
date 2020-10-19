@@ -8,7 +8,6 @@ includes: [compareArray.js]
 
 const expected = [
   "get calendar",
-  "get era",
   "get month",
   "valueOf month",
   "get year",

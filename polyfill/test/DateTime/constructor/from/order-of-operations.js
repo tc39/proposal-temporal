@@ -10,7 +10,6 @@ const expected = [
   "get calendar",
   "get day",
   "valueOf day",
-  "get era",
   "get hour",
   "valueOf hour",
   "get microsecond",

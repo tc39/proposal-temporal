@@ -543,7 +543,7 @@ ym.toDateOnDay(24); // => 2019-06-24
 This method can be used to convert a `Temporal.YearMonth` into a record-like data structure.
 It returns a new plain JavaScript object, with all the fields as enumerable, writable, own data properties.
 
-Note that if using a different calendar from ISO 8601, these will be the calendar-specific values.
+Note that if using a different calendar from ISO 8601, these will be the calendar-specific values and may include extra properties such as `era`.
 
 > **NOTE**: The possible values for the `month` property of the returned object start at 1, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
 
