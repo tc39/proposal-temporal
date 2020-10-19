@@ -165,16 +165,20 @@
 </li>
 </ul>
 </li>
+<li><a href="#properties">Properties</a>
+<ul>
+<li><a href="#epochSeconds">epochSeconds</a>
+</li>
+<li><a href="#epochMilliseconds">epochMilliseconds</a>
+</li>
+<li><a href="#epochMicroseconds">epochMicroseconds</a>
+</li>
+<li><a href="#epochNanoseconds">epochNanoseconds</a>
+</li>
+</ul>
+</li>
 <li><a href="#methods">Methods</a>
 <ul>
-<li><a href="#getEpochSeconds">getEpochSeconds</a>
-</li>
-<li><a href="#getEpochMilliseconds">getEpochMilliseconds</a>
-</li>
-<li><a href="#getEpochMicroseconds">getEpochMicroseconds</a>
-</li>
-<li><a href="#getEpochNanoseconds">getEpochNanoseconds</a>
-</li>
 <li><a href="#toZonedDateTimeISO">toZonedDateTimeISO</a>
 </li>
 <li><a href="#toZonedDateTime">toZonedDateTime</a>
@@ -316,24 +320,23 @@ two <span class="token operator">=</span> Temporal<span class="token punctuation
 three <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">fromEpochSeconds</span><span class="token punctuation">(</span><span class="token number">1.2e9</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 sorted <span class="token operator">=</span> <span class="token punctuation">[</span>three<span class="token punctuation">,</span> one<span class="token punctuation">,</span> two<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">sort</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span>compare<span class="token punctuation">)</span><span class="token punctuation">;</span>
 sorted<span class="token punctuation">.</span><span class="token function">join</span><span class="token punctuation">(</span><span class="token string">' '</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token comment">// => 2001-09-09T01:46:40Z 2004-11-09T11:33:20Z 2008-01-10T21:20Z</span></code></pre><h2 id="methods">Methods</h2>
-<h3 id="getEpochSeconds"><a class="heading-link" href="#getEpochSeconds"></a>instant.<strong>getEpochSeconds</strong>() : number</h3><p><strong>Returns:</strong> an integer number of seconds.</p>
-<p>Returns the number of seconds between the Unix epoch (midnight UTC on January 1, 1970) and <code>instant</code>.
+<span class="token comment">// => 2001-09-09T01:46:40Z 2004-11-09T11:33:20Z 2008-01-10T21:20Z</span></code></pre><h2 id="properties">Properties</h2>
+<h3 id="epochSeconds"><a class="heading-link" href="#epochSeconds"></a>instant.<strong>epochSeconds</strong> : number</h3><p>The value of this property is an integer number of seconds between the Unix epoch (midnight UTC on January 1, 1970) and <code>instant</code>.
 This number will be negative if <code>instant</code> is before 1970.
-The number of seconds is rounded towards zero.</p>
-<p>Use this method if you need to interface with some other system that reckons time in seconds since the Unix epoch.</p>
+The number of seconds is truncated towards zero.</p>
+<p>Use this property if you need to interface with some other system that reckons time in seconds since the Unix epoch.</p>
 <p>Example usage:</p>
 <pre class="language-js"><code class="language-js">instant <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2019-03-30T01:45+01:00'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-instant<span class="token punctuation">.</span><span class="token function">getEpochSeconds</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 1554000300</span></code></pre><h3 id="getEpochMilliseconds"><a class="heading-link" href="#getEpochMilliseconds"></a>instant.<strong>getEpochMilliseconds</strong>() : number</h3><p><strong>Returns:</strong> an integer number of milliseconds.</p>
-<p>Same as <code>getEpochSeconds()</code>, but with millisecond (10<sup>&minus;3</sup> second) precision.</p>
+instant<span class="token punctuation">.</span>epochSeconds<span class="token punctuation">;</span> <span class="token comment">// => 1554000300</span></code></pre><h3 id="epochMilliseconds"><a class="heading-link" href="#epochMilliseconds"></a>instant.<strong>epochMilliseconds</strong> : number</h3><p>Same as <code>epochSeconds</code>, but with millisecond (10<sup>&minus;3</sup> second) precision.
+The number of seconds is truncated towards zero.</p>
 <p>This method can be useful in particular to create an old-style JavaScript <code>Date</code> object, if one is needed.
 An example:</p>
 <pre class="language-js"><code class="language-js">instant <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2019-03-30T00:45Z'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token keyword">new</span> <span class="token class-name">Date</span><span class="token punctuation">(</span>instant<span class="token punctuation">.</span><span class="token function">getEpochMilliseconds</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2019-03-30T00:45:00.000Z</span></code></pre><h3 id="getEpochMicroseconds"><a class="heading-link" href="#getEpochMicroseconds"></a>instant.<strong>getEpochMicroseconds</strong>() : bigint</h3><p><strong>Returns:</strong> a number of microseconds, as a bigint.</p>
-<p>Same as <code>getEpochSeconds()</code>, but with microsecond (10<sup>&minus;6</sup> second) precision.</p>
-<h3 id="getEpochNanoseconds"><a class="heading-link" href="#getEpochNanoseconds"></a>instant.<strong>getEpochNanoseconds</strong>() : bigint</h3><p><strong>Returns:</strong> a number of nanoseconds, as a bigint.</p>
-<p>Same as <code>getEpochSeconds()</code>, but with nanosecond (10<sup>&minus;9</sup> second) precision.</p>
-<p>The value returned from this method is suitable to be passed to <code>new Temporal.Instant()</code>.</p>
+<span class="token keyword">new</span> <span class="token class-name">Date</span><span class="token punctuation">(</span>instant<span class="token punctuation">.</span>epochMilliseconds<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2019-03-30T00:45:00.000Z</span></code></pre><h3 id="epochMicroseconds"><a class="heading-link" href="#epochMicroseconds"></a>instant.<strong>epochMicroseconds</strong> : bigint</h3><p>Same as <code>epochSeconds</code>, but the value is a bigint with microsecond (10<sup>&minus;6</sup> second) precision.
+The number of seconds is truncated towards zero.</p>
+<h3 id="epochNanoseconds"><a class="heading-link" href="#epochNanoseconds"></a>instant.<strong>epochNanoseconds</strong> : bigint</h3><p>Same as <code>epochSeconds</code>, but the value is a bigint with nanosecond (10<sup>&minus;9</sup> second) precision.</p>
+<p>The value of this property is suitable to be passed to <code>new Temporal.Instant()</code>.</p>
+<h2 id="methods">Methods</h2>
 <h3 id="toZonedDateTimeISO"><a class="heading-link" href="#toZonedDateTimeISO"></a>instant.<strong>toZonedDateTimeISO</strong>(<em>timeZone</em>: object | string) : Temporal.ZonedDateTime</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>timeZone</code> (object or string): A <code>Temporal.TimeZone</code> object, or an object implementing the <a href="./timezone.html#protocol">time zone protocol</a>, or a string description of the time zone; either its IANA name or UTC offset.</li>

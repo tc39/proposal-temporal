@@ -279,9 +279,9 @@ If you want both, use <code>Temporal.DateTime</code>.</p>
 <span class="token keyword">const</span> timeStamp <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">instant</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
 <span class="token comment">// Timestamp in Milliseconds</span>
-timeStamp<span class="token punctuation">.</span><span class="token function">getEpochMilliseconds</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+timeStamp<span class="token punctuation">.</span>epochMilliseconds<span class="token punctuation">;</span>
 <span class="token comment">// Timestamp in Seconds</span>
-timeStamp<span class="token punctuation">.</span><span class="token function">getEpochSeconds</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+timeStamp<span class="token punctuation">.</span>epochSeconds<span class="token punctuation">;</span>
 </code></pre><h2 id="converting-between-temporal-types-and-legacy-date">Converting between Temporal types and legacy Date</h2>
 <h3 id="instant-from-legacy-date"><a class="heading-link" href="#instant-from-legacy-date"></a>Instant from legacy Date</h3><p>Map a legacy ECMAScript Date instance into a Temporal.Instant instance corresponding to the same instant in exact time.</p>
 <pre class="language-javascript"><code class="language-javascript"><span class="token keyword">const</span> legacyDate <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Date</span><span class="token punctuation">(</span><span class="token string">'1970-01-01T00:00:01Z'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>

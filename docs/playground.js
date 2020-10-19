@@ -6627,7 +6627,7 @@
         formatter = _extractOverrides.formatter;
 
     if (instant && formatter) {
-      return formatter.format(instant.getEpochMilliseconds());
+      return formatter.format(instant.epochMilliseconds);
     }
 
     for (var _len = arguments.length, rest = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
@@ -6645,7 +6645,7 @@
         formatter = _extractOverrides2.formatter;
 
     if (instant && formatter) {
-      return formatter.formatToParts(instant.getEpochMilliseconds());
+      return formatter.formatToParts(instant.epochMilliseconds);
     }
 
     for (var _len2 = arguments.length, rest = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
@@ -6670,7 +6670,7 @@
           bformatter = _extractOverrides4.formatter;
 
       if (aa && bb && aformatter && bformatter && aformatter === bformatter) {
-        return aformatter.formatRange(aa.getEpochMilliseconds(), bb.getEpochMilliseconds());
+        return aformatter.formatRange(aa.epochMilliseconds, bb.epochMilliseconds);
       }
     }
 
@@ -6692,7 +6692,7 @@
           bformatter = _extractOverrides6.formatter;
 
       if (aa && bb && aformatter && bformatter && aformatter === bformatter) {
-        return aformatter.formatRangeToParts(aa.getEpochMilliseconds(), bb.getEpochMilliseconds());
+        return aformatter.formatRangeToParts(aa.epochMilliseconds, bb.epochMilliseconds);
       }
     }
 
@@ -6968,33 +6968,6 @@
     }
 
     _createClass(Instant, [{
-      key: "getEpochSeconds",
-      value: function getEpochSeconds() {
-        if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
-        var value = GetSlot(this, EPOCHNANOSECONDS);
-        return +value.divide(1e9);
-      }
-    }, {
-      key: "getEpochMilliseconds",
-      value: function getEpochMilliseconds() {
-        if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
-        var value = BigInteger(GetSlot(this, EPOCHNANOSECONDS));
-        return +value.divide(1e6);
-      }
-    }, {
-      key: "getEpochMicroseconds",
-      value: function getEpochMicroseconds() {
-        if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
-        var value = GetSlot(this, EPOCHNANOSECONDS);
-        return bigIntIfAvailable(value.divide(1e3));
-      }
-    }, {
-      key: "getEpochNanoseconds",
-      value: function getEpochNanoseconds() {
-        if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
-        return bigIntIfAvailable(GetSlot(this, EPOCHNANOSECONDS));
-      }
-    }, {
       key: "add",
       value: function add(temporalDurationLike) {
         if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
@@ -7223,6 +7196,33 @@
         var timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);
         var calendar = GetISO8601Calendar();
         return ES.GetTemporalDateTimeFor(timeZone, this, calendar);
+      }
+    }, {
+      key: "epochSeconds",
+      get: function get() {
+        if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
+        var value = GetSlot(this, EPOCHNANOSECONDS);
+        return +value.divide(1e9);
+      }
+    }, {
+      key: "epochMilliseconds",
+      get: function get() {
+        if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
+        var value = BigInteger(GetSlot(this, EPOCHNANOSECONDS));
+        return +value.divide(1e6);
+      }
+    }, {
+      key: "epochMicroseconds",
+      get: function get() {
+        if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
+        var value = GetSlot(this, EPOCHNANOSECONDS);
+        return bigIntIfAvailable(value.divide(1e3));
+      }
+    }, {
+      key: "epochNanoseconds",
+      get: function get() {
+        if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
+        return bigIntIfAvailable(GetSlot(this, EPOCHNANOSECONDS));
       }
     }], [{
       key: "fromEpochSeconds",
