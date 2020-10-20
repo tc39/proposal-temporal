@@ -216,9 +216,12 @@ const timeZoneIANAName = withCode(
   choice(...timezoneNames),
   (data, result) => (data.ianaName = ES.GetCanonicalTimeZoneIdentifier(result).toString())
 );
-const timeZone = withCode(choice(utcDesignator, seq(timeZoneUTCOffset, ['[', timeZoneIANAName, ']'])), (data) => {
-  if (!('offset' in data)) data.offset = undefined;
-});
+const timeZone = withCode(
+  choice(utcDesignator, timeZoneUTCOffset, seq([timeZoneUTCOffset], '[', timeZoneIANAName, ']')),
+  (data) => {
+    if (!('offset' in data)) data.offset = undefined;
+  }
+);
 const temporalTimeZoneIdentifier = withCode(choice(timeZoneUTCOffset, timeZoneIANAName), (data) => {
   if (!('offset' in data)) data.offset = undefined;
 });

@@ -8,7 +8,7 @@ const yearpart = /(?:[+-\u2212]\d{6}|\d{4})/;
 const datesplit = new RegExp(`(${yearpart.source})(?:-(\\d{2})-(\\d{2})|(\\d{2})(\\d{2}))`);
 const timesplit = /(\d{2})(?::(\d{2})(?::(\d{2})(?:[.,](\d{1,9}))?)?|(\d{2})(?:(\d{2})(?:[.,](\d{1,9}))?)?)?/;
 export const offset = /([+-\u2212])([0-2][0-9])(?::?([0-5][0-9]))?/;
-const zonesplit = new RegExp(`(?:([zZ])|(?:${offset.source}?(?:\\[(${timeZoneID.source})\\])?))`);
+const zonesplit = new RegExp(`(?:([zZ])|(?:${offset.source})?(?:\\[(${timeZoneID.source})\\])?)`);
 const calendar = new RegExp(`\\[c=(${calendarID.source})\\]`);
 
 export const instant = new RegExp(
