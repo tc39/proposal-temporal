@@ -208,7 +208,7 @@ export const ES = ObjectAssign({}, ES2020, {
       let canonicalIdent = ES.GetCanonicalTimeZoneIdentifier(stringIdent);
       if (canonicalIdent) {
         canonicalIdent = canonicalIdent.toString();
-        if (parseOffsetString(canonicalIdent) !== null) return { offset: canonicalIdent };
+        if (ES.ParseOffsetString(canonicalIdent) !== null) return { offset: canonicalIdent };
         return { ianaName: canonicalIdent };
       }
     } catch {
@@ -1138,8 +1138,16 @@ export const ES = ObjectAssign({}, ES2020, {
     return `${sign < 0 ? '-' : ''}P${dateParts.join('')}${timeParts.join('')}`;
   },
 
+  ParseOffsetString: (string) => {
+    const match = OFFSET.exec(String(string));
+    if (!match) return null;
+    const sign = match[1] === '-' || match[1] === '\u2212' ? -1 : +1;
+    const hours = +match[2];
+    const minutes = +(match[3] || 0);
+    return sign * (hours * 60 + minutes) * 60 * 1e9;
+  },
   GetCanonicalTimeZoneIdentifier: (timeZoneIdentifier) => {
-    const offsetNs = parseOffsetString(timeZoneIdentifier);
+    const offsetNs = ES.ParseOffsetString(timeZoneIdentifier);
     if (offsetNs !== null) return ES.FormatTimeZoneOffsetString(offsetNs);
     const formatter = new IntlDateTimeFormat('en-us', {
       timeZone: String(timeZoneIdentifier),
@@ -2468,14 +2476,6 @@ export const ES = ObjectAssign({}, ES2020, {
 
 const OFFSET = new RegExp(`^${PARSE.offset.source}$`);
 
-function parseOffsetString(string) {
-  const match = OFFSET.exec(String(string));
-  if (!match) return null;
-  const sign = match[1] === '-' || match[1] === '\u2212' ? -1 : +1;
-  const hours = +match[2];
-  const minutes = +(match[3] || 0);
-  return sign * (hours * 60 + minutes) * 60 * 1e9;
-}
 function bisect(getState, left, right, lstate = getState(left), rstate = getState(right)) {
   left = bigInt(left);
   right = bigInt(right);
