@@ -165,8 +165,6 @@ const durationTimeDesignator = character('Tt');
 const weeksDesignator = character('Ww');
 const yearsDesignator = character('Yy');
 const utcDesignator = withCode(character('Zz'), (data) => {
-  data.zoneHour = 0;
-  data.zoneMinute = 0;
   data.ianaName = 'UTC';
 });
 
@@ -201,24 +199,28 @@ const timeZoneUTCOffsetMinute = withCode(
   zeroPaddedInclusive(0, 59, 2),
   (data, result) => (data.offsetMinute = +result)
 );
-const timeZoneUTCOffset = seq(timeZoneUTCOffsetSign, timeZoneUTCOffsetHour, [[':'], timeZoneUTCOffsetMinute]);
+const timeZoneUTCOffset = withCode(
+  seq(timeZoneUTCOffsetSign, timeZoneUTCOffsetHour, [[':'], timeZoneUTCOffsetMinute]),
+  (data) => {
+    if (data.offsetSign !== undefined && data.offsetHour !== undefined) {
+      const minutes = +`${data.offsetSign}${data.offsetHour * 60 + (data.offsetMinute || 0)}`;
+      data.offset =
+        (minutes < 0 ? '-' : '+') +
+        `${Math.floor(Math.abs(minutes) / 60)}`.padStart(2, '0') +
+        ':' +
+        `${Math.abs(minutes) % 60}`.padStart(2, '0');
+    }
+  }
+);
 const timeZoneIANAName = withCode(
   choice(...timezoneNames),
   (data, result) => (data.ianaName = ES.GetCanonicalTimeZoneIdentifier(result).toString())
 );
 const timeZone = withCode(choice(utcDesignator, seq(timeZoneUTCOffset, ['[', timeZoneIANAName, ']'])), (data) => {
-  data.offset =
-    data.offsetSign + `${data.offsetHour}`.padStart(2, '0') + ':' + `${data.offsetMinute || 0}`.padStart(2, '0');
-  data.zone = data.ianaName || data.offset;
+  if (!('offset' in data)) data.offset = undefined;
 });
 const temporalTimeZoneIdentifier = withCode(choice(timeZoneUTCOffset, timeZoneIANAName), (data) => {
-  const minutes = +`${data.offsetSign}${data.offsetHour * 60 + (data.offsetMinute || 0)}`;
-  data.offset =
-    (minutes < 0 ? '-' : '+') +
-    `${Math.floor(Math.abs(minutes) / 60)}`.padStart(2, '0') +
-    ':' +
-    `${Math.abs(minutes) % 60}`.padStart(2, '0');
-  data.zone = data.ianaName || data.offset;
+  if (!('offset' in data)) data.offset = undefined;
 });
 const timeSpec = seq(
   timeHour,
@@ -297,13 +299,13 @@ const goals = {
 const dateItems = ['year', 'month', 'day'];
 const timeItems = ['hour', 'minute', 'second', 'millisecond', 'microsecond', 'nanosecond'];
 const comparisonItems = {
-  Instant: [...dateItems, ...timeItems, 'zone'],
+  Instant: [...dateItems, ...timeItems, 'offset', 'ianaName'],
   Date: dateItems,
   DateTime: [...dateItems, ...timeItems],
   Duration: ['years', 'months', 'days', 'hours', 'minutes', 'seconds', 'milliseconds', 'microseconds', 'nanoseconds'],
   MonthDay: ['month', 'day'],
   Time: timeItems,
-  TimeZone: ['zone'],
+  TimeZone: ['offset', 'ianaName'],
   YearMonth: ['year', 'month']
 };
 
@@ -315,7 +317,9 @@ for (let count = 0; count < 1000; count++) {
   try {
     const parsed = ES[`ParseTemporal${mode}String`](fuzzed);
     for (let prop of comparisonItems[mode]) {
-      assert.equal(parsed[prop], generatedData[prop] || 0);
+      let expected = generatedData[prop];
+      if (prop !== 'ianaName' && prop !== 'offset') expected = expected || 0;
+      assert.equal(parsed[prop], expected);
     }
     console.log(`${fuzzed} => ok`);
   } catch (e) {
