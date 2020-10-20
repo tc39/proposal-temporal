@@ -132,7 +132,7 @@ export const ES = ObjectAssign({}, ES2020, {
         // Not an IANA name, may be a custom ID, pass through unchanged
       }
     }
-    const calendar = match[18] || null;
+    const calendar = match[18] || undefined;
     return {
       year,
       month,
