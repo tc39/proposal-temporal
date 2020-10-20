@@ -24,15 +24,6 @@ import * as REGEX from './regex.mjs';
 const OFFSET = new RegExp(`^${REGEX.offset.source}$`);
 const IANA_NAME = new RegExp(`^${REGEX.timeZoneID.source}$`);
 
-function parseOffsetString(string) {
-  const match = OFFSET.exec(String(string));
-  if (!match) return null;
-  const sign = match[1] === '-' || match[1] === '\u2212' ? -1 : +1;
-  const hours = +match[2];
-  const minutes = +(match[3] || 0);
-  return sign * (hours * 60 + minutes) * 60 * 1e9;
-}
-
 export class TimeZone {
   constructor(timeZoneIdentifier) {
     if (new.target === TimeZone) {
@@ -61,7 +52,7 @@ export class TimeZone {
     instant = ES.ToTemporalInstant(instant, GetIntrinsic('%Temporal.Instant%'));
     const id = GetSlot(this, TIMEZONE_ID);
 
-    const offsetNs = parseOffsetString(id);
+    const offsetNs = ES.ParseOffsetString(id);
     if (offsetNs !== null) return offsetNs;
 
     return ES.GetIANATimeZoneOffsetNanoseconds(GetSlot(instant, EPOCHNANOSECONDS), id);
@@ -167,7 +158,7 @@ export class TimeZone {
     const Instant = GetIntrinsic('%Temporal.Instant%');
     const id = GetSlot(this, TIMEZONE_ID);
 
-    const offsetNs = parseOffsetString(id);
+    const offsetNs = ES.ParseOffsetString(id);
     if (offsetNs !== null) {
       const epochNs = ES.GetEpochFromParts(
         GetSlot(dateTime, ISO_YEAR),
@@ -204,7 +195,7 @@ export class TimeZone {
     const id = GetSlot(this, TIMEZONE_ID);
 
     // Offset time zones or UTC have no transitions
-    if (parseOffsetString(id) !== null || id === 'UTC') {
+    if (ES.ParseOffsetString(id) !== null || id === 'UTC') {
       return null;
     }
 
@@ -219,7 +210,7 @@ export class TimeZone {
     const id = GetSlot(this, TIMEZONE_ID);
 
     // Offset time zones or UTC have no transitions
-    if (parseOffsetString(id) !== null || id === 'UTC') {
+    if (ES.ParseOffsetString(id) !== null || id === 'UTC') {
       return null;
     }
 
