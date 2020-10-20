@@ -50,6 +50,10 @@ describe('TimeZone', () => {
     test('\u221201:00');
     test('\u22120650');
     test('\u221208');
+    test('+01:00:00');
+    test('-010000');
+    test('+03:30:00.000000001');
+    test('-033000.1');
     test('Europe/Vienna');
     test('America/New_York');
     test('Africa/CAIRO'); // capitalization
@@ -59,6 +63,9 @@ describe('TimeZone', () => {
     function test(zone) {
       it(`${zone} is a zone`, () => equal(typeof new Temporal.TimeZone(zone), 'object'));
     }
+    ['+00:01.1', '-01.1'].forEach((id) => {
+      it(`${id} is not a zone`, () => throws(() => new Temporal.TimeZone(id), RangeError));
+    });
   });
   describe('.id property', () => {
     test('+01:00');
@@ -69,6 +76,10 @@ describe('TimeZone', () => {
     test('\u221201:00', '-01:00');
     test('\u22120650', '-06:50');
     test('\u221208', '-08:00');
+    test('+01:00:00', '+01:00');
+    test('-010000', '-01:00');
+    test('+03:30:00.000000001', '+03:30:00.000000001');
+    test('-033000.1', '-03:30:00.1');
     test('Europe/Vienna');
     test('America/New_York');
     test('Africa/CAIRO', 'Africa/Cairo');
@@ -121,9 +132,9 @@ describe('TimeZone', () => {
       equal(tzFrom, custom);
     });
     it('throws with bad identifier', () => {
-      throws(() => Temporal.TimeZone.from('local'), RangeError);
-      throws(() => Temporal.TimeZone.from('Z'), RangeError);
-      throws(() => Temporal.TimeZone.from('-08:00[America/Vancouver]'), RangeError);
+      ['local', 'Z', '-08:00[America/Vancouver]', '+00:01.1', '-01.1'].forEach((bad) => {
+        throws(() => Temporal.TimeZone.from(bad), RangeError);
+      });
     });
     it('throws with bad value in property bag', () => {
       throws(() => Temporal.TimeZone.from({ timeZone: 'local' }), RangeError);

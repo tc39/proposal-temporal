@@ -293,6 +293,12 @@ describe('Instant', () => {
         BigInt(Date.UTC(2019, 1, 17, 2, 45)) * BigInt(1e6)
       );
     });
+    it('sub-minute offset', () => {
+      equal(
+        Instant.from('1900-01-01T12:19:32+00:19:32[Europe/Amsterdam]').epochNanoseconds,
+        BigInt(Date.UTC(1900, 0, 1, 12)) * BigInt(1e6)
+      );
+    });
     it('throws when unable to disambiguate using offset', () => {
       throws(() => Instant.from('2019-02-16T23:45-04:00[America/Sao_Paulo]'), RangeError);
     });
