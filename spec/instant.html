@@ -388,7 +388,8 @@
         1. If _temporalTimeZoneLike_ is *undefined*, then
           1. Set _temporalTimeZoneLike_ to *"UTC"*.
         1. Let _timeZone_ be ? ToTemporalTimeZone(_temporalTimeZoneLike_).
-        1. Return ? TemporalInstantToString(_instant_, _timeZone_).
+        1. Let _calendar_ be ! GetISO8601Calendar().
+        1. Return ? TemporalInstantToString(_instant_, _timeZone_, _calendar_).
       </emu-alg>
     </emu-clause>
 
@@ -403,7 +404,8 @@
         1. Perform ? RequireInternalSlot(_instant_, [[InitializedTemporalInstant]]).
         1. If the implementation does not include the ECMA-402 Internationalization API, then
           1. Let _timeZone_ be ? CreateTemporalTimeZone(*"UTC"*).
-          1. Return ? TemporalInstantToString(_instant_, _timeZone_).
+          1. Let _calendar_ be ! GetISO8601Calendar().
+          1. Return ? TemporalInstantToString(_instant_, _timeZone_, _calendar_).
         1. Let _dateFormat_ be ? Construct(%DateTimeFormat%, « _locales_, _options_ »).
         1. Return ? FormatDateTime(_dateFormat_, _instant_).
       </emu-alg>
@@ -418,7 +420,8 @@
         1. Let _instant_ be the *this* value.
         1. Perform ? RequireInternalSlot(_instant_, [[InitializedTemporalInstant]]).
         1. Let _timeZone_ be ? CreateTemporalTimeZone(*"UTC"*).
-        1. Return ? TemporalInstantToString(_instant_, _timeZone_).
+        1. Let _calendar_ be ! GetISO8601Calendar().
+        1. Return ? TemporalInstantToString(_instant_, _timeZone_, _calendar_).
       </emu-alg>
     </emu-clause>
 
@@ -585,11 +588,11 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal-temporalinstanttostring" aoid="TemporalInstantToString">
-      <h1>TemporalInstantToString ( _instant_, _timeZone_ )</h1>
+      <h1>TemporalInstantToString ( _instant_, _timeZone_, _calendar_ )</h1>
       <emu-alg>
         1. Assert: Type(_instant_) is Object.
         1. Assert: _instant_ has an [[InitializedTemporalInstant]] internal slot.
-        1. Let _dateTime_ be ? GetTemporalDateTimeFor(_timeZone_, _instant_).
+        1. Let _dateTime_ be ? GetTemporalDateTimeFor(_timeZone_, _instant_, _calendar_).
         1. Let _dateTimeString_ be ? TemporalDateTimeToString(_dateTime_).
         1. Let _timeZoneString_ be ? ISOTimeZoneString(_timeZone_, _instant_).
         1. Return the string-concatenation of _dateTimeString_ and _timeZoneString_.
