@@ -97,6 +97,11 @@ describe('Instant', () => {
       const tz = Temporal.TimeZone.from('America/New_York');
       equal(inst.toString(tz), '1976-11-18T09:23:30.123456789-05:00[America/New_York]');
     });
+    it('sub-minute offset', () => {
+      const inst = Instant.from('1900-01-01T12:00Z');
+      const tz = Temporal.TimeZone.from('Europe/Amsterdam');
+      equal(inst.toString(tz), '1900-01-01T12:19:32+00:19:32[Europe/Amsterdam]');
+    });
   });
   describe('Instant.toJSON() works', () => {
     it('`1976-11-18T15:23:30.123456789+01:00`.toJSON()', () => {

@@ -197,6 +197,18 @@ describe('TimeZone', () => {
       }
     });
   });
+  describe('sub-minute offset', () => {
+    const zone = new Temporal.TimeZone('Europe/Amsterdam');
+    const inst = Temporal.Instant.from('1900-01-01T12:00Z');
+    const dtm = Temporal.DateTime.from('1900-01-01T12:00');
+    it(`${zone} has ID ${zone}`, () => equal(zone.id, `${zone}`));
+    it(`${zone} has offset +00:19:32 in ns`, () => equal(zone.getOffsetNanosecondsFor(inst), 1172000000000));
+    it(`${zone} has offset +00:19:32`, () => equal(zone.getOffsetStringFor(inst), '+00:19:32'));
+    it(`(${zone}).getDateTimeFor(${inst})`, () => equal(`${zone.getDateTimeFor(inst)}`, '1900-01-01T12:19:32'));
+    it(`(${zone}).getInstantFor(${dtm})`, () => equal(`${zone.getInstantFor(dtm)}`, '1900-01-01T11:40:28Z'));
+    it(`(${zone}).getNextTransition(${inst})`, () => zone.getNextTransition(inst), null);
+    it(`(${zone}).getPreviousTransition(${inst})`, () => zone.getPreviousTransition(inst), null);
+  });
   describe('with DST change', () => {
     it('clock moving forward', () => {
       const zone = new Temporal.TimeZone('Europe/Berlin');
