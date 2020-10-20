@@ -376,6 +376,74 @@ describe('ZonedDateTime', () => {
     });
   });
 
+  describe('math order of operations and options', () => {
+    const breakoutUnits = (
+      op: 'add' | 'subtract',
+      zdt: ZonedDateTime,
+      d: Temporal.Duration,
+      options: Temporal.ArithmeticOptions
+    ) =>
+      zdt[op]({ years: d.years }, options)
+        [op]({ months: d.months }, options)
+        [op]({ weeks: d.weeks }, options)
+        [op]({ days: d.days }, options)
+        [op](
+          {
+            hours: d.hours,
+            minutes: d.minutes,
+            seconds: d.seconds,
+            milliseconds: d.milliseconds,
+            microseconds: d.microseconds,
+            nanoseconds: d.nanoseconds
+          },
+          options
+        );
+
+    it('order of operations: add / none', () => {
+      const zdt = ZonedDateTime.from('2020-01-31T00:00-08:00[America/Los_Angeles]');
+      const d = Temporal.Duration.from({ months: 1, days: 1 });
+      const options: Temporal.ArithmeticOptions | undefined = undefined;
+      const result = zdt.add(d, options);
+      equal(result.toString(), '2020-03-01T00:00-08:00[America/Los_Angeles]');
+      equal(breakoutUnits('add', zdt, d, options).toString(), result.toString());
+    });
+    it('order of operations: add / constrain', () => {
+      const zdt = ZonedDateTime.from('2020-01-31T00:00-08:00[America/Los_Angeles]');
+      const d = Temporal.Duration.from({ months: 1, days: 1 });
+      const options: Temporal.ArithmeticOptions | undefined = { overflow: 'constrain' };
+      const result = zdt.add(d, options);
+      equal(result.toString(), '2020-03-01T00:00-08:00[America/Los_Angeles]');
+      equal(breakoutUnits('add', zdt, d, options).toString(), result.toString());
+    });
+    it('order of operations: add / reject', () => {
+      const zdt = ZonedDateTime.from('2020-01-31T00:00-08:00[America/Los_Angeles]');
+      const d = Temporal.Duration.from({ months: 1, days: 1 });
+      const options: Temporal.ArithmeticOptions | undefined = { overflow: 'reject' };
+      throws(() => zdt.add(d, options));
+    });
+    it('order of operations: subtract / none', () => {
+      const zdt = ZonedDateTime.from('2020-03-31T00:00-07:00[America/Los_Angeles]');
+      const d = Temporal.Duration.from({ months: 1, days: 1 });
+      const options: Temporal.ArithmeticOptions | undefined = undefined;
+      const result = zdt.subtract(d, options);
+      equal(result.toString(), '2020-02-28T00:00-08:00[America/Los_Angeles]');
+      equal(breakoutUnits('subtract', zdt, d, options).toString(), result.toString());
+    });
+    it('order of operations: subtract / constrain', () => {
+      const zdt = ZonedDateTime.from('2020-03-31T00:00-07:00[America/Los_Angeles]');
+      const d = Temporal.Duration.from({ months: 1, days: 1 });
+      const options: Temporal.ArithmeticOptions | undefined = { overflow: 'constrain' };
+      const result = zdt.subtract(d, options);
+      equal(result.toString(), '2020-02-28T00:00-08:00[America/Los_Angeles]');
+      equal(breakoutUnits('subtract', zdt, d, options).toString(), result.toString());
+    });
+    it('order of operations: subtract / reject', () => {
+      const zdt = ZonedDateTime.from('2020-03-31T00:00-07:00[America/Los_Angeles]');
+      const d = Temporal.Duration.from({ months: 1, days: 1 });
+      const options: Temporal.ArithmeticOptions | undefined = { overflow: 'reject' };
+      throws(() => zdt.subtract(d, options));
+    });
+  });
   describe('Structure', () => {
     it('ZonedDateTime is a Function', () => {
       equal(typeof ZonedDateTime, 'function');

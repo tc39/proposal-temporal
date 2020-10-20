@@ -184,39 +184,25 @@ function doAddOrSubtract(
   options: Temporal.ArithmeticOptions | undefined,
   zonedDateTime: ZonedDateTime
 ): ZonedDateTime {
-  // If negative duration for add, change to a positive duration subtract.
-  // If negative duration for subtract, change to a positive duration add.
-  // By doing this, none of the code below must worry about negative durations.
-  let duration = Temporal.Duration.from(durationLike);
-  if (duration.sign < 0) {
-    duration = duration.negated();
-    op = op === 'add' ? 'subtract' : 'add';
-  }
-
   const overflow = getOption(options, 'overflow', OVERFLOW_OPTIONS, 'constrain');
   const { timeZone, calendar } = zonedDateTime;
   const { timeDuration, dateDuration } = splitDuration(durationLike);
 
-  // RFC 5545 requires the date portion to be added in calendar days and the
-  // time portion to be added/subtracted in exact time. Subtraction works the
-  // same except that the order of operations is reversed: first the time units
-  // are subtracted using exact time, then date units are subtracted with
-  // calendar days.
+  // RFC 5545 requires the date portion to be added/subtracted in calendar days
+  // and the time portion to be added/subtracted in exact time.
+  // TODO: remove the manual order-of-operations hack below after #993 fix lands
+  // const dtIntermediate = zonedDateTime.toDateTime()[op](dateDuration, { overflow });
+  const { years, months, weeks, days } = dateDuration;
+  let dtIntermediate = zonedDateTime.toDateTime();
+  dtIntermediate = years ? dtIntermediate[op]({ years }, { overflow }) : dtIntermediate;
+  dtIntermediate = months ? dtIntermediate[op]({ months }, { overflow }) : dtIntermediate;
+  dtIntermediate = weeks ? dtIntermediate[op]({ weeks }, { overflow }) : dtIntermediate;
+  dtIntermediate = days ? dtIntermediate[op]({ days }, { overflow }) : dtIntermediate;
   // Note that `{ disambiguation: 'compatible' }` is implicitly used below
   // because this disambiguation behavior is required by RFC 5545.
-  if (op === 'add') {
-    // if addition, then order of operations is largest (date) units first
-    const dtIntermediate = zonedDateTime.toDateTime().add(dateDuration, { overflow });
-    const absIntermediate = dtIntermediate.toInstant(timeZone);
-    const absResult = absIntermediate.add(timeDuration);
-    return new ZonedDateTime(absResult.epochNanoseconds, timeZone, calendar);
-  } else {
-    // if subtraction, then order of operations is smallest (time) units first
-    const absIntermediate = zonedDateTime.toInstant().subtract(timeDuration);
-    const dtIntermediate = absIntermediate.toDateTime(timeZone, calendar);
-    const dtResult = dtIntermediate.subtract(dateDuration, { overflow });
-    return fromDateTime(dtResult, timeZone);
-  }
+  const absIntermediate = dtIntermediate.toInstant(timeZone);
+  const absResult = absIntermediate[op](timeDuration);
+  return new ZonedDateTime(absResult.epochNanoseconds, timeZone, calendar);
 }
 
 export class ZonedDateTime {
