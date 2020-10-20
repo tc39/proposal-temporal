@@ -293,6 +293,10 @@ describe('Userland time zone', () => {
         const tz = Temporal.TimeZone.from('1970-01-01T00:00-00:00:01.111111111[Custom/Subminute]');
         assert(tz instanceof SubminuteTimeZone);
       });
+      it('works for Instant.from', () => {
+        const instant = Temporal.Instant.from('1970-01-01T11:59:58.888888889-00:00:01.111111111[Custom/Subminute]');
+        equal(`${instant}`, '1970-01-01T12:00Z');
+      });
       it('works for Instant.toString', () => {
         const inst = Temporal.Instant.fromEpochSeconds(0);
         equal(inst.toString('Custom/Subminute'), '1969-12-31T23:59:58.888888889-00:00:01.111111111[Custom/Subminute]');

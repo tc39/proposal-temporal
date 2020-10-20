@@ -636,9 +636,23 @@
           `4` Digit
           `5` Digit
 
+      TimeZoneUTCOffsetSecond :
+          `0` Digit
+          `1` Digit
+          `2` Digit
+          `3` Digit
+          `4` Digit
+          `5` Digit
+
+      TimeZoneUTCOffsetFraction :
+          DecimalSeparator TimeFractionalPart
+
       TimeZoneUTCOffset :
           TimeZoneUTCOffsetSign TimeZoneUTCOffsetHour
-          TimeZoneUTCOffsetSign TimeZoneUTCOffsetHour `:`? TimeZoneUTCOffsetMinute
+          TimeZoneUTCOffsetSign TimeZoneUTCOffsetHour `:` TimeZoneUTCOffsetMinute
+          TimeZoneUTCOffsetSign TimeZoneUTCOffsetHour TimeZoneUTCOffsetMinute
+          TimeZoneUTCOffsetSign TimeZoneUTCOffsetHour `:` TimeZoneUTCOffsetMinute `:` TimeZoneUTCOffsetSecond TimeZoneUTCOffsetFraction?
+          TimeZoneUTCOffsetSign TimeZoneUTCOffsetHour TimeZoneUTCOffsetMinute TimeZoneUTCOffsetSecond TimeZoneUTCOffsetFraction?
 
       TZLeadingChar :
           Alpha

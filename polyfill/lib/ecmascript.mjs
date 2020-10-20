@@ -120,10 +120,20 @@ export const ES = ObjectAssign({}, ES2020, {
     let offset;
     if (match[14] && match[15]) {
       const offsetSign = match[14] === '-' || match[14] === '\u2212' ? '-' : '+';
-      offset = `${offsetSign}${match[15]}:${match[16] || '00'}`;
+      const offsetHours = match[15] || '00';
+      const offsetMinutes = match[16] || '00';
+      const offsetSeconds = match[17] || '00';
+      let offsetFraction = match[18] || '0';
+      offset = `${offsetSign}${offsetHours}:${offsetMinutes}`;
+      if (+offsetFraction) {
+        while (offsetFraction.endsWith('0')) offsetFraction = offsetFraction.slice(0, -1);
+        offset += `:${offsetSeconds}.${offsetFraction}`;
+      } else if (+offsetSeconds) {
+        offset += `:${offsetSeconds}`;
+      }
       if (offset === '-00:00') offset = '+00:00';
     }
-    let ianaName = match[13] ? 'UTC' : match[17];
+    let ianaName = match[13] ? 'UTC' : match[19];
     if (ianaName) {
       try {
         // Canonicalize name if it is an IANA link name or is capitalized wrong
@@ -132,7 +142,7 @@ export const ES = ObjectAssign({}, ES2020, {
         // Not an IANA name, may be a custom ID, pass through unchanged
       }
     }
-    const calendar = match[18] || undefined;
+    const calendar = match[20] || undefined;
     return {
       year,
       month,
@@ -1144,7 +1154,9 @@ export const ES = ObjectAssign({}, ES2020, {
     const sign = match[1] === '-' || match[1] === '\u2212' ? -1 : +1;
     const hours = +match[2];
     const minutes = +(match[3] || 0);
-    return sign * (hours * 60 + minutes) * 60 * 1e9;
+    const seconds = +(match[4] || 0);
+    const nanoseconds = +((match[5] || 0) + '000000000').slice(0, 9);
+    return sign * (((hours * 60 + minutes) * 60 + seconds) * 1e9 + nanoseconds);
   },
   GetCanonicalTimeZoneIdentifier: (timeZoneIdentifier) => {
     const offsetNs = ES.ParseOffsetString(timeZoneIdentifier);

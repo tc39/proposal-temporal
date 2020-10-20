@@ -199,16 +199,38 @@ const timeZoneUTCOffsetMinute = withCode(
   zeroPaddedInclusive(0, 59, 2),
   (data, result) => (data.offsetMinute = +result)
 );
+const timeZoneUTCOffsetSecond = withCode(
+  zeroPaddedInclusive(0, 59, 2),
+  (data, result) => (data.offsetSecond = +result)
+);
+const timeZoneUTCOffsetFractionalPart = withCode(between(1, 9, digit()), (data, result) => {
+  const fraction = result.padEnd(9, '0');
+  data.offsetFraction = +fraction;
+});
+const timeZoneUTCOffsetFraction = seq(decimalSeparator, timeZoneUTCOffsetFractionalPart);
 const timeZoneUTCOffset = withCode(
-  seq(timeZoneUTCOffsetSign, timeZoneUTCOffsetHour, [[':'], timeZoneUTCOffsetMinute]),
+  seq(
+    timeZoneUTCOffsetSign,
+    timeZoneUTCOffsetHour,
+    choice(
+      [timeZoneUTCOffsetMinute, [timeZoneUTCOffsetSecond, [timeZoneUTCOffsetFraction]]],
+      seq(':', timeZoneUTCOffsetMinute, [':', timeZoneUTCOffsetSecond, [timeZoneUTCOffsetFraction]])
+    )
+  ),
   (data) => {
     if (data.offsetSign !== undefined && data.offsetHour !== undefined) {
-      const minutes = +`${data.offsetSign}${data.offsetHour * 60 + (data.offsetMinute || 0)}`;
-      data.offset =
-        (minutes < 0 ? '-' : '+') +
-        `${Math.floor(Math.abs(minutes) / 60)}`.padStart(2, '0') +
-        ':' +
-        `${Math.abs(minutes) % 60}`.padStart(2, '0');
+      const h = `${data.offsetHour}`.padStart(2, '0');
+      const m = `${data.offsetMinute || 0}`.padStart(2, '0');
+      const s = `${data.offsetSecond || 0}`.padStart(2, '0');
+      data.offset = `${data.offsetSign}${h}:${m}`;
+      if (data.offsetFraction) {
+        let fraction = `${data.offsetFraction}`.padStart(9, '0');
+        while (fraction.endsWith('0')) fraction = fraction.slice(0, -1);
+        data.offset += `:${s}.${fraction}`;
+      } else if (data.offsetSecond) {
+        data.offset += `:${s}`;
+      }
+      if (data.offset === '-00:00') data.offset = '+00:00';
     }
   }
 );
