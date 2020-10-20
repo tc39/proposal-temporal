@@ -1172,10 +1172,23 @@ export const ES = ObjectAssign({}, ES2020, {
   FormatTimeZoneOffsetString: (offsetNanoseconds) => {
     const sign = offsetNanoseconds < 0 ? '-' : '+';
     offsetNanoseconds = Math.abs(offsetNanoseconds);
-    const offsetMinutes = Math.floor(offsetNanoseconds / 60e9);
-    const offsetMinuteString = `00${offsetMinutes % 60}`.slice(-2);
-    const offsetHourString = `00${Math.floor(offsetMinutes / 60)}`.slice(-2);
-    return `${sign}${offsetHourString}:${offsetMinuteString}`;
+    const nanoseconds = offsetNanoseconds % 1e9;
+    const seconds = Math.floor(offsetNanoseconds / 1e9) % 60;
+    const minutes = Math.floor(offsetNanoseconds / 60e9) % 60;
+    const hours = Math.floor(offsetNanoseconds / 3600e9);
+
+    const hourString = ES.ISODateTimePartString(hours);
+    const minuteString = ES.ISODateTimePartString(minutes);
+    const secondString = ES.ISODateTimePartString(seconds);
+    let post = '';
+    if (nanoseconds) {
+      let fraction = `${nanoseconds}`.padStart(9, '0');
+      while (fraction[fraction.length - 1] === '0') fraction = fraction.slice(0, -1);
+      post = `:${secondString}.${fraction}`;
+    } else if (seconds) {
+      post = `:${secondString}`;
+    }
+    return `${sign}${hourString}:${minuteString}${post}`;
   },
   GetEpochFromParts: (year, month, day, hour, minute, second, millisecond, microsecond, nanosecond) => {
     // Note: Date.UTC() interprets one and two-digit years as being in the

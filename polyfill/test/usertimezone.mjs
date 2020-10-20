@@ -215,6 +215,109 @@ describe('Userland time zone', () => {
       });
     });
   });
+  describe('sub-minute offset', () => {
+    class SubminuteTimeZone extends Temporal.TimeZone {
+      constructor() {
+        super('Custom/Subminute');
+      }
+      getOffsetNanosecondsFor() {
+        return -1111111111;
+      }
+      getPossibleInstantsFor(dateTime) {
+        const instant = dateTime.toInstant('UTC');
+        return [instant.add({ nanoseconds: 1111111111 })];
+      }
+      getNextTransition() {
+        return null;
+      }
+      getPreviousTransition() {
+        return null;
+      }
+    }
+
+    const obj = new SubminuteTimeZone();
+    const inst = Temporal.Instant.fromEpochNanoseconds(0n);
+    const dt = new Temporal.DateTime(1976, 11, 18, 15, 23, 30, 123, 456, 789);
+
+    it('is a time zone', () => equal(typeof obj, 'object'));
+    it('.id property', () => equal(obj.id, 'Custom/Subminute'));
+    it('.id is not available in from()', () => {
+      throws(() => Temporal.TimeZone.from('Custom/Subminute'), RangeError);
+      throws(
+        () => Temporal.TimeZone.from('2020-05-26T16:02:46.251163036-00:00:01.111111111[Custom/Subminute]'),
+        RangeError
+      );
+    });
+    it('has offset string -00:00:01.111111111', () => equal(obj.getOffsetStringFor(inst), '-00:00:01.111111111'));
+    it('converts to DateTime', () => {
+      equal(`${obj.getDateTimeFor(inst)}`, '1969-12-31T23:59:58.888888889');
+      equal(`${inst.toDateTimeISO(obj)}`, '1969-12-31T23:59:58.888888889');
+      equal(`${inst.toDateTime(obj, 'gregory')}`, '1969-12-31T23:59:58.888888889[c=gregory]');
+    });
+    it('converts to Instant', () => {
+      equal(`${obj.getInstantFor(dt)}`, '1976-11-18T15:23:31.234567900Z');
+      equal(`${dt.toInstant(obj)}`, '1976-11-18T15:23:31.234567900Z');
+    });
+    it('converts to string', () => equal(`${obj}`, obj.id));
+    it('prints in instant.toString', () =>
+      equal(inst.toString(obj), '1969-12-31T23:59:58.888888889-00:00:01.111111111[Custom/Subminute]'));
+    it('has no next transitions', () => assert.equal(obj.getNextTransition(), null));
+    it('has no previous transitions', () => assert.equal(obj.getPreviousTransition(), null));
+    it('works in Temporal.now', () => {
+      assert(Temporal.now.dateTimeISO(obj) instanceof Temporal.DateTime);
+      assert(Temporal.now.dateTime('gregory', obj) instanceof Temporal.DateTime);
+      assert(Temporal.now.dateISO(obj) instanceof Temporal.Date);
+      assert(Temporal.now.date('gregory', obj) instanceof Temporal.Date);
+      assert(Temporal.now.timeISO(obj) instanceof Temporal.Time);
+    });
+    describe('Making available globally', () => {
+      const originalTemporalTimeZoneFrom = Temporal.TimeZone.from;
+      before(() => {
+        Temporal.TimeZone.from = function (item) {
+          let id;
+          if (item instanceof Temporal.TimeZone) {
+            id = item.id;
+          } else {
+            id = `${item}`;
+            // TODO: Use Temporal.parse here to extract the ID from an ISO string
+          }
+          if (id === 'Custom/Subminute') return new SubminuteTimeZone();
+          return originalTemporalTimeZoneFrom.call(this, id);
+        };
+      });
+      it('works for TimeZone.from(id)', () => {
+        const tz = Temporal.TimeZone.from('Custom/Subminute');
+        assert(tz instanceof SubminuteTimeZone);
+      });
+      it.skip('works for TimeZone.from(ISO string)', () => {
+        const tz = Temporal.TimeZone.from('1970-01-01T00:00-00:00:01.111111111[Custom/Subminute]');
+        assert(tz instanceof SubminuteTimeZone);
+      });
+      it('works for Instant.toString', () => {
+        const inst = Temporal.Instant.fromEpochSeconds(0);
+        equal(inst.toString('Custom/Subminute'), '1969-12-31T23:59:58.888888889-00:00:01.111111111[Custom/Subminute]');
+      });
+      it('works for Instant.toDateTime and toDateTimeISO', () => {
+        const inst = Temporal.Instant.fromEpochSeconds(0);
+        equal(`${inst.toDateTimeISO('Custom/Subminute')}`, '1969-12-31T23:59:58.888888889');
+        equal(`${inst.toDateTime('Custom/Subminute', 'gregory')}`, '1969-12-31T23:59:58.888888889[c=gregory]');
+      });
+      it('works for DateTime.toInstant', () => {
+        const dt = Temporal.DateTime.from('1970-01-01T00:00');
+        equal(dt.toInstant('Custom/Subminute').epochNanoseconds, 1111111111n);
+      });
+      it('works for Temporal.now', () => {
+        assert(Temporal.now.dateTimeISO('Custom/Subminute') instanceof Temporal.DateTime);
+        assert(Temporal.now.dateTime('gregory', 'Custom/Subminute') instanceof Temporal.DateTime);
+        assert(Temporal.now.dateISO('Custom/Subminute') instanceof Temporal.Date);
+        assert(Temporal.now.date('gregory', 'Custom/Subminute') instanceof Temporal.Date);
+        assert(Temporal.now.timeISO('Custom/Subminute') instanceof Temporal.Time);
+      });
+      after(() => {
+        Temporal.TimeZone.from = originalTemporalTimeZoneFrom;
+      });
+    });
+  });
 });
 
 const nsPerDay = 86400_000_000_000n;

@@ -31,5 +31,5 @@ const timeZone = new Proxy({
 });
 
 const result = Temporal.TimeZone.prototype.getOffsetStringFor.call(timeZone, instant);
-assert.sameValue(result, "+02:44");
+assert.sameValue(result, "+02:44:36.543210123");
 assert.compareArray(actual, expected);
