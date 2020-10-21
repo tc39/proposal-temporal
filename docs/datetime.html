@@ -371,10 +371,10 @@ dt <span class="token operator">=</span> Temporal<span class="token punctuation"
 dt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> year<span class="token operator">:</span> <span class="token number">2001</span><span class="token punctuation">,</span> month<span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">,</span> day<span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">,</span> minute<span class="token operator">:</span> <span class="token number">60</span> <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> overflow<span class="token operator">:</span> <span class="token string">'reject'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token comment">// => throws</span></code></pre><!-- prettier-ignore-end -->
 
-<h3 id="compare"><a class="heading-link" href="#compare"></a>Temporal.DateTime.<strong>compare</strong>(<em>one</em>: Temporal.DateTime, <em>two</em>: Temporal.DateTime) : number</h3><p><strong>Parameters:</strong></p>
+<h3 id="compare"><a class="heading-link" href="#compare"></a>Temporal.DateTime.<strong>compare</strong>(<em>one</em>: Temporal.DateTime | object | string, <em>two</em>: Temporal.DateTime | object | string) : number</h3><p><strong>Parameters:</strong></p>
 <ul>
-<li><code>one</code> (<code>Temporal.DateTime</code>): First date/time to compare.</li>
-<li><code>two</code> (<code>Temporal.DateTime</code>): Second date/time to compare.</li>
+<li><code>one</code> (<code>Temporal.DateTime</code> or value convertible to one): First date/time to compare.</li>
+<li><code>two</code> (<code>Temporal.DateTime</code> or value convertible to one): Second date/time to compare.</li>
 </ul>
 <p><strong>Returns:</strong> &minus;1, 0, or 1.</p>
 <p>Compares two <code>Temporal.DateTime</code> objects.
@@ -384,6 +384,7 @@ Returns an integer indicating whether <code>one</code> comes before or after or 
 <li>0 if <code>one</code> and <code>two</code> are the same;</li>
 <li>1 if <code>one</code> comes after <code>two</code>.</li>
 </ul>
+<p>If <code>one</code> and <code>two</code> are not <code>Temporal.DateTime</code> objects, then they will be converted to one as if they were passed to <code>Temporal.DateTime.from()</code>.</p>
 <p>This function can be used to sort arrays of <code>Temporal.DateTime</code> objects.
 For example:</p>
 <pre class="language-javascript"><code class="language-javascript">one <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'1995-12-07T03:24'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -517,9 +518,9 @@ date<span class="token punctuation">.</span><span class="token function">with</s
 <p>This method is the same as <code>datetime.with({ calendar })</code>, but may be more efficient.</p>
 <p>Usage example:</p>
 <pre class="language-javascript"><code class="language-javascript">dt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'1995-12-07T03:24:30.000003500[c=japanese]'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-dt<span class="token punctuation">.</span><span class="token function">withCalendar</span><span class="token punctuation">(</span><span class="token string">'iso8601'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 1995-12-07T03:24:30.000003500</span></code></pre><h3 id="add"><a class="heading-link" href="#add"></a>datetime.<strong>add</strong>(<em>duration</em>: object, <em>options</em>?: object) : Temporal.DateTime</h3><p><strong>Parameters:</strong></p>
+dt<span class="token punctuation">.</span><span class="token function">withCalendar</span><span class="token punctuation">(</span><span class="token string">'iso8601'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 1995-12-07T03:24:30.000003500</span></code></pre><h3 id="add"><a class="heading-link" href="#add"></a>datetime.<strong>add</strong>(<em>duration</em>: Temporal.Duration | object | string, <em>options</em>?: object) : Temporal.DateTime</h3><p><strong>Parameters:</strong></p>
 <ul>
-<li><code>duration</code> (object): A <code>Temporal.Duration</code> object or a duration-like object.</li>
+<li><code>duration</code> (<code>Temporal.Duration</code> or value convertible to one): The duration to add.</li>
 <li><code>options</code> (optional object): An object with properties representing options for the addition.
 The following options are recognized:<ul>
 <li><code>overflow</code> (string): How to deal with additions that result in out-of-range values.
@@ -530,7 +531,8 @@ The default is <code>constrain</code>.</li>
 </ul>
 <p><strong>Returns:</strong> a new <code>Temporal.DateTime</code> object which is the date and time indicated by <code>datetime</code> plus <code>duration</code>.</p>
 <p>This method adds <code>duration</code> to <code>datetime</code>, returning a point in time that is in the future relative to <code>datetime</code>.</p>
-<p>The <code>duration</code> argument is an object with properties denoting a duration, such as <code>{ hours: 5, minutes: 30 }</code>, or a <code>Temporal.Duration</code> object.</p>
+<p>The <code>duration</code> argument is an object with properties denoting a duration, such as <code>{ hours: 5, minutes: 30 }</code>, or a string such as <code>PT5H30M</code>, or a <code>Temporal.Duration</code> object.
+If <code>duration</code> is not a <code>Temporal.Duration</code> object, then it will be converted to one as if it were passed to <code>Temporal.Duration.from()</code>.</p>
 <p>Some additions may be ambiguous, because months have different lengths.
 For example, adding one month to August 31 would result in September 31, which doesn&#39;t exist.
 For these cases, the <code>overflow</code> option tells what to do:</p>
@@ -546,9 +548,9 @@ dt<span class="token punctuation">.</span><span class="token function">add</span
 
 dt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2019-01-31T15:30'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 dt<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token punctuation">{</span> months<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2019-02-28T15:30</span>
-dt<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token punctuation">{</span> months<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> overflow<span class="token operator">:</span> <span class="token string">'reject'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => throws</span></code></pre><h3 id="subtract"><a class="heading-link" href="#subtract"></a>datetime.<strong>subtract</strong>(<em>duration</em>: object, <em>options</em>?: object) : Temporal.DateTime</h3><p><strong>Parameters:</strong></p>
+dt<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token punctuation">{</span> months<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> overflow<span class="token operator">:</span> <span class="token string">'reject'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => throws</span></code></pre><h3 id="subtract"><a class="heading-link" href="#subtract"></a>datetime.<strong>subtract</strong>(<em>duration</em>: Temporal.Duration | object | string, <em>options</em>?: object) : Temporal.DateTime</h3><p><strong>Parameters:</strong></p>
 <ul>
-<li><code>duration</code> (object): A <code>Temporal.Duration</code> object or a duration-like object.</li>
+<li><code>duration</code> (<code>Temporal.Duration</code> or value convertible to one): The duration to subtract.</li>
 <li><code>options</code> (optional object): An object with properties representing options for the subtraction.
 The following options are recognized:<ul>
 <li><code>overflow</code> (string): How to deal with subtractions that result in out-of-range values.
@@ -559,7 +561,8 @@ The default is <code>constrain</code>.</li>
 </ul>
 <p><strong>Returns:</strong> a new <code>Temporal.DateTime</code> object which is the time indicated by <code>datetime</code> minus <code>duration</code>.</p>
 <p>This method subtracts <code>duration</code> from <code>datetime</code>, returning a point in time that is in the past relative to <code>datetime</code>.</p>
-<p>The <code>duration</code> argument is an object with properties denoting a duration, such as <code>{ hours: 5, minutes: 30 }</code>, or a <code>Temporal.Duration</code> object.</p>
+<p>The <code>duration</code> argument is an object with properties denoting a duration, such as <code>{ hours: 5, minutes: 30 }</code>, or a string such as <code>PT5H30M</code>, or a <code>Temporal.Duration</code> object.
+If <code>duration</code> is not a <code>Temporal.Duration</code> object, then it will be converted to one as if it were passed to <code>Temporal.Duration.from()</code>.</p>
 <p>Some subtractions may be ambiguous, because months have different lengths.
 For example, subtracting one month from July 31 would result in June 31, which doesn&#39;t exist.
 For these cases, the <code>overflow</code> option tells what to do:</p>
@@ -575,9 +578,9 @@ dt<span class="token punctuation">.</span><span class="token function">subtract<
 
 dt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2019-03-31T15:30'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 dt<span class="token punctuation">.</span><span class="token function">subtract</span><span class="token punctuation">(</span><span class="token punctuation">{</span> months<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> overflow<span class="token operator">:</span> <span class="token string">'constrain'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2019-02-28T15:30</span>
-dt<span class="token punctuation">.</span><span class="token function">subtract</span><span class="token punctuation">(</span><span class="token punctuation">{</span> months<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => throws</span></code></pre><h3 id="difference"><a class="heading-link" href="#difference"></a>datetime.<strong>difference</strong>(<em>other</em>: Temporal.DateTime, <em>options</em>?: object) : Temporal.Duration</h3><p><strong>Parameters:</strong></p>
+dt<span class="token punctuation">.</span><span class="token function">subtract</span><span class="token punctuation">(</span><span class="token punctuation">{</span> months<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => throws</span></code></pre><h3 id="difference"><a class="heading-link" href="#difference"></a>datetime.<strong>difference</strong>(<em>other</em>: Temporal.DateTime | object | string, <em>options</em>?: object) : Temporal.Duration</h3><p><strong>Parameters:</strong></p>
 <ul>
-<li><code>other</code> (<code>Temporal.DateTime</code>): Another date/time with which to compute the difference.</li>
+<li><code>other</code> (<code>Temporal.DateTime</code> or value convertible to one): Another date/time with which to compute the difference.</li>
 <li><code>options</code> (optional object): An object with properties representing options for the operation.
 The following options are recognized:<ul>
 <li><code>largestUnit</code> (string): The largest unit of time to allow in the resulting <code>Temporal.Duration</code> object.
@@ -597,6 +600,7 @@ The default is <code>&#39;nearest&#39;</code>.</li>
 <p><strong>Returns:</strong> a <code>Temporal.Duration</code> representing the difference between <code>datetime</code> and <code>other</code>.</p>
 <p>This method computes the difference between the two times represented by <code>datetime</code> and <code>other</code>, optionally rounds it, and returns it as a <code>Temporal.Duration</code> object.
 If <code>other</code> is later than <code>datetime</code> then the resulting duration will be negative.</p>
+<p>If <code>other</code> is not a <code>Temporal.DateTime</code> object, then it will be converted to one as if it were passed to <code>Temporal.DateTime.from()</code>.</p>
 <p>The <code>largestUnit</code> option controls how the resulting duration is expressed.
 The returned <code>Temporal.Duration</code> object will not have any nonzero fields that are larger than the unit in <code>largestUnit</code>.
 A difference of two hours will become 7200 seconds when <code>largestUnit</code> is <code>&quot;seconds&quot;</code>, for example.
@@ -686,7 +690,7 @@ dt<span class="token punctuation">.</span><span class="token function">round</sp
 dt<span class="token punctuation">.</span><span class="token function">round</span><span class="token punctuation">(</span><span class="token punctuation">{</span> roundingIncrement<span class="token operator">:</span> <span class="token number">30</span><span class="token punctuation">,</span> smallestUnit<span class="token operator">:</span> <span class="token string">'minute'</span><span class="token punctuation">,</span> roundingMode<span class="token operator">:</span> <span class="token string">'floor'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token comment">// => 1995-12-07T03:00</span></code></pre><!-- prettier-ignore-end -->
 
-<h3 id="equals"><a class="heading-link" href="#equals"></a>datetime.<strong>equals</strong>(<em>other</em>: Temporal.DateTime) : boolean</h3><p><strong>Parameters:</strong></p>
+<h3 id="equals"><a class="heading-link" href="#equals"></a>datetime.<strong>equals</strong>(<em>other</em>: Temporal.DateTime | object | string) : boolean</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>other</code> (<code>Temporal.DateTime</code>): Another date/time to compare.</li>
 </ul>
@@ -695,6 +699,7 @@ dt<span class="token punctuation">.</span><span class="token function">round</sp
 <p>This function exists because it&#39;s not possible to compare using <code>datetime == other</code> or <code>datetime === other</code>, due to ambiguity in the primitive representation and between Temporal types.</p>
 <p>If you don&#39;t need to know the order in which the two dates/times occur, then this function may be less typing and more efficient than <code>Temporal.DateTime.compare</code>.</p>
 <p>Note that this function will return <code>true</code> if the two date/times are equal, even if they are expressed in different calendar systems.</p>
+<p>If <code>other</code> is not a <code>Temporal.DateTime</code> object, then it will be converted to one as if it were passed to <code>Temporal.DateTime.from()</code>.</p>
 <p>Example usage:</p>
 <pre class="language-javascript"><code class="language-javascript">dt1 <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'1995-12-07T03:24:30.000003500'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 dt2 <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2019-01-31T15:30'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>

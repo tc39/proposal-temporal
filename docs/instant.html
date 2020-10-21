@@ -300,10 +300,10 @@ todayMs <span class="token operator">=</span> Temporal<span class="token punctua
 <p><strong>Returns:</strong> a new <code>Temporal.Instant</code> object.</p>
 <p>Same as <code>Temporal.Instant.fromEpochSeconds()</code>, but with nanosecond (10<sup>&minus;9</sup> second) precision.
 Also the same as <code>new Temporal.Instant(epochNanoseconds)</code>.</p>
-<h3 id="compare"><a class="heading-link" href="#compare"></a>Temporal.Instant.<strong>compare</strong>(<em>one</em>: Temporal.Instant, <em>two</em>: Temporal.Instant) : number</h3><p><strong>Parameters:</strong></p>
+<h3 id="compare"><a class="heading-link" href="#compare"></a>Temporal.Instant.<strong>compare</strong>(<em>one</em>: Temporal.Instant | string, <em>two</em>: Temporal.Instant | string) : number</h3><p><strong>Parameters:</strong></p>
 <ul>
-<li><code>one</code> (<code>Temporal.Instant</code>): First time to compare.</li>
-<li><code>two</code> (<code>Temporal.Instant</code>): Second time to compare.</li>
+<li><code>one</code> (<code>Temporal.Instant</code> or value convertible to one): First time to compare.</li>
+<li><code>two</code> (<code>Temporal.Instant</code> or value convertible to one): Second time to compare.</li>
 </ul>
 <p><strong>Returns:</strong> &minus;1, 0, or 1.</p>
 <p>Compares two <code>Temporal.Instant</code> objects.
@@ -313,6 +313,7 @@ Returns an integer indicating whether <code>one</code> comes before or after or 
 <li>0 if <code>one</code> and <code>two</code> represent the same time;</li>
 <li>1 if <code>one</code> comes after <code>two</code>.</li>
 </ul>
+<p>If <code>one</code> and <code>two</code> are not <code>Temporal.Instant</code> objects, then they will be converted to one as if they were passed to <code>Temporal.Instant.from()</code>.</p>
 <p>This function can be used to sort arrays of <code>Temporal.Instant</code> objects.
 For example:</p>
 <pre class="language-javascript"><code class="language-javascript">one <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">fromEpochSeconds</span><span class="token punctuation">(</span><span class="token number">1.0e9</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -414,13 +415,14 @@ cal <span class="token operator">=</span> Temporal<span class="token punctuation
 dt <span class="token operator">=</span> epoch<span class="token punctuation">.</span><span class="token function">toDateTime</span><span class="token punctuation">(</span>tz<span class="token punctuation">,</span> cal<span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token comment">// => 1970-01-01T09:00[c=japanese]</span>
 console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>dt<span class="token punctuation">.</span>year<span class="token punctuation">,</span> dt<span class="token punctuation">.</span>era<span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token comment">// => 45 showa</span></code></pre><h3 id="add"><a class="heading-link" href="#add"></a>instant.<strong>add</strong>(<em>duration</em>: object) : Temporal.Instant</h3><p><strong>Parameters:</strong></p>
+  <span class="token comment">// => 45 showa</span></code></pre><h3 id="add"><a class="heading-link" href="#add"></a>instant.<strong>add</strong>(<em>duration</em>: Temporal.Duration | object | string) : Temporal.Instant</h3><p><strong>Parameters:</strong></p>
 <ul>
-<li><code>duration</code> (object): A <code>Temporal.Duration</code> object or a duration-like object.</li>
+<li><code>duration</code> (<code>Temporal.Duration</code> or value convertible to one): The duration to add.</li>
 </ul>
 <p><strong>Returns:</strong> a new <code>Temporal.Instant</code> object which is the exact time indicated by <code>instant</code> plus <code>duration</code>.</p>
 <p>This method adds <code>duration</code> to <code>instant</code>.</p>
-<p>The <code>duration</code> argument is an object with properties denoting a duration, such as <code>{ hours: 5, minutes: 30 }</code>, or a <code>Temporal.Duration</code> object.</p>
+<p>The <code>duration</code> argument is an object with properties denoting a duration, such as <code>{ hours: 5, minutes: 30 }</code>, or a string such as <code>PT5H30M</code>, or a <code>Temporal.Duration</code> object.
+If <code>duration</code> is not a <code>Temporal.Duration</code> object, then it will be converted to one as if it were passed to <code>Temporal.Duration.from()</code>.</p>
 <p>The <code>years</code>, <code>months</code>, <code>weeks</code>, and <code>days</code> fields of <code>duration</code> must be zero.
 <code>Temporal.Instant</code> is independent of time zones and calendars, and so years, months, weeks, and days may be different lengths depending on which calendar or time zone they are reckoned in.
 This makes an addition with those units ambiguous.
@@ -431,13 +433,14 @@ If you need to do this, convert the <code>Temporal.Instant</code> to a <code>Tem
 <pre class="language-js"><code class="language-js"><span class="token comment">// Temporal.Instant representing five hours from now</span>
 Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">instant</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token punctuation">{</span> hours<span class="token operator">:</span> <span class="token number">5</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 fiveHours <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Duration<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> hours<span class="token operator">:</span> <span class="token number">5</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">instant</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>fiveHours<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre><h3 id="subtract"><a class="heading-link" href="#subtract"></a>instant.<strong>subtract</strong>(<em>duration</em>: object) : Temporal.Instant</h3><p><strong>Parameters:</strong></p>
+Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">instant</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>fiveHours<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre><h3 id="subtract"><a class="heading-link" href="#subtract"></a>instant.<strong>subtract</strong>(<em>duration</em>: Temporal.Duration | object | string) : Temporal.Instant</h3><p><strong>Parameters:</strong></p>
 <ul>
-<li><code>duration</code> (object): A <code>Temporal.Duration</code> object or a duration-like object.</li>
+<li><code>duration</code> (<code>Temporal.Duration</code> or value convertible to one): The duration to subtract.</li>
 </ul>
 <p><strong>Returns:</strong> a new <code>Temporal.Instant</code> object which is the exact time indicated by <code>instant</code> minus <code>duration</code>.</p>
 <p>This method subtracts <code>duration</code> from <code>instant</code>.</p>
-<p>The <code>duration</code> argument is an object with properties denoting a duration, such as <code>{ hours: 5, minutes: 30 }</code>, or a <code>Temporal.Duration</code> object.</p>
+<p>The <code>duration</code> argument is an object with properties denoting a duration, such as <code>{ hours: 5, minutes: 30 }</code>, or a string such as <code>PT5H30M</code>, or a <code>Temporal.Duration</code> object.
+If <code>duration</code> is not a <code>Temporal.Duration</code> object, then it will be converted to one as if it were passed to <code>Temporal.Duration.from()</code>.</p>
 <p>The <code>years</code>, <code>months</code>, <code>weeks</code>, and <code>days</code> fields of <code>duration</code> must be zero.
 <code>Temporal.Instant</code> is independent of time zones and calendars, and so years, months, weeks, and days may be different lengths depending on which calendar or time zone they are reckoned in.
 This makes a subtraction with those units ambiguous.
@@ -448,9 +451,9 @@ If you need to do this, convert the <code>Temporal.Instant</code> to a <code>Tem
 <pre class="language-js"><code class="language-js"><span class="token comment">// Temporal.Instant representing this time an hour ago</span>
 Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">instant</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">subtract</span><span class="token punctuation">(</span><span class="token punctuation">{</span> hours<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 oneHour <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Duration<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> hours<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">instant</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">subtract</span><span class="token punctuation">(</span>oneHour<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre><h3 id="difference"><a class="heading-link" href="#difference"></a>instant.<strong>difference</strong>(<em>other</em>: Temporal.Instant, <em>options</em>?: object) : Temporal.Duration</h3><p><strong>Parameters:</strong></p>
+Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">instant</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">subtract</span><span class="token punctuation">(</span>oneHour<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre><h3 id="difference"><a class="heading-link" href="#difference"></a>instant.<strong>difference</strong>(<em>other</em>: Temporal.Instant | string, <em>options</em>?: object) : Temporal.Duration</h3><p><strong>Parameters:</strong></p>
 <ul>
-<li><code>other</code> (<code>Temporal.Instant</code>): Another exact time with which to compute the difference.</li>
+<li><code>other</code> (<code>Temporal.Instant</code> or value convertible to one): Another exact time with which to compute the difference.</li>
 <li><code>options</code> (optional object): An object with properties representing options for the operation.
 The following options are recognized:<ul>
 <li><code>largestUnit</code> (string): The largest unit of time to allow in the resulting <code>Temporal.Duration</code> object.
@@ -470,6 +473,7 @@ The default is <code>&#39;nearest&#39;</code>.</li>
 <p><strong>Returns:</strong> a <code>Temporal.Duration</code> representing the difference between <code>instant</code> and <code>other</code>.</p>
 <p>This method computes the difference between the two exact times represented by <code>instant</code> and <code>other</code>, optionally rounds it, and returns it as a <code>Temporal.Duration</code> object.
 If <code>other</code> is later than <code>instant</code> then the resulting duration will be negative.</p>
+<p>If <code>other</code> is not a <code>Temporal.Instant</code> object, then it will be converted to one as if it were passed to <code>Temporal.Instant.from()</code>.</p>
 <p>The <code>largestUnit</code> option controls how the resulting duration is expressed.
 The returned <code>Temporal.Duration</code> object will not have any nonzero fields that are larger than the unit in <code>largestUnit</code>.
 A difference of two hours will become 7200 seconds when <code>largestUnit</code> is <code>&quot;seconds&quot;</code>, for example.
@@ -569,14 +573,15 @@ instant<span class="token punctuation">.</span><span class="token function">roun
 instant<span class="token punctuation">.</span><span class="token function">round</span><span class="token punctuation">(</span><span class="token punctuation">{</span> roundingIncrement<span class="token operator">:</span> <span class="token number">60</span><span class="token punctuation">,</span> smallestUnit<span class="token operator">:</span> <span class="token string">'minute'</span><span class="token punctuation">,</span> roundingMode<span class="token operator">:</span> <span class="token string">'floor'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token comment">// => 2019-03-30T02:00Z</span></code></pre><!-- prettier-ignore-end -->
 
-<h3 id="equals"><a class="heading-link" href="#equals"></a>instant.<strong>equals</strong>(<em>other</em>: Temporal.Instant) : boolean</h3><p><strong>Parameters:</strong></p>
+<h3 id="equals"><a class="heading-link" href="#equals"></a>instant.<strong>equals</strong>(<em>other</em>: Temporal.Instant | string) : boolean</h3><p><strong>Parameters:</strong></p>
 <ul>
-<li><code>other</code> (<code>Temporal.Instant</code>): Another exact time to compare.</li>
+<li><code>other</code> (<code>Temporal.Instant</code> or value convertible to one): Another exact time to compare.</li>
 </ul>
 <p><strong>Returns:</strong> <code>true</code> if <code>instant</code> and <code>other</code> are equal, or <code>false</code> if not.</p>
 <p>Compares two <code>Temporal.Instant</code> objects for equality.</p>
 <p>This function exists because it&#39;s not possible to compare using <code>instant == other</code> or <code>instant === other</code>, due to ambiguity in the primitive representation and between Temporal types.</p>
 <p>If you don&#39;t need to know the order in which the two times occur, then this function may be less typing and more efficient than <code>Temporal.Instant.compare</code>.</p>
+<p>If <code>other</code> is not a <code>Temporal.Instant</code> object, then it will be converted to one as if it were passed to <code>Temporal.Instant.from()</code>.</p>
 <p>Example usage:</p>
 <pre class="language-javascript"><code class="language-javascript">one <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">fromEpochSeconds</span><span class="token punctuation">(</span><span class="token number">1.0e9</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 two <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">fromEpochSeconds</span><span class="token punctuation">(</span><span class="token number">1.1e9</span><span class="token punctuation">)</span><span class="token punctuation">;</span>

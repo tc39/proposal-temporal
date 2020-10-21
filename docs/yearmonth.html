@@ -286,10 +286,10 @@ ym <span class="token operator">=</span> Temporal<span class="token punctuation"
 ym <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>YearMonth<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> year<span class="token operator">:</span> <span class="token number">2001</span><span class="token punctuation">,</span> month<span class="token operator">:</span> <span class="token number">13</span> <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> overflow<span class="token operator">:</span> <span class="token string">'reject'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>
   <span class="token comment">// throws</span>
 ym <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>YearMonth<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> year<span class="token operator">:</span> <span class="token number">2001</span><span class="token punctuation">,</span> month<span class="token operator">:</span> <span class="token operator">-</span><span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> overflow<span class="token operator">:</span> <span class="token string">'reject'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>
-  <span class="token comment">// throws</span></code></pre><h3 id="compare"><a class="heading-link" href="#compare"></a>Temporal.YearMonth.<strong>compare</strong>(<em>one</em>: Temporal.YearMonth, <em>two</em>: Temporal.YearMonth) : number</h3><p><strong>Parameters:</strong></p>
+  <span class="token comment">// throws</span></code></pre><h3 id="compare"><a class="heading-link" href="#compare"></a>Temporal.YearMonth.<strong>compare</strong>(<em>one</em>: Temporal.YearMonth | object | string, <em>two</em>: Temporal.YearMonth | object | string) : number</h3><p><strong>Parameters:</strong></p>
 <ul>
-<li><code>one</code> (<code>Temporal.YearMonth</code>): First month to compare.</li>
-<li><code>two</code> (<code>Temporal.YearMonth</code>): Second month to compare.</li>
+<li><code>one</code> (<code>Temporal.YearMonth</code> or value convertible to one): First month to compare.</li>
+<li><code>two</code> (<code>Temporal.YearMonth</code> or value convertible to one): Second month to compare.</li>
 </ul>
 <p><strong>Returns:</strong> &minus;1, 0, or 1.</p>
 <p>Compares two <code>Temporal.YearMonth</code> objects.
@@ -299,6 +299,7 @@ Returns an integer indicating whether <code>one</code> comes before or after or 
 <li>0 if <code>one</code> and <code>two</code> are the same;</li>
 <li>1 if <code>one</code> comes after <code>two</code>.</li>
 </ul>
+<p>If <code>one</code> and <code>two</code> are not <code>Temporal.YearMonth</code> objects, then they will be converted to one as if they were passed to <code>Temporal.YearMonth.from()</code>.</p>
 <p>This function can be used to sort arrays of <code>Temporal.YearMonth</code> objects.
 For example:</p>
 <pre class="language-javascript"><code class="language-javascript">one <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>YearMonth<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2006-08'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -376,9 +377,9 @@ If you need to do this, use <code>yearMonth.toDateOnDay(day).withCalendar(calend
 <p>Usage example:</p>
 <pre class="language-javascript"><code class="language-javascript">ym <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>YearMonth<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2019-06'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token comment">// Get December of that year</span>
-ym<span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span><span class="token punctuation">{</span>month<span class="token operator">:</span> <span class="token number">12</span><span class="token punctuation">}</span><span class="token punctuation">)</span>  <span class="token comment">// => 2019-12</span></code></pre><h3 id="add"><a class="heading-link" href="#add"></a>yearMonth.<strong>add</strong>(<em>duration</em>: object, <em>options</em>?: object) : Temporal.YearMonth</h3><p><strong>Parameters:</strong></p>
+ym<span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span><span class="token punctuation">{</span>month<span class="token operator">:</span> <span class="token number">12</span><span class="token punctuation">}</span><span class="token punctuation">)</span>  <span class="token comment">// => 2019-12</span></code></pre><h3 id="add"><a class="heading-link" href="#add"></a>yearMonth.<strong>add</strong>(<em>duration</em>: Temporal.Duration | object | string, <em>options</em>?: object) : Temporal.YearMonth</h3><p><strong>Parameters:</strong></p>
 <ul>
-<li><code>duration</code> (object): A <code>Temporal.Duration</code> object or a duration-like object.</li>
+<li><code>duration</code> (<code>Temporal.Duration</code> or value convertible to one): The duration to add.</li>
 <li><code>options</code> (optional object): An object with properties representing options for the addition.
 The following options are recognized:<ul>
 <li><code>overflow</code> (string): How to deal with additions that result in out-of-range values.
@@ -389,7 +390,8 @@ The default is <code>constrain</code>.</li>
 </ul>
 <p><strong>Returns:</strong> a new <code>Temporal.YearMonth</code> object which is the month indicated by <code>yearMonth</code> plus <code>duration</code>.</p>
 <p>This method adds <code>duration</code> to <code>yearMonth</code>, returning a month that is in the future relative to <code>yearMonth</code>.</p>
-<p>The <code>duration</code> argument is an object with properties denoting a duration, such as <code>{ months: 5 }</code>, or a <code>Temporal.Duration</code> object.</p>
+<p>The <code>duration</code> argument is an object with properties denoting a duration, such as <code>{ months: 5 }</code>, or a string such as <code>P5M</code>, or a <code>Temporal.Duration</code> object.
+If <code>duration</code> is not a <code>Temporal.Duration</code> object, then it will be converted to one as if it were passed to <code>Temporal.Duration.from()</code>.</p>
 <p>If the result is earlier or later than the range of dates that <code>Temporal.YearMonth</code> can represent (approximately half a million years centered on the <a href="https://en.wikipedia.org/wiki/Unix_time">Unix epoch</a>), then this method will throw a <code>RangeError</code> regardless of <code>overflow</code>.</p>
 <p>The <code>overflow</code> option has no effect in the default ISO calendar, because a year is always 12 months and therefore not ambiguous.
 It doesn&#39;t matter in this case that years and months can be different numbers of days, as the resolution of <code>Temporal.YearMonth</code> does not distinguish days.
@@ -397,9 +399,9 @@ However, <code>overflow</code> may have an effect in other calendars where years
 <p>Adding a negative duration is equivalent to subtracting the absolute value of that duration.</p>
 <p>Usage example:</p>
 <pre class="language-javascript"><code class="language-javascript">ym <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>YearMonth<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2019-06'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-ym<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token punctuation">{</span>years<span class="token operator">:</span> <span class="token number">20</span><span class="token punctuation">,</span> months<span class="token operator">:</span> <span class="token number">4</span><span class="token punctuation">}</span><span class="token punctuation">)</span>  <span class="token comment">// => 2039-10</span></code></pre><h3 id="subtract"><a class="heading-link" href="#subtract"></a>yearMonth.<strong>subtract</strong>(<em>duration</em>: object, <em>options</em>?: object) : Temporal.YearMonth</h3><p><strong>Parameters:</strong></p>
+ym<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token punctuation">{</span>years<span class="token operator">:</span> <span class="token number">20</span><span class="token punctuation">,</span> months<span class="token operator">:</span> <span class="token number">4</span><span class="token punctuation">}</span><span class="token punctuation">)</span>  <span class="token comment">// => 2039-10</span></code></pre><h3 id="subtract"><a class="heading-link" href="#subtract"></a>yearMonth.<strong>subtract</strong>(<em>duration</em>: Temporal.Duration | object | string, <em>options</em>?: object) : Temporal.YearMonth</h3><p><strong>Parameters:</strong></p>
 <ul>
-<li><code>duration</code> (object): A <code>Temporal.Duration</code> object or a duration-like object.</li>
+<li><code>duration</code> (<code>Temporal.Duration</code> or value convertible to one): The duration to subtract.</li>
 <li><code>options</code> (optional object): An object with properties representing options for the subtraction.
 The following options are recognized:<ul>
 <li><code>overflow</code> (string): How to deal with additions that result in out-of-range values.
@@ -410,7 +412,8 @@ The default is <code>constrain</code>.</li>
 </ul>
 <p><strong>Returns:</strong> a new <code>Temporal.YearMonth</code> object which is the month indicated by <code>yearMonth</code> minus <code>duration</code>.</p>
 <p>This method subtracts <code>duration</code> from <code>yearMonth</code>, returning a month that is in the future relative to <code>yearMonth</code>.</p>
-<p>The <code>duration</code> argument is an object with properties denoting a duration, such as <code>{ months: 5 }</code>, or a <code>Temporal.Duration</code> object.</p>
+<p>The <code>duration</code> argument is an object with properties denoting a duration, such as <code>{ months: 5 }</code>, or a string such as <code>P5M</code>, or a <code>Temporal.Duration</code> object.
+If <code>duration</code> is not a <code>Temporal.Duration</code> object, then it will be converted to one as if it were passed to <code>Temporal.Duration.from()</code>.</p>
 <p>If the result is earlier or later than the range of dates that <code>Temporal.YearMonth</code> can represent (approximately half a million years centered on the <a href="https://en.wikipedia.org/wiki/Unix_time">Unix epoch</a>), then this method will throw a <code>RangeError</code> regardless of <code>overflow</code>.</p>
 <p>The <code>overflow</code> option has no effect in the default ISO calendar, because a year is always 12 months and therefore not ambiguous.
 It doesn&#39;t matter in this case that years and months can be different numbers of days, as the resolution of <code>Temporal.YearMonth</code> does not distinguish days.
@@ -418,9 +421,9 @@ However, <code>overflow</code> may have an effect in other calendars where years
 <p>Subtracting a negative duration is equivalent to adding the absolute value of that duration.</p>
 <p>Usage example:</p>
 <pre class="language-javascript"><code class="language-javascript">ym <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>YearMonth<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2019-06'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-ym<span class="token punctuation">.</span><span class="token function">subtract</span><span class="token punctuation">(</span><span class="token punctuation">{</span>years<span class="token operator">:</span> <span class="token number">20</span><span class="token punctuation">,</span> months<span class="token operator">:</span> <span class="token number">4</span><span class="token punctuation">}</span><span class="token punctuation">)</span>  <span class="token comment">// => 1999-02</span></code></pre><h3 id="difference"><a class="heading-link" href="#difference"></a>yearMonth.<strong>difference</strong>(<em>other</em>: Temporal.YearMonth, <em>options</em>?: object) : Temporal.Duration</h3><p><strong>Parameters:</strong></p>
+ym<span class="token punctuation">.</span><span class="token function">subtract</span><span class="token punctuation">(</span><span class="token punctuation">{</span>years<span class="token operator">:</span> <span class="token number">20</span><span class="token punctuation">,</span> months<span class="token operator">:</span> <span class="token number">4</span><span class="token punctuation">}</span><span class="token punctuation">)</span>  <span class="token comment">// => 1999-02</span></code></pre><h3 id="difference"><a class="heading-link" href="#difference"></a>yearMonth.<strong>difference</strong>(<em>other</em>: Temporal.YearMonth | object | string, <em>options</em>?: object) : Temporal.Duration</h3><p><strong>Parameters:</strong></p>
 <ul>
-<li><code>other</code> (<code>Temporal.YearMonth</code>): Another month with which to compute the difference.</li>
+<li><code>other</code> (<code>Temporal.YearMonth</code> or value convertible to one): Another month with which to compute the difference.</li>
 <li><code>options</code> (optional object): An object with properties representing options for the operation.
 The following options are recognized:<ul>
 <li><code>largestUnit</code> (string): The largest unit of time to allow in the resulting <code>Temporal.Duration</code> object.
@@ -440,6 +443,7 @@ The default is <code>&#39;nearest&#39;</code>.</li>
 <p><strong>Returns:</strong> a <code>Temporal.Duration</code> representing the difference between <code>yearMonth</code> and <code>other</code>.</p>
 <p>This method computes the difference between the two months represented by <code>yearMonth</code> and <code>other</code>, optionally rounds it, and returns it as a <code>Temporal.Duration</code> object.
 If <code>other</code> is later than <code>yearMonth</code> then the resulting duration will be negative.</p>
+<p>If <code>other</code> is not a <code>Temporal.YearMonth</code> object, then it will be converted to one as if it were passed to <code>Temporal.YearMonth.from()</code>.</p>
 <p>The <code>largestUnit</code> option controls how the resulting duration is expressed.
 The returned <code>Temporal.Duration</code> object will not have any nonzero fields that are larger than the unit in <code>largestUnit</code>.
 A difference of one year and two months will become 14 months when <code>largestUnit</code> is <code>&quot;months&quot;</code>, for example.
@@ -463,13 +467,14 @@ other<span class="token punctuation">.</span><span class="token function">differ
 <span class="token comment">// day of the month (and if applicable, the time of that day) from which</span>
 <span class="token comment">// you want to reckon the difference. For example, using the first of</span>
 <span class="token comment">// the month to calculate a number of days:</span>
-ym<span class="token punctuation">.</span><span class="token function">toDateOnDay</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">difference</span><span class="token punctuation">(</span>other<span class="token punctuation">.</span><span class="token function">toDateOnDay</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> largestUnit<span class="token operator">:</span> <span class="token string">'days'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// => P4687D</span></code></pre><h3 id="equals"><a class="heading-link" href="#equals"></a>yearMonth.<strong>equals</strong>(<em>other</em>: Temporal.YearMonth) : boolean</h3><p><strong>Parameters:</strong></p>
+ym<span class="token punctuation">.</span><span class="token function">toDateOnDay</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">difference</span><span class="token punctuation">(</span>other<span class="token punctuation">.</span><span class="token function">toDateOnDay</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> largestUnit<span class="token operator">:</span> <span class="token string">'days'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// => P4687D</span></code></pre><h3 id="equals"><a class="heading-link" href="#equals"></a>yearMonth.<strong>equals</strong>(<em>other</em>: Temporal.YearMonth | object | string) : boolean</h3><p><strong>Parameters:</strong></p>
 <ul>
-<li><code>other</code> (<code>Temporal.YearMonth</code>): Another month to compare.</li>
+<li><code>other</code> (<code>Temporal.YearMonth</code> or value convertible to one): Another month to compare.</li>
 </ul>
 <p><strong>Returns:</strong> <code>true</code> if <code>yearMonth</code> and <code>other</code> are equal, or <code>false</code> if not.</p>
 <p>Compares two <code>Temporal.YearMonth</code> objects for equality.</p>
 <p>This function exists because it&#39;s not possible to compare using <code>yearMonth == other</code> or <code>yearMonth === other</code>, due to ambiguity in the primitive representation and between Temporal types.</p>
+<p>If <code>other</code> is not a <code>Temporal.YearMonth</code> object, then it will be converted to one as if it were passed to <code>Temporal.YearMonth.from()</code>.</p>
 <p>Note that equality of two months from different calendar systems only makes sense in a few cases, such as when the two calendar systems both use the Gregorian year.</p>
 <p>Even if you are using the same calendar system, if you don&#39;t need to know the order in which the two months occur, then this function may be less typing and more efficient than <code>Temporal.YearMonth.compare</code>.</p>
 <p>Example usage:</p>

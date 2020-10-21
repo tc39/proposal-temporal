@@ -357,9 +357,9 @@ If a property of <code>durationLike</code> is infinity, then this function will 
 years <span class="token operator">+=</span> Math<span class="token punctuation">.</span><span class="token function">floor</span><span class="token punctuation">(</span>months <span class="token operator">/</span> <span class="token number">12</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 months <span class="token operator">%=</span> <span class="token number">12</span><span class="token punctuation">;</span>
 duration <span class="token operator">=</span> duration<span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span><span class="token punctuation">{</span> years<span class="token punctuation">,</span> months <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token comment">// => P4Y2M50DT50H100M</span></code></pre><h3 id="add"><a class="heading-link" href="#add"></a>duration.<strong>add</strong>(<em>other</em>: object, <em>options</em>?: object) : Temporal.Duration</h3><p><strong>Parameters:</strong></p>
+  <span class="token comment">// => P4Y2M50DT50H100M</span></code></pre><h3 id="add"><a class="heading-link" href="#add"></a>duration.<strong>add</strong>(<em>other</em>: Temporal.Duration | object | string, <em>options</em>?: object) : Temporal.Duration</h3><p><strong>Parameters:</strong></p>
 <ul>
-<li><code>other</code> (object): A <code>Temporal.Duration</code> object or a duration-like object.</li>
+<li><code>other</code> (<code>Temporal.Duration</code> or value convertible to one): The duration to add.</li>
 <li><code>options</code> (optional object): An object with properties representing options for the addition.
 The following options are recognized:<ul>
 <li><code>overflow</code> (string): How to deal with additions that result in mixed-sign values or values that are larger than the next highest unit.
@@ -370,7 +370,8 @@ The default is <code>constrain</code>.</li>
 </ul>
 <p><strong>Returns:</strong> a new <code>Temporal.Duration</code> object which represents the sum of the durations of <code>duration</code> and <code>other</code>.</p>
 <p>This method adds <code>other</code> to <code>duration</code>, resulting in a longer duration.</p>
-<p>The <code>other</code> argument is an object with properties denoting a duration, such as <code>{ hours: 5, minutes: 30 }</code>, or a <code>Temporal.Duration</code> object.</p>
+<p>The <code>other</code> argument is an object with properties denoting a duration, such as <code>{ hours: 5, minutes: 30 }</code>, or a string such as <code>PT5H30M</code>, or a <code>Temporal.Duration</code> object.
+If <code>other</code> is not a <code>Temporal.Duration</code> object, then it will be converted to one as if it were passed to <code>Temporal.Duration.from()</code>.</p>
 <p>In order to be valid, the resulting duration must not have fields with mixed signs.
 However, before the result is balanced, it&#39;s possible that the intermediate result will have one or more negative fields while the overall duration is positive, or vice versa.
 For example, &quot;4 hours and 15 minutes&quot; minus &quot;2 hours and 30 minutes&quot; results in &quot;2 hours and &minus;15 minutes&quot;.
@@ -410,9 +411,9 @@ Temporal<span class="token punctuation">.</span>Duration<span class="token punct
     <span class="token keyword">return</span> duration<span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span><span class="token punctuation">{</span> years<span class="token punctuation">,</span> months <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span>
 <span class="token function">monthsToYears</span><span class="token punctuation">(</span>result<span class="token punctuation">)</span>  <span class="token comment">// => P3Y</span>
-</code></pre><h3 id="subtract"><a class="heading-link" href="#subtract"></a>duration.<strong>subtract</strong>(<em>other</em>: object, <em>options</em>?: object) : Temporal.Duration</h3><p><strong>Parameters:</strong></p>
+</code></pre><h3 id="subtract"><a class="heading-link" href="#subtract"></a>duration.<strong>subtract</strong>(<em>other</em>: Temporal.Duration | object | string, <em>options</em>?: object) : Temporal.Duration</h3><p><strong>Parameters:</strong></p>
 <ul>
-<li><code>other</code> (object): A <code>Temporal.Duration</code> object or a duration-like object.</li>
+<li><code>other</code> (<code>Temporal.Duration</code> or value convertible to one): The duration to subtract.</li>
 <li><code>options</code> (optional object): An object with properties representing options for the subtraction.
 The following options are recognized:<ul>
 <li><code>overflow</code> (string): How to deal with subtractions that result in values with mixed signs or values that are larger than the next highest unit.
@@ -423,7 +424,8 @@ The default is <code>constrain</code>.</li>
 </ul>
 <p><strong>Returns:</strong> a new <code>Temporal.Duration</code> object which represents the duration of <code>duration</code> less the duration of <code>other</code>.</p>
 <p>This method subtracts <code>other</code> from <code>duration</code>, resulting in a shorter duration.</p>
-<p>The <code>other</code> argument is an object with properties denoting a duration, such as <code>{ hours: 5, minutes: 30 }</code>, or a <code>Temporal.Duration</code> object.</p>
+<p>The <code>other</code> argument is an object with properties denoting a duration, such as <code>{ hours: 5, minutes: 30 }</code>, or a string such as <code>PT5H30M</code>, or a <code>Temporal.Duration</code> object.
+If <code>duration</code> is not a <code>Temporal.Duration</code> object, then it will be converted to one as if it were passed to <code>Temporal.Duration.from()</code>.</p>
 <p>If <code>other</code> is larger than <code>duration</code> and the subtraction would result in a negative duration, the method will throw a <code>RangeError</code>.</p>
 <p>In order to be valid, the resulting duration must not have fields with mixed signs.
 However, before the result is balanced, it&#39;s possible that the intermediate result will have one or more negative fields while the overall duration is positive, or vice versa.
