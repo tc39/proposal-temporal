@@ -348,6 +348,7 @@ export namespace Temporal {
 
   export interface CalendarProtocol {
     id: string;
+    calendar?: never;
     year(date: Temporal.Date): number;
     month(date: Temporal.Date): number;
     day(date: Temporal.Date): number;
@@ -410,7 +411,7 @@ export namespace Temporal {
    *
    * See https://tc39.es/proposal-temporal/docs/calendar.html for more details.
    */
-  export class Calendar implements Required<CalendarProtocol> {
+  export class Calendar implements Omit<Required<CalendarProtocol>, 'calendar'> {
     static from(item: CalendarProtocol | string): Temporal.Calendar;
     constructor(calendarIdentifier: string);
     readonly id: string;
@@ -519,7 +520,7 @@ export namespace Temporal {
     readonly monthsInYear: number;
     readonly isLeapYear: boolean;
     equals(other: Temporal.Date): boolean;
-    with(dateLike: DateLike, options?: AssignmentOptions): Temporal.Date;
+    with(dateLike: DateLike | string, options?: AssignmentOptions): Temporal.Date;
     withCalendar(calendar: CalendarProtocol | string): Temporal.Date;
     add(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.Date;
     subtract(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.Date;
@@ -636,7 +637,7 @@ export namespace Temporal {
     readonly monthsInYear: number;
     readonly isLeapYear: boolean;
     equals(other: Temporal.DateTime): boolean;
-    with(dateTimeLike: DateTimeLike, options?: AssignmentOptions): Temporal.DateTime;
+    with(dateTimeLike: DateTimeLike | string, options?: AssignmentOptions): Temporal.DateTime;
     withCalendar(calendar: CalendarProtocol | string): Temporal.DateTime;
     add(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.DateTime;
     subtract(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.DateTime;
@@ -781,7 +782,7 @@ export namespace Temporal {
     readonly microsecond: number;
     readonly nanosecond: number;
     equals(other: Temporal.Time): boolean;
-    with(timeLike: Temporal.Time | TimeLike, options?: AssignmentOptions): Temporal.Time;
+    with(timeLike: TimeLike | string, options?: AssignmentOptions): Temporal.Time;
     add(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.Time;
     subtract(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.Time;
     difference(
@@ -834,6 +835,7 @@ export namespace Temporal {
    */
   export interface TimeZoneProtocol {
     id: string;
+    timeZone?: never;
     getOffsetNanosecondsFor(instant: Temporal.Instant): number;
     getOffsetStringFor(instant: Temporal.Instant): string;
     getZonedDateTimeFor(instant: Temporal.Instant, calendar?: CalendarProtocol | string): Temporal.ZonedDateTime;
@@ -859,8 +861,8 @@ export namespace Temporal {
    *
    * See https://tc39.es/proposal-temporal/docs/timezone.html for more details.
    */
-  export class TimeZone implements Required<TimeZoneProtocol> {
-    static from(timeZone: Temporal.TimeZoneProtocol | string): Temporal.TimeZone;
+  export class TimeZone implements Omit<Required<TimeZoneProtocol>, 'timeZone'> {
+    static from(timeZone: Temporal.TimeZone | string): Temporal.TimeZone;
     constructor(timeZoneIdentifier: string);
     readonly id: string;
     getOffsetNanosecondsFor(instant: Temporal.Instant): number;

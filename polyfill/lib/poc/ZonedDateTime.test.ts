@@ -87,6 +87,14 @@ describe('ZonedDateTime', () => {
       const zdt = Temporal.ZonedDateTime.from('2020-03-08T01:00-08:00[America/Los_Angeles]');
       equal(zdt.toString(), '2020-03-08T01:00-08:00[America/Los_Angeles]');
     });
+    it('parses with an IANA zone but no offset', () => {
+      const zdt = Temporal.ZonedDateTime.from('2020-03-08T01:00[America/Los_Angeles]');
+      equal(zdt.toString(), '2020-03-08T01:00-08:00[America/Los_Angeles]');
+    });
+    it('parses with an IANA zone but no offset (with disambiguation)', () => {
+      const zdt = Temporal.ZonedDateTime.from('2020-03-08T02:30[America/Los_Angeles]', { disambiguation: 'earlier' });
+      equal(zdt.toString(), '2020-03-08T01:30-08:00[America/Los_Angeles]');
+    });
     it('parses with an offset in brackets', () => {
       const zdt = Temporal.ZonedDateTime.from('2020-03-08T01:00-08:00[-08:00]');
       equal(zdt.toString(), '2020-03-08T01:00-08:00[-08:00]');

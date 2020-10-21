@@ -79,9 +79,18 @@ function fromIsoString(isoString, options) {
   // > time zone. (So you can't tell what the local time will be one minute
   // > later, for example.)
   const isZ = absString.trimEnd().toUpperCase().endsWith('Z');
-  const abs = Temporal.Instant.from(absString);
+  let abs;
+  let ignoreOffsetOption = isZ;
+  try {
+    abs = Temporal.Instant.from(absString);
+  } catch (e) {
+    // presumably, parsing to Instant failed because offset is missing,
+    // so we'll just infer the offset from the time zone.
+    abs = dt.toInstant(tz, { disambiguation });
+    ignoreOffsetOption = true;
+  }
   const offsetNs = dt.difference(abs.toDateTime('UTC', dt.calendar), { largestUnit: 'nanoseconds' }).nanoseconds;
-  return fromCommon(dt.withCalendar(cal), tz, offsetNs, disambiguation, isZ ? 'use' : offsetOption);
+  return fromCommon(dt.withCalendar(cal), tz, offsetNs, disambiguation, ignoreOffsetOption ? 'use' : offsetOption);
 }
 
 /** Shared logic for the object and string forms of `from` */
