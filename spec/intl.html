@@ -305,6 +305,10 @@
             1. <ins>Let _pattern_ be _dateTimeFormat_.[[TemporalTimePattern]].</ins>
             1. <ins>Let _tm_ be { [[hour]]: _date_.[[Hour]], [[minute]]: _date_.[[Minute]], [[second]]: _date_.[[Second]] }.</ins>
           1. <ins>If _date_ has an [[InitializedTemporalDateTime]] or an [[InitializedTemporalInstant]] internal slot, then</ins>
+            1. <ins>If _date_ has an [[InitializedTemporalInstant]] internal slot, then</ins>
+              1. <ins>Let _timeZone_ be ? TimeZoneFrom(_dateTimeFormat_.[[TimeZone]]).</ins>
+              1. <ins>Let _calendar_ be ? CalendarFrom(_dateTimeFormat_.[[Calendar]]).</ins>
+              1. <ins>Set _date_ to ? GetTemporalDateTimeFor(_timeZone_, _instant_, _calendar_).</ins>
             1. <ins>Let _calendar_ be ? CalendarToString(_x_).</ins>
             1. <ins>If _calendar_ is not *"iso8601"* and not equal to _dateTimeFormat_.[[Calendar]], then</ins>
               1. <ins>Throw a *RangeError* exception.</ins>
