@@ -110,6 +110,10 @@ export class Date {
   }
   with(temporalDateLike, options = undefined) {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
+    if (ES.Type(temporalDateLike) !== 'Object') {
+      const str = ES.ToString(temporalDateLike);
+      temporalDateLike = ES.RelevantTemporalObjectFromString(str);
+    }
     let source;
     let calendar = temporalDateLike.calendar;
     if (calendar) {

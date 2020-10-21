@@ -290,9 +290,15 @@ describe('DateTime', () => {
       const noon = Temporal.Time.from({ hour: 12 });
       equal(`${datetime.with(noon)}`, '1976-11-18T12:00');
     });
+    it('datetime.with(iso time string)', () => {
+      equal(`${datetime.with('12:00')}`, '1976-11-18T12:00');
+    });
     it('datetime.with(date) works', () => {
       const date = Temporal.Date.from('1995-04-07');
       equal(`${datetime.with(date)}`, '1995-04-07T15:23:30.123456789');
+    });
+    it('datetime.with(iso date string)', () => {
+      equal(`${datetime.with('1995-04-07')}`, '1995-04-07T15:23:30.123456789');
     });
     it('datetime.with(monthDay) works', () => {
       const md = Temporal.MonthDay.from('01-01');
@@ -321,6 +327,15 @@ describe('DateTime', () => {
     });
     it('incorrectly-spelled properties are ignored', () => {
       equal(`${datetime.with({ month: 12, days: 15 })}`, '1976-12-18T15:23:30.123456789');
+    });
+    it('datetime.with(iso datetime string)', () => {
+      const date2 = datetime.with('2019-05-17T12:34:56.007007007');
+      equal(`${date2}`, '2019-05-17T12:34:56.007007007');
+      const date3 = datetime.with('2019-05-17T12:34:56.007007007Z');
+      equal(`${date3}`, '2019-05-17T12:34:56.007007007');
+    });
+    it('date.with(bad string)', () => {
+      throws(() => datetime.with('42'), RangeError);
     });
   });
   describe('DateTime.compare() works', () => {

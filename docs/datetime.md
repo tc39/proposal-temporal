@@ -353,11 +353,11 @@ dt.with({ year: 2100 }).isLeapYear; // => false
 
 ## Methods
 
-### datetime.**with**(_dateTimeLike_: object, _options_?: object) : Temporal.DateTime
+### datetime.**with**(_dateTimeLike_: object | string, _options_?: object) : Temporal.DateTime
 
 **Parameters:**
 
-- `dateTimeLike` (object): an object with some or all of the properties of a `Temporal.DateTime`.
+- `dateTimeLike` (object or string): an object with some or all of the properties of a `Temporal.DateTime`, or an ISO string.
 - `options` (optional object): An object with properties representing options for the operation.
   The following options are recognized:
   - `overflow` (string): How to deal with out-of-range values.
@@ -367,6 +367,8 @@ dt.with({ year: 2100 }).isLeapYear; // => false
 **Returns:** a new `Temporal.DateTime` object.
 
 This method creates a new `Temporal.DateTime` which is a copy of `datetime`, but any properties present on `dateTimeLike` override the ones already present on `datetime`.
+
+If `dateTimeLike` is a string, then it will be attempted to be converted into a `Temporal.Date` (if no time is given in the string), `Temporal.DateTime`, or `Temporal.Time`, in order of priority.
 
 Since `Temporal.DateTime` objects are immutable, use this method instead of modifying one.
 
@@ -389,8 +391,12 @@ dt.with({ year: 2015, second: 31 }); // => 2015-12-07T03:24:31.000003500
 midnight = Temporal.Time.from({ hour: 0 });
 dt.with(midnight); // => 1995-12-07T00:00
 // Note: not the same as dt.with({ hour: 0 })!
+// Same as above but using a string:
+dt.with('00:00'); // => 1995-12-07T00:00
 date = Temporal.Date.from('2015-03-31');
 dt.with(date); // => 2015-03-31T03:24:31.000003500
+// Same as above but using a string:
+dt.with('2015-03-31'); // => 2015-03-31T03:24:31.000003500
 yearMonth = Temporal.YearMonth.from('2018-04');
 date.with(yearMonth); // => 2018-04-07T03:24:31.000003500
 monthDay = Temporal.MonthDay.from('02-29');

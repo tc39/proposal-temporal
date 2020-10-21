@@ -87,6 +87,10 @@ export class Time {
 
   with(temporalTimeLike, options = undefined) {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
+    if (ES.Type(temporalTimeLike) !== 'Object') {
+      const str = ES.ToString(temporalTimeLike);
+      temporalTimeLike = ES.RelevantTemporalObjectFromString(str);
+    }
     options = ES.NormalizeOptionsObject(options);
     const overflow = ES.ToTemporalOverflow(options);
     const props = ES.ToPartialRecord(temporalTimeLike, [

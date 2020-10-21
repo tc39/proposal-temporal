@@ -101,10 +101,33 @@ describe('TimeZone', () => {
       it(`TimeZone.from(${zone}) does the same thing as new TimeZone(${zone})`, () =>
         equal(timezoneFrom.id, timezoneObj.id));
     }
-    it('TimeZone.from throws with bad identifier', () => {
-      throws(() => Temporal.TimeZone.from('local'));
-      throws(() => Temporal.TimeZone.from('Z'));
-      throws(() => Temporal.TimeZone.from('-08:00[America/Vancouver]'));
+    it.skip('ZonedDateTime is accepted', () => {
+      // FIXME: Requires ZonedDateTime
+    });
+    it('property bag with time zone object is accepted', () => {
+      const tz = new Temporal.TimeZone('Africa/Cairo');
+      const tzFrom = Temporal.TimeZone.from({ timeZone: tz });
+      assert(tzFrom instanceof Temporal.TimeZone);
+      equal(tzFrom.id, 'Africa/Cairo');
+    });
+    it('property bag with string is accepted', () => {
+      const tzFrom = Temporal.TimeZone.from({ timeZone: 'Africa/Cairo' });
+      assert(tzFrom instanceof Temporal.TimeZone);
+      equal(tzFrom.id, 'Africa/Cairo');
+    });
+    it('property bag with custom time zone is accepted', () => {
+      const custom = { id: 'Etc/Custom' };
+      const tzFrom = Temporal.TimeZone.from({ timeZone: custom });
+      equal(tzFrom, custom);
+    });
+    it('throws with bad identifier', () => {
+      throws(() => Temporal.TimeZone.from('local'), RangeError);
+      throws(() => Temporal.TimeZone.from('Z'), RangeError);
+      throws(() => Temporal.TimeZone.from('-08:00[America/Vancouver]'), RangeError);
+    });
+    it('throws with bad value in property bag', () => {
+      throws(() => Temporal.TimeZone.from({ timeZone: 'local' }), RangeError);
+      throws(() => Temporal.TimeZone.from({ timeZone: { timeZone: 'Africa/Cairo' } }), RangeError);
     });
   });
   describe('TimeZone.from(ISO string)', () => {

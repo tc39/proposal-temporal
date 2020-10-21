@@ -84,8 +84,8 @@ export const ES = ObjectAssign({}, ES2020, {
   IsTemporalYearMonth: (item) => HasSlot(item, YEAR_MONTH_BRAND),
   IsTemporalMonthDay: (item) => HasSlot(item, MONTH_DAY_BRAND),
   TemporalTimeZoneFromString: (stringIdent) => {
-    const { zone, ianaName, offset } = ES.ParseTemporalTimeZoneString(stringIdent);
-    const result = ES.GetCanonicalTimeZoneIdentifier(zone);
+    const { ianaName, offset } = ES.ParseTemporalTimeZoneString(stringIdent);
+    const result = ES.GetCanonicalTimeZoneIdentifier(ianaName || offset);
     if (offset && ianaName) {
       const ns = ES.ParseTemporalInstant(stringIdent);
       const offsetNs = ES.GetIANATimeZoneOffsetNanoseconds(ns, result);
@@ -117,9 +117,13 @@ export const ES = ObjectAssign({}, ES2020, {
     const millisecond = ES.ToInteger(fraction.slice(0, 3));
     const microsecond = ES.ToInteger(fraction.slice(3, 6));
     const nanosecond = ES.ToInteger(fraction.slice(6, 9));
-    const offsetSign = match[14] === '-' || match[14] === '\u2212' ? '-' : '+';
-    const offset = `${offsetSign}${match[15] || '00'}:${match[16] || '00'}`;
-    let ianaName = match[17];
+    let offset;
+    if (match[14] && match[15]) {
+      const offsetSign = match[14] === '-' || match[14] === '\u2212' ? '-' : '+';
+      offset = `${offsetSign}${match[15]}:${match[16] || '00'}`;
+      if (offset === '-00:00') offset = '+00:00';
+    }
+    let ianaName = match[13] ? 'UTC' : match[17];
     if (ianaName) {
       try {
         // Canonicalize name if it is an IANA link name or is capitalized wrong
@@ -128,8 +132,7 @@ export const ES = ObjectAssign({}, ES2020, {
         // Not an IANA name, may be a custom ID, pass through unchanged
       }
     }
-    const zone = match[13] ? 'UTC' : ianaName || offset;
-    const calendar = match[18] || null;
+    const calendar = match[18] || undefined;
     return {
       year,
       month,
@@ -140,7 +143,6 @@ export const ES = ObjectAssign({}, ES2020, {
       millisecond,
       microsecond,
       nanosecond,
-      zone,
       ianaName,
       offset,
       calendar
@@ -203,8 +205,12 @@ export const ES = ObjectAssign({}, ES2020, {
   },
   ParseTemporalTimeZoneString: (stringIdent) => {
     try {
-      const canonicalIdent = ES.GetCanonicalTimeZoneIdentifier(stringIdent);
-      if (canonicalIdent) return { zone: canonicalIdent.toString() };
+      let canonicalIdent = ES.GetCanonicalTimeZoneIdentifier(stringIdent);
+      if (canonicalIdent) {
+        canonicalIdent = canonicalIdent.toString();
+        if (parseOffsetString(canonicalIdent) !== null) return { offset: canonicalIdent };
+        return { ianaName: canonicalIdent };
+      }
     } catch {
       // fall through
     }
@@ -247,13 +253,13 @@ export const ES = ObjectAssign({}, ES2020, {
       microsecond,
       nanosecond,
       offset,
-      zone
+      ianaName
     } = ES.ParseTemporalInstantString(isoString);
 
     const DateTime = GetIntrinsic('%Temporal.DateTime%');
 
     const dt = new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
-    const tz = ES.TimeZoneFrom(zone);
+    const tz = ES.TimeZoneFrom(ianaName || offset);
 
     const possibleInstants = tz.getPossibleInstantsFor(dt);
     if (possibleInstants.length === 1) return GetSlot(possibleInstants[0], EPOCHNANOSECONDS);
@@ -603,6 +609,31 @@ export const ES = ObjectAssign({}, ES2020, {
       } = ES.ParseTemporalDateTimeString(ES.ToString(relativeTo)));
       if (!calendar) calendar = GetISO8601Calendar();
       calendar = ES.ToTemporalCalendar(calendar);
+    }
+    const TemporalDateTime = GetIntrinsic('%Temporal.DateTime%');
+    return new TemporalDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
+  },
+  RelevantTemporalObjectFromString: (str) => {
+    let props;
+    try {
+      props = ES.ParseISODateTime(str, { zoneRequired: false });
+    } catch {
+      try {
+        props = ES.ParseTemporalTimeString(str);
+      } catch {
+        throw new RangeError(`invalid value ${str} for a Temporal object`);
+      }
+      const { hour, minute, second, millisecond, microsecond, nanosecond } = props;
+      const TemporalTime = GetIntrinsic('%Temporal.Time%');
+      return new TemporalTime(hour, minute, second, millisecond, microsecond, nanosecond);
+    }
+    let { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar } = props;
+    if (!calendar) calendar = new (GetIntrinsic('%Temporal.ISO8601Calendar%'))();
+    const DATE_ONLY = new RegExp(`^${PARSE.datesplit.source}$`);
+    const match = DATE_ONLY.exec(str);
+    if (match) {
+      const TemporalDate = GetIntrinsic('%Temporal.Date%');
+      return new TemporalDate(year, month, day, calendar);
     }
     const TemporalDateTime = GetIntrinsic('%Temporal.DateTime%');
     return new TemporalDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
