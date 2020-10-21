@@ -273,55 +273,54 @@
     </emu-clause>
 
     <emu-clause id="sec-partitiondatetimepattern" aoid="PartitionDateTimePattern">
-      <h1>PartitionDateTimePattern ( _dateTimeFormat_, <del>_x_</del><ins>_date_</ins> )</h1>
+      <h1>PartitionDateTimePattern ( _dateTimeFormat_, _x_ )</h1>
 
       <p>
-        The PartitionDateTimePattern abstract operation is called with arguments _dateTimeFormat_ (which must be an object initialized as a DateTimeFormat) and <del>_x_</del><ins>_date_</ins> (which must be <del>a Number</del><ins>an ECMAScript</ins> value), <del>interprets _x_ as a time value as specified in ES2021, <emu-xref href="#sec-time-values-and-time-range"></emu-xref>,</del> and creates the corresponding parts according to the effective locale and the formatting options of _dateTimeFormat_. The following steps are taken:
+        The PartitionDateTimePattern abstract operation is called with arguments _dateTimeFormat_ (which must be an object initialized as a DateTimeFormat) and _x_ (which must be <del>a Number</del><ins>an ECMAScript</ins> value), <del>interprets _x_ as a time value as specified in ES2021, <emu-xref href="#sec-time-values-and-time-range"></emu-xref>,</del> and creates the corresponding parts according to the effective locale and the formatting options of _dateTimeFormat_. The following steps are taken:
       </p>
 
       <emu-alg>
-        1. <ins>If IsTemporalObject(_date_) is *true*, then</ins>
-          1. <ins>Let _x_ be _date_.</ins>
+        1. <ins>If IsTemporalObject(_x_) is *true*, then</ins>
           1. <mark>TODO: _era_, _dayPeriod_, _fractionalSecondDigits_.</mark>
-          1. <ins>If _date_ has an [[InitializedTemporalDate]] internal slot, then</ins>
+          1. <ins>If _x_ has an [[InitializedTemporalDate]] internal slot, then</ins>
             1. <ins>Let _calendar_ be ? CalendarToString(_x_).</ins>
             1. <ins>If _calendar_ is not *"iso8601"* and not equal to _dateTimeFormat_.[[Calendar]], then</ins>
               1. <ins>Throw a *RangeError* exception.</ins>
             1. <ins>Let _pattern_ be _dateTimeFormat_.[[TemporalDatePattern]].</ins>
-            1. <ins>Let _tm_ be { [[weekday]]: ToDayOfWeek(_date_.[[Year]], _date_.[[Month]], _date_.[[Day]]), [[year]]: _date_.[[Year]], [[month]]: _date_.[[Month]], [[day]]: _date_.[[Day]] }.</ins>
-          1. <ins>If _date_ has an [[InitializedTemporalYearMonth]] internal slot, then</ins>
+            1. <ins>Let _tm_ be { [[weekday]]: ToDayOfWeek(_x_.[[Year]], _x_.[[Month]], _x_.[[Day]]), [[year]]: _x_.[[Year]], [[month]]: _x_.[[Month]], [[day]]: _x_.[[Day]] }.</ins>
+          1. <ins>If _x_ has an [[InitializedTemporalYearMonth]] internal slot, then</ins>
             1. <ins>Let _calendar_ be ? CalendarToString(_x_).</ins>
             1. <ins>If _calendar_ is not equal to _dateTimeFormat_.[[Calendar]], then</ins>
               1. <ins>Throw a *RangeError* exception.</ins>
             1. <ins>Let _pattern_ be _dateTimeFormat_.[[TemporalYearMonthPattern]].</ins>
-            1. <ins>Let _tm_ be { [[year]]: _date_.[[Year]], [[month]]: _date_.[[Month]] }.</ins>
-          1. <ins>If _date_ has an [[InitializedTemporalMonthDay]] internal slot, then</ins>
+            1. <ins>Let _tm_ be { [[year]]: _x_.[[Year]], [[month]]: _x_.[[Month]] }.</ins>
+          1. <ins>If _x_ has an [[InitializedTemporalMonthDay]] internal slot, then</ins>
             1. <ins>Let _calendar_ be ? CalendarToString(_x_).</ins>
             1. <ins>If _calendar_ is not equal to _dateTimeFormat_.[[Calendar]], then</ins>
               1. <ins>Throw a *RangeError* exception.</ins>
             1. <ins>Let _pattern_ be _dateTimeFormat_.[[TemporalMonthDayPattern]].</ins>
-            1. <ins>Let _tm_ be { [[month]]: _date_.[[Month]], [[day]]: _date_.[[Day]] }.</ins>
-          1. <ins>If _date_ has an [[InitializedTemporalTime]] internal slot, then</ins>
+            1. <ins>Let _tm_ be { [[month]]: _x_.[[Month]], [[day]]: _x_.[[Day]] }.</ins>
+          1. <ins>If _x_ has an [[InitializedTemporalTime]] internal slot, then</ins>
             1. <ins>Let _pattern_ be _dateTimeFormat_.[[TemporalTimePattern]].</ins>
-            1. <ins>Let _tm_ be { [[hour]]: _date_.[[Hour]], [[minute]]: _date_.[[Minute]], [[second]]: _date_.[[Second]] }.</ins>
-          1. <ins>If _date_ has an [[InitializedTemporalDateTime]] or an [[InitializedTemporalInstant]] internal slot, then</ins>
-            1. <ins>If _date_ has an [[InitializedTemporalInstant]] internal slot, then</ins>
+            1. <ins>Let _tm_ be { [[hour]]: _x_.[[Hour]], [[minute]]: _x_.[[Minute]], [[second]]: _x_.[[Second]] }.</ins>
+          1. <ins>If _x_ has an [[InitializedTemporalDateTime]] or an [[InitializedTemporalInstant]] internal slot, then</ins>
+            1. <ins>If _x_ has an [[InitializedTemporalInstant]] internal slot, then</ins>
               1. <ins>Let _timeZone_ be ? TimeZoneFrom(_dateTimeFormat_.[[TimeZone]]).</ins>
               1. <ins>Let _calendar_ be ? CalendarFrom(_dateTimeFormat_.[[Calendar]]).</ins>
-              1. <ins>Set _date_ to ? GetTemporalDateTimeFor(_timeZone_, _instant_, _calendar_).</ins>
+              1. <ins>Set _x_ to ? GetTemporalDateTimeFor(_timeZone_, _instant_, _calendar_).</ins>
             1. <ins>Let _calendar_ be ? CalendarToString(_x_).</ins>
             1. <ins>If _calendar_ is not *"iso8601"* and not equal to _dateTimeFormat_.[[Calendar]], then</ins>
               1. <ins>Throw a *RangeError* exception.</ins>
             1. <ins>Let _pattern_ be _dateTimeFormat_.[[TemporalDateTimePattern]].</ins>
-            1. <ins>Let _tm_ be { [[weekday]]: ToDayOfWeek(_date_.[[Year]], _date_.[[Month]], _date_.[[Day]]), [[year]]: _date_.[[Year]], [[month]]: _date_.[[Month]], [[day]]: _date_.[[Day]], [[hour]]: _date_.[[Hour]], [[minute]]: _date_.[[Minute]], [[second]]: _date_.[[Second]] }.</ins>
+            1. <ins>Let _tm_ be { [[weekday]]: ToDayOfWeek(_x_.[[Year]], _x_.[[Month]], _x_.[[Day]]), [[year]]: _x_.[[Year]], [[month]]: _x_.[[Month]], [[day]]: _x_.[[Day]], [[hour]]: _x_.[[Hour]], [[minute]]: _x_.[[Minute]], [[second]]: _x_.[[Second]] }.</ins>
           1. <ins>If _pattern_ is *null*, throw a *TypeError* exception.</ins>
         1. <ins>Else,</ins>
           1. <ins>Let _pattern_ be _dateTimeFormat_.[[Pattern]].</ins>
-          1. <ins>If _date_ is *undefined*, then</ins>
-            1. <ins>Let _x_ be Call(%Date.now%, *undefined*).</ins>
+          1. <ins>If _x_ is *undefined*, then</ins>
+            1. <ins>Set _x_ to Call(%Date.now%, *undefined*).</ins>
           1. <ins>Else,</ins>
-            1. <ins>Let _x_ be ? ToNumber(_date_).</ins>
-          1. Let _x_ be TimeClip(_x_).
+            1. <ins>Set _x_ to ? ToNumber(_x_).</ins>
+          1. Set _x_ to TimeClip(_x_).
           1. If _x_ is *NaN*, throw a *RangeError* exception.
           1. <ins>Let _tm_ be ToLocalTime(_x_, _dateTimeFormat_.[[Calendar]], _dateTimeFormat_.[[TimeZone]]).</ins>
         1. Let _locale_ be _dateTimeFormat_.[[Locale]].
