@@ -3161,7 +3161,7 @@
   var datesplit = new RegExp("(".concat(yearpart.source, ")(?:-(\\d{2})-(\\d{2})|(\\d{2})(\\d{2}))"));
   var timesplit = /(\d{2})(?::(\d{2})(?::(\d{2})(?:[.,](\d{1,9}))?)?|(\d{2})(?:(\d{2})(?:[.,](\d{1,9}))?)?)?/;
   var offset = /([+-\u2212])([0-2][0-9])(?::?([0-5][0-9]))?/;
-  var zonesplit = new RegExp("(?:([zZ])|(?:".concat(offset.source, "?(?:\\[(").concat(timeZoneID.source, ")\\])?))"));
+  var zonesplit = new RegExp("(?:([zZ])|(?:".concat(offset.source, ")?(?:\\[(").concat(timeZoneID.source, ")\\])?)"));
   var calendar = new RegExp("\\[c=(".concat(calendarID.source, ")\\]"));
   var instant = new RegExp("^".concat(datesplit.source, "(?:T|\\s+)").concat(timesplit.source).concat(zonesplit.source, "(?:").concat(calendar.source, ")?$"), 'i');
   var datetime = new RegExp("^".concat(datesplit.source, "(?:(?:T|\\s+)").concat(timesplit.source, "(?:").concat(zonesplit.source, ")?)?(?:").concat(calendar.source, ")?$"), 'i');
@@ -3229,11 +3229,10 @@
     },
     TemporalTimeZoneFromString: function TemporalTimeZoneFromString(stringIdent) {
       var _ES$ParseTemporalTime = ES.ParseTemporalTimeZoneString(stringIdent),
-          zone = _ES$ParseTemporalTime.zone,
           ianaName = _ES$ParseTemporalTime.ianaName,
           offset = _ES$ParseTemporalTime.offset;
 
-      var result = ES.GetCanonicalTimeZoneIdentifier(zone);
+      var result = ES.GetCanonicalTimeZoneIdentifier(ianaName || offset);
 
       if (offset && ianaName) {
         var ns = ES.ParseTemporalInstant(stringIdent);
@@ -3269,9 +3268,15 @@
       var millisecond = ES.ToInteger(fraction.slice(0, 3));
       var microsecond = ES.ToInteger(fraction.slice(3, 6));
       var nanosecond = ES.ToInteger(fraction.slice(6, 9));
-      var offsetSign = match[14] === '-' || match[14] === "\u2212" ? '-' : '+';
-      var offset = "".concat(offsetSign).concat(match[15] || '00', ":").concat(match[16] || '00');
-      var ianaName = match[17];
+      var offset;
+
+      if (match[14] && match[15]) {
+        var offsetSign = match[14] === '-' || match[14] === "\u2212" ? '-' : '+';
+        offset = "".concat(offsetSign).concat(match[15], ":").concat(match[16] || '00');
+        if (offset === '-00:00') offset = '+00:00';
+      }
+
+      var ianaName = match[13] ? 'UTC' : match[17];
 
       if (ianaName) {
         try {
@@ -3281,8 +3286,7 @@
         }
       }
 
-      var zone = match[13] ? 'UTC' : ianaName || offset;
-      var calendar = match[18] || null;
+      var calendar = match[18] || undefined;
       return {
         year: year,
         month: month,
@@ -3293,7 +3297,6 @@
         millisecond: millisecond,
         microsecond: microsecond,
         nanosecond: nanosecond,
-        zone: zone,
         ianaName: ianaName,
         offset: offset,
         calendar: calendar
@@ -3407,9 +3410,16 @@
     ParseTemporalTimeZoneString: function ParseTemporalTimeZoneString(stringIdent) {
       try {
         var canonicalIdent = ES.GetCanonicalTimeZoneIdentifier(stringIdent);
-        if (canonicalIdent) return {
-          zone: canonicalIdent.toString()
-        };
+
+        if (canonicalIdent) {
+          canonicalIdent = canonicalIdent.toString();
+          if (parseOffsetString(canonicalIdent) !== null) return {
+            offset: canonicalIdent
+          };
+          return {
+            ianaName: canonicalIdent
+          };
+        }
       } catch (_unused2) {// fall through
       }
 
@@ -3469,11 +3479,11 @@
           microsecond = _ES$ParseTemporalInst.microsecond,
           nanosecond = _ES$ParseTemporalInst.nanosecond,
           offset = _ES$ParseTemporalInst.offset,
-          zone = _ES$ParseTemporalInst.zone;
+          ianaName = _ES$ParseTemporalInst.ianaName;
 
       var DateTime = GetIntrinsic$1('%Temporal.DateTime%');
       var dt = new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
-      var tz = ES.TimeZoneFrom(zone);
+      var tz = ES.TimeZoneFrom(ianaName || offset);
       var possibleInstants = tz.getPossibleInstantsFor(dt);
       if (possibleInstants.length === 1) return GetSlot(possibleInstants[0], EPOCHNANOSECONDS);
 
