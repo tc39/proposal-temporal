@@ -17,18 +17,18 @@ Briefly, the ISO 8601 notation consists of a `P` character, followed by years, m
 Any zero components may be omitted.
 For more detailed information, see the ISO 8601 standard or the [Wikipedia page](https://en.wikipedia.org/wiki/ISO_8601#Durations).
 
-| ISO 8601             | Meaning |
-| -------------------- | ------- |
+| ISO 8601             | Meaning                                                                              |
+| -------------------- | ------------------------------------------------------------------------------------ |
 | **P1Y1M1DT1H1M1.1S** | One year, one month, one day, one hour, one minute, one second, and 100 milliseconds |
-| **P40D**             | Forty days |
-| **P1Y1D**            | A year and a day |
-| **P3DT4H59M**        | Three days, four hours and 59 minutes |
-| **PT2H30M**          | Two and a half hours |
-| **P1M**              | One month |
-| **PT1M**             | One minute |
-| **PT0.0021S**        | 2.1 milliseconds (two milliseconds and 100 microseconds) |
-| **PT0S**             | Zero |
-| **P0D**              | Zero |
+| **P40D**             | Forty days                                                                           |
+| **P1Y1D**            | A year and a day                                                                     |
+| **P3DT4H59M**        | Three days, four hours and 59 minutes                                                |
+| **PT2H30M**          | Two and a half hours                                                                 |
+| **P1M**              | One month                                                                            |
+| **PT1M**             | One minute                                                                           |
+| **PT0.0021S**        | 2.1 milliseconds (two milliseconds and 100 microseconds)                             |
+| **PT0S**             | Zero                                                                                 |
+| **P0D**              | Zero                                                                                 |
 
 > **NOTE:** According to the ISO 8601-1 standard, weeks are not allowed to appear together with any other units, and durations can only be positive.
 > As extensions to the standard, ISO 8601-2 allows a sign character at the start of the string, and allows combining weeks with other units.
@@ -39,6 +39,7 @@ For more detailed information, see the ISO 8601 standard or the [Wikipedia page]
 ### **new Temporal.Duration**(_years_?: number, _months_?: number, _days_?: number, _hours_?: number, _minutes_?: number, _seconds_?: number, _milliseconds_?: number, _microseconds_?: number, _nanoseconds_?: number) : Temporal.Duration
 
 **Parameters:**
+
 - `years` (optional number): A number of years.
 - `months` (optional number): A number of months.
 - `weeks` (optional number): A number of weeks.
@@ -60,11 +61,12 @@ Use this constructor directly if you have the correct parameters already as nume
 Otherwise `Temporal.Duration.from()` is probably more convenient because it accepts more kinds of input and allows controlling the overflow behaviour.
 
 Usage examples:
+
 ```javascript
-new Temporal.Duration(1, 2, 3, 4, 5, 6, 7, 987, 654, 321)  // => P1Y2M3W4DT5H6M7.987654321S
-new Temporal.Duration(0, 0, 0, 40)  // => P40D
-new Temporal.Duration(undefined, undefined, undefined, 40)  // => P40D
-new Temporal.Duration()  // => PT0S
+new Temporal.Duration(1, 2, 3, 4, 5, 6, 7, 987, 654, 321); // => P1Y2M3W4DT5H6M7.987654321S
+new Temporal.Duration(0, 0, 0, 40); // => P40D
+new Temporal.Duration(undefined, undefined, undefined, 40); // => P40D
+new Temporal.Duration(); // => PT0S
 ```
 
 ## Static methods
@@ -72,6 +74,7 @@ new Temporal.Duration()  // => PT0S
 ### Temporal.Duration.**from**(_thing_: any, _options_?: object) : Temporal.Duration
 
 **Parameters:**
+
 - `thing`: A `Duration`-like object or a string from which to create a `Temporal.Duration`.
 
 **Returns:** a new `Temporal.Duration` object.
@@ -91,18 +94,19 @@ Any non-object value is converted to a string, which is expected to be in ISO 86
 > If no sign character is present, then the sign is assumed to be positive.
 
 Usage examples:
+
 ```javascript
-d = Temporal.Duration.from({ years: 1, days: 1 })  // => P1Y1D
-d = Temporal.Duration.from({ days: -2, hours: -12 })  // => -P2DT12H
+d = Temporal.Duration.from({ years: 1, days: 1 }); // => P1Y1D
+d = Temporal.Duration.from({ days: -2, hours: -12 }); // => -P2DT12H
 
-Temporal.Duration.from(d) === d  // => true
+Temporal.Duration.from(d) === d; // => true
 
-d = Temporal.Duration.from('P1Y1D')  // => P1Y1D
-d = Temporal.Duration.from('-P2DT12H')  // => -P2DT12H
-d = Temporal.Duration.from('P0D')  // => PT0S
+d = Temporal.Duration.from('P1Y1D'); // => P1Y1D
+d = Temporal.Duration.from('-P2DT12H'); // => -P2DT12H
+d = Temporal.Duration.from('P0D'); // => PT0S
 
 // Mixed-sign values are never allowed, even if overall positive:
-d = Temporal.Duration.from({ hours: 1, minutes: -30 })  // throws
+d = Temporal.Duration.from({ hours: 1, minutes: -30 }); // throws
 ```
 
 ## Properties
@@ -130,6 +134,8 @@ d = Temporal.Duration.from({ hours: 1, minutes: -30 })  // throws
 The above read-only properties allow accessing each component of the duration individually.
 
 Usage examples:
+
+<!-- prettier-ignore-start -->
 ```javascript
 d = Temporal.Duration.from('P1Y2M3W4DT5H6M7.987654321S');
 d.years         // => 1
@@ -143,6 +149,7 @@ d.milliseconds  // => 987
 d.microseconds  // => 654
 d.nanoseconds   // => 321
 ```
+<!-- prettier-ignore-end -->
 
 ### duration.**sign** : number
 
@@ -153,6 +160,7 @@ The read-only `sign` property has the value –1, 0, or 1, depending on whether 
 ### duration.**with**(_durationLike_: object, _options_?: object) : Temporal.Duration
 
 **Parameters:**
+
 - `durationLike` (object): an object with some or all of the properties of a `Temporal.Duration`.
 
 **Returns:** a new `Temporal.Duration` object.
@@ -165,6 +173,8 @@ All non-zero properties of `durationLike` must have the same sign, and they must
 If a property of `durationLike` is infinity, then this function will throw a `RangeError`.
 
 Usage example:
+
+<!-- prettier-ignore-start -->
 ```javascript
 duration = Temporal.Duration.from({ months: 50, days: 50, hours: 50, minutes: 100 });
 // Perform a balance operation using additional ISO calendar rules:
@@ -174,10 +184,12 @@ months %= 12;
 duration = duration.with({ years, months });
   // => P4Y2M50DT50H100M
 ```
+<!-- prettier-ignore-end -->
 
 ### duration.**add**(_other_: Temporal.Duration | object | string, _options_?: object) : Temporal.Duration
 
 **Parameters:**
+
 - `other` (`Temporal.Duration` or value convertible to one): The duration to add.
 - `options` (optional object): An object with properties representing options for the addition.
   The following options are recognized:
@@ -196,6 +208,7 @@ In order to be valid, the resulting duration must not have fields with mixed sig
 However, before the result is balanced, it's possible that the intermediate result will have one or more negative fields while the overall duration is positive, or vice versa.
 For example, "4 hours and 15 minutes" minus "2 hours and 30 minutes" results in "2 hours and &minus;15 minutes".
 The `overflow` option tells what to do in this case:
+
 - In `constrain` mode (the default), additions that result in mixed-sign fields will balance those fields with the next-highest field so that all the fields of the result are constrained to have the same sign.
 - In `balance` mode, all fields are balanced with the next highest field, no matter if they have mixed signs or not.
 
@@ -207,39 +220,44 @@ If you need such a conversion, use the `round()` method, and provide the start d
 Adding a negative duration is equivalent to subtracting the absolute value of that duration.
 
 Usage example:
+
+<!-- prettier-ignore-start -->
+
 ```javascript
 hour = Temporal.Duration.from('PT1H');
-hour.add({ minutes: 30 })  // => PT1H30M
+hour.add({ minutes: 30 }); // => PT1H30M
 
 // Examples of balancing:
 one = Temporal.Duration.from({ hours: 1, minutes: 30 });
 two = Temporal.Duration.from({ hours: 2, minutes: 45 });
-result = one.add(two)  // => PT3H75M
-result.with(result, { overflow: 'balance' })  // => PT4H15M
+result = one.add(two); // => PT3H75M
+result.with(result, { overflow: 'balance' }); // => PT4H15M
 
 fifty = Temporal.Duration.from('P50Y50M50DT50H50M50.500500500S');
-result = fifty.add(fifty)  // => P100Y100M100DT100H100M101.001001S'
-Temporal.Duration.from(result, { overflow: 'balance' })
-  // => P100Y100M104DT5H41M41.001001S
+result = fifty.add(fifty); // => P100Y100M100DT100H100M101.001001S'
+Temporal.Duration.from(result, { overflow: 'balance' });
+// => P100Y100M104DT5H41M41.001001S
 
 // Example of not balancing:
 oneAndAHalfYear = Temporal.Duration.from({ years: 1, months: 6 });
-result = oneAndAHalfYear.add(oneAndAHalfYear)  // => P2Y12M
-Temporal.Duration.from(result, { overflow: 'balance' }) // => P2Y12M
+result = oneAndAHalfYear.add(oneAndAHalfYear); // => P2Y12M
+Temporal.Duration.from(result, { overflow: 'balance' }); // => P2Y12M
 // Example of custom conversion using ISO calendar rules:
 function monthsToYears(duration) {
-    let { years, months } = duration;
-    years += Math.floor(months / 12);
-    months %= 12;
-    return duration.with({ years, months });
+  let { years, months } = duration;
+  years += Math.floor(months / 12);
+  months %= 12;
+  return duration.with({ years, months });
 }
-monthsToYears(result)  // => P3Y
-
+monthsToYears(result); // => P3Y
 ```
+
+<!-- prettier-ignore-start -->
 
 ### duration.**subtract**(_other_: Temporal.Duration | object | string, _options_?: object) : Temporal.Duration
 
 **Parameters:**
+
 - `other` (`Temporal.Duration` or value convertible to one): The duration to subtract.
 - `options` (optional object): An object with properties representing options for the subtraction.
   The following options are recognized:
@@ -260,6 +278,7 @@ In order to be valid, the resulting duration must not have fields with mixed sig
 However, before the result is balanced, it's possible that the intermediate result will have one or more negative fields while the overall duration is positive, or vice versa.
 For example, "4 hours and 15 minutes" minus "2 hours and 30 minutes" results in "2 hours and &minus;15 minutes".
 The `overflow` argument tells what to do in this case:
+
 - In `constrain` mode (the default), subtractions that result in mixed-sign fields will balance those fields with the next-highest field so that all the fields of the result are constrained to have the same sign.
 - In `balance` mode, all fields are balanced with the next highest field, no matter if they have mixed signs or not.
 
@@ -268,26 +287,27 @@ For usage examples and a more complete explanation of how balancing works and wh
 Subtracting a negative duration is equivalent to adding the absolute value of that duration.
 
 Usage example:
+
 ```javascript
 hourAndAHalf = Temporal.Duration.from('PT1H30M');
-hourAndAHalf.subtract({ hours: 1 })  // => PT30M
+hourAndAHalf.subtract({ hours: 1 }); // => PT30M
 
 one = Temporal.Duration.from({ minutes: 180 });
 two = Temporal.Duration.from({ seconds: 30 });
-one.subtract(two);  // => PT179M30S
-one.subtract(two, { overflow: 'balance' });  // => PT2H59M30S
+one.subtract(two); // => PT179M30S
+one.subtract(two, { overflow: 'balance' }); // => PT2H59M30S
 
 // Example of not balancing:
 threeYears = Temporal.Duration.from({ years: 3 });
 oneAndAHalfYear = Temporal.Duration.from({ years: 1, months: 6 });
-threeYears.subtract(oneAndAHalfYear)  // throws; mixed months and years signs cannot be balanced
+threeYears.subtract(oneAndAHalfYear); // throws; mixed months and years signs cannot be balanced
 // Example of a custom conversion using ISO calendar rules:
 function yearsToMonths(duration) {
-    let { years, months } = duration;
-    months += years * 12;
-    return duration.with({ years: 0, months });
+  let { years, months } = duration;
+  months += years * 12;
+  return duration.with({ years: 0, months });
 }
-yearsToMonths(threeYears).subtract(yearsToMonths(oneAndAHalfYear))  // => P18M
+yearsToMonths(threeYears).subtract(yearsToMonths(oneAndAHalfYear)); // => P18M
 ```
 
 ### duration.**negated**() : Temporal.Duration
@@ -299,11 +319,12 @@ It returns a newly constructed `Temporal.Duration` with all the fields having th
 If `duration` is zero, then the returned object is a copy of `duration`.
 
 Usage example:
+
 ```javascript
 d = Temporal.Duration.from('P1Y2M3DT4H5M6.987654321S');
-d.sign  // 1
-d.negated()  // -P1Y2M3DT4H5M6.987654321S
-d.negated().sign  // -1
+d.sign; // 1
+d.negated(); // -P1Y2M3DT4H5M6.987654321S
+d.negated().sign; // -1
 ```
 
 ### duration.**abs**() : Temporal.Duration
@@ -315,9 +336,10 @@ It returns a newly constructed `Temporal.Duration` with all the fields having th
 If `duration` is already positive or zero, then the returned object is a copy of `duration`.
 
 Usage example:
+
 ```javascript
 d = Temporal.Duration.from('-PT8H30M');
-d.abs()  // PT8H30M
+d.abs(); // PT8H30M
 ```
 
 ### duration.**isZero**() : boolean
@@ -327,6 +349,7 @@ d.abs()  // PT8H30M
 This is a convenience method that tells whether `duration` represents a zero length of time.
 
 Usage example:
+
 ```javascript
 d = Temporal.Duration.from('PT0S');
 d.isZero(); // => true
@@ -338,6 +361,7 @@ d.isZero(); // => true
 ### duration.**round**(_options_: object) : Temporal.Duration
 
 **Parameters:**
+
 - `options` (object): An object with properties representing options for the operation.
   The following options are recognized:
   - `largestUnit` (string): The largest unit of time to allow in the resulting `Temporal.Duration` object.
@@ -349,7 +373,7 @@ d.isZero(); // => true
   - `roundingIncrement` (number): The granularity to round to, of the unit given by `smallestUnit`.
     The default is 1.
   - `roundingMode` (string): How to handle the remainder, if rounding.
-    Valid values are `'ceil'`, `'floor'`, `'trunc'`, and `'nearest'`.
+    Valid values are `'nearest'`, `'ceil'`, `'trunc'`, and `'floor'`.
     The default is `'nearest'`.
   - `relativeTo` (`Temporal.DateTime`): The starting point to use when converting between years, months, weeks, and days.
     It must be a `Temporal.DateTime`, or a value that can be passed to `Temporal.DateTime.from()`.
@@ -388,17 +412,24 @@ The valid values in this case are 1 (default), 2, 3, 4, 5, 6, 10, 12, 15, 20, an
 Instead of 60 minutes, use 1 hour.)
 
 The `roundingMode` option controls how the rounding is performed.
-  - `ceil`: Always round up, towards positive infinity.
-  - `floor`: Always round down, towards negative infinity.
-  - `trunc`: Always round towards zero, chopping off the part after the decimal point.
-  - `nearest`: Round to the nearest of the values allowed by `roundingIncrement` and `smallestUnit`.
-    When there is a tie, round up, like `ceil`.
+
+- `nearest`: Round to the nearest of the values allowed by `roundingIncrement` and `smallestUnit`.
+  When there is a tie, round away from zero like `ceil` for positive durations and like `floor` for negative durations.
+- `ceil`: Always round towards positive infinity.
+  For negative durations this option will decrease the absolute value of the duration which may be unexpected.
+  To round away from zero, use `ceil` for positive durations and `floor` for negative durations.
+- `trunc`: Always round towards zero, chopping off the part after the decimal point.
+- `floor`: Always round down, towards negative infinity.
+  This mode acts the same as `trunc` for positive durations but for negative durations it will increase the absolute value of the result which may be unexpected.
+  For this reason, `trunc` is recommended for most "round down" use cases.
 
 The `relativeTo` option gives the starting point used when converting between or rounding to years, months, weeks, or days.
 It is a `Temporal.DateTime` instance.
-If any other type of value is given, then it will be converted to a `Temporal.DateTime` as if it were passed to `Temporal.DateTime.from(.., { overflow: 'reject' })`.
+If any other type of value is given, then it will be converted to a `Temporal.DateTime` as if it were passed to `Temporal.DateTime.from(..., { overflow: 'reject' })`.
+A `Temporal.Date` or a date string like `2020-01-01` is also accepted because time is optional when creating a `Temporal.DateTime`.
 
 Example usage:
+
 ```javascript
 // Balance a duration as far as possible without knowing a starting point
 d = Temporal.Duration.from({ minutes: 130 });
@@ -428,7 +459,7 @@ d.round({
 // Normalize days into months or years
 d = Temporal.Duration.from({ days: 190 });
 refDate = Temporal.Date.from('2020-01-01');
-d.round({ relativeTo: refDate, largestUnit: 'years' });  // => P6M6D
+d.round({ relativeTo: refDate, largestUnit: 'years' }); // => P6M6D
 
 // Same, but in a different calendar system
 d.round({
@@ -464,10 +495,11 @@ This method can be used to convert a `Temporal.Duration` into a record-like data
 It returns a new plain JavaScript object, with all the fields as enumerable, writable, own data properties.
 
 Usage example:
+
 ```javascript
 d = Temporal.Duration.from('P1Y2M3DT4H5M6.987654321S');
-Object.assign({}, d).days  // => undefined
-Object.assign({}, d.getFields()).days  // => 3
+Object.assign({}, d).days; // => undefined
+Object.assign({}, d.getFields()).days; // => 3
 ```
 
 ### duration.**toString**() : string
@@ -480,20 +512,21 @@ This method overrides `Object.prototype.toString()` and provides the ISO 8601 de
 > See [Duration balancing](./balancing.md#serialization) for more information.
 
 Usage examples:
+
 ```javascript
 d = Temporal.Duration.from({ years: 1, days: 1 });
-d.toString();  // => P1Y1D
+d.toString(); // => P1Y1D
 d = Temporal.Duration.from({ years: -1, days: -1 });
-d.toString();  // => -P1Y1D
+d.toString(); // => -P1Y1D
 d = Temporal.Duration.from({ milliseconds: 1000 });
-d.toString();  // => PT1S
+d.toString(); // => PT1S
 
 // The output format always balances units under 1 s, even if the
 // underlying Temporal.Duration object doesn't.
 nobal = Temporal.Duration.from({ milliseconds: 3500 });
-console.log(`${nobal}`, nobal.seconds, nobal.milliseconds);  // => PT3.500S 0 3500
-bal = Temporal.Duration.from({ milliseconds: 3500 }, { overflow: 'balance'});
-console.log(`${bal}`, bal.seconds, bal.milliseconds);  // => PT3.500S 3 500
+console.log(`${nobal}`, nobal.seconds, nobal.milliseconds); // => PT3.500S 0 3500
+bal = Temporal.Duration.from({ milliseconds: 3500 }, { overflow: 'balance' });
+console.log(`${bal}`, bal.seconds, bal.milliseconds); // => PT3.500S 3 500
 ```
 
 ### duration.**toJSON**() : string
@@ -510,10 +543,11 @@ If you need to rebuild a `Temporal.Duration` object from a JSON string, then you
 In that case you can build a custom "reviver" function for your use case.
 
 Example usage:
+
 ```js
 const ban = {
   reason: 'cooldown',
-  banDuration: Temporal.Duration.from({ hours: 48 }),
+  banDuration: Temporal.Duration.from({ hours: 48 })
 };
 const str = JSON.stringify(ban, null, 2);
 console.log(str);
@@ -525,8 +559,7 @@ console.log(str);
 
 // To rebuild from the string:
 function reviver(key, value) {
-  if (key.endsWith('Duration'))
-    return Temporal.Duration.from(value);
+  if (key.endsWith('Duration')) return Temporal.Duration.from(value);
   return value;
 }
 JSON.parse(str, reviver);
@@ -535,6 +568,7 @@ JSON.parse(str, reviver);
 ### duration.**toLocaleString**(_locales_?: string | array&lt;string&gt;, _options_?: object) : string
 
 **Parameters:**
+
 - `locales` (optional string or array of strings): A string with a BCP 47 language tag with an optional Unicode extension key, or an array of such strings.
 - `options` (optional object): An object with properties influencing the formatting.
 
@@ -549,11 +583,12 @@ The `locales` and `options` arguments are the same as in the constructor to [`In
 > If `Intl.DurationFormat` is not available, then the output of this method is the same as that of `duration.toString()`, and the `locales` and `options` arguments are ignored.
 
 Usage examples:
+
 ```javascript
-d = Temporal.Duration.from('P1DT6H30M')
-d.toLocaleString()  // => 1 day 6 hours 30 minutes
-d.toLocaleString('de-DE')  // => 1 Tag 6 Stunden 30 Minuten
-d.toLocaleString('en-US', {day: 'numeric', hour: 'numeric'})  // => 1 day 6 hours
+d = Temporal.Duration.from('P1DT6H30M');
+d.toLocaleString(); // => 1 day 6 hours 30 minutes
+d.toLocaleString('de-DE'); // => 1 Tag 6 Stunden 30 Minuten
+d.toLocaleString('en-US', { day: 'numeric', hour: 'numeric' }); // => 1 day 6 hours
 ```
 
 ### duration.**valueOf**()

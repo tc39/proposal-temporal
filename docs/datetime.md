@@ -518,7 +518,7 @@ dt.subtract({ months: 1 }); // => throws
   - `roundingIncrement` (number): The granularity to round to, of the unit given by `smallestUnit`.
     The default is 1.
   - `roundingMode` (string): How to handle the remainder, if rounding.
-    Valid values are `'ceil'`, `'floor'`, `'trunc'`, and `'nearest'`.
+    Valid values are `'nearest'`, `'ceil'`, `'trunc'`, and `'floor'`.
     The default is `'nearest'`.
 
 **Returns:** a `Temporal.Duration` representing the difference between `datetime` and `other`.
@@ -590,7 +590,7 @@ mar1.difference(jan1);                            // => P121D
   - `roundingIncrement` (number): The granularity to round to, of the unit given by `smallestUnit`.
     The default is 1.
   - `roundingMode` (string): How to handle the remainder.
-    Valid values are `'ceil'`, `'floor'`, `'trunc'`, and `'nearest'`.
+    Valid values are `'nearest'`, `'ceil'`, `'trunc'`, and `'floor'`.
     The default is `'nearest'`.
 
 **Returns:** a new `Temporal.DateTime` object which is `datetime` rounded to `roundingIncrement` of `smallestUnit`.

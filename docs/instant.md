@@ -239,6 +239,7 @@ It is the same as `toZonedDateTime()`, but always uses the ISO 8601 calendar.
 Use this method if you are not doing computations in other calendars.
 
 Example usage:
+
 ```js
 // Converting a specific exact time to a calendar date / wall-clock time
 timestamp = Temporal.Instant.fromEpochSeconds(1553993100);
@@ -265,6 +266,7 @@ If you only want to use the ISO 8601 calendar, use `toDateTimeISO()`.
 
 Example usage:
 
+<!-- prettier-ignore-start -->
 ```js
 // What time was the Unix epoch (timestamp 0) in Bell Labs (Murray Hill, New Jersey, USA) in the Gregorian calendar?
 epoch = Temporal.Instant.fromEpochSeconds(0);
@@ -280,6 +282,7 @@ zdt = epoch.toZonedDateTime(tz, cal);
 console.log(zdt.year, zdt.era);
   // => 45 showa
 ```
+<!-- prettier-ignore-end -->
 
 ### instant.**toDateTimeISO**(_timeZone_: object | string) : Temporal.DateTime
 
@@ -297,6 +300,7 @@ It is the same as `toDateTime()`, but always uses the ISO 8601 calendar.
 Use this method if you are not doing computations in other calendars.
 
 Example usage:
+
 ```js
 // Converting an exact time to a calendar date / wall-clock time
 timestamp = Temporal.Instant.fromEpochSeconds(1553993100);
@@ -325,6 +329,7 @@ If you only want to use the ISO 8601 calendar, use `toDateTimeISO()`.
 
 Example usage:
 
+<!-- prettier-ignore-start -->
 ```js
 // What time was the Unix epoch (timestamp 0) in Bell Labs (Murray Hill, New Jersey, USA) in the Gregorian calendar?
 epoch = Temporal.Instant.fromEpochSeconds(0);
@@ -340,6 +345,7 @@ dt = epoch.toDateTime(tz, cal);
 console.log(dt.year, dt.era);
   // => 45 showa
 ```
+<!-- prettier-ignore-end -->
 
 ### instant.**add**(_duration_: Temporal.Duration | object | string) : Temporal.Instant
 
@@ -419,7 +425,7 @@ Temporal.now.instant().subtract(oneHour);
   - `roundingIncrement` (number): The granularity to round to, of the unit given by `smallestUnit`.
     The default is 1.
   - `roundingMode` (string): How to handle the remainder, if rounding.
-    Valid values are `'ceil'`, `'floor'`, `'trunc'`, and `'nearest'`.
+    Valid values are `'nearest'`, `'ceil'`, `'trunc'`, and `'floor'`.
     The default is `'nearest'`.
 
 **Returns:** a `Temporal.Duration` representing the difference between `instant` and `other`.
@@ -503,7 +509,7 @@ billion.toDateTime(utc).difference(epoch.toDateTime(utc), { largestUnit: 'years'
   - `roundingIncrement` (number): The granularity to round to, of the unit given by `smallestUnit`.
     The default is 1.
   - `roundingMode` (string): How to handle the remainder.
-    Valid values are `'ceil'`, `'floor'`, `'trunc'`, and `'nearest'`.
+    Valid values are `'nearest'`, `'ceil'`, `'trunc'`, and `'floor'`.
     The default is `'nearest'`.
 
 **Returns:** a new `Temporal.Instant` object which is `instant` rounded to `roundingIncrement` of `smallestUnit`.
